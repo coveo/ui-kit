@@ -1,0 +1,92 @@
+import {renderFunctionFixture} from '@/vitest-utils/testing-helpers/fixture';
+import {html} from 'lit';
+import {describe, it, expect} from 'vitest';
+import CannotAccess from '../../../images/cannot-access.svg';
+import Indexing from '../../../images/indexing.svg';
+import NoConnection from '../../../images/no-connection.svg';
+import SearchInactive from '../../../images/search-inactive.svg';
+import SomethingWrong from '../../../images/something-wrong.svg';
+import {renderQueryErrorIcon} from './icon';
+
+describe('#renderQueryErrorIcon', () => {
+  const renderComponent = async (errorType?: string) => {
+    const element = await renderFunctionFixture(
+      html`${renderQueryErrorIcon({props: {errorType}})}`
+    );
+
+    return {
+      atomicIcon: element.querySelector('atomic-icon'),
+    };
+  };
+
+  it('should render atomic-icon with correct attributes', async () => {
+    const {atomicIcon} = await renderComponent();
+
+    expect(atomicIcon).not.toBeNull();
+    expect(atomicIcon).toHaveAttribute('part', 'icon');
+    expect(atomicIcon).toHaveAttribute('class', 'w-1/2 max-w-lg');
+  });
+
+  it('should render default icon when errorType is undefined', async () => {
+    const {atomicIcon} = await renderComponent();
+
+    expect(atomicIcon).toHaveAttribute('icon');
+    const iconAttribute = atomicIcon!.getAttribute('icon');
+    expect(iconAttribute).toBeTruthy();
+    expect(iconAttribute).toBe(SomethingWrong);
+  });
+
+  it('should render NoConnection icon when errorType is Disconnected', async () => {
+    const {atomicIcon} = await renderComponent('Disconnected');
+
+    expect(atomicIcon).toHaveAttribute('icon');
+    const iconAttribute = atomicIcon!.getAttribute('icon');
+    expect(iconAttribute).toBeTruthy();
+    expect(iconAttribute).toBe(NoConnection);
+  });
+
+  it('should render Indexing icon when errorType is NoEndpointsException', async () => {
+    const {atomicIcon} = await renderComponent('NoEndpointsException');
+
+    expect(atomicIcon).toHaveAttribute('icon');
+    const iconAttribute = atomicIcon!.getAttribute('icon');
+    expect(iconAttribute).toBeTruthy();
+    expect(iconAttribute).toBe(Indexing);
+  });
+
+  it('should render CannotAccess icon when errorType is InvalidTokenException', async () => {
+    const {atomicIcon} = await renderComponent('InvalidTokenException');
+
+    expect(atomicIcon).toHaveAttribute('icon');
+    const iconAttribute = atomicIcon!.getAttribute('icon');
+    expect(iconAttribute).toBeTruthy();
+    expect(iconAttribute).toBe(CannotAccess);
+  });
+
+  it('should render SearchInactive icon when errorType is OrganizationIsPausedException', async () => {
+    const {atomicIcon} = await renderComponent('OrganizationIsPausedException');
+
+    expect(atomicIcon).toHaveAttribute('icon');
+    const iconAttribute = atomicIcon!.getAttribute('icon');
+    expect(iconAttribute).toBeTruthy();
+    expect(iconAttribute).toBe(SearchInactive);
+  });
+
+  it('should render default icon when errorType is unknown', async () => {
+    const {atomicIcon} = await renderComponent('UnknownErrorType');
+
+    expect(atomicIcon).toHaveAttribute('icon');
+    // Should use SomethingWrong as default for unknown types
+    const iconAttribute = atomicIcon!.getAttribute('icon');
+    expect(iconAttribute).toBeTruthy();
+  });
+
+  it('should render default icon when errorType is empty string', async () => {
+    const {atomicIcon} = await renderComponent('');
+
+    expect(atomicIcon).toHaveAttribute('icon');
+    // Should use SomethingWrong as default for empty string
+    const iconAttribute = atomicIcon!.getAttribute('icon');
+    expect(iconAttribute).toBeTruthy();
+  });
+});
