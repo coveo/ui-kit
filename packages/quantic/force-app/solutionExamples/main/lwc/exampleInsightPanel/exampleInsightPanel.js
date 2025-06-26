@@ -109,7 +109,7 @@ export default class ExampleInsightPanel extends LightningElement {
 
     this.caseNumber =
       this.getFieldValueFromRecord(this.caseRecord, 'Case.CaseNumber') ||
-      this.caseId;
+      '1234'; // Default case number if example insight panel is not on a case record page.
     this.engine.dispatch(this.actions.setCaseId(this.caseId));
     this.engine.dispatch(this.actions.setCaseNumber(this.caseNumber));
     this.initAttachedResults();
