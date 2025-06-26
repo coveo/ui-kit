@@ -16,7 +16,7 @@ export const renderNoItems: FunctionalComponent<NoItemsProps> = ({props}) => {
         key: `${props.i18nKey}-for`,
         params: {
           query: html`<span
-            class="inline-block max-w-full truncate align-bottom font-bold whitespace-normal"
+            class="inline-block max-w-full overflow-hidden align-bottom font-bold text-ellipsis whitespace-normal"
             part="highlight"
           >
             ${localizedString({
