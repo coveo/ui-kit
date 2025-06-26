@@ -208,6 +208,7 @@ function ensurePathAndReturnChildren(
     parent.state = 'idle';
     children = parent.children;
   }
+
   return children;
 }
 

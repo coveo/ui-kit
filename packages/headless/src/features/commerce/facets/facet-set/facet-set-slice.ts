@@ -519,7 +519,6 @@ function handleDeselectAllFacetValues(request: AnyFacetRequest) {
   } else {
     request.values.forEach((value) => {
       if (value.state !== 'idle') {
-        // TODO: test that here
         value.previousState = value.state;
       }
       value.state = 'idle';

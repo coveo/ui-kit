@@ -56,13 +56,6 @@ export interface BaseFacetValueRequest {
   previousState?: FacetValueState;
 }
 
-export interface BaseFacetValueRequest {
-  /** The current facet value state.
-   * @defaultValue `idle`
-   */
-  state: FacetValueState;
-}
-
 export interface CurrentValues<T> {
   /** The values displayed by the facet in the search interface at the moment of the request.
    * @defaultValue `[]`
