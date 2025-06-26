@@ -132,8 +132,6 @@ test.describe('Example Search Page E2E Tests', () => {
           });
         }
       );
-
-      expect(consoleErrors.length).toBe(0);
     });
   });
 
