@@ -42,7 +42,6 @@ test.describe('Example Insight Panel E2E Tests', () => {
       search,
     }) => {
       await expect(insightPanel.errorComponent).not.toBeVisible();
-      expect(consoleErrors.length).toBe(0);
       // Trigger a search
       const exampleQuery = 'Test';
       const searchRequestPromise = search.waitForSearchRequest();
@@ -110,6 +109,8 @@ test.describe('Example Insight Panel E2E Tests', () => {
           });
         }
       );
+
+      expect(consoleErrors.length).toBe(0);
     });
   });
 });
