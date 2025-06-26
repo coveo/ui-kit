@@ -5,8 +5,13 @@ module.exports = {
         !(file.includes('/stencil-generated/') && file.endsWith('.ts')) &&
         !file.includes('/packages/quantic/') &&
         !file.endsWith('.tw.css') &&
-        !file.endsWith('.pcss')
+        !file.endsWith('.pcss') &&
+        !file.endsWith('/package.json') &&
+        !file.endsWith('/package-lock.json')
     );
+    if (filteredFiles.length === 0) {
+      return 'echo "No files to process with Biome"';
+    }
     return `biome check --write ${filteredFiles.join(' ')}`;
   },
   '**/*.md': (files) => {
