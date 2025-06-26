@@ -240,106 +240,104 @@ describe('atomic-product-text', () => {
     });
   });
 
-  describe('highlighting functionality', () => {
-    describe('when #shouldHighlight is true', () => {
-      it('should render highlights for #ec_name field with highlight keywords', async () => {
-        const productWithHighlights = buildFakeProduct({
-          ec_name: 'Test Product Name',
-          nameHighlights: [
-            {
-              offset: 5,
-              length: 7,
-            },
-          ],
-        });
-
-        const element = await renderComponent({
-          field: 'ec_name',
-          shouldHighlight: true,
-          product: productWithHighlights,
-        });
-
-        const commerceText = locators.getCommerceText(element);
-        expect(commerceText).toBeNull();
-
-        expect(element.shadowRoot?.innerHTML).not.toContain(
-          '<atomic-commerce-text'
-        );
+  describe('when #shouldHighlight is true', () => {
+    it('should render highlights for #ec_name field with highlight keywords', async () => {
+      const productWithHighlights = buildFakeProduct({
+        ec_name: 'Test Product Name',
+        nameHighlights: [
+          {
+            offset: 5,
+            length: 7,
+          },
+        ],
       });
 
-      it('should render highlights for #excerpt field with highlight keywords', async () => {
-        const productWithExcerptHighlights = buildFakeProduct({
-          excerpt: 'This is an excerpt with highlights',
-          excerptHighlights: [
-            {
-              offset: 8,
-              length: 2,
-            },
-          ],
-        });
-
-        const element = await renderComponent({
-          field: 'excerpt',
-          shouldHighlight: true,
-          product: productWithExcerptHighlights,
-        });
-
-        const commerceText = locators.getCommerceText(element);
-        expect(commerceText).toBeNull();
-
-        expect(element.shadowRoot?.innerHTML).not.toContain(
-          '<atomic-commerce-text'
-        );
+      const element = await renderComponent({
+        field: 'ec_name',
+        shouldHighlight: true,
+        product: productWithHighlights,
       });
 
-      it('should render plain text when #field is not supported for highlighting', async () => {
-        const element = await renderComponent({
-          field: 'ec_brand',
-          shouldHighlight: true,
-        });
+      const commerceText = locators.getCommerceText(element);
+      expect(commerceText).toBeNull();
 
-        const commerceText = locators.getCommerceText(element);
-        expect(commerceText).toBeDefined();
-        expect(commerceText?.shadowRoot?.textContent).toContain('Test Brand');
+      expect(element.shadowRoot?.innerHTML).not.toContain(
+        '<atomic-commerce-text'
+      );
+    });
+
+    it('should render highlights for #excerpt field with highlight keywords', async () => {
+      const productWithExcerptHighlights = buildFakeProduct({
+        excerpt: 'This is an excerpt with highlights',
+        excerptHighlights: [
+          {
+            offset: 8,
+            length: 2,
+          },
+        ],
       });
 
-      it('should render plain text when no highlight keywords are available', async () => {
-        const productWithoutHighlights = buildFakeProduct({
-          ec_name: 'Test Product Name',
-          nameHighlights: [],
-        });
-
-        const element = await renderComponent({
-          field: 'ec_name',
-          shouldHighlight: true,
-          product: productWithoutHighlights,
-        });
-
-        const commerceText = locators.getCommerceText(element);
-        expect(commerceText).toBeDefined();
-        expect(commerceText?.shadowRoot?.textContent).toContain(
-          'Test Product Name'
-        );
+      const element = await renderComponent({
+        field: 'excerpt',
+        shouldHighlight: true,
+        product: productWithExcerptHighlights,
       });
 
-      it('should render plain text when highlight keywords are null', async () => {
-        const productWithNullHighlights = buildFakeProduct({
-          ec_name: 'Test Product Name',
-          nameHighlights: null as unknown as [],
-        });
+      const commerceText = locators.getCommerceText(element);
+      expect(commerceText).toBeNull();
 
-        const element = await renderComponent({
-          field: 'ec_name',
-          shouldHighlight: true,
-          product: productWithNullHighlights,
-        });
+      expect(element.shadowRoot?.innerHTML).not.toContain(
+        '<atomic-commerce-text'
+      );
+    });
 
-        const commerceText = locators.getCommerceText(element);
-        expect(commerceText).toBeDefined();
-        expect(commerceText?.shadowRoot?.textContent).toContain(
-          'Test Product Name'
-        );
+    it('should render plain text when #field is not supported for highlighting', async () => {
+      const element = await renderComponent({
+        field: 'ec_brand',
+        shouldHighlight: true,
       });
+
+      const commerceText = locators.getCommerceText(element);
+      expect(commerceText).toBeDefined();
+      expect(commerceText?.shadowRoot?.textContent).toContain('Test Brand');
+    });
+
+    it('should render plain text when no highlight keywords are available', async () => {
+      const productWithoutHighlights = buildFakeProduct({
+        ec_name: 'Test Product Name',
+        nameHighlights: [],
+      });
+
+      const element = await renderComponent({
+        field: 'ec_name',
+        shouldHighlight: true,
+        product: productWithoutHighlights,
+      });
+
+      const commerceText = locators.getCommerceText(element);
+      expect(commerceText).toBeDefined();
+      expect(commerceText?.shadowRoot?.textContent).toContain(
+        'Test Product Name'
+      );
+    });
+
+    it('should render plain text when highlight keywords are null', async () => {
+      const productWithNullHighlights = buildFakeProduct({
+        ec_name: 'Test Product Name',
+        nameHighlights: null as unknown as [],
+      });
+
+      const element = await renderComponent({
+        field: 'ec_name',
+        shouldHighlight: true,
+        product: productWithNullHighlights,
+      });
+
+      const commerceText = locators.getCommerceText(element);
+      expect(commerceText).toBeDefined();
+      expect(commerceText?.shadowRoot?.textContent).toContain(
+        'Test Product Name'
+      );
     });
 
     describe('when #shouldHighlight is false', () => {
@@ -392,143 +390,135 @@ describe('atomic-product-text', () => {
       });
     });
 
-    describe('supported fields for highlighting', () => {
-      it('should support highlighting for #ec_name field', async () => {
-        const element = await renderComponent({
-          field: 'ec_name',
-          shouldHighlight: true,
-        });
-
-        expect(element.shouldHighlight).toBe(true);
-      });
-
-      it('should support highlighting for #excerpt field', async () => {
-        const element = await renderComponent({
-          field: 'excerpt',
-          shouldHighlight: true,
-        });
-
-        expect(element.shouldHighlight).toBe(true);
-      });
-
-      it('should not support highlighting for other fields', async () => {
-        const element = await renderComponent({
-          field: 'ec_brand',
-          shouldHighlight: true,
-        });
-
-        const commerceText = locators.getCommerceText(element);
-        expect(commerceText).toBeDefined();
-      });
-    });
-
-    describe('error handling in highlighting', () => {
-      it('should handle errors gracefully when highlighting fails', async () => {
-        const productWithHighlights = buildFakeProduct({
-          ec_name: 'Test Product Name',
-          nameHighlights: [
-            {
-              offset: 5,
-              length: 7,
-            },
-          ],
-        });
-
-        const element = await renderComponent({
-          field: 'ec_name',
-          shouldHighlight: true,
-          product: productWithHighlights,
-        });
-
-        expect(element).toBeDefined();
-        expect(element.shadowRoot).toBeDefined();
-      });
-    });
-  });
-
-  describe('edge cases', () => {
-    it('should display nothing for numeric #field values', async () => {
-      const productWithNumericField = buildFakeProduct({
-        additionalFields: {
-          numeric_field: 12345,
-        },
-      });
+    it('should support highlighting for #ec_name field', async () => {
       const element = await renderComponent({
-        field: 'numeric_field',
-        product: productWithNumericField,
+        field: 'ec_name',
+        shouldHighlight: true,
       });
-      const commerceText = locators.getCommerceText(element);
-      expect(commerceText?.shadowRoot?.textContent).toBe('');
+
+      expect(element.shouldHighlight).toBe(true);
     });
 
-    it('should display nothing for boolean #field values', async () => {
-      const productWithBooleanField = buildFakeProduct({
-        additionalFields: {
-          boolean_field: true,
-        },
-      });
+    it('should support highlighting for #excerpt field', async () => {
       const element = await renderComponent({
-        field: 'boolean_field',
-        product: productWithBooleanField,
+        field: 'excerpt',
+        shouldHighlight: true,
       });
-      const commerceText = locators.getCommerceText(element);
-      expect(commerceText?.shadowRoot?.textContent).toBe('');
+
+      expect(element.shouldHighlight).toBe(true);
     });
 
-    it('should handle special characters in #field values', async () => {
-      const productWithSpecialChars = buildFakeProduct({
-        additionalFields: {
-          special_field: 'Value with éàü & symbols!',
-        },
-      });
-
+    it('should not support highlighting for other fields', async () => {
       const element = await renderComponent({
-        field: 'special_field',
-        product: productWithSpecialChars,
+        field: 'ec_brand',
+        shouldHighlight: true,
       });
 
       const commerceText = locators.getCommerceText(element);
-      expect(commerceText?.shadowRoot?.textContent).toContain(
-        'Value with éàü & symbols!'
-      );
+      expect(commerceText).toBeDefined();
     });
-  });
 
-  describe('different interface types', () => {
-    it('should work with `search` interface type', async () => {
-      const {element} = await renderInAtomicProduct<AtomicProductText>({
-        template: html`<atomic-product-text
-          .field=${'ec_name'}
-        ></atomic-product-text>`,
-        selector: 'atomic-product-text',
-        product: mockProduct,
-        bindings: (bindings) => {
-          bindings.interfaceElement.type = 'search';
-          bindings.i18n = i18n;
-          return bindings;
-        },
+    it('should handle errors gracefully when highlighting fails', async () => {
+      const productWithHighlights = buildFakeProduct({
+        ec_name: 'Test Product Name',
+        nameHighlights: [
+          {
+            offset: 5,
+            length: 7,
+          },
+        ],
+      });
+
+      const element = await renderComponent({
+        field: 'ec_name',
+        shouldHighlight: true,
+        product: productWithHighlights,
       });
 
       expect(element).toBeDefined();
-      expect(element?.field).toBe('ec_name');
+      expect(element.shadowRoot).toBeDefined();
+    });
+  });
+
+  it('should display nothing for numeric #field values', async () => {
+    const productWithNumericField = buildFakeProduct({
+      additionalFields: {
+        numeric_field: 12345,
+      },
+    });
+    const element = await renderComponent({
+      field: 'numeric_field',
+      product: productWithNumericField,
+    });
+    const commerceText = locators.getCommerceText(element);
+    expect(commerceText?.shadowRoot?.textContent).toBe('');
+  });
+
+  it('should display nothing for boolean #field values', async () => {
+    const productWithBooleanField = buildFakeProduct({
+      additionalFields: {
+        boolean_field: true,
+      },
+    });
+    const element = await renderComponent({
+      field: 'boolean_field',
+      product: productWithBooleanField,
+    });
+    const commerceText = locators.getCommerceText(element);
+    expect(commerceText?.shadowRoot?.textContent).toBe('');
+  });
+
+  it('should handle special characters in #field values', async () => {
+    const productWithSpecialChars = buildFakeProduct({
+      additionalFields: {
+        special_field: 'Value with éàü & symbols!',
+      },
     });
 
-    it('should work with `product-listing interface type', async () => {
-      const {element} = await renderInAtomicProduct<AtomicProductText>({
-        template: html`<atomic-product-text
-          .field=${'ec_name'}
-        ></atomic-product-text>`,
-        selector: 'atomic-product-text',
-        product: mockProduct,
-        bindings: (bindings) => {
-          bindings.interfaceElement.type = 'product-listing';
-          bindings.i18n = i18n;
-          return bindings;
-        },
-      });
-
-      expect(element).toBeDefined();
-      expect(element?.field).toBe('ec_name');
+    const element = await renderComponent({
+      field: 'special_field',
+      product: productWithSpecialChars,
     });
+
+    const commerceText = locators.getCommerceText(element);
+    expect(commerceText?.shadowRoot?.textContent).toContain(
+      'Value with éàü & symbols!'
+    );
+  });
+
+  it('should work with `search` interface type', async () => {
+    const {element} = await renderInAtomicProduct<AtomicProductText>({
+      template: html`<atomic-product-text
+        .field=${'ec_name'}
+      ></atomic-product-text>`,
+      selector: 'atomic-product-text',
+      product: mockProduct,
+      bindings: (bindings) => {
+        bindings.interfaceElement.type = 'search';
+        bindings.i18n = i18n;
+        return bindings;
+      },
+    });
+
+    expect(element).toBeDefined();
+    expect(element?.field).toBe('ec_name');
+  });
+
+  it('should work with `product-listing interface type', async () => {
+    const {element} = await renderInAtomicProduct<AtomicProductText>({
+      template: html`<atomic-product-text
+        .field=${'ec_name'}
+      ></atomic-product-text>`,
+      selector: 'atomic-product-text',
+      product: mockProduct,
+      bindings: (bindings) => {
+        bindings.interfaceElement.type = 'product-listing';
+        bindings.i18n = i18n;
+        return bindings;
+      },
+    });
+
+    expect(element).toBeDefined();
+    expect(element?.field).toBe('ec_name');
   });
 });
