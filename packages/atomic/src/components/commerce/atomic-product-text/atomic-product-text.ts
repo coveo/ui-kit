@@ -1,3 +1,4 @@
+import {booleanConverter} from '@/src/converters/boolean-converter';
 import {bindingGuard} from '@/src/decorators/binding-guard';
 import {bindings} from '@/src/decorators/bindings';
 import {createProductContextController} from '@/src/decorators/commerce/product-template-decorators.js';
@@ -38,7 +39,12 @@ export class AtomicProductText
    *
    * Only works if the `field` property is set to `excerpt` or `ec_name`.
    */
-  @property({type: Boolean, attribute: 'should-highlight', reflect: true})
+  @property({
+    type: Boolean,
+    attribute: 'should-highlight',
+    reflect: true,
+    converter: booleanConverter,
+  })
   shouldHighlight = true;
   /**
    * The locale key to use for displaying default text when the specified field has no value for the product.
