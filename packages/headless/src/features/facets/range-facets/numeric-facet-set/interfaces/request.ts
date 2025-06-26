@@ -29,7 +29,7 @@ export interface NumericRangeRequest {
   /**
    * The previous facet value state in the search interface.
    */
-  previousState?: Exclude<FacetValueState, 'idle'>;
+  previousState?: FacetValueState;
 }
 
 export interface NumericFacetRequest

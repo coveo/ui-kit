@@ -30,7 +30,7 @@ export interface DateRangeRequest {
   /**
    * The previous facet value state in the search interface.
    */
-  previousState?: Exclude<FacetValueState, 'idle'>;
+  previousState?: FacetValueState;
 }
 
 export function isDateFacetRequest(

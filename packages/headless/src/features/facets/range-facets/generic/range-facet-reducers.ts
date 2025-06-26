@@ -72,6 +72,7 @@ export function toggleSelectRangeValue<
   }
 
   const isSelected = value.state === 'selected';
+  value.previousState = value.state;
   value.state = isSelected ? 'idle' : 'selected';
 
   request.preventAutoSelect = true;
@@ -94,6 +95,7 @@ export function toggleExcludeRangeValue<
   }
 
   const isExcluded = value.state === 'excluded';
+  value.previousState = value.state;
   value.state = isExcluded ? 'idle' : 'excluded';
 
   request.preventAutoSelect = true;

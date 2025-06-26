@@ -235,6 +235,16 @@ function buildCategoryFacetValueRequest(
   };
 }
 
+function processValueAndChildren(value: CategoryFacetValueRequest): void {
+  value.previousState = value.state !== 'idle' ? value.state : undefined;
+
+  if (value.children && value.children.length > 0) {
+    value.children.forEach((child) => {
+      processValueAndChildren(child);
+    });
+  }
+}
+
 function handleCategoryFacetResponseUpdate(
   state: CategoryFacetSetState,
   facets: AnyFacetResponse[]
@@ -253,7 +263,13 @@ function handleCategoryFacetResponseUpdate(
 
     const requestWasInvalid = isRequestInvalid(request, response);
 
-    request.currentValues = requestWasInvalid ? [] : request.currentValues;
+    if (requestWasInvalid) {
+      request.currentValues = [];
+    } else {
+      request.currentValues.forEach((value) => {
+        processValueAndChildren(value);
+      });
+    }
     request.preventAutoSelect = false;
   });
 }

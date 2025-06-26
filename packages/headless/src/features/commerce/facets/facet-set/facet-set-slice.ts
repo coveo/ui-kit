@@ -212,6 +212,7 @@ export const commerceFacetSetReducer = createReducer(
           children.push(selectedValue);
         }
 
+        selectedValue.previousState = selectedValue.state;
         selectedValue.state =
           selectedValue.state === 'idle' ? 'selected' : 'idle';
 
@@ -516,7 +517,13 @@ function handleDeselectAllFacetValues(request: AnyFacetRequest) {
     request.values = [];
     request.preventAutoSelect = true;
   } else {
-    request.values.forEach((value) => (value.state = 'idle'));
+    request.values.forEach((value) => {
+      if (value.state !== 'idle') {
+        // TODO: test that here
+        value.previousState = value.state;
+      }
+      value.state = 'idle';
+    });
   }
 }
 
@@ -560,6 +567,7 @@ function updateExistingFacetValueState(
   >,
   toggleAction: 'select' | 'exclude'
 ) {
+  existingFacetValue.previousState = existingFacetValue.state;
   switch (existingFacetValue.state) {
     case 'idle':
       existingFacetValue.state =
@@ -673,6 +681,7 @@ function insertNewValue(
   const indexToInsertAt =
     firstIdleIndex === -1 ? values.length : firstIdleIndex;
 
+  facetValue.previousState = facetValue.state;
   facetRequest.values.splice(indexToInsertAt, 0, facetValue);
 
   if (firstIdleIndex > -1) {
