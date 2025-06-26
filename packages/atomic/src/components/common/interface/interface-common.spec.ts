@@ -368,6 +368,78 @@ describe('#CommonAtomicInterfaceHelper', () => {
   });
 
   describe('#onLanguageChange', () => {
+    it('should use the provided newLanguage parameter when it is defined', async () => {
+      const mockReadMethod = vi.fn();
+      vi.mocked(Backend).mockImplementation(
+        () =>
+          ({
+            read: mockReadMethod,
+          }) as unknown as Backend
+      );
+
+      const atomicInterface = await setupElement();
+      (atomicInterface as BaseAtomicInterface<CommerceEngine>).language = 'fr';
+      const changeLanguageSpy = vi.spyOn(
+        atomicInterface.i18n,
+        'changeLanguage'
+      );
+      const helper = new CommonAtomicInterfaceHelper(
+        atomicInterface,
+        'CoveoAtomic'
+      );
+
+      helper.onLanguageChange('it');
+
+      expect(mockReadMethod).toHaveBeenCalledExactlyOnceWith(
+        'it',
+        'translation',
+        expect.any(Function)
+      );
+
+      const callback = mockReadMethod.mock.calls[0][2];
+      const mockData = {key: 'value'};
+      callback(null, mockData);
+
+      expect(changeLanguageSpy).toHaveBeenCalledExactlyOnceWith('it');
+    });
+
+    it('should use the atomic interface language when newLanguage is not provided', async () => {
+      const mockReadMethod = vi.fn();
+      vi.mocked(Backend).mockImplementation(
+        () =>
+          ({
+            read: mockReadMethod,
+          }) as unknown as Backend
+      );
+
+      const atomicInterface = await setupElement();
+      (atomicInterface as BaseAtomicInterface<CommerceEngine>).language = 'fr';
+      const changeLanguageSpy = vi.spyOn(
+        atomicInterface.i18n,
+        'changeLanguage'
+      );
+      const helper = new CommonAtomicInterfaceHelper(
+        atomicInterface,
+        'CoveoAtomic'
+      );
+
+      helper.onLanguageChange();
+
+      expect(mockReadMethod).toHaveBeenCalledExactlyOnceWith(
+        'fr',
+        'translation',
+        expect.any(Function)
+      );
+
+      // Execute the callback that would be called by Backend.read
+      const callback = mockReadMethod.mock.calls[0][2];
+      const mockData = {key: 'value'};
+      callback(null, mockData);
+
+      // Should use the interface language when no new language is provided
+      expect(changeLanguageSpy).toHaveBeenCalledExactlyOnceWith('fr');
+    });
+
     it('should call #loadDayjsLocale with the atomic interface language when it is defined', async () => {
       const loadDayjsLocaleSpy = vi.mocked(loadDayjsLocale);
       const atomicInterface = await setupElement();
