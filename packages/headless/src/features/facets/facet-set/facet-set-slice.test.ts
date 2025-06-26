@@ -192,6 +192,53 @@ describe('facet-set slice', () => {
           (req) => req.value === facetValue.value
         );
         expect(targetValue?.state).toBe(facetValueState);
+        expect(targetValue?.previousState).toBe('idle');
+      });
+
+      it(`sets the previousState of a ${facetValueState} value to idle`, () => {
+        const facetValue = buildMockFacetValue({
+          value: 'TED',
+          state: facetValueState,
+        });
+        const facetValueRequest = convertFacetValueToRequest(facetValue);
+
+        state[id] = buildMockFacetSlice({
+          request: buildMockFacetRequest({
+            currentValues: [facetValueRequest],
+          }),
+        });
+
+        const action = toggleAction({
+          facetId: id,
+          selection: facetValue,
+        });
+        const finalState = facetSetReducer(state, action);
+
+        const targetValue = finalState[id]?.request.currentValues.find(
+          (req) => req.value === facetValue.value
+        );
+        expect(targetValue?.previousState).toBe(facetValueState);
+      });
+
+      it(`does not set the previousState of value transitioning from ${facetValueState} to ${facetValueState}`, () => {
+        const facetValue = buildMockFacetValue({
+          value: 'TED',
+          state: 'selected',
+        });
+        const facetValueRequest = convertFacetValueToRequest(facetValue);
+        state[id] = buildMockFacetSlice({
+          request: buildMockFacetRequest({currentValues: [facetValueRequest]}),
+        });
+
+        const action = toggleSelectFacetValue({
+          facetId: id,
+          selection: buildMockFacetValue(),
+        });
+        const finalState = facetSetReducer(state, action);
+
+        const targetValue = finalState[id]?.request.currentValues.find(
+          (req) => req.value === facetValue.value
+        );
         expect(targetValue?.previousState).toBeUndefined();
       });
 
@@ -812,133 +859,4 @@ describe('facet-set slice', () => {
       expect(finalState[b]?.request.preventAutoSelect).toBe(true);
     });
   });
-
-  // // State transition tests with previousState tracking
-  // describe('toggleSelectFacetValue state transitions', () => {
-  //   const id = '1';
-
-  //   it('transitions from idle to selected and does not set previousState', () => {
-  //     const facetValue = buildMockFacetValue({value: 'TED', state: 'idle'});
-  //     const facetValueRequest = convertFacetValueToRequest(facetValue);
-  //     state[id] = buildMockFacetSlice({
-  //       request: buildMockFacetRequest({currentValues: [facetValueRequest]}),
-  //     });
-
-  //     const action = toggleSelectFacetValue({
-  //       facetId: id,
-  //       selection: facetValue,
-  //     });
-  //     const finalState = facetSetReducer(state, action);
-
-  //     const targetValue = finalState[id]?.request.currentValues.find(
-  //       (req) => req.value === facetValue.value
-  //     );
-  //     expect(targetValue?.state).toBe('selected');
-  //     expect(targetValue?.previousState).toBeUndefined();
-  //   });
-
-  //   it('transitions from selected to idle and stores previousState as selected', () => {
-  //     const facetValue = buildMockFacetValue({value: 'TED', state: 'selected'});
-  //     const facetValueRequest = convertFacetValueToRequest(facetValue);
-  //     state[id] = buildMockFacetSlice({
-  //       request: buildMockFacetRequest({currentValues: [facetValueRequest]}),
-  //     });
-
-  //     const action = toggleSelectFacetValue({
-  //       facetId: id,
-  //       selection: facetValue,
-  //     });
-  //     const finalState = facetSetReducer(state, action);
-
-  //     const targetValue = finalState[id]?.request.currentValues.find(
-  //       (req) => req.value === facetValue.value
-  //     );
-  //     expect(targetValue?.state).toBe('idle');
-  //     expect(targetValue?.previousState).toBe('selected');
-  //   });
-
-  //   it('transitions from excluded to selected and stores previousState as excluded', () => {
-  //     const facetValue = buildMockFacetValue({value: 'TED', state: 'excluded'});
-  //     const facetValueRequest = convertFacetValueToRequest(facetValue);
-  //     state[id] = buildMockFacetSlice({
-  //       request: buildMockFacetRequest({currentValues: [facetValueRequest]}),
-  //     });
-
-  //     const action = toggleSelectFacetValue({
-  //       facetId: id,
-  //       selection: facetValue,
-  //     });
-  //     const finalState = facetSetReducer(state, action);
-
-  //     const targetValue = finalState[id]?.request.currentValues.find(
-  //       (req) => req.value === facetValue.value
-  //     );
-  //     expect(targetValue?.state).toBe('selected');
-  //     expect(targetValue?.previousState).toBe('excluded');
-  //   });
-  // });
-
-  // describe('toggleExcludeFacetValue state transitions', () => {
-  //   const id = '1';
-
-  //   it('transitions from idle to excluded and does not set previousState', () => {
-  //     const facetValue = buildMockFacetValue({value: 'TED', state: 'idle'});
-  //     const facetValueRequest = convertFacetValueToRequest(facetValue);
-  //     state[id] = buildMockFacetSlice({
-  //       request: buildMockFacetRequest({currentValues: [facetValueRequest]}),
-  //     });
-
-  //     const action = toggleExcludeFacetValue({
-  //       facetId: id,
-  //       selection: facetValue,
-  //     });
-  //     const finalState = facetSetReducer(state, action);
-
-  //     const targetValue = finalState[id]?.request.currentValues.find(
-  //       (req) => req.value === facetValue.value
-  //     );
-  //     expect(targetValue?.state).toBe('excluded');
-  //     expect(targetValue?.previousState).toBeUndefined();
-  //   });
-
-  //   it('transitions from excluded to idle and stores previousState as excluded', () => {
-  //     const facetValue = buildMockFacetValue({value: 'TED', state: 'excluded'});
-  //     const facetValueRequest = convertFacetValueToRequest(facetValue);
-  //     state[id] = buildMockFacetSlice({
-  //       request: buildMockFacetRequest({currentValues: [facetValueRequest]}),
-  //     });
-
-  //     const action = toggleExcludeFacetValue({
-  //       facetId: id,
-  //       selection: facetValue,
-  //     });
-  //     const finalState = facetSetReducer(state, action);
-
-  //     const targetValue = finalState[id]?.request.currentValues.find(
-  //       (req) => req.value === facetValue.value
-  //     );
-  //     expect(targetValue?.state).toBe('idle');
-  //     expect(targetValue?.previousState).toBe('excluded');
-  //   });
-
-  //   it('transitions from selected to excluded and stores previousState as selected', () => {
-  //     const facetValue = buildMockFacetValue({value: 'TED', state: 'selected'});
-  //     const facetValueRequest = convertFacetValueToRequest(facetValue);
-  //     state[id] = buildMockFacetSlice({
-  //       request: buildMockFacetRequest({currentValues: [facetValueRequest]}),
-  //     });
-
-  //     const action = toggleExcludeFacetValue({
-  //       facetId: id,
-  //       selection: facetValue,
-  //     });
-  //     const finalState = facetSetReducer(state, action);
-
-  //     const targetValue = finalState[id]?.request.currentValues.find(
-  //       (req) => req.value === facetValue.value
-  //     );
-  //     expect(targetValue?.state).toBe('excluded');
-  //     expect(targetValue?.previousState).toBe('selected');
-  //   });
-  // });
 });
