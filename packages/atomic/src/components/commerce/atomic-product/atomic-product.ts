@@ -1,3 +1,4 @@
+import {booleanConverter} from '@/src/converters/boolean-converter';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
 import {Product, InteractiveProduct} from '@coveo/headless/commerce';
 import {CSSResultGroup, LitElement, html, unsafeCSS} from 'lit';
@@ -42,9 +43,7 @@ export class AtomicProduct extends LitElement {
   @property({
     attribute: 'stop-propagation',
     type: Boolean,
-    converter: {
-      fromAttribute: (value) => value !== 'false',
-    },
+    converter: booleanConverter,
     reflect: true,
   })
   stopPropagation?: boolean;
