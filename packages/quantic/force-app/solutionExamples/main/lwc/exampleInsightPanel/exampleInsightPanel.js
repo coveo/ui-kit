@@ -39,17 +39,18 @@ export default class ExampleInsightPanel extends LightningElement {
 
   @wire(getRecord, {recordId: '$caseId', fields: '$caseFields'})
   wiredRecord({data, error}) {
-    if (!this.triggeredFirstSearch) {
-      this.caseRecord = data;
-    }
-    if (error) {
+    if (data) {
+      if (!this.triggeredFirstSearch) {
+        this.caseRecord = data;
+      } else {
+        if (this.watchedFieldsUpdated(data)) {
+          this.caseRecord = data;
+          this.executeSearchAfterContextChanged();
+        }
+      }
+    } else {
       console.warn('An error occurred while retrieving the record.');
       console.warn(error);
-    } else if (data) {
-      if (this.watchedFieldsUpdated(data) && this.triggeredFirstSearch) {
-        this.caseRecord = data;
-        this.executeSearchAfterContextChanged();
-      }
     }
   }
 
@@ -135,7 +136,10 @@ export default class ExampleInsightPanel extends LightningElement {
 
   handleInterfaceLoad = (event) => {
     event.stopPropagation();
-    this.executeFirstSearch();
+    if (!this.triggeredFirstSearch) {
+      this.triggeredFirstSearch = true;
+      this.executeFirstSearch();
+    }
   };
 
   handleResultTemplateRegistration(event) {
@@ -234,10 +238,7 @@ export default class ExampleInsightPanel extends LightningElement {
    * @returns {void}
    */
   executeFirstSearch = () => {
-    if (!this.triggeredFirstSearch) {
-      this.triggeredFirstSearch = true;
-      this.setupContext();
-      this.engine.executeFirstSearch();
-    }
+    this.setupContext();
+    this.engine.executeFirstSearch();
   };
 }
