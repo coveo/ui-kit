@@ -7,7 +7,6 @@ import {html} from 'lit';
 import {describe, it, vi, expect, beforeEach} from 'vitest';
 import {AtomicProductText} from './atomic-product-text';
 
-// Mock headless at the top level
 vi.mock('@coveo/headless/commerce', {spy: true});
 
 describe('atomic-product-text', () => {
@@ -237,6 +236,212 @@ describe('atomic-product-text', () => {
       expect(commerceText?.shadowRoot?.textContent).toContain(
         'New Product Name'
       );
+    });
+  });
+
+  describe('highlighting functionality', () => {
+    describe('when #shouldHighlight is true', () => {
+      it('should render highlights for #ec_name field with highlight keywords', async () => {
+        const productWithHighlights = buildFakeProduct({
+          ec_name: 'Test Product Name',
+          nameHighlights: [
+            {
+              offset: 5,
+              length: 7,
+            },
+          ],
+        });
+
+        const element = await renderComponent({
+          field: 'ec_name',
+          shouldHighlight: true,
+          product: productWithHighlights,
+        });
+
+        const commerceText = locators.getCommerceText(element);
+        expect(commerceText).toBeNull();
+
+        expect(element.shadowRoot?.innerHTML).not.toContain(
+          '<atomic-commerce-text'
+        );
+      });
+
+      it('should render highlights for #excerpt field with highlight keywords', async () => {
+        const productWithExcerptHighlights = buildFakeProduct({
+          excerpt: 'This is an excerpt with highlights',
+          excerptHighlights: [
+            {
+              offset: 8,
+              length: 2,
+            },
+          ],
+        });
+
+        const element = await renderComponent({
+          field: 'excerpt',
+          shouldHighlight: true,
+          product: productWithExcerptHighlights,
+        });
+
+        const commerceText = locators.getCommerceText(element);
+        expect(commerceText).toBeNull();
+
+        expect(element.shadowRoot?.innerHTML).not.toContain(
+          '<atomic-commerce-text'
+        );
+      });
+
+      it('should render plain text when #field is not supported for highlighting', async () => {
+        const element = await renderComponent({
+          field: 'ec_brand',
+          shouldHighlight: true,
+        });
+
+        const commerceText = locators.getCommerceText(element);
+        expect(commerceText).toBeDefined();
+        expect(commerceText?.shadowRoot?.textContent).toContain('Test Brand');
+      });
+
+      it('should render plain text when no highlight keywords are available', async () => {
+        const productWithoutHighlights = buildFakeProduct({
+          ec_name: 'Test Product Name',
+          nameHighlights: [],
+        });
+
+        const element = await renderComponent({
+          field: 'ec_name',
+          shouldHighlight: true,
+          product: productWithoutHighlights,
+        });
+
+        const commerceText = locators.getCommerceText(element);
+        expect(commerceText).toBeDefined();
+        expect(commerceText?.shadowRoot?.textContent).toContain(
+          'Test Product Name'
+        );
+      });
+
+      it('should render plain text when highlight keywords are null', async () => {
+        const productWithNullHighlights = buildFakeProduct({
+          ec_name: 'Test Product Name',
+          nameHighlights: null as unknown as [],
+        });
+
+        const element = await renderComponent({
+          field: 'ec_name',
+          shouldHighlight: true,
+          product: productWithNullHighlights,
+        });
+
+        const commerceText = locators.getCommerceText(element);
+        expect(commerceText).toBeDefined();
+        expect(commerceText?.shadowRoot?.textContent).toContain(
+          'Test Product Name'
+        );
+      });
+    });
+
+    describe('when #shouldHighlight is false', () => {
+      it('should render plain text even for supported highlight fields', async () => {
+        const productWithHighlights = buildFakeProduct({
+          ec_name: 'Test Product Name',
+          nameHighlights: [
+            {
+              offset: 5,
+              length: 7,
+            },
+          ],
+        });
+
+        const element = await renderComponent({
+          field: 'ec_name',
+          shouldHighlight: false,
+          product: productWithHighlights,
+        });
+
+        const commerceText = locators.getCommerceText(element);
+        expect(commerceText).toBeDefined();
+        expect(commerceText?.shadowRoot?.textContent).toContain(
+          'Test Product Name'
+        );
+      });
+
+      it('should render plain text for #excerpt field', async () => {
+        const productWithExcerptHighlights = buildFakeProduct({
+          excerpt: 'This is an excerpt with highlights',
+          excerptHighlights: [
+            {
+              offset: 8,
+              length: 2,
+            },
+          ],
+        });
+
+        const element = await renderComponent({
+          field: 'excerpt',
+          shouldHighlight: false,
+          product: productWithExcerptHighlights,
+        });
+
+        const commerceText = locators.getCommerceText(element);
+        expect(commerceText).toBeDefined();
+        expect(commerceText?.shadowRoot?.textContent).toContain(
+          'This is an excerpt with highlights'
+        );
+      });
+    });
+
+    describe('supported fields for highlighting', () => {
+      it('should support highlighting for #ec_name field', async () => {
+        const element = await renderComponent({
+          field: 'ec_name',
+          shouldHighlight: true,
+        });
+
+        expect(element.shouldHighlight).toBe(true);
+      });
+
+      it('should support highlighting for #excerpt field', async () => {
+        const element = await renderComponent({
+          field: 'excerpt',
+          shouldHighlight: true,
+        });
+
+        expect(element.shouldHighlight).toBe(true);
+      });
+
+      it('should not support highlighting for other fields', async () => {
+        const element = await renderComponent({
+          field: 'ec_brand',
+          shouldHighlight: true,
+        });
+
+        const commerceText = locators.getCommerceText(element);
+        expect(commerceText).toBeDefined();
+      });
+    });
+
+    describe('error handling in highlighting', () => {
+      it('should handle errors gracefully when highlighting fails', async () => {
+        const productWithHighlights = buildFakeProduct({
+          ec_name: 'Test Product Name',
+          nameHighlights: [
+            {
+              offset: 5,
+              length: 7,
+            },
+          ],
+        });
+
+        const element = await renderComponent({
+          field: 'ec_name',
+          shouldHighlight: true,
+          product: productWithHighlights,
+        });
+
+        expect(element).toBeDefined();
+        expect(element.shadowRoot).toBeDefined();
+      });
     });
   });
 
