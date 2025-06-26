@@ -30,63 +30,42 @@ describe('#renderQueryErrorIcon', () => {
   it('should render default icon when errorType is undefined', async () => {
     const {atomicIcon} = await renderComponent();
 
-    expect(atomicIcon).toHaveAttribute('icon');
-    const iconAttribute = atomicIcon!.getAttribute('icon');
-    expect(iconAttribute).toBeTruthy();
-    expect(iconAttribute).toBe(SomethingWrong);
+    expect(atomicIcon).toHaveAttribute('icon', SomethingWrong);
   });
 
   it('should render NoConnection icon when errorType is Disconnected', async () => {
     const {atomicIcon} = await renderComponent('Disconnected');
 
-    expect(atomicIcon).toHaveAttribute('icon');
-    const iconAttribute = atomicIcon!.getAttribute('icon');
-    expect(iconAttribute).toBeTruthy();
-    expect(iconAttribute).toBe(NoConnection);
+    expect(atomicIcon).toHaveAttribute('icon', NoConnection);
   });
 
   it('should render Indexing icon when errorType is NoEndpointsException', async () => {
     const {atomicIcon} = await renderComponent('NoEndpointsException');
 
-    expect(atomicIcon).toHaveAttribute('icon');
-    const iconAttribute = atomicIcon!.getAttribute('icon');
-    expect(iconAttribute).toBeTruthy();
-    expect(iconAttribute).toBe(Indexing);
+    expect(atomicIcon).toHaveAttribute('icon', Indexing);
   });
 
   it('should render CannotAccess icon when errorType is InvalidTokenException', async () => {
     const {atomicIcon} = await renderComponent('InvalidTokenException');
 
-    expect(atomicIcon).toHaveAttribute('icon');
-    const iconAttribute = atomicIcon!.getAttribute('icon');
-    expect(iconAttribute).toBeTruthy();
-    expect(iconAttribute).toBe(CannotAccess);
+    expect(atomicIcon).toHaveAttribute('icon', CannotAccess);
   });
 
   it('should render SearchInactive icon when errorType is OrganizationIsPausedException', async () => {
     const {atomicIcon} = await renderComponent('OrganizationIsPausedException');
 
-    expect(atomicIcon).toHaveAttribute('icon');
-    const iconAttribute = atomicIcon!.getAttribute('icon');
-    expect(iconAttribute).toBeTruthy();
-    expect(iconAttribute).toBe(SearchInactive);
+    expect(atomicIcon).toHaveAttribute('icon', SearchInactive);
   });
 
   it('should render default icon when errorType is unknown', async () => {
     const {atomicIcon} = await renderComponent('UnknownErrorType');
 
-    expect(atomicIcon).toHaveAttribute('icon');
-    // Should use SomethingWrong as default for unknown types
-    const iconAttribute = atomicIcon!.getAttribute('icon');
-    expect(iconAttribute).toBeTruthy();
+    expect(atomicIcon).toHaveAttribute('icon', SomethingWrong);
   });
 
   it('should render default icon when errorType is empty string', async () => {
     const {atomicIcon} = await renderComponent('');
 
-    expect(atomicIcon).toHaveAttribute('icon');
-    // Should use SomethingWrong as default for empty string
-    const iconAttribute = atomicIcon!.getAttribute('icon');
-    expect(iconAttribute).toBeTruthy();
+    expect(atomicIcon).toHaveAttribute('icon', SomethingWrong);
   });
 });
