@@ -12,7 +12,7 @@ import {
   InitializeBindings,
   BindStateToController,
 } from '../../../../utils/initialization-utils';
-import {NoItemsContainer} from '../../../common/no-items/container';
+import {NoItemsContainer} from '../../../common/no-items/stencil-container';
 import {MagnifyingGlass} from '../../../common/no-items/stencil-magnifying-glass';
 import {Button} from '../../../common/stencil-button';
 import {InsightBindings} from '../../atomic-insight-interface/atomic-insight-interface';

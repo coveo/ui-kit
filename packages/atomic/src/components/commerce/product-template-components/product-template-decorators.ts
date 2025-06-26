@@ -1,4 +1,4 @@
-import {Product} from '@coveo/headless/commerce';
+import {InteractiveProduct, Product} from '@coveo/headless/commerce';
 import {LitElement} from 'lit';
 import {
   InteractiveItemContextController,
@@ -26,7 +26,7 @@ import {fetchItemContext} from '../../common/item-list/fetch-item-context';
  *   @state() product!: Product;
  *
  *   render() {
- *     this.product = this.productController.item as Product;
+ *     this.product = this.productController.item;
  *     return html`<div>${this.product?.ec_name}</div>`;
  *   }
  * }
@@ -35,8 +35,8 @@ import {fetchItemContext} from '../../common/item-list/fetch-item-context';
 export function createProductContextController(
   host: LitElement & {error: Error | null},
   options: {folded?: boolean} = {}
-) {
-  return new ItemContextController(host, {
+): ItemContextController<Product> {
+  return new ItemContextController<Product>(host, {
     parentName: 'atomic-product',
     folded: options.folded ?? false,
   });
@@ -57,7 +57,7 @@ export function createProductContextController(
  *   @state() product!: Product;
  *
  *   render() {
- *     this.product = this.interactiveProductController.item as Product;
+ *     this.product = this.interactiveProductController.interactiveItem;
  *     return html`<div>${this.product?.ec_name}</div>`;
  *   }
  * }
@@ -65,12 +65,14 @@ export function createProductContextController(
  */
 export function createInteractiveProductContextController(
   host: LitElement & {error: Error}
-) {
-  return new InteractiveItemContextController(host);
+): InteractiveItemContextController<InteractiveProduct> {
+  return new InteractiveItemContextController<InteractiveProduct>(host);
 }
 
 export type ProductContextEvent<T = Product> = ItemContextEvent<T>;
-export type InteractiveProductContextEvent = InteractiveItemContextEvent;
+export type InteractiveProductContextEvent<
+  T extends InteractiveProduct = InteractiveProduct,
+> = InteractiveItemContextEvent<T>;
 
 /**
  * Retrieves `Product` on a rendered `atomic-product`.
