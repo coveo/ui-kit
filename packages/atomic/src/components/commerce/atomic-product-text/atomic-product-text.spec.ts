@@ -229,6 +229,7 @@ describe('atomic-product-text', () => {
         ec_name: 'New Product Name',
       });
 
+      // @ts-expect-error private property access for testing
       element.product = newProduct;
       await element.updateComplete;
 
