@@ -17,10 +17,7 @@ import {
   RegisterDateFacetActionCreatorPayload,
   updateDateFacetValues,
 } from './date-facet-actions.js';
-import {
-  dateFacetSetReducer,
-  convertToDateRangeRequests,
-} from './date-facet-set-slice.js';
+import {dateFacetSetReducer} from './date-facet-set-slice.js';
 import {
   DateFacetSetState,
   getDateFacetSetInitialState,
@@ -172,122 +169,5 @@ describe('date-facet-set slice', () => {
     expect(
       RangeFacetReducers.onRangeFacetRequestFulfilled
     ).toHaveBeenCalledTimes(1);
-  });
-
-  describe('#convertToDateRangeRequests', () => {
-    it('converts date facet values to date range requests', () => {
-      const values = [
-        buildMockDateFacetValue({
-          start: '2023-01-01',
-          end: '2023-01-31',
-          state: 'selected',
-        }),
-        buildMockDateFacetValue({
-          start: '2023-02-01',
-          end: '2023-02-28',
-          state: 'idle',
-        }),
-      ];
-
-      const result = convertToDateRangeRequests(values);
-
-      expect(result).toHaveLength(2);
-      expect(result[0]).toEqual({
-        start: '2023-01-01',
-        end: '2023-01-31',
-        endInclusive: false,
-        state: 'selected',
-        previousState: 'selected',
-      });
-      expect(result[1]).toEqual({
-        start: '2023-02-01',
-        end: '2023-02-28',
-        endInclusive: false,
-        state: 'idle',
-      });
-    });
-
-    it('sets previousState when value state is selected', () => {
-      const values = [
-        buildMockDateFacetValue({
-          start: '2023-01-01',
-          end: '2023-01-31',
-          state: 'selected',
-        }),
-      ];
-
-      const result = convertToDateRangeRequests(values);
-
-      expect(result[0].previousState).toBe('selected');
-    });
-
-    it('sets previousState when value state is excluded', () => {
-      const values = [
-        buildMockDateFacetValue({
-          start: '2023-01-01',
-          end: '2023-01-31',
-          state: 'excluded',
-        }),
-      ];
-
-      const result = convertToDateRangeRequests(values);
-
-      expect(result[0].previousState).toBe('excluded');
-    });
-
-    it('does not set previousState when value state is idle', () => {
-      const values = [
-        buildMockDateFacetValue({
-          start: '2023-01-01',
-          end: '2023-01-31',
-          state: 'idle',
-        }),
-      ];
-
-      const result = convertToDateRangeRequests(values);
-
-      expect(result[0].previousState).toBeUndefined();
-    });
-
-    it('removes numberOfResults property from date facet values', () => {
-      const values = [
-        buildMockDateFacetValue({
-          start: '2023-01-01',
-          end: '2023-01-31',
-          state: 'selected',
-          numberOfResults: 42,
-        }),
-      ];
-
-      const result = convertToDateRangeRequests(values);
-
-      expect(result[0]).not.toHaveProperty('numberOfResults');
-    });
-
-    it('handles mixed states correctly', () => {
-      const values = [
-        buildMockDateFacetValue({
-          start: '2023-01-01',
-          end: '2023-01-31',
-          state: 'selected',
-        }),
-        buildMockDateFacetValue({
-          start: '2023-02-01',
-          end: '2023-02-28',
-          state: 'excluded',
-        }),
-        buildMockDateFacetValue({
-          start: '2023-03-01',
-          end: '2023-03-31',
-          state: 'idle',
-        }),
-      ];
-
-      const result = convertToDateRangeRequests(values);
-
-      expect(result[0].previousState).toBe('selected');
-      expect(result[1].previousState).toBe('excluded');
-      expect(result[2].previousState).toBeUndefined();
-    });
   });
 });

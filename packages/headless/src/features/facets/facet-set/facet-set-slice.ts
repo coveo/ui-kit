@@ -317,6 +317,7 @@ export function convertFacetValueToRequest(
   facetValue: FacetValue
 ): FacetValueRequest {
   const {value, state} = facetValue;
+
   return {value, state};
 }
 
