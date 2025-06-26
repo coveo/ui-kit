@@ -18,7 +18,7 @@ import {QueryErrorGuard} from '../../common/query-error/guard';
 import {QueryErrorIcon} from '../../common/query-error/icon';
 import {QueryErrorLink} from '../../common/query-error/link';
 import {QueryErrorShowMore} from '../../common/query-error/show-more';
-import {QueryErrorTitle} from '../../common/query-error/title';
+import {QueryErrorTitle} from '../../common/query-error/stencil-title';
 import {getAriaMessageFromErrorType} from '../../common/query-error/utils';
 import {InsightBindings} from '../atomic-insight-interface/atomic-insight-interface';
 
