@@ -105,7 +105,7 @@ const subscribeToSearchRequest = (
       lastTriggerParams = triggerParams;
     }
 
-    if (triggerParams.q.length === 0 && !!state.generatedAnswer.cannotAnswer) {
+    if (triggerParams.q.length === 0 && !!triggerParams.cannotAnswer) {
       engine.dispatch(setCannotAnswer(false));
     }
 
@@ -113,7 +113,7 @@ const subscribeToSearchRequest = (
       triggerParams.q.length === 0 ||
       triggerParams.requestId.length === 0 ||
       triggerParams.requestId === lastTriggerParams.requestId ||
-      !state.search?.searchAction?.actionCause
+      triggerParams
     ) {
       return;
     }
