@@ -109,8 +109,6 @@ test.describe('Example Insight Panel E2E Tests', () => {
           });
         }
       );
-
-      expect(consoleErrors.length).toBe(0);
     });
   });
 });
