@@ -1,4 +1,5 @@
-export {getClientId} from './clientid';
-export {getShopifyCookie} from './shopify';
-export {fetchAppProxyConfig} from './app-proxy';
+export type * from '../types';
+export {publishCustomShopifyEvent} from './shopify';
+export * from './app-proxy';
+export * from './init';
 export * from '../constants';

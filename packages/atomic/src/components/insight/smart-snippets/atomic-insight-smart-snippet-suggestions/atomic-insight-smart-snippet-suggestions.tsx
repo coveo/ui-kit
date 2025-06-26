@@ -74,7 +74,6 @@ export class AtomicInsightSmartSnippetSuggestions
   }
 
   public render() {
-    console.log(this.smartSnippetQuestionsListState);
     if (!this.smartSnippetQuestionsListState.questions.length) {
       return <Hidden></Hidden>;
     }

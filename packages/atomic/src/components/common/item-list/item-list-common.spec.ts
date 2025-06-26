@@ -1,5 +1,8 @@
 import {CommerceStore} from '@/src/components';
-import {getFirstFocusableDescendant} from '@/src/utils/accessibility-utils';
+import {
+  FocusTargetController,
+  getFirstFocusableDescendant,
+} from '@/src/utils/accessibility-utils';
 import {updateBreakpoints} from '@/src/utils/replace-breakpoint';
 import {defer} from '@/src/utils/utils';
 import {afterEach, beforeEach, describe, expect, it, vi} from 'vitest';
@@ -132,7 +135,7 @@ describe('ItemListCommon', () => {
       const nextNewItemTarget = {
         ...baseNextNewItemTarget,
         setTarget,
-      };
+      } as unknown as FocusTargetController;
 
       beforeEach(() => {
         itemListCommon = itemListCommonFixture({
@@ -200,8 +203,11 @@ describe('ItemListCommon', () => {
       );
       const getCurrentNumberOfItems = vi.fn(() => 5);
       const nextNewItemTarget = {
-        ...baseNextNewItemTarget,
-      };
+        focus: vi.fn(),
+        focusAfterSearch: vi.fn(),
+        focusOnNextTarget: vi.fn(),
+        setTarget: vi.fn(),
+      } as unknown as FocusTargetController;
       const itemListCommon = itemListCommonFixture({
         getCurrentNumberOfItems,
         nextNewItemTarget,
@@ -224,8 +230,11 @@ describe('ItemListCommon', () => {
       );
       const getCurrentNumberOfItems = vi.fn(() => 5);
       const nextNewItemTarget = {
-        ...baseNextNewItemTarget,
-      };
+        focus: vi.fn(),
+        focusAfterSearch: vi.fn(),
+        focusOnNextTarget: vi.fn(),
+        setTarget: vi.fn(),
+      } as unknown as FocusTargetController;
       const itemListCommon = itemListCommonFixture({
         getCurrentNumberOfItems,
         nextNewItemTarget,
@@ -244,8 +253,11 @@ describe('ItemListCommon', () => {
 
     it('should call #props.nextNewItemTarget.focusOnNextTarget()', () => {
       const nextNewItemTarget = {
-        ...baseNextNewItemTarget,
-      };
+        focus: vi.fn(),
+        focusAfterSearch: vi.fn(),
+        focusOnNextTarget: vi.fn(),
+        setTarget: vi.fn(),
+      } as unknown as FocusTargetController;
       const itemListCommon = itemListCommonFixture({
         nextNewItemTarget,
       });
@@ -430,7 +442,7 @@ describe('ItemListCommon', () => {
               nextNewItemTarget: {
                 ...baseNextNewItemTarget,
                 setTarget,
-              },
+              } as unknown as FocusTargetController,
             });
 
             itemListCommon.setNewResultRef(document.createElement('div'), 0);
@@ -455,7 +467,7 @@ describe('ItemListCommon', () => {
               nextNewItemTarget: {
                 ...baseNextNewItemTarget,
                 setTarget,
-              },
+              } as unknown as FocusTargetController,
             });
 
             const element = document.createElement('div');
@@ -474,13 +486,14 @@ describe('ItemListCommon', () => {
           it('should call #props.nextNewItemTarget.focus', async () => {
             const engineSubscribe = vi.fn().mockReturnValue(vi.fn());
             const focus = vi.fn();
+            const nextNewItemTarget = {
+              ...baseNextNewItemTarget,
+              focus,
+            } as unknown as FocusTargetController;
             const itemListCommon = itemListCommonFixture({
               engineSubscribe,
               getIsLoading: vi.fn(() => false),
-              nextNewItemTarget: {
-                ...baseNextNewItemTarget,
-                focus,
-              },
+              nextNewItemTarget,
             });
 
             itemListCommon.setNewResultRef(document.createElement('div'), 0);
@@ -537,14 +550,18 @@ describe('ItemListCommon', () => {
   });
 
   const itemListCommonFixture = (props: Partial<ItemListCommonProps> = {}) => {
+    const host = document.createElement('div');
     return new ItemListCommon({
       engineSubscribe: vi.fn(),
       getCurrentNumberOfItems: vi.fn(),
       getIsLoading: vi.fn(),
       nextNewItemTarget: {
-        ...baseNextNewItemTarget,
-      },
-      host: document.createElement('div'),
+        focus: vi.fn(),
+        focusAfterSearch: vi.fn(),
+        focusOnNextTarget: vi.fn(),
+        setTarget: vi.fn(),
+      } as unknown as FocusTargetController,
+      host,
       loadingFlag: '',
       store: {
         setLoadingFlag: vi.fn(),

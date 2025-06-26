@@ -198,6 +198,9 @@
       atomic-smart-snippet-suggestions::part(source-url) {
         word-wrap: break-word;
       }
+      atomic-quickview-modal::part(backdrop) {
+        z-index: 1001;
+      }
     </style>
   </head>
 
@@ -308,6 +311,9 @@
                       border-radius: var(--atomic-border-radius-xl);
                     }
                   </style>
+                  <atomic-result-section-actions>
+                    <atomic-quickview></atomic-quickview>
+                  </atomic-result-section-actions>
                   <atomic-result-section-badges>
                     <atomic-field-condition must-match-sourcetype="Salesforce">
                       <atomic-result-badge label="Salesforce" class="salesforce-badge"></atomic-result-badge>
