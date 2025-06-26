@@ -1,12 +1,13 @@
 import {buildSearchEngine, SearchEngineOptions} from '@coveo/headless';
 import {COVEO_SHOPIFY_CONFIG_KEY} from '../constants';
-import {AppProxyResponse} from '../types';
+import {CoveoShopifyOptions} from '../types';
 import {publishCustomShopifyEvent} from '../utilities/shopify';
 
 export {COVEO_SHOPIFY_CONFIG_KEY} from '../constants';
-export type {AppProxyConfig, AppProxyResponse} from '../types';
 
+export type * from '../types';
 export * from '@coveo/headless';
+export * from '../constants';
 export * from '../utilities';
 
 export interface BuildShopifySearchEngineOptions {
@@ -33,7 +34,7 @@ export function buildShopifySearchEngine({
     );
   }
 
-  const appProxyResponse: AppProxyResponse = {
+  const options: CoveoShopifyOptions = {
     accessToken: searchEngineOptions.configuration.accessToken,
     organizationId: searchEngineOptions.configuration.organizationId,
     environment: searchEngineOptions.configuration.environment,
@@ -44,7 +45,7 @@ export function buildShopifySearchEngine({
   const clientId = engine.relay.getMeta('').clientId;
 
   publishCustomShopifyEvent(COVEO_SHOPIFY_CONFIG_KEY, {
-    ...appProxyResponse,
+    ...options,
     clientId,
   });
 
