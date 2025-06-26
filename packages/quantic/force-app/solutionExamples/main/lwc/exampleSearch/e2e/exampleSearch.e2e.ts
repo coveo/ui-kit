@@ -44,7 +44,6 @@ test.describe('Example Search Page E2E Tests', () => {
       search,
     }) => {
       await expect(searchPage.errorComponent).not.toBeVisible();
-      expect(consoleErrors.length).toBe(0);
       // Trigger a search query
       const exampleQuery = 'test';
       const searchRequestPromise = search.waitForSearchRequest();
@@ -133,6 +132,8 @@ test.describe('Example Search Page E2E Tests', () => {
           });
         }
       );
+
+      expect(consoleErrors.length).toBe(0);
     });
   });
 
