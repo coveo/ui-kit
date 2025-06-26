@@ -1,3 +1,29 @@
+## <small>3.27.3 (2025-06-25)</small>
+
+- chore(atomic): make product/item context controllers generic (#5511) ([153636d](https://github.com/coveo/ui-kit/commits/153636d)), closes [#5511](https://github.com/coveo/ui-kit/issues/5511)
+- chore(atomic): migrate atomic-commerce-layout (#5444) ([49f57b0](https://github.com/coveo/ui-kit/commits/49f57b0)), closes [#5444](https://github.com/coveo/ui-kit/issues/5444)
+- chore(atomic): migrate atomic-commerce-query-summary (#5480) ([d21d37f](https://github.com/coveo/ui-kit/commits/d21d37f)), closes [#5480](https://github.com/coveo/ui-kit/issues/5480)
+- chore(atomic): migrate atomic-commerce-recommendation-list to Lit (#5156) ([38e84af](https://github.com/coveo/ui-kit/commits/38e84af)), closes [#5156](https://github.com/coveo/ui-kit/issues/5156)
+- chore(atomic): migrate atomic-commerce-search-box (#5189) ([94a8a70](https://github.com/coveo/ui-kit/commits/94a8a70)), closes [#5189](https://github.com/coveo/ui-kit/issues/5189)
+- chore(atomic): migrate atomic-product-template (#5376) ([6eb35aa](https://github.com/coveo/ui-kit/commits/6eb35aa)), closes [#5376](https://github.com/coveo/ui-kit/issues/5376)
+- chore(atomic): migrate auto-correction.tsx (#5490) ([59183ab](https://github.com/coveo/ui-kit/commits/59183ab)), closes [#5490](https://github.com/coveo/ui-kit/issues/5490)
+- chore(atomic): migrate correction.tsx (#5488) ([916c365](https://github.com/coveo/ui-kit/commits/916c365)), closes [#5488](https://github.com/coveo/ui-kit/issues/5488)
+- chore(atomic): migrate items-per-page/choices.tsx (#5498) ([59a1687](https://github.com/coveo/ui-kit/commits/59a1687)), closes [#5498](https://github.com/coveo/ui-kit/issues/5498)
+- chore(atomic): migrate items-per-page/label.tsx (#5496) ([8cb6acd](https://github.com/coveo/ui-kit/commits/8cb6acd)), closes [#5496](https://github.com/coveo/ui-kit/issues/5496)
+- chore(atomic): migrate query-correction/guard.tsx (#5489) ([7b75f44](https://github.com/coveo/ui-kit/commits/7b75f44)), closes [#5489](https://github.com/coveo/ui-kit/issues/5489)
+- chore(atomic): migrate refine-modal/body.tsx (#5502) ([fda43fc](https://github.com/coveo/ui-kit/commits/fda43fc)), closes [#5502](https://github.com/coveo/ui-kit/issues/5502)
+- chore(atomic): migrate refine-modal/button.tsx (#5503) ([497e1d7](https://github.com/coveo/ui-kit/commits/497e1d7)), closes [#5503](https://github.com/coveo/ui-kit/issues/5503)
+- chore(atomic): migrate refine-modal/filters.tsx (#5504) ([a1208dd](https://github.com/coveo/ui-kit/commits/a1208dd)), closes [#5504](https://github.com/coveo/ui-kit/issues/5504)
+- chore(atomic): migrate refine-modal/sort.tsx (#5508) ([0c04279](https://github.com/coveo/ui-kit/commits/0c04279)), closes [#5508](https://github.com/coveo/ui-kit/issues/5508)
+- chore(atomic): prefix functional components with `render` (#5500) ([d83490f](https://github.com/coveo/ui-kit/commits/d83490f)), closes [#5500](https://github.com/coveo/ui-kit/issues/5500)
+- chore(atomic): support @mapProperty decorator for CEM (#5471) ([4361a56](https://github.com/coveo/ui-kit/commits/4361a56)), closes [#5471](https://github.com/coveo/ui-kit/issues/5471)
+- chore(deps): update tailwind to v4.1.10 j:kit-282 (#5521) ([30c3d55](https://github.com/coveo/ui-kit/commits/30c3d55)), closes [#5521](https://github.com/coveo/ui-kit/issues/5521)
+- docs(atomic): document slot in no-items components (#5519) ([1aa8309](https://github.com/coveo/ui-kit/commits/1aa8309)), closes [#5519](https://github.com/coveo/ui-kit/issues/5519)
+- fix: ensure deterministic build outputs by sorting filesystem operations (#5470) ([ec7b28f](https://github.com/coveo/ui-kit/commits/ec7b28f)), closes [#5470](https://github.com/coveo/ui-kit/issues/5470)
+- fix(deps): update all dependencies j:kit-282 (#5522) ([ee7a9ab](https://github.com/coveo/ui-kit/commits/ee7a9ab)), closes [#5522](https://github.com/coveo/ui-kit/issues/5522)
+- fix(headless commerce): support show more / show less on root category facet values (#5466) ([90229d6](https://github.com/coveo/ui-kit/commits/90229d6)), closes [#5466](https://github.com/coveo/ui-kit/issues/5466)
+- test(atomic): update breadbox e2e test for backend data changes (#5486) ([1da4d6e](https://github.com/coveo/ui-kit/commits/1da4d6e)), closes [#5486](https://github.com/coveo/ui-kit/issues/5486)
+
 ## <small>3.27.2 (2025-06-18)</small>
 
 - chore: add missing props in renderSubmitButton (#5454) ([9f04aeb](https://github.com/coveo/ui-kit/commits/9f04aeb)), closes [#5454](https://github.com/coveo/ui-kit/issues/5454)
