@@ -36,6 +36,7 @@ export interface SearchParameterActionCreators {
    *
    * @param payload - The action creator payload.
    * @returns A dispatchable action.
+   * @deprecated This action will be removed in V4. Use alternative tab management methods instead.
    */
   restoreTab(payload: string): PayloadAction<string>;
 }
