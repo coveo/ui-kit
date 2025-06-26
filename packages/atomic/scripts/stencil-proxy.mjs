@@ -17,7 +17,14 @@ const atomicVersion = JSON.parse(
 const srcDir = resolve('./stencil-proxy');
 const distDir = resolve('./dist');
 
-const files = readdirSync(srcDir, {recursive: true, withFileTypes: true});
+const files = readdirSync(srcDir, {
+  recursive: true,
+  withFileTypes: true,
+}).toSorted((a, b) => {
+  const aPath = join(a.parentPath, a.name);
+  const bPath = join(b.parentPath, b.name);
+  return aPath.localeCompare(bPath);
+});
 
 const prefixFileWithUnderscore = (file) =>
   file.split(sep).slice(0, -1).join(sep) + sep + '_' + file.split(sep).pop();
