@@ -3,6 +3,7 @@ import {
   AtomicCommerceLayout as LitAtomicCommerceLayout,
   AtomicCommercePager as LitAtomicCommercePager,
   AtomicCommerceProductList as LitAtomicCommerceProductList,
+  AtomicCommerceProductsPerPage as LitAtomicCommerceProductsPerPage,
   AtomicCommerceQuerySummary as LitAtomicCommerceQuerySummary,
   AtomicCommerceRecommendationList as LitAtomicCommerceRecommendationList,
   AtomicCommerceSearchBox as LitAtomicCommerceSearchBox,
@@ -38,6 +39,12 @@ export const AtomicCommerceProductList = createComponent({
   tagName: 'atomic-commerce-product-list',
   react: React,
   elementClass: LitAtomicCommerceProductList,
+});
+
+export const AtomicCommerceProductsPerPage = createComponent({
+  tagName: 'atomic-commerce-products-per-page',
+  react: React,
+  elementClass: LitAtomicCommerceProductsPerPage,
 });
 
 export const AtomicCommerceQuerySummary = createComponent({
