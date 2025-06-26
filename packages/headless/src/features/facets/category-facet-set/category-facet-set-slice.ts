@@ -104,6 +104,7 @@ export const categoryFacetSetReducer = createReducer(
           const lastSelectedParent = children[0];
 
           lastSelectedParent.retrieveChildren = true;
+          lastSelectedParent.previousState = lastSelectedParent.state;
           lastSelectedParent.state = 'selected';
           lastSelectedParent.children = [];
           return;
@@ -203,10 +204,10 @@ function ensurePathAndReturnChildren(
     }
 
     parent.retrieveChildren = false;
+    parent.previousState = parent.state !== 'idle' ? parent.state : undefined;
     parent.state = 'idle';
     children = parent.children;
   }
-
   return children;
 }
 
@@ -235,16 +236,6 @@ function buildCategoryFacetValueRequest(
   };
 }
 
-function processValueAndChildren(value: CategoryFacetValueRequest): void {
-  value.previousState = value.state !== 'idle' ? value.state : undefined;
-
-  if (value.children && value.children.length > 0) {
-    value.children.forEach((child) => {
-      processValueAndChildren(child);
-    });
-  }
-}
-
 function handleCategoryFacetResponseUpdate(
   state: CategoryFacetSetState,
   facets: AnyFacetResponse[]
@@ -263,13 +254,7 @@ function handleCategoryFacetResponseUpdate(
 
     const requestWasInvalid = isRequestInvalid(request, response);
 
-    if (requestWasInvalid) {
-      request.currentValues = [];
-    } else {
-      request.currentValues.forEach((value) => {
-        processValueAndChildren(value);
-      });
-    }
+    request.currentValues = requestWasInvalid ? [] : request.currentValues;
     request.preventAutoSelect = false;
   });
 }
