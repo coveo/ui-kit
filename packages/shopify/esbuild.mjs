@@ -42,6 +42,10 @@ const entries = [
     entryPoint: 'src/utilities/index.ts',
     outfile: 'utilities.esm.js',
   },
+  {
+    entryPoint: 'src/constants.ts',
+    outfile: 'constants.esm.js',
+  },
 ];
 
 const getBase = (entryPoint) => ({

@@ -20,13 +20,13 @@ import ArrowLeftIcon from '../../../images/arrow-left-rounded.svg';
 import ArrowRightIcon from '../../../images/arrow-right-rounded.svg';
 import {createAppLoadedListener} from '../../common/interface/store';
 import {
-  pagerNextButton,
-  pagerPageButton,
-  pagerPageButtons,
-  pagerPreviousButton,
+  renderPagerNextButton,
+  renderPagerPageButton,
+  renderPageButtons,
+  renderPagerPreviousButton,
 } from '../../common/pager/pager-buttons';
-import {pagerGuard} from '../../common/pager/pager-guard';
-import {pagerNavigation} from '../../common/pager/pager-navigation';
+import {renderPagerGuard} from '../../common/pager/pager-guard';
+import {renderPagerNavigation} from '../../common/pager/pager-navigation';
 import {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface';
 import {getCurrentPagesRange} from './commerce-pager-utils';
 
@@ -121,18 +121,18 @@ export class AtomicCommercePager
       this.numberOfPages,
       this.pagerState.totalPages - 1
     );
-    return html`${pagerGuard({
+    return html`${renderPagerGuard({
       props: {
         hasItems: this.pagerState.totalPages > 1,
         isAppLoaded: this.isAppLoaded,
       },
     })(
-      html`${pagerNavigation({
+      html`${renderPagerNavigation({
         props: {
           i18n: this.bindings.i18n,
         },
       })(html`
-        ${pagerPreviousButton({
+        ${renderPagerPreviousButton({
           props: {
             icon: this.previousButtonIcon,
             disabled: this.pagerState.page === 0,
@@ -143,13 +143,13 @@ export class AtomicCommercePager
             },
           },
         })}
-        ${pagerPageButtons({
+        ${renderPageButtons({
           props: {
             i18n: this.bindings.i18n,
           },
         })(
           html`${pagesRange.map((pageNumber) =>
-            pagerPageButton({
+            renderPagerPageButton({
               props: {
                 isSelected: pageNumber === this.pagerState.page,
                 ariaLabel: this.bindings.i18n.t('page-number', {
@@ -168,7 +168,7 @@ export class AtomicCommercePager
             })
           )}`
         )}
-        ${pagerNextButton({
+        ${renderPagerNextButton({
           props: {
             icon: this.nextButtonIcon,
             disabled: this.pagerState.page + 1 >= this.pagerState.totalPages,

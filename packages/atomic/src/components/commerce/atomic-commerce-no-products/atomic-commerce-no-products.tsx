@@ -12,9 +12,9 @@ import {
   InitializeBindings,
 } from '../../../utils/initialization-utils';
 import {AriaLiveRegion} from '../../../utils/stencil-accessibility-utils';
-import {NoItemsContainer} from '../../common/no-items/container';
 import {MagnifyingGlass} from '../../common/no-items/magnifying-glass';
 import {NoItems} from '../../common/no-items/no-items';
+import {NoItemsContainer} from '../../common/no-items/stencil-container';
 import {NoItemsGuard} from '../../common/no-items/stencil-guard';
 import {SearchTips} from '../../common/no-items/tips';
 import {getSummary} from '../../common/no-items/utils';
@@ -23,7 +23,7 @@ import {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-int
 /**
  * @alpha
  *
- * The `atomic-no-products` component displays search tips when there are no products. Any additional content slotted inside of its element will be displayed as well.
+ * The `atomic-commerce-no-products` component displays search tips when there are no products. Any additional content slotted inside of its element will be displayed as well.
  *
  * @part no-results - The text indicating that no products were found for the search.
  * @part search-tips - The search tips to help the user correct the query.

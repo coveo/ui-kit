@@ -31,7 +31,7 @@ const {play: playFixedNumberOfProducts} = wrapInCommerceInterface({
 
 const meta: Meta = {
   component: 'atomic-commerce-query-summary',
-  title: 'Atomic-Commerce/QuerySummary',
+  title: 'Commerce/atomic-commerce-query-summary',
   id: 'atomic-commerce-query-summary',
   render: renderComponent,
   decorators: [decorator],
@@ -41,22 +41,18 @@ const meta: Meta = {
 
 export default meta;
 
-export const Default: Story = {
-  name: 'atomic-query-summary',
-};
+export const Default: Story = {};
 
-export const NoInitialSearch: Story = {
-  name: 'No Initial Search',
-  tags: ['test'],
+export const WithoutFirstRequestExecuted: Story = {
+  name: 'Without first request executed',
   decorators: [(story) => story()],
   play: async (context) => {
     await playNoInitialSearch(context);
   },
 };
 
-export const FixedNumberOfProducts: Story = {
-  name: 'Fixed Number of Products',
-  tags: ['test'],
+export const WithAFixedNumberOfProducts: Story = {
+  name: 'With a fixed number of products',
   decorators: [(story) => story()],
   play: async (context) => {
     await playFixedNumberOfProducts(context);
@@ -64,8 +60,7 @@ export const FixedNumberOfProducts: Story = {
 };
 
 export const WithSearchBox: Story = {
-  name: 'With a Search Box',
-  tags: ['test'],
+  name: 'With a search box',
   decorators: [
     (story) =>
       html` <atomic-commerce-layout>
@@ -80,7 +75,4 @@ export const WithSearchBox: Story = {
         </atomic-layout-section>
       </atomic-commerce-layout>`,
   ],
-  play: async (context) => {
-    await playNoInitialSearch(context);
-  },
 };
