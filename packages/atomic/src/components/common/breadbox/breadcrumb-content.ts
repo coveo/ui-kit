@@ -45,7 +45,10 @@ export const renderBreadcrumbContent: FunctionalComponent<
   });
 
   return html`<span part="breadcrumb-label" class=${multiClassMap(labelClass)}>
-      ${props.i18n.t('with-colon', {text: props.breadcrumb.label})}
+      ${props.i18n.t('with-colon', {
+        text: props.breadcrumb.label,
+        interpolation: {escapeValue: false},
+      })}
     </span>
     <span part="breadcrumb-value" class=${multiClassMap(valueClass)}>
       ${props.breadcrumb.content ?? value}
