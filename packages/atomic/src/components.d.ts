@@ -15,7 +15,7 @@ import { AnyBindings } from "./components/common/interface/bindings";
 import { NumberInputType } from "./components/common/facets/facet-number-input/number-input-type";
 import { ItemDisplayBasicLayout, ItemDisplayDensity, ItemDisplayImageSize, ItemDisplayLayout } from "./components/common/layout/display-options";
 import { ItemRenderingFunction } from "./components/common/item-list/stencil-item-list-common";
-import { InsightEngine, FacetSortCriterion as InsightFacetSortCriterion, FoldedResult as InsightFoldedResult, InteractiveResult as InsightInteractiveResult, LogLevel as InsightLogLevel, RangeFacetRangeAlgorithm as InsightRangeFacetRangeAlgorithm, RangeFacetSortCriterion as InsightRangeFacetSortCriterion, Result as InsightResult, ResultTemplate as InsightResultTemplate, ResultTemplateCondition as InsightResultTemplateCondition, UserAction as IUserAction } from "@coveo/headless/insight";
+import { InsightEngine, FacetSortCriterion as InsightFacetSortCriterion, FoldedResult as InsightFoldedResult, InteractiveResult as InsightInteractiveResult, LogLevel as InsightLogLevel, RangeFacetRangeAlgorithm as InsightRangeFacetRangeAlgorithm, RangeFacetSortCriterion as InsightRangeFacetSortCriterion, Result as InsightResult, ResultTemplate as InsightResultTemplate, ResultTemplateCondition as InsigwhtResultTemplateCondition, UserAction as IUserAction } from "@coveo/headless/insight";
 import { InsightInitializationOptions } from "./components/insight/atomic-insight-interface/atomic-insight-interface";
 import { InsightStore } from "./components/insight/atomic-insight-interface/store";
 import { Actions, InsightResultActionClickedEvent } from "./components/insight/atomic-insight-result-action/atomic-insight-result-action";
@@ -471,40 +471,6 @@ export namespace Components {
      * @alpha
      */
     interface AtomicCommerceRefineToggle {
-    }
-    /**
-     * The `atomic-commerce-search-box` component creates a search box with built-in support for suggestions.
-     * @alpha
-     */
-    interface AtomicCommerceSearchBox {
-        /**
-          * Whether to clear all active query filters when the end user submits a new query from the search box. Setting this option to "false" is not recommended & can lead to an increasing number of queries returning no results.
-         */
-        "clearFilters": boolean;
-        /**
-          * Whether to prevent the user from triggering searches and query suggestions from the component. Perfect for use cases where you need to disable the search conditionally. For the specific case when you need to disable the search based on the length of the query, refer to {@link minimumQueryLength}.
-         */
-        "disableSearch": boolean;
-        /**
-          * The minimum query length required to enable search. For example, to disable the search for empty queries, set this to `1`.
-         */
-        "minimumQueryLength": number;
-        /**
-          * The amount of queries displayed when the user interacts with the search box. By default, a mix of query suggestions and recent queries will be shown. You can configure those settings using the following components as children:  - atomic-commerce-search-box-query-suggestions  - atomic-commerce-search-box-recent-queries
-         */
-        "numberOfQueries": number;
-        /**
-          * Defining this option makes the search box standalone (see [Use a Standalone Search Box](https://docs.coveo.com/en/atomic/latest/usage/ssb/)).  This option defines the default URL the user should be redirected to, when a query is submitted. If a query pipeline redirect is triggered, it will redirect to that URL instead (see [query pipeline triggers](https://docs.coveo.com/en/1458)).
-         */
-        "redirectionUrl"?: string;
-        /**
-          * The delay for suggestion queries on input, in milliseconds.  The suggestion request will be delayed until the end user stops typing for at least the specified amount of time.  This delay is used to avoid sending too many requests to the Coveo Platform when the user is typing, as well as reducing potential input lag on low end devices. A higher delay will reduce input lag, at the cost of suggestions freshness.
-         */
-        "suggestionDelay": number;
-        /**
-          * The timeout for suggestion queries, in milliseconds. If a suggestion query times out, the suggestions from that particular query won't be shown.
-         */
-        "suggestionTimeout": number;
     }
     /**
      * A facet is a list of values for a certain field occurring in the results.
@@ -5572,7 +5538,6 @@ declare global {
         "atomic-commerce-recommendation-interface": HTMLAtomicCommerceRecommendationInterfaceElement;
         "atomic-commerce-refine-modal": HTMLAtomicCommerceRefineModalElement;
         "atomic-commerce-refine-toggle": HTMLAtomicCommerceRefineToggleElement;
-        "atomic-commerce-search-box": HTMLAtomicCommerceSearchBoxElement;
         "atomic-commerce-timeframe-facet": HTMLAtomicCommerceTimeframeFacetElement;
         "atomic-did-you-mean": HTMLAtomicDidYouMeanElement;
         "atomic-external": HTMLAtomicExternalElement;
@@ -6141,44 +6106,6 @@ declare namespace LocalJSX {
      * @alpha
      */
     interface AtomicCommerceRefineToggle {
-    }
-    /**
-     * The `atomic-commerce-search-box` component creates a search box with built-in support for suggestions.
-     * @alpha
-     */
-    interface AtomicCommerceSearchBox {
-        /**
-          * Whether to clear all active query filters when the end user submits a new query from the search box. Setting this option to "false" is not recommended & can lead to an increasing number of queries returning no results.
-         */
-        "clearFilters"?: boolean;
-        /**
-          * Whether to prevent the user from triggering searches and query suggestions from the component. Perfect for use cases where you need to disable the search conditionally. For the specific case when you need to disable the search based on the length of the query, refer to {@link minimumQueryLength}.
-         */
-        "disableSearch"?: boolean;
-        /**
-          * The minimum query length required to enable search. For example, to disable the search for empty queries, set this to `1`.
-         */
-        "minimumQueryLength"?: number;
-        /**
-          * The amount of queries displayed when the user interacts with the search box. By default, a mix of query suggestions and recent queries will be shown. You can configure those settings using the following components as children:  - atomic-commerce-search-box-query-suggestions  - atomic-commerce-search-box-recent-queries
-         */
-        "numberOfQueries"?: number;
-        /**
-          * Event that is emitted when a standalone search box redirection is triggered. By default, the search box will directly change the URL and redirect accordingly, so if you want to handle the redirection differently, use this event.  Example: ```html <script>   document.querySelector('atomic-commerce-search-box').addEventListener((e) => {     e.preventDefault();     // handle redirection   }); </script> ... <atomic-commerce-search-box redirection-url="/search"></atomic-commerce-search-box> ```
-         */
-        "onRedirect"?: (event: AtomicCommerceSearchBoxCustomEvent<RedirectionPayload>) => void;
-        /**
-          * Defining this option makes the search box standalone (see [Use a Standalone Search Box](https://docs.coveo.com/en/atomic/latest/usage/ssb/)).  This option defines the default URL the user should be redirected to, when a query is submitted. If a query pipeline redirect is triggered, it will redirect to that URL instead (see [query pipeline triggers](https://docs.coveo.com/en/1458)).
-         */
-        "redirectionUrl"?: string;
-        /**
-          * The delay for suggestion queries on input, in milliseconds.  The suggestion request will be delayed until the end user stops typing for at least the specified amount of time.  This delay is used to avoid sending too many requests to the Coveo Platform when the user is typing, as well as reducing potential input lag on low end devices. A higher delay will reduce input lag, at the cost of suggestions freshness.
-         */
-        "suggestionDelay"?: number;
-        /**
-          * The timeout for suggestion queries, in milliseconds. If a suggestion query times out, the suggestions from that particular query won't be shown.
-         */
-        "suggestionTimeout"?: number;
     }
     /**
      * A facet is a list of values for a certain field occurring in the results.
@@ -9073,7 +9000,6 @@ declare namespace LocalJSX {
         "atomic-commerce-recommendation-interface": AtomicCommerceRecommendationInterface;
         "atomic-commerce-refine-modal": AtomicCommerceRefineModal;
         "atomic-commerce-refine-toggle": AtomicCommerceRefineToggle;
-        "atomic-commerce-search-box": AtomicCommerceSearchBox;
         "atomic-commerce-timeframe-facet": AtomicCommerceTimeframeFacet;
         "atomic-did-you-mean": AtomicDidYouMean;
         "atomic-external": AtomicExternal;
@@ -9347,11 +9273,6 @@ declare module "@stencil/core" {
              * @alpha
              */
             "atomic-commerce-refine-toggle": LocalJSX.AtomicCommerceRefineToggle & JSXBase.HTMLAttributes<HTMLAtomicCommerceRefineToggleElement>;
-            /**
-             * The `atomic-commerce-search-box` component creates a search box with built-in support for suggestions.
-             * @alpha
-             */
-            "atomic-commerce-search-box": LocalJSX.AtomicCommerceSearchBox & JSXBase.HTMLAttributes<HTMLAtomicCommerceSearchBoxElement>;
             /**
              * A facet is a list of values for a certain field occurring in the results.
              * An `atomic-commerce-timeframe-facet` displays a facet of the results for the current query as date intervals.
