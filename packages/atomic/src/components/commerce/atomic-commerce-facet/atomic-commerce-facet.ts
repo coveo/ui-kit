@@ -113,7 +113,7 @@ export class AtomicCommerceFacet
   private showLessFocus!: FocusTargetController;
   private showMoreFocus!: FocusTargetController;
   private headerFocus!: FocusTargetController;
-  private unsubscribeFacetController?: () => void | undefined;
+  private unsubscribeFacetController?: () => void;
   private ariaLiveRegion = new AriaLiveRegionController(this, 'facet-search');
 
   public initialize() {
@@ -236,8 +236,7 @@ export class AtomicCommerceFacet
   private renderValues() {
     return this.renderValuesContainer(
       this.facetState.values.map((value, i) => {
-        const shouldFocusOnShowLessAfterInteraction = i === 0;
-        const shouldFocusOnShowMoreAfterInteraction = i === 0;
+        const shouldFocusAfterInteraction = i === 0;
 
         return renderFacetValue({
           props: {
@@ -248,10 +247,10 @@ export class AtomicCommerceFacet
             facetValue: value.value,
             facetState: value.state,
             setRef: (btn) => {
-              if (shouldFocusOnShowLessAfterInteraction) {
+              if (shouldFocusAfterInteraction) {
                 this.showLessFocus?.setTarget(btn as HTMLElement);
               }
-              if (shouldFocusOnShowMoreAfterInteraction) {
+              if (shouldFocusAfterInteraction) {
                 this.showMoreFocus?.setTarget(btn as HTMLElement);
               }
             },
