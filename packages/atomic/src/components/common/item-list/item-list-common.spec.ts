@@ -220,6 +220,7 @@ describe('ItemListCommon', () => {
         focusAfterSearch: vi.fn(),
         focusOnNextTarget: vi.fn(),
         setTarget: vi.fn(),
+        registerFocusCallback: vi.fn(),
       } as unknown as FocusTargetController;
       const itemListCommon = itemListCommonFixture({
         getCurrentNumberOfItems,
@@ -247,6 +248,7 @@ describe('ItemListCommon', () => {
         focusAfterSearch: vi.fn(),
         focusOnNextTarget: vi.fn(),
         setTarget: vi.fn(),
+        registerFocusCallback: vi.fn(),
       } as unknown as FocusTargetController;
       const itemListCommon = itemListCommonFixture({
         getCurrentNumberOfItems,
@@ -270,6 +272,7 @@ describe('ItemListCommon', () => {
         focusAfterSearch: vi.fn(),
         focusOnNextTarget: vi.fn(),
         setTarget: vi.fn(),
+        registerFocusCallback: vi.fn(),
       } as unknown as FocusTargetController;
       const itemListCommon = itemListCommonFixture({
         nextNewItemTarget,
@@ -537,6 +540,7 @@ describe('ItemListCommon', () => {
 
             expect(unsubscribe).toHaveBeenCalledOnce();
           });
+
           it('should not unsubscribe on subsequent calls', async () => {
             const unsubscribe = vi.fn();
             const engineSubscribe = vi.fn().mockReturnValue(unsubscribe);
@@ -573,6 +577,7 @@ describe('ItemListCommon', () => {
         focusAfterSearch: vi.fn(),
         focusOnNextTarget: vi.fn(),
         setTarget: vi.fn(),
+        registerFocusCallback: vi.fn(),
       } as unknown as FocusTargetController,
       host,
       loadingFlag: '',
