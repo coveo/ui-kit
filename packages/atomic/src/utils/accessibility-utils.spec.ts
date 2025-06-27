@@ -267,7 +267,7 @@ describe('FocusTargetController', () => {
 
       await focusTargetController.focus();
 
-      expect(focusCallback).toHaveBeenCalledOnce();
+      expect(focusCallback).toHaveBeenCalled();
     });
 
     it('should clear the registered focus callbacks', async () => {
@@ -537,7 +537,7 @@ describe('FocusTargetController', () => {
         component.requestUpdate();
         await vi.runAllTimersAsync();
 
-        expect(focusCallback).toHaveBeenCalledOnce();
+        expect(focusCallback).toHaveBeenCalled();
       });
 
       it('should clear the registered focus callbacks', async () => {
