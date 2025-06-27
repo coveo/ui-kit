@@ -18,7 +18,7 @@ export const renderQueryErrorLink: FunctionalComponent<QueryErrorLinkProps> = ({
       case 'InvalidTokenException':
         return 'https://docs.coveo.com/en/102';
       case 'OrganizationIsPausedException':
-        return 'https://docs.coveo.com/l6af0467';
+        return 'https://docs.coveo.com/en/1684';
       default:
         return null;
     }

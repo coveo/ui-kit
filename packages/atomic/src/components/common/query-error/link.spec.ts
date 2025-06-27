@@ -22,7 +22,7 @@ describe('#renderQueryErrorLink', () => {
     };
   };
 
-  it('should render the link the the "doc-link" part', async () => {
+  it('should render the link with the "doc-link" part', async () => {
     const {link} = await renderComponent('NoEndpointsException');
 
     expect(link).toHaveAttribute('part', 'doc-link');
@@ -50,7 +50,7 @@ describe('#renderQueryErrorLink', () => {
   it('should render link with correct href when errorType is OrganizationIsPausedException', async () => {
     const {link} = await renderComponent('OrganizationIsPausedException');
 
-    expect(link).toHaveAttribute('href', 'https://docs.coveo.com/l6af0467');
+    expect(link).toHaveAttribute('href', 'https://docs.coveo.com/en/1684');
   });
 
   it('should not render link when errorType is undefined', async () => {
