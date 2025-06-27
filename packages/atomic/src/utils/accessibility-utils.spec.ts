@@ -490,7 +490,10 @@ describe('FocusTargetController', () => {
       const setup = async ({
         mockedDefer,
         element,
-      }: {mockedDefer?: typeof defer; element?: HTMLElement} = {}) => {
+      }: {
+        mockedDefer?: typeof defer;
+        element?: HTMLElement;
+      } = {}) => {
         mockedDefer ??= vi.mocked(defer).mockReturnValue(Promise.resolve());
         element ??= document.createElement('div');
         const getUniqueIDFromEngine = vi
