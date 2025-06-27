@@ -1,0 +1,46 @@
+name: Sync Template Repository
+
+on:
+  workflow_call: # Manual trigger
+
+jobs:
+  publish-template:
+    environment: Release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout main repo
+        uses: actions/checkout@v4
+        with:
+          path: kit
+
+      - name: Generate a token
+        id: generate-token
+        uses: actions/create-github-app-token@d72941d797fd3113feb6b93fd0dec494b13a2547 # v1
+        with:
+          app-id: ${{ secrets.RELEASER_APP_ID }}
+          private-key: ${{ secrets.RELEASER_PRIVATE_KEY }}
+          owner: coveo
+          repositories: |
+            atomic-project-template
+
+      - name: Checkout template repo
+        uses: actions/checkout@v4
+        with:
+          repository: coveo/atomic-project-template
+          token: ${{ steps.generate-token.outputs.token }}
+          path: template/atomic
+
+      - name: Flush template repo, except .git
+        run: find template/atomic -mindepth 1 -not -path "template/atomic/.git" -not -path "template/atomic/.git/*" -delete
+
+      - name: Copy examples
+        run: cp -r kit/packages/templates/atomic/* template/atomic/ --exclude='**/project.json'
+
+      - name: Push update to template repository
+        uses: actions/github-script@60a0d83039c74a4aee543508d2ffcb1c3799cdea # v7
+        with:
+          github-token: ${{ steps.generate-token.outputs.token }}
+          script: |
+            const { commitChanges, setupGit } = await import('${{github.workspace}}/kit/packages/ci/common/git.js');
+            await setupGit();
+            await commitChanges("Update template", github, "atomic-project-template");
