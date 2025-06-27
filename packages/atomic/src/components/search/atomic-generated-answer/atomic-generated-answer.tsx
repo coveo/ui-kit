@@ -128,6 +128,11 @@ export class AtomicGeneratedAnswer implements InitializableComponent {
   @Prop() answerConfigurationId?: string;
 
   /**
+   * A list of fields to include with the citations used to generate the answer.
+   */
+  @Prop() fieldsToIncludeInCitations = 'filetype';
+
+  /**
    * The tabs on which the generated answer can be displayed. This property should not be used at the same time as `tabs-excluded`.
    *
    * Set this property as a stringified JSON array, e.g.,
@@ -194,6 +199,7 @@ export class AtomicGeneratedAnswer implements InitializableComponent {
       ...(this.answerConfigurationId && {
         answerConfigurationId: this.answerConfigurationId,
       }),
+      fieldsToIncludeInCitations: this.getCitationFields(),
     });
     this.searchStatus = buildSearchStatus(this.bindings.engine);
     this.generatedAnswerCommon.insertFeedbackModal();
@@ -290,6 +296,13 @@ export class AtomicGeneratedAnswer implements InitializableComponent {
     return this.host?.shadowRoot?.querySelector(
       '[part="generated-answer-footer"]'
     );
+  }
+
+  private getCitationFields() {
+    return this.fieldsToIncludeInCitations
+      ?.split(',')
+      .map((field) => field.trim())
+      .filter((field) => field.length > 0);
   }
 
   private validateMaxCollapsedHeight(): number {
