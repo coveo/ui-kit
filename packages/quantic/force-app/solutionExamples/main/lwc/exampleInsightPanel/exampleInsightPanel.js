@@ -19,7 +19,7 @@ export default class ExampleInsightPanel extends LightningElement {
   /** @type {string} */
   @api insightId = '142be676-703c-445f-b2d3-fcc7c0a3ded8';
   /** @type {string} */
-  @api caseId;
+  @api caseId = '1234';
 
   /** @type {boolean} */
   isInitAttachedResults = false;

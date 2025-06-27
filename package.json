@@ -1,7 +1,7 @@
 {
   "name": "ui-kit",
   "private": true,
-  "version": "3.0.42",
+  "version": "3.0.43",
   "scripts": {
     "postinstall": "husky install && patch-package && npx playwright install",
     "reset:install": "git checkout origin/master package-lock.json && npm i",
@@ -40,10 +40,10 @@
     "@nx/web": "20.8.2",
     "@octokit/rest": "21.1.1",
     "@trivago/prettier-plugin-sort-imports": "5.2.2",
-    "@tsconfig/node20": "20.1.5",
+    "@tsconfig/node20": "20.1.6",
     "@types/execa": "2.0.2",
     "@types/jest": "29.5.14",
-    "@types/node": "22.15.31",
+    "@types/node": "22.15.32",
     "@typescript-eslint/eslint-plugin": "7.18.0",
     "@typescript-eslint/parser": "7.18.0",
     "@vitest/browser": "3.2.3",
@@ -60,7 +60,7 @@
     "eslint-plugin-cypress": "2.15.2",
     "eslint-plugin-package-lock": "1.0.0",
     "execa": "9.6.0",
-    "glob": "11.0.2",
+    "glob": "11.0.3",
     "gts": "5.3.1",
     "husky": "9.1.7",
     "lint-staged": "15.5.2",
@@ -126,5 +126,5 @@
   "dependencies": {
     "upgrade": "1.1.0"
   },
-  "packageManager": "npm@11.4.1"
+  "packageManager": "npm@11.4.2"
 }
