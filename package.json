@@ -99,6 +99,7 @@
     "packages/samples/*",
     "packages/samples/headless-ssr/*",
     "packages/shopify",
+    "packages/templates/atomic/*",
     "utils/cdn",
     "utils/ci"
   ],

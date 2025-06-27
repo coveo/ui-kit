@@ -1,0 +1,8 @@
+{
+  "name": "@coveo/atomic-sample-components",
+  "private": true,
+  "version": "0.0.0",
+  "dependencies": {
+    "@coveo/atomic": "3.27.3"
+  }
+}
