@@ -1,4 +1,7 @@
+import {createComponent} from '@lit/react';
+import React from 'react';
 import {
+  AtomicCommerceBreadbox as LitAtomicCommerceBreadbox,
   AtomicCommerceInterface as LitAtomicCommerceInterface,
   AtomicCommerceLayout as LitAtomicCommerceLayout,
   AtomicCommercePager as LitAtomicCommercePager,
@@ -15,8 +18,12 @@ import {
   AtomicLayoutSection as LitAtomicLayoutSection,
   AtomicProduct as LitAtomicProduct,
 } from '@coveo/atomic/components';
-import {createComponent} from '@lit/react';
-import React from 'react';
+
+export const AtomicCommerceBreadbox = createComponent({
+  tagName: 'atomic-commerce-breadbox',
+  react: React,
+  elementClass: LitAtomicCommerceBreadbox,
+});
 
 export const AtomicCommerceInterface = createComponent({
   tagName: 'atomic-commerce-interface',
@@ -54,6 +61,12 @@ export const AtomicCommerceRecommendationList = createComponent({
   elementClass: LitAtomicCommerceRecommendationList,
 });
 
+export const AtomicCommerceSearchBox = createComponent({
+  tagName: 'atomic-commerce-search-box',
+  react: React,
+  elementClass: LitAtomicCommerceSearchBox,
+});
+
 export const AtomicCommerceSearchBoxInstantProducts = createComponent({
   tagName: 'atomic-commerce-search-box-instant-products',
   react: React,
@@ -70,12 +83,6 @@ export const AtomicCommerceSearchBoxRecentQueries = createComponent({
   tagName: 'atomic-commerce-search-box-recent-queries',
   react: React,
   elementClass: LitAtomicCommerceSearchBoxRecentQueries,
-});
-
-export const AtomicCommerceSearchBox = createComponent({
-  tagName: 'atomic-commerce-search-box',
-  react: React,
-  elementClass: LitAtomicCommerceSearchBox,
 });
 
 export const AtomicCommerceSortDropdown = createComponent({

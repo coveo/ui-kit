@@ -137,28 +137,6 @@ export declare interface AtomicColorFacet extends Components.AtomicColorFacet {}
 
 
 @ProxyCmp({
-  inputs: ['pathLimit']
-, defineCustomElementFn: defineCustomElementAtomicCommerceBreadbox})
-@Component({standalone:false,
-  selector: 'atomic-commerce-breadbox',
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  template: '<ng-content></ng-content>',
-  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: ['pathLimit'],
-})
-export class AtomicCommerceBreadbox {
-  protected el: HTMLElement;
-  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
-    c.detach();
-    this.el = r.nativeElement;
-  }
-}
-
-
-export declare interface AtomicCommerceBreadbox extends Components.AtomicCommerceBreadbox {}
-
-
-@ProxyCmp({
   inputs: ['facet', 'field', 'isCollapsed', 'summary']
 , defineCustomElementFn: defineCustomElementAtomicCommerceCategoryFacet})
 @Component({standalone:false,
@@ -2694,6 +2672,32 @@ export class AtomicTimeframeFacet {
 export declare interface AtomicTimeframeFacet extends Components.AtomicTimeframeFacet {}
 
 //#region Lit Declarations
+
+@ProxyCmp({
+  inputs: ['pathLimit'],
+  methods: ['initialize'],
+  defineCustomElementFn: () => {customElements.get('atomic-commerce-breadbox') || customElements.define('atomic-commerce-breadbox', LitAtomicCommerceBreadbox);}
+})
+@Component({
+  selector: 'atomic-commerce-breadbox',
+  standalone: false,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
+  inputs: ['pathLimit']
+})
+export class AtomicCommerceBreadbox {
+  protected readonly el: HTMLElement;
+  constructor(c: ChangeDetectorRef, el: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = el.nativeElement;
+    
+  }
+}
+
+export declare interface AtomicCommerceBreadbox extends LitAtomicCommerceBreadbox {
+
+}
 
 @ProxyCmp({
   inputs: ['type', 'analytics', 'logLevel', 'i18n', 'language', 'engine', 'reflectStateInUrl', 'scrollContainer', 'languageAssetsPath', 'iconAssetsPath'],

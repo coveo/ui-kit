@@ -1,5 +1,7 @@
 // Auto-generated file
 export default {
+  'atomic-commerce-breadbox': async () =>
+    await import('./atomic-commerce-breadbox/atomic-commerce-breadbox.js'),
   'atomic-commerce-interface': async () =>
     await import('./atomic-commerce-interface/atomic-commerce-interface.js'),
   'atomic-commerce-layout': async () =>
