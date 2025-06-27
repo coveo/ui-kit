@@ -92,7 +92,12 @@ export class AtomicCommerceFacet
   /**
    * Specifies whether the facet is collapsed.
    */
-  @property({type: Boolean, reflect: true, converter: booleanConverter})
+  @property({
+    type: Boolean,
+    reflect: true,
+    converter: booleanConverter,
+    attribute: 'is-collapsed',
+  })
   public isCollapsed = false;
   /**
    * The field identifier for this facet.
@@ -393,6 +398,7 @@ export class AtomicCommerceFacet
   @bindingGuard()
   @errorGuard()
   protected render() {
+    console.log(this.summaryState);
     const {hasError, firstRequestExecuted} = this.summaryState;
     return html`
       ${when(
