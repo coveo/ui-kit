@@ -59,11 +59,6 @@ export class FocusTargetController implements ReactiveController {
   private publicOnFocusCallbacks: Function[] = [];
   private doFocusAfterSearch = false;
   private doFocusOnNextTarget = false;
-  public registerFocusCallback: (callback: Function) => void = (
-    callback: Function
-  ) => {
-    this.publicOnFocusCallbacks.push(callback);
-  };
 
   constructor(
     private host: ReactiveControllerHost,
@@ -72,6 +67,10 @@ export class FocusTargetController implements ReactiveController {
     this.host = host;
     this.bindings = bindings;
     this.host.addController(this);
+  }
+
+  public registerFocusCallback(callback: Function): void {
+    this.publicOnFocusCallbacks.push(callback);
   }
 
   private clearFocusCallbacks() {

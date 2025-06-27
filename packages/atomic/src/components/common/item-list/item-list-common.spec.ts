@@ -54,6 +54,19 @@ describe('ItemListCommon', () => {
 
       expect(store.state.resultList).toBe(itemListCommon);
     });
+
+    it('should register a focus callback that resets indexOfResultToFocus', () => {
+      const registerFocusCallback = vi.fn();
+      const nextNewItemTarget = {
+        ...baseNextNewItemTarget,
+        registerFocusCallback,
+      } as unknown as FocusTargetController;
+
+      itemListCommonFixture({nextNewItemTarget});
+
+      expect(registerFocusCallback).toHaveBeenCalledOnce();
+      expect(registerFocusCallback).toHaveBeenCalledWith(expect.any(Function));
+    });
   });
 
   describe('#updateBreakpoints', () => {
