@@ -15,7 +15,7 @@
                     class="slds-icon slds-input__icon slds-input__icon_left searchbox__search-icon"
                     icon-name="utility:search"
                     size="x-small"
-                    data-cy="search-box-search-icon"
+                    data-testid="search-box-search-icon"
                   ></lightning-icon>
                 </div>
               </template>
@@ -55,7 +55,7 @@
                     title={labels.clear}
                     aria-label={labels.clear}
                     alternative-text={labels.clear}
-                    data-cy="search-box-clear-button"
+                    data-testid="search-box-clear-button"
                   ></lightning-button-icon>
                 </div>
               </template>
@@ -65,7 +65,7 @@
                   class="searchbox__submit-button slds-button slds-button_neutral"
                   title={labels.search}
                   onclick={onSubmit}
-                  data-cy="search-box-submit-button"
+                  data-testid="search-box-submit-button"
                 >
                   <lightning-icon
                     class="slds-current-color"

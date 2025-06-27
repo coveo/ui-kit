@@ -8,7 +8,7 @@
   "main": "./dist/headless.esm.js",
   "module": "./dist/headless.esm.js",
   "license": "Apache-2.0",
-  "version": "1.5.1",
+  "version": "1.7.0",
   "files": [
     "dist/"
   ],
@@ -38,6 +38,11 @@
       "types": "./dist/utilities/index.d.ts",
       "import": "./dist/utilities.esm.js",
       "default": "./dist/utilities.esm.js"
+    },
+    "./constants": {
+      "types": "./dist/constants.d.ts",
+      "import": "./dist/constants.esm.js",
+      "default": "./dist/constants.esm.js"
     }
   },
   "scripts": {
@@ -53,11 +58,11 @@
   },
   "devDependencies": {
     "@coveo/ci": "1.0.0",
-    "vitest": "3.2.1"
+    "vitest": "3.2.3"
   },
   "dependencies": {
-    "@coveo/headless": "3.26.0",
     "@coveo/relay": "1.2.1",
+    "@coveo/headless": "3.27.0",
     "uuid": "^11.0.0"
   },
   "engines": {

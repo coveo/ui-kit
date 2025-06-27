@@ -1,3 +1,18 @@
+## <small>3.2.47 (2025-06-25)</small>
+
+- ci: fix generated files desync (#5532) ([52afab5](https://github.com/coveo/ui-kit/commits/52afab5)), closes [#5532](https://github.com/coveo/ui-kit/issues/5532) [#5470](https://github.com/coveo/ui-kit/issues/5470) [#5198](https://github.com/coveo/ui-kit/issues/5198)
+- fix: ensure deterministic build outputs by sorting filesystem operations (#5470) ([ec7b28f](https://github.com/coveo/ui-kit/commits/ec7b28f)), closes [#5470](https://github.com/coveo/ui-kit/issues/5470)
+- fix(deps): update all dependencies j:kit-282 (#5522) ([ee7a9ab](https://github.com/coveo/ui-kit/commits/ee7a9ab)), closes [#5522](https://github.com/coveo/ui-kit/issues/5522)
+- chore(atomic): migrate atomic-commerce-layout (#5444) ([49f57b0](https://github.com/coveo/ui-kit/commits/49f57b0)), closes [#5444](https://github.com/coveo/ui-kit/issues/5444)
+- chore(atomic): migrate atomic-commerce-query-summary (#5480) ([d21d37f](https://github.com/coveo/ui-kit/commits/d21d37f)), closes [#5480](https://github.com/coveo/ui-kit/issues/5480)
+- chore(atomic): migrate atomic-commerce-recommendation-list to Lit (#5156) ([38e84af](https://github.com/coveo/ui-kit/commits/38e84af)), closes [#5156](https://github.com/coveo/ui-kit/issues/5156)
+- chore(atomic): migrate atomic-commerce-search-box (#5189) ([94a8a70](https://github.com/coveo/ui-kit/commits/94a8a70)), closes [#5189](https://github.com/coveo/ui-kit/issues/5189)
+
+## <small>3.2.46 (2025-06-18)</small>
+
+- chore(atomic commerce): migrate atomic-product-list (#5374) ([39a35b4](https://github.com/coveo/ui-kit/commits/39a35b4)), closes [#5374](https://github.com/coveo/ui-kit/issues/5374)
+- fix(deps): update all dependencies j:kit-282 (#5476) ([c5ea600](https://github.com/coveo/ui-kit/commits/c5ea600)), closes [#5476](https://github.com/coveo/ui-kit/issues/5476)
+
 ## <small>3.2.45 (2025-06-11)</small>
 
 - fix(deps): update all dependencies j:kit-282 (#5068) ([2a0d833](https://github.com/coveo/ui-kit/commits/2a0d833)), closes [#5068](https://github.com/coveo/ui-kit/issues/5068)
