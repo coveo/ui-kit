@@ -20,7 +20,6 @@ import { InsightInitializationOptions } from "./components/insight/atomic-insigh
 import { InsightStore } from "./components/insight/atomic-insight-interface/store";
 import { Actions, InsightResultActionClickedEvent } from "./components/insight/atomic-insight-result-action/atomic-insight-result-action";
 import { InsightResultAttachToCaseEvent } from "./components/insight/atomic-insight-result-attach-to-case-action/atomic-insight-result-attach-to-case-action";
-import { Section } from "./components/common/atomic-layout-section/sections";
 import { SelectChildProductEventArgs } from "./components/commerce/atomic-product-children/select-child-product-event";
 import { TruncateAfter } from "./components/common/expandable-text/expandable-text";
 import { ItemDisplayImageSize as ItemDisplayImageSize1 } from "./components.d";
@@ -49,7 +48,6 @@ export { InsightInitializationOptions } from "./components/insight/atomic-insigh
 export { InsightStore } from "./components/insight/atomic-insight-interface/store";
 export { Actions, InsightResultActionClickedEvent } from "./components/insight/atomic-insight-result-action/atomic-insight-result-action";
 export { InsightResultAttachToCaseEvent } from "./components/insight/atomic-insight-result-attach-to-case-action/atomic-insight-result-attach-to-case-action";
-export { Section } from "./components/common/atomic-layout-section/sections";
 export { SelectChildProductEventArgs } from "./components/commerce/atomic-product-children/select-child-product-event";
 export { TruncateAfter } from "./components/common/expandable-text/expandable-text";
 export { ItemDisplayImageSize as ItemDisplayImageSize1 } from "./components.d";
