@@ -5,10 +5,6 @@ import {
 } from 'c/quanticHeadlessLoader';
 import {getItemFromLocalStorage, setItemInLocalStorage} from 'c/quanticUtils';
 import {LightningElement, api, track} from 'lwc';
-// @ts-ignore
-import errorTemplate from './templates/errorTemplate.html';
-// @ts-ignore
-import searchBox from './templates/searchBox.html';
 
 /** @typedef {import("coveo").SearchEngine} SearchEngine */
 /** @typedef {import("coveo").SearchBoxState} SearchBoxState */
@@ -123,6 +119,7 @@ export default class QuanticSearchBox extends LightningElement {
         },
         options: {
           maxLength: 20,
+          clearFilters: !this.keepFiltersOnSearch,
         },
       });
       this.unsubscribeRecentQueriesList = this.recentQueriesList.subscribe(() =>
@@ -238,21 +235,9 @@ export default class QuanticSearchBox extends LightningElement {
   };
 
   /**
-   * @return {quanticSearchBoxInput}
-   */
-  get quanticSearchBoxInput() {
-    // @ts-ignore
-    return this.template.querySelector('c-quantic-search-box-input');
-  }
-
-  /**
    * Sets the component in the initialization error state.
    */
   setInitializationError() {
     this.hasInitializationError = true;
-  }
-
-  render() {
-    return this.hasInitializationError ? errorTemplate : searchBox;
   }
 }

@@ -1,11 +1,11 @@
 import {renderInAtomicCommerceInterface} from '@/vitest-utils/testing-helpers/fixtures/atomic/commerce/atomic-commerce-interface-fixture';
 import {buildFakeRegularFacet} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/facet-controller';
-import {buildFakeSummary} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/summary-controller';
+import {buildFakeSummary} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/summary-subcontroller';
 import {RegularFacet, Summary} from '@coveo/headless/commerce';
 import {userEvent} from '@storybook/test';
 import {page} from '@vitest/browser/context';
 import '@vitest/browser/matchers.d.ts';
-import {html} from 'lit';
+import {html, LitElement} from 'lit';
 import {
   describe,
   expect,
@@ -618,6 +618,84 @@ describe('AtomicCommerceFacet', () => {
       isAutoSelected: false,
       isSuggested: false,
       moreValuesAvailable: false,
+    });
+  });
+
+  describe('#initialize', () => {
+    it('should call all initialization methods in the correct order', async () => {
+      const element = await setupElement();
+
+      // Spy on the private methods
+      // @ts-expect-error: accessing private methods for testing
+      const validateFacetSpy = vi.spyOn(element, 'validateFacet');
+      // @ts-expect-error: accessing private methods for testing
+      const initFocusTargetsSpy = vi.spyOn(element, 'initFocusTargets');
+      // @ts-expect-error: accessing private methods for testing
+      const ensureSubscribedSpy = vi.spyOn(element, 'ensureSubscribed');
+      // @ts-expect-error: accessing private methods for testing
+      const initAriaLiveSpy = vi.spyOn(element, 'initAriaLive');
+      // @ts-expect-error: accessing private methods for testing
+      const initPopoverSpy = vi.spyOn(element, 'initPopover');
+
+      // Reset the spies to clear any calls from setupElement
+      validateFacetSpy.mockClear();
+      initFocusTargetsSpy.mockClear();
+      ensureSubscribedSpy.mockClear();
+      initAriaLiveSpy.mockClear();
+      initPopoverSpy.mockClear();
+
+      // Call initialize
+      element.initialize();
+
+      // Verify all methods were called
+      expect(validateFacetSpy).toHaveBeenCalledOnce();
+      expect(initFocusTargetsSpy).toHaveBeenCalledOnce();
+      expect(ensureSubscribedSpy).toHaveBeenCalledOnce();
+      expect(initAriaLiveSpy).toHaveBeenCalledOnce();
+      expect(initPopoverSpy).toHaveBeenCalledOnce();
+    });
+
+    it('should subscribe to facet controller', async () => {
+      const element = await setupElement();
+      const subscribeSpy = vi.spyOn(mockedFacet, 'subscribe');
+
+      element.initialize();
+
+      expect(subscribeSpy).toHaveBeenCalled();
+    });
+  });
+
+  describe('#disconnectedCallback', () => {
+    it('should unsubscribe from facet controller when component disconnects', async () => {
+      const element = await setupElement();
+      const unsubscribeSpy = vi.fn();
+
+      // @ts-expect-error: accessing private properties for testing
+      element.unsubscribeFacetController = unsubscribeSpy;
+
+      element.disconnectedCallback();
+
+      expect(unsubscribeSpy).toHaveBeenCalledOnce();
+      // @ts-expect-error: accessing private properties for testing
+      expect(element.unsubscribeFacetController).toBeUndefined();
+    });
+
+    it('should not error when unsubscribeFacetController is undefined', async () => {
+      const element = await setupElement();
+
+      // @ts-expect-error: accessing private properties for testing
+      element.unsubscribeFacetController = undefined;
+
+      expect(() => element.disconnectedCallback()).not.toThrow();
+    });
+
+    it('should call super.disconnectedCallback()', async () => {
+      const element = await setupElement();
+      const superSpy = vi.spyOn(LitElement.prototype, 'disconnectedCallback');
+
+      element.disconnectedCallback();
+
+      expect(superSpy).toHaveBeenCalledOnce();
     });
   });
 });

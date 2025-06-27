@@ -1,8 +1,17 @@
 {
-  "extends": ["@salesforce/eslint-config-lwc/recommended"],
+  "extends": ["@salesforce/eslint-config-lwc/recommended", "prettier"],
   "root": true,
   "globals": {
     "CoveoHeadless": "readonly",
     "CoveoHeadlessCaseAssist": "readonly"
-  }
+  },
+  "overrides": [
+    {
+      "files": ["**/e2e/*.ts"],
+      "parser": "@typescript-eslint/parser",
+      "rules": {
+        "no-redeclare": ["error", {"builtinGlobals": false}]
+      }
+    }
+  ]
 }
