@@ -1,5 +1,21 @@
 import {CSSResult} from 'lit';
 
+/**
+ * Decorator to inject styles into components that do not use Shadow DOM.
+ *
+ * This decorator is intended for LitElement-based components that render in the light DOM (i.e., without a shadow root).
+ * It ensures that the component's styles (provided as static `styles` property) are injected into the document or shadow root using `adoptedStyleSheets`.
+ *
+ * Usage:
+ *   @injectStylesForNoShadowDOM
+ *   class MyComponent extends LitElement { ... }
+ *
+ * - Ensures styles are applied even when Shadow DOM is not used.
+ * - Prevents duplicate style injection by checking for existing style sheets.
+ * - Calls the original `connectedCallback` and `createRenderRoot` methods.
+ *
+ * @template T - A LitElement constructor with a static `styles` property.
+ */
 export const injectStylesForNoShadowDOM = <
   T extends {
     styles: CSSResult | CSSResult[];
