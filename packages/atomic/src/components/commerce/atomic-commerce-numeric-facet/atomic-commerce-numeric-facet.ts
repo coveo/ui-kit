@@ -30,7 +30,7 @@ import {
   defaultCurrencyFormatter,
   defaultNumberFormatter,
 } from '../../common/formats/format-common';
-import {Range} from '../atomic-commerce-facet-number-input/atomic-commerce-facet-number-input';
+import type {Range} from '../atomic-commerce-facet-number-input/atomic-commerce-facet-number-input';
 // TODO: remove
 import '../atomic-commerce-facet-number-input/atomic-commerce-facet-number-input';
 import {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface';
@@ -38,7 +38,23 @@ import styles from './atomic-commerce-numeric-facet.tw.css';
 
 /**
  * The `atomic-commerce-numeric-facet` component is responsible for rendering a commerce facet that allows the user to filter products using numeric ranges.
- * TODO: document parts
+ *
+ * @part facet - The wrapper around the entire facet.
+ * @part label-button - The clickable label button that toggles facet visibility.
+ * @part label-button-icon - The icon displayed in the label button (expand/collapse arrow).
+ * @part clear-button - The button to clear all selected facet values.
+ * @part clear-button-icon - The icon displayed in the clear button.
+ * @part values - The list container for all facet values.
+ * @part value-label - The text label for individual facet values.
+ * @part value-count - The count indicator showing number of results for each value.
+ * @part value-checkbox-label - The label associated with facet value checkboxes.
+ * @part value-exclude-button - The button to exclude specific facet values.
+ * @part input-form - The form container for numeric range inputs.
+ * @part label-start - The label for the minimum value input field.
+ * @part input-start - The input field for entering minimum numeric value.
+ * @part label-end - The label for the maximum value input field.
+ * @part input-end - The input field for entering maximum numeric value.
+ * @part input-apply-button - The button to apply custom numeric range values.
  *
  * @alpha
  */
@@ -103,12 +119,6 @@ export class AtomicCommerceNumericFacet
     this.ensureSubscribed();
     this.registerFacetToStore();
   }
-
-  // public connectedCallback(): void {
-  //   super.connectedCallback();
-  //   // TODO: copy commerce facet to avoid this
-  //   this.ensureSubscribed();
-  // }
 
   public disconnectedCallback(): void {
     this.unsubscribeFacetController?.();
