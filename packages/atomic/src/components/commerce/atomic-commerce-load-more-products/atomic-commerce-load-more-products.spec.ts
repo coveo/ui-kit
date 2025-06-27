@@ -269,7 +269,7 @@ describe('AtomicCommerceLoadMoreProducts', () => {
     });
 
     describe('when the load more button is clicked', () => {
-      it('should call fetchMoreProducts', async () => {
+      it('should call #fetchMoreProducts', async () => {
         const {fetchMoreProductsSpy} = await renderLoadMoreProducts({
           interfaceType: 'product-listing',
           paginationState: {totalEntries: 100},
@@ -285,7 +285,7 @@ describe('AtomicCommerceLoadMoreProducts', () => {
         expect(fetchMoreProductsSpy).toHaveBeenCalledOnce();
       });
 
-      it('should call focusOnNextNewResult', async () => {
+      it('should call #focusOnNextNewResult', async () => {
         const {focusOnNextNewResultSpy} = await renderLoadMoreProducts({
           interfaceType: 'product-listing',
           paginationState: {totalEntries: 100},
