@@ -1,17 +1,16 @@
 /* eslint-disable */
 /* tslint:disable */
 /* auto-generated react proxies */
-import { createReactComponent } from './react-component-lib';
+import { createReactComponent } from './react-component-lib/index.js';
 
 import type { JSX } from '@coveo/atomic';
 
-import { defineCustomElements } from '@coveo/atomic/dist/atomic/loader';
+import { defineCustomElements } from '@coveo/atomic/loader';
 
 defineCustomElements();
 export const AtomicCommerceBreadbox = /*@__PURE__*/createReactComponent<JSX.AtomicCommerceBreadbox, HTMLAtomicCommerceBreadboxElement>('atomic-commerce-breadbox');
 export const AtomicCommerceCategoryFacet = /*@__PURE__*/createReactComponent<JSX.AtomicCommerceCategoryFacet, HTMLAtomicCommerceCategoryFacetElement>('atomic-commerce-category-facet');
 export const AtomicCommerceDidYouMean = /*@__PURE__*/createReactComponent<JSX.AtomicCommerceDidYouMean, HTMLAtomicCommerceDidYouMeanElement>('atomic-commerce-did-you-mean');
-export const AtomicCommerceFacetNumberInput = /*@__PURE__*/createReactComponent<JSX.AtomicCommerceFacetNumberInput, HTMLAtomicCommerceFacetNumberInputElement>('atomic-commerce-facet-number-input');
 export const AtomicCommerceFacets = /*@__PURE__*/createReactComponent<JSX.AtomicCommerceFacets, HTMLAtomicCommerceFacetsElement>('atomic-commerce-facets');
 export const AtomicCommerceLoadMoreProducts = /*@__PURE__*/createReactComponent<JSX.AtomicCommerceLoadMoreProducts, HTMLAtomicCommerceLoadMoreProductsElement>('atomic-commerce-load-more-products');
 export const AtomicCommerceNoProducts = /*@__PURE__*/createReactComponent<JSX.AtomicCommerceNoProducts, HTMLAtomicCommerceNoProductsElement>('atomic-commerce-no-products');
@@ -46,5 +45,3 @@ export const AtomicProductSectionVisual = /*@__PURE__*/createReactComponent<JSX.
 export const AtomicProductText = /*@__PURE__*/createReactComponent<JSX.AtomicProductText, HTMLAtomicProductTextElement>('atomic-product-text');
 export const AtomicResultLocalizedText = /*@__PURE__*/createReactComponent<JSX.AtomicResultLocalizedText, HTMLAtomicResultLocalizedTextElement>('atomic-result-localized-text');
 export const AtomicTimeframe = /*@__PURE__*/createReactComponent<JSX.AtomicTimeframe, HTMLAtomicTimeframeElement>('atomic-timeframe');
-export const StencilAtomicCommerceFacetNumberInput = /*@__PURE__*/createReactComponent<JSX.StencilAtomicCommerceFacetNumberInput, HTMLStencilAtomicCommerceFacetNumberInputElement>('stencil-atomic-commerce-facet-number-input');
-export const StencilAtomicCommerceNumericFacet = /*@__PURE__*/createReactComponent<JSX.StencilAtomicCommerceNumericFacet, HTMLStencilAtomicCommerceNumericFacetElement>('stencil-atomic-commerce-numeric-facet');
