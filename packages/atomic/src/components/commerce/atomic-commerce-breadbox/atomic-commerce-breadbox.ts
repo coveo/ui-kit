@@ -1,45 +1,47 @@
+import {bindStateToController} from '@/src/decorators/bind-state';
+import {bindingGuard} from '@/src/decorators/binding-guard';
+import {bindings} from '@/src/decorators/bindings';
+import {errorGuard} from '@/src/decorators/error-guard';
+import {InitializableComponent} from '@/src/decorators/types';
+import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles.js';
+import {FocusTargetController} from '@/src/utils/accessibility-utils';
+import {parseDate} from '@/src/utils/date-utils';
+import {getFieldValueCaption} from '@/src/utils/field-utils';
 import {NumberValue, Schema} from '@coveo/bueno';
 import {
-  BreadcrumbManagerState,
   BreadcrumbManager,
-  ProductListing,
-  Search,
+  BreadcrumbManagerState,
+  BreadcrumbValue,
+  buildContext,
   buildProductListing,
   buildSearch,
-  NumericFacetValue,
-  RegularFacetValue,
-  DateFacetValue,
-  Breadcrumb,
   CategoryFacetValue,
-  BreadcrumbValue,
   Context,
   ContextState,
-  buildContext,
+  DateFacetValue,
   LocationFacetValue,
+  NumericFacetValue,
+  ProductListing,
+  RegularFacetValue,
+  Search,
+  Breadcrumb,
 } from '@coveo/headless/commerce';
-import {Component, h, State, Element, Prop} from '@stencil/core';
-import {parseDate} from '../../../utils/date-utils';
-import {getFieldValueCaption} from '../../../utils/field-utils';
-import {
-  InitializableComponent,
-  BindStateToController,
-  InitializeBindings,
-} from '../../../utils/initialization-utils';
-import {FocusTargetController} from '../../../utils/stencil-accessibility-utils';
+import {CSSResultGroup, html, LitElement, nothing, unsafeCSS} from 'lit';
+import {customElement, property, state} from 'lit/decorators.js';
+import {renderBreadcrumbButton} from '../../common/breadbox/breadcrumb-button';
+import {renderBreadcrumbClearAll} from '../../common/breadbox/breadcrumb-clear-all';
+import {renderBreadcrumbContainer} from '../../common/breadbox/breadcrumb-container';
+import {renderBreadcrumbContent} from '../../common/breadbox/breadcrumb-content';
+import {renderBreadcrumbShowLess} from '../../common/breadbox/breadcrumb-show-less';
+import {renderBreadcrumbShowMore} from '../../common/breadbox/breadcrumb-show-more';
 import {Breadcrumb as BreadboxBreadcrumb} from '../../common/breadbox/breadcrumb-types';
-import {BreadcrumbButton} from '../../common/breadbox/stencil-breadcrumb-button';
-import {BreadcrumbClearAll} from '../../common/breadbox/stencil-breadcrumb-clear-all';
-import {BreadcrumbContainer} from '../../common/breadbox/stencil-breadcrumb-container';
-import {BreadcrumbContent} from '../../common/breadbox/stencil-breadcrumb-content';
-import {BreadcrumbShowLess} from '../../common/breadbox/stencil-breadcrumb-show-less';
-import {BreadcrumbShowMore} from '../../common/breadbox/stencil-breadcrumb-show-more';
 import {formatHumanReadable} from '../../common/facets/numeric-facet/formatter';
 import {
   defaultCurrencyFormatter,
   defaultNumberFormatter,
 } from '../../common/formats/format-common';
-import {Hidden} from '../../common/stencil-hidden';
 import {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface';
+import styles from './atomic-commerce-breadbox.tw.css';
 
 type AnyFacetValue =
   | RegularFacetValue
@@ -65,43 +67,39 @@ type AnyFacetValue =
  *
  * @alpha
  */
-@Component({
-  tag: 'atomic-commerce-breadbox',
-  styleUrl: 'atomic-commerce-breadbox.pcss',
-  shadow: true,
-})
+@customElement('atomic-commerce-breadbox')
+@bindings()
+@withTailwindStyles
 export class AtomicCommerceBreadbox
+  extends LitElement
   implements InitializableComponent<CommerceBindings>
 {
-  @InitializeBindings() public bindings!: CommerceBindings;
+  static styles: CSSResultGroup = [unsafeCSS(styles)];
 
   private resizeObserver?: ResizeObserver;
-  private showMore!: HTMLButtonElement;
-  private showLess!: HTMLButtonElement;
   private lastRemovedBreadcrumbIndex = 0;
   private numberOfBreadcrumbs = 0;
   private numberOfCollapsedBreadcrumbs = 0;
   private firstExpandedBreadcrumbIndex?: number;
-  breadcrumbManager!: BreadcrumbManager;
+  private breadcrumbRemovedFocus!: FocusTargetController;
+  private breadcrumbShowMoreFocus!: FocusTargetController;
+  private breadcrumbShowLessFocus!: FocusTargetController;
 
-  @Element() private host!: HTMLElement;
-
+  public bindings!: CommerceBindings;
+  public breadcrumbManager!: BreadcrumbManager;
   public context!: Context;
-  @BindStateToController('context') contextState!: ContextState;
-
+  @bindStateToController('context')
+  @state()
+  public contextState!: ContextState;
   public searchOrListing!: Search | ProductListing;
 
-  @BindStateToController('breadcrumbManager')
-  @State()
-  private breadcrumbManagerState!: BreadcrumbManagerState;
-  @State() public error!: Error;
-  @State() private isCollapsed = true;
+  @bindStateToController('breadcrumbManager')
+  @state()
+  public breadcrumbManagerState!: BreadcrumbManagerState;
 
-  private breadcrumbRemovedFocus?: FocusTargetController;
-
-  private breadcrumbShowMoreFocus?: FocusTargetController;
-
-  private breadcrumbShowLessFocus?: FocusTargetController;
+  @state() public error!: Error;
+  @state() private isCollapsed = true;
+  @state() private showMoreText = '';
 
   /**
    * This prop allows you to control the display depth
@@ -117,25 +115,43 @@ export class AtomicCommerceBreadbox
    * Minimum: `1`
    * @defaultValue `3`
    */
-  @Prop() public pathLimit = 3;
+  @property({type: Number, attribute: 'path-limit'}) pathLimit = 3;
 
   public initialize() {
     this.validateProps();
-
     if (this.bindings.interfaceElement.type === 'product-listing') {
       this.searchOrListing = buildProductListing(this.bindings.engine);
     } else {
       this.searchOrListing = buildSearch(this.bindings.engine);
     }
-
     this.context = buildContext(this.bindings.engine);
-
     this.breadcrumbManager = this.searchOrListing.breadcrumbManager();
 
-    if (window.ResizeObserver) {
+    if (window.ResizeObserver && this.parentElement) {
       this.resizeObserver = new ResizeObserver(() => this.adaptBreadcrumbs());
-      this.resizeObserver.observe(this.host.parentElement!);
+      this.resizeObserver.observe(this.parentElement);
     }
+
+    this.breadcrumbRemovedFocus = new FocusTargetController(
+      this,
+      this.bindings
+    );
+    this.breadcrumbShowMoreFocus = new FocusTargetController(
+      this,
+      this.bindings
+    );
+    this.breadcrumbShowLessFocus = new FocusTargetController(
+      this,
+      this.bindings
+    );
+  }
+
+  updated(changedProperties: Map<string, unknown>) {
+    super.updated(changedProperties);
+    if (changedProperties.has('pathLimit')) {
+      this.validateProps();
+    }
+    this.adaptBreadcrumbs();
   }
 
   private validateProps() {
@@ -154,27 +170,22 @@ export class AtomicCommerceBreadbox
     this.resizeObserver?.disconnect();
   }
 
-  private get focusTargets() {
-    if (!this.breadcrumbRemovedFocus) {
-      this.breadcrumbRemovedFocus = new FocusTargetController(this);
-    }
-    if (!this.breadcrumbShowLessFocus) {
-      this.breadcrumbShowLessFocus = new FocusTargetController(this);
-    }
-    if (!this.breadcrumbShowMoreFocus) {
-      this.breadcrumbShowMoreFocus = new FocusTargetController(this);
-    }
-    return {
-      breadcrumbRemovedFocus: this.breadcrumbRemovedFocus,
-      breadcrumbShowLessFocus: this.breadcrumbShowLessFocus,
-      breadcrumbShowMoreFocus: this.breadcrumbShowMoreFocus,
-    };
-  }
-
   private get breadcrumbs() {
     return Array.from(
-      this.host.shadowRoot!.querySelectorAll('li.breadcrumb')
+      this.shadowRoot!.querySelectorAll('li.breadcrumb')
     ) as HTMLElement[];
+  }
+
+  private get showMoreButton() {
+    return this.shadowRoot!.querySelector(
+      'button[part="show-more"]'
+    ) as HTMLButtonElement;
+  }
+
+  private get showLessButton() {
+    return this.shadowRoot!.querySelector(
+      'button[part="show-less"]'
+    ) as HTMLButtonElement;
   }
 
   private hide(element: HTMLElement) {
@@ -187,6 +198,27 @@ export class AtomicCommerceBreadbox
 
   private showAllBreadcrumbs() {
     this.breadcrumbs.forEach((breadcrumb) => this.show(breadcrumb));
+  }
+
+  private adaptBreadcrumbs() {
+    if (!this.breadcrumbs.length) {
+      return;
+    }
+    this.showAllBreadcrumbs();
+
+    if (!this.isCollapsed) {
+      this.updateShowLessDisplay();
+      return;
+    }
+
+    this.hideOverflowingBreadcrumbs();
+  }
+
+  private updateShowLessDisplay() {
+    this.show(this.showLessButton);
+    if (this.showLessButton.offsetTop === 0) {
+      this.hide(this.showLessButton);
+    }
   }
 
   private hideOverflowingBreadcrumbs() {
@@ -202,30 +234,8 @@ export class AtomicCommerceBreadbox
     this.updateShowMoreValue(hiddenBreadcrumbs);
   }
 
-  private updateShowLessDisplay() {
-    this.show(this.showLess);
-    if (this.showLess.offsetTop === 0) {
-      this.hide(this.showLess);
-    }
-  }
-
-  private adaptBreadcrumbs() {
-    if (!this.breadcrumbs.length) {
-      return;
-    }
-    this.showAllBreadcrumbs();
-
-    if (!this.isCollapsed) {
-      this.updateShowLessDisplay();
-      return;
-    }
-
-    this.updateShowMoreValue(this.breadcrumbs.length);
-    this.hideOverflowingBreadcrumbs();
-  }
-
   private get isOverflowing() {
-    const listElement = this.host.shadowRoot!.querySelector('ul');
+    const listElement = this.shadowRoot!.querySelector('ul');
     if (!listElement) {
       return false;
     }
@@ -235,19 +245,14 @@ export class AtomicCommerceBreadbox
   private updateShowMoreValue(value: number) {
     this.numberOfCollapsedBreadcrumbs = value;
     if (value === 0) {
-      this.hide(this.showMore);
+      this.hide(this.showMoreButton);
       return;
     }
-    this.show(this.showMore);
-    this.showMore.textContent = `+ ${value.toLocaleString(
+    this.show(this.showMoreButton);
+
+    this.showMoreText = `+ ${value.toLocaleString(
       this.bindings.i18n.language
     )}`;
-    this.showMore.setAttribute(
-      'aria-label',
-      this.bindings.i18n.t('show-n-more-filters', {
-        value,
-      })
-    );
   }
 
   private getNumberFormatter(field: string) {
@@ -326,42 +331,47 @@ export class AtomicCommerceBreadbox
 
     return breadcrumbs.map((breadcrumb, index) => {
       const isLastBreadcrumb = breadcrumbs.length === 1;
-      return (
-        <BreadcrumbButton
-          setRef={(ref) => {
-            if (this.lastRemovedBreadcrumbIndex === index) {
-              this.focusTargets.breadcrumbRemovedFocus.setTarget(ref);
-            }
-            if (this.firstExpandedBreadcrumbIndex === index) {
-              this.focusTargets.breadcrumbShowMoreFocus.setTarget(ref);
-            }
-          }}
-          pathLimit={this.pathLimit}
-          breadcrumb={breadcrumb}
-          onSelectBreadcrumb={() => {
+
+      return html`${renderBreadcrumbButton({
+        props: {
+          pathLimit: this.pathLimit,
+          breadcrumb,
+          i18n: this.bindings.i18n,
+          onSelectBreadcrumb: () => {
             if (isLastBreadcrumb) {
               this.bindings.store.state.resultList?.focusOnFirstResultAfterNextSearch();
             } else if (this.numberOfBreadcrumbs > 1) {
-              this.focusTargets.breadcrumbRemovedFocus.focusAfterSearch();
+              this.breadcrumbRemovedFocus.focusAfterSearch();
             }
 
             this.lastRemovedBreadcrumbIndex = index;
             breadcrumb.deselect();
-          }}
-          i18n={this.bindings.i18n}
-        >
-          <BreadcrumbContent
-            pathLimit={this.pathLimit}
-            isCollapsed={this.isCollapsed}
-            i18n={this.bindings.i18n}
-            breadcrumb={breadcrumb}
-          ></BreadcrumbContent>
-        </BreadcrumbButton>
-      );
+          },
+          refCallback: (ref) => {
+            if (this.lastRemovedBreadcrumbIndex === index) {
+              this.breadcrumbRemovedFocus.setTarget(ref);
+            }
+            if (this.firstExpandedBreadcrumbIndex === index) {
+              this.breadcrumbShowMoreFocus.setTarget(ref);
+            }
+          },
+        },
+      })(
+        html`${renderBreadcrumbContent({
+          props: {
+            pathLimit: this.pathLimit,
+            isCollapsed: this.isCollapsed,
+            i18n: this.bindings.i18n,
+            breadcrumb,
+          },
+        })}`
+      )}`;
     });
   }
 
-  public render() {
+  @bindingGuard()
+  @errorGuard()
+  render() {
     const breadcrumbs = this.breadcrumbManagerState.facetBreadcrumbs
       .map((breadcrumb) => {
         return this.buildBreadcrumb(breadcrumb);
@@ -369,63 +379,70 @@ export class AtomicCommerceBreadbox
       .flat();
 
     if (!breadcrumbs.length) {
-      return <Hidden></Hidden>;
+      return html`${nothing}`;
     }
-    return (
-      <BreadcrumbContainer
-        isCollapsed={this.isCollapsed}
-        i18n={this.bindings.i18n}
-      >
-        {this.renderBreadcrumbs(breadcrumbs)}
-        <BreadcrumbShowMore
-          setRef={(el: HTMLButtonElement) => {
-            this.focusTargets.breadcrumbShowLessFocus.setTarget(el!);
-            this.showMore = el;
-          }}
-          onShowMore={() => {
+
+    return html`${renderBreadcrumbContainer({
+      props: {
+        isCollapsed: this.isCollapsed,
+        i18n: this.bindings.i18n,
+      },
+    })(
+      html`${this.renderBreadcrumbs(breadcrumbs)}
+      ${renderBreadcrumbShowMore({
+        props: {
+          refCallback: (el) => {
+            this.breadcrumbShowLessFocus.setTarget(el!);
+          },
+          onShowMore: () => {
             this.firstExpandedBreadcrumbIndex =
               this.numberOfBreadcrumbs - this.numberOfCollapsedBreadcrumbs;
-            this.focusTargets.breadcrumbShowMoreFocus.focusOnNextTarget();
+            this.breadcrumbShowMoreFocus.focusOnNextTarget();
             this.isCollapsed = false;
-          }}
-          isCollapsed={this.isCollapsed}
-          i18n={this.bindings.i18n}
-          numberOfCollapsedBreadcrumbs={this.numberOfCollapsedBreadcrumbs}
-        ></BreadcrumbShowMore>
-
-        <BreadcrumbShowLess
-          setRef={(el: HTMLButtonElement) => {
-            this.showLess = el;
-          }}
-          onShowLess={() => {
-            this.focusTargets.breadcrumbShowLessFocus.focusOnNextTarget();
+          },
+          isCollapsed: this.isCollapsed,
+          i18n: this.bindings.i18n,
+          numberOfCollapsedBreadcrumbs: this.numberOfCollapsedBreadcrumbs,
+          value: this.showMoreText,
+          ariaLabel: this.bindings.i18n.t('show-n-more-filters', {
+            value: this.showMoreText,
+          }),
+        },
+      })}
+      ${renderBreadcrumbShowLess({
+        props: {
+          onShowLess: () => {
+            this.breadcrumbShowLessFocus.focusOnNextTarget();
             this.isCollapsed = true;
-          }}
-          isCollapsed={this.isCollapsed}
-          i18n={this.bindings.i18n}
-        ></BreadcrumbShowLess>
-
-        <BreadcrumbClearAll
-          setRef={() => {
+          },
+          isCollapsed: this.isCollapsed,
+          i18n: this.bindings.i18n,
+        },
+      })}
+      ${renderBreadcrumbClearAll({
+        props: {
+          refCallback: (ref) => {
             const isFocusTarget =
               this.lastRemovedBreadcrumbIndex === this.numberOfBreadcrumbs;
 
-            isFocusTarget
-              ? this.focusTargets.breadcrumbRemovedFocus.setTarget
-              : undefined;
-          }}
-          onClick={async () => {
+            if (isFocusTarget) {
+              this.breadcrumbRemovedFocus.setTarget(ref);
+            }
+          },
+          onClick: () => {
             this.breadcrumbManager.deselectAll();
             this.bindings.store.state.resultList?.focusOnFirstResultAfterNextSearch();
-          }}
-          isCollapsed={this.isCollapsed}
-          i18n={this.bindings.i18n}
-        ></BreadcrumbClearAll>
-      </BreadcrumbContainer>
-    );
+          },
+          isCollapsed: this.isCollapsed,
+          i18n: this.bindings.i18n,
+        },
+      })} `
+    )}`;
   }
+}
 
-  public componentDidRender() {
-    this.adaptBreadcrumbs();
+declare global {
+  interface HTMLElementTagNameMap {
+    'atomic-commerce-breadbox': AtomicCommerceBreadbox;
   }
 }

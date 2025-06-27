@@ -1,6 +1,7 @@
 import {createComponent} from '@lit/react';
 import React from 'react';
 import {
+  AtomicCommerceBreadbox as LitAtomicCommerceBreadbox,
   AtomicCommerceInterface as LitAtomicCommerceInterface,
   AtomicCommerceLayout as LitAtomicCommerceLayout,
   AtomicCommercePager as LitAtomicCommercePager,
@@ -16,6 +17,12 @@ import {
   AtomicIcon as LitAtomicIcon,
   AtomicProduct as LitAtomicProduct,
 } from '@coveo/atomic/components';
+
+export const AtomicCommerceBreadbox = createComponent({
+  tagName: 'atomic-commerce-breadbox',
+  react: React,
+  elementClass: LitAtomicCommerceBreadbox,
+});
 
 export const AtomicCommerceInterface = createComponent({
   tagName: 'atomic-commerce-interface',
