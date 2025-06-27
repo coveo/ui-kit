@@ -4,6 +4,7 @@ import {createTestI18n} from '@/vitest-utils/testing-helpers/i18n-utils';
 import {Product} from '@coveo/headless/commerce';
 import {i18n} from 'i18next';
 import {html} from 'lit';
+import {ifDefined} from 'lit/directives/if-defined.js';
 import {describe, it, vi, expect, beforeEach} from 'vitest';
 import {AtomicProductText} from './atomic-product-text';
 
@@ -55,9 +56,9 @@ describe('atomic-product-text', () => {
     const {element, atomicInterface} =
       await renderInAtomicProduct<AtomicProductText>({
         template: html`<atomic-product-text
-          .field=${options.field || 'ec_name'}
-          .shouldHighlight=${options.shouldHighlight ?? true}
-          .default=${options.default || ''}
+          field=${ifDefined(options.field)}
+          should-highlight=${ifDefined(options.shouldHighlight)}
+          default=${ifDefined(options.default)}
         ></atomic-product-text>`,
         selector: 'atomic-product-text',
         product: productToUse === null ? undefined : productToUse,
@@ -87,12 +88,12 @@ describe('atomic-product-text', () => {
     expect(el).toBeInstanceOf(AtomicProductText);
   });
 
-  it('should render with default props', async () => {
+  it('should render nothing when default props are used', async () => {
     const element = await renderComponent();
+    const commerceText = locators.getCommerceText(element);
     expect(element).toBeDefined();
-    expect(element.field).toBe('ec_name');
-    expect(element.shouldHighlight).toBe(true);
-    expect(element.default).toBe('');
+    expect(commerceText).toBeNull();
+    expect(element).toBeEmptyDOMElement();
   });
 
   describe('when field has value', () => {
@@ -158,34 +159,41 @@ describe('atomic-product-text', () => {
       );
     });
 
-    it('should render empty when no #default is provided', async () => {
+    it('should render nothing when no #default is provided', async () => {
       const element = await renderComponent({
         field: 'nonexistent_field',
         default: '',
       });
 
       const commerceText = locators.getCommerceText(element);
-      expect(commerceText).toBeDefined();
+
+      expect(commerceText).toBeNull();
+      expect(element).toBeDefined();
+      expect(element).toBeEmptyDOMElement();
     });
   });
 
   describe('when product is not available', () => {
-    it('should render nothing when #product is null', async () => {
+    it('should render error component when #product is null', async () => {
       const element = await renderComponent({
         product: null as unknown as Product,
       });
 
-      const commerceText = locators.getCommerceText(element);
-      expect(commerceText).toBeNull();
+      const errorComponent = element?.shadowRoot?.querySelector(
+        'atomic-component-error'
+      );
+      expect(errorComponent).toBeDefined();
     });
 
-    it('should render nothing when #product is undefined', async () => {
+    it('should render error component when #product is undefined', async () => {
       const element = await renderComponent({
         product: undefined as unknown as Product,
       });
 
-      const commerceText = locators.getCommerceText(element);
-      expect(commerceText).toBeNull();
+      const errorComponent = element?.shadowRoot?.querySelector(
+        'atomic-component-error'
+      );
+      expect(errorComponent).toBeDefined();
     });
   });
 
@@ -451,7 +459,10 @@ describe('atomic-product-text', () => {
       product: productWithNumericField,
     });
     const commerceText = locators.getCommerceText(element);
-    expect(commerceText?.shadowRoot?.textContent).toBe('');
+
+    expect(element).toBeDefined();
+    expect(commerceText).toBeNull();
+    expect(element).toBeEmptyDOMElement();
   });
 
   it('should display nothing for boolean #field values', async () => {
@@ -465,7 +476,10 @@ describe('atomic-product-text', () => {
       product: productWithBooleanField,
     });
     const commerceText = locators.getCommerceText(element);
-    expect(commerceText?.shadowRoot?.textContent).toBe('');
+
+    expect(element).toBeDefined();
+    expect(commerceText).toBeNull();
+    expect(element).toBeEmptyDOMElement();
   });
 
   it('should handle special characters in #field values', async () => {
