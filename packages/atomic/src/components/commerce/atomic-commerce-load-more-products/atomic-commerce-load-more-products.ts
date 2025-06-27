@@ -14,6 +14,7 @@ import {
 } from '@coveo/headless/commerce';
 import {CSSResultGroup, html, unsafeCSS, LitElement, nothing} from 'lit';
 import {customElement, state} from 'lit/decorators.js';
+import {when} from 'lit/directives/when.js';
 import {createAppLoadedListener} from '../../common/interface/store';
 import {renderLoadMoreButton} from '../../common/load-more/button';
 import {renderLoadMoreContainer} from '../../common/load-more/container';
@@ -45,8 +46,14 @@ export class AtomicCommerceLoadMoreProducts
   @state()
   bindings!: CommerceBindings;
 
+  @state()
+  public error!: Error;
+
   public pagination!: Pagination;
   public listingOrSearch!: ProductListing | Search;
+
+  @state()
+  private isAppLoaded = false;
 
   @bindStateToController('pagination')
   @state()
@@ -55,9 +62,6 @@ export class AtomicCommerceLoadMoreProducts
   @bindStateToController('listingOrSearch')
   @state()
   private productListingOrSearchState!: ProductListingState | SearchState;
-
-  @state() public error!: Error;
-  @state() private isAppLoaded = false;
 
   public initialize() {
     if (this.bindings.interfaceElement.type === 'product-listing') {
@@ -72,6 +76,39 @@ export class AtomicCommerceLoadMoreProducts
     });
   }
 
+  render() {
+    return html`${when(
+      this.shouldRender,
+      () =>
+        renderLoadMoreContainer()(html`
+          ${renderLoadMoreSummary({
+            props: {
+              from: this.lastProduct,
+              to: this.paginationState.totalEntries,
+              i18n: this.bindings.i18n,
+              label: 'showing-products-of-load-more',
+            },
+          })}
+          ${renderLoadMoreProgressBar({
+            props: {
+              from: this.lastProduct,
+              to: this.paginationState.totalEntries,
+            },
+          })}
+          ${renderLoadMoreButton({
+            props: {
+              i18n: this.bindings.i18n,
+              label: 'load-more-products',
+              moreAvailable:
+                this.lastProduct < this.paginationState.totalEntries,
+              onClick: () => this.onClick(),
+            },
+          })}
+        `),
+      () => nothing
+    )}`;
+  }
+
   private get lastProduct() {
     return this.productListingOrSearchState.products.length;
   }
@@ -81,40 +118,8 @@ export class AtomicCommerceLoadMoreProducts
     this.pagination.fetchMoreProducts();
   }
 
-  private renderLoadMoreGuard() {
-    if (!this.isAppLoaded || this.paginationState.totalEntries <= 0) {
-      return nothing;
-    }
-
-    const {i18n} = this.bindings;
-    return renderLoadMoreContainer()(html`
-      ${renderLoadMoreSummary({
-        props: {
-          from: this.lastProduct,
-          to: this.paginationState.totalEntries,
-          i18n,
-          label: 'showing-products-of-load-more',
-        },
-      })}
-      ${renderLoadMoreProgressBar({
-        props: {
-          from: this.lastProduct,
-          to: this.paginationState.totalEntries,
-        },
-      })}
-      ${renderLoadMoreButton({
-        props: {
-          i18n,
-          label: 'load-more-products',
-          moreAvailable: this.lastProduct < this.paginationState.totalEntries,
-          onClick: () => this.onClick(),
-        },
-      })}
-    `);
-  }
-
-  render() {
-    return this.renderLoadMoreGuard();
+  private get shouldRender() {
+    return this.isAppLoaded && this.paginationState.totalEntries > 0;
   }
 }
 
