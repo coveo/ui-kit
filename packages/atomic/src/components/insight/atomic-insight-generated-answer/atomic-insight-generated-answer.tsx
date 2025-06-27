@@ -119,6 +119,11 @@ export class AtomicInsightGeneratedAnswer
    */
   @Prop() answerConfigurationId?: string;
 
+  /**
+   * A list of fields to include with the citations used to generate the answer.
+   */
+  @Prop() fieldsToIncludeInCitations = 'filetype';
+
   @AriaLiveRegion('generated-answer')
   protected ariaMessage!: string;
 
@@ -152,6 +157,7 @@ export class AtomicInsightGeneratedAnswer
       ...(this.answerConfigurationId && {
         answerConfigurationId: this.answerConfigurationId,
       }),
+      fieldsToIncludeInCitations: this.getCitationFields(),
     });
     this.searchStatus = buildInsightSearchStatus(this.bindings.engine);
     this.generatedAnswerCommon.insertFeedbackModal();
@@ -247,6 +253,13 @@ export class AtomicInsightGeneratedAnswer
     return this.host?.shadowRoot?.querySelector(
       '[part="generated-answer-footer"]'
     );
+  }
+
+  private getCitationFields() {
+    return this.fieldsToIncludeInCitations
+      ?.split(',')
+      .map((field) => field.trim())
+      .filter((field) => field.length > 0);
   }
 
   private validateMaxCollapsedHeight(): number {
