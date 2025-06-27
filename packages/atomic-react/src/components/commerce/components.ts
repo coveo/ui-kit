@@ -1,7 +1,9 @@
 import {
   AtomicCommerceFacet as LitAtomicCommerceFacet,
+  AtomicCommerceFacetNumberInput as LitAtomicCommerceFacetNumberInput,
   AtomicCommerceInterface as LitAtomicCommerceInterface,
   AtomicCommerceLayout as LitAtomicCommerceLayout,
+  AtomicCommerceNumericFacet as LitAtomicCommerceNumericFacet,
   AtomicCommercePager as LitAtomicCommercePager,
   AtomicCommerceProductList as LitAtomicCommerceProductList,
   AtomicCommerceQuerySummary as LitAtomicCommerceQuerySummary,
@@ -17,6 +19,12 @@ import {
 } from '@coveo/atomic/components';
 import {createComponent} from '@lit/react';
 import React from 'react';
+
+export const AtomicCommerceFacetNumberInput = createComponent({
+  tagName: 'atomic-commerce-facet-number-input',
+  react: React,
+  elementClass: LitAtomicCommerceFacetNumberInput,
+});
 
 export const AtomicCommerceFacet = createComponent({
   tagName: 'atomic-commerce-facet',
@@ -34,6 +42,12 @@ export const AtomicCommerceLayout = createComponent({
   tagName: 'atomic-commerce-layout',
   react: React,
   elementClass: LitAtomicCommerceLayout,
+});
+
+export const AtomicCommerceNumericFacet = createComponent({
+  tagName: 'atomic-commerce-numeric-facet',
+  react: React,
+  elementClass: LitAtomicCommerceNumericFacet,
 });
 
 export const AtomicCommercePager = createComponent({

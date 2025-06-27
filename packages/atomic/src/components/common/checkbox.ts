@@ -58,7 +58,7 @@ export const renderCheckbox: FunctionalComponent<CheckboxProps> = ({props}) => {
       role="checkbox"
       @click=${() => props.onToggle?.(!props.checked)}
       @mousedown=${(e: MouseEvent) => props.onMouseDown?.(e)}
-      ${ref(props.ref)}
+      ${props.ref ? ref(props.ref) : ''}
     >
       <atomic-icon
         style="stroke: white"
