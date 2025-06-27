@@ -22,9 +22,8 @@ describe('atomic-commerce-facet-number-input', () => {
     facet =
       props.facet ||
       ({
-        // TODO: add fixture
         state: {field: 'ec_price', facetId: 'test-facet'},
-      } as unknown as NumericFacet);
+      } as NumericFacet);
     const {element} =
       await renderInAtomicCommerceInterface<AtomicCommerceFacetNumberInput>({
         template: html`<atomic-commerce-facet-number-input
@@ -34,14 +33,6 @@ describe('atomic-commerce-facet-number-input', () => {
         ></atomic-commerce-facet-number-input>`,
         selector: 'atomic-commerce-facet-number-input',
       });
-
-    // const element = await renderFunctionFixture(
-    //   html`<atomic-commerce-facet-number-input
-    //     label=${props.label ?? 'Price'}
-    //     .facet=${facet}
-    //     .range=${props.range ?? {start: 0, end: 100}}
-    //   ></atomic-commerce-facet-number-input>`
-    // );
 
     return {
       element,
@@ -56,7 +47,7 @@ describe('atomic-commerce-facet-number-input', () => {
         );
       },
       get form() {
-        return page.getByRole('form');
+        return element.querySelector('form');
       },
       get applyButton() {
         return page.getByLabelText(
@@ -86,55 +77,44 @@ describe('atomic-commerce-facet-number-input', () => {
     await expect.element(endInput).toHaveValue(100);
   });
 
-  // TODO: useless
-  // it.skip('should update start and end state on input', async () => {
-  //   await setupElement({range: {start: 10, end: 100}});
-  //   const {startInput, endInput} = locators;
-  //   await startInput.fill('20');
-  //   await endInput.fill('200');
-  //   expect(element['start']).toBe(20);
-  //   expect(element['end']).toBe(200);
-  // });
-
-  // TODO:
-  // it.skip('should render empty input values when range is not provided', async () => {
-  //   const {startInput, endInput} = locators;
-  //   await expect.element(startInput).toHaveValue('');
-  //   await expect.element(endInput).toHaveValue('');
-  // });
+  it('should render empty input values when range is not provided', async () => {
+    const {startInput, endInput} = await setupElement({range: undefined});
+    await expect.element(startInput).toHaveValue(null);
+    await expect.element(endInput).toHaveValue(null);
+  });
 
   it('should render the form with part="input-form"', async () => {
     const {form} = await setupElement({range: {start: 10, end: 100}});
     await expect(form).toHaveAttribute('part', 'input-form');
   });
 
-  it.skip('should render the label for start input with part="label-start"', async () => {
+  it('should render the label for start input with part="label-start"', async () => {
     const {minLabel} = await setupElement({range: {start: 10, end: 100}});
     await expect(minLabel).toHaveAttribute('part', 'label-start');
   });
 
-  it.skip('should render the start input with part="input-start"', async () => {
+  it('should render the start input with part="input-start"', async () => {
     const {startInput} = await setupElement({range: {start: 10, end: 100}});
     await expect(startInput).toHaveAttribute('part', 'input-start');
   });
 
-  it.skip('should render the end input with part="input-end"', async () => {
+  it('should render the end input with part="input-end"', async () => {
     const {endInput} = await setupElement({range: {start: 10, end: 100}});
     await expect(endInput).toHaveAttribute('part', 'input-end');
   });
 
-  it.skip('should render the label for end input with part="label-end"', async () => {
+  it('should render the label for end input with part="label-end"', async () => {
     const {maxLabel} = await setupElement({range: {start: 10, end: 100}});
     await expect(maxLabel).toHaveAttribute('part', 'label-end');
   });
 
-  it.skip('should render the apply button with part="input-apply-button"', async () => {
+  it('should render the apply button with part="input-apply-button"', async () => {
     const {applyButton} = await setupElement({range: {start: 10, end: 100}});
     await expect(applyButton).toHaveAttribute('part', 'input-apply-button');
   });
 
   describe('#apply', () => {
-    it.skip('should emit atomic-number-input-apply event with correct detail button is clicked', async () => {
+    it('should emit atomic-number-input-apply event with correct detail button is clicked', async () => {
       const {element, applyButton} = await setupElement({
         range: {start: 10, end: 100},
       });
@@ -148,27 +128,13 @@ describe('atomic-commerce-facet-number-input', () => {
       );
     });
 
-    it.skip('should not emit event if inputs are invalid', async () => {
-      const {element, applyButton} = await setupElement({
-        range: {start: 10, end: 100},
-      });
-      const spy = vi.fn();
-      element.addEventListener('atomic-number-input-apply', spy);
-
-      element['startRef'] = {validity: {valid: false}} as HTMLInputElement;
-      element['endRef'] = {validity: {valid: false}} as HTMLInputElement;
-
-      await applyButton.click();
-      expect(spy).not.toHaveBeenCalled();
-    });
-
-    it.skip('should set the appropriate start and end refs', async () => {
+    it('should set the appropriate start and end refs', async () => {
       const {element, startInput, endInput} = await setupElement({
         range: {start: 10, end: 100},
       });
 
-      expect(element['startRef']).toBe(startInput);
-      expect(element['endRef']).toBe(endInput);
+      expect(element['startRef']).toBe(startInput.element());
+      expect(element['endRef']).toBe(endInput.element());
     });
   });
 });

@@ -1,5 +1,6 @@
 import {bindings} from '@/src/decorators/bindings';
 import {injectStylesForNoShadowDOM} from '@/src/decorators/light-dom';
+import {InitializableComponent} from '@/src/decorators/types';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
 import {isUndefined} from '@coveo/bueno';
 import {NumericFacet} from '@coveo/headless/commerce';
@@ -19,13 +20,16 @@ export type Range = {start: number; end: number};
 @withTailwindStyles
 @injectStylesForNoShadowDOM
 @bindings()
-export class AtomicCommerceFacetNumberInput extends LitElement {
+export class AtomicCommerceFacetNumberInput
+  extends LitElement
+  implements InitializableComponent<CommerceBindings>
+{
   /**
    * The bindings object containing i18n and engine context for the component.
-   * TODO: not necessary if decorated
    */
   @state()
   bindings!: CommerceBindings;
+
   @state()
   error!: Error;
 
@@ -51,16 +55,9 @@ export class AtomicCommerceFacetNumberInput extends LitElement {
   static styles = unsafeCSS(styles);
 
   initialize() {
-    console.log('---- Initializing AtomicCommerceFacetNumberInput');
     this.start = this.range?.start;
     this.end = this.range?.end;
   }
-
-  // connectedCallback() {
-  //   super.connectedCallback();
-  // this.start = this.range?.start;
-  // this.end = this.range?.end;
-  // }
 
   private apply() {
     if (!this.startRef?.validity.valid || !this.endRef?.validity.valid) {
@@ -101,25 +98,17 @@ export class AtomicCommerceFacetNumberInput extends LitElement {
   }
 
   render() {
-    console.log('---> Rendering AtomicCommerceFacetNumberInput');
     if (!this.facet || !this.bindings) {
-      console.log('---> ERROR');
       return html`${nothing}`;
     }
     const {facetId} = this.facet.state;
     const label = this.bindings.i18n.t(this.label);
     const minText = this.bindings.i18n.t('min');
-    console.log('minText----->', minText);
     const maxText = this.bindings.i18n.t('max');
-    console.log('maxText----->', maxText);
     const minAria = this.bindings.i18n.t('number-input-minimum', {label});
-    console.log('minAria----->', minAria);
     const maxAria = this.bindings.i18n.t('number-input-maximum', {label});
-    console.log('maxAria----->', maxAria);
     const apply = this.bindings.i18n.t('apply');
-    console.log('apply----->', apply);
     const applyAria = this.bindings.i18n.t('number-input-apply', {label});
-    console.log('applyAria----->', applyAria);
     const inputClasses =
       'p-2.5 input-primary placeholder-neutral-dark min-w-0 mr-1';
     const labelClasses = 'text-neutral-dark text-sm';
