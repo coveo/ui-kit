@@ -31,7 +31,6 @@ import {
   defaultNumberFormatter,
 } from '../../common/formats/format-common';
 import type {Range} from '../atomic-commerce-facet-number-input/atomic-commerce-facet-number-input';
-// TODO: remove
 import '../atomic-commerce-facet-number-input/atomic-commerce-facet-number-input';
 import {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface';
 import styles from './atomic-commerce-numeric-facet.tw.css';
@@ -278,9 +277,9 @@ export class AtomicCommerceNumericFacet
   @errorGuard()
   protected render() {
     const {firstRequestExecuted} = this.summaryState;
-    return html` ${when(!firstRequestExecuted || this.shouldRenderFacet, () =>
+    return html`${when(!firstRequestExecuted || this.shouldRenderFacet, () =>
       renderFacetContainer()(
-        html` ${renderFacetHeader({
+        html`${renderFacetHeader({
           props: {
             i18n: this.bindings.i18n,
             label: this.displayName,

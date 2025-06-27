@@ -398,7 +398,6 @@ export class AtomicCommerceFacet
   @bindingGuard()
   @errorGuard()
   protected render() {
-    console.log(this.summaryState);
     const {hasError, firstRequestExecuted} = this.summaryState;
     return html`
       ${when(
