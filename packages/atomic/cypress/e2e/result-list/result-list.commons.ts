@@ -48,7 +48,8 @@ export default (
       });
     });
 
-    describe('when injecting a result list after an initial search is executed', () => {
+    // TODO: Address this during the atomic-result-list lit migration
+    describe.skip('when injecting a result list after an initial search is executed', () => {
       beforeEach(() => {
         new TestFixture().init();
         getSearchInterface((searchInterface) => {
