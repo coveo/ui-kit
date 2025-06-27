@@ -1,2 +1,2 @@
 // Auto-generated file
-export {};
+export {AtomicSearchLayout} from './atomic-search-layout/atomic-search-layout.js';

@@ -1,3 +1,5 @@
+@reference '../../../utils/coveo.tw.css';
+
 .atomic-modal-opened {
   overflow-y: hidden;
 }
@@ -63,6 +65,12 @@ atomic-search-layout {
     display: none;
 
     & * {
+      max-width: 100%;
+    }
+  }
+
+  atomic-layout-section[section='main'] {
+    atomic-layout-section[section='horizontal-facets'] {
       margin-bottom: var(--atomic-layout-spacing-y);
     }
   }

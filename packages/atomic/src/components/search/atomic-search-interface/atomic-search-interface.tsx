@@ -42,7 +42,7 @@ import {
   errorSelector,
   firstSearchExecutedSelector,
   noResultsSelector,
-} from '../atomic-layout/search-layout';
+} from '../atomic-search-layout/search-layout';
 import {getAnalyticsConfig} from './analytics-config';
 import type {Bindings as _Bindings} from './interfaces';
 import {createSearchStore, SearchStore} from './store';

@@ -11,7 +11,7 @@ import {
   setLoadingFlag,
   unsetLoadingFlag,
 } from '../../common/interface/store';
-import {makeDesktopQuery} from '../../search/atomic-layout/search-layout';
+import {makeDesktopQuery} from '../atomic-commerce-layout/commerce-layout';
 
 interface Data {
   loadingFlags: string[];
