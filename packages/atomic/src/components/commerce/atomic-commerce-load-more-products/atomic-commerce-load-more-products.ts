@@ -15,7 +15,7 @@ import {
 import {CSSResultGroup, html, unsafeCSS, LitElement, nothing} from 'lit';
 import {customElement, state} from 'lit/decorators.js';
 import {createAppLoadedListener} from '../../common/interface/store';
-import {loadMoreButton} from '../../common/load-more/button';
+import {renderLoadMoreButton} from '../../common/load-more/button';
 import {renderLoadMoreContainer} from '../../common/load-more/container';
 import {renderLoadMoreProgressBar} from '../../common/load-more/progress-bar';
 import {renderLoadMoreSummary} from '../../common/load-more/summary';
@@ -102,7 +102,7 @@ export class AtomicCommerceLoadMoreProducts
           to: this.paginationState.totalEntries,
         },
       })}
-      ${loadMoreButton({
+      ${renderLoadMoreButton({
         props: {
           i18n,
           label: 'load-more-products',
