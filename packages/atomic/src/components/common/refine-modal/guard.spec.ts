@@ -35,86 +35,40 @@ describe('#refineToggleGuard', () => {
     expect(element).toBeEmptyDOMElement();
   });
 
-  it('should render nothing when hasItems is false', async () => {
-    const {element} = await renderComponent({
-      hasError: false,
-      firstRequestExecuted: true,
-      hasItems: false,
-    });
-
-    expect(element).toBeEmptyDOMElement();
-  });
-
-  it('should render a placeholder with correct attributes when firstRequestExecuted is false', async () => {
-    const {placeholder} = await renderComponent({
-      hasError: false,
-      firstRequestExecuted: false,
-      hasItems: true,
-    });
-
-    expect(placeholder).toBeVisible();
-    expect(placeholder).toHaveAttribute('part', 'placeholder');
-    expect(placeholder).toHaveAttribute('aria-hidden', 'true');
-  });
-
-  it('should render the children when all conditions are met', async () => {
-    const {element, children} = await renderComponent({
-      hasError: false,
-      firstRequestExecuted: true,
-      hasItems: true,
-    });
-
-    expect(children).toBeVisible();
-    expect(children).toHaveTextContent('Test Children');
-    expect(element).toContainHTML(
-      '<div class="test-children">Test Children</div>'
-    );
-  });
-
   describe('when hasError is false', () => {
-    it('should render placeholder when firstRequestExecuted is false', async () => {
-      const {placeholder, children} = await renderComponent({
+    it('should render a placeholder with correct attributes when firstRequestExecuted is false', async () => {
+      const {placeholder} = await renderComponent({
         hasError: false,
         firstRequestExecuted: false,
         hasItems: true,
       });
 
       expect(placeholder).toBeVisible();
-      expect(children).toBeNull();
+      expect(placeholder).toHaveAttribute('part', 'placeholder');
+      expect(placeholder).toHaveAttribute('aria-hidden', 'true');
     });
 
-    it('should render children when firstRequestExecuted is true and hasItems is true', async () => {
-      const {placeholder, children} = await renderComponent({
-        hasError: false,
-        firstRequestExecuted: true,
-        hasItems: true,
+    describe('when firstRequestExecuted is true', () => {
+      it('should render nothing when hasItems is false', async () => {
+        const {element} = await renderComponent({
+          hasError: false,
+          firstRequestExecuted: true,
+          hasItems: false,
+        });
+
+        expect(element).toBeEmptyDOMElement();
       });
 
-      expect(placeholder).toBeNull();
-      expect(children).toBeVisible();
-    });
-  });
+      it('should render children when hasItems is true', async () => {
+        const {children} = await renderComponent({
+          hasError: false,
+          firstRequestExecuted: true,
+          hasItems: true,
+        });
 
-  describe('when firstRequestExecuted is true', () => {
-    it('should render nothing when hasItems is false', async () => {
-      const {element} = await renderComponent({
-        hasError: false,
-        firstRequestExecuted: true,
-        hasItems: false,
+        expect(children).toBeVisible();
+        expect(children).toHaveTextContent('Test Children');
       });
-
-      expect(element).toBeEmptyDOMElement();
-    });
-
-    it('should render children when hasItems is true', async () => {
-      const {children} = await renderComponent({
-        hasError: false,
-        firstRequestExecuted: true,
-        hasItems: true,
-      });
-
-      expect(children).toBeVisible();
-      expect(children).toHaveTextContent('Test Children');
     });
   });
 });
