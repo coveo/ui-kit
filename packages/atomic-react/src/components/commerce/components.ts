@@ -70,7 +70,7 @@ export const AtomicCommerceSearchBoxQuerySuggestions = createComponent({
 export const AtomicCommerceSearchBoxRecentQueries = createComponent({
   tagName: 'atomic-commerce-search-box-recent-queries',
   react: React,
-  elementClass: LitAtomicCommerceText,
+  elementClass: LitAtomicCommerceSearchBoxRecentQueries,
 });
 
 export const AtomicCommerceSearchBox = createComponent({
