@@ -4,6 +4,8 @@ module.exports = {
       (file) =>
         !(file.includes('/stencil-generated/') && file.endsWith('.ts')) &&
         !file.includes('/packages/quantic/') &&
+        !file.includes('.github/prompts') &&
+        !file.includes('.github/instructions') &&
         !file.endsWith('.tw.css') &&
         !file.endsWith('.pcss') &&
         !file.endsWith('/package.json') &&
