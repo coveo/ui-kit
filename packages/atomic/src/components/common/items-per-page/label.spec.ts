@@ -6,7 +6,7 @@ import {renderLabel} from './label';
 describe('#renderLabel', () => {
   const renderComponent = async () => {
     const element = await renderFunctionFixture(
-      html`${renderLabel({props: {}})(html`children`)}`
+      html`${renderLabel()(html`children`)}`
     );
 
     return {

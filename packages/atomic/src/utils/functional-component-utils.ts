@@ -1,6 +1,10 @@
 import {nothing, TemplateResult} from 'lit';
 import {DirectiveResult} from 'lit/directive.js';
 
+export interface FunctionalComponentNoProps {
+  (): TemplateResult | typeof nothing;
+}
+
 export interface FunctionalComponent<T = {}> {
   ({props}: {props: T}): TemplateResult | typeof nothing;
 }
