@@ -16,7 +16,7 @@ import {NoItemsContainer} from '../../common/no-items/stencil-container';
 import {NoItemsGuard} from '../../common/no-items/stencil-guard';
 import {MagnifyingGlass} from '../../common/no-items/stencil-magnifying-glass';
 import {NoItems} from '../../common/no-items/stencil-no-items';
-import {SearchTips} from '../../common/no-items/tips';
+import {SearchTips} from '../../common/no-items/stencil-tips';
 import {getSummary} from '../../common/no-items/utils';
 import {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface';
 
