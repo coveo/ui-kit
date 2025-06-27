@@ -17,9 +17,14 @@ export default defineConfig({
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 0,
   workers: process.env.CI ? 1 : undefined,
-  reporter: 'html',
+  reporter: process.env.CI
+    ? [['html'], ['list'], ['github']]
+    : [['html'], ['list']],
   use: {
-    trace: 'on-first-retry',
+    trace: 'retain-on-failure',
+  },
+  expect: {
+    timeout: 7 * 1000,
   },
 
   projects: [
