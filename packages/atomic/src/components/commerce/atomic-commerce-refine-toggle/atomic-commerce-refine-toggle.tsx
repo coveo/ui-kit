@@ -14,6 +14,7 @@ import {
 import {RefineToggleGuard} from '../../common/refine-modal/guard';
 import {RefineToggleButton} from '../../common/refine-modal/stencil-button';
 import {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface';
+import {AtomicCommerceRefineModal} from '../atomic-commerce-refine-modal/atomic-commerce-refine-modal';
 
 /**
  * The `atomic-commerce-refine-toggle` component displays a button that opens a modal containing the facets and the sort components.
@@ -37,7 +38,7 @@ export class AtomicCommerceRefineToggle
   @State()
   private summaryState!: SearchSummaryState | ProductListingSummaryState;
   @Element() public host!: HTMLElement;
-  private modalRef?: HTMLAtomicCommerceRefineModalElement;
+  private modalRef?: AtomicCommerceRefineModal;
   private buttonRef?: HTMLButtonElement;
 
   @InitializeBindings() public bindings!: CommerceBindings;

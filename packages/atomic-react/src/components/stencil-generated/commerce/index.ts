@@ -20,7 +20,6 @@ export const AtomicCommerceNumericFacet = /*@__PURE__*/createReactComponent<JSX.
 export const AtomicCommerceProductsPerPage = /*@__PURE__*/createReactComponent<JSX.AtomicCommerceProductsPerPage, HTMLAtomicCommerceProductsPerPageElement>('atomic-commerce-products-per-page');
 export const AtomicCommerceQueryError = /*@__PURE__*/createReactComponent<JSX.AtomicCommerceQueryError, HTMLAtomicCommerceQueryErrorElement>('atomic-commerce-query-error');
 export const AtomicCommerceRecommendationInterface = /*@__PURE__*/createReactComponent<JSX.AtomicCommerceRecommendationInterface, HTMLAtomicCommerceRecommendationInterfaceElement>('atomic-commerce-recommendation-interface');
-export const AtomicCommerceRefineModal = /*@__PURE__*/createReactComponent<JSX.AtomicCommerceRefineModal, HTMLAtomicCommerceRefineModalElement>('atomic-commerce-refine-modal');
 export const AtomicCommerceRefineToggle = /*@__PURE__*/createReactComponent<JSX.AtomicCommerceRefineToggle, HTMLAtomicCommerceRefineToggleElement>('atomic-commerce-refine-toggle');
 export const AtomicCommerceText = /*@__PURE__*/createReactComponent<JSX.AtomicCommerceText, HTMLAtomicCommerceTextElement>('atomic-commerce-text');
 export const AtomicCommerceTimeframeFacet = /*@__PURE__*/createReactComponent<JSX.AtomicCommerceTimeframeFacet, HTMLAtomicCommerceTimeframeFacetElement>('atomic-commerce-timeframe-facet');
