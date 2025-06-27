@@ -87,7 +87,7 @@ export interface SearchParameters {
 
   /**
    * The active tab id.
-   * @deprecated Restoring the tab with the restoreSearchParameters action can cause components to be visible/hidden on the wrong tab. Instead, first restore the tab using the `restoreTab` action, then the rest of the parameters with the restoreSearchParameters action.
+   * @deprecated Restoring the tab with the restoreSearchParameters action can cause components to be visible/hidden on the wrong tab. The `restoreTab` action is also deprecated and will be removed in V4. Use alternative tab management methods instead.
    */
   tab?: string;
 
@@ -108,6 +108,10 @@ export const restoreSearchParameters = createAction(
     validatePayload(payload, searchParametersDefinition)
 );
 
+/**
+ * Restores a tab from the search parameters.
+ * @deprecated This action will be removed in V4. Use alternative tab management methods instead.
+ */
 export const restoreTab = createAction(
   'searchParameters/restoreTab',
   (payload: TabId) => validatePayload(payload, requiredNonEmptyString)

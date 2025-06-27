@@ -1,3 +1,10 @@
+## <small>3.24.1 (2025-06-25)</small>
+
+- fix(deps): update all dependencies j:kit-282 (#5522) ([ee7a9ab](https://github.com/coveo/ui-kit/commits/ee7a9ab)), closes [#5522](https://github.com/coveo/ui-kit/issues/5522)
+- fix(quantic): quantic searchbox always clears filters on suggestion click (#5495) ([735a423](https://github.com/coveo/ui-kit/commits/735a423)), closes [#5495](https://github.com/coveo/ui-kit/issues/5495)
+- test(quantic): Playwright migration for quantic searchbox component (#5449) ([f003f4c](https://github.com/coveo/ui-kit/commits/f003f4c)), closes [#5449](https://github.com/coveo/ui-kit/issues/5449)
+- test(quantic): standalone searchbox tests (#5428) ([6eed3a2](https://github.com/coveo/ui-kit/commits/6eed3a2)), closes [#5428](https://github.com/coveo/ui-kit/issues/5428)
+
 ## 3.24.0 (2025-06-18)
 
 - fix(deps): update all dependencies j:kit-282 (#5476) ([c5ea600](https://github.com/coveo/ui-kit/commits/c5ea600)), closes [#5476](https://github.com/coveo/ui-kit/issues/5476)

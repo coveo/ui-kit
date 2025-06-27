@@ -1,3 +1,7 @@
+## 1.7.0 (2025-06-25)
+
+- feat(shopify): add init function to make it easy to emit custom events on pages with no search (#552 ([5eb2d5d](https://github.com/coveo/ui-kit/commits/5eb2d5d)), closes [#5524](https://github.com/coveo/ui-kit/issues/5524)
+
 ## 1.6.0 (2025-06-18)
 
 - feat(shopify): emit clientId in custom event (#5472) ([cc79bee](https://github.com/coveo/ui-kit/commits/cc79bee)), closes [#5472](https://github.com/coveo/ui-kit/issues/5472)

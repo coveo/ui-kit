@@ -20,6 +20,7 @@ import {
   AtomicProductSectionEmphasized,
   AtomicProductSectionMetadata,
   AtomicProductSectionName,
+  AtomicCommerceQuerySummary,
 } from '@coveo/atomic-react/commerce';
 import {
   buildCommerceEngine,
@@ -51,6 +52,7 @@ export const CommerceSearchPage = () => {
         </AtomicLayoutSection>
         <AtomicLayoutSection section="main">
           <AtomicLayoutSection section="status">
+            <AtomicCommerceQuerySummary />
             <AtomicCommerceSortDropdown />
           </AtomicLayoutSection>
           <AtomicLayoutSection section="products">
@@ -79,7 +81,7 @@ function MyTemplate() {
       <AtomicProductSectionMetadata>
         <AtomicProductText
           field="ec_brand"
-          class="text-neutral-dark block"
+          className="text-neutral-dark block"
         ></AtomicProductText>
         <AtomicProductRating field="ec_rating"></AtomicProductRating>
       </AtomicProductSectionMetadata>
