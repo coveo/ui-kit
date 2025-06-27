@@ -33,7 +33,7 @@ export class AtomicProductText
    * The string field whose value the component should render.
    * The component will look for the specified field in the product's properties first, and then in the product's `additionalFields` property.
    */
-  @property({type: String, reflect: true}) field = '';
+  @property({type: String, reflect: true}) public field!: string;
   /**
    * Whether to highlight the string field value.
    *
@@ -45,19 +45,19 @@ export class AtomicProductText
     reflect: true,
     converter: booleanConverter,
   })
-  shouldHighlight = true;
+  public shouldHighlight = true;
   /**
    * The locale key to use for displaying default text when the specified field has no value for the product.
    */
-  @property({type: String, reflect: true}) default = '';
+  @property({type: String, reflect: true}) public default?: string;
 
   @state() private product!: Product;
 
   private productController = createProductContextController(this);
 
-  @state() bindings!: CommerceBindings;
+  @state() public bindings!: CommerceBindings;
 
-  @state() error!: Error;
+  @state() public error!: Error;
 
   initialize() {
     if (!this.product && this.productController.item) {
@@ -85,6 +85,10 @@ export class AtomicProductText
   }
 
   private renderFallback() {
+    if (!this.default) {
+      return nothing;
+    }
+
     return renderItemTextFallback({
       props: {
         field: this.field,
@@ -152,7 +156,7 @@ export class AtomicProductText
   render() {
     return html`
       ${when(
-        this.product,
+        this.product && this.field,
         () => this.renderProductTextValue(),
         () => nothing
       )}
