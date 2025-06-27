@@ -12,12 +12,11 @@ describe('#renderSearchTips', () => {
     i18n = await createTestI18n();
   });
 
-  const renderComponent = async (overrides = {}) => {
+  const renderComponent = async () => {
     const element = await renderFunctionFixture(
       html`${renderSearchTips({
         props: {
           i18n,
-          ...overrides,
         },
       })}`
     );
