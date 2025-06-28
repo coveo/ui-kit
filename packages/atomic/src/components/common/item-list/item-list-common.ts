@@ -49,6 +49,9 @@ export class ItemListCommon {
     this.props.store.setLoadingFlag(this.props.loadingFlag);
     this.props.store.state.resultList = this;
     this.updateBreakpointsOnce = once(() => updateBreakpoints(this.props.host));
+    this.props.nextNewItemTarget.registerFocusCallback(() => {
+      this.indexOfResultToFocus = undefined;
+    });
   }
 
   public updateBreakpoints() {
