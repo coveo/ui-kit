@@ -26,7 +26,7 @@
             <div
               class="slds-col slds-order_2 slds-large-order_1 slds-size_1-of-1 slds-large-size_3-of-12 facets_container slds-show_large"
             >
-              <c-quantic-facet-manager engine-id={engineId}>
+              <c-quantic-facet-manager engine-id={engineId} data-testid="facet-manager">
                 <c-quantic-facet
                   field="objecttype"
                   label="Type"
@@ -138,6 +138,7 @@
                 <c-quantic-sort
                   class="slds-var-m-vertical_xxx-small slds-large-size_5-of-12 slds-show_large"
                   engine-id={engineId}
+                  data-testid="search-page-sort"
                 >
                 </c-quantic-sort>
                 <div
