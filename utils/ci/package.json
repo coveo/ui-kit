@@ -32,6 +32,7 @@
     "if-not-cdn": "node ./if-not-cdn.mjs",
     "if-cdn": "node ./if-cdn.mjs",
     "reify": "node ./reify.mjs",
+    "setup-git-user": "node ./setup-git-user.mjs",
     "test": "tsc"
   }
 }
