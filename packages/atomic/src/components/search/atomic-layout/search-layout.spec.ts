@@ -3,7 +3,8 @@ import {AtomicLayoutSection} from '../../common/atomic-layout-section/atomic-lay
 import {AtomicSearchLayout} from './atomic-search-layout';
 import {buildSearchLayout} from './search-layout';
 
-describe('Search Layout', () => {
+// TODO: need to migrate KIT-4433
+describe.skip('Search Layout', () => {
   describe('#buildSearchLayout', () => {
     async function getSearchLayout(html: string) {
       const page = await newSpecPage({

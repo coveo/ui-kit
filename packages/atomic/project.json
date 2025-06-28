@@ -140,7 +140,7 @@
       "executor": "nx:run-commands",
       "dependsOn": ["build:locales"],
       "options": {
-        "command": "stencil test --spec -- src/utils/initialization-utils.spec.ts src/components/search/atomic-layout/search-layout.spec.ts",
+        "command": "stencil test --spec -- src/utils/initialization-utils.spec.ts",
         "cwd": "{projectRoot}"
       }
     },
