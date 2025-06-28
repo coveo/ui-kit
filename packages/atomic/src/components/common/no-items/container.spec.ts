@@ -7,7 +7,7 @@ describe('#renderNoItemsContainer', () => {
   const renderComponent = async (childrenContent?: string) => {
     const children = childrenContent ? html`${childrenContent}` : html``;
     const element = await renderFunctionFixture(
-      html`${renderNoItemsContainer({props: {}})(children)}`
+      html`${renderNoItemsContainer()(children)}`
     );
 
     return {
