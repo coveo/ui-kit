@@ -30,6 +30,8 @@
     "useEditorconfig": true,
     "includes": [
       "**/*.{js,jsx,ts,tsx,mjs,json,jsonc,css}",
+      "!.github/prompts/**/*",
+      "!.github/instructions/**/*",
       "!**/packages/quantic/**/*",
       "!**/lwc/**/*.css",
       "!**/lwc/**/*.html",
