@@ -104,6 +104,7 @@ export const categoryFacetSetReducer = createReducer(
           const lastSelectedParent = children[0];
 
           lastSelectedParent.retrieveChildren = true;
+          lastSelectedParent.previousState = lastSelectedParent.state;
           lastSelectedParent.state = 'selected';
           lastSelectedParent.children = [];
           return;
@@ -203,6 +204,7 @@ function ensurePathAndReturnChildren(
     }
 
     parent.retrieveChildren = false;
+    parent.previousState = parent.state !== 'idle' ? parent.state : undefined;
     parent.state = 'idle';
     children = parent.children;
   }

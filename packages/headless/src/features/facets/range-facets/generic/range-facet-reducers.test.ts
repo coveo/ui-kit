@@ -214,6 +214,107 @@ describe('range facet reducers', () => {
     it('when the passed id is not registered, it does not throw', () => {
       expect(() => handleRangeFacetDeselectAll({}, '1')).not.toThrow();
     });
+
+    it('sets #previousState correctly when transitioning from selected to idle', () => {
+      const id = '1';
+      const selectedValue: NumericRangeRequest = {
+        start: 0,
+        end: 10,
+        endInclusive: false,
+        state: 'selected',
+      };
+      const state = {
+        [id]: buildMockNumericFacetSlice({
+          request: buildMockNumericFacetRequest({
+            currentValues: [selectedValue],
+          }),
+        }),
+      };
+
+      handleRangeFacetDeselectAll(state, id);
+
+      expect(selectedValue.previousState).toBe('selected');
+    });
+
+    it('sets #previousState correctly when transitioning from excluded to idle', () => {
+      const id = '1';
+      const excludedValue: NumericRangeRequest = {
+        start: 0,
+        end: 10,
+        endInclusive: false,
+        state: 'excluded',
+      };
+      const state = {
+        [id]: buildMockNumericFacetSlice({
+          request: buildMockNumericFacetRequest({
+            currentValues: [excludedValue],
+          }),
+        }),
+      };
+
+      handleRangeFacetDeselectAll(state, id);
+
+      expect(excludedValue.previousState).toBe('excluded');
+    });
+
+    it('handles mixed state transitions correctly', () => {
+      const id = '1';
+      const selectedValue: NumericRangeRequest = {
+        start: 0,
+        end: 10,
+        endInclusive: false,
+        state: 'selected',
+      };
+      const excludedValue: NumericRangeRequest = {
+        start: 10,
+        end: 20,
+        endInclusive: false,
+        state: 'excluded',
+      };
+      const idleValue: NumericRangeRequest = {
+        start: 20,
+        end: 30,
+        endInclusive: false,
+        state: 'idle',
+      };
+      const state = {
+        [id]: buildMockNumericFacetSlice({
+          request: buildMockNumericFacetRequest({
+            currentValues: [selectedValue, excludedValue, idleValue],
+          }),
+        }),
+      };
+
+      handleRangeFacetDeselectAll(state, id);
+
+      expect(selectedValue.previousState).toBe('selected');
+      expect(excludedValue.previousState).toBe('excluded');
+      expect(idleValue.previousState).toBeUndefined();
+    });
+
+    it('preserves existing #previousState when value was already idle', () => {
+      const id = '1';
+      const idleValueWithPreviousState: NumericRangeRequest = {
+        start: 0,
+        end: 10,
+        endInclusive: false,
+        state: 'idle',
+        previousState: 'selected',
+      };
+      const state = {
+        [id]: buildMockNumericFacetSlice({
+          request: buildMockNumericFacetRequest({
+            currentValues: [idleValueWithPreviousState],
+          }),
+        }),
+      };
+
+      handleRangeFacetDeselectAll(state, id);
+
+      expect(idleValueWithPreviousState.state).toBe('idle');
+      // Should not change existing previousState since the value was already idle
+      expect(idleValueWithPreviousState.previousState).toBe('selected');
+    });
   });
 
   describe('#handleRangeFacetSearchParameterRestoration', () => {

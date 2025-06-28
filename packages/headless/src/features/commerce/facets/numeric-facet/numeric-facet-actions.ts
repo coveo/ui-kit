@@ -101,6 +101,10 @@ const numericFacetValueDefinition = {
     required: true,
     constrainTo: ['idle', 'selected', 'excluded'],
   }),
+  previousState: new StringValue<'selected' | 'excluded'>({
+    required: false,
+    constrainTo: ['selected', 'excluded'],
+  }),
   start: new NumberValue({required: true}),
   end: new NumberValue({required: true}),
   endInclusive: new BooleanValue({required: true}),
