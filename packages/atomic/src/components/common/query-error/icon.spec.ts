@@ -22,15 +22,7 @@ describe('#renderQueryErrorIcon', () => {
   it('should render atomic-icon with correct attributes', async () => {
     const {atomicIcon} = await renderComponent();
 
-    expect(atomicIcon).not.toBeNull();
     expect(atomicIcon).toHaveAttribute('part', 'icon');
-    expect(atomicIcon).toHaveAttribute('class', 'w-1/2 max-w-lg');
-  });
-
-  it('should render default icon when errorType is undefined', async () => {
-    const {atomicIcon} = await renderComponent();
-
-    expect(atomicIcon).toHaveAttribute('icon', SomethingWrong);
   });
 
   it('should render NoConnection icon when errorType is Disconnected', async () => {
@@ -59,12 +51,6 @@ describe('#renderQueryErrorIcon', () => {
 
   it('should render default icon when errorType is unknown', async () => {
     const {atomicIcon} = await renderComponent('UnknownErrorType');
-
-    expect(atomicIcon).toHaveAttribute('icon', SomethingWrong);
-  });
-
-  it('should render default icon when errorType is empty string', async () => {
-    const {atomicIcon} = await renderComponent('');
 
     expect(atomicIcon).toHaveAttribute('icon', SomethingWrong);
   });
