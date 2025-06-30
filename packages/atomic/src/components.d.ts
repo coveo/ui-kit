@@ -460,13 +460,6 @@ export namespace Components {
         "openButton"?: HTMLElement;
     }
     /**
-     * The `atomic-commerce-refine-toggle` component displays a button that opens a modal containing the facets and the sort components.
-     * When this component is added to the `atomic-commerce-search-interface`, an `atomic-commerce-refine-modal` component is automatically created.
-     * @alpha 
-     */
-    interface AtomicCommerceRefineToggle {
-    }
-    /**
      * @alpha The `atomic-commerce-text` component leverages the I18n translation module through the atomic-commerce-interface.
      */
     interface AtomicCommerceText {
@@ -3757,17 +3750,6 @@ declare global {
         new (): HTMLAtomicCommerceRefineModalElement;
     };
     /**
-     * The `atomic-commerce-refine-toggle` component displays a button that opens a modal containing the facets and the sort components.
-     * When this component is added to the `atomic-commerce-search-interface`, an `atomic-commerce-refine-modal` component is automatically created.
-     * @alpha 
-     */
-    interface HTMLAtomicCommerceRefineToggleElement extends Components.AtomicCommerceRefineToggle, HTMLStencilElement {
-    }
-    var HTMLAtomicCommerceRefineToggleElement: {
-        prototype: HTMLAtomicCommerceRefineToggleElement;
-        new (): HTMLAtomicCommerceRefineToggleElement;
-    };
-    /**
      * @alpha The `atomic-commerce-text` component leverages the I18n translation module through the atomic-commerce-interface.
      */
     interface HTMLAtomicCommerceTextElement extends Components.AtomicCommerceText, HTMLStencilElement {
@@ -5554,7 +5536,6 @@ declare global {
         "atomic-commerce-query-error": HTMLAtomicCommerceQueryErrorElement;
         "atomic-commerce-recommendation-interface": HTMLAtomicCommerceRecommendationInterfaceElement;
         "atomic-commerce-refine-modal": HTMLAtomicCommerceRefineModalElement;
-        "atomic-commerce-refine-toggle": HTMLAtomicCommerceRefineToggleElement;
         "atomic-commerce-text": HTMLAtomicCommerceTextElement;
         "atomic-commerce-timeframe-facet": HTMLAtomicCommerceTimeframeFacetElement;
         "atomic-did-you-mean": HTMLAtomicDidYouMeanElement;
@@ -6111,13 +6092,6 @@ declare namespace LocalJSX {
         "collapseFacetsAfter"?: number;
         "isOpen"?: boolean;
         "openButton"?: HTMLElement;
-    }
-    /**
-     * The `atomic-commerce-refine-toggle` component displays a button that opens a modal containing the facets and the sort components.
-     * When this component is added to the `atomic-commerce-search-interface`, an `atomic-commerce-refine-modal` component is automatically created.
-     * @alpha 
-     */
-    interface AtomicCommerceRefineToggle {
     }
     /**
      * @alpha The `atomic-commerce-text` component leverages the I18n translation module through the atomic-commerce-interface.
@@ -9026,7 +9000,6 @@ declare namespace LocalJSX {
         "atomic-commerce-query-error": AtomicCommerceQueryError;
         "atomic-commerce-recommendation-interface": AtomicCommerceRecommendationInterface;
         "atomic-commerce-refine-modal": AtomicCommerceRefineModal;
-        "atomic-commerce-refine-toggle": AtomicCommerceRefineToggle;
         "atomic-commerce-text": AtomicCommerceText;
         "atomic-commerce-timeframe-facet": AtomicCommerceTimeframeFacet;
         "atomic-did-you-mean": AtomicDidYouMean;
@@ -9294,12 +9267,6 @@ declare module "@stencil/core" {
              * @alpha 
              */
             "atomic-commerce-refine-modal": LocalJSX.AtomicCommerceRefineModal & JSXBase.HTMLAttributes<HTMLAtomicCommerceRefineModalElement>;
-            /**
-             * The `atomic-commerce-refine-toggle` component displays a button that opens a modal containing the facets and the sort components.
-             * When this component is added to the `atomic-commerce-search-interface`, an `atomic-commerce-refine-modal` component is automatically created.
-             * @alpha 
-             */
-            "atomic-commerce-refine-toggle": LocalJSX.AtomicCommerceRefineToggle & JSXBase.HTMLAttributes<HTMLAtomicCommerceRefineToggleElement>;
             /**
              * @alpha The `atomic-commerce-text` component leverages the I18n translation module through the atomic-commerce-interface.
              */
