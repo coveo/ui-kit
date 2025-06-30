@@ -6,6 +6,7 @@ export {AtomicCommercePager} from './atomic-commerce-pager/atomic-commerce-pager
 export {AtomicCommerceProductList} from './atomic-commerce-product-list/atomic-commerce-product-list.js';
 export {AtomicCommerceQuerySummary} from './atomic-commerce-query-summary/atomic-commerce-query-summary.js';
 export {AtomicCommerceRecommendationList} from './atomic-commerce-recommendation-list/atomic-commerce-recommendation-list.js';
+export {AtomicCommerceRefineToggle} from './atomic-commerce-refine-toggle/atomic-commerce-refine-toggle.js';
 export {AtomicCommerceSearchBox} from './atomic-commerce-search-box/atomic-commerce-search-box.js';
 export {AtomicCommerceSearchBoxInstantProducts} from './atomic-commerce-search-box-instant-products/atomic-commerce-search-box-instant-products.js';
 export {AtomicCommerceSearchBoxQuerySuggestions} from './atomic-commerce-search-box-query-suggestions/atomic-commerce-search-box-query-suggestions.js';
