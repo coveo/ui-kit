@@ -16,11 +16,11 @@ import {
 } from '../../../utils/initialization-utils';
 import {AriaLiveRegion} from '../../../utils/stencil-accessibility-utils';
 import {Cancel} from '../../common/no-items/cancel';
-import {NoItemsContainer} from '../../common/no-items/container';
-import {NoItemsGuard} from '../../common/no-items/guard';
-import {MagnifyingGlass} from '../../common/no-items/magnifying-glass';
-import {NoItems} from '../../common/no-items/no-items';
-import {SearchTips} from '../../common/no-items/tips';
+import {NoItemsContainer} from '../../common/no-items/stencil-container';
+import {NoItemsGuard} from '../../common/no-items/stencil-guard';
+import {MagnifyingGlass} from '../../common/no-items/stencil-magnifying-glass';
+import {NoItems} from '../../common/no-items/stencil-no-items';
+import {SearchTips} from '../../common/no-items/stencil-tips';
 import {getSummary} from '../../common/no-items/utils';
 import {Bindings} from '../atomic-search-interface/atomic-search-interface';
 

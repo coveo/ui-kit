@@ -11,8 +11,8 @@ import {
   InitializableComponent,
   BindStateToController,
 } from '../../../utils/initialization-utils';
-import {RefineToggleGuard} from '../../common/refine-modal/guard';
 import {RefineToggleButton} from '../../common/refine-modal/stencil-button';
+import {RefineToggleGuard} from '../../common/refine-modal/stencil-guard';
 import {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface';
 
 /**
