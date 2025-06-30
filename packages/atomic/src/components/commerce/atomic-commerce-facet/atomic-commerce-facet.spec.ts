@@ -1,10 +1,8 @@
 import {renderInAtomicCommerceInterface} from '@/vitest-utils/testing-helpers/fixtures/atomic/commerce/atomic-commerce-interface-fixture';
 import {buildFakeRegularFacet} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/facet-controller';
 import {buildFakeSummary} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/summary-subcontroller';
-import {RegularFacet, Summary} from '@coveo/headless/commerce';
-import {userEvent} from '@storybook/test';
-import {page} from '@vitest/browser/context';
-import '@vitest/browser/matchers.d.ts';
+import type {RegularFacet, Summary} from '@coveo/headless/commerce';
+import {page, userEvent} from '@vitest/browser/context';
 import {html, LitElement} from 'lit';
 import {
   describe,
@@ -15,7 +13,7 @@ import {
   MockInstance,
   afterEach,
 } from 'vitest';
-import {AtomicCommerceFacet} from './atomic-commerce-facet';
+import type {AtomicCommerceFacet} from './atomic-commerce-facet';
 import './atomic-commerce-facet';
 
 vi.mock('@coveo/headless/commerce', {spy: true});
@@ -116,7 +114,7 @@ describe('AtomicCommerceFacet', () => {
         template: html`<atomic-commerce-facet
           .facet=${mockedFacet}
           .summary=${mockedSummary}
-          ?isCollapsed=${isCollapsed}
+          ?is-collapsed=${isCollapsed}
           field="testField"
         ></atomic-commerce-facet>`,
         selector: 'atomic-commerce-facet',
