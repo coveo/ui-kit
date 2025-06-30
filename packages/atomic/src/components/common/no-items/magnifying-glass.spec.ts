@@ -6,7 +6,7 @@ import {renderMagnifyingGlass} from './magnifying-glass';
 describe('#renderMagnifyingGlass', () => {
   const renderComponent = async () => {
     const element = await renderFunctionFixture(
-      html`${renderMagnifyingGlass({props: {}})}`
+      html`${renderMagnifyingGlass()}`
     );
 
     return {

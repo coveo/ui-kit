@@ -1,8 +1,8 @@
-import {FunctionalComponent} from '@/src/utils/functional-component-utils';
+import {FunctionalComponentNoProps} from '@/src/utils/functional-component-utils';
 import {html} from 'lit';
 import MagnifyingGlassIcon from '../../../images/magnifying-glass.svg';
 
-export const renderMagnifyingGlass: FunctionalComponent = () => {
+export const renderMagnifyingGlass: FunctionalComponentNoProps = () => {
   return html`
     <atomic-icon
       part="icon"
