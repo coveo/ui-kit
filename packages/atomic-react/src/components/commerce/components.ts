@@ -2,6 +2,7 @@ import {createComponent} from '@lit/react';
 import React from 'react';
 import {
   AtomicCommerceBreadbox as LitAtomicCommerceBreadbox,
+  AtomicCommerceDidYouMean as LitAtomicCommerceDidYouMean,
   AtomicCommerceInterface as LitAtomicCommerceInterface,
   AtomicCommerceLayout as LitAtomicCommerceLayout,
   AtomicCommercePager as LitAtomicCommercePager,
@@ -18,22 +19,40 @@ import {
   AtomicProduct as LitAtomicProduct,
 } from '@coveo/atomic/components';
 
+export const AtomicComponentError = createComponent({
+  tagName: 'atomic-component-error',
+  react: React,
+  elementClass: LitAtomicComponentError,
+});
+
+export const AtomicIcon = createComponent({
+  tagName: 'atomic-icon',
+  react: React,
+  elementClass: LitAtomicIcon,
+});
+
 export const AtomicCommerceBreadbox = createComponent({
   tagName: 'atomic-commerce-breadbox',
   react: React,
   elementClass: LitAtomicCommerceBreadbox,
 });
 
-export const AtomicCommerceInterface = createComponent({
-  tagName: 'atomic-commerce-interface',
+export const AtomicCommerceDidYouMean = createComponent({
+  tagName: 'atomic-commerce-did-you-mean',
   react: React,
-  elementClass: LitAtomicCommerceInterface,
+  elementClass: LitAtomicCommerceDidYouMean,
 });
 
 export const AtomicCommerceLayout = createComponent({
   tagName: 'atomic-commerce-layout',
   react: React,
   elementClass: LitAtomicCommerceLayout,
+});
+
+export const AtomicCommerceInterface = createComponent({
+  tagName: 'atomic-commerce-interface',
+  react: React,
+  elementClass: LitAtomicCommerceInterface,
 });
 
 export const AtomicCommercePager = createComponent({
@@ -94,16 +113,4 @@ export const AtomicProduct = createComponent({
   tagName: 'atomic-product',
   react: React,
   elementClass: LitAtomicProduct,
-});
-
-export const AtomicComponentError = createComponent({
-  tagName: 'atomic-component-error',
-  react: React,
-  elementClass: LitAtomicComponentError,
-});
-
-export const AtomicIcon = createComponent({
-  tagName: 'atomic-icon',
-  react: React,
-  elementClass: LitAtomicIcon,
 });
