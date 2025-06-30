@@ -11,7 +11,7 @@ import {
   InitializeBindings,
 } from '../../../utils/initialization-utils';
 import {AriaLiveRegion} from '../../../utils/stencil-accessibility-utils';
-import {QueryErrorDetails} from '../../common/query-error/details';
+import {QueryErrorDetails} from '../../common/query-error/stencil-details';
 import {QueryErrorIcon} from '../../common/query-error/icon';
 import {QueryErrorShowMore} from '../../common/query-error/show-more';
 import {QueryErrorContainer} from '../../common/query-error/stencil-container';
