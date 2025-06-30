@@ -13,7 +13,7 @@ import {
 } from '../../../utils/initialization-utils';
 import {AriaLiveRegion} from '../../../utils/stencil-accessibility-utils';
 import {QueryErrorDetails} from '../../common/query-error/stencil-details';
-import {QueryErrorIcon} from '../../common/query-error/icon';
+import {QueryErrorIcon} from '../../common/query-error/stencil-icon';
 import {QueryErrorShowMore} from '../../common/query-error/show-more';
 import {QueryErrorContainer} from '../../common/query-error/stencil-container';
 import {QueryErrorDescription} from '../../common/query-error/stencil-description';
