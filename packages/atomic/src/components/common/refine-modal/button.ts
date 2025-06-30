@@ -7,7 +7,7 @@ import {renderButton} from '../button';
 interface RefineToggleButtonProps {
   i18n: i18n;
   onClick: () => void;
-  setRef: RefOrCallback;
+  refCallback: RefOrCallback;
 }
 
 export const renderRefineToggleButton: FunctionalComponent<
@@ -19,7 +19,7 @@ export const renderRefineToggleButton: FunctionalComponent<
       class: 'w-full p-3',
       onClick: props.onClick,
       text: props.i18n.t('sort-and-filter'),
-      ref: props.setRef,
+      ref: props.refCallback,
       part: 'button',
     },
   })(nothing)}`;
