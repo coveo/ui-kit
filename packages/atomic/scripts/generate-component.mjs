@@ -1,7 +1,7 @@
 import fs from 'fs-extra';
 import handlebars from 'handlebars';
 import path from 'path';
-import {formatWithPrettier} from './format-with-prettier.mjs';
+import {formatWithBiome} from './format-with-biome.mjs';
 
 const capitalize = (str) => str.charAt(0).toUpperCase() + str.slice(1);
 const kebabToPascal = (str) => str.split('-').map(capitalize).join('');
@@ -50,7 +50,7 @@ async function generateFiles(name, outputDir) {
     let content = compiled({name, namePascalCase, shorterName});
 
     // Format each file with Prettier
-    content = await formatWithPrettier(content, outputPath);
+    content = await formatWithBiome(content, outputPath);
 
     await fs.ensureDir(path.dirname(outputPath));
     await fs.writeFile(outputPath, content, 'utf8');
