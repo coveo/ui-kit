@@ -25,13 +25,13 @@ export interface Environment {
   send: (url: string, token: string, event: RelayEvent) => void;
 
   /**
-   * Returns the referring URL, or `null` if it is not available.
+   * Returns the first 1024 characters of the referring URL, or `null` if it is not available.
    * @returns {string|null}
    */
   getReferrer: () => string | null;
 
   /**
-   * Returns the current location (URL) context, or `null` if not available.
+   * Returns the first 1024 characters of the current location (URL) context, or `null` if not available.
    * @returns {string|null}
    */
   getLocation: () => string | null;

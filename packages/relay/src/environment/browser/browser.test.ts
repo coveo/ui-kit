@@ -42,6 +42,17 @@ describe("buildBrowserEnvironment", () => {
     );
   });
 
+  it("truncates the referrer beyond 1024 characters", () => {
+    const limit = 1024;
+    const referrer = "a".repeat(limit + 1);
+
+    Object.defineProperty(window.document, "referrer", {
+      value: referrer,
+    });
+
+    expect(buildBrowserEnvironment().getReferrer()).toHaveLength(limit);
+  });
+
   it("returns null when the referrer is an empty string", () => {
     Object.defineProperty(window.document, "referrer", {
       value: "",
@@ -58,6 +69,17 @@ describe("buildBrowserEnvironment", () => {
     expect(buildBrowserEnvironment().getLocation()).toBe(
       "https://www.patate.com/recettes",
     );
+  });
+
+  it("truncates the location beyond 1024 characters", () => {
+    const limit = 1024;
+    const location = "a".repeat(limit + 1);
+
+    Object.defineProperty(window, "location", {
+      value: { href: location },
+    });
+
+    expect(buildBrowserEnvironment().getLocation()).toHaveLength(limit);
   });
 
   it("retrieves the userAgent", () => {

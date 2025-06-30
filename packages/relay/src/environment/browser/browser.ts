@@ -7,7 +7,11 @@ import { v4 as uuidv4 } from "uuid";
 function getReferrer() {
   const referrer = document.referrer;
 
-  return referrer === "" ? null : referrer;
+  return referrer === "" ? null : trimTo1024(referrer);
+}
+
+function trimTo1024(input: string) {
+  return input.slice(0, 1024);
 }
 
 export function buildBrowserEnvironment(): Environment {
@@ -31,7 +35,7 @@ export function buildBrowserEnvironment(): Environment {
       }
     },
     getReferrer: () => getReferrer(),
-    getLocation: () => window.location.href,
+    getLocation: () => trimTo1024(window.location.href),
     getUserAgent: () => navigator.userAgent,
     generateUUID: () => uuidv4(),
     storage: createBrowserStorage(),
