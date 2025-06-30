@@ -97,7 +97,7 @@ describe('atomic-commerce-did-you-mean', () => {
     expect(buildQueryTrigger).toHaveBeenCalled();
   });
 
-  it('should call didYouMean on this.didYouMean', async () => {
+  it("should set this.didYouMean the search controller's didYouMean", async () => {
     const {element} = await renderDidYouMean();
     expect(element.didYouMean).toBe(mockedDidYouMean);
   });
