@@ -15,3 +15,12 @@ export class InitialChoiceNotInChoicesError extends Error {
     this.name = 'InitialChoiceNotInChoicesError';
   }
 }
+
+export class ChoiceIsNegativeError extends Error {
+  constructor(choice: number) {
+    super(
+      `The choice value "${choice}" from the "choicesDisplayed" option is negative.`
+    );
+    this.name = 'ChoiceIsNegativeError';
+  }
+}

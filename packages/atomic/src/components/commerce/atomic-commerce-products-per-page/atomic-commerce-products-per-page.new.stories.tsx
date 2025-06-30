@@ -26,10 +26,3 @@ export const WithCustomChoicesDisplayed: Story = {
     'attributes-initial-choice': '2',
   },
 };
-
-export const WithAnInitialSelection: Story = {
-  name: 'With an initial choice',
-  args: {
-    'attributes-initial-choice': '25',
-  },
-};

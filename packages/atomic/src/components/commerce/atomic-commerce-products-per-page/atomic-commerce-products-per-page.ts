@@ -2,10 +2,6 @@ import type {CommerceBindings} from '@/src/components/commerce/atomic-commerce-i
 import {renderFieldsetGroup} from '@/src/components/common/fieldset-group.js';
 import {createAppLoadedListener} from '@/src/components/common/interface/store.js';
 import {renderChoices} from '@/src/components/common/items-per-page/choices.js';
-import {
-  ChoiceIsNaNError,
-  InitialChoiceNotInChoicesError,
-} from '@/src/components/common/items-per-page/error.js';
 import {renderLabel} from '@/src/components/common/items-per-page/label.js';
 import {
   convertChoicesToNumbers,
@@ -81,19 +77,9 @@ export class AtomicCommerceProductsPerPage
   initialChoice?: number;
 
   public initialize() {
-    try {
-      this.choices = convertChoicesToNumbers(this.choicesDisplayed);
-      this.initialChoice = this.initialChoice ?? this.choices[0];
-      validateInitialChoice(this.initialChoice, this.choices);
-    } catch (error) {
-      if (
-        error instanceof ChoiceIsNaNError ||
-        error instanceof InitialChoiceNotInChoicesError
-      ) {
-        this.bindings.engine.logger.error(error.message, this);
-        throw error;
-      }
-    }
+    this.choices = convertChoicesToNumbers(this.choicesDisplayed);
+    this.initialChoice = this.initialChoice ?? this.choices[0];
+    validateInitialChoice(this.initialChoice, this.choices);
 
     const controller =
       this.bindings.interfaceElement.type === 'search'

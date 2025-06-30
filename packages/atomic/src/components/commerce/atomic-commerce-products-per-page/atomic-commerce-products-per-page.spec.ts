@@ -19,8 +19,13 @@ import {ifDefined} from 'lit/directives/if-defined.js';
 import {describe, it, expect, vi, beforeEach} from 'vitest';
 import './atomic-commerce-products-per-page';
 import {AtomicCommerceProductsPerPage} from './atomic-commerce-products-per-page';
+import {
+  convertChoicesToNumbers,
+  validateInitialChoice,
+} from '../../common/items-per-page/validate';
 
 vi.mock('@coveo/headless/commerce', {spy: true});
+vi.mock('@/src/components/common/items-per-page/validate.js', {spy: true});
 
 describe('AtomicCommerceProductsPerPage', () => {
   const mockedEngine = buildFakeCommerceEngine();
@@ -113,30 +118,25 @@ describe('AtomicCommerceProductsPerPage', () => {
     vi.spyOn(console, 'error').mockImplementation(() => {});
   });
 
-  it('should log an error and throw if choicesDisplayed is not a valid comma-separated list of numbers', async () => {
-    const choicesDisplayed = '10,25,invalid,100';
-
-    const {element} = await renderProductsPerPage({
+  it('should call convertChoicesToNumbers with the choicesDisplayed prop', async () => {
+    const choicesDisplayed = '10,25,50,100';
+    await renderProductsPerPage({
       props: {choicesDisplayed},
     });
 
-    expect(element.error).toBeDefined();
-    expect(element.error.message).toBe(
-      'The choice value "invalid" from the "choicesDisplayed" option is not a number.'
-    );
+    expect(convertChoicesToNumbers).toHaveBeenCalledWith(choicesDisplayed);
   });
 
-  it('should log an error and throw if initialChoice is not in choicesDisplayed', async () => {
+  it('should call validateInitialChoice with the initialChoice prop and the choices', async () => {
     const choicesDisplayed = '10,25,50,100';
-    const initialChoice = 200;
-
-    const {element} = await renderProductsPerPage({
+    const initialChoice = 50;
+    await renderProductsPerPage({
       props: {choicesDisplayed, initialChoice},
     });
 
-    expect(element.error).toBeDefined();
-    expect(element.error.message).toBe(
-      'The initial choice value "200" is not included in the choices 10,25,50,100.'
+    expect(validateInitialChoice).toHaveBeenCalledWith(
+      initialChoice,
+      [10, 25, 50, 100]
     );
   });
 
