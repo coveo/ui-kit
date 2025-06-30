@@ -1,5 +1,7 @@
 // Auto-generated file
 export default {
+  'atomic-commerce-breadbox': async () =>
+    await import('./atomic-commerce-breadbox/atomic-commerce-breadbox.js'),
   'atomic-commerce-interface': async () =>
     await import('./atomic-commerce-interface/atomic-commerce-interface.js'),
   'atomic-commerce-layout': async () =>
@@ -40,6 +42,8 @@ export default {
     await import(
       './atomic-commerce-sort-dropdown/atomic-commerce-sort-dropdown.js'
     ),
+  'atomic-product': async () =>
+    await import('./atomic-product/atomic-product.js'),
   'atomic-product-template': async () =>
     await import('./atomic-product-template/atomic-product-template.js'),
 } as Record<string, () => Promise<unknown>>;

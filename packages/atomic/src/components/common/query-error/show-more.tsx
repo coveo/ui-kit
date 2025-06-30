@@ -1,7 +1,7 @@
 import {FunctionalComponent, h} from '@stencil/core';
 import {i18n} from 'i18next';
 import {Button} from '../stencil-button';
-import {QueryErrorLink} from './link';
+import {QueryErrorLink} from './stencil-link';
 
 interface QueryErrorShowMoreProps {
   onShowMore: () => void;
