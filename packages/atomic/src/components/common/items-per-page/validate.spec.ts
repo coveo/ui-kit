@@ -19,7 +19,14 @@ describe('validate', () => {
     it('should throw an error if a choice is negative', () => {
       const choices = '10,-20,30';
       expect(() => convertChoicesToNumbers(choices)).toThrow(
-        'The choice value "-20" from the "choicesDisplayed" option is negative.'
+        'The choice value "-20" from the "choicesDisplayed" option is not positive (<= 0).'
+      );
+    });
+
+    it('should throw an error if a choice is zero', () => {
+      const choices = '10,0,30';
+      expect(() => convertChoicesToNumbers(choices)).toThrow(
+        'The choice value "0" from the "choicesDisplayed" option is not positive (<= 0).'
       );
     });
   });

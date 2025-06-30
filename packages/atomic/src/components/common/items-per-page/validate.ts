@@ -1,6 +1,6 @@
 import {
   ChoiceIsNaNError,
-  ChoiceIsNegativeError,
+  ChoiceIsNonPositiveError,
   InitialChoiceNotInChoicesError,
 } from './error';
 
@@ -10,8 +10,8 @@ export function convertChoicesToNumbers(choices: string) {
     if (isNaN(parsedChoice)) {
       throw new ChoiceIsNaNError(choice);
     }
-    if (parsedChoice < 0) {
-      throw new ChoiceIsNegativeError(parsedChoice);
+    if (parsedChoice <= 0) {
+      throw new ChoiceIsNonPositiveError(parsedChoice);
     }
 
     return parsedChoice;
