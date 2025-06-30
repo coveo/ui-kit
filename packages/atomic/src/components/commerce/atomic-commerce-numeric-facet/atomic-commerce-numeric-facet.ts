@@ -239,22 +239,20 @@ export class AtomicCommerceNumericFacet
         label: this.displayName,
       },
     })(
-      html`<ul part="values" class="mt-3">
-        ${this.valuesToRender.map((value) =>
-          renderNumericFacetValue({
-            props: {
-              formatter: this.formatter,
-              displayValuesAs: 'checkbox',
-              facetValue: value,
-              field: this.facetState.field,
-              i18n: this.bindings.i18n,
-              logger: this.bindings.engine.logger,
-              manualRanges: [],
-              onClick: () => this.facet.toggleSelect(value),
-            },
-          })
-        )}
-      </ul>`
+      html`${this.valuesToRender.map((value) =>
+        renderNumericFacetValue({
+          props: {
+            formatter: this.formatter,
+            displayValuesAs: 'checkbox',
+            facetValue: value,
+            field: this.facetState.field,
+            i18n: this.bindings.i18n,
+            logger: this.bindings.engine.logger,
+            manualRanges: [],
+            onClick: () => this.facet.toggleSelect(value),
+          },
+        })
+      )} `
     );
   }
 
