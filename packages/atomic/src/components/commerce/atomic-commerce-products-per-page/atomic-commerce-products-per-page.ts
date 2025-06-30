@@ -32,7 +32,7 @@ import {html, LitElement} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 
 /**
- * The `atomic-commerce-products-per-page` component determines how many products to display per page.
+ * The `atomic-commerce-products-per-page` component lets the end user select how many products to display per page.
  *
  * @part label - The "Products per page" label.
  * @part buttons - The list of buttons.
@@ -82,7 +82,6 @@ export class AtomicCommerceProductsPerPage
 
   public initialize() {
     try {
-      console.log(this.initialChoice, this.choicesDisplayed);
       this.choices = convertChoicesToNumbers(this.choicesDisplayed);
       this.initialChoice = this.initialChoice ?? this.choices[0];
       validateInitialChoice(this.initialChoice, this.choices);

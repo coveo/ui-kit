@@ -156,13 +156,13 @@ describe('AtomicCommerceProductsPerPage', () => {
     expect(buildProductListing).toHaveBeenCalledWith(mockedEngine);
   });
 
-  it('should call summary on this.summary', async () => {
+  it("should set this.summary to the product listing or search controller's summary", async () => {
     const {element} = await renderProductsPerPage();
 
     expect(element.summary).toBe(mockedSummary);
   });
 
-  it('should call pagination on this.pagination', async () => {
+  it("should set this.pagination to the product listing or search controller's pagination", async () => {
     const {element} = await renderProductsPerPage();
 
     expect(element.pagination).toBe(mockedPager);
@@ -306,7 +306,7 @@ describe('AtomicCommerceProductsPerPage', () => {
     });
   });
 
-  it('should call setItemSize with the correct value when a button is checked', async () => {
+  it('should call setPageSize with the correct value when a button is checked', async () => {
     const {element, buttons} = await renderProductsPerPage();
     const paginationSpy = vi.spyOn(element.pagination, 'setPageSize');
 
