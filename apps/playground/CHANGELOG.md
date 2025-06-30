@@ -1,3 +1,9 @@
+## 2.2.5 (2025-06-30)
+
+### Bug Fixes
+
+- trim location and referrer beyond 1024 characters ([#186](https://github.com/coveo/relay/issues/186)) ([c93c241](https://github.com/coveo/relay/commits/))
+
 ## 2.2.4 (2025-06-30)
 
 ## 2.2.3 (2025-06-10)
