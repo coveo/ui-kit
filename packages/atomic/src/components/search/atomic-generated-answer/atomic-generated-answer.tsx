@@ -76,6 +76,7 @@ export class AtomicGeneratedAnswer implements InitializableComponent {
   private readonly DEFAULT_COLLAPSED_HEIGHT = 16;
   private readonly MAX_COLLAPSED_HEIGHT = 32;
   private readonly MIN_COLLAPSED_HEIGHT = 9;
+  private readonly DEFAULT_FIELDS_TO_INCLUDE_IN_CITATIONS = 'filetype';
 
   @BindStateToController('generatedAnswer', {
     onUpdateCallbackMethod: 'onGeneratedAnswerStateUpdate',
@@ -130,7 +131,8 @@ export class AtomicGeneratedAnswer implements InitializableComponent {
   /**
    * A list of fields to include with the citations used to generate the answer.
    */
-  @Prop() fieldsToIncludeInCitations = 'filetype';
+  @Prop() fieldsToIncludeInCitations =
+    this.DEFAULT_FIELDS_TO_INCLUDE_IN_CITATIONS;
 
   /**
    * The tabs on which the generated answer can be displayed. This property should not be used at the same time as `tabs-excluded`.

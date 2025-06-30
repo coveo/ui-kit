@@ -73,6 +73,7 @@ export class AtomicInsightGeneratedAnswer
   private readonly DEFAULT_COLLAPSED_HEIGHT = 16;
   private readonly MAX_COLLAPSED_HEIGHT = 32;
   private readonly MIN_COLLAPSED_HEIGHT = 9;
+  private readonly DEFAULT_FIELDS_TO_INCLUDE_IN_CITATIONS = 'filetype';
 
   @BindStateToController('generatedAnswer', {
     onUpdateCallbackMethod: 'onGeneratedAnswerStateUpdate',
@@ -122,7 +123,8 @@ export class AtomicInsightGeneratedAnswer
   /**
    * A list of fields to include with the citations used to generate the answer.
    */
-  @Prop() fieldsToIncludeInCitations = 'filetype';
+  @Prop() fieldsToIncludeInCitations =
+    this.DEFAULT_FIELDS_TO_INCLUDE_IN_CITATIONS;
 
   @AriaLiveRegion('generated-answer')
   protected ariaMessage!: string;
