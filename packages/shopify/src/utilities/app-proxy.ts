@@ -2,11 +2,13 @@ import {AppProxyOptions, CoveoShopifyOptions} from '../types';
 import {memoize} from './memoize';
 
 function getFetch(): typeof fetch {
+  // Browser environments
   if (typeof fetch === 'function') {
     return fetch;
   }
-  if (typeof global !== 'undefined' && typeof (global as any).fetch === 'function') {
-    return (global as any).fetch;
+  // Node.js environments
+  if (typeof global !== 'undefined' && typeof global.fetch === 'function') {
+    return global.fetch;
   }
   throw new Error('Fetch API is not available in this environment.');
 }
