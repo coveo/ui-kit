@@ -8,7 +8,7 @@ interface ChoicesProps {
   pageSize: number;
   choices: number[];
   lang: string;
-  scrollToTopEvent: () => {};
+  scrollToTopEvent: () => void;
   setItemSize: (size: number) => void;
   focusOnFirstResultAfterNextSearch: () => Promise<void> | undefined;
   focusOnNextNewResult: () => void | undefined;

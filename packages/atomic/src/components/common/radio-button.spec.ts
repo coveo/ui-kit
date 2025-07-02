@@ -4,7 +4,7 @@ import {html, render} from 'lit';
 import {vi, describe, beforeEach, afterEach, it, expect} from 'vitest';
 import {renderRadioButton, RadioButtonProps} from './radio-button';
 
-vi.mock('@/src/utils/ripple');
+vi.mock('../../utils/ripple');
 
 describe('radioButton', () => {
   let container: HTMLElement;

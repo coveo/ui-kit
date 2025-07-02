@@ -9,14 +9,12 @@ import { defineCustomElements } from '@coveo/atomic/loader';
 
 defineCustomElements();
 export const AtomicCommerceCategoryFacet = /*@__PURE__*/createReactComponent<JSX.AtomicCommerceCategoryFacet, HTMLAtomicCommerceCategoryFacetElement>('atomic-commerce-category-facet');
-export const AtomicCommerceDidYouMean = /*@__PURE__*/createReactComponent<JSX.AtomicCommerceDidYouMean, HTMLAtomicCommerceDidYouMeanElement>('atomic-commerce-did-you-mean');
 export const AtomicCommerceFacet = /*@__PURE__*/createReactComponent<JSX.AtomicCommerceFacet, HTMLAtomicCommerceFacetElement>('atomic-commerce-facet');
 export const AtomicCommerceFacetNumberInput = /*@__PURE__*/createReactComponent<JSX.AtomicCommerceFacetNumberInput, HTMLAtomicCommerceFacetNumberInputElement>('atomic-commerce-facet-number-input');
 export const AtomicCommerceFacets = /*@__PURE__*/createReactComponent<JSX.AtomicCommerceFacets, HTMLAtomicCommerceFacetsElement>('atomic-commerce-facets');
 export const AtomicCommerceLoadMoreProducts = /*@__PURE__*/createReactComponent<JSX.AtomicCommerceLoadMoreProducts, HTMLAtomicCommerceLoadMoreProductsElement>('atomic-commerce-load-more-products');
 export const AtomicCommerceNoProducts = /*@__PURE__*/createReactComponent<JSX.AtomicCommerceNoProducts, HTMLAtomicCommerceNoProductsElement>('atomic-commerce-no-products');
 export const AtomicCommerceNumericFacet = /*@__PURE__*/createReactComponent<JSX.AtomicCommerceNumericFacet, HTMLAtomicCommerceNumericFacetElement>('atomic-commerce-numeric-facet');
-export const AtomicCommerceProductsPerPage = /*@__PURE__*/createReactComponent<JSX.AtomicCommerceProductsPerPage, HTMLAtomicCommerceProductsPerPageElement>('atomic-commerce-products-per-page');
 export const AtomicCommerceQueryError = /*@__PURE__*/createReactComponent<JSX.AtomicCommerceQueryError, HTMLAtomicCommerceQueryErrorElement>('atomic-commerce-query-error');
 export const AtomicCommerceRecommendationInterface = /*@__PURE__*/createReactComponent<JSX.AtomicCommerceRecommendationInterface, HTMLAtomicCommerceRecommendationInterfaceElement>('atomic-commerce-recommendation-interface');
 export const AtomicCommerceRefineModal = /*@__PURE__*/createReactComponent<JSX.AtomicCommerceRefineModal, HTMLAtomicCommerceRefineModalElement>('atomic-commerce-refine-modal');
