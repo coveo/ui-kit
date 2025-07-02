@@ -21,7 +21,7 @@ import {QueryErrorShowMore} from '../../common/query-error/show-more';
 import {QueryErrorContainer} from '../../common/query-error/stencil-container';
 import {QueryErrorDescription} from '../../common/query-error/stencil-description';
 import {QueryErrorGuard} from '../../common/query-error/stencil-guard';
-import {QueryErrorTitle} from '../../common/query-error/title';
+import {QueryErrorTitle} from '../../common/query-error/stencil-title';
 import {getAriaMessageFromErrorType} from '../../common/query-error/utils';
 import {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface';
 import {QueryErrorLink} from '../../common/query-error/stencil-link';
