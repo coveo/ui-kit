@@ -1,16 +1,19 @@
 import {Canvas, ArgTypes, Meta, Title, Description} from '@storybook/blocks';
 import * as AtomicCommerceSortDropdownStories from './atomic-commerce-sort-dropdown.new.stories';
-
-{/* Storybook provides a number of blocs to construct documentation pages */}
-{/* https://storybook.js.org/docs/writing-docs/doc-blocks#available-blocks */}
+import {CanvasWithGithub} from '../../../../storybook-utils/documentation/canvas-with-github';
 
 <Meta of={AtomicCommerceSortDropdownStories} />
 
 <Title />
-<Description />
+<Subtitle><Description/></Subtitle>
 
-<Canvas of={AtomicCommerceSortDropdownStories.Default} />
+<CanvasWithGithub
+  of={AtomicCommerceSortDropdownStories.Default}
+  githubPath="commerce/atomic-commerce-sort-dropdown/atomic-commerce-sort-dropdown.ts"
+/>
 
-## Properties
+## Examples
+<Stories title={""}/>
 
+## Reference
 <ArgTypes />
