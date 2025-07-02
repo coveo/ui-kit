@@ -2,6 +2,7 @@ import {createComponent} from '@lit/react';
 import React from 'react';
 import {
   AtomicCommerceBreadbox as LitAtomicCommerceBreadbox,
+  AtomicCommerceDidYouMean as LitAtomicCommerceDidYouMean,
   AtomicCommerceInterface as LitAtomicCommerceInterface,
   AtomicCommerceLayout as LitAtomicCommerceLayout,
   AtomicCommercePager as LitAtomicCommercePager,
@@ -23,6 +24,12 @@ export const AtomicCommerceBreadbox = createComponent({
   tagName: 'atomic-commerce-breadbox',
   react: React,
   elementClass: LitAtomicCommerceBreadbox,
+});
+
+export const AtomicCommerceDidYouMean = createComponent({
+  tagName: 'atomic-commerce-did-you-mean',
+  react: React,
+  elementClass: LitAtomicCommerceDidYouMean,
 });
 
 export const AtomicCommerceInterface = createComponent({

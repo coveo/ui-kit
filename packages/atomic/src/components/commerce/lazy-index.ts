@@ -2,6 +2,10 @@
 export default {
   'atomic-commerce-breadbox': async () =>
     await import('./atomic-commerce-breadbox/atomic-commerce-breadbox.js'),
+  'atomic-commerce-did-you-mean': async () =>
+    await import(
+      './atomic-commerce-did-you-mean/atomic-commerce-did-you-mean.js'
+    ),
   'atomic-commerce-interface': async () =>
     await import('./atomic-commerce-interface/atomic-commerce-interface.js'),
   'atomic-commerce-layout': async () =>

@@ -1,5 +1,6 @@
 // Auto-generated file
 export {AtomicCommerceBreadbox} from './atomic-commerce-breadbox/atomic-commerce-breadbox.js';
+export {AtomicCommerceDidYouMean} from './atomic-commerce-did-you-mean/atomic-commerce-did-you-mean.js';
 export {AtomicCommerceInterface} from './atomic-commerce-interface/atomic-commerce-interface.js';
 export {AtomicCommerceLayout} from './atomic-commerce-layout/atomic-commerce-layout.js';
 export {AtomicCommercePager} from './atomic-commerce-pager/atomic-commerce-pager.js';
