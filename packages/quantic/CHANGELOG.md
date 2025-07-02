@@ -1,3 +1,14 @@
+## 3.25.0 (2025-07-02)
+
+* chore(lint): integrate biome (#5507) ([53bcada](https://github.com/coveo/ui-kit/commits/53bcada)), closes [#5507](https://github.com/coveo/ui-kit/issues/5507)
+* chore(quantic): added useful commands for deploying code  (#5547) ([e4bf3d3](https://github.com/coveo/ui-kit/commits/e4bf3d3)), closes [#5547](https://github.com/coveo/ui-kit/issues/5547)
+* feat(quantic): added the logic to support sending the case context in the payload of insight search  ([86a8c3c](https://github.com/coveo/ui-kit/commits/86a8c3c)), closes [#5463](https://github.com/coveo/ui-kit/issues/5463)
+* test(quantic): Playwright migration for the example insight panel component (#5485) ([77b153c](https://github.com/coveo/ui-kit/commits/77b153c)), closes [#5485](https://github.com/coveo/ui-kit/issues/5485)
+* test(quantic): Playwright migration for the example search page component (#5513) ([503ad14](https://github.com/coveo/ui-kit/commits/503ad14)), closes [#5513](https://github.com/coveo/ui-kit/issues/5513)
+* test(quantic): quanticFoldedResultList migration to Playwright and unit tests (#5520) ([6ee6229](https://github.com/coveo/ui-kit/commits/6ee6229)), closes [#5520](https://github.com/coveo/ui-kit/issues/5520)
+
+
+
 ## <small>3.24.1 (2025-06-25)</small>
 
 - fix(deps): update all dependencies j:kit-282 (#5522) ([ee7a9ab](https://github.com/coveo/ui-kit/commits/ee7a9ab)), closes [#5522](https://github.com/coveo/ui-kit/issues/5522)

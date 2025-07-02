@@ -24,7 +24,15 @@ test.describe('smoke test', () => {
     await expect(querySummary).toBeVisible();
 
     const summaryContainer = querySummary.locator('div[part="container"]');
-    await expect(summaryContainer).toHaveText(/Results 1-[1-9].*for test/);
+    await expect
+      .poll(
+        async () => {
+          const text = await summaryContainer.textContent();
+          return text ?? '';
+        },
+        {timeout: 5000}
+      )
+      .toMatch(/Results 1-[1-9].*for test/);
 
     // Verify result list and results exist
     const resultList = page.locator('atomic-result-list');
@@ -51,9 +59,15 @@ test.describe('smoke test', () => {
     await expect(querySummary).toBeVisible();
 
     const summaryContainer = querySummary.locator('div[part="container"]');
-    await expect(summaryContainer).toHaveText(
-      /Products? 1-[1-9]?[0-9]* of \d+ for shoe/
-    );
+    await expect
+      .poll(
+        async () => {
+          const text = await summaryContainer.textContent();
+          return text ?? '';
+        },
+        {timeout: 5000}
+      )
+      .toMatch(/Products? 1-[1-9]?[0-9]* of \d+ for shoe/);
 
     // Verify facets are visible
     const facets = page.locator('atomic-commerce-facets');
