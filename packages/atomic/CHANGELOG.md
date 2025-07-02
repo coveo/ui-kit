@@ -1,3 +1,36 @@
+## <small>3.27.4 (2025-07-02)</small>
+
+* chore: add support for using copilot prompts/instructions from atomic (#5552) ([da155af](https://github.com/coveo/ui-kit/commits/da155af)), closes [#5552](https://github.com/coveo/ui-kit/issues/5552)
+* chore(atomic): merge fakeSummary controllers together (#5545) ([9620066](https://github.com/coveo/ui-kit/commits/9620066)), closes [#5545](https://github.com/coveo/ui-kit/issues/5545)
+* chore(atomic): migrate atomic-commerce-breadbox (#5459) ([817e7b5](https://github.com/coveo/ui-kit/commits/817e7b5)), closes [#5459](https://github.com/coveo/ui-kit/issues/5459)
+* chore(atomic): migrate atomic-commerce-did-you-mean (#5523) ([5357de3](https://github.com/coveo/ui-kit/commits/5357de3)), closes [#5523](https://github.com/coveo/ui-kit/issues/5523)
+* chore(atomic): migrate atomic-product (#5398) ([6cd9e95](https://github.com/coveo/ui-kit/commits/6cd9e95)), closes [#5398](https://github.com/coveo/ui-kit/issues/5398)
+* chore(atomic): migrate LoadMoreContainer functional component to Lit (#5514) ([2804c88](https://github.com/coveo/ui-kit/commits/2804c88)), closes [#5514](https://github.com/coveo/ui-kit/issues/5514)
+* chore(atomic): migrate LoadMoreProgressBar functional component to Lit (#5517) ([441b994](https://github.com/coveo/ui-kit/commits/441b994)), closes [#5517](https://github.com/coveo/ui-kit/issues/5517)
+* chore(atomic): migrate LoadMoreSummary functional component to Lit (#5516) ([3fb3cc9](https://github.com/coveo/ui-kit/commits/3fb3cc9)), closes [#5516](https://github.com/coveo/ui-kit/issues/5516)
+* chore(atomic): migrate magnifying-glass.tsx (#5492) ([97104d0](https://github.com/coveo/ui-kit/commits/97104d0)), closes [#5492](https://github.com/coveo/ui-kit/issues/5492)
+* chore(atomic): migrate no-items.tsx (#5499) ([2fda8af](https://github.com/coveo/ui-kit/commits/2fda8af)), closes [#5499](https://github.com/coveo/ui-kit/issues/5499)
+* chore(atomic): migrate no-items/container.tsx (#5493) ([e6336d9](https://github.com/coveo/ui-kit/commits/e6336d9)), closes [#5493](https://github.com/coveo/ui-kit/issues/5493)
+* chore(atomic): migrate no-items/guard.tsx (#5494) ([fb43ef0](https://github.com/coveo/ui-kit/commits/fb43ef0)), closes [#5494](https://github.com/coveo/ui-kit/issues/5494)
+* chore(atomic): migrate no-items/tips.tsx (#5491) ([058fb31](https://github.com/coveo/ui-kit/commits/058fb31)), closes [#5491](https://github.com/coveo/ui-kit/issues/5491)
+* chore(atomic): migrate query-error/container.tsx (#5529) ([26a3a08](https://github.com/coveo/ui-kit/commits/26a3a08)), closes [#5529](https://github.com/coveo/ui-kit/issues/5529)
+* chore(atomic): migrate query-error/description (#5530) ([53310a2](https://github.com/coveo/ui-kit/commits/53310a2)), closes [#5530](https://github.com/coveo/ui-kit/issues/5530)
+* chore(atomic): migrate query-error/details (#5531) ([2b4f029](https://github.com/coveo/ui-kit/commits/2b4f029)), closes [#5531](https://github.com/coveo/ui-kit/issues/5531)
+* chore(atomic): migrate query-error/guard (#5536) ([04a355b](https://github.com/coveo/ui-kit/commits/04a355b)), closes [#5536](https://github.com/coveo/ui-kit/issues/5536)
+* chore(atomic): migrate query-error/icon.tsx (#5537) ([4931cfc](https://github.com/coveo/ui-kit/commits/4931cfc)), closes [#5537](https://github.com/coveo/ui-kit/issues/5537)
+* chore(atomic): migrate query-error/link.tsx (#5538) ([b7b3e4b](https://github.com/coveo/ui-kit/commits/b7b3e4b)), closes [#5538](https://github.com/coveo/ui-kit/issues/5538)
+* chore(atomic): migrate refine-modal/guard.tsx (#5526) ([5af75a8](https://github.com/coveo/ui-kit/commits/5af75a8)), closes [#5526](https://github.com/coveo/ui-kit/issues/5526)
+* chore(atomic): migrate refine-modal/modal.tsx (#5505) ([41fd2d1](https://github.com/coveo/ui-kit/commits/41fd2d1)), closes [#5505](https://github.com/coveo/ui-kit/issues/5505)
+* chore(atomic): move product template components directly under commerce components folder (#5479) ([77bbee6](https://github.com/coveo/ui-kit/commits/77bbee6)), closes [#5479](https://github.com/coveo/ui-kit/issues/5479)
+* chore(atomic): refactor load-more button and spec (#5542) ([fba84e8](https://github.com/coveo/ui-kit/commits/fba84e8)), closes [#5542](https://github.com/coveo/ui-kit/issues/5542)
+* chore(atomic): remove style management from bindings (#5445) ([3d7ee54](https://github.com/coveo/ui-kit/commits/3d7ee54)), closes [#5445](https://github.com/coveo/ui-kit/issues/5445)
+* chore(lint): integrate biome (#5507) ([53bcada](https://github.com/coveo/ui-kit/commits/53bcada)), closes [#5507](https://github.com/coveo/ui-kit/issues/5507)
+* ci: hopefully fix flakiness from options.spec.ts (#5558) ([ce971e4](https://github.com/coveo/ui-kit/commits/ce971e4)), closes [#5558](https://github.com/coveo/ui-kit/issues/5558)
+* fix(atomic): disable scrolling for load-more-button & ensure sb queries does not scroll wrongly (#54 ([4891da3](https://github.com/coveo/ui-kit/commits/4891da3)), closes [#5461](https://github.com/coveo/ui-kit/issues/5461)
+* test(atomic): skip flaky result list test (#5549) ([5fde5df](https://github.com/coveo/ui-kit/commits/5fde5df)), closes [#5549](https://github.com/coveo/ui-kit/issues/5549)
+
+
+
 ## <small>3.27.3 (2025-06-25)</small>
 
 - chore(atomic): make product/item context controllers generic (#5511) ([153636d](https://github.com/coveo/ui-kit/commits/153636d)), closes [#5511](https://github.com/coveo/ui-kit/issues/5511)
