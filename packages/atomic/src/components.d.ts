@@ -22,7 +22,7 @@ import { Actions, InsightResultActionClickedEvent } from "./components/insight/a
 import { InsightResultAttachToCaseEvent } from "./components/insight/atomic-insight-result-attach-to-case-action/atomic-insight-result-attach-to-case-action";
 import { Section } from "./components/common/atomic-layout-section/sections";
 import { SelectChildProductEventArgs } from "./components/commerce/atomic-product-children/select-child-product-event";
-import { TruncateAfter } from "./components/common/expandable-text/expandable-text";
+import { TruncateAfter } from "./components/common/expandable-text/stencil-expandable-text";
 import { ItemDisplayImageSize as ItemDisplayImageSize1 } from "./components.d";
 import { RecommendationEngine, InteractiveResult as RecsInteractiveResult, LogLevel as RecsLogLevel, Result as RecsResult, ResultTemplate as RecsResultTemplate, ResultTemplateCondition as RecsResultTemplateCondition } from "@coveo/headless/recommendation";
 import { RecsInitializationOptions } from "./components/recommendations/atomic-recs-interface/atomic-recs-interface";
@@ -51,7 +51,7 @@ export { Actions, InsightResultActionClickedEvent } from "./components/insight/a
 export { InsightResultAttachToCaseEvent } from "./components/insight/atomic-insight-result-attach-to-case-action/atomic-insight-result-attach-to-case-action";
 export { Section } from "./components/common/atomic-layout-section/sections";
 export { SelectChildProductEventArgs } from "./components/commerce/atomic-product-children/select-child-product-event";
-export { TruncateAfter } from "./components/common/expandable-text/expandable-text";
+export { TruncateAfter } from "./components/common/expandable-text/stencil-expandable-text";
 export { ItemDisplayImageSize as ItemDisplayImageSize1 } from "./components.d";
 export { RecommendationEngine, InteractiveResult as RecsInteractiveResult, LogLevel as RecsLogLevel, Result as RecsResult, ResultTemplate as RecsResultTemplate, ResultTemplateCondition as RecsResultTemplateCondition } from "@coveo/headless/recommendation";
 export { RecsInitializationOptions } from "./components/recommendations/atomic-recs-interface/atomic-recs-interface";
