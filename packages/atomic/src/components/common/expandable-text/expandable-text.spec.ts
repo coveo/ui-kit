@@ -74,6 +74,7 @@ describe('#renderExpandableText', () => {
     });
 
     expect(button).toHaveClass('invisible');
+    expect(button).not.toHaveClass('hidden');
   });
 
   it('should apply the correct class on the button when isCollapsible is false and isTruncated is false and isExpanded is true', async () => {
@@ -84,6 +85,7 @@ describe('#renderExpandableText', () => {
     });
 
     expect(button).toHaveClass('hidden');
+    expect(button).not.toHaveClass('invisible');
   });
 
   it('should render the correct label on the icon when isExpanded is false', async () => {
