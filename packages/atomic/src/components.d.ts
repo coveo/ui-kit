@@ -774,6 +774,10 @@ export namespace Components {
          */
         "collapsible"?: boolean;
         /**
+          * A list of fields to include with the citations used to generate the answer.
+         */
+        "fieldsToIncludeInCitations": string;
+        /**
           * The maximum height (in rem units) of the answer when collapsed.
          */
         "maxCollapsedHeight": number;
@@ -913,6 +917,10 @@ export namespace Components {
           * @default false
          */
         "collapsible"?: boolean;
+        /**
+          * A list of fields to include with the citations used to generate the answer.
+         */
+        "fieldsToIncludeInCitations": string;
         /**
           * The maximum height (in rem units) of the answer when collapsed.
          */
@@ -6368,6 +6376,10 @@ declare namespace LocalJSX {
          */
         "collapsible"?: boolean;
         /**
+          * A list of fields to include with the citations used to generate the answer.
+         */
+        "fieldsToIncludeInCitations"?: string;
+        /**
           * The maximum height (in rem units) of the answer when collapsed.
          */
         "maxCollapsedHeight"?: number;
@@ -6504,6 +6516,10 @@ declare namespace LocalJSX {
           * @default false
          */
         "collapsible"?: boolean;
+        /**
+          * A list of fields to include with the citations used to generate the answer.
+         */
+        "fieldsToIncludeInCitations"?: string;
         /**
           * The maximum height (in rem units) of the answer when collapsed.
          */
