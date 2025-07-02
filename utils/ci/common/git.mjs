@@ -31,7 +31,11 @@ export const setupGit = async () => {
  * @param {Octokit} octokit
  * @returns {Promise<string>}
  */
-export async function commitChanges(commitMessage, octokit) {
+export async function commitChanges(
+  commitMessage,
+  octokit,
+  repoName = REPO_NAME
+) {
   // Get latest commit and name of the main branch.
   const currentBranchName = await getCurrentBranchName();
   const currentSHA = await getSHA1fromRef(currentBranchName);

@@ -1,0 +1,25 @@
+{
+  "name": "@coveo/atomic-sample-app",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "start": "vite",
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview",
+    "test": "playwright test"
+  },
+  "dependencies": {
+    "@coveo/atomic": "3.27.3",
+    "@coveo/headless": "^3.27.0"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.53.1",
+    "@types/node": "^24.0.4",
+    "@vitest/browser": "^3.2.4",
+    "playwright": "^1.53.1",
+    "typescript": "~5.8.3",
+    "vite": "^6.3.5"
+  }
+}

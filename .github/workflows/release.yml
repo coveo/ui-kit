@@ -222,3 +222,7 @@ jobs:
         run: npm run notify:docs
         env:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+
+  publish-repo-template:
+    if: ${{ !cancelled() }}
+    uses: ./.github/workflows/publish-repo-template.yml

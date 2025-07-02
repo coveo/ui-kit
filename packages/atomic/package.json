@@ -25,7 +25,8 @@
     },
     "./themes/*": {
       "import": "./dist/atomic/themes/*",
-      "require": "./dist/atomic/themes/*"
+      "require": "./dist/atomic/themes/*",
+      "types": "./dist/atomic/themes/*.d.ts"
     },
     "./assets/*": {
       "import": "./dist/atomic/assets/*",
