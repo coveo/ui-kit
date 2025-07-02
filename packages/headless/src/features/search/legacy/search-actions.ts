@@ -336,11 +336,13 @@ export async function legacyExecuteSearch(
     logger,
   });
 
-  config.dispatch(
-    updateSearchAction({
-      actionCause: eventDescription?.actionCause || 'default',
-    })
-  );
+  if (eventDescription?.actionCause) {
+    config.dispatch(
+      updateSearchAction({
+        actionCause: eventDescription.actionCause,
+      })
+    );
+  }
 
   const request = await buildSearchRequest(state, eventDescription);
 
