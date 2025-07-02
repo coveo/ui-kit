@@ -20,7 +20,6 @@ import { InsightInitializationOptions } from "./components/insight/atomic-insigh
 import { InsightStore } from "./components/insight/atomic-insight-interface/store";
 import { Actions, InsightResultActionClickedEvent } from "./components/insight/atomic-insight-result-action/atomic-insight-result-action";
 import { InsightResultAttachToCaseEvent } from "./components/insight/atomic-insight-result-attach-to-case-action/atomic-insight-result-attach-to-case-action";
-import { Section } from "./components/common/atomic-layout-section/sections";
 import { SelectChildProductEventArgs } from "./components/commerce/atomic-product-children/select-child-product-event";
 import { TruncateAfter } from "./components/common/expandable-text/expandable-text";
 import { ItemDisplayImageSize as ItemDisplayImageSize1 } from "./components.d";
@@ -49,7 +48,6 @@ export { InsightInitializationOptions } from "./components/insight/atomic-insigh
 export { InsightStore } from "./components/insight/atomic-insight-interface/store";
 export { Actions, InsightResultActionClickedEvent } from "./components/insight/atomic-insight-result-action/atomic-insight-result-action";
 export { InsightResultAttachToCaseEvent } from "./components/insight/atomic-insight-result-attach-to-case-action/atomic-insight-result-attach-to-case-action";
-export { Section } from "./components/common/atomic-layout-section/sections";
 export { SelectChildProductEventArgs } from "./components/commerce/atomic-product-children/select-child-product-event";
 export { TruncateAfter } from "./components/common/expandable-text/expandable-text";
 export { ItemDisplayImageSize as ItemDisplayImageSize1 } from "./components.d";
@@ -1512,23 +1510,6 @@ export namespace Components {
         "select": () => Promise<void>;
     }
     interface AtomicIpxTabs {
-    }
-    /**
-     * The `atomic-layout-section` lets you identify various sections for the related `atomic-layout` component.
-     */
-    interface AtomicLayoutSection {
-        /**
-          * For column sections, the maximum horizontal space it should take. E.g. '300px'
-         */
-        "maxWidth"?: string;
-        /**
-          * For column sections, the minimum horizontal space it should take. E.g. '300px'
-         */
-        "minWidth"?: string;
-        /**
-          * The name of the layout section.
-         */
-        "section": Section;
     }
     /**
      * The `atomic-load-more-results` component allows the user to load additional results if more are available.
@@ -4274,15 +4255,6 @@ declare global {
         new (): HTMLAtomicIpxTabsElement;
     };
     /**
-     * The `atomic-layout-section` lets you identify various sections for the related `atomic-layout` component.
-     */
-    interface HTMLAtomicLayoutSectionElement extends Components.AtomicLayoutSection, HTMLStencilElement {
-    }
-    var HTMLAtomicLayoutSectionElement: {
-        prototype: HTMLAtomicLayoutSectionElement;
-        new (): HTMLAtomicLayoutSectionElement;
-    };
-    /**
      * The `atomic-load-more-results` component allows the user to load additional results if more are available.
      */
     interface HTMLAtomicLoadMoreResultsElement extends Components.AtomicLoadMoreResults, HTMLStencilElement {
@@ -5562,7 +5534,6 @@ declare global {
         "atomic-ipx-result-link": HTMLAtomicIpxResultLinkElement;
         "atomic-ipx-tab": HTMLAtomicIpxTabElement;
         "atomic-ipx-tabs": HTMLAtomicIpxTabsElement;
-        "atomic-layout-section": HTMLAtomicLayoutSectionElement;
         "atomic-load-more-results": HTMLAtomicLoadMoreResultsElement;
         "atomic-modal": HTMLAtomicModalElement;
         "atomic-no-results": HTMLAtomicNoResultsElement;
@@ -7065,23 +7036,6 @@ declare namespace LocalJSX {
         "label"?: string;
     }
     interface AtomicIpxTabs {
-    }
-    /**
-     * The `atomic-layout-section` lets you identify various sections for the related `atomic-layout` component.
-     */
-    interface AtomicLayoutSection {
-        /**
-          * For column sections, the maximum horizontal space it should take. E.g. '300px'
-         */
-        "maxWidth"?: string;
-        /**
-          * For column sections, the minimum horizontal space it should take. E.g. '300px'
-         */
-        "minWidth"?: string;
-        /**
-          * The name of the layout section.
-         */
-        "section": Section;
     }
     /**
      * The `atomic-load-more-results` component allows the user to load additional results if more are available.
@@ -9011,7 +8965,6 @@ declare namespace LocalJSX {
         "atomic-ipx-result-link": AtomicIpxResultLink;
         "atomic-ipx-tab": AtomicIpxTab;
         "atomic-ipx-tabs": AtomicIpxTabs;
-        "atomic-layout-section": AtomicLayoutSection;
         "atomic-load-more-results": AtomicLoadMoreResults;
         "atomic-modal": AtomicModal;
         "atomic-no-results": AtomicNoResults;
@@ -9346,10 +9299,6 @@ declare module "@stencil/core" {
             "atomic-ipx-result-link": LocalJSX.AtomicIpxResultLink & JSXBase.HTMLAttributes<HTMLAtomicIpxResultLinkElement>;
             "atomic-ipx-tab": LocalJSX.AtomicIpxTab & JSXBase.HTMLAttributes<HTMLAtomicIpxTabElement>;
             "atomic-ipx-tabs": LocalJSX.AtomicIpxTabs & JSXBase.HTMLAttributes<HTMLAtomicIpxTabsElement>;
-            /**
-             * The `atomic-layout-section` lets you identify various sections for the related `atomic-layout` component.
-             */
-            "atomic-layout-section": LocalJSX.AtomicLayoutSection & JSXBase.HTMLAttributes<HTMLAtomicLayoutSectionElement>;
             /**
              * The `atomic-load-more-results` component allows the user to load additional results if more are available.
              */
