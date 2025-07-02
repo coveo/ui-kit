@@ -42,9 +42,8 @@ const meta: Meta = {
 };
 
 export default meta;
-
+//TODO here
 export const Default: Story = {
-  name: 'atomic-icon',
   args: {
     'attributes-icon': 'assets://account.svg',
   },
