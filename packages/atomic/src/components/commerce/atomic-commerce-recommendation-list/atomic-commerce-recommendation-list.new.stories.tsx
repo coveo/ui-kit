@@ -69,7 +69,6 @@ const meta: Meta = {
 export default meta;
 
 export const Default: Story = {
-  name: 'atomic-commerce-recommendation-list',
   play: async (context) => {
     await play(context);
   },

@@ -3,6 +3,7 @@ import {renderComponent} from '@/storybook-utils/common/render-component';
 import {getSampleCommerceEngineConfiguration} from '@coveo/headless/commerce';
 import type {Meta, StoryObj as Story} from '@storybook/web-components';
 
+//TODO here
 async function initializeCommerceInterface(canvasElement: HTMLElement) {
   await customElements.whenDefined('atomic-commerce-interface');
   const commerceInterface = canvasElement.querySelector(
@@ -33,9 +34,7 @@ const meta: Meta = {
 
 export default meta;
 
-export const Default: Story = {
-  name: 'atomic-commerce-interface',
-};
+export const Default: Story = {};
 
 export const SearchBeforeInit: Story = {
   tags: ['commerce', 'test'],
