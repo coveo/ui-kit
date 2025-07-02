@@ -303,11 +303,6 @@ export namespace Components {
         "summary": Summary<SearchSummaryState | ProductListingSummaryState>;
     }
     /**
-     * @alpha The `atomic-commerce-query-correction` component is responsible for handling query corrections. When a query returns no products but finds a possible query correction, the component either suggests the correction or automatically triggers a new query with the suggested term.
-     */
-    interface AtomicCommerceDidYouMean {
-    }
-    /**
      * The `atomic-commerce-facet` component renders a commerce facet that the end user can interact with to filter products.
      * @alpha 
      */
@@ -3634,15 +3629,6 @@ declare global {
         new (): HTMLAtomicCommerceCategoryFacetElement;
     };
     /**
-     * @alpha The `atomic-commerce-query-correction` component is responsible for handling query corrections. When a query returns no products but finds a possible query correction, the component either suggests the correction or automatically triggers a new query with the suggested term.
-     */
-    interface HTMLAtomicCommerceDidYouMeanElement extends Components.AtomicCommerceDidYouMean, HTMLStencilElement {
-    }
-    var HTMLAtomicCommerceDidYouMeanElement: {
-        prototype: HTMLAtomicCommerceDidYouMeanElement;
-        new (): HTMLAtomicCommerceDidYouMeanElement;
-    };
-    /**
      * The `atomic-commerce-facet` component renders a commerce facet that the end user can interact with to filter products.
      * @alpha 
      */
@@ -5551,7 +5537,6 @@ declare global {
         "atomic-citation": HTMLAtomicCitationElement;
         "atomic-color-facet": HTMLAtomicColorFacetElement;
         "atomic-commerce-category-facet": HTMLAtomicCommerceCategoryFacetElement;
-        "atomic-commerce-did-you-mean": HTMLAtomicCommerceDidYouMeanElement;
         "atomic-commerce-facet": HTMLAtomicCommerceFacetElement;
         "atomic-commerce-facet-number-input": HTMLAtomicCommerceFacetNumberInputElement;
         "atomic-commerce-facets": HTMLAtomicCommerceFacetsElement;
@@ -5964,11 +5949,6 @@ declare namespace LocalJSX {
           * The summary controller instance.
          */
         "summary": Summary<SearchSummaryState | ProductListingSummaryState>;
-    }
-    /**
-     * @alpha The `atomic-commerce-query-correction` component is responsible for handling query corrections. When a query returns no products but finds a possible query correction, the component either suggests the correction or automatically triggers a new query with the suggested term.
-     */
-    interface AtomicCommerceDidYouMean {
     }
     /**
      * The `atomic-commerce-facet` component renders a commerce facet that the end user can interact with to filter products.
@@ -9031,7 +9011,6 @@ declare namespace LocalJSX {
         "atomic-citation": AtomicCitation;
         "atomic-color-facet": AtomicColorFacet;
         "atomic-commerce-category-facet": AtomicCommerceCategoryFacet;
-        "atomic-commerce-did-you-mean": AtomicCommerceDidYouMean;
         "atomic-commerce-facet": AtomicCommerceFacet;
         "atomic-commerce-facet-number-input": AtomicCommerceFacetNumberInput;
         "atomic-commerce-facets": AtomicCommerceFacets;
@@ -9256,10 +9235,6 @@ declare module "@stencil/core" {
              * @alpha 
              */
             "atomic-commerce-category-facet": LocalJSX.AtomicCommerceCategoryFacet & JSXBase.HTMLAttributes<HTMLAtomicCommerceCategoryFacetElement>;
-            /**
-             * @alpha The `atomic-commerce-query-correction` component is responsible for handling query corrections. When a query returns no products but finds a possible query correction, the component either suggests the correction or automatically triggers a new query with the suggested term.
-             */
-            "atomic-commerce-did-you-mean": LocalJSX.AtomicCommerceDidYouMean & JSXBase.HTMLAttributes<HTMLAtomicCommerceDidYouMeanElement>;
             /**
              * The `atomic-commerce-facet` component renders a commerce facet that the end user can interact with to filter products.
              * @alpha 
