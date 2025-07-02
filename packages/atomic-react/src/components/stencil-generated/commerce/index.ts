@@ -8,7 +8,6 @@ import type { JSX } from '@coveo/atomic';
 import { defineCustomElements } from '@coveo/atomic/loader';
 
 defineCustomElements();
-export const AtomicCommerceBreadbox = /*@__PURE__*/createReactComponent<JSX.AtomicCommerceBreadbox, HTMLAtomicCommerceBreadboxElement>('atomic-commerce-breadbox');
 export const AtomicCommerceCategoryFacet = /*@__PURE__*/createReactComponent<JSX.AtomicCommerceCategoryFacet, HTMLAtomicCommerceCategoryFacetElement>('atomic-commerce-category-facet');
 export const AtomicCommerceFacet = /*@__PURE__*/createReactComponent<JSX.AtomicCommerceFacet, HTMLAtomicCommerceFacetElement>('atomic-commerce-facet');
 export const AtomicCommerceFacetNumberInput = /*@__PURE__*/createReactComponent<JSX.AtomicCommerceFacetNumberInput, HTMLAtomicCommerceFacetNumberInputElement>('atomic-commerce-facet-number-input');
@@ -21,12 +20,10 @@ export const AtomicCommerceQueryError = /*@__PURE__*/createReactComponent<JSX.At
 export const AtomicCommerceRecommendationInterface = /*@__PURE__*/createReactComponent<JSX.AtomicCommerceRecommendationInterface, HTMLAtomicCommerceRecommendationInterfaceElement>('atomic-commerce-recommendation-interface');
 export const AtomicCommerceRefineModal = /*@__PURE__*/createReactComponent<JSX.AtomicCommerceRefineModal, HTMLAtomicCommerceRefineModalElement>('atomic-commerce-refine-modal');
 export const AtomicCommerceRefineToggle = /*@__PURE__*/createReactComponent<JSX.AtomicCommerceRefineToggle, HTMLAtomicCommerceRefineToggleElement>('atomic-commerce-refine-toggle');
-export const AtomicCommerceSearchBox = /*@__PURE__*/createReactComponent<JSX.AtomicCommerceSearchBox, HTMLAtomicCommerceSearchBoxElement>('atomic-commerce-search-box');
 export const AtomicCommerceText = /*@__PURE__*/createReactComponent<JSX.AtomicCommerceText, HTMLAtomicCommerceTextElement>('atomic-commerce-text');
 export const AtomicCommerceTimeframeFacet = /*@__PURE__*/createReactComponent<JSX.AtomicCommerceTimeframeFacet, HTMLAtomicCommerceTimeframeFacetElement>('atomic-commerce-timeframe-facet');
 export const AtomicLayoutSection = /*@__PURE__*/createReactComponent<JSX.AtomicLayoutSection, HTMLAtomicLayoutSectionElement>('atomic-layout-section');
 export const AtomicNumericRange = /*@__PURE__*/createReactComponent<JSX.AtomicNumericRange, HTMLAtomicNumericRangeElement>('atomic-numeric-range');
-export const AtomicProduct = /*@__PURE__*/createReactComponent<JSX.AtomicProduct, HTMLAtomicProductElement>('atomic-product');
 export const AtomicProductChildren = /*@__PURE__*/createReactComponent<JSX.AtomicProductChildren, HTMLAtomicProductChildrenElement>('atomic-product-children');
 export const AtomicProductDescription = /*@__PURE__*/createReactComponent<JSX.AtomicProductDescription, HTMLAtomicProductDescriptionElement>('atomic-product-description');
 export const AtomicProductExcerpt = /*@__PURE__*/createReactComponent<JSX.AtomicProductExcerpt, HTMLAtomicProductExcerptElement>('atomic-product-excerpt');

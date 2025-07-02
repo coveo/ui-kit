@@ -1,3 +1,16 @@
+## <small>3.27.1 (2025-07-02)</small>
+
+* chore(headless): deprecate restoreTab action (KIT-4398) (#5527) ([e5f54e7](https://github.com/coveo/ui-kit/commits/e5f54e7)), closes [#5527](https://github.com/coveo/ui-kit/issues/5527)
+* chore(lint): integrate biome (#5507) ([53bcada](https://github.com/coveo/ui-kit/commits/53bcada)), closes [#5507](https://github.com/coveo/ui-kit/issues/5507)
+
+
+
+## 3.27.0 (2025-06-25)
+
+- fix(deps): update all dependencies j:kit-282 (#5522) ([ee7a9ab](https://github.com/coveo/ui-kit/commits/ee7a9ab)), closes [#5522](https://github.com/coveo/ui-kit/issues/5522)
+- fix(headless commerce): support show more / show less on root category facet values (#5466) ([90229d6](https://github.com/coveo/ui-kit/commits/90229d6)), closes [#5466](https://github.com/coveo/ui-kit/issues/5466)
+- feat(headless): support domain property on date / numeric range facet controller states (#5497) ([4f26dec](https://github.com/coveo/ui-kit/commits/4f26dec)), closes [#5497](https://github.com/coveo/ui-kit/issues/5497)
+
 ## <small>3.26.1 (2025-06-18)</small>
 
 - chore(deps): update vite to v3.2.3 j:kit-282 (#5475) ([32f2b2e](https://github.com/coveo/ui-kit/commits/32f2b2e)), closes [#5475](https://github.com/coveo/ui-kit/issues/5475)

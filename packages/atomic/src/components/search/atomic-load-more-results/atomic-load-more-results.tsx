@@ -12,11 +12,11 @@ import {
   InitializeBindings,
 } from '../../../utils/initialization-utils';
 import {createAppLoadedListener} from '../../common/interface/store';
-import {LoadMoreContainer} from '../../common/load-more/container';
 import {LoadMoreGuard} from '../../common/load-more/guard';
-import {LoadMoreProgressBar} from '../../common/load-more/progress-bar';
 import {LoadMoreButton} from '../../common/load-more/stencil-button';
-import {LoadMoreSummary} from '../../common/load-more/summary';
+import {LoadMoreContainer} from '../../common/load-more/stencil-container';
+import {LoadMoreProgressBar} from '../../common/load-more/stencil-progress-bar';
+import {LoadMoreSummary} from '../../common/load-more/stencil-summary';
 import {Bindings} from '../atomic-search-interface/atomic-search-interface';
 
 /**
@@ -60,7 +60,10 @@ export class AtomicLoadMoreResults {
   }
 
   private async onClick() {
-    this.bindings.store.state.resultList?.focusOnNextNewResult();
+    // TODO KIT-4227: Once the focus mess is resolved, ensure that:
+    // The focus is set on the next new result after loading more results **without scrolling**.
+    //this.bindings.store.state.resultList?.focusOnNextNewResult();
+    (document.activeElement as HTMLElement)?.blur(); // Blur the active element to avoid focus issues, remove when focus mess is resolved.
     this.resultList.fetchMoreResults();
   }
 
