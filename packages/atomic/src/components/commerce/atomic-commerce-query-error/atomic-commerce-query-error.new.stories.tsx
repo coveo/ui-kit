@@ -9,9 +9,8 @@ const {decorator, play} = wrapInCommerceInterface({
 
 const meta: Meta = {
   component: 'atomic-commerce-query-error',
-  title: 'Atomic-Commerce/Interface Components/atomic-commerce-query-error',
+  title: 'Commerce/atomic-commerce-query-error',
   id: 'atomic-commerce-query-error',
-
   render: renderComponent,
   decorators: [decorator],
   parameters,
@@ -20,6 +19,4 @@ const meta: Meta = {
 
 export default meta;
 
-export const Default: Story = {
-  name: 'atomic-commerce-query-error',
-};
+export const Default: Story = {};
