@@ -25,7 +25,6 @@ import {CommerceRecommendationStore} from '../atomic-commerce-recommendation-int
 import styles from './atomic-product.tw.css';
 
 /**
- *
  * The `atomic-product` component is used internally by the `atomic-commerce-product-list` and `atomic-commerce-recommendation-list` components.
  */
 @customElement('atomic-product')
