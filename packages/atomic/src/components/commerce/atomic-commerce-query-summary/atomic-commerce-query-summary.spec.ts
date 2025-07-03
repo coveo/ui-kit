@@ -1,8 +1,8 @@
 import {renderInAtomicCommerceInterface} from '@/vitest-utils/testing-helpers/fixtures/atomic/commerce/atomic-commerce-interface-fixture';
 import {buildFakeCommerceEngine} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/engine';
 import {buildFakeProductListing} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/product-listing-controller';
-import {buildFakeQuerySummary} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/query-summary-subcontroller';
 import {buildFakeSearch} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/search-controller';
+import {buildFakeSummary} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/summary-subcontroller';
 import {
   buildProductListing,
   buildSearch,
@@ -31,7 +31,7 @@ describe('AtomicCommerceQuerySummary', () => {
       | Partial<SearchSummaryState>
       | Partial<ProductListingSummaryState>;
   } = {}) => {
-    mockedQuerySummary = buildFakeQuerySummary({state: querySummaryState});
+    mockedQuerySummary = buildFakeSummary({state: querySummaryState});
 
     vi.mocked(buildProductListing).mockReturnValue(
       buildFakeProductListing({

@@ -16,6 +16,7 @@ export const defaultImplementation = {
   selectPage: vi.fn(),
   nextPage: vi.fn(),
   fetchMoreProducts: vi.fn(),
+  setPageSize: vi.fn(),
 };
 
 export const buildFakePager = ({
