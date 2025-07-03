@@ -105,10 +105,10 @@ export class AtomicCitation {
       return uri;
     }
     const highlight = this.extractTextToHighlight(text);
-    const encodedTextFragment = encodeURIComponent(highlight).replace(
-      /-/g,
-      '%2D'
-    );
+    const encodedTextFragment = encodeURIComponent(highlight)
+      .replace(/-/g, '%2D')
+      .replace(/_/g, '%5F')
+      .replace(/~/g, '%7E');
     return `${uri}#:~:text=${encodedTextFragment}`;
   }
 
