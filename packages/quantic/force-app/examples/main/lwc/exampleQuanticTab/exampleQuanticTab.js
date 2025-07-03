@@ -36,6 +36,12 @@ export default class ExampleQuanticTab extends LightningElement {
       defaultValue: false,
     },
     {
+      attribute: 'clearFiltersOnTabChange',
+      label: 'Clear Filters on Tab Change',
+      description: 'Whether to clear the filters when the active tab changes.',
+      defaultValue: false,
+    },
+    {
       attribute: 'useCase',
       label: 'Use Case',
       description:
