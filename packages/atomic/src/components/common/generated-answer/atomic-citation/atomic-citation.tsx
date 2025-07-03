@@ -96,6 +96,32 @@ export class AtomicCitation {
     );
   }
 
+  private generateTextFragmentUrl(
+    uri: string,
+    text?: string,
+    filetype?: string
+  ) {
+    if (filetype !== 'html' || !text) {
+      return uri;
+    }
+    const highlight = this.extractTextToHighlight(text);
+    const encodedTextFragment = encodeURIComponent(highlight).replace(
+      /-/g,
+      '%2D'
+    );
+    return `${uri}#:~:text=${encodedTextFragment}`;
+  }
+
+  private extractTextToHighlight(text: string) {
+    const SENTENCE_REGEX = /(?<!\d)(?<=^|[.!?]\s)["'\(\[]?[A-Z][^.!?]*[.!?]/g;
+    const FALLBACK_WORD_COUNT = 5;
+    const sentences = text.match(SENTENCE_REGEX);
+    if (sentences?.length) {
+      return sentences[0].trim();
+    }
+    return text.split(/\s+/).slice(0, FALLBACK_WORD_COUNT).join(' ');
+  }
+
   private openPopover = () => {
     this.isOpen = true;
   };
@@ -138,7 +164,11 @@ export class AtomicCitation {
     return (
       <div class="relative">
         <LinkWithItemAnalytics
-          href={this.citation.clickUri ?? this.citation.uri}
+          href={this.generateTextFragmentUrl(
+            this.citation.clickUri ?? this.citation.uri,
+            this.citation.text,
+            this.citation.fields?.filetype
+          )}
           ref={(el) => (this.citationRef = el!)}
           part="citation"
           target="_blank"
