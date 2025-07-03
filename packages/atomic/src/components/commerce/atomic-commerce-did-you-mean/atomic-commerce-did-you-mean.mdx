@@ -1,6 +1,6 @@
 import {Canvas, ArgTypes, Meta, Title, Description, Stories, Subtitle} from '@storybook/blocks';
 import * as AtomicCommerceDidYouMeanStories from './atomic-commerce-did-you-mean.new.stories';
-
+import {CanvasWithGithub} from '../../../../storybook-utils/documentation/canvas-with-github';
 
 <Meta of={AtomicCommerceDidYouMeanStories} />
 
@@ -8,19 +8,9 @@ import * as AtomicCommerceDidYouMeanStories from './atomic-commerce-did-you-mean
 <Title />
 <Subtitle ><Description/></Subtitle>
 
-<Canvas
-  additionalActions={[
-    {
-      title: 'Open in GitHub',
-      onClick: () => {
-        window.open(
-          'https://github.com/coveo/ui-kit/blob/master/packages/atomic/src/components/commerce/atomic-commerce-did-you-mean/atomic-commerce-did-you-mean.ts',
-          '_blank'
-        );
-      },
-    },
-  ]}
+<CanvasWithGithub
   of={AtomicCommerceDidYouMeanStories.Default}
+  githubPath="commerce/atomic-commerce-did-you-mean/atomic-commerce-did-you-mean.ts"
 />
 
 ## Usage
