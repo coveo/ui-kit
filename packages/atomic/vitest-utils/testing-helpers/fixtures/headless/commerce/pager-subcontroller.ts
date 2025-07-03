@@ -15,6 +15,7 @@ export const defaultImplementation = {
   previousPage: vi.fn(),
   selectPage: vi.fn(),
   nextPage: vi.fn(),
+  fetchMoreProducts: vi.fn(),
   setPageSize: vi.fn(),
 };
 
