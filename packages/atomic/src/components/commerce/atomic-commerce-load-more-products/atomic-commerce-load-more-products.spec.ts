@@ -17,20 +17,6 @@ import {AtomicCommerceLoadMoreProducts} from './atomic-commerce-load-more-produc
 vi.mock('@coveo/headless/commerce', {spy: true});
 
 describe('AtomicCommerceLoadMoreProducts', () => {
-  const locators = {
-    loadMoreButton: page.getByRole('button'),
-    container: page.getByTestId('load-more-container'),
-    parts: (element: AtomicCommerceLoadMoreProducts) => {
-      const qs = (part: string) =>
-        element.shadowRoot?.querySelector(`[part="${part}"]`);
-      return {
-        showingResults: qs('showing-results'),
-        progressBar: qs('progress-bar'),
-        container: qs('container'),
-      };
-    },
-  };
-
   const renderLoadMoreProducts = async ({
     interfaceType = 'product-listing',
     paginationState,
@@ -104,7 +90,25 @@ describe('AtomicCommerceLoadMoreProducts', () => {
         },
       });
 
-    return {element, fetchMoreProductsSpy, focusOnNextNewResultSpy};
+    return {
+      element,
+      fetchMoreProductsSpy,
+      focusOnNextNewResultSpy,
+      locators: {
+        get loadMoreButton() {
+          return page.getByRole('button');
+        },
+        get showingResults() {
+          return element.shadowRoot?.querySelector('[part="showing-results"]');
+        },
+        get progressBar() {
+          return element.shadowRoot?.querySelector('[part="progress-bar"]');
+        },
+        get container() {
+          return element.shadowRoot?.querySelector('[part="container"]');
+        },
+      },
+    };
   };
 
   describe("when interface element type is 'product-listing'", () => {
@@ -183,28 +187,28 @@ describe('AtomicCommerceLoadMoreProducts', () => {
 
   // render ====================================================================
   it('should render nothing when the app is not loaded', async () => {
-    const {element} = await renderLoadMoreProducts({
+    const {locators} = await renderLoadMoreProducts({
       interfaceType: 'product-listing',
       isAppLoaded: false,
       paginationState: {totalEntries: 100},
     });
 
-    expect(locators.parts(element).container).not.toBeInTheDocument();
+    expect(locators.container).not.toBeInTheDocument();
   });
 
   it('should render nothing when there are no products', async () => {
-    const {element} = await renderLoadMoreProducts({
+    const {locators} = await renderLoadMoreProducts({
       interfaceType: 'product-listing',
       isAppLoaded: true,
       paginationState: {totalEntries: 0},
     });
 
-    expect(locators.parts(element).container).not.toBeInTheDocument();
+    expect(locators.container).not.toBeInTheDocument();
   });
 
   describe('when the app is loaded and there are products', () => {
     it('should render the container', async () => {
-      const {element} = await renderLoadMoreProducts({
+      const {locators} = await renderLoadMoreProducts({
         interfaceType: 'product-listing',
         paginationState: {totalEntries: 100},
         productListingState: {
@@ -214,11 +218,11 @@ describe('AtomicCommerceLoadMoreProducts', () => {
         },
       });
 
-      expect(locators.parts(element).container).toBeInTheDocument();
+      expect(locators.container).toBeInTheDocument();
     });
 
     it('should render a localized summary with formatted numbers', async () => {
-      const {element} = await renderLoadMoreProducts({
+      const {locators} = await renderLoadMoreProducts({
         interfaceType: 'product-listing',
         paginationState: {totalEntries: 1234567},
         productListingState: {
@@ -227,7 +231,7 @@ describe('AtomicCommerceLoadMoreProducts', () => {
           ),
         },
       });
-      const summaryElement = locators.parts(element).showingResults;
+      const summaryElement = locators.showingResults;
 
       expect(summaryElement?.textContent?.trim()).toBe(
         'Showing 123,456 of 1,234,567 products'
@@ -235,7 +239,7 @@ describe('AtomicCommerceLoadMoreProducts', () => {
     });
 
     it('should render a progress bar with the correct width', async () => {
-      const {element} = await renderLoadMoreProducts({
+      const {locators} = await renderLoadMoreProducts({
         interfaceType: 'product-listing',
         paginationState: {totalEntries: 1234567},
         productListingState: {
@@ -244,7 +248,7 @@ describe('AtomicCommerceLoadMoreProducts', () => {
           ),
         },
       });
-      const progressBar = locators.parts(element).progressBar;
+      const progressBar = locators.progressBar;
       const progressBarFill = progressBar?.querySelector('.progress-bar');
 
       // Math.ceil(Math.min((123456 / 1234567) * 100, 100)) = 10, so width will be 10%
@@ -252,7 +256,7 @@ describe('AtomicCommerceLoadMoreProducts', () => {
     });
 
     it('should render a load more button with the correct localized label when more products are available', async () => {
-      await renderLoadMoreProducts({
+      const {locators} = await renderLoadMoreProducts({
         interfaceType: 'product-listing',
         paginationState: {totalEntries: 100},
         productListingState: {
@@ -263,14 +267,12 @@ describe('AtomicCommerceLoadMoreProducts', () => {
       });
 
       await expect.element(locators.loadMoreButton).toBeInTheDocument();
-      await expect
-        .element(locators.loadMoreButton)
-        .toHaveTextContent('Load more products');
+      expect(locators.loadMoreButton).toHaveTextContent('Load more products');
     });
 
     describe('when the load more button is clicked', () => {
       it('should call #fetchMoreProducts', async () => {
-        const {fetchMoreProductsSpy} = await renderLoadMoreProducts({
+        const {fetchMoreProductsSpy, locators} = await renderLoadMoreProducts({
           interfaceType: 'product-listing',
           paginationState: {totalEntries: 100},
           productListingState: {
@@ -286,15 +288,16 @@ describe('AtomicCommerceLoadMoreProducts', () => {
       });
 
       it('should call #focusOnNextNewResult', async () => {
-        const {focusOnNextNewResultSpy} = await renderLoadMoreProducts({
-          interfaceType: 'product-listing',
-          paginationState: {totalEntries: 100},
-          productListingState: {
-            products: Array.from({length: 25}, (_, i) =>
-              buildFakeProduct({permanentid: `product-${i}`})
-            ),
-          },
-        });
+        const {focusOnNextNewResultSpy, locators} =
+          await renderLoadMoreProducts({
+            interfaceType: 'product-listing',
+            paginationState: {totalEntries: 100},
+            productListingState: {
+              products: Array.from({length: 25}, (_, i) =>
+                buildFakeProduct({permanentid: `product-${i}`})
+              ),
+            },
+          });
 
         await locators.loadMoreButton.click();
 
@@ -303,7 +306,7 @@ describe('AtomicCommerceLoadMoreProducts', () => {
     });
 
     it('should not render a load more button when all products are loaded', async () => {
-      await renderLoadMoreProducts({
+      const {locators} = await renderLoadMoreProducts({
         interfaceType: 'product-listing',
         paginationState: {totalEntries: 25},
         productListingState: {
