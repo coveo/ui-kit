@@ -20,7 +20,7 @@
     "@angular/platform-browser": "17.3.12",
     "@angular/platform-browser-dynamic": "17.3.12",
     "@angular/router": "17.3.12",
-    "@coveo/atomic": "2.79.1",
+    "@coveo/atomic": "2.79.2",
     "rxjs": "7.8.1"
   },
   "peerDependencies": {
