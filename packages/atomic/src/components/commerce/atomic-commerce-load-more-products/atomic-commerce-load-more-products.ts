@@ -1,5 +1,7 @@
 import {bindStateToController} from '@/src/decorators/bind-state';
+import {bindingGuard} from '@/src/decorators/binding-guard';
 import {bindings} from '@/src/decorators/bindings';
+import {errorGuard} from '@/src/decorators/error-guard';
 import {InitializableComponent} from '@/src/decorators/types';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles.js';
 import {
@@ -12,7 +14,7 @@ import {
   ProductListingState,
   SearchState,
 } from '@coveo/headless/commerce';
-import {CSSResultGroup, html, unsafeCSS, LitElement, nothing} from 'lit';
+import {CSSResultGroup, html, unsafeCSS, LitElement} from 'lit';
 import {customElement, state} from 'lit/decorators.js';
 import {when} from 'lit/directives/when.js';
 import {createAppLoadedListener} from '../../common/interface/store';
@@ -76,36 +78,34 @@ export class AtomicCommerceLoadMoreProducts
     });
   }
 
+  @bindingGuard()
+  @errorGuard()
   render() {
-    return html`${when(
-      this.shouldRender,
-      () =>
-        renderLoadMoreContainer()(html`
-          ${renderLoadMoreSummary({
-            props: {
-              from: this.lastProduct,
-              to: this.paginationState.totalEntries,
-              i18n: this.bindings.i18n,
-              label: 'showing-products-of-load-more',
-            },
-          })}
-          ${renderLoadMoreProgressBar({
-            props: {
-              from: this.lastProduct,
-              to: this.paginationState.totalEntries,
-            },
-          })}
-          ${renderLoadMoreButton({
-            props: {
-              i18n: this.bindings.i18n,
-              label: 'load-more-products',
-              moreAvailable:
-                this.lastProduct < this.paginationState.totalEntries,
-              onClick: () => this.onClick(),
-            },
-          })}
-        `),
-      () => nothing
+    return html`${when(this.shouldRender, () =>
+      renderLoadMoreContainer()(html`
+        ${renderLoadMoreSummary({
+          props: {
+            from: this.lastProduct,
+            to: this.paginationState.totalEntries,
+            i18n: this.bindings.i18n,
+            label: 'showing-products-of-load-more',
+          },
+        })}
+        ${renderLoadMoreProgressBar({
+          props: {
+            from: this.lastProduct,
+            to: this.paginationState.totalEntries,
+          },
+        })}
+        ${renderLoadMoreButton({
+          props: {
+            i18n: this.bindings.i18n,
+            label: 'load-more-products',
+            moreAvailable: this.lastProduct < this.paginationState.totalEntries,
+            onClick: () => this.onClick(),
+          },
+        })}
+      `)
     )}`;
   }
 
