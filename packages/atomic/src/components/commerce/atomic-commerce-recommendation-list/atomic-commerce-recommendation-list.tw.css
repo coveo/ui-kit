@@ -19,6 +19,3 @@
     @apply font-sans text-2xl font-bold;
   }
 }
-atomic-product:not(.hydrated) {
-  visibility: hidden;
-}

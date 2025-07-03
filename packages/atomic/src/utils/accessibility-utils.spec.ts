@@ -258,6 +258,40 @@ describe('FocusTargetController', () => {
 
       expect(elementFocusSpy).toHaveBeenCalledOnce();
     });
+
+    it('should call the registered focus callbacks', async () => {
+      const {focusTargetController} = await renderComponent();
+
+      const focusCallback = vi.fn();
+      focusTargetController.registerFocusCallback(focusCallback);
+
+      await focusTargetController.focus();
+
+      expect(focusCallback).toHaveBeenCalled();
+    });
+
+    it('should clear the registered focus callbacks', async () => {
+      const {focusTargetController} = await renderComponent();
+
+      const focusCallback = vi.fn();
+      focusTargetController.registerFocusCallback(focusCallback);
+
+      await focusTargetController.focus();
+      await focusTargetController.focus();
+
+      expect(focusCallback).toHaveBeenCalledOnce();
+    });
+
+    it('should call the internal focus callback when set', async () => {
+      const {focusTargetController} = await renderComponent();
+
+      // This method return a promise that resolves when the focus is done
+      const internalCallback = focusTargetController.focusOnNextTarget();
+
+      await focusTargetController.focus();
+
+      expect(internalCallback).resolves.toBeUndefined();
+    });
   });
 
   describe('#focusAfterSearch', async () => {
@@ -423,7 +457,7 @@ describe('FocusTargetController', () => {
   });
 
   describe('#disableForCurrentSearch', () => {
-    it('should prevent the #defer util function from being called and the target element from being focused once when called after the #focusAfterSearch method', async () => {
+    it('should prevent the defer that handle the focus actions from being called if executed after #focusAfterSearch method', async () => {
       const mockedDefer = vi.mocked(defer);
 
       const getUniqueIDFromEngine = vi
@@ -437,26 +471,103 @@ describe('FocusTargetController', () => {
 
       const {focusTargetController} = component;
 
-      const element = document.createElement('div');
-      const htmlElementFocusSpy = vi.spyOn(element, 'focus');
-      focusTargetController.setTarget(element);
-
-      component.requestUpdate();
+      focusTargetController.setTarget(document.createElement('div'));
 
       focusTargetController.focusAfterSearch();
       focusTargetController.disableForCurrentSearch();
+      component.requestUpdate();
       await vi.runAllTimersAsync();
 
       expect(mockedDefer).not.toHaveBeenCalled();
-      expect(htmlElementFocusSpy).not.toHaveBeenCalled();
+    });
+  });
 
-      component.requestUpdate();
+  describe('#hostUpdated', () => {
+    describe('when the host is updated after a search & that the focus has not been disabled for the current search', () => {
+      let component: FocusTargetControllerTestComponent;
+      let focusTargetController: FocusTargetController;
 
-      focusTargetController.focusAfterSearch();
-      await vi.runAllTimersAsync();
+      const setup = async ({
+        mockedDefer,
+        element,
+      }: {
+        mockedDefer?: typeof defer;
+        element?: HTMLElement;
+      } = {}) => {
+        mockedDefer ??= vi.mocked(defer).mockReturnValue(Promise.resolve());
+        element ??= document.createElement('div');
+        const getUniqueIDFromEngine = vi
+          .fn()
+          .mockReturnValue('request-id')
+          .mockReturnValueOnce('request-id-2')
+          .mockReturnValueOnce('request-id-3')
+          .mockReturnValueOnce('request-id-4');
 
-      expect(mockedDefer).toHaveBeenCalledOnce();
-      expect(htmlElementFocusSpy).toHaveBeenCalledOnce();
+        component = await renderComponent(getUniqueIDFromEngine);
+        focusTargetController = component.focusTargetController;
+        focusTargetController.setTarget(element);
+        focusTargetController.focusAfterSearch();
+      };
+
+      it('should call the #defer method', async () => {
+        const mockedDefer = vi.mocked(defer);
+        await setup({mockedDefer});
+
+        component.requestUpdate();
+        await vi.runAllTimersAsync();
+
+        expect(mockedDefer).toHaveBeenCalledOnce();
+      });
+
+      it('should focus on the target element', async () => {
+        const element = document.createElement('div');
+        const elementFocusSpy = vi.spyOn(element, 'focus');
+
+        await setup({element});
+
+        component.requestUpdate();
+        await vi.runAllTimersAsync();
+
+        expect(elementFocusSpy).toHaveBeenCalledOnce();
+      });
+
+      it('should call the registered focus callbacks', async () => {
+        await setup();
+
+        const focusCallback = vi.fn();
+        focusTargetController.registerFocusCallback(focusCallback);
+
+        component.requestUpdate();
+        await vi.runAllTimersAsync();
+
+        expect(focusCallback).toHaveBeenCalled();
+      });
+
+      it('should clear the registered focus callbacks', async () => {
+        await setup();
+
+        const focusCallback = vi.fn();
+        focusTargetController.registerFocusCallback(focusCallback);
+
+        component.requestUpdate();
+        await vi.runAllTimersAsync();
+        component.requestUpdate();
+        await vi.runAllTimersAsync();
+
+        expect(focusCallback).toHaveBeenCalledOnce();
+      });
+
+      it('should call the internal focus callback when set', async () => {
+        await setup();
+
+        // This method return a promise that resolves when the focus is done
+        const internalCallback = focusTargetController.focusOnNextTarget();
+
+        component.requestUpdate();
+        await vi.runAllTimersAsync();
+
+        expect(internalCallback).resolves.toBeUndefined();
+      });
     });
   });
 });

@@ -10,7 +10,7 @@ const {decorator, play} = wrapInSearchInterface();
 
 const meta: Meta = {
   component: 'atomic-commerce-layout',
-  title: 'AtomicCommerceLayout',
+  title: 'Commerce/atomic-commerce-layout',
   id: 'atomic-commerce-layout',
   render: renderComponent,
   decorators: [decorator],

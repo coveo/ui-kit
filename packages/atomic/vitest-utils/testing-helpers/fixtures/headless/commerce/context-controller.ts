@@ -1,22 +1,18 @@
 import {Context, ContextState} from '@coveo/headless/commerce';
-import {vi} from 'vitest';
 
 export const defaultState = {
   language: 'en',
   country: 'US',
   currency: 'USD',
-  view: {url: 'https://www.example.com', title: 'Example'},
-};
+  view: {
+    url: 'https://example.com',
+  },
+} satisfies ContextState;
 
 export const defaultImplementation = {
-  addReducers: vi.fn(),
   subscribe: (subscribedFunction: () => void) => {
     subscribedFunction();
-    return {unsubscribe: vi.fn()};
   },
-  setLanguage: vi.fn((language: string) => {
-    defaultState.language = language;
-  }),
   state: defaultState,
 };
 
@@ -26,10 +22,9 @@ export const buildFakeContext = ({
 }: Partial<{
   implementation?: Partial<Context>;
   state?: Partial<ContextState>;
-}>): Context => {
-  return {
+}>): Context =>
+  ({
     ...defaultImplementation,
     ...implementation,
     ...(state && {state: {...defaultState, ...state}}),
-  } as Context;
-};
+  }) as Context;

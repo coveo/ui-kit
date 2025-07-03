@@ -1,6 +1,6 @@
 {
   "name": "@coveo/quantic",
-  "version": "3.24.1",
+  "version": "3.25.0",
   "description": "A Salesforce Lightning Web Component (LWC) library for building modern UIs interfacing with the Coveo platform",
   "author": "coveo.com",
   "homepage": "https://coveo.com",
@@ -37,6 +37,9 @@
     "create:lws-disabled": "../../node_modules/.bin/ts-node scripts/build/deploy-community.ts --scratch-org-def-path=./config/lws-disabled-scratch-def.json",
     "deploy:main": "sf project deploy start --source-dir force-app/main --target-org",
     "deploy:examples": "sf project deploy start --source-dir force-app/examples --source-dir force-app/solutionExamples --target-org",
+    "deploy:lws-disabled": "npm run deploy:main --target-org Quantic__LWS_disabled && npm run deploy:examples --target-org Quantic__LWS_disabled",
+    "deploy:lws-enabled": "npm run deploy:main --target-org Quantic__LWS_enabled && npm run deploy:examples --target-org Quantic__LWS_enabled",
+    "deploy:all": "npm run deploy:lws-enabled && npm run deploy:lws-disabled",
     "build:doc": "jsdoc -c jsdoc-config.json",
     "publish:sfdx": "../../node_modules/.bin/ts-node scripts/build/create-package.ts --remove-translations",
     "promote:sfdx": "npm run publish:sfdx -- --promote",
@@ -50,8 +53,8 @@
   },
   "dependencies": {
     "dompurify": "3.2.6",
-    "@coveo/bueno": "1.0.18",
-    "@coveo/headless": "3.27.0",
+    "@coveo/bueno": "1.0.19",
+    "@coveo/headless": "3.27.1",
     "fs-extra": "11.3.0",
     "marked": "12.0.2"
   },

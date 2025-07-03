@@ -44,7 +44,7 @@ const TEMPLATE_EXAMPLE = `<template>
 
 const meta: Meta = {
   component: 'atomic-product-template',
-  title: 'Atomic-Commerce/Product Template Components/atomic-product-template',
+  title: 'Commerce/atomic-product-template',
   id: 'atomic-product-template',
   render: renderComponentWithoutCodeRoot,
   parameters,

@@ -1,63 +1,68 @@
+import {renderFunctionFixture} from '@/vitest-utils/testing-helpers/fixture';
 import {createTestI18n} from '@/vitest-utils/testing-helpers/i18n-utils';
 import {i18n as I18n} from 'i18next';
-import {html, render} from 'lit';
-import {describe, beforeAll, beforeEach, afterEach, test, expect} from 'vitest';
-import {loadMoreButton} from './button';
+import {html} from 'lit';
+import {beforeAll, describe, expect, it, vi} from 'vitest';
+import {renderLoadMoreButton} from './button';
 
-describe('loadMoreButton', () => {
-  let container: HTMLElement;
+describe('#renderLoadMoreButton', () => {
   let i18n: I18n;
 
   beforeAll(async () => {
     i18n = await createTestI18n();
   });
 
-  beforeEach(() => {
-    container = document.createElement('div');
-    document.body.appendChild(container);
-  });
-
-  afterEach(() => {
-    document.body.removeChild(container);
-  });
-
-  const renderLoadMoreButton = (props: {
-    moreAvailable: boolean;
-    label?: 'load-more-results' | 'load-more-products';
-  }) => {
-    render(
-      html`${loadMoreButton({
+  const renderComponent = async (overrides = {}) => {
+    const onClick = vi.fn();
+    const element = await renderFunctionFixture(
+      html`${renderLoadMoreButton({
         props: {
           i18n,
-          onClick: () => {},
-          moreAvailable: props.moreAvailable,
-          label: props.label ?? 'load-more-results',
+          onClick,
+          moreAvailable: true,
+          label: 'load-more-results',
+          ...overrides,
         },
-      })}`,
-      container
+      })}`
     );
+
+    return {
+      element,
+      button: element.querySelector('button'),
+      onClick,
+    };
   };
 
-  test('should render nothing when moreAvailable is false', () => {
-    renderLoadMoreButton({moreAvailable: false});
+  it('should render nothing when moreAvailable is false', async () => {
+    const {button, element} = await renderComponent({moreAvailable: false});
 
-    expect(container).toBeEmptyDOMElement();
+    expect(button).toBeNull();
+    expect(element.children).toHaveLength(0);
   });
 
-  test('should render a button with the correct props', () => {
-    renderLoadMoreButton({moreAvailable: true});
+  it('should render button with correct part attribute', async () => {
+    const {button} = await renderComponent();
 
-    const button = container.querySelector('button');
-    expect(button).toHaveClass('btn-primary');
-    expect(button).toHaveClass('my-2');
-    expect(button).toHaveClass('p-3');
-    expect(button).toHaveClass('font-bold');
+    expect(button).toHaveAttribute('part', 'load-more-results-button');
   });
 
-  test('should render the children as the label', () => {
-    renderLoadMoreButton({moreAvailable: true, label: 'load-more-products'});
+  it('should render correct label when label is load-more-results', async () => {
+    const {button} = await renderComponent({label: 'load-more-results'});
 
-    const button = container.querySelector('button');
+    expect(button).toHaveTextContent('Load more results');
+  });
+
+  it('should render correct label when label is load-more-products', async () => {
+    const {button} = await renderComponent({label: 'load-more-products'});
+
     expect(button).toHaveTextContent('Load more products');
+  });
+
+  it('should call onClick when button is clicked', async () => {
+    const {button, onClick} = await renderComponent();
+
+    button?.click();
+
+    expect(onClick).toHaveBeenCalledOnce();
   });
 });

@@ -1,0 +1,63 @@
+import {Canvas, Markdown, ArgTypes, Meta, Title, Description, Controls, Primary, Stories, Subtitle} from '@storybook/blocks';
+import * as AtomicLayoutSectionStories from './atomic-layout-section.new.stories';
+
+<Meta of={AtomicLayoutSectionStories} />
+
+<Title />
+<Subtitle ><Description/></Subtitle>
+
+<Canvas
+  additionalActions={[
+    {
+      title: 'Open in GitHub',
+      onClick: () => {
+        window.open(
+          'https://github.com/coveo/ui-kit/blob/master/packages/atomic/src/components/common/atomic-layout-section/atomic-layout-section.ts',
+          '_blank'
+        );
+      },
+    },
+  ]}
+  of={AtomicLayoutSectionStories.Default}
+/>
+
+## Usage
+This component is used to define a section within a layout. 
+Each `atomic-layout-section` reserves space based on its section attribute, 
+allowing the layout to position and style content consistently within the `atomic-search-layout` or `atomic-commerce-layout`.
+
+An example using the `atomic-commerce-interface` and `atomic-commerce-layout` where we define sections for **search**, **main** content, **status**, **products**, and **pagination**:
+
+```html
+<atomic-commerce-interface>
+
+  <atomic-commerce-layout>
+
+    <atomic-layout-section section="search">
+        ...
+    </atomic-layout-section>
+    
+    <atomic-layout-section section="main">
+        
+      <atomic-layout-section section="status">
+       ... 
+      </atomic-layout-section>
+      
+      <atomic-layout-section section="products">
+       ... 
+      </atomic-layout-section>
+
+      <atomic-layout-section section="pagination">
+       ... 
+      </atomic-layout-section>
+
+    </atomic-layout-section>
+  </atomic-commerce-layout>
+</atomic-commerce-interface>
+```
+
+## Examples
+<Stories title={""}/>
+
+## Reference
+<ArgTypes />
