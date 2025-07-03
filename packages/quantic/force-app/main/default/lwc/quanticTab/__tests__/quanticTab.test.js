@@ -146,6 +146,7 @@ describe('c-quantic-tab', () => {
         options: {
           expression: defaultOptions.expression,
           id: defaultOptions.name,
+          clearFiltersOnTabChange: false,
         },
         initialState: {
           isActive: defaultOptions.isActive,
@@ -155,6 +156,27 @@ describe('c-quantic-tab', () => {
       expect(functionsMocks.buildSearchStatus).toHaveBeenCalledWith(
         exampleEngine
       );
+    });
+
+    it('should pass the clearFiltersOnTabChange option to the tab controller when set to true', async () => {
+      const optionsWithClearFilters = {
+        ...defaultOptions,
+        clearFiltersOnTabChange: true,
+      };
+      createTestComponent(optionsWithClearFilters);
+      await flushPromises();
+
+      expect(functionsMocks.buildTab).toHaveBeenCalledTimes(1);
+      expect(functionsMocks.buildTab).toHaveBeenCalledWith(exampleEngine, {
+        options: {
+          expression: optionsWithClearFilters.expression,
+          id: optionsWithClearFilters.name,
+          clearFiltersOnTabChange: true,
+        },
+        initialState: {
+          isActive: optionsWithClearFilters.isActive,
+        },
+      });
     });
 
     it('should subscribe to the headless tab and search status state changes', async () => {
