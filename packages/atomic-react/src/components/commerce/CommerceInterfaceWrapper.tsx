@@ -1,4 +1,4 @@
-import type {JSX, i18n} from '@coveo/atomic';
+import type {i18n} from '@coveo/atomic';
 import React, {useEffect, useRef} from 'react';
 import {AtomicCommerceInterface} from './components';
 
