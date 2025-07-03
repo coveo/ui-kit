@@ -13,7 +13,6 @@ type InsightPanelE2EFixtures = {
 };
 
 export const testInsight = quanticBase.extend<InsightPanelE2EFixtures>({
-  pageUrl: pageUrl,
   search: async ({page}, use) => {
     await use(new SearchObject(page, insightSearchRequestRegex));
   },
