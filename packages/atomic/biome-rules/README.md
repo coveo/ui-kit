@@ -1,7 +1,6 @@
 # Biome toLocaleString Plugin
 
-## Overview
-Custom Biome (GritQL) plugin that enforces explicit locale usage in `toLocaleString()` calls. Ensures consistent localization by requiring developers to use Atomic's i18n state instead of relying on runtime browser locale.
+Enforces explicit locale usage in `toLocaleString()` calls.
 
 ## Plugin Rule
 **File**: `no-tolocalestring-without-locale.grit`
@@ -43,9 +42,3 @@ npm run lint:check
 ```
 
 The plugin runs automatically as part of the existing lint process and will fail CI if violations are found.
-
-## Notes
-
-- **Current Scope**: Plugin applies globally but intended for Atomic package only
-- **Message**: "Use explicit locale argument: toLocaleString(locale). Get locale from Atomic i18n state to ensure consistent localization."
-- **Integration**: Runs automatically with existing lint process and CI checks
