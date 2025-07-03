@@ -28,6 +28,7 @@ import {customElement, property, state} from 'lit/decorators.js';
 import {when} from 'lit/directives/when.js';
 import {shouldDisplayInputForFacetRange} from '../../common/facets/facet-common';
 import {FacetInfo} from '../../common/facets/facet-common-store';
+import '../../common/facets/facet-date-input/atomic-facet-date-input/atomic-facet-date-input';
 import {initializePopover} from '../../common/facets/popover/popover-type';
 import {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface';
 import styles from './atomic-commerce-timeframe-facet.tw.css';
