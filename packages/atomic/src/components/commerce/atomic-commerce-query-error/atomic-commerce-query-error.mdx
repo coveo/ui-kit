@@ -1,0 +1,36 @@
+import { Canvas, ArgTypes, Meta, Title, Description, Stories, Subtitle } from '@storybook/blocks';
+import * as AtomicCommerceQueryErrorStories from './atomic-commerce-query-error.new.stories';
+import { CanvasWithGithub } from '../../../../storybook-utils/documentation/canvas-with-github';
+
+<Meta of={ AtomicCommerceQueryErrorStories } />
+
+<Title />
+<Subtitle><Description/></Subtitle>
+
+<CanvasWithGithub
+  of={ AtomicCommerceQueryErrorStories.Default }
+  githubPath="commerce/atomic-commerce-query-error/atomic-commerce-query-error.ts"
+/>
+
+## Usage
+This component is used to display an error message when a query fails. 
+It is typically placed within the "main" section of the layout, often alongside other components that display search results or product listings.
+
+```html
+<atomic-commerce-interface>
+  ...
+  <atomic-commerce-layout>
+    ...
+    <atomic-layout-section section="main">
+      ...
+      <atomic-commerce-query-error></atomic-commerce-query-error>
+    </atomic-layout-section>
+  </atomic-commerce-layout>
+</atomic-commerce-interface>
+```
+
+## Examples
+<Stories title={""}/>
+
+## Reference
+<ArgTypes />
