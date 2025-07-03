@@ -1,12 +1,12 @@
 name: cdn-checks
-description: 'Runs CDN checks'
+description: "Runs CDN checks"
 runs:
   using: composite
   steps:
     - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
     - uses: ./.github/actions/setup
       with:
-        cache-suffix: 'cdn'
+        cache-suffix: "cdn"
       env:
         DEPLOYMENT_ENVIRONMENT: CDN
     - run: npm run build
@@ -17,8 +17,9 @@ runs:
       env:
         DEPLOYMENT_ENVIRONMENT: CDN
       with:
+        testsToRun: "atomic-commerce-query-error.e2e.ts atomic-icon.e2e.ts atomic-commerce-text.e2e.ts atomic-commerce-query-summary.e2e.ts"
         shardIndex: 1
-        shardTotal: 25
+        shardTotal: 1
         uploadArtifacts: false
     - uses: ./.github/actions/playwright-atomic-hosted-pages
       env:
