@@ -16,7 +16,7 @@ import {AtomicCommerceLoadMoreProducts} from './atomic-commerce-load-more-produc
 
 vi.mock('@coveo/headless/commerce', {spy: true});
 
-describe('AtomicCommerceLoadMoreProducts', () => {
+describe('atomic-commerce-load-more-products', () => {
   const renderLoadMoreProducts = async ({
     interfaceType = 'product-listing',
     paginationState,
