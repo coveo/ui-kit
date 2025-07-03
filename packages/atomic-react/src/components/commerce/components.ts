@@ -34,16 +34,16 @@ export const AtomicCommerceDidYouMean = createComponent({
   elementClass: LitAtomicCommerceDidYouMean,
 });
 
-export const AtomicCommerceLayout = createComponent({
-  tagName: 'atomic-commerce-layout',
-  react: React,
-  elementClass: LitAtomicCommerceLayout,
-});
-
 export const AtomicCommerceInterface = createComponent({
   tagName: 'atomic-commerce-interface',
   react: React,
   elementClass: LitAtomicCommerceInterface,
+});
+
+export const AtomicCommerceLayout = createComponent({
+  tagName: 'atomic-commerce-layout',
+  react: React,
+  elementClass: LitAtomicCommerceLayout,
 });
 
 export const AtomicCommercePager = createComponent({
@@ -88,16 +88,16 @@ export const AtomicCommerceSearchBox = createComponent({
   elementClass: LitAtomicCommerceSearchBox,
 });
 
-export const AtomicCommerceSearchBoxQuerySuggestions = createComponent({
-  tagName: 'atomic-commerce-search-box-query-suggestions',
-  react: React,
-  elementClass: LitAtomicCommerceSearchBoxQuerySuggestions,
-});
-
 export const AtomicCommerceSearchBoxInstantProducts = createComponent({
   tagName: 'atomic-commerce-search-box-instant-products',
   react: React,
   elementClass: LitAtomicCommerceSearchBoxInstantProducts,
+});
+
+export const AtomicCommerceSearchBoxQuerySuggestions = createComponent({
+  tagName: 'atomic-commerce-search-box-query-suggestions',
+  react: React,
+  elementClass: LitAtomicCommerceSearchBoxQuerySuggestions,
 });
 
 export const AtomicCommerceSearchBoxRecentQueries = createComponent({
