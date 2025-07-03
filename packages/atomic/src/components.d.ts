@@ -445,20 +445,6 @@ export namespace Components {
     interface AtomicCommerceRefineToggle {
     }
     /**
-     * @alpha The `atomic-commerce-text` component leverages the I18n translation module through the atomic-commerce-interface.
-     */
-    interface AtomicCommerceText {
-        /**
-          * The count value used for plurals.
-          * @type {number}
-         */
-        "count"?: number;
-        /**
-          * The string key value.
-         */
-        "value": string;
-    }
-    /**
      * A facet is a list of values for a certain field occurring in the results.
      * An `atomic-commerce-timeframe-facet` displays a facet of the results for the current query as date intervals.
      * @alpha 
@@ -3703,15 +3689,6 @@ declare global {
         new (): HTMLAtomicCommerceRefineToggleElement;
     };
     /**
-     * @alpha The `atomic-commerce-text` component leverages the I18n translation module through the atomic-commerce-interface.
-     */
-    interface HTMLAtomicCommerceTextElement extends Components.AtomicCommerceText, HTMLStencilElement {
-    }
-    var HTMLAtomicCommerceTextElement: {
-        prototype: HTMLAtomicCommerceTextElement;
-        new (): HTMLAtomicCommerceTextElement;
-    };
-    /**
      * A facet is a list of values for a certain field occurring in the results.
      * An `atomic-commerce-timeframe-facet` displays a facet of the results for the current query as date intervals.
      * @alpha 
@@ -5479,7 +5456,6 @@ declare global {
         "atomic-commerce-recommendation-interface": HTMLAtomicCommerceRecommendationInterfaceElement;
         "atomic-commerce-refine-modal": HTMLAtomicCommerceRefineModalElement;
         "atomic-commerce-refine-toggle": HTMLAtomicCommerceRefineToggleElement;
-        "atomic-commerce-text": HTMLAtomicCommerceTextElement;
         "atomic-commerce-timeframe-facet": HTMLAtomicCommerceTimeframeFacetElement;
         "atomic-did-you-mean": HTMLAtomicDidYouMeanElement;
         "atomic-external": HTMLAtomicExternalElement;
@@ -6020,20 +5996,6 @@ declare namespace LocalJSX {
      * @alpha 
      */
     interface AtomicCommerceRefineToggle {
-    }
-    /**
-     * @alpha The `atomic-commerce-text` component leverages the I18n translation module through the atomic-commerce-interface.
-     */
-    interface AtomicCommerceText {
-        /**
-          * The count value used for plurals.
-          * @type {number}
-         */
-        "count"?: number;
-        /**
-          * The string key value.
-         */
-        "value": string;
     }
     /**
      * A facet is a list of values for a certain field occurring in the results.
@@ -8918,7 +8880,6 @@ declare namespace LocalJSX {
         "atomic-commerce-recommendation-interface": AtomicCommerceRecommendationInterface;
         "atomic-commerce-refine-modal": AtomicCommerceRefineModal;
         "atomic-commerce-refine-toggle": AtomicCommerceRefineToggle;
-        "atomic-commerce-text": AtomicCommerceText;
         "atomic-commerce-timeframe-facet": AtomicCommerceTimeframeFacet;
         "atomic-did-you-mean": AtomicDidYouMean;
         "atomic-external": AtomicExternal;
@@ -9181,10 +9142,6 @@ declare module "@stencil/core" {
              * @alpha 
              */
             "atomic-commerce-refine-toggle": LocalJSX.AtomicCommerceRefineToggle & JSXBase.HTMLAttributes<HTMLAtomicCommerceRefineToggleElement>;
-            /**
-             * @alpha The `atomic-commerce-text` component leverages the I18n translation module through the atomic-commerce-interface.
-             */
-            "atomic-commerce-text": LocalJSX.AtomicCommerceText & JSXBase.HTMLAttributes<HTMLAtomicCommerceTextElement>;
             /**
              * A facet is a list of values for a certain field occurring in the results.
              * An `atomic-commerce-timeframe-facet` displays a facet of the results for the current query as date intervals.
