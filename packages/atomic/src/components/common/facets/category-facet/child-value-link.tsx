@@ -1,7 +1,7 @@
-import {FunctionalComponent, h} from '@stencil/core';
+import {type FunctionalComponent, h} from '@stencil/core';
 import {
   CategoryFacetValueLink,
-  CategoryFacetValueLinkProps,
+  type CategoryFacetValueLinkProps,
 } from './value-link';
 
 interface CategoryFacetChildValueLinkProps

@@ -5,7 +5,7 @@ import '@vitest/browser/matchers.d.ts';
 import {html} from 'lit';
 import {vi, expect, describe, beforeAll, it} from 'vitest';
 import {
-  FacetShowMoreProps,
+  type FacetShowMoreProps,
   renderFacetShowMoreLess,
 } from './facet-show-more-less';
 

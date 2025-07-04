@@ -5,7 +5,7 @@ import {describe, it, beforeAll, expect} from 'vitest';
 import {
   getPartialRecentQueryClearElement,
   getPartialRecentQueryElement,
-  RecentQueriesContainerProps,
+  type RecentQueriesContainerProps,
   renderRecentQuery,
   renderRecentQueryClear,
 } from './recent-queries';

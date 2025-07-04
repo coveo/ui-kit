@@ -1,5 +1,5 @@
 import {createTestI18n} from '@/vitest-utils/testing-helpers/i18n-utils';
-import {i18n as I18n} from 'i18next';
+import type {i18n as I18n} from 'i18next';
 import {html, render} from 'lit';
 import {describe, test, beforeEach, afterEach, expect} from 'vitest';
 import ArrowLeftIcon from '../../../images/arrow-left-rounded.svg';

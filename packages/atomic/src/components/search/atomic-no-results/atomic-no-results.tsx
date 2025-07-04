@@ -1,12 +1,12 @@
 import {
   buildHistoryManager,
-  HistoryManager,
-  HistoryManagerState,
+  type HistoryManager,
+  type HistoryManagerState,
   buildSearchStatus,
-  SearchStatus,
-  SearchStatusState,
-  QuerySummary,
-  QuerySummaryState,
+  type SearchStatus,
+  type SearchStatusState,
+  type QuerySummary,
+  type QuerySummaryState,
   buildQuerySummary,
 } from '@coveo/headless';
 import {Component, h, Prop, State} from '@stencil/core';
@@ -22,7 +22,7 @@ import {MagnifyingGlass} from '../../common/no-items/stencil-magnifying-glass';
 import {NoItems} from '../../common/no-items/stencil-no-items';
 import {SearchTips} from '../../common/no-items/stencil-tips';
 import {getSummary} from '../../common/no-items/utils';
-import {Bindings} from '../atomic-search-interface/atomic-search-interface';
+import type {Bindings} from '../atomic-search-interface/atomic-search-interface';
 
 /**
  * The `atomic-no-results` component displays search tips and a "Cancel last action" button when there are no results. Any additional content slotted inside of its element will be displayed as well.

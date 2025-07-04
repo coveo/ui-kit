@@ -1,35 +1,35 @@
 import {Schema, StringValue} from '@coveo/bueno';
 import {
-  NumericFacet,
+  type NumericFacet,
   buildNumericFacet,
-  NumericFacetState,
-  NumericFacetOptions,
-  SearchStatus,
-  SearchStatusState,
+  type NumericFacetState,
+  type NumericFacetOptions,
+  type SearchStatus,
+  type SearchStatusState,
   buildSearchStatus,
-  NumericFacetValue,
-  NumericRangeRequest,
+  type NumericFacetValue,
+  type NumericRangeRequest,
   buildNumericRange,
   buildFacetConditionsManager,
-  FacetConditionsManager,
-  FacetValueRequest,
-  CategoryFacetValueRequest,
+  type FacetConditionsManager,
+  type FacetValueRequest,
+  type CategoryFacetValueRequest,
   buildTabManager,
-  TabManager,
-  TabManagerState,
+  type TabManager,
+  type TabManagerState,
 } from '@coveo/headless';
-import {Component, h, State, Prop, VNode, Element} from '@stencil/core';
+import {Component, h, State, Prop, type VNode, Element} from '@stencil/core';
 import Star from '../../../../images/star.svg';
 import {
   BindStateToController,
-  InitializableComponent,
+  type InitializableComponent,
   InitializeBindings,
 } from '../../../../utils/initialization-utils';
 import {ArrayProp, MapProp} from '../../../../utils/props-utils';
 import {FocusTargetController} from '../../../../utils/stencil-accessibility-utils';
 import {Rating} from '../../../common/atomic-rating/atomic-rating';
 import {parseDependsOn} from '../../../common/facets/depends-on';
-import {FacetInfo} from '../../../common/facets/facet-common-store';
+import type {FacetInfo} from '../../../common/facets/facet-common-store';
 import {FacetContainer} from '../../../common/facets/facet-container/stencil-facet-container';
 import {FacetHeader} from '../../../common/facets/facet-header/stencil-facet-header';
 import {FacetPlaceholder} from '../../../common/facets/facet-placeholder/facet-placeholder';
@@ -38,7 +38,7 @@ import {FacetValueLink} from '../../../common/facets/facet-value-link/stencil-fa
 import {FacetValuesGroup} from '../../../common/facets/facet-values-group/stencil-facet-values-group';
 import {initializePopover} from '../../../common/facets/popover/popover-type';
 import {Hidden} from '../../../common/stencil-hidden';
-import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
+import type {Bindings} from '../../atomic-search-interface/atomic-search-interface';
 
 /**
  * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (e.g., number of occurrences).

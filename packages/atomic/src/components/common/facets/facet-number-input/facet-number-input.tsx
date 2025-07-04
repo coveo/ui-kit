@@ -1,8 +1,15 @@
-import {NumericFilter, NumericFilterState} from '@coveo/headless';
-import {Component, h, State, Prop, Event, EventEmitter} from '@stencil/core';
-import {AnyBindings} from '../../interface/bindings';
+import type {NumericFilter, NumericFilterState} from '@coveo/headless';
+import {
+  Component,
+  h,
+  State,
+  Prop,
+  Event,
+  type EventEmitter,
+} from '@stencil/core';
+import type {AnyBindings} from '../../interface/bindings';
 import {Button} from '../../stencil-button';
-import {NumberInputType} from './number-input-type';
+import type {NumberInputType} from './number-input-type';
 
 /**
  * Internal component made to be integrated in a NumericFacet.

@@ -3,11 +3,11 @@ import {Component, h, State, Prop, Element, Watch, Host} from '@stencil/core';
 import CloseIcon from '../../../../images/close.svg';
 import {rectEquals} from '../../../../utils/dom-utils';
 import {
-  InitializableComponent,
+  type InitializableComponent,
   InitializeBindings,
 } from '../../../../utils/initialization-utils';
 import {Button} from '../../../common/stencil-button';
-import {InsightBindings} from '../../atomic-insight-interface/atomic-insight-interface';
+import type {InsightBindings} from '../../atomic-insight-interface/atomic-insight-interface';
 
 /**
  * @internal
@@ -142,7 +142,6 @@ export class AtomicInsightUserActionsModal
           container={this.host}
           close={() => (this.isOpen = false)}
           exportparts={ATOMIC_MODAL_EXPORT_PARTS}
-          scope={this.bindings.interfaceElement}
         >
           {renderHeader()}
           {renderBody()}

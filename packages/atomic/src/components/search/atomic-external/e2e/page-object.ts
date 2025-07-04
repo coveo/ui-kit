@@ -1,5 +1,5 @@
 import {BasePageObject} from '@/playwright-utils/base-page-object';
-import {Page} from '@playwright/test';
+import type {Page} from '@playwright/test';
 
 export class AtomicExternalPageObject extends BasePageObject<'atomic-external'> {
   constructor(page: Page) {

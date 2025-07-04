@@ -8,8 +8,8 @@ import {buildFakeInstantProducts} from '@/vitest-utils/testing-helpers/fixtures/
 import {buildInstantProducts} from '@coveo/headless/commerce';
 import {page} from '@vitest/browser/context';
 import {html} from 'lit';
-import {describe, MockInstance, vi, expect, beforeEach, it} from 'vitest';
-import {
+import {describe, type MockInstance, vi, expect, beforeEach, it} from 'vitest';
+import type {
   SearchBoxSuggestionElement,
   SearchBoxSuggestions,
 } from '../../common/suggestions/suggestions-common';

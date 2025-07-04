@@ -1,5 +1,5 @@
-import {h, FunctionalComponent} from '@stencil/core';
-import {i18n} from 'i18next';
+import {h, type FunctionalComponent} from '@stencil/core';
+import type {i18n} from 'i18next';
 
 export interface BreadcrumbContainerProps {
   isCollapsed: boolean;

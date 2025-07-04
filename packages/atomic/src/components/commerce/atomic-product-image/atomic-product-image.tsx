@@ -1,13 +1,13 @@
 import {isNullOrUndefined} from '@coveo/bueno';
-import {Product, ProductTemplatesHelpers} from '@coveo/headless/commerce';
+import {type Product, ProductTemplatesHelpers} from '@coveo/headless/commerce';
 import {Component, h, Prop, Element, State, Method} from '@stencil/core';
 import {
-  InitializableComponent,
+  type InitializableComponent,
   InitializeBindings,
 } from '../../../utils/initialization-utils';
 import {filterProtocol} from '../../../utils/xss-utils';
 import {ImageCarousel} from '../../common/image-carousel/image-carousel';
-import {CommerceBindings as Bindings} from '../atomic-commerce-interface/atomic-commerce-interface';
+import type {CommerceBindings as Bindings} from '../atomic-commerce-interface/atomic-commerce-interface';
 import {ProductContext} from '../product-template-component-utils/stencil-product-template-decorators';
 
 type Image = {
@@ -132,7 +132,7 @@ export class AtomicProductImage implements InitializableComponent<Bindings> {
       const finalUrl = this.useFallback ? this.fallback : url;
 
       this.validateUrl(finalUrl);
-      let altText;
+      let altText: string;
 
       if (typeof validImageAlt === 'string') {
         altText = validImageAlt;

@@ -3,7 +3,7 @@ import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {renderComponent} from '@/storybook-utils/common/render-component';
 import {within} from '@storybook/test';
 import type {Meta, StoryObj as Story} from '@storybook/web-components';
-import {AtomicCommerceInterface} from '../atomic-commerce-interface/atomic-commerce-interface';
+import type {AtomicCommerceInterface} from '../atomic-commerce-interface/atomic-commerce-interface';
 
 const {decorator, play} = wrapInCommerceInterface({skipFirstRequest: true});
 
@@ -39,7 +39,7 @@ export const WithTranslations: Story = {
         // "translation-key": "A single product"
         [context.args['attributes-value']]: context.args.translationValue,
         // "translation-key_other": "{{count}} products"
-        [context.args['attributes-value'] + '_other']:
+        [`${context.args['attributes-value']}_other`]:
           context.args.translationValueOther,
       });
     });

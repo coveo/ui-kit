@@ -1,19 +1,19 @@
 import {
   buildProductListing,
   buildSearch,
-  Summary,
-  SearchSummaryState,
-  ProductListingSummaryState,
+  type Summary,
+  type SearchSummaryState,
+  type ProductListingSummaryState,
 } from '@coveo/headless/commerce';
 import {Component, h, State, Element} from '@stencil/core';
 import {
   InitializeBindings,
-  InitializableComponent,
+  type InitializableComponent,
   BindStateToController,
 } from '../../../utils/initialization-utils';
 import {RefineToggleButton} from '../../common/refine-modal/stencil-button';
 import {RefineToggleGuard} from '../../common/refine-modal/stencil-guard';
-import {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface';
+import type {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface';
 
 /**
  * The `atomic-commerce-refine-toggle` component displays a button that opens a modal containing the facets and the sort components.

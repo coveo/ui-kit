@@ -1,11 +1,11 @@
 import {NumberValue} from '@coveo/bueno';
 import {
   buildRecommendationList,
-  RecommendationList,
-  RecommendationListState,
+  type RecommendationList,
+  type RecommendationListState,
   loadConfigurationActions,
   buildInteractiveResult as buildRecsInteractiveResult,
-  Result as RecsResult,
+  type Result as RecsResult,
 } from '@coveo/headless/recommendation';
 import {
   Component,
@@ -19,7 +19,7 @@ import {
 } from '@stencil/core';
 import {
   BindStateToController,
-  InitializableComponent,
+  type InitializableComponent,
   InitializeBindings,
 } from '../../../utils/initialization-utils';
 import {FocusTargetController} from '../../../utils/stencil-accessibility-utils';
@@ -32,17 +32,17 @@ import {DisplayGrid} from '../../common/item-list/stencil-display-grid';
 import {DisplayWrapper} from '../../common/item-list/stencil-display-wrapper';
 import {
   ItemListCommon,
-  ItemRenderingFunction,
+  type ItemRenderingFunction,
 } from '../../common/item-list/stencil-item-list-common';
 import {
-  ItemDisplayDensity,
-  ItemDisplayImageSize,
-  ItemDisplayBasicLayout,
+  type ItemDisplayDensity,
+  type ItemDisplayImageSize,
+  type ItemDisplayBasicLayout,
   getItemListDisplayClasses,
 } from '../../common/layout/display-options';
 import {Carousel} from '../../common/stencil-carousel';
 import {Heading} from '../../common/stencil-heading';
-import {RecsBindings} from '../atomic-recs-interface/atomic-recs-interface';
+import type {RecsBindings} from '../atomic-recs-interface/atomic-recs-interface';
 
 /**
  * The `atomic-recs-list` component displays recommendations by applying one or more result templates.

@@ -1,6 +1,6 @@
-import {FunctionalComponent, h} from '@stencil/core';
+import {type FunctionalComponent, h} from '@stencil/core';
 import {Button} from '../../stencil-button';
-import {FacetValueProps} from '../stencil-facet-common';
+import type {FacetValueProps} from '../stencil-facet-common';
 
 export const FacetValueBox: FunctionalComponent<FacetValueProps> = (
   props,

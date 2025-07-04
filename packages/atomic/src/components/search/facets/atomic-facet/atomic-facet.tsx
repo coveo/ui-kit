@@ -1,19 +1,19 @@
 import {
-  Facet,
+  type Facet,
   buildFacet,
-  FacetState,
-  FacetOptions,
-  FacetSortCriterion,
-  SearchStatus,
-  SearchStatusState,
+  type FacetState,
+  type FacetOptions,
+  type FacetSortCriterion,
+  type SearchStatus,
+  type SearchStatusState,
   buildSearchStatus,
   buildFacetConditionsManager,
-  FacetResultsMustMatch,
-  FacetConditionsManager,
-  FacetValueRequest,
-  CategoryFacetValueRequest,
-  TabManagerState,
-  TabManager,
+  type FacetResultsMustMatch,
+  type FacetConditionsManager,
+  type FacetValueRequest,
+  type CategoryFacetValueRequest,
+  type TabManagerState,
+  type TabManager,
   buildTabManager,
 } from '@coveo/headless';
 import {
@@ -22,13 +22,13 @@ import {
   State,
   Prop,
   Element,
-  VNode,
+  type VNode,
   Fragment,
 } from '@stencil/core';
 import {getFieldCaptions} from '../../../../utils/field-utils';
 import {
   BindStateToController,
-  InitializableComponent,
+  type InitializableComponent,
   InitializeBindings,
 } from '../../../../utils/initialization-utils';
 import {ArrayProp, MapProp} from '../../../../utils/props-utils';
@@ -37,7 +37,7 @@ import {
   FocusTargetController,
 } from '../../../../utils/stencil-accessibility-utils';
 import {parseDependsOn} from '../../../common/facets/depends-on';
-import {FacetInfo} from '../../../common/facets/facet-common-store';
+import type {FacetInfo} from '../../../common/facets/facet-common-store';
 import {FacetContainer} from '../../../common/facets/facet-container/stencil-facet-container';
 import {FacetGuard} from '../../../common/facets/facet-guard';
 import {FacetHeader} from '../../../common/facets/facet-header/stencil-facet-header';
@@ -53,12 +53,12 @@ import {FacetSearchMatches} from '../../../common/facets/facet-search/stencil-fa
 import {FacetSearchValue} from '../../../common/facets/facet-search/stencil-facet-search-value';
 import {FacetShowMoreLess} from '../../../common/facets/facet-show-more-less/stencil-facet-show-more-less';
 import {
-  FacetValueProps,
+  type FacetValueProps,
   FacetValue,
 } from '../../../common/facets/facet-value/stencil-facet-value';
 import {FacetValuesGroup} from '../../../common/facets/facet-values-group/stencil-facet-values-group';
 import {initializePopover} from '../../../common/facets/popover/popover-type';
-import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
+import type {Bindings} from '../../atomic-search-interface/atomic-search-interface';
 
 /**
  * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (e.g., number of occurrences).

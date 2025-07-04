@@ -1,4 +1,4 @@
-import {FacetSortCriterion} from '@coveo/headless';
+import type {FacetSortCriterion} from '@coveo/headless';
 import {orderBy} from 'natural-orderby';
 import {test, expect} from './fixture';
 
@@ -217,7 +217,7 @@ test.describe('Sort Criteria', () => {
             .poll(async () => await facet.facetValue.count())
             .toBe(30);
         });
-
+        // biome-ignore lint/suspicious/noTemplateCurlyInString: testing templating.
         test('should have facet values sorted by custom order first, and then by ${criteria}', async ({
           facet,
         }) => {

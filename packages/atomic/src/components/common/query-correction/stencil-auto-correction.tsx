@@ -1,5 +1,5 @@
-import {FunctionalComponent, h, Fragment} from '@stencil/core';
-import {i18n} from 'i18next';
+import {type FunctionalComponent, h, Fragment} from '@stencil/core';
+import type {i18n} from 'i18next';
 import {LocalizedString} from '../../../utils/jsx-utils';
 
 interface AutoCorrectionProps {

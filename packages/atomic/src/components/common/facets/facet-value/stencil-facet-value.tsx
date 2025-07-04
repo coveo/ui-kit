@@ -1,5 +1,5 @@
-import {FunctionalComponent, h} from '@stencil/core';
-import {i18n} from 'i18next';
+import {type FunctionalComponent, h} from '@stencil/core';
+import type {i18n} from 'i18next';
 import {getFieldValueCaption} from '../../../../utils/field-utils';
 import {FacetValueBox} from '../facet-value-box/stencil-facet-value-box';
 import {FacetValueCheckbox} from '../facet-value-checkbox/stencil-facet-value-checkbox';
@@ -54,7 +54,7 @@ export const FacetValue: FunctionalComponent<FacetValueProps> = ({
           onClick={onSelect}
           searchQuery={facetSearchQuery}
           buttonRef={(element) => {
-            setRef && setRef(element);
+            setRef?.(element);
           }}
         >
           <FacetValueLabelHighlight
@@ -75,7 +75,7 @@ export const FacetValue: FunctionalComponent<FacetValueProps> = ({
           onClick={onSelect}
           searchQuery={facetSearchQuery}
           buttonRef={(element) => {
-            setRef && setRef(element);
+            setRef?.(element);
           }}
         >
           <FacetValueLabelHighlight
@@ -95,7 +95,7 @@ export const FacetValue: FunctionalComponent<FacetValueProps> = ({
           onClick={onSelect}
           searchQuery={facetSearchQuery}
           buttonRef={(element) => {
-            setRef && setRef(element);
+            setRef?.(element);
           }}
         >
           <FacetValueLabelHighlight

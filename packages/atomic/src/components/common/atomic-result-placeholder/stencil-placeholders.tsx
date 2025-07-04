@@ -1,6 +1,6 @@
 // The Lit equivalent of this file is item-placeholders.ts. The Lit version doesn't include the placeholder guard.
-import {FunctionalComponent, h} from '@stencil/core';
-import {
+import {type FunctionalComponent, h} from '@stencil/core';
+import type {
   ItemDisplayDensity,
   ItemDisplayImageSize,
   ItemDisplayLayout,
@@ -36,7 +36,10 @@ export const ResultsPlaceholder: FunctionalComponent<ResultPlaceholderProps> = (
 ) => {
   return Array.from({length: props.numberOfPlaceholders}, (_, i) => (
     <atomic-result-placeholder
-      key={`placeholder-${i}`}
+      key={
+        // biome-ignore lint/suspicious/noArrayIndexKey: This is a placeholder, so index is acceptable
+        `placeholder-${i}`
+      }
       density={props.density}
       display={props.display || 'list'}
       imageSize={props.imageSize}

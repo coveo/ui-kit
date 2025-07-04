@@ -1,7 +1,7 @@
-import {h, FunctionalComponent, Fragment} from '@stencil/core';
-import {JSXBase} from '@stencil/core/internal';
+import {h, type FunctionalComponent, Fragment} from '@stencil/core';
+import type {JSXBase} from '@stencil/core/internal';
 import ArrowRight from '../../../images/arrow-right.svg';
-import {AnyBindings} from '../interface/bindings';
+import type {AnyBindings} from '../interface/bindings';
 import {Button} from '../stencil-button';
 import CarouselIndicator from './image-carousel-indicators';
 

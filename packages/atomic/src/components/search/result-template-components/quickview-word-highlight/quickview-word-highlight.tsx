@@ -1,4 +1,4 @@
-import {TermsToHighlight} from '@coveo/headless';
+import type {TermsToHighlight} from '@coveo/headless';
 import {hsvToRgb, rgbToHsv} from '../../../../utils/color-utils';
 
 export const HIGHLIGHT_PREFIX = 'CoveoHighlight';

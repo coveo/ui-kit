@@ -1,5 +1,5 @@
-import {FunctionalComponent} from '@/src/utils/functional-component-utils';
-import {i18n} from 'i18next';
+import type {FunctionalComponent} from '@/src/utils/functional-component-utils';
+import type {i18n} from 'i18next';
 import {html} from 'lit';
 import {createRef, ref} from 'lit/directives/ref.js';
 import {when} from 'lit/directives/when.js';

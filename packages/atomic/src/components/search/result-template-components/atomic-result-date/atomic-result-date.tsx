@@ -1,14 +1,14 @@
-import {Result, ResultTemplatesHelpers} from '@coveo/headless';
+import {type Result, ResultTemplatesHelpers} from '@coveo/headless';
 import {Component, Prop, Element, State} from '@stencil/core';
 import dayjs from 'dayjs';
 import calendar from 'dayjs/plugin/calendar';
 import updateLocale from 'dayjs/plugin/updateLocale';
 import {parseDate} from '../../../../utils/date-utils';
 import {
-  InitializableComponent,
+  type InitializableComponent,
   InitializeBindings,
 } from '../../../../utils/initialization-utils';
-import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
+import type {Bindings} from '../../atomic-search-interface/atomic-search-interface';
 import {ResultContext} from '../result-template-decorators';
 
 dayjs.extend(calendar);

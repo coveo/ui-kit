@@ -1,7 +1,7 @@
 import {renderFunctionFixture} from '@/vitest-utils/testing-helpers/fixture';
 import {createTestI18n} from '@/vitest-utils/testing-helpers/i18n-utils';
 import type {i18n} from 'i18next';
-import {html, TemplateResult} from 'lit';
+import {html, type TemplateResult} from 'lit';
 import {describe, it, expect, beforeEach, vi} from 'vitest';
 import {renderQueryErrorShowMore} from './show-more';
 

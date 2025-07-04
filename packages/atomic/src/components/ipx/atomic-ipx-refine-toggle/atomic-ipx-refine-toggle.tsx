@@ -1,10 +1,10 @@
 import {
-  BreadcrumbManager,
-  BreadcrumbManagerState,
+  type BreadcrumbManager,
+  type BreadcrumbManagerState,
   buildBreadcrumbManager,
   buildSearchStatus,
-  SearchStatus,
-  SearchStatusState,
+  type SearchStatus,
+  type SearchStatusState,
 } from '@coveo/headless';
 import {Component, h, State, Element, Prop} from '@stencil/core';
 import FilterIcon from '../../../images/filter.svg';
@@ -13,7 +13,7 @@ import {
   BindStateToController,
 } from '../../../utils/initialization-utils';
 import {IconButton} from '../../common/iconButton';
-import {Bindings} from '../../search/atomic-search-interface/atomic-search-interface';
+import type {Bindings} from '../../search/atomic-search-interface/atomic-search-interface';
 
 /**
  * @internal

@@ -5,7 +5,7 @@ import '@vitest/browser/matchers.d.ts';
 import {html} from 'lit';
 import {expect, vi, describe, beforeAll, it} from 'vitest';
 import {
-  FacetSearchMatchesProps,
+  type FacetSearchMatchesProps,
   renderFacetSearchMatches,
 } from './facet-search-matches';
 

@@ -6,17 +6,17 @@ import {
   Element,
   Watch,
   Event,
-  EventEmitter,
+  type EventEmitter,
   Host,
   Listen,
 } from '@stencil/core';
 import {
-  InitializableComponent,
+  type InitializableComponent,
   InitializeBindings,
 } from '../../../utils/initialization-utils';
 import {updateBreakpoints} from '../../../utils/replace-breakpoint';
 import {once, randomID} from '../../../utils/utils';
-import {AnyBindings} from '../../common/interface/bindings';
+import type {AnyBindings} from '../../common/interface/bindings';
 
 /**
  * @internal

@@ -1,21 +1,21 @@
 import {NumberValue, Schema} from '@coveo/bueno';
 import {
-  BreadcrumbManagerState,
-  BreadcrumbManager,
+  type BreadcrumbManagerState,
+  type BreadcrumbManager,
   buildBreadcrumbManager,
-  FacetManager,
-  FacetManagerState,
+  type FacetManager,
+  type FacetManagerState,
   buildFacetManager,
 } from '@coveo/headless';
 import {Component, h, State, Element, Prop} from '@stencil/core';
 import {getFieldValueCaption} from '../../../utils/field-utils';
 import {
-  InitializableComponent,
+  type InitializableComponent,
   BindStateToController,
   InitializeBindings,
 } from '../../../utils/initialization-utils';
 import {FocusTargetController} from '../../../utils/stencil-accessibility-utils';
-import {Breadcrumb as BreadboxBreadcrumb} from '../../common/breadbox/breadcrumb-types';
+import type {Breadcrumb as BreadboxBreadcrumb} from '../../common/breadbox/breadcrumb-types';
 import {BreadcrumbButton} from '../../common/breadbox/stencil-breadcrumb-button';
 import {BreadcrumbClearAll} from '../../common/breadbox/stencil-breadcrumb-clear-all';
 import {BreadcrumbContainer} from '../../common/breadbox/stencil-breadcrumb-container';
@@ -23,7 +23,7 @@ import {BreadcrumbContent} from '../../common/breadbox/stencil-breadcrumb-conten
 import {BreadcrumbShowLess} from '../../common/breadbox/stencil-breadcrumb-show-less';
 import {BreadcrumbShowMore} from '../../common/breadbox/stencil-breadcrumb-show-more';
 import {Hidden} from '../../common/stencil-hidden';
-import {Bindings} from '../atomic-search-interface/atomic-search-interface';
+import type {Bindings} from '../atomic-search-interface/atomic-search-interface';
 
 /**
  * The `atomic-breadbox` component creates breadcrumbs that display a summary of the currently active facet values.
@@ -217,10 +217,9 @@ export class AtomicBreadbox implements InitializableComponent {
 
   private get facetBreadcrumbs(): BreadboxBreadcrumb[] {
     return this.breadcrumbManagerState.facetBreadcrumbs
-      .map(({facetId, field, values}) =>
+      .flatMap(({facetId, field, values}) =>
         values.map((value) => ({value, facetId, field}))
       )
-      .flat()
       .filter(({facetId}) => this.bindings.store.state.facets[facetId])
       .map(({value, facetId, field}) => ({
         facetId,
@@ -248,10 +247,9 @@ export class AtomicBreadbox implements InitializableComponent {
 
   private get numericFacetBreadcrumbs(): BreadboxBreadcrumb[] {
     return this.breadcrumbManagerState.numericFacetBreadcrumbs
-      .map(({facetId, field, values}) =>
+      .flatMap(({facetId, field, values}) =>
         values.map((value) => ({value, facetId, field}))
       )
-      .flat()
       .map(({value, facetId}) => ({
         facetId,
         label: this.bindings.store.state.numericFacets[facetId].label(),
@@ -268,10 +266,9 @@ export class AtomicBreadbox implements InitializableComponent {
 
   private get dateFacetBreadcrumbs(): BreadboxBreadcrumb[] {
     return this.breadcrumbManagerState.dateFacetBreadcrumbs
-      .map(({facetId, field, values}) =>
+      .flatMap(({facetId, field, values}) =>
         values.map((value) => ({value, facetId, field}))
       )
-      .flat()
       .map(({value, facetId}) => ({
         facetId,
         label: this.bindings.store.state.dateFacets[facetId].label(),

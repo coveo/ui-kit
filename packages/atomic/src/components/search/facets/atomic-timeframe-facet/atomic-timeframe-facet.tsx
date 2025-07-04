@@ -4,26 +4,26 @@ import {
   buildDateRange,
   buildFacetConditionsManager,
   buildSearchStatus,
-  DateFacet,
-  DateFacetState,
-  DateFilter,
-  DateFilterState,
-  DateRangeRequest,
+  type DateFacet,
+  type DateFacetState,
+  type DateFilter,
+  type DateFilterState,
+  type DateRangeRequest,
   deserializeRelativeDate,
-  RangeFacetSortCriterion,
+  type RangeFacetSortCriterion,
   loadDateFacetSetActions,
-  SearchStatus,
-  SearchStatusState,
-  FacetValueRequest,
-  CategoryFacetValueRequest,
+  type SearchStatus,
+  type SearchStatusState,
+  type FacetValueRequest,
+  type CategoryFacetValueRequest,
   buildTabManager,
-  TabManager,
-  TabManagerState,
+  type TabManager,
+  type TabManagerState,
 } from '@coveo/headless';
 import {Component, Element, h, Listen, Prop, State} from '@stencil/core';
 import {
   BindStateToController,
-  InitializableComponent,
+  type InitializableComponent,
   InitializeBindings,
 } from '../../../../utils/initialization-utils';
 import {ArrayProp, MapProp} from '../../../../utils/props-utils';
@@ -31,7 +31,7 @@ import {FocusTargetController} from '../../../../utils/stencil-accessibility-uti
 import {parseDependsOn} from '../../../common/facets/depends-on';
 import {FacetPlaceholder} from '../../../common/facets/facet-placeholder/facet-placeholder';
 import {TimeframeFacetCommon} from '../../../common/facets/timeframe-facet-common';
-import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
+import type {Bindings} from '../../atomic-search-interface/atomic-search-interface';
 
 /**
  * A facet is a list of values for a certain field occurring in the results.

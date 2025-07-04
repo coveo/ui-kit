@@ -8,13 +8,13 @@ import {
   describe,
   expect,
   it,
-  Mock,
-  MockInstance,
+  type Mock,
+  type MockInstance,
   vi,
 } from 'vitest';
-import {CommerceBindings} from '../components/commerce/atomic-commerce-interface/atomic-commerce-interface';
+import type {CommerceBindings} from '../components/commerce/atomic-commerce-interface/atomic-commerce-interface';
 import {bindings} from '../decorators/bindings';
-import {InitializableComponent} from '../decorators/types';
+import type {InitializableComponent} from '../decorators/types';
 import {
   AriaLiveRegionController,
   FocusTargetController,
@@ -103,10 +103,6 @@ export class FocusTargetControllerTestComponent
   @state() public error!: Error;
 
   private _focusTargetController!: FocusTargetController;
-
-  constructor() {
-    super();
-  }
 
   public get focusTargetController() {
     if (!this._focusTargetController) {

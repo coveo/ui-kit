@@ -1,4 +1,4 @@
-import {Context, ContextState} from '@coveo/headless/commerce';
+import type {Context, ContextState} from '@coveo/headless/commerce';
 
 export const defaultState = {
   language: 'en',

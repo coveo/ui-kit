@@ -5,7 +5,7 @@ import {page} from '@vitest/browser/context';
 import {html} from 'lit';
 import {describe, it, expect, vi, beforeEach, beforeAll} from 'vitest';
 import {
-  FacetSearchInputProps,
+  type FacetSearchInputProps,
   renderFacetSearchInput,
 } from './facet-search-input';
 

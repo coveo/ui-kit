@@ -1,7 +1,7 @@
 import {Schema, StringValue} from '@coveo/bueno';
 import {
-  Product,
-  ChildProduct,
+  type Product,
+  type ChildProduct,
   ProductTemplatesHelpers,
 } from '@coveo/headless/commerce';
 import {
@@ -10,19 +10,19 @@ import {
   Element,
   Prop,
   Event,
-  EventEmitter,
+  type EventEmitter,
   State,
   Host,
 } from '@stencil/core';
 import {
-  InitializableComponent,
+  type InitializableComponent,
   InitializeBindings,
 } from '../../../utils/initialization-utils';
 import {filterProtocol} from '../../../utils/xss-utils';
 import {Button} from '../../common/stencil-button';
-import {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface';
+import type {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface';
 import {ProductContext} from '../product-template-component-utils/stencil-product-template-decorators';
-import {SelectChildProductEventArgs} from './select-child-product-event';
+import type {SelectChildProductEventArgs} from './select-child-product-event';
 
 /**
  * @alpha
@@ -126,6 +126,7 @@ export class AtomicProductChildren
     return (
       <button
         class={`product-child${child.permanentid === this.activeChildId ? this.activeChildClasses : ' '}`}
+        type="button"
         title={child.ec_name || undefined}
         onKeyPress={(event) =>
           event.key === 'Enter' && this.onSelectChild(child)

@@ -6,7 +6,7 @@ import {vi, describe, beforeEach, afterEach, it, expect} from 'vitest';
 import {bindingsContext} from '../components/context/bindings-context';
 import type {Bindings} from '../components/search/atomic-search-interface/interfaces';
 import {bindings} from './bindings';
-import {InitializableComponent} from './types';
+import type {InitializableComponent} from './types';
 
 const mockBindings = () =>
   ({

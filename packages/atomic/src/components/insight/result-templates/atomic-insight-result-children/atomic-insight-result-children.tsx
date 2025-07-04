@@ -1,13 +1,13 @@
 import {
   buildInteractiveResult as buildInsightInteractiveResult,
-  FoldedResultListState as InsightFoldedResultListState,
-  FoldedResult as InsightFoldedResult,
-  FoldedResultList as InsightFoldedResultList,
+  type FoldedResultListState as InsightFoldedResultListState,
+  type FoldedResult as InsightFoldedResult,
+  type FoldedResultList as InsightFoldedResultList,
 } from '@coveo/headless/insight';
 import {Component, Element, State, h, Listen, Prop} from '@stencil/core';
 import {buildCustomEvent} from '../../../../utils/event-utils';
 import {
-  InitializableComponent,
+  type InitializableComponent,
   InitializeBindings,
 } from '../../../../utils/initialization-utils';
 import {elementHasAncestorTag} from '../../../../utils/utils';
@@ -19,17 +19,17 @@ import {
 import {ItemTemplateProvider} from '../../../common/item-list/item-template-provider';
 import {
   ChildTemplatesContext,
-  ChildTemplatesContextEvent,
-  DisplayConfig,
+  type ChildTemplatesContextEvent,
+  type DisplayConfig,
   ItemContext,
   ItemDisplayConfigContext,
 } from '../../../common/item-list/stencil-item-decorators';
-import {ItemDisplayImageSize} from '../../../common/layout/display-options';
+import type {ItemDisplayImageSize} from '../../../common/layout/display-options';
 import {ChildrenWrapper} from '../../../common/result-children/children-wrapper';
 import {CollectionGuard} from '../../../common/result-children/collection-guard';
 import {ResultChildrenGuard} from '../../../common/result-children/guard';
 import {ShowHideButton} from '../../../common/result-children/show-hide-button';
-import {InsightBindings} from '../../atomic-insight-interface/atomic-insight-interface';
+import type {InsightBindings} from '../../atomic-insight-interface/atomic-insight-interface';
 
 const childTemplateComponent = 'atomic-insight-result-children-template';
 const componentTag = 'atomic-insight-result-children';

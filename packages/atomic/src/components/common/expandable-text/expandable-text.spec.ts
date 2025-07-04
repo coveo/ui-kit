@@ -1,7 +1,10 @@
 import {renderFunctionFixture} from '@/vitest-utils/testing-helpers/fixture';
 import {html} from 'lit';
 import {describe, it, expect, vi} from 'vitest';
-import {ExpandableTextProps, renderExpandableText} from './expandable-text';
+import {
+  type ExpandableTextProps,
+  renderExpandableText,
+} from './expandable-text';
 import {userEvent} from '@vitest/browser/context';
 import MinusIcon from '../../../images/minus.svg';
 import PlusIcon from '../../../images/plus.svg';

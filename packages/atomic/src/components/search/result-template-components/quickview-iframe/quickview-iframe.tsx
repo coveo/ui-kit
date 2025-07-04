@@ -1,5 +1,5 @@
-import {SearchEngine} from '@coveo/headless';
-import {FunctionalComponent, h} from '@stencil/core';
+import type {SearchEngine} from '@coveo/headless';
+import {type FunctionalComponent, h} from '@stencil/core';
 
 const documentIdentifierInIframe = 'CoveoDocIdentifier';
 
@@ -60,6 +60,7 @@ export const QuickviewIframe: FunctionalComponent<{
   };
 
   return (
+    // biome-ignore lint/a11y/useIframeTitle: to reconsider after migration
     <iframe
       src="about:blank"
       class="h-full w-full"

@@ -1,4 +1,4 @@
-import {FunctionalComponentWithChildrenNoProps} from '@/src/utils/functional-component-utils';
+import type {FunctionalComponentWithChildrenNoProps} from '@/src/utils/functional-component-utils';
 import {html} from 'lit';
 
 export const renderFacetContainer: FunctionalComponentWithChildrenNoProps =

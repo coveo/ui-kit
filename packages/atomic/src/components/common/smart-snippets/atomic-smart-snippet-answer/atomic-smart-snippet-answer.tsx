@@ -1,10 +1,10 @@
-import {InlineLink} from '@coveo/headless';
+import type {InlineLink} from '@coveo/headless';
 import {
   Component,
   h,
   Prop,
   Event,
-  EventEmitter,
+  type EventEmitter,
   Host,
   Element,
 } from '@stencil/core';

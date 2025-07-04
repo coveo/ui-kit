@@ -1,4 +1,4 @@
-import {Result, ResultTemplatesHelpers} from '@coveo/headless';
+import {type Result, ResultTemplatesHelpers} from '@coveo/headless';
 import bgIcons from '@salesforce-ux/design-system/design-tokens/dist/bg-standard.common';
 import {Component, Element, h} from '@stencil/core';
 import {snakeToCamel} from '../../../../utils/utils';
@@ -46,7 +46,7 @@ export class AtomicResultIcon {
     const backgroundColor = bgIcons[snakeToCamel(icon)] || 'transparent';
     return (
       <atomic-icon
-        icon={'assets://' + icon}
+        icon={`assets://${icon}`}
         class={icon}
         title={icon}
         style={{backgroundColor}}

@@ -3,7 +3,7 @@ import {customElement} from 'lit/decorators.js';
 import {describe, it, expect, beforeEach, afterEach, vi} from 'vitest';
 import {
   ItemDisplayConfigContextController,
-  DisplayConfig,
+  type DisplayConfig,
 } from './item-display-config-context-controller';
 
 @customElement('test-element')
@@ -34,7 +34,7 @@ describe('item-display-config-context', () => {
     let parentElement: HTMLElement;
 
     const teardown = () => {
-      if (parentElement && parentElement.parentNode) {
+      if (parentElement?.parentNode) {
         document.body.removeChild(parentElement);
       }
       parentElement = null as never;

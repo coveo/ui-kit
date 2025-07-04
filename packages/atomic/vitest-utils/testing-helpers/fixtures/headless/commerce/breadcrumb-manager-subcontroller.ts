@@ -1,4 +1,4 @@
-import {
+import type {
   BreadcrumbManager,
   BreadcrumbManagerState,
 } from '@coveo/headless/commerce';

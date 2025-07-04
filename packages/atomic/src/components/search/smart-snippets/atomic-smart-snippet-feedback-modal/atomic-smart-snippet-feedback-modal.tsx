@@ -12,8 +12,8 @@ import {updateBreakpoints} from '@/src/utils/replace-breakpoint';
 import {randomID} from '@/src/utils/utils';
 import {
   buildSmartSnippet,
-  SmartSnippet,
-  SmartSnippetFeedback,
+  type SmartSnippet,
+  type SmartSnippetFeedback,
 } from '@coveo/headless';
 import {
   Component,
@@ -22,14 +22,14 @@ import {
   Watch,
   Element,
   Event,
-  EventEmitter,
+  type EventEmitter,
   h,
 } from '@stencil/core';
 import {
-  InitializableComponent,
+  type InitializableComponent,
   InitializeBindings,
 } from '../../../../utils/initialization-utils';
-import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
+import type {Bindings} from '../../atomic-search-interface/atomic-search-interface';
 
 /**
  * The `atomic-smart-snippet-feedback-modal` is automatically created as a child of the `atomic-search-interface` when the `atomic-smart-snippet` is initialized.

@@ -1,5 +1,5 @@
-import {FunctionalComponent} from '@/src/utils/functional-component-utils';
-import {i18n} from 'i18next';
+import type {FunctionalComponent} from '@/src/utils/functional-component-utils';
+import type {i18n} from 'i18next';
 import {html, nothing} from 'lit';
 import {when} from 'lit/directives/when.js';
 import MinusIcon from '../../../../images/minus.svg';

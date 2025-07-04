@@ -1,15 +1,15 @@
 import {
   buildSearchStatus,
-  SearchStatus,
-  SearchStatusState,
-  QuerySummary,
-  QuerySummaryState,
+  type SearchStatus,
+  type SearchStatusState,
+  type QuerySummary,
+  type QuerySummaryState,
   buildQuerySummary,
 } from '@coveo/headless/insight';
 import {Component, State, h} from '@stencil/core';
 import {
   BindStateToController,
-  InitializableComponent,
+  type InitializableComponent,
   InitializeBindings,
 } from '../../../utils/initialization-utils';
 import {AriaLiveRegion} from '../../../utils/stencil-accessibility-utils';
@@ -18,7 +18,7 @@ import {NoItemsGuard} from '../../common/no-items/stencil-guard';
 import {MagnifyingGlass} from '../../common/no-items/stencil-magnifying-glass';
 import {NoItems} from '../../common/no-items/stencil-no-items';
 import {SearchTips} from '../../common/no-items/stencil-tips';
-import {InsightBindings} from '../atomic-insight-interface/atomic-insight-interface';
+import type {InsightBindings} from '../atomic-insight-interface/atomic-insight-interface';
 
 /**
  * @internal

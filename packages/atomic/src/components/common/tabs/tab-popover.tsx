@@ -1,7 +1,7 @@
 import {
   createPopperLite as createPopper,
   preventOverflow,
-  Instance as PopperInstance,
+  type Instance as PopperInstance,
 } from '@popperjs/core';
 import {
   Component,
@@ -14,10 +14,10 @@ import {
 } from '@stencil/core';
 import ArrowBottomIcon from '../../../images/arrow-bottom-rounded.svg';
 import {
-  InitializableComponent,
+  type InitializableComponent,
   InitializeBindings,
 } from '../../../utils/initialization-utils';
-import {Bindings} from '../../search/atomic-search-interface/atomic-search-interface';
+import type {Bindings} from '../../search/atomic-search-interface/atomic-search-interface';
 import {Button} from '../stencil-button';
 
 /**
@@ -101,7 +101,7 @@ export class TabPopover implements InitializableComponent {
 
     const startIndex = currentIndex > -1 ? currentIndex : -1;
 
-    let nextIndex;
+    let nextIndex: number;
     if (currentIndex === -1) {
       nextIndex = key === 'ArrowDown' ? 0 : tabButtons.length - 1;
     } else {
@@ -201,6 +201,7 @@ export class TabPopover implements InitializableComponent {
 
   private renderBackdrop() {
     return (
+      // biome-ignore lint/a11y: to reconsider after migration
       <div
         part="backdrop"
         class="fixed top-0 right-0 bottom-0 left-0 z-9998 cursor-pointer bg-transparent"

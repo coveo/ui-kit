@@ -1,4 +1,4 @@
-import {FunctionalComponent, h} from '@stencil/core';
+import {type FunctionalComponent, h} from '@stencil/core';
 import {GeneratedMarkdownContent} from './generated-content/generated-markdown-content';
 import {GeneratedTextContent} from './generated-content/generated-text-content';
 

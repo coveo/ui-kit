@@ -1,12 +1,19 @@
 import {
   buildDateRange,
-  DateFilterRange,
-  DateRangeRequest,
+  type DateFilterRange,
+  type DateRangeRequest,
 } from '@coveo/headless';
-import {Component, h, State, Prop, Event, EventEmitter} from '@stencil/core';
+import {
+  Component,
+  h,
+  State,
+  Prop,
+  Event,
+  type EventEmitter,
+} from '@stencil/core';
 import {parseDate} from '../../../../utils/date-utils';
 import {Button} from '../../../common/stencil-button';
-import {AnyBindings} from '../../interface/bindings';
+import type {AnyBindings} from '../../interface/bindings';
 
 /**
  * Internal component made to be integrated in a TimeframeFacet.

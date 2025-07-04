@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {
   getSampleSearchEngineConfiguration,
-  SearchEngineConfiguration,
+  type SearchEngineConfiguration,
 } from '@coveo/headless';
 import {vi, describe, beforeEach, afterEach, it, expect} from 'vitest';
 import {getAnalyticsConfig} from './analytics-config';
@@ -26,8 +26,8 @@ describe('analyticsConfig', () => {
     const config = getSampleSearchEngineConfiguration();
     config.analytics = {
       ...config.analytics,
-      analyticsClientMiddleware: (_: string, payload: any) => {
-        payload['foo'] = 'bar';
+      analyticsClientMiddleware: (_, payload) => {
+        payload.foo = 'bar';
         return payload;
       },
     };
@@ -82,9 +82,13 @@ describe('analyticsConfig', () => {
 
     it('use the existing analytic middleware if available', () => {
       const resultingConfig = getAnalyticsConfig(config, true, store);
-      const out = resultingConfig.analyticsClientMiddleware!('an_event', {
+      const payload = {
         buzz: 'bazz',
-      }) as any;
+      } as const;
+      const out = resultingConfig.analyticsClientMiddleware!(
+        'an_event',
+        payload
+      ) as typeof payload & {foo?: string};
 
       expect(out.foo).toBe(
         config.analytics?.analyticsClientMiddleware ? 'bar' : undefined
@@ -95,8 +99,10 @@ describe('analyticsConfig', () => {
       const resultingConfig = getAnalyticsConfig(config, true, store);
       const out = resultingConfig.analyticsClientMiddleware!('an_event', {
         customData: {},
-      }) as any;
-      expect(out.customData).toHaveProperty('coveoAtomicVersion');
+      });
+      expect((out as {customData: unknown}).customData).toHaveProperty(
+        'coveoAtomicVersion'
+      );
     });
 
     it('augments analytics payload with facet title, with any type of facet registered to the store', () => {
@@ -110,14 +116,17 @@ describe('analyticsConfig', () => {
           element: document.createElement('div'),
           isHidden: () => false,
         });
-
-        const out = resultingConfig.analyticsClientMiddleware!('an_event', {
+        const payload = {
           customData: {
             facetId: 'some_id',
             facetTitle: 'some_title',
           },
           facetState: [{title: 'some_title', id: 'some_id'}],
-        }) as any;
+        } as const;
+        const out = resultingConfig.analyticsClientMiddleware!(
+          'an_event',
+          payload
+        ) as typeof payload;
         expect(out.customData.facetTitle).toBe('This is a label');
         expect(out.facetState[0].title).toBe('This is a label');
       });
@@ -125,13 +134,17 @@ describe('analyticsConfig', () => {
 
     it('does not augment analytics payload with a facet title when a facet is unavailable from the store', () => {
       const result = getAnalyticsConfig(config, true, store);
-      const out = result.analyticsClientMiddleware!('an_event', {
+      const payload = {
         customData: {
           facetId: 'some_id',
           facetTitle: 'some_title',
         },
         facetState: [{title: 'some_title', id: 'some_id'}],
-      }) as any;
+      } as const;
+      const out = result.analyticsClientMiddleware!(
+        'an_event',
+        payload
+      ) as typeof payload;
       expect(out.customData.facetTitle).toBe('some_title');
       expect(out.facetState[0].title).toBe('some_title');
     });

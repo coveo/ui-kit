@@ -7,18 +7,18 @@ import {buildFakeSummary} from '@/vitest-utils/testing-helpers/fixtures/headless
 import {
   buildProductListing,
   buildSearch,
-  Pagination,
-  PaginationState,
-  ProductListingSummaryState,
-  SearchSummaryState,
-  Summary,
+  type Pagination,
+  type PaginationState,
+  type ProductListingSummaryState,
+  type SearchSummaryState,
+  type Summary,
 } from '@coveo/headless/commerce';
 import {userEvent} from '@storybook/test';
 import {html} from 'lit';
 import {ifDefined} from 'lit/directives/if-defined.js';
 import {describe, it, expect, vi, beforeEach} from 'vitest';
 import './atomic-commerce-products-per-page';
-import {AtomicCommerceProductsPerPage} from './atomic-commerce-products-per-page';
+import type {AtomicCommerceProductsPerPage} from './atomic-commerce-products-per-page';
 import {
   convertChoicesToNumbers,
   validateInitialChoice,

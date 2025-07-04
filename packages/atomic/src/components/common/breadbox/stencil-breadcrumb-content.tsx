@@ -1,7 +1,7 @@
-import {h, FunctionalComponent, Fragment} from '@stencil/core';
-import {i18n} from 'i18next';
+import {h, type FunctionalComponent, Fragment} from '@stencil/core';
+import type {i18n} from 'i18next';
 import CloseIcon from '../../../images/close.svg';
-import {Breadcrumb} from './breadcrumb-types';
+import type {Breadcrumb} from './breadcrumb-types';
 import {getFirstBreadcrumbValue} from './breadcrumb-utils';
 
 export interface BreadcrumbContentProps {

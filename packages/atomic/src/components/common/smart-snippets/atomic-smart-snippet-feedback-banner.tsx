@@ -1,5 +1,5 @@
-import {h, FunctionalComponent} from '@stencil/core';
-import {i18n} from 'i18next';
+import {h, type FunctionalComponent} from '@stencil/core';
+import type {i18n} from 'i18next';
 import Checkmark from '../../../images/checkmark.svg';
 import Cross from '../../../images/cross.svg';
 import {Button} from '../stencil-button';
@@ -20,9 +20,9 @@ interface SmartSnippetFeedbackBannerProps {
 export const SmartSnippetFeedbackBanner: FunctionalComponent<
   SmartSnippetFeedbackBannerProps
 > = (props) => {
-  const inquiryId = 'feedback-inquiry-' + props.id;
-  const thankYouId = 'feedback-thank-you-' + props.id;
-  const radioGroupName = 'feedback-options-' + props.id;
+  const inquiryId = `feedback-inquiry-${props.id}`;
+  const thankYouId = `feedback-thank-you-${props.id}`;
+  const radioGroupName = `feedback-options-${props.id}`;
 
   const Inquiry = () => (
     <span id={inquiryId} part="feedback-inquiry" class="shrink-0">
@@ -32,6 +32,7 @@ export const SmartSnippetFeedbackBanner: FunctionalComponent<
 
   const Buttons = () => (
     <div part="feedback-buttons" class="flex gap-x-4">
+      {/* biome-ignore lint/a11y/noLabelWithoutControl: to reconsider after migration */}
       <label
         part="feedback-like-button"
         class={
@@ -48,6 +49,7 @@ export const SmartSnippetFeedbackBanner: FunctionalComponent<
           class="cursor-[inherit] text-[inherit]"
         ></RadioButton>
       </label>
+      {/* biome-ignore lint/a11y/noLabelWithoutControl: to reconsider after migration */}
       <label
         part="feedback-dislike-button"
         class={

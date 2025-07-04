@@ -1,5 +1,5 @@
-import {FunctionalComponent, h} from '@stencil/core';
-import {i18n} from 'i18next';
+import {type FunctionalComponent, h} from '@stencil/core';
+import type {i18n} from 'i18next';
 import CloseIcon from '../../../images/close.svg';
 import {ATOMIC_MODAL_EXPORT_PARTS} from '../atomic-modal/export-parts';
 import {Button} from '../stencil-button';
@@ -83,7 +83,6 @@ export const RefineModal: FunctionalComponent<RefineModalProps> = (
       }}
       exportparts={ATOMIC_MODAL_EXPORT_PARTS}
       boundary={props.boundary}
-      scope={props.scope}
     >
       {renderHeader()}
       {...children}

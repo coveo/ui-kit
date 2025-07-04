@@ -1,22 +1,22 @@
-import {FacetResultsMustMatch} from '@coveo/headless';
+import type {FacetResultsMustMatch} from '@coveo/headless';
 import {
   buildFacet as buildInsightFacet,
   buildFacetConditionsManager as buildInsightFacetConditionsManager,
   buildSearchStatus as buildInsightSearchStatus,
-  CategoryFacetValueRequest as InsightCategoryFacetValueRequest,
-  Facet as InsightFacet,
-  FacetConditionsManager as InsightFacetConditionsManager,
-  FacetOptions as InsightFacetOptions,
-  FacetSortCriterion as InsightFacetSortCriterion,
-  FacetState as InsightFacetState,
-  FacetValueRequest as InsightFacetValueRequest,
-  SearchStatus as InsightSearchStatus,
-  SearchStatusState as InsightSearchStatusState,
+  type CategoryFacetValueRequest as InsightCategoryFacetValueRequest,
+  type Facet as InsightFacet,
+  type FacetConditionsManager as InsightFacetConditionsManager,
+  type FacetOptions as InsightFacetOptions,
+  type FacetSortCriterion as InsightFacetSortCriterion,
+  type FacetState as InsightFacetState,
+  type FacetValueRequest as InsightFacetValueRequest,
+  type SearchStatus as InsightSearchStatus,
+  type SearchStatusState as InsightSearchStatusState,
 } from '@coveo/headless/insight';
-import {Component, h, State, Prop, Element, VNode} from '@stencil/core';
+import {Component, h, State, Prop, Element, type VNode} from '@stencil/core';
 import {
   BindStateToController,
-  InitializableComponent,
+  type InitializableComponent,
   InitializeBindings,
 } from '../../../utils/initialization-utils';
 import {
@@ -24,7 +24,7 @@ import {
   FocusTargetController,
 } from '../../../utils/stencil-accessibility-utils';
 import {parseDependsOn} from '../../common/facets/depends-on';
-import {FacetInfo} from '../../common/facets/facet-common-store';
+import type {FacetInfo} from '../../common/facets/facet-common-store';
 import {FacetContainer} from '../../common/facets/facet-container/stencil-facet-container';
 import {FacetGuard} from '../../common/facets/facet-guard';
 import {FacetHeader} from '../../common/facets/facet-header/stencil-facet-header';
@@ -32,12 +32,12 @@ import {FacetPlaceholder} from '../../common/facets/facet-placeholder/facet-plac
 import {announceFacetSearchResultsWithAriaLive} from '../../common/facets/facet-search/facet-search-aria-live';
 import {FacetShowMoreLess} from '../../common/facets/facet-show-more-less/stencil-facet-show-more-less';
 import {
-  FacetValueProps,
+  type FacetValueProps,
   FacetValue,
 } from '../../common/facets/facet-value/stencil-facet-value';
 import {FacetValuesGroup} from '../../common/facets/facet-values-group/stencil-facet-values-group';
 import {initializePopover} from '../../common/facets/popover/popover-type';
-import {InsightBindings} from '../atomic-insight-interface/atomic-insight-interface';
+import type {InsightBindings} from '../atomic-insight-interface/atomic-insight-interface';
 
 /**
  * @internal

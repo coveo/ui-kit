@@ -2,8 +2,8 @@ import {markParentAsReady, isParentReady} from '@/src/utils/init-queue';
 import {Component, Prop, Listen, Element} from '@stencil/core';
 import {buildCustomEvent} from '../../../utils/event-utils';
 import {
-  AtomicInterface,
-  InitializeEvent,
+  type AtomicInterface,
+  type InitializeEvent,
   initializeEventName,
 } from '../../../utils/initialization-utils';
 

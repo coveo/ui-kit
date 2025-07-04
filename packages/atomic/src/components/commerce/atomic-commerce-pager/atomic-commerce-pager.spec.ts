@@ -5,13 +5,20 @@ import {buildFakeSearch} from '@/vitest-utils/testing-helpers/fixtures/headless/
 import {
   buildProductListing,
   buildSearch,
-  PaginationState,
+  type PaginationState,
 } from '@coveo/headless/commerce';
 import {page} from '@vitest/browser/context';
 import {html} from 'lit';
 import {ifDefined} from 'lit/directives/if-defined.js';
-import {describe, vi, expect, MockInstance, test, beforeEach} from 'vitest';
-import {AtomicCommercePager} from './atomic-commerce-pager';
+import {
+  describe,
+  vi,
+  expect,
+  type MockInstance,
+  test,
+  beforeEach,
+} from 'vitest';
+import type {AtomicCommercePager} from './atomic-commerce-pager';
 import './atomic-commerce-pager';
 
 vi.mock('@coveo/headless/commerce', {spy: true});

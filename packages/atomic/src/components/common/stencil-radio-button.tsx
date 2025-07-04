@@ -1,7 +1,7 @@
-import {FunctionalComponent, h} from '@stencil/core';
-import {JSXBase} from '@stencil/core/internal';
+import {type FunctionalComponent, h} from '@stencil/core';
+import type {JSXBase} from '@stencil/core/internal';
 import {createRipple} from '../../utils/ripple';
-import {RadioButtonProps} from './radio-button';
+import type {RadioButtonProps} from './radio-button';
 import {
   getClassNameForButtonStyle,
   getRippleColorForButtonStyle,

@@ -1,4 +1,4 @@
-import {
+import type {
   ResultTemplateCondition as RecsResultTemplateCondition,
   ResultTemplate as RecsResultTemplate,
 } from '@coveo/headless/recommendation';
@@ -73,8 +73,6 @@ export class AtomicRecsResultTemplate {
     string,
     string[]
   > = {};
-
-  constructor() {}
 
   connectedCallback() {
     this.resultTemplateCommon = new ResultTemplateCommon({

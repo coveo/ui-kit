@@ -1,11 +1,11 @@
-import {Product} from '@coveo/headless/commerce';
+import type {Product} from '@coveo/headless/commerce';
 import {Component, Prop, Element, State, Listen} from '@stencil/core';
 import {InitializeBindings} from '../../../utils/initialization-utils';
 import {
   defaultNumberFormatter,
-  NumberFormatter,
+  type NumberFormatter,
 } from '../../common/formats/format-common';
-import {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface';
+import type {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface';
 import {parseValue} from '../product-template-component-utils/product-utils';
 import {ProductContext} from '../product-template-component-utils/stencil-product-template-decorators';
 

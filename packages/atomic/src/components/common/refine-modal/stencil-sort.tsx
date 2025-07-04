@@ -1,5 +1,5 @@
-import {Fragment, FunctionalComponent, h} from '@stencil/core';
-import {i18n} from 'i18next';
+import {Fragment, type FunctionalComponent, h} from '@stencil/core';
+import type {i18n} from 'i18next';
 import SortIcon from '../../../images/sort.svg';
 
 interface RefineModalSortSectionProps {

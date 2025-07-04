@@ -1,22 +1,22 @@
 import {
-  DidYouMean,
-  DidYouMeanState,
+  type DidYouMean,
+  type DidYouMeanState,
   buildDidYouMean,
-  QueryTrigger,
+  type QueryTrigger,
   buildQueryTrigger,
-  QueryTriggerState,
+  type QueryTriggerState,
 } from '@coveo/headless';
 import {Component, h, Prop, State, Watch} from '@stencil/core';
 import {
   BindStateToController,
-  InitializableComponent,
+  type InitializableComponent,
   InitializeBindings,
 } from '../../../utils/initialization-utils';
 import {AutoCorrection} from '../../common/query-correction/stencil-auto-correction';
 import {Correction} from '../../common/query-correction/stencil-correction';
 import {QueryCorrectionGuard} from '../../common/query-correction/stencil-guard';
 import {TriggerCorrection} from '../../common/query-correction/stencil-trigger-correction';
-import {Bindings} from '../atomic-search-interface/atomic-search-interface';
+import type {Bindings} from '../atomic-search-interface/atomic-search-interface';
 
 /**
  * The `atomic-did-you-mean` component is responsible for handling query corrections. When a query returns no result but finds a possible query correction, the component either suggests the correction or automatically triggers a new query with the suggested term.
@@ -85,7 +85,7 @@ export class AtomicDidYouMean implements InitializableComponent {
 
   private get content() {
     if (!this.queryTriggerState || !this.didYouMeanState) {
-      return;
+      return undefined;
     }
 
     const {hasQueryCorrection, wasAutomaticallyCorrected} =
@@ -120,6 +120,7 @@ export class AtomicDidYouMean implements InitializableComponent {
         />
       );
     }
+    return undefined;
   }
 
   public render() {

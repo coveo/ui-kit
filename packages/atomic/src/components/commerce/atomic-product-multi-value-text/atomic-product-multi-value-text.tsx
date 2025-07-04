@@ -1,18 +1,18 @@
 import {
-  BreadcrumbManager,
+  type BreadcrumbManager,
   buildProductListing,
   buildSearch,
-  Product,
-  ProductListing,
+  type Product,
+  type ProductListing,
   ProductTemplatesHelpers,
-  Search,
-  RegularFacetValue,
+  type Search,
+  type RegularFacetValue,
 } from '@coveo/headless/commerce';
-import {Component, Element, Prop, h, State, VNode} from '@stencil/core';
+import {Component, Element, Prop, h, State, type VNode} from '@stencil/core';
 import {getFieldValueCaption} from '../../../utils/field-utils';
 import {InitializeBindings} from '../../../utils/initialization-utils';
 import {titleToKebab} from '../../../utils/utils';
-import {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface';
+import type {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface';
 import {ProductContext} from '../product-template-component-utils/stencil-product-template-decorators';
 
 /**
@@ -101,10 +101,10 @@ export class AtomicProductMultiValueText {
     return this.breadcrumbManager.state.facetBreadcrumbs
       .filter((facet) => facet.field === this.field)
       .reduce(
-        (values, facet) => [
-          ...values,
-          ...facet.values.map(({value}) => (value as RegularFacetValue).value),
-        ],
+        (values: string[], facet) =>
+          values.concat(
+            facet.values.map(({value}) => (value as RegularFacetValue).value)
+          ),
         [] as string[]
       );
   }

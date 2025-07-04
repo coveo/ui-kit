@@ -1,16 +1,16 @@
 import {Schema, StringValue} from '@coveo/bueno';
-import {Product} from '@coveo/headless/commerce';
+import type {Product} from '@coveo/headless/commerce';
 import {Component, State, h, Element, Prop} from '@stencil/core';
 import {
-  InitializableComponent,
+  type InitializableComponent,
   InitializeBindings,
 } from '../../../utils/initialization-utils';
 import {
   ExpandableText,
-  TruncateAfter,
+  type TruncateAfter,
 } from '../../common/expandable-text/stencil-expandable-text';
 import {Hidden} from '../../common/stencil-hidden';
-import {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface';
+import type {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface';
 import {ProductContext} from '../product-template-component-utils/stencil-product-template-decorators';
 
 /**

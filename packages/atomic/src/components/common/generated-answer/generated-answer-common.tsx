@@ -1,4 +1,4 @@
-import {
+import type {
   GeneratedAnswer,
   GeneratedAnswerCitation,
   GeneratedAnswerState,
@@ -8,12 +8,12 @@ import {
 } from '@coveo/headless';
 import {h} from '@stencil/core';
 import {
-  GeneratedAnswerData,
+  type GeneratedAnswerData,
   SafeStorage,
   StorageItems,
 } from '../../../utils/local-storage-utils';
 import {getNamedSlotFromHost} from '../../../utils/slot-utils';
-import {AnyBindings} from '../interface/bindings';
+import type {AnyBindings} from '../interface/bindings';
 import {Heading} from '../stencil-heading';
 import {Switch} from '../switch';
 import {CopyButton} from './copy-button';

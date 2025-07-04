@@ -1,5 +1,5 @@
-import {FunctionalComponent, h} from '@stencil/core';
-import {FacetValueProps} from '../../../common/facets/stencil-facet-common';
+import {type FunctionalComponent, h} from '@stencil/core';
+import type {FacetValueProps} from '../../../common/facets/stencil-facet-common';
 import {Button} from '../../../common/stencil-button';
 
 export const FacetSegmentedValue: FunctionalComponent<FacetValueProps> = (

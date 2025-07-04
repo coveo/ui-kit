@@ -6,19 +6,19 @@ import {
   Element,
   Watch,
   Event,
-  EventEmitter,
+  type EventEmitter,
   Host,
   Listen,
 } from '@stencil/core';
 import {isIOS} from '../../../utils/device-utils';
 import {listenOnce} from '../../../utils/event-utils';
 import {
-  InitializableComponent,
+  type InitializableComponent,
   InitializeBindings,
 } from '../../../utils/initialization-utils';
 import {updateBreakpoints} from '../../../utils/replace-breakpoint';
 import {once, randomID} from '../../../utils/utils';
-import {AnyBindings} from '../interface/bindings';
+import type {AnyBindings} from '../interface/bindings';
 
 /**
  * When the modal is opened, the class `atomic-modal-opened` is added to the interfaceElement and the body, allowing further customization.
@@ -183,19 +183,20 @@ export class AtomicModal implements InitializableComponent<AnyBindings> {
 
     return (
       <Host class={this.getClasses().join(' ')} data-nosnippet>
+        {/* biome-ignore lint/a11y/noStaticElementInteractions: to reconsider after migration  */}
         <div
           part="backdrop"
+          role="presentation"
           class={` ${this.boundary === 'page' ? 'fixed' : 'absolute'} top-0 right-0 bottom-0 left-0 z-9999`}
           onClick={(e) => e.target === e.currentTarget && this.close()}
         >
+          {/* biome-ignore lint/a11y/useAriaPropsSupportedByRole: to reconsider after migration  */}
           <atomic-focus-trap
-            role="dialog"
             aria-modal={this.isOpen.toString()}
             aria-labelledby={this.headerId}
             source={this.source}
             container={this.container ?? this.host}
             ref={(ref) => (this.focusTrap = ref)}
-            scope={this.scope}
           >
             <Content />
           </atomic-focus-trap>

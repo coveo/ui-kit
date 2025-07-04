@@ -1,16 +1,16 @@
-import {FoldedItemListStateContextEvent} from '@/src/components/common/item-list/item-list-decorators';
+import type {FoldedItemListStateContextEvent} from '@/src/components/common/item-list/item-list-decorators';
 import {
-  ResultsPerPageState,
-  ResultsPerPage,
+  type ResultsPerPageState,
+  type ResultsPerPage,
   buildFoldedResultList,
-  FoldedResultList,
-  FoldedResultListState,
+  type FoldedResultList,
+  type FoldedResultListState,
   buildResultsPerPage,
-  ResultListProps,
-  FoldedCollection,
+  type ResultListProps,
+  type FoldedCollection,
   buildInteractiveResult,
-  TabManager,
-  TabManagerState,
+  type TabManager,
+  type TabManagerState,
   buildTabManager,
 } from '@coveo/headless';
 import {
@@ -25,7 +25,7 @@ import {
 } from '@stencil/core';
 import {
   BindStateToController,
-  InitializableComponent,
+  type InitializableComponent,
   InitializeBindings,
 } from '../../../../utils/initialization-utils';
 import {ArrayProp} from '../../../../utils/props-utils';
@@ -41,16 +41,16 @@ import {ItemTemplateProvider} from '../../../common/item-list/item-template-prov
 import {DisplayWrapper} from '../../../common/item-list/stencil-display-wrapper';
 import {
   ItemListCommon,
-  ItemRenderingFunction,
+  type ItemRenderingFunction,
 } from '../../../common/item-list/stencil-item-list-common';
 import {
-  ItemDisplayDensity,
-  ItemDisplayImageSize,
-  ItemDisplayLayout,
+  type ItemDisplayDensity,
+  type ItemDisplayImageSize,
+  type ItemDisplayLayout,
   getItemListDisplayClasses,
 } from '../../../common/layout/display-options';
 import {Hidden} from '../../../common/stencil-hidden';
-import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
+import type {Bindings} from '../../atomic-search-interface/atomic-search-interface';
 
 /**
  * The `atomic-folded-result-list` component is responsible for displaying folded query results, by applying one or more result templates for up to three layers (i.e., to the result, child and grandchild).

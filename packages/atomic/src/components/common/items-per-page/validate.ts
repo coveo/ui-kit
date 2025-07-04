@@ -7,7 +7,7 @@ import {
 export function convertChoicesToNumbers(choices: string) {
   return choices.split(',').map((choice) => {
     const parsedChoice = parseInt(choice);
-    if (isNaN(parsedChoice)) {
+    if (Number.isNaN(parsedChoice)) {
       throw new ChoiceIsNaNError(choice);
     }
     if (parsedChoice <= 0) {

@@ -1,4 +1,4 @@
-import {FunctionalComponent, h, Fragment} from '@stencil/core';
+import {type FunctionalComponent, h, Fragment} from '@stencil/core';
 
 export interface ItemDisplayGuardProps {
   firstRequestExecuted: boolean;

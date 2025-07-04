@@ -1,7 +1,7 @@
 import {
   buildRecentQueriesList,
-  RecentQueriesList,
-  SearchBox,
+  type RecentQueriesList,
+  type SearchBox,
 } from '@coveo/headless';
 import {Component, Element, Prop, State, h} from '@stencil/core';
 import Clock from '../../../../images/clock.svg';
@@ -17,11 +17,11 @@ import {
 } from '../../../common/suggestions/stencil-recent-queries';
 import {
   dispatchSearchBoxSuggestionsEvent,
-  SearchBoxSuggestionElement,
-  SearchBoxSuggestions,
-  SearchBoxSuggestionsBindings,
+  type SearchBoxSuggestionElement,
+  type SearchBoxSuggestions,
+  type SearchBoxSuggestionsBindings,
 } from '../../../common/suggestions/suggestions-common';
-import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
+import type {Bindings} from '../../atomic-search-interface/atomic-search-interface';
 
 /**
  * The `atomic-search-box-recent-queries` component can be added as a child of an `atomic-search-box` component, allowing for the configuration of recent query suggestions.

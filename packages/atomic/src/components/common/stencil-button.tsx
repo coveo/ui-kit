@@ -1,7 +1,7 @@
-import {FunctionalComponent, h} from '@stencil/core';
+import {type FunctionalComponent, h} from '@stencil/core';
 import {createRipple} from '../../utils/ripple';
 import {
-  ButtonStyle,
+  type ButtonStyle,
   getRippleColorForButtonStyle,
   getClassNameForButtonStyle,
 } from './stencil-button-style';

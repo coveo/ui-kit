@@ -1,7 +1,7 @@
-import {FunctionalComponent, h} from '@stencil/core';
+import {type FunctionalComponent, h} from '@stencil/core';
 import {createRipple} from '../../../../utils/ripple';
 import {randomID} from '../../../../utils/utils';
-import {FacetValueProps} from '../../../common/facets/stencil-facet-common';
+import type {FacetValueProps} from '../../../common/facets/stencil-facet-common';
 
 export const ColorFacetCheckbox: FunctionalComponent<FacetValueProps> = (
   props,
@@ -15,12 +15,13 @@ export const ColorFacetCheckbox: FunctionalComponent<FacetValueProps> = (
     formattedCount: count,
   });
   const partValue = props.displayValue
-    .match(new RegExp('-?[_a-zA-Z]+[_a-zA-Z0-9-]*'))
+    .match(/-?[_a-zA-Z]+[_a-zA-Z0-9-]*/)
     ?.toString();
   let labelRef: HTMLLabelElement;
 
   return (
     <li key={props.displayValue} class="relative flex items-center">
+      {/* biome-ignore lint/a11y: to reconsider after migration */}
       <button
         id={id}
         role="checkbox"

@@ -1,9 +1,9 @@
 import {
-  QuerySummary,
-  QuerySummaryState,
+  type QuerySummary,
+  type QuerySummaryState,
   buildQuerySummary,
-  ResultList,
-  ResultListState,
+  type ResultList,
+  type ResultListState,
   buildResultList,
 } from '@coveo/headless';
 import {Component, h, State} from '@stencil/core';
@@ -17,7 +17,7 @@ import {LoadMoreButton} from '../../common/load-more/stencil-button';
 import {LoadMoreContainer} from '../../common/load-more/stencil-container';
 import {LoadMoreProgressBar} from '../../common/load-more/stencil-progress-bar';
 import {LoadMoreSummary} from '../../common/load-more/stencil-summary';
-import {Bindings} from '../atomic-search-interface/atomic-search-interface';
+import type {Bindings} from '../atomic-search-interface/atomic-search-interface';
 
 /**
  * The `atomic-load-more-results` component allows the user to load additional results if more are available.

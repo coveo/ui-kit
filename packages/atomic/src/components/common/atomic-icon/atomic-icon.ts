@@ -1,7 +1,7 @@
 import {bindingGuard} from '@/src/decorators/binding-guard';
 import {errorGuard} from '@/src/decorators/error-guard';
 import {injectStylesForNoShadowDOM} from '@/src/decorators/light-dom';
-import {InitializableComponent} from '@/src/decorators/types';
+import type {InitializableComponent} from '@/src/decorators/types';
 import {watch} from '@/src/decorators/watch';
 import {InitializeBindingsMixin} from '@/src/mixins/bindings-mixin';
 import {parseAssetURL} from '@/src/utils/asset-path-utils';
@@ -10,7 +10,7 @@ import {LitElement, svg, unsafeCSS} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {guard} from 'lit/directives/guard.js';
 import {unsafeSVG} from 'lit/directives/unsafe-svg.js';
-import {AnyBindings} from '../interface/bindings';
+import type {AnyBindings} from '../interface/bindings';
 import styles from './atomic-icon.tw.css';
 
 class IconFetchError extends Error {

@@ -1,4 +1,4 @@
-import {
+import type {
   ResultTemplate as InsightResultTemplate,
   ResultTemplateCondition as InsightResultTemplateCondition,
 } from '@coveo/headless/insight';
@@ -67,8 +67,6 @@ export class AtomicInsightResultTemplate {
     string,
     string[]
   > = {};
-
-  constructor() {}
 
   connectedCallback() {
     this.resultTemplateCommon = new ResultTemplateCommon({

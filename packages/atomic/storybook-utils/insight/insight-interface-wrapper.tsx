@@ -1,9 +1,9 @@
 import {
   getSampleInsightEngineConfiguration,
-  InsightEngineConfiguration,
+  type InsightEngineConfiguration,
 } from '@coveo/headless/insight';
 import {within} from '@storybook/test';
-import {Decorator, StoryContext} from '@storybook/web-components';
+import type {Decorator, StoryContext} from '@storybook/web-components';
 import {html} from 'lit';
 import type * as _ from '../../src/components.js';
 

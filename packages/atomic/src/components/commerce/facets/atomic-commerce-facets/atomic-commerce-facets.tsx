@@ -1,26 +1,26 @@
 import {NumberValue, Schema} from '@coveo/bueno';
 import {
-  RegularFacet,
-  CategoryFacet,
-  DateFacet,
-  NumericFacet,
-  FacetGeneratorState,
+  type RegularFacet,
+  type CategoryFacet,
+  type DateFacet,
+  type NumericFacet,
+  type FacetGeneratorState,
   buildProductListing,
   buildSearch,
-  FacetGenerator,
-  Summary,
-  SearchSummaryState,
-  ProductListingSummaryState,
+  type FacetGenerator,
+  type Summary,
+  type SearchSummaryState,
+  type ProductListingSummaryState,
 } from '@coveo/headless/commerce';
 import {Component, h, Element, State, Prop, Fragment} from '@stencil/core';
 import {
   BindStateToController,
-  InitializableComponent,
+  type InitializableComponent,
   InitializeBindings,
 } from '../../../../utils/initialization-utils';
 import {FacetPlaceholder} from '../../../common/facets/facet-placeholder/facet-placeholder';
 import {createAppLoadedListener} from '../../../common/interface/store';
-import {CommerceBindings as Bindings} from '../../atomic-commerce-interface/atomic-commerce-interface';
+import type {CommerceBindings as Bindings} from '../../atomic-commerce-interface/atomic-commerce-interface';
 
 /**
  * The `atomic-commerce-facets` component automatically renders commerce facets based on the Commerce API response.

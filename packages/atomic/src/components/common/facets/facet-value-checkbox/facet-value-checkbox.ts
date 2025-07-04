@@ -1,4 +1,4 @@
-import {FunctionalComponentWithChildren} from '@/src/utils/functional-component-utils';
+import type {FunctionalComponentWithChildren} from '@/src/utils/functional-component-utils';
 import {html} from 'lit';
 import {keyed} from 'lit/directives/keyed.js';
 import {ref} from 'lit/directives/ref.js';
@@ -6,7 +6,7 @@ import {createRipple} from '../../../../utils/ripple';
 import {randomID} from '../../../../utils/utils';
 import {renderCheckbox as checkbox} from '../../checkbox';
 import {renderTriStateCheckbox} from '../../triStateCheckbox';
-import {FacetValuePropsBase} from '../facet-common';
+import type {FacetValuePropsBase} from '../facet-common';
 import {renderFacetValueExclude} from '../facet-value-exclude/facet-value-exclude';
 
 export type TriStateFacetValueProps = Omit<

@@ -1,11 +1,11 @@
 import {Component, h, Prop, State} from '@stencil/core';
 import ArrowFull from '../../../images/arrow-full.svg';
 import {
-  InitializableComponent,
+  type InitializableComponent,
   InitializeBindings,
 } from '../../../utils/initialization-utils';
 import {IconButton} from '../../common/iconButton';
-import {Bindings} from '../../search/atomic-search-interface/atomic-search-interface';
+import type {Bindings} from '../../search/atomic-search-interface/atomic-search-interface';
 
 /**
  * @internal

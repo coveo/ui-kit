@@ -1,5 +1,5 @@
-import {HighlightKeywords} from '../atomic-quickview-modal/atomic-quickview-modal';
-import {QuickviewWordHighlight} from '../quickview-word-highlight/quickview-word-highlight';
+import type {HighlightKeywords} from '../atomic-quickview-modal/atomic-quickview-modal';
+import type {QuickviewWordHighlight} from '../quickview-word-highlight/quickview-word-highlight';
 
 const buildPreviewBar = (documentWriter: Document) => {
   const previewBarId = 'CoveoPreviewBar';

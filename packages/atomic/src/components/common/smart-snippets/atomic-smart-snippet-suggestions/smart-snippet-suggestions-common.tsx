@@ -1,5 +1,5 @@
-import {FunctionalComponent, h} from '@stencil/core';
-import {i18n} from 'i18next';
+import {type FunctionalComponent, h} from '@stencil/core';
+import type {i18n} from 'i18next';
 import {Button} from '../../stencil-button';
 import {Heading} from '../../stencil-heading';
 
@@ -87,6 +87,7 @@ export const SmartSnippetSuggestionsFooter: FunctionalComponent<{
   i18n: i18n;
 }> = ({i18n}, children) => {
   return (
+    // biome-ignore lint/a11y: to reconsider after migration
     <footer part="footer" aria-label={i18n.t('smart-snippet-source')}>
       {children}
     </footer>

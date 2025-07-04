@@ -5,8 +5,8 @@ import {buildFakeCommerceEngine} from '@/vitest-utils/testing-helpers/fixtures/h
 import {buildFakeProductListing} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/product-listing-controller';
 import {buildFakeSearch} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/search-controller';
 import {
-  BreadcrumbManager,
-  BreadcrumbManagerState,
+  type BreadcrumbManager,
+  type BreadcrumbManagerState,
   buildContext,
   buildProductListing,
   buildSearch,
@@ -16,14 +16,14 @@ import {html} from 'lit';
 import {ifDefined} from 'lit/directives/if-defined.js';
 import {describe, it, expect, vi, beforeEach} from 'vitest';
 import './atomic-commerce-breadbox';
-import {AtomicCommerceBreadbox} from './atomic-commerce-breadbox';
+import type {AtomicCommerceBreadbox} from './atomic-commerce-breadbox';
+import type {Dayjs} from 'dayjs';
 
 vi.mock('@coveo/headless/commerce', {spy: true});
 vi.mock('@/src/utils/date-utils', () => {
   const parseDate = vi.fn((date) => {
     const d = new Date(date);
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    (d as any).format = vi.fn((_fmt: string) => {
+    (d as unknown as Dayjs).format = vi.fn((_fmt: string) => {
       return d.toISOString().split('T')[0];
     });
     return d;

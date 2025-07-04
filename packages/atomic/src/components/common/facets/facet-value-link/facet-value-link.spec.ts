@@ -3,7 +3,10 @@ import {createTestI18n} from '@/vitest-utils/testing-helpers/i18n-utils';
 import {page} from '@vitest/browser/context';
 import {html} from 'lit';
 import {expect, vi, describe, beforeAll, it} from 'vitest';
-import {renderFacetValueLink, FacetValueLinkProps} from './facet-value-link';
+import {
+  renderFacetValueLink,
+  type FacetValueLinkProps,
+} from './facet-value-link';
 
 describe('renderFacetValueLink', () => {
   let i18n: Awaited<ReturnType<typeof createTestI18n>>;

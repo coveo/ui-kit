@@ -6,16 +6,16 @@ import {buildFakeSearch} from '@/vitest-utils/testing-helpers/fixtures/headless/
 import {
   buildSearch,
   buildQueryTrigger,
-  DidYouMeanState,
-  QueryTriggerState,
-  DidYouMean,
-  QueryTrigger,
+  type DidYouMeanState,
+  type QueryTriggerState,
+  type DidYouMean,
+  type QueryTrigger,
 } from '@coveo/headless/commerce';
 import {userEvent} from '@vitest/browser/context';
 import {html} from 'lit';
 import {describe, expect, it, vi, beforeEach} from 'vitest';
 import './atomic-commerce-did-you-mean';
-import {AtomicCommerceDidYouMean} from './atomic-commerce-did-you-mean';
+import type {AtomicCommerceDidYouMean} from './atomic-commerce-did-you-mean';
 
 vi.mock('@coveo/headless/commerce', {spy: true});
 

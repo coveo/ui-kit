@@ -1,4 +1,4 @@
-import {FunctionalComponent, Host, h} from '@stencil/core';
+import {type FunctionalComponent, Host, h} from '@stencil/core';
 
 /**
  * @deprecated Should only be used for Stencil components; for Lit components, use the displayIf directive instead

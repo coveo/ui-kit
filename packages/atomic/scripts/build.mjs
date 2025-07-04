@@ -1,6 +1,6 @@
 import chalk from 'chalk';
-import {dirname, basename, relative, join} from 'path';
-import {argv} from 'process';
+import {dirname, basename, relative, join} from 'node:path';
+import {argv} from 'node:process';
 import {
   readConfigFile,
   getLineAndCharacterOfPosition,
@@ -11,7 +11,7 @@ import {
   flattenDiagnosticMessageText,
   DiagnosticCategory,
 } from 'typescript';
-import {fileURLToPath} from 'url';
+import {fileURLToPath} from 'node:url';
 import resourceUrlTransformer from './asset-path-transformer.mjs';
 import {generateLitExports} from './generate-lit-exports.mjs';
 import pathTransformer from './path-transform.mjs';
@@ -117,7 +117,7 @@ function compileWithTransformer() {
     }
   });
 
-  let exitCode = emitResult.emitSkipped || hasError ? 1 : 0;
+  const exitCode = emitResult.emitSkipped || hasError ? 1 : 0;
   console.log(`Process exiting with code '${exitCode}'.`);
   process.exit(exitCode);
 }

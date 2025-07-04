@@ -1,5 +1,5 @@
-import {FacetValue, SearchStatusState} from '@coveo/headless';
-import {i18n} from 'i18next';
+import type {FacetValue, SearchStatusState} from '@coveo/headless';
+import type {i18n} from 'i18next';
 
 export interface FacetValueProps {
   i18n: i18n;

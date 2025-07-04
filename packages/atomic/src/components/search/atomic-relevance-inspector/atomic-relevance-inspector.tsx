@@ -1,7 +1,7 @@
 import {getOrganizationEndpoint} from '@coveo/headless';
-import {Component, h, Prop, Event, EventEmitter} from '@stencil/core';
+import {Component, h, Prop, Event, type EventEmitter} from '@stencil/core';
 import {Button} from '../../common/stencil-button';
-import {Bindings} from '../atomic-search-interface/atomic-search-interface';
+import type {Bindings} from '../atomic-search-interface/atomic-search-interface';
 
 /**
  * The `atomic-relevance-inspector` component is used internally to offer insight on search page relevance, as well as information to help troubleshoot issues during development.

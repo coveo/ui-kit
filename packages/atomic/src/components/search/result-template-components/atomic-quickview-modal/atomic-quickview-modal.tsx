@@ -1,38 +1,38 @@
 import {
   buildInteractiveResult,
-  Result,
-  InteractiveResult,
-  TermsToHighlight,
+  type Result,
+  type InteractiveResult,
+  type TermsToHighlight,
 } from '@coveo/headless';
 import {
   Component,
   Event,
-  EventEmitter,
+  type EventEmitter,
   h,
   Prop,
   State,
   Watch,
   Method,
-  VNode,
+  type VNode,
   Fragment,
 } from '@stencil/core';
 import CloseIcon from '../../../../images/close.svg';
 import {
-  InitializableComponent,
+  type InitializableComponent,
   InitializeBindings,
 } from '../../../../utils/initialization-utils';
 import {ATOMIC_MODAL_EXPORT_PARTS} from '../../../common/atomic-modal/export-parts';
 import {IconButton} from '../../../common/iconButton';
 import {LinkWithItemAnalytics} from '../../../common/item-link/item-link';
 import {Button} from '../../../common/stencil-button';
-import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
+import type {Bindings} from '../../atomic-search-interface/atomic-search-interface';
 import {QuickviewSidebar} from '../atomic-quickview-sidebar/atomic-quickview-sidebar';
 import {QuickviewIframe} from '../quickview-iframe/quickview-iframe';
 import {buildQuickviewPreviewBar} from '../quickview-preview-bar/quickview-preview-bar';
 import {
   getWordsHighlights,
   HIGHLIGHT_PREFIX,
-  QuickviewWordHighlight,
+  type QuickviewWordHighlight,
 } from '../quickview-word-highlight/quickview-word-highlight';
 
 export interface HighlightKeywords {
@@ -227,7 +227,7 @@ export class AtomicQuickviewModal implements InitializableComponent {
   private onClose() {
     this.content = undefined;
     this.result = undefined;
-    this.modalCloseCallback && this.modalCloseCallback();
+    this.modalCloseCallback?.();
   }
 
   private get isOpen() {

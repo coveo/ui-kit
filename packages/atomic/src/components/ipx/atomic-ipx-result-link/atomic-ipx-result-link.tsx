@@ -1,21 +1,21 @@
 import {isUndefined} from '@coveo/bueno';
 import {
-  IPXActionsHistoryActionCreators,
-  InteractiveResult,
+  type IPXActionsHistoryActionCreators,
+  type InteractiveResult,
   loadIPXActionsHistoryActions,
 } from '@coveo/headless';
 import {Component, h, Prop, Element} from '@stencil/core';
 import {buildCustomEvent} from '../../../utils/event-utils';
 import {
-  InitializableComponent,
+  type InitializableComponent,
   InitializeBindings,
 } from '../../../utils/initialization-utils';
 import {buildStringTemplateFromResult} from '../../../utils/result-utils';
 import {getDefaultSlotFromHost} from '../../../utils/slot-utils';
-import {AnyUnfoldedItem} from '../../common/interface/item';
+import type {AnyUnfoldedItem} from '../../common/interface/item';
 import {getAttributesFromLinkSlot} from '../../common/item-link/attributes-slot';
 import {LinkWithItemAnalytics} from '../../common/item-link/item-link';
-import {RecsBindings} from '../../recommendations/atomic-recs-interface/atomic-recs-interface';
+import type {RecsBindings} from '../../recommendations/atomic-recs-interface/atomic-recs-interface';
 import {
   ResultContext,
   InteractiveResultContext,

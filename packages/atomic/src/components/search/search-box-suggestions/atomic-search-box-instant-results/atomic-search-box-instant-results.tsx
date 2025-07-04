@@ -1,16 +1,16 @@
 import {
   buildInstantResults,
   buildInteractiveInstantResult,
-  InstantResults,
-  Result,
-  SearchBox,
+  type InstantResults,
+  type Result,
+  type SearchBox,
 } from '@coveo/headless';
 import {Component, Element, State, h, Prop, Method} from '@stencil/core';
-import {InitializableComponent} from '../../../../utils/initialization-utils';
+import type {InitializableComponent} from '../../../../utils/initialization-utils';
 import {encodeForDomAttribute} from '../../../../utils/string-utils';
 import {ItemTemplateProvider} from '../../../common/item-list/item-template-provider';
-import {ItemRenderingFunction} from '../../../common/item-list/stencil-item-list-common';
-import {
+import type {ItemRenderingFunction} from '../../../common/item-list/stencil-item-list-common';
+import type {
   ItemDisplayDensity,
   ItemDisplayImageSize,
   ItemDisplayLayout,
@@ -22,11 +22,11 @@ import {
 } from '../../../common/suggestions/stencil-instant-item';
 import {
   dispatchSearchBoxSuggestionsEvent,
-  SearchBoxSuggestionElement,
-  SearchBoxSuggestions,
-  SearchBoxSuggestionsBindings,
+  type SearchBoxSuggestionElement,
+  type SearchBoxSuggestions,
+  type SearchBoxSuggestionsBindings,
 } from '../../../common/suggestions/suggestions-common';
-import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
+import type {Bindings} from '../../atomic-search-interface/atomic-search-interface';
 
 export type AriaLabelGenerator = (
   bindings: Bindings,

@@ -1,5 +1,5 @@
-import {FocusTargetController} from '@/src/utils/stencil-accessibility-utils';
-import {
+import type {FocusTargetController} from '@/src/utils/stencil-accessibility-utils';
+import type {
   DateFacet,
   DateFacetValue,
   DateFilter,
@@ -12,14 +12,14 @@ import {
   RelativeDateUnit,
   SearchStatusState,
 } from '@coveo/headless';
-import {h, VNode} from '@stencil/core';
+import {h, type VNode} from '@stencil/core';
 import {parseDate} from '../../../utils/date-utils';
 import {getFieldValueCaption} from '../../../utils/field-utils';
 import {randomID} from '../../../utils/utils';
-import {InsightBindings} from '../../insight/atomic-insight-interface/atomic-insight-interface';
-import {Bindings as SearchBindings} from '../../search/atomic-search-interface/atomic-search-interface';
+import type {InsightBindings} from '../../insight/atomic-insight-interface/atomic-insight-interface';
+import type {Bindings as SearchBindings} from '../../search/atomic-search-interface/atomic-search-interface';
 import {Hidden} from '../stencil-hidden';
-import {FacetInfo} from './facet-common-store';
+import type {FacetInfo} from './facet-common-store';
 import {FacetContainer} from './facet-container/stencil-facet-container';
 import {FacetHeader} from './facet-header/stencil-facet-header';
 import {FacetPlaceholder} from './facet-placeholder/facet-placeholder';

@@ -1,27 +1,27 @@
 import {
-  BreadcrumbManager,
+  type BreadcrumbManager,
   buildBreadcrumbManager,
-  BreadcrumbManagerState,
-  QuerySummary,
-  QuerySummaryState,
-  FacetManagerState,
-  Sort,
+  type BreadcrumbManagerState,
+  type QuerySummary,
+  type QuerySummaryState,
+  type FacetManagerState,
+  type Sort,
   buildSort,
-  SortState,
+  type SortState,
   buildQuerySummary,
   buildSearchStatus,
-  SearchStatus,
-  FacetManager,
+  type SearchStatus,
+  type FacetManager,
   buildFacetManager,
-  TabManager,
-  TabManagerState,
+  type TabManager,
+  type TabManagerState,
   buildTabManager,
 } from '@coveo/headless';
 import {Component, h, State, Prop, Element, Watch} from '@stencil/core';
 import {
-  AtomicInterface,
+  type AtomicInterface,
   BindStateToController,
-  InitializableComponent,
+  type InitializableComponent,
   InitializeBindings,
 } from '../../../utils/initialization-utils';
 import {shouldDisplayOnCurrentTab} from '../../../utils/tab-utils';
@@ -29,7 +29,7 @@ import {sortByDocumentPosition} from '../../../utils/utils';
 import {findSection} from '../../common/atomic-layout-section/sections';
 import {popoverClass} from '../../common/facets/popover/popover-type';
 import {
-  BaseFacetElement,
+  type BaseFacetElement,
   sortFacetVisibility,
   triageFacetsByParents,
   collapseFacetsAfter,
@@ -42,8 +42,8 @@ import {
 } from '../../common/refine-modal/stencil-filters';
 import {RefineModal} from '../../common/refine-modal/stencil-modal';
 import {RefineModalSortSection} from '../../common/refine-modal/stencil-sort';
-import {Bindings} from '../atomic-search-interface/atomic-search-interface';
-import {SortDropdownOption} from '../atomic-search-interface/store';
+import type {Bindings} from '../atomic-search-interface/atomic-search-interface';
+import type {SortDropdownOption} from '../atomic-search-interface/store';
 
 /**
  * The `atomic-refine-modal` is automatically created as a child of the `atomic-search-interface` when the `atomic-refine-toggle` is initialized.

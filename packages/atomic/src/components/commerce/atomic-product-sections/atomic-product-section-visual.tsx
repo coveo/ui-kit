@@ -1,4 +1,4 @@
-import {ItemDisplayImageSize} from '@/src/components';
+import type {ItemDisplayImageSize} from '@/src/components';
 import {hideEmptySection} from '@/src/utils/item-section-utils';
 import {Element, Component, Prop} from '@stencil/core';
 

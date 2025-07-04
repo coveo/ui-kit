@@ -1,11 +1,11 @@
 import {
-  ResultsPerPageState as InsightResultsPerPageState,
-  ResultsPerPage as InsightResultsPerPage,
+  type ResultsPerPageState as InsightResultsPerPageState,
+  type ResultsPerPage as InsightResultsPerPage,
   buildFoldedResultList as buildInsightFoldedResultList,
-  FoldedResultList as InsightFoldedResultList,
-  FoldedResultListState as InsightFoldedResultListState,
+  type FoldedResultList as InsightFoldedResultList,
+  type FoldedResultListState as InsightFoldedResultListState,
   buildResultsPerPage as buildInsightResultsPerPage,
-  FoldedCollection as InsightFoldedCollection,
+  type FoldedCollection as InsightFoldedCollection,
   buildInteractiveResult as buildInsightInteractiveResult,
 } from '@coveo/headless/insight';
 import {
@@ -19,7 +19,7 @@ import {
 } from '@stencil/core';
 import {
   BindStateToController,
-  InitializableComponent,
+  type InitializableComponent,
   InitializeBindings,
 } from '../../../../utils/initialization-utils';
 import {FocusTargetController} from '../../../../utils/stencil-accessibility-utils';
@@ -28,21 +28,21 @@ import {ResultsPlaceholdersGuard} from '../../../common/atomic-result-placeholde
 import {extractUnfoldedItem} from '../../../common/interface/item';
 import {createAppLoadedListener} from '../../../common/interface/store';
 import {ItemDisplayGuard} from '../../../common/item-list/item-display-guard';
-import {FoldedItemListStateContextEvent} from '../../../common/item-list/item-list-decorators';
+import type {FoldedItemListStateContextEvent} from '../../../common/item-list/item-list-decorators';
 import {ItemListGuard} from '../../../common/item-list/item-list-guard';
 import {ItemTemplateProvider} from '../../../common/item-list/item-template-provider';
 import {DisplayWrapper} from '../../../common/item-list/stencil-display-wrapper';
 import {
   ItemListCommon,
-  ItemRenderingFunction,
+  type ItemRenderingFunction,
 } from '../../../common/item-list/stencil-item-list-common';
 import {
-  ItemDisplayDensity,
-  ItemDisplayImageSize,
-  ItemDisplayLayout,
+  type ItemDisplayDensity,
+  type ItemDisplayImageSize,
+  type ItemDisplayLayout,
   getItemListDisplayClasses,
 } from '../../../common/layout/display-options';
-import {InsightBindings} from '../../atomic-insight-interface/atomic-insight-interface';
+import type {InsightBindings} from '../../atomic-insight-interface/atomic-insight-interface';
 
 /**
  * @internal

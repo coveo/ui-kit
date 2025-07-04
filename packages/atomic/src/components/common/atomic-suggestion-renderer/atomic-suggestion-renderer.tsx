@@ -1,7 +1,7 @@
 import {isMacOS} from '@/src/utils/device-utils';
-import {Component, Fragment, Host, Prop, VNode, h} from '@stencil/core';
-import {i18n} from 'i18next';
-import {SearchBoxSuggestionElement} from '../suggestions/suggestions-common';
+import {Component, Fragment, Host, Prop, type VNode, h} from '@stencil/core';
+import type {i18n} from 'i18next';
+import type {SearchBoxSuggestionElement} from '../suggestions/suggestions-common';
 
 /**
  * The `atomic-suggestion-renderer` component is used to render individual suggestions. It was created to isolate
@@ -107,6 +107,7 @@ export class AtomicSuggestionRenderer {
       <Host class="contents">
         {isButton ? (
           <button
+            type="button"
             id={this.id}
             key={this.suggestion.key}
             part={this.parts}
@@ -126,6 +127,7 @@ export class AtomicSuggestionRenderer {
             {this.content}
           </button>
         ) : (
+          // biome-ignore lint/a11y/useAriaPropsSupportedByRole: to reconsider after migration
           <span
             id={this.id}
             key={this.suggestion.key}

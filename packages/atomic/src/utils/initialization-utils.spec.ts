@@ -1,15 +1,19 @@
-import {buildSearchBox, buildSearchEngine, Controller} from '@coveo/headless';
-import {newSpecPage, SpecPage} from '@stencil/core/testing';
+import {
+  buildSearchBox,
+  buildSearchEngine,
+  type Controller,
+} from '@coveo/headless';
+import {newSpecPage, type SpecPage} from '@stencil/core/testing';
 import i18next from 'i18next';
 import {AtomicSearchBox} from '../components/search/atomic-search-box/atomic-search-box';
 import {
   AtomicSearchInterface,
-  Bindings,
+  type Bindings,
 } from '../components/search/atomic-search-interface/atomic-search-interface';
 import {createSearchStore} from '../components/search/atomic-search-interface/store';
 import {
   BindStateToController,
-  InitializableComponent,
+  type InitializableComponent,
   InitializeBindings,
   initializeBindings,
   MissingInterfaceParentError,
@@ -20,11 +24,11 @@ jest.mock('./replace-breakpoint.ts', () => ({
   updateBreakpoints: () => {},
 }));
 
-// https://github.com/ionic-team/stencil/issues/3260
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-(global as any).DocumentFragment = class DocumentFragment extends Node {};
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-(global as any).ShadowRoot = class ShadowRoot extends DocumentFragment {};
+// // https://github.com/ionic-team/stencil/issues/3260
+// // biome-ignore lint/suspicious/noExplicitAny: Stencil polyfills
+// (global as any).DocumentFragment = class DocumentFragment extends Node {};
+// // biome-ignore lint/suspicious/noExplicitAny: Stencil polyfills
+// (global as any).ShadowRoot = class ShadowRoot extends DocumentFragment {};
 
 describe('InitializeBindings decorator', () => {
   it(`when using the decorator with a property other than bindings
@@ -100,12 +104,11 @@ describe('InitializeBindings decorator', () => {
       });
 
       it('should queue the event', async () => {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const eventQueueMap = (window as any).initQueueNamespace.eventQueueMap;
+        const eventQueueMap = window.initQueueNamespace.eventQueueMap;
         const queue = eventQueueMap.get(searchInterface);
         expect(queue).toBeDefined();
-        expect(queue.length).toBeGreaterThan(0);
-        expect(queue[0].event.type).toBe('atomic/initializeComponent');
+        expect(queue?.length).toBeGreaterThan(0);
+        expect(queue?.[0].event.type).toBe('atomic/initializeComponent');
       });
 
       it('should dispatch queued events when parent becomes ready', async () => {
@@ -154,7 +157,7 @@ describe('InitializeBindings decorator', () => {
 
     it(`when "engine" is defined
     should render the content `, () => {
-      component['bindings'] = {
+      component.bindings = {
         engine: buildSearchEngine({
           configuration: {
             accessToken: 'accessToken',

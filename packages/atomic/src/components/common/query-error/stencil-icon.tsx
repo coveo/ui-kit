@@ -1,10 +1,10 @@
-import {FunctionalComponent, h} from '@stencil/core';
+import {type FunctionalComponent, h} from '@stencil/core';
 import CannotAccess from '../../../images/cannot-access.svg';
 import Indexing from '../../../images/indexing.svg';
 import NoConnection from '../../../images/no-connection.svg';
 import SearchInactive from '../../../images/search-inactive.svg';
 import SomethingWrong from '../../../images/something-wrong.svg';
-import {KnownErrorType} from './known-error-types';
+import type {KnownErrorType} from './known-error-types';
 
 interface QueryErrorIconProps {
   errorType?: string;

@@ -1,7 +1,7 @@
 import {Component, h, Prop} from '@stencil/core';
 import {
-  ItemDisplayDensity,
-  ItemDisplayImageSize,
+  type ItemDisplayDensity,
+  type ItemDisplayImageSize,
   getItemDisplayClasses,
 } from '../../common/layout/display-options';
 

@@ -1,4 +1,4 @@
-import {FunctionalComponent, h} from '@stencil/core';
+import {type FunctionalComponent, h} from '@stencil/core';
 import MagnifyingGlassIcon from '../../../images/magnifying-glass.svg';
 
 export const MagnifyingGlass: FunctionalComponent = () => (

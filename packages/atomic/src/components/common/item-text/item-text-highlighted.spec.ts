@@ -3,7 +3,7 @@ import {unsafeHTML} from 'lit/directives/unsafe-html.js';
 import {describe, it, expect, vi, beforeEach} from 'vitest';
 import {
   renderItemTextHighlighted,
-  ItemTextHighlightedProps,
+  type ItemTextHighlightedProps,
 } from './item-text-highlighted';
 import {renderWithHighlights} from './render-highlights';
 

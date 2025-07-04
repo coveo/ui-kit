@@ -1,9 +1,9 @@
 import {isNullOrUndefined} from '@coveo/bueno';
 import {
-  Search,
-  ProductListing,
-  SearchState,
-  ProductListingState,
+  type Search,
+  type ProductListing,
+  type SearchState,
+  type ProductListingState,
   buildProductListing,
   buildSearch,
   getCommerceApiBaseUrl,
@@ -11,7 +11,7 @@ import {
 import {Component, h, State} from '@stencil/core';
 import {
   BindStateToController,
-  InitializableComponent,
+  type InitializableComponent,
   InitializeBindings,
 } from '../../../utils/initialization-utils';
 import {AriaLiveRegion} from '../../../utils/stencil-accessibility-utils';
@@ -23,7 +23,7 @@ import {QueryErrorDescription} from '../../common/query-error/stencil-descriptio
 import {QueryErrorGuard} from '../../common/query-error/stencil-guard';
 import {QueryErrorTitle} from '../../common/query-error/stencil-title';
 import {getAriaMessageFromErrorType} from '../../common/query-error/utils';
-import {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface';
+import type {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface';
 import {QueryErrorLink} from '../../common/query-error/stencil-link';
 
 /**

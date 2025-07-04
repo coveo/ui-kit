@@ -1,5 +1,5 @@
 import {newSpecPage} from '@stencil/core/testing';
-import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
+import type {Bindings} from '../../atomic-search-interface/atomic-search-interface';
 import {AtomicTabManager} from './atomic-tab-manager';
 
 describe('atomic-tab-manager', () => {

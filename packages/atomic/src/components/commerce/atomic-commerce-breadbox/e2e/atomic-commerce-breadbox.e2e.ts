@@ -1,5 +1,5 @@
 /* eslint-disable @cspell/spellchecker */
-import {Locator} from '@playwright/test';
+import type {Locator} from '@playwright/test';
 import {test, expect} from './fixture';
 
 test.describe('Default', () => {
@@ -270,7 +270,7 @@ test.describe('Default', () => {
     }) => {
       const breadcrumbButton = breadbox.getBreadcrumbButtons(firstValueText);
 
-      await expect(breadcrumbButton).toHaveText('Price: ' + firstValueText);
+      await expect(breadcrumbButton).toHaveText(`Price: ${firstValueText}`);
     });
   });
 
@@ -313,7 +313,7 @@ test.describe('Default', () => {
     }) => {
       const breadcrumbButton = breadbox.getBreadcrumbButtons(firstValueText);
 
-      await expect(breadcrumbButton).toHaveText('Price: ' + firstValueText);
+      await expect(breadcrumbButton).toHaveText(`Price: ${firstValueText}`);
     });
   });
 
@@ -362,7 +362,7 @@ test.describe('Default', () => {
     }) => {
       const breadcrumbButton = breadbox.getBreadcrumbButtons(firstValueText);
 
-      await expect(breadcrumbButton).toHaveText('Date: ' + firstValueText);
+      await expect(breadcrumbButton).toHaveText(`Date: ${firstValueText}`);
     });
   });
 

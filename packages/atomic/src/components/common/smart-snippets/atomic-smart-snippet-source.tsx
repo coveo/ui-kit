@@ -1,20 +1,20 @@
-import {Result} from '@coveo/headless';
+import type {Result} from '@coveo/headless';
 import {
   Component,
   Prop,
   h,
   Listen,
   State,
-  EventEmitter,
+  type EventEmitter,
   Event,
   Host,
 } from '@stencil/core';
 import {
-  InitializableComponent,
+  type InitializableComponent,
   InitializeBindings,
 } from '../../../utils/initialization-utils';
-import {ResultContextEvent} from '../../search/result-template-components/result-template-decorators';
-import {AnyBindings} from '../interface/bindings';
+import type {ResultContextEvent} from '../../search/result-template-components/result-template-decorators';
+import type {AnyBindings} from '../interface/bindings';
 import {LinkWithItemAnalytics} from '../item-link/item-link';
 
 /**

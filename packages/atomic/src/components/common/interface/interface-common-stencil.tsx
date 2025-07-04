@@ -1,11 +1,11 @@
 import {setCoveoGlobal} from '@/src/global/environment.js';
 import {loadDayjsLocale} from '@/src/utils/dayjs-locales.js';
-import {InitializeEvent} from '@/src/utils/initialization-utils.js';
-import {LogLevel} from '@coveo/headless';
-import {ComponentInterface, h} from '@stencil/core';
-import {i18n, TFunction} from 'i18next';
+import type {InitializeEvent} from '@/src/utils/initialization-utils.js';
+import type {LogLevel} from '@coveo/headless';
+import {type ComponentInterface, h} from '@stencil/core';
+import type {i18n, TFunction} from 'i18next';
 import Backend from 'i18next-http-backend';
-import {AnyBindings, AnyEngineType} from './bindings';
+import type {AnyBindings, AnyEngineType} from './bindings';
 import {i18nBackendOptions, i18nTranslationNamespace} from './stencil-i18n';
 import {init18n} from './stencil-i18n';
 
@@ -49,10 +49,7 @@ export class CommonAtomicInterfaceHelper<Engine extends AnyEngineType> {
     atomicInterface.connectedCallback = () => {
       this.i18nPromise = init18n(atomicInterface);
 
-      return (
-        originalConnectedCallback &&
-        originalConnectedCallback.call(atomicInterface)
-      );
+      return originalConnectedCallback?.call(atomicInterface);
     };
 
     atomicInterface.render = () => {
@@ -65,7 +62,7 @@ export class CommonAtomicInterfaceHelper<Engine extends AnyEngineType> {
         );
       }
 
-      return originalRender && originalRender.call(atomicInterface);
+      return originalRender?.call(atomicInterface);
     };
   }
 

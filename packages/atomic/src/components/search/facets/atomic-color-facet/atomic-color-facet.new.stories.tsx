@@ -2,11 +2,11 @@ import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {facetDecorator} from '@/storybook-utils/common/facets-decorator';
 import {renderComponent} from '@/storybook-utils/common/render-component';
 import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
-import {
+import type {
   ArgTypes,
   Args,
-  type Meta,
-  type StoryObj as Story,
+  Meta,
+  StoryObj as Story,
 } from '@storybook/web-components';
 
 const {decorator, play} = wrapInSearchInterface();
@@ -69,6 +69,7 @@ const facetValueToCss = {
 
 const argTypes = Object.keys(facetValueToCss).reduce<ArgTypes>(
   (acc, facetValue) =>
+    // biome-ignore lint/performance: not important in test.
     Object.assign(acc, {
       [`cssParts-value-${facetValue}`]: {
         control: {
@@ -101,6 +102,7 @@ const baseFacetValueCss = {
 
 const args = Object.entries(facetValueToCss).reduce<Args>(
   (acc, [facetValue, css]) =>
+    // biome-ignore lint/performance: not important in test.
     Object.assign(acc, {
       [`cssParts-value-${facetValue}`]: {
         ...baseFacetValueCss,

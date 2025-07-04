@@ -1,10 +1,10 @@
 import {
   buildBreadcrumbManager as buildInsightBreadcrumbManager,
   buildSearchStatus as buildInsightSearchStatus,
-  BreadcrumbManager as InsightBreadcrumbManager,
-  BreadcrumbManagerState as InsightBreadcrumbManagerState,
-  SearchStatus as InsightSearchStatus,
-  SearchStatusState as InsightSearchStatusState,
+  type BreadcrumbManager as InsightBreadcrumbManager,
+  type BreadcrumbManagerState as InsightBreadcrumbManagerState,
+  type SearchStatus as InsightSearchStatus,
+  type SearchStatusState as InsightSearchStatusState,
 } from '@coveo/headless/insight';
 import {Component, h, State, Element} from '@stencil/core';
 import FilterIcon from '../../../images/filter.svg';
@@ -13,7 +13,7 @@ import {
   BindStateToController,
 } from '../../../utils/initialization-utils';
 import {IconButton} from '../../common/iconButton';
-import {InsightBindings} from '../atomic-insight-interface/atomic-insight-interface';
+import type {InsightBindings} from '../atomic-insight-interface/atomic-insight-interface';
 
 /**
  * @internal

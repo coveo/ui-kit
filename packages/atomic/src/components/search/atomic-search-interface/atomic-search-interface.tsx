@@ -1,13 +1,13 @@
 import {markParentAsReady} from '@/src/utils/init-queue';
 import {
-  LogLevel,
-  Unsubscribe,
+  type LogLevel,
+  type Unsubscribe,
   buildUrlManager,
-  UrlManager,
+  type UrlManager,
   buildSearchEngine,
-  SearchEngine,
-  SearchEngineConfiguration,
-  SearchStatus,
+  type SearchEngine,
+  type SearchEngineConfiguration,
+  type SearchStatus,
   buildSearchStatus,
   loadSearchConfigurationActions,
   loadQueryActions,
@@ -25,16 +25,16 @@ import {
   State,
   setNonce,
 } from '@stencil/core';
-import i18next, {i18n} from 'i18next';
-import {InitializeEvent} from '../../../utils/initialization-utils';
+import i18next, {type i18n} from 'i18next';
+import type {InitializeEvent} from '../../../utils/initialization-utils';
 import {
   SafeStorage,
-  StandaloneSearchBoxData,
+  type StandaloneSearchBoxData,
   StorageItems,
 } from '../../../utils/local-storage-utils';
 import {ArrayProp} from '../../../utils/props-utils';
 import {
-  StencilBaseAtomicInterface,
+  type StencilBaseAtomicInterface,
   CommonAtomicInterfaceHelper,
   mismatchedInterfaceAndEnginePropError,
 } from '../../common/interface/interface-common-stencil';
@@ -45,7 +45,7 @@ import {
 } from '../atomic-layout/search-layout';
 import {getAnalyticsConfig} from './analytics-config';
 import type {Bindings as _Bindings} from './interfaces';
-import {createSearchStore, SearchStore} from './store';
+import {createSearchStore, type SearchStore} from './store';
 
 const FirstSearchExecutedFlag = 'firstSearchExecuted';
 export type InitializationOptions = SearchEngineConfiguration;

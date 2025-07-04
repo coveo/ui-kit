@@ -9,8 +9,8 @@ import {buildRecentQueriesList} from '@coveo/headless/commerce';
 import {page} from '@vitest/browser/context';
 import {html} from 'lit';
 import {ifDefined} from 'lit/directives/if-defined.js';
-import {describe, vi, expect, it, MockInstance, beforeEach} from 'vitest';
-import {
+import {describe, vi, expect, it, type MockInstance, beforeEach} from 'vitest';
+import type {
   SearchBoxSuggestionElement,
   SearchBoxSuggestions,
 } from '../../common/suggestions/suggestions-common';

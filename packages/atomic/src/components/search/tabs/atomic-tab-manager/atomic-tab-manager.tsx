@@ -1,8 +1,8 @@
 import {
-  TabManager,
-  TabManagerState,
+  type TabManager,
+  type TabManagerState,
   buildTabManager,
-  Tab,
+  type Tab,
   buildTab,
 } from '@coveo/headless';
 import {Component, h, Element, State, Prop, Host} from '@stencil/core';
@@ -10,7 +10,7 @@ import {
   BindStateToController,
   InitializeBindings,
 } from '../../../../utils/initialization-utils';
-import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
+import type {Bindings} from '../../atomic-search-interface/atomic-search-interface';
 
 /**
  * The `atomic-tab-manager` component manages a collection of tabs,

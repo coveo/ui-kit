@@ -9,15 +9,15 @@ import {randomID} from '@/src/utils/utils';
 import {
   buildSmartSnippet,
   buildTabManager,
-  InlineLink,
-  SmartSnippet,
-  SmartSnippetState,
-  TabManager,
-  TabManagerState,
+  type InlineLink,
+  type SmartSnippet,
+  type SmartSnippetState,
+  type TabManager,
+  type TabManagerState,
 } from '@coveo/headless';
 import {Component, Prop, State, Element, Listen, h} from '@stencil/core';
 import {
-  InitializableComponent,
+  type InitializableComponent,
   InitializeBindings,
   BindStateToController,
 } from '../../../../utils/initialization-utils';
@@ -25,7 +25,7 @@ import {ArrayProp} from '../../../../utils/props-utils';
 import {shouldDisplayOnCurrentTab} from '../../../../utils/tab-utils';
 import {getAttributesFromLinkSlot} from '../../../common/item-link/attributes-slot';
 import {Hidden} from '../../../common/stencil-hidden';
-import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
+import type {Bindings} from '../../atomic-search-interface/atomic-search-interface';
 
 /**
  * The `atomic-smart-snippet` component displays the excerpt of a document that would be most likely to answer a particular query.

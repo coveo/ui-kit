@@ -1,15 +1,15 @@
 import {
   buildPager as buildInsightPager,
   buildSearchStatus as buildInsightSearchStatus,
-  Pager as InsightPager,
-  PagerState as InsightPagerState,
-  SearchStatus as InsightSearchStatus,
-  SearchStatusState as InsightSearchStatusState,
+  type Pager as InsightPager,
+  type PagerState as InsightPagerState,
+  type SearchStatus as InsightSearchStatus,
+  type SearchStatusState as InsightSearchStatusState,
 } from '@coveo/headless/insight';
 import {
   Component,
   Event,
-  EventEmitter,
+  type EventEmitter,
   h,
   Host,
   Prop,
@@ -19,7 +19,7 @@ import ArrowLeftIcon from '../../../images/arrow-left-rounded.svg';
 import ArrowRightIcon from '../../../images/arrow-right-rounded.svg';
 import {
   BindStateToController,
-  InitializableComponent,
+  type InitializableComponent,
   InitializeBindings,
 } from '../../../utils/initialization-utils';
 import {randomID} from '../../../utils/utils';
@@ -30,7 +30,7 @@ import {
   PagerPreviousButton,
 } from '../../common/pager/stencil-pager-buttons';
 import {PagerNavigation} from '../../common/pager/stencil-pager-navigation';
-import {InsightBindings} from '../atomic-insight-interface/atomic-insight-interface';
+import type {InsightBindings} from '../atomic-insight-interface/atomic-insight-interface';
 
 /**
  * @internal

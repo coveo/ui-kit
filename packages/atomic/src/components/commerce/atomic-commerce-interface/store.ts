@@ -1,13 +1,13 @@
 import {
-  CommerceEngine,
+  type CommerceEngine,
   Selectors,
-  ChildProduct,
+  type ChildProduct,
 } from '@coveo/headless/commerce';
 import {DEFAULT_MOBILE_BREAKPOINT} from '../../../utils/replace-breakpoint';
 import {
-  BaseStore,
+  type BaseStore,
   createBaseStore,
-  ResultListInfo,
+  type ResultListInfo,
   setLoadingFlag,
   unsetLoadingFlag,
 } from '../../common/interface/store';

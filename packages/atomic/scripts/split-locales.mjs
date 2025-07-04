@@ -1,5 +1,5 @@
 import fs from 'node:fs';
-import {promisify} from 'util';
+import {promisify} from 'node:util';
 
 const mkdir = promisify(fs.mkdir);
 const rm = promisify(fs.rm);

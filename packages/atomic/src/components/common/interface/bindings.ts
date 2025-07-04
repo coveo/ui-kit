@@ -1,13 +1,13 @@
 import type {SearchEngine} from '@coveo/headless';
-import {CommerceEngine} from '@coveo/headless/commerce';
-import {InsightEngine} from '@coveo/headless/insight';
+import type {CommerceEngine} from '@coveo/headless/commerce';
+import type {InsightEngine} from '@coveo/headless/insight';
 import type {RecommendationEngine} from '@coveo/headless/recommendation';
-import {i18n} from 'i18next';
-import {CommerceStore} from '../../commerce/atomic-commerce-interface/store';
-import {CommerceRecommendationStore} from '../../commerce/atomic-commerce-recommendation-interface/store';
-import {InsightStore} from '../../insight/atomic-insight-interface/store';
-import {RecsStore} from '../../recommendations/atomic-recs-interface/store';
-import {SearchStore} from '../../search/atomic-search-interface/store';
+import type {i18n} from 'i18next';
+import type {CommerceStore} from '../../commerce/atomic-commerce-interface/store';
+import type {CommerceRecommendationStore} from '../../commerce/atomic-commerce-recommendation-interface/store';
+import type {InsightStore} from '../../insight/atomic-insight-interface/store';
+import type {RecsStore} from '../../recommendations/atomic-recs-interface/store';
+import type {SearchStore} from '../../search/atomic-search-interface/store';
 
 /**
  * Bindings passed from an interface to its children components.

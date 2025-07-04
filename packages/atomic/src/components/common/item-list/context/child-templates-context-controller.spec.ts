@@ -1,4 +1,4 @@
-import {ItemTemplateProvider} from '@/src/components/common/item-list/item-template-provider';
+import type {ItemTemplateProvider} from '@/src/components/common/item-list/item-template-provider';
 import {LitElement} from 'lit';
 import {customElement, state} from 'lit/decorators.js';
 import {describe, it, expect, beforeEach, vi} from 'vitest';

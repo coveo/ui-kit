@@ -1,12 +1,12 @@
 import {
   buildQuerySummary,
-  QuerySummary,
-  QuerySummaryState,
+  type QuerySummary,
+  type QuerySummaryState,
 } from '@coveo/headless/insight';
 import {Component, State, h} from '@stencil/core';
 import {
   BindStateToController,
-  InitializableComponent,
+  type InitializableComponent,
   InitializeBindings,
 } from '../../../utils/initialization-utils';
 import {LocalizedString} from '../../../utils/jsx-utils';
@@ -14,7 +14,7 @@ import {AriaLiveRegion} from '../../../utils/stencil-accessibility-utils';
 import {QuerySummaryContainer} from '../../common/query-summary/stencil-container';
 import {QuerySummaryGuard} from '../../common/query-summary/stencil-guard';
 import {getQuerySummaryI18nParameters} from '../../common/query-summary/stencil-utils';
-import {InsightBindings} from '../atomic-insight-interface/atomic-insight-interface';
+import type {InsightBindings} from '../atomic-insight-interface/atomic-insight-interface';
 
 /**
  * @internal

@@ -1,5 +1,5 @@
-import {FunctionalComponentWithChildren} from '@/src/utils/functional-component-utils';
-import {i18n} from 'i18next';
+import type {FunctionalComponentWithChildren} from '@/src/utils/functional-component-utils';
+import type {i18n} from 'i18next';
 import {html} from 'lit';
 import {when} from 'lit/directives/when.js';
 import {renderFieldsetGroup} from '../../fieldset-group';

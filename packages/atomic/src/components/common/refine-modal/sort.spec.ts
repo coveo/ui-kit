@@ -1,7 +1,7 @@
 import {renderFunctionFixture} from '@/vitest-utils/testing-helpers/fixture';
 import {createTestI18n} from '@/vitest-utils/testing-helpers/i18n-utils';
 import {userEvent} from '@storybook/test';
-import {i18n} from 'i18next';
+import type {i18n} from 'i18next';
 import {html} from 'lit';
 import {describe, beforeAll, it, expect, vi} from 'vitest';
 import {renderRefineModalSortSection} from './sort';

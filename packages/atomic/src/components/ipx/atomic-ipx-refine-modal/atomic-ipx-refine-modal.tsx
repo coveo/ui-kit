@@ -1,22 +1,22 @@
 import {
-  BreadcrumbManager,
-  BreadcrumbManagerState,
+  type BreadcrumbManager,
+  type BreadcrumbManagerState,
   buildBreadcrumbManager,
   buildQuerySummary,
-  QuerySummary,
-  QuerySummaryState,
+  type QuerySummary,
+  type QuerySummaryState,
 } from '@coveo/headless';
 import {Component, h, State, Prop, Element, Watch, Host} from '@stencil/core';
 import {
   BindStateToController,
-  InitializableComponent,
+  type InitializableComponent,
   InitializeBindings,
 } from '../../../utils/initialization-utils';
 import {getClonedFacetElements} from '../../common/refine-modal/cloned-facet-elements';
 import {RefineModal} from '../../common/refine-modal/stencil-modal';
 import {Button} from '../../common/stencil-button';
 import {Hidden} from '../../common/stencil-hidden';
-import {Bindings} from '../../search/atomic-search-interface/atomic-search-interface';
+import type {Bindings} from '../../search/atomic-search-interface/atomic-search-interface';
 
 /**
  * @internal

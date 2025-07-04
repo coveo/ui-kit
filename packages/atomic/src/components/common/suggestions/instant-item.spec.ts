@@ -1,6 +1,6 @@
 import {encodeForDomAttribute} from '@/src/utils/string-utils';
 import {createTestI18n} from '@/vitest-utils/testing-helpers/i18n-utils';
-import {i18n as I18n} from 'i18next';
+import type {i18n as I18n} from 'i18next';
 import {describe, beforeAll, it, expect, vi} from 'vitest';
 import {
   getPartialInstantItemElement,

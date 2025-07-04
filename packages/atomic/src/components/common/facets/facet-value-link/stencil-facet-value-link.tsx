@@ -1,6 +1,6 @@
-import {FunctionalComponent, h, VNode} from '@stencil/core';
+import {type FunctionalComponent, h, type VNode} from '@stencil/core';
 import {Button} from '../../stencil-button';
-import {FacetValueProps} from '../stencil-facet-common';
+import type {FacetValueProps} from '../stencil-facet-common';
 
 export interface FacetValueLinkProps extends FacetValueProps {
   subList?: VNode | VNode[];

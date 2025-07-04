@@ -6,7 +6,7 @@ import {
 } from '../../common/interface/store';
 import {
   createCommerceRecommendationStore,
-  CommerceRecommendationStore,
+  type CommerceRecommendationStore,
 } from './store';
 
 vi.mock('../../common/interface/store', {spy: true});

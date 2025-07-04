@@ -1,14 +1,18 @@
-import {HighlightUtils, Result, ResultTemplatesHelpers} from '@coveo/headless';
+import {
+  HighlightUtils,
+  type Result,
+  ResultTemplatesHelpers,
+} from '@coveo/headless';
 import {Component, Prop, h, Element, State} from '@stencil/core';
 import {getFieldValueCaption} from '../../../../utils/field-utils';
 import {
-  InitializableComponent,
+  type InitializableComponent,
   InitializeBindings,
 } from '../../../../utils/initialization-utils';
 import {getStringValueFromResultOrNull} from '../../../../utils/result-utils';
 import {ItemTextFallback} from '../../../common/item-text/stencil-item-text-fallback';
 import {ItemTextHighlighted} from '../../../common/item-text/stencil-item-text-highlighted';
-import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
+import type {Bindings} from '../../atomic-search-interface/atomic-search-interface';
 import {ResultContext} from '../result-template-decorators';
 
 /**

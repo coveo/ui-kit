@@ -1,5 +1,5 @@
-import {FunctionalComponentWithChildren} from '@/src/utils/functional-component-utils';
-import {i18n} from 'i18next';
+import type {FunctionalComponentWithChildren} from '@/src/utils/functional-component-utils';
+import type {i18n} from 'i18next';
 import {html} from 'lit';
 import ArrowBottomIcon from '../../../images/arrow-bottom-rounded.svg';
 import '../atomic-icon/atomic-icon';

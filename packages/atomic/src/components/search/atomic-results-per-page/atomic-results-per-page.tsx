@@ -1,15 +1,22 @@
 import {
-  ResultsPerPage,
+  type ResultsPerPage,
   buildResultsPerPage,
-  ResultsPerPageState,
+  type ResultsPerPageState,
   buildSearchStatus,
-  SearchStatus,
-  SearchStatusState,
+  type SearchStatus,
+  type SearchStatusState,
 } from '@coveo/headless';
-import {Component, Event, EventEmitter, h, Prop, State} from '@stencil/core';
+import {
+  Component,
+  Event,
+  type EventEmitter,
+  h,
+  Prop,
+  State,
+} from '@stencil/core';
 import {
   BindStateToController,
-  InitializableComponent,
+  type InitializableComponent,
   InitializeBindings,
 } from '../../../utils/initialization-utils';
 import {randomID} from '../../../utils/utils';
@@ -26,7 +33,7 @@ import {
 } from '../../common/items-per-page/validate';
 import {PagerGuard} from '../../common/pager/stencil-pager-guard';
 import {FieldsetGroup} from '../../common/stencil-fieldset-group';
-import {Bindings} from '../atomic-search-interface/atomic-search-interface';
+import type {Bindings} from '../atomic-search-interface/atomic-search-interface';
 
 /**
  * The `atomic-results-per-page` component determines how many results to display per page.

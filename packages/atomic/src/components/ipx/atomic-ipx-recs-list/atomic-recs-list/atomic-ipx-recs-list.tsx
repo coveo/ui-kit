@@ -1,14 +1,14 @@
 import {NumberValue} from '@coveo/bueno';
 import {
-  IPXActionsHistoryActionCreators,
+  type IPXActionsHistoryActionCreators,
   loadIPXActionsHistoryActions,
 } from '@coveo/headless';
 import {
   buildRecommendationList,
-  RecommendationList,
-  RecommendationListState,
+  type RecommendationList,
+  type RecommendationListState,
   loadConfigurationActions,
-  Result as RecsResult,
+  type Result as RecsResult,
   buildInteractiveResult as buildRecsInteractiveResult,
 } from '@coveo/headless/recommendation';
 import {
@@ -22,7 +22,7 @@ import {
   Watch,
 } from '@stencil/core';
 import {
-  InitializableComponent,
+  type InitializableComponent,
   InitializeBindings,
   BindStateToController,
 } from '../../../../utils/initialization-utils';
@@ -36,17 +36,17 @@ import {DisplayGrid} from '../../../common/item-list/stencil-display-grid';
 import {DisplayWrapper} from '../../../common/item-list/stencil-display-wrapper';
 import {
   ItemListCommon,
-  ItemRenderingFunction,
+  type ItemRenderingFunction,
 } from '../../../common/item-list/stencil-item-list-common';
 import {
   getItemListDisplayClasses,
-  ItemDisplayBasicLayout,
-  ItemDisplayDensity,
-  ItemDisplayImageSize,
+  type ItemDisplayBasicLayout,
+  type ItemDisplayDensity,
+  type ItemDisplayImageSize,
 } from '../../../common/layout/display-options';
 import {Carousel} from '../../../common/stencil-carousel';
 import {Heading} from '../../../common/stencil-heading';
-import {RecsBindings} from '../../../recommendations/atomic-recs-interface/atomic-recs-interface';
+import type {RecsBindings} from '../../../recommendations/atomic-recs-interface/atomic-recs-interface';
 
 /**
  * The `atomic-ipx-recs-list` component displays recommendations by applying one or more result templates.

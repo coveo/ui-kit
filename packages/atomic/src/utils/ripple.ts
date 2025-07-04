@@ -24,7 +24,7 @@ function setPositionRelativeIfStatic(element: Element) {
 export function createRipple(event: MouseEvent, options: RippleOptions) {
   const button = options.parent ?? (event.currentTarget as Element);
   const existingRipple = button.getElementsByClassName(RIPPLE)[0];
-  existingRipple && existingRipple.remove();
+  existingRipple?.remove();
 
   button.classList.add('ripple-parent');
   setPositionRelativeIfStatic(button);
@@ -52,7 +52,7 @@ async function cleanupAnimationOnFinish(
   animationDuration: number
 ) {
   listenOnce(ripple, 'animationend', () => {
-    ripple && ripple.remove();
+    ripple?.remove();
   });
   // Backup in case the button gets hidden or unmounted and the ripple hasn't been cleaned up.
   setTimeout(

@@ -1,9 +1,9 @@
-import {Product} from '@coveo/headless/commerce';
+import type {Product} from '@coveo/headless/commerce';
 import {
   InteractiveItemContext,
-  InteractiveItemContextEvent,
+  type InteractiveItemContextEvent,
   ItemContext,
-  ItemContextEvent,
+  type ItemContextEvent,
   itemContext,
 } from '../../common/item-list/stencil-item-decorators';
 

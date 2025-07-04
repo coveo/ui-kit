@@ -9,7 +9,7 @@ import {buildFakeStandaloneSearchBox} from '@/vitest-utils/testing-helpers/fixtu
 import {
   buildSearchBox,
   buildStandaloneSearchBox,
-  CommerceEngine,
+  type CommerceEngine,
   loadQuerySetActions,
 } from '@coveo/headless/commerce';
 import {userEvent} from '@vitest/browser/context';

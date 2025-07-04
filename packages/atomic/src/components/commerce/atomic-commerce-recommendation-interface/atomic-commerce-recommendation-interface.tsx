@@ -1,8 +1,8 @@
 import {markParentAsReady} from '@/src/utils/init-queue.js';
 import {
-  CommerceEngine,
-  CommerceEngineConfiguration,
-  Context,
+  type CommerceEngine,
+  type CommerceEngineConfiguration,
+  type Context,
   buildContext,
 } from '@coveo/headless/commerce';
 import {
@@ -16,19 +16,19 @@ import {
   State,
   setNonce,
 } from '@stencil/core';
-import i18next, {i18n} from 'i18next';
-import {InitializeEvent} from '../../../utils/initialization-utils';
-import {
+import i18next, {type i18n} from 'i18next';
+import type {InitializeEvent} from '../../../utils/initialization-utils';
+import type {
   AdoptedStylesBindings,
   CommonBindings,
 } from '../../common/interface/bindings';
 import {
-  StencilBaseAtomicInterface,
+  type StencilBaseAtomicInterface,
   CommonAtomicInterfaceHelper,
 } from '../../common/interface/interface-common-stencil';
-import {AtomicCommerceInterface} from '../atomic-commerce-interface/atomic-commerce-interface';
+import type {AtomicCommerceInterface} from '../atomic-commerce-interface/atomic-commerce-interface';
 import {
-  CommerceRecommendationStore,
+  type CommerceRecommendationStore,
   createCommerceRecommendationStore,
 } from './store';
 

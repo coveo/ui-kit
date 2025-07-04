@@ -1,25 +1,25 @@
-import {
+import type {
   InteractiveResult as RecsInteractiveResult,
   Result as RecsResult,
 } from '@coveo/headless/recommendation';
 import {Component, h, Prop, Element, Listen, Host} from '@stencil/core';
 import {parentNodeToString} from '../../../utils/dom-utils';
-import {
+import type {
   InteractiveItemContextEvent,
   ItemContextEvent,
   DisplayConfig,
 } from '../../common/item-list/stencil-item-decorators';
 import {
-  ItemRenderingFunction,
+  type ItemRenderingFunction,
   resultComponentClass,
 } from '../../common/item-list/stencil-item-list-common';
 import {
   ItemLayout,
-  ItemDisplayDensity,
-  ItemDisplayImageSize,
-  ItemDisplayLayout,
+  type ItemDisplayDensity,
+  type ItemDisplayImageSize,
+  type ItemDisplayLayout,
 } from '../../common/layout/display-options';
-import {RecsStore} from '../atomic-recs-interface/store';
+import type {RecsStore} from '../atomic-recs-interface/store';
 
 /**
  * The `atomic-recs-result` component is used internally by the `atomic-recs-list` component.

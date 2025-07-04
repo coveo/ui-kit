@@ -1,17 +1,17 @@
 import {
-  ResultList as InsightResultList,
-  ResultListState as InsightResultListState,
+  type ResultList as InsightResultList,
+  type ResultListState as InsightResultListState,
   buildResultList as buildInsightResultList,
-  Result as InsightResult,
+  type Result as InsightResult,
   buildInteractiveResult as buildInsightInteractiveResult,
   buildResultsPerPage as buildInsightResultsPerPage,
-  ResultsPerPage as InsightResultsPerPage,
-  ResultsPerPageState as InsightResultsPerPageState,
+  type ResultsPerPage as InsightResultsPerPage,
+  type ResultsPerPageState as InsightResultsPerPageState,
 } from '@coveo/headless/insight';
 import {Component, h, Element, State, Prop, Method} from '@stencil/core';
 import {
   BindStateToController,
-  InitializableComponent,
+  type InitializableComponent,
   InitializeBindings,
 } from '../../../../utils/initialization-utils';
 import {FocusTargetController} from '../../../../utils/stencil-accessibility-utils';
@@ -24,15 +24,15 @@ import {ItemTemplateProvider} from '../../../common/item-list/item-template-prov
 import {DisplayWrapper} from '../../../common/item-list/stencil-display-wrapper';
 import {
   ItemListCommon,
-  ItemRenderingFunction,
+  type ItemRenderingFunction,
 } from '../../../common/item-list/stencil-item-list-common';
 import {
   getItemListDisplayClasses,
-  ItemDisplayDensity,
-  ItemDisplayImageSize,
-  ItemDisplayLayout,
+  type ItemDisplayDensity,
+  type ItemDisplayImageSize,
+  type ItemDisplayLayout,
 } from '../../../common/layout/display-options';
-import {InsightBindings} from '../../atomic-insight-interface/atomic-insight-interface';
+import type {InsightBindings} from '../../atomic-insight-interface/atomic-insight-interface';
 
 /**
  * @internal

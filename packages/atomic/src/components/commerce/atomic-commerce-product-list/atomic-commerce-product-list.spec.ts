@@ -7,14 +7,14 @@ import {genericSubscribe} from '@/vitest-utils/testing-helpers/fixtures/headless
 import {
   buildProductListing,
   buildSearch,
-  InteractiveProduct,
-  InteractiveProductProps,
-  Product,
+  type InteractiveProduct,
+  type InteractiveProductProps,
+  type Product,
 } from '@coveo/headless/commerce';
 import {page} from '@vitest/browser/context';
 import {html} from 'lit';
-import {beforeEach, describe, expect, it, MockInstance, vi} from 'vitest';
-import {
+import {beforeEach, describe, expect, it, type MockInstance, vi} from 'vitest';
+import type {
   ItemDisplayDensity,
   ItemDisplayImageSize,
   ItemDisplayLayout,

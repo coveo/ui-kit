@@ -1,4 +1,4 @@
-import {NumericFacetValue, SearchStatusState} from '@coveo/headless';
+import type {NumericFacetValue, SearchStatusState} from '@coveo/headless';
 import {describe, it, expect} from 'vitest';
 import {
   shouldDisplayInputForFacetRange,

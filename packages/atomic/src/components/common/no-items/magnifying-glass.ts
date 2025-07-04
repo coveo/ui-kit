@@ -1,4 +1,4 @@
-import {FunctionalComponent} from '@/src/utils/functional-component-utils';
+import type {FunctionalComponent} from '@/src/utils/functional-component-utils';
 import {html} from 'lit';
 import MagnifyingGlassIcon from '../../../images/magnifying-glass.svg';
 

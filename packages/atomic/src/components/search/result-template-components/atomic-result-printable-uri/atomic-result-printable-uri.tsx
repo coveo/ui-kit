@@ -1,17 +1,17 @@
 import {Schema, NumberValue} from '@coveo/bueno';
 import {
   buildInteractiveResult,
-  InteractiveResult,
-  Result,
+  type InteractiveResult,
+  type Result,
 } from '@coveo/headless';
-import {Component, Element, h, Prop, State, VNode} from '@stencil/core';
+import {Component, Element, h, Prop, State, type VNode} from '@stencil/core';
 import Arrow from '../../../../images/arrow-right.svg';
 import {InitializeBindings} from '../../../../utils/initialization-utils';
 import {FocusTargetController} from '../../../../utils/stencil-accessibility-utils';
 import {parseXML} from '../../../../utils/utils';
 import {getAttributesFromLinkSlot} from '../../../common/item-link/attributes-slot';
 import {LinkWithItemAnalytics} from '../../../common/item-link/item-link';
-import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
+import type {Bindings} from '../../atomic-search-interface/atomic-search-interface';
 import {ResultContext} from '../result-template-decorators';
 
 /**
@@ -78,6 +78,7 @@ export class AtomicResultPrintableUri {
     return (
       <li>
         <button
+          type="button"
           aria-label={this.bindings.i18n.t('collapsed-uri-parts')}
           onClick={(e) => {
             e.stopPropagation();
@@ -113,6 +114,7 @@ export class AtomicResultPrintableUri {
       <atomic-icon
         class="result-printable-uri-separator"
         icon={Arrow}
+        // biome-ignore lint/a11y/useAriaPropsForRole: to reconsider after migration
         role="separator"
       ></atomic-icon>
     );

@@ -1,23 +1,24 @@
 import theme from '@/src/utils/coveo.tw.css';
 import utilities from '@/src/utils/tailwind-utilities/utilities.tw.css';
 import styles from '@/src/utils/tailwind.global.tw.css';
-import {CSSResult, CSSResultGroup, unsafeCSS} from 'lit';
+import {CSSResult, type CSSResultGroup, unsafeCSS} from 'lit';
 
 export function withTailwindStyles<
   T extends {
     styles?: CSSResultGroup | CSSStyleSheet | undefined;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    // biome-ignore lint/suspicious/noExplicitAny: Acceptable for mixin constructor
     new (...args: any[]): {};
   },
->(constructor: T): T {
-  return class extends constructor {
+>(baseClass: T): T {
+  return class extends baseClass {
     static get styles(): CSSResultGroup {
       const baseStyles = [
         unsafeCSS(theme),
         unsafeCSS(styles),
         unsafeCSS(utilities),
       ];
-      const customStyles = super.styles;
+      baseClass;
+      const customStyles = baseClass.styles;
 
       if (customStyles instanceof CSSResult) {
         return [...baseStyles, customStyles];

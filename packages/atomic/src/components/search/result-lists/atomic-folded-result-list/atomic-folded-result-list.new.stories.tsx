@@ -2,6 +2,7 @@
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {renderComponent} from '@/storybook-utils/common/render-component';
 import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
+import type {SearchEngineConfiguration} from '@coveo/headless';
 import type {Meta, StoryObj as Story} from '@storybook/web-components';
 
 const SLOTS_DEFAULT = `
@@ -117,7 +118,9 @@ const SLOTS_DEFAULT = `
 </atomic-result-template>
 `;
 
-const preprocessRequest = (response: any) => {
+const preprocessRequest: SearchEngineConfiguration['preprocessRequest'] = (
+  response
+) => {
   const parsed = JSON.parse(response.body as string);
   parsed.aq = '@source==("iNaturalistTaxons")';
   parsed.fieldsToInclude = [...(parsed.fieldsToInclude || []), 'source'];
@@ -148,12 +151,13 @@ export const Default: Story = {
   },
 };
 
-const preprocessRequestNoChildrenResult = (response: any) => {
-  const parsed = JSON.parse(response.body as string);
-  parsed.aq = '@foldingcollection==("atlcontinentantarctica")';
-  response.body = JSON.stringify(parsed);
-  return response;
-};
+const preprocessRequestNoChildrenResult: SearchEngineConfiguration['preprocessRequest'] =
+  (response) => {
+    const parsed = JSON.parse(response.body as string);
+    parsed.aq = '@foldingcollection==("atlcontinentantarctica")';
+    response.body = JSON.stringify(parsed);
+    return response;
+  };
 
 const {play: noResultChildrenPlay} = wrapInSearchInterface({
   preprocessRequest: preprocessRequestNoChildrenResult,

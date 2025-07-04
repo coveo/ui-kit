@@ -1,13 +1,13 @@
 import {NumberValue, Schema} from '@coveo/bueno';
 import {
-  FacetManager,
+  type FacetManager,
   buildFacetManager,
-  FacetManagerState,
+  type FacetManagerState,
 } from '@coveo/headless';
 import {Component, h, Element, State, Prop} from '@stencil/core';
 import {
   BindStateToController,
-  InitializableComponent,
+  type InitializableComponent,
   InitializeBindings,
 } from '../../../utils/initialization-utils';
 import {
@@ -15,9 +15,9 @@ import {
   getAutomaticFacetGenerator,
   sortFacetVisibility,
   collapseFacetsAfter,
-  BaseFacetElement,
+  type BaseFacetElement,
 } from '../../common/facets/stencil-facet-common';
-import {Bindings} from '../atomic-search-interface/atomic-search-interface';
+import type {Bindings} from '../atomic-search-interface/atomic-search-interface';
 
 /**
  * The `atomic-facet-manager` helps reorder facets and their values to match the most recent search response with the most relevant results.

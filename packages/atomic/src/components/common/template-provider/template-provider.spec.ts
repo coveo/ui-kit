@@ -1,6 +1,9 @@
 import type {TemplatesManager} from '@coveo/headless';
 import {afterEach, beforeEach, describe, expect, it, vi} from 'vitest';
-import {TemplateProvider, TemplateProviderProps} from './template-provider';
+import {
+  TemplateProvider,
+  type TemplateProviderProps,
+} from './template-provider';
 
 describe('TemplateProvider', () => {
   beforeEach(() => {
@@ -281,17 +284,6 @@ describe('TemplateProvider', () => {
   });
 
   class TestTemplateProvider extends TemplateProvider<unknown> {
-    constructor(
-      props: TemplateProviderProps<unknown>,
-      buildManager: () => TemplatesManager<
-        unknown,
-        DocumentFragment,
-        DocumentFragment
-      >
-    ) {
-      super(props, buildManager);
-    }
-
     protected makeDefaultTemplate() {
       const content = document.createDocumentFragment();
       content.append(document.createTextNode('Default Template'));

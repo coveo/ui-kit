@@ -1,8 +1,8 @@
 import {
   buildInteractiveResult,
-  FoldedResult,
-  FoldedResultList,
-  FoldedResultListState,
+  type FoldedResult,
+  type FoldedResultList,
+  type FoldedResultListState,
 } from '@coveo/headless';
 import {
   Component,
@@ -15,7 +15,7 @@ import {
 } from '@stencil/core';
 import {buildCustomEvent} from '../../../../utils/event-utils';
 import {
-  InitializableComponent,
+  type InitializableComponent,
   InitializeBindings,
 } from '../../../../utils/initialization-utils';
 import {elementHasAncestorTag} from '../../../../utils/utils';
@@ -27,16 +27,16 @@ import {
 import {ItemTemplateProvider} from '../../../common/item-list/item-template-provider';
 import {
   ChildTemplatesContext,
-  ChildTemplatesContextEvent,
-  DisplayConfig,
+  type ChildTemplatesContextEvent,
+  type DisplayConfig,
   ItemDisplayConfigContext,
 } from '../../../common/item-list/stencil-item-decorators';
-import {ItemDisplayImageSize} from '../../../common/layout/display-options';
+import type {ItemDisplayImageSize} from '../../../common/layout/display-options';
 import {ChildrenWrapper} from '../../../common/result-children/children-wrapper';
 import {CollectionGuard} from '../../../common/result-children/collection-guard';
 import {ResultChildrenGuard} from '../../../common/result-children/guard';
 import {ShowHideButton} from '../../../common/result-children/show-hide-button';
-import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
+import type {Bindings} from '../../atomic-search-interface/atomic-search-interface';
 import {ResultContext} from '../../result-template-components/result-template-decorators';
 
 const childTemplateComponent = 'atomic-result-children-template';

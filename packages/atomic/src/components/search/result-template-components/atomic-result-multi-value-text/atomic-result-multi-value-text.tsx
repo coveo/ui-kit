@@ -1,14 +1,14 @@
 import {
-  BreadcrumbManager,
+  type BreadcrumbManager,
   buildBreadcrumbManager,
-  Result,
+  type Result,
   ResultTemplatesHelpers,
 } from '@coveo/headless';
-import {Component, Element, Prop, h, State, VNode} from '@stencil/core';
+import {Component, Element, Prop, h, State, type VNode} from '@stencil/core';
 import {getFieldValueCaption} from '../../../../utils/field-utils';
 import {InitializeBindings} from '../../../../utils/initialization-utils';
 import {titleToKebab} from '../../../../utils/utils';
-import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
+import type {Bindings} from '../../atomic-search-interface/atomic-search-interface';
 import {ResultContext} from '../result-template-decorators';
 
 /**
@@ -88,10 +88,8 @@ export class AtomicResultMultiValueText {
     return this.breadcrumbManager.state.facetBreadcrumbs
       .filter((facet) => facet.field === this.field)
       .reduce(
-        (values, facet) => [
-          ...values,
-          ...facet.values.map(({value}) => value.value),
-        ],
+        (values: string[], facet) =>
+          values.concat(facet.values.map(({value}) => value.value)),
         [] as string[]
       );
   }

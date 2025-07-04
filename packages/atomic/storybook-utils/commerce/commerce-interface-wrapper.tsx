@@ -1,10 +1,10 @@
-import {AtomicCommerceInterface} from '@/src/components/commerce/atomic-commerce-interface/atomic-commerce-interface';
+import type {AtomicCommerceInterface} from '@/src/components/commerce/atomic-commerce-interface/atomic-commerce-interface';
 import {
-  CommerceEngineConfiguration,
+  type CommerceEngineConfiguration,
   getSampleCommerceEngineConfiguration,
 } from '@coveo/headless/commerce';
 import {within} from '@storybook/test';
-import {Decorator, StoryContext} from '@storybook/web-components';
+import type {Decorator, StoryContext} from '@storybook/web-components';
 import {html} from 'lit';
 import type * as _ from '../../src/components.js';
 
