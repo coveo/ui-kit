@@ -111,6 +111,7 @@ export const facetSetReducer = createReducer(
         }
 
         const isSelected = existingValue.state === 'selected';
+        existingValue.previousState = existingValue.state;
         existingValue.state = isSelected ? 'idle' : 'selected';
         facetRequest.freezeCurrentValues = true;
       })
@@ -133,6 +134,7 @@ export const facetSetReducer = createReducer(
         }
 
         const isExcluded = existingValue.state === 'excluded';
+        existingValue.previousState = existingValue.state;
         existingValue.state = isExcluded ? 'idle' : 'excluded';
         facetRequest.freezeCurrentValues = true;
       })
