@@ -1,19 +1,19 @@
 import {
-  CategoryFacet,
+  type CategoryFacet,
   buildCategoryFacet,
-  CategoryFacetState,
-  CategoryFacetOptions,
-  CategoryFacetSortCriterion,
-  SearchStatus,
-  SearchStatusState,
+  type CategoryFacetState,
+  type CategoryFacetOptions,
+  type CategoryFacetSortCriterion,
+  type SearchStatus,
+  type SearchStatusState,
   buildSearchStatus,
-  CategoryFacetValue,
+  type CategoryFacetValue,
   buildFacetConditionsManager,
-  FacetConditionsManager,
-  FacetValueRequest,
-  CategoryFacetValueRequest,
-  TabManagerState,
-  TabManager,
+  type FacetConditionsManager,
+  type FacetValueRequest,
+  type CategoryFacetValueRequest,
+  type TabManagerState,
+  type TabManager,
   buildTabManager,
 } from '@coveo/headless';
 import {Component, h, State, Prop, Element, Fragment} from '@stencil/core';
@@ -23,7 +23,7 @@ import {
 } from '../../../../utils/field-utils';
 import {
   BindStateToController,
-  InitializableComponent,
+  type InitializableComponent,
   InitializeBindings,
 } from '../../../../utils/initialization-utils';
 import {ArrayProp, MapProp} from '../../../../utils/props-utils';
@@ -41,7 +41,7 @@ import {CategoryFacetSearchResultsContainer} from '../../../common/facets/catego
 import {CategoryFacetSearchValue} from '../../../common/facets/category-facet/search-value';
 import {CategoryFacetTreeValueContainer} from '../../../common/facets/category-facet/value-as-tree-container';
 import {parseDependsOn} from '../../../common/facets/depends-on';
-import {FacetInfo} from '../../../common/facets/facet-common-store';
+import type {FacetInfo} from '../../../common/facets/facet-common-store';
 import {FacetContainer} from '../../../common/facets/facet-container/stencil-facet-container';
 import {FacetGuard} from '../../../common/facets/facet-guard';
 import {FacetHeader} from '../../../common/facets/facet-header/stencil-facet-header';
@@ -56,7 +56,7 @@ import {FacetSearchMatches} from '../../../common/facets/facet-search/stencil-fa
 import {FacetShowMoreLess} from '../../../common/facets/facet-show-more-less/stencil-facet-show-more-less';
 import {FacetValuesGroup} from '../../../common/facets/facet-values-group/stencil-facet-values-group';
 import {initializePopover} from '../../../common/facets/popover/popover-type';
-import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
+import type {Bindings} from '../../atomic-search-interface/atomic-search-interface';
 
 /**
  * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (e.g., number of occurrences).

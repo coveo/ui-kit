@@ -1,19 +1,19 @@
-import {FoldedResult, InteractiveResult, Result} from '@coveo/headless';
+import type {FoldedResult, InteractiveResult, Result} from '@coveo/headless';
 import {Component, h, Prop, Element, Listen, Host} from '@stencil/core';
 import {parentNodeToString} from '../../../utils/dom-utils';
-import {DisplayConfig} from '../../common/item-list/stencil-item-decorators';
+import type {DisplayConfig} from '../../common/item-list/stencil-item-decorators';
 import {
-  ItemRenderingFunction,
+  type ItemRenderingFunction,
   resultComponentClass,
 } from '../../common/item-list/stencil-item-list-common';
 import {
   ItemLayout,
-  ItemDisplayDensity,
-  ItemDisplayImageSize,
-  ItemDisplayLayout,
+  type ItemDisplayDensity,
+  type ItemDisplayImageSize,
+  type ItemDisplayLayout,
 } from '../../common/layout/display-options';
-import {SearchStore} from '../atomic-search-interface/store';
-import {
+import type {SearchStore} from '../atomic-search-interface/store';
+import type {
   InteractiveResultContextEvent,
   ResultContextEvent,
 } from '../result-template-components/result-template-decorators';

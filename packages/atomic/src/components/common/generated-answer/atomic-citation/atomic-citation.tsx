@@ -1,8 +1,11 @@
-import {GeneratedAnswerCitation, InteractiveCitation} from '@coveo/headless';
+import type {
+  GeneratedAnswerCitation,
+  InteractiveCitation,
+} from '@coveo/headless';
 import {
   createPopper,
   preventOverflow,
-  Instance as PopperInstance,
+  type Instance as PopperInstance,
 } from '@popperjs/core';
 import {Component, h, State, Prop, Element, Watch} from '@stencil/core';
 import {LinkWithItemAnalytics} from '../../item-link/item-link';
@@ -51,13 +54,13 @@ export class AtomicCitation {
   @Watch('isOpen')
   sendHoverAnalytics() {
     if (this.isOpen) {
-      this.hoverStart = new Date().getTime();
+      this.hoverStart = Date.now();
       return;
     }
     if (!this.hoverStart) {
       return;
     }
-    const difference = new Date().getTime() - this.hoverStart;
+    const difference = Date.now() - this.hoverStart;
     if (difference > this.hoverAnalyticsTimeout) {
       this.sendHoverEndEvent(difference);
     }

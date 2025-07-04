@@ -1,6 +1,6 @@
 import {LitElement} from 'lit';
 import {customElement, property} from 'lit/decorators.js';
-import {Section} from './sections';
+import type {Section} from './sections';
 
 /**
  * The `atomic-layout-section` lets you identify various sections for the related `atomic-search-layout` or `atomic-commerce-layout` component.

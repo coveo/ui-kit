@@ -1,14 +1,19 @@
-import {buildTab, Tab, TabState, Unsubscribe} from '@coveo/headless';
+import {
+  buildTab,
+  type Tab,
+  type TabState,
+  type Unsubscribe,
+} from '@coveo/headless';
 import {Component, h, Prop, State, Element, Method} from '@stencil/core';
 import {
   BindStateToController,
-  InitializableComponent,
+  type InitializableComponent,
   InitializeBindings,
 } from '../../../utils/initialization-utils';
 import {createAppLoadedListener} from '../../common/interface/store';
 import {Button} from '../../common/stencil-button';
 import {dispatchTabLoaded} from '../../common/tabs/tab-common';
-import {Bindings} from '../../search/atomic-search-interface/atomic-search-interface';
+import type {Bindings} from '../../search/atomic-search-interface/atomic-search-interface';
 
 /**
  * @internal

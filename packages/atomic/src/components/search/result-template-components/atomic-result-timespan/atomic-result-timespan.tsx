@@ -1,11 +1,11 @@
 import {Schema, StringValue} from '@coveo/bueno';
-import {Result, ResultTemplatesHelpers} from '@coveo/headless';
+import {type Result, ResultTemplatesHelpers} from '@coveo/headless';
 import {Component, Prop, State} from '@stencil/core';
 import dayjs from 'dayjs';
-import {DurationUnitType} from 'dayjs/plugin/duration';
+import type {DurationUnitType} from 'dayjs/plugin/duration';
 import duration from 'dayjs/plugin/duration';
 import {InitializeBindings} from '../../../../utils/initialization-utils';
-import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
+import type {Bindings} from '../../atomic-search-interface/atomic-search-interface';
 import {ResultContext} from '../result-template-decorators';
 
 dayjs.extend(duration);
@@ -56,7 +56,7 @@ export class AtomicResultTimespan {
       this.error = new Error(`No value found for field ${this.field}`);
       return;
     }
-    if (isNaN(this.value)) {
+    if (Number.isNaN(this.value)) {
       this.error = new Error(
         `Value ${this.value} for field ${this.field} is not a number`
       );

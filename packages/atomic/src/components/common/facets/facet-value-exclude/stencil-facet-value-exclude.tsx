@@ -1,4 +1,4 @@
-import {FunctionalComponent, h} from '@stencil/core';
+import {type FunctionalComponent, h} from '@stencil/core';
 import Tick from '../../../../images/clear.svg';
 
 export interface ExcludeProps {
@@ -10,6 +10,7 @@ export const FacetValueExclude: FunctionalComponent<ExcludeProps> = (props) => {
   return (
     <button
       part="value-exclude-button"
+      type="button"
       aria-label={props.ariaLabel}
       class="value-exclude-button peer invisible absolute right-2 z-1 order-last ml-auto flex group-hover:visible"
       onClick={() => props.onClick?.()}

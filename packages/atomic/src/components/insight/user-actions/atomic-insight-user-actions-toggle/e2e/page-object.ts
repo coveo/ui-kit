@@ -1,5 +1,5 @@
 import {BasePageObject} from '@/playwright-utils/base-page-object';
-import {Page} from '@playwright/test';
+import type {Page} from '@playwright/test';
 
 export class UserActionsTogglePageObject extends BasePageObject<'atomic-insight-user-actions-toggle'> {
   constructor(page: Page) {

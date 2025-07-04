@@ -1,4 +1,4 @@
-import {Pagination, PaginationState} from '@coveo/headless/commerce';
+import type {Pagination, PaginationState} from '@coveo/headless/commerce';
 import {vi} from 'vitest';
 import {genericSubscribe} from '../common';
 

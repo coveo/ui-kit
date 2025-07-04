@@ -1,6 +1,6 @@
 import {
-  Result,
-  ResultTemplateCondition,
+  type Result,
+  type ResultTemplateCondition,
   ResultTemplatesHelpers,
 } from '@coveo/headless';
 import {Component, Prop, h, Element} from '@stencil/core';

@@ -1,4 +1,4 @@
-import {InlineLink} from '@coveo/headless';
+import type {InlineLink} from '@coveo/headless';
 import {
   h,
   Component,
@@ -7,12 +7,12 @@ import {
   Element,
   Watch,
   Event,
-  EventEmitter,
+  type EventEmitter,
 } from '@stencil/core';
 import ArrowDown from '../../../../images/arrow-down.svg';
 import {listenOnce} from '../../../../utils/event-utils';
 import {InitializeBindings} from '../../../../utils/initialization-utils';
-import {AnyBindings} from '../../interface/bindings';
+import type {AnyBindings} from '../../interface/bindings';
 
 /**
  * @internal
@@ -130,6 +130,7 @@ export class AtomicSmartSnippetExpandableAnswer {
       return;
     }
     return (
+      // biome-ignore lint/a11y/useButtonType: to reconsider after migration
       <button
         onClick={() =>
           this.isExpanded ? this.collapse.emit() : this.expand.emit()

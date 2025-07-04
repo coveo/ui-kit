@@ -5,7 +5,7 @@ import {
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {renderComponent} from '@/storybook-utils/common/render-component';
 import {
-  CommerceEngineConfiguration,
+  type CommerceEngineConfiguration,
   getSampleCommerceEngineConfiguration,
 } from '@coveo/headless/commerce';
 import type {Meta, StoryObj as Story} from '@storybook/web-components';
@@ -22,7 +22,7 @@ const productListingEngineConfiguration: Partial<CommerceEngineConfiguration> =
       currency: 'USD',
       language: 'en',
       view: {
-        url: context.view.url + '/browse/promotions/ui-kit-testing',
+        url: `${context.view.url}/browse/promotions/ui-kit-testing`,
       },
     },
     ...restOfConfiguration,

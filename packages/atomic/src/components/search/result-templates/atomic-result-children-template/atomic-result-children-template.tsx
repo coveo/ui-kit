@@ -1,4 +1,4 @@
-import {ResultTemplate, ResultTemplateCondition} from '@coveo/headless';
+import type {ResultTemplate, ResultTemplateCondition} from '@coveo/headless';
 import {Component, Element, Prop, State, Method} from '@stencil/core';
 import {MapProp} from '../../../../utils/props-utils';
 import {
@@ -50,8 +50,6 @@ export class AtomicResultChildrenTemplate {
   > = {};
 
   public resultTemplateCommon!: ResultTemplateCommon;
-
-  constructor() {}
 
   connectedCallback() {
     this.resultTemplateCommon = new ResultTemplateCommon({

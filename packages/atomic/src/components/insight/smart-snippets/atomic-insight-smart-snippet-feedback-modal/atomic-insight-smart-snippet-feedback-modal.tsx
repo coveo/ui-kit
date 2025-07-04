@@ -12,9 +12,9 @@ import {updateBreakpoints} from '@/src/utils/replace-breakpoint';
 import {randomID} from '@/src/utils/utils';
 import {
   buildSmartSnippet as buildInsightSmartSnippet,
-  SmartSnippet as InsightSmartSnippet,
-  SmartSnippetFeedback as InsightSmartSnippetFeedback,
-  SmartSnippetFeedback,
+  type SmartSnippet as InsightSmartSnippet,
+  type SmartSnippetFeedback as InsightSmartSnippetFeedback,
+  type SmartSnippetFeedback,
 } from '@coveo/headless/insight';
 import {
   Component,
@@ -23,14 +23,14 @@ import {
   Watch,
   Element,
   Event,
-  EventEmitter,
+  type EventEmitter,
   h,
 } from '@stencil/core';
 import {
-  InitializableComponent,
+  type InitializableComponent,
   InitializeBindings,
 } from '../../../../utils/initialization-utils';
-import {InsightBindings} from '../../atomic-insight-interface/atomic-insight-interface';
+import type {InsightBindings} from '../../atomic-insight-interface/atomic-insight-interface';
 
 /**
  * @internal

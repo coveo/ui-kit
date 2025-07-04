@@ -40,12 +40,12 @@ export class AtomicTabButton {
         role="listitem"
         class={`${this.activeTabClass}`}
         aria-current={this.active ? 'true' : 'false'}
-        aria-label={'tab for ' + this.label}
-        part={'button-container' + (this.active ? '-active' : '')}
+        aria-label={`tab for ${this.label}`}
+        part={`button-container${this.active ? '-active' : ''}`}
       >
         <Button
           class={`w-full truncate px-2 pb-1 text-xl sm:px-6 ${this.activeTabTextClass}`}
-          part={'tab-button' + (this.active ? '-active' : '')}
+          part={`tab-button${this.active ? '-active' : ''}`}
           onClick={this.select}
           style="text-transparent"
         >

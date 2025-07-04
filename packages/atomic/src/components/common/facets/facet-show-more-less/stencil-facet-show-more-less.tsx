@@ -1,5 +1,5 @@
-import {FunctionalComponent, h} from '@stencil/core';
-import {i18n} from 'i18next';
+import {type FunctionalComponent, h} from '@stencil/core';
+import type {i18n} from 'i18next';
 import MinusIcon from '../../../../images/minus.svg';
 import PlusIcon from '../../../../images/plus.svg';
 import {Button} from '../../stencil-button';

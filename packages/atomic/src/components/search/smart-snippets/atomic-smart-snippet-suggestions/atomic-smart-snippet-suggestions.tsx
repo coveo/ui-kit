@@ -11,20 +11,20 @@ import {Hidden} from '@/src/components/common/stencil-hidden';
 import {randomID} from '@/src/utils/utils';
 import {
   buildSmartSnippetQuestionsList,
-  Result,
-  SmartSnippetQuestionsList,
-  SmartSnippetQuestionsListState,
-  SmartSnippetRelatedQuestion,
+  type Result,
+  type SmartSnippetQuestionsList,
+  type SmartSnippetQuestionsListState,
+  type SmartSnippetRelatedQuestion,
 } from '@coveo/headless';
 import {Component, Prop, State, Element, h} from '@stencil/core';
 import ArrowDown from '../../../../images/arrow-down.svg';
 import ArrowRight from '../../../../images/arrow-right.svg';
 import {
-  InitializableComponent,
+  type InitializableComponent,
   InitializeBindings,
   BindStateToController,
 } from '../../../../utils/initialization-utils';
-import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
+import type {Bindings} from '../../atomic-search-interface/atomic-search-interface';
 
 /**
  * The `atomic-smart-snippet-suggestions-suggestions` component displays an accordion of questions related to the query with their corresponding answers.

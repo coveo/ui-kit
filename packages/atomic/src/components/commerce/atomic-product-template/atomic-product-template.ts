@@ -1,7 +1,7 @@
 import {errorGuard} from '@/src/decorators/error-guard';
-import {LitElementWithError} from '@/src/decorators/types';
+import type {LitElementWithError} from '@/src/decorators/types';
 import {mapProperty} from '@/src/utils/props-utils';
-import {
+import type {
   ProductTemplate,
   ProductTemplateCondition,
 } from '@coveo/headless/commerce';

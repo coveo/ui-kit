@@ -1,20 +1,20 @@
 import type {CoreEngine} from '@coveo/headless';
 import {
-  ComponentInterface,
+  type ComponentInterface,
   getElement,
   h,
   forceUpdate as forceUpdateComponent,
 } from '@stencil/core';
-import {TOptions} from 'i18next';
-import {AnyBindings} from '../components/common/interface/bindings';
+import type {TOptions} from 'i18next';
+import type {AnyBindings} from '../components/common/interface/bindings';
 import {Hidden} from '../components/common/stencil-hidden';
-import {Bindings} from '../components/search/atomic-search-interface/atomic-search-interface';
+import type {Bindings} from '../components/search/atomic-search-interface/atomic-search-interface';
 import {closest} from './dom-utils';
 import {buildCustomEvent} from './event-utils';
 import {enqueueOrDispatchInitializationEvent} from './init-queue';
 import {
   MissingInterfaceParentError,
-  InitializeEventHandler,
+  type InitializeEventHandler,
   initializableElements,
   initializeEventName,
 } from './initialization-lit-stencil-common-utils';
@@ -159,7 +159,7 @@ export function InitializeBindings<SpecificBindings extends AnyBindings>({
         event as InitializeEvent,
         element
       );
-      return componentWillLoad && componentWillLoad.call(this);
+      return componentWillLoad?.call(this);
     };
 
     component.render = function () {
@@ -177,7 +177,7 @@ export function InitializeBindings<SpecificBindings extends AnyBindings>({
       }
 
       getElement(this).setAttribute(renderedAttribute, 'true');
-      return render && render.call(this);
+      return render?.call(this);
     };
 
     component.disconnectedCallback = function () {
@@ -185,7 +185,7 @@ export function InitializeBindings<SpecificBindings extends AnyBindings>({
       element.setAttribute(renderedAttribute, 'false');
       element.setAttribute(loadedAttribute, 'false');
       unsubscribeLanguage();
-      disconnectedCallback && disconnectedCallback.call(this);
+      disconnectedCallback?.call(this);
     };
 
     component.componentDidRender = function () {
@@ -194,14 +194,14 @@ export function InitializeBindings<SpecificBindings extends AnyBindings>({
         return;
       }
 
-      componentDidRender && componentDidRender.call(this);
+      componentDidRender?.call(this);
       if (element.getAttribute(loadedAttribute) === 'false') {
         element.setAttribute(loadedAttribute, 'true');
-        componentDidLoad && componentDidLoad.call(this);
+        componentDidLoad?.call(this);
       }
     };
 
-    component.componentDidLoad = function () {};
+    component.componentDidLoad = () => {};
   };
 }
 
@@ -235,7 +235,7 @@ export function BindStateToController(
     const {disconnectedCallback, initialize} = component;
 
     component.initialize = function () {
-      initialize && initialize.call(this);
+      initialize?.call(this);
 
       if (!initialize) {
         return console.error(
@@ -267,7 +267,7 @@ export function BindStateToController(
 
     component.disconnectedCallback = function () {
       !getElement(this).isConnected && this.unsubscribeController?.();
-      disconnectedCallback && disconnectedCallback.call(this);
+      disconnectedCallback?.call(this);
     };
   };
 }
@@ -283,10 +283,10 @@ export function DeferUntilRender() {
     let deferredExecutions: DeferredExecution[] = [];
 
     component.connectedCallback = function () {
-      this[methodName] = function (...args: unknown[]) {
+      this[methodName] = (...args: unknown[]) => {
         deferredExecutions.push({args});
       };
-      connectedCallback && connectedCallback.call(this);
+      connectedCallback?.call(this);
     };
 
     component.componentDidRender = function () {
@@ -294,7 +294,7 @@ export function DeferUntilRender() {
         originalMethod.call(this, ...args)
       );
       deferredExecutions = [];
-      componentDidRender && componentDidRender.call(this);
+      componentDidRender?.call(this);
     };
   };
 }

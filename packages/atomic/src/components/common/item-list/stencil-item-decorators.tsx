@@ -1,12 +1,12 @@
 import {closest} from '@/src/utils/dom-utils';
-import {ComponentInterface, getElement} from '@stencil/core';
+import {type ComponentInterface, getElement} from '@stencil/core';
 import {buildCustomEvent} from '../../../utils/event-utils';
-import {AnyItem} from '../interface/item';
-import {
+import type {AnyItem} from '../interface/item';
+import type {
   ItemDisplayDensity,
   ItemDisplayImageSize,
 } from '../layout/display-options';
-import {ItemTemplateProvider} from './item-template-provider';
+import type {ItemTemplateProvider} from './item-template-provider';
 
 export class MissingParentError extends Error {
   constructor(elementName: string, parentName: string) {
@@ -43,7 +43,7 @@ export function ItemContext(
         );
         return;
       }
-      return connectedCallback && connectedCallback.call(this);
+      return connectedCallback?.call(this);
     };
 
     component.componentWillRender = function () {
@@ -51,7 +51,7 @@ export function ItemContext(
         return;
       }
 
-      return componentWillRender && componentWillRender.call(this);
+      return componentWillRender?.call(this);
     };
 
     component.render = function () {
@@ -66,7 +66,7 @@ export function ItemContext(
         );
         return;
       }
-      return render && render.call(this);
+      return render?.call(this);
     };
   };
 }
@@ -86,7 +86,7 @@ export function InteractiveItemContext() {
         }
       );
       element.dispatchEvent(event);
-      return connectedCallback && connectedCallback.call(this);
+      return connectedCallback?.call(this);
     };
   };
 }
@@ -171,7 +171,7 @@ export function ChildTemplatesContext() {
         this[itemTemplateProviderProp] = null;
         return;
       }
-      return componentWillRender && componentWillRender.call(this);
+      return componentWillRender?.call(this);
     };
   };
 }
@@ -205,7 +205,7 @@ export function ItemDisplayConfigContext() {
       if (canceled) {
         return;
       }
-      return componentWillRender && componentWillRender.call(this);
+      return componentWillRender?.call(this);
     };
   };
 }

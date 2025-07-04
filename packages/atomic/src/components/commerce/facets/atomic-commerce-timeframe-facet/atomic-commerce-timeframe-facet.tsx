@@ -1,23 +1,31 @@
 import {
-  DateFacet,
-  DateFilterRange,
+  type DateFacet,
+  type DateFilterRange,
   deserializeRelativeDate,
-  DateFacetValue,
-  DateFacetState,
-  DateRangeRequest,
-  SearchSummaryState,
-  ProductListingSummaryState,
-  Summary,
+  type DateFacetValue,
+  type DateFacetState,
+  type DateRangeRequest,
+  type SearchSummaryState,
+  type ProductListingSummaryState,
+  type Summary,
 } from '@coveo/headless/commerce';
-import {Component, Element, h, Listen, Prop, State, VNode} from '@stencil/core';
+import {
+  Component,
+  Element,
+  h,
+  Listen,
+  Prop,
+  State,
+  type VNode,
+} from '@stencil/core';
 import {parseDate} from '../../../../utils/date-utils';
 import {
   BindStateToController,
-  InitializableComponent,
+  type InitializableComponent,
   InitializeBindings,
 } from '../../../../utils/initialization-utils';
 import {FocusTargetController} from '../../../../utils/stencil-accessibility-utils';
-import {FacetInfo} from '../../../common/facets/facet-common-store';
+import type {FacetInfo} from '../../../common/facets/facet-common-store';
 import {FacetContainer} from '../../../common/facets/facet-container/stencil-facet-container';
 import {FacetGuard} from '../../../common/facets/facet-guard';
 import {FacetHeader} from '../../../common/facets/facet-header/stencil-facet-header';
@@ -26,7 +34,7 @@ import {FacetValueLink} from '../../../common/facets/facet-value-link/stencil-fa
 import {FacetValuesGroup} from '../../../common/facets/facet-values-group/stencil-facet-values-group';
 import {initializePopover} from '../../../common/facets/popover/popover-type';
 import {shouldDisplayInputForFacetRange} from '../../../common/facets/stencil-facet-common';
-import {CommerceBindings as Bindings} from '../../atomic-commerce-interface/atomic-commerce-interface';
+import type {CommerceBindings as Bindings} from '../../atomic-commerce-interface/atomic-commerce-interface';
 
 /**
  * A facet is a list of values for a certain field occurring in the results.
@@ -86,7 +94,7 @@ export class AtomicCommerceTimeframeFacet
     return this.headerFocus;
   }
 
-  private unsubscribeFacetController?: () => void | undefined;
+  private unsubscribeFacetController?: () => undefined | undefined;
 
   public initialize() {
     if (!this.facet) {

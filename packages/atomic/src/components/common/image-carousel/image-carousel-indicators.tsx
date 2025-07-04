@@ -1,5 +1,5 @@
 /* eslint-disable @cspell/spellchecker */
-import {FunctionalComponent, h} from '@stencil/core';
+import {type FunctionalComponent, h} from '@stencil/core';
 
 interface CarouselIndicatorProps {
   numberOfImages: number;
@@ -10,8 +10,8 @@ interface CarouselIndicatorProps {
 
 const CarouselIndicator: FunctionalComponent<CarouselIndicatorProps> = ({
   numberOfImages,
-  currentImage: currentImage,
-  navigateToImage: navigateToImage,
+  currentImage,
+  navigateToImage,
   maxImagesBeforeAndAfter = 2,
 }) => {
   return (
@@ -42,6 +42,7 @@ const CarouselIndicator: FunctionalComponent<CarouselIndicatorProps> = ({
           index > 0;
 
         return (
+          // biome-ignore lint/a11y: to reconsider after migration
           <li
             part={`indicator ${isActive ? 'active-indicator' : ''}`}
             class={`hover:bg-primary-light cursor-pointer rounded-md shadow transition-all duration-200 ease-in-out ${

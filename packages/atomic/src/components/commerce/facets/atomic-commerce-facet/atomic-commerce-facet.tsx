@@ -1,4 +1,4 @@
-import {
+import type {
   ProductListingSummaryState,
   RegularFacet,
   RegularFacetState,
@@ -11,19 +11,19 @@ import {
   State,
   Prop,
   Element,
-  VNode,
+  type VNode,
   Fragment,
 } from '@stencil/core';
 import {
   BindStateToController,
-  InitializableComponent,
+  type InitializableComponent,
   InitializeBindings,
 } from '../../../../utils/initialization-utils';
 import {
   AriaLiveRegion,
   FocusTargetController,
 } from '../../../../utils/stencil-accessibility-utils';
-import {FacetInfo} from '../../../common/facets/facet-common-store';
+import type {FacetInfo} from '../../../common/facets/facet-common-store';
 import {FacetContainer} from '../../../common/facets/facet-container/stencil-facet-container';
 import {FacetGuard} from '../../../common/facets/facet-guard';
 import {FacetHeader} from '../../../common/facets/facet-header/stencil-facet-header';
@@ -38,12 +38,12 @@ import {FacetSearchMatches} from '../../../common/facets/facet-search/stencil-fa
 import {FacetSearchValue} from '../../../common/facets/facet-search/stencil-facet-search-value';
 import {FacetShowMoreLess} from '../../../common/facets/facet-show-more-less/stencil-facet-show-more-less';
 import {
-  FacetValueProps,
+  type FacetValueProps,
   FacetValue,
 } from '../../../common/facets/facet-value/stencil-facet-value';
 import {FacetValuesGroup} from '../../../common/facets/facet-values-group/stencil-facet-values-group';
 import {initializePopover} from '../../../common/facets/popover/popover-type';
-import {CommerceBindings as Bindings} from '../../atomic-commerce-interface/atomic-commerce-interface';
+import type {CommerceBindings as Bindings} from '../../atomic-commerce-interface/atomic-commerce-interface';
 
 /**
  * The `atomic-commerce-facet` component renders a commerce facet that the end user can interact with to filter products.
@@ -123,7 +123,7 @@ export class AtomicCommerceFacet implements InitializableComponent<Bindings> {
   private showLessFocus?: FocusTargetController;
   private showMoreFocus?: FocusTargetController;
   private headerFocus?: FocusTargetController;
-  private unsubscribeFacetController?: () => void | undefined;
+  private unsubscribeFacetController?: () => undefined | undefined;
 
   @AriaLiveRegion('facet-search')
   protected facetSearchAriaMessage!: string;

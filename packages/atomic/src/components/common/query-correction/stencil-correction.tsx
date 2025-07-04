@@ -1,5 +1,5 @@
-import {FunctionalComponent, h} from '@stencil/core';
-import {i18n} from 'i18next';
+import {type FunctionalComponent, h} from '@stencil/core';
+import type {i18n} from 'i18next';
 import {LocalizedString} from '../../../utils/jsx-utils';
 
 interface CorrectionProps {
@@ -20,6 +20,7 @@ export const Correction: FunctionalComponent<CorrectionProps> = ({
         params={{
           query: (
             <button
+              type="submit"
               class="text-primary hover:text-primary-light focus-visible:text-primary-light py-1 hover:underline focus-visible:underline"
               part="correction-btn"
               onClick={() => onClick()}

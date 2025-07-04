@@ -1,8 +1,8 @@
 // The Lit equivalent of this file is table-layout.ts
-import {FunctionalComponent, VNode, h} from '@stencil/core';
+import {type FunctionalComponent, type VNode, h} from '@stencil/core';
 import {tableElementTagName} from '../../search/atomic-table-result/table-element-utils.js';
-import {AnyItem} from '../interface/item.js';
-import {ItemRenderingFunction} from './stencil-item-list-common.js';
+import type {AnyItem} from '../interface/item.js';
+import type {ItemRenderingFunction} from './stencil-item-list-common.js';
 
 interface TableColumnsProps {
   templateContentForFirstItem: DocumentFragment;

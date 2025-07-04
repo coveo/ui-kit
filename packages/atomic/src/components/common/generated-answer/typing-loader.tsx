@@ -1,4 +1,4 @@
-import {FunctionalComponent, h} from '@stencil/core';
+import {type FunctionalComponent, h} from '@stencil/core';
 
 export const TypingLoader: FunctionalComponent = () => (
   <div class="typing-indicator" aria-hidden="true">

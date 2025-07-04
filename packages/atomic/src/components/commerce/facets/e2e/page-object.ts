@@ -7,10 +7,6 @@ export class AnyFacetPageObject<
     | 'atomic-commerce-facet'
     | 'atomic-commerce-numeric-facet',
 > extends BasePageObject<FacetType> {
-  constructor(page: Page, facetType: FacetType) {
-    super(page, facetType);
-  }
-
   get searchInput() {
     return this.page.getByPlaceholder('Search');
   }

@@ -4,7 +4,7 @@ import {html} from 'lit';
 import {expect, describe, it} from 'vitest';
 import {
   facetSearchInputGuard,
-  FacetSearchInputGuardProps,
+  type FacetSearchInputGuardProps,
 } from './facet-search-input-guard';
 
 function renderWithGuard(

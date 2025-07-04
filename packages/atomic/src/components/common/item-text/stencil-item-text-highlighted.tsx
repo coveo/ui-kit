@@ -1,7 +1,7 @@
-import {FunctionalComponent, h, Host} from '@stencil/core';
+import {type FunctionalComponent, h, Host} from '@stencil/core';
 import {
-  HighlightKeywords,
-  HighlightString,
+  type HighlightKeywords,
+  type HighlightString,
   renderWithHighlights,
 } from './render-highlights';
 

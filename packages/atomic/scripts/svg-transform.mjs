@@ -1,5 +1,5 @@
-import {readFileSync} from 'fs';
-import {basename, dirname, join, resolve} from 'path';
+import {readFileSync} from 'node:fs';
+import {basename, dirname, join, resolve} from 'node:path';
 import {
   NodeFlags,
   isImportDeclaration,

@@ -1,4 +1,4 @@
-import escape from 'escape-html';
+import escapeHtml from 'escape-html';
 import {regexEncode} from '../../../../utils/string-utils';
 
 interface FacetSearchState {
@@ -46,14 +46,14 @@ export function shouldDisplaySearchResults(facetSearchState: FacetSearchState) {
 }
 
 export function highlightSearchResult(resultValue: string, searchQuery = '') {
-  const sanitizedResult = escape(resultValue);
+  const sanitizedResult = escapeHtml(resultValue);
 
   if (searchQuery.trim() === '') {
     return sanitizedResult;
   }
 
-  const regex = new RegExp(`(${regexEncode(escape(searchQuery))})`, 'i');
-  return escape(resultValue).replace(
+  const regex = new RegExp(`(${regexEncode(escapeHtml(searchQuery))})`, 'i');
+  return escapeHtml(resultValue).replace(
     regex,
     '<span part="search-highlight" class="font-bold">$1</span>'
   );

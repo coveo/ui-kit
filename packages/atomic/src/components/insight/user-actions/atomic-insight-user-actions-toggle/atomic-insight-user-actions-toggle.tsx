@@ -1,17 +1,17 @@
 import {
   buildUserActions as buildInsightUserActions,
-  UserActions as InsightUserActions,
-  UserActionsState as InsightUserActionsState,
+  type UserActions as InsightUserActions,
+  type UserActionsState as InsightUserActionsState,
 } from '@coveo/headless/insight';
 import {Component, h, Prop, Element, State} from '@stencil/core';
 import Clockicon from '../../../../images/clock.svg';
 import {
   BindStateToController,
-  InitializableComponent,
+  type InitializableComponent,
   InitializeBindings,
 } from '../../../../utils/initialization-utils';
 import {IconButton} from '../../../common/iconButton';
-import {InsightBindings} from '../../atomic-insight-interface/atomic-insight-interface';
+import type {InsightBindings} from '../../atomic-insight-interface/atomic-insight-interface';
 
 /**
  * @internal

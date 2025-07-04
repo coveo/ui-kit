@@ -1,10 +1,10 @@
-import {
+import type {
   Result as InsightResult,
   InteractiveResult as InsightInteractiveResult,
   FoldedResult as InsightFoldedResult,
 } from '@coveo/headless/insight';
 import {Component, h, Prop, Element, Listen, Host} from '@stencil/core';
-import {
+import type {
   DisplayConfig,
   InteractiveItemContextEvent,
   ItemContextEvent,
@@ -12,10 +12,10 @@ import {
 import {resultComponentClass} from '../../common/item-list/stencil-item-list-common';
 import {
   ItemLayout,
-  ItemDisplayDensity,
-  ItemDisplayImageSize,
+  type ItemDisplayDensity,
+  type ItemDisplayImageSize,
 } from '../../common/layout/display-options';
-import {InsightStore} from '../atomic-insight-interface/store';
+import type {InsightStore} from '../atomic-insight-interface/store';
 
 /**
  * @internal

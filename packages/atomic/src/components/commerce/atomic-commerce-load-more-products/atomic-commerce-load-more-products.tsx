@@ -1,12 +1,12 @@
 import {
-  Pagination,
-  PaginationState,
+  type Pagination,
+  type PaginationState,
   buildSearch,
   buildProductListing,
-  ProductListing,
-  Search,
-  ProductListingState,
-  SearchState,
+  type ProductListing,
+  type Search,
+  type ProductListingState,
+  type SearchState,
 } from '@coveo/headless/commerce';
 import {Component, h, State} from '@stencil/core';
 import {
@@ -19,7 +19,7 @@ import {LoadMoreButton} from '../../common/load-more/stencil-button';
 import {LoadMoreContainer} from '../../common/load-more/stencil-container';
 import {LoadMoreProgressBar} from '../../common/load-more/stencil-progress-bar';
 import {LoadMoreSummary} from '../../common/load-more/stencil-summary';
-import {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface';
+import type {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface';
 
 /**
  * The `atomic-commerce-load-more-products` component allows the user to load additional products if more are available.

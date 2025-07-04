@@ -2,7 +2,7 @@ import {Component, Element, Prop, State, h} from '@stencil/core';
 import {
   defaultCurrencyFormatter,
   dispatchNumberFormatEvent,
-  NumberFormatter,
+  type NumberFormatter,
 } from '../../common/formats/format-common';
 
 /**

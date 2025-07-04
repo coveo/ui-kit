@@ -2,13 +2,13 @@ import {isNullOrUndefined} from '@coveo/bueno';
 import {
   buildRecommendationList,
   getOrganizationEndpoint,
-  RecommendationList,
-  RecommendationListState,
+  type RecommendationList,
+  type RecommendationListState,
 } from '@coveo/headless/recommendation';
 import {Component, h, State} from '@stencil/core';
 import {
   BindStateToController,
-  InitializableComponent,
+  type InitializableComponent,
   InitializeBindings,
 } from '../../../utils/initialization-utils';
 import {AriaLiveRegion} from '../../../utils/stencil-accessibility-utils';
@@ -20,7 +20,7 @@ import {QueryErrorDescription} from '../../common/query-error/stencil-descriptio
 import {QueryErrorGuard} from '../../common/query-error/stencil-guard';
 import {QueryErrorTitle} from '../../common/query-error/stencil-title';
 import {getAriaMessageFromErrorType} from '../../common/query-error/utils';
-import {RecsBindings} from '../atomic-recs-interface/atomic-recs-interface';
+import type {RecsBindings} from '../atomic-recs-interface/atomic-recs-interface';
 import {QueryErrorLink} from '../../common/query-error/stencil-link';
 
 /**

@@ -1,16 +1,16 @@
 import {isUndefined} from '@coveo/bueno';
-import {InteractiveProduct} from '@coveo/headless/commerce';
-import {Product} from '@coveo/headless/commerce';
+import type {InteractiveProduct} from '@coveo/headless/commerce';
+import type {Product} from '@coveo/headless/commerce';
 import {Component, h, Prop, Element} from '@stencil/core';
 import {buildCustomEvent} from '../../../utils/event-utils';
 import {
-  InitializableComponent,
+  type InitializableComponent,
   InitializeBindings,
 } from '../../../utils/initialization-utils';
 import {getDefaultSlotFromHost} from '../../../utils/slot-utils';
 import {getAttributesFromLinkSlot} from '../../common/item-link/attributes-slot';
 import {LinkWithItemAnalytics} from '../../common/item-link/item-link';
-import {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface';
+import type {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface';
 import {buildStringTemplateFromProduct} from '../product-template-component-utils/product-utils';
 import {
   ProductContext,

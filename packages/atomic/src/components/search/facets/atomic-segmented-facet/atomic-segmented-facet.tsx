@@ -2,32 +2,32 @@ import {
   buildFacet,
   buildFacetConditionsManager,
   buildSearchStatus,
-  CategoryFacetValueRequest,
-  Facet,
-  FacetConditionsManager,
-  FacetOptions,
-  FacetSortCriterion,
-  FacetState,
-  FacetValue,
-  FacetValueRequest,
-  SearchStatus,
-  SearchStatusState,
+  type CategoryFacetValueRequest,
+  type Facet,
+  type FacetConditionsManager,
+  type FacetOptions,
+  type FacetSortCriterion,
+  type FacetState,
+  type FacetValue,
+  type FacetValueRequest,
+  type SearchStatus,
+  type SearchStatusState,
   buildTabManager,
-  TabManager,
-  TabManagerState,
+  type TabManager,
+  type TabManagerState,
 } from '@coveo/headless';
-import {Component, h, Prop, State, VNode} from '@stencil/core';
+import {Component, h, Prop, State, type VNode} from '@stencil/core';
 import {getFieldValueCaption} from '../../../../utils/field-utils';
 import {
   BindStateToController,
-  InitializableComponent,
+  type InitializableComponent,
   InitializeBindings,
 } from '../../../../utils/initialization-utils';
 import {ArrayProp, MapProp} from '../../../../utils/props-utils';
 import {parseDependsOn} from '../../../common/facets/depends-on';
 import {FacetValuesGroup} from '../../../common/facets/facet-values-group/stencil-facet-values-group';
 import {Hidden} from '../../../common/stencil-hidden';
-import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
+import type {Bindings} from '../../atomic-search-interface/atomic-search-interface';
 import {FacetSegmentedValue} from '../facet-segmented-value/facet-segmented-value';
 
 /**

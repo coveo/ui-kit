@@ -1,6 +1,6 @@
 import {Element, Component, Prop} from '@stencil/core';
 import {hideEmptySection} from '../../../../utils/item-section-utils';
-import {ItemDisplayImageSize} from '../../../common/layout/display-options';
+import type {ItemDisplayImageSize} from '../../../common/layout/display-options';
 
 /**
  * This section provides visual information about the item.

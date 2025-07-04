@@ -1,5 +1,5 @@
-import {Decorator} from '@storybook/web-components';
-import {html, TemplateResult, render} from 'lit';
+import type {Decorator} from '@storybook/web-components';
+import {html, type TemplateResult, render} from 'lit';
 
 export const wrapInProductTemplate = (): {
   decorator: Decorator;

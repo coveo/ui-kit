@@ -9,16 +9,16 @@ import {Hidden} from '@/src/components/common/stencil-hidden';
 import {randomID} from '@/src/utils/utils';
 import {
   buildSmartSnippet as buildInsightSmartSnippet,
-  SmartSnippet as InsightSmartSnippet,
-  SmartSnippetState as InsightSmartSnippetState,
+  type SmartSnippet as InsightSmartSnippet,
+  type SmartSnippetState as InsightSmartSnippetState,
 } from '@coveo/headless/insight';
 import {Component, Prop, State, Element, h} from '@stencil/core';
 import {
-  InitializableComponent,
+  type InitializableComponent,
   InitializeBindings,
   BindStateToController,
 } from '../../../../utils/initialization-utils';
-import {InsightBindings} from '../../atomic-insight-interface/atomic-insight-interface';
+import type {InsightBindings} from '../../atomic-insight-interface/atomic-insight-interface';
 
 /**
  * @internal

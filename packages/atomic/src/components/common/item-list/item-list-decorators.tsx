@@ -1,4 +1,4 @@
-import {ComponentInterface, getElement} from '@stencil/core';
+import {type ComponentInterface, getElement} from '@stencil/core';
 import {buildCustomEvent} from '../../../utils/event-utils';
 
 type FoldedItemListContextEventHandler = (foldedItemList: unknown) => void;
@@ -26,7 +26,7 @@ export function FoldedItemListContext() {
       if (canceled) {
         return;
       }
-      return componentWillRender && componentWillRender.call(this);
+      return componentWillRender?.call(this);
     };
   };
 }
@@ -61,7 +61,7 @@ export function FoldedItemListStateContext() {
       if (canceled) {
         return;
       }
-      return componentWillRender && componentWillRender.call(this);
+      return componentWillRender?.call(this);
     };
   };
 }

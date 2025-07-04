@@ -5,16 +5,16 @@ vi.mock('@coveo/headless', () => ({VERSION: 'HEADLESS_VERSION'}));
 
 describe('environment', () => {
   const globalWindow = window as Record<string, unknown>;
-  const originalCoveoAtomic = globalWindow['COVEO_ATOMIC'];
+  const originalCoveoAtomic = globalWindow.COVEO_ATOMIC;
   const originalEnv = process.env.VERSION;
 
   beforeEach(() => {
-    delete globalWindow['COVEO_ATOMIC'];
+    delete globalWindow.COVEO_ATOMIC;
     process.env.VERSION = 'ATOMIC_VERSION';
   });
 
   afterEach(() => {
-    globalWindow['COVEO_ATOMIC'] = originalCoveoAtomic;
+    globalWindow.COVEO_ATOMIC = originalCoveoAtomic;
     if (originalEnv !== undefined) {
       process.env.VERSION = originalEnv;
     } else {
@@ -35,27 +35,25 @@ describe('environment', () => {
 
   describe('#setCoveoGlobal', () => {
     it('should set the COVEO_ATOMIC global variable when not already set', () => {
-      expect(
-        (window as Record<string, unknown>)['COVEO_ATOMIC']
-      ).toBeUndefined();
+      expect((window as Record<string, unknown>).COVEO_ATOMIC).toBeUndefined();
 
       env.setCoveoGlobal('COVEO_ATOMIC');
 
-      expect((window as Record<string, unknown>)['COVEO_ATOMIC']).toEqual({
+      expect((window as Record<string, unknown>).COVEO_ATOMIC).toEqual({
         version: 'ATOMIC_VERSION',
         headlessVersion: 'HEADLESS_VERSION',
       });
     });
 
     it('should not overwrite the COVEO_ATOMIC global variable when already set', () => {
-      (window as Record<string, unknown>)['COVEO_ATOMIC'] = {
+      (window as Record<string, unknown>).COVEO_ATOMIC = {
         version: 'EXISTING',
         headlessVersion: 'EXISTING',
       };
 
       env.setCoveoGlobal('COVEO_ATOMIC');
 
-      expect((window as Record<string, unknown>)['COVEO_ATOMIC']).toEqual({
+      expect((window as Record<string, unknown>).COVEO_ATOMIC).toEqual({
         version: 'EXISTING',
         headlessVersion: 'EXISTING',
       });

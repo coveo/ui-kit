@@ -4,7 +4,7 @@ import {
   isParentReady,
   queueEventForParent,
 } from './init-queue';
-import {InitializeEvent} from './init-queue';
+import type {InitializeEvent} from './init-queue';
 
 describe('init-queue', () => {
   let parent: HTMLElement;

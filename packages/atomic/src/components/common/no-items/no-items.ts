@@ -1,6 +1,6 @@
 import {localizedString} from '@/src/directives/localized-string';
-import {FunctionalComponent} from '@/src/utils/functional-component-utils';
-import {i18n} from 'i18next';
+import type {FunctionalComponent} from '@/src/utils/functional-component-utils';
+import type {i18n} from 'i18next';
 import {html} from 'lit';
 
 interface NoItemsProps {

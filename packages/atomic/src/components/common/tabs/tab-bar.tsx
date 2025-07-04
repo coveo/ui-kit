@@ -1,6 +1,6 @@
 import {h, Component, Element, Host, State, Listen} from '@stencil/core';
 import {Button} from '../stencil-button';
-import {TabCommonElement} from './tab-common';
+import type {TabCommonElement} from './tab-common';
 
 /**
  * @internal

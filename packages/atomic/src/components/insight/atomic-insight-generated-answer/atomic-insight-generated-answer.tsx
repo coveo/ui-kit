@@ -1,22 +1,22 @@
 import {
-  SearchStatus as InsightSearchStatus,
-  SearchStatusState as InsightSearchStatusState,
+  type SearchStatus as InsightSearchStatus,
+  type SearchStatusState as InsightSearchStatusState,
   buildGeneratedAnswer as buildInsightGeneratedAnswer,
   buildInteractiveCitation as buildInsightInteractiveCitation,
   buildSearchStatus as buildInsightSearchStatus,
-  GeneratedAnswer as InsightGeneratedAnswer,
-  GeneratedAnswerState as InsightGeneratedAnswerState,
+  type GeneratedAnswer as InsightGeneratedAnswer,
+  type GeneratedAnswerState as InsightGeneratedAnswerState,
 } from '@coveo/headless/insight';
 import {Component, Element, State, Prop, Watch} from '@stencil/core';
 import {debounce} from '../../../utils/debounce-utils';
 import {
   BindStateToController,
-  InitializableComponent,
+  type InitializableComponent,
   InitializeBindings,
 } from '../../../utils/initialization-utils';
 import {AriaLiveRegion} from '../../../utils/stencil-accessibility-utils';
 import {GeneratedAnswerCommon} from '../../common/generated-answer/generated-answer-common';
-import {InsightBindings} from '../atomic-insight-interface/atomic-insight-interface';
+import type {InsightBindings} from '../atomic-insight-interface/atomic-insight-interface';
 
 /**
  * @internal

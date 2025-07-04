@@ -1,6 +1,6 @@
 import fs from 'node:fs';
 import {fileURLToPath} from 'node:url';
-import {promisify} from 'util';
+import {promisify} from 'node:util';
 
 const readFile = promisify(fs.readFile);
 const writeFile = promisify(fs.writeFile);

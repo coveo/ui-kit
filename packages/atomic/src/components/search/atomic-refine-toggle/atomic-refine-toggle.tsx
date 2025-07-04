@@ -1,17 +1,17 @@
 import {
   buildSearchStatus,
-  SearchStatusState,
-  SearchStatus,
+  type SearchStatusState,
+  type SearchStatus,
 } from '@coveo/headless';
 import {Component, h, Prop, State, Element} from '@stencil/core';
 import {
   InitializeBindings,
-  InitializableComponent,
+  type InitializableComponent,
   BindStateToController,
 } from '../../../utils/initialization-utils';
 import {RefineToggleButton} from '../../common/refine-modal/stencil-button';
 import {RefineToggleGuard} from '../../common/refine-modal/stencil-guard';
-import {Bindings} from '../atomic-search-interface/atomic-search-interface';
+import type {Bindings} from '../atomic-search-interface/atomic-search-interface';
 
 /**
  * The `atomic-refine-toggle` component displays a button that opens a modal containing the facets and the sort components.

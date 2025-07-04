@@ -1,15 +1,15 @@
 import {
   buildSearchStatus,
-  SearchStatus,
-  SearchStatusState,
+  type SearchStatus,
+  type SearchStatusState,
 } from '@coveo/headless';
 import {Component, Element, h, Listen, State} from '@stencil/core';
-import {Bindings} from '../../../..';
+import type {Bindings} from '../../../..';
 import ArrowLeftIcon from '../../../../images/arrow-left-rounded.svg';
 import ArrowRightIcon from '../../../../images/arrow-right-rounded.svg';
 import {
   BindStateToController,
-  InitializableComponent,
+  type InitializableComponent,
   InitializeBindings,
 } from '../../../../utils/initialization-utils';
 import {Button} from '../../../common/stencil-button';

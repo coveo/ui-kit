@@ -1,5 +1,5 @@
-import {FunctionalComponent, h} from '@stencil/core';
-import {i18n} from 'i18next';
+import {type FunctionalComponent, h} from '@stencil/core';
+import type {i18n} from 'i18next';
 import ArrowBottomIcon from '../../../../images/arrow-bottom-rounded.svg';
 import ArrowTopIcon from '../../../../images/arrow-top-rounded.svg';
 import CloseIcon from '../../../../images/close.svg';

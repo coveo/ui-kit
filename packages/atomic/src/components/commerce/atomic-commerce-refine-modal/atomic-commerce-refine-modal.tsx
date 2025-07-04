@@ -1,20 +1,20 @@
 import {
-  Summary,
-  SearchSummaryState,
-  ProductListingSummaryState,
+  type Summary,
+  type SearchSummaryState,
+  type ProductListingSummaryState,
   buildSearch,
   buildProductListing,
-  Sort,
-  SortState,
-  FacetGenerator,
-  FacetGeneratorState,
-  BreadcrumbManager,
-  BreadcrumbManagerState,
+  type Sort,
+  type SortState,
+  type FacetGenerator,
+  type FacetGeneratorState,
+  type BreadcrumbManager,
+  type BreadcrumbManagerState,
 } from '@coveo/headless/commerce';
 import {Component, State, Prop, Element, Watch, h} from '@stencil/core';
 import {
   BindStateToController,
-  InitializableComponent,
+  type InitializableComponent,
   InitializeBindings,
 } from '../../../utils/initialization-utils';
 import {RefineModalBody} from '../../common/refine-modal/stencil-body';
@@ -24,7 +24,7 @@ import {
 } from '../../common/refine-modal/stencil-filters';
 import {RefineModal} from '../../common/refine-modal/stencil-modal';
 import {RefineModalSortSection} from '../../common/refine-modal/stencil-sort';
-import {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface';
+import type {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface';
 import {CommerceSortOption, getSortByLabel} from '../sort/stencil-option';
 
 /**

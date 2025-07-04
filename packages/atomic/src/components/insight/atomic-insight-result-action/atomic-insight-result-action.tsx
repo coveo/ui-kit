@@ -1,21 +1,28 @@
-import {Result} from '@coveo/headless';
+import type {Result} from '@coveo/headless';
 import {
-  InsightAnalyticsActionCreators,
+  type InsightAnalyticsActionCreators,
   loadInsightAnalyticsActions,
 } from '@coveo/headless/insight';
-import {Component, Event, EventEmitter, Prop, State, h} from '@stencil/core';
+import {
+  Component,
+  Event,
+  type EventEmitter,
+  Prop,
+  State,
+  h,
+} from '@stencil/core';
 import AttachIcon from '../../../images/attach.svg';
 import CopyIcon from '../../../images/copy-dark.svg';
 import EmailIcon from '../../../images/email.svg';
 import QuickviewIcon from '../../../images/preview.svg';
 import FeedIcon from '../../../images/share-post.svg';
 import {
-  InitializableComponent,
+  type InitializableComponent,
   InitializeBindings,
 } from '../../../utils/initialization-utils';
 import {IconButton} from '../../common/iconButton';
 import {ResultContext} from '../../search/result-template-components/result-template-decorators';
-import {InsightBindings} from '../atomic-insight-interface/atomic-insight-interface';
+import type {InsightBindings} from '../atomic-insight-interface/atomic-insight-interface';
 
 export interface InsightResultActionClickedEvent {
   action: string;

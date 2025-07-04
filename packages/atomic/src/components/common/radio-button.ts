@@ -1,11 +1,11 @@
 import {multiClassMap} from '@/src/directives/multi-class-map';
-import {FunctionalComponent} from '@/src/utils/functional-component-utils';
+import type {FunctionalComponent} from '@/src/utils/functional-component-utils';
 import {html, nothing} from 'lit';
 import {ifDefined} from 'lit/directives/if-defined.js';
-import {ref, RefOrCallback} from 'lit/directives/ref.js';
+import {ref, type RefOrCallback} from 'lit/directives/ref.js';
 import {createRipple} from '../../utils/ripple';
 import {
-  ButtonStyle,
+  type ButtonStyle,
   getClassNameForButtonStyle,
   getRippleColorForButtonStyle,
 } from './button-style';

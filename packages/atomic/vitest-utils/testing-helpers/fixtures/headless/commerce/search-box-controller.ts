@@ -1,4 +1,4 @@
-import {SearchBox, SearchBoxState} from '@coveo/headless/commerce';
+import type {SearchBox, SearchBoxState} from '@coveo/headless/commerce';
 import {vi} from 'vitest';
 
 export const defaultState = {

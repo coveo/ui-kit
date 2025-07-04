@@ -1,4 +1,4 @@
-import {Product, ProductTemplateCondition} from '@coveo/headless/commerce';
+import type {Product, ProductTemplateCondition} from '@coveo/headless/commerce';
 import {Component, Prop, h, Element} from '@stencil/core';
 import {MapProp} from '../../../utils/props-utils';
 import {

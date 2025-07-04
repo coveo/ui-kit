@@ -6,14 +6,14 @@ import {buildFakeSummary} from '@/vitest-utils/testing-helpers/fixtures/headless
 import {
   buildProductListing,
   buildSearch,
-  ProductListingSummaryState,
-  SearchSummaryState,
-  Summary,
+  type ProductListingSummaryState,
+  type SearchSummaryState,
+  type Summary,
 } from '@coveo/headless/commerce';
 import {html} from 'lit';
 import {describe, vi, it, expect} from 'vitest';
 import './atomic-commerce-query-summary';
-import {AtomicCommerceQuerySummary} from './atomic-commerce-query-summary';
+import type {AtomicCommerceQuerySummary} from './atomic-commerce-query-summary';
 
 vi.mock('@coveo/headless/commerce', {spy: true});
 

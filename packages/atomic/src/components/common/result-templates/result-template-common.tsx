@@ -1,12 +1,12 @@
 import {
-  ResultTemplate,
-  ResultTemplateCondition,
+  type ResultTemplate,
+  type ResultTemplateCondition,
   ResultTemplatesHelpers,
 } from '@coveo/headless';
 import {h} from '@stencil/core';
 import {aggregate, isElementNode, isVisualNode} from '../../../utils/utils';
 import {tableElementTagName} from '../../search/atomic-table-result/table-element-utils';
-import {ItemTarget} from '../layout/display-options';
+import type {ItemTarget} from '../layout/display-options';
 import {isResultSectionNode} from '../layout/sections';
 
 export type TemplateContent = DocumentFragment;

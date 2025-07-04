@@ -1,23 +1,23 @@
 import {
-  QuerySummary as InsightQuerySummary,
-  QuerySummaryState as InsightQuerySummaryState,
+  type QuerySummary as InsightQuerySummary,
+  type QuerySummaryState as InsightQuerySummaryState,
   buildQuerySummary as buildInsightQuerySummary,
-  BreadcrumbManager as InsightBreadcrumbManager,
-  BreadcrumbManagerState as InsightBreadcrumbManagerState,
+  type BreadcrumbManager as InsightBreadcrumbManager,
+  type BreadcrumbManagerState as InsightBreadcrumbManagerState,
   buildBreadcrumbManager as buildInsightBreadcrumbManager,
 } from '@coveo/headless/insight';
 import {Component, h, State, Prop, Element, Watch, Host} from '@stencil/core';
 import {rectEquals} from '../../../utils/dom-utils';
 import {
   BindStateToController,
-  InitializableComponent,
+  type InitializableComponent,
   InitializeBindings,
 } from '../../../utils/initialization-utils';
 import {getClonedFacetElements} from '../../common/refine-modal/cloned-facet-elements';
 import {RefineModal} from '../../common/refine-modal/stencil-modal';
 import {Button} from '../../common/stencil-button';
 import {Hidden} from '../../common/stencil-hidden';
-import {InsightBindings} from '../atomic-insight-interface/atomic-insight-interface';
+import type {InsightBindings} from '../atomic-insight-interface/atomic-insight-interface';
 
 /**
  * @internal

@@ -1,5 +1,5 @@
 // The Lit equivalent of this file is grid-layout.ts
-import {FunctionalComponent, h} from '@stencil/core';
+import {type FunctionalComponent, h} from '@stencil/core';
 
 export interface DisplayGridProps {
   selectorForItem: string;
@@ -16,6 +16,7 @@ export const DisplayGrid: FunctionalComponent<DisplayGridProps> = (
 ) => {
   let ref: HTMLElement | undefined;
   return (
+    // biome-ignore lint/a11y: to reconsider after migration
     <div
       part="result-list-grid-clickable-container outline"
       ref={(element) => {

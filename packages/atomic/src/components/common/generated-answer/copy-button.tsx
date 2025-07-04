@@ -1,4 +1,4 @@
-import {FunctionalComponent, h} from '@stencil/core';
+import {type FunctionalComponent, h} from '@stencil/core';
 import CopyIcon from '../../../images/copy.svg';
 import {Button} from '../stencil-button';
 

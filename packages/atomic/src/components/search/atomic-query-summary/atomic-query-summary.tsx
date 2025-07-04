@@ -1,12 +1,12 @@
 import {
-  QuerySummary,
-  QuerySummaryState,
+  type QuerySummary,
+  type QuerySummaryState,
   buildQuerySummary,
 } from '@coveo/headless';
 import {Component, h, State} from '@stencil/core';
 import {
   BindStateToController,
-  InitializableComponent,
+  type InitializableComponent,
   InitializeBindings,
 } from '../../../utils/initialization-utils';
 import {LocalizedString} from '../../../utils/jsx-utils';
@@ -14,7 +14,7 @@ import {AriaLiveRegion} from '../../../utils/stencil-accessibility-utils';
 import {QuerySummaryContainer} from '../../common/query-summary/stencil-container';
 import {QuerySummaryGuard} from '../../common/query-summary/stencil-guard';
 import {getQuerySummaryI18nParameters} from '../../common/query-summary/stencil-utils';
-import {Bindings} from '../atomic-search-interface/atomic-search-interface';
+import type {Bindings} from '../atomic-search-interface/atomic-search-interface';
 
 /**
  * The `atomic-query-summary` component displays information about the current range of results and the request duration (e.g., "Results 1-10 of 123 in 0.47 seconds").

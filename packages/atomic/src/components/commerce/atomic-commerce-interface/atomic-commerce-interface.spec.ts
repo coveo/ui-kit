@@ -1,15 +1,15 @@
 import {bindings} from '@/src/decorators/bindings';
-import {InitializableComponent} from '@/src/decorators/types';
+import type {InitializableComponent} from '@/src/decorators/types';
 import {InitializeBindingsMixin} from '@/src/mixins/bindings-mixin';
 import {StorageItems} from '@/src/utils/local-storage-utils';
 import {fixture} from '@/vitest-utils/testing-helpers/fixture';
 import {fixtureCleanup} from '@/vitest-utils/testing-helpers/fixture-wrapper';
 import {
-  CommerceEngineConfiguration,
+  type CommerceEngineConfiguration,
   getSampleCommerceEngineConfiguration,
-  ProductListing,
-  Search,
-  UrlManager,
+  type ProductListing,
+  type Search,
+  type UrlManager,
 } from '@coveo/headless/commerce';
 import {buildCommerceEngine} from '@coveo/headless/commerce';
 import {html} from 'lit';
@@ -21,14 +21,14 @@ import {
   test,
   expect,
   vi,
-  MockInstance,
+  type MockInstance,
   beforeEach,
   afterEach,
 } from 'vitest';
 import {stateKey} from '../../../../../headless/src/app/state-key';
 import {
   AtomicCommerceInterface,
-  CommerceBindings,
+  type CommerceBindings,
 } from './atomic-commerce-interface';
 
 vi.mock('@coveo/headless/commerce', async () => {
@@ -499,8 +499,7 @@ describe('AtomicCommerceInterface', () => {
       } as unknown as Search | ProductListing;
 
       const replaceStateSpy = vi.spyOn(history, 'replaceState');
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      (element as any).updateHash();
+      (element as unknown as {updateHash: Function}).updateHash();
 
       expect(replaceStateSpy).toHaveBeenCalledWith(
         null,
@@ -515,8 +514,7 @@ describe('AtomicCommerceInterface', () => {
       } as unknown as Search | ProductListing;
 
       const pushStateSpy = vi.spyOn(history, 'pushState');
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      (element as any).updateHash();
+      (element as unknown as {updateHash: Function}).updateHash();
 
       expect(pushStateSpy).toHaveBeenCalledWith(
         null,

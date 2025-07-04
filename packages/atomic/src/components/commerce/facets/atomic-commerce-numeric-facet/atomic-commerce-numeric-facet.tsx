@@ -1,22 +1,22 @@
 import {
-  NumericFacet,
-  NumericFacetState,
-  NumericRangeRequest,
-  ProductListingSummaryState,
-  SearchSummaryState,
-  Summary,
-  Context,
-  ContextState,
+  type NumericFacet,
+  type NumericFacetState,
+  type NumericRangeRequest,
+  type ProductListingSummaryState,
+  type SearchSummaryState,
+  type Summary,
+  type Context,
+  type ContextState,
   buildContext,
 } from '@coveo/headless/commerce';
 import {Component, Element, h, Listen, Prop, State} from '@stencil/core';
 import {
   BindStateToController,
-  InitializableComponent,
+  type InitializableComponent,
   InitializeBindings,
 } from '../../../../utils/initialization-utils';
 import {FocusTargetController} from '../../../../utils/stencil-accessibility-utils';
-import {FacetInfo} from '../../../common/facets/facet-common-store';
+import type {FacetInfo} from '../../../common/facets/facet-common-store';
 import {FacetContainer} from '../../../common/facets/facet-container/stencil-facet-container';
 import {FacetGuard} from '../../../common/facets/facet-guard';
 import {FacetHeader} from '../../../common/facets/facet-header/stencil-facet-header';
@@ -28,7 +28,7 @@ import {
   defaultCurrencyFormatter,
   defaultNumberFormatter,
 } from '../../../common/formats/format-common';
-import {CommerceBindings as Bindings} from '../../atomic-commerce-interface/atomic-commerce-interface';
+import type {CommerceBindings as Bindings} from '../../atomic-commerce-interface/atomic-commerce-interface';
 import type {Range} from '../facet-number-input/atomic-commerce-facet-number-input';
 
 /**
@@ -88,7 +88,7 @@ export class AtomicCommerceNumericFacet
     return this.headerFocus;
   }
 
-  private unsubscribeFacetController?: () => void | undefined;
+  private unsubscribeFacetController?: () => undefined | undefined;
 
   public initialize() {
     if (!this.facet) {

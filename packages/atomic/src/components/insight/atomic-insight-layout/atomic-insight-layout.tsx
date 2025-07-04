@@ -1,10 +1,10 @@
 import {Component, Element, Prop, Watch} from '@stencil/core';
 import {
-  InitializableComponent,
+  type InitializableComponent,
   InitializeBindings,
 } from '../../../utils/initialization-utils';
 import {randomID} from '../../../utils/utils';
-import {InsightBindings} from '../atomic-insight-interface/atomic-insight-interface';
+import type {InsightBindings} from '../atomic-insight-interface/atomic-insight-interface';
 import {buildInsightLayout} from './insight-layout';
 
 /**

@@ -1,4 +1,4 @@
-import {Fragment, FunctionalComponent, h} from '@stencil/core';
+import {Fragment, type FunctionalComponent, h} from '@stencil/core';
 
 export interface LoadMoreGuardProps {
   isLoaded: boolean;

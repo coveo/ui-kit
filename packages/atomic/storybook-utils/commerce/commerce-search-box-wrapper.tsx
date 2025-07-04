@@ -1,5 +1,5 @@
-import {Decorator} from '@storybook/web-components';
-import {html, TemplateResult} from 'lit';
+import type {Decorator} from '@storybook/web-components';
+import {html, type TemplateResult} from 'lit';
 
 export const wrapInCommerceSearchBox = (
   extra?: TemplateResult

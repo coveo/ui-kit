@@ -26,8 +26,7 @@ export class ProductImageObject extends BasePageObject<'atomic-product-image'> {
     return this.page.getByRole('listitem').nth(1);
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  async withCustomThumbnails(thumbnails: any[]) {
+  async withCustomThumbnails(thumbnails: unknown[]) {
     await this.page.route('**/commerce/v2/listing', async (route) => {
       const response = await route.fetch();
       const body = await response.json();

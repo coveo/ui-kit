@@ -1,13 +1,17 @@
-import {AttachToCase, buildAttachToCase, Result} from '@coveo/headless/insight';
+import {
+  type AttachToCase,
+  buildAttachToCase,
+  type Result,
+} from '@coveo/headless/insight';
 import {Component, State, h, Element} from '@stencil/core';
 import AttachIcon from '../../../images/attach.svg';
 import {
   BindStateToController,
-  InitializableComponent,
+  type InitializableComponent,
   InitializeBindings,
 } from '../../../utils/initialization-utils';
 import {ResultContext} from '../../search/result-template-components/result-template-decorators';
-import {InsightBindings} from '../atomic-insight-interface/atomic-insight-interface';
+import type {InsightBindings} from '../atomic-insight-interface/atomic-insight-interface';
 
 /**
  * @internal

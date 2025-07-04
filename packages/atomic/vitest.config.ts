@@ -1,7 +1,7 @@
 import tailwindcss from '@tailwindcss/vite';
-import {readFileSync} from 'fs';
+import {readFileSync} from 'node:fs';
 import path from 'node:path';
-import {dirname, resolve} from 'path';
+import {dirname, resolve} from 'node:path';
 import {defineConfig} from 'vitest/config';
 //@ts-expect-error - normal json import
 import packageJson from './package.json' with {type: 'json'};
@@ -36,7 +36,7 @@ export default defineConfig({
   },
   resolve: {
     alias: [
-      {find: '@/', replacement: path.resolve(import.meta.dirname, './') + '/'},
+      {find: '@/', replacement: `${path.resolve(import.meta.dirname, './')}/`},
       {
         find: /^@coveo\/headless\/(.*)$/,
         replacement: path.resolve(

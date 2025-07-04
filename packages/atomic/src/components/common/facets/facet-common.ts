@@ -1,6 +1,6 @@
-import {FacetValue, SearchStatusState} from '@coveo/headless';
-import {i18n} from 'i18next';
-import {RefOrCallback} from 'lit/directives/ref.js';
+import type {FacetValue, SearchStatusState} from '@coveo/headless';
+import type {i18n} from 'i18next';
+import type {RefOrCallback} from 'lit/directives/ref.js';
 
 export interface FacetValuePropsBase {
   i18n: i18n;

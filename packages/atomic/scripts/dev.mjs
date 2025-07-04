@@ -61,7 +61,7 @@ async function stopAllProcesses() {
   isStopped = true;
 
   runningProcesses.forEach((process) => {
-    if (process && process.kill) {
+    if (process?.kill) {
       process.kill('SIGTERM');
     }
   });
@@ -89,7 +89,7 @@ async function waitForPort(port, host = 'localhost', timeout = 30000) {
       tcpTimeout: 1000,
       interval: 500,
     });
-  } catch (error) {
+  } catch (_) {
     throw new Error(`Timeout waiting for port ${port} on ${host}`);
   }
 }

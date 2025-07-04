@@ -1,14 +1,14 @@
 import {isNullOrUndefined} from '@coveo/bueno';
 import DOMPurify from 'dompurify';
-import {LitElement} from 'lit';
+import type {LitElement} from 'lit';
 import {debounce} from '../../../utils/debounce-utils';
 import {promiseTimeout} from '../../../utils/promise-utils';
 import {
   elementHasNoQuery,
   elementHasQuery,
-  SearchBoxSuggestionElement,
-  SearchBoxSuggestionsBindings,
-  SearchBoxSuggestionsEvent,
+  type SearchBoxSuggestionElement,
+  type SearchBoxSuggestionsBindings,
+  type SearchBoxSuggestionsEvent,
 } from './suggestions-common';
 
 /**
@@ -31,13 +31,13 @@ export interface SearchBoxSuggestions {
   /**
    * Hook called when the user changes the search box's input value. This can lead to all the query suggestions being updated.
    */
-  onInput?(): Promise<unknown> | void;
+  onInput?(): Promise<unknown> | undefined;
   /**
    * Hook called when the current suggested query changes as the user navigates the list of suggestions.
    * This is used for instant results, which are rendered based on the current suggested query.
    * @param q The new current suggested query.
    */
-  onSuggestedQueryChange?(q: string): Promise<unknown> | void;
+  onSuggestedQueryChange?(q: string): Promise<unknown> | undefined;
 }
 
 interface SearchBoxProps {
@@ -167,7 +167,7 @@ export class SuggestionManager<SearchBoxController> {
     if (this.panelInFocus === panel) {
       return;
     }
-    if (panel && panel.firstElementChild) {
+    if (panel?.firstElementChild) {
       const panelHasActiveDescendant =
         this.previousActiveDescendantElement &&
         panel.contains(this.previousActiveDescendantElement);
@@ -221,7 +221,7 @@ export class SuggestionManager<SearchBoxController> {
       this.clearSuggestions();
       this.updateOwnerSearchboxQuery(item.query);
     }
-    item.onSelect && item.onSelect(e);
+    item.onSelect?.(e);
   }
 
   public get hasSuggestions() {
@@ -437,9 +437,9 @@ export class SuggestionManager<SearchBoxController> {
   }
 
   private getSuggestionElements(suggestions: SearchBoxSuggestions[]) {
-    const elements = suggestions
-      .map((suggestion) => suggestion.renderItems())
-      .flat();
+    const elements = suggestions.flatMap((suggestion) =>
+      suggestion.renderItems()
+    );
 
     const max =
       this.ownerSearchBoxProps.getNumberOfSuggestionsToDisplay() +

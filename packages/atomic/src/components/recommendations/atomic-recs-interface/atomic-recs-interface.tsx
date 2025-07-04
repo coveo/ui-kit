@@ -1,13 +1,13 @@
 import {markParentAsReady} from '@/src/utils/init-queue';
 import {
-  RecommendationEngine,
-  RecommendationEngineConfiguration,
+  type RecommendationEngine,
+  type RecommendationEngineConfiguration,
   loadFieldActions,
   EcommerceDefaultFieldsToInclude,
   buildRecommendationEngine,
   loadRecommendationActions,
   loadSearchConfigurationActions,
-  LogLevel as RecsLogLevel,
+  type LogLevel as RecsLogLevel,
 } from '@coveo/headless/recommendation';
 import {
   Component,
@@ -20,17 +20,17 @@ import {
   State,
   setNonce,
 } from '@stencil/core';
-import i18next, {i18n} from 'i18next';
-import {InitializeEvent} from '../../../utils/initialization-utils';
+import i18next, {type i18n} from 'i18next';
+import type {InitializeEvent} from '../../../utils/initialization-utils';
 import {ArrayProp} from '../../../utils/props-utils';
-import {CommonBindings} from '../../common/interface/bindings';
+import type {CommonBindings} from '../../common/interface/bindings';
 import {
-  StencilBaseAtomicInterface,
+  type StencilBaseAtomicInterface,
   CommonAtomicInterfaceHelper,
   mismatchedInterfaceAndEnginePropError,
 } from '../../common/interface/interface-common-stencil';
 import {getAnalyticsConfig} from './analytics-config';
-import {createRecsStore, RecsStore} from './store';
+import {createRecsStore, type RecsStore} from './store';
 
 const FirstRecommendationExecutedFlag = 'firstRecommendationExecuted';
 export type RecsInitializationOptions = RecommendationEngineConfiguration;

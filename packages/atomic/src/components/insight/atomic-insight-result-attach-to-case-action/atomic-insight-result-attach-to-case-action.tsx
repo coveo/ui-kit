@@ -1,15 +1,26 @@
-import {AttachToCase, buildAttachToCase, Result} from '@coveo/headless/insight';
-import {Component, Event, State, h, Element, EventEmitter} from '@stencil/core';
+import {
+  type AttachToCase,
+  buildAttachToCase,
+  type Result,
+} from '@coveo/headless/insight';
+import {
+  Component,
+  Event,
+  State,
+  h,
+  Element,
+  type EventEmitter,
+} from '@stencil/core';
 import AttachIcon from '../../../images/attach.svg';
 import DetachIcon from '../../../images/detach.svg';
 import {
   BindStateToController,
-  InitializableComponent,
+  type InitializableComponent,
   InitializeBindings,
 } from '../../../utils/initialization-utils';
 import {IconButton} from '../../common/iconButton';
 import {ResultContext} from '../../search/result-template-components/result-template-decorators';
-import {InsightBindings} from '../atomic-insight-interface/atomic-insight-interface';
+import type {InsightBindings} from '../atomic-insight-interface/atomic-insight-interface';
 
 export interface InsightResultAttachToCaseEvent {
   callback: () => void;

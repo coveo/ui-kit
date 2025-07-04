@@ -1,4 +1,4 @@
-import {FunctionalComponent, h} from '@stencil/core';
+import {type FunctionalComponent, h} from '@stencil/core';
 import {highlightSearchResult} from '../facet-search/facet-search-utils';
 
 interface FacetValueLabelHighlightProps {

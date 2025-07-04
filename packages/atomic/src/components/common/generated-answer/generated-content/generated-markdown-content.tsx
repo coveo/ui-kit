@@ -1,4 +1,4 @@
-import {FunctionalComponent, h} from '@stencil/core';
+import {type FunctionalComponent, h} from '@stencil/core';
 import DOMPurify from 'dompurify';
 import {transformMarkdownToHtml} from './markdown-utils';
 

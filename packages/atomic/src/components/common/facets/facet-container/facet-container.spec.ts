@@ -1,5 +1,5 @@
 import {renderFunctionFixture} from '@/vitest-utils/testing-helpers/fixture';
-import {html, TemplateResult} from 'lit';
+import {html, type TemplateResult} from 'lit';
 import {expect, describe, it} from 'vitest';
 import {renderFacetContainer} from './facet-container';
 

@@ -1,8 +1,8 @@
 import {ContextConsumer} from '@lit/context';
-import {ReactiveElement} from 'lit';
-import {AnyBindings} from '../components';
+import type {ReactiveElement} from 'lit';
+import type {AnyBindings} from '../components';
 import {bindingsContext} from '../components/context/bindings-context';
-import {InitializableComponent} from './types';
+import type {InitializableComponent} from './types';
 
 /**
  * A decorator that will initialize the component with the bindings provided by the bindings context.
@@ -29,9 +29,9 @@ import {InitializableComponent} from './types';
  * ```
  */
 export function bindings() {
-  return function (target: {
+  return (target: {
     prototype: ReactiveElement & InitializableComponent<AnyBindings>;
-  }) {
+  }) => {
     const connectedCallback = target.prototype.connectedCallback;
 
     target.prototype.connectedCallback = function () {

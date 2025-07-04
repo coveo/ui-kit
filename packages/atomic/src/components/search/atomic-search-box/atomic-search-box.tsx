@@ -1,12 +1,12 @@
 import {isNullOrUndefined} from '@coveo/bueno';
 import {
-  SearchBox,
-  SearchBoxState,
+  type SearchBox,
+  type SearchBoxState,
   buildSearchBox,
-  StandaloneSearchBox,
-  StandaloneSearchBoxState,
+  type StandaloneSearchBox,
+  type StandaloneSearchBoxState,
   buildStandaloneSearchBox,
-  SearchBoxOptions,
+  type SearchBoxOptions,
 } from '@coveo/headless';
 import {
   Component,
@@ -17,18 +17,18 @@ import {
   Watch,
   Element,
   Event,
-  EventEmitter,
+  type EventEmitter,
   Host,
 } from '@stencil/core';
 import {hasKeyboard, isMacOS} from '../../../utils/device-utils';
 import {
   BindStateToController,
-  InitializableComponent,
+  type InitializableComponent,
   InitializeBindings,
 } from '../../../utils/initialization-utils';
 import {
   SafeStorage,
-  StandaloneSearchBoxData,
+  type StandaloneSearchBoxData,
   StorageItems,
 } from '../../../utils/local-storage-utils';
 import {updateBreakpoints} from '../../../utils/replace-breakpoint';
@@ -39,18 +39,18 @@ import {
   randomID,
   spreadProperties,
 } from '../../../utils/utils';
-import {RedirectionPayload} from '../../common/search-box/redirection-payload';
+import type {RedirectionPayload} from '../../common/search-box/redirection-payload';
 import {SearchBoxWrapper} from '../../common/search-box/stencil-search-box-wrapper';
 import {SearchTextArea} from '../../common/search-box/stencil-search-text-area';
 import {SubmitButton} from '../../common/search-box/stencil-submit-button';
 import {SuggestionManager} from '../../common/suggestions/stencil-suggestion-manager';
 import {
-  SearchBoxSuggestionElement,
-  SearchBoxSuggestionsBindings,
-  SearchBoxSuggestionsEvent,
+  type SearchBoxSuggestionElement,
+  type SearchBoxSuggestionsBindings,
+  type SearchBoxSuggestionsEvent,
   elementHasQuery,
 } from '../../common/suggestions/suggestions-common';
-import {Bindings} from '../atomic-search-interface/atomic-search-interface';
+import type {Bindings} from '../atomic-search-interface/atomic-search-interface';
 
 /**
  * The `atomic-search-box` component creates a search box with built-in support for suggestions.
@@ -499,6 +499,7 @@ export class AtomicSearchBox implements InitializableComponent<Bindings> {
     }
 
     return (
+      // biome-ignore lint/a11y: to reconsider after migration
       <atomic-suggestion-renderer
         i18n={this.bindings.i18n}
         id={id}
@@ -535,6 +536,7 @@ export class AtomicSearchBox implements InitializableComponent<Bindings> {
     }
 
     return (
+      // biome-ignore lint/a11y: to reconsider after migration
       <div
         part={`suggestions suggestions-${side}`}
         ref={setRef}

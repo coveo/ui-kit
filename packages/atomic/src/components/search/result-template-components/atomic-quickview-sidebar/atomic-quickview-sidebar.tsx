@@ -1,5 +1,5 @@
-import {Fragment, FunctionalComponent, h} from '@stencil/core';
-import {i18n} from 'i18next';
+import {Fragment, type FunctionalComponent, h} from '@stencil/core';
+import type {i18n} from 'i18next';
 import Add from '../../../../images/add.svg';
 import ArrowDown from '../../../../images/arrow-bottom-rounded.svg';
 import ArrowUp from '../../../../images/arrow-top-rounded.svg';
@@ -9,7 +9,7 @@ import {IconButton} from '../../../common/iconButton';
 import {StencilCheckbox} from '../../../common/stencil-checkbox';
 import {FieldsetGroup} from '../../../common/stencil-fieldset-group';
 import type {HighlightKeywords} from '../atomic-quickview-modal/atomic-quickview-modal';
-import {QuickviewWordHighlight} from '../quickview-word-highlight/quickview-word-highlight';
+import type {QuickviewWordHighlight} from '../quickview-word-highlight/quickview-word-highlight';
 
 const identifierKeywordsSection = 'coveo-quickview-sidebar-keywords';
 

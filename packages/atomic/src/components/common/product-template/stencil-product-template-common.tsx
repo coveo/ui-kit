@@ -1,12 +1,12 @@
 import {aggregate, isElementNode, isVisualNode} from '@/src/utils/utils';
 import {
-  ProductTemplate,
-  ProductTemplateCondition,
+  type ProductTemplate,
+  type ProductTemplateCondition,
   ProductTemplatesHelpers,
 } from '@coveo/headless/commerce';
 import {h} from '@stencil/core';
 import {tableElementTagName} from '../../search/atomic-table-result/table-element-utils';
-import {ItemTarget} from '../layout/display-options';
+import type {ItemTarget} from '../layout/display-options';
 import {isResultSectionNode} from '../layout/sections';
 
 export {makeMatchConditions} from './product-template-common';

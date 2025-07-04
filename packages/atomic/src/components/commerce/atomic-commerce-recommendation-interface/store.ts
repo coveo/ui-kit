@@ -1,7 +1,7 @@
 import {
-  BaseStore,
+  type BaseStore,
   createBaseStore,
-  ResultListInfo,
+  type ResultListInfo,
   setLoadingFlag,
   unsetLoadingFlag,
 } from '../../common/interface/store';

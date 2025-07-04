@@ -5,7 +5,7 @@ import {html} from 'lit';
 import {vi, expect, describe, it} from 'vitest';
 import {
   renderTriStateCheckbox,
-  TriStateCheckboxProps,
+  type TriStateCheckboxProps,
 } from './triStateCheckbox';
 
 describe('renderTriStateCheckbox', () => {

@@ -1,20 +1,20 @@
 import {NumberValue, Schema} from '@coveo/bueno';
 import {
-  AutomaticFacetGenerator,
-  AutomaticFacetGeneratorState,
-  SearchStatus,
-  SearchStatusState,
+  type AutomaticFacetGenerator,
+  type AutomaticFacetGeneratorState,
+  type SearchStatus,
+  type SearchStatusState,
   buildAutomaticFacetGenerator,
   buildSearchStatus,
 } from '@coveo/headless';
 import {Component, Method, Prop, State, h} from '@stencil/core';
 import {
   BindStateToController,
-  InitializableComponent,
+  type InitializableComponent,
   InitializeBindings,
 } from '../../../../utils/initialization-utils';
 import {FacetPlaceholder} from '../../../common/facets/facet-placeholder/facet-placeholder';
-import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
+import type {Bindings} from '../../atomic-search-interface/atomic-search-interface';
 
 /**
  * The `atomic-automatic-facet-generator` is a component that renders the facets from

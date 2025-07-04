@@ -7,11 +7,11 @@ import {createRef} from 'lit/directives/ref.js';
 import {expect, vi, describe, beforeAll, it} from 'vitest';
 import {renderCheckbox} from '../../checkbox';
 import {renderTriStateCheckbox} from '../../triStateCheckbox';
-import {FacetValuePropsBase} from '../facet-common';
+import type {FacetValuePropsBase} from '../facet-common';
 import {renderFacetValueExclude} from '../facet-value-exclude/facet-value-exclude';
 import {
   renderFacetValueCheckbox,
-  TriStateFacetValueProps,
+  type TriStateFacetValueProps,
 } from './facet-value-checkbox';
 
 vi.mock('../../triStateCheckbox', {spy: true});

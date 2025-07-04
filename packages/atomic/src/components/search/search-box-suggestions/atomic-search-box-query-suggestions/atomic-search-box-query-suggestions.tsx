@@ -1,8 +1,8 @@
 import {
   loadQuerySuggestActions,
-  SearchBox,
-  SearchEngine,
-  Suggestion,
+  type SearchBox,
+  type SearchEngine,
+  type Suggestion,
 } from '@coveo/headless';
 import {Component, Element, Prop, State, h} from '@stencil/core';
 import SearchIcon from '../../../../images/search.svg';
@@ -14,9 +14,9 @@ import {
 } from '../../../common/suggestions/stencil-query-suggestions';
 import {
   dispatchSearchBoxSuggestionsEvent,
-  SearchBoxSuggestionElement,
-  SearchBoxSuggestions,
-  SearchBoxSuggestionsBindings,
+  type SearchBoxSuggestionElement,
+  type SearchBoxSuggestions,
+  type SearchBoxSuggestionsBindings,
 } from '../../../common/suggestions/suggestions-common';
 
 /**

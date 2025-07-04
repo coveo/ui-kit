@@ -1,4 +1,4 @@
-import {dirname, posix, resolve, relative, sep} from 'path';
+import {dirname, posix, resolve, relative, sep} from 'node:path';
 import {
   isImportDeclaration,
   visitEachChild,

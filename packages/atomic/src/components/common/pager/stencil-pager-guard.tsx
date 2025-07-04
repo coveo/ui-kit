@@ -1,4 +1,4 @@
-import {FunctionalComponent, h, Fragment} from '@stencil/core';
+import {type FunctionalComponent, h, Fragment} from '@stencil/core';
 import {Hidden} from '../stencil-hidden';
 
 /**

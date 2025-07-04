@@ -1,42 +1,42 @@
 import {Schema, StringValue} from '@coveo/bueno';
 import {
   buildFacetConditionsManager,
-  FacetConditionsManager,
+  type FacetConditionsManager,
   buildNumericFacet,
   buildNumericFilter,
   buildNumericRange,
   buildSearchStatus,
-  CategoryFacetValueRequest,
-  FacetValueRequest,
+  type CategoryFacetValueRequest,
+  type FacetValueRequest,
   loadNumericFacetSetActions,
-  NumericFacet,
-  NumericFacetState,
-  NumericFilter,
-  NumericFilterState,
-  RangeFacetRangeAlgorithm,
-  RangeFacetSortCriterion,
-  SearchStatus,
-  SearchStatusState,
-  NumericRangeRequest,
+  type NumericFacet,
+  type NumericFacetState,
+  type NumericFilter,
+  type NumericFilterState,
+  type RangeFacetRangeAlgorithm,
+  type RangeFacetSortCriterion,
+  type SearchStatus,
+  type SearchStatusState,
+  type NumericRangeRequest,
   buildTabManager,
-  TabManager,
-  TabManagerState,
+  type TabManager,
+  type TabManagerState,
 } from '@coveo/headless';
 import {Component, Element, h, Listen, Prop, State} from '@stencil/core';
 import {
   BindStateToController,
-  InitializableComponent,
+  type InitializableComponent,
   InitializeBindings,
 } from '../../../../utils/initialization-utils';
 import {ArrayProp, MapProp} from '../../../../utils/props-utils';
 import {FocusTargetController} from '../../../../utils/stencil-accessibility-utils';
 import {randomID} from '../../../../utils/utils';
 import {parseDependsOn} from '../../../common/facets/depends-on';
-import {FacetInfo} from '../../../common/facets/facet-common-store';
+import type {FacetInfo} from '../../../common/facets/facet-common-store';
 import {FacetContainer} from '../../../common/facets/facet-container/stencil-facet-container';
 import {FacetGuard} from '../../../common/facets/facet-guard';
 import {FacetHeader} from '../../../common/facets/facet-header/stencil-facet-header';
-import {NumberInputType} from '../../../common/facets/facet-number-input/number-input-type';
+import type {NumberInputType} from '../../../common/facets/facet-number-input/number-input-type';
 import {FacetPlaceholder} from '../../../common/facets/facet-placeholder/facet-placeholder';
 import {formatHumanReadable} from '../../../common/facets/numeric-facet/formatter';
 import {NumericFacetValueLink} from '../../../common/facets/numeric-facet/value-link';
@@ -45,9 +45,9 @@ import {initializePopover} from '../../../common/facets/popover/popover-type';
 import {shouldDisplayInputForFacetRange} from '../../../common/facets/stencil-facet-common';
 import {
   defaultNumberFormatter,
-  NumberFormatter,
+  type NumberFormatter,
 } from '../../../common/formats/format-common';
-import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
+import type {Bindings} from '../../atomic-search-interface/atomic-search-interface';
 
 /**
  * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (e.g., ascending, descending).

@@ -7,8 +7,8 @@ import {
 import {initializeEventName} from '@/src/utils/initialization-lit-stencil-common-utils.js';
 import type {CommerceEngine} from '@coveo/headless/commerce';
 import {provide} from '@lit/context';
-import {type i18n} from 'i18next';
-import {html, LitElement, nothing, TemplateResult} from 'lit';
+import type {i18n} from 'i18next';
+import {html, LitElement, nothing, type TemplateResult} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {vi} from 'vitest';
 import type {

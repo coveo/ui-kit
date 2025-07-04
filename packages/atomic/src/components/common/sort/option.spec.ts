@@ -4,7 +4,7 @@ import {page} from '@vitest/browser/context';
 import '@vitest/browser/matchers.d.ts';
 import {html} from 'lit';
 import {expect, describe, beforeAll, it} from 'vitest';
-import {renderSortOption, SortOptionProps} from './option';
+import {renderSortOption, type SortOptionProps} from './option';
 
 describe('renderSortOption', () => {
   let i18n: Awaited<ReturnType<typeof createTestI18n>>;

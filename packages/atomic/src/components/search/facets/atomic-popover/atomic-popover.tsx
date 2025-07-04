@@ -1,28 +1,28 @@
 import {
   buildSearchStatus,
-  SearchStatus,
-  SearchStatusState,
-  FacetState,
+  type SearchStatus,
+  type SearchStatusState,
+  type FacetState,
 } from '@coveo/headless';
 import {
   createPopperLite as createPopper,
   preventOverflow,
-  Instance as PopperInstance,
+  type Instance as PopperInstance,
 } from '@popperjs/core';
 import {Component, h, Listen, State, Element, Host} from '@stencil/core';
 import ArrowBottomIcon from '../../../../images/arrow-bottom-rounded.svg';
 import {
   BindStateToController,
-  InitializableComponent,
+  type InitializableComponent,
   InitializeBindings,
 } from '../../../../utils/initialization-utils';
 import {
-  PopoverChildFacet,
+  type PopoverChildFacet,
   popoverClass,
 } from '../../../common/facets/popover/popover-type';
 import {Button} from '../../../common/stencil-button';
 import {Hidden} from '../../../common/stencil-hidden';
-import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
+import type {Bindings} from '../../atomic-search-interface/atomic-search-interface';
 
 /**
  * The `atomic-popover` component displays any facet as a popover menu.
@@ -180,6 +180,7 @@ export class AtomicPopover implements InitializableComponent {
 
   private renderBackdrop() {
     return (
+      // biome-ignore lint/a11y: to reconsider after migration
       <div
         part="backdrop"
         class="fixed top-0 right-0 bottom-0 left-0 z-9998 cursor-pointer bg-transparent"

@@ -1,9 +1,9 @@
 import {readFromObject} from '@/src/utils/object-utils';
 import {buildFakeProduct} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/product';
 import {createTestI18n} from '@/vitest-utils/testing-helpers/i18n-utils';
-import {Product, ProductTemplatesHelpers} from '@coveo/headless/commerce';
+import {type Product, ProductTemplatesHelpers} from '@coveo/headless/commerce';
 import {vi, describe, it, expect, beforeEach} from 'vitest';
-import {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface';
+import type {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface';
 import {FieldValueIsNaNError} from './error';
 import {
   parseValue,
@@ -223,7 +223,7 @@ describe('product-utils', () => {
       vi.mocked(readFromObject)
         .mockReturnValueOnce('Test Product')
         .mockReturnValueOnce('99.99');
-
+      // biome-ignore lint/suspicious/noTemplateCurlyInString: Templating test
       const template = 'Product: ${ec_name}, Price: ${ec_price}';
       const result = buildStringTemplateFromProduct(
         template,
@@ -245,6 +245,7 @@ describe('product-utils', () => {
     it('should handle multiple occurrences of same variable', () => {
       vi.mocked(readFromObject).mockReturnValue('Test Product');
 
+      // biome-ignore lint/suspicious/noTemplateCurlyInString: Templating test
       const template = '${ec_name} - ${ec_name} (${ec_name})';
       const result = buildStringTemplateFromProduct(
         template,
@@ -263,6 +264,7 @@ describe('product-utils', () => {
         .mockReturnValueOnce(undefined)
         .mockReturnValueOnce('example.com');
 
+      // biome-ignore lint/suspicious/noTemplateCurlyInString: Templating test
       const template = 'Host: ${location.hostname}';
       const result = buildStringTemplateFromProduct(
         template,
@@ -286,6 +288,7 @@ describe('product-utils', () => {
     it('should log warning and return empty string when variable cannot be resolved', () => {
       vi.mocked(readFromObject).mockReturnValue(undefined);
 
+      // biome-ignore lint/suspicious/noTemplateCurlyInString: Templating test
       const template = 'Unknown: ${unknown.field}';
       const result = buildStringTemplateFromProduct(
         template,
@@ -302,6 +305,7 @@ describe('product-utils', () => {
     it('should handle nested object properties', () => {
       vi.mocked(readFromObject).mockReturnValue('nested-value');
 
+      // biome-ignore lint/suspicious/noTemplateCurlyInString: Templating test
       const template = 'Nested: ${additionalFields.customField}';
       const result = buildStringTemplateFromProduct(
         template,

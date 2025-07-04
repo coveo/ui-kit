@@ -1,5 +1,5 @@
 /* eslint-disable @cspell/spellchecker */
-import {AtomicCommerceInterface} from '../atomic-commerce-interface';
+import type {AtomicCommerceInterface} from '../atomic-commerce-interface';
 import {test, expect} from './fixture';
 
 test.describe('AtomicCommerceInterface', () => {

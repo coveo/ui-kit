@@ -1,15 +1,15 @@
 import {Schema, StringValue} from '@coveo/bueno';
 import {
   buildQuickview,
-  QuickviewState,
-  Quickview,
-  Result,
+  type QuickviewState,
+  type Quickview,
+  type Result,
 } from '@coveo/headless';
 import {Component, Listen, Prop, State, h, Element} from '@stencil/core';
 import QuickviewIcon from '../../../images/preview.svg';
 import {
   BindStateToController,
-  InitializableComponent,
+  type InitializableComponent,
   InitializeBindings,
 } from '../../../utils/initialization-utils';
 import {
@@ -17,7 +17,7 @@ import {
   FocusTargetController,
 } from '../../../utils/stencil-accessibility-utils';
 import {IconButton} from '../../common/iconButton';
-import {Bindings} from '../../search/atomic-search-interface/atomic-search-interface';
+import type {Bindings} from '../../search/atomic-search-interface/atomic-search-interface';
 import {ResultContext} from '../../search/result-template-components/result-template-decorators';
 
 /**

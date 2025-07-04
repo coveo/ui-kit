@@ -1,30 +1,30 @@
 import {
-  Facet,
+  type Facet,
   buildFacet,
-  FacetState,
-  FacetOptions,
-  FacetSortCriterion,
-  SearchStatus,
-  SearchStatusState,
+  type FacetState,
+  type FacetOptions,
+  type FacetSortCriterion,
+  type SearchStatus,
+  type SearchStatusState,
   buildSearchStatus,
-  FacetValue,
+  type FacetValue,
   buildFacetConditionsManager,
-  FacetConditionsManager,
-  FacetResultsMustMatch,
-  FacetValueRequest,
-  CategoryFacetValueRequest,
+  type FacetConditionsManager,
+  type FacetResultsMustMatch,
+  type FacetValueRequest,
+  type CategoryFacetValueRequest,
   buildTabManager,
-  TabManager,
-  TabManagerState,
+  type TabManager,
+  type TabManagerState,
 } from '@coveo/headless';
-import {Component, h, State, Prop, VNode, Element} from '@stencil/core';
+import {Component, h, State, Prop, type VNode, Element} from '@stencil/core';
 import {
   getFieldCaptions,
   getFieldValueCaption,
 } from '../../../../utils/field-utils';
 import {
   BindStateToController,
-  InitializableComponent,
+  type InitializableComponent,
   InitializeBindings,
 } from '../../../../utils/initialization-utils';
 import {ArrayProp, MapProp} from '../../../../utils/props-utils';
@@ -33,7 +33,7 @@ import {
   FocusTargetController,
 } from '../../../../utils/stencil-accessibility-utils';
 import {parseDependsOn} from '../../../common/facets/depends-on';
-import {FacetInfo} from '../../../common/facets/facet-common-store';
+import type {FacetInfo} from '../../../common/facets/facet-common-store';
 import {FacetContainer} from '../../../common/facets/facet-container/stencil-facet-container';
 import {FacetHeader} from '../../../common/facets/facet-header/stencil-facet-header';
 import {FacetPlaceholder} from '../../../common/facets/facet-placeholder/facet-placeholder';
@@ -50,7 +50,7 @@ import {FacetValueLabelHighlight} from '../../../common/facets/facet-value-label
 import {FacetValuesGroup} from '../../../common/facets/facet-values-group/stencil-facet-values-group';
 import {initializePopover} from '../../../common/facets/popover/popover-type';
 import {Hidden} from '../../../common/stencil-hidden';
-import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
+import type {Bindings} from '../../atomic-search-interface/atomic-search-interface';
 import {ColorFacetCheckbox} from '../color-facet-checkbox/color-facet-checkbox';
 
 /**

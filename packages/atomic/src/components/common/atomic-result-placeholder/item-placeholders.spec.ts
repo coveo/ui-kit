@@ -1,10 +1,10 @@
-import {ItemDisplayLayout} from '@/src/components';
+import type {ItemDisplayLayout} from '@/src/components';
 import {renderFunctionFixture} from '@/vitest-utils/testing-helpers/fixture';
 import {html} from 'lit';
 import {describe, expect, it} from 'vitest';
 import {
   renderItemPlaceholders,
-  ItemPlaceholdersProps,
+  type ItemPlaceholdersProps,
 } from './item-placeholders';
 
 describe('renderItemPlaceholders', () => {

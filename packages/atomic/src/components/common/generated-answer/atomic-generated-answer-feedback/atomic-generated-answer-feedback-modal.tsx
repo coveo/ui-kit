@@ -1,4 +1,4 @@
-import {
+import type {
   GeneratedAnswer,
   GeneratedAnswerFeedback,
   GeneratedAnswerFeedbackOption,
@@ -11,19 +11,19 @@ import {
   Prop,
   Element,
   Event,
-  EventEmitter,
+  type EventEmitter,
 } from '@stencil/core/internal';
 import CloseIcon from '../../../../images/close.svg';
 import Success from '../../../../images/success.svg';
 import {
-  InitializableComponent,
+  type InitializableComponent,
   InitializeBindings,
 } from '../../../../utils/initialization-utils';
 import {updateBreakpoints} from '../../../../utils/replace-breakpoint';
 import {once, randomID} from '../../../../utils/utils';
 import {ATOMIC_MODAL_EXPORT_PARTS} from '../../atomic-modal/export-parts';
 import {IconButton} from '../../iconButton';
-import {AnyBindings} from '../../interface/bindings';
+import type {AnyBindings} from '../../interface/bindings';
 import {Button} from '../../stencil-button';
 import {FieldsetGroup} from '../../stencil-fieldset-group';
 import {RadioButton} from '../../stencil-radio-button';
@@ -242,6 +242,7 @@ export class AtomicGeneratedAnswerFeedbackModal
     return (
       <div class="block">
         <div class="flex">
+          {/* biome-ignore lint/a11y/noLabelWithoutControl: to be reconsidered */}
           <label class="text-base">
             {this.bindings.i18n.t(label)}
             <span class="text-error-red ml-0.5">*</span>
@@ -268,6 +269,7 @@ export class AtomicGeneratedAnswerFeedbackModal
                 key={String(correspondingAnswer)}
               >
                 {this.renderAnswerEvaluation(localeKey, correspondingAnswer)}
+                {/* biome-ignore lint/a11y/useAriaPropsSupportedByRole: bug in biome, todo report */}
                 <div
                   class="options flex text-base"
                   aria-label={this.bindings.i18n.t(localeKey)}

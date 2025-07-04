@@ -1,4 +1,4 @@
-import {FunctionalComponent, h} from '@stencil/core';
+import {type FunctionalComponent, h} from '@stencil/core';
 import Tick from '../../images/checkbox.svg';
 
 /**
@@ -57,6 +57,7 @@ export const StencilCheckbox: FunctionalComponent<StencilCheckboxProps> = (
   return (
     <button
       {...attributes}
+      // biome-ignore lint/a11y/useAriaPropsForRole: to reconsider after migration
       role="checkbox"
       onClick={() => props.onToggle?.(!props.checked)}
       onMouseDown={(e) => props.onMouseDown?.(e)}

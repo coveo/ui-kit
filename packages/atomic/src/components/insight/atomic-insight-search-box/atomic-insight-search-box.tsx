@@ -1,9 +1,9 @@
 import {loadInsightSearchActions} from '@coveo/headless/insight';
 import {
   buildSearchBox as buildInsightSearchBox,
-  SearchBox as InsightSearchBox,
-  SearchBoxState as InsightSearchBoxState,
-  Suggestion as InsightSuggestion,
+  type SearchBox as InsightSearchBox,
+  type SearchBoxState as InsightSearchBoxState,
+  type Suggestion as InsightSuggestion,
 } from '@coveo/headless/insight';
 import {Component, Element, h, Prop, State} from '@stencil/core';
 import SearchSlimIcon from '../../../images/search-slim.svg';
@@ -25,9 +25,9 @@ import {
 import {SuggestionManager} from '../../common/suggestions/stencil-suggestion-manager';
 import {
   elementHasQuery,
-  SearchBoxSuggestionElement,
+  type SearchBoxSuggestionElement,
 } from '../../common/suggestions/suggestions-common';
-import {InsightBindings} from '../atomic-insight-interface/atomic-insight-interface';
+import type {InsightBindings} from '../atomic-insight-interface/atomic-insight-interface';
 
 /**
  * @internal
@@ -180,6 +180,7 @@ export class AtomicInsightSearchBox {
     }
 
     return (
+      // biome-ignore lint/a11y/noStaticElementInteractions: to reconsider after migration
       <atomic-suggestion-renderer
         i18n={this.bindings.i18n}
         id={id}
@@ -236,6 +237,7 @@ export class AtomicInsightSearchBox {
     }
 
     return (
+      // biome-ignore lint/a11y/noStaticElementInteractions: to reconsider after migration
       <div
         part={'suggestions'}
         ref={setRef}

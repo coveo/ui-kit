@@ -1,11 +1,11 @@
 import {
   buildSearchEngine,
   getSampleSearchEngineConfiguration,
-  Raw,
-  Result,
+  type Raw,
+  type Result,
 } from '@coveo/headless';
 import {vi, describe, it, expect} from 'vitest';
-import {Bindings} from '../components/search/atomic-search-interface/atomic-search-interface';
+import type {Bindings} from '../components/search/atomic-search-interface/atomic-search-interface';
 import {buildStringTemplateFromResult} from './result-utils';
 
 describe('buildStringTemplateFromResult', () => {
@@ -21,6 +21,7 @@ describe('buildStringTemplateFromResult', () => {
   const bindings = {engine} as Bindings;
 
   it('should create string templates', () => {
+    // biome-ignore-start lint/suspicious/noTemplateCurlyInString: testing templating.
     const templates = [
       {in: 'abc', out: 'abc'},
       {in: '${title}bar', out: 'foobar'},
@@ -28,7 +29,7 @@ describe('buildStringTemplateFromResult', () => {
       {in: '${uri}/abc', out: 'http://uri.foo.com/abc'},
       {in: '${window.location.hostname}', out: 'localhost'},
     ];
-
+    // biome-ignore-end lint/suspicious/noTemplateCurlyInString: testing templating.
     templates.forEach((template) =>
       expect(
         buildStringTemplateFromResult(template.in, mockResult, bindings)
@@ -42,6 +43,7 @@ describe('buildStringTemplateFromResult', () => {
       .mockImplementation(() => {});
     expect(
       buildStringTemplateFromResult(
+        // biome-ignore lint/suspicious/noTemplateCurlyInString: testing templating.
         '${title}/${raw.notafield}',
         mockResult,
         bindings

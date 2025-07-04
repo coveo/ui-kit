@@ -1,17 +1,24 @@
 import {
   buildPager,
   buildSearchStatus,
-  Pager,
-  PagerState,
-  SearchStatus,
-  SearchStatusState,
+  type Pager,
+  type PagerState,
+  type SearchStatus,
+  type SearchStatusState,
 } from '@coveo/headless';
-import {Component, Event, EventEmitter, h, Prop, State} from '@stencil/core';
+import {
+  Component,
+  Event,
+  type EventEmitter,
+  h,
+  Prop,
+  State,
+} from '@stencil/core';
 import ArrowLeftIcon from '../../../images/arrow-left-rounded.svg';
 import ArrowRightIcon from '../../../images/arrow-right-rounded.svg';
 import {
   BindStateToController,
-  InitializableComponent,
+  type InitializableComponent,
   InitializeBindings,
 } from '../../../utils/initialization-utils';
 import {randomID} from '../../../utils/utils';
@@ -24,7 +31,7 @@ import {
 } from '../../common/pager/stencil-pager-buttons';
 import {PagerGuard} from '../../common/pager/stencil-pager-guard';
 import {PagerNavigation} from '../../common/pager/stencil-pager-navigation';
-import {Bindings} from '../atomic-search-interface/atomic-search-interface';
+import type {Bindings} from '../atomic-search-interface/atomic-search-interface';
 
 /**
  * The `atomic-pager` provides buttons that allow the end user to navigate through the different result pages.

@@ -1,20 +1,20 @@
 import {
-  ResultList,
-  ResultListState,
+  type ResultList,
+  type ResultListState,
   buildResultList,
-  ResultsPerPageState,
-  ResultsPerPage,
+  type ResultsPerPageState,
+  type ResultsPerPage,
   buildResultsPerPage,
   buildInteractiveResult,
-  Result,
-  TabManager,
-  TabManagerState,
+  type Result,
+  type TabManager,
+  type TabManagerState,
   buildTabManager,
 } from '@coveo/headless';
 import {Component, Element, State, Prop, Method, h, Watch} from '@stencil/core';
 import {
   BindStateToController,
-  InitializableComponent,
+  type InitializableComponent,
   InitializeBindings,
 } from '../../../../utils/initialization-utils';
 import {ArrayProp} from '../../../../utils/props-utils';
@@ -34,16 +34,16 @@ import {
 import {DisplayWrapper} from '../../../common/item-list/stencil-display-wrapper';
 import {
   ItemListCommon,
-  ItemRenderingFunction,
+  type ItemRenderingFunction,
 } from '../../../common/item-list/stencil-item-list-common';
 import {
-  ItemDisplayDensity,
-  ItemDisplayImageSize,
-  ItemDisplayLayout,
+  type ItemDisplayDensity,
+  type ItemDisplayImageSize,
+  type ItemDisplayLayout,
   getItemListDisplayClasses,
 } from '../../../common/layout/display-options';
 import {TabGuard} from '../../../common/tabs/tab-guard';
-import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
+import type {Bindings} from '../../atomic-search-interface/atomic-search-interface';
 
 /**
  * The `atomic-result-list` component is responsible for displaying query results by applying one or more result templates.

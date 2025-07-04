@@ -1,11 +1,11 @@
-import {Result, ResultTemplatesHelpers} from '@coveo/headless';
+import {type Result, ResultTemplatesHelpers} from '@coveo/headless';
 import {Component, Prop, Element, State, Listen} from '@stencil/core';
 import {InitializeBindings} from '../../../../utils/initialization-utils';
 import {
   defaultNumberFormatter,
-  NumberFormatter,
+  type NumberFormatter,
 } from '../../../common/formats/format-common';
-import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
+import type {Bindings} from '../../atomic-search-interface/atomic-search-interface';
 import {ResultContext} from '../result-template-decorators';
 
 /**

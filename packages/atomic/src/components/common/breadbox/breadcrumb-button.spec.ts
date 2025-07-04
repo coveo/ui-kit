@@ -1,6 +1,6 @@
 import {renderFunctionFixture} from '@/vitest-utils/testing-helpers/fixture';
 import {createTestI18n} from '@/vitest-utils/testing-helpers/i18n-utils';
-import {i18n} from 'i18next';
+import type {i18n} from 'i18next';
 import {html} from 'lit';
 import {expect, describe, beforeAll, it, vi, beforeEach} from 'vitest';
 import {renderBreadcrumbButton} from './breadcrumb-button';

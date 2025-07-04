@@ -1,4 +1,4 @@
-import {FunctionalComponent, h} from '@stencil/core';
+import {type FunctionalComponent, h} from '@stencil/core';
 import {RadioButton} from '../stencil-radio-button';
 
 interface ChoicesProps {
@@ -10,7 +10,7 @@ interface ChoicesProps {
   scrollToTopEvent: () => {};
   setItemSize: (size: number) => void;
   focusOnFirstResultAfterNextSearch: () => Promise<void> | undefined;
-  focusOnNextNewResult: () => void | undefined;
+  focusOnNextNewResult: () => undefined | undefined;
 }
 
 export const Choices: FunctionalComponent<ChoicesProps> = ({

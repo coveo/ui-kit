@@ -1,5 +1,5 @@
-import {FunctionalComponent, Fragment, h} from '@stencil/core';
-import {i18n} from 'i18next';
+import {type FunctionalComponent, Fragment, h} from '@stencil/core';
+import type {i18n} from 'i18next';
 import {LocalizedString} from '../../../utils/jsx-utils';
 
 interface TriggerCorrectionProps {
@@ -36,6 +36,7 @@ export const TriggerCorrection: FunctionalComponent<TriggerCorrectionProps> = ({
           params={{
             query: (
               <button
+                type="submit"
                 class="text-primary hover:text-primary-light focus-visible:text-primary-light py-1 hover:underline focus-visible:underline"
                 part="undo-btn"
                 onClick={() => onClick()}

@@ -1,6 +1,6 @@
 import {localizedString} from '@/src/directives/localized-string';
-import {FunctionalComponentWithChildren} from '@/src/utils/functional-component-utils';
-import {i18n} from 'i18next';
+import type {FunctionalComponentWithChildren} from '@/src/utils/functional-component-utils';
+import type {i18n} from 'i18next';
 import {html} from 'lit';
 import CloseIcon from '../../../images/close.svg';
 import {ATOMIC_MODAL_EXPORT_PARTS} from '../atomic-modal/export-parts';

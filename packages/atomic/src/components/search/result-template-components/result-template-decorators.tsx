@@ -1,9 +1,9 @@
-import {FoldedResult, Result} from '@coveo/headless';
+import type {FoldedResult, Result} from '@coveo/headless';
 import {
   InteractiveItemContext,
-  InteractiveItemContextEvent,
+  type InteractiveItemContextEvent,
   ItemContext,
-  ItemContextEvent,
+  type ItemContextEvent,
   itemContext,
 } from '../../common/item-list/stencil-item-decorators';
 

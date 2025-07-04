@@ -8,11 +8,20 @@
   "linter": {
     "rules": {
       "recommended": true,
+      "a11y": {
+        "useSemanticElements": "off",
+        "useKeyWithMouseEvents": "off"
+      },
+      "correctness": {
+        "noUnusedImports": "off",
+        "useJsxKeyInIterable": "off"
+      },
       "style": {
         "noNonNullAssertion": "off"
       },
       "suspicious": {
-        "noAssignInExpressions": "info"
+        "noAssignInExpressions": "off",
+        "noExportsInTest": "off"
       }
     }
   }

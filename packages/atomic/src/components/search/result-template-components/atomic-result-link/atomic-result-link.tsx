@@ -1,17 +1,17 @@
 import {isUndefined} from '@coveo/bueno';
-import {InteractiveResult} from '@coveo/headless';
+import type {InteractiveResult} from '@coveo/headless';
 import {Component, h, Prop, Element} from '@stencil/core';
 import {buildCustomEvent} from '../../../../utils/event-utils';
 import {
-  InitializableComponent,
+  type InitializableComponent,
   InitializeBindings,
 } from '../../../../utils/initialization-utils';
 import {buildStringTemplateFromResult} from '../../../../utils/result-utils';
 import {getDefaultSlotFromHost} from '../../../../utils/slot-utils';
-import {AnyUnfoldedItem} from '../../../common/interface/item';
+import type {AnyUnfoldedItem} from '../../../common/interface/item';
 import {getAttributesFromLinkSlot} from '../../../common/item-link/attributes-slot';
 import {LinkWithItemAnalytics} from '../../../common/item-link/item-link';
-import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
+import type {Bindings} from '../../atomic-search-interface/atomic-search-interface';
 import {
   InteractiveResultContext,
   ResultContext,

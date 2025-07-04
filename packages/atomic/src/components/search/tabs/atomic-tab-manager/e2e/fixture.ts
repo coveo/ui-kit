@@ -1,4 +1,4 @@
-import {AxeFixture, makeAxeBuilder} from '@/playwright-utils/base-fixture';
+import {type AxeFixture, makeAxeBuilder} from '@/playwright-utils/base-fixture';
 import {test as base} from '@playwright/test';
 import {SearchBoxPageObject} from '../../../atomic-search-box/e2e/page-object';
 import {AtomicFacetPageObject as FacetPageObject} from '../../../facets/atomic-facet/e2e/page-object';

@@ -1,9 +1,9 @@
 import {Component, h, State} from '@stencil/core';
 import {
-  InitializableComponent,
+  type InitializableComponent,
   InitializeBindings,
 } from '../../../utils/initialization-utils';
-import {Bindings} from '../../search/atomic-search-interface/atomic-search-interface';
+import type {Bindings} from '../../search/atomic-search-interface/atomic-search-interface';
 
 /**
  * @internal

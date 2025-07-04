@@ -1,4 +1,4 @@
-import {Fragment, FunctionalComponent, h} from '@stencil/core';
+import {Fragment, type FunctionalComponent, h} from '@stencil/core';
 
 const MIN_VALUES_WHERE_FACET_SEARCH_IMPROVES_UX = 9;
 

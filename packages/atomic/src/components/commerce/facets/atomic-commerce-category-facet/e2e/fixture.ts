@@ -1,4 +1,4 @@
-import {AxeFixture, makeAxeBuilder} from '@/playwright-utils/base-fixture';
+import {type AxeFixture, makeAxeBuilder} from '@/playwright-utils/base-fixture';
 import {test as base} from '@playwright/test';
 import {CategoryFacetPageObject} from './page-object';
 

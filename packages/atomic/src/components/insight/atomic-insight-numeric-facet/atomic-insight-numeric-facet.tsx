@@ -5,35 +5,35 @@ import {
   buildNumericFilter as buildInsightNumericFilter,
   buildNumericRange as buildInsightNumericRange,
   buildSearchStatus as buildInsightSearchStatus,
-  CategoryFacetValueRequest as InsightCategoryFacetValueRequest,
-  FacetConditionsManager as InsightFacetConditionsManager,
-  FacetValueRequest as InsightFacetValueRequest,
-  NumericFacet as InsightNumericFacet,
-  NumericFacetState as InsightNumericFacetState,
-  NumericFilter as InsightNumericFilter,
-  NumericFilterState as InsightNumericFilterState,
-  NumericRangeRequest as InsightNumericRangeRequest,
-  RangeFacetRangeAlgorithm as InsightRangeFacetRangeAlgorithm,
-  RangeFacetSortCriterion as InsightRangeFacetSortCriterion,
-  SearchStatus as InsightSearchStatus,
-  SearchStatusState as InsightSearchStatusState,
+  type CategoryFacetValueRequest as InsightCategoryFacetValueRequest,
+  type FacetConditionsManager as InsightFacetConditionsManager,
+  type FacetValueRequest as InsightFacetValueRequest,
+  type NumericFacet as InsightNumericFacet,
+  type NumericFacetState as InsightNumericFacetState,
+  type NumericFilter as InsightNumericFilter,
+  type NumericFilterState as InsightNumericFilterState,
+  type NumericRangeRequest as InsightNumericRangeRequest,
+  type RangeFacetRangeAlgorithm as InsightRangeFacetRangeAlgorithm,
+  type RangeFacetSortCriterion as InsightRangeFacetSortCriterion,
+  type SearchStatus as InsightSearchStatus,
+  type SearchStatusState as InsightSearchStatusState,
   loadNumericFacetSetActions as loadInsightNumericFacetSetActions,
 } from '@coveo/headless/insight';
 import {Component, Element, h, Listen, Prop, State} from '@stencil/core';
 import {
   BindStateToController,
-  InitializableComponent,
+  type InitializableComponent,
   InitializeBindings,
 } from '../../../utils/initialization-utils';
 import {MapProp} from '../../../utils/props-utils';
 import {FocusTargetController} from '../../../utils/stencil-accessibility-utils';
 import {randomID} from '../../../utils/utils';
 import {parseDependsOn} from '../../common/facets/depends-on';
-import {FacetInfo} from '../../common/facets/facet-common-store';
+import type {FacetInfo} from '../../common/facets/facet-common-store';
 import {FacetContainer} from '../../common/facets/facet-container/stencil-facet-container';
 import {FacetGuard} from '../../common/facets/facet-guard';
 import {FacetHeader} from '../../common/facets/facet-header/stencil-facet-header';
-import {NumberInputType} from '../../common/facets/facet-number-input/number-input-type';
+import type {NumberInputType} from '../../common/facets/facet-number-input/number-input-type';
 import {FacetPlaceholder} from '../../common/facets/facet-placeholder/facet-placeholder';
 import {formatHumanReadable} from '../../common/facets/numeric-facet/formatter';
 import {NumericFacetValueLink} from '../../common/facets/numeric-facet/value-link';
@@ -42,9 +42,9 @@ import {initializePopover} from '../../common/facets/popover/popover-type';
 import {shouldDisplayInputForFacetRange} from '../../common/facets/stencil-facet-common';
 import {
   defaultNumberFormatter,
-  NumberFormatter,
+  type NumberFormatter,
 } from '../../common/formats/format-common';
-import {InsightBindings} from '../atomic-insight-interface/atomic-insight-interface';
+import type {InsightBindings} from '../atomic-insight-interface/atomic-insight-interface';
 
 /**
  * @internal

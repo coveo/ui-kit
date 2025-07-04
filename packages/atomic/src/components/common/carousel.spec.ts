@@ -2,10 +2,10 @@ import {renderFunctionFixture} from '@/vitest-utils/testing-helpers/fixture';
 import {createTestI18n} from '@/vitest-utils/testing-helpers/i18n-utils';
 import {page} from '@vitest/browser/context';
 import '@vitest/browser/matchers.d.ts';
-import {html, nothing, TemplateResult} from 'lit';
+import {html, nothing, type TemplateResult} from 'lit';
 import {vi, expect, describe, beforeAll, it} from 'vitest';
-import {renderCarousel, CarouselProps} from './carousel';
-import {AnyBindings} from './interface/bindings';
+import {renderCarousel, type CarouselProps} from './carousel';
+import type {AnyBindings} from './interface/bindings';
 
 describe('carousel', () => {
   let i18n: Awaited<ReturnType<typeof createTestI18n>>;

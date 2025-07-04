@@ -1,5 +1,5 @@
 import {
-  BaseAtomicInterface,
+  type BaseAtomicInterface,
   CommonAtomicInterfaceHelper,
 } from '@/src/components/common/interface/interface-common.js';
 import {setCoveoGlobal} from '@/src/global/environment.js';

@@ -1,5 +1,5 @@
-import {ReactiveController, ReactiveControllerHost} from 'lit';
-import {AnyBindings} from '../components';
+import type {ReactiveController, ReactiveControllerHost} from 'lit';
+import type {AnyBindings} from '../components';
 import {buildCustomEvent} from './event-utils';
 import {defer} from './utils';
 

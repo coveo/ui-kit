@@ -1,4 +1,4 @@
-import {Result, ResultTemplatesHelpers} from '@coveo/headless';
+import {type Result, ResultTemplatesHelpers} from '@coveo/headless';
 import {Component, Element, Prop, h} from '@stencil/core';
 import {ResultContext} from '../result-template-decorators';
 

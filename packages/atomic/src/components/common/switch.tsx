@@ -1,4 +1,4 @@
-import {FunctionalComponent, h} from '@stencil/core';
+import {type FunctionalComponent, h} from '@stencil/core';
 
 export interface SwitchProps {
   checked?: boolean;
@@ -14,7 +14,6 @@ export const Switch: FunctionalComponent<SwitchProps> = (props) => {
   const attributes = {
     onClick: () => props.onToggle?.(!props.checked),
     'arial-label': props.ariaLabel,
-    'aria-checked': String(!!props.checked),
     part: props.part,
     tabIndex: props.tabIndex,
     title: props.title,
@@ -43,6 +42,7 @@ export const Switch: FunctionalComponent<SwitchProps> = (props) => {
   ].join(' ');
 
   return (
+    // biome-ignore lint/a11y/useAriaPropsForRole: to reconsider after migration
     <button role="switch" {...attributes} class={buttonClasses}>
       <div class={containerClasses}>
         <div class={handleClasses}></div>

@@ -1,21 +1,21 @@
 import {Schema, StringValue} from '@coveo/bueno';
 import {
-  Sort,
+  type Sort,
   buildSort,
-  SortState,
+  type SortState,
   parseCriterionExpression,
   buildSearchStatus,
-  SearchStatus,
-  SearchStatusState,
-  TabManager,
-  TabManagerState,
+  type SearchStatus,
+  type SearchStatusState,
+  type TabManager,
+  type TabManagerState,
   buildTabManager,
   loadSortCriteriaActions,
 } from '@coveo/headless';
 import {Component, h, State, Element} from '@stencil/core';
 import {
   BindStateToController,
-  InitializableComponent,
+  type InitializableComponent,
   InitializeBindings,
 } from '../../../utils/initialization-utils';
 import {shouldDisplayOnCurrentTab} from '../../../utils/tab-utils';
@@ -25,7 +25,7 @@ import {SortGuard} from '../../common/sort/stencil-guard';
 import {SortLabel} from '../../common/sort/stencil-label';
 import {SortOption} from '../../common/sort/stencil-option';
 import {SortSelect} from '../../common/sort/stencil-select';
-import {Bindings} from '../atomic-search-interface/atomic-search-interface';
+import type {Bindings} from '../atomic-search-interface/atomic-search-interface';
 
 /**
  * The `atomic-sort-dropdown` component renders a dropdown that the end user can interact with to select the criteria to use when sorting query results.

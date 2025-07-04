@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import {AnyBindings} from '../components/common/interface/bindings';
+import type {AnyBindings} from '../components/common/interface/bindings';
 import {buildCustomEvent} from './event-utils';
-import {InitializableComponent} from './initialization-utils';
+import type {InitializableComponent} from './initialization-utils';
 import {defer} from './utils';
 
 const findAriaLiveEventName = 'atomic/accessibility/findAriaLive';
@@ -45,7 +45,7 @@ export function AriaLiveRegion(regionName: string, assertive = false) {
     });
 
     component.componentWillRender = function () {
-      componentWillRender && componentWillRender.call(this);
+      componentWillRender?.call(this);
       registerRegion();
     };
   };
@@ -123,8 +123,7 @@ export class FocusTargetController {
     const originalComponentDidRender = this.component.componentDidRender;
 
     this.component.componentDidRender = () => {
-      originalComponentDidRender &&
-        originalComponentDidRender.call(this.component);
+      originalComponentDidRender?.call(this.component);
       if (!this.bindings) {
         return;
       }

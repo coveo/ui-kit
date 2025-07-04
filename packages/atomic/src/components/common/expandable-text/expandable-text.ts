@@ -1,4 +1,4 @@
-import {FunctionalComponentWithChildren} from '@/src/utils/functional-component-utils';
+import type {FunctionalComponentWithChildren} from '@/src/utils/functional-component-utils';
 import {html} from 'lit';
 import {renderButton} from '../button';
 import MinusIcon from '../../../images/minus.svg';

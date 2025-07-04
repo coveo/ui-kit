@@ -1,6 +1,6 @@
-import {h, FunctionalComponent} from '@stencil/core';
-import {JSXBase} from '@stencil/core/internal';
-import {HeadingProps} from './heading';
+import {h, type FunctionalComponent} from '@stencil/core';
+import type {JSXBase} from '@stencil/core/internal';
+import type {HeadingProps} from './heading';
 
 /**
  * @deprecated Should only be used for Stencil components; for Lit components, use the heading function instead.

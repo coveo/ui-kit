@@ -3,11 +3,11 @@ import {Component, Element, Fragment, h, Prop, State} from '@stencil/core';
 import CloseIcon from '../../../images/close.svg';
 import SearchIcon from '../../../images/search.svg';
 import {
-  InitializableComponent,
+  type InitializableComponent,
   InitializeBindings,
 } from '../../../utils/initialization-utils';
 import {Button} from '../../common/stencil-button';
-import {Bindings} from '../../search/atomic-search-interface/atomic-search-interface';
+import type {Bindings} from '../../search/atomic-search-interface/atomic-search-interface';
 
 const numberOrPixelValuePattern = new RegExp(/^(?=.*(?:\d+|px)$).*$/);
 

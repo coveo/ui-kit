@@ -7,14 +7,14 @@ import {
   describe,
   beforeAll,
   it,
-  MockedFunction,
+  type MockedFunction,
   beforeEach,
 } from 'vitest';
 import {renderFacetValueBox} from '../facet-value-box/facet-value-box';
 import {renderFacetValueCheckbox} from '../facet-value-checkbox/facet-value-checkbox';
 import {renderFacetValueLabelHighlight} from '../facet-value-label-highlight/facet-value-label-highlight';
 import {renderFacetValueLink} from '../facet-value-link/facet-value-link';
-import {FacetValueProps, renderFacetValue} from './facet-value';
+import {type FacetValueProps, renderFacetValue} from './facet-value';
 
 vi.mock('../facet-value-checkbox/facet-value-checkbox', {spy: true});
 vi.mock('../facet-value-link/facet-value-link', {spy: true});

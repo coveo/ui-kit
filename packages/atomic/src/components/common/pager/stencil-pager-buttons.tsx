@@ -1,7 +1,10 @@
-import {FunctionalComponent, h} from '@stencil/core';
-import {i18n} from 'i18next';
-import {Button, StencilButtonProps} from '../stencil-button';
-import {RadioButton, StencilRadioButtonProps} from '../stencil-radio-button';
+import {type FunctionalComponent, h} from '@stencil/core';
+import type {i18n} from 'i18next';
+import {Button, type StencilButtonProps} from '../stencil-button';
+import {
+  RadioButton,
+  type StencilRadioButtonProps,
+} from '../stencil-radio-button';
 
 /**
  * @deprecated use the lit equivalent

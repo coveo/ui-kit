@@ -5,22 +5,22 @@ import {
   buildFacetConditionsManager as buildInsightFacetConditionsManager,
   buildSearchStatus as buildInsightSearchStatus,
   deserializeRelativeDate as deserializeInsightRelativeDate,
-  DateFacet as InsightDateFacet,
-  DateFacetState as InsightDateFacetState,
-  DateFilter as InsightDateFilter,
-  DateFilterState as InsightDateFilterState,
-  DateRangeRequest as InsightDateRangeRequest,
-  SearchStatus as InsightSearchStatus,
-  SearchStatusState as InsightSearchStatusState,
+  type DateFacet as InsightDateFacet,
+  type DateFacetState as InsightDateFacetState,
+  type DateFilter as InsightDateFilter,
+  type DateFilterState as InsightDateFilterState,
+  type DateRangeRequest as InsightDateRangeRequest,
+  type SearchStatus as InsightSearchStatus,
+  type SearchStatusState as InsightSearchStatusState,
   loadDateFacetSetActions as loadInsightDateFacetSetActions,
-  RangeFacetSortCriterion as InsightRangeFacetSortCriterion,
-  FacetValueRequest as InsightFacetValueRequest,
-  CategoryFacetValueRequest as InsightCategoryFacetValueRequest,
+  type RangeFacetSortCriterion as InsightRangeFacetSortCriterion,
+  type FacetValueRequest as InsightFacetValueRequest,
+  type CategoryFacetValueRequest as InsightCategoryFacetValueRequest,
 } from '@coveo/headless/insight';
 import {Component, Element, h, Listen, Prop, State} from '@stencil/core';
 import {
   BindStateToController,
-  InitializableComponent,
+  type InitializableComponent,
   InitializeBindings,
 } from '../../../utils/initialization-utils';
 import {MapProp} from '../../../utils/props-utils';
@@ -28,7 +28,7 @@ import {FocusTargetController} from '../../../utils/stencil-accessibility-utils'
 import {parseDependsOn} from '../../common/facets/depends-on';
 import {FacetPlaceholder} from '../../common/facets/facet-placeholder/facet-placeholder';
 import {TimeframeFacetCommon} from '../../common/facets/timeframe-facet-common';
-import {InsightBindings} from '../atomic-insight-interface/atomic-insight-interface';
+import type {InsightBindings} from '../atomic-insight-interface/atomic-insight-interface';
 
 /**
  * @internal

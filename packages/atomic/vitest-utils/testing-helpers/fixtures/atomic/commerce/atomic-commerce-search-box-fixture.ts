@@ -1,13 +1,13 @@
-import {
+import type {
   SearchBoxSuggestions,
   SearchBoxSuggestionsBindings,
   SearchBoxSuggestionsEvent,
 } from '@/src/components/common/suggestions/suggestions-common';
 import {fixture} from '@/vitest-utils/testing-helpers/fixture';
 import {createTestI18n} from '@/vitest-utils/testing-helpers/i18n-utils';
-import {SearchBox, StandaloneSearchBox} from '@coveo/headless/commerce';
-import {i18n} from 'i18next';
-import {html, LitElement, nothing, render, TemplateResult} from 'lit';
+import type {SearchBox, StandaloneSearchBox} from '@coveo/headless/commerce';
+import type {i18n} from 'i18next';
+import {html, LitElement, nothing, render, type TemplateResult} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {vi} from 'vitest';
 

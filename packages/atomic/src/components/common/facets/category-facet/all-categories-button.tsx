@@ -1,5 +1,5 @@
-import {FunctionalComponent, h} from '@stencil/core';
-import {i18n} from 'i18next';
+import {type FunctionalComponent, h} from '@stencil/core';
+import type {i18n} from 'i18next';
 import LeftArrow from '../../../../images/arrow-left-rounded.svg';
 import {Button} from '../../stencil-button';
 
@@ -20,11 +20,7 @@ export const CategoryFacetAllCategoryButton: FunctionalComponent<
         onClick();
       }}
     >
-      <atomic-icon
-        aria-hidden="true"
-        icon={LeftArrow}
-        part="back-arrow"
-      ></atomic-icon>
+      <atomic-icon icon={LeftArrow} part="back-arrow"></atomic-icon>
       <span class="truncate">{allCategories}</span>
     </Button>
   );

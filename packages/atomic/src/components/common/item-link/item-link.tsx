@@ -1,6 +1,6 @@
-import {FunctionalComponent, h} from '@stencil/core';
+import {type FunctionalComponent, h} from '@stencil/core';
 import {filterProtocol} from '../../../utils/xss-utils';
-import {ItemTarget} from '../layout/display-options';
+import type {ItemTarget} from '../layout/display-options';
 
 interface ItemLinkEventProps {
   onSelect: () => void;

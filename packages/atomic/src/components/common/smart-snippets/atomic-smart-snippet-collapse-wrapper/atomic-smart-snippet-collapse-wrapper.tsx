@@ -1,7 +1,7 @@
 import {Component, h, Element, State, Prop, Host} from '@stencil/core';
 import ArrowDown from '../../../../images/arrow-down.svg';
 import {InitializeBindings} from '../../../../utils/initialization-utils';
-import {AnyBindings} from '../../interface/bindings';
+import type {AnyBindings} from '../../interface/bindings';
 
 /**
  * @internal
@@ -55,7 +55,7 @@ export class AtomicSmartSnippetCollapseWrapper {
     this.isExpanded = !this.showButton;
     this.host.style.setProperty(
       '--collapsed-size',
-      this.collapsedHeight + 'px'
+      `${this.collapsedHeight}px`
     );
   }
 
@@ -65,6 +65,7 @@ export class AtomicSmartSnippetCollapseWrapper {
     }
     return (
       <button
+        type="submit"
         onClick={() => (this.isExpanded = !this.isExpanded)}
         class="text-primary mb-4 hover:underline"
         part={this.isExpanded ? 'show-less-button' : 'show-more-button'}

@@ -1,10 +1,10 @@
 import {Component, Prop, State, h} from '@stencil/core';
 import DOMPurify from 'dompurify';
 import {
-  InitializableComponent,
+  type InitializableComponent,
   InitializeBindings,
 } from '../../../utils/initialization-utils';
-import {Bindings} from '../atomic-search-interface/atomic-search-interface';
+import type {Bindings} from '../atomic-search-interface/atomic-search-interface';
 
 /**
  * The `atomic-html` component renders the HTML value of a string.

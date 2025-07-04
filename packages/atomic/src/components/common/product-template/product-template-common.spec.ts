@@ -6,7 +6,7 @@ import {
   beforeEach,
   afterEach,
   vi,
-  MockInstance,
+  type MockInstance,
 } from 'vitest';
 import {isResultSectionNode} from '../layout/sections';
 import {

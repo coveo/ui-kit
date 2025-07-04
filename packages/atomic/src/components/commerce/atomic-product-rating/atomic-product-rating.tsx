@@ -1,15 +1,15 @@
-import {Product, ProductTemplatesHelpers} from '@coveo/headless/commerce';
+import {type Product, ProductTemplatesHelpers} from '@coveo/headless/commerce';
 import {Component, Element, h, Prop, State} from '@stencil/core';
 import Star from '../../../images/star.svg';
 import {
-  InitializableComponent,
+  type InitializableComponent,
   InitializeBindings,
 } from '../../../utils/initialization-utils';
 import {
   Rating,
   computeNumberOfStars,
 } from '../../common/atomic-rating/atomic-rating';
-import {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface';
+import type {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface';
 import {ProductContext} from '../product-template-component-utils/stencil-product-template-decorators';
 
 /**

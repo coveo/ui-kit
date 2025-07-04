@@ -1,10 +1,10 @@
 import {
   buildInteractiveResult,
   buildSearchEngine,
-  Result,
+  type Result,
 } from '@coveo/headless';
 import {h} from '@stencil/core';
-import {newSpecPage, SpecPage} from '@stencil/core/testing';
+import {newSpecPage, type SpecPage} from '@stencil/core/testing';
 import {MissingParentError} from '../../common/item-list/stencil-item-decorators';
 import {AtomicResult} from '../atomic-result/atomic-result';
 import {AtomicSearchInterface} from '../atomic-search-interface/atomic-search-interface';

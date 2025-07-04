@@ -1,4 +1,4 @@
-import {AnyBindings} from '@/src/components';
+import type {AnyBindings} from '@/src/components';
 import {createContext, ContextRoot} from '@lit/context';
 
 if (typeof window !== 'undefined') {

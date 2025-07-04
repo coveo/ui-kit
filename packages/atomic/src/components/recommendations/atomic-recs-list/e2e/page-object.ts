@@ -35,7 +35,7 @@ export class AtomicCommerceRecsListPageObject extends BasePageObject<'atomic-rec
         const response = await route.fetch();
         const body = await response.json();
         if (numberOfRecommendations !== undefined) {
-          body['results'] = body['results'].slice(0, numberOfRecommendations);
+          body.results = body.results.slice(0, numberOfRecommendations);
         }
         await route.fulfill({
           response,

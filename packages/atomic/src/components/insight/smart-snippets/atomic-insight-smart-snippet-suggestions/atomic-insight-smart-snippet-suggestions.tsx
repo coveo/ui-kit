@@ -3,16 +3,16 @@ import {Hidden} from '@/src/components/common/stencil-hidden';
 import {randomID} from '@/src/utils/utils';
 import {
   buildSmartSnippetQuestionsList as buildInsightSmartSnippetQuestionsList,
-  SmartSnippetQuestionsList as InsightSmartSnippetQuestionsList,
-  SmartSnippetQuestionsListState as InsightSmartSnippetQuestionsListState,
-  Result,
-  SmartSnippetRelatedQuestion,
+  type SmartSnippetQuestionsList as InsightSmartSnippetQuestionsList,
+  type SmartSnippetQuestionsListState as InsightSmartSnippetQuestionsListState,
+  type Result,
+  type SmartSnippetRelatedQuestion,
 } from '@coveo/headless/insight';
 import {Component, Prop, State, Element, h} from '@stencil/core';
 import ArrowDown from '../../../../images/arrow-down.svg';
 import ArrowRight from '../../../../images/arrow-right.svg';
 import {
-  InitializableComponent,
+  type InitializableComponent,
   InitializeBindings,
   BindStateToController,
 } from '../../../../utils/initialization-utils';
@@ -24,7 +24,7 @@ import {
   SmartSnippetSuggestionsQuestionWrapper,
   SmartSnippetSuggestionsWrapper,
 } from '../../../common/smart-snippets/atomic-smart-snippet-suggestions/smart-snippet-suggestions-common';
-import {InsightBindings} from '../../atomic-insight-interface/atomic-insight-interface';
+import type {InsightBindings} from '../../atomic-insight-interface/atomic-insight-interface';
 
 /**
  * @internal

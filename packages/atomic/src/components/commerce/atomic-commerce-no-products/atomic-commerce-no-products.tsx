@@ -1,14 +1,14 @@
 import {
-  SearchSummaryState,
-  ProductListingSummaryState,
-  Summary,
+  type SearchSummaryState,
+  type ProductListingSummaryState,
+  type Summary,
   buildSearch,
   buildProductListing,
 } from '@coveo/headless/commerce';
 import {Component, State, h} from '@stencil/core';
 import {
   BindStateToController,
-  InitializableComponent,
+  type InitializableComponent,
   InitializeBindings,
 } from '../../../utils/initialization-utils';
 import {AriaLiveRegion} from '../../../utils/stencil-accessibility-utils';
@@ -18,7 +18,7 @@ import {MagnifyingGlass} from '../../common/no-items/stencil-magnifying-glass';
 import {NoItems} from '../../common/no-items/stencil-no-items';
 import {SearchTips} from '../../common/no-items/stencil-tips';
 import {getSummary} from '../../common/no-items/utils';
-import {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface';
+import type {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface';
 
 /**
  * @alpha

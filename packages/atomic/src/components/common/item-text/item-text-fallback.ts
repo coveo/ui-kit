@@ -1,4 +1,4 @@
-import {FunctionalComponentWithChildren} from '@/src/utils/functional-component-utils.js';
+import type {FunctionalComponentWithChildren} from '@/src/utils/functional-component-utils.js';
 import {isUndefined} from '@coveo/bueno';
 import {html, nothing} from 'lit';
 import {possiblyWarnOnBadFieldType} from './field-warning.js';

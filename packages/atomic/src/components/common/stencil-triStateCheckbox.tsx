@@ -1,8 +1,8 @@
-import {FacetValueState} from '@coveo/headless';
-import {FunctionalComponent, h} from '@stencil/core';
+import type {FacetValueState} from '@coveo/headless';
+import {type FunctionalComponent, h} from '@stencil/core';
 import Tick from '../../images/checkbox.svg';
 import Close from '../../images/close.svg';
-import {StencilCheckboxProps} from './stencil-checkbox';
+import type {StencilCheckboxProps} from './stencil-checkbox';
 
 export type TriStateCheckboxProps = Omit<StencilCheckboxProps, 'checked'> & {
   state: FacetValueState;
@@ -54,7 +54,6 @@ export const TriStateCheckbox: FunctionalComponent<TriStateCheckboxProps> = (
   return (
     <button
       {...attributes}
-      role="button"
       onClick={() => props.onToggle?.(!isSelected)}
       onMouseDown={(e) => props.onMouseDown?.(e)}
     >

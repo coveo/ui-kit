@@ -1,17 +1,17 @@
 import {
   buildContext,
-  Product,
-  Context,
-  ContextState,
+  type Product,
+  type Context,
+  type ContextState,
 } from '@coveo/headless/commerce';
 import {Component, h, Host} from '@stencil/core';
 import {
   BindStateToController,
-  InitializableComponent,
+  type InitializableComponent,
   InitializeBindings,
 } from '../../../utils/initialization-utils';
 import {defaultCurrencyFormatter} from '../../common/formats/format-common';
-import {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface';
+import type {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface';
 import {parseValue} from '../product-template-component-utils/product-utils';
 import {ProductContext} from '../product-template-component-utils/stencil-product-template-decorators';
 

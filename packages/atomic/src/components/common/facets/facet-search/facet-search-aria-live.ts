@@ -1,5 +1,5 @@
-import {Facet, FacetSearchState} from '@coveo/headless';
-import {i18n} from 'i18next';
+import type {Facet, FacetSearchState} from '@coveo/headless';
+import type {i18n} from 'i18next';
 import {shouldUpdateFacetSearchComponent} from './facet-search-utils';
 
 export function announceFacetSearchResultsWithAriaLive(
