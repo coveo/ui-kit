@@ -13,6 +13,7 @@ import {
   AtomicCommerceSearchBoxQuerySuggestions as LitAtomicCommerceSearchBoxQuerySuggestions,
   AtomicCommerceSearchBoxRecentQueries as LitAtomicCommerceSearchBoxRecentQueries,
   AtomicCommerceSortDropdown as LitAtomicCommerceSortDropdown,
+  AtomicCommerceTimeframeFacet as LitAtomicCommerceTimeframeFacet,
   AtomicComponentError as LitAtomicComponentError,
   AtomicIcon as LitAtomicIcon,
   AtomicProduct as LitAtomicProduct,
@@ -102,6 +103,12 @@ export const AtomicCommerceSortDropdown = createComponent({
   tagName: 'atomic-commerce-sort-dropdown',
   react: React,
   elementClass: LitAtomicCommerceSortDropdown,
+});
+
+export const AtomicCommerceTimeframeFacet = createComponent({
+  tagName: 'atomic-commerce-timeframe-facet',
+  react: React,
+  elementClass: LitAtomicCommerceTimeframeFacet,
 });
 
 export const AtomicProduct = createComponent({

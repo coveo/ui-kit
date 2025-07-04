@@ -13,7 +13,7 @@ import {AnyBindings} from '../../interface/bindings';
  * @internal
  */
 @Component({
-  tag: 'atomic-facet-date-input',
+  tag: 'atomic-stencil-facet-date-input',
   shadow: false,
 })
 export class FacetDateInput {
