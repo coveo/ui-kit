@@ -1,4 +1,4 @@
-import {LitElement, html, css} from 'lit';
+import {LitElement, html} from 'lit';
 import {customElement, property} from 'lit/decorators.js';
 import {Section} from './sections';
 
@@ -24,8 +24,6 @@ export class AtomicLayoutSection extends LitElement {
    */
   @property({type: String, reflect: true, attribute: 'max-width'})
   maxWidth?: string;
-
-  static styles = css``;
 
   render() {
     return html`<slot></slot>`;

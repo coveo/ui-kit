@@ -46,7 +46,7 @@ describe('atomic-layout-section', () => {
         .toHaveAttribute('section', 'facets');
     });
 
-    it('reflects minWidth  propertie to attributes', async () => {
+    it('should reflect the minWidth property to attributes', async () => {
       await setupElement({
         minWidth: '200px',
       });
@@ -55,7 +55,7 @@ describe('atomic-layout-section', () => {
         .toHaveAttribute('min-width', '200px');
     });
 
-    it('reflects  maxWidth propertie to attributes', async () => {
+    it('should reflect the maxWidth property to attributes', async () => {
       await setupElement({
         maxWidth: '400px',
       });
@@ -65,7 +65,7 @@ describe('atomic-layout-section', () => {
         .toHaveAttribute('max-width', '400px');
     });
 
-    it('has undefined minWidth and maxWidth by default', async () => {
+    it('should has undefined minWidth and maxWidth by default', async () => {
       await setupElement({section: 'main'});
       await expect.element(locators.layout).not.toHaveAttribute('max-width');
       await expect.element(locators.layout).not.toHaveAttribute('min-width');
