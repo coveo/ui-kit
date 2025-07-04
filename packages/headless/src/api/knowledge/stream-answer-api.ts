@@ -270,7 +270,12 @@ export const answerApi = answerSlice.injectEndpoints({
 export const selectAnswerTriggerParams = createSelector(
   (state) => selectQuery(state)?.q,
   (state) => state.search.requestId,
-  (q, requestId) => ({q, requestId})
+  (state) => state.generatedAnswer.cannotAnswer,
+  (q, requestId, cannotAnswer) => ({
+    q,
+    requestId,
+    cannotAnswer,
+  })
 );
 
 let generateFacetParams: Record<string, ReturnType<typeof getFacets>> = {};
