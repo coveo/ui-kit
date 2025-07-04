@@ -764,56 +764,6 @@ describe('commerceFacetSetReducer', () => {
               finalState[facetId]?.request.values as FacetValueRequest[]
             ).find((req) => req.value === facetValue.value);
             expect(targetValue?.state).toBe(facetValueState);
-            expect(targetValue?.previousState).toBe('idle');
-          });
-
-          it(`sets the previousState of a ${facetValueState} value to idle`, () => {
-            const facetValue = buildMockCommerceRegularFacetValue({
-              value: 'TED',
-              state: facetValueState,
-            });
-            const facetValueRequest = convertFacetValueToRequest(facetValue);
-
-            state[facetId] = buildMockCommerceFacetSlice({
-              request: buildMockCommerceFacetRequest({
-                values: [facetValueRequest],
-              }),
-            });
-
-            const action = toggleAction({
-              facetId,
-              selection: facetValue,
-            });
-            const finalState = commerceFacetSetReducer(state, action);
-
-            const targetValue = (
-              finalState[facetId]?.request.values as FacetValueRequest[]
-            ).find((req) => req.value === facetValue.value);
-            expect(targetValue?.previousState).toBe(facetValueState);
-          });
-
-          it(`does not set the previousState of value transitioning from ${facetValueState} to ${facetValueState}`, () => {
-            const facetValue = buildMockCommerceRegularFacetValue({
-              value: 'TED',
-              state: 'selected',
-            });
-            const facetValueRequest = convertFacetValueToRequest(facetValue);
-            state[facetId] = buildMockCommerceFacetSlice({
-              request: buildMockCommerceFacetRequest({
-                values: [facetValueRequest],
-              }),
-            });
-
-            const action = toggleSelectFacetValue({
-              facetId,
-              selection: buildMockCommerceRegularFacetValue(),
-            });
-            const finalState = commerceFacetSetReducer(state, action);
-
-            const targetValue = (
-              finalState[facetId]?.request.values as FacetValueRequest[]
-            ).find((req) => req.value === facetValue.value);
-            expect(targetValue?.previousState).toBeUndefined();
           });
 
           it(`sets the state of an ${oppositeFacetValueState} value to ${facetValueState}`, () => {
@@ -839,7 +789,6 @@ describe('commerceFacetSetReducer', () => {
               finalState[facetId]?.request.values as FacetValueRequest[]
             ).find((req) => req.value === facetValue.value);
             expect(targetValue?.state).toBe(facetValueState);
-            expect(targetValue?.previousState).toBe(oppositeFacetValueState);
           });
 
           it(`sets the state of a ${facetValueState} value to idle`, () => {
@@ -865,7 +814,6 @@ describe('commerceFacetSetReducer', () => {
               finalState[facetId]?.request.values as FacetValueRequest[]
             ).find((req) => req.value === facetValue.value);
             expect(targetValue?.state).toBe('idle');
-            expect(targetValue?.previousState).toBe(facetValueState);
           });
 
           it('sets #preventAutoSelect to true', () => {

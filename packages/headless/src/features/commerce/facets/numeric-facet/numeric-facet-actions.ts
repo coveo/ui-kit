@@ -85,7 +85,7 @@ export type UpdateManualNumericFacetRangePayload = {
    * The unique identifier of the facet (e.g., `"1"`).
    */
   facetId: string;
-} & NumericRangeRequest;
+} & Omit<NumericRangeRequest, 'previousState'>;
 
 export const updateManualNumericFacetRange = createAction(
   'commerce/facets/numericFacet/updateManualRange',
@@ -100,10 +100,6 @@ const numericFacetValueDefinition = {
   state: new StringValue<'idle' | 'selected' | 'excluded'>({
     required: true,
     constrainTo: ['idle', 'selected', 'excluded'],
-  }),
-  previousState: new StringValue<'selected' | 'excluded'>({
-    required: false,
-    constrainTo: ['selected', 'excluded'],
   }),
   start: new NumberValue({required: true}),
   end: new NumberValue({required: true}),
