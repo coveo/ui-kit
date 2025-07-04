@@ -1,0 +1,19 @@
+{
+  "root": false,
+  "$schema": "https://biomejs.dev/schemas/2.0.6/schema.json",
+  "extends": "//",
+  "files": {
+    "includes": ["**", "!cypress/**/*"]
+  },
+  "linter": {
+    "rules": {
+      "recommended": true,
+      "style": {
+        "noNonNullAssertion": "off"
+      },
+      "suspicious": {
+        "noAssignInExpressions": "info"
+      }
+    }
+  }
+}
