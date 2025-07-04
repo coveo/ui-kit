@@ -11,7 +11,7 @@ if (!process.env.INIT_CWD) {
 }
 process.chdir(process.env.INIT_CWD);
 
-(async () => {
+void (async () => {
   const PATH = '.';
 
   console.log('Bumping root package.json version');

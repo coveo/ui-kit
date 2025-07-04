@@ -29,7 +29,7 @@ const allComponents = Promise.all([
 
 const originalDefineCustomElements = exportModule.defineCustomElements;
 exportModule.defineCustomElements = function (...args) {
-  allComponents.then((module) =>
+  void allComponents.then((module) =>
     Object.values(module).forEach((importFunction) => importFunction())
   );
   originalDefineCustomElements(...args);

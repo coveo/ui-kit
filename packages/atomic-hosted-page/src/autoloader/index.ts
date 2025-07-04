@@ -24,12 +24,12 @@ if (typeof window !== 'undefined') {
       const childTemplates = root.querySelectorAll('template');
       //This is necessary to load the components that are inside the templates
       for (const template of childTemplates) {
-        discover(template.content);
+        await discover(template.content);
         observer.observe(template.content, {subtree: true, childList: true});
       }
       //TODO: This part should not be necessary: instead, if component-a uses component-b, component-a should be responsible for loading component-b
       if ('shadowRoot' in root && root.shadowRoot) {
-        discover(root.shadowRoot);
+        void discover(root.shadowRoot);
         observer.observe(root.shadowRoot, {subtree: true, childList: true});
       }
     }
@@ -57,7 +57,7 @@ if (typeof window !== 'undefined') {
     for (const {addedNodes} of mutations) {
       for (const node of addedNodes) {
         if (node.nodeType === Node.ELEMENT_NODE) {
-          discover(node as Element);
+          void discover(node as Element);
         }
       }
     }
@@ -65,7 +65,7 @@ if (typeof window !== 'undefined') {
 
   const initializeDiscovery = () => {
     // Initial discovery
-    discover(document.body);
+    void discover(document.body);
     // Listen for new undefined elements
     observer.observe(document.documentElement, {
       subtree: true,

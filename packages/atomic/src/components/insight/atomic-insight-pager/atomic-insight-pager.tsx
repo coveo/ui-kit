@@ -89,7 +89,7 @@ export class AtomicInsightPager
             i18n={this.bindings.i18n}
             onClick={() => {
               this.pager.previousPage();
-              this.focusOnFirstResultAndScrollToTop();
+              void this.focusOnFirstResultAndScrollToTop();
             }}
           />
           <PagerPageButtons i18n={this.bindings.i18n}>
@@ -100,7 +100,7 @@ export class AtomicInsightPager
                   ariaLabel={this.bindings.i18n.t('page-number', {pageNumber})}
                   onChecked={() => {
                     this.pager.selectPage(pageNumber);
-                    this.focusOnFirstResultAndScrollToTop();
+                    void this.focusOnFirstResultAndScrollToTop();
                   }}
                   page={pageNumber}
                   groupName={this.radioGroupName}
@@ -115,7 +115,7 @@ export class AtomicInsightPager
             i18n={this.bindings.i18n}
             onClick={() => {
               this.pager.nextPage();
-              this.focusOnFirstResultAndScrollToTop();
+              void this.focusOnFirstResultAndScrollToTop();
             }}
           />
         </PagerNavigation>

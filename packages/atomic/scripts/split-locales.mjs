@@ -39,7 +39,7 @@ async function splitLocales() {
     );
   });
 
-  saveAvailableLocales(localesMap);
+  await saveAvailableLocales(localesMap);
 }
 
 async function saveAvailableLocales(localesMap) {
@@ -54,4 +54,4 @@ async function saveAvailableLocales(localesMap) {
   );
 }
 
-splitLocales();
+void splitLocales();

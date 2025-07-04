@@ -13,7 +13,7 @@ const reportTitle = '# Pull Request Report';
 
 async function main() {
   const report = await buildReport();
-  sendReport(report);
+  await sendReport(report);
 }
 
 async function buildReport() {
@@ -46,4 +46,4 @@ function findBundleSizeComment(comments) {
   );
 }
 
-main();
+void main();

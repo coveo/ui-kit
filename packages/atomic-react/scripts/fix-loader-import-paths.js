@@ -26,4 +26,4 @@ const updateFiles = async () => {
   );
 };
 
-updateFiles();
+void updateFiles();

@@ -538,7 +538,7 @@ const fromLogToLegacyBuilderFactory = (actionCause: string) => {
       Promise.resolve({
         description: {actionCause: actionCause},
         log: async (_metadata: {searchUID: string}) => {
-          log(client, state);
+          await log(client, state);
         },
       });
   };

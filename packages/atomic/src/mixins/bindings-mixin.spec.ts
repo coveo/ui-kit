@@ -71,7 +71,7 @@ describe('InitializeBindingsMixin mixin', () => {
   });
 
   afterEach(() => {
-    teardownElement();
+    void teardownElement();
     consoleErrorSpy.mockRestore();
     mockedFetchBindings.mockRestore();
   });

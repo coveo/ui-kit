@@ -120,7 +120,7 @@ async function startServers() {
 const isStencil = process.argv.includes('--stencil');
 
 // Start the servers (vite & storybook) first
-startServers();
+void startServers();
 
 // Watch the src folder for changes
 watch('src', {recursive: true}, async (_, filename) => {

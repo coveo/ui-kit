@@ -79,7 +79,7 @@ describe('buildSamlFlow', () => {
       });
 
       it('sends a request with the token', () => {
-        provider.exchangeHandshakeToken();
+        void provider.exchangeHandshakeToken();
 
         expect(request).toHaveBeenCalledWith(
           `https://platform.cloud.coveo.com/rest/search/v2/login/handshake/token?organizationId=${options.organizationId}`,
@@ -97,7 +97,7 @@ describe('buildSamlFlow', () => {
         options.organizationId = '>';
         initSamlFlow();
 
-        provider.exchangeHandshakeToken();
+        void provider.exchangeHandshakeToken();
         expect(request).toHaveBeenCalledWith(
           'https://platform.cloud.coveo.com/rest/search/v2/login/handshake/token?organizationId=%3E',
           expect.any(Object)
@@ -106,7 +106,7 @@ describe('buildSamlFlow', () => {
 
       it('url hash starts with handshake token param, it exchanges the token', () => {
         options.location!.hash = `#handshake_token=${handshakeToken}`;
-        provider.exchangeHandshakeToken();
+        void provider.exchangeHandshakeToken();
 
         assertHandshakeTokenSent();
       });
@@ -121,7 +121,7 @@ describe('buildSamlFlow', () => {
       });
 
       it('it removes the handshake token from the hash', () => {
-        provider.exchangeHandshakeToken();
+        void provider.exchangeHandshakeToken();
         expect(options.history!.replaceState).toHaveBeenCalledWith(
           null,
           '',
@@ -153,7 +153,7 @@ describe('buildSamlFlow', () => {
   describe('url hash starts with / followed by handshake token param (Angular bug)', () => {
     beforeEach(() => {
       options.location!.hash = '#/handshake_token=token';
-      provider.exchangeHandshakeToken();
+      void provider.exchangeHandshakeToken();
     });
 
     it('exchanges the token', () => {

@@ -146,13 +146,13 @@ export function buildSearchBox(
 
     selectSuggestion(value: string) {
       dispatch(selectQuerySuggestion({id, expression: value}));
-      performSearch().then(() => {
+      void performSearch().then(() => {
         dispatch(clearQuerySuggest({id}));
       });
     },
 
     submit() {
-      performSearch();
+      void performSearch();
       dispatch(clearQuerySuggest({id}));
     },
 

@@ -38,7 +38,7 @@ export function insertAtomicSearchBox() {
       searchInterface.appendChild(searchBox);
       typedocSearchBox.appendChild(searchInterface);
 
-      (async () => {
+      void (async () => {
         await customElements.whenDefined('atomic-search-interface');
         const searchInterfaceElement = document.querySelector(
           'atomic-search-interface'

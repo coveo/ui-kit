@@ -95,4 +95,4 @@ async function main() {
   writeFileSync('temporary.json', JSON.stringify(allIdentifiedProblems));
 }
 
-main();
+void main();

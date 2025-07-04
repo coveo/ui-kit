@@ -82,7 +82,7 @@ export function fetchEventSource(
     function onVisibilityChange() {
       curRequestController?.abort(); // close existing request on every visibility change
       if (!document.hidden) {
-        create(); // page is now visible again, recreate request.
+        void create(); // page is now visible again, recreate request.
       }
     }
 
@@ -160,7 +160,7 @@ export function fetchEventSource(
       }
     }
 
-    create();
+    void create();
   });
 }
 

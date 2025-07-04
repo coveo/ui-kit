@@ -35,7 +35,7 @@ export abstract class TemplateProvider<ItemType> {
     >
   ) {
     this.templateManager = this.buildManager();
-    this.registerResultTemplates();
+    void this.registerResultTemplates();
   }
 
   private async registerResultTemplates() {

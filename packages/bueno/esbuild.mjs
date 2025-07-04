@@ -63,4 +63,4 @@ async function main() {
   await Promise.all([nodeCjs(), nodeEsm(), browserEsm(), browserUmd()]);
 }
 
-main();
+void main();

@@ -62,7 +62,7 @@ export class AtomicIPXButton implements InitializableComponent {
 
   private async onClick() {
     if (!this.recommendationsLoaded) {
-      this.getRecommendations();
+      await this.getRecommendations();
     }
     this.isModalOpen ? this.close() : this.open();
     this.render();
@@ -96,7 +96,7 @@ export class AtomicIPXButton implements InitializableComponent {
       ? ['ipx-close-icon', 'ipx-open-icon']
       : ['ipx-open-icon', 'ipx-close-icon'];
     if (this.isModalOpen && !this.recommendationsLoaded) {
-      this.getRecommendations();
+      void this.getRecommendations();
     }
 
     return (

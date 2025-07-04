@@ -60,7 +60,7 @@ export class TabPopover implements InitializableComponent {
     }
 
     if (e.key === 'Escape') {
-      this.toggle();
+      void this.toggle();
     } else if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
       e.preventDefault();
       this.navigatePopover(e.key);

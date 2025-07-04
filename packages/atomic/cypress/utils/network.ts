@@ -37,21 +37,21 @@ function getAnalytics(selector: string): Promise<any> {
 
 export function getApiResponseBodyAt(selector: string, order: number) {
   for (let i = 0; i < order; i++) {
-    getApiResponseBody(selector);
+    void getApiResponseBody(selector);
   }
   return getApiResponseBody(selector);
 }
 
 export async function getApiRequestBodyAt(selector: string, order: number) {
   for (let i = 0; i < order; i++) {
-    getApiRequestBody(selector);
+    await getApiRequestBody(selector);
   }
   return getApiRequestBody(selector);
 }
 
 export function getAnalyticsAt(selector: string, order: number) {
   for (let i = 0; i < order; i++) {
-    getAnalytics(selector);
+    void getAnalytics(selector);
   }
   return getAnalytics(selector);
 }

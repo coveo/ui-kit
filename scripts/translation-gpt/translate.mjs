@@ -132,4 +132,4 @@ async function main() {
   writeFileSync('temporary.json', JSON.stringify({}, null, 2));
 }
 
-main();
+void main();

@@ -114,7 +114,7 @@ export class AtomicIcon
   }
 
   public initialize() {
-    this.updateIcon();
+    void this.updateIcon();
   }
 
   @bindingGuard()
