@@ -94,7 +94,11 @@
   },
   "linter": {
     "enabled": true,
-    "rules": {"recommended": false, "style": {"useBlockStatements": "off"}},
+    "rules": {
+      "recommended": false,
+      "style": {"useBlockStatements": "off"},
+      "nursery": {"noFloatingPromises": "warn"}
+    },
     "includes": [
       "**",
       "!**/packages/quantic/**/*",
