@@ -220,6 +220,15 @@ describe('atomic-commerce-load-more-products', () => {
       expect(progressBarFill).toHaveStyle('width: 10%');
     });
 
+    it('should not render a load more button when all products are loaded', async () => {
+      const {locators} = await renderLoadMoreProducts({
+        numberOfProducts: 10,
+        totalNumberOfProducts: 10,
+      });
+
+      await expect.element(locators.loadMoreButton).not.toBeInTheDocument();
+    });
+
     it('should render a load more button with the correct localized label when more products are available', async () => {
       const {locators} = await renderLoadMoreProducts({
         numberOfProducts: 10,
@@ -248,15 +257,6 @@ describe('atomic-commerce-load-more-products', () => {
       it('should call #focusOnNextNewResult', async () => {
         expect(focusOnNextNewResultSpy).toHaveBeenCalledOnce();
       });
-    });
-
-    it('should not render a load more button when all products are loaded', async () => {
-      const {locators} = await renderLoadMoreProducts({
-        numberOfProducts: 10,
-        totalNumberOfProducts: 10,
-      });
-
-      await expect.element(locators.loadMoreButton).not.toBeInTheDocument();
     });
   });
 });
