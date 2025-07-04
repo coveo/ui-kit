@@ -35,6 +35,8 @@
       "**/*.{js,jsx,ts,tsx,mjs,json,jsonc,css}",
       "!.github/prompts/**/*",
       "!.github/instructions/**/*",
+      "!.github/**/*.yml",
+      "!.github/**/*.yaml",
       "!**/packages/quantic/**/*",
       "!**/lwc/**/*.css",
       "!**/lwc/**/*.html",
