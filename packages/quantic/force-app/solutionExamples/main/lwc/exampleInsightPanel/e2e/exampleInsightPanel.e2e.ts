@@ -42,7 +42,6 @@ test.describe('Example Insight Panel E2E Tests', () => {
       search,
     }) => {
       await expect(insightPanel.errorComponent).not.toBeVisible();
-
       // Trigger a search
       const exampleQuery = 'Test';
       const searchRequestPromise = search.waitForSearchRequest();
