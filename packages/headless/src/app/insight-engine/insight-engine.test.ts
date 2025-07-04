@@ -156,4 +156,12 @@ describe('buildInsightEngine', () => {
   it('exposes an #executeFirstSearch method', () => {
     expect(engine.executeFirstSearch).toBeTruthy();
   });
+
+  it('should ensure that engine.relay is the same reference as thunk extra args relay', async () => {
+    const thunkRelay = await engine.dispatch(
+      (_dispatch, _getState, extra) => extra.relay
+    );
+
+    expect(thunkRelay).toBe(engine.relay);
+  });
 });
