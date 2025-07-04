@@ -97,7 +97,7 @@
     "rules": {
       "recommended": false,
       "style": {"useBlockStatements": "off"},
-      "nursery": {"noFloatingPromises": "warn"}
+      "nursery": {"noFloatingPromises": "error"}
     },
     "includes": [
       "**",
