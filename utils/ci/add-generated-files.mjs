@@ -8,7 +8,7 @@ if (!process.env.INIT_CWD) {
 process.chdir(process.env.INIT_CWD);
 
 // Commit, tag and push
-(async () => {
+void (async () => {
   const octokit = new Octokit({
     auth: process.env.GITHUB_INSTALLATION_TOKEN,
   });

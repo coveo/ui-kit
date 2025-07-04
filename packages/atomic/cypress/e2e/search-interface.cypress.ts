@@ -289,7 +289,7 @@ describe('Search Interface Component', () => {
     });
 
     it('should log libraries versions in analytics custom data', () => {
-      TestFixture.getUACustomData().then((customData) => {
+      return TestFixture.getUACustomData().then((customData) => {
         expect(customData).to.have.property('coveoAtomicVersion');
         expect(customData).to.have.property('coveoHeadlessVersion');
       });

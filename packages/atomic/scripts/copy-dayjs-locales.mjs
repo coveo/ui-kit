@@ -34,4 +34,4 @@ async function copyDayjsLocales() {
   await writeFile(dayjsLocaleDataPath, fileContent);
 }
 
-copyDayjsLocales();
+void copyDayjsLocales();

@@ -80,7 +80,7 @@ export class AtomicIPXModal implements InitializableComponent<AnyBindings> {
   public componentDidLoad() {
     const id = this.host.id || randomID('atomic-ipx-modal-');
     this.host.id = id;
-    this.watchToggleOpen(this.isOpen);
+    void this.watchToggleOpen(this.isOpen);
   }
 
   private updateBreakpoints = once(() => updateBreakpoints(this.host));

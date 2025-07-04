@@ -45,7 +45,7 @@ describe('buildSamlClient', () => {
     describe('#isLoginPending is true', () => {
       beforeEach(() => {
         samlState.isLoginPending = true;
-        client.authenticate();
+        void client.authenticate();
       });
 
       it('does not call #login', () => {
@@ -64,7 +64,7 @@ describe('buildSamlClient', () => {
     describe('#isLoginPending is false', () => {
       beforeEach(() => {
         samlFlow.handshakeTokenAvailable = false;
-        client.authenticate();
+        void client.authenticate();
       });
 
       it('calls #login', () => {
@@ -94,7 +94,7 @@ describe('buildSamlClient', () => {
     });
 
     it('removes the pending flag', () => {
-      client.authenticate();
+      void client.authenticate();
       expect(samlState.removeLoginPending).toHaveBeenCalledTimes(1);
     });
   });

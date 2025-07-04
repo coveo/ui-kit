@@ -345,7 +345,7 @@ export class AtomicIPXRecsList implements InitializableComponent<RecsBindings> {
     });
     const originalSelect = interactiveResult.select;
     interactiveResult.select = () => {
-      this.onSelect(recommendation, originalSelect);
+      void this.onSelect(recommendation, originalSelect);
     };
     const linkContent =
       this.itemTemplateProvider.getLinkTemplateContent(recommendation);

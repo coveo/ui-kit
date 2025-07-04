@@ -30,7 +30,7 @@ export class FixtureAtomicCommerceProductList extends LitElement {
 
   constructor() {
     super();
-    createTestI18n().then((i18n) => {
+    void createTestI18n().then((i18n) => {
       this.i18n = i18n;
     });
   }

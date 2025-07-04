@@ -139,7 +139,7 @@ export class AtomicCommercePager
             i18n: this.bindings.i18n,
             onClick: () => {
               this.pager.previousPage();
-              this.focusOnFirstResultAndScrollToTop();
+              void this.focusOnFirstResultAndScrollToTop();
             },
           },
         })}
@@ -157,7 +157,7 @@ export class AtomicCommercePager
                 }),
                 onChecked: () => {
                   this.pager.selectPage(pageNumber);
-                  this.focusOnFirstResultAndScrollToTop();
+                  void this.focusOnFirstResultAndScrollToTop();
                 },
                 page: pageNumber,
                 groupName: this.radioGroupName,
@@ -175,7 +175,7 @@ export class AtomicCommercePager
             i18n: this.bindings.i18n,
             onClick: () => {
               this.pager.nextPage();
-              this.focusOnFirstResultAndScrollToTop();
+              void this.focusOnFirstResultAndScrollToTop();
             },
           },
         })}

@@ -75,7 +75,7 @@ class ChildLitElement extends ChildrenUpdateCompleteMixin(LitElement) {
   public value!: string;
 
   public async initialize() {
-    this.initializeNested();
+    await this.initializeNested();
     await this.updateComplete;
     this.value = 'ready';
     await new Promise((resolve) => setTimeout(resolve, 50));

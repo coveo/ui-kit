@@ -53,4 +53,4 @@ async function main() {
   appendToDataFile(data);
 }
 
-main();
+void main();

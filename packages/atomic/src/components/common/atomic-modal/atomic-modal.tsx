@@ -127,7 +127,7 @@ export class AtomicModal implements InitializableComponent<AnyBindings> {
   }
 
   public componentDidLoad() {
-    this.watchToggleOpen(this.isOpen);
+    void this.watchToggleOpen(this.isOpen);
   }
 
   private updateBreakpoints = once(() => updateBreakpoints(this.host));

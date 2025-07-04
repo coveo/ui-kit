@@ -284,7 +284,7 @@ export function buildCoreSearchBox(
 
     selectSuggestion(value: string) {
       dispatch(selectQuerySuggestion({id, expression: value}));
-      performSearch({
+      void performSearch({
         legacy: logQuerySuggestionClick({id, suggestion: value}),
         next: omniboxAnalytics(),
       }).then(() => {
@@ -298,7 +298,7 @@ export function buildCoreSearchBox(
         | InsightAction = logSearchboxSubmit(),
       nextAnalytics: SearchAction
     ) {
-      performSearch({legacy: legacyAnalytics, next: nextAnalytics});
+      void performSearch({legacy: legacyAnalytics, next: nextAnalytics});
       dispatch(clearQuerySuggest({id}));
     },
 

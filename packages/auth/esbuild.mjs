@@ -34,4 +34,4 @@ async function main() {
   await Promise.all([esm(), cjs()]);
 }
 
-main();
+void main();

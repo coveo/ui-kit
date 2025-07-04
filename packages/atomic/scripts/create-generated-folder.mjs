@@ -10,4 +10,4 @@ async function createGeneratedFolder() {
   await mkdir(generatedPath);
 }
 
-createGeneratedFolder();
+void createGeneratedFolder();

@@ -212,7 +212,7 @@ export class SuggestionManager<SearchBoxController> {
       this.updateDescendants(id);
     }
     if (item.query) {
-      this.updateSuggestedQuery(item.query);
+      void this.updateSuggestedQuery(item.query);
     }
   }
 
@@ -294,7 +294,7 @@ export class SuggestionManager<SearchBoxController> {
     const defaultSuggestedQuery =
       this.allSuggestionElements.find(elementHasQuery)?.query || '';
 
-    this.updateSuggestedQuery(defaultSuggestedQuery);
+    await this.updateSuggestedQuery(defaultSuggestedQuery);
   }
 
   private get lastValue() {
@@ -362,7 +362,7 @@ export class SuggestionManager<SearchBoxController> {
   private updateOwnerSearchboxQuery(query: string) {
     if (query && this.ownerSearchBoxProps.getSearchBoxValue() !== query) {
       this.ownerSearchBoxProps.updateQuery(query);
-      this.updateSuggestedQuery(query);
+      void this.updateSuggestedQuery(query);
     }
   }
 

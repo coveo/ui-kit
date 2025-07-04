@@ -147,7 +147,7 @@ export class AtomicFocusTrap {
   }
 
   connectedCallback() {
-    this.activeChanged(this.active, this.active);
+    void this.activeChanged(this.active, this.active);
   }
 
   disconnectedCallback() {

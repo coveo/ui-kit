@@ -92,7 +92,7 @@ describe('bindings decorator', () => {
   });
 
   afterEach(() => {
-    teardownElement();
+    void teardownElement();
     consoleErrorSpy.mockRestore();
   });
 

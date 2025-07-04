@@ -188,7 +188,11 @@ export const dispatchSearchBoxSuggestionsEvent = <
       )}`
     );
   }
-  dispatchSearchBoxSuggestionsEventEventually(interfaceElement, element, event);
+  void dispatchSearchBoxSuggestionsEventEventually(
+    interfaceElement,
+    element,
+    event
+  );
 };
 
 export function elementHasNoQuery(el: SearchBoxSuggestionElement) {

@@ -38,7 +38,7 @@ export async function addItemToCart(newItem: CartItem): Promise<CartItem[]> {
   } else {
     cart.push(newItem);
   }
-  setCartInCookies(cart);
+  await setCartInCookies(cart);
   return cart;
 }
 
@@ -56,11 +56,11 @@ export async function updateItemQuantity(
       existingItem.quantity = updatedItem.quantity;
     }
   }
-  setCartInCookies(cart);
+  await setCartInCookies(cart);
   return cart;
 }
 
 export async function clearCart(): Promise<CartItem[]> {
-  setCartInCookies([]);
+  await setCartInCookies([]);
   return [];
 }

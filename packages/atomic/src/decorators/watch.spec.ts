@@ -43,7 +43,7 @@ describe('@watch decorator', () => {
   };
 
   beforeEach(() => {
-    setupElement();
+    void setupElement();
   });
 
   afterEach(() => {

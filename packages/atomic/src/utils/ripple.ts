@@ -44,7 +44,7 @@ export function createRipple(event: MouseEvent, options: RippleOptions) {
   ripple.style.top = `${event.clientY - (top + radius)}px`;
   ripple.style.setProperty('--animation-duration', `${animationDuration}ms`);
   button.prepend(ripple);
-  cleanupAnimationOnFinish(ripple, animationDuration);
+  void cleanupAnimationOnFinish(ripple, animationDuration);
 }
 
 async function cleanupAnimationOnFinish(

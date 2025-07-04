@@ -321,4 +321,4 @@ async function main() {
   await Promise.all([...browserEsm, ...browserUmd, ...nodeCjs, ...quanticUmd]);
 }
 
-main();
+void main();

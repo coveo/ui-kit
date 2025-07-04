@@ -87,7 +87,7 @@ export class FocusTargetController {
     this.element = el;
     if (this.doFocusOnNextTarget) {
       this.doFocusOnNextTarget = false;
-      this.focus();
+      void this.focus();
     }
   }
 
@@ -137,7 +137,7 @@ export class FocusTargetController {
         if (this.element) {
           const el = this.element;
           // The focus seems to be flaky without deferring, especially on iOS.
-          defer().then(() => {
+          void defer().then(() => {
             el.focus();
             this.clearFocusCallbacks();
           });

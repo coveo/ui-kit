@@ -302,7 +302,7 @@ describe('Generated Answer Test Suites', () => {
         });
 
         it('should log the stream ID in the search event custom data', () => {
-          TestFixture.getUACustomData().then((customData) => {
+          return TestFixture.getUACustomData().then((customData) => {
             expect(customData).to.have.property(
               'generativeQuestionAnsweringId',
               streamId

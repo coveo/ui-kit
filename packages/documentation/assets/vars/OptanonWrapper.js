@@ -17,7 +17,7 @@ function OptanonWrapper() {
     // Disable analytics on the atomic-search-interface if it's rendered
     setAtomicSearchInterfaceAnalytics('false');
 
-    waitForTypeDoc().then(() => {
+    void waitForTypeDoc().then(() => {
       window.TypeDoc.disableWritingLocalStorage();
     });
 
@@ -40,7 +40,7 @@ function OptanonWrapper() {
 
     accordionItemsToDelete.forEach((item) => localStorage.removeItem(item));
   } else {
-    waitForTypeDoc().then(() => {
+    void waitForTypeDoc().then(() => {
       window.TypeDoc.enableLocalStorage();
     });
 
