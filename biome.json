@@ -1,6 +1,9 @@
 {
   "$schema": "https://biomejs.dev/schemas/2.0.6/schema.json",
   "vcs": {"enabled": true, "clientKind": "git", "useIgnoreFile": true},
+  "plugins": [
+    "./packages/atomic/biome-rules/no-tolocalestring-without-locale.grit"
+  ],
   "files": {
     "ignoreUnknown": false,
     "maxSize": 2097152,
