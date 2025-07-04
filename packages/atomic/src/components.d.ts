@@ -21,7 +21,7 @@ import { InsightStore } from "./components/insight/atomic-insight-interface/stor
 import { Actions, InsightResultActionClickedEvent } from "./components/insight/atomic-insight-result-action/atomic-insight-result-action";
 import { InsightResultAttachToCaseEvent } from "./components/insight/atomic-insight-result-attach-to-case-action/atomic-insight-result-attach-to-case-action";
 import { SelectChildProductEventArgs } from "./components/commerce/atomic-product-children/select-child-product-event";
-import { TruncateAfter } from "./components/common/expandable-text/expandable-text";
+import { TruncateAfter } from "./components/common/expandable-text/stencil-expandable-text";
 import { ItemDisplayImageSize as ItemDisplayImageSize1 } from "./components.d";
 import { RecommendationEngine, InteractiveResult as RecsInteractiveResult, LogLevel as RecsLogLevel, Result as RecsResult, ResultTemplate as RecsResultTemplate, ResultTemplateCondition as RecsResultTemplateCondition } from "@coveo/headless/recommendation";
 import { RecsInitializationOptions } from "./components/recommendations/atomic-recs-interface/atomic-recs-interface";
@@ -49,7 +49,7 @@ export { InsightStore } from "./components/insight/atomic-insight-interface/stor
 export { Actions, InsightResultActionClickedEvent } from "./components/insight/atomic-insight-result-action/atomic-insight-result-action";
 export { InsightResultAttachToCaseEvent } from "./components/insight/atomic-insight-result-attach-to-case-action/atomic-insight-result-attach-to-case-action";
 export { SelectChildProductEventArgs } from "./components/commerce/atomic-product-children/select-child-product-event";
-export { TruncateAfter } from "./components/common/expandable-text/expandable-text";
+export { TruncateAfter } from "./components/common/expandable-text/stencil-expandable-text";
 export { ItemDisplayImageSize as ItemDisplayImageSize1 } from "./components.d";
 export { RecommendationEngine, InteractiveResult as RecsInteractiveResult, LogLevel as RecsLogLevel, Result as RecsResult, ResultTemplate as RecsResultTemplate, ResultTemplateCondition as RecsResultTemplateCondition } from "@coveo/headless/recommendation";
 export { RecsInitializationOptions } from "./components/recommendations/atomic-recs-interface/atomic-recs-interface";
@@ -301,11 +301,6 @@ export namespace Components {
         "summary": Summary<SearchSummaryState | ProductListingSummaryState>;
     }
     /**
-     * @alpha The `atomic-commerce-query-correction` component is responsible for handling query corrections. When a query returns no products but finds a possible query correction, the component either suggests the correction or automatically triggers a new query with the suggested term.
-     */
-    interface AtomicCommerceDidYouMean {
-    }
-    /**
      * The `atomic-commerce-facet` component renders a commerce facet that the end user can interact with to filter products.
      * @alpha 
      */
@@ -382,21 +377,6 @@ export namespace Components {
         "summary": Summary<SearchSummaryState | ProductListingSummaryState>;
     }
     /**
-     * The `atomic-commerce-products-per-page` component determines how many products to display per page.
-     * @alpha 
-     */
-    interface AtomicCommerceProductsPerPage {
-        /**
-          * A list of choices for the number of products to display per page, separated by commas.
-         */
-        "choicesDisplayed": string;
-        /**
-          * The initial selection for the number of product per page. This should be part of the `choicesDisplayed` option. By default, this is set to the first value in `choicesDisplayed`.
-          * @type {number}
-         */
-        "initialChoice"?: number;
-    }
-    /**
      * The `atomic-commerce-query-error` component handles fatal errors when performing a query on the Commerce API. When the error is known, it displays a link to relevant documentation for debugging purposes. When the error is unknown, it displays a small text area with the JSON content of the error.
      * @alpha 
      */
@@ -463,20 +443,6 @@ export namespace Components {
      * @alpha 
      */
     interface AtomicCommerceRefineToggle {
-    }
-    /**
-     * @alpha The `atomic-commerce-text` component leverages the I18n translation module through the atomic-commerce-interface.
-     */
-    interface AtomicCommerceText {
-        /**
-          * The count value used for plurals.
-          * @type {number}
-         */
-        "count"?: number;
-        /**
-          * The string key value.
-         */
-        "value": string;
     }
     /**
      * A facet is a list of values for a certain field occurring in the results.
@@ -792,6 +758,10 @@ export namespace Components {
          */
         "collapsible"?: boolean;
         /**
+          * A list of fields to include with the citations used to generate the answer.
+         */
+        "fieldsToIncludeInCitations": string;
+        /**
           * The maximum height (in rem units) of the answer when collapsed.
          */
         "maxCollapsedHeight": number;
@@ -931,6 +901,10 @@ export namespace Components {
           * @default false
          */
         "collapsible"?: boolean;
+        /**
+          * A list of fields to include with the citations used to generate the answer.
+         */
+        "fieldsToIncludeInCitations": string;
         /**
           * The maximum height (in rem units) of the answer when collapsed.
          */
@@ -3434,10 +3408,6 @@ export interface AtomicCommerceFacetNumberInputCustomEvent<T> extends CustomEven
     detail: T;
     target: HTMLAtomicCommerceFacetNumberInputElement;
 }
-export interface AtomicCommerceProductsPerPageCustomEvent<T> extends CustomEvent<T> {
-    detail: T;
-    target: HTMLAtomicCommerceProductsPerPageElement;
-}
 export interface AtomicFacetDateInputCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLAtomicFacetDateInputElement;
@@ -3607,15 +3577,6 @@ declare global {
         new (): HTMLAtomicCommerceCategoryFacetElement;
     };
     /**
-     * @alpha The `atomic-commerce-query-correction` component is responsible for handling query corrections. When a query returns no products but finds a possible query correction, the component either suggests the correction or automatically triggers a new query with the suggested term.
-     */
-    interface HTMLAtomicCommerceDidYouMeanElement extends Components.AtomicCommerceDidYouMean, HTMLStencilElement {
-    }
-    var HTMLAtomicCommerceDidYouMeanElement: {
-        prototype: HTMLAtomicCommerceDidYouMeanElement;
-        new (): HTMLAtomicCommerceDidYouMeanElement;
-    };
-    /**
      * The `atomic-commerce-facet` component renders a commerce facet that the end user can interact with to filter products.
      * @alpha 
      */
@@ -3686,27 +3647,6 @@ declare global {
         prototype: HTMLAtomicCommerceNumericFacetElement;
         new (): HTMLAtomicCommerceNumericFacetElement;
     };
-    interface HTMLAtomicCommerceProductsPerPageElementEventMap {
-        "atomic/scrollToTop": any;
-    }
-    /**
-     * The `atomic-commerce-products-per-page` component determines how many products to display per page.
-     * @alpha 
-     */
-    interface HTMLAtomicCommerceProductsPerPageElement extends Components.AtomicCommerceProductsPerPage, HTMLStencilElement {
-        addEventListener<K extends keyof HTMLAtomicCommerceProductsPerPageElementEventMap>(type: K, listener: (this: HTMLAtomicCommerceProductsPerPageElement, ev: AtomicCommerceProductsPerPageCustomEvent<HTMLAtomicCommerceProductsPerPageElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
-        removeEventListener<K extends keyof HTMLAtomicCommerceProductsPerPageElementEventMap>(type: K, listener: (this: HTMLAtomicCommerceProductsPerPageElement, ev: AtomicCommerceProductsPerPageCustomEvent<HTMLAtomicCommerceProductsPerPageElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
-    }
-    var HTMLAtomicCommerceProductsPerPageElement: {
-        prototype: HTMLAtomicCommerceProductsPerPageElement;
-        new (): HTMLAtomicCommerceProductsPerPageElement;
-    };
     /**
      * The `atomic-commerce-query-error` component handles fatal errors when performing a query on the Commerce API. When the error is known, it displays a link to relevant documentation for debugging purposes. When the error is unknown, it displays a small text area with the JSON content of the error.
      * @alpha 
@@ -3747,15 +3687,6 @@ declare global {
     var HTMLAtomicCommerceRefineToggleElement: {
         prototype: HTMLAtomicCommerceRefineToggleElement;
         new (): HTMLAtomicCommerceRefineToggleElement;
-    };
-    /**
-     * @alpha The `atomic-commerce-text` component leverages the I18n translation module through the atomic-commerce-interface.
-     */
-    interface HTMLAtomicCommerceTextElement extends Components.AtomicCommerceText, HTMLStencilElement {
-    }
-    var HTMLAtomicCommerceTextElement: {
-        prototype: HTMLAtomicCommerceTextElement;
-        new (): HTMLAtomicCommerceTextElement;
     };
     /**
      * A facet is a list of values for a certain field occurring in the results.
@@ -5515,19 +5446,16 @@ declare global {
         "atomic-citation": HTMLAtomicCitationElement;
         "atomic-color-facet": HTMLAtomicColorFacetElement;
         "atomic-commerce-category-facet": HTMLAtomicCommerceCategoryFacetElement;
-        "atomic-commerce-did-you-mean": HTMLAtomicCommerceDidYouMeanElement;
         "atomic-commerce-facet": HTMLAtomicCommerceFacetElement;
         "atomic-commerce-facet-number-input": HTMLAtomicCommerceFacetNumberInputElement;
         "atomic-commerce-facets": HTMLAtomicCommerceFacetsElement;
         "atomic-commerce-load-more-products": HTMLAtomicCommerceLoadMoreProductsElement;
         "atomic-commerce-no-products": HTMLAtomicCommerceNoProductsElement;
         "atomic-commerce-numeric-facet": HTMLAtomicCommerceNumericFacetElement;
-        "atomic-commerce-products-per-page": HTMLAtomicCommerceProductsPerPageElement;
         "atomic-commerce-query-error": HTMLAtomicCommerceQueryErrorElement;
         "atomic-commerce-recommendation-interface": HTMLAtomicCommerceRecommendationInterfaceElement;
         "atomic-commerce-refine-modal": HTMLAtomicCommerceRefineModalElement;
         "atomic-commerce-refine-toggle": HTMLAtomicCommerceRefineToggleElement;
-        "atomic-commerce-text": HTMLAtomicCommerceTextElement;
         "atomic-commerce-timeframe-facet": HTMLAtomicCommerceTimeframeFacetElement;
         "atomic-did-you-mean": HTMLAtomicDidYouMeanElement;
         "atomic-external": HTMLAtomicExternalElement;
@@ -5929,11 +5857,6 @@ declare namespace LocalJSX {
         "summary": Summary<SearchSummaryState | ProductListingSummaryState>;
     }
     /**
-     * @alpha The `atomic-commerce-query-correction` component is responsible for handling query corrections. When a query returns no products but finds a possible query correction, the component either suggests the correction or automatically triggers a new query with the suggested term.
-     */
-    interface AtomicCommerceDidYouMean {
-    }
-    /**
      * The `atomic-commerce-facet` component renders a commerce facet that the end user can interact with to filter products.
      * @alpha 
      */
@@ -6011,22 +5934,6 @@ declare namespace LocalJSX {
         "summary": Summary<SearchSummaryState | ProductListingSummaryState>;
     }
     /**
-     * The `atomic-commerce-products-per-page` component determines how many products to display per page.
-     * @alpha 
-     */
-    interface AtomicCommerceProductsPerPage {
-        /**
-          * A list of choices for the number of products to display per page, separated by commas.
-         */
-        "choicesDisplayed"?: string;
-        /**
-          * The initial selection for the number of product per page. This should be part of the `choicesDisplayed` option. By default, this is set to the first value in `choicesDisplayed`.
-          * @type {number}
-         */
-        "initialChoice"?: number;
-        "onAtomic/scrollToTop"?: (event: AtomicCommerceProductsPerPageCustomEvent<any>) => void;
-    }
-    /**
      * The `atomic-commerce-query-error` component handles fatal errors when performing a query on the Commerce API. When the error is known, it displays a link to relevant documentation for debugging purposes. When the error is unknown, it displays a small text area with the JSON content of the error.
      * @alpha 
      */
@@ -6089,20 +5996,6 @@ declare namespace LocalJSX {
      * @alpha 
      */
     interface AtomicCommerceRefineToggle {
-    }
-    /**
-     * @alpha The `atomic-commerce-text` component leverages the I18n translation module through the atomic-commerce-interface.
-     */
-    interface AtomicCommerceText {
-        /**
-          * The count value used for plurals.
-          * @type {number}
-         */
-        "count"?: number;
-        /**
-          * The string key value.
-         */
-        "value": string;
     }
     /**
      * A facet is a list of values for a certain field occurring in the results.
@@ -6416,6 +6309,10 @@ declare namespace LocalJSX {
          */
         "collapsible"?: boolean;
         /**
+          * A list of fields to include with the citations used to generate the answer.
+         */
+        "fieldsToIncludeInCitations"?: string;
+        /**
           * The maximum height (in rem units) of the answer when collapsed.
          */
         "maxCollapsedHeight"?: number;
@@ -6552,6 +6449,10 @@ declare namespace LocalJSX {
           * @default false
          */
         "collapsible"?: boolean;
+        /**
+          * A list of fields to include with the citations used to generate the answer.
+         */
+        "fieldsToIncludeInCitations"?: string;
         /**
           * The maximum height (in rem units) of the answer when collapsed.
          */
@@ -8969,19 +8870,16 @@ declare namespace LocalJSX {
         "atomic-citation": AtomicCitation;
         "atomic-color-facet": AtomicColorFacet;
         "atomic-commerce-category-facet": AtomicCommerceCategoryFacet;
-        "atomic-commerce-did-you-mean": AtomicCommerceDidYouMean;
         "atomic-commerce-facet": AtomicCommerceFacet;
         "atomic-commerce-facet-number-input": AtomicCommerceFacetNumberInput;
         "atomic-commerce-facets": AtomicCommerceFacets;
         "atomic-commerce-load-more-products": AtomicCommerceLoadMoreProducts;
         "atomic-commerce-no-products": AtomicCommerceNoProducts;
         "atomic-commerce-numeric-facet": AtomicCommerceNumericFacet;
-        "atomic-commerce-products-per-page": AtomicCommerceProductsPerPage;
         "atomic-commerce-query-error": AtomicCommerceQueryError;
         "atomic-commerce-recommendation-interface": AtomicCommerceRecommendationInterface;
         "atomic-commerce-refine-modal": AtomicCommerceRefineModal;
         "atomic-commerce-refine-toggle": AtomicCommerceRefineToggle;
-        "atomic-commerce-text": AtomicCommerceText;
         "atomic-commerce-timeframe-facet": AtomicCommerceTimeframeFacet;
         "atomic-did-you-mean": AtomicDidYouMean;
         "atomic-external": AtomicExternal;
@@ -9194,10 +9092,6 @@ declare module "@stencil/core" {
              */
             "atomic-commerce-category-facet": LocalJSX.AtomicCommerceCategoryFacet & JSXBase.HTMLAttributes<HTMLAtomicCommerceCategoryFacetElement>;
             /**
-             * @alpha The `atomic-commerce-query-correction` component is responsible for handling query corrections. When a query returns no products but finds a possible query correction, the component either suggests the correction or automatically triggers a new query with the suggested term.
-             */
-            "atomic-commerce-did-you-mean": LocalJSX.AtomicCommerceDidYouMean & JSXBase.HTMLAttributes<HTMLAtomicCommerceDidYouMeanElement>;
-            /**
              * The `atomic-commerce-facet` component renders a commerce facet that the end user can interact with to filter products.
              * @alpha 
              */
@@ -9228,11 +9122,6 @@ declare module "@stencil/core" {
              */
             "atomic-commerce-numeric-facet": LocalJSX.AtomicCommerceNumericFacet & JSXBase.HTMLAttributes<HTMLAtomicCommerceNumericFacetElement>;
             /**
-             * The `atomic-commerce-products-per-page` component determines how many products to display per page.
-             * @alpha 
-             */
-            "atomic-commerce-products-per-page": LocalJSX.AtomicCommerceProductsPerPage & JSXBase.HTMLAttributes<HTMLAtomicCommerceProductsPerPageElement>;
-            /**
              * The `atomic-commerce-query-error` component handles fatal errors when performing a query on the Commerce API. When the error is known, it displays a link to relevant documentation for debugging purposes. When the error is unknown, it displays a small text area with the JSON content of the error.
              * @alpha 
              */
@@ -9253,10 +9142,6 @@ declare module "@stencil/core" {
              * @alpha 
              */
             "atomic-commerce-refine-toggle": LocalJSX.AtomicCommerceRefineToggle & JSXBase.HTMLAttributes<HTMLAtomicCommerceRefineToggleElement>;
-            /**
-             * @alpha The `atomic-commerce-text` component leverages the I18n translation module through the atomic-commerce-interface.
-             */
-            "atomic-commerce-text": LocalJSX.AtomicCommerceText & JSXBase.HTMLAttributes<HTMLAtomicCommerceTextElement>;
             /**
              * A facet is a list of values for a certain field occurring in the results.
              * An `atomic-commerce-timeframe-facet` displays a facet of the results for the current query as date intervals.

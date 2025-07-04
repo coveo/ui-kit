@@ -58,13 +58,26 @@ export class FocusTargetController {
   private bindings: AnyBindings;
   private lastSearchId?: string;
   private element?: HTMLElement;
-  private onFocusCallback?: Function;
+  public registerFocusCallback: (callback: Function) => void = (
+    callback: Function
+  ) => {
+    this.publicOnFocusCallbacks.push(callback);
+  };
+  private internalOnFocusCallback?: Function;
   private doFocusAfterSearch = false;
   private doFocusOnNextTarget = false;
+  private publicOnFocusCallbacks: Function[] = [];
 
   constructor(private component: InitializableComponent<AnyBindings>) {
     this.bindings = component.bindings;
     this.handleComponentRenderLoop();
+  }
+
+  private clearFocusCallbacks() {
+    this.internalOnFocusCallback?.();
+    while (this.publicOnFocusCallbacks.length) {
+      this.publicOnFocusCallbacks.pop()?.();
+    }
   }
 
   public setTarget(el: HTMLElement | undefined) {
@@ -81,7 +94,7 @@ export class FocusTargetController {
   public async focus() {
     await defer();
     this.element?.focus();
-    this.onFocusCallback?.();
+    this.clearFocusCallbacks();
   }
 
   public focusAfterSearch() {
@@ -89,12 +102,12 @@ export class FocusTargetController {
       this.bindings.engine
     );
     this.doFocusAfterSearch = true;
-    return new Promise((resolve) => (this.onFocusCallback = resolve));
+    return new Promise((resolve) => (this.internalOnFocusCallback = resolve));
   }
 
   public focusOnNextTarget() {
     this.doFocusOnNextTarget = true;
-    return new Promise((resolve) => (this.onFocusCallback = resolve));
+    return new Promise((resolve) => (this.internalOnFocusCallback = resolve));
   }
 
   public disableForCurrentSearch() {
@@ -126,7 +139,7 @@ export class FocusTargetController {
           // The focus seems to be flaky without deferring, especially on iOS.
           defer().then(() => {
             el.focus();
-            this.onFocusCallback?.();
+            this.clearFocusCallbacks();
           });
         }
       }

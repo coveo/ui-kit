@@ -1,17 +1,19 @@
-import {LitElement, html} from 'lit';
+import {LitElement} from 'lit';
 import {customElement, property} from 'lit/decorators.js';
 import {Section} from './sections';
 
 /**
- * The `atomic-layout-section` lets you identify various sections for the related `atomic-layout` component.
+ * The `atomic-layout-section` lets you identify various sections for the related `atomic-search-layout` or `atomic-commerce-layout` component.
+ *
+ * @slot default - The default slot where you can add child components to the section.
  */
 @customElement('atomic-layout-section')
 export class AtomicLayoutSection extends LitElement {
   /**
    * The name of the layout section.
    */
-  @property({type: String, reflect: true})
-  section!: Section;
+  @property({type: String, reflect: true}) section!: Section;
+
   /**
    * For column sections, the minimum horizontal space it should take.
    * E.g. '300px'
@@ -25,8 +27,8 @@ export class AtomicLayoutSection extends LitElement {
   @property({type: String, reflect: true, attribute: 'max-width'})
   maxWidth?: string;
 
-  render() {
-    return html`<slot></slot>`;
+  createRenderRoot() {
+    return this;
   }
 }
 

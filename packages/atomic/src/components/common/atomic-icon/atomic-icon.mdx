@@ -1,16 +1,19 @@
-import {Canvas, ArgTypes, Meta, Title, Description} from '@storybook/blocks';
+import {Canvas, ArgTypes, Meta, Title, Description, Stories, Subtitle} from '@storybook/blocks';
 import * as AtomicIconStories from './atomic-icon.new.stories';
-
-{/* Storybook provides a number of blocs to construct documentation pages */}
-{/* https://storybook.js.org/docs/writing-docs/doc-blocks#available-blocks */}
+import {CanvasWithGithub} from '../../../../storybook-utils/documentation/canvas-with-github';
 
 <Meta of={ AtomicIconStories } />
 
 <Title />
-<Description />
+<Subtitle><Description/></Subtitle>
 
-<Canvas of={ AtomicIconStories.Default } />
+<CanvasWithGithub
+  of={ AtomicIconStories.Default }
+  githubPath="common/atomic-icon/atomic-icon.ts"
+/>
 
-## Properties
+## Examples
+<Stories title={""}/>
+
+## Reference
 <ArgTypes />
-

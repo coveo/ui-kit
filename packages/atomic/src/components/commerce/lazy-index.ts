@@ -2,6 +2,10 @@
 export default {
   'atomic-commerce-breadbox': async () =>
     await import('./atomic-commerce-breadbox/atomic-commerce-breadbox.js'),
+  'atomic-commerce-did-you-mean': async () =>
+    await import(
+      './atomic-commerce-did-you-mean/atomic-commerce-did-you-mean.js'
+    ),
   'atomic-commerce-interface': async () =>
     await import('./atomic-commerce-interface/atomic-commerce-interface.js'),
   'atomic-commerce-layout': async () =>
@@ -11,6 +15,10 @@ export default {
   'atomic-commerce-product-list': async () =>
     await import(
       './atomic-commerce-product-list/atomic-commerce-product-list.js'
+    ),
+  'atomic-commerce-products-per-page': async () =>
+    await import(
+      './atomic-commerce-products-per-page/atomic-commerce-products-per-page.js'
     ),
   'atomic-commerce-query-summary': async () =>
     await import(
@@ -38,6 +46,8 @@ export default {
     await import(
       './atomic-commerce-sort-dropdown/atomic-commerce-sort-dropdown.js'
     ),
+  'atomic-commerce-text': async () =>
+    await import('./atomic-commerce-text/atomic-commerce-text.js'),
   'atomic-product': async () =>
     await import('./atomic-product/atomic-product.js'),
   'atomic-product-template': async () =>

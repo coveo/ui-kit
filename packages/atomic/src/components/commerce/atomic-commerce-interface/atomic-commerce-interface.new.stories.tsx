@@ -12,7 +12,7 @@ async function initializeCommerceInterface(canvasElement: HTMLElement) {
 }
 const meta: Meta = {
   component: 'atomic-commerce-interface',
-  title: 'Atomic-Commerce/Interfaces/atomic-commerce-interface',
+  title: 'Commerce/atomic-commerce-interface',
   id: 'atomic-commerce-interface',
   render: renderComponent,
   parameters,

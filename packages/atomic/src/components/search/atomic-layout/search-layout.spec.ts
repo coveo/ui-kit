@@ -1,14 +1,13 @@
 import {newSpecPage} from '@stencil/core/testing';
-import {AtomicLayoutSection} from '../../common/atomic-layout-section/atomic-layout-section';
+// import {AtomicLayoutSection} from '../../common/atomic-layout-section/atomic-layout-section';
 import {AtomicSearchLayout} from './atomic-search-layout';
 import {buildSearchLayout} from './search-layout';
 
-// TODO: need to migrate KIT-4433
 describe.skip('Search Layout', () => {
   describe('#buildSearchLayout', () => {
     async function getSearchLayout(html: string) {
       const page = await newSpecPage({
-        components: [AtomicLayoutSection, AtomicSearchLayout],
+        components: [AtomicSearchLayout],
         html,
       });
       return buildSearchLayout(

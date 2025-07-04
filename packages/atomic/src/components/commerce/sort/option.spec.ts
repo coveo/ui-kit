@@ -11,7 +11,7 @@ import {
 
 vi.mock('@coveo/headless/commerce');
 
-vi.mock('@/src/components/common/sort/option', {spy: true});
+vi.mock('../../common/sort/option', {spy: true});
 
 describe('renderCommerceSortOption', () => {
   let i18n: Awaited<ReturnType<typeof createTestI18n>>;
