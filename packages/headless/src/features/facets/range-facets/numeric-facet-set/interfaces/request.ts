@@ -25,6 +25,15 @@ export interface NumericRangeRequest {
    * The current facet value state.
    */
   state: FacetValueState;
+
+  /**
+   * The previous facet value state in the search interface.
+   *
+   * Tracks the state before the most recent transition to enable analytics reporting
+   * on facet selection behavior and support Event Protocol migration. Also used for
+   * preserving facet values during automatic range generation.
+   */
+  previousState?: FacetValueState;
 }
 
 export interface NumericFacetRequest
