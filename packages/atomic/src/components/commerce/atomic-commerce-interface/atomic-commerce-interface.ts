@@ -29,10 +29,7 @@ import i18next, {i18n} from 'i18next';
 import {CSSResultGroup, html, LitElement, unsafeCSS} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {ChildrenUpdateCompleteMixin} from '../../../mixins/children-update-complete-mixin';
-import {
-  AdoptedStylesBindings,
-  CommonBindings,
-} from '../../common/interface/bindings';
+import {CommonBindings} from '../../common/interface/bindings';
 import {
   BaseAtomicInterface,
   CommonAtomicInterfaceHelper,
@@ -56,8 +53,7 @@ export type CommerceBindings = CommonBindings<
   CommerceEngine,
   CommerceStore,
   AtomicCommerceInterface
-> &
-  AdoptedStylesBindings;
+>;
 
 const FirstRequestExecutedFlag = 'firstRequestExecuted';
 
@@ -352,21 +348,6 @@ export class AtomicCommerceInterface
       i18n: this.i18n,
       store: this.store,
       interfaceElement: this as AtomicCommerceInterface,
-      addAdoptedStyleSheets: (stylesheet) => {
-        // TODO: KIT-4333: remove and only keep decorator
-        const parent = this.getRootNode();
-        const styleSheet = stylesheet;
-        const isDocumentOrShadowRoot =
-          parent instanceof Document || parent instanceof ShadowRoot;
-
-        if (
-          styleSheet &&
-          isDocumentOrShadowRoot &&
-          !parent.adoptedStyleSheets.includes(styleSheet)
-        ) {
-          parent.adoptedStyleSheets.push(styleSheet);
-        }
-      },
     };
   }
 

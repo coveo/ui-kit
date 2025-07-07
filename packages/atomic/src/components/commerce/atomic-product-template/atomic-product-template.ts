@@ -9,6 +9,8 @@ import {html, LitElement, nothing} from 'lit';
 import {property, customElement, state} from 'lit/decorators.js';
 import {makeMatchConditions} from '../../common/product-template/product-template-common';
 import {ProductTemplateController} from '../../common/product-template/product-template-controller';
+import '../atomic-commerce-text/atomic-commerce-text';
+import '../atomic-product-text/atomic-product-text';
 import '../atomic-product/atomic-product';
 
 /**
