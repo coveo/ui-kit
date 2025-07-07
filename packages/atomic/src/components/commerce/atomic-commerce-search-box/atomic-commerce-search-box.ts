@@ -684,7 +684,6 @@ export class AtomicCommerceSearchBox
           }
 
           this.isExpanded = false;
-          this.triggerTextAreaChange(item.query ?? '');
         }}
         .onMouseOver=${() => {
           this.suggestionManager.onSuggestionMouseOver(item, side, id);
