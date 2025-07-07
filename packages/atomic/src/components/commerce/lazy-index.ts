@@ -28,6 +28,10 @@ export default {
     await import(
       './atomic-commerce-query-summary/atomic-commerce-query-summary.js'
     ),
+  'atomic-commerce-recommendation-interface': async () =>
+    await import(
+      './atomic-commerce-recommendation-interface/atomic-commerce-recommendation-interface.js'
+    ),
   'atomic-commerce-recommendation-list': async () =>
     await import(
       './atomic-commerce-recommendation-list/atomic-commerce-recommendation-list.js'
