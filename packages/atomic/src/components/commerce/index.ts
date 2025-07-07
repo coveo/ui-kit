@@ -3,6 +3,7 @@ export {AtomicCommerceBreadbox} from './atomic-commerce-breadbox/atomic-commerce
 export {AtomicCommerceDidYouMean} from './atomic-commerce-did-you-mean/atomic-commerce-did-you-mean.js';
 export {AtomicCommerceInterface} from './atomic-commerce-interface/atomic-commerce-interface.js';
 export {AtomicCommerceLayout} from './atomic-commerce-layout/atomic-commerce-layout.js';
+export {AtomicCommerceNoProducts} from './atomic-commerce-no-products/atomic-commerce-no-products.js';
 export {AtomicCommercePager} from './atomic-commerce-pager/atomic-commerce-pager.js';
 export {AtomicCommerceProductList} from './atomic-commerce-product-list/atomic-commerce-product-list.js';
 export {AtomicCommerceProductsPerPage} from './atomic-commerce-products-per-page/atomic-commerce-products-per-page.js';
