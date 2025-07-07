@@ -50,6 +50,10 @@ export interface BaseFacetValueRequest {
    * @defaultValue `idle`
    */
   state: FacetValueState;
+  /**
+   * The previous facet value state in the search interface.
+   */
+  previousState?: FacetValueState;
 }
 
 export interface CurrentValues<T> {
