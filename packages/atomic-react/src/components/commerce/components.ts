@@ -102,16 +102,16 @@ export const AtomicCommerceSearchBoxQuerySuggestions = createComponent({
   elementClass: LitAtomicCommerceSearchBoxQuerySuggestions,
 });
 
-export const AtomicCommerceSortDropdown = createComponent({
-  tagName: 'atomic-commerce-sort-dropdown',
-  react: React,
-  elementClass: LitAtomicCommerceSortDropdown,
-});
-
 export const AtomicCommerceSearchBoxRecentQueries = createComponent({
   tagName: 'atomic-commerce-search-box-recent-queries',
   react: React,
   elementClass: LitAtomicCommerceSearchBoxRecentQueries,
+});
+
+export const AtomicCommerceSortDropdown = createComponent({
+  tagName: 'atomic-commerce-sort-dropdown',
+  react: React,
+  elementClass: LitAtomicCommerceSortDropdown,
 });
 
 export const AtomicCommerceText = createComponent({
