@@ -174,6 +174,10 @@ export function buildCommerceEngine(
   return redactEngine({
     ...engine,
 
+    get relay() {
+      return internalEngine.relay;
+    },
+
     get [stateKey]() {
       return internalEngine.state;
     },
