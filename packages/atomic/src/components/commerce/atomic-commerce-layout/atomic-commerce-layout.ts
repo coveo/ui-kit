@@ -6,8 +6,8 @@ import {DEFAULT_MOBILE_BREAKPOINT} from '../../../utils/replace-breakpoint';
 import styles from './atomic-commerce-layout.tw.css';
 
 /**
- * @alpha
  * The `atomic-commerce-layout` helps organize elements in the commerce page.
+ * @alpha
  */
 @customElement('atomic-commerce-layout')
 export class AtomicCommerceLayout extends CommerceLayoutMixin(
