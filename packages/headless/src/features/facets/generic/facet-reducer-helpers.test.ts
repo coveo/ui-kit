@@ -130,7 +130,7 @@ describe('generic facet reducers', () => {
         expect(request.currentValues[2].previousState).toBeUndefined();
       });
 
-      it("don't preserves existing #previousState when value was already idle", () => {
+      it('does not preserve existing #previousState when value was already idle', () => {
         const idleValueWithPreviousState = buildMockFacetValueRequest({
           value: 'idle-with-previous',
           state: 'idle',
