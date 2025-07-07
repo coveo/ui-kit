@@ -121,7 +121,6 @@ export class SuggestionManager<SearchBoxController> {
 
   public clickOnActiveElement() {
     this.activeDescendantElement?.click();
-    this.updateActiveDescendant();
   }
 
   public isRightPanelInFocus() {

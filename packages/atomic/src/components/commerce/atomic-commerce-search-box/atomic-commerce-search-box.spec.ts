@@ -444,6 +444,14 @@ describe('AtomicCommerceSearchBox', () => {
     });
   });
 
+  /**
+   * https://coveord.atlassian.net/browse/KIT-4468
+   * Write this test here when the atomic-suggestion-renderer is removed and when we can properly test the suggestions
+   */
+  describe.skip('when selecting a suggestion with the keyboard', () => {
+    it('should reset the aria-descendant on the search box', async () => {});
+  });
+
   it('should have the "suggestions-wrapper suggestions-single-list" part on the suggestions container', async () => {
     const {suggestionsContainer, textArea} = await renderSearchBox();
 
