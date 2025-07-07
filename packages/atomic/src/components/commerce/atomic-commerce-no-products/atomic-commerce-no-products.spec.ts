@@ -87,12 +87,12 @@ describe('AtomicCommerceNoProducts', () => {
     expect(buildSearch).toHaveBeenCalledWith(mockedEngine);
   });
 
-  it('should set summary to the controller summary', async () => {
+  it('should set summary to the summary sub-controller', async () => {
     const {element} = await renderNoProducts();
     expect(element.summary).toBe(mockedSummary);
   });
 
-  it('should render nothing if firstSearchExecuted is false', async () => {
+  it('should render nothing when firstSearchExecuted is false', async () => {
     const {element} = await renderNoProducts({
       summaryState: {
         firstRequestExecuted: false,
@@ -103,7 +103,7 @@ describe('AtomicCommerceNoProducts', () => {
     expect(element).toBeEmptyDOMElement();
   });
 
-  it('should render nothing if isLoading is true', async () => {
+  it('should render nothing when isLoading is true', async () => {
     const {element} = await renderNoProducts({
       summaryState: {
         firstRequestExecuted: true,
@@ -114,7 +114,7 @@ describe('AtomicCommerceNoProducts', () => {
     expect(element).toBeEmptyDOMElement();
   });
 
-  it('should render nothing if hasProducts is true', async () => {
+  it('should render nothing when hasProducts is true', async () => {
     const {element} = await renderNoProducts({
       summaryState: {
         firstRequestExecuted: true,
@@ -147,7 +147,7 @@ describe('AtomicCommerceNoProducts', () => {
     expect(icon).toHaveAttribute('icon', MagnifyingGlassIcon);
   });
 
-  it('should render the correct part attribute on the no results text', async () => {
+  it('should render the correct part attribute on the "no results" text', async () => {
     const {noResultsText} = await renderNoProducts();
 
     expect(noResultsText).toHaveAttribute('part', 'no-results');
@@ -166,7 +166,7 @@ describe('AtomicCommerceNoProducts', () => {
     );
   });
 
-  it('should highlight the query in the no results text', async () => {
+  it('should highlight the query in the "no results" text', async () => {
     const query = 'test query';
     const {highlightedQuery} = await renderNoProducts({
       summaryState: {

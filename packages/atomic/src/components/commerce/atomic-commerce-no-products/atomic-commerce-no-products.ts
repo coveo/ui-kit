@@ -48,7 +48,7 @@ export class AtomicCommerceNoProducts
 
   @bindStateToController('summary')
   @state()
-  private summaryState!: SearchSummaryState | ProductListingSummaryState;
+  public summaryState!: SearchSummaryState | ProductListingSummaryState;
 
   @state()
   public error!: Error;
