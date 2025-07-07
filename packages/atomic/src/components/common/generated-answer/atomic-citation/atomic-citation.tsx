@@ -113,13 +113,14 @@ export class AtomicCitation {
   }
 
   private extractTextToHighlight(text: string) {
-    const SENTENCE_REGEX = /(?<!\d)(?<=^|[.!?]\s)["'\(\[]?[A-Z][^.!?]*[.!?]/g;
-    const FALLBACK_WORD_COUNT = 5;
-    const sentences = text.match(SENTENCE_REGEX);
+    const sentenceRegex =
+      /(?<!\d)(?<=^|[\p{P}]\s)[\p{P}]?\p{Uppercase_Letter}[^.!?]*[\p{P}]/gu;
+    const fallbackWordCount = 5;
+    const sentences = text.match(sentenceRegex);
     if (sentences?.length) {
       return sentences[0].trim();
     }
-    return text.split(/\s+/).slice(0, FALLBACK_WORD_COUNT).join(' ');
+    return text.split(/\s+/).slice(0, fallbackWordCount).join(' ');
   }
 
   private openPopover = () => {
