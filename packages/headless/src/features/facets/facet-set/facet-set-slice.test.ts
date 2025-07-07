@@ -192,6 +192,54 @@ describe('facet-set slice', () => {
           (req) => req.value === facetValue.value
         );
         expect(targetValue?.state).toBe(facetValueState);
+        expect(targetValue?.previousState).toBe('idle');
+      });
+
+      it(`sets the previousState of a ${facetValueState} value to idle`, () => {
+        const facetValue = buildMockFacetValue({
+          value: 'TED',
+          state: facetValueState,
+        });
+        const facetValueRequest = convertFacetValueToRequest(facetValue);
+
+        state[id] = buildMockFacetSlice({
+          request: buildMockFacetRequest({
+            currentValues: [facetValueRequest],
+          }),
+        });
+
+        const action = toggleAction({
+          facetId: id,
+          selection: facetValue,
+        });
+        const finalState = facetSetReducer(state, action);
+
+        const targetValue = finalState[id]?.request.currentValues.find(
+          (req) => req.value === facetValue.value
+        );
+        expect(targetValue?.previousState).toBe(facetValueState);
+      });
+
+      it(`does not set the previousState of value transitioning from ${facetValueState} to ${facetValueState}`, () => {
+        const facetValue = buildMockFacetValue({
+          value: 'TED',
+          state: 'selected',
+        });
+        const facetValueRequest = convertFacetValueToRequest(facetValue);
+        state[id] = buildMockFacetSlice({
+          request: buildMockFacetRequest({currentValues: [facetValueRequest]}),
+        });
+
+        const action = toggleSelectFacetValue({
+          facetId: id,
+          selection: buildMockFacetValue(),
+        });
+        const finalState = facetSetReducer(state, action);
+
+        const targetValue = finalState[id]?.request.currentValues.find(
+          (req) => req.value === facetValue.value
+        );
+        expect(targetValue?.previousState).toBeUndefined();
       });
 
       it(`sets the state of an ${oppositeFacetValueState} value to ${facetValueState}`, () => {
@@ -217,6 +265,7 @@ describe('facet-set slice', () => {
           (req) => req.value === facetValue.value
         );
         expect(targetValue?.state).toBe(facetValueState);
+        expect(targetValue?.previousState).toBe(oppositeFacetValueState);
       });
 
       it(`sets the state of a ${facetValueState} value to idle`, () => {
@@ -242,6 +291,7 @@ describe('facet-set slice', () => {
           (req) => req.value === facetValue.value
         );
         expect(targetValue?.state).toBe('idle');
+        expect(targetValue?.previousState).toBe(facetValueState);
       });
 
       it('sets #freezeCurrentValues to true', () => {

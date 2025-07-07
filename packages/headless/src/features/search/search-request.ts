@@ -7,7 +7,7 @@ import {AutomaticFacetRequest} from '../facets/automatic-facet-set/interfaces/re
 import {AutomaticFacetResponse} from '../facets/automatic-facet-set/interfaces/response.js';
 import {FacetSetState} from '../facets/facet-set/facet-set-state.js';
 import {getFacetRequests} from '../facets/generic/interfaces/generic-facet-request.js';
-import {AnyFacetValue} from '../facets/generic/interfaces/generic-facet-response.js';
+import {AnyFacetRequest} from '../facets/generic/interfaces/generic-facet-request.js';
 import {RangeFacetSetState} from '../facets/range-facets/generic/interfaces/range-facet.js';
 import {maximumNumberOfResultsFromIndex} from '../pagination/pagination-constants.js';
 import {buildSearchAndFoldingLoadCollectionRequest as legacyBuildSearchAndFoldingLoadCollectionRequest} from '../search-and-folding/legacy/search-and-folding-request.js';
@@ -166,10 +166,18 @@ function getSpecificFacetRequests<T extends FacetSetState>(state: T) {
 
 function getRangeFacetRequests<T extends RangeFacetSetState>(state: T) {
   return getFacetRequests(state).map((request) => {
-    const currentValues = request.currentValues as AnyFacetValue[];
+    const currentValues =
+      request.currentValues as AnyFacetRequest['currentValues'];
     const hasActiveValues = currentValues.some(({state}) => state !== 'idle');
+    const hasPreviousStateValues = currentValues.some(
+      (value) => value.previousState
+    );
 
-    if (request.generateAutomaticRanges && !hasActiveValues) {
+    if (
+      request.generateAutomaticRanges &&
+      !hasActiveValues &&
+      !hasPreviousStateValues
+    ) {
       return {...request, currentValues: []};
     }
 

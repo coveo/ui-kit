@@ -552,6 +552,13 @@ describe('category facet slice', () => {
             finalState[facetId]?.request.currentValues[0].retrieveChildren
           ).toBe(false);
         });
+
+        it('sets the parent previousState to the previous state value', () => {
+          const finalState = categoryFacetSetReducer(state, action);
+          expect(
+            finalState[facetId]?.request.currentValues[0].previousState
+          ).toBe('selected');
+        });
       });
 
       describe('when the selected value path does not contain the parent', () => {
@@ -659,6 +666,13 @@ describe('category facet slice', () => {
           const parent = finalState[facetId]?.request.currentValues[0];
 
           expect(parent?.state).toBe('selected');
+        });
+
+        it('sets parent previousState to the previous state before changing to selected', () => {
+          const finalState = categoryFacetSetReducer(state, action);
+          const parent = finalState[facetId]?.request.currentValues[0];
+
+          expect(parent?.previousState).toBe('idle');
         });
       });
     });

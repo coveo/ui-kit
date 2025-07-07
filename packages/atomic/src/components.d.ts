@@ -350,11 +350,6 @@ export namespace Components {
     interface AtomicCommerceLoadMoreProducts {
     }
     /**
-     * @alpha The `atomic-commerce-no-products` component displays search tips when there are no products. Any additional content slotted inside of its element will be displayed as well.
-     */
-    interface AtomicCommerceNoProducts {
-    }
-    /**
      * The `atomic-commerce-numeric-facet` component is responsible for rendering a commerce facet that allows the user to filter products using numeric ranges.
      * @alpha 
      */
@@ -401,20 +396,6 @@ export namespace Components {
      * @alpha 
      */
     interface AtomicCommerceRefineToggle {
-    }
-    /**
-     * @alpha The `atomic-commerce-text` component leverages the I18n translation module through the atomic-commerce-interface.
-     */
-    interface AtomicCommerceText {
-        /**
-          * The count value used for plurals.
-          * @type {number}
-         */
-        "count"?: number;
-        /**
-          * The string key value.
-         */
-        "value": string;
     }
     /**
      * A facet is a list of values for a certain field occurring in the results.
@@ -1889,23 +1870,6 @@ export namespace Components {
           * How large or small the visual section of product using this template should be.
          */
         "imageSize"?: Omit<ItemDisplayImageSize, 'icon'>;
-    }
-    /**
-     * @alpha The `atomic-product-text` component renders the value of a string product field.
-     */
-    interface AtomicProductText {
-        /**
-          * The locale key for the text to display when the configured field has no value.
-         */
-        "default"?: string;
-        /**
-          * The product field which the component should use. This will look in the Product object first, and then in the product.additionalFields object for the fields.
-         */
-        "field": string;
-        /**
-          * When this is set to `true`, the component attempts to highlight text based on the highlighting properties provided by the search API response. This property only works for the product excerpt and the ec_name field.
-         */
-        "shouldHighlight": boolean;
     }
     /**
      * The `atomic-query-error` component handles fatal errors when performing a query on the index or Search API. When the error is known, it displays a link to relevant documentation link for debugging purposes. When the error is unknown, it displays a small text area with the JSON content of the error.
@@ -3601,15 +3565,6 @@ declare global {
         new (): HTMLAtomicCommerceLoadMoreProductsElement;
     };
     /**
-     * @alpha The `atomic-commerce-no-products` component displays search tips when there are no products. Any additional content slotted inside of its element will be displayed as well.
-     */
-    interface HTMLAtomicCommerceNoProductsElement extends Components.AtomicCommerceNoProducts, HTMLStencilElement {
-    }
-    var HTMLAtomicCommerceNoProductsElement: {
-        prototype: HTMLAtomicCommerceNoProductsElement;
-        new (): HTMLAtomicCommerceNoProductsElement;
-    };
-    /**
      * The `atomic-commerce-numeric-facet` component is responsible for rendering a commerce facet that allows the user to filter products using numeric ranges.
      * @alpha 
      */
@@ -3650,15 +3605,6 @@ declare global {
     var HTMLAtomicCommerceRefineToggleElement: {
         prototype: HTMLAtomicCommerceRefineToggleElement;
         new (): HTMLAtomicCommerceRefineToggleElement;
-    };
-    /**
-     * @alpha The `atomic-commerce-text` component leverages the I18n translation module through the atomic-commerce-interface.
-     */
-    interface HTMLAtomicCommerceTextElement extends Components.AtomicCommerceText, HTMLStencilElement {
-    }
-    var HTMLAtomicCommerceTextElement: {
-        prototype: HTMLAtomicCommerceTextElement;
-        new (): HTMLAtomicCommerceTextElement;
     };
     /**
      * A facet is a list of values for a certain field occurring in the results.
@@ -4534,15 +4480,6 @@ declare global {
     var HTMLAtomicProductSectionVisualElement: {
         prototype: HTMLAtomicProductSectionVisualElement;
         new (): HTMLAtomicProductSectionVisualElement;
-    };
-    /**
-     * @alpha The `atomic-product-text` component renders the value of a string product field.
-     */
-    interface HTMLAtomicProductTextElement extends Components.AtomicProductText, HTMLStencilElement {
-    }
-    var HTMLAtomicProductTextElement: {
-        prototype: HTMLAtomicProductTextElement;
-        new (): HTMLAtomicProductTextElement;
     };
     /**
      * The `atomic-query-error` component handles fatal errors when performing a query on the index or Search API. When the error is known, it displays a link to relevant documentation link for debugging purposes. When the error is unknown, it displays a small text area with the JSON content of the error.
@@ -5422,12 +5359,10 @@ declare global {
         "atomic-commerce-facet-number-input": HTMLAtomicCommerceFacetNumberInputElement;
         "atomic-commerce-facets": HTMLAtomicCommerceFacetsElement;
         "atomic-commerce-load-more-products": HTMLAtomicCommerceLoadMoreProductsElement;
-        "atomic-commerce-no-products": HTMLAtomicCommerceNoProductsElement;
         "atomic-commerce-numeric-facet": HTMLAtomicCommerceNumericFacetElement;
         "atomic-commerce-query-error": HTMLAtomicCommerceQueryErrorElement;
         "atomic-commerce-refine-modal": HTMLAtomicCommerceRefineModalElement;
         "atomic-commerce-refine-toggle": HTMLAtomicCommerceRefineToggleElement;
-        "atomic-commerce-text": HTMLAtomicCommerceTextElement;
         "atomic-commerce-timeframe-facet": HTMLAtomicCommerceTimeframeFacetElement;
         "atomic-did-you-mean": HTMLAtomicDidYouMeanElement;
         "atomic-external": HTMLAtomicExternalElement;
@@ -5517,7 +5452,6 @@ declare global {
         "atomic-product-section-metadata": HTMLAtomicProductSectionMetadataElement;
         "atomic-product-section-name": HTMLAtomicProductSectionNameElement;
         "atomic-product-section-visual": HTMLAtomicProductSectionVisualElement;
-        "atomic-product-text": HTMLAtomicProductTextElement;
         "atomic-query-error": HTMLAtomicQueryErrorElement;
         "atomic-query-summary": HTMLAtomicQuerySummaryElement;
         "atomic-quickview": HTMLAtomicQuickviewElement;
@@ -5879,11 +5813,6 @@ declare namespace LocalJSX {
     interface AtomicCommerceLoadMoreProducts {
     }
     /**
-     * @alpha The `atomic-commerce-no-products` component displays search tips when there are no products. Any additional content slotted inside of its element will be displayed as well.
-     */
-    interface AtomicCommerceNoProducts {
-    }
-    /**
      * The `atomic-commerce-numeric-facet` component is responsible for rendering a commerce facet that allows the user to filter products using numeric ranges.
      * @alpha 
      */
@@ -5930,20 +5859,6 @@ declare namespace LocalJSX {
      * @alpha 
      */
     interface AtomicCommerceRefineToggle {
-    }
-    /**
-     * @alpha The `atomic-commerce-text` component leverages the I18n translation module through the atomic-commerce-interface.
-     */
-    interface AtomicCommerceText {
-        /**
-          * The count value used for plurals.
-          * @type {number}
-         */
-        "count"?: number;
-        /**
-          * The string key value.
-         */
-        "value": string;
     }
     /**
      * A facet is a list of values for a certain field occurring in the results.
@@ -7365,23 +7280,6 @@ declare namespace LocalJSX {
           * How large or small the visual section of product using this template should be.
          */
         "imageSize"?: Omit<ItemDisplayImageSize, 'icon'>;
-    }
-    /**
-     * @alpha The `atomic-product-text` component renders the value of a string product field.
-     */
-    interface AtomicProductText {
-        /**
-          * The locale key for the text to display when the configured field has no value.
-         */
-        "default"?: string;
-        /**
-          * The product field which the component should use. This will look in the Product object first, and then in the product.additionalFields object for the fields.
-         */
-        "field": string;
-        /**
-          * When this is set to `true`, the component attempts to highlight text based on the highlighting properties provided by the search API response. This property only works for the product excerpt and the ec_name field.
-         */
-        "shouldHighlight"?: boolean;
     }
     /**
      * The `atomic-query-error` component handles fatal errors when performing a query on the index or Search API. When the error is known, it displays a link to relevant documentation link for debugging purposes. When the error is unknown, it displays a small text area with the JSON content of the error.
@@ -8822,12 +8720,10 @@ declare namespace LocalJSX {
         "atomic-commerce-facet-number-input": AtomicCommerceFacetNumberInput;
         "atomic-commerce-facets": AtomicCommerceFacets;
         "atomic-commerce-load-more-products": AtomicCommerceLoadMoreProducts;
-        "atomic-commerce-no-products": AtomicCommerceNoProducts;
         "atomic-commerce-numeric-facet": AtomicCommerceNumericFacet;
         "atomic-commerce-query-error": AtomicCommerceQueryError;
         "atomic-commerce-refine-modal": AtomicCommerceRefineModal;
         "atomic-commerce-refine-toggle": AtomicCommerceRefineToggle;
-        "atomic-commerce-text": AtomicCommerceText;
         "atomic-commerce-timeframe-facet": AtomicCommerceTimeframeFacet;
         "atomic-did-you-mean": AtomicDidYouMean;
         "atomic-external": AtomicExternal;
@@ -8917,7 +8813,6 @@ declare namespace LocalJSX {
         "atomic-product-section-metadata": AtomicProductSectionMetadata;
         "atomic-product-section-name": AtomicProductSectionName;
         "atomic-product-section-visual": AtomicProductSectionVisual;
-        "atomic-product-text": AtomicProductText;
         "atomic-query-error": AtomicQueryError;
         "atomic-query-summary": AtomicQuerySummary;
         "atomic-quickview": AtomicQuickview;
@@ -9061,10 +8956,6 @@ declare module "@stencil/core" {
              */
             "atomic-commerce-load-more-products": LocalJSX.AtomicCommerceLoadMoreProducts & JSXBase.HTMLAttributes<HTMLAtomicCommerceLoadMoreProductsElement>;
             /**
-             * @alpha The `atomic-commerce-no-products` component displays search tips when there are no products. Any additional content slotted inside of its element will be displayed as well.
-             */
-            "atomic-commerce-no-products": LocalJSX.AtomicCommerceNoProducts & JSXBase.HTMLAttributes<HTMLAtomicCommerceNoProductsElement>;
-            /**
              * The `atomic-commerce-numeric-facet` component is responsible for rendering a commerce facet that allows the user to filter products using numeric ranges.
              * @alpha 
              */
@@ -9086,10 +8977,6 @@ declare module "@stencil/core" {
              * @alpha 
              */
             "atomic-commerce-refine-toggle": LocalJSX.AtomicCommerceRefineToggle & JSXBase.HTMLAttributes<HTMLAtomicCommerceRefineToggleElement>;
-            /**
-             * @alpha The `atomic-commerce-text` component leverages the I18n translation module through the atomic-commerce-interface.
-             */
-            "atomic-commerce-text": LocalJSX.AtomicCommerceText & JSXBase.HTMLAttributes<HTMLAtomicCommerceTextElement>;
             /**
              * A facet is a list of values for a certain field occurring in the results.
              * An `atomic-commerce-timeframe-facet` displays a facet of the results for the current query as date intervals.
@@ -9376,10 +9263,6 @@ declare module "@stencil/core" {
              * * Always has a 1:1 aspect ratio.
              */
             "atomic-product-section-visual": LocalJSX.AtomicProductSectionVisual & JSXBase.HTMLAttributes<HTMLAtomicProductSectionVisualElement>;
-            /**
-             * @alpha The `atomic-product-text` component renders the value of a string product field.
-             */
-            "atomic-product-text": LocalJSX.AtomicProductText & JSXBase.HTMLAttributes<HTMLAtomicProductTextElement>;
             /**
              * The `atomic-query-error` component handles fatal errors when performing a query on the index or Search API. When the error is known, it displays a link to relevant documentation link for debugging purposes. When the error is unknown, it displays a small text area with the JSON content of the error.
              */

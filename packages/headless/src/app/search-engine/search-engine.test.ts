@@ -185,5 +185,13 @@ describe('searchEngine', () => {
         expect(engine.state.configuration.search.apiBaseUrl).toBe(proxyBaseUrl);
       });
     });
+
+    it('should ensure that engine.relay is the same reference as thunk extra args relay', async () => {
+      const thunkRelay = await engine.dispatch(
+        (_dispatch, _getState, extra) => extra.relay
+      );
+
+      expect(thunkRelay).toBe(engine.relay);
+    });
   });
 });

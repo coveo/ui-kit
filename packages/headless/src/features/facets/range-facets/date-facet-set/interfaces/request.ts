@@ -26,6 +26,11 @@ export interface DateRangeRequest {
    * The current facet value state.
    */
   state: FacetValueState;
+
+  /**
+   * The previous facet value state in the search interface.
+   */
+  previousState?: FacetValueState;
 }
 
 export function isDateFacetRequest(
