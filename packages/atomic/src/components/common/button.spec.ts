@@ -4,7 +4,7 @@ import {html, nothing, render} from 'lit';
 import {vi, describe, beforeEach, afterEach, it, expect} from 'vitest';
 import {renderButton as button, ButtonProps} from './button';
 
-vi.mock('@/src/utils/ripple');
+vi.mock('../../utils/ripple');
 
 describe('button', () => {
   let container: HTMLElement;
