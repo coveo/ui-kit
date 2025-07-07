@@ -56,7 +56,7 @@ export const createOverlayComponent = <OverlayComponent extends object, OverlayT
 
     componentDidMount() {
       if (this.props.isOpen) {
-        void this.present();
+        this.present();
       }
     }
 
@@ -88,7 +88,7 @@ export const createOverlayComponent = <OverlayComponent extends object, OverlayT
       }
 
       if (prevProps.isOpen !== this.props.isOpen && this.props.isOpen === true) {
-        await this.present(prevProps);
+        this.present(prevProps);
       }
       if (this.overlay && prevProps.isOpen !== this.props.isOpen && this.props.isOpen === false) {
         await this.overlay.dismiss();
