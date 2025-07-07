@@ -31,6 +31,7 @@ import {
   UpdateQueryActionCreatorPayload,
 } from '../../query/query-actions.js';
 import {buildSearchAndFoldingLoadCollectionRequest} from '../../search-and-folding/legacy/search-and-folding-request.js';
+import {updateSearchAction} from '../search-actions.js';
 import {logFetchMoreResults} from '../search-analytics-actions.js';
 import {MappedSearchRequest, mapSearchRequest} from '../search-mappings.js';
 import {
@@ -334,6 +335,14 @@ export async function legacyExecuteSearch(
     preprocessRequest,
     logger,
   });
+
+  if (eventDescription?.actionCause) {
+    config.dispatch(
+      updateSearchAction({
+        actionCause: eventDescription.actionCause,
+      })
+    );
+  }
 
   const request = await buildSearchRequest(state, eventDescription);
 

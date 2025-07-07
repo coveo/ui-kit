@@ -127,4 +127,12 @@ describe('buildRecommendationEngine', () => {
 
     expect(engine.state.configuration.search.locale).toBe(locale);
   });
+
+  it('should ensure that engine.relay is the same reference as thunk extra args relay', async () => {
+    const thunkRelay = await engine.dispatch(
+      (_dispatch, _getState, extra) => extra.relay
+    );
+
+    expect(thunkRelay).toBe(engine.relay);
+  });
 });
