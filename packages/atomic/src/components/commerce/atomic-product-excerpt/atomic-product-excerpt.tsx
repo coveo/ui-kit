@@ -8,7 +8,7 @@ import {
 import {
   ExpandableText,
   TruncateAfter,
-} from '../../common/expandable-text/expandable-text';
+} from '../../common/expandable-text/stencil-expandable-text';
 import {Hidden} from '../../common/stencil-hidden';
 import {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface';
 import {ProductContext} from '../product-template-component-utils/stencil-product-template-decorators';
