@@ -46,10 +46,14 @@ export default {
     await import(
       './atomic-commerce-sort-dropdown/atomic-commerce-sort-dropdown.js'
     ),
+  'atomic-commerce-text': async () =>
+    await import('./atomic-commerce-text/atomic-commerce-text.js'),
   'atomic-product': async () =>
     await import('./atomic-product/atomic-product.js'),
   'atomic-product-template': async () =>
     await import('./atomic-product-template/atomic-product-template.js'),
+  'atomic-product-text': async () =>
+    await import('./atomic-product-text/atomic-product-text.js'),
 } as Record<string, () => Promise<unknown>>;
 
 export type * from './index.js';
