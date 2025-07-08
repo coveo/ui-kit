@@ -38,16 +38,16 @@ export const AtomicCommerceDidYouMean = createComponent({
   elementClass: LitAtomicCommerceDidYouMean,
 });
 
-export const AtomicCommerceLayout = createComponent({
-  tagName: 'atomic-commerce-layout',
-  react: React,
-  elementClass: LitAtomicCommerceLayout,
-});
-
 export const AtomicCommerceInterface = createComponent({
   tagName: 'atomic-commerce-interface',
   react: React,
   elementClass: LitAtomicCommerceInterface,
+});
+
+export const AtomicCommerceLayout = createComponent({
+  tagName: 'atomic-commerce-layout',
+  react: React,
+  elementClass: LitAtomicCommerceLayout,
 });
 
 export const AtomicCommerceLoadMoreProducts = createComponent({
@@ -62,16 +62,16 @@ export const AtomicCommerceNoProducts = createComponent({
   elementClass: LitAtomicCommerceNoProducts,
 });
 
-export const AtomicCommerceProductList = createComponent({
-  tagName: 'atomic-commerce-product-list',
-  react: React,
-  elementClass: LitAtomicCommerceProductList,
-});
-
 export const AtomicCommercePager = createComponent({
   tagName: 'atomic-commerce-pager',
   react: React,
   elementClass: LitAtomicCommercePager,
+});
+
+export const AtomicCommerceProductList = createComponent({
+  tagName: 'atomic-commerce-product-list',
+  react: React,
+  elementClass: LitAtomicCommerceProductList,
 });
 
 export const AtomicCommerceProductsPerPage = createComponent({
