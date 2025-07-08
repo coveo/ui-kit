@@ -1,25 +1,15 @@
-import {Canvas, ArgTypes, Meta, Title, Description, Stories, Subtitle} from '@storybook/blocks';
+import { Canvas, ArgTypes, Meta, Title, Description, Stories, Subtitle } from '@storybook/blocks';
 import * as AtomicCommerceRefineModalStories from './atomic-commerce-refine-modal.new.stories';
-
+import { CanvasWithGithub } from '../../../../storybook-utils/documentation/canvas-with-github';
 
 
 <Meta of={AtomicCommerceRefineModalStories} />
 <Title />
 <Subtitle ><Description/></Subtitle>
 
-<Canvas
-  additionalActions={[
-    {
-      title: 'Open in GitHub',
-      onClick: () => {
-        window.open(
-          'https://github.com/coveo/ui-kit/blob/master/packages/atomic/src/components/commerce/atomic-commerce-refine-modal/atomic-commerce-refine-modal.ts',
-          '_blank'
-        );
-      },
-    },
-  ]}
-  of={AtomicCommerceRefineModalStories.Default}
+<CanvasWithGithub
+  of={AtomicCommerceRefineModalStories.DefaultModal}
+  githubPath="commerce/atomic-commerce-refine-modal/atomic-commerce-refine-modal.ts"
 />
 
 

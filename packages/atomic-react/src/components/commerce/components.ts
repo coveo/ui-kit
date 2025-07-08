@@ -12,6 +12,7 @@ import {
   AtomicCommerceQuerySummary as LitAtomicCommerceQuerySummary,
   AtomicCommerceRecommendationInterface as LitAtomicCommerceRecommendationInterface,
   AtomicCommerceRecommendationList as LitAtomicCommerceRecommendationList,
+  AtomicCommerceRefineModal as LitAtomicCommerceRefineModal,
   AtomicCommerceRefineToggle as LitAtomicCommerceRefineToggle,
   AtomicCommerceSearchBox as LitAtomicCommerceSearchBox,
   AtomicCommerceSearchBoxInstantProducts as LitAtomicCommerceSearchBoxInstantProducts,
@@ -26,12 +27,6 @@ import {
   AtomicProductText as LitAtomicProductText,
 } from '@coveo/atomic/components';
 
-export const AtomicCommerceBreadbox = createComponent({
-  tagName: 'atomic-commerce-breadbox',
-  react: React,
-  elementClass: LitAtomicCommerceBreadbox,
-});
-
 export const AtomicCommerceDidYouMean = createComponent({
   tagName: 'atomic-commerce-did-you-mean',
   react: React,
@@ -42,6 +37,12 @@ export const AtomicCommerceInterface = createComponent({
   tagName: 'atomic-commerce-interface',
   react: React,
   elementClass: LitAtomicCommerceInterface,
+});
+
+export const AtomicCommerceBreadbox = createComponent({
+  tagName: 'atomic-commerce-breadbox',
+  react: React,
+  elementClass: LitAtomicCommerceBreadbox,
 });
 
 export const AtomicCommerceLayout = createComponent({
@@ -96,6 +97,12 @@ export const AtomicCommerceRefineToggle = createComponent({
   tagName: 'atomic-commerce-refine-toggle',
   react: React,
   elementClass: LitAtomicCommerceRefineToggle,
+});
+
+export const AtomicCommerceRefineModal = createComponent({
+  tagName: 'atomic-commerce-refine-modal',
+  react: React,
+  elementClass: LitAtomicCommerceRefineModal,
 });
 
 export const AtomicCommerceSearchBox = createComponent({

@@ -35,4 +35,6 @@ const meta: Meta = {
 
 export default meta;
 
-export const Default: Story = {};
+export const DefaultModal: Story = {
+  name: 'Default modal',
+};
