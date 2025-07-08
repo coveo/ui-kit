@@ -1,5 +1,5 @@
 import {FunctionalComponentWithChildren} from '@/src/utils/functional-component-utils';
-import {i18n} from 'i18next';
+import type {i18n} from 'i18next';
 import {html} from 'lit';
 import {renderFacetValuesGroup} from '../facet-values-group/facet-values-group';
 

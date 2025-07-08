@@ -10,7 +10,7 @@ import {renderFacetValueLink} from '../facet-value-link/facet-value-link';
 import {formatHumanReadable} from './formatter';
 import {
   renderNumericFacetValue,
-  NumericFacetValueLinkProps,
+  type NumericFacetValueLinkProps,
 } from './value-link';
 
 // Mock the dependencies
@@ -89,16 +89,6 @@ describe('#renderNumericFacetValue', () => {
   });
 
   describe('when displayValuesAs is "checkbox"', () => {
-    beforeEach(() => {
-      // Mock the checkbox render function to return a recognizable template
-      vi.mocked(renderFacetValueCheckbox).mockReturnValue(
-        () => html`<div data-testid="checkbox-container">checkbox content</div>`
-      );
-      vi.mocked(renderFacetValueLabelHighlight).mockReturnValue(
-        html`<span data-testid="label-highlight">highlighted label</span>`
-      );
-    });
-
     it('should call renderFacetValueCheckbox with correct props when facet value is not selected', async () => {
       await renderComponent({
         displayValuesAs: 'checkbox',
@@ -158,16 +148,6 @@ describe('#renderNumericFacetValue', () => {
   });
 
   describe('when displayValuesAs is "link"', () => {
-    beforeEach(() => {
-      // Mock the link render function to return a recognizable template
-      vi.mocked(renderFacetValueLink).mockReturnValue(
-        () => html`<div data-testid="link-container">link content</div>`
-      );
-      vi.mocked(renderFacetValueLabelHighlight).mockReturnValue(
-        html`<span data-testid="label-highlight">highlighted label</span>`
-      );
-    });
-
     it('should call renderFacetValueLink with correct props when facet value is not selected', async () => {
       await renderComponent({
         displayValuesAs: 'link',
