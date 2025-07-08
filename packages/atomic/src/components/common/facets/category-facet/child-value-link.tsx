@@ -2,7 +2,7 @@ import {FunctionalComponent, h} from '@stencil/core';
 import {
   CategoryFacetValueLink,
   CategoryFacetValueLinkProps,
-} from './value-link';
+} from './stencil-value-link';
 
 interface CategoryFacetChildValueLinkProps
   extends Omit<CategoryFacetValueLinkProps, 'isParent'> {}
