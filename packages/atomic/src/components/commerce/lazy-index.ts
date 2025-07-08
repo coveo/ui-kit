@@ -40,6 +40,10 @@ export default {
     await import(
       './atomic-commerce-recommendation-list/atomic-commerce-recommendation-list.js'
     ),
+  'atomic-commerce-refine-toggle': async () =>
+    await import(
+      './atomic-commerce-refine-toggle/atomic-commerce-refine-toggle.js'
+    ),
   'atomic-commerce-search-box': async () =>
     await import('./atomic-commerce-search-box/atomic-commerce-search-box.js'),
   'atomic-commerce-search-box-instant-products': async () =>
