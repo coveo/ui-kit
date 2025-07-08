@@ -1,3 +1,11 @@
+## <small>3.3.38 (2025-07-02)</small>
+
+* chore(atomic): migrate atomic-commerce-breadbox (#5459) ([817e7b5](https://github.com/coveo/ui-kit/commits/817e7b5)), closes [#5459](https://github.com/coveo/ui-kit/issues/5459)
+* chore(atomic): migrate atomic-commerce-did-you-mean (#5523) ([5357de3](https://github.com/coveo/ui-kit/commits/5357de3)), closes [#5523](https://github.com/coveo/ui-kit/issues/5523)
+* chore(atomic): migrate atomic-product (#5398) ([6cd9e95](https://github.com/coveo/ui-kit/commits/6cd9e95)), closes [#5398](https://github.com/coveo/ui-kit/issues/5398)
+
+
+
 ## <small>3.3.37 (2025-06-25)</small>
 
 - ci: fix generated files desync (#5532) ([52afab5](https://github.com/coveo/ui-kit/commits/52afab5)), closes [#5532](https://github.com/coveo/ui-kit/issues/5532) [#5470](https://github.com/coveo/ui-kit/issues/5470) [#5198](https://github.com/coveo/ui-kit/issues/5198)

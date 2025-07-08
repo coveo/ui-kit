@@ -186,6 +186,52 @@ describe('search request', () => {
     expect(facets).toContainEqual(request);
   });
 
+  it('#searchRequest does not strip facet values in #numericFacetSet for facets with generateAutomaticRanges when values have previousState', async () => {
+    const request = buildMockNumericFacetRequest({
+      field: 'objecttype',
+      currentValues: [
+        {
+          start: 0,
+          end: 10,
+          endInclusive: true,
+          state: 'idle',
+          previousState: 'selected',
+        },
+        {start: 10, end: 20, endInclusive: true, state: 'idle'},
+      ],
+      generateAutomaticRanges: true,
+    });
+    state.numericFacetSet[1] = buildMockNumericFacetSlice({request});
+
+    const {facets} = (
+      await buildSearchRequest(state, buildMockNavigatorContextProvider()())
+    ).request;
+    expect(facets).toContainEqual(request);
+  });
+
+  it('#searchRequest strips facet values in #numericFacetSet for facets with generateAutomaticRanges when no values have previousState and all are idle', async () => {
+    const request = buildMockNumericFacetRequest({
+      field: 'objecttype',
+      currentValues: [
+        {start: 0, end: 10, endInclusive: true, state: 'idle'},
+        {start: 10, end: 20, endInclusive: true, state: 'idle'},
+      ],
+      generateAutomaticRanges: true,
+    });
+    state.numericFacetSet[1] = buildMockNumericFacetSlice({request});
+
+    const {facets} = (
+      await buildSearchRequest(state, buildMockNavigatorContextProvider()())
+    ).request;
+    expect(facets).toContainEqual(
+      buildMockNumericFacetRequest({
+        field: 'objecttype',
+        currentValues: [],
+        generateAutomaticRanges: true,
+      })
+    );
+  });
+
   it('#searchRequest returns the facets in the state #dateFacetSet', async () => {
     const request = buildMockDateFacetRequest({
       field: 'date',
@@ -234,6 +280,52 @@ describe('search request', () => {
       await buildSearchRequest(state, buildMockNavigatorContextProvider()())
     ).request;
     expect(facets).toContainEqual(request);
+  });
+
+  it('#searchRequest does not strip facet values in #dateFacetSet for facets with generateAutomaticRanges when values have previousState', async () => {
+    const request = buildMockDateFacetRequest({
+      field: 'date',
+      currentValues: [
+        {
+          start: '0',
+          end: '10',
+          endInclusive: false,
+          state: 'idle',
+          previousState: 'excluded',
+        },
+        {start: '10', end: '20', endInclusive: false, state: 'idle'},
+      ],
+      generateAutomaticRanges: true,
+    });
+    state.dateFacetSet[1] = buildMockDateFacetSlice({request});
+
+    const {facets} = (
+      await buildSearchRequest(state, buildMockNavigatorContextProvider()())
+    ).request;
+    expect(facets).toContainEqual(request);
+  });
+
+  it('#searchRequest strips facet values in #dateFacetSet for facets with generateAutomaticRanges when no values have previousState and all are idle', async () => {
+    const request = buildMockDateFacetRequest({
+      field: 'date',
+      currentValues: [
+        {start: '0', end: '10', endInclusive: false, state: 'idle'},
+        {start: '10', end: '20', endInclusive: false, state: 'idle'},
+      ],
+      generateAutomaticRanges: true,
+    });
+    state.dateFacetSet[1] = buildMockDateFacetSlice({request});
+
+    const {facets} = (
+      await buildSearchRequest(state, buildMockNavigatorContextProvider()())
+    ).request;
+    expect(facets).toContainEqual(
+      buildMockDateFacetRequest({
+        field: 'date',
+        currentValues: [],
+        generateAutomaticRanges: true,
+      })
+    );
   });
 
   it('#searchRequest returns the state #generateAutomaticFacets.desiredCount', async () => {

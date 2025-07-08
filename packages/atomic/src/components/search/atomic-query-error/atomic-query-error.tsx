@@ -11,13 +11,13 @@ import {
   InitializeBindings,
 } from '../../../utils/initialization-utils';
 import {AriaLiveRegion} from '../../../utils/stencil-accessibility-utils';
-import {QueryErrorDetails} from '../../common/query-error/details';
-import {QueryErrorIcon} from '../../common/query-error/icon';
-import {QueryErrorShowMore} from '../../common/query-error/show-more';
+import {QueryErrorDetails} from '../../common/query-error/stencil-details';
+import {QueryErrorIcon} from '../../common/query-error/stencil-icon';
+import {QueryErrorShowMore} from '../../common/query-error/stencil-show-more';
 import {QueryErrorContainer} from '../../common/query-error/stencil-container';
 import {QueryErrorDescription} from '../../common/query-error/stencil-description';
 import {QueryErrorGuard} from '../../common/query-error/stencil-guard';
-import {QueryErrorTitle} from '../../common/query-error/title';
+import {QueryErrorTitle} from '../../common/query-error/stencil-title';
 import {getAriaMessageFromErrorType} from '../../common/query-error/utils';
 import {Bindings} from '../atomic-search-interface/atomic-search-interface';
 import {QueryErrorLink} from '../../common/query-error/stencil-link';

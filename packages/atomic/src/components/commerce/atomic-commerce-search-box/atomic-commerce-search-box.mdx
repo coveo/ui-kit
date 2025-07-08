@@ -1,25 +1,15 @@
 import {Canvas, ArgTypes, Meta, Title, Description, Subtitle, Stories} from '@storybook/blocks';
 import * as AtomicCommerceSearchBoxStories from './atomic-commerce-search-box.new.stories';
-
+import {CanvasWithGithub} from '../../../../storybook-utils/documentation/canvas-with-github';
 
 <Meta of={AtomicCommerceSearchBoxStories} />
 
 <Title />
 <Subtitle><Description/></Subtitle>
 
-<Canvas
-  additionalActions={[
-    {
-      title: 'Open in GitHub',
-      onClick: () => {
-        window.open(
-          'https://github.com/coveo/ui-kit/blob/master/packages/atomic/src/components/commerce/atomic-commerce-search-box/atomic-commerce-search-box.ts',
-          '_blank'
-        );
-      },
-    },
-  ]}
+<CanvasWithGithub
   of={AtomicCommerceSearchBoxStories.Default}
+  githubPath="commerce/atomic-commerce-search-box/atomic-commerce-search-box.ts"
 />
 
 ## Usage

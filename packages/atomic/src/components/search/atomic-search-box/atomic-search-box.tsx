@@ -515,7 +515,6 @@ export class AtomicSearchBox implements InitializableComponent<Bindings> {
           }
 
           this.isExpanded = false;
-          this.triggerTextAreaChange(item.query ?? '');
         }}
         onMouseOver={() => {
           this.suggestionManager.onSuggestionMouseOver(item, side, id);

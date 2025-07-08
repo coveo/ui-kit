@@ -2,7 +2,7 @@ import {AppProxyOptions, CoveoShopifyOptions} from '../types';
 import {memoize} from './memoize';
 
 const memoizedFetch = memoize(
-  (...args: Parameters<typeof fetch>) => global.fetch(...args),
+  (...args: Parameters<typeof fetch>) => fetch(...args),
   (url: string) => url
 );
 

@@ -1,8 +1,6 @@
 import {Canvas, Markdown, ArgTypes, Meta, Title, Description, Controls, Primary, Stories, Subtitle} from '@storybook/blocks';
 import * as AtomicCommerceQuerySummaryStories from './atomic-commerce-query-summary.new.stories';
-
-{/* Storybook provides a number of blocs to construct documentation pages */}
-{/* https://storybook.js.org/docs/writing-docs/doc-blocks#available-blocks */}
+import {CanvasWithGithub} from '../../../../storybook-utils/documentation/canvas-with-github';
 
 <Meta of={AtomicCommerceQuerySummaryStories} />
 
@@ -10,20 +8,11 @@ import * as AtomicCommerceQuerySummaryStories from './atomic-commerce-query-summ
 <Subtitle ><Description/></Subtitle>
 
 
-<Canvas
-  additionalActions={[
-    {
-      title: 'Open in GitHub',
-      onClick: () => {
-        window.open(
-          'https://github.com/coveo/ui-kit/blob/master/packages/atomic/src/components/commerce/atomic-commerce-query-summary/atomic-commerce-query-summary.ts',
-          '_blank'
-        );
-      },
-    },
-  ]}
+<CanvasWithGithub
   of={AtomicCommerceQuerySummaryStories.Default}
+  githubPath="commerce/atomic-commerce-query-summary/atomic-commerce-query-summary.ts"
 />
+
 ## Properties
 
 ## Usage

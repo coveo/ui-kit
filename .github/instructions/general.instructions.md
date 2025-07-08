@@ -1,4 +1,6 @@
-# GitHub Copilot Instructions
+---
+applyTo: '**'
+---
 
 ## Core Principles
 

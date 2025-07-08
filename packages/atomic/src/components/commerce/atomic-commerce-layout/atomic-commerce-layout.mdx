@@ -1,16 +1,33 @@
-import {Canvas, ArgTypes, Meta, Title, Description} from '@storybook/blocks';
+import { Canvas, ArgTypes, Meta, Title, Description, Stories, Subtitle } from '@storybook/blocks';
 import * as AtomicCommerceLayoutStories from './atomic-commerce-layout.new.stories';
-
-{/* Storybook provides a number of blocs to construct documentation pages */}
-{/* https://storybook.js.org/docs/writing-docs/doc-blocks#available-blocks */}
+import { CanvasWithGithub } from '../../../../storybook-utils/documentation/canvas-with-github';
 
 <Meta of={AtomicCommerceLayoutStories} />
 
 <Title />
-<Description />
+<Subtitle><Description/></Subtitle>
 
-<Canvas of={AtomicCommerceLayoutStories.Default} />
+<CanvasWithGithub
+  of={AtomicCommerceLayoutStories.Default}
+  githubPath="commerce/atomic-commerce-layout/atomic-commerce-layout.ts"
+/>
 
-## Properties
 
+## Usage
+
+This component organizes the commerce page layout. 
+Use `atomic-layout-section` to define the different sections of the page, such as **search**, **facets**, and **main**.
+
+```html
+<atomic-commerce-layout>
+  <atomic-layout-section section="search"></atomic-layout-section>
+  <atomic-layout-section section="facets"></atomic-layout-section>
+  <atomic-layout-section section="main"></atomic-layout-section>
+</atomic-commerce-layout>
+```
+
+## Examples
+<Stories title={""}/>
+
+## Reference
 <ArgTypes />

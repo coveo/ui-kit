@@ -1,25 +1,15 @@
 import {Canvas, Markdown, ArgTypes, Meta, Title, Description, Controls, Primary, Stories, Subtitle} from '@storybook/blocks';
 import * as AtomicCommercePagerStories from './atomic-commerce-pager.new.stories';
+import {CanvasWithGithub} from '../../../../storybook-utils/documentation/canvas-with-github';
 
 <Meta of={AtomicCommercePagerStories} />
-
 
 <Title />
 <Subtitle ><Description/></Subtitle>
 
-<Canvas
-  additionalActions={[
-    {
-      title: 'Open in GitHub',
-      onClick: () => {
-        window.open(
-          'https://github.com/coveo/ui-kit/blob/master/packages/atomic/src/components/commerce/atomic-commerce-pager/atomic-commerce-pager.ts',
-          '_blank'
-        );
-      },
-    },
-  ]}
+<CanvasWithGithub
   of={AtomicCommercePagerStories.Default}
+  githubPath="commerce/atomic-commerce-pager/atomic-commerce-pager.ts"
 />
 
 ## Usage
