@@ -1,7 +1,7 @@
-import {BasePageObject} from '@/playwright-utils/base-page-object';
+import {BasePageObject} from '@/playwright-utils/lit-base-page-object';
 import type {Page} from '@playwright/test';
 
-export class AtomicCommerceBreadboxPageObject extends BasePageObject<'atomic-commerce-breadbox'> {
+export class AtomicCommerceBreadboxPageObject extends BasePageObject {
   constructor(page: Page) {
     super(page, 'atomic-commerce-breadbox');
   }
@@ -57,7 +57,7 @@ export class AtomicCommerceBreadboxPageObject extends BasePageObject<'atomic-com
   }
 
   getShowMorebutton() {
-    return this.page.getByLabel(/Show \d+ more filters/);
+    return this.page.getByLabel(/Show\s*\+\s*\d+\s+more filters/);
   }
 
   getClearAllButton() {

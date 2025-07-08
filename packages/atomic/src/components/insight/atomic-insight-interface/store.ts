@@ -22,6 +22,13 @@ import {
 } from '../../common/interface/store';
 import {makeDesktopQuery} from '../atomic-insight-layout/insight-layout';
 
+interface FacetInfoMap {
+  [facetId: string]:
+    | FacetInfo
+    | (FacetInfo & FacetValueFormat<NumericFacetValue>)
+    | (FacetInfo & FacetValueFormat<DateFacetValue>);
+}
+
 interface Data {
   loadingFlags: string[];
   iconAssetsPath: string;
@@ -46,6 +53,7 @@ export type InsightStore = BaseStore<Data> & {
   getFacetElements(): HTMLElement[];
   waitUntilAppLoaded(callback: () => void): void;
   getUniqueIDFromEngine(engine: InsightEngine): string;
+  getAllFacets(): FacetInfoMap;
 };
 
 export function createInsightStore(): InsightStore {
@@ -71,6 +79,15 @@ export function createInsightStore(): InsightStore {
 
     setLoadingFlag(loadingFlag: string) {
       setLoadingFlag(store, loadingFlag);
+    },
+
+    getAllFacets() {
+      return {
+        ...store.state.facets,
+        ...store.state.dateFacets,
+        ...store.state.categoryFacets,
+        ...store.state.numericFacets,
+      };
     },
 
     isMobile() {

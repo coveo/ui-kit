@@ -4,6 +4,10 @@ import {Product, InteractiveProduct} from '@coveo/headless/commerce';
 import {CSSResultGroup, LitElement, html, unsafeCSS} from 'lit';
 import {customElement, property} from 'lit/decorators.js';
 import {ref} from 'lit/directives/ref.js';
+import {
+  InteractiveProductContextEvent,
+  ProductContextEvent,
+} from '../../../decorators/commerce/product-template-decorators';
 import {parentNodeToString} from '../../../utils/dom-utils';
 import {DisplayConfig} from '../../common/item-list/context/item-display-config-context-controller';
 import {
@@ -18,10 +22,6 @@ import {
 } from '../../common/layout/display-options';
 import {CommerceStore} from '../atomic-commerce-interface/store';
 import {CommerceRecommendationStore} from '../atomic-commerce-recommendation-interface/store';
-import {
-  InteractiveProductContextEvent,
-  ProductContextEvent,
-} from '../product-template-components/product-template-decorators';
 import styles from './atomic-product.tw.css';
 
 /**

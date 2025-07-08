@@ -18,7 +18,7 @@ const {decorator, play} = wrapInSearchInterface();
 
 const meta: Meta = {
   component: 'atomic-icon',
-  title: 'Atomic/Common',
+  title: 'Common/atomic-icon',
   id: 'atomic-icon',
 
   render: renderComponent,
@@ -42,9 +42,8 @@ const meta: Meta = {
 };
 
 export default meta;
-
+//TODO here
 export const Default: Story = {
-  name: 'atomic-icon',
   args: {
     'attributes-icon': 'assets://account.svg',
   },

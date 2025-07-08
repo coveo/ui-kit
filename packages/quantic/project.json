@@ -41,6 +41,24 @@
         "script": "promote:sfdx:ci"
       }
     },
+    "lint:check": {
+      "executor": "nx:run-commands",
+      "options": {
+        "commands": [
+          "npm run lint:check:tests"
+        ],
+        "cwd": "{projectRoot}"
+      }
+    },
+    "lint:fix": {
+      "executor": "nx:run-commands",
+      "options": {
+        "commands": [
+          "npm run lint:fix"
+        ],
+        "cwd": "{projectRoot}"
+      }
+    },
     "test": {
       "executor": "nx:run-commands",
       "outputs": ["{projectRoot}/coverage"],

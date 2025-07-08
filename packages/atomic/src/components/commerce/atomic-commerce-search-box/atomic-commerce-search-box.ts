@@ -46,7 +46,7 @@ import {
   SearchBoxSuggestionsEvent,
 } from '../../common/suggestions/suggestions-common';
 import {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface';
-import {SelectChildProductEventArgs} from '../product-template-components/atomic-product-children/select-child-product-event';
+import {SelectChildProductEventArgs} from '../atomic-product-children/select-child-product-event';
 import styles from './atomic-commerce-search-box.tw.css';
 
 /**
@@ -597,8 +597,7 @@ export class AtomicCommerceSearchBox
       !this.isSearchDisabledForEndUser;
 
     const classes = {
-      'bg-background border-neutral absolute top-full left-0 z-10 flex w-full rounded-md border':
-        true,
+      'bg-background border-neutral absolute top-full left-0 z-10 flex w-full rounded-md border': true,
       hidden: !isVisible,
     };
 
@@ -685,7 +684,6 @@ export class AtomicCommerceSearchBox
           }
 
           this.isExpanded = false;
-          this.triggerTextAreaChange(item.query ?? '');
         }}
         .onMouseOver=${() => {
           this.suggestionManager.onSuggestionMouseOver(item, side, id);

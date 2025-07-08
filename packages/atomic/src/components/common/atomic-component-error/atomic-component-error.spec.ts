@@ -44,4 +44,23 @@ describe('AtomicComponentError', () => {
     await setupElement();
     expect(consoleErrorSpy).toHaveBeenCalledWith(error, element);
   });
+
+  it('should log the error to the console when the element is loaded after being attached to the DOM', async () => {
+    const element = document.createElement('div');
+    const error = new Error('Test error');
+    const el = await fixture(
+      html`<atomic-component-error-clone
+        .element=${element}
+        .error=${error}
+      ></atomic-component-error-clone>`
+    );
+    customElements.define(
+      'atomic-component-error-clone',
+      class extends AtomicComponentError {}
+    );
+
+    await el.updateComplete;
+
+    expect(consoleErrorSpy).toHaveBeenCalledWith(error, element);
+  });
 });

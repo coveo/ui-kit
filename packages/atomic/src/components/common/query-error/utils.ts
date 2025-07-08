@@ -9,7 +9,6 @@ export const getErrorTitleFromErrorType = (
   switch (errorType as KnownErrorType) {
     case 'Disconnected':
       return i18n.t('disconnected');
-
     case 'NoEndpointsException':
       return i18n.t('no-endpoints', {org: organizationId});
     case 'InvalidTokenException':

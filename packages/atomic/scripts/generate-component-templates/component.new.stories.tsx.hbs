@@ -10,7 +10,7 @@ const {decorator, play} = wrapInSearchInterface();
 
 const meta: Meta = {
   component: '{{name}}',
-  title: '{{namePascalCase}}',
+  title: 'TODO/{{name}}',
   id: '{{name}}',
   render: renderComponent,
   decorators: [decorator],
@@ -20,6 +20,4 @@ const meta: Meta = {
 
 export default meta;
 
-export const Default: Story = {
-  name: '{{name}}',
-};
+export const Default: Story = {};

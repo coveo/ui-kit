@@ -28,6 +28,7 @@ export function handleFacetDeselectAll(facetRequest: FacetRequest) {
 
   facetRequest.currentValues = facetRequest.currentValues.map((value) => ({
     ...value,
+    ...{previousState: value.state !== 'idle' ? value.state : undefined},
     state: 'idle',
   }));
   facetRequest.preventAutoSelect = true;

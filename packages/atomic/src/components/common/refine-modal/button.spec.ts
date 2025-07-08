@@ -19,7 +19,7 @@ describe('#renderRefineToggleButton', () => {
         props: {
           i18n,
           onClick: () => {},
-          setRef: () => {},
+          refCallback: () => {},
           ...overrides,
         },
       })}`
@@ -51,10 +51,10 @@ describe('#renderRefineToggleButton', () => {
     expect(onClick).toHaveBeenCalled();
   });
 
-  it('should call setRef with the button element', async () => {
-    const setRef = vi.fn();
-    await renderComponent({setRef});
+  it('should call refCallback with the button element', async () => {
+    const refCallback = vi.fn();
+    await renderComponent({refCallback});
 
-    expect(setRef).toHaveBeenCalledWith(expect.any(HTMLButtonElement));
+    expect(refCallback).toHaveBeenCalledWith(expect.any(HTMLButtonElement));
   });
 });

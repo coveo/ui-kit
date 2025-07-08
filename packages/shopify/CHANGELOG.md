@@ -1,3 +1,9 @@
+## <small>1.7.1 (2025-07-02)</small>
+
+* chore(lint): integrate biome (#5507) ([53bcada](https://github.com/coveo/ui-kit/commits/53bcada)), closes [#5507](https://github.com/coveo/ui-kit/issues/5507)
+
+
+
 ## 1.7.0 (2025-06-25)
 
 - feat(shopify): add init function to make it easy to emit custom events on pages with no search (#552 ([5eb2d5d](https://github.com/coveo/ui-kit/commits/5eb2d5d)), closes [#5524](https://github.com/coveo/ui-kit/issues/5524)
