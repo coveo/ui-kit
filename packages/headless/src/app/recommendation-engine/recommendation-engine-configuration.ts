@@ -48,7 +48,7 @@ export interface RecommendationEngineConfiguration extends EngineConfiguration {
   /**
    * The base URL to use to proxy Coveo search requests (e.g., `https://example.com/search`).
    *
-   * This is an advanced option that you only set if you need to proxy Coveo search requests through your own
+   * This is an advanced option that you only set if you proxy Coveo search requests through your own
    * server. In most cases, you should not set this option.
    *
    *  See [Headless proxy: Recommendation engine](https://docs.coveo.com/en/headless/latest/usage/proxy#recommendation-engine).
