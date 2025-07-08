@@ -120,7 +120,7 @@ export class AtomicCommerceProductsPerPage
         },
       })(html`
         <div class="flex items-center">
-          ${renderLabel({props: {}})(html`${this.label}`)}
+          ${renderLabel()(html`${this.label}`)}
           ${renderFieldsetGroup({
             props: {
               label: this.label,

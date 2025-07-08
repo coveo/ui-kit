@@ -85,7 +85,7 @@ export type UpdateManualNumericFacetRangePayload = {
    * The unique identifier of the facet (e.g., `"1"`).
    */
   facetId: string;
-} & NumericRangeRequest;
+} & Omit<NumericRangeRequest, 'previousState'>;
 
 export const updateManualNumericFacetRange = createAction(
   'commerce/facets/numericFacet/updateManualRange',
