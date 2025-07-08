@@ -391,13 +391,6 @@ export namespace Components {
         "openButton"?: HTMLElement;
     }
     /**
-     * The `atomic-commerce-refine-toggle` component displays a button that opens a modal containing the facets and the sort components.
-     * When this component is added to the `atomic-commerce-search-interface`, an `atomic-commerce-refine-modal` component is automatically created.
-     * @alpha 
-     */
-    interface AtomicCommerceRefineToggle {
-    }
-    /**
      * A facet is a list of values for a certain field occurring in the results.
      * An `atomic-commerce-timeframe-facet` displays a facet of the results for the current query as date intervals.
      * @alpha 
@@ -3596,17 +3589,6 @@ declare global {
         new (): HTMLAtomicCommerceRefineModalElement;
     };
     /**
-     * The `atomic-commerce-refine-toggle` component displays a button that opens a modal containing the facets and the sort components.
-     * When this component is added to the `atomic-commerce-search-interface`, an `atomic-commerce-refine-modal` component is automatically created.
-     * @alpha 
-     */
-    interface HTMLAtomicCommerceRefineToggleElement extends Components.AtomicCommerceRefineToggle, HTMLStencilElement {
-    }
-    var HTMLAtomicCommerceRefineToggleElement: {
-        prototype: HTMLAtomicCommerceRefineToggleElement;
-        new (): HTMLAtomicCommerceRefineToggleElement;
-    };
-    /**
      * A facet is a list of values for a certain field occurring in the results.
      * An `atomic-commerce-timeframe-facet` displays a facet of the results for the current query as date intervals.
      * @alpha 
@@ -5362,7 +5344,6 @@ declare global {
         "atomic-commerce-numeric-facet": HTMLAtomicCommerceNumericFacetElement;
         "atomic-commerce-query-error": HTMLAtomicCommerceQueryErrorElement;
         "atomic-commerce-refine-modal": HTMLAtomicCommerceRefineModalElement;
-        "atomic-commerce-refine-toggle": HTMLAtomicCommerceRefineToggleElement;
         "atomic-commerce-timeframe-facet": HTMLAtomicCommerceTimeframeFacetElement;
         "atomic-did-you-mean": HTMLAtomicDidYouMeanElement;
         "atomic-external": HTMLAtomicExternalElement;
@@ -5852,13 +5833,6 @@ declare namespace LocalJSX {
         "collapseFacetsAfter"?: number;
         "isOpen"?: boolean;
         "openButton"?: HTMLElement;
-    }
-    /**
-     * The `atomic-commerce-refine-toggle` component displays a button that opens a modal containing the facets and the sort components.
-     * When this component is added to the `atomic-commerce-search-interface`, an `atomic-commerce-refine-modal` component is automatically created.
-     * @alpha 
-     */
-    interface AtomicCommerceRefineToggle {
     }
     /**
      * A facet is a list of values for a certain field occurring in the results.
@@ -8723,7 +8697,6 @@ declare namespace LocalJSX {
         "atomic-commerce-numeric-facet": AtomicCommerceNumericFacet;
         "atomic-commerce-query-error": AtomicCommerceQueryError;
         "atomic-commerce-refine-modal": AtomicCommerceRefineModal;
-        "atomic-commerce-refine-toggle": AtomicCommerceRefineToggle;
         "atomic-commerce-timeframe-facet": AtomicCommerceTimeframeFacet;
         "atomic-did-you-mean": AtomicDidYouMean;
         "atomic-external": AtomicExternal;
@@ -8971,12 +8944,6 @@ declare module "@stencil/core" {
              * @alpha 
              */
             "atomic-commerce-refine-modal": LocalJSX.AtomicCommerceRefineModal & JSXBase.HTMLAttributes<HTMLAtomicCommerceRefineModalElement>;
-            /**
-             * The `atomic-commerce-refine-toggle` component displays a button that opens a modal containing the facets and the sort components.
-             * When this component is added to the `atomic-commerce-search-interface`, an `atomic-commerce-refine-modal` component is automatically created.
-             * @alpha 
-             */
-            "atomic-commerce-refine-toggle": LocalJSX.AtomicCommerceRefineToggle & JSXBase.HTMLAttributes<HTMLAtomicCommerceRefineToggleElement>;
             /**
              * A facet is a list of values for a certain field occurring in the results.
              * An `atomic-commerce-timeframe-facet` displays a facet of the results for the current query as date intervals.
