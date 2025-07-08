@@ -1,22 +1,12 @@
 import {renderFunctionFixture} from '@/vitest-utils/testing-helpers/fixture';
+import {createTestI18n} from '@/vitest-utils/testing-helpers/i18n-utils';
 import type {i18n} from 'i18next';
 import {html} from 'lit';
-import {vi, describe, it, expect} from 'vitest';
+import {vi, describe, it, expect, beforeAll} from 'vitest';
 import {
   renderCategoryFacetParentButton,
   type CategoryFacetParentButtonProps,
 } from './parent-button';
-
-const mockI18n = {
-  t: vi.fn((key: string, options?: unknown) => {
-    if (key === 'facet-value') {
-      const opts = options as {value: string; count: number};
-      return `${opts?.value} (${opts?.count})`;
-    }
-    return key;
-  }),
-  language: 'en',
-} as unknown as i18n;
 
 vi.mock('../../../../utils/field-utils', () => ({
   getFieldValueCaption: vi.fn(
@@ -25,25 +15,42 @@ vi.mock('../../../../utils/field-utils', () => ({
 }));
 
 describe('renderCategoryFacetParentButton', () => {
-  const defaultProps: CategoryFacetParentButtonProps = {
-    i18n: mockI18n,
-    field: 'category',
-    facetValue: {value: 'electronics', numberOfResults: 42},
-    onClick: vi.fn(),
-  };
+  let i18n: Awaited<ReturnType<typeof createTestI18n>>;
 
-  const renderComponent = (
+  beforeAll(async () => {
+    i18n = await createTestI18n();
+  });
+
+  const renderComponent = async (
     props: Partial<CategoryFacetParentButtonProps> = {}
   ) => {
+    const defaultProps: CategoryFacetParentButtonProps = {
+      i18n,
+      field: 'category',
+      facetValue: {value: 'electronics', numberOfResults: 42},
+      onClick: vi.fn(),
+    };
     const mergedProps = {...defaultProps, ...props};
-    return renderFunctionFixture(
+    const container = await renderFunctionFixture(
       html`${renderCategoryFacetParentButton({props: mergedProps})}`
     );
+
+    return {
+      container,
+      get button() {
+        return container.querySelector('button');
+      },
+      get icon() {
+        return container.querySelector('atomic-icon');
+      },
+      get textSpan() {
+        return container.querySelector('span.truncate');
+      },
+    };
   };
 
   it('should render a button with correct structure', async () => {
-    const container = await renderComponent();
-    const button = container.querySelector('button');
+    const {button} = await renderComponent();
 
     expect(button).toBeInTheDocument();
     expect(button).toHaveAttribute('part', 'parent-button');
@@ -51,16 +58,14 @@ describe('renderCategoryFacetParentButton', () => {
   });
 
   it('should render the back arrow icon', async () => {
-    const container = await renderComponent();
-    const icon = container.querySelector('atomic-icon');
+    const {icon} = await renderComponent();
 
     expect(icon).toBeInTheDocument();
     expect(icon).toHaveAttribute('part', 'back-arrow');
   });
 
   it('should render the display value with correct formatting', async () => {
-    const container = await renderComponent();
-    const textSpan = container.querySelector('span.truncate');
+    const {textSpan} = await renderComponent();
 
     expect(textSpan).toBeInTheDocument();
     expect(textSpan).toHaveTextContent('category: electronics');
@@ -68,53 +73,47 @@ describe('renderCategoryFacetParentButton', () => {
 
   it('should call onClick when button is clicked', async () => {
     const onClickMock = vi.fn();
-    const container = await renderComponent({onClick: onClickMock});
-    const button = container.querySelector('button');
+    const {button} = await renderComponent({onClick: onClickMock});
 
     button?.click();
     expect(onClickMock).toHaveBeenCalled();
   });
 
   it('should generate correct aria-label', async () => {
-    const container = await renderComponent();
-    const button = container.querySelector('button');
+    const {button} = await renderComponent();
 
-    expect(button).toHaveAttribute('aria-label', 'category: electronics (42)');
-    expect(mockI18n.t).toHaveBeenCalledWith('facet-value', {
-      value: 'category: electronics',
-      count: 42,
-      formattedCount: '42',
-    });
+    expect(button).toHaveAttribute(
+      'aria-label',
+      'Inclusion filter on category: electronics; 42 results'
+    );
   });
 
   it('should handle different field and facet values', async () => {
-    const container = await renderComponent({
+    const {textSpan, button} = await renderComponent({
       field: 'brand',
       facetValue: {value: 'apple', numberOfResults: 123},
     });
 
-    const textSpan = container.querySelector('span.truncate');
-    const button = container.querySelector('button');
-
     expect(textSpan).toHaveTextContent('brand: apple');
-    expect(button).toHaveAttribute('aria-label', 'brand: apple (123)');
+    expect(button).toHaveAttribute(
+      'aria-label',
+      'Inclusion filter on brand: apple; 123 results'
+    );
   });
 
   it('should format large numbers correctly in aria-label', async () => {
-    await renderComponent({
+    const {button} = await renderComponent({
       facetValue: {value: 'test', numberOfResults: 1234},
     });
 
-    expect(mockI18n.t).toHaveBeenCalledWith('facet-value', {
-      value: 'category: test',
-      count: 1234,
-      formattedCount: '1,234',
-    });
+    expect(button).toHaveAttribute(
+      'aria-label',
+      'Inclusion filter on category: test; 1,234 results'
+    );
   });
 
   it('should apply the correct button style', async () => {
-    const container = await renderComponent();
-    const button = container.querySelector('button');
+    const {button} = await renderComponent();
 
     expect(button).toHaveClass('btn-text-neutral');
   });
@@ -148,8 +147,7 @@ describe('renderCategoryFacetParentButton', () => {
   });
 
   it('should maintain button accessibility attributes', async () => {
-    const container = await renderComponent();
-    const button = container.querySelector('button');
+    const {button} = await renderComponent();
 
     expect(button).toHaveAttribute('aria-pressed', 'false');
     expect(button).toHaveAttribute('part', 'parent-button');
