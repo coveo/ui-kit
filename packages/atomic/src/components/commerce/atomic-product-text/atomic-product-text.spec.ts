@@ -16,7 +16,7 @@ describe('atomic-product-text', () => {
 
   const locators = {
     getCommerceText: (element: AtomicProductText) =>
-      element.shadowRoot?.querySelector('atomic-commerce-text'),
+      element?.querySelector('atomic-commerce-text'),
   };
 
   beforeEach(async () => {
@@ -93,7 +93,7 @@ describe('atomic-product-text', () => {
     const commerceText = locators.getCommerceText(element);
     expect(element).toBeDefined();
     expect(commerceText).toBeNull();
-    expect(element).toBeEmptyDOMElement();
+    expect(element.textContent?.trim()).toBe('');
   });
 
   describe('when field has value', () => {
@@ -169,7 +169,7 @@ describe('atomic-product-text', () => {
 
       expect(commerceText).toBeNull();
       expect(element).toBeDefined();
-      expect(element).toBeEmptyDOMElement();
+      expect(element.textContent?.trim()).toBe('');
     });
   });
 
@@ -179,9 +179,7 @@ describe('atomic-product-text', () => {
         product: null as unknown as Product,
       });
 
-      const errorComponent = element?.shadowRoot?.querySelector(
-        'atomic-component-error'
-      );
+      const errorComponent = element?.querySelector('atomic-component-error');
       expect(errorComponent).toBeDefined();
     });
 
@@ -190,9 +188,7 @@ describe('atomic-product-text', () => {
         product: undefined as unknown as Product,
       });
 
-      const errorComponent = element?.shadowRoot?.querySelector(
-        'atomic-component-error'
-      );
+      const errorComponent = element?.querySelector('atomic-component-error');
       expect(errorComponent).toBeDefined();
     });
   });
@@ -269,9 +265,7 @@ describe('atomic-product-text', () => {
       const commerceText = locators.getCommerceText(element);
       expect(commerceText).toBeNull();
 
-      expect(element.shadowRoot?.innerHTML).not.toContain(
-        '<atomic-commerce-text'
-      );
+      expect(element.innerHTML).not.toContain('<atomic-commerce-text');
     });
 
     it('should render highlights for #excerpt field with highlight keywords', async () => {
@@ -294,9 +288,7 @@ describe('atomic-product-text', () => {
       const commerceText = locators.getCommerceText(element);
       expect(commerceText).toBeNull();
 
-      expect(element.shadowRoot?.innerHTML).not.toContain(
-        '<atomic-commerce-text'
-      );
+      expect(element.innerHTML).not.toContain('<atomic-commerce-text');
     });
 
     it('should render plain text when #field is not supported for highlighting', async () => {
@@ -462,7 +454,7 @@ describe('atomic-product-text', () => {
 
     expect(element).toBeDefined();
     expect(commerceText).toBeNull();
-    expect(element).toBeEmptyDOMElement();
+    expect(element.textContent?.trim()).toBe('');
   });
 
   it('should display nothing for boolean #field values', async () => {
@@ -479,7 +471,7 @@ describe('atomic-product-text', () => {
 
     expect(element).toBeDefined();
     expect(commerceText).toBeNull();
-    expect(element).toBeEmptyDOMElement();
+    expect(element.textContent?.trim()).toBe('');
   });
 
   it('should handle special characters in #field values', async () => {
