@@ -5,6 +5,7 @@ import {
   AtomicCommerceDidYouMean as LitAtomicCommerceDidYouMean,
   AtomicCommerceInterface as LitAtomicCommerceInterface,
   AtomicCommerceLayout as LitAtomicCommerceLayout,
+  AtomicCommerceLoadMoreProducts as LitAtomicCommerceLoadMoreProducts,
   AtomicCommerceNoProducts as LitAtomicCommerceNoProducts,
   AtomicCommercePager as LitAtomicCommercePager,
   AtomicCommerceProductList as LitAtomicCommerceProductList,
@@ -37,16 +38,22 @@ export const AtomicCommerceDidYouMean = createComponent({
   elementClass: LitAtomicCommerceDidYouMean,
 });
 
+export const AtomicCommerceLayout = createComponent({
+  tagName: 'atomic-commerce-layout',
+  react: React,
+  elementClass: LitAtomicCommerceLayout,
+});
+
 export const AtomicCommerceInterface = createComponent({
   tagName: 'atomic-commerce-interface',
   react: React,
   elementClass: LitAtomicCommerceInterface,
 });
 
-export const AtomicCommerceLayout = createComponent({
-  tagName: 'atomic-commerce-layout',
+export const AtomicCommerceLoadMoreProducts = createComponent({
+  tagName: 'atomic-commerce-load-more-products',
   react: React,
-  elementClass: LitAtomicCommerceLayout,
+  elementClass: LitAtomicCommerceLoadMoreProducts,
 });
 
 export const AtomicCommerceNoProducts = createComponent({
@@ -55,16 +62,16 @@ export const AtomicCommerceNoProducts = createComponent({
   elementClass: LitAtomicCommerceNoProducts,
 });
 
-export const AtomicCommercePager = createComponent({
-  tagName: 'atomic-commerce-pager',
-  react: React,
-  elementClass: LitAtomicCommercePager,
-});
-
 export const AtomicCommerceProductList = createComponent({
   tagName: 'atomic-commerce-product-list',
   react: React,
   elementClass: LitAtomicCommerceProductList,
+});
+
+export const AtomicCommercePager = createComponent({
+  tagName: 'atomic-commerce-pager',
+  react: React,
+  elementClass: LitAtomicCommercePager,
 });
 
 export const AtomicCommerceProductsPerPage = createComponent({
