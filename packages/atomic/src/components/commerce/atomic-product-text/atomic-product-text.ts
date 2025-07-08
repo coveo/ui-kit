@@ -3,14 +3,14 @@ import {bindingGuard} from '@/src/decorators/binding-guard';
 import {bindings} from '@/src/decorators/bindings';
 import {createProductContextController} from '@/src/decorators/commerce/product-template-decorators.js';
 import {errorGuard} from '@/src/decorators/error-guard';
+import {injectStylesForNoShadowDOM} from '@/src/decorators/light-dom';
 import {InitializableComponent} from '@/src/decorators/types';
-import {InitializeBindingsMixin} from '@/src/mixins/bindings-mixin';
 import {
   Product,
   ProductTemplatesHelpers,
   HighlightUtils,
 } from '@coveo/headless/commerce';
-import {LitElement, html, nothing} from 'lit';
+import {LitElement, html, nothing, css} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {when} from 'lit/directives/when.js';
 import {getFieldValueCaption} from '../../../utils/field-utils';
@@ -23,12 +23,14 @@ import {getStringValueFromProductOrNull} from '../product-template-component-uti
 /**
  * The `atomic-product-text` component renders the value of a string field for a given product.
  */
-@bindings()
 @customElement('atomic-product-text')
+@bindings()
+@injectStylesForNoShadowDOM
 export class AtomicProductText
-  extends InitializeBindingsMixin(LitElement)
+  extends LitElement
   implements InitializableComponent<CommerceBindings>
 {
+  static styles = css``;
   /**
    * The string field whose value the component should render.
    * The component will look for the specified field in the product's properties first, and then in the product's `additionalFields` property.
