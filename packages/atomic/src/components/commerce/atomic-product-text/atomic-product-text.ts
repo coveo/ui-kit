@@ -3,7 +3,6 @@ import {bindingGuard} from '@/src/decorators/binding-guard';
 import {bindings} from '@/src/decorators/bindings';
 import {createProductContextController} from '@/src/decorators/commerce/product-template-decorators.js';
 import {errorGuard} from '@/src/decorators/error-guard';
-import {injectStylesForNoShadowDOM} from '@/src/decorators/light-dom';
 import {InitializableComponent} from '@/src/decorators/types';
 import {
   Product,
@@ -25,12 +24,10 @@ import {getStringValueFromProductOrNull} from '../product-template-component-uti
  */
 @customElement('atomic-product-text')
 @bindings()
-@injectStylesForNoShadowDOM
 export class AtomicProductText
   extends LitElement
   implements InitializableComponent<CommerceBindings>
 {
-  static styles = css``;
   /**
    * The string field whose value the component should render.
    * The component will look for the specified field in the product's properties first, and then in the product's `additionalFields` property.
@@ -60,6 +57,10 @@ export class AtomicProductText
   @state() public bindings!: CommerceBindings;
 
   @state() public error!: Error;
+
+  protected createRenderRoot() {
+    return this;
+  }
 
   initialize() {
     if (!this.product && this.productController.item) {
