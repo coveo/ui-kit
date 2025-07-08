@@ -3010,7 +3010,7 @@ export declare interface AtomicProductTemplate extends LitAtomicProductTemplate 
 
 @ProxyCmp({
   inputs: ['field', 'shouldHighlight', 'default'],
-  methods: ['initialize', 'initBindings'],
+  methods: ['initialize'],
   defineCustomElementFn: () => {customElements.get('atomic-product-text') || customElements.define('atomic-product-text', LitAtomicProductText);}
 })
 @Component({
