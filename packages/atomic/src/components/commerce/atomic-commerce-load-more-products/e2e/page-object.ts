@@ -1,35 +1,20 @@
-import {BasePageObject} from '@/playwright-utils/base-page-object';
+import {BasePageObject} from '@/playwright-utils/lit-base-page-object';
 import type {Page} from '@playwright/test';
 
-export class LoadMoreProductsPageObject extends BasePageObject<'atomic-commerce-load-more-products'> {
+export class LoadMoreProductsPageObject extends BasePageObject {
   constructor(page: Page) {
     super(page, 'atomic-commerce-load-more-products');
   }
 
-  summary({index, total}: {index?: number; total?: number} = {}) {
-    return this.page.getByText(
-      new RegExp(`Showing ${index ?? '\\d+'} of ${total ?? '\\d+'} products`)
-    );
-  }
-
   get hydrated() {
-    return this.page.locator(
-      'atomic-commerce-load-more-products[class*="hydrated"]'
-    );
+    return this.page.locator(`${this.tag}`);
   }
 
   get button() {
-    return this.page.getByText('Load more products');
+    return this.page.locator('[part="load-more-results-button"]');
   }
 
-  get progressBar() {
-    return this.page.locator('[part="progress-bar"]');
-  }
-
-  get progressValue() {
-    return this.page.locator('[part="progress-bar"] > div');
-  }
-  get loadMoreButton() {
-    return this.page.getByRole('button', {name: 'Load more results'});
+  get showingResults() {
+    return this.page.locator('[part="showing-results"]');
   }
 }
