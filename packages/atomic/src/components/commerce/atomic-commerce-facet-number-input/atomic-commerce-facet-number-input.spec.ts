@@ -63,7 +63,7 @@ describe('atomic-commerce-facet-number-input', () => {
     };
   };
 
-  it('is defined', () => {
+  it('should be defined', () => {
     const el = document.createElement('atomic-commerce-facet-number-input');
     expect(el).toBeInstanceOf(AtomicCommerceFacetNumberInput);
   });
@@ -113,8 +113,8 @@ describe('atomic-commerce-facet-number-input', () => {
     await expect(applyButton).toHaveAttribute('part', 'input-apply-button');
   });
 
-  describe('#apply', () => {
-    it('should emit atomic-number-input-apply event with correct detail button is clicked', async () => {
+  describe('when the apply button is clicked', () => {
+    it('should emit atomic-number-input-apply event with correct detail', async () => {
       const {element, applyButton} = await setupElement({
         range: {start: 10, end: 100},
       });

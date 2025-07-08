@@ -36,7 +36,7 @@ import {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-int
 import styles from './atomic-commerce-numeric-facet.tw.css';
 
 /**
- * The `atomic-commerce-numeric-facet` component is responsible for rendering a commerce facet that allows the user to filter products using numeric ranges.
+ * The `atomic-commerce-numeric-facet` component renders a commerce facet that allows the user to filter products using numeric ranges.
  *
  * @part facet - The wrapper around the entire facet.
  * @part label-button - The clickable label button that toggles facet visibility.
@@ -45,17 +45,16 @@ import styles from './atomic-commerce-numeric-facet.tw.css';
  * @part clear-button-icon - The icon displayed in the clear button.
  * @part values - The list container for all facet values.
  * @part value-label - The text label for individual facet values.
- * @part value-count - The count indicator showing number of results for each value.
+ * @part value-count - The count indicator showing the number of results for each value.
  * @part value-checkbox-label - The label associated with facet value checkboxes.
  * @part value-exclude-button - The button to exclude specific facet values.
  * @part input-form - The form container for numeric range inputs.
  * @part label-start - The label for the minimum value input field.
- * @part input-start - The input field for entering minimum numeric value.
+ * @part input-start - The input field to enter the minimum numeric value.
  * @part label-end - The label for the maximum value input field.
- * @part input-end - The input field for entering maximum numeric value.
+ * @part input-end - The input field to enter the maximum numeric value.
  * @part input-apply-button - The button to apply custom numeric range values.
  *
- * @alpha
  */
 @customElement('atomic-commerce-numeric-facet')
 @withTailwindStyles
@@ -74,7 +73,7 @@ export class AtomicCommerceNumericFacet
    */
   @property({type: Object}) facet!: NumericFacet;
   /**
-   * Specifies whether the facet is collapsed.
+   * Whether the facet is collapsed.
    */
   @property({
     type: Boolean,

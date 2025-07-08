@@ -14,7 +14,7 @@ export type Range = {start: number; end: number};
 
 /**
  * Internal component made to be integrated in a NumericFacet.
- * @alpha
+ * @internal
  */
 @customElement('atomic-commerce-facet-number-input')
 @withTailwindStyles

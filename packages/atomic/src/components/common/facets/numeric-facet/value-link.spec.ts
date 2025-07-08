@@ -224,7 +224,7 @@ describe('#renderNumericFacetValue', () => {
   });
 
   describe('when displayValuesAs has an invalid value', () => {
-    it('should return nothing for invalid displayValuesAs', async () => {
+    it('should return nothing when displayValuesAs is invalid', async () => {
       const element = await renderComponent({
         displayValuesAs: 'invalid' as 'checkbox' | 'link',
       });
