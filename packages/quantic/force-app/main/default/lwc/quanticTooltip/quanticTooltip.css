@@ -1,5 +1,5 @@
 :host {
-  --x-translation: var(--adapted-x-translation, 0px);
+  --x-translation: var(--adapted-x-translation, 0);
   --max-width: var(--adapted-max-width, 20rem);
 }
 
