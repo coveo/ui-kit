@@ -29,7 +29,7 @@ describe('renderCategoryFacetAllCategoryButton', () => {
       ...props,
     } as CategoryFacetAllCategoryButtonProps;
     return renderFunctionFixture(
-      html`${renderCategoryFacetAllCategoryButton(mergedProps)}`
+      html`${renderCategoryFacetAllCategoryButton({props: mergedProps})}`
     );
   };
 

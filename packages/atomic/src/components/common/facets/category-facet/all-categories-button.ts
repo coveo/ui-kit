@@ -1,6 +1,6 @@
+import {FunctionalComponent} from '@/src/utils/functional-component-utils';
 import type {i18n} from 'i18next';
 import {html} from 'lit';
-import type {TemplateResult} from 'lit';
 import LeftArrow from '../../../../images/arrow-left-rounded.svg';
 import '../../../common/atomic-icon/atomic-icon';
 import {renderButton} from '../../button';
@@ -10,10 +10,9 @@ export interface CategoryFacetAllCategoryButtonProps {
   onClick(): void;
 }
 
-export const renderCategoryFacetAllCategoryButton = ({
-  i18n,
-  onClick,
-}: CategoryFacetAllCategoryButtonProps): TemplateResult => {
+export const renderCategoryFacetAllCategoryButton: FunctionalComponent<
+  CategoryFacetAllCategoryButtonProps
+> = ({props: {i18n, onClick}}) => {
   const allCategories = i18n.t('all-categories');
   return html`
     ${renderButton({
