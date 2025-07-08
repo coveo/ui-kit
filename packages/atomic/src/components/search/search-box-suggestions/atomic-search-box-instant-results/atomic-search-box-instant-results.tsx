@@ -181,6 +181,7 @@ export class AtomicSearchBoxInstantResults implements InitializableComponent {
       );
       elements.push({
         ...partialItem,
+        query: this.instantResults.state.q,
         content: <InstantItemShowAllButton i18n={this.bindings.i18n} />,
         onSelect: () => {
           this.bindings.clearSuggestions();
