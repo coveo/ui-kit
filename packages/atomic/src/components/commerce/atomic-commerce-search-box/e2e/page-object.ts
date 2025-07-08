@@ -70,6 +70,10 @@ export class SearchBoxPageObject extends BasePageObject {
     );
   }
 
+  get showAllResultsButton() {
+    return this.page.getByLabel('See all results');
+  }
+
   private listSideAffix(listSide?: 'Left' | 'Right') {
     return listSide ? ` In ${listSide} list\\.` : '';
   }

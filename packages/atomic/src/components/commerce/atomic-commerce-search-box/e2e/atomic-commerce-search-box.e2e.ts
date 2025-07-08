@@ -323,6 +323,26 @@ test.describe('AtomicCommerceSearchBox', () => {
         await expect(searchBox.searchInput).toHaveValue('a');
       });
     });
+
+    test.describe('when navigating to "See all results" with keyboard and pressing Enter', () => {
+      test('should execute the query in the search box without clearing it', async ({
+        searchBox,
+      }) => {
+        await searchBox.searchInput.click();
+        await searchBox.searchInput.fill('a');
+
+        // Navigate to the "See all results" button using keyboard
+        await searchBox.searchInput.press('ArrowDown'); // Navigate to suggestions
+        // Navigate to the "See all results" which should be the last item
+        for (let i = 0; i < 10; i++) {
+          // Max 10 attempts to find "See all results"
+          await searchBox.searchInput.press('ArrowDown');
+        }
+
+        await searchBox.searchInput.press('Enter');
+        await expect(searchBox.searchInput).toHaveValue('a');
+      });
+    });
   });
 
   test.describe('with disable-search=true and minimum-query-length=1', () => {

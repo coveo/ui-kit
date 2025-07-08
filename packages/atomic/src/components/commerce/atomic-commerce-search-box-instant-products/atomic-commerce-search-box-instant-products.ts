@@ -196,6 +196,7 @@ export class AtomicCommerceSearchBoxInstantProducts
       );
       elements.push({
         ...partialItem,
+        query: this.instantProducts.state.query,
         content: renderInstantItemShowAllButton({i18n: this.bindings.i18n}),
         onSelect: () => {
           this.bindings.clearSuggestions();
