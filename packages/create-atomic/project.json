@@ -1,0 +1,7 @@
+{
+  "name": "create-atomic",
+  "root": "packages/ui/atomic/create-atomic",
+  "sourceRoot": "packages/ui/atomic/create-atomic/src",
+  "projectType": "application",
+  "implicitDependencies": ["create-atomic-template"]
+}

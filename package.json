@@ -91,7 +91,9 @@
     "packages/samples/headless-ssr/*",
     "packages/shopify",
     "utils/cdn",
-    "utils/ci"
+    "utils/ci",
+    "packages/create-atomic-template",
+    "packages/create-atomic"
   ],
   "config": {
     "commitizen": {
