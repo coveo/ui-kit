@@ -69,10 +69,11 @@ export function registerAutoloader(
         observer.observe(template.content, {subtree: true, childList: true});
       }
       //TODO: This part should not be necessary: instead, if component-a uses component-b, component-a should be responsible for loading component-b
-      if ('shadowRoot' in root && root.shadowRoot) {
-        if (visitedNodes.has(root.shadowRoot)) {
-          return;
-        }
+      if (
+        'shadowRoot' in root &&
+        root.shadowRoot &&
+        !visitedNodes.has(root.shadowRoot)
+      ) {
         discover(root.shadowRoot);
         observer.observe(root.shadowRoot, {subtree: true, childList: true});
       }
@@ -86,7 +87,7 @@ export function registerAutoloader(
         continue;
       }
       if ('shadowRoot' in atomicElement && atomicElement.shadowRoot) {
-        discover(atomicElement.shadowRoot);
+        discover(atomicElement);
         continue;
       }
       if (atomicElement.classList.contains('hydrated')) {
