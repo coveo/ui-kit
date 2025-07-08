@@ -487,42 +487,86 @@ describe('CoreCommerceFacet', () => {
       });
     });
     describe('#canShowLessValues', () => {
-      it('when the number of currentValues is equal to the configured number, returns "false"', () => {
-        const values = [buildMockCommerceRegularFacetValue()];
-        setFacetRequest({values, initialNumberOfValues: 1, numberOfValues: 1});
-        setFacetResponse({
-          values: [buildMockCommerceRegularFacetValue({value: 'Some Value'})],
-        });
-
+      it("should return 'false' then the request is undefined", () => {
+        setFacetRequest(undefined);
         initFacet();
 
         expect(facet.state.canShowLessValues).toBe(false);
       });
 
-      it('when the number of currentValues is greater than the configured number, returns "true"', () => {
+      it("should return 'false' when the length of the values is less than the initial number of values", () => {
         const value = buildMockCommerceRegularFacetValue();
+        setFacetRequest({
+          values: [value],
+          initialNumberOfValues: 2,
+        });
+        initFacet();
 
-        setFacetRequest({values: [value, value]});
-        setFacetResponse({
-          values: [buildMockCommerceRegularFacetValue({value: 'Some Value'})],
+        expect(facet.state.canShowLessValues).toBe(false);
+      });
+
+      it("should return 'false' when the length of the values is equal to the initial number of values", () => {
+        const value = buildMockCommerceRegularFacetValue();
+        setFacetRequest({
+          values: [value, value],
+          initialNumberOfValues: 2,
+        });
+        initFacet();
+
+        expect(facet.state.canShowLessValues).toBe(false);
+      });
+
+      it("should return 'false' when none of the values in the request are idle", () => {
+        const selectedValue = buildMockCommerceRegularFacetValue({
+          state: 'selected',
+        });
+        setFacetRequest({
+          values: [selectedValue, selectedValue, selectedValue, selectedValue],
+          initialNumberOfValues: 2,
+        });
+        initFacet();
+
+        expect(facet.state.canShowLessValues).toBe(false);
+      });
+
+      it("should return 'false' when the length of the values is 1 and the initial number of values is undefined", () => {
+        const value = buildMockCommerceRegularFacetValue();
+        setFacetRequest({
+          values: [value],
+          initialNumberOfValues: undefined,
+        });
+        initFacet();
+
+        expect(facet.state.canShowLessValues).toBe(false);
+      });
+
+      it("should return 'true' when the number of idle values is greater than 1 and the initial number of values is undefined", () => {
+        const value = buildMockCommerceRegularFacetValue();
+        const selectedValue = buildMockCommerceRegularFacetValue({
+          state: 'selected',
+        });
+        setFacetRequest({
+          values: [selectedValue, selectedValue, value],
+          initialNumberOfValues: undefined,
         });
         initFacet();
 
         expect(facet.state.canShowLessValues).toBe(true);
       });
 
-      it('when number of currentValues > configured number and there are no idle values, returns "false"', () => {
+      it("should return 'true' when the length of the values in the request is greater than the initial number of values and there is at least one idle value", () => {
+        const value = buildMockCommerceRegularFacetValue();
         const selectedValue = buildMockCommerceRegularFacetValue({
           state: 'selected',
         });
-
-        setFacetRequest({values: [selectedValue, selectedValue]});
-        setFacetResponse({
-          values: [buildMockCommerceRegularFacetValue({value: 'Some Value'})],
+        setFacetRequest({
+          values: [selectedValue, selectedValue, selectedValue, value],
+          initialNumberOfValues: 2,
         });
+
         initFacet();
 
-        expect(facet.state.canShowLessValues).toBe(false);
+        expect(facet.state.canShowLessValues).toBe(true);
       });
     });
 
