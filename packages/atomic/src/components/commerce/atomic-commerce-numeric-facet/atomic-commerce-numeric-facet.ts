@@ -3,25 +3,25 @@ import {booleanConverter} from '@/src/converters/boolean-converter';
 import {bindStateToController} from '@/src/decorators/bind-state';
 import {bindingGuard} from '@/src/decorators/binding-guard';
 import {errorGuard} from '@/src/decorators/error-guard';
-import {InitializableComponent} from '@/src/decorators/types';
+import type {InitializableComponent} from '@/src/decorators/types';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
 import {InitializeBindingsMixin} from '@/src/mixins/bindings-mixin';
 import {FocusTargetController} from '@/src/utils/accessibility-utils';
 import {
-  NumericFacet,
-  NumericFacetState,
-  ProductListingSummaryState,
-  SearchSummaryState,
-  Summary,
-  Context,
-  ContextState,
+  type NumericFacet,
+  type NumericFacetState,
+  type ProductListingSummaryState,
+  type SearchSummaryState,
+  type Summary,
+  type Context,
+  type ContextState,
   buildContext,
 } from '@coveo/headless/commerce';
-import {CSSResultGroup, LitElement, html, unsafeCSS} from 'lit';
+import {type CSSResultGroup, LitElement, html, unsafeCSS} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {when} from 'lit/directives/when.js';
 import {shouldDisplayInputForFacetRange} from '../../common/facets/facet-common';
-import {FacetInfo} from '../../common/facets/facet-common-store';
+import type {FacetInfo} from '../../common/facets/facet-common-store';
 import {renderFacetContainer} from '../../common/facets/facet-container/facet-container';
 import {renderFacetHeader} from '../../common/facets/facet-header/facet-header';
 import {renderNumericFacetValue} from '../../common/facets/numeric-facet/value-link';
@@ -32,7 +32,7 @@ import {
 } from '../../common/formats/format-common';
 import type {Range} from '../atomic-commerce-facet-number-input/atomic-commerce-facet-number-input';
 import '../atomic-commerce-facet-number-input/atomic-commerce-facet-number-input';
-import {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface';
+import type {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface';
 import styles from './atomic-commerce-numeric-facet.tw.css';
 
 /**
@@ -226,9 +226,9 @@ export class AtomicCommerceNumericFacet
     if (this.unsubscribeFacetController) {
       return;
     }
-    this.unsubscribeFacetController = this.facet?.subscribe(
-      () => (this.facetState = this.facet.state)
-    );
+    this.unsubscribeFacetController = this.facet?.subscribe(() => {
+      this.facetState = this.facet.state;
+    });
   }
 
   private renderValues() {
@@ -283,7 +283,9 @@ export class AtomicCommerceNumericFacet
             numberOfActiveValues: this.numberOfSelectedValues,
             isCollapsed: this.isCollapsed,
             headingLevel: 0,
-            onToggleCollapse: () => (this.isCollapsed = !this.isCollapsed),
+            onToggleCollapse: () => {
+              this.isCollapsed = !this.isCollapsed;
+            },
             onClearFilters: () => {
               this.focusTarget.focusAfterSearch();
               this.facet.deselectAll();

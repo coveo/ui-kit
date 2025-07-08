@@ -1,11 +1,11 @@
 import {renderInAtomicCommerceInterface} from '@/vitest-utils/testing-helpers/fixtures/atomic/commerce/atomic-commerce-interface-fixture';
-import {NumericFacet} from '@coveo/headless/commerce';
+import type {NumericFacet} from '@coveo/headless/commerce';
 import {page} from '@vitest/browser/context';
 import {html} from 'lit';
 import {describe, it, vi, expect} from 'vitest';
 import {
   AtomicCommerceFacetNumberInput,
-  Range,
+  type Range,
 } from './atomic-commerce-facet-number-input';
 import './atomic-commerce-facet-number-input';
 

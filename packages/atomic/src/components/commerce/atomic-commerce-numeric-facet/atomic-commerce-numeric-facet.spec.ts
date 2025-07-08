@@ -1,3 +1,4 @@
+/** biome-ignore-all lint/style/noNonNullAssertion: <explanation> */
 import {renderInAtomicCommerceInterface} from '@/vitest-utils/testing-helpers/fixtures/atomic/commerce/atomic-commerce-interface-fixture';
 import {buildFakeContext} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/context-controller';
 import {buildFakeCommerceEngine} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/engine';
@@ -5,7 +6,7 @@ import {buildFakeNumericFacet} from '@/vitest-utils/testing-helpers/fixtures/hea
 import {buildFakeSummary} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/summary-subcontroller';
 import {
   buildContext,
-  Context,
+  type Context,
   type NumericFacet,
   type Summary,
 } from '@coveo/headless/commerce';
@@ -17,7 +18,7 @@ import {
   vi,
   beforeEach,
   it,
-  MockInstance,
+  type MockInstance,
   afterEach,
 } from 'vitest';
 import type {AtomicCommerceNumericFacet} from './atomic-commerce-numeric-facet';
@@ -32,8 +33,9 @@ describe('atomic-commerce-numeric-facet', () => {
   let mockedConsoleError: MockInstance;
 
   beforeEach(() => {
-    mockedConsoleError = vi.spyOn(console, 'error');
-    // .mockImplementation(() => {});
+    mockedConsoleError = vi
+      .spyOn(console, 'error')
+      .mockImplementation(() => {});
 
     mockedContext = buildFakeContext({});
     mockedSummary = buildFakeSummary({});
