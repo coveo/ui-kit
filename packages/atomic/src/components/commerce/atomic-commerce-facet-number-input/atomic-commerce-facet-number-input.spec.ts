@@ -136,5 +136,29 @@ describe('atomic-commerce-facet-number-input', () => {
       expect(element['startRef']).toBe(startInput.element());
       expect(element['endRef']).toBe(endInput.element());
     });
+
+    it('should maintain valid refs when input values change', async () => {
+      const {element, startInput, endInput} = await setupElement({
+        range: {start: 10, end: 100},
+      });
+
+      await startInput.fill('50');
+      await endInput.fill('200');
+
+      expect(element['startRef']).toBe(startInput.element());
+      expect(element['endRef']).toBe(endInput.element());
+    });
+
+    it('should update ref values when input values change', async () => {
+      const {element, startInput, endInput} = await setupElement({
+        range: {start: 10, end: 100},
+      });
+
+      await startInput.fill('50');
+      await endInput.fill('200');
+
+      expect(element['startRef']?.value).toBe('50');
+      expect(element['endRef']?.value).toBe('200');
+    });
   });
 });

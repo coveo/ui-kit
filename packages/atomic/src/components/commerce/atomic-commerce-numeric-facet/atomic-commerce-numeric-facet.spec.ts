@@ -32,9 +32,8 @@ describe('atomic-commerce-numeric-facet', () => {
   let mockedConsoleError: MockInstance;
 
   beforeEach(() => {
-    mockedConsoleError = vi
-      .spyOn(console, 'error')
-      .mockImplementation(() => {});
+    mockedConsoleError = vi.spyOn(console, 'error');
+    // .mockImplementation(() => {});
 
     mockedContext = buildFakeContext({});
     mockedSummary = buildFakeSummary({});
@@ -149,6 +148,28 @@ describe('atomic-commerce-numeric-facet', () => {
   it('should render the title', async () => {
     const {title} = await setupElement();
     await expect.element(title).toBeVisible();
+  });
+
+  it('should render "no-label" when displayName is falsy', async () => {
+    mockedFacet = buildFakeNumericFacet({
+      state: {
+        displayName: '',
+      },
+    });
+
+    const {labelButton} = await setupElement();
+    await expect.element(labelButton).toHaveTextContent('No label');
+  });
+
+  it('should render "No label" when displayName is undefined', async () => {
+    mockedFacet = buildFakeNumericFacet({
+      state: {
+        displayName: undefined,
+      },
+    });
+
+    const {labelButton} = await setupElement();
+    await expect.element(labelButton).toHaveTextContent('No label');
   });
 
   it('should render the first facet value', async () => {

@@ -73,6 +73,21 @@ describe('#renderNumericFacetValue', () => {
     );
   };
 
+  it('should call formatHumanReadable with correct props', async () => {
+    await renderComponent({displayValuesAs: 'checkbox'});
+
+    expect(formatHumanReadable).toHaveBeenCalledWith(
+      expect.objectContaining({
+        field: 'price',
+        facetValue: defaultProps.facetValue,
+        manualRanges: [],
+        i18n,
+        logger: mockLogger,
+        formatter: mockFormatter,
+      })
+    );
+  });
+
   describe('when displayValuesAs is "checkbox"', () => {
     beforeEach(() => {
       // Mock the checkbox render function to return a recognizable template
@@ -81,21 +96,6 @@ describe('#renderNumericFacetValue', () => {
       );
       vi.mocked(renderFacetValueLabelHighlight).mockReturnValue(
         html`<span data-testid="label-highlight">highlighted label</span>`
-      );
-    });
-
-    it('should call formatHumanReadable with correct props', async () => {
-      await renderComponent({displayValuesAs: 'checkbox'});
-
-      expect(formatHumanReadable).toHaveBeenCalledWith(
-        expect.objectContaining({
-          field: 'price',
-          facetValue: defaultProps.facetValue,
-          manualRanges: [],
-          i18n,
-          logger: mockLogger,
-          formatter: mockFormatter,
-        })
       );
     });
 
@@ -223,15 +223,13 @@ describe('#renderNumericFacetValue', () => {
     });
   });
 
-  describe('when displayValuesAs has an invalid value', () => {
-    it('should return nothing when displayValuesAs is invalid', async () => {
-      const element = await renderComponent({
-        displayValuesAs: 'invalid' as 'checkbox' | 'link',
-      });
-
-      // The element should be empty when nothing is returned
-      expect(element.children).toHaveLength(0);
+  it('should return nothing when displayValuesAs is invalid', async () => {
+    const element = await renderComponent({
+      displayValuesAs: 'invalid' as 'checkbox' | 'link',
     });
+
+    // The element should be empty when nothing is returned
+    expect(element.children).toHaveLength(0);
   });
 
   describe('edge cases', () => {
