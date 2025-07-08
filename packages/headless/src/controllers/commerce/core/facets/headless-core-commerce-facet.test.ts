@@ -326,24 +326,19 @@ describe('CoreCommerceFacet', () => {
   });
 
   describe('#showMoreValues', () => {
-    it('dispatches #updateCoreFacetNumberOfValues with the correct payload', () => {
-      const numberOfValues = 10;
-
-      setFacetRequest({numberOfValues, initialNumberOfValues: 10});
-      setFacetResponse({
-        values: [buildMockCommerceRegularFacetValue({state: 'idle'})],
-      });
+    it('should dispatch #updateCoreFacetNumberOfValues with the correct arguments', () => {
+      setFacetRequest({numberOfValues: 4, initialNumberOfValues: 4});
       initFacet();
 
       facet.showMoreValues();
 
       expect(updateCoreFacetNumberOfValues).toHaveBeenCalledWith({
         facetId,
-        numberOfValues: 20,
+        numberOfValues: 8,
       });
     });
 
-    it('dispatches #updateCoreFacetIsFieldExpanded with the correct payload', () => {
+    it('should dispatch #updateCoreFacetIsFieldExpanded with the correct arguments', () => {
       facet.showMoreValues();
 
       expect(updateCoreFacetIsFieldExpanded).toHaveBeenCalledWith({
@@ -352,9 +347,58 @@ describe('CoreCommerceFacet', () => {
       });
     });
 
-    it('dispatches #fetchProductsActionCreator', () => {
+    it('should dispatch #fetchProductsActionCreator', () => {
       facet.showMoreValues();
+
       expect(fetchProductsActionCreator).toHaveBeenCalled();
+    });
+
+    describe('when dispatching #updateCoreFacetNumberOfValues', () => {
+      it('should set numberOfValues in the payload to the initial number of values when the current number of values is undefined', () => {
+        setFacetRequest({initialNumberOfValues: 4, numberOfValues: undefined});
+        initFacet();
+        facet.showMoreValues();
+
+        expect(updateCoreFacetNumberOfValues).toHaveBeenCalledWith({
+          facetId,
+          numberOfValues: 4,
+        });
+      });
+
+      it('should set numberOfValues in the payload to the number of values + 1 when the initial number of values is undefined', () => {
+        setFacetRequest({numberOfValues: 4, initialNumberOfValues: undefined});
+        initFacet();
+        facet.showMoreValues();
+
+        expect(updateCoreFacetNumberOfValues).toHaveBeenCalledWith({
+          facetId,
+          numberOfValues: 5,
+        });
+      });
+
+      it('should set numberOfValues in the payload to the next multiple of the initial number of values when the number of values is not a multiple of the initial number of values', () => {
+        setFacetRequest({numberOfValues: 5, initialNumberOfValues: 4});
+        initFacet();
+
+        facet.showMoreValues();
+
+        expect(updateCoreFacetNumberOfValues).toHaveBeenCalledWith({
+          facetId,
+          numberOfValues: 8,
+        });
+      });
+
+      it('should set numberOfValues in the payload to the next multiple of the initial number of values when the number of values is a multiple of the initial number of values', () => {
+        setFacetRequest({numberOfValues: 8, initialNumberOfValues: 4});
+        initFacet();
+
+        facet.showMoreValues();
+
+        expect(updateCoreFacetNumberOfValues).toHaveBeenCalledWith({
+          facetId,
+          numberOfValues: 12,
+        });
+      });
     });
   });
 
