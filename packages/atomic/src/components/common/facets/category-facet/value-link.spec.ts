@@ -1,43 +1,35 @@
 import {renderFunctionFixture} from '@/vitest-utils/testing-helpers/fixture';
-import type {i18n} from 'i18next';
+import {createTestI18n} from '@/vitest-utils/testing-helpers/i18n-utils';
 import {html} from 'lit';
-import {vi, describe, it, expect} from 'vitest';
+import {vi, describe, it, expect, beforeAll} from 'vitest';
 import {
   renderCategoryFacetValueLink,
   type CategoryFacetValueLinkProps,
 } from './value-link';
 
-const mockI18n = {
-  t: vi.fn((key: string, options?) => {
-    if (key === 'facet-value') {
-      return `${options?.value} (${options?.count})`;
-    }
-    if (key === 'between-parentheses') {
-      return `(${options?.text})`;
-    }
-    return key;
-  }),
-  language: 'en',
-};
-
 describe('renderCategoryFacetValueLink', () => {
-  const defaultProps: CategoryFacetValueLinkProps = {
-    displayValue: 'Test Value',
-    numberOfResults: 42,
-    i18n: mockI18n as unknown as i18n,
-    onClick: vi.fn(),
-    isParent: false,
-    isSelected: false,
-    searchQuery: '',
-    isLeafValue: false,
-    setRef: vi.fn(),
-    children: html`<div>Child</div>`,
-  };
+  let i18n: Awaited<ReturnType<typeof createTestI18n>>;
+
+  beforeAll(async () => {
+    i18n = await createTestI18n();
+  });
 
   const renderComponent = (
     props: Partial<CategoryFacetValueLinkProps> = {},
     children = html`<div>Child</div>`
   ) => {
+    const defaultProps: CategoryFacetValueLinkProps = {
+      displayValue: 'Test Value',
+      numberOfResults: 42,
+      i18n,
+      onClick: vi.fn(),
+      isParent: false,
+      isSelected: false,
+      searchQuery: '',
+      isLeafValue: false,
+      setRef: vi.fn(),
+      children: html`<div>Child</div>`,
+    };
     const mergedProps = {...defaultProps, ...props};
     return renderFunctionFixture(
       html`${renderCategoryFacetValueLink({props: mergedProps})(children)}`
