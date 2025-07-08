@@ -357,6 +357,7 @@ describe('CoreCommerceFacet', () => {
       it('should set numberOfValues in the payload to the initial number of values when the current number of values is undefined', () => {
         setFacetRequest({initialNumberOfValues: 4, numberOfValues: undefined});
         initFacet();
+
         facet.showMoreValues();
 
         expect(updateCoreFacetNumberOfValues).toHaveBeenCalledWith({
@@ -368,6 +369,7 @@ describe('CoreCommerceFacet', () => {
       it('should set numberOfValues in the payload to the number of values + 1 when the initial number of values is undefined', () => {
         setFacetRequest({numberOfValues: 4, initialNumberOfValues: undefined});
         initFacet();
+
         facet.showMoreValues();
 
         expect(updateCoreFacetNumberOfValues).toHaveBeenCalledWith({
@@ -531,14 +533,14 @@ describe('CoreCommerceFacet', () => {
       });
     });
     describe('#canShowLessValues', () => {
-      it("should return 'false' then the request is undefined", () => {
+      it("should be 'false' then the request is undefined", () => {
         setFacetRequest(undefined);
         initFacet();
 
         expect(facet.state.canShowLessValues).toBe(false);
       });
 
-      it("should return 'false' when the length of the values is less than the initial number of values", () => {
+      it("should be'false' when the length of the values is less than the initial number of values", () => {
         const value = buildMockCommerceRegularFacetValue();
         setFacetRequest({
           values: [value],
@@ -549,7 +551,7 @@ describe('CoreCommerceFacet', () => {
         expect(facet.state.canShowLessValues).toBe(false);
       });
 
-      it("should return 'false' when the length of the values is equal to the initial number of values", () => {
+      it("should be 'false' when the length of the values is equal to the initial number of values", () => {
         const value = buildMockCommerceRegularFacetValue();
         setFacetRequest({
           values: [value, value],
@@ -560,7 +562,7 @@ describe('CoreCommerceFacet', () => {
         expect(facet.state.canShowLessValues).toBe(false);
       });
 
-      it("should return 'false' when none of the values in the request are idle", () => {
+      it("should be 'false' when none of the values in the request are idle", () => {
         const selectedValue = buildMockCommerceRegularFacetValue({
           state: 'selected',
         });
@@ -573,7 +575,7 @@ describe('CoreCommerceFacet', () => {
         expect(facet.state.canShowLessValues).toBe(false);
       });
 
-      it("should return 'false' when the length of the values is 1 and the initial number of values is undefined", () => {
+      it("should be 'false' when the length of the values is 1 and the initial number of values is undefined", () => {
         const value = buildMockCommerceRegularFacetValue();
         setFacetRequest({
           values: [value],
@@ -584,7 +586,7 @@ describe('CoreCommerceFacet', () => {
         expect(facet.state.canShowLessValues).toBe(false);
       });
 
-      it("should return 'true' when the number of idle values is greater than 1 and the initial number of values is undefined", () => {
+      it("should be 'true' when the number of idle values is greater than 1 and the initial number of values is undefined", () => {
         const value = buildMockCommerceRegularFacetValue();
         const selectedValue = buildMockCommerceRegularFacetValue({
           state: 'selected',
@@ -598,7 +600,7 @@ describe('CoreCommerceFacet', () => {
         expect(facet.state.canShowLessValues).toBe(true);
       });
 
-      it("should return 'true' when the length of the values in the request is greater than the initial number of values and there is at least one idle value", () => {
+      it("should be 'true' when the length of the values in the request is greater than the initial number of values and there is at least one idle value", () => {
         const value = buildMockCommerceRegularFacetValue();
         const selectedValue = buildMockCommerceRegularFacetValue({
           state: 'selected',
