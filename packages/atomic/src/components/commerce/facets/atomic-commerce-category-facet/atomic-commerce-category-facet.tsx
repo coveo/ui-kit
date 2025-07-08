@@ -25,7 +25,7 @@ import {CategoryFacetParentButton} from '../../../common/facets/category-facet/p
 import {CategoryFacetParentValueLink} from '../../../common/facets/category-facet/parent-value-link';
 import {CategoryFacetSearchResultsContainer} from '../../../common/facets/category-facet/search-results-container';
 import {CategoryFacetSearchValue} from '../../../common/facets/category-facet/search-value';
-import {CategoryFacetTreeValueContainer} from '../../../common/facets/category-facet/value-as-tree-container';
+import {CategoryFacetTreeValueContainer} from '../../../common/facets/category-facet/stencil-value-as-tree-container';
 import {FacetInfo} from '../../../common/facets/facet-common-store';
 import {FacetContainer} from '../../../common/facets/facet-container/stencil-facet-container';
 import {FacetGuard} from '../../../common/facets/facet-guard';
