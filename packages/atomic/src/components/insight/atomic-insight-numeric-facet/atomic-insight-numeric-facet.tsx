@@ -36,8 +36,8 @@ import {FacetHeader} from '../../common/facets/facet-header/stencil-facet-header
 import {NumberInputType} from '../../common/facets/facet-number-input/number-input-type';
 import {FacetPlaceholder} from '../../common/facets/facet-placeholder/facet-placeholder';
 import {formatHumanReadable} from '../../common/facets/numeric-facet/formatter';
+import {NumericFacetValueLink} from '../../common/facets/numeric-facet/stencil-value-link';
 import {NumericFacetValuesContainer} from '../../common/facets/numeric-facet/stencil-values-container';
-import {NumericFacetValueLink} from '../../common/facets/numeric-facet/value-link';
 import {initializePopover} from '../../common/facets/popover/popover-type';
 import {shouldDisplayInputForFacetRange} from '../../common/facets/stencil-facet-common';
 import {
