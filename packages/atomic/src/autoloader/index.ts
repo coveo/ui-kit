@@ -86,7 +86,11 @@ export function registerAutoloader(
         litRegistrationPromises.push(register(tagName));
         continue;
       }
-      if ('shadowRoot' in atomicElement && atomicElement.shadowRoot) {
+      if (
+        'shadowRoot' in atomicElement &&
+        atomicElement.shadowRoot &&
+        !visitedNodes.has(atomicElement.shadowRoot)
+      ) {
         discover(atomicElement);
         continue;
       }
