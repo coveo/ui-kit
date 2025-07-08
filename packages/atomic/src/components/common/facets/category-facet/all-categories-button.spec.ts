@@ -1,29 +1,33 @@
 /* eslint-disable @cspell/spellchecker */
 import {renderFunctionFixture} from '@/vitest-utils/testing-helpers/fixture';
+import {createTestI18n} from '@/vitest-utils/testing-helpers/i18n-utils';
 import {page} from '@vitest/browser/context';
 import '@vitest/browser/matchers.d.ts';
-import type {i18n} from 'i18next';
 import {html} from 'lit';
-import {vi, expect, describe, it} from 'vitest';
+import {vi, expect, describe, it, beforeAll} from 'vitest';
 import type {CategoryFacetAllCategoryButtonProps} from './all-categories-button';
 import {renderCategoryFacetAllCategoryButton} from './all-categories-button';
 
 describe('renderCategoryFacetAllCategoryButton', () => {
-  const mockI18n = {
-    t: vi.fn((key: string) => {
-      if (key === 'all-categories') {
-        return 'All Categories';
-      }
-      return key;
-    }),
-  };
+  const createMockI18n = (translationText: string) =>
+    ({
+      ...i18n,
+      t: vi.fn(() => translationText),
+    }) as unknown as typeof i18n;
 
-  const defaultProps: CategoryFacetAllCategoryButtonProps = {
-    i18n: mockI18n as unknown as i18n,
-    onClick: vi.fn(),
-  };
+  let i18n: Awaited<ReturnType<typeof createTestI18n>>;
 
-  const renderComponent = (props: Partial<typeof defaultProps> = {}) => {
+  beforeAll(async () => {
+    i18n = await createTestI18n();
+  });
+
+  const renderComponent = (
+    props: Partial<CategoryFacetAllCategoryButtonProps> = {}
+  ) => {
+    const defaultProps: CategoryFacetAllCategoryButtonProps = {
+      i18n,
+      onClick: vi.fn(),
+    };
     const mergedProps = {
       ...defaultProps,
       ...props,
@@ -75,15 +79,8 @@ describe('renderCategoryFacetAllCategoryButton', () => {
     await expect.element(textSpan).toHaveTextContent('All Categories');
   });
 
-  it('uses the correct i18n translation', () => {
-    renderComponent();
-    expect(mockI18n.t).toHaveBeenCalledWith('all-categories');
-  });
-
   it('renders with different translation text', async () => {
-    const customI18n = {
-      t: vi.fn(() => 'Todas las categorías'),
-    };
+    const customI18n = createMockI18n('Todas las categorías');
 
     await renderComponent({i18n: customI18n});
     const button = page.getByRole('button');
