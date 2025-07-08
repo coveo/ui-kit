@@ -4,7 +4,6 @@ import {bindings} from '@/src/decorators/bindings';
 import {createProductContextController} from '@/src/decorators/commerce/product-template-decorators.js';
 import {errorGuard} from '@/src/decorators/error-guard';
 import {InitializableComponent} from '@/src/decorators/types';
-import {InitializeBindingsMixin} from '@/src/mixins/bindings-mixin';
 import {
   Product,
   ProductTemplatesHelpers,
@@ -23,10 +22,10 @@ import {getStringValueFromProductOrNull} from '../product-template-component-uti
 /**
  * The `atomic-product-text` component renders the value of a string field for a given product.
  */
-@bindings()
 @customElement('atomic-product-text')
+@bindings()
 export class AtomicProductText
-  extends InitializeBindingsMixin(LitElement)
+  extends LitElement
   implements InitializableComponent<CommerceBindings>
 {
   /**
@@ -58,6 +57,10 @@ export class AtomicProductText
   @state() public bindings!: CommerceBindings;
 
   @state() public error!: Error;
+
+  protected createRenderRoot() {
+    return this;
+  }
 
   initialize() {
     if (!this.product && this.productController.item) {
