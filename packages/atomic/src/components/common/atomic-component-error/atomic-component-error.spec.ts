@@ -45,7 +45,7 @@ describe('AtomicComponentError', () => {
     expect(consoleErrorSpy).toHaveBeenCalledWith(error, element);
   });
 
-  it('when the element is loaded after being attached to the DOM, it should log the error properly', async () => {
+  it('should log the error to the console when the element is loaded after being attached to the DOM', async () => {
     const element = document.createElement('div');
     const error = new Error('Test error');
     const el = await fixture(
