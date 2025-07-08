@@ -14,6 +14,9 @@ export function registerAutoloader(
 
   roots ??= [document.documentElement];
   roots = Array.isArray(roots) ? roots : [roots];
+
+  // Track visited nodes to prevent infinite recursion
+  const visitedNodes = new WeakSet<Element | ShadowRoot | DocumentFragment>();
   /**
    * Observes a stencil element for hydration and discovers its shadowRoot when hydrated.
    */
@@ -22,7 +25,7 @@ export function registerAutoloader(
       if (atomicElement.classList.contains('hydrated')) {
         attributeObserver.disconnect();
         if ('shadowRoot' in atomicElement && atomicElement.shadowRoot) {
-          discover(atomicElement);
+          discover(atomicElement.shadowRoot);
         }
       }
     });
@@ -37,43 +40,57 @@ export function registerAutoloader(
    * Checks a node for undefined elements and attempts to register them.
    */
   const discover = async (root: Element | ShadowRoot | DocumentFragment) => {
+    visitedNodes.add(root);
+
     const rootTagName =
       root instanceof Element ? root.tagName.toLowerCase() : '';
-    const rootIsAtomicElement = rootTagName?.startsWith('atomic-');
-    const allAtomicElements = [...root.querySelectorAll('*')].filter((el) =>
-      el.tagName.toLowerCase().startsWith('atomic-')
+    const rootIsCustomElement = rootTagName?.includes('-');
+    const allCustomElements = [...root.querySelectorAll('*')].filter((el) =>
+      el.tagName.toLowerCase().includes('-')
     );
 
     // If the root element is an undefined Atomic component, add it to the list
     if (
-      rootIsAtomicElement &&
+      rootIsCustomElement &&
       root instanceof Element &&
-      !customElements.get(rootTagName)
+      !customElements.get(rootTagName) &&
+      !allCustomElements.includes(root)
     ) {
-      allAtomicElements.push(root);
+      allCustomElements.push(root);
     }
-    if (rootIsAtomicElement) {
+    if (rootIsCustomElement) {
       const childTemplates = root.querySelectorAll('template');
       //This is necessary to load the components that are inside the templates
       for (const template of childTemplates) {
+        if (visitedNodes.has(template.content)) {
+          continue;
+        }
         discover(template.content);
         observer.observe(template.content, {subtree: true, childList: true});
       }
       //TODO: This part should not be necessary: instead, if component-a uses component-b, component-a should be responsible for loading component-b
-      if ('shadowRoot' in root && root.shadowRoot) {
+      if (
+        'shadowRoot' in root &&
+        root.shadowRoot &&
+        !visitedNodes.has(root.shadowRoot)
+      ) {
         discover(root.shadowRoot);
         observer.observe(root.shadowRoot, {subtree: true, childList: true});
       }
     }
     const litRegistrationPromises = [];
-    for (const atomicElement of allAtomicElements) {
+    for (const atomicElement of allCustomElements) {
       const tagName = atomicElement.tagName.toLowerCase();
       if (tagName in elementMap && !customElements.get(tagName)) {
         // The element uses Lit already, we don't need to jam the lazy loader in the Shadow DOM.
         litRegistrationPromises.push(register(tagName));
         continue;
       }
-      if ('shadowRoot' in atomicElement && atomicElement.shadowRoot) {
+      if (
+        'shadowRoot' in atomicElement &&
+        atomicElement.shadowRoot &&
+        !visitedNodes.has(atomicElement.shadowRoot)
+      ) {
         discover(atomicElement);
         continue;
       }
