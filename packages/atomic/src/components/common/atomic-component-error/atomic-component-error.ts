@@ -11,8 +11,7 @@ export class AtomicComponentError extends LitElement {
   @property({type: Object}) element!: HTMLElement;
   @property({type: Object}) error!: Error;
 
-  connectedCallback() {
-    super.connectedCallback();
+  firstUpdated() {
     console.error(this.error, this.element);
   }
 
