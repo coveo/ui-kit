@@ -1,5 +1,9 @@
 // Auto-generated file
 export default {
+  'atomic-commerce-category-facet': async () =>
+    await import(
+      './atomic-commerce-category-facet/atomic-commerce-category-facet.js'
+    ),
   'atomic-commerce-facet': async () =>
     await import('./atomic-commerce-facet/atomic-commerce-facet.js'),
   'atomic-commerce-interface': async () =>

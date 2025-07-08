@@ -6,9 +6,9 @@
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
 import { AutomaticFacet, CategoryFacetSortCriterion, DateFilterRange, DateRangeRequest, FacetResultsMustMatch, FacetSortCriterion, FoldedResult, GeneratedAnswer, GeneratedAnswerCitation, InlineLink, InteractiveCitation, InteractiveResult, LogLevel, NumericFilter, NumericFilterState, RangeFacetRangeAlgorithm, RangeFacetSortCriterion, RelativeDateUnit, Result, ResultTemplate, ResultTemplateCondition, SearchEngine, SearchStatus } from "@coveo/headless";
-import { CategoryFacet, CommerceEngine, DateFacet, NumericFacet, ProductListingSummaryState, SearchSummaryState, Summary } from "@coveo/headless/commerce";
 import { CommerceBindings as Bindings } from "./components/commerce/atomic-commerce-interface/atomic-commerce-interface";
 import { Range } from "./components/commerce/facets/facet-number-input/atomic-commerce-facet-number-input";
+import { CommerceEngine, DateFacet, NumericFacet, ProductListingSummaryState, SearchSummaryState, Summary } from "@coveo/headless/commerce";
 import { i18n } from "i18next";
 import { AtomicInterface } from "./utils/initialization-utils";
 import { AnyBindings } from "./components/common/interface/bindings";
@@ -34,9 +34,9 @@ import { InitializationOptions } from "./components/search/atomic-search-interfa
 import { StandaloneSearchBoxData } from "./utils/local-storage-utils";
 import { SearchBoxSuggestionElement } from "./components/common/suggestions/suggestions-common";
 export { AutomaticFacet, CategoryFacetSortCriterion, DateFilterRange, DateRangeRequest, FacetResultsMustMatch, FacetSortCriterion, FoldedResult, GeneratedAnswer, GeneratedAnswerCitation, InlineLink, InteractiveCitation, InteractiveResult, LogLevel, NumericFilter, NumericFilterState, RangeFacetRangeAlgorithm, RangeFacetSortCriterion, RelativeDateUnit, Result, ResultTemplate, ResultTemplateCondition, SearchEngine, SearchStatus } from "@coveo/headless";
-export { CategoryFacet, CommerceEngine, DateFacet, NumericFacet, ProductListingSummaryState, SearchSummaryState, Summary } from "@coveo/headless/commerce";
 export { CommerceBindings as Bindings } from "./components/commerce/atomic-commerce-interface/atomic-commerce-interface";
 export { Range } from "./components/commerce/facets/facet-number-input/atomic-commerce-facet-number-input";
+export { CommerceEngine, DateFacet, NumericFacet, ProductListingSummaryState, SearchSummaryState, Summary } from "@coveo/headless/commerce";
 export { i18n } from "i18next";
 export { AtomicInterface } from "./utils/initialization-utils";
 export { AnyBindings } from "./components/common/interface/bindings";
@@ -287,29 +287,6 @@ export namespace Components {
           * @defaultValue `3`
          */
         "pathLimit": number;
-    }
-    /**
-     * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (e.g., number of occurrences).
-     * An `atomic-commerce-category-facet` displays a facet of values in a browsable, hierarchical fashion.
-     * @alpha 
-     */
-    interface AtomicCommerceCategoryFacet {
-        /**
-          * The category facet controller instance.
-         */
-        "facet": CategoryFacet;
-        /**
-          * The field identifier for this facet.
-         */
-        "field"?: string;
-        /**
-          * Specifies whether the facet is collapsed.
-         */
-        "isCollapsed": boolean;
-        /**
-          * The summary controller instance.
-         */
-        "summary": Summary<SearchSummaryState | ProductListingSummaryState>;
     }
     /**
      * @alpha The `atomic-commerce-query-correction` component is responsible for handling query corrections. When a query returns no products but finds a possible query correction, the component either suggests the correction or automatically triggers a new query with the suggested term.
@@ -3612,17 +3589,6 @@ declare global {
         new (): HTMLAtomicCommerceBreadboxElement;
     };
     /**
-     * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (e.g., number of occurrences).
-     * An `atomic-commerce-category-facet` displays a facet of values in a browsable, hierarchical fashion.
-     * @alpha 
-     */
-    interface HTMLAtomicCommerceCategoryFacetElement extends Components.AtomicCommerceCategoryFacet, HTMLStencilElement {
-    }
-    var HTMLAtomicCommerceCategoryFacetElement: {
-        prototype: HTMLAtomicCommerceCategoryFacetElement;
-        new (): HTMLAtomicCommerceCategoryFacetElement;
-    };
-    /**
      * @alpha The `atomic-commerce-query-correction` component is responsible for handling query corrections. When a query returns no products but finds a possible query correction, the component either suggests the correction or automatically triggers a new query with the suggested term.
      */
     interface HTMLAtomicCommerceDidYouMeanElement extends Components.AtomicCommerceDidYouMean, HTMLStencilElement {
@@ -5530,7 +5496,6 @@ declare global {
         "atomic-citation": HTMLAtomicCitationElement;
         "atomic-color-facet": HTMLAtomicColorFacetElement;
         "atomic-commerce-breadbox": HTMLAtomicCommerceBreadboxElement;
-        "atomic-commerce-category-facet": HTMLAtomicCommerceCategoryFacetElement;
         "atomic-commerce-did-you-mean": HTMLAtomicCommerceDidYouMeanElement;
         "atomic-commerce-facet-number-input": HTMLAtomicCommerceFacetNumberInputElement;
         "atomic-commerce-facets": HTMLAtomicCommerceFacetsElement;
@@ -5931,29 +5896,6 @@ declare namespace LocalJSX {
           * @defaultValue `3`
          */
         "pathLimit"?: number;
-    }
-    /**
-     * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (e.g., number of occurrences).
-     * An `atomic-commerce-category-facet` displays a facet of values in a browsable, hierarchical fashion.
-     * @alpha 
-     */
-    interface AtomicCommerceCategoryFacet {
-        /**
-          * The category facet controller instance.
-         */
-        "facet": CategoryFacet;
-        /**
-          * The field identifier for this facet.
-         */
-        "field"?: string;
-        /**
-          * Specifies whether the facet is collapsed.
-         */
-        "isCollapsed"?: boolean;
-        /**
-          * The summary controller instance.
-         */
-        "summary": Summary<SearchSummaryState | ProductListingSummaryState>;
     }
     /**
      * @alpha The `atomic-commerce-query-correction` component is responsible for handling query corrections. When a query returns no products but finds a possible query correction, the component either suggests the correction or automatically triggers a new query with the suggested term.
@@ -8991,7 +8933,6 @@ declare namespace LocalJSX {
         "atomic-citation": AtomicCitation;
         "atomic-color-facet": AtomicColorFacet;
         "atomic-commerce-breadbox": AtomicCommerceBreadbox;
-        "atomic-commerce-category-facet": AtomicCommerceCategoryFacet;
         "atomic-commerce-did-you-mean": AtomicCommerceDidYouMean;
         "atomic-commerce-facet-number-input": AtomicCommerceFacetNumberInput;
         "atomic-commerce-facets": AtomicCommerceFacets;
@@ -9215,12 +9156,6 @@ declare module "@stencil/core" {
              * @alpha 
              */
             "atomic-commerce-breadbox": LocalJSX.AtomicCommerceBreadbox & JSXBase.HTMLAttributes<HTMLAtomicCommerceBreadboxElement>;
-            /**
-             * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (e.g., number of occurrences).
-             * An `atomic-commerce-category-facet` displays a facet of values in a browsable, hierarchical fashion.
-             * @alpha 
-             */
-            "atomic-commerce-category-facet": LocalJSX.AtomicCommerceCategoryFacet & JSXBase.HTMLAttributes<HTMLAtomicCommerceCategoryFacetElement>;
             /**
              * @alpha The `atomic-commerce-query-correction` component is responsible for handling query corrections. When a query returns no products but finds a possible query correction, the component either suggests the correction or automatically triggers a new query with the suggested term.
              */
