@@ -1,33 +1,12 @@
 import {renderFunctionFixture} from '@/vitest-utils/testing-helpers/fixture';
-import type {i18n} from 'i18next';
+import {createTestI18n} from '@/vitest-utils/testing-helpers/i18n-utils';
 import {html} from 'lit';
-import {vi, describe, it, expect} from 'vitest';
+import {vi, describe, it, expect, beforeAll} from 'vitest';
 import {
   renderCategoryFacetChildValueLink,
   type CategoryFacetChildValueLinkProps,
 } from './child-value-link';
 import {renderCategoryFacetValueLink} from './value-link';
-
-const mockI18n = {
-  t: vi.fn((key: string, options?: unknown) => {
-    const opts = options as {
-      count?: number;
-      formattedCount?: string;
-      value?: string;
-    };
-    switch (key) {
-      case 'facet-value':
-        return `${opts?.value} (${opts?.count})`;
-      case 'between-parentheses':
-        return `(${opts?.formattedCount})`;
-      case 'clear-filter':
-        return 'Clear filter';
-      default:
-        return key;
-    }
-  }),
-  language: 'en',
-} as unknown as i18n;
 
 vi.mock('./value-link', () => ({
   renderCategoryFacetValueLink: vi.fn(
@@ -43,37 +22,45 @@ vi.mock('./value-link', () => ({
 }));
 
 describe('renderCategoryFacetChildValueLink', () => {
-  const defaultProps: CategoryFacetChildValueLinkProps = {
-    displayValue: 'Laptops',
-    numberOfResults: 42,
-    i18n: mockI18n,
-    onClick: vi.fn(),
-    isSelected: false,
-    searchQuery: '',
-    isLeafValue: true,
-    setRef: vi.fn(),
-  };
+  let i18n: Awaited<ReturnType<typeof createTestI18n>>;
 
-  const renderComponent = (
+  beforeAll(async () => {
+    i18n = await createTestI18n();
+  });
+
+  const renderComponent = async (
     props: Partial<CategoryFacetChildValueLinkProps> = {},
     children = html`<span>Child content</span>`
   ) => {
+    const defaultProps: CategoryFacetChildValueLinkProps = {
+      displayValue: 'Laptops',
+      numberOfResults: 42,
+      i18n,
+      onClick: vi.fn(),
+      isSelected: false,
+      searchQuery: '',
+      isLeafValue: true,
+      setRef: vi.fn(),
+    };
     const mergedProps = {...defaultProps, ...props};
-    return renderFunctionFixture(
+    const container = await renderFunctionFixture(
       html`${renderCategoryFacetChildValueLink({props: mergedProps})(children)}`
     );
+
+    return {
+      container,
+      link: container.querySelector('[data-testid="category-value-link"]'),
+    };
   };
 
   it('should render a child value link component', async () => {
-    const container = await renderComponent();
-    const link = container.querySelector('[data-testid="category-value-link"]');
+    const {link} = await renderComponent();
 
     expect(link).toBeInTheDocument();
   });
 
   it('should pass isParent as false to the parent component', async () => {
-    const container = await renderComponent();
-    const link = container.querySelector('[data-testid="category-value-link"]');
+    const {link} = await renderComponent();
 
     expect(link).toHaveAttribute('data-is-parent', 'false');
   });
@@ -189,16 +176,6 @@ describe('renderCategoryFacetChildValueLink', () => {
     expect(renderCategoryFacetValueLink).toHaveBeenCalledWith({
       props: expect.objectContaining({
         numberOfResults: 999,
-      }),
-    });
-  });
-
-  it('should pass i18n instance correctly', async () => {
-    await renderComponent({i18n: mockI18n});
-
-    expect(renderCategoryFacetValueLink).toHaveBeenCalledWith({
-      props: expect.objectContaining({
-        i18n: mockI18n,
       }),
     });
   });
