@@ -37,7 +37,7 @@ import {validateDateFacetOptions} from './headless-date-facet-options.js';
  */
 export interface DateFilterOptions {
   /**
-   * The field whose values you want to display in the filter.
+   * The values of which field to display in the filter.
    */
   field: string;
 

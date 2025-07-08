@@ -140,10 +140,10 @@ export interface FacetGenerator
   /**
    * The state of each every facet returned by the Commerce API.
    *
-   * In a server-side rendering (SSR) scenario, you must use this state to render the facet UI components before the
+   * In a server-side rendering (SSR) scenario, use this state to render the facet UI components before the
    * facet controller is hydrated on the client side.
    *
-   * Once the facet generator controller has been hydrated, you must use the `getFacetController` method to retrieve
+   * Once the facet generator controller has been hydrated, use the `getFacetController` method to retrieve
    * the individual facet controllers and subscribe to their respective states.
    */
   state: FacetGeneratorState;

@@ -43,7 +43,7 @@ export interface SmartSnippetQuestionsList
   /**
    * Selects the source, logging a UA event to the Coveo Platform if the source hadn't been selected before.
    *
-   * In a DOM context, we recommend calling this method on all of the following events:
+   * In a DOM context, call this method on all of the following events:
    * * `contextmenu`
    * * `click`
    * * `mouseup`
@@ -55,7 +55,7 @@ export interface SmartSnippetQuestionsList
   /**
    * Prepares to select the source after a certain delay, sending analytics if it hadn't been selected before.
    *
-   * In a DOM context, we recommend calling this method on the `touchstart` event.
+   * In a DOM context, call this method on the `touchstart` event.
    *
    * @param identifier - The `questionAnswerId` of the smart snippet to collapse.
    */
@@ -63,7 +63,7 @@ export interface SmartSnippetQuestionsList
   /**
    * Cancels the pending selection caused by `beginDelayedSelect`.
    *
-   * In a DOM context, we recommend calling this method on the `touchend` event.
+   * In a DOM context, call this method on the `touchend` event.
    *
    * @param identifier - The `questionAnswerId` of the smart snippet to collapse.
    */
@@ -71,7 +71,7 @@ export interface SmartSnippetQuestionsList
   /**
    * Selects a link inside an answer, logging a UA event to the Coveo Platform if it was never selected before.
    *
-   * In a DOM context, we recommend calling this method on all of the following events:
+   * In a DOM context, call this method on all of the following events:
    * * `contextmenu`
    * * `click`
    * * `mouseup`
@@ -84,7 +84,7 @@ export interface SmartSnippetQuestionsList
   /**
    * Prepares to select a link inside an answer after a certain delay, sending analytics if it was never selected before.
    *
-   * In a DOM context, we recommend calling this method on the `touchstart` event.
+   * In a DOM context, call this method on the `touchstart` event.
    *
    * @param identifier - The `questionAnswerId` of the smart snippet containing the link.
    * @param link - The link to select.
@@ -93,7 +93,7 @@ export interface SmartSnippetQuestionsList
   /**
    * Cancels the pending selection caused by `beginDelayedSelectInlineLink`.
    *
-   * In a DOM context, we recommend calling this method on the `touchend` event.
+   * In a DOM context, call this method on the `touchend` event.
    *
    * @param identifier - The `questionAnswerId` of the smart snippet containing the link.
    * @param link - The link to select.

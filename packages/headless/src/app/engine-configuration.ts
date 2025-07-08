@@ -143,7 +143,7 @@ export interface AnalyticsConfiguration {
   /**
    * The base URL to use to proxy Coveo analytics requests (e.g., `https://example.com/analytics`).
    *
-   * This is an advanced option that you should only set if you need to proxy Coveo analytics requests through your own
+   * This is an advanced option that you only set if you need to proxy Coveo analytics requests through your own
    * server. In most cases, you should not set this option.
    *
    * See [Headless proxy: Analytics](https://docs.coveo.com/en/headless/latest/usage/proxy#analytics).

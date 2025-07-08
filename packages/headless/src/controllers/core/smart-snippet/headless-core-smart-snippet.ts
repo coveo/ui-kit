@@ -94,7 +94,7 @@ export interface SmartSnippetCore extends Controller {
   /**
    * Selects the source, logging a UA event to the Coveo Platform if the source wasn't already selected before.
    *
-   * In a DOM context, we recommend calling this method on all of the following events:
+   * In a DOM context, call this method on all of the following events:
    * * `contextmenu`
    * * `click`
    * * `mouseup`
@@ -104,13 +104,13 @@ export interface SmartSnippetCore extends Controller {
   /**
    * Prepares to select the source after a certain delay, sending analytics if it was never selected before.
    *
-   * In a DOM context, we recommend calling this method on the `touchstart` event.
+   * In a DOM context, call this method on the `touchstart` event.
    */
   beginDelayedSelectSource(): void;
   /**
    * Cancels the pending selection caused by `beginDelayedSelectSource`.
    *
-   * In a DOM context, we recommend calling this method on the `touchend` event.
+   * In a DOM context, call this method on the `touchend` event.
    */
   cancelPendingSelectSource(): void;
 }
@@ -127,7 +127,7 @@ export interface SmartSnippet extends SmartSnippetCore {
   /**
    * Selects a link inside the answer, logging a UA event to the Coveo Platform if it was never selected before.
    *
-   * In a DOM context, we recommend calling this method on all of the following events:
+   * In a DOM context, call this method on all of the following events:
    * * `contextmenu`
    * * `click`
    * * `mouseup`
@@ -139,7 +139,7 @@ export interface SmartSnippet extends SmartSnippetCore {
   /**
    * Prepares to select a link inside the answer after a certain delay, sending analytics if it was never selected before.
    *
-   * In a DOM context, we recommend calling this method on the `touchstart` event.
+   * In a DOM context, call this method on the `touchstart` event.
    *
    * @param link - The link to select.
    */
@@ -147,7 +147,7 @@ export interface SmartSnippet extends SmartSnippetCore {
   /**
    * Cancels the pending selection caused by `beginDelayedSelectInlineLink`.
    *
-   * In a DOM context, we recommend calling this method on the `touchend` event.
+   * In a DOM context, call this method on the `touchend` event.
    *
    * @param link - The link to select.
    */

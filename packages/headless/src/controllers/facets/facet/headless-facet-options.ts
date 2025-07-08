@@ -21,7 +21,7 @@ import {
 
 export interface FacetOptions {
   /**
-   * The field whose values you want to display in the facet.
+   * The values of which field to display in the facet.
    * */
   field: string;
 

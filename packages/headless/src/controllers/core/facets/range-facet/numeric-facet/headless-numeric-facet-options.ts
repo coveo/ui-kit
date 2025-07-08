@@ -41,7 +41,7 @@ import {
  */
 export interface NumericFacetOptions {
   /**
-   * The field whose values you want to display in the facet.
+   * The values of which field to display in the facet.
    */
   field: string;
 
@@ -53,7 +53,7 @@ export interface NumericFacetOptions {
   /**
    * Whether the index should automatically create range values.
    *
-   * Tip: If you set this parameter to true, you should ensure that the ['Use cache for numeric queries' option](https://docs.coveo.com/en/1833#use-cache-for-numeric-queries) is enabled for this facet's field in your index in order to speed up automatic range evaluation.
+   * Tip: If you set this parameter to true, ensure that the ['Use cache for numeric queries' option](https://docs.coveo.com/en/1833#use-cache-for-numeric-queries) is enabled for this facet's field in your index in order to speed up automatic range evaluation.
    */
   generateAutomaticRanges: boolean;
 
