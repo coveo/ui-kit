@@ -9,7 +9,7 @@ import {
   ProductTemplatesHelpers,
   HighlightUtils,
 } from '@coveo/headless/commerce';
-import {LitElement, html, nothing, css} from 'lit';
+import {LitElement, html, nothing} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {when} from 'lit/directives/when.js';
 import {getFieldValueCaption} from '../../../utils/field-utils';
