@@ -1,3 +1,9 @@
+## 2.2.7 (2025-07-08)
+
+### Bug Fixes
+
+- **deps:** update mantine monorepo to v8 (major) ([#173](https://github.com/coveo/relay/issues/173)) ([0028256](https://github.com/coveo/relay/commits/))
+
 ## 2.2.6 (2025-07-08)
 
 ## 2.2.5 (2025-06-30)
