@@ -1,19 +1,19 @@
 import {ArrayValue, RecordValue, Schema, StringValue} from '@coveo/bueno';
 import {
-  FacetResultsMustMatch,
+  type FacetResultsMustMatch,
   facetResultsMustMatch,
 } from '../../../../features/facets/facet-api/request.js';
 import {
+  type FacetSortCriterion,
   facetSortCriteria,
-  FacetSortCriterion,
 } from '../../../../features/facets/facet-set/interfaces/request.js';
 import {
   facetId,
+  facetSearch,
   field,
   filterFacetCount,
   injectionDepth,
   numberOfValues,
-  facetSearch,
 } from '../_common/facet-option-definitions.js';
 
 export interface FacetOptions {

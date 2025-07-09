@@ -10,13 +10,13 @@ import {prepareForSearchWithQuery} from '../../features/search/search-actions.js
 import {searchReducer as search} from '../../features/search/search-slice.js';
 import {
   buildMockSearchEngine,
-  MockedSearchEngine,
+  type MockedSearchEngine,
 } from '../../test/mock-engine-v2.js';
 import {buildMockQueryState} from '../../test/mock-query-state.js';
 import {createMockState} from '../../test/mock-state.js';
 import {
   buildRecentQueriesList,
-  RecentQueriesList,
+  type RecentQueriesList,
 } from './headless-recent-queries-list.js';
 
 vi.mock('../../features/recent-queries/recent-queries-actions');

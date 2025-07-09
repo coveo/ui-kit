@@ -2,35 +2,35 @@ import {buildMockCategoryFacetRequest} from '../../../test/mock-category-facet-r
 import {buildMockCategoryFacetResponse} from '../../../test/mock-category-facet-response.js';
 import {buildMockCategoryFacetSearchResult} from '../../../test/mock-category-facet-search-result.js';
 import {buildMockCategoryFacetSlice} from '../../../test/mock-category-facet-slice.js';
-import {buildMockCategoryFacetValueRequest} from '../../../test/mock-category-facet-value-request.js';
 import {buildMockCategoryFacetValue} from '../../../test/mock-category-facet-value.js';
+import {buildMockCategoryFacetValueRequest} from '../../../test/mock-category-facet-value-request.js';
 import {buildMockSearch} from '../../../test/mock-search.js';
 import {logSearchEvent} from '../../analytics/analytics-actions.js';
 import {deselectAllBreadcrumbs} from '../../breadcrumb/breadcrumb-actions.js';
 import {change} from '../../history/history-actions.js';
 import {getHistoryInitialState} from '../../history/history-state.js';
-import {restoreSearchParameters} from '../../search-parameters/search-parameter-actions.js';
 import {executeSearch, fetchFacetValues} from '../../search/search-actions.js';
+import {restoreSearchParameters} from '../../search-parameters/search-parameter-actions.js';
 import {selectCategoryFacetSearchResult} from '../facet-search-set/category/category-facet-search-actions.js';
-import {FacetResponse} from '../facet-set/interfaces/response.js';
+import type {FacetResponse} from '../facet-set/interfaces/response.js';
 import {updateFacetAutoSelection} from '../generic/facet-actions.js';
 import * as FacetReducers from '../generic/facet-reducer-helpers.js';
 import * as CategoryFacetReducerHelpers from './category-facet-reducer-helpers.js';
 import {
+  deselectAllCategoryFacetValues,
+  type RegisterCategoryFacetActionCreatorPayload,
   registerCategoryFacet,
   toggleSelectCategoryFacetValue,
-  deselectAllCategoryFacetValues,
+  updateCategoryFacetBasePath,
   updateCategoryFacetNumberOfValues,
   updateCategoryFacetSortCriterion,
-  RegisterCategoryFacetActionCreatorPayload,
-  updateCategoryFacetBasePath,
 } from './category-facet-set-actions.js';
 import {categoryFacetSetReducer} from './category-facet-set-slice.js';
 import {
-  CategoryFacetSetState,
+  type CategoryFacetSetState,
   getCategoryFacetSetInitialState,
 } from './category-facet-set-state.js';
-import {CategoryFacetSortCriterion} from './interfaces/request.js';
+import type {CategoryFacetSortCriterion} from './interfaces/request.js';
 
 describe('category facet slice', () => {
   const facetId = '1';
@@ -210,7 +210,7 @@ describe('category facet slice', () => {
       const request = buildMockCategoryFacetRequest();
 
       const cf = {geography: path};
-      state['geography'] = buildMockCategoryFacetSlice({
+      state.geography = buildMockCategoryFacetSlice({
         request,
         initialNumberOfValues,
       });
@@ -226,7 +226,7 @@ describe('category facet slice', () => {
         retrieveCount: initialNumberOfValues,
       });
 
-      expect(finalState['geography']?.request.currentValues).toEqual([a]);
+      expect(finalState.geography?.request.currentValues).toEqual([a]);
       expect(spy).toHaveBeenCalled();
     });
 
@@ -235,7 +235,7 @@ describe('category facet slice', () => {
 
       const cf = {};
       const request = buildMockCategoryFacetRequest();
-      state['geography'] = buildMockCategoryFacetSlice({
+      state.geography = buildMockCategoryFacetSlice({
         request,
         initialNumberOfValues,
       });
@@ -245,8 +245,8 @@ describe('category facet slice', () => {
         restoreSearchParameters({cf})
       );
 
-      expect(finalState['geography']?.request.currentValues).toEqual([]);
-      expect(finalState['geography']?.request.numberOfValues).toEqual(
+      expect(finalState.geography?.request.currentValues).toEqual([]);
+      expect(finalState.geography?.request.numberOfValues).toEqual(
         initialNumberOfValues
       );
     });
@@ -257,7 +257,7 @@ describe('category facet slice', () => {
       const cf = {};
       const request = buildMockCategoryFacetRequest();
       request.preventAutoSelect = false;
-      state['geography'] = buildMockCategoryFacetSlice({
+      state.geography = buildMockCategoryFacetSlice({
         request,
         initialNumberOfValues,
       });
@@ -267,7 +267,7 @@ describe('category facet slice', () => {
         restoreSearchParameters({cf})
       );
 
-      expect(finalState['geography']?.request.preventAutoSelect).toBe(false);
+      expect(finalState.geography?.request.preventAutoSelect).toBe(false);
     });
 
     it('when a facet is found in the #cf payload and has no values selected, it does not preventAutoSelection', () => {
@@ -278,7 +278,7 @@ describe('category facet slice', () => {
       request.preventAutoSelect = false;
 
       const cf = {geography: path};
-      state['geography'] = buildMockCategoryFacetSlice({
+      state.geography = buildMockCategoryFacetSlice({
         request,
         initialNumberOfValues,
       });
@@ -288,7 +288,7 @@ describe('category facet slice', () => {
         restoreSearchParameters({cf})
       );
 
-      expect(finalState['geography']?.request.preventAutoSelect).toBe(false);
+      expect(finalState.geography?.request.preventAutoSelect).toBe(false);
     });
 
     it('when a facet is found in the #cf payload and has values selected, it does preventAutoSelection', () => {
@@ -299,7 +299,7 @@ describe('category facet slice', () => {
       request.preventAutoSelect = false;
 
       const cf = {geography: path};
-      state['geography'] = buildMockCategoryFacetSlice({
+      state.geography = buildMockCategoryFacetSlice({
         request,
         initialNumberOfValues,
       });
@@ -309,7 +309,7 @@ describe('category facet slice', () => {
         restoreSearchParameters({cf})
       );
 
-      expect(finalState['geography']?.request.preventAutoSelect).toBe(true);
+      expect(finalState.geography?.request.preventAutoSelect).toBe(true);
     });
 
     it('when a facet is found in the #cf payload, has previously selected values, and restore remove selection, it sets #currentValues to the new value', () => {
@@ -318,7 +318,7 @@ describe('category facet slice', () => {
       let path = ['a', 'b'];
       const request = buildMockCategoryFacetRequest();
       let cf = {geography: path};
-      state['geography'] = buildMockCategoryFacetSlice({
+      state.geography = buildMockCategoryFacetSlice({
         request,
         initialNumberOfValues,
       });
@@ -329,11 +329,10 @@ describe('category facet slice', () => {
       );
 
       expect(
-        intermediateState['geography']?.request.currentValues[0].value
+        intermediateState.geography?.request.currentValues[0].value
       ).toEqual('a');
       expect(
-        intermediateState['geography']?.request.currentValues[0].children[0]
-          .value
+        intermediateState.geography?.request.currentValues[0].children[0].value
       ).toEqual('b');
 
       path = ['a'];
@@ -344,11 +343,9 @@ describe('category facet slice', () => {
         restoreSearchParameters({cf})
       );
 
-      expect(finalState['geography']?.request.currentValues[0].value).toEqual(
-        'a'
-      );
+      expect(finalState.geography?.request.currentValues[0].value).toEqual('a');
       expect(
-        finalState['geography']?.request.currentValues[0].children.length
+        finalState.geography?.request.currentValues[0].children.length
       ).toBe(0);
     });
   });

@@ -1,20 +1,20 @@
-import {Mock} from 'vitest';
+import type {Mock} from 'vitest';
 import {updateFacetOptions} from '../../../../../features/facet-options/facet-options-actions.js';
 import {updateDateFacetValues} from '../../../../../features/facets/range-facets/date-facet-set/date-facet-actions.js';
 import {executeSearch} from '../../../../../features/insight-search/insight-search-actions.js';
-import {InsightAppState} from '../../../../../state/insight-app-state.js';
+import type {InsightAppState} from '../../../../../state/insight-app-state.js';
 import {buildMockDateFacetSlice} from '../../../../../test/mock-date-facet-slice.js';
 import {buildMockDateFacetValue} from '../../../../../test/mock-date-facet-value.js';
 import {
   buildMockInsightEngine,
-  MockedInsightEngine,
+  type MockedInsightEngine,
 } from '../../../../../test/mock-engine-v2.js';
 import {buildMockInsightState} from '../../../../../test/mock-insight-state.js';
 import {
   buildDateFilter,
-  DateFilter,
-  DateFilterInitialState,
-  DateFilterOptions,
+  type DateFilter,
+  type DateFilterInitialState,
+  type DateFilterOptions,
 } from './headless-insight-date-filter.js';
 
 vi.mock(

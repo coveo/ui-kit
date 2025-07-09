@@ -1,14 +1,14 @@
-import {SearchEngine} from '../../app/search-engine/search-engine.js';
+import type {SearchEngine} from '../../app/search-engine/search-engine.js';
 import {updateQuery} from '../../features/query/query-actions.js';
 import {queryReducer as query} from '../../features/query/query-slice.js';
 import {executeSearch} from '../../features/search/search-actions.js';
 import {logUndoTriggerQuery} from '../../features/triggers/trigger-analytics-actions.js';
 import {updateIgnoreQueryTrigger} from '../../features/triggers/triggers-actions.js';
 import {triggerReducer as triggers} from '../../features/triggers/triggers-slice.js';
-import {TriggerSection, QuerySection} from '../../state/state-sections.js';
+import type {QuerySection, TriggerSection} from '../../state/state-sections.js';
 import {loadReducerError} from '../../utils/errors.js';
 import {buildController} from '../controller/headless-controller.js';
-import {QueryTrigger} from '../core/triggers/headless-core-query-trigger.js';
+import type {QueryTrigger} from '../core/triggers/headless-core-query-trigger.js';
 
 /**
  * Creates a `QueryTrigger` controller instance.

@@ -1,4 +1,4 @@
-import {BaseParam} from '../../../platform-service-params.js';
+import type {BaseParam} from '../../../platform-service-params.js';
 import {baseInsightUserActionRequest} from '../insight-params.js';
 
 export type InsightUserActionsRequest = BaseParam & UserIdParam;

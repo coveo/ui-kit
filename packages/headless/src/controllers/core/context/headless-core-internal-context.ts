@@ -1,16 +1,16 @@
-import {CoreEngine} from '../../../app/engine.js';
+import type {CoreEngine} from '../../../app/engine.js';
 import {
   addContext,
   removeContext,
 } from '../../../features/context/context-actions.js';
 import {contextReducer as context} from '../../../features/context/context-slice.js';
-import {ContextValue} from '../../../features/context/context-state.js';
-import {ContextSection} from '../../../state/state-sections.js';
+import type {ContextValue} from '../../../features/context/context-state.js';
+import type {ContextSection} from '../../../state/state-sections.js';
 import {loadReducerError} from '../../../utils/errors.js';
 import {
-  ReservedContextKey,
-  UnreservedContextKeyError,
   isReservedContextKey,
+  type ReservedContextKey,
+  UnreservedContextKeyError,
 } from './headless-context-reserved-keys.js';
 
 /**

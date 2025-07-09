@@ -1,9 +1,9 @@
 import {
-  MockedSearchEngine,
   buildMockSearchEngine,
+  type MockedSearchEngine,
 } from '../../test/mock-engine-v2.js';
 import {createMockState} from '../../test/mock-state.js';
-import {buildTabManager, TabManager} from './headless-tab-manager.js';
+import {buildTabManager, type TabManager} from './headless-tab-manager.js';
 
 vi.mock('../../features/search/search-actions');
 

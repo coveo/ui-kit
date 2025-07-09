@@ -1,18 +1,18 @@
 import {ArrayValue, isArray, Schema} from '@coveo/bueno';
 import {configuration} from '../../../app/common-reducers.js';
-import {CoreEngine} from '../../../app/engine.js';
+import type {CoreEngine} from '../../../app/engine.js';
 import {updatePage} from '../../../features/pagination/pagination-actions.js';
 import {
   buildCriterionExpression,
-  SortCriterion,
   criterionDefinition,
+  type SortCriterion,
 } from '../../../features/sort-criteria/criteria.js';
 import {
   registerSortCriterion,
   updateSortCriterion,
 } from '../../../features/sort-criteria/sort-criteria-actions.js';
 import {sortCriteriaReducer as sortCriteria} from '../../../features/sort-criteria/sort-criteria-slice.js';
-import {
+import type {
   ConfigurationSection,
   SortSection,
 } from '../../../state/state-sections.js';
@@ -20,7 +20,7 @@ import {loadReducerError} from '../../../utils/errors.js';
 import {validateInitialState} from '../../../utils/validate-payload.js';
 import {
   buildController,
-  Controller,
+  type Controller,
 } from '../../controller/headless-controller.js';
 
 export interface SortProps {

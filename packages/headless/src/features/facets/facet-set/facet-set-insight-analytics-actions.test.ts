@@ -1,5 +1,5 @@
-import {InsightEngine} from '../../../app/insight-engine/insight-engine.js';
-import {ThunkExtraArguments} from '../../../app/thunk-extra-arguments.js';
+import type {InsightEngine} from '../../../app/insight-engine/insight-engine.js';
+import type {ThunkExtraArguments} from '../../../app/thunk-extra-arguments.js';
 import {buildMockInsightEngine} from '../../../test/mock-engine-v2.js';
 import {buildMockFacetRequest} from '../../../test/mock-facet-request.js';
 import {buildMockFacetSlice} from '../../../test/mock-facet-slice.js';
@@ -10,9 +10,9 @@ import {
   logFacetClearAll,
   logFacetDeselect,
   logFacetSelect,
-  logFacetUpdateSort,
-  logFacetShowMore,
   logFacetShowLess,
+  logFacetShowMore,
+  logFacetUpdateSort,
 } from './facet-set-insight-analytics-actions.js';
 
 const mockLogBreadcrumbFacet = vi.fn();

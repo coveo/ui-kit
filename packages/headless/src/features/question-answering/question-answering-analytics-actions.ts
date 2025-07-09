@@ -1,16 +1,16 @@
-import {SmartSnippets} from '@coveo/relay-event-types';
+import type {SmartSnippets} from '@coveo/relay-event-types';
 import {validatePayload} from '../../utils/validate-payload.js';
 import {
-  ClickAction,
-  CustomAction,
+  type ClickAction,
+  type CustomAction,
   documentIdentifier,
   makeAnalyticsAction,
   partialDocumentInformation,
 } from '../analytics/analytics-utils.js';
 import {
   inlineLinkPayloadDefinition,
-  QuestionAnsweringInlineLinkActionCreatorPayload,
-  QuestionAnsweringUniqueIdentifierActionCreatorPayload,
+  type QuestionAnsweringInlineLinkActionCreatorPayload,
+  type QuestionAnsweringUniqueIdentifierActionCreatorPayload,
   uniqueIdentifierPayloadDefinition,
   validateQuestionAnsweringActionCreatorPayload,
 } from './question-answering-document-id.js';

@@ -1,5 +1,5 @@
 import {createSelector} from '@reduxjs/toolkit';
-import {CommercePaginationSection} from '../../../state/state-sections.js';
+import type {CommercePaginationSection} from '../../../state/state-sections.js';
 
 export const perPagePrincipalSelector = createSelector(
   (state: Partial<CommercePaginationSection>) =>

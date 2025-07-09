@@ -1,5 +1,5 @@
-import {SearchAndListingControllerDefinitionWithoutProps} from '../../../app/commerce-ssr-engine/types/common.js';
-import {NotifyTrigger} from '../../core/triggers/headless-core-notify-trigger.js';
+import type {SearchAndListingControllerDefinitionWithoutProps} from '../../../app/commerce-ssr-engine/types/common.js';
+import type {NotifyTrigger} from '../../core/triggers/headless-core-notify-trigger.js';
 import {buildNotifyTrigger} from './headless-notify-trigger.js';
 
 export type {NotifyTriggerState} from '../../core/triggers/headless-core-notify-trigger.js';

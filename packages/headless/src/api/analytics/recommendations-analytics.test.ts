@@ -2,7 +2,7 @@ import {createMockRecommendationState} from '../../test/mock-recommendation-stat
 import {buildMockResult} from '../../test/mock-result.js';
 import {
   RecommendationAnalyticsProvider,
-  StateNeededByRecommendationAnalyticsProvider,
+  type StateNeededByRecommendationAnalyticsProvider,
 } from './recommendations-analytics.js';
 
 describe('recommendations analytics', () => {

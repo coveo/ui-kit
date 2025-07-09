@@ -1,5 +1,5 @@
-import {RangeFacetOptionalParameters} from './interfaces/options.js';
-import {
+import type {RangeFacetOptionalParameters} from './interfaces/options.js';
+import type {
   RangeFacetRequest,
   RangeFacetResponse,
   RangeFacetValue,

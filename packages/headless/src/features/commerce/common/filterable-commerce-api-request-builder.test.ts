@@ -1,6 +1,6 @@
 import {
   defaultNodeJSNavigatorContextProvider,
-  NavigatorContext,
+  type NavigatorContext,
 } from '../../../app/navigator-context-provider.js';
 import {buildMockPaginatedCommerceAPIRequest} from '../../../test/mock-commerce-api-request.js';
 import {buildMockCommerceFacetRequest} from '../../../test/mock-commerce-facet-request.js';
@@ -13,15 +13,15 @@ import {getConfigurationInitialState} from '../configuration/configuration-state
 import {getCartInitialState} from '../context/cart/cart-state.js';
 import {getContextInitialState} from '../context/context-state.js';
 import {
-  CommerceFacetSlice,
+  type CommerceFacetSlice,
   getCommerceFacetSetInitialState,
 } from '../facets/facet-set/facet-set-state.js';
 import {getCommercePaginationInitialState} from '../pagination/pagination-state.js';
+import {SortBy, type SortCriterion, SortDirection} from '../sort/sort.js';
 import {getCommerceSortInitialState} from '../sort/sort-state.js';
-import {SortBy, SortCriterion, SortDirection} from '../sort/sort.js';
 import {
   buildFilterableCommerceAPIRequest,
-  StateNeededForFilterableCommerceAPIRequest,
+  type StateNeededForFilterableCommerceAPIRequest,
 } from './filterable-commerce-api-request-builder.js';
 import {buildPaginatedCommerceAPIRequest} from './paginated-commerce-api-request-builder.js';
 

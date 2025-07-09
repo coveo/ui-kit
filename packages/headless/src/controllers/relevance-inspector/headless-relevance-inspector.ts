@@ -1,21 +1,21 @@
 import {BooleanValue, Schema} from '@coveo/bueno';
-import {FieldDescription} from '../../api/search/fields/fields-response.js';
-import {
+import type {FieldDescription} from '../../api/search/fields/fields-response.js';
+import type {
   ExecutionReport,
   ExecutionStep,
 } from '../../api/search/search/execution-report.js';
-import {QueryRankingExpression} from '../../api/search/search/query-ranking-expression.js';
-import {Result} from '../../api/search/search/result.js';
-import {SearchResponseSuccessWithDebugInfo} from '../../api/search/search/search-response.js';
-import {SecurityIdentity} from '../../api/search/search/security-identity.js';
+import type {QueryRankingExpression} from '../../api/search/search/query-ranking-expression.js';
+import type {Result} from '../../api/search/search/result.js';
+import type {SearchResponseSuccessWithDebugInfo} from '../../api/search/search/search-response.js';
+import type {SecurityIdentity} from '../../api/search/search/security-identity.js';
 import {configuration} from '../../app/common-reducers.js';
-import {SearchEngine} from '../../app/search-engine/search-engine.js';
-import {enableDebug, disableDebug} from '../../features/debug/debug-actions.js';
+import type {SearchEngine} from '../../app/search-engine/search-engine.js';
+import {disableDebug, enableDebug} from '../../features/debug/debug-actions.js';
 import {rankingInformationSelector} from '../../features/debug/debug-selectors.js';
 import {debugReducer as debug} from '../../features/debug/debug-slice.js';
-import {
-  QueryRankingExpressionWeights,
+import type {
   DocumentWeights,
+  QueryRankingExpressionWeights,
   RankingInformation,
   TermWeightReport,
 } from '../../features/debug/ranking-info-parser.js';
@@ -26,7 +26,7 @@ import {
 } from '../../features/fields/fields-actions.js';
 import {fieldsReducer as fields} from '../../features/fields/fields-slice.js';
 import {searchReducer as search} from '../../features/search/search-slice.js';
-import {
+import type {
   ConfigurationSection,
   DebugSection,
   FieldsSection,
@@ -36,7 +36,7 @@ import {loadReducerError} from '../../utils/errors.js';
 import {validateInitialState} from '../../utils/validate-payload.js';
 import {
   buildController,
-  Controller,
+  type Controller,
 } from '../controller/headless-controller.js';
 
 export type {

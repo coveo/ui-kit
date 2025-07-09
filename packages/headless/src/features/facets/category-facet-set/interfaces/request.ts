@@ -1,12 +1,12 @@
-import {
+import type {
   BaseFacetRequest,
+  BaseFacetValueRequest,
   CurrentValues,
   Delimitable,
-  Type,
   SortCriteria,
-  BaseFacetValueRequest,
+  Type,
 } from '../../facet-api/request.js';
-import {CategoryFacetValueCommon} from './commons.js';
+import type {CategoryFacetValueCommon} from './commons.js';
 
 export const categoryFacetSortCriteria: CategoryFacetSortCriterion[] = [
   'alphanumeric',

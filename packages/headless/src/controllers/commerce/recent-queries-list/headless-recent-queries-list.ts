@@ -5,21 +5,21 @@ import {
   Schema,
   StringValue,
 } from '@coveo/bueno';
-import {CommerceEngine} from '../../../app/commerce-engine/commerce-engine.js';
+import type {CommerceEngine} from '../../../app/commerce-engine/commerce-engine.js';
 import {stateKey} from '../../../app/state-key.js';
-import {UpdateQueryPayload} from '../../../features/commerce/query/query-actions.js';
+import type {UpdateQueryPayload} from '../../../features/commerce/query/query-actions.js';
 import {
   clearRecentQueries,
   registerRecentQueries,
 } from '../../../features/commerce/recent-queries/recent-queries-actions.js';
 import {recentQueriesReducer as recentQueries} from '../../../features/commerce/recent-queries/recent-queries-slice.js';
 import {
-  PrepareForSearchWithQueryOptions,
   executeSearch,
+  type PrepareForSearchWithQueryOptions,
   prepareForSearchWithQuery,
 } from '../../../features/commerce/search/search-actions.js';
 import {commerceSearchReducer as search} from '../../../features/commerce/search/search-slice.js';
-import {RecentQueriesSection} from '../../../state/state-sections.js';
+import type {RecentQueriesSection} from '../../../state/state-sections.js';
 import {loadReducerError} from '../../../utils/errors.js';
 import {
   validateInitialState,
@@ -27,7 +27,7 @@ import {
 } from '../../../utils/validate-payload.js';
 import {
   buildController,
-  Controller,
+  type Controller,
 } from '../../controller/headless-controller.js';
 import type {
   RecentQueriesListInitialState,

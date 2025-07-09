@@ -1,11 +1,11 @@
-import {ArrayValue, EnumValue, StringValue, RecordValue} from '@coveo/bueno';
+import {ArrayValue, EnumValue, RecordValue, StringValue} from '@coveo/bueno';
 import {
-  SortBy,
-  SortByRelevance,
-  SortDirection,
-  SortByFields as CoreSortByFields,
-  SortByFieldsFields as CoreSortByFieldsFields,
   buildRelevanceSortCriterion,
+  type SortByFields as CoreSortByFields,
+  type SortByFieldsFields as CoreSortByFieldsFields,
+  SortBy,
+  type SortByRelevance,
+  SortDirection,
 } from '../../sort/sort.js';
 
 export type {SortByRelevance};

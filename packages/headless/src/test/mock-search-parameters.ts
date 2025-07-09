@@ -1,4 +1,4 @@
-import {SearchParameters} from '../features/search-parameters/search-parameter-actions.js';
+import type {SearchParameters} from '../features/search-parameters/search-parameter-actions.js';
 
 export function buildMockSearchParameters(
   config: SearchParameters = {}

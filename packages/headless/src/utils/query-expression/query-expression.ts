@@ -1,39 +1,42 @@
-import {Negatable} from './common/negatable.js';
-import {Part} from './common/part.js';
-import {buildDateField, DateFieldExpression} from './date-field/date-field.js';
+import type {Negatable} from './common/negatable.js';
+import type {Part} from './common/part.js';
+import {
+  buildDateField,
+  type DateFieldExpression,
+} from './date-field/date-field.js';
 import {
   buildDateRangeField,
-  DateRangeFieldExpression,
+  type DateRangeFieldExpression,
 } from './date-range-field/date-range-field.js';
 import {
   buildExactMatch,
-  ExactMatchExpression,
+  type ExactMatchExpression,
 } from './exact-match/exact-match.js';
 import {
   buildFieldExists,
-  FieldExistsExpression,
+  type FieldExistsExpression,
 } from './field-exists/field-exists.js';
-import {buildKeyword, KeywordExpression} from './keyword/keyword.js';
-import {buildNear, NearExpression, OtherTerm} from './near/near.js';
+import {buildKeyword, type KeywordExpression} from './keyword/keyword.js';
+import {buildNear, type NearExpression, type OtherTerm} from './near/near.js';
 import {
   buildNumericField,
-  NumericFieldExpression,
+  type NumericFieldExpression,
 } from './numeric-field/numeric-field.js';
 import {
   buildNumericRangeField,
-  NumericRangeFieldExpression,
+  type NumericRangeFieldExpression,
 } from './numeric-range-field/numeric-range-field.js';
 import {
   buildQueryExtension,
-  QueryExtensionExpression,
+  type QueryExtensionExpression,
 } from './query-extension/query-extension.js';
 import {
   buildStringFacetField,
-  StringFacetFieldExpression,
+  type StringFacetFieldExpression,
 } from './string-facet-field/string-facet-field.js';
 import {
   buildStringField,
-  StringFieldExpression,
+  type StringFieldExpression,
 } from './string-field/string-field.js';
 
 export type {

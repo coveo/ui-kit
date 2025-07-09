@@ -1,5 +1,5 @@
 import {createSelector} from '@reduxjs/toolkit';
-import {
+import type {
   CommerceFacetSetSection,
   ProductListingSection,
 } from '../../../../state/state-sections.js';

@@ -1,10 +1,11 @@
+/** biome-ignore-all lint/complexity/noExcessiveNestedTestSuites: <> */
 import {
   toggleSelectCategoryFacetValue,
   updateCategoryFacetNumberOfValues,
 } from '../../../../../features/commerce/facets/category-facet/category-facet-actions.js';
-import {AnyFacetRequest} from '../../../../../features/commerce/facets/facet-set/interfaces/request.js';
-import {CategoryFacetResponse} from '../../../../../features/commerce/facets/facet-set/interfaces/response.js';
-import {CommerceAppState} from '../../../../../state/commerce-app-state.js';
+import type {AnyFacetRequest} from '../../../../../features/commerce/facets/facet-set/interfaces/request.js';
+import type {CategoryFacetResponse} from '../../../../../features/commerce/facets/facet-set/interfaces/response.js';
+import type {CommerceAppState} from '../../../../../state/commerce-app-state.js';
 import {buildMockCategoryFacetSearch} from '../../../../../test/mock-category-facet-search.js';
 import {buildMockCommerceFacetRequest} from '../../../../../test/mock-commerce-facet-request.js';
 import {buildMockCategoryFacetResponse} from '../../../../../test/mock-commerce-facet-response.js';
@@ -12,13 +13,13 @@ import {buildMockCommerceFacetSlice} from '../../../../../test/mock-commerce-fac
 import {buildMockCategoryFacetValue} from '../../../../../test/mock-commerce-facet-value.js';
 import {buildMockCommerceState} from '../../../../../test/mock-commerce-state.js';
 import {
-  MockedCommerceEngine,
   buildMockCommerceEngine,
+  type MockedCommerceEngine,
 } from '../../../../../test/mock-engine-v2.js';
 import {
-  CategoryFacet,
-  CategoryFacetOptions,
   buildCategoryFacet,
+  type CategoryFacet,
+  type CategoryFacetOptions,
 } from './headless-commerce-category-facet.js';
 
 vi.mock(

@@ -1,9 +1,9 @@
-import {InsightEngine} from '../../../app/insight-engine/insight-engine.js';
+import type {InsightEngine} from '../../../app/insight-engine/insight-engine.js';
 import {logNotifyTrigger} from '../../../features/triggers/insight-trigger-analytics-actions.js';
 import {
   buildCoreNotifyTrigger,
-  NotifyTrigger,
-  NotifyTriggerState,
+  type NotifyTrigger,
+  type NotifyTriggerState,
 } from '../../core/triggers/headless-core-notify-trigger.js';
 
 export type {NotifyTrigger, NotifyTriggerState};

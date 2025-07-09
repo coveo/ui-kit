@@ -1,27 +1,31 @@
 import {updateFacetOptions} from '../../../../features/facet-options/facet-options-actions.js';
 import {
   deselectAllFacetValues,
-  updateFacetSortCriterion,
   updateFacetNumberOfValues,
+  updateFacetSortCriterion,
 } from '../../../../features/facets/facet-set/facet-set-actions.js';
 import {executeToggleFacetSelect} from '../../../../features/facets/facet-set/facet-set-controller-actions.js';
-import {FacetRequest} from '../../../../features/facets/facet-set/interfaces/request.js';
-import {FacetValue} from '../../../../features/facets/facet-set/interfaces/response.js';
+import type {FacetRequest} from '../../../../features/facets/facet-set/interfaces/request.js';
+import type {FacetValue} from '../../../../features/facets/facet-set/interfaces/response.js';
 import {
   executeSearch,
   fetchFacetValues,
 } from '../../../../features/insight-search/insight-search-actions.js';
-import {InsightAppState} from '../../../../state/insight-app-state.js';
+import type {InsightAppState} from '../../../../state/insight-app-state.js';
 import {
-  MockedInsightEngine,
   buildMockInsightEngine,
+  type MockedInsightEngine,
 } from '../../../../test/mock-engine-v2.js';
 import {buildMockFacetRequest} from '../../../../test/mock-facet-request.js';
 import {buildMockFacetSearch} from '../../../../test/mock-facet-search.js';
 import {buildMockFacetSlice} from '../../../../test/mock-facet-slice.js';
 import {buildMockFacetValue} from '../../../../test/mock-facet-value.js';
 import {buildMockInsightState} from '../../../../test/mock-insight-state.js';
-import {buildFacet, Facet, FacetOptions} from './headless-insight-facet.js';
+import {
+  buildFacet,
+  type Facet,
+  type FacetOptions,
+} from './headless-insight-facet.js';
 
 vi.mock('../../../../features/facets/facet-set/facet-set-actions');
 vi.mock('../../../../features/insight-search/insight-search-actions');

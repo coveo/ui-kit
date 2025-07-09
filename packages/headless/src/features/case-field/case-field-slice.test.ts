@@ -1,11 +1,14 @@
-import {GetCaseClassificationsResponse} from '../../api/service/case-assist/get-case-classifications/get-case-classifications-response.js';
+import type {GetCaseClassificationsResponse} from '../../api/service/case-assist/get-case-classifications/get-case-classifications-response.js';
 import {
-  updateCaseField,
   fetchCaseClassifications,
   registerCaseField,
+  updateCaseField,
 } from './case-field-actions.js';
 import {caseFieldReducer} from './case-field-slice.js';
-import {getCaseFieldInitialState, CaseFieldState} from './case-field-state.js';
+import {
+  type CaseFieldState,
+  getCaseFieldInitialState,
+} from './case-field-state.js';
 
 describe('case field slice', () => {
   let state: CaseFieldState;

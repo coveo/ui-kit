@@ -1,11 +1,11 @@
 import {createSelector} from '@reduxjs/toolkit';
-import {CoreEngine} from '../../../app/engine.js';
+import type {CoreEngine} from '../../../app/engine.js';
 import {tabSetReducer as tabSet} from '../../../features/tab-set/tab-set-slice.js';
-import {TabSection} from '../../../state/state-sections.js';
+import type {TabSection} from '../../../state/state-sections.js';
 import {loadReducerError} from '../../../utils/errors.js';
 import {
   buildController,
-  Controller,
+  type Controller,
 } from '../../controller/headless-controller.js';
 
 /**

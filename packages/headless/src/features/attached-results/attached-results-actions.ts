@@ -7,12 +7,12 @@ import {
 } from '@coveo/bueno';
 import {createAction} from '@reduxjs/toolkit';
 import {
-  validatePayload,
-  requiredNonEmptyString,
   nonEmptyString,
+  requiredNonEmptyString,
   serializeSchemaValidationError,
+  validatePayload,
 } from '../../utils/validate-payload.js';
-import {AttachedResult} from './attached-results-state.js';
+import type {AttachedResult} from './attached-results-state.js';
 
 export interface SetAttachedResultsActionCreatorPayload {
   /**

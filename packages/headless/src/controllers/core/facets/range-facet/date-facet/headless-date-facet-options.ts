@@ -3,30 +3,30 @@ import {
   BooleanValue,
   RecordValue,
   Schema,
-  SchemaDefinition,
+  type SchemaDefinition,
   StringValue,
 } from '@coveo/bueno';
-import {CoreEngine} from '../../../../../app/engine.js';
+import type {CoreEngine} from '../../../../../app/engine.js';
 import {facetValueStates} from '../../../../../features/facets/facet-api/value.js';
 import {validateManualDateRanges} from '../../../../../features/facets/range-facets/date-facet-set/date-facet-actions.js';
-import {DateRangeRequest} from '../../../../../features/facets/range-facets/date-facet-set/interfaces/request.js';
+import type {DateRangeRequest} from '../../../../../features/facets/range-facets/date-facet-set/interfaces/request.js';
 import {
+  type RangeFacetRangeAlgorithm,
+  type RangeFacetSortCriterion,
   rangeFacetRangeAlgorithm,
-  RangeFacetRangeAlgorithm,
   rangeFacetSortCriteria,
-  RangeFacetSortCriterion,
 } from '../../../../../features/facets/range-facets/generic/interfaces/request.js';
-import {
+import type {
   ConfigurationSection,
   DateFacetSection,
   SearchSection,
 } from '../../../../../state/state-sections.js';
 import {validateOptions} from '../../../../../utils/validate-payload.js';
 import {
-  field,
   facetId,
-  generateAutomaticRanges,
+  field,
   filterFacetCount,
+  generateAutomaticRanges,
   injectionDepth,
   numberOfValues,
 } from '../../../../core/facets/_common/facet-option-definitions.js';

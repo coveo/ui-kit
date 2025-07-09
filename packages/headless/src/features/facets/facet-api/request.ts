@@ -1,5 +1,5 @@
-import {FacetSortOrder} from '../facet-set/interfaces/request.js';
-import {FacetValueState} from './value.js';
+import type {FacetSortOrder} from '../facet-set/interfaces/request.js';
+import type {FacetValueState} from './value.js';
 
 export interface BaseFacetRequest {
   /**

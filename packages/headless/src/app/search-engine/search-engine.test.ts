@@ -1,11 +1,11 @@
 import {enableDebug} from '../../features/debug/debug-actions.js';
 import {setSearchHub} from '../../features/search-hub/search-hub-actions.js';
-import {getSampleSearchEngineConfiguration} from './search-engine-configuration.js';
 import {
   buildSearchEngine,
-  SearchEngine,
-  SearchEngineOptions,
+  type SearchEngine,
+  type SearchEngineOptions,
 } from './search-engine.js';
+import {getSampleSearchEngineConfiguration} from './search-engine-configuration.js';
 
 describe('searchEngine', () => {
   let engine: SearchEngine;

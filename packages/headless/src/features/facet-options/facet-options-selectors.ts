@@ -1,4 +1,4 @@
-import {FacetOptionsSection} from '../../state/state-sections.js';
+import type {FacetOptionsSection} from '../../state/state-sections.js';
 
 export const isFacetEnabledSelector = (
   state: FacetOptionsSection,

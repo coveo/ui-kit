@@ -1,22 +1,22 @@
 import {ArrayValue, RecordValue, Schema, StringValue} from '@coveo/bueno';
 import {
-  FacetResultsMustMatch,
+  type FacetResultsMustMatch,
   facetResultsMustMatch,
 } from '../../../features/facets/facet-api/request.js';
 import {
+  type FacetSortCriterion,
   facetSortCriteria,
-  FacetSortCriterion,
 } from '../../../features/facets/facet-set/interfaces/request.js';
 import {
+  allowedValues,
+  customSort,
   facetId,
+  facetSearch,
   field,
   filterFacetCount,
+  hasBreadcrumbs,
   injectionDepth,
   numberOfValues,
-  facetSearch,
-  allowedValues,
-  hasBreadcrumbs,
-  customSort,
 } from '../../core/facets/_common/facet-option-definitions.js';
 
 export interface FacetOptions {

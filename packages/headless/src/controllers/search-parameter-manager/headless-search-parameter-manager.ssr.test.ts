@@ -1,5 +1,6 @@
-import {SSRSearchEngine} from '../../app/search-engine/search-engine.ssr.js';
-import {ControllerDefinitionWithProps} from '../../app/ssr-engine/types/common.js';
+import type {SSRSearchEngine} from '../../app/search-engine/search-engine.ssr.js';
+import type {ControllerDefinitionWithProps} from '../../app/ssr-engine/types/common.js';
+import {advancedSearchQueriesReducer} from './../../features/advanced-search-queries/advanced-search-queries-slice.js';
 import {configurationReducer} from '../../features/configuration/configuration-slice.js';
 import {debugReducer} from '../../features/debug/debug-slice.js';
 import {facetOptionsReducer} from '../../features/facet-options/facet-options-slice.js';
@@ -15,14 +16,13 @@ import {staticFilterSetReducer} from '../../features/static-filter-set/static-fi
 import {tabSetReducer} from '../../features/tab-set/tab-set-slice.js';
 import {buildMockSSRSearchEngine} from '../../test/mock-engine-v2.js';
 import {createMockState} from '../../test/mock-state.js';
-import {advancedSearchQueriesReducer} from './../../features/advanced-search-queries/advanced-search-queries-slice.js';
 import {
-  SearchParameterManager,
   buildSearchParameterManager,
+  type SearchParameterManager,
 } from './headless-search-parameter-manager.js';
 import {
-  SearchParameterManagerBuildProps,
   defineSearchParameterManager,
+  type SearchParameterManagerBuildProps,
 } from './headless-search-parameter-manager.ssr.js';
 
 vi.mock('./headless-search-parameter-manager');

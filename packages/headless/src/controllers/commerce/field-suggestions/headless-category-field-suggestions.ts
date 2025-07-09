@@ -1,5 +1,5 @@
 import {createSelector} from '@reduxjs/toolkit';
-import {
+import type {
   CommerceEngine,
   CommerceEngineState,
 } from '../../../app/commerce-engine/commerce-engine.js';
@@ -7,10 +7,10 @@ import {stateKey} from '../../../app/state-key.js';
 import {getFacetIdWithCommerceFieldSuggestionNamespace} from '../../../features/commerce/facets/facet-search-set/commerce-facet-search-actions.js';
 import {commerceFacetSetReducer as commerceFacetSet} from '../../../features/commerce/facets/facet-set/facet-set-slice.js';
 import {fieldSuggestionsOrderReducer as fieldSuggestionsOrder} from '../../../features/commerce/facets/field-suggestions-order/field-suggestions-order-slice.js';
-import {FieldSuggestionsFacet} from '../../../features/commerce/facets/field-suggestions-order/field-suggestions-order-state.js';
+import type {FieldSuggestionsFacet} from '../../../features/commerce/facets/field-suggestions-order/field-suggestions-order-state.js';
 import {selectCategoryFacetSearchResult} from '../../../features/facets/facet-search-set/category/category-facet-search-actions.js';
 import {categoryFacetSearchSetReducer as categoryFacetSearchSet} from '../../../features/facets/facet-search-set/category/category-facet-search-set-slice.js';
-import {
+import type {
   CategoryFacetSearchSection,
   CommerceFacetSetSection,
   FacetSearchSection,
@@ -19,15 +19,15 @@ import {
 import {loadReducerError} from '../../../utils/errors.js';
 import {
   buildController,
-  Controller,
+  type Controller,
 } from '../../controller/headless-controller.js';
-import {
-  CategoryFieldSuggestionsState as CoreCategoryFieldSuggestionsState,
+import type {
   CategoryFieldSuggestionsValue,
+  CategoryFieldSuggestionsState as CoreCategoryFieldSuggestionsState,
 } from '../../field-suggestions/category-facet/headless-category-field-suggestions.js';
+import type {CategoryFacetOptions} from '../core/facets/category/headless-commerce-category-facet.js';
 import {buildCategoryFacetSearch} from '../core/facets/category/headless-commerce-category-facet-search.js';
-import {CategoryFacetOptions} from '../core/facets/category/headless-commerce-category-facet.js';
-import {FacetControllerType} from '../core/facets/headless-core-commerce-facet.js';
+import type {FacetControllerType} from '../core/facets/headless-core-commerce-facet.js';
 
 export type {CategoryFieldSuggestionsValue};
 
@@ -145,7 +145,7 @@ export function buildCategoryFieldSuggestions(
     ...controller,
     ...facetSearch,
 
-    select: function (value: CategoryFieldSuggestionsValue) {
+    select: (value: CategoryFieldSuggestionsValue) => {
       dispatch(
         selectCategoryFacetSearchResult({facetId: options.facetId, value})
       );
@@ -153,7 +153,7 @@ export function buildCategoryFieldSuggestions(
       dispatch(options.fetchProductsActionCreator());
     },
 
-    updateText: function (text: string) {
+    updateText: (text: string) => {
       facetSearch.updateText(text);
       facetSearch.search();
     },

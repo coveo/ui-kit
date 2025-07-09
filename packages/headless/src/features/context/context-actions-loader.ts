@@ -1,13 +1,13 @@
-import {PayloadAction} from '@reduxjs/toolkit';
-import {CoreEngine} from '../../app/engine.js';
+import type {PayloadAction} from '@reduxjs/toolkit';
+import type {CoreEngine} from '../../app/engine.js';
 import {contextReducer as context} from '../../features/context/context-slice.js';
 import {
+  type AddContextActionCreatorPayload,
   addContext,
-  AddContextActionCreatorPayload,
   removeContext,
   setContext,
 } from './context-actions.js';
-import {ContextPayload} from './context-state.js';
+import type {ContextPayload} from './context-state.js';
 
 export type {AddContextActionCreatorPayload};
 

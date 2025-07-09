@@ -1,4 +1,4 @@
-import {
+import type {
   SearchAPIErrorWithExceptionInBody,
   SearchAPIErrorWithStatusCode,
 } from '../search-api-error-response.js';

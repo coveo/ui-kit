@@ -1,11 +1,11 @@
-import {CoreEngine} from '../../../app/engine.js';
+import type {CoreEngine} from '../../../app/engine.js';
 import {firstSearchExecutedSelector} from '../../../features/search/search-selectors.js';
 import {searchReducer as search} from '../../../features/search/search-slice.js';
-import {SearchSection} from '../../../state/state-sections.js';
+import type {SearchSection} from '../../../state/state-sections.js';
 import {loadReducerError} from '../../../utils/errors.js';
 import {
   buildController,
-  Controller,
+  type Controller,
 } from '../../controller/headless-controller.js';
 
 /**

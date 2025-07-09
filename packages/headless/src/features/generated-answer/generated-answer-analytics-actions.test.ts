@@ -1,17 +1,20 @@
 import {createRelay} from '@coveo/relay';
-import {ThunkExtraArguments} from '../../app/thunk-extra-arguments.js';
-import {GeneratedAnswerCitation} from '../../controllers/generated-answer/headless-generated-answer.js';
+import type {ThunkExtraArguments} from '../../app/thunk-extra-arguments.js';
+import type {GeneratedAnswerCitation} from '../../controllers/generated-answer/headless-generated-answer.js';
 import {
   buildMockSearchEngine,
-  MockedSearchEngine,
+  type MockedSearchEngine,
 } from '../../test/mock-engine-v2.js';
 import {buildMockSearchResponse} from '../../test/mock-search-response.js';
 import {buildMockSearchState} from '../../test/mock-search-state.js';
 import {createMockState} from '../../test/mock-state.js';
 import {getConfigurationInitialState} from '../configuration/configuration-state.js';
 import {
+  type GeneratedAnswerFeedback,
   logCopyGeneratedAnswer,
   logDislikeGeneratedAnswer,
+  logGeneratedAnswerCollapse,
+  logGeneratedAnswerExpand,
   logGeneratedAnswerFeedback,
   logGeneratedAnswerHideAnswers,
   logGeneratedAnswerShowAnswers,
@@ -20,9 +23,6 @@ import {
   logLikeGeneratedAnswer,
   logOpenGeneratedAnswerSource,
   logRetryGeneratedAnswer,
-  logGeneratedAnswerExpand,
-  logGeneratedAnswerCollapse,
-  GeneratedAnswerFeedback,
 } from './generated-answer-analytics-actions.js';
 import {getGeneratedAnswerInitialState} from './generated-answer-state.js';
 

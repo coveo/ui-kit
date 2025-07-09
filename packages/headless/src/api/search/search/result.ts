@@ -1,5 +1,5 @@
-import {HighlightKeyword} from '../../../utils/highlight.js';
-import {Raw} from './raw.js';
+import type {HighlightKeyword} from '../../../utils/highlight.js';
+import type {Raw} from './raw.js';
 
 export interface Result {
   /**

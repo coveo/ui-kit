@@ -1,8 +1,8 @@
-import {UnknownAction} from '@reduxjs/toolkit';
-import {Controller} from '../../controllers/controller/headless-controller.js';
+import type {UnknownAction} from '@reduxjs/toolkit';
+import type {Controller} from '../../controllers/controller/headless-controller.js';
 import {clone, mapObject} from '../../utils/utils.js';
-import {CoreEngine, CoreEngineNext} from '../engine.js';
-import {
+import type {CoreEngine, CoreEngineNext} from '../engine.js';
+import type {
   ControllerDefinition,
   ControllerDefinitionsMap,
   ControllersMap,
@@ -82,14 +82,10 @@ export function composeFunction<
 >(
   parentFunction: (...params: TParameters) => TReturn,
   children: TChildren
-): TChildren & {
-  (...params: TParameters): TReturn;
-} {
-  const newFunction = function (...params: TParameters) {
-    return parentFunction(...params);
-  } as {
-    (...params: TParameters): TReturn;
-  } & TChildren;
+): TChildren & ((...params: TParameters) => TReturn) {
+  const newFunction = ((...params: TParameters) =>
+    parentFunction(...params)) as ((...params: TParameters) => TReturn) &
+    TChildren;
   for (const [key, value] of Object.entries(children)) {
     (newFunction as unknown as Record<typeof key, typeof value>)[key] = value;
   }

@@ -1,4 +1,4 @@
-import {QuestionsAnswers} from '../../../api/search/search/question-answering.js';
+import type {QuestionsAnswers} from '../../../api/search/search/question-answering.js';
 import {
   closeFeedbackModal,
   collapseSmartSnippet,
@@ -8,24 +8,24 @@ import {
   openFeedbackModal,
 } from '../../../features/question-answering/question-answering-actions.js';
 import {
-  SmartSnippetFeedback,
+  type SmartSnippetFeedback,
   smartSnippetAnalyticsClient,
 } from '../../../features/question-answering/question-answering-analytics-actions.js';
 import {questionAnsweringReducer as questionAnswering} from '../../../features/question-answering/question-answering-slice.js';
 import {searchReducer as search} from '../../../features/search/search-slice.js';
 import {emptyQuestionAnswer} from '../../../features/search/search-state.js';
-import {SearchAppState} from '../../../state/search-app-state.js';
+import type {SearchAppState} from '../../../state/search-app-state.js';
 import {
-  MockedSearchEngine,
   buildMockSearchEngine,
+  type MockedSearchEngine,
 } from '../../../test/mock-engine-v2.js';
 import {buildMockSearchResponse} from '../../../test/mock-search-response.js';
 import {buildMockSearchState} from '../../../test/mock-search-state.js';
 import {createMockState} from '../../../test/mock-state.js';
 import {
-  SmartSnippetCore,
-  SmartSnippetState,
   buildCoreSmartSnippet,
+  type SmartSnippetCore,
+  type SmartSnippetState,
 } from './headless-core-smart-snippet.js';
 
 vi.mock('../../../features/question-answering/question-answering-actions');
