@@ -61,7 +61,7 @@
     "vitest": "3.2.3"
   },
   "dependencies": {
-    "@coveo/relay": "1.2.1",
+    "@coveo/relay": "1.2.5",
     "@coveo/headless": "3.27.2",
     "uuid": "^11.0.0"
   },
