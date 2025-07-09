@@ -1,4 +1,4 @@
-import {CSSResult} from 'lit';
+import type {CSSResult} from 'lit';
 
 /**
  * Decorator to inject styles into components that do not use Shadow DOM.
@@ -19,7 +19,7 @@ import {CSSResult} from 'lit';
 export const injectStylesForNoShadowDOM = <
   T extends {
     styles: CSSResult | CSSResult[];
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    // biome-ignore lint/suspicious/noExplicitAny: <>
     new (...args: any[]): any;
   },
 >(

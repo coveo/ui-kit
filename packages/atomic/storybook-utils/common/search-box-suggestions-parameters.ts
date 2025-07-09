@@ -1,4 +1,4 @@
-import {Parameters} from '@storybook/web-components';
+import type {Parameters} from '@storybook/web-components';
 import {parameters as commonParameters} from './common-meta-parameters.js';
 
 export const parameters: Parameters = {

@@ -1,5 +1,5 @@
-import {FunctionalComponentWithChildrenNoProps} from '@/src/utils/functional-component-utils';
 import {html} from 'lit';
+import type {FunctionalComponentWithChildrenNoProps} from '@/src/utils/functional-component-utils';
 
 export const renderRefineModalBody: FunctionalComponentWithChildrenNoProps =
   () => (children) => {

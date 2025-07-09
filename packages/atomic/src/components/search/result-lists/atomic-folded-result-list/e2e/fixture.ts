@@ -1,5 +1,5 @@
-import {AxeFixture, makeAxeBuilder} from '@/playwright-utils/base-fixture';
 import {test as base} from '@playwright/test';
+import {type AxeFixture, makeAxeBuilder} from '@/playwright-utils/base-fixture';
 import {AtomicFoldedResultListPageObject as FoldedResultList} from './page-object';
 
 type Fixture = {

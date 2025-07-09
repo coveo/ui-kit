@@ -1,4 +1,4 @@
-import {LitElement, render, TemplateResult} from 'lit';
+import {type LitElement, render, type TemplateResult} from 'lit';
 import {fixtureWrapper} from './fixture-wrapper';
 
 /**

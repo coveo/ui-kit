@@ -1,4 +1,4 @@
-import {test, expect, triggerError} from './fixture';
+import {expect, test, triggerError} from './fixture';
 
 test.describe('when search returns an error', () => {
   test.beforeEach(async ({queryError}) => {

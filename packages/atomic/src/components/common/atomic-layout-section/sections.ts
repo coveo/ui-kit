@@ -1,4 +1,4 @@
-import {AtomicLayoutSection} from './atomic-layout-section';
+import type {AtomicLayoutSection} from './atomic-layout-section';
 
 export type Section =
   | 'search'

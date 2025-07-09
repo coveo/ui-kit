@@ -1,52 +1,52 @@
+import {
+  buildSearchBox,
+  buildStandaloneSearchBox,
+  loadQuerySetActions,
+  type SearchBox,
+  type SearchBoxOptions,
+  type SearchBoxState,
+  type StandaloneSearchBox,
+  type StandaloneSearchBoxState,
+} from '@coveo/headless/commerce';
+import {type CSSResultGroup, html, LitElement, unsafeCSS} from 'lit';
+import {customElement, property, state} from 'lit/decorators.js';
+import {classMap} from 'lit/directives/class-map.js';
+import {createRef, type RefOrCallback, ref} from 'lit/directives/ref.js';
 import {booleanConverter} from '@/src/converters/boolean-converter';
 import {bindStateToController} from '@/src/decorators/bind-state';
 import {bindingGuard} from '@/src/decorators/binding-guard';
 import {bindings} from '@/src/decorators/bindings';
 import {errorGuard} from '@/src/decorators/error-guard';
-import {InitializableComponent} from '@/src/decorators/types';
+import type {InitializableComponent} from '@/src/decorators/types';
 import {watch} from '@/src/decorators/watch';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles.js';
 import {AriaLiveRegionController} from '@/src/utils/accessibility-utils';
 import {hasKeyboard, isMacOS} from '@/src/utils/device-utils';
 import {
   SafeStorage,
-  StandaloneSearchBoxData,
+  type StandaloneSearchBoxData,
   StorageItems,
 } from '@/src/utils/local-storage-utils';
 import {updateBreakpoints} from '@/src/utils/replace-breakpoint';
-import {
-  buildSearchBox,
-  buildStandaloneSearchBox,
-  loadQuerySetActions,
-  SearchBox,
-  SearchBoxOptions,
-  SearchBoxState,
-  StandaloneSearchBox,
-  StandaloneSearchBoxState,
-} from '@coveo/headless/commerce';
-import {CSSResultGroup, html, LitElement, unsafeCSS} from 'lit';
-import {customElement, property, state} from 'lit/decorators.js';
-import {classMap} from 'lit/directives/class-map.js';
-import {createRef, ref, RefOrCallback} from 'lit/directives/ref.js';
 import {
   isFocusingOut,
   once,
   randomID,
   spreadProperties,
 } from '../../../utils/utils';
-import {RedirectionPayload} from '../../common/search-box/redirection-payload';
+import type {RedirectionPayload} from '../../common/search-box/redirection-payload';
 import {renderSearchBoxWrapper} from '../../common/search-box/search-box-wrapper';
 import {renderSearchBoxTextArea} from '../../common/search-box/search-text-area';
 import {renderSubmitButton} from '../../common/search-box/submit-button';
 import {SuggestionManager} from '../../common/suggestions/suggestion-manager';
 import {
   elementHasQuery,
-  SearchBoxSuggestionElement,
-  SearchBoxSuggestionsBindings,
-  SearchBoxSuggestionsEvent,
+  type SearchBoxSuggestionElement,
+  type SearchBoxSuggestionsBindings,
+  type SearchBoxSuggestionsEvent,
 } from '../../common/suggestions/suggestions-common';
-import {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface';
-import {SelectChildProductEventArgs} from '../atomic-product-children/select-child-product-event';
+import type {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface';
+import type {SelectChildProductEventArgs} from '../atomic-product-children/select-child-product-event';
 import styles from './atomic-commerce-search-box.tw.css';
 
 /**
@@ -458,7 +458,7 @@ export class AtomicCommerceSearchBox
     this.searchBox.submit();
   }
 
-  private onKeyDown(e: KeyboardEvent) {
+  private async onKeyDown(e: KeyboardEvent) {
     if (this.isSearchDisabledForEndUser) {
       return;
     }
@@ -472,12 +472,12 @@ export class AtomicCommerceSearchBox
         break;
       case 'ArrowDown':
         e.preventDefault();
-        this.suggestionManager.focusNextValue();
+        await this.suggestionManager.focusNextValue();
         this.announceNewActiveSuggestionToScreenReader();
         break;
       case 'ArrowUp':
         e.preventDefault();
-        this.suggestionManager.focusPreviousValue();
+        await this.suggestionManager.focusPreviousValue();
         this.announceNewActiveSuggestionToScreenReader();
         break;
       case 'ArrowRight':
@@ -616,13 +616,17 @@ export class AtomicCommerceSearchBox
       ${this.renderPanel(
         'left',
         this.suggestionManager.leftSuggestionElements,
-        (el) => (this.suggestionManager.leftPanel = el),
+        (el) => {
+          this.suggestionManager.leftPanel = el;
+        },
         () => this.suggestionManager.leftPanel
       )}
       ${this.renderPanel(
         'right',
         this.suggestionManager.rightSuggestionElements,
-        (el) => (this.suggestionManager.rightPanel = el),
+        (el) => {
+          this.suggestionManager.rightPanel = el;
+        },
         () => this.suggestionManager.rightPanel
       )}
     </div>`;
@@ -677,16 +681,16 @@ export class AtomicCommerceSearchBox
         .index=${index}
         .lastIndex=${lastIndex}
         .isDoubleList=${this.suggestionManager.isDoubleList}
-        .onClick=${(e: Event) => {
-          this.suggestionManager.onSuggestionClick(item, e);
+        .onClick=${async (e: Event) => {
+          await this.suggestionManager.onSuggestionClick(item, e);
           if (item.key === 'recent-query-clear') {
             return;
           }
 
           this.isExpanded = false;
         }}
-        .onMouseOver=${() => {
-          this.suggestionManager.onSuggestionMouseOver(item, side, id);
+        .onMouseOver=${async () => {
+          await this.suggestionManager.onSuggestionMouseOver(item, side, id);
         }}
       ></atomic-suggestion-renderer>
     `;

@@ -1,7 +1,7 @@
-import {renderFunctionFixture} from '@/vitest-utils/testing-helpers/fixture';
 import {userEvent} from '@vitest/browser/context';
 import {html} from 'lit';
-import {vi, expect, describe, it} from 'vitest';
+import {describe, expect, it, vi} from 'vitest';
+import {renderFunctionFixture} from '@/vitest-utils/testing-helpers/fixture';
 import {renderSearchBoxWrapper} from './search-box-wrapper';
 
 describe('#renderTextAreaClearButton', () => {

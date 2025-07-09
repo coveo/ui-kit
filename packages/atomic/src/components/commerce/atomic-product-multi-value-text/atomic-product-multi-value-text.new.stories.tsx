@@ -1,11 +1,11 @@
+import {getSampleCommerceEngineConfiguration} from '@coveo/headless/commerce';
+import type {Meta, StoryObj as Story} from '@storybook/web-components';
+import {html} from 'lit';
 import {wrapInCommerceInterface} from '@/storybook-utils/commerce/commerce-interface-wrapper';
 import {wrapInCommerceProductList} from '@/storybook-utils/commerce/commerce-product-list-wrapper';
 import {wrapInProductTemplate} from '@/storybook-utils/commerce/commerce-product-template-wrapper';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {renderComponent} from '@/storybook-utils/common/render-component';
-import {getSampleCommerceEngineConfiguration} from '@coveo/headless/commerce';
-import type {Meta, StoryObj as Story} from '@storybook/web-components';
-import {html} from 'lit';
 
 const baseConfiguration = getSampleCommerceEngineConfiguration();
 

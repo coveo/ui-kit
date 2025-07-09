@@ -1,4 +1,4 @@
-import {test, expect} from './fixture';
+import {expect, test} from './fixture';
 
 const exampleUserId = 'exampleUserId';
 const exampleTicketCreationDate = encodeURIComponent('2024-08-30');

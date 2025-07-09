@@ -1,5 +1,4 @@
 import {BasePageObject} from '@/playwright-utils/base-page-object';
-import type {Page} from '@playwright/test';
 
 export class AnyFacetPageObject<
   FacetType extends
@@ -7,10 +6,6 @@ export class AnyFacetPageObject<
     | 'atomic-commerce-facet'
     | 'atomic-commerce-numeric-facet',
 > extends BasePageObject<FacetType> {
-  constructor(page: Page, facetType: FacetType) {
-    super(page, facetType);
-  }
-
   get searchInput() {
     return this.page.getByPlaceholder('Search');
   }

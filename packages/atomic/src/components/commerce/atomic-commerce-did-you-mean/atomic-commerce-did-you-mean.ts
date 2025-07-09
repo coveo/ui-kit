@@ -1,24 +1,24 @@
+import {
+  buildQueryTrigger,
+  buildSearch,
+  type DidYouMean,
+  type DidYouMeanState,
+  type QueryTrigger,
+  type QueryTriggerState,
+} from '@coveo/headless/commerce';
+import {html, LitElement, nothing} from 'lit';
+import {customElement, state} from 'lit/decorators.js';
+import {when} from 'lit/directives/when.js';
 import {bindStateToController} from '@/src/decorators/bind-state';
 import {bindingGuard} from '@/src/decorators/binding-guard';
 import {bindings} from '@/src/decorators/bindings';
 import {errorGuard} from '@/src/decorators/error-guard';
-import {InitializableComponent} from '@/src/decorators/types';
+import type {InitializableComponent} from '@/src/decorators/types';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
-import {
-  DidYouMeanState,
-  DidYouMean,
-  buildSearch,
-  QueryTrigger,
-  buildQueryTrigger,
-  QueryTriggerState,
-} from '@coveo/headless/commerce';
-import {html, LitElement} from 'lit';
-import {customElement, state} from 'lit/decorators.js';
-import {when} from 'lit/directives/when.js';
 import {renderAutoCorrection} from '../../common/query-correction/auto-correction';
 import {renderCorrection} from '../../common/query-correction/correction';
 import {renderTriggerCorrection} from '../../common/query-correction/trigger-correction';
-import {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface';
+import type {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface';
 
 /**
  * @alpha
@@ -101,6 +101,7 @@ export class AtomicCommerceDidYouMean
         },
       });
     }
+    return nothing;
   }
 
   @bindingGuard()

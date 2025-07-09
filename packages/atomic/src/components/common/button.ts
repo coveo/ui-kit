@@ -1,13 +1,13 @@
-import {FunctionalComponentWithChildren} from '@/src/utils/functional-component-utils';
 import {html, nothing} from 'lit';
 import {ifDefined} from 'lit/directives/if-defined.js';
-import {ref, RefOrCallback} from 'lit/directives/ref.js';
+import {type RefOrCallback, ref} from 'lit/directives/ref.js';
 import {when} from 'lit/directives/when.js';
+import type {FunctionalComponentWithChildren} from '@/src/utils/functional-component-utils';
 import {createRipple} from '../../utils/ripple';
 import {
-  getRippleColorForButtonStyle,
+  type ButtonStyle,
   getClassNameForButtonStyle,
-  ButtonStyle,
+  getRippleColorForButtonStyle,
 } from './button-style';
 
 export interface ButtonProps {

@@ -1,4 +1,4 @@
-import {i18n} from 'i18next';
+import type {i18n} from 'i18next';
 
 function getFieldCaptionNamespace(field: string) {
   return `caption-${field}`;

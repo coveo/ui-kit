@@ -1,6 +1,6 @@
 import {LitElement} from 'lit';
 import {customElement, property} from 'lit/decorators.js';
-import {vi, describe, beforeEach, afterEach, it, expect} from 'vitest';
+import {afterEach, beforeEach, describe, expect, it, vi} from 'vitest';
 import {watch} from './watch.js';
 
 @customElement('test-element')
@@ -42,8 +42,8 @@ describe('@watch decorator', () => {
     withWaitUntilFirstUpdateTrueSpy.mockRestore();
   };
 
-  beforeEach(() => {
-    setupElement();
+  beforeEach(async () => {
+    await setupElement();
   });
 
   afterEach(() => {

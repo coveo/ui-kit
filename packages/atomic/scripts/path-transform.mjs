@@ -1,9 +1,9 @@
-import {dirname, posix, resolve, relative, sep} from 'path';
+import {dirname, posix, relative, resolve, sep} from 'node:path';
 import {
   isImportDeclaration,
+  isStringLiteral,
   visitEachChild,
   visitNode,
-  isStringLiteral,
 } from 'typescript';
 
 // The import prefix as defined in the tsconfig under paths

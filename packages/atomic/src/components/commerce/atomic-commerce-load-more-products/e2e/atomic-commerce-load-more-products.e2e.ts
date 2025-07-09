@@ -1,4 +1,4 @@
-import {test, expect} from './fixture';
+import {expect, test} from './fixture';
 
 test.describe('atomic-commerce-load-more-products', () => {
   test.beforeEach(async ({loadMore}) => {

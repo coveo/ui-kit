@@ -1,11 +1,11 @@
-import {
-  SearchEngineConfiguration,
+import type {
+  AnalyticsClientSendEventHook,
   AnalyticsConfiguration,
   EngineConfiguration,
+  SearchEngineConfiguration,
 } from '@coveo/headless';
-import {AnalyticsClientSendEventHook} from '@coveo/headless';
-import {InsightEngineConfiguration} from '@coveo/headless/insight';
-import {RecommendationEngineConfiguration} from '@coveo/headless/recommendation';
+import type {InsightEngineConfiguration} from '@coveo/headless/insight';
+import type {RecommendationEngineConfiguration} from '@coveo/headless/recommendation';
 import {getAtomicEnvironment} from '../../../global/environment';
 
 export type AnalyticsPayload = Parameters<AnalyticsClientSendEventHook>[1];

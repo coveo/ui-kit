@@ -1,4 +1,4 @@
-import {test, expect} from './fixture';
+import {expect, test} from './fixture';
 
 test.describe('atomic-product-numeric-field-value', () => {
   test.beforeEach(async ({numericFieldValue}) => {

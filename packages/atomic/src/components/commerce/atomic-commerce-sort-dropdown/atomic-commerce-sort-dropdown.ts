@@ -1,28 +1,28 @@
-import {bindings} from '@/src/decorators/bindings';
-import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
 import {
-  Sort,
-  SortState,
-  Search,
-  ProductListing,
   buildProductListing,
   buildSearch,
-  SearchState,
-  ProductListingState,
+  type ProductListing,
+  type ProductListingState,
+  type Search,
+  type SearchState,
+  type Sort,
+  type SortState,
 } from '@coveo/headless/commerce';
-import {html, CSSResultGroup, unsafeCSS, LitElement} from 'lit';
+import {type CSSResultGroup, html, LitElement, unsafeCSS} from 'lit';
 import {customElement, state} from 'lit/decorators.js';
 import {guard} from 'lit/directives/guard.js';
 import {map} from 'lit/directives/map.js';
+import {bindings} from '@/src/decorators/bindings';
+import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
 import {bindStateToController} from '../../../decorators/bind-state';
 import {bindingGuard} from '../../../decorators/binding-guard';
 import {errorGuard} from '../../../decorators/error-guard';
-import {InitializableComponent} from '../../../decorators/types';
+import type {InitializableComponent} from '../../../decorators/types';
 import {randomID} from '../../../utils/utils';
 import {renderSortLabel} from '../../common/sort/label';
 import {renderSortSelect} from '../../common/sort/select';
 import {sortGuard} from '../../common/sort/sort-guard';
-import {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface';
+import type {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface';
 import {getSortByLabel, renderCommerceSortOption} from '../sort/option';
 import styles from './atomic-commerce-sort-dropdown.tw.css';
 

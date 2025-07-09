@@ -1,8 +1,8 @@
-import {fixture} from '@/vitest-utils/testing-helpers/fixture';
 import {userEvent} from '@vitest/browser/context';
-import {html, nothing, TemplateResult} from 'lit';
+import {html, nothing, type TemplateResult} from 'lit';
 import {describe, expect, it, vi} from 'vitest';
-import {GridLayoutProps, renderGridLayout} from './grid-layout';
+import {fixture} from '@/vitest-utils/testing-helpers/fixture';
+import {type GridLayoutProps, renderGridLayout} from './grid-layout';
 
 describe('renderGridLayout', () => {
   const gridLayoutFixture = async (

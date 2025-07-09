@@ -1,12 +1,12 @@
 import {
-  Product,
-  Template,
   buildProductTemplatesManager,
+  type Product,
+  type Template,
 } from '@coveo/headless/commerce';
-import {ItemTarget} from '../../common/layout/display-options';
+import type {ItemTarget} from '../../common/layout/display-options';
 import {
   TemplateProvider,
-  TemplateProviderProps,
+  type TemplateProviderProps,
 } from '../../common/template-provider/template-provider';
 
 export class ProductTemplateProvider extends TemplateProvider<Product> {

@@ -1,6 +1,6 @@
-import {fixture} from '@/vitest-utils/testing-helpers/fixture';
 import {css, html, LitElement, unsafeCSS} from 'lit';
-import {describe, beforeEach, it, expect} from 'vitest';
+import {beforeEach, describe, expect, it} from 'vitest';
+import {fixture} from '@/vitest-utils/testing-helpers/fixture';
 import {injectStylesForNoShadowDOM} from './light-dom';
 
 describe('injectStylesForNoShadowDOM', () => {

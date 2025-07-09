@@ -1,5 +1,5 @@
 import {html, nothing} from 'lit';
-import {directive, Directive} from 'lit/directive.js';
+import {Directive, directive} from 'lit/directive.js';
 
 const MIN_VALUES_WHERE_FACET_SEARCH_IMPROVES_UX = 9;
 
