@@ -1,3 +1,9 @@
+## <small>1.1.28 (2025-07-09)</small>
+
+* fix(atomic): broaden autoloader shadowDOM sniffing (#5533) ([9833a8b](https://github.com/coveo/ui-kit/commits/9833a8b)), closes [#5533](https://github.com/coveo/ui-kit/issues/5533)
+
+
+
 ## <small>1.1.27 (2025-07-02)</small>
 
 * chore(lint): integrate biome (#5507) ([53bcada](https://github.com/coveo/ui-kit/commits/53bcada)), closes [#5507](https://github.com/coveo/ui-kit/issues/5507)
