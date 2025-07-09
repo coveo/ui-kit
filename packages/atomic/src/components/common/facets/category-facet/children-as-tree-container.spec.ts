@@ -7,7 +7,7 @@ interface CategoryFacetChildrenAsTreeContainerProps {
   className?: string;
 }
 
-describe('renderCategoryFacetChildrenAsTreeContainer', () => {
+describe('#renderCategoryFacetChildrenAsTreeContainer', () => {
   const defaultProps: CategoryFacetChildrenAsTreeContainerProps = {
     className: undefined,
   };

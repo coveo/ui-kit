@@ -8,7 +8,7 @@ import {vi, expect, describe, it, beforeAll} from 'vitest';
 import type {CategoryFacetAllCategoryButtonProps} from './all-categories-button';
 import {renderCategoryFacetAllCategoryButton} from './all-categories-button';
 
-describe('renderCategoryFacetAllCategoryButton', () => {
+describe('#renderCategoryFacetAllCategoryButton', () => {
   const createMockI18n = (translationText: string) =>
     ({
       ...i18n,
