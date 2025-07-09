@@ -76,6 +76,8 @@ export default {
     await import('./atomic-product/atomic-product.js'),
   'atomic-product-children': async () =>
     await import('./atomic-product-children/atomic-product-children.js'),
+  'atomic-product-link': async () =>
+    await import('./atomic-product-link/atomic-product-link.js'),
   'atomic-product-template': async () =>
     await import('./atomic-product-template/atomic-product-template.js'),
   'atomic-product-text': async () =>

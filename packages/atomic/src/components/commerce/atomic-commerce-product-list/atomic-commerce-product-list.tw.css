@@ -47,3 +47,7 @@
     flex-direction: column;
   }
 }
+
+atomic-product:not(.hydrated) {
+  visibility: hidden;
+}

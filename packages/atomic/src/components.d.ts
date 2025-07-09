@@ -1666,15 +1666,6 @@ export namespace Components {
         "previousImage": () => Promise<void>;
     }
     /**
-     * @alpha The `atomic-product-link` component automatically transforms a search product title into a clickable link that points to the original item.
-     */
-    interface AtomicProductLink {
-        /**
-          * The [template literal](https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Template_literals) from which to generate the `href` attribute value  The template literal can reference any number of product properties from the parent product. It can also reference the window object.  For example, the following markup generates an `href` value such as `http://uri.com?id=itemTitle`, using the product's `clickUri` and `itemtitle` fields. ```html <atomic-product-link href-template='${clickUri}?id=${permanentId}'></atomic-product-link> ```
-         */
-        "hrefTemplate"?: string;
-    }
-    /**
      * @alpha The `atomic-product-multi-value-text` component renders the values of a multi-value string field.
      */
     interface AtomicProductMultiValueText {
@@ -4194,15 +4185,6 @@ declare global {
         new (): HTMLAtomicProductImageElement;
     };
     /**
-     * @alpha The `atomic-product-link` component automatically transforms a search product title into a clickable link that points to the original item.
-     */
-    interface HTMLAtomicProductLinkElement extends Components.AtomicProductLink, HTMLStencilElement {
-    }
-    var HTMLAtomicProductLinkElement: {
-        prototype: HTMLAtomicProductLinkElement;
-        new (): HTMLAtomicProductLinkElement;
-    };
-    /**
      * @alpha The `atomic-product-multi-value-text` component renders the values of a multi-value string field.
      */
     interface HTMLAtomicProductMultiValueTextElement extends Components.AtomicProductMultiValueText, HTMLStencilElement {
@@ -5314,7 +5296,6 @@ declare global {
         "atomic-product-excerpt": HTMLAtomicProductExcerptElement;
         "atomic-product-field-condition": HTMLAtomicProductFieldConditionElement;
         "atomic-product-image": HTMLAtomicProductImageElement;
-        "atomic-product-link": HTMLAtomicProductLinkElement;
         "atomic-product-multi-value-text": HTMLAtomicProductMultiValueTextElement;
         "atomic-product-numeric-field-value": HTMLAtomicProductNumericFieldValueElement;
         "atomic-product-price": HTMLAtomicProductPriceElement;
@@ -6951,15 +6932,6 @@ declare namespace LocalJSX {
           * @type {string}
          */
         "imageAltField"?: string;
-    }
-    /**
-     * @alpha The `atomic-product-link` component automatically transforms a search product title into a clickable link that points to the original item.
-     */
-    interface AtomicProductLink {
-        /**
-          * The [template literal](https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Template_literals) from which to generate the `href` attribute value  The template literal can reference any number of product properties from the parent product. It can also reference the window object.  For example, the following markup generates an `href` value such as `http://uri.com?id=itemTitle`, using the product's `clickUri` and `itemtitle` fields. ```html <atomic-product-link href-template='${clickUri}?id=${permanentId}'></atomic-product-link> ```
-         */
-        "hrefTemplate"?: string;
     }
     /**
      * @alpha The `atomic-product-multi-value-text` component renders the values of a multi-value string field.
@@ -8619,7 +8591,6 @@ declare namespace LocalJSX {
         "atomic-product-excerpt": AtomicProductExcerpt;
         "atomic-product-field-condition": AtomicProductFieldCondition;
         "atomic-product-image": AtomicProductImage;
-        "atomic-product-link": AtomicProductLink;
         "atomic-product-multi-value-text": AtomicProductMultiValueText;
         "atomic-product-numeric-field-value": AtomicProductNumericFieldValue;
         "atomic-product-price": AtomicProductPrice;
@@ -8957,10 +8928,6 @@ declare module "@stencil/core" {
              * @alpha 
              */
             "atomic-product-image": LocalJSX.AtomicProductImage & JSXBase.HTMLAttributes<HTMLAtomicProductImageElement>;
-            /**
-             * @alpha The `atomic-product-link` component automatically transforms a search product title into a clickable link that points to the original item.
-             */
-            "atomic-product-link": LocalJSX.AtomicProductLink & JSXBase.HTMLAttributes<HTMLAtomicProductLinkElement>;
             /**
              * @alpha The `atomic-product-multi-value-text` component renders the values of a multi-value string field.
              */
