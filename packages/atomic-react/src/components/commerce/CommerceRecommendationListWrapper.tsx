@@ -8,8 +8,10 @@ import type {Product} from '@coveo/headless/commerce';
 import React, {useEffect, useRef} from 'react';
 import {createRoot} from 'react-dom/client';
 import {renderToString} from 'react-dom/server';
-import {AtomicProductLink} from '../stencil-generated/commerce/index.js';
-import {AtomicCommerceRecommendationList as LitAtomicCommerceRecommendationList} from './components.js';
+import {
+  AtomicCommerceRecommendationList as LitAtomicCommerceRecommendationList,
+  AtomicProductLink,
+} from './components.js';
 
 interface Template {
   contentTemplate: JSX.Element;
