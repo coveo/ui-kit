@@ -163,7 +163,7 @@ export class AtomicProduct extends ChildrenUpdateCompleteMixin(LitElement) {
       ?.click();
   };
 
-  public async connectedCallback() {
+  public connectedCallback() {
     super.connectedCallback();
 
     if (!this.content) {
@@ -198,9 +198,6 @@ export class AtomicProduct extends ChildrenUpdateCompleteMixin(LitElement) {
       this.resolveProductDisplayConfig as EventListener
     );
     this.addEventListener('click', this.handleClick);
-
-    await this.getUpdateComplete();
-    this.classList.add('hydrated');
   }
 
   public disconnectedCallback() {

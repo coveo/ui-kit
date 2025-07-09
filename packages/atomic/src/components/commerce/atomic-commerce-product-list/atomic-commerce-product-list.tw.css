@@ -44,7 +44,3 @@
     }
   }
 }
-
-atomic-product:not(.hydrated) {
-  visibility: hidden;
-}
