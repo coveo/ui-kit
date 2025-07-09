@@ -31,13 +31,13 @@ export interface SearchBoxSuggestions {
   /**
    * Hook called when the user changes the search box's input value. This can lead to all the query suggestions being updated.
    */
-  onInput?(): Promise<unknown> | void;
+  onInput?(): Promise<unknown>;
   /**
    * Hook called when the current suggested query changes as the user navigates the list of suggestions.
    * This is used for instant results, which are rendered based on the current suggested query.
    * @param q The new current suggested query.
    */
-  onSuggestedQueryChange?(q: string): Promise<unknown> | void;
+  onSuggestedQueryChange?(q: string): Promise<unknown>;
 }
 
 interface SearchBoxProps {
@@ -167,7 +167,7 @@ export class SuggestionManager<SearchBoxController> {
     if (this.panelInFocus === panel) {
       return;
     }
-    if (panel && panel.firstElementChild) {
+    if (panel?.firstElementChild) {
       const panelHasActiveDescendant =
         this.previousActiveDescendantElement &&
         panel.contains(this.previousActiveDescendantElement);
@@ -183,22 +183,22 @@ export class SuggestionManager<SearchBoxController> {
     this.updateActiveDescendant();
   }
 
-  public focusNextValue() {
+  public async focusNextValue() {
     if (!this.hasSuggestions || !this.nextOrFirstValue) {
       return;
     }
 
-    this.focusValue(this.nextOrFirstValue as HTMLElement);
+    await this.focusValue(this.nextOrFirstValue as HTMLElement);
   }
 
-  public focusValue(value: HTMLElement) {
+  public async focusValue(value: HTMLElement) {
     this.updateKeyboardActiveDescendant(value.id);
     this.updateActiveDescendant(value.id);
     this.scrollActiveDescendantIntoView();
-    this.updateQueryFromSuggestion();
+    await this.updateQueryFromSuggestion();
   }
 
-  public onSuggestionMouseOver(
+  public async onSuggestionMouseOver(
     item: SearchBoxSuggestionElement,
     side: 'left' | 'right',
     id: string
@@ -212,16 +212,16 @@ export class SuggestionManager<SearchBoxController> {
       this.updateDescendants(id);
     }
     if (item.query) {
-      this.updateSuggestedQuery(item.query);
+      await this.updateSuggestedQuery(item.query);
     }
   }
 
-  public onSuggestionClick(item: SearchBoxSuggestionElement, e: Event) {
+  public async onSuggestionClick(item: SearchBoxSuggestionElement, e: Event) {
     if (item.query) {
       this.clearSuggestions();
-      this.updateOwnerSearchboxQuery(item.query);
+      await this.updateOwnerSearchboxQuery(item.query);
     }
-    item.onSelect && item.onSelect(e);
+    item.onSelect?.(e);
   }
 
   public get hasSuggestions() {
@@ -232,7 +232,7 @@ export class SuggestionManager<SearchBoxController> {
     return [...this.leftSuggestionElements, ...this.rightSuggestionElements];
   }
 
-  public focusPreviousValue() {
+  public async focusPreviousValue() {
     if (this.firstValue === this.activeDescendantElement) {
       this.updateKeyboardActiveDescendant();
       this.updateActiveDescendant();
@@ -243,7 +243,7 @@ export class SuggestionManager<SearchBoxController> {
       return;
     }
 
-    this.focusValue(this.previousOrLastValue as HTMLElement);
+    await this.focusValue(this.previousOrLastValue as HTMLElement);
   }
 
   public get hasActiveDescendant() {
@@ -294,7 +294,7 @@ export class SuggestionManager<SearchBoxController> {
     const defaultSuggestedQuery =
       this.allSuggestionElements.find(elementHasQuery)?.query || '';
 
-    this.updateSuggestedQuery(defaultSuggestedQuery);
+    await this.updateSuggestedQuery(defaultSuggestedQuery);
   }
 
   private get lastValue() {
@@ -351,17 +351,17 @@ export class SuggestionManager<SearchBoxController> {
     });
   }
 
-  private updateQueryFromSuggestion() {
+  private async updateQueryFromSuggestion() {
     const suggestedQuery = this.activeDescendantElement?.getAttribute(
       this.queryDataAttribute
     );
-    this.updateOwnerSearchboxQuery(suggestedQuery || '');
+    await this.updateOwnerSearchboxQuery(suggestedQuery || '');
   }
 
-  private updateOwnerSearchboxQuery(query: string) {
+  private async updateOwnerSearchboxQuery(query: string) {
     if (query && this.ownerSearchBoxProps.getSearchBoxValue() !== query) {
       this.ownerSearchBoxProps.updateQuery(query);
-      this.updateSuggestedQuery(query);
+      await this.updateSuggestedQuery(query);
     }
   }
 

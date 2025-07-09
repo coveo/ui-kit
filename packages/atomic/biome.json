@@ -10,8 +10,7 @@
       "recommended": true,
       "style": {
         "noNonNullAssertion": "off"
-      },
-      "nursery": {"noFloatingPromises": "error"}
+      }
     }
   },
   "assist": {

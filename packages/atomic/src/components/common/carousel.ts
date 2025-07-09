@@ -31,7 +31,7 @@ const renderPreviousButton = (
   const buttonProps: ButtonProps = {
     style: 'outline-primary',
     part: 'previous-button',
-    class: commonPaginationClasses + ' -translate-x-1/2',
+    class: `${commonPaginationClasses} -translate-x-1/2`,
     onClick: previousPage,
     ariaLabel: bindings.i18n.t('previous'),
   };
@@ -57,7 +57,7 @@ const renderNextButton = (
   const buttonProps: ButtonProps = {
     style: 'outline-primary',
     part: 'next-button',
-    class: commonPaginationClasses + ' right-0 translate-x-1/2',
+    class: `${commonPaginationClasses} right-0 translate-x-1/2`,
     onClick: nextPage,
     ariaLabel: bindings.i18n.t('next'),
   };

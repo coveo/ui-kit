@@ -88,7 +88,9 @@ export const renderFacetValueCheckbox: FunctionalComponentWithChildren<
         html`<li class="group relative flex items-center">
           ${renderCheckbox()}
           <label
-            ${ref((ref) => (labelRef = ref as HTMLLabelElement))}
+            ${ref((ref) => {
+              labelRef = ref as HTMLLabelElement;
+            })}
             .htmlFor=${id}
             part="value-checkbox-label"
             class="items-center"

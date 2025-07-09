@@ -6,7 +6,7 @@ import {
   type QueryTrigger,
   type QueryTriggerState,
 } from '@coveo/headless/commerce';
-import {html, LitElement} from 'lit';
+import {html, LitElement, nothing} from 'lit';
 import {customElement, state} from 'lit/decorators.js';
 import {when} from 'lit/directives/when.js';
 import {bindStateToController} from '@/src/decorators/bind-state';
@@ -101,6 +101,7 @@ export class AtomicCommerceDidYouMean
         },
       });
     }
+    return nothing;
   }
 
   @bindingGuard()

@@ -1,6 +1,7 @@
+import {basename, dirname, join, relative} from 'node:path';
+import {argv} from 'node:process';
+import {fileURLToPath} from 'node:url';
 import chalk from 'chalk';
-import {basename, dirname, join, relative} from 'path';
-import {argv} from 'process';
 import {
   createProgram,
   DiagnosticCategory,
@@ -11,7 +12,6 @@ import {
   readConfigFile,
   sys,
 } from 'typescript';
-import {fileURLToPath} from 'url';
 import resourceUrlTransformer from './asset-path-transformer.mjs';
 import {generateLitExports} from './generate-lit-exports.mjs';
 import pathTransformer from './path-transform.mjs';

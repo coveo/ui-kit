@@ -56,7 +56,7 @@ export const renderFacetValue: FunctionalComponent<FacetValueProps> = ({
           onClick: onSelect,
           searchQuery: facetSearchQuery,
           buttonRef: (element) => {
-            setRef && setRef(element as HTMLButtonElement | undefined);
+            setRef?.(element as HTMLButtonElement | undefined);
           },
         },
       })(
@@ -79,7 +79,7 @@ export const renderFacetValue: FunctionalComponent<FacetValueProps> = ({
           onClick: onSelect,
           searchQuery: facetSearchQuery,
           buttonRef: (element) => {
-            setRef && setRef(element);
+            setRef?.(element);
           },
         },
       })(
@@ -102,7 +102,7 @@ export const renderFacetValue: FunctionalComponent<FacetValueProps> = ({
           onClick: onSelect,
           searchQuery: facetSearchQuery,
           buttonRef: (element) => {
-            setRef && setRef(element);
+            setRef?.(element);
           },
         },
       })(

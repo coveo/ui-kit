@@ -107,7 +107,7 @@ vi.mock('@coveo/headless/commerce', async () => {
 
 @customElement('test-element')
 @bindings()
-export class TestElement
+class TestElement
   extends InitializeBindingsMixin(LitElement)
   implements InitializableComponent<CommerceBindings>
 {
@@ -498,7 +498,7 @@ describe('AtomicCommerceInterface', () => {
       } as unknown as Search | ProductListing;
 
       const replaceStateSpy = vi.spyOn(history, 'replaceState');
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      // biome-ignore lint/suspicious/noExplicitAny: <>
       (element as any).updateHash();
 
       expect(replaceStateSpy).toHaveBeenCalledWith(
@@ -514,7 +514,7 @@ describe('AtomicCommerceInterface', () => {
       } as unknown as Search | ProductListing;
 
       const pushStateSpy = vi.spyOn(history, 'pushState');
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      // biome-ignore lint/suspicious/noExplicitAny: <>
       (element as any).updateHash();
 
       expect(pushStateSpy).toHaveBeenCalledWith(

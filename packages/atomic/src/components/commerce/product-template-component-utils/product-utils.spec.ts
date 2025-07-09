@@ -1,3 +1,4 @@
+/** biome-ignore-all lint/suspicious/noTemplateCurlyInString: <> */
 import {type Product, ProductTemplatesHelpers} from '@coveo/headless/commerce';
 import {beforeEach, describe, expect, it, vi} from 'vitest';
 import {readFromObject} from '@/src/utils/object-utils';
@@ -40,7 +41,6 @@ describe('product-utils', () => {
       i18n: await createTestI18n(),
       store: {} as never,
       interfaceElement: {} as never,
-      addAdoptedStyleSheets: vi.fn(),
     };
 
     vi.spyOn(ProductTemplatesHelpers, 'getProductProperty').mockImplementation(

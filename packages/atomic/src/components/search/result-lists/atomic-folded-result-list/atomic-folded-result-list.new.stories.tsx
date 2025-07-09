@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
+/** biome-ignore-all lint/suspicious/noExplicitAny: <> */
 
 import type {Meta, StoryObj as Story} from '@storybook/web-components';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';

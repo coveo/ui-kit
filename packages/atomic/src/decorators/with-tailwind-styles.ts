@@ -6,18 +6,18 @@ import utilities from '@/src/utils/tailwind-utilities/utilities.tw.css';
 export function withTailwindStyles<
   T extends {
     styles?: CSSResultGroup | CSSStyleSheet | undefined;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    // biome-ignore lint/suspicious/noExplicitAny: <>
     new (...args: any[]): {};
   },
->(constructor: T): T {
-  return class extends constructor {
+>(Base: T): T {
+  return class extends Base {
     static get styles(): CSSResultGroup {
       const baseStyles = [
         unsafeCSS(theme),
         unsafeCSS(styles),
         unsafeCSS(utilities),
       ];
-      const customStyles = constructor.styles;
+      const customStyles = Base.styles;
 
       if (customStyles instanceof CSSResult) {
         return [...baseStyles, customStyles];

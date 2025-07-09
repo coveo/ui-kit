@@ -18,7 +18,6 @@ export function getAnalyticsConfig(
   switch (recsConfig.analytics?.analyticsMode) {
     case 'next':
       return getNextAnalyticsConfig(recsConfig, enabled);
-    case 'legacy':
     default:
       return getLegacyAnalyticsConfig(recsConfig, enabled);
   }

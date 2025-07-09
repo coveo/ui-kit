@@ -1,3 +1,4 @@
+/** biome-ignore-all lint/suspicious/noTemplateCurlyInString: <> */
 import {
   buildSearchEngine,
   getSampleSearchEngineConfiguration,

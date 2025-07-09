@@ -249,7 +249,7 @@ describe('store', () => {
         format: () => 'formatted',
       };
       registerFacet(store, 'facets', data);
-      expect(store.state.facets['facet1']).toBe(data);
+      expect(store.state.facets.facet1).toBe(data);
       expect(store.state.facetElements).toContain(element);
     });
 
@@ -277,7 +277,7 @@ describe('store', () => {
         format: () => 'formatted',
       };
       registerFacet(store, 'facets', data);
-      expect(store.state.facets['facet2']).toBeUndefined();
+      expect(store.state.facets.facet2).toBeUndefined();
       expect(store.state.facetElements).not.toContain(element);
     });
 
@@ -314,7 +314,7 @@ describe('store', () => {
         format: () => 'formatted',
       };
       registerFacet(store, 'facets', data);
-      expect(store.state.facets['facet3']).toBe(data);
+      expect(store.state.facets.facet3).toBe(data);
       expect(store.state.facetElements).not.toContain(oldElement);
       expect(store.state.facetElements).toContain(newElement);
     });
@@ -342,7 +342,7 @@ describe('store', () => {
         format: () => 'formatted',
       };
       registerFacet(store, 'numericFacets', data);
-      expect(store.state.numericFacets['facet4']).toBe(data);
+      expect(store.state.numericFacets.facet4).toBe(data);
       expect(store.state.facetElements).toContain(element);
     });
   });

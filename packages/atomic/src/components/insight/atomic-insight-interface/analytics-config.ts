@@ -16,7 +16,6 @@ export function getAnalyticsConfig(
   switch (searchEngineConfig.analytics?.analyticsMode) {
     case 'next':
       return getNextAnalyticsConfig(searchEngineConfig, enabled);
-    case 'legacy':
     default:
       return getLegacyAnalyticsConfig(searchEngineConfig, enabled);
   }

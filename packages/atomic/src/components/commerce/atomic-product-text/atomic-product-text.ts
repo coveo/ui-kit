@@ -127,7 +127,9 @@ export class AtomicProductText
             textValue,
             highlightKeywords,
             highlightString: HighlightUtils.highlightString,
-            onError: (error: Error) => (this.error = error),
+            onError: (error: Error) => {
+              this.error = error;
+            },
           },
         })
       : html`

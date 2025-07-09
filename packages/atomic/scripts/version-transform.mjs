@@ -1,5 +1,7 @@
-import {readFileSync} from 'fs';
-import {resolve} from 'path';
+import {readFileSync} from 'node:fs';
+import {resolve} from 'node:path';
+// Read the version from package.json
+import {fileURLToPath} from 'node:url';
 import {
   isIdentifier,
   isNonNullExpression,
@@ -7,8 +9,6 @@ import {
   visitEachChild,
   visitNode,
 } from 'typescript';
-// Read the version from package.json
-import {fileURLToPath} from 'url';
 
 const __dirname = fileURLToPath(new URL('.', import.meta.url));
 const packageJsonPath = resolve(__dirname, '../package.json');

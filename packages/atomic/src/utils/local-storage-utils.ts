@@ -17,7 +17,6 @@ export interface GeneratedAnswerData {
 }
 
 export class SafeStorage implements Storage {
-  constructor() {}
   public clear() {
     return this.tryAccessLocalStorageOrWarn(
       () => localStorage.clear(),

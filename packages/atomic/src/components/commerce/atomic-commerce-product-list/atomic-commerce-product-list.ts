@@ -87,10 +87,6 @@ export class AtomicCommerceProductList
   private productTemplateProvider!: ProductTemplateProvider;
   private unsubscribeSummary!: () => void;
 
-  public constructor() {
-    super();
-  }
-
   @state()
   bindings!: CommerceBindings;
   @state()

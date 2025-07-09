@@ -1,10 +1,10 @@
+import {readdirSync, readFileSync} from 'node:fs';
 import replacePlugin from '@rollup/plugin-replace';
 import {angularOutputTarget as angular} from '@stencil/angular-output-target';
 import type {Config} from '@stencil/core';
 import {reactOutputTarget as react} from '@stencil/react-output-target';
 import {postcss} from '@stencil-community/postcss';
 import tailwindcss from '@tailwindcss/postcss';
-import {readdirSync, readFileSync} from 'fs';
 import postcssNested from 'postcss-nested';
 import type {PluginImpl} from 'rollup';
 import html from 'rollup-plugin-html';

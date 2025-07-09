@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
+/** biome-ignore-all lint/suspicious/noExplicitAny: <> */
 import {
   getSampleSearchEngineConfiguration,
   type SearchEngineConfiguration,
@@ -27,7 +27,7 @@ describe('analyticsConfig', () => {
     config.analytics = {
       ...config.analytics,
       analyticsClientMiddleware: (_: string, payload: any) => {
-        payload['foo'] = 'bar';
+        payload.foo = 'bar';
         return payload;
       },
     };

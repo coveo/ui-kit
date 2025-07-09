@@ -11,7 +11,7 @@ interface ChoicesProps {
   scrollToTopEvent: () => void;
   setItemSize: (size: number) => void;
   focusOnFirstResultAfterNextSearch: () => Promise<void> | undefined;
-  focusOnNextNewResult: () => void | undefined;
+  focusOnNextNewResult: () => void;
 }
 
 export const renderChoices: FunctionalComponent<ChoicesProps> = ({props}) => {

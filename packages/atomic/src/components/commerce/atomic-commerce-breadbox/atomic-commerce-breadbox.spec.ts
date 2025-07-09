@@ -22,7 +22,7 @@ vi.mock('@coveo/headless/commerce', {spy: true});
 vi.mock('@/src/utils/date-utils', () => {
   const parseDate = vi.fn((date) => {
     const d = new Date(date);
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    // biome-ignore lint/suspicious/noExplicitAny: <>
     (d as any).format = vi.fn((_fmt: string) => {
       return d.toISOString().split('T')[0];
     });

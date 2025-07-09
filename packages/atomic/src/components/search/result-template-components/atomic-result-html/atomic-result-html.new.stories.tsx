@@ -7,9 +7,9 @@ import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-w
 const {decorator: resultDecorator, engineConfig} = wrapInResult({
   search: {
     preprocessSearchResponseMiddleware: (res) => {
-      res.body.results.forEach(
-        (r) => (r.excerpt = '<div>Some HTML content</div>')
-      );
+      res.body.results.forEach((r) => {
+        r.excerpt = '<div>Some HTML content</div>';
+      });
       return res;
     },
   },

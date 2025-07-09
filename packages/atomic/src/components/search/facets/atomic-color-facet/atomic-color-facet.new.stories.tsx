@@ -69,6 +69,7 @@ const facetValueToCss = {
 
 const argTypes = Object.keys(facetValueToCss).reduce<ArgTypes>(
   (acc, facetValue) =>
+    // biome-ignore lint/performance/noAccumulatingSpread: <>
     Object.assign(acc, {
       [`cssParts-value-${facetValue}`]: {
         control: {
@@ -101,6 +102,7 @@ const baseFacetValueCss = {
 
 const args = Object.entries(facetValueToCss).reduce<Args>(
   (acc, [facetValue, css]) =>
+    // biome-ignore lint/performance/noAccumulatingSpread: <>
     Object.assign(acc, {
       [`cssParts-value-${facetValue}`]: {
         ...baseFacetValueCss,

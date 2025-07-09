@@ -1,4 +1,4 @@
-import {resolve} from 'path';
+import {resolve} from 'node:path';
 import {defineConfig, type Plugin} from 'vite';
 
 function configureAssetPaths(): Plugin {

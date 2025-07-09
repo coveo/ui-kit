@@ -42,8 +42,8 @@ describe('@watch decorator', () => {
     withWaitUntilFirstUpdateTrueSpy.mockRestore();
   };
 
-  beforeEach(() => {
-    setupElement();
+  beforeEach(async () => {
+    await setupElement();
   });
 
   afterEach(() => {

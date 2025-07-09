@@ -458,7 +458,7 @@ export class AtomicCommerceSearchBox
     this.searchBox.submit();
   }
 
-  private onKeyDown(e: KeyboardEvent) {
+  private async onKeyDown(e: KeyboardEvent) {
     if (this.isSearchDisabledForEndUser) {
       return;
     }
@@ -472,12 +472,12 @@ export class AtomicCommerceSearchBox
         break;
       case 'ArrowDown':
         e.preventDefault();
-        this.suggestionManager.focusNextValue();
+        await this.suggestionManager.focusNextValue();
         this.announceNewActiveSuggestionToScreenReader();
         break;
       case 'ArrowUp':
         e.preventDefault();
-        this.suggestionManager.focusPreviousValue();
+        await this.suggestionManager.focusPreviousValue();
         this.announceNewActiveSuggestionToScreenReader();
         break;
       case 'ArrowRight':
@@ -616,13 +616,17 @@ export class AtomicCommerceSearchBox
       ${this.renderPanel(
         'left',
         this.suggestionManager.leftSuggestionElements,
-        (el) => (this.suggestionManager.leftPanel = el),
+        (el) => {
+          this.suggestionManager.leftPanel = el;
+        },
         () => this.suggestionManager.leftPanel
       )}
       ${this.renderPanel(
         'right',
         this.suggestionManager.rightSuggestionElements,
-        (el) => (this.suggestionManager.rightPanel = el),
+        (el) => {
+          this.suggestionManager.rightPanel = el;
+        },
         () => this.suggestionManager.rightPanel
       )}
     </div>`;
@@ -677,16 +681,16 @@ export class AtomicCommerceSearchBox
         .index=${index}
         .lastIndex=${lastIndex}
         .isDoubleList=${this.suggestionManager.isDoubleList}
-        .onClick=${(e: Event) => {
-          this.suggestionManager.onSuggestionClick(item, e);
+        .onClick=${async (e: Event) => {
+          await this.suggestionManager.onSuggestionClick(item, e);
           if (item.key === 'recent-query-clear') {
             return;
           }
 
           this.isExpanded = false;
         }}
-        .onMouseOver=${() => {
-          this.suggestionManager.onSuggestionMouseOver(item, side, id);
+        .onMouseOver=${async () => {
+          await this.suggestionManager.onSuggestionMouseOver(item, side, id);
         }}
       ></atomic-suggestion-renderer>
     `;

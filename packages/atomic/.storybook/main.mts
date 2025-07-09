@@ -1,6 +1,6 @@
+import {readFileSync} from 'node:fs';
+import path, {dirname, resolve } from 'node:path';
 import type {StorybookConfig} from '@storybook/web-components-vite';
-import {readFileSync} from 'fs';
-import path, {dirname, resolve } from 'path';
 import type {PluginImpl} from 'rollup';
 import {mergeConfig} from 'vite';
 import {generateExternalPackageMappings} from '../scripts/externalPackageMappings.mjs';
@@ -22,7 +22,7 @@ const externalizeDependencies: PluginImpl = () => {
         return false;
       }
 
-      const packageMappings = generateExternalPackageMappings(__dirname);
+      const packageMappings = generateExternalPackageMappings();
       const packageMapping = packageMappings[source];
 
       if (packageMapping) {

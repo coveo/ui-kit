@@ -22,7 +22,7 @@ const productListingEngineConfiguration: Partial<CommerceEngineConfiguration> =
       currency: 'USD',
       language: 'en',
       view: {
-        url: context.view.url + '/browse/promotions/ui-kit-testing',
+        url: `${context.view.url}/browse/promotions/ui-kit-testing`,
       },
     },
     ...restOfConfiguration,

@@ -137,9 +137,9 @@ export class AtomicCommercePager
             icon: this.previousButtonIcon,
             disabled: this.pagerState.page === 0,
             i18n: this.bindings.i18n,
-            onClick: () => {
+            onClick: async () => {
               this.pager.previousPage();
-              this.focusOnFirstResultAndScrollToTop();
+              await this.focusOnFirstResultAndScrollToTop();
             },
           },
         })}
@@ -155,9 +155,9 @@ export class AtomicCommercePager
                 ariaLabel: this.bindings.i18n.t('page-number', {
                   pageNumber: pageNumber + 1,
                 }),
-                onChecked: () => {
+                onChecked: async () => {
                   this.pager.selectPage(pageNumber);
-                  this.focusOnFirstResultAndScrollToTop();
+                  await this.focusOnFirstResultAndScrollToTop();
                 },
                 page: pageNumber,
                 groupName: this.radioGroupName,
@@ -173,9 +173,9 @@ export class AtomicCommercePager
             icon: this.nextButtonIcon,
             disabled: this.pagerState.page + 1 >= this.pagerState.totalPages,
             i18n: this.bindings.i18n,
-            onClick: () => {
+            onClick: async () => {
               this.pager.nextPage();
-              this.focusOnFirstResultAndScrollToTop();
+              await this.focusOnFirstResultAndScrollToTop();
             },
           },
         })}

@@ -95,7 +95,7 @@ describe('AriaLiveRegionController', () => {
 
 @customElement('focus-target-controller-test-component')
 @bindings()
-export class FocusTargetControllerTestComponent
+class FocusTargetControllerTestComponent
   extends LitElement
   implements InitializableComponent<CommerceBindings>
 {
@@ -164,7 +164,7 @@ describe('FocusTargetController', () => {
       it('should not focus on any element on the next call to the #focus method', async () => {
         const htmlElementFocusSpy = vi.spyOn(HTMLElement.prototype, 'focus');
 
-        focusTargetController.setTarget(undefined);
+        await focusTargetController.setTarget(undefined);
         await focusTargetController.focus();
 
         expect(htmlElementFocusSpy).not.toHaveBeenCalled();
@@ -178,7 +178,7 @@ describe('FocusTargetController', () => {
 
           focusTargetController.focusOnNextTarget();
           await vi.runAllTimersAsync();
-          focusTargetController.setTarget(undefined);
+          await focusTargetController.setTarget(undefined);
         });
 
         it('should not call the #focus method', async () => {
@@ -186,8 +186,8 @@ describe('FocusTargetController', () => {
         });
 
         it('should not prevent the immediate next call with an element from calling the #focus method', async () => {
-          focusTargetController.setTarget(document.createElement('div'));
-          focusTargetController.setTarget(document.createElement('span'));
+          await focusTargetController.setTarget(document.createElement('div'));
+          await focusTargetController.setTarget(document.createElement('span'));
 
           expect(focusMethodSpy).toHaveBeenCalledOnce();
         });
@@ -199,7 +199,7 @@ describe('FocusTargetController', () => {
         const element = document.createElement('div');
         const elementFocusSpy = vi.spyOn(element, 'focus');
 
-        focusTargetController.setTarget(element);
+        await focusTargetController.setTarget(element);
 
         expect(elementFocusSpy).not.toHaveBeenCalled();
 
@@ -208,10 +208,10 @@ describe('FocusTargetController', () => {
         expect(elementFocusSpy).toHaveBeenCalledOnce();
       });
 
-      it('should not call the #focus method when not doing focus on the next target', () => {
+      it('should not call the #focus method when not doing focus on the next target', async () => {
         const focusMethodSpy = vi.spyOn(focusTargetController, 'focus');
 
-        focusTargetController.setTarget(document.createElement('div'));
+        await focusTargetController.setTarget(document.createElement('div'));
 
         expect(focusMethodSpy).not.toHaveBeenCalled();
       });
@@ -224,7 +224,7 @@ describe('FocusTargetController', () => {
 
         expect(focusMethodSpy).not.toHaveBeenCalled();
 
-        focusTargetController.setTarget(document.createElement('div'));
+        await focusTargetController.setTarget(document.createElement('div'));
 
         expect(focusMethodSpy).toHaveBeenCalledOnce();
       });
@@ -505,7 +505,7 @@ describe('FocusTargetController', () => {
 
         component = await renderComponent(getUniqueIDFromEngine);
         focusTargetController = component.focusTargetController;
-        focusTargetController.setTarget(element);
+        await focusTargetController.setTarget(element);
         focusTargetController.focusAfterSearch();
       };
 

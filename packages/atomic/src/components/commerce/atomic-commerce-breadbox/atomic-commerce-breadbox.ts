@@ -347,12 +347,12 @@ export class AtomicCommerceBreadbox
             this.lastRemovedBreadcrumbIndex = index;
             breadcrumb.deselect();
           },
-          refCallback: (ref) => {
+          refCallback: async (ref) => {
             if (this.lastRemovedBreadcrumbIndex === index) {
-              this.breadcrumbRemovedFocus.setTarget(ref);
+              await this.breadcrumbRemovedFocus.setTarget(ref);
             }
             if (this.firstExpandedBreadcrumbIndex === index) {
-              this.breadcrumbShowMoreFocus.setTarget(ref);
+              await this.breadcrumbShowMoreFocus.setTarget(ref);
             }
           },
         },
@@ -391,8 +391,8 @@ export class AtomicCommerceBreadbox
       html`${this.renderBreadcrumbs(breadcrumbs)}
       ${renderBreadcrumbShowMore({
         props: {
-          refCallback: (el) => {
-            this.breadcrumbShowLessFocus.setTarget(el!);
+          refCallback: async (el) => {
+            await this.breadcrumbShowLessFocus.setTarget(el!);
           },
           onShowMore: () => {
             this.firstExpandedBreadcrumbIndex =
@@ -421,12 +421,12 @@ export class AtomicCommerceBreadbox
       })}
       ${renderBreadcrumbClearAll({
         props: {
-          refCallback: (ref) => {
+          refCallback: async (ref) => {
             const isFocusTarget =
               this.lastRemovedBreadcrumbIndex === this.numberOfBreadcrumbs;
 
             if (isFocusTarget) {
-              this.breadcrumbRemovedFocus.setTarget(ref);
+              await this.breadcrumbRemovedFocus.setTarget(ref);
             }
           },
           onClick: () => {

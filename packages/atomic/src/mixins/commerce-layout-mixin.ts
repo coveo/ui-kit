@@ -28,7 +28,7 @@ export const CommerceLayoutMixin = <T extends Constructor<LitElement>>(
   class CommerceLayoutMixinClass extends superClass {
     static styles = [cssResult];
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    // biome-ignore lint/suspicious/noExplicitAny: <>
     constructor(...args: any[]) {
       super(...args);
       if (!this.id) {

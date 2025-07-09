@@ -154,8 +154,8 @@ test.describe('Default', () => {
       await page.route(/commerce\/v2\/search/, async (route) => {
         const response = await route.fetch();
         const body = await response.json();
-        body['pagination']['totalPages'] = 2;
-        body['pagination']['page'] = 1;
+        body.pagination.totalPages = 2;
+        body.pagination.page = 1;
         await route.fulfill({
           response,
           body: JSON.stringify(body),

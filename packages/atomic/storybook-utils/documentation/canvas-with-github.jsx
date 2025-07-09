@@ -1,4 +1,5 @@
 import {Canvas} from '@storybook/blocks';
+// biome-ignore lint/correctness/noUnusedImports: <>
 import React from 'react';
 
 export const CanvasWithGithub = ({of, githubPath}) => {

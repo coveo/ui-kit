@@ -42,10 +42,10 @@ export const renderRadioButton: FunctionalComponent<RadioButtonProps> = ({
     ...(props.style && {[getClassNameForButtonStyle(props.style)]: true}),
   };
 
-  const onMouseDown = (e: MouseEvent) => {
+  const onMouseDown = async (e: MouseEvent) => {
     if (props.style) {
       const rippleColor = getRippleColorForButtonStyle(props.style);
-      createRipple(e, {color: rippleColor});
+      await createRipple(e, {color: rippleColor});
     }
   };
 

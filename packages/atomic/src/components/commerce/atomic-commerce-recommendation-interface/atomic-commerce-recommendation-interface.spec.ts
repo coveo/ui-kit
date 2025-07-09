@@ -29,7 +29,7 @@ vi.mock('@/src/utils/init-queue', {spy: true});
 
 @customElement('test-element')
 @bindings()
-export class TestElement
+class TestElement
   extends InitializeBindingsMixin(LitElement)
   implements InitializableComponent<CommerceBindings>
 {

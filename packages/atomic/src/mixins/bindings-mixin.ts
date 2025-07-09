@@ -58,7 +58,8 @@ export class BindingController implements ReactiveController {
   private unsubscribeLanguage = () => {};
 
   constructor(host: ReactiveControllerHost) {
-    (this.host = host).addController(this);
+    this.host = host;
+    this.host.addController(this);
   }
 
   hostConnected() {
@@ -98,7 +99,7 @@ export const InitializeBindingsMixin = <T extends Constructor<LitElement>>(
   superClass: T
 ) => {
   class BindingControllerMixinClass extends superClass {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    // biome-ignore lint/suspicious/noExplicitAny: <>
     constructor(...args: any[]) {
       super(...args);
       this.initBindings();

@@ -284,17 +284,6 @@ describe('TemplateProvider', () => {
   });
 
   class TestTemplateProvider extends TemplateProvider<unknown> {
-    constructor(
-      props: TemplateProviderProps<unknown>,
-      buildManager: () => TemplatesManager<
-        unknown,
-        DocumentFragment,
-        DocumentFragment
-      >
-    ) {
-      super(props, buildManager);
-    }
-
     protected makeDefaultTemplate() {
       const content = document.createDocumentFragment();
       content.append(document.createTextNode('Default Template'));

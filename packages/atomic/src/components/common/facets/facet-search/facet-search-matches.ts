@@ -1,4 +1,4 @@
-import escape from 'escape-html';
+import escapeHtml from 'escape-html';
 import type {i18n} from 'i18next';
 import {html, nothing} from 'lit';
 import type {FunctionalComponent} from '@/src/utils/functional-component-utils';
@@ -19,7 +19,7 @@ function matchesFound(
   i18n: i18n
 ) {
   return i18n.t(key, {
-    query: `<span class="font-bold italic text-on-background" part="matches-query">${escape(
+    query: `<span class="font-bold italic text-on-background" part="matches-query">${escapeHtml(
       query
     )}</span>`,
     interpolation: {escapeValue: false},
@@ -28,7 +28,7 @@ function matchesFound(
 
 function clickableMoreMatchesFound(query: string, i18n: i18n) {
   return i18n.t('more-matches-for', {
-    query: `<span class="font-bold italic" part="matches-query">${escape(
+    query: `<span class="font-bold italic" part="matches-query">${escapeHtml(
       query
     )}</span>`,
     interpolation: {escapeValue: false},

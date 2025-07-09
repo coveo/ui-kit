@@ -27,7 +27,7 @@ const files = readdirSync(srcDir, {
 });
 
 const prefixFileWithUnderscore = (file) =>
-  file.split(sep).slice(0, -1).join(sep) + sep + '_' + file.split(sep).pop();
+  `${file.split(sep).slice(0, -1).join(sep) + sep}_${file.split(sep).pop()}`;
 
 for (const file of files) {
   if (file.isFile()) {

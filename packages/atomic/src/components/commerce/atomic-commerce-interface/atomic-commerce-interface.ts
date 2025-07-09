@@ -274,7 +274,9 @@ export class AtomicCommerceInterface
    * This bypasses the properties set on the component, such as analytics and language.
    */
   public initializeWithEngine(engine: CommerceEngine) {
-    return this.internalInitialization(() => (this.engine = engine));
+    return this.internalInitialization(() => {
+      this.engine = engine;
+    });
   }
 
   /**

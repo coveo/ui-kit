@@ -6,11 +6,6 @@ export const ChildrenUpdateCompleteMixin = <T extends Constructor<LitElement>>(
   superClass: T
 ) => {
   class ChildrenUpdateCompleteMixinClass extends superClass {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    constructor(...args: any[]) {
-      super(...args);
-    }
-
     async getUpdateComplete(): Promise<boolean> {
       const baseUpdateComplete = await super.getUpdateComplete();
 

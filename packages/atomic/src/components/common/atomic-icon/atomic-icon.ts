@@ -113,8 +113,8 @@ export class AtomicIcon
     this.svg = await svgPromise;
   }
 
-  public initialize() {
-    this.updateIcon();
+  public async initialize() {
+    await this.updateIcon();
   }
 
   @bindingGuard()

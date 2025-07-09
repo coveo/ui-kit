@@ -69,7 +69,9 @@ export class AtomicCommerceRefineToggle
   }
 
   private enableModal() {
-    this.modalRef && (this.modalRef.isOpen = true);
+    if (this.modalRef) {
+      this.modalRef.isOpen = true;
+    }
   }
 
   @errorGuard()

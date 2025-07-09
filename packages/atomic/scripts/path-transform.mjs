@@ -1,4 +1,4 @@
-import {dirname, posix, relative, resolve, sep} from 'path';
+import {dirname, posix, relative, resolve, sep} from 'node:path';
 import {
   isImportDeclaration,
   isStringLiteral,

@@ -34,7 +34,7 @@ describe('item-display-config-context', () => {
     let parentElement: HTMLElement;
 
     const teardown = () => {
-      if (parentElement && parentElement.parentNode) {
+      if (parentElement?.parentNode) {
         document.body.removeChild(parentElement);
       }
       parentElement = null as never;

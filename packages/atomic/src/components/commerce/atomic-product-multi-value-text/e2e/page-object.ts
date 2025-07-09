@@ -20,7 +20,7 @@ export class ProductMultiValueTextPageObject extends BasePageObject<'atomic-prod
     return this.hydrated
       .first()
       .getByText(
-        `${expectedNumber ? expectedNumber.toString() + ' ' : ''}more...`
+        `${expectedNumber ? `${expectedNumber.toString()} ` : ''}more...`
       );
   }
 

@@ -270,7 +270,7 @@ test.describe('Default', () => {
     }) => {
       const breadcrumbButton = breadbox.getBreadcrumbButtons(firstValueText);
 
-      await expect(breadcrumbButton).toHaveText('Price: ' + firstValueText);
+      await expect(breadcrumbButton).toHaveText(`Price: ${firstValueText}`);
     });
   });
 
@@ -313,7 +313,7 @@ test.describe('Default', () => {
     }) => {
       const breadcrumbButton = breadbox.getBreadcrumbButtons(firstValueText);
 
-      await expect(breadcrumbButton).toHaveText('Price: ' + firstValueText);
+      await expect(breadcrumbButton).toHaveText(`Price: ${firstValueText}`);
     });
   });
 
@@ -362,7 +362,7 @@ test.describe('Default', () => {
     }) => {
       const breadcrumbButton = breadbox.getBreadcrumbButtons(firstValueText);
 
-      await expect(breadcrumbButton).toHaveText('Date: ' + firstValueText);
+      await expect(breadcrumbButton).toHaveText(`Date: ${firstValueText}`);
     });
   });
 

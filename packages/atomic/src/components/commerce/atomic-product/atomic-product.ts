@@ -254,11 +254,15 @@ export class AtomicProduct extends LitElement {
         <div class=${resultComponentClass}>
           <div
             class="result-root"
-            ${ref((el) => (this.productRootRef = el as HTMLElement))}
+            ${ref((el) => {
+              this.productRootRef = el as HTMLElement;
+            })}
           ></div>
           <div
             class="link-container"
-            ${ref((el) => (this.linkContainerRef = el as HTMLElement))}
+            ${ref((el) => {
+              this.linkContainerRef = el as HTMLElement;
+            })}
           ></div>
         </div>
       `;

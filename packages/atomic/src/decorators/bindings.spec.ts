@@ -15,7 +15,7 @@ const mockBindings = () =>
 
 @customElement('test-element')
 @bindings()
-export class TestElement
+class TestElement
   extends LitElement
   implements InitializableComponent<Bindings>
 {
@@ -32,7 +32,7 @@ export class TestElement
   initialize = vi.fn();
 }
 @customElement('test-interface-element')
-export class TestInterfaceElement extends LitElement {
+class TestInterfaceElement extends LitElement {
   @state()
   @provide({context: bindingsContext})
   public bindings: Bindings = {} as Bindings;
@@ -91,8 +91,8 @@ describe('bindings decorator', () => {
     consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
   });
 
-  afterEach(() => {
-    teardownElement();
+  afterEach(async () => {
+    await teardownElement();
     consoleErrorSpy.mockRestore();
   });
 

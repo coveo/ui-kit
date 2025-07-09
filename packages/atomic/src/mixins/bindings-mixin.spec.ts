@@ -26,7 +26,7 @@ const mockBindings = () =>
   }) as Bindings;
 
 @customElement('test-element')
-export class TestElement
+class TestElement
   extends InitializeBindingsMixin(LitElement)
   implements InitializableComponent<Bindings>
 {
@@ -70,8 +70,8 @@ describe('InitializeBindingsMixin mixin', () => {
     consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
   });
 
-  afterEach(() => {
-    teardownElement();
+  afterEach(async () => {
+    await teardownElement();
     consoleErrorSpy.mockRestore();
     mockedFetchBindings.mockRestore();
   });

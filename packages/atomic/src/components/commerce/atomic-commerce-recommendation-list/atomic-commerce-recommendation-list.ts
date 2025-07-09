@@ -12,9 +12,6 @@ import {customElement, property, state} from 'lit/decorators.js';
 import {keyed} from 'lit/directives/keyed.js';
 import {map} from 'lit/directives/map.js';
 import {when} from 'lit/directives/when.js';
-import type {SelectChildProductEventArgs} from '@/src/components';
-// TODO: Replace with atomic-commerce-recommendation-interface bindings once it is merged (KIT-3934)
-import type {CommerceBindings} from '@/src/components/commerce/atomic-commerce-interface/atomic-commerce-interface';
 import {ProductTemplateProvider} from '@/src/components/commerce/product-list/product-template-provider';
 import {renderItemPlaceholders} from '@/src/components/common/atomic-result-placeholder/item-placeholders';
 import {renderCarousel} from '@/src/components/common/carousel';
@@ -42,6 +39,8 @@ import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
 import {InitializeBindingsMixin} from '@/src/mixins/bindings-mixin';
 import {FocusTargetController} from '@/src/utils/accessibility-utils';
 import {randomID} from '@/src/utils/utils';
+import type {CommerceBindings} from '../atomic-commerce-recommendation-interface/atomic-commerce-recommendation-interface';
+import type {SelectChildProductEventArgs} from '../atomic-product-children/select-child-product-event';
 import styles from './atomic-commerce-recommendation-list.tw.css';
 
 /**
@@ -196,7 +195,7 @@ export class AtomicCommerceRecommendationList
 
   public disconnectedCallback() {
     super.disconnectedCallback();
-    this.unsubscribeSummary && this.unsubscribeSummary();
+    this.unsubscribeSummary?.();
     this.removeEventListener(
       'atomic/selectChildProduct',
       this.selectChildProductCallback
