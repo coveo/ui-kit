@@ -2,7 +2,6 @@ import {bindingGuard} from '@/src/decorators/binding-guard';
 import {bindings} from '@/src/decorators/bindings';
 import {errorGuard} from '@/src/decorators/error-guard';
 import {InitializableComponent} from '@/src/decorators/types';
-import {InitializeBindingsMixin} from '@/src/mixins/bindings-mixin';
 import {LitElement, html} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface';
@@ -14,7 +13,7 @@ import {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-int
 @customElement('atomic-commerce-text')
 @bindings()
 export class AtomicCommerceText
-  extends InitializeBindingsMixin(LitElement)
+  extends LitElement
   implements InitializableComponent<CommerceBindings>
 {
   @state() bindings!: CommerceBindings;

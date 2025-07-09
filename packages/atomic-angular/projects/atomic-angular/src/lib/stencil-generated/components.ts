@@ -3048,7 +3048,7 @@ export declare interface AtomicProductText extends LitAtomicProductText {
 
 @ProxyCmp({
   inputs: ['stopPropagation', 'product', 'interactiveProduct', 'store', 'content', 'linkContent', 'display', 'density', 'imageSize', 'classes'],
-  methods: [],
+  methods: ['getUpdateComplete'],
   defineCustomElementFn: () => {customElements.get('atomic-product') || customElements.define('atomic-product', LitAtomicProduct);}
 })
 @Component({

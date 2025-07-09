@@ -6,16 +6,16 @@ import {
   AtomicLayoutSection as LitAtomicLayoutSection,
 } from '@coveo/atomic/components';
 
-export const AtomicComponentError = createComponent({
-  tagName: 'atomic-component-error',
-  react: React,
-  elementClass: LitAtomicComponentError,
-});
-
 export const AtomicIcon = createComponent({
   tagName: 'atomic-icon',
   react: React,
   elementClass: LitAtomicIcon,
+});
+
+export const AtomicComponentError = createComponent({
+  tagName: 'atomic-component-error',
+  react: React,
+  elementClass: LitAtomicComponentError,
 });
 
 export const AtomicLayoutSection = createComponent({
