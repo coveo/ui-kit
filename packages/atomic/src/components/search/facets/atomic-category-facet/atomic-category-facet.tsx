@@ -35,10 +35,10 @@ import {CategoryFacetChildValueLink} from '../../../common/facets/category-facet
 import {CategoryFacetChildrenAsTreeContainer} from '../../../common/facets/category-facet/children-as-tree-container';
 import {CategoryFacetParentAsTreeContainer} from '../../../common/facets/category-facet/parent-as-tree-container';
 import {CategoryFacetParentValueLink} from '../../../common/facets/category-facet/parent-value-link';
-import {CategoryFacetSearchResultsContainer} from '../../../common/facets/category-facet/search-results-container';
 import {CategoryFacetSearchValue} from '../../../common/facets/category-facet/search-value';
 import {CategoryFacetAllCategoryButton} from '../../../common/facets/category-facet/stencil-all-categories-button';
 import {CategoryFacetParentButton} from '../../../common/facets/category-facet/stencil-parent-button';
+import {CategoryFacetSearchResultsContainer} from '../../../common/facets/category-facet/stencil-search-results-container';
 import {CategoryFacetTreeValueContainer} from '../../../common/facets/category-facet/value-as-tree-container';
 import {parseDependsOn} from '../../../common/facets/depends-on';
 import {FacetInfo} from '../../../common/facets/facet-common-store';
