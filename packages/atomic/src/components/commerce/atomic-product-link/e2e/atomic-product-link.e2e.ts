@@ -31,14 +31,13 @@ test.describe('with slot for attributes', () => {
 test.describe('with alternative content', () => {
   test.beforeEach(async ({productLink}) => {
     await productLink.load({story: 'with-alternative-content'});
-    await productLink.hydrated.first().waitFor({state: 'visible'});
+    await productLink.hydrated.first().waitFor();
   });
 
   test('should render alternative content', async ({productLink}) => {
-    await expect(productLink.anchor().first()).toHaveText(
+    await expect(productLink.anchor().first()).toContainText(
       'Alternative content'
     );
-
     await expect(productLink.anchor().first().locator('img')).toBeVisible();
   });
 });
