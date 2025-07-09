@@ -1,7 +1,3 @@
-import {watch} from '@/src/decorators/watch';
-import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles.js';
-import {ChildrenUpdateCompleteMixin} from '@/src/mixins/children-update-complete-mixin.js';
-import {InitializeEvent, markParentAsReady} from '@/src/utils/init-queue';
 import {
   buildContext,
   CommerceEngine,
@@ -14,6 +10,10 @@ import {provide} from '@lit/context';
 import i18next, {i18n} from 'i18next';
 import {CSSResultGroup, html, LitElement, unsafeCSS} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
+import {watch} from '@/src/decorators/watch';
+import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles.js';
+import {ChildrenUpdateCompleteMixin} from '@/src/mixins/children-update-complete-mixin.js';
+import {InitializeEvent, markParentAsReady} from '@/src/utils/init-queue';
 import {
   AdoptedStylesBindings,
   CommonBindings,

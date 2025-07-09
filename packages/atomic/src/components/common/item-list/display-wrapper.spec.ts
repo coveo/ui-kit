@@ -1,7 +1,7 @@
-import {ItemDisplayLayout} from '@/src/components';
-import {fixture} from '@/vitest-utils/testing-helpers/fixture';
 import {html, nothing, TemplateResult} from 'lit';
 import {describe, expect, it} from 'vitest';
+import {ItemDisplayLayout} from '@/src/components';
+import {fixture} from '@/vitest-utils/testing-helpers/fixture';
 import {DisplayWrapperProps, renderDisplayWrapper} from './display-wrapper';
 
 describe('renderDisplayWrapper', () => {

@@ -1,15 +1,15 @@
 import chalk from 'chalk';
-import {dirname, basename, relative, join} from 'path';
+import {basename, dirname, join, relative} from 'path';
 import {argv} from 'process';
 import {
-  readConfigFile,
-  getLineAndCharacterOfPosition,
-  sys,
-  parseJsonConfigFileContent,
-  getPreEmitDiagnostics,
   createProgram,
-  flattenDiagnosticMessageText,
   DiagnosticCategory,
+  flattenDiagnosticMessageText,
+  getLineAndCharacterOfPosition,
+  getPreEmitDiagnostics,
+  parseJsonConfigFileContent,
+  readConfigFile,
+  sys,
 } from 'typescript';
 import {fileURLToPath} from 'url';
 import resourceUrlTransformer from './asset-path-transformer.mjs';

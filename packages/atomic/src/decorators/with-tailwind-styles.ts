@@ -1,7 +1,7 @@
-import theme from '@/src/utils/coveo.tw.css';
-import utilities from '@/src/utils/tailwind-utilities/utilities.tw.css';
-import styles from '@/src/utils/tailwind.global.tw.css';
 import {CSSResult, CSSResultGroup, unsafeCSS} from 'lit';
+import theme from '@/src/utils/coveo.tw.css';
+import styles from '@/src/utils/tailwind.global.tw.css';
+import utilities from '@/src/utils/tailwind-utilities/utilities.tw.css';
 
 export function withTailwindStyles<
   T extends {

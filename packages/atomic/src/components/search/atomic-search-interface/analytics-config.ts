@@ -4,10 +4,10 @@ import {
 } from '@coveo/headless';
 import {
   AnalyticsPayload,
+  augmentAnalyticsConfigWithAtomicVersion,
+  augmentAnalyticsConfigWithDocument,
   augmentAnalyticsWithAtomicVersion,
   augmentWithExternalMiddleware,
-  augmentAnalyticsConfigWithDocument,
-  augmentAnalyticsConfigWithAtomicVersion,
   getNextAnalyticsConfig,
 } from '../../common/interface/analytics-config';
 import {createSearchStore} from './store';

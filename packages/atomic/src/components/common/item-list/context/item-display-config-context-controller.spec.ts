@@ -1,9 +1,9 @@
 import {LitElement} from 'lit';
 import {customElement} from 'lit/decorators.js';
-import {describe, it, expect, beforeEach, afterEach, vi} from 'vitest';
+import {afterEach, beforeEach, describe, expect, it, vi} from 'vitest';
 import {
-  ItemDisplayConfigContextController,
   DisplayConfig,
+  ItemDisplayConfigContextController,
 } from './item-display-config-context-controller';
 
 @customElement('test-element')

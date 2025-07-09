@@ -1,4 +1,4 @@
-import {test, expect} from './fixture';
+import {expect, test} from './fixture';
 
 test.describe('when more results are NOT available & there are NO result children', () => {
   test.beforeEach(async ({foldedResultList}) => {

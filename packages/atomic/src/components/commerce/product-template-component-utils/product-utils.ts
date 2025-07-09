@@ -1,5 +1,5 @@
-import {readFromObject} from '@/src/utils/object-utils';
 import {Product, ProductTemplatesHelpers} from '@coveo/headless/commerce';
+import {readFromObject} from '@/src/utils/object-utils';
 import {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface';
 import {FieldValueIsNaNError} from './error';
 

@@ -1,17 +1,17 @@
+import {
+  HighlightUtils,
+  Product,
+  ProductTemplatesHelpers,
+} from '@coveo/headless/commerce';
+import {html, LitElement, nothing} from 'lit';
+import {customElement, property, state} from 'lit/decorators.js';
+import {when} from 'lit/directives/when.js';
 import {booleanConverter} from '@/src/converters/boolean-converter';
 import {bindingGuard} from '@/src/decorators/binding-guard';
 import {bindings} from '@/src/decorators/bindings';
 import {createProductContextController} from '@/src/decorators/commerce/product-template-decorators.js';
 import {errorGuard} from '@/src/decorators/error-guard';
 import {InitializableComponent} from '@/src/decorators/types';
-import {
-  Product,
-  ProductTemplatesHelpers,
-  HighlightUtils,
-} from '@coveo/headless/commerce';
-import {LitElement, html, nothing} from 'lit';
-import {customElement, property, state} from 'lit/decorators.js';
-import {when} from 'lit/directives/when.js';
 import {getFieldValueCaption} from '../../../utils/field-utils';
 import {renderItemTextFallback} from '../../common/item-text/item-text-fallback.js';
 import {renderItemTextHighlighted} from '../../common/item-text/item-text-highlighted.js';

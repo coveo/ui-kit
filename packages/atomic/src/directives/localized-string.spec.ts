@@ -1,7 +1,7 @@
 import i18next, {i18n as I18n} from 'i18next';
 import {html, render} from 'lit';
-import {describe, beforeEach, afterEach, it, expect} from 'vitest';
-import {localizedString, LocalizedStringProps} from './localized-string';
+import {afterEach, beforeEach, describe, expect, it} from 'vitest';
+import {LocalizedStringProps, localizedString} from './localized-string';
 
 describe('localizedString', () => {
   let container: HTMLElement;

@@ -1,9 +1,9 @@
-import {renderInAtomicCommerceInterface} from '@/vitest-utils/testing-helpers/fixtures/atomic/commerce/atomic-commerce-interface-fixture';
-import {sanitizeHtml} from '@/vitest-utils/testing-helpers/testing-utils/sanitize-html';
 import {Product} from '@coveo/headless/commerce';
 import {page} from '@vitest/browser/context';
 import {html} from 'lit';
-import {describe, it, expect, vi} from 'vitest';
+import {describe, expect, it, vi} from 'vitest';
+import {renderInAtomicCommerceInterface} from '@/vitest-utils/testing-helpers/fixtures/atomic/commerce/atomic-commerce-interface-fixture';
+import {sanitizeHtml} from '@/vitest-utils/testing-helpers/testing-utils/sanitize-html';
 import {makeMatchConditions} from '../../common/product-template/product-template-common';
 import {AtomicProductTemplate} from './atomic-product-template';
 

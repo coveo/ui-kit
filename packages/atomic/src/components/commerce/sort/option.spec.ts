@@ -1,12 +1,12 @@
+import {SortBy, SortCriterion} from '@coveo/headless/commerce';
+import {beforeAll, describe, expect, it, vi} from 'vitest';
 import {renderSortOption as renderCommonSortOption} from '@/src/components/common/sort/option';
 import {createTestI18n} from '@/vitest-utils/testing-helpers/i18n-utils';
-import {SortBy, SortCriterion} from '@coveo/headless/commerce';
-import {vi, describe, beforeAll, it, expect} from 'vitest';
 import {
   CommerceSortOptionProps,
-  renderCommerceSortOption,
   getLabel,
   getSortByLabel,
+  renderCommerceSortOption,
 } from './option';
 
 vi.mock('@coveo/headless/commerce');

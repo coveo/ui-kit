@@ -1,3 +1,8 @@
+import {buildRecentQueriesList} from '@coveo/headless/commerce';
+import {page} from '@vitest/browser/context';
+import {html} from 'lit';
+import {ifDefined} from 'lit/directives/if-defined.js';
+import {beforeEach, describe, expect, it, MockInstance, vi} from 'vitest';
 import {buildCustomEvent} from '@/src/utils/event-utils';
 import {fixture} from '@/vitest-utils/testing-helpers/fixture';
 import {
@@ -5,11 +10,6 @@ import {
   renderInAtomicCommerceSearchBox,
 } from '@/vitest-utils/testing-helpers/fixtures/atomic/commerce/atomic-commerce-search-box-fixture';
 import {buildFakeRecentQueriesList} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/recent-queries-list-controller';
-import {buildRecentQueriesList} from '@coveo/headless/commerce';
-import {page} from '@vitest/browser/context';
-import {html} from 'lit';
-import {ifDefined} from 'lit/directives/if-defined.js';
-import {describe, vi, expect, it, MockInstance, beforeEach} from 'vitest';
 import {
   SearchBoxSuggestionElement,
   SearchBoxSuggestions,

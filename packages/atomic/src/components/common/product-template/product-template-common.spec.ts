@@ -1,18 +1,18 @@
-import {isElementNode, isVisualNode} from '@/src/utils/utils';
 import {
-  describe,
-  it,
-  expect,
-  beforeEach,
   afterEach,
-  vi,
+  beforeEach,
+  describe,
+  expect,
+  it,
   MockInstance,
+  vi,
 } from 'vitest';
+import {isElementNode, isVisualNode} from '@/src/utils/utils';
 import {isResultSectionNode} from '../layout/sections';
 import {
-  makeMatchConditions,
-  makeDefinedConditions,
   getTemplateNodeType,
+  makeDefinedConditions,
+  makeMatchConditions,
 } from './product-template-common';
 
 vi.mock('../layout/sections', {spy: true});

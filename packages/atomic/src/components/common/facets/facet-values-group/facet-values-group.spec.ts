@@ -1,15 +1,15 @@
-import {renderFunctionFixture} from '@/vitest-utils/testing-helpers/fixture';
-import {createTestI18n} from '@/vitest-utils/testing-helpers/i18n-utils';
 import {html} from 'lit';
 import {
-  MockedFunction,
-  vi,
-  describe,
   beforeAll,
   beforeEach,
-  it,
+  describe,
   expect,
+  it,
+  MockedFunction,
+  vi,
 } from 'vitest';
+import {renderFunctionFixture} from '@/vitest-utils/testing-helpers/fixture';
+import {createTestI18n} from '@/vitest-utils/testing-helpers/i18n-utils';
 import {renderFieldsetGroup as renderCommonFieldsetGroup} from '../../fieldset-group';
 import {renderFacetValuesGroup} from './facet-values-group';
 import {FacetValuesGroupProps} from './stencil-facet-values-group';

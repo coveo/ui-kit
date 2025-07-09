@@ -2,7 +2,7 @@ import {renderFunctionFixture} from '@/vitest-utils/testing-helpers/fixture';
 import {createTestI18n} from '@/vitest-utils/testing-helpers/i18n-utils';
 import '@vitest/browser/matchers.d.ts';
 import {html} from 'lit';
-import {expect, describe, beforeAll, it} from 'vitest';
+import {beforeAll, describe, expect, it} from 'vitest';
 import {renderSortLabel, SortLabelProps} from './label';
 
 describe('renderSortLabel', () => {

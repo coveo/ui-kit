@@ -1,5 +1,5 @@
-import {AxeFixture, makeAxeBuilder} from '@/playwright-utils/base-fixture';
 import {test as base} from '@playwright/test';
+import {AxeFixture, makeAxeBuilder} from '@/playwright-utils/base-fixture';
 import {AtomicResultPageObject as Result} from '../../../atomic-result/e2e/page-object';
 import {AtomicResultListPageObject as ResultList} from './page-object';
 

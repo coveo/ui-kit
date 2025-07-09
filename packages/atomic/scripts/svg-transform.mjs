@@ -1,8 +1,8 @@
 import {readFileSync} from 'fs';
 import {basename, dirname, join, resolve} from 'path';
 import {
-  NodeFlags,
   isImportDeclaration,
+  NodeFlags,
   visitEachChild,
   visitNode,
 } from 'typescript';

@@ -1,6 +1,6 @@
 import {FacetSortCriterion} from '@coveo/headless';
 import {orderBy} from 'natural-orderby';
-import {test, expect} from './fixture';
+import {expect, test} from './fixture';
 
 test.describe('when selecting the facet search "More matches for" button', () => {
   test.beforeEach(async ({facet}) => {

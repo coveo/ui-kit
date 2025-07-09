@@ -1,6 +1,6 @@
 /* eslint-disable @cspell/spellchecker */
 import {AtomicCommerceInterface} from '../atomic-commerce-interface';
-import {test, expect} from './fixture';
+import {expect, test} from './fixture';
 
 test.describe('AtomicCommerceInterface', () => {
   test.describe('when search has not been initialized', () => {

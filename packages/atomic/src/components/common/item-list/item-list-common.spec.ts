@@ -1,3 +1,4 @@
+import {afterEach, beforeEach, describe, expect, it, vi} from 'vitest';
 import {CommerceStore} from '@/src/components';
 import {
   FocusTargetController,
@@ -5,7 +6,6 @@ import {
 } from '@/src/utils/accessibility-utils';
 import {updateBreakpoints} from '@/src/utils/replace-breakpoint';
 import {defer} from '@/src/utils/utils';
-import {afterEach, beforeEach, describe, expect, it, vi} from 'vitest';
 import {ItemListCommon, ItemListCommonProps} from './item-list-common';
 
 vi.mock('@/src/utils/accessibility-utils', {spy: true});

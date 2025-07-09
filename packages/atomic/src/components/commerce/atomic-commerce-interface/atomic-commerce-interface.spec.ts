@@ -1,30 +1,29 @@
-import {bindings} from '@/src/decorators/bindings';
-import {InitializableComponent} from '@/src/decorators/types';
-import {InitializeBindingsMixin} from '@/src/mixins/bindings-mixin';
-import {StorageItems} from '@/src/utils/local-storage-utils';
-import {fixture} from '@/vitest-utils/testing-helpers/fixture';
-import {fixtureCleanup} from '@/vitest-utils/testing-helpers/fixture-wrapper';
 import {
+  buildCommerceEngine,
   CommerceEngineConfiguration,
   getSampleCommerceEngineConfiguration,
   ProductListing,
   Search,
   UrlManager,
 } from '@coveo/headless/commerce';
-import {buildCommerceEngine} from '@coveo/headless/commerce';
-import {html} from 'lit';
-import {LitElement} from 'lit';
+import {html, LitElement} from 'lit';
 import {customElement, state} from 'lit/decorators.js';
 import {within} from 'shadow-dom-testing-library';
 import {
-  describe,
-  test,
-  expect,
-  vi,
-  MockInstance,
-  beforeEach,
   afterEach,
+  beforeEach,
+  describe,
+  expect,
+  MockInstance,
+  test,
+  vi,
 } from 'vitest';
+import {bindings} from '@/src/decorators/bindings';
+import {InitializableComponent} from '@/src/decorators/types';
+import {InitializeBindingsMixin} from '@/src/mixins/bindings-mixin';
+import {StorageItems} from '@/src/utils/local-storage-utils';
+import {fixture} from '@/vitest-utils/testing-helpers/fixture';
+import {fixtureCleanup} from '@/vitest-utils/testing-helpers/fixture-wrapper';
 import {stateKey} from '../../../../../headless/src/app/state-key';
 import {
   AtomicCommerceInterface,

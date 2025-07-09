@@ -1,7 +1,7 @@
 import chalk from 'chalk';
-import {readdirSync, mkdirSync, readFileSync, writeFileSync} from 'fs';
+import {mkdirSync, readdirSync, readFileSync, writeFileSync} from 'fs';
 import * as lightningcss from 'lightningcss';
-import {join, dirname, relative} from 'path';
+import {dirname, join, relative} from 'path';
 import postcss from 'postcss';
 import postcssLoadConfig from 'postcss-load-config';
 import {dedent} from 'ts-dedent';

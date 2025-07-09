@@ -1,10 +1,10 @@
+import {i18n} from 'i18next';
+import {html, nothing} from 'lit';
+import {when} from 'lit/directives/when.js';
 import {
   FunctionalComponent,
   FunctionalComponentWithChildren,
 } from '@/src/utils/functional-component-utils';
-import {i18n} from 'i18next';
-import {html, nothing} from 'lit';
-import {when} from 'lit/directives/when.js';
 import {renderButton} from '../button';
 
 interface RefineModalFiltersSectionProps {

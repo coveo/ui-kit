@@ -1,12 +1,12 @@
 import {NumericFacetValue, SearchStatusState} from '@coveo/headless';
-import {describe, it, expect} from 'vitest';
+import {describe, expect, it} from 'vitest';
 import {
+  collapseFacetsAfter,
+  getAutomaticFacetGenerator,
+  getFacetsInChildren,
+  isAutomaticFacetGenerator,
   shouldDisplayInputForFacetRange,
   sortFacetVisibility,
-  collapseFacetsAfter,
-  isAutomaticFacetGenerator,
-  getFacetsInChildren,
-  getAutomaticFacetGenerator,
   triageFacetsByParents,
 } from './facet-common';
 

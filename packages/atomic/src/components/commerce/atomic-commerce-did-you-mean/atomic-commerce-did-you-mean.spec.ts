@@ -1,19 +1,19 @@
+import {
+  buildQueryTrigger,
+  buildSearch,
+  DidYouMean,
+  DidYouMeanState,
+  QueryTrigger,
+  QueryTriggerState,
+} from '@coveo/headless/commerce';
+import {userEvent} from '@vitest/browser/context';
+import {html} from 'lit';
+import {beforeEach, describe, expect, it, vi} from 'vitest';
 import {renderInAtomicCommerceInterface} from '@/vitest-utils/testing-helpers/fixtures/atomic/commerce/atomic-commerce-interface-fixture';
 import {buildFakeDidYouMean} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/did-you-mean-subcontroller';
 import {buildFakeCommerceEngine} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/engine';
 import {buildFakeQueryTrigger} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/query-trigger-controller';
 import {buildFakeSearch} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/search-controller';
-import {
-  buildSearch,
-  buildQueryTrigger,
-  DidYouMeanState,
-  QueryTriggerState,
-  DidYouMean,
-  QueryTrigger,
-} from '@coveo/headless/commerce';
-import {userEvent} from '@vitest/browser/context';
-import {html} from 'lit';
-import {describe, expect, it, vi, beforeEach} from 'vitest';
 import './atomic-commerce-did-you-mean';
 import {AtomicCommerceDidYouMean} from './atomic-commerce-did-you-mean';
 

@@ -1,7 +1,7 @@
 import {
+  ChildProduct,
   CommerceEngine,
   Selectors,
-  ChildProduct,
 } from '@coveo/headless/commerce';
 import {DEFAULT_MOBILE_BREAKPOINT} from '../../../utils/replace-breakpoint';
 import {

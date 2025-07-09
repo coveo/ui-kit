@@ -1,10 +1,10 @@
+import {page} from '@vitest/browser/context';
 import * as assetPathUtils from '@/src/utils/asset-path-utils';
 import {fixture} from '@/vitest-utils/testing-helpers/fixture';
-import {page} from '@vitest/browser/context';
 import '@vitest/browser/matchers.d.ts';
 import DOMPurify from 'dompurify';
 import {html} from 'lit';
-import {expect, MockInstance, vi, describe, beforeEach, it} from 'vitest';
+import {beforeEach, describe, expect, it, MockInstance, vi} from 'vitest';
 import './atomic-icon';
 import {AtomicIcon} from './atomic-icon';
 

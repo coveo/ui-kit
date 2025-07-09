@@ -1,5 +1,5 @@
-import {AxeFixture, makeAxeBuilder} from '@/playwright-utils/base-fixture';
 import {test as base} from '@playwright/test';
+import {AxeFixture, makeAxeBuilder} from '@/playwright-utils/base-fixture';
 import {ProductTemplateObject} from './page-object';
 
 interface TestFixture {

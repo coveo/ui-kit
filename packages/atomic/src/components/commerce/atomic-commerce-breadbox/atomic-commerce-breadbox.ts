@@ -1,14 +1,6 @@
-import {bindStateToController} from '@/src/decorators/bind-state';
-import {bindingGuard} from '@/src/decorators/binding-guard';
-import {bindings} from '@/src/decorators/bindings';
-import {errorGuard} from '@/src/decorators/error-guard';
-import {InitializableComponent} from '@/src/decorators/types';
-import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles.js';
-import {FocusTargetController} from '@/src/utils/accessibility-utils';
-import {parseDate} from '@/src/utils/date-utils';
-import {getFieldValueCaption} from '@/src/utils/field-utils';
 import {NumberValue, Schema} from '@coveo/bueno';
 import {
+  Breadcrumb,
   BreadcrumbManager,
   BreadcrumbManagerState,
   BreadcrumbValue,
@@ -24,10 +16,18 @@ import {
   ProductListing,
   RegularFacetValue,
   Search,
-  Breadcrumb,
 } from '@coveo/headless/commerce';
 import {CSSResultGroup, html, LitElement, nothing, unsafeCSS} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
+import {bindStateToController} from '@/src/decorators/bind-state';
+import {bindingGuard} from '@/src/decorators/binding-guard';
+import {bindings} from '@/src/decorators/bindings';
+import {errorGuard} from '@/src/decorators/error-guard';
+import {InitializableComponent} from '@/src/decorators/types';
+import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles.js';
+import {FocusTargetController} from '@/src/utils/accessibility-utils';
+import {parseDate} from '@/src/utils/date-utils';
+import {getFieldValueCaption} from '@/src/utils/field-utils';
 import {renderBreadcrumbButton} from '../../common/breadbox/breadcrumb-button';
 import {renderBreadcrumbClearAll} from '../../common/breadbox/breadcrumb-clear-all';
 import {renderBreadcrumbContainer} from '../../common/breadbox/breadcrumb-container';

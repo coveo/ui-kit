@@ -1,8 +1,8 @@
-import {renderInAtomicCommerceInterface} from '@/vitest-utils/testing-helpers/fixtures/atomic/commerce/atomic-commerce-interface-fixture';
-import {createTestI18n} from '@/vitest-utils/testing-helpers/i18n-utils';
 import {i18n} from 'i18next';
 import {html} from 'lit';
-import {describe, it, vi, expect, beforeEach} from 'vitest';
+import {beforeEach, describe, expect, it, vi} from 'vitest';
+import {renderInAtomicCommerceInterface} from '@/vitest-utils/testing-helpers/fixtures/atomic/commerce/atomic-commerce-interface-fixture';
+import {createTestI18n} from '@/vitest-utils/testing-helpers/i18n-utils';
 import {AtomicCommerceText} from './atomic-commerce-text';
 
 describe('atomic-commerce-text', () => {

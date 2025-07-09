@@ -1,10 +1,10 @@
-import {describe, it, expect, beforeEach, afterEach, vi} from 'vitest';
+import {afterEach, beforeEach, describe, expect, it, vi} from 'vitest';
 import {
-  markParentAsReady,
+  InitializeEvent,
   isParentReady,
+  markParentAsReady,
   queueEventForParent,
 } from './init-queue';
-import {InitializeEvent} from './init-queue';
 
 describe('init-queue', () => {
   let parent: HTMLElement;

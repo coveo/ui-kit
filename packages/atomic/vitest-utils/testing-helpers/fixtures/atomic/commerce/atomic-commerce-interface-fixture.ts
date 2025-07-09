@@ -1,16 +1,16 @@
-import type {CommerceStore} from '@/src/components.js';
-import {bindingsContext} from '@/src/components/context/bindings-context.js';
-import {
-  markParentAsReady,
-  type InitializeEvent,
-} from '@/src/utils/init-queue.js';
-import {initializeEventName} from '@/src/utils/initialization-lit-stencil-common-utils.js';
 import type {CommerceEngine} from '@coveo/headless/commerce';
 import {provide} from '@lit/context';
 import {type i18n} from 'i18next';
 import {html, LitElement, nothing, TemplateResult} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {vi} from 'vitest';
+import {bindingsContext} from '@/src/components/context/bindings-context.js';
+import type {CommerceStore} from '@/src/components.js';
+import {
+  type InitializeEvent,
+  markParentAsReady,
+} from '@/src/utils/init-queue.js';
+import {initializeEventName} from '@/src/utils/initialization-lit-stencil-common-utils.js';
 import type {
   AtomicCommerceInterface,
   CommerceBindings,

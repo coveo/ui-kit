@@ -1,11 +1,11 @@
 import {readFileSync} from 'fs';
 import {resolve} from 'path';
 import {
-  isPropertyAccessExpression,
   isIdentifier,
+  isNonNullExpression,
+  isPropertyAccessExpression,
   visitEachChild,
   visitNode,
-  isNonNullExpression,
 } from 'typescript';
 // Read the version from package.json
 import {fileURLToPath} from 'url';

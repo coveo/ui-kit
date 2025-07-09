@@ -1,9 +1,9 @@
-import {booleanConverter} from '@/src/converters/boolean-converter';
-import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
-import {Product, InteractiveProduct} from '@coveo/headless/commerce';
-import {CSSResultGroup, LitElement, html, unsafeCSS} from 'lit';
+import {InteractiveProduct, Product} from '@coveo/headless/commerce';
+import {CSSResultGroup, html, LitElement, unsafeCSS} from 'lit';
 import {customElement, property} from 'lit/decorators.js';
 import {ref} from 'lit/directives/ref.js';
+import {booleanConverter} from '@/src/converters/boolean-converter';
+import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
 import {
   InteractiveProductContextEvent,
   ProductContextEvent,
@@ -15,10 +15,10 @@ import {
   resultComponentClass,
 } from '../../common/item-list/item-list-common';
 import {
-  ItemLayout,
   ItemDisplayDensity,
   ItemDisplayImageSize,
   ItemDisplayLayout,
+  ItemLayout,
 } from '../../common/layout/display-options';
 import {CommerceStore} from '../atomic-commerce-interface/store';
 import {CommerceRecommendationStore} from '../atomic-commerce-recommendation-interface/store';

@@ -1,10 +1,3 @@
-import {bindStateToController} from '@/src/decorators/bind-state';
-import {bindingGuard} from '@/src/decorators/binding-guard';
-import {bindings} from '@/src/decorators/bindings';
-import {errorGuard} from '@/src/decorators/error-guard';
-import {InitializableComponent} from '@/src/decorators/types';
-import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
-import {randomID} from '@/src/utils/utils';
 import {NumberValue, Schema} from '@coveo/bueno';
 import {
   buildProductListing,
@@ -16,13 +9,20 @@ import {
 } from '@coveo/headless/commerce';
 import {html, LitElement} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
+import {bindStateToController} from '@/src/decorators/bind-state';
+import {bindingGuard} from '@/src/decorators/binding-guard';
+import {bindings} from '@/src/decorators/bindings';
+import {errorGuard} from '@/src/decorators/error-guard';
+import {InitializableComponent} from '@/src/decorators/types';
+import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
+import {randomID} from '@/src/utils/utils';
 import ArrowLeftIcon from '../../../images/arrow-left-rounded.svg';
 import ArrowRightIcon from '../../../images/arrow-right-rounded.svg';
 import {createAppLoadedListener} from '../../common/interface/store';
 import {
+  renderPageButtons,
   renderPagerNextButton,
   renderPagerPageButton,
-  renderPageButtons,
   renderPagerPreviousButton,
 } from '../../common/pager/pager-buttons';
 import {renderPagerGuard} from '../../common/pager/pager-guard';

@@ -1,7 +1,7 @@
+import {findPackageJSON} from 'node:module';
 import chalk from 'chalk';
 import {spawn} from 'child_process';
-import {readFileSync, readdirSync, statSync, writeFileSync} from 'fs';
-import {findPackageJSON} from 'node:module';
+import {readdirSync, readFileSync, statSync, writeFileSync} from 'fs';
 import path from 'path';
 
 const currentDir = import.meta.dirname;

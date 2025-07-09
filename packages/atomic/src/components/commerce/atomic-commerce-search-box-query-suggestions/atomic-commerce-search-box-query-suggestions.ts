@@ -1,4 +1,12 @@
 import {
+  CommerceEngine,
+  loadQuerySuggestActions,
+  SearchBox,
+  Suggestion,
+} from '@coveo/headless/commerce';
+import {html, LitElement, nothing} from 'lit';
+import {customElement, property, state} from 'lit/decorators.js';
+import {
   getPartialSearchBoxSuggestionElement,
   renderQuerySuggestion,
 } from '@/src/components/common/suggestions/query-suggestions';
@@ -10,14 +18,6 @@ import {
 } from '@/src/components/common/suggestions/suggestions-common';
 import {errorGuard} from '@/src/decorators/error-guard';
 import {SearchBoxSuggestionsComponent} from '@/src/decorators/types';
-import {
-  CommerceEngine,
-  loadQuerySuggestActions,
-  SearchBox,
-  Suggestion,
-} from '@coveo/headless/commerce';
-import {html, LitElement, nothing} from 'lit';
-import {customElement, property, state} from 'lit/decorators.js';
 import SearchIcon from '../../../images/search.svg';
 import {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface';
 

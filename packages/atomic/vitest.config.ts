@@ -1,6 +1,6 @@
+import path from 'node:path';
 import tailwindcss from '@tailwindcss/vite';
 import {readFileSync} from 'fs';
-import path from 'node:path';
 import {dirname, resolve} from 'path';
 import {defineConfig} from 'vitest/config';
 //@ts-expect-error - normal json import

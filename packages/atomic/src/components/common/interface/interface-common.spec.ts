@@ -1,3 +1,7 @@
+import type {CommerceEngine} from '@coveo/headless/commerce';
+import Backend from 'i18next-http-backend';
+import {html} from 'lit';
+import {describe, expect, it, vi} from 'vitest';
 import {
   BaseAtomicInterface,
   CommonAtomicInterfaceHelper,
@@ -6,10 +10,6 @@ import {setCoveoGlobal} from '@/src/global/environment.js';
 import {loadDayjsLocale} from '@/src/utils/dayjs-locales.js';
 import {renderInAtomicCommerceInterface} from '@/vitest-utils/testing-helpers/fixtures/atomic/commerce/atomic-commerce-interface-fixture.js';
 import {buildFakeCommerceEngine} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/engine.js';
-import type {CommerceEngine} from '@coveo/headless/commerce';
-import Backend from 'i18next-http-backend';
-import {html} from 'lit';
-import {describe, expect, it, vi} from 'vitest';
 import {init18n} from './i18n.js';
 
 vi.mock('@/src/global/environment.js', {spy: true});

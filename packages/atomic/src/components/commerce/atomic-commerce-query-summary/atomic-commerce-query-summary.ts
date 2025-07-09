@@ -1,11 +1,3 @@
-import {bindStateToController} from '@/src/decorators/bind-state';
-import {bindingGuard} from '@/src/decorators/binding-guard';
-import {bindings} from '@/src/decorators/bindings';
-import {errorGuard} from '@/src/decorators/error-guard';
-import {InitializableComponent} from '@/src/decorators/types';
-import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles.js';
-import {localizedString} from '@/src/directives/localized-string';
-import {AriaLiveRegionController} from '@/src/utils/accessibility-utils';
 import {
   buildProductListing,
   buildSearch,
@@ -15,6 +7,14 @@ import {
 } from '@coveo/headless/commerce';
 import {CSSResultGroup, html, LitElement, unsafeCSS} from 'lit';
 import {customElement, state} from 'lit/decorators.js';
+import {bindStateToController} from '@/src/decorators/bind-state';
+import {bindingGuard} from '@/src/decorators/binding-guard';
+import {bindings} from '@/src/decorators/bindings';
+import {errorGuard} from '@/src/decorators/error-guard';
+import {InitializableComponent} from '@/src/decorators/types';
+import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles.js';
+import {localizedString} from '@/src/directives/localized-string';
+import {AriaLiveRegionController} from '@/src/utils/accessibility-utils';
 import {renderQuerySummaryContainer} from '../../common/query-summary/container';
 import {renderQuerySummaryGuard} from '../../common/query-summary/guard';
 import {getProductQuerySummaryI18nParameters} from '../../common/query-summary/utils';

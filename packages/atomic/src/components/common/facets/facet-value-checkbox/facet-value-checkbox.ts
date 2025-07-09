@@ -1,7 +1,7 @@
-import {FunctionalComponentWithChildren} from '@/src/utils/functional-component-utils';
 import {html} from 'lit';
 import {keyed} from 'lit/directives/keyed.js';
 import {ref} from 'lit/directives/ref.js';
+import {FunctionalComponentWithChildren} from '@/src/utils/functional-component-utils';
 import {createRipple} from '../../../../utils/ripple';
 import {randomID} from '../../../../utils/utils';
 import {renderCheckbox as checkbox} from '../../checkbox';

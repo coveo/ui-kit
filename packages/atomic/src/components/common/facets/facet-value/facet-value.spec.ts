@@ -1,15 +1,15 @@
-import {renderFunctionFixture} from '@/vitest-utils/testing-helpers/fixture';
-import {createTestI18n} from '@/vitest-utils/testing-helpers/i18n-utils';
 import {html} from 'lit';
 import {
-  expect,
-  vi,
-  describe,
   beforeAll,
+  beforeEach,
+  describe,
+  expect,
   it,
   MockedFunction,
-  beforeEach,
+  vi,
 } from 'vitest';
+import {renderFunctionFixture} from '@/vitest-utils/testing-helpers/fixture';
+import {createTestI18n} from '@/vitest-utils/testing-helpers/i18n-utils';
 import {renderFacetValueBox} from '../facet-value-box/facet-value-box';
 import {renderFacetValueCheckbox} from '../facet-value-checkbox/facet-value-checkbox';
 import {renderFacetValueLabelHighlight} from '../facet-value-label-highlight/facet-value-label-highlight';

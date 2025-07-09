@@ -1,12 +1,12 @@
+import {html, TemplateResult} from 'lit';
+import {keyed} from 'lit/directives/keyed.js';
+import {map} from 'lit/directives/map.js';
+import {ref} from 'lit/directives/ref.js';
 import {ItemRenderingFunction} from '@/src/components';
 import {
   FunctionalComponent,
   FunctionalComponentWithChildren,
 } from '@/src/utils/functional-component-utils';
-import {html, TemplateResult} from 'lit';
-import {keyed} from 'lit/directives/keyed.js';
-import {map} from 'lit/directives/map.js';
-import {ref} from 'lit/directives/ref.js';
 import {tableElementTagName} from '../../search/atomic-table-result/table-element-utils';
 import {AnyItem} from '../interface/item';
 

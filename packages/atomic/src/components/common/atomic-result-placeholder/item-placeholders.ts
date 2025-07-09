@@ -1,12 +1,12 @@
+import {html} from 'lit';
+import {keyed} from 'lit/directives/keyed.js';
+import {map} from 'lit/directives/map.js';
 import {
   ItemDisplayDensity,
   ItemDisplayImageSize,
   ItemDisplayLayout,
 } from '@/src/components';
 import {FunctionalComponent} from '@/src/utils/functional-component-utils';
-import {html} from 'lit';
-import {keyed} from 'lit/directives/keyed.js';
-import {map} from 'lit/directives/map.js';
 
 export interface ItemPlaceholdersProps {
   density: ItemDisplayDensity;

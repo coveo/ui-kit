@@ -1,9 +1,3 @@
-import {renderInAtomicCommerceInterface} from '@/vitest-utils/testing-helpers/fixtures/atomic/commerce/atomic-commerce-interface-fixture';
-import {buildFakeProduct} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/product';
-import {buildFakeProductListing} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/product-listing-controller';
-import {buildFakeSearch} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/search-controller';
-import {buildFakeSummary} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/summary-subcontroller';
-import {genericSubscribe} from '@/vitest-utils/testing-helpers/fixtures/headless/common';
 import {
   buildProductListing,
   buildSearch,
@@ -14,6 +8,12 @@ import {
 import {page} from '@vitest/browser/context';
 import {html} from 'lit';
 import {beforeEach, describe, expect, it, MockInstance, vi} from 'vitest';
+import {renderInAtomicCommerceInterface} from '@/vitest-utils/testing-helpers/fixtures/atomic/commerce/atomic-commerce-interface-fixture';
+import {buildFakeProduct} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/product';
+import {buildFakeProductListing} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/product-listing-controller';
+import {buildFakeSearch} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/search-controller';
+import {buildFakeSummary} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/summary-subcontroller';
+import {genericSubscribe} from '@/vitest-utils/testing-helpers/fixtures/headless/common';
 import {
   ItemDisplayDensity,
   ItemDisplayImageSize,

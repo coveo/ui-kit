@@ -1,5 +1,5 @@
-import {FunctionalComponent} from '@/src/utils/functional-component-utils';
 import {SortCriterion} from '@coveo/headless/commerce';
+import {FunctionalComponent} from '@/src/utils/functional-component-utils';
 import {renderSortOption, SortOptionProps} from '../../common/sort/option';
 
 export interface CommerceSortOptionProps

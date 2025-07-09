@@ -1,6 +1,6 @@
-import {makeAxeBuilder, AxeFixture} from '@/playwright-utils/base-fixture';
-import {ProductsPageObject as Product} from '@/src/components/commerce/atomic-product/e2e/page-object';
 import {test as base} from '@playwright/test';
+import {AxeFixture, makeAxeBuilder} from '@/playwright-utils/base-fixture';
+import {ProductsPageObject as Product} from '@/src/components/commerce/atomic-product/e2e/page-object';
 import {ProductTextPageObject as ProductText} from './page-object';
 
 type MyFixtures = {

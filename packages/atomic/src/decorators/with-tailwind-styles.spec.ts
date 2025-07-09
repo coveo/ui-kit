@@ -1,9 +1,9 @@
-import theme from '@/src/utils/coveo.tw.css';
-import utilities from '@/src/utils/tailwind-utilities/utilities.tw.css';
-import globalStyles from '@/src/utils/tailwind.global.tw.css';
 import {CSSResult, CSSResultGroup, html, LitElement, unsafeCSS} from 'lit';
 import {customElement} from 'lit/decorators.js';
-import {describe, beforeEach, afterEach, it, expect} from 'vitest';
+import {afterEach, beforeEach, describe, expect, it} from 'vitest';
+import theme from '@/src/utils/coveo.tw.css';
+import globalStyles from '@/src/utils/tailwind.global.tw.css';
+import utilities from '@/src/utils/tailwind-utilities/utilities.tw.css';
 import {withTailwindStyles} from './with-tailwind-styles';
 
 const componentStyles = `

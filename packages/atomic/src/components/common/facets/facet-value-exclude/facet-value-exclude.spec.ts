@@ -1,8 +1,8 @@
-import {renderFunctionFixture} from '@/vitest-utils/testing-helpers/fixture';
 import {userEvent} from '@vitest/browser/context';
 import {html} from 'lit';
-import {expect, vi, describe, it} from 'vitest';
-import {renderFacetValueExclude, ExcludeProps} from './facet-value-exclude';
+import {describe, expect, it, vi} from 'vitest';
+import {renderFunctionFixture} from '@/vitest-utils/testing-helpers/fixture';
+import {ExcludeProps, renderFacetValueExclude} from './facet-value-exclude';
 
 const setupElement = async (props: Partial<ExcludeProps> = {}) => {
   const element = await renderFunctionFixture(

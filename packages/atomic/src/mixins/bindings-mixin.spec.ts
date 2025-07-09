@@ -1,15 +1,15 @@
 import i18next from 'i18next';
-import {LitElement, html} from 'lit';
+import {html, LitElement} from 'lit';
 import {customElement, state} from 'lit/decorators.js';
 import {
-  Mock,
-  vi,
-  describe,
-  beforeEach,
   afterEach,
-  it,
-  test,
+  beforeEach,
+  describe,
   expect,
+  it,
+  Mock,
+  test,
+  vi,
 } from 'vitest';
 import type {Bindings} from '../components/search/atomic-search-interface/interfaces';
 import {InitializableComponent} from '../decorators/types';

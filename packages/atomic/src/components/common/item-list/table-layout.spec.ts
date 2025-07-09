@@ -1,10 +1,10 @@
+import {html, nothing, TemplateResult} from 'lit';
+import {describe, expect, it, vi} from 'vitest';
 import {
   fixture,
   renderFunctionFixture,
 } from '@/vitest-utils/testing-helpers/fixture';
 import {buildFakeProduct} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/product';
-import {html, nothing, TemplateResult} from 'lit';
-import {describe, expect, it, vi} from 'vitest';
 import {AnyItem} from '../interface/item';
 import {
   renderTableData,

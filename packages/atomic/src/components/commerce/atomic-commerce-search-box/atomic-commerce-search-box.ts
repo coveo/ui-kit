@@ -1,3 +1,17 @@
+import {
+  buildSearchBox,
+  buildStandaloneSearchBox,
+  loadQuerySetActions,
+  SearchBox,
+  SearchBoxOptions,
+  SearchBoxState,
+  StandaloneSearchBox,
+  StandaloneSearchBoxState,
+} from '@coveo/headless/commerce';
+import {CSSResultGroup, html, LitElement, unsafeCSS} from 'lit';
+import {customElement, property, state} from 'lit/decorators.js';
+import {classMap} from 'lit/directives/class-map.js';
+import {createRef, RefOrCallback, ref} from 'lit/directives/ref.js';
 import {booleanConverter} from '@/src/converters/boolean-converter';
 import {bindStateToController} from '@/src/decorators/bind-state';
 import {bindingGuard} from '@/src/decorators/binding-guard';
@@ -14,20 +28,6 @@ import {
   StorageItems,
 } from '@/src/utils/local-storage-utils';
 import {updateBreakpoints} from '@/src/utils/replace-breakpoint';
-import {
-  buildSearchBox,
-  buildStandaloneSearchBox,
-  loadQuerySetActions,
-  SearchBox,
-  SearchBoxOptions,
-  SearchBoxState,
-  StandaloneSearchBox,
-  StandaloneSearchBoxState,
-} from '@coveo/headless/commerce';
-import {CSSResultGroup, html, LitElement, unsafeCSS} from 'lit';
-import {customElement, property, state} from 'lit/decorators.js';
-import {classMap} from 'lit/directives/class-map.js';
-import {createRef, ref, RefOrCallback} from 'lit/directives/ref.js';
 import {
   isFocusingOut,
   once,

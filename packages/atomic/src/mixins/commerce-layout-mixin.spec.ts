@@ -1,8 +1,8 @@
-import {fixture} from '@/vitest-utils/testing-helpers/fixture';
-import {LitElement, unsafeCSS, html, CSSResult} from 'lit';
+import {CSSResult, html, LitElement, unsafeCSS} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {ifDefined} from 'lit/directives/if-defined.js';
-import {describe, it, expect, vi} from 'vitest';
+import {describe, expect, it, vi} from 'vitest';
+import {fixture} from '@/vitest-utils/testing-helpers/fixture';
 import {buildCommerceLayout} from '../components/commerce/atomic-commerce-layout/commerce-layout';
 import {CommerceLayoutMixin} from './commerce-layout-mixin';
 

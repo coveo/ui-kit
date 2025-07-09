@@ -4,11 +4,11 @@ import DOMPurify from 'dompurify';
 import {debounce} from '../../../utils/debounce-utils';
 import {promiseTimeout} from '../../../utils/promise-utils';
 import {
+  elementHasNoQuery,
+  elementHasQuery,
   SearchBoxSuggestionElement,
   SearchBoxSuggestionsBindings,
   SearchBoxSuggestionsEvent,
-  elementHasNoQuery,
-  elementHasQuery,
 } from './suggestions-common';
 
 /**

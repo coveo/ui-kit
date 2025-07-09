@@ -1,9 +1,9 @@
 import {describe, expect, it} from 'vitest';
 import './atomic-layout-section';
-import {AtomicLayoutSection} from './atomic-layout-section';
-import {fixture} from '@/vitest-utils/testing-helpers/fixture';
 import {html} from 'lit';
 import {ifDefined} from 'lit/directives/if-defined.js';
+import {fixture} from '@/vitest-utils/testing-helpers/fixture';
+import {AtomicLayoutSection} from './atomic-layout-section';
 import {Section} from './sections';
 
 describe('AtomicLayoutSection', () => {

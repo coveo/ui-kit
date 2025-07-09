@@ -1,12 +1,12 @@
-import {errorGuard} from '@/src/decorators/error-guard';
-import {LitElementWithError} from '@/src/decorators/types';
-import {mapProperty} from '@/src/utils/props-utils';
 import {
   ProductTemplate,
   ProductTemplateCondition,
 } from '@coveo/headless/commerce';
 import {html, LitElement, nothing} from 'lit';
-import {property, customElement, state} from 'lit/decorators.js';
+import {customElement, property, state} from 'lit/decorators.js';
+import {errorGuard} from '@/src/decorators/error-guard';
+import {LitElementWithError} from '@/src/decorators/types';
+import {mapProperty} from '@/src/utils/props-utils';
 import {makeMatchConditions} from '../../common/product-template/product-template-common';
 import {ProductTemplateController} from '../../common/product-template/product-template-controller';
 import '../atomic-commerce-text/atomic-commerce-text';

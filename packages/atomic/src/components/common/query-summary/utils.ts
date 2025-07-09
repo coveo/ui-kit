@@ -1,6 +1,6 @@
-import {FunctionalComponent} from '@/src/utils/functional-component-utils';
 import {i18n} from 'i18next';
 import {html} from 'lit';
+import {FunctionalComponent} from '@/src/utils/functional-component-utils';
 
 interface i18nKeyProps {
   first: number;

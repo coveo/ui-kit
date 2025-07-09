@@ -1,10 +1,10 @@
-import {createRipple} from '@/src/utils/ripple';
-import {renderFunctionFixture} from '@/vitest-utils/testing-helpers/fixture';
-import {createTestI18n} from '@/vitest-utils/testing-helpers/i18n-utils';
 import {page} from '@vitest/browser/context';
 import {html} from 'lit';
 import {createRef} from 'lit/directives/ref.js';
-import {expect, vi, describe, beforeAll, it} from 'vitest';
+import {beforeAll, describe, expect, it, vi} from 'vitest';
+import {createRipple} from '@/src/utils/ripple';
+import {renderFunctionFixture} from '@/vitest-utils/testing-helpers/fixture';
+import {createTestI18n} from '@/vitest-utils/testing-helpers/i18n-utils';
 import {renderCheckbox} from '../../checkbox';
 import {renderTriStateCheckbox} from '../../triStateCheckbox';
 import {FacetValuePropsBase} from '../facet-common';

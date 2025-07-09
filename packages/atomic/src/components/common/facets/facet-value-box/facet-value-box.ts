@@ -1,7 +1,7 @@
-import {FunctionalComponentWithChildren} from '@/src/utils/functional-component-utils';
 import {html} from 'lit';
 import {ifDefined} from 'lit/directives/if-defined.js';
 import {keyed} from 'lit/directives/keyed.js';
+import {FunctionalComponentWithChildren} from '@/src/utils/functional-component-utils';
 import {renderButton} from '../../button';
 import {FacetValuePropsBase} from '../facet-common';
 

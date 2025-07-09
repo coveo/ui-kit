@@ -1,8 +1,8 @@
-import {LitElementWithError} from '@/src/decorators/types';
-import {fixture} from '@/vitest-utils/testing-helpers/fixture';
 import {html, LitElement, TemplateResult} from 'lit';
 import {customElement, state} from 'lit/decorators.js';
-import {describe, it, expect, vi, beforeEach, MockInstance} from 'vitest';
+import {beforeEach, describe, expect, it, MockInstance, vi} from 'vitest';
+import {LitElementWithError} from '@/src/decorators/types';
+import {fixture} from '@/vitest-utils/testing-helpers/fixture';
 import {getTemplateNodeType} from './product-template-common';
 import {ProductTemplateController} from './product-template-controller';
 

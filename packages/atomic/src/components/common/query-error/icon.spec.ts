@@ -1,6 +1,6 @@
-import {renderFunctionFixture} from '@/vitest-utils/testing-helpers/fixture';
 import {html} from 'lit';
-import {describe, it, expect} from 'vitest';
+import {describe, expect, it} from 'vitest';
+import {renderFunctionFixture} from '@/vitest-utils/testing-helpers/fixture';
 import CannotAccess from '../../../images/cannot-access.svg';
 import Indexing from '../../../images/indexing.svg';
 import NoConnection from '../../../images/no-connection.svg';

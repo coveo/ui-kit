@@ -1,5 +1,5 @@
 import {CommerceEngine, Selectors} from '@coveo/headless/commerce';
-import {describe, test, expect, vi} from 'vitest';
+import {describe, expect, test, vi} from 'vitest';
 import {createCommerceStore} from './store';
 
 vi.mock('@coveo/headless/commerce', {spy: true});

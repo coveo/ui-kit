@@ -1,11 +1,3 @@
-import {watch} from '@/src/decorators/watch';
-import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles.js';
-import {markParentAsReady} from '@/src/utils/init-queue';
-import {
-  SafeStorage,
-  StandaloneSearchBoxData,
-  StorageItems,
-} from '@/src/utils/local-storage-utils';
 import {
   buildCommerceEngine,
   buildContext,
@@ -14,8 +6,8 @@ import {
   CommerceEngine,
   CommerceEngineConfiguration,
   Context,
-  loadQueryActions,
   LogLevel,
+  loadQueryActions,
   ProductListing,
   ProductListingSummaryState,
   Search,
@@ -28,6 +20,14 @@ import {provide} from '@lit/context';
 import i18next, {i18n} from 'i18next';
 import {CSSResultGroup, html, LitElement, unsafeCSS} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
+import {watch} from '@/src/decorators/watch';
+import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles.js';
+import {markParentAsReady} from '@/src/utils/init-queue';
+import {
+  SafeStorage,
+  StandaloneSearchBoxData,
+  StorageItems,
+} from '@/src/utils/local-storage-utils';
 import {ChildrenUpdateCompleteMixin} from '../../../mixins/children-update-complete-mixin';
 import {CommonBindings} from '../../common/interface/bindings';
 import {

@@ -1,5 +1,3 @@
-import {fixture} from '@/vitest-utils/testing-helpers/fixture';
-import {renderInAtomicCommerceInterface} from '@/vitest-utils/testing-helpers/fixtures/atomic/commerce/atomic-commerce-interface-fixture';
 import {html, LitElement} from 'lit';
 import {customElement, state} from 'lit/decorators.js';
 import {
@@ -12,6 +10,8 @@ import {
   MockInstance,
   vi,
 } from 'vitest';
+import {fixture} from '@/vitest-utils/testing-helpers/fixture';
+import {renderInAtomicCommerceInterface} from '@/vitest-utils/testing-helpers/fixtures/atomic/commerce/atomic-commerce-interface-fixture';
 import {CommerceBindings} from '../components/commerce/atomic-commerce-interface/atomic-commerce-interface';
 import {bindings} from '../decorators/bindings';
 import {InitializableComponent} from '../decorators/types';

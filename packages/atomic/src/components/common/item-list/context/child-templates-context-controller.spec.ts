@@ -1,7 +1,7 @@
-import {ItemTemplateProvider} from '@/src/components/common/item-list/item-template-provider';
 import {LitElement} from 'lit';
 import {customElement, state} from 'lit/decorators.js';
-import {describe, it, expect, beforeEach, vi} from 'vitest';
+import {beforeEach, describe, expect, it, vi} from 'vitest';
+import {ItemTemplateProvider} from '@/src/components/common/item-list/item-template-provider';
 import {ChildTemplatesContextController} from './child-templates-context-controller';
 
 const mockItemTemplateProvider: ItemTemplateProvider = {

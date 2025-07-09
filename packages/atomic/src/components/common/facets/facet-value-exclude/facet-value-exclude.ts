@@ -1,6 +1,6 @@
-import {FunctionalComponent} from '@/src/utils/functional-component-utils';
 import {html} from 'lit';
 import {ifDefined} from 'lit/directives/if-defined.js';
+import {FunctionalComponent} from '@/src/utils/functional-component-utils';
 import Tick from '../../../../images/clear.svg';
 import '../../atomic-icon/atomic-icon';
 

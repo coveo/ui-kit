@@ -1,3 +1,6 @@
+import {Product} from '@coveo/headless/commerce';
+import {html} from 'lit';
+import {beforeEach, describe, expect, it, vi} from 'vitest';
 import {
   ItemDisplayDensity,
   ItemDisplayImageSize,
@@ -5,9 +8,6 @@ import {
 } from '@/src/components';
 import {renderInAtomicCommerceInterface} from '@/vitest-utils/testing-helpers/fixtures/atomic/commerce/atomic-commerce-interface-fixture';
 import {buildFakeProduct} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/product';
-import {Product} from '@coveo/headless/commerce';
-import {html} from 'lit';
-import {describe, expect, it, vi, beforeEach} from 'vitest';
 import {ItemRenderingFunction} from '../../common/item-list/item-list-common';
 import {AtomicProduct} from './atomic-product';
 

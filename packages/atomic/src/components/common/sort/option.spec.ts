@@ -1,9 +1,9 @@
+import {page} from '@vitest/browser/context';
 import {renderFunctionFixture} from '@/vitest-utils/testing-helpers/fixture';
 import {createTestI18n} from '@/vitest-utils/testing-helpers/i18n-utils';
-import {page} from '@vitest/browser/context';
 import '@vitest/browser/matchers.d.ts';
 import {html} from 'lit';
-import {expect, describe, beforeAll, it} from 'vitest';
+import {beforeAll, describe, expect, it} from 'vitest';
 import {renderSortOption, SortOptionProps} from './option';
 
 describe('renderSortOption', () => {

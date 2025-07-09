@@ -1,7 +1,7 @@
 import {
+  buildProductTemplatesManager,
   Product,
   Template,
-  buildProductTemplatesManager,
 } from '@coveo/headless/commerce';
 import {ItemTarget} from '../../common/layout/display-options';
 import {

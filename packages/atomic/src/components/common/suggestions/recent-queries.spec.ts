@@ -1,7 +1,7 @@
+import {html} from 'lit';
+import {beforeAll, describe, expect, it} from 'vitest';
 import {fixture} from '@/vitest-utils/testing-helpers/fixture';
 import {createTestI18n} from '@/vitest-utils/testing-helpers/i18n-utils';
-import {html} from 'lit';
-import {describe, it, beforeAll, expect} from 'vitest';
 import {
   getPartialRecentQueryClearElement,
   getPartialRecentQueryElement,

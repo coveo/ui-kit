@@ -1,3 +1,17 @@
+import {NumberValue, Schema, StringValue} from '@coveo/bueno';
+import {
+  buildRecommendations,
+  Product,
+  Recommendations,
+  RecommendationsState,
+  RecommendationsSummaryState,
+  Summary,
+} from '@coveo/headless/commerce';
+import {CSSResultGroup, html, LitElement, nothing, unsafeCSS} from 'lit';
+import {customElement, property, state} from 'lit/decorators.js';
+import {keyed} from 'lit/directives/keyed.js';
+import {map} from 'lit/directives/map.js';
+import {when} from 'lit/directives/when.js';
 import {SelectChildProductEventArgs} from '@/src/components';
 // TODO: Replace with atomic-commerce-recommendation-interface bindings once it is merged (KIT-3934)
 import {CommerceBindings} from '@/src/components/commerce/atomic-commerce-interface/atomic-commerce-interface';
@@ -13,10 +27,10 @@ import {
   ItemRenderingFunction,
 } from '@/src/components/common/item-list/item-list-common';
 import {
+  getItemListDisplayClasses,
   ItemDisplayBasicLayout,
   ItemDisplayDensity,
   ItemDisplayImageSize,
-  getItemListDisplayClasses,
 } from '@/src/components/common/layout/display-options';
 import {bindStateToController} from '@/src/decorators/bind-state.js';
 import {bindingGuard} from '@/src/decorators/binding-guard';
@@ -28,21 +42,6 @@ import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
 import {InitializeBindingsMixin} from '@/src/mixins/bindings-mixin';
 import {FocusTargetController} from '@/src/utils/accessibility-utils';
 import {randomID} from '@/src/utils/utils';
-import {NumberValue} from '@coveo/bueno';
-import {Schema, StringValue} from '@coveo/bueno';
-import {
-  Product,
-  Recommendations,
-  RecommendationsState,
-  RecommendationsSummaryState,
-  Summary,
-  buildRecommendations,
-} from '@coveo/headless/commerce';
-import {CSSResultGroup, html, LitElement, nothing, unsafeCSS} from 'lit';
-import {customElement, property, state} from 'lit/decorators.js';
-import {keyed} from 'lit/directives/keyed.js';
-import {map} from 'lit/directives/map.js';
-import {when} from 'lit/directives/when.js';
 import styles from './atomic-commerce-recommendation-list.tw.css';
 
 /**

@@ -1,5 +1,5 @@
 import {Page} from 'playwright/test';
-import {test, expect} from './fixture';
+import {expect, test} from './fixture';
 
 test.describe('AtomicCommerceSearchBoxQuerySuggestions', () => {
   test.beforeEach(async ({commerceSearchBoxQuerySuggestions, page}) => {

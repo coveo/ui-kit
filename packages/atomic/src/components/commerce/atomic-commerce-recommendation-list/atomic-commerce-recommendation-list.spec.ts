@@ -1,4 +1,11 @@
 import {
+  buildRecommendations,
+  InteractiveProduct,
+  InteractiveProductProps,
+  Product,
+} from '@coveo/headless/commerce';
+import {page} from '@vitest/browser/context';
+import {
   defaultBindings,
   renderInAtomicCommerceRecommendationInterface,
 } from '@/vitest-utils/testing-helpers/fixtures/atomic/commerce/atomic-commerce-recommendation-interface-fixture.js';
@@ -6,16 +13,9 @@ import {buildFakeProduct} from '@/vitest-utils/testing-helpers/fixtures/headless
 import {buildFakeRecommendations} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/recommendations-controller.js';
 import {buildFakeSummary} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/summary-subcontroller.js';
 import {genericSubscribe} from '@/vitest-utils/testing-helpers/fixtures/headless/common.js';
-import {
-  buildRecommendations,
-  InteractiveProduct,
-  InteractiveProductProps,
-  Product,
-} from '@coveo/headless/commerce';
-import {page} from '@vitest/browser/context';
 import '@vitest/browser/matchers.d.ts';
 import {html} from 'lit';
-import {describe, expect, vi, beforeEach, it} from 'vitest';
+import {beforeEach, describe, expect, it, vi} from 'vitest';
 import {
   ItemDisplayBasicLayout,
   ItemDisplayDensity,

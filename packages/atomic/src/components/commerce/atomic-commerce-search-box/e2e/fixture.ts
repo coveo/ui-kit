@@ -1,5 +1,5 @@
+import {test as base, Page} from '@playwright/test';
 import {AxeFixture, makeAxeBuilder} from '@/playwright-utils/base-fixture';
-import {Page, test as base} from '@playwright/test';
 import {LoadMoreProductsPageObject} from '../../atomic-commerce-load-more-products/e2e/page-object';
 import {FacetsPageObject} from '../../facets/atomic-commerce-facets/e2e/page-object';
 import {SearchBoxPageObject} from './page-object';

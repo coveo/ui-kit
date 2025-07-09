@@ -1,9 +1,9 @@
+import {LitElement, ReactiveController, ReactiveControllerHost} from 'lit';
 import {
   ItemDisplayDensity,
   ItemDisplayImageSize,
 } from '@/src/components/common/layout/display-options';
 import {buildCustomEvent} from '@/src/utils/event-utils';
-import {LitElement, ReactiveController, ReactiveControllerHost} from 'lit';
 
 const itemDisplayConfigContextEventName = 'atomic/resolveResultDisplayConfig';
 

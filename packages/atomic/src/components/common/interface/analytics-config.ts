@@ -1,9 +1,9 @@
 import {
-  SearchEngineConfiguration,
+  AnalyticsClientSendEventHook,
   AnalyticsConfiguration,
   EngineConfiguration,
+  SearchEngineConfiguration,
 } from '@coveo/headless';
-import {AnalyticsClientSendEventHook} from '@coveo/headless';
 import {InsightEngineConfiguration} from '@coveo/headless/insight';
 import {RecommendationEngineConfiguration} from '@coveo/headless/recommendation';
 import {getAtomicEnvironment} from '../../../global/environment';

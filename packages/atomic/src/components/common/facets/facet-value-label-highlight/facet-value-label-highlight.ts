@@ -1,6 +1,6 @@
+import {html} from 'lit';
 import {multiClassMap, tw} from '@/src/directives/multi-class-map';
 import {FunctionalComponent} from '@/src/utils/functional-component-utils';
-import {html} from 'lit';
 import {highlightSearchResult} from '../facet-search/facet-search-utils';
 
 interface FacetValueLabelHighlightProps {

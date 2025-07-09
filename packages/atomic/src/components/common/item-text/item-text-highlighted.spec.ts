@@ -1,9 +1,9 @@
 import {html, nothing} from 'lit';
 import {unsafeHTML} from 'lit/directives/unsafe-html.js';
-import {describe, it, expect, vi, beforeEach} from 'vitest';
+import {beforeEach, describe, expect, it, vi} from 'vitest';
 import {
-  renderItemTextHighlighted,
   ItemTextHighlightedProps,
+  renderItemTextHighlighted,
 } from './item-text-highlighted';
 import {renderWithHighlights} from './render-highlights';
 

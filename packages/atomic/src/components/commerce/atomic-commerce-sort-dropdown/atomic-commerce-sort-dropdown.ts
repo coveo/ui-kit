@@ -1,19 +1,19 @@
-import {bindings} from '@/src/decorators/bindings';
-import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
 import {
-  Sort,
-  SortState,
-  Search,
-  ProductListing,
   buildProductListing,
   buildSearch,
-  SearchState,
+  ProductListing,
   ProductListingState,
+  Search,
+  SearchState,
+  Sort,
+  SortState,
 } from '@coveo/headless/commerce';
-import {html, CSSResultGroup, unsafeCSS, LitElement} from 'lit';
+import {CSSResultGroup, html, LitElement, unsafeCSS} from 'lit';
 import {customElement, state} from 'lit/decorators.js';
 import {guard} from 'lit/directives/guard.js';
 import {map} from 'lit/directives/map.js';
+import {bindings} from '@/src/decorators/bindings';
+import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
 import {bindStateToController} from '../../../decorators/bind-state';
 import {bindingGuard} from '../../../decorators/binding-guard';
 import {errorGuard} from '../../../decorators/error-guard';

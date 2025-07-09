@@ -1,3 +1,14 @@
+import {
+  buildProductListing,
+  buildSearch,
+  Pagination,
+  PaginationState,
+  ProductListingSummaryState,
+  SearchSummaryState,
+  Summary,
+} from '@coveo/headless/commerce';
+import {html, LitElement} from 'lit';
+import {customElement, property, state} from 'lit/decorators.js';
 import type {CommerceBindings} from '@/src/components/commerce/atomic-commerce-interface/atomic-commerce-interface.js';
 import {renderFieldsetGroup} from '@/src/components/common/fieldset-group.js';
 import {createAppLoadedListener} from '@/src/components/common/interface/store.js';
@@ -15,17 +26,6 @@ import {errorGuard} from '@/src/decorators/error-guard';
 import {InitializableComponent} from '@/src/decorators/types.js';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles.js';
 import {randomID} from '@/src/utils/utils.js';
-import {
-  Pagination,
-  PaginationState,
-  buildSearch,
-  buildProductListing,
-  SearchSummaryState,
-  ProductListingSummaryState,
-  Summary,
-} from '@coveo/headless/commerce';
-import {html, LitElement} from 'lit';
-import {customElement, property, state} from 'lit/decorators.js';
 
 /**
  * The `atomic-commerce-products-per-page` component lets the end user select how many products to display per page.

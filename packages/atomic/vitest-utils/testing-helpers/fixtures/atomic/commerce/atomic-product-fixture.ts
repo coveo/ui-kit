@@ -5,8 +5,8 @@ import type {CommerceBindings} from '../../../../../src/components/commerce/atom
 import {fixture} from '../../../fixture.js';
 import {
   defaultBindings as commerceDefaultBindings,
-  renderInAtomicCommerceInterface,
   type FixtureAtomicCommerceInterface,
+  renderInAtomicCommerceInterface,
 } from './atomic-commerce-interface-fixture.js';
 
 @customElement('atomic-product')

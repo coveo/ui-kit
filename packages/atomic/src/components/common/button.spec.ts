@@ -1,8 +1,8 @@
-import {createRipple} from '@/src/utils/ripple';
 import {fireEvent, within} from '@storybook/test';
 import {html, nothing, render} from 'lit';
-import {vi, describe, beforeEach, afterEach, it, expect} from 'vitest';
-import {renderButton as button, ButtonProps} from './button';
+import {afterEach, beforeEach, describe, expect, it, vi} from 'vitest';
+import {createRipple} from '@/src/utils/ripple';
+import {ButtonProps, renderButton as button} from './button';
 
 vi.mock('../../utils/ripple');
 

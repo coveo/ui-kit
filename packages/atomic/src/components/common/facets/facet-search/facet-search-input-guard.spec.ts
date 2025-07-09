@@ -1,10 +1,10 @@
-import {renderFunctionFixture} from '@/vitest-utils/testing-helpers/fixture';
 import {page} from '@vitest/browser/context';
 import {html} from 'lit';
-import {expect, describe, it} from 'vitest';
+import {describe, expect, it} from 'vitest';
+import {renderFunctionFixture} from '@/vitest-utils/testing-helpers/fixture';
 import {
-  facetSearchInputGuard,
   FacetSearchInputGuardProps,
+  facetSearchInputGuard,
 } from './facet-search-input-guard';
 
 function renderWithGuard(

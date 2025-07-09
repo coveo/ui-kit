@@ -1,8 +1,8 @@
 import {
-  NumericFacetValue,
   DateFacetValue,
-  SortCriterion,
+  NumericFacetValue,
   SearchEngine,
+  SortCriterion,
 } from '@coveo/headless';
 import {DEFAULT_MOBILE_BREAKPOINT} from '../../../utils/replace-breakpoint';
 import {
@@ -15,8 +15,8 @@ import {
   BaseStore,
   createBaseStore,
   getFacetElements,
-  registerFacet,
   ResultListInfo,
+  registerFacet,
   setLoadingFlag,
   unsetLoadingFlag,
   waitUntilAppLoaded,

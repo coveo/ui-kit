@@ -1,6 +1,6 @@
-import {FunctionalComponentWithChildren} from '@/src/utils/functional-component-utils';
 import {i18n} from 'i18next';
 import {html} from 'lit';
+import {FunctionalComponentWithChildren} from '@/src/utils/functional-component-utils';
 import SortIcon from '../../../images/sort.svg';
 
 interface RefineModalSortSectionProps {

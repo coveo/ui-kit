@@ -1,3 +1,8 @@
+import {SearchBox, StandaloneSearchBox} from '@coveo/headless/commerce';
+import {i18n} from 'i18next';
+import {html, LitElement, nothing, render, TemplateResult} from 'lit';
+import {customElement, property, state} from 'lit/decorators.js';
+import {vi} from 'vitest';
 import {
   SearchBoxSuggestions,
   SearchBoxSuggestionsBindings,
@@ -5,11 +10,6 @@ import {
 } from '@/src/components/common/suggestions/suggestions-common';
 import {fixture} from '@/vitest-utils/testing-helpers/fixture';
 import {createTestI18n} from '@/vitest-utils/testing-helpers/i18n-utils';
-import {SearchBox, StandaloneSearchBox} from '@coveo/headless/commerce';
-import {i18n} from 'i18next';
-import {html, LitElement, nothing, render, TemplateResult} from 'lit';
-import {customElement, property, state} from 'lit/decorators.js';
-import {vi} from 'vitest';
 
 type CommerceSearchBoxBindings = SearchBoxSuggestionsBindings<
   SearchBox | StandaloneSearchBox

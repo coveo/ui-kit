@@ -1,12 +1,14 @@
-import {InteractiveItemContextController} from '@/src/components/common/item-list/context/interactive-item-context-controller';
-import {InteractiveItemContextEvent} from '@/src/components/common/item-list/context/interactive-item-context-controller';
+import {InteractiveProduct, Product} from '@coveo/headless/commerce';
+import {LitElement} from 'lit';
+import {
+  InteractiveItemContextController,
+  InteractiveItemContextEvent,
+} from '@/src/components/common/item-list/context/interactive-item-context-controller';
 import {
   ItemContextController,
   ItemContextEvent,
 } from '@/src/components/common/item-list/context/item-context-controller';
 import {fetchItemContext} from '@/src/components/common/item-list/fetch-item-context';
-import {InteractiveProduct, Product} from '@coveo/headless/commerce';
-import {LitElement} from 'lit';
 
 /**
  * Creates a [Lit reactive controller](https://lit.dev/docs/composition/controllers/) for managing product context in product template components.

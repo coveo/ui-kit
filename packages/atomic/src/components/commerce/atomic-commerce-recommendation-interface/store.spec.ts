@@ -1,12 +1,12 @@
-import {describe, it, expect, beforeEach, vi} from 'vitest';
+import {beforeEach, describe, expect, it, vi} from 'vitest';
 import {
   createBaseStore,
   setLoadingFlag,
   unsetLoadingFlag,
 } from '../../common/interface/store';
 import {
-  createCommerceRecommendationStore,
   CommerceRecommendationStore,
+  createCommerceRecommendationStore,
 } from './store';
 
 vi.mock('../../common/interface/store', {spy: true});

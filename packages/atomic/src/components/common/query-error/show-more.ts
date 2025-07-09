@@ -1,6 +1,6 @@
-import {FunctionalComponent} from '@/src/utils/functional-component-utils';
 import {i18n} from 'i18next';
 import {nothing, TemplateResult} from 'lit';
+import {FunctionalComponent} from '@/src/utils/functional-component-utils';
 import {renderButton} from '../button';
 
 interface QueryErrorShowMoreProps {

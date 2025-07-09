@@ -1,6 +1,6 @@
-import chalk from 'chalk';
 import {exec} from 'node:child_process';
 import {watch} from 'node:fs';
+import chalk from 'chalk';
 import ora from 'ora';
 import waitOn from 'wait-on';
 

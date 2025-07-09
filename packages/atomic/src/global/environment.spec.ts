@@ -1,4 +1,4 @@
-import {describe, it, expect, vi, beforeEach, afterEach} from 'vitest';
+import {afterEach, beforeEach, describe, expect, it, vi} from 'vitest';
 import * as env from './environment';
 
 vi.mock('@coveo/headless', () => ({VERSION: 'HEADLESS_VERSION'}));

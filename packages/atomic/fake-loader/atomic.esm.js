@@ -1,4 +1,4 @@
-import {defineCustomElements, atomicVersion, headlessVersion} from './index.js';
+import {atomicVersion, defineCustomElements, headlessVersion} from './index.js';
 
 export {atomicVersion, headlessVersion};
 

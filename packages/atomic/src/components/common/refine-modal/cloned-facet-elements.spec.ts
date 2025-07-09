@@ -1,4 +1,4 @@
-import {describe, it, expect, beforeAll} from 'vitest';
+import {beforeAll, describe, expect, it} from 'vitest';
 import {BaseFacetElement} from '../facets/facet-common';
 import {getClonedFacetElements} from './cloned-facet-elements';
 

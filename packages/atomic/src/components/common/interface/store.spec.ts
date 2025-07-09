@@ -1,12 +1,12 @@
+import {beforeEach, describe, expect, it, vi} from 'vitest';
 import {buildFakeCommerceEngine} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/engine';
-import {describe, beforeEach, it, expect, vi} from 'vitest';
 import {
-  unsetLoadingFlag,
-  setLoadingFlag,
+  BaseStore,
   createAppLoadedListener,
   createBaseStore,
-  BaseStore,
   registerFacet,
+  setLoadingFlag,
+  unsetLoadingFlag,
   waitUntilAppLoaded,
 } from './store';
 

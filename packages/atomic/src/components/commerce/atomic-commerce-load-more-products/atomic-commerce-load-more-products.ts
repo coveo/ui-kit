@@ -1,22 +1,22 @@
+import {
+  buildProductListing,
+  buildSearch,
+  Pagination,
+  PaginationState,
+  ProductListing,
+  ProductListingState,
+  Search,
+  SearchState,
+} from '@coveo/headless/commerce';
+import {CSSResultGroup, html, LitElement, unsafeCSS} from 'lit';
+import {customElement, state} from 'lit/decorators.js';
+import {when} from 'lit/directives/when.js';
 import {bindStateToController} from '@/src/decorators/bind-state';
 import {bindingGuard} from '@/src/decorators/binding-guard';
 import {bindings} from '@/src/decorators/bindings';
 import {errorGuard} from '@/src/decorators/error-guard';
 import {InitializableComponent} from '@/src/decorators/types';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles.js';
-import {
-  Pagination,
-  PaginationState,
-  buildSearch,
-  buildProductListing,
-  ProductListing,
-  Search,
-  ProductListingState,
-  SearchState,
-} from '@coveo/headless/commerce';
-import {CSSResultGroup, html, unsafeCSS, LitElement} from 'lit';
-import {customElement, state} from 'lit/decorators.js';
-import {when} from 'lit/directives/when.js';
 import {createAppLoadedListener} from '../../common/interface/store';
 import {renderLoadMoreButton} from '../../common/load-more/button';
 import {renderLoadMoreContainer} from '../../common/load-more/container';

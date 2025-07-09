@@ -1,11 +1,11 @@
-import {renderInAtomicProduct} from '@/vitest-utils/testing-helpers/fixtures/atomic/commerce/atomic-product-fixture';
-import {buildFakeProduct} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/product';
-import {createTestI18n} from '@/vitest-utils/testing-helpers/i18n-utils';
 import {Product} from '@coveo/headless/commerce';
 import {i18n} from 'i18next';
 import {html} from 'lit';
 import {ifDefined} from 'lit/directives/if-defined.js';
-import {describe, it, vi, expect, beforeEach} from 'vitest';
+import {beforeEach, describe, expect, it, vi} from 'vitest';
+import {renderInAtomicProduct} from '@/vitest-utils/testing-helpers/fixtures/atomic/commerce/atomic-product-fixture';
+import {buildFakeProduct} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/product';
+import {createTestI18n} from '@/vitest-utils/testing-helpers/i18n-utils';
 import {AtomicProductText} from './atomic-product-text';
 
 vi.mock('@coveo/headless/commerce', {spy: true});

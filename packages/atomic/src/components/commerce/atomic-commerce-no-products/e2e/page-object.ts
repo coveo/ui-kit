@@ -1,5 +1,5 @@
-import {BasePageObject} from '@/playwright-utils/lit-base-page-object';
 import {Page} from '@playwright/test';
+import {BasePageObject} from '@/playwright-utils/lit-base-page-object';
 
 export class NoProductsPageObject extends BasePageObject {
   constructor(page: Page) {

@@ -1,4 +1,4 @@
-import {Result, Template, buildResultTemplatesManager} from '@coveo/headless';
+import {buildResultTemplatesManager, Result, Template} from '@coveo/headless';
 import {AnyBindings} from '../interface/bindings';
 import {ItemTarget} from '../layout/display-options';
 import {

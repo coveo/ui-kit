@@ -1,15 +1,3 @@
-import type {
-  ItemRenderingFunction,
-  SelectChildProductEventArgs,
-} from '@/src/components.js';
-import {bindStateToController} from '@/src/decorators/bind-state.js';
-import {bindingGuard} from '@/src/decorators/binding-guard.js';
-import {bindings} from '@/src/decorators/bindings.js';
-import {errorGuard} from '@/src/decorators/error-guard.js';
-import {InitializableComponent} from '@/src/decorators/types.js';
-import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles.js';
-import {FocusTargetController} from '@/src/utils/accessibility-utils.js';
-import {randomID} from '@/src/utils/utils.js';
 import {NumberValue, Schema, StringValue} from '@coveo/bueno';
 import {
   buildProductListing,
@@ -28,14 +16,26 @@ import {keyed} from 'lit/directives/keyed.js';
 import {map} from 'lit/directives/map.js';
 import {ref} from 'lit/directives/ref.js';
 import {when} from 'lit/directives/when.js';
+import type {
+  ItemRenderingFunction,
+  SelectChildProductEventArgs,
+} from '@/src/components.js';
+import {bindStateToController} from '@/src/decorators/bind-state.js';
+import {bindingGuard} from '@/src/decorators/binding-guard.js';
+import {bindings} from '@/src/decorators/bindings.js';
+import {errorGuard} from '@/src/decorators/error-guard.js';
+import {InitializableComponent} from '@/src/decorators/types.js';
+import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles.js';
+import {FocusTargetController} from '@/src/utils/accessibility-utils.js';
+import {randomID} from '@/src/utils/utils.js';
 import {renderItemPlaceholders} from '../../common/atomic-result-placeholder/item-placeholders.js';
 import {createAppLoadedListener} from '../../common/interface/store.js';
 import {renderDisplayWrapper} from '../../common/item-list/display-wrapper.js';
 import {renderGridLayout} from '../../common/item-list/grid-layout.js';
 import {ItemListCommon} from '../../common/item-list/item-list-common.js';
 import {
-  renderTableLayout,
   renderTableData,
+  renderTableLayout,
   renderTableRow,
 } from '../../common/item-list/table-layout.js';
 import {

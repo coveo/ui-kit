@@ -1,10 +1,10 @@
+import {page} from '@vitest/browser/context';
 import {renderFunctionFixture} from '@/vitest-utils/testing-helpers/fixture';
 import {createTestI18n} from '@/vitest-utils/testing-helpers/i18n-utils';
-import {page} from '@vitest/browser/context';
 import '@vitest/browser/matchers.d.ts';
 import {html} from 'lit';
-import {vi, expect, describe, it, beforeAll} from 'vitest';
-import {renderFacetHeader, FacetHeaderProps} from './facet-header';
+import {beforeAll, describe, expect, it, vi} from 'vitest';
+import {FacetHeaderProps, renderFacetHeader} from './facet-header';
 
 describe('facetHeader', () => {
   let i18n: Awaited<ReturnType<typeof createTestI18n>>;
