@@ -33,10 +33,10 @@ import {
 } from '../../../../utils/stencil-accessibility-utils';
 import {CategoryFacetChildValueLink} from '../../../common/facets/category-facet/child-value-link';
 import {CategoryFacetChildrenAsTreeContainer} from '../../../common/facets/category-facet/children-as-tree-container';
-import {CategoryFacetParentAsTreeContainer} from '../../../common/facets/category-facet/parent-as-tree-container';
 import {CategoryFacetParentValueLink} from '../../../common/facets/category-facet/parent-value-link';
 import {CategoryFacetSearchValue} from '../../../common/facets/category-facet/search-value';
 import {CategoryFacetAllCategoryButton} from '../../../common/facets/category-facet/stencil-all-categories-button';
+import {CategoryFacetParentAsTreeContainer} from '../../../common/facets/category-facet/stencil-parent-as-tree-container';
 import {CategoryFacetParentButton} from '../../../common/facets/category-facet/stencil-parent-button';
 import {CategoryFacetSearchResultsContainer} from '../../../common/facets/category-facet/stencil-search-results-container';
 import {CategoryFacetTreeValueContainer} from '../../../common/facets/category-facet/value-as-tree-container';
