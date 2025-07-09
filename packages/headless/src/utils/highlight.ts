@@ -75,7 +75,7 @@ export function highlightString(params: HighlightParams): string {
     return params.content;
   }
   if (params.highlights.length === 0) {
-    return escape(params.content);
+    return escapeHtml(params.content);
   }
 
   const maxIndex = params.content.length;
@@ -89,15 +89,15 @@ export function highlightString(params: HighlightParams): string {
     if (end > maxIndex) {
       break;
     }
-    highlighted += escape(params.content.slice(last, start));
+    highlighted += escapeHtml(params.content.slice(last, start));
     highlighted += params.openingDelimiter;
-    highlighted += escape(params.content.slice(start, end));
+    highlighted += escapeHtml(params.content.slice(start, end));
     highlighted += params.closingDelimiter;
 
     last = end;
   }
   if (last !== maxIndex) {
-    highlighted += escape(params.content.slice(last));
+    highlighted += escapeHtml(params.content.slice(last));
   }
   return highlighted;
 }
@@ -111,7 +111,7 @@ export function getHighlightedSuggestion(
   suggestion: string,
   options: SuggestionHighlightingOptions
 ) {
-  suggestion = escape(suggestion);
+  suggestion = escapeHtml(suggestion);
   return suggestion.replace(
     /\[(.*?)\]|\{(.*?)\}|\((.*?)\)/g,
     (part, notMatched, matched, corrected) => {
@@ -149,7 +149,7 @@ function suggestionWithDelimiters(
  * @param str The string to escape
  */
 
-export function escape(str: string) {
+export function escapeHtml(str: string) {
   const mapOfCharToEscape: Record<string, string> = {
     '&': '&amp;',
     '<': '&lt;',
@@ -159,7 +159,7 @@ export function escape(str: string) {
     '`': '&#x60;',
   };
 
-  const source = '(?:' + Object.keys(mapOfCharToEscape).join('|') + ')';
+  const source = `(?:${Object.keys(mapOfCharToEscape).join('|')})`;
   const testRegexp = RegExp(source);
   const replaceRegexp = RegExp(source, 'g');
 

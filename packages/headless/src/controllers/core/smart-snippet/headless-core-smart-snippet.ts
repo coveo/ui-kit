@@ -1,7 +1,7 @@
-import {QuestionAnswerDocumentIdentifier} from '../../../api/search/search/question-answering.js';
-import {Result} from '../../../api/search/search/result.js';
-import {CoreEngine} from '../../../app/engine.js';
-import {
+import type {QuestionAnswerDocumentIdentifier} from '../../../api/search/search/question-answering.js';
+import type {Result} from '../../../api/search/search/result.js';
+import type {CoreEngine} from '../../../app/engine.js';
+import type {
   ClickAction,
   CustomAction,
 } from '../../../features/analytics/analytics-utils.js';
@@ -13,8 +13,8 @@ import {
   likeSmartSnippet,
   openFeedbackModal,
 } from '../../../features/question-answering/question-answering-actions.js';
-import {SmartSnippetFeedback} from '../../../features/question-answering/question-answering-analytics-actions.js';
-import {
+import type {SmartSnippetFeedback} from '../../../features/question-answering/question-answering-analytics-actions.js';
+import type {
   QuestionAnsweringInlineLinkActionCreatorPayload,
   QuestionAnsweringUniqueIdentifierActionCreatorPayload,
 } from '../../../features/question-answering/question-answering-document-id.js';
@@ -22,16 +22,16 @@ import {answerSourceSelector} from '../../../features/question-answering/questio
 import {questionAnsweringReducer as questionAnswering} from '../../../features/question-answering/question-answering-slice.js';
 import {pushRecentResult} from '../../../features/recent-results/recent-results-actions.js';
 import {searchReducer as search} from '../../../features/search/search-slice.js';
-import {
+import type {
   QuestionAnsweringSection,
   SearchSection,
 } from '../../../state/state-sections.js';
 import {loadReducerError} from '../../../utils/errors.js';
 import {
-  Controller,
   buildController,
+  type Controller,
 } from '../../controller/headless-controller.js';
-import {InlineLink} from '../../smart-snippet/headless-smart-snippet-interactive-inline-links.js';
+import type {InlineLink} from '../../smart-snippet/headless-smart-snippet-interactive-inline-links.js';
 import {buildInteractiveResultCore} from '../interactive-result/headless-core-interactive-result.js';
 
 export type {QuestionAnswerDocumentIdentifier} from '../../../api/search/search/question-answering.js';

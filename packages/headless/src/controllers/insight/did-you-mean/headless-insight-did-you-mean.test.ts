@@ -5,10 +5,13 @@ import {
 import {executeSearch} from '../../../features/insight-search/insight-search-actions.js';
 import {
   buildMockInsightEngine,
-  MockedInsightEngine,
+  type MockedInsightEngine,
 } from '../../../test/mock-engine-v2.js';
 import {buildMockInsightState} from '../../../test/mock-insight-state.js';
-import {buildDidYouMean, DidYouMean} from './headless-insight-did-you-mean.js';
+import {
+  buildDidYouMean,
+  type DidYouMean,
+} from './headless-insight-did-you-mean.js';
 
 vi.mock('../../../features/insight-search/insight-search-actions');
 vi.mock('../../../features/did-you-mean/did-you-mean-actions');

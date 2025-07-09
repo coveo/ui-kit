@@ -1,10 +1,10 @@
-import {
+import type {
   DateFacetSection,
   SearchSection,
 } from '../../../../state/state-sections.js';
 import {baseFacetResponseSelector} from '../../facet-set/facet-set-selectors.js';
-import {AnyFacetResponse} from '../../generic/interfaces/generic-facet-response.js';
-import {DateFacetResponse, DateFacetValue} from './interfaces/response.js';
+import type {AnyFacetResponse} from '../../generic/interfaces/generic-facet-response.js';
+import type {DateFacetResponse, DateFacetValue} from './interfaces/response.js';
 
 function isDateFacetResponse(
   state: SearchSection & DateFacetSection,

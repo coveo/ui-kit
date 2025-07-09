@@ -1,4 +1,4 @@
-import {UserActionType} from '../../../../features/insight-user-actions/insight-user-actions-state.js';
+import type {UserActionType} from '../../../../features/insight-user-actions/insight-user-actions-state.js';
 
 export interface InsightUserActionsResponse {
   value: Array<UserAction>;

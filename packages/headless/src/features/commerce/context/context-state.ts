@@ -1,5 +1,5 @@
-import {CurrencyCodeISO4217} from '@coveo/relay-event-types';
-import {
+import type {CurrencyCodeISO4217} from '@coveo/relay-event-types';
+import type {
   UserParams,
   ViewParams,
 } from '../../../api/commerce/commerce-api-params.js';

@@ -1,6 +1,6 @@
 import {createAction} from '@reduxjs/toolkit';
 import {
-  QuestionAnsweringUniqueIdentifierActionCreatorPayload,
+  type QuestionAnsweringUniqueIdentifierActionCreatorPayload,
   validateQuestionAnsweringActionCreatorPayload,
 } from './question-answering-document-id.js';
 

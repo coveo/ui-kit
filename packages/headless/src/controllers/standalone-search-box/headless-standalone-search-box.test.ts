@@ -1,12 +1,12 @@
 import {configuration} from '../../app/common-reducers.js';
+import {updateQuery} from '../../features/query/query-actions.js';
+import {queryReducer as query} from '../../features/query/query-slice.js';
 import {
   registerQuerySetQuery,
   updateQuerySetQuery,
 } from '../../features/query-set/query-set-actions.js';
 import {selectQuerySuggestion} from '../../features/query-suggest/query-suggest-actions.js';
 import {querySuggestReducer as querySuggest} from '../../features/query-suggest/query-suggest-slice.js';
-import {updateQuery} from '../../features/query/query-actions.js';
-import {queryReducer as query} from '../../features/query/query-slice.js';
 import {
   fetchRedirectUrl,
   registerStandaloneSearchBox,
@@ -15,11 +15,11 @@ import {
   updateAnalyticsToSearchFromLink,
 } from '../../features/standalone-search-box-set/standalone-search-box-set-actions.js';
 import {standaloneSearchBoxSetReducer as standaloneSearchBoxSet} from '../../features/standalone-search-box-set/standalone-search-box-set-slice.js';
-import {StandaloneSearchBoxAnalytics} from '../../features/standalone-search-box-set/standalone-search-box-set-state.js';
-import {SearchAppState} from '../../state/search-app-state.js';
+import type {StandaloneSearchBoxAnalytics} from '../../features/standalone-search-box-set/standalone-search-box-set-state.js';
+import type {SearchAppState} from '../../state/search-app-state.js';
 import {
   buildMockSearchEngine,
-  MockedSearchEngine,
+  type MockedSearchEngine,
 } from '../../test/mock-engine-v2.js';
 import {buildMockOmniboxSuggestionMetadata} from '../../test/mock-omnibox-suggestion-metadata.js';
 import {buildMockQuerySuggest} from '../../test/mock-query-suggest.js';
@@ -27,8 +27,8 @@ import {buildMockStandaloneSearchBoxEntry} from '../../test/mock-standalone-sear
 import {createMockState} from '../../test/mock-state.js';
 import {
   buildStandaloneSearchBox,
-  StandaloneSearchBox,
-  StandaloneSearchBoxOptions,
+  type StandaloneSearchBox,
+  type StandaloneSearchBoxOptions,
 } from './headless-standalone-search-box.js';
 
 vi.mock('../../features/query-set/query-set-actions');

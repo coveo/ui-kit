@@ -1,5 +1,5 @@
 import {configuration} from '../../../../../app/common-reducers.js';
-import {CoreEngine} from '../../../../../app/engine.js';
+import type {CoreEngine} from '../../../../../app/engine.js';
 import {
   disableFacet,
   enableFacet,
@@ -9,16 +9,16 @@ import {isFacetEnabledSelector} from '../../../../../features/facet-options/face
 import {facetOptionsReducer as facetOptions} from '../../../../../features/facet-options/facet-options-slice.js';
 import {isFacetLoadingResponseSelector} from '../../../../../features/facets/facet-set/facet-set-selectors.js';
 import {
+  type RegisterDateFacetActionCreatorPayload,
   registerDateFacet,
-  RegisterDateFacetActionCreatorPayload,
   updateDateFacetValues,
 } from '../../../../../features/facets/range-facets/date-facet-set/date-facet-actions.js';
 import {dateFacetSelectedValuesSelector} from '../../../../../features/facets/range-facets/date-facet-set/date-facet-selectors.js';
 import {dateFacetSetReducer as dateFacetSet} from '../../../../../features/facets/range-facets/date-facet-set/date-facet-set-slice.js';
-import {DateFacetValue} from '../../../../../features/facets/range-facets/date-facet-set/interfaces/response.js';
+import type {DateFacetValue} from '../../../../../features/facets/range-facets/date-facet-set/interfaces/response.js';
 import {searchReducer as search} from '../../../../../features/search/search-slice.js';
 import {selectActiveTab} from '../../../../../features/tab-set/tab-set-selectors.js';
-import {
+import type {
   ConfigurationSection,
   DateFacetSection,
   FacetOptionsSection,
@@ -27,7 +27,7 @@ import {
 import {loadReducerError} from '../../../../../utils/errors.js';
 import {
   buildController,
-  Controller,
+  type Controller,
 } from '../../../../controller/headless-controller.js';
 import {determineFacetId} from '../../_common/facet-id-determinor.js';
 import {validateDateFacetOptions} from './headless-date-facet-options.js';

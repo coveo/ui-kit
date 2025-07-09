@@ -1,4 +1,4 @@
-import {CaseAssistAPIErrorStatusResponse} from '../../api/service/case-assist/case-assist-api-client.js';
+import type {CaseAssistAPIErrorStatusResponse} from '../../api/service/case-assist/case-assist-api-client.js';
 
 export const getCaseFieldInitialState = (): CaseFieldState => ({
   status: {

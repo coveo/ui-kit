@@ -1,6 +1,7 @@
-import {CoreEngine} from '../../app/engine.js';
-import {SearchEngine} from '../../app/search-engine/search-engine.js';
-import {ControllerDefinitionWithProps} from '../../app/ssr-engine/types/common.js';
+import type {CoreEngine} from '../../app/engine.js';
+import type {SearchEngine} from '../../app/search-engine/search-engine.js';
+import type {ControllerDefinitionWithProps} from '../../app/ssr-engine/types/common.js';
+import {advancedSearchQueriesReducer as advancedSearchQueries} from './../../features/advanced-search-queries/advanced-search-queries-slice.js';
 import {configurationReducer as configuration} from '../../features/configuration/configuration-slice.js';
 import {debugReducer as debug} from '../../features/debug/debug-slice.js';
 import {facetOptionsReducer as facetOptions} from '../../features/facet-options/facet-options-slice.js';
@@ -15,11 +16,10 @@ import {sortCriteriaReducer as sortCriteria} from '../../features/sort-criteria/
 import {staticFilterSetReducer as staticFilterSet} from '../../features/static-filter-set/static-filter-set-slice.js';
 import {tabSetReducer as tabSet} from '../../features/tab-set/tab-set-slice.js';
 import {loadReducerError, MissingControllerProps} from '../../utils/errors.js';
-import {advancedSearchQueriesReducer as advancedSearchQueries} from './../../features/advanced-search-queries/advanced-search-queries-slice.js';
 import {
-  SearchParameterManager,
-  SearchParameterManagerInitialState,
   buildSearchParameterManager,
+  type SearchParameterManager,
+  type SearchParameterManagerInitialState,
 } from './headless-search-parameter-manager.js';
 
 export * from './headless-search-parameter-manager.js';

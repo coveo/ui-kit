@@ -1,9 +1,9 @@
-import {FacetSelectionChangeMetadata} from './facet-set-analytics-actions-utils.js';
+import type {FacetSelectionChangeMetadata} from './facet-set-analytics-actions-utils.js';
 import {
   logFacetDeselect,
   logFacetSelect,
 } from './facet-set-insight-analytics-actions.js';
-import {FacetValue} from './interfaces/response.js';
+import type {FacetValue} from './interfaces/response.js';
 
 export const isFacetValueSelected = (value: FacetValue) => {
   return value.state === 'selected';

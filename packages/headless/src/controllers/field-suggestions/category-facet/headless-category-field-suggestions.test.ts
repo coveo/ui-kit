@@ -1,19 +1,19 @@
-import {CategoryFacetRequest} from '../../../features/facets/category-facet-set/interfaces/request.js';
+import type {CategoryFacetRequest} from '../../../features/facets/category-facet-set/interfaces/request.js';
 import {executeFieldSuggest} from '../../../features/facets/facet-search-set/generic/generic-facet-search-actions.js';
 import {updateFacetSearch} from '../../../features/facets/facet-search-set/specific/specific-facet-search-actions.js';
-import {SearchAppState} from '../../../state/search-app-state.js';
+import type {SearchAppState} from '../../../state/search-app-state.js';
 import {buildMockCategoryFacetRequest} from '../../../test/mock-category-facet-request.js';
 import {buildMockCategoryFacetSearch} from '../../../test/mock-category-facet-search.js';
 import {buildMockCategoryFacetSlice} from '../../../test/mock-category-facet-slice.js';
 import {
   buildMockSearchEngine,
-  MockedSearchEngine,
+  type MockedSearchEngine,
 } from '../../../test/mock-engine-v2.js';
 import {createMockState} from '../../../test/mock-state.js';
 import {
   buildCategoryFieldSuggestions,
-  CategoryFieldSuggestions,
-  CategoryFieldSuggestionsOptions,
+  type CategoryFieldSuggestions,
+  type CategoryFieldSuggestionsOptions,
 } from './headless-category-field-suggestions.js';
 
 vi.mock(

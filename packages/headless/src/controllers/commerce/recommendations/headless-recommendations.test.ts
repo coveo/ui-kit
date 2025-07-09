@@ -1,4 +1,4 @@
-import {ChildProduct} from '../../../api/commerce/common/product.js';
+import type {ChildProduct} from '../../../api/commerce/common/product.js';
 import {
   fetchRecommendations,
   promoteChildToParent,
@@ -7,12 +7,12 @@ import {
 import {recommendationsReducer} from '../../../features/commerce/recommendations/recommendations-slice.js';
 import {buildMockCommerceState} from '../../../test/mock-commerce-state.js';
 import {
-  MockedCommerceEngine,
   buildMockCommerceEngine,
+  type MockedCommerceEngine,
 } from '../../../test/mock-engine-v2.js';
 import {
-  Recommendations,
   buildRecommendations,
+  type Recommendations,
 } from './headless-recommendations.js';
 
 vi.mock('../../../features/commerce/recommendations/recommendations-actions');

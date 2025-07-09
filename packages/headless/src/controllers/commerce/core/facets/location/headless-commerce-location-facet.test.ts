@@ -1,19 +1,19 @@
-import {LocationFacetRequest} from '../../../../../features/commerce/facets/facet-set/interfaces/request.js';
+import type {LocationFacetRequest} from '../../../../../features/commerce/facets/facet-set/interfaces/request.js';
 import {toggleSelectLocationFacetValue} from '../../../../../features/commerce/facets/location-facet/location-facet-actions.js';
-import {CommerceAppState} from '../../../../../state/commerce-app-state.js';
+import type {CommerceAppState} from '../../../../../state/commerce-app-state.js';
 import {buildMockCommerceFacetRequest} from '../../../../../test/mock-commerce-facet-request.js';
 import {buildMockCommerceLocationFacetResponse} from '../../../../../test/mock-commerce-facet-response.js';
 import {buildMockCommerceFacetSlice} from '../../../../../test/mock-commerce-facet-slice.js';
 import {buildMockCommerceLocationFacetValue} from '../../../../../test/mock-commerce-facet-value.js';
 import {buildMockCommerceState} from '../../../../../test/mock-commerce-state.js';
 import {
-  MockedCommerceEngine,
   buildMockCommerceEngine,
+  type MockedCommerceEngine,
 } from '../../../../../test/mock-engine-v2.js';
 import {
-  LocationFacet,
-  LocationFacetOptions,
   buildCommerceLocationFacet,
+  type LocationFacet,
+  type LocationFacetOptions,
 } from './headless-commerce-location-facet.js';
 
 vi.mock(

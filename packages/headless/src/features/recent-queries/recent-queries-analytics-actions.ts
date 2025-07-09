@@ -1,7 +1,7 @@
 import {
+  type CustomAction,
+  type LegacySearchAction,
   makeAnalyticsAction,
-  CustomAction,
-  LegacySearchAction,
 } from '../analytics/analytics-utils.js';
 
 export const logClearRecentQueries = (): CustomAction =>

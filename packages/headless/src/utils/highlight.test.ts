@@ -1,10 +1,10 @@
 import {
-  HighlightKeyword,
-  highlightString,
-  HighlightParams,
+  escapeHtml,
   getHighlightedSuggestion,
-  SuggestionHighlightingOptions,
-  escape,
+  type HighlightKeyword,
+  type HighlightParams,
+  highlightString,
+  type SuggestionHighlightingOptions,
 } from './highlight.js';
 
 describe('highlight', () => {
@@ -173,12 +173,14 @@ describe('highlight', () => {
   describe('escape', () => {
     it('should replace special characters', () => {
       /* cspell:disable-next-line */
-      expect(escape("an'es'caped&<str&>ing`\"`")).toBe(
+      expect(escapeHtml("an'es'caped&<str&>ing`\"`")).toBe(
         /* cspell:disable-next-line */
         'an&#x27;es&#x27;caped&amp;&lt;str&amp;&gt;ing&#x60;&quot;&#x60;'
       );
       /* cspell:disable-next-line */
-      expect(escape("constante d'acidité")).toBe('constante d&#x27;acidité');
+      expect(escapeHtml("constante d'acidité")).toBe(
+        'constante d&#x27;acidité'
+      );
     });
   });
 });

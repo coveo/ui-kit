@@ -1,4 +1,4 @@
-import {describe, it, expect, vi} from 'vitest';
+import {describe, expect, it, vi} from 'vitest';
 import {defineRecommendations} from '../../../controllers/commerce/recommendations/headless-recommendations.ssr.js';
 import {getSampleCommerceEngineConfiguration} from '../../commerce-engine/commerce-engine-configuration.js';
 import {SolutionType} from '../types/common.js';

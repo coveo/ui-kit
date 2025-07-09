@@ -1,4 +1,4 @@
-import {Raw} from '../api/search/search/raw.js';
+import type {Raw} from '../api/search/search/raw.js';
 
 /**
  * For internal use only.

@@ -1,5 +1,5 @@
-import {BaseFacetResponse} from '../../../facet-api/response.js';
-import {FacetValueState} from '../../../facet-api/value.js';
+import type {BaseFacetResponse} from '../../../facet-api/response.js';
+import type {FacetValueState} from '../../../facet-api/value.js';
 
 /**
  * The domain of a numeric facet.

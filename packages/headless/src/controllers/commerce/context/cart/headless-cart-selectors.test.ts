@@ -1,15 +1,15 @@
 import {itemsSelector} from '../../../../features/commerce/context/cart/cart-selector.js';
 import {
-  CartState,
+  type CartItemWithMetadata,
+  type CartState,
   getCartInitialState,
 } from '../../../../features/commerce/context/cart/cart-state.js';
-import {CartItemWithMetadata} from '../../../../features/commerce/context/cart/cart-state.js';
+import {createCartKey} from './headless-cart.js';
 import {
   itemSelector,
-  totalQuantitySelector,
   totalPriceSelector,
+  totalQuantitySelector,
 } from './headless-cart-selectors.js';
-import {createCartKey} from './headless-cart.js';
 
 describe('headless-cart-selectors', () => {
   let cartOptions: CartState;

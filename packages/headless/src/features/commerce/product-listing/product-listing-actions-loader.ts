@@ -1,14 +1,14 @@
-import {AsyncThunkAction, PayloadAction} from '@reduxjs/toolkit';
-import {AsyncThunkCommerceOptions} from '../../../api/commerce/commerce-api-client.js';
-import {CommerceEngine} from '../../../app/commerce-engine/commerce-engine.js';
+import type {AsyncThunkAction, PayloadAction} from '@reduxjs/toolkit';
+import type {AsyncThunkCommerceOptions} from '../../../api/commerce/commerce-api-client.js';
+import type {CommerceEngine} from '../../../app/commerce-engine/commerce-engine.js';
 import {productListingReducer as productListing} from '../../../features/commerce/product-listing/product-listing-slice.js';
 import {
-  PromoteChildToParentPayload,
-  QueryCommerceAPIThunkReturn,
-  StateNeededByFetchProductListing,
   fetchMoreProducts,
   fetchProductListing,
+  type PromoteChildToParentPayload,
   promoteChildToParent,
+  type QueryCommerceAPIThunkReturn,
+  type StateNeededByFetchProductListing,
 } from './product-listing-actions.js';
 
 /**

@@ -1,5 +1,5 @@
 import {ArrayValue, RecordValue, Schema, StringValue} from '@coveo/bueno';
-import {
+import type {
   PostprocessFacetSearchResponseMiddleware,
   PostprocessQuerySuggestResponseMiddleware,
   PostprocessSearchResponseMiddleware,
@@ -9,8 +9,8 @@ import {
   requiredNonEmptyString,
 } from '../../utils/validate-payload.js';
 import {
+  type EngineConfiguration,
   engineConfigurationDefinitions,
-  EngineConfiguration,
   getSampleEngineConfiguration,
 } from '../engine-configuration.js';
 

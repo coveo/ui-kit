@@ -1,4 +1,4 @@
-import {BaseCommerceSuccessResponse} from '../common/response.js';
+import type {BaseCommerceSuccessResponse} from '../common/response.js';
 
 export interface RecommendationsCommerceSuccessResponse
   extends Omit<BaseCommerceSuccessResponse, 'triggers'> {

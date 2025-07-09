@@ -1,7 +1,7 @@
-import {SerializedError} from '@reduxjs/toolkit';
-import {CommerceAPIErrorResponse} from '../../../api/commerce/commerce-api-error-response.js';
-import {Product} from '../../../api/commerce/common/product.js';
-import {
+import type {SerializedError} from '@reduxjs/toolkit';
+import type {CommerceAPIErrorResponse} from '../../../api/commerce/commerce-api-error-response.js';
+import type {Product} from '../../../api/commerce/common/product.js';
+import type {
   InstantItemsCache,
   InstantItemsState,
 } from '../../instant-items/instant-items-state.js';

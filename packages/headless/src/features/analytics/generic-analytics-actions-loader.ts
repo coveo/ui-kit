@@ -1,13 +1,13 @@
-import {SearchEngine} from '../../app/search-engine/search-engine.js';
+import type {SearchEngine} from '../../app/search-engine/search-engine.js';
 import {
-  logSearchEvent,
-  LogSearchEventActionCreatorPayload,
+  type LogClickEventActionCreatorPayload,
+  type LogCustomEventActionCreatorPayload,
+  type LogSearchEventActionCreatorPayload,
   logClickEvent,
-  LogClickEventActionCreatorPayload,
   logCustomEvent,
-  LogCustomEventActionCreatorPayload,
+  logSearchEvent,
 } from './analytics-actions.js';
-import {
+import type {
   ClickAction,
   CustomAction,
   LegacySearchAction,

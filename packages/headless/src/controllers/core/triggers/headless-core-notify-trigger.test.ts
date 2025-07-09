@@ -1,12 +1,12 @@
-import {Mock} from 'vitest';
+import type {Mock} from 'vitest';
 import {logNotifyTrigger} from '../../../features/triggers/trigger-analytics-actions.js';
 import {triggerReducer as triggers} from '../../../features/triggers/triggers-slice.js';
 import {
   buildMockSearchEngine,
-  MockedSearchEngine,
+  type MockedSearchEngine,
 } from '../../../test/mock-engine-v2.js';
 import {createMockState} from '../../../test/mock-state.js';
-import {NotifyTrigger} from '../../core/triggers/headless-core-notify-trigger.js';
+import type {NotifyTrigger} from '../../core/triggers/headless-core-notify-trigger.js';
 import {buildCoreNotifyTrigger} from './headless-core-notify-trigger.js';
 
 vi.mock('../../../features/triggers/trigger-analytics-actions');

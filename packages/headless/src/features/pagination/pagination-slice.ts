@@ -11,6 +11,11 @@ import {
   selectFacetSearchResult,
 } from '../facets/facet-search-set/specific/specific-facet-search-actions.js';
 import {
+  deselectAllFacetValues,
+  toggleExcludeFacetValue,
+  toggleSelectFacetValue,
+} from './../facets/facet-set/facet-set-actions.js';
+import {
   toggleExcludeDateFacetValue,
   toggleSelectDateFacetValue,
   updateDateFacetValues,
@@ -21,21 +26,16 @@ import {
   updateNumericFacetValues,
 } from '../facets/range-facets/numeric-facet-set/numeric-facet-actions.js';
 import {change} from '../history/history-actions.js';
-import {restoreSearchParameters} from '../search-parameters/search-parameter-actions.js';
 import {executeSearch} from '../search/search-actions.js';
+import {restoreSearchParameters} from '../search-parameters/search-parameter-actions.js';
 import {updateActiveTab} from '../tab-set/tab-set-actions.js';
 import {
-  deselectAllFacetValues,
-  toggleExcludeFacetValue,
-  toggleSelectFacetValue,
-} from './../facets/facet-set/facet-set-actions.js';
-import {
+  nextPage,
+  previousPage,
   registerNumberOfResults,
+  registerPage,
   updateNumberOfResults,
   updatePage,
-  registerPage,
-  previousPage,
-  nextPage,
 } from './pagination-actions.js';
 import {
   maximumNumberOfResultsFromIndex,
@@ -43,7 +43,7 @@ import {
 } from './pagination-constants.js';
 import {
   getPaginationInitialState,
-  PaginationState,
+  type PaginationState,
 } from './pagination-state.js';
 
 export const paginationReducer = createReducer(

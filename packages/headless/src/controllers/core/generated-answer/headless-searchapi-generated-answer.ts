@@ -1,10 +1,10 @@
-import {Unsubscribe} from '@reduxjs/toolkit';
-import {GeneratedAnswerAPIClient} from '../../../api/generated-answer/generated-answer-client.js';
-import {CoreEngine} from '../../../app/engine.js';
-import {InsightEngine} from '../../../app/insight-engine/insight-engine.js';
-import {SearchEngine} from '../../../app/search-engine/search-engine.js';
-import {ClientThunkExtraArguments} from '../../../app/thunk-extra-arguments.js';
-import {ConfigurationState} from '../../../features/configuration/configuration-state.js';
+import type {Unsubscribe} from '@reduxjs/toolkit';
+import type {GeneratedAnswerAPIClient} from '../../../api/generated-answer/generated-answer-client.js';
+import type {CoreEngine} from '../../../app/engine.js';
+import type {InsightEngine} from '../../../app/insight-engine/insight-engine.js';
+import type {SearchEngine} from '../../../app/search-engine/search-engine.js';
+import type {ClientThunkExtraArguments} from '../../../app/thunk-extra-arguments.js';
+import type {ConfigurationState} from '../../../features/configuration/configuration-state.js';
 import {
   resetAnswer,
   setId,
@@ -12,7 +12,7 @@ import {
 } from '../../../features/generated-answer/generated-answer-actions.js';
 import {generatedAnswerReducer as generatedAnswer} from '../../../features/generated-answer/generated-answer-slice.js';
 import {executeSearch} from '../../../features/search/search-actions.js';
-import {
+import type {
   DebugSection,
   GeneratedAnswerSection,
   SearchSection,
@@ -21,9 +21,9 @@ import {loadReducerError} from '../../../utils/errors.js';
 import {randomID} from '../../../utils/utils.js';
 import {
   buildCoreGeneratedAnswer,
-  GeneratedAnswer,
-  GeneratedAnswerAnalyticsClient,
-  GeneratedAnswerProps,
+  type GeneratedAnswer,
+  type GeneratedAnswerAnalyticsClient,
+  type GeneratedAnswerProps,
 } from './headless-core-generated-answer.js';
 
 export interface SearchAPIGeneratedAnswer extends GeneratedAnswer {}

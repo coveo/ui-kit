@@ -2,14 +2,14 @@
 import {fetchPage} from '../../features/search/search-actions.js';
 import {
   buildMockSearchEngine,
-  MockedSearchEngine,
+  type MockedSearchEngine,
 } from '../../test/mock-engine-v2.js';
 import {createMockState} from '../../test/mock-state.js';
 import {
-  Pager,
-  PagerOptions,
-  PagerInitialState,
   buildPager,
+  type Pager,
+  type PagerInitialState,
+  type PagerOptions,
 } from './headless-pager.js';
 
 vi.mock('../../features/search/search-actions');

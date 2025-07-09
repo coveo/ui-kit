@@ -4,24 +4,24 @@ import {
   NumberValue,
   RecordValue,
   Schema,
-  SchemaDefinition,
+  type SchemaDefinition,
   StringValue,
 } from '@coveo/bueno';
-import {CoreEngine} from '../../../../../app/engine.js';
+import type {CoreEngine} from '../../../../../app/engine.js';
 import {
-  FacetResultsMustMatch,
+  type FacetResultsMustMatch,
   facetResultsMustMatch,
 } from '../../../../../features/facets/facet-api/request.js';
 import {facetValueStates} from '../../../../../features/facets/facet-api/value.js';
 import {
+  type RangeFacetRangeAlgorithm,
+  type RangeFacetSortCriterion,
   rangeFacetRangeAlgorithm,
-  RangeFacetRangeAlgorithm,
   rangeFacetSortCriteria,
-  RangeFacetSortCriterion,
 } from '../../../../../features/facets/range-facets/generic/interfaces/request.js';
-import {NumericRangeRequest} from '../../../../../features/facets/range-facets/numeric-facet-set/interfaces/request.js';
+import type {NumericRangeRequest} from '../../../../../features/facets/range-facets/numeric-facet-set/interfaces/request.js';
 import {validateManualNumericRanges} from '../../../../../features/facets/range-facets/numeric-facet-set/numeric-facet-actions.js';
-import {
+import type {
   ConfigurationSection,
   NumericFacetSection,
   SearchSection,
@@ -30,8 +30,8 @@ import {validateOptions} from '../../../../../utils/validate-payload.js';
 import {
   facetId,
   field,
-  generateAutomaticRanges,
   filterFacetCount,
+  generateAutomaticRanges,
   injectionDepth,
   numberOfValues,
 } from '../../../../core/facets/_common/facet-option-definitions.js';

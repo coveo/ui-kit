@@ -1,7 +1,7 @@
-import {NumberValue, BooleanValue, RecordValue} from '@coveo/bueno';
+import {BooleanValue, NumberValue, RecordValue} from '@coveo/bueno';
 import {requiredNonEmptyString} from '../../../../utils/validate-payload.js';
 import {facetIdDefinition} from '../../generic/facet-actions-validation.js';
-import {RangeFacetValue} from './interfaces/range-facet.js';
+import type {RangeFacetValue} from './interfaces/range-facet.js';
 
 export const numericFacetValueDefinition = {
   state: requiredNonEmptyString,

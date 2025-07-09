@@ -102,8 +102,7 @@
     "enabled": true,
     "rules": {
       "recommended": false,
-      "style": {"useBlockStatements": "off"},
-      "nursery": {"noFloatingPromises": "warn"}
+      "style": {"useBlockStatements": "off"}
     },
     "includes": [
       "**",

@@ -1,9 +1,9 @@
 import {ArrayValue, StringValue} from '@coveo/bueno';
 import {createAction, createAsyncThunk} from '@reduxjs/toolkit';
 import {isErrorResponse} from '../../api/search/search-api-client.js';
-import {AsyncThunkInsightOptions} from '../../api/service/insight/insight-api-client.js';
-import {InsightUserActionsResponse} from '../../api/service/insight/user-actions/user-actions-response.js';
-import {
+import type {AsyncThunkInsightOptions} from '../../api/service/insight/insight-api-client.js';
+import type {InsightUserActionsResponse} from '../../api/service/insight/user-actions/user-actions-response.js';
+import type {
   ConfigurationSection,
   InsightUserActionsSection,
 } from '../../state/state-sections.js';

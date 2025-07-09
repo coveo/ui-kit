@@ -1,6 +1,6 @@
-import {SearchEngine} from '../../app/search-engine/search-engine.js';
-import {ControllerDefinitionWithoutProps} from '../../app/ssr-engine/types/common.js';
-import {Pager, PagerProps, buildPager} from './headless-pager.js';
+import type {SearchEngine} from '../../app/search-engine/search-engine.js';
+import type {ControllerDefinitionWithoutProps} from '../../app/ssr-engine/types/common.js';
+import {buildPager, type Pager, type PagerProps} from './headless-pager.js';
 
 export * from './headless-pager.js';
 

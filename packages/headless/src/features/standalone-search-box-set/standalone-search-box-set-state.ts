@@ -1,4 +1,4 @@
-import {OmniboxSuggestionMetadata} from '../query-suggest/query-suggest-analytics-actions.js';
+import type {OmniboxSuggestionMetadata} from '../query-suggest/query-suggest-analytics-actions.js';
 
 export type StandaloneSearchBoxSetState = Record<
   string,

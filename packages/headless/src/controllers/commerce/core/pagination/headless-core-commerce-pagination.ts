@@ -1,6 +1,6 @@
 import {NumberValue, Schema} from '@coveo/bueno';
 import {createSelector} from '@reduxjs/toolkit';
-import {
+import type {
   CommerceEngine,
   CommerceEngineState,
 } from '../../../../app/commerce-engine/commerce-engine.js';
@@ -17,9 +17,9 @@ import {loadReducerError} from '../../../../utils/errors.js';
 import {validateOptions} from '../../../../utils/validate-payload.js';
 import {
   buildController,
-  Controller,
+  type Controller,
 } from '../../../controller/headless-controller.js';
-import {FetchProductsActionCreator} from '../common.js';
+import type {FetchProductsActionCreator} from '../common.js';
 
 /**
  * The `Pagination` sub-controller is responsible for navigating between pages of results in a commerce interface.

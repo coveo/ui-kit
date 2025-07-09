@@ -1,4 +1,5 @@
 import {configuration} from '../../../app/common-reducers.js';
+import {queryReducer as commerceQuery} from '../../../features/commerce/query/query-slice.js';
 import {
   registerQuerySetQuery,
   updateQuerySetQuery,
@@ -9,7 +10,6 @@ import {
   registerQuerySuggest,
   selectQuerySuggestion,
 } from '../../../features/commerce/query-suggest/query-suggest-actions.js';
-import {queryReducer as commerceQuery} from '../../../features/commerce/query/query-slice.js';
 import {
   executeSearch,
   prepareForSearchWithQuery,
@@ -17,18 +17,18 @@ import {
 import {commerceSearchReducer as commerceSearch} from '../../../features/commerce/search/search-slice.js';
 import {querySetReducer as querySet} from '../../../features/query-set/query-set-slice.js';
 import {querySuggestReducer as querySuggest} from '../../../features/query-suggest/query-suggest-slice.js';
-import {CommerceAppState} from '../../../state/commerce-app-state.js';
+import type {CommerceAppState} from '../../../state/commerce-app-state.js';
 import {buildMockCommerceState} from '../../../test/mock-commerce-state.js';
 import {
-  MockedCommerceEngine,
   buildMockCommerceEngine,
+  type MockedCommerceEngine,
 } from '../../../test/mock-engine-v2.js';
 import {buildMockQuerySuggest} from '../../../test/mock-query-suggest.js';
 import {
-  SearchBox,
-  SearchBoxProps,
-  SearchBoxOptions,
   buildSearchBox,
+  type SearchBox,
+  type SearchBoxOptions,
+  type SearchBoxProps,
 } from './headless-search-box.js';
 
 vi.mock('../../../features/commerce/query-suggest/query-suggest-actions');

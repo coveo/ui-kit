@@ -3,12 +3,12 @@ import {getConfigurationInitialState} from '../../features/configuration/configu
 import {buildMockAnalyticsState} from '../../test/mock-analytics-state.js';
 import {
   buildMockSearchEngine,
-  MockedSearchEngine,
+  type MockedSearchEngine,
 } from '../../test/mock-engine-v2.js';
 import {createMockState} from '../../test/mock-state.js';
 import {
   buildSmartSnippet,
-  SmartSnippetProps,
+  type SmartSnippetProps,
 } from './headless-smart-snippet.js';
 
 describe('smart snippet', () => {

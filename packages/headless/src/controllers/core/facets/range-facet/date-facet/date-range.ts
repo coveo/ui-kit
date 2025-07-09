@@ -1,18 +1,18 @@
 import {
+  type AbsoluteDate,
   formatDateForSearchApi,
-  AbsoluteDate,
-  validateAbsoluteDate,
   parseDate,
+  validateAbsoluteDate,
 } from '../../../../../api/search/date/date-format.js';
 import {
-  serializeRelativeDate,
   isRelativeDate,
   isRelativeDateFormat,
-  RelativeDate,
+  type RelativeDate,
+  serializeRelativeDate,
   validateRelativeDate,
 } from '../../../../../api/search/date/relative-date.js';
-import {FacetValueState} from '../../../../../features/facets/facet-api/value.js';
-import {DateRangeRequest} from '../../../../../features/facets/range-facets/date-facet-set/interfaces/request.js';
+import type {FacetValueState} from '../../../../../features/facets/facet-api/value.js';
+import type {DateRangeRequest} from '../../../../../features/facets/range-facets/date-facet-set/interfaces/request.js';
 
 export type DateRangeInput = AbsoluteDate | RelativeDate;
 
