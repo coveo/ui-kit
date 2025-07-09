@@ -3,7 +3,7 @@ import {html} from 'lit';
 import {describe, it, expect} from 'vitest';
 import {renderCategoryFacetSearchResultsContainer} from './search-results-container';
 
-describe('renderCategoryFacetSearchResultsContainer', () => {
+describe('#renderCategoryFacetSearchResultsContainer', () => {
   const renderComponent = async (children = html`<li>Test child</li>`) => {
     const container = await renderFunctionFixture(
       html`${renderCategoryFacetSearchResultsContainer()(children)}`
