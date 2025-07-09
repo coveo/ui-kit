@@ -1,9 +1,9 @@
-import {FunctionalComponent} from '@/src/utils/functional-component-utils';
+import '@/src/components/common/atomic-icon/atomic-icon';
+import {renderButton} from '@/src/components/common/button';
+import type {FunctionalComponent} from '@/src/utils/functional-component-utils';
 import type {i18n} from 'i18next';
 import {html} from 'lit';
 import LeftArrow from '../../../../images/arrow-left-rounded.svg';
-import '@/src/components/common/atomic-icon/atomic-icon';
-import {renderButton} from '@/src/components/common/button';
 
 export interface CategoryFacetAllCategoryButtonProps {
   i18n: i18n;

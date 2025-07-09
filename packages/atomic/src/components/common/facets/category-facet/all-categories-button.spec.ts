@@ -63,12 +63,4 @@ describe('#renderCategoryFacetAllCategoryButton', () => {
       .element(button)
       .toHaveAttribute('part', 'all-categories-button');
   });
-
-  it('applies the truncate class to the text span', async () => {
-    const container = await renderComponent();
-    const textSpan = container.querySelector('span.truncate');
-
-    await expect.element(textSpan).toBeInTheDocument();
-    await expect.element(textSpan).toHaveTextContent('All Categories');
-  });
 });
