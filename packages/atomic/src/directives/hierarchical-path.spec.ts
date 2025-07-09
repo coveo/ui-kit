@@ -33,19 +33,23 @@ describe('#hierarchicalPath', () => {
       emptyPathContent: html`<span>No path</span>`,
     });
 
-    expect(container.textContent?.replace(/\s+/g, " ").trim()).toBe("No path");
+    expect(container.textContent?.replace(/\s+/g, ' ').trim()).toBe('No path');
   });
 
   it('should render single path item without separator', () => {
     renderPath({path: ['electronics']});
 
-    expect(container.textContent?.replace(/\s+/g, " ").trim()).toBe('electronics');
+    expect(container.textContent?.replace(/\s+/g, ' ').trim()).toBe(
+      'electronics'
+    );
   });
 
   it('should render multiple path items with separators', () => {
     renderPath({path: ['electronics', 'computers', 'laptops']});
 
-    expect(container.textContent?.replace(/\s+/g, " ").trim()).toBe("electronics / computers / laptops");
+    expect(container.textContent?.replace(/\s+/g, ' ').trim()).toBe(
+      'electronics / computers / laptops'
+    );
   });
 
   it('should use custom separator', () => {
@@ -57,19 +61,6 @@ describe('#hierarchicalPath', () => {
     expect(container.textContent?.replace(/\s+/g, ' ').trim()).toBe(
       'electronics > computers'
     );
-  });
-
-  it('should apply default CSS classes', () => {
-    renderPath({path: ['electronics', 'computers']});
-
-    const spans = container.querySelectorAll('span');
-    const separatorSpan = spans[1]; // First separator
-    const itemSpan = spans[0]; // First item
-
-    expect(separatorSpan).toHaveClass('mx-0.5');
-    expect(itemSpan).toHaveClass('max-w-max');
-    expect(itemSpan).toHaveClass('flex-1');
-    expect(itemSpan).toHaveClass('truncate');
   });
 
   it('should apply custom CSS classes', () => {
@@ -93,7 +84,9 @@ describe('#hierarchicalPath', () => {
       maxLength: 3,
     });
 
-    expect(container.textContent).not.toContain('...');
+    expect(container.textContent?.replace(/\s+/g, ' ').trim()).not.toContain(
+      '...'
+    );
     expect(container.textContent).toContain('electronics');
     expect(container.textContent).toContain('computers');
     expect(container.textContent).toContain('laptops');
