@@ -3,7 +3,7 @@ import {html} from 'lit';
 import {describe, it, expect} from 'vitest';
 import {renderCategoryFacetTreeValueContainer} from './value-as-tree-container';
 
-describe('renderCategoryFacetTreeValueContainer', () => {
+describe('#renderCategoryFacetTreeValueContainer', () => {
   const renderComponent = async (children = html`<span>Test child</span>`) => {
     const container = await renderFunctionFixture(
       html`${renderCategoryFacetTreeValueContainer({props: {}})(children)}`
