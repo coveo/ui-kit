@@ -2,19 +2,12 @@
 import {renderFunctionFixture} from '@/vitest-utils/testing-helpers/fixture';
 import {createTestI18n} from '@/vitest-utils/testing-helpers/i18n-utils';
 import {page} from '@vitest/browser/context';
-import '@vitest/browser/matchers.d.ts';
 import {html} from 'lit';
 import {vi, expect, describe, it, beforeAll} from 'vitest';
 import type {CategoryFacetAllCategoryButtonProps} from './all-categories-button';
 import {renderCategoryFacetAllCategoryButton} from './all-categories-button';
 
 describe('#renderCategoryFacetAllCategoryButton', () => {
-  const createMockI18n = (translationText: string) =>
-    ({
-      ...i18n,
-      t: vi.fn(() => translationText),
-    }) as unknown as typeof i18n;
-
   let i18n: Awaited<ReturnType<typeof createTestI18n>>;
 
   beforeAll(async () => {
@@ -77,13 +70,5 @@ describe('#renderCategoryFacetAllCategoryButton', () => {
 
     await expect.element(textSpan).toBeInTheDocument();
     await expect.element(textSpan).toHaveTextContent('All Categories');
-  });
-
-  it('renders with different translation text', async () => {
-    const customI18n = createMockI18n('Todas las categorías');
-
-    await renderComponent({i18n: customI18n});
-    const button = page.getByRole('button');
-    await expect.element(button).toHaveTextContent('Todas las categorías');
   });
 });

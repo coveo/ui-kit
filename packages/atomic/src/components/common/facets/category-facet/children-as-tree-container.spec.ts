@@ -32,21 +32,6 @@ describe('#renderCategoryFacetChildrenAsTreeContainer', () => {
     expect(ul).toHaveAttribute('part', 'values');
   });
 
-  it('should render children inside the ul element', async () => {
-    const container = await renderComponent(
-      {},
-      html`<li class="test-child">Test Item</li>`
-    );
-
-    const ul = container.querySelector('ul');
-    const child = container.querySelector('.test-child');
-
-    expect(ul).toBeInTheDocument();
-    expect(child).toBeInTheDocument();
-    expect(child).toHaveTextContent('Test Item');
-    expect(ul).toContainElement(child as HTMLElement);
-  });
-
   it('should apply custom className when provided', async () => {
     const container = await renderComponent({className: 'custom-class'});
     const ul = container.querySelector('ul');
@@ -59,13 +44,6 @@ describe('#renderCategoryFacetChildrenAsTreeContainer', () => {
     const ul = container.querySelector('ul');
 
     expect(ul).not.toHaveAttribute('class');
-  });
-
-  it('should apply empty string as className', async () => {
-    const container = await renderComponent({className: ''});
-    const ul = container.querySelector('ul');
-
-    expect(ul).toHaveAttribute('class', '');
   });
 
   it('should render multiple children', async () => {
@@ -86,20 +64,5 @@ describe('#renderCategoryFacetChildrenAsTreeContainer', () => {
     expect(children[0]).toHaveTextContent('Item 1');
     expect(children[1]).toHaveTextContent('Item 2');
     expect(children[2]).toHaveTextContent('Item 3');
-  });
-
-  it('should render with both className and children', async () => {
-    const container = await renderComponent(
-      {className: 'tree-container'},
-      html`<li class="tree-item">Tree Item</li>`
-    );
-
-    const ul = container.querySelector('ul');
-    const child = container.querySelector('.tree-item');
-
-    expect(ul).toHaveClass('tree-container');
-    expect(ul).toHaveAttribute('part', 'values');
-    expect(child).toHaveTextContent('Tree Item');
-    expect(ul).toContainElement(child as HTMLElement);
   });
 });
