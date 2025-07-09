@@ -8,6 +8,9 @@ interface CategoryFacetAllCategoryButtonProps {
   onClick(): void;
 }
 
+/**
+ * @deprecated should only be used for Stencil components.
+ */
 export const CategoryFacetAllCategoryButton: FunctionalComponent<
   CategoryFacetAllCategoryButtonProps
 > = ({i18n, onClick}) => {
