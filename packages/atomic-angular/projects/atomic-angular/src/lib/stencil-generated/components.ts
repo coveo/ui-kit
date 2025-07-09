@@ -2684,7 +2684,7 @@ export declare interface AtomicCommercePager extends LitAtomicCommercePager {
 
 @ProxyCmp({
   inputs: ['density', 'display', 'imageSize', 'numberOfPlaceholders'],
-  methods: ['setRenderFunction', 'initialize'],
+  methods: ['setRenderFunction', 'initialize', 'getUpdateComplete'],
   defineCustomElementFn: () => {customElements.get('atomic-commerce-product-list') || customElements.define('atomic-commerce-product-list', LitAtomicCommerceProductList);}
 })
 @Component({
