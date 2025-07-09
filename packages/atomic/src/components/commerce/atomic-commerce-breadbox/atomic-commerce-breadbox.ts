@@ -1,29 +1,29 @@
 import {NumberValue, Schema} from '@coveo/bueno';
 import {
-  Breadcrumb,
-  BreadcrumbManager,
-  BreadcrumbManagerState,
-  BreadcrumbValue,
+  type Breadcrumb,
+  type BreadcrumbManager,
+  type BreadcrumbManagerState,
+  type BreadcrumbValue,
   buildContext,
   buildProductListing,
   buildSearch,
-  CategoryFacetValue,
-  Context,
-  ContextState,
-  DateFacetValue,
-  LocationFacetValue,
-  NumericFacetValue,
-  ProductListing,
-  RegularFacetValue,
-  Search,
+  type CategoryFacetValue,
+  type Context,
+  type ContextState,
+  type DateFacetValue,
+  type LocationFacetValue,
+  type NumericFacetValue,
+  type ProductListing,
+  type RegularFacetValue,
+  type Search,
 } from '@coveo/headless/commerce';
-import {CSSResultGroup, html, LitElement, nothing, unsafeCSS} from 'lit';
+import {type CSSResultGroup, html, LitElement, nothing, unsafeCSS} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {bindStateToController} from '@/src/decorators/bind-state';
 import {bindingGuard} from '@/src/decorators/binding-guard';
 import {bindings} from '@/src/decorators/bindings';
 import {errorGuard} from '@/src/decorators/error-guard';
-import {InitializableComponent} from '@/src/decorators/types';
+import type {InitializableComponent} from '@/src/decorators/types';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles.js';
 import {FocusTargetController} from '@/src/utils/accessibility-utils';
 import {parseDate} from '@/src/utils/date-utils';
@@ -34,13 +34,13 @@ import {renderBreadcrumbContainer} from '../../common/breadbox/breadcrumb-contai
 import {renderBreadcrumbContent} from '../../common/breadbox/breadcrumb-content';
 import {renderBreadcrumbShowLess} from '../../common/breadbox/breadcrumb-show-less';
 import {renderBreadcrumbShowMore} from '../../common/breadbox/breadcrumb-show-more';
-import {Breadcrumb as BreadboxBreadcrumb} from '../../common/breadbox/breadcrumb-types';
+import type {Breadcrumb as BreadboxBreadcrumb} from '../../common/breadbox/breadcrumb-types';
 import {formatHumanReadable} from '../../common/facets/numeric-facet/formatter';
 import {
   defaultCurrencyFormatter,
   defaultNumberFormatter,
 } from '../../common/formats/format-common';
-import {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface';
+import type {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface';
 import styles from './atomic-commerce-breadbox.tw.css';
 
 type AnyFacetValue =
@@ -372,11 +372,11 @@ export class AtomicCommerceBreadbox
   @bindingGuard()
   @errorGuard()
   render() {
-    const breadcrumbs = this.breadcrumbManagerState.facetBreadcrumbs
-      .map((breadcrumb) => {
+    const breadcrumbs = this.breadcrumbManagerState.facetBreadcrumbs.flatMap(
+      (breadcrumb) => {
         return this.buildBreadcrumb(breadcrumb);
-      })
-      .flat();
+      }
+    );
 
     if (!breadcrumbs.length) {
       return html`${nothing}`;

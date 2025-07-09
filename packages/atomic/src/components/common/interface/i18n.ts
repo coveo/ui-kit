@@ -1,5 +1,5 @@
 import DOMPurify from 'dompurify';
-import Backend, {HttpBackendOptions} from 'i18next-http-backend';
+import Backend, {type HttpBackendOptions} from 'i18next-http-backend';
 import {getAssetPath} from '@/src/utils/asset-path-utils';
 import availableLocales from '../../../generated/availableLocales.json';
 import type {AnyEngineType} from './bindings';

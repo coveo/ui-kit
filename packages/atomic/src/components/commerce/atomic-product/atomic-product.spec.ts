@@ -1,14 +1,14 @@
-import {Product} from '@coveo/headless/commerce';
+import type {Product} from '@coveo/headless/commerce';
 import {html} from 'lit';
 import {beforeEach, describe, expect, it, vi} from 'vitest';
-import {
+import type {
   ItemDisplayDensity,
   ItemDisplayImageSize,
   ItemDisplayLayout,
 } from '@/src/components';
 import {renderInAtomicCommerceInterface} from '@/vitest-utils/testing-helpers/fixtures/atomic/commerce/atomic-commerce-interface-fixture';
 import {buildFakeProduct} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/product';
-import {ItemRenderingFunction} from '../../common/item-list/item-list-common';
+import type {ItemRenderingFunction} from '../../common/item-list/item-list-common';
 import {AtomicProduct} from './atomic-product';
 
 vi.mock('@coveo/headless/commerce', {spy: true});

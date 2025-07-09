@@ -1,6 +1,6 @@
-import {i18n} from 'i18next';
+import type {i18n} from 'i18next';
 import {html} from 'lit';
-import {FunctionalComponentWithChildren} from '@/src/utils/functional-component-utils';
+import type {FunctionalComponentWithChildren} from '@/src/utils/functional-component-utils';
 import ArrowBottomIcon from '../../../images/arrow-bottom-rounded.svg';
 import '../atomic-icon/atomic-icon';
 

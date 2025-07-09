@@ -1,9 +1,9 @@
-import {VNode} from '@stencil/core';
-import {HTMLStencilElement} from '@stencil/core/internal';
+import type {VNode} from '@stencil/core';
+import type {HTMLStencilElement} from '@stencil/core/internal';
 import type {LitElement} from 'lit';
 import {closest} from '../../../utils/dom-utils';
 import {buildCustomEvent} from '../../../utils/event-utils';
-import {AnyBindings} from '../interface/bindings';
+import type {AnyBindings} from '../interface/bindings';
 
 /**
  * Element which will be rendered in the list of suggestions.

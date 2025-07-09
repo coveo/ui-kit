@@ -1,4 +1,4 @@
-import {
+import type {
   BuildCtx,
   CompilerCtx,
   OutputTargetCustom,
@@ -80,11 +80,7 @@ export function generateAngularModuleDefinition(options: {
   moduleFile: string;
 }): OutputTargetCustom {
   return {
-    generator: async function (
-      config,
-      compilerCtx: CompilerCtx,
-      buildCtx: BuildCtx
-    ) {
+    generator: async (config, compilerCtx: CompilerCtx, buildCtx: BuildCtx) => {
       const filteredComponents = buildCtx.components.filter((cmp) => {
         return !cmp.internal;
       });

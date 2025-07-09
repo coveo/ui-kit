@@ -1,9 +1,9 @@
-import {Product, ProductTemplatesHelpers} from '@coveo/headless/commerce';
+import {type Product, ProductTemplatesHelpers} from '@coveo/headless/commerce';
 import {beforeEach, describe, expect, it, vi} from 'vitest';
 import {readFromObject} from '@/src/utils/object-utils';
 import {buildFakeProduct} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/product';
 import {createTestI18n} from '@/vitest-utils/testing-helpers/i18n-utils';
-import {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface';
+import type {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface';
 import {FieldValueIsNaNError} from './error';
 import {
   buildStringTemplateFromProduct,

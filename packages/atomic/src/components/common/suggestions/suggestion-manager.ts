@@ -1,14 +1,14 @@
 import {isNullOrUndefined} from '@coveo/bueno';
 import DOMPurify from 'dompurify';
-import {LitElement} from 'lit';
+import type {LitElement} from 'lit';
 import {debounce} from '../../../utils/debounce-utils';
 import {promiseTimeout} from '../../../utils/promise-utils';
 import {
   elementHasNoQuery,
   elementHasQuery,
-  SearchBoxSuggestionElement,
-  SearchBoxSuggestionsBindings,
-  SearchBoxSuggestionsEvent,
+  type SearchBoxSuggestionElement,
+  type SearchBoxSuggestionsBindings,
+  type SearchBoxSuggestionsEvent,
 } from './suggestions-common';
 
 /**
@@ -437,9 +437,9 @@ export class SuggestionManager<SearchBoxController> {
   }
 
   private getSuggestionElements(suggestions: SearchBoxSuggestions[]) {
-    const elements = suggestions
-      .map((suggestion) => suggestion.renderItems())
-      .flat();
+    const elements = suggestions.flatMap((suggestion) =>
+      suggestion.renderItems()
+    );
 
     const max =
       this.ownerSearchBoxProps.getNumberOfSuggestionsToDisplay() +

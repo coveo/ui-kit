@@ -1,7 +1,7 @@
 import type {StorybookConfig} from '@storybook/web-components-vite';
 import {readFileSync} from 'fs';
 import path, {dirname, resolve } from 'path';
-import {PluginImpl} from 'rollup';
+import type {PluginImpl} from 'rollup';
 import {mergeConfig} from 'vite';
 import {generateExternalPackageMappings} from '../scripts/externalPackageMappings.mjs';
 

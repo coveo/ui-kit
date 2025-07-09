@@ -5,7 +5,7 @@ import {createTestI18n} from '@/vitest-utils/testing-helpers/i18n-utils';
 import {
   getPartialRecentQueryClearElement,
   getPartialRecentQueryElement,
-  RecentQueriesContainerProps,
+  type RecentQueriesContainerProps,
   renderRecentQuery,
   renderRecentQueryClear,
 } from './recent-queries';

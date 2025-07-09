@@ -1,7 +1,7 @@
-import {i18n} from 'i18next';
+import type {i18n} from 'i18next';
 import {html} from 'lit';
 import {localizedString} from '@/src/directives/localized-string';
-import {FunctionalComponent} from '@/src/utils/functional-component-utils';
+import type {FunctionalComponent} from '@/src/utils/functional-component-utils';
 
 interface NoItemsProps {
   query: string;

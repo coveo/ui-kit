@@ -1,6 +1,6 @@
-import {ReactiveController, ReactiveControllerHost} from 'lit';
-import {ItemTemplateProvider} from '@/src/components/common/item-list/item-template-provider';
-import {LitElementWithError} from '@/src/decorators/types';
+import type {ReactiveController, ReactiveControllerHost} from 'lit';
+import type {ItemTemplateProvider} from '@/src/components/common/item-list/item-template-provider';
+import type {LitElementWithError} from '@/src/decorators/types';
 import {buildCustomEvent} from '@/src/utils/event-utils';
 
 const childTemplatesContextEventName = 'atomic/resolveChildTemplates';

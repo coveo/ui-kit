@@ -5,7 +5,7 @@ import {
   unsetLoadingFlag,
 } from '../../common/interface/store';
 import {
-  CommerceRecommendationStore,
+  type CommerceRecommendationStore,
   createCommerceRecommendationStore,
 } from './store';
 

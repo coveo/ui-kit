@@ -1,4 +1,4 @@
-import {CSSResult} from 'lit';
+import type {CSSResult} from 'lit';
 
 /**
  * Decorator to inject styles into components that do not use Shadow DOM.

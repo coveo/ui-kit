@@ -1,7 +1,7 @@
-import {i18n} from 'i18next';
+import type {i18n} from 'i18next';
 import {html} from 'lit';
-import {Ref} from 'lit/directives/ref.js';
-import {FunctionalComponent} from '@/src/utils/functional-component-utils';
+import type {Ref} from 'lit/directives/ref.js';
+import type {FunctionalComponent} from '@/src/utils/functional-component-utils';
 import ClearSlim from '../../../images/clear-slim.svg';
 import {renderButton} from '../button';
 

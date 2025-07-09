@@ -1,9 +1,9 @@
-import {
+import type {
   AnalyticsConfiguration as InsightAnalyticsConfiguration,
   EngineConfiguration as InsightEngineConfiguration,
 } from '@coveo/headless/insight';
 import {
-  AnalyticsPayload,
+  type AnalyticsPayload,
   augmentAnalyticsWithAtomicVersion,
   augmentWithExternalMiddleware,
   getNextAnalyticsConfig,

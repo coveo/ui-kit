@@ -1,4 +1,4 @@
-import {NumericFacetValue, SearchStatusState} from '@coveo/headless';
+import type {NumericFacetValue, SearchStatusState} from '@coveo/headless';
 import {describe, expect, it} from 'vitest';
 import {
   collapseFacetsAfter,

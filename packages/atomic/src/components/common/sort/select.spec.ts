@@ -2,9 +2,9 @@ import {page} from '@vitest/browser/context';
 import {renderFunctionFixture} from '@/vitest-utils/testing-helpers/fixture';
 import {createTestI18n} from '@/vitest-utils/testing-helpers/i18n-utils';
 import '@vitest/browser/matchers.d.ts';
-import {html, TemplateResult} from 'lit';
+import {html, type TemplateResult} from 'lit';
 import {beforeAll, describe, expect, it, vi} from 'vitest';
-import {renderSortSelect, SortSelectProps} from './select';
+import {renderSortSelect, type SortSelectProps} from './select';
 
 describe('renderSortSelect', () => {
   let i18n: Awaited<ReturnType<typeof createTestI18n>>;
@@ -72,7 +72,7 @@ describe('renderSortSelect', () => {
 
     const icon = element.querySelector('atomic-icon');
     expect(icon).toBeInTheDocument();
-    expect(icon?.getAttribute('icon')).toMatch(new RegExp('<svg.*></svg>'));
+    expect(icon?.getAttribute('icon')).toMatch(/<svg.*><\/svg>/);
   });
 
   it('applies the correct part attributes', async () => {

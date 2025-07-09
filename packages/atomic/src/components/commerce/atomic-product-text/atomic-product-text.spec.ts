@@ -1,5 +1,5 @@
-import {Product} from '@coveo/headless/commerce';
-import {i18n} from 'i18next';
+import type {Product} from '@coveo/headless/commerce';
+import type {i18n} from 'i18next';
 import {html} from 'lit';
 import {ifDefined} from 'lit/directives/if-defined.js';
 import {beforeEach, describe, expect, it, vi} from 'vitest';

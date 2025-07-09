@@ -1,5 +1,5 @@
 import {test as base} from '@playwright/test';
-import {AxeFixture, makeAxeBuilder} from '@/playwright-utils/base-fixture';
+import {type AxeFixture, makeAxeBuilder} from '@/playwright-utils/base-fixture';
 import {AtomicQuickviewLocators as Quickview} from './page-object';
 
 type MyFixtures = {

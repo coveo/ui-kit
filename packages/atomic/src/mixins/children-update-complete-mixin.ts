@@ -1,6 +1,6 @@
-import {HTMLStencilElement} from '@stencil/core/internal';
+import type {HTMLStencilElement} from '@stencil/core/internal';
 import {LitElement} from 'lit';
-import {Constructor} from './mixin-common';
+import type {Constructor} from './mixin-common';
 
 export const ChildrenUpdateCompleteMixin = <T extends Constructor<LitElement>>(
   superClass: T

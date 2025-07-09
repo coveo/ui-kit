@@ -1,5 +1,5 @@
-import {LitElement, ReactiveController, ReactiveControllerHost} from 'lit';
-import {InitializableComponent} from '@/src/decorators/types.js';
+import type {LitElement, ReactiveController, ReactiveControllerHost} from 'lit';
+import type {InitializableComponent} from '@/src/decorators/types.js';
 import {buildCustomEvent} from '@/src/utils/event-utils';
 
 type LitElementWithError = Omit<

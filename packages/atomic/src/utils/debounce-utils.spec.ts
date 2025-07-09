@@ -1,5 +1,5 @@
 import {afterEach, beforeEach, describe, expect, it, vi} from 'vitest';
-import {buildDebouncedQueue, DebouncedQueue} from './debounce-utils';
+import {buildDebouncedQueue, type DebouncedQueue} from './debounce-utils';
 
 describe('buildDebouncedQueue', () => {
   let queue: DebouncedQueue;

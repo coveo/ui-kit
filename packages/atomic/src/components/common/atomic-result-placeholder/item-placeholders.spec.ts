@@ -1,9 +1,9 @@
 import {html} from 'lit';
 import {describe, expect, it} from 'vitest';
-import {ItemDisplayLayout} from '@/src/components';
+import type {ItemDisplayLayout} from '@/src/components';
 import {renderFunctionFixture} from '@/vitest-utils/testing-helpers/fixture';
 import {
-  ItemPlaceholdersProps,
+  type ItemPlaceholdersProps,
   renderItemPlaceholders,
 } from './item-placeholders';
 

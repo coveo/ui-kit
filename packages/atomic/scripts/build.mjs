@@ -117,7 +117,7 @@ function compileWithTransformer() {
     }
   });
 
-  let exitCode = emitResult.emitSkipped || hasError ? 1 : 0;
+  const exitCode = emitResult.emitSkipped || hasError ? 1 : 0;
   console.log(`Process exiting with code '${exitCode}'.`);
   process.exit(exitCode);
 }

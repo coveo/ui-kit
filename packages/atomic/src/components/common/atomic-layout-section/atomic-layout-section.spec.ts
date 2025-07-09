@@ -3,8 +3,8 @@ import './atomic-layout-section';
 import {html} from 'lit';
 import {ifDefined} from 'lit/directives/if-defined.js';
 import {fixture} from '@/vitest-utils/testing-helpers/fixture';
-import {AtomicLayoutSection} from './atomic-layout-section';
-import {Section} from './sections';
+import type {AtomicLayoutSection} from './atomic-layout-section';
+import type {Section} from './sections';
 
 describe('AtomicLayoutSection', () => {
   let element: AtomicLayoutSection;

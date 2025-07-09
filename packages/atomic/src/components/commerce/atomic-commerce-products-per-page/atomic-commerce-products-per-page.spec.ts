@@ -1,11 +1,11 @@
 import {
   buildProductListing,
   buildSearch,
-  Pagination,
-  PaginationState,
-  ProductListingSummaryState,
-  SearchSummaryState,
-  Summary,
+  type Pagination,
+  type PaginationState,
+  type ProductListingSummaryState,
+  type SearchSummaryState,
+  type Summary,
 } from '@coveo/headless/commerce';
 import {userEvent} from '@storybook/test';
 import {html} from 'lit';
@@ -22,7 +22,7 @@ import {
   convertChoicesToNumbers,
   validateInitialChoice,
 } from '../../common/items-per-page/validate';
-import {AtomicCommerceProductsPerPage} from './atomic-commerce-products-per-page';
+import type {AtomicCommerceProductsPerPage} from './atomic-commerce-products-per-page';
 
 vi.mock('@coveo/headless/commerce', {spy: true});
 vi.mock('@/src/components/common/items-per-page/validate.js', {spy: true});

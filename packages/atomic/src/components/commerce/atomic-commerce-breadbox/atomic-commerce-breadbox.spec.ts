@@ -1,6 +1,6 @@
 import {
-  BreadcrumbManager,
-  BreadcrumbManagerState,
+  type BreadcrumbManager,
+  type BreadcrumbManagerState,
   buildContext,
   buildProductListing,
   buildSearch,
@@ -16,7 +16,7 @@ import {buildFakeCommerceEngine} from '@/vitest-utils/testing-helpers/fixtures/h
 import {buildFakeProductListing} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/product-listing-controller';
 import {buildFakeSearch} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/search-controller';
 import './atomic-commerce-breadbox';
-import {AtomicCommerceBreadbox} from './atomic-commerce-breadbox';
+import type {AtomicCommerceBreadbox} from './atomic-commerce-breadbox';
 
 vi.mock('@coveo/headless/commerce', {spy: true});
 vi.mock('@/src/utils/date-utils', () => {

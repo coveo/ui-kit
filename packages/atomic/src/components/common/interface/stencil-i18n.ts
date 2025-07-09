@@ -1,9 +1,9 @@
 import DOMPurify from 'dompurify';
-import Backend, {HttpBackendOptions} from 'i18next-http-backend';
+import Backend, {type HttpBackendOptions} from 'i18next-http-backend';
 import {getAssetPath} from '@/src/utils/stencil-asset-path-utils';
 import availableLocales from '../../../generated/availableLocales.json';
-import {AnyEngineType} from './bindings';
-import {StencilBaseAtomicInterface} from './interface-common-stencil';
+import type {AnyEngineType} from './bindings';
+import type {StencilBaseAtomicInterface} from './interface-common-stencil';
 
 export const i18nTranslationNamespace = 'translation';
 

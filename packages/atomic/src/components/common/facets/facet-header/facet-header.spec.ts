@@ -4,7 +4,7 @@ import {createTestI18n} from '@/vitest-utils/testing-helpers/i18n-utils';
 import '@vitest/browser/matchers.d.ts';
 import {html} from 'lit';
 import {beforeAll, describe, expect, it, vi} from 'vitest';
-import {FacetHeaderProps, renderFacetHeader} from './facet-header';
+import {type FacetHeaderProps, renderFacetHeader} from './facet-header';
 
 describe('facetHeader', () => {
   let i18n: Awaited<ReturnType<typeof createTestI18n>>;

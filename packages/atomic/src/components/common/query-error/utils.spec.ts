@@ -1,4 +1,4 @@
-import {i18n} from 'i18next';
+import type {i18n} from 'i18next';
 import {beforeAll, describe, expect, it} from 'vitest';
 import {createTestI18n} from '@/vitest-utils/testing-helpers/i18n-utils';
 import {

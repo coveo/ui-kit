@@ -1,5 +1,5 @@
 import {html, nothing} from 'lit';
-import {FunctionalComponentWithChildren} from '@/src/utils/functional-component-utils';
+import type {FunctionalComponentWithChildren} from '@/src/utils/functional-component-utils';
 
 interface QuerySummaryGuardProps {
   hasResults: boolean;

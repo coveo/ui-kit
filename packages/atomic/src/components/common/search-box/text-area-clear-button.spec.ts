@@ -1,6 +1,6 @@
 import {userEvent} from '@vitest/browser/context';
 import {html} from 'lit';
-import {createRef, Ref} from 'lit/directives/ref.js';
+import {createRef, type Ref} from 'lit/directives/ref.js';
 import {beforeAll, describe, expect, it, vi} from 'vitest';
 import {renderFunctionFixture} from '@/vitest-utils/testing-helpers/fixture';
 import {createTestI18n} from '@/vitest-utils/testing-helpers/i18n-utils';

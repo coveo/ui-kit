@@ -1,12 +1,12 @@
-import {InteractiveProduct, Product} from '@coveo/headless/commerce';
-import {LitElement} from 'lit';
+import type {InteractiveProduct, Product} from '@coveo/headless/commerce';
+import type {LitElement} from 'lit';
 import {
   InteractiveItemContextController,
-  InteractiveItemContextEvent,
+  type InteractiveItemContextEvent,
 } from '@/src/components/common/item-list/context/interactive-item-context-controller';
 import {
   ItemContextController,
-  ItemContextEvent,
+  type ItemContextEvent,
 } from '@/src/components/common/item-list/context/item-context-controller';
 import {fetchItemContext} from '@/src/components/common/item-list/fetch-item-context';
 

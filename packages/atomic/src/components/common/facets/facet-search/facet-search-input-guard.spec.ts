@@ -3,7 +3,7 @@ import {html} from 'lit';
 import {describe, expect, it} from 'vitest';
 import {renderFunctionFixture} from '@/vitest-utils/testing-helpers/fixture';
 import {
-  FacetSearchInputGuardProps,
+  type FacetSearchInputGuardProps,
   facetSearchInputGuard,
 } from './facet-search-input-guard';
 

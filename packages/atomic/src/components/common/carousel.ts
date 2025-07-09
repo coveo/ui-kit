@@ -1,10 +1,10 @@
 import {html, nothing} from 'lit';
 import {map} from 'lit/directives/map.js';
-import {FunctionalComponentWithChildren} from '@/src/utils/functional-component-utils';
+import type {FunctionalComponentWithChildren} from '@/src/utils/functional-component-utils';
 import ArrowRight from '../../images/arrow-right.svg';
 import './atomic-icon/atomic-icon';
-import {ButtonProps, renderButton} from './button';
-import {AnyBindings} from './interface/bindings';
+import {type ButtonProps, renderButton} from './button';
+import type {AnyBindings} from './interface/bindings';
 
 export interface CarouselProps {
   bindings: AnyBindings;

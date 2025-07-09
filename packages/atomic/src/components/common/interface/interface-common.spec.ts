@@ -3,7 +3,7 @@ import Backend from 'i18next-http-backend';
 import {html} from 'lit';
 import {describe, expect, it, vi} from 'vitest';
 import {
-  BaseAtomicInterface,
+  type BaseAtomicInterface,
   CommonAtomicInterfaceHelper,
 } from '@/src/components/common/interface/interface-common.js';
 import {setCoveoGlobal} from '@/src/global/environment.js';

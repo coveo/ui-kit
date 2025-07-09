@@ -1,7 +1,7 @@
 import {within} from '@storybook/test';
 import {html, render} from 'lit';
 import {afterEach, beforeEach, describe, expect, it} from 'vitest';
-import {HeadingProps, renderHeading as heading} from './heading';
+import {type HeadingProps, renderHeading as heading} from './heading';
 
 describe('heading', () => {
   let container: HTMLElement;

@@ -1,4 +1,4 @@
-import {type Controller} from '@coveo/headless';
+import type {Controller} from '@coveo/headless';
 import {LitElement} from 'lit';
 import {customElement} from 'lit/decorators.js';
 import {afterEach, beforeEach, describe, expect, it, vi} from 'vitest';

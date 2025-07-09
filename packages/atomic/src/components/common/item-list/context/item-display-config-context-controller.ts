@@ -1,5 +1,5 @@
-import {LitElement, ReactiveController, ReactiveControllerHost} from 'lit';
-import {
+import type {LitElement, ReactiveController, ReactiveControllerHost} from 'lit';
+import type {
   ItemDisplayDensity,
   ItemDisplayImageSize,
 } from '@/src/components/common/layout/display-options';

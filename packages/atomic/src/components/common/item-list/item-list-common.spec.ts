@@ -1,12 +1,12 @@
 import {afterEach, beforeEach, describe, expect, it, vi} from 'vitest';
-import {CommerceStore} from '@/src/components';
+import type {CommerceStore} from '@/src/components';
 import {
-  FocusTargetController,
+  type FocusTargetController,
   getFirstFocusableDescendant,
 } from '@/src/utils/accessibility-utils';
 import {updateBreakpoints} from '@/src/utils/replace-breakpoint';
 import {defer} from '@/src/utils/utils';
-import {ItemListCommon, ItemListCommonProps} from './item-list-common';
+import {ItemListCommon, type ItemListCommonProps} from './item-list-common';
 
 vi.mock('@/src/utils/accessibility-utils', {spy: true});
 vi.mock('@/src/utils/replace-breakpoint', {spy: true});

@@ -1,9 +1,9 @@
 import {html, nothing} from 'lit';
 import {unsafeHTML} from 'lit/directives/unsafe-html.js';
-import {FunctionalComponent} from '@/src/utils/functional-component-utils.js';
+import type {FunctionalComponent} from '@/src/utils/functional-component-utils.js';
 import {
-  HighlightKeywords,
-  HighlightString,
+  type HighlightKeywords,
+  type HighlightString,
   renderWithHighlights,
 } from './render-highlights.js';
 

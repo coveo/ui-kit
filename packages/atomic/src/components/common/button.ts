@@ -1,11 +1,11 @@
 import {html, nothing} from 'lit';
 import {ifDefined} from 'lit/directives/if-defined.js';
-import {RefOrCallback, ref} from 'lit/directives/ref.js';
+import {type RefOrCallback, ref} from 'lit/directives/ref.js';
 import {when} from 'lit/directives/when.js';
-import {FunctionalComponentWithChildren} from '@/src/utils/functional-component-utils';
+import type {FunctionalComponentWithChildren} from '@/src/utils/functional-component-utils';
 import {createRipple} from '../../utils/ripple';
 import {
-  ButtonStyle,
+  type ButtonStyle,
   getClassNameForButtonStyle,
   getRippleColorForButtonStyle,
 } from './button-style';

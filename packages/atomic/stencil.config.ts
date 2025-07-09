@@ -1,12 +1,12 @@
 import replacePlugin from '@rollup/plugin-replace';
 import {angularOutputTarget as angular} from '@stencil/angular-output-target';
-import {Config} from '@stencil/core';
+import type {Config} from '@stencil/core';
 import {reactOutputTarget as react} from '@stencil/react-output-target';
 import {postcss} from '@stencil-community/postcss';
 import tailwindcss from '@tailwindcss/postcss';
 import {readdirSync, readFileSync} from 'fs';
 import postcssNested from 'postcss-nested';
-import {PluginImpl} from 'rollup';
+import type {PluginImpl} from 'rollup';
 import html from 'rollup-plugin-html';
 import {inlineSvg} from 'stencil-inline-svg';
 import {generateExternalPackageMappings} from './scripts/externalPackageMappings.mjs';

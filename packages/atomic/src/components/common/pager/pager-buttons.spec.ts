@@ -1,4 +1,4 @@
-import {i18n as I18n} from 'i18next';
+import type {i18n as I18n} from 'i18next';
 import {html, render} from 'lit';
 import {afterEach, beforeEach, describe, expect, test} from 'vitest';
 import {createTestI18n} from '@/vitest-utils/testing-helpers/i18n-utils';

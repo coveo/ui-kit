@@ -1,7 +1,7 @@
 import {beforeEach, describe, expect, it, vi} from 'vitest';
 import {buildFakeCommerceEngine} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/engine';
 import {
-  BaseStore,
+  type BaseStore,
   createAppLoadedListener,
   createBaseStore,
   registerFacet,

@@ -1,12 +1,12 @@
 import '@/src/components/common/atomic-icon/atomic-icon';
-import {i18n} from 'i18next';
+import type {i18n} from 'i18next';
 import {html} from 'lit';
-import {
+import type {
   FunctionalComponent,
   FunctionalComponentWithChildren,
 } from '@/src/utils/functional-component-utils';
-import {ButtonProps, renderButton} from '../button';
-import {RadioButtonProps, renderRadioButton} from '../radio-button';
+import {type ButtonProps, renderButton} from '../button';
+import {type RadioButtonProps, renderRadioButton} from '../radio-button';
 
 interface PagerNavigationButtonProps
   extends Omit<ButtonProps, 'style' | 'part' | 'class'> {

@@ -1,6 +1,6 @@
 import {
   HighlightUtils,
-  Product,
+  type Product,
   ProductTemplatesHelpers,
 } from '@coveo/headless/commerce';
 import {html, LitElement, nothing} from 'lit';
@@ -11,11 +11,11 @@ import {bindingGuard} from '@/src/decorators/binding-guard';
 import {bindings} from '@/src/decorators/bindings';
 import {createProductContextController} from '@/src/decorators/commerce/product-template-decorators.js';
 import {errorGuard} from '@/src/decorators/error-guard';
-import {InitializableComponent} from '@/src/decorators/types';
+import type {InitializableComponent} from '@/src/decorators/types';
 import {getFieldValueCaption} from '../../../utils/field-utils';
 import {renderItemTextFallback} from '../../common/item-text/item-text-fallback.js';
 import {renderItemTextHighlighted} from '../../common/item-text/item-text-highlighted.js';
-import {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface';
+import type {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface';
 import '../atomic-commerce-text/atomic-commerce-text';
 import {getStringValueFromProductOrNull} from '../product-template-component-utils/product-utils.js';
 

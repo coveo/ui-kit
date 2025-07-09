@@ -1,7 +1,7 @@
 import {fireEvent, within} from '@storybook/test';
 import {html, render} from 'lit';
 import {afterEach, beforeEach, describe, expect, it, vi} from 'vitest';
-import {CheckboxProps, renderCheckbox as checkbox} from './checkbox';
+import {type CheckboxProps, renderCheckbox as checkbox} from './checkbox';
 
 describe('renderCheckbox', () => {
   let container: HTMLElement;

@@ -1,4 +1,4 @@
-import {html, noChange, nothing, TemplateResult} from 'lit';
+import {html, noChange, nothing, type TemplateResult} from 'lit';
 import {describe, expect, it, vi} from 'vitest';
 import {renderFunctionFixture} from '@/vitest-utils/testing-helpers/fixture';
 import {sortGuard} from './sort-guard';

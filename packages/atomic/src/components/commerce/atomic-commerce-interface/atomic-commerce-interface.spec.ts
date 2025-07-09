@@ -1,10 +1,10 @@
 import {
   buildCommerceEngine,
-  CommerceEngineConfiguration,
+  type CommerceEngineConfiguration,
   getSampleCommerceEngineConfiguration,
-  ProductListing,
-  Search,
-  UrlManager,
+  type ProductListing,
+  type Search,
+  type UrlManager,
 } from '@coveo/headless/commerce';
 import {html, LitElement} from 'lit';
 import {customElement, state} from 'lit/decorators.js';
@@ -14,12 +14,12 @@ import {
   beforeEach,
   describe,
   expect,
-  MockInstance,
+  type MockInstance,
   test,
   vi,
 } from 'vitest';
 import {bindings} from '@/src/decorators/bindings';
-import {InitializableComponent} from '@/src/decorators/types';
+import type {InitializableComponent} from '@/src/decorators/types';
 import {InitializeBindingsMixin} from '@/src/mixins/bindings-mixin';
 import {StorageItems} from '@/src/utils/local-storage-utils';
 import {fixture} from '@/vitest-utils/testing-helpers/fixture';
@@ -27,7 +27,7 @@ import {fixtureCleanup} from '@/vitest-utils/testing-helpers/fixture-wrapper';
 import {stateKey} from '../../../../../headless/src/app/state-key';
 import {
   AtomicCommerceInterface,
-  CommerceBindings,
+  type CommerceBindings,
 } from './atomic-commerce-interface';
 
 vi.mock('@coveo/headless/commerce', async () => {

@@ -1,6 +1,6 @@
 import {html} from 'lit';
 import {ref as litRef} from 'lit/directives/ref.js';
-import {FunctionalComponentWithChildren} from '@/src/utils/functional-component-utils';
+import type {FunctionalComponentWithChildren} from '@/src/utils/functional-component-utils';
 
 export interface GridLayoutProps {
   item: {clickUri: string; title: string};

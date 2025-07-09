@@ -1,5 +1,5 @@
-import {i18n} from 'i18next';
-import {FunctionalComponent} from '@/src/utils/functional-component-utils';
+import type {i18n} from 'i18next';
+import type {FunctionalComponent} from '@/src/utils/functional-component-utils';
 import {getFieldValueCaption} from '../../../../utils/field-utils';
 import {renderFacetValueBox} from '../facet-value-box/facet-value-box';
 import {renderFacetValueCheckbox} from '../facet-value-checkbox/facet-value-checkbox';

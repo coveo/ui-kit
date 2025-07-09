@@ -44,7 +44,7 @@ const updateHtmlVersionsInDirectory = (
     const headlessRegex =
       /https?:\/\/(localhost:3000|static(?:dev|stg)?\.cloud\.coveo\.com)\/headless\/v\d+(\.\d+)?(\.\d+)?/g;
     const atomicAssetRegex =
-      /(["'`\(])@coveo\/atomic\/assets\/(.*?)(["'`\)])|@coveo\/atomic\/assets\/(\S+)/g;
+      /(["'`(])@coveo\/atomic\/assets\/(.*?)(["'`)])|@coveo\/atomic\/assets\/(\S+)/g;
 
     const cdnBaseUrl =
       {

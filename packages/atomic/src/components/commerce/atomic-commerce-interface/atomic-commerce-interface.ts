@@ -3,41 +3,41 @@ import {
   buildContext,
   buildProductListing,
   buildSearch,
-  CommerceEngine,
-  CommerceEngineConfiguration,
-  Context,
-  LogLevel,
+  type CommerceEngine,
+  type CommerceEngineConfiguration,
+  type Context,
+  type LogLevel,
   loadQueryActions,
-  ProductListing,
-  ProductListingSummaryState,
-  Search,
-  SearchSummaryState,
-  Summary,
-  Unsubscribe,
-  UrlManager,
+  type ProductListing,
+  type ProductListingSummaryState,
+  type Search,
+  type SearchSummaryState,
+  type Summary,
+  type Unsubscribe,
+  type UrlManager,
 } from '@coveo/headless/commerce';
 import {provide} from '@lit/context';
-import i18next, {i18n} from 'i18next';
-import {CSSResultGroup, html, LitElement, unsafeCSS} from 'lit';
+import i18next, {type i18n} from 'i18next';
+import {type CSSResultGroup, html, LitElement, unsafeCSS} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {watch} from '@/src/decorators/watch';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles.js';
 import {markParentAsReady} from '@/src/utils/init-queue';
 import {
   SafeStorage,
-  StandaloneSearchBoxData,
+  type StandaloneSearchBoxData,
   StorageItems,
 } from '@/src/utils/local-storage-utils';
 import {ChildrenUpdateCompleteMixin} from '../../../mixins/children-update-complete-mixin';
-import {CommonBindings} from '../../common/interface/bindings';
+import type {CommonBindings} from '../../common/interface/bindings';
 import {
-  BaseAtomicInterface,
+  type BaseAtomicInterface,
   CommonAtomicInterfaceHelper,
-  InitializeEvent,
+  type InitializeEvent,
 } from '../../common/interface/interface-common';
 import {bindingsContext} from '../../context/bindings-context';
 import {
-  CommerceStore,
+  type CommerceStore,
   createCommerceStore,
 } from '../atomic-commerce-interface/store';
 import {

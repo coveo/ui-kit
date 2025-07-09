@@ -1,4 +1,4 @@
-import {AtomicCommerceRecommendationInterface} from '../atomic-commerce-recommendation-interface';
+import type {AtomicCommerceRecommendationInterface} from '../atomic-commerce-recommendation-interface';
 import {expect, test} from './fixture';
 
 test.describe('AtomicCommerceRecommendationInterface', () => {

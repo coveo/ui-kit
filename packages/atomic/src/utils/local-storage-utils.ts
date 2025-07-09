@@ -1,4 +1,4 @@
-import {StandaloneSearchBoxAnalytics} from '@coveo/headless';
+import type {StandaloneSearchBoxAnalytics} from '@coveo/headless';
 
 export enum StorageItems {
   RECENT_QUERIES = 'coveo-recent-queries',

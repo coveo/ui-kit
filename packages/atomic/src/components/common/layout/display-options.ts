@@ -1,4 +1,4 @@
-import {containsSections, ItemSectionTagName} from './sections';
+import {containsSections, type ItemSectionTagName} from './sections';
 
 export type ItemDisplayBasicLayout = 'list' | 'grid';
 export type ItemDisplayLayout = ItemDisplayBasicLayout | 'table';

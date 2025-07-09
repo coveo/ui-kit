@@ -1,5 +1,5 @@
 import {html} from 'lit';
-import {FunctionalComponent} from '@/src/utils/functional-component-utils';
+import type {FunctionalComponent} from '@/src/utils/functional-component-utils';
 import {renderRadioButton} from '../radio-button';
 
 interface ChoicesProps {

@@ -4,7 +4,7 @@ import {
   describe,
   expect,
   it,
-  MockInstance,
+  type MockInstance,
   vi,
 } from 'vitest';
 import {isElementNode, isVisualNode} from '@/src/utils/utils';

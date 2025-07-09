@@ -1,10 +1,10 @@
 import {
   buildQueryTrigger,
   buildSearch,
-  DidYouMean,
-  DidYouMeanState,
-  QueryTrigger,
-  QueryTriggerState,
+  type DidYouMean,
+  type DidYouMeanState,
+  type QueryTrigger,
+  type QueryTriggerState,
 } from '@coveo/headless/commerce';
 import {userEvent} from '@vitest/browser/context';
 import {html} from 'lit';
@@ -15,7 +15,7 @@ import {buildFakeCommerceEngine} from '@/vitest-utils/testing-helpers/fixtures/h
 import {buildFakeQueryTrigger} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/query-trigger-controller';
 import {buildFakeSearch} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/search-controller';
 import './atomic-commerce-did-you-mean';
-import {AtomicCommerceDidYouMean} from './atomic-commerce-did-you-mean';
+import type {AtomicCommerceDidYouMean} from './atomic-commerce-did-you-mean';
 
 vi.mock('@coveo/headless/commerce', {spy: true});
 

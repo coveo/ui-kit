@@ -1,9 +1,9 @@
 import {
   buildProductListing,
   buildSearch,
-  ProductListingSummaryState,
-  SearchSummaryState,
-  Summary,
+  type ProductListingSummaryState,
+  type SearchSummaryState,
+  type Summary,
 } from '@coveo/headless/commerce';
 import {html, LitElement} from 'lit';
 import {customElement, state} from 'lit/decorators.js';
@@ -11,7 +11,7 @@ import {bindStateToController} from '@/src/decorators/bind-state.js';
 import {bindingGuard} from '@/src/decorators/binding-guard.js';
 import {bindings} from '@/src/decorators/bindings.js';
 import {errorGuard} from '@/src/decorators/error-guard.js';
-import {InitializableComponent} from '@/src/decorators/types.js';
+import type {InitializableComponent} from '@/src/decorators/types.js';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles.js';
 import {AriaLiveRegionController} from '@/src/utils/accessibility-utils.js';
 import {renderNoItemsContainer} from '../../common/no-items/container.js';
@@ -20,7 +20,7 @@ import {renderMagnifyingGlass} from '../../common/no-items/magnifying-glass.js';
 import {renderNoItems} from '../../common/no-items/no-items.js';
 import {renderSearchTips} from '../../common/no-items/tips.js';
 import {getSummary} from '../../common/no-items/utils.js';
-import {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface.js';
+import type {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface.js';
 
 /**
  * @alpha

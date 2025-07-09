@@ -1,4 +1,4 @@
-import {i18n as I18n} from 'i18next';
+import type {i18n as I18n} from 'i18next';
 import {html} from 'lit';
 import {beforeAll, describe, expect, it, vi} from 'vitest';
 import {fixture} from '@/vitest-utils/testing-helpers/fixture';
@@ -6,7 +6,7 @@ import {createTestI18n} from '@/vitest-utils/testing-helpers/i18n-utils';
 import {encodeForDomAttribute} from '../../../utils/string-utils';
 import {
   getPartialSearchBoxSuggestionElement,
-  RenderQuerySuggestionOptions,
+  type RenderQuerySuggestionOptions,
   renderQuerySuggestion,
 } from './query-suggestions';
 

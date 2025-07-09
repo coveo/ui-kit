@@ -1,6 +1,6 @@
 import '@/src/components/common/atomic-component-error/atomic-component-error.js';
 import type {LogLevel} from '@coveo/headless';
-import {i18n, TFunction} from 'i18next';
+import type {i18n, TFunction} from 'i18next';
 import Backend from 'i18next-http-backend';
 import {html} from 'lit';
 import type {

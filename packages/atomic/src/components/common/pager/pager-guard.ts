@@ -1,6 +1,6 @@
 import {html} from 'lit';
 import {displayIf} from '@/src/directives/display-if';
-import {FunctionalComponentGuard} from '@/src/utils/functional-component-utils';
+import type {FunctionalComponentGuard} from '@/src/utils/functional-component-utils';
 
 interface PagerGuardProps {
   hasError?: boolean;

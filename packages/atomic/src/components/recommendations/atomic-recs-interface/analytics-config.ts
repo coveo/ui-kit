@@ -1,9 +1,9 @@
-import {
+import type {
   AnalyticsConfiguration,
   RecommendationEngineConfiguration,
 } from '@coveo/headless/recommendation';
 import {
-  AnalyticsPayload,
+  type AnalyticsPayload,
   augmentAnalyticsConfigWithAtomicVersion,
   augmentAnalyticsConfigWithDocument,
   augmentAnalyticsWithAtomicVersion,

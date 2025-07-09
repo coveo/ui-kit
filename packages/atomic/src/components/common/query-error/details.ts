@@ -1,5 +1,5 @@
 import {html, nothing} from 'lit';
-import {FunctionalComponent} from '@/src/utils/functional-component-utils';
+import type {FunctionalComponent} from '@/src/utils/functional-component-utils';
 
 export interface QueryErrorDetailsProps {
   error: unknown;

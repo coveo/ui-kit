@@ -1,9 +1,9 @@
-import {SearchBox, StandaloneSearchBox} from '@coveo/headless/commerce';
-import {i18n} from 'i18next';
-import {html, LitElement, nothing, render, TemplateResult} from 'lit';
+import type {SearchBox, StandaloneSearchBox} from '@coveo/headless/commerce';
+import type {i18n} from 'i18next';
+import {html, LitElement, nothing, render, type TemplateResult} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {vi} from 'vitest';
-import {
+import type {
   SearchBoxSuggestions,
   SearchBoxSuggestionsBindings,
   SearchBoxSuggestionsEvent,

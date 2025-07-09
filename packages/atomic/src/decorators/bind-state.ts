@@ -80,7 +80,7 @@ export function bindStateToController<Element extends ReactiveElement>(
           typeof updateCallback === 'function' && updateCallback();
         });
 
-        component.disconnectedCallback = function () {
+        component.disconnectedCallback = () => {
           !component.isConnected && unsubscribeController?.();
           disconnectedCallback && disconnectedCallback.call(component);
         };

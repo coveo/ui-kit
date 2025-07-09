@@ -1,4 +1,4 @@
-import {i18n as I18n} from 'i18next';
+import type {i18n as I18n} from 'i18next';
 import {beforeAll, describe, expect, it, vi} from 'vitest';
 import {encodeForDomAttribute} from '@/src/utils/string-utils';
 import {createTestI18n} from '@/vitest-utils/testing-helpers/i18n-utils';

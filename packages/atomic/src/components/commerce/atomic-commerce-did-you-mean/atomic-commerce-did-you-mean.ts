@@ -1,10 +1,10 @@
 import {
   buildQueryTrigger,
   buildSearch,
-  DidYouMean,
-  DidYouMeanState,
-  QueryTrigger,
-  QueryTriggerState,
+  type DidYouMean,
+  type DidYouMeanState,
+  type QueryTrigger,
+  type QueryTriggerState,
 } from '@coveo/headless/commerce';
 import {html, LitElement} from 'lit';
 import {customElement, state} from 'lit/decorators.js';
@@ -13,12 +13,12 @@ import {bindStateToController} from '@/src/decorators/bind-state';
 import {bindingGuard} from '@/src/decorators/binding-guard';
 import {bindings} from '@/src/decorators/bindings';
 import {errorGuard} from '@/src/decorators/error-guard';
-import {InitializableComponent} from '@/src/decorators/types';
+import type {InitializableComponent} from '@/src/decorators/types';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
 import {renderAutoCorrection} from '../../common/query-correction/auto-correction';
 import {renderCorrection} from '../../common/query-correction/correction';
 import {renderTriggerCorrection} from '../../common/query-correction/trigger-correction';
-import {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface';
+import type {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface';
 
 /**
  * @alpha

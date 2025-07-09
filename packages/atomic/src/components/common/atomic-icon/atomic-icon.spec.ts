@@ -4,7 +4,7 @@ import {fixture} from '@/vitest-utils/testing-helpers/fixture';
 import '@vitest/browser/matchers.d.ts';
 import DOMPurify from 'dompurify';
 import {html} from 'lit';
-import {beforeEach, describe, expect, it, MockInstance, vi} from 'vitest';
+import {beforeEach, describe, expect, it, type MockInstance, vi} from 'vitest';
 import './atomic-icon';
 import {AtomicIcon} from './atomic-icon';
 

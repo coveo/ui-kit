@@ -2,7 +2,7 @@ import {fireEvent, within} from '@storybook/test';
 import {html, render} from 'lit';
 import {afterEach, beforeEach, describe, expect, it, vi} from 'vitest';
 import {createRipple} from '@/src/utils/ripple';
-import {RadioButtonProps, renderRadioButton} from './radio-button';
+import {type RadioButtonProps, renderRadioButton} from './radio-button';
 
 vi.mock('../../utils/ripple');
 

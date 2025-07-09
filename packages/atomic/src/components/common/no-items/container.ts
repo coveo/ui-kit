@@ -1,5 +1,5 @@
 import {html} from 'lit';
-import {FunctionalComponentWithChildrenNoProps} from '@/src/utils/functional-component-utils';
+import type {FunctionalComponentWithChildrenNoProps} from '@/src/utils/functional-component-utils';
 
 export const renderNoItemsContainer: FunctionalComponentWithChildrenNoProps =
   () => (children) =>

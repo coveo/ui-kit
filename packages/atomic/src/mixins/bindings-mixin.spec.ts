@@ -7,12 +7,12 @@ import {
   describe,
   expect,
   it,
-  Mock,
+  type Mock,
   test,
   vi,
 } from 'vitest';
 import type {Bindings} from '../components/search/atomic-search-interface/interfaces';
-import {InitializableComponent} from '../decorators/types';
+import type {InitializableComponent} from '../decorators/types';
 import {fetchBindings} from '../utils/initialization-lit-stencil-common-utils';
 import {InitializeBindingsMixin} from './bindings-mixin';
 

@@ -1,6 +1,6 @@
 import {isArray} from '@coveo/bueno';
-import {ComponentInterface, getElement} from '@stencil/core';
-import {ReactiveElement} from 'lit';
+import {type ComponentInterface, getElement} from '@stencil/core';
+import type {ReactiveElement} from 'lit';
 import {camelToKebab, kebabToCamel} from './utils';
 
 interface MapPropOptions {

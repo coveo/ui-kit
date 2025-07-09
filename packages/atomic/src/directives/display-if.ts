@@ -1,5 +1,5 @@
 import {LitElement, noChange} from 'lit';
-import {Directive, directive, Part, PartType} from 'lit/directive.js';
+import {Directive, directive, type Part, PartType} from 'lit/directive.js';
 
 class DisplayIfDirective extends Directive {
   render<T>(_condition: boolean, _children: () => T) {

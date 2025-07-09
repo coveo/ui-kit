@@ -1,6 +1,6 @@
-import {i18n} from 'i18next';
+import type {i18n} from 'i18next';
 import {html, nothing} from 'lit';
-import {FunctionalComponent} from '@/src/utils/functional-component-utils';
+import type {FunctionalComponent} from '@/src/utils/functional-component-utils';
 import {renderButton} from '../button';
 
 interface LoadMoreButtonProps {

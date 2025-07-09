@@ -1,4 +1,4 @@
-import {html, TemplateResult} from 'lit';
+import {html, type TemplateResult} from 'lit';
 import {describe, expect, it} from 'vitest';
 import {renderFunctionFixture} from '@/vitest-utils/testing-helpers/fixture';
 import {renderFacetContainer} from './facet-container';

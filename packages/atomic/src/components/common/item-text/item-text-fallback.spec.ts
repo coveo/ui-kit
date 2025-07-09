@@ -1,7 +1,7 @@
 import {isUndefined} from '@coveo/bueno';
 import {html, nothing} from 'lit';
 import {beforeEach, describe, expect, it, vi} from 'vitest';
-import {ItemTextProps, renderItemTextFallback} from './item-text-fallback';
+import {type ItemTextProps, renderItemTextFallback} from './item-text-fallback';
 
 vi.mock('@coveo/bueno', () => ({
   isUndefined: vi.fn(),

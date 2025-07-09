@@ -1,4 +1,10 @@
-import {CSSResult, CSSResultGroup, html, LitElement, unsafeCSS} from 'lit';
+import {
+  type CSSResult,
+  type CSSResultGroup,
+  html,
+  LitElement,
+  unsafeCSS,
+} from 'lit';
 import {customElement} from 'lit/decorators.js';
 import {afterEach, beforeEach, describe, expect, it} from 'vitest';
 import theme from '@/src/utils/coveo.tw.css';

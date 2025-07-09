@@ -1,6 +1,6 @@
 import {ifDefined} from 'lit/directives/if-defined.js';
 import {html, literal, unsafeStatic} from 'lit/static-html.js';
-import {FunctionalComponentWithChildren} from '@/src/utils/functional-component-utils';
+import type {FunctionalComponentWithChildren} from '@/src/utils/functional-component-utils';
 
 export interface HeadingProps {
   /**

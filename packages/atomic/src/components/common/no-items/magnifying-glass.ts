@@ -1,5 +1,5 @@
 import {html} from 'lit';
-import {FunctionalComponentNoProps} from '@/src/utils/functional-component-utils';
+import type {FunctionalComponentNoProps} from '@/src/utils/functional-component-utils';
 import MagnifyingGlassIcon from '../../../images/magnifying-glass.svg';
 
 export const renderMagnifyingGlass: FunctionalComponentNoProps = () => {

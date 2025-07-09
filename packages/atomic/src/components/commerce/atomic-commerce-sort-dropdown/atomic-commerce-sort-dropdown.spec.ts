@@ -8,7 +8,7 @@ import {buildFakeSort} from '@/vitest-utils/testing-helpers/fixtures/headless/co
 import '@vitest/browser/matchers.d.ts';
 import {html} from 'lit';
 import {beforeEach, describe, expect, it, vi } from 'vitest';
-import {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface';
+import type {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface';
 import {AtomicCommerceSortDropdown} from './atomic-commerce-sort-dropdown';
 import './atomic-commerce-sort-dropdown';
 

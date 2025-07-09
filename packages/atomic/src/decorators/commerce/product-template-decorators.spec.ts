@@ -1,4 +1,4 @@
-import {LitElement} from 'lit';
+import type {LitElement} from 'lit';
 import {beforeEach, describe, expect, it, vi} from 'vitest';
 import {InteractiveItemContextController} from '@/src/components/common/item-list/context/interactive-item-context-controller';
 import {ItemContextController} from '@/src/components/common/item-list/context/item-context-controller';

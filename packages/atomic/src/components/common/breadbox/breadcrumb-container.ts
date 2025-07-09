@@ -1,7 +1,7 @@
-import {i18n} from 'i18next';
+import type {i18n} from 'i18next';
 import {html} from 'lit';
 import {multiClassMap, tw} from '@/src/directives/multi-class-map';
-import {FunctionalComponentWithChildren} from '@/src/utils/functional-component-utils';
+import type {FunctionalComponentWithChildren} from '@/src/utils/functional-component-utils';
 
 export interface BreadcrumbContainerProps {
   isCollapsed: boolean;

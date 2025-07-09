@@ -2,7 +2,7 @@ import {LitElement} from 'lit';
 import {customElement} from 'lit/decorators.js';
 import {afterEach, beforeEach, describe, expect, it, vi} from 'vitest';
 import {
-  DisplayConfig,
+  type DisplayConfig,
   ItemDisplayConfigContextController,
 } from './item-display-config-context-controller';
 

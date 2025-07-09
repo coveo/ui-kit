@@ -1,31 +1,31 @@
 import {
   buildContext,
-  CommerceEngine,
-  CommerceEngineConfiguration,
-  Context,
+  type CommerceEngine,
+  type CommerceEngineConfiguration,
+  type Context,
   loadContextActions,
 } from '@coveo/headless/commerce';
 import type {CurrencyCodeISO4217} from '@coveo/relay-event-types';
 import {provide} from '@lit/context';
-import i18next, {i18n} from 'i18next';
-import {CSSResultGroup, html, LitElement, unsafeCSS} from 'lit';
+import i18next, {type i18n} from 'i18next';
+import {type CSSResultGroup, html, LitElement, unsafeCSS} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {watch} from '@/src/decorators/watch';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles.js';
 import {ChildrenUpdateCompleteMixin} from '@/src/mixins/children-update-complete-mixin.js';
-import {InitializeEvent, markParentAsReady} from '@/src/utils/init-queue';
-import {
+import {type InitializeEvent, markParentAsReady} from '@/src/utils/init-queue';
+import type {
   AdoptedStylesBindings,
   CommonBindings,
 } from '../../common/interface/bindings.js';
 import {
-  BaseAtomicInterface,
+  type BaseAtomicInterface,
   CommonAtomicInterfaceHelper,
 } from '../../common/interface/interface-common.js';
 import {bindingsContext} from '../../context/bindings-context.js';
 import styles from './atomic-commerce-recommendation-interface.tw.css';
 import {
-  CommerceRecommendationStore,
+  type CommerceRecommendationStore,
   createCommerceRecommendationStore,
 } from './store.js';
 

@@ -1,5 +1,5 @@
 /* eslint-disable @cspell/spellchecker */
-import {Locator} from '@playwright/test';
+import type {Locator} from '@playwright/test';
 import {expect, test} from './fixture';
 
 test.describe('Default', () => {

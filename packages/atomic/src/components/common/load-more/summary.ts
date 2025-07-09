@@ -1,7 +1,7 @@
-import {i18n} from 'i18next';
+import type {i18n} from 'i18next';
 import {html} from 'lit';
 import {unsafeHTML} from 'lit/directives/unsafe-html.js';
-import {FunctionalComponent} from '@/src/utils/functional-component-utils';
+import type {FunctionalComponent} from '@/src/utils/functional-component-utils';
 
 interface LoadMoreSummaryProps {
   i18n: i18n;

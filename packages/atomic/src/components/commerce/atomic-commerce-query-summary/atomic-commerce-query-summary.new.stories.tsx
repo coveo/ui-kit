@@ -1,4 +1,4 @@
-import {CommerceEngineConfiguration} from '@coveo/headless/commerce';
+import type {CommerceEngineConfiguration} from '@coveo/headless/commerce';
 import type {Meta, StoryObj as Story} from '@storybook/web-components';
 import {html} from 'lit';
 import {wrapInCommerceInterface} from '@/storybook-utils/commerce/commerce-interface-wrapper';

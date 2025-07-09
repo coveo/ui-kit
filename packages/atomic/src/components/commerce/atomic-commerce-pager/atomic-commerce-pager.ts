@@ -2,10 +2,10 @@ import {NumberValue, Schema} from '@coveo/bueno';
 import {
   buildProductListing,
   buildSearch,
-  Pagination,
-  PaginationState,
-  ProductListing,
-  Search,
+  type Pagination,
+  type PaginationState,
+  type ProductListing,
+  type Search,
 } from '@coveo/headless/commerce';
 import {html, LitElement} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
@@ -13,7 +13,7 @@ import {bindStateToController} from '@/src/decorators/bind-state';
 import {bindingGuard} from '@/src/decorators/binding-guard';
 import {bindings} from '@/src/decorators/bindings';
 import {errorGuard} from '@/src/decorators/error-guard';
-import {InitializableComponent} from '@/src/decorators/types';
+import type {InitializableComponent} from '@/src/decorators/types';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
 import {randomID} from '@/src/utils/utils';
 import ArrowLeftIcon from '../../../images/arrow-left-rounded.svg';
@@ -27,7 +27,7 @@ import {
 } from '../../common/pager/pager-buttons';
 import {renderPagerGuard} from '../../common/pager/pager-guard';
 import {renderPagerNavigation} from '../../common/pager/pager-navigation';
-import {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface';
+import type {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface';
 import {getCurrentPagesRange} from './commerce-pager-utils';
 
 /**

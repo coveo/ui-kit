@@ -1,9 +1,9 @@
 import {
   buildProductListing,
   buildSearch,
-  ProductListingSummaryState,
-  SearchSummaryState,
-  Summary,
+  type ProductListingSummaryState,
+  type SearchSummaryState,
+  type Summary,
 } from '@coveo/headless/commerce';
 import {html} from 'lit';
 import {describe, expect, it, vi} from 'vitest';
@@ -12,7 +12,7 @@ import {buildFakeCommerceEngine} from '@/vitest-utils/testing-helpers/fixtures/h
 import {buildFakeProductListing} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/product-listing-controller';
 import {buildFakeSearch} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/search-controller';
 import {buildFakeSummary} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/summary-subcontroller';
-import {AtomicCommerceRefineToggle} from './atomic-commerce-refine-toggle';
+import type {AtomicCommerceRefineToggle} from './atomic-commerce-refine-toggle';
 import './atomic-commerce-refine-toggle.js';
 import {userEvent} from '@vitest/browser/context';
 

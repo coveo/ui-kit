@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {
   getSampleSearchEngineConfiguration,
-  SearchEngineConfiguration,
+  type SearchEngineConfiguration,
 } from '@coveo/headless';
 import {afterEach, beforeEach, describe, expect, it, vi} from 'vitest';
 import {getAnalyticsConfig} from './analytics-config';

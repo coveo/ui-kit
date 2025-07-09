@@ -1,15 +1,19 @@
-import {buildSearchBox, buildSearchEngine, Controller} from '@coveo/headless';
-import {newSpecPage, SpecPage} from '@stencil/core/testing';
+import {
+  buildSearchBox,
+  buildSearchEngine,
+  type Controller,
+} from '@coveo/headless';
+import {newSpecPage, type SpecPage} from '@stencil/core/testing';
 import i18next from 'i18next';
 import {AtomicSearchBox} from '../components/search/atomic-search-box/atomic-search-box';
 import {
   AtomicSearchInterface,
-  Bindings,
+  type Bindings,
 } from '../components/search/atomic-search-interface/atomic-search-interface';
 import {createSearchStore} from '../components/search/atomic-search-interface/store';
 import {
   BindStateToController,
-  InitializableComponent,
+  type InitializableComponent,
   InitializeBindings,
   initializeBindings,
   MissingInterfaceParentError,

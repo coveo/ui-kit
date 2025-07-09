@@ -7,12 +7,12 @@ import {within} from 'shadow-dom-testing-library';
 import {beforeEach, describe, expect, it, vi} from 'vitest';
 import {
   AtomicCommerceRecommendationInterface,
-  CommerceBindings,
+  type CommerceBindings,
 } from '@/src/components/commerce/atomic-commerce-recommendation-interface/atomic-commerce-recommendation-interface';
 import {createCommerceRecommendationStore} from '@/src/components/commerce/atomic-commerce-recommendation-interface/store';
 import {CommonAtomicInterfaceHelper} from '@/src/components/common/interface/interface-common';
 import {bindings} from '@/src/decorators/bindings';
-import {InitializableComponent} from '@/src/decorators/types';
+import type {InitializableComponent} from '@/src/decorators/types';
 import {InitializeBindingsMixin} from '@/src/mixins/bindings-mixin';
 import {markParentAsReady} from '@/src/utils/init-queue';
 import {fixture} from '@/vitest-utils/testing-helpers/fixture';

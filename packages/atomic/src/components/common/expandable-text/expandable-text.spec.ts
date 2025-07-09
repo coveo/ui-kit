@@ -4,7 +4,10 @@ import {describe, expect, it, vi} from 'vitest';
 import {renderFunctionFixture} from '@/vitest-utils/testing-helpers/fixture';
 import MinusIcon from '../../../images/minus.svg';
 import PlusIcon from '../../../images/plus.svg';
-import {ExpandableTextProps, renderExpandableText} from './expandable-text';
+import {
+  type ExpandableTextProps,
+  renderExpandableText,
+} from './expandable-text';
 
 describe('#renderExpandableText', () => {
   const renderComponent = async (

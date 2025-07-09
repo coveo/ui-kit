@@ -1,9 +1,9 @@
-import {SortBy, SortCriterion} from '@coveo/headless/commerce';
+import {SortBy, type SortCriterion} from '@coveo/headless/commerce';
 import {beforeAll, describe, expect, it, vi} from 'vitest';
 import {renderSortOption as renderCommonSortOption} from '@/src/components/common/sort/option';
 import {createTestI18n} from '@/vitest-utils/testing-helpers/i18n-utils';
 import {
-  CommerceSortOptionProps,
+  type CommerceSortOptionProps,
   getLabel,
   getSortByLabel,
   renderCommerceSortOption,

@@ -1,28 +1,28 @@
 import {
   buildProductListing,
   buildSearch,
-  Pagination,
-  PaginationState,
-  ProductListing,
-  ProductListingState,
-  Search,
-  SearchState,
+  type Pagination,
+  type PaginationState,
+  type ProductListing,
+  type ProductListingState,
+  type Search,
+  type SearchState,
 } from '@coveo/headless/commerce';
-import {CSSResultGroup, html, LitElement, unsafeCSS} from 'lit';
+import {type CSSResultGroup, html, LitElement, unsafeCSS} from 'lit';
 import {customElement, state} from 'lit/decorators.js';
 import {when} from 'lit/directives/when.js';
 import {bindStateToController} from '@/src/decorators/bind-state';
 import {bindingGuard} from '@/src/decorators/binding-guard';
 import {bindings} from '@/src/decorators/bindings';
 import {errorGuard} from '@/src/decorators/error-guard';
-import {InitializableComponent} from '@/src/decorators/types';
+import type {InitializableComponent} from '@/src/decorators/types';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles.js';
 import {createAppLoadedListener} from '../../common/interface/store';
 import {renderLoadMoreButton} from '../../common/load-more/button';
 import {renderLoadMoreContainer} from '../../common/load-more/container';
 import {renderLoadMoreProgressBar} from '../../common/load-more/progress-bar';
 import {renderLoadMoreSummary} from '../../common/load-more/summary';
-import {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface';
+import type {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface';
 import styles from './atomic-commerce-load-more-products.tw.css';
 
 /**

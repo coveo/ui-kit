@@ -7,11 +7,11 @@ import {renderFunctionFixture} from '@/vitest-utils/testing-helpers/fixture';
 import {createTestI18n} from '@/vitest-utils/testing-helpers/i18n-utils';
 import {renderCheckbox} from '../../checkbox';
 import {renderTriStateCheckbox} from '../../triStateCheckbox';
-import {FacetValuePropsBase} from '../facet-common';
+import type {FacetValuePropsBase} from '../facet-common';
 import {renderFacetValueExclude} from '../facet-value-exclude/facet-value-exclude';
 import {
   renderFacetValueCheckbox,
-  TriStateFacetValueProps,
+  type TriStateFacetValueProps,
 } from './facet-value-checkbox';
 
 vi.mock('../../triStateCheckbox', {spy: true});

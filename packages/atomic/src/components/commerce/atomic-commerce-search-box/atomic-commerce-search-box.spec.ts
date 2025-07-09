@@ -6,7 +6,7 @@ import '@/vitest-utils/testing-helpers/fixtures/atomic/commerce/fake-atomic-comm
 import {
   buildSearchBox,
   buildStandaloneSearchBox,
-  CommerceEngine,
+  type CommerceEngine,
   loadQuerySetActions,
 } from '@coveo/headless/commerce';
 import {userEvent} from '@vitest/browser/context';

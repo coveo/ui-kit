@@ -1,8 +1,8 @@
-import {CSSResult, LitElement, unsafeCSS} from 'lit';
+import {type CSSResult, type LitElement, unsafeCSS} from 'lit';
 import {buildCommerceLayout} from '../components/commerce/atomic-commerce-layout/commerce-layout';
 import {injectStylesForNoShadowDOM} from '../decorators/light-dom';
 import {randomID} from '../utils/utils';
-import {Constructor} from './mixin-common';
+import type {Constructor} from './mixin-common';
 
 export interface CommerceLayoutRequirements {
   error: Error;

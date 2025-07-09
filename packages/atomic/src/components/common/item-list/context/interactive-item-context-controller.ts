@@ -1,5 +1,5 @@
-import {ReactiveController, ReactiveControllerHost} from 'lit';
-import {LitElementWithError} from '@/src/decorators/types';
+import type {ReactiveController, ReactiveControllerHost} from 'lit';
+import type {LitElementWithError} from '@/src/decorators/types';
 import {buildCustomEvent} from '@/src/utils/event-utils';
 
 const interactiveItemContextEventName = 'atomic/resolveInteractiveResult';

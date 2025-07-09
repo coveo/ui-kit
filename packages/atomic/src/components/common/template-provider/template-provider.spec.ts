@@ -1,6 +1,9 @@
 import type {TemplatesManager} from '@coveo/headless';
 import {afterEach, beforeEach, describe, expect, it, vi} from 'vitest';
-import {TemplateProvider, TemplateProviderProps} from './template-provider';
+import {
+  TemplateProvider,
+  type TemplateProviderProps,
+} from './template-provider';
 
 describe('TemplateProvider', () => {
   beforeEach(() => {

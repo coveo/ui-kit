@@ -2,7 +2,7 @@ import {html, nothing} from 'lit';
 import {unsafeHTML} from 'lit/directives/unsafe-html.js';
 import {beforeEach, describe, expect, it, vi} from 'vitest';
 import {
-  ItemTextHighlightedProps,
+  type ItemTextHighlightedProps,
   renderItemTextHighlighted,
 } from './item-text-highlighted';
 import {renderWithHighlights} from './render-highlights';
