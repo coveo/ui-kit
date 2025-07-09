@@ -36,9 +36,9 @@
   },
   "devDependencies": {
     "@coveo/ci": "1.0.0",
-    "@playwright/test": "1.53.0",
-    "@types/node": "22.15.32",
-    "rollup": "4.43.0",
+    "@playwright/test": "1.53.2",
+    "@types/node": "22.16.0",
+    "rollup": "4.44.1",
     "rimraf": "3.0.2",
     "vite": "6.3.5",
     "ncp": "2.0.0"
