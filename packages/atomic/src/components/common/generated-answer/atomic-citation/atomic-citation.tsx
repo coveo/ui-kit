@@ -7,6 +7,7 @@ import {
 import {Component, h, State, Prop, Element, Watch} from '@stencil/core';
 import {LinkWithItemAnalytics} from '../../item-link/item-link';
 import {Heading} from '../../stencil-heading';
+import {extractTextToHighlight} from './text-fragment-utils';
 
 /**
  * @internal
@@ -104,23 +105,12 @@ export class AtomicCitation {
     if (filetype !== 'html' || !text) {
       return uri;
     }
-    const highlight = this.extractTextToHighlight(text);
-    const encodedTextFragment = encodeURIComponent(highlight)
-      .replace(/-/g, '%2D')
-      .replace(/_/g, '%5F')
-      .replace(/~/g, '%7E');
+    const highlight = extractTextToHighlight(text);
+    const encodedTextFragment = encodeURIComponent(highlight).replace(
+      /-/g,
+      '%2D'
+    );
     return `${uri}#:~:text=${encodedTextFragment}`;
-  }
-
-  private extractTextToHighlight(text: string) {
-    const sentenceRegex =
-      /(?<!\d)(?<=^|[\p{P}]\s)[\p{P}]?\p{Uppercase_Letter}[^.!?]*[\p{P}]/gu;
-    const fallbackWordCount = 5;
-    const sentences = text.match(sentenceRegex);
-    if (sentences?.length) {
-      return sentences[0].trim();
-    }
-    return text.split(/\s+/).slice(0, fallbackWordCount).join(' ');
   }
 
   private openPopover = () => {
