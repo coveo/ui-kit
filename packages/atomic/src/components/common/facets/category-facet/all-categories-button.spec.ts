@@ -2,7 +2,6 @@
 import {renderFunctionFixture} from '@/vitest-utils/testing-helpers/fixture';
 import {createTestI18n} from '@/vitest-utils/testing-helpers/i18n-utils';
 import {page} from '@vitest/browser/context';
-import '@vitest/browser/matchers.d.ts';
 import {html} from 'lit';
 import {vi, expect, describe, it, beforeAll} from 'vitest';
 import type {CategoryFacetAllCategoryButtonProps} from './all-categories-button';
