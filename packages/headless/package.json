@@ -99,7 +99,7 @@
   },
   "dependencies": {
     "@coveo/bueno": "1.0.19",
-    "@coveo/relay": "1.2.1",
+    "@coveo/relay": "1.2.5",
     "@coveo/relay-event-types": "14.7.5",
     "@reduxjs/toolkit": "2.6.0",
     "abortcontroller-polyfill": "1.7.8",
