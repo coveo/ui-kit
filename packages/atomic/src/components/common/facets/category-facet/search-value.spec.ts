@@ -13,7 +13,7 @@ vi.mock('../../../../utils/field-utils', () => ({
   ),
 }));
 
-describe('renderCategoryFacetSearchValue', () => {
+describe('#renderCategoryFacetSearchValue', () => {
   let i18n: Awaited<ReturnType<typeof createTestI18n>>;
 
   beforeAll(async () => {
@@ -120,7 +120,7 @@ describe('renderCategoryFacetSearchValue', () => {
     expect(button).toHaveAttribute('aria-label');
   });
 
-  it('should render with empty path as all categories', async () => {
+  it('should render empty path as all categories', async () => {
     const {container} = await renderComponent({
       value: {count: 10, path: [], displayValue: 'test'},
     });

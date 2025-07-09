@@ -5,7 +5,7 @@ import {
   type HierarchicalPathProps,
 } from './hierarchical-path';
 
-describe('hierarchicalPath', () => {
+describe('#hierarchicalPath', () => {
   let container: HTMLElement;
 
   beforeEach(() => {
@@ -33,23 +33,19 @@ describe('hierarchicalPath', () => {
       emptyPathContent: html`<span>No path</span>`,
     });
 
-    expect(container.textContent).toContain('No path');
+    expect(container.textContent?.replace(/\s+/g, " ").trim()).toBe("No path");
   });
 
   it('should render single path item without separator', () => {
     renderPath({path: ['electronics']});
 
-    expect(container.textContent).toContain('electronics');
-    expect(container.querySelectorAll('span').length).toBe(1);
+    expect(container.textContent?.replace(/\s+/g, " ").trim()).toBe('electronics');
   });
 
   it('should render multiple path items with separators', () => {
     renderPath({path: ['electronics', 'computers', 'laptops']});
 
-    expect(container.textContent).toContain('electronics');
-    expect(container.textContent).toContain('computers');
-    expect(container.textContent).toContain('laptops');
-    expect(container.textContent).toContain('/');
+    expect(container.textContent?.replace(/\s+/g, " ").trim()).toBe("electronics / computers / laptops");
   });
 
   it('should use custom separator', () => {
@@ -58,7 +54,7 @@ describe('hierarchicalPath', () => {
       separator: ' > ',
     });
 
-    expect(container.textContent?.replace(/\s+/g, ' ').trim()).toContain(
+    expect(container.textContent?.replace(/\s+/g, ' ').trim()).toBe(
       'electronics > computers'
     );
   });
