@@ -11,6 +11,7 @@ import {makeMatchConditions} from '../../common/product-template/product-templat
 import {ProductTemplateController} from '../../common/product-template/product-template-controller';
 import '../atomic-commerce-text/atomic-commerce-text';
 import '../atomic-product-text/atomic-product-text';
+import '../atomic-product-link/atomic-product-link';
 import '../atomic-product/atomic-product';
 import '../atomic-product-children/atomic-product-children';
 
