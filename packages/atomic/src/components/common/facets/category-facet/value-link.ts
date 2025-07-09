@@ -1,9 +1,9 @@
+import {renderFacetValueLabelHighlight} from '@/src/components/common/facets/facet-value-label-highlight/facet-value-label-highlight';
+import {renderFacetValueLink} from '@/src/components/common/facets/facet-value-link/facet-value-link';
 import type {FunctionalComponentWithChildren} from '@/src/utils/functional-component-utils';
 import type {i18n} from 'i18next';
 import type {TemplateResult} from 'lit';
 import {html} from 'lit';
-import {renderFacetValueLabelHighlight} from '@/src/components/common/facets/facet-value-label-highlight/facet-value-label-highlight';
-import {renderFacetValueLink} from '@/src/components/common/facets/facet-value-link/facet-value-link';
 
 export interface CategoryFacetValueLinkProps {
   displayValue: string;
