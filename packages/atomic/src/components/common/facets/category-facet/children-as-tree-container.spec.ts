@@ -1,11 +1,10 @@
 import {renderFunctionFixture} from '@/vitest-utils/testing-helpers/fixture';
 import {html} from 'lit';
 import {describe, it, expect} from 'vitest';
-import {renderCategoryFacetChildrenAsTreeContainer} from './children-as-tree-container';
-
-interface CategoryFacetChildrenAsTreeContainerProps {
-  className?: string;
-}
+import {
+  type CategoryFacetChildrenAsTreeContainerProps,
+  renderCategoryFacetChildrenAsTreeContainer,
+} from './children-as-tree-container';
 
 describe('#renderCategoryFacetChildrenAsTreeContainer', () => {
   const defaultProps: CategoryFacetChildrenAsTreeContainerProps = {

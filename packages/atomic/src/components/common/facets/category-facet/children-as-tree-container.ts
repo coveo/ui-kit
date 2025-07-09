@@ -2,7 +2,7 @@ import type {FunctionalComponentWithChildren} from '@/src/utils/functional-compo
 import {html} from 'lit';
 import {ifDefined} from 'lit/directives/if-defined.js';
 
-interface CategoryFacetChildrenAsTreeContainerProps {
+export interface CategoryFacetChildrenAsTreeContainerProps {
   className?: string;
 }
 
