@@ -90,6 +90,8 @@ export class AtomicCommerceRecommendationList
   private productTemplateRegistered = false;
   @state()
   private templateHasError = false;
+  @state()
+  private isProductsReady = false;
 
   @bindStateToController('recommendations')
   @state()
@@ -200,6 +202,26 @@ export class AtomicCommerceRecommendationList
       'atomic/selectChildProduct',
       this.selectChildProductCallback
     );
+  }
+
+  public async updated(changedProperties: Map<string, unknown>) {
+    super.updated(changedProperties);
+    if (changedProperties.has('recommendationsState') && this.isProductsReady) {
+      this.isProductsReady = false;
+    }
+    await this.updateProductsReadyState();
+  }
+
+  private async updateProductsReadyState() {
+    if (
+      this.isAppLoaded &&
+      !this.isProductsReady &&
+      this.summaryState?.firstRequestExecuted &&
+      this.recommendationsState?.products?.length > 0
+    ) {
+      await this.getUpdateComplete();
+      this.isProductsReady = true;
+    }
   }
 
   private get focusTarget() {
@@ -392,7 +414,7 @@ export class AtomicCommerceRecommendationList
   }
 
   private computeListDisplayClasses() {
-    const displayPlaceholders = !this.isAppLoaded;
+    const displayPlaceholders = !(this.isAppLoaded && this.isProductsReady);
 
     return getItemListDisplayClasses(
       'grid',
@@ -484,13 +506,19 @@ export class AtomicCommerceRecommendationList
     if (!this.productTemplateRegistered || this.error) {
       return;
     }
-    return renderDisplayWrapper({
-      props: {listClasses, display: 'list'},
-    })(html`
-      ${when(
-        this.isAppLoaded,
-        () => html`${this.renderAsGrid()}`,
-        () =>
+
+    const productClasses = `${listClasses} ${!this.isProductsReady && 'hidden'}`;
+
+    return html`
+      ${when(this.isAppLoaded, () =>
+        renderDisplayWrapper({
+          props: {listClasses: productClasses, display: 'list'},
+        })(html`${this.renderAsGrid()}`)
+      )}
+      ${when(!this.isProductsReady, () =>
+        renderDisplayWrapper({
+          props: {listClasses, display: 'list'},
+        })(
           renderItemPlaceholders({
             props: {
               density: this.density,
@@ -501,8 +529,9 @@ export class AtomicCommerceRecommendationList
                 this.recommendationsState.products.length,
             },
           })
+        )
       )}
-    `);
+    `;
   }
 
   private get shouldRender() {
