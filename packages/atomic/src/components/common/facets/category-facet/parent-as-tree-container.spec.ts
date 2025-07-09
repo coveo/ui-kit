@@ -24,7 +24,6 @@ describe('#renderCategoryFacetParentAsTreeContainer', () => {
     );
 
     return {
-      container,
       get ul() {
         return container.querySelector('ul');
       },
@@ -41,17 +40,18 @@ describe('#renderCategoryFacetParentAsTreeContainer', () => {
   });
 
   it('should render children inside the ul element', async () => {
-    const {ul, container} = await renderComponent(
+    const {ul, children} = await renderComponent(
       {},
-      html`<li class="test-child">Test Item</li>`
+      html` <li class="child-1">Item 1</li>
+        <li class="child-2">Item 2</li>
+        <li class="child-3">Item 3</li>`
     );
 
-    const child = container.querySelector('.test-child');
-
     expect(ul).toBeInTheDocument();
-    expect(child).toBeInTheDocument();
-    expect(child).toHaveTextContent('Test Item');
-    expect(ul).toContainElement(child as HTMLElement);
+    expect(children).toHaveLength(3);
+    expect(children[0]).toHaveTextContent('Item 1');
+    expect(children[1]).toHaveTextContent('Item 2');
+    expect(children[2]).toHaveTextContent('Item 3');
   });
 
   it('should apply "parents" part when isTopLevel is true', async () => {
@@ -76,21 +76,5 @@ describe('#renderCategoryFacetParentAsTreeContainer', () => {
     const {ul} = await renderComponent({className: undefined});
 
     expect(ul).not.toHaveAttribute('class');
-  });
-
-  it('should render multiple children', async () => {
-    const {children} = await renderComponent(
-      {},
-      html`
-        <li class="child-1">Item 1</li>
-        <li class="child-2">Item 2</li>
-        <li class="child-3">Item 3</li>
-      `
-    );
-
-    expect(children).toHaveLength(3);
-    expect(children[0]).toHaveTextContent('Item 1');
-    expect(children[1]).toHaveTextContent('Item 2');
-    expect(children[2]).toHaveTextContent('Item 3');
   });
 });
