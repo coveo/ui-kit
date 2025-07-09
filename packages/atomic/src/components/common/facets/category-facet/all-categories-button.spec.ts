@@ -8,7 +8,7 @@ import {vi, expect, describe, it, beforeAll} from 'vitest';
 import type {CategoryFacetAllCategoryButtonProps} from './all-categories-button';
 import {renderCategoryFacetAllCategoryButton} from './all-categories-button';
 
-describe('renderCategoryFacetAllCategoryButton', () => {
+describe('#renderCategoryFacetAllCategoryButton', () => {
   let i18n: Awaited<ReturnType<typeof createTestI18n>>;
 
   beforeAll(async () => {
