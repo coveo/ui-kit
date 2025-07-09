@@ -47,6 +47,7 @@ import {
 import type {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface.js';
 import {ProductTemplateProvider} from '../product-list/product-template-provider.js';
 import styles from './atomic-commerce-product-list.tw.css';
+import {ChildrenUpdateCompleteMixin} from '@/src/mixins/children-update-complete-mixin.js';
 
 /**
  * The `atomic-commerce-product-list` component is responsible for displaying products.
@@ -72,7 +73,7 @@ import styles from './atomic-commerce-product-list.tw.css';
 @bindings()
 @withTailwindStyles
 export class AtomicCommerceProductList
-  extends LitElement
+  extends ChildrenUpdateCompleteMixin(LitElement)
   implements InitializableComponent<CommerceBindings>
 {
   static styles: CSSResultGroup = [unsafeCSS(styles)];
@@ -97,6 +98,8 @@ export class AtomicCommerceProductList
   error!: Error;
   @state()
   private isAppLoaded = false;
+  @state()
+  private isProductsReady = false;
   @state()
   private resultTemplateRegistered = false;
   @state()
@@ -171,6 +174,25 @@ export class AtomicCommerceProductList
       this.selectChildProductCallback
     );
   }
+  public async updated(changedProperties: Map<string, unknown>) {
+    super.updated(changedProperties);
+    if (changedProperties.has('searchOrListingState') && this.isProductsReady) {
+      this.isProductsReady = false;
+    }
+    await this.updateProductsReadyState();
+  }
+
+  private async updateProductsReadyState() {
+    if (
+      this.isAppLoaded &&
+      !this.isProductsReady &&
+      this.summaryState?.firstRequestExecuted &&
+      this.searchOrListingState?.products?.length > 0
+    ) {
+      await this.getUpdateComplete();
+      this.isProductsReady = true;
+    }
+  }
 
   @bindingGuard()
   @errorGuard()
@@ -183,12 +205,13 @@ export class AtomicCommerceProductList
           () => html`<slot></slot>`,
           () => {
             const listClasses = this.computeListDisplayClasses();
-            return renderDisplayWrapper({
-              props: {listClasses, display: this.display},
-            })(html`
-              ${when(
-                this.isAppLoaded,
-                () =>
+            const productClasses = `${listClasses} ${!this.isProductsReady && 'hidden'}`;
+
+            return html`
+              ${when(this.isAppLoaded, () =>
+                renderDisplayWrapper({
+                  props: {listClasses: productClasses, display: this.display},
+                })(
                   html`${when(
                     this.display === 'grid',
                     () => this.renderGrid(),
@@ -198,8 +221,13 @@ export class AtomicCommerceProductList
                         () => this.renderList(),
                         () => this.renderTable()
                       )}`
-                  )}`,
-                () =>
+                  )}`
+                )
+              )}
+              ${when(!this.isProductsReady, () =>
+                renderDisplayWrapper({
+                  props: {listClasses, display: this.display},
+                })(
                   renderItemPlaceholders({
                     props: {
                       density: this.density,
@@ -208,8 +236,9 @@ export class AtomicCommerceProductList
                       numberOfPlaceholders: this.numberOfPlaceholders,
                     },
                   })
+                )
               )}
-            `);
+            `;
           }
         )}`,
       () => nothing
@@ -296,7 +325,7 @@ export class AtomicCommerceProductList
   }
 
   private computeListDisplayClasses() {
-    const displayPlaceholders = !this.isAppLoaded;
+    const displayPlaceholders = !(this.isAppLoaded && this.isProductsReady);
 
     return getItemListDisplayClasses(
       this.display,
