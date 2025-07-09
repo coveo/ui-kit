@@ -4,6 +4,7 @@ import {customElement, property} from 'lit/decorators.js';
 import {ref} from 'lit/directives/ref.js';
 import {booleanConverter} from '@/src/converters/boolean-converter';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
+import {ChildrenUpdateCompleteMixin} from '@/src/mixins/children-update-complete-mixin';
 import type {
   InteractiveProductContextEvent,
   ProductContextEvent,
@@ -29,7 +30,7 @@ import styles from './atomic-product.tw.css';
  */
 @customElement('atomic-product')
 @withTailwindStyles
-export class AtomicProduct extends LitElement {
+export class AtomicProduct extends ChildrenUpdateCompleteMixin(LitElement) {
   private layout!: ItemLayout;
   private productRootRef?: HTMLElement;
   private linkContainerRef?: HTMLElement;
@@ -162,7 +163,7 @@ export class AtomicProduct extends LitElement {
       ?.click();
   };
 
-  public connectedCallback() {
+  public async connectedCallback() {
     super.connectedCallback();
 
     if (!this.content) {
@@ -197,6 +198,9 @@ export class AtomicProduct extends LitElement {
       this.resolveProductDisplayConfig as EventListener
     );
     this.addEventListener('click', this.handleClick);
+
+    await this.getUpdateComplete();
+    this.classList.add('hydrated');
   }
 
   public disconnectedCallback() {

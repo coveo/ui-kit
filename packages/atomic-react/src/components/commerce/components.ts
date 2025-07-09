@@ -22,6 +22,7 @@ import {
   AtomicIcon as LitAtomicIcon,
   AtomicLayoutSection as LitAtomicLayoutSection,
   AtomicProduct as LitAtomicProduct,
+  AtomicProductLink as LitAtomicProductLink,
   AtomicProductText as LitAtomicProductText,
 } from '@coveo/atomic/components';
 import {createComponent} from '@lit/react';
@@ -63,16 +64,16 @@ export const AtomicCommerceNoProducts = createComponent({
   elementClass: LitAtomicCommerceNoProducts,
 });
 
-export const AtomicCommercePager = createComponent({
-  tagName: 'atomic-commerce-pager',
-  react: React,
-  elementClass: LitAtomicCommercePager,
-});
-
 export const AtomicCommerceProductList = createComponent({
   tagName: 'atomic-commerce-product-list',
   react: React,
   elementClass: LitAtomicCommerceProductList,
+});
+
+export const AtomicCommercePager = createComponent({
+  tagName: 'atomic-commerce-pager',
+  react: React,
+  elementClass: LitAtomicCommercePager,
 });
 
 export const AtomicCommerceProductsPerPage = createComponent({
@@ -123,16 +124,22 @@ export const AtomicCommerceSearchBoxQuerySuggestions = createComponent({
   elementClass: LitAtomicCommerceSearchBoxQuerySuggestions,
 });
 
+export const AtomicCommerceSortDropdown = createComponent({
+  tagName: 'atomic-commerce-sort-dropdown',
+  react: React,
+  elementClass: LitAtomicCommerceSortDropdown,
+});
+
 export const AtomicCommerceSearchBoxRecentQueries = createComponent({
   tagName: 'atomic-commerce-search-box-recent-queries',
   react: React,
   elementClass: LitAtomicCommerceSearchBoxRecentQueries,
 });
 
-export const AtomicCommerceSortDropdown = createComponent({
-  tagName: 'atomic-commerce-sort-dropdown',
+export const AtomicProduct = createComponent({
+  tagName: 'atomic-product',
   react: React,
-  elementClass: LitAtomicCommerceSortDropdown,
+  elementClass: LitAtomicProduct,
 });
 
 export const AtomicCommerceText = createComponent({
@@ -141,10 +148,10 @@ export const AtomicCommerceText = createComponent({
   elementClass: LitAtomicCommerceText,
 });
 
-export const AtomicProduct = createComponent({
-  tagName: 'atomic-product',
+export const AtomicProductLink = createComponent({
+  tagName: 'atomic-product-link',
   react: React,
-  elementClass: LitAtomicProduct,
+  elementClass: LitAtomicProductLink,
 });
 
 export const AtomicProductText = createComponent({
