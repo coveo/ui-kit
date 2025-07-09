@@ -23,13 +23,14 @@ import {
 import type {CommerceStore} from '../atomic-commerce-interface/store';
 import type {CommerceRecommendationStore} from '../atomic-commerce-recommendation-interface/store';
 import styles from './atomic-product.tw.css';
+import {ChildrenUpdateCompleteMixin} from '@/src/mixins/children-update-complete-mixin';
 
 /**
  * The `atomic-product` component is used internally by the `atomic-commerce-product-list` and `atomic-commerce-recommendation-list` components.
  */
 @customElement('atomic-product')
 @withTailwindStyles
-export class AtomicProduct extends LitElement {
+export class AtomicProduct extends ChildrenUpdateCompleteMixin(LitElement) {
   private layout!: ItemLayout;
   private productRootRef?: HTMLElement;
   private linkContainerRef?: HTMLElement;
@@ -162,7 +163,7 @@ export class AtomicProduct extends LitElement {
       ?.click();
   };
 
-  public connectedCallback() {
+  public async connectedCallback() {
     super.connectedCallback();
 
     if (!this.content) {
@@ -197,6 +198,9 @@ export class AtomicProduct extends LitElement {
       this.resolveProductDisplayConfig as EventListener
     );
     this.addEventListener('click', this.handleClick);
+
+    await this.getUpdateComplete();
+    this.classList.add('hydrated');
   }
 
   public disconnectedCallback() {
