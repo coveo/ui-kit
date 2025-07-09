@@ -6,7 +6,7 @@ import {
   type CategoryFacetParentAsTreeContainerProps,
 } from './parent-as-tree-container';
 
-describe('renderCategoryFacetParentAsTreeContainer', () => {
+describe('#renderCategoryFacetParentAsTreeContainer', () => {
   const defaultProps: CategoryFacetParentAsTreeContainerProps = {
     isTopLevel: false,
     className: undefined,
