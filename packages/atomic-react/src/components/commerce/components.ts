@@ -1,4 +1,4 @@
-import { createComponent } from '@lit/react';
+import {createComponent} from '@lit/react';
 import React from 'react';
 import {
   AtomicCommerceBreadbox as LitAtomicCommerceBreadbox,
@@ -51,6 +51,12 @@ export const AtomicCommerceLayout = createComponent({
   elementClass: LitAtomicCommerceLayout,
 });
 
+export const AtomicCommerceLoadMoreProducts = createComponent({
+  tagName: 'atomic-commerce-load-more-products',
+  react: React,
+  elementClass: LitAtomicCommerceLoadMoreProducts,
+});
+
 export const AtomicCommerceNoProducts = createComponent({
   tagName: 'atomic-commerce-no-products',
   react: React,
@@ -91,6 +97,12 @@ export const AtomicCommerceRecommendationList = createComponent({
   tagName: 'atomic-commerce-recommendation-list',
   react: React,
   elementClass: LitAtomicCommerceRecommendationList,
+});
+
+export const AtomicCommerceRefineToggle = createComponent({
+  tagName: 'atomic-commerce-refine-toggle',
+  react: React,
+  elementClass: LitAtomicCommerceRefineToggle,
 });
 
 export const AtomicCommerceSearchBox = createComponent({
