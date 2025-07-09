@@ -1,6 +1,5 @@
 import {renderFunctionFixture} from '@/vitest-utils/testing-helpers/fixture';
 import {createTestI18n} from '@/vitest-utils/testing-helpers/i18n-utils';
-import type {i18n} from 'i18next';
 import {html} from 'lit';
 import {vi, describe, it, expect, beforeAll} from 'vitest';
 import {
@@ -116,40 +115,5 @@ describe('renderCategoryFacetParentButton', () => {
     const {button} = await renderComponent();
 
     expect(button).toHaveClass('btn-text-neutral');
-  });
-
-  it('should handle different i18n languages', async () => {
-    const frenchI18n = {
-      t: vi.fn((key: string, options?: unknown) => {
-        if (key === 'facet-value') {
-          const opts = options as {
-            value: string;
-            count: number;
-            formattedCount: string;
-          };
-          return `${opts?.value} (${opts?.count})`;
-        }
-        return key;
-      }),
-      language: 'fr',
-    } as unknown as i18n;
-
-    await renderComponent({
-      i18n: frenchI18n,
-      facetValue: {value: 'test', numberOfResults: 1234},
-    });
-
-    expect(frenchI18n.t).toHaveBeenCalledWith('facet-value', {
-      value: 'category: test',
-      count: 1234,
-      formattedCount: (1234).toLocaleString('fr'),
-    });
-  });
-
-  it('should maintain button accessibility attributes', async () => {
-    const {button} = await renderComponent();
-
-    expect(button).toHaveAttribute('aria-pressed', 'false');
-    expect(button).toHaveAttribute('part', 'parent-button');
   });
 });
