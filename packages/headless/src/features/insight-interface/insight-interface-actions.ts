@@ -1,10 +1,10 @@
 import {createAsyncThunk} from '@reduxjs/toolkit';
 import {getOrganizationEndpoint} from '../../api/platform-client.js';
 import {isErrorResponse} from '../../api/search/search-api-client.js';
-import {GetInsightInterfaceConfigRequest} from '../../api/service/insight/get-interface/get-interface-config-request.js';
-import {GetInsightInterfaceConfigResponse} from '../../api/service/insight/get-interface/get-interface-config-response.js';
-import {AsyncThunkInsightOptions} from '../../api/service/insight/insight-api-client.js';
-import {
+import type {GetInsightInterfaceConfigRequest} from '../../api/service/insight/get-interface/get-interface-config-request.js';
+import type {GetInsightInterfaceConfigResponse} from '../../api/service/insight/get-interface/get-interface-config-response.js';
+import type {AsyncThunkInsightOptions} from '../../api/service/insight/insight-api-client.js';
+import type {
   ConfigurationSection,
   InsightConfigurationSection,
 } from '../../state/state-sections.js';

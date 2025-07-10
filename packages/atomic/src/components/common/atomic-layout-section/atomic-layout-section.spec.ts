@@ -1,10 +1,10 @@
 import {describe, expect, it} from 'vitest';
 import './atomic-layout-section';
-import {AtomicLayoutSection} from './atomic-layout-section';
-import {fixture} from '@/vitest-utils/testing-helpers/fixture';
 import {html} from 'lit';
 import {ifDefined} from 'lit/directives/if-defined.js';
-import {Section} from './sections';
+import {fixture} from '@/vitest-utils/testing-helpers/fixture';
+import type {AtomicLayoutSection} from './atomic-layout-section';
+import type {Section} from './sections';
 
 describe('AtomicLayoutSection', () => {
   let element: AtomicLayoutSection;

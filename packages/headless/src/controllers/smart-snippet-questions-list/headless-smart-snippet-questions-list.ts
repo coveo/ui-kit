@@ -1,25 +1,25 @@
 import {warnIfUsingNextAnalyticsModeForServiceFeature} from '../../app/engine.js';
-import {SearchEngine} from '../../app/search-engine/search-engine.js';
+import type {SearchEngine} from '../../app/search-engine/search-engine.js';
 import {smartSnippetAnalyticsClient} from '../../features/question-answering/question-answering-analytics-actions.js';
 import {
   buildCoreSmartSnippetQuestionsList,
-  CoreSmartSnippetQuestionsListState,
-  CoreSmartSnippetQuestionsList,
-  SmartSnippetQuestionsListProps,
+  type CoreSmartSnippetQuestionsList,
+  type CoreSmartSnippetQuestionsListState,
+  type SmartSnippetQuestionsListProps,
 } from '../core/smart-snippet-questions-list/headless-core-smart-snippet-questions-list.js';
 import {
   buildSmartSnippetInteractiveInlineLinks,
-  InlineLink,
+  type InlineLink,
 } from '../smart-snippet/headless-smart-snippet-interactive-inline-links.js';
 import {buildSmartSnippetInteractiveQuestions} from './headless-smart-snippet-interactive-questions.js';
 
 export type {QuestionAnswerDocumentIdentifier} from '../../api/search/search/question-answering.js';
 export type {
+  CoreSmartSnippetQuestionsList,
+  CoreSmartSnippetQuestionsListState,
   SmartSnippetQuestionsListOptions,
   SmartSnippetQuestionsListProps,
   SmartSnippetRelatedQuestion,
-  CoreSmartSnippetQuestionsList,
-  CoreSmartSnippetQuestionsListState,
 } from '../core/smart-snippet-questions-list/headless-core-smart-snippet-questions-list.js';
 
 /**

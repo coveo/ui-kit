@@ -1,4 +1,4 @@
-import {test, expect} from './fixture';
+import {expect, test} from './fixture';
 
 test.describe('when a "depends-on" prop is provided', () => {
   test.beforeEach(async ({facet}) => {

@@ -1,14 +1,14 @@
 import {validatePayload} from '../../../../utils/validate-payload.js';
 import {
+  type LegacySearchAction,
   makeAnalyticsAction,
-  LegacySearchAction,
 } from '../../../analytics/analytics-utils.js';
 import {
   getRangeFacetMetadata,
   rangeBreadcrumbFacet,
 } from '../generic/range-facet-analytics-actions.js';
 import {rangeFacetSelectionPayloadDefinition} from '../generic/range-facet-validate-payload.js';
-import {DateFacetValue} from './interfaces/response.js';
+import type {DateFacetValue} from './interfaces/response.js';
 
 export interface LogDateFacetBreadcrumbActionCreatorPayload {
   /**

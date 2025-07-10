@@ -1,16 +1,16 @@
 import {
-  StateFromReducersMapObject,
   createAction,
   createReducer,
+  type StateFromReducersMapObject,
 } from '@reduxjs/toolkit';
 import * as Store from '../app/store.js';
 import {updateAnalyticsConfiguration} from '../features/configuration/configuration-actions.js';
-import {ConfigurationState} from '../features/configuration/configuration-state.js';
+import type {ConfigurationState} from '../features/configuration/configuration-state.js';
 import {buildMockThunkExtraArguments} from '../test/mock-thunk-extra-arguments.js';
 import {configuration} from './common-reducers.js';
+import {buildEngine, type CoreEngine, type EngineOptions} from './engine.js';
 import {getSampleEngineConfiguration} from './engine-configuration.js';
-import {buildEngine, CoreEngine, EngineOptions} from './engine.js';
-import {ThunkExtraArguments} from './thunk-extra-arguments.js';
+import type {ThunkExtraArguments} from './thunk-extra-arguments.js';
 
 vi.mock(import('pino'), async (importOriginal) => {
   const mod = await importOriginal(); // type is inferred

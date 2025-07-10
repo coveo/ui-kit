@@ -1,8 +1,8 @@
-import {
+import type {
   BaseFacetRequest,
-  SortCriteria,
   BaseFacetValueRequest,
   RangeAlgorithm,
+  SortCriteria,
 } from '../../../facet-api/request.js';
 
 export const rangeFacetSortCriteria: RangeFacetSortCriterion[] = [

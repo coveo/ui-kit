@@ -1,13 +1,13 @@
-import {createTestI18n} from '@/vitest-utils/testing-helpers/i18n-utils';
-import {i18n as I18n} from 'i18next';
+import type {i18n as I18n} from 'i18next';
 import {html, render} from 'lit';
-import {describe, test, beforeEach, afterEach, expect} from 'vitest';
+import {afterEach, beforeEach, describe, expect, test} from 'vitest';
+import {createTestI18n} from '@/vitest-utils/testing-helpers/i18n-utils';
 import ArrowLeftIcon from '../../../images/arrow-left-rounded.svg';
 import ArrowRightIcon from '../../../images/arrow-right-rounded.svg';
 import {
+  renderPageButtons,
   renderPagerNextButton,
   renderPagerPageButton,
-  renderPageButtons,
   renderPagerPreviousButton,
 } from './pager-buttons';
 

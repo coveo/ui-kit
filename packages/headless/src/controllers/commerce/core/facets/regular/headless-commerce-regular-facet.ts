@@ -1,4 +1,4 @@
-import {CommerceEngine} from '../../../../../app/commerce-engine/commerce-engine.js';
+import type {CommerceEngine} from '../../../../../app/commerce-engine/commerce-engine.js';
 import {stateKey} from '../../../../../app/state-key.js';
 import {
   toggleExcludeFacetValue,
@@ -6,19 +6,19 @@ import {
 } from '../../../../../features/commerce/facets/regular-facet/regular-facet-actions.js';
 import {specificFacetSearchStateSelector} from '../../../../../features/facets/facet-search-set/specific/specific-facet-search-state-selector.js';
 import {
-  CoreCommerceFacet,
-  CoreCommerceFacetOptions,
-  CoreCommerceFacetState,
-  FacetControllerType,
-  FacetValueRequest,
-  RegularFacetValue,
   buildCoreCommerceFacet,
+  type CoreCommerceFacet,
+  type CoreCommerceFacetOptions,
+  type CoreCommerceFacetState,
+  type FacetControllerType,
+  type FacetValueRequest,
+  type RegularFacetValue,
 } from '../headless-core-commerce-facet.js';
-import {SearchableFacetOptions} from '../searchable/headless-commerce-searchable-facet.js';
+import type {SearchableFacetOptions} from '../searchable/headless-commerce-searchable-facet.js';
 import {
-  RegularFacetSearch,
-  RegularFacetSearchState,
   buildRegularFacetSearch,
+  type RegularFacetSearch,
+  type RegularFacetSearchState,
 } from './headless-commerce-regular-facet-search.js';
 
 /**

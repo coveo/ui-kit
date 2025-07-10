@@ -2,16 +2,16 @@ import {ArrayValue, RecordValue, Schema, StringValue} from '@coveo/bueno';
 import {facetResultsMustMatch} from '../../../../features/facets/facet-api/request.js';
 import {facetSortCriteria} from '../../../../features/facets/facet-set/interfaces/request.js';
 import {
+  allowedValues,
+  customSort,
   facetId,
+  facetSearch,
   field,
   filterFacetCount,
   injectionDepth,
   numberOfValues,
-  facetSearch,
-  allowedValues,
-  customSort,
 } from '../../../core/facets/_common/facet-option-definitions.js';
-import {
+import type {
   FacetOptions as CoreFacetOptions,
   FacetSearchOptions,
 } from '../../../core/facets/facet/headless-core-facet-options.js';

@@ -4,57 +4,57 @@ import {
   excludeFacetSearchResult,
   selectFacetSearchResult,
 } from '../../facets/facet-search-set/specific/specific-facet-search-actions.js';
-import {ToggleSelectFacetValueActionCreatorPayload} from '../../facets/facet-set/facet-set-actions.js';
-import {DateRangeRequest} from '../../facets/range-facets/date-facet-set/interfaces/request.js';
-import {NumericRangeRequest} from '../../facets/range-facets/numeric-facet-set/interfaces/request.js';
+import type {ToggleSelectFacetValueActionCreatorPayload} from '../../facets/facet-set/facet-set-actions.js';
+import type {DateRangeRequest} from '../../facets/range-facets/date-facet-set/interfaces/request.js';
+import type {NumericRangeRequest} from '../../facets/range-facets/numeric-facet-set/interfaces/request.js';
 import {setView} from '../context/context-actions.js';
 import {
+  type ToggleSelectCategoryFacetValuePayload,
   toggleSelectCategoryFacetValue,
-  ToggleSelectCategoryFacetValuePayload,
 } from '../facets/category-facet/category-facet-actions.js';
 import {
   clearAllCoreFacets,
+  type DeselectAllValuesInCoreFacetPayload,
   deleteAllCoreFacets,
   deselectAllValuesInCoreFacet,
-  DeselectAllValuesInCoreFacetPayload,
 } from '../facets/core-facet/core-facet-actions.js';
 import {
+  type ToggleSelectDateFacetValuePayload,
   toggleExcludeDateFacetValue,
   toggleSelectDateFacetValue,
-  ToggleSelectDateFacetValuePayload,
 } from '../facets/date-facet/date-facet-actions.js';
 import {
+  type ToggleSelectLocationFacetValuePayload,
   toggleSelectLocationFacetValue,
-  ToggleSelectLocationFacetValuePayload,
 } from '../facets/location-facet/location-facet-actions.js';
 import {
+  type ToggleExcludeNumericFacetValuePayload,
+  type ToggleSelectNumericFacetValuePayload,
   toggleExcludeNumericFacetValue,
-  ToggleExcludeNumericFacetValuePayload,
   toggleSelectNumericFacetValue,
-  ToggleSelectNumericFacetValuePayload,
+  type UpdateManualNumericFacetRangePayload,
   updateManualNumericFacetRange,
-  UpdateManualNumericFacetRangePayload,
 } from '../facets/numeric-facet/numeric-facet-actions.js';
 import {
   toggleExcludeFacetValue,
   toggleSelectFacetValue,
 } from '../facets/regular-facet/regular-facet-actions.js';
 import {
+  type NextPagePayload,
   nextPage,
-  NextPagePayload,
+  type PreviousPagePayload,
   previousPage,
-  PreviousPagePayload,
+  type SelectPagePayload,
+  type SetPageSizePayload,
   selectPage,
-  SelectPagePayload,
   setPageSize,
-  SetPageSizePayload,
 } from '../pagination/pagination-actions.js';
 import {restoreProductListingParameters} from '../product-listing-parameters/product-listing-parameters-actions.js';
-import {updateQuery, UpdateQueryPayload} from '../query/query-actions.js';
+import {type UpdateQueryPayload, updateQuery} from '../query/query-actions.js';
 import {restoreSearchParameters} from '../search-parameters/search-parameters-actions.js';
-import {applySort, ApplySortPayload} from '../sort/sort-actions.js';
+import {type ApplySortPayload, applySort} from '../sort/sort-actions.js';
 import {
-  CommerceParametersState,
+  type CommerceParametersState,
   getCommerceParametersInitialState,
 } from './parameters-state.js';
 

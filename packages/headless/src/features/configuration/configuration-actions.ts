@@ -2,21 +2,21 @@ import {
   ArrayValue,
   BooleanValue,
   RecordValue,
-  SchemaDefinition,
+  type SchemaDefinition,
   StringValue,
   Value,
 } from '@coveo/bueno';
 import {createAction} from '@reduxjs/toolkit';
-import {IRuntimeEnvironment} from 'coveo.analytics';
-import {PlatformEnvironment} from '../../utils/url-utils.js';
+import type {IRuntimeEnvironment} from 'coveo.analytics';
+import type {PlatformEnvironment} from '../../utils/url-utils.js';
 import {
   nonEmptyString,
-  validatePayload,
-  requiredNonEmptyString,
   optionalNonEmptyVersionString,
   optionalTrackingId,
+  requiredNonEmptyString,
+  validatePayload,
 } from '../../utils/validate-payload.js';
-import {COVEO_FRAMEWORK, CoveoFramework} from '../../utils/version.js';
+import {COVEO_FRAMEWORK, type CoveoFramework} from '../../utils/version.js';
 
 const originSchemaOnConfigUpdate = () => nonEmptyString;
 

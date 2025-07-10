@@ -4,7 +4,7 @@ import {
   requiredNonEmptyString,
 } from '../../utils/validate-payload.js';
 import {
-  EngineConfiguration,
+  type EngineConfiguration,
   engineConfigurationDefinitions,
 } from '../engine-configuration.js';
 

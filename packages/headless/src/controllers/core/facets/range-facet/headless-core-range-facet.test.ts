@@ -1,4 +1,4 @@
-import {CoreEngine} from '../../../../app/engine.js';
+import type {CoreEngine} from '../../../../app/engine.js';
 import {
   disableFacet,
   enableFacet,
@@ -6,16 +6,16 @@ import {
 } from '../../../../features/facet-options/facet-options-actions.js';
 import {deselectAllFacetValues} from '../../../../features/facets/facet-set/facet-set-actions.js';
 import {updateRangeFacetSortCriterion} from '../../../../features/facets/range-facets/generic/range-facet-actions.js';
-import {NumericFacetRequest} from '../../../../features/facets/range-facets/numeric-facet-set/interfaces/request.js';
-import {SearchAppState} from '../../../../state/search-app-state.js';
-import {
+import type {NumericFacetRequest} from '../../../../features/facets/range-facets/numeric-facet-set/interfaces/request.js';
+import type {SearchAppState} from '../../../../state/search-app-state.js';
+import type {
   ConfigurationSection,
   FacetOptionsSection,
   SearchSection,
 } from '../../../../state/state-sections.js';
 import {
-  MockedSearchEngine,
   buildMockSearchEngine,
+  type MockedSearchEngine,
 } from '../../../../test/mock-engine-v2.js';
 import {buildMockNumericFacetRequest} from '../../../../test/mock-numeric-facet-request.js';
 import {buildMockNumericFacetResponse} from '../../../../test/mock-numeric-facet-response.js';
@@ -23,8 +23,8 @@ import {buildMockNumericFacetValue} from '../../../../test/mock-numeric-facet-va
 import {createMockState} from '../../../../test/mock-state.js';
 import {
   buildCoreRangeFacet,
-  RangeFacet,
-  RangeFacetProps,
+  type RangeFacet,
+  type RangeFacetProps,
 } from './headless-core-range-facet.js';
 
 vi.mock('../../../../features/facet-options/facet-options-actions');

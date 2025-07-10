@@ -1,16 +1,16 @@
-import {Result} from '../../api/search/search/result.js';
+import type {Result} from '../../api/search/search/result.js';
 import {buildMockFacetResponse} from '../../test/mock-facet-response.js';
 import {buildMockQuestionsAnswers} from '../../test/mock-question-answer.js';
 import {buildMockResult} from '../../test/mock-result.js';
+import {buildMockSearch} from '../../test/mock-search.js';
 import {buildMockSearchResponse} from '../../test/mock-search-response.js';
 import {buildMockSearchState} from '../../test/mock-search-state.js';
-import {buildMockSearch} from '../../test/mock-search.js';
 import {logFacetShowMore} from '../facets/facet-set/facet-set-analytics-actions.js';
 import {logPageNext} from '../pagination/pagination-analytics-actions.js';
 import {logSearchboxSubmit} from '../query/query-analytics-actions.js';
 import {
+  type ExecuteSearchThunkReturn,
   executeSearch,
-  ExecuteSearchThunkReturn,
   fetchFacetValues,
   fetchMoreResults,
   fetchPage,
@@ -19,7 +19,7 @@ import {searchReducer} from './search-slice.js';
 import {
   emptyQuestionAnswer,
   getSearchInitialState,
-  SearchState,
+  type SearchState,
 } from './search-state.js';
 
 describe('search-slice', () => {
@@ -283,7 +283,9 @@ describe('search-slice', () => {
         questionAnswer,
       });
 
-    beforeEach(() => (state = initialMockState()));
+    beforeEach(() => {
+      state = initialMockState();
+    });
 
     function expectStateResets(finalState: SearchState) {
       expect(finalState.response).toEqual(getSearchInitialState().response);

@@ -1,16 +1,16 @@
-import {CommerceEngineState} from '../../../../app/commerce-engine/commerce-engine.js';
-import {CommerceAppState} from '../../../../state/commerce-app-state.js';
+import type {CommerceEngineState} from '../../../../app/commerce-engine/commerce-engine.js';
+import type {CommerceAppState} from '../../../../state/commerce-app-state.js';
 import {buildMockCommerceState} from '../../../../test/mock-commerce-state.js';
 import {
   buildMockCommerceEngine,
-  MockedCommerceEngine,
+  type MockedCommerceEngine,
 } from '../../../../test/mock-engine-v2.js';
-import {SearchSummaryState} from '../../search/summary/headless-search-summary.js';
+import type {SearchSummaryState} from '../../search/summary/headless-search-summary.js';
 import {
   buildCoreSummary,
-  Summary,
-  SummaryOptions,
-  SummaryState,
+  type Summary,
+  type SummaryOptions,
+  type SummaryState,
 } from './headless-core-summary.js';
 
 describe('commerce core summary', () => {

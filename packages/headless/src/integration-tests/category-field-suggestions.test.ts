@@ -1,12 +1,20 @@
-import {SearchEngine} from '../app/search-engine/search-engine.js';
-import {getSampleSearchEngineConfiguration} from '../app/search-engine/search-engine.js';
-import {buildSearchEngine} from '../app/search-engine/search-engine.js';
-import {CategoryFacet} from '../controllers/facets/category-facet/headless-category-facet.js';
-import {buildCategoryFacet} from '../controllers/facets/category-facet/headless-category-facet.js';
-import {buildFacet} from '../controllers/facets/facet/headless-facet.js';
-import {Facet} from '../controllers/facets/facet/headless-facet.js';
-import {CategoryFieldSuggestions} from '../controllers/field-suggestions/category-facet/headless-category-field-suggestions.js';
-import {buildCategoryFieldSuggestions} from '../controllers/field-suggestions/category-facet/headless-category-field-suggestions.js';
+import {
+  buildSearchEngine,
+  getSampleSearchEngineConfiguration,
+  type SearchEngine,
+} from '../app/search-engine/search-engine.js';
+import {
+  buildCategoryFacet,
+  type CategoryFacet,
+} from '../controllers/facets/category-facet/headless-category-facet.js';
+import {
+  buildFacet,
+  type Facet,
+} from '../controllers/facets/facet/headless-facet.js';
+import {
+  buildCategoryFieldSuggestions,
+  type CategoryFieldSuggestions,
+} from '../controllers/field-suggestions/category-facet/headless-category-field-suggestions.js';
 import {waitForNextStateChange} from '../test/functional-test-utils.js';
 
 describe('category field suggestions', () => {
@@ -33,20 +41,22 @@ describe('category field suggestions', () => {
 
     beforeEach(async () => {
       await waitForNextStateChange(engine, {
-        action: () =>
-          (categoryFacet = buildCategoryFacet(engine, {options: {field}})),
+        action: () => {
+          categoryFacet = buildCategoryFacet(engine, {options: {field}});
+        },
         expectedSubscriberCalls: 5,
       });
       await waitForNextStateChange(engine, {
-        action: () =>
-          (categoryFieldSuggestions = buildCategoryFieldSuggestions(engine, {
+        action: () => {
+          categoryFieldSuggestions = buildCategoryFieldSuggestions(engine, {
             options: {
               facet: {
                 field,
                 facetId: categoryFacet.state.facetId,
               },
             },
-          })),
+          });
+        },
         expectedSubscriberCalls: 2,
       });
     });
@@ -80,10 +90,11 @@ describe('category field suggestions', () => {
     let categoryFieldSuggestions: CategoryFieldSuggestions;
     beforeEach(async () => {
       await waitForNextStateChange(engine, {
-        action: () =>
-          (categoryFieldSuggestions = buildCategoryFieldSuggestions(engine, {
+        action: () => {
+          categoryFieldSuggestions = buildCategoryFieldSuggestions(engine, {
             options: {facet: {field}},
-          })),
+          });
+        },
         expectedSubscriberCalls: 3,
       });
     });
@@ -129,10 +140,11 @@ describe('category field suggestions', () => {
     it('is unaffected by the current search context', async () => {
       let facet!: Facet;
       await waitForNextStateChange(engine, {
-        action: () =>
-          (facet = buildFacet(engine, {
+        action: () => {
+          facet = buildFacet(engine, {
             options: {field: unrelatedFacetField},
-          })),
+          });
+        },
         expectedSubscriberCalls: 3,
       });
       await waitForNextStateChange(facet, {
@@ -219,10 +231,11 @@ describe('category field suggestions', () => {
     const expectedPath = ['Canada'];
     let categoryFieldSuggestions!: CategoryFieldSuggestions;
     await waitForNextStateChange(engine, {
-      action: () =>
-        (categoryFieldSuggestions = buildCategoryFieldSuggestions(engine, {
+      action: () => {
+        categoryFieldSuggestions = buildCategoryFieldSuggestions(engine, {
           options: {facet: {field, basePath}},
-        })),
+        });
+      },
       expectedSubscriberCalls: 3,
     });
     await waitForNextStateChange(categoryFieldSuggestions, {

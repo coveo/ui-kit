@@ -44,7 +44,7 @@ export function bindStateToController<Element extends ReactiveElement>(
       const {disconnectedCallback, initialize} = component;
 
       component.initialize = function () {
-        initialize && initialize.call(this);
+        initialize?.call(this);
 
         if (!initialize) {
           return console.error(
@@ -80,9 +80,9 @@ export function bindStateToController<Element extends ReactiveElement>(
           typeof updateCallback === 'function' && updateCallback();
         });
 
-        component.disconnectedCallback = function () {
+        component.disconnectedCallback = () => {
           !component.isConnected && unsubscribeController?.();
-          disconnectedCallback && disconnectedCallback.call(component);
+          disconnectedCallback?.call(component);
         };
       };
     });

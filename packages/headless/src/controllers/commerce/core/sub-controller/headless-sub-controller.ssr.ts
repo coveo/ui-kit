@@ -1,14 +1,14 @@
 import {ensureAtLeastOneSolutionType} from '../../../../app/commerce-ssr-engine/common.js';
 import {
-  ControllerDefinitionOption,
+  type ControllerDefinitionOption,
   SolutionType,
-  SubControllerDefinitionWithoutProps,
+  type SubControllerDefinitionWithoutProps,
 } from '../../../../app/commerce-ssr-engine/types/common.js';
 import type {Summary} from '../../core/summary/headless-core-summary.js';
 import {buildProductListing} from '../../product-listing/headless-product-listing.js';
 import type {ProductListingSummaryState} from '../../product-listing/summary/headless-product-listing-summary.js';
 import {buildSearch} from '../../search/headless-search.js';
-import {SearchSummaryState} from '../../search/summary/headless-search-summary.js';
+import type {SearchSummaryState} from '../../search/summary/headless-search-summary.js';
 
 export type {ProductListingSummaryState, Summary};
 

@@ -1,6 +1,6 @@
-import {SearchAppState} from '../../state/search-app-state.js';
-import {buildMockQuerySuggestCompletion} from '../../test/mock-query-suggest-completion.js';
+import type {SearchAppState} from '../../state/search-app-state.js';
 import {buildMockQuerySuggest} from '../../test/mock-query-suggest.js';
+import {buildMockQuerySuggestCompletion} from '../../test/mock-query-suggest-completion.js';
 import {createMockState} from '../../test/mock-state.js';
 import {buildOmniboxSuggestionMetadata} from './query-suggest-analytics-actions.js';
 

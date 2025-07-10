@@ -1,7 +1,7 @@
-import {ThunkExtraArguments} from '../../app/thunk-extra-arguments.js';
+import type {ThunkExtraArguments} from '../../app/thunk-extra-arguments.js';
 import {
-  MockedInsightEngine,
   buildMockInsightEngine,
+  type MockedInsightEngine,
 } from '../../test/mock-engine-v2.js';
 import {buildMockInsightState} from '../../test/mock-insight-state.js';
 import {buildMockRaw} from '../../test/mock-raw.js';
@@ -9,8 +9,8 @@ import {buildMockResult} from '../../test/mock-result.js';
 import {buildMockSearchState} from '../../test/mock-search-state.js';
 import {getConfigurationInitialState} from '../configuration/configuration-state.js';
 import {
-  logShowMoreFoldedResults,
   logShowLessFoldedResults,
+  logShowMoreFoldedResults,
 } from './folding-insight-analytics-actions.js';
 import {getFoldingInitialState} from './folding-state.js';
 

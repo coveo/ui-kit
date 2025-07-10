@@ -1,11 +1,11 @@
 import {pickNonBaseParams} from '../../api-client-utils.js';
-import {
+import type {
   HTTPContentType,
   HttpMethods,
   PlatformClientCallOptions,
 } from '../../platform-client.js';
-import {BaseParam} from '../../platform-service-params.js';
-import {InsightUserActionsRequest} from './user-actions/user-actions-request.js';
+import type {BaseParam} from '../../platform-service-params.js';
+import type {InsightUserActionsRequest} from './user-actions/user-actions-request.js';
 
 export interface InsightIdParam {
   insightId: string;

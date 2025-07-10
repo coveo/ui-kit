@@ -1,8 +1,8 @@
 import {buildSearchResponse} from '../../../test/mock-commerce-search.js';
 import {buildMockProduct} from '../../../test/mock-product.js';
 import {
-  RecentQueriesState,
   getRecentQueriesInitialState,
+  type RecentQueriesState,
 } from '../../recent-queries/recent-queries-state.js';
 import {executeSearch} from '../search/search-actions.js';
 import {

@@ -1,4 +1,4 @@
-import {InsightAPIErrorStatusResponse} from '../../api/service/insight/insight-api-client.js';
+import type {InsightAPIErrorStatusResponse} from '../../api/service/insight/insight-api-client.js';
 
 export interface UserActionTimeline {
   precedingSessions: UserSession[];

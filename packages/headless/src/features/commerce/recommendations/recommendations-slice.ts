@@ -1,23 +1,23 @@
 import {createReducer} from '@reduxjs/toolkit';
-import {CommerceAPIErrorStatusResponse} from '../../../api/commerce/commerce-api-error-response.js';
-import {
+import type {CommerceAPIErrorStatusResponse} from '../../../api/commerce/commerce-api-error-response.js';
+import type {
   BaseProduct,
   ChildProduct,
   Product,
 } from '../../../api/commerce/common/product.js';
-import {RecommendationsCommerceSuccessResponse} from '../../../api/commerce/recommendations/recommendations-response.js';
+import type {RecommendationsCommerceSuccessResponse} from '../../../api/commerce/recommendations/recommendations-response.js';
 import {
-  fetchRecommendations,
-  registerRecommendationsSlot,
   fetchMoreRecommendations,
+  fetchRecommendations,
   promoteChildToParent,
-  QueryRecommendationsCommerceAPIThunkReturn,
+  type QueryRecommendationsCommerceAPIThunkReturn,
+  registerRecommendationsSlot,
 } from './recommendations-actions.js';
 import {
   getRecommendationsInitialState,
   getRecommendationsSliceInitialState,
-  RecommendationsSlice,
-  RecommendationsState,
+  type RecommendationsSlice,
+  type RecommendationsState,
 } from './recommendations-state.js';
 
 export const recommendationsReducer = createReducer(
@@ -98,7 +98,7 @@ export const recommendationsReducer = createReducer(
         }
 
         const {products} = recommendations;
-        let childToPromote;
+        let childToPromote: ChildProduct | undefined;
         const currentParentIndex = products.findIndex((product) => {
           childToPromote = product.children.find(
             (child) => child.permanentid === action.payload.child.permanentid

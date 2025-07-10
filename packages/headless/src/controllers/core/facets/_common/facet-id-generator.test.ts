@@ -1,9 +1,9 @@
-import pino, {Logger} from 'pino';
+import pino, {type Logger} from 'pino';
 import {buildMockCategoryFacetSlice} from '../../../../test/mock-category-facet-slice.js';
 import {buildMockDateFacetSlice} from '../../../../test/mock-date-facet-slice.js';
 import {buildMockFacetSlice} from '../../../../test/mock-facet-slice.js';
 import {buildMockNumericFacetSlice} from '../../../../test/mock-numeric-facet-slice.js';
-import {generateFacetId, FacetIdConfig} from './facet-id-generator.js';
+import {type FacetIdConfig, generateFacetId} from './facet-id-generator.js';
 
 describe('#generateFacetId', () => {
   let config: FacetIdConfig;

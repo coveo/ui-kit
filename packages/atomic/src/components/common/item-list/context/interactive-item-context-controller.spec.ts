@@ -1,8 +1,8 @@
-import {AnyItem} from '@/src/components/common/interface/item.js';
-import {LitElementWithError} from '@/src/decorators/types.js';
 import {LitElement} from 'lit';
 import {customElement, state} from 'lit/decorators.js';
-import {describe, it, expect, beforeEach, vi} from 'vitest';
+import {beforeEach, describe, expect, it, vi} from 'vitest';
+import type {AnyItem} from '@/src/components/common/interface/item.js';
+import type {LitElementWithError} from '@/src/decorators/types.js';
 import {InteractiveItemContextController} from './interactive-item-context-controller';
 
 @customElement('test-element')

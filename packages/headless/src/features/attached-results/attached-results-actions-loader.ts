@@ -1,11 +1,11 @@
-import {PayloadAction} from '@reduxjs/toolkit';
-import {InsightEngine} from '../../app/insight-engine/insight-engine.js';
+import type {PayloadAction} from '@reduxjs/toolkit';
+import type {InsightEngine} from '../../app/insight-engine/insight-engine.js';
 import {attachedResultsReducer as attachedResults} from '../../features/attached-results/attached-results-slice.js';
 import {
+  type SetAttachedResultsActionCreatorPayload,
   setAttachedResults,
-  SetAttachedResultsActionCreatorPayload,
 } from './attached-results-actions.js';
-import {AttachedResult} from './attached-results-state.js';
+import type {AttachedResult} from './attached-results-state.js';
 
 export type {SetAttachedResultsActionCreatorPayload, AttachedResult};
 

@@ -7,13 +7,13 @@ import {
 import {insightUserActionsReducer} from '../../../features/insight-user-actions/insight-user-actions-slice.js';
 import {
   buildMockInsightEngine,
-  MockedInsightEngine,
+  type MockedInsightEngine,
 } from '../../../test/mock-engine-v2.js';
 import {buildMockInsightState} from '../../../test/mock-insight-state.js';
 import {
-  UserActions,
-  UserActionsOptions,
   buildUserActions,
+  type UserActions,
+  type UserActionsOptions,
 } from './headless-user-actions.js';
 
 vi.mock('../../../features/insight-user-actions/insight-user-actions-actions');

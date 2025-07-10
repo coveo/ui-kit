@@ -1,12 +1,12 @@
 import {
-  buildRelevanceSortCriterion,
-  buildQueryRankingExpressionSortCriterion,
-  buildNoSortCriterion,
   buildDateSortCriterion,
   buildFieldSortCriterion,
-  SortCriterion,
-  SortOrder,
+  buildNoSortCriterion,
+  buildQueryRankingExpressionSortCriterion,
+  buildRelevanceSortCriterion,
   SortBy,
+  type SortCriterion,
+  SortOrder,
 } from './criteria.js';
 
 function parseCriterion(criterion: {
@@ -71,7 +71,7 @@ export function parseCriterionExpression(expression: string) {
   return criteria.map((criterion) => {
     const criterionValues = criterion.trim().split(' ');
     const by = criterionValues[0].toLowerCase();
-    const order = criterionValues[1] && criterionValues[1].toLowerCase();
+    const order = criterionValues[1]?.toLowerCase();
 
     if (criterionValues.length > 2) {
       throw wrongFormatError;

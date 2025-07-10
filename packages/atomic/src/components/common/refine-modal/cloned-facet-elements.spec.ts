@@ -1,5 +1,5 @@
-import {describe, it, expect, beforeAll} from 'vitest';
-import {BaseFacetElement} from '../facets/facet-common';
+import {beforeAll, describe, expect, it} from 'vitest';
+import type {BaseFacetElement} from '../facets/facet-common';
 import {getClonedFacetElements} from './cloned-facet-elements';
 
 describe('#getClonedFacetElements', () => {

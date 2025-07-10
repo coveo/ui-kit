@@ -1,4 +1,4 @@
-import {
+import type {
   QuestionAnswer,
   QuestionsAnswers,
 } from '../api/search/search/question-answering.js';

@@ -1,47 +1,47 @@
 import {
   closeGeneratedAnswerFeedbackModal,
+  collapseGeneratedAnswer,
   dislikeGeneratedAnswer,
+  expandGeneratedAnswer,
   likeGeneratedAnswer,
   openGeneratedAnswerFeedbackModal,
+  registerFieldsToIncludeInCitations,
   sendGeneratedAnswerFeedback,
+  setIsEnabled,
   setIsVisible,
   updateResponseFormat,
-  registerFieldsToIncludeInCitations,
-  expandGeneratedAnswer,
-  collapseGeneratedAnswer,
-  setIsEnabled,
 } from '../../../features/generated-answer/generated-answer-actions.js';
 import {
+  type GeneratedAnswerFeedback,
   generatedAnswerAnalyticsClient,
   logCopyGeneratedAnswer,
   logDislikeGeneratedAnswer,
+  logGeneratedAnswerCollapse,
+  logGeneratedAnswerExpand,
   logGeneratedAnswerFeedback,
   logGeneratedAnswerHideAnswers,
   logGeneratedAnswerShowAnswers,
   logHoverCitation,
   logLikeGeneratedAnswer,
   logOpenGeneratedAnswerSource,
-  logGeneratedAnswerExpand,
-  logGeneratedAnswerCollapse,
-  GeneratedAnswerFeedback,
 } from '../../../features/generated-answer/generated-answer-analytics-actions.js';
 import {generatedAnswerReducer} from '../../../features/generated-answer/generated-answer-slice.js';
 import {
-  GeneratedAnswerState,
+  type GeneratedAnswerState,
   getGeneratedAnswerInitialState,
 } from '../../../features/generated-answer/generated-answer-state.js';
-import {GeneratedResponseFormat} from '../../../features/generated-answer/generated-response-format.js';
-import {SearchAppState} from '../../../state/search-app-state.js';
+import type {GeneratedResponseFormat} from '../../../features/generated-answer/generated-response-format.js';
+import type {SearchAppState} from '../../../state/search-app-state.js';
 import {buildMockCitation} from '../../../test/mock-citation.js';
 import {
   buildMockSearchEngine,
-  MockedSearchEngine,
+  type MockedSearchEngine,
 } from '../../../test/mock-engine-v2.js';
 import {createMockState} from '../../../test/mock-state.js';
 import {
   buildCoreGeneratedAnswer,
-  GeneratedAnswer,
-  GeneratedAnswerProps,
+  type GeneratedAnswer,
+  type GeneratedAnswerProps,
 } from './headless-core-generated-answer.js';
 
 vi.mock('../../../features/generated-answer/generated-answer-actions');

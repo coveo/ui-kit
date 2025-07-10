@@ -1,5 +1,5 @@
-import {CurrencyCodeISO4217} from '@coveo/relay-event-types';
-import {CommerceEngine} from '../../../app/commerce-engine/commerce-engine.js';
+import type {CurrencyCodeISO4217} from '@coveo/relay-event-types';
+import type {CommerceEngine} from '../../../app/commerce-engine/commerce-engine.js';
 import {stateKey} from '../../../app/state-key.js';
 import {
   setContext,
@@ -12,7 +12,7 @@ import {loadReducerError} from '../../../utils/errors.js';
 import {validateOptions} from '../../../utils/validate-payload.js';
 import {
   buildController,
-  Controller,
+  type Controller,
 } from '../../controller/headless-controller.js';
 
 export interface ContextOptions {

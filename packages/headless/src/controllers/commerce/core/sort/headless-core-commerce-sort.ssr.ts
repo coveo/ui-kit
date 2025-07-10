@@ -1,12 +1,16 @@
 import {ensureAtLeastOneSolutionType} from '../../../../app/commerce-ssr-engine/common.js';
 import {
-  ControllerDefinitionOption,
+  type ControllerDefinitionOption,
   SolutionType,
-  SubControllerDefinitionWithoutProps,
+  type SubControllerDefinitionWithoutProps,
 } from '../../../../app/commerce-ssr-engine/types/common.js';
 import {buildProductListing} from '../../product-listing/headless-product-listing.js';
 import {buildSearch} from '../../search/headless-search.js';
-import {Sort, SortProps, SortState} from './headless-core-commerce-sort.js';
+import type {
+  Sort,
+  SortProps,
+  SortState,
+} from './headless-core-commerce-sort.js';
 
 export type {Sort, SortProps, SortState};
 

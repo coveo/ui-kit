@@ -1,7 +1,7 @@
 import {html} from 'lit';
-import {TemplateResultType} from 'lit/directive-helpers.js';
+import type {TemplateResultType} from 'lit/directive-helpers.js';
 import '../components/common/atomic-component-error/atomic-component-error';
-import {
+import type {
   GenericRender,
   LitElementWithError,
   RenderGuardDecorator,

@@ -1,17 +1,17 @@
 import {
-  setContext,
   addContext,
   removeContext,
+  setContext,
 } from '../../features/dictionary-field-context/dictionary-field-context-actions.js';
 import {dictionaryFieldContextReducer as dictionaryFieldContext} from '../../features/dictionary-field-context/dictionary-field-context-slice.js';
 import {
   buildMockSearchEngine,
-  MockedSearchEngine,
+  type MockedSearchEngine,
 } from '../../test/mock-engine-v2.js';
 import {createMockState} from '../../test/mock-state.js';
 import {
   buildDictionaryFieldContext,
-  DictionaryFieldContext,
+  type DictionaryFieldContext,
 } from './headless-dictionary-field-context.js';
 
 vi.mock(

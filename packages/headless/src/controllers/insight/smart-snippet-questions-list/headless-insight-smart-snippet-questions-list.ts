@@ -1,22 +1,22 @@
-import {InsightEngine} from '../../../app/insight-engine/insight-engine.js';
+import type {InsightEngine} from '../../../app/insight-engine/insight-engine.js';
 import {insightSmartSnippetAnalyticsClient} from '../../../features/question-answering/question-answering-insight-analytics-actions.js';
 import {
   buildCoreSmartSnippetQuestionsList,
-  CoreSmartSnippetQuestionsList,
-  SmartSnippetQuestionsListProps,
-  CoreSmartSnippetQuestionsListState,
+  type CoreSmartSnippetQuestionsList,
+  type CoreSmartSnippetQuestionsListState,
+  type SmartSnippetQuestionsListProps,
 } from '../../core/smart-snippet-questions-list/headless-core-smart-snippet-questions-list.js';
-import {InlineLink} from '../../smart-snippet/headless-smart-snippet-interactive-inline-links.js';
+import type {InlineLink} from '../../smart-snippet/headless-smart-snippet-interactive-inline-links.js';
 import {buildSmartSnippetInteractiveInlineLinks} from '../smart-snippet/headless-insight-smart-snippet-interactive-inline-links.js';
 import {buildInsightSmartSnippetInteractiveQuestions} from './headless-insight-smart-snippet-interactive-questions.js';
 
 export type {QuestionAnswerDocumentIdentifier} from '../../../api/search/search/question-answering.js';
 export type {
+  CoreSmartSnippetQuestionsList,
+  CoreSmartSnippetQuestionsListState,
   SmartSnippetQuestionsListOptions,
   SmartSnippetQuestionsListProps,
-  CoreSmartSnippetQuestionsListState,
   SmartSnippetRelatedQuestion,
-  CoreSmartSnippetQuestionsList,
 } from '../../core/smart-snippet-questions-list/headless-core-smart-snippet-questions-list.js';
 
 /**

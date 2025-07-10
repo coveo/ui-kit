@@ -11,15 +11,15 @@ import {fieldsReducer as fields} from '../../features/fields/fields-slice.js';
 import {searchReducer as search} from '../../features/search/search-slice.js';
 import {
   buildMockSearchEngine,
-  MockedSearchEngine,
+  type MockedSearchEngine,
 } from '../../test/mock-engine-v2.js';
 import {buildMockFieldDescription} from '../../test/mock-field-description.js';
 import {buildMockSearchResponseWithDebugInfo} from '../../test/mock-search-response.js';
 import {createMockState} from '../../test/mock-state.js';
 import {
   buildRelevanceInspector,
-  RelevanceInspector,
-  RelevanceInspectorProps,
+  type RelevanceInspector,
+  type RelevanceInspectorProps,
 } from './headless-relevance-inspector.js';
 
 vi.mock('../../features/debug/debug-actions');

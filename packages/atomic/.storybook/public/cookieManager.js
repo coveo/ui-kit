@@ -10,7 +10,7 @@ const functionalKeys = {
   ],
 };
 
-let originalLocalStorage = window.localStorage;
+const originalLocalStorage = window.localStorage;
 
 export const getOptanonConsentCookie = () => {
   return document.cookie.split(';').find((cookie) => {

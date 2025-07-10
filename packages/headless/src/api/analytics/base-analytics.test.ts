@@ -4,7 +4,7 @@ import {getSearchHubInitialState} from '../../features/search-hub/search-hub-sta
 import {buildMockAnalyticsState} from '../../test/mock-analytics-state.js';
 import {
   BaseAnalyticsProvider,
-  StateNeededByBaseAnalyticsProvider,
+  type StateNeededByBaseAnalyticsProvider,
 } from './base-analytics.js';
 
 class TestProvider extends BaseAnalyticsProvider<StateNeededByBaseAnalyticsProvider> {

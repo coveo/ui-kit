@@ -5,10 +5,13 @@ import {insightInterfaceReducer as insightInterface} from '../../features/insigh
 import {searchHubReducer as searchHub} from '../../features/search-hub/search-hub-slice.js';
 import {
   buildMockInsightEngine,
-  MockedInsightEngine,
+  type MockedInsightEngine,
 } from '../../test/mock-engine-v2.js';
 import {buildMockInsightState} from '../../test/mock-insight-state.js';
-import {buildInsightInterface, InsightInterface} from './insight-interface.js';
+import {
+  buildInsightInterface,
+  type InsightInterface,
+} from './insight-interface.js';
 
 vi.mock('../../features/insight-interface/insight-interface-actions');
 

@@ -1,31 +1,31 @@
-import {AsyncThunk, UnknownAction} from '@reduxjs/toolkit';
-import {ThunkDispatch} from 'redux-thunk';
-import {GeneratedAnswerAPIClient} from '../../api/generated-answer/generated-answer-client.js';
-import {SearchAPIClient} from '../../api/search/search-api-client.js';
-import {SearchAPIErrorWithStatusCode} from '../../api/search/search-api-error-response.js';
+import type {AsyncThunk, UnknownAction} from '@reduxjs/toolkit';
+import type {ThunkDispatch} from 'redux-thunk';
+import type {GeneratedAnswerAPIClient} from '../../api/generated-answer/generated-answer-client.js';
+import type {SearchAPIClient} from '../../api/search/search-api-client.js';
+import type {SearchAPIErrorWithStatusCode} from '../../api/search/search-api-error-response.js';
 import {configuration} from '../../app/common-reducers.js';
-import {ClientThunkExtraArguments} from '../../app/thunk-extra-arguments.js';
+import type {ClientThunkExtraArguments} from '../../app/thunk-extra-arguments.js';
 import {
   registerNumberOfResults,
   updateNumberOfResults,
 } from '../../features/pagination/pagination-actions.js';
 import {paginationReducer as pagination} from '../../features/pagination/pagination-slice.js';
-import {StateNeededByExecuteSearch} from '../../features/search/search-actions-thunk-processor.js';
 import {
-  ExecuteSearchThunkReturn,
+  type ExecuteSearchThunkReturn,
   fetchPage,
-  TransitiveSearchAction,
+  type TransitiveSearchAction,
 } from '../../features/search/search-actions.js';
+import type {StateNeededByExecuteSearch} from '../../features/search/search-actions-thunk-processor.js';
 import {
-  MockedSearchEngine,
   buildMockSearchEngine,
+  type MockedSearchEngine,
 } from '../../test/mock-engine-v2.js';
 import {buildMockPagination} from '../../test/mock-pagination.js';
 import {createMockState} from '../../test/mock-state.js';
 import {
-  ResultsPerPage,
-  ResultsPerPageProps,
   buildResultsPerPage,
+  type ResultsPerPage,
+  type ResultsPerPageProps,
 } from './headless-results-per-page.js';
 
 vi.mock('../../features/pagination/pagination-actions');

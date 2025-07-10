@@ -1,8 +1,8 @@
 import {Schema, StringValue} from '@coveo/bueno';
-import {PostprocessSearchResponseMiddleware} from '../../api/search/search-api-client-middleware.js';
+import type {PostprocessSearchResponseMiddleware} from '../../api/search/search-api-client-middleware.js';
 import {nonEmptyString} from '../../utils/validate-payload.js';
 import {
-  EngineConfiguration,
+  type EngineConfiguration,
   engineConfigurationDefinitions,
   getSampleEngineConfiguration,
 } from '../engine-configuration.js';

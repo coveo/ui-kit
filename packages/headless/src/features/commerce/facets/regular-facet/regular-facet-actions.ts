@@ -4,7 +4,7 @@ import {
   requiredNonEmptyString,
   validatePayload,
 } from '../../../../utils/validate-payload.js';
-import {ToggleSelectFacetValueActionCreatorPayload} from '../../../facets/facet-set/facet-set-actions.js';
+import type {ToggleSelectFacetValueActionCreatorPayload} from '../../../facets/facet-set/facet-set-actions.js';
 import {facetValueDefinition} from '../../../facets/facet-set/facet-set-validate-payload.js';
 
 export type ToggleExcludeFacetValuePayload =

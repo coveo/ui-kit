@@ -1,12 +1,12 @@
-import {BaseParam} from '../../../platform-service-params.js';
-import {
+import type {BaseParam} from '../../../platform-service-params.js';
+import type {
   ClientIdParam,
+  ContextParam,
+  CountryParam,
   CurrencyParam,
   LanguageParam,
   QueryParam,
   TrackingIdParam,
-  ContextParam,
-  CountryParam,
 } from '../../commerce-api-params.js';
 import {baseRequest} from '../../common/request.js';
 
