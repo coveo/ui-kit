@@ -11,10 +11,7 @@ async function main() {
   await searchInterface.initialize({
     accessToken,
     organizationId,
-    organizationEndpoints: await searchInterface.getOrganizationEndpoints(
-      organizationId,
-      platformEnvironment as 'dev' | 'stg' | 'prod' | 'hipaa'
-    ),
+    environment: platformEnvironment as 'dev' | 'stg' | 'prod' | 'hipaa',
   });
 
   searchInterface.executeFirstSearch();

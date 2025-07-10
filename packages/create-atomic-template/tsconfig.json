@@ -1,11 +1,12 @@
 {
-  "extends": "../../tsconfig.json",
+  "extends": "./node_modules/gts/tsconfig-google.json",
   "compilerOptions": {
     "allowSyntheticDefaultImports": true,
     "declaration": false,
+    "skipLibCheck": true,
     "experimentalDecorators": true,
     "lib": ["dom", "es2018"],
-    "moduleResolution": "node",
+    "moduleResolution": "bundler",
     "module": "esnext",
     "target": "es2018",
     "noUnusedLocals": true,
