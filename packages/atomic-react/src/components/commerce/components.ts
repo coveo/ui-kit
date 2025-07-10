@@ -136,16 +136,16 @@ export const AtomicCommerceSortDropdown = createComponent({
   elementClass: LitAtomicCommerceSortDropdown,
 });
 
-export const AtomicProduct = createComponent({
-  tagName: 'atomic-product',
-  react: React,
-  elementClass: LitAtomicProduct,
-});
-
 export const AtomicCommerceText = createComponent({
   tagName: 'atomic-commerce-text',
   react: React,
   elementClass: LitAtomicCommerceText,
+});
+
+export const AtomicProduct = createComponent({
+  tagName: 'atomic-product',
+  react: React,
+  elementClass: LitAtomicProduct,
 });
 
 export const AtomicProductChildren = createComponent({
