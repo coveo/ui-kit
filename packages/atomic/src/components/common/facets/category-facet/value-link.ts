@@ -15,7 +15,6 @@ export interface CategoryFacetValueLinkProps {
   searchQuery: string;
   isLeafValue: boolean;
   setRef: (el?: Element) => void;
-  children?: unknown;
 }
 
 export const renderCategoryFacetValueLink: FunctionalComponentWithChildren<
