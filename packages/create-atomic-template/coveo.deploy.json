@@ -12,7 +12,7 @@
   ],
   "javascriptUrls": [
     {
-      "path": "https://static.cloud.coveo.com/atomic/v2/atomic.esm.js",
+      "path": "https://static.cloud.coveo.com/atomic/v3/atomic.esm.js",
       "isModule": true
     }
   ],
@@ -23,7 +23,7 @@
   ],
   "cssUrls": [
     {
-      "path": "https://static.cloud.coveo.com/atomic/v2/themes/coveo.css"
+      "path": "https://static.cloud.coveo.com/atomic/v3/themes/coveo.css"
     }
   ],
   "schemaVersion": "1.0.0"
