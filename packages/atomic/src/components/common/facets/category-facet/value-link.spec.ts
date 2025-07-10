@@ -118,8 +118,8 @@ describe('renderCategoryFacetValueLink', () => {
   });
 
   it('should display the correct count format', async () => {
-    const {countElement} = await renderComponent({numberOfResults: 123});
+    const {countElement} = await renderComponent({numberOfResults: 1234});
     expect(countElement).toBeInTheDocument();
-    expect(countElement).toHaveTextContent('(123)');
+    expect(countElement).toHaveTextContent('(1,234)');
   });
 });
