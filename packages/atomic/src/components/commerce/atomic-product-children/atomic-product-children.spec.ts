@@ -1,6 +1,5 @@
 import {describe, expect, it, vi} from 'vitest';
 import './atomic-product-children';
-import {userEvent} from '@vitest/browser/context';
 import {html} from 'lit';
 import {ifDefined} from 'lit/directives/if-defined.js';
 import {renderInAtomicProduct} from '@/vitest-utils/testing-helpers/fixtures/atomic/commerce/atomic-product-fixture';
@@ -15,6 +14,7 @@ describe('atomic-product-children', () => {
       label?: string;
       field?: string;
       fallback?: string;
+      // biome-ignore lint/suspicious/noExplicitAny: <>
       childProducts?: any[];
     } = {}
   ) => {
