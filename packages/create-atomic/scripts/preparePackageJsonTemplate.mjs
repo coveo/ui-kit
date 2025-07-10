@@ -5,8 +5,13 @@ import detectIndent from 'detect-indent';
 import {fileURLToPath} from 'url';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
-const atomicTemplatePath = resolve(__dirname, '..', '..', 'template');
-const bundledTemplatePath = resolve(__dirname, '..', 'template');
+const atomicTemplatePath = resolve(
+  __dirname,
+  '..',
+  '..',
+  'create-atomic-template'
+);
+const bundledTemplatePath = resolve(__dirname, '..', 'create-atomic-template');
 
 copySync(atomicTemplatePath, bundledTemplatePath, {recursive: true});
 copyFileSync(
@@ -32,6 +37,6 @@ finalPackageJsonTemplate.dependencies = packageJsonObject.dependencies;
 finalPackageJsonTemplate.devDependencies = packageJsonObject.devDependencies;
 
 writeFileSync(
-  resolve(__dirname, '..', 'template', 'package.json.hbs'),
+  resolve(__dirname, '..', 'create-atomic-template', 'package.json.hbs'),
   JSON.stringify(finalPackageJsonTemplate, undefined, pkgIndent)
 );

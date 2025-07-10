@@ -3,7 +3,6 @@
   "description": "{{titleCase project}} project",
   "version": "1.41.1",
   "private": true,
-  "workspaces": [],
   "scripts": {
     "release:phase1": "npx -p=@coveord/release npm-publish",
     "lint": "prettier --check . && eslint ."
