@@ -205,12 +205,18 @@ export default class ExampleInsightPanel extends LightningElement {
    * @returns {void}
    */
   setupContext() {
-    const subject = this.getFieldValueFromRecord(this.caseRecord, 'Case.Subject');
-    const description = this.getFieldValueFromRecord(this.caseRecord, 'Case.Description');
+    const subject = this.getFieldValueFromRecord(
+      this.caseRecord,
+      'Case.Subject'
+    );
+    const description = this.getFieldValueFromRecord(
+      this.caseRecord,
+      'Case.Description'
+    );
     const context = {
       Case_ID: this.caseId,
-      ...(subject ? { Case_Subject: subject } : {}),
-      ...(description ? { Case_Description: description } : {}),
+      ...(subject ? {Case_Subject: subject} : {}),
+      ...(description ? {Case_Description: description} : {}),
     };
     this.engine.dispatch(this.actions.setCaseContext(context));
   }

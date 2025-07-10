@@ -74,7 +74,7 @@ export interface SearchConfigurationOptions {
   /**
    * The base URL to use to proxy Coveo search requests (e.g., `https://example.com/search`).
    *
-   * This is an advanced option that you should only set if you need to proxy Coveo searchrequests through your own
+   * This is an advanced option that you only set if you proxy Coveo searchrequests through your own
    * server. In most cases, you should not set this option.
    *
    *  See [Headless proxy: Search](https://docs.coveo.com/en/headless/latest/usage/proxy#search).
