@@ -27,7 +27,7 @@ export interface Result {
 
   /**
    * The hyperlinkable item URI.
-   * Notes: Use the clickUri value to create hyperlinks to the item, rather than the uri or printableUri value.
+   * Notes: Use the `clickUri` value to create hyperlinks to the item, rather than the `uri` or `printableUri` value.
    *
    * @example
    * https://example.com/t/1/898/2
@@ -35,7 +35,7 @@ export interface Result {
   clickUri: string;
 
   /**
-   * The unique item identifier. Consider the uniqueId value as an opaque string.
+   * The unique item identifier. Consider the `uniqueId` value as an opaque string.
    *
    * @example
    * 84.72597$https://example.com/Root:0/Topic:898/Post:2
