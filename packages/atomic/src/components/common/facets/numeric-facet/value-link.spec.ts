@@ -69,13 +69,23 @@ describe('#renderNumericFacetValue', () => {
   };
 
   it('should call formatHumanReadable with correct props', async () => {
-    await renderComponent({displayValuesAs: 'checkbox'});
+    const manualRanges = [
+      {
+        start: 10,
+        end: 20,
+        endInclusive: true,
+        label: 'Budget Range',
+        state: 'idle' as const,
+      },
+    ];
+
+    await renderComponent({displayValuesAs: 'checkbox', manualRanges});
 
     expect(formatHumanReadable).toHaveBeenCalledWith(
       expect.objectContaining({
         field: 'price',
         facetValue: defaultProps.facetValue,
-        manualRanges: [],
+        manualRanges,
         i18n,
         logger: mockLogger,
         formatter: mockFormatter,
@@ -193,28 +203,5 @@ describe('#renderNumericFacetValue', () => {
 
     // The element should be empty when nothing is returned
     expect(element.children).toHaveLength(0);
-  });
-
-  it('should pass manual ranges to formatHumanReadable', async () => {
-    const manualRanges = [
-      {
-        start: 10,
-        end: 20,
-        endInclusive: true,
-        label: 'Budget Range',
-        state: 'idle' as const,
-      },
-    ];
-
-    await renderComponent({
-      manualRanges,
-      displayValuesAs: 'checkbox',
-    });
-
-    expect(formatHumanReadable).toHaveBeenCalledWith(
-      expect.objectContaining({
-        manualRanges,
-      })
-    );
   });
 });
