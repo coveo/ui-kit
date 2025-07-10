@@ -2,6 +2,7 @@ import {
   AtomicCommerceFacet as LitAtomicCommerceFacet,
   AtomicCommerceInterface as LitAtomicCommerceInterface,
   AtomicCommerceLayout as LitAtomicCommerceLayout,
+  AtomicCommerceNumericFacet as LitAtomicCommerceNumericFacet,
   AtomicCommercePager as LitAtomicCommercePager,
   AtomicCommerceProductList as LitAtomicCommerceProductList,
   AtomicCommerceQuerySummary as LitAtomicCommerceQuerySummary,
@@ -34,6 +35,12 @@ export const AtomicCommerceLayout = createComponent({
   tagName: 'atomic-commerce-layout',
   react: React,
   elementClass: LitAtomicCommerceLayout,
+});
+
+export const AtomicCommerceNumericFacet = createComponent({
+  tagName: 'atomic-commerce-numeric-facet',
+  react: React,
+  elementClass: LitAtomicCommerceNumericFacet,
 });
 
 export const AtomicCommercePager = createComponent({
