@@ -1,6 +1,6 @@
-import {Canvas, ArgTypes, Meta, Title, Description, Stories, Subtitle} from '@storybook/blocks';
+import { Canvas, ArgTypes, Meta, Title, Description, Stories, Subtitle } from '@storybook/blocks';
 import * as AtomicProductChildrenStories from './atomic-product-children.new.stories';
-import {CanvasWithGithub} from '../../../../storybook-utils/documentation/canvas-with-github';
+import { CanvasWithGithub } from '../../../../storybook-utils/documentation/canvas-with-github';
 
 <Meta of={ AtomicProductChildrenStories } />
 
@@ -9,11 +9,31 @@ import {CanvasWithGithub} from '../../../../storybook-utils/documentation/canvas
 
 <CanvasWithGithub
   of={ AtomicProductChildrenStories.Default }
-  githubPath="TODO/atomic-product-children/atomic-product-children.ts"
+  githubPath="commerce/atomic-product-children/atomic-product-children.ts"
 />
 
 ## Usage
-TODO: Add usage instructions here.
+The `atomic-product-children` component renders a list of child products associated with a parent product. 
+It is typically used within `atomic-product-template` components to display related products in a product list.
+It is also typically wrapped in `atomic-product-section-children` to provide a section for child products.
+
+
+```html
+<atomic-commerce-interface>
+  ...
+  <atomic-commerce-product-list>
+    <atomic-product-template>
+      <template>
+        ...
+        <atomic-product-section-children>
+          <atomic-product-children></atomic-product-children>
+        </atomic-product-section-children>
+
+      </template>
+    </atomic-product-template>
+  </atomic-commerce-product-list>
+</atomic-commerce-interface>
+```
 
 ## Examples
 <Stories title={""}/>
