@@ -1,4 +1,4 @@
-import {ItemLinkProps} from './item-link';
+import type {ItemLinkProps} from './item-link';
 
 type ItemLinkEventProps = Pick<
   ItemLinkProps,
