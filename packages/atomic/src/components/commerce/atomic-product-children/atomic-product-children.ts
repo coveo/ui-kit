@@ -151,7 +151,7 @@ export class AtomicProductChildren
             style: 'text-primary',
             class: 'product-child plus-button',
           },
-        })(html`+${this.childProducts.length - 5}`)}
+        })(html`+${this.productController.item?.totalNumberOfChildren! - 5}`)}
       </div>
     `;
   }

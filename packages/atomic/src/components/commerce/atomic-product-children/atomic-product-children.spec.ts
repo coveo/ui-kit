@@ -16,6 +16,7 @@ describe('atomic-product-children', () => {
       fallback?: string;
       // biome-ignore lint/suspicious/noExplicitAny: <>
       childProducts?: any[];
+      totalNumberOfChildren?: number;
     } = {}
   ) => {
     const childProducts = Array.from({length: 6}, (_, i) =>
@@ -43,6 +44,7 @@ describe('atomic-product-children', () => {
         null_field: null,
       },
       children: props.childProducts ? props.childProducts : childProducts,
+      totalNumberOfChildren: props.totalNumberOfChildren ?? 6,
     });
 
     const {element} = await renderInAtomicProduct({
@@ -263,10 +265,14 @@ describe('atomic-product-children', () => {
     expect(image?.src).toBe('https://example.com/fallback.jpg');
   });
 
-  //TODO: Add more tests for this while fixing KIT-4408
-  it('should render the count button with the correct count', async () => {
-    const {childProducts} = await renderProductChildren();
+  it('should render the count button with the correct count according to the totalNumberOfChildren', async () => {
+    const total = 7;
+    const {childProducts} = await renderProductChildren({
+      totalNumberOfChildren: total,
+    });
 
-    expect(childProducts[childProducts.length - 1]).toHaveTextContent('+1');
+    expect(childProducts[childProducts.length - 1]).toHaveTextContent(
+      (total - 5).toString()
+    );
   });
 });
