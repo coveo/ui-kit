@@ -7,7 +7,7 @@ export interface BaseFacetRequest {
    * By default, a unique random identifier is generated.
    */
   facetId: string;
-  /** The values of which field to display in the facet.*/
+  /** The field from which to display values in the facet.*/
   field: string;
   /** Whether to exclude folded result parents when estimating the result count for each facet value.
    *

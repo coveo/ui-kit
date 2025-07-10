@@ -31,7 +31,7 @@ export interface RegisterNumericFacetActionCreatorPayload {
   facetId: string;
 
   /**
-   * The values of which field to display in the facet.
+   * The field from which to display values in the facet.
    */
   field: string;
 
