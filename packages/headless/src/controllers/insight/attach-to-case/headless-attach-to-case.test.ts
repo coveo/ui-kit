@@ -9,17 +9,17 @@ import {
 } from '../../../features/attached-results/attached-results-analytics-actions.js';
 import {attachedResultsReducer as attachedResults} from '../../../features/attached-results/attached-results-slice.js';
 import {buildAttachedResultFromSearchResult} from '../../../features/attached-results/attached-results-utils.js';
-import {InsightAppState} from '../../../state/insight-app-state.js';
+import type {InsightAppState} from '../../../state/insight-app-state.js';
 import {createMockAttachedResult} from '../../../test/mock-attached-results.js';
 import {
   buildMockInsightEngine,
-  MockedInsightEngine,
+  type MockedInsightEngine,
 } from '../../../test/mock-engine-v2.js';
 import {buildMockInsightState} from '../../../test/mock-insight-state.js';
 import {buildMockResult} from '../../../test/mock-result.js';
 import {
-  AttachToCase,
-  AttachToCaseOptions,
+  type AttachToCase,
+  type AttachToCaseOptions,
   buildAttachToCase,
 } from './headless-attach-to-case.js';
 

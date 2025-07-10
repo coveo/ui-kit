@@ -1,15 +1,15 @@
 import {StringValue} from '@coveo/bueno';
 import {createAction} from '@reduxjs/toolkit';
-import {PlatformEnvironment} from '../../../utils/url-utils.js';
+import type {PlatformEnvironment} from '../../../utils/url-utils.js';
 import {
   nonEmptyString,
   requiredTrackingId,
   validatePayload,
 } from '../../../utils/validate-payload.js';
 import {
-  UpdateAnalyticsConfigurationActionCreatorPayload,
-  UpdateBasicConfigurationActionCreatorPayload,
   analyticsConfigurationSchema,
+  type UpdateAnalyticsConfigurationActionCreatorPayload,
+  type UpdateBasicConfigurationActionCreatorPayload,
 } from '../../configuration/configuration-actions.js';
 
 export type UpdateBasicConfigurationPayload =

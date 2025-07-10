@@ -9,15 +9,15 @@ import {searchReducer as search} from '../../../features/search/search-slice.js'
 import {emptyQuestionAnswer} from '../../../features/search/search-state.js';
 import {
   buildMockSearchEngine,
-  MockedSearchEngine,
+  type MockedSearchEngine,
 } from '../../../test/mock-engine-v2.js';
 import {buildMockRaw} from '../../../test/mock-raw.js';
 import {buildMockResult} from '../../../test/mock-result.js';
 import {buildMockSearchState} from '../../../test/mock-search-state.js';
 import {createMockState} from '../../../test/mock-state.js';
 import {
-  CoreSmartSnippetQuestionsList,
   buildCoreSmartSnippetQuestionsList,
+  type CoreSmartSnippetQuestionsList,
 } from './headless-core-smart-snippet-questions-list.js';
 
 vi.mock('../../../features/question-answering/question-answering-actions');

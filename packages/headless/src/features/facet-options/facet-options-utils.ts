@@ -11,7 +11,7 @@ export const isFacetVisibleOnTab = (
     return true;
   }
 
-  if (facetTabs.excluded && facetTabs.excluded.includes(activeTab)) {
+  if (facetTabs.excluded?.includes(activeTab)) {
     return false;
   }
 

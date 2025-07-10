@@ -1,12 +1,12 @@
-import {CategoryFacetSearchRequest} from '../../../../../api/commerce/facet-search/facet-search-request.js';
-import {NavigatorContext} from '../../../../../app/navigator-context-provider.js';
+import type {CategoryFacetSearchRequest} from '../../../../../api/commerce/facet-search/facet-search-request.js';
+import type {NavigatorContext} from '../../../../../app/navigator-context-provider.js';
 import {buildFilterableCommerceAPIRequest} from '../../../common/filterable-commerce-api-request-builder.js';
-import {
+import type {
   AnyFacetRequest,
   CategoryFacetRequest,
 } from '../../facet-set/interfaces/request.js';
 import {getFacetIdWithoutCommerceFieldSuggestionNamespace} from '../commerce-facet-search-actions.js';
-import {StateNeededForCategoryFacetSearch} from './commerce-category-facet-search-state.js';
+import type {StateNeededForCategoryFacetSearch} from './commerce-category-facet-search-state.js';
 
 export const buildCategoryFacetSearchRequest = (
   facetId: string,

@@ -1,18 +1,18 @@
-import {PayloadAction} from '@reduxjs/toolkit';
+import type {PayloadAction} from '@reduxjs/toolkit';
 import {configuration} from '../../app/common-reducers.js';
-import {CoreEngine, CoreEngineNext} from '../../app/engine.js';
+import type {CoreEngine, CoreEngineNext} from '../../app/engine.js';
 import {
+  type AnalyticsRuntimeEnvironment,
   disableAnalytics,
   enableAnalytics,
+  type SetOriginLevel2ActionCreatorPayload,
+  type SetOriginLevel3ActionCreatorPayload,
   setOriginLevel2,
-  SetOriginLevel2ActionCreatorPayload,
   setOriginLevel3,
-  SetOriginLevel3ActionCreatorPayload,
+  type UpdateAnalyticsConfigurationActionCreatorPayload,
+  type UpdateBasicConfigurationActionCreatorPayload,
   updateAnalyticsConfiguration,
-  UpdateAnalyticsConfigurationActionCreatorPayload,
   updateBasicConfiguration,
-  UpdateBasicConfigurationActionCreatorPayload,
-  AnalyticsRuntimeEnvironment,
 } from './configuration-actions.js';
 
 export type {

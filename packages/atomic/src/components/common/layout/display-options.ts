@@ -1,4 +1,4 @@
-import {containsSections, ItemSectionTagName} from './sections';
+import {containsSections, type ItemSectionTagName} from './sections';
 
 export type ItemDisplayBasicLayout = 'list' | 'grid';
 export type ItemDisplayLayout = ItemDisplayBasicLayout | 'table';
@@ -10,11 +10,10 @@ function getDisplayClass(display: ItemDisplayLayout) {
   switch (display) {
     case 'grid':
       return 'display-grid';
-    case 'list':
-    default:
-      return 'display-list';
     case 'table':
       return 'display-table';
+    default:
+      return 'display-list';
   }
 }
 
@@ -22,11 +21,10 @@ function getDensityClass(density: ItemDisplayDensity) {
   switch (density) {
     case 'comfortable':
       return 'density-comfortable';
-    case 'normal':
-    default:
-      return 'density-normal';
     case 'compact':
       return 'density-compact';
+    default:
+      return 'density-normal';
   }
 }
 
@@ -36,11 +34,10 @@ function getImageClass(image: ItemDisplayImageSize) {
       return 'image-large';
     case 'small':
       return 'image-small';
-    case 'icon':
-    default:
-      return 'image-icon';
     case 'none':
       return 'image-none';
+    default:
+      return 'image-icon';
   }
 }
 

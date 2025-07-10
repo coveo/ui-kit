@@ -7,25 +7,25 @@ import {
   validateManualDateRanges,
 } from '../../../../features/facets/range-facets/date-facet-set/date-facet-actions.js';
 import {dateFacetSetReducer as dateFacetSet} from '../../../../features/facets/range-facets/date-facet-set/date-facet-set-slice.js';
-import {DateFacetValue} from '../../../../features/facets/range-facets/date-facet-set/interfaces/response.js';
+import type {DateFacetValue} from '../../../../features/facets/range-facets/date-facet-set/interfaces/response.js';
 import {updateRangeFacetSortCriterion} from '../../../../features/facets/range-facets/generic/range-facet-actions.js';
 import {executeSearch} from '../../../../features/search/search-actions.js';
 import {searchReducer as search} from '../../../../features/search/search-slice.js';
-import {SearchAppState} from '../../../../state/search-app-state.js';
+import type {SearchAppState} from '../../../../state/search-app-state.js';
 import {buildMockDateFacetResponse} from '../../../../test/mock-date-facet-response.js';
 import {buildMockDateFacetSlice} from '../../../../test/mock-date-facet-slice.js';
 import {buildMockDateFacetValue} from '../../../../test/mock-date-facet-value.js';
 import {
-  MockedSearchEngine,
   buildMockSearchEngine,
+  type MockedSearchEngine,
 } from '../../../../test/mock-engine-v2.js';
 import {createMockState} from '../../../../test/mock-state.js';
 import * as FacetIdDeterminor from '../../../core/facets/_common/facet-id-determinor.js';
 import {
-  DateFacet,
   buildDateFacet,
-  DateFacetOptions,
   buildDateRange,
+  type DateFacet,
+  type DateFacetOptions,
 } from './headless-date-facet.js';
 
 vi.mock(

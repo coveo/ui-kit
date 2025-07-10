@@ -4,21 +4,21 @@ import {buildMockNotifyTrigger} from '../../test/mock-trigger-notify.js';
 import {buildMockQueryTrigger} from '../../test/mock-trigger-query.js';
 import {buildMockRedirectTrigger} from '../../test/mock-trigger-redirect.js';
 import {
-  TransitiveSearchAction,
   executeSearch,
+  type TransitiveSearchAction,
 } from '../search/search-actions.js';
 import {
   applyQueryTriggerModification,
   updateIgnoreQueryTrigger,
 } from './triggers-actions.js';
+import {triggerReducer} from './triggers-slice.js';
 import {
   handleApplyQueryTriggerModification,
   handleFetchItemsFulfilled,
   handleFetchItemsPending,
   handleUpdateIgnoreQueryTrigger,
 } from './triggers-slice-functions.js';
-import {triggerReducer} from './triggers-slice.js';
-import {TriggerState, getTriggerInitialState} from './triggers-state.js';
+import {getTriggerInitialState, type TriggerState} from './triggers-state.js';
 
 describe('triggers slice', () => {
   let initialState: TriggerState;

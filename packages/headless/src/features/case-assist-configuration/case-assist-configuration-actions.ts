@@ -1,9 +1,9 @@
 import {StringValue} from '@coveo/bueno';
 import {createAction} from '@reduxjs/toolkit';
 import {
-  validatePayload,
-  requiredNonEmptyString,
   nonEmptyString,
+  requiredNonEmptyString,
+  validatePayload,
 } from '../../utils/validate-payload.js';
 
 export interface SetCaseAssistConfigurationActionCreatorPayload {

@@ -1,12 +1,12 @@
-import {describe, it, vi, expect, beforeEach} from 'vitest';
+import {beforeEach, describe, expect, it, vi} from 'vitest';
 import {deselectAllBreadcrumbs} from '../../../features/breadcrumb/breadcrumb-actions.js';
 import {
   buildMockSearchEngine,
-  MockedSearchEngine,
+  type MockedSearchEngine,
 } from '../../../test/mock-engine-v2.js';
 import {createMockState} from '../../../test/mock-state.js';
 import {
-  BreadcrumbManager,
+  type BreadcrumbManager,
   buildCoreBreadcrumbManager,
 } from './headless-core-breadcrumb-manager.js';
 

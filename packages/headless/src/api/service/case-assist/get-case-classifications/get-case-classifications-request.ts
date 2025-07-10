@@ -1,4 +1,4 @@
-import {
+import type {
   BaseParam,
   ClientIDParam,
   ContextParam,
@@ -7,8 +7,8 @@ import {
 } from '../../../platform-service-params.js';
 import {
   baseCaseAssistRequest,
-  CaseAssistIdParam,
-  FieldsParam,
+  type CaseAssistIdParam,
+  type FieldsParam,
   prepareSuggestionRequestFields,
 } from '../case-assist-params.js';
 

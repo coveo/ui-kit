@@ -1,6 +1,6 @@
-import {CommerceEngine} from '../../../../app/commerce-engine/commerce-engine.js';
+import type {CommerceEngine} from '../../../../app/commerce-engine/commerce-engine.js';
 import {productListingReducer as productListing} from '../../../../features/commerce/product-listing/product-listing-slice.js';
-import {ProductListingSection} from '../../../../state/state-sections.js';
+import type {ProductListingSection} from '../../../../state/state-sections.js';
 
 export function loadProductListingReducer(
   engine: CommerceEngine

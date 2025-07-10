@@ -1,12 +1,12 @@
 import {isNullOrUndefined} from '@coveo/bueno';
 import {createReducer} from '@reduxjs/toolkit';
 import {
-  setAttachedResults,
   attachResult,
   detachResult,
+  setAttachedResults,
 } from './attached-results-actions.js';
 import {
-  AttachedResult,
+  type AttachedResult,
   getAttachedResultsInitialState,
 } from './attached-results-state.js';
 
@@ -17,13 +17,13 @@ export const attachedResultsReducer = createReducer(
       .addCase(setAttachedResults, (state, action) => {
         const {results, loading} = action.payload;
 
-        if ('results' in state && state['results']?.length > 0) {
+        if ('results' in state && state.results?.length > 0) {
           return;
         }
 
-        state['results'] = results;
+        state.results = results;
         if (loading) {
-          state['loading'] = loading;
+          state.loading = loading;
         }
       })
       .addCase(attachResult, (state, action) => {

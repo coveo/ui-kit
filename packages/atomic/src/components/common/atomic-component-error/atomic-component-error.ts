@@ -1,6 +1,6 @@
-import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
 import {html, LitElement} from 'lit';
 import {customElement, property} from 'lit/decorators.js';
+import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
 
 /**
  * The `atomic-component-error` component is used by other components to render and log errors.

@@ -2,6 +2,7 @@
  * Represents a message sent in an event stream
  * https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events/Using_server-sent_events#Event_stream_format
  */
+/** biome-ignore-all lint/suspicious/noAssignInExpressions: <> */
 export interface EventSourceMessage {
   /** The event ID to set the EventSource object's last event ID value. */
   id: string;
@@ -30,7 +31,7 @@ export async function getBytes(
   }
 }
 
-const enum ControlChars {
+enum ControlChars {
   NewLine = 10,
   CarriageReturn = 13,
   Space = 32,
@@ -150,7 +151,7 @@ export function getMessages(
         case 'data':
           // if this message already has data, append the new value to the old.
           // otherwise, just set to the new value:
-          message.data = message.data ? message.data + '\n' + value : value; // otherwise,
+          message.data = message.data ? `${message.data}\n${value}` : value; // otherwise,
           break;
         case 'event':
           message.event = value;
@@ -172,7 +173,7 @@ function retry(
   onRetry: {(retry: number): void; (arg0: number): void}
 ) {
   const retry = parseInt(value, 10);
-  if (!isNaN(retry)) {
+  if (!Number.isNaN(retry)) {
     // per spec, ignore non-integers
     onRetry((message.retry = retry));
   }

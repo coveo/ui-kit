@@ -5,14 +5,14 @@ import {
 import {logClearRecentResults} from '../../features/recent-results/recent-results-analytics-actions.js';
 import {recentResultsReducer as recentResults} from '../../features/recent-results/recent-results-slice.js';
 import {
-  MockedSearchEngine,
   buildMockSearchEngine,
+  type MockedSearchEngine,
 } from '../../test/mock-engine-v2.js';
 import {buildMockResult} from '../../test/mock-result.js';
 import {createMockState} from '../../test/mock-state.js';
 import {
   buildRecentResultsList,
-  RecentResultsList,
+  type RecentResultsList,
 } from './headless-recent-results-list.js';
 
 vi.mock('../../features/recent-results/recent-results-analytics-actions');

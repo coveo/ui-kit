@@ -1,9 +1,9 @@
-import {CommerceAPIResponse} from '../../../api/commerce/commerce-api-client.js';
-import {FacetSearchRequestOptions} from '../../../api/search/facet-search/base/base-facet-search-request.js';
-import {FacetSearchResponse} from '../../../api/search/facet-search/facet-search-response.js';
+import type {CommerceAPIResponse} from '../../../api/commerce/commerce-api-client.js';
+import type {FacetSearchRequestOptions} from '../../../api/search/facet-search/base/base-facet-search-request.js';
+import type {FacetSearchResponse} from '../../../api/search/facet-search/facet-search-response.js';
 import {getFacetIdWithCommerceFieldSuggestionNamespace} from '../../commerce/facets/facet-search-set/commerce-facet-search-actions.js';
-import {FieldSuggestionsFacet} from '../../commerce/facets/field-suggestions-order/field-suggestions-order-state.js';
-import {FacetSearchOptions} from './facet-search-request-options.js';
+import type {FieldSuggestionsFacet} from '../../commerce/facets/field-suggestions-order/field-suggestions-order-state.js';
+import type {FacetSearchOptions} from './facet-search-request-options.js';
 
 export type FacetSearchState<T extends FacetSearchResponse> = {
   /**

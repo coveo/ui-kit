@@ -1,14 +1,14 @@
-import {InsightEngine} from '../../../app/insight-engine/insight-engine.js';
+import type {InsightEngine} from '../../../app/insight-engine/insight-engine.js';
 import {executeSearch} from '../../../features/insight-search/insight-search-actions.js';
-import {SortCriterion} from '../../../features/sort-criteria/criteria.js';
+import type {SortCriterion} from '../../../features/sort-criteria/criteria.js';
 import {resultsSort} from '../../../features/sort-criteria/sort-criteria-analytics-actions.js';
 import {logResultsSort} from '../../../features/sort-criteria/sort-criteria-insight-analytics-actions.js';
 import {
   buildCoreSort,
-  Sort,
-  SortProps,
-  SortState,
-  SortInitialState,
+  type Sort,
+  type SortInitialState,
+  type SortProps,
+  type SortState,
 } from '../../core/sort/headless-core-sort.js';
 
 export type {Sort, SortProps, SortState, SortInitialState};

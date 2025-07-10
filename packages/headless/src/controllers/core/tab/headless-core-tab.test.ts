@@ -7,11 +7,11 @@ import {
 import {tabSetReducer as tabSet} from '../../../features/tab-set/tab-set-slice.js';
 import {
   buildMockSearchEngine,
-  MockedSearchEngine,
+  type MockedSearchEngine,
 } from '../../../test/mock-engine-v2.js';
 import {createMockState} from '../../../test/mock-state.js';
 import {buildMockTabSlice} from '../../../test/mock-tab-state.js';
-import {buildCoreTab, Tab, TabProps} from './headless-core-tab.js';
+import {buildCoreTab, type Tab, type TabProps} from './headless-core-tab.js';
 
 vi.mock('../../../features/tab-set/tab-set-actions');
 

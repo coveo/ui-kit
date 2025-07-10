@@ -1,12 +1,12 @@
-import {Mock} from 'vitest';
+import type {Mock} from 'vitest';
 import {logTriggerRedirect} from '../../features/triggers/trigger-analytics-actions.js';
 import {triggerReducer as triggers} from '../../features/triggers/triggers-slice.js';
 import {
   buildMockSearchEngine,
-  MockedSearchEngine,
+  type MockedSearchEngine,
 } from '../../test/mock-engine-v2.js';
 import {createMockState} from '../../test/mock-state.js';
-import {RedirectionTrigger} from '../core/triggers/headless-core-redirection-trigger.js';
+import type {RedirectionTrigger} from '../core/triggers/headless-core-redirection-trigger.js';
 import {buildRedirectionTrigger} from './headless-redirection-trigger.js';
 
 vi.mock('../../features/triggers/trigger-analytics-actions');

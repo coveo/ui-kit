@@ -1,15 +1,19 @@
-import {buildSearchBox, buildSearchEngine, Controller} from '@coveo/headless';
-import {newSpecPage, SpecPage} from '@stencil/core/testing';
+import {
+  buildSearchBox,
+  buildSearchEngine,
+  type Controller,
+} from '@coveo/headless';
+import {newSpecPage, type SpecPage} from '@stencil/core/testing';
 import i18next from 'i18next';
 import {AtomicSearchBox} from '../components/search/atomic-search-box/atomic-search-box';
 import {
   AtomicSearchInterface,
-  Bindings,
+  type Bindings,
 } from '../components/search/atomic-search-interface/atomic-search-interface';
 import {createSearchStore} from '../components/search/atomic-search-interface/store';
 import {
   BindStateToController,
-  InitializableComponent,
+  type InitializableComponent,
   InitializeBindings,
   initializeBindings,
   MissingInterfaceParentError,
@@ -21,9 +25,9 @@ jest.mock('./replace-breakpoint.ts', () => ({
 }));
 
 // https://github.com/ionic-team/stencil/issues/3260
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+// biome-ignore lint/suspicious/noExplicitAny: <>
 (global as any).DocumentFragment = class DocumentFragment extends Node {};
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+// biome-ignore lint/suspicious/noExplicitAny: <>
 (global as any).ShadowRoot = class ShadowRoot extends DocumentFragment {};
 
 describe('InitializeBindings decorator', () => {
@@ -74,9 +78,9 @@ describe('InitializeBindings decorator', () => {
       });
       it('when child component is loaded should dispatch an "atomic/initializeComponent" custom event with the initialize method as detail', async () => {
         let eventContent!: CustomEvent;
-        const spy = jest
-          .fn()
-          .mockImplementation((event) => (eventContent = event));
+        const spy = jest.fn().mockImplementation((event) => {
+          eventContent = event;
+        });
 
         page.root!.addEventListener('atomic/initializeComponent', spy);
         page.root!.innerHTML = '<atomic-search-box></atomic-search-box>';
@@ -100,7 +104,7 @@ describe('InitializeBindings decorator', () => {
       });
 
       it('should queue the event', async () => {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        // biome-ignore lint/suspicious/noExplicitAny: <>
         const eventQueueMap = (window as any).initQueueNamespace.eventQueueMap;
         const queue = eventQueueMap.get(searchInterface);
         expect(queue).toBeDefined();
@@ -154,7 +158,7 @@ describe('InitializeBindings decorator', () => {
 
     it(`when "engine" is defined
     should render the content `, () => {
-      component['bindings'] = {
+      component.bindings = {
         engine: buildSearchEngine({
           configuration: {
             accessToken: 'accessToken',

@@ -1,5 +1,5 @@
 import {createSelector} from '@reduxjs/toolkit';
-import {CoreAnalyticsState} from '../../features/configuration/configuration-state.js';
+import type {CoreAnalyticsState} from '../../features/configuration/configuration-state.js';
 import {VERSION} from '../../utils/version.js';
 
 export const getAnalyticsSource = createSelector(

@@ -1,4 +1,4 @@
-import {test, expect} from './fixture';
+import {expect, test} from './fixture';
 
 test.describe('atomic-product-description', async () => {
   test.beforeEach(async ({page, productDescription}) => {

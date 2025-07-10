@@ -8,7 +8,7 @@ import {getPaginationInitialState} from '../features/pagination/pagination-state
 import {getPipelineInitialState} from '../features/pipeline/pipeline-state.js';
 import {getRecommendationInitialState} from '../features/recommendation/recommendation-state.js';
 import {getSearchHubInitialState} from '../features/search-hub/search-hub-state.js';
-import {RecommendationAppState} from '../state/recommendation-app-state.js';
+import type {RecommendationAppState} from '../state/recommendation-app-state.js';
 
 export function createMockRecommendationState(
   config: Partial<RecommendationAppState> = {}

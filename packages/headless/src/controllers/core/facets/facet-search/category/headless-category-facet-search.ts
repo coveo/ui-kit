@@ -1,16 +1,16 @@
-import {AsyncThunkAction} from '@reduxjs/toolkit';
-import {CategoryFacetSearchResult} from '../../../../../api/search/facet-search/category-facet-search/category-facet-search-response.js';
-import {AsyncThunkOptions} from '../../../../../app/async-thunk-options.js';
-import {CoreEngine, CoreEngineNext} from '../../../../../app/engine.js';
+import type {AsyncThunkAction} from '@reduxjs/toolkit';
+import type {CategoryFacetSearchResult} from '../../../../../api/search/facet-search/category-facet-search/category-facet-search-response.js';
+import type {AsyncThunkOptions} from '../../../../../app/async-thunk-options.js';
+import type {CoreEngine, CoreEngineNext} from '../../../../../app/engine.js';
 import {stateKey} from '../../../../../app/state-key.js';
-import {ThunkExtraArguments} from '../../../../../app/thunk-extra-arguments.js';
+import type {ThunkExtraArguments} from '../../../../../app/thunk-extra-arguments.js';
 import {
   registerCategoryFacetSearch,
   selectCategoryFacetSearchResult,
 } from '../../../../../features/facets/facet-search-set/category/category-facet-search-actions.js';
 import {defaultFacetSearchOptions} from '../../../../../features/facets/facet-search-set/facet-search-reducer-helpers.js';
-import {FacetSearchOptions} from '../../../../../features/facets/facet-search-set/facet-search-request-options.js';
-import {
+import type {FacetSearchOptions} from '../../../../../features/facets/facet-search-set/facet-search-request-options.js';
+import type {
   CategoryFacetSearchSection,
   ConfigurationSection,
 } from '../../../../../state/state-sections.js';

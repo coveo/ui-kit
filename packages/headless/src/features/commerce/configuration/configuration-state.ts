@@ -1,4 +1,4 @@
-import {CoreConfigurationState} from '../../configuration/configuration-state.js';
+import type {CoreConfigurationState} from '../../configuration/configuration-state.js';
 
 export interface ConfigurationState extends CoreConfigurationState {
   /**

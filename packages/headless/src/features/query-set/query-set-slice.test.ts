@@ -1,25 +1,28 @@
-import {SearchCommerceSuccessResponse} from '../../api/commerce/search/response.js';
+import type {SearchCommerceSuccessResponse} from '../../api/commerce/search/response.js';
 import {buildMockSearch} from '../../test/mock-search.js';
 import {selectQuerySuggestion as selectCommerceQuerySuggestion} from '../commerce/query-suggest/query-suggest-actions.js';
-import {restoreSearchParameters as commerceRestoreSearchParameters} from '../commerce/search-parameters/search-parameters-actions.js';
 import {
-  QuerySearchCommerceAPIThunkReturn,
   executeSearch as commerceExecuteSearch,
+  type QuerySearchCommerceAPIThunkReturn,
 } from '../commerce/search/search-actions.js';
+import {restoreSearchParameters as commerceRestoreSearchParameters} from '../commerce/search-parameters/search-parameters-actions.js';
 import {change} from '../history/history-actions.js';
 import {getHistoryInitialState} from '../history/history-state.js';
 import {selectQuerySuggestion} from '../query-suggest/query-suggest-actions.js';
-import {restoreSearchParameters} from '../search-parameters/search-parameter-actions.js';
 import {
-  ExecuteSearchThunkReturn,
+  type ExecuteSearchThunkReturn,
   executeSearch,
 } from '../search/search-actions.js';
+import {restoreSearchParameters} from '../search-parameters/search-parameter-actions.js';
 import {
   registerQuerySetQuery,
   updateQuerySetQuery,
 } from './query-set-actions.js';
 import {querySetReducer} from './query-set-slice.js';
-import {getQuerySetInitialState, QuerySetState} from './query-set-state.js';
+import {
+  getQuerySetInitialState,
+  type QuerySetState,
+} from './query-set-state.js';
 
 describe('querySet slice', () => {
   let state: QuerySetState;
@@ -161,7 +164,7 @@ describe('querySet slice', () => {
     registerQueryWithId('bar');
 
     const expectedQuerySet = {foo: 'world', bar: 'world'};
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    // biome-ignore lint/suspicious/noExplicitAny: <>
     const nextState = querySetReducer(state, (action as any)({q: 'world'}));
     expect(nextState).toEqual(expectedQuerySet);
   });
@@ -178,7 +181,7 @@ describe('querySet slice', () => {
     registerQueryWithId('bar', 'bar');
 
     const expectedQuerySet = {foo: 'foo', bar: 'bar'};
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    // biome-ignore lint/suspicious/noExplicitAny: <>
     const nextState = querySetReducer(state, (action as any)({}));
     expect(nextState).toEqual(expectedQuerySet);
   });

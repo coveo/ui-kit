@@ -1,4 +1,4 @@
-import {test, expect} from './fixture';
+import {expect, test} from './fixture';
 
 test.describe('before query is loaded', () => {
   test.beforeEach(async ({recsList}) => {

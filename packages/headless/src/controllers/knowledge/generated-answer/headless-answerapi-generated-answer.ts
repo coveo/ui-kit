@@ -1,38 +1,38 @@
 import {
+  type AnswerEvaluationPOSTParams,
   answerEvaluation,
-  AnswerEvaluationPOSTParams,
 } from '../../../api/knowledge/post-answer-evaluation.js';
 import {triggerSearchRequest} from '../../../api/knowledge/stream-answer-actions.js';
 import {
   answerApi,
   fetchAnswer,
-  GeneratedAnswerStream,
+  type GeneratedAnswerStream,
+  type StateNeededByAnswerAPI,
   selectAnswer,
   selectAnswerTriggerParams,
-  StateNeededByAnswerAPI,
 } from '../../../api/knowledge/stream-answer-api.js';
 import {warnIfUsingNextAnalyticsModeForServiceFeature} from '../../../app/engine.js';
-import {InsightEngine} from '../../../app/insight-engine/insight-engine.js';
-import {SearchEngine} from '../../../app/search-engine/search-engine.js';
+import type {InsightEngine} from '../../../app/insight-engine/insight-engine.js';
+import type {SearchEngine} from '../../../app/search-engine/search-engine.js';
 import {
   resetAnswer,
   sendGeneratedAnswerFeedback,
   setCannotAnswer,
   updateAnswerConfigurationId,
 } from '../../../features/generated-answer/generated-answer-actions.js';
-import {GeneratedAnswerFeedback} from '../../../features/generated-answer/generated-answer-analytics-actions.js';
+import type {GeneratedAnswerFeedback} from '../../../features/generated-answer/generated-answer-analytics-actions.js';
 import {filterOutDuplicatedCitations} from '../../../features/generated-answer/utils/generated-answer-citation-utils.js';
 import {queryReducer as query} from '../../../features/query/query-slice.js';
-import {
+import type {
   GeneratedAnswerSection,
   QuerySection,
 } from '../../../state/state-sections.js';
 import {loadReducerError} from '../../../utils/errors.js';
 import {
   buildCoreGeneratedAnswer,
-  GeneratedAnswer,
-  GeneratedAnswerAnalyticsClient,
-  GeneratedAnswerProps,
+  type GeneratedAnswer,
+  type GeneratedAnswerAnalyticsClient,
+  type GeneratedAnswerProps,
 } from '../../core/generated-answer/headless-core-generated-answer.js';
 
 export interface AnswerApiGeneratedAnswer

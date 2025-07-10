@@ -1,5 +1,5 @@
-import {GeneratedAnswerCitation} from '../../api/generated-answer/generated-answer-event-payload.js';
-import {
+import type {GeneratedAnswerCitation} from '../../api/generated-answer/generated-answer-event-payload.js';
+import type {
   GeneratedContentFormat,
   GeneratedResponseFormat,
 } from './generated-response-format.js';

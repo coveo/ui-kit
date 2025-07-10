@@ -1,11 +1,11 @@
-import {getSampleEngineConfiguration} from '../engine-configuration.js';
 import {nextAnalyticsUsageWithServiceFeatureWarning} from '../engine.js';
-import {CaseAssistEngineConfiguration} from './case-assist-engine-configuration.js';
+import {getSampleEngineConfiguration} from '../engine-configuration.js';
 import {
   buildCaseAssistEngine,
-  CaseAssistEngine,
-  CaseAssistEngineOptions,
+  type CaseAssistEngine,
+  type CaseAssistEngineOptions,
 } from './case-assist-engine.js';
+import type {CaseAssistEngineConfiguration} from './case-assist-engine-configuration.js';
 
 function getSampleCaseAssistEngineConfiguration(): CaseAssistEngineConfiguration {
   return {

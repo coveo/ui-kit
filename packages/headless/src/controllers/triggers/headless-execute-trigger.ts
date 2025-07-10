@@ -1,13 +1,13 @@
-import {SearchEngine} from '../../app/search-engine/search-engine.js';
+import type {SearchEngine} from '../../app/search-engine/search-engine.js';
 import {logTriggerExecute} from '../../features/triggers/trigger-analytics-actions.js';
 import {triggerReducer as triggers} from '../../features/triggers/triggers-slice.js';
-import {FunctionExecutionTrigger} from '../../features/triggers/triggers-state.js';
-import {TriggerSection} from '../../state/state-sections.js';
+import type {FunctionExecutionTrigger} from '../../features/triggers/triggers-state.js';
+import type {TriggerSection} from '../../state/state-sections.js';
 import {arrayEqual} from '../../utils/compare-utils.js';
 import {loadReducerError} from '../../utils/errors.js';
 import {
   buildController,
-  Controller,
+  type Controller,
 } from '../controller/headless-controller.js';
 
 /**

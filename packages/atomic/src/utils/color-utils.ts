@@ -18,7 +18,6 @@ export const rgbToHsv = (r: number, g: number, b: number) => {
       case g:
         h = (b - r) / d + 2;
         break;
-      case b:
       default:
         h = (r - g) / d + 4;
         break;
@@ -30,7 +29,7 @@ export const rgbToHsv = (r: number, g: number, b: number) => {
 };
 
 export const hsvToRgb = (h: number, s: number, v: number) => {
-  let r, g, b;
+  let r: number, g: number, b: number;
 
   const i = Math.floor(h * 6);
   const f = h * 6 - i;
@@ -40,23 +39,34 @@ export const hsvToRgb = (h: number, s: number, v: number) => {
 
   switch (i % 6) {
     case 0:
-      (r = v), (g = t), (b = p);
+      r = v;
+      g = t;
+      b = p;
       break;
     case 1:
-      (r = q), (g = v), (b = p);
+      r = q;
+      g = v;
+      b = p;
       break;
     case 2:
-      (r = p), (g = v), (b = t);
+      r = p;
+      g = v;
+      b = t;
       break;
     case 3:
-      (r = p), (g = q), (b = v);
+      r = p;
+      g = q;
+      b = v;
       break;
     case 4:
-      (r = t), (g = p), (b = v);
+      r = t;
+      g = p;
+      b = v;
       break;
-    case 5:
     default:
-      (r = v), (g = p), (b = q);
+      r = v;
+      g = p;
+      b = q;
       break;
   }
 

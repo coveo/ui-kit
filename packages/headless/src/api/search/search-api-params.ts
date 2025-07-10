@@ -1,15 +1,15 @@
-import {FacetOptions} from '../../features/facet-options/facet-options.js';
-import {AutomaticFacetRequest} from '../../features/facets/automatic-facet-set/interfaces/request.js';
-import {AnyFacetRequest} from '../../features/facets/generic/interfaces/generic-facet-request.js';
-import {GeneratedContentFormat} from '../../features/generated-answer/generated-response-format.js';
+import type {FacetOptions} from '../../features/facet-options/facet-options.js';
+import type {AutomaticFacetRequest} from '../../features/facets/automatic-facet-set/interfaces/request.js';
+import type {AnyFacetRequest} from '../../features/facets/generic/interfaces/generic-facet-request.js';
+import type {GeneratedContentFormat} from '../../features/generated-answer/generated-response-format.js';
 import {URLPath} from '../../utils/url-utils.js';
-import {HistoryElement} from '../analytics/coveo.analytics/history-store.js';
-import {
+import type {HistoryElement} from '../analytics/coveo.analytics/history-store.js';
+import type {
   HTTPContentType,
   HttpMethods,
   PlatformClientCallOptions,
 } from '../platform-client.js';
-import {BaseParam} from '../platform-service-params.js';
+import type {BaseParam} from '../platform-service-params.js';
 
 export interface QueryParam {
   q?: string;

@@ -12,15 +12,15 @@ import {
 } from '../../../features/pagination/pagination-selectors.js';
 import {paginationReducer as pagination} from '../../../features/pagination/pagination-slice.js';
 import {
-  MockedSearchEngine,
   buildMockSearchEngine,
+  type MockedSearchEngine,
 } from '../../../test/mock-engine-v2.js';
 import {createMockState} from '../../../test/mock-state.js';
 import {
-  Pager,
-  PagerOptions,
-  PagerInitialState,
   buildCorePager,
+  type Pager,
+  type PagerInitialState,
+  type PagerOptions,
 } from './headless-core-pager.js';
 
 vi.mock('../../../features/pagination/pagination-actions');

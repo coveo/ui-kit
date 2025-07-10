@@ -1,17 +1,17 @@
+import {
+  buildProductListing,
+  buildSearch,
+  type ProductListingSummaryState,
+  type SearchSummaryState,
+  type Summary,
+} from '@coveo/headless/commerce';
+import {html} from 'lit';
+import {describe, expect, it, vi} from 'vitest';
 import {renderInAtomicCommerceInterface} from '@/vitest-utils/testing-helpers/fixtures/atomic/commerce/atomic-commerce-interface-fixture';
 import {buildFakeProductListing} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/product-listing-controller';
 import {buildFakeSearch} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/search-controller';
 import {buildFakeSummary} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/summary-subcontroller';
-import {
-  buildProductListing,
-  buildSearch,
-  ProductListingSummaryState,
-  SearchSummaryState,
-  Summary,
-} from '@coveo/headless/commerce';
-import {describe, vi, it, expect} from 'vitest';
-import {AtomicCommerceNoProducts} from './atomic-commerce-no-products';
-import {html} from 'lit';
+import type {AtomicCommerceNoProducts} from './atomic-commerce-no-products';
 import './atomic-commerce-no-products';
 import {buildFakeCommerceEngine} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/engine';
 import MagnifyingGlassIcon from '../../../images/magnifying-glass.svg';

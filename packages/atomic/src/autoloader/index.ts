@@ -21,11 +21,11 @@ export function registerAutoloader(
    * Observes a stencil element for hydration and discovers its shadowRoot when hydrated.
    */
   const observeStencilElementHydration = (atomicElement: Element) => {
-    const attributeObserver = new MutationObserver(() => {
+    const attributeObserver = new MutationObserver(async () => {
       if (atomicElement.classList.contains('hydrated')) {
         attributeObserver.disconnect();
         if ('shadowRoot' in atomicElement && atomicElement.shadowRoot) {
-          discover(atomicElement.shadowRoot);
+          await discover(atomicElement.shadowRoot);
         }
       }
     });
@@ -65,7 +65,7 @@ export function registerAutoloader(
         if (visitedNodes.has(template.content)) {
           continue;
         }
-        discover(template.content);
+        await discover(template.content);
         observer.observe(template.content, {subtree: true, childList: true});
       }
       //TODO: This part should not be necessary: instead, if component-a uses component-b, component-a should be responsible for loading component-b
@@ -74,7 +74,7 @@ export function registerAutoloader(
         root.shadowRoot &&
         !visitedNodes.has(root.shadowRoot)
       ) {
-        discover(root.shadowRoot);
+        await discover(root.shadowRoot);
         observer.observe(root.shadowRoot, {subtree: true, childList: true});
       }
     }
@@ -91,7 +91,7 @@ export function registerAutoloader(
         atomicElement.shadowRoot &&
         !visitedNodes.has(atomicElement.shadowRoot)
       ) {
-        discover(atomicElement);
+        await discover(atomicElement);
         continue;
       }
       if (atomicElement.classList.contains('hydrated')) {
@@ -116,20 +116,20 @@ export function registerAutoloader(
     return elementMap[tagName]?.();
   };
 
-  const observer = new MutationObserver((mutations) => {
+  const observer = new MutationObserver(async (mutations) => {
     for (const {addedNodes} of mutations) {
       for (const node of addedNodes) {
         if (node.nodeType === Node.ELEMENT_NODE) {
-          discover(node as Element);
+          await discover(node as Element);
         }
       }
     }
   });
 
-  const initializeDiscovery = () => {
+  const initializeDiscovery = async () => {
     for (const root of roots) {
       // Initial discovery
-      discover(root);
+      await discover(root);
       // Listen for new undefined elements
       observer.observe(root, {
         subtree: true,

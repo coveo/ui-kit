@@ -1,28 +1,28 @@
-import {
+import type {
   ContextParam,
   FoldingParam,
   LocaleParam,
   NumberOfResultsParam,
 } from '../../../platform-service-params.js';
-import {
+import type {
   AnalyticsParam,
   ConstantQueryParam,
   EnableDidYouMeanParam,
   FacetsParam,
   FieldsToIncludeParam,
-  QueryCorrectionParam,
   FirstResultParam,
   PipelineRuleParams,
+  QueryCorrectionParam,
   QueryParam,
   SortCriteriaParam,
   TabParam,
 } from '../../../search/search-api-params.js';
 import {
   baseInsightRequest,
-  InsightParam,
+  type InsightParam,
   pickNonInsightParams,
 } from '../insight-params.js';
-import {InsightQuerySuggestRequest} from '../query-suggest/query-suggest-request.js';
+import type {InsightQuerySuggestRequest} from '../query-suggest/query-suggest-request.js';
 
 export type InsightQueryRequest = InsightParam &
   AnalyticsParam &

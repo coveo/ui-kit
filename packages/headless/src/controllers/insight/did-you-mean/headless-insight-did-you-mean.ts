@@ -1,17 +1,17 @@
-import {
+import type {
   QueryCorrection,
   WordCorrection,
 } from '../../../api/search/search/query-corrections.js';
-import {InsightEngine} from '../../../app/insight-engine/insight-engine.js';
+import type {InsightEngine} from '../../../app/insight-engine/insight-engine.js';
 import {didYouMeanClick} from '../../../features/did-you-mean/did-you-mean-analytics-actions.js';
 import {logDidYouMeanClick} from '../../../features/did-you-mean/did-you-mean-insight-analytics-actions.js';
 import {executeSearch} from '../../../features/insight-search/insight-search-actions.js';
 import {
   buildCoreDidYouMean,
-  DidYouMean,
-  DidYouMeanState,
-  DidYouMeanProps,
-  DidYouMeanOptions,
+  type DidYouMean,
+  type DidYouMeanOptions,
+  type DidYouMeanProps,
+  type DidYouMeanState,
 } from '../../core/did-you-mean/headless-core-did-you-mean.js';
 
 export type {

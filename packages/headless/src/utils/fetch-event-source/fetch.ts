@@ -1,4 +1,5 @@
-import {EventSourceMessage, getBytes, getLines, getMessages} from './parse.js';
+/** biome-ignore-all lint/suspicious/noConfusingVoidType: <> */
+import {type EventSourceMessage, getBytes, getLines, getMessages} from './parse.js';
 
 export const EventStreamContentType = 'text/event-stream';
 

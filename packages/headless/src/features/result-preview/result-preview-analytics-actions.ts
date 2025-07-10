@@ -1,7 +1,7 @@
-import {ItemClick} from '@coveo/relay-event-types';
-import {Result} from '../../api/search/search/result.js';
+import type {ItemClick} from '@coveo/relay-event-types';
+import type {Result} from '../../api/search/search/result.js';
 import {
-  ClickAction,
+  type ClickAction,
   documentIdentifier,
   makeAnalyticsAction,
   partialDocumentInformation,

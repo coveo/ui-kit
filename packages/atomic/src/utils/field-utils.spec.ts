@@ -1,5 +1,5 @@
+import {beforeEach, describe, expect, it, vi} from 'vitest';
 import {createTestI18n} from '@/vitest-utils/testing-helpers/i18n-utils';
-import {describe, it, expect, vi, beforeEach} from 'vitest';
 import {getFieldCaptions, getFieldValueCaption} from './field-utils';
 
 describe('field-utils', () => {

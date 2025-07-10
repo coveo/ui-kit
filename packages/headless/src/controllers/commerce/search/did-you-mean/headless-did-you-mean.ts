@@ -1,19 +1,19 @@
-import {
+import type {
   QueryCorrection,
   WordCorrection,
 } from '../../../../api/search/search/query-corrections.js';
-import {CommerceEngine} from '../../../../app/commerce-engine/commerce-engine.js';
+import type {CommerceEngine} from '../../../../app/commerce-engine/commerce-engine.js';
 import {stateKey} from '../../../../app/state-key.js';
 import {didYouMeanReducer as didYouMean} from '../../../../features/commerce/did-you-mean/did-you-mean-slice.js';
 import {updateQuery} from '../../../../features/commerce/query/query-actions.js';
 import {executeSearch} from '../../../../features/commerce/search/search-actions.js';
-import {CommerceDidYouMeanSection} from '../../../../state/state-sections.js';
+import type {CommerceDidYouMeanSection} from '../../../../state/state-sections.js';
 import {loadReducerError} from '../../../../utils/errors.js';
 import {
   buildController,
-  Controller,
+  type Controller,
 } from '../../../controller/headless-controller.js';
-import {DidYouMeanState} from '../../../did-you-mean/headless-did-you-mean.js';
+import type {DidYouMeanState} from '../../../did-you-mean/headless-did-you-mean.js';
 
 export type {QueryCorrection, WordCorrection, DidYouMeanState};
 

@@ -1,9 +1,9 @@
 import {
+  type AnyAction,
   combineReducers,
-  ReducersMapObject,
-  Reducer,
-  AnyAction,
-  StateFromReducersMapObject,
+  type Reducer,
+  type ReducersMapObject,
+  type StateFromReducersMapObject,
 } from '@reduxjs/toolkit';
 import {fromEntries} from '../utils/utils.js';
 
@@ -53,7 +53,9 @@ export function createReducerManager(
     add(newReducers: ReducersMapObject) {
       Object.keys(newReducers)
         .filter((key) => !(key in reducers))
-        .forEach((key) => (reducers[key] = newReducers[key]));
+        .forEach((key) => {
+          reducers[key] = newReducers[key];
+        });
     },
 
     addCrossReducer(reducer: Reducer) {

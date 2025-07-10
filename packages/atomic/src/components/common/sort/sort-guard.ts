@@ -1,4 +1,4 @@
-import {html, noChange, nothing, TemplateResult} from 'lit';
+import {html, noChange, nothing, type TemplateResult} from 'lit';
 
 interface SortGuardProps {
   firstSearchExecuted: boolean;

@@ -1,10 +1,10 @@
-import {InsightPanel} from '@coveo/relay-event-types';
+import type {InsightPanel} from '@coveo/relay-event-types';
 import {
   requiredNonEmptyString,
   validatePayload,
 } from '../../utils/validate-payload.js';
 import {
-  InsightAction,
+  type InsightAction,
   makeInsightAnalyticsActionFactory,
 } from '../analytics/analytics-utils.js';
 import {SearchPageEvents} from '../analytics/search-action-cause.js';

@@ -1,16 +1,16 @@
 import {
-  Value,
-  NumberValue,
-  StringValue,
   ArrayValue,
   BooleanValue,
+  NumberValue,
+  StringValue,
+  Value,
 } from '@coveo/bueno';
 import {
-  validatePayloadAndThrow,
   requiredNonEmptyString,
+  validatePayloadAndThrow,
 } from '../../../utils/validate-payload.js';
-import {FacetValueState} from '../facet-api/value.js';
-import {CategoryFacetValue} from './interfaces/response.js';
+import type {FacetValueState} from '../facet-api/value.js';
+import type {CategoryFacetValue} from './interfaces/response.js';
 
 export const categoryFacetValueDefinition = {
   state: new Value<FacetValueState>({required: true}),

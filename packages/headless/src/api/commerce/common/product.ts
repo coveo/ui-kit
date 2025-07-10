@@ -1,4 +1,4 @@
-import {HighlightKeyword} from '../../../utils/highlight.js';
+import type {HighlightKeyword} from '../../../utils/highlight.js';
 
 export type ChildProduct = Omit<
   BaseProduct,

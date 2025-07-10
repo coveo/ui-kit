@@ -1,24 +1,23 @@
+import * as headless from '@coveo/headless/commerce';
+import i18next from 'i18next';
+import {html, LitElement} from 'lit';
+import {customElement, state} from 'lit/decorators.js';
+import {ifDefined} from 'lit/directives/if-defined.js';
+import {within} from 'shadow-dom-testing-library';
+import {beforeEach, describe, expect, it, vi} from 'vitest';
 import {
   AtomicCommerceRecommendationInterface,
-  CommerceBindings,
+  type CommerceBindings,
 } from '@/src/components/commerce/atomic-commerce-recommendation-interface/atomic-commerce-recommendation-interface';
 import {createCommerceRecommendationStore} from '@/src/components/commerce/atomic-commerce-recommendation-interface/store';
 import {CommonAtomicInterfaceHelper} from '@/src/components/common/interface/interface-common';
 import {bindings} from '@/src/decorators/bindings';
-import {InitializableComponent} from '@/src/decorators/types';
+import type {InitializableComponent} from '@/src/decorators/types';
 import {InitializeBindingsMixin} from '@/src/mixins/bindings-mixin';
 import {markParentAsReady} from '@/src/utils/init-queue';
 import {fixture} from '@/vitest-utils/testing-helpers/fixture';
 import {buildFakeContext} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/context-controller';
 import {buildFakeCommerceEngine} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/engine';
-import * as headless from '@coveo/headless/commerce';
-import i18next from 'i18next';
-import {html} from 'lit';
-import {LitElement} from 'lit';
-import {customElement, state} from 'lit/decorators.js';
-import {ifDefined} from 'lit/directives/if-defined.js';
-import {within} from 'shadow-dom-testing-library';
-import {beforeEach, describe, expect, it, vi} from 'vitest';
 
 vi.mock('i18next', {spy: true});
 vi.mock('@coveo/headless/commerce', {spy: true});
@@ -30,7 +29,7 @@ vi.mock('@/src/utils/init-queue', {spy: true});
 
 @customElement('test-element')
 @bindings()
-export class TestElement
+class TestElement
   extends InitializeBindingsMixin(LitElement)
   implements InitializableComponent<CommerceBindings>
 {

@@ -1,6 +1,6 @@
 import {
-  CommerceEngine,
-  CommerceEngineConfiguration,
+  type CommerceEngine,
+  type CommerceEngineConfiguration,
   getSampleCommerceEngineConfiguration,
 } from '@coveo/headless/commerce';
 import {vi} from 'vitest';

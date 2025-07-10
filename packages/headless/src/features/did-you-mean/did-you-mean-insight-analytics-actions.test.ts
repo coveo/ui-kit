@@ -1,5 +1,5 @@
-import {InsightEngine} from '../../app/insight-engine/insight-engine.js';
-import {ThunkExtraArguments} from '../../app/thunk-extra-arguments.js';
+import type {InsightEngine} from '../../app/insight-engine/insight-engine.js';
+import type {ThunkExtraArguments} from '../../app/thunk-extra-arguments.js';
 import {buildMockInsightEngine} from '../../test/mock-engine-v2.js';
 import {buildMockInsightState} from '../../test/mock-insight-state.js';
 import {getConfigurationInitialState} from '../configuration/configuration-state.js';
