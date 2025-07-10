@@ -235,8 +235,7 @@ describe('atomic-product-children', () => {
     expect(image?.src).toBe('https://example.com/image1.jpg');
   });
 
-  //TODO: Unskip this test once KIT-4408 is fixed
-  it.skip('should render the default fallback image when the ec_thumbnails field is empty and no fallback image is provided', async () => {
+  it('should render the default fallback image when the ec_thumbnails field is empty and no fallback image is provided', async () => {
     const {image} = await renderProductChildren({
       childProducts: [
         buildFakeProduct({
