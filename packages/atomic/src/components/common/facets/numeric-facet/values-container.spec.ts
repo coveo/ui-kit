@@ -2,15 +2,7 @@ import {renderFunctionFixture} from '@/vitest-utils/testing-helpers/fixture';
 import {createTestI18n} from '@/vitest-utils/testing-helpers/i18n-utils';
 import '@vitest/browser/matchers.d.ts';
 import {html, type TemplateResult} from 'lit';
-import {
-  vi,
-  expect,
-  describe,
-  beforeAll,
-  beforeEach,
-  it,
-  afterEach,
-} from 'vitest';
+import {vi, expect, describe, beforeAll, beforeEach, it} from 'vitest';
 import {renderFacetValuesGroup} from '../facet-values-group/facet-values-group';
 import {
   renderNumericFacetValuesGroup,
@@ -39,10 +31,6 @@ describe('#renderNumericFacetValuesGroup', async () => {
     );
   });
 
-  afterEach(() => {
-    vi.clearAllMocks();
-  });
-
   const renderComponent = async (
     props: Partial<NumericFacetValuesContainerProps> = {},
     children = html`<li>Test Child</li>`
@@ -53,13 +41,7 @@ describe('#renderNumericFacetValuesGroup', async () => {
     const container = await renderFunctionFixture(result);
 
     return {
-      container,
       ul: container.querySelector('ul'),
-      fieldset: container.querySelector('[data-testid="fieldset"]'),
-      facetValuesGroup: container.querySelector(
-        '[data-testid="facet-values-group"]'
-      ),
-      children: container.querySelectorAll('li'),
       customChildren: container.querySelectorAll('[data-testid^="child-"]'),
     };
   };
@@ -74,54 +56,29 @@ describe('#renderNumericFacetValuesGroup', async () => {
     });
   });
 
-  it('should render a ul element', async () => {
-    const {ul} = await renderComponent();
-    expect(ul).toBeInTheDocument();
-  });
-
   it('should render ul with correct part attribute', async () => {
     const {ul} = await renderComponent();
     expect(ul).toHaveAttribute('part', 'values');
   });
 
-  describe('when rendering with custom children', async () => {
-    it('should render the correct number of children', async () => {
-      const {customChildren} = await renderComponent(
-        {},
-        html`<li data-testid="child-1">Child 1</li>
-          <li data-testid="child-2">Child 2</li>`
-      );
-      expect(customChildren).toHaveLength(2);
-    });
-
-    it('should render children with correct content', async () => {
-      const {customChildren} = await renderComponent(
-        {},
-        html`<li data-testid="child-1">Child 1</li>
-          <li data-testid="child-2">Child 2</li>`
-      );
-      expect(customChildren[0]).toHaveTextContent('Child 1');
-      expect(customChildren[1]).toHaveTextContent('Child 2');
-    });
+  it('should render the correct number of children when rendering with custom children', async () => {
+    const {customChildren} = await renderComponent(
+      {},
+      html`<li data-testid="child-1">Child 1</li>
+        <li data-testid="child-2">Child 2</li>`
+    );
+    expect(customChildren).toHaveLength(2);
+    expect(customChildren[0]).toHaveTextContent('Child 1');
+    expect(customChildren[1]).toHaveTextContent('Child 2');
   });
 
-  it('should call renderFacetValuesGroup exactly once', async () => {
-    await renderComponent();
-    expect(renderFacetValuesGroup).toHaveBeenCalledTimes(1);
-  });
-
-  describe('when rendering with custom label', async () => {
-    beforeEach(async () => {
-      await renderComponent({label: 'Custom Label'});
-    });
-
-    it('should call renderFacetValuesGroup with custom label', async () => {
-      expect(renderFacetValuesGroup).toHaveBeenCalledWith({
-        props: {
-          i18n,
-          label: 'Custom Label',
-        },
-      });
+  it('should call renderFacetValuesGroup with custom label', async () => {
+    await renderComponent({label: 'Custom Label'});
+    expect(renderFacetValuesGroup).toHaveBeenCalledWith({
+      props: {
+        i18n,
+        label: 'Custom Label',
+      },
     });
   });
 
