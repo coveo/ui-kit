@@ -1,0 +1,22 @@
+import {Canvas, ArgTypes, Meta, Title, Description, Stories, Subtitle} from '@storybook/blocks';
+import * as AtomicProductChildrenStories from './atomic-product-children.new.stories';
+import {CanvasWithGithub} from '../../../../storybook-utils/documentation/canvas-with-github';
+
+<Meta of={ AtomicProductChildrenStories } />
+
+<Title />
+<Subtitle><Description/></Subtitle>
+
+<CanvasWithGithub
+  of={ AtomicProductChildrenStories.Default }
+  githubPath="TODO/atomic-product-children/atomic-product-children.ts"
+/>
+
+## Usage
+TODO: Add usage instructions here.
+
+## Examples
+<Stories title={""}/>
+
+## Reference
+<ArgTypes />
