@@ -11,7 +11,7 @@ const atomicTemplatePath = resolve(
   '..',
   'create-atomic-template'
 );
-const bundledTemplatePath = resolve(__dirname, '..', 'create-atomic-template');
+const bundledTemplatePath = resolve(__dirname, '..', 'template');
 
 copySync(atomicTemplatePath, bundledTemplatePath, {recursive: true});
 copyFileSync(
@@ -37,6 +37,6 @@ finalPackageJsonTemplate.dependencies = packageJsonObject.dependencies;
 finalPackageJsonTemplate.devDependencies = packageJsonObject.devDependencies;
 
 writeFileSync(
-  resolve(__dirname, '..', 'create-atomic-template', 'package.json.hbs'),
+  resolve(__dirname, '..', 'template', 'package.json.hbs'),
   JSON.stringify(finalPackageJsonTemplate, undefined, pkgIndent)
 );
