@@ -36,12 +36,12 @@ import {errorGuard} from '@/src/decorators/error-guard';
 import type {InitializableComponent} from '@/src/decorators/types';
 import {watch} from '@/src/decorators/watch';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
-import {InitializeBindingsMixin} from '@/src/mixins/bindings-mixin';
 import {FocusTargetController} from '@/src/utils/accessibility-utils';
 import {randomID} from '@/src/utils/utils';
 import type {CommerceBindings} from '../atomic-commerce-recommendation-interface/atomic-commerce-recommendation-interface';
 import type {SelectChildProductEventArgs} from '../atomic-product-children/select-child-product-event';
 import styles from './atomic-commerce-recommendation-list.tw.css';
+import {ChildrenUpdateCompleteMixin} from '../../../mixins/children-update-complete-mixin';
 
 /**
  * The `atomic-commerce-recommendation-list` component displays a list of product recommendations by applying one or more product templates.
@@ -65,7 +65,7 @@ import styles from './atomic-commerce-recommendation-list.tw.css';
 @withTailwindStyles
 // TODO: Remove the mixin once atomic-commerce-recommendation-interface is merged (KIT-3934)
 export class AtomicCommerceRecommendationList
-  extends InitializeBindingsMixin(LitElement)
+  extends ChildrenUpdateCompleteMixin(LitElement)
   implements InitializableComponent<CommerceBindings>
 {
   static styles: CSSResultGroup = [unsafeCSS(styles)];
@@ -280,6 +280,15 @@ export class AtomicCommerceRecommendationList
     }
     if (this.augmentedRecommendationListState.hasError) {
       return;
+    }
+
+    if (!this.isProductsReady && this.isAppLoaded) {
+      return html`
+        <div
+          aria-hidden="true"
+          class="bg-neutral my-2 h-8 w-60 animate-pulse rounded"
+        ></div>
+      `;
     }
 
     return html`${renderHeading({
