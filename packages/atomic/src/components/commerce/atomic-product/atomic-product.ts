@@ -4,6 +4,7 @@ import {customElement, property} from 'lit/decorators.js';
 import {ref} from 'lit/directives/ref.js';
 import {booleanConverter} from '@/src/converters/boolean-converter';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
+import {ChildrenUpdateCompleteMixin} from '@/src/mixins/children-update-complete-mixin';
 import type {
   InteractiveProductContextEvent,
   ProductContextEvent,
@@ -23,7 +24,6 @@ import {
 import type {CommerceStore} from '../atomic-commerce-interface/store';
 import type {CommerceRecommendationStore} from '../atomic-commerce-recommendation-interface/store';
 import styles from './atomic-product.tw.css';
-import {ChildrenUpdateCompleteMixin} from '@/src/mixins/children-update-complete-mixin';
 
 /**
  * The `atomic-product` component is used internally by the `atomic-commerce-product-list` and `atomic-commerce-recommendation-list` components.
