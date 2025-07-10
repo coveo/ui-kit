@@ -20,7 +20,7 @@ const mockI18n = {
   language: 'en',
 };
 
-describe('renderCategoryFacetValueLink', () => {
+describe('#renderCategoryFacetValueLink', () => {
   const defaultProps: CategoryFacetValueLinkProps = {
     displayValue: 'Test Value',
     numberOfResults: 42,
