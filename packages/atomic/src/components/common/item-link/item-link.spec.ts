@@ -1,7 +1,7 @@
-import {renderFunctionFixture} from '@/vitest-utils/testing-helpers/fixture';
 import {html} from 'lit';
-import {describe, it, vi, expect} from 'vitest';
-import {renderLinkWithItemAnalytics, type ItemLinkProps} from './item-link';
+import {describe, expect, it, vi} from 'vitest';
+import {renderFunctionFixture} from '@/vitest-utils/testing-helpers/fixture';
+import {type ItemLinkProps, renderLinkWithItemAnalytics} from './item-link';
 
 vi.mock('@/src/utils/xss-utils', () => ({
   filterProtocol: vi.fn((url: string) => url),

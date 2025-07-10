@@ -1,10 +1,9 @@
-import type {FunctionalComponentWithChildren} from '@/src/utils/functional-component-utils';
 import {html} from 'lit';
 import {ifDefined} from 'lit/directives/if-defined.js';
 import {ref} from 'lit/directives/ref.js';
-
-import {filterProtocol} from '@/src/utils/xss-utils.js';
 import type {ItemTarget} from '@/src/components/common/layout/display-options';
+import type {FunctionalComponentWithChildren} from '@/src/utils/functional-component-utils';
+import {filterProtocol} from '@/src/utils/xss-utils.js';
 import {bindAnalyticsToLink} from './bind-analytics-to-link';
 export interface ItemLinkProps {
   href: string;
