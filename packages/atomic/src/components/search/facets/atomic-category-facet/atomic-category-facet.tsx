@@ -31,8 +31,8 @@ import {
   AriaLiveRegion,
   FocusTargetController,
 } from '../../../../utils/stencil-accessibility-utils';
-import {CategoryFacetChildValueLink} from '../../../common/facets/category-facet/child-value-link';
 import {CategoryFacetAllCategoryButton} from '../../../common/facets/category-facet/stencil-all-categories-button';
+import {CategoryFacetChildValueLink} from '../../../common/facets/category-facet/stencil-child-value-link';
 import {CategoryFacetChildrenAsTreeContainer} from '../../../common/facets/category-facet/stencil-children-as-tree-container';
 import {CategoryFacetParentAsTreeContainer} from '../../../common/facets/category-facet/stencil-parent-as-tree-container';
 import {CategoryFacetParentButton} from '../../../common/facets/category-facet/stencil-parent-button';
