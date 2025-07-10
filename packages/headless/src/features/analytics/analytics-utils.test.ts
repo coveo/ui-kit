@@ -1,14 +1,14 @@
 import {createRelay} from '@coveo/relay';
-import {MockInstance} from 'vitest';
-import {ThunkExtraArguments} from '../../app/thunk-extra-arguments.js';
+import type {MockInstance} from 'vitest';
+import type {ThunkExtraArguments} from '../../app/thunk-extra-arguments.js';
 import {buildMockAnalyticsState} from '../../test/mock-analytics-state.js';
 import {
-  MockedSearchEngine,
   buildMockSearchEngine,
+  type MockedSearchEngine,
 } from '../../test/mock-engine-v2.js';
 import {createMockRecommendationState} from '../../test/mock-recommendation-state.js';
-import {buildMockResultWithFolding} from '../../test/mock-result-with-folding.js';
 import {buildMockResult} from '../../test/mock-result.js';
+import {buildMockResultWithFolding} from '../../test/mock-result-with-folding.js';
 import {createMockState} from '../../test/mock-state.js';
 import {getConfigurationInitialState} from '../configuration/configuration-state.js';
 import {
@@ -26,7 +26,7 @@ describe('analytics-utils', () => {
   describe('#partialDocumentInformation', () => {
     it('should extract documentation information with a single author', () => {
       const result = buildMockResult();
-      result.raw['author'] = 'john';
+      result.raw.author = 'john';
 
       expect(
         partialDocumentInformation(result, createMockState()).documentAuthor
@@ -35,7 +35,7 @@ describe('analytics-utils', () => {
 
     it('should extract documentation information with multiple author', () => {
       const result = buildMockResult();
-      result.raw['author'] = ['john', 'doe'];
+      result.raw.author = ['john', 'doe'];
 
       expect(
         partialDocumentInformation(result, createMockState()).documentAuthor
@@ -44,7 +44,7 @@ describe('analytics-utils', () => {
 
     it('should extract document information when there is no author', () => {
       const result = buildMockResult();
-      delete result.raw['author'];
+      delete result.raw.author;
       expect(
         partialDocumentInformation(result, createMockState()).documentAuthor
       ).toBe('unknown');
@@ -60,7 +60,7 @@ describe('analytics-utils', () => {
 
     it('should extract sourceName information when there is no source field', () => {
       const result = buildMockResult();
-      delete result.raw['source'];
+      delete result.raw.source;
       expect(
         partialDocumentInformation(result, createMockState()).sourceName
       ).toBe('unknown');
@@ -200,7 +200,7 @@ describe('analytics-utils', () => {
         }),
     } as const;
     const additionalMakeAnalyticParamsForRelay = {
-      analyticsPayloadBuilder: () => ({['🥔']: '🍅'}),
+      analyticsPayloadBuilder: () => ({'🥔': '🍅'}),
       analyticsType: '🥖',
     };
     function buildMockRelay() {

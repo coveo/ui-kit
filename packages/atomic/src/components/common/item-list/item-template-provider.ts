@@ -1,9 +1,13 @@
-import {Result, Template, buildResultTemplatesManager} from '@coveo/headless';
-import {AnyBindings} from '../interface/bindings';
-import {ItemTarget} from '../layout/display-options';
+import {
+  buildResultTemplatesManager,
+  type Result,
+  type Template,
+} from '@coveo/headless';
+import type {AnyBindings} from '../interface/bindings';
+import type {ItemTarget} from '../layout/display-options';
 import {
   TemplateProvider,
-  TemplateProviderProps,
+  type TemplateProviderProps,
 } from '../template-provider/template-provider';
 
 export class ItemTemplateProvider extends TemplateProvider<Result> {

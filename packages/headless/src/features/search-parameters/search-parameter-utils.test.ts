@@ -1,11 +1,11 @@
 import type {SearchParameterKey} from './search-parameter-serializer.js';
 import {
-  SearchParamValue,
   addFacetValuesToSearchParams,
   extendSearchParameters,
   isFacetPair,
   isRangeFacetPair,
   isValidSearchParam,
+  type SearchParamValue,
   toArray,
 } from './search-parameter-utils.js';
 

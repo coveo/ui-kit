@@ -2,7 +2,7 @@ import {createRelay} from '@coveo/relay';
 import {CoveoSearchPageClient} from 'coveo.analytics';
 import {
   buildRecommendationEngine,
-  RecommendationEngine,
+  type RecommendationEngine,
 } from '../../app/recommendation-engine/recommendation-engine.js';
 import {getSampleSearchEngineConfiguration} from '../../app/search-engine/search-engine.js';
 import {buildMockNonEmptyResult} from '../../test/mock-result.js';

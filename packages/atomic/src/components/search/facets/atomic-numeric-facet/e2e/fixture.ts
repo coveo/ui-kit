@@ -1,6 +1,6 @@
 import {test as base} from '@playwright/test';
 import {
-  AxeFixture,
+  type AxeFixture,
   makeAxeBuilder,
 } from '../../../../../../playwright-utils/base-fixture';
 import {AtomicNumericFacetPageObject as Facet} from './page-object';

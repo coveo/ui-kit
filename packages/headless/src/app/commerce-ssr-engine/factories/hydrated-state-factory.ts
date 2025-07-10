@@ -1,15 +1,15 @@
 import {composeFunction} from '../../ssr-engine/common.js';
-import {SolutionType} from '../types/common.js';
-import {
+import type {SolutionType} from '../types/common.js';
+import type {
   BuildParameters,
+  CommerceControllerDefinitionsMap,
   HydrateStaticStateFromBuildResultParameters,
   HydrateStaticStateFunction,
   HydrateStaticStateParameters,
-  CommerceControllerDefinitionsMap,
 } from '../types/core-engine.js';
 import {
   buildFactory,
-  CommerceEngineDefinitionOptions,
+  type CommerceEngineDefinitionOptions,
 } from './build-factory.js';
 
 export const hydratedStaticStateFactory: <

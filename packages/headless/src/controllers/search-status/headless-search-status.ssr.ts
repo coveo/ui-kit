@@ -1,6 +1,9 @@
-import {SearchEngine} from '../../app/search-engine/search-engine.js';
-import {ControllerDefinitionWithoutProps} from '../../app/ssr-engine/types/common.js';
-import {SearchStatus, buildSearchStatus} from './headless-search-status.js';
+import type {SearchEngine} from '../../app/search-engine/search-engine.js';
+import type {ControllerDefinitionWithoutProps} from '../../app/ssr-engine/types/common.js';
+import {
+  buildSearchStatus,
+  type SearchStatus,
+} from './headless-search-status.js';
 
 export * from './headless-search-status.js';
 

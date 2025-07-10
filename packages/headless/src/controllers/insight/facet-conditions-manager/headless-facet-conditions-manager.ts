@@ -1,9 +1,9 @@
-import {InsightEngine} from '../../../app/insight-engine/insight-engine.js';
+import type {InsightEngine} from '../../../app/insight-engine/insight-engine.js';
 import {
-  FacetConditionsManager,
-  AnyFacetValuesCondition,
-  FacetConditionsManagerProps,
+  type AnyFacetValuesCondition,
   buildCoreFacetConditionsManager,
+  type FacetConditionsManager,
+  type FacetConditionsManagerProps,
 } from '../../core/facets/facet-conditions-manager/headless-facet-conditions-manager.js';
 
 export type {

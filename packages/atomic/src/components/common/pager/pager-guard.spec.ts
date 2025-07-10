@@ -1,6 +1,6 @@
-import {displayIf} from '@/src/directives/display-if';
 import * as lit from 'lit';
-import {describe, test, expect, vi} from 'vitest';
+import {describe, expect, test, vi} from 'vitest';
+import {displayIf} from '@/src/directives/display-if';
 import {renderPagerGuard} from './pager-guard';
 
 vi.mock('@/src/directives/display-if', () => ({

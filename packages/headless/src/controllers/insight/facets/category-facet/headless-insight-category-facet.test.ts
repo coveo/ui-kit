@@ -6,7 +6,7 @@ import {
   updateCategoryFacetSortCriterion,
 } from '../../../../features/facets/category-facet-set/category-facet-set-actions.js';
 import {defaultCategoryFacetOptions} from '../../../../features/facets/category-facet-set/category-facet-set-slice.js';
-import {
+import type {
   CategoryFacetRequest,
   CategoryFacetSortCriterion,
 } from '../../../../features/facets/category-facet-set/interfaces/request.js';
@@ -14,20 +14,20 @@ import {
   executeSearch,
   fetchFacetValues,
 } from '../../../../features/insight-search/insight-search-actions.js';
-import {InsightAppState} from '../../../../state/insight-app-state.js';
+import type {InsightAppState} from '../../../../state/insight-app-state.js';
 import {buildMockCategoryFacetRequest} from '../../../../test/mock-category-facet-request.js';
 import {buildMockCategoryFacetResponse} from '../../../../test/mock-category-facet-response.js';
 import {buildMockCategoryFacetSlice} from '../../../../test/mock-category-facet-slice.js';
 import {buildMockCategoryFacetValue} from '../../../../test/mock-category-facet-value.js';
 import {
   buildMockInsightEngine,
-  MockedInsightEngine,
+  type MockedInsightEngine,
 } from '../../../../test/mock-engine-v2.js';
 import {buildMockInsightState} from '../../../../test/mock-insight-state.js';
 import {
-  CategoryFacet,
-  CategoryFacetOptions,
   buildCategoryFacet,
+  type CategoryFacet,
+  type CategoryFacetOptions,
 } from './headless-insight-category-facet.js';
 
 vi.mock(

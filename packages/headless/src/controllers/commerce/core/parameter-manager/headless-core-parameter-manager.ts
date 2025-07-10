@@ -1,21 +1,21 @@
-import {RecordValue, Schema, SchemaDefinition} from '@coveo/bueno';
-import {createSelector, UnknownAction} from '@reduxjs/toolkit';
-import {
+import {RecordValue, Schema, type SchemaDefinition} from '@coveo/bueno';
+import {createSelector, type UnknownAction} from '@reduxjs/toolkit';
+import type {
   CommerceEngine,
   CommerceEngineState,
 } from '../../../../app/commerce-engine/commerce-engine.js';
 import {stateKey} from '../../../../app/state-key.js';
-import {Parameters} from '../../../../features/commerce/parameters/parameters-actions.js';
+import type {Parameters} from '../../../../features/commerce/parameters/parameters-actions.js';
 import {parametersReducer as commerceParameters} from '../../../../features/commerce/parameters/parameters-slice.js';
-import {CommerceParametersSection} from '../../../../state/state-sections.js';
+import type {CommerceParametersSection} from '../../../../state/state-sections.js';
 import {deepEqualAnyOrder} from '../../../../utils/compare-utils.js';
 import {loadReducerError} from '../../../../utils/errors.js';
 import {validateInitialState} from '../../../../utils/validate-payload.js';
 import {
-  Controller,
   buildController,
+  type Controller,
 } from '../../../controller/headless-controller.js';
-import {FetchProductsActionCreator} from '../common.js';
+import type {FetchProductsActionCreator} from '../common.js';
 
 export interface ParameterManagerProps<T extends Parameters> {
   /**

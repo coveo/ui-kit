@@ -1,15 +1,17 @@
 import {configuration} from '../../../app/common-reducers.js';
 import {updateFacetOptions} from '../../../features/facet-options/facet-options-actions.js';
 import {
+  deselectAllCategoryFacetValues,
   registerCategoryFacet,
   toggleSelectCategoryFacetValue,
-  deselectAllCategoryFacetValues,
   updateCategoryFacetNumberOfValues,
   updateCategoryFacetSortCriterion,
 } from '../../../features/facets/category-facet-set/category-facet-set-actions.js';
-import {categoryFacetSetReducer as categoryFacetSet} from '../../../features/facets/category-facet-set/category-facet-set-slice.js';
-import {defaultCategoryFacetOptions} from '../../../features/facets/category-facet-set/category-facet-set-slice.js';
 import {
+  categoryFacetSetReducer as categoryFacetSet,
+  defaultCategoryFacetOptions,
+} from '../../../features/facets/category-facet-set/category-facet-set-slice.js';
+import type {
   CategoryFacetRequest,
   CategoryFacetSortCriterion,
 } from '../../../features/facets/category-facet-set/interfaces/request.js';
@@ -19,23 +21,23 @@ import {
   fetchFacetValues,
 } from '../../../features/search/search-actions.js';
 import {searchReducer as search} from '../../../features/search/search-slice.js';
-import {SearchAppState} from '../../../state/search-app-state.js';
+import type {SearchAppState} from '../../../state/search-app-state.js';
 import {buildMockCategoryFacetRequest} from '../../../test/mock-category-facet-request.js';
 import {buildMockCategoryFacetResponse} from '../../../test/mock-category-facet-response.js';
 import {buildMockCategoryFacetSearch} from '../../../test/mock-category-facet-search.js';
 import {buildMockCategoryFacetSlice} from '../../../test/mock-category-facet-slice.js';
 import {buildMockCategoryFacetValue} from '../../../test/mock-category-facet-value.js';
 import {
-  MockedSearchEngine,
   buildMockSearchEngine,
+  type MockedSearchEngine,
 } from '../../../test/mock-engine-v2.js';
 import {createMockState} from '../../../test/mock-state.js';
 import * as FacetIdDeterminor from '../../core/facets/_common/facet-id-determinor.js';
 import * as CategoryFacetSearch from '../../core/facets/facet-search/category/headless-category-facet-search.js';
 import {
   buildCategoryFacet,
-  CategoryFacet,
-  CategoryFacetOptions,
+  type CategoryFacet,
+  type CategoryFacetOptions,
 } from './headless-category-facet.js';
 
 vi.mock(

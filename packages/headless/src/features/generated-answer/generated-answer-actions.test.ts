@@ -1,17 +1,17 @@
 import {buildMockCitation} from '../../test/mock-citation.js';
 import {
-  setIsVisible,
+  registerFieldsToIncludeInCitations,
+  setAnswerContentFormat,
+  setIsEnabled,
   setIsLoading,
+  setIsVisible,
   updateCitations,
   updateError,
   updateMessage,
   updateResponseFormat,
-  registerFieldsToIncludeInCitations,
-  setAnswerContentFormat,
-  setIsEnabled,
 } from './generated-answer-actions.js';
 import {
-  GeneratedContentFormat,
+  type GeneratedContentFormat,
   generatedContentFormat,
 } from './generated-response-format.js';
 

@@ -14,6 +14,11 @@ import {CanvasWithGithub} from '../../../../storybook-utils/documentation/canvas
 
 ## Usage
 This component is typically placed within the "pagination" section of the layout.
+
+**Note:** Use either `atomic-commerce-pager` OR `atomic-commerce-load-more-products` for pagination, but not both. These components provide alternative pagination approaches:
+- `atomic-commerce-pager`: Provides traditional page-based navigation with numbered pages. It is often used along with the `atomic-commerce-products-per-page` component.
+- `atomic-commerce-load-more-products`: Allows users to incrementally load additional products with a "Load More" button.
+
 ```html
 <atomic-commerce-interface>
   ...

@@ -1,9 +1,9 @@
 import {createAction} from '@reduxjs/toolkit';
 import {validatePayload} from '../../../utils/validate-payload.js';
 import {
-  RegisterQuerySetQueryActionCreatorPayload,
-  UpdateQuerySetQueryActionCreatorPayload,
   querySetDefinition,
+  type RegisterQuerySetQueryActionCreatorPayload,
+  type UpdateQuerySetQueryActionCreatorPayload,
 } from '../../query-set/query-set-actions.js';
 
 export type RegisterQuerySetQueryPayload =

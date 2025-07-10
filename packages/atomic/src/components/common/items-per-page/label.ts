@@ -1,7 +1,7 @@
-import {FunctionalComponentWithChildren} from '@/src/utils/functional-component-utils';
 import {html} from 'lit';
+import type {FunctionalComponentWithChildrenNoProps} from '@/src/utils/functional-component-utils';
 
-export const renderLabel: FunctionalComponentWithChildren<{}> =
+export const renderLabel: FunctionalComponentWithChildrenNoProps =
   () => (children) =>
     html`
     <span

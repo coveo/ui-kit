@@ -1,24 +1,24 @@
 import {createReducer} from '@reduxjs/toolkit';
 import {undoable} from '../../app/undoable.js';
-import {SortState} from '../../controllers/sort/headless-sort.js';
+import type {SortState} from '../../controllers/sort/headless-sort.js';
 import {arrayEqual} from '../../utils/compare-utils.js';
-import {AdvancedSearchQueriesState} from '../advanced-search-queries/advanced-search-queries-state.js';
-import {ContextState} from '../context/context-state.js';
-import {DictionaryFieldContextState} from '../dictionary-field-context/dictionary-field-context-state.js';
-import {AutomaticFacetSetState} from '../facets/automatic-facet-set/automatic-facet-set-state.js';
-import {CategoryFacetSetState} from '../facets/category-facet-set/category-facet-set-state.js';
+import type {AdvancedSearchQueriesState} from '../advanced-search-queries/advanced-search-queries-state.js';
+import type {ContextState} from '../context/context-state.js';
+import type {DictionaryFieldContextState} from '../dictionary-field-context/dictionary-field-context-state.js';
+import type {AutomaticFacetSetState} from '../facets/automatic-facet-set/automatic-facet-set-state.js';
+import type {CategoryFacetSetState} from '../facets/category-facet-set/category-facet-set-state.js';
 import {findActiveValueAncestry} from '../facets/category-facet-set/category-facet-utils.js';
-import {FacetValue} from '../facets/facet-set/interfaces/response.js';
-import {AnyFacetSetState} from '../facets/generic/interfaces/generic-facet-section.js';
-import {PaginationState} from '../pagination/pagination-state.js';
-import {QueryState} from '../query/query-state.js';
-import {
+import type {FacetValue} from '../facets/facet-set/interfaces/response.js';
+import type {AnyFacetSetState} from '../facets/generic/interfaces/generic-facet-section.js';
+import type {PaginationState} from '../pagination/pagination-state.js';
+import type {QueryState} from '../query/query-state.js';
+import type {
   StaticFilterSetState,
   StaticFilterSlice,
 } from '../static-filter-set/static-filter-set-state.js';
-import {TabSetState} from '../tab-set/tab-set-state.js';
-import {snapshot, redo, undo} from './history-actions.js';
-import {getHistoryInitialState, HistoryState} from './history-state.js';
+import type {TabSetState} from '../tab-set/tab-set-state.js';
+import {redo, snapshot, undo} from './history-actions.js';
+import {getHistoryInitialState, type HistoryState} from './history-state.js';
 
 // TODO: https://coveord.atlassian.net/browse/KIT-2969:
 // Should be able to remove most of the code in this file following changes history management change

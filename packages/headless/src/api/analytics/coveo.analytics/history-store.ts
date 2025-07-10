@@ -1,4 +1,4 @@
-import {getAvailableStorage, WebStorage} from './storage.js';
+import {getAvailableStorage, type WebStorage} from './storage.js';
 
 export const STORE_KEY: string = '__coveo.analytics.history';
 export const MAX_NUMBER_OF_HISTORY_ELEMENTS: number = 20;

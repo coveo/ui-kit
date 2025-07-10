@@ -1,17 +1,17 @@
 import {RecordValue, Schema} from '@coveo/bueno';
 import type {AnyAction, Dispatch} from '@reduxjs/toolkit';
-import {CoreEngine} from '../../../app/engine.js';
+import type {CoreEngine} from '../../../app/engine.js';
 import {
-  setContext,
   addContext,
   removeContext,
+  setContext,
 } from '../../../features/context/context-actions.js';
 import {contextReducer as context} from '../../../features/context/context-slice.js';
-import {
+import type {
   ContextPayload,
   ContextValue,
 } from '../../../features/context/context-state.js';
-import {
+import type {
   ConfigurationSection,
   ContextSection,
 } from '../../../state/state-sections.js';
@@ -19,11 +19,11 @@ import {loadReducerError} from '../../../utils/errors.js';
 import {validateInitialState} from '../../../utils/validate-payload.js';
 import {
   buildController,
-  Controller,
+  type Controller,
 } from '../../controller/headless-controller.js';
 import {
-  ReservedContextKeyError,
   isReservedContextKey,
+  ReservedContextKeyError,
 } from './headless-context-reserved-keys.js';
 
 export type {ContextPayload, ContextValue};

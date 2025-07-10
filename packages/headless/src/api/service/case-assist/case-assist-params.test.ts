@@ -1,8 +1,8 @@
 import {
   baseCaseAssistRequest,
-  CaseAssistParam,
-  prepareSuggestionRequestFields,
+  type CaseAssistParam,
   prepareContextFromFields,
+  prepareSuggestionRequestFields,
 } from './case-assist-params.js';
 
 describe('case assist params', () => {

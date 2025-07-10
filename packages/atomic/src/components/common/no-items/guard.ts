@@ -1,5 +1,5 @@
 import {html, nothing} from 'lit';
-import {directive, Directive} from 'lit/directive.js';
+import {Directive, directive} from 'lit/directive.js';
 
 interface NoItemsGuardProps {
   firstSearchExecuted: boolean;

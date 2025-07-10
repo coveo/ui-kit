@@ -1,4 +1,4 @@
-import {test, expect} from './fixture';
+import {expect, test} from './fixture';
 
 test.describe('default', () => {
   test.beforeEach(async ({productMultiValueText}) => {
@@ -102,9 +102,7 @@ test.describe('with max-values-to-display set to total number of values (6)', ()
     await expect(productMultiValueText.separators).toHaveCount(5);
   });
 
-  //TODO: Address in KIT-4278 -
-  // *might be fixed with the await added in this PR
-  test.skip('should not render an indicator that more values are available', async ({
+  test('should not render an indicator that more values are available', async ({
     productMultiValueText,
   }) => {
     await expect(productMultiValueText.moreValuesIndicator()).not.toBeVisible();

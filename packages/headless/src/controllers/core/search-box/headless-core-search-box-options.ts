@@ -1,11 +1,11 @@
 import {
   BooleanValue,
   NumberValue,
+  RecordValue,
   Schema,
   StringValue,
-  RecordValue,
 } from '@coveo/bueno';
-import {SuggestionHighlightingOptions} from '../../../utils/highlight.js';
+import type {SuggestionHighlightingOptions} from '../../../utils/highlight.js';
 import {requiredNonEmptyString} from '../../../utils/validate-payload.js';
 
 export interface SearchBoxOptions {

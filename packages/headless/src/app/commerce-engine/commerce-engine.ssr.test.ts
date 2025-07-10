@@ -3,9 +3,9 @@ import {defineParameterManager} from '../../controllers/commerce/core/parameter-
 import {defineSummary} from '../../controllers/commerce/core/summary/headless-core-summary.ssr.js';
 import {defineRecommendations} from '../../controllers/commerce/recommendations/headless-recommendations.ssr.js';
 import {defineDidYouMean} from '../../controllers/commerce/search/did-you-mean/headless-did-you-mean.ssr.js';
-import {CommerceEngineDefinitionOptions} from '../commerce-ssr-engine/factories/build-factory.js';
-import {getSampleCommerceEngineConfiguration} from './commerce-engine-configuration.js';
+import type {CommerceEngineDefinitionOptions} from '../commerce-ssr-engine/factories/build-factory.js';
 import {defineCommerceEngine} from './commerce-engine.ssr.js';
+import {getSampleCommerceEngineConfiguration} from './commerce-engine-configuration.js';
 
 describe('Commerce Engine SSR', () => {
   let definitionOptions: NonNullable<CommerceEngineDefinitionOptions>;

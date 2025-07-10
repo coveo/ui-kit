@@ -1,15 +1,15 @@
 import {NumberValue} from '@coveo/bueno';
 import {createAction, createAsyncThunk} from '@reduxjs/toolkit';
 import {
-  AsyncThunkCommerceOptions,
+  type AsyncThunkCommerceOptions,
   isErrorResponse,
 } from '../../../api/commerce/commerce-api-client.js';
-import {QuerySuggestSuccessResponse} from '../../../api/commerce/search/query-suggest/query-suggest-response.js';
-import {
+import type {QuerySuggestSuccessResponse} from '../../../api/commerce/search/query-suggest/query-suggest-response.js';
+import type {
   CartSection,
+  CommerceConfigurationSection,
   CommerceContextSection,
   CommerceQuerySection,
-  CommerceConfigurationSection,
   QuerySetSection,
   VersionSection,
 } from '../../../state/state-sections.js';
@@ -18,7 +18,7 @@ import {
   requiredNonEmptyString,
   validatePayload,
 } from '../../../utils/validate-payload.js';
-import {
+import type {
   ClearQuerySuggestActionCreatorPayload,
   FetchQuerySuggestionsActionCreatorPayload,
   RegisterQuerySuggestActionCreatorPayload,

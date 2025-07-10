@@ -1,12 +1,12 @@
+import {beforeEach, describe, expect, it, vi} from 'vitest';
 import {buildFakeCommerceEngine} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/engine';
-import {describe, beforeEach, it, expect, vi} from 'vitest';
 import {
-  unsetLoadingFlag,
-  setLoadingFlag,
+  type BaseStore,
   createAppLoadedListener,
   createBaseStore,
-  BaseStore,
   registerFacet,
+  setLoadingFlag,
+  unsetLoadingFlag,
   waitUntilAppLoaded,
 } from './store';
 
@@ -249,7 +249,7 @@ describe('store', () => {
         format: () => 'formatted',
       };
       registerFacet(store, 'facets', data);
-      expect(store.state.facets['facet1']).toBe(data);
+      expect(store.state.facets.facet1).toBe(data);
       expect(store.state.facetElements).toContain(element);
     });
 
@@ -277,7 +277,7 @@ describe('store', () => {
         format: () => 'formatted',
       };
       registerFacet(store, 'facets', data);
-      expect(store.state.facets['facet2']).toBeUndefined();
+      expect(store.state.facets.facet2).toBeUndefined();
       expect(store.state.facetElements).not.toContain(element);
     });
 
@@ -314,7 +314,7 @@ describe('store', () => {
         format: () => 'formatted',
       };
       registerFacet(store, 'facets', data);
-      expect(store.state.facets['facet3']).toBe(data);
+      expect(store.state.facets.facet3).toBe(data);
       expect(store.state.facetElements).not.toContain(oldElement);
       expect(store.state.facetElements).toContain(newElement);
     });
@@ -342,7 +342,7 @@ describe('store', () => {
         format: () => 'formatted',
       };
       registerFacet(store, 'numericFacets', data);
-      expect(store.state.numericFacets['facet4']).toBe(data);
+      expect(store.state.numericFacets.facet4).toBe(data);
       expect(store.state.facetElements).toContain(element);
     });
   });

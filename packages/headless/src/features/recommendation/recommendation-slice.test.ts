@@ -7,7 +7,7 @@ import {
 import {recommendationReducer} from './recommendation-slice.js';
 import {
   getRecommendationInitialState,
-  RecommendationState,
+  type RecommendationState,
 } from './recommendation-state.js';
 
 describe('recommendation slice', () => {

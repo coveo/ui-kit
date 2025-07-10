@@ -1,5 +1,5 @@
 import {createReducer} from '@reduxjs/toolkit';
-import {NumericRangeRequest} from '../../../facets/range-facets/numeric-facet-set/interfaces/request.js';
+import type {NumericRangeRequest} from '../../../facets/range-facets/numeric-facet-set/interfaces/request.js';
 import {restoreProductListingParameters} from '../../product-listing-parameters/product-listing-parameters-actions.js';
 import {restoreSearchParameters} from '../../search-parameters/search-parameters-actions.js';
 import {
@@ -8,7 +8,7 @@ import {
 } from '../core-facet/core-facet-actions.js';
 import {
   getManualNumericFacetInitialState,
-  ManualNumericFacetSetState,
+  type ManualNumericFacetSetState,
 } from './manual-numeric-facet-state.js';
 import {
   toggleExcludeNumericFacetValue,

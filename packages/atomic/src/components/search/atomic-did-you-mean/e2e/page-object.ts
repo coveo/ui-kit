@@ -1,6 +1,7 @@
 /* eslint-disable @cspell/spellchecker */
+
+import type {Page} from '@playwright/test';
 import {BasePageObject} from '@/playwright-utils/base-page-object';
-import {Page} from '@playwright/test';
 
 export class DidYouMeanPageObject extends BasePageObject<'atomic-did-you-mean'> {
   constructor(page: Page) {

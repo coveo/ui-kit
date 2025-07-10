@@ -1,11 +1,11 @@
-import {getSampleEngineConfiguration} from '../engine-configuration.js';
 import {nextAnalyticsUsageWithServiceFeatureWarning} from '../engine.js';
-import {CaseAssistEngineConfiguration} from './case-assist-engine-configuration.js';
+import {getSampleEngineConfiguration} from '../engine-configuration.js';
 import {
   buildCaseAssistEngine,
-  CaseAssistEngine,
-  CaseAssistEngineOptions,
+  type CaseAssistEngine,
+  type CaseAssistEngineOptions,
 } from './case-assist-engine.js';
+import type {CaseAssistEngineConfiguration} from './case-assist-engine-configuration.js';
 
 function getSampleCaseAssistEngineConfiguration(): CaseAssistEngineConfiguration {
   return {
@@ -138,5 +138,13 @@ describe('buildCaseAssistEngine', () => {
     expect(engine.state.caseAssistConfiguration?.locale).toEqual(
       options.configuration.locale
     );
+  });
+
+  it('should ensure that engine.relay is the same reference as thunk extra args relay', async () => {
+    const thunkRelay = await engine.dispatch(
+      (_dispatch, _getState, extra) => extra.relay
+    );
+
+    expect(thunkRelay).toBe(engine.relay);
   });
 });

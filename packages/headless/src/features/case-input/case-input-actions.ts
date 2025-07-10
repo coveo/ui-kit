@@ -1,8 +1,8 @@
 import {createAction} from '@reduxjs/toolkit';
 import {
-  validatePayload,
-  requiredNonEmptyString,
   requiredEmptyAllowedString,
+  requiredNonEmptyString,
+  validatePayload,
 } from '../../utils/validate-payload.js';
 
 export interface SetCaseInputActionCreatorPayload {

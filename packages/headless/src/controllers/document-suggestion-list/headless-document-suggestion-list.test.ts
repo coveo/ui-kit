@@ -8,11 +8,11 @@ import {getDocumentSuggestionInitialState} from '../../features/document-suggest
 import {buildMockCaseAssistState} from '../../test/mock-case-assist-state.js';
 import {
   buildMockCaseAssistEngine,
-  MockedCaseAssistEngine,
+  type MockedCaseAssistEngine,
 } from '../../test/mock-engine-v2.js';
 import {
-  DocumentSuggestionList,
   buildDocumentSuggestionList,
+  type DocumentSuggestionList,
 } from './headless-document-suggestion-list.js';
 
 vi.mock('../../features/document-suggestion/document-suggestion-actions');

@@ -1,5 +1,5 @@
 import {
-  CommerceEngineConfiguration,
+  type CommerceEngineConfiguration,
   getSampleCommerceEngineConfiguration,
 } from '@coveo/headless/commerce';
 import {describe, expect, it, vi} from 'vitest';

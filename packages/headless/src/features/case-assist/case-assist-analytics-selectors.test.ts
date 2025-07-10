@@ -1,13 +1,13 @@
-import {CaseAssistAppState} from '../../state/case-assist-app-state.js';
+import type {CaseAssistAppState} from '../../state/case-assist-app-state.js';
 import {
-  KnownCaseFields,
-  caseAssistCaseSelector,
   caseAssistCaseClassificationSelector,
   caseAssistCaseFieldValueSelector,
   caseAssistCaseInputValueSelector,
+  caseAssistCaseSelector,
   caseAssistCustomCaseFieldValuesSelector,
   caseAssistCustomCaseInputValuesSelector,
   caseAssistDocumentSuggestionSelector,
+  KnownCaseFields,
 } from './case-assist-analytics-selectors.js';
 
 const examplePermanentid = 'example permanent id';

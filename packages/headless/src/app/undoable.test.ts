@@ -1,4 +1,4 @@
-import {AnyAction, Reducer} from '@reduxjs/toolkit';
+import type {AnyAction, Reducer} from '@reduxjs/toolkit';
 import {makeHistory, undoable} from './undoable.js';
 
 describe('undoable', () => {

@@ -1,6 +1,6 @@
 import {
   emptyQuestionAnswer,
-  SearchState,
+  type SearchState,
 } from '../features/search/search-state.js';
 import {buildMockSearchResponse} from './mock-search-response.js';
 

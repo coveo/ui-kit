@@ -1,13 +1,13 @@
-import {Mock} from 'vitest';
+import type {Mock} from 'vitest';
 import {configuration} from '../../../app/common-reducers.js';
 import {
   buildMockSearchEngine,
-  MockedSearchEngine,
+  type MockedSearchEngine,
 } from '../../../test/mock-engine-v2.js';
 import {createMockState} from '../../../test/mock-state.js';
 import {
   buildInteractiveResultCore,
-  InteractiveResultCore,
+  type InteractiveResultCore,
 } from './headless-core-interactive-result.js';
 
 describe('InteractiveResultCore', () => {

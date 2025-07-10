@@ -1,14 +1,14 @@
-import {Mock} from 'vitest';
+import type {Mock} from 'vitest';
 import {updateQuery} from '../../features/query/query-actions.js';
 import {queryReducer as query} from '../../features/query/query-slice.js';
 import {executeSearch} from '../../features/search/search-actions.js';
 import {triggerReducer as triggers} from '../../features/triggers/triggers-slice.js';
 import {
   buildMockSearchEngine,
-  MockedSearchEngine,
+  type MockedSearchEngine,
 } from '../../test/mock-engine-v2.js';
 import {createMockState} from '../../test/mock-state.js';
-import {QueryTrigger} from '../core/triggers/headless-core-query-trigger.js';
+import type {QueryTrigger} from '../core/triggers/headless-core-query-trigger.js';
 import {buildQueryTrigger} from './headless-query-trigger.js';
 
 vi.mock('../../features/query/query-actions');
