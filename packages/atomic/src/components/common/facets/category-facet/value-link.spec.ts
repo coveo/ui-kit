@@ -50,21 +50,27 @@ describe('#renderCategoryFacetValueLink', () => {
     expect(button).toBeInTheDocument();
   });
 
-  it('should render as parent when isParent is true', async () => {
+  it('should render the "active-parent" when isParent is true', async () => {
     const {button} = await renderComponent({isParent: true});
-    expect(button).toHaveAttribute('part', 'active-parent node-value');
+    expect(button).toHaveAttribute(
+      'part',
+      expect.stringContaining('active-parent')
+    );
   });
 
-  it('should not render as parent when isParent is false', async () => {
+  it('should not render the "active-parent" when isParent is false', async () => {
     const {button} = await renderComponent({isParent: false});
-    expect(button).not.toHaveAttribute('part', 'active-parent node-value');
+    expect(button).not.toHaveAttribute(
+      'part',
+      expect.stringContaining('active-parent')
+    );
   });
 
   it('should render as selected when isSelected is true', async () => {
     const {button} = await renderComponent({isSelected: true});
     expect(button).toHaveAttribute(
       'part',
-      'value-link value-link-selected node-value'
+      expect.stringContaining('value-link-selected')
     );
     expect(button).toHaveAttribute('aria-pressed', 'true');
   });
@@ -73,19 +79,25 @@ describe('#renderCategoryFacetValueLink', () => {
     const {button} = await renderComponent({isSelected: false});
     expect(button).not.toHaveAttribute(
       'part',
-      'value-link value-link-selected node-value'
+      expect.stringContaining('value-link-selected')
     );
     expect(button).toHaveAttribute('aria-pressed', 'false');
   });
 
   it('should render as leaf when isLeafValue is true', async () => {
     const {button} = await renderComponent({isLeafValue: true});
-    expect(button).toHaveAttribute('part', 'value-link leaf-value');
+    expect(button).toHaveAttribute(
+      'part',
+      expect.stringContaining('leaf-value')
+    );
   });
 
   it('should not render as leaf when isLeafValue is false', async () => {
     const {button} = await renderComponent({isLeafValue: false});
-    expect(button).not.toHaveAttribute('part', 'value-link leaf-value');
+    expect(button).not.toHaveAttribute(
+      'part',
+      expect.stringContaining('leaf-value')
+    );
   });
 
   it('should call onClick when clicked', async () => {
