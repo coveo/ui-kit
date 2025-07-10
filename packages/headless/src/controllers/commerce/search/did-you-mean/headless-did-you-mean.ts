@@ -27,7 +27,7 @@ export interface DidYouMean extends Controller {
   /**
    * Executes a search using the suggested query correction.
    *
-   * Typically, you should only call this method when `state.hasQueryCorrection` is `true` and `state.wasAutomaticallyCorrected` is `false`.
+   * Typically, you only call this method when `state.hasQueryCorrection` is `true` and `state.wasAutomaticallyCorrected` is `false`.
    * When this is the case, you could call this method when the user clicks a link to search with the suggested query correction rather than
    * with the query they originally submitted.
    */

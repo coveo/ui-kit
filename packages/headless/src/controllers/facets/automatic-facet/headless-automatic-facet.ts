@@ -22,7 +22,7 @@ import type {AutomaticFacet} from '../automatic-facet-generator/headless-automat
  */
 export interface AutomaticFacetProps {
   /**
-   * The field whose values you want to display in the facet.
+   * The field from which to display values in the facet.
    */
   field: string;
 }
