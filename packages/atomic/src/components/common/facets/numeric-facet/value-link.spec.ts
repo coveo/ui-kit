@@ -55,7 +55,6 @@ describe('#renderNumericFacetValue', () => {
       displayValuesAs: 'checkbox',
     };
 
-    vi.clearAllMocks();
     vi.mocked(formatHumanReadable).mockReturnValue('10 to 20');
   });
 
@@ -128,17 +127,6 @@ describe('#renderNumericFacetValue', () => {
       });
     });
 
-    it('should call renderFacetValueLabelHighlight with correct props', async () => {
-      await renderComponent({displayValuesAs: 'checkbox'});
-
-      expect(renderFacetValueLabelHighlight).toHaveBeenCalledWith({
-        props: {
-          displayValue: '10 to 20',
-          isSelected: false,
-        },
-      });
-    });
-
     it('should call onClick when checkbox onClick is triggered', async () => {
       await renderComponent({displayValuesAs: 'checkbox'});
 
@@ -183,25 +171,25 @@ describe('#renderNumericFacetValue', () => {
         },
       });
     });
+  });
 
-    it('should call renderFacetValueLabelHighlight with correct props for link', async () => {
-      await renderComponent({displayValuesAs: 'link'});
+  it('should call renderFacetValueLabelHighlight with correct props', async () => {
+    await renderComponent();
 
-      expect(renderFacetValueLabelHighlight).toHaveBeenCalledWith({
-        props: {
-          displayValue: '10 to 20',
-          isSelected: false,
-        },
-      });
+    expect(renderFacetValueLabelHighlight).toHaveBeenCalledWith({
+      props: {
+        displayValue: '10 to 20',
+        isSelected: false,
+      },
     });
   });
 
   it('should return nothing when displayValuesAs is invalid', async () => {
     const element = await renderComponent({
-      displayValuesAs: 'invalid' as 'checkbox' | 'link',
+      // @ts-expect-error: Intentionally passing an invalid value
+      displayValuesAs: 'invalid',
     });
 
-    // The element should be empty when nothing is returned
-    expect(element.children).toHaveLength(0);
+    expect(element).toBeEmptyDOMElement();
   });
 });
