@@ -1,11 +1,11 @@
 import '@/src/components/common/atomic-icon/atomic-icon';
+import {renderButton} from '@/src/components/common/button';
+import {renderFacetValueLabelHighlight} from '@/src/components/common/facets/facet-value-label-highlight/facet-value-label-highlight';
+import {hierarchicalPath} from '@/src/directives/hierarchical-path';
+import {getFieldValueCaption} from '@/src/utils/field-utils';
 import type {FunctionalComponent} from '@/src/utils/functional-component-utils';
 import type {i18n} from 'i18next';
 import {html} from 'lit';
-import {hierarchicalPath} from '@/src/directives/hierarchical-path';
-import {getFieldValueCaption} from '@/src/utils/field-utils';
-import {renderButton} from '@/src/components/common/button';
-import {renderFacetValueLabelHighlight} from '@/src/components/common/facets/facet-value-label-highlight/facet-value-label-highlight';
 
 interface CategoryFacetSearchValueProps {
   value: {count: number; path: string[]; displayValue: string};

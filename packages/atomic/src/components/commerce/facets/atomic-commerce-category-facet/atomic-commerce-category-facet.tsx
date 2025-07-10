@@ -18,11 +18,11 @@ import {
   FocusTargetController,
 } from '../../../../utils/stencil-accessibility-utils';
 import {CategoryFacetChildValueLink} from '../../../common/facets/category-facet/child-value-link';
-import {CategoryFacetParentValueLink} from '../../../common/facets/category-facet/parent-value-link';
 import {CategoryFacetAllCategoryButton} from '../../../common/facets/category-facet/stencil-all-categories-button';
 import {CategoryFacetChildrenAsTreeContainer} from '../../../common/facets/category-facet/stencil-children-as-tree-container';
 import {CategoryFacetParentAsTreeContainer} from '../../../common/facets/category-facet/stencil-parent-as-tree-container';
 import {CategoryFacetParentButton} from '../../../common/facets/category-facet/stencil-parent-button';
+import {CategoryFacetParentValueLink} from '../../../common/facets/category-facet/stencil-parent-value-link';
 import {CategoryFacetSearchResultsContainer} from '../../../common/facets/category-facet/stencil-search-results-container';
 import {CategoryFacetSearchValue} from '../../../common/facets/category-facet/stencil-search-value';
 import {CategoryFacetTreeValueContainer} from '../../../common/facets/category-facet/value-as-tree-container';
