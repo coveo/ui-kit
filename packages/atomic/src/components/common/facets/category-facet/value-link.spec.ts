@@ -1,68 +1,67 @@
 import {renderFunctionFixture} from '@/vitest-utils/testing-helpers/fixture';
-import type {i18n} from 'i18next';
+import {createTestI18n} from '@/vitest-utils/testing-helpers/i18n-utils';
 import {html} from 'lit';
-import {vi, describe, it, expect} from 'vitest';
+import {vi, describe, it, expect, beforeAll} from 'vitest';
 import {
   renderCategoryFacetValueLink,
   type CategoryFacetValueLinkProps,
 } from './value-link';
 
-const mockI18n = {
-  t: vi.fn((key: string, options?) => {
-    if (key === 'facet-value') {
-      return `${options?.value} (${options?.count})`;
-    }
-    if (key === 'between-parentheses') {
-      return `(${options?.text})`;
-    }
-    return key;
-  }),
-  language: 'en',
-};
-
 describe('#renderCategoryFacetValueLink', () => {
-  const defaultProps: CategoryFacetValueLinkProps = {
-    displayValue: 'Test Value',
-    numberOfResults: 42,
-    i18n: mockI18n as unknown as i18n,
-    onClick: vi.fn(),
-    isParent: false,
-    isSelected: false,
-    searchQuery: '',
-    isLeafValue: false,
-    setRef: vi.fn(),
-    children: html`<div>Child</div>`,
-  };
+  let i18n: Awaited<ReturnType<typeof createTestI18n>>;
 
-  const renderComponent = (
+  beforeAll(async () => {
+    i18n = await createTestI18n();
+  });
+
+  const renderComponent = async (
     props: Partial<CategoryFacetValueLinkProps> = {},
     children = html`<div>Child</div>`
   ) => {
+    const defaultProps: CategoryFacetValueLinkProps = {
+      displayValue: 'Test Value',
+      numberOfResults: 42,
+      i18n,
+      onClick: vi.fn(),
+      isParent: false,
+      isSelected: false,
+      searchQuery: '',
+      isLeafValue: false,
+      setRef: vi.fn(),
+    };
     const mergedProps = {...defaultProps, ...props};
-    return renderFunctionFixture(
+    const container = await renderFunctionFixture(
       html`${renderCategoryFacetValueLink({props: mergedProps})(children)}`
     );
+
+    return {
+      container,
+      listItem: container.querySelector('li'),
+      button: container.querySelector('button'),
+      highlight: container.querySelector('span[part="value-label"]'),
+      countElement: container.querySelector('.value-count'),
+    };
   };
 
   it('should render the facet value link with correct structure', async () => {
-    const container = await renderComponent();
-    const listItem = container.querySelector('li');
-    const button = container.querySelector('button');
+    const {listItem, button} = await renderComponent();
 
     expect(listItem).toBeInTheDocument();
     expect(button).toBeInTheDocument();
-    expect(button).toHaveAttribute('aria-pressed', 'false');
   });
 
   it('should render as parent when isParent is true', async () => {
-    const container = await renderComponent({isParent: true});
-    const button = container.querySelector('button');
+    const {button} = await renderComponent({isParent: true});
     expect(button).toHaveAttribute('part', 'active-parent node-value');
   });
 
+  it('should not render as parent when isParent is false', async () => {
+    const {button} = await renderComponent({isParent: false});
+    expect(button).not.toHaveAttribute('part', 'active-parent node-value');
+  });
+
   it('should render as selected when isSelected is true', async () => {
-    const container = await renderComponent({isSelected: true});
-    const button = container.querySelector('button');
+    const {button} = await renderComponent({isSelected: true});
     expect(button).toHaveAttribute(
       'part',
       'value-link value-link-selected node-value'
@@ -70,16 +69,28 @@ describe('#renderCategoryFacetValueLink', () => {
     expect(button).toHaveAttribute('aria-pressed', 'true');
   });
 
+  it('should not render as selected when isSelected is false', async () => {
+    const {button} = await renderComponent({isSelected: false});
+    expect(button).not.toHaveAttribute(
+      'part',
+      'value-link value-link-selected node-value'
+    );
+    expect(button).toHaveAttribute('aria-pressed', 'false');
+  });
+
   it('should render as leaf when isLeafValue is true', async () => {
-    const container = await renderComponent({isLeafValue: true});
-    const button = container.querySelector('button');
+    const {button} = await renderComponent({isLeafValue: true});
     expect(button).toHaveAttribute('part', 'value-link leaf-value');
+  });
+
+  it('should not render as leaf when isLeafValue is false', async () => {
+    const {button} = await renderComponent({isLeafValue: false});
+    expect(button).not.toHaveAttribute('part', 'value-link leaf-value');
   });
 
   it('should call onClick when clicked', async () => {
     const onClickMock = vi.fn();
-    const container = await renderComponent({onClick: onClickMock});
-    const button = container.querySelector('button');
+    const {button} = await renderComponent({onClick: onClickMock});
     button?.click();
     expect(onClickMock).toHaveBeenCalled();
   });
@@ -91,13 +102,12 @@ describe('#renderCategoryFacetValueLink', () => {
   });
 
   it('should render the facet-value-label-highlight', async () => {
-    const container = await renderComponent({isSelected: true});
-    const highlight = container.querySelector('span[part="value-label"]');
+    const {highlight} = await renderComponent({isSelected: true});
     expect(highlight).toBeInTheDocument();
   });
 
   it('should render children as subList', async () => {
-    const container = await renderComponent(
+    const {container} = await renderComponent(
       {},
       html`<span class="child-span">Extra</span>`
     );
@@ -107,9 +117,8 @@ describe('#renderCategoryFacetValueLink', () => {
   });
 
   it('should display the correct count format', async () => {
-    const container = await renderComponent({numberOfResults: 123});
-    const countElement = container.querySelector('.value-count');
+    const {countElement} = await renderComponent({numberOfResults: 1234});
     expect(countElement).toBeInTheDocument();
-    expect(countElement).toHaveTextContent('(123)');
+    expect(countElement).toHaveTextContent('(1,234)');
   });
 });
