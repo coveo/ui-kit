@@ -1,3 +1,7 @@
+import {
+  type NavigatorContext,
+  SolutionType,
+} from '@coveo/headless-react/ssr-commerce';
 import {coveo_accessToken} from '@/app/cookies.server';
 import externalCartService from '@/external-services/external-cart-service';
 import externalContextService from '@/external-services/external-context-service';
@@ -5,20 +9,16 @@ import {
   toCoveoCartItems,
   toCoveoCurrency,
 } from '@/utils/external-api-conversions';
-import {
-  NavigatorContext,
-  SolutionType,
-} from '@coveo/headless-react/ssr-commerce';
 import {isExpired} from '../utils/access-token-utils';
 import {
   _listingEngineDefinition,
   _recommendationEngineDefinition,
   _searchEngineDefinition,
   _standaloneEngineDefinition,
-  ListingEngineDefinition,
-  RecommendationEngineDefinition,
-  SearchEngineDefinition,
-  StandaloneEngineDefinition,
+  type ListingEngineDefinition,
+  type RecommendationEngineDefinition,
+  type SearchEngineDefinition,
+  type StandaloneEngineDefinition,
 } from './commerce-engine';
 import {fetchToken} from './fetch-token';
 
@@ -38,7 +38,11 @@ export async function getEngineDefinition<T extends SolutionType>(
   request: Request,
   solutionType: T
 ): Promise<MappedEngineDefinition<T>> {
-  let engineDefinition;
+  let engineDefinition:
+    | ListingEngineDefinition
+    | RecommendationEngineDefinition
+    | StandaloneEngineDefinition
+    | SearchEngineDefinition;
 
   switch (solutionType) {
     case SolutionType.listing:
