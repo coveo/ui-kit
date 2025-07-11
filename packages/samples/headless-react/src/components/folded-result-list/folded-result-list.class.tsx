@@ -1,11 +1,11 @@
 import {
   buildFoldedResultList,
-  FoldedResult,
-  FoldedResultList as FoldedResultListController,
-  FoldedResultListState,
-  Unsubscribe,
+  type FoldedResult,
+  type FoldedResultList as FoldedResultListController,
+  type FoldedResultListState,
+  type Unsubscribe,
 } from '@coveo/headless';
-import {Component, ContextType} from 'react';
+import {Component, type ContextType} from 'react';
 import {AppContext} from '../../context/engine';
 import {ResultLink} from '../result-list/result-link';
 

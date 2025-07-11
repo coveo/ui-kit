@@ -1,12 +1,16 @@
-import {buildSamlClient, SamlClient, SamlClientOptions} from '@coveo/auth';
+import {
+  buildSamlClient,
+  type SamlClient,
+  type SamlClientOptions,
+} from '@coveo/auth';
 import {buildSearchEngine} from '@coveo/headless';
 import {
-  useState,
+  type FunctionComponent,
+  type PropsWithChildren,
+  useEffect,
   useMemo,
   useRef,
-  useEffect,
-  PropsWithChildren,
-  FunctionComponent,
+  useState,
 } from 'react';
 import {AppContext} from '../context/engine';
 

@@ -1,10 +1,10 @@
 import {
   buildSearchBox,
-  SearchBox as HeadlessSearchBox,
-  SearchBoxState,
-  Unsubscribe,
+  type SearchBox as HeadlessSearchBox,
+  type SearchBoxState,
+  type Unsubscribe,
 } from '@coveo/headless';
-import {Component, ContextType} from 'react';
+import {Component, type ContextType} from 'react';
 import {AppContext} from '../../context/engine';
 
 export class SearchBox extends Component<{}, SearchBoxState> {
@@ -54,6 +54,11 @@ export class SearchBox extends Component<{}, SearchBoxState> {
               <li
                 key={value}
                 onClick={() => this.controller.selectSuggestion(value)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    this.controller.selectSuggestion(value);
+                  }
+                }}
               >
                 {value}
               </li>
