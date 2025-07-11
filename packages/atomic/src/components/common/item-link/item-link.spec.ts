@@ -272,4 +272,22 @@ describe('#renderLinkWithItemAnalytics', () => {
 
     expect(filterProtocol).toHaveBeenCalledWith('javascript:alert("xss")');
   });
+
+  it('should call onInitializeLink with cleanup function when provided', async () => {
+    const onInitializeLink = vi.fn();
+    await renderComponent({
+      onInitializeLink,
+    });
+
+    expect(onInitializeLink).toHaveBeenCalledOnce();
+    expect(onInitializeLink).toHaveBeenCalledWith(expect.any(Function));
+  });
+
+  it('should not throw when onInitializeLink is not provided', async () => {
+    await expect(
+      renderComponent({
+        onInitializeLink: undefined,
+      })
+    ).resolves.toBeDefined();
+  });
 });
