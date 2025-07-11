@@ -9,13 +9,13 @@
 }
 
 .result-action_first {
-  --sds-c-button-radius-border: 4px 0px 0px 4px;
+  --sds-c-button-radius-border: 4px 0 0 4px;
 }
 
 .result-action_middle {
-  --sds-c-button-radius-border: 0px;
+  --sds-c-button-radius-border: 0;
 }
 
 .result-action_last {
-  --sds-c-button-radius-border: 0px 4px 4px 0px;
+  --sds-c-button-radius-border: 0 4px 4px 0;
 }
