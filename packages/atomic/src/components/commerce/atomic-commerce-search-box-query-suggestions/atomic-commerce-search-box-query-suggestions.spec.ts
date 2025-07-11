@@ -141,6 +141,9 @@ describe('AtomicCommerceSearchBoxQuerySuggestions', () => {
       // Set maxWithQuery to 5 (higher than numberOfQueries)
       element.maxWithQuery = 5;
 
+      // Call initialize to trigger the register with the new maxWithQuery value
+      element.initialize();
+
       expect(
         loadQuerySuggestActions(element.bindings.engine).registerQuerySuggest
       ).toHaveBeenCalledWith(
@@ -169,15 +172,11 @@ describe('AtomicCommerceSearchBoxQuerySuggestions', () => {
       // Call initialize to trigger the warning
       element.initialize();
 
-      expect(warnSpy).toHaveBeenCalledWith(
-        expect.stringContaining('Query suggestions configuration mismatch')
-      );
-      expect(warnSpy).toHaveBeenCalledWith(
-        expect.stringContaining('number-of-queries="3"')
-      );
-      expect(warnSpy).toHaveBeenCalledWith(
-        expect.stringContaining('max-with-query="5"')
-      );
+      expect(warnSpy).toHaveBeenCalledOnce();
+      const warningMessage = warnSpy.mock.calls[0][0];
+      expect(warningMessage).toContain('Query suggestions configuration mismatch');
+      expect(warningMessage).toContain('number-of-queries="3"');
+      expect(warningMessage).toContain('max-with-query="5"');
     });
 
     it('should return a position that is the index of the element', async () => {
