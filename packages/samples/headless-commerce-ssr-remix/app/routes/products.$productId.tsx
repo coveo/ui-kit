@@ -1,26 +1,26 @@
+import {
+  type NavigatorContext,
+  SolutionType,
+} from '@coveo/headless-react/ssr-commerce';
+import type {LoaderFunctionArgs} from '@remix-run/node';
+import {useLoaderData} from '@remix-run/react';
+import invariant from 'tiny-invariant';
 import ContextDropdown from '@/app/components/context-dropdown';
 import ProductView from '@/app/components/product-view';
 import {StandaloneProvider} from '@/app/components/providers/providers';
 import externalCartService, {
-  ExternalCartItem,
+  type ExternalCartItem,
 } from '@/external-services/external-cart-service';
 import externalCatalogAPI, {
-  ExternalCatalogItem,
+  type ExternalCatalogItem,
 } from '@/external-services/external-catalog-service';
 import externalContextService from '@/external-services/external-context-service';
-import {StandaloneStaticState} from '@/lib/commerce-engine';
+import type {StandaloneStaticState} from '@/lib/commerce-engine';
 import {
   getBaseFetchStaticStateConfiguration,
   getEngineDefinition,
 } from '@/lib/commerce-engine.server';
 import {getNavigatorContext} from '@/lib/navigator-context';
-import {
-  NavigatorContext,
-  SolutionType,
-} from '@coveo/headless-react/ssr-commerce';
-import {LoaderFunctionArgs} from '@remix-run/node';
-import {useLoaderData} from '@remix-run/react';
-import invariant from 'tiny-invariant';
 
 export const loader = async ({params, request}: LoaderFunctionArgs) => {
   const productId = params.productId;

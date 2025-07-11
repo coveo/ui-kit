@@ -1,9 +1,9 @@
+import {useEffect} from 'react';
 import {
   isUserTrackingAllowedByClient,
   retrieveOrGenerateClientId,
 } from '@/lib/client-id.client';
 import {removeCookie, setCookie} from '@/utils/cookie-utils.client';
-import {useEffect} from 'react';
 
 /**
  * This hook sets the `coveo_visitorId` and the `coveo_capture` cookies if the client allows Coveo requests to capture

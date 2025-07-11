@@ -1,4 +1,4 @@
-import {NavigatorContext} from '@coveo/headless-react/ssr-commerce';
+import type {NavigatorContext} from '@coveo/headless-react/ssr-commerce';
 import {getAnalyticsContext} from './client-id.server';
 
 export const getNavigatorContext = async (
