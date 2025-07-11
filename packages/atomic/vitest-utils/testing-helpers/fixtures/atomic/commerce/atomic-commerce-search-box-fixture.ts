@@ -78,6 +78,9 @@ export class FixtureAtomicCommerceSearchBox extends LitElement {
 export const defaultBindings = {
   engine: {
     dispatch: vi.fn(),
+    logger: {
+      warn: vi.fn(),
+    },
   } as unknown as CommerceSearchBoxBindings['engine'],
   id: 'search-box-1',
   numberOfQueries: 3,
