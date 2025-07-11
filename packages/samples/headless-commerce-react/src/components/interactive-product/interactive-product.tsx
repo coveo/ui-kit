@@ -1,4 +1,4 @@
-import {
+import type {
   Cart,
   ChildProduct,
   InteractiveProduct as HeadlessInteractiveProduct,
@@ -67,10 +67,15 @@ export default function InteractiveProduct(props: IInteractiveProductProps) {
         <p className="CartCurrentQuantity">
           Currently in cart:<span> {numberInCart()}</span>
         </p>
-        <button className="CartAddOne" onClick={() => adjustQuantity(1)}>
+        <button
+          type="button"
+          className="CartAddOne"
+          onClick={() => adjustQuantity(1)}
+        >
           Add one
         </button>
         <button
+          type="button"
           className="CartRemoveOne"
           disabled={!isInCart()}
           onClick={() => adjustQuantity(-1)}
@@ -78,6 +83,7 @@ export default function InteractiveProduct(props: IInteractiveProductProps) {
           Remove one
         </button>
         <button
+          type="button"
           className="CartRemoveAll"
           disabled={!isInCart()}
           onClick={removeFromCart}
@@ -125,7 +131,7 @@ export default function InteractiveProduct(props: IInteractiveProductProps) {
 
   return (
     <div className="InteractiveProduct">
-      <button className="ProductLink" onClick={clickProduct}>
+      <button type="button" className="ProductLink" onClick={clickProduct}>
         {product.ec_name}
       </button>
       <div className="ProductImageWrapper">
@@ -143,10 +149,15 @@ export default function InteractiveProduct(props: IInteractiveProductProps) {
       {product.children.map((child) => {
         return child.permanentid !== product.permanentid ? (
           <button
+            type="button"
             key={child.permanentid}
             onClick={() => promoteChildToParent!(child)}
           >
-            <img height="25px" src={child.ec_images[0]}></img>
+            <img
+              alt={child.ec_name!}
+              height="25px"
+              src={child.ec_images[0]}
+            ></img>
           </button>
         ) : null;
       })}
