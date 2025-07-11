@@ -1,5 +1,5 @@
-import {describe, it, expect, vi, beforeEach, afterEach} from 'vitest';
-import {CoveoShopifyCustomEvent} from '../types';
+import {afterEach, beforeEach, describe, expect, it, vi} from 'vitest';
+import type {CoveoShopifyCustomEvent} from '../types';
 import {publishCustomShopifyEvent} from './shopify';
 
 const mockCustomShopifyEvent: CoveoShopifyCustomEvent = {
