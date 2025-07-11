@@ -1,0 +1,71 @@
+name: "Coveo UI Kit Development Environment"
+description: "Development environment setup for Coveo UI Kit repository"
+
+# Configure the development environment
+environment:
+  # Use Node.js version specified in .nvmrc
+  runtime: "nodejs"
+  node_version: "22.17.0"
+  
+  # Environment variables needed for the build process
+  env:
+    NODE_OPTIONS: "--max_old_space_size=4096"
+    NX_REJECT_UNKNOWN_LOCAL_CACHE: "0"
+    CYPRESS_VERIFY_TIMEOUT: "60000"
+
+# Pre-install tools and dependencies
+setup:
+  # Install dependencies (includes postinstall: husky install && patch-package && npx playwright install)
+  - name: "Install project dependencies"
+    run: "npm ci"
+    
+  # Build the project
+  - name: "Build packages"
+    run: "npm run build"
+
+# Common development commands
+commands:
+  build:
+    description: "Build all packages"
+    run: "npm run build"
+    
+  test:
+    description: "Run unit tests"
+    run: "npm run test"
+    
+  lint:
+    description: "Run linting checks"
+    run: "npm run lint:check"
+    
+  lint-fix:
+    description: "Fix linting issues"
+    run: "npm run lint:fix"
+    
+  dev-atomic:
+    description: "Start development server for Atomic"
+    run: "npm run dev:atomic"
+    
+  package-compatibility:
+    description: "Check package compatibility"
+    run: "npm run package-compatibility"
+    
+  pr-report:
+    description: "Generate PR report"
+    run: "npm run pr:report"
+    
+  reset-install:
+    description: "Reset package-lock.json and reinstall"
+    run: "npm run reset:install"
+
+# Tools that should be available in the development environment
+tools:
+  - "node"
+  - "npm"
+  - "npx"
+  - "git"
+  - "nx"
+  - "playwright"
+  - "biome"
+  - "cspell"
+  - "husky"
+  - "patch-package"
