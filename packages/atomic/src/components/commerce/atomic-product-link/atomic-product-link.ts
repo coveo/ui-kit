@@ -65,6 +65,7 @@ export class AtomicProductLink
   private hasDefaultSlot!: boolean;
   private linkAttributes?: Attr[];
   private stopPropagation?: boolean;
+  private removeLinkEventHandlers?: () => void;
 
   private logWarningIfNeed(warning?: string) {
     if (warning) {
@@ -101,6 +102,14 @@ export class AtomicProductLink
     this.linkAttributes = getAttributesFromLinkSlot(this, slotName);
   }
 
+  disconnectedCallback() {
+    super.disconnectedCallback();
+    if (this.removeLinkEventHandlers) {
+      this.removeLinkEventHandlers();
+      this.removeLinkEventHandlers = undefined;
+    }
+  }
+
   @bindingGuard()
   @errorGuard()
   render() {
@@ -134,6 +143,12 @@ export class AtomicProductLink
             },
             attributes: this.linkAttributes,
             stopPropagation: this.stopPropagation,
+            onInitializeLink: (cleanupCallback) => {
+              if (this.removeLinkEventHandlers) {
+                this.removeLinkEventHandlers();
+              }
+              this.removeLinkEventHandlers = cleanupCallback;
+            },
           },
         })(html`
           ${when(
