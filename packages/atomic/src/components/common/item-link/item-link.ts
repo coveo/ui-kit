@@ -23,6 +23,7 @@ export interface ItemLinkProps {
   onSelect: () => void;
   onBeginDelayedSelect: () => void;
   onCancelPendingSelect: () => void;
+  onInitializeLink?: (cleanupCallback: () => void) => void;
 }
 
 export const renderLinkWithItemAnalytics: FunctionalComponentWithChildren<
@@ -48,6 +49,7 @@ export const renderLinkWithItemAnalytics: FunctionalComponentWithChildren<
       onSelect,
       onBeginDelayedSelect,
       onCancelPendingSelect,
+      onInitializeLink,
     } = props;
 
     return html`
@@ -67,12 +69,16 @@ export const renderLinkWithItemAnalytics: FunctionalComponentWithChildren<
             return;
           }
 
-          bindAnalyticsToLink(el as HTMLAnchorElement, {
+          const cleanup = bindAnalyticsToLink(el as HTMLAnchorElement, {
             onSelect,
             onBeginDelayedSelect,
             onCancelPendingSelect,
             stopPropagation,
           });
+
+          if (onInitializeLink) {
+            onInitializeLink(cleanup);
+          }
 
           if (attributes?.length) {
             [...attributes].forEach(({nodeName, nodeValue}) => {

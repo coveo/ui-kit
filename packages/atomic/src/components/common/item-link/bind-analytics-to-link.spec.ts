@@ -121,4 +121,68 @@ describe('#bindAnalyticsToLink', () => {
 
     expect(stopPropagationSpy).toHaveBeenCalledTimes(1);
   });
+
+  it('should return a cleanup function', () => {
+    const cleanup = bindAnalyticsToLink(mockLink, eventProps);
+
+    expect(cleanup).toBeTypeOf('function');
+  });
+
+  it('should remove event listeners when cleanup function is called', () => {
+    const cleanup = bindAnalyticsToLink(mockLink, eventProps);
+
+    const clickEvent = new MouseEvent('click', {bubbles: true});
+    mockLink.dispatchEvent(clickEvent);
+    expect(eventProps.onSelect).toHaveBeenCalledTimes(1);
+
+    cleanup();
+
+    eventProps.onSelect.mockClear();
+
+    mockLink.dispatchEvent(clickEvent);
+    expect(eventProps.onSelect).not.toHaveBeenCalled();
+  });
+
+  it('should remove all event listeners when cleanup is called', () => {
+    const cleanup = bindAnalyticsToLink(mockLink, eventProps);
+
+    // Verify all listeners work before cleanup
+    mockLink.dispatchEvent(new MouseEvent('click', {bubbles: true}));
+    mockLink.dispatchEvent(new MouseEvent('contextmenu', {bubbles: true}));
+    mockLink.dispatchEvent(new MouseEvent('mousedown', {bubbles: true}));
+    mockLink.dispatchEvent(new MouseEvent('mouseup', {bubbles: true}));
+    mockLink.dispatchEvent(new TouchEvent('touchstart', {bubbles: true}));
+    mockLink.dispatchEvent(new TouchEvent('touchend', {bubbles: true}));
+
+    expect(eventProps.onSelect).toHaveBeenCalledTimes(4);
+    expect(eventProps.onBeginDelayedSelect).toHaveBeenCalledTimes(1);
+    expect(eventProps.onCancelPendingSelect).toHaveBeenCalledTimes(1);
+
+    cleanup();
+
+    eventProps.onSelect.mockClear();
+    eventProps.onBeginDelayedSelect.mockClear();
+    eventProps.onCancelPendingSelect.mockClear();
+
+    mockLink.dispatchEvent(new MouseEvent('click', {bubbles: true}));
+    mockLink.dispatchEvent(new MouseEvent('contextmenu', {bubbles: true}));
+    mockLink.dispatchEvent(new MouseEvent('mousedown', {bubbles: true}));
+    mockLink.dispatchEvent(new MouseEvent('mouseup', {bubbles: true}));
+    mockLink.dispatchEvent(new TouchEvent('touchstart', {bubbles: true}));
+    mockLink.dispatchEvent(new TouchEvent('touchend', {bubbles: true}));
+
+    expect(eventProps.onSelect).not.toHaveBeenCalled();
+    expect(eventProps.onBeginDelayedSelect).not.toHaveBeenCalled();
+    expect(eventProps.onCancelPendingSelect).not.toHaveBeenCalled();
+  });
+
+  it('should not throw when cleanup is called multiple times', () => {
+    const cleanup = bindAnalyticsToLink(mockLink, eventProps);
+
+    expect(() => {
+      cleanup();
+      cleanup();
+      cleanup();
+    }).not.toThrow();
+  });
 });
