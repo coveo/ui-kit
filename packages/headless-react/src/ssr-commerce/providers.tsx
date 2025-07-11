@@ -1,25 +1,25 @@
 'use client';
 
 import {
-  Cart,
-  Controller,
-  InferControllersMapFromDefinition,
-  ControllerDefinitionsMap,
-  EngineStaticState,
-  InferControllerStaticStateMapFromDefinitionsWithSolutionType,
-  InferHydratedState,
-  NavigatorContext,
-  ControllerWithKind,
+  type Cart,
+  type Context,
+  type Controller,
+  type ControllerDefinitionsMap,
+  type ControllerWithKind,
+  type EngineStaticState,
+  type HydrateStaticStateOptions,
+  type InferControllerStaticStateMapFromDefinitionsWithSolutionType,
+  type InferControllersMapFromDefinition,
+  type InferHydratedState,
   Kind,
-  SolutionType,
-  Context,
-  HydrateStaticStateOptions,
-  ParameterManager,
-  Parameters,
-  Recommendations,
+  type NavigatorContext,
+  type ParameterManager,
+  type Parameters,
+  type Recommendations,
+  type SolutionType,
 } from '@coveo/headless/ssr-commerce';
-import {PropsWithChildren, useEffect, useState} from 'react';
-import {ReactCommerceEngineDefinition} from './commerce-engine.js';
+import {type PropsWithChildren, useEffect, useState} from 'react';
+import type {ReactCommerceEngineDefinition} from './commerce-engine.js';
 
 type ControllerPropsMap = {[customName: string]: unknown};
 type UnknownAction = {type: string};
@@ -137,7 +137,7 @@ export function buildProviderWithDefinition<
           >,
         });
       });
-    }, [staticState]);
+    }, [staticState, definition]);
 
     return (
       <definition.StateProvider

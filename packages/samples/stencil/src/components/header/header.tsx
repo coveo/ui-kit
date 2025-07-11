@@ -1,4 +1,5 @@
-import {FunctionalComponent, h} from '@stencil/core';
+// biome-ignore lint/correctness/noUnusedImports: <>
+import {type FunctionalComponent, h} from '@stencil/core';
 import {href} from 'stencil-router-v2';
 
 export const homePath = '/';

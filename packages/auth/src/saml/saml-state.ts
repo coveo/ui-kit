@@ -1,4 +1,4 @@
-import {BrowserStorage, getBrowserStorage} from './browser-storage';
+import {type BrowserStorage, getBrowserStorage} from './browser-storage';
 
 interface SamlStateOptions {
   storage?: BrowserStorage;
