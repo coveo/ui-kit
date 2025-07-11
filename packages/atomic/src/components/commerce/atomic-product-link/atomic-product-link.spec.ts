@@ -5,6 +5,7 @@ import {html, nothing} from 'lit';
 import {ifDefined} from 'lit/directives/if-defined.js';
 import {beforeEach, describe, expect, it, vi} from 'vitest';
 import {renderInAtomicProduct} from '@/vitest-utils/testing-helpers/fixtures/atomic/commerce/atomic-product-fixture';
+import {buildFakeInteractiveProduct} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/interactive-product';
 import {buildFakeProduct} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/product';
 import {AtomicProductLink} from './atomic-product-link';
 import './atomic-product-link';
@@ -27,23 +28,23 @@ describe('atomic-product-link', () => {
         custom_url_param: 'custom-value',
       },
     });
-    mockInteractiveProduct = {
-      select: vi.fn(),
-      beginDelayedSelect: vi.fn(),
-      cancelPendingSelect: vi.fn(),
-      warningMessage: undefined,
-    } as unknown as InteractiveProduct;
+    mockInteractiveProduct = buildFakeInteractiveProduct();
   });
+
   const renderProductLink = async (
     options: {
       hrefTemplate?: string;
       product?: Product | null;
+      interactiveProduct?: InteractiveProduct | null;
       slotContent?: string | unknown;
       attributes?: string;
-      interactiveProduct?: Partial<InteractiveProduct> | null;
     } = {}
   ) => {
     const productToUse = 'product' in options ? options.product : mockProduct;
+    const interactiveProductToUse =
+      'interactiveProduct' in options
+        ? options.interactiveProduct
+        : mockInteractiveProduct;
 
     const attributesSlot = options.attributes
       ? html`<a slot="attributes" target="_blank" download></a>`
@@ -59,6 +60,10 @@ describe('atomic-product-link', () => {
         </atomic-product-link>`,
         selector: 'atomic-product-link',
         product: productToUse === null ? undefined : productToUse,
+        interactiveProduct:
+          interactiveProductToUse === null
+            ? undefined
+            : interactiveProductToUse,
         bindings: (bindings) => {
           bindings.store.onChange = vi.fn();
           bindings.engine.logger = {warn: vi.fn()} as never;
@@ -69,15 +74,6 @@ describe('atomic-product-link', () => {
     await atomicInterface.updateComplete;
     await atomicProduct.updateComplete;
     await element.updateComplete;
-
-    if (options.interactiveProduct) {
-      (element as any).interactiveProduct = {
-        ...mockInteractiveProduct,
-        ...options.interactiveProduct,
-      };
-    } else {
-      (element as any).interactiveProduct = mockInteractiveProduct;
-    }
 
     return {
       element,
@@ -94,13 +90,6 @@ describe('atomic-product-link', () => {
       },
     };
   };
-
-  const createMockInteractiveProduct = (): Partial<InteractiveProduct> => ({
-    select: vi.fn(),
-    beginDelayedSelect: vi.fn(),
-    cancelPendingSelect: vi.fn(),
-    warningMessage: undefined,
-  });
 
   it('should be defined', () => {
     const el = document.createElement('atomic-product-link');
@@ -153,8 +142,7 @@ describe('atomic-product-link', () => {
       }
     });
 
-    it('should set interactiveProduct from controller when available', async () => {
-      const mockInteractiveProduct = createMockInteractiveProduct();
+    it('should set interactiveProduct from controller', async () => {
       const {element} = await renderProductLink();
 
       if (element) {
@@ -276,7 +264,6 @@ describe('atomic-product-link', () => {
   });
 
   it('should handle warning messages when available', async () => {
-    const mockInteractiveProduct = createMockInteractiveProduct();
     mockInteractiveProduct.warningMessage = 'Test warning message';
 
     const {element, link} = await renderProductLink({
@@ -313,7 +300,7 @@ describe('atomic-product-link', () => {
 
     if (element) {
       (element as any).product = newProduct;
-      (element as any).interactiveProduct = createMockInteractiveProduct();
+      (element as any).interactiveProduct = buildFakeInteractiveProduct();
     }
 
     await element?.updateComplete;
@@ -340,10 +327,6 @@ describe('atomic-product-link', () => {
     const {element, link} = await renderProductLink({
       product: productWithoutClickUri,
     });
-
-    if (element) {
-      (element as any).interactiveProduct = createMockInteractiveProduct();
-    }
 
     await element?.updateComplete;
     await expect.element(link).toHaveAttribute('href', '');
