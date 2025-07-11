@@ -1,5 +1,5 @@
 import {renderHook} from '@testing-library/react';
-import {vi, expect, describe, test, it} from 'vitest';
+import {describe, expect, it, test, vi} from 'vitest';
 import {useSyncMemoizedStore} from './client-utils.js';
 
 describe('useSyncMemoizedStore', () => {

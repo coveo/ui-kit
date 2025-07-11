@@ -1,24 +1,19 @@
+/** biome-ignore-all lint/suspicious/noExplicitAny: <> */
 import {
   SolutionType,
-  CommerceEngine as SSRCommerceEngine,
+  type CommerceEngine as SSRCommerceEngine,
 } from '@coveo/headless/ssr-commerce';
-import {render, cleanup, screen} from '@testing-library/react';
-import {Context, createContext} from 'react';
-import React from 'react';
-import {vi, expect, describe, test, afterEach} from 'vitest';
+import {cleanup, render, screen} from '@testing-library/react';
+import React, {type Context, createContext} from 'react';
+import {afterEach, describe, expect, test, vi} from 'vitest';
 import {
+  buildHydratedStateProvider,
   buildStateProvider,
   buildStaticStateProvider,
-  buildHydratedStateProvider,
 } from './common.js';
-import {ContextState} from './types.js';
+import type {ContextState} from './types.js';
 
-type MockContext = ContextState<
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  any,
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  any
->;
+type MockContext = ContextState<any, any>;
 describe('SSR Commerce Common functions', () => {
   const mockContext = createContext(
     null
