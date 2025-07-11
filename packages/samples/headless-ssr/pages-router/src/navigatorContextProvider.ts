@@ -1,5 +1,5 @@
-import {NavigatorContext} from '@coveo/headless/ssr';
-import {IncomingHttpHeaders} from 'node:http';
+import type {IncomingHttpHeaders} from 'node:http';
+import type {NavigatorContext} from '@coveo/headless/ssr';
 
 /**
  * Provides navigation context for Coveo within Next.js  Pages Router applications.
@@ -11,7 +11,7 @@ export class NextJsPagesRouterNavigatorContext implements NavigatorContext {
   constructor(private headers: IncomingHttpHeaders) {}
 
   get referrer() {
-    const referrerHeader = this.headers['referer'] ?? this.headers['referrer']; // Some browsers use 'referer'
+    const referrerHeader = this.headers.referer ?? this.headers.referrer; // Some browsers use 'referer'
     const referrer = Array.isArray(referrerHeader)
       ? referrerHeader[0]
       : referrerHeader;

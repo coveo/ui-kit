@@ -1,8 +1,8 @@
-import {
+import type {
   ResultList as ResultListController,
   ResultListState,
 } from '@coveo/headless/ssr';
-import {useEffect, useState, FunctionComponent} from 'react';
+import {type FunctionComponent, useEffect, useState} from 'react';
 import ResultListCommon from '../common/result-list';
 
 interface ResultListProps {

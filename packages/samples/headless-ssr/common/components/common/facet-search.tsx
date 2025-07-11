@@ -1,4 +1,4 @@
-import {SpecificFacetSearchResult} from '@coveo/headless/ssr';
+import type {SpecificFacetSearchResult} from '@coveo/headless/ssr';
 
 interface FacetSearchProps {
   query: string;
@@ -33,7 +33,11 @@ export default function FacetSearchCommon({
       <ul>
         {facetSearchResults.map((value) => (
           <li key={value.rawValue}>
-            <button onClick={() => onToggle?.(value)} disabled={isLoading}>
+            <button
+              type="button"
+              onClick={() => onToggle?.(value)}
+              disabled={isLoading}
+            >
               {value.displayValue} ({value.count} results)
             </button>
           </li>

@@ -1,14 +1,14 @@
+import {
+  buildSSRSearchParameterSerializer,
+  type NavigatorContext,
+} from '@coveo/headless/ssr';
+import type {GetServerSidePropsContext} from 'next';
 import SearchPage from '@/common/components/generic/search-page';
 import {
-  SearchStaticState,
   fetchStaticState,
+  type SearchStaticState,
   setNavigatorContextProvider,
 } from '@/common/lib/generic/engine';
-import {
-  NavigatorContext,
-  buildSSRSearchParameterSerializer,
-} from '@coveo/headless/ssr';
-import {GetServerSidePropsContext} from 'next';
 import {NextJsPagesRouterNavigatorContext} from '../../navigatorContextProvider';
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
