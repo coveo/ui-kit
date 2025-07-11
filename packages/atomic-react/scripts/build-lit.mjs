@@ -96,5 +96,5 @@ for (const entry of entries) {
     ].join('\n')
   );
   // Format with Biome, like the original prettier.format() calls
-  execSync(`npx @biomejs/biome format --write "${entry.path}"`, {stdio: 'pipe'});
+  execSync(`npx @biomejs/biome check --write "${entry.path}"`, {stdio: 'pipe'});
 }
