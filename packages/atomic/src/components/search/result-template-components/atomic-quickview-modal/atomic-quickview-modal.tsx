@@ -23,7 +23,7 @@ import {
 } from '../../../../utils/initialization-utils';
 import {ATOMIC_MODAL_EXPORT_PARTS} from '../../../common/atomic-modal/export-parts';
 import {IconButton} from '../../../common/iconButton';
-import {LinkWithItemAnalytics} from '../../../common/item-link/item-link';
+import {LinkWithItemAnalytics} from '../../../common/item-link/stencil-item-link';
 import {Button} from '../../../common/stencil-button';
 import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
 import {QuickviewSidebar} from '../atomic-quickview-sidebar/atomic-quickview-sidebar';
