@@ -1,17 +1,15 @@
 import type {i18n} from '@coveo/atomic';
+// biome-ignore lint/style/useImportType: <React is needed>
 import React, {useEffect, useRef} from 'react';
 import {AtomicCommerceRecommendationInterface} from './components.js';
 
-export type AtomicCommerceRecommendationInterface = React.ComponentProps<
+type AtomicCommerceRecommendationInterfaceProps = React.ComponentProps<
   typeof AtomicCommerceRecommendationInterface
 >;
 
-/**
- * The properties of the AtomicCommerceRecommendationInterface component
- */
 interface WrapperProps
   extends Omit<
-    AtomicCommerceRecommendationInterface,
+    AtomicCommerceRecommendationInterfaceProps,
     'i18n' | 'pipeline' | 'searchHub'
   > {
   /**
@@ -22,7 +20,6 @@ interface WrapperProps
    */
   localization?: (i18n: i18n) => void;
 }
-
 const DefaultProps: Required<Pick<WrapperProps, 'localization'>> = {
   localization: () => {},
 };
@@ -55,7 +52,7 @@ export const InterfaceWrapper = (
         localization(CommerceRecommendationInterfaceAtomic.i18n);
       });
     }
-  }, [interfaceRef]);
+  }, [localization, engine, initialization]);
 
   return (
     <AtomicCommerceRecommendationInterface

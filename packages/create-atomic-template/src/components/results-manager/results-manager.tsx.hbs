@@ -1,0 +1,29 @@
+import {Component, h} from '@stencil/core';
+import {waitForAtomic} from '../../utils/atomic';
+{{#each page.results.templates}}
+import template{{inc @index}} from './template-{{inc @index}}.html';
+{{/each}}
+
+/**
+ * Component used to manage results & result templates.
+ * See https://docs.coveo.com/en/atomic/latest/usage/displaying-results/
+ */
+@Component({
+  tag: 'results-manager',
+  shadow: false,
+})
+export class ResultsManager {
+  public async componentWillLoad() {
+    return waitForAtomic();
+  }
+
+  public render() {
+    return <atomic-result-list {{#each page.results.attributes}}{{@key}}="{{{this}}}" {{/each}}>
+      {{#each page.results.templates}}
+        <atomic-result-template {{#each this.attributes}}{{@key}}="{{{this}}}" {{/each}}>
+          <template innerHTML={ template{{inc @index}} }></template>
+        </atomic-result-template>
+      {{/each}}
+    </atomic-result-list>;
+  }
+}

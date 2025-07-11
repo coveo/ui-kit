@@ -1,10 +1,11 @@
-import {AtomicCommerceProductList} from '@coveo/atomic/components';
-import {
+import type {AtomicCommerceProductList} from '@coveo/atomic/components';
+import type {
   ItemDisplayDensity,
   ItemDisplayImageSize,
   ItemDisplayLayout,
 } from '@coveo/atomic/loader';
 import type {Product} from '@coveo/headless/commerce';
+// biome-ignore lint/style/useImportType: <React is needed>
 import React, {useEffect, useRef} from 'react';
 import {createRoot} from 'react-dom/client';
 import {renderToString} from 'react-dom/server';
@@ -77,12 +78,13 @@ export const ListWrapper: React.FC<WrapperProps> = (props) => {
             ? createRoot(linkContainer!).render(
                 <AtomicProductLink></AtomicProductLink>
               )
-            : createRoot(linkContainer!).render(<></>);
+            : // biome-ignore lint/complexity/noUselessFragments: <>
+              createRoot(linkContainer!).render(<></>);
           return renderToString(templateResult);
         }
       }
     );
-  }, [commerceProductListRef]);
+  }, [otherProps.display, template]);
   return (
     <LitAtomicCommerceProductList
       ref={commerceProductListRef}

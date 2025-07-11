@@ -1,6 +1,6 @@
-import cem from '@coveo/atomic/custom-elements-manifest' with {type: 'json'};
-import {writeFileSync} from 'node:fs';
 import {execSync} from 'node:child_process';
+import {writeFileSync} from 'node:fs';
+import cem from '@coveo/atomic/custom-elements-manifest' with {type: 'json'};
 
 const isLitDeclaration = (declaration) =>
   declaration?.superclass?.name === 'LitElement';
@@ -96,5 +96,5 @@ for (const entry of entries) {
     ].join('\n')
   );
   // Format with Biome, like the original prettier.format() calls
-  execSync(`npx @biomejs/biome format --write "${entry.path}"`, {stdio: 'pipe'});
+  execSync(`npx @biomejs/biome check --write "${entry.path}"`, {stdio: 'pipe'});
 }

@@ -1,4 +1,4 @@
-import {test, expect} from './cart.fixture';
+import {expect, test} from './cart.fixture';
 
 test.describe('default', () => {
   const cartCookie = [

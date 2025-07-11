@@ -1,5 +1,3 @@
-import {createComponent} from '@lit/react';
-import React from 'react';
 import {
   AtomicCommerceBreadbox as LitAtomicCommerceBreadbox,
   AtomicCommerceDidYouMean as LitAtomicCommerceDidYouMean,
@@ -26,6 +24,8 @@ import {
   AtomicProduct as LitAtomicProduct,
   AtomicProductText as LitAtomicProductText,
 } from '@coveo/atomic/components';
+import {createComponent} from '@lit/react';
+import React from 'react';
 
 export const AtomicCommerceBreadbox = createComponent({
   tagName: 'atomic-commerce-breadbox',
