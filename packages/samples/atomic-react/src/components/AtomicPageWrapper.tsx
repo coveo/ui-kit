@@ -15,33 +15,34 @@ import {
   AtomicRatingFacet,
   AtomicRatingRangeFacet,
   AtomicRefineToggle,
+  AtomicResultImage,
+  AtomicResultLink,
+  AtomicResultNumber,
+  AtomicResultRating,
+  AtomicResultSectionTitle,
+  AtomicResultSectionTitleMetadata,
+  AtomicResultSectionVisual,
   AtomicSearchBox,
+  AtomicSearchBoxInstantResults,
+  AtomicSearchBoxQuerySuggestions,
+  AtomicSearchBoxRecentQueries,
   AtomicSearchInterface,
   AtomicSearchLayout,
   AtomicSortDropdown,
   AtomicSortExpression,
   AtomicTimeframe,
   AtomicTimeframeFacet,
-  AtomicSearchBoxInstantResults,
-  AtomicSearchBoxRecentQueries,
-  AtomicResultSectionVisual,
-  AtomicResultImage,
-  AtomicResultSectionTitle,
-  AtomicResultLink,
-  AtomicResultSectionTitleMetadata,
-  AtomicResultRating,
-  AtomicResultNumber,
-  Bindings,
-  AtomicSearchBoxQuerySuggestions,
+  type Bindings,
 } from '@coveo/atomic-react';
 import {
   buildSearchEngine,
-  Result,
-  SearchEngineConfiguration,
   getSampleSearchEngineConfiguration,
   loadAdvancedSearchQueryActions,
+  type Result,
+  type SearchEngineConfiguration,
 } from '@coveo/headless';
-import React, {FunctionComponent, useMemo} from 'react';
+import type React from 'react';
+import {type FunctionComponent, useMemo} from 'react';
 
 type Sample = 'service' | 'electronics';
 
