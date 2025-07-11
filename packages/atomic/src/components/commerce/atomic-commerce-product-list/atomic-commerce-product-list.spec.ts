@@ -991,6 +991,10 @@ describe('AtomicCommerceProductList', () => {
 
         display === 'table' && (await setupTableTemplate(element));
 
+        interactiveProduct.mockClear();
+
+        element.requestUpdate();
+        await element.updateComplete;
         const atomicProductElements =
           element.shadowRoot?.querySelectorAll('atomic-product');
 
