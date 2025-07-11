@@ -7,11 +7,15 @@
     "release:phase3": {},
     "build": {
       "executor": "nx:run-commands",
-      "outputs": ["{projectRoot}/lib"],
+      "outputs": ["{projectRoot}/lib", "{projectRoot}/template"],
       "cache": true,
       "options": {
-        "commands": ["npm run build"],
-        "parallel": true,
+        "commands": [
+          "rimraf template",
+          "npm run build:ts",
+          "node ./scripts/preparePackageJsonTemplate.mjs"
+        ],
+        "parallel": false,
         "cwd": "{projectRoot}"
       }
     }
