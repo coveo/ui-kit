@@ -15,7 +15,7 @@
     "build": "tsc -p tsconfig.json",
     "prepublishOnly": "rimraf template && npm run build && node ./scripts/preparePackageJsonTemplate.mjs",
     "lint": "prettier --check . && eslint .",
-    "release:phase1": "npx -p=@coveord/release npm-publish"
+    "promote:npm:latest": "npm run-script -w=@coveo/ci promote-npm-prod"
   },
   "keywords": [
     "coveo",

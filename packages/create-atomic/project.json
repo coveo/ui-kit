@@ -1,7 +1,18 @@
 {
   "name": "create-atomic",
-  "root": "packages/ui/atomic/create-atomic",
-  "sourceRoot": "packages/ui/atomic/create-atomic/src",
-  "projectType": "application",
-  "implicitDependencies": ["create-atomic-template"]
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "targets": {
+    "release:phase1": {},
+    "release:phase3": {},
+    "build": {
+      "executor": "nx:run-commands",
+      "outputs": ["{projectRoot}/lib"],
+      "cache": true,
+      "options": {
+        "commands": ["npm run build"],
+        "parallel": true,
+        "cwd": "{projectRoot}"
+      }
+    }
+  }
 }
