@@ -1,6 +1,7 @@
 {
   "name": "create-atomic",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "implicitDependencies": ["create-atomic-template"],
   "targets": {
     "release:phase1": {},
     "release:phase3": {},
