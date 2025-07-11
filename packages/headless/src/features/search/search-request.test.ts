@@ -1,4 +1,4 @@
-import {SearchAppState} from '../../state/search-app-state.js';
+import type {SearchAppState} from '../../state/search-app-state.js';
 import {buildMockAutomaticFacetRequest} from '../../test/mock-automatic-facet-request.js';
 import {buildMockAutomaticFacetResponse} from '../../test/mock-automatic-facet-response.js';
 import {buildMockAutomaticFacetSlice} from '../../test/mock-automatic-facet-slice.js';
@@ -7,8 +7,8 @@ import {buildMockCategoryFacetSlice} from '../../test/mock-category-facet-slice.
 import {buildMockDateFacetRequest} from '../../test/mock-date-facet-request.js';
 import {buildMockDateFacetSlice} from '../../test/mock-date-facet-slice.js';
 import {buildMockDateFacetValue} from '../../test/mock-date-facet-value.js';
-import {buildFacetOptionsSlice} from '../../test/mock-facet-options-slice.js';
 import {buildMockFacetOptions} from '../../test/mock-facet-options.js';
+import {buildFacetOptionsSlice} from '../../test/mock-facet-options-slice.js';
 import {buildMockFacetRequest} from '../../test/mock-facet-request.js';
 import {buildMockFacetSlice} from '../../test/mock-facet-slice.js';
 import {buildMockFacetValue} from '../../test/mock-facet-value.js';
@@ -458,35 +458,35 @@ describe('search request', () => {
       facetId: 'h',
     });
 
-    state.facetSet['a'] = buildMockFacetSlice({request: enabledFacetRequest});
-    state.facetSet['b'] = buildMockFacetSlice({request: disabledFacetRequest});
-    state.numericFacetSet['c'] = buildMockNumericFacetSlice({
+    state.facetSet.a = buildMockFacetSlice({request: enabledFacetRequest});
+    state.facetSet.b = buildMockFacetSlice({request: disabledFacetRequest});
+    state.numericFacetSet.c = buildMockNumericFacetSlice({
       request: enabledNumericFacetRequest,
     });
-    state.numericFacetSet['d'] = buildMockNumericFacetSlice({
+    state.numericFacetSet.d = buildMockNumericFacetSlice({
       request: disabledNumericFacetRequest,
     });
-    state.dateFacetSet['e'] = buildMockDateFacetSlice({
+    state.dateFacetSet.e = buildMockDateFacetSlice({
       request: enabledDateFacetRequest,
     });
-    state.dateFacetSet['f'] = buildMockDateFacetSlice({
+    state.dateFacetSet.f = buildMockDateFacetSlice({
       request: disabledDateFacetRequest,
     });
-    state.categoryFacetSet['g'] = buildMockCategoryFacetSlice({
+    state.categoryFacetSet.g = buildMockCategoryFacetSlice({
       request: enabledCategoryFacetRequest,
     });
-    state.categoryFacetSet['h'] = buildMockCategoryFacetSlice({
+    state.categoryFacetSet.h = buildMockCategoryFacetSlice({
       request: disabledCategoryFacetRequest,
     });
 
-    state.facetOptions.facets['a'] = buildFacetOptionsSlice();
-    state.facetOptions.facets['b'] = buildFacetOptionsSlice({enabled: false});
-    state.facetOptions.facets['c'] = buildFacetOptionsSlice();
-    state.facetOptions.facets['d'] = buildFacetOptionsSlice({enabled: false});
-    state.facetOptions.facets['e'] = buildFacetOptionsSlice();
-    state.facetOptions.facets['f'] = buildFacetOptionsSlice({enabled: false});
-    state.facetOptions.facets['g'] = buildFacetOptionsSlice();
-    state.facetOptions.facets['h'] = buildFacetOptionsSlice({enabled: false});
+    state.facetOptions.facets.a = buildFacetOptionsSlice();
+    state.facetOptions.facets.b = buildFacetOptionsSlice({enabled: false});
+    state.facetOptions.facets.c = buildFacetOptionsSlice();
+    state.facetOptions.facets.d = buildFacetOptionsSlice({enabled: false});
+    state.facetOptions.facets.e = buildFacetOptionsSlice();
+    state.facetOptions.facets.f = buildFacetOptionsSlice({enabled: false});
+    state.facetOptions.facets.g = buildFacetOptionsSlice();
+    state.facetOptions.facets.h = buildFacetOptionsSlice({enabled: false});
 
     const {facets} = (
       await buildSearchRequest(state, buildMockNavigatorContextProvider()())

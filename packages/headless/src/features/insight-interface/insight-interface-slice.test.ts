@@ -43,7 +43,7 @@ describe('insight interface slice', () => {
     const failedAction = fetchInterface.rejected(
       null,
       requestId,
-      null as unknown as void,
+      null as unknown as undefined,
       errorResponse
     );
 

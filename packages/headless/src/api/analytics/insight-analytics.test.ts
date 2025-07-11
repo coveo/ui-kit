@@ -5,8 +5,8 @@ import {getGeneratedAnswerInitialState} from '../../features/generated-answer/ge
 import {buildMockFacetRequest} from '../../test/mock-facet-request.js';
 import {buildMockFacetResponse} from '../../test/mock-facet-response.js';
 import {buildMockFacetSlice} from '../../test/mock-facet-slice.js';
-import {buildMockFacetValueRequest} from '../../test/mock-facet-value-request.js';
 import {buildMockFacetValue} from '../../test/mock-facet-value.js';
+import {buildMockFacetValueRequest} from '../../test/mock-facet-value-request.js';
 import {buildMockInsightState} from '../../test/mock-insight-state.js';
 import {buildMockQueryState} from '../../test/mock-query-state.js';
 import {buildMockResult} from '../../test/mock-result.js';
@@ -14,7 +14,7 @@ import {buildMockSearchState} from '../../test/mock-search-state.js';
 import {
   configureInsightAnalytics,
   InsightAnalyticsProvider,
-  StateNeededByInsightAnalyticsProvider,
+  type StateNeededByInsightAnalyticsProvider,
 } from './insight-analytics.js';
 
 describe('insight analytics', () => {

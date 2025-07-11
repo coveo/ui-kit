@@ -5,7 +5,7 @@ import {
   validatePayload,
 } from '../../../../utils/validate-payload.js';
 import {facetValueDefinition} from '../../../facets/facet-set/facet-set-validate-payload.js';
-import {LocationFacetValue} from '../facet-set/interfaces/response.js';
+import type {LocationFacetValue} from '../facet-set/interfaces/response.js';
 
 export interface ToggleSelectLocationFacetValuePayload {
   /**

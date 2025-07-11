@@ -1,4 +1,4 @@
-import {test, expect} from './fixture';
+import {expect, test} from './fixture';
 
 test.describe('when there is no promotional price', async () => {
   test.beforeEach(async ({productPrice}) => {

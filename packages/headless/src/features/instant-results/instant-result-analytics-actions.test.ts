@@ -1,9 +1,9 @@
 import {createRelay} from '@coveo/relay';
 import {CoveoSearchPageClient} from 'coveo.analytics';
 import {
-  SearchEngine,
   buildSearchEngine,
   getSampleSearchEngineConfiguration,
+  type SearchEngine,
 } from '../../app/search-engine/search-engine.js';
 import {buildMockNonEmptyResult} from '../../test/mock-result.js';
 import {clearMicrotaskQueue} from '../../test/unit-test-utils.js';

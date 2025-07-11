@@ -1,10 +1,10 @@
 import {
-  StringValue,
-  NumberValue,
-  BooleanValue,
-  RecordValue,
-  Value,
   ArrayValue,
+  BooleanValue,
+  NumberValue,
+  RecordValue,
+  StringValue,
+  Value,
 } from '@coveo/bueno';
 import {createAction} from '@reduxjs/toolkit';
 import {
@@ -12,11 +12,11 @@ import {
   customSort,
 } from '../../../controllers/core/facets/_common/facet-option-definitions.js';
 import {validatePayload} from '../../../utils/validate-payload.js';
-import {FacetResultsMustMatch} from '../facet-api/request.js';
+import type {FacetResultsMustMatch} from '../facet-api/request.js';
 import {facetIdDefinition} from '../generic/facet-actions-validation.js';
 import {facetValueDefinition} from './facet-set-validate-payload.js';
-import {FacetSortCriterion} from './interfaces/request.js';
-import {FacetValue} from './interfaces/response.js';
+import type {FacetSortCriterion} from './interfaces/request.js';
+import type {FacetValue} from './interfaces/response.js';
 
 export interface RegisterFacetActionCreatorPayload {
   /**
@@ -25,7 +25,7 @@ export interface RegisterFacetActionCreatorPayload {
   facetId: string;
 
   /**
-   * The field whose values you want to display in the facet.
+   * The field from which to display values in the facet.
    * */
   field: string;
 

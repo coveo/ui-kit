@@ -5,7 +5,7 @@ import {
   updateInstantResultsQuery,
 } from './instant-results-actions.js';
 import {instantResultsReducer} from './instant-results-slice.js';
-import {InstantResultCache} from './instant-results-state.js';
+import type {InstantResultCache} from './instant-results-state.js';
 
 const id1 = 'search_box_1';
 const id2 = 'search_box_2';

@@ -1,10 +1,10 @@
-import {ChildProduct} from '../../../api/commerce/common/product.js';
+import type {ChildProduct} from '../../../api/commerce/common/product.js';
 import {buildMockCommerceRegularFacetResponse} from '../../../test/mock-commerce-facet-response.js';
 import {buildSearchResponse} from '../../../test/mock-commerce-search.js';
 import {
+  buildMockBaseProduct,
   buildMockChildProduct,
   buildMockProduct,
-  buildMockBaseProduct,
 } from '../../../test/mock-product.js';
 import {setContext, setView} from '../context/context-actions.js';
 import {
@@ -14,7 +14,7 @@ import {
 } from './search-actions.js';
 import {commerceSearchReducer} from './search-slice.js';
 import {
-  CommerceSearchState,
+  type CommerceSearchState,
   getCommerceSearchInitialState,
 } from './search-state.js';
 

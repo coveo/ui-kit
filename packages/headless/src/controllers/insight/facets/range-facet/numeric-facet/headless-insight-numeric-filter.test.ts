@@ -1,20 +1,20 @@
-import {describe, it, expect, vi, Mock, beforeEach} from 'vitest';
+import {beforeEach, describe, expect, it, type Mock, vi} from 'vitest';
 import {updateFacetOptions} from '../../../../../features/facet-options/facet-options-actions.js';
 import {updateNumericFacetValues} from '../../../../../features/facets/range-facets/numeric-facet-set/numeric-facet-actions.js';
 import {executeSearch} from '../../../../../features/insight-search/insight-search-actions.js';
-import {InsightAppState} from '../../../../../state/insight-app-state.js';
+import type {InsightAppState} from '../../../../../state/insight-app-state.js';
 import {
   buildMockInsightEngine,
-  MockedInsightEngine,
+  type MockedInsightEngine,
 } from '../../../../../test/mock-engine-v2.js';
 import {buildMockInsightState} from '../../../../../test/mock-insight-state.js';
 import {buildMockNumericFacetSlice} from '../../../../../test/mock-numeric-facet-slice.js';
 import {buildMockNumericFacetValue} from '../../../../../test/mock-numeric-facet-value.js';
 import {
   buildNumericFilter,
-  NumericFilter,
-  NumericFilterInitialState,
-  NumericFilterOptions,
+  type NumericFilter,
+  type NumericFilterInitialState,
+  type NumericFilterOptions,
 } from './headless-insight-numeric-filter.js';
 
 vi.mock(

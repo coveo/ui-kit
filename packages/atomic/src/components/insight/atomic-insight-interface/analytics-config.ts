@@ -1,9 +1,9 @@
-import {
+import type {
   AnalyticsConfiguration as InsightAnalyticsConfiguration,
   EngineConfiguration as InsightEngineConfiguration,
 } from '@coveo/headless/insight';
 import {
-  AnalyticsPayload,
+  type AnalyticsPayload,
   augmentAnalyticsWithAtomicVersion,
   augmentWithExternalMiddleware,
   getNextAnalyticsConfig,
@@ -16,7 +16,6 @@ export function getAnalyticsConfig(
   switch (searchEngineConfig.analytics?.analyticsMode) {
     case 'next':
       return getNextAnalyticsConfig(searchEngineConfig, enabled);
-    case 'legacy':
     default:
       return getLegacyAnalyticsConfig(searchEngineConfig, enabled);
   }

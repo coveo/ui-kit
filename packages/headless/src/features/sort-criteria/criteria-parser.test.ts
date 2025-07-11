@@ -1,13 +1,13 @@
-import {parseCriterionExpression} from './criteria-parser.js';
 import {
-  buildRelevanceSortCriterion,
-  buildQueryRankingExpressionSortCriterion,
-  buildNoSortCriterion,
   buildDateSortCriterion,
   buildFieldSortCriterion,
-  SortOrder,
+  buildNoSortCriterion,
+  buildQueryRankingExpressionSortCriterion,
+  buildRelevanceSortCriterion,
   SortBy,
+  SortOrder,
 } from './criteria.js';
+import {parseCriterionExpression} from './criteria-parser.js';
 
 describe('#parseCriterionExpression', () => {
   it('when criterion expression is empty, throws an error', () => {

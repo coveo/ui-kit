@@ -1,4 +1,4 @@
-import {ThunkExtraArguments} from '../../../../app/thunk-extra-arguments.js';
+import type {ThunkExtraArguments} from '../../../../app/thunk-extra-arguments.js';
 import {buildMockDateFacetRequest} from '../../../../test/mock-date-facet-request.js';
 import {buildMockDateFacetSlice} from '../../../../test/mock-date-facet-slice.js';
 import {buildMockDateFacetValue} from '../../../../test/mock-date-facet-value.js';

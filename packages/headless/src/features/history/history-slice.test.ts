@@ -1,5 +1,9 @@
-import {Reducer} from '@reduxjs/toolkit';
-import {undoable, StateWithHistory, makeHistory} from '../../app/undoable.js';
+import type {Reducer} from '@reduxjs/toolkit';
+import {
+  makeHistory,
+  type StateWithHistory,
+  undoable,
+} from '../../app/undoable.js';
 import {buildMockAdvancedSearchQueriesState} from '../../test/mock-advanced-search-queries-state.js';
 import {buildMockAutomaticFacetSlice} from '../../test/mock-automatic-facet-slice.js';
 import {buildMockCategoryFacetRequest} from '../../test/mock-category-facet-request.js';
@@ -15,7 +19,7 @@ import {buildMockStaticFilterValue} from '../../test/mock-static-filter-value.js
 import {buildMockTabSlice} from '../../test/mock-tab-state.js';
 import {redo, snapshot, undo} from './history-actions.js';
 import {historyReducer} from './history-slice.js';
-import {getHistoryInitialState, HistoryState} from './history-state.js';
+import {getHistoryInitialState, type HistoryState} from './history-state.js';
 
 describe('history slice', () => {
   let undoableReducer: Reducer<StateWithHistory<HistoryState>>;

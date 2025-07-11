@@ -1,7 +1,7 @@
 import {
-  InstantItemsCache,
-  InstantItemsState,
   hasExpired,
+  type InstantItemsCache,
+  type InstantItemsState,
 } from './instant-items-state.js';
 
 type InstantItemsStateWithCache = InstantItemsState<

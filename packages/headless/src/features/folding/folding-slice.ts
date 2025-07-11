@@ -1,5 +1,5 @@
 import {createReducer} from '@reduxjs/toolkit';
-import {Result} from '../../api/search/search/result.js';
+import type {Result} from '../../api/search/search/result.js';
 import {isArray} from '../../utils/utils.js';
 import {
   executeSearch,
@@ -8,12 +8,12 @@ import {
 } from '../search/search-actions.js';
 import {loadCollection, registerFolding} from './folding-actions.js';
 import {
-  FoldedCollection,
-  CollectionId,
-  FoldedResult,
-  FoldingFields,
+  type CollectionId,
+  type FoldedCollection,
+  type FoldedResult,
+  type FoldingFields,
+  type FoldingState,
   getFoldingInitialState,
-  FoldingState,
 } from './folding-state.js';
 import {getAllIncludedResultsFrom} from './folding-utils.js';
 

@@ -8,14 +8,14 @@ import {
 import {didYouMeanReducer as didYouMean} from '../../../features/did-you-mean/did-you-mean-slice.js';
 import {
   buildMockSearchEngine,
-  MockedSearchEngine,
+  type MockedSearchEngine,
 } from '../../../test/mock-engine-v2.js';
 import {createMockState} from '../../../test/mock-state.js';
 import {
   buildCoreDidYouMean,
-  DidYouMean,
-  DidYouMeanOptions,
-  DidYouMeanProps,
+  type DidYouMean,
+  type DidYouMeanOptions,
+  type DidYouMeanProps,
 } from './headless-core-did-you-mean.js';
 
 vi.mock('pino', async () => {

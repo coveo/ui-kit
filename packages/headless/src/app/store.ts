@@ -1,14 +1,14 @@
-import {Relay} from '@coveo/relay';
+import type {Relay} from '@coveo/relay';
 import {
   configureStore as configureStoreToolkit,
-  ReducersMapObject,
-  StateFromReducersMapObject,
-  Middleware,
-  Reducer,
+  type Middleware,
+  type Reducer,
+  type ReducersMapObject,
+  type StateFromReducersMapObject,
 } from '@reduxjs/toolkit';
 import {logActionMiddleware} from './logger-middlewares.js';
-import {NavigatorContext} from './navigator-context-provider.js';
-import {ThunkExtraArguments} from './thunk-extra-arguments.js';
+import type {NavigatorContext} from './navigator-context-provider.js';
+import type {ThunkExtraArguments} from './thunk-extra-arguments.js';
 
 export interface CoreExtraArguments
   extends ThunkExtraArguments,

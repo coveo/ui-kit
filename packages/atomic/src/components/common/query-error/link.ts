@@ -1,7 +1,7 @@
-import {FunctionalComponent} from '@/src/utils/functional-component-utils';
-import {i18n} from 'i18next';
+import type {i18n} from 'i18next';
 import {html, nothing} from 'lit';
-import {KnownErrorType} from './known-error-types';
+import type {FunctionalComponent} from '@/src/utils/functional-component-utils';
+import type {KnownErrorType} from './known-error-types';
 
 interface QueryErrorLinkProps {
   errorType?: string;

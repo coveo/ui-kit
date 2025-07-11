@@ -1,5 +1,5 @@
-import {Trigger} from '../../common/trigger.js';
-import {
+import type {Trigger} from '../../common/trigger.js';
+import type {
   SearchAPIErrorWithExceptionInBody,
   SearchAPIErrorWithStatusCode,
 } from '../search-api-error-response.js';

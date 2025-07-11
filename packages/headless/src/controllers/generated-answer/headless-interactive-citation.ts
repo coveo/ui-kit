@@ -1,10 +1,10 @@
-import {SearchEngine} from '../../app/search-engine/search-engine.js';
+import type {SearchEngine} from '../../app/search-engine/search-engine.js';
 import {generatedAnswerAnalyticsClient} from '../../features/generated-answer/generated-answer-analytics-actions.js';
 import {
-  InteractiveCitation,
-  InteractiveCitationOptions,
-  InteractiveCitationProps,
   buildInteractiveCitationCore,
+  type InteractiveCitation,
+  type InteractiveCitationOptions,
+  type InteractiveCitationProps,
 } from '../core/generated-answer/headless-core-interactive-citation.js';
 
 export type {

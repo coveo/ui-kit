@@ -1,6 +1,6 @@
-import {FacetSortCriterion} from '@coveo/headless';
+import type {FacetSortCriterion} from '@coveo/headless';
 import {orderBy} from 'natural-orderby';
-import {test, expect} from './fixture';
+import {expect, test} from './fixture';
 
 test.describe('when selecting the facet search "More matches for" button', () => {
   test.beforeEach(async ({facet}) => {
@@ -218,6 +218,7 @@ test.describe('Sort Criteria', () => {
             .toBe(30);
         });
 
+        // biome-ignore lint/suspicious/noTemplateCurlyInString: <>
         test('should have facet values sorted by custom order first, and then by ${criteria}', async ({
           facet,
         }) => {

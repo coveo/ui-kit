@@ -1,10 +1,12 @@
-import {AsyncThunkAction} from '@reduxjs/toolkit';
+import type {AsyncThunkAction} from '@reduxjs/toolkit';
 import {configuration} from '../../../app/common-reducers.js';
-import {CoreEngine} from '../../../app/engine.js';
-import {
+import type {CoreEngine} from '../../../app/engine.js';
+import type {
   InsightAction,
   LegacySearchAction,
 } from '../../../features/analytics/analytics-utils.js';
+import {logSearchboxSubmit} from '../../../features/query/query-analytics-actions.js';
+import {queryReducer as query} from '../../../features/query/query-slice.js';
 import {
   registerQuerySetQuery,
   updateQuerySetQuery,
@@ -12,7 +14,7 @@ import {
 import {querySetReducer as querySet} from '../../../features/query-set/query-set-slice.js';
 import {
   clearQuerySuggest,
-  FetchQuerySuggestionsActionCreatorPayload,
+  type FetchQuerySuggestionsActionCreatorPayload,
   registerQuerySuggest,
   selectQuerySuggestion,
 } from '../../../features/query-suggest/query-suggest-actions.js';
@@ -21,16 +23,14 @@ import {
   omniboxAnalytics,
 } from '../../../features/query-suggest/query-suggest-analytics-actions.js';
 import {querySuggestReducer as querySuggest} from '../../../features/query-suggest/query-suggest-slice.js';
-import {QuerySuggestState} from '../../../features/query-suggest/query-suggest-state.js';
-import {logSearchboxSubmit} from '../../../features/query/query-analytics-actions.js';
-import {queryReducer as query} from '../../../features/query/query-slice.js';
+import type {QuerySuggestState} from '../../../features/query-suggest/query-suggest-state.js';
 import {
-  SearchAction,
-  TransitiveSearchAction,
   prepareForSearchWithQuery,
+  type SearchAction,
+  type TransitiveSearchAction,
 } from '../../../features/search/search-actions.js';
 import {searchReducer as search} from '../../../features/search/search-slice.js';
-import {
+import type {
   ConfigurationSection,
   QuerySection,
   QuerySetSection,
@@ -39,19 +39,19 @@ import {
 } from '../../../state/state-sections.js';
 import {loadReducerError} from '../../../utils/errors.js';
 import {
-  SuggestionHighlightingOptions,
-  Delimiters,
+  type Delimiters,
   getHighlightedSuggestion,
+  type SuggestionHighlightingOptions,
 } from '../../../utils/highlight.js';
 import {randomID} from '../../../utils/utils.js';
 import {validateOptions} from '../../../utils/validate-payload.js';
 import {
   buildController,
-  Controller,
+  type Controller,
 } from '../../controller/headless-controller.js';
 import {
   defaultSearchBoxOptions,
-  SearchBoxOptions,
+  type SearchBoxOptions,
   searchBoxOptionsSchema,
 } from './headless-core-search-box-options.js';
 
@@ -66,7 +66,7 @@ interface NextSearchBoxProps {
    */
   executeSearchActionCreator: (
     arg: TransitiveSearchAction
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    // biome-ignore lint/suspicious/noExplicitAny: third-party API requires 'any'
   ) => AsyncThunkAction<any, TransitiveSearchAction, any>;
 
   isNextAnalyticsReady: true;
@@ -78,7 +78,7 @@ interface LegacySearchBoxProps {
    */
   executeSearchActionCreator: (
     arg: LegacySearchAction
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    // biome-ignore lint/suspicious/noExplicitAny: third-party API requires 'any'
   ) => AsyncThunkAction<any, LegacySearchAction, any>;
 
   isNextAnalyticsReady: false;
@@ -96,11 +96,11 @@ interface SearchBoxPropsBase {
   executeSearchActionCreator:
     | ((
         arg: TransitiveSearchAction
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        // biome-ignore lint/suspicious/noExplicitAny: third-party API requires 'any'
       ) => AsyncThunkAction<any, TransitiveSearchAction, any>)
     | ((
         arg: LegacySearchAction
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        // biome-ignore lint/suspicious/noExplicitAny: third-party API requires 'any'
       ) => AsyncThunkAction<any, LegacySearchAction, any>);
 
   /**
@@ -108,7 +108,7 @@ interface SearchBoxPropsBase {
    */
   fetchQuerySuggestionsActionCreator: (
     arg: FetchQuerySuggestionsActionCreatorPayload
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    // biome-ignore lint/suspicious/noExplicitAny: third-party API requires 'any'
   ) => AsyncThunkAction<any, FetchQuerySuggestionsActionCreatorPayload, any>;
   //Indicate if the executeSearchActionCreator can use the new analytics logic.
   isNextAnalyticsReady: boolean;

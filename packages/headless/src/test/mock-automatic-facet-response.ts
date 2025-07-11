@@ -1,4 +1,4 @@
-import {AutomaticFacetResponse} from '../features/facets/automatic-facet-set/interfaces/response.js';
+import type {AutomaticFacetResponse} from '../features/facets/automatic-facet-set/interfaces/response.js';
 
 export function buildMockAutomaticFacetResponse(
   config: Partial<AutomaticFacetResponse> = {}

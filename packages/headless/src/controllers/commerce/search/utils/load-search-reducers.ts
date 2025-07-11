@@ -1,6 +1,6 @@
-import {CommerceEngine} from '../../../../app/commerce-engine/commerce-engine.js';
+import type {CommerceEngine} from '../../../../app/commerce-engine/commerce-engine.js';
 import {commerceSearchReducer as commerceSearch} from '../../../../features/commerce/search/search-slice.js';
-import {CommerceSearchSection} from '../../../../state/state-sections.js';
+import type {CommerceSearchSection} from '../../../../state/state-sections.js';
 
 export function loadSearchReducer(
   engine: CommerceEngine

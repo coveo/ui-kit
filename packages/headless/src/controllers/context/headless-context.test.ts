@@ -1,14 +1,14 @@
-import {describe, it, expect, vi, beforeEach} from 'vitest';
+import {beforeEach, describe, expect, it, vi} from 'vitest';
 import {setContext} from '../../features/context/context-actions.js';
 import {
   buildMockSearchEngine,
-  MockedSearchEngine,
+  type MockedSearchEngine,
 } from '../../test/mock-engine-v2.js';
 import {createMockState} from '../../test/mock-state.js';
 import {
   buildContext,
-  Context,
-  ContextInitialState,
+  type Context,
+  type ContextInitialState,
 } from './headless-context.js';
 
 vi.mock('../../features/context/context-actions');

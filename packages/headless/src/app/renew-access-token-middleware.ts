@@ -1,5 +1,5 @@
-import {Middleware, UnknownAction} from '@reduxjs/toolkit';
-import {Logger} from 'pino';
+import type {Middleware, UnknownAction} from '@reduxjs/toolkit';
+import type {Logger} from 'pino';
 import {debounce} from 'ts-debounce';
 import {updateBasicConfiguration} from '../features/configuration/configuration-actions.js';
 import {ExpiredTokenError} from '../utils/errors.js';
@@ -9,10 +9,9 @@ export function createRenewAccessTokenMiddleware(
   renewToken?: () => Promise<string>
 ): Middleware {
   let accessTokenRenewalsAttempts = 0;
-  const resetRenewalTriesAfterDelay = debounce(
-    () => (accessTokenRenewalsAttempts = 0),
-    500
-  );
+  const resetRenewalTriesAfterDelay = debounce(() => {
+    accessTokenRenewalsAttempts = 0;
+  }, 500);
 
   return (store) => (next) => async (action) => {
     const isThunk = typeof action === 'function';
@@ -51,7 +50,7 @@ export function createRenewAccessTokenMiddleware(
   };
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+// biome-ignore lint/suspicious/noExplicitAny: legacy API requires 'any'
 function isExpiredTokenError(action: any) {
   return action?.error?.name === new ExpiredTokenError().name;
 }

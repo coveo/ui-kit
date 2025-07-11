@@ -4,15 +4,15 @@ import {updateBasicConfiguration} from '../../configuration/configuration-action
 import {
   disableAnalytics,
   enableAnalytics,
+  type UpdateAnalyticsConfigurationPayload,
+  type UpdateBasicConfigurationPayload,
+  type UpdateProxyBaseUrlPayload,
   updateAnalyticsConfiguration,
-  UpdateAnalyticsConfigurationPayload,
   updateBasicConfiguration as updateBasicCommerceConfiguration,
-  UpdateBasicConfigurationPayload,
   updateProxyBaseUrl,
-  UpdateProxyBaseUrlPayload,
 } from './configuration-actions.js';
 import {
-  ConfigurationState,
+  type ConfigurationState,
   getConfigurationInitialState,
 } from './configuration-state.js';
 

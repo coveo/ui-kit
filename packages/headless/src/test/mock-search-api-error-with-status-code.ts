@@ -1,4 +1,4 @@
-import {SearchAPIErrorWithStatusCode} from '../api/search/search-api-error-response.js';
+import type {SearchAPIErrorWithStatusCode} from '../api/search/search-api-error-response.js';
 
 export function buildMockSearchApiErrorWithStatusCode(
   config: Partial<SearchAPIErrorWithStatusCode> = {}

@@ -1,8 +1,8 @@
-import {SearchEngine} from '../../app/search-engine/search-engine.js';
-import {ControllerDefinitionWithProps} from '../../app/ssr-engine/types/common.js';
+import type {SearchEngine} from '../../app/search-engine/search-engine.js';
+import type {ControllerDefinitionWithProps} from '../../app/ssr-engine/types/common.js';
 import {MissingControllerProps} from '../../utils/errors.js';
-import {ContextProps} from '../core/context/headless-core-context.js';
-import {Context, buildContext} from './headless-context.js';
+import type {ContextProps} from '../core/context/headless-core-context.js';
+import {buildContext, type Context} from './headless-context.js';
 
 export * from './headless-context.js';
 

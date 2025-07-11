@@ -1,4 +1,4 @@
-import {Middleware} from '@reduxjs/toolkit';
+import type {Middleware} from '@reduxjs/toolkit';
 
 function isInstantlyCallableThunkAction(action: unknown): action is () => void {
   return (action as {instantlyCallable: boolean}).instantlyCallable;

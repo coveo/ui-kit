@@ -1,9 +1,9 @@
-import {
+import type {
   BaseParam,
   ContextParam,
   LocaleParam,
 } from '../../platform-service-params.js';
-import {
+import type {
   AnalyticsParam,
   AuthenticationParam,
   PipelineParam,

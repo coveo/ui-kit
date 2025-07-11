@@ -1,6 +1,6 @@
-import {FunctionalComponentWithChildren} from '@/src/utils/functional-component-utils';
-import {i18n} from 'i18next';
+import type {i18n} from 'i18next';
 import {html} from 'lit';
+import type {FunctionalComponentWithChildren} from '@/src/utils/functional-component-utils';
 
 interface PagerNavigationProps {
   i18n: i18n;

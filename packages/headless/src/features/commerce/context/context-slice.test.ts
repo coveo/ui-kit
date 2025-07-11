@@ -1,6 +1,9 @@
 import {setContext, setLocation, setView} from './context-actions.js';
 import {contextReducer} from './context-slice.js';
-import {CommerceContextState, getContextInitialState} from './context-state.js';
+import {
+  type CommerceContextState,
+  getContextInitialState,
+} from './context-state.js';
 
 describe('context-slice', () => {
   let state: CommerceContextState;

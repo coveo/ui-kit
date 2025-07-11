@@ -1,5 +1,5 @@
 import {isNullOrUndefined} from '@coveo/bueno';
-import {Middleware, UnknownAction} from '@reduxjs/toolkit';
+import type {Middleware, UnknownAction} from '@reduxjs/toolkit';
 
 type UnknownActionWithAnalyticsPayload = UnknownAction & {
   payload: {analyticsAction?: UnknownAction};
@@ -26,7 +26,7 @@ export const analyticsMiddleware: Middleware = (api) => (next) => (action) => {
   // To meet those conditions, we ensure the analyticsMiddleware is always the first executed (in store.ts/configureStore) and that it is removed from the payload.
   // We only keep a reference to the function in order to dispatch it correctly after the reducer (next) has the chance of processing the action/state change
 
-  let analytics: UnknownAction | undefined = undefined;
+  let analytics: UnknownAction | undefined;
 
   if (isAnalyticsAction(action)) {
     analytics = action.payload.analyticsAction;

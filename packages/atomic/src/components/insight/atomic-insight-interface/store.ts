@@ -1,21 +1,21 @@
-import {DEFAULT_MOBILE_BREAKPOINT} from '@/src/utils/replace-breakpoint';
-import {
+import type {
   DateFacetValue,
   InsightEngine,
   NumericFacetValue,
 } from '@coveo/headless/insight';
-import {
+import {DEFAULT_MOBILE_BREAKPOINT} from '@/src/utils/replace-breakpoint';
+import type {
   FacetInfo,
   FacetStore,
   FacetType,
   FacetValueFormat,
 } from '../../common/facets/facet-common-store';
 import {
-  BaseStore,
+  type BaseStore,
   createBaseStore,
   getFacetElements,
+  type ResultListInfo,
   registerFacet,
-  ResultListInfo,
   setLoadingFlag,
   unsetLoadingFlag,
   waitUntilAppLoaded,

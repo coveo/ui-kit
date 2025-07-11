@@ -1,4 +1,4 @@
-import {OmniboxSuggestionMetadata} from '../features/query-suggest/query-suggest-analytics-actions.js';
+import type {OmniboxSuggestionMetadata} from '../features/query-suggest/query-suggest-analytics-actions.js';
 
 export function buildMockOmniboxSuggestionMetadata(
   config: Partial<OmniboxSuggestionMetadata> = {}

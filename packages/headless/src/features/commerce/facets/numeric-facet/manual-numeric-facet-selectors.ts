@@ -1,5 +1,5 @@
 import {createSelector} from '@reduxjs/toolkit';
-import {ManualRangeSection} from '../../../../state/state-sections.js';
+import type {ManualRangeSection} from '../../../../state/state-sections.js';
 
 export const manualNumericFacetSelector = createSelector(
   (state: ManualRangeSection, facetId: string) =>

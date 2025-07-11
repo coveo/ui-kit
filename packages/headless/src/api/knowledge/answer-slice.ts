@@ -1,12 +1,12 @@
 import {
-  BaseQueryFn,
+  type BaseQueryFn,
   createApi,
-  FetchArgs,
+  type FetchArgs,
+  type FetchBaseQueryError,
   fetchBaseQuery,
-  FetchBaseQueryError,
   retry,
 } from '@reduxjs/toolkit/query';
-import {
+import type {
   ConfigurationSection,
   GeneratedAnswerSection,
 } from '../../state/state-sections.js';

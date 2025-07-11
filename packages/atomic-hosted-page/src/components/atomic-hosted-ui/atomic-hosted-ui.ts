@@ -1,5 +1,5 @@
 import {Schema, StringValue} from '@coveo/bueno';
-import {type PlatformEnvironment} from '@coveo/headless';
+import type {PlatformEnvironment} from '@coveo/headless';
 import {html, LitElement} from 'lit';
 import {customElement, property} from 'lit/decorators.js';
 import {getHostedPage} from './api.js';

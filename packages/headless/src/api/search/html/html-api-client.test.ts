@@ -1,5 +1,5 @@
 import {buildContentURL} from './html-api-client.js';
-import {HtmlRequest} from './html-request.js';
+import type {HtmlRequest} from './html-request.js';
 
 describe('buildContentURL', () => {
   const baseRequest: HtmlRequest = {

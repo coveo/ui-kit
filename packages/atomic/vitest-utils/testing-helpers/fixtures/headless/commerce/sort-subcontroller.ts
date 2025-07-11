@@ -1,4 +1,4 @@
-import {Sort, SortState} from '@coveo/headless/commerce';
+import type {Sort, SortState} from '@coveo/headless/commerce';
 import {vi} from 'vitest';
 import {genericSubscribe} from '../common';
 

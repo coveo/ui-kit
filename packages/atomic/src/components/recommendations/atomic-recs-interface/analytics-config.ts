@@ -1,13 +1,13 @@
-import {
+import type {
   AnalyticsConfiguration,
   RecommendationEngineConfiguration,
 } from '@coveo/headless/recommendation';
 import {
-  AnalyticsPayload,
+  type AnalyticsPayload,
+  augmentAnalyticsConfigWithAtomicVersion,
+  augmentAnalyticsConfigWithDocument,
   augmentAnalyticsWithAtomicVersion,
   augmentWithExternalMiddleware,
-  augmentAnalyticsConfigWithDocument,
-  augmentAnalyticsConfigWithAtomicVersion,
   getNextAnalyticsConfig,
 } from '../../common/interface/analytics-config';
 
@@ -18,7 +18,6 @@ export function getAnalyticsConfig(
   switch (recsConfig.analytics?.analyticsMode) {
     case 'next':
       return getNextAnalyticsConfig(recsConfig, enabled);
-    case 'legacy':
     default:
       return getLegacyAnalyticsConfig(recsConfig, enabled);
   }

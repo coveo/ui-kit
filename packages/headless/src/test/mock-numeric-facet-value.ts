@@ -1,4 +1,4 @@
-import {NumericFacetValue} from '../features/facets/range-facets/numeric-facet-set/interfaces/response.js';
+import type {NumericFacetValue} from '../features/facets/range-facets/numeric-facet-set/interfaces/response.js';
 
 export function buildMockNumericFacetValue(
   config: Partial<NumericFacetValue> = {}

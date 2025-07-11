@@ -1,5 +1,5 @@
 import {createSelector} from '@reduxjs/toolkit';
-import {StaticFilterSection} from '../../state/state-sections.js';
+import type {StaticFilterSection} from '../../state/state-sections.js';
 
 /**
  * Given a static filter state, returns an array of selected filter expressions.

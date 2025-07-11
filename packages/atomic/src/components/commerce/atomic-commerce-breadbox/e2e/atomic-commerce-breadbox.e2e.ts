@@ -1,6 +1,6 @@
 /* eslint-disable @cspell/spellchecker */
-import {Locator} from '@playwright/test';
-import {test, expect} from './fixture';
+import type {Locator} from '@playwright/test';
+import {expect, test} from './fixture';
 
 test.describe('Default', () => {
   test.beforeEach(async ({breadbox}) => {
@@ -270,7 +270,7 @@ test.describe('Default', () => {
     }) => {
       const breadcrumbButton = breadbox.getBreadcrumbButtons(firstValueText);
 
-      await expect(breadcrumbButton).toHaveText('Price: ' + firstValueText);
+      await expect(breadcrumbButton).toHaveText(`Price: ${firstValueText}`);
     });
   });
 
@@ -313,7 +313,7 @@ test.describe('Default', () => {
     }) => {
       const breadcrumbButton = breadbox.getBreadcrumbButtons(firstValueText);
 
-      await expect(breadcrumbButton).toHaveText('Price: ' + firstValueText);
+      await expect(breadcrumbButton).toHaveText(`Price: ${firstValueText}`);
     });
   });
 
@@ -362,7 +362,7 @@ test.describe('Default', () => {
     }) => {
       const breadcrumbButton = breadbox.getBreadcrumbButtons(firstValueText);
 
-      await expect(breadcrumbButton).toHaveText('Date: ' + firstValueText);
+      await expect(breadcrumbButton).toHaveText(`Date: ${firstValueText}`);
     });
   });
 

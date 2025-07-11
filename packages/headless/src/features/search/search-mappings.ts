@@ -2,18 +2,18 @@ import {
   formatRelativeDateForSearchApi,
   isRelativeDateFormat,
 } from '../../api/search/date/relative-date.js';
-import {SearchAPIClientResponse} from '../../api/search/search-api-client.js';
-import {SearchAPIErrorWithStatusCode} from '../../api/search/search-api-error-response.js';
-import {FacetsParam} from '../../api/search/search-api-params.js';
-import {SearchRequest} from '../../api/search/search/search-request.js';
-import {SearchResponseSuccess} from '../../api/search/search/search-response.js';
-import {AnyFacetRequest} from '../facets/generic/interfaces/generic-facet-request.js';
-import {AnyFacetResponse} from '../facets/generic/interfaces/generic-facet-response.js';
+import type {SearchRequest} from '../../api/search/search/search-request.js';
+import type {SearchResponseSuccess} from '../../api/search/search/search-response.js';
+import type {SearchAPIClientResponse} from '../../api/search/search-api-client.js';
+import type {SearchAPIErrorWithStatusCode} from '../../api/search/search-api-error-response.js';
+import type {FacetsParam} from '../../api/search/search-api-params.js';
+import type {AnyFacetRequest} from '../facets/generic/interfaces/generic-facet-request.js';
+import type {AnyFacetResponse} from '../facets/generic/interfaces/generic-facet-response.js';
 import {
-  DateRangeRequest,
+  type DateRangeRequest,
   isDateFacetRequest,
 } from '../facets/range-facets/date-facet-set/interfaces/request.js';
-import {
+import type {
   DateFacetResponse,
   DateFacetValue,
 } from '../facets/range-facets/date-facet-set/interfaces/response.js';

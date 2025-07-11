@@ -1,5 +1,5 @@
-import {Draft} from '@reduxjs/toolkit';
-import {
+import type {Draft} from '@reduxjs/toolkit';
+import type {
   Correction,
   QueryCorrection,
 } from '../../api/search/search/query-corrections.js';

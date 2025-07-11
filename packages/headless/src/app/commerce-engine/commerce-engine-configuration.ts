@@ -1,12 +1,12 @@
 import {BooleanValue, RecordValue, Schema, StringValue} from '@coveo/bueno';
-import {CartInitialState} from '../../controllers/commerce/context/cart/headless-cart.js';
-import {ContextOptions} from '../../controllers/commerce/context/headless-context.js';
+import type {CartInitialState} from '../../controllers/commerce/context/cart/headless-cart.js';
+import type {ContextOptions} from '../../controllers/commerce/context/headless-context.js';
 import {cartDefinition} from '../../features/commerce/context/cart/cart-validation.js';
 import {contextDefinition} from '../../features/commerce/context/context-validation.js';
 import {nonEmptyString} from '../../utils/validate-payload.js';
 import {
-  AnalyticsConfiguration,
-  EngineConfiguration,
+  type AnalyticsConfiguration,
+  type EngineConfiguration,
   engineConfigurationDefinitions,
 } from '../engine-configuration.js';
 
@@ -33,7 +33,7 @@ export interface CommerceEngineConfiguration extends EngineConfiguration {
   /**
    * The base URL to use to proxy Coveo commerce requests (e.g., `https://example.com/commerce`).
    *
-   * This is an advanced option that you should only set if you need to proxy Coveo commerce requests through your own
+   * This is an advanced option that you only set if you proxy Coveo commerce requests through your own
    * server. In most cases, you should not set this option.
    *
    * See [Headless proxy: Commerce](https://docs.coveo.com/en/headless/latest/usage/proxy#commerce).

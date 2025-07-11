@@ -1,5 +1,5 @@
-import {QuestionAnswerDocumentIdentifier} from '../../api/search/search/question-answering.js';
-import {
+import type {QuestionAnswerDocumentIdentifier} from '../../api/search/search/question-answering.js';
+import type {
   QuestionAnsweringSection,
   SearchSection,
 } from '../../state/state-sections.js';

@@ -1,6 +1,6 @@
-import {multiClassMap} from '@/src/directives/multi-class-map';
-import {FunctionalComponentWithChildren} from '@/src/utils/functional-component-utils';
 import {html} from 'lit';
+import {multiClassMap} from '@/src/directives/multi-class-map';
+import type {FunctionalComponentWithChildren} from '@/src/utils/functional-component-utils';
 
 interface Props {
   additionalClasses?: string;

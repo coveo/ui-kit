@@ -1,12 +1,12 @@
-import {ListingAndStandaloneControllerWithoutProps} from '../../../app/commerce-ssr-engine/types/common.js';
-import {StandaloneSearchBoxProps} from '../../standalone-search-box/headless-standalone-search-box.js';
+import type {ListingAndStandaloneControllerWithoutProps} from '../../../app/commerce-ssr-engine/types/common.js';
+import type {StandaloneSearchBoxProps} from '../../standalone-search-box/headless-standalone-search-box.js';
 import {
-  StandaloneSearchBox,
   buildStandaloneSearchBox,
+  type StandaloneSearchBox,
 } from './headless-standalone-search-box.js';
 
-export type {StandaloneSearchBoxOptions} from './headless-standalone-search-box-options.js';
 export type {StandaloneSearchBoxState} from './headless-standalone-search-box.js';
+export type {StandaloneSearchBoxOptions} from './headless-standalone-search-box-options.js';
 export type {StandaloneSearchBox, StandaloneSearchBoxProps};
 
 export interface StandaloneSearchBoxDefinition

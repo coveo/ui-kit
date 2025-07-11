@@ -1,4 +1,4 @@
-import {InsightAppState} from '../../state/insight-app-state.js';
+import type {InsightAppState} from '../../state/insight-app-state.js';
 import {buildMockCategoryFacetRequest} from '../../test/mock-category-facet-request.js';
 import {buildMockCategoryFacetSlice} from '../../test/mock-category-facet-slice.js';
 import {buildMockDateFacetRequest} from '../../test/mock-date-facet-request.js';
@@ -11,14 +11,14 @@ import {buildMockNumericFacetSlice} from '../../test/mock-numeric-facet-slice.js
 import {buildMockTabSlice} from '../../test/mock-tab-state.js';
 import {getConfigurationInitialState} from '../configuration/configuration-state.js';
 import {
-  CollectionId,
+  type CollectionId,
   getFoldingInitialState,
 } from '../folding/folding-state.js';
 import {maximumNumberOfResultsFromIndex} from '../pagination/pagination-constants.js';
 import {
-  buildInsightSearchRequest,
-  buildInsightLoadCollectionRequest,
   buildInsightBaseRequest,
+  buildInsightLoadCollectionRequest,
+  buildInsightSearchRequest,
 } from './insight-search-request.js';
 
 describe('insight search request', () => {

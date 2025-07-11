@@ -1,16 +1,16 @@
 import {createReducer} from '@reduxjs/toolkit';
 import {executeSearch} from '../search/search-actions.js';
 import {
-  enableDidYouMean,
-  disableDidYouMean,
   applyDidYouMeanCorrection,
-  enableAutomaticQueryCorrection,
   disableAutomaticQueryCorrection,
+  disableDidYouMean,
+  enableAutomaticQueryCorrection,
+  enableDidYouMean,
   setCorrectionMode,
 } from './did-you-mean-actions.js';
 import {setToNonEmptyQueryCorrection} from './did-you-mean-slice-functions.js';
 import {
-  CorrectionMode,
+  type CorrectionMode,
   emptyLegacyCorrection,
   getDidYouMeanInitialState,
 } from './did-you-mean-state.js';
@@ -40,10 +40,9 @@ export const didYouMeanReducer = createReducer(
         const {queryCorrection, queryCorrections} = action.payload.response;
 
         if (state.queryCorrectionMode === 'legacy') {
-          const nonOptionalQueryCorrections =
-            queryCorrections && queryCorrections[0]
-              ? queryCorrections[0]
-              : emptyLegacyCorrection();
+          const nonOptionalQueryCorrections = queryCorrections?.[0]
+            ? queryCorrections[0]
+            : emptyLegacyCorrection();
 
           state.queryCorrection = nonOptionalQueryCorrections;
         }

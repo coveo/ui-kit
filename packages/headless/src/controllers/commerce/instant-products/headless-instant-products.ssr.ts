@@ -1,8 +1,8 @@
-import {NonRecommendationControllerDefinitionWithoutProps} from '../../../app/commerce-ssr-engine/types/common.js';
+import type {NonRecommendationControllerDefinitionWithoutProps} from '../../../app/commerce-ssr-engine/types/common.js';
 import {
-  InstantProducts,
-  InstantProductsProps,
   buildInstantProducts,
+  type InstantProducts,
+  type InstantProductsProps,
 } from './headless-instant-products.js';
 
 export type {

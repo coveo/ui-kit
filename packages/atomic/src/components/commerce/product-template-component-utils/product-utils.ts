@@ -1,6 +1,6 @@
+import {type Product, ProductTemplatesHelpers} from '@coveo/headless/commerce';
 import {readFromObject} from '@/src/utils/object-utils';
-import {Product, ProductTemplatesHelpers} from '@coveo/headless/commerce';
-import {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface';
+import type {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface';
 import {FieldValueIsNaNError} from './error';
 
 export function parseValue(product: Product, field: string) {

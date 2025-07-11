@@ -1,19 +1,19 @@
-import {CaseAssistAPIClient} from '../../api/service/case-assist/case-assist-api-client.js';
-import {CaseAssistEngine} from '../../app/case-assist-engine/case-assist-engine.js';
-import {CoreEngine} from '../../app/engine.js';
-import {ClientThunkExtraArguments} from '../../app/thunk-extra-arguments.js';
+import type {CaseAssistAPIClient} from '../../api/service/case-assist/case-assist-api-client.js';
+import type {CaseAssistEngine} from '../../app/case-assist-engine/case-assist-engine.js';
+import type {CoreEngine} from '../../app/engine.js';
+import type {ClientThunkExtraArguments} from '../../app/thunk-extra-arguments.js';
 import {logQuickviewDocumentSuggestionClick} from '../../features/case-assist/case-assist-analytics-actions.js';
 import {documentSuggestionReducer as documentSuggestion} from '../../features/document-suggestion/document-suggestion-slice.js';
 import {preparePreviewPagination} from '../../features/result-preview/result-preview-actions.js';
 import {buildResultPreviewRequest} from '../../features/result-preview/result-preview-request-builder.js';
-import {DocumentSuggestionSection} from '../../state/state-sections.js';
+import type {DocumentSuggestionSection} from '../../state/state-sections.js';
 import {loadReducerError} from '../../utils/errors.js';
 import {
   buildCoreQuickview,
-  QuickviewOptions,
-  QuickviewState,
-  QuickviewProps,
-  Quickview,
+  type Quickview,
+  type QuickviewOptions,
+  type QuickviewProps,
+  type QuickviewState,
 } from '../core/quickview/headless-core-quickview.js';
 
 export interface CaseAssistQuickviewProps extends QuickviewProps {}

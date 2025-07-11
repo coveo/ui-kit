@@ -1,6 +1,6 @@
-import {SearchAPIErrorWithStatusCode} from '../../api/search/search-api-error-response.js';
+import type {SearchAPIErrorWithStatusCode} from '../../api/search/search-api-error-response.js';
 import {
-  InsightAction,
+  type InsightAction,
   makeInsightAnalyticsActionFactory,
 } from '../analytics/analytics-utils.js';
 import {SearchPageEvents} from '../analytics/search-action-cause.js';

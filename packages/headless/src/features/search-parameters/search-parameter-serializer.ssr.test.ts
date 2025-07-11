@@ -1,4 +1,4 @@
-import {SearchParameters} from './search-parameter-actions.js';
+import type {SearchParameters} from './search-parameter-actions.js';
 import {buildSSRSearchParameterSerializer} from './search-parameter-serializer.ssr.js';
 
 const someSpecialCharactersThatNeedsEncoding = [

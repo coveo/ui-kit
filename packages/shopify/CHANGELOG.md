@@ -1,3 +1,9 @@
+## <small>1.7.2 (2025-07-09)</small>
+
+* fix(shopify): get memoized fetch working in browsers (#5561) ([b11d812](https://github.com/coveo/ui-kit/commits/b11d812)), closes [#5561](https://github.com/coveo/ui-kit/issues/5561)
+
+
+
 ## <small>1.7.1 (2025-07-02)</small>
 
 * chore(lint): integrate biome (#5507) ([53bcada](https://github.com/coveo/ui-kit/commits/53bcada)), closes [#5507](https://github.com/coveo/ui-kit/issues/5507)

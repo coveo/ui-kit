@@ -7,7 +7,7 @@ import {
 import {recentResultsReducer} from './recent-results-slice.js';
 import {
   getRecentResultsInitialState,
-  RecentResultsState,
+  type RecentResultsState,
 } from './recent-results-state.js';
 
 describe('recent-results slice', () => {

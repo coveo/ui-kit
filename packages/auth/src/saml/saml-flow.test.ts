@@ -1,6 +1,6 @@
-import {BrowserHistory} from './browser-history';
-import {BrowserLocation} from './browser-location';
-import {buildSamlFlow, SamlFlow, SamlFlowOptions} from './saml-flow';
+import type {BrowserHistory} from './browser-history';
+import type {BrowserLocation} from './browser-location';
+import {buildSamlFlow, type SamlFlow, type SamlFlowOptions} from './saml-flow';
 
 describe('buildSamlFlow', () => {
   const handshakeToken = 'token';

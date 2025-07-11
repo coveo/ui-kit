@@ -12,7 +12,7 @@ const require = createRequire(import.meta.url);
 function resolveEsm(moduleName) {
   const packageJsonPath = require.resolve(`${moduleName}/package.json`);
   const packageJson = require(packageJsonPath);
-  return join(moduleName, packageJson['module'] || packageJson['main']);
+  return join(moduleName, packageJson.module || packageJson.main);
 }
 
 /**

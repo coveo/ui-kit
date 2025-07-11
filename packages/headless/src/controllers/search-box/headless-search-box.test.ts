@@ -1,18 +1,18 @@
-import {fetchQuerySuggestions} from '../../features/query-suggest/query-suggest-actions.js';
 import {logSearchboxSubmit} from '../../features/query/query-analytics-actions.js';
+import {fetchQuerySuggestions} from '../../features/query-suggest/query-suggest-actions.js';
 import {executeSearch} from '../../features/search/search-actions.js';
-import {SearchAppState} from '../../state/search-app-state.js';
+import type {SearchAppState} from '../../state/search-app-state.js';
 import {
   buildMockSearchEngine,
-  MockedSearchEngine,
+  type MockedSearchEngine,
 } from '../../test/mock-engine-v2.js';
 import {buildMockQuerySuggest} from '../../test/mock-query-suggest.js';
 import {createMockState} from '../../test/mock-state.js';
 import {
-  SearchBox,
-  SearchBoxProps,
-  SearchBoxOptions,
   buildSearchBox,
+  type SearchBox,
+  type SearchBoxOptions,
+  type SearchBoxProps,
 } from './headless-search-box.js';
 
 vi.mock('../../features/query/query-analytics-actions', () => ({

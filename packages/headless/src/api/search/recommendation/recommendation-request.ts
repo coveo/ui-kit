@@ -1,11 +1,11 @@
-import {
+import type {
   BaseParam,
   ContextParam,
   DictionaryFieldContextParam,
   LocaleParam,
   NumberOfResultsParam,
 } from '../../platform-service-params.js';
-import {
+import type {
   ActionsHistoryParam,
   AdvancedQueryParam,
   AnalyticsParam,

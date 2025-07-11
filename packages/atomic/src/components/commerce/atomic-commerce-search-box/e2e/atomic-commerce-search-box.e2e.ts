@@ -1,4 +1,4 @@
-import {test, expect, setSuggestions, setRecentQueries} from './fixture';
+import {expect, setRecentQueries, setSuggestions, test} from './fixture';
 
 test.describe('AtomicCommerceSearchBox', () => {
   test.describe('default', () => {

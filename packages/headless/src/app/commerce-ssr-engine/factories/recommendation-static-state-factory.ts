@@ -1,23 +1,23 @@
-import {UnknownAction} from '@reduxjs/toolkit';
+import type {UnknownAction} from '@reduxjs/toolkit';
 import {filterObject} from '../../../utils/utils.js';
 import {composeFunction} from '../../ssr-engine/common.js';
 import {createStaticState} from '../common.js';
 import {
-  EngineStaticState,
-  InferControllerStaticStateMapFromDefinitionsWithSolutionType,
-  RecommendationControllerSettings,
+  type EngineStaticState,
+  type InferControllerStaticStateMapFromDefinitionsWithSolutionType,
+  type RecommendationControllerSettings,
   SolutionType,
 } from '../types/common.js';
-import {
+import type {
   BuildResult,
+  CommerceControllerDefinitionsMap,
   FetchStaticStateFromBuildResultParameters,
   FetchStaticStateFunction,
-  CommerceControllerDefinitionsMap,
   FetchStaticStateParameters,
 } from '../types/core-engine.js';
 import {
   buildFactory,
-  CommerceEngineDefinitionOptions,
+  type CommerceEngineDefinitionOptions,
 } from './build-factory.js';
 import {filterRecommendationControllers} from './utils/recommendation-filter.js';
 

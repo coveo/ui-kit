@@ -1,6 +1,7 @@
 /* eslint-disable canonical/no-barrel-import */
+/** biome-ignore-all lint/suspicious/noExplicitAny: <mock> */
 /* eslint-disable @cspell/spellchecker */
-import {StateNeededByAnswerAPI} from '../stream-answer-api.js';
+import type {StateNeededByAnswerAPI} from '../stream-answer-api.js';
 
 const atomicVersion = '2.77.0';
 

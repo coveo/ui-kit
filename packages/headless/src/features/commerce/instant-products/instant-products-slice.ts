@@ -1,8 +1,8 @@
 import {createReducer} from '@reduxjs/toolkit';
-import {
-  Product,
+import type {
   BaseProduct,
   ChildProduct,
+  Product,
 } from '../../../api/commerce/common/product.js';
 import {
   clearExpiredItems,
@@ -73,7 +73,7 @@ export const instantProductsReducer = createReducer(
         }
         const products = cache.products;
 
-        let childToPromote;
+        let childToPromote: ChildProduct | undefined;
         const currentParentIndex = products.findIndex((product) => {
           childToPromote = product.children.find(
             (child) => child.permanentid === action.payload.child.permanentid

@@ -1,28 +1,28 @@
+import {
+  buildProductListing,
+  buildSearch,
+  type Pagination,
+  type PaginationState,
+  type ProductListingSummaryState,
+  type SearchSummaryState,
+  type Summary,
+} from '@coveo/headless/commerce';
+import {userEvent} from '@storybook/test';
+import {html} from 'lit';
+import {ifDefined} from 'lit/directives/if-defined.js';
+import {beforeEach, describe, expect, it, vi} from 'vitest';
 import {renderInAtomicCommerceInterface} from '@/vitest-utils/testing-helpers/fixtures/atomic/commerce/atomic-commerce-interface-fixture';
 import {buildFakeCommerceEngine} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/engine';
 import {buildFakePager} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/pager-subcontroller';
 import {buildFakeProductListing} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/product-listing-controller';
 import {buildFakeSearch} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/search-controller';
 import {buildFakeSummary} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/summary-subcontroller';
-import {
-  buildProductListing,
-  buildSearch,
-  Pagination,
-  PaginationState,
-  ProductListingSummaryState,
-  SearchSummaryState,
-  Summary,
-} from '@coveo/headless/commerce';
-import {userEvent} from '@storybook/test';
-import {html} from 'lit';
-import {ifDefined} from 'lit/directives/if-defined.js';
-import {describe, it, expect, vi, beforeEach} from 'vitest';
 import './atomic-commerce-products-per-page';
-import {AtomicCommerceProductsPerPage} from './atomic-commerce-products-per-page';
 import {
   convertChoicesToNumbers,
   validateInitialChoice,
 } from '../../common/items-per-page/validate';
+import type {AtomicCommerceProductsPerPage} from './atomic-commerce-products-per-page';
 
 vi.mock('@coveo/headless/commerce', {spy: true});
 vi.mock('@/src/components/common/items-per-page/validate.js', {spy: true});

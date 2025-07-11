@@ -1,5 +1,5 @@
-import {AtomicCommerceRecommendationInterface} from '../atomic-commerce-recommendation-interface';
-import {test, expect} from './fixture';
+import type {AtomicCommerceRecommendationInterface} from '../atomic-commerce-recommendation-interface';
+import {expect, test} from './fixture';
 
 test.describe('AtomicCommerceRecommendationInterface', () => {
   test('should attach itself', async ({commerceRecommendationInterface}) => {

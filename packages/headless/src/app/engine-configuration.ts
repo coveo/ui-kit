@@ -1,17 +1,17 @@
 import {
   BooleanValue,
   RecordValue,
-  SchemaDefinition,
+  type SchemaDefinition,
   StringValue,
 } from '@coveo/bueno';
-import {
+import type {
   AnalyticsClientSendEventHook,
   IRuntimeEnvironment,
 } from 'coveo.analytics';
-import {PreprocessRequest} from '../api/preprocess-request.js';
-import {PlatformEnvironment} from '../utils/url-utils.js';
+import type {PreprocessRequest} from '../api/preprocess-request.js';
+import type {PlatformEnvironment} from '../utils/url-utils.js';
 import {requiredNonEmptyString} from '../utils/validate-payload.js';
-import {CoveoFramework} from '../utils/version.js';
+import type {CoveoFramework} from '../utils/version.js';
 
 /**
  * The global headless engine configuration options.
@@ -143,7 +143,7 @@ export interface AnalyticsConfiguration {
   /**
    * The base URL to use to proxy Coveo analytics requests (e.g., `https://example.com/analytics`).
    *
-   * This is an advanced option that you should only set if you need to proxy Coveo analytics requests through your own
+   * This is an advanced option that you only set if you proxy Coveo analytics requests through your own
    * server. In most cases, you should not set this option.
    *
    * See [Headless proxy: Analytics](https://docs.coveo.com/en/headless/latest/usage/proxy#analytics).

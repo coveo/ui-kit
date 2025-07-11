@@ -1,5 +1,5 @@
 import {configuration} from '../../../../../app/common-reducers.js';
-import {CoreEngine} from '../../../../../app/engine.js';
+import type {CoreEngine} from '../../../../../app/engine.js';
 import {
   disableFacet,
   enableFacet,
@@ -8,17 +8,17 @@ import {
 import {isFacetEnabledSelector} from '../../../../../features/facet-options/facet-options-selectors.js';
 import {facetOptionsReducer as facetOptions} from '../../../../../features/facet-options/facet-options-slice.js';
 import {isFacetLoadingResponseSelector} from '../../../../../features/facets/facet-set/facet-set-selectors.js';
-import {NumericFacetValue} from '../../../../../features/facets/range-facets/numeric-facet-set/interfaces/response.js';
+import type {NumericFacetValue} from '../../../../../features/facets/range-facets/numeric-facet-set/interfaces/response.js';
 import {
+  type RegisterNumericFacetActionCreatorPayload,
   registerNumericFacet,
-  RegisterNumericFacetActionCreatorPayload,
   updateNumericFacetValues,
 } from '../../../../../features/facets/range-facets/numeric-facet-set/numeric-facet-actions.js';
 import {numericFacetSelectedValuesSelector} from '../../../../../features/facets/range-facets/numeric-facet-set/numeric-facet-selectors.js';
 import {numericFacetSetReducer as numericFacetSet} from '../../../../../features/facets/range-facets/numeric-facet-set/numeric-facet-set-slice.js';
 import {searchReducer as search} from '../../../../../features/search/search-slice.js';
 import {selectActiveTab} from '../../../../../features/tab-set/tab-set-selectors.js';
-import {
+import type {
   ConfigurationSection,
   FacetOptionsSection,
   NumericFacetSection,
@@ -27,7 +27,7 @@ import {
 import {loadReducerError} from '../../../../../utils/errors.js';
 import {
   buildController,
-  Controller,
+  type Controller,
 } from '../../../../controller/headless-controller.js';
 import {determineFacetId} from '../../_common/facet-id-determinor.js';
 import {validateNumericFacetOptions} from './headless-numeric-facet-options.js';
@@ -37,7 +37,7 @@ import {validateNumericFacetOptions} from './headless-numeric-facet-options.js';
  */
 export interface NumericFilterOptions {
   /**
-   * The field whose values you want to display in the filter.
+   * The values of which field to display in the filter.
    */
   field: string;
 

@@ -1,19 +1,19 @@
 import * as BackOff from 'exponential-backoff';
 import {pino} from 'pino';
-import {Mock} from 'vitest';
+import type {Mock} from 'vitest';
 import {ExpiredTokenError} from '../utils/errors.js';
-import {PlatformEnvironment} from '../utils/url-utils.js';
+import type {PlatformEnvironment} from '../utils/url-utils.js';
 import {
   getAnalyticsNextApiBaseUrl,
   getOrganizationEndpoint,
   getSearchApiBaseUrl,
   PlatformClient,
-  PlatformClientCallOptions,
+  type PlatformClientCallOptions,
 } from './platform-client.js';
 import {
   NoopPreprocessRequest,
-  PlatformRequestOptions,
-  PreprocessRequest,
+  type PlatformRequestOptions,
+  type PreprocessRequest,
 } from './preprocess-request.js';
 
 const {Response} = await vi.importActual('node-fetch');

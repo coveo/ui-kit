@@ -1,13 +1,13 @@
-import {PayloadAction, AsyncThunkAction} from '@reduxjs/toolkit';
-import {AsyncThunkInsightOptions} from '../../api/service/insight/insight-api-client.js';
-import {CoreEngine} from '../../app/engine.js';
+import type {AsyncThunkAction, PayloadAction} from '@reduxjs/toolkit';
+import type {AsyncThunkInsightOptions} from '../../api/service/insight/insight-api-client.js';
+import type {CoreEngine} from '../../app/engine.js';
 import {insightUserActionsReducer as insightUserActions} from '../../features/insight-user-actions/insight-user-actions-slice.js';
 import {
-  registerUserActions,
+  type FetchUserActionsThunkReturn,
   fetchUserActions,
-  RegisterUserActionsPayload,
-  StateNeededByFetchUserActions,
-  FetchUserActionsThunkReturn,
+  type RegisterUserActionsPayload,
+  registerUserActions,
+  type StateNeededByFetchUserActions,
 } from './insight-user-actions-actions.js';
 
 export type {RegisterUserActionsPayload};

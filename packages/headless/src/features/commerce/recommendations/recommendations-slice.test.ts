@@ -1,12 +1,12 @@
-import {Action} from '@reduxjs/toolkit';
-import {ChildProduct} from '../../../api/commerce/common/product.js';
+import type {Action} from '@reduxjs/toolkit';
+import type {ChildProduct} from '../../../api/commerce/common/product.js';
 import {
+  buildMockBaseProduct,
   buildMockChildProduct,
   buildMockProduct,
-  buildMockBaseProduct,
 } from '../../../test/mock-product.js';
-import {buildMockRecommendationsSlice} from '../../../test/mock-recommendations-slice.js';
 import {buildMockRecommendationsResponse} from '../../../test/mock-recommendations.js';
+import {buildMockRecommendationsSlice} from '../../../test/mock-recommendations-slice.js';
 import {
   fetchMoreRecommendations,
   fetchRecommendations,
@@ -16,7 +16,7 @@ import {
 import {recommendationsReducer} from './recommendations-slice.js';
 import {
   getRecommendationsInitialState,
-  RecommendationsState,
+  type RecommendationsState,
 } from './recommendations-state.js';
 
 describe('recommendation-slice', () => {

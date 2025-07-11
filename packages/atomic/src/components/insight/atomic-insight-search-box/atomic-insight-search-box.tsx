@@ -114,9 +114,7 @@ export class AtomicInsightSearchBox {
         this.searchBox.state.suggestions.map((suggestion) =>
           this.renderSuggestionItem(suggestion)
         ),
-      onInput: () => {
-        this.bindings.engine.dispatch(fetchQuerySuggestions({id: this.id}));
-      },
+      onInput:  () => this.bindings.engine.dispatch(fetchQuerySuggestions({id: this.id})),
       panel: 'left',
     });
   }
@@ -131,7 +129,7 @@ export class AtomicInsightSearchBox {
     this.suggestionManager.clearSuggestions();
   }
 
-  private onKeyDown(e: KeyboardEvent) {
+  private async onKeyDown(e: KeyboardEvent) {
     if (this.disableSearch) {
       return;
     }
@@ -145,12 +143,12 @@ export class AtomicInsightSearchBox {
         break;
       case 'ArrowDown':
         e.preventDefault();
-        this.suggestionManager.focusNextValue();
+        await this.suggestionManager.focusNextValue();
         this.announceNewActiveSuggestionToScreenReader();
         break;
       case 'ArrowUp':
         e.preventDefault();
-        this.suggestionManager.focusPreviousValue();
+        await this.suggestionManager.focusPreviousValue();
         this.announceNewActiveSuggestionToScreenReader();
         break;
       case 'Tab':

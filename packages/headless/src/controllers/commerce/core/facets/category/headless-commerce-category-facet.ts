@@ -12,18 +12,18 @@ import type {
 import {findActiveValueAncestry} from '../../../../../features/facets/category-facet-set/category-facet-utils.js';
 import {categoryFacetSearchStateSelector} from '../../../../../features/facets/facet-search-set/category/category-facet-search-state-selector.js';
 import {
+  buildCoreCommerceFacet,
   type CategoryFacetValue,
   type CoreCommerceFacet,
   type CoreCommerceFacetOptions,
   type CoreCommerceFacetState,
   type FacetControllerType,
-  buildCoreCommerceFacet,
 } from '../headless-core-commerce-facet.js';
 import type {SearchableFacetOptions} from '../searchable/headless-commerce-searchable-facet.js';
 import {
+  buildCategoryFacetSearch,
   type CategoryFacetSearch,
   type CategoryFacetSearchState,
-  buildCategoryFacetSearch,
 } from './headless-commerce-category-facet-search.js';
 
 export type CategoryFacetOptions = Omit<

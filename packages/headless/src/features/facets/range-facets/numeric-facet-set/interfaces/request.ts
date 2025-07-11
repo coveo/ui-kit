@@ -1,6 +1,6 @@
-import {CurrentValues, Type} from '../../../facet-api/request.js';
-import {FacetValueState} from '../../../facet-api/value.js';
-import {BaseRangeFacetRequest} from '../../generic/interfaces/request.js';
+import type {CurrentValues, Type} from '../../../facet-api/request.js';
+import type {FacetValueState} from '../../../facet-api/value.js';
+import type {BaseRangeFacetRequest} from '../../generic/interfaces/request.js';
 
 /**
  * The options defining a value to display in a `NumericFacet`.

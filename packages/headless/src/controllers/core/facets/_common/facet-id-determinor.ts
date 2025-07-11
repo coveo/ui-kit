@@ -1,5 +1,5 @@
-import {CoreEngine} from '../../../../app/engine.js';
-import {AllFacetSections} from '../../../../features/facets/generic/interfaces/generic-facet-section.js';
+import type {CoreEngine} from '../../../../app/engine.js';
+import type {AllFacetSections} from '../../../../features/facets/generic/interfaces/generic-facet-section.js';
 import {generateFacetId} from './facet-id-generator.js';
 
 interface FacetIdConfig {

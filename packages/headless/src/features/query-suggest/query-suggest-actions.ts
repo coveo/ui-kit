@@ -2,14 +2,14 @@ import {NumberValue} from '@coveo/bueno';
 import {createAction, createAsyncThunk} from '@reduxjs/toolkit';
 import HistoryStore from '../../api/analytics/coveo.analytics/history-store.js';
 import {getSearchApiBaseUrl} from '../../api/platform-client.js';
-import {QuerySuggestRequest} from '../../api/search/query-suggest/query-suggest-request.js';
-import {QuerySuggestSuccessResponse} from '../../api/search/query-suggest/query-suggest-response.js';
+import type {QuerySuggestRequest} from '../../api/search/query-suggest/query-suggest-request.js';
+import type {QuerySuggestSuccessResponse} from '../../api/search/query-suggest/query-suggest-response.js';
 import {
+  type AsyncThunkSearchOptions,
   isErrorResponse,
-  AsyncThunkSearchOptions,
 } from '../../api/search/search-api-client.js';
-import {NavigatorContext} from '../../app/navigator-context-provider.js';
-import {
+import type {NavigatorContext} from '../../app/navigator-context-provider.js';
+import type {
   ConfigurationSection,
   ContextSection,
   PipelineSection,
@@ -18,9 +18,9 @@ import {
   SearchHubSection,
 } from '../../state/state-sections.js';
 import {
-  validatePayload,
-  requiredNonEmptyString,
   requiredEmptyAllowedString,
+  requiredNonEmptyString,
+  validatePayload,
 } from '../../utils/validate-payload.js';
 import {fromAnalyticsStateToAnalyticsParams} from '../configuration/analytics-params.js';
 import {fromAnalyticsStateToAnalyticsParams as legacyFromAnalyticsStateToAnalyticsParams} from '../configuration/legacy-analytics-params.js';

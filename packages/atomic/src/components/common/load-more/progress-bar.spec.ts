@@ -1,6 +1,6 @@
-import {renderFunctionFixture} from '@/vitest-utils/testing-helpers/fixture';
 import {html} from 'lit';
-import {describe, it, expect} from 'vitest';
+import {describe, expect, it} from 'vitest';
+import {renderFunctionFixture} from '@/vitest-utils/testing-helpers/fixture';
 import {renderLoadMoreProgressBar} from './progress-bar';
 
 describe('#renderLoadMoreProgressBar', () => {

@@ -1,4 +1,4 @@
-import {CategoryFacetRequest} from '../features/facets/category-facet-set/interfaces/request.js';
+import type {CategoryFacetRequest} from '../features/facets/category-facet-set/interfaces/request.js';
 
 export function buildMockCategoryFacetRequest(
   config: Partial<CategoryFacetRequest> = {}

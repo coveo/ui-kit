@@ -1,7 +1,7 @@
-import {ThunkExtraArguments} from '../../../app/thunk-extra-arguments.js';
+import type {ThunkExtraArguments} from '../../../app/thunk-extra-arguments.js';
 import {
-  MockedSearchEngine,
   buildMockSearchEngine,
+  type MockedSearchEngine,
 } from '../../../test/mock-engine-v2.js';
 import {buildMockFacetValue} from '../../../test/mock-facet-value.js';
 import {createMockState} from '../../../test/mock-state.js';

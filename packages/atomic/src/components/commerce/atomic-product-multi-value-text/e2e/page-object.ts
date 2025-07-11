@@ -1,5 +1,5 @@
+import type {Page} from '@playwright/test';
 import {BasePageObject} from '@/playwright-utils/base-page-object';
-import {Page} from '@playwright/test';
 
 export class ProductMultiValueTextPageObject extends BasePageObject<'atomic-product-multi-value-text'> {
   constructor(page: Page) {
@@ -20,7 +20,7 @@ export class ProductMultiValueTextPageObject extends BasePageObject<'atomic-prod
     return this.hydrated
       .first()
       .getByText(
-        `${expectedNumber ? expectedNumber.toString() + ' ' : ''}more...`
+        `${expectedNumber ? `${expectedNumber.toString()} ` : ''}more...`
       );
   }
 

@@ -1,18 +1,18 @@
-import {InsightEngine} from '../../../app/insight-engine/insight-engine.js';
+import type {InsightEngine} from '../../../app/insight-engine/insight-engine.js';
 import {fetchPage} from '../../../features/insight-search/insight-search-actions.js';
 import {browseResults} from '../../../features/pagination/pagination-analytics-actions.js';
 import {
-  logPageNumber,
   logPageNext,
+  logPageNumber,
   logPagePrevious,
 } from '../../../features/pagination/pagination-insight-analytics-actions.js';
 import {
   buildCorePager,
-  PagerInitialState,
-  PagerOptions,
-  PagerProps,
-  Pager,
-  PagerState,
+  type Pager,
+  type PagerInitialState,
+  type PagerOptions,
+  type PagerProps,
+  type PagerState,
 } from '../../core/pager/headless-core-pager.js';
 
 export type {PagerInitialState, PagerOptions, PagerProps, Pager, PagerState};

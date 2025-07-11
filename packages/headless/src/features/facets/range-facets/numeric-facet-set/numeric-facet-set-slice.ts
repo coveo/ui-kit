@@ -2,35 +2,35 @@ import {createReducer} from '@reduxjs/toolkit';
 import {deselectAllBreadcrumbs} from '../../../breadcrumb/breadcrumb-actions.js';
 import {disableFacet} from '../../../facet-options/facet-options-actions.js';
 import {change} from '../../../history/history-actions.js';
-import {restoreSearchParameters} from '../../../search-parameters/search-parameter-actions.js';
 import {executeSearch} from '../../../search/search-actions.js';
+import {restoreSearchParameters} from '../../../search-parameters/search-parameter-actions.js';
 import {handleFacetSortCriterionUpdate} from '../../generic/facet-reducer-helpers.js';
 import {
-  registerRangeFacet,
-  toggleSelectRangeValue,
-  onRangeFacetRequestFulfilled,
-  handleRangeFacetDeselectAll,
   defaultRangeFacetOptions,
+  handleRangeFacetDeselectAll,
   handleRangeFacetSearchParameterRestoration,
-  updateRangeValues,
+  onRangeFacetRequestFulfilled,
+  registerRangeFacet,
   toggleExcludeRangeValue,
+  toggleSelectRangeValue,
+  updateRangeValues,
 } from '../generic/range-facet-reducers.js';
-import {
+import type {
   NumericFacetRequest,
   NumericRangeRequest,
 } from './interfaces/request.js';
-import {
+import type {
   NumericFacetResponse,
   NumericFacetValue,
 } from './interfaces/response.js';
 import {
-  registerNumericFacet,
-  toggleSelectNumericFacetValue,
   deselectAllNumericFacetValues,
-  updateNumericFacetSortCriterion,
-  RegisterNumericFacetActionCreatorPayload,
-  updateNumericFacetValues,
+  type RegisterNumericFacetActionCreatorPayload,
+  registerNumericFacet,
   toggleExcludeNumericFacetValue,
+  toggleSelectNumericFacetValue,
+  updateNumericFacetSortCriterion,
+  updateNumericFacetValues,
 } from './numeric-facet-actions.js';
 import {
   getNumericFacetSetInitialState,

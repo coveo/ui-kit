@@ -4,31 +4,45 @@ const componentMap = {
 } as Record<string, () => Promise<unknown>>;
 
 if (typeof window !== 'undefined') {
+  // Track visited nodes to prevent infinite recursion
+  const visitedNodes = new WeakSet<Element | ShadowRoot | DocumentFragment>();
+
   /**
    * Checks a node for undefined elements and attempts to register them.
    */
   const discover = async (root: Element | ShadowRoot | DocumentFragment) => {
+    visitedNodes.add(root);
     const rootTagName =
       root instanceof Element ? root.tagName.toLowerCase() : '';
-    const rootIsAtomicElement = rootTagName?.startsWith('atomic-');
+    const rootIsCustomElement = rootTagName?.includes('-');
     const tags = [...root.querySelectorAll(':not(:defined)')]
       .map((el) => el.tagName.toLowerCase())
-      .filter((tag) => tag.startsWith('atomic-'));
+      .filter((tag) => tag.includes('-'));
 
     // If the root element is an undefined Atomic component, add it to the list
-    if (rootIsAtomicElement && !customElements.get(rootTagName)) {
+    if (
+      rootIsCustomElement &&
+      !customElements.get(rootTagName) &&
+      !tags.includes(rootTagName)
+    ) {
       tags.push(rootTagName);
     }
 
-    if (rootIsAtomicElement) {
+    if (rootIsCustomElement) {
       const childTemplates = root.querySelectorAll('template');
       //This is necessary to load the components that are inside the templates
       for (const template of childTemplates) {
+        if (visitedNodes.has(template.content)) {
+          continue;
+        }
         discover(template.content);
         observer.observe(template.content, {subtree: true, childList: true});
       }
       //TODO: This part should not be necessary: instead, if component-a uses component-b, component-a should be responsible for loading component-b
       if ('shadowRoot' in root && root.shadowRoot) {
+        if (visitedNodes.has(root.shadowRoot)) {
+          return;
+        }
         discover(root.shadowRoot);
         observer.observe(root.shadowRoot, {subtree: true, childList: true});
       }

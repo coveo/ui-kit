@@ -1,12 +1,12 @@
 import type {Product} from '@coveo/headless/commerce';
-import {html, LitElement, nothing, TemplateResult} from 'lit';
+import {html, LitElement, nothing, type TemplateResult} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import type {CommerceBindings} from '../../../../../src/components/commerce/atomic-commerce-interface/atomic-commerce-interface.js';
 import {fixture} from '../../../fixture.js';
 import {
   defaultBindings as commerceDefaultBindings,
-  renderInAtomicCommerceInterface,
   type FixtureAtomicCommerceInterface,
+  renderInAtomicCommerceInterface,
 } from './atomic-commerce-interface-fixture.js';
 
 @customElement('atomic-product')

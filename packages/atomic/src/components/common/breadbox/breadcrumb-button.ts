@@ -1,12 +1,12 @@
-import {FunctionalComponentWithChildren} from '@/src/utils/functional-component-utils';
-import {i18n} from 'i18next';
+import type {i18n} from 'i18next';
 import {html} from 'lit';
 import {keyed} from 'lit/directives/keyed.js';
+import type {FunctionalComponentWithChildren} from '@/src/utils/functional-component-utils';
 import {renderButton} from '../button';
-import {Breadcrumb} from './breadcrumb-types';
+import type {Breadcrumb} from './breadcrumb-types';
 import {
-  joinBreadcrumbValues,
   getFirstBreadcrumbValue,
+  joinBreadcrumbValues,
 } from './breadcrumb-utils';
 
 export interface BreadcrumbButtonProps {

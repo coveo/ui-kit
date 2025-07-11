@@ -1,8 +1,11 @@
 import {NumberValue, Schema} from '@coveo/bueno';
-import {SerializedError} from '@reduxjs/toolkit';
-import {CommerceAPIErrorResponse} from '../../../api/commerce/commerce-api-error-response.js';
-import {ChildProduct, Product} from '../../../api/commerce/common/product.js';
-import {CommerceEngine} from '../../../app/commerce-engine/commerce-engine.js';
+import type {SerializedError} from '@reduxjs/toolkit';
+import type {CommerceAPIErrorResponse} from '../../../api/commerce/commerce-api-error-response.js';
+import type {
+  ChildProduct,
+  Product,
+} from '../../../api/commerce/common/product.js';
+import type {CommerceEngine} from '../../../app/commerce-engine/commerce-engine.js';
 import {stateKey} from '../../../app/state-key.js';
 import {
   clearExpiredProducts,
@@ -13,7 +16,7 @@ import {
 import {instantProductsReducer} from '../../../features/commerce/instant-products/instant-products-slice.js';
 import {fetchInstantProducts} from '../../../features/commerce/search/search-actions.js';
 import {hasExpired} from '../../../features/instant-items/instant-items-state.js';
-import {InstantProductsSection} from '../../../state/state-sections.js';
+import type {InstantProductsSection} from '../../../state/state-sections.js';
 import {loadReducerError} from '../../../utils/errors.js';
 import {randomID} from '../../../utils/utils.js';
 import {
@@ -21,13 +24,13 @@ import {
   validateOptions,
 } from '../../../utils/validate-payload.js';
 import {
-  Controller,
   buildController,
+  type Controller,
 } from '../../controller/headless-controller.js';
 import {
-  InteractiveProduct,
-  InteractiveProductProps,
   buildCoreInteractiveProduct,
+  type InteractiveProduct,
+  type InteractiveProductProps,
 } from '../core/interactive-product/headless-core-interactive-product.js';
 
 export interface InstantProductsOptions {

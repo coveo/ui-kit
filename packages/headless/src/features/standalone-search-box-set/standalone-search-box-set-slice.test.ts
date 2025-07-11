@@ -3,13 +3,13 @@ import {buildMockStandaloneSearchBoxEntry} from '../../test/mock-standalone-sear
 import {
   fetchRedirectUrl,
   registerStandaloneSearchBox,
+  resetStandaloneSearchBox,
   updateAnalyticsToOmniboxFromLink,
   updateAnalyticsToSearchFromLink,
-  resetStandaloneSearchBox,
   updateStandaloneSearchBoxRedirectionUrl,
 } from './standalone-search-box-set-actions.js';
 import {standaloneSearchBoxSetReducer} from './standalone-search-box-set-slice.js';
-import {StandaloneSearchBoxSetState} from './standalone-search-box-set-state.js';
+import type {StandaloneSearchBoxSetState} from './standalone-search-box-set-state.js';
 
 describe('standalone search box slice', () => {
   const id = '1';

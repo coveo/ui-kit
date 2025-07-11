@@ -1,13 +1,13 @@
 import {warnIfUsingNextAnalyticsModeForServiceFeature} from '../../app/engine.js';
-import {SearchEngine} from '../../app/search-engine/search-engine.js';
+import type {SearchEngine} from '../../app/search-engine/search-engine.js';
 import {smartSnippetAnalyticsClient} from '../../features/question-answering/question-answering-analytics-actions.js';
 import {
-  SmartSnippet,
-  SmartSnippetCore,
-  SmartSnippetOptions,
-  SmartSnippetProps,
-  SmartSnippetState,
   buildCoreSmartSnippet,
+  type SmartSnippet,
+  type SmartSnippetCore,
+  type SmartSnippetOptions,
+  type SmartSnippetProps,
+  type SmartSnippetState,
 } from '../core/smart-snippet/headless-core-smart-snippet.js';
 import {buildSmartSnippetInteractiveInlineLinks} from './headless-smart-snippet-interactive-inline-links.js';
 

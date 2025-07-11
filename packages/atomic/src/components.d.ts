@@ -344,12 +344,6 @@ export namespace Components {
         "collapseFacetsAfter": number;
     }
     /**
-     * The `atomic-commerce-load-more-products` component allows the user to load additional products if more are available.
-     * @alpha 
-     */
-    interface AtomicCommerceLoadMoreProducts {
-    }
-    /**
      * The `atomic-commerce-numeric-facet` component is responsible for rendering a commerce facet that allows the user to filter products using numeric ranges.
      * @alpha 
      */
@@ -3548,16 +3542,6 @@ declare global {
         new (): HTMLAtomicCommerceFacetsElement;
     };
     /**
-     * The `atomic-commerce-load-more-products` component allows the user to load additional products if more are available.
-     * @alpha 
-     */
-    interface HTMLAtomicCommerceLoadMoreProductsElement extends Components.AtomicCommerceLoadMoreProducts, HTMLStencilElement {
-    }
-    var HTMLAtomicCommerceLoadMoreProductsElement: {
-        prototype: HTMLAtomicCommerceLoadMoreProductsElement;
-        new (): HTMLAtomicCommerceLoadMoreProductsElement;
-    };
-    /**
      * The `atomic-commerce-numeric-facet` component is responsible for rendering a commerce facet that allows the user to filter products using numeric ranges.
      * @alpha 
      */
@@ -5340,7 +5324,6 @@ declare global {
         "atomic-commerce-facet": HTMLAtomicCommerceFacetElement;
         "atomic-commerce-facet-number-input": HTMLAtomicCommerceFacetNumberInputElement;
         "atomic-commerce-facets": HTMLAtomicCommerceFacetsElement;
-        "atomic-commerce-load-more-products": HTMLAtomicCommerceLoadMoreProductsElement;
         "atomic-commerce-numeric-facet": HTMLAtomicCommerceNumericFacetElement;
         "atomic-commerce-query-error": HTMLAtomicCommerceQueryErrorElement;
         "atomic-commerce-refine-modal": HTMLAtomicCommerceRefineModalElement;
@@ -5786,12 +5769,6 @@ declare namespace LocalJSX {
           * The maximum number of facets to expand. Remaining facets are automatically collapsed.  Using the value `0` collapses all facets. Using the value `-1` disables the feature and keeps all facets expanded.
          */
         "collapseFacetsAfter"?: number;
-    }
-    /**
-     * The `atomic-commerce-load-more-products` component allows the user to load additional products if more are available.
-     * @alpha 
-     */
-    interface AtomicCommerceLoadMoreProducts {
     }
     /**
      * The `atomic-commerce-numeric-facet` component is responsible for rendering a commerce facet that allows the user to filter products using numeric ranges.
@@ -8693,7 +8670,6 @@ declare namespace LocalJSX {
         "atomic-commerce-facet": AtomicCommerceFacet;
         "atomic-commerce-facet-number-input": AtomicCommerceFacetNumberInput;
         "atomic-commerce-facets": AtomicCommerceFacets;
-        "atomic-commerce-load-more-products": AtomicCommerceLoadMoreProducts;
         "atomic-commerce-numeric-facet": AtomicCommerceNumericFacet;
         "atomic-commerce-query-error": AtomicCommerceQueryError;
         "atomic-commerce-refine-modal": AtomicCommerceRefineModal;
@@ -8923,11 +8899,6 @@ declare module "@stencil/core" {
              * @alpha 
              */
             "atomic-commerce-facets": LocalJSX.AtomicCommerceFacets & JSXBase.HTMLAttributes<HTMLAtomicCommerceFacetsElement>;
-            /**
-             * The `atomic-commerce-load-more-products` component allows the user to load additional products if more are available.
-             * @alpha 
-             */
-            "atomic-commerce-load-more-products": LocalJSX.AtomicCommerceLoadMoreProducts & JSXBase.HTMLAttributes<HTMLAtomicCommerceLoadMoreProductsElement>;
             /**
              * The `atomic-commerce-numeric-facet` component is responsible for rendering a commerce facet that allows the user to filter products using numeric ranges.
              * @alpha 

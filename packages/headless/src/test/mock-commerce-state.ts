@@ -21,7 +21,7 @@ import {getQuerySetInitialState} from '../features/query-set/query-set-state.js'
 import {getQuerySuggestSetInitialState} from '../features/query-suggest/query-suggest-state.js';
 import {getRecentQueriesInitialState} from '../features/recent-queries/recent-queries-state.js';
 import {getTriggerInitialState} from '../features/triggers/triggers-state.js';
-import {CommerceAppState} from '../state/commerce-app-state.js';
+import type {CommerceAppState} from '../state/commerce-app-state.js';
 
 export function buildMockCommerceState(
   config: Partial<CommerceAppState> = {}

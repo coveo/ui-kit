@@ -1,12 +1,12 @@
-import {Product} from '@coveo/relay-event-types';
-import {describe, vi, beforeEach, it, expect} from 'vitest';
+import type {Product} from '@coveo/relay-event-types';
+import {beforeEach, describe, expect, it, vi} from 'vitest';
 import {productView} from '../../../features/commerce/product/product-actions.js';
 import {buildMockCommerceState} from '../../../test/mock-commerce-state.js';
 import {
   buildMockCommerceEngine,
-  MockedCommerceEngine,
+  type MockedCommerceEngine,
 } from '../../../test/mock-engine-v2.js';
-import {buildProductView, ProductView} from './headless-product-view.js';
+import {buildProductView, type ProductView} from './headless-product-view.js';
 
 vi.mock('../../../features/commerce/product/product-actions');
 

@@ -1,5 +1,5 @@
-import {QueryCorrection} from '../../search/search/query-corrections.js';
-import {CommerceSuccessResponse} from '../common/response.js';
+import type {QueryCorrection} from '../../search/search/query-corrections.js';
+import type {CommerceSuccessResponse} from '../common/response.js';
 
 export interface SearchCommerceSuccessResponse extends CommerceSuccessResponse {
   queryCorrection?: SearchCommerceQueryCorrectionResponse;

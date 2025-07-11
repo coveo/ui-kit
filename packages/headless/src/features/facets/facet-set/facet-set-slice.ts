@@ -5,37 +5,37 @@ import {
 } from '../../breadcrumb/breadcrumb-actions.js';
 import {disableFacet} from '../../facet-options/facet-options-actions.js';
 import {change} from '../../history/history-actions.js';
-import {restoreSearchParameters} from '../../search-parameters/search-parameter-actions.js';
 import {executeSearch, fetchFacetValues} from '../../search/search-actions.js';
+import {restoreSearchParameters} from '../../search-parameters/search-parameter-actions.js';
 import {
   excludeFacetSearchResult,
   selectFacetSearchResult,
 } from '../facet-search-set/specific/specific-facet-search-actions.js';
 import {updateFacetAutoSelection} from '../generic/facet-actions.js';
 import {
-  handleFacetSortCriterionUpdate,
   handleFacetDeselectAll,
+  handleFacetSortCriterionUpdate,
   handleFacetUpdateNumberOfValues,
 } from '../generic/facet-reducer-helpers.js';
-import {AnyFacetResponse} from '../generic/interfaces/generic-facet-response.js';
+import type {AnyFacetResponse} from '../generic/interfaces/generic-facet-response.js';
 import {
-  registerFacet,
-  toggleSelectFacetValue,
-  toggleExcludeFacetValue,
   deselectAllFacetValues,
-  updateFacetSortCriterion,
-  updateFacetNumberOfValues,
+  type RegisterFacetActionCreatorPayload,
+  registerFacet,
+  toggleExcludeFacetValue,
+  toggleSelectFacetValue,
   updateFacetIsFieldExpanded,
+  updateFacetNumberOfValues,
+  updateFacetSortCriterion,
   updateFreezeCurrentValues,
-  RegisterFacetActionCreatorPayload,
 } from './facet-set-actions.js';
 import {
   getFacetSetInitialState,
   getFacetSetSliceInitialState,
 } from './facet-set-state.js';
-import {FacetOptionalParameters} from './interfaces/options.js';
-import {FacetRequest, FacetValueRequest} from './interfaces/request.js';
-import {FacetValue, FacetResponse} from './interfaces/response.js';
+import type {FacetOptionalParameters} from './interfaces/options.js';
+import type {FacetRequest, FacetValueRequest} from './interfaces/request.js';
+import type {FacetResponse, FacetValue} from './interfaces/response.js';
 
 export const facetSetReducer = createReducer(
   getFacetSetInitialState(),

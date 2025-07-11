@@ -1,9 +1,9 @@
-import {PayloadAction} from '@reduxjs/toolkit';
-import {CommerceEngine} from '../../../../app/commerce-engine/commerce-engine.js';
+import type {PayloadAction} from '@reduxjs/toolkit';
+import type {CommerceEngine} from '../../../../app/commerce-engine/commerce-engine.js';
 import {commerceFacetSetReducer as commerceFacetSet} from '../facet-set/facet-set-slice.js';
 import {
-  ToggleExcludeFacetValuePayload,
-  ToggleSelectFacetValuePayload,
+  type ToggleExcludeFacetValuePayload,
+  type ToggleSelectFacetValuePayload,
   toggleExcludeFacetValue,
   toggleSelectFacetValue,
 } from './regular-facet-actions.js';

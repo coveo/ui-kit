@@ -1,7 +1,7 @@
-import {CategoryFacetValue as CommerceCategoryFacetValue} from '../../commerce/facets/facet-set/interfaces/response.js';
-import {CategoryFacetValueCommon} from './interfaces/commons.js';
-import {CategoryFacetValueRequest} from './interfaces/request.js';
-import {CategoryFacetValue} from './interfaces/response.js';
+import type {CategoryFacetValue as CommerceCategoryFacetValue} from '../../commerce/facets/facet-set/interfaces/response.js';
+import type {CategoryFacetValueCommon} from './interfaces/commons.js';
+import type {CategoryFacetValueRequest} from './interfaces/request.js';
+import type {CategoryFacetValue} from './interfaces/response.js';
 
 type GenericCategoryFacetValue = CategoryFacetValueRequest | CategoryFacetValue;
 

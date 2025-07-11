@@ -1,4 +1,4 @@
-import {ChildProduct} from '../../../api/commerce/common/product.js';
+import type {ChildProduct} from '../../../api/commerce/common/product.js';
 import {configuration} from '../../../app/common-reducers.js';
 import {contextReducer} from '../../../features/commerce/context/context-slice.js';
 import {
@@ -9,7 +9,6 @@ import {
 import {parametersDefinition} from '../../../features/commerce/parameters/parameters-schema.js';
 import {activeParametersSelector} from '../../../features/commerce/parameters/parameters-selectors.js';
 import {productListingSerializer} from '../../../features/commerce/parameters/parameters-serializer.js';
-import {restoreProductListingParameters} from '../../../features/commerce/product-listing-parameters/product-listing-parameters-actions.js';
 import * as ProductListingActions from '../../../features/commerce/product-listing/product-listing-actions.js';
 import {
   errorSelector,
@@ -19,10 +18,11 @@ import {
   responseIdSelector,
 } from '../../../features/commerce/product-listing/product-listing-selectors.js';
 import {productListingReducer} from '../../../features/commerce/product-listing/product-listing-slice.js';
+import {restoreProductListingParameters} from '../../../features/commerce/product-listing-parameters/product-listing-parameters-actions.js';
 import {buildMockCommerceState} from '../../../test/mock-commerce-state.js';
 import {
-  MockedCommerceEngine,
   buildMockCommerceEngine,
+  type MockedCommerceEngine,
 } from '../../../test/mock-engine-v2.js';
 import * as SubControllers from '../core/sub-controller/headless-sub-controller.js';
 import {
@@ -31,7 +31,7 @@ import {
 } from './facets/headless-product-listing-facet-options.js';
 import {
   buildProductListing,
-  ProductListing,
+  type ProductListing,
 } from './headless-product-listing.js';
 
 describe('headless product-listing', () => {

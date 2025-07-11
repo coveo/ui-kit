@@ -1,15 +1,15 @@
-import {InsightEngine} from '../../../app/insight-engine/insight-engine.js';
+import type {InsightEngine} from '../../../app/insight-engine/insight-engine.js';
 import {executeSearch} from '../../../features/insight-search/insight-search-actions.js';
 import {
-  logPagerResize,
   browseResults,
+  logPagerResize,
 } from '../../../features/pagination/pagination-analytics-actions.js';
 import {
-  ResultsPerPage,
-  ResultsPerPageProps,
-  ResultsPerPageInitialState,
-  ResultsPerPageState,
   buildCoreResultsPerPage,
+  type ResultsPerPage,
+  type ResultsPerPageInitialState,
+  type ResultsPerPageProps,
+  type ResultsPerPageState,
 } from '../../core/results-per-page/headless-core-results-per-page.js';
 
 export type {

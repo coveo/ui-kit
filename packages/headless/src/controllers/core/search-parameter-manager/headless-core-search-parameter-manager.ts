@@ -1,32 +1,32 @@
 import {RecordValue, Schema} from '@coveo/bueno';
-import {CoreEngine} from '../../../app/engine.js';
-import {AutomaticFacetResponse} from '../../../features/facets/automatic-facet-set/interfaces/response.js';
+import type {CoreEngine} from '../../../app/engine.js';
+import type {AutomaticFacetResponse} from '../../../features/facets/automatic-facet-set/interfaces/response.js';
 import {findActiveValueAncestry} from '../../../features/facets/category-facet-set/category-facet-utils.js';
-import {
+import type {
   BaseFacetValueRequest,
   CurrentValues,
 } from '../../../features/facets/facet-api/request.js';
-import {FacetRequest} from '../../../features/facets/facet-set/interfaces/request.js';
+import type {FacetRequest} from '../../../features/facets/facet-set/interfaces/request.js';
 import {
+  getFacets,
   getQ,
   getSortCriteria,
-  getFacets,
   getTab,
 } from '../../../features/parameter-manager/parameter-manager-selectors.js';
 import {getQueryInitialState} from '../../../features/query/query-state.js';
 import {
   restoreSearchParameters,
-  SearchParameters,
+  type SearchParameters,
 } from '../../../features/search-parameters/search-parameter-actions.js';
 import {searchParametersDefinition} from '../../../features/search-parameters/search-parameter-schema.js';
 import {initialSearchParameterSelector} from '../../../features/search-parameters/search-parameter-selectors.js';
 import {getSortCriteriaInitialState} from '../../../features/sort-criteria/sort-criteria-state.js';
-import {TabSetState} from '../../../features/tab-set/tab-set-state.js';
-import {SearchParametersState} from '../../../state/search-app-state.js';
+import type {TabSetState} from '../../../features/tab-set/tab-set-state.js';
+import type {SearchParametersState} from '../../../state/search-app-state.js';
 import {validateInitialState} from '../../../utils/validate-payload.js';
 import {
   buildController,
-  Controller,
+  type Controller,
 } from '../../controller/headless-controller.js';
 
 export type {SearchParameters};
@@ -264,6 +264,7 @@ function getAutomaticFacets(state: Partial<SearchParametersState>) {
       const selectedValues = getSelectedResponseValues(response);
       return selectedValues.length ? {[facetId]: selectedValues} : {};
     })
+    // biome-ignore lint/performance/noAccumulatingSpread: <>
     .reduce((acc, obj) => ({...acc, ...obj}), {});
 
   return Object.keys(af).length ? {af} : {};

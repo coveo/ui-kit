@@ -1,5 +1,5 @@
-import {StateFromReducersMapObject} from '@reduxjs/toolkit';
-import {Logger} from 'pino';
+import type {StateFromReducersMapObject} from '@reduxjs/toolkit';
+import type {Logger} from 'pino';
 import {CommerceAPIClient} from '../../api/commerce/commerce-api-client.js';
 import {NoopPreprocessRequest} from '../../api/preprocess-request.js';
 import {
@@ -8,7 +8,7 @@ import {
   updateProxyBaseUrl,
 } from '../../features/commerce/configuration/configuration-actions.js';
 import {configurationReducer} from '../../features/commerce/configuration/configuration-slice.js';
-import {ConfigurationState} from '../../features/commerce/configuration/configuration-state.js';
+import type {ConfigurationState} from '../../features/commerce/configuration/configuration-state.js';
 import {setItems} from '../../features/commerce/context/cart/cart-actions.js';
 import {cartReducer} from '../../features/commerce/context/cart/cart-slice.js';
 import {setContext} from '../../features/commerce/context/context-actions.js';
@@ -28,20 +28,20 @@ import {versionReducer} from '../../features/debug/version-slice.js';
 import {facetOrderReducer} from '../../features/facets/facet-order/facet-order-slice.js';
 import {categoryFacetSearchSetReducer} from '../../features/facets/facet-search-set/category/category-facet-search-set-slice.js';
 import {specificFacetSearchSetReducer} from '../../features/facets/facet-search-set/specific/specific-facet-search-set-slice.js';
-import {CommerceAppState} from '../../state/commerce-app-state.js';
-import {CommerceThunkExtraArguments} from '../commerce-thunk-extra-arguments.js';
+import type {CommerceAppState} from '../../state/commerce-app-state.js';
+import type {CommerceThunkExtraArguments} from '../commerce-thunk-extra-arguments.js';
 import {
   buildCoreEngine,
-  CoreEngineNext,
-  CoreState,
-  EngineOptions,
-  ExternalEngineOptions,
+  type CoreEngineNext,
+  type CoreState,
+  type EngineOptions,
+  type ExternalEngineOptions,
 } from '../engine.js';
 import {buildLogger} from '../logger.js';
 import {redactEngine, stateKey} from '../state-key.js';
 import {buildThunkExtraArguments} from '../thunk-extra-arguments.js';
 import {
-  CommerceEngineConfiguration,
+  type CommerceEngineConfiguration,
   commerceEngineConfigurationSchema,
 } from './commerce-engine-configuration.js';
 

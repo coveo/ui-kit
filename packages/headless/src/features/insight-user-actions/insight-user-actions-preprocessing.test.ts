@@ -1,16 +1,16 @@
-import {MockInstance} from 'vitest';
+import type {MockInstance} from 'vitest';
 import {
-  mapAndSortActionsByMostRecent,
-  isActionWithinSessionThreshold,
-  preprocessUserActionsData,
-  splitActionsIntoTimelineSessions,
-  shouldExcludeAction,
   insertSessionInTimeline,
+  isActionWithinSessionThreshold,
+  mapAndSortActionsByMostRecent,
+  preprocessUserActionsData,
+  shouldExcludeAction,
+  splitActionsIntoTimelineSessions,
 } from './insight-user-actions-preprocessing.js';
 import {
-  UserActionTimeline,
+  type UserActionTimeline,
   UserActionType,
-  UserSession,
+  type UserSession,
 } from './insight-user-actions-state.js';
 
 const createRelativeDate = (date: Date, minutes: number, seconds: number) => {

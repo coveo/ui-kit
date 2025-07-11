@@ -1,27 +1,27 @@
 import {
-  Controller,
-  ControllerDefinitionsMap,
-  ControllerDefinition,
-  InferControllerFromDefinition,
-  InferControllerStaticStateMapFromDefinitionsWithSolutionType,
-  InferControllersMapFromDefinition,
+  type Controller,
+  type ControllerDefinition,
+  type ControllerDefinitionsMap,
+  type InferControllerFromDefinition,
+  type InferControllerStaticStateMapFromDefinitionsWithSolutionType,
+  type InferControllersMapFromDefinition,
   SolutionType,
-  CommerceEngine as SSRCommerceEngine,
+  type CommerceEngine as SSRCommerceEngine,
 } from '@coveo/headless/ssr-commerce';
 import {
-  useContext,
+  type Context,
+  type PropsWithChildren,
   useCallback,
+  useContext,
   useMemo,
-  Context,
-  PropsWithChildren,
 } from 'react';
 import {useSyncMemoizedStore} from '../client-utils.js';
 import {
   MissingEngineProviderError,
   UndefinedControllerError,
 } from '../errors.js';
-import {SingletonGetter, capitalize, mapObject} from '../utils.js';
-import {
+import {capitalize, mapObject, type SingletonGetter} from '../utils.js';
+import type {
   ContextHydratedState,
   ContextState,
   ControllerHook,
@@ -74,9 +74,12 @@ function buildControllerHook<
         isHydratedStateContext(ctx)
           ? ctx.controllers[key as ControllerKey].subscribe(listener)
           : () => {},
-      [ctx]
+      [ctx, key]
     );
-    const getStaticState = useCallback(() => ctx.controllers[key].state, [ctx]);
+    const getStaticState = useCallback(
+      () => ctx.controllers[key].state,
+      [ctx, key]
+    );
     const state = useSyncMemoizedStore(subscribe, getStaticState);
     const methods = useMemo(() => {
       if (!isHydratedStateContext(ctx)) {

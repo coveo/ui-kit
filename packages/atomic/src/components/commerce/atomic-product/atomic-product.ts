@@ -1,27 +1,27 @@
-import {booleanConverter} from '@/src/converters/boolean-converter';
-import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
-import {Product, InteractiveProduct} from '@coveo/headless/commerce';
-import {CSSResultGroup, LitElement, html, unsafeCSS} from 'lit';
+import type {InteractiveProduct, Product} from '@coveo/headless/commerce';
+import {type CSSResultGroup, html, LitElement, unsafeCSS} from 'lit';
 import {customElement, property} from 'lit/decorators.js';
 import {ref} from 'lit/directives/ref.js';
-import {
+import {booleanConverter} from '@/src/converters/boolean-converter';
+import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
+import type {
   InteractiveProductContextEvent,
   ProductContextEvent,
 } from '../../../decorators/commerce/product-template-decorators';
 import {parentNodeToString} from '../../../utils/dom-utils';
-import {DisplayConfig} from '../../common/item-list/context/item-display-config-context-controller';
+import type {DisplayConfig} from '../../common/item-list/context/item-display-config-context-controller';
 import {
-  ItemRenderingFunction,
+  type ItemRenderingFunction,
   resultComponentClass,
 } from '../../common/item-list/item-list-common';
 import {
+  type ItemDisplayDensity,
+  type ItemDisplayImageSize,
+  type ItemDisplayLayout,
   ItemLayout,
-  ItemDisplayDensity,
-  ItemDisplayImageSize,
-  ItemDisplayLayout,
 } from '../../common/layout/display-options';
-import {CommerceStore} from '../atomic-commerce-interface/store';
-import {CommerceRecommendationStore} from '../atomic-commerce-recommendation-interface/store';
+import type {CommerceStore} from '../atomic-commerce-interface/store';
+import type {CommerceRecommendationStore} from '../atomic-commerce-recommendation-interface/store';
 import styles from './atomic-product.tw.css';
 
 /**
@@ -254,11 +254,15 @@ export class AtomicProduct extends LitElement {
         <div class=${resultComponentClass}>
           <div
             class="result-root"
-            ${ref((el) => (this.productRootRef = el as HTMLElement))}
+            ${ref((el) => {
+              this.productRootRef = el as HTMLElement;
+            })}
           ></div>
           <div
             class="link-container"
-            ${ref((el) => (this.linkContainerRef = el as HTMLElement))}
+            ${ref((el) => {
+              this.linkContainerRef = el as HTMLElement;
+            })}
           ></div>
         </div>
       `;

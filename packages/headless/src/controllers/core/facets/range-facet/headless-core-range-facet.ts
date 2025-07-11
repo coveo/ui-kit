@@ -1,4 +1,4 @@
-import {CoreEngine} from '../../../../app/engine.js';
+import type {CoreEngine} from '../../../../app/engine.js';
 import {
   disableFacet,
   enableFacet,
@@ -10,17 +10,17 @@ import {
   baseFacetResponseSelector,
   isFacetLoadingResponseSelector,
 } from '../../../../features/facets/facet-set/facet-set-selectors.js';
-import {
-  RangeFacetResponse,
+import type {
   RangeFacetRequest,
+  RangeFacetResponse,
 } from '../../../../features/facets/range-facets/generic/interfaces/range-facet.js';
-import {RangeFacetSortCriterion} from '../../../../features/facets/range-facets/generic/interfaces/request.js';
+import type {RangeFacetSortCriterion} from '../../../../features/facets/range-facets/generic/interfaces/request.js';
 import {updateRangeFacetSortCriterion} from '../../../../features/facets/range-facets/generic/range-facet-actions.js';
 import {
   isRangeFacetValueExcluded,
   isRangeFacetValueSelected,
 } from '../../../../features/facets/range-facets/generic/range-facet-utils.js';
-import {
+import type {
   ConfigurationSection,
   FacetOptionsSection,
   SearchSection,

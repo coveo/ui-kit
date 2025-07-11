@@ -1,4 +1,4 @@
-import {BaseParam} from '../platform-service-params.js';
+import type {BaseParam} from '../platform-service-params.js';
 
 interface GeneratedAnswerParam {
   streamId?: string;

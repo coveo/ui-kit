@@ -1,8 +1,8 @@
-import {describe, it, expect} from 'vitest';
+import {describe, expect, it} from 'vitest';
 import {
-  renderWithHighlights,
   type HighlightKeywords,
   type HighlightString,
+  renderWithHighlights,
 } from './render-highlights';
 
 describe('render-highlights', () => {

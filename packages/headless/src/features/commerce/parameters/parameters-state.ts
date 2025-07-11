@@ -1,4 +1,4 @@
-import {CommerceSearchParameters} from '../search-parameters/search-parameters-actions.js';
+import type {CommerceSearchParameters} from '../search-parameters/search-parameters-actions.js';
 
 export interface CommerceParametersState extends CommerceSearchParameters {}
 

@@ -1,17 +1,17 @@
-import {AsyncThunkAction} from '@reduxjs/toolkit';
-import {FacetSearchAPIClient} from '../../../../api/search/search-api-client.js';
-import {AsyncThunkOptions} from '../../../../app/async-thunk-options.js';
-import {CoreEngine, CoreEngineNext} from '../../../../app/engine.js';
-import {
+import type {AsyncThunkAction} from '@reduxjs/toolkit';
+import type {FacetSearchAPIClient} from '../../../../api/search/search-api-client.js';
+import type {AsyncThunkOptions} from '../../../../app/async-thunk-options.js';
+import type {CoreEngine, CoreEngineNext} from '../../../../app/engine.js';
+import type {
   ClientThunkExtraArguments,
   ThunkExtraArguments,
 } from '../../../../app/thunk-extra-arguments.js';
-import {CategoryFacetSearchState} from '../../../../features/facets/facet-search-set/category/category-facet-search-set-state.js';
-import {FacetSearchOptions} from '../../../../features/facets/facet-search-set/facet-search-request-options.js';
+import type {CategoryFacetSearchState} from '../../../../features/facets/facet-search-set/category/category-facet-search-set-state.js';
+import type {FacetSearchOptions} from '../../../../features/facets/facet-search-set/facet-search-request-options.js';
 import {clearFacetSearch} from '../../../../features/facets/facet-search-set/generic/generic-facet-search-actions.js';
 import {updateFacetSearch} from '../../../../features/facets/facet-search-set/specific/specific-facet-search-actions.js';
-import {SpecificFacetSearchState} from '../../../../features/facets/facet-search-set/specific/specific-facet-search-set-state.js';
-import {
+import type {SpecificFacetSearchState} from '../../../../features/facets/facet-search-set/specific/specific-facet-search-set-state.js';
+import type {
   CategoryFacetSearchSection,
   FacetSearchSection,
 } from '../../../../state/state-sections.js';

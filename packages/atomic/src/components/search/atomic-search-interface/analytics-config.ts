@@ -1,16 +1,16 @@
-import {
+import type {
   AnalyticsConfiguration,
   SearchEngineConfiguration,
 } from '@coveo/headless';
 import {
-  AnalyticsPayload,
+  type AnalyticsPayload,
+  augmentAnalyticsConfigWithAtomicVersion,
+  augmentAnalyticsConfigWithDocument,
   augmentAnalyticsWithAtomicVersion,
   augmentWithExternalMiddleware,
-  augmentAnalyticsConfigWithDocument,
-  augmentAnalyticsConfigWithAtomicVersion,
   getNextAnalyticsConfig,
 } from '../../common/interface/analytics-config';
-import {createSearchStore} from './store';
+import type {createSearchStore} from './store';
 
 export function getAnalyticsConfig(
   searchEngineConfig: SearchEngineConfiguration,
@@ -20,7 +20,6 @@ export function getAnalyticsConfig(
   switch (searchEngineConfig.analytics?.analyticsMode) {
     case 'next':
       return getNextAnalyticsConfig(searchEngineConfig, enabled);
-    case 'legacy':
     default:
       return getLegacyAnalyticsConfig(searchEngineConfig, enabled, store);
   }
@@ -96,8 +95,7 @@ function augmentAnalyticsWithFacetTitles(
   }
 
   if (
-    payload.customData &&
-    payload.customData.facetTitle &&
+    payload.customData?.facetTitle &&
     payload.customData.facetId &&
     payload.customData.facetTitle
   ) {

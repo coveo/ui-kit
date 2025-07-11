@@ -1,24 +1,24 @@
-import {SearchEngine} from '../../app/search-engine/search-engine.js';
+import type {SearchEngine} from '../../app/search-engine/search-engine.js';
 import {getDebugInitialState} from '../../features/debug/debug-state.js';
 import {getPaginationInitialState} from '../../features/pagination/pagination-state.js';
 import {getQueryInitialState} from '../../features/query/query-state.js';
-import {SearchParameters} from '../../features/search-parameters/search-parameter-actions.js';
+import {executeSearch} from '../../features/search/search-actions.js';
+import type {SearchParameters} from '../../features/search-parameters/search-parameter-actions.js';
 import {
   legacyLogParametersChange,
   parametersChange,
 } from '../../features/search-parameters/search-parameter-analytics-actions.js';
-import {executeSearch} from '../../features/search/search-actions.js';
-import {StaticFilterValue} from '../../features/static-filter-set/static-filter-set-state.js';
-import {SearchParametersState} from '../../state/search-app-state.js';
+import type {StaticFilterValue} from '../../features/static-filter-set/static-filter-set-state.js';
+import type {SearchParametersState} from '../../state/search-app-state.js';
 import {deepEqualAnyOrder} from '../../utils/compare-utils.js';
 import {
   buildCoreSearchParameterManager,
   enrichParameters,
   getCoreActiveSearchParameters,
-  SearchParameterManager,
-  SearchParameterManagerInitialState,
-  SearchParameterManagerProps,
-  SearchParameterManagerState,
+  type SearchParameterManager,
+  type SearchParameterManagerInitialState,
+  type SearchParameterManagerProps,
+  type SearchParameterManagerState,
 } from '../core/search-parameter-manager/headless-core-search-parameter-manager.js';
 
 export type {
@@ -150,6 +150,7 @@ function getStaticFilters(state: Partial<SearchParametersState>) {
       const selectedCaptions = getSelectedStaticFilterCaptions(filter.values);
       return selectedCaptions.length ? {[id]: selectedCaptions} : {};
     })
+    // biome-ignore lint/performance/noAccumulatingSpread: <>
     .reduce((acc, obj) => ({...acc, ...obj}), {});
 
   return Object.keys(sf).length ? {sf} : {};

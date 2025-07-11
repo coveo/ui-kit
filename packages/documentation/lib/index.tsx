@@ -3,7 +3,7 @@ import {dirname, resolve} from 'node:path';
 import {fileURLToPath} from 'node:url';
 // following docs https://typedoc.org/guides/development/#plugins
 // eslint-disable-next-line n/no-unpublished-import
-import {Application, JSX, RendererEvent, Converter} from 'typedoc';
+import {type Application, Converter, JSX, RendererEvent} from 'typedoc';
 import {formatTypeDocToolbar} from './formatTypeDocToolbar.js';
 import {insertAtomicSearchBox} from './insertAtomicSearchBox.js';
 import {insertBetaNote} from './insertBetaNote.js';

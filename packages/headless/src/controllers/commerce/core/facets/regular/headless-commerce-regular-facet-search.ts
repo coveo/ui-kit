@@ -1,19 +1,19 @@
-import {FacetSearchType} from '../../../../../api/commerce/facet-search/facet-search-request.js';
-import {SpecificFacetSearchResult} from '../../../../../api/search/facet-search/specific-facet-search/specific-facet-search-response.js';
-import {CommerceEngine} from '../../../../../app/commerce-engine/commerce-engine.js';
+import type {FacetSearchType} from '../../../../../api/commerce/facet-search/facet-search-request.js';
+import type {SpecificFacetSearchResult} from '../../../../../api/search/facet-search/specific-facet-search/specific-facet-search-response.js';
+import type {CommerceEngine} from '../../../../../app/commerce-engine/commerce-engine.js';
 import {
   executeCommerceFacetSearch,
   executeCommerceFieldSuggest,
 } from '../../../../../features/commerce/facets/facet-search-set/commerce-facet-search-actions.js';
-import {FacetSearchOptions} from '../../../../../features/facets/facet-search-set/facet-search-request-options.js';
+import type {FacetSearchOptions} from '../../../../../features/facets/facet-search-set/facet-search-request-options.js';
 import {specificFacetSearchSetReducer as facetSearchSet} from '../../../../../features/facets/facet-search-set/specific/specific-facet-search-set-slice.js';
-import {FacetSearchSection} from '../../../../../state/state-sections.js';
+import type {FacetSearchSection} from '../../../../../state/state-sections.js';
 import {loadReducerError} from '../../../../../utils/errors.js';
 import {
-  FacetSearchProps,
   buildFacetSearch,
+  type FacetSearchProps,
 } from '../../../../core/facets/facet-search/specific/headless-facet-search.js';
-import {CoreFacetSearchState} from '../searchable/headless-commerce-searchable-facet.js';
+import type {CoreFacetSearchState} from '../searchable/headless-commerce-searchable-facet.js';
 
 export type RegularFacetSearchState =
   CoreFacetSearchState<SpecificFacetSearchResult>;

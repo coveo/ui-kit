@@ -1,4 +1,4 @@
-import {test, expect} from './fixture';
+import {expect, test} from './fixture';
 
 test.describe('when modifying state of a component (search box) that is a child of an atomic-external component', () => {
   test.beforeEach(async ({external, page}) => {

@@ -15,23 +15,23 @@ import {convertToDateRangeRequests} from '../../../facets/range-facets/date-face
 import {findExactRangeValue} from '../../../facets/range-facets/generic/range-facet-reducers.js';
 import {convertToNumericRangeRequests} from '../../../facets/range-facets/numeric-facet-set/numeric-facet-set-slice.js';
 import {setContext, setView} from '../../context/context-actions.js';
-import {restoreProductListingParameters} from '../../product-listing-parameters/product-listing-parameters-actions.js';
 import {fetchProductListing} from '../../product-listing/product-listing-actions.js';
+import {restoreProductListingParameters} from '../../product-listing-parameters/product-listing-parameters-actions.js';
 import {fetchQuerySuggestions} from '../../query-suggest/query-suggest-actions.js';
-import {restoreSearchParameters} from '../../search-parameters/search-parameters-actions.js';
 import {executeSearch} from '../../search/search-actions.js';
+import {restoreSearchParameters} from '../../search-parameters/search-parameters-actions.js';
 import {
   toggleSelectCategoryFacetValue,
   updateCategoryFacetNumberOfValues,
 } from '../category-facet/category-facet-actions.js';
 import {
+  clearAllCoreFacets,
+  deleteAllCoreFacets,
   deselectAllValuesInCoreFacet,
+  updateAutoSelectionForAllCoreFacets,
   updateCoreFacetFreezeCurrentValues,
   updateCoreFacetIsFieldExpanded,
   updateCoreFacetNumberOfValues,
-  updateAutoSelectionForAllCoreFacets,
-  clearAllCoreFacets,
-  deleteAllCoreFacets,
 } from '../core-facet/core-facet-actions.js';
 import {
   toggleExcludeDateFacetValue,
@@ -66,12 +66,12 @@ import {
 import type {
   AnyFacetRequest,
   AnyFacetValueRequest,
-  RegularFacetRequest,
-  NumericFacetRequest,
-  DateFacetRequest,
   CategoryFacetRequest,
+  DateFacetRequest,
   LocationFacetRequest,
   LocationFacetValueRequest,
+  NumericFacetRequest,
+  RegularFacetRequest,
 } from './interfaces/request.js';
 import type {
   AnyFacetResponse,
@@ -516,7 +516,9 @@ function handleDeselectAllFacetValues(request: AnyFacetRequest) {
     request.values = [];
     request.preventAutoSelect = true;
   } else {
-    request.values.forEach((value) => (value.state = 'idle'));
+    request.values.forEach((value) => {
+      value.state = 'idle';
+    });
   }
 }
 

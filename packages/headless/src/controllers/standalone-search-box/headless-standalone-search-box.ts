@@ -1,21 +1,21 @@
 import {configuration} from '../../app/common-reducers.js';
-import {SearchEngine} from '../../app/search-engine/search-engine.js';
+import type {SearchEngine} from '../../app/search-engine/search-engine.js';
+import {updateQuery} from '../../features/query/query-actions.js';
+import {queryReducer as query} from '../../features/query/query-slice.js';
 import {selectQuerySuggestion} from '../../features/query-suggest/query-suggest-actions.js';
 import {buildOmniboxSuggestionMetadata} from '../../features/query-suggest/query-suggest-analytics-actions.js';
 import {querySuggestReducer as querySuggest} from '../../features/query-suggest/query-suggest-slice.js';
-import {updateQuery} from '../../features/query/query-actions.js';
-import {queryReducer as query} from '../../features/query/query-slice.js';
 import {
   fetchRedirectUrl,
   registerStandaloneSearchBox,
+  resetStandaloneSearchBox,
   updateAnalyticsToOmniboxFromLink,
   updateAnalyticsToSearchFromLink,
-  resetStandaloneSearchBox,
   updateStandaloneSearchBoxRedirectionUrl,
 } from '../../features/standalone-search-box-set/standalone-search-box-set-actions.js';
 import {standaloneSearchBoxSetReducer as standaloneSearchBoxSet} from '../../features/standalone-search-box-set/standalone-search-box-set-slice.js';
-import {StandaloneSearchBoxAnalytics} from '../../features/standalone-search-box-set/standalone-search-box-set-state.js';
-import {
+import type {StandaloneSearchBoxAnalytics} from '../../features/standalone-search-box-set/standalone-search-box-set-state.js';
+import type {
   ConfigurationSection,
   QuerySection,
   QuerySuggestionSection,
@@ -27,11 +27,11 @@ import {validateOptions} from '../../utils/validate-payload.js';
 import {defaultSearchBoxOptions} from '../core/search-box/headless-core-search-box-options.js';
 import {
   buildSearchBox,
-  SearchBox,
-  SearchBoxState,
+  type SearchBox,
+  type SearchBoxState,
 } from '../search-box/headless-search-box.js';
 import {
-  StandaloneSearchBoxOptions,
+  type StandaloneSearchBoxOptions,
   standaloneSearchBoxSchema,
 } from './headless-standalone-search-box-options.js';
 

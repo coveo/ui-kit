@@ -1,5 +1,5 @@
 import {buildCustomEvent} from '../../../../utils/event-utils';
-import {FacetInfo} from '../../../common/facets/facet-common-store';
+import type {FacetInfo} from '../../../common/facets/facet-common-store';
 
 export interface PopoverChildFacet extends FacetInfo {
   hasValues: () => boolean;

@@ -1,6 +1,6 @@
-import {QuestionAnswerDocumentIdentifier} from '../../../api/search/search/question-answering.js';
-import {Result} from '../../../api/search/search/result.js';
-import {CoreEngine} from '../../../app/engine.js';
+import type {QuestionAnswerDocumentIdentifier} from '../../../api/search/search/question-answering.js';
+import type {Result} from '../../../api/search/search/result.js';
+import type {CoreEngine} from '../../../app/engine.js';
 import {
   collapseSmartSnippetRelatedQuestion,
   expandSmartSnippetRelatedQuestion,
@@ -8,16 +8,16 @@ import {
 import {questionAnsweringReducer as questionAnswering} from '../../../features/question-answering/question-answering-slice.js';
 import {getResultProperty} from '../../../features/result-templates/result-templates-helpers.js';
 import {searchReducer as search} from '../../../features/search/search-slice.js';
-import {
+import type {
   QuestionAnsweringSection,
   SearchSection,
 } from '../../../state/state-sections.js';
 import {loadReducerError} from '../../../utils/errors.js';
 import {
   buildController,
-  Controller,
+  type Controller,
 } from '../../controller/headless-controller.js';
-import {SmartSnippetAnalyticsClient} from '../smart-snippet/headless-core-smart-snippet.js';
+import type {SmartSnippetAnalyticsClient} from '../smart-snippet/headless-core-smart-snippet.js';
 
 export type {QuestionAnswerDocumentIdentifier} from '../../../api/search/search/question-answering.js';
 

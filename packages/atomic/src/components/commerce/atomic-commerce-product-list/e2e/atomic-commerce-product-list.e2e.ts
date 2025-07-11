@@ -1,4 +1,4 @@
-import {test, expect} from './fixture';
+import {expect, test} from './fixture';
 
 test.describe('atomic-commerce-product-list', () => {
   test.describe('when #display is set to "grid"', () => {

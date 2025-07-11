@@ -1,5 +1,5 @@
-import {Middleware, Action, PayloadAction} from '@reduxjs/toolkit';
-import {FetchRecommendationsPayload} from '../features/commerce/recommendations/recommendations-actions.js';
+import type {Action, Middleware, PayloadAction} from '@reduxjs/toolkit';
+import type {FetchRecommendationsPayload} from '../features/commerce/recommendations/recommendations-actions.js';
 
 export const randomID = (prepend?: string, length = 5) =>
   prepend +
@@ -57,9 +57,9 @@ export function doNotTrack() {
   if (typeof navigator === 'undefined' || typeof window === 'undefined') {
     return false;
   }
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: <>
   const nav = <any>navigator;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: <>
   const win = <any>window;
   return [
     nav.globalPrivacyControl,
@@ -80,7 +80,7 @@ export function fromEntries<K extends PropertyKey, V>(
 }
 
 export function resetTimeout(
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: <>
   callback: (...args: any[]) => void,
   timeoutId?: ReturnType<typeof setTimeout>,
   ms?: number | undefined

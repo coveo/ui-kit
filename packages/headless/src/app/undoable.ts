@@ -1,4 +1,4 @@
-import {Reducer, AnyAction} from '@reduxjs/toolkit';
+import type {AnyAction, Reducer} from '@reduxjs/toolkit';
 
 const MAX_PAST_HISTORY_ENTRY_COUNT = 10;
 

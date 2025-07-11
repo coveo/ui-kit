@@ -1,8 +1,8 @@
-import {
+import type {
   QueryCorrection,
   WordCorrection,
 } from '../../api/search/search/query-corrections.js';
-import {SearchEngine} from '../../app/search-engine/search-engine.js';
+import type {SearchEngine} from '../../app/search-engine/search-engine.js';
 import {
   didYouMeanClick,
   logDidYouMeanClick,
@@ -10,10 +10,10 @@ import {
 import {executeSearch} from '../../features/search/search-actions.js';
 import {
   buildCoreDidYouMean,
-  DidYouMean,
-  DidYouMeanProps,
-  DidYouMeanState,
-  DidYouMeanOptions,
+  type DidYouMean,
+  type DidYouMeanOptions,
+  type DidYouMeanProps,
+  type DidYouMeanState,
 } from '../core/did-you-mean/headless-core-did-you-mean.js';
 
 export type {

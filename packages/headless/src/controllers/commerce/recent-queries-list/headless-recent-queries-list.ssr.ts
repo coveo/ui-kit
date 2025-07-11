@@ -1,14 +1,14 @@
-import {NonRecommendationControllerDefinitionWithoutProps} from '../../../app/commerce-ssr-engine/types/common.js';
+import type {NonRecommendationControllerDefinitionWithoutProps} from '../../../app/commerce-ssr-engine/types/common.js';
 import {
-  RecentQueriesList,
-  RecentQueriesListProps,
   buildRecentQueriesList,
+  type RecentQueriesList,
+  type RecentQueriesListProps,
 } from './headless-recent-queries-list.js';
 
 export type {
-  RecentQueriesState,
   RecentQueriesListInitialState,
   RecentQueriesListOptions,
+  RecentQueriesState,
 } from './headless-recent-queries-list.js';
 export type {RecentQueriesList, RecentQueriesListProps};
 

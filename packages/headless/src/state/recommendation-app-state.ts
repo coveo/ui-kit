@@ -1,15 +1,15 @@
-import {
+import type {
   AdvancedSearchQueriesSection,
   ConfigurationSection,
   ContextSection,
   DebugSection,
   DictionaryFieldContextSection,
   FieldsSection,
+  PaginationSection,
   PipelineSection,
   RecommendationSection,
   SearchHubSection,
   VersionSection,
-  PaginationSection,
 } from './state-sections.js';
 
 export type RecommendationAppState = ConfigurationSection &

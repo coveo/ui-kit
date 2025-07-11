@@ -17,12 +17,12 @@ export const onetrustPreferencesGroup = 'ot';
 const onetrustCookieName = 'OptanonConsent';
 
 function getOneTrustActiveGroups() {
-  let onetrustCookie = getCookie(onetrustCookieName);
+  const onetrustCookie = getCookie(onetrustCookieName);
   if (onetrustCookie === undefined || onetrustCookie === '') {
     return undefined;
   }
-  let onetrustGroupRaw = onetrustCookie.match('groups=(.*?)&')[0];
-  let formattedActiveGroups = onetrustGroupRaw
+  const onetrustGroupRaw = onetrustCookie.match('groups=(.*?)&')[0];
+  const formattedActiveGroups = onetrustGroupRaw
     .replaceAll('%3A', ':')
     .replaceAll('%2C', ',')
     .replace('groups=', '')
@@ -39,8 +39,8 @@ function getOneTrustActiveGroups() {
  * @returns true if all the groups to verify are active, false otherwise.
  */
 export function isActiveGroup(groupsToVerify) {
-  let list = groupsToVerify.split(',');
-  let activeGroups = getOneTrustActiveGroups();
+  const list = groupsToVerify.split(',');
+  const activeGroups = getOneTrustActiveGroups();
   if (activeGroups === undefined) {
     return false;
   }

@@ -1,4 +1,4 @@
-import {Mock} from 'vitest';
+import type {Mock} from 'vitest';
 import {configuration} from '../../../../app/common-reducers.js';
 import {updateFacetOptions} from '../../../../features/facet-options/facet-options-actions.js';
 import {
@@ -9,22 +9,22 @@ import {
 import {dateFacetSetReducer as dateFacetSet} from '../../../../features/facets/range-facets/date-facet-set/date-facet-set-slice.js';
 import {executeSearch} from '../../../../features/search/search-actions.js';
 import {searchReducer as search} from '../../../../features/search/search-slice.js';
-import {SearchAppState} from '../../../../state/search-app-state.js';
+import type {SearchAppState} from '../../../../state/search-app-state.js';
 import {buildMockDateFacetResponse} from '../../../../test/mock-date-facet-response.js';
 import {buildMockDateFacetSlice} from '../../../../test/mock-date-facet-slice.js';
 import {buildMockDateFacetValue} from '../../../../test/mock-date-facet-value.js';
 import {
   buildMockSearchEngine,
-  MockedSearchEngine,
+  type MockedSearchEngine,
 } from '../../../../test/mock-engine-v2.js';
 import {createMockState} from '../../../../test/mock-state.js';
 import * as FacetIdDeterminor from '../../../core/facets/_common/facet-id-determinor.js';
 import {buildDateRange} from '../../../core/facets/range-facet/date-facet/date-range.js';
 import {
   buildDateFilter,
-  DateFilter,
-  DateFilterInitialState,
-  DateFilterOptions,
+  type DateFilter,
+  type DateFilterInitialState,
+  type DateFilterOptions,
 } from './headless-date-filter.js';
 
 vi.mock('../../../../features/facet-options/facet-options-actions');

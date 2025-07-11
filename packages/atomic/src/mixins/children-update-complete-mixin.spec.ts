@@ -1,6 +1,6 @@
-import {LitElement, html} from 'lit';
+import {html, LitElement} from 'lit';
 import {customElement, property} from 'lit/decorators.js';
-import {describe, beforeEach, afterEach, it, expect, vi} from 'vitest';
+import {afterEach, beforeEach, describe, expect, it, vi} from 'vitest';
 import {ChildrenUpdateCompleteMixin} from './children-update-complete-mixin';
 
 type StencilTestElement = HTMLElement & {
@@ -75,7 +75,7 @@ class ChildLitElement extends ChildrenUpdateCompleteMixin(LitElement) {
   public value!: string;
 
   public async initialize() {
-    this.initializeNested();
+    await this.initializeNested();
     await this.updateComplete;
     this.value = 'ready';
     await new Promise((resolve) => setTimeout(resolve, 50));

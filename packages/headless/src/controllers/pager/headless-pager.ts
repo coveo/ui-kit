@@ -1,18 +1,18 @@
-import {SearchEngine} from '../../app/search-engine/search-engine.js';
+import type {SearchEngine} from '../../app/search-engine/search-engine.js';
 import {
-  logPageNumber,
-  logPageNext,
-  logPagePrevious,
   browseResults,
+  logPageNext,
+  logPageNumber,
+  logPagePrevious,
 } from '../../features/pagination/pagination-analytics-actions.js';
 import {fetchPage} from '../../features/search/search-actions.js';
 import {
   buildCorePager,
-  PagerInitialState,
-  PagerOptions,
-  PagerProps,
-  Pager,
-  PagerState,
+  type Pager,
+  type PagerInitialState,
+  type PagerOptions,
+  type PagerProps,
+  type PagerState,
 } from '../core/pager/headless-core-pager.js';
 
 export type {PagerInitialState, PagerOptions, PagerProps, Pager, PagerState};

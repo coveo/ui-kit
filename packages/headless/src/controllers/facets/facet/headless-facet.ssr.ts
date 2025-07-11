@@ -1,6 +1,6 @@
-import {SearchEngine} from '../../../app/search-engine/search-engine.js';
-import {ControllerDefinitionWithoutProps} from '../../../app/ssr-engine/types/common.js';
-import {Facet, FacetProps, buildFacet} from './headless-facet.js';
+import type {SearchEngine} from '../../../app/search-engine/search-engine.js';
+import type {ControllerDefinitionWithoutProps} from '../../../app/ssr-engine/types/common.js';
+import {buildFacet, type Facet, type FacetProps} from './headless-facet.js';
 
 export * from './headless-facet.js';
 

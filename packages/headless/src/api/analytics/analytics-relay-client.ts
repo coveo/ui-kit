@@ -1,6 +1,6 @@
 import {createRelay} from '@coveo/relay';
 import {createSelector} from '@reduxjs/toolkit';
-import {
+import type {
   CommerceConfigurationSection,
   ConfigurationSection,
 } from '../../state/state-sections.js';

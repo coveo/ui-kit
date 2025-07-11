@@ -1,24 +1,24 @@
-import {Action, UnknownAction} from '@reduxjs/toolkit';
+import type {Action, UnknownAction} from '@reduxjs/toolkit';
 import {stateKey} from '../../../app/state-key.js';
-import {Controller} from '../../../controllers/controller/headless-controller.js';
+import type {Controller} from '../../../controllers/controller/headless-controller.js';
 import {
   createWaitForActionMiddleware,
   createWaitForActionMiddlewareForRecommendation,
 } from '../../../utils/utils.js';
 import {
   buildCommerceEngine,
-  CommerceEngine,
-  CommerceEngineOptions,
+  type CommerceEngine,
+  type CommerceEngineOptions,
 } from '../../commerce-engine/commerce-engine.js';
 import {buildLogger} from '../../logger.js';
-import {ControllersPropsMap} from '../../ssr-engine/types/common.js';
+import type {ControllersPropsMap} from '../../ssr-engine/types/common.js';
 import {buildControllerDefinitions} from '../common.js';
 import {
-  ControllerDefinitionsMap,
-  InferControllerPropsMapFromDefinitions,
+  type ControllerDefinitionsMap,
+  type InferControllerPropsMapFromDefinitions,
   SolutionType,
 } from '../types/common.js';
-import {
+import type {
   BuildParameters,
   CommerceControllerDefinitionsMap,
   EngineDefinitionOptions,

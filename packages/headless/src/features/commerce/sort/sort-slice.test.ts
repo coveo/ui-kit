@@ -2,18 +2,21 @@ import {buildSearchResponse} from '../../../test/mock-commerce-search.js';
 import {buildFetchProductListingResponse} from '../../../test/mock-product-listing.js';
 import {SortBy, SortDirection} from '../../sort/sort.js';
 import {
-  SetContextPayload,
-  SetViewPayload,
+  type SetContextPayload,
+  type SetViewPayload,
   setContext,
   setView,
 } from '../context/context-actions.js';
-import {restoreProductListingParameters} from '../product-listing-parameters/product-listing-parameters-actions.js';
 import {fetchProductListing} from '../product-listing/product-listing-actions.js';
-import {restoreSearchParameters} from '../search-parameters/search-parameters-actions.js';
+import {restoreProductListingParameters} from '../product-listing-parameters/product-listing-parameters-actions.js';
 import {executeSearch} from '../search/search-actions.js';
+import {restoreSearchParameters} from '../search-parameters/search-parameters-actions.js';
 import {applySort} from './sort-actions.js';
 import {sortReducer} from './sort-slice.js';
-import {CommerceSortState, getCommerceSortInitialState} from './sort-state.js';
+import {
+  type CommerceSortState,
+  getCommerceSortInitialState,
+} from './sort-state.js';
 
 describe('product-listing-sort-slice', () => {
   const sort = {

@@ -1,11 +1,11 @@
 import * as InsightInterfaceActions from '../../features/insight-interface/insight-interface-actions.js';
-import {getSampleEngineConfiguration} from '../engine-configuration.js';
 import {nextAnalyticsUsageWithServiceFeatureWarning} from '../engine.js';
+import {getSampleEngineConfiguration} from '../engine-configuration.js';
 import {
   buildInsightEngine,
-  InsightEngine,
-  InsightEngineConfiguration,
-  InsightEngineOptions,
+  type InsightEngine,
+  type InsightEngineConfiguration,
+  type InsightEngineOptions,
 } from './insight-engine.js';
 
 const fetchInterfaceSpy = vi.spyOn(InsightInterfaceActions, 'fetchInterface');

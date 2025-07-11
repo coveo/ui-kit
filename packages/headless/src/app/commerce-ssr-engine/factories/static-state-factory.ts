@@ -1,23 +1,23 @@
-import {UnknownAction} from '@reduxjs/toolkit';
+import type {UnknownAction} from '@reduxjs/toolkit';
 import {buildProductListing} from '../../../controllers/commerce/product-listing/headless-product-listing.js';
 import {buildSearch} from '../../../controllers/commerce/search/headless-search.js';
 import {augmentPreprocessRequestWithForwardedFor} from '../../ssr-engine/augment-preprocess-request.js';
 import {composeFunction} from '../../ssr-engine/common.js';
 import {createStaticState} from '../common.js';
 import {
-  EngineStaticState,
-  InferControllerStaticStateMapFromDefinitionsWithSolutionType,
+  type EngineStaticState,
+  type InferControllerStaticStateMapFromDefinitionsWithSolutionType,
   SolutionType,
 } from '../types/common.js';
-import {
+import type {
+  CommerceControllerDefinitionsMap,
   FetchStaticStateFromBuildResultParameters,
   FetchStaticStateFunction,
   FetchStaticStateParameters,
-  CommerceControllerDefinitionsMap,
 } from '../types/core-engine.js';
 import {
   buildFactory,
-  CommerceEngineDefinitionOptions,
+  type CommerceEngineDefinitionOptions,
 } from './build-factory.js';
 
 export const fetchStaticStateFactory: <

@@ -1,11 +1,11 @@
-import {PayloadAction} from '@reduxjs/toolkit';
-import {SearchEngine} from '../../app/search-engine/search-engine.js';
+import type {PayloadAction} from '@reduxjs/toolkit';
+import type {SearchEngine} from '../../app/search-engine/search-engine.js';
 import {querySetReducer as querySet} from '../../features/query-set/query-set-slice.js';
 import {
+  type RegisterQuerySetQueryActionCreatorPayload,
   registerQuerySetQuery,
-  RegisterQuerySetQueryActionCreatorPayload,
+  type UpdateQuerySetQueryActionCreatorPayload,
   updateQuerySetQuery,
-  UpdateQuerySetQueryActionCreatorPayload,
 } from './query-set-actions.js';
 
 export type {

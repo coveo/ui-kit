@@ -4,19 +4,19 @@
 import type {Controller} from '../../controllers/controller/headless-controller.js';
 import {
   buildFactory,
-  CommerceEngineDefinitionOptions,
+  type CommerceEngineDefinitionOptions,
 } from '../commerce-ssr-engine/factories/build-factory.js';
 import {hydratedStaticStateFactory} from '../commerce-ssr-engine/factories/hydrated-state-factory.js';
 import {hydratedRecommendationStaticStateFactory} from '../commerce-ssr-engine/factories/recommendation-hydrated-state-factory.js';
 import {fetchRecommendationStaticStateFactory} from '../commerce-ssr-engine/factories/recommendation-static-state-factory.js';
 import {fetchStaticStateFactory} from '../commerce-ssr-engine/factories/static-state-factory.js';
 import {
-  ControllerDefinitionsMap,
+  type ControllerDefinitionsMap,
   SolutionType,
 } from '../commerce-ssr-engine/types/common.js';
-import {EngineDefinition} from '../commerce-ssr-engine/types/core-engine.js';
-import {NavigatorContextProvider} from '../navigator-context-provider.js';
-import {CommerceEngineOptions} from './commerce-engine.js';
+import type {EngineDefinition} from '../commerce-ssr-engine/types/core-engine.js';
+import type {NavigatorContextProvider} from '../navigator-context-provider.js';
+import type {CommerceEngineOptions} from './commerce-engine.js';
 
 export interface CommerceEngineDefinition<
   TControllers extends ControllerDefinitionsMap<Controller>,

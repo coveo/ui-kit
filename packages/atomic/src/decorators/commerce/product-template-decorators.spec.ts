@@ -1,11 +1,11 @@
+import type {LitElement} from 'lit';
+import {beforeEach, describe, expect, it, vi} from 'vitest';
 import {InteractiveItemContextController} from '@/src/components/common/item-list/context/interactive-item-context-controller';
 import {ItemContextController} from '@/src/components/common/item-list/context/item-context-controller';
 import * as fetchItemContextModule from '@/src/components/common/item-list/fetch-item-context';
-import {LitElement} from 'lit';
-import {describe, it, expect, vi, beforeEach} from 'vitest';
 import {
-  createProductContextController,
   createInteractiveProductContextController,
+  createProductContextController,
   fetchProductContext,
 } from './product-template-decorators';
 

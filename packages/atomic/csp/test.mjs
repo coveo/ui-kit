@@ -1,7 +1,7 @@
 import {equal, notEqual} from 'node:assert';
 import {fork} from 'node:child_process';
 import {resolve} from 'node:path';
-import {describe, it, before, after} from 'node:test';
+import {after, before, describe, it} from 'node:test';
 import {launch} from 'puppeteer';
 
 describe('CSP Smoketest', () => {

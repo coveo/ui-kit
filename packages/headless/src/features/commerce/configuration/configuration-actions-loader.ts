@@ -1,12 +1,12 @@
-import {PayloadAction} from '@reduxjs/toolkit';
-import {CommerceEngine} from '../../../app/commerce-engine/commerce-engine.js';
+import type {PayloadAction} from '@reduxjs/toolkit';
+import type {CommerceEngine} from '../../../app/commerce-engine/commerce-engine.js';
 import {configurationReducer as configuration} from '../../configuration/configuration-slice.js';
 import {
-  UpdateAnalyticsConfigurationPayload,
-  UpdateBasicConfigurationPayload,
-  UpdateProxyBaseUrlPayload,
   disableAnalytics,
   enableAnalytics,
+  type UpdateAnalyticsConfigurationPayload,
+  type UpdateBasicConfigurationPayload,
+  type UpdateProxyBaseUrlPayload,
   updateAnalyticsConfiguration,
   updateBasicConfiguration,
   updateProxyBaseUrl,

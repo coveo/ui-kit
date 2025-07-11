@@ -1,10 +1,10 @@
-import {PayloadAction} from '@reduxjs/toolkit';
-import {SearchEngine} from '../../../app/search-engine/search-engine.js';
-import {AutomaticFacetGeneratorOptions} from '../../../controllers/facets/automatic-facet-generator/headless-automatic-facet-generator-options.js';
+import type {PayloadAction} from '@reduxjs/toolkit';
+import type {SearchEngine} from '../../../app/search-engine/search-engine.js';
+import type {AutomaticFacetGeneratorOptions} from '../../../controllers/facets/automatic-facet-generator/headless-automatic-facet-generator-options.js';
 import {
-  ToggleSelectAutomaticFacetValueActionCreatorPayload,
-  setOptions,
   deselectAllAutomaticFacetValues,
+  setOptions,
+  type ToggleSelectAutomaticFacetValueActionCreatorPayload,
   toggleSelectAutomaticFacetValue,
 } from './automatic-facet-set-actions.js';
 import {automaticFacetSetReducer as automaticFacetSet} from './automatic-facet-set-slice.js';

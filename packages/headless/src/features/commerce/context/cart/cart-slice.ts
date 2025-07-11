@@ -2,8 +2,8 @@ import {createReducer} from '@reduxjs/toolkit';
 import {createCartKey} from '../../../../controllers/commerce/context/cart/headless-cart.js';
 import {purchase, setItems, updateItemQuantity} from './cart-actions.js';
 import {
-  CartItemWithMetadata,
-  CartState,
+  type CartItemWithMetadata,
+  type CartState,
   getCartInitialState,
 } from './cart-state.js';
 

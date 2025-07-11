@@ -1,7 +1,7 @@
 import {createAction} from '@reduxjs/toolkit';
 import {validatePayload} from '../../../utils/validate-payload.js';
 import {
-  RegisterRecentQueriesCreatorPayload,
+  type RegisterRecentQueriesCreatorPayload,
   registerRecentQueriesPayloadDefinition,
 } from '../../recent-queries/recent-queries-actions.js';
 

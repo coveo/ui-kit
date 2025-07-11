@@ -1,15 +1,15 @@
 import {Schema, StringValue} from '@coveo/bueno';
 import {configuration} from '../../app/common-reducers.js';
-import {SearchEngine} from '../../app/search-engine/search-engine.js';
+import type {SearchEngine} from '../../app/search-engine/search-engine.js';
 import {buildSearchParameterSerializer} from '../../features/search-parameters/search-parameter-serializer.js';
-import {SearchParametersState} from '../../state/search-app-state.js';
-import {ConfigurationSection} from '../../state/state-sections.js';
+import type {SearchParametersState} from '../../state/search-app-state.js';
+import type {ConfigurationSection} from '../../state/state-sections.js';
 import {deepEqualAnyOrder} from '../../utils/compare-utils.js';
 import {loadReducerError} from '../../utils/errors.js';
 import {validateInitialState} from '../../utils/validate-payload.js';
 import {
   buildController,
-  Controller,
+  type Controller,
 } from '../controller/headless-controller.js';
 import {buildSearchParameterManager} from '../search-parameter-manager/headless-search-parameter-manager.js';
 

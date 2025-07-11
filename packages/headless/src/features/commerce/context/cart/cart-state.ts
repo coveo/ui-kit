@@ -1,4 +1,4 @@
-import {CartItemParam} from '../../../../api/commerce/commerce-api-params.js';
+import type {CartItemParam} from '../../../../api/commerce/commerce-api-params.js';
 
 export interface CartItemWithMetadata extends CartItemParam {
   /**

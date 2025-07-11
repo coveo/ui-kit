@@ -1,4 +1,4 @@
-import {Logger} from 'pino';
+import type {Logger} from 'pino';
 
 export class APICallsQueue {
   private currentAbortController: AbortController | null = null;
@@ -11,8 +11,8 @@ export class APICallsQueue {
     options: {logger: Logger; warnOnAbort: boolean}
   ) {
     const lastAbortController = this.currentAbortController;
-    const abortController = (this.currentAbortController =
-      new AbortController());
+    this.currentAbortController = new AbortController();
+    const abortController = this.currentAbortController;
     if (lastAbortController) {
       if (options.warnOnAbort) {
         options.logger.warn('Cancelling current pending search query');

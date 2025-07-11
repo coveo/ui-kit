@@ -1,21 +1,21 @@
-import {SearchEngine} from '../../app/search-engine/search-engine.js';
-import {fetchQuerySuggestions} from '../../features/query-suggest/query-suggest-actions.js';
+import type {SearchEngine} from '../../app/search-engine/search-engine.js';
 import {
   logSearchboxSubmit,
   searchboxSubmit,
 } from '../../features/query/query-analytics-actions.js';
+import {fetchQuerySuggestions} from '../../features/query-suggest/query-suggest-actions.js';
 import {executeSearch} from '../../features/search/search-actions.js';
-import {
-  SuggestionHighlightingOptions,
+import type {
   Delimiters,
+  SuggestionHighlightingOptions,
 } from '../../utils/highlight.js';
-import {Controller} from '../controller/headless-controller.js';
-import {SearchBoxOptions} from '../core/search-box/headless-core-search-box-options.js';
+import type {Controller} from '../controller/headless-controller.js';
 import {
   buildCoreSearchBox,
-  SearchBoxState,
-  Suggestion,
+  type SearchBoxState,
+  type Suggestion,
 } from '../core/search-box/headless-core-search-box.js';
+import type {SearchBoxOptions} from '../core/search-box/headless-core-search-box-options.js';
 
 export type {
   SearchBoxOptions,
