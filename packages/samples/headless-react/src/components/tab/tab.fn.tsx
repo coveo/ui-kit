@@ -1,5 +1,10 @@
-import {Tab as HeadlessTab} from '@coveo/headless';
-import {useEffect, useState, FunctionComponent, PropsWithChildren} from 'react';
+import type {Tab as HeadlessTab} from '@coveo/headless';
+import {
+  type FunctionComponent,
+  type PropsWithChildren,
+  useEffect,
+  useState,
+} from 'react';
 
 interface TabProps extends PropsWithChildren {
   controller: HeadlessTab;

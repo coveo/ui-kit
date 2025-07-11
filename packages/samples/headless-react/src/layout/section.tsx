@@ -1,4 +1,4 @@
-import {FunctionComponent, PropsWithChildren} from 'react';
+import type {FunctionComponent, PropsWithChildren} from 'react';
 
 interface SectionProps extends PropsWithChildren {
   title: string;

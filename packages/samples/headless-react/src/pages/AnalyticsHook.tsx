@@ -2,8 +2,8 @@ import {
   buildSearchBox,
   buildSearchEngine,
   getSampleSearchEngineConfiguration,
-  SearchBox as HeadlessSearchBox,
-  SearchEngine,
+  type SearchBox as HeadlessSearchBox,
+  type SearchEngine,
 } from '@coveo/headless';
 import {Component} from 'react';
 import {SearchBox} from '../components/search-box/search-box.fn';
@@ -20,12 +20,12 @@ declare global {
  * In a real life scenario, you would arrange for Google Tag Manager to be globally available, following [Google documentation](https://developers.google.com/tag-platform/tag-manager/web/datalayer#datalayer).
  */
 const fakeDataLayer = {
-  push: function () {},
+  push: () => {},
 };
-window['dataLayer'] = fakeDataLayer;
+window.dataLayer = fakeDataLayer;
 
 const pushToGoogleDataLayer = (payload: Record<string, unknown>) => {
-  window['dataLayer'].push(payload);
+  window.dataLayer.push(payload);
 };
 
 type AnalyticsHooksProps = {};
@@ -52,7 +52,7 @@ export class AnalyticsHook extends Component<
            * You can also use this hook to simply push data to an external system, such as Google Tag Manager.
            *
            */
-          analyticsClientMiddleware: (eventType, payload) => {
+          analyticsClientMiddleware: (_eventType, payload) => {
             this.setState({analyticsPayload: payload});
             pushToGoogleDataLayer(payload);
             return payload;

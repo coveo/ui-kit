@@ -1,5 +1,5 @@
-import {FieldSuggestions as HeadlessFieldSuggestions} from '@coveo/headless';
-import {useEffect, useState, FunctionComponent} from 'react';
+import type {FieldSuggestions as HeadlessFieldSuggestions} from '@coveo/headless';
+import {type FunctionComponent, useEffect, useState} from 'react';
 
 interface FieldSuggestionsProps {
   controller: HeadlessFieldSuggestions;
@@ -29,6 +29,11 @@ export const FieldSuggestions: FunctionComponent<FieldSuggestionsProps> = (
           <li
             key={facetSearchValue.rawValue}
             onClick={() => controller.select(facetSearchValue)}
+            onKeyUp={(e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                controller.select(facetSearchValue);
+              }
+            }}
           >
             {facetSearchValue.displayValue} ({facetSearchValue.count} results)
           </li>

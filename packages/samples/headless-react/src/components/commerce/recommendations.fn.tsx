@@ -1,5 +1,5 @@
-import {Recommendations as HeadlessRecommendations} from '@coveo/headless/commerce';
-import {useEffect, useState, FunctionComponent} from 'react';
+import type {Recommendations as HeadlessRecommendations} from '@coveo/headless/commerce';
+import {type FunctionComponent, useEffect, useState} from 'react';
 
 interface RecommendationsProps {
   controller: HeadlessRecommendations;

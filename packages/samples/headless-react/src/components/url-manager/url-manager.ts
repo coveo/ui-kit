@@ -1,7 +1,7 @@
 import {
-  buildUrlManager,
-  SearchEngine,
   buildSearchStatus,
+  buildUrlManager,
+  type SearchEngine,
 } from '@coveo/headless';
 
 /**

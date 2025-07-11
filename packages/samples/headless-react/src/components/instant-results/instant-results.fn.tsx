@@ -1,8 +1,8 @@
-import {
-  SearchBox as HeadlessSearchBox,
+import type {
   InstantResults as HeadlessInstantResults,
+  SearchBox as HeadlessSearchBox,
 } from '@coveo/headless';
-import {useEffect, useState, FunctionComponent} from 'react';
+import {type FunctionComponent, useEffect, useState} from 'react';
 
 interface InstantResultsProps {
   controllerSearchbox: HeadlessSearchBox;
@@ -59,6 +59,11 @@ export const InstantResults: FunctionComponent<InstantResultsProps> = (
                 key={value}
                 onMouseEnter={() => controllerInstantResults.updateQuery(value)}
                 onClick={() => controllerSearchbox.selectSuggestion(value)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    controllerSearchbox.selectSuggestion(value);
+                  }
+                }}
               >
                 {value}
               </li>
@@ -68,7 +73,7 @@ export const InstantResults: FunctionComponent<InstantResultsProps> = (
         <ul>
           {instantResultsState.results.map((result) => {
             return (
-              <li>
+              <li key={result.uniqueId}>
                 <div>
                   {result.title}: {result.raw.source}
                 </div>

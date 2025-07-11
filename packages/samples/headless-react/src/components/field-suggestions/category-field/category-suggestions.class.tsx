@@ -1,11 +1,11 @@
 import {
-  CategoryFieldSuggestions as HeadlessCategoryFieldSuggestions,
-  CategoryFieldSuggestionsOptions,
-  Unsubscribe,
   buildCategoryFieldSuggestions,
-  CategoryFacetSearchState,
+  type CategoryFacetSearchState,
+  type CategoryFieldSuggestionsOptions,
+  type CategoryFieldSuggestions as HeadlessCategoryFieldSuggestions,
+  type Unsubscribe,
 } from '@coveo/headless';
-import {Component, ContextType} from 'react';
+import {Component, type ContextType} from 'react';
 import {AppContext} from '../../../context/engine';
 
 type CategoryFieldSuggestionsFacetOptions =
@@ -66,6 +66,11 @@ export class CategoryFieldSuggestions extends Component<
                 '>'
               )}
               onClick={() => this.controller.select(facetSearchValue)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                  this.controller.select(facetSearchValue);
+                }
+              }}
             >
               {[...facetSearchValue.path, facetSearchValue.displayValue].join(
                 ' > '

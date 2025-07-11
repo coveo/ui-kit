@@ -1,9 +1,9 @@
-import {buildInteractiveResult, Result} from '@coveo/headless';
+import {buildInteractiveResult, type Result} from '@coveo/headless';
 import {
-  FunctionComponent,
+  type FunctionComponent,
+  type PropsWithChildren,
   useContext,
   useEffect,
-  PropsWithChildren,
 } from 'react';
 import {AppContext} from '../../context/engine';
 import {filterProtocol} from '../../utils/filter-protocol';

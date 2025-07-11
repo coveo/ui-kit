@@ -1,8 +1,8 @@
 import {
   buildDateRange,
-  DateFilter as HeadlessDateFilter,
+  type DateFilter as HeadlessDateFilter,
 } from '@coveo/headless';
-import {useEffect, useState, FunctionComponent, Fragment} from 'react';
+import {Fragment, type FunctionComponent, useEffect, useState} from 'react';
 import {parseDate} from '../date-facet/date-utils';
 
 interface DateFilterProps {
@@ -31,14 +31,18 @@ export const DateFilter: FunctionComponent<DateFilterProps> = (props) => {
       <input
         key="start"
         type="Date"
-        ref={(ref) => (startRef = ref!)}
+        ref={(ref) => {
+          startRef = ref!;
+        }}
         defaultValue={formattedDateValue(range?.start)}
         placeholder="Start"
       />
       <input
         key="end"
         type="Date"
-        ref={(ref) => (endRef = ref!)}
+        ref={(ref) => {
+          endRef = ref!;
+        }}
         defaultValue={formattedDateValue(range?.end)}
         placeholder="End"
       />

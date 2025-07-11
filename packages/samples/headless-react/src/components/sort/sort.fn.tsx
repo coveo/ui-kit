@@ -1,9 +1,9 @@
 import {
   buildCriterionExpression,
-  Sort as HeadlessSort,
-  SortCriterion,
+  type Sort as HeadlessSort,
+  type SortCriterion,
 } from '@coveo/headless';
-import {useEffect, useState, FunctionComponent} from 'react';
+import {type FunctionComponent, useEffect, useState} from 'react';
 
 interface SortProps {
   controller: HeadlessSort;

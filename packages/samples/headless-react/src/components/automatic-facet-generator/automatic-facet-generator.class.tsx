@@ -1,11 +1,11 @@
 import {
+  type AutomaticFacetGeneratorOptions,
+  type AutomaticFacetGeneratorState,
   buildAutomaticFacetGenerator,
-  AutomaticFacetGeneratorState,
-  AutomaticFacetGenerator as HeadlessAutomaticFacetGenerator,
-  Unsubscribe,
-  AutomaticFacetGeneratorOptions,
+  type AutomaticFacetGenerator as HeadlessAutomaticFacetGenerator,
+  type Unsubscribe,
 } from '@coveo/headless';
-import {Component, ContextType} from 'react';
+import {Component, type ContextType} from 'react';
 import {AppContext} from '../../context/engine';
 import {AutomaticFacet} from '../automatic-facet/automatic-facet.class';
 

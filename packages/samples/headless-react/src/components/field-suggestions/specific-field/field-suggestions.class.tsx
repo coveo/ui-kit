@@ -1,11 +1,11 @@
 import {
-  FieldSuggestions as HeadlessFieldSuggestions,
-  FieldSuggestionsOptions,
-  Unsubscribe,
   buildFieldSuggestions,
-  FacetSearchState,
+  type FacetSearchState,
+  type FieldSuggestionsOptions,
+  type FieldSuggestions as HeadlessFieldSuggestions,
+  type Unsubscribe,
 } from '@coveo/headless';
-import {Component, ContextType} from 'react';
+import {Component, type ContextType} from 'react';
 import {AppContext} from '../../../context/engine';
 
 type FieldSuggestionsFacetOptions = FieldSuggestionsOptions['facet'];
@@ -62,6 +62,11 @@ export class FieldSuggestions extends Component<
             <li
               key={facetSearchValue.rawValue}
               onClick={() => this.controller.select(facetSearchValue)}
+              onKeyUp={(e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                  this.controller.select(facetSearchValue);
+                }
+              }}
             >
               {facetSearchValue.displayValue} ({facetSearchValue.count} results)
             </li>
