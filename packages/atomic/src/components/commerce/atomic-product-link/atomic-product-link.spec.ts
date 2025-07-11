@@ -212,6 +212,21 @@ describe('atomic-product-link', () => {
     });
   });
 
+  describe('#disconnectedCallback', () => {
+    it('should call cleanup function when component is disconnected', async () => {
+      const cleanupSpy = vi.fn();
+      const {element} = await renderProductLink();
+
+      (element as any).removeLinkEventHandlers = cleanupSpy;
+
+      element?.disconnectedCallback();
+
+      expect(cleanupSpy).toHaveBeenCalledOnce();
+
+      expect((element as any).removeLinkEventHandlers).toBeUndefined();
+    });
+  });
+
   describe('when #hrefTemplate is provided', () => {
     let link: any;
 
