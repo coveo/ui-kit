@@ -1,5 +1,5 @@
-import {SchemaValue} from '../schema.js';
-import {ValueConfig, Value, isUndefined} from './value.js';
+import type {SchemaValue} from '../schema.js';
+import {isUndefined, Value, type ValueConfig} from './value.js';
 
 interface NumberValueConfig extends ValueConfig<number> {
   min?: number;
@@ -49,5 +49,5 @@ export function isNumberOrUndefined(
 }
 
 export function isNumber(value: unknown): value is number {
-  return typeof value === 'number' && !isNaN(value);
+  return typeof value === 'number' && !Number.isNaN(value);
 }
