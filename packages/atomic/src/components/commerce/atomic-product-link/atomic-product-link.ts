@@ -39,8 +39,6 @@ export class AtomicProductLink
 {
   static styles = unsafeCSS(styles);
 
-  public static isCompatibleWithProductList = true;
-
   /**
    * The [template literal](https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Template_literals) from which to generate the `href` attribute value
    *
