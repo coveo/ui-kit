@@ -1,4 +1,4 @@
-import {DidYouMean as HeadlessDidYouMean} from '@coveo/headless/commerce';
+import type {DidYouMean as HeadlessDidYouMean} from '@coveo/headless/commerce';
 import {useEffect, useState} from 'react';
 
 interface IDidYouMeanProps {
@@ -35,7 +35,16 @@ export default function DidYouMean(props: IDidYouMeanProps) {
     <div>
       <p>
         Search for
-        <span onClick={() => controller?.applyCorrection()}>
+        {/** biome-ignore lint/a11y/noStaticElementInteractions: <> */}
+        <span
+          onClick={() => controller?.applyCorrection()}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+              e.preventDefault();
+              controller?.applyCorrection();
+            }
+          }}
+        >
           <b>{state.queryCorrection.correctedQuery}</b>
         </span>
         instead?
