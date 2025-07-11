@@ -1,7 +1,7 @@
 import {getAnalyticsNextApiBaseUrl} from '@coveo/headless';
 import {createRelay} from '@coveo/relay';
 import {COVEO_SHOPIFY_CONFIG_KEY} from '../constants';
-import {CoveoShopifyOptions} from '../types';
+import type {CoveoShopifyOptions} from '../types';
 import {publishCustomShopifyEvent} from './shopify';
 
 export function init(options: CoveoShopifyOptions) {
