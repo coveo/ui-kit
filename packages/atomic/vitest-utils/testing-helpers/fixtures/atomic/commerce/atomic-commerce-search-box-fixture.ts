@@ -80,6 +80,7 @@ export const defaultBindings = {
     dispatch: vi.fn(),
   } as unknown as CommerceSearchBoxBindings['engine'],
   id: 'search-box-1',
+  numberOfQueries: 3,
   store: {
     onChange: vi.fn(),
     isMobile: vi.fn(() => false),

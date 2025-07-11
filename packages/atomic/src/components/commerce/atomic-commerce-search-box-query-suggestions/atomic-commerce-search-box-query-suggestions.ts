@@ -101,24 +101,26 @@ export class AtomicCommerceSearchBoxQuerySuggestions
   private getEffectiveMaxWithQuery(): number {
     const numberOfQueries = this.bindings.numberOfQueries;
     const maxWithQuery = this.maxWithQuery;
-    
+
     // Check if there's a clash between numberOfQueries and maxWithQuery
     if (numberOfQueries < maxWithQuery) {
       const logger = this.bindings.engine.logger;
       logger.warn(
         `Query suggestions configuration mismatch: atomic-commerce-search-box has number-of-queries="${numberOfQueries}" but atomic-commerce-search-box-query-suggestions has max-with-query="${maxWithQuery}". ` +
-        `Using the smaller value (${numberOfQueries}) to ensure consistent behavior. ` +
-        `Consider updating max-with-query to ${numberOfQueries} or increasing number-of-queries to ${maxWithQuery}.`
+          `Using the smaller value (${numberOfQueries}) to ensure consistent behavior. ` +
+          `Consider updating max-with-query to ${numberOfQueries} or increasing number-of-queries to ${maxWithQuery}.`
       );
       return numberOfQueries;
     }
-    
+
     return maxWithQuery;
   }
 
   private renderItems(): SearchBoxSuggestionElement[] {
     const hasQuery = this.bindings.searchBoxController.state.value !== '';
-    const max = hasQuery ? this.getEffectiveMaxWithQuery() : this.maxWithoutQuery;
+    const max = hasQuery
+      ? this.getEffectiveMaxWithQuery()
+      : this.maxWithoutQuery;
     return this.bindings.searchBoxController.state.suggestions
       .slice(0, max)
       .map((suggestion) => this.renderItem(suggestion));
