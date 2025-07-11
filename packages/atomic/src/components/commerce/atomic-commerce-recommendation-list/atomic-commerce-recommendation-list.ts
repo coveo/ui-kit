@@ -63,7 +63,6 @@ import styles from './atomic-commerce-recommendation-list.tw.css';
 @customElement('atomic-commerce-recommendation-list')
 @bindings()
 @withTailwindStyles
-// TODO: Remove the mixin once atomic-commerce-recommendation-interface is merged (KIT-3934)
 export class AtomicCommerceRecommendationList
   extends ChildrenUpdateCompleteMixin(LitElement)
   implements InitializableComponent<CommerceBindings>
@@ -341,7 +340,6 @@ export class AtomicCommerceRecommendationList
     this.recommendations.refresh();
   }
 
-  // TODO: Remove once atomic-commerce-recommendation-interface is merged (KIT-3934)
   private initSummary() {
     this.summary = this.recommendations.summary();
     this.unsubscribeSummary = this.summary.subscribe(() => {
