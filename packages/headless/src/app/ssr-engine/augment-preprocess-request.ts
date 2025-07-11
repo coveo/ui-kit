@@ -4,6 +4,7 @@ import type {
   PreprocessRequest,
   RequestMetadata,
 } from '../../api/preprocess-request.js';
+import {isBrowser} from '../../utils/runtime.js';
 import {buildLogger, type LoggerOptions} from '../logger.js';
 import type {NavigatorContextProvider} from '../navigator-context-provider.js';
 
@@ -22,17 +23,19 @@ export function augmentPreprocessRequestWithForwardedFor(
     clientOrigin: PlatformClientOrigin,
     metadata?: RequestMetadata
   ) => {
-    const headers = new Headers(request.headers);
-    const forwardedFor = options.navigatorContextProvider?.()?.forwardedFor;
-    if (forwardedFor) {
-      headers.set('x-forwarded-for', forwardedFor as string);
-    } else {
-      const logger = buildLogger(options.loggerOptions);
-      logger.warn(
-        "[WARNING] Unable to set x-forwarded-for header. Make sure to set the 'forwardedFor' property in the navigator context provider."
-      );
+    if (!isBrowser()) {
+      const headers = new Headers(request.headers);
+      const forwardedFor = options.navigatorContextProvider?.()?.forwardedFor;
+      if (forwardedFor) {
+        headers.set('x-forwarded-for', forwardedFor as string);
+      } else {
+        const logger = buildLogger(options.loggerOptions);
+        logger.warn(
+          "[WARNING] Unable to set x-forwarded-for header. Make sure to set the 'forwardedFor' property in the navigator context provider."
+        );
+      }
+      request.headers = headers;
     }
-    request.headers = headers;
     if (originalPreprocessRequest) {
       return originalPreprocessRequest(request, clientOrigin, metadata);
     }
