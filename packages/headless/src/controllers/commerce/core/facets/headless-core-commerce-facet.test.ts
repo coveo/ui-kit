@@ -326,24 +326,19 @@ describe('CoreCommerceFacet', () => {
   });
 
   describe('#showMoreValues', () => {
-    it('dispatches #updateCoreFacetNumberOfValues with the correct payload', () => {
-      const numberOfValues = 10;
-
-      setFacetRequest({numberOfValues, initialNumberOfValues: 10});
-      setFacetResponse({
-        values: [buildMockCommerceRegularFacetValue({state: 'idle'})],
-      });
+    it('should dispatch #updateCoreFacetNumberOfValues with the correct arguments', () => {
+      setFacetRequest({numberOfValues: 4, initialNumberOfValues: 4});
       initFacet();
 
       facet.showMoreValues();
 
       expect(updateCoreFacetNumberOfValues).toHaveBeenCalledWith({
         facetId,
-        numberOfValues: 20,
+        numberOfValues: 8,
       });
     });
 
-    it('dispatches #updateCoreFacetIsFieldExpanded with the correct payload', () => {
+    it('should dispatch #updateCoreFacetIsFieldExpanded with the correct arguments', () => {
       facet.showMoreValues();
 
       expect(updateCoreFacetIsFieldExpanded).toHaveBeenCalledWith({
@@ -352,23 +347,69 @@ describe('CoreCommerceFacet', () => {
       });
     });
 
-    it('dispatches #fetchProductsActionCreator', () => {
+    it('should dispatch #fetchProductsActionCreator', () => {
       facet.showMoreValues();
+
       expect(fetchProductsActionCreator).toHaveBeenCalled();
+    });
+
+    describe('when dispatching #updateCoreFacetNumberOfValues', () => {
+      it('should set numberOfValues in the payload to the initial number of values when the current number of values is undefined', () => {
+        setFacetRequest({initialNumberOfValues: 4, numberOfValues: undefined});
+        initFacet();
+
+        facet.showMoreValues();
+
+        expect(updateCoreFacetNumberOfValues).toHaveBeenCalledWith({
+          facetId,
+          numberOfValues: 4,
+        });
+      });
+
+      it('should set numberOfValues in the payload to the number of values + 1 when the initial number of values is undefined', () => {
+        setFacetRequest({numberOfValues: 4, initialNumberOfValues: undefined});
+        initFacet();
+
+        facet.showMoreValues();
+
+        expect(updateCoreFacetNumberOfValues).toHaveBeenCalledWith({
+          facetId,
+          numberOfValues: 5,
+        });
+      });
+
+      it('should set numberOfValues in the payload to the next multiple of the initial number of values when the number of values is not a multiple of the initial number of values', () => {
+        setFacetRequest({numberOfValues: 5, initialNumberOfValues: 4});
+        initFacet();
+
+        facet.showMoreValues();
+
+        expect(updateCoreFacetNumberOfValues).toHaveBeenCalledWith({
+          facetId,
+          numberOfValues: 8,
+        });
+      });
+
+      it('should set numberOfValues in the payload to the next multiple of the initial number of values when the number of values is a multiple of the initial number of values', () => {
+        setFacetRequest({numberOfValues: 8, initialNumberOfValues: 4});
+        initFacet();
+
+        facet.showMoreValues();
+
+        expect(updateCoreFacetNumberOfValues).toHaveBeenCalledWith({
+          facetId,
+          numberOfValues: 12,
+        });
+      });
     });
   });
 
   describe('#showLessValues', () => {
-    it('when number of active values is less than initial number of values, dispatches #updateCoreFacetNumberOfValues with numberOfValues: <initial number of value> in payload', () => {
-      const activeValues = [
-        buildMockCommerceRegularFacetValue({
-          state: 'selected',
-        }),
-      ];
-      const initialNumberOfValues = activeValues.length + 1;
+    it('should dispatch #updateCoreFacetNumberOfValues with the correct payload', () => {
+      const value = buildMockCommerceRegularFacetValue();
       setFacetRequest({
-        initialNumberOfValues,
-        values: activeValues,
+        values: [value, value, value, value, value, value, value, value],
+        initialNumberOfValues: 4,
       });
       initFacet();
 
@@ -376,30 +417,11 @@ describe('CoreCommerceFacet', () => {
 
       expect(updateCoreFacetNumberOfValues).toHaveBeenCalledWith({
         facetId,
-        numberOfValues: initialNumberOfValues,
+        numberOfValues: 4,
       });
     });
 
-    it('when number of active values is greater than initial number of values, dispatches #updateCoreFacetNumberOfValues with numberOfValues: <number of active values> in payload', () => {
-      const activeValues = [
-        buildMockCommerceRegularFacetValue({state: 'selected'}),
-        buildMockCommerceRegularFacetValue({state: 'selected'}),
-      ];
-      const initialNumberOfValues = activeValues.length - 1;
-      setFacetRequest({
-        initialNumberOfValues,
-        values: activeValues,
-      });
-      initFacet();
-      facet.showLessValues();
-
-      expect(updateCoreFacetNumberOfValues).toHaveBeenCalledWith({
-        facetId,
-        numberOfValues: activeValues.length,
-      });
-    });
-
-    it('dispatches #updateCoreFacetIsFieldExpanded with isFieldExpanded: false payload', () => {
+    it('should dispatch #updateCoreFacetIsFieldExpanded with the correct payload', () => {
       facet.showLessValues();
 
       expect(updateCoreFacetIsFieldExpanded).toHaveBeenCalledWith({
@@ -408,9 +430,69 @@ describe('CoreCommerceFacet', () => {
       });
     });
 
-    it('dispatches #fetchProductsActionCreator', () => {
+    it('should dispatch #fetchProductsActionCreator', () => {
       facet.showLessValues();
+
       expect(fetchProductsActionCreator).toHaveBeenCalled();
+    });
+
+    describe('when dispatching #updateCoreFacetNumberOfValues', () => {
+      it('should set numberOfValues in the payload to the number of non-idle values when the initial number of values in undefined', () => {
+        const value = buildMockCommerceRegularFacetValue();
+        const selectedValue = buildMockCommerceRegularFacetValue({
+          state: 'selected',
+        });
+        setFacetRequest({
+          values: [value, value, value, selectedValue, selectedValue],
+          initialNumberOfValues: undefined,
+        });
+        initFacet();
+
+        facet.showLessValues();
+
+        expect(updateCoreFacetNumberOfValues).toHaveBeenCalledWith({
+          facetId,
+          numberOfValues: 2,
+        });
+      });
+
+      it('should set numberOfValues in the payload to the initial number of values when the initial number of values is greater than the number of non-idle values', () => {
+        const selectedValue = buildMockCommerceRegularFacetValue({
+          state: 'selected',
+        });
+        const value = buildMockCommerceRegularFacetValue();
+        setFacetRequest({
+          values: [selectedValue, value, value, value],
+          initialNumberOfValues: 2,
+        });
+        initFacet();
+
+        facet.showLessValues();
+
+        expect(updateCoreFacetNumberOfValues).toHaveBeenCalledWith({
+          facetId,
+          numberOfValues: 2,
+        });
+      });
+
+      it('should set numberOfValues in the payload to the initial number of values when the initial number of values is less than the number of non-idle values', () => {
+        const selectedValue = buildMockCommerceRegularFacetValue({
+          state: 'selected',
+        });
+        const value = buildMockCommerceRegularFacetValue();
+        setFacetRequest({
+          values: [selectedValue, selectedValue, selectedValue, value],
+          initialNumberOfValues: 2,
+        });
+        initFacet();
+
+        facet.showLessValues();
+
+        expect(updateCoreFacetNumberOfValues).toHaveBeenCalledWith({
+          facetId,
+          numberOfValues: 3,
+        });
+      });
     });
   });
 
@@ -487,42 +569,86 @@ describe('CoreCommerceFacet', () => {
       });
     });
     describe('#canShowLessValues', () => {
-      it('when the number of currentValues is equal to the configured number, returns "false"', () => {
-        const values = [buildMockCommerceRegularFacetValue()];
-        setFacetRequest({values, initialNumberOfValues: 1, numberOfValues: 1});
-        setFacetResponse({
-          values: [buildMockCommerceRegularFacetValue({value: 'Some Value'})],
-        });
-
+      it("should be 'false' then the request is undefined", () => {
+        setFacetRequest(undefined);
         initFacet();
 
         expect(facet.state.canShowLessValues).toBe(false);
       });
 
-      it('when the number of currentValues is greater than the configured number, returns "true"', () => {
+      it("should be'false' when the length of the values is less than the initial number of values", () => {
         const value = buildMockCommerceRegularFacetValue();
+        setFacetRequest({
+          values: [value],
+          initialNumberOfValues: 2,
+        });
+        initFacet();
 
-        setFacetRequest({values: [value, value]});
-        setFacetResponse({
-          values: [buildMockCommerceRegularFacetValue({value: 'Some Value'})],
+        expect(facet.state.canShowLessValues).toBe(false);
+      });
+
+      it("should be 'false' when the length of the values is equal to the initial number of values", () => {
+        const value = buildMockCommerceRegularFacetValue();
+        setFacetRequest({
+          values: [value, value],
+          initialNumberOfValues: 2,
+        });
+        initFacet();
+
+        expect(facet.state.canShowLessValues).toBe(false);
+      });
+
+      it("should be 'false' when none of the values in the request are idle", () => {
+        const selectedValue = buildMockCommerceRegularFacetValue({
+          state: 'selected',
+        });
+        setFacetRequest({
+          values: [selectedValue, selectedValue, selectedValue, selectedValue],
+          initialNumberOfValues: 2,
+        });
+        initFacet();
+
+        expect(facet.state.canShowLessValues).toBe(false);
+      });
+
+      it("should be 'false' when the length of the values is 1 and the initial number of values is undefined", () => {
+        const value = buildMockCommerceRegularFacetValue();
+        setFacetRequest({
+          values: [value],
+          initialNumberOfValues: undefined,
+        });
+        initFacet();
+
+        expect(facet.state.canShowLessValues).toBe(false);
+      });
+
+      it("should be 'true' when the number of idle values is greater than 1 and the initial number of values is undefined", () => {
+        const value = buildMockCommerceRegularFacetValue();
+        const selectedValue = buildMockCommerceRegularFacetValue({
+          state: 'selected',
+        });
+        setFacetRequest({
+          values: [selectedValue, selectedValue, value],
+          initialNumberOfValues: undefined,
         });
         initFacet();
 
         expect(facet.state.canShowLessValues).toBe(true);
       });
 
-      it('when number of currentValues > configured number and there are no idle values, returns "false"', () => {
+      it("should be 'true' when the length of the values in the request is greater than the initial number of values and there is at least one idle value", () => {
+        const value = buildMockCommerceRegularFacetValue();
         const selectedValue = buildMockCommerceRegularFacetValue({
           state: 'selected',
         });
-
-        setFacetRequest({values: [selectedValue, selectedValue]});
-        setFacetResponse({
-          values: [buildMockCommerceRegularFacetValue({value: 'Some Value'})],
+        setFacetRequest({
+          values: [selectedValue, selectedValue, selectedValue, value],
+          initialNumberOfValues: 2,
         });
+
         initFacet();
 
-        expect(facet.state.canShowLessValues).toBe(false);
+        expect(facet.state.canShowLessValues).toBe(true);
       });
     });
 
