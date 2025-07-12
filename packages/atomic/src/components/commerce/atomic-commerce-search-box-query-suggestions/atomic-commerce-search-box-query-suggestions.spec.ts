@@ -174,7 +174,9 @@ describe('AtomicCommerceSearchBoxQuerySuggestions', () => {
 
       expect(warnSpy).toHaveBeenCalledOnce();
       const warningMessage = warnSpy.mock.calls[0][0];
-      expect(warningMessage).toContain('Query suggestions configuration mismatch');
+      expect(warningMessage).toContain(
+        'Query suggestions configuration mismatch'
+      );
       expect(warningMessage).toContain('number-of-queries="3"');
       expect(warningMessage).toContain('max-with-query="5"');
     });
