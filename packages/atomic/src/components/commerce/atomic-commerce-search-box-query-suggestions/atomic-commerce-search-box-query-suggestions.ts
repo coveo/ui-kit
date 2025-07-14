@@ -76,7 +76,6 @@ export class AtomicCommerceSearchBoxQuerySuggestions
     const {registerQuerySuggest, fetchQuerySuggestions} =
       loadQuerySuggestActions(engine);
 
-    // Check for clash between numberOfQueries and maxWithQuery
     const numberOfQueries = this.bindings.numberOfQueries;
     const maxWithQuery = this.maxWithQuery;
 

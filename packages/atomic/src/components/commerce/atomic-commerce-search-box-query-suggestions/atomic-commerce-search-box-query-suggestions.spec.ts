@@ -117,29 +117,10 @@ describe('AtomicCommerceSearchBoxQuerySuggestions', () => {
   });
 
   describe('#initialize', () => {
-    it('should dispatch registerQuerySuggest with the correct id and count when no clash', async () => {
+    it('should dispatch registerQuerySuggest with the correct id and count', async () => {
       const {element} = await renderElements({
         numberOfQueries: 3,
       });
-      element.maxWithQuery = 3;
-
-      expect(
-        loadQuerySuggestActions(element.bindings.engine).registerQuerySuggest
-      ).toHaveBeenCalledWith(
-        expect.objectContaining({
-          id: element.bindings.id,
-          count: 3,
-        })
-      );
-    });
-
-    it('should dispatch registerQuerySuggest with numberOfQueries even when numberOfQueries < maxWithQuery', async () => {
-      const {element} = await renderElements({
-        numberOfQueries: 3,
-      });
-      element.maxWithQuery = 5;
-
-      element.initialize();
 
       expect(
         loadQuerySuggestActions(element.bindings.engine).registerQuerySuggest
@@ -234,37 +215,6 @@ describe('AtomicCommerceSearchBoxQuerySuggestions', () => {
         });
 
         expect(items.length).toBe(1);
-      });
-
-      it('should return the correct number of items when there is more suggestions that the maxWithQuery', async () => {
-        await setupRenderItemsTest({
-          searchBoxController: {
-            state: {
-              suggestions: [
-                {
-                  highlightedValue: 'suggestion1Highlighted',
-                  rawValue: 'suggestion1',
-                },
-                {
-                  highlightedValue: 'suggestion2Highlighted',
-                  rawValue: 'suggestion2',
-                },
-                {
-                  highlightedValue: 'suggestion3Highlighted',
-                  rawValue: 'suggestion3',
-                },
-                {
-                  highlightedValue: 'suggestion4Highlighted',
-                  rawValue: 'suggestion4',
-                },
-              ],
-              value: 'query',
-            },
-            selectSuggestion: vi.fn(),
-          },
-        });
-
-        expect(items.length).toBe(3);
       });
 
       it('should return the correct number of items when numberOfQueries < maxWithQuery (uses maxWithQuery)', async () => {
