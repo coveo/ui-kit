@@ -1,12 +1,12 @@
-import {it, expect} from 'vitest';
+import {expect, it} from 'vitest';
 import {
-  AppProxyOptions,
-  CoveoShopifyOptions,
-  CoveoShopifyCustomEvent,
-  fetchAppProxyConfig,
-  COVEO_SHOPIFY_CONFIG_KEY,
-  BuildShopifyCommerceEngineOptions,
+  type AppProxyOptions,
+  type BuildShopifyCommerceEngineOptions,
   buildShopifyCommerceEngine,
+  COVEO_SHOPIFY_CONFIG_KEY,
+  type CoveoShopifyCustomEvent,
+  type CoveoShopifyOptions,
+  fetchAppProxyConfig,
 } from './index';
 
 it('should export the correct types', () => {
