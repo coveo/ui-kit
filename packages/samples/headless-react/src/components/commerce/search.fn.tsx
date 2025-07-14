@@ -1,5 +1,5 @@
-import {Search as HeadlessSearch} from '@coveo/headless/commerce';
-import {useEffect, useState, FunctionComponent} from 'react';
+import type {Search as HeadlessSearch} from '@coveo/headless/commerce';
+import {type FunctionComponent, useEffect, useState} from 'react';
 
 interface SearchProps {
   controller: HeadlessSearch;

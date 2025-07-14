@@ -1,12 +1,12 @@
 import {
   buildCriterionExpression,
   buildSort,
-  Sort as HeadlessSort,
-  SortCriterion,
-  SortState,
-  Unsubscribe,
+  type Sort as HeadlessSort,
+  type SortCriterion,
+  type SortState,
+  type Unsubscribe,
 } from '@coveo/headless';
-import {Component, ContextType} from 'react';
+import {Component, type ContextType} from 'react';
 import {AppContext} from '../../context/engine';
 
 interface SortProps {
