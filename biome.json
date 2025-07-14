@@ -11,6 +11,7 @@
     "includes": [
       "**",
       "!**/packages/quantic/**/*",
+      "!**/packages/create-atomic-template/**/*",
       "!**/dist/**",
       "!**/dist*/**",
       "!**/*.d.ts",
@@ -101,8 +102,8 @@
   "linter": {
     "enabled": true,
     "rules": {
-      "recommended": false,
-      "style": {"useBlockStatements": "off"}
+      "recommended": true,
+      "style": {"noNonNullAssertion": "off"}
     },
     "includes": [
       "**",

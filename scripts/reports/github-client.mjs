@@ -5,9 +5,7 @@ const owner = 'coveo';
 const repo = 'ui-kit';
 
 const getPullRequestNumber = () => {
-  return (
-    (context.payload.pull_request && context.payload.pull_request.number) || 0
-  );
+  return context.payload.pull_request?.number || 0;
 };
 
 export const getPullRequestTitle = async () => {

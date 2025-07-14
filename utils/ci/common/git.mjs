@@ -13,8 +13,8 @@ import {
   gitSwitchBranch,
   gitSetupUser,
 } from '@coveo/semantic-monorepo-tools';
-import {spawnSync} from 'child_process';
-import {randomUUID} from 'crypto';
+import {spawnSync} from 'node:child_process';
+import {randomUUID} from 'node:crypto';
 import {Octokit} from 'octokit';
 import {REPO_NAME, REPO_OWNER} from './constants.mjs';
 

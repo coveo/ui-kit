@@ -92,8 +92,8 @@ await (async () => {
     return;
   }
   const parsedCommits = parseCommits(commits, convention.parserOpts);
-  let currentGitVersion = getCurrentVersion(PATH);
-  let currentNpmVersion = new SemVer(
+  const currentGitVersion = getCurrentVersion(PATH);
+  const currentNpmVersion = new SemVer(
     privatePackage
       ? '0.0.0' // private package does not have a npm version, so we default to the 'lowest' possible
       : await describeNpmTag(packageJson.name, 'beta')

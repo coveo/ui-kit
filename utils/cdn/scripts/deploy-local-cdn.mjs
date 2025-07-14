@@ -1,12 +1,12 @@
-import fs from 'fs/promises';
+import fs from 'node:fs/promises';
 import ncp from 'ncp';
-import path from 'path';
+import path from 'node:path';
 import chalk from 'chalk';
 import { findPackageJSON} from 'node:module';
 
 const currentDir = import.meta.dirname;
 const getVersionFromPackageJson = async (packageName, versionType) => {
-  const packageJsonPath = findPackageJSON('@coveo/' +packageName, import.meta.url);
+  const packageJsonPath = findPackageJSON(`@coveo/${packageName}`, import.meta.url);
   try {
     const packageJson = JSON.parse(await fs.readFile(packageJsonPath, 'utf-8'));
     const version = packageJson.version;
@@ -35,6 +35,7 @@ const preprocessConfig = async (configContent) => {
 
   let match;
   versionPlaceholderRegex.lastIndex = 0;
+  // biome-ignore lint/suspicious/noAssignInExpressions: <>
   while ((match = versionPlaceholderRegex.exec(configContent)) !== null) {
     const placeholderKey = match[0].substring(2, match[0].length - 1); 
     
@@ -61,7 +62,7 @@ const preprocessConfig = async (configContent) => {
   await Promise.all(promises);
 
   return configContent.replace(/\$\[([A-Z_]+)\]/g, (_, key) => {
-    if (versionPlaceholders.hasOwnProperty(key)) {
+    if (Object.hasOwn(versionPlaceholders, key)) {
       return versionPlaceholders[key];
     }
     return ''; 
@@ -100,7 +101,7 @@ const ensureDirectoryExists = async (directory) => {
 
 const copyDagPhaseFiles = async () => {
   for (const phase of deploymentConfig.dag_phases) {
-    if (phase.s3 && phase.s3.source && phase.s3.directory) {
+    if (phase.s3?.source && phase.s3.directory) {
       const sourcePath = path.resolve(
         currentDir,
         `../../../${phase.s3.source}`

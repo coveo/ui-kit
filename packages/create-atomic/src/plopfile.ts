@@ -1,15 +1,15 @@
-import {NodePlopAPI} from 'plop';
-import {spawn} from 'child_process';
+import type {NodePlopAPI} from 'plop';
+import {spawn} from 'node:child_process';
 import {getPackageManager} from './utils.js';
-import {fetchPageManifest, IManifest} from './fetch-page.js';
+import {fetchPageManifest, type IManifest} from './fetch-page.js';
 import {listSearchPagesOptions} from './list-pages.js';
 import {defaultPageManifest} from './default/default-page.js';
 import {writeFileSync} from 'node:fs';
-import {join} from 'path';
+import {join} from 'node:path';
 import {createPlatformClient} from './client.js';
-import PlatformClient from '@coveo/platform-client';
+import type PlatformClient from '@coveo/platform-client';
 import ListPrompt from 'inquirer/lib/prompts/list.js';
-import {PromptQuestion} from 'node-plop';
+import type {PromptQuestion} from 'node-plop';
 
 interface PlopData {
   project: string;
@@ -134,13 +134,11 @@ export default function (plop: NodePlopAPI) {
         pageSize: 10,
         message:
           'Use an existing hosted search page as a template, or start from scratch?',
-        choices: async function (answers: PlopData) {
-          return [
-            {value: undefined, name: 'Start from scratch'},
-            {type: 'separator'},
-            ...(await listSearchPagesOptions(initPlatformClient(answers))),
-          ];
-        },
+        choices: async (answers: PlopData) => [
+          {value: undefined, name: 'Start from scratch'},
+          {type: 'separator'},
+          ...(await listSearchPagesOptions(initPlatformClient(answers))),
+        ],
         validate: async (input: string, answers: PlopData) => {
           try {
             return !!(await fetchPageManifest(
@@ -154,116 +152,115 @@ export default function (plop: NodePlopAPI) {
         },
       } as PromptQuestion,
     ],
-    actions: function () {
-      return [
-        async function download(data) {
-          const answers = data as PlopData;
-          if (answers['page-id']) {
-            answers.page = await fetchPageManifest(
-              initPlatformClient(answers),
-              answers['page-id'],
-              'unknown'
-            );
-            return `Hosted search page named "${answers.page.config.name}" has been downloaded`;
-          }
-
-          answers.page = defaultPageManifest;
-          return 'Using the default search page template.';
-        },
-        async function generateSearchApiKey(data) {
-          const answers = data as PlopData;
-          const platformClient = initPlatformClient(answers);
-          const apiKeyModel = await createSearchApiKey(
-            answers['project'],
-            answers['search-hub'],
-            platformClient
+    actions: () => [
+      async function download(data) {
+        const answers = data as PlopData;
+        if (answers['page-id']) {
+          answers.page = await fetchPageManifest(
+            initPlatformClient(answers),
+            answers['page-id'],
+            'unknown'
           );
-          answers['api-key'] = apiKeyModel.value!;
-          return 'A search API key has been created for this project';
-        },
-        {
-          type: 'add',
-          path: currentPath + '/{{project}}/.env',
-          templateFile: '../template/.env.hbs',
-        },
-        {
-          type: 'add',
-          path: currentPath + '/{{project}}/.gitignore',
-          templateFile: '../template/.gitignore.hbs',
-        },
-        {
-          type: 'add',
-          path: currentPath + '/{{project}}/package.json',
-          templateFile: '../template/package.json.hbs',
-        },
-        {
-          type: 'addMany',
-          destination: currentPath + '/{{project}}/',
-          base: '../template',
-          templateFiles: [
-            '../template/src/**',
-            '../template/scripts/*',
-            '../template/.env.example',
-            '../template/tsconfig.json',
-            '../template/stencil.config.ts',
-            '../template/README.md',
-            '../template/coveo.deploy.json',
-            '../template/deployment.esbuild.mjs',
-          ],
-        },
-        function generateTemplates(data) {
-          const {project, page} = data as PlopData;
-          page.results.templates.forEach((resultTemplate, index) => {
-            const filePath = join(
-              currentPath,
-              project,
-              'src',
-              'components',
-              'results-manager',
-              `template-${index + 1}.html`
-            );
-            writeFileSync(
-              filePath,
-              plop.renderString('{{{markup}}}', resultTemplate)
-            );
-          });
+          return `Hosted search page named "${answers.page.config.name}" has been downloaded`;
+        }
 
-          return `${page.results.templates.length} result template(s) generated`;
-        },
-        function installPackagesPrompt() {
-          return 'Installing packages...';
-        },
-        function installPackages(data) {
-          return new Promise((resolve, reject) => {
-            const {project} = data as PlopData;
-            const installProcess = spawn(getPackageManager(), ['install'], {
-              stdio: ['ignore', 'pipe', 'pipe'],
-              shell: process.platform === 'win32' ? 'powershell' : undefined,
-              cwd: join(currentPath, project),
-            });
+        answers.page = defaultPageManifest;
+        return 'Using the default search page template.';
+      },
+      async function generateSearchApiKey(data) {
+        const answers = data as PlopData;
+        const platformClient = initPlatformClient(answers);
+        const apiKeyModel = await createSearchApiKey(
+          answers.project,
+          answers['search-hub'],
+          platformClient
+        );
+        answers['api-key'] = apiKeyModel.value!;
+        return 'A search API key has been created for this project';
+      },
+      {
+        type: 'add',
+        path: `${currentPath}/{{project}}/.env`,
+        templateFile: '../template/.env.hbs',
+      },
+      {
+        type: 'add',
+        path: `${currentPath}/{{project}}/.gitignore`,
+        templateFile: '../template/.gitignore.hbs',
+      },
+      {
+        type: 'add',
+        path: `${currentPath}/{{project}}/package.json`,
+        templateFile: '../template/package.json.hbs',
+      },
+      {
+        type: 'addMany',
+        destination: `${currentPath}/{{project}}/`,
+        base: '../template',
+        templateFiles: [
+          '../template/src/**',
+          '../template/scripts/*',
+          '../template/.env.example',
+          '../template/tsconfig.json',
+          '../template/stencil.config.ts',
+          '../template/README.md',
+          '../template/coveo.deploy.json',
+          '../template/deployment.esbuild.mjs',
+        ],
+      },
+      function generateTemplates(data) {
+        const {project, page} = data as PlopData;
+        page.results.templates.forEach((resultTemplate, index) => {
+          const filePath = join(
+            currentPath,
+            project,
+            'src',
+            'components',
+            'results-manager',
+            `template-${index + 1}.html`
+          );
+          writeFileSync(
+            filePath,
+            plop.renderString('{{{markup}}}', resultTemplate)
+          );
+        });
 
-            let output = '';
-            installProcess.stdout.on('data', (chunk) => {
-              output += chunk.toString();
-            });
-            installProcess.stderr.on('data', (chunk) => {
-              output += chunk.toString();
-            });
-
-            installProcess.on('close', (code, signal) => {
-              if (code === 0) {
-                resolve('Installation complete');
-              } else {
-                const codeMsg = `Installation exited with code "${code}"`;
-                const signalMsg = signal ? ` & signal:${signal} ` : '';
-                reject(`${codeMsg}${signalMsg} ${output}`);
-              }
-            });
-          });
-        },
-        function getStarted(data) {
+        return `${page.results.templates.length} result template(s) generated`;
+      },
+      function installPackagesPrompt() {
+        return 'Installing packages...';
+      },
+      function installPackages(data) {
+        return new Promise((resolve, reject) => {
           const {project} = data as PlopData;
-          return `
+          const installProcess = spawn(getPackageManager(), ['install'], {
+            stdio: ['ignore', 'pipe', 'pipe'],
+            shell: process.platform === 'win32' ? 'powershell' : undefined,
+            cwd: join(currentPath, project),
+          });
+
+          let output = '';
+          installProcess.stdout.on('data', (chunk) => {
+            output += chunk.toString();
+          });
+          installProcess.stderr.on('data', (chunk) => {
+            output += chunk.toString();
+          });
+
+          installProcess.on('close', (code, signal) => {
+            if (code === 0) {
+              resolve('Installation complete');
+            } else {
+              const codeMsg = `Installation exited with code "${code}"`;
+              const signalMsg = signal ? ` & signal:${signal} ` : '';
+              reject(`${codeMsg}${signalMsg} ${output}`);
+            }
+          });
+        });
+      },
+      function getStarted(data) {
+        const {project} = data as PlopData;
+        return `
           To get started:
           > cd ${project}
           > npm start
@@ -273,8 +270,7 @@ export default function (plop: NodePlopAPI) {
       
           Happy hacking!
           `;
-        },
-      ];
-    },
+      },
+    ],
   });
 }

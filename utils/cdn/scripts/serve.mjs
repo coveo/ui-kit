@@ -1,4 +1,4 @@
-import {spawn} from 'child_process';
+import {spawn} from 'node:child_process';
 import chalk from 'chalk';
 
 try{
@@ -11,7 +11,7 @@ try{
     stdio: 'inherit',
   });
 }
-catch(err) {
+catch(err) {
   console.error(chalk.red('Error starting the server:'), err);
   process.exit(1);
 }

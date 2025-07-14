@@ -1,6 +1,6 @@
 #!/usr/bin/env node
-import {existsSync, readFileSync} from 'fs';
-import {join, relative, resolve} from 'path';
+import {existsSync, readFileSync} from 'node:fs';
+import {join, relative, resolve} from 'node:path';
 import ts from 'typescript';
 
 export function ensureFileExists(filePath) {

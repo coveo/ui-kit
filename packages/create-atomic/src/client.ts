@@ -9,7 +9,7 @@ export function createPlatformClient(
   accessToken: string
 ) {
   const globalRequestSettings: Record<string, unknown> = {};
-  const proxyServer = process.env['https_proxy'] || process.env['HTTPS_PROXY'];
+  const proxyServer = process.env.https_proxy || process.env.HTTPS_PROXY;
   if (proxyServer) {
     const httpsProxyAgent = HttpsProxyAgent(proxyServer);
     globalRequestSettings.agent = httpsProxyAgent;

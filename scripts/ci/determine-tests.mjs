@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 import {setOutput} from '@actions/core';
-import {readdirSync, statSync} from 'fs';
-import {EOL} from 'os';
-import {basename, dirname, join, relative} from 'path';
+import {readdirSync, statSync} from 'node:fs';
+import {EOL} from 'node:os';
+import {basename, dirname, join, relative} from 'node:path';
 import {getBaseHeadSHAs, getChangedFiles} from './git-utils.mjs';
 import {listImports, ensureFileExists} from './list-imports.mjs';
 
