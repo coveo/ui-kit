@@ -1,0 +1,106 @@
+import {Canvas, ArgTypes, Meta, Title, Description, Subtitle} from '@storybook/blocks';
+import * as AtomicProductNumericFieldValueStories from './atomic-product-numeric-field-value.new.stories';
+
+<Meta of={AtomicProductNumericFieldValueStories} />
+
+<Title />
+<Subtitle>
+  <Description />
+</Subtitle>
+
+<Canvas
+  additionalActions={[
+    {
+      title: 'Open in GitHub',
+      onClick: () => {
+        window.open(
+          'https://github.com/coveo/ui-kit/blob/master/packages/atomic/src/components/commerce/atomic-product-numeric-field-value/atomic-product-numeric-field-value.ts',
+          '_blank'
+        );
+      },
+    },
+  ]}
+  of={AtomicProductNumericFieldValueStories.Default}
+/>
+
+## Usage
+
+The `atomic-product-numeric-field-value` component renders the value of a numeric product field with proper formatting.
+
+This component is used within `atomic-product-template` components inside the product list:
+
+```html
+<atomic-commerce-interface>
+  ...
+  <atomic-commerce-product-list>
+    <atomic-product-template>
+      <template>
+        <atomic-product-numeric-field-value field="ec_rating"></atomic-product-numeric-field-value>
+        <atomic-product-numeric-field-value field="ec_price">
+          <atomic-format-currency currency="USD"></atomic-format-currency>
+        </atomic-product-numeric-field-value>
+        <atomic-product-numeric-field-value field="weight">
+          <atomic-format-unit unit="kg"></atomic-format-unit>
+        </atomic-product-numeric-field-value>
+      </template>
+    </atomic-product-template>
+  </atomic-commerce-product-list>
+  ...
+</atomic-commerce-interface>
+```
+
+### Basic Usage
+
+To display a numeric field value:
+
+```html
+<atomic-product-numeric-field-value field="ec_rating"></atomic-product-numeric-field-value>
+```
+
+### With Currency Formatting
+
+Format numeric values as currency:
+
+```html
+<atomic-product-numeric-field-value field="ec_price">
+  <atomic-format-currency currency="USD"></atomic-format-currency>
+</atomic-product-numeric-field-value>
+```
+
+### With Unit Formatting
+
+Format numeric values with units:
+
+```html
+<atomic-product-numeric-field-value field="weight">
+  <atomic-format-unit unit="kg"></atomic-format-unit>
+</atomic-product-numeric-field-value>
+```
+
+### With Custom Number Formatting
+
+Use custom number formatting:
+
+```html
+<atomic-product-numeric-field-value field="score">
+  <atomic-format-number maximum-fraction-digits="2"></atomic-format-number>
+</atomic-product-numeric-field-value>
+```
+
+### Supported Fields
+
+The component looks for fields in this order:
+1. First in the Product object properties
+2. Then in the `product.additionalFields` object
+
+The field value must be parseable as a number, otherwise an error will be thrown.
+
+### Error Handling
+
+If a field value cannot be parsed as a number, the component will:
+- Throw a `FieldValueIsNaNError` with details about the field and value
+- Remove itself from the DOM to avoid displaying invalid content
+
+## Reference
+
+<ArgTypes />
