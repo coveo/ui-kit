@@ -29,8 +29,8 @@ import type {CommerceFacetSetSection} from '../../../../state/state-sections.js'
 import {loadReducerError} from '../../../../utils/errors.js';
 import {buildController} from '../../../controller/headless-controller.js';
 import type {
-  CoreFacet as HeadlessCoreFacet,
   CoreFacetState,
+  CoreFacet as HeadlessCoreFacet,
 } from '../../../core/facets/facet/headless-core-facet.js';
 import type {DateRangeRequest} from '../../../core/facets/range-facet/date-facet/headless-core-date-facet.js';
 import type {NumericRangeRequest} from '../../../core/facets/range-facet/numeric-facet/headless-core-numeric-facet.js';

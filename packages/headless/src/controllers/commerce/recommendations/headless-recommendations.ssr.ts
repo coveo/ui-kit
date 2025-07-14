@@ -1,19 +1,19 @@
 import {
+  type RecommendationOnlyControllerDefinitionWithProps,
   recommendationInternalOptionKey,
-  RecommendationOnlyControllerDefinitionWithProps,
 } from '../../../app/commerce-ssr-engine/types/common.js';
 import {
   createControllerWithKind,
   Kind,
 } from '../../../app/commerce-ssr-engine/types/kind.js';
-import {
+import type {
   RecommendationsOptions,
   RecommendationsState,
 } from '../recommendations/headless-recommendations.js';
 import {
-  RecommendationsProps,
-  Recommendations,
   buildRecommendations,
+  type Recommendations,
+  type RecommendationsProps,
 } from './headless-recommendations.js';
 
 export type {Recommendations, RecommendationsState};

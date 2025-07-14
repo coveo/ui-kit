@@ -1,6 +1,6 @@
 import {isNullOrUndefined} from '@coveo/bueno';
-import {StateFromReducersMapObject} from '@reduxjs/toolkit';
-import {Logger} from 'pino';
+import type {StateFromReducersMapObject} from '@reduxjs/toolkit';
+import type {Logger} from 'pino';
 import {NoopPreprocessRequest} from '../../api/preprocess-request.js';
 import {CaseAssistAPIClient} from '../../api/service/case-assist/case-assist-api-client.js';
 import {setCaseAssistConfiguration} from '../../features/case-assist-configuration/case-assist-configuration-actions.js';
@@ -8,19 +8,19 @@ import {caseAssistConfigurationReducer as caseAssistConfiguration} from '../../f
 import {debugReducer as debug} from '../../features/debug/debug-slice.js';
 import {setSearchHub} from '../../features/search-hub/search-hub-actions.js';
 import {searchHubReducer as searchHub} from '../../features/search-hub/search-hub-slice.js';
-import {CaseAssistAppState} from '../../state/case-assist-app-state.js';
-import {CaseAssistThunkExtraArguments} from '../case-assist-thunk-extra-arguments.js';
+import type {CaseAssistAppState} from '../../state/case-assist-app-state.js';
+import type {CaseAssistThunkExtraArguments} from '../case-assist-thunk-extra-arguments.js';
 import {
   buildEngine,
-  CoreEngine,
-  EngineOptions,
-  ExternalEngineOptions,
+  type CoreEngine,
+  type EngineOptions,
+  type ExternalEngineOptions,
   warnIfUsingNextAnalyticsModeForServiceFeature,
 } from '../engine.js';
 import {buildLogger} from '../logger.js';
 import {buildThunkExtraArguments} from '../thunk-extra-arguments.js';
 import {
-  CaseAssistEngineConfiguration,
+  type CaseAssistEngineConfiguration,
   caseAssistEngineConfigurationSchema,
 } from './case-assist-engine-configuration.js';
 

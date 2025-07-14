@@ -1,10 +1,13 @@
-import {renderFunctionFixture} from '@/vitest-utils/testing-helpers/fixture';
-import {html} from 'lit';
-import {describe, it, expect, vi} from 'vitest';
-import {ExpandableTextProps, renderExpandableText} from './expandable-text';
 import {userEvent} from '@vitest/browser/context';
+import {html} from 'lit';
+import {describe, expect, it, vi} from 'vitest';
+import {renderFunctionFixture} from '@/vitest-utils/testing-helpers/fixture';
 import MinusIcon from '../../../images/minus.svg';
 import PlusIcon from '../../../images/plus.svg';
+import {
+  type ExpandableTextProps,
+  renderExpandableText,
+} from './expandable-text';
 
 describe('#renderExpandableText', () => {
   const renderComponent = async (

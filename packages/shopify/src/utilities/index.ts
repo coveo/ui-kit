@@ -1,5 +1,5 @@
+export * from '../constants';
 export type * from '../types';
-export {publishCustomShopifyEvent} from './shopify';
 export * from './app-proxy';
 export * from './init';
-export * from '../constants';
+export {publishCustomShopifyEvent} from './shopify';

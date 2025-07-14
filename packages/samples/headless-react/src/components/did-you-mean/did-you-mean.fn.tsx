@@ -1,5 +1,5 @@
-import {DidYouMean as HeadlessDidYouMean} from '@coveo/headless';
-import {useEffect, useState, FunctionComponent} from 'react';
+import type {DidYouMean as HeadlessDidYouMean} from '@coveo/headless';
+import {type FunctionComponent, useEffect, useState} from 'react';
 
 interface DidYouMeanProps {
   controller: HeadlessDidYouMean;

@@ -1,4 +1,4 @@
-import {i18n} from 'i18next';
+import type {i18n} from 'i18next';
 import {html} from 'lit';
 import {getErrorDescriptionFromErrorType} from './utils';
 

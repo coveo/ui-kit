@@ -1,4 +1,4 @@
-import {test, expect} from './fixture';
+import {expect, test} from './fixture';
 
 test.describe('when clicking facet search "More matches for"', () => {
   test.beforeEach(async ({facet}) => {

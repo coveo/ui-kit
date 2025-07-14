@@ -1,13 +1,13 @@
-import {PayloadAction} from '@reduxjs/toolkit';
-import {CoreEngine} from '../../app/engine.js';
+import type {PayloadAction} from '@reduxjs/toolkit';
+import type {CoreEngine} from '../../app/engine.js';
 import {dictionaryFieldContextReducer as dictionaryFieldContext} from '../../features/dictionary-field-context/dictionary-field-context-slice.js';
 import {
+  type AddDictionaryFieldContextActionCreatorPayload,
   addContext,
-  AddDictionaryFieldContextActionCreatorPayload,
   removeContext,
   setContext,
 } from './dictionary-field-context-actions.js';
-import {DictionaryFieldContextPayload} from './dictionary-field-context-state.js';
+import type {DictionaryFieldContextPayload} from './dictionary-field-context-state.js';
 
 export type {AddDictionaryFieldContextActionCreatorPayload};
 

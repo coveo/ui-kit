@@ -6,7 +6,7 @@ import {getDebugInitialState} from '../features/debug/debug-state.js';
 import {getDocumentSuggestionInitialState} from '../features/document-suggestion/document-suggestion-state.js';
 import {getResultPreviewInitialState} from '../features/result-preview/result-preview-state.js';
 import {getSearchHubInitialState} from '../features/search-hub/search-hub-state.js';
-import {CaseAssistAppState} from '../state/case-assist-app-state.js';
+import type {CaseAssistAppState} from '../state/case-assist-app-state.js';
 
 export function buildMockCaseAssistState(
   config: Partial<CaseAssistAppState> = {}

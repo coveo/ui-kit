@@ -1,17 +1,17 @@
 import {
-  getSampleCommerceEngineConfiguration,
   buildCommerceEngine,
+  getSampleCommerceEngineConfiguration,
 } from '@coveo/headless/commerce';
-import {describe, it, expect, vi, beforeEach, afterEach} from 'vitest';
+import {afterEach, beforeEach, describe, expect, it, vi} from 'vitest';
 import {
-  AppProxyOptions,
-  CoveoShopifyOptions,
-  fetchAppProxyConfig,
-  CoveoShopifyCustomEvent,
-  publishCustomShopifyEvent,
-  COVEO_SHOPIFY_CONFIG_KEY,
+  type AppProxyOptions,
+  type BuildShopifyCommerceEngineOptions,
   buildShopifyCommerceEngine,
-  BuildShopifyCommerceEngineOptions,
+  COVEO_SHOPIFY_CONFIG_KEY,
+  type CoveoShopifyCustomEvent,
+  type CoveoShopifyOptions,
+  fetchAppProxyConfig,
+  publishCustomShopifyEvent,
 } from './commerce';
 
 it('should export the correct types', () => {

@@ -1,8 +1,8 @@
 import HistoryStore from '../../api/analytics/coveo.analytics/history-store.js';
 import {getOrganizationEndpoint} from '../../api/platform-client.js';
-import {InsightQuerySuggestRequest} from '../../api/service/insight/query-suggest/query-suggest-request.js';
-import {InsightAppState} from '../../state/insight-app-state.js';
-import {
+import type {InsightQuerySuggestRequest} from '../../api/service/insight/query-suggest/query-suggest-request.js';
+import type {InsightAppState} from '../../state/insight-app-state.js';
+import type {
   ConfigurationSection,
   InsightConfigurationSection,
 } from '../../state/state-sections.js';

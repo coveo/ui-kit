@@ -1,4 +1,4 @@
-import {ExternalCartItem} from '@/external-services/external-cart-service';
+import type {ExternalCartItem} from '@/external-services/external-cart-service';
 import {formatCurrency} from '@/utils/format-utils';
 import AddToCartButton from './add-to-cart-button';
 import PurchaseButton from './purchase-button';

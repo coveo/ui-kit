@@ -1,6 +1,6 @@
 'use client';
 
-import {DependencyList, useEffect, useReducer, useRef} from 'react';
+import {type DependencyList, useEffect, useReducer, useRef} from 'react';
 
 /**
  * Subscriber is a function that takes a single argument, which is another function `listener` that returns `void`. The Subscriber function itself returns another function that can be used to unsubscribe the `listener`.

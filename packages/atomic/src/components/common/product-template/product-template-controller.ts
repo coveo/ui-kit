@@ -1,10 +1,10 @@
-import {
+import type {
   ProductTemplate,
   ProductTemplateCondition,
 } from '@coveo/headless/commerce';
-import {ReactiveController, ReactiveControllerHost} from 'lit';
+import type {ReactiveController, ReactiveControllerHost} from 'lit';
 import {aggregate} from '../../../utils/utils';
-import {ItemTarget} from '../../common/layout/display-options';
+import type {ItemTarget} from '../../common/layout/display-options';
 import {getTemplateNodeType} from './product-template-common';
 
 export type TemplateContent = DocumentFragment;

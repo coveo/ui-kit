@@ -1,4 +1,4 @@
-import {StaticFilterSection} from '../../state/state-sections.js';
+import type {StaticFilterSection} from '../../state/state-sections.js';
 import {selectStaticFilterExpressions} from './static-filter-set-selectors.js';
 
 describe('static filter set expressions', () => {

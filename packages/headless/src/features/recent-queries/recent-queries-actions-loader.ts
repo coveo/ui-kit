@@ -1,10 +1,10 @@
-import {PayloadAction} from '@reduxjs/toolkit';
-import {SearchEngine} from '../../app/search-engine/search-engine.js';
+import type {PayloadAction} from '@reduxjs/toolkit';
+import type {SearchEngine} from '../../app/search-engine/search-engine.js';
 import {recentQueriesReducer as recentQueries} from '../../features/recent-queries/recent-queries-slice.js';
 import {
-  RegisterRecentQueriesCreatorPayload,
-  registerRecentQueries,
   clearRecentQueries,
+  type RegisterRecentQueriesCreatorPayload,
+  registerRecentQueries,
 } from './recent-queries-actions.js';
 
 /**

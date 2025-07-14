@@ -1,9 +1,9 @@
 import {
-  DateFacet,
-  DateFacetValue,
+  type DateFacet,
+  type DateFacetValue,
   deserializeRelativeDate,
 } from '@coveo/headless';
-import {useEffect, useState, FunctionComponent} from 'react';
+import {type FunctionComponent, useEffect, useState} from 'react';
 
 interface RelativeDateFacetProps {
   controller: DateFacet;

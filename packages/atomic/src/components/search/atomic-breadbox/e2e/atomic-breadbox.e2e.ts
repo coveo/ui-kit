@@ -1,4 +1,4 @@
-import {test, expect} from './fixture';
+import {expect, test} from './fixture';
 
 test.describe('AtomicBreadbox', () => {
   test('should show the breadcrumb as stars for the rating facet', async ({

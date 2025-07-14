@@ -1,6 +1,6 @@
-import {AnalyticsClientSendEventHook} from 'coveo.analytics';
+import type {AnalyticsClientSendEventHook} from 'coveo.analytics';
 import {pino} from 'pino';
-import {
+import type {
   PlatformRequestOptions,
   PreprocessRequest,
 } from '../preprocess-request.js';

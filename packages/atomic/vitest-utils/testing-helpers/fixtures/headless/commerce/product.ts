@@ -1,4 +1,4 @@
-import {Product} from '@coveo/headless/commerce';
+import type {Product} from '@coveo/headless/commerce';
 
 export const buildFakeProduct = (product?: Partial<Product>): Product => ({
   clickUri: '',

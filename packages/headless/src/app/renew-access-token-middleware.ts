@@ -1,5 +1,5 @@
-import {Middleware, UnknownAction} from '@reduxjs/toolkit';
-import {Logger} from 'pino';
+import type {Middleware, UnknownAction} from '@reduxjs/toolkit';
+import type {Logger} from 'pino';
 import {debounce} from 'ts-debounce';
 import {updateBasicConfiguration} from '../features/configuration/configuration-actions.js';
 
@@ -8,10 +8,9 @@ export function createRenewAccessTokenMiddleware(
   renewToken?: () => Promise<string>
 ): Middleware {
   let accessTokenRenewalsAttempts = 0;
-  const resetRenewalTriesAfterDelay = debounce(
-    () => (accessTokenRenewalsAttempts = 0),
-    500
-  );
+  const resetRenewalTriesAfterDelay = debounce(() => {
+    accessTokenRenewalsAttempts = 0;
+  }, 500);
 
   return (store) => (next) => async (action) => {
     const isThunk = typeof action === 'function';

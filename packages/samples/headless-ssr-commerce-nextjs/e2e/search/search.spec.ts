@@ -1,4 +1,4 @@
-import {test, expect} from './search.fixture';
+import {expect, test} from './search.fixture';
 
 test.describe('default', () => {
   test.beforeEach(async ({page}) => {

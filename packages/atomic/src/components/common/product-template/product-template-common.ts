@@ -1,5 +1,5 @@
 import {
-  ProductTemplateCondition,
+  type ProductTemplateCondition,
   ProductTemplatesHelpers,
 } from '@coveo/headless/commerce';
 import {intersection} from '../../../utils/set';

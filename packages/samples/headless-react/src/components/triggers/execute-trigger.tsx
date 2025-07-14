@@ -1,8 +1,8 @@
 import {
   buildExecuteTrigger,
-  SearchEngine,
-  ExecuteTriggerParams,
-  FunctionExecutionTrigger,
+  type ExecuteTriggerParams,
+  type FunctionExecutionTrigger,
+  type SearchEngine,
 } from '@coveo/headless';
 
 /**

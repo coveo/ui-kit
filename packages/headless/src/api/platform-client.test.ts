@@ -7,12 +7,12 @@ import {
   getOrganizationEndpoint,
   getSearchApiBaseUrl,
   PlatformClient,
-  PlatformClientCallOptions,
+  type PlatformClientCallOptions,
 } from './platform-client.js';
 import {
   NoopPreprocessRequest,
-  PlatformRequestOptions,
-  PreprocessRequest,
+  type PlatformRequestOptions,
+  type PreprocessRequest,
 } from './preprocess-request.js';
 
 const {Response} = await vi.importActual('node-fetch');

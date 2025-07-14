@@ -1,8 +1,8 @@
 import {
-  CommerceEngine,
-  Cart,
   buildRecommendations,
-  Context,
+  type Cart,
+  type CommerceEngine,
+  type Context,
 } from '@coveo/headless/commerce';
 import {useEffect} from 'react';
 import RecommendationsInterface from '../components/use-cases/recommendations-interface/recommendations-interface.js';

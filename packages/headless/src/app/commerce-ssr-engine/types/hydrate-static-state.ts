@@ -1,18 +1,18 @@
 import type {UnknownAction} from '@reduxjs/toolkit';
-import {Controller} from '../../../controllers/controller/headless-controller.js';
+import type {Controller} from '../../../controllers/controller/headless-controller.js';
 import type {
   ControllersMap,
   ControllersPropsMap,
   HydratedState,
   OptionsTuple,
 } from '../../ssr-engine/types/common.js';
-import {SSRCommerceEngine} from '../factories/build-factory.js';
-import {
+import type {SSRCommerceEngine} from '../factories/build-factory.js';
+import type {
   ControllerDefinitionsMap,
   EngineDefinitionControllersPropsOption,
   SolutionType,
 } from './common.js';
-import {FromBuildResult} from './from-build-result.js';
+import type {FromBuildResult} from './from-build-result.js';
 
 export interface HydrateStaticStateOptions<TSearchAction> {
   searchActions: TSearchAction[];

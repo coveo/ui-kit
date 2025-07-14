@@ -1,9 +1,9 @@
+import {userEvent} from '@storybook/test';
+import type {i18n} from 'i18next';
+import {html} from 'lit';
+import {beforeAll, describe, expect, it, vi} from 'vitest';
 import {renderFunctionFixture} from '@/vitest-utils/testing-helpers/fixture';
 import {createTestI18n} from '@/vitest-utils/testing-helpers/i18n-utils';
-import {userEvent} from '@storybook/test';
-import {i18n} from 'i18next';
-import {html} from 'lit';
-import {describe, beforeAll, it, expect, vi} from 'vitest';
 import {renderRefineToggleButton} from './button';
 
 describe('#renderRefineToggleButton', () => {
@@ -19,7 +19,7 @@ describe('#renderRefineToggleButton', () => {
         props: {
           i18n,
           onClick: () => {},
-          setRef: () => {},
+          refCallback: () => {},
           ...overrides,
         },
       })}`
@@ -51,10 +51,10 @@ describe('#renderRefineToggleButton', () => {
     expect(onClick).toHaveBeenCalled();
   });
 
-  it('should call setRef with the button element', async () => {
-    const setRef = vi.fn();
-    await renderComponent({setRef});
+  it('should call refCallback with the button element', async () => {
+    const refCallback = vi.fn();
+    await renderComponent({refCallback});
 
-    expect(setRef).toHaveBeenCalledWith(expect.any(HTMLButtonElement));
+    expect(refCallback).toHaveBeenCalledWith(expect.any(HTMLButtonElement));
   });
 });

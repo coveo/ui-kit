@@ -1,4 +1,4 @@
-import {NotifyTrigger as HeadlessNotifyTrigger} from '@coveo/headless/commerce';
+import type {NotifyTrigger as HeadlessNotifyTrigger} from '@coveo/headless/commerce';
 import {useEffect, useState} from 'react';
 
 interface INotifyTriggerProps {
@@ -26,8 +26,8 @@ export default function NotifyTrigger(props: INotifyTriggerProps) {
     <div className="NotifyTrigger">
       <h3>Notifications:</h3>
       <ul>
-        {state.notifications.map((notification, index) => (
-          <li key={`${notification}-${index}`}>{notification}</li>
+        {state.notifications.map((notification) => (
+          <li key={`${notification}`}>{notification}</li>
         ))}
       </ul>
     </div>

@@ -1,8 +1,8 @@
-import {FunctionalComponentWithChildren} from '@/src/utils/functional-component-utils';
 import {html} from 'lit';
-import {renderButton} from '../button';
+import type {FunctionalComponentWithChildren} from '@/src/utils/functional-component-utils';
 import MinusIcon from '../../../images/minus.svg';
 import PlusIcon from '../../../images/plus.svg';
+import {renderButton} from '../button';
 import '../atomic-icon/atomic-icon';
 
 export type TruncateAfter = 'none' | '1' | '2' | '3' | '4';

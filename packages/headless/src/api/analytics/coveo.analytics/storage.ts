@@ -1,7 +1,7 @@
 import {Cookie} from './cookie.js';
 import {
-  hasLocalStorage,
   hasCookieStorage,
+  hasLocalStorage,
   hasSessionStorage,
 } from './detector.js';
 

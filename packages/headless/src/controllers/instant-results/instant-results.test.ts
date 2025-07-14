@@ -1,9 +1,9 @@
 import {registerInstantResults} from '../../features/instant-results/instant-results-actions.js';
 import {instantResultsReducer as instantResults} from '../../features/instant-results/instant-results-slice.js';
-import {SearchAppState} from '../../state/search-app-state.js';
+import type {SearchAppState} from '../../state/search-app-state.js';
 import {
-  MockedSearchEngine,
   buildMockSearchEngine,
+  type MockedSearchEngine,
 } from '../../test/mock-engine-v2.js';
 import {createMockState} from '../../test/mock-state.js';
 import {buildInstantResults} from './instant-results.js';

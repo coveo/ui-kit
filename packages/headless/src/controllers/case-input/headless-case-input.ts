@@ -1,15 +1,15 @@
 import {Schema} from '@coveo/bueno';
-import {CaseAssistEngine} from '../../app/case-assist-engine/case-assist-engine.js';
+import type {CaseAssistEngine} from '../../app/case-assist-engine/case-assist-engine.js';
 import {configuration} from '../../app/common-reducers.js';
-import {caseAssistConfigurationReducer as caseAssistConfiguration} from '../../features/case-assist-configuration/case-assist-configuration-slice.js';
 import {logUpdateCaseField} from '../../features/case-assist/case-assist-analytics-actions.js';
+import {caseAssistConfigurationReducer as caseAssistConfiguration} from '../../features/case-assist-configuration/case-assist-configuration-slice.js';
 import {fetchCaseClassifications} from '../../features/case-field/case-field-actions.js';
 import {caseFieldReducer as caseField} from '../../features/case-field/case-field-slice.js';
 import {updateCaseInput} from '../../features/case-input/case-input-actions.js';
 import {caseInputReducer as caseInput} from '../../features/case-input/case-input-slice.js';
 import {fetchDocumentSuggestions} from '../../features/document-suggestion/document-suggestion-actions.js';
 import {documentSuggestionReducer as documentSuggestion} from '../../features/document-suggestion/document-suggestion-slice.js';
-import {
+import type {
   CaseAssistConfigurationSection,
   CaseFieldSection,
   CaseInputSection,
@@ -23,7 +23,7 @@ import {
 } from '../../utils/validate-payload.js';
 import {
   buildController,
-  Controller,
+  type Controller,
 } from '../controller/headless-controller.js';
 
 export interface CaseInputOptions {

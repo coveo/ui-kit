@@ -1,4 +1,4 @@
-import {FunctionComponent} from 'react';
+import type {FunctionComponent} from 'react';
 import {AtomicPageWrapper} from '../components/AtomicPageWrapper';
 
 export const InstantResultsPage: FunctionComponent = () => {

@@ -1,8 +1,8 @@
 import {createRelay} from '@coveo/relay';
-import {ThunkExtraArguments} from '../../app/thunk-extra-arguments.js';
+import type {ThunkExtraArguments} from '../../app/thunk-extra-arguments.js';
 import {
   buildMockInsightEngine,
-  MockedInsightEngine,
+  type MockedInsightEngine,
 } from '../../test/mock-engine-v2.js';
 import {buildMockInsightState} from '../../test/mock-insight-state.js';
 import {buildMockRaw} from '../../test/mock-raw.js';
@@ -12,20 +12,20 @@ import {buildMockSearchState} from '../../test/mock-search-state.js';
 import {getConfigurationInitialState} from '../configuration/configuration-state.js';
 import {emptyQuestionAnswer} from '../search/search-state.js';
 import {
+  logCloseSmartSnippetFeedbackModal,
+  logCollapseSmartSnippet,
+  logCollapseSmartSnippetSuggestion,
+  logDislikeSmartSnippet,
   logExpandSmartSnippet,
   logExpandSmartSnippetSuggestion,
-  logCollapseSmartSnippetSuggestion,
-  logOpenSmartSnippetSuggestionSource,
-  logOpenSmartSnippetSuggestionInlineLink,
-  logCollapseSmartSnippet,
   logLikeSmartSnippet,
-  logDislikeSmartSnippet,
-  logOpenSmartSnippetSource,
-  logOpenSmartSnippetInlineLink,
   logOpenSmartSnippetFeedbackModal,
-  logCloseSmartSnippetFeedbackModal,
-  logSmartSnippetFeedback,
+  logOpenSmartSnippetInlineLink,
+  logOpenSmartSnippetSource,
+  logOpenSmartSnippetSuggestionInlineLink,
+  logOpenSmartSnippetSuggestionSource,
   logSmartSnippetDetailedFeedback,
+  logSmartSnippetFeedback,
 } from './question-answering-insight-analytics-actions.js';
 import {getQuestionAnsweringInitialState} from './question-answering-state.js';
 

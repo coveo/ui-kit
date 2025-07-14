@@ -1,6 +1,6 @@
 'use client';
 
-import {
+import type {
   CategoryFacetSearchResult,
   CategoryFacetState,
   CategoryFacetValue,
@@ -125,6 +125,11 @@ export default function CategoryFacet(props: ICategoryFacetProps) {
             className="FacetSearchResult"
             key={value.rawValue}
             onClick={() => onClickFacetSearchResult(value)}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                onClickFacetSearchResult(value);
+              }
+            }}
             style={{width: 'fit-content'}}
           >
             <input
@@ -137,6 +142,7 @@ export default function CategoryFacet(props: ICategoryFacetProps) {
             <label className="FacetSearchResultLabel" htmlFor={value.rawValue}>
               <span
                 className="FacetSearchResultName"
+                // biome-ignore lint/security/noDangerouslySetInnerHtml: <>
                 dangerouslySetInnerHTML={{
                   __html: highlightFacetSearchResult(value.displayValue),
                 }}
@@ -240,6 +246,7 @@ export default function CategoryFacet(props: ICategoryFacetProps) {
                 checked={false}
                 onChange={() => toggleSelectFacetValue(root)}
               ></input>
+              {/** biome-ignore lint/a11y/noLabelWithoutControl: <> */}
               <label className="FacetValueName">{root.value}</label>
               <span className="FacetValueNumberOfResults">
                 {' '}
@@ -270,6 +277,7 @@ export default function CategoryFacet(props: ICategoryFacetProps) {
         {renderRootValues()}
         {renderActiveFacetValueTree()}
         <button
+          type="button"
           aria-label="Show more facet values"
           className="FacetShowMore"
           disabled={!controller || state.isLoading || !state.canShowMoreValues}
@@ -278,6 +286,7 @@ export default function CategoryFacet(props: ICategoryFacetProps) {
           +
         </button>
         <button
+          type="button"
           aria-label="Show less facet values"
           className="FacetShowLess"
           disabled={!controller || state.isLoading || !state.canShowLessValues}

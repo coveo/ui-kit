@@ -2,34 +2,34 @@ import {createReducer} from '@reduxjs/toolkit';
 import {deselectAllBreadcrumbs} from '../../../breadcrumb/breadcrumb-actions.js';
 import {disableFacet} from '../../../facet-options/facet-options-actions.js';
 import {change} from '../../../history/history-actions.js';
-import {restoreSearchParameters} from '../../../search-parameters/search-parameter-actions.js';
 import {executeSearch} from '../../../search/search-actions.js';
+import {restoreSearchParameters} from '../../../search-parameters/search-parameter-actions.js';
 import {handleFacetSortCriterionUpdate} from '../../generic/facet-reducer-helpers.js';
 import {
-  registerRangeFacet,
-  toggleSelectRangeValue,
-  onRangeFacetRequestFulfilled,
-  handleRangeFacetDeselectAll,
   defaultRangeFacetOptions,
+  handleRangeFacetDeselectAll,
   handleRangeFacetSearchParameterRestoration,
-  updateRangeValues,
+  onRangeFacetRequestFulfilled,
+  registerRangeFacet,
   toggleExcludeRangeValue,
+  toggleSelectRangeValue,
+  updateRangeValues,
 } from '../generic/range-facet-reducers.js';
 import {
-  registerDateFacet,
-  toggleSelectDateFacetValue,
   deselectAllDateFacetValues,
-  updateDateFacetSortCriterion,
-  RegisterDateFacetActionCreatorPayload,
-  updateDateFacetValues,
+  type RegisterDateFacetActionCreatorPayload,
+  registerDateFacet,
   toggleExcludeDateFacetValue,
+  toggleSelectDateFacetValue,
+  updateDateFacetSortCriterion,
+  updateDateFacetValues,
 } from './date-facet-actions.js';
 import {
   getDateFacetSetInitialState,
   getDateFacetSetSliceInitialState,
 } from './date-facet-set-state.js';
-import {DateFacetRequest, DateRangeRequest} from './interfaces/request.js';
-import {DateFacetResponse, DateFacetValue} from './interfaces/response.js';
+import type {DateFacetRequest, DateRangeRequest} from './interfaces/request.js';
+import type {DateFacetResponse, DateFacetValue} from './interfaces/response.js';
 
 export const dateFacetSetReducer = createReducer(
   getDateFacetSetInitialState(),

@@ -2,7 +2,7 @@ import {
   DESIRED_COUNT_DEFAULT,
   NUMBER_OF_VALUE_DEFAULT,
 } from './automatic-facet-set-constants.js';
-import {AutomaticFacetResponse} from './interfaces/response.js';
+import type {AutomaticFacetResponse} from './interfaces/response.js';
 
 export type AutomaticFacetSlice = {
   response: AutomaticFacetResponse;

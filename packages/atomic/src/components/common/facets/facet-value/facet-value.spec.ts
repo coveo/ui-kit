@@ -1,20 +1,20 @@
-import {renderFunctionFixture} from '@/vitest-utils/testing-helpers/fixture';
-import {createTestI18n} from '@/vitest-utils/testing-helpers/i18n-utils';
 import {html} from 'lit';
 import {
-  expect,
-  vi,
-  describe,
   beforeAll,
-  it,
-  MockedFunction,
   beforeEach,
+  describe,
+  expect,
+  it,
+  type MockedFunction,
+  vi,
 } from 'vitest';
+import {renderFunctionFixture} from '@/vitest-utils/testing-helpers/fixture';
+import {createTestI18n} from '@/vitest-utils/testing-helpers/i18n-utils';
 import {renderFacetValueBox} from '../facet-value-box/facet-value-box';
 import {renderFacetValueCheckbox} from '../facet-value-checkbox/facet-value-checkbox';
 import {renderFacetValueLabelHighlight} from '../facet-value-label-highlight/facet-value-label-highlight';
 import {renderFacetValueLink} from '../facet-value-link/facet-value-link';
-import {FacetValueProps, renderFacetValue} from './facet-value';
+import {type FacetValueProps, renderFacetValue} from './facet-value';
 
 vi.mock('../facet-value-checkbox/facet-value-checkbox', {spy: true});
 vi.mock('../facet-value-link/facet-value-link', {spy: true});

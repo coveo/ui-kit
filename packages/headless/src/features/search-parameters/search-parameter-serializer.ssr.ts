@@ -2,20 +2,20 @@ import {isNullOrUndefined} from '@coveo/bueno';
 import {arrayEqualStrictlyDifferentOrder} from '../../utils/compare-utils.js';
 import type {SearchParameters} from './search-parameter-actions.js';
 import {
-  SearchParameterKey,
   isValidKey,
   rangeDelimiterExclusive,
   rangeDelimiterInclusive,
+  type SearchParameterKey,
 } from './search-parameter-serializer.js';
 import {
-  FacetValueSearchParam,
-  RangeFacetValueSearchParam,
-  SearchParamPair,
-  SearchParamValue,
   extendSearchParameters,
+  type FacetValueSearchParam,
   isFacetPair,
   isRangeFacetPair,
   isValidSearchParam,
+  type RangeFacetValueSearchParam,
+  type SearchParamPair,
+  type SearchParamValue,
 } from './search-parameter-utils.js';
 
 export function buildSSRSearchParameterSerializer() {

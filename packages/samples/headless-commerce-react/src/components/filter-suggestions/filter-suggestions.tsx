@@ -3,7 +3,7 @@
  *
  * If you wish to implement filter suggestions in your project, please contact your Coveo representative.
  */
-import {
+import type {
   CategoryFacetSearchResult,
   CategoryFilterSuggestions,
   FilterSuggestions as HeadlessFilterSuggestions,
@@ -38,7 +38,10 @@ export default function FilterSuggestions(props: IFilterSuggestionsProps) {
     value: RegularFacetSearchResult | CategoryFacetSearchResult
   ) => {
     return (
-      <button onClick={() => onClickFilterSuggestion(controller, value)}>
+      <button
+        type="button"
+        onClick={() => onClickFilterSuggestion(controller, value)}
+      >
         Search for <em>{state.query}</em>{' '}
         {controller.type === 'hierarchical' ? 'in' : 'with'}{' '}
         <b>{state.displayName}</b> <em>{value.displayValue}</em> ({value.count}{' '}

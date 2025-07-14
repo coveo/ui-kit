@@ -1,10 +1,13 @@
-import {Mock} from 'vitest';
+import type {Mock} from 'vitest';
 import {buildMockCommerceState} from '../../../../test/mock-commerce-state.js';
 import {
   buildMockCommerceEngine,
-  MockedCommerceEngine,
+  type MockedCommerceEngine,
 } from '../../../../test/mock-engine-v2.js';
-import {buildCoreUrlManager, UrlManager} from './headless-core-url-manager.js';
+import {
+  buildCoreUrlManager,
+  type UrlManager,
+} from './headless-core-url-manager.js';
 
 describe('core url manager', () => {
   let engine: MockedCommerceEngine;

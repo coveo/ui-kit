@@ -3,19 +3,19 @@ import {isMacOS} from '@/src/utils/device-utils';
 import * as replaceBreakpoint from '@/src/utils/replace-breakpoint';
 import {renderInAtomicCommerceInterface} from '@/vitest-utils/testing-helpers/fixtures/atomic/commerce/atomic-commerce-interface-fixture';
 import '@/vitest-utils/testing-helpers/fixtures/atomic/commerce/fake-atomic-commerce-search-box-suggestions-fixture';
-import {buildFakeLoadQuerySetActions} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/query-set-actions';
-import {buildFakeSearchBox} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/search-box-controller';
-import {buildFakeStandaloneSearchBox} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/standalone-search-box-controller';
 import {
   buildSearchBox,
   buildStandaloneSearchBox,
-  CommerceEngine,
+  type CommerceEngine,
   loadQuerySetActions,
 } from '@coveo/headless/commerce';
 import {userEvent} from '@vitest/browser/context';
 import {html} from 'lit';
 import {ifDefined} from 'lit/directives/if-defined.js';
-import {describe, it, expect, vi} from 'vitest';
+import {describe, expect, it, vi} from 'vitest';
+import {buildFakeLoadQuerySetActions} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/query-set-actions';
+import {buildFakeSearchBox} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/search-box-controller';
+import {buildFakeStandaloneSearchBox} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/standalone-search-box-controller';
 import {randomID} from '../../../utils/utils';
 import {AtomicCommerceSearchBox} from './atomic-commerce-search-box';
 import './atomic-commerce-search-box';

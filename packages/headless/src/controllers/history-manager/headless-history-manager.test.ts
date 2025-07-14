@@ -8,12 +8,12 @@ import {
 } from '../../features/history/history-state.js';
 import {
   buildMockSearchEngine,
-  MockedSearchEngine,
+  type MockedSearchEngine,
 } from '../../test/mock-engine-v2.js';
 import {createMockState} from '../../test/mock-state.js';
 import {
   buildHistoryManager,
-  HistoryManager,
+  type HistoryManager,
 } from './headless-history-manager.js';
 
 vi.mock('../../features/history/history-actions');

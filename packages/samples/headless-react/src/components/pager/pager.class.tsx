@@ -1,10 +1,10 @@
 import {
   buildPager,
-  Pager as HeadlessPager,
-  PagerState,
-  Unsubscribe,
+  type Pager as HeadlessPager,
+  type PagerState,
+  type Unsubscribe,
 } from '@coveo/headless';
-import {Component, ContextType} from 'react';
+import {Component, type ContextType} from 'react';
 import {AppContext} from '../../context/engine';
 
 export class Pager extends Component<{}, PagerState> {

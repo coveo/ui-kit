@@ -1,3 +1,17 @@
+## <small>3.2.49 (2025-07-09)</small>
+
+* chore(atomic commerce): migrate atomic-commerce-load-more-products to Lit (#5551) ([9a77990](https://github.com/coveo/ui-kit/commits/9a77990)), closes [#5551](https://github.com/coveo/ui-kit/issues/5551)
+* chore(atomic commerce): migrate atomic-commerce-recommendation-interface (#5483) ([f8c6add](https://github.com/coveo/ui-kit/commits/f8c6add)), closes [#5483](https://github.com/coveo/ui-kit/issues/5483)
+* chore(atomic): migrate atomic-commerce-no-products (#5550) ([a29a641](https://github.com/coveo/ui-kit/commits/a29a641)), closes [#5550](https://github.com/coveo/ui-kit/issues/5550)
+* chore(atomic): migrate atomic-commerce-products-per-page (#5525) ([1ef71f1](https://github.com/coveo/ui-kit/commits/1ef71f1)), closes [#5525](https://github.com/coveo/ui-kit/issues/5525)
+* chore(atomic): migrate atomic-commerce-refine-toggle (#5557) ([c758e56](https://github.com/coveo/ui-kit/commits/c758e56)), closes [#5557](https://github.com/coveo/ui-kit/issues/5557)
+* chore(atomic): migrate atomic-commerce-text (#5464) ([4f3f990](https://github.com/coveo/ui-kit/commits/4f3f990)), closes [#5464](https://github.com/coveo/ui-kit/issues/5464)
+* chore(atomic): migrate atomic-layout-section (#5564) ([9ad6b72](https://github.com/coveo/ui-kit/commits/9ad6b72)), closes [#5564](https://github.com/coveo/ui-kit/issues/5564)
+* chore(atomic): migrate atomic-product-text (#5465) ([91c0773](https://github.com/coveo/ui-kit/commits/91c0773)), closes [#5465](https://github.com/coveo/ui-kit/issues/5465)
+* chore(deps): update dependency @rollup/plugin-typescript to v12.1.3 j:kit-282 (#5560) ([73dc0e9](https://github.com/coveo/ui-kit/commits/73dc0e9)), closes [#5560](https://github.com/coveo/ui-kit/issues/5560)
+
+
+
 ## <small>3.2.48 (2025-07-02)</small>
 
 * chore(atomic): migrate atomic-commerce-breadbox (#5459) ([817e7b5](https://github.com/coveo/ui-kit/commits/817e7b5)), closes [#5459](https://github.com/coveo/ui-kit/issues/5459)

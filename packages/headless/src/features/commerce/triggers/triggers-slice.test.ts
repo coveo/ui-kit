@@ -11,8 +11,8 @@ import {
   handleUpdateIgnoreQueryTrigger,
 } from '../../triggers/triggers-slice-functions.js';
 import {
-  TriggerState,
   getTriggerInitialState,
+  type TriggerState,
 } from '../../triggers/triggers-state.js';
 import {fetchProductListing} from '../product-listing/product-listing-actions.js';
 import {executeSearch} from '../search/search-actions.js';

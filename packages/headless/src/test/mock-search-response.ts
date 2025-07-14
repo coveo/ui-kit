@@ -1,4 +1,4 @@
-import {
+import type {
   SearchResponseSuccess,
   SearchResponseSuccessWithDebugInfo,
 } from '../api/search/search/search-response.js';

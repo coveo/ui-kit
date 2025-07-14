@@ -1,10 +1,10 @@
 'use client';
 
-import {usePersistQuery} from '@/hooks/use-recent-queries';
-import {useParameterManager} from '@/lib/commerce-engine';
 import {buildParameterSerializer} from '@coveo/headless-react/ssr-commerce';
 import {useSearchParams} from 'next/navigation';
 import {useEffect, useMemo, useRef} from 'react';
+import {usePersistQuery} from '@/hooks/use-recent-queries';
+import {useParameterManager} from '@/lib/commerce-engine';
 
 export default function ParameterManager({url}: {url: string | null}) {
   const {state, methods} = useParameterManager();

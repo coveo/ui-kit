@@ -1,18 +1,18 @@
 import {createSelector} from '@reduxjs/toolkit';
-import {FacetSearchType} from '../../../api/commerce/facet-search/facet-search-request.js';
-import {
+import type {FacetSearchType} from '../../../api/commerce/facet-search/facet-search-request.js';
+import type {
   CommerceEngine,
   CommerceEngineState,
 } from '../../../app/commerce-engine/commerce-engine.js';
 import {stateKey} from '../../../app/state-key.js';
 import {fieldSuggestionsOrderReducer as fieldSuggestionsOrder} from '../../../features/commerce/facets/field-suggestions-order/field-suggestions-order-slice.js';
-import {FieldSuggestionsFacet} from '../../../features/commerce/facets/field-suggestions-order/field-suggestions-order-state.js';
+import type {FieldSuggestionsFacet} from '../../../features/commerce/facets/field-suggestions-order/field-suggestions-order-state.js';
 import {executeSearch} from '../../../features/commerce/search/search-actions.js';
-import {FieldSuggestionsOrderSection} from '../../../state/state-sections.js';
+import type {FieldSuggestionsOrderSection} from '../../../state/state-sections.js';
 import {loadReducerError} from '../../../utils/errors.js';
 import {
   buildController,
-  Controller,
+  type Controller,
 } from '../../controller/headless-controller.js';
 import {
   facetResponseSelector,
@@ -20,7 +20,7 @@ import {
 } from '../search/facets/headless-search-facet-options.js';
 import {
   buildCategoryFieldSuggestions,
-  CategoryFieldSuggestions,
+  type CategoryFieldSuggestions,
 } from './headless-category-field-suggestions.js';
 
 /**

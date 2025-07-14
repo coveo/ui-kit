@@ -1,5 +1,5 @@
-import {InsightEngine} from '../../../../app/insight-engine/insight-engine.js';
-import {CategoryFacetSortCriterion} from '../../../../features/facets/category-facet-set/interfaces/request.js';
+import type {InsightEngine} from '../../../../app/insight-engine/insight-engine.js';
+import type {CategoryFacetSortCriterion} from '../../../../features/facets/category-facet-set/interfaces/request.js';
 import {
   facetClearAll,
   facetDeselect,
@@ -17,21 +17,21 @@ import {
   executeSearch,
   fetchFacetValues,
 } from '../../../../features/insight-search/insight-search-actions.js';
-import {SearchAction} from '../../../../features/search/search-actions.js';
+import type {SearchAction} from '../../../../features/search/search-actions.js';
 import {
   buildCoreCategoryFacet,
-  CategoryFacet,
-  CategoryFacetOptions,
-  CategoryFacetProps,
-  CategoryFacetSearch,
-  CategoryFacetSearchOptions,
-  CategoryFacetSearchResult,
-  CategoryFacetSearchState,
-  CategoryFacetState,
-  CategoryFacetValue,
-  CategoryFacetValueCommon,
-  CoreCategoryFacet,
-  CoreCategoryFacetState,
+  type CategoryFacet,
+  type CategoryFacetOptions,
+  type CategoryFacetProps,
+  type CategoryFacetSearch,
+  type CategoryFacetSearchOptions,
+  type CategoryFacetSearchResult,
+  type CategoryFacetSearchState,
+  type CategoryFacetState,
+  type CategoryFacetValue,
+  type CategoryFacetValueCommon,
+  type CoreCategoryFacet,
+  type CoreCategoryFacetState,
 } from '../../../core/facets/category-facet/headless-core-category-facet.js';
 
 export type {

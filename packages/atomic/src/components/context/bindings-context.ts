@@ -1,5 +1,5 @@
-import {AnyBindings} from '@/src/components';
-import {createContext, ContextRoot} from '@lit/context';
+import {ContextRoot, createContext} from '@lit/context';
+import type {AnyBindings} from '@/src/components';
 
 if (typeof window !== 'undefined') {
   const contextRoot = new ContextRoot();

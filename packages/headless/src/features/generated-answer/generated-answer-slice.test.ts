@@ -1,32 +1,32 @@
 import {RETRYABLE_STREAM_ERROR_CODE} from '../../api/generated-answer/generated-answer-client.js';
 import {buildMockCitation} from '../../test/mock-citation.js';
 import {
+  closeGeneratedAnswerFeedbackModal,
+  collapseGeneratedAnswer,
   dislikeGeneratedAnswer,
+  expandGeneratedAnswer,
   likeGeneratedAnswer,
+  openGeneratedAnswerFeedbackModal,
+  registerFieldsToIncludeInCitations,
   resetAnswer,
-  setIsVisible,
+  sendGeneratedAnswerFeedback,
+  setAnswerContentFormat,
+  setCannotAnswer,
+  setIsAnswerGenerated,
+  setIsEnabled,
   setIsLoading,
   setIsStreaming,
+  setIsVisible,
   updateCitations,
   updateError,
   updateMessage,
   updateResponseFormat,
-  openGeneratedAnswerFeedbackModal,
-  closeGeneratedAnswerFeedbackModal,
-  sendGeneratedAnswerFeedback,
-  registerFieldsToIncludeInCitations,
-  setAnswerContentFormat,
-  setIsAnswerGenerated,
-  expandGeneratedAnswer,
-  collapseGeneratedAnswer,
-  setIsEnabled,
-  setCannotAnswer,
 } from './generated-answer-actions.js';
 import {generatedAnswerReducer} from './generated-answer-slice.js';
 import {getGeneratedAnswerInitialState} from './generated-answer-state.js';
 import {
-  GeneratedContentFormat,
-  GeneratedResponseFormat,
+  type GeneratedContentFormat,
+  type GeneratedResponseFormat,
   generatedContentFormat,
 } from './generated-response-format.js';
 

@@ -1,7 +1,7 @@
+import fs from 'node:fs';
+import path from 'node:path';
+import {fileURLToPath} from 'node:url';
 import chalk from 'chalk';
-import fs from 'fs';
-import path from 'path';
-import {fileURLToPath} from 'url';
 import {formatWithBiome} from './format-with-biome.mjs';
 
 const baseComponentsDir = path.resolve(

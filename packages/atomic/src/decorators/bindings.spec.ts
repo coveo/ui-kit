@@ -1,12 +1,12 @@
 import {provide} from '@lit/context';
 import i18next from 'i18next';
-import {LitElement, html} from 'lit';
+import {html, LitElement} from 'lit';
 import {customElement, state} from 'lit/decorators.js';
-import {vi, describe, beforeEach, afterEach, it, expect} from 'vitest';
+import {afterEach, beforeEach, describe, expect, it, vi} from 'vitest';
 import {bindingsContext} from '../components/context/bindings-context';
 import type {Bindings} from '../components/search/atomic-search-interface/interfaces';
 import {bindings} from './bindings';
-import {InitializableComponent} from './types';
+import type {InitializableComponent} from './types';
 
 const mockBindings = () =>
   ({
@@ -15,7 +15,7 @@ const mockBindings = () =>
 
 @customElement('test-element')
 @bindings()
-export class TestElement
+class TestElement
   extends LitElement
   implements InitializableComponent<Bindings>
 {
@@ -32,7 +32,7 @@ export class TestElement
   initialize = vi.fn();
 }
 @customElement('test-interface-element')
-export class TestInterfaceElement extends LitElement {
+class TestInterfaceElement extends LitElement {
   @state()
   @provide({context: bindingsContext})
   public bindings: Bindings = {} as Bindings;
@@ -91,8 +91,8 @@ describe('bindings decorator', () => {
     consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
   });
 
-  afterEach(() => {
-    teardownElement();
+  afterEach(async () => {
+    await teardownElement();
     consoleErrorSpy.mockRestore();
   });
 

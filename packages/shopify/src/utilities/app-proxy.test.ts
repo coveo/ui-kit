@@ -1,5 +1,5 @@
-import {describe, it, expect, vi, beforeEach, afterEach} from 'vitest';
-import {fetchAppProxyConfig, clearAppProxyCache} from './app-proxy';
+import {afterEach, beforeEach, describe, expect, it, vi} from 'vitest';
+import {clearAppProxyCache, fetchAppProxyConfig} from './app-proxy';
 
 describe('fetchAppProxyConfig', () => {
   const mockFetch = vi.fn();

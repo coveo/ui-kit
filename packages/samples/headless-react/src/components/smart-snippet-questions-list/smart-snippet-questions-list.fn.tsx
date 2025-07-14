@@ -1,5 +1,5 @@
-import {SmartSnippetQuestionsList as HeadlessSmartSnippetQuestionsList} from '@coveo/headless';
-import {useEffect, useState, FunctionComponent} from 'react';
+import type {SmartSnippetQuestionsList as HeadlessSmartSnippetQuestionsList} from '@coveo/headless';
+import {type FunctionComponent, useEffect, useState} from 'react';
 
 interface SmartSnippetQuestionsListProps {
   controller: HeadlessSmartSnippetQuestionsList;
@@ -30,6 +30,7 @@ export const SmartSnippetQuestionsList: FunctionComponent<
               <dd>
                 <div
                   style={{display: question.expanded ? 'block' : 'none'}}
+                  // biome-ignore lint/security/noDangerouslySetInnerHtml: <>
                   dangerouslySetInnerHTML={{__html: question.answer}}
                 ></div>
                 <button

@@ -1,7 +1,7 @@
+import type {Meta, StoryObj as Story} from '@storybook/web-components';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {renderComponent} from '@/storybook-utils/common/render-component';
 import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
-import type {Meta, StoryObj as Story} from '@storybook/web-components';
 
 const {decorator, play} = wrapInSearchInterface({
   search: {

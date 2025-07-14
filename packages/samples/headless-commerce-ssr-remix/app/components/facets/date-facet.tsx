@@ -1,4 +1,4 @@
-import {
+import type {
   DateFacetState,
   DateFacet as HeadlessDateFacet,
 } from '@coveo/headless-react/ssr-commerce';
@@ -54,6 +54,7 @@ export default function DateFacet({
         {state.displayName ?? state.facetId}
       </legend>
       <button
+        type="button"
         className="FacetClear"
         disabled={!controller || !state.hasActiveValues}
         onClick={controller?.deselectAll}
@@ -65,6 +66,7 @@ export default function DateFacet({
       )}
       {renderFacetValues()}
       <button
+        type="button"
         className="FacetShowMore"
         disabled={!controller || !state.canShowMoreValues}
         onClick={controller?.showMoreValues}
@@ -72,6 +74,7 @@ export default function DateFacet({
         +
       </button>
       <button
+        type="button"
         className="FacetShowLess"
         disabled={!controller || !state.canShowLessValues}
         onClick={controller?.showLessValues}

@@ -2,14 +2,14 @@ import {facetOptionsReducer as facetOptions} from '../../../features/facet-optio
 import {searchReducer as search} from '../../../features/search/search-slice.js';
 import {
   buildMockSearchEngine,
-  MockedSearchEngine,
+  type MockedSearchEngine,
 } from '../../../test/mock-engine-v2.js';
 import {buildMockFacetResponse} from '../../../test/mock-facet-response.js';
 import {createMockState} from '../../../test/mock-state.js';
 import {
   buildCoreFacetManager,
-  FacetManager,
-  FacetManagerPayload,
+  type FacetManager,
+  type FacetManagerPayload,
 } from './headless-core-facet-manager.js';
 
 describe('facet manager', () => {

@@ -1,6 +1,6 @@
 import {isNullOrUndefined} from '@coveo/bueno';
 import {createSelector} from '@reduxjs/toolkit';
-import {
+import type {
   CommercePaginationSection,
   RecommendationsSection,
 } from '../../../state/state-sections.js';

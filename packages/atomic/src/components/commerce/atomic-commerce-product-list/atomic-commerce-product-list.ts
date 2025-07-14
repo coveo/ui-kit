@@ -1,3 +1,21 @@
+import {NumberValue, Schema, StringValue} from '@coveo/bueno';
+import {
+  buildProductListing,
+  buildSearch,
+  type ProductListing,
+  type ProductListingState,
+  type ProductListingSummaryState,
+  type Search,
+  type SearchState,
+  type SearchSummaryState,
+  type Summary,
+} from '@coveo/headless/commerce';
+import {type CSSResultGroup, html, LitElement, nothing, unsafeCSS} from 'lit';
+import {customElement, property, state} from 'lit/decorators.js';
+import {keyed} from 'lit/directives/keyed.js';
+import {map} from 'lit/directives/map.js';
+import {ref} from 'lit/directives/ref.js';
+import {when} from 'lit/directives/when.js';
 import type {
   ItemRenderingFunction,
   SelectChildProductEventArgs,
@@ -6,43 +24,25 @@ import {bindStateToController} from '@/src/decorators/bind-state.js';
 import {bindingGuard} from '@/src/decorators/binding-guard.js';
 import {bindings} from '@/src/decorators/bindings.js';
 import {errorGuard} from '@/src/decorators/error-guard.js';
-import {InitializableComponent} from '@/src/decorators/types.js';
+import type {InitializableComponent} from '@/src/decorators/types.js';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles.js';
 import {FocusTargetController} from '@/src/utils/accessibility-utils.js';
 import {randomID} from '@/src/utils/utils.js';
-import {NumberValue, Schema, StringValue} from '@coveo/bueno';
-import {
-  buildProductListing,
-  buildSearch,
-  ProductListing,
-  ProductListingState,
-  ProductListingSummaryState,
-  Search,
-  SearchState,
-  SearchSummaryState,
-  Summary,
-} from '@coveo/headless/commerce';
-import {CSSResultGroup, html, LitElement, nothing, unsafeCSS} from 'lit';
-import {customElement, property, state} from 'lit/decorators.js';
-import {keyed} from 'lit/directives/keyed.js';
-import {map} from 'lit/directives/map.js';
-import {ref} from 'lit/directives/ref.js';
-import {when} from 'lit/directives/when.js';
 import {renderItemPlaceholders} from '../../common/atomic-result-placeholder/item-placeholders.js';
 import {createAppLoadedListener} from '../../common/interface/store.js';
 import {renderDisplayWrapper} from '../../common/item-list/display-wrapper.js';
 import {renderGridLayout} from '../../common/item-list/grid-layout.js';
 import {ItemListCommon} from '../../common/item-list/item-list-common.js';
 import {
-  renderTableLayout,
   renderTableData,
+  renderTableLayout,
   renderTableRow,
 } from '../../common/item-list/table-layout.js';
 import {
   getItemListDisplayClasses,
-  ItemDisplayDensity,
-  ItemDisplayImageSize,
-  ItemDisplayLayout,
+  type ItemDisplayDensity,
+  type ItemDisplayImageSize,
+  type ItemDisplayLayout,
 } from '../../common/layout/display-options.js';
 import type {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface.js';
 import {ProductTemplateProvider} from '../product-list/product-template-provider.js';
@@ -86,10 +86,6 @@ export class AtomicCommerceProductList
   private productListCommon!: ItemListCommon;
   private productTemplateProvider!: ProductTemplateProvider;
   private unsubscribeSummary!: () => void;
-
-  public constructor() {
-    super();
-  }
 
   @state()
   bindings!: CommerceBindings;

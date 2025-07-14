@@ -1,7 +1,7 @@
 import {createAction} from '@reduxjs/toolkit';
 import {validatePayload} from '../../../../utils/validate-payload.js';
 import {
-  RangeFacetSelectionPayload,
+  type RangeFacetSelectionPayload,
   rangeFacetSelectionPayloadDefinition,
 } from './range-facet-validate-payload.js';
 

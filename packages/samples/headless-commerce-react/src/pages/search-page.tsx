@@ -5,12 +5,11 @@ import {
   buildQueryTrigger,
   buildSearch,
   buildSearchBox,
-  Cart,
-  CommerceEngine,
+  type Cart,
+  type CommerceEngine,
+  type Context,
 } from '@coveo/headless/commerce';
-import {Context} from '@coveo/headless/commerce';
-import {useCallback} from 'react';
-import {useEffect} from 'react';
+import {useCallback, useEffect} from 'react';
 import DidYouMean from '../components/did-you-mean/did-you-mean.js';
 import SearchBox from '../components/search-box/search-box.js';
 import NotifyTrigger from '../components/triggers/notify-trigger.js';
@@ -67,6 +66,7 @@ export default function Search(props: ISearchProps) {
     };
   }, [searchController]);
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <>
   useEffect(() => {
     /**
      * It is important to call the `Context` controller's `setView` method with the current URL when a page is loaded,

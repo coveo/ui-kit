@@ -1,16 +1,16 @@
 import {BooleanValue, NumberValue, StringValue} from '@coveo/bueno';
 import {createAsyncThunk} from '@reduxjs/toolkit';
-import {EventDescription} from 'coveo.analytics';
+import type {EventDescription} from 'coveo.analytics';
 import HistoryStore from '../../../api/analytics/coveo.analytics/history-store.js';
-import {AsyncThunkSearchOptions} from '../../../api/search/search-api-client.js';
-import {SearchResponseSuccess} from '../../../api/search/search/search-response.js';
-import {AsyncThunkOptions} from '../../../app/async-thunk-options.js';
-import {InstantResultSection} from '../../../state/state-sections.js';
+import type {SearchResponseSuccess} from '../../../api/search/search/search-response.js';
+import type {AsyncThunkSearchOptions} from '../../../api/search/search-api-client.js';
+import type {AsyncThunkOptions} from '../../../app/async-thunk-options.js';
+import type {InstantResultSection} from '../../../state/state-sections.js';
 import {
   requiredNonEmptyString,
   validatePayload,
 } from '../../../utils/validate-payload.js';
-import {
+import type {
   AnalyticsAsyncThunk,
   LegacySearchAction,
 } from '../../analytics/analytics-utils.js';
@@ -21,22 +21,25 @@ import {
 import {updateFacetAutoSelection} from '../../facets/generic/facet-actions.js';
 import {logInstantResultsSearch} from '../../instant-results/instant-result-analytics-actions.js';
 import {
-  FetchInstantResultsActionCreatorPayload,
-  FetchInstantResultsThunkReturn,
+  type FetchInstantResultsActionCreatorPayload,
+  type FetchInstantResultsThunkReturn,
   updateInstantResultsQuery,
 } from '../../instant-results/instant-results-actions.js';
 import {updatePage} from '../../pagination/pagination-actions.js';
 import {
+  type UpdateQueryActionCreatorPayload,
   updateQuery,
-  UpdateQueryActionCreatorPayload,
 } from '../../query/query-actions.js';
 import {buildSearchAndFoldingLoadCollectionRequest} from '../../search-and-folding/legacy/search-and-folding-request.js';
 import {updateSearchAction} from '../search-actions.js';
 import {logFetchMoreResults} from '../search-analytics-actions.js';
-import {MappedSearchRequest, mapSearchRequest} from '../search-mappings.js';
+import {
+  type MappedSearchRequest,
+  mapSearchRequest,
+} from '../search-mappings.js';
 import {
   AsyncSearchThunkProcessor,
-  StateNeededByExecuteSearch,
+  type StateNeededByExecuteSearch,
 } from './search-actions-thunk-processor.js';
 import {buildSearchRequest} from './search-request.js';
 
@@ -198,7 +201,8 @@ const addEntryInActionsHistory = (state: StateNeededByExecuteSearch) => {
 
 export async function legacyFetchInstantResults(
   payload: FetchInstantResultsActionCreatorPayload,
-  config: any //eslint-disable-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: <>
+  config: any
 ) {
   validatePayload(payload, {
     id: requiredNonEmptyString,
@@ -245,7 +249,8 @@ export async function legacyFetchInstantResults(
 
 export async function legacyFetchPage(
   state: StateNeededByExecuteSearch,
-  config: any, //eslint-disable-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: <>
+  config: any,
   searchAction: LegacySearchAction
 ) {
   addEntryInActionsHistory(state);
@@ -272,7 +277,8 @@ export async function legacyFetchPage(
 }
 
 export async function legacyFetchMoreResults(
-  config: any, //eslint-disable-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: <>
+  config: any,
   state: StateNeededByExecuteSearch
 ) {
   const {analyticsClientMiddleware, preprocessRequest, logger} = config.extra;
@@ -297,7 +303,8 @@ export async function legacyFetchMoreResults(
 }
 
 export async function legacyFetchFacetValues(
-  config: any, //eslint-disable-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: <>
+  config: any,
   searchAction: LegacySearchAction,
   state: StateNeededByExecuteSearch
 ) {
@@ -323,7 +330,8 @@ export async function legacyFetchFacetValues(
 
 export async function legacyExecuteSearch(
   state: StateNeededByExecuteSearch,
-  config: any, //eslint-disable-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: <>
+  config: any,
   searchAction: LegacySearchAction
 ) {
   addEntryInActionsHistory(state);

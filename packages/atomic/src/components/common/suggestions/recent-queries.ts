@@ -1,9 +1,9 @@
 import {HighlightUtils} from '@coveo/headless';
-import {i18n} from 'i18next';
+import type {i18n} from 'i18next';
 import {html, render} from 'lit';
 import {when} from 'lit/directives/when.js';
 import {encodeForDomAttribute} from '../../../utils/string-utils';
-import {SearchBoxSuggestionElement} from './suggestions-common';
+import type {SearchBoxSuggestionElement} from './suggestions-common';
 
 export const getPartialRecentQueryElement = (
   value: string,

@@ -1,8 +1,8 @@
-import {Relay} from '@coveo/relay';
-import {Logger} from 'pino';
-import {Mock} from 'vitest';
-import {InsightAPIClient} from '../../../api/service/insight/insight-api-client.js';
-import {InsightQueryRequest} from '../../../api/service/insight/query/query-request.js';
+import type {Relay} from '@coveo/relay';
+import type {Logger} from 'pino';
+import type {Mock} from 'vitest';
+import type {InsightAPIClient} from '../../../api/service/insight/insight-api-client.js';
+import type {InsightQueryRequest} from '../../../api/service/insight/query/query-request.js';
 import {defaultNodeJSNavigatorContextProvider} from '../../../app/navigator-context-provider.js';
 import {buildMockInsightQueryRequest} from '../../../test/mock-insight-request.js';
 import {buildMockResult} from '../../../test/mock-result.js';
@@ -11,8 +11,8 @@ import {buildMockSearchState} from '../../../test/mock-search-state.js';
 import {getConfigurationInitialState} from '../../configuration/configuration-state.js';
 import {getInsightConfigurationInitialState} from '../../insight-configuration/insight-configuration-state.js';
 import {updateQuery} from '../../query/query-actions.js';
-import {ExecuteSearchThunkReturn} from '../../search/legacy/search-actions.js';
-import {
+import type {ExecuteSearchThunkReturn} from '../../search/legacy/search-actions.js';
+import type {
   MappedSearchRequest,
   SearchMappings,
 } from '../../search/search-mappings.js';
@@ -22,7 +22,7 @@ import {
 } from '../insight-search-analytics-actions.js';
 import {
   AsyncInsightSearchThunkProcessor,
-  AsyncThunkConfig,
+  type AsyncThunkConfig,
 } from './insight-search-actions-thunk-processor.js';
 
 vi.mock('../insight-search-analytics-actions');

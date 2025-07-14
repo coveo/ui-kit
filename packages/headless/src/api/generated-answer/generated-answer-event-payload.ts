@@ -1,5 +1,5 @@
-import {GeneratedContentFormat} from '../../features/generated-answer/generated-response-format.js';
-import {Raw} from '../search/search/raw.js';
+import type {GeneratedContentFormat} from '../../features/generated-answer/generated-response-format.js';
+import type {Raw} from '../search/search/raw.js';
 
 export type GeneratedAnswerStreamFinishReason = 'COMPLETED' | 'ERROR';
 

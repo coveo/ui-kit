@@ -1,17 +1,17 @@
-import {PayloadAction} from '@reduxjs/toolkit';
-import {CoreEngine} from '../../../../app/engine.js';
+import type {PayloadAction} from '@reduxjs/toolkit';
+import type {CoreEngine} from '../../../../app/engine.js';
 import {numericFacetSetReducer as numericFacetSet} from '../../../../features/facets/range-facets/numeric-facet-set/numeric-facet-set-slice.js';
 import {
   deselectAllNumericFacetValues,
+  type RegisterNumericFacetActionCreatorPayload,
   registerNumericFacet,
-  RegisterNumericFacetActionCreatorPayload,
-  toggleSelectNumericFacetValue,
+  type ToggleSelectNumericFacetValueActionCreatorPayload,
   toggleExcludeNumericFacetValue,
-  ToggleSelectNumericFacetValueActionCreatorPayload,
+  toggleSelectNumericFacetValue,
+  type UpdateNumericFacetSortCriterionActionCreatorPayload,
+  type UpdateNumericFacetValuesActionCreatorPayload,
   updateNumericFacetSortCriterion,
-  UpdateNumericFacetSortCriterionActionCreatorPayload,
   updateNumericFacetValues,
-  UpdateNumericFacetValuesActionCreatorPayload,
 } from './numeric-facet-actions.js';
 
 export type {

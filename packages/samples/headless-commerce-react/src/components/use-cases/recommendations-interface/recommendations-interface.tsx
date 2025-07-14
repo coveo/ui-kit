@@ -1,4 +1,4 @@
-import {Cart, Recommendations} from '@coveo/headless/commerce';
+import type {Cart, Recommendations} from '@coveo/headless/commerce';
 import {useEffect, useState} from 'react';
 import ProductList from '../../product-list/product-list.js';
 import Summary from '../../summary/summary.js';

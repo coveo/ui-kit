@@ -1,15 +1,15 @@
 import {
-  Controller,
-  ControllerDefinitionsMap,
-  CommerceEngineDefinitionOptions,
+  type CommerceEngine,
+  type CommerceEngineDefinitionOptions,
+  type CommerceEngineOptions,
+  type Controller,
+  type ControllerDefinitionsMap,
   defineCommerceEngine as defineBaseCommerceEngine,
-  CommerceEngineOptions,
   SolutionType,
-  CommerceEngine,
 } from '@coveo/headless/ssr-commerce';
 // Workaround to prevent Next.js erroring about importing CSR only hooks
 import React from 'react';
-import {singleton, SingletonGetter} from '../utils.js';
+import {type SingletonGetter, singleton} from '../utils.js';
 import {
   buildControllerHooks,
   buildEngineHook,
@@ -17,7 +17,7 @@ import {
   buildStateProvider,
   buildStaticStateProvider,
 } from './common.js';
-import {
+import type {
   ContextState,
   InferControllerHooksMapFromDefinition,
   ReactEngineDefinition,

@@ -4,15 +4,15 @@ import {
   toggleSelectAutomaticFacetValue,
 } from '../../../features/facets/automatic-facet-set/automatic-facet-set-actions.js';
 import {executeSearch} from '../../../features/search/search-actions.js';
-import {SearchAppState} from '../../../state/search-app-state.js';
+import type {SearchAppState} from '../../../state/search-app-state.js';
 import {buildMockAutomaticFacetSlice} from '../../../test/mock-automatic-facet-slice.js';
 import {
   buildMockSearchEngine,
-  MockedSearchEngine,
+  type MockedSearchEngine,
 } from '../../../test/mock-engine-v2.js';
 import {buildMockFacetValue} from '../../../test/mock-facet-value.js';
 import {createMockState} from '../../../test/mock-state.js';
-import {AutomaticFacet} from '../automatic-facet-generator/headless-automatic-facet-generator.js';
+import type {AutomaticFacet} from '../automatic-facet-generator/headless-automatic-facet-generator.js';
 
 vi.mock(
   '../../../features/facets/automatic-facet-set/automatic-facet-set-actions'

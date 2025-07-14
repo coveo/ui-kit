@@ -1,4 +1,4 @@
-import {CommerceEngineConfiguration} from '@coveo/headless/commerce';
+import type {CommerceEngineConfiguration} from '@coveo/headless/commerce';
 
 export function getAnalyticsConfig(
   commerceEngineConfig: CommerceEngineConfiguration,

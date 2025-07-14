@@ -1,11 +1,11 @@
 import {
   buildFacetManager,
-  FacetManager as HeadlessFacetManager,
-  FacetManagerPayload,
-  FacetManagerState,
-  Unsubscribe,
+  type FacetManagerPayload,
+  type FacetManagerState,
+  type FacetManager as HeadlessFacetManager,
+  type Unsubscribe,
 } from '@coveo/headless';
-import {Children, Component, ContextType, ReactElement} from 'react';
+import {Children, Component, type ContextType, type ReactElement} from 'react';
 import {AppContext} from '../../context/engine';
 
 type FacetManagerChild = ReactElement<{facetId: string}>;

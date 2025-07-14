@@ -1,5 +1,5 @@
-import {Pager as HeadlessPager} from '@coveo/headless';
-import {useEffect, useState, FunctionComponent} from 'react';
+import type {Pager as HeadlessPager} from '@coveo/headless';
+import {type FunctionComponent, useEffect, useState} from 'react';
 
 interface PagerProps {
   controller: HeadlessPager;

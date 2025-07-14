@@ -1,9 +1,8 @@
-import {renderFunctionFixture} from '@/vitest-utils/testing-helpers/fixture';
-import {createTestI18n} from '@/vitest-utils/testing-helpers/i18n-utils';
 import {userEvent} from '@storybook/test';
 import {html} from 'lit';
-import {describe, vi, beforeAll, it} from 'vitest';
-import {expect} from 'vitest';
+import {beforeAll, describe, expect, it, vi} from 'vitest';
+import {renderFunctionFixture} from '@/vitest-utils/testing-helpers/fixture';
+import {createTestI18n} from '@/vitest-utils/testing-helpers/i18n-utils';
 import {renderSubmitButton} from './submit-button';
 
 describe('#renderSubmitButton', () => {

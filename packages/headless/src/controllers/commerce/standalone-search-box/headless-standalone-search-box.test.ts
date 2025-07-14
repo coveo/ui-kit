@@ -1,12 +1,12 @@
 import {configuration} from '../../../app/common-reducers.js';
 import {stateKey} from '../../../app/state-key.js';
+import {updateQuery} from '../../../features/commerce/query/query-actions.js';
+import {queryReducer as commerceQuery} from '../../../features/commerce/query/query-slice.js';
 import {
   registerQuerySetQuery,
   updateQuerySetQuery,
 } from '../../../features/commerce/query-set/query-set-actions.js';
 import {selectQuerySuggestion} from '../../../features/commerce/query-suggest/query-suggest-actions.js';
-import {updateQuery} from '../../../features/commerce/query/query-actions.js';
-import {queryReducer as commerceQuery} from '../../../features/commerce/query/query-slice.js';
 import {
   fetchRedirectUrl,
   registerStandaloneSearchBox,
@@ -15,19 +15,19 @@ import {
 import {commerceStandaloneSearchBoxSetReducer as commerceStandaloneSearchBoxSet} from '../../../features/commerce/standalone-search-box-set/standalone-search-box-set-slice.js';
 // TODO: KIT-3127: import from commerce
 import {querySuggestReducer as querySuggest} from '../../../features/query-suggest/query-suggest-slice.js';
-import {CommerceAppState} from '../../../state/commerce-app-state.js';
+import type {CommerceAppState} from '../../../state/commerce-app-state.js';
 import {buildMockCommerceState} from '../../../test/mock-commerce-state.js';
 import {
   buildMockCommerceEngine,
-  MockedCommerceEngine,
+  type MockedCommerceEngine,
 } from '../../../test/mock-engine-v2.js';
 import {buildMockQuerySuggest} from '../../../test/mock-query-suggest.js';
 import {buildMockStandaloneSearchBoxEntry} from '../../../test/mock-standalone-search-box-entry.js';
-import {StandaloneSearchBoxOptions} from './headless-standalone-search-box-options.js';
 import {
-  StandaloneSearchBox,
   buildStandaloneSearchBox,
+  type StandaloneSearchBox,
 } from './headless-standalone-search-box.js';
+import type {StandaloneSearchBoxOptions} from './headless-standalone-search-box-options.js';
 
 vi.mock('../../../features/commerce/query-set/query-set-actions');
 vi.mock('../../../features/commerce/query-suggest/query-suggest-actions');

@@ -1,4 +1,4 @@
-import {
+import type {
   InstantProducts as HeadlessInstantProducts,
   Product,
 } from '@coveo/headless/commerce';
@@ -49,9 +49,9 @@ export default function InstantProducts(props: IInstantProductProps) {
             Instant products for query <b>{state.query}</b>
           </p>
           <ul className="InstantProducts">
-            {state.products.map((product, index) => (
-              <li className="Product" key={index}>
-                <button onClick={() => onClickProduct(product)}>
+            {state.products.map((product) => (
+              <li className="Product" key={product.permanentid}>
+                <button onClick={() => onClickProduct(product)} type="button">
                   {product.ec_name} ({product.ec_product_id})
                 </button>
               </li>

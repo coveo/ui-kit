@@ -1,15 +1,15 @@
+import type {Meta, StoryObj as Story} from '@storybook/web-components';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {renderComponent} from '@/storybook-utils/common/render-component';
 import {wrapInResult} from '@/storybook-utils/search/result-wrapper';
 import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
-import type {Meta, StoryObj as Story} from '@storybook/web-components';
 
 const {decorator: resultDecorator, engineConfig} = wrapInResult({
   search: {
     preprocessSearchResponseMiddleware: (res) => {
-      res.body.results.forEach(
-        (r) => (r.excerpt = '<div>Some HTML content</div>')
-      );
+      res.body.results.forEach((r) => {
+        r.excerpt = '<div>Some HTML content</div>';
+      });
       return res;
     },
   },

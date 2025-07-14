@@ -1,4 +1,4 @@
-import {
+import type {
   CategoryFacetSearchResult,
   CategoryFacetState,
   CategoryFacetValue,
@@ -123,6 +123,11 @@ export default function CategoryFacet({
             key={value.rawValue}
             onClick={() => onClickFacetSearchResult(value)}
             style={{width: 'fit-content'}}
+            onKeyDown={(event) => {
+              if (event.key === 'Enter' || event.key === ' ') {
+                onClickFacetSearchResult(value);
+              }
+            }}
           >
             <input
               aria-label={`Select facet search result '${value.displayValue}' in category '${value.path.join(' / ')}'`}
@@ -134,6 +139,7 @@ export default function CategoryFacet({
             <label className="FacetSearchResultLabel" htmlFor={value.rawValue}>
               <span
                 className="FacetSearchResultName"
+                // biome-ignore lint/security/noDangerouslySetInnerHtml: <>
                 dangerouslySetInnerHTML={{
                   __html: highlightFacetSearchResult(value.displayValue),
                 }}
@@ -237,6 +243,7 @@ export default function CategoryFacet({
                 checked={false}
                 onChange={() => toggleSelectFacetValue(root)}
               ></input>
+              {/** biome-ignore lint/a11y/noLabelWithoutControl: <> */}
               <label className="FacetValueName">{root.value}</label>
               <span className="FacetValueNumberOfResults">
                 {' '}
@@ -267,6 +274,7 @@ export default function CategoryFacet({
         {renderRootValues()}
         {renderActiveFacetValueTree()}
         <button
+          type="button"
           aria-label="Show more facet values"
           className="FacetShowMore"
           disabled={!controller || state.isLoading || !state.canShowMoreValues}
@@ -275,6 +283,7 @@ export default function CategoryFacet({
           +
         </button>
         <button
+          type="button"
           aria-label="Show less facet values"
           className="FacetShowLess"
           disabled={!controller || state.isLoading || !state.canShowLessValues}

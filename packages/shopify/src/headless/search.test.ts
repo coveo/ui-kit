@@ -1,18 +1,18 @@
 import {
-  getSampleSearchEngineConfiguration,
   buildSearchEngine,
+  getSampleSearchEngineConfiguration,
 } from '@coveo/headless';
-import {describe, it, expect, vi, beforeEach, afterEach} from 'vitest';
+import {afterEach, beforeEach, describe, expect, it, vi} from 'vitest';
 import {
-  AppProxyOptions,
-  CoveoShopifyOptions,
-  fetchAppProxyConfig,
-  CoveoShopifyCustomEvent,
-  publishCustomShopifyEvent,
+  type AppProxyOptions,
+  type BuildShopifySearchEngineOptions,
+  buildShopifySearchEngine,
   COVEO_SHOPIFY_CONFIG_KEY,
-  BuildShopifySearchEngineOptions,
+  type CoveoShopifyCustomEvent,
+  type CoveoShopifyOptions,
+  fetchAppProxyConfig,
+  publishCustomShopifyEvent,
 } from './search';
-import {buildShopifySearchEngine} from './search';
 
 const getSampleSearchEngineConfigurationWithTrackingId = () => ({
   ...getSampleSearchEngineConfiguration(),

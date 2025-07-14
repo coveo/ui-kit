@@ -1,4 +1,4 @@
-import {QueryTrigger as HeadlessQueryTrigger} from '@coveo/headless/commerce';
+import type {QueryTrigger as HeadlessQueryTrigger} from '@coveo/headless/commerce';
 import {useEffect, useState} from 'react';
 
 interface IQueryTriggerProps {

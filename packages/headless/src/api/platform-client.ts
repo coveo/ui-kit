@@ -4,7 +4,7 @@ import {DisconnectedError} from '../utils/errors.js';
 import {PlatformEnvironment} from '../utils/url-utils.js';
 import {clone} from '../utils/utils.js';
 import {canBeFormUrlEncoded, encodeAsFormUrl} from './form-url-encoder.js';
-import {
+import type {
   PlatformClientOrigin,
   PlatformRequestOptions,
   PreprocessRequest,
@@ -42,6 +42,7 @@ export interface PlatformResponse<T> {
 
 export type PlatformClientCallError = DisconnectedError | Error;
 
+// biome-ignore lint/complexity/noStaticOnlyClass: Maybe change this into a function someday. Not worth the effort right now.
 export class PlatformClient {
   static async call(
     options: PlatformClientCallOptions

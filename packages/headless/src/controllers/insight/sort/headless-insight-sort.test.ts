@@ -5,11 +5,11 @@ import {
 } from '../../../features/sort-criteria/criteria.js';
 import {updateSortCriterion} from '../../../features/sort-criteria/sort-criteria-actions.js';
 import {
-  MockedInsightEngine,
   buildMockInsightEngine,
+  type MockedInsightEngine,
 } from '../../../test/mock-engine-v2.js';
 import {buildMockInsightState} from '../../../test/mock-insight-state.js';
-import {Sort, SortProps, buildSort} from './headless-insight-sort.js';
+import {buildSort, type Sort, type SortProps} from './headless-insight-sort.js';
 
 vi.mock('../../../features/sort-criteria/sort-criteria-actions');
 vi.mock('../../../features/insight-search/insight-search-actions');

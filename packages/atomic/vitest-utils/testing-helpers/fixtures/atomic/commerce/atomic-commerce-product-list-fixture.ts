@@ -1,10 +1,10 @@
-import {CommerceBindings} from '@/src/index.js';
-import {fixture} from '@/vitest-utils/testing-helpers/fixture';
-import {createTestI18n} from '@/vitest-utils/testing-helpers/i18n-utils';
-import {i18n} from 'i18next';
-import {html, LitElement, nothing, render, TemplateResult} from 'lit';
+import type {i18n} from 'i18next';
+import {html, LitElement, nothing, render, type TemplateResult} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {vi} from 'vitest';
+import type {CommerceBindings} from '@/src/index.js';
+import {fixture} from '@/vitest-utils/testing-helpers/fixture';
+import {createTestI18n} from '@/vitest-utils/testing-helpers/i18n-utils';
 
 @customElement('atomic-commerce-product-list')
 export class FixtureAtomicCommerceProductList extends LitElement {

@@ -1,16 +1,16 @@
-import {ItemClick} from '@coveo/relay-event-types';
+import type {ItemClick} from '@coveo/relay-event-types';
 import {RecommendationAnalyticsProvider} from '../../api/analytics/recommendations-analytics.js';
-import {Result} from '../../api/search/search/result.js';
+import type {Result} from '../../api/search/search/result.js';
 import {
-  ClickAction,
+  type ClickAction,
   documentIdentifier,
+  type LegacySearchAction,
   makeAnalyticsAction,
   partialRecommendationInformation,
-  LegacySearchAction,
   validateResultPayload,
 } from '../analytics/analytics-utils.js';
 import {SearchPageEvents} from '../analytics/search-action-cause.js';
-import {SearchAction} from '../search/search-actions.js';
+import type {SearchAction} from '../search/search-actions.js';
 
 //TODO: KIT-2859
 export const logRecommendationUpdate = (): LegacySearchAction =>

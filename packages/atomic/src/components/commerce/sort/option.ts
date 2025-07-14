@@ -1,6 +1,6 @@
-import {FunctionalComponent} from '@/src/utils/functional-component-utils';
-import {SortCriterion} from '@coveo/headless/commerce';
-import {renderSortOption, SortOptionProps} from '../../common/sort/option';
+import type {SortCriterion} from '@coveo/headless/commerce';
+import type {FunctionalComponent} from '@/src/utils/functional-component-utils';
+import {renderSortOption, type SortOptionProps} from '../../common/sort/option';
 
 export interface CommerceSortOptionProps
   extends Omit<SortOptionProps, 'label' | 'value'> {

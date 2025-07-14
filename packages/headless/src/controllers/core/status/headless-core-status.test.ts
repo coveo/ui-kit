@@ -1,7 +1,7 @@
 import {searchReducer as search} from '../../../features/search/search-slice.js';
 import {
   buildMockSearchEngine,
-  MockedSearchEngine,
+  type MockedSearchEngine,
 } from '../../../test/mock-engine-v2.js';
 import {buildMockResult} from '../../../test/mock-result.js';
 import {createMockState} from '../../../test/mock-state.js';

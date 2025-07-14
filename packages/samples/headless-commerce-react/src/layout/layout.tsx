@@ -3,9 +3,9 @@ import {
   buildFilterSuggestionsGenerator,
   buildInstantProducts,
   buildStandaloneSearchBox,
-  CommerceEngine,
+  type CommerceEngine,
 } from '@coveo/headless/commerce';
-import React from 'react';
+import type React from 'react';
 import CartTab from '../components/cart-tab/cart-tab.js';
 import StandaloneSearchBox from '../components/standalone-search-box/standalone-search-box.js';
 import {highlightOptions} from '../utils/highlight-options.js';

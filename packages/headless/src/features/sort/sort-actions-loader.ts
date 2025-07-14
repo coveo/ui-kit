@@ -1,8 +1,8 @@
-import {PayloadAction} from '@reduxjs/toolkit';
-import {CoreEngine} from '../../app/engine.js';
+import type {PayloadAction} from '@reduxjs/toolkit';
+import type {CoreEngine} from '../../app/engine.js';
 import {sortReducer as sort} from '../../features/sort/sort-slice.js';
+import type {SortCriterion} from './sort.js';
 import {registerSortCriterion, updateSortCriterion} from './sort-actions.js';
-import {SortCriterion} from './sort.js';
 
 /**
  * The sort action creators.

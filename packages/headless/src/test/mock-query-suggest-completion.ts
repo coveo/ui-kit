@@ -1,4 +1,4 @@
-import {QuerySuggestCompletion} from '../api/search/query-suggest/query-suggest-response.js';
+import type {QuerySuggestCompletion} from '../api/search/query-suggest/query-suggest-response.js';
 
 export function buildMockQuerySuggestCompletion(
   config: Partial<QuerySuggestCompletion> = {}

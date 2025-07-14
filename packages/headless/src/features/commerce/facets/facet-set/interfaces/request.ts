@@ -1,13 +1,13 @@
-import {
+import type {
   DateRangeRequest,
   NumericRangeRequest,
 } from '../../../../../controllers/commerce/core/facets/headless-core-commerce-facet.js';
-import {BaseFacetValueRequest} from '../../../../facets/facet-api/request.js';
-import {
+import type {BaseFacetValueRequest} from '../../../../facets/facet-api/request.js';
+import type {
   FacetRequest,
   FacetValueRequest,
 } from '../../../../facets/facet-set/interfaces/request.js';
-import {
+import type {
   CategoryFacetDelimitingCharacter,
   FacetType,
   NumericFacetExtraProperties,

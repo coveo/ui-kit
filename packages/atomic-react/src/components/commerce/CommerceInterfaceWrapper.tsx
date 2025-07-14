@@ -1,18 +1,19 @@
-import type {JSX, i18n} from '@coveo/atomic';
+import type {i18n} from '@coveo/atomic';
+// biome-ignore lint/style/useImportType: <React is needed>
 import React, {useEffect, useRef} from 'react';
 import {AtomicCommerceInterface} from './components';
 
-export type AtomicCommerceInterface = React.ComponentProps<
+type AtomicCommerceInterfaceProps = React.ComponentProps<
   typeof AtomicCommerceInterface
 >;
 
-type ExecuteRequest = AtomicCommerceInterface['executeFirstRequest'];
+type ExecuteRequest = AtomicCommerceInterfaceProps['executeFirstRequest'];
 
-/**
- * The properties of the AtomicCommerceInterface component
- */
 interface WrapperProps
-  extends Omit<AtomicCommerceInterface, 'i18n' | 'pipeline' | 'searchHub'> {
+  extends Omit<
+    AtomicCommerceInterfaceProps,
+    'i18n' | 'pipeline' | 'searchHub'
+  > {
   /**
    * An optional callback function that can be used to control the execution of the first request.
    *
@@ -66,7 +67,7 @@ export const InterfaceWrapper = (
         );
       });
     }
-  }, [interfaceRef]);
+  }, [engine, initialization, localization, onReady]);
 
   return (
     <AtomicCommerceInterface ref={interfaceRef} {...allOtherProps}>

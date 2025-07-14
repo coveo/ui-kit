@@ -1,5 +1,5 @@
-import {PayloadAction} from '@reduxjs/toolkit';
-import {CoreEngine} from '../../app/engine.js';
+import type {PayloadAction} from '@reduxjs/toolkit';
+import type {CoreEngine} from '../../app/engine.js';
 import {pipelineReducer as pipeline} from '../../features/pipeline/pipeline-slice.js';
 import {setPipeline} from './pipeline-actions.js';
 

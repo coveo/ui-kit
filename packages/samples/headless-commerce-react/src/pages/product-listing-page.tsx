@@ -1,12 +1,11 @@
 import {
   buildNotifyTrigger,
   buildProductListing,
-  Cart,
-  CommerceEngine,
-  Context,
+  type Cart,
+  type CommerceEngine,
+  type Context,
 } from '@coveo/headless/commerce';
-import {useCallback} from 'react';
-import {useEffect} from 'react';
+import {useCallback, useEffect} from 'react';
 import NotifyTrigger from '../components/triggers/notify-trigger.js';
 import SearchAndListingInterface from '../components/use-cases/search-and-listing-interface/search-and-listing-interface.js';
 

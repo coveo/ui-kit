@@ -1,4 +1,4 @@
-import {SearchCommerceSuccessResponse} from '../../../api/commerce/search/response.js';
+import type {SearchCommerceSuccessResponse} from '../../../api/commerce/search/response.js';
 import {buildMockCommerceState} from '../../../test/mock-commerce-state.js';
 import {buildMockCommerceEngine} from '../../../test/mock-engine-v2.js';
 import {buildMockProduct} from '../../../test/mock-product.js';

@@ -1,19 +1,19 @@
-import {ItemClick} from '@coveo/relay-event-types';
+import type {ItemClick} from '@coveo/relay-event-types';
 import {
   InstantResultsAnalyticsProvider,
-  StateNeededByInstantResultsAnalyticsProvider,
+  type StateNeededByInstantResultsAnalyticsProvider,
 } from '../../api/analytics/instant-result-analytics.js';
-import {Result} from '../../api/search/search/result.js';
+import type {Result} from '../../api/search/search/result.js';
 import {
-  partialDocumentInformation,
   documentIdentifier,
-  validateResultPayload,
+  type InstantResultsClickAction,
+  type InstantResultsSearchAction,
   makeAnalyticsAction,
-  InstantResultsSearchAction,
-  InstantResultsClickAction,
+  partialDocumentInformation,
+  validateResultPayload,
 } from '../analytics/analytics-utils.js';
 import {SearchPageEvents} from '../analytics/search-action-cause.js';
-import {SearchAction} from '../search/search-actions.js';
+import type {SearchAction} from '../search/search-actions.js';
 
 export const logInstantResultOpen = (
   result: Result

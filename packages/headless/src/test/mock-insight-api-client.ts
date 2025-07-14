@@ -2,7 +2,7 @@ import {pino} from 'pino';
 import {NoopPreprocessRequest} from '../api/preprocess-request.js';
 import {
   InsightAPIClient,
-  InsightAPIClientOptions,
+  type InsightAPIClientOptions,
 } from '../api/service/insight/insight-api-client.js';
 
 export function buildMockInsightAPIClient(

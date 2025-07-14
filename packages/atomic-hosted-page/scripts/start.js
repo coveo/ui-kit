@@ -1,4 +1,4 @@
-import {execSync, spawn} from 'child_process';
+import {execSync, spawn} from 'node:child_process';
 
 const startWsServer = () => {
   const wsServer = spawn('npx', ['ws', '-p', '3333', '-d', 'dev'], {

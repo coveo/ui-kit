@@ -1,10 +1,10 @@
 import {createAsyncThunk} from '@reduxjs/toolkit';
-import {AsyncThunkInsightOptions} from '../../../api/service/insight/insight-api-client.js';
-import {InsightAction} from '../../analytics/analytics-utils.js';
-import {ExecuteSearchThunkReturn} from '../../search/legacy/search-actions.js';
+import type {AsyncThunkInsightOptions} from '../../../api/service/insight/insight-api-client.js';
+import type {InsightAction} from '../../analytics/analytics-utils.js';
+import type {ExecuteSearchThunkReturn} from '../../search/legacy/search-actions.js';
 import {
-  StateNeededByExecuteSearch,
   addEntryInActionsHistory,
+  type StateNeededByExecuteSearch,
 } from '../insight-search-actions.js';
 import {logFetchMoreResults} from '../insight-search-analytics-actions.js';
 import {
@@ -16,7 +16,8 @@ import {AsyncInsightSearchThunkProcessor} from './insight-search-actions-thunk-p
 
 export async function legacyExecuteSearch(
   state: StateNeededByExecuteSearch,
-  config: any, //eslint-disable-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: <>
+  config: any,
   analyticsAction: InsightAction
 ) {
   addEntryInActionsHistory(state);
@@ -47,7 +48,8 @@ export async function legacyExecuteSearch(
 
 export async function legacyFetchPage(
   state: StateNeededByExecuteSearch,
-  config: any, //eslint-disable-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: <>
+  config: any,
   analyticsAction: InsightAction
 ) {
   addEntryInActionsHistory(state);
@@ -78,7 +80,8 @@ export async function legacyFetchPage(
 
 export async function legacyFetchMoreResults(
   state: StateNeededByExecuteSearch,
-  config: any //eslint-disable-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: <>
+  config: any
 ) {
   const processor = new AsyncInsightSearchThunkProcessor<
     ReturnType<typeof config.rejectWithValue>
@@ -106,7 +109,8 @@ export async function legacyFetchMoreResults(
 
 export async function legacyFetchFacetValues(
   state: StateNeededByExecuteSearch,
-  config: any, //eslint-disable-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: <>
+  config: any,
   analyticsAction: InsightAction
 ) {
   const processor = new AsyncInsightSearchThunkProcessor<

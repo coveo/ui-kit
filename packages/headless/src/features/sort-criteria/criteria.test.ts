@@ -1,10 +1,10 @@
 import {
-  buildRelevanceSortCriterion,
-  buildQueryRankingExpressionSortCriterion,
-  buildNoSortCriterion,
+  buildCriterionExpression,
   buildDateSortCriterion,
   buildFieldSortCriterion,
-  buildCriterionExpression,
+  buildNoSortCriterion,
+  buildQueryRankingExpressionSortCriterion,
+  buildRelevanceSortCriterion,
   SortOrder,
 } from './criteria.js';
 

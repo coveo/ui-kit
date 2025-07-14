@@ -1,16 +1,16 @@
-import {SortParam} from '../../../api/commerce/commerce-api-params.js';
-import {FilterableCommerceAPIRequest} from '../../../api/commerce/common/request.js';
-import {NavigatorContext} from '../../../app/navigator-context-provider.js';
-import {
+import type {SortParam} from '../../../api/commerce/commerce-api-params.js';
+import type {FilterableCommerceAPIRequest} from '../../../api/commerce/common/request.js';
+import type {NavigatorContext} from '../../../app/navigator-context-provider.js';
+import type {
   CommerceFacetSetSection,
   CommerceSortSection,
   FacetOrderSection,
   ManualRangeSection,
 } from '../../../state/state-sections.js';
-import {SortBy, SortCriterion} from '../sort/sort.js';
+import {SortBy, type SortCriterion} from '../sort/sort.js';
 import {
   buildPaginatedCommerceAPIRequest,
-  StateNeededForPaginatedCommerceAPIRequest,
+  type StateNeededForPaginatedCommerceAPIRequest,
 } from './paginated-commerce-api-request-builder.js';
 
 export type StateNeededForFilterableCommerceAPIRequest =

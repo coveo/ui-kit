@@ -1,14 +1,14 @@
 import {executeSearch} from '../../../features/insight-search/insight-search-actions.js';
 import {updateNumberOfResults} from '../../../features/pagination/pagination-actions.js';
 import {
-  MockedInsightEngine,
   buildMockInsightEngine,
+  type MockedInsightEngine,
 } from '../../../test/mock-engine-v2.js';
 import {buildMockInsightState} from '../../../test/mock-insight-state.js';
 import {
-  ResultsPerPage,
-  ResultsPerPageProps,
   buildResultsPerPage,
+  type ResultsPerPage,
+  type ResultsPerPageProps,
 } from './headless-insight-results-per-page.js';
 
 vi.mock('../../../features/pagination/pagination-actions');

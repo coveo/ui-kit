@@ -1,8 +1,8 @@
-import {renderFunctionFixture} from '@/vitest-utils/testing-helpers/fixture';
 import {page} from '@vitest/browser/context';
+import {renderFunctionFixture} from '@/vitest-utils/testing-helpers/fixture';
 import '@vitest/browser/matchers.d.ts';
 import {html} from 'lit';
-import {expect, describe, it, vi} from 'vitest';
+import {describe, expect, it, vi} from 'vitest';
 import {highlightSearchResult} from '../facet-search/facet-search-utils';
 import {renderFacetValueLabelHighlight} from './facet-value-label-highlight';
 

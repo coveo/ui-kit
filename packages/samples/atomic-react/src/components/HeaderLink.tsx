@@ -1,4 +1,4 @@
-import {FunctionComponent} from 'react';
+import type {FunctionComponent} from 'react';
 
 type Props = {
   page: string;
@@ -16,6 +16,12 @@ export const HeaderLink: FunctionComponent<Props> = ({
       onClick={() => {
         setPage(page);
         window.history.pushState({}, '', `?page=${page}`);
+      }}
+      onKeyDown={(e) => {
+        if (e.key === 'Enter') {
+          setPage(page);
+          window.history.pushState({}, '', `?page=${page}`);
+        }
       }}
     >
       {page} example

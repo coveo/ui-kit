@@ -1,4 +1,4 @@
-import {Action} from '@reduxjs/toolkit';
+import type {Action} from '@reduxjs/toolkit';
 import {buildMockSearch} from '../../test/mock-search.js';
 import {deselectAllBreadcrumbs} from '../breadcrumb/breadcrumb-actions.js';
 import {toggleSelectAutomaticFacetValue} from '../facets/automatic-facet-set/automatic-facet-set-actions.js';
@@ -12,40 +12,40 @@ import {
   selectFacetSearchResult,
 } from '../facets/facet-search-set/specific/specific-facet-search-actions.js';
 import {
+  deselectAllFacetValues,
+  toggleExcludeFacetValue,
+  toggleSelectFacetValue,
+} from './../facets/facet-set/facet-set-actions.js';
+import {
   deselectAllDateFacetValues,
   toggleExcludeDateFacetValue,
   toggleSelectDateFacetValue,
   updateDateFacetValues,
 } from '../facets/range-facets/date-facet-set/date-facet-actions.js';
 import {
-  toggleSelectNumericFacetValue,
   deselectAllNumericFacetValues,
-  updateNumericFacetValues,
   toggleExcludeNumericFacetValue,
+  toggleSelectNumericFacetValue,
+  updateNumericFacetValues,
 } from '../facets/range-facets/numeric-facet-set/numeric-facet-actions.js';
 import {change} from '../history/history-actions.js';
 import {getHistoryInitialState} from '../history/history-state.js';
 import {logSearchboxSubmit} from '../query/query-analytics-actions.js';
-import {restoreSearchParameters} from '../search-parameters/search-parameter-actions.js';
 import {executeSearch} from '../search/search-actions.js';
+import {restoreSearchParameters} from '../search-parameters/search-parameter-actions.js';
 import {updateActiveTab} from '../tab-set/tab-set-actions.js';
 import {
-  deselectAllFacetValues,
-  toggleExcludeFacetValue,
-  toggleSelectFacetValue,
-} from './../facets/facet-set/facet-set-actions.js';
-import {
+  nextPage,
+  previousPage,
   registerNumberOfResults,
+  registerPage,
   updateNumberOfResults,
   updatePage,
-  registerPage,
-  previousPage,
-  nextPage,
 } from './pagination-actions.js';
-import {paginationReducer, calculatePage} from './pagination-slice.js';
+import {calculatePage, paginationReducer} from './pagination-slice.js';
 import {
   getPaginationInitialState,
-  PaginationState,
+  type PaginationState,
 } from './pagination-state.js';
 
 describe('pagination slice', () => {

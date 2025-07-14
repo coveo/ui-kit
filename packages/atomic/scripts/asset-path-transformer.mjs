@@ -1,10 +1,10 @@
 import {
-  isPropertyAccessExpression,
   isIdentifier,
   isMetaProperty,
+  isPropertyAccessExpression,
+  SyntaxKind,
   visitEachChild,
   visitNode,
-  SyntaxKind,
 } from 'typescript';
 
 /**

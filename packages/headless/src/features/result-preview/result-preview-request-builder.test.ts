@@ -1,10 +1,10 @@
 import {getSearchApiBaseUrl} from '../../api/platform-client.js';
-import {HtmlRequestOptions} from '../../api/search/html/html-request.js';
+import type {HtmlRequestOptions} from '../../api/search/html/html-request.js';
 import {getConfigurationInitialState} from '../configuration/configuration-state.js';
 import {getQueryInitialState} from '../query/query-state.js';
 import {
   buildResultPreviewRequest,
-  StateNeededByHtmlEndpoint,
+  type StateNeededByHtmlEndpoint,
 } from '../result-preview/result-preview-request-builder.js';
 import {getResultPreviewInitialState} from './result-preview-state.js';
 

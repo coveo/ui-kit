@@ -1,4 +1,4 @@
-import {FieldDescription} from '../../api/search/fields/fields-response.js';
+import type {FieldDescription} from '../../api/search/fields/fields-response.js';
 
 export interface FieldsState {
   /**

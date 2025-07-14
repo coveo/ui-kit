@@ -1,5 +1,5 @@
 import {NumberValue, Schema, StringValue} from '@coveo/bueno';
-import dayjs, {QUnitType} from 'dayjs';
+import dayjs, {type QUnitType} from 'dayjs';
 import quarterOfYear from 'dayjs/plugin/quarterOfYear.js';
 import {
   assertDateAboveAPIMinimum,
@@ -144,7 +144,7 @@ export function isRelativeDateFormat(date: string) {
   }
 
   const intAmount = parseInt(amount);
-  if (isNaN(intAmount) || intAmount <= 0) {
+  if (Number.isNaN(intAmount) || intAmount <= 0) {
     return false;
   }
 

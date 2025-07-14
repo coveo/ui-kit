@@ -1,19 +1,19 @@
-import {AsyncThunkAction, PayloadAction} from '@reduxjs/toolkit';
-import {AsyncThunkInsightOptions} from '../../api/service/insight/insight-api-client.js';
-import {InsightEngine} from '../../app/insight-engine/insight-engine.js';
+import type {AsyncThunkAction, PayloadAction} from '@reduxjs/toolkit';
+import type {AsyncThunkInsightOptions} from '../../api/service/insight/insight-api-client.js';
+import type {InsightEngine} from '../../app/insight-engine/insight-engine.js';
 import {searchReducer as search} from '../../features/search/search-slice.js';
-import {InsightAction} from '../analytics/analytics-utils.js';
+import type {InsightAction} from '../analytics/analytics-utils.js';
 import {
-  FetchQuerySuggestionsActionCreatorPayload,
-  FetchQuerySuggestionsThunkReturn,
-  RegisterQuerySuggestActionCreatorPayload,
+  type FetchQuerySuggestionsActionCreatorPayload,
+  type FetchQuerySuggestionsThunkReturn,
+  type RegisterQuerySuggestActionCreatorPayload,
   registerQuerySuggest,
 } from '../query-suggest/query-suggest-actions.js';
-import {ExecuteSearchThunkReturn} from '../search/legacy/search-actions.js';
+import type {ExecuteSearchThunkReturn} from '../search/legacy/search-actions.js';
 import {
-  StateNeededByExecuteSearch,
-  StateNeededByQuerySuggest,
   fetchQuerySuggestions,
+  type StateNeededByExecuteSearch,
+  type StateNeededByQuerySuggest,
 } from './insight-search-actions.js';
 import {
   executeSearch,

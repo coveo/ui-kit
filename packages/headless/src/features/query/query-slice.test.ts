@@ -5,7 +5,7 @@ import {selectQuerySuggestion} from '../query-suggest/query-suggest-actions.js';
 import {restoreSearchParameters} from '../search-parameters/search-parameter-actions.js';
 import {updateQuery} from './query-actions.js';
 import {queryReducer} from './query-slice.js';
-import {getQueryInitialState, QueryState} from './query-state.js';
+import {getQueryInitialState, type QueryState} from './query-state.js';
 
 describe('query slice', () => {
   let state: QueryState;

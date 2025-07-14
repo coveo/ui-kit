@@ -1,9 +1,9 @@
-import {SearchEngine} from '../../app/search-engine/search-engine.js';
-import {ControllerDefinitionWithoutProps} from '../../app/ssr-engine/types/common.js';
+import type {SearchEngine} from '../../app/search-engine/search-engine.js';
+import type {ControllerDefinitionWithoutProps} from '../../app/ssr-engine/types/common.js';
 import {
-  StaticFilter,
-  StaticFilterProps,
   buildStaticFilter,
+  type StaticFilter,
+  type StaticFilterProps,
 } from './headless-static-filter.js';
 
 export * from './headless-static-filter.js';

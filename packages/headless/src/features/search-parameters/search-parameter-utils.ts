@@ -3,7 +3,6 @@ import {isEmptyString} from '../../utils/utils.js';
 import type {DateRangeRequest} from '../facets/range-facets/date-facet-set/interfaces/request.js';
 import type {NumericRangeRequest} from '../facets/range-facets/numeric-facet-set/interfaces/request.js';
 import {
-  SearchParameterKey,
   buildDateRanges,
   buildNumericRanges,
   cast,
@@ -12,6 +11,7 @@ import {
   isRangeFacetObject,
   isValidBasicKey,
   keyHasObjectValue,
+  type SearchParameterKey,
 } from './search-parameter-serializer.js';
 
 export type SearchParamValue = string | string[] | undefined;

@@ -10,6 +10,10 @@ export default {
     await import('./atomic-commerce-interface/atomic-commerce-interface.js'),
   'atomic-commerce-layout': async () =>
     await import('./atomic-commerce-layout/atomic-commerce-layout.js'),
+  'atomic-commerce-load-more-products': async () =>
+    await import(
+      './atomic-commerce-load-more-products/atomic-commerce-load-more-products.js'
+    ),
   'atomic-commerce-no-products': async () =>
     await import(
       './atomic-commerce-no-products/atomic-commerce-no-products.js'
@@ -28,9 +32,17 @@ export default {
     await import(
       './atomic-commerce-query-summary/atomic-commerce-query-summary.js'
     ),
+  'atomic-commerce-recommendation-interface': async () =>
+    await import(
+      './atomic-commerce-recommendation-interface/atomic-commerce-recommendation-interface.js'
+    ),
   'atomic-commerce-recommendation-list': async () =>
     await import(
       './atomic-commerce-recommendation-list/atomic-commerce-recommendation-list.js'
+    ),
+  'atomic-commerce-refine-toggle': async () =>
+    await import(
+      './atomic-commerce-refine-toggle/atomic-commerce-refine-toggle.js'
     ),
   'atomic-commerce-search-box': async () =>
     await import('./atomic-commerce-search-box/atomic-commerce-search-box.js'),

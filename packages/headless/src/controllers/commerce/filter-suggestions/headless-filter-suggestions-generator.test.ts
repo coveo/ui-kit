@@ -1,22 +1,22 @@
-import {FacetSearchType} from '../../../api/commerce/facet-search/facet-search-request.js';
-import {FieldSuggestionsFacet} from '../../../api/commerce/search/query-suggest/query-suggest-response.js';
+import type {FacetSearchType} from '../../../api/commerce/facet-search/facet-search-request.js';
+import type {FieldSuggestionsFacet} from '../../../api/commerce/search/query-suggest/query-suggest-response.js';
 import {getFacetIdWithCommerceFieldSuggestionNamespace} from '../../../features/commerce/facets/facet-search-set/commerce-facet-search-actions.js';
 import {fieldSuggestionsOrderReducer as fieldSuggestionsOrder} from '../../../features/commerce/facets/field-suggestions-order/field-suggestions-order-slice.js';
-import {CommerceAppState} from '../../../state/commerce-app-state.js';
+import type {CommerceAppState} from '../../../state/commerce-app-state.js';
 import {buildMockCategoryFacetSearch} from '../../../test/mock-category-facet-search.js';
 import {buildMockCommerceFacetRequest} from '../../../test/mock-commerce-facet-request.js';
 import {buildMockCommerceState} from '../../../test/mock-commerce-state.js';
 import {
   buildMockCommerceEngine,
-  MockedCommerceEngine,
+  type MockedCommerceEngine,
 } from '../../../test/mock-engine-v2.js';
 import {buildMockFacetSearch} from '../../../test/mock-facet-search.js';
 import {buildCategoryFilterSuggestions} from './headless-category-filter-suggestions.js';
+import {buildFilterSuggestions} from './headless-filter-suggestions.js';
 import {
   buildFilterSuggestionsGenerator,
-  FilterSuggestionsGenerator,
+  type FilterSuggestionsGenerator,
 } from './headless-filter-suggestions-generator.js';
-import {buildFilterSuggestions} from './headless-filter-suggestions.js';
 
 describe('FilterSuggestionsGenerator', () => {
   let engine: MockedCommerceEngine;

@@ -3,12 +3,12 @@ import {productClick} from '../../../../features/commerce/product/product-action
 import {buildMockCommerceState} from '../../../../test/mock-commerce-state.js';
 import {
   buildMockCommerceEngine,
-  MockedCommerceEngine,
+  type MockedCommerceEngine,
 } from '../../../../test/mock-engine-v2.js';
 import {buildMockProduct} from '../../../../test/mock-product.js';
 import {
   buildCoreInteractiveProduct,
-  InteractiveProduct,
+  type InteractiveProduct,
 } from './headless-core-interactive-product.js';
 
 vi.mock('../../../../features/commerce/product/product-actions');

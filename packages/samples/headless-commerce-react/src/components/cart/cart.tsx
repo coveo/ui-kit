@@ -1,4 +1,4 @@
-import {CartItem, Cart as HeadlessCart} from '@coveo/headless/commerce';
+import type {CartItem, Cart as HeadlessCart} from '@coveo/headless/commerce';
 import {useEffect, useState} from 'react';
 import {saveCartItemsToLocaleStorage} from '../../utils/cart-utils.js';
 import {formatCurrency} from '../../utils/format-currency.js';
@@ -42,8 +42,8 @@ export default function Cart(props: ICartProps) {
   return (
     <div className="Cart">
       <ul>
-        {state.items.map((item, index) => (
-          <li key={index}>
+        {state.items.map((item) => (
+          <li key={item.productId}>
             <p>
               <span>Name: </span>
               <span>{item.name}</span>
@@ -60,9 +60,16 @@ export default function Cart(props: ICartProps) {
               <span>Total: </span>
               <span>{formatCurrency(item.price * item.quantity)}</span>
             </p>
-            <button onClick={() => adjustQuantity(item, 1)}>Add one</button>
-            <button onClick={() => adjustQuantity(item, -1)}>Remove one</button>
-            <button onClick={() => adjustQuantity(item, -item.quantity)}>
+            <button type="button" onClick={() => adjustQuantity(item, 1)}>
+              Add one
+            </button>
+            <button type="button" onClick={() => adjustQuantity(item, -1)}>
+              Remove one
+            </button>
+            <button
+              type="button"
+              onClick={() => adjustQuantity(item, -item.quantity)}
+            >
               Remove all
             </button>
           </li>
@@ -73,10 +80,10 @@ export default function Cart(props: ICartProps) {
         {formatCurrency(state.totalPrice)}
         <span></span>
       </p>
-      <button disabled={isCartEmpty()} onClick={purchase}>
+      <button type="button" disabled={isCartEmpty()} onClick={purchase}>
         Purchase
       </button>
-      <button disabled={isCartEmpty()} onClick={emptyCart}>
+      <button type="button" disabled={isCartEmpty()} onClick={emptyCart}>
         Empty cart
       </button>
       <hr />

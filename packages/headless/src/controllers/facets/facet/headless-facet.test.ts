@@ -2,28 +2,28 @@ import {configuration} from '../../../app/common-reducers.js';
 import {updateFacetOptions} from '../../../features/facet-options/facet-options-actions.js';
 import {specificFacetSearchSetReducer as facetSearchSet} from '../../../features/facets/facet-search-set/specific/specific-facet-search-set-slice.js';
 import {
-  registerFacet,
   deselectAllFacetValues,
-  updateFacetSortCriterion,
-  updateFacetNumberOfValues,
+  registerFacet,
   updateFacetIsFieldExpanded,
+  updateFacetNumberOfValues,
+  updateFacetSortCriterion,
 } from '../../../features/facets/facet-set/facet-set-actions.js';
 import {
   executeToggleFacetExclude,
   executeToggleFacetSelect,
 } from '../../../features/facets/facet-set/facet-set-controller-actions.js';
 import {facetSetReducer as facetSet} from '../../../features/facets/facet-set/facet-set-slice.js';
-import {FacetRequest} from '../../../features/facets/facet-set/interfaces/request.js';
-import {FacetValue} from '../../../features/facets/facet-set/interfaces/response.js';
+import type {FacetRequest} from '../../../features/facets/facet-set/interfaces/request.js';
+import type {FacetValue} from '../../../features/facets/facet-set/interfaces/response.js';
 import {
   executeSearch,
   fetchFacetValues,
 } from '../../../features/search/search-actions.js';
 import {searchReducer as search} from '../../../features/search/search-slice.js';
-import {SearchAppState} from '../../../state/search-app-state.js';
+import type {SearchAppState} from '../../../state/search-app-state.js';
 import {
-  MockedSearchEngine,
   buildMockSearchEngine,
+  type MockedSearchEngine,
 } from '../../../test/mock-engine-v2.js';
 import {buildMockFacetRequest} from '../../../test/mock-facet-request.js';
 import {buildMockFacetResponse} from '../../../test/mock-facet-response.js';
@@ -33,7 +33,7 @@ import {buildMockFacetValue} from '../../../test/mock-facet-value.js';
 import {createMockState} from '../../../test/mock-state.js';
 import * as FacetIdDeterminor from '../../core/facets/_common/facet-id-determinor.js';
 import * as FacetSearch from '../../core/facets/facet-search/specific/headless-facet-search.js';
-import {buildFacet, Facet, FacetOptions} from './headless-facet.js';
+import {buildFacet, type Facet, type FacetOptions} from './headless-facet.js';
 
 vi.mock('../../../features/facets/facet-set/facet-set-actions');
 vi.mock('../../../features/facet-options/facet-options-actions');

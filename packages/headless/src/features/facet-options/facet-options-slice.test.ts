@@ -7,7 +7,7 @@ import {executeSearch} from '../search/search-actions.js';
 import {updateFacetOptions} from './facet-options-actions.js';
 import {facetOptionsReducer} from './facet-options-slice.js';
 import {
-  FacetOptionsState,
+  type FacetOptionsState,
   getFacetOptionsInitialState,
 } from './facet-options-state.js';
 

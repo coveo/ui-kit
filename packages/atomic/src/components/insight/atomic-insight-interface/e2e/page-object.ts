@@ -1,5 +1,5 @@
+import type {Page} from '@playwright/test';
 import {BasePageObject} from '@/playwright-utils/base-page-object';
-import {Page} from '@playwright/test';
 
 export class InsightInterfacePageObject extends BasePageObject<'atomic-insight-interface'> {
   constructor(page: Page) {

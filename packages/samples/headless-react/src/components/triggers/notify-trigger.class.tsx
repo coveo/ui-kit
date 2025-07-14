@@ -1,10 +1,10 @@
 import {
   buildNotifyTrigger,
-  NotifyTrigger as HeadlessNotifyTrigger,
-  NotifyTriggerState,
-  Unsubscribe,
+  type NotifyTrigger as HeadlessNotifyTrigger,
+  type NotifyTriggerState,
+  type Unsubscribe,
 } from '@coveo/headless';
-import {Component, ContextType} from 'react';
+import {Component, type ContextType} from 'react';
 import {AppContext} from '../../context/engine';
 
 export class NotifyTrigger extends Component<{}, NotifyTriggerState> {
@@ -27,7 +27,7 @@ export class NotifyTrigger extends Component<{}, NotifyTriggerState> {
   private updateState() {
     this.setState(this.controller.state, () => {
       this.state.notifications.forEach((notification) => {
-        alert('Notification: ' + notification);
+        alert(`Notification: ${notification}`);
       });
     });
   }

@@ -1,14 +1,14 @@
-import {AsyncThunkAction, PayloadAction} from '@reduxjs/toolkit';
-import {AsyncThunkCaseAssistOptions} from '../../api/service/case-assist/case-assist-api-client.js';
-import {CaseAssistEngine} from '../../app/case-assist-engine/case-assist-engine.js';
+import type {AsyncThunkAction, PayloadAction} from '@reduxjs/toolkit';
+import type {AsyncThunkCaseAssistOptions} from '../../api/service/case-assist/case-assist-api-client.js';
+import type {CaseAssistEngine} from '../../app/case-assist-engine/case-assist-engine.js';
 import {caseFieldReducer as caseField} from '../../features/case-field/case-field-slice.js';
 import {
+  type FetchClassificationsThunkReturn,
   fetchCaseClassifications,
-  FetchClassificationsThunkReturn,
-  updateCaseField,
-  SetCaseFieldActionCreatorPayload,
-  StateNeededByFetchClassifications,
   registerCaseField,
+  type SetCaseFieldActionCreatorPayload,
+  type StateNeededByFetchClassifications,
+  updateCaseField,
 } from './case-field-actions.js';
 
 export type {SetCaseFieldActionCreatorPayload};

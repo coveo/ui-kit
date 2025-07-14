@@ -1,8 +1,8 @@
 import {createReducer} from '@reduxjs/toolkit';
 import {
-  registerRecentResults,
   clearRecentResults,
   pushRecentResult,
+  registerRecentResults,
 } from './recent-results-actions.js';
 import {getRecentResultsInitialState} from './recent-results-state.js';
 

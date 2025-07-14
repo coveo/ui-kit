@@ -1,3 +1,5 @@
+import type {Meta, StoryObj as Story} from '@storybook/web-components';
+import {within} from 'shadow-dom-testing-library';
 import {wrapInCommerceInterface} from '@/storybook-utils/commerce/commerce-interface-wrapper';
 import {wrapInCommerceProductList} from '@/storybook-utils/commerce/commerce-product-list-wrapper';
 import {wrapInCommerceRecommendationInterface} from '@/storybook-utils/commerce/commerce-recommendation-interface-wrapper';
@@ -5,9 +7,8 @@ import {wrapInCommerceRecommendationList} from '@/storybook-utils/commerce/comme
 import {wrapInCommerceSearchBoxInstantProducts} from '@/storybook-utils/commerce/commerce-searchbox-instant-products-wrapper';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {renderComponentWithoutCodeRoot} from '@/storybook-utils/common/render-component';
-import type {Meta, StoryObj as Story} from '@storybook/web-components';
-import {within} from 'shadow-dom-testing-library';
 import {parameters as searchBoxParameters} from '@/storybook-utils/common/search-box-suggestions-parameters';
+
 const TEMPLATE_EXAMPLE = `<template>
   <atomic-product-section-name>
     <atomic-product-link class="font-bold"></atomic-product-link>

@@ -1,16 +1,16 @@
-import {CoreEngine} from '../../app/engine.js';
+import type {CoreEngine} from '../../app/engine.js';
 import {
   addContext,
   removeContext,
   setContext,
 } from '../../features/dictionary-field-context/dictionary-field-context-actions.js';
 import {dictionaryFieldContextReducer as dictionaryFieldContext} from '../../features/dictionary-field-context/dictionary-field-context-slice.js';
-import {DictionaryFieldContextPayload} from '../../features/dictionary-field-context/dictionary-field-context-state.js';
-import {DictionaryFieldContextSection} from '../../state/state-sections.js';
+import type {DictionaryFieldContextPayload} from '../../features/dictionary-field-context/dictionary-field-context-state.js';
+import type {DictionaryFieldContextSection} from '../../state/state-sections.js';
 import {loadReducerError} from '../../utils/errors.js';
 import {
-  Controller,
   buildController,
+  type Controller,
 } from '../controller/headless-controller.js';
 
 export type {DictionaryFieldContextPayload};

@@ -1,11 +1,9 @@
-import {Result} from '../../api/search/search/result.js';
+import type {Result} from '../../api/search/search/result.js';
 import {
-  ClickAction,
-  CustomAction,
-  makeAnalyticsAction,
-} from '../analytics/analytics-utils.js';
-import {
+  type ClickAction,
+  type CustomAction,
   documentIdentifier,
+  makeAnalyticsAction,
   partialDocumentInformation,
   validateResultPayload,
 } from '../analytics/analytics-utils.js';

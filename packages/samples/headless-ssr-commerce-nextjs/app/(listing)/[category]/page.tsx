@@ -1,3 +1,6 @@
+import {buildParameterSerializer} from '@coveo/headless-react/ssr-commerce';
+import {headers} from 'next/headers';
+import {notFound} from 'next/navigation';
 import * as externalCartAPI from '@/actions/external-cart-api';
 import BreadcrumbManager from '@/components/breadcrumb-manager';
 import Cart from '@/components/cart';
@@ -23,9 +26,6 @@ import {
 } from '@/lib/commerce-engine';
 import {NextJsNavigatorContext} from '@/lib/navigatorContextProvider';
 import {defaultContext} from '@/utils/context';
-import {buildParameterSerializer} from '@coveo/headless-react/ssr-commerce';
-import {headers} from 'next/headers';
-import {notFound} from 'next/navigation';
 
 // This is a hardcoded list of categories that are available in my coveo merchandising hub.
 const categoryList = ['surf-accessories', 'paddleboards', 'toys'];

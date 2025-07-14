@@ -1,7 +1,7 @@
-import {ExternalCartItem} from '@/external-services/external-cart-service';
-import {useCart} from '@/lib/commerce-engine';
 import {useFetcher} from '@remix-run/react';
 import {useEffect} from 'react';
+import type {ExternalCartItem} from '@/external-services/external-cart-service';
+import {useCart} from '@/lib/commerce-engine';
 
 export default function AddToCartButton({
   productId,
@@ -33,14 +33,14 @@ export default function AddToCartButton({
       productId,
       quantity,
     });
-  }, [fetcher.data]);
+  }, [fetcher.data, methods]);
 
   return (
     <fetcher.Form method="post" action="/cart/add">
       <input type="hidden" name="productName" value={name} />
       <input type="hidden" name="pricePerUnit" value={price} />
       <input type="hidden" name="uniqueId" value={productId} />
-      <button disabled={!methods || fetcher.state !== 'idle'}>
+      <button type="button" className="idle">
         Add one to cart
       </button>
     </fetcher.Form>

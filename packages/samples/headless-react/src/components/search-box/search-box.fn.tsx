@@ -1,5 +1,5 @@
-import {SearchBox as HeadlessSearchBox} from '@coveo/headless';
-import {useEffect, useState, FunctionComponent} from 'react';
+import type {SearchBox as HeadlessSearchBox} from '@coveo/headless';
+import {type FunctionComponent, useEffect, useState} from 'react';
 
 interface SearchBoxProps {
   controller: HeadlessSearchBox;
@@ -24,7 +24,15 @@ export const SearchBox: FunctionComponent<SearchBoxProps> = (props) => {
         {state.suggestions.map((suggestion) => {
           const value = suggestion.rawValue;
           return (
-            <li key={value} onClick={() => controller.selectSuggestion(value)}>
+            <li
+              key={value}
+              onClick={() => controller.selectSuggestion(value)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                  controller.selectSuggestion(value);
+                }
+              }}
+            >
               {value}
             </li>
           );

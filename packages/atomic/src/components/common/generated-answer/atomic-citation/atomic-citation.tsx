@@ -7,6 +7,7 @@ import {
 import {Component, h, State, Prop, Element, Watch} from '@stencil/core';
 import {LinkWithItemAnalytics} from '../../item-link/item-link';
 import {Heading} from '../../stencil-heading';
+import {extractTextToHighlight} from './text-fragment-utils';
 
 /**
  * @internal
@@ -96,6 +97,22 @@ export class AtomicCitation {
     );
   }
 
+  private generateTextFragmentUrl(
+    uri: string,
+    text?: string,
+    filetype?: string
+  ) {
+    if (filetype !== 'html' || !text) {
+      return uri;
+    }
+    const highlight = extractTextToHighlight(text);
+    const encodedTextFragment = encodeURIComponent(highlight).replace(
+      /-/g,
+      '%2D'
+    );
+    return `${uri}#:~:text=${encodedTextFragment}`;
+  }
+
   private openPopover = () => {
     this.isOpen = true;
   };
@@ -138,7 +155,11 @@ export class AtomicCitation {
     return (
       <div class="relative">
         <LinkWithItemAnalytics
-          href={this.citation.clickUri ?? this.citation.uri}
+          href={this.generateTextFragmentUrl(
+            this.citation.clickUri ?? this.citation.uri,
+            this.citation.text,
+            this.citation.fields?.filetype
+          )}
           ref={(el) => (this.citationRef = el!)}
           part="citation"
           target="_blank"

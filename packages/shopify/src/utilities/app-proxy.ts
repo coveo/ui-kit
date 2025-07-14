@@ -1,4 +1,4 @@
-import {AppProxyOptions, CoveoShopifyOptions} from '../types';
+import type {AppProxyOptions, CoveoShopifyOptions} from '../types';
 import {memoize} from './memoize';
 
 const memoizedFetch = memoize(

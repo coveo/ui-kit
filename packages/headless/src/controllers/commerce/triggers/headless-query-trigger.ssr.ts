@@ -1,5 +1,5 @@
-import {SearchOnlyControllerDefinitionWithoutProps} from '../../../app/commerce-ssr-engine/types/common.js';
-import {QueryTrigger} from '../../core/triggers/headless-core-query-trigger.js';
+import type {SearchOnlyControllerDefinitionWithoutProps} from '../../../app/commerce-ssr-engine/types/common.js';
+import type {QueryTrigger} from '../../core/triggers/headless-core-query-trigger.js';
 import {buildQueryTrigger} from './headless-query-trigger.js';
 
 export type {QueryTriggerState} from '../../core/triggers/headless-core-query-trigger.js';

@@ -1,9 +1,9 @@
 import {getQueryInitialState} from '../../features/query/query-state.js';
 import {getSearchInitialState} from '../../features/search/search-state.js';
-import {InstantResultSection} from '../../state/state-sections.js';
+import type {InstantResultSection} from '../../state/state-sections.js';
 import {
   SearchAnalyticsProvider,
-  StateNeededBySearchAnalyticsProvider,
+  type StateNeededBySearchAnalyticsProvider,
 } from './search-analytics.js';
 
 export type StateNeededByInstantResultsAnalyticsProvider =

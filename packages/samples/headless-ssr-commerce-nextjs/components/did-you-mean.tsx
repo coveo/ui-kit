@@ -1,6 +1,6 @@
-import {
-  DidYouMeanState,
+import type {
   DidYouMean as DidYouMeanController,
+  DidYouMeanState,
 } from '@coveo/headless/ssr-commerce';
 import {useEffect, useState} from 'react';
 
@@ -40,7 +40,15 @@ export default function DidYouMean({staticState, controller}: DidYouMeanProps) {
     <div>
       <p>
         Search for
-        <span onClick={() => controller?.applyCorrection()}>
+        {/** biome-ignore lint/a11y/noStaticElementInteractions: <> */}
+        <span
+          onClick={() => controller?.applyCorrection()}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter') {
+              controller?.applyCorrection();
+            }
+          }}
+        >
           <b>{state.queryCorrection.correctedQuery}</b>
         </span>
         instead?

@@ -1,5 +1,5 @@
 import {Schema} from '@coveo/bueno';
-import {SearchEngine} from '../../app/search-engine/search-engine.js';
+import type {SearchEngine} from '../../app/search-engine/search-engine.js';
 import {executeSearch} from '../../features/search/search-actions.js';
 import {
   deselectAllStaticFilterValues,
@@ -15,20 +15,20 @@ import {
   staticFilterValuesSchema,
 } from '../../features/static-filter-set/static-filter-set-schema.js';
 import {staticFilterSetReducer as staticFilterSet} from '../../features/static-filter-set/static-filter-set-slice.js';
-import {
+import type {
   StaticFilterValue,
   StaticFilterValueState,
 } from '../../features/static-filter-set/static-filter-set-state.js';
-import {StaticFilterSection} from '../../state/state-sections.js';
+import type {StaticFilterSection} from '../../state/state-sections.js';
 import {loadReducerError} from '../../utils/errors.js';
 import {validateOptions} from '../../utils/validate-payload.js';
 import {
   buildController,
-  Controller,
+  type Controller,
 } from '../controller/headless-controller.js';
 import {
   buildStaticFilterValue,
-  StaticFilterValueOptions,
+  type StaticFilterValueOptions,
 } from './static-filter-value.js';
 
 export type {

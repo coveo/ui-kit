@@ -1,6 +1,6 @@
 'use client';
 
-import {
+import type {
   BaseFacetSearchResult,
   RegularFacet as HeadlessRegularFacet,
   RegularFacetState,
@@ -122,6 +122,11 @@ export default function RegularFacet(props: IRegularFacetProps) {
             className="FacetSearchResult"
             key={value.rawValue}
             onClick={() => onClickFacetSearchResult(value)}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') {
+                onClickFacetSearchResult(value);
+              }
+            }}
             style={{width: 'fit-content'}}
           >
             <input
@@ -134,6 +139,7 @@ export default function RegularFacet(props: IRegularFacetProps) {
             <label className="FacetSearchResultLabel" htmlFor={value.rawValue}>
               <span
                 className="FacetSearchResultName"
+                // biome-ignore lint/security/noDangerouslySetInnerHtml: <>
                 dangerouslySetInnerHTML={{
                   __html: highlightFacetSearchResult(value.displayValue),
                 }}
@@ -187,6 +193,7 @@ export default function RegularFacet(props: IRegularFacetProps) {
           ))}
         </ul>
         <button
+          type="button"
           aria-label="Show more facet values"
           className="FacetShowMore"
           disabled={!controller || state.isLoading || !state.canShowMoreValues}
@@ -195,6 +202,7 @@ export default function RegularFacet(props: IRegularFacetProps) {
           +
         </button>
         <button
+          type="button"
           aria-label="Show less facet values"
           className="FacetShowLess"
           disabled={!controller || state.isLoading || !state.canShowLessValues}

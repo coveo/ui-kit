@@ -1,5 +1,5 @@
-import {FacetValueState} from '../../../../facets/facet-api/value.js';
-import {
+import type {FacetValueState} from '../../../../facets/facet-api/value.js';
+import type {
   CategoryFacetDelimitingCharacter,
   FacetType,
   NumericFacetExtraProperties,

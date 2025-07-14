@@ -1,29 +1,28 @@
-/* eslint-disable canonical/no-barrel-import */
-/* eslint-disable @typescript-eslint/no-explicit-any */
+/** biome-ignore-all lint/suspicious/noExplicitAny: Just tests */
 import {buildMockNavigatorContextProvider} from '../../../test/mock-navigator-context-provider.js';
-import {EventSourceMessage} from '../../../utils/fetch-event-source/parse.js';
+import type {EventSourceMessage} from '../../../utils/fetch-event-source/parse.js';
 import {
   constructAnswerQueryParams,
-  GeneratedAnswerStream,
+  type GeneratedAnswerStream,
   updateCacheWithEvent,
 } from '../stream-answer-api.js';
 import {
   expectedStreamAnswerAPIParam,
   expectedStreamAnswerAPIParamWithATabWithAnExpression,
   expectedStreamAnswerAPIParamWithoutAnyTab,
-  expectedStreamAnswerAPIParamWithStaticFiltersAndTabExpression,
-  expectedStreamAnswerAPIParamWithStaticFiltersSelected,
-  expectedStreamAnswerAPIParamWithStaticFiltersAndTabExpressionWithoutAdvancedCQ,
   expectedStreamAnswerAPIParamWithoutSearchAction,
+  expectedStreamAnswerAPIParamWithStaticFiltersAndTabExpression,
+  expectedStreamAnswerAPIParamWithStaticFiltersAndTabExpressionWithoutAdvancedCQ,
+  expectedStreamAnswerAPIParamWithStaticFiltersSelected,
   streamAnswerAPIStateMock,
   streamAnswerAPIStateMockWithATabWithAnExpression,
+  streamAnswerAPIStateMockWithNonValidFilters,
   streamAnswerAPIStateMockWithoutAnyFilters,
   streamAnswerAPIStateMockWithoutAnyTab,
-  streamAnswerAPIStateMockWithNonValidFilters,
-  streamAnswerAPIStateMockWithStaticFiltersAndTabExpression,
-  streamAnswerAPIStateMockWithStaticFiltersSelected,
-  streamAnswerAPIStateMockWithStaticFiltersAndTabExpressionWithEmptyCQ,
   streamAnswerAPIStateMockWithoutSearchAction,
+  streamAnswerAPIStateMockWithStaticFiltersAndTabExpression,
+  streamAnswerAPIStateMockWithStaticFiltersAndTabExpressionWithEmptyCQ,
+  streamAnswerAPIStateMockWithStaticFiltersSelected,
 } from './stream-answer-api-state-mock.js';
 
 describe('#streamAnswerApi', () => {

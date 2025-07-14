@@ -1,5 +1,5 @@
-import {AutomaticFacetGenerator as HeadlessAutomaticFacetGenerator} from '@coveo/headless';
-import {FunctionComponent, useEffect, useState} from 'react';
+import type {AutomaticFacetGenerator as HeadlessAutomaticFacetGenerator} from '@coveo/headless';
+import {type FunctionComponent, useEffect, useState} from 'react';
 import {AutomaticFacet as AutomaticFacetFn} from '../automatic-facet/automatic-facet.fn';
 
 interface AutomaticFacetGeneratorProps {

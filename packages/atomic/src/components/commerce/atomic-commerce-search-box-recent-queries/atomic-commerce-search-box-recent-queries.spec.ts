@@ -1,3 +1,8 @@
+import {buildRecentQueriesList} from '@coveo/headless/commerce';
+import {page} from '@vitest/browser/context';
+import {html} from 'lit';
+import {ifDefined} from 'lit/directives/if-defined.js';
+import {beforeEach, describe, expect, it, type MockInstance, vi} from 'vitest';
 import {buildCustomEvent} from '@/src/utils/event-utils';
 import {fixture} from '@/vitest-utils/testing-helpers/fixture';
 import {
@@ -5,12 +10,7 @@ import {
   renderInAtomicCommerceSearchBox,
 } from '@/vitest-utils/testing-helpers/fixtures/atomic/commerce/atomic-commerce-search-box-fixture';
 import {buildFakeRecentQueriesList} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/recent-queries-list-controller';
-import {buildRecentQueriesList} from '@coveo/headless/commerce';
-import {page} from '@vitest/browser/context';
-import {html} from 'lit';
-import {ifDefined} from 'lit/directives/if-defined.js';
-import {describe, vi, expect, it, MockInstance, beforeEach} from 'vitest';
-import {
+import type {
   SearchBoxSuggestionElement,
   SearchBoxSuggestions,
 } from '../../common/suggestions/suggestions-common';
@@ -283,109 +283,105 @@ describe('AtomicCommerceSearchBoxRecentQueries', () => {
           ).toHaveBeenCalled();
         });
 
-        describe('when rendering the content', () => {
-          describe('when rendering the query clear item', () => {
-            const setupContent = () => {
-              return items[0].content as HTMLElement;
-            };
+        describe('when rendering the query clear item', () => {
+          const setupContent = () => {
+            return items[0].content as HTMLElement;
+          };
 
-            it('should have the correct part on the container', () => {
-              const content = setupContent();
-              expect(content).toHaveAttribute(
-                'part',
-                'recent-query-title-content'
-              );
-            });
-
-            it('should have the correct part on the recent searches span ', () => {
-              const content = setupContent();
-              const recentSearchesSpan = content.querySelector('span');
-              expect(recentSearchesSpan).toHaveAttribute(
-                'part',
-                'recent-query-title'
-              );
-            });
-
-            it('should have the correct text on the recent searches span', () => {
-              const content = setupContent();
-              const recentSearchesSpan = content.querySelector('span');
-              expect(recentSearchesSpan).toHaveTextContent('Recent searches');
-            });
-
-            it('should have the correct part on the recent query clear span', () => {
-              const content = setupContent();
-              const recentQueryClearSpan = content.querySelector(
-                'span[part="recent-query-clear"]'
-              );
-              expect(recentQueryClearSpan).toHaveAttribute(
-                'part',
-                'recent-query-clear'
-              );
-            });
-
-            it('should have the correct text on the recent query clear span', () => {
-              const content = setupContent();
-              const recentQueryClearSpan = content.querySelector(
-                'span[part="recent-query-clear"]'
-              );
-              expect(recentQueryClearSpan).toHaveTextContent('Clear');
-            });
+          it('should have the correct part on the container', () => {
+            const content = setupContent();
+            expect(content).toHaveAttribute(
+              'part',
+              'recent-query-title-content'
+            );
           });
 
-          describe('when rendering the recent query item', () => {
-            const setupContent = async (bindings: {} = {}) => {
-              ({element} = await renderElements(bindings));
-              object = element.initialize();
-              items = object.renderItems();
-              return items[1].content as HTMLElement;
-            };
+          it('should have the correct part on the recent searches span ', () => {
+            const content = setupContent();
+            const recentSearchesSpan = content.querySelector('span');
+            expect(recentSearchesSpan).toHaveAttribute(
+              'part',
+              'recent-query-title'
+            );
+          });
 
-            it('should have the correct part on the container', async () => {
-              const content = await setupContent();
-              expect(content).toHaveAttribute('part', 'recent-query-content');
+          it('should have the correct text on the recent searches span', () => {
+            const content = setupContent();
+            const recentSearchesSpan = content.querySelector('span');
+            expect(recentSearchesSpan).toHaveTextContent('Recent searches');
+          });
+
+          it('should have the correct part on the recent query clear span', () => {
+            const content = setupContent();
+            const recentQueryClearSpan = content.querySelector(
+              'span[part="recent-query-clear"]'
+            );
+            expect(recentQueryClearSpan).toHaveAttribute(
+              'part',
+              'recent-query-clear'
+            );
+          });
+
+          it('should have the correct text on the recent query clear span', () => {
+            const content = setupContent();
+            const recentQueryClearSpan = content.querySelector(
+              'span[part="recent-query-clear"]'
+            );
+            expect(recentQueryClearSpan).toHaveTextContent('Clear');
+          });
+        });
+
+        describe('when rendering the recent query item', () => {
+          const setupContent = async (bindings: {} = {}) => {
+            ({element} = await renderElements(bindings));
+            object = element.initialize();
+            items = object.renderItems();
+            return items[1].content as HTMLElement;
+          };
+
+          it('should have the correct part on the container', async () => {
+            const content = await setupContent();
+            expect(content).toHaveAttribute('part', 'recent-query-content');
+          });
+
+          it('should have the correct part on the icon', async () => {
+            const content = await setupContent();
+            const icon = content.querySelector('atomic-icon');
+            expect(icon).toHaveAttribute('part', 'recent-query-icon');
+          });
+
+          it('should have the correct part on the span when there is a query', async () => {
+            const content = await setupContent({
+              searchBoxController: {
+                state: {
+                  value: 'query',
+                },
+                selectSuggestion: vi.fn(),
+              },
             });
+            const span = content.querySelector('span');
+            expect(span).toHaveAttribute('part', 'recent-query-text');
+          });
 
-            it('should have the correct part on the icon', async () => {
-              const content = await setupContent();
-              const icon = content.querySelector('atomic-icon');
-              expect(icon).toHaveAttribute('part', 'recent-query-icon');
+          it('should contain the highlighted value when there is a query', async () => {
+            const content = await setupContent({
+              searchBoxController: {
+                state: {
+                  value: 'query',
+                },
+                selectSuggestion: vi.fn(),
+              },
             });
+            const highlightedValue = content.querySelector(
+              'span[part="recent-query-text-highlight"]'
+            );
+            expect(highlightedValue).toHaveTextContent('1');
+          });
 
-            describe('when there is a query', () => {
-              it('should have the correct part on the span', async () => {
-                const content = await setupContent({
-                  searchBoxController: {
-                    state: {
-                      value: 'query',
-                    },
-                    selectSuggestion: vi.fn(),
-                  },
-                });
-                const span = content.querySelector('span');
-                expect(span).toHaveAttribute('part', 'recent-query-text');
-              });
-
-              it('should contain the highlighted value', async () => {
-                const content = await setupContent({
-                  searchBoxController: {
-                    state: {
-                      value: 'query',
-                    },
-                    selectSuggestion: vi.fn(),
-                  },
-                });
-                const highlightedValue = content.querySelector(
-                  'span[part="recent-query-text-highlight"]'
-                );
-                expect(highlightedValue).toHaveTextContent('1');
-              });
-            });
-
-            it('should have the correct part on the span when there is no query', async () => {
-              const content = await setupContent();
-              const span = content.querySelector('span');
-              expect(span).toHaveAttribute('part', 'recent-query-text');
-            });
+          it('should have the correct part on the span when there is no query', async () => {
+            const content = await setupContent();
+            const span = content.querySelector('span');
+            expect(span).toHaveAttribute('part', 'recent-query-text');
           });
         });
       });

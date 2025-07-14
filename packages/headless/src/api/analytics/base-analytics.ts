@@ -1,5 +1,5 @@
 import {getSearchHubInitialState} from '../../features/search-hub/search-hub-state.js';
-import {
+import type {
   ConfigurationSection,
   ContextSection,
   PipelineSection,
@@ -42,7 +42,7 @@ export abstract class BaseAnalyticsProvider<
       formattedObject[formattedKey] = value;
     }
     if (configuration.analytics.analyticsMode === 'legacy') {
-      formattedObject['coveoHeadlessVersion'] = VERSION;
+      formattedObject.coveoHeadlessVersion = VERSION;
     }
     return formattedObject;
   }

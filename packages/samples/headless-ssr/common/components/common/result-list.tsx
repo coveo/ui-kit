@@ -1,4 +1,4 @@
-import {Result} from '@coveo/headless/ssr';
+import type {Result} from '@coveo/headless/ssr';
 
 interface ResultListCommonProps {
   results: Result[];

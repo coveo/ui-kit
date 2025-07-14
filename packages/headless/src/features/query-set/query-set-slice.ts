@@ -5,24 +5,27 @@ import {
   updateQuerySetQuery as updateCommerceQuerySetQuery,
 } from '../commerce/query-set/query-set-actions.js';
 import {selectQuerySuggestion as selectCommerceQuerySuggestion} from '../commerce/query-suggest/query-suggest-actions.js';
+import {executeSearch as commerceExecuteSearch} from '../commerce/search/search-actions.js';
 import {
-  CommerceSearchParameters,
+  type CommerceSearchParameters,
   restoreSearchParameters as commerceRestoreSearchParameters,
 } from '../commerce/search-parameters/search-parameters-actions.js';
-import {executeSearch as commerceExecuteSearch} from '../commerce/search/search-actions.js';
 import {change} from '../history/history-actions.js';
 import {selectQuerySuggestion} from '../query-suggest/query-suggest-actions.js';
-import {
-  SearchParameters,
-  restoreSearchParameters,
-} from '../search-parameters/search-parameter-actions.js';
 import {executeSearch} from '../search/search-actions.js';
 import {
-  RegisterQuerySetQueryActionCreatorPayload,
+  restoreSearchParameters,
+  type SearchParameters,
+} from '../search-parameters/search-parameter-actions.js';
+import {
+  type RegisterQuerySetQueryActionCreatorPayload,
   registerQuerySetQuery,
   updateQuerySetQuery,
 } from './query-set-actions.js';
-import {getQuerySetInitialState, QuerySetState} from './query-set-state.js';
+import {
+  getQuerySetInitialState,
+  type QuerySetState,
+} from './query-set-state.js';
 
 export const querySetReducer = createReducer(
   getQuerySetInitialState(),
@@ -84,7 +87,9 @@ function handleRestoreSearchParameters(
 }
 
 function updateAllQuerySetQuery(state: QuerySetState, query: string) {
-  Object.keys(state).forEach((id) => (state[id] = query));
+  Object.keys(state).forEach((id) => {
+    state[id] = query;
+  });
 }
 
 const updateQuery = (state: QuerySetState, id: string, query: string) => {

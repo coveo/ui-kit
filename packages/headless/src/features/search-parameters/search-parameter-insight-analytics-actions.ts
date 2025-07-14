@@ -1,6 +1,6 @@
-import {DateRangeRequest} from '../../controllers/insight/facets/range-facet/date-facet/headless-insight-date-facet.js';
-import {NumericRangeRequest} from '../../controllers/insight/facets/range-facet/numeric-facet/headless-insight-numeric-facet.js';
-import {InsightAction} from '../analytics/analytics-utils.js';
+import type {DateRangeRequest} from '../../controllers/insight/facets/range-facet/date-facet/headless-insight-date-facet.js';
+import type {NumericRangeRequest} from '../../controllers/insight/facets/range-facet/numeric-facet/headless-insight-numeric-facet.js';
+import type {InsightAction} from '../analytics/analytics-utils.js';
 import {logFacetUnexclude} from '../facets/facet-set/facet-set-analytics-actions.js';
 import {
   logFacetClearAll,
@@ -10,7 +10,7 @@ import {
 import {logInsightInterfaceChange} from '../insight-search/insight-search-analytics-actions.js';
 import {logSearchboxSubmit} from '../query/query-insight-analytics-actions.js';
 import {logResultsSort} from '../sort-criteria/sort-criteria-insight-analytics-actions.js';
-import {SearchParameters} from './search-parameter-actions.js';
+import type {SearchParameters} from './search-parameter-actions.js';
 
 export function logParametersChange(
   previousParameters: SearchParameters,
@@ -76,12 +76,11 @@ function areFacetParamsEqual(
 
 function parseRangeFacetParams(facetsParams: RangeFacetParameters) {
   const formattedParams: FacetParameters = {};
-  Object.keys(facetsParams).forEach(
-    (key) =>
-      (formattedParams[key] = facetsParams[key].map(
-        (facetValue) => `${facetValue.start}..${facetValue.end}`
-      ))
-  );
+  Object.keys(facetsParams).forEach((key) => {
+    formattedParams[key] = facetsParams[key].map(
+      (facetValue) => `${facetValue.start}..${facetValue.end}`
+    );
+  });
   return formattedParams;
 }
 

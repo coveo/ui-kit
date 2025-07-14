@@ -1,3 +1,4 @@
+import {headers} from 'next/headers';
 import * as externalCartAPI from '@/actions/external-cart-api';
 import ContextDropdown from '@/components/context-dropdown';
 import ProductViewer from '@/components/product-viewer';
@@ -13,7 +14,6 @@ import {
 } from '@/lib/commerce-engine';
 import {NextJsNavigatorContext} from '@/lib/navigatorContextProvider';
 import {defaultContext} from '@/utils/context';
-import {headers} from 'next/headers';
 
 export default async function ProductDescriptionPage({
   params,

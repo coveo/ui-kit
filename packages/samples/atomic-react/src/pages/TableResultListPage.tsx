@@ -14,7 +14,7 @@ import {
   AtomicResultText,
   AtomicTableElement,
 } from '@coveo/atomic-react';
-import {FunctionComponent} from 'react';
+import type {FunctionComponent} from 'react';
 import {AtomicPageWrapper} from '../components/AtomicPageWrapper';
 
 export const TableResultListPage: FunctionComponent = () => {

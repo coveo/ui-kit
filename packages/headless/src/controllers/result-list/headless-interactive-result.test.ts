@@ -1,16 +1,16 @@
-import {Result} from '../../api/search/search/result.js';
+import type {Result} from '../../api/search/search/result.js';
 import {configuration} from '../../app/common-reducers.js';
 import {pushRecentResult} from '../../features/recent-results/recent-results-actions.js';
 import {logDocumentOpen} from '../../features/result/result-analytics-actions.js';
 import {
   buildMockSearchEngine,
-  MockedSearchEngine,
+  type MockedSearchEngine,
 } from '../../test/mock-engine-v2.js';
 import {buildMockResult} from '../../test/mock-result.js';
 import {createMockState} from '../../test/mock-state.js';
 import {
   buildInteractiveResult,
-  InteractiveResult,
+  type InteractiveResult,
 } from './headless-interactive-result.js';
 
 vi.mock('../../features/recent-results/recent-results-actions');
@@ -33,7 +33,8 @@ describe('InteractiveResult', () => {
   };
 
   function initializeInteractiveResult(delay?: number) {
-    const result = (mockResult = buildMockResult(resultStringParams));
+    mockResult = buildMockResult(resultStringParams);
+    const result = mockResult;
     interactiveResult = buildInteractiveResult(engine, {
       options: {result, selectionDelay: delay},
     });

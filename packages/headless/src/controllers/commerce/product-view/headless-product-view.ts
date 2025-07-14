@@ -1,5 +1,5 @@
-import {Product} from '@coveo/relay-event-types';
-import {CommerceEngine} from '../../../app/commerce-engine/commerce-engine.js';
+import type {Product} from '@coveo/relay-event-types';
+import type {CommerceEngine} from '../../../app/commerce-engine/commerce-engine.js';
 import {productView} from '../../../features/commerce/product/product-actions.js';
 
 /**

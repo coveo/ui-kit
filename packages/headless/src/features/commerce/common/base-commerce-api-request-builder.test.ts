@@ -1,9 +1,9 @@
 import {getAnalyticsSource} from '../../../api/analytics/analytics-selectors.js';
 import {getCommerceApiBaseUrl} from '../../../api/commerce/commerce-api-client.js';
-import {BaseCommerceAPIRequest} from '../../../api/commerce/common/request.js';
+import type {BaseCommerceAPIRequest} from '../../../api/commerce/common/request.js';
 import {
   defaultNodeJSNavigatorContextProvider,
-  NavigatorContext,
+  type NavigatorContext,
 } from '../../../app/navigator-context-provider.js';
 import {getConfigurationInitialState} from '../configuration/configuration-state.js';
 import {
@@ -13,7 +13,7 @@ import {
 import {getContextInitialState} from '../context/context-state.js';
 import {
   buildBaseCommerceAPIRequest,
-  StateNeededForBaseCommerceAPIRequest,
+  type StateNeededForBaseCommerceAPIRequest,
 } from './base-commerce-api-request-builder.js';
 
 vi.mock('../../../api/analytics/analytics-selectors.js');

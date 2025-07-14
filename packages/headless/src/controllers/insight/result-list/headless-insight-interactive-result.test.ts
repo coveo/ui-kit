@@ -1,16 +1,16 @@
-import {Result} from '../../../api/search/search/result.js';
+import type {Result} from '../../../api/search/search/result.js';
 import {configuration} from '../../../app/common-reducers.js';
 import {pushRecentResult} from '../../../features/recent-results/recent-results-actions.js';
 import {logDocumentOpen} from '../../../features/result/result-insight-analytics-actions.js';
 import {
   buildMockInsightEngine,
-  MockedInsightEngine,
+  type MockedInsightEngine,
 } from '../../../test/mock-engine-v2.js';
 import {buildMockInsightState} from '../../../test/mock-insight-state.js';
 import {buildMockResult} from '../../../test/mock-result.js';
 import {
   buildInteractiveResult,
-  InteractiveResult,
+  type InteractiveResult,
 } from './headless-insight-interactive-result.js';
 
 vi.mock('../../../features/result/result-insight-analytics-actions');
@@ -33,7 +33,8 @@ describe('InsightInteractiveResult', () => {
   };
 
   function initializeInteractiveResult(delay?: number) {
-    const result = (mockResult = buildMockResult(resultStringParams));
+    mockResult = buildMockResult(resultStringParams);
+    const result = mockResult;
     interactiveResult = buildInteractiveResult(engine, {
       options: {result, selectionDelay: delay},
     });

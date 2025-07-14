@@ -1,34 +1,34 @@
-import {SearchEngine} from '../../app/search-engine/search-engine.js';
+import type {SearchEngine} from '../../app/search-engine/search-engine.js';
 import {logDidYouMeanClick} from '../did-you-mean/did-you-mean-analytics-actions.js';
 import {
+  type LogCategoryFacetBreadcrumbActionCreatorPayload,
   logCategoryFacetBreadcrumb,
-  LogCategoryFacetBreadcrumbActionCreatorPayload,
 } from '../facets/category-facet-set/category-facet-set-analytics-actions.js';
 import {
+  type LogFacetBreadcrumbActionCreatorPayload,
+  type LogFacetDeselectActionCreatorPayload,
+  type LogFacetExcludeActionCreatorPayload,
+  type LogFacetSelectActionCreatorPayload,
+  type LogFacetUnexcludeActionCreatorPayload,
+  type LogFacetUpdateSortActionCreatorPayload,
   logFacetBreadcrumb,
   logFacetClearAll,
-  logFacetUnexclude,
-  logFacetExclude,
   logFacetDeselect,
+  logFacetExclude,
   logFacetSelect,
   logFacetShowLess,
   logFacetShowMore,
+  logFacetUnexclude,
   logFacetUpdateSort,
-  LogFacetBreadcrumbActionCreatorPayload,
-  LogFacetDeselectActionCreatorPayload,
-  LogFacetExcludeActionCreatorPayload,
-  LogFacetUnexcludeActionCreatorPayload,
-  LogFacetSelectActionCreatorPayload,
-  LogFacetUpdateSortActionCreatorPayload,
 } from '../facets/facet-set/facet-set-analytics-actions.js';
 import {logClearBreadcrumbs} from '../facets/generic/facet-generic-analytics-actions.js';
 import {
+  type LogDateFacetBreadcrumbActionCreatorPayload,
   logDateFacetBreadcrumb,
-  LogDateFacetBreadcrumbActionCreatorPayload,
 } from '../facets/range-facets/date-facet-set/date-facet-analytics-actions.js';
 import {
+  type LogNumericFacetBreadcrumbActionCreatorPayload,
   logNumericFacetBreadcrumb,
-  LogNumericFacetBreadcrumbActionCreatorPayload,
 } from '../facets/range-facets/numeric-facet-set/numeric-facet-analytics-actions.js';
 import {
   logNavigateBackward,
@@ -41,53 +41,53 @@ import {
   logPagePrevious,
   logPagerResize,
 } from '../pagination/pagination-analytics-actions.js';
-import {
-  logQuerySuggestionClick,
-  LogQuerySuggestionClickActionCreatorPayload,
-  OmniboxSuggestionMetadata,
-} from '../query-suggest/query-suggest-analytics-actions.js';
 import {logSearchboxSubmit} from '../query/query-analytics-actions.js';
 import {
+  type LogQuerySuggestionClickActionCreatorPayload,
+  logQuerySuggestionClick,
+  type OmniboxSuggestionMetadata,
+} from '../query-suggest/query-suggest-analytics-actions.js';
+import {
+  logCloseSmartSnippetFeedbackModal,
   logCollapseSmartSnippet,
-  logExpandSmartSnippet,
+  logCollapseSmartSnippetSuggestion,
   logDislikeSmartSnippet,
+  logExpandSmartSnippet,
+  logExpandSmartSnippetSuggestion,
   logLikeSmartSnippet,
   logOpenSmartSnippetFeedbackModal,
-  logCloseSmartSnippetFeedbackModal,
-  logSmartSnippetFeedback,
   logSmartSnippetDetailedFeedback,
-  logCollapseSmartSnippetSuggestion,
-  logExpandSmartSnippetSuggestion,
-  SmartSnippetFeedback,
+  logSmartSnippetFeedback,
+  type SmartSnippetFeedback,
 } from '../question-answering/question-answering-analytics-actions.js';
-import {
+import type {
   QuestionAnsweringInlineLinkActionCreatorPayload,
   QuestionAnsweringUniqueIdentifierActionCreatorPayload,
 } from '../question-answering/question-answering-document-id.js';
 import {logResultsSort} from '../sort-criteria/sort-criteria-analytics-actions.js';
 import {
-  logStaticFilterSelect,
-  logStaticFilterDeselect,
+  type LogStaticFilterClearAllActionCreatorPayload,
+  type LogStaticFilterToggleValueActionCreatorPayload,
   logStaticFilterClearAll,
-  LogStaticFilterToggleValueActionCreatorPayload,
-  LogStaticFilterClearAllActionCreatorPayload,
-  StaticFilterValueMetadata,
+  logStaticFilterDeselect,
+  logStaticFilterSelect,
+  type StaticFilterValueMetadata,
 } from '../static-filter-set/static-filter-set-actions.js';
 import {
+  type LogUndoTriggerQueryActionCreatorPayload,
   logNotifyTrigger,
   logTriggerExecute,
   logTriggerQuery,
   logTriggerRedirect,
   logUndoTriggerQuery,
-  LogUndoTriggerQueryActionCreatorPayload,
 } from '../triggers/trigger-analytics-actions.js';
 import {
   logInterfaceChange,
   logInterfaceLoad,
-  logSearchFromLink,
   logOmniboxFromLink,
+  logSearchFromLink,
 } from './analytics-actions.js';
-import {CustomAction, LegacySearchAction} from './analytics-utils.js';
+import type {CustomAction, LegacySearchAction} from './analytics-utils.js';
 
 export type {
   LogCategoryFacetBreadcrumbActionCreatorPayload,

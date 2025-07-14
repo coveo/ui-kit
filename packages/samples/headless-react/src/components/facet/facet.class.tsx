@@ -1,11 +1,11 @@
 import {
   buildFacet,
-  Facet as HeadlessFacet,
-  FacetOptions,
-  FacetState,
-  Unsubscribe,
+  type FacetOptions,
+  type FacetState,
+  type Facet as HeadlessFacet,
+  type Unsubscribe,
 } from '@coveo/headless';
-import {Component, ContextType} from 'react';
+import {Component, type ContextType} from 'react';
 import {AppContext} from '../../context/engine';
 import {FacetSearch} from './facet-search';
 

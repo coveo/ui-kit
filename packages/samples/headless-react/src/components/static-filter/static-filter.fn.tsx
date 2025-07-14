@@ -1,5 +1,5 @@
-import {StaticFilterOptions, buildStaticFilter} from '@coveo/headless';
-import {useEffect, useState, FunctionComponent, useContext} from 'react';
+import {buildStaticFilter, type StaticFilterOptions} from '@coveo/headless';
+import {type FunctionComponent, useContext, useEffect, useState} from 'react';
 import {AppContext} from '../../context/engine';
 
 export const StaticFilter: FunctionComponent<StaticFilterOptions> = (props) => {

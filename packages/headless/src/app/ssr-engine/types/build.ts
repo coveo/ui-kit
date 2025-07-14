@@ -1,5 +1,5 @@
-import {CoreEngine, CoreEngineNext} from '../../engine.js';
-import {
+import type {CoreEngine, CoreEngineNext} from '../../engine.js';
+import type {
   ControllersMap,
   ControllersPropsMap,
   EngineDefinitionBuildResult,
@@ -12,19 +12,14 @@ export interface BuildOptions<TEngineOptions> {
   extend?: OptionsExtender<TEngineOptions>;
 }
 
-export interface Build<
+export type Build<
   TEngine extends CoreEngine | CoreEngineNext,
   TEngineOptions,
   TControllersMap extends ControllersMap,
   TControllersProps extends ControllersPropsMap,
-> {
-  /**
-   * Initializes an engine and controllers from the definition.
-   */
-  (
-    ...params: OptionsTuple<
-      BuildOptions<TEngineOptions> &
-        EngineDefinitionControllersPropsOption<TControllersProps>
-    >
-  ): Promise<EngineDefinitionBuildResult<TEngine, TControllersMap>>;
-}
+> = (
+  ...params: OptionsTuple<
+    BuildOptions<TEngineOptions> &
+      EngineDefinitionControllersPropsOption<TControllersProps>
+  >
+) => Promise<EngineDefinitionBuildResult<TEngine, TControllersMap>>;

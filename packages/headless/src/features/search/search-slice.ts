@@ -1,4 +1,4 @@
-import {createReducer, PayloadAction} from '@reduxjs/toolkit';
+import {createReducer, type PayloadAction} from '@reduxjs/toolkit';
 import {
   executeSearch,
   fetchFacetValues,
@@ -9,7 +9,7 @@ import {updateSearchAction} from './search-actions.js';
 import {
   emptyQuestionAnswer,
   getSearchInitialState,
-  SearchState,
+  type SearchState,
 } from './search-state.js';
 
 type SearchAction = typeof executeSearch | typeof fetchMoreResults;

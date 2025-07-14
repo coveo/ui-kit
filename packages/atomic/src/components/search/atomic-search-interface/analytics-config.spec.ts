@@ -1,9 +1,9 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
+/** biome-ignore-all lint/suspicious/noExplicitAny: <> */
 import {
   getSampleSearchEngineConfiguration,
-  SearchEngineConfiguration,
+  type SearchEngineConfiguration,
 } from '@coveo/headless';
-import {vi, describe, beforeEach, afterEach, it, expect} from 'vitest';
+import {afterEach, beforeEach, describe, expect, it, vi} from 'vitest';
 import {getAnalyticsConfig} from './analytics-config';
 import {createSearchStore} from './store';
 
@@ -27,7 +27,7 @@ describe('analyticsConfig', () => {
     config.analytics = {
       ...config.analytics,
       analyticsClientMiddleware: (_: string, payload: any) => {
-        payload['foo'] = 'bar';
+        payload.foo = 'bar';
         return payload;
       },
     };

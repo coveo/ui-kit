@@ -18,8 +18,8 @@ export default function Cart() {
   return (
     <div>
       <ul id="cart">
-        {state.items.map((item, index) => (
-          <li key={index}>
+        {state.items.map((item) => (
+          <li key={item.productId}>
             <p>
               <span>Name: </span>
               <span>{item.name}</span>
@@ -44,13 +44,20 @@ export default function Cart() {
               </span>
               <span> {item.price * item.quantity}</span>
             </p>
-            <button onClick={() => adjustQuantity(methods!, item, 1)}>
+            <button
+              type="button"
+              onClick={() => adjustQuantity(methods!, item, 1)}
+            >
               Add one
             </button>
-            <button onClick={() => adjustQuantity(methods!, item, -1)}>
+            <button
+              type="button"
+              onClick={() => adjustQuantity(methods!, item, -1)}
+            >
               Remove one
             </button>
             <button
+              type="button"
               onClick={() => adjustQuantity(methods!, item, -item.quantity)}
             >
               Remove all
@@ -64,12 +71,17 @@ export default function Cart() {
         <span> {state.totalPrice}</span>
       </p>
       <button
+        type="button"
         disabled={isCartEmpty()}
         onClick={() => purchase(methods!, state.totalPrice)}
       >
         Purchase
       </button>
-      <button disabled={isCartEmpty()} onClick={() => emptyCart(methods!)}>
+      <button
+        type="button"
+        disabled={isCartEmpty()}
+        onClick={() => emptyCart(methods!)}
+      >
         Empty cart
       </button>
     </div>

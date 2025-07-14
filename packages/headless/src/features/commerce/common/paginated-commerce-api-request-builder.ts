@@ -1,9 +1,9 @@
-import {PaginatedCommerceAPIRequest} from '../../../api/commerce/common/request.js';
-import {NavigatorContext} from '../../../app/navigator-context-provider.js';
-import {CommercePaginationSection} from '../../../state/state-sections.js';
+import type {PaginatedCommerceAPIRequest} from '../../../api/commerce/common/request.js';
+import type {NavigatorContext} from '../../../app/navigator-context-provider.js';
+import type {CommercePaginationSection} from '../../../state/state-sections.js';
 import {
   buildBaseCommerceAPIRequest,
-  StateNeededForBaseCommerceAPIRequest,
+  type StateNeededForBaseCommerceAPIRequest,
 } from './base-commerce-api-request-builder.js';
 
 export type StateNeededForPaginatedCommerceAPIRequest =

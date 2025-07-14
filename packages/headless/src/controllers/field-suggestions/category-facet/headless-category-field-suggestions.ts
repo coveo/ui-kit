@@ -1,12 +1,14 @@
-import {CategoryFacetSearchResult} from '../../../api/search/facet-search/category-facet-search/category-facet-search-response.js';
+import type {CategoryFacetSearchResult} from '../../../api/search/facet-search/category-facet-search/category-facet-search-response.js';
 import {configuration} from '../../../app/common-reducers.js';
-import {CoreEngine} from '../../../app/engine.js';
-import {SearchEngine} from '../../../app/search-engine/search-engine.js';
-import {SearchThunkExtraArguments} from '../../../app/search-thunk-extra-arguments.js';
+import type {CoreEngine} from '../../../app/engine.js';
+import type {SearchEngine} from '../../../app/search-engine/search-engine.js';
+import type {SearchThunkExtraArguments} from '../../../app/search-thunk-extra-arguments.js';
 import {updateFacetOptions} from '../../../features/facet-options/facet-options-actions.js';
 import {registerCategoryFacet} from '../../../features/facets/category-facet-set/category-facet-set-actions.js';
-import {categoryFacetSetReducer as categoryFacetSet} from '../../../features/facets/category-facet-set/category-facet-set-slice.js';
-import {defaultCategoryFacetOptions} from '../../../features/facets/category-facet-set/category-facet-set-slice.js';
+import {
+  categoryFacetSetReducer as categoryFacetSet,
+  defaultCategoryFacetOptions,
+} from '../../../features/facets/category-facet-set/category-facet-set-slice.js';
 import {categoryFacetSearchSetReducer as categoryFacetSearchSet} from '../../../features/facets/facet-search-set/category/category-facet-search-set-slice.js';
 import {
   executeFacetSearch,
@@ -18,7 +20,7 @@ import {
 } from '../../../features/facets/facet-set/facet-set-analytics-actions.js';
 import {executeSearch} from '../../../features/search/search-actions.js';
 import {searchReducer as search} from '../../../features/search/search-slice.js';
-import {
+import type {
   CategoryFacetSearchSection,
   CategoryFacetSection,
   ConfigurationSection,
@@ -27,11 +29,11 @@ import {
 import {loadReducerError} from '../../../utils/errors.js';
 import {
   buildController,
-  Subscribable,
+  type Subscribable,
 } from '../../controller/headless-controller.js';
 import {determineFacetId} from '../../core/facets/_common/facet-id-determinor.js';
+import type {CategoryFacetOptions} from '../../facets/category-facet/headless-category-facet.js';
 import {buildCategoryFacetSearch} from '../../facets/category-facet/headless-category-facet-search.js';
-import {CategoryFacetOptions} from '../../facets/category-facet/headless-category-facet.js';
 
 export interface CategoryFieldSuggestionsValue {
   /**
@@ -202,7 +204,7 @@ export function buildCategoryFieldSuggestions(
   return {
     ...controller,
     ...facetSearch,
-    updateText: function (text: string) {
+    updateText: (text: string) => {
       facetSearch.updateText(text);
       facetSearch.search();
     },

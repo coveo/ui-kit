@@ -1,12 +1,14 @@
-import {Relay} from '@coveo/relay';
-import {AnalyticsClientSendEventHook} from 'coveo.analytics';
-import {Logger} from 'pino';
-import {GeneratedAnswerAPIClient} from '../api/generated-answer/generated-answer-client.js';
-import {PreprocessRequest} from '../api/preprocess-request.js';
-import {NoopPreprocessRequest} from '../api/preprocess-request.js';
+import type {Relay} from '@coveo/relay';
+import type {AnalyticsClientSendEventHook} from 'coveo.analytics';
+import type {Logger} from 'pino';
+import type {GeneratedAnswerAPIClient} from '../api/generated-answer/generated-answer-client.js';
+import {
+  NoopPreprocessRequest,
+  type PreprocessRequest,
+} from '../api/preprocess-request.js';
 import {validatePayloadAndThrow} from '../utils/validate-payload.js';
-import {EngineConfiguration} from './engine-configuration.js';
-import {NavigatorContext} from './navigator-context-provider.js';
+import type {EngineConfiguration} from './engine-configuration.js';
+import type {NavigatorContext} from './navigator-context-provider.js';
 
 export interface ClientThunkExtraArguments<T, K = GeneratedAnswerAPIClient>
   extends ThunkExtraArguments {
@@ -43,7 +45,7 @@ function getAnalyticsClientMiddleware(
   configuration: EngineConfiguration
 ): AnalyticsClientSendEventHook {
   const {analytics} = configuration;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: required for compatibility
   const NoopAnalyticsMiddleware = (_: string, p: any) => p;
   return analytics?.analyticsClientMiddleware || NoopAnalyticsMiddleware;
 }

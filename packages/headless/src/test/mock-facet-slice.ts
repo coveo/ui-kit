@@ -1,4 +1,4 @@
-import {FacetSlice} from '../features/facets/facet-set/facet-set-state.js';
+import type {FacetSlice} from '../features/facets/facet-set/facet-set-state.js';
 import {buildMockFacetRequest} from './mock-facet-request.js';
 
 export function buildMockFacetSlice(

@@ -1,5 +1,5 @@
-import {Config} from '@stencil/core';
 import {spawnSync} from 'node:child_process';
+import type {Config} from '@stencil/core';
 import html from 'rollup-plugin-html';
 import nodePolyfills from 'rollup-plugin-node-polyfills';
 
@@ -56,7 +56,7 @@ function coveoResolve() {
 
 function nodeResolve(
   source: string,
-  importer: string,
+  _importer: string,
   conditions: string[] = []
 ) {
   return spawnSync(

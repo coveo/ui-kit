@@ -1,4 +1,4 @@
-import {PrimitivesValues} from '@coveo/bueno';
+import type {PrimitivesValues} from '@coveo/bueno';
 import {createCustomEqual} from 'fast-equals';
 
 export function arrayEqual<T>(

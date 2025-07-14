@@ -8,16 +8,16 @@ import {
 import {resultPreviewReducer as resultPreview} from '../../../features/result-preview/result-preview-slice.js';
 import {
   buildMockSearchEngine,
-  MockedSearchEngine,
+  type MockedSearchEngine,
 } from '../../../test/mock-engine-v2.js';
+import {buildMockResult} from '../../../test/mock-result.js';
 import {buildMockResultPreviewRequest} from '../../../test/mock-result-preview-request-builder.js';
 import {buildMockResultPreviewState} from '../../../test/mock-result-preview-state.js';
-import {buildMockResult} from '../../../test/mock-result.js';
 import {createMockState} from '../../../test/mock-state.js';
 import {
   buildCoreQuickview,
-  QuickviewOptions,
-  Quickview,
+  type Quickview,
+  type QuickviewOptions,
 } from './headless-core-quickview.js';
 
 vi.mock('../../../features/result-preview/result-preview-actions');

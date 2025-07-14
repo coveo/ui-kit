@@ -1,4 +1,4 @@
-import {SearchBox as SearchBoxController} from '@coveo/headless/ssr';
+import type {SearchBox as SearchBoxController} from '@coveo/headless/ssr';
 
 interface SearchBoxCommonProps {
   controller: Omit<SearchBoxController, 'state' | 'subscribe'> | undefined;

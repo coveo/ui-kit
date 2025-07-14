@@ -1,11 +1,11 @@
 import {getOrganizationEndpoint} from '../../api/platform-client.js';
-import {
+import type {
   HtmlRequest,
   HtmlRequestOptions,
 } from '../../api/search/html/html-request.js';
 import {baseInsightUrl} from '../../api/service/insight/insight-params.js';
-import {InsightConfigurationSection} from '../../state/state-sections.js';
-import {StateNeededByHtmlEndpoint} from '../result-preview/result-preview-request-builder.js';
+import type {InsightConfigurationSection} from '../../state/state-sections.js';
+import type {StateNeededByHtmlEndpoint} from '../result-preview/result-preview-request-builder.js';
 
 export type StateNeededByInsightHtmlEndpoint = StateNeededByHtmlEndpoint &
   InsightConfigurationSection;

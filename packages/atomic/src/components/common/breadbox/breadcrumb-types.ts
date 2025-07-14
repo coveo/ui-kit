@@ -1,4 +1,4 @@
-import {FacetValueFormat} from '../facets/facet-common-store';
+import type {FacetValueFormat} from '../facets/facet-common-store';
 
 export interface Breadcrumb {
   facetId: string;

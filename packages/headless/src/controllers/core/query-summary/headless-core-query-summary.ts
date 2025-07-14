@@ -1,18 +1,18 @@
-import {CoreEngine} from '../../../app/engine.js';
+import type {CoreEngine} from '../../../app/engine.js';
 import {paginationReducer as pagination} from '../../../features/pagination/pagination-slice.js';
 import {searchReducer as search} from '../../../features/search/search-slice.js';
-import {
+import type {
   PaginationSection,
   SearchSection,
 } from '../../../state/state-sections.js';
 import {loadReducerError} from '../../../utils/errors.js';
 import {
   buildController,
-  Controller,
+  type Controller,
 } from '../../controller/headless-controller.js';
 import {
   buildCoreStatus,
-  SearchStatusState,
+  type SearchStatusState,
 } from '../status/headless-core-status.js';
 
 /**

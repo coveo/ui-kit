@@ -1,33 +1,33 @@
 import {
+  type AnalyticsClientSendEventHook,
   CoveoSearchPageClient,
-  SearchPageClientProvider,
-  AnalyticsClientSendEventHook,
+  type SearchPageClientProvider,
 } from 'coveo.analytics';
 import type {SearchEventRequest} from 'coveo.analytics/dist/definitions/events.js';
-import {Logger} from 'pino';
+import type {Logger} from 'pino';
 import {
   buildFacetStateMetadata,
   getStateNeededForFacetMetadata,
 } from '../../features/facets/facet-set/facet-set-analytics-actions-utils.js';
-import {FacetSortCriterion} from '../../features/facets/facet-set/interfaces/request.js';
-import {DateFacetValue} from '../../features/facets/range-facets/date-facet-set/interfaces/response.js';
-import {RangeFacetSortCriterion} from '../../features/facets/range-facets/generic/interfaces/request.js';
-import {NumericFacetValue} from '../../features/facets/range-facets/numeric-facet-set/interfaces/response.js';
-import {OmniboxSuggestionMetadata} from '../../features/query-suggest/query-suggest-analytics-actions.js';
+import type {FacetSortCriterion} from '../../features/facets/facet-set/interfaces/request.js';
+import type {DateFacetValue} from '../../features/facets/range-facets/date-facet-set/interfaces/response.js';
+import type {RangeFacetSortCriterion} from '../../features/facets/range-facets/generic/interfaces/request.js';
+import type {NumericFacetValue} from '../../features/facets/range-facets/numeric-facet-set/interfaces/response.js';
 import {getQueryInitialState} from '../../features/query/query-state.js';
+import type {OmniboxSuggestionMetadata} from '../../features/query-suggest/query-suggest-analytics-actions.js';
 import {getSearchInitialState} from '../../features/search/search-state.js';
 import {getSortCriteriaInitialState} from '../../features/sort-criteria/sort-criteria-state.js';
-import {StaticFilterValueMetadata} from '../../features/static-filter-set/static-filter-set-actions.js';
-import {SearchAppState} from '../../state/search-app-state.js';
-import {ConfigurationSection} from '../../state/state-sections.js';
+import type {StaticFilterValueMetadata} from '../../features/static-filter-set/static-filter-set-actions.js';
+import type {SearchAppState} from '../../state/search-app-state.js';
+import type {ConfigurationSection} from '../../state/state-sections.js';
 import {getOrganizationEndpoint} from '../platform-client.js';
-import {PreprocessRequest} from '../preprocess-request.js';
+import type {PreprocessRequest} from '../preprocess-request.js';
 import {BaseAnalyticsProvider} from './base-analytics.js';
+import HistoryStore from './coveo.analytics/history-store.js';
 import {
   wrapAnalyticsClientSendEventHook,
   wrapPreprocessRequest,
 } from './coveo-analytics-utils.js';
-import HistoryStore from './coveo.analytics/history-store.js';
 
 export type StateNeededBySearchAnalyticsProvider = ConfigurationSection &
   Partial<Omit<SearchAppState, 'configuration'>>;
@@ -95,8 +95,7 @@ export class SearchAnalyticsProvider
       state.search?.response?.extendedResults?.generativeQuestionAnsweringId;
 
     if (generativeQuestionAnsweringId) {
-      baseObject['generativeQuestionAnsweringId'] =
-        generativeQuestionAnsweringId;
+      baseObject.generativeQuestionAnsweringId = generativeQuestionAnsweringId;
     }
 
     return baseObject;
@@ -215,7 +214,7 @@ export class SearchAnalyticsProvider
   }
 
   public getOmniboxAnalyticsMetadata(id: string, suggestion: string) {
-    const querySuggest = this.state.querySuggest && this.state.querySuggest[id];
+    const querySuggest = this.state.querySuggest?.[id];
     const suggestions = querySuggest!.completions.map(
       (completion) => completion.expression
     );
@@ -254,7 +253,7 @@ export class SearchAnalyticsProvider
     const state = this.getState();
     const formattedObject: Record<string, string | boolean> = {};
     if (state.generatedAnswer?.isVisible !== undefined) {
-      formattedObject['showGeneratedAnswer'] = state.generatedAnswer.isVisible;
+      formattedObject.showGeneratedAnswer = state.generatedAnswer.isVisible;
     }
     return formattedObject;
   }

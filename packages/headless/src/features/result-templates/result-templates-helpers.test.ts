@@ -63,7 +63,7 @@ describe('result template helpers', () => {
         'excerpt',
       ]);
       const result = buildMockResult();
-      result.raw['anotherfield'] = 0;
+      result.raw.anotherfield = 0;
       expect(match(result)).toBe(true);
     });
 
@@ -71,7 +71,7 @@ describe('result template helpers', () => {
     should return false`, () => {
       const match = fieldsMustBeDefined(['language', 'anotherfield']);
       const result = buildMockResult();
-      result.raw['language'] = ['Test'];
+      result.raw.language = ['Test'];
       expect(match(result)).toBe(false);
     });
   });
@@ -85,7 +85,7 @@ describe('result template helpers', () => {
         'excerpt',
       ]);
       const result = buildMockResult({excerpt: undefined});
-      result.raw['anotherfield'] = null;
+      result.raw.anotherfield = null;
       expect(match(result)).toBe(true);
     });
 
@@ -93,7 +93,7 @@ describe('result template helpers', () => {
     should return false`, () => {
       const match = fieldsMustNotBeDefined(['somefield', 'anotherfield']);
       const result = buildMockResult();
-      result.raw['anotherfield'] = 0;
+      result.raw.anotherfield = 0;
       expect(match(result)).toBe(false);
     });
   });

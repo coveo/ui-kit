@@ -1,14 +1,14 @@
+import fs from 'node:fs';
+import path from 'node:path';
 import {
   buildSearchEngine,
-  getSampleSearchEngineConfiguration,
   buildSearchStatus,
-  SearchEngine,
+  getSampleSearchEngineConfiguration,
+  type SearchEngine,
 } from '@coveo/headless';
-import escape from 'escape-html';
+import escapeHtml from 'escape-html';
 import express from 'express';
-import fs from 'fs';
-import path from 'path';
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
+// biome-ignore lint/correctness/noUnusedImports: <>
 import React from 'react';
 import ReactDOMServer from 'react-dom/server';
 import App from '../src/App';
@@ -16,7 +16,7 @@ import App from '../src/App';
 const PORT = 3000;
 const app = express();
 
-app.get('/', async (req, res) => {
+app.get('/', async (_req, res) => {
   const engine = buildSearchEngine({
     configuration: getSampleSearchEngineConfiguration(),
   });
@@ -32,7 +32,7 @@ app.get('/', async (req, res) => {
       return res.status(500).send('Internal error');
     }
 
-    const state = escape(JSON.stringify(engine.state));
+    const state = escapeHtml(JSON.stringify(engine.state));
     const page = data
       .replace('<div id="root"></div>', `<div id="root">${app}</div>`)
       .replace(

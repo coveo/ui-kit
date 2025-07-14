@@ -1,19 +1,19 @@
 import type {SearchPageEvents as LegacySearchPageEvents} from 'coveo.analytics/dist/definitions/searchPage/searchPageEvents.js';
-import {Result} from '../../api/search/search/result.js';
+import type {Result} from '../../api/search/search/result.js';
 import {
-  validatePayload,
-  requiredNonEmptyString,
   nonEmptyString,
+  requiredNonEmptyString,
+  validatePayload,
 } from '../../utils/validate-payload.js';
-import {OmniboxSuggestionMetadata} from '../query-suggest/query-suggest-analytics-actions.js';
-import {SearchAction} from '../search/search-actions.js';
+import type {OmniboxSuggestionMetadata} from '../query-suggest/query-suggest-analytics-actions.js';
+import type {SearchAction} from '../search/search-actions.js';
 import {
-  ClickAction,
-  CustomAction,
+  type ClickAction,
+  type CustomAction,
   documentIdentifier,
+  type LegacySearchAction,
   makeAnalyticsAction,
   partialDocumentInformation,
-  LegacySearchAction,
   validateResultPayload,
 } from './analytics-utils.js';
 import {SearchPageEvents} from './search-action-cause.js';

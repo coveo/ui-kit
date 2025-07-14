@@ -1,11 +1,11 @@
 import {isNullOrUndefined} from '@coveo/bueno';
 import {createSelector} from '@reduxjs/toolkit';
-import {
-  CommerceEngineState,
+import type {
   CommerceEngine,
+  CommerceEngineState,
 } from '../../../app/commerce-engine/commerce-engine.js';
 import {stateKey} from '../../../app/state-key.js';
-import {
+import type {
   CommercePaginationSection,
   ProductListingSection,
 } from '../../../state/state-sections.js';

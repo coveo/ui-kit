@@ -3,37 +3,37 @@ import {
   BooleanValue,
   RecordValue,
   Schema,
-  SchemaDefinition,
+  type SchemaDefinition,
   StringValue,
 } from '@coveo/bueno';
-import {CoreEngine} from '../../../../../app/engine.js';
+import type {CoreEngine} from '../../../../../app/engine.js';
 import {facetValueStates} from '../../../../../features/facets/facet-api/value.js';
 import {validateManualDateRanges} from '../../../../../features/facets/range-facets/date-facet-set/date-facet-actions.js';
-import {DateRangeRequest} from '../../../../../features/facets/range-facets/date-facet-set/interfaces/request.js';
+import type {DateRangeRequest} from '../../../../../features/facets/range-facets/date-facet-set/interfaces/request.js';
 import {
+  type RangeFacetRangeAlgorithm,
+  type RangeFacetSortCriterion,
   rangeFacetRangeAlgorithm,
-  RangeFacetRangeAlgorithm,
   rangeFacetSortCriteria,
-  RangeFacetSortCriterion,
 } from '../../../../../features/facets/range-facets/generic/interfaces/request.js';
-import {
+import type {
   ConfigurationSection,
   DateFacetSection,
   SearchSection,
 } from '../../../../../state/state-sections.js';
 import {validateOptions} from '../../../../../utils/validate-payload.js';
 import {
-  field,
   facetId,
-  generateAutomaticRanges,
+  field,
   filterFacetCount,
+  generateAutomaticRanges,
   injectionDepth,
   numberOfValues,
 } from '../../../../core/facets/_common/facet-option-definitions.js';
 
 export interface DateFacetOptions {
   /**
-   * The field whose values you want to display in the facet.
+   * The field from which to display values in the facet.
    */
   field: string;
 
@@ -45,7 +45,7 @@ export interface DateFacetOptions {
   /**
    * Whether the index should automatically create range values.
    *
-   * Tip: If you set this parameter to true, you should ensure that the ['Use cache for numeric queries' option](https://docs.coveo.com/en/1833#use-cache-for-numeric-queries) is enabled for this facet's field in your index in order to speed up automatic range evaluation.
+   * Tip: If you set this parameter to true, ensure that the ['Use cache for numeric queries' option](https://docs.coveo.com/en/1833#use-cache-for-numeric-queries) is enabled for this facet's field in your index in order to speed up automatic range evaluation.
    */
   generateAutomaticRanges: boolean;
 

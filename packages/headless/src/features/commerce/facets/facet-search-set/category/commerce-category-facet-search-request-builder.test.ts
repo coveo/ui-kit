@@ -1,7 +1,7 @@
-import {MockInstance} from 'vitest';
-import {NavigatorContext} from '../../../../../app/navigator-context-provider.js';
+import type {MockInstance} from 'vitest';
+import type {NavigatorContext} from '../../../../../app/navigator-context-provider.js';
 import * as Actions from '../../../../../features/commerce/common/filterable-commerce-api-request-builder.js';
-import {CommerceAppState} from '../../../../../state/commerce-app-state.js';
+import type {CommerceAppState} from '../../../../../state/commerce-app-state.js';
 import {buildMockCategoryFacetSearch} from '../../../../../test/mock-category-facet-search.js';
 import {buildMockCommerceFacetRequest} from '../../../../../test/mock-commerce-facet-request.js';
 import {buildMockCommerceFacetSlice} from '../../../../../test/mock-commerce-facet-slice.js';
@@ -9,7 +9,7 @@ import {buildMockCategoryFacetValue} from '../../../../../test/mock-commerce-fac
 import {buildMockCommerceState} from '../../../../../test/mock-commerce-state.js';
 import {buildMockFacetSearchRequestOptions} from '../../../../../test/mock-facet-search-request-options.js';
 import {buildMockNavigatorContextProvider} from '../../../../../test/mock-navigator-context-provider.js';
-import {CategoryFacetValueRequest} from '../../facet-set/interfaces/request.js';
+import type {CategoryFacetValueRequest} from '../../facet-set/interfaces/request.js';
 import {
   getFacetIdWithCommerceFieldSuggestionNamespace,
   getFacetIdWithoutCommerceFieldSuggestionNamespace,

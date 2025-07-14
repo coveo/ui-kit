@@ -1,9 +1,9 @@
+import type {CommerceEngineConfiguration} from '@coveo/headless/commerce';
+import type {Meta, StoryObj as Story} from '@storybook/web-components';
+import {html} from 'lit';
 import {wrapInCommerceInterface} from '@/storybook-utils/commerce/commerce-interface-wrapper';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {renderComponent} from '@/storybook-utils/common/render-component';
-import {CommerceEngineConfiguration} from '@coveo/headless/commerce';
-import type {Meta, StoryObj as Story} from '@storybook/web-components';
-import {html} from 'lit';
 
 const {decorator, play} = wrapInCommerceInterface({
   skipFirstRequest: false,

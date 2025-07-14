@@ -1,9 +1,9 @@
-import {PayloadAction} from '@reduxjs/toolkit';
-import {CommerceEngine} from '../../../app/commerce-engine/commerce-engine.js';
+import type {PayloadAction} from '@reduxjs/toolkit';
+import type {CommerceEngine} from '../../../app/commerce-engine/commerce-engine.js';
 import {
-  RegisterRecentQueriesCreatorPayload,
-  registerRecentQueries,
   clearRecentQueries,
+  type RegisterRecentQueriesCreatorPayload,
+  registerRecentQueries,
 } from '../../recent-queries/recent-queries-actions.js';
 import {recentQueriesReducer as recentQueries} from './recent-queries-slice.js';
 

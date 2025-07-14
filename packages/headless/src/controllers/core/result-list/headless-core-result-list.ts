@@ -1,12 +1,12 @@
 import {ArrayValue, Schema, StringValue} from '@coveo/bueno';
-import {AsyncThunkAction} from '@reduxjs/toolkit';
-import {Result} from '../../../api/search/search/result.js';
+import type {AsyncThunkAction} from '@reduxjs/toolkit';
+import type {Result} from '../../../api/search/search/result.js';
 import {configuration} from '../../../app/common-reducers.js';
-import {CoreEngine} from '../../../app/engine.js';
+import type {CoreEngine} from '../../../app/engine.js';
 import {registerFieldsToInclude} from '../../../features/fields/fields-actions.js';
 import {fieldsReducer as fields} from '../../../features/fields/fields-slice.js';
 import {searchReducer as search} from '../../../features/search/search-slice.js';
-import {
+import type {
   ConfigurationSection,
   FieldsSection,
   SearchSection,
@@ -15,11 +15,11 @@ import {loadReducerError} from '../../../utils/errors.js';
 import {validateOptions} from '../../../utils/validate-payload.js';
 import {
   buildController,
-  Controller,
+  type Controller,
 } from '../../controller/headless-controller.js';
 import {
   buildCoreStatus,
-  SearchStatusState,
+  type SearchStatusState,
 } from '../status/headless-core-status.js';
 
 const optionsSchema = new Schema<ResultListOptions>({
@@ -49,7 +49,8 @@ export interface ResultListProps {
   /**
    * The action creator to build the `fetchMoreResults` action.
    */
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
+  // biome-ignore lint/suspicious/noExplicitAny: third-party type uses 'any'
   fetchMoreResultsActionCreator?: () => AsyncThunkAction<unknown, void, any>;
 }
 

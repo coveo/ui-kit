@@ -1,4 +1,4 @@
-import {CategoryFacetResponse} from '../features/facets/category-facet-set/interfaces/response.js';
+import type {CategoryFacetResponse} from '../features/facets/category-facet-set/interfaces/response.js';
 
 export function buildMockCategoryFacetResponse(
   config: Partial<CategoryFacetResponse> = {}

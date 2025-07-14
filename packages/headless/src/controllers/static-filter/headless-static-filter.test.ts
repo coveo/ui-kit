@@ -8,15 +8,15 @@ import {
 import {staticFilterSetReducer as staticFilterSet} from '../../features/static-filter-set/static-filter-set-slice.js';
 import {
   buildMockSearchEngine,
-  MockedSearchEngine,
+  type MockedSearchEngine,
 } from '../../test/mock-engine-v2.js';
 import {createMockState} from '../../test/mock-state.js';
 import {buildMockStaticFilterSlice} from '../../test/mock-static-filter-slice.js';
 import {buildMockStaticFilterValue} from '../../test/mock-static-filter-value.js';
 import {
   buildStaticFilter,
-  StaticFilter,
-  StaticFilterOptions,
+  type StaticFilter,
+  type StaticFilterOptions,
 } from './headless-static-filter.js';
 
 vi.mock('../../features/search/search-actions');

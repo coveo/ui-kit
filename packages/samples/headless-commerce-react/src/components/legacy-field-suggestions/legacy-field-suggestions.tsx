@@ -4,7 +4,7 @@
  *
  * If you wish to implement filter suggestions in your project, please contact your Coveo representative.
  */
-import {
+import type {
   CategoryFacetSearchResult,
   CategoryFieldSuggestions,
 } from '@coveo/headless/commerce';
@@ -39,7 +39,10 @@ export default function LegacyFieldSuggestions(
     value: CategoryFacetSearchResult
   ) => {
     return (
-      <button onClick={() => onClickLegacyFieldSuggestion(controller, value)}>
+      <button
+        type="button"
+        onClick={() => onClickLegacyFieldSuggestion(controller, value)}
+      >
         Select the <em>{[...value.path, value.displayValue].join('/')}</em>{' '}
         value in the <b>{state.displayName}</b> facet ({value.count} products)
       </button>

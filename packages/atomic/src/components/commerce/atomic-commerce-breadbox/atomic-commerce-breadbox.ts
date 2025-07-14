@@ -1,46 +1,46 @@
+import {NumberValue, Schema} from '@coveo/bueno';
+import {
+  type Breadcrumb,
+  type BreadcrumbManager,
+  type BreadcrumbManagerState,
+  type BreadcrumbValue,
+  buildContext,
+  buildProductListing,
+  buildSearch,
+  type CategoryFacetValue,
+  type Context,
+  type ContextState,
+  type DateFacetValue,
+  type LocationFacetValue,
+  type NumericFacetValue,
+  type ProductListing,
+  type RegularFacetValue,
+  type Search,
+} from '@coveo/headless/commerce';
+import {type CSSResultGroup, html, LitElement, nothing, unsafeCSS} from 'lit';
+import {customElement, property, state} from 'lit/decorators.js';
 import {bindStateToController} from '@/src/decorators/bind-state';
 import {bindingGuard} from '@/src/decorators/binding-guard';
 import {bindings} from '@/src/decorators/bindings';
 import {errorGuard} from '@/src/decorators/error-guard';
-import {InitializableComponent} from '@/src/decorators/types';
+import type {InitializableComponent} from '@/src/decorators/types';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles.js';
 import {FocusTargetController} from '@/src/utils/accessibility-utils';
 import {parseDate} from '@/src/utils/date-utils';
 import {getFieldValueCaption} from '@/src/utils/field-utils';
-import {NumberValue, Schema} from '@coveo/bueno';
-import {
-  BreadcrumbManager,
-  BreadcrumbManagerState,
-  BreadcrumbValue,
-  buildContext,
-  buildProductListing,
-  buildSearch,
-  CategoryFacetValue,
-  Context,
-  ContextState,
-  DateFacetValue,
-  LocationFacetValue,
-  NumericFacetValue,
-  ProductListing,
-  RegularFacetValue,
-  Search,
-  Breadcrumb,
-} from '@coveo/headless/commerce';
-import {CSSResultGroup, html, LitElement, nothing, unsafeCSS} from 'lit';
-import {customElement, property, state} from 'lit/decorators.js';
 import {renderBreadcrumbButton} from '../../common/breadbox/breadcrumb-button';
 import {renderBreadcrumbClearAll} from '../../common/breadbox/breadcrumb-clear-all';
 import {renderBreadcrumbContainer} from '../../common/breadbox/breadcrumb-container';
 import {renderBreadcrumbContent} from '../../common/breadbox/breadcrumb-content';
 import {renderBreadcrumbShowLess} from '../../common/breadbox/breadcrumb-show-less';
 import {renderBreadcrumbShowMore} from '../../common/breadbox/breadcrumb-show-more';
-import {Breadcrumb as BreadboxBreadcrumb} from '../../common/breadbox/breadcrumb-types';
+import type {Breadcrumb as BreadboxBreadcrumb} from '../../common/breadbox/breadcrumb-types';
 import {formatHumanReadable} from '../../common/facets/numeric-facet/formatter';
 import {
   defaultCurrencyFormatter,
   defaultNumberFormatter,
 } from '../../common/formats/format-common';
-import {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface';
+import type {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface';
 import styles from './atomic-commerce-breadbox.tw.css';
 
 type AnyFacetValue =
@@ -347,12 +347,12 @@ export class AtomicCommerceBreadbox
             this.lastRemovedBreadcrumbIndex = index;
             breadcrumb.deselect();
           },
-          refCallback: (ref) => {
+          refCallback: async (ref) => {
             if (this.lastRemovedBreadcrumbIndex === index) {
-              this.breadcrumbRemovedFocus.setTarget(ref);
+              await this.breadcrumbRemovedFocus.setTarget(ref);
             }
             if (this.firstExpandedBreadcrumbIndex === index) {
-              this.breadcrumbShowMoreFocus.setTarget(ref);
+              await this.breadcrumbShowMoreFocus.setTarget(ref);
             }
           },
         },
@@ -372,11 +372,11 @@ export class AtomicCommerceBreadbox
   @bindingGuard()
   @errorGuard()
   render() {
-    const breadcrumbs = this.breadcrumbManagerState.facetBreadcrumbs
-      .map((breadcrumb) => {
+    const breadcrumbs = this.breadcrumbManagerState.facetBreadcrumbs.flatMap(
+      (breadcrumb) => {
         return this.buildBreadcrumb(breadcrumb);
-      })
-      .flat();
+      }
+    );
 
     if (!breadcrumbs.length) {
       return html`${nothing}`;
@@ -391,8 +391,8 @@ export class AtomicCommerceBreadbox
       html`${this.renderBreadcrumbs(breadcrumbs)}
       ${renderBreadcrumbShowMore({
         props: {
-          refCallback: (el) => {
-            this.breadcrumbShowLessFocus.setTarget(el!);
+          refCallback: async (el) => {
+            await this.breadcrumbShowLessFocus.setTarget(el!);
           },
           onShowMore: () => {
             this.firstExpandedBreadcrumbIndex =
@@ -421,12 +421,12 @@ export class AtomicCommerceBreadbox
       })}
       ${renderBreadcrumbClearAll({
         props: {
-          refCallback: (ref) => {
+          refCallback: async (ref) => {
             const isFocusTarget =
               this.lastRemovedBreadcrumbIndex === this.numberOfBreadcrumbs;
 
             if (isFocusTarget) {
-              this.breadcrumbRemovedFocus.setTarget(ref);
+              await this.breadcrumbRemovedFocus.setTarget(ref);
             }
           },
           onClick: () => {

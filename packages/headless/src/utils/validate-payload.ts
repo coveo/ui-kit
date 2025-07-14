@@ -1,13 +1,13 @@
 import {
-  SchemaDefinition,
-  SchemaValue,
-  Schema,
-  SchemaValidationError,
-  StringValue,
-  RecordValue,
   ArrayValue,
+  RecordValue,
+  Schema,
+  type SchemaDefinition,
+  SchemaValidationError,
+  type SchemaValue,
+  StringValue,
 } from '@coveo/bueno';
-import {SerializedError} from '@reduxjs/toolkit';
+import type {SerializedError} from '@reduxjs/toolkit';
 import type {CoreEngine, CoreEngineNext} from '../app/engine.js';
 
 export const requiredNonEmptyString = new StringValue({

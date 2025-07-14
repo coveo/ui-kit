@@ -1,4 +1,4 @@
-import {buildRelevanceSortCriterion, SortCriterion} from './sort.js';
+import {buildRelevanceSortCriterion, type SortCriterion} from './sort.js';
 
 export type SortState = SortCriterion;
 

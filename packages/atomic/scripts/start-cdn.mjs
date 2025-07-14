@@ -1,22 +1,22 @@
-import chalk from 'chalk';
-import {spawn} from 'child_process';
-import {readFileSync, readdirSync, statSync, writeFileSync} from 'fs';
+import {spawn} from 'node:child_process';
+import {readdirSync, readFileSync, statSync, writeFileSync} from 'node:fs';
 import {findPackageJSON} from 'node:module';
-import path from 'path';
+import path from 'node:path';
+import chalk from 'chalk';
 
 const currentDir = import.meta.dirname;
 const siteDir = path.resolve(currentDir, '../dev');
 
 const getVersionFromPackageJson = async (packageName, versionType) => {
   const packageJsonPath = findPackageJSON(
-    '@coveo/' + packageName,
+    `@coveo/${packageName}`,
     import.meta.url
   );
   console.log(`Reading version from ${packageJsonPath}`);
   try {
     const packageJson = JSON.parse(readFileSync(packageJsonPath, 'utf-8'));
     const version = packageJson.version;
-    const [major, minor, patch] = version.split('.');
+    const [major, minor] = version.split('.');
     return (
       {
         major: major,
@@ -44,7 +44,7 @@ const updateHtmlVersionsInDirectory = (
     const headlessRegex =
       /https?:\/\/(localhost:3000|static(?:dev|stg)?\.cloud\.coveo\.com)\/headless\/v\d+(\.\d+)?(\.\d+)?/g;
     const atomicAssetRegex =
-      /(["'`\(])@coveo\/atomic\/assets\/(.*?)(["'`\)])|@coveo\/atomic\/assets\/(\S+)/g;
+      /(["'`(])@coveo\/atomic\/assets\/(.*?)(["'`)])|@coveo\/atomic\/assets\/(\S+)/g;
 
     const cdnBaseUrl =
       {

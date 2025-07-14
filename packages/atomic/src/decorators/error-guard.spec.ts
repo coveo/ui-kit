@@ -1,7 +1,7 @@
-import {fixture} from '@/vitest-utils/testing-helpers/fixture';
-import {LitElement, html} from 'lit';
+import {html, LitElement} from 'lit';
 import {customElement, state} from 'lit/decorators.js';
-import {vi, describe, beforeEach, afterEach, it, expect} from 'vitest';
+import {afterEach, beforeEach, describe, expect, it, vi} from 'vitest';
+import {fixture} from '@/vitest-utils/testing-helpers/fixture';
 import {errorGuard} from './error-guard';
 
 describe('@errorGuard decorator', () => {

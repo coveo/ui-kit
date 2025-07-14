@@ -1,6 +1,7 @@
 {
   "$schema": "https://biomejs.dev/schemas/2.0.6/schema.json",
   "vcs": {"enabled": true, "clientKind": "git", "useIgnoreFile": true},
+  "root": true,
   "plugins": [
     "./packages/atomic/biome-rules/no-tolocalestring-without-locale.grit"
   ],
@@ -32,7 +33,7 @@
     "expand": "auto",
     "useEditorconfig": true,
     "includes": [
-      "**/*.{js,jsx,ts,tsx,mjs,json,jsonc,css}",
+      "**/*.{js,jsx,ts,tsx,mjs,json,jsonc,css,md}",
       "!.github/prompts/**/*",
       "!.github/instructions/**/*",
       "!.github/**/*.yml",
@@ -99,7 +100,10 @@
   },
   "linter": {
     "enabled": true,
-    "rules": {"recommended": false, "style": {"useBlockStatements": "off"}},
+    "rules": {
+      "recommended": false,
+      "style": {"useBlockStatements": "off"}
+    },
     "includes": [
       "**",
       "!**/packages/quantic/**/*",

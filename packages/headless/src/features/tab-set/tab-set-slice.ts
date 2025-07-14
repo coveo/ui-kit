@@ -6,7 +6,7 @@ import {
   restoreTab,
 } from '../search-parameters/search-parameter-actions.js';
 import {registerTab, updateActiveTab} from './tab-set-actions.js';
-import {getTabSetInitialState, TabSetState} from './tab-set-state.js';
+import {getTabSetInitialState, type TabSetState} from './tab-set-state.js';
 
 export const tabSetReducer = createReducer(
   getTabSetInitialState(),

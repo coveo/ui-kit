@@ -1,9 +1,9 @@
-import {SearchEngine} from '../../app/search-engine/search-engine.js';
-import {ControllerDefinitionWithoutProps} from '../../app/ssr-engine/types/common.js';
-import {SmartSnippetQuestionsListProps} from '../core/smart-snippet-questions-list/headless-core-smart-snippet-questions-list.js';
+import type {SearchEngine} from '../../app/search-engine/search-engine.js';
+import type {ControllerDefinitionWithoutProps} from '../../app/ssr-engine/types/common.js';
+import type {SmartSnippetQuestionsListProps} from '../core/smart-snippet-questions-list/headless-core-smart-snippet-questions-list.js';
 import {
-  SmartSnippetQuestionsList,
   buildSmartSnippetQuestionsList,
+  type SmartSnippetQuestionsList,
 } from './headless-smart-snippet-questions-list.js';
 
 export * from './headless-smart-snippet-questions-list.js';

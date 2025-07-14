@@ -1,6 +1,6 @@
+import path from 'node:path';
 import fs from 'fs-extra';
 import handlebars from 'handlebars';
-import path from 'path';
 import {formatWithBiome} from './format-with-biome.mjs';
 
 const capitalize = (str) => str.charAt(0).toUpperCase() + str.slice(1);

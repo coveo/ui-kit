@@ -1,4 +1,4 @@
-import {CoreEngine} from '../../../../app/engine.js';
+import type {CoreEngine} from '../../../../app/engine.js';
 import {
   disableFacet,
   enableFacet,
@@ -6,9 +6,9 @@ import {
 import {facetOptionsReducer as facetOptions} from '../../../../features/facet-options/facet-options-slice.js';
 import {isFacetVisibleOnTab} from '../../../../features/facet-options/facet-options-utils.js';
 import {updateFreezeCurrentValues} from '../../../../features/facets/facet-set/facet-set-actions.js';
-import {AnyFacetValueRequest} from '../../../../features/facets/generic/interfaces/generic-facet-request.js';
-import {AnyFacetValue} from '../../../../features/facets/generic/interfaces/generic-facet-response.js';
-import {
+import type {AnyFacetValueRequest} from '../../../../features/facets/generic/interfaces/generic-facet-request.js';
+import type {AnyFacetValue} from '../../../../features/facets/generic/interfaces/generic-facet-response.js';
+import type {
   CategoryFacetSection,
   DateFacetSection,
   FacetOptionsSection,

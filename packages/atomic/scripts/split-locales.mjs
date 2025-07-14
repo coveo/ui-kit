@@ -1,5 +1,5 @@
 import fs from 'node:fs';
-import {promisify} from 'util';
+import {promisify} from 'node:util';
 
 const mkdir = promisify(fs.mkdir);
 const rm = promisify(fs.rm);
@@ -39,7 +39,7 @@ async function splitLocales() {
     );
   });
 
-  saveAvailableLocales(localesMap);
+  await saveAvailableLocales(localesMap);
 }
 
 async function saveAvailableLocales(localesMap) {

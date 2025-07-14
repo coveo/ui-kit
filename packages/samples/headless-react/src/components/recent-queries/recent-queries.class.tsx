@@ -1,11 +1,11 @@
 import {
   buildRecentQueriesList,
-  RecentQueriesListOptions,
-  RecentQueriesList as HeadlessRecentQueriesList,
-  Unsubscribe,
-  RecentQueriesState,
+  type RecentQueriesList as HeadlessRecentQueriesList,
+  type RecentQueriesListOptions,
+  type RecentQueriesState,
+  type Unsubscribe,
 } from '@coveo/headless';
-import {Component, ContextType} from 'react';
+import {Component, type ContextType} from 'react';
 import {AppContext} from '../../context/engine';
 
 export class RecentQueriesList extends Component<

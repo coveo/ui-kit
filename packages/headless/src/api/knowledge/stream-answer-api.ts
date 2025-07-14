@@ -1,8 +1,12 @@
 /* eslint-disable canonical/no-barrel-import */
-import {createSelector, ThunkDispatch, UnknownAction} from '@reduxjs/toolkit';
+import {
+  createSelector,
+  type ThunkDispatch,
+  type UnknownAction,
+} from '@reduxjs/toolkit';
 import {
   defaultNodeJSNavigatorContextProvider,
-  NavigatorContext,
+  type NavigatorContext,
 } from '../../app/navigator-context-provider.js';
 import {selectAdvancedSearchQueries} from '../../features/advanced-search-queries/advanced-search-query-selectors.js';
 import {fromAnalyticsStateToAnalyticsParams} from '../../features/configuration/analytics-params.js';
@@ -15,23 +19,23 @@ import {
 } from '../../features/generated-answer/generated-answer-actions.js';
 import {logGeneratedAnswerStreamEnd} from '../../features/generated-answer/generated-answer-analytics-actions.js';
 import {selectFieldsToIncludeInCitation} from '../../features/generated-answer/generated-answer-selectors.js';
-import {GeneratedContentFormat} from '../../features/generated-answer/generated-response-format.js';
+import type {GeneratedContentFormat} from '../../features/generated-answer/generated-response-format.js';
 import {maximumNumberOfResultsFromIndex} from '../../features/pagination/pagination-constants.js';
 import {selectPipeline} from '../../features/pipeline/select-pipeline.js';
 import {selectQuery} from '../../features/query/query-selectors.js';
-import {selectSearchHub} from '../../features/search-hub/search-hub-selectors.js';
 import {
   initialSearchMappings,
   mapFacetRequest,
 } from '../../features/search/search-mappings.js';
 import {selectSearchActionCause} from '../../features/search/search-selectors.js';
+import {selectSearchHub} from '../../features/search-hub/search-hub-selectors.js';
 import {selectStaticFilterExpressions} from '../../features/static-filter-set/static-filter-set-selectors.js';
 import {
   selectActiveTab,
   selectActiveTabExpression,
 } from '../../features/tab-set/tab-set-selectors.js';
-import {SearchAppState} from '../../state/search-app-state.js';
-import {
+import type {SearchAppState} from '../../state/search-app-state.js';
+import type {
   ConfigurationSection,
   GeneratedAnswerSection,
   InsightConfigurationSection,
@@ -39,10 +43,10 @@ import {
 } from '../../state/state-sections.js';
 import {getFacets} from '../../utils/facet-utils.js';
 import {fetchEventSource} from '../../utils/fetch-event-source/fetch.js';
-import {EventSourceMessage} from '../../utils/fetch-event-source/parse.js';
-import {GeneratedAnswerCitation} from '../generated-answer/generated-answer-event-payload.js';
+import type {EventSourceMessage} from '../../utils/fetch-event-source/parse.js';
+import type {GeneratedAnswerCitation} from '../generated-answer/generated-answer-event-payload.js';
 import {getOrganizationEndpoint} from '../platform-client.js';
-import {SearchRequest} from '../search/search/search-request.js';
+import type {SearchRequest} from '../search/search/search-request.js';
 import {answerSlice} from './answer-slice.js';
 
 export type StateNeededByAnswerAPI = {

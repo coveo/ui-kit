@@ -1,5 +1,5 @@
 import type {UnknownAction} from '@reduxjs/toolkit';
-import {Controller} from '../../../controllers/controller/headless-controller.js';
+import type {Controller} from '../../../controllers/controller/headless-controller.js';
 import type {
   ControllerDefinitionsMap,
   EngineDefinitionControllersPropsOption,
@@ -7,12 +7,12 @@ import type {
   SolutionType,
 } from '../../commerce-ssr-engine/types/common.js';
 import type {
+  ControllerStaticStateMap,
   ControllersMap,
   ControllersPropsMap,
-  ControllerStaticStateMap,
   OptionsTuple,
 } from '../../ssr-engine/types/common.js';
-import {FromBuildResult} from './from-build-result.js';
+import type {FromBuildResult} from './from-build-result.js';
 
 export type FetchStaticStateOptions = {};
 

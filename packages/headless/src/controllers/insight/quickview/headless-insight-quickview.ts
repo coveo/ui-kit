@@ -1,15 +1,15 @@
-import {Result} from '../../../api/search/search/result.js';
+import type {Result} from '../../../api/search/search/result.js';
 import {configuration} from '../../../app/common-reducers.js';
-import {InsightEngine} from '../../../app/insight-engine/insight-engine.js';
+import type {InsightEngine} from '../../../app/insight-engine/insight-engine.js';
 import {insightInterfaceReducer as insightInterface} from '../../../features/insight-interface/insight-interface-slice.js';
 import {
   buildInsightResultPreviewRequest,
-  StateNeededByInsightHtmlEndpoint,
+  type StateNeededByInsightHtmlEndpoint,
 } from '../../../features/insight-search/insight-result-preview-request-builder.js';
 import {logDocumentQuickview} from '../../../features/result-preview/result-preview-insight-analytics-actions.js';
 import {resultPreviewReducer as resultPreview} from '../../../features/result-preview/result-preview-slice.js';
 import {loadReducerError} from '../../../utils/errors.js';
-import {Controller} from '../../controller/headless-controller.js';
+import type {Controller} from '../../controller/headless-controller.js';
 import {buildCoreQuickview} from '../../core/quickview/headless-core-quickview.js';
 
 export interface QuickviewProps {

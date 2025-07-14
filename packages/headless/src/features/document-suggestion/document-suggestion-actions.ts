@@ -2,18 +2,18 @@ import {createAsyncThunk} from '@reduxjs/toolkit';
 import {getVisitorID} from '../../api/analytics/coveo-analytics-utils.js';
 import {getOrganizationEndpoint} from '../../api/platform-client.js';
 import {isErrorResponse} from '../../api/search/search-api-client.js';
-import {AsyncThunkCaseAssistOptions} from '../../api/service/case-assist/case-assist-api-client.js';
+import type {AsyncThunkCaseAssistOptions} from '../../api/service/case-assist/case-assist-api-client.js';
 import {prepareContextFromFields} from '../../api/service/case-assist/case-assist-params.js';
-import {GetDocumentSuggestionsRequest} from '../../api/service/case-assist/get-document-suggestions/get-document-suggestions-request.js';
-import {GetDocumentSuggestionsResponse} from '../../api/service/case-assist/get-document-suggestions/get-document-suggestions-response.js';
-import {NavigatorContext} from '../../app/navigator-context-provider.js';
-import {
+import type {GetDocumentSuggestionsRequest} from '../../api/service/case-assist/get-document-suggestions/get-document-suggestions-request.js';
+import type {GetDocumentSuggestionsResponse} from '../../api/service/case-assist/get-document-suggestions/get-document-suggestions-response.js';
+import type {NavigatorContext} from '../../app/navigator-context-provider.js';
+import type {
   CaseAssistConfigurationSection,
-  DocumentSuggestionSection,
+  CaseFieldSection,
+  CaseInputSection,
   ConfigurationSection,
   DebugSection,
-  CaseInputSection,
-  CaseFieldSection,
+  DocumentSuggestionSection,
 } from '../../state/state-sections.js';
 import {SearchPageEvents} from '../analytics/search-action-cause.js';
 import {fromAnalyticsStateToAnalyticsParams} from '../configuration/analytics-params.js';

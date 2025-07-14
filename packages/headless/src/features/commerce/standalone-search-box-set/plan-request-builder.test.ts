@@ -1,7 +1,7 @@
-import {QuerySuggestRequest} from '../../../api/commerce/search/query-suggest/query-suggest-request.js';
+import type {QuerySuggestRequest} from '../../../api/commerce/search/query-suggest/query-suggest-request.js';
 import {
   defaultNodeJSNavigatorContextProvider,
-  NavigatorContext,
+  type NavigatorContext,
 } from '../../../app/navigator-context-provider.js';
 import {buildMockBaseCommerceAPIRequest} from '../../../test/mock-commerce-api-request.js';
 import {buildBaseCommerceAPIRequest} from '../common/base-commerce-api-request-builder.js';
@@ -11,7 +11,7 @@ import {getContextInitialState} from '../context/context-state.js';
 import {getCommerceQueryInitialState} from '../query/query-state.js';
 import {
   buildPlanRequest,
-  StateNeededForPlanCommerceAPIRequest,
+  type StateNeededForPlanCommerceAPIRequest,
 } from './plan-request-builder.js';
 
 vi.mock('../common/base-commerce-api-request-builder.js');

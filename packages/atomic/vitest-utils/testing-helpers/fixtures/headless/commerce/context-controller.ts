@@ -1,4 +1,5 @@
-import {Context, ContextState} from '@coveo/headless/commerce';
+import type {Context, ContextState} from '@coveo/headless/commerce';
+import {vi} from 'vitest';
 
 export const defaultState = {
   language: 'en',
@@ -13,6 +14,9 @@ export const defaultImplementation = {
   subscribe: (subscribedFunction: () => void) => {
     subscribedFunction();
   },
+  setLanguage: vi.fn((language: string) => {
+    defaultState.language = language;
+  }),
   state: defaultState,
 };
 

@@ -1,6 +1,6 @@
 // following docs https://typedoc.org/guides/development/#plugins
 // eslint-disable-next-line n/no-unpublished-import
-import {Context, Comment, DeclarationReflection} from 'typedoc';
+import {Comment, type Context, type DeclarationReflection} from 'typedoc';
 
 const comments = [
   {

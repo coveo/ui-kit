@@ -1,12 +1,12 @@
-import {FunctionalComponent} from '@/src/utils/functional-component-utils';
 import {html} from 'lit';
+import type {FunctionalComponent} from '@/src/utils/functional-component-utils';
 import CannotAccess from '../../../images/cannot-access.svg';
 import Indexing from '../../../images/indexing.svg';
 import NoConnection from '../../../images/no-connection.svg';
 import SearchInactive from '../../../images/search-inactive.svg';
 import SomethingWrong from '../../../images/something-wrong.svg';
 import '../../common/atomic-icon/atomic-icon';
-import {KnownErrorType} from './known-error-types';
+import type {KnownErrorType} from './known-error-types';
 
 interface QueryErrorIconProps {
   errorType?: string;

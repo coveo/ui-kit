@@ -1,8 +1,8 @@
-import {InsightEngine} from '../../../app/insight-engine/insight-engine.js';
+import type {InsightEngine} from '../../../app/insight-engine/insight-engine.js';
 import {
   buildCoreQueryError,
-  QueryError,
-  QueryErrorState,
+  type QueryError,
+  type QueryErrorState,
 } from '../../core/query-error/headless-core-query-error.js';
 
 export type {QueryError, QueryErrorState};

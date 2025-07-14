@@ -1,8 +1,8 @@
-import {SearchEngine} from '../../app/search-engine/search-engine.js';
+import type {SearchEngine} from '../../app/search-engine/search-engine.js';
 import {
-  TabManager,
-  TabManagerState,
   buildCoreTabManager,
+  type TabManager,
+  type TabManagerState,
 } from '../core/tab-manager/headless-core-tab-manager.js';
 
 export type {TabManager, TabManagerState};

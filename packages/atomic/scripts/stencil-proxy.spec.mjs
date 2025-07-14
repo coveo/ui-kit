@@ -1,4 +1,4 @@
-import {test, expect} from 'vitest';
+import {expect, test} from 'vitest';
 
 test('a dynamic import of atomic.esm.js should exposes the correct version exports', async () => {
   const {headlessVersion, atomicVersion} = await import('../cdn/atomic.esm.js');

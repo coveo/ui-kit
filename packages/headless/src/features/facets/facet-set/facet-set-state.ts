@@ -1,4 +1,4 @@
-import {FacetRequest} from './interfaces/request.js';
+import type {FacetRequest} from './interfaces/request.js';
 
 export type FacetSlice = {
   request: FacetRequest;

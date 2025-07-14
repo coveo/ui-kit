@@ -1,8 +1,9 @@
-import type {JSX, i18n} from '@coveo/atomic';
+import type {i18n, JSX} from '@coveo/atomic';
 import {
   buildSearchEngine,
   getSampleSearchEngineConfiguration,
 } from '@coveo/headless';
+// biome-ignore lint/style/useImportType: <React is needed>
 import React, {useEffect, useRef} from 'react';
 import {AtomicSearchInterface} from '../stencil-generated/search/index.js';
 
@@ -66,7 +67,7 @@ export const SearchInterfaceWrapper = (
         );
       });
     }
-  }, [searchInterfaceRef]);
+  }, [engine, initialization, localization, onReady]);
 
   return (
     <AtomicSearchInterface ref={searchInterfaceRef} {...allOtherProps}>

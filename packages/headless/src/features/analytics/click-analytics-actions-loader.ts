@@ -1,17 +1,17 @@
-import {Result} from '../../api/search/search/result.js';
-import {SearchEngine} from '../../app/search-engine/search-engine.js';
+import type {Result} from '../../api/search/search/result.js';
+import type {SearchEngine} from '../../app/search-engine/search-engine.js';
 import {
   logOpenSmartSnippetInlineLink,
   logOpenSmartSnippetSource,
   logOpenSmartSnippetSuggestionInlineLink,
   logOpenSmartSnippetSuggestionSource,
 } from '../question-answering/question-answering-analytics-actions.js';
-import {
+import type {
   QuestionAnsweringInlineLinkActionCreatorPayload,
   QuestionAnsweringUniqueIdentifierActionCreatorPayload,
 } from '../question-answering/question-answering-document-id.js';
 import {logDocumentOpen} from '../result/result-analytics-actions.js';
-import {ClickAction} from './analytics-utils.js';
+import type {ClickAction} from './analytics-utils.js';
 
 /**
  * The click analytics action creators.

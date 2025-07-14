@@ -41,7 +41,7 @@ describe('ranking info parser', () => {
     const toParse = createRankingInfoWithKeywords();
 
     const parsed = parseRankingInfo(toParse)!;
-    const testsTermsWeights = parsed.termsWeight?.['test'];
+    const testsTermsWeights = parsed.termsWeight?.test;
 
     expect(testsTermsWeights?.Weights?.Title).toBe(800);
     expect(testsTermsWeights?.Weights?.Concept).toBe(0);

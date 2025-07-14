@@ -1,12 +1,12 @@
 import dayjs from 'dayjs';
 import {
-  describe,
-  it,
-  expect,
-  vi,
-  beforeEach,
-  beforeAll,
   afterEach,
+  beforeAll,
+  beforeEach,
+  describe,
+  expect,
+  it,
+  vi,
 } from 'vitest';
 import {loadDayjsLocale} from './dayjs-locales';
 

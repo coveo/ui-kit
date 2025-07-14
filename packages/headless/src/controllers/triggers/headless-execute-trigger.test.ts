@@ -1,15 +1,15 @@
-import {Mock} from 'vitest';
+import type {Mock} from 'vitest';
 import {logTriggerExecute} from '../../features/triggers/trigger-analytics-actions.js';
 import {triggerReducer as triggers} from '../../features/triggers/triggers-slice.js';
-import {FunctionExecutionTrigger} from '../../features/triggers/triggers-state.js';
+import type {FunctionExecutionTrigger} from '../../features/triggers/triggers-state.js';
 import {
   buildMockSearchEngine,
-  MockedSearchEngine,
+  type MockedSearchEngine,
 } from '../../test/mock-engine-v2.js';
 import {createMockState} from '../../test/mock-state.js';
 import {
-  ExecuteTrigger,
   buildExecuteTrigger,
+  type ExecuteTrigger,
 } from './headless-execute-trigger.js';
 
 vi.mock('../../features/triggers/trigger-analytics-actions');

@@ -1,13 +1,13 @@
-import {
+import type {
   Recommendations,
   RecommendationsOptions,
 } from '../../../../controllers/commerce/recommendations/headless-recommendations.js';
-import {RecommendationsDefinitionMeta} from '../../../../controllers/commerce/recommendations/headless-recommendations.ssr.js';
-import {Controller} from '../../../../controllers/controller/headless-controller.js';
+import type {RecommendationsDefinitionMeta} from '../../../../controllers/commerce/recommendations/headless-recommendations.ssr.js';
+import type {Controller} from '../../../../controllers/controller/headless-controller.js';
 import {MultipleRecommendationError} from '../../../../utils/errors.js';
 import {
-  ControllerDefinition,
-  ControllerDefinitionsMap,
+  type ControllerDefinition,
+  type ControllerDefinitionsMap,
   recommendationInternalOptionKey,
 } from '../../types/common.js';
 

@@ -1,16 +1,16 @@
 import {
-  FocusTargetController,
+  type FocusTargetController,
   getFirstFocusableDescendant,
 } from '@/src/utils/accessibility-utils';
 import {defer, once} from '@/src/utils/utils';
 import {updateBreakpoints} from '../../../utils/replace-breakpoint';
-import {CommerceStore} from '../../commerce/atomic-commerce-interface/store';
-import {CommerceRecommendationStore} from '../../commerce/atomic-commerce-recommendation-interface/store';
-import {InsightStore} from '../../insight/atomic-insight-interface/store';
-import {RecsStore} from '../../recommendations/atomic-recs-interface/store';
-import {SearchStore} from '../../search/atomic-search-interface/store';
-import {AnyItem} from '../interface/item';
-import {
+import type {CommerceStore} from '../../commerce/atomic-commerce-interface/store';
+import type {CommerceRecommendationStore} from '../../commerce/atomic-commerce-recommendation-interface/store';
+import type {InsightStore} from '../../insight/atomic-insight-interface/store';
+import type {RecsStore} from '../../recommendations/atomic-recs-interface/store';
+import type {SearchStore} from '../../search/atomic-search-interface/store';
+import type {AnyItem} from '../interface/item';
+import type {
   ItemDisplayDensity,
   ItemDisplayImageSize,
 } from '../layout/display-options';

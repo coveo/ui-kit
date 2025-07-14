@@ -1,9 +1,9 @@
-import {VNode} from '@stencil/core';
-import {HTMLStencilElement} from '@stencil/core/internal';
+import type {VNode} from '@stencil/core';
+import type {HTMLStencilElement} from '@stencil/core/internal';
 import type {LitElement} from 'lit';
 import {closest} from '../../../utils/dom-utils';
 import {buildCustomEvent} from '../../../utils/event-utils';
-import {AnyBindings} from '../interface/bindings';
+import type {AnyBindings} from '../interface/bindings';
 
 /**
  * Element which will be rendered in the list of suggestions.
@@ -66,13 +66,13 @@ export interface SearchBoxSuggestions {
   /**
    * Hook called when the user changes the search box's input value. This can lead to all the query suggestions being updated.
    */
-  onInput?(): Promise<unknown> | void;
+  onInput?(): Promise<unknown>;
   /**
    * Hook called when the suggested query changes as a user traverses through the list of suggestions.
    * This is used for instant results, which are rendered based on the current suggested query.
    * @param q The new suggested query.
    */
-  onSuggestedQueryChange?(q: string): Promise<unknown> | void;
+  onSuggestedQueryChange?(q: string): Promise<unknown>;
 }
 
 /**
@@ -146,7 +146,7 @@ export type SearchBoxSuggestionsBindings<
 
 const isLitElementLoosely = (candidate: unknown): candidate is LitElement =>
   'updateComplete' in (candidate as LitElement) &&
-  (candidate as LitElement)['updateComplete'] instanceof Promise;
+  (candidate as LitElement).updateComplete instanceof Promise;
 
 const dispatchSearchBoxSuggestionsEventEventually = async <
   SearchBoxController,
@@ -188,7 +188,11 @@ export const dispatchSearchBoxSuggestionsEvent = <
       )}`
     );
   }
-  dispatchSearchBoxSuggestionsEventEventually(interfaceElement, element, event);
+  void dispatchSearchBoxSuggestionsEventEventually(
+    interfaceElement,
+    element,
+    event
+  );
 };
 
 export function elementHasNoQuery(el: SearchBoxSuggestionElement) {

@@ -1,8 +1,8 @@
-import {InsightEngine} from '../../../app/insight-engine/insight-engine.js';
+import type {InsightEngine} from '../../../app/insight-engine/insight-engine.js';
 import {
   buildCoreQuerySummary,
-  QuerySummary,
-  QuerySummaryState,
+  type QuerySummary,
+  type QuerySummaryState,
 } from '../../core/query-summary/headless-core-query-summary.js';
 
 export type {QuerySummary, QuerySummaryState};

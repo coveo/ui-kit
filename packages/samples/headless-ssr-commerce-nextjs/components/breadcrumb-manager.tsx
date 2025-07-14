@@ -1,13 +1,13 @@
 'use client';
 
-import {useBreadcrumbManager} from '@/lib/commerce-engine';
-import {
-  NumericFacetValue,
-  DateFacetValue,
+import type {
   CategoryFacetValue,
-  RegularFacetValue,
+  DateFacetValue,
   LocationFacetValue,
+  NumericFacetValue,
+  RegularFacetValue,
 } from '@coveo/headless-react/ssr-commerce';
+import {useBreadcrumbManager} from '@/lib/commerce-engine';
 
 export default function BreadcrumbManager() {
   const {state, methods} = useBreadcrumbManager();
@@ -47,7 +47,9 @@ export default function BreadcrumbManager() {
   return (
     <div>
       <div>
-        <button onClick={methods?.deselectAll}>Clear all filters</button>
+        <button type="button" onClick={methods?.deselectAll}>
+          Clear all filters
+        </button>
       </div>
       <ul>
         {state.facetBreadcrumbs.map((facetBreadcrumb) => {
@@ -56,6 +58,7 @@ export default function BreadcrumbManager() {
               {facetBreadcrumb.values.map((value, index) => {
                 return (
                   <button
+                    type="button"
                     key={`${value.value}-breadcrumb-${index}`}
                     onClick={() => value.deselect()}
                   >
