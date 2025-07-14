@@ -3,7 +3,11 @@
   "name": "@coveo/documentation",
   "type": "module",
   "main": "dist/index.js",
-  "files": ["dist", "configs", "tsconfig.json"],
+  "files": [
+    "dist",
+    "configs",
+    "tsconfig.json"
+  ],
   "scripts": {
     "build": "nx build"
   },

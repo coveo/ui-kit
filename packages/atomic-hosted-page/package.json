@@ -15,7 +15,11 @@
   "es2017": "dist/esm/index.mjs",
   "types": "dist/types/components.d.ts",
   "unpkg": "dist/atomic-page/atomic-hosted-page.esm.js",
-  "files": ["dist/", "loader/", "docs/"],
+  "files": [
+    "dist/",
+    "loader/",
+    "docs/"
+  ],
   "scripts": {
     "clean": "rimraf -rf dist/*",
     "build": "nx build",

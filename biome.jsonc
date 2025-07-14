@@ -38,66 +38,40 @@
       // atomic-stencil-samples excluded files.
       "!**/packages/samples/stencil/**/*.d.ts",
 
-      // This is in another ticket for tailwind css
+      // TODO: 
       "!**/*.tw.css"
     ]
   },
   "formatter": {
     "enabled": true,
-    "formatWithErrors": false,
     "indentStyle": "space",
-    "indentWidth": 2,
-    "lineEnding": "lf",
-    "lineWidth": 80,
-    "attributePosition": "auto",
-    "bracketSameLine": false,
     "bracketSpacing": false,
-    "expand": "auto",
-    "useEditorconfig": true,
     "includes": ["**"]
   },
   "linter": {
     "enabled": true,
     "rules": {
       "recommended": true,
-      "style": {"noNonNullAssertion": "off"}
+      "style": {"noNonNullAssertion": "off"},
+      // TODO:
+      "complexity": {"noBannedTypes": "off"},
+      // TODO:
+      "correctness": {"noUnusedVariables": "off"}
     },
     "includes": ["**"]
   },
   "javascript": {
     "formatter": {
-      "jsxQuoteStyle": "double",
-      "quoteProperties": "asNeeded",
       "trailingCommas": "es5",
-      "semicolons": "always",
-      "arrowParentheses": "always",
-      "bracketSameLine": false,
       "quoteStyle": "single",
-      "attributePosition": "auto",
       "bracketSpacing": false
     }
   },
   "html": {"formatter": {"selfCloseVoidElements": "always"}},
-  "css": {
-    "formatter": {
-      "enabled": true,
-      "quoteStyle": "single"
-    }
-  },
-  "overrides": [
-    {
-      "includes": ["**/*.ts", "**/*.tsx"],
-      "linter": {
-        "rules": {
-          // These two are other tickets as well
-          "complexity": {"noBannedTypes": "off"},
-          "correctness": {"noUnusedVariables": "off"}
-        }
-      }
-    }
-  ],
   "assist": {
     "enabled": true,
     "actions": {"source": {"organizeImports": "on"}}
   }
 }
+
+//TODO: Clean up eslint mentions (non-comments)

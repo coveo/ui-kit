@@ -57,7 +57,9 @@
   "types": "./dist/definitions/index.d.ts",
   "license": "Apache-2.0",
   "version": "3.27.2",
-  "files": ["dist/"],
+  "files": [
+    "dist/"
+  ],
   "scripts": {
     "dev": "concurrently \"npm run build:definitions -- -w\" \"npm run build:bundles -- dev\"",
     "build": "nx build",

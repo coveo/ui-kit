@@ -10,7 +10,9 @@
   "types": "./dist/definitions/index.d.ts",
   "license": "Apache-2.0",
   "version": "1.0.19",
-  "files": ["dist/"],
+  "files": [
+    "dist/"
+  ],
   "type": "module",
   "exports": {
     ".": {

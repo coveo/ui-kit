@@ -8,7 +8,9 @@
     "./dist/auth.esm.js": "./dist/auth.esm.js"
   },
   "types": "./dist/definitions/auth.d.ts",
-  "files": ["dist/"],
+  "files": [
+    "dist/"
+  ],
   "scripts": {
     "dev": "concurrently \"npm run build:definitions -- -w\" \"npm run build:bundles -- dev\"",
     "build": "nx build",
@@ -28,7 +30,11 @@
     "url": "git+https://github.com/coveo/ui-kit.git",
     "directory": "packages/auth"
   },
-  "keywords": ["coveo", "authentication", "saml"],
+  "keywords": [
+    "coveo",
+    "authentication",
+    "saml"
+  ],
   "license": "Apache-2.0",
   "bugs": {
     "url": "https://github.com/coveo/ui-kit/issues"

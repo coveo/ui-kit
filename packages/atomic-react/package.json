@@ -24,7 +24,11 @@
   "module": "./dist/esm/atomic-react.mjs",
   "main": "./dist/cjs/atomic-react.cjs",
   "types": "./dist/types/index.d.ts",
-  "files": ["dist/", "recommendation/", "commerce/"],
+  "files": [
+    "dist/",
+    "recommendation/",
+    "commerce/"
+  ],
   "dependencies": {
     "@coveo/atomic": "3.28.0",
     "@lit/react": "1.0.6",
