@@ -28,6 +28,12 @@ import {
 import {createComponent} from '@lit/react';
 import React from 'react';
 
+export const AtomicCommerceBreadbox = createComponent({
+  tagName: 'atomic-commerce-breadbox',
+  react: React,
+  elementClass: LitAtomicCommerceBreadbox,
+});
+
 export const AtomicCommerceDidYouMean = createComponent({
   tagName: 'atomic-commerce-did-you-mean',
   react: React,
@@ -38,12 +44,6 @@ export const AtomicCommerceInterface = createComponent({
   tagName: 'atomic-commerce-interface',
   react: React,
   elementClass: LitAtomicCommerceInterface,
-});
-
-export const AtomicCommerceBreadbox = createComponent({
-  tagName: 'atomic-commerce-breadbox',
-  react: React,
-  elementClass: LitAtomicCommerceBreadbox,
 });
 
 export const AtomicCommerceLayout = createComponent({
@@ -100,16 +100,16 @@ export const AtomicCommerceRecommendationList = createComponent({
   elementClass: LitAtomicCommerceRecommendationList,
 });
 
-export const AtomicCommerceRefineToggle = createComponent({
-  tagName: 'atomic-commerce-refine-toggle',
-  react: React,
-  elementClass: LitAtomicCommerceRefineToggle,
-});
-
 export const AtomicCommerceRefineModal = createComponent({
   tagName: 'atomic-commerce-refine-modal',
   react: React,
   elementClass: LitAtomicCommerceRefineModal,
+});
+
+export const AtomicCommerceRefineToggle = createComponent({
+  tagName: 'atomic-commerce-refine-toggle',
+  react: React,
+  elementClass: LitAtomicCommerceRefineToggle,
 });
 
 export const AtomicCommerceSearchBox = createComponent({

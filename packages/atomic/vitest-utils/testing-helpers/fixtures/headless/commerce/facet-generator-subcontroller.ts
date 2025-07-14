@@ -1,4 +1,7 @@
-import {FacetGeneratorState, FacetGenerator} from '@coveo/headless/commerce';
+import type {
+  FacetGenerator,
+  FacetGeneratorState,
+} from '@coveo/headless/commerce';
 import {vi} from 'vitest';
 import {genericSubscribe} from '../common';
 

@@ -1,26 +1,26 @@
+import {
+  type BreadcrumbManager,
+  type BreadcrumbManagerState,
+  buildProductListing,
+  buildSearch,
+  type FacetGenerator,
+  type FacetGeneratorState,
+  type ProductListingSummaryState,
+  type SearchSummaryState,
+  type Sort,
+  type SortCriterion,
+  type SortState,
+  type Summary,
+} from '@coveo/headless/commerce';
+import {type CSSResultGroup, html, LitElement, nothing, unsafeCSS} from 'lit';
+import {customElement, property, state} from 'lit/decorators.js';
 import {bindStateToController} from '@/src/decorators/bind-state';
 import {bindingGuard} from '@/src/decorators/binding-guard';
 import {bindings} from '@/src/decorators/bindings';
 import {errorGuard} from '@/src/decorators/error-guard';
-import {InitializableComponent} from '@/src/decorators/types';
+import type {InitializableComponent} from '@/src/decorators/types';
 import {watch} from '@/src/decorators/watch';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles.js';
-import {
-  Summary,
-  SearchSummaryState,
-  ProductListingSummaryState,
-  buildSearch,
-  buildProductListing,
-  Sort,
-  SortState,
-  FacetGenerator,
-  FacetGeneratorState,
-  BreadcrumbManager,
-  BreadcrumbManagerState,
-  SortCriterion,
-} from '@coveo/headless/commerce';
-import {CSSResultGroup, html, LitElement, nothing, unsafeCSS} from 'lit';
-import {customElement, property, state} from 'lit/decorators.js';
 import {renderRefineModalBody} from '../../common/refine-modal/body';
 import {
   renderRefineModalFiltersClearButton,
@@ -28,7 +28,7 @@ import {
 } from '../../common/refine-modal/filters';
 import {renderRefineModal} from '../../common/refine-modal/modal';
 import {renderRefineModalSortSection} from '../../common/refine-modal/sort';
-import {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface';
+import type {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface';
 import {getSortByLabel, renderCommerceSortOption} from '../sort/option';
 import styles from './atomic-commerce-refine-modal.tw.css';
 
@@ -207,7 +207,9 @@ export class AtomicCommerceRefineModal
         i18n: this.bindings.i18n,
         host: this,
         isOpen: this.isOpen,
-        onClose: () => (this.isOpen = false),
+        onClose: () => {
+          this.isOpen = false;
+        },
         title: this.bindings.i18n.t('sort-and-filter'),
         numberOfItems: this.summaryState.totalNumberOfProducts,
         openButton: this.openButton,

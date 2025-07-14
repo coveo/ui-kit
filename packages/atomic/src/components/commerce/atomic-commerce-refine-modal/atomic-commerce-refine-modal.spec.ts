@@ -1,3 +1,19 @@
+import {
+  type BreadcrumbManager,
+  buildProductListing,
+  buildSearch,
+  type FacetGenerator,
+  type ProductListingSummaryState,
+  type SearchSummaryState,
+  type Sort,
+  SortBy,
+  type SortState,
+  type Summary,
+} from '@coveo/headless/commerce';
+import {userEvent} from '@vitest/browser/context';
+import {html} from 'lit';
+import {ifDefined} from 'lit/directives/if-defined.js';
+import {describe, expect, it, vi} from 'vitest';
 import {renderInAtomicCommerceInterface} from '@/vitest-utils/testing-helpers/fixtures/atomic/commerce/atomic-commerce-interface-fixture';
 import {buildFakeBreadcrumbManager} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/breadcrumb-manager-subcontroller';
 import {buildFakeFacetGenerator} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/facet-generator-subcontroller';
@@ -5,24 +21,8 @@ import {buildFakeProductListing} from '@/vitest-utils/testing-helpers/fixtures/h
 import {buildFakeQuerySummary} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/query-summary-subcontroller';
 import {buildFakeSearch} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/search-controller';
 import {buildFakeSort} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/sort-subcontroller';
-import {
-  buildSearch,
-  buildProductListing,
-  Summary,
-  SearchSummaryState,
-  ProductListingSummaryState,
-  Sort,
-  FacetGenerator,
-  BreadcrumbManager,
-  SortState,
-  SortBy,
-} from '@coveo/headless/commerce';
-import {userEvent} from '@vitest/browser/context';
-import {html} from 'lit';
-import {ifDefined} from 'lit/directives/if-defined.js';
-import {describe, it, expect, vi} from 'vitest';
 import './atomic-commerce-refine-modal';
-import {AtomicCommerceRefineModal} from './atomic-commerce-refine-modal';
+import type {AtomicCommerceRefineModal} from './atomic-commerce-refine-modal';
 
 vi.mock('@coveo/headless/commerce', {spy: true});
 
