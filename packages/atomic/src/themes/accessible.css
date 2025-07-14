@@ -60,7 +60,8 @@
   --atomic-rating-icon-outline: none;
 
   --animate-slide-down-modal: slideDown 0.5s linear forwards;
-  --animate-scale-up-modal: scaleUp 0.5s cubic-bezier(0.165, 0.84, 0.44, 1) forwards;
+  --animate-scale-up-modal: scaleUp 0.5s cubic-bezier(0.165, 0.84, 0.44, 1)
+    forwards;
 
   --spacing: 0.25rem;
 }

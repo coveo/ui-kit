@@ -148,11 +148,6 @@
     }
   },
   "overrides": [
-    {"includes": ["**/package-lock.json"], "linter": {"rules": {}}},
-    {
-      "includes": ["**/*.ts", "**/*.tsx", "**/*.js", "**/*.jsx", "**/*.mjs"],
-      "linter": {"rules": {}}
-    },
     {
       "includes": ["**/*.ts", "**/*.tsx"],
       "linter": {
@@ -161,17 +156,7 @@
           "correctness": {"noUnusedVariables": "off"}
         }
       }
-    },
-    {
-      "includes": ["**/*.js", "**/*.jsx"],
-      "linter": {"rules": {"correctness": {"noUnusedVariables": "off"}}}
-    },
-    {"includes": ["**/*.mjs"]},
-    {
-      "includes": ["**/*.{scss,css,pcss,html,mdx}"],
-      "formatter": {"lineWidth": 120}
-    },
-    {"includes": ["**/*.tsx"]}
+    }
   ],
   "assist": {
     "enabled": true,
