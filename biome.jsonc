@@ -38,7 +38,7 @@
       // atomic-stencil-samples excluded files.
       "!**/packages/samples/stencil/**/*.d.ts",
 
-      // TODO: 
+      // TODO: https://coveord.atlassian.net/browse/KIT-4553
       "!**/*.tw.css"
     ]
   },
@@ -53,9 +53,9 @@
     "rules": {
       "recommended": true,
       "style": {"noNonNullAssertion": "off"},
-      // TODO:
+      // TODO: https://coveord.atlassian.net/browse/KIT-4556
       "complexity": {"noBannedTypes": "off"},
-      // TODO:
+      // TODO: https://coveord.atlassian.net/browse/KIT-4555
       "correctness": {"noUnusedVariables": "off"}
     },
     "includes": ["**"]
