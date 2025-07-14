@@ -98,19 +98,11 @@
   "config": {
     "commitizen": {
       "path": "./node_modules/cz-conventional-changelog",
-      "defaultScope": [
-        "auth",
-        "bueno",
-        "headless",
-        "atomic",
-        "quantic"
-      ]
+      "defaultScope": ["auth", "bueno", "headless", "atomic", "quantic"]
     }
   },
   "commitlint": {
-    "extends": [
-      "@commitlint/config-conventional"
-    ]
+    "extends": ["@commitlint/config-conventional"]
   },
   "engines": {
     "node": "^22.14.0",

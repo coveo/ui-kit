@@ -10,9 +10,12 @@
     "maxSize": 2097152,
     "includes": [
       "**",
+      // Packages that should be excluded : quantic uses eslint, create-atomic-template is a template.
       "!**/packages/quantic/**/*",
       "!**/packages/create-atomic-template/**/*",
-      "!**/.deployment.config.json"
+      "!**/.deployment.config.json",
+      // This is in another ticket for tailwind css
+      "!**/*.tw.css"
     ]
   },
   "formatter": {
@@ -28,27 +31,10 @@
     "expand": "auto",
     "useEditorconfig": true,
     "includes": [
-      "**/*.{js,jsx,ts,tsx,mjs,json,jsonc,css,md}",
-      "!.github/prompts/**/*",
-      "!.github/instructions/**/*",
-      "!.github/**/*.yml",
-      "!.github/**/*.yaml",
-      "!**/packages/quantic/**/*",
-      "!**/lwc/**/*.css",
-      "!**/lwc/**/*.html",
-      "!**/lwc/**/*.svg",
-      "!**/lwc/**/*.xml",
+      "**/*.{js,jsx,ts,tsx,mjs,json,jsonc,css}",
       "!**/*.tw.css",
-      "!**/stencil-generated/**/*",
-      "!**/.sfdx",
-      "!**/dist",
-      "!**/*.d.ts",
       "!**/LICENSE.md",
       "!utils/**/.storybook/**",
-      "!**/.angular/**",
-      "!**/.next/**",
-      "!**/www/**",
-      "!**/cdn/**",
       "!scripts/deploy/execute-deployment-pipeline.mjs",
       "!**/staticresources/**",
       "!packages/atomic-hosted-page/loader/**/*",
@@ -66,7 +52,6 @@
       "!packages/samples/vuejs/public/lang/*.json",
       "!**/.deployment.config.json",
       "!.deployment.config.json",
-      "!**/package.json",
       "!packages/atomic-angular/scripts/build-lit.mjs",
       "!packages/atomic-react/scripts/build-lit.mjs",
       "!packages/atomic/playwright-utils/**/*",

@@ -1,12 +1,15 @@
 import fs from 'node:fs/promises';
-import { findPackageJSON} from 'node:module';
+import {findPackageJSON} from 'node:module';
 import path from 'node:path';
 import chalk from 'chalk';
 import ncp from 'ncp';
 
 const currentDir = import.meta.dirname;
 const getVersionFromPackageJson = async (packageName, versionType) => {
-  const packageJsonPath = findPackageJSON(`@coveo/${packageName}`, import.meta.url);
+  const packageJsonPath = findPackageJSON(
+    `@coveo/${packageName}`,
+    import.meta.url
+  );
   try {
     const packageJson = JSON.parse(await fs.readFile(packageJsonPath, 'utf-8'));
     const version = packageJson.version;
@@ -18,7 +21,10 @@ const getVersionFromPackageJson = async (packageName, versionType) => {
         patch: version,
       }[versionType] || version
     );
-  } catch (err) {    throw new Error(`Error reading or parsing ${packageJsonPath}: ${err.message}`);
+  } catch (err) {
+    throw new Error(
+      `Error reading or parsing ${packageJsonPath}: ${err.message}`
+    );
   }
 };
 
@@ -28,8 +34,9 @@ const preprocessConfig = async (configContent) => {
     IS_NOT_NIGHTLY: 'true',
   };
 
-  const versionPlaceholderRegex = /\$\[([A-Z_]+?)_(MAJOR|MINOR|PATCH)_VERSION\]/g;
-  
+  const versionPlaceholderRegex =
+    /\$\[([A-Z_]+?)_(MAJOR|MINOR|PATCH)_VERSION\]/g;
+
   const promises = [];
   const processedPlaceholderKeys = new Set();
 
@@ -37,24 +44,26 @@ const preprocessConfig = async (configContent) => {
   versionPlaceholderRegex.lastIndex = 0;
   // biome-ignore lint/suspicious/noAssignInExpressions: <>
   while ((match = versionPlaceholderRegex.exec(configContent)) !== null) {
-    const placeholderKey = match[0].substring(2, match[0].length - 1); 
-    
+    const placeholderKey = match[0].substring(2, match[0].length - 1);
+
     if (processedPlaceholderKeys.has(placeholderKey)) {
       continue;
     }
     processedPlaceholderKeys.add(placeholderKey);
 
-    const packageIdentifier = match[1]; 
-    const versionTypeIdentifier = match[2]; 
+    const packageIdentifier = match[1];
+    const versionTypeIdentifier = match[2];
 
     const packageName = packageIdentifier.replace(/_/g, '-').toLowerCase();
     const versionType = versionTypeIdentifier.toLowerCase();
-    
+
     promises.push(
       (async () => {
-          const version = await getVersionFromPackageJson(packageName, versionType);
-          versionPlaceholders[placeholderKey] = version;
-
+        const version = await getVersionFromPackageJson(
+          packageName,
+          versionType
+        );
+        versionPlaceholders[placeholderKey] = version;
       })()
     );
   }
@@ -65,7 +74,7 @@ const preprocessConfig = async (configContent) => {
     if (Object.hasOwn(versionPlaceholders, key)) {
       return versionPlaceholders[key];
     }
-    return ''; 
+    return '';
   });
 };
 
@@ -83,7 +92,11 @@ const copyFiles = async (source, destination) => {
   return new Promise((resolve, reject) => {
     ncp(source, destination, (err) => {
       if (err) {
-        reject(new Error(`NCP error copying from ${source} to ${destination}: ${err ? err.map(e => e.message).join(', ') : 'unknown error'}`));
+        reject(
+          new Error(
+            `NCP error copying from ${source} to ${destination}: ${err ? err.map((e) => e.message).join(', ') : 'unknown error'}`
+          )
+        );
       } else {
         resolve();
       }
@@ -112,20 +125,25 @@ const copyDagPhaseFiles = async () => {
         await ensureDirectoryExists(targetPath);
         await copyFiles(sourcePath, targetPath);
       } catch (err) {
-        throw new Error(`Failed to process phase ${phase.id} (source: ${sourcePath}, target: ${targetPath}): ${err.message}`);
+        throw new Error(
+          `Failed to process phase ${phase.id} (source: ${sourcePath}, target: ${targetPath}): ${err.message}`
+        );
       }
     }
   }
 };
 
 const main = async () => {
-  await fs.rm(devCdnDir, { recursive: true, force: true });
-  await ensureDirectoryExists(devCdnDir); 
+  await fs.rm(devCdnDir, {recursive: true, force: true});
+  await ensureDirectoryExists(devCdnDir);
 
   await copyDagPhaseFiles();
 };
 
 main().catch((err) => {
-  console.error(chalk.red('An error occurred during local CDN deployment:'), err.message);
+  console.error(
+    chalk.red('An error occurred during local CDN deployment:'),
+    err.message
+  );
   process.exit(1);
 });

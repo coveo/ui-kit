@@ -41,11 +41,7 @@
     },
     "./custom-elements-manifest": "./custom-elements.json"
   },
-  "files": [
-    "dist/",
-    "docs/",
-    "licenses/"
-  ],
+  "files": ["dist/", "docs/", "licenses/"],
   "scripts": {
     "clean": "rimraf -rf dist/* dist-storybook/* www/* docs/* playwright-report/*",
     "build": "nx build",
