@@ -1,26 +1,20 @@
 import type {Page} from '@playwright/test';
-import {BasePageObject} from '@/playwright-utils/base-page-object';
+import {BasePageObject} from '@/playwright-utils/lit-base-page-object';
 
-export class QuerySummaryPageObject extends BasePageObject<'atomic-commerce-query-summary'> {
+export class QuerySummaryPageObject extends BasePageObject {
   constructor(page: Page) {
     super(page, 'atomic-commerce-query-summary');
   }
 
-  get placeholder() {
-    return this.page.locator('[part="placeholder"]');
-  }
-
-  ariaLive(textRegex: RegExp) {
-    return this.page.getByRole('status').filter({hasText: textRegex});
-  }
-
-  text(summaryRegex: RegExp) {
+  get text() {
     return this.page
-      .locator(':not([role="status"])')
-      .filter({hasText: summaryRegex});
+      .locator('div[part="container"]')
+      .filter({hasText: /Products \d+-\d+ of [\d,]+/});
   }
 
-  get container() {
-    return this.page.locator('[part="container"]');
+  get ariaLive() {
+    return this.page
+      .getByRole('status')
+      .filter({hasText: /Products \d+-\d+ of [\d,]+/});
   }
 }
