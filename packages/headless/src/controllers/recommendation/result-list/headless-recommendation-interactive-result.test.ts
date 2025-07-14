@@ -1,15 +1,15 @@
-import {Mock} from 'vitest';
+import type {Mock} from 'vitest';
 import {logRecommendationOpen} from '../../../features/recommendation/recommendation-analytics-actions.js';
 import {
   buildMockRecommendationEngine,
-  MockedRecommendationEngine,
+  type MockedRecommendationEngine,
 } from '../../../test/mock-engine-v2.js';
 import {createMockRecommendationState} from '../../../test/mock-recommendation-state.js';
 import {buildMockResult} from '../../../test/mock-result.js';
 import {buildInteractiveResultCore} from '../../core/interactive-result/headless-core-interactive-result.js';
 import {
   buildInteractiveResult,
-  RecommendationInteractiveResultProps,
+  type RecommendationInteractiveResultProps,
 } from './headless-recommendation-interactive-result.js';
 
 vi.mock('../../core/interactive-result/headless-core-interactive-result');

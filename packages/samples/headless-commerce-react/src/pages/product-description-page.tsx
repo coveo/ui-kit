@@ -1,9 +1,9 @@
 import {
-  Cart,
-  CommerceEngine,
-  Context,
   buildProductView,
   buildRecommendations,
+  type Cart,
+  type CommerceEngine,
+  type Context,
 } from '@coveo/headless/commerce';
 import {useEffect, useRef, useState} from 'react';
 import RecommendationsInterface from '../components/use-cases/recommendations-interface/recommendations-interface.js';
@@ -126,10 +126,15 @@ export default function ProductDescriptionPage(
         <p className="CartCurrentQuantity">
           Currently in cart:<span> {numberInCart()}</span>
         </p>
-        <button className="CartAddOne" onClick={() => adjustQuantityInCart(1)}>
+        <button
+          type="button"
+          className="CartAddOne"
+          onClick={() => adjustQuantityInCart(1)}
+        >
           Add one
         </button>
         <button
+          type="button"
           className="CartRemoveOne"
           disabled={!isInCart()}
           onClick={() => adjustQuantityInCart(-1)}
@@ -137,6 +142,7 @@ export default function ProductDescriptionPage(
           Remove one
         </button>
         <button
+          type="button"
           className="CartRemoveAll"
           disabled={!isInCart()}
           onClick={removeFromCart}

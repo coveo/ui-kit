@@ -1,12 +1,12 @@
 import {
   ArrayValue,
   BooleanValue,
+  isBoolean,
   NumberValue,
   Schema,
   StringValue,
-  isBoolean,
 } from '@coveo/bueno';
-import {SearchEngine} from '../../app/search-engine/search-engine.js';
+import type {SearchEngine} from '../../app/search-engine/search-engine.js';
 import {
   clearRecentQueries,
   registerRecentQueries,
@@ -17,13 +17,13 @@ import {
 } from '../../features/recent-queries/recent-queries-analytics-actions.js';
 import {recentQueriesReducer as recentQueries} from '../../features/recent-queries/recent-queries-slice.js';
 import {
-  PrepareForSearchWithQueryOptions,
   executeSearch,
+  type PrepareForSearchWithQueryOptions,
   prepareForSearchWithQuery,
 } from '../../features/search/search-actions.js';
 import {searchReducer as search} from '../../features/search/search-slice.js';
-import {UpdateQueryActionCreatorPayload} from '../../ssr.index.js';
-import {RecentQueriesSection} from '../../state/state-sections.js';
+import type {UpdateQueryActionCreatorPayload} from '../../ssr.index.js';
+import type {RecentQueriesSection} from '../../state/state-sections.js';
 import {loadReducerError} from '../../utils/errors.js';
 import {
   validateInitialState,
@@ -31,7 +31,7 @@ import {
 } from '../../utils/validate-payload.js';
 import {
   buildController,
-  Controller,
+  type Controller,
 } from '../controller/headless-controller.js';
 
 export interface RecentQueriesListProps {

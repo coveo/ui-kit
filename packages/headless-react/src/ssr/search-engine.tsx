@@ -1,10 +1,10 @@
 import {
-  Controller,
-  SearchEngine,
-  ControllerDefinitionsMap,
-  SearchEngineDefinitionOptions,
+  type Controller,
+  type ControllerDefinitionsMap,
   defineSearchEngine as defineBaseSearchEngine,
-  SearchEngineOptions,
+  type SearchEngine,
+  type SearchEngineDefinitionOptions,
+  type SearchEngineOptions,
 } from '@coveo/headless/ssr';
 // Workaround to prevent Next.js erroring about importing CSR only hooks
 import React from 'react';
@@ -16,7 +16,7 @@ import {
   buildStateProvider,
   buildStaticStateProvider,
 } from './common.js';
-import {ContextState, ReactEngineDefinition} from './types.js';
+import type {ContextState, ReactEngineDefinition} from './types.js';
 
 export type ReactSearchEngineDefinition<
   TControllers extends ControllerDefinitionsMap<SearchEngine, Controller>,

@@ -1,11 +1,11 @@
 import {isSearchApiDate} from './date-format.js';
 import {
   deserializeRelativeDate,
-  RelativeDate,
-  serializeRelativeDate,
+  formatRelativeDateForSearchApi,
   isRelativeDate,
   isRelativeDateFormat,
-  formatRelativeDateForSearchApi,
+  type RelativeDate,
+  serializeRelativeDate,
   validateRelativeDate,
 } from './relative-date.js';
 

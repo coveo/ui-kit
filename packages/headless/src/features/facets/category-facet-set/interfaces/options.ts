@@ -1,4 +1,4 @@
-import {CategoryFacetRequest} from './request.js';
+import type {CategoryFacetRequest} from './request.js';
 
 export type CategoryFacetOptionalParameters = Pick<
   CategoryFacetRequest,

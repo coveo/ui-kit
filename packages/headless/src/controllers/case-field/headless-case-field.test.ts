@@ -1,9 +1,9 @@
 import {configuration} from '../../app/common-reducers.js';
-import {caseAssistConfigurationReducer as caseAssistConfiguration} from '../../features/case-assist-configuration/case-assist-configuration-slice.js';
 import {
   logClassificationClick,
   logUpdateCaseField,
 } from '../../features/case-assist/case-assist-analytics-actions.js';
+import {caseAssistConfigurationReducer as caseAssistConfiguration} from '../../features/case-assist-configuration/case-assist-configuration-slice.js';
 import {
   fetchCaseClassifications,
   registerCaseField,
@@ -17,12 +17,12 @@ import {documentSuggestionReducer as documentSuggestion} from '../../features/do
 import {buildMockCaseAssistState} from '../../test/mock-case-assist-state.js';
 import {
   buildMockCaseAssistEngine,
-  MockedCaseAssistEngine,
+  type MockedCaseAssistEngine,
 } from '../../test/mock-engine-v2.js';
 import {
   buildCaseField,
-  CaseField,
-  CaseFieldOptions,
+  type CaseField,
+  type CaseFieldOptions,
 } from './headless-case-field.js';
 
 vi.mock('../../features/document-suggestion/document-suggestion-actions');

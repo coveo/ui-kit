@@ -1,5 +1,5 @@
-import {BasePageObject} from '@/playwright-utils/base-page-object';
 import type {Page} from '@playwright/test';
+import {BasePageObject} from '@/playwright-utils/base-page-object';
 
 export class ProductLinkPageObject extends BasePageObject<'atomic-product-link'> {
   constructor(page: Page) {

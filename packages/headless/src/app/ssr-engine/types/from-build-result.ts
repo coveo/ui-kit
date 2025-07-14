@@ -1,5 +1,5 @@
-import {CoreEngine, CoreEngineNext} from '../../engine.js';
-import {ControllersMap, EngineDefinitionBuildResult} from './common.js';
+import type {CoreEngine, CoreEngineNext} from '../../engine.js';
+import type {ControllersMap, EngineDefinitionBuildResult} from './common.js';
 
 export interface FromBuildResultOptions<
   TEngine extends CoreEngine | CoreEngineNext,
@@ -9,13 +9,11 @@ export interface FromBuildResultOptions<
   allowedRecommendationKeys?: (keyof TControllers)[];
 }
 
-export interface FromBuildResult<
+export type FromBuildResult<
   TEngine extends CoreEngine | CoreEngineNext,
   TControllers extends ControllersMap,
   TOptions,
   TReturn,
-> {
-  (
-    options: FromBuildResultOptions<TEngine, TControllers> & TOptions
-  ): Promise<TReturn>;
-}
+> = (
+  options: FromBuildResultOptions<TEngine, TControllers> & TOptions
+) => Promise<TReturn>;

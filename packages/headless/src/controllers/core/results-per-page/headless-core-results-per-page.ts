@@ -1,12 +1,12 @@
 import {NumberValue, Schema} from '@coveo/bueno';
 import {configuration} from '../../../app/common-reducers.js';
-import {CoreEngine} from '../../../app/engine.js';
+import type {CoreEngine} from '../../../app/engine.js';
 import {
   registerNumberOfResults,
   updateNumberOfResults,
 } from '../../../features/pagination/pagination-actions.js';
 import {paginationReducer as pagination} from '../../../features/pagination/pagination-slice.js';
-import {
+import type {
   ConfigurationSection,
   PaginationSection,
 } from '../../../state/state-sections.js';
@@ -14,7 +14,7 @@ import {loadReducerError} from '../../../utils/errors.js';
 import {validateInitialState} from '../../../utils/validate-payload.js';
 import {
   buildController,
-  Controller,
+  type Controller,
 } from '../../controller/headless-controller.js';
 
 const initialStateSchema = new Schema({

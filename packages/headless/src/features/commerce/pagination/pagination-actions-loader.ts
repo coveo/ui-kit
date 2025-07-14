@@ -1,16 +1,16 @@
-import {PayloadAction} from '@reduxjs/toolkit';
-import {CommerceEngine} from '../../../app/commerce-engine/commerce-engine.js';
+import type {PayloadAction} from '@reduxjs/toolkit';
+import type {CommerceEngine} from '../../../app/commerce-engine/commerce-engine.js';
 import {
-  RegisterRecommendationsSlotPaginationPayload,
-  NextPagePayload,
-  PreviousPagePayload,
-  SelectPagePayload,
-  SetPageSizePayload,
-  previousPage,
+  type NextPagePayload,
   nextPage,
+  type PreviousPagePayload,
+  previousPage,
+  type RegisterRecommendationsSlotPaginationPayload,
+  registerRecommendationsSlotPagination,
+  type SelectPagePayload,
+  type SetPageSizePayload,
   selectPage,
   setPageSize,
-  registerRecommendationsSlotPagination,
 } from './pagination-actions.js';
 import {paginationReducer as commercePagination} from './pagination-slice.js';
 

@@ -1,5 +1,5 @@
-import {CommerceSuccessResponse} from '../api/commerce/common/response.js';
-import {QueryCommerceAPIThunkReturn} from '../features/commerce/product-listing/product-listing-actions.js';
+import type {CommerceSuccessResponse} from '../api/commerce/common/response.js';
+import type {QueryCommerceAPIThunkReturn} from '../features/commerce/product-listing/product-listing-actions.js';
 import {SortBy} from '../features/sort/sort.js';
 
 export function buildFetchProductListingResponse(

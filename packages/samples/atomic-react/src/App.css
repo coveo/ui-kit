@@ -4,7 +4,6 @@ header {
 
 header ul li {
   display: inline-block;
-  list-decoration: none;
   cursor: pointer;
   color: var(--atomic-primary);
   margin-right: 24px;

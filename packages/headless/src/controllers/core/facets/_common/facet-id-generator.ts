@@ -1,5 +1,5 @@
-import {Logger} from 'pino';
-import {AllFacetSections} from '../../../../features/facets/generic/interfaces/generic-facet-section.js';
+import type {Logger} from 'pino';
+import type {AllFacetSections} from '../../../../features/facets/generic/interfaces/generic-facet-section.js';
 
 export interface FacetIdConfig {
   field: string;

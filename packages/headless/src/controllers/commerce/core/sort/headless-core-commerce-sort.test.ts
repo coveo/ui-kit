@@ -4,12 +4,12 @@ import {sortReducer} from '../../../../features/commerce/sort/sort-slice.js';
 import {buildMockCommerceState} from '../../../../test/mock-commerce-state.js';
 import {
   buildMockCommerceEngine,
-  MockedCommerceEngine,
+  type MockedCommerceEngine,
 } from '../../../../test/mock-engine-v2.js';
 import {
-  buildRelevanceSortCriterion,
   buildCoreSort,
-  Sort,
+  buildRelevanceSortCriterion,
+  type Sort,
   SortBy,
 } from './headless-core-commerce-sort.js';
 

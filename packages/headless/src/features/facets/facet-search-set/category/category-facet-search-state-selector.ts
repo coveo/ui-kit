@@ -1,6 +1,6 @@
 import {createSelector} from '@reduxjs/toolkit';
-import {CategoryFacetSearchSection} from '../../../../state/state-sections.js';
-import {CategoryFacetSearchState} from './category-facet-search-set-state.js';
+import type {CategoryFacetSearchSection} from '../../../../state/state-sections.js';
+import type {CategoryFacetSearchState} from './category-facet-search-set-state.js';
 
 export const categoryFacetSearchStateSelector = createSelector(
   (state: CategoryFacetSearchSection, facetId: string) => ({

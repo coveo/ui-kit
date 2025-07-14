@@ -1,9 +1,9 @@
-import {fixture} from '@/vitest-utils/testing-helpers/fixture';
 import {page} from '@vitest/browser/context';
+import {fixture} from '@/vitest-utils/testing-helpers/fixture';
 import '@vitest/browser/matchers.d.ts';
 import {html, LitElement} from 'lit';
 import {customElement, property} from 'lit/decorators.js';
-import {describe, expect, it, vi, beforeEach} from 'vitest';
+import {beforeEach, describe, expect, it, vi} from 'vitest';
 import {booleanConverter} from './boolean-converter';
 
 describe('booleanConverter', () => {

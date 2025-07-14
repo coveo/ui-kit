@@ -1,11 +1,11 @@
 import {
   BooleanValue,
-  StringValue,
-  SchemaDefinition,
   NumberValue,
   RecordValue,
+  type SchemaDefinition,
+  StringValue,
 } from '@coveo/bueno';
-import {SearchParameters} from './search-parameter-actions.js';
+import type {SearchParameters} from './search-parameter-actions.js';
 
 export const searchParametersDefinition: SchemaDefinition<
   Required<SearchParameters>

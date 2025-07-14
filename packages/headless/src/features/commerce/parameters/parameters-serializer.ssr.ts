@@ -1,5 +1,5 @@
 import {isNullOrUndefined} from '@coveo/bueno';
-import {
+import type {
   DateRangeRequest,
   NumericRangeRequest,
 } from '../../../controllers/commerce/core/facets/headless-core-commerce-facet.js';
@@ -16,17 +16,17 @@ import {
   rangeDelimiterInclusive,
 } from '../../search-parameters/search-parameter-serializer.js';
 import {
-  FacetValueSearchParam,
-  SearchParamValue as CommerceSearchParamValue,
+  type SearchParamValue as CommerceSearchParamValue,
+  type FacetValueSearchParam,
   toArray,
 } from '../../search-parameters/search-parameter-utils.js';
-import {CommerceSearchParameters} from '../search-parameters/search-parameters-actions.js';
-import {SortCriterion} from '../sort/sort.js';
+import type {CommerceSearchParameters} from '../search-parameters/search-parameters-actions.js';
+import type {SortCriterion} from '../sort/sort.js';
 import {
   buildCriterionExpression,
   commerceFacetsRegex,
   deserializeSortCriteria,
-  FacetParameters,
+  type FacetParameters,
   keyHasObjectValue,
 } from './parameters-serializer.js';
 

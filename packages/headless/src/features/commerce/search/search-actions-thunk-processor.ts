@@ -1,32 +1,32 @@
 import {isNullOrUndefined} from '@coveo/bueno';
-import {UnknownAction} from '@reduxjs/toolkit';
-import {ThunkDispatch} from 'redux-thunk';
+import type {UnknownAction} from '@reduxjs/toolkit';
+import type {ThunkDispatch} from 'redux-thunk';
 import {
-  CommerceAPIClient,
-  CommerceAPIResponse,
+  type CommerceAPIClient,
+  type CommerceAPIResponse,
   isErrorResponse,
 } from '../../../api/commerce/commerce-api-client.js';
-import {CommerceAPIErrorStatusResponse} from '../../../api/commerce/commerce-api-error-response.js';
-import {FilterableCommerceAPIRequest} from '../../../api/commerce/common/request.js';
-import {CommerceSearchRequest} from '../../../api/commerce/search/request.js';
-import {SearchCommerceSuccessResponse} from '../../../api/commerce/search/response.js';
-import {ClientThunkExtraArguments} from '../../../app/thunk-extra-arguments.js';
-import {
-  CommerceSearchSection,
-  CommerceQuerySection,
+import type {CommerceAPIErrorStatusResponse} from '../../../api/commerce/commerce-api-error-response.js';
+import type {FilterableCommerceAPIRequest} from '../../../api/commerce/common/request.js';
+import type {CommerceSearchRequest} from '../../../api/commerce/search/request.js';
+import type {SearchCommerceSuccessResponse} from '../../../api/commerce/search/response.js';
+import type {ClientThunkExtraArguments} from '../../../app/thunk-extra-arguments.js';
+import type {
   CommerceDidYouMeanSection,
+  CommerceQuerySection,
+  CommerceSearchSection,
   TriggerSection,
 } from '../../../state/state-sections.js';
 import {
   buildFilterableCommerceAPIRequest,
-  StateNeededForFilterableCommerceAPIRequest,
+  type StateNeededForFilterableCommerceAPIRequest,
 } from '../common/filterable-commerce-api-request-builder.js';
 import {updateQuery} from '../query/query-actions.js';
 import {
   applyQueryTriggerModification,
   updateIgnoreQueryTrigger,
 } from '../triggers/triggers-actions.js';
-import {QuerySearchCommerceAPIThunkReturn} from './search-actions.js';
+import type {QuerySearchCommerceAPIThunkReturn} from './search-actions.js';
 import {queryExecutedFromResponseSelector} from './search-selectors.js';
 
 interface FetchedResponse {
@@ -78,9 +78,9 @@ export class AsyncSearchThunkProcessor<RejectionType> {
   public async fetchFromAPI(
     request: FilterableCommerceAPIRequest | CommerceSearchRequest
   ) {
-    const startedAt = new Date().getTime();
+    const startedAt = Date.now();
     const response = await this.extra.apiClient.search(request);
-    const duration = new Date().getTime() - startedAt;
+    const duration = Date.now() - startedAt;
     const queryExecuted = this.getState().commerceQuery.query || '';
     return {response, duration, queryExecuted, requestExecuted: request};
   }

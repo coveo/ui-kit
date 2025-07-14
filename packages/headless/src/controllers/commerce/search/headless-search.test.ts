@@ -1,4 +1,4 @@
-import {ChildProduct} from '../../../api/commerce/common/product.js';
+import type {ChildProduct} from '../../../api/commerce/common/product.js';
 import {configuration} from '../../../app/common-reducers.js';
 import {contextReducer as commerceContext} from '../../../features/commerce/context/context-slice.js';
 import {
@@ -8,8 +8,6 @@ import {
 } from '../../../features/commerce/pagination/pagination-selectors.js';
 import {searchSerializer} from '../../../features/commerce/parameters/parameters-serializer.js';
 import {queryReducer as commerceQuery} from '../../../features/commerce/query/query-slice.js';
-import {restoreSearchParameters} from '../../../features/commerce/search-parameters/search-parameters-actions.js';
-import {searchParametersDefinition} from '../../../features/commerce/search-parameters/search-parameters-schema.js';
 import * as SearchActions from '../../../features/commerce/search/search-actions.js';
 import {
   activeParametersSelector,
@@ -21,17 +19,19 @@ import {
   responseIdSelector,
 } from '../../../features/commerce/search/search-selectors.js';
 import {commerceSearchReducer as commerceSearch} from '../../../features/commerce/search/search-slice.js';
+import {restoreSearchParameters} from '../../../features/commerce/search-parameters/search-parameters-actions.js';
+import {searchParametersDefinition} from '../../../features/commerce/search-parameters/search-parameters-schema.js';
 import {buildMockCommerceState} from '../../../test/mock-commerce-state.js';
 import {
-  MockedCommerceEngine,
   buildMockCommerceEngine,
+  type MockedCommerceEngine,
 } from '../../../test/mock-engine-v2.js';
 import * as SubControllers from '../core/sub-controller/headless-sub-controller.js';
 import {
   facetResponseSelector,
   isFacetLoadingResponseSelector,
 } from './facets/headless-search-facet-options.js';
-import {buildSearch, Search} from './headless-search.js';
+import {buildSearch, type Search} from './headless-search.js';
 
 describe('headless search', () => {
   let search: Search;

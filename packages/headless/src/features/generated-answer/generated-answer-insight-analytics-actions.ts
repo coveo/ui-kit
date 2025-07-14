@@ -1,14 +1,14 @@
-import {Rga} from '@coveo/relay-event-types';
+import type {Rga} from '@coveo/relay-event-types';
 import {
   citationDocumentIdentifier,
-  InsightAction,
+  type InsightAction,
   makeInsightAnalyticsActionFactory,
   partialCitationInformation,
 } from '../analytics/analytics-utils.js';
 import {SearchPageEvents} from '../analytics/search-action-cause.js';
 import {getCaseContextAnalyticsMetadata} from '../case-context/case-context-state.js';
 import {
-  GeneratedAnswerFeedback,
+  type GeneratedAnswerFeedback,
   parseEvaluationDetails,
 } from './generated-answer-analytics-actions.js';
 import {

@@ -15,8 +15,8 @@ export default function NotifyTrigger() {
     <div className="NotifyTrigger">
       <h3>Notifications:</h3>
       <ul>
-        {state.notifications.map((notification, index) => (
-          <li key={`${notification}-${index}`}>{notification}</li>
+        {state.notifications.map((notification) => (
+          <li key={`${notification}`}>{notification}</li>
         ))}
       </ul>
     </div>

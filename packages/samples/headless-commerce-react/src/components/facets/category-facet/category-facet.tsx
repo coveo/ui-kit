@@ -1,4 +1,4 @@
-import {
+import type {
   CategoryFacetSearchResult,
   CategoryFacetValue,
   CategoryFacet as HeadlessCategoryFacet,
@@ -120,6 +120,11 @@ export default function CategoryFacet(props: ICategoryFacetProps) {
               className="FacetSearchResult"
               key={id}
               onClick={() => onClickFacetSearchResult(value)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') {
+                  onClickFacetSearchResult(value);
+                }
+              }}
               style={{width: 'fit-content'}}
             >
               <input
@@ -132,6 +137,7 @@ export default function CategoryFacet(props: ICategoryFacetProps) {
               <label className="FacetSearchResultLabel" htmlFor={id}>
                 <span
                   className="FacetSearchResultName"
+                  // biome-ignore lint/security/noDangerouslySetInnerHtml: <>
                   dangerouslySetInnerHTML={{
                     __html: highlightFacetSearchResult(value.displayValue),
                   }}
@@ -267,6 +273,7 @@ export default function CategoryFacet(props: ICategoryFacetProps) {
         {renderRootValues()}
         {renderActiveFacetValueTree()}
         <button
+          type="button"
           aria-label="Show more facet values"
           className="FacetShowMore"
           disabled={state.isLoading || !state.canShowMoreValues}
@@ -275,6 +282,7 @@ export default function CategoryFacet(props: ICategoryFacetProps) {
           +
         </button>
         <button
+          type="button"
           aria-label="Show less facet values"
           className="FacetShowLess"
           disabled={state.isLoading || !state.canShowLessValues}

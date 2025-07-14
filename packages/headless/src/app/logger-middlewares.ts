@@ -1,10 +1,10 @@
-import {
+import type {
   Action,
   Middleware,
   SerializedError,
   UnknownAction,
 } from '@reduxjs/toolkit';
-import {Logger} from 'pino';
+import type {Logger} from 'pino';
 
 type UnknownActionWithPossibleErrorPayload = UnknownAction & {
   payload?: {ignored?: boolean; message?: string; errorCode?: string};

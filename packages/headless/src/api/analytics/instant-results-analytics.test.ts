@@ -1,13 +1,13 @@
 import {getConfigurationInitialState} from '../../features/configuration/configuration-state.js';
 import {
   getInstantResultsInitialState,
-  InstantResultCache,
+  type InstantResultCache,
 } from '../../features/instant-results/instant-results-state.js';
 import {buildMockResult} from '../../test/mock-result.js';
 import {getObjectHash} from '../../utils/utils.js';
 import {
   InstantResultsAnalyticsProvider,
-  StateNeededByInstantResultsAnalyticsProvider,
+  type StateNeededByInstantResultsAnalyticsProvider,
 } from './instant-result-analytics.js';
 
 describe('instant results analytics provider', () => {
@@ -47,7 +47,7 @@ describe('instant results analytics provider', () => {
     let provider: InstantResultsAnalyticsProvider;
     beforeEach(() => {
       const state = getBaseState();
-      state.instantResults['someid'] = {
+      state.instantResults.someid = {
         q: 'somequery',
         cache: {
           someSuggestion: activeSuggestionCache,

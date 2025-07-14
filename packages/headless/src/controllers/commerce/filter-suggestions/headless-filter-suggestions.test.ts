@@ -12,18 +12,18 @@ import {
   updateFacetSearch,
 } from '../../../features/facets/facet-search-set/specific/specific-facet-search-actions.js';
 import {specificFacetSearchSetReducer as facetSearchSet} from '../../../features/facets/facet-search-set/specific/specific-facet-search-set-slice.js';
-import {SpecificFacetSearchState} from '../../../features/facets/facet-search-set/specific/specific-facet-search-set-state.js';
-import {CommerceAppState} from '../../../state/commerce-app-state.js';
+import type {SpecificFacetSearchState} from '../../../features/facets/facet-search-set/specific/specific-facet-search-set-state.js';
+import type {CommerceAppState} from '../../../state/commerce-app-state.js';
 import {buildMockCommerceState} from '../../../test/mock-commerce-state.js';
 import {
   buildMockCommerceEngine,
-  MockedCommerceEngine,
+  type MockedCommerceEngine,
 } from '../../../test/mock-engine-v2.js';
 import {buildMockFacetSearch} from '../../../test/mock-facet-search.js';
-import {RegularFacetOptions} from '../core/facets/regular/headless-commerce-regular-facet.js';
+import type {RegularFacetOptions} from '../core/facets/regular/headless-commerce-regular-facet.js';
 import {
   buildFilterSuggestions,
-  FilterSuggestions,
+  type FilterSuggestions,
 } from './headless-filter-suggestions.js';
 
 vi.mock(

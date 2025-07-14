@@ -1,15 +1,15 @@
 import {StringValue} from '@coveo/bueno';
 import {createAction} from '@reduxjs/toolkit';
-import {PlatformEnvironment} from '../../../utils/url-utils.js';
+import type {PlatformEnvironment} from '../../../utils/url-utils.js';
 import {
   nonEmptyString,
   requiredTrackingId,
   validatePayload,
 } from '../../../utils/validate-payload.js';
 import {
-  UpdateAnalyticsConfigurationActionCreatorPayload,
-  UpdateBasicConfigurationActionCreatorPayload,
   analyticsConfigurationSchema,
+  type UpdateAnalyticsConfigurationActionCreatorPayload,
+  type UpdateBasicConfigurationActionCreatorPayload,
 } from '../../configuration/configuration-actions.js';
 
 export type UpdateBasicConfigurationPayload =
@@ -32,7 +32,7 @@ export type UpdateProxyBaseUrlPayload = {
   /**
    * The base URL to use to proxy Coveo commerce requests (e.g., `https://example.com/commerce`).
    *
-   * This is an advanced option that you should only set if you need to proxy Coveo commerce requests through your own
+   * This is an advanced option that you only set if you proxy Coveo commerce requests through your own
    * server. In most cases, you should not set this option.
    *
    *  See [Headless proxy: Commerce](https://docs.coveo.com/en/headless/latest/usage/proxy#commerce).

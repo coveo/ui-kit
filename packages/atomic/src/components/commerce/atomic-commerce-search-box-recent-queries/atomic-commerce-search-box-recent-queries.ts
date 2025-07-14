@@ -1,14 +1,14 @@
-import {errorGuard} from '@/src/decorators/error-guard';
-import {SearchBoxSuggestionsComponent} from '@/src/decorators/types';
-import {SafeStorage, StorageItems} from '@/src/utils/local-storage-utils';
-import {once} from '@/src/utils/utils';
 import {
   buildRecentQueriesList,
-  RecentQueriesList,
-  SearchBox,
+  type RecentQueriesList,
+  type SearchBox,
 } from '@coveo/headless/commerce';
 import {html, LitElement, nothing} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
+import {errorGuard} from '@/src/decorators/error-guard';
+import type {SearchBoxSuggestionsComponent} from '@/src/decorators/types';
+import {SafeStorage, StorageItems} from '@/src/utils/local-storage-utils';
+import {once} from '@/src/utils/utils';
 import Clock from '../../../images/clock.svg';
 import {
   getPartialRecentQueryClearElement,
@@ -18,11 +18,11 @@ import {
 } from '../../common/suggestions/recent-queries';
 import {
   dispatchSearchBoxSuggestionsEvent,
-  SearchBoxSuggestionElement,
-  SearchBoxSuggestions,
-  SearchBoxSuggestionsBindings,
+  type SearchBoxSuggestionElement,
+  type SearchBoxSuggestions,
+  type SearchBoxSuggestionsBindings,
 } from '../../common/suggestions/suggestions-common';
-import {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface';
+import type {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface';
 
 /**
  * The `atomic-commerce-search-box-recent-queries` component can be added as a child of an `atomic-commerce-search-box` component, allowing for the configuration of recent query suggestions.

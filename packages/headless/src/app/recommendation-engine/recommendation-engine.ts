@@ -1,13 +1,13 @@
 import {isNullOrUndefined} from '@coveo/bueno';
-import {StateFromReducersMapObject} from '@reduxjs/toolkit';
-import {Logger} from 'pino';
+import type {StateFromReducersMapObject} from '@reduxjs/toolkit';
+import type {Logger} from 'pino';
 import {NoopPreprocessRequest} from '../../api/preprocess-request.js';
+import {SearchAPIClient} from '../../api/search/search-api-client.js';
 import {
   NoopPostprocessFacetSearchResponseMiddleware,
   NoopPostprocessQuerySuggestResponseMiddleware,
   NoopPostprocessSearchResponseMiddleware,
 } from '../../api/search/search-api-client-middleware.js';
-import {SearchAPIClient} from '../../api/search/search-api-client.js';
 import {updateSearchConfiguration} from '../../features/configuration/configuration-actions.js';
 import {debugReducer as debug} from '../../features/debug/debug-slice.js';
 import {setPipeline} from '../../features/pipeline/pipeline-actions.js';
@@ -15,20 +15,20 @@ import {pipelineReducer as pipeline} from '../../features/pipeline/pipeline-slic
 import {recommendationReducer as recommendation} from '../../features/recommendation/recommendation-slice.js';
 import {setSearchHub} from '../../features/search-hub/search-hub-actions.js';
 import {searchHubReducer as searchHub} from '../../features/search-hub/search-hub-slice.js';
-import {RecommendationAppState} from '../../state/recommendation-app-state.js';
+import type {RecommendationAppState} from '../../state/recommendation-app-state.js';
 import {
   buildEngine,
-  CoreEngine,
-  EngineOptions,
-  ExternalEngineOptions,
+  type CoreEngine,
+  type EngineOptions,
+  type ExternalEngineOptions,
 } from '../engine.js';
 import {buildLogger} from '../logger.js';
-import {SearchThunkExtraArguments} from '../search-thunk-extra-arguments.js';
+import type {SearchThunkExtraArguments} from '../search-thunk-extra-arguments.js';
 import {buildThunkExtraArguments} from '../thunk-extra-arguments.js';
 import {
-  RecommendationEngineConfiguration,
-  recommendationEngineConfigurationSchema,
   getSampleRecommendationEngineConfiguration,
+  type RecommendationEngineConfiguration,
+  recommendationEngineConfigurationSchema,
 } from './recommendation-engine-configuration.js';
 
 export type {RecommendationEngineConfiguration};

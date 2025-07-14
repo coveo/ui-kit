@@ -1,6 +1,6 @@
-import {Middleware, MiddlewareAPI} from '@reduxjs/toolkit';
-import {pino, Logger} from 'pino';
-import {Mock} from 'vitest';
+import type {Middleware, MiddlewareAPI} from '@reduxjs/toolkit';
+import {type Logger, pino} from 'pino';
+import type {Mock} from 'vitest';
 import {updateBasicConfiguration} from '../features/configuration/configuration-actions.js';
 import {ExpiredTokenError} from '../utils/errors.js';
 import {createRenewAccessTokenMiddleware} from './renew-access-token-middleware.js';

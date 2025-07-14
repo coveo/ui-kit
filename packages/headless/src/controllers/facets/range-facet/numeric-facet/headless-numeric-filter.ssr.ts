@@ -1,9 +1,9 @@
-import {SearchEngine} from '../../../../app/search-engine/search-engine.js';
-import {ControllerDefinitionWithoutProps} from '../../../../app/ssr-engine/types/common.js';
+import type {SearchEngine} from '../../../../app/search-engine/search-engine.js';
+import type {ControllerDefinitionWithoutProps} from '../../../../app/ssr-engine/types/common.js';
 import {
-  NumericFilter,
-  NumericFilterProps,
   buildNumericFilter,
+  type NumericFilter,
+  type NumericFilterProps,
 } from './headless-numeric-filter.js';
 
 export * from './headless-numeric-filter.js';

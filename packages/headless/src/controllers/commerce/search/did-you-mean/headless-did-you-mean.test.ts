@@ -5,9 +5,9 @@ import {executeSearch} from '../../../../features/commerce/search/search-actions
 import {buildMockCommerceState} from '../../../../test/mock-commerce-state.js';
 import {
   buildMockCommerceEngine,
-  MockedCommerceEngine,
+  type MockedCommerceEngine,
 } from '../../../../test/mock-engine-v2.js';
-import {buildDidYouMean, DidYouMean} from './headless-did-you-mean.js';
+import {buildDidYouMean, type DidYouMean} from './headless-did-you-mean.js';
 
 vi.mock('../../../../features/commerce/query/query-actions');
 vi.mock('../../../../features/commerce/search/search-actions');

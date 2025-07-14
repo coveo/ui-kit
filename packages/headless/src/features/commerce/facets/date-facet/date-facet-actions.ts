@@ -7,8 +7,8 @@ import {
   validatePayloadAndThrow,
 } from '../../../../utils/validate-payload.js';
 import {
-  ToggleSelectDateFacetValueActionCreatorPayload,
-  UpdateDateFacetValuesActionCreatorPayload,
+  type ToggleSelectDateFacetValueActionCreatorPayload,
+  type UpdateDateFacetValuesActionCreatorPayload,
   validateManualDateRanges,
 } from '../../../facets/range-facets/date-facet-set/date-facet-actions.js';
 import {dateFacetValueDefinition} from '../../../facets/range-facets/generic/range-facet-validate-payload.js';

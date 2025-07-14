@@ -1,6 +1,6 @@
-import {Result} from '../../api/search/search/result.js';
-import {RecommendationEngine} from '../../app/recommendation-engine/recommendation-engine.js';
-import {ClickAction} from '../analytics/analytics-utils.js';
+import type {Result} from '../../api/search/search/result.js';
+import type {RecommendationEngine} from '../../app/recommendation-engine/recommendation-engine.js';
+import type {ClickAction} from '../analytics/analytics-utils.js';
 import {logRecommendationOpen} from './recommendation-analytics-actions.js';
 
 /**

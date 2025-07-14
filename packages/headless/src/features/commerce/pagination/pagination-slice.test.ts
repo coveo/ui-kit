@@ -20,11 +20,11 @@ import {
   toggleExcludeFacetValue,
   toggleSelectFacetValue,
 } from '../facets/regular-facet/regular-facet-actions.js';
-import {restoreProductListingParameters} from '../product-listing-parameters/product-listing-parameters-actions.js';
 import {fetchProductListing} from '../product-listing/product-listing-actions.js';
+import {restoreProductListingParameters} from '../product-listing-parameters/product-listing-parameters-actions.js';
 import {fetchRecommendations} from '../recommendations/recommendations-actions.js';
-import {restoreSearchParameters} from '../search-parameters/search-parameters-actions.js';
 import {executeSearch} from '../search/search-actions.js';
+import {restoreSearchParameters} from '../search-parameters/search-parameters-actions.js';
 import {applySort} from '../sort/sort-actions.js';
 import {
   nextPage,
@@ -35,10 +35,10 @@ import {
 } from './pagination-actions.js';
 import {paginationReducer} from './pagination-slice.js';
 import {
-  CommercePaginationState,
+  type CommercePaginationState,
   getCommercePaginationInitialSlice,
   getCommercePaginationInitialState,
-  PaginationSlice,
+  type PaginationSlice,
 } from './pagination-state.js';
 
 describe('pagination slice', () => {

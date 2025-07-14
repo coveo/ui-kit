@@ -1,5 +1,5 @@
-import {CategoryFacetSetState} from './category-facet-set-state.js';
-import {
+import type {CategoryFacetSetState} from './category-facet-set-state.js';
+import type {
   CategoryFacetRequest,
   CategoryFacetValueRequest,
 } from './interfaces/request.js';

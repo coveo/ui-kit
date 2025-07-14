@@ -1,5 +1,5 @@
 import {removeDuplicates} from '../../utils/utils.js';
-import {ResultWithFolding} from './folding-slice.js';
+import type {ResultWithFolding} from './folding-slice.js';
 
 export function getAllIncludedResultsFrom(relevantResult: ResultWithFolding) {
   const foldedResults = getChildResultsRecursively(relevantResult);

@@ -1,7 +1,7 @@
 import {tabSetReducer as tabSet} from '../../../features/tab-set/tab-set-slice.js';
 import {
   buildMockSearchEngine,
-  MockedSearchEngine,
+  type MockedSearchEngine,
 } from '../../../test/mock-engine-v2.js';
 import {createMockState} from '../../../test/mock-state.js';
 import {buildCoreTabManager} from './headless-core-tab-manager.js';

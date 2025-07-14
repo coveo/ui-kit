@@ -1,11 +1,11 @@
 import {createCartKey} from '../../controllers/commerce/context/cart/headless-cart.js';
 import {stateKey} from '../state-key.js';
-import {getSampleCommerceEngineConfiguration} from './commerce-engine-configuration.js';
 import {
   buildCommerceEngine,
-  CommerceEngine,
-  CommerceEngineOptions,
+  type CommerceEngine,
+  type CommerceEngineOptions,
 } from './commerce-engine.js';
+import {getSampleCommerceEngineConfiguration} from './commerce-engine-configuration.js';
 
 describe('buildCommerceEngine', () => {
   let options: CommerceEngineOptions;
@@ -128,5 +128,13 @@ describe('buildCommerceEngine', () => {
       [createCartKey(items[0])]: items[0],
       [createCartKey(items[1])]: items[1],
     });
+  });
+
+  it('should ensure that engine.relay is the same reference as thunk extra args relay', async () => {
+    const thunkRelay = await engine.dispatch(
+      (_dispatch, _getState, extra) => extra.relay
+    );
+
+    expect(thunkRelay).toBe(engine.relay);
   });
 });

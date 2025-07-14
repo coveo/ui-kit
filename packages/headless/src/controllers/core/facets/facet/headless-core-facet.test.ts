@@ -3,23 +3,23 @@ import {updateFacetOptions} from '../../../../features/facet-options/facet-optio
 import {facetOptionsReducer as facetOptions} from '../../../../features/facet-options/facet-options-slice.js';
 import {specificFacetSearchSetReducer as facetSearchSet} from '../../../../features/facets/facet-search-set/specific/specific-facet-search-set-slice.js';
 import {
-  registerFacet,
   deselectAllFacetValues,
-  updateFacetSortCriterion,
-  updateFacetNumberOfValues,
+  registerFacet,
   updateFacetIsFieldExpanded,
+  updateFacetNumberOfValues,
+  updateFacetSortCriterion,
 } from '../../../../features/facets/facet-set/facet-set-actions.js';
 import {
   executeToggleFacetExclude,
   executeToggleFacetSelect,
 } from '../../../../features/facets/facet-set/facet-set-controller-actions.js';
 import {facetSetReducer as facetSet} from '../../../../features/facets/facet-set/facet-set-slice.js';
-import {FacetRequest} from '../../../../features/facets/facet-set/interfaces/request.js';
-import {FacetValue} from '../../../../features/facets/facet-set/interfaces/response.js';
-import {SearchAppState} from '../../../../state/search-app-state.js';
+import type {FacetRequest} from '../../../../features/facets/facet-set/interfaces/request.js';
+import type {FacetValue} from '../../../../features/facets/facet-set/interfaces/response.js';
+import type {SearchAppState} from '../../../../state/search-app-state.js';
 import {
-  MockedSearchEngine,
   buildMockSearchEngine,
+  type MockedSearchEngine,
 } from '../../../../test/mock-engine-v2.js';
 import {buildMockFacetRequest} from '../../../../test/mock-facet-request.js';
 import {buildMockFacetResponse} from '../../../../test/mock-facet-response.js';
@@ -30,8 +30,8 @@ import {createMockState} from '../../../../test/mock-state.js';
 import * as FacetIdDeterminor from '../_common/facet-id-determinor.js';
 import {
   buildCoreFacet,
-  CoreFacet,
-  FacetOptions,
+  type CoreFacet,
+  type FacetOptions,
 } from './headless-core-facet.js';
 
 vi.mock('../../../../features/facets/facet-set/facet-set-actions');

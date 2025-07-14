@@ -1,6 +1,6 @@
 'use server';
 
-import {CartItem} from '@coveo/headless-react/ssr-commerce';
+import type {CartItem} from '@coveo/headless-react/ssr-commerce';
 import {cookies} from 'next/headers';
 
 async function getCartFromCookies(): Promise<CartItem[]> {

@@ -1,12 +1,12 @@
 import {configuration} from '../../../app/common-reducers.js';
 import {updatePage} from '../../../features/pagination/pagination-actions.js';
 import {
-  buildRelevanceSortCriterion,
-  buildDateSortCriterion,
-  SortOrder,
   buildCriterionExpression,
-  SortCriterion,
+  buildDateSortCriterion,
   buildFieldSortCriterion,
+  buildRelevanceSortCriterion,
+  type SortCriterion,
+  SortOrder,
 } from '../../../features/sort-criteria/criteria.js';
 import {
   registerSortCriterion,
@@ -14,11 +14,15 @@ import {
 } from '../../../features/sort-criteria/sort-criteria-actions.js';
 import {sortCriteriaReducer as sortCriteria} from '../../../features/sort-criteria/sort-criteria-slice.js';
 import {
-  MockedSearchEngine,
   buildMockSearchEngine,
+  type MockedSearchEngine,
 } from '../../../test/mock-engine-v2.js';
 import {createMockState} from '../../../test/mock-state.js';
-import {Sort, SortProps, buildCoreSort} from './headless-core-sort.js';
+import {
+  buildCoreSort,
+  type Sort,
+  type SortProps,
+} from './headless-core-sort.js';
 
 vi.mock('../../../features/sort-criteria/sort-criteria-actions');
 vi.mock('../../../features/pagination/pagination-actions');

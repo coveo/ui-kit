@@ -1,5 +1,5 @@
 /* eslint-disable @cspell/spellchecker */
-import {test, expect} from './fixture';
+import {expect, test} from './fixture';
 
 test.describe('default', async () => {
   test.beforeEach(async ({productImage}) => {

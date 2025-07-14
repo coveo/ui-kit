@@ -1,9 +1,9 @@
-import {SearchEngine} from '../../app/search-engine/search-engine.js';
-import {ControllerDefinitionWithoutProps} from '../../app/ssr-engine/types/common.js';
+import type {SearchEngine} from '../../app/search-engine/search-engine.js';
+import type {ControllerDefinitionWithoutProps} from '../../app/ssr-engine/types/common.js';
 import {
-  RelevanceInspector,
-  RelevanceInspectorProps,
   buildRelevanceInspector,
+  type RelevanceInspector,
+  type RelevanceInspectorProps,
 } from './headless-relevance-inspector.js';
 
 export * from './headless-relevance-inspector.js';

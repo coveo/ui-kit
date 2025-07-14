@@ -2,18 +2,18 @@ import {preparePreviewPagination} from '../../features/result-preview/result-pre
 import {logDocumentQuickview} from '../../features/result-preview/result-preview-analytics-actions.js';
 import {buildResultPreviewRequest} from '../../features/result-preview/result-preview-request-builder.js';
 import {searchReducer} from '../../features/search/search-slice.js';
-import {SearchAppState} from '../../state/search-app-state.js';
+import type {SearchAppState} from '../../state/search-app-state.js';
 import {
   buildMockSearchEngine,
-  MockedSearchEngine,
+  type MockedSearchEngine,
 } from '../../test/mock-engine-v2.js';
 import {buildMockResult} from '../../test/mock-result.js';
 import {createMockState} from '../../test/mock-state.js';
 import {buildCoreQuickview} from '../core/quickview/headless-core-quickview.js';
 import {
   buildQuickview,
-  QuickviewOptions,
-  Quickview,
+  type Quickview,
+  type QuickviewOptions,
 } from './headless-quickview.js';
 
 vi.mock('../core/quickview/headless-core-quickview');

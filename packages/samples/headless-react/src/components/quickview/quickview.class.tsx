@@ -1,11 +1,11 @@
 import {
   buildQuickview,
-  Quickview as HeadlessQuickview,
-  QuickviewState as HeadlessQuickviewState,
-  Unsubscribe,
-  Result,
+  type Quickview as HeadlessQuickview,
+  type QuickviewState as HeadlessQuickviewState,
+  type Result,
+  type Unsubscribe,
 } from '@coveo/headless';
-import {Component, ContextType} from 'react';
+import {Component, type ContextType} from 'react';
 import {AppContext} from '../../context/engine';
 
 interface QuickviewProps {
@@ -59,7 +59,10 @@ export class Quickview extends Component<QuickviewProps, QuickviewState> {
       return (
         <div>
           <button onClick={() => this.closeModal()}>X</button>
-          <iframe srcDoc={this.state.quickview.content}></iframe>
+          <iframe
+            title="Quickview"
+            srcDoc={this.state.quickview.content}
+          ></iframe>
         </div>
       );
     }
