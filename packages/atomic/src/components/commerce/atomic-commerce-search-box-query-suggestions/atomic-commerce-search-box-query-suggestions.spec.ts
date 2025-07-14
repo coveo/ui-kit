@@ -121,7 +121,6 @@ describe('AtomicCommerceSearchBoxQuerySuggestions', () => {
       const {element} = await renderElements({
         numberOfQueries: 3,
       });
-      // Set maxWithQuery to 3 (equal to numberOfQueries - no clash)
       element.maxWithQuery = 3;
 
       expect(
@@ -129,7 +128,7 @@ describe('AtomicCommerceSearchBoxQuerySuggestions', () => {
       ).toHaveBeenCalledWith(
         expect.objectContaining({
           id: element.bindings.id,
-          count: 3, // Should use maxWithQuery when no clash
+          count: 3,
         })
       );
     });
@@ -138,10 +137,8 @@ describe('AtomicCommerceSearchBoxQuerySuggestions', () => {
       const {element} = await renderElements({
         numberOfQueries: 3,
       });
-      // Set maxWithQuery to 5 (higher than numberOfQueries)
       element.maxWithQuery = 5;
 
-      // Call initialize to trigger the register with the new maxWithQuery value
       element.initialize();
 
       expect(
@@ -149,7 +146,7 @@ describe('AtomicCommerceSearchBoxQuerySuggestions', () => {
       ).toHaveBeenCalledWith(
         expect.objectContaining({
           id: element.bindings.id,
-          count: 3, // Should use the smaller value (numberOfQueries)
+          count: 3,
         })
       );
     });
@@ -166,10 +163,8 @@ describe('AtomicCommerceSearchBoxQuerySuggestions', () => {
           },
         },
       });
-      // Set maxWithQuery to 5 (higher than numberOfQueries)
       element.maxWithQuery = 5;
 
-      // Call initialize to trigger the warning
       element.initialize();
 
       expect(warnSpy).toHaveBeenCalledOnce();
@@ -301,14 +296,12 @@ describe('AtomicCommerceSearchBoxQuerySuggestions', () => {
           },
         });
 
-        // Set maxWithQuery to 5 (higher than numberOfQueries)
         element.maxWithQuery = 5;
 
-        // Re-render items with the new maxWithQuery value
         object = element.initialize();
         items = object.renderItems();
 
-        expect(items.length).toBe(2); // Should use numberOfQueries (2) instead of maxWithQuery (5)
+        expect(items.length).toBe(2);
       });
 
       it('should return the correct number of items when there is more suggestions than the maxWithoutQuery', async () => {
