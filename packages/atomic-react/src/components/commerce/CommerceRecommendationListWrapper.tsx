@@ -10,8 +10,8 @@ import React, {useEffect, useRef} from 'react';
 import {createRoot} from 'react-dom/client';
 import {renderToString} from 'react-dom/server';
 import {
-  AtomicCommerceRecommendationList as LitAtomicCommerceRecommendationList,
   AtomicProductLink,
+  AtomicCommerceRecommendationList as LitAtomicCommerceRecommendationList,
 } from './components.js';
 
 interface Template {

@@ -10,27 +10,28 @@ import {
   createProductContextController,
 } from '@/src/decorators/commerce/product-template-decorators.js';
 import {errorGuard} from '@/src/decorators/error-guard';
-import {injectStylesForNoShadowDOM} from '@/src/decorators/light-dom';
+import {injectStylesForNoShadowDOM} from '@/src/decorators/inject-styles-for-no-shadow-dom';
 import type {InitializableComponent} from '@/src/decorators/types';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles.js';
 import {buildCustomEvent} from '../../../utils/event-utils';
-import {getDefaultSlotFromHost} from '../../../utils/slot-utils';
 import {getAttributesFromLinkSlot} from '../../common/item-link/attributes-slot';
 import {renderLinkWithItemAnalytics} from '../../common/item-link/item-link';
 import type {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface';
 import {buildStringTemplateFromProduct} from '../product-template-component-utils/product-utils';
 import '../atomic-product-text/atomic-product-text';
+import {injectSlotsForNoShadowDOM} from '@/src/decorators/light-dom-with-slots';
 import styles from './atomic-product-link.tw.css';
 
 /**
  * @alpha
  * The `atomic-product-link` component automatically transforms a search product title into a clickable link that points to the original item.
- * @slot default - Lets you display alternative content inside the link.
- * @slot attributes - Lets you pass [attributes](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/a#attributes) down to the link element, overriding other attributes. Use only with an "a" tag, e.g., `<a slot="attributes" target="_blank" download></a>`.
+ * @slot default - Default content displayed inside the link.
+ * @slot attributes - Attributes element: Use `<a slot="attributes" target="_blank"></a>` to pass attributes to the generated link.
  *
  */
 @customElement('atomic-product-link')
 @bindings()
+@injectSlotsForNoShadowDOM()
 @injectStylesForNoShadowDOM
 @withTailwindStyles
 export class AtomicProductLink
@@ -38,6 +39,14 @@ export class AtomicProductLink
   implements InitializableComponent<CommerceBindings>
 {
   static styles = unsafeCSS(styles);
+
+  // Properties added by @injectSlotsForNoShadowDOM decorator
+  declare slots: {[name: string]: ChildNode[] | undefined};
+  declare adoptChildren: () => void;
+  declare getSlotNameForChild: (child: ChildNode) => string;
+  declare isTextNodeEmpty: (node: Text) => boolean;
+  declare isSlotEmpty: (slot: string) => boolean;
+  declare yield: (slot: string, defaultContent?: unknown) => unknown[];
 
   /**
    * The [template literal](https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Template_literals) from which to generate the `href` attribute value
@@ -62,8 +71,7 @@ export class AtomicProductLink
   @state() public bindings!: CommerceBindings;
   @state() public error!: Error;
 
-  private hasDefaultSlot!: boolean;
-  private linkAttributes?: Attr[];
+  @state() private linkAttributes?: Attr[];
   private stopPropagation?: boolean;
   private removeLinkEventHandlers?: () => void;
 
@@ -71,6 +79,34 @@ export class AtomicProductLink
     if (warning) {
       this.bindings.engine.logger.warn(warning);
     }
+  }
+
+  private extractAttributesFromSlot() {
+    if (!this.hasUpdated && Object.keys(this.slots).length === 0) {
+      this.adoptChildren();
+    }
+
+    const slotName = 'attributes';
+    const attributes = getAttributesFromLinkSlot(this, slotName);
+
+    if (!attributes) {
+      this.linkAttributes = undefined;
+      return;
+    }
+
+    // Find the slot element to set it as hidden
+    const attributesSlot = this.slots.attributes?.[0];
+    if (
+      attributesSlot instanceof Element &&
+      !attributesSlot.hasAttribute('hidden')
+    ) {
+      attributesSlot.setAttribute('hidden', '');
+    }
+
+    // Filter out the 'hidden' attribute that we just added
+    this.linkAttributes = attributes.filter(
+      (attr: Attr) => attr.nodeName !== 'hidden'
+    );
   }
 
   initialize() {
@@ -93,13 +129,6 @@ export class AtomicProductLink
         }
       )
     );
-  }
-
-  connectedCallback() {
-    super.connectedCallback();
-    const slotName = 'attributes';
-    this.hasDefaultSlot = !!getDefaultSlotFromHost(this);
-    this.linkAttributes = getAttributesFromLinkSlot(this, slotName);
   }
 
   disconnectedCallback() {
@@ -125,6 +154,7 @@ export class AtomicProductLink
             );
 
         const {warningMessage} = this.interactiveProduct;
+        this.extractAttributesFromSlot();
 
         return renderLinkWithItemAnalytics({
           props: {
@@ -151,13 +181,12 @@ export class AtomicProductLink
             },
           },
         })(html`
-          ${when(
-            this.hasDefaultSlot,
-            () => html`<slot></slot>`,
-            () => html`<atomic-product-text
-              field="ec_name"
-              default="no-title"
-            ></atomic-product-text>`
+          ${this.yield(
+            '',
+            html`<atomic-product-text
+            field="ec_name"
+            default="no-title"
+          ></atomic-product-text>`
           )}
         `);
       },
