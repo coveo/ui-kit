@@ -28,8 +28,7 @@ const meta: Meta = {
     const canvas = within(context.canvasElement);
     const refineToggle = await canvas.findByShadowText('Sort & Filter');
 
-    await new Promise((resolve) => setTimeout(resolve, 500));
-    await userEvent.click(refineToggle);
+    await userEvent.click(refineToggle, {delay: 500});
   },
 };
 

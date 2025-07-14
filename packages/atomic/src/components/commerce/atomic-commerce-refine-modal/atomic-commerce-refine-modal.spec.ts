@@ -3,6 +3,7 @@ import {
   buildProductListing,
   buildSearch,
   type FacetGenerator,
+  type FacetGeneratorState,
   type ProductListingSummaryState,
   type SearchSummaryState,
   type Sort,
@@ -18,9 +19,9 @@ import {renderInAtomicCommerceInterface} from '@/vitest-utils/testing-helpers/fi
 import {buildFakeBreadcrumbManager} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/breadcrumb-manager-subcontroller';
 import {buildFakeFacetGenerator} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/facet-generator-subcontroller';
 import {buildFakeProductListing} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/product-listing-controller';
-import {buildFakeQuerySummary} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/query-summary-subcontroller';
 import {buildFakeSearch} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/search-controller';
 import {buildFakeSort} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/sort-subcontroller';
+import {buildFakeSummary} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/summary-subcontroller';
 import './atomic-commerce-refine-modal';
 import type {AtomicCommerceRefineModal} from './atomic-commerce-refine-modal';
 
@@ -66,6 +67,7 @@ describe('atomic-commerce-refine-modal', () => {
       interfaceType?: 'search' | 'product-listing';
       sortState?: SortState;
       collapseFacetsAfter?: number;
+      facetGeneratorState?: FacetGeneratorState;
     } = {}
   ) => {
     const {
@@ -73,10 +75,13 @@ describe('atomic-commerce-refine-modal', () => {
       interfaceType = 'product-listing',
       sortState,
       collapseFacetsAfter,
+      facetGeneratorState,
     } = options;
-    mockedQuerySummary = buildFakeQuerySummary();
+    mockedQuerySummary = buildFakeSummary();
     mockedSort = buildFakeSort({state: sortState});
-    mockedFacetGenerator = buildFakeFacetGenerator();
+    mockedFacetGenerator = buildFakeFacetGenerator({
+      state: facetGeneratorState,
+    });
     mockedBreadcrumbManager = buildFakeBreadcrumbManager();
 
     vi.mocked(buildProductListing).mockReturnValue(
@@ -212,6 +217,19 @@ describe('atomic-commerce-refine-modal', () => {
     const slot = element.querySelector('div[slot="facets"]');
     expect(slot).not.toBeNull();
     expect(slot?.querySelector('atomic-commerce-facets')).not.toBeNull();
+  });
+
+  it('should not append a second facet slot when isOpen changes again', async () => {
+    const {element} = await renderRefineModal({
+      isOpen: true,
+    });
+
+    const initialSlot = element.querySelector('div[slot="facets"]');
+    expect(initialSlot).not.toBeNull();
+    element.isOpen = false;
+    element.isOpen = true;
+    const newSlot = element.querySelector('div[slot="facets"]');
+    expect(newSlot).toBe(initialSlot);
   });
 
   it('should render the title with the correct text', async () => {
@@ -506,6 +524,14 @@ describe('atomic-commerce-refine-modal', () => {
       'collapseFacetsAfter',
       2
     );
+  });
+
+  it('should not render the filter section when facetGeneratorState.length is 0', async () => {
+    const {filterSection} = await renderRefineModal({
+      facetGeneratorState: [],
+    });
+
+    expect(filterSection).not.toBeInTheDocument();
   });
 
   it('should render the filter clear all button with the correct part attribute', async () => {

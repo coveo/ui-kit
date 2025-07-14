@@ -20,9 +20,11 @@ export const buildFakeFacetGenerator = ({
 }: Partial<{
   implementation?: Partial<FacetGenerator>;
   state?: Partial<FacetGeneratorState>;
-}> = {}): FacetGenerator =>
-  ({
+}> = {}): FacetGenerator => {
+  const properState = state ? state : defaultState;
+  return {
     ...defaultImplementation,
     ...implementation,
-    ...(state && {state: {...defaultState, ...state}}),
-  }) as FacetGenerator;
+    state: properState,
+  } as FacetGenerator;
+};

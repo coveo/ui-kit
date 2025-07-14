@@ -14,6 +14,7 @@ import {
 } from '@coveo/headless/commerce';
 import {type CSSResultGroup, html, LitElement, nothing, unsafeCSS} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
+import {booleanConverter} from '@/src/converters/boolean-converter';
 import {bindStateToController} from '@/src/decorators/bind-state';
 import {bindingGuard} from '@/src/decorators/binding-guard';
 import {bindings} from '@/src/decorators/bindings';
@@ -54,7 +55,6 @@ import styles from './atomic-commerce-refine-modal.tw.css';
  * @part section-filters-title - The title for the filters section.
  * @part filter-clear-all - The button that resets all actively selected facet values.
  * @part section-title - The title for each section.
- *
  */
 @customElement('atomic-commerce-refine-modal')
 @bindings()
@@ -80,7 +80,12 @@ export class AtomicCommerceRefineModal
   /**
    * Whether the modal is open.
    */
-  @property({type: Boolean, reflect: true, attribute: 'is-open'})
+  @property({
+    type: Boolean,
+    converter: booleanConverter,
+    reflect: true,
+    attribute: 'is-open',
+  })
   isOpen = false;
 
   /**
@@ -135,6 +140,13 @@ export class AtomicCommerceRefineModal
     }
   }
 
+  /**
+   * This method is necessary to ensure
+   * that the facets slot is rendered outside of the component's shadow DOM, preserving
+   * correct CSS inheritance and slot behavior. If this logic were placed in the render
+   * function, the slot would be rendered inside the shadow DOM, which would break
+   * expected CSS styling and slot distribution.
+   */
   private createFacetSlot(): HTMLDivElement {
     const divSlot = document.createElement('div');
     divSlot.setAttribute('slot', 'facets');
