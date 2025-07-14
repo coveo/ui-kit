@@ -90,7 +90,7 @@ export class AtomicCommerceRecommendationList
   @state()
   private templateHasError = false;
   @state()
-  private isProductsReady = false;
+  private isEveryProductReady = false;
 
   @bindStateToController('recommendations')
   @state()
@@ -205,8 +205,11 @@ export class AtomicCommerceRecommendationList
 
   public async updated(changedProperties: Map<string, unknown>) {
     super.updated(changedProperties);
-    if (changedProperties.has('recommendationsState') && this.isProductsReady) {
-      this.isProductsReady = false;
+    if (
+      changedProperties.has('recommendationsState') &&
+      this.isEveryProductReady
+    ) {
+      this.isEveryProductReady = false;
     }
     await this.updateProductsReadyState();
   }
@@ -214,12 +217,12 @@ export class AtomicCommerceRecommendationList
   private async updateProductsReadyState() {
     if (
       this.isAppLoaded &&
-      !this.isProductsReady &&
+      !this.isEveryProductReady &&
       this.summaryState?.firstRequestExecuted &&
       this.recommendationsState?.products?.length > 0
     ) {
       await this.getUpdateComplete();
-      this.isProductsReady = true;
+      this.isEveryProductReady = true;
     }
   }
 
@@ -281,7 +284,7 @@ export class AtomicCommerceRecommendationList
       return;
     }
 
-    if (!this.isProductsReady && this.isAppLoaded) {
+    if (!this.isEveryProductReady && this.isAppLoaded) {
       return html`
         <div
           aria-hidden="true"
@@ -421,7 +424,7 @@ export class AtomicCommerceRecommendationList
   }
 
   private computeListDisplayClasses() {
-    const displayPlaceholders = !(this.isAppLoaded && this.isProductsReady);
+    const displayPlaceholders = !(this.isAppLoaded && this.isEveryProductReady);
 
     return getItemListDisplayClasses(
       'grid',
@@ -514,7 +517,7 @@ export class AtomicCommerceRecommendationList
       return;
     }
 
-    const productClasses = `${listClasses} ${!this.isProductsReady && 'hidden'}`;
+    const productClasses = `${listClasses} ${!this.isEveryProductReady && 'hidden'}`;
 
     return html`
       ${when(this.isAppLoaded, () =>
@@ -522,7 +525,7 @@ export class AtomicCommerceRecommendationList
           props: {listClasses: productClasses, display: 'list'},
         })(html`${this.renderAsGrid()}`)
       )}
-      ${when(!this.isProductsReady, () =>
+      ${when(!this.isEveryProductReady, () =>
         renderDisplayWrapper({
           props: {listClasses, display: 'list'},
         })(
