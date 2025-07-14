@@ -1,5 +1,5 @@
 import {Product} from '@coveo/headless/commerce';
-import {html, LitElement, nothing} from 'lit';
+import {html, LitElement, nothing, PropertyValues} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {when} from 'lit/directives/when.js';
 import {bindingGuard} from '@/src/decorators/binding-guard';
@@ -46,21 +46,20 @@ export class AtomicProductNumericFieldValue
     return this;
   }
 
-  private handleNumberFormatEvent = (event: Event) => {
-    const customEvent = event as CustomEvent<NumberFormatter>;
-    customEvent.preventDefault();
-    customEvent.stopPropagation();
-    this.formatter = customEvent.detail;
+  private handleNumberFormatEvent = (event: CustomEvent<NumberFormatter>) => {
+    event.preventDefault();
+    event.stopPropagation();
+    this.formatter = event.detail;
     this.updateValueToDisplay();
   };
 
   connectedCallback() {
     super.connectedCallback();
-    this.addEventListener('atomic/numberFormat', this.handleNumberFormatEvent);
+    this.addEventListener('atomic/numberFormat', this.handleNumberFormatEvent as EventListener);
   }
 
   disconnectedCallback() {
-    this.removeEventListener('atomic/numberFormat', this.handleNumberFormatEvent);
+    this.removeEventListener('atomic/numberFormat', this.handleNumberFormatEvent as EventListener);
     super.disconnectedCallback();
   }
 
@@ -98,11 +97,19 @@ export class AtomicProductNumericFieldValue
     }
   }
 
-  protected willUpdate(): void {
+  private updateProductFromController() {
     if (this.productController.item) {
       this.product = this.productController.item;
     }
-    this.updateValueToDisplay();
+  }
+
+  protected willUpdate(changedProperties: PropertyValues): void {
+    this.updateProductFromController();
+    
+    // Only update value display when relevant properties change
+    if (changedProperties.has('field') || changedProperties.has('product')) {
+      this.updateValueToDisplay();
+    }
   }
 
   @bindingGuard()

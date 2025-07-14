@@ -6,7 +6,6 @@ import {beforeEach, describe, expect, it, vi} from 'vitest';
 import {renderInAtomicProduct} from '@/vitest-utils/testing-helpers/fixtures/atomic/commerce/atomic-product-fixture';
 import {buildFakeProduct} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/product';
 import {createTestI18n} from '@/vitest-utils/testing-helpers/i18n-utils';
-import {FieldValueIsNaNError} from '../product-template-component-utils/error';
 import {AtomicProductNumericFieldValue} from './atomic-product-numeric-field-value';
 
 vi.mock('@coveo/headless/commerce', {spy: true});
