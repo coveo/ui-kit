@@ -55,6 +55,8 @@ export class AtomicCommerceSearchBoxQuerySuggestions
   @property({type: Number, attribute: 'max-without-query', reflect: true})
   public maxWithoutQuery?: number;
 
+  private effectiveMaxWithQuery!: number;
+
   connectedCallback() {
     super.connectedCallback();
     try {
@@ -76,13 +78,13 @@ export class AtomicCommerceSearchBoxQuerySuggestions
     const {registerQuerySuggest, fetchQuerySuggestions} =
       loadQuerySuggestActions(engine);
 
-    // Check for clash between numberOfQueries and maxWithQuery
-    const effectiveMaxWithQuery = this.getEffectiveMaxWithQuery();
+    // Check for clash between numberOfQueries and maxWithQuery and store the effective value
+    this.effectiveMaxWithQuery = this.calculateEffectiveMaxWithQuery();
 
     engine.dispatch(
       registerQuerySuggest({
         id: this.bindings.id,
-        count: effectiveMaxWithQuery,
+        count: this.effectiveMaxWithQuery,
       })
     );
 
@@ -98,7 +100,7 @@ export class AtomicCommerceSearchBoxQuerySuggestions
     };
   }
 
-  private getEffectiveMaxWithQuery(): number {
+  private calculateEffectiveMaxWithQuery(): number {
     const numberOfQueries = this.bindings.numberOfQueries;
     const maxWithQuery = this.maxWithQuery;
 
@@ -114,6 +116,14 @@ export class AtomicCommerceSearchBoxQuerySuggestions
     }
 
     return maxWithQuery;
+  }
+
+  private getEffectiveMaxWithQuery(): number {
+    // Fallback if somehow renderItems is called before initialize
+    if (this.effectiveMaxWithQuery === undefined) {
+      return this.calculateEffectiveMaxWithQuery();
+    }
+    return this.effectiveMaxWithQuery;
   }
 
   private renderItems(): SearchBoxSuggestionElement[] {
