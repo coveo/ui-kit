@@ -93,7 +93,8 @@
     "utils/cdn",
     "utils/ci",
     "packages/create-atomic-template",
-    "packages/create-atomic"
+    "packages/create-atomic",
+    "packages/create-atomic-component"
   ],
   "config": {
     "commitizen": {
