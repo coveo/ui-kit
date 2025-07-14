@@ -72,5 +72,3 @@
     "actions": {"source": {"organizeImports": "on"}}
   }
 }
-
-//TODO: Clean up eslint mentions (non-comments)
