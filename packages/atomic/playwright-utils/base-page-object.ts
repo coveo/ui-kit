@@ -1,6 +1,6 @@
 import type {Page} from '@playwright/test';
 import {buildArgsParam} from '@storybook/router';
-import {JSX} from '../dist/types/components';
+import type {JSX} from '../dist/types/components';
 
 export class BasePageObject<
   TagName extends keyof JSX.IntrinsicElements,
@@ -60,7 +60,7 @@ export class BasePageObject<
       const response = await route.fetch();
       const body = await response.json();
       if (numberOfRecommendations !== undefined) {
-        body['products'] = body['products'].slice(0, numberOfRecommendations);
+        body.products = body.products.slice(0, numberOfRecommendations);
       }
       await route.fulfill({
         response,

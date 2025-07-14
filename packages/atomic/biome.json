@@ -3,7 +3,13 @@
   "$schema": "https://biomejs.dev/schemas/2.0.6/schema.json",
   "extends": "//",
   "files": {
-    "includes": ["**", "!cypress/**/*", "!**/*.tsx", "**/*.stories.tsx"]
+    "includes": [
+      "**",
+      "!cypress/**/*",
+      "!**/*.tsx",
+      "**/*.stories.tsx",
+      "!**/*.d.ts"
+    ]
   },
   "linter": {
     "rules": {

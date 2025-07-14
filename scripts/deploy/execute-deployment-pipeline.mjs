@@ -8,7 +8,6 @@ import buenoJson from '../../packages/bueno/package.json' with {type: 'json'};
 import headlessJson from '../../packages/headless/package.json' with {type: 'json'};
 import shopifyJson from '../../packages/shopify/package.json' with {type: 'json'};
 
-const releaseCommit = execSync('git rev-parse HEAD').toString().trim();
 
 function getVersionComposants(version) {
   const parsedVersion = parse(version);

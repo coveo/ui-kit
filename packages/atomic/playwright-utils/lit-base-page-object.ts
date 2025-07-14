@@ -58,7 +58,7 @@ export class BasePageObject {
       const response = await route.fetch();
       const body = await response.json();
       if (numberOfRecommendations !== undefined) {
-        body['products'] = body['products'].slice(0, numberOfRecommendations);
+        body.products = body.products.slice(0, numberOfRecommendations);
       }
       await route.fulfill({
         response,

@@ -1,9 +1,9 @@
+import { readFileSync, writeFileSync } from 'node:fs';
 import cem from '@coveo/atomic/custom-elements-manifest' with {type: 'json'};
-import { readFileSync, writeFileSync } from 'fs';
 
 const atomicAngularModuleFilePath ='projects/atomic-angular/src/lib/stencil-generated/atomic-angular.module.ts';
 const atomicAngularComponentFilePath = 'projects/atomic-angular/src/lib/stencil-generated/components.ts';
-let atomicAngularModuleFileContent = readFileSync(atomicAngularModuleFilePath, 'utf-8');
+const atomicAngularModuleFileContent = readFileSync(atomicAngularModuleFilePath, 'utf-8');
 let atomicAngularComponentFileContent = readFileSync(atomicAngularComponentFilePath, 'utf-8');
 
 const startTag = '//#region Lit Declarations';
@@ -50,7 +50,7 @@ ${(declaration.events || [])
 }
 `
 
-atomicAngularComponentFileContent = atomicAngularComponentFileContent.replace(new RegExp(`${startTag}.*?${endTag}`, 'gm'), '').trimEnd() + `\n\n${startTag}\n`;
+atomicAngularComponentFileContent = `${atomicAngularComponentFileContent.replace(new RegExp(`${startTag}.*?${endTag}`, 'gm'), '').trimEnd()}\n\n${startTag}\n`;
 
 function processLitDeclaration(declaration) {
   atomicAngularComponentFileContent += declarationToProxyCmp(
@@ -75,7 +75,7 @@ function processNonLitDeclaration(declaration) {
 
   atomicAngularComponentFileContent = atomicAngularComponentFileContent.replaceAll(
     regex,
-    (match, p1, p2) => {
+    (_match, p1, p2) => {
       let newP1;
       if (p1.includes('defineCustomElementFn')) {
         newP1 = p1;
