@@ -63,8 +63,7 @@
   "javascript": {
     "formatter": {
       "trailingCommas": "es5",
-      "quoteStyle": "single",
-      "bracketSpacing": false
+      "quoteStyle": "single"
     }
   },
   "html": {"formatter": {"selfCloseVoidElements": "always"}},
