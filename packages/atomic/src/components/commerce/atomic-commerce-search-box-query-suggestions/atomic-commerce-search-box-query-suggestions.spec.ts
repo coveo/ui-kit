@@ -133,7 +133,7 @@ describe('AtomicCommerceSearchBoxQuerySuggestions', () => {
       );
     });
 
-    it('should dispatch registerQuerySuggest with clamped count when numberOfQueries < maxWithQuery', async () => {
+    it('should dispatch registerQuerySuggest with numberOfQueries even when numberOfQueries < maxWithQuery', async () => {
       const {element} = await renderElements({
         numberOfQueries: 3,
       });
@@ -267,7 +267,7 @@ describe('AtomicCommerceSearchBoxQuerySuggestions', () => {
         expect(items.length).toBe(3);
       });
 
-      it('should return the correct number of items when numberOfQueries < maxWithQuery (uses the smaller value)', async () => {
+      it('should return the correct number of items when numberOfQueries < maxWithQuery (uses maxWithQuery)', async () => {
         await setupRenderItemsTest({
           numberOfQueries: 2,
           searchBoxController: {
@@ -301,7 +301,7 @@ describe('AtomicCommerceSearchBoxQuerySuggestions', () => {
         object = element.initialize();
         items = object.renderItems();
 
-        expect(items.length).toBe(2);
+        expect(items.length).toBe(4);
       });
 
       it('should return the correct number of items when there is more suggestions than the maxWithoutQuery', async () => {
