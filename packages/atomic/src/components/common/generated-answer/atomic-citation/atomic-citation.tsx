@@ -36,7 +36,7 @@ export class AtomicCitation {
    */
   @Prop() interactiveCitation!: InteractiveCitation;
   /**
-   * Option to disable HTML anchoring for citations.
+   * Option to disable anchoring for HTML citations.
    * @default false
    */
   @Prop() disableHtmlCitationAnchoring: boolean = false;

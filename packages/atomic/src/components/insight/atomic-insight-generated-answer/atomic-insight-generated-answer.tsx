@@ -127,7 +127,7 @@ export class AtomicInsightGeneratedAnswer
     this.DEFAULT_FIELDS_TO_INCLUDE_IN_CITATIONS;
 
   /**
-   * Option to disable HTML anchoring for citations.
+   * Option to disable anchoring for HTML citations.
    * @default false
    */
   @Prop() disableHtmlCitationAnchoring?: boolean;
