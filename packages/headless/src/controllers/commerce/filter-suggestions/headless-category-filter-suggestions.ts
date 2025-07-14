@@ -179,7 +179,8 @@ export function buildCategoryFilterSuggestions(
       facetSearch.search();
     },
 
-    getSearchParameters: (value: CategoryFacetSearchResult) => searchSerializer.serialize({
+    getSearchParameters: (value: CategoryFacetSearchResult) =>
+      searchSerializer.serialize({
         q: facetSearchStateSelector(getState()).query,
         cf: {[options.facetId]: [...value.path, value.rawValue]},
       }),
@@ -200,8 +201,9 @@ export function buildCategoryFilterSuggestions(
     },
 
     get state() {
-      const {displayName, field, facetId} =
-        facetForFieldSuggestionsSelector(getState());
+      const {displayName, field, facetId} = facetForFieldSuggestionsSelector(
+        getState()
+      );
       return {
         displayName,
         field,

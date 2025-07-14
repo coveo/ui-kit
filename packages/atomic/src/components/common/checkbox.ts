@@ -1,6 +1,6 @@
 import {html} from 'lit';
 import {ifDefined} from 'lit/directives/if-defined.js';
-import {type RefOrCallback, ref } from 'lit/directives/ref.js';
+import {type RefOrCallback, ref} from 'lit/directives/ref.js';
 import {multiClassMap, tw} from '@/src/directives/multi-class-map';
 import type {FunctionalComponent} from '@/src/utils/functional-component-utils';
 import Tick from '../../images/checkbox.svg';
@@ -32,8 +32,7 @@ export const renderCheckbox: FunctionalComponent<CheckboxProps> = ({props}) => {
   const partName = props.part ?? 'checkbox';
 
   const classNames = tw({
-    'no-outline hover:border-primary-light focus-visible:border-primary-light grid h-4 w-4 place-items-center rounded':
-      true,
+    'no-outline hover:border-primary-light focus-visible:border-primary-light grid h-4 w-4 place-items-center rounded': true,
     'selected bg-primary hover:bg-primary-light focus-visible:bg-primary-light':
       Boolean(props.checked),
     'border-neutral-dark border': !props.checked,
