@@ -63,6 +63,8 @@ export function createRenewAccessTokenMiddleware(
  * @returns `true` if the action's payload has a `statusCode` of `401` or `419`,
  *          otherwise `false`.
  */
+
+// biome-ignore lint/suspicious/noExplicitAny: <This can be any action>
 function isUnauthorizedError(action: any) {
   return (
     action?.payload?.statusCode === 401 || action?.payload?.statusCode === 419

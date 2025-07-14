@@ -1,7 +1,7 @@
 import * as BackOff from 'exponential-backoff';
 import {pino} from 'pino';
-import {Mock} from 'vitest';
-import {PlatformEnvironment} from '../utils/url-utils.js';
+import type {Mock} from 'vitest';
+import type {PlatformEnvironment} from '../utils/url-utils.js';
 import {
   getAnalyticsNextApiBaseUrl,
   getOrganizationEndpoint,

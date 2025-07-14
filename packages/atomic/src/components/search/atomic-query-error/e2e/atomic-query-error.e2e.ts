@@ -1,4 +1,4 @@
-import {test, expect} from './fixture';
+import {expect, test} from './fixture';
 
 test.describe('AtomicQueryError', () => {
   test('should be accessible', async ({makeAxeBuilder, queryError}) => {

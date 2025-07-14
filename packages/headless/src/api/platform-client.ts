@@ -1,7 +1,7 @@
 import {backOff} from 'exponential-backoff';
-import {Logger} from 'pino';
+import type {Logger} from 'pino';
 import {DisconnectedError} from '../utils/errors.js';
-import {PlatformEnvironment} from '../utils/url-utils.js';
+import type {PlatformEnvironment} from '../utils/url-utils.js';
 import {clone} from '../utils/utils.js';
 import {canBeFormUrlEncoded, encodeAsFormUrl} from './form-url-encoder.js';
 import type {
