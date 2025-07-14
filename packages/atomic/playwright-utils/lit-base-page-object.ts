@@ -20,7 +20,10 @@ export class BasePageObject {
   async load({
     args,
     story = 'default',
-  }: {args?: Record<string, unknown>; story?: string} = {}) {
+  }: {
+    args?: Record<string, unknown>;
+    story?: string;
+  } = {}) {
     if (args) {
       await this.page.goto(
         `${this.urlRoot}?id=${this.tag}--${story}&args=${buildArgsParam(undefined, this.camelToKebab(args))}`

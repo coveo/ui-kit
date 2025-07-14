@@ -10,10 +10,34 @@
     "maxSize": 2097152,
     "includes": [
       "**",
-      // Packages that should be excluded : quantic uses eslint, create-atomic-template is a template.
+      // Packages that should be excluded: quantic uses eslint, create-atomic-template is a template.
       "!**/packages/quantic/**/*",
       "!**/packages/create-atomic-template/**/*",
+
+      // Root excluded files.
       "!**/.deployment.config.json",
+
+      // atomic excluded files.
+      "!**/packages/atomic/**/cypress/**/*",
+      "!**/packages/atomic/**/*.tsx", // Exclude tsx files during Lit migration.
+      "**/packages/atomic/**/*.stories.tsx", // Reinclude storybook stories.
+      "!**/packages/atomic/**/*.d.ts",
+
+      // atomic-angular excluded files.
+      "!**/packages/atomic-angular/**/stencil-generated/**/*",
+
+      // atomic-react excluded files.
+      "!**/packages/atomic-react/**/stencil-generated/**/*",
+
+      // documentation excluded files.
+      "!**/packages/documentation/**/assets/**/*",
+
+      // headless excluded files.
+      "!**/packages/headless/**/coveo.analytics/**/*",
+
+      // atomic-stencil-samples excluded files.
+      "!**/packages/samples/stencil/**/*.d.ts",
+
       // This is in another ticket for tailwind css
       "!**/*.tw.css"
     ]
@@ -30,34 +54,7 @@
     "bracketSpacing": false,
     "expand": "auto",
     "useEditorconfig": true,
-    "includes": [
-      "**/*.{js,jsx,ts,tsx,mjs,json,jsonc,css}",
-      "!**/*.tw.css",
-      "!**/LICENSE.md",
-      "!utils/**/.storybook/**",
-      "!scripts/deploy/execute-deployment-pipeline.mjs",
-      "!**/staticresources/**",
-      "!packages/atomic-hosted-page/loader/**/*",
-      "!packages/atomic/docs/**/*",
-      "!packages/atomic/dist-storybook/**/*",
-      "!packages/atomic/src/components/search/atomic-search-interface/lang/*.json",
-      "!packages/atomic/src/external-builds/**/*",
-      "!packages/atomic/src/generated/**",
-      "!packages/headless/src/external-builds/**/*",
-      "!packages/quantic/docs/out/quantic-docs.json",
-      "!packages/quantic/.tmp/**",
-      "!packages/samples/headless-react/build/**/*",
-      "!packages/samples/headless-commerce-ssr-remix/build/**/*",
-      "!packages/samples/angular/src/lang/*.json",
-      "!packages/samples/vuejs/public/lang/*.json",
-      "!**/.deployment.config.json",
-      "!.deployment.config.json",
-      "!packages/atomic-angular/scripts/build-lit.mjs",
-      "!packages/atomic-react/scripts/build-lit.mjs",
-      "!packages/atomic/playwright-utils/**/*",
-      "!packages/documentation/assets/css/main-new.css",
-      "!packages/headless/src/utils/fetch-event-source/**/*"
-    ]
+    "includes": ["**"]
   },
   "linter": {
     "enabled": true,
@@ -65,11 +62,7 @@
       "recommended": true,
       "style": {"noNonNullAssertion": "off"}
     },
-    "includes": [
-      "**",
-      // This in another ticket for tailwind css
-      "!**/*.tw.css"
-    ]
+    "includes": ["**"]
   },
   "javascript": {
     "formatter": {
@@ -96,6 +89,7 @@
       "includes": ["**/*.ts", "**/*.tsx"],
       "linter": {
         "rules": {
+          // These two are other tickets as well
           "complexity": {"noBannedTypes": "off"},
           "correctness": {"noUnusedVariables": "off"}
         }
