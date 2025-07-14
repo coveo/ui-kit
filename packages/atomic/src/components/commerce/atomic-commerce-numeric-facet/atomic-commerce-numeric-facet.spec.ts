@@ -1,3 +1,4 @@
+/** biome-ignore-all lint/style/noNonNullAssertion: <explanation> */
 import {renderInAtomicCommerceInterface} from '@/vitest-utils/testing-helpers/fixtures/atomic/commerce/atomic-commerce-interface-fixture';
 import {buildFakeContext} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/context-controller';
 import {buildFakeCommerceEngine} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/engine';
@@ -5,7 +6,7 @@ import {buildFakeNumericFacet} from '@/vitest-utils/testing-helpers/fixtures/hea
 import {buildFakeSummary} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/summary-subcontroller';
 import {
   buildContext,
-  Context,
+  type Context,
   type NumericFacet,
   type Summary,
 } from '@coveo/headless/commerce';
@@ -17,7 +18,7 @@ import {
   vi,
   beforeEach,
   it,
-  MockInstance,
+  type MockInstance,
   afterEach,
 } from 'vitest';
 import type {AtomicCommerceNumericFacet} from './atomic-commerce-numeric-facet';
@@ -149,6 +150,28 @@ describe('atomic-commerce-numeric-facet', () => {
   it('should render the title', async () => {
     const {title} = await setupElement();
     await expect.element(title).toBeVisible();
+  });
+
+  it('should render "no-label" when displayName is falsy', async () => {
+    mockedFacet = buildFakeNumericFacet({
+      state: {
+        displayName: '',
+      },
+    });
+
+    const {labelButton} = await setupElement();
+    await expect.element(labelButton).toHaveTextContent('No label');
+  });
+
+  it('should render "No label" when displayName is undefined', async () => {
+    mockedFacet = buildFakeNumericFacet({
+      state: {
+        displayName: undefined,
+      },
+    });
+
+    const {labelButton} = await setupElement();
+    await expect.element(labelButton).toHaveTextContent('No label');
   });
 
   it('should render the first facet value', async () => {

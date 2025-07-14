@@ -1,20 +1,22 @@
+import {bindingGuard} from '@/src/decorators/binding-guard';
 import {bindings} from '@/src/decorators/bindings';
+import {errorGuard} from '@/src/decorators/error-guard';
 import {injectStylesForNoShadowDOM} from '@/src/decorators/light-dom';
-import {InitializableComponent} from '@/src/decorators/types';
+import type {InitializableComponent} from '@/src/decorators/types';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
 import {isUndefined} from '@coveo/bueno';
-import {NumericFacet} from '@coveo/headless/commerce';
-import {LitElement, html, unsafeCSS, nothing} from 'lit';
+import type {NumericFacet} from '@coveo/headless/commerce';
+import {LitElement, html, unsafeCSS} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {ref} from 'lit/directives/ref.js';
-import {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface';
+import type {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface';
 import styles from './atomic-commerce-facet-number-input.tw.css';
 
 export type Range = {start: number; end: number};
 
 /**
  * Internal component made to be integrated in a NumericFacet.
- * @alpha
+ * @internal
  */
 @customElement('atomic-commerce-facet-number-input')
 @withTailwindStyles
@@ -97,10 +99,9 @@ export class AtomicCommerceFacetNumberInput
     return this.range?.end !== undefined ? String(this.range.end) : '';
   }
 
+  @bindingGuard()
+  @errorGuard()
   render() {
-    if (!this.facet || !this.bindings) {
-      return html`${nothing}`;
-    }
     const {facetId} = this.facet.state;
     const label = this.bindings.i18n.t(this.label);
     const minText = this.bindings.i18n.t('min');
@@ -138,9 +139,12 @@ export class AtomicCommerceFacetNumberInput
           required
           min=${this.absoluteMinimum}
           max=${this.maximumInputValue}
-          @input=${(e: Event) =>
-            (this.start = (e.target as HTMLInputElement).valueAsNumber)}
-          ${ref((ref) => (this.startRef = ref as HTMLInputElement))}
+          @input=${(e: Event) => {
+            this.start = (e.target as HTMLInputElement).valueAsNumber;
+          }}
+          ${ref((ref) => {
+            this.startRef = ref as HTMLInputElement;
+          })}
         />
         <label part="label-end" class=${labelClasses} for="${facetId}_end">
           ${maxText}
@@ -156,9 +160,12 @@ export class AtomicCommerceFacetNumberInput
           required
           min=${this.minimumInputValue}
           max=${Number.MAX_SAFE_INTEGER}
-          @input=${(e: Event) =>
-            (this.end = (e.target as HTMLInputElement).valueAsNumber)}
-          ${ref((ref) => (this.endRef = ref as HTMLInputElement))}
+          @input=${(e: Event) => {
+            this.end = (e.target as HTMLInputElement).valueAsNumber;
+          }}
+          ${ref((ref) => {
+            this.endRef = ref as HTMLInputElement;
+          })}
         />
         <button
           style="outline-primary"

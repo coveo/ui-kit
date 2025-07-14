@@ -3,7 +3,7 @@ import {html, nothing} from 'lit';
 import {renderFacetValueCheckbox} from '../facet-value-checkbox/facet-value-checkbox';
 import {renderFacetValueLabelHighlight} from '../facet-value-label-highlight/facet-value-label-highlight';
 import {renderFacetValueLink} from '../facet-value-link/facet-value-link';
-import {FormatFacetValueRange, formatHumanReadable} from './formatter';
+import {type FormatFacetValueRange, formatHumanReadable} from './formatter';
 
 export interface NumericFacetValueLinkProps extends FormatFacetValueRange {
   onClick: () => void;

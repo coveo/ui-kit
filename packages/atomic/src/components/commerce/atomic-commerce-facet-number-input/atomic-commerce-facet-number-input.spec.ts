@@ -1,11 +1,11 @@
 import {renderInAtomicCommerceInterface} from '@/vitest-utils/testing-helpers/fixtures/atomic/commerce/atomic-commerce-interface-fixture';
-import {NumericFacet} from '@coveo/headless/commerce';
+import type {NumericFacet} from '@coveo/headless/commerce';
 import {page} from '@vitest/browser/context';
 import {html} from 'lit';
 import {describe, it, vi, expect} from 'vitest';
 import {
   AtomicCommerceFacetNumberInput,
-  Range,
+  type Range,
 } from './atomic-commerce-facet-number-input';
 import './atomic-commerce-facet-number-input';
 
@@ -63,7 +63,7 @@ describe('atomic-commerce-facet-number-input', () => {
     };
   };
 
-  it('is defined', () => {
+  it('should be defined', () => {
     const el = document.createElement('atomic-commerce-facet-number-input');
     expect(el).toBeInstanceOf(AtomicCommerceFacetNumberInput);
   });
@@ -113,8 +113,8 @@ describe('atomic-commerce-facet-number-input', () => {
     await expect(applyButton).toHaveAttribute('part', 'input-apply-button');
   });
 
-  describe('#apply', () => {
-    it('should emit atomic-number-input-apply event with correct detail button is clicked', async () => {
+  describe('when the apply button is clicked', () => {
+    it('should emit atomic-number-input-apply event with correct detail', async () => {
       const {element, applyButton} = await setupElement({
         range: {start: 10, end: 100},
       });
@@ -135,6 +135,30 @@ describe('atomic-commerce-facet-number-input', () => {
 
       expect(element['startRef']).toBe(startInput.element());
       expect(element['endRef']).toBe(endInput.element());
+    });
+
+    it('should maintain valid refs when input values change', async () => {
+      const {element, startInput, endInput} = await setupElement({
+        range: {start: 10, end: 100},
+      });
+
+      await startInput.fill('50');
+      await endInput.fill('200');
+
+      expect(element['startRef']).toBe(startInput.element());
+      expect(element['endRef']).toBe(endInput.element());
+    });
+
+    it('should update ref values when input values change', async () => {
+      const {element, startInput, endInput} = await setupElement({
+        range: {start: 10, end: 100},
+      });
+
+      await startInput.fill('50');
+      await endInput.fill('200');
+
+      expect(element['startRef']?.value).toBe('50');
+      expect(element['endRef']?.value).toBe('200');
     });
   });
 });

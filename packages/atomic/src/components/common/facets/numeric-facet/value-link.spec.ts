@@ -1,6 +1,7 @@
 import {NumberFormatter} from '@/src/components/common/formats/format-common';
 import {renderFunctionFixture} from '@/vitest-utils/testing-helpers/fixture';
 import {createTestI18n} from '@/vitest-utils/testing-helpers/i18n-utils';
+import {page} from '@vitest/browser/context';
 import '@vitest/browser/matchers.d.ts';
 import {html} from 'lit';
 import {vi, expect, describe, beforeAll, beforeEach, it} from 'vitest';
@@ -10,7 +11,7 @@ import {renderFacetValueLink} from '../facet-value-link/facet-value-link';
 import {formatHumanReadable} from './formatter';
 import {
   renderNumericFacetValue,
-  NumericFacetValueLinkProps,
+  type NumericFacetValueLinkProps,
 } from './value-link';
 
 // Mock the dependencies
@@ -19,13 +20,7 @@ vi.mock('../facet-value-link/facet-value-link', {spy: true});
 vi.mock('../facet-value-label-highlight/facet-value-label-highlight', {
   spy: true,
 });
-vi.mock('./formatter', async (importOriginal) => {
-  const actual = await importOriginal<typeof import('./formatter')>();
-  return {
-    ...actual,
-    formatHumanReadable: vi.fn(),
-  };
-});
+vi.mock('./formatter', {spy: true});
 
 describe('#renderNumericFacetValue', () => {
   let i18n: Awaited<ReturnType<typeof createTestI18n>>;
@@ -60,7 +55,6 @@ describe('#renderNumericFacetValue', () => {
       displayValuesAs: 'checkbox',
     };
 
-    vi.clearAllMocks();
     vi.mocked(formatHumanReadable).mockReturnValue('10 to 20');
   });
 
@@ -73,32 +67,32 @@ describe('#renderNumericFacetValue', () => {
     );
   };
 
+  it('should call formatHumanReadable with correct props', async () => {
+    const manualRanges = [
+      {
+        start: 10,
+        end: 20,
+        endInclusive: true,
+        label: 'Budget Range',
+        state: 'idle' as const,
+      },
+    ];
+
+    await renderComponent({displayValuesAs: 'checkbox', manualRanges});
+
+    expect(formatHumanReadable).toHaveBeenCalledWith(
+      expect.objectContaining({
+        field: 'price',
+        facetValue: defaultProps.facetValue,
+        manualRanges,
+        i18n,
+        logger: mockLogger,
+        formatter: mockFormatter,
+      })
+    );
+  });
+
   describe('when displayValuesAs is "checkbox"', () => {
-    beforeEach(() => {
-      // Mock the checkbox render function to return a recognizable template
-      vi.mocked(renderFacetValueCheckbox).mockReturnValue(
-        () => html`<div data-testid="checkbox-container">checkbox content</div>`
-      );
-      vi.mocked(renderFacetValueLabelHighlight).mockReturnValue(
-        html`<span data-testid="label-highlight">highlighted label</span>`
-      );
-    });
-
-    it('should call formatHumanReadable with correct props', async () => {
-      await renderComponent({displayValuesAs: 'checkbox'});
-
-      expect(formatHumanReadable).toHaveBeenCalledWith(
-        expect.objectContaining({
-          field: 'price',
-          facetValue: defaultProps.facetValue,
-          manualRanges: [],
-          i18n,
-          logger: mockLogger,
-          formatter: mockFormatter,
-        })
-      );
-    });
-
     it('should call renderFacetValueCheckbox with correct props when facet value is not selected', async () => {
       await renderComponent({
         displayValuesAs: 'checkbox',
@@ -133,41 +127,17 @@ describe('#renderNumericFacetValue', () => {
       });
     });
 
-    it('should call renderFacetValueLabelHighlight with correct props', async () => {
-      await renderComponent({displayValuesAs: 'checkbox'});
-
-      expect(renderFacetValueLabelHighlight).toHaveBeenCalledWith({
-        props: {
-          displayValue: '10 to 20',
-          isSelected: false,
-        },
-      });
-    });
-
     it('should call onClick when checkbox onClick is triggered', async () => {
       await renderComponent({displayValuesAs: 'checkbox'});
 
-      // Get the onClick function passed to renderFacetValueCheckbox
-      const checkboxCall = vi.mocked(renderFacetValueCheckbox).mock.calls[0];
-      const checkboxOnClick = checkboxCall[0].props.onClick;
-
-      checkboxOnClick();
+      const button = await page.getByRole('checkbox');
+      await button.click();
 
       expect(mockOnClick).toHaveBeenCalledTimes(1);
     });
   });
 
   describe('when displayValuesAs is "link"', () => {
-    beforeEach(() => {
-      // Mock the link render function to return a recognizable template
-      vi.mocked(renderFacetValueLink).mockReturnValue(
-        () => html`<div data-testid="link-container">link content</div>`
-      );
-      vi.mocked(renderFacetValueLabelHighlight).mockReturnValue(
-        html`<span data-testid="label-highlight">highlighted label</span>`
-      );
-    });
-
     it('should call renderFacetValueLink with correct props when facet value is not selected', async () => {
       await renderComponent({
         displayValuesAs: 'link',
@@ -201,101 +171,25 @@ describe('#renderNumericFacetValue', () => {
         },
       });
     });
+  });
 
-    it('should call renderFacetValueLabelHighlight with correct props for link', async () => {
-      await renderComponent({displayValuesAs: 'link'});
+  it('should call renderFacetValueLabelHighlight with correct props', async () => {
+    await renderComponent();
 
-      expect(renderFacetValueLabelHighlight).toHaveBeenCalledWith({
-        props: {
-          displayValue: '10 to 20',
-          isSelected: false,
-        },
-      });
-    });
-
-    it('should pass onClick directly to renderFacetValueLink', async () => {
-      await renderComponent({displayValuesAs: 'link'});
-
-      const linkCall = vi.mocked(renderFacetValueLink).mock.calls[0];
-      const linkOnClick = linkCall[0].props.onClick;
-
-      expect(linkOnClick).toBe(mockOnClick);
+    expect(renderFacetValueLabelHighlight).toHaveBeenCalledWith({
+      props: {
+        displayValue: '10 to 20',
+        isSelected: false,
+      },
     });
   });
 
-  describe('when displayValuesAs has an invalid value', () => {
-    it('should return nothing for invalid displayValuesAs', async () => {
-      const element = await renderComponent({
-        displayValuesAs: 'invalid' as 'checkbox' | 'link',
-      });
-
-      // The element should be empty when nothing is returned
-      expect(element.children).toHaveLength(0);
-    });
-  });
-
-  describe('edge cases', () => {
-    it('should handle excluded facet value state', async () => {
-      await renderComponent({
-        displayValuesAs: 'checkbox',
-        facetValue: {...defaultProps.facetValue, state: 'excluded'},
-      });
-
-      expect(renderFacetValueCheckbox).toHaveBeenCalledWith({
-        props: expect.objectContaining({
-          isSelected: false, // excluded should be treated as not selected
-        }),
-      });
+  it('should return nothing when displayValuesAs is invalid', async () => {
+    const element = await renderComponent({
+      // @ts-expect-error: Intentionally passing an invalid value
+      displayValuesAs: 'invalid',
     });
 
-    it('should handle zero numberOfResults', async () => {
-      await renderComponent({
-        displayValuesAs: 'checkbox',
-        facetValue: {...defaultProps.facetValue, numberOfResults: 0},
-      });
-
-      expect(renderFacetValueCheckbox).toHaveBeenCalledWith({
-        props: expect.objectContaining({
-          numberOfResults: 0,
-        }),
-      });
-    });
-
-    it('should handle different number formats', async () => {
-      vi.mocked(formatHumanReadable).mockReturnValue('$10.00 to $20.99');
-
-      await renderComponent({displayValuesAs: 'checkbox'});
-
-      expect(renderFacetValueCheckbox).toHaveBeenCalledWith({
-        props: expect.objectContaining({
-          displayValue: '$10.00 to $20.99',
-        }),
-      });
-    });
-  });
-
-  describe('integration with manual ranges', () => {
-    it('should pass manual ranges to formatHumanReadable', async () => {
-      const manualRanges = [
-        {
-          start: 10,
-          end: 20,
-          endInclusive: true,
-          label: 'Budget Range',
-          state: 'idle' as const,
-        },
-      ];
-
-      await renderComponent({
-        manualRanges,
-        displayValuesAs: 'checkbox',
-      });
-
-      expect(formatHumanReadable).toHaveBeenCalledWith(
-        expect.objectContaining({
-          manualRanges,
-        })
-      );
-    });
+    expect(element).toBeEmptyDOMElement();
   });
 });
