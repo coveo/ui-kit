@@ -1,7 +1,6 @@
 import * as BackOff from 'exponential-backoff';
 import {pino} from 'pino';
 import {Mock} from 'vitest';
-import {ExpiredTokenError} from '../utils/errors.js';
 import {PlatformEnvironment} from '../utils/url-utils.js';
 import {
   getAnalyticsNextApiBaseUrl,

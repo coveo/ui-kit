@@ -2,7 +2,6 @@ import {Middleware, UnknownAction} from '@reduxjs/toolkit';
 import {Logger} from 'pino';
 import {debounce} from 'ts-debounce';
 import {updateBasicConfiguration} from '../features/configuration/configuration-actions.js';
-import {ExpiredTokenError} from '../utils/errors.js';
 
 export function createRenewAccessTokenMiddleware(
   logger: Logger,
@@ -23,7 +22,7 @@ export function createRenewAccessTokenMiddleware(
 
     const payload = await next(action);
 
-    if (!isExpiredTokenError(payload)) {
+    if (!isUnauthorizedError(payload)) {
       return payload;
     }
 
@@ -51,9 +50,24 @@ export function createRenewAccessTokenMiddleware(
   };
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-function isExpiredTokenError(action: any) {
-  return action?.error?.name === new ExpiredTokenError().name;
+/**
+ * Checks if the `statusCode` property within the action's payload is either
+ * `401` (Unauthorized) or `419` (Authentication Timeout/Expired Token).
+ *
+ * Both `401` and `419` are treated equivalently to ensure consistent handling
+ * of unauthorized errors across different APIs, regardless of which status code
+ * is used. Handling it here (not in the platform client) allows us to manage
+ * the renew access token logic and ensure the error payload bubbles up to the
+ * headless state.
+ *
+ * @param action - The action object potentially containing an error payload.
+ * @returns `true` if the action's payload has a `statusCode` of `401` or `419`,
+ *          otherwise `false`.
+ */
+function isUnauthorizedError(action: any) {
+  return (
+    action?.payload?.statusCode === 401 || action?.payload?.statusCode === 419
+  );
 }
 
 async function attempt(fn: () => Promise<string>) {

@@ -2,7 +2,6 @@ import {Middleware, MiddlewareAPI} from '@reduxjs/toolkit';
 import {pino, Logger} from 'pino';
 import {Mock} from 'vitest';
 import {updateBasicConfiguration} from '../features/configuration/configuration-actions.js';
-import {ExpiredTokenError} from '../utils/errors.js';
 import {createRenewAccessTokenMiddleware} from './renew-access-token-middleware.js';
 
 describe('createRenewAccessTokenMiddleware', () => {
@@ -15,7 +14,7 @@ describe('createRenewAccessTokenMiddleware', () => {
 
   function buildExpiredTokenPayload() {
     return {
-      error: {name: new ExpiredTokenError().name},
+      payload: {statusCode: 401},
     };
   }
 
