@@ -126,6 +126,12 @@ export class AtomicInsightGeneratedAnswer
   @Prop() fieldsToIncludeInCitations =
     this.DEFAULT_FIELDS_TO_INCLUDE_IN_CITATIONS;
 
+  /**
+   * Option to disable HTML anchoring for citations.
+   * @default false
+   */
+  @Prop() disableHtmlCitationAnchoring?: boolean;
+
   @AriaLiveRegion('generated-answer')
   protected ariaMessage!: string;
 
@@ -137,6 +143,7 @@ export class AtomicInsightGeneratedAnswer
       host: this.host,
       withToggle: this.withToggle,
       collapsible: this.collapsible,
+      disableHtmlCitationAnchoring: this.disableHtmlCitationAnchoring,
       getGeneratedAnswer: () => this.generatedAnswer,
       getGeneratedAnswerState: () => this.generatedAnswerState,
       getSearchStatusState: () => this.searchStatusState,

@@ -135,6 +135,12 @@ export class AtomicGeneratedAnswer implements InitializableComponent {
     this.DEFAULT_FIELDS_TO_INCLUDE_IN_CITATIONS;
 
   /**
+   * Option to disable HTML anchoring for citations.
+   * @default false
+   */
+  @Prop() disableHtmlCitationAnchoring?: boolean;
+
+  /**
    * The tabs on which the generated answer can be displayed. This property should not be used at the same time as `tabs-excluded`.
    *
    * Set this property as a stringified JSON array, e.g.,
@@ -179,6 +185,7 @@ export class AtomicGeneratedAnswer implements InitializableComponent {
       host: this.host,
       withToggle: this.withToggle,
       collapsible: this.collapsible,
+      disableHtmlCitationAnchoring: this.disableHtmlCitationAnchoring,
       getGeneratedAnswer: () => this.generatedAnswer,
       getGeneratedAnswerState: () => this.generatedAnswerState,
       getSearchStatusState: () => this.searchStatusState,
