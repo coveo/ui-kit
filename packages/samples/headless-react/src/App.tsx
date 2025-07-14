@@ -1,16 +1,16 @@
-import React from 'react';
-import {BrowserRouter, NavLink, Routes, Route} from 'react-router-dom';
+import type React from 'react';
+import {BrowserRouter, NavLink, Route, Routes} from 'react-router-dom';
 import {AboutPage} from './pages/AboutPage';
 import {AnalyticsHook} from './pages/AnalyticsHook';
-import {DependentFacetPage} from './pages/DependentFacetPage';
-import {RecommendationPage} from './pages/RecommendationPage';
-import {SamlPage} from './pages/SamlPage';
-import {SearchPage, SearchPageProps} from './pages/SearchPage';
-import {StandaloneSearchBoxPage} from './pages/StandaloneSearchBoxPage';
 import {CommerceApp} from './pages/commerce/CommerceApp';
 import {ProductListingPage} from './pages/commerce/ProductListingPage';
 import {RecommendationsPage} from './pages/commerce/RecommendationsPage';
 import {SearchPage as CommerceSearchPage} from './pages/commerce/SearchPage';
+import {DependentFacetPage} from './pages/DependentFacetPage';
+import {RecommendationPage} from './pages/RecommendationPage';
+import {SamlPage} from './pages/SamlPage';
+import {SearchPage, type SearchPageProps} from './pages/SearchPage';
+import {StandaloneSearchBoxPage} from './pages/StandaloneSearchBoxPage';
 
 function App(props: SearchPageProps) {
   const activeNavLink: React.CSSProperties = {color: 'red'};
