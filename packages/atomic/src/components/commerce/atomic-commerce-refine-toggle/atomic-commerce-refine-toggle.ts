@@ -15,6 +15,7 @@ import type {InitializableComponent} from '@/src/decorators/types';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles.js';
 import {renderRefineToggleButton} from '../../common/refine-modal/button';
 import {refineToggleGuard} from '../../common/refine-modal/guard';
+import type {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface';
 import type {AtomicCommerceRefineModal} from '../atomic-commerce-refine-modal/atomic-commerce-refine-modal.js';
 
 /**
