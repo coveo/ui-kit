@@ -1,22 +1,16 @@
-import {
-  FacetState,
-  Facet as FacetController,
-  TabManager,
-} from '@coveo/headless/ssr';
-import {useEffect, useState, FunctionComponent} from 'react';
+import type {Facet as FacetController, FacetState} from '@coveo/headless/ssr';
+import {type FunctionComponent, useEffect, useState} from 'react';
 import FacetCommon from '../common/facet';
 
 interface FacetProps {
   title: string;
   staticState: FacetState;
-  tabManager?: TabManager;
   controller?: FacetController;
 }
 
 export const Facet: FunctionComponent<FacetProps> = ({
   title,
   staticState,
-  tabManager,
   controller,
 }) => {
   const [state, setState] = useState(staticState);
