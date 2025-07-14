@@ -1,4 +1,4 @@
-import {getOctokit, context} from '@actions/github';
+import {context, getOctokit} from '@actions/github';
 
 const octokit = getOctokit(process.env.GITHUB_CREDENTIALS).rest;
 const owner = 'coveo';

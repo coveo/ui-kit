@@ -1,6 +1,6 @@
 #!/usr/bin/env node
-import {describeNpmTag, npmPublish} from '@coveo/semantic-monorepo-tools';
 import {readFileSync} from 'node:fs';
+import {describeNpmTag, npmPublish} from '@coveo/semantic-monorepo-tools';
 
 if (!process.env.INIT_CWD) {
   throw new Error('Should be called using npm run-script');

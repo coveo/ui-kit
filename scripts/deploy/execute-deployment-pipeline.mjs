@@ -1,12 +1,12 @@
 import {execSync} from 'node:child_process';
 import {parse} from 'semver';
+import rootJson from '../../package.json' with {type: 'json'};
+import atomicJson from '../../packages/atomic/package.json' with {type: 'json'};
 import atomicHostedPageJson from '../../packages/atomic-hosted-page/package.json' with {type: 'json'};
 import atomicReactJson from '../../packages/atomic-react/package.json' with {type: 'json'};
-import atomicJson from '../../packages/atomic/package.json' with {type: 'json'};
-import headlessJson from '../../packages/headless/package.json' with {type: 'json'};
 import buenoJson from '../../packages/bueno/package.json' with {type: 'json'};
+import headlessJson from '../../packages/headless/package.json' with {type: 'json'};
 import shopifyJson from '../../packages/shopify/package.json' with {type: 'json'};
-import rootJson from '../../package.json' with {type: 'json'};
 
 const releaseCommit = execSync('git rev-parse HEAD').toString().trim();
 

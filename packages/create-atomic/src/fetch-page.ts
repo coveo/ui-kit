@@ -1,7 +1,7 @@
 import type {
-  PlatformClient,
   IManifestResponse,
   ISearchInterfaceConfigurationResponse,
+  PlatformClient,
 } from '@coveo/platform-client';
 
 /**

@@ -1,7 +1,7 @@
 import 'isomorphic-fetch';
 import 'abortcontroller-polyfill';
-import HttpsProxyAgent from 'https-proxy-agent';
 import {PlatformClient} from '@coveo/platform-client';
+import HttpsProxyAgent from 'https-proxy-agent';
 
 export function createPlatformClient(
   host: string,

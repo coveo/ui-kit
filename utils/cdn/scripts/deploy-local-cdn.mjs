@@ -1,8 +1,8 @@
 import fs from 'node:fs/promises';
-import ncp from 'ncp';
+import { findPackageJSON} from 'node:module';
 import path from 'node:path';
 import chalk from 'chalk';
-import { findPackageJSON} from 'node:module';
+import ncp from 'ncp';
 
 const currentDir = import.meta.dirname;
 const getVersionFromPackageJson = async (packageName, versionType) => {

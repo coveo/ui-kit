@@ -1,5 +1,5 @@
 import {execute} from '../../exec.mjs';
-import {getHeadBranchName, getBaseBranchName} from '../github-client.mjs';
+import {getBaseBranchName, getHeadBranchName} from '../github-client.mjs';
 import {computeFileSizes} from './command.mjs';
 import {buildReport} from './report.mjs';
 

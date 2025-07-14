@@ -1,20 +1,20 @@
 #!/usr/bin/env node
+import {spawnSync} from 'node:child_process';
+import {appendFileSync, readFileSync, writeFileSync} from 'node:fs';
+import {join, resolve} from 'node:path';
 import {
-  getLastTag,
-  parseCommits,
+  describeNpmTag,
+  generateChangelog,
   getCommits,
   getCurrentVersion,
+  getLastTag,
   getNextVersion,
-  generateChangelog,
-  writeChangelog,
-  describeNpmTag,
   getSHA1fromRef,
+  parseCommits,
+  writeChangelog,
 } from '@coveo/semantic-monorepo-tools';
 // @ts-ignore no dts is ok
 import changelogConvention from 'conventional-changelog-conventionalcommits';
-import {spawnSync} from 'node:child_process';
-import {appendFileSync, readFileSync, writeFileSync} from 'node:fs';
-import {resolve, join} from 'node:path';
 import {gt, SemVer} from 'semver';
 import {
   REPO_FS_ROOT,

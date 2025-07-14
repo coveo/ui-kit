@@ -1,20 +1,20 @@
 #!/usr/bin/env node
-import {
-  getCurrentBranchName,
-  gitDeleteRemoteBranch,
-  getSHA1fromRef,
-  gitCreateBranch,
-  gitAdd,
-  gitWriteTree,
-  gitCommitTree,
-  gitUpdateRef,
-  gitPublishBranch,
-  gitPull,
-  gitSwitchBranch,
-  gitSetupUser,
-} from '@coveo/semantic-monorepo-tools';
 import {spawnSync} from 'node:child_process';
 import {randomUUID} from 'node:crypto';
+import {
+  getCurrentBranchName,
+  getSHA1fromRef,
+  gitAdd,
+  gitCommitTree,
+  gitCreateBranch,
+  gitDeleteRemoteBranch,
+  gitPublishBranch,
+  gitPull,
+  gitSetupUser,
+  gitSwitchBranch,
+  gitUpdateRef,
+  gitWriteTree,
+} from '@coveo/semantic-monorepo-tools';
 import {Octokit} from 'octokit';
 import {REPO_NAME, REPO_OWNER} from './constants.mjs';
 

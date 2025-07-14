@@ -1,15 +1,15 @@
-import type {NodePlopAPI} from 'plop';
 import {spawn} from 'node:child_process';
-import {getPackageManager} from './utils.js';
-import {fetchPageManifest, type IManifest} from './fetch-page.js';
-import {listSearchPagesOptions} from './list-pages.js';
-import {defaultPageManifest} from './default/default-page.js';
 import {writeFileSync} from 'node:fs';
 import {join} from 'node:path';
-import {createPlatformClient} from './client.js';
 import type PlatformClient from '@coveo/platform-client';
 import ListPrompt from 'inquirer/lib/prompts/list.js';
 import type {PromptQuestion} from 'node-plop';
+import type {NodePlopAPI} from 'plop';
+import {createPlatformClient} from './client.js';
+import {defaultPageManifest} from './default/default-page.js';
+import {fetchPageManifest, type IManifest} from './fetch-page.js';
+import {listSearchPagesOptions} from './list-pages.js';
+import {getPackageManager} from './utils.js';
 
 interface PlopData {
   project: string;

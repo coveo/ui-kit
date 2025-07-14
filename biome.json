@@ -12,13 +12,7 @@
       "**",
       "!**/packages/quantic/**/*",
       "!**/packages/create-atomic-template/**/*",
-      "!**/dist/**",
-      "!**/dist*/**",
-      "!**/*.d.ts",
-      "!.deployment.config.json",
-      "!**/.deployment.config.json",
-      "!**/package.json",
-      "!**/package-lock.json"
+      "!**/.deployment.config.json"
     ]
   },
   "formatter": {
@@ -181,6 +175,6 @@
   ],
   "assist": {
     "enabled": true,
-    "actions": {"source": {"organizeImports": "off"}}
+    "actions": {"source": {"organizeImports": "on"}}
   }
 }
