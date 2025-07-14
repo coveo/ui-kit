@@ -55,6 +55,8 @@ import styles from './atomic-commerce-numeric-facet.tw.css';
  * @part input-end - The input field to enter the maximum numeric value.
  * @part input-apply-button - The button to apply custom numeric range values.
  *
+ * @internal
+ *
  */
 @customElement('atomic-commerce-numeric-facet')
 @withTailwindStyles
@@ -107,7 +109,7 @@ export class AtomicCommerceNumericFacet
   @state() public error!: Error;
 
   private headerFocus!: FocusTargetController;
-  private unsubscribeFacetController?: () => void | undefined;
+  private unsubscribeFacetController?: () => void;
 
   static styles: CSSResultGroup = [unsafeCSS(styles)];
 
