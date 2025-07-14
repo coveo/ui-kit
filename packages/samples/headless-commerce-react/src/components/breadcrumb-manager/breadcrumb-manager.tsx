@@ -1,10 +1,10 @@
-import {
+import type {
   CategoryFacetValue,
-  RegularFacetValue,
-  NumericFacetValue,
   DateFacetValue,
   BreadcrumbManager as HeadlessBreadcrumbManager,
   LocationFacetValue,
+  NumericFacetValue,
+  RegularFacetValue,
 } from '@coveo/headless/commerce';
 import {useEffect, useState} from 'react';
 
@@ -60,7 +60,9 @@ export default function BreadcrumbManager(props: BreadcrumbManagerProps) {
   return (
     <div className="BreadcrumbManager">
       <div className="ClearAllBreadcrumbs">
-        <button onClick={controller.deselectAll}>Clear all filters</button>
+        <button onClick={controller.deselectAll} type="button">
+          Clear all filters
+        </button>
       </div>
       <ul className="Breadcrumbs">
         {state.facetBreadcrumbs.map((facetBreadcrumb) => {
@@ -72,6 +74,7 @@ export default function BreadcrumbManager(props: BreadcrumbManagerProps) {
               {facetBreadcrumb.values.map((value, index) => {
                 return (
                   <button
+                    type="button"
                     className="BreadcrumbValue"
                     key={`${value.value}-breadcrumb-${index}`}
                     onClick={() => value.deselect()}

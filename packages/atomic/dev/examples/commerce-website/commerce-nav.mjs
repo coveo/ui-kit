@@ -28,7 +28,7 @@ export const getParamValue = (param) => {
   return document.location.hash
     .substring(1)
     .split('&')
-    .reduce(function (res, item) {
+    .reduce((res, item) => {
       var parts = item.split('=');
       res[parts[0]] = parts[1];
       return res;

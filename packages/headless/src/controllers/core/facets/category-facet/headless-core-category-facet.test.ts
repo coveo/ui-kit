@@ -17,13 +17,13 @@ import {
   findActiveValueAncestry,
   partitionIntoParentsAndValues,
 } from '../../../../features/facets/category-facet-set/category-facet-utils.js';
-import {
+import type {
   CategoryFacetRequest,
   CategoryFacetSortCriterion,
 } from '../../../../features/facets/category-facet-set/interfaces/request.js';
 import {categoryFacetSearchSetReducer as categoryFacetSearchSet} from '../../../../features/facets/facet-search-set/category/category-facet-search-set-slice.js';
 import {searchReducer as search} from '../../../../features/search/search-slice.js';
-import {SearchAppState} from '../../../../state/search-app-state.js';
+import type {SearchAppState} from '../../../../state/search-app-state.js';
 import {buildMockCategoryFacetRequest} from '../../../../test/mock-category-facet-request.js';
 import {buildMockCategoryFacetResponse} from '../../../../test/mock-category-facet-response.js';
 import {buildMockCategoryFacetSearch} from '../../../../test/mock-category-facet-search.js';
@@ -31,15 +31,15 @@ import {buildMockCategoryFacetSlice} from '../../../../test/mock-category-facet-
 import {buildMockCategoryFacetValue} from '../../../../test/mock-category-facet-value.js';
 import {
   buildMockSearchEngine,
-  MockedSearchEngine,
+  type MockedSearchEngine,
 } from '../../../../test/mock-engine-v2.js';
 import {createMockState} from '../../../../test/mock-state.js';
 import * as FacetIdDeterminor from '../_common/facet-id-determinor.js';
 import {
   buildCoreCategoryFacet,
-  CategoryFacetOptions,
-  CategoryFacetValue,
-  CoreCategoryFacet,
+  type CategoryFacetOptions,
+  type CategoryFacetValue,
+  type CoreCategoryFacet,
 } from './headless-core-category-facet.js';
 
 vi.mock('../../../../features/facets/category-facet-set/category-facet-utils');

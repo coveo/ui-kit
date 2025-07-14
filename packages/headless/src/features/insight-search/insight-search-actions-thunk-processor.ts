@@ -1,28 +1,28 @@
 import {isNullOrUndefined} from '@coveo/bueno';
-import {ThunkDispatch, AnyAction} from '@reduxjs/toolkit';
+import type {AnyAction, ThunkDispatch} from '@reduxjs/toolkit';
 import {
-  SearchOptions,
   isErrorResponse,
   isSuccessResponse,
+  type SearchOptions,
 } from '../../api/search/search-api-client.js';
-import {
+import type {
   InsightAPIClient,
   InsightAPIErrorStatusResponse,
 } from '../../api/service/insight/insight-api-client.js';
-import {InsightQueryRequest} from '../../api/service/insight/query/query-request.js';
-import {ClientThunkExtraArguments} from '../../app/thunk-extra-arguments.js';
+import type {InsightQueryRequest} from '../../api/service/insight/query/query-request.js';
+import type {ClientThunkExtraArguments} from '../../app/thunk-extra-arguments.js';
 import {applyDidYouMeanCorrection} from '../did-you-mean/did-you-mean-actions.js';
 import {snapshot} from '../history/history-actions.js';
 import {extractHistory} from '../history/history-state.js';
 import {updateQuery} from '../query/query-actions.js';
-import {ExecuteSearchThunkReturn} from '../search/search-actions.js';
+import type {ExecuteSearchThunkReturn} from '../search/search-actions.js';
 import {
-  ErrorResponse,
-  MappedSearchRequest,
-  SuccessResponse,
+  type ErrorResponse,
+  type MappedSearchRequest,
   mapSearchResponse,
+  type SuccessResponse,
 } from '../search/search-mappings.js';
-import {StateNeededByExecuteSearch} from './insight-search-actions.js';
+import type {StateNeededByExecuteSearch} from './insight-search-actions.js';
 import {logQueryError} from './insight-search-analytics-actions.js';
 import {buildInsightSearchRequest} from './insight-search-request.js';
 
@@ -64,12 +64,12 @@ export class AsyncInsightSearchThunkProcessor<RejectionType> {
     {request, mappings}: MappedSearchRequest<InsightQueryRequest>,
     options?: SearchOptions
   ) {
-    const startedAt = new Date().getTime();
+    const startedAt = Date.now();
     const response = mapSearchResponse(
       await this.extra.apiClient.query(request, options),
       mappings
     );
-    const duration = new Date().getTime() - startedAt;
+    const duration = Date.now() - startedAt;
     const queryExecuted = this.getState().query?.q || '';
     return {
       response,

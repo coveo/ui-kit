@@ -1,14 +1,14 @@
-import {
+import type {
   Controller,
   ControllerDefinitionsMap,
-  InferControllerFromDefinition,
-  InferControllersMapFromDefinition,
-  InferControllerStaticStateMapFromDefinitionsWithSolutionType,
   EngineDefinition,
+  InferControllerFromDefinition,
+  InferControllerStaticStateMapFromDefinitionsWithSolutionType,
+  InferControllersMapFromDefinition,
   SolutionType,
   CommerceEngine as SSRCommerceEngine,
 } from '@coveo/headless/ssr-commerce';
-import {FunctionComponent, PropsWithChildren} from 'react';
+import type {FunctionComponent, PropsWithChildren} from 'react';
 
 export type ContextStaticState<
   TControllers extends ControllerDefinitionsMap<Controller>,

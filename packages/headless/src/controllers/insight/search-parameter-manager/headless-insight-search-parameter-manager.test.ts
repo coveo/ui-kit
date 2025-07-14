@@ -3,7 +3,7 @@ import {restoreSearchParameters} from '../../../features/search-parameters/searc
 import {initialSearchParameterSelector} from '../../../features/search-parameters/search-parameter-selectors.js';
 import {
   buildMockInsightEngine,
-  MockedInsightEngine,
+  type MockedInsightEngine,
 } from '../../../test/mock-engine-v2.js';
 import {buildMockFacetRequest} from '../../../test/mock-facet-request.js';
 import {buildMockFacetSlice} from '../../../test/mock-facet-slice.js';
@@ -11,8 +11,8 @@ import {buildMockFacetValueRequest} from '../../../test/mock-facet-value-request
 import {buildMockInsightState} from '../../../test/mock-insight-state.js';
 import {
   buildSearchParameterManager,
-  SearchParameterManager,
-  SearchParameterManagerProps,
+  type SearchParameterManager,
+  type SearchParameterManagerProps,
 } from './headless-insight-search-parameter-manager.js';
 
 vi.mock('../../../features/search-parameters/search-parameter-actions');

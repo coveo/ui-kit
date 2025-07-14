@@ -7,13 +7,13 @@ import {categoryFacetSearchSetReducer as categoryFacetSearchSet} from '../../../
 import {buildMockCategoryFacetSearch} from '../../../../../test/mock-category-facet-search.js';
 import {buildMockCommerceState} from '../../../../../test/mock-commerce-state.js';
 import {
-  MockedCommerceEngine,
   buildMockCommerceEngine,
+  type MockedCommerceEngine,
 } from '../../../../../test/mock-engine-v2.js';
 import {
-  CategoryFacetSearch,
-  CategoryFacetSearchProps,
   buildCategoryFacetSearch,
+  type CategoryFacetSearch,
+  type CategoryFacetSearchProps,
 } from './headless-commerce-category-facet-search.js';
 
 vi.mock(

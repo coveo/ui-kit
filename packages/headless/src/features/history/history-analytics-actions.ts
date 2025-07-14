@@ -1,7 +1,7 @@
 import type {SearchPageEvents as LegacySearchPageEvents} from 'coveo.analytics/dist/definitions/searchPage/searchPageEvents.js';
 import {
+  type LegacySearchAction,
   makeAnalyticsAction,
-  LegacySearchAction,
 } from '../analytics/analytics-utils.js';
 
 //TODO: KIT-2859

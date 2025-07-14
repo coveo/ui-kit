@@ -1,12 +1,12 @@
-import {PayloadAction} from '@reduxjs/toolkit';
-import {CommerceEngine} from '../../../../app/commerce-engine/commerce-engine.js';
+import type {PayloadAction} from '@reduxjs/toolkit';
+import type {CommerceEngine} from '../../../../app/commerce-engine/commerce-engine.js';
 import {commerceFacetSetReducer as commerceFacetSet} from '../facet-set/facet-set-slice.js';
 import {
-  ToggleExcludeDateFacetValuePayload,
-  ToggleSelectDateFacetValuePayload,
-  UpdateDateFacetValuesPayload,
+  type ToggleExcludeDateFacetValuePayload,
+  type ToggleSelectDateFacetValuePayload,
   toggleExcludeDateFacetValue,
   toggleSelectDateFacetValue,
+  type UpdateDateFacetValuesPayload,
   updateDateFacetValues,
 } from './date-facet-actions.js';
 

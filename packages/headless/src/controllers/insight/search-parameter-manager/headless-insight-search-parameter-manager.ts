@@ -1,6 +1,6 @@
-import {InsightEngine} from '../../../app/insight-engine/insight-engine.js';
+import type {InsightEngine} from '../../../app/insight-engine/insight-engine.js';
 import {executeSearch} from '../../../features/insight-search/insight-search-actions.js';
-import {SearchParameters} from '../../../features/search-parameters/search-parameter-actions.js';
+import type {SearchParameters} from '../../../features/search-parameters/search-parameter-actions.js';
 import {parametersChange} from '../../../features/search-parameters/search-parameter-analytics-actions.js';
 import {logParametersChange} from '../../../features/search-parameters/search-parameter-insight-analytics-actions.js';
 import {deepEqualAnyOrder} from '../../../utils/compare-utils.js';
@@ -8,10 +8,10 @@ import {
   buildCoreSearchParameterManager,
   enrichParameters,
   getCoreActiveSearchParameters,
-  SearchParameterManager,
-  SearchParameterManagerInitialState,
-  SearchParameterManagerProps,
-  SearchParameterManagerState,
+  type SearchParameterManager,
+  type SearchParameterManagerInitialState,
+  type SearchParameterManagerProps,
+  type SearchParameterManagerState,
 } from '../../core/search-parameter-manager/headless-core-search-parameter-manager.js';
 
 export type {

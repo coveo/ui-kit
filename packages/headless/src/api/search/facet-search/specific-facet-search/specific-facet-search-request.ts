@@ -1,4 +1,4 @@
-import {
+import type {
   BaseFacetSearchRequest,
   FacetSearchType,
 } from '../base/base-facet-search-request.js';

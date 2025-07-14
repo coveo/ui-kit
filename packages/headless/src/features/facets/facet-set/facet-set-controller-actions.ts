@@ -1,7 +1,7 @@
 import {RecordValue} from '@coveo/bueno';
 import {createAsyncThunk} from '@reduxjs/toolkit';
-import {AsyncThunkOptions} from '../../../app/async-thunk-options.js';
-import {
+import type {AsyncThunkOptions} from '../../../app/async-thunk-options.js';
+import type {
   ConfigurationSection,
   FacetSection,
 } from '../../../state/state-sections.js';
@@ -12,7 +12,7 @@ import {
   toggleSelectFacetValue,
 } from './facet-set-actions.js';
 import {facetValueDefinition} from './facet-set-validate-payload.js';
-import {FacetValue} from './interfaces/response.js';
+import type {FacetValue} from './interfaces/response.js';
 
 const definition = {
   facetId: facetIdDefinition,

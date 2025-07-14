@@ -1,7 +1,7 @@
-import {
+import type {
+  BaseProduct,
   ChildProduct,
   Product,
-  BaseProduct,
 } from '../api/commerce/common/product.js';
 
 export function buildMockChildProduct(

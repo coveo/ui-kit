@@ -7,12 +7,12 @@ import {
 import {recommendationReducer} from '../../features/recommendation/recommendation-slice.js';
 import {
   buildMockRecommendationEngine,
-  MockedRecommendationEngine,
+  type MockedRecommendationEngine,
 } from '../../test/mock-engine-v2.js';
 import {createMockRecommendationState} from '../../test/mock-recommendation-state.js';
 import {
   buildRecommendationList,
-  RecommendationList,
+  type RecommendationList,
 } from './headless-recommendation.js';
 
 vi.mock('../../features/recommendation/recommendation-actions');

@@ -1,5 +1,6 @@
 import type {JSX as AtomicJSX} from '@coveo/atomic';
 import type {FoldedResult, Result} from '@coveo/headless';
+// biome-ignore lint/style/useImportType: <React is needed>
 import React, {useEffect, useRef} from 'react';
 import {createRoot} from 'react-dom/client';
 import {renderToString} from 'react-dom/server';
@@ -33,7 +34,7 @@ export const SearchBoxInstantResultsWrapper: React.FC<WrapperProps> = (
       createRoot(root).render(template(result as Result));
       return renderToString(template(result as Result));
     });
-  }, [instantResultsRef]);
+  }, [template]);
   return (
     <AtomicSearchBoxInstantResults ref={instantResultsRef} {...otherProps} />
   );

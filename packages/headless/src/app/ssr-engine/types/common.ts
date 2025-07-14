@@ -1,6 +1,6 @@
-import {UnknownAction} from '@reduxjs/toolkit';
+import type {UnknownAction} from '@reduxjs/toolkit';
 import type {Controller} from '../../../controllers/controller/headless-controller.js';
-import {CoreEngine, CoreEngineNext} from '../../engine.js';
+import type {CoreEngine, CoreEngineNext} from '../../engine.js';
 
 export type HasKey<T, K extends PropertyKey> = T extends unknown
   ? K extends keyof T
@@ -47,9 +47,7 @@ export type OptionsTuple<TOptions> =
       ? [options?: TOptions]
       : [options: TOptions];
 
-export interface OptionsExtender<TOptions> {
-  (options: TOptions): TOptions | Promise<TOptions>;
-}
+export type OptionsExtender<TOptions> = (options: TOptions) => TOptions | Promise<TOptions>
 
 export interface ControllersPropsMap {
   [customName: string]: unknown;

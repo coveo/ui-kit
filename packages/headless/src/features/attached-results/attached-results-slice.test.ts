@@ -6,7 +6,7 @@ import {
 } from './attached-results-actions.js';
 import {attachedResultsReducer} from './attached-results-slice.js';
 import {
-  AttachedResultsState,
+  type AttachedResultsState,
   getAttachedResultsInitialState,
 } from './attached-results-state.js';
 

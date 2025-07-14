@@ -1,4 +1,4 @@
-import {FacetValue} from '../../facet-set/interfaces/response.js';
+import type {FacetValue} from '../../facet-set/interfaces/response.js';
 
 export type AutomaticFacetRequest = {
   field: string;

@@ -16,18 +16,18 @@ import {getInsightConfigurationInitialState} from '../features/insight-configura
 import {getInsightInterfaceInitialState} from '../features/insight-interface/insight-interface-state.js';
 import {getInsightUserActionsInitialState} from '../features/insight-user-actions/insight-user-actions-state.js';
 import {getPaginationInitialState} from '../features/pagination/pagination-state.js';
+import {getQueryInitialState} from '../features/query/query-state.js';
 import {getQuerySetInitialState} from '../features/query-set/query-set-state.js';
 import {getQuerySuggestSetInitialState} from '../features/query-suggest/query-suggest-state.js';
-import {getQueryInitialState} from '../features/query/query-state.js';
 import {getQuestionAnsweringInitialState} from '../features/question-answering/question-answering-state.js';
 import {getResultPreviewInitialState} from '../features/result-preview/result-preview-state.js';
-import {getSearchHubInitialState} from '../features/search-hub/search-hub-state.js';
 import {getSearchInitialState} from '../features/search/search-state.js';
+import {getSearchHubInitialState} from '../features/search-hub/search-hub-state.js';
 import {getSortCriteriaInitialState} from '../features/sort-criteria/sort-criteria-state.js';
 import {getStaticFilterSetInitialState} from '../features/static-filter-set/static-filter-set-state.js';
 import {getTabSetInitialState} from '../features/tab-set/tab-set-state.js';
 import {getTriggerInitialState} from '../features/triggers/triggers-state.js';
-import {InsightAppState} from '../state/insight-app-state.js';
+import type {InsightAppState} from '../state/insight-app-state.js';
 
 export function buildMockInsightState(
   config: Partial<InsightAppState> = {}

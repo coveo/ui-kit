@@ -1,6 +1,6 @@
-import {useProductList} from '@/lib/commerce-engine';
-import {Product} from '@coveo/headless-react/ssr-commerce';
+import type {Product} from '@coveo/headless-react/ssr-commerce';
 import {useNavigate} from '@remix-run/react';
+import {useProductList} from '@/lib/commerce-engine';
 
 export default function ProductList() {
   const {state, methods} = useProductList();
@@ -17,7 +17,11 @@ export default function ProductList() {
     <ul aria-label="Product List">
       {state.products.map((product) => (
         <li key={product.ec_product_id}>
-          <button disabled={!methods} onClick={() => onProductClick(product)}>
+          <button
+            type="button"
+            disabled={!methods}
+            onClick={() => onProductClick(product)}
+          >
             {product.ec_name}
           </button>
         </li>

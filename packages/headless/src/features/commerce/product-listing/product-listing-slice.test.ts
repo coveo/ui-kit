@@ -1,11 +1,11 @@
-import {ChildProduct} from '../../../api/commerce/common/product.js';
+import type {ChildProduct} from '../../../api/commerce/common/product.js';
 import {buildMockCommerceRegularFacetResponse} from '../../../test/mock-commerce-facet-response.js';
-import {buildFetchProductListingResponse} from '../../../test/mock-product-listing.js';
 import {
+  buildMockBaseProduct,
   buildMockChildProduct,
   buildMockProduct,
-  buildMockBaseProduct,
 } from '../../../test/mock-product.js';
+import {buildFetchProductListingResponse} from '../../../test/mock-product-listing.js';
 import {setContext, setView} from '../context/context-actions.js';
 import {
   fetchMoreProducts,
@@ -15,7 +15,7 @@ import {
 import {productListingReducer} from './product-listing-slice.js';
 import {
   getProductListingInitialState,
-  ProductListingState,
+  type ProductListingState,
 } from './product-listing-state.js';
 
 describe('product-listing-slice', () => {

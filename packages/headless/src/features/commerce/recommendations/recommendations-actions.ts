@@ -1,26 +1,26 @@
 import {RecordValue, StringValue} from '@coveo/bueno';
 import {createAction, createAsyncThunk} from '@reduxjs/toolkit';
 import {
-  AsyncThunkCommerceOptions,
+  type AsyncThunkCommerceOptions,
   isErrorResponse,
 } from '../../../api/commerce/commerce-api-client.js';
-import {ChildProduct} from '../../../api/commerce/common/product.js';
-import {CommerceRecommendationsRequest} from '../../../api/commerce/recommendations/recommendations-request.js';
-import {RecommendationsCommerceSuccessResponse} from '../../../api/commerce/recommendations/recommendations-response.js';
-import {NavigatorContext} from '../../../app/navigator-context-provider.js';
-import {RecommendationsSection} from '../../../state/state-sections.js';
+import type {ChildProduct} from '../../../api/commerce/common/product.js';
+import type {CommerceRecommendationsRequest} from '../../../api/commerce/recommendations/recommendations-request.js';
+import type {RecommendationsCommerceSuccessResponse} from '../../../api/commerce/recommendations/recommendations-response.js';
+import type {NavigatorContext} from '../../../app/navigator-context-provider.js';
+import type {RecommendationsSection} from '../../../state/state-sections.js';
 import {validatePayload} from '../../../utils/validate-payload.js';
 import {
   buildPaginatedCommerceAPIRequest,
-  StateNeededForPaginatedCommerceAPIRequest,
+  type StateNeededForPaginatedCommerceAPIRequest,
 } from '../common/paginated-commerce-api-request-builder.js';
 import {getProductsFromCartPurchasedState} from '../context/cart/cart-state.js';
 import {perPageRecommendationSelector} from '../pagination/pagination-selectors.js';
+import {recommendationsSlotDefinition} from './recommendations.js';
 import {
   moreRecommendationsAvailableSelector,
   numberOfRecommendationsSelector,
 } from './recommendations-selectors.js';
-import {recommendationsSlotDefinition} from './recommendations.js';
 
 export interface QueryRecommendationsCommerceAPIThunkReturn {
   /** The successful recommendations response. */

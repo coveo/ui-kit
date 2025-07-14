@@ -1,4 +1,4 @@
-import {Action} from '@reduxjs/toolkit';
+import type {Action} from '@reduxjs/toolkit';
 import {
   clearAllCoreFacets,
   deselectAllValuesInCoreFacet,
@@ -9,7 +9,7 @@ import {
   toggleSelectDateFacetValue,
 } from '../../../../features/commerce/facets/date-facet/date-facet-actions.js';
 import {commerceFacetSetReducer as commerceFacetSet} from '../../../../features/commerce/facets/facet-set/facet-set-slice.js';
-import {
+import type {
   AnyFacetResponse,
   AnyFacetValueResponse,
   CategoryFacetValue,
@@ -27,9 +27,9 @@ import {
   toggleExcludeFacetValue,
   toggleSelectFacetValue,
 } from '../../../../features/commerce/facets/regular-facet/regular-facet-actions.js';
-import {FacetValueState} from '../../../../features/facets/facet-api/value.js';
+import type {FacetValueState} from '../../../../features/facets/facet-api/value.js';
 import {facetOrderReducer as facetOrder} from '../../../../features/facets/facet-order/facet-order-slice.js';
-import {CommerceAppState} from '../../../../state/commerce-app-state.js';
+import type {CommerceAppState} from '../../../../state/commerce-app-state.js';
 import {buildMockCommerceFacetRequest} from '../../../../test/mock-commerce-facet-request.js';
 import {
   buildMockCategoryFacetResponse,
@@ -45,12 +45,12 @@ import {
 import {buildMockCommerceState} from '../../../../test/mock-commerce-state.js';
 import {
   buildMockCommerceEngine,
-  MockedCommerceEngine,
+  type MockedCommerceEngine,
 } from '../../../../test/mock-engine-v2.js';
 import {
-  BreadcrumbManager,
+  type BreadcrumbManager,
   buildCoreBreadcrumbManager,
-  CoreBreadcrumbManagerOptions,
+  type CoreBreadcrumbManagerOptions,
 } from './headless-core-breadcrumb-manager.js';
 
 vi.mock('../../../../features/commerce/facets/core-facet/core-facet-actions');
@@ -402,6 +402,7 @@ describe('core breadcrumb manager', () => {
 
   function generateDeselectionTestCases(breadcrumb: AnyFacetValueResponse) {
     return (state: string, action: Action) => {
+      // biome-ignore lint/suspicious/noDuplicateTestHooks: <not refactoring this right now>
       beforeEach(() => {
         breadcrumb.state = state as FacetValueState;
         deselectBreadcrumb();

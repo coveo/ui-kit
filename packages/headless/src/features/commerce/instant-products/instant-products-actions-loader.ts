@@ -1,14 +1,14 @@
-import {PayloadAction} from '@reduxjs/toolkit';
-import {CommerceEngine} from '../../../app/commerce-engine/commerce-engine.js';
+import type {PayloadAction} from '@reduxjs/toolkit';
+import type {CommerceEngine} from '../../../app/commerce-engine/commerce-engine.js';
 import {
-  ClearExpiredInstantProductsPayload,
-  CoreInstantProductPayload,
-  PromoteChildToParentPayload,
-  RegisterInstantProductPayload,
-  UpdateInstantProductQueryPayload,
+  type ClearExpiredInstantProductsPayload,
+  type CoreInstantProductPayload,
   clearExpiredProducts,
+  type PromoteChildToParentPayload,
   promoteChildToParent,
+  type RegisterInstantProductPayload,
   registerInstantProducts,
+  type UpdateInstantProductQueryPayload,
   updateInstantProductsQuery,
 } from './instant-products-actions.js';
 import {instantProductsReducer as instantProducts} from './instant-products-slice.js';

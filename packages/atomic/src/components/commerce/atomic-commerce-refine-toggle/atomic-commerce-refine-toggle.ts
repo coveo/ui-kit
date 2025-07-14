@@ -1,22 +1,21 @@
 import {
   buildProductListing,
   buildSearch,
-  Summary,
-  SearchSummaryState,
-  ProductListingSummaryState,
+  type ProductListingSummaryState,
+  type SearchSummaryState,
+  type Summary,
 } from '@coveo/headless/commerce';
-import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles.js';
-import {bindings} from '@/src/decorators/bindings';
-import {bindStateToController} from '@/src/decorators/bind-state';
-import {InitializableComponent} from '@/src/decorators/types';
 import {html, LitElement} from 'lit';
 import {customElement, state} from 'lit/decorators.js';
-import {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface';
+import {bindStateToController} from '@/src/decorators/bind-state';
+import {bindingGuard} from '@/src/decorators/binding-guard';
+import {bindings} from '@/src/decorators/bindings';
+import {errorGuard} from '@/src/decorators/error-guard';
+import type {InitializableComponent} from '@/src/decorators/types';
+import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles.js';
 import {renderRefineToggleButton} from '../../common/refine-modal/button';
 import {refineToggleGuard} from '../../common/refine-modal/guard';
-import {errorGuard} from '@/src/decorators/error-guard';
-import {bindingGuard} from '@/src/decorators/binding-guard';
-import {AtomicCommerceRefineModal} from '../atomic-commerce-refine-modal/atomic-commerce-refine-modal.js';
+import type {AtomicCommerceRefineModal} from '../atomic-commerce-refine-modal/atomic-commerce-refine-modal.js';
 
 /**
  * The `atomic-commerce-refine-toggle` component displays a button that opens a modal containing the facets and the sort components.
@@ -70,7 +69,9 @@ export class AtomicCommerceRefineToggle
   }
 
   private enableModal() {
-    this.modalRef && (this.modalRef.isOpen = true);
+    if (this.modalRef) {
+      this.modalRef.isOpen = true;
+    }
   }
 
   @errorGuard()

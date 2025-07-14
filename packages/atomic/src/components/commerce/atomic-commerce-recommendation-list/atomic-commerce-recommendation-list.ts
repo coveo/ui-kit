@@ -1,6 +1,17 @@
-import {SelectChildProductEventArgs} from '@/src/components';
-// TODO: Replace with atomic-commerce-recommendation-interface bindings once it is merged (KIT-3934)
-import {CommerceBindings} from '@/src/components/commerce/atomic-commerce-interface/atomic-commerce-interface';
+import {NumberValue, Schema, StringValue} from '@coveo/bueno';
+import {
+  buildRecommendations,
+  type Product,
+  type Recommendations,
+  type RecommendationsState,
+  type RecommendationsSummaryState,
+  type Summary,
+} from '@coveo/headless/commerce';
+import {type CSSResultGroup, html, LitElement, nothing, unsafeCSS} from 'lit';
+import {customElement, property, state} from 'lit/decorators.js';
+import {keyed} from 'lit/directives/keyed.js';
+import {map} from 'lit/directives/map.js';
+import {when} from 'lit/directives/when.js';
 import {ProductTemplateProvider} from '@/src/components/commerce/product-list/product-template-provider';
 import {renderItemPlaceholders} from '@/src/components/common/atomic-result-placeholder/item-placeholders';
 import {renderCarousel} from '@/src/components/common/carousel';
@@ -10,39 +21,26 @@ import {renderDisplayWrapper} from '@/src/components/common/item-list/display-wr
 import {renderGridLayout} from '@/src/components/common/item-list/grid-layout';
 import {
   ItemListCommon,
-  ItemRenderingFunction,
+  type ItemRenderingFunction,
 } from '@/src/components/common/item-list/item-list-common';
 import {
-  ItemDisplayBasicLayout,
-  ItemDisplayDensity,
-  ItemDisplayImageSize,
   getItemListDisplayClasses,
+  type ItemDisplayBasicLayout,
+  type ItemDisplayDensity,
+  type ItemDisplayImageSize,
 } from '@/src/components/common/layout/display-options';
 import {bindStateToController} from '@/src/decorators/bind-state.js';
 import {bindingGuard} from '@/src/decorators/binding-guard';
 import {bindings} from '@/src/decorators/bindings';
 import {errorGuard} from '@/src/decorators/error-guard';
-import {InitializableComponent} from '@/src/decorators/types';
+import type {InitializableComponent} from '@/src/decorators/types';
 import {watch} from '@/src/decorators/watch';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
 import {InitializeBindingsMixin} from '@/src/mixins/bindings-mixin';
 import {FocusTargetController} from '@/src/utils/accessibility-utils';
 import {randomID} from '@/src/utils/utils';
-import {NumberValue} from '@coveo/bueno';
-import {Schema, StringValue} from '@coveo/bueno';
-import {
-  Product,
-  Recommendations,
-  RecommendationsState,
-  RecommendationsSummaryState,
-  Summary,
-  buildRecommendations,
-} from '@coveo/headless/commerce';
-import {CSSResultGroup, html, LitElement, nothing, unsafeCSS} from 'lit';
-import {customElement, property, state} from 'lit/decorators.js';
-import {keyed} from 'lit/directives/keyed.js';
-import {map} from 'lit/directives/map.js';
-import {when} from 'lit/directives/when.js';
+import type {CommerceBindings} from '../atomic-commerce-recommendation-interface/atomic-commerce-recommendation-interface';
+import type {SelectChildProductEventArgs} from '../atomic-product-children/select-child-product-event';
 import styles from './atomic-commerce-recommendation-list.tw.css';
 
 /**
@@ -197,7 +195,7 @@ export class AtomicCommerceRecommendationList
 
   public disconnectedCallback() {
     super.disconnectedCallback();
-    this.unsubscribeSummary && this.unsubscribeSummary();
+    this.unsubscribeSummary?.();
     this.removeEventListener(
       'atomic/selectChildProduct',
       this.selectChildProductCallback

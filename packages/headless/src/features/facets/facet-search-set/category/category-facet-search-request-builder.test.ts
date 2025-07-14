@@ -1,4 +1,4 @@
-import {SearchAppState} from '../../../../state/search-app-state.js';
+import type {SearchAppState} from '../../../../state/search-app-state.js';
 import {buildMockCategoryFacetRequest} from '../../../../test/mock-category-facet-request.js';
 import {buildMockCategoryFacetSearch} from '../../../../test/mock-category-facet-search.js';
 import {buildMockCategoryFacetSlice} from '../../../../test/mock-category-facet-slice.js';

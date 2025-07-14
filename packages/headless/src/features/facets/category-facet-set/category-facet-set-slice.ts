@@ -2,36 +2,36 @@ import {createReducer} from '@reduxjs/toolkit';
 import {deselectAllBreadcrumbs} from '../../breadcrumb/breadcrumb-actions.js';
 import {disableFacet} from '../../facet-options/facet-options-actions.js';
 import {change} from '../../history/history-actions.js';
-import {restoreSearchParameters} from '../../search-parameters/search-parameter-actions.js';
 import {executeSearch, fetchFacetValues} from '../../search/search-actions.js';
+import {restoreSearchParameters} from '../../search-parameters/search-parameter-actions.js';
 import {selectCategoryFacetSearchResult} from '../facet-search-set/category/category-facet-search-actions.js';
 import {updateFacetAutoSelection} from '../generic/facet-actions.js';
 import {handleFacetUpdateNumberOfValues} from '../generic/facet-reducer-helpers.js';
-import {AnyFacetResponse} from '../generic/interfaces/generic-facet-response.js';
+import type {AnyFacetResponse} from '../generic/interfaces/generic-facet-response.js';
 import {
   handleCategoryFacetDeselectAll,
   selectPath,
 } from './category-facet-reducer-helpers.js';
 import {
+  deselectAllCategoryFacetValues,
+  type RegisterCategoryFacetActionCreatorPayload,
   registerCategoryFacet,
   toggleSelectCategoryFacetValue,
-  deselectAllCategoryFacetValues,
+  updateCategoryFacetBasePath,
   updateCategoryFacetNumberOfValues,
   updateCategoryFacetSortCriterion,
-  RegisterCategoryFacetActionCreatorPayload,
-  updateCategoryFacetBasePath,
 } from './category-facet-set-actions.js';
 import {
-  CategoryFacetSetState,
+  type CategoryFacetSetState,
   getCategoryFacetSetInitialState,
 } from './category-facet-set-state.js';
 import {findActiveValueAncestry} from './category-facet-utils.js';
-import {CategoryFacetOptionalParameters} from './interfaces/options.js';
-import {
+import type {CategoryFacetOptionalParameters} from './interfaces/options.js';
+import type {
   CategoryFacetRequest,
   CategoryFacetValueRequest,
 } from './interfaces/request.js';
-import {CategoryFacetResponse} from './interfaces/response.js';
+import type {CategoryFacetResponse} from './interfaces/response.js';
 
 export const categoryFacetSetReducer = createReducer(
   getCategoryFacetSetInitialState(),

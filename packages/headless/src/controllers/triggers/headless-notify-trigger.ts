@@ -1,9 +1,9 @@
-import {SearchEngine} from '../../app/search-engine/search-engine.js';
+import type {SearchEngine} from '../../app/search-engine/search-engine.js';
 import {logNotifyTrigger} from '../../features/triggers/trigger-analytics-actions.js';
 import {
   buildCoreNotifyTrigger,
-  NotifyTrigger,
-  NotifyTriggerState,
+  type NotifyTrigger,
+  type NotifyTriggerState,
 } from '../core/triggers/headless-core-notify-trigger.js';
 
 export type {NotifyTrigger, NotifyTriggerState};

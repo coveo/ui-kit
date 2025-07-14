@@ -1,5 +1,9 @@
-import {AfterViewInit, Component, ViewChild} from '@angular/core';
-import {Result, Bindings, AtomicRecsInterface} from '@coveo/atomic-angular';
+import {type AfterViewInit, Component, ViewChild} from '@angular/core';
+import type {
+  AtomicRecsInterface,
+  Bindings,
+  Result,
+} from '@coveo/atomic-angular';
 
 @Component({
   standalone: false,
@@ -11,7 +15,6 @@ export class AtomicAngularRecommendationPageComponent implements AfterViewInit {
   @ViewChild('recsInterface')
   searchInterface!: AtomicRecsInterface;
 
-  constructor() {}
   async ngAfterViewInit(): Promise<void> {
     this.searchInterface
       ?.initialize({
@@ -35,6 +38,7 @@ export class AtomicAngularRecommendationPageComponent implements AfterViewInit {
     if ('ec_rating' in result.raw) {
       information.push(
         i18n.t('stars', {
+          // biome-ignore lint/complexity/useLiteralKeys: <>
           count: result.raw['ec_rating'] as number,
           max: 5,
         })
@@ -45,6 +49,7 @@ export class AtomicAngularRecommendationPageComponent implements AfterViewInit {
 
     if ('ec_price' in result.raw) {
       information.push(
+        // biome-ignore lint/complexity/useLiteralKeys: <>
         (result.raw['ec_price'] as number).toLocaleString(
           i18n.languages as string[],
           {

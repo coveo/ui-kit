@@ -1,40 +1,40 @@
 import {configuration} from '../../../../../app/common-reducers.js';
-import {CoreEngine} from '../../../../../app/engine.js';
+import type {CoreEngine} from '../../../../../app/engine.js';
 import {facetOptionsReducer as facetOptions} from '../../../../../features/facet-options/facet-options-slice.js';
 import {deselectAllFacetValues} from '../../../../../features/facets/facet-set/facet-set-actions.js';
-import {RangeFacetSortCriterion} from '../../../../../features/facets/range-facets/generic/interfaces/request.js';
-import {
+import type {RangeFacetSortCriterion} from '../../../../../features/facets/range-facets/generic/interfaces/request.js';
+import type {
   NumericFacetRequest,
   NumericRangeRequest,
 } from '../../../../../features/facets/range-facets/numeric-facet-set/interfaces/request.js';
-import {
+import type {
   NumericFacetResponse,
   NumericFacetValue,
 } from '../../../../../features/facets/range-facets/numeric-facet-set/interfaces/response.js';
 import {
-  RegisterNumericFacetActionCreatorPayload,
+  type RegisterNumericFacetActionCreatorPayload,
   registerNumericFacet,
 } from '../../../../../features/facets/range-facets/numeric-facet-set/numeric-facet-actions.js';
 import {executeToggleNumericFacetSelect} from '../../../../../features/facets/range-facets/numeric-facet-set/numeric-facet-controller-actions.js';
 import {numericFacetSetReducer as numericFacetSet} from '../../../../../features/facets/range-facets/numeric-facet-set/numeric-facet-set-slice.js';
 import {searchReducer as search} from '../../../../../features/search/search-slice.js';
 import {selectActiveTab} from '../../../../../features/tab-set/tab-set-selectors.js';
-import {
+import type {
   ConfigurationSection,
   FacetOptionsSection,
   NumericFacetSection,
   SearchSection,
 } from '../../../../../state/state-sections.js';
 import {loadReducerError} from '../../../../../utils/errors.js';
-import {Controller} from '../../../../controller/headless-controller.js';
+import type {Controller} from '../../../../controller/headless-controller.js';
 import {determineFacetId} from '../../_common/facet-id-determinor.js';
 import {assertRangeFacetOptions} from '../core-range-facet-utils.js';
 import {buildCoreRangeFacet} from '../headless-core-range-facet.js';
 import {
-  NumericFacetOptions,
+  type NumericFacetOptions,
   validateNumericFacetOptions,
 } from './headless-numeric-facet-options.js';
-import {buildNumericRange, NumericRangeOptions} from './numeric-range.js';
+import {buildNumericRange, type NumericRangeOptions} from './numeric-range.js';
 
 export type {
   NumericRangeOptions,

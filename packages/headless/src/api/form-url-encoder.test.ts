@@ -1,4 +1,4 @@
-import {encodeAsFormUrl, canBeFormUrlEncoded} from './form-url-encoder.js';
+import {canBeFormUrlEncoded, encodeAsFormUrl} from './form-url-encoder.js';
 
 describe('#encodeAsFormUrl', () => {
   it('a record with string key and value, it encodes it correctly', () => {

@@ -1,7 +1,7 @@
-import {renderFunctionFixture} from '@/vitest-utils/testing-helpers/fixture';
 import {userEvent} from '@storybook/test';
 import {html} from 'lit';
-import {describe, it, expect, vi} from 'vitest';
+import {describe, expect, it, vi} from 'vitest';
+import {renderFunctionFixture} from '@/vitest-utils/testing-helpers/fixture';
 import {renderChoices} from './choices';
 
 describe('#renderChoices', () => {

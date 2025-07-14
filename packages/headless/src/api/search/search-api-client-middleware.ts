@@ -1,7 +1,7 @@
-import {PlatformResponse} from '../platform-client.js';
-import {FacetSearchResponse} from './facet-search/facet-search-response.js';
-import {QuerySuggestSuccessResponse} from './query-suggest/query-suggest-response.js';
-import {SearchResponseSuccess} from './search/search-response.js';
+import type {PlatformResponse} from '../platform-client.js';
+import type {FacetSearchResponse} from './facet-search/facet-search-response.js';
+import type {QuerySuggestSuccessResponse} from './query-suggest/query-suggest-response.js';
+import type {SearchResponseSuccess} from './search/search-response.js';
 
 export type PostprocessSearchResponseMiddleware = (
   response: PlatformResponse<SearchResponseSuccess>

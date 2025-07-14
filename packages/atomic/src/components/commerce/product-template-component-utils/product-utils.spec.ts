@@ -1,14 +1,15 @@
+/** biome-ignore-all lint/suspicious/noTemplateCurlyInString: <> */
+import {type Product, ProductTemplatesHelpers} from '@coveo/headless/commerce';
+import {beforeEach, describe, expect, it, vi} from 'vitest';
 import {readFromObject} from '@/src/utils/object-utils';
 import {buildFakeProduct} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/product';
 import {createTestI18n} from '@/vitest-utils/testing-helpers/i18n-utils';
-import {Product, ProductTemplatesHelpers} from '@coveo/headless/commerce';
-import {vi, describe, it, expect, beforeEach} from 'vitest';
-import {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface';
+import type {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface';
 import {FieldValueIsNaNError} from './error';
 import {
-  parseValue,
-  getStringValueFromProductOrNull,
   buildStringTemplateFromProduct,
+  getStringValueFromProductOrNull,
+  parseValue,
 } from './product-utils';
 
 vi.mock('@coveo/headless/commerce', {spy: true});
@@ -40,7 +41,6 @@ describe('product-utils', () => {
       i18n: await createTestI18n(),
       store: {} as never,
       interfaceElement: {} as never,
-      addAdoptedStyleSheets: vi.fn(),
     };
 
     vi.spyOn(ProductTemplatesHelpers, 'getProductProperty').mockImplementation(

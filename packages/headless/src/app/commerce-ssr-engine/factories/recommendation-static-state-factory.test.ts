@@ -1,13 +1,13 @@
-import {Mock, MockInstance} from 'vitest';
+import type {Mock, MockInstance} from 'vitest';
 import {defineRecommendations} from '../../../controllers/commerce/recommendations/headless-recommendations.ssr.js';
 import {buildMockCommerceState} from '../../../test/mock-commerce-state.js';
 import {buildMockSSRCommerceEngine} from '../../../test/mock-engine-v2.js';
 import {getSampleCommerceEngineConfiguration} from '../../commerce-engine/commerce-engine-configuration.js';
-import {
+import type {
   InferControllersMapFromDefinition,
   SolutionType,
 } from '../types/common.js';
-import {CommerceControllerDefinitionsMap} from '../types/core-engine.js';
+import type {CommerceControllerDefinitionsMap} from '../types/core-engine.js';
 import * as buildFactory from './build-factory.js';
 import {fetchRecommendationStaticStateFactory} from './recommendation-static-state-factory.js';
 

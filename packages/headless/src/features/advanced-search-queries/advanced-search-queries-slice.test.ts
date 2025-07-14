@@ -8,7 +8,7 @@ import {
 } from './advanced-search-queries-actions.js';
 import {advancedSearchQueriesReducer} from './advanced-search-queries-slice.js';
 import {
-  AdvancedSearchQueriesState,
+  type AdvancedSearchQueriesState,
   getAdvancedSearchQueriesInitialState,
 } from './advanced-search-queries-state.js';
 

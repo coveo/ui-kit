@@ -8,7 +8,7 @@ import {
   toggleSelectStaticFilterValue,
 } from './static-filter-set-actions.js';
 import {staticFilterSetReducer} from './static-filter-set-slice.js';
-import {
+import type {
   StaticFilterValue,
   StaticFilterValueState,
 } from './static-filter-set-state.js';

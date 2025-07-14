@@ -4,17 +4,17 @@ import {
 } from '../search-parameters/search-parameter-actions.js';
 import {updateActiveTab} from '../tab-set/tab-set-actions.js';
 import {
-  updateBasicConfiguration,
-  updateSearchConfiguration,
   disableAnalytics,
   enableAnalytics,
-  updateAnalyticsConfiguration,
-  setOriginLevel3,
   setOriginLevel2,
+  setOriginLevel3,
+  updateAnalyticsConfiguration,
+  updateBasicConfiguration,
+  updateSearchConfiguration,
 } from './configuration-actions.js';
 import {configurationReducer} from './configuration-slice.js';
 import {
-  ConfigurationState,
+  type ConfigurationState,
   getConfigurationInitialState,
 } from './configuration-state.js';
 
