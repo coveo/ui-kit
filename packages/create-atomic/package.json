@@ -12,6 +12,7 @@
   "main": "index.mjs",
   "scripts": {
     "start": "node ./index.mjs",
+    "build": "nx build",
     "build:ts": "tsc -p tsconfig.json",
     "lint": "prettier --check . && eslint .",
     "publish:npm": "npm run-script -w=@coveo/ci npm-publish",
