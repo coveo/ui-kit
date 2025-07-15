@@ -175,6 +175,13 @@
       "rangeStrategy": "replace",
       "description": "Isolate lightningcss",
       "matchPackageNames": ["lightningcss"]
+    },
+    {
+      "groupName": "biome",
+      "groupSlug": "biome",
+      "rangeStrategy": "replace",
+      "description": "Isolate biome",
+      "matchPackageNames": ["@biomejs/biome"]
     }
   ],
   "lockFileMaintenance": {
