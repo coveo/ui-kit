@@ -48,13 +48,6 @@ reports
 /playwright-report/
 /playwright/.cache/
 
-# Cypress artifacts
-.cache/
-cypress/screenshots/*
-cypress/videos/*
-
-cypress/plugins/config/examples-community.json
-
 # Generated Documentation
 docs/out/*
 
