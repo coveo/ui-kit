@@ -1,10 +1,10 @@
 import {
   buildRelevanceInspector,
-  RelevanceInspector as HeadlessRelevanceInspector,
-  RelevanceInspectorState,
-  Unsubscribe,
+  type RelevanceInspector as HeadlessRelevanceInspector,
+  type RelevanceInspectorState,
+  type Unsubscribe,
 } from '@coveo/headless';
-import {Component, ContextType} from 'react';
+import {Component, type ContextType} from 'react';
 import {AppContext} from '../../context/engine';
 
 export class RelevanceInspector extends Component<{}, RelevanceInspectorState> {

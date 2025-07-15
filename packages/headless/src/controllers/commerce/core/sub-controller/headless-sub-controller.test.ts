@@ -1,14 +1,14 @@
-import {SchemaDefinition} from '@coveo/bueno';
-import {Parameters} from '../../../../features/commerce/parameters/parameters-actions.js';
-import {CommerceSearchParameters} from '../../../../features/commerce/search-parameters/search-parameters-actions.js';
+import type {SchemaDefinition} from '@coveo/bueno';
+import type {Parameters} from '../../../../features/commerce/parameters/parameters-actions.js';
+import type {CommerceSearchParameters} from '../../../../features/commerce/search-parameters/search-parameters-actions.js';
 import {buildMockCommerceState} from '../../../../test/mock-commerce-state.js';
 import {
-  MockedCommerceEngine,
   buildMockCommerceEngine,
+  type MockedCommerceEngine,
 } from '../../../../test/mock-engine-v2.js';
 import {buildMockProduct} from '../../../../test/mock-product.js';
 import * as DidYouMean from '../../search/did-you-mean/headless-did-you-mean.js';
-import {SearchSummaryState} from '../../search/summary/headless-search-summary.js';
+import type {SearchSummaryState} from '../../search/summary/headless-search-summary.js';
 import * as CoreBreadcrumbManager from '../breadcrumb-manager/headless-core-breadcrumb-manager.js';
 import * as CoreFacetGenerator from '../facets/generator/headless-commerce-facet-generator.js';
 import * as CoreInteractiveProduct from '../interactive-product/headless-core-interactive-product.js';
@@ -17,12 +17,12 @@ import * as CoreParameterManager from '../parameter-manager/headless-core-parame
 import * as CoreSort from '../sort/headless-core-commerce-sort.js';
 import * as CoreUrlManager from '../url-manager/headless-core-url-manager.js';
 import {
-  BaseSolutionTypeSubControllers,
+  type BaseSolutionTypeSubControllers,
   buildBaseSubControllers,
   buildSearchAndListingsSubControllers,
   buildSearchSubControllers,
-  SearchAndListingSubControllers,
-  SearchSubControllers,
+  type SearchAndListingSubControllers,
+  type SearchSubControllers,
 } from './headless-sub-controller.js';
 
 describe('sub-controllers', () => {

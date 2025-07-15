@@ -1,4 +1,4 @@
-import {test, expect, triggerError} from './fixture';
+import {expect, test, triggerError} from './fixture';
 
 test.describe('AtomicCommerceQueryError', () => {
   test.beforeEach(async ({queryError}) => {

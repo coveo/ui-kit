@@ -1,4 +1,4 @@
-import {CommerceFacetSlice} from '../features/commerce/facets/facet-set/facet-set-state.js';
+import type {CommerceFacetSlice} from '../features/commerce/facets/facet-set/facet-set-state.js';
 import {buildMockCommerceFacetRequest} from './mock-commerce-facet-request.js';
 
 export function buildMockCommerceFacetSlice(

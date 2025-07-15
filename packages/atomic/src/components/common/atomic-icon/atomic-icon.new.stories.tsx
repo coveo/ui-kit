@@ -1,11 +1,11 @@
-import {parameters} from '@/storybook-utils/common/common-meta-parameters';
-import {renderComponent} from '@/storybook-utils/common/render-component';
-import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
 import bgIcons from '@salesforce-ux/design-system/design-tokens/dist/bg-standard.common';
-import {userEvent, waitFor, expect} from '@storybook/test';
+import {expect, userEvent, waitFor} from '@storybook/test';
 import type {Meta, StoryObj as Story} from '@storybook/web-components';
 import {html} from 'lit';
 import {within} from 'shadow-dom-testing-library';
+import {parameters} from '@/storybook-utils/common/common-meta-parameters';
+import {renderComponent} from '@/storybook-utils/common/render-component';
+import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
 import AssetsList from '../../../../docs/assets.json';
 
 function snakeToCamel(value: string) {
@@ -42,9 +42,8 @@ const meta: Meta = {
 };
 
 export default meta;
-
+//TODO here
 export const Default: Story = {
-  name: 'atomic-icon',
   args: {
     'attributes-icon': 'assets://account.svg',
   },

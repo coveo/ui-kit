@@ -1,10 +1,10 @@
-import {buildMockResultPreviewRequest} from '../../test/mock-result-preview-request-builder.js';
 import {buildMockResult} from '../../test/mock-result.js';
-import {buildMockSearchResponse} from '../../test/mock-search-response.js';
+import {buildMockResultPreviewRequest} from '../../test/mock-result-preview-request-builder.js';
 import {
   buildMockLegacySearch,
   buildMockSearch,
 } from '../../test/mock-search.js';
+import {buildMockSearchResponse} from '../../test/mock-search-response.js';
 import {logInterfaceLoad} from '../analytics/analytics-actions.js';
 import {executeSearch} from '../insight-search/insight-search-actions.js';
 import {logPageNext} from '../pagination/pagination-analytics-actions.js';
@@ -19,7 +19,7 @@ import {
 import {resultPreviewReducer} from './result-preview-slice.js';
 import {
   getResultPreviewInitialState,
-  ResultPreviewState,
+  type ResultPreviewState,
 } from './result-preview-state.js';
 
 describe('ResultPreview', () => {

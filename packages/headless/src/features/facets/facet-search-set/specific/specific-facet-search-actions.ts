@@ -1,12 +1,12 @@
-import {RecordValue, NumberValue} from '@coveo/bueno';
+import {NumberValue, RecordValue} from '@coveo/bueno';
 import {createAction} from '@reduxjs/toolkit';
-import {SpecificFacetSearchResult} from '../../../../api/search/facet-search/specific-facet-search/specific-facet-search-response.js';
+import type {SpecificFacetSearchResult} from '../../../../api/search/facet-search/specific-facet-search/specific-facet-search-response.js';
 import {
-  validatePayload,
   requiredEmptyAllowedString,
+  validatePayload,
 } from '../../../../utils/validate-payload.js';
 import {facetIdDefinition} from '../../generic/facet-actions-validation.js';
-import {FacetSearchOptions} from '../facet-search-request-options.js';
+import type {FacetSearchOptions} from '../facet-search-request-options.js';
 import {facetSearchOptionsDefinition} from '../generic/generic-facet-search-validate-payload.js';
 
 const selectFacetSearchResultPayloadDefinition = {

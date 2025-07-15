@@ -1,15 +1,16 @@
-import {Result} from '../../api/search/search/result.js';
-import {InsightEngine} from '../../app/insight-engine/insight-engine.js';
-import {LogCategoryFacetBreadcrumbActionCreatorPayload} from '../facets/category-facet-set/category-facet-set-analytics-actions.js';
+import type {Result} from '../../api/search/search/result.js';
+import type {InsightEngine} from '../../app/insight-engine/insight-engine.js';
+import type {LogCategoryFacetBreadcrumbActionCreatorPayload} from '../facets/category-facet-set/category-facet-set-analytics-actions.js';
 import {logCategoryFacetBreadcrumb} from '../facets/category-facet-set/category-facet-set-insight-analytics-actions.js';
-import {
+import type {
   LogFacetBreadcrumbActionCreatorPayload,
   LogFacetDeselectActionCreatorPayload,
   LogFacetExcludeActionCreatorPayload,
-  LogFacetUnexcludeActionCreatorPayload,
   LogFacetSelectActionCreatorPayload,
+  LogFacetUnexcludeActionCreatorPayload,
 } from '../facets/facet-set/facet-set-analytics-actions.js';
 import {
+  type LogFacetUpdateSortActionCreatorPayload,
   logFacetBreadcrumb,
   logFacetClearAll,
   logFacetDeselect,
@@ -17,16 +18,15 @@ import {
   logFacetShowLess,
   logFacetShowMore,
   logFacetUpdateSort,
-  LogFacetUpdateSortActionCreatorPayload,
 } from '../facets/facet-set/facet-set-insight-analytics-actions.js';
 import {logClearBreadcrumbs} from '../facets/generic/facet-generic-insight-analytics-actions.js';
-import {LogDateFacetBreadcrumbActionCreatorPayload} from '../facets/range-facets/date-facet-set/date-facet-analytics-actions.js';
+import type {LogDateFacetBreadcrumbActionCreatorPayload} from '../facets/range-facets/date-facet-set/date-facet-analytics-actions.js';
 import {logDateFacetBreadcrumb} from '../facets/range-facets/date-facet-set/date-facet-insight-analytics-actions.js';
-import {LogNumericFacetBreadcrumbActionCreatorPayload} from '../facets/range-facets/numeric-facet-set/numeric-facet-analytics-actions.js';
+import type {LogNumericFacetBreadcrumbActionCreatorPayload} from '../facets/range-facets/numeric-facet-set/numeric-facet-analytics-actions.js';
 import {logNumericFacetBreadcrumb} from '../facets/range-facets/numeric-facet-set/numeric-facet-insight-analytics-actions.js';
 import {
+  type CreateArticleMetadata,
   logInsightCreateArticle,
-  CreateArticleMetadata,
   logOpenUserActions,
 } from '../insight-search/insight-analytics-actions.js';
 import {
@@ -38,19 +38,19 @@ import {
   logPageNumber,
   logPagePrevious,
 } from '../pagination/pagination-insight-analytics-actions.js';
-import {SmartSnippetFeedback} from '../question-answering/question-answering-analytics-actions.js';
+import type {SmartSnippetFeedback} from '../question-answering/question-answering-analytics-actions.js';
 import {
-  logCopyToClipboard,
   logCaseSendEmail,
+  logCopyToClipboard,
   logFeedItemTextPost,
 } from '../result-actions/result-actions-insight-analytics-actions.js';
 import {logResultsSort} from '../sort-criteria/sort-criteria-insight-analytics-actions.js';
-import {
+import type {
   LogStaticFilterToggleValueActionCreatorPayload,
   StaticFilterValueMetadata,
 } from '../static-filter-set/static-filter-set-actions.js';
 import {logInsightStaticFilterDeselect} from '../static-filter-set/static-filter-set-insight-analytics-actions.js';
-import {InsightAction} from './analytics-utils.js';
+import type {InsightAction} from './analytics-utils.js';
 
 export type {
   LogStaticFilterToggleValueActionCreatorPayload,

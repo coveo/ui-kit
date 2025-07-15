@@ -1,4 +1,4 @@
-import {DateFacetRequest} from './interfaces/request.js';
+import type {DateFacetRequest} from './interfaces/request.js';
 
 export type DateFacetSlice = {
   request: DateFacetRequest;

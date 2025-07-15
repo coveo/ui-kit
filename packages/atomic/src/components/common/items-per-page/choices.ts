@@ -1,5 +1,5 @@
-import {FunctionalComponent} from '@/src/utils/functional-component-utils';
 import {html} from 'lit';
+import type {FunctionalComponent} from '@/src/utils/functional-component-utils';
 import {renderRadioButton} from '../radio-button';
 
 interface ChoicesProps {
@@ -11,7 +11,7 @@ interface ChoicesProps {
   scrollToTopEvent: () => void;
   setItemSize: (size: number) => void;
   focusOnFirstResultAfterNextSearch: () => Promise<void> | undefined;
-  focusOnNextNewResult: () => void | undefined;
+  focusOnNextNewResult: () => void;
 }
 
 export const renderChoices: FunctionalComponent<ChoicesProps> = ({props}) => {

@@ -1,7 +1,7 @@
-import {PaginationSection} from '../../state/state-sections.js';
+import type {PaginationSection} from '../../state/state-sections.js';
 import {
+  type InsightAction,
   makeInsightAnalyticsActionFactory,
-  InsightAction,
 } from '../analytics/analytics-utils.js';
 import {LegacySearchPageEvents} from '../analytics/legacy-search-action-cause.js';
 import {getCaseContextAnalyticsMetadata} from '../case-context/case-context-state.js';

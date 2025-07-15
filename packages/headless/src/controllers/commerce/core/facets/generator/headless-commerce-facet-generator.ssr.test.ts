@@ -1,29 +1,29 @@
 import {SolutionType} from '../../../../../app/commerce-ssr-engine/types/common.js';
-import {AnyFacetResponse} from '../../../../../features/commerce/facets/facet-set/interfaces/response.js';
-import {CommerceAppState} from '../../../../../state/commerce-app-state.js';
+import type {AnyFacetResponse} from '../../../../../features/commerce/facets/facet-set/interfaces/response.js';
+import type {CommerceAppState} from '../../../../../state/commerce-app-state.js';
 import {buildMockCategoryFacetSearch} from '../../../../../test/mock-category-facet-search.js';
 import {buildMockCommerceFacetRequest} from '../../../../../test/mock-commerce-facet-request.js';
 import {
   buildMockCategoryFacetResponse,
   buildMockCommerceDateFacetResponse,
+  buildMockCommerceLocationFacetResponse,
   buildMockCommerceNumericFacetResponse,
   buildMockCommerceRegularFacetResponse,
-  buildMockCommerceLocationFacetResponse,
 } from '../../../../../test/mock-commerce-facet-response.js';
 import {buildMockCommerceState} from '../../../../../test/mock-commerce-state.js';
 import {
   buildMockSSRCommerceEngine,
-  MockedCommerceEngine,
+  type MockedCommerceEngine,
 } from '../../../../../test/mock-engine-v2.js';
 import {buildMockFacetSearch} from '../../../../../test/mock-facet-search.js';
 import {buildProductListing} from '../../../product-listing/headless-product-listing.js';
 import {buildSearch} from '../../../search/headless-search.js';
-import {FacetType} from '../headless-core-commerce-facet.js';
-import {GeneratedFacetControllers} from './headless-commerce-facet-generator.js';
+import type {FacetType} from '../headless-core-commerce-facet.js';
+import type {GeneratedFacetControllers} from './headless-commerce-facet-generator.js';
 import {
   buildFacetGenerator,
-  FacetGenerator,
-  FacetGeneratorOptions,
+  type FacetGenerator,
+  type FacetGeneratorOptions,
 } from './headless-commerce-facet-generator.ssr.js';
 
 describe('SSR FacetGenerator', () => {
@@ -59,7 +59,6 @@ describe('SSR FacetGenerator', () => {
         case 'location':
           response = buildMockCommerceLocationFacetResponse({facetId, type});
           break;
-        case 'regular':
         default:
           response = buildMockCommerceRegularFacetResponse({facetId, type});
       }

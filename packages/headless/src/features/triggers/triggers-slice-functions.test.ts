@@ -1,4 +1,4 @@
-import {Trigger} from '../../api/common/trigger.js';
+import type {Trigger} from '../../api/common/trigger.js';
 import {buildMockExecuteTrigger} from '../../test/mock-trigger-execute.js';
 import {buildMockNotifyTrigger} from '../../test/mock-trigger-notify.js';
 import {buildMockQueryTrigger} from '../../test/mock-trigger-query.js';
@@ -9,7 +9,7 @@ import {
   handleFetchItemsPending,
   handleUpdateIgnoreQueryTrigger,
 } from './triggers-slice-functions.js';
-import {TriggerState, getTriggerInitialState} from './triggers-state.js';
+import {getTriggerInitialState, type TriggerState} from './triggers-state.js';
 
 describe('triggers slice functions', () => {
   let state: TriggerState;

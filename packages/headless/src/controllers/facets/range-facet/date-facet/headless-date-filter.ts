@@ -1,5 +1,5 @@
 import {configuration} from '../../../../app/common-reducers.js';
-import {SearchEngine} from '../../../../app/search-engine/search-engine.js';
+import type {SearchEngine} from '../../../../app/search-engine/search-engine.js';
 import {
   facetClearAll,
   facetSelect,
@@ -9,7 +9,7 @@ import {
 import {dateFacetSetReducer as dateFacetSet} from '../../../../features/facets/range-facets/date-facet-set/date-facet-set-slice.js';
 import {executeSearch} from '../../../../features/search/search-actions.js';
 import {searchReducer as search} from '../../../../features/search/search-slice.js';
-import {
+import type {
   ConfigurationSection,
   DateFacetSection,
   SearchSection,
@@ -17,12 +17,12 @@ import {
 import {loadReducerError} from '../../../../utils/errors.js';
 import {
   buildCoreDateFilter,
-  DateFilter,
-  DateFilterInitialState,
-  DateFilterOptions,
-  DateFilterProps,
-  DateFilterRange,
-  DateFilterState,
+  type DateFilter,
+  type DateFilterInitialState,
+  type DateFilterOptions,
+  type DateFilterProps,
+  type DateFilterRange,
+  type DateFilterState,
 } from '../../../core/facets/range-facet/date-facet/headless-core-date-filter.js';
 
 export type {

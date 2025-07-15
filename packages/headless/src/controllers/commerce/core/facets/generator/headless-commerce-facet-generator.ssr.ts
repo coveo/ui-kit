@@ -22,13 +22,13 @@ import {specificFacetSearchStateSelector} from '../../../../../features/facets/f
 import type {ManualRangeSection} from '../../../../../state/state-sections.js';
 import {loadReducerError} from '../../../../../utils/errors.js';
 import {
-  isFacetLoadingResponseSelector as listingIsFacetLoadingResponseSelector,
   facetResponseSelector as listingFacetResponseSelector,
+  isFacetLoadingResponseSelector as listingIsFacetLoadingResponseSelector,
 } from '../../../product-listing/facets/headless-product-listing-facet-options.js';
 import {buildProductListing} from '../../../product-listing/headless-product-listing.js';
 import {
-  isFacetLoadingResponseSelector as searchIsFacetLoadingResponseSelector,
   facetResponseSelector as searchFacetResponseSelector,
+  isFacetLoadingResponseSelector as searchIsFacetLoadingResponseSelector,
 } from '../../../search/facets/headless-search-facet-options.js';
 import {buildSearch} from '../../../search/headless-search.js';
 import type {
@@ -44,8 +44,8 @@ import type {
 import {getDateFacetState} from '../date/headless-commerce-date-facet.js';
 import type {
   CategoryFacetValue,
-  FacetType,
   CoreCommerceFacet,
+  FacetType,
 } from '../headless-core-commerce-facet.js';
 import {getCoreFacetState} from '../headless-core-commerce-facet.js';
 import type {
@@ -55,8 +55,8 @@ import type {
 import {getLocationFacetState} from '../location/headless-commerce-location-facet.js';
 import type {
   NumericFacet,
-  NumericFacetValue,
   NumericFacetState,
+  NumericFacetValue,
 } from '../numeric/headless-commerce-numeric-facet.js';
 import {getNumericFacetState} from '../numeric/headless-commerce-numeric-facet.js';
 import type {
@@ -140,10 +140,10 @@ export interface FacetGenerator
   /**
    * The state of each every facet returned by the Commerce API.
    *
-   * In a server-side rendering (SSR) scenario, you must use this state to render the facet UI components before the
+   * In a server-side rendering (SSR) scenario, use this state to render the facet UI components before the
    * facet controller is hydrated on the client side.
    *
-   * Once the facet generator controller has been hydrated, you must use the `getFacetController` method to retrieve
+   * Once the facet generator controller has been hydrated, use the `getFacetController` method to retrieve
    * the individual facet controllers and subscribe to their respective states.
    */
   state: FacetGeneratorState;

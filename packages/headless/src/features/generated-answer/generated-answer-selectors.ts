@@ -1,12 +1,12 @@
 import {isNullOrUndefined} from '@coveo/bueno';
 import {createSelector} from '@reduxjs/toolkit';
 import {
+  type StateNeededByAnswerAPI,
   selectAnswer,
-  StateNeededByAnswerAPI,
 } from '../../api/knowledge/stream-answer-api.js';
-import {GeneratedAnswerCitation} from '../../controllers/generated-answer/headless-generated-answer.js';
-import {SearchAppState} from '../../state/search-app-state.js';
-import {
+import type {GeneratedAnswerCitation} from '../../controllers/generated-answer/headless-generated-answer.js';
+import type {SearchAppState} from '../../state/search-app-state.js';
+import type {
   GeneratedAnswerSection,
   SearchSection,
 } from '../../state/state-sections.js';

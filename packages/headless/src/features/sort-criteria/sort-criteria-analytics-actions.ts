@@ -1,9 +1,9 @@
 import {
+  type LegacySearchAction,
   makeAnalyticsAction,
-  LegacySearchAction,
 } from '../analytics/analytics-utils.js';
 import {SearchPageEvents} from '../analytics/search-action-cause.js';
-import {SearchAction} from '../search/search-actions.js';
+import type {SearchAction} from '../search/search-actions.js';
 import {getSortCriteriaInitialState} from './sort-criteria-state.js';
 
 //TODO: KIT-2859

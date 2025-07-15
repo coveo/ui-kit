@@ -1,12 +1,12 @@
-import {CaseAssist} from '@coveo/relay-event-types';
+import type {CaseAssist} from '@coveo/relay-event-types';
 import {
-  CaseAssistAction,
+  type CaseAssistAction,
   makeCaseAssistAnalyticsAction,
 } from '../analytics/analytics-utils.js';
-import {NextStageOptions} from './case-assist-analytics-actions-loader.js';
+import type {NextStageOptions} from './case-assist-analytics-actions-loader.js';
 import {
-  caseAssistCaseSelector,
   caseAssistCaseClassificationSelector,
+  caseAssistCaseSelector,
   caseAssistDocumentSuggestionSelector,
 } from './case-assist-analytics-selectors.js';
 

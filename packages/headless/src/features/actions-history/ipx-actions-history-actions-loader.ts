@@ -1,5 +1,5 @@
-import {AsyncThunkAction} from '@reduxjs/toolkit';
-import {CoreEngine} from '../../app/engine.js';
+import type {AsyncThunkAction} from '@reduxjs/toolkit';
+import type {CoreEngine} from '../../app/engine.js';
 import {addPageViewEntryInActionsHistory} from './ipx-actions-history-actions.js';
 
 /**

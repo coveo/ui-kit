@@ -1,8 +1,8 @@
-import {SearchAPIErrorWithStatusCode} from '../../api/search/search-api-error-response.js';
+import type {SearchAPIErrorWithStatusCode} from '../../api/search/search-api-error-response.js';
 import {getAdvancedSearchQueriesInitialState} from '../advanced-search-queries/advanced-search-queries-state.js';
 import {
+  type LegacySearchAction,
   makeAnalyticsAction,
-  LegacySearchAction,
 } from '../analytics/analytics-utils.js';
 import {getQueryInitialState} from '../query/query-state.js';
 

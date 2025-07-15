@@ -1,4 +1,4 @@
-import {DateFacet as HeadlessDateFacet} from '@coveo/headless/commerce';
+import type {DateFacet as HeadlessDateFacet} from '@coveo/headless/commerce';
 import {useEffect, useState} from 'react';
 
 interface IDateFacetProps {
@@ -49,6 +49,7 @@ export default function DateFacet(props: IDateFacetProps) {
         {state.displayName ?? state.facetId}
       </legend>
       <button
+        type="button"
         aria-label="Clear selected facet values"
         className="FacetClear"
         disabled={state.isLoading || !state.hasActiveValues}
@@ -61,6 +62,7 @@ export default function DateFacet(props: IDateFacetProps) {
       )}
       {renderFacetValues()}
       <button
+        type="button"
         aria-label="Show more facet values"
         className="FacetShowMore"
         disabled={state.isLoading || !state.canShowMoreValues}
@@ -69,6 +71,7 @@ export default function DateFacet(props: IDateFacetProps) {
         +
       </button>
       <button
+        type="button"
         aria-label="Show less facet values"
         className="FacetShowLess"
         disabled={state.isLoading || !state.canShowLessValues}

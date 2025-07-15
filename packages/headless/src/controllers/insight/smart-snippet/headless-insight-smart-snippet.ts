@@ -1,20 +1,20 @@
-import {InsightEngine} from '../../../app/insight-engine/insight-engine.js';
+import type {InsightEngine} from '../../../app/insight-engine/insight-engine.js';
 import {insightSmartSnippetAnalyticsClient} from '../../../features/question-answering/question-answering-insight-analytics-actions.js';
 import {
-  SmartSnippet,
-  SmartSnippetProps,
   buildCoreSmartSnippet,
+  type SmartSnippet,
+  type SmartSnippetProps,
 } from '../../core/smart-snippet/headless-core-smart-snippet.js';
-import {InlineLink} from '../../smart-snippet/headless-smart-snippet-interactive-inline-links.js';
+import type {InlineLink} from '../../smart-snippet/headless-smart-snippet-interactive-inline-links.js';
 import {buildSmartSnippetInteractiveInlineLinks} from './headless-insight-smart-snippet-interactive-inline-links.js';
 
 export type {QuestionAnswerDocumentIdentifier} from '../../../api/search/search/question-answering.js';
 export type {
+  SmartSnippet,
+  SmartSnippetCore,
   SmartSnippetOptions,
   SmartSnippetProps,
   SmartSnippetState,
-  SmartSnippet,
-  SmartSnippetCore,
 } from '../../core/smart-snippet/headless-core-smart-snippet.js';
 
 export type {InlineLink};

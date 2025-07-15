@@ -1,9 +1,9 @@
-import {AnyAction} from '@reduxjs/toolkit';
+import type {AnyAction} from '@reduxjs/toolkit';
 import {fetchQuerySuggestions} from '../../query-suggest/query-suggest-actions.js';
 import {fieldSuggestionsOrderReducer} from './field-suggestions-order-slice.js';
 import {
-  FieldSuggestionsFacet,
-  FieldSuggestionsOrderState,
+  type FieldSuggestionsFacet,
+  type FieldSuggestionsOrderState,
   getFieldSuggestionsOrderInitialState,
 } from './field-suggestions-order-state.js';
 

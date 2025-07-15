@@ -1,23 +1,23 @@
-import {Mock} from 'vitest';
+import type {Mock} from 'vitest';
 import {logQuickviewDocumentSuggestionClick} from '../../features/case-assist/case-assist-analytics-actions.js';
 import {documentSuggestionReducer as documentSuggestion} from '../../features/document-suggestion/document-suggestion-slice.js';
 import {preparePreviewPagination} from '../../features/result-preview/result-preview-actions.js';
 import {buildResultPreviewRequest} from '../../features/result-preview/result-preview-request-builder.js';
-import {CaseAssistAppState} from '../../state/case-assist-app-state.js';
+import type {CaseAssistAppState} from '../../state/case-assist-app-state.js';
 import {buildMockDocumentSuggestion} from '../../test/mock-case-assist-document-suggestion.js';
 import {buildMockCaseAssistState} from '../../test/mock-case-assist-state.js';
 import {
   buildMockCaseAssistEngine,
-  MockedCaseAssistEngine,
+  type MockedCaseAssistEngine,
 } from '../../test/mock-engine-v2.js';
 import {buildMockResult} from '../../test/mock-result.js';
 import {buildCoreQuickview} from '../core/quickview/headless-core-quickview.js';
 import {
   buildCaseAssistQuickview,
-  CaseAssistQuickviewOptions,
-  CaseAssistQuickview,
+  type CaseAssistQuickview,
+  type CaseAssistQuickviewOptions,
 } from './case-assist-headless-quickview.js';
-import {CoreQuickviewState} from './headless-quickview.js';
+import type {CoreQuickviewState} from './headless-quickview.js';
 
 vi.mock('../core/quickview/headless-core-quickview');
 vi.mock('../../features/result-preview/result-preview-actions');

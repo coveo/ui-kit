@@ -1,0 +1,48 @@
+import { Canvas, ArgTypes, Meta, Title, Description, Stories, Subtitle } from '@storybook/blocks';
+import * as AtomicCommerceRefineToggleStories from './atomic-commerce-refine-toggle.new.stories';
+
+<Meta of={ AtomicCommerceRefineToggleStories } />
+
+<Title />
+<Subtitle ><Description/></Subtitle>
+
+
+<Canvas
+  additionalActions={[
+    {
+      title: 'Open in GitHub',
+      onClick: () => {
+        window.open(
+          'https://github.com/coveo/ui-kit/blob/master/packages/atomic/src/components/commerce/atomic-commerce-refine-toggle/atomic-commerce-refine-toggle.ts',
+          '_blank'
+        );
+      },
+    },
+  ]}
+  of={AtomicCommerceRefineToggleStories.Default}
+/>
+
+## Usage
+This component is typically placed within the "status" section of the layout.
+```html
+<atomic-commerce-interface>
+  ...
+  <atomic-commerce-layout>
+    ...
+    <atomic-layout-section section="main">
+      ...
+     <atomic-layout-section section="status">
+
+       <atomic-commerce-refine-toggle></atomic-commerce-refine-toggle>
+
+      </atomic-layout-section>
+    </atomic-layout-section>
+  </atomic-commerce-layout>
+</atomic-commerce-interface>
+```
+
+## Examples
+<Stories title={""}/>
+
+## Reference
+<ArgTypes />

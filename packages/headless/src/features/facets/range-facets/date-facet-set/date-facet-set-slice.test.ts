@@ -5,21 +5,21 @@ import {logSearchEvent} from '../../../analytics/analytics-actions.js';
 import {deselectAllBreadcrumbs} from '../../../breadcrumb/breadcrumb-actions.js';
 import {change} from '../../../history/history-actions.js';
 import {getHistoryInitialState} from '../../../history/history-state.js';
-import {restoreSearchParameters} from '../../../search-parameters/search-parameter-actions.js';
 import {executeSearch} from '../../../search/search-actions.js';
+import {restoreSearchParameters} from '../../../search-parameters/search-parameter-actions.js';
 import * as FacetReducers from '../../generic/facet-reducer-helpers.js';
 import * as RangeFacetReducers from '../generic/range-facet-reducers.js';
 import {
+  deselectAllDateFacetValues,
+  type RegisterDateFacetActionCreatorPayload,
   registerDateFacet,
   toggleSelectDateFacetValue,
   updateDateFacetSortCriterion,
-  deselectAllDateFacetValues,
-  RegisterDateFacetActionCreatorPayload,
   updateDateFacetValues,
 } from './date-facet-actions.js';
 import {dateFacetSetReducer} from './date-facet-set-slice.js';
 import {
-  DateFacetSetState,
+  type DateFacetSetState,
   getDateFacetSetInitialState,
 } from './date-facet-set-state.js';
 

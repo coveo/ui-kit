@@ -1,21 +1,21 @@
 import {configuration} from '../../../../app/common-reducers.js';
-import {SearchEngine} from '../../../../app/search-engine/search-engine.js';
+import type {SearchEngine} from '../../../../app/search-engine/search-engine.js';
 import {
   facetClearAll,
   logFacetClearAll,
   logFacetUpdateSort,
 } from '../../../../features/facets/facet-set/facet-set-analytics-actions.js';
-import {RangeFacetSortCriterion} from '../../../../features/facets/range-facets/generic/interfaces/request.js';
+import type {RangeFacetSortCriterion} from '../../../../features/facets/range-facets/generic/interfaces/request.js';
 import {
-  getLegacyAnalyticsActionForToggleRangeFacetSelect,
   getAnalyticsActionForToggleFacetSelect,
+  getLegacyAnalyticsActionForToggleRangeFacetSelect,
 } from '../../../../features/facets/range-facets/generic/range-facet-utils.js';
-import {NumericRangeRequest} from '../../../../features/facets/range-facets/numeric-facet-set/interfaces/request.js';
-import {NumericFacetValue} from '../../../../features/facets/range-facets/numeric-facet-set/interfaces/response.js';
+import type {NumericRangeRequest} from '../../../../features/facets/range-facets/numeric-facet-set/interfaces/request.js';
+import type {NumericFacetValue} from '../../../../features/facets/range-facets/numeric-facet-set/interfaces/response.js';
 import {numericFacetSetReducer as numericFacetSet} from '../../../../features/facets/range-facets/numeric-facet-set/numeric-facet-set-slice.js';
 import {executeSearch} from '../../../../features/search/search-actions.js';
 import {searchReducer as search} from '../../../../features/search/search-slice.js';
-import {
+import type {
   ConfigurationSection,
   NumericFacetSection,
   SearchSection,
@@ -24,11 +24,11 @@ import {loadReducerError} from '../../../../utils/errors.js';
 import {
   buildCoreNumericFacet,
   buildNumericRange,
-  NumericFacet,
-  NumericFacetOptions,
-  NumericFacetProps,
-  NumericFacetState,
-  NumericRangeOptions,
+  type NumericFacet,
+  type NumericFacetOptions,
+  type NumericFacetProps,
+  type NumericFacetState,
+  type NumericRangeOptions,
 } from '../../../core/facets/range-facet/numeric-facet/headless-core-numeric-facet.js';
 
 export type {

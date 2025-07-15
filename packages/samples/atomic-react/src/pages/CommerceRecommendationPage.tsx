@@ -1,19 +1,19 @@
 import {
   AtomicCommerceInterface,
-  AtomicProductLink,
-  AtomicProductText,
-  AtomicProductPrice,
-  AtomicProductDescription,
   AtomicCommerceLayout,
-  AtomicProductSectionVisual,
+  AtomicCommerceRecommendationList,
+  AtomicLayoutSection,
+  AtomicProductDescription,
   AtomicProductImage,
+  AtomicProductLink,
+  AtomicProductPrice,
   AtomicProductRating,
   AtomicProductSectionDescription,
   AtomicProductSectionEmphasized,
   AtomicProductSectionMetadata,
   AtomicProductSectionName,
-  AtomicLayoutSection,
-  AtomicCommerceRecommendationList,
+  AtomicProductSectionVisual,
+  AtomicProductText,
 } from '@coveo/atomic-react/commerce';
 import {
   buildCommerceEngine,
@@ -75,7 +75,7 @@ function MyTemplate() {
       <AtomicProductSectionMetadata>
         <AtomicProductText
           field="ec_brand"
-          class="text-neutral-dark block"
+          className="text-neutral-dark block"
         ></AtomicProductText>
         <AtomicProductRating field="ec_rating"></AtomicProductRating>
       </AtomicProductSectionMetadata>

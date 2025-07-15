@@ -1,4 +1,4 @@
-import {DocumentSuggestionResponse} from '../api/service/case-assist/get-document-suggestions/get-document-suggestions-response.js';
+import type {DocumentSuggestionResponse} from '../api/service/case-assist/get-document-suggestions/get-document-suggestions-response.js';
 
 export const buildMockDocumentSuggestion = (
   partialDocSuggestion?: Partial<DocumentSuggestionResponse>

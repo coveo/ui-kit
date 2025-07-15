@@ -65,11 +65,15 @@ export const staticFilterSetReducer = createReducer(
           return;
         }
 
-        filter.values.forEach((v) => (v.state = 'idle'));
+        filter.values.forEach((v) => {
+          v.state = 'idle';
+        });
       })
       .addCase(deselectAllBreadcrumbs, (state) => {
         Object.values(state).forEach((filter) => {
-          filter.values.forEach((v) => (v.state = 'idle'));
+          filter.values.forEach((v) => {
+            v.state = 'idle';
+          });
         });
       })
       .addCase(restoreSearchParameters, (state, action) => {

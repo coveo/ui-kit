@@ -4,7 +4,7 @@ import {
   nonEmptyString,
   validatePayload,
 } from '../../../utils/validate-payload.js';
-import {ApplyQueryTriggerModificationPayload} from '../../triggers/triggers-actions.js';
+import type {ApplyQueryTriggerModificationPayload} from '../../triggers/triggers-actions.js';
 
 export type UpdateIgnoreQueryTriggerPayload = {
   /**

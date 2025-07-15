@@ -15,6 +15,7 @@ export default function ProductList() {
           <ProductButtonWithImage methods={methods} product={product} />
 
           <button
+            type="button"
             onClick={() => addToCart(cartMethods!, cartState, product, methods)}
           >
             Add to cart

@@ -1,6 +1,9 @@
-import {SearchEngine} from '../../app/search-engine/search-engine.js';
-import {ControllerDefinitionWithoutProps} from '../../app/ssr-engine/types/common.js';
-import {QuerySummary, buildQuerySummary} from './headless-query-summary.js';
+import type {SearchEngine} from '../../app/search-engine/search-engine.js';
+import type {ControllerDefinitionWithoutProps} from '../../app/ssr-engine/types/common.js';
+import {
+  buildQuerySummary,
+  type QuerySummary,
+} from './headless-query-summary.js';
 
 export * from './headless-query-summary.js';
 

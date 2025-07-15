@@ -1,7 +1,7 @@
 import {
   defineCommerceEngine,
-  InferHydratedState,
-  InferStaticState,
+  type InferHydratedState,
+  type InferStaticState,
 } from '@coveo/headless-react/ssr-commerce';
 import options from './commerce-engine-config';
 

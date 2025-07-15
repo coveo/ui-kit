@@ -1,10 +1,10 @@
-import {SearchAppState} from '../../state/search-app-state.js';
+import type {SearchAppState} from '../../state/search-app-state.js';
 import {createMockState} from '../../test/mock-state.js';
 import {maximumNumberOfResultsFromIndex} from './pagination-constants.js';
 import {
   currentPageSelector,
-  maxPageSelector,
   currentPagesSelector,
+  maxPageSelector,
 } from './pagination-selectors.js';
 import {calculateFirstResult} from './pagination-slice.js';
 

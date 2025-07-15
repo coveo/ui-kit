@@ -1,12 +1,12 @@
 import {
   buildCategoryFacet,
-  CategoryFacet as HeadlessCategoryFacet,
-  CategoryFacetOptions,
-  CategoryFacetState,
-  CategoryFacetValue,
-  Unsubscribe,
+  type CategoryFacetOptions,
+  type CategoryFacetState,
+  type CategoryFacetValue,
+  type CategoryFacet as HeadlessCategoryFacet,
+  type Unsubscribe,
 } from '@coveo/headless';
-import {Component, ContextType} from 'react';
+import {Component, type ContextType} from 'react';
 import {AppContext} from '../../context/engine';
 import {CategoryFacetSearch} from './category-facet-search';
 

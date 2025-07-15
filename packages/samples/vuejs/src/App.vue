@@ -1,4 +1,5 @@
 <script setup lang="ts">
+// biome-ignore lint/correctness/noUnusedImports: <>
 import SearchPage from './components/SearchPage.vue';
 </script>
 

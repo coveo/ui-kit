@@ -1,18 +1,18 @@
-import {CoreEngine} from '../../../app/engine.js';
-import {SearchThunkExtraArguments} from '../../../app/search-thunk-extra-arguments.js';
+import type {CoreEngine} from '../../../app/engine.js';
+import type {SearchThunkExtraArguments} from '../../../app/search-thunk-extra-arguments.js';
 import {registerCategoryFacetSearch} from '../../../features/facets/facet-search-set/category/category-facet-search-actions.js';
 import {defaultFacetSearchOptions} from '../../../features/facets/facet-search-set/facet-search-reducer-helpers.js';
 import {
   executeFacetSearch,
   executeFieldSuggest,
 } from '../../../features/facets/facet-search-set/generic/generic-facet-search-actions.js';
-import {
+import type {
   CategoryFacetSearchSection,
   ConfigurationSection,
 } from '../../../state/state-sections.js';
 import {
   buildCoreCategoryFacetSearch,
-  CategoryFacetSearchProps,
+  type CategoryFacetSearchProps,
 } from '../../core/facets/facet-search/category/headless-category-facet-search.js';
 import {buildGenericFacetSearch} from '../../core/facets/facet-search/facet-search.js';
 

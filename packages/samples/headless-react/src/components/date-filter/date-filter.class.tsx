@@ -1,12 +1,12 @@
 import {
   buildDateFilter,
   buildDateRange,
-  DateFilter as HeadlessDateFilter,
-  DateFilterOptions,
-  DateFilterState,
-  Unsubscribe,
+  type DateFilterOptions,
+  type DateFilterState,
+  type DateFilter as HeadlessDateFilter,
+  type Unsubscribe,
 } from '@coveo/headless';
-import {Component, ContextType} from 'react';
+import {Component, type ContextType} from 'react';
 import {AppContext} from '../../context/engine';
 import {parseDate} from '../date-facet/date-utils';
 
@@ -74,14 +74,18 @@ export class DateFilter extends Component<DateFilterProps, DateFilterState> {
       <input
         key="start"
         type="date"
-        ref={(ref) => (this.startRef = ref!)}
+        ref={(ref) => {
+          this.startRef = ref!;
+        }}
         defaultValue={this.formattedDateValue(range?.start)}
         placeholder="Start"
       />,
       <input
         key="end"
         type="date"
-        ref={(ref) => (this.endRef = ref!)}
+        ref={(ref) => {
+          this.endRef = ref!;
+        }}
         defaultValue={this.formattedDateValue(range?.end)}
         placeholder="End"
       />,

@@ -1,60 +1,60 @@
 import {configuration} from '../../../app/common-reducers.js';
-import {CoreEngine} from '../../../app/engine.js';
-import {SearchEngine} from '../../../app/search-engine/search-engine.js';
-import {SearchThunkExtraArguments} from '../../../app/search-thunk-extra-arguments.js';
+import type {CoreEngine} from '../../../app/engine.js';
+import type {SearchEngine} from '../../../app/search-engine/search-engine.js';
+import type {SearchThunkExtraArguments} from '../../../app/search-thunk-extra-arguments.js';
 import {updateFacetOptions} from '../../../features/facet-options/facet-options-actions.js';
-import {FacetValueState} from '../../../features/facets/facet-api/value.js';
+import type {FacetValueState} from '../../../features/facets/facet-api/value.js';
 import {
   executeFacetSearch,
   executeFieldSuggest,
 } from '../../../features/facets/facet-search-set/generic/generic-facet-search-actions.js';
 import {specificFacetSearchSetReducer as facetSearchSet} from '../../../features/facets/facet-search-set/specific/specific-facet-search-set-slice.js';
 import {
-  logFacetClearAll,
-  logFacetUpdateSort,
-  logFacetShowMore,
-  logFacetShowLess,
-  logFacetSelect,
-  logFacetExclude,
-  facetSelect,
   facetClearAll,
   facetExclude,
+  facetSelect,
+  logFacetClearAll,
+  logFacetExclude,
+  logFacetSelect,
+  logFacetShowLess,
+  logFacetShowMore,
+  logFacetUpdateSort,
 } from '../../../features/facets/facet-set/facet-set-analytics-actions.js';
 import {facetSetReducer as facetSet} from '../../../features/facets/facet-set/facet-set-slice.js';
 import {
-  getLegacyAnalyticsActionForToggleFacetExclude,
-  getLegacyAnalyticsActionForToggleFacetSelect,
   getAnalyticsActionForToggleFacetExclude,
   getAnalyticsActionForToggleFacetSelect,
+  getLegacyAnalyticsActionForToggleFacetExclude,
+  getLegacyAnalyticsActionForToggleFacetSelect,
 } from '../../../features/facets/facet-set/facet-set-utils.js';
-import {FacetSortCriterion} from '../../../features/facets/facet-set/interfaces/request.js';
+import type {FacetSortCriterion} from '../../../features/facets/facet-set/interfaces/request.js';
 import {
   executeSearch,
   fetchFacetValues,
 } from '../../../features/search/search-actions.js';
 import {searchReducer as search} from '../../../features/search/search-slice.js';
-import {
-  FacetSection,
+import type {
   ConfigurationSection,
   FacetSearchSection,
+  FacetSection,
   SearchSection,
 } from '../../../state/state-sections.js';
 import {loadReducerError} from '../../../utils/errors.js';
-import {buildFacetSearch} from '../../core/facets/facet-search/specific/headless-facet-search.js';
 import {
   buildCoreFacet,
-  Facet,
-  FacetSearch,
-  FacetSearchState,
-  FacetState,
-  FacetValue,
-  SpecificFacetSearchResult,
-  CoreFacet,
-  CoreFacetState,
+  type CoreFacet,
+  type CoreFacetState,
+  type Facet,
+  type FacetSearch,
+  type FacetSearchState,
+  type FacetState,
+  type FacetValue,
+  type SpecificFacetSearchResult,
 } from '../../core/facets/facet/headless-core-facet.js';
+import {buildFacetSearch} from '../../core/facets/facet-search/specific/headless-facet-search.js';
 import {
-  FacetOptions,
-  FacetSearchOptions,
+  type FacetOptions,
+  type FacetSearchOptions,
   facetOptionsSchema,
 } from './headless-facet-options.js';
 

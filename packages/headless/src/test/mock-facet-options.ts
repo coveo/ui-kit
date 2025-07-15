@@ -1,4 +1,4 @@
-import {FacetOptionsState} from '../features/facet-options/facet-options-state.js';
+import type {FacetOptionsState} from '../features/facet-options/facet-options-state.js';
 
 export function buildMockFacetOptions(
   config: Partial<FacetOptionsState> = {}

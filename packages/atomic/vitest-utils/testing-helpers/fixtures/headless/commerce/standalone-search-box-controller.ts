@@ -1,4 +1,4 @@
-import {
+import type {
   StandaloneSearchBox,
   StandaloneSearchBoxState,
 } from '@coveo/headless/commerce';

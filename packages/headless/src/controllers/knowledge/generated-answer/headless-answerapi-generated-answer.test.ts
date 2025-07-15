@@ -3,7 +3,7 @@ import {triggerSearchRequest} from '../../../api/knowledge/stream-answer-actions
 import {
   answerApi,
   fetchAnswer,
-  StateNeededByAnswerAPI,
+  type StateNeededByAnswerAPI,
 } from '../../../api/knowledge/stream-answer-api.js';
 import {getConfigurationInitialState} from '../../../features/configuration/configuration-state.js';
 import {
@@ -12,18 +12,18 @@ import {
   updateResponseFormat,
 } from '../../../features/generated-answer/generated-answer-actions.js';
 import {
+  type GeneratedAnswerFeedback,
   generatedAnswerAnalyticsClient,
-  GeneratedAnswerFeedback,
 } from '../../../features/generated-answer/generated-answer-analytics-actions.js';
 import {getGeneratedAnswerInitialState} from '../../../features/generated-answer/generated-answer-state.js';
 import {queryReducer} from '../../../features/query/query-slice.js';
 import {buildMockAnalyticsState} from '../../../test/mock-analytics-state.js';
 import {
   buildMockSearchEngine,
-  MockedSearchEngine,
+  type MockedSearchEngine,
 } from '../../../test/mock-engine-v2.js';
 import {createMockState} from '../../../test/mock-state.js';
-import {
+import type {
   GeneratedAnswerProps,
   GeneratedResponseFormat,
 } from '../../generated-answer/headless-generated-answer.js';

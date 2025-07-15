@@ -1,7 +1,7 @@
-import {PayloadAction} from '@reduxjs/toolkit';
-import {SearchEngine} from '../../app/search-engine/search-engine.js';
+import type {PayloadAction} from '@reduxjs/toolkit';
+import type {SearchEngine} from '../../app/search-engine/search-engine.js';
 import {sortCriteriaReducer as sortCriteria} from '../../features/sort-criteria/sort-criteria-slice.js';
-import {SortCriterion} from './criteria.js';
+import type {SortCriterion} from './criteria.js';
 import {
   registerSortCriterion,
   updateSortCriterion,

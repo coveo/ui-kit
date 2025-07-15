@@ -1,12 +1,12 @@
-import {CoreEngine} from '../../../app/engine.js';
+import type {CoreEngine} from '../../../app/engine.js';
 import {facetOptionsReducer as facetOptions} from '../../../features/facet-options/facet-options-slice.js';
 import {searchReducer as search} from '../../../features/search/search-slice.js';
-import {SearchSection} from '../../../state/state-sections.js';
+import type {SearchSection} from '../../../state/state-sections.js';
 import {loadReducerError} from '../../../utils/errors.js';
 import {sortFacets} from '../../../utils/facet-utils.js';
 import {
   buildController,
-  Controller,
+  type Controller,
 } from '../../controller/headless-controller.js';
 
 /**

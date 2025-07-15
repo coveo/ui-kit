@@ -1,16 +1,16 @@
-import externalContextService from '@/external-services/external-context-service';
-import {useContext, useEngine} from '@/lib/commerce-engine';
 import {
-  CommerceEngine,
-  ContextOptions,
+  type CommerceEngine,
+  type ContextOptions,
   loadProductListingActions,
   loadSearchActions,
 } from '@coveo/headless-react/ssr-commerce';
-import {LoaderFunctionArgs} from '@remix-run/node';
+import type {LoaderFunctionArgs} from '@remix-run/node';
 import {Form, useFetcher, useLoaderData} from '@remix-run/react';
 import {useState} from 'react';
+import externalContextService from '@/external-services/external-context-service';
+import {useContext, useEngine} from '@/lib/commerce-engine';
 
-export const loader = async ({}: LoaderFunctionArgs) => {
+export const loader = async (_args: LoaderFunctionArgs) => {
   const contextInfo = await externalContextService.getContextInformation();
   return contextInfo;
 };

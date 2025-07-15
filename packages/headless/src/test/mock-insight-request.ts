@@ -1,4 +1,4 @@
-import {InsightQueryRequest} from '../api/service/insight/query/query-request.js';
+import type {InsightQueryRequest} from '../api/service/insight/query/query-request.js';
 
 export function buildMockInsightQueryRequest(
   config?: Partial<InsightQueryRequest>

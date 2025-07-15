@@ -1,5 +1,5 @@
-import {SpecificFacetSearchResponse} from '../../../../api/search/facet-search/specific-facet-search/specific-facet-search-response.js';
-import {
+import type {SpecificFacetSearchResponse} from '../../../../api/search/facet-search/specific-facet-search/specific-facet-search-response.js';
+import type {
   FacetSearchSetState,
   FacetSearchState,
 } from '../facet-search-reducer-helpers.js';

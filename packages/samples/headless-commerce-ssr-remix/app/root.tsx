@@ -1,9 +1,23 @@
+import {
+  buildParameterSerializer,
+  type NavigatorContext,
+  SolutionType,
+} from '@coveo/headless-react/ssr-commerce';
+import type {LoaderFunctionArgs, MetaFunction} from '@remix-run/node';
+import {
+  Links,
+  Meta,
+  Outlet,
+  Scripts,
+  ScrollRestoration,
+  useLoaderData,
+} from '@remix-run/react';
 import externalCartService from '@/external-services/external-cart-service';
 import {
   getVisitorIdSetCookieHeader,
   shouldCapture,
 } from '@/lib/client-id.server';
-import {
+import type {
   SearchEngineDefinition,
   SearchStaticState,
   StandaloneEngineDefinition,
@@ -14,20 +28,6 @@ import {
   getEngineDefinition,
 } from '@/lib/commerce-engine.server';
 import {getNavigatorContext} from '@/lib/navigator-context';
-import {
-  buildParameterSerializer,
-  NavigatorContext,
-  SolutionType,
-} from '@coveo/headless-react/ssr-commerce';
-import {LoaderFunctionArgs, MetaFunction} from '@remix-run/node';
-import {
-  Links,
-  Meta,
-  Outlet,
-  Scripts,
-  ScrollRestoration,
-  useLoaderData,
-} from '@remix-run/react';
 import Header from './components/header';
 import ParameterManager from './components/parameter-manager';
 import {
