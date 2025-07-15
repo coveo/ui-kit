@@ -4,6 +4,7 @@ test.describe('AtomicCommerceRefineModal', () => {
   test.beforeEach(async ({page}) => {
     await page.goto('/iframe.html?id=atomic-commerce-refine-toggle--default');
     await page.locator('atomic-commerce-refine-toggle').waitFor();
+    await page.locator('atomic-commerce-refine-toggle').click();
   });
 
   test('should be accessible', async ({makeAxeBuilder}) => {
