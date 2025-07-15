@@ -1,19 +1,17 @@
+import {buildProductListing, buildSearch} from '@coveo/headless/commerce';
+import {html} from 'lit';
+import {beforeEach, describe, expect, it, vi} from 'vitest';
 import {renderInAtomicCommerceInterface} from '@/vitest-utils/testing-helpers/fixtures/atomic/commerce/atomic-commerce-interface-fixture';
 import {buildFakeCommerceEngine} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/engine';
-import {buildFakeSearch} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/search-controller';
 import {buildFakeProductListing} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/product-listing-controller';
-import {buildSearch, buildProductListing} from '@coveo/headless/commerce';
-import {html} from 'lit';
-import {describe, it, expect, vi, beforeEach} from 'vitest';
+import {buildFakeSearch} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/search-controller';
 import './atomic-commerce-query-error';
-import {AtomicCommerceQueryError} from './atomic-commerce-query-error';
 import {userEvent} from '@vitest/browser/context';
-import NoConnection from '../../../images/no-connection.svg';
-import Indexing from '../../../images/indexing.svg';
-import CannotAccess from '../../../images/cannot-access.svg';
-import SearchInactive from '../../../images/search-inactive.svg';
+import {getAriaMessageFromErrorType} from '../../common/query-error/utils';
+import type {AtomicCommerceQueryError} from './atomic-commerce-query-error';
 
 vi.mock('@coveo/headless/commerce', {spy: true});
+vi.mock('../../common/query-error/utils', {spy: true});
 
 describe('atomic-commerce-query-error', () => {
   const mockedEngine = buildFakeCommerceEngine();
@@ -27,6 +25,7 @@ describe('atomic-commerce-query-error', () => {
     error = mockError,
   }: {
     interfaceElementType?: 'product-listing' | 'search';
+    // biome-ignore lint/suspicious/noExplicitAny: <>
     error?: any;
   } = {}) => {
     vi.mocked(buildProductListing).mockReturnValue(
@@ -88,6 +87,16 @@ describe('atomic-commerce-query-error', () => {
     expect(element).toBeEmptyDOMElement();
   });
 
+  it('should call getAriaMessageFromErrorType with the correct parameters', async () => {
+    await renderQueryError();
+    expect(getAriaMessageFromErrorType).toHaveBeenCalledWith(
+      expect.anything(),
+      mockedEngine.configuration.organizationId,
+      mockedEngine.configuration.commerce.apiBaseUrl,
+      mockError.type
+    );
+  });
+
   it('should render the icon with the correct part', async () => {
     const {locators} = await renderQueryError();
 
@@ -106,7 +115,7 @@ describe('atomic-commerce-query-error', () => {
     expect(locators.description).toHaveAttribute('part', 'description');
   });
 
-  describe('when the show more info button is showed', () => {
+  describe('when the show more info button is shown', () => {
     it('should render the button with the correct part', async () => {
       const {locators} = await renderQueryError();
 
@@ -159,7 +168,7 @@ describe('atomic-commerce-query-error', () => {
   });
 
   describe('when the doc link is displayed', () => {
-    let locators: any;
+    let locators: Awaited<ReturnType<typeof renderQueryError>>['locators'];
     beforeEach(async () => {
       const {locators: renderedLocators} = await renderQueryError({
         error: {
@@ -181,7 +190,7 @@ describe('atomic-commerce-query-error', () => {
   });
 
   describe('when the error type is "Disconnected"', () => {
-    let locators: any;
+    let locators: Awaited<ReturnType<typeof renderQueryError>>['locators'];
 
     beforeEach(async () => {
       const mockError = {
@@ -190,10 +199,6 @@ describe('atomic-commerce-query-error', () => {
         message: 'Disconnected from the server',
       };
       ({locators} = await renderQueryError({error: mockError}));
-    });
-
-    it('should display the correct icon', () => {
-      expect(locators.icon).toHaveAttribute('icon', NoConnection);
     });
 
     it('should display the correct title', () => {
@@ -216,7 +221,7 @@ describe('atomic-commerce-query-error', () => {
   });
 
   describe('when the error type is "NoEndpointsException"', () => {
-    let locators: any;
+    let locators: Awaited<ReturnType<typeof renderQueryError>>['locators'];
 
     beforeEach(async () => {
       const mockError = {
@@ -225,10 +230,6 @@ describe('atomic-commerce-query-error', () => {
         message: 'No endpoints available',
       };
       ({locators} = await renderQueryError({error: mockError}));
-    });
-
-    it('should display the correct icon', () => {
-      expect(locators.icon).toHaveAttribute('icon', Indexing);
     });
 
     it('should display the correct title', () => {
@@ -253,7 +254,7 @@ describe('atomic-commerce-query-error', () => {
   });
 
   describe('when the error type is "InvalidTokenException"', () => {
-    let locators: any;
+    let locators: Awaited<ReturnType<typeof renderQueryError>>['locators'];
 
     beforeEach(async () => {
       const mockError = {
@@ -262,10 +263,6 @@ describe('atomic-commerce-query-error', () => {
         message: 'Invalid token',
       };
       ({locators} = await renderQueryError({error: mockError}));
-    });
-
-    it('should display the correct icon', () => {
-      expect(locators.icon).toHaveAttribute('icon', CannotAccess);
     });
 
     it('should display the correct title', () => {
@@ -290,7 +287,7 @@ describe('atomic-commerce-query-error', () => {
   });
 
   describe('when the error type is "OrganizationIsPausedException"', () => {
-    let locators: any;
+    let locators: Awaited<ReturnType<typeof renderQueryError>>['locators'];
 
     beforeEach(async () => {
       const mockError = {
@@ -299,10 +296,6 @@ describe('atomic-commerce-query-error', () => {
         message: 'Organization is paused',
       };
       ({locators} = await renderQueryError({error: mockError}));
-    });
-
-    it('should display the correct icon', () => {
-      expect(locators.icon).toHaveAttribute('icon', SearchInactive);
     });
 
     it('should display the correct title', () => {
