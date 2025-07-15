@@ -3,6 +3,8 @@ import type {InteractiveProduct, Product} from '@coveo/headless/commerce';
 import {html, LitElement, nothing, unsafeCSS} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {when} from 'lit/directives/when.js';
+import {getAttributesFromLinkSlot} from '@/src/components/common/item-link/attributes-slot';
+import {renderLinkWithItemAnalytics} from '@/src/components/common/item-link/item-link';
 import {bindingGuard} from '@/src/decorators/binding-guard';
 import {bindings} from '@/src/decorators/bindings';
 import {
@@ -13,13 +15,14 @@ import {errorGuard} from '@/src/decorators/error-guard';
 import {injectStylesForNoShadowDOM} from '@/src/decorators/inject-styles-for-no-shadow-dom';
 import type {InitializableComponent} from '@/src/decorators/types';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles.js';
-import {buildCustomEvent} from '../../../utils/event-utils';
-import {getAttributesFromLinkSlot} from '../../common/item-link/attributes-slot';
-import {renderLinkWithItemAnalytics} from '../../common/item-link/item-link';
+import {buildCustomEvent} from '@/src/utils/event-utils';
 import type {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface';
 import {buildStringTemplateFromProduct} from '../product-template-component-utils/product-utils';
 import '../atomic-product-text/atomic-product-text';
-import {injectSlotsForNoShadowDOM} from '@/src/decorators/light-dom-with-slots';
+import {
+  type LightDOMWithSlots,
+  SlotsForNoShadowDOMMixin,
+} from '@/src/mixins/slots-for-no-shadow-dom-mixin';
 import styles from './atomic-product-link.tw.css';
 
 /**
@@ -31,22 +34,13 @@ import styles from './atomic-product-link.tw.css';
  */
 @customElement('atomic-product-link')
 @bindings()
-@injectSlotsForNoShadowDOM()
 @injectStylesForNoShadowDOM
 @withTailwindStyles
 export class AtomicProductLink
-  extends LitElement
+  extends SlotsForNoShadowDOMMixin(LitElement)
   implements InitializableComponent<CommerceBindings>
 {
   static styles = unsafeCSS(styles);
-
-  // Properties added by @injectSlotsForNoShadowDOM decorator
-  declare slots: {[name: string]: ChildNode[] | undefined};
-  declare adoptChildren: () => void;
-  declare getSlotNameForChild: (child: ChildNode) => string;
-  declare isTextNodeEmpty: (node: Text) => boolean;
-  declare isSlotEmpty: (slot: string) => boolean;
-  declare yield: (slot: string, defaultContent?: unknown) => unknown[];
 
   /**
    * The [template literal](https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Template_literals) from which to generate the `href` attribute value
@@ -94,7 +88,6 @@ export class AtomicProductLink
       return;
     }
 
-    // Find the slot element to set it as hidden
     const attributesSlot = this.slots.attributes?.[0];
     if (
       attributesSlot instanceof Element &&
@@ -103,7 +96,6 @@ export class AtomicProductLink
       attributesSlot.setAttribute('hidden', '');
     }
 
-    // Filter out the 'hidden' attribute that we just added
     this.linkAttributes = attributes.filter(
       (attr: Attr) => attr.nodeName !== 'hidden'
     );
@@ -192,5 +184,13 @@ export class AtomicProductLink
       },
       () => nothing
     )}`;
+  }
+}
+
+export interface AtomicProductLink extends LightDOMWithSlots {}
+
+declare global {
+  interface HTMLElementTagNameMap {
+    'atomic-product-link': AtomicProductLink;
   }
 }
