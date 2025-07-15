@@ -1,13 +1,13 @@
-import {SchemaDefinition, SchemaValue} from '../schema.js';
-import {BooleanValue, isBoolean} from './boolean-value.js';
-import {NumberValue, isNumber} from './number-value.js';
-import {StringValue, isString} from './string-value.js';
+import type {SchemaDefinition, SchemaValue} from '../schema.js';
+import {type BooleanValue, isBoolean} from './boolean-value.js';
+import {isNumber, type NumberValue} from './number-value.js';
+import {isString, type StringValue} from './string-value.js';
 import {
-  PrimitivesValues,
-  ValueConfig,
   isNullOrUndefined,
-  Value,
   isUndefined,
+  type PrimitivesValues,
+  Value,
+  type ValueConfig,
 } from './value.js';
 
 type RecordWithPrimitiveValues = Record<string, PrimitivesValues>;
@@ -55,7 +55,7 @@ export class RecordValue implements SchemaValue<ComplexRecord> {
       const invalidValue = validator.validate(value);
 
       if (invalidValue !== null) {
-        out += ' ' + invalidValue;
+        out += ` ${invalidValue}`;
       }
     }
 
@@ -120,7 +120,7 @@ export class ArrayValue<T extends PrimitivesValues = PrimitivesValues>
         }
         const isInvalid = this.validatePrimitiveValue(el, this.config.each!);
         if (isInvalid !== null) {
-          out += ' ' + isInvalid;
+          out += ` ${isInvalid}`;
         }
       });
 

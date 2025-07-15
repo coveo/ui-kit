@@ -1,17 +1,17 @@
-import {PayloadAction} from '@reduxjs/toolkit';
-import {CoreEngine} from '../../../../app/engine.js';
+import type {PayloadAction} from '@reduxjs/toolkit';
+import type {CoreEngine} from '../../../../app/engine.js';
 import {dateFacetSetReducer as dateFacetSet} from '../../../../features/facets/range-facets/date-facet-set/date-facet-set-slice.js';
 import {
   deselectAllDateFacetValues,
+  type RegisterDateFacetActionCreatorPayload,
   registerDateFacet,
-  RegisterDateFacetActionCreatorPayload,
-  toggleSelectDateFacetValue,
-  ToggleSelectDateFacetValueActionCreatorPayload,
-  updateDateFacetSortCriterion,
-  UpdateDateFacetSortCriterionActionCreatorPayload,
-  UpdateDateFacetValuesActionCreatorPayload,
-  updateDateFacetValues,
+  type ToggleSelectDateFacetValueActionCreatorPayload,
   toggleExcludeDateFacetValue,
+  toggleSelectDateFacetValue,
+  type UpdateDateFacetSortCriterionActionCreatorPayload,
+  type UpdateDateFacetValuesActionCreatorPayload,
+  updateDateFacetSortCriterion,
+  updateDateFacetValues,
 } from './date-facet-actions.js';
 
 export type {

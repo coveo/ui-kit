@@ -1,10 +1,10 @@
-import {StateFromReducersMapObject} from '@reduxjs/toolkit';
-import {Logger} from 'pino';
+import type {StateFromReducersMapObject} from '@reduxjs/toolkit';
+import type {Logger} from 'pino';
 import {GeneratedAnswerAPIClient} from '../../api/generated-answer/generated-answer-client.js';
 import {NoopPreprocessRequest} from '../../api/preprocess-request.js';
 import {InsightAPIClient} from '../../api/service/insight/insight-api-client.js';
 import {interfaceLoad} from '../../features/analytics/analytics-actions.js';
-import {LegacySearchAction} from '../../features/analytics/analytics-utils.js';
+import type {LegacySearchAction} from '../../features/analytics/analytics-utils.js';
 import {updateSearchConfiguration} from '../../features/configuration/configuration-actions.js';
 import {setInsightConfiguration} from '../../features/insight-configuration/insight-configuration-actions.js';
 import {insightConfigurationReducer as insightConfiguration} from '../../features/insight-configuration/insight-configuration-slice.js';
@@ -13,26 +13,26 @@ import {insightInterfaceReducer as insightInterface} from '../../features/insigh
 import {executeSearch} from '../../features/insight-search/insight-search-actions.js';
 import {logInsightInterfaceLoad} from '../../features/insight-search/insight-search-analytics-actions.js';
 import {resultPreviewReducer as resultPreview} from '../../features/result-preview/result-preview-slice.js';
-import {searchHubReducer as searchHub} from '../../features/search-hub/search-hub-slice.js';
 import {firstSearchExecutedSelector} from '../../features/search/search-selectors.js';
 import {searchReducer as search} from '../../features/search/search-slice.js';
-import {InsightAppState} from '../../state/insight-app-state.js';
+import {searchHubReducer as searchHub} from '../../features/search-hub/search-hub-slice.js';
+import type {InsightAppState} from '../../state/insight-app-state.js';
 import {
   buildEngine,
-  CoreEngine,
-  EngineOptions,
-  ExternalEngineOptions,
+  type CoreEngine,
+  type EngineOptions,
+  type ExternalEngineOptions,
   warnIfUsingNextAnalyticsModeForServiceFeature,
 } from '../engine.js';
-import {InsightThunkExtraArguments} from '../insight-thunk-extra-arguments.js';
+import type {InsightThunkExtraArguments} from '../insight-thunk-extra-arguments.js';
 import {buildLogger} from '../logger.js';
-import {AdditionalCoreExtraArguments} from '../store.js';
+import type {AdditionalCoreExtraArguments} from '../store.js';
 import {buildThunkExtraArguments} from '../thunk-extra-arguments.js';
 import {
-  InsightEngineConfiguration,
-  insightEngineConfigurationSchema,
-  InsightEngineSearchConfigurationOptions,
   getSampleInsightEngineConfiguration,
+  type InsightEngineConfiguration,
+  type InsightEngineSearchConfigurationOptions,
+  insightEngineConfigurationSchema,
 } from './insight-engine-configuration.js';
 
 export type {

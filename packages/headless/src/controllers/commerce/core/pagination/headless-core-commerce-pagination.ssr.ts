@@ -1,17 +1,17 @@
 import {ensureAtLeastOneSolutionType} from '../../../../app/commerce-ssr-engine/common.js';
 import {
-  ControllerDefinitionOption,
+  type ControllerDefinitionOption,
   SolutionType,
-  SubControllerDefinitionWithoutProps,
+  type SubControllerDefinitionWithoutProps,
 } from '../../../../app/commerce-ssr-engine/types/common.js';
 import {buildProductListing} from '../../product-listing/headless-product-listing.js';
 import {buildSearch} from '../../search/headless-search.js';
-import {
+import type {
+  CorePaginationOptions,
   Pagination,
+  PaginationOptions,
   PaginationProps,
   PaginationState,
-  PaginationOptions,
-  CorePaginationOptions,
 } from './headless-core-commerce-pagination.js';
 
 export type {

@@ -1,0 +1,185 @@
+{
+  "$schema": "https://biomejs.dev/schemas/2.0.6/schema.json",
+  "vcs": {"enabled": true, "clientKind": "git", "useIgnoreFile": true},
+  "root": true,
+  "plugins": [
+    "./packages/atomic/biome-rules/no-tolocalestring-without-locale.grit"
+  ],
+  "files": {
+    "ignoreUnknown": false,
+    "maxSize": 2097152,
+    "includes": [
+      "**",
+      "!**/packages/quantic/**/*",
+      "!**/dist/**",
+      "!**/dist*/**",
+      "!**/*.d.ts",
+      "!.deployment.config.json",
+      "!**/.deployment.config.json",
+      "!**/package.json",
+      "!**/package-lock.json"
+    ]
+  },
+  "formatter": {
+    "enabled": true,
+    "formatWithErrors": false,
+    "indentStyle": "space",
+    "indentWidth": 2,
+    "lineEnding": "lf",
+    "lineWidth": 80,
+    "attributePosition": "auto",
+    "bracketSameLine": false,
+    "bracketSpacing": false,
+    "expand": "auto",
+    "useEditorconfig": true,
+    "includes": [
+      "**/*.{js,jsx,ts,tsx,mjs,json,jsonc,css,md}",
+      "!.github/prompts/**/*",
+      "!.github/instructions/**/*",
+      "!.github/**/*.yml",
+      "!.github/**/*.yaml",
+      "!**/packages/quantic/**/*",
+      "!**/lwc/**/*.css",
+      "!**/lwc/**/*.html",
+      "!**/lwc/**/*.svg",
+      "!**/lwc/**/*.xml",
+      "!**/*.tw.css",
+      "!**/stencil-generated/**/*",
+      "!**/.sfdx",
+      "!**/dist",
+      "!**/*.d.ts",
+      "!**/LICENSE.md",
+      "!utils/**/.storybook/**",
+      "!**/.angular/**",
+      "!**/.next/**",
+      "!**/www/**",
+      "!**/cdn/**",
+      "!scripts/deploy/execute-deployment-pipeline.mjs",
+      "!**/staticresources/**",
+      "!packages/atomic-hosted-page/loader/**/*",
+      "!packages/atomic/docs/**/*",
+      "!packages/atomic/dist-storybook/**/*",
+      "!packages/atomic/src/components/search/atomic-search-interface/lang/*.json",
+      "!packages/atomic/src/external-builds/**/*",
+      "!packages/atomic/src/generated/**",
+      "!packages/headless/src/external-builds/**/*",
+      "!packages/quantic/docs/out/quantic-docs.json",
+      "!packages/quantic/.tmp/**",
+      "!packages/samples/headless-react/build/**/*",
+      "!packages/samples/headless-commerce-ssr-remix/build/**/*",
+      "!packages/samples/angular/src/lang/*.json",
+      "!packages/samples/vuejs/public/lang/*.json",
+      "!**/.deployment.config.json",
+      "!.deployment.config.json",
+      "!**/package.json",
+      "!packages/atomic-angular/scripts/build-lit.mjs",
+      "!packages/atomic-react/scripts/build-lit.mjs",
+      "!packages/atomic/playwright-utils/**/*",
+      "!packages/documentation/assets/css/main-new.css",
+      "!packages/atomic/src/components/commerce/atomic-commerce-search-box/e2e/page-object.ts",
+      "!packages/atomic/src/components/commerce/atomic-commerce-sort-dropdown/atomic-commerce-sort-dropdown.spec.ts",
+      "!packages/atomic/src/components/common/checkbox.ts",
+      "!packages/atomic/src/components/common/facets/facet-container/facet-container.ts",
+      "!packages/atomic/src/components/common/facets/facet-header/facet-header.ts",
+      "!packages/atomic/src/components/common/item-list/table-layout.ts",
+      "!packages/atomic/src/components/common/search-box/search-box-wrapper.ts",
+      "!packages/atomic/src/components/common/suggestions/query-suggestions.ts",
+      "!packages/atomic/src/components/common/triStateCheckbox.ts",
+      "!packages/atomic/src/components/search/atomic-did-you-mean/atomic-did-you-mean.new.stories.tsx",
+      "!packages/atomic/src/components/search/atomic-search-box/e2e/page-object.ts",
+      "!packages/atomic/storybook-utils/commerce/commerce-interface-wrapper.tsx",
+      "!packages/atomic/storybook-utils/common/facets-decorator.tsx",
+      "!packages/atomic/storybook-utils/search/search-interface-wrapper.tsx",
+      "!packages/headless/src/app/commerce-ssr-engine/types/common.ts",
+      "!packages/headless/src/app/ssr-engine/types/common.ts",
+      "!packages/headless/src/controllers/commerce/filter-suggestions/headless-category-filter-suggestions.ts",
+      "!packages/headless/src/controllers/commerce/filter-suggestions/headless-filter-suggestions.ts",
+      "!packages/headless/src/controllers/core/pager/headless-core-pager.test.ts",
+      "!packages/headless/src/utils/fetch-event-source/**/*"
+    ]
+  },
+  "linter": {
+    "enabled": true,
+    "rules": {
+      "recommended": false,
+      "style": {"useBlockStatements": "off"}
+    },
+    "includes": [
+      "**",
+      "!**/packages/quantic/**/*",
+      "!**/node_modules",
+      "!**/stencil-generated",
+      "!**/dist/**",
+      "!**/dist*/**",
+      "!**/*.d.ts",
+      "!**/www",
+      "!**/.storybook",
+      "!scripts/deploy/execute-deployment-pipeline.mjs",
+      "!**/build",
+      "!**/.deployment.config.json",
+      "!.deployment.config.json",
+      "!**/package.json",
+      "!packages/atomic-angular/scripts/build-lit.mjs",
+      "!packages/atomic-react/scripts/build-lit.mjs",
+      "!packages/atomic/src/components/*/lazy-index.ts",
+      "!packages/atomic/src/components/*/index.ts",
+      "!**/*.tw.css",
+      "!**/components.d.ts",
+      "!utils/cdn/project.json",
+      "!packages/atomic/src/components/commerce/atomic-commerce-product-list/atomic-commerce-product-list.tw.css",
+      "!packages/atomic/playwright-utils/**/*",
+      "!packages/atomic/src/components/commerce/atomic-commerce-layout/atomic-commerce-layout.tw.css",
+      "!packages/samples/vuejs/src/assets/styles.css"
+    ]
+  },
+  "javascript": {
+    "formatter": {
+      "jsxQuoteStyle": "double",
+      "quoteProperties": "asNeeded",
+      "trailingCommas": "es5",
+      "semicolons": "always",
+      "arrowParentheses": "always",
+      "bracketSameLine": false,
+      "quoteStyle": "single",
+      "attributePosition": "auto",
+      "bracketSpacing": false
+    }
+  },
+  "html": {"formatter": {"selfCloseVoidElements": "always"}},
+  "css": {
+    "formatter": {
+      "enabled": true,
+      "quoteStyle": "single"
+    }
+  },
+  "overrides": [
+    {"includes": ["**/package-lock.json"], "linter": {"rules": {}}},
+    {
+      "includes": ["**/*.ts", "**/*.tsx", "**/*.js", "**/*.jsx", "**/*.mjs"],
+      "linter": {"rules": {}}
+    },
+    {
+      "includes": ["**/*.ts", "**/*.tsx"],
+      "linter": {
+        "rules": {
+          "complexity": {"noBannedTypes": "off"},
+          "correctness": {"noUnusedVariables": "off"}
+        }
+      }
+    },
+    {
+      "includes": ["**/*.js", "**/*.jsx"],
+      "linter": {"rules": {"correctness": {"noUnusedVariables": "off"}}}
+    },
+    {"includes": ["**/*.mjs"]},
+    {
+      "includes": ["**/*.{scss,css,pcss,html,mdx}"],
+      "formatter": {"lineWidth": 120}
+    },
+    {"includes": ["**/*.tsx"]}
+  ],
+  "assist": {
+    "enabled": true,
+    "actions": {"source": {"organizeImports": "off"}}
+  }
+}

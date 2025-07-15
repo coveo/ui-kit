@@ -16,7 +16,7 @@ const buenoJson = JSON.parse(readFileSync(buenoJsonPath, 'utf-8'));
 
 const buenoVersion = isNightly
   ? `v${buenoJson.version.split('.').shift()}-nightly`
-  : 'v' + buenoJson.version;
+  : `v${buenoJson.version}`;
 const buenoPath = isCDN
   ? `/bueno/${buenoVersion}/bueno.esm.js`
   : '@coveo/bueno';
@@ -41,6 +41,10 @@ const entries = [
   {
     entryPoint: 'src/utilities/index.ts',
     outfile: 'utilities.esm.js',
+  },
+  {
+    entryPoint: 'src/constants.ts',
+    outfile: 'constants.esm.js',
   },
 ];
 
@@ -67,7 +71,7 @@ function browserEsm(base, outfile) {
   const replaceBuenoImport = {
     name: 'replace-bueno-import',
     setup(build) {
-      build.onResolve({filter: /^@coveo\/bueno$/}, (args) => {
+      build.onResolve({filter: /^@coveo\/bueno$/}, () => {
         return {path: buenoPath, external: true};
       });
     },
@@ -86,12 +90,10 @@ function browserEsm(base, outfile) {
 
 async function main() {
   await Promise.all(
-    entries
-      .map(async ({entryPoint, outfile}) => {
-        const base = getBase(entryPoint);
-        return [nodeEsm(base, outfile), browserEsm(base, outfile)];
-      })
-      .flat()
+    entries.flatMap(async ({entryPoint, outfile}) => {
+      const base = getBase(entryPoint);
+      return [nodeEsm(base, outfile), browserEsm(base, outfile)];
+    })
   );
 }
 

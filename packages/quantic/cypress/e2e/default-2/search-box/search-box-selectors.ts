@@ -23,11 +23,11 @@ export const SearchBoxSelectors: SearchBoxSelector = {
     ),
   suggestionList: () =>
     SearchBoxSelectors.get().find(
-      'c-quantic-search-box-suggestions-list [data-cy="suggestion-list"]'
+      'c-quantic-search-box-suggestions-list [data-testid="suggestion-list"]'
     ),
   searchButton: () =>
     SearchBoxSelectors.get().find(
-      'c-quantic-search-box-input [data-cy="search-box-submit-button"]'
+      'c-quantic-search-box-input [data-testid="search-box-submit-button"]'
     ),
   clearRecentQueriesButton: () =>
     SearchBoxSelectors.get().find(

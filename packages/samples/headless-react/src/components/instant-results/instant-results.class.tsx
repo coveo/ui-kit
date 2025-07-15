@@ -1,13 +1,13 @@
 import {
-  buildSearchBox,
-  SearchBox as HeadlessSearchbox,
   buildInstantResults,
-  InstantResults as HeadlessInstantResults,
-  InstantResultsState,
-  Unsubscribe,
-  SearchBoxState,
+  buildSearchBox,
+  type InstantResults as HeadlessInstantResults,
+  type SearchBox as HeadlessSearchbox,
+  type InstantResultsState,
+  type SearchBoxState,
+  type Unsubscribe,
 } from '@coveo/headless';
-import {Component, ContextType, ReactNode} from 'react';
+import {Component, type ContextType, type ReactNode} from 'react';
 import {AppContext} from '../../context/engine';
 
 export class InstantResults extends Component<
@@ -96,6 +96,11 @@ export class InstantResults extends Component<
                   onClick={() =>
                     this.controllerSearchbox.selectSuggestion(value)
                   }
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                      this.controllerSearchbox.selectSuggestion(value);
+                    }
+                  }}
                 >
                   {value}
                 </li>
@@ -105,7 +110,7 @@ export class InstantResults extends Component<
           <ul>
             {this.state.instantResults.results.map((result) => {
               return (
-                <li>
+                <li key={result.uniqueId}>
                   <div>
                     {result.title}: {result.raw.source}
                   </div>

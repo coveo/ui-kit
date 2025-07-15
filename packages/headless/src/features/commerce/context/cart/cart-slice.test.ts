@@ -3,8 +3,8 @@ import {createCartKey} from '../../../../controllers/commerce/context/cart/headl
 import {purchase, setItems, updateItemQuantity} from './cart-actions.js';
 import {cartReducer} from './cart-slice.js';
 import {
-  CartItemWithMetadata,
-  CartState,
+  type CartItemWithMetadata,
+  type CartState,
   getCartInitialState,
 } from './cart-state.js';
 

@@ -1,17 +1,17 @@
-import {PayloadAction} from '@reduxjs/toolkit';
-import {SearchEngine} from '../../app/search-engine/search-engine.js';
+import type {PayloadAction} from '@reduxjs/toolkit';
+import type {SearchEngine} from '../../app/search-engine/search-engine.js';
 import {questionAnsweringReducer as questionAnswering} from '../../features/question-answering/question-answering-slice.js';
 import {
-  collapseSmartSnippet,
-  dislikeSmartSnippet,
-  likeSmartSnippet,
-  expandSmartSnippet,
-  openFeedbackModal,
   closeFeedbackModal,
+  collapseSmartSnippet,
   collapseSmartSnippetRelatedQuestion,
+  dislikeSmartSnippet,
+  expandSmartSnippet,
   expandSmartSnippetRelatedQuestion,
+  likeSmartSnippet,
+  openFeedbackModal,
 } from './question-answering-actions.js';
-import {QuestionAnsweringUniqueIdentifierActionCreatorPayload} from './question-answering-document-id.js';
+import type {QuestionAnsweringUniqueIdentifierActionCreatorPayload} from './question-answering-document-id.js';
 
 /**
  * The question answering action creators.

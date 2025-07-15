@@ -1,18 +1,18 @@
 import {SchemaValidationError} from '@coveo/bueno';
-import {Parameters} from '../../../../features/commerce/parameters/parameters-actions.js';
+import type {Parameters} from '../../../../features/commerce/parameters/parameters-actions.js';
 import {parametersDefinition} from '../../../../features/commerce/parameters/parameters-schema.js';
 import {parametersReducer as commerceParameters} from '../../../../features/commerce/parameters/parameters-slice.js';
-import {FacetValueState} from '../../../../features/facets/facet-api/value.js';
+import type {FacetValueState} from '../../../../features/facets/facet-api/value.js';
 import {buildRelevanceSortCriterion} from '../../../../features/sort/sort.js';
 import {buildMockCommerceState} from '../../../../test/mock-commerce-state.js';
 import {
   buildMockCommerceEngine,
-  MockedCommerceEngine,
+  type MockedCommerceEngine,
 } from '../../../../test/mock-engine-v2.js';
 import {
   buildCoreParameterManager,
-  CoreParameterManagerProps,
-  ParameterManager,
+  type CoreParameterManagerProps,
+  type ParameterManager,
 } from './headless-core-parameter-manager.js';
 
 describe('parameter manager', () => {

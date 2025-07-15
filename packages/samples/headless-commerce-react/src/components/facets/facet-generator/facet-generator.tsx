@@ -1,4 +1,4 @@
-import {FacetGenerator as HeadlessFacetGenerator} from '@coveo/headless/commerce';
+import type {FacetGenerator as HeadlessFacetGenerator} from '@coveo/headless/commerce';
 import {useEffect, useState} from 'react';
 import CategoryFacet from '../category-facet/category-facet.js';
 import DateFacet from '../date-facet/date-facet.js';
@@ -26,17 +26,35 @@ export default function FacetGenerator(props: IFacetGeneratorProps) {
 
   return (
     <nav className="Facets">
-      {facetState.map((facet, index) => {
+      {facetState.map((facet) => {
         switch (facet.type) {
           case 'regular':
-            return <RegularFacet key={index} controller={facet}></RegularFacet>;
+            return (
+              <RegularFacet
+                key={facet.state.facetId}
+                controller={facet}
+              ></RegularFacet>
+            );
           case 'numericalRange':
-            return <NumericFacet key={index} controller={facet}></NumericFacet>;
+            return (
+              <NumericFacet
+                key={facet.state.facetId}
+                controller={facet}
+              ></NumericFacet>
+            );
           case 'dateRange':
-            return <DateFacet key={index} controller={facet}></DateFacet>;
+            return (
+              <DateFacet
+                key={facet.state.facetId}
+                controller={facet}
+              ></DateFacet>
+            );
           case 'hierarchical':
             return (
-              <CategoryFacet key={index} controller={facet}></CategoryFacet>
+              <CategoryFacet
+                key={facet.state.facetId}
+                controller={facet}
+              ></CategoryFacet>
             );
           default:
             return null;

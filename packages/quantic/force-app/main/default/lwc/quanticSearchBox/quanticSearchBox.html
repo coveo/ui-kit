@@ -1,0 +1,17 @@
+<template>
+  <template lwc:if={hasInitializationError}>
+    <c-quantic-component-error component-name={template.host.localName}>
+    </c-quantic-component-error>
+  </template>
+  <template lwc:else>
+    <c-quantic-search-box-input
+      input-value={searchBoxValue}
+      textarea={textarea}
+      without-submit-button={withoutSubmitButton}
+      placeholder={placeholder}
+      suggestions={suggestions}
+      recent-queries={recentQueries}
+      max-number-of-suggestions={numberOfSuggestions}
+    ></c-quantic-search-box-input>
+  </template>
+</template>

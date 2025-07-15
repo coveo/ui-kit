@@ -1,4 +1,4 @@
-import {ThunkExtraArguments} from './thunk-extra-arguments.js';
+import type {ThunkExtraArguments} from './thunk-extra-arguments.js';
 
 export interface AsyncThunkOptions<
   T,

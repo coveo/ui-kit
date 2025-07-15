@@ -1,6 +1,5 @@
 /* eslint-disable no-import-assign */
 import QuanticSearchBoxSuggestionsList from 'c/quanticSearchBoxSuggestionsList';
-// import * as mockHeadlessLoader from 'c/quanticHeadlessLoader';
 import {cleanup, buildCreateTestComponent, flushPromises} from 'c/testUtils';
 
 const labels = {

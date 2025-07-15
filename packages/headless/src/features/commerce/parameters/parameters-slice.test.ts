@@ -1,5 +1,5 @@
-import {ActionCreatorWithoutPayload} from '@reduxjs/toolkit';
-import {FacetValueState} from '../../facets/facet-api/value.js';
+import type {ActionCreatorWithoutPayload} from '@reduxjs/toolkit';
+import type {FacetValueState} from '../../facets/facet-api/value.js';
 import {selectCategoryFacetSearchResult} from '../../facets/facet-search-set/category/category-facet-search-actions.js';
 import {
   excludeFacetSearchResult,
@@ -33,16 +33,16 @@ import {
   setPageSize,
 } from '../pagination/pagination-actions.js';
 import {
-  ProductListingParameters,
+  type ProductListingParameters,
   restoreProductListingParameters,
 } from '../product-listing-parameters/product-listing-parameters-actions.js';
 import {updateQuery} from '../query/query-actions.js';
-import {CommerceSearchParameters} from '../search-parameters/search-parameters-actions.js';
-import {applySort} from '../sort/sort-actions.js';
+import type {CommerceSearchParameters} from '../search-parameters/search-parameters-actions.js';
 import {SortBy, SortDirection} from '../sort/sort.js';
+import {applySort} from '../sort/sort-actions.js';
 import {parametersReducer} from './parameters-slice.js';
 import {
-  CommerceParametersState,
+  type CommerceParametersState,
   getCommerceParametersInitialState,
 } from './parameters-state.js';
 
@@ -244,61 +244,61 @@ describe('commerceParameters slice', () => {
       );
       expect(finalState).toEqual({...initialState, sortCriteria: newSort});
     });
-  }),
-    describe('when #updateQuery is dispatched', () => {
-      it('sets state.page to undefined', () => {
-        const state = {
-          ...initialState,
-          page: 5,
-        };
-        const finalState = parametersReducer(
-          state,
-          updateQuery({query: 'new query'})
-        );
-        expect(finalState.page).toBeUndefined();
-      });
-      it('when payload.query is undefined, set state.q to undefined', () => {
-        const state = {
-          ...initialState,
-          q: 'query',
-        };
-        const finalState = parametersReducer(
-          state,
-          updateQuery({query: undefined})
-        );
-        expect(finalState).toEqual({...state, q: undefined});
-      });
-
-      it('when payload.query is an empty string, set state.q to undefined', () => {
-        const state = {
-          ...initialState,
-          q: 'query',
-        };
-        const finalState = parametersReducer(state, updateQuery({query: ''}));
-        expect(finalState).toEqual({...state, q: undefined});
-      });
-
-      it('when the trimmed payload.query is an empty string, set state.q to undefined', () => {
-        const state = {
-          ...initialState,
-          q: 'query',
-        };
-        const finalState = parametersReducer(
-          state,
-          updateQuery({query: '          '})
-        );
-        expect(finalState).toEqual({...state, q: undefined});
-      });
-
-      it('when payload.query is not undefined, blank, or empty, set state.q to payload.query', () => {
-        const state = {...initialState, q: 'query'};
-        const finalState = parametersReducer(
-          state,
-          updateQuery({query: 'new query'})
-        );
-        expect(finalState).toEqual({...state, q: 'new query'});
-      });
+  });
+  describe('when #updateQuery is dispatched', () => {
+    it('sets state.page to undefined', () => {
+      const state = {
+        ...initialState,
+        page: 5,
+      };
+      const finalState = parametersReducer(
+        state,
+        updateQuery({query: 'new query'})
+      );
+      expect(finalState.page).toBeUndefined();
     });
+    it('when payload.query is undefined, set state.q to undefined', () => {
+      const state = {
+        ...initialState,
+        q: 'query',
+      };
+      const finalState = parametersReducer(
+        state,
+        updateQuery({query: undefined})
+      );
+      expect(finalState).toEqual({...state, q: undefined});
+    });
+
+    it('when payload.query is an empty string, set state.q to undefined', () => {
+      const state = {
+        ...initialState,
+        q: 'query',
+      };
+      const finalState = parametersReducer(state, updateQuery({query: ''}));
+      expect(finalState).toEqual({...state, q: undefined});
+    });
+
+    it('when the trimmed payload.query is an empty string, set state.q to undefined', () => {
+      const state = {
+        ...initialState,
+        q: 'query',
+      };
+      const finalState = parametersReducer(
+        state,
+        updateQuery({query: '          '})
+      );
+      expect(finalState).toEqual({...state, q: undefined});
+    });
+
+    it('when payload.query is not undefined, blank, or empty, set state.q to payload.query', () => {
+      const state = {...initialState, q: 'query'};
+      const finalState = parametersReducer(
+        state,
+        updateQuery({query: 'new query'})
+      );
+      expect(finalState).toEqual({...state, q: 'new query'});
+    });
+  });
 
   describe.each<{action: ActionCreatorWithoutPayload; actionName: string}>([
     {action: clearAllCoreFacets, actionName: 'clearAllCoreFacets'},
@@ -530,7 +530,6 @@ describe('commerceParameters slice', () => {
             numberOfResults: 1,
             path: ['f2v1', 'f2v2'],
           },
-          retrieveCount: 1,
         })
       );
       expect(finalState.page).toBeUndefined();
@@ -554,7 +553,6 @@ describe('commerceParameters slice', () => {
               numberOfResults: 1,
               path: ['f2v1', 'f2v2'],
             },
-            retrieveCount: 1,
           })
         );
         expect(finalState).toEqual(state);
@@ -573,7 +571,6 @@ describe('commerceParameters slice', () => {
               numberOfResults: 1,
               path: ['f1v1'],
             },
-            retrieveCount: 1,
           })
         );
 
@@ -595,7 +592,6 @@ describe('commerceParameters slice', () => {
             numberOfResults: 1,
             path: ['f1v1', 'f1v2', 'f1v3'],
           },
-          retrieveCount: 1,
         })
       );
 

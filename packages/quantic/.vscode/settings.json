@@ -1,0 +1,23 @@
+{
+  "eslint.enable": true,
+  "prettier.enable": true,
+  "biome.enabled": false,
+  
+  // Use ESLint for LWC JavaScript files in Quantic
+  "[javascript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.codeActionsOnSave": {
+      "source.fixAll.eslint": "explicit"
+    }
+  },
+  
+  // Use Prettier for Apex files
+  "[apex]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  
+  // Lightning Web Component HTML files
+  "[html]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  }
+}

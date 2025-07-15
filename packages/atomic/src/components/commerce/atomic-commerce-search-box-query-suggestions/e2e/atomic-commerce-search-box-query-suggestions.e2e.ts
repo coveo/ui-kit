@@ -1,5 +1,5 @@
-import {Page} from 'playwright/test';
-import {test, expect} from './fixture';
+import type {Page} from 'playwright/test';
+import {expect, test} from './fixture';
 
 test.describe('AtomicCommerceSearchBoxQuerySuggestions', () => {
   test.beforeEach(async ({commerceSearchBoxQuerySuggestions, page}) => {
@@ -25,9 +25,10 @@ test.describe('AtomicCommerceSearchBoxQuerySuggestions', () => {
     test('should change the activeDescendant of the search box', async ({
       commerceSearchBoxQuerySuggestions,
     }) => {
-      await expect(
-        commerceSearchBoxQuerySuggestions.searchBox
-      ).not.toHaveAttribute('aria-activedescendant');
+      await expect(commerceSearchBoxQuerySuggestions.searchBox).toHaveAttribute(
+        'aria-activedescendant',
+        ''
+      );
 
       await commerceSearchBoxQuerySuggestions.suggestion.first().hover();
 
@@ -60,9 +61,10 @@ test.describe('AtomicCommerceSearchBoxQuerySuggestions', () => {
       commerceSearchBoxQuerySuggestions,
       page,
     }) => {
-      await expect(
-        commerceSearchBoxQuerySuggestions.searchBox
-      ).not.toHaveAttribute('aria-activedescendant');
+      await expect(commerceSearchBoxQuerySuggestions.searchBox).toHaveAttribute(
+        'aria-activedescendant',
+        ''
+      );
 
       await expect(
         commerceSearchBoxQuerySuggestions.suggestion.first()

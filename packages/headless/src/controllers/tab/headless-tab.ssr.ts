@@ -1,6 +1,6 @@
-import {SearchEngine} from '../../app/search-engine/search-engine.js';
-import {ControllerDefinitionWithoutProps} from '../../app/ssr-engine/types/common.js';
-import {Tab, TabProps, buildTab} from './headless-tab.js';
+import type {SearchEngine} from '../../app/search-engine/search-engine.js';
+import type {ControllerDefinitionWithoutProps} from '../../app/ssr-engine/types/common.js';
+import {buildTab, type Tab, type TabProps} from './headless-tab.js';
 
 export * from './headless-tab.js';
 

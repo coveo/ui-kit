@@ -1,11 +1,11 @@
 import {
-  AnalyticsClientSendEventHook,
+  type AnalyticsClientSendEventHook,
   CoveoAnalyticsClient,
-  IRuntimeEnvironment,
+  type IRuntimeEnvironment,
 } from 'coveo.analytics';
-import {Logger} from 'pino';
+import type {Logger} from 'pino';
 import {clone} from '../../utils/utils.js';
-import {PreprocessRequest} from '../preprocess-request.js';
+import type {PreprocessRequest} from '../preprocess-request.js';
 
 export const getVisitorID = (options: {
   runtimeEnvironment?: IRuntimeEnvironment;

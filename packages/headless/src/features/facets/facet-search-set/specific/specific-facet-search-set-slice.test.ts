@@ -6,8 +6,8 @@ import {executeCommerceFacetSearch} from '../../../commerce/facets/facet-search-
 import {fetchProductListing} from '../../../commerce/product-listing/product-listing-actions.js';
 import {executeSearch as executeCommerceSearch} from '../../../commerce/search/search-actions.js';
 import {
+  type ExecuteSearchThunkReturn,
   executeSearch,
-  ExecuteSearchThunkReturn,
 } from '../../../search/search-actions.js';
 import * as FacetSearchReducerHelpers from '../facet-search-reducer-helpers.js';
 import {
@@ -21,7 +21,7 @@ import {
 import {specificFacetSearchSetReducer} from './specific-facet-search-set-slice.js';
 import {
   getFacetSearchSetInitialState,
-  SpecificFacetSearchSetState,
+  type SpecificFacetSearchSetState,
 } from './specific-facet-search-set-state.js';
 
 describe('FacetSearch slice', () => {

@@ -12,16 +12,16 @@ import {
   InitializeBindings,
 } from '../../../utils/initialization-utils';
 import {AriaLiveRegion} from '../../../utils/stencil-accessibility-utils';
-import {QueryErrorContainer} from '../../common/query-error/container';
-import {QueryErrorDescription} from '../../common/query-error/description';
-import {QueryErrorDetails} from '../../common/query-error/details';
-import {QueryErrorGuard} from '../../common/query-error/guard';
-import {QueryErrorIcon} from '../../common/query-error/icon';
-import {QueryErrorLink} from '../../common/query-error/link';
-import {QueryErrorShowMore} from '../../common/query-error/show-more';
-import {QueryErrorTitle} from '../../common/query-error/title';
+import {QueryErrorDetails} from '../../common/query-error/stencil-details';
+import {QueryErrorIcon} from '../../common/query-error/stencil-icon';
+import {QueryErrorShowMore} from '../../common/query-error/stencil-show-more';
+import {QueryErrorContainer} from '../../common/query-error/stencil-container';
+import {QueryErrorDescription} from '../../common/query-error/stencil-description';
+import {QueryErrorGuard} from '../../common/query-error/stencil-guard';
+import {QueryErrorTitle} from '../../common/query-error/stencil-title';
 import {getAriaMessageFromErrorType} from '../../common/query-error/utils';
 import {RecsBindings} from '../atomic-recs-interface/atomic-recs-interface';
+import {QueryErrorLink} from '../../common/query-error/stencil-link';
 
 /**
  * The `atomic-recs-error` component handles fatal errors when performing a recommendations request on the index or Search API. When the error is known, it displays a link to relevant documentation link for debugging purposes. When the error is unknown, it displays a small text area with the JSON content of the error.

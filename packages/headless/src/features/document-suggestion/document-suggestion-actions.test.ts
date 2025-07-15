@@ -1,4 +1,4 @@
-import {CaseAssistAppState} from '../../state/case-assist-app-state.js';
+import type {CaseAssistAppState} from '../../state/case-assist-app-state.js';
 import {buildMockCaseAssistState} from '../../test/mock-case-assist-state.js';
 import {buildMockNavigatorContextProvider} from '../../test/mock-navigator-context-provider.js';
 import {buildFetchDocumentSuggestionsRequest} from './document-suggestion-actions.js';

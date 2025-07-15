@@ -1,6 +1,6 @@
-import {displayIf} from '@/src/directives/display-if';
-import {FunctionalComponentGuard} from '@/src/utils/functional-component-utils';
 import {html} from 'lit';
+import {displayIf} from '@/src/directives/display-if';
+import type {FunctionalComponentGuard} from '@/src/utils/functional-component-utils';
 
 interface PagerGuardProps {
   hasError?: boolean;
@@ -8,7 +8,7 @@ interface PagerGuardProps {
   hasItems: boolean;
 }
 
-export const pagerGuard: FunctionalComponentGuard<PagerGuardProps> =
+export const renderPagerGuard: FunctionalComponentGuard<PagerGuardProps> =
   ({props}) =>
   (children) => {
     const condition = !props.hasError && props.isAppLoaded && props.hasItems;

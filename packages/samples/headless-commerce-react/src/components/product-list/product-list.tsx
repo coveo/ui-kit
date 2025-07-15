@@ -1,9 +1,9 @@
-import {
-  InteractiveProduct as HeadlessInteractiveProduct,
-  InteractiveProductProps,
-  Product as HeadlessProduct,
+import type {
   Cart,
   ChildProduct,
+  InteractiveProduct as HeadlessInteractiveProduct,
+  Product as HeadlessProduct,
+  InteractiveProductProps,
 } from '@coveo/headless/commerce';
 import InteractiveProduct from '../interactive-product/interactive-product.js';
 
@@ -32,8 +32,8 @@ export default function ProductList(props: IProductListProps) {
 
   return (
     <ul className="ProductList">
-      {products.map((product, index) => (
-        <li className="Product" key={index}>
+      {products.map((product) => (
+        <li className="Product" key={product.permanentid}>
           <InteractiveProduct
             product={product}
             controller={controllerBuilder({options: {product}})}

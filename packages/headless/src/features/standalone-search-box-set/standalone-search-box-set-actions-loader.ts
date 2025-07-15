@@ -1,19 +1,19 @@
-import {AsyncThunkAction, PayloadAction} from '@reduxjs/toolkit';
-import {AsyncThunkSearchOptions} from '../../api/search/search-api-client.js';
-import {SearchEngine} from '../../app/search-engine/search-engine.js';
+import type {AsyncThunkAction, PayloadAction} from '@reduxjs/toolkit';
+import type {AsyncThunkSearchOptions} from '../../api/search/search-api-client.js';
+import type {SearchEngine} from '../../app/search-engine/search-engine.js';
 import {standaloneSearchBoxSetReducer as standaloneSearchBoxSet} from '../../features/standalone-search-box-set/standalone-search-box-set-slice.js';
 import {
-  registerStandaloneSearchBox,
-  RegisterStandaloneSearchBoxActionCreatorPayload,
+  type FetchRedirectUrlActionCreatorPayload,
   fetchRedirectUrl,
-  FetchRedirectUrlActionCreatorPayload,
-  updateAnalyticsToSearchFromLink,
-  UpdateAnalyticsToSearchFromLinkActionCreatorPayload,
-  updateAnalyticsToOmniboxFromLink,
-  UpdateAnalyticsToOmniboxFromLinkActionCreatorPayload,
-  StateNeededForRedirect,
+  type RegisterStandaloneSearchBoxActionCreatorPayload,
+  type ResetStandaloneSearchBoxActionCreatorPayload,
+  registerStandaloneSearchBox,
   resetStandaloneSearchBox,
-  ResetStandaloneSearchBoxActionCreatorPayload,
+  type StateNeededForRedirect,
+  type UpdateAnalyticsToOmniboxFromLinkActionCreatorPayload,
+  type UpdateAnalyticsToSearchFromLinkActionCreatorPayload,
+  updateAnalyticsToOmniboxFromLink,
+  updateAnalyticsToSearchFromLink,
   updateStandaloneSearchBoxRedirectionUrl,
 } from './standalone-search-box-set-actions.js';
 

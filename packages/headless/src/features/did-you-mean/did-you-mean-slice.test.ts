@@ -1,18 +1,18 @@
-import {buildMockSearchResponse} from '../../test/mock-search-response.js';
 import {buildMockSearch} from '../../test/mock-search.js';
+import {buildMockSearchResponse} from '../../test/mock-search-response.js';
 import {logSearchEvent} from '../analytics/analytics-actions.js';
 import {executeSearch} from '../search/search-actions.js';
 import {
-  enableDidYouMean,
-  disableDidYouMean,
   disableAutomaticQueryCorrection,
+  disableDidYouMean,
   enableAutomaticQueryCorrection,
+  enableDidYouMean,
   setCorrectionMode,
 } from './did-you-mean-actions.js';
 import {didYouMeanReducer} from './did-you-mean-slice.js';
 import {
+  type DidYouMeanState,
   getDidYouMeanInitialState,
-  DidYouMeanState,
 } from './did-you-mean-state.js';
 
 describe('did you mean slice', () => {

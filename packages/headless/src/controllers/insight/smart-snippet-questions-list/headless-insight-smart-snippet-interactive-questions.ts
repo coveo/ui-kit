@@ -1,5 +1,5 @@
-import {Result} from '../../../api/search/search/result.js';
-import {InsightEngine} from '../../../app/insight-engine/insight-engine.js';
+import type {Result} from '../../../api/search/search/result.js';
+import type {InsightEngine} from '../../../app/insight-engine/insight-engine.js';
 import {logOpenSmartSnippetSuggestionSource} from '../../../features/question-answering/question-answering-insight-analytics-actions.js';
 import {
   answerSourceSelector,
@@ -8,14 +8,14 @@ import {
 import {questionAnsweringReducer as questionAnswering} from '../../../features/question-answering/question-answering-slice.js';
 import {pushRecentResult} from '../../../features/recent-results/recent-results-actions.js';
 import {searchReducer as search} from '../../../features/search/search-slice.js';
-import {
+import type {
   QuestionAnsweringSection,
   SearchSection,
 } from '../../../state/state-sections.js';
 import {loadReducerError} from '../../../utils/errors.js';
 import {
   buildInteractiveResultCore,
-  InteractiveResultCore,
+  type InteractiveResultCore,
 } from '../../core/interactive-result/headless-core-interactive-result.js';
 
 /**

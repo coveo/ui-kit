@@ -1,4 +1,4 @@
-import {mkdirSync, readFileSync, cpSync} from 'node:fs';
+import {cpSync, mkdirSync, readFileSync} from 'node:fs';
 import {dirname, join, relative, resolve as resolvePath} from 'node:path';
 import resolve from 'resolve';
 import {workspacesRoot} from '../../../scripts/packages.mjs';
@@ -37,7 +37,7 @@ function getDeploymentPipelineAssets() {
    */
   function getRelativeDestination(pipelineDirectory) {
     const regexp =
-      /^proda\/StaticCDN\/(?<packageName>[^\/]+)(?<version>\/v\$[^\/]+)(?<remainder>.*)?$/;
+      /^proda\/StaticCDN\/(?<packageName>[^/]+)(?<version>\/v\$[^/]+)(?<remainder>.*)?$/;
     const match = pipelineDirectory.match(regexp);
     if (!match) {
       throw `Could not parse ${pipelineDirectory} because it did not match the expected structure.`;

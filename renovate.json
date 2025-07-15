@@ -168,8 +168,18 @@
         "/^eslint-plugin-.*/",
         "/@typescript-eslint/.*/"
       ]
+    },
+    {
+      "groupName": "lightningcss",
+      "groupSlug": "lightningcss",
+      "rangeStrategy": "replace",
+      "description": "Isolate lightningcss",
+      "matchPackageNames": ["lightningcss"]
     }
   ],
+  "lockFileMaintenance": {
+    "enabled": true
+  },
   "rangeStrategy": "auto",
   "commitMessageSuffix": "J:KIT-282",
   "vulnerabilityAlerts": {

@@ -14,7 +14,7 @@ const salesforceDocTypeIcons = readdirSync(
     recursive: true,
     withFileTypes: true,
   }
-);
+).toSorted((a, b) => a.name.localeCompare(b.name));
 
 const salesforceStandardIcons = readdirSync(
   `${salesforceDesignSystem}/assets/icons/standard`,
@@ -22,7 +22,7 @@ const salesforceStandardIcons = readdirSync(
     recursive: true,
     withFileTypes: true,
   }
-);
+).toSorted((a, b) => a.name.localeCompare(b.name));
 
 mkdirSync('dist/atomic/assets', {recursive: true});
 
@@ -40,5 +40,5 @@ for (const [icons, subpath] of [
   }
 }
 
-const files = readdirSync('dist/atomic/assets');
+const files = readdirSync('dist/atomic/assets').toSorted();
 writeFileSync('docs/assets.json', JSON.stringify({assets: files}));

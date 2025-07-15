@@ -1,11 +1,11 @@
 import {
   cpSync,
   readdirSync,
-  renameSync,
   readFileSync,
+  renameSync,
   writeFileSync,
 } from 'node:fs';
-import {join, sep, resolve, relative, dirname} from 'node:path';
+import {dirname, join, relative, resolve, sep} from 'node:path';
 
 const headlessVersion = JSON.parse(
   readFileSync('../headless/package.json', 'utf8')
@@ -17,10 +17,17 @@ const atomicVersion = JSON.parse(
 const srcDir = resolve('./stencil-proxy');
 const distDir = resolve('./dist');
 
-const files = readdirSync(srcDir, {recursive: true, withFileTypes: true});
+const files = readdirSync(srcDir, {
+  recursive: true,
+  withFileTypes: true,
+}).toSorted((a, b) => {
+  const aPath = join(a.parentPath, a.name);
+  const bPath = join(b.parentPath, b.name);
+  return aPath.localeCompare(bPath);
+});
 
 const prefixFileWithUnderscore = (file) =>
-  file.split(sep).slice(0, -1).join(sep) + sep + '_' + file.split(sep).pop();
+  `${file.split(sep).slice(0, -1).join(sep) + sep}_${file.split(sep).pop()}`;
 
 for (const file of files) {
   if (file.isFile()) {

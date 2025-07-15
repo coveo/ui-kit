@@ -12,10 +12,8 @@ import {
   InitializableComponent,
   InitializeBindings,
 } from '../../../utils/initialization-utils';
-import {
-  getClonedFacetElements,
-  RefineModal,
-} from '../../common/refine-modal/modal';
+import {getClonedFacetElements} from '../../common/refine-modal/cloned-facet-elements';
+import {RefineModal} from '../../common/refine-modal/stencil-modal';
 import {Button} from '../../common/stencil-button';
 import {Hidden} from '../../common/stencil-hidden';
 import {Bindings} from '../../search/atomic-search-interface/atomic-search-interface';

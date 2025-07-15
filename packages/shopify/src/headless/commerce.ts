@@ -1,17 +1,15 @@
 import {
   buildCommerceEngine,
-  CommerceEngineOptions,
+  type CommerceEngineOptions,
 } from '@coveo/headless/commerce';
 import {COVEO_SHOPIFY_CONFIG_KEY} from '../constants';
-import {AppProxyResponse} from '../types';
+import type {CoveoShopifyOptions} from '../types';
 import {publishCustomShopifyEvent} from '../utilities/shopify';
 
-export {COVEO_SHOPIFY_CONFIG_KEY} from '../constants';
-
 export * from '@coveo/headless/commerce';
+export * from '../constants';
+export type * from '../types';
 export * from '../utilities';
-
-export type {AppProxyConfig, AppProxyResponse} from '../types';
 
 export interface BuildShopifyCommerceEngineOptions {
   commerceEngineOptions: CommerceEngineOptions;
@@ -30,7 +28,7 @@ export interface BuildShopifyCommerceEngineOptions {
 export function buildShopifyCommerceEngine({
   commerceEngineOptions,
 }: BuildShopifyCommerceEngineOptions) {
-  const appProxyResponse: AppProxyResponse = {
+  const options: CoveoShopifyOptions = {
     accessToken: commerceEngineOptions.configuration.accessToken,
     organizationId: commerceEngineOptions.configuration.organizationId,
     environment: commerceEngineOptions.configuration.environment,
@@ -40,7 +38,7 @@ export function buildShopifyCommerceEngine({
   const clientId = engine.relay.getMeta('').clientId;
 
   publishCustomShopifyEvent(COVEO_SHOPIFY_CONFIG_KEY, {
-    ...appProxyResponse,
+    ...options,
     clientId,
   });
 

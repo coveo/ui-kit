@@ -1,7 +1,7 @@
 import {pino} from 'pino';
 import {
   CommerceAPIClient,
-  CommerceAPIClientOptions,
+  type CommerceAPIClientOptions,
 } from '../api/commerce/commerce-api-client.js';
 import {NoopPreprocessRequest} from '../api/preprocess-request.js';
 

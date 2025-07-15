@@ -1,11 +1,11 @@
-import {SSRSearchEngine} from '../../app/search-engine/search-engine.ssr.js';
+import type {SSRSearchEngine} from '../../app/search-engine/search-engine.ssr.js';
 import {buildMockSSRSearchEngine} from '../../test/mock-engine-v2.js';
 import {createMockState} from '../../test/mock-state.js';
 import {MissingControllerProps} from '../../utils/errors.js';
 import {buildContext} from './headless-context.js';
 import {
-  ContextDefinition,
-  ContextProps,
+  type ContextDefinition,
+  type ContextProps,
   defineContext,
 } from './headless-context.ssr.js';
 

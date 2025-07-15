@@ -1,6 +1,6 @@
 import {
+  type LegacySearchAction,
   makeAnalyticsAction,
-  LegacySearchAction,
 } from '../../analytics/analytics-utils.js';
 
 //TODO: KIT-2859

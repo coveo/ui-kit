@@ -1,32 +1,32 @@
 /**
  * Utility functions to be used for Server Side Rendering.
  */
-import {UnknownAction} from '@reduxjs/toolkit';
+import type {UnknownAction} from '@reduxjs/toolkit';
 import type {Controller} from '../../controllers/controller/headless-controller.js';
-import {LegacySearchAction} from '../../features/analytics/analytics-utils.js';
+import type {LegacySearchAction} from '../../features/analytics/analytics-utils.js';
 import {createWaitForActionMiddleware} from '../../utils/utils.js';
 import {buildLogger} from '../logger.js';
-import {NavigatorContextProvider} from '../navigator-context-provider.js';
+import type {NavigatorContextProvider} from '../navigator-context-provider.js';
 import {augmentPreprocessRequestWithForwardedFor} from '../ssr-engine/augment-preprocess-request.js';
 import {
   buildControllerDefinitions,
   composeFunction,
   createStaticState,
 } from '../ssr-engine/common.js';
-import {
+import type {
   ControllerDefinitionsMap,
   EngineStaticState,
   InferControllerPropsMapFromDefinitions,
   InferControllerStaticStateMapFromDefinitions,
 } from '../ssr-engine/types/common.js';
-import {
+import type {
   EngineDefinition,
   EngineDefinitionOptions,
 } from '../ssr-engine/types/core-engine.js';
 import {
-  SearchEngine,
-  SearchEngineOptions,
   buildSearchEngine,
+  type SearchEngine,
+  type SearchEngineOptions,
 } from './search-engine.js';
 
 /**

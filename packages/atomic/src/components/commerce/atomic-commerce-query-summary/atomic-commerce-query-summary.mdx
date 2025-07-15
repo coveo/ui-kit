@@ -1,0 +1,42 @@
+import {Canvas, Markdown, ArgTypes, Meta, Title, Description, Controls, Primary, Stories, Subtitle} from '@storybook/blocks';
+import * as AtomicCommerceQuerySummaryStories from './atomic-commerce-query-summary.new.stories';
+import {CanvasWithGithub} from '../../../../storybook-utils/documentation/canvas-with-github';
+
+<Meta of={AtomicCommerceQuerySummaryStories} />
+
+<Title />
+<Subtitle ><Description/></Subtitle>
+
+
+<CanvasWithGithub
+  of={AtomicCommerceQuerySummaryStories.Default}
+  githubPath="commerce/atomic-commerce-query-summary/atomic-commerce-query-summary.ts"
+/>
+
+## Properties
+
+## Usage
+This component is typically placed within the "status" section of the layout.
+```html
+<atomic-commerce-interface>
+  ...
+  <atomic-commerce-layout>
+    ...
+    <atomic-layout-section section="main">
+      ...
+      <atomic-layout-section section="status">
+
+        <atomic-commerce-query-summary></atomic-commerce-query-summary>
+
+      </atomic-layout-section>
+    </atomic-layout-section>
+  </atomic-commerce-layout>
+</atomic-commerce-interface>
+```
+
+## Examples
+<Stories title={""}/>
+
+## Reference
+<ArgTypes />
+

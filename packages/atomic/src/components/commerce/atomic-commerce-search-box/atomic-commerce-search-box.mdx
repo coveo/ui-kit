@@ -1,0 +1,53 @@
+import {Canvas, ArgTypes, Meta, Title, Description, Subtitle, Stories} from '@storybook/blocks';
+import * as AtomicCommerceSearchBoxStories from './atomic-commerce-search-box.new.stories';
+import {CanvasWithGithub} from '../../../../storybook-utils/documentation/canvas-with-github';
+
+<Meta of={AtomicCommerceSearchBoxStories} />
+
+<Title />
+<Subtitle><Description/></Subtitle>
+
+<CanvasWithGithub
+  of={AtomicCommerceSearchBoxStories.Default}
+  githubPath="commerce/atomic-commerce-search-box/atomic-commerce-search-box.ts"
+/>
+
+## Usage
+This component is typically placed within the "search" section of the layout.
+```html
+<atomic-commerce-interface>
+  ...
+  <atomic-commerce-layout>
+    ...
+    <atomic-layout-section section="search">
+
+        <atomic-commerce-search-box></atomic-commerce-search-box>
+
+    </atomic-layout-section>
+  </atomic-commerce-layout>
+</atomic-commerce-interface>
+```
+
+By default, [atomic-commerce-search-box-recent-queries](/docs/atomic-commerce-search-box-recent-queries--docs) and [atomic-commerce-search-box-query-suggestions](/docs/atomic-commerce-search-box-query-suggestions--docs) are enabled.  
+You can include them inside the search box to customize their properties.
+
+To enable instant product results, you must explicitly include the [atomic-commerce-search-box-instant-products](/docs/atomic-commerce-search-box-instant-products--docs) component inside the search box.
+
+
+```html
+<atomic-commerce-search-box>
+  <atomic-commerce-search-box-recent-queries max-queries="8"></atomic-commerce-search-box-recent-queries>
+  <atomic-commerce-search-box-query-suggestions max-suggestions="6"></atomic-commerce-search-box-query-suggestions>
+  <atomic-commerce-search-box-instant-products image-size="small">
+    <atomic-product-template>
+       ...
+    </atomic-product-template>
+  </atomic-commerce-search-box-instant-products>
+</atomic-commerce-search-box>
+```
+
+## Examples
+<Stories title={""}/>
+
+## Reference
+<ArgTypes />

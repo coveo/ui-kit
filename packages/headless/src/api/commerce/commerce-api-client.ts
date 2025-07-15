@@ -1,40 +1,40 @@
-import {Logger} from 'pino';
-import {CommerceThunkExtraArguments} from '../../app/commerce-thunk-extra-arguments.js';
-import {CommerceAppState} from '../../state/commerce-app-state.js';
-import {PlatformEnvironment} from '../../utils/url-utils.js';
+import type {Logger} from 'pino';
+import type {CommerceThunkExtraArguments} from '../../app/commerce-thunk-extra-arguments.js';
+import type {CommerceAppState} from '../../state/commerce-app-state.js';
+import type {PlatformEnvironment} from '../../utils/url-utils.js';
 import {
   getOrganizationEndpoint,
   PlatformClient,
-  PlatformClientCallOptions,
+  type PlatformClientCallOptions,
 } from '../platform-client.js';
-import {PreprocessRequest} from '../preprocess-request.js';
-import {SpecificFacetSearchResponse} from '../search/facet-search/specific-facet-search/specific-facet-search-response.js';
+import type {PreprocessRequest} from '../preprocess-request.js';
+import type {SpecificFacetSearchResponse} from '../search/facet-search/specific-facet-search/specific-facet-search-response.js';
 import {buildAPIResponseFromErrorOrThrow} from '../search/search-api-error-response.js';
-import {
+import type {
   CommerceAPIErrorResponse,
   CommerceAPIErrorStatusResponse,
 } from './commerce-api-error-response.js';
 import {
+  type FilterableCommerceAPIRequest,
   getRequestOptions,
-  FilterableCommerceAPIRequest,
 } from './common/request.js';
-import {CommerceSuccessResponse} from './common/response.js';
-import {
+import type {CommerceSuccessResponse} from './common/response.js';
+import type {
   CommerceFacetSearchRequest,
   FacetSearchType,
 } from './facet-search/facet-search-request.js';
 import {
-  CommerceRecommendationsRequest,
   buildRecommendationsRequest,
+  type CommerceRecommendationsRequest,
 } from './recommendations/recommendations-request.js';
-import {RecommendationsCommerceSuccessResponse} from './recommendations/recommendations-response.js';
+import type {RecommendationsCommerceSuccessResponse} from './recommendations/recommendations-response.js';
 import {
   getQuerySuggestRequestOptions,
-  QuerySuggestRequest,
+  type QuerySuggestRequest,
 } from './search/query-suggest/query-suggest-request.js';
-import {QuerySuggestSuccessResponse} from './search/query-suggest/query-suggest-response.js';
-import {CommerceSearchRequest} from './search/request.js';
-import {SearchCommerceSuccessResponse} from './search/response.js';
+import type {QuerySuggestSuccessResponse} from './search/query-suggest/query-suggest-response.js';
+import type {CommerceSearchRequest} from './search/request.js';
+import type {SearchCommerceSuccessResponse} from './search/response.js';
 
 export interface CommerceFacetSearchAPIClient {
   facetSearch(

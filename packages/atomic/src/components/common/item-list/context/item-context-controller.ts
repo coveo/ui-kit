@@ -1,6 +1,6 @@
-import {InitializableComponent} from '@/src/decorators/types.js';
+import type {LitElement, ReactiveController, ReactiveControllerHost} from 'lit';
+import type {InitializableComponent} from '@/src/decorators/types.js';
 import {buildCustomEvent} from '@/src/utils/event-utils';
-import {LitElement, ReactiveController, ReactiveControllerHost} from 'lit';
 
 type LitElementWithError = Omit<
   Pick<InitializableComponent, 'error'>,
@@ -20,33 +20,35 @@ export class MissingParentError extends Error {
   }
 }
 
-function extractFolded(
+function extractFolded<T = Record<string, unknown>>(
   item: Record<string, unknown>,
   returnFolded: boolean
-): Record<string, unknown> {
+): T {
   if (returnFolded) {
     if ('children' in item) {
-      return item;
+      return item as T;
     } else {
-      return {children: [], result: item};
+      return {children: [], result: item} as T;
     }
   }
 
   if ('children' in item && 'result' in item) {
-    return item.result as Record<string, unknown>;
+    return item.result as T;
   }
-  return item;
+  return item as T;
 }
 
 /**
  * A reactive controller that manages item context data from parent components.
  * Handles fetching item data via custom events and manages error states.
  */
-export class ItemContextController implements ReactiveController {
+export class ItemContextController<T = Record<string, unknown>>
+  implements ReactiveController
+{
   private host: ReactiveControllerHost & LitElementWithError;
   private parentName: string;
   private folded: boolean;
-  private _item: Record<string, unknown> | null = null;
+  private _item: T | null = null;
   private _error: MissingParentError | null = null;
 
   constructor(
@@ -59,7 +61,7 @@ export class ItemContextController implements ReactiveController {
     host.addController(this);
   }
 
-  get item(): Record<string, unknown> | null {
+  get item(): T | null {
     return this._error ? null : this._item;
   }
 
@@ -79,7 +81,7 @@ export class ItemContextController implements ReactiveController {
     const event = buildCustomEvent(
       itemContextEventName,
       (item: Record<string, unknown>) => {
-        this._item = extractFolded(item, this.folded);
+        this._item = extractFolded<T>(item, this.folded);
         this._error = null;
         this.host.error = null;
         this.host.requestUpdate();

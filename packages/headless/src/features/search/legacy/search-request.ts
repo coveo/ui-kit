@@ -1,9 +1,9 @@
-import {EventDescription} from 'coveo.analytics';
-import {SearchAppState} from '../../../state/search-app-state.js';
-import {ConfigurationSection} from '../../../state/state-sections.js';
+import type {EventDescription} from 'coveo.analytics';
+import type {SearchAppState} from '../../../state/search-app-state.js';
+import type {ConfigurationSection} from '../../../state/state-sections.js';
 import {getFacets} from '../../../utils/facet-utils.js';
-import {AutomaticFacetRequest} from '../../facets/automatic-facet-set/interfaces/request.js';
-import {AutomaticFacetResponse} from '../../facets/automatic-facet-set/interfaces/response.js';
+import type {AutomaticFacetRequest} from '../../facets/automatic-facet-set/interfaces/request.js';
+import type {AutomaticFacetResponse} from '../../facets/automatic-facet-set/interfaces/response.js';
 import {maximumNumberOfResultsFromIndex} from '../../pagination/pagination-constants.js';
 import {buildSearchAndFoldingLoadCollectionRequest} from '../../search-and-folding/legacy/search-and-folding-request.js';
 import {mapSearchRequest} from '../search-mappings.js';

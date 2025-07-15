@@ -3,7 +3,7 @@ import {
   registerComponentForInit,
   initializeWithHeadless,
 } from 'c/quanticHeadlessLoader';
-import {LightningElement, api} from 'lwc';
+import {LightningElement, api, wire} from 'lwc';
 // @ts-ignore
 import defaultTemplate from './resultTemplates/defaultResultTemplate.html';
 // @ts-ignore
@@ -12,6 +12,7 @@ import youtubeTemplate from './resultTemplates/youtubeResultTemplate.html';
 import {buildAttachedResultsPayloadHeadless} from 'c/attachToCaseUtils';
 // @ts-ignore
 import {getAllAttachedResults} from 'c/attachToCaseService';
+import {getRecord} from 'lightning/uiRecordApi';
 
 export default class ExampleInsightPanel extends LightningElement {
   /** @type {string} */
@@ -19,10 +20,39 @@ export default class ExampleInsightPanel extends LightningElement {
   /** @type {string} */
   @api insightId = '142be676-703c-445f-b2d3-fcc7c0a3ded8';
   /** @type {string} */
-  @api caseId;
+  @api caseId = '1234';
 
   /** @type {boolean} */
   isInitAttachedResults = false;
+  /** @type {boolean} */
+  triggeredFirstSearch = false;
+  /** @type {object} */
+  caseRecord;
+
+  caseFields = [
+    'Case.CreatedDate',
+    'Case.CreatedBy.Email',
+    'Case.CaseNumber',
+    'Case.Subject',
+    'Case.Description',
+  ];
+
+  @wire(getRecord, {recordId: '$caseId', fields: '$caseFields'})
+  wiredRecord({data, error}) {
+    if (data) {
+      if (!this.triggeredFirstSearch) {
+        this.caseRecord = data;
+      } else {
+        if (this.watchedFieldsUpdated(data)) {
+          this.caseRecord = data;
+          this.executeSearchAfterContextChanged();
+        }
+      }
+    } else {
+      console.warn('An error occurred while retrieving the record.');
+      console.warn(error);
+    }
+  }
 
   loadAttachedResults() {
     getAllAttachedResults(this.caseId)
@@ -73,9 +103,15 @@ export default class ExampleInsightPanel extends LightningElement {
     this.actions = {
       ...this.headless.loadCaseContextActions(engine),
       ...this.headless.loadAttachedResultsActions(engine),
+      ...this.headless.loadInsightSearchAnalyticsActions(engine),
+      ...this.headless.loadInsightSearchActions(engine),
     };
 
+    this.caseNumber =
+      this.getFieldValueFromRecord(this.caseRecord, 'Case.CaseNumber') ||
+      '1234'; // Default case number if example insight panel is not on a case record page.
     this.engine.dispatch(this.actions.setCaseId(this.caseId));
+    this.engine.dispatch(this.actions.setCaseNumber(this.caseNumber));
     this.initAttachedResults();
   };
 
@@ -99,7 +135,10 @@ export default class ExampleInsightPanel extends LightningElement {
 
   handleInterfaceLoad = (event) => {
     event.stopPropagation();
-    this.engine.executeFirstSearch();
+    if (!this.triggeredFirstSearch) {
+      this.triggeredFirstSearch = true;
+      this.executeFirstSearch();
+    }
   };
 
   handleResultTemplateRegistration(event) {
@@ -124,4 +163,83 @@ export default class ExampleInsightPanel extends LightningElement {
       }
     );
   }
+
+  /**
+   * Indicates whether the watched fields of a case record have been updated.
+   * @param {object} newRecordData the new case record data
+   * @returns {boolean}
+   */
+  watchedFieldsUpdated(newRecordData) {
+    return Object.values(this.caseFields)?.reduce((result, field) => {
+      const previousValue = this.getFieldValueFromRecord(
+        this.caseRecord,
+        field
+      );
+      const newValue = this.getFieldValueFromRecord(newRecordData, field);
+      return result || previousValue !== newValue;
+    }, false);
+  }
+
+  /**
+   * Returns the value of a record field.
+   * This function expects the fieldName to be in the following format "Case.Contact.Name".
+   * @param {{fields: any}} record The case record
+   * @param {string} fieldName The case field name
+   * @returns {string}
+   */
+  getFieldValueFromRecord(record, fieldName) {
+    let innerKeys = fieldName.split('.');
+    if (!record || !innerKeys.length) return null;
+    if (innerKeys[0].toLowerCase() === 'case') {
+      innerKeys = innerKeys.slice(1);
+    }
+    if (innerKeys.length === 1) return record.fields?.[innerKeys[0]]?.value;
+    return this.getFieldValueFromRecord(
+      record.fields?.[innerKeys[0]]?.value,
+      innerKeys.slice(1).join('.')
+    );
+  }
+
+  /**
+   * Setup the case context.
+   * @returns {void}
+   */
+  setupContext() {
+    const subject = this.getFieldValueFromRecord(
+      this.caseRecord,
+      'Case.Subject'
+    );
+    const description = this.getFieldValueFromRecord(
+      this.caseRecord,
+      'Case.Description'
+    );
+    const context = {
+      Case_ID: this.caseId,
+      ...(subject ? {Case_Subject: subject} : {}),
+      ...(description ? {Case_Description: description} : {}),
+    };
+    this.engine.dispatch(this.actions.setCaseContext(context));
+  }
+
+  /**
+   * Executes a search after detecting context change.
+   * @returns {void}
+   */
+  executeSearchAfterContextChanged() {
+    this.setupContext();
+    this.engine.dispatch(
+      this.actions.executeSearch(
+        this.actions.logContextChanged(this.caseId, this.caseNumber)
+      )
+    );
+  }
+
+  /**
+   * Executes the first search.
+   * @returns {void}
+   */
+  executeFirstSearch = () => {
+    this.setupContext();
+    this.engine.executeFirstSearch();
+  };
 }

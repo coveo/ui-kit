@@ -1,26 +1,29 @@
-import {CommerceEngine} from '../../../../../app/commerce-engine/commerce-engine.js';
+import type {CommerceEngine} from '../../../../../app/commerce-engine/commerce-engine.js';
 import {stateKey} from '../../../../../app/state-key.js';
 import {
   toggleSelectCategoryFacetValue,
   updateCategoryFacetNumberOfValues,
 } from '../../../../../features/commerce/facets/category-facet/category-facet-actions.js';
-import {CategoryFacetValueRequest} from '../../../../../features/commerce/facets/facet-set/interfaces/request.js';
-import {defaultNumberOfValuesIncrement} from '../../../../../features/facets/category-facet-set/category-facet-set-actions.js';
+import {facetRequestSelector} from '../../../../../features/commerce/facets/facet-set/facet-set-selector.js';
+import type {
+  CategoryFacetRequest,
+  CategoryFacetValueRequest,
+} from '../../../../../features/commerce/facets/facet-set/interfaces/request.js';
 import {findActiveValueAncestry} from '../../../../../features/facets/category-facet-set/category-facet-utils.js';
 import {categoryFacetSearchStateSelector} from '../../../../../features/facets/facet-search-set/category/category-facet-search-state-selector.js';
 import {
-  CategoryFacetValue,
-  CoreCommerceFacet,
-  CoreCommerceFacetOptions,
-  CoreCommerceFacetState,
-  FacetControllerType,
   buildCoreCommerceFacet,
+  type CategoryFacetValue,
+  type CoreCommerceFacet,
+  type CoreCommerceFacetOptions,
+  type CoreCommerceFacetState,
+  type FacetControllerType,
 } from '../headless-core-commerce-facet.js';
-import {SearchableFacetOptions} from '../searchable/headless-commerce-searchable-facet.js';
+import type {SearchableFacetOptions} from '../searchable/headless-commerce-searchable-facet.js';
 import {
-  CategoryFacetSearch,
-  CategoryFacetSearchState,
   buildCategoryFacetSearch,
+  type CategoryFacetSearch,
+  type CategoryFacetSearchState,
 } from './headless-commerce-category-facet-search.js';
 
 export type CategoryFacetOptions = Omit<
@@ -94,14 +97,18 @@ export function buildCategoryFacet(
   const {deselectAll, isValueSelected, subscribe, toggleSelect} =
     coreController;
   const {dispatch} = engine;
-  const getFacetId = () => coreController.state.facetId;
+  const {facetId} = options;
+
   const facetSearch = buildCategoryFacetSearch(engine, {
-    options: {facetId: getFacetId(), ...options.facetSearch},
+    options: {facetId, ...options.facetSearch},
     select: () => {
       dispatch(options.fetchProductsActionCreator());
     },
     isForFieldSuggestions: false,
   });
+
+  const getRequest = () =>
+    facetRequestSelector(engine[stateKey], facetId)! as CategoryFacetRequest;
 
   return {
     deselectAll,
@@ -110,25 +117,36 @@ export function buildCategoryFacet(
     toggleSelect,
 
     showMoreValues() {
-      const {facetId} = options;
-      const {activeValue, values} = this.state;
-      const numberOfValues =
-        (activeValue?.children.length ?? values.length) +
-        defaultNumberOfValuesIncrement;
+      const {initialNumberOfValues, values, numberOfValues} = getRequest();
 
-      dispatch(updateCategoryFacetNumberOfValues({facetId, numberOfValues}));
-      dispatch(options.fetchProductsActionCreator());
-    },
+      if (!initialNumberOfValues && !numberOfValues) {
+        return;
+      }
 
-    showLessValues() {
-      const {facetId} = options;
+      const newNumberOfValues =
+        values.length + (initialNumberOfValues ?? numberOfValues)!;
 
       dispatch(
         updateCategoryFacetNumberOfValues({
           facetId,
-          numberOfValues: defaultNumberOfValuesIncrement,
+          numberOfValues: newNumberOfValues,
         })
       );
+
+      dispatch(options.fetchProductsActionCreator());
+    },
+
+    showLessValues() {
+      const request = getRequest();
+      const numberOfValues = request.initialNumberOfValues ?? 1;
+
+      dispatch(
+        updateCategoryFacetNumberOfValues({
+          facetId,
+          numberOfValues,
+        })
+      );
+
       dispatch(options.fetchProductsActionCreator());
     },
 
@@ -137,7 +155,8 @@ export function buildCategoryFacet(
     get state() {
       return getCategoryFacetState(
         coreController.state,
-        categoryFacetSearchStateSelector(engine[stateKey], getFacetId())
+        categoryFacetSearchStateSelector(engine[stateKey], facetId),
+        getRequest()
       );
     },
 
@@ -147,19 +166,27 @@ export function buildCategoryFacet(
 
 export const getCategoryFacetState = (
   coreState: CoreCommerceFacetState<CategoryFacetValue>,
-  facetSearchSelector: ReturnType<typeof categoryFacetSearchStateSelector>
+  facetSearchSelector: ReturnType<typeof categoryFacetSearchStateSelector>,
+  request: CategoryFacetRequest | undefined
 ): CategoryFacetState => {
   const {values} = coreState;
   const selectedValueAncestry = findActiveValueAncestry(values);
   const activeValue = selectedValueAncestry.length
     ? selectedValueAncestry[selectedValueAncestry.length - 1]
     : undefined;
-  const canShowLessValues = activeValue
-    ? activeValue.children.length > defaultNumberOfValuesIncrement
-    : false;
-  const canShowMoreValues =
-    activeValue?.moreValuesAvailable ?? coreState.canShowMoreValues ?? false;
-  const hasActiveValues = !!activeValue;
+  const initialNumberOfValues = request?.initialNumberOfValues;
+
+  const canShowLessValues =
+    !!initialNumberOfValues &&
+    (activeValue
+      ? initialNumberOfValues < activeValue.children.length
+      : initialNumberOfValues <
+        (request!.numberOfValues ?? coreState.values.length));
+
+  const canShowMoreValues = activeValue
+    ? activeValue.moreValuesAvailable
+    : coreState.canShowMoreValues;
+
   return {
     ...coreState,
     activeValue,
@@ -172,7 +199,7 @@ export const getCategoryFacetState = (
       query: facetSearchSelector?.options.query ?? '',
       values: facetSearchSelector?.response.values ?? [],
     },
-    hasActiveValues,
+    hasActiveValues: !!activeValue,
     selectedValueAncestry,
     type: 'hierarchical',
     values,

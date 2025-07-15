@@ -39,9 +39,7 @@ export function isResultSectionNode(element: Node) {
 
 export function containsSections(content: string | NodeList | HTMLCollection) {
   if (typeof content === 'string') {
-    return Array.from(resultSectionTags.values()).some((resultSectionTag) =>
-      content.includes(resultSectionTag)
-    );
+    return Array.from(allTags.values()).some((tag) => content.includes(tag));
   }
   return Array.from(content).some((child) => isResultSectionNode(child));
 }

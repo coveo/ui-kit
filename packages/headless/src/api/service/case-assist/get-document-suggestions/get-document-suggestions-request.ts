@@ -1,4 +1,4 @@
-import {
+import type {
   BaseParam,
   ClientIDParam,
   ContextParam,
@@ -6,11 +6,11 @@ import {
   LocaleParam,
   NumberOfResultsParam,
 } from '../../../platform-service-params.js';
-import {AnalyticsParam} from '../../../search/search-api-params.js';
+import type {AnalyticsParam} from '../../../search/search-api-params.js';
 import {
   baseCaseAssistRequest,
-  CaseAssistIdParam,
-  FieldsParam,
+  type CaseAssistIdParam,
+  type FieldsParam,
   prepareSuggestionRequestFields,
 } from '../case-assist-params.js';
 
@@ -29,10 +29,10 @@ export const buildGetDocumentSuggestionsRequest = (
 ) => {
   const queryStringArguments: Record<string, string> = {};
   if (req.debug) {
-    queryStringArguments['debug'] = '1';
+    queryStringArguments.debug = '1';
   }
   if (req.numberOfResults) {
-    queryStringArguments['numberOfResults'] = req.numberOfResults.toString();
+    queryStringArguments.numberOfResults = req.numberOfResults.toString();
   }
 
   return {

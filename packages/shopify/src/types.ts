@@ -1,17 +1,17 @@
-import {CommerceEngineOptions} from '@coveo/headless/commerce';
+import type {CommerceEngineOptions} from '@coveo/headless/commerce';
 
-export interface AppProxyConfig {
+export interface AppProxyOptions {
   appProxyUrl?: string;
   marketId: string;
 }
 
-export interface AppProxyResponse {
+export interface CoveoShopifyOptions {
   accessToken: string;
   organizationId: string;
   environment: CommerceEngineOptions['configuration']['environment'];
   trackingId: string;
 }
 
-export type CoveoShopifyCustomEvent = AppProxyResponse & {
+export interface CoveoShopifyCustomEvent extends CoveoShopifyOptions {
   clientId: string;
-};
+}

@@ -1,3 +1,9 @@
+## <small>1.0.19 (2025-07-02)</small>
+
+* chore(lint): integrate biome (#5507) ([53bcada](https://github.com/coveo/ui-kit/commits/53bcada)), closes [#5507](https://github.com/coveo/ui-kit/issues/5507)
+
+
+
 ## <small>1.0.18 (2025-06-18)</small>
 
 - chore(deps): update vite to v3.2.3 j:kit-282 (#5475) ([32f2b2e](https://github.com/coveo/ui-kit/commits/32f2b2e)), closes [#5475](https://github.com/coveo/ui-kit/issues/5475)

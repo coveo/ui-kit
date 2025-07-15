@@ -1,3 +1,25 @@
+## <small>3.27.2 (2025-07-09)</small>
+
+* chore(deps): update dependency typedoc to v0.28.7 j:kit-282 (#5591) ([f769419](https://github.com/coveo/ui-kit/commits/f769419)), closes [#5591](https://github.com/coveo/ui-kit/issues/5591)
+* fix(headless commerce): ensure headless uses the same relay reference between engine and thunk (#557 ([915daea](https://github.com/coveo/ui-kit/commits/915daea)), closes [#5578](https://github.com/coveo/ui-kit/issues/5578) [/github.com/coveo/ui-kit/blob/9e01022db1d190ed5f8c13fd720b83886a32a3f9/packages/headless/src/app/commerce-engine/commerce-engine.ts#L138](https://github.com//github.com/coveo/ui-kit/blob/9e01022db1d190ed5f8c13fd720b83886a32a3f9/packages/headless/src/app/commerce-engine/commerce-engine.ts/issues/L138)
+* fix(headless): add previous selection state to facet state object. (#5544) ([c05dd1a](https://github.com/coveo/ui-kit/commits/c05dd1a)), closes [#5544](https://github.com/coveo/ui-kit/issues/5544)
+* fix(headless): send action cause in legacy analytics mode (#5566) ([9e01022](https://github.com/coveo/ui-kit/commits/9e01022)), closes [#5566](https://github.com/coveo/ui-kit/issues/5566) [/github.com/coveo/ui-kit/blob/fix/SVCC-5218/packages/headless/src/features/search/search-actions.ts#L118](https://github.com//github.com/coveo/ui-kit/blob/fix/SVCC-5218/packages/headless/src/features/search/search-actions.ts/issues/L118) [/github.com/coveo/ui-kit/blob/fix/SVCC-5218/packages/headless/src/features/search/search-actions.ts#L126](https://github.com//github.com/coveo/ui-kit/blob/fix/SVCC-5218/packages/headless/src/features/search/search-actions.ts/issues/L126)
+
+
+
+## <small>3.27.1 (2025-07-02)</small>
+
+* chore(headless): deprecate restoreTab action (KIT-4398) (#5527) ([e5f54e7](https://github.com/coveo/ui-kit/commits/e5f54e7)), closes [#5527](https://github.com/coveo/ui-kit/issues/5527)
+* chore(lint): integrate biome (#5507) ([53bcada](https://github.com/coveo/ui-kit/commits/53bcada)), closes [#5507](https://github.com/coveo/ui-kit/issues/5507)
+
+
+
+## 3.27.0 (2025-06-25)
+
+- fix(deps): update all dependencies j:kit-282 (#5522) ([ee7a9ab](https://github.com/coveo/ui-kit/commits/ee7a9ab)), closes [#5522](https://github.com/coveo/ui-kit/issues/5522)
+- fix(headless commerce): support show more / show less on root category facet values (#5466) ([90229d6](https://github.com/coveo/ui-kit/commits/90229d6)), closes [#5466](https://github.com/coveo/ui-kit/issues/5466)
+- feat(headless): support domain property on date / numeric range facet controller states (#5497) ([4f26dec](https://github.com/coveo/ui-kit/commits/4f26dec)), closes [#5497](https://github.com/coveo/ui-kit/issues/5497)
+
 ## <small>3.26.1 (2025-06-18)</small>
 
 - chore(deps): update vite to v3.2.3 j:kit-282 (#5475) ([32f2b2e](https://github.com/coveo/ui-kit/commits/32f2b2e)), closes [#5475](https://github.com/coveo/ui-kit/issues/5475)

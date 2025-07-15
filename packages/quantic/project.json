@@ -41,6 +41,28 @@
         "script": "promote:sfdx:ci"
       }
     },
+    "lint:check": {
+      "executor": "nx:run-commands",
+      "options": {
+        "commands": [
+          "eslint force-app/main/default/lwc/",
+          "eslint force-app/examples/main/lwc/",
+          "prettier \"force-app/{,**}/*.js\" --check"
+        ],
+        "cwd": "{projectRoot}"
+      }
+    },
+    "lint:fix": {
+      "executor": "nx:run-commands",
+      "options": {
+        "commands": [
+          "eslint --fix force-app/main/default/lwc/",
+          "eslint --fix force-app/examples/main/lwc/",
+          "prettier \"force-app/{,**}/*.js\" --write"
+        ],
+        "cwd": "{projectRoot}"
+      }
+    },
     "test": {
       "executor": "nx:run-commands",
       "outputs": ["{projectRoot}/coverage"],

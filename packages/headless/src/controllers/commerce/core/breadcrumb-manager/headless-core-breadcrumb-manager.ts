@@ -1,5 +1,5 @@
 import {createSelector} from '@reduxjs/toolkit';
-import {
+import type {
   CommerceEngine,
   CommerceEngineState,
 } from '../../../../app/commerce-engine/commerce-engine.js';
@@ -14,8 +14,8 @@ import {
   toggleSelectDateFacetValue,
 } from '../../../../features/commerce/facets/date-facet/date-facet-actions.js';
 import {commerceFacetSetReducer as commerceFacetSet} from '../../../../features/commerce/facets/facet-set/facet-set-slice.js';
-import {FacetType} from '../../../../features/commerce/facets/facet-set/interfaces/common.js';
-import {
+import type {FacetType} from '../../../../features/commerce/facets/facet-set/interfaces/common.js';
+import type {
   AnyFacetResponse,
   AnyFacetValueResponse,
   BaseFacetValue,
@@ -36,19 +36,19 @@ import {
 } from '../../../../features/commerce/facets/regular-facet/regular-facet-actions.js';
 import {findActiveValueAncestry} from '../../../../features/facets/category-facet-set/category-facet-utils.js';
 import {facetOrderReducer as facetOrder} from '../../../../features/facets/facet-order/facet-order-slice.js';
-import {
+import type {
   CommerceFacetSetSection,
   FacetOrderSection,
 } from '../../../../state/state-sections.js';
 import {loadReducerError} from '../../../../utils/errors.js';
-import {
+import type {
   BreadcrumbValue,
   CoreBreadcrumbManager,
   DeselectableValue,
 } from '../../../breadcrumb-manager/headless-breadcrumb-manager.js';
 import {buildController} from '../../../controller/headless-controller.js';
-import {ToggleActionCreator} from '../common.js';
-import {CoreCommerceFacetOptions} from '../facets/headless-core-commerce-facet.js';
+import type {ToggleActionCreator} from '../common.js';
+import type {CoreCommerceFacetOptions} from '../facets/headless-core-commerce-facet.js';
 
 export type {BreadcrumbValue, DeselectableValue};
 
@@ -238,7 +238,7 @@ export function buildCoreBreadcrumbManager(
         value: activeValue,
         deselect: () => {
           dispatch(
-            actions['hierarchical'].toggleSelectActionCreator({
+            actions.hierarchical.toggleSelectActionCreator({
               facetId: facet.facetId,
             })
           );

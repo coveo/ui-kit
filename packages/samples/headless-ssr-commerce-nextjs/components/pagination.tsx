@@ -30,6 +30,7 @@ export default function Pagination() {
         Page {state.page + 1} of {state.totalPages}
       </div>
       <button
+        type="button"
         className="PreviousPage"
         disabled={methods === undefined || state.page === 0}
         onClick={methods?.previousPage}
@@ -38,6 +39,7 @@ export default function Pagination() {
       </button>
       {renderPageRadioButtons()}
       <button
+        type="button"
         className="NextPage"
         disabled={methods === undefined || state.page === state.totalPages - 1}
         onClick={methods?.nextPage}

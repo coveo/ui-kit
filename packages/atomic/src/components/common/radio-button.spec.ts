@@ -1,10 +1,10 @@
-import {createRipple} from '@/src/utils/ripple';
 import {fireEvent, within} from '@storybook/test';
 import {html, render} from 'lit';
-import {vi, describe, beforeEach, afterEach, it, expect} from 'vitest';
-import {radioButton, RadioButtonProps} from './radio-button';
+import {afterEach, beforeEach, describe, expect, it, vi} from 'vitest';
+import {createRipple} from '@/src/utils/ripple';
+import {type RadioButtonProps, renderRadioButton} from './radio-button';
 
-vi.mock('@/src/utils/ripple');
+vi.mock('../../utils/ripple');
 
 describe('radioButton', () => {
   let container: HTMLElement;
@@ -18,11 +18,11 @@ describe('radioButton', () => {
     document.body.removeChild(container);
   });
 
-  const renderRadioButton = (
+  const renderComponent = (
     props: Partial<RadioButtonProps>
   ): HTMLInputElement => {
     render(
-      html`${radioButton({props: {...props, groupName: 'test-group'}})}`,
+      html`${renderRadioButton({props: {...props, groupName: 'test-group'}})}`,
       container
     );
 
@@ -36,7 +36,7 @@ describe('radioButton', () => {
       ariaLabel: 'Test Radio Button',
     };
 
-    const input = renderRadioButton(props);
+    const input = renderComponent(props);
 
     expect(input).toBeInTheDocument();
     expect(input.name).toBe('test-group');
@@ -52,7 +52,7 @@ describe('radioButton', () => {
       onChecked,
     };
 
-    const input = renderRadioButton(props);
+    const input = renderComponent(props);
     await fireEvent.click(input);
 
     await expect(onChecked).toHaveBeenCalled();
@@ -68,9 +68,9 @@ describe('radioButton', () => {
     };
 
     render(
-      html`${radioButton({props: {...props, text: 'radio-1'}})}
-      ${radioButton({props: {...props, text: 'radio-2'}})}
-      ${radioButton({props: {...props, text: 'radio-3'}})}`,
+      html`${renderRadioButton({props: {...props, text: 'radio-1'}})}
+      ${renderRadioButton({props: {...props, text: 'radio-2'}})}
+      ${renderRadioButton({props: {...props, text: 'radio-3'}})}`,
       container
     );
 
@@ -94,7 +94,7 @@ describe('radioButton', () => {
       style: 'primary',
     };
 
-    const input = renderRadioButton(props);
+    const input = renderComponent(props);
     await fireEvent.mouseDown(input);
 
     await expect(mockedRipple).toHaveBeenCalledWith(expect.anything(), {
@@ -107,7 +107,7 @@ describe('radioButton', () => {
       class: 'test-class',
     };
 
-    const input = renderRadioButton(props);
+    const input = renderComponent(props);
     expect(input).toBeInTheDocument();
     expect(input.classList.contains('test-class')).toBe(true);
     expect(input.classList.contains('btn-radio')).toBe(true);
@@ -119,7 +119,7 @@ describe('radioButton', () => {
       part: 'test-part',
     };
 
-    const input = renderRadioButton(props);
+    const input = renderComponent(props);
     expect(input.getAttribute('part')).toBe('test-part');
   });
 
@@ -130,7 +130,7 @@ describe('radioButton', () => {
       ref,
     };
 
-    render(html`${radioButton({props})}`, container);
+    render(html`${renderRadioButton({props})}`, container);
 
     expect(ref).toHaveBeenCalled();
   });
@@ -140,7 +140,7 @@ describe('radioButton', () => {
       ariaCurrent: 'page',
     };
 
-    renderRadioButton(props);
+    renderComponent(props);
     expect(
       within(container).getByRole('radio', {current: 'page'})
     ).toBeInTheDocument();

@@ -1,9 +1,9 @@
 import {configuration} from '../../../../../app/common-reducers.js';
-import {CoreEngine} from '../../../../../app/engine.js';
+import type {CoreEngine} from '../../../../../app/engine.js';
 import {facetOptionsReducer as facetOptions} from '../../../../../features/facet-options/facet-options-slice.js';
 import {deselectAllFacetValues} from '../../../../../features/facets/facet-set/facet-set-actions.js';
 import {
-  RegisterDateFacetActionCreatorPayload,
+  type RegisterDateFacetActionCreatorPayload,
   registerDateFacet,
 } from '../../../../../features/facets/range-facets/date-facet-set/date-facet-actions.js';
 import {
@@ -11,37 +11,35 @@ import {
   executeToggleDateFacetSelect,
 } from '../../../../../features/facets/range-facets/date-facet-set/date-facet-controller-actions.js';
 import {dateFacetSetReducer as dateFacetSet} from '../../../../../features/facets/range-facets/date-facet-set/date-facet-set-slice.js';
-import {
+import type {
   DateFacetRequest,
   DateRangeRequest,
 } from '../../../../../features/facets/range-facets/date-facet-set/interfaces/request.js';
-import {
+import type {
   DateFacetResponse,
   DateFacetValue,
 } from '../../../../../features/facets/range-facets/date-facet-set/interfaces/response.js';
-import {RangeFacetSortCriterion} from '../../../../../features/facets/range-facets/generic/interfaces/request.js';
+import type {RangeFacetSortCriterion} from '../../../../../features/facets/range-facets/generic/interfaces/request.js';
 import {searchReducer as search} from '../../../../../features/search/search-slice.js';
 import {selectActiveTab} from '../../../../../features/tab-set/tab-set-selectors.js';
-import {
+import type {
   ConfigurationSection,
   DateFacetSection,
   FacetOptionsSection,
   SearchSection,
 } from '../../../../../state/state-sections.js';
 import {loadReducerError} from '../../../../../utils/errors.js';
-import {Controller} from '../../../../controller/headless-controller.js';
+import type {Controller} from '../../../../controller/headless-controller.js';
 import {determineFacetId} from '../../_common/facet-id-determinor.js';
+import {assertRangeFacetOptions} from '../core-range-facet-utils.js';
+import {buildCoreRangeFacet} from '../headless-core-range-facet.js';
 import {
-  assertRangeFacetOptions,
-  buildCoreRangeFacet,
-} from '../headless-core-range-facet.js';
-import {
-  DateRangeOptions,
-  DateRangeInput,
   buildDateRange,
+  type DateRangeInput,
+  type DateRangeOptions,
 } from './date-range.js';
 import {
-  DateFacetOptions,
+  type DateFacetOptions,
   validateDateFacetOptions,
 } from './headless-date-facet-options.js';
 

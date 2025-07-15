@@ -1,4 +1,4 @@
-import {Controller} from '../../../controllers/controller/headless-controller.js';
+import type {Controller} from '../../../controllers/controller/headless-controller.js';
 import type {
   ControllersMap,
   ControllersPropsMap,
@@ -6,8 +6,8 @@ import type {
   OptionsExtender,
   OptionsTuple,
 } from '../../ssr-engine/types/common.js';
-import {SSRCommerceEngine} from '../factories/build-factory.js';
-import {
+import type {SSRCommerceEngine} from '../factories/build-factory.js';
+import type {
   ControllerDefinitionsMap,
   EngineDefinitionControllersPropsOption,
   SolutionType,
@@ -23,18 +23,13 @@ export type Build<
   TControllersProps extends ControllersPropsMap,
   TControllersDefinitionsMap extends ControllerDefinitionsMap<Controller>,
   TSolutionType extends SolutionType,
-> = {
-  /**
-   * Initializes an engine and controllers from the definition.
-   */
-  (
-    ...params: OptionsTuple<
-      BuildOptions<TEngineOptions> &
-        EngineDefinitionControllersPropsOption<
-          TControllersDefinitionsMap,
-          TControllersProps,
-          TSolutionType
-        >
-    >
-  ): Promise<EngineDefinitionBuildResult<SSRCommerceEngine, TControllersMap>>;
-};
+> = (
+  ...params: OptionsTuple<
+    BuildOptions<TEngineOptions> &
+      EngineDefinitionControllersPropsOption<
+        TControllersDefinitionsMap,
+        TControllersProps,
+        TSolutionType
+      >
+  >
+) => Promise<EngineDefinitionBuildResult<SSRCommerceEngine, TControllersMap>>;

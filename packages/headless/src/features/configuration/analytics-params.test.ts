@@ -1,12 +1,12 @@
-import {EventDescription} from 'coveo.analytics';
+import type {EventDescription} from 'coveo.analytics';
 import {getAnalyticsSource} from '../../api/analytics/analytics-selectors.js';
-import {AnalyticsParam} from '../../api/search/search-api-params.js';
+import type {AnalyticsParam} from '../../api/search/search-api-params.js';
 import {
   defaultNodeJSNavigatorContextProvider,
-  NavigatorContext,
+  type NavigatorContext,
 } from '../../app/navigator-context-provider.js';
 import {fromAnalyticsStateToAnalyticsParams} from './analytics-params.js';
-import {AnalyticsState} from './configuration-state.js';
+import type {AnalyticsState} from './configuration-state.js';
 
 vi.mock('../../api/analytics/analytics-selectors.js');
 

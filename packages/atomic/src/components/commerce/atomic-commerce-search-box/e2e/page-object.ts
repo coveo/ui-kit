@@ -1,7 +1,7 @@
-import {BasePageObject} from '@/playwright-utils/base-page-object';
 import type {Page} from '@playwright/test';
+import {BasePageObject} from '@/playwright-utils/lit-base-page-object';
 
-export class SearchBoxPageObject extends BasePageObject<'atomic-commerce-search-box'> {
+export class SearchBoxPageObject extends BasePageObject {
   constructor(page: Page) {
     super(page, 'atomic-commerce-search-box');
   }

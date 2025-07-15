@@ -1,8 +1,8 @@
+import type {i18n} from 'i18next';
+import {html} from 'lit';
+import {beforeAll, describe, expect, it, vi} from 'vitest';
 import {renderFunctionFixture} from '@/vitest-utils/testing-helpers/fixture';
 import {createTestI18n} from '@/vitest-utils/testing-helpers/i18n-utils';
-import {i18n} from 'i18next';
-import {html} from 'lit';
-import {expect, describe, beforeAll, it, vi} from 'vitest';
 import {renderBreadcrumbContent} from './breadcrumb-content';
 import {getFirstBreadcrumbValue} from './breadcrumb-utils';
 
@@ -180,6 +180,60 @@ describe('#renderBreadcrumbContent', () => {
       const {value} = await renderWithContent();
       expect(value).toHaveClass('ml-1');
       expect(value).not.toHaveClass('max-w-[30ch] truncate selected');
+    });
+  });
+
+  describe('when the breadcrumb label contains special characters', () => {
+    it('should render ampersands without escaping', async () => {
+      const {label} = await renderComponent({
+        breadcrumb: {
+          label: 'Brand & Co.',
+          state: 'selected' as const,
+          facetId: 'test-facet',
+          formattedValue: ['test'],
+          deselect: () => {},
+        },
+      });
+      expect(label).toHaveTextContent('Brand & Co.:');
+    });
+
+    it('should render less-than and greater-than symbols without escaping', async () => {
+      const {label} = await renderComponent({
+        breadcrumb: {
+          label: 'Size < 10',
+          state: 'selected' as const,
+          facetId: 'test-facet',
+          formattedValue: ['test'],
+          deselect: () => {},
+        },
+      });
+      expect(label).toHaveTextContent('Size < 10:');
+    });
+
+    it('should render quotes without escaping', async () => {
+      const {label} = await renderComponent({
+        breadcrumb: {
+          label: 'Category "Premium"',
+          state: 'selected' as const,
+          facetId: 'test-facet',
+          formattedValue: ['test'],
+          deselect: () => {},
+        },
+      });
+      expect(label).toHaveTextContent('Category "Premium":');
+    });
+
+    it('should render apostrophes without escaping', async () => {
+      const {label} = await renderComponent({
+        breadcrumb: {
+          label: "Women's Brand",
+          state: 'selected' as const,
+          facetId: 'test-facet',
+          formattedValue: ['test'],
+          deselect: () => {},
+        },
+      });
+      expect(label).toHaveTextContent("Women's Brand:");
     });
   });
 });

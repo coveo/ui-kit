@@ -1,9 +1,13 @@
-import {SSRCommerceEngine} from '../../../app/commerce-ssr-engine/factories/build-factory.js';
+import type {SSRCommerceEngine} from '../../../app/commerce-ssr-engine/factories/build-factory.js';
 import {buildMockCommerceState} from '../../../test/mock-commerce-state.js';
 import {buildMockSSRCommerceEngine} from '../../../test/mock-engine-v2.js';
 import {MissingControllerProps} from '../../../utils/errors.js';
-import {buildContext, ContextOptions, Context} from './headless-context.js';
-import {ContextDefinition, defineContext} from './headless-context.ssr.js';
+import {
+  buildContext,
+  type Context,
+  type ContextOptions,
+} from './headless-context.js';
+import {type ContextDefinition, defineContext} from './headless-context.ssr.js';
 
 vi.mock('./headless-context');
 const buildContextMock = vi.mocked(buildContext);

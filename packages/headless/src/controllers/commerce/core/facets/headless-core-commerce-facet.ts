@@ -1,4 +1,4 @@
-import {CommerceEngine} from '../../../../app/commerce-engine/commerce-engine.js';
+import type {CommerceEngine} from '../../../../app/commerce-engine/commerce-engine.js';
 import {stateKey} from '../../../../app/state-key.js';
 import {
   deselectAllValuesInCoreFacet,
@@ -7,13 +7,13 @@ import {
 } from '../../../../features/commerce/facets/core-facet/core-facet-actions.js';
 import {facetRequestSelector} from '../../../../features/commerce/facets/facet-set/facet-set-selector.js';
 import {commerceFacetSetReducer as commerceFacetSet} from '../../../../features/commerce/facets/facet-set/facet-set-slice.js';
-import {FacetType} from '../../../../features/commerce/facets/facet-set/interfaces/common.js';
-import {
+import type {FacetType} from '../../../../features/commerce/facets/facet-set/interfaces/common.js';
+import type {
   AnyFacetRequest,
   CategoryFacetValueRequest,
   LocationFacetValueRequest,
 } from '../../../../features/commerce/facets/facet-set/interfaces/request.js';
-import {
+import type {
   AnyFacetResponse,
   AnyFacetValueResponse,
   BaseFacetValue,
@@ -23,18 +23,21 @@ import {
   NumericFacetValue,
   RegularFacetValue,
 } from '../../../../features/commerce/facets/facet-set/interfaces/response.js';
-import {FacetValueRequest} from '../../../../features/facets/facet-set/interfaces/request.js';
-import {AnyFacetValueRequest} from '../../../../features/facets/generic/interfaces/generic-facet-request.js';
-import {CommerceFacetSetSection} from '../../../../state/state-sections.js';
+import type {FacetValueRequest} from '../../../../features/facets/facet-set/interfaces/request.js';
+import type {AnyFacetValueRequest} from '../../../../features/facets/generic/interfaces/generic-facet-request.js';
+import type {CommerceFacetSetSection} from '../../../../state/state-sections.js';
 import {loadReducerError} from '../../../../utils/errors.js';
 import {buildController} from '../../../controller/headless-controller.js';
-import {
-  CoreFacet as HeadlessCoreFacet,
+import type {
   CoreFacetState,
+  CoreFacet as HeadlessCoreFacet,
 } from '../../../core/facets/facet/headless-core-facet.js';
-import {DateRangeRequest} from '../../../core/facets/range-facet/date-facet/headless-core-date-facet.js';
-import {NumericRangeRequest} from '../../../core/facets/range-facet/numeric-facet/headless-core-numeric-facet.js';
-import {FetchProductsActionCreator, ToggleActionCreator} from '../common.js';
+import type {DateRangeRequest} from '../../../core/facets/range-facet/date-facet/headless-core-date-facet.js';
+import type {NumericRangeRequest} from '../../../core/facets/range-facet/numeric-facet/headless-core-numeric-facet.js';
+import type {
+  FetchProductsActionCreator,
+  ToggleActionCreator,
+} from '../common.js';
 
 export type {
   FacetType,
@@ -192,9 +195,6 @@ export function buildCoreCommerceFacet<
         props.options.toggleSelectActionCreator({
           selection,
           facetId,
-          ...('retrieveCount' in selection
-            ? {retrieveCount: selection.retrieveCount}
-            : {}),
         })
       );
       dispatch(props.options.fetchProductsActionCreator());

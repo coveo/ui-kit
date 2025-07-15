@@ -1,8 +1,8 @@
 import {setCaseAssistConfiguration} from './case-assist-configuration-actions.js';
 import {caseAssistConfigurationReducer} from './case-assist-configuration-slice.js';
 import {
+  type CaseAssistConfigurationState,
   getCaseAssistConfigurationInitialState,
-  CaseAssistConfigurationState,
 } from './case-assist-configuration-state.js';
 
 describe('case assist slice', () => {

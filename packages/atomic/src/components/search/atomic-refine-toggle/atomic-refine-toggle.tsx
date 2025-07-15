@@ -9,8 +9,8 @@ import {
   InitializableComponent,
   BindStateToController,
 } from '../../../utils/initialization-utils';
-import {RefineToggleButton} from '../../common/refine-modal/button';
-import {RefineToggleGuard} from '../../common/refine-modal/guard';
+import {RefineToggleButton} from '../../common/refine-modal/stencil-button';
+import {RefineToggleGuard} from '../../common/refine-modal/stencil-guard';
 import {Bindings} from '../atomic-search-interface/atomic-search-interface';
 
 /**

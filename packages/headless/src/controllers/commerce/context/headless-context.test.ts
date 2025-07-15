@@ -4,13 +4,13 @@ import {
   setView,
 } from '../../../features/commerce/context/context-actions.js';
 import {contextReducer} from '../../../features/commerce/context/context-slice.js';
-import {CommerceContextState} from '../../../features/commerce/context/context-state.js';
+import type {CommerceContextState} from '../../../features/commerce/context/context-state.js';
 import {buildMockCommerceState} from '../../../test/mock-commerce-state.js';
 import {
-  MockedCommerceEngine,
   buildMockCommerceEngine,
+  type MockedCommerceEngine,
 } from '../../../test/mock-engine-v2.js';
-import {buildContext, Context} from './headless-context.js';
+import {buildContext, type Context} from './headless-context.js';
 
 vi.mock('../../../features/commerce/context/context-actions');
 

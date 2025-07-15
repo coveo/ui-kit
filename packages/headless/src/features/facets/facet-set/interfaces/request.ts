@@ -1,14 +1,14 @@
-import {
-  BaseFacetRequest,
-  CurrentValues,
-  Freezable,
-  Type,
-  SortCriteria,
-  BaseFacetValueRequest,
-  Expandable,
+import type {
   AllowedValues,
+  BaseFacetRequest,
+  BaseFacetValueRequest,
+  CurrentValues,
   CustomSort,
+  Expandable,
+  Freezable,
+  SortCriteria,
   SpecificSortCriteriaExplicitAlphanumeric,
+  Type,
 } from '../../facet-api/request.js';
 
 export const facetSortCriteria: FacetSortCriterion[] = [

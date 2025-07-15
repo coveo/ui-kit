@@ -1,5 +1,6 @@
-import {Sort, SortState} from '@coveo/headless/commerce';
+import type {Sort, SortState} from '@coveo/headless/commerce';
 import {vi} from 'vitest';
+import {genericSubscribe} from '../common';
 
 export const defaultState = {
   availableSorts: [
@@ -9,9 +10,7 @@ export const defaultState = {
 };
 
 export const defaultImplementation = {
-  subscribe: (subscribedFunction: () => void) => {
-    subscribedFunction();
-  },
+  subscribe: genericSubscribe,
   state: defaultState,
   sortBy: vi.fn(),
   isSortedBy: vi.fn(),

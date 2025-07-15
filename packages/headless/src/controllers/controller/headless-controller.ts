@@ -1,4 +1,4 @@
-import {Unsubscribe} from '@reduxjs/toolkit';
+import type {Unsubscribe} from '@reduxjs/toolkit';
 import type {CoreEngine, CoreEngineNext} from '../../app/engine.js';
 
 export interface Subscribable {
@@ -56,7 +56,7 @@ export function buildController<T extends object>(
       return () => {
         listeners.delete(symbol);
         if (hasNoListeners()) {
-          unsubscribe && unsubscribe();
+          unsubscribe?.();
         }
       };
     },

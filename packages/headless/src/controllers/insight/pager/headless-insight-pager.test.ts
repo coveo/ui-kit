@@ -1,14 +1,14 @@
 import {fetchPage} from '../../../features/insight-search/insight-search-actions.js';
 import {
   buildMockInsightEngine,
-  MockedInsightEngine,
+  type MockedInsightEngine,
 } from '../../../test/mock-engine-v2.js';
 import {buildMockInsightState} from '../../../test/mock-insight-state.js';
 import {
-  Pager,
-  PagerOptions,
-  PagerInitialState,
   buildPager,
+  type Pager,
+  type PagerInitialState,
+  type PagerOptions,
 } from './headless-insight-pager.js';
 
 vi.mock('../../../features/insight-search/insight-search-actions');

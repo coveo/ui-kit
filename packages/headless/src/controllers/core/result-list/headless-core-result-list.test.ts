@@ -1,5 +1,5 @@
 import {SchemaValidationError} from '@coveo/bueno';
-import {Mock} from 'vitest';
+import type {Mock} from 'vitest';
 import {configuration} from '../../../app/common-reducers.js';
 import {registerFieldsToInclude} from '../../../features/fields/fields-actions.js';
 import {fieldsReducer as fields} from '../../../features/fields/fields-slice.js';
@@ -7,11 +7,14 @@ import {fetchMoreResults} from '../../../features/search/search-actions.js';
 import {searchReducer as search} from '../../../features/search/search-slice.js';
 import {
   buildMockSearchEngine,
-  MockedSearchEngine,
+  type MockedSearchEngine,
 } from '../../../test/mock-engine-v2.js';
 import {buildMockResult} from '../../../test/mock-result.js';
 import {createMockState} from '../../../test/mock-state.js';
-import {buildCoreResultList, ResultList} from './headless-core-result-list.js';
+import {
+  buildCoreResultList,
+  type ResultList,
+} from './headless-core-result-list.js';
 
 vi.mock('../../../features/fields/fields-actions');
 vi.mock('../../../features/search/search-actions');

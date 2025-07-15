@@ -1,3 +1,7 @@
+import {buildInstantProducts} from '@coveo/headless/commerce';
+import {page} from '@vitest/browser/context';
+import {html} from 'lit';
+import {beforeEach, describe, expect, it, type MockInstance, vi} from 'vitest';
 import {buildCustomEvent} from '@/src/utils/event-utils';
 import {fixture} from '@/vitest-utils/testing-helpers/fixture';
 import {
@@ -5,11 +9,7 @@ import {
   renderInAtomicCommerceSearchBox,
 } from '@/vitest-utils/testing-helpers/fixtures/atomic/commerce/atomic-commerce-search-box-fixture';
 import {buildFakeInstantProducts} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/instant-products-controller';
-import {buildInstantProducts} from '@coveo/headless/commerce';
-import {page} from '@vitest/browser/context';
-import {html} from 'lit';
-import {describe, MockInstance, vi, expect, beforeEach, it} from 'vitest';
-import {
+import type {
   SearchBoxSuggestionElement,
   SearchBoxSuggestions,
 } from '../../common/suggestions/suggestions-common';

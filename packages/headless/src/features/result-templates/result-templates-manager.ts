@@ -1,13 +1,13 @@
-import {Result} from '../../api/search/search/result.js';
-import {CoreEngine, CoreEngineNext} from '../../app/engine.js';
+import type {Result} from '../../api/search/search/result.js';
+import type {CoreEngine, CoreEngineNext} from '../../app/engine.js';
 import {fieldsReducer as fields} from '../../features/fields/fields-slice.js';
-import {FieldsSection} from '../../state/state-sections.js';
+import type {FieldsSection} from '../../state/state-sections.js';
 import {loadReducerError} from '../../utils/errors.js';
 import {registerFieldsToInclude} from '../fields/fields-actions.js';
 import {
   buildTemplatesManager,
-  Template,
-  TemplateCondition,
+  type Template,
+  type TemplateCondition,
 } from '../templates/templates-manager.js';
 
 export type ResultTemplate<Content = unknown> = Template<Result, Content>;

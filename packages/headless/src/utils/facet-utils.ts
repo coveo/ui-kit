@@ -1,9 +1,9 @@
-import {FacetSetState} from '../features/facets/facet-set/facet-set-state.js';
+import type {FacetSetState} from '../features/facets/facet-set/facet-set-state.js';
 import {getFacetRequests} from '../features/facets/generic/interfaces/generic-facet-request.js';
-import {AnyFacetValue} from '../features/facets/generic/interfaces/generic-facet-response.js';
-import {RangeFacetSetState} from '../features/facets/range-facets/generic/interfaces/range-facet.js';
-import {SearchAppState} from '../state/search-app-state.js';
-import {ConfigurationSection} from '../state/state-sections.js';
+import type {AnyFacetValue} from '../features/facets/generic/interfaces/generic-facet-response.js';
+import type {RangeFacetSetState} from '../features/facets/range-facets/generic/interfaces/range-facet.js';
+import type {SearchAppState} from '../state/search-app-state.js';
+import type {ConfigurationSection} from '../state/state-sections.js';
 
 type StateNeededBySearchRequest = ConfigurationSection &
   Partial<SearchAppState>;
@@ -18,7 +18,9 @@ export function sortFacets<T extends {facetId: string}>(
   sortOrder: string[]
 ) {
   const payloadMap: Record<string, T> = {};
-  facets.forEach((f) => (payloadMap[f.facetId] = f));
+  facets.forEach((f) => {
+    payloadMap[f.facetId] = f;
+  });
 
   const sortedFacets: T[] = [];
   sortOrder.forEach((facetId) => {

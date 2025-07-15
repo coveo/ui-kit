@@ -1,11 +1,11 @@
 import {describe, expect, it} from 'vitest';
 import {buildDateRange} from '../../../controllers/core/facets/range-facet/date-facet/date-range.js';
 import {buildNumericRange} from '../../../controllers/core/facets/range-facet/numeric-facet/numeric-range.js';
-import {CommerceSearchParameters} from '../search-parameters/search-parameters-actions.js';
+import type {CommerceSearchParameters} from '../search-parameters/search-parameters-actions.js';
 import {buildFieldsSortCriterion, SortDirection} from '../sort/sort.js';
 import {
-  searchSerializer,
   productListingSerializer,
+  searchSerializer,
 } from './parameters-serializer.js';
 
 describe('searchSerializer', () => {

@@ -4,26 +4,26 @@ import {
   updateCoreFacetNumberOfValues,
 } from '../../../../features/commerce/facets/core-facet/core-facet-actions.js';
 import {commerceFacetSetReducer as commerceFacetSet} from '../../../../features/commerce/facets/facet-set/facet-set-slice.js';
-import {AnyFacetRequest} from '../../../../features/commerce/facets/facet-set/interfaces/request.js';
-import {RegularFacetResponse} from '../../../../features/commerce/facets/facet-set/interfaces/response.js';
+import type {AnyFacetRequest} from '../../../../features/commerce/facets/facet-set/interfaces/request.js';
+import type {RegularFacetResponse} from '../../../../features/commerce/facets/facet-set/interfaces/response.js';
 import {
   toggleExcludeFacetValue,
   toggleSelectFacetValue,
 } from '../../../../features/commerce/facets/regular-facet/regular-facet-actions.js';
-import {CommerceAppState} from '../../../../state/commerce-app-state.js';
+import type {CommerceAppState} from '../../../../state/commerce-app-state.js';
 import {buildMockCommerceFacetRequest} from '../../../../test/mock-commerce-facet-request.js';
 import {buildMockCommerceRegularFacetResponse} from '../../../../test/mock-commerce-facet-response.js';
 import {buildMockCommerceFacetSlice} from '../../../../test/mock-commerce-facet-slice.js';
 import {buildMockCommerceRegularFacetValue} from '../../../../test/mock-commerce-facet-value.js';
 import {buildMockCommerceState} from '../../../../test/mock-commerce-state.js';
 import {
-  MockedCommerceEngine,
   buildMockCommerceEngine,
+  type MockedCommerceEngine,
 } from '../../../../test/mock-engine-v2.js';
-import {FacetValueState} from '../../../core/facets/facet/headless-core-facet.js';
+import type {FacetValueState} from '../../../core/facets/facet/headless-core-facet.js';
 import {
   buildCoreCommerceFacet,
-  CoreCommerceFacetOptions,
+  type CoreCommerceFacetOptions,
 } from './headless-core-commerce-facet.js';
 
 vi.mock('../../../../features/commerce/facets/core-facet/core-facet-actions');
@@ -114,19 +114,6 @@ describe('CoreCommerceFacet', () => {
     it('dispatches #fetchProductsActionCreator', () => {
       facet.toggleSelect(facetValue());
       expect(fetchProductsActionCreator).toHaveBeenCalled();
-    });
-
-    it('sets retrieveCount when provided in selection', () => {
-      const selection = {
-        ...facetValue(),
-        retrieveCount: 30,
-      };
-      facet.toggleSelect(selection);
-      expect(toggleSelectActionCreator).toHaveBeenCalledWith({
-        facetId,
-        selection,
-        retrieveCount: 30,
-      });
     });
   });
 

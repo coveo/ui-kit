@@ -20,6 +20,52 @@ yarn add @coveo/shopify
 
 ## Features
 
+### `init`
+
+Initializes the Coveo Shopify integration to ensure that web pixels work correctly. This function should be called on every page of your Shopify store to maintain consistent tracking and personalization.
+
+The `init` function publishes a custom event with the configuration data that the web pixels need to function properly.
+
+#### Parameters
+
+- `options` (required): A `CoveoShopifyOptions` object containing:
+  - `accessToken` (required): The access token for the Coveo API.
+  - `organizationId` (required): The organization ID.
+  - `environment` (required): The environment configuration ('dev', 'stg', 'prod', etc.).
+  - `trackingId` (required): The tracking ID for analytics.
+
+#### Returns
+
+This function doesn't return a value but publishes a custom event that web pixels can listen to.
+
+#### Example
+
+```typescript
+import {init} from '@coveo/shopify/utilities';
+
+// Initialize on every page
+init({
+  accessToken: 'your-access-token',
+  organizationId: 'your-org-id',
+  environment: 'prod',
+  trackingId: 'your-tracking-id',
+});
+```
+
+#### Usage with App Proxy Configuration
+
+You can combine the `init` function with `fetchAppProxyConfig` to initialize the integration:
+
+```typescript
+import {init, fetchAppProxyConfig} from '@coveo/shopify/utilities';
+
+const config = await fetchAppProxyConfig({
+  marketId: 'market_123432',
+});
+
+init(config);
+```
+
 ### `fetchAppProxyConfig`
 
 Fetches the app proxy configuration for a given Shopify market.

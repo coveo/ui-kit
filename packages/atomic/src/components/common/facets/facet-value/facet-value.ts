@@ -1,5 +1,5 @@
-import {FunctionalComponent} from '@/src/utils/functional-component-utils';
-import {i18n} from 'i18next';
+import type {i18n} from 'i18next';
+import type {FunctionalComponent} from '@/src/utils/functional-component-utils';
 import {getFieldValueCaption} from '../../../../utils/field-utils';
 import {renderFacetValueBox} from '../facet-value-box/facet-value-box';
 import {renderFacetValueCheckbox} from '../facet-value-checkbox/facet-value-checkbox';
@@ -56,7 +56,7 @@ export const renderFacetValue: FunctionalComponent<FacetValueProps> = ({
           onClick: onSelect,
           searchQuery: facetSearchQuery,
           buttonRef: (element) => {
-            setRef && setRef(element as HTMLButtonElement | undefined);
+            setRef?.(element as HTMLButtonElement | undefined);
           },
         },
       })(
@@ -79,7 +79,7 @@ export const renderFacetValue: FunctionalComponent<FacetValueProps> = ({
           onClick: onSelect,
           searchQuery: facetSearchQuery,
           buttonRef: (element) => {
-            setRef && setRef(element);
+            setRef?.(element);
           },
         },
       })(
@@ -102,7 +102,7 @@ export const renderFacetValue: FunctionalComponent<FacetValueProps> = ({
           onClick: onSelect,
           searchQuery: facetSearchQuery,
           buttonRef: (element) => {
-            setRef && setRef(element);
+            setRef?.(element);
           },
         },
       })(

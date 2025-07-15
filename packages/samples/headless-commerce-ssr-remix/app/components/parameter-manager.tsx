@@ -1,8 +1,8 @@
-import {usePersistQuery} from '@/app/hooks/use-recent-queries';
-import {useParameterManager} from '@/lib/commerce-engine';
 import {buildParameterSerializer} from '@coveo/headless-react/ssr-commerce';
 import {useSearchParams} from '@remix-run/react';
 import {useEffect, useMemo, useRef} from 'react';
+import {usePersistQuery} from '@/app/hooks/use-recent-queries';
+import {useParameterManager} from '@/lib/commerce-engine';
 
 export default function ParameterManager({url}: {url: string | null}) {
   const {state, methods} = useParameterManager();
@@ -21,6 +21,8 @@ export default function ParameterManager({url}: {url: string | null}) {
    * When the URL fragment changes, this effect deserializes it and synchronizes it into the
    * ParameterManager controller's state.
    */
+
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <>
   useEffect(() => {
     if (methods === undefined) {
       return;
@@ -42,6 +44,8 @@ export default function ParameterManager({url}: {url: string | null}) {
    * When the ParameterManager controller's state changes, this effect serializes it into the URL fragment and pushes the new URL
    * to the browser history.
    * */
+
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <>
   useEffect(() => {
     if (methods === undefined) {
       return;

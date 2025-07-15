@@ -1,9 +1,9 @@
-import {
-  RegularFacetValue,
-  NumericFacetValue,
-  DateFacetValue,
+import type {
   CategoryFacetValue,
+  DateFacetValue,
   LocationFacetValue,
+  NumericFacetValue,
+  RegularFacetValue,
 } from '../features/commerce/facets/facet-set/interfaces/response.js';
 
 export function buildMockCommerceRegularFacetValue(

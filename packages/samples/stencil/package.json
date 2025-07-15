@@ -9,9 +9,9 @@
     "e2e:watch": "cypress open --browser chrome --e2e"
   },
   "dependencies": {
-    "@coveo/atomic": "3.27.2",
-    "@coveo/bueno": "1.0.18",
-    "@coveo/headless": "3.26.1",
+    "@coveo/atomic": "3.28.0",
+    "@coveo/bueno": "1.0.19",
+    "@coveo/headless": "3.27.2",
     "@stencil/core": "4.20.0",
     "stencil-router-v2": "0.6.0"
   },
