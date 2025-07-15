@@ -2,16 +2,25 @@ import type {PropertyValues} from 'lit';
 
 type AdoptedNode = ChildNode & {contentFor?: string};
 
+export interface LightDOMWithSlots {
+  slots: {[name: string]: AdoptedNode[] | undefined};
+  _slotsInitialized: boolean;
+  adoptChildren(): void;
+  getSlotNameForChild(child: AdoptedNode): string;
+  isTextNodeEmpty(node: Text): boolean;
+  isSlotEmpty(slot: string): boolean;
+  yield(slot: string, defaultContent?: unknown): unknown[];
+}
+
 /**
- * Decorator that adds light DOM slot functionality to LitElement components.
+ * Mixin that adds light DOM slot functionality to LitElement components.
  *
- * This decorator enables components to render in the light DOM while still supporting
+ * This mixin enables components to render in the light DOM while still supporting
  * slot-based content distribution. It provides methods to adopt child nodes into slots,
  * check if slots are empty, and yield slot content with optional default fallbacks.
  *
  * Usage:
- *   @injectSlotsForNoShadowDOM()
- *   class MyComponent extends LitElement {
+ *   class MyComponent extends SlotsForNoShadowDOMMixin(LitElement) {
  *     render() {
  *       return html`
  *         <div class="header">${this.yield('header')}</div>
@@ -20,27 +29,26 @@ type AdoptedNode = ChildNode & {contentFor?: string};
  *     }
  *   }
  */
-export function injectSlotsForNoShadowDOM() {
-  return (target: {
-    // biome-ignore lint/suspicious/noExplicitAny: decorator target type
-    prototype: any;
-  }) => {
-    target.prototype.createRenderRoot = function () {
-      return this;
-    };
+// biome-ignore lint/suspicious/noExplicitAny: mixin needs to work with any class constructor
+export function SlotsForNoShadowDOMMixin<T extends new (...args: any[]) => any>(
+  Base: T
+  // biome-ignore lint/suspicious/noExplicitAny: mixin return type needs any for flexibility
+): T & (new (...args: any[]) => LightDOMWithSlots) {
+  class SlotsForNoShadowDOMClass extends Base implements LightDOMWithSlots {
+    slots: {[name: string]: AdoptedNode[] | undefined} = {};
+    _slotsInitialized = false;
 
-    const originalConnectedCallback = target.prototype.connectedCallback;
-    target.prototype.connectedCallback = function () {
+    createRenderRoot() {
+      return this;
+    }
+
+    connectedCallback() {
       this.slots = {};
       this._slotsInitialized = false;
+      super.connectedCallback?.();
+    }
 
-      if (originalConnectedCallback) {
-        originalConnectedCallback.call(this);
-      }
-    };
-
-    // Add adoptChildren method
-    target.prototype.adoptChildren = function () {
+    adoptChildren(): void {
       // Clear existing slots to prevent duplication
       this.slots = {};
 
@@ -56,11 +64,9 @@ export function injectSlotsForNoShadowDOM() {
       );
 
       this._slotsInitialized = true;
-    };
+    }
 
-    target.prototype.getSlotNameForChild = function (
-      child: AdoptedNode
-    ): string {
+    getSlotNameForChild(child: AdoptedNode): string {
       if (child instanceof Comment && child.nextSibling instanceof Element) {
         return this.getSlotNameForChild(child.nextSibling);
       }
@@ -70,13 +76,13 @@ export function injectSlotsForNoShadowDOM() {
       }
 
       return '';
-    };
+    }
 
-    target.prototype.isTextNodeEmpty = (node: Text): boolean => {
+    isTextNodeEmpty(node: Text): boolean {
       return !node.textContent || !node.textContent.trim();
-    };
+    }
 
-    target.prototype.isSlotEmpty = function (slot: string): boolean {
+    isSlotEmpty(slot: string): boolean {
       const content = this.slots[slot];
 
       return (
@@ -88,9 +94,9 @@ export function injectSlotsForNoShadowDOM() {
           );
         })
       );
-    };
+    }
 
-    target.prototype.yield = function (slot: string, defaultContent?: unknown) {
+    yield(slot: string, defaultContent?: unknown): unknown[] {
       if (!this._slotsInitialized) {
         this.adoptChildren();
       }
@@ -101,17 +107,20 @@ export function injectSlotsForNoShadowDOM() {
         ...(slotContent || []),
         ...(this.isSlotEmpty(slot) && defaultContent ? [defaultContent] : []),
       ];
-    };
+    }
 
-    const originalWillUpdate = target.prototype.willUpdate;
-    target.prototype.willUpdate = function (changedProperties: PropertyValues) {
-      if (originalWillUpdate) {
-        originalWillUpdate.call(this, changedProperties);
-      }
+    willUpdate(changedProperties: PropertyValues): void {
+      super.willUpdate?.(changedProperties);
 
       if (!this.hasUpdated && !this._slotsInitialized) {
         this.adoptChildren();
       }
-    };
-  };
+    }
+  }
+
+  return SlotsForNoShadowDOMClass as T &
+    (new (
+      // biome-ignore lint/suspicious/noExplicitAny: <>
+      ...args: any[]
+    ) => LightDOMWithSlots);
 }
