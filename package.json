@@ -42,8 +42,6 @@
     "@tsconfig/node20": "20.1.6",
     "@types/execa": "2.0.2",
     "@types/jest": "29.5.14",
-    "@typescript-eslint/eslint-plugin": "7.18.0",
-    "@typescript-eslint/parser": "7.18.0",
     "@vitest/browser": "3.2.1",
     "@types/node": "22.16.0",
     "aws-sdk": "2.1692.0",
