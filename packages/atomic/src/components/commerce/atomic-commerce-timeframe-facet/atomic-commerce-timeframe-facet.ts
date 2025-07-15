@@ -8,40 +8,55 @@ import {bindStateToController} from '@/src/decorators/bind-state';
 import {bindingGuard} from '@/src/decorators/binding-guard';
 import {bindings} from '@/src/decorators/bindings';
 import {errorGuard} from '@/src/decorators/error-guard';
-import {InitializableComponent} from '@/src/decorators/types';
+import type {InitializableComponent} from '@/src/decorators/types';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles.js';
 import {FocusTargetController} from '@/src/utils/accessibility-utils';
 import {parseDate} from '@/src/utils/date-utils';
 import {
-  DateFacet,
-  DateFilterRange,
+  type DateFacet,
+  type DateFilterRange,
   deserializeRelativeDate,
-  DateFacetValue,
-  DateFacetState,
-  DateRangeRequest,
-  SearchSummaryState,
-  ProductListingSummaryState,
-  Summary,
+  type DateFacetValue,
+  type DateFacetState,
+  type DateRangeRequest,
+  type SearchSummaryState,
+  type ProductListingSummaryState,
+  type Summary,
 } from '@coveo/headless/commerce';
-import {CSSResultGroup, html, LitElement, unsafeCSS} from 'lit';
+import {type CSSResultGroup, html, LitElement, unsafeCSS} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {when} from 'lit/directives/when.js';
 import {shouldDisplayInputForFacetRange} from '../../common/facets/facet-common';
-import {FacetInfo} from '../../common/facets/facet-common-store';
+import type {FacetInfo} from '../../common/facets/facet-common-store';
 import '../../common/facets/facet-date-input/atomic-facet-date-input/atomic-facet-date-input';
 import {initializePopover} from '../../common/facets/popover/popover-type';
-import {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface';
+import type {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface';
 import styles from './atomic-commerce-timeframe-facet.tw.css';
 
 /**
  * A facet is a list of values for a certain field occurring in the results.
  * An `atomic-commerce-timeframe-facet` displays a facet of the results for the current query as date intervals.
  *
- * @alpha
+ * @part facet - The wrapper for the entire facet.
+ * @part label-button - The header button to expand/collapse the facet.
+ * @part label-button-icon - The expand/collapse icon in the header.
+ * @part clear-button - The button to clear all selected values.
+ * @part clear-button-icon - The icon in the clear button.
+ * @part values - The container for the facet values list.
+ * @part value-link - A facet value button.
+ * @part value-link-selected - A selected facet value button.
+ * @part value-count - The result count for a facet value.
+ * @part value-label - The label text of a facet value.
+ * @part input-label - The label for date input fields.
+ * @part input-start - The start date input field.
+ * @part input-end - The end date input field.
+ * @part input-apply-button - The button to apply date range selection.
+ *
+ * @internal
  */
 @customElement('atomic-commerce-timeframe-facet')
-@bindings()
 @withTailwindStyles
+@bindings()
 export class AtomicCommerceTimeframeFacet
   extends LitElement
   implements InitializableComponent<CommerceBindings>
@@ -87,6 +102,8 @@ export class AtomicCommerceTimeframeFacet
   @state() private inputRange?: DateFilterRange;
 
   private headerFocus?: FocusTargetController;
+
+  // TODO: check if this is needed
   private unsubscribeFacetController?: () => void;
 
   private get displayName() {
@@ -114,6 +131,7 @@ export class AtomicCommerceTimeframeFacet
   disconnectedCallback(): void {
     super.disconnectedCallback();
     if (!this.isConnected) {
+      // TODO: check if still needed
       this.unsubscribeFacetController?.();
       this.unsubscribeFacetController = undefined;
     }
@@ -182,10 +200,6 @@ export class AtomicCommerceTimeframeFacet
     return !!this.inputRange;
   }
 
-  private get isHidden() {
-    return !this.shouldRenderFacet;
-  }
-
   private resetRange() {
     this.inputRange = undefined;
     this.facet.setRanges([]);
@@ -196,9 +210,10 @@ export class AtomicCommerceTimeframeFacet
       label: () => this.bindings.i18n.t(this.displayName),
       facetId: this.facetState.facetId,
       element: this,
-      isHidden: () => this.isHidden,
+      isHidden: () => !this.shouldRenderFacet,
     };
 
+    // TODO: remove KIT-4549
     initializePopover(this, {
       ...facetInfo,
       hasValues: () => this.hasValues,
@@ -220,7 +235,7 @@ export class AtomicCommerceTimeframeFacet
           count: relativeDate.amount,
         }
       );
-    } catch (error) {
+    } catch (_error) {
       return this.bindings.i18n.t('to', {
         start: parseDate(facetValue.start).format('YYYY-MM-DD'),
         end: parseDate(facetValue.end).format('YYYY-MM-DD'),
@@ -286,7 +301,9 @@ export class AtomicCommerceTimeframeFacet
         numberOfActiveValues: this.numberOfSelectedValues,
         isCollapsed: this.isCollapsed,
         headingLevel: 0,
-        onToggleCollapse: () => (this.isCollapsed = !this.isCollapsed),
+        onToggleCollapse: () => {
+          this.isCollapsed = !this.isCollapsed;
+        },
         headerRef: (el) => this.focusTarget.setTarget(el),
       },
     });
@@ -315,12 +332,13 @@ export class AtomicCommerceTimeframeFacet
   }
 
   private ensureSubscribed() {
+    // TODO: check if this is needed...
     if (this.unsubscribeFacetController) {
       return;
     }
-    this.unsubscribeFacetController = this.facet?.subscribe(
-      () => (this.facetState = this.facet.state)
-    );
+    this.unsubscribeFacetController = this.facet?.subscribe(() => {
+      this.facetState = this.facet.state;
+    });
   }
 
   @bindingGuard()

@@ -12,7 +12,7 @@ const {play, decorator} = wrapInCommerceInterface({skipFirstRequest: true});
 
 const meta: Meta = {
   component: 'atomic-commerce-timeframe-facet',
-  title: 'Commerce/TimeframeFacet',
+  title: 'Commerce/atomic-commerce-timeframe-facet',
   id: 'atomic-commerce-timeframe-facet',
   render: renderComponent,
   decorators: [decorator],

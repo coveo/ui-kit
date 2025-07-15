@@ -1,18 +1,19 @@
+import {AnyBindings} from '@/src/components';
+import {renderButton} from '@/src/components/common/button';
 import {errorGuard} from '@/src/decorators/error-guard';
-import {LitElementWithError} from '@/src/decorators/types';
+import {injectStylesForNoShadowDOM} from '@/src/decorators/light-dom';
+import type {LitElementWithError} from '@/src/decorators/types';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles.js';
+import {parseDate} from '@/src/utils/date-utils';
 import {
   buildDateRange,
-  DateFilterRange,
-  DateRangeRequest,
+  type DateFilterRange,
+  type DateRangeRequest,
 } from '@coveo/headless';
-import {CSSResultGroup, html, LitElement, unsafeCSS} from 'lit';
+import {html, LitElement, unsafeCSS} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {ifDefined} from 'lit/directives/if-defined.js';
-import {createRef, ref, Ref} from 'lit/directives/ref.js';
-import {parseDate} from '../../../../../utils/date-utils';
-import {renderButton} from '../../../../common/button';
-import {AnyBindings} from '../../../interface/bindings';
+import {createRef, ref, type Ref} from 'lit/directives/ref.js';
 import styles from './atomic-facet-date-input.tw.css';
 
 /**
@@ -20,12 +21,13 @@ import styles from './atomic-facet-date-input.tw.css';
  * @internal
  */
 @customElement('atomic-facet-date-input')
-@withTailwindStyles
+@injectStylesForNoShadowDOM // TODO: check if can be removed
+@withTailwindStyles // TODO: check if can be removed
 export class AtomicFacetDateInput
   extends LitElement
   implements LitElementWithError
 {
-  static styles: CSSResultGroup = [unsafeCSS(styles)];
+  static styles = unsafeCSS(styles);
 
   @state() private start?: Date;
   @state() private end?: Date;
@@ -57,21 +59,26 @@ export class AtomicFacetDateInput
   /**
    * Validates that this component is only used within an atomic-commerce-timeframe-facet.
    * This is an internal component and should not be used directly by consumers.
-   * @private
    */
   private validateParentComponent(): void {
-    // Check if this component is being used within the expected parent
-    // The parent can be either a direct parent or the shadow host (outside shadow DOM)
+    const validParents = [
+      'atomic-commerce-timeframe-facet',
+      'atomic-timeframe-facet', // TODO: check that the non commerce date facet works as well
+    ];
     const parentElement = this.parentElement;
+
     const shadowHost =
       this.getRootNode() instanceof ShadowRoot
         ? (this.getRootNode() as ShadowRoot).host
         : null;
 
-    const isValidParent =
-      parentElement?.tagName.toLowerCase() ===
-        'atomic-commerce-timeframe-facet' ||
-      shadowHost?.tagName.toLowerCase() === 'atomic-commerce-timeframe-facet';
+    const hostElements = [parentElement, shadowHost].filter(
+      Boolean
+    ) as Element[];
+
+    const isValidParent = hostElements.some(({tagName}) =>
+      validParents.includes(tagName.toLowerCase())
+    );
 
     if (!isValidParent) {
       const error = new Error(
@@ -102,15 +109,18 @@ export class AtomicFacetDateInput
       return;
     }
 
-    this.dispatchEvent(
-      new CustomEvent('atomic/dateInputApply', {
-        detail: {
-          start: this.start,
-          end: this.end,
-        },
-        bubbles: true,
-      })
-    );
+    const eventDict = {
+      detail: {
+        start: this.start,
+        end: this.end,
+      },
+      bubbles: true,
+    };
+
+    this.dispatchEvent(new CustomEvent('atomic-date-input-apply', eventDict));
+
+    // Backwards compatibility for stencil components listening this event
+    this.dispatchEvent(new CustomEvent('atomic/dateInputApply', eventDict));
 
     const rangeRequest = buildDateRange({
       start: this.start!,
@@ -178,10 +188,11 @@ export class AtomicFacetDateInput
             this.end ? this.formattedDateValue(this.end) : this.max
           )}
           .value=${this.formattedDateValue(range?.start)}
-          @input=${(e: Event) =>
-            (this.start = parseDate(
+          @input=${(e: Event) => {
+            this.start = parseDate(
               (e.target as HTMLInputElement).value
-            ).toDate())}
+            ).toDate();
+          }}
         />
         <label
           part="input-label"
@@ -203,10 +214,9 @@ export class AtomicFacetDateInput
           min=${ifDefined(this.formattedDateValue(this.start) || this.min)}
           max=${ifDefined(this.max)}
           .value=${this.formattedDateValue(range?.end)}
-          @input=${(e: Event) =>
-            (this.end = parseDate(
-              (e.target as HTMLInputElement).value
-            ).toDate())}
+          @input=${(e: Event) => {
+            this.end = parseDate((e.target as HTMLInputElement).value).toDate();
+          }}
         />
         ${renderButton({
           props: {

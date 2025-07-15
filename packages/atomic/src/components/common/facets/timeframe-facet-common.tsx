@@ -351,7 +351,7 @@ export class TimeframeFacetCommon {
 
   private renderDateInput() {
     return (
-      <atomic-stencil-facet-date-input
+      <atomic-facet-date-input
         min={this.props.min}
         max={this.props.max}
         bindings={this.props.bindings}
@@ -361,7 +361,7 @@ export class TimeframeFacetCommon {
         rangeSetter={(request: DateRangeRequest) => {
           this.filter!.setRange(request);
         }}
-      ></atomic-stencil-facet-date-input>
+      ></atomic-facet-date-input>
     );
   }
 
