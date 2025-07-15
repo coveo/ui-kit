@@ -31,7 +31,7 @@
   "devDependencies": {
     "@actions/core": "1.11.1",
     "@actions/github": "6.0.1",
-    "@biomejs/biome": "2.0.6",
+    "@biomejs/biome": "2.1.0",
     "@commitlint/config-conventional": "19.8.1",
     "@commitlint/lint": "19.8.1",
     "@commitlint/load": "19.8.1",
@@ -49,7 +49,7 @@
     "concurrently": "9.2.0",
     "cspell": "8.19.4",
     "cz-conventional-changelog": "3.3.0",
-    "esbuild": "0.25.5",
+    "esbuild": "0.25.6",
     "esbuild-plugin-alias": "0.2.1",
     "esbuild-plugin-umd-wrapper": "3.0.0",
     "execa": "9.6.0",
