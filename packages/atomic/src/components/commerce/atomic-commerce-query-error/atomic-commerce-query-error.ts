@@ -1,32 +1,32 @@
 import {isNullOrUndefined} from '@coveo/bueno';
 import {
-  Search,
-  ProductListing,
-  SearchState,
-  ProductListingState,
   buildProductListing,
   buildSearch,
   getCommerceApiBaseUrl,
+  type ProductListing,
+  type ProductListingState,
+  type Search,
+  type SearchState,
 } from '@coveo/headless/commerce';
-import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles.js';
-import {bindings} from '@/src/decorators/bindings';
-import {bindStateToController} from '@/src/decorators/bind-state';
-import {LitElement, html} from 'lit';
+import {html, LitElement} from 'lit';
 import {customElement, state} from 'lit/decorators.js';
 import {when} from 'lit/directives/when.js';
-import {InitializableComponent} from '@/src/decorators/types';
+import {bindStateToController} from '@/src/decorators/bind-state';
+import {bindingGuard} from '@/src/decorators/binding-guard';
+import {bindings} from '@/src/decorators/bindings';
+import {errorGuard} from '@/src/decorators/error-guard';
+import type {InitializableComponent} from '@/src/decorators/types';
+import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles.js';
 import {AriaLiveRegionController} from '../../../utils/accessibility-utils';
-import {renderQueryErrorDetails} from '../../common/query-error/details';
-import {renderQueryErrorIcon} from '../../common/query-error/icon';
-import {renderQueryErrorShowMore} from '../../common/query-error/show-more';
 import {renderQueryErrorContainer} from '../../common/query-error/container';
 import {renderQueryErrorDescription} from '../../common/query-error/description';
+import {renderQueryErrorDetails} from '../../common/query-error/details';
+import {renderQueryErrorIcon} from '../../common/query-error/icon';
+import {renderQueryErrorLink} from '../../common/query-error/link';
+import {renderQueryErrorShowMore} from '../../common/query-error/show-more';
 import {renderQueryErrorTitle} from '../../common/query-error/title';
 import {getAriaMessageFromErrorType} from '../../common/query-error/utils';
-import {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface';
-import {renderQueryErrorLink} from '../../common/query-error/link';
-import {errorGuard} from '@/src/decorators/error-guard';
-import {bindingGuard} from '@/src/decorators/binding-guard';
+import type {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface';
 
 /**
  * The `atomic-commerce-query-error` component handles fatal errors when performing a query on the Commerce API. When the error is known, it displays a link to relevant documentation for debugging purposes. When the error is unknown, it displays a small text area with the JSON content of the error.
@@ -121,7 +121,9 @@ export class AtomicCommerceQueryError
           ${renderQueryErrorShowMore({
             props: {
               link: linkResult,
-              onShowMore: () => (this.showMoreInfo = !this.showMoreInfo),
+              onShowMore: () => {
+                this.showMoreInfo = !this.showMoreInfo;
+              },
               i18n,
             },
           })}
