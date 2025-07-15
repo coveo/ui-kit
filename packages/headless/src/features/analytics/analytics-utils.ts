@@ -61,7 +61,7 @@ import type {ResultWithFolding} from '../folding/folding-slice.js';
 import {getAllIncludedResultsFrom} from '../folding/folding-utils.js';
 import {getPipelineInitialState} from '../pipeline/pipeline-state.js';
 
-export interface PreparableAnalyticsActionOptions<
+interface PreparableAnalyticsActionOptions<
   StateNeeded extends ConfigurationSection,
 > {
   analyticsClientMiddleware: AnalyticsClientSendEventHook;
@@ -86,7 +86,7 @@ export function makeBasicNewSearchAnalyticsAction(
   };
 }
 
-export interface PreparedAnalyticsAction<
+interface PreparedAnalyticsAction<
   StateNeeded extends
     ConfigurationSection = StateNeededBySearchAnalyticsProvider,
 > {
@@ -101,7 +101,7 @@ type PrepareAnalyticsFunction<
   options: PreparableAnalyticsActionOptions<StateNeeded>
 ) => Promise<PreparedAnalyticsAction<StateNeeded>>;
 
-export interface PreparableAnalyticsAction<
+interface PreparableAnalyticsAction<
   StateNeeded extends
     ConfigurationSection = StateNeededBySearchAnalyticsProvider,
 > extends AnalyticsAsyncThunk<StateNeeded> {
@@ -129,14 +129,14 @@ export type InsightAction =
 export type CaseAssistAction =
   PreparableAnalyticsAction<StateNeededByCaseAssistAnalytics>;
 
-export interface AsyncThunkAnalyticsOptions<
+interface AsyncThunkAnalyticsOptions<
   T extends StateNeededBySearchAnalyticsProvider,
 > {
   state: T;
   extra: ThunkExtraArguments;
 }
 
-export interface AsyncThunkInsightAnalyticsOptions<
+interface AsyncThunkInsightAnalyticsOptions<
   T extends Partial<StateNeededByInsightAnalyticsProvider>,
 > {
   state: T;
@@ -217,7 +217,7 @@ function makePreparableAnalyticsAction<
   return rootAction as PreparableAnalyticsAction<StateNeeded>;
 }
 
-export type AnalyticsActionOptions<
+type AnalyticsActionOptions<
   LegacyStateNeeded extends StateNeededBySearchAnalyticsProvider,
   StateNeeded extends StateNeededBySearchAnalyticsProvider,
   LegacyGetBuilderType,
@@ -232,14 +232,14 @@ export type AnalyticsActionOptions<
     __legacy__getBuilder: LegacyGetBuilderType;
   };
 
-export interface NextAnalyticsOptions<
+interface NextAnalyticsOptions<
   StateNeeded extends InternalLegacyStateNeeded,
   PayloadType,
 > {
   analyticsType: string;
   analyticsPayloadBuilder: (state: StateNeeded) => PayloadType;
 }
-export interface LegacyAnalyticsOptions<
+interface LegacyAnalyticsOptions<
   StateNeeded extends InternalLegacyStateNeeded,
   Client,
   Provider,
@@ -580,10 +580,10 @@ export const makeInsightAnalyticsActionFactory = (actionCause: string) => {
   return makeInsightAnalyticsAction;
 };
 
-export const makeNoopAnalyticsAction = () =>
+const makeNoopAnalyticsAction = () =>
   makeAnalyticsAction('analytics/noop', () => null);
 
-export const noopSearchAnalyticsAction = (): LegacySearchAction =>
+const noopSearchAnalyticsAction = (): LegacySearchAction =>
   makeNoopAnalyticsAction();
 
 export const partialDocumentInformation = (

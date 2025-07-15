@@ -86,5 +86,5 @@ export interface FetchInstantResultsThunkReturn {
   duration: number;
 }
 
-export type StateNeededByInstantResults = StateNeededByExecuteSearch &
+type StateNeededByInstantResults = StateNeededByExecuteSearch &
   InstantResultSection;

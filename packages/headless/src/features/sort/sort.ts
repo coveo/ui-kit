@@ -30,14 +30,14 @@ export const buildRelevanceSortCriterion = (): SortByRelevance => ({
   by: SortBy.Relevance,
 });
 
-export const buildFieldsSortCriterion = (
+const buildFieldsSortCriterion = (
   fields: SortByFieldsFields[]
 ): SortByFields => ({
   by: SortBy.Fields,
   fields,
 });
 
-export const sortCriterionDefinition = new RecordValue({
+const sortCriterionDefinition = new RecordValue({
   options: {
     required: false,
   },

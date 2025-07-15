@@ -1,4 +1,4 @@
-export interface AdvancedSearchQueriesDefaultFiltersState {
+interface AdvancedSearchQueriesDefaultFiltersState {
   /**
    * The initial cq filter (e.g., `((q AND aq) OR dq) AND cq).
    */

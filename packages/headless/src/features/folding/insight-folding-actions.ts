@@ -18,18 +18,13 @@ import type {CollectionId} from '../folding/folding-state.js';
 import {fetchFromAPI} from '../insight-search/insight-search-actions.js';
 import {buildInsightLoadCollectionRequest} from '../insight-search/insight-search-request.js';
 
-export type {
-  RegisterFoldingActionCreatorPayload,
-  LoadCollectionFulfilledReturn,
-};
-
-export const registerFolding = createAction(
+const registerFolding = createAction(
   'folding/register',
   (payload: RegisterFoldingActionCreatorPayload) =>
     validatePayload(payload, foldingOptionsSchemaDefinition)
 );
 
-export type StateNeededByLoadCollection = ConfigurationSection &
+type StateNeededByLoadCollection = ConfigurationSection &
   FoldingSection &
   QuerySection &
   InsightConfigurationSection;

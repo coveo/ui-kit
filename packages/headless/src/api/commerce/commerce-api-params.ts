@@ -25,11 +25,11 @@ export interface ContextParam {
   context: ContextParams;
 }
 
-export interface ProductParam {
+interface ProductParam {
   productId: string;
 }
 
-export interface ContextParams {
+interface ContextParams {
   view: ViewParams;
   user?: UserParams;
   product?: ProductParam;

@@ -28,7 +28,7 @@ export interface AutomaticRanges<T extends boolean> {
   generateAutomaticRanges: T;
 }
 
-export interface RangeRequest<T extends string | number>
+interface RangeRequest<T extends string | number>
   extends BaseFacetValueRequest {
   /** The start value of the range.*/
   start: T;

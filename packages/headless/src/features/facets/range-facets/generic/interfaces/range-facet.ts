@@ -22,7 +22,7 @@ import type {NumericFacetSetState} from '../../numeric-facet-set/numeric-facet-s
 export type RangeFacetRequest = DateFacetRequest | NumericFacetRequest;
 export type RangeValueRequest = DateRangeRequest | NumericRangeRequest;
 export type RangeFacetSetState = DateFacetSetState | NumericFacetSetState;
-export type RangeFacetRegistrationOptions =
+type RangeFacetRegistrationOptions =
   | RegisterDateFacetActionCreatorPayload
   | RegisterNumericFacetActionCreatorPayload;
 export type RangeFacetValue = DateFacetValue | NumericFacetValue;

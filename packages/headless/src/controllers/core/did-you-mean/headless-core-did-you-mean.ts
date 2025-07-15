@@ -1,7 +1,4 @@
-import type {
-  QueryCorrection,
-  WordCorrection,
-} from '../../../api/search/search/query-corrections.js';
+import type {QueryCorrection} from '../../../api/search/search/query-corrections.js';
 import {configuration} from '../../../app/common-reducers.js';
 import type {CoreEngine} from '../../../app/engine.js';
 import {
@@ -21,8 +18,6 @@ import {
   buildController,
   type Controller,
 } from '../../controller/headless-controller.js';
-
-export type {QueryCorrection, WordCorrection};
 
 export interface DidYouMeanProps {
   options?: DidYouMeanOptions;

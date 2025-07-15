@@ -30,11 +30,11 @@ export type StateNeededByQuerySuggest = ConfigurationSection &
   QuerySetSection &
   Partial<ContextSection & PipelineSection & SearchHubSection>;
 
-export const idDefinition = {
+const idDefinition = {
   id: requiredNonEmptyString,
 };
 
-export interface QuerySuggestionID {
+interface QuerySuggestionID {
   id: string;
 }
 

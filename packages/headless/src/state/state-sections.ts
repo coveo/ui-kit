@@ -387,7 +387,7 @@ export interface FieldSuggestionsOrderSection {
   fieldSuggestionsOrder: FieldSuggestionsOrderState;
 }
 
-export interface StructuredSortSection {
+interface StructuredSortSection {
   /**
    * The information related to sort when using a structured sort format.
    */

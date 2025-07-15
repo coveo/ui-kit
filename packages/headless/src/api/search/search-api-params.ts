@@ -86,11 +86,11 @@ export interface RecommendationParam {
   recommendation: string;
 }
 
-export interface MachineLearningParam {
+interface MachineLearningParam {
   mlParameters: MachineLearningECommerceParameters;
 }
 
-export interface MachineLearningECommerceParameters {
+interface MachineLearningECommerceParameters {
   itemIds?: string[];
   categoryFilter?: string;
   brandFilter?: string;
@@ -99,7 +99,7 @@ export interface MachineLearningECommerceParameters {
   recentlySeenConsideredMinutes?: number;
 }
 
-export interface MaximumAgeParam {
+interface MaximumAgeParam {
   maximumAge: number;
 }
 
@@ -148,16 +148,16 @@ export interface PipelineRuleParams {
   pipelineRuleParameters?: PipelineRuleParameters;
 }
 
-export interface PipelineRuleParameters {
+interface PipelineRuleParameters {
   mlGenerativeQuestionAnswering?: GenQAParameters;
 }
 
-export interface GenQAParameters {
+interface GenQAParameters {
   responseFormat: ResponseFormatParameters;
   citationsFieldToInclude: string[];
 }
 
-export interface ResponseFormatParameters {
+interface ResponseFormatParameters {
   contentFormat?: GeneratedContentFormat[];
 }
 

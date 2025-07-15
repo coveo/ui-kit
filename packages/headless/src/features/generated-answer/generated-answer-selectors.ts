@@ -53,7 +53,7 @@ export const citationSourceSelector = createSelector(
     )
 );
 
-export const selectAnswerTriggerParams = createSelector(
+const selectAnswerTriggerParams = createSelector(
   (state) => selectQuery(state)?.q,
   (state) => state.search.requestId,
   (q, requestId) => ({q, requestId})

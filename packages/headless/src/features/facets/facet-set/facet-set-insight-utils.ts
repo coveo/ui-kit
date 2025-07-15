@@ -5,7 +5,7 @@ import {
 } from './facet-set-insight-analytics-actions.js';
 import type {FacetValue} from './interfaces/response.js';
 
-export const isFacetValueSelected = (value: FacetValue) => {
+const isFacetValueSelected = (value: FacetValue) => {
   return value.state === 'selected';
 };
 

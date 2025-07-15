@@ -43,8 +43,6 @@ import {
 } from './search-actions-thunk-processor.js';
 import {buildSearchRequest} from './search-request.js';
 
-export type {StateNeededByExecuteSearch} from './search-actions-thunk-processor.js';
-
 export interface ExecuteSearchThunkReturn {
   /** The successful search response. */
   response: SearchResponseSuccess;
@@ -68,7 +66,7 @@ interface PrepareForSearchWithQueryOptions {
   clearFilters: boolean;
 }
 
-export const prepareForSearchWithQuery = createAsyncThunk<
+const prepareForSearchWithQuery = createAsyncThunk<
   void,
   UpdateQueryActionCreatorPayload & PrepareForSearchWithQueryOptions,
   AsyncThunkOptions<StateNeededByExecuteSearch>
@@ -158,7 +156,7 @@ const buildFetchMoreRequest = async (
   return mappedRequest;
 };
 
-export const buildInstantResultSearchRequest = async (
+const buildInstantResultSearchRequest = async (
   state: StateNeededByExecuteSearch,
   q: string,
   numberOfResults: number
@@ -302,7 +300,7 @@ export async function legacyFetchMoreResults(
   return await processor.process(fetched);
 }
 
-export async function legacyFetchFacetValues(
+async function legacyFetchFacetValues(
   // biome-ignore lint/suspicious/noExplicitAny: <>
   config: any,
   searchAction: LegacySearchAction,

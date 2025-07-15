@@ -63,7 +63,7 @@ export interface FieldDescriptionsResponseSuccess {
   fields: FieldDescription[];
 }
 
-export type FieldDescriptions =
+type FieldDescriptions =
   | FieldDescriptionsResponseSuccess
   | SearchAPIErrorWithExceptionInBody
   | SearchAPIErrorWithStatusCode;

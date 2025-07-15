@@ -13,7 +13,7 @@ import type {
   NumericFacetExtraProperties,
 } from './common.js';
 
-export type FreezableFacetRequestProperties = {
+type FreezableFacetRequestProperties = {
   preventAutoSelect: boolean;
   freezeCurrentValues?: boolean;
 };
@@ -58,7 +58,7 @@ export type LocationFacetRequest = BaseCommerceFacetRequest<
   'location'
 >;
 
-export type BaseCommerceFacetRequest<Value, Type extends FacetType> = Pick<
+type BaseCommerceFacetRequest<Value, Type extends FacetType> = Pick<
   FacetRequest,
   'facetId' | 'field' | 'isFieldExpanded'
 > & {
@@ -98,4 +98,4 @@ type MappedFacetRequest = {
           : never;
 };
 
-export type CommerceFacetRequest = MappedFacetRequest[FacetType];
+type CommerceFacetRequest = MappedFacetRequest[FacetType];

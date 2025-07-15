@@ -46,7 +46,7 @@ export const buildMockPaginatedCommerceAPIRequest = (
   };
 };
 
-export const buildMockFilterableCommerceAPIRequest = (
+const buildMockFilterableCommerceAPIRequest = (
   config?: Partial<FilterableCommerceAPIRequest>
 ): FilterableCommerceAPIRequest => {
   return {

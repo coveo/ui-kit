@@ -1,0 +1,10 @@
+{
+  "workspaces": {
+    "packages/headless": {
+      "entry": ["src/*index.ts"],
+      "project": ["**/*.{js,ts}"],
+      "ignore": ["ponyfills/*.js"]
+    }
+  },
+  "ignoreWorkspaces": ["packages/quantic"]
+}

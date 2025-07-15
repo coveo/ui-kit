@@ -18,14 +18,14 @@ import {
 } from './analytics-utils.js';
 import {SearchPageEvents} from './search-action-cause.js';
 
-export interface SearchEventPayload {
+interface SearchEventPayload {
   /** The identifier of the search action (e.g., `interfaceLoad`). */
   evt: LegacySearchPageEvents | string;
   /** The event metadata. */
   meta?: Record<string, unknown>;
 }
 
-export interface ClickEventPayload {
+interface ClickEventPayload {
   /**
    * The identifier of the click action.
    */
@@ -40,7 +40,7 @@ export interface ClickEventPayload {
   meta?: Record<string, unknown>;
 }
 
-export interface CustomEventPayload {
+interface CustomEventPayload {
   /**
    * The event cause identifier of the custom action
    */

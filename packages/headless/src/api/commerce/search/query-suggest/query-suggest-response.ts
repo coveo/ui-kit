@@ -6,7 +6,7 @@ import type {
 /**
  * A Coveo ML query suggestion.
  */
-export interface QuerySuggestCompletion {
+interface QuerySuggestCompletion {
   /**
    * The original query expression.
    */
@@ -63,7 +63,7 @@ export interface QuerySuggestSuccessResponse {
   fieldSuggestionsFacets: FieldSuggestionsFacet[];
 }
 
-export type QuerySuggest =
+type QuerySuggest =
   | QuerySuggestSuccessResponse
   | SearchAPIErrorWithExceptionInBody
   | SearchAPIErrorWithStatusCode;

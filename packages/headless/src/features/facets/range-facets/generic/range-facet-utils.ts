@@ -50,7 +50,7 @@ export const getLegacyAnalyticsActionForToggleRangeFacetExclude = (
     : logFacetExclude(payload);
 };
 
-export const getAnalyticsActionForToggleRangeFacetExclude = (
+const getAnalyticsActionForToggleRangeFacetExclude = (
   selection: RangeFacetValue
 ): SearchAction => {
   return isRangeFacetValueExcluded(selection)

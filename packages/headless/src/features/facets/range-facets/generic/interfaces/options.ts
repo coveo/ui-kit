@@ -16,7 +16,7 @@ export type RangeFacetOptionalParameters = Pick<
   | 'resultsMustMatch'
 >;
 
-export type ManualRangeFacetOptions<T extends RangeFacetRequest> =
+type ManualRangeFacetOptions<T extends RangeFacetRequest> =
   RangeFacetRequiredParameters &
     Pick<T, 'currentValues'> &
     AutomaticRanges<false> &

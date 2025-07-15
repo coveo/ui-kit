@@ -2,10 +2,10 @@ import {getAvailableStorage, type WebStorage} from './storage.js';
 
 export const STORE_KEY: string = '__coveo.analytics.history';
 export const MAX_NUMBER_OF_HISTORY_ELEMENTS: number = 20;
-export const MIN_THRESHOLD_FOR_DUPLICATE_VALUE: number = 1000 * 60;
+const MIN_THRESHOLD_FOR_DUPLICATE_VALUE: number = 1000 * 60;
 export const MAX_VALUE_SIZE = 75;
 
-export class HistoryStore {
+ class HistoryStore {
   private static instance: HistoryStore | null = null;
   public static getInstance(store?: WebStorage): HistoryStore {
     if (!HistoryStore.instance) {
@@ -182,7 +182,7 @@ export interface HistoryElement {
   internalTime?: number;
 }
 
-export interface HistoryViewElement extends HistoryElement {
+interface HistoryViewElement extends HistoryElement {
   title?: string;
 }
 

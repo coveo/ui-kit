@@ -24,7 +24,7 @@ import {
 import {getCommerceSortInitialState} from '../sort/sort-state.js';
 import type {Parameters as ManagedParameters} from './parameters-actions.js';
 
-export function initialParametersSelector(
+function initialParametersSelector(
   state: CommerceEngine[typeof stateKey]
 ): Required<ManagedParameters> {
   return {

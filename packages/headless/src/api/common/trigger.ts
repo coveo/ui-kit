@@ -16,7 +16,7 @@ export interface TriggerNotify {
   content: string;
 }
 
-export function isNotifyTrigger(trigger: Trigger): trigger is TriggerNotify {
+function isNotifyTrigger(trigger: Trigger): trigger is TriggerNotify {
   return trigger.type === 'notify';
 }
 
@@ -42,7 +42,7 @@ export interface TriggerQuery {
   content: string;
 }
 
-export function isQueryTrigger(trigger: Trigger): trigger is TriggerQuery {
+function isQueryTrigger(trigger: Trigger): trigger is TriggerQuery {
   return trigger.type === 'query';
 }
 
@@ -59,6 +59,6 @@ export interface TriggerExecute {
  */
 export type ExecuteTriggerParams = (string | number | boolean)[];
 
-export function isExecuteTrigger(trigger: Trigger): trigger is TriggerExecute {
+function isExecuteTrigger(trigger: Trigger): trigger is TriggerExecute {
   return trigger.type === 'execute';
 }
