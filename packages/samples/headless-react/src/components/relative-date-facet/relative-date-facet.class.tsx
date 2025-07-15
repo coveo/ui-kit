@@ -1,13 +1,13 @@
 import {
   buildDateFacet,
-  DateFacet,
-  DateFacetOptions,
-  DateFacetState,
-  DateFacetValue,
-  Unsubscribe,
+  type DateFacet,
+  type DateFacetOptions,
+  type DateFacetState,
+  type DateFacetValue,
   deserializeRelativeDate,
+  type Unsubscribe,
 } from '@coveo/headless';
-import {Component, ContextType} from 'react';
+import {Component, type ContextType} from 'react';
 import {AppContext} from '../../context/engine';
 
 interface RelativeDateFacetProps extends DateFacetOptions {

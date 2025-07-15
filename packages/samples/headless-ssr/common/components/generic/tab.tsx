@@ -1,5 +1,9 @@
-import {Tab as TabController, TabManager, TabState} from '@coveo/headless/ssr';
-import {useEffect, useState, FunctionComponent} from 'react';
+import type {
+  Tab as TabController,
+  TabManager,
+  TabState,
+} from '@coveo/headless/ssr';
+import {type FunctionComponent, useEffect, useState} from 'react';
 import TabCommon from '../common/tab';
 
 interface TabProps {

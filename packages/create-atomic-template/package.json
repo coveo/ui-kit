@@ -1,7 +1,7 @@
 {
   "name": "@coveo/create-atomic-template",
   "description": "{{titleCase project}} project",
-  "version": "1.41.1",
+  "version": "0.0.0",
   "private": true,
   "scripts": {
     "lint": "prettier --check . && eslint ."

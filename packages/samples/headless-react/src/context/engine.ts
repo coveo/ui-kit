@@ -1,6 +1,6 @@
-import {SearchEngine} from '@coveo/headless';
-import {CommerceEngine} from '@coveo/headless/commerce';
-import {RecommendationEngine} from '@coveo/headless/recommendation';
+import type {SearchEngine} from '@coveo/headless';
+import type {CommerceEngine} from '@coveo/headless/commerce';
+import type {RecommendationEngine} from '@coveo/headless/recommendation';
 import {createContext} from 'react';
 
 export interface AppContextType {
