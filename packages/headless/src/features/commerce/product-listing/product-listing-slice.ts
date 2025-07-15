@@ -122,7 +122,11 @@ function preprocessProduct(product: BaseProduct, position: number): Product {
     return {...product, position};
   }
 
-  const {children, totalNumberOfChildren, ...restOfProduct} = product;
+  const {
+    children,
+    totalNumberOfChildren: _totalNumberOfChildren,
+    ...restOfProduct
+  } = product;
 
   return {
     ...product,

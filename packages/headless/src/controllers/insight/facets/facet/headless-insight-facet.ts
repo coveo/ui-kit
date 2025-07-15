@@ -122,7 +122,7 @@ export function buildFacet(engine: InsightEngine, props: FacetProps): Facet {
   };
 
   const facetSearch = createNoopFacetSearch();
-  const {state, ...restOfFacetSearch} = facetSearch;
+  const {state: _state, ...restOfFacetSearch} = facetSearch;
 
   return {
     ...coreController,

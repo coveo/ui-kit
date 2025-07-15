@@ -54,9 +54,7 @@
       "recommended": true,
       "style": {"noNonNullAssertion": "off"},
       // TODO: https://coveord.atlassian.net/browse/KIT-4556
-      "complexity": {"noBannedTypes": "off"},
-      // TODO: https://coveord.atlassian.net/browse/KIT-4555
-      "correctness": {"noUnusedVariables": "off"}
+      "complexity": {"noBannedTypes": "off"}
     },
     "includes": ["**"]
   },

@@ -401,7 +401,7 @@ describe('range facet reducers', () => {
       values: NumericFacetValue[]
     ): NumericRangeRequest[] {
       return values.map((v) => {
-        const {numberOfResults, ...rest} = v;
+        const {numberOfResults: _numberOfResults, ...rest} = v;
         return rest;
       });
     }
