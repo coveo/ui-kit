@@ -9,11 +9,11 @@ export interface CaseAssistIdParam {
   caseAssistId: string;
 }
 
-interface CaseFields {
+type CaseFields = {
   [fieldName: string]: {
     value: string;
   };
-}
+};
 
 export interface FieldsParam {
   fields: CaseFields;

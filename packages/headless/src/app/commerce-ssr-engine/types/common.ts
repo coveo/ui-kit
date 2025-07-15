@@ -491,10 +491,7 @@ type ListingOnlyControllerDefinitionWithProps<
   TProps,
 > = ControllerDefinitionWithProps<TController, TProps> & ListingOnlyController;
 
-type RecommendationOnlyControllerDefinitionWithoutProps<
-  TController extends Controller,
-> = ControllerDefinitionWithoutProps<TController> &
-  RecommendationOnlyController;
+
 
 export type RecommendationOnlyControllerDefinitionWithProps<
   TController extends Controller,
@@ -506,15 +503,9 @@ export type NonRecommendationControllerDefinitionWithoutProps<
   TController extends Controller,
 > = ControllerDefinitionWithoutProps<TController> & NonRecommendationController;
 
-type NonRecommendationControllerDefinitionWithProps<
-  TController extends Controller,
-  TProps,
-> = ControllerDefinitionWithProps<TController, TProps> &
-  NonRecommendationController;
 
-type UniversalControllerDefinitionWithoutProps<
-  TController extends Controller,
-> = ControllerDefinitionWithoutProps<TController> & UniversalController;
+
+
 
 export type UniversalControllerDefinitionWithProps<
   TController extends Controller,

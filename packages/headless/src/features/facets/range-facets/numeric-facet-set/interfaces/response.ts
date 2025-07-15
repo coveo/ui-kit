@@ -4,7 +4,7 @@ import type {FacetValueState} from '../../../facet-api/value.js';
 /**
  * The domain of a numeric facet.
  */
-interface NumericFacetDomain {
+type NumericFacetDomain = {
   /**
    * The largest available value in the range.
    */
@@ -13,7 +13,7 @@ interface NumericFacetDomain {
    * The smallest available value in the range.
    */
   start: number;
-}
+};
 
 export interface NumericFacetValue {
   /**

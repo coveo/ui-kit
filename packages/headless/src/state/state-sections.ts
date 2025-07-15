@@ -54,7 +54,6 @@ import type {RecentResultsState} from '../features/recent-results/recent-results
 import type {RecommendationState} from '../features/recommendation/recommendation-state.js';
 import type {ResultPreviewState} from '../features/result-preview/result-preview-state.js';
 import type {SearchState} from '../features/search/search-state.js';
-import type {SortState} from '../features/sort/sort-state.js';
 import type {SortCriteriaState} from '../features/sort-criteria/sort-criteria-state.js';
 import type {StandaloneSearchBoxSetState} from '../features/standalone-search-box-set/standalone-search-box-set-state.js';
 import type {StaticFilterSetState} from '../features/static-filter-set/static-filter-set-state.js';
@@ -385,13 +384,6 @@ export interface FieldSuggestionsOrderSection {
    * The facet field suggestions order.
    */
   fieldSuggestionsOrder: FieldSuggestionsOrderState;
-}
-
-interface StructuredSortSection {
-  /**
-   * The information related to sort when using a structured sort format.
-   */
-  sort: SortState;
 }
 
 export interface TriggerSection {

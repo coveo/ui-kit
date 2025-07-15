@@ -145,13 +145,6 @@ export function getOrganizationEndpoint(
   return `https://${organizationId}${endpointTypePart}.org${environmentSuffix}.coveo.com`;
 }
 
-function getAdministrationOrganizationEndpoint(
-  organizationId: string,
-  environment: PlatformEnvironment = 'prod'
-) {
-  return getOrganizationEndpoint(organizationId, environment, 'admin');
-}
-
 export function getSearchApiBaseUrl(
   organizationId: string,
   environment: PlatformEnvironment = 'prod'

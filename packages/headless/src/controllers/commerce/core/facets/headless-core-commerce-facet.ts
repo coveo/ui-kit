@@ -159,8 +159,6 @@ export type CoreCommerceFacetState<
   values: ValueResponse[];
 };
 
-type CoreCommerceFacetBuilder = typeof buildCoreCommerceFacet;
-
 export function buildCoreCommerceFacet<
   ValueRequest extends AnyFacetValueRequest,
   ValueResponse extends AnyFacetValueResponse,

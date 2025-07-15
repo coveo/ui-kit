@@ -1,8 +1,3 @@
-import type {
-  SearchAPIErrorWithExceptionInBody,
-  SearchAPIErrorWithStatusCode,
-} from '../../../search/search-api-error-response.js';
-
 /**
  * A Coveo ML query suggestion.
  */
@@ -62,8 +57,3 @@ export interface QuerySuggestSuccessResponse {
    */
   fieldSuggestionsFacets: FieldSuggestionsFacet[];
 }
-
-type QuerySuggest =
-  | QuerySuggestSuccessResponse
-  | SearchAPIErrorWithExceptionInBody
-  | SearchAPIErrorWithStatusCode;

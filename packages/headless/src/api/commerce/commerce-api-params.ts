@@ -22,21 +22,17 @@ export interface ClientIdParam {
 }
 
 export interface ContextParam {
-  context: ContextParams;
-}
-
-interface ProductParam {
-  productId: string;
-}
-
-interface ContextParams {
-  view: ViewParams;
-  user?: UserParams;
-  product?: ProductParam;
-  cart?: CartItemParam[];
-  purchased?: CartItemParam[];
-  capture: boolean;
-  source: string[];
+  context: {
+    view: ViewParams;
+    user?: UserParams;
+    product?: {
+      productId: string;
+    };
+    cart?: CartItemParam[];
+    purchased?: CartItemParam[];
+    capture: boolean;
+    source: string[];
+  };
 }
 
 export interface ViewParams {

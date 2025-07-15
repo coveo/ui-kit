@@ -17,14 +17,6 @@ export class ReservedContextKeyError extends Error {
   }
 }
 
-class UnreservedContextKeyError extends Error {
-  constructor(key: ReservedContextKey) {
-    super(
-      `The key "${key}" has not been reserved. Please report this error to Coveo on https://github.com/coveo/ui-kit/issues/new.`
-    );
-  }
-}
-
 export function isReservedContextKey(
   contextKey: string
 ): contextKey is ReservedContextKey {

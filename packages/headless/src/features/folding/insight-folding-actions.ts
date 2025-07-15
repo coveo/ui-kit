@@ -1,4 +1,4 @@
-import {createAction, createAsyncThunk} from '@reduxjs/toolkit';
+import {createAsyncThunk} from '@reduxjs/toolkit';
 import {isErrorResponse} from '../../api/search/search-api-client.js';
 import type {AsyncThunkInsightOptions} from '../../api/service/insight/insight-api-client.js';
 import type {
@@ -7,22 +7,11 @@ import type {
   InsightConfigurationSection,
   QuerySection,
 } from '../../state/state-sections.js';
-import {validatePayload} from '../../utils/validate-payload.js';
-import {
-  foldingOptionsSchemaDefinition,
-  type LoadCollectionFulfilledReturn,
-  type RegisterFoldingActionCreatorPayload,
-} from '../folding/folding-actions.js';
+import type {LoadCollectionFulfilledReturn} from '../folding/folding-actions.js';
 import type {ResultWithFolding} from '../folding/folding-slice.js';
 import type {CollectionId} from '../folding/folding-state.js';
 import {fetchFromAPI} from '../insight-search/insight-search-actions.js';
 import {buildInsightLoadCollectionRequest} from '../insight-search/insight-search-request.js';
-
-const registerFolding = createAction(
-  'folding/register',
-  (payload: RegisterFoldingActionCreatorPayload) =>
-    validatePayload(payload, foldingOptionsSchemaDefinition)
-);
 
 type StateNeededByLoadCollection = ConfigurationSection &
   FoldingSection &

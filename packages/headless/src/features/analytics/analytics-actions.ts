@@ -18,41 +18,6 @@ import {
 } from './analytics-utils.js';
 import {SearchPageEvents} from './search-action-cause.js';
 
-interface SearchEventPayload {
-  /** The identifier of the search action (e.g., `interfaceLoad`). */
-  evt: LegacySearchPageEvents | string;
-  /** The event metadata. */
-  meta?: Record<string, unknown>;
-}
-
-interface ClickEventPayload {
-  /**
-   * The identifier of the click action.
-   */
-  evt: LegacySearchPageEvents | string;
-  /**
-   * The result associated with the click event.
-   */
-  result: Result;
-  /**
-   * The event metadata.
-   */
-  meta?: Record<string, unknown>;
-}
-
-interface CustomEventPayload {
-  /**
-   * The event cause identifier of the custom action
-   */
-  evt: LegacySearchPageEvents | string;
-  /**
-   * The event type identifier of the custom action
-   */
-  type: string;
-  /** The event metadata. */
-  meta?: Record<string, unknown>;
-}
-
 const validateEvent = (p: {evt: string; type?: string}) =>
   validatePayload(p, {
     evt: requiredNonEmptyString,

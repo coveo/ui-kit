@@ -182,8 +182,6 @@ export interface HistoryElement {
   internalTime?: number;
 }
 
-interface HistoryViewElement extends HistoryElement {
-  title?: string;
-}
+
 
 export default HistoryStore;

@@ -27,7 +27,6 @@ import {
 } from './headless-core-generated-answer.js';
 
 interface SearchAPIGeneratedAnswer extends GeneratedAnswer {}
-interface SearchAPIGeneratedAnswerProps extends GeneratedAnswerProps {}
 
 interface SubscribeStateManager {
   engines: Record<

@@ -1,12 +1,10 @@
 import {createAction} from '@reduxjs/toolkit';
 import type {Result} from '../../api/search/search/result.js';
-import type {InstantResultSection} from '../../state/state-sections.js';
 import {
   requiredEmptyAllowedString,
   requiredNonEmptyString,
   validatePayload,
 } from '../../utils/validate-payload.js';
-import type {StateNeededByExecuteSearch} from '../search/search-actions-thunk-processor.js';
 
 export interface RegisterInstantResultActionCreatorPayload {
   /**
@@ -85,6 +83,3 @@ export interface FetchInstantResultsThunkReturn {
   totalCountFiltered: number;
   duration: number;
 }
-
-type StateNeededByInstantResults = StateNeededByExecuteSearch &
-  InstantResultSection;

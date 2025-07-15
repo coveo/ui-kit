@@ -85,17 +85,3 @@ export type AnyFacetRequest = BaseCommerceFacetRequest<
       NumericFacetExtraProperties &
       FreezableFacetRequestProperties
   >;
-
-type MappedFacetRequest = {
-  [T in FacetType]: T extends 'numericalRange'
-    ? NumericFacetRequest
-    : T extends 'regular'
-      ? RegularFacetRequest
-      : T extends 'dateRange'
-        ? DateFacetRequest
-        : T extends 'hierarchical'
-          ? CategoryFacetRequest
-          : never;
-};
-
-type CommerceFacetRequest = MappedFacetRequest[FacetType];
