@@ -1,37 +1,28 @@
 import {html, LitElement} from 'lit';
 import {beforeEach, describe, expect, it} from 'vitest';
 import {fixture} from '@/vitest-utils/testing-helpers/fixture';
-import {injectSlotsForNoShadowDOM} from './inject-slots-for-now-shadow-dom';
+import {
+  type LightDOMWithSlots,
+  SlotsForNoShadowDOMMixin,
+} from './slots-for-no-shadow-dom-mixin';
 
-type AdoptedNode = ChildNode & {contentFor?: string};
+describe('SlotsForNoShadowDOMMixin', () => {
+  type TestableSlottedElement = LitElement & LightDOMWithSlots;
 
-describe('injectSlotsForNoShadowDOM', () => {
-  interface TestableSlottedElement extends LitElement {
-    slots: {[name: string]: AdoptedNode[] | undefined};
-    _slotsInitialized: boolean;
-    adoptChildren(): void;
-    getSlotNameForChild(child: AdoptedNode): string;
-    isTextNodeEmpty(node: Text): boolean;
-    isSlotEmpty(slot: string): boolean;
-    yield(slot: string, defaultContent?: unknown): unknown[];
-  }
-
-  @injectSlotsForNoShadowDOM()
-  class SlottedElement extends LitElement {
+  class SlottedElement extends SlotsForNoShadowDOMMixin(LitElement) {
     render() {
       return html`
-        <div class="header">${(this as unknown as TestableSlottedElement).yield('header')}</div>
-        <div class="content">${(this as unknown as TestableSlottedElement).yield('content', html`<span>Default content</span>`)}</div>
-        <div class="footer">${(this as unknown as TestableSlottedElement).yield('footer')}</div>
+        <div class="header">${this.yield('header')}</div>
+        <div class="content">${this.yield('content', html`<span>Default content</span>`)}</div>
+        <div class="footer">${this.yield('footer')}</div>
       `;
     }
   }
 
-  @injectSlotsForNoShadowDOM()
-  class SimpleSlottedElement extends LitElement {
+  class SimpleSlottedElement extends SlotsForNoShadowDOMMixin(LitElement) {
     render() {
       return html`
-        <div class="main">${(this as unknown as TestableSlottedElement).yield('main')}</div>
+        <div class="main">${this.yield('main')}</div>
       `;
     }
   }
@@ -75,7 +66,7 @@ describe('injectSlotsForNoShadowDOM', () => {
     beforeEach(async () => {
       element = (await fixture(
         html`<slotted-element></slotted-element>`
-      )) as unknown as TestableSlottedElement;
+      )) as TestableSlottedElement;
     });
 
     it('should render in light DOM', () => {
@@ -106,7 +97,7 @@ describe('injectSlotsForNoShadowDOM', () => {
           <p slot="content">Main Content</p>
           <small slot="footer">Footer Content</small>
         </slotted-element>
-      `)) as unknown as TestableSlottedElement;
+      `)) as TestableSlottedElement;
     });
 
     it('should adopt children into correct slots', () => {
@@ -135,7 +126,7 @@ describe('injectSlotsForNoShadowDOM', () => {
           <p>Unslotted content</p>
           <span slot="main">Slotted content</span>
         </simple-slotted-element>
-      `)) as unknown as TestableSlottedElement;
+      `)) as TestableSlottedElement;
     });
 
     it('should adopt unslotted content to default slot', () => {
@@ -158,7 +149,7 @@ describe('injectSlotsForNoShadowDOM', () => {
     beforeEach(async () => {
       element = (await fixture(
         html`<slotted-element></slotted-element>`
-      )) as unknown as TestableSlottedElement;
+      )) as TestableSlottedElement;
     });
 
     it('should return slot attribute value for elements', () => {
@@ -183,7 +174,7 @@ describe('injectSlotsForNoShadowDOM', () => {
     beforeEach(async () => {
       element = (await fixture(
         html`<slotted-element></slotted-element>`
-      )) as unknown as TestableSlottedElement;
+      )) as TestableSlottedElement;
     });
 
     it('should return true for empty text nodes', () => {
@@ -220,7 +211,7 @@ describe('injectSlotsForNoShadowDOM', () => {
           <div slot="header">Content</div>
           <span slot="footer">${'   '}</span>
         </slotted-element>
-      `)) as unknown as TestableSlottedElement;
+      `)) as TestableSlottedElement;
     });
 
     it('should return false for slots with actual content', async () => {
@@ -243,7 +234,7 @@ describe('injectSlotsForNoShadowDOM', () => {
         <slotted-element>
           ${' \n\t '}
         </slotted-element>
-      `)) as unknown as TestableSlottedElement;
+      `)) as TestableSlottedElement;
       await testElement.updateComplete;
       expect(testElement.isSlotEmpty('')).toBe(true);
     });
@@ -257,7 +248,7 @@ describe('injectSlotsForNoShadowDOM', () => {
         <slotted-element>
           <span slot="header">Header Content</span>
         </slotted-element>
-      `)) as unknown as TestableSlottedElement;
+      `)) as TestableSlottedElement;
     });
 
     it('should return slot content when available', () => {
