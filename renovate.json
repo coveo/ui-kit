@@ -136,21 +136,6 @@
       "matchPackageNames": ["marked"]
     },
     {
-      "groupName": "relay",
-      "groupSlug": "relay",
-      "rangeStrategy": "replace",
-      "description": "Isolate relay since it is causing issues with stencil projetcs",
-      "matchPackageNames": ["@coveo/relay"]
-    },
-    {
-      "groupName": "Cypress Split",
-      "groupSlug": "cypress-split",
-      "rangeStrategy": "replace",
-      "allowedVersions": "1.5.0",
-      "description": "Lock until bahmutov/cypress-repeat#52 is fixed",
-      "matchPackageNames": ["/^cypress-split$/"]
-    },
-    {
       "matchFileNames": ["packages/quantic/package.json"],
       "groupSlug": "sfdx-lwc-jest",
       "rangeStrategy": "replace",
@@ -195,6 +180,8 @@
   "ignoreDeps": [
     "eslint-plugin-canonical",
     "@salesforce/sfdx-lwc-jest",
-    "cypress"
+    "cypress",
+    "cypress-split",
+    "cypress-repeat"
   ]
 }
