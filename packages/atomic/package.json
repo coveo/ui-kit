@@ -135,7 +135,7 @@
     "jest-cli": "29.7.0",
     "jest-environment-node": "29.7.0",
     "jest-localstorage-mock": "2.4.26",
-    "lightningcss": "1.29.1",
+    "lightningcss": "1.30.1",
     "local-web-server": "5.4.0",
     "natural-orderby": "5.0.0",
     "ora": "8.2.0",
