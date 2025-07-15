@@ -8,7 +8,7 @@ import nodePolyfills from 'rollup-plugin-node-polyfills';
 // https://stenciljs.com/docs/config
 
 export const config: Config = {
-  namespace: 'testingatomicwithcli',
+  namespace: '{{project}}',
   globalStyle: 'src/style/index.css',
   taskQueue: 'async',
   outputTargets: [
