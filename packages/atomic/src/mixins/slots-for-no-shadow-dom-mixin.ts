@@ -1,4 +1,5 @@
-import type {PropertyValues} from 'lit';
+import type {LitElement, PropertyValues} from 'lit';
+import type {Constructor} from './mixin-common';
 
 type AdoptedNode = ChildNode & {contentFor?: string};
 
@@ -29,12 +30,13 @@ export interface LightDOMWithSlots {
  *     }
  *   }
  */
-// biome-ignore lint/suspicious/noExplicitAny: mixin needs to work with any class constructor
-export function SlotsForNoShadowDOMMixin<T extends new (...args: any[]) => any>(
-  Base: T
-  // biome-ignore lint/suspicious/noExplicitAny: mixin return type needs any for flexibility
-): T & (new (...args: any[]) => LightDOMWithSlots) {
-  class SlotsForNoShadowDOMClass extends Base implements LightDOMWithSlots {
+export const SlotsForNoShadowDOMMixin = <T extends Constructor<LitElement>>(
+  superClass: T
+) => {
+  class SlotsForNoShadowDOMClass
+    extends superClass
+    implements LightDOMWithSlots
+  {
     slots: {[name: string]: AdoptedNode[] | undefined} = {};
     _slotsInitialized = false;
 
@@ -118,9 +120,5 @@ export function SlotsForNoShadowDOMMixin<T extends new (...args: any[]) => any>(
     }
   }
 
-  return SlotsForNoShadowDOMClass as T &
-    (new (
-      // biome-ignore lint/suspicious/noExplicitAny: <>
-      ...args: any[]
-    ) => LightDOMWithSlots);
-}
+  return SlotsForNoShadowDOMClass as T;
+};
