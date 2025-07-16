@@ -1,3 +1,9 @@
+## <small>3.4.2 (2025-07-16)</small>
+
+* style: enable biome recommended rules in atomic-angular (#5627) ([0dae41d](https://github.com/coveo/ui-kit/commits/0dae41d)), closes [#5627](https://github.com/coveo/ui-kit/issues/5627)
+
+
+
 ## 3.4.0 (2025-07-09)
 
 * chore(atomic commerce): migrate atomic-commerce-load-more-products to Lit (#5551) ([9a77990](https://github.com/coveo/ui-kit/commits/9a77990)), closes [#5551](https://github.com/coveo/ui-kit/issues/5551)
