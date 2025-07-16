@@ -1,5 +1,5 @@
-import {buildQuickview, Result} from '@coveo/headless';
-import {useEffect, useState, useContext, FunctionComponent} from 'react';
+import {buildQuickview, type Result} from '@coveo/headless';
+import {type FunctionComponent, useContext, useEffect, useState} from 'react';
 import {AppContext} from '../../context/engine';
 
 interface QuickviewProps {
@@ -32,7 +32,7 @@ export const Quickview: FunctionComponent<QuickviewProps> = (props) => {
     return (
       <div>
         <button onClick={() => closeModal()}>X</button>
-        <iframe srcDoc={state.content}></iframe>
+        <iframe title="Quickview" srcDoc={state.content}></iframe>
       </div>
     );
   }

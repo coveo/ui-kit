@@ -1,16 +1,16 @@
 import {
-  Controller,
-  ControllerDefinitionsMap,
-  SearchEngine,
-  SearchEngineDefinitionOptions,
-  getSampleSearchEngineConfiguration,
+  type Controller,
+  type ControllerDefinitionsMap,
+  defineContext,
   defineFacet,
   defineResultList,
   defineSearchBox,
-  defineContext,
   defineSearchParameterManager,
-  defineTabManager,
   defineTab,
+  defineTabManager,
+  getSampleSearchEngineConfiguration,
+  type SearchEngine,
+  type SearchEngineDefinitionOptions,
 } from '@coveo/headless/ssr';
 
 export const config = {

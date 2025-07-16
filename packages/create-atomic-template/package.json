@@ -1,14 +1,14 @@
 {
   "name": "@coveo/create-atomic-template",
   "description": "{{titleCase project}} project",
-  "version": "1.41.1",
+  "version": "0.0.0",
   "private": true,
   "scripts": {
     "lint": "prettier --check . && eslint ."
   },
   "dependencies": {
-    "@coveo/atomic": "3.27.4",
-    "@coveo/headless": "3.27.1",
+    "@coveo/atomic": "3.29.1",
+    "@coveo/headless": "3.27.4",
     "@stencil/core": "4.20.0"
   },
   "devDependencies": {

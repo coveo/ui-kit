@@ -372,19 +372,6 @@ export namespace Components {
     interface AtomicCommerceQueryError {
     }
     /**
-     * The `atomic-commerce-refine-modal` is automatically created as a child of the `atomic-commerce-search-interface` when the `atomic-commerce-refine-toggle` is initialized.
-     * When the modal is opened, the class `atomic-modal-opened` is added to the interface element and the body, allowing further customization.
-     * @alpha 
-     */
-    interface AtomicCommerceRefineModal {
-        /**
-          * The number of expanded facets inside the refine modal. Remaining facets are automatically collapsed.  Using the value `0` collapses all facets.
-         */
-        "collapseFacetsAfter": number;
-        "isOpen": boolean;
-        "openButton"?: HTMLElement;
-    }
-    /**
      * A facet is a list of values for a certain field occurring in the results.
      * An `atomic-commerce-timeframe-facet` displays a facet of the results for the current query as date intervals.
      * @alpha 
@@ -3552,17 +3539,6 @@ declare global {
         new (): HTMLAtomicCommerceQueryErrorElement;
     };
     /**
-     * The `atomic-commerce-refine-modal` is automatically created as a child of the `atomic-commerce-search-interface` when the `atomic-commerce-refine-toggle` is initialized.
-     * When the modal is opened, the class `atomic-modal-opened` is added to the interface element and the body, allowing further customization.
-     * @alpha 
-     */
-    interface HTMLAtomicCommerceRefineModalElement extends Components.AtomicCommerceRefineModal, HTMLStencilElement {
-    }
-    var HTMLAtomicCommerceRefineModalElement: {
-        prototype: HTMLAtomicCommerceRefineModalElement;
-        new (): HTMLAtomicCommerceRefineModalElement;
-    };
-    /**
      * A facet is a list of values for a certain field occurring in the results.
      * An `atomic-commerce-timeframe-facet` displays a facet of the results for the current query as date intervals.
      * @alpha 
@@ -5306,7 +5282,6 @@ declare global {
         "atomic-commerce-facets": HTMLAtomicCommerceFacetsElement;
         "atomic-commerce-numeric-facet": HTMLAtomicCommerceNumericFacetElement;
         "atomic-commerce-query-error": HTMLAtomicCommerceQueryErrorElement;
-        "atomic-commerce-refine-modal": HTMLAtomicCommerceRefineModalElement;
         "atomic-commerce-timeframe-facet": HTMLAtomicCommerceTimeframeFacetElement;
         "atomic-did-you-mean": HTMLAtomicDidYouMeanElement;
         "atomic-external": HTMLAtomicExternalElement;
@@ -5776,19 +5751,6 @@ declare namespace LocalJSX {
      * @alpha 
      */
     interface AtomicCommerceQueryError {
-    }
-    /**
-     * The `atomic-commerce-refine-modal` is automatically created as a child of the `atomic-commerce-search-interface` when the `atomic-commerce-refine-toggle` is initialized.
-     * When the modal is opened, the class `atomic-modal-opened` is added to the interface element and the body, allowing further customization.
-     * @alpha 
-     */
-    interface AtomicCommerceRefineModal {
-        /**
-          * The number of expanded facets inside the refine modal. Remaining facets are automatically collapsed.  Using the value `0` collapses all facets.
-         */
-        "collapseFacetsAfter"?: number;
-        "isOpen"?: boolean;
-        "openButton"?: HTMLElement;
     }
     /**
      * A facet is a list of values for a certain field occurring in the results.
@@ -8641,7 +8603,6 @@ declare namespace LocalJSX {
         "atomic-commerce-facets": AtomicCommerceFacets;
         "atomic-commerce-numeric-facet": AtomicCommerceNumericFacet;
         "atomic-commerce-query-error": AtomicCommerceQueryError;
-        "atomic-commerce-refine-modal": AtomicCommerceRefineModal;
         "atomic-commerce-timeframe-facet": AtomicCommerceTimeframeFacet;
         "atomic-did-you-mean": AtomicDidYouMean;
         "atomic-external": AtomicExternal;
@@ -8877,12 +8838,6 @@ declare module "@stencil/core" {
              * @alpha 
              */
             "atomic-commerce-query-error": LocalJSX.AtomicCommerceQueryError & JSXBase.HTMLAttributes<HTMLAtomicCommerceQueryErrorElement>;
-            /**
-             * The `atomic-commerce-refine-modal` is automatically created as a child of the `atomic-commerce-search-interface` when the `atomic-commerce-refine-toggle` is initialized.
-             * When the modal is opened, the class `atomic-modal-opened` is added to the interface element and the body, allowing further customization.
-             * @alpha 
-             */
-            "atomic-commerce-refine-modal": LocalJSX.AtomicCommerceRefineModal & JSXBase.HTMLAttributes<HTMLAtomicCommerceRefineModalElement>;
             /**
              * A facet is a list of values for a certain field occurring in the results.
              * An `atomic-commerce-timeframe-facet` displays a facet of the results for the current query as date intervals.

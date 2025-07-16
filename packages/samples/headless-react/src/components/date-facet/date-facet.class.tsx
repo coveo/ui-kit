@@ -1,12 +1,12 @@
 import {
   buildDateFacet,
-  DateFacet as HeadlessDateFacet,
-  DateFacetOptions,
-  DateFacetState,
-  DateFacetValue,
-  Unsubscribe,
+  type DateFacetOptions,
+  type DateFacetState,
+  type DateFacetValue,
+  type DateFacet as HeadlessDateFacet,
+  type Unsubscribe,
 } from '@coveo/headless';
-import {Component, ContextType} from 'react';
+import {Component, type ContextType} from 'react';
 import {AppContext} from '../../context/engine';
 import {parseDate} from './date-utils';
 

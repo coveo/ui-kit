@@ -1,10 +1,10 @@
 import {
   buildResultList,
-  ResultList as ResultListController,
-  ResultListState,
-  Unsubscribe,
+  type ResultList as ResultListController,
+  type ResultListState,
+  type Unsubscribe,
 } from '@coveo/headless';
-import {Component, ContextType} from 'react';
+import {Component, type ContextType} from 'react';
 import {AppContext} from '../../context/engine';
 import {Quickview} from '../quickview/quickview.class';
 import {ResultLink} from './result-link';

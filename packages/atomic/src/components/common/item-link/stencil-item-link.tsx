@@ -1,6 +1,7 @@
 import {FunctionalComponent, h} from '@stencil/core';
 import {filterProtocol} from '../../../utils/xss-utils';
 import {ItemTarget} from '../layout/display-options';
+import { bindAnalyticsToLink } from './bind-analytics-to-link';
 
 interface ItemLinkEventProps {
   onSelect: () => void;
@@ -26,37 +27,6 @@ export interface ItemLinkProps extends ItemLinkEventProps {
   onFocus?: () => void;
   onBlur?: () => void;
 }
-
-export const bindAnalyticsToLink = (
-  link: HTMLAnchorElement,
-  {
-    onSelect,
-    onBeginDelayedSelect,
-    onCancelPendingSelect,
-    stopPropagation = true,
-  }: ItemLinkEventProps
-) => {
-  const stopPropagationAndProcess = (e: Event, process: () => void) => {
-    stopPropagation && e.stopPropagation();
-    process();
-  };
-  (['click', 'contextmenu', 'mousedown', 'mouseup'] as const).forEach(
-    (eventName) =>
-      link.addEventListener(eventName, (e) =>
-        stopPropagationAndProcess(e, onSelect)
-      )
-  );
-  link.addEventListener(
-    'touchstart',
-    (e) => stopPropagationAndProcess(e, onBeginDelayedSelect),
-    {passive: true}
-  );
-  link.addEventListener(
-    'touchend',
-    (e) => stopPropagationAndProcess(e, onCancelPendingSelect),
-    {passive: true}
-  );
-};
 
 export const LinkWithItemAnalytics: FunctionalComponent<ItemLinkProps> = (
   {
