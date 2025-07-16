@@ -51,8 +51,8 @@
     "babel:headless": "babel ../../node_modules/@coveo/headless/dist/quantic --out-dir .tmp/quantic-compiled --extensions .js --minified"
   },
   "dependencies": {
-    "@coveo/bueno": "1.0.19",
-    "@coveo/headless": "3.27.1",
+    "@coveo/bueno": "1.0.21",
+    "@coveo/headless": "3.27.4",
     "dompurify": "3.2.6",
     "fs-extra": "11.3.0",
     "marked": "12.0.2"
@@ -69,9 +69,9 @@
     "@octokit/graphql": "8.2.2",
     "@octokit/graphql-schema": "15.26.0",
     "@playwright/test": "1.53.2",
+    "@salesforce-ux/slds-linter": "0.3.0",
     "@salesforce/eslint-config-lwc": "3.7.2",
     "@salesforce/sfdx-lwc-jest": "5.1.0",
-    "@salesforce-ux/slds-linter": "0.3.0",
     "@types/node": "22.16.0",
     "@types/strip-color": "0.1.2",
     "@types/wait-on": "5.3.4",
