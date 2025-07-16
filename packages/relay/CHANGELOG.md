@@ -1,3 +1,11 @@
+## 1.2.6 (2025-07-16)
+
+### Bug Fixes
+
+- **deps:** update all non-major dependencies ([#181](https://github.com/coveo/relay/issues/181)) ([b1fb064](https://github.com/coveo/relay/commits/))
+- **deps:** update mantine monorepo to v8 (major) ([#173](https://github.com/coveo/relay/issues/173)) ([0028256](https://github.com/coveo/relay/commits/))
+- improve URL truncation to account for encoded characters ([#189](https://github.com/coveo/relay/issues/189)) ([444fd20](https://github.com/coveo/relay/commits/))
+
 ## 1.2.5 (2025-06-30)
 
 ### Bug Fixes

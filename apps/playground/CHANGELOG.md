@@ -1,3 +1,10 @@
+## 2.2.8 (2025-07-16)
+
+### Bug Fixes
+
+- **deps:** update all non-major dependencies ([#181](https://github.com/coveo/relay/issues/181)) ([b1fb064](https://github.com/coveo/relay/commits/))
+- improve URL truncation to account for encoded characters ([#189](https://github.com/coveo/relay/issues/189)) ([444fd20](https://github.com/coveo/relay/commits/))
+
 ## 2.2.7 (2025-07-08)
 
 ### Bug Fixes
