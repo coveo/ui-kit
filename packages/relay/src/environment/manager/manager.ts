@@ -3,6 +3,7 @@ import { buildBrowserEnvironment } from "../browser/browser";
 import { localStorageAvailable } from "../browser/storage/availability";
 import { Environment } from "../environment";
 import { buildNullEnvironment } from "../null/null";
+
 export interface EnvironmentManager {
   get: () => Readonly<Environment>;
 }

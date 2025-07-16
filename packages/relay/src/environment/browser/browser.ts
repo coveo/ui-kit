@@ -4,14 +4,10 @@ import { createBrowserStorage } from "./storage/storage";
 import { RelayEvent } from "../../event/relay-event";
 import { v4 as uuidv4 } from "uuid";
 
-function getReferrer() {
+function getReferrer(): string | null {
   const referrer = document.referrer;
 
-  return referrer === "" ? null : trimTo1024(referrer);
-}
-
-function trimTo1024(input: string) {
-  return input.slice(0, 1024);
+  return referrer === "" ? null : referrer;
 }
 
 export function buildBrowserEnvironment(): Environment {
@@ -35,7 +31,7 @@ export function buildBrowserEnvironment(): Environment {
       }
     },
     getReferrer: () => getReferrer(),
-    getLocation: () => trimTo1024(window.location.href),
+    getLocation: () => window.location.href,
     getUserAgent: () => navigator.userAgent,
     generateUUID: () => uuidv4(),
     storage: createBrowserStorage(),

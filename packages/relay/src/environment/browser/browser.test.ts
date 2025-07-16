@@ -22,6 +22,10 @@ describe("buildBrowserEnvironment", () => {
     writable: true,
   });
 
+  Object.defineProperty(window, "location", {
+    writable: true,
+  });
+
   beforeEach(() => {
     Object.defineProperty(navigator, "sendBeacon", {
       value: jest.fn(() => true),
@@ -42,15 +46,17 @@ describe("buildBrowserEnvironment", () => {
     );
   });
 
-  it("truncates the referrer beyond 1024 characters", () => {
+  it("does not truncate the referrer to the 1024 character limit", () => {
     const limit = 1024;
-    const referrer = "a".repeat(limit + 1);
+    const referrer = "a".repeat(limit * 2);
 
     Object.defineProperty(window.document, "referrer", {
       value: referrer,
     });
 
-    expect(buildBrowserEnvironment().getReferrer()).toHaveLength(limit);
+    expect(buildBrowserEnvironment().getReferrer()).toHaveLength(
+      referrer.length,
+    );
   });
 
   it("returns null when the referrer is an empty string", () => {
@@ -71,15 +77,17 @@ describe("buildBrowserEnvironment", () => {
     );
   });
 
-  it("truncates the location beyond 1024 characters", () => {
+  it("does not truncate the location to the 1024 character limit", () => {
     const limit = 1024;
-    const location = "a".repeat(limit + 1);
+    const location = "a".repeat(limit * 2);
 
     Object.defineProperty(window, "location", {
       value: { href: location },
     });
 
-    expect(buildBrowserEnvironment().getLocation()).toHaveLength(limit);
+    expect(buildBrowserEnvironment().getLocation()).toHaveLength(
+      location.length,
+    );
   });
 
   it("retrieves the userAgent", () => {

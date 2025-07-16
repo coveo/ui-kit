@@ -2,6 +2,7 @@ import { ClientIdManager } from "../../client-id/client-id";
 import { Environment } from "../../environment/environment";
 import { RelayConfig } from "../../config/config";
 import { version } from "../../version";
+import { truncateUrl } from "../../utils/url-shortener";
 
 /**
  * The `EventConfig` object provides additional information for the configuration associated with the event.
@@ -85,7 +86,12 @@ export function createMeta(
     source: getSource(config),
     clientId,
     userAgent: getUserAgent(),
-    referrer: getReferrer(),
-    location: getLocation(),
+    referrer: truncate(getReferrer()),
+    location: truncate(getLocation()),
   });
+}
+
+function truncate(url: string | null) {
+  const limit = 1024;
+  return url !== null ? truncateUrl(url, limit) : null;
 }
