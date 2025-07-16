@@ -140,7 +140,7 @@ jobs:
         run: |
           echo "Affected projects: ${{ steps.set.outputs.projects }}"
   knip: 
-    name: 'Run knip'
+    name: 'Look for unused code or dependencies'
     runs-on: ubuntu-latest
     needs: build
     steps:
