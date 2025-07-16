@@ -1,0 +1,6 @@
+{
+  "name": "create-atomic-component-project-template",
+  "root": "packages/ui/create-atomic-component-project/template",
+  "sourceRoot": "packages/ui/create-atomic-component-project/template",
+  "projectType": "library"
+}

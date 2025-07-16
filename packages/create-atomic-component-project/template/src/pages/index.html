@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Test-2121</title>
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css?family=Lexend:200,300,400,500,600,700,900&display=swap"
+    />
+    <link href="/atomic/themes/coveo.css" rel="stylesheet" />
+    <link href="/index.css" rel="stylesheet" />
+    <!--
+      When using the Coveo CDN - Make sure you're using the same minor version as the packaged Atomic.
+      E.g., if you have "@coveo/atomic@1.44.3" installed, use the "/atomic/v1.44/" path.
+
+      <script type="module" src="https://static.cloud.coveo.com/atomic/vMAJOR.MINOR/atomic.esm.js"></script>
+    -->
+    <script type="module" src="/atomic/atomic.esm.js"></script>
+    <!-- Custom Elements Lazy Loading -->
+    <script type="module" src="/build/my-custom-components.esm.js"></script>
+    <!-- <script type="module">
+      /**
+       * To import modules from `@coveo/headless`, you can use the following syntax:
+       * import { moduleName } from "./headless/headless.esm.js";
+       * Replace `moduleName` with the specific module you want to import from the `@coveo/headless` library.
+       * For example, if you want to import the `buildSearchEngine`,  you would use:
+       */
+      import { buildSearchEngine } from "./headless/headless.esm.js";
+    </script> -->
+  </head>
+  <body>
+    <atomic-search-interface
+      fields-to-include='["urihash","objecttype","collection","foldingcollection","foldingparent","foldingchild","date","ytvideoduration","ytviewcount","ytthumbnailurl","sports_blogimage"]'
+    >
+      <atomic-search-layout>
+        <atomic-layout-section section="search">
+          <atomic-search-box></atomic-search-box>
+        </atomic-layout-section>
+        <atomic-layout-section section="facets">
+          <atomic-facet-manager>
+            <atomic-facet
+              field="objecttype"
+              label="Type"
+              with-search="false"
+            ></atomic-facet>
+            <atomic-timeframe-facet label="Date" with-date-picker>
+              <atomic-timeframe unit="month"></atomic-timeframe>
+              <atomic-timeframe unit="quarter"></atomic-timeframe>
+              <atomic-timeframe unit="year"></atomic-timeframe>
+            </atomic-timeframe-facet>
+          </atomic-facet-manager>
+        </atomic-layout-section>
+        <atomic-layout-section section="main">
+          <atomic-layout-section section="status">
+            <atomic-breadbox></atomic-breadbox>
+            <atomic-query-summary></atomic-query-summary>
+            <atomic-refine-toggle></atomic-refine-toggle>
+            <atomic-sort-dropdown>
+              <atomic-sort-expression
+                label="relevance"
+                expression="relevancy"
+              ></atomic-sort-expression>
+              <atomic-sort-expression
+                label="most-recent"
+                expression="date descending"
+              ></atomic-sort-expression>
+            </atomic-sort-dropdown>
+            <atomic-did-you-mean></atomic-did-you-mean>
+          </atomic-layout-section>
+          <atomic-layout-section section="results">
+            <atomic-folded-result-list display="list" image-size="small">
+              <atomic-result-template must-match-source="Youtube">
+                <template>
+                  <style>
+                    .field {
+                      display: inline-flex;
+                      white-space: nowrap;
+                      align-items: center;
+                    }
+
+                    .field-label {
+                      font-weight: bold;
+                      margin-right: 0.25rem;
+                    }
+
+                    .smooth-border {
+                      border-radius: 5px;
+                      overflow: hidden;
+                    }
+
+                    .force-fit-content {
+                      height: fit-content !important;
+                    }
+                  </style>
+                  <atomic-result-section-badges>
+                    <atomic-field-condition must-match-is-recommendation="true">
+                      <atomic-result-badge
+                        label="Recommended"
+                      ></atomic-result-badge>
+                    </atomic-field-condition>
+                    <atomic-field-condition must-match-is-top-result="true">
+                      <atomic-result-badge
+                        label="Top Result"
+                      ></atomic-result-badge>
+                    </atomic-field-condition>
+                  </atomic-result-section-badges>
+
+                  <atomic-result-section-title>
+                    <atomic-result-link>
+                      <a slot="attributes" target="_blank"></a>
+                    </atomic-result-link>
+                  </atomic-result-section-title>
+
+                  <atomic-result-section-visual class="force-fit-content">
+                    <atomic-field-condition if-defined="ytthumbnailurl">
+                      <atomic-result-image
+                        field="ytthumbnailurl"
+                        class="force-fit-content smooth-border"
+                      ></atomic-result-image>
+                    </atomic-field-condition>
+                  </atomic-result-section-visual>
+
+                  <atomic-result-section-excerpt style="margin-top: 0.5rem">
+                    <atomic-result-text field="excerpt"></atomic-result-text>
+                  </atomic-result-section-excerpt>
+
+                  <atomic-result-section-bottom-metadata>
+                    <atomic-result-fields-list>
+                      <atomic-field-condition
+                        class="field"
+                        if-defined="ytvideoduration"
+                      >
+                        <span> 00: </span>
+                        <atomic-result-number
+                          field="ytvideoduration"
+                        ></atomic-result-number>
+                      </atomic-field-condition>
+
+                      <atomic-field-condition
+                        class="field"
+                        if-defined="ytviewcount"
+                      >
+                        <span class="field-label">
+                          <atomic-text value="Views"></atomic-text>:
+                        </span>
+                        <atomic-result-number
+                          field="ytviewcount"
+                        ></atomic-result-number>
+                      </atomic-field-condition>
+
+                      <span class="field">
+                        <atomic-result-date
+                          relative-time="true"
+                          format="MMM D, YYYY"
+                        ></atomic-result-date>
+                      </span>
+                    </atomic-result-fields-list>
+                  </atomic-result-section-bottom-metadata>
+                </template>
+              </atomic-result-template>
+
+              <atomic-result-template must-match-source="Sports - Blog">
+                <template>
+                  <style>
+                    .field {
+                      display: inline-flex;
+                      white-space: nowrap;
+                      align-items: center;
+                    }
+
+                    .field-label {
+                      font-weight: bold;
+                      margin-right: 0.25rem;
+                    }
+
+                    .smooth-border {
+                      border-radius: 5px;
+                      overflow: hidden;
+                    }
+
+                    .force-fit-content {
+                      height: fit-content !important;
+                    }
+                  </style>
+                  <atomic-result-section-badges>
+                    <atomic-field-condition must-match-is-recommendation="true">
+                      <atomic-result-badge
+                        label="Recommended"
+                      ></atomic-result-badge>
+                    </atomic-field-condition>
+                    <atomic-field-condition must-match-is-top-result="true">
+                      <atomic-result-badge
+                        label="Top Result"
+                      ></atomic-result-badge>
+                    </atomic-field-condition>
+                  </atomic-result-section-badges>
+
+                  <atomic-result-section-title>
+                    <atomic-result-link>
+                      <a slot="attributes" target="_blank"></a>
+                    </atomic-result-link>
+                  </atomic-result-section-title>
+
+                  <atomic-result-section-visual class="force-fit-content">
+                    <atomic-field-condition if-defined="sports_blogimage">
+                      <atomic-result-image
+                        field="sports_blogimage"
+                        class="force-fit-content smooth-border"
+                      ></atomic-result-image>
+                    </atomic-field-condition>
+                  </atomic-result-section-visual>
+
+                  <atomic-result-section-excerpt style="margin-top: 0.5rem">
+                    <atomic-result-text field="excerpt"></atomic-result-text>
+                  </atomic-result-section-excerpt>
+
+                  <atomic-result-section-bottom-metadata>
+                    <atomic-result-fields-list>
+                      <atomic-field-condition
+                        class="field"
+                        if-defined="ytviewcount"
+                      >
+                        <span class="field-label">
+                          <atomic-text value="Views"></atomic-text>:
+                        </span>
+                        <atomic-result-number
+                          field="ytviewcount"
+                        ></atomic-result-number>
+                      </atomic-field-condition>
+
+                      <span class="field">
+                        <atomic-result-date
+                          relative-time="true"
+                          format="MMM D, YYYY"
+                        ></atomic-result-date>
+                      </span>
+                    </atomic-result-fields-list>
+                  </atomic-result-section-bottom-metadata>
+                </template>
+              </atomic-result-template>
+
+              <atomic-result-template must-match-source="Chatter">
+                <template>
+                  <style>
+                    .thumbnail {
+                      border-radius: 5px;
+                    }
+                  </style>
+                  <atomic-result-section-visual class="thumbnail">
+                    <img src="https://picsum.photos/360" />
+                  </atomic-result-section-visual>
+
+                  <atomic-result-section-badges>
+                    <atomic-field-condition must-match-is-recommendation="true">
+                      <atomic-result-badge
+                        label="Recommended"
+                      ></atomic-result-badge>
+                    </atomic-field-condition>
+                    <atomic-field-condition must-match-is-top-result="true">
+                      <atomic-result-badge
+                        label="Top Result"
+                      ></atomic-result-badge>
+                    </atomic-field-condition>
+                  </atomic-result-section-badges>
+
+                  <atomic-result-section-title>
+                    <atomic-result-link></atomic-result-link>
+                  </atomic-result-section-title>
+
+                  <atomic-result-section-excerpt>
+                    <atomic-result-text field="excerpt"></atomic-result-text>
+                  </atomic-result-section-excerpt>
+
+                  <atomic-result-section-children>
+                    <atomic-load-more-children-results></atomic-load-more-children-results>
+
+                    <atomic-result-children image-size="icon">
+                      <!-- CHILD -->
+                      <atomic-result-children-template>
+                        <!-- CHILD TEMPLATE -->
+                        <template>
+                          <atomic-result-section-visual>
+                            <atomic-result-image
+                              class="icon"
+                            ></atomic-result-image>
+                            <img
+                              src="https://picsum.photos/350"
+                              class="thumbnail"
+                            />
+                          </atomic-result-section-visual>
+
+                          <atomic-result-section-title-metadata>
+                            <atomic-result-link></atomic-result-link>
+                          </atomic-result-section-title-metadata>
+
+                          <atomic-result-section-excerpt>
+                            <atomic-result-text
+                              field="excerpt"
+                            ></atomic-result-text>
+                          </atomic-result-section-excerpt>
+
+                          <atomic-result-section-children>
+                            <atomic-result-children inherit-templates="">
+                            </atomic-result-children>
+                          </atomic-result-section-children>
+                        </template>
+                      </atomic-result-children-template>
+                    </atomic-result-children>
+                  </atomic-result-section-children>
+                </template>
+              </atomic-result-template>
+
+              <atomic-result-template>
+                <template>
+                  <style>
+                    .field {
+                      display: inline-flex;
+                      white-space: nowrap;
+                      align-items: center;
+                    }
+
+                    .field-label {
+                      font-weight: bold;
+                      margin-right: 0.25rem;
+                    }
+
+                    .badge-fullname::part(result-badge-element) {
+                      background-color: #1372ec;
+                    }
+
+                    .badge-fullname::part(result-badge-label) {
+                      color: #ffffff;
+                    }
+                  </style>
+                  <atomic-result-section-visual image-size="icon">
+                    <atomic-field-condition if-not-defined="thumbnailurl">
+                      <atomic-result-icon class="icon"></atomic-result-icon>
+                    </atomic-field-condition>
+                    <atomic-field-condition if-defined="thumbnailurl">
+                      <atomic-result-image
+                        field="thumbnailurl"
+                      ></atomic-result-image>
+                    </atomic-field-condition>
+                  </atomic-result-section-visual>
+                  <atomic-result-section-badges>
+                    <atomic-result-badge
+                      class="badge-fullname"
+                      field="fullname"
+                    ></atomic-result-badge>
+                  </atomic-result-section-badges>
+                  <atomic-result-section-title>
+                    <atomic-result-link>
+                      <a slot="attributes" target="_blank"></a>
+                    </atomic-result-link>
+                  </atomic-result-section-title>
+                  <atomic-result-section-title-metadata>
+                  </atomic-result-section-title-metadata>
+                  <atomic-result-section-excerpt>
+                    <atomic-result-text field="excerpt"></atomic-result-text>
+                  </atomic-result-section-excerpt>
+                  <atomic-result-section-bottom-metadata>
+                    <atomic-result-fields-list> </atomic-result-fields-list>
+                  </atomic-result-section-bottom-metadata>
+                </template>
+              </atomic-result-template>
+            </atomic-folded-result-list>
+            <atomic-query-error></atomic-query-error>
+            <atomic-no-results></atomic-no-results>
+          </atomic-layout-section>
+          <atomic-layout-section section="pagination">
+            <atomic-load-more-results></atomic-load-more-results>
+          </atomic-layout-section>
+        </atomic-layout-section>
+      </atomic-search-layout>
+    </atomic-search-interface>
+  </body>
+</html>

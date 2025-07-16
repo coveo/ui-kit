@@ -1,7 +1,7 @@
 {
-  "name": "@coveo/create-atomic-component",
-  "version": "1.2.21-test.2",
-  "description": "Initialize a Coveo Atomic Component",
+  "name": "@coveo/create-atomic-component-project",
+  "version": "1.2.16",
+  "description": "Initialize a Coveo Atomic Library Project",
   "type": "module",
   "main": "index.js",
   "bin": "index.js",
@@ -12,7 +12,7 @@
     "template/.gitignore"
   ],
   "scripts": {
-    "promote:npm:latest": "npm run-script -w=@coveo/ci promote-npm-prod"
+    "release:phase1": "npx -p=@coveord/release npm-publish"
   },
   "keywords": [
     "coveo",
@@ -23,8 +23,5 @@
   "license": "Apache-2.0",
   "publishConfig": {
     "access": "public"
-  },
-  "dependencies": {
-    "@coveo/create-atomic-component-project": "1.2.16"
   }
 }
