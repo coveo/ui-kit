@@ -27,7 +27,7 @@
       "ignore": ["src/lib/stencil-generated/**/*.ts"]
     },
     "packages/atomic-hosted-page": {
-      "entry": ["src/atomic-hosted-page.esm.ts", "loader/index.js"],
+      "entry": ["src/atomic-hosted-page.esm.ts", "loader/index.js", "dev/vite.config.ts"],
       "ignore": ["cdn/**"]
     },
     "packages/atomic-react": {

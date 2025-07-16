@@ -1,6 +1,7 @@
 import lint from '@commitlint/lint';
 import load from '@commitlint/load';
 import {getPullRequestTitle} from '../github-client.mjs';
+import '@commitlint/config-conventional';
 
 const specUrl = 'https://www.conventionalcommits.org/en/v1.0.0/#summary';
 
