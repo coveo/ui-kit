@@ -32,10 +32,7 @@ describe('atomic-product-numeric-field-value', () => {
   });
 
   const renderComponent = async (
-    options: {
-      field?: string;
-      product?: Product | null;
-    } = {}
+    options: {field?: string; product?: Product | null} = {}
   ) => {
     const productToUse = 'product' in options ? options.product : mockProduct;
     const {element, atomicInterface} =
@@ -191,18 +188,19 @@ describe('atomic-product-numeric-field-value', () => {
   });
 
   it('should work with different interface types', async () => {
-    const {element} = await renderInAtomicProduct<AtomicProductNumericFieldValue>({
-      template: html`<atomic-product-numeric-field-value
-        .field=${'ec_rating'}
-      ></atomic-product-numeric-field-value>`,
-      selector: 'atomic-product-numeric-field-value',
-      product: mockProduct,
-      bindings: (bindings) => {
-        bindings.interfaceElement.type = 'search';
-        bindings.i18n = i18n;
-        return bindings;
-      },
-    });
+    const {element} =
+      await renderInAtomicProduct<AtomicProductNumericFieldValue>({
+        template: html`<atomic-product-numeric-field-value
+          .field=${'ec_rating'}
+        ></atomic-product-numeric-field-value>`,
+        selector: 'atomic-product-numeric-field-value',
+        product: mockProduct,
+        bindings: (bindings) => {
+          bindings.interfaceElement.type = 'search';
+          bindings.i18n = i18n;
+          return bindings;
+        },
+      });
 
     expect(element).toBeDefined();
     expect(element?.field).toBe('ec_rating');

@@ -1,5 +1,5 @@
-import {Product} from '@coveo/headless/commerce';
-import {html, LitElement, nothing, PropertyValues} from 'lit';
+import type {Product} from '@coveo/headless/commerce';
+import {html, LitElement, nothing, type PropertyValues} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {when} from 'lit/directives/when.js';
 import {bindingGuard} from '@/src/decorators/binding-guard';
@@ -9,7 +9,7 @@ import {errorGuard} from '@/src/decorators/error-guard';
 import type {InitializableComponent} from '@/src/decorators/types';
 import {
   defaultNumberFormatter,
-  NumberFormatter,
+  type NumberFormatter,
 } from '../../common/formats/format-common';
 import type {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface';
 import {parseValue} from '../product-template-component-utils/product-utils.js';
@@ -32,7 +32,20 @@ export class AtomicProductNumericFieldValue
    */
   @property({type: String, reflect: true}) public field!: string;
 
-  @state() private product!: Product;
+  @state() private _product!: Product;
+
+  get product(): Product {
+    // Give priority to directly set product over controller
+    return this._product || this.productController.item;
+  }
+
+  set product(value: Product) {
+    if (this._product !== value) {
+      this._product = value;
+      this.updateValueToDisplay();
+      this.requestUpdate();
+    }
+  }
   @state() private formatter: NumberFormatter = defaultNumberFormatter;
   @state() private valueToDisplay: string | null = null;
 
@@ -51,35 +64,42 @@ export class AtomicProductNumericFieldValue
     event.stopPropagation();
     this.formatter = event.detail;
     this.updateValueToDisplay();
+    this.requestUpdate();
   };
 
   connectedCallback() {
     super.connectedCallback();
-    this.addEventListener('atomic/numberFormat', this.handleNumberFormatEvent as EventListener);
+    this.addEventListener(
+      'atomic/numberFormat',
+      this.handleNumberFormatEvent as EventListener
+    );
   }
 
   disconnectedCallback() {
-    this.removeEventListener('atomic/numberFormat', this.handleNumberFormatEvent as EventListener);
+    this.removeEventListener(
+      'atomic/numberFormat',
+      this.handleNumberFormatEvent as EventListener
+    );
     super.disconnectedCallback();
   }
 
   initialize() {
-    if (!this.product && this.productController.item) {
-      this.product = this.productController.item;
-    }
+    this.updateProductFromController();
+    this.updateValueToDisplay();
   }
 
   private formatValue(value: number): string {
     try {
-      return this.formatter(value, this.bindings.i18n.languages as string[]);
+      const languages = this.bindings?.i18n?.languages || ['en'];
+      return this.formatter(value, [...languages]);
     } catch (error) {
-      this.error = error as Error;
+      // Don't set this.error for formatting errors - they should not prevent rendering
       return value.toString();
     }
   }
 
   private updateValueToDisplay() {
-    if (!this.product) {
+    if (!this.product || !this.field) {
       this.valueToDisplay = null;
       return;
     }
@@ -98,16 +118,21 @@ export class AtomicProductNumericFieldValue
   }
 
   private updateProductFromController() {
-    if (this.productController.item) {
-      this.product = this.productController.item;
+    // Only update from controller if no product has been set directly
+    if (!this._product && this.productController.item) {
+      this._product = this.productController.item;
     }
   }
 
   protected willUpdate(changedProperties: PropertyValues): void {
     this.updateProductFromController();
-    
-    // Only update value display when relevant properties change
-    if (changedProperties.has('field') || changedProperties.has('product')) {
+
+    // Update value display when relevant properties change
+    if (
+      changedProperties.has('field') ||
+      changedProperties.has('_product') ||
+      changedProperties.has('formatter')
+    ) {
       this.updateValueToDisplay();
     }
   }
