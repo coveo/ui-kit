@@ -282,15 +282,6 @@ export function buildCoreEngine<
     reducerManager.addCrossReducer(options.crossReducer);
   }
   const logger = thunkExtraArguments.logger;
-  const getClientId = () => {
-    let clientId = '';
-    try {
-      clientId = getRelayInstanceFromState(engine.state).getMeta('').clientId;
-    } catch (e) {
-      logger.warn('Error while obtaining clientID from relay', e);
-    }
-    return clientId;
-  };
   const thunkExtraArgumentsWithRelay: CoreExtraArguments & ExtraArguments = {
     ...thunkExtraArguments,
     get relay() {
@@ -304,7 +295,7 @@ export function buildCoreEngine<
         return defaultNodeJSNavigatorContextProvider();
       }
 
-      return defaultBrowserNavigatorContextProvider(getClientId());
+      return defaultBrowserNavigatorContextProvider(this.relay);
     },
   };
   const store = createStore(
@@ -351,7 +342,7 @@ export function buildCoreEngine<
         return defaultNodeJSNavigatorContextProvider();
       }
 
-      return defaultBrowserNavigatorContextProvider(getClientId());
+      return defaultBrowserNavigatorContextProvider(this.relay);
     },
 
     logger,
