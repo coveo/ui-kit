@@ -1,3 +1,18 @@
+## <small>3.29.1 (2025-07-16)</small>
+
+* chore(atomic): enable biome recommended rules (#5582) ([595a264](https://github.com/coveo/ui-kit/commits/595a264)), closes [#5582](https://github.com/coveo/ui-kit/issues/5582)
+* chore(atomic): make atomic build 5x faster (#5657) ([9afec32](https://github.com/coveo/ui-kit/commits/9afec32)), closes [#5657](https://github.com/coveo/ui-kit/issues/5657)
+* chore(atomic): migrate item-link (#5607) ([b65e6d0](https://github.com/coveo/ui-kit/commits/b65e6d0)), closes [#5607](https://github.com/coveo/ui-kit/issues/5607)
+* chore(atomic): revert lightning css upgrade (#5622) ([f7120f5](https://github.com/coveo/ui-kit/commits/f7120f5)), closes [#5622](https://github.com/coveo/ui-kit/issues/5622)
+* chore(deps): Revert "chore(deps): update vite to v3.2.3 j:kit-282" (#5487) ([b9ad867](https://github.com/coveo/ui-kit/commits/b9ad867)), closes [#5487](https://github.com/coveo/ui-kit/issues/5487)
+* chore(deps): update tailwind to v4.1.11 j:kit-282 (#5603) ([73dff13](https://github.com/coveo/ui-kit/commits/73dff13)), closes [#5603](https://github.com/coveo/ui-kit/issues/5603)
+* chore(deps): update vite to v3.2.4 j:kit-282 (#5604) ([8e8dd6a](https://github.com/coveo/ui-kit/commits/8e8dd6a)), closes [#5604](https://github.com/coveo/ui-kit/issues/5604)
+* test(atomic): simpler query-summary tests (#5654) ([8314c49](https://github.com/coveo/ui-kit/commits/8314c49)), closes [#5654](https://github.com/coveo/ui-kit/issues/5654)
+* feat(atomic): add text fragments for HTML citation anchoring (#5572) ([86d1231](https://github.com/coveo/ui-kit/commits/86d1231)), closes [#5572](https://github.com/coveo/ui-kit/issues/5572)
+* fix(deps): update all dependencies j:kit-282 (#5605) ([8132ed8](https://github.com/coveo/ui-kit/commits/8132ed8)), closes [#5605](https://github.com/coveo/ui-kit/issues/5605)
+
+
+
 ## 3.28.0 (2025-07-09)
 
 * chore(atomic commerce): migrate atomic-commerce-load-more-products to Lit (#5551) ([9a77990](https://github.com/coveo/ui-kit/commits/9a77990)), closes [#5551](https://github.com/coveo/ui-kit/issues/5551)
