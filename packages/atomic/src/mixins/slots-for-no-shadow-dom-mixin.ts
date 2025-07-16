@@ -23,7 +23,6 @@ export interface LightDOMWithSlots {
   isTextNodeEmpty(node: Text): boolean;
   isSlotEmpty(slot: string): boolean;
   yield(slot: string, defaultContent?: unknown): TemplateResult | unknown[];
-  _relocateSlottedContent(): void;
 }
 
 export const SlotsForNoShadowDOMMixin = <T extends Constructor<LitElement>>(
@@ -156,21 +155,6 @@ export const SlotsForNoShadowDOMMixin = <T extends Constructor<LitElement>>(
       return [placeholder];
     }
 
-    _relocateSlottedContent(): void {
-      if (!this._pendingSlotRelocation) {
-        return;
-      }
-
-      this._processSlotRelocations();
-      this._resetRelocationState();
-    }
-
-    private _processSlotRelocations(): void {
-      for (const placeholderInfo of this._slotPlaceholders) {
-        this._relocateSingleSlot(placeholderInfo);
-      }
-    }
-
     private _relocateSingleSlot(placeholderInfo: SlotPlaceholder): void {
       const {placeholder, originalNodes} = placeholderInfo;
       const parent = placeholder.parentNode;
@@ -201,11 +185,6 @@ export const SlotsForNoShadowDOMMixin = <T extends Constructor<LitElement>>(
       }
     }
 
-    private _resetRelocationState(): void {
-      this._slotPlaceholders = [];
-      this._pendingSlotRelocation = false;
-    }
-
     willUpdate(changedProperties: PropertyValues): void {
       super.willUpdate?.(changedProperties);
 
@@ -218,7 +197,16 @@ export const SlotsForNoShadowDOMMixin = <T extends Constructor<LitElement>>(
       super.updated?.(changedProperties);
 
       // Relocate slot content after Lit has finished updating the DOM
-      this._relocateSlottedContent();
+      if (!this._pendingSlotRelocation) {
+        return;
+      }
+
+      for (const placeholderInfo of this._slotPlaceholders) {
+        this._relocateSingleSlot(placeholderInfo);
+      }
+
+      this._slotPlaceholders = [];
+      this._pendingSlotRelocation = false;
     }
   }
 
