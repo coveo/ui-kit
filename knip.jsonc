@@ -19,8 +19,8 @@
 
     // Modifying entry points and ignored files for certain packages.
     "packages/headless": {
-      "entry": ["src/*index.ts"],
-      "ignore": ["ponyfills/*.js"]
+      "entry": ["src/*index.ts", "ponyfills/*.js"],
+      "ignoreDependencies": ["navigator.sendbeacon"]
     },
     "packages/atomic-angular/projects/atomic-angular": {
       "entry": ["src/public-api.ts"],
