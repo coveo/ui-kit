@@ -366,12 +366,6 @@ export namespace Components {
         "summary": Summary<SearchSummaryState | ProductListingSummaryState>;
     }
     /**
-     * The `atomic-commerce-query-error` component handles fatal errors when performing a query on the Commerce API. When the error is known, it displays a link to relevant documentation for debugging purposes. When the error is unknown, it displays a small text area with the JSON content of the error.
-     * @alpha 
-     */
-    interface AtomicCommerceQueryError {
-    }
-    /**
      * The `atomic-commerce-refine-modal` is automatically created as a child of the `atomic-commerce-search-interface` when the `atomic-commerce-refine-toggle` is initialized.
      * When the modal is opened, the class `atomic-modal-opened` is added to the interface element and the body, allowing further customization.
      * @alpha 
@@ -3552,16 +3546,6 @@ declare global {
         new (): HTMLAtomicCommerceNumericFacetElement;
     };
     /**
-     * The `atomic-commerce-query-error` component handles fatal errors when performing a query on the Commerce API. When the error is known, it displays a link to relevant documentation for debugging purposes. When the error is unknown, it displays a small text area with the JSON content of the error.
-     * @alpha 
-     */
-    interface HTMLAtomicCommerceQueryErrorElement extends Components.AtomicCommerceQueryError, HTMLStencilElement {
-    }
-    var HTMLAtomicCommerceQueryErrorElement: {
-        prototype: HTMLAtomicCommerceQueryErrorElement;
-        new (): HTMLAtomicCommerceQueryErrorElement;
-    };
-    /**
      * The `atomic-commerce-refine-modal` is automatically created as a child of the `atomic-commerce-search-interface` when the `atomic-commerce-refine-toggle` is initialized.
      * When the modal is opened, the class `atomic-modal-opened` is added to the interface element and the body, allowing further customization.
      * @alpha 
@@ -5325,7 +5309,6 @@ declare global {
         "atomic-commerce-facet-number-input": HTMLAtomicCommerceFacetNumberInputElement;
         "atomic-commerce-facets": HTMLAtomicCommerceFacetsElement;
         "atomic-commerce-numeric-facet": HTMLAtomicCommerceNumericFacetElement;
-        "atomic-commerce-query-error": HTMLAtomicCommerceQueryErrorElement;
         "atomic-commerce-refine-modal": HTMLAtomicCommerceRefineModalElement;
         "atomic-commerce-timeframe-facet": HTMLAtomicCommerceTimeframeFacetElement;
         "atomic-did-you-mean": HTMLAtomicDidYouMeanElement;
@@ -5791,12 +5774,6 @@ declare namespace LocalJSX {
           * The Summary controller instance.
          */
         "summary": Summary<SearchSummaryState | ProductListingSummaryState>;
-    }
-    /**
-     * The `atomic-commerce-query-error` component handles fatal errors when performing a query on the Commerce API. When the error is known, it displays a link to relevant documentation for debugging purposes. When the error is unknown, it displays a small text area with the JSON content of the error.
-     * @alpha 
-     */
-    interface AtomicCommerceQueryError {
     }
     /**
      * The `atomic-commerce-refine-modal` is automatically created as a child of the `atomic-commerce-search-interface` when the `atomic-commerce-refine-toggle` is initialized.
@@ -8671,7 +8648,6 @@ declare namespace LocalJSX {
         "atomic-commerce-facet-number-input": AtomicCommerceFacetNumberInput;
         "atomic-commerce-facets": AtomicCommerceFacets;
         "atomic-commerce-numeric-facet": AtomicCommerceNumericFacet;
-        "atomic-commerce-query-error": AtomicCommerceQueryError;
         "atomic-commerce-refine-modal": AtomicCommerceRefineModal;
         "atomic-commerce-timeframe-facet": AtomicCommerceTimeframeFacet;
         "atomic-did-you-mean": AtomicDidYouMean;
@@ -8904,11 +8880,6 @@ declare module "@stencil/core" {
              * @alpha 
              */
             "atomic-commerce-numeric-facet": LocalJSX.AtomicCommerceNumericFacet & JSXBase.HTMLAttributes<HTMLAtomicCommerceNumericFacetElement>;
-            /**
-             * The `atomic-commerce-query-error` component handles fatal errors when performing a query on the Commerce API. When the error is known, it displays a link to relevant documentation for debugging purposes. When the error is unknown, it displays a small text area with the JSON content of the error.
-             * @alpha 
-             */
-            "atomic-commerce-query-error": LocalJSX.AtomicCommerceQueryError & JSXBase.HTMLAttributes<HTMLAtomicCommerceQueryErrorElement>;
             /**
              * The `atomic-commerce-refine-modal` is automatically created as a child of the `atomic-commerce-search-interface` when the `atomic-commerce-refine-toggle` is initialized.
              * When the modal is opened, the class `atomic-modal-opened` is added to the interface element and the body, allowing further customization.
