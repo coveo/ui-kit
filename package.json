@@ -57,10 +57,10 @@
     "rimraf": "6.0.1",
     "semver": "7.7.2",
     "typescript": "5.8.3",
-    "ts-node": "10.9.2",
     "vitest": "3.2.1",
     "execa": "9.6.0",
-    "aws-sdk": "2.1692.0"
+    "aws-sdk": "2.1692.0",
+    "playwright": "1.53.2"
   },
   "overrides": {
     "@coveo/ci": {
