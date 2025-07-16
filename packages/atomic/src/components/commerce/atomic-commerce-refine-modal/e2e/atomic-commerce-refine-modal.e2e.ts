@@ -4,6 +4,9 @@ test.describe('AtomicCommerceRefineModal', () => {
   test.beforeEach(async ({page}) => {
     await page.goto('/iframe.html?id=atomic-commerce-refine-toggle--default');
     await page.locator('atomic-commerce-refine-toggle').waitFor();
+    await expect(
+      page.getByRole('button', {name: 'Sort & Filter'})
+    ).toBeVisible();
     await page.locator('atomic-commerce-refine-toggle').click();
   });
 
