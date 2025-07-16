@@ -1,16 +1,16 @@
-import {MockInstance} from 'vitest';
+import type {MockInstance} from 'vitest';
 import {
   PlatformClient,
-  PlatformClientCallError,
+  type PlatformClientCallError,
 } from '../api/platform-client.js';
 import {
   buildSearchEngine,
   getSampleSearchEngineConfiguration,
 } from '../app/search-engine/search-engine.js';
 import {
-  SearchBoxOptions,
-  SearchBoxProps,
   buildCoreSearchBox,
+  type SearchBoxOptions,
+  type SearchBoxProps,
 } from '../controllers/core/search-box/headless-core-search-box.js';
 import {
   interfaceChange,
@@ -22,7 +22,7 @@ import {
   omniboxFromLink,
   searchFromLink,
 } from '../features/analytics/analytics-actions.js';
-import {LegacySearchAction} from '../features/analytics/analytics-utils.js';
+import type {LegacySearchAction} from '../features/analytics/analytics-utils.js';
 import {
   didYouMeanAutomatic,
   didYouMeanClick,
@@ -56,8 +56,8 @@ import {
   logDateFacetBreadcrumb,
 } from '../features/facets/range-facets/date-facet-set/date-facet-analytics-actions.js';
 import {dateFacetSetReducer} from '../features/facets/range-facets/date-facet-set/date-facet-set-slice.js';
-import {DateFacetValue} from '../features/facets/range-facets/date-facet-set/interfaces/response.js';
-import {NumericFacetValue} from '../features/facets/range-facets/numeric-facet-set/interfaces/response.js';
+import type {DateFacetValue} from '../features/facets/range-facets/date-facet-set/interfaces/response.js';
+import type {NumericFacetValue} from '../features/facets/range-facets/numeric-facet-set/interfaces/response.js';
 import {registerNumericFacet} from '../features/facets/range-facets/numeric-facet-set/numeric-facet-actions.js';
 import {
   logNumericFacetBreadcrumb,
@@ -68,12 +68,12 @@ import {
   logInstantResultsSearch,
   searchboxAsYouType,
 } from '../features/instant-results/instant-result-analytics-actions.js';
-import {fetchQuerySuggestions} from '../features/query-suggest/query-suggest-actions.js';
-import {OmniboxSuggestionMetadata} from '../features/query-suggest/query-suggest-analytics-actions.js';
 import {
   logSearchboxSubmit,
   searchboxSubmit,
 } from '../features/query/query-analytics-actions.js';
+import {fetchQuerySuggestions} from '../features/query-suggest/query-suggest-actions.js';
+import type {OmniboxSuggestionMetadata} from '../features/query-suggest/query-suggest-analytics-actions.js';
 import {logRecentQueryClick} from '../features/recent-queries/recent-queries-analytics-actions.js';
 import {
   logRecommendationUpdate,
@@ -105,6 +105,7 @@ const legacySearchEngine = buildSearchEngine({
   },
 });
 
+// biome-ignore lint/suspicious/noExportsInTest: <>
 export function assertNextEqualsLegacy(
   call: MockInstance,
   excludedProperties: string[] = excludedBaseProperties
@@ -114,6 +115,7 @@ export function assertNextEqualsLegacy(
   );
 }
 
+// biome-ignore lint/suspicious/noExportsInTest: <>
 export function assertActionCause(
   call: MockInstance,
   callIndex: number,
@@ -129,6 +131,7 @@ export function assertActionCause(
   );
 }
 
+// biome-ignore lint/suspicious/noExportsInTest: <>
 export function extractAndExcludeProperties(
   call: MockInstance,
   callIndex: number,
@@ -153,6 +156,7 @@ function excludeProperties(
   return result;
 }
 
+// biome-ignore lint/suspicious/noExportsInTest: <>
 export const excludedBaseProperties = [
   'clientId',
   'capture',

@@ -1,4 +1,4 @@
-import {directive, Directive} from 'lit/directive.js';
+import {Directive, directive} from 'lit/directive.js';
 import {classMap} from 'lit/directives/class-map.js';
 
 export const tw = <T extends {[x: string]: boolean}>(

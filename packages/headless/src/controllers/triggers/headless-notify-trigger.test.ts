@@ -1,9 +1,9 @@
 import {
   buildMockSearchEngine,
-  MockedSearchEngine,
+  type MockedSearchEngine,
 } from '../../test/mock-engine-v2.js';
 import {createMockState} from '../../test/mock-state.js';
-import {NotifyTrigger} from '../core/triggers/headless-core-notify-trigger.js';
+import type {NotifyTrigger} from '../core/triggers/headless-core-notify-trigger.js';
 import {buildNotifyTrigger} from './headless-notify-trigger.js';
 
 vi.mock('../../features/triggers/trigger-analytics-actions');

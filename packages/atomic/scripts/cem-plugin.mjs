@@ -100,7 +100,7 @@ function getDecoratorNameAndOptions(node, ts) {
 export function mapPropertyPlugin() {
   return {
     name: 'map-property',
-    analyzePhase({ts, node, moduleDoc, context}) {
+    analyzePhase({ts, node, moduleDoc}) {
       if (ts.isPropertyDeclaration(node)) {
         const {decoratorName, options} = getDecoratorNameAndOptions(node, ts);
         if (decoratorName === 'mapProperty') {

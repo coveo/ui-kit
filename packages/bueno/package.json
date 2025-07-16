@@ -9,7 +9,7 @@
   "module": "./dist/bueno.esm.js",
   "types": "./dist/definitions/index.d.ts",
   "license": "Apache-2.0",
-  "version": "1.0.19",
+  "version": "1.0.21",
   "files": [
     "dist/"
   ],
@@ -36,7 +36,7 @@
   },
   "devDependencies": {
     "@coveo/ci": "1.0.0",
-    "vitest": "3.2.3"
+    "vitest": "3.2.1"
   },
   "engines": {
     "node": "^20.9.0 || ^22.11.0"

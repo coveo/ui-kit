@@ -1,5 +1,5 @@
-import {PayloadAction} from '@reduxjs/toolkit';
-import {CoreEngine} from '../../app/engine.js';
+import type {PayloadAction} from '@reduxjs/toolkit';
+import type {CoreEngine} from '../../app/engine.js';
 import {debugReducer as debug} from '../../features/debug/debug-slice.js';
 import {disableDebug, enableDebug} from './debug-actions.js';
 

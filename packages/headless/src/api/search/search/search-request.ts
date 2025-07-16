@@ -1,4 +1,4 @@
-import {
+import type {
   BaseParam,
   ContextParam,
   DebugParam,
@@ -7,11 +7,12 @@ import {
   LocaleParam,
   NumberOfResultsParam,
 } from '../../platform-service-params.js';
-import {
+import type {
   ActionsHistoryParam,
   AdvancedQueryParam,
   AnalyticsParam,
   AuthenticationParam,
+  AutomaticFacetsParams,
   ConstantQueryParam,
   DisjunctionQueryParam,
   EnableDidYouMeanParam,
@@ -21,17 +22,16 @@ import {
   FacetsParam,
   FieldsToIncludeParam,
   FirstResultParam,
-  AutomaticFacetsParams,
   LargeQueryParam,
   PipelineParam,
+  PipelineRuleParams,
+  QueryCorrectionParam,
   QueryParam,
   ReferrerParam,
   SearchHubParam,
   SortCriteriaParam,
   TabParam,
   TimezoneParam,
-  QueryCorrectionParam,
-  PipelineRuleParams,
 } from '../search-api-params.js';
 
 export type SearchRequest = BaseParam &

@@ -2,21 +2,21 @@ import {
   ArrayValue,
   BooleanValue,
   RecordValue,
-  SchemaDefinition,
+  type SchemaDefinition,
   StringValue,
   Value,
 } from '@coveo/bueno';
 import {createAction} from '@reduxjs/toolkit';
-import {IRuntimeEnvironment} from 'coveo.analytics';
-import {PlatformEnvironment} from '../../utils/url-utils.js';
+import type {IRuntimeEnvironment} from 'coveo.analytics';
+import type {PlatformEnvironment} from '../../utils/url-utils.js';
 import {
   nonEmptyString,
-  validatePayload,
-  requiredNonEmptyString,
   optionalNonEmptyVersionString,
   optionalTrackingId,
+  requiredNonEmptyString,
+  validatePayload,
 } from '../../utils/validate-payload.js';
-import {COVEO_FRAMEWORK, CoveoFramework} from '../../utils/version.js';
+import {COVEO_FRAMEWORK, type CoveoFramework} from '../../utils/version.js';
 
 const originSchemaOnConfigUpdate = () => nonEmptyString;
 
@@ -58,7 +58,7 @@ export interface UpdateSearchConfigurationActionCreatorPayload {
   /**
    * The base URL to use to proxy Coveo search requests (e.g., `https://example.com/search`).
    *
-   * This is an advanced option that you should only set if you need to proxy Coveo searchrequests through your own
+   * This is an advanced option that you only set if you proxy Coveo searchrequests through your own
    * server. In most cases, you should not set this option.
    *
    *  See [Headless proxy: Search](https://docs.coveo.com/en/headless/latest/usage/proxy#search).
@@ -136,7 +136,7 @@ export interface UpdateAnalyticsConfigurationActionCreatorPayload {
   /**
    * The base URL to use to proxy Coveo analytics requests (e.g., `https://example.com/analytics`).
    *
-   * This is an advanced option that you should only set if you need to proxy Coveo analytics requests through your own
+   * This is an advanced option that you only set if you proxy Coveo analytics requests through your own
    * server. In most cases, you should not set this option.
    *
    * See [Headless proxy: Analytics](https://docs.coveo.com/en/headless/latest/usage/proxy#analytics).

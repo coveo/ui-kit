@@ -1,8 +1,8 @@
-import {ExternalCartItem} from '@/external-services/external-cart-service';
-import {ExternalCatalogItem} from '@/external-services/external-catalog-service';
+import {useEffect} from 'react';
+import type {ExternalCartItem} from '@/external-services/external-cart-service';
+import type {ExternalCatalogItem} from '@/external-services/external-catalog-service';
 import {useProductView} from '@/lib/commerce-engine';
 import {formatCurrency} from '@/utils/format-utils';
-import {useEffect} from 'react';
 import AddToCartButton from './add-to-cart-button';
 import RemoveFromCartButton from './remove-from-cart-button';
 
@@ -32,7 +32,7 @@ export default function ProductView({
       methods.view({name, price, productId});
       viewed = true;
     }
-  }, []);
+  }, [methods, name, price, productId, viewed]);
 
   return (
     <>

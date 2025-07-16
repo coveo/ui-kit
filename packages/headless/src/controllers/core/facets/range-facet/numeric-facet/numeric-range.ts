@@ -1,5 +1,5 @@
-import {NumericRangeRequest} from '../../../../../features/facets/range-facets/numeric-facet-set/interfaces/request.js';
-import {FacetValueState} from '../../facet/headless-core-facet.js';
+import type {NumericRangeRequest} from '../../../../../features/facets/range-facets/numeric-facet-set/interfaces/request.js';
+import type {FacetValueState} from '../../facet/headless-core-facet.js';
 
 export interface NumericRangeOptions {
   /**

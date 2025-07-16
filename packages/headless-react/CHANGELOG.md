@@ -1,3 +1,17 @@
+## <small>2.4.36 (2025-07-16)</small>
+
+* chore(deps): update vite to v3.2.4 j:kit-282 (#5604) ([8e8dd6a](https://github.com/coveo/ui-kit/commits/8e8dd6a)), closes [#5604](https://github.com/coveo/ui-kit/issues/5604)
+* chore(headless-react): enable recommended biome rules (#5634) ([7df6bd6](https://github.com/coveo/ui-kit/commits/7df6bd6)), closes [#5634](https://github.com/coveo/ui-kit/issues/5634)
+
+
+
+## <small>2.4.34 (2025-07-09)</small>
+
+* chore(deps): update dependency typedoc to v0.28.7 j:kit-282 (#5591) ([f769419](https://github.com/coveo/ui-kit/commits/f769419)), closes [#5591](https://github.com/coveo/ui-kit/issues/5591)
+* ci: fix flakiness in headless-react (#5585) ([5abcea5](https://github.com/coveo/ui-kit/commits/5abcea5)), closes [#5585](https://github.com/coveo/ui-kit/issues/5585)
+
+
+
 ## <small>2.4.33 (2025-07-02)</small>
 
 * chore(lint): integrate biome (#5507) ([53bcada](https://github.com/coveo/ui-kit/commits/53bcada)), closes [#5507](https://github.com/coveo/ui-kit/issues/5507)

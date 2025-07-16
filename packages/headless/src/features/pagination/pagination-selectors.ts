@@ -1,6 +1,6 @@
-import {PaginationSection} from '../../state/state-sections.js';
+import type {PaginationSection} from '../../state/state-sections.js';
 import {minimumPage} from './pagination-constants.js';
-import {calculatePage, calculateMaxPage} from './pagination-slice.js';
+import {calculateMaxPage, calculatePage} from './pagination-slice.js';
 
 interface Range {
   start: number;

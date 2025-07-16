@@ -9,19 +9,19 @@ import {updateQuery} from '../../../features/commerce/query/query-actions.js';
 import {queryReducer as commerceQuery} from '../../../features/commerce/query/query-slice.js';
 import {selectCategoryFacetSearchResult} from '../../../features/facets/facet-search-set/category/category-facet-search-actions.js';
 import {categoryFacetSearchSetReducer as categoryFacetSearchSet} from '../../../features/facets/facet-search-set/category/category-facet-search-set-slice.js';
-import {CategoryFacetSearchState} from '../../../features/facets/facet-search-set/category/category-facet-search-set-state.js';
+import type {CategoryFacetSearchState} from '../../../features/facets/facet-search-set/category/category-facet-search-set-state.js';
 import {updateFacetSearch} from '../../../features/facets/facet-search-set/specific/specific-facet-search-actions.js';
-import {CommerceAppState} from '../../../state/commerce-app-state.js';
+import type {CommerceAppState} from '../../../state/commerce-app-state.js';
 import {buildMockCategoryFacetSearch} from '../../../test/mock-category-facet-search.js';
 import {buildMockCommerceState} from '../../../test/mock-commerce-state.js';
 import {
   buildMockCommerceEngine,
-  MockedCommerceEngine,
+  type MockedCommerceEngine,
 } from '../../../test/mock-engine-v2.js';
-import {CategoryFacetOptions} from '../core/facets/category/headless-commerce-category-facet.js';
+import type {CategoryFacetOptions} from '../core/facets/category/headless-commerce-category-facet.js';
 import {
   buildCategoryFilterSuggestions,
-  CategoryFilterSuggestions,
+  type CategoryFilterSuggestions,
 } from './headless-category-filter-suggestions.js';
 
 vi.mock(

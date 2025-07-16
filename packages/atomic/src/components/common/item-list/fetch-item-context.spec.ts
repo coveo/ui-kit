@@ -1,4 +1,4 @@
-import {describe, it, expect, beforeEach, vi} from 'vitest';
+import {beforeEach, describe, expect, it, vi} from 'vitest';
 import {closest} from '../../../utils/dom-utils.js';
 import {buildCustomEvent} from '../../../utils/event-utils.js';
 import {MissingParentError} from './context/item-context-controller.js';

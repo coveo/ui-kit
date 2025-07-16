@@ -1,4 +1,4 @@
-import {test, expect} from './fixture';
+import {expect, test} from './fixture';
 
 test.describe('default', async () => {
   test('should display atomic product components when a child of a product list', async ({

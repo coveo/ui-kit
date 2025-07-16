@@ -1,4 +1,4 @@
-@import '../../../global/global.pcss';
+@reference '../../../utils/coveo.tw.css';
 
 /**
  * @prop --atomic-more-results-progress-bar-color-from: Color of the start of the gradient for the load more results progress bar.

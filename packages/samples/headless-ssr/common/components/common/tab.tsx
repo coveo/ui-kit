@@ -1,4 +1,4 @@
-import {Tab, TabState} from '@coveo/headless/ssr';
+import type {Tab, TabState} from '@coveo/headless/ssr';
 
 interface TabCommonProps {
   state: TabState;
@@ -21,6 +21,7 @@ export default function TabCommon({
 
   return (
     <button
+      type="button"
       role="tab"
       aria-selected={state.isActive}
       key={tabName}

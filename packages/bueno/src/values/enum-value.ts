@@ -1,5 +1,5 @@
-import {SchemaValue} from '../schema.js';
-import {Value, ValueConfig, isUndefined} from './value.js';
+import type {SchemaValue} from '../schema.js';
+import {isUndefined, Value, type ValueConfig} from './value.js';
 
 export interface EnumValueConfig<T> extends ValueConfig<T> {
   enum: Record<string | number, string | number>;

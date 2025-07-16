@@ -1,12 +1,12 @@
-import {SearchResponseSuccess} from '../../api/search/search/search-response.js';
+import type {SearchResponseSuccess} from '../../api/search/search/search-response.js';
 import {
   buildMockQuestionAnswer,
   buildMockQuestionsAnswers,
 } from '../../test/mock-question-answer.js';
 import {buildMockRaw} from '../../test/mock-raw.js';
 import {buildMockResult} from '../../test/mock-result.js';
-import {buildMockSearchResponse} from '../../test/mock-search-response.js';
 import {buildMockSearch} from '../../test/mock-search.js';
+import {buildMockSearchResponse} from '../../test/mock-search-response.js';
 import {executeSearch} from '../search/search-actions.js';
 import {
   collapseSmartSnippet,
@@ -19,7 +19,7 @@ import {
 import {questionAnsweringReducer} from './question-answering-slice.js';
 import {
   getQuestionAnsweringInitialState,
-  QuestionAnsweringState,
+  type QuestionAnsweringState,
 } from './question-answering-state.js';
 
 function buildUniqueQuestionAnswer(increment: number) {

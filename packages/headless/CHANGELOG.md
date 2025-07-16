@@ -1,3 +1,22 @@
+## <small>3.27.4 (2025-07-16)</small>
+
+* chore: remove all traces of eslint-plugin-canonical (#5663) ([2d3a8a3](https://github.com/coveo/ui-kit/commits/2d3a8a3)), closes [#5663](https://github.com/coveo/ui-kit/issues/5663)
+* chore(deps): update vite to v3.2.4 j:kit-282 (#5604) ([8e8dd6a](https://github.com/coveo/ui-kit/commits/8e8dd6a)), closes [#5604](https://github.com/coveo/ui-kit/issues/5604)
+* chore(headless): enable biome recommended rules (#5617) ([af474bd](https://github.com/coveo/ui-kit/commits/af474bd)), closes [#5617](https://github.com/coveo/ui-kit/issues/5617)
+* docs(headless): Updates the docstring according to the style guide (#5612) ([1b7a157](https://github.com/coveo/ui-kit/commits/1b7a157)), closes [#5612](https://github.com/coveo/ui-kit/issues/5612)
+* fix(deps): update dependency @coveo/relay to v1.2.5 j:kit-282 (#5606) ([1ff9835](https://github.com/coveo/ui-kit/commits/1ff9835)), closes [#5606](https://github.com/coveo/ui-kit/issues/5606)
+
+
+
+## <small>3.27.2 (2025-07-09)</small>
+
+* chore(deps): update dependency typedoc to v0.28.7 j:kit-282 (#5591) ([f769419](https://github.com/coveo/ui-kit/commits/f769419)), closes [#5591](https://github.com/coveo/ui-kit/issues/5591)
+* fix(headless commerce): ensure headless uses the same relay reference between engine and thunk (#557 ([915daea](https://github.com/coveo/ui-kit/commits/915daea)), closes [#5578](https://github.com/coveo/ui-kit/issues/5578) [/github.com/coveo/ui-kit/blob/9e01022db1d190ed5f8c13fd720b83886a32a3f9/packages/headless/src/app/commerce-engine/commerce-engine.ts#L138](https://github.com//github.com/coveo/ui-kit/blob/9e01022db1d190ed5f8c13fd720b83886a32a3f9/packages/headless/src/app/commerce-engine/commerce-engine.ts/issues/L138)
+* fix(headless): add previous selection state to facet state object. (#5544) ([c05dd1a](https://github.com/coveo/ui-kit/commits/c05dd1a)), closes [#5544](https://github.com/coveo/ui-kit/issues/5544)
+* fix(headless): send action cause in legacy analytics mode (#5566) ([9e01022](https://github.com/coveo/ui-kit/commits/9e01022)), closes [#5566](https://github.com/coveo/ui-kit/issues/5566) [/github.com/coveo/ui-kit/blob/fix/SVCC-5218/packages/headless/src/features/search/search-actions.ts#L118](https://github.com//github.com/coveo/ui-kit/blob/fix/SVCC-5218/packages/headless/src/features/search/search-actions.ts/issues/L118) [/github.com/coveo/ui-kit/blob/fix/SVCC-5218/packages/headless/src/features/search/search-actions.ts#L126](https://github.com//github.com/coveo/ui-kit/blob/fix/SVCC-5218/packages/headless/src/features/search/search-actions.ts/issues/L126)
+
+
+
 ## <small>3.27.1 (2025-07-02)</small>
 
 * chore(headless): deprecate restoreTab action (KIT-4398) (#5527) ([e5f54e7](https://github.com/coveo/ui-kit/commits/e5f54e7)), closes [#5527](https://github.com/coveo/ui-kit/issues/5527)

@@ -1,9 +1,9 @@
-import {FunctionalComponentWithChildren} from '@/src/utils/functional-component-utils';
 import {html} from 'lit';
 import {ifDefined} from 'lit/directives/if-defined.js';
 import {keyed} from 'lit/directives/keyed.js';
+import type {FunctionalComponentWithChildren} from '@/src/utils/functional-component-utils';
 import {renderButton} from '../../button';
-import {FacetValuePropsBase} from '../facet-common';
+import type {FacetValuePropsBase} from '../facet-common';
 
 export const renderFacetValueBox: FunctionalComponentWithChildren<
   FacetValuePropsBase

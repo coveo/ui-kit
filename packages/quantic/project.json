@@ -45,7 +45,9 @@
       "executor": "nx:run-commands",
       "options": {
         "commands": [
-          "npm run lint:check:tests"
+          "eslint force-app/main/default/lwc/",
+          "eslint force-app/examples/main/lwc/",
+          "prettier \"force-app/{,**}/*.js\" --check"
         ],
         "cwd": "{projectRoot}"
       }
@@ -54,7 +56,9 @@
       "executor": "nx:run-commands",
       "options": {
         "commands": [
-          "npm run lint:fix"
+          "eslint --fix force-app/main/default/lwc/",
+          "eslint --fix force-app/examples/main/lwc/",
+          "prettier \"force-app/{,**}/*.js\" --write"
         ],
         "cwd": "{projectRoot}"
       }

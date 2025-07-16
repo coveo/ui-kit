@@ -1,7 +1,10 @@
 import {createSelector} from '@reduxjs/toolkit';
-import {CommerceAPIErrorStatusResponse} from '../../../api/commerce/commerce-api-error-response.js';
-import {ChildProduct, Product} from '../../../api/commerce/common/product.js';
-import {
+import type {CommerceAPIErrorStatusResponse} from '../../../api/commerce/commerce-api-error-response.js';
+import type {
+  ChildProduct,
+  Product,
+} from '../../../api/commerce/common/product.js';
+import type {
   CommerceEngine,
   CommerceEngineState,
 } from '../../../app/commerce-engine/commerce-engine.js';
@@ -11,6 +14,7 @@ import {
   perPageRecommendationSelector,
   totalEntriesRecommendationSelector,
 } from '../../../features/commerce/pagination/pagination-selectors.js';
+import {recommendationsOptionsSchema} from '../../../features/commerce/recommendations/recommendations.js';
 import {
   fetchMoreRecommendations,
   fetchRecommendations,
@@ -22,19 +26,18 @@ import {
   numberOfRecommendationsSelector,
 } from '../../../features/commerce/recommendations/recommendations-selectors.js';
 import {recommendationsReducer as recommendations} from '../../../features/commerce/recommendations/recommendations-slice.js';
-import {recommendationsOptionsSchema} from '../../../features/commerce/recommendations/recommendations.js';
 import {loadReducerError} from '../../../utils/errors.js';
 import {validateInitialState} from '../../../utils/validate-payload.js';
 import {
   buildController,
-  Controller,
+  type Controller,
 } from '../../controller/headless-controller.js';
 import {
-  BaseSolutionTypeSubControllers,
+  type BaseSolutionTypeSubControllers,
   buildBaseSubControllers,
 } from '../core/sub-controller/headless-sub-controller.js';
-import {SummaryState} from '../core/summary/headless-core-summary.js';
-import {RecommendationsSummaryState} from './summary/headless-recommendations-summary.js';
+import type {SummaryState} from '../core/summary/headless-core-summary.js';
+import type {RecommendationsSummaryState} from './summary/headless-recommendations-summary.js';
 
 /**
  * The `Recommendations` controller exposes a method for retrieving recommendations content in a commerce interface.

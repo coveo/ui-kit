@@ -1,32 +1,32 @@
 import {configuration} from '../../../app/common-reducers.js';
-import {SearchEngine} from '../../../app/search-engine/search-engine.js';
+import type {SearchEngine} from '../../../app/search-engine/search-engine.js';
 import {updateFacetOptions} from '../../../features/facet-options/facet-options-actions.js';
 import {categoryFacetSetReducer as categoryFacetSet} from '../../../features/facets/category-facet-set/category-facet-set-slice.js';
-import {CategoryFacetSortCriterion} from '../../../features/facets/category-facet-set/interfaces/request.js';
-import {CategoryFacetValue} from '../../../features/facets/category-facet-set/interfaces/response.js';
+import type {CategoryFacetSortCriterion} from '../../../features/facets/category-facet-set/interfaces/request.js';
+import type {CategoryFacetValue} from '../../../features/facets/category-facet-set/interfaces/response.js';
 import {categoryFacetSearchSetReducer as categoryFacetSearchSet} from '../../../features/facets/facet-search-set/category/category-facet-search-set-slice.js';
 import {
   executeFacetSearch,
   executeFieldSuggest,
 } from '../../../features/facets/facet-search-set/generic/generic-facet-search-actions.js';
 import {
-  logFacetUpdateSort,
-  logFacetShowMore,
-  logFacetShowLess,
-  logFacetClearAll,
-  logFacetDeselect,
-  logFacetSelect,
   facetClearAll,
   facetDeselect,
   facetSelect,
+  logFacetClearAll,
+  logFacetDeselect,
+  logFacetSelect,
+  logFacetShowLess,
+  logFacetShowMore,
+  logFacetUpdateSort,
 } from '../../../features/facets/facet-set/facet-set-analytics-actions.js';
 import {
-  SearchAction,
   executeSearch,
   fetchFacetValues,
+  type SearchAction,
 } from '../../../features/search/search-actions.js';
 import {searchReducer as search} from '../../../features/search/search-slice.js';
-import {
+import type {
   CategoryFacetSearchSection,
   CategoryFacetSection,
   ConfigurationSection,
@@ -34,20 +34,20 @@ import {
 } from '../../../state/state-sections.js';
 import {loadReducerError} from '../../../utils/errors.js';
 import {
+  buildCoreCategoryFacet,
+  type CategoryFacet,
+  type CategoryFacetProps,
+  type CategoryFacetSearch,
+  type CategoryFacetSearchResult,
+  type CategoryFacetSearchState,
+  type CategoryFacetState,
+  type CoreCategoryFacet,
+  type CoreCategoryFacetState,
+} from '../../core/facets/category-facet/headless-core-category-facet.js';
+import type {
   CategoryFacetOptions,
   CategoryFacetSearchOptions,
 } from '../../core/facets/category-facet/headless-core-category-facet-options.js';
-import {
-  buildCoreCategoryFacet,
-  CategoryFacet,
-  CategoryFacetProps,
-  CategoryFacetState,
-  CategoryFacetSearch,
-  CategoryFacetSearchState,
-  CategoryFacetSearchResult,
-  CoreCategoryFacet,
-  CoreCategoryFacetState,
-} from '../../core/facets/category-facet/headless-core-category-facet.js';
 import {buildCategoryFacetSearch} from './headless-category-facet-search.js';
 
 export type {

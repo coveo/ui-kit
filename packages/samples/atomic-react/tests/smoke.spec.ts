@@ -1,4 +1,4 @@
-import {test, expect} from '@playwright/test';
+import {expect, test} from '@playwright/test';
 
 test.describe('smoke test', () => {
   test.use({viewport: {width: 2000, height: 2000}});

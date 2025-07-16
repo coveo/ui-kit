@@ -1,6 +1,6 @@
-import {useInstantProducts} from '@/lib/commerce-engine';
-import {Product} from '@coveo/headless-react/ssr-commerce';
+import type {Product} from '@coveo/headless-react/ssr-commerce';
 import {useNavigate} from '@remix-run/react';
+import {useInstantProducts} from '@/lib/commerce-engine';
 import AddToCartButton from './add-to-cart-button';
 
 export default function InstantProducts() {
@@ -18,9 +18,9 @@ export default function InstantProducts() {
   return (
     <ul>
       Instant Products :
-      {state.products.map((product, index) => (
-        <li key={index}>
-          <button onClick={() => clickProduct(product)}>
+      {state.products.map((product) => (
+        <li key={product.ec_product_id}>
+          <button type="button" onClick={() => clickProduct(product)}>
             {product.ec_name} ({product.ec_product_id})
           </button>
           {product.ec_product_id &&

@@ -1,6 +1,6 @@
-import {CommerceEngine} from '../../../../../app/commerce-engine/commerce-engine.js';
+import type {CommerceEngine} from '../../../../../app/commerce-engine/commerce-engine.js';
 import {stateKey} from '../../../../../app/state-key.js';
-import {NumericFacetResponse} from '../../../../../features/commerce/facets/facet-set/interfaces/response.js';
+import type {NumericFacetResponse} from '../../../../../features/commerce/facets/facet-set/interfaces/response.js';
 import {manualNumericFacetSelector} from '../../../../../features/commerce/facets/numeric-facet/manual-numeric-facet-selectors.js';
 import {manualNumericFacetReducer as manualNumericFacetSet} from '../../../../../features/commerce/facets/numeric-facet/manual-numeric-facet-slice.js';
 import {
@@ -8,16 +8,16 @@ import {
   toggleSelectNumericFacetValue,
   updateManualNumericFacetRange,
 } from '../../../../../features/commerce/facets/numeric-facet/numeric-facet-actions.js';
-import {ManualRangeSection} from '../../../../../state/state-sections.js';
+import type {ManualRangeSection} from '../../../../../state/state-sections.js';
 import {loadReducerError} from '../../../../../utils/errors.js';
 import {
-  CoreCommerceFacet,
-  CoreCommerceFacetOptions,
-  CoreCommerceFacetState,
-  FacetControllerType,
-  NumericFacetValue,
-  NumericRangeRequest,
   buildCoreCommerceFacet,
+  type CoreCommerceFacet,
+  type CoreCommerceFacetOptions,
+  type CoreCommerceFacetState,
+  type FacetControllerType,
+  type NumericFacetValue,
+  type NumericRangeRequest,
 } from '../headless-core-commerce-facet.js';
 
 export type {NumericFacetValue};
@@ -115,8 +115,7 @@ export function buildCommerceNumericFacet(
   }
 
   const {dispatch} = engine;
-  const {facetId, fetchProductsActionCreator: fetchProductsActionCreator} =
-    options;
+  const {facetId, fetchProductsActionCreator} = options;
 
   return {
     ...coreController,

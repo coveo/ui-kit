@@ -1,23 +1,23 @@
 import {
+  AtomicFoldedResultList,
   AtomicResultBadge,
   AtomicResultFieldsList,
+  AtomicResultImage,
   AtomicResultLink,
   AtomicResultMultiValueText,
   AtomicResultPrintableUri,
   AtomicResultSectionBadges,
   AtomicResultSectionBottomMetadata,
+  AtomicResultSectionChildren,
   AtomicResultSectionExcerpt,
   AtomicResultSectionTitle,
   AtomicResultSectionTitleMetadata,
   AtomicResultSectionVisual,
   AtomicResultText,
   AtomicText,
-  AtomicResultSectionChildren,
-  AtomicFoldedResultList,
-  AtomicResultImage,
 } from '@coveo/atomic-react';
-import {FoldedResult} from '@coveo/headless';
-import {FunctionComponent} from 'react';
+import type {FoldedResult} from '@coveo/headless';
+import type {FunctionComponent} from 'react';
 import {AtomicPageWrapper} from '../components/AtomicPageWrapper';
 
 export const FoldedResultListPage: FunctionComponent = () => {
@@ -81,7 +81,7 @@ function MyTemplate(result: FoldedResult) {
             <b>This result has children:</b>
             <ul>
               {result.children.map((child, i) => (
-                <li>
+                <li key={child.result.uniqueId}>
                   <b>Child {i + 1}: </b>
                   <a href={child.result.clickUri}>{child.result.title}</a>
                 </li>
@@ -92,6 +92,7 @@ function MyTemplate(result: FoldedResult) {
       </AtomicResultSectionChildren>
       <AtomicResultSectionBottomMetadata>
         <AtomicResultFieldsList>
+          {/** biome-ignore lint/complexity/noUselessFragments: <> */}
           <>
             {result.result.raw.author && (
               <div className="field">

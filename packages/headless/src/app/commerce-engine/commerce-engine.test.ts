@@ -1,11 +1,11 @@
 import {createCartKey} from '../../controllers/commerce/context/cart/headless-cart.js';
 import {stateKey} from '../state-key.js';
-import {getSampleCommerceEngineConfiguration} from './commerce-engine-configuration.js';
 import {
   buildCommerceEngine,
-  CommerceEngine,
-  CommerceEngineOptions,
+  type CommerceEngine,
+  type CommerceEngineOptions,
 } from './commerce-engine.js';
+import {getSampleCommerceEngineConfiguration} from './commerce-engine-configuration.js';
 
 describe('buildCommerceEngine', () => {
   let options: CommerceEngineOptions;

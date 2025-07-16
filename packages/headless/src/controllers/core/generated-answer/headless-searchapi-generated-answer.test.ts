@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
+/** biome-ignore-all lint/suspicious/noExplicitAny: Just tests */
 import {
   closeGeneratedAnswerFeedbackModal,
   dislikeGeneratedAnswer,
@@ -12,20 +12,20 @@ import {
   updateResponseFormat,
 } from '../../../features/generated-answer/generated-answer-actions.js';
 import {
+  type GeneratedAnswerFeedback,
   generatedAnswerAnalyticsClient,
-  GeneratedAnswerFeedback,
 } from '../../../features/generated-answer/generated-answer-analytics-actions.js';
 import {
-  GeneratedAnswerState,
+  type GeneratedAnswerState,
   getGeneratedAnswerInitialState,
 } from '../../../features/generated-answer/generated-answer-state.js';
 import {executeSearch} from '../../../features/search/search-actions.js';
 import {
   buildMockSearchEngine,
-  MockedSearchEngine,
+  type MockedSearchEngine,
 } from '../../../test/mock-engine-v2.js';
 import {createMockState} from '../../../test/mock-state.js';
-import {
+import type {
   GeneratedAnswerProps,
   GeneratedResponseFormat,
 } from '../../generated-answer/headless-generated-answer.js';

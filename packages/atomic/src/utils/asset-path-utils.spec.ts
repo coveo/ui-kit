@@ -1,4 +1,4 @@
-import {expect, describe, it} from 'vitest';
+import {describe, expect, it} from 'vitest';
 import {parseAssetURL} from './asset-path-utils';
 
 describe('parseAssetURL', () => {
@@ -17,12 +17,14 @@ describe('parseAssetURL', () => {
   });
 
   it('works with Atomic assets (without .svg)', () => {
-    expect(parseAssetURL('assets://attachment')).toBe('/assets/attachment.svg');
+    expect(parseAssetURL('assets://attachment')).toBe(
+      '/__vitest_test__/__test__/assets/attachment.svg'
+    );
   });
 
   it('works with Atomic assets (with .svg)', () => {
     expect(parseAssetURL('assets://attachment.svg')).toBe(
-      '/assets/attachment.svg'
+      '/__vitest_test__/__test__/assets/attachment.svg'
     );
   });
 });

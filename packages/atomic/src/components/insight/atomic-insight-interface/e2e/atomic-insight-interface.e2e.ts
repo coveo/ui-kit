@@ -1,4 +1,4 @@
-import {test, expect} from './fixture';
+import {expect, test} from './fixture';
 
 const defaultInsightQuerySummaryText = 'Insights related to this case';
 

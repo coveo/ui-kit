@@ -1,10 +1,10 @@
-import {InsightEngine} from '../../../app/insight-engine/insight-engine.js';
+import type {InsightEngine} from '../../../app/insight-engine/insight-engine.js';
 import {logOpenGeneratedAnswerSource} from '../../../features/generated-answer/generated-answer-insight-analytics-actions.js';
 import {
-  InteractiveCitation,
-  InteractiveCitationOptions,
-  InteractiveCitationProps,
   buildInteractiveCitationCore,
+  type InteractiveCitation,
+  type InteractiveCitationOptions,
+  type InteractiveCitationProps,
 } from '../../core/generated-answer/headless-core-interactive-citation.js';
 
 export type {

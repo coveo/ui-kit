@@ -1,26 +1,26 @@
 import {createRelay} from '@coveo/relay';
-import {ThunkExtraArguments} from '../../app/thunk-extra-arguments.js';
+import type {ThunkExtraArguments} from '../../app/thunk-extra-arguments.js';
 import {buildMockCaseAssistState} from '../../test/mock-case-assist-state.js';
 import {
   buildMockCaseAssistEngine,
-  MockedCaseAssistEngine,
+  type MockedCaseAssistEngine,
 } from '../../test/mock-engine-v2.js';
 import {getCaseFieldInitialState} from '../case-field/case-field-state.js';
 import {getConfigurationInitialState} from '../configuration/configuration-state.js';
 import {getDocumentSuggestionInitialState} from '../document-suggestion/document-suggestion-state.js';
 import {
-  logCaseStart,
-  logCaseNextStage,
-  logCreateCase,
-  logSolveCase,
   logAbandonCase,
-  logUpdateCaseField,
   logAutoSelectCaseField,
+  logCaseNextStage,
+  logCaseStart,
   logClassificationClick,
+  logCreateCase,
   logDocumentSuggestionClick,
-  logQuickviewDocumentSuggestionClick,
   logDocumentSuggestionOpen,
   logDocumentSuggestionRating,
+  logQuickviewDocumentSuggestionClick,
+  logSolveCase,
+  logUpdateCaseField,
 } from './case-assist-analytics-actions.js';
 
 const mockLogEnterInterface = vi.fn();

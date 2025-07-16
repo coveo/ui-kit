@@ -4,13 +4,13 @@ import {updateResponseFormat} from '../../features/generated-answer/generated-an
 import {buildMockAnalyticsState} from '../../test/mock-analytics-state.js';
 import {
   buildMockSearchEngine,
-  MockedSearchEngine,
+  type MockedSearchEngine,
 } from '../../test/mock-engine-v2.js';
 import {createMockState} from '../../test/mock-state.js';
 import {
   buildGeneratedAnswer,
-  GeneratedAnswerProps,
-  GeneratedResponseFormat,
+  type GeneratedAnswerProps,
+  type GeneratedResponseFormat,
 } from './headless-generated-answer.js';
 
 vi.mock('../../features/generated-answer/generated-answer-actions');

@@ -12,8 +12,8 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "vue": "3.5.16",
-    "@coveo/atomic": "3.27.4"
+    "vue": "3.5.17",
+    "@coveo/atomic": "3.29.1"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "5.2.4",

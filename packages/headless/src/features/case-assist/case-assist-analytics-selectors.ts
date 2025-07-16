@@ -1,4 +1,4 @@
-import {CaseAssistAppState} from '../../state/case-assist-app-state.js';
+import type {CaseAssistAppState} from '../../state/case-assist-app-state.js';
 
 export enum KnownCaseFields {
   id = 'id',
@@ -41,6 +41,7 @@ export const caseAssistCustomCaseInputValuesSelector = (
     if (isCustomFieldName(fieldName)) {
       const value = state?.caseInput?.[fieldName]?.value;
       if (value) {
+        // biome-ignore lint/performance/noAccumulatingSpread: <>
         return {...customFields, [fieldName]: value};
       }
     }
@@ -61,6 +62,7 @@ export const caseAssistCustomCaseFieldValuesSelector = (
       if (isCustomFieldName(fieldName)) {
         const value = state?.caseField?.fields?.[fieldName]?.value;
         if (value) {
+          // biome-ignore lint/performance/noAccumulatingSpread: <>
           return {...customFields, [fieldName]: value};
         }
       }
@@ -117,7 +119,7 @@ export const caseAssistDocumentSuggestionSelector = (
   fromQuickview = false,
   openDocument = false
 ) => {
-  let suggestionIdx;
+  let suggestionIdx: number | undefined;
   const suggestion = state.documentSuggestion?.documents.find((s, idx) => {
     const isFound = s.uniqueId === suggestionId;
     if (isFound) {
@@ -134,15 +136,15 @@ export const caseAssistDocumentSuggestionSelector = (
 
   const result = {
     suggestionId: suggestion.uniqueId,
-    permanentId: suggestion.fields['permanentid'],
+    permanentId: suggestion.fields.permanentid,
     responseId: state.documentSuggestion?.status.lastResponseId ?? '',
     suggestion: {
-      documentUri: suggestion.fields['uri'],
-      documentUriHash: suggestion.fields['urihash'],
+      documentUri: suggestion.fields.uri,
+      documentUriHash: suggestion.fields.urihash,
       documentTitle: suggestion.title,
       documentUrl: suggestion.clickUri,
       documentPosition: suggestionIdx ?? 0,
-      sourceName: suggestion.fields['source'],
+      sourceName: suggestion.fields.source,
     },
   };
 

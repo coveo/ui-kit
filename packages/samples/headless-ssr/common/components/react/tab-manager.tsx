@@ -8,7 +8,7 @@ export default function TabManager() {
   const {state, methods} = useTabManager();
 
   return (
-    <TabManagerCommon controller={methods} value={state.activeTab}>
+    <TabManagerCommon>
       <Tab tabName={'all'} tabLabel="All"></Tab>
       <Tab tabName={'countries'} tabLabel="Countries"></Tab>
       <Tab tabName={'videos'} tabLabel="Videos"></Tab>

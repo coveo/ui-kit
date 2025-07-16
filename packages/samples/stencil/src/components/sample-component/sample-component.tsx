@@ -1,13 +1,14 @@
-import {Bindings, initializeBindings} from '@coveo/atomic';
+import {type Bindings, initializeBindings} from '@coveo/atomic';
 import {
-  PagerState,
-  Pager,
-  SearchStatusState,
-  buildSearchStatus,
   buildPager,
-  Unsubscribe,
+  buildSearchStatus,
+  type Pager,
+  type PagerState,
+  type SearchStatusState,
+  type Unsubscribe,
 } from '@coveo/headless';
-import {Component, Element, h, State, forceUpdate} from '@stencil/core';
+// biome-ignore lint/correctness/noUnusedImports: <>
+import {Component, Element, forceUpdate, h, State} from '@stencil/core';
 
 @Component({
   tag: 'sample-component',
@@ -33,12 +34,12 @@ export class SampleComponent {
       this.bindings = await initializeBindings(this.host);
       const statusController = buildSearchStatus(this.bindings.engine);
       this.pagerController = buildPager(this.bindings.engine);
-      this.statusUnsubscribe = statusController.subscribe(
-        () => (this.statusState = statusController.state)
-      );
-      this.pagerUnsubscribe = this.pagerController.subscribe(
-        () => (this.pagerState = this.pagerController.state)
-      );
+      this.statusUnsubscribe = statusController.subscribe(() => {
+        this.statusState = statusController.state;
+      });
+      this.pagerUnsubscribe = this.pagerController.subscribe(() => {
+        this.pagerState = this.pagerController.state;
+      });
       const updateLanguage = () => forceUpdate(this);
       this.bindings!.i18n.on('languageChanged', updateLanguage);
       this.i18nUnsubscribe = () =>
@@ -64,6 +65,7 @@ export class SampleComponent {
     const isSelected = this.pagerController.isCurrentPage(page);
     return (
       <button
+        type="button"
         onClick={() => {
           this.pagerController.selectPage(page);
         }}
@@ -77,6 +79,7 @@ export class SampleComponent {
   private get previous() {
     return (
       <button
+        type="button"
         onClick={() => {
           this.pagerController.previousPage();
         }}
@@ -89,6 +92,7 @@ export class SampleComponent {
   private get next() {
     return (
       <button
+        type="button"
         onClick={() => {
           this.pagerController.nextPage();
         }}

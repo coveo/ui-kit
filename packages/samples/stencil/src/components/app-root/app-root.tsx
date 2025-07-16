@@ -1,7 +1,8 @@
 import {
   getSampleSearchEngineConfiguration,
-  SearchEngine,
+  type SearchEngine,
 } from '@coveo/headless';
+// biome-ignore lint/correctness/noUnusedImports: <>
 import {Component, h} from '@stencil/core';
 import {createRouter, Route} from 'stencil-router-v2';
 import {Header, homePath, searchPath} from '../header/header';

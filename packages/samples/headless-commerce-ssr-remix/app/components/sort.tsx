@@ -1,5 +1,5 @@
+import {SortBy, type SortCriterion} from '@coveo/headless-react/ssr-commerce';
 import {useSort} from '@/lib/commerce-engine';
-import {SortBy, SortCriterion} from '@coveo/headless-react/ssr-commerce';
 
 export default function Sort() {
   const {state, methods} = useSort();
@@ -33,9 +33,9 @@ export default function Sort() {
         onChange={(e) => methods?.sortBy(JSON.parse(e.target.value))}
         disabled={!methods}
       >
-        {state.availableSorts.map((sort, index) => (
+        {state.availableSorts.map((sort) => (
           <option
-            key={index}
+            key={sort.by}
             value={JSON.stringify(sort)}
             onSelect={() => methods?.sortBy(sort)}
           >

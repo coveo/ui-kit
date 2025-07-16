@@ -1,9 +1,9 @@
-import {PayloadAction} from '@reduxjs/toolkit';
-import {CaseAssistEngine} from '../../app/case-assist-engine/case-assist-engine.js';
+import type {PayloadAction} from '@reduxjs/toolkit';
+import type {CaseAssistEngine} from '../../app/case-assist-engine/case-assist-engine.js';
 import {caseInputReducer as caseInput} from '../../features/case-input/case-input-slice.js';
 import {
+  type SetCaseInputActionCreatorPayload,
   updateCaseInput,
-  SetCaseInputActionCreatorPayload,
 } from './case-input-actions.js';
 
 export type {SetCaseInputActionCreatorPayload};

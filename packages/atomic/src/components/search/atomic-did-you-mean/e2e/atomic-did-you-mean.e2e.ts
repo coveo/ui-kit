@@ -1,5 +1,5 @@
 /* eslint-disable @cspell/spellchecker */
-import {test, expect} from './fixture';
+import {expect, test} from './fixture';
 
 test.describe('with an automatic query correction', () => {
   const ORIGINAL_QUERY = 'coveoo';

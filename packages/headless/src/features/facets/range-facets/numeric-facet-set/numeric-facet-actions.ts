@@ -1,28 +1,28 @@
 import {
-  RecordValue,
-  NumberValue,
-  BooleanValue,
-  Value,
   ArrayValue,
+  BooleanValue,
+  NumberValue,
+  RecordValue,
   StringValue,
+  Value,
 } from '@coveo/bueno';
 import {createAction} from '@reduxjs/toolkit';
 import {
-  validatePayload,
   requiredNonEmptyString,
   serializeSchemaValidationError,
+  validatePayload,
   validatePayloadAndThrow,
 } from '../../../../utils/validate-payload.js';
 import {deselectAllFacetValues} from '../../facet-set/facet-set-actions.js';
 import {facetIdDefinition} from '../../generic/facet-actions-validation.js';
-import {
+import type {
   RangeFacetRangeAlgorithm,
   RangeFacetSortCriterion,
 } from '../generic/interfaces/request.js';
 import {updateRangeFacetSortCriterion} from '../generic/range-facet-actions.js';
 import {numericFacetValueDefinition} from '../generic/range-facet-validate-payload.js';
-import {NumericRangeRequest} from './interfaces/request.js';
-import {NumericFacetValue} from './interfaces/response.js';
+import type {NumericRangeRequest} from './interfaces/request.js';
+import type {NumericFacetValue} from './interfaces/response.js';
 
 export interface RegisterNumericFacetActionCreatorPayload {
   /**
@@ -31,7 +31,7 @@ export interface RegisterNumericFacetActionCreatorPayload {
   facetId: string;
 
   /**
-   * The field whose values you want to display in the facet.
+   * The field from which to display values in the facet.
    */
   field: string;
 
@@ -51,7 +51,7 @@ export interface RegisterNumericFacetActionCreatorPayload {
   /**
    * Whether the index should automatically create range values.
    *
-   * Tip: If you set this parameter to true, you should ensure that the ['Use cache for numeric queries' option](https://docs.coveo.com/en/1833#use-cache-for-numeric-queries) is enabled for this facet's field in your index in order to speed up automatic range evaluation.
+   * Tip: If you set this parameter to true, ensure that the ['Use cache for numeric queries' option](https://docs.coveo.com/en/1833#use-cache-for-numeric-queries) is enabled for this facet's field in your index in order to speed up automatic range evaluation.
    */
   generateAutomaticRanges: boolean;
 

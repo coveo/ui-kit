@@ -1,11 +1,11 @@
-import {Mock, describe, it, expect, vi} from 'vitest';
+import {describe, expect, it, type Mock, vi} from 'vitest';
 import {defineCart} from '../../../controllers/commerce/context/cart/headless-cart.ssr.js';
 import {defineProductList} from '../../../controllers/commerce/product-list/headless-product-list.ssr.js';
 import {defineRecommendations} from '../../../controllers/commerce/recommendations/headless-recommendations.ssr.js';
 import {defineSearchBox} from '../../../controllers/commerce/search-box/headless-search-box.ssr.js';
-import {getSampleCommerceEngineConfiguration} from '../../commerce-engine/commerce-engine-configuration.js';
+import type {CommerceEngineOptions} from '../../commerce-engine/commerce-engine.js';
 import * as commerceEngine from '../../commerce-engine/commerce-engine.js';
-import {CommerceEngineOptions} from '../../commerce-engine/commerce-engine.js';
+import {getSampleCommerceEngineConfiguration} from '../../commerce-engine/commerce-engine-configuration.js';
 import {buildLogger} from '../../logger.js';
 import {SolutionType} from '../types/common.js';
 import {buildFactory} from './build-factory.js';

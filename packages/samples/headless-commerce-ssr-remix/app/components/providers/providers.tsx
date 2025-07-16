@@ -1,10 +1,10 @@
+import {buildProviderWithDefinition} from '@coveo/headless-react/ssr-commerce';
 import {
   _listingEngineDefinition,
   _recommendationEngineDefinition,
   _searchEngineDefinition,
   _standaloneEngineDefinition,
 } from '@/lib/commerce-engine';
-import {buildProviderWithDefinition} from '@coveo/headless-react/ssr-commerce';
 
 // Wraps listing pages to provide context for listing-specific hooks
 export const ListingProvider = buildProviderWithDefinition(

@@ -1,3 +1,11 @@
+import {
+  buildParameterSerializer,
+  type NavigatorContext,
+  SolutionType,
+} from '@coveo/headless-react/ssr-commerce';
+import type {LoaderFunctionArgs} from '@remix-run/node';
+import {useLoaderData, useParams} from '@remix-run/react';
+import invariant from 'tiny-invariant';
 import BreadcrumbManager from '@/app/components/breadcrumb-manager';
 import ContextDropdown from '@/app/components/context-dropdown';
 import FacetGenerator from '@/app/components/facets/facet-generator';
@@ -10,7 +18,7 @@ import {
 import PopularRecommendations from '@/app/components/recommendations/popular-recommendations';
 import Sort from '@/app/components/sort';
 import Summary from '@/app/components/summary';
-import {
+import type {
   ListingStaticState,
   RecommendationStaticState,
 } from '@/lib/commerce-engine';
@@ -19,14 +27,6 @@ import {
   getEngineDefinition,
 } from '@/lib/commerce-engine.server';
 import {getNavigatorContext} from '@/lib/navigator-context';
-import {
-  buildParameterSerializer,
-  NavigatorContext,
-  SolutionType,
-} from '@coveo/headless-react/ssr-commerce';
-import {LoaderFunctionArgs} from '@remix-run/node';
-import {useLoaderData, useParams} from '@remix-run/react';
-import invariant from 'tiny-invariant';
 import ParameterManager from '../components/parameter-manager';
 import NotifyTrigger from '../components/triggers/notify-trigger';
 

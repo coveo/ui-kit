@@ -1,3 +1,48 @@
+## <small>3.29.1 (2025-07-16)</small>
+
+* chore(atomic): enable biome recommended rules (#5582) ([595a264](https://github.com/coveo/ui-kit/commits/595a264)), closes [#5582](https://github.com/coveo/ui-kit/issues/5582)
+* chore(atomic): make atomic build 5x faster (#5657) ([9afec32](https://github.com/coveo/ui-kit/commits/9afec32)), closes [#5657](https://github.com/coveo/ui-kit/issues/5657)
+* chore(atomic): migrate item-link (#5607) ([b65e6d0](https://github.com/coveo/ui-kit/commits/b65e6d0)), closes [#5607](https://github.com/coveo/ui-kit/issues/5607)
+* chore(atomic): revert lightning css upgrade (#5622) ([f7120f5](https://github.com/coveo/ui-kit/commits/f7120f5)), closes [#5622](https://github.com/coveo/ui-kit/issues/5622)
+* chore(deps): Revert "chore(deps): update vite to v3.2.3 j:kit-282" (#5487) ([b9ad867](https://github.com/coveo/ui-kit/commits/b9ad867)), closes [#5487](https://github.com/coveo/ui-kit/issues/5487)
+* chore(deps): update tailwind to v4.1.11 j:kit-282 (#5603) ([73dff13](https://github.com/coveo/ui-kit/commits/73dff13)), closes [#5603](https://github.com/coveo/ui-kit/issues/5603)
+* chore(deps): update vite to v3.2.4 j:kit-282 (#5604) ([8e8dd6a](https://github.com/coveo/ui-kit/commits/8e8dd6a)), closes [#5604](https://github.com/coveo/ui-kit/issues/5604)
+* test(atomic): simpler query-summary tests (#5654) ([8314c49](https://github.com/coveo/ui-kit/commits/8314c49)), closes [#5654](https://github.com/coveo/ui-kit/issues/5654)
+* feat(atomic): add text fragments for HTML citation anchoring (#5572) ([86d1231](https://github.com/coveo/ui-kit/commits/86d1231)), closes [#5572](https://github.com/coveo/ui-kit/issues/5572)
+* fix(deps): update all dependencies j:kit-282 (#5605) ([8132ed8](https://github.com/coveo/ui-kit/commits/8132ed8)), closes [#5605](https://github.com/coveo/ui-kit/issues/5605)
+
+
+
+## 3.28.0 (2025-07-09)
+
+* chore(atomic commerce): migrate atomic-commerce-load-more-products to Lit (#5551) ([9a77990](https://github.com/coveo/ui-kit/commits/9a77990)), closes [#5551](https://github.com/coveo/ui-kit/issues/5551)
+* chore(atomic commerce): migrate atomic-commerce-recommendation-interface (#5483) ([f8c6add](https://github.com/coveo/ui-kit/commits/f8c6add)), closes [#5483](https://github.com/coveo/ui-kit/issues/5483)
+* chore(atomic): make atomic-product-text light dom (#5596) ([624f34d](https://github.com/coveo/ui-kit/commits/624f34d)), closes [#5596](https://github.com/coveo/ui-kit/issues/5596)
+* chore(atomic): migrate atomic-commerce-no-products (#5550) ([a29a641](https://github.com/coveo/ui-kit/commits/a29a641)), closes [#5550](https://github.com/coveo/ui-kit/issues/5550)
+* chore(atomic): migrate atomic-commerce-products-per-page (#5525) ([1ef71f1](https://github.com/coveo/ui-kit/commits/1ef71f1)), closes [#5525](https://github.com/coveo/ui-kit/issues/5525)
+* chore(atomic): migrate atomic-commerce-refine-toggle (#5557) ([c758e56](https://github.com/coveo/ui-kit/commits/c758e56)), closes [#5557](https://github.com/coveo/ui-kit/issues/5557)
+* chore(atomic): migrate atomic-commerce-text (#5464) ([4f3f990](https://github.com/coveo/ui-kit/commits/4f3f990)), closes [#5464](https://github.com/coveo/ui-kit/issues/5464)
+* chore(atomic): migrate atomic-layout-section (#5564) ([9ad6b72](https://github.com/coveo/ui-kit/commits/9ad6b72)), closes [#5564](https://github.com/coveo/ui-kit/issues/5564)
+* chore(atomic): migrate atomic-product-text (#5465) ([91c0773](https://github.com/coveo/ui-kit/commits/91c0773)), closes [#5465](https://github.com/coveo/ui-kit/issues/5465)
+* chore(atomic): migrate expandable-text.tsx (#5562) ([df6c8a3](https://github.com/coveo/ui-kit/commits/df6c8a3)), closes [#5562](https://github.com/coveo/ui-kit/issues/5562)
+* chore(atomic): migrate query-error/show-more.tsx (#5539) ([d7a2bdb](https://github.com/coveo/ui-kit/commits/d7a2bdb)), closes [#5539](https://github.com/coveo/ui-kit/issues/5539)
+* chore(atomic): migrate query-error/title.tsx (#5540) ([48cf271](https://github.com/coveo/ui-kit/commits/48cf271)), closes [#5540](https://github.com/coveo/ui-kit/issues/5540)
+* fix: bring back getAllFacets method (#5588) ([961cf46](https://github.com/coveo/ui-kit/commits/961cf46)), closes [#5588](https://github.com/coveo/ui-kit/issues/5588)
+* fix(atomic): broaden autoloader shadowDOM sniffing (#5533) ([9833a8b](https://github.com/coveo/ui-kit/commits/9833a8b)), closes [#5533](https://github.com/coveo/ui-kit/issues/5533)
+* fix(atomic): do not use reactive properties prematurely (#5592) ([591d31c](https://github.com/coveo/ui-kit/commits/591d31c)), closes [#5592](https://github.com/coveo/ui-kit/issues/5592)
+* fix(atomic): Ensure special characters in breadcrumb label display correctly (#5534) ([fc6b952](https://github.com/coveo/ui-kit/commits/fc6b952)), closes [#5534](https://github.com/coveo/ui-kit/issues/5534)
+* fix(atomic): fix "see all results" button deleting the query in the search box (#5587) ([6888a4e](https://github.com/coveo/ui-kit/commits/6888a4e)), closes [#5587](https://github.com/coveo/ui-kit/issues/5587)
+* fix(atomic): properly applyCorrection for didYouMean component (#5528) ([5facbaf](https://github.com/coveo/ui-kit/commits/5facbaf)), closes [#5528](https://github.com/coveo/ui-kit/issues/5528)
+* docs(atomic): add missing Usage documentation for various components (#5569) ([51bfa6a](https://github.com/coveo/ui-kit/commits/51bfa6a)), closes [#5569](https://github.com/coveo/ui-kit/issues/5569)
+* docs(atomic): add reusable canvas with github component (#5568) ([05db57f](https://github.com/coveo/ui-kit/commits/05db57f)), closes [#5568](https://github.com/coveo/ui-kit/issues/5568)
+* ci: enable back flaky test (#5580) ([230c3b9](https://github.com/coveo/ui-kit/commits/230c3b9)), closes [#5580](https://github.com/coveo/ui-kit/issues/5580)
+* ci: fix flaky button unit test (#5579) ([7bb0ec8](https://github.com/coveo/ui-kit/commits/7bb0ec8)), closes [#5579](https://github.com/coveo/ui-kit/issues/5579)
+* ci: skip rightfully failing test in instant-products (#5563) ([69436da](https://github.com/coveo/ui-kit/commits/69436da)), closes [#5563](https://github.com/coveo/ui-kit/issues/5563)
+* feat(atomic): add Biome plugin to enforce explicit locale in toLocaleString (#5581) ([1b99503](https://github.com/coveo/ui-kit/commits/1b99503)), closes [#5581](https://github.com/coveo/ui-kit/issues/5581)
+* feat(atomic): add fieldsToIncludeInCitations property (#5553) ([bc804cc](https://github.com/coveo/ui-kit/commits/bc804cc)), closes [#5553](https://github.com/coveo/ui-kit/issues/5553)
+
+
+
 ## <small>3.27.4 (2025-07-02)</small>
 
 * chore: add support for using copilot prompts/instructions from atomic (#5552) ([da155af](https://github.com/coveo/ui-kit/commits/da155af)), closes [#5552](https://github.com/coveo/ui-kit/issues/5552)

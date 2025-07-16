@@ -9,11 +9,13 @@ export default function RecentQueries() {
       <ul>
         Recent Queries :
         {state.queries.map((query, index) => (
-          <li key={index}>
+          <li key={query}>
             {query}
             <button
+              type="button"
               onMouseEnter={() => instantProductsController?.updateQuery(query)}
               onClick={() => methods?.executeRecentQuery(index)}
+              // biome-ignore lint/security/noDangerouslySetInnerHtml: <>
               dangerouslySetInnerHTML={{__html: query}}
             ></button>
           </li>

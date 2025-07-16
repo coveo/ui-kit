@@ -2,7 +2,7 @@ import {restoreSearchParameters} from '../search-parameters/search-parameters-ac
 import {updateQuery} from './query-actions.js';
 import {queryReducer} from './query-slice.js';
 import {
-  CommerceQueryState,
+  type CommerceQueryState,
   getCommerceQueryInitialState,
 } from './query-state.js';
 

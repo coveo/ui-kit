@@ -1,10 +1,10 @@
-import {PaginationSection} from '../../state/state-sections.js';
+import type {PaginationSection} from '../../state/state-sections.js';
 import {
+  type LegacySearchAction,
   makeAnalyticsAction,
-  LegacySearchAction,
 } from '../analytics/analytics-utils.js';
 import {SearchPageEvents} from '../analytics/search-action-cause.js';
-import {SearchAction} from '../search/search-actions.js';
+import type {SearchAction} from '../search/search-actions.js';
 import {currentPageSelector} from './pagination-selectors.js';
 import {getPaginationInitialState} from './pagination-state.js';
 
