@@ -9,7 +9,7 @@
   "dependencies": {
     "@coveo/atomic": "3.29.1",
     "@coveo/headless": "3.27.4",
-    "@stencil/core": "4.20.0"
+    "@stencil/core": "4.35.3"
   },
   "devDependencies": {
     "@rollup/plugin-replace": "5.0.2",
