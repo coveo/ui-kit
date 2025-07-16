@@ -13,6 +13,7 @@
     "lint:check": "npx @biomejs/biome check --error-on-warnings . && npx nx run quantic:lint:check && cspell **/*.md --no-progress --show-suggestions --show-context",
     "lint:fix": "npx @biomejs/biome check --write --error-on-warnings . && npx nx run quantic:lint:fix && cspell **/*.md --no-progress --show-suggestions --show-context",
     "package-compatibility": "node ./scripts/ci/package-compatibility.mjs",
+    "validate-workspace-dependencies": "node ./scripts/ci/validate-workspace-dependencies.mjs",
     "pr:report": "node ./scripts/reports/pr-report.mjs",
     "report:bundle-size:time-series": "node ./scripts/reports/bundle-size/time-series.mjs",
     "commit": "git-cz",
