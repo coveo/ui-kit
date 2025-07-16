@@ -55,17 +55,13 @@ export const SlotsForNoShadowDOMMixin = <T extends Constructor<LitElement>>(
 
     adoptChildren(): void {
       // Clear existing state
-      this._clearSlotState();
+      this.slots = {};
+      this._slotPlaceholders = [];
 
       // Create a mapping of slot content without moving DOM nodes
       this._mapChildrenToSlots();
 
       this._slotsInitialized = true;
-    }
-
-    private _clearSlotState(): void {
-      this.slots = {};
-      this._slotPlaceholders = [];
     }
 
     private _mapChildrenToSlots(): void {
