@@ -11,8 +11,8 @@
     "e2e": "cypress run --browser chrome"
   },
   "dependencies": {
-    "@coveo/atomic": "3.28.0",
-    "@coveo/headless": "3.27.2",
+     "@coveo/atomic": "3.29.1",
+    "@coveo/headless": "3.27.4",
     "react": "19.1.0"
   },
   "devDependencies": {

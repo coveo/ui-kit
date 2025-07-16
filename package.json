@@ -1,7 +1,7 @@
 {
   "name": "ui-kit",
   "private": true,
-  "version": "3.0.45",
+  "version": "3.0.46",
   "scripts": {
     "postinstall": "husky install && patch-package && npx playwright install",
     "reset:install": "git checkout origin/master package-lock.json && npm i",
@@ -41,6 +41,7 @@
     "@tsconfig/node20": "20.1.6",
     "@types/jest": "29.5.14",
     "@types/node": "22.16.0",
+    "@vitest/browser": "3.2.1",
     "commitizen": "4.3.1",
     "concurrently": "9.2.0",
     "cspell": "8.19.4",
