@@ -5,7 +5,7 @@
  * interactions with a fake database represented as a private property..
  */
 
-export type ExternalContextInformation = {
+type ExternalContextInformation = {
   country: string;
   currency: string;
   language: string;

@@ -31,7 +31,7 @@ export interface InteractiveCitationProps extends InteractiveResultCoreProps {
  */
 export interface InteractiveCitation extends InteractiveResultCore {}
 
-export interface InteractiveCitationAnalyticsClient {
+interface InteractiveCitationAnalyticsClient {
   logOpenGeneratedAnswerSource(citationId: string): CustomAction;
 }
 

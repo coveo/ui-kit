@@ -15,5 +15,5 @@ export const REPO_FS_ROOT = resolve(
 );
 
 export const NPM_LATEST_TAG = 'latest';
-export const NPM_BETA_TAG = 'beta';
-export const NPM_ALPHA_TAG = 'alpha';
+const NPM_BETA_TAG = 'beta';
+const NPM_ALPHA_TAG = 'alpha';

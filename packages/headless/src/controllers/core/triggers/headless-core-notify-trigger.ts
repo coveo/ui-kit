@@ -40,11 +40,11 @@ export interface NotifyTriggerState {
   notifications: string[];
 }
 
-export interface NotifyTriggerProps {
+interface NotifyTriggerProps {
   options: NotifyTriggerOptions;
 }
 
-export interface NotifyTriggerOptions {
+interface NotifyTriggerOptions {
   logNotifyTriggerActionCreator: () => InsightAction | LegacySearchAction;
 }
 

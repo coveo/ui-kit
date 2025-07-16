@@ -16,7 +16,7 @@ import {
   NUMBER_OF_VALUE_MINIMUM,
 } from './automatic-facet-set-constants.js';
 
-export interface ToggleSelectAutomaticFacetValueActionCreatorPayload {
+interface ToggleSelectAutomaticFacetValueActionCreatorPayload {
   /**
    * The field of the automatic facet.
    */

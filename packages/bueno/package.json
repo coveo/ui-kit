@@ -35,7 +35,6 @@
     "promote:npm:latest": "npm run-script -w=@coveo/ci promote-npm-prod"
   },
   "devDependencies": {
-    "@coveo/ci": "1.0.0",
     "vitest": "3.2.1"
   },
   "engines": {

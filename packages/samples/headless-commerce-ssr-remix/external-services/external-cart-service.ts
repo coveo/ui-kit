@@ -19,11 +19,11 @@ export type ExternalCartPurchaseResponse = {
   additionalData?: Record<string, unknown>;
 };
 
-export type ExternalCartAddItemResponse = ExternalCartItem & {
+type ExternalCartAddItemResponse = ExternalCartItem & {
   additionalData?: Record<string, unknown>;
 };
 
-export type ExternalCartRemoveItemResponse =
+type ExternalCartRemoveItemResponse =
   | (ExternalCartItem & {
       additionalData?: Record<string, unknown>;
     })

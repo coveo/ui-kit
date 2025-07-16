@@ -10,7 +10,7 @@ import type {
 } from './common.js';
 import type {FromBuildResult} from './from-build-result.js';
 
-export type FetchStaticStateOptions = {};
+type FetchStaticStateOptions = {};
 
 export type FetchStaticState<
   TEngine extends CoreEngine | CoreEngineNext,

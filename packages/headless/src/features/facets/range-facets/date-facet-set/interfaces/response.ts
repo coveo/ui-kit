@@ -4,7 +4,7 @@ import type {FacetValueState} from '../../../facet-api/value.js';
 /**
  * The domain of a date facet.
  */
-export interface DateFacetDomain {
+type DateFacetDomain = {
   /**
    * The most recent date available value in the range.
    */
@@ -13,7 +13,7 @@ export interface DateFacetDomain {
    * The least recent date available value in the range.
    */
   start: string;
-}
+};
 
 export interface DateFacetValue {
   /**

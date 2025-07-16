@@ -89,7 +89,7 @@ export interface PromoteChildToParentPayload {
   child: ChildProduct;
 }
 
-export const promoteChildToParentDefinition = {
+const promoteChildToParentDefinition = {
   child: new RecordValue({
     options: {required: true},
     values: {

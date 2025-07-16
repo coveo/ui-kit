@@ -48,7 +48,7 @@ export interface ConfigurationState
   knowledge: KnowledgeState;
 }
 
-export interface SearchState {
+interface SearchState {
   /**
    * The Search API base URL to use.
    *

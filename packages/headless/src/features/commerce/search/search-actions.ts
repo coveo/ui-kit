@@ -43,7 +43,7 @@ export interface PrepareForSearchWithQueryOptions {
   clearFilters: boolean;
 }
 
-export interface FetchInstantProductsPayload {
+interface FetchInstantProductsPayload {
   /**
    * The search box ID.
    */
@@ -58,7 +58,7 @@ export interface FetchInstantProductsPayload {
   cacheTimeout?: number;
 }
 
-export interface FetchInstantProductsThunkReturn {
+interface FetchInstantProductsThunkReturn {
   /** The successful response. */
   response: SearchCommerceSuccessResponse;
 }
@@ -172,7 +172,7 @@ export interface PromoteChildToParentPayload {
   child: ChildProduct;
 }
 
-export const promoteChildToParentDefinition = {
+const promoteChildToParentDefinition = {
   child: new RecordValue({
     options: {required: true},
     values: {

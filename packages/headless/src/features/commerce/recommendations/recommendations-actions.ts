@@ -131,7 +131,7 @@ export const fetchMoreRecommendations = createAsyncThunk<
   }
 );
 
-export interface SlotIdPayload {
+interface SlotIdPayload {
   slotId: string;
   productId?: string;
 }
@@ -148,7 +148,7 @@ export interface PromoteChildToParentPayload extends SlotIdPayload {
   child: ChildProduct;
 }
 
-export const promoteChildToParentDefinition = {
+const promoteChildToParentDefinition = {
   child: new RecordValue({
     options: {required: true},
     values: {

@@ -26,11 +26,11 @@ export interface SetAttachedResultsActionCreatorPayload {
   loading?: boolean;
 }
 
-export interface SetAttachToCaseAttachActionCreatorPayload {
+interface SetAttachToCaseAttachActionCreatorPayload {
   result: AttachedResult;
 }
 
-export interface SetAttachToCaseDetachActionCreatorPayload {
+interface SetAttachToCaseDetachActionCreatorPayload {
   result: AttachedResult;
 }
 

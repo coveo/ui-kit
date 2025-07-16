@@ -4,7 +4,7 @@ import {
   validatePayload,
 } from '../../utils/validate-payload.js';
 
-export interface SetInsightConfigurationActionCreatorPayload {
+interface SetInsightConfigurationActionCreatorPayload {
   /**
    * The unique identifier of the target insight configuration.
    */

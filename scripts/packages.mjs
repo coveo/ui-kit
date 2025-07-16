@@ -8,7 +8,7 @@ export const workspacesRoot = resolve(
   '..'
 );
 
-export const packageDirsNpmTag = /** @type {const} */ ([
+const packageDirsNpmTag = /** @type {const} */ ([
   'atomic',
   'auth',
   'bueno',
@@ -33,15 +33,11 @@ export const packageDirsNpmTag = /** @type {const} */ ([
 /**
  * @param {PackageDir} packageDir
  */
-export function getPackagePathFromPackageDir(packageDir) {
+function getPackagePathFromPackageDir(packageDir) {
   return resolve(workspacesRoot, 'packages', packageDir);
 }
 
-/**
- * @param {string} fullPath
- * @returns {import('@npmcli/package-json').PackageJson}
- */
-export function getPackageManifestFromPackagePath(fullPath) {
+function getPackageManifestFromPackagePath(fullPath) {
   return JSON.parse(readFileSync(resolve(fullPath, 'package.json')).toString());
 }
 

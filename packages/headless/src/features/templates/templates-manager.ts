@@ -33,7 +33,7 @@ export interface Template<ItemType, Content = unknown, LinkContent = unknown> {
   fields?: string[];
 }
 
-export const templateSchema = new Schema({
+const templateSchema = new Schema({
   content: new Value({required: true}),
   conditions: new Value({required: true}),
   priority: new NumberValue({required: false, default: 0, min: 0}),

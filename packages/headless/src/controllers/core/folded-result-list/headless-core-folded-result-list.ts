@@ -166,7 +166,7 @@ export interface FoldedResultListState extends SearchStatusState {
   moreResultsAvailable: boolean;
 }
 
-export interface FoldedResultAnalyticsClient {
+interface FoldedResultAnalyticsClient {
   logShowMoreFoldedResults: (result: Result) => ClickAction;
   logShowLessFoldedResults: () => CustomAction;
 }

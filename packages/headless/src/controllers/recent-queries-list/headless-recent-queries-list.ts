@@ -135,7 +135,7 @@ export interface RecentQueriesState {
   analyticsEnabled: boolean;
 }
 
-export function validateRecentQueriesProps(
+function validateRecentQueriesProps(
   engine: SearchEngine,
   props?: RecentQueriesListProps
 ) {

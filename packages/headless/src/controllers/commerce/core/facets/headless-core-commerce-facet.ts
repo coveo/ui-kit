@@ -63,7 +63,7 @@ export interface FacetControllerType<T extends FacetType> {
  *
  * The configurable `CoreCommerceFacet` properties used internally.
  */
-export interface CoreCommerceFacetProps {
+interface CoreCommerceFacetProps {
   options: CoreCommerceFacetOptions;
 }
 
@@ -158,8 +158,6 @@ export type CoreCommerceFacetState<
    */
   values: ValueResponse[];
 };
-
-export type CoreCommerceFacetBuilder = typeof buildCoreCommerceFacet;
 
 export function buildCoreCommerceFacet<
   ValueRequest extends AnyFacetValueRequest,

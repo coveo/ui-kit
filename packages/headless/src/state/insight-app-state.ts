@@ -31,7 +31,7 @@ import type {
   VersionSection,
 } from './state-sections.js';
 
-export type InsightSearchParametersState = FacetSection &
+type InsightSearchParametersState = FacetSection &
   DateFacetSection &
   NumericFacetSection &
   CategoryFacetSection &

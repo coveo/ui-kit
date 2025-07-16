@@ -9,7 +9,7 @@ import type {
 } from './common.js';
 import type {FromBuildResult} from './from-build-result.js';
 
-export interface HydrateStaticStateOptions<TSearchAction> {
+interface HydrateStaticStateOptions<TSearchAction> {
   searchAction: TSearchAction;
 }
 

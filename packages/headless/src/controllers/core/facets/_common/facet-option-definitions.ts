@@ -25,8 +25,8 @@ export const generateAutomaticRanges = new BooleanValue({
   required: true,
 }) as never;
 
-export const captions = new RecordValue();
-export const query = new StringValue();
+const captions = new RecordValue();
+const query = new StringValue();
 
 const facetSearchOptionDefinitions: SchemaDefinition<FacetSearchRequestOptions> =
   {

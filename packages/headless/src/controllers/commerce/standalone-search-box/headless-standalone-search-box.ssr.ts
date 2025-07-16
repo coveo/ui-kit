@@ -6,7 +6,6 @@ import {
 } from './headless-standalone-search-box.js';
 
 export type {StandaloneSearchBoxState} from './headless-standalone-search-box.js';
-export type {StandaloneSearchBoxOptions} from './headless-standalone-search-box-options.js';
 export type {StandaloneSearchBox, StandaloneSearchBoxProps};
 
 export interface StandaloneSearchBoxDefinition

@@ -7,7 +7,6 @@ export type {
   NotifyTrigger,
   NotifyTriggerState,
 } from '../core/triggers/headless-core-notify-trigger.js';
-export {buildNotifyTrigger} from './headless-notify-trigger.js';
 
 export interface NotifyTriggerDefinition
   extends ControllerDefinitionWithoutProps<SearchEngine, NotifyTrigger> {}

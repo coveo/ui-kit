@@ -3,9 +3,8 @@ import type {FacetRequest} from '../facet-set/interfaces/request.js';
 import type {AnyFacetRequest} from './interfaces/generic-facet-request.js';
 import type {AnyFacetSlice} from './interfaces/generic-facet-section.js';
 
-export type SpecificFacetState<
-  SliceType extends AnyFacetSlice = AnyFacetSlice,
-> = Record<string, SliceType>;
+type SpecificFacetState<SliceType extends AnyFacetSlice = AnyFacetSlice> =
+  Record<string, SliceType>;
 
 export function handleFacetSortCriterionUpdate<T extends AnyFacetSlice>(
   state: SpecificFacetState<T>,

@@ -1,4 +1,3 @@
-import type {GeneratedAnswerCitation} from '../../../api/generated-answer/generated-answer-event-payload.js';
 import type {CoreEngine} from '../../../app/engine.js';
 import type {
   CustomAction,
@@ -31,12 +30,6 @@ import {
   buildController,
   type Controller,
 } from '../../controller/headless-controller.js';
-
-export type {
-  GeneratedAnswerCitation,
-  GeneratedResponseFormat,
-  GeneratedAnswerState,
-};
 
 /**
  * The `GeneratedAnswer` controller uses Coveo Machine Learning (Coveo ML) models to automatically generate an answer to a query executed by the user.

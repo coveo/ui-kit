@@ -29,10 +29,6 @@ import type {
   QuerySuggestionSection,
 } from '../../../state/state-sections.js';
 import {loadReducerError} from '../../../utils/errors.js';
-import type {
-  Delimiters,
-  SuggestionHighlightingOptions,
-} from '../../../utils/highlight.js';
 import {randomID} from '../../../utils/utils.js';
 import {validateOptions} from '../../../utils/validate-payload.js';
 import {buildController} from '../../controller/headless-controller.js';
@@ -48,14 +44,7 @@ import {
   searchBoxOptionsSchema,
 } from './headless-search-box-options.js';
 
-export type {
-  SearchBoxOptions,
-  SearchBoxState,
-  SuggestionHighlightingOptions,
-  Suggestion,
-  Delimiters,
-  CoreSearchBox,
-};
+export type {SearchBoxOptions, SearchBoxState, Suggestion, CoreSearchBox};
 
 export interface SearchBoxProps {
   /**

@@ -9,7 +9,7 @@ export const getCaseFieldInitialState = (): CaseFieldState => ({
   fields: {},
 });
 
-export interface CaseFieldStatus {
+interface CaseFieldStatus {
   /**
    * `true` if a request is in progress and `false` otherwise.
    */
@@ -39,7 +39,7 @@ export interface CaseFieldSuggestion {
   confidence: number;
 }
 
-export interface CaseField {
+interface CaseField {
   /**
    * The field to predict.
    */

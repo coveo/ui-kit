@@ -28,7 +28,7 @@ export const {
   useProductView,
   useQueryTrigger,
   useRecentQueriesList,
-  useRedirectionTrigger,
+
   useSearchBox,
   useSort,
   useStandaloneSearchBox,
@@ -40,21 +40,20 @@ export const {
 
 export type ListingEngineDefinition = typeof _listingEngineDefinition;
 export type ListingStaticState = InferStaticState<ListingEngineDefinition>;
-export type ListingHydratedState = InferHydratedState<ListingEngineDefinition>;
+type ListingHydratedState = InferHydratedState<ListingEngineDefinition>;
 
 export type SearchEngineDefinition = typeof _searchEngineDefinition;
 export type SearchStaticState = InferStaticState<SearchEngineDefinition>;
-export type SearchHydratedState = InferHydratedState<SearchEngineDefinition>;
+type SearchHydratedState = InferHydratedState<SearchEngineDefinition>;
 
 export type StandaloneEngineDefinition = typeof _standaloneEngineDefinition;
 export type StandaloneStaticState =
   InferStaticState<StandaloneEngineDefinition>;
-export type StandaloneHydratedState =
-  InferHydratedState<StandaloneEngineDefinition>;
+type StandaloneHydratedState = InferHydratedState<StandaloneEngineDefinition>;
 
 export type RecommendationEngineDefinition =
   typeof _recommendationEngineDefinition;
 export type RecommendationStaticState =
   InferStaticState<RecommendationEngineDefinition>;
-export type RecommendationHydratedState =
+type RecommendationHydratedState =
   InferHydratedState<RecommendationEngineDefinition>;
