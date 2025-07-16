@@ -10,6 +10,11 @@
   "bin": "./index.mjs",
   "type": "module",
   "main": "index.mjs",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/coveo/ui-kit.git",
+    "directory": "packages/create-atomic"
+  },
   "scripts": {
     "start": "node ./index.mjs",
     "build": "nx build",
