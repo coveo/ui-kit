@@ -113,7 +113,6 @@ describe('atomic-product-link', () => {
     const {productText} = await renderProductLink();
 
     expect(productText).toBeTruthy();
-    console.log(productText());
     expect(productText()?.getAttribute('field')).toBe('ec_name');
     expect(productText()?.getAttribute('default')).toBe('no-title');
   });
