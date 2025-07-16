@@ -1,15 +1,15 @@
 import {createAsyncThunk} from '@reduxjs/toolkit';
 import HistoryStore from '../../api/analytics/coveo.analytics/history-store.js';
 import {
-  SearchOptions,
   isErrorResponse,
+  type SearchOptions,
 } from '../../api/search/search-api-client.js';
-import {
+import type {
   AsyncThunkInsightOptions,
   InsightAPIClient,
 } from '../../api/service/insight/insight-api-client.js';
-import {InsightQueryRequest} from '../../api/service/insight/query/query-request.js';
-import {
+import type {InsightQueryRequest} from '../../api/service/insight/query/query-request.js';
+import type {
   CategoryFacetSection,
   ConfigurationSection,
   ContextSection,
@@ -30,24 +30,24 @@ import {
   TabSection,
 } from '../../state/state-sections.js';
 import {requiredNonEmptyString} from '../../utils/validate-payload.js';
-import {InsightAction as LegacyInsightAction} from '../analytics/analytics-utils.js';
+import type {InsightAction as LegacyInsightAction} from '../analytics/analytics-utils.js';
 import {SearchPageEvents} from '../analytics/search-action-cause.js';
-import {
+import type {
   FetchQuerySuggestionsActionCreatorPayload,
   FetchQuerySuggestionsThunkReturn,
 } from '../query-suggest/query-suggest-actions.js';
-import {
+import type {
   ExecuteSearchThunkReturn,
   SearchAction,
 } from '../search/search-actions.js';
 import {
-  MappedSearchRequest,
+  type MappedSearchRequest,
   mapSearchResponse,
 } from '../search/search-mappings.js';
 import {buildInsightQuerySuggestRequest} from './insight-query-suggest-request.js';
 import {
   AsyncInsightSearchThunkProcessor,
-  AsyncThunkConfig,
+  type AsyncThunkConfig,
 } from './insight-search-actions-thunk-processor.js';
 import {
   buildInsightFetchFacetValuesRequest,
@@ -56,9 +56,9 @@ import {
 } from './insight-search-request.js';
 import {
   legacyExecuteSearch,
-  legacyFetchPage,
   legacyFetchFacetValues,
   legacyFetchMoreResults,
+  legacyFetchPage,
 } from './legacy/insight-search-actions.js';
 
 export type StateNeededByExecuteSearch = ConfigurationSection &
@@ -86,12 +86,12 @@ export const fetchFromAPI = async (
   {request, mappings}: MappedSearchRequest<InsightQueryRequest>,
   options?: SearchOptions
 ) => {
-  const startedAt = new Date().getTime();
+  const startedAt = Date.now();
   const response = mapSearchResponse(
     await client.query(request, options),
     mappings
   );
-  const duration = new Date().getTime() - startedAt;
+  const duration = Date.now() - startedAt;
   const queryExecuted = state.query?.q || '';
   return {
     response,

@@ -1,4 +1,4 @@
-import {GeneratedAnswerCitation} from '../../../api/generated-answer/generated-answer-event-payload.js';
+import type {GeneratedAnswerCitation} from '../../../api/generated-answer/generated-answer-event-payload.js';
 import {configuration} from '../../../app/common-reducers.js';
 import {
   generatedAnswerAnalyticsClient,
@@ -7,12 +7,12 @@ import {
 import {buildMockCitation} from '../../../test/mock-citation.js';
 import {
   buildMockSearchEngine,
-  MockedSearchEngine,
+  type MockedSearchEngine,
 } from '../../../test/mock-engine-v2.js';
 import {createMockState} from '../../../test/mock-state.js';
 import {
   buildInteractiveCitationCore,
-  InteractiveCitation,
+  type InteractiveCitation,
 } from './headless-core-interactive-citation.js';
 
 vi.mock(

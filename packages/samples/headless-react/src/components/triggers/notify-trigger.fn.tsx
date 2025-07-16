@@ -1,5 +1,5 @@
-import {NotifyTrigger as HeadlessNotifyTrigger} from '@coveo/headless';
-import {useEffect, useState, FunctionComponent} from 'react';
+import type {NotifyTrigger as HeadlessNotifyTrigger} from '@coveo/headless';
+import {type FunctionComponent, useEffect, useState} from 'react';
 
 interface HeadlessNotifyTriggerProps {
   controller: HeadlessNotifyTrigger;
@@ -20,7 +20,7 @@ export const NotifyTrigger: FunctionComponent<HeadlessNotifyTriggerProps> = (
 
   const notify = () => {
     state.notifications.forEach((notification) => {
-      alert('Notification: ' + notification);
+      alert(`Notification: ${notification}`);
     });
   };
 

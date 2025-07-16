@@ -1,10 +1,10 @@
 import {
   buildStandaloneSearchBox,
-  StandaloneSearchBox as HeadlessStandaloneSearchBox,
-  StandaloneSearchBoxState,
-  Unsubscribe,
+  type StandaloneSearchBox as HeadlessStandaloneSearchBox,
+  type StandaloneSearchBoxState,
+  type Unsubscribe,
 } from '@coveo/headless';
-import {Component, ContextType} from 'react';
+import {Component, type ContextType} from 'react';
 import {AppContext} from '../../context/engine';
 import {standaloneSearchBoxStorageKey} from './standalone-search-box-storage-key';
 
@@ -70,6 +70,11 @@ export class StandaloneSearchBox extends Component<
               <li
                 key={value}
                 onClick={() => this.controller.selectSuggestion(value)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    this.controller.selectSuggestion(value);
+                  }
+                }}
               >
                 {value}
               </li>

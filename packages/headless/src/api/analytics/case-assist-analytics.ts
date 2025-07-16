@@ -1,10 +1,10 @@
 import {
-  AnalyticsClientSendEventHook,
+  type AnalyticsClientSendEventHook,
   CaseAssistClient,
-  CaseAssistClientProvider,
+  type CaseAssistClientProvider,
 } from 'coveo.analytics';
-import {Logger} from 'pino';
-import {
+import type {Logger} from 'pino';
+import type {
   CaseAssistConfigurationSection,
   CaseFieldSection,
   CaseInputSection,
@@ -13,7 +13,7 @@ import {
   SearchHubSection,
 } from '../../state/state-sections.js';
 import {getOrganizationEndpoint} from '../platform-client.js';
-import {PreprocessRequest} from '../preprocess-request.js';
+import type {PreprocessRequest} from '../preprocess-request.js';
 import {BaseAnalyticsProvider} from './base-analytics.js';
 import {
   wrapAnalyticsClientSendEventHook,

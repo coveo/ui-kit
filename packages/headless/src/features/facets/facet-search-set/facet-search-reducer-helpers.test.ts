@@ -1,21 +1,21 @@
-import {SpecificFacetSearchResponse} from '../../../api/search/facet-search/specific-facet-search/specific-facet-search-response.js';
+import type {SpecificFacetSearchResponse} from '../../../api/search/facet-search/specific-facet-search/specific-facet-search-response.js';
+import {buildMockFacetSearch} from '../../../test/mock-facet-search.js';
 import {buildMockFacetSearchRequestOptions} from '../../../test/mock-facet-search-request-options.js';
 import {buildMockFacetSearchResponse} from '../../../test/mock-facet-search-response.js';
 import {buildMockFacetSearchResult} from '../../../test/mock-facet-search-result.js';
-import {buildMockFacetSearch} from '../../../test/mock-facet-search.js';
 import {
-  handleFacetSearchRegistration,
-  handleFacetSearchUpdate,
-  handleFacetSearchPending,
-  handleFacetSearchRejected,
-  handleFacetSearchFulfilled,
-  handleFacetSearchClear,
-  handleFacetSearchSetClear,
   defaultFacetSearchOptions,
+  handleFacetSearchClear,
+  handleFacetSearchFulfilled,
+  handleFacetSearchPending,
+  handleFacetSearchRegistration,
+  handleFacetSearchRejected,
+  handleFacetSearchSetClear,
+  handleFacetSearchUpdate,
 } from './facet-search-reducer-helpers.js';
 import {
-  SpecificFacetSearchSetState,
   getFacetSearchSetInitialState,
+  type SpecificFacetSearchSetState,
 } from './specific/specific-facet-search-set-state.js';
 
 describe('FacetSearch slice', () => {

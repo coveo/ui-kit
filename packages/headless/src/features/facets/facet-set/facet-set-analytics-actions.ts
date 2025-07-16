@@ -1,22 +1,22 @@
 import {Value} from '@coveo/bueno';
 import {
-  validatePayload,
   requiredNonEmptyString,
+  validatePayload,
 } from '../../../utils/validate-payload.js';
 import {
+  type LegacySearchAction,
   makeAnalyticsAction,
-  LegacySearchAction,
 } from '../../analytics/analytics-utils.js';
 import {SearchPageEvents} from '../../analytics/search-action-cause.js';
-import {SearchAction} from '../../search/search-actions.js';
+import type {SearchAction} from '../../search/search-actions.js';
 import {facetIdDefinition} from '../generic/facet-actions-validation.js';
-import {RangeFacetSortCriterion} from '../range-facets/generic/interfaces/request.js';
+import type {RangeFacetSortCriterion} from '../range-facets/generic/interfaces/request.js';
 import {
   buildFacetBaseMetadata,
-  getStateNeededForFacetMetadata,
   buildFacetSelectionChangeMetadata,
+  getStateNeededForFacetMetadata,
 } from './facet-set-analytics-actions-utils.js';
-import {FacetSortCriterion} from './interfaces/request.js';
+import type {FacetSortCriterion} from './interfaces/request.js';
 
 export const logFacetShowMore = (facetId: string): LegacySearchAction =>
   makeAnalyticsAction('analytics/facet/showMore', (client, state) => {

@@ -1,0 +1,49 @@
+{
+  "name": "@coveo/create-atomic",
+  "description": "Coveo Atomic Generator",
+  "version": "1.40.9",
+  "files": [
+    "/lib",
+    "/template",
+    "/template/.gitignore"
+  ],
+  "bin": "./index.mjs",
+  "type": "module",
+  "main": "index.mjs",
+  "scripts": {
+    "start": "node ./index.mjs",
+    "build": "nx build",
+    "build:ts": "tsc -p tsconfig.json",
+    "lint": "prettier --check . && eslint .",
+    "publish:npm": "npm run-script -w=@coveo/ci npm-publish",
+    "publish:bump": "npm run-script -w=@coveo/ci bump",
+    "promote:npm:latest": "npm run-script -w=@coveo/ci promote-npm-prod"
+  },
+  "keywords": [
+    "coveo",
+    "headless",
+    "atomic",
+    "template",
+    "generator"
+  ],
+  "author": "Coveo",
+  "license": "Apache-2.0",
+  "publishConfig": {
+    "access": "public"
+  },
+  "dependencies": {
+    "@coveo/platform-client": "60.3.0",
+    "abortcontroller-polyfill": "1.7.5",
+    "detect-indent": "7.0.1",
+    "https-proxy-agent": "5.0.1",
+    "inquirer": "9.2.0",
+    "isomorphic-fetch": "3.0.0",
+    "minimist": "1.2.8",
+    "node-plop": "^0.31.0",
+    "plop": "3.1.2"
+  },
+  "devDependencies": {
+    "fs-extra": "11.1.1",
+    "typescript": "5.8.3"
+  }
+}

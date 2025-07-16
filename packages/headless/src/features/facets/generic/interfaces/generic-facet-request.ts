@@ -1,15 +1,15 @@
-import {
+import type {
   CategoryFacetRequest,
   CategoryFacetValueRequest,
 } from '../../category-facet-set/interfaces/request.js';
-import {
+import type {
   FacetRequest,
   FacetValueRequest,
 } from '../../facet-set/interfaces/request.js';
-import {DateRangeRequest} from '../../range-facets/date-facet-set/interfaces/request.js';
-import {RangeFacetRequest} from '../../range-facets/generic/interfaces/range-facet.js';
-import {NumericRangeRequest} from '../../range-facets/numeric-facet-set/interfaces/request.js';
-import {AnyFacetSetState} from './generic-facet-section.js';
+import type {DateRangeRequest} from '../../range-facets/date-facet-set/interfaces/request.js';
+import type {RangeFacetRequest} from '../../range-facets/generic/interfaces/range-facet.js';
+import type {NumericRangeRequest} from '../../range-facets/numeric-facet-set/interfaces/request.js';
+import type {AnyFacetSetState} from './generic-facet-section.js';
 
 export type AnyFacetRequest =
   | FacetRequest

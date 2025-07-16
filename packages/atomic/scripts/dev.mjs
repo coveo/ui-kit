@@ -1,6 +1,6 @@
-import chalk from 'chalk';
 import {exec} from 'node:child_process';
 import {watch} from 'node:fs';
+import chalk from 'chalk';
 import ora from 'ora';
 import waitOn from 'wait-on';
 
@@ -61,7 +61,7 @@ async function stopAllProcesses() {
   isStopped = true;
 
   runningProcesses.forEach((process) => {
-    if (process && process.kill) {
+    if (process?.kill) {
       process.kill('SIGTERM');
     }
   });
@@ -89,7 +89,7 @@ async function waitForPort(port, host = 'localhost', timeout = 30000) {
       tcpTimeout: 1000,
       interval: 500,
     });
-  } catch (error) {
+  } catch (_) {
     throw new Error(`Timeout waiting for port ${port} on ${host}`);
   }
 }
@@ -120,7 +120,7 @@ async function startServers() {
 const isStencil = process.argv.includes('--stencil');
 
 // Start the servers (vite & storybook) first
-startServers();
+await startServers();
 
 // Watch the src folder for changes
 watch('src', {recursive: true}, async (_, filename) => {

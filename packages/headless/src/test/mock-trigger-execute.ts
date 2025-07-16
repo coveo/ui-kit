@@ -1,4 +1,4 @@
-import {TriggerExecute} from '../api/common/trigger.js';
+import type {TriggerExecute} from '../api/common/trigger.js';
 
 export function buildMockExecuteTrigger(
   config: Partial<TriggerExecute> = {}

@@ -1,6 +1,6 @@
-import {i18n} from 'i18next';
-import {html, TemplateResult} from 'lit';
-import {Directive, directive, PartInfo, PartType} from 'lit/directive.js';
+import type {i18n} from 'i18next';
+import {html, type TemplateResult} from 'lit';
+import {Directive, directive, type PartInfo, PartType} from 'lit/directive.js';
 
 export interface LocalizedStringProps {
   i18n: i18n;

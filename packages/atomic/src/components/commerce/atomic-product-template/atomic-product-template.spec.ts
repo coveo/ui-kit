@@ -1,9 +1,9 @@
-import {renderInAtomicCommerceInterface} from '@/vitest-utils/testing-helpers/fixtures/atomic/commerce/atomic-commerce-interface-fixture';
-import {sanitizeHtml} from '@/vitest-utils/testing-helpers/testing-utils/sanitize-html';
-import {Product} from '@coveo/headless/commerce';
+import type {Product} from '@coveo/headless/commerce';
 import {page} from '@vitest/browser/context';
 import {html} from 'lit';
-import {describe, it, expect, vi} from 'vitest';
+import {describe, expect, it, vi} from 'vitest';
+import {renderInAtomicCommerceInterface} from '@/vitest-utils/testing-helpers/fixtures/atomic/commerce/atomic-commerce-interface-fixture';
+import {sanitizeHtml} from '@/vitest-utils/testing-helpers/testing-utils/sanitize-html';
 import {makeMatchConditions} from '../../common/product-template/product-template-common';
 import {AtomicProductTemplate} from './atomic-product-template';
 
@@ -72,7 +72,7 @@ describe('AtomicProductTemplate', () => {
   it('should call #getTemplate on the controller', async () => {
     const brandConditions = (item: Product) => item.ec_brand === 'Coveo';
     const element = await setupElement({conditions: [brandConditions]});
-    const ctrl = element['productTemplateController'];
+    const ctrl = element.productTemplateController;
     //@ts-expect-error: we don't really care about the return template here
     const spy = vi.spyOn(ctrl, 'getTemplate').mockResolvedValue('🍰');
     const result = await element.getTemplate();

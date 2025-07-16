@@ -1,25 +1,25 @@
-import {PayloadAction} from '@reduxjs/toolkit';
-import {SearchEngine} from '../../../app/search-engine/search-engine.js';
+import type {PayloadAction} from '@reduxjs/toolkit';
+import type {SearchEngine} from '../../../app/search-engine/search-engine.js';
 import {facetSetReducer as facetSet} from '../../../features/facets/facet-set/facet-set-slice.js';
 import {
+  type UpdateFacetAutoSelectionActionCreatorPayload,
   updateFacetAutoSelection,
-  UpdateFacetAutoSelectionActionCreatorPayload,
 } from '../generic/facet-actions.js';
 import {
   deselectAllFacetValues,
+  type RegisterFacetActionCreatorPayload,
   registerFacet,
+  type ToggleSelectFacetValueActionCreatorPayload,
   toggleExcludeFacetValue,
-  RegisterFacetActionCreatorPayload,
   toggleSelectFacetValue,
-  ToggleSelectFacetValueActionCreatorPayload,
+  type UpdateFacetIsFieldExpandedActionCreatorPayload,
+  type UpdateFacetNumberOfValuesActionCreatorPayload,
+  type UpdateFacetSortCriterionActionCreatorPayload,
+  type UpdateFreezeCurrentValuesActionCreatorPayload,
   updateFacetIsFieldExpanded,
-  UpdateFacetIsFieldExpandedActionCreatorPayload,
   updateFacetNumberOfValues,
-  UpdateFacetNumberOfValuesActionCreatorPayload,
   updateFacetSortCriterion,
-  UpdateFacetSortCriterionActionCreatorPayload,
   updateFreezeCurrentValues,
-  UpdateFreezeCurrentValuesActionCreatorPayload,
 } from './facet-set-actions.js';
 
 export type {

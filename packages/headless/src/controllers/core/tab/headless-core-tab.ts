@@ -1,6 +1,6 @@
 import {BooleanValue, Schema} from '@coveo/bueno';
 import {configuration} from '../../../app/common-reducers.js';
-import {CoreEngine} from '../../../app/engine.js';
+import type {CoreEngine} from '../../../app/engine.js';
 import {getConfigurationInitialState} from '../../../features/configuration/configuration-state.js';
 import {prepareForSearchWithQuery} from '../../../features/search/search-actions.js';
 import {
@@ -8,7 +8,7 @@ import {
   updateActiveTab,
 } from '../../../features/tab-set/tab-set-actions.js';
 import {tabSetReducer as tabSet} from '../../../features/tab-set/tab-set-slice.js';
-import {
+import type {
   ConfigurationSection,
   TabSection,
 } from '../../../state/state-sections.js';
@@ -21,7 +21,7 @@ import {
 } from '../../../utils/validate-payload.js';
 import {
   buildController,
-  Controller,
+  type Controller,
 } from '../../controller/headless-controller.js';
 
 export interface TabOptions {

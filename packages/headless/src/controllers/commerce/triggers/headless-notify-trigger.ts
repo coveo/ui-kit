@@ -1,11 +1,11 @@
-import {CommerceEngine} from '../../../app/commerce-engine/commerce-engine.js';
+import type {CommerceEngine} from '../../../app/commerce-engine/commerce-engine.js';
 import {stateKey} from '../../../app/state-key.js';
 import {commerceTriggersReducer as triggers} from '../../../features/commerce/triggers/triggers-slice.js';
-import {TriggerSection} from '../../../state/state-sections.js';
+import type {TriggerSection} from '../../../state/state-sections.js';
 import {arrayEqual} from '../../../utils/compare-utils.js';
 import {loadReducerError} from '../../../utils/errors.js';
 import {buildController} from '../../controller/headless-controller.js';
-import {NotifyTrigger} from '../../core/triggers/headless-core-notify-trigger.js';
+import type {NotifyTrigger} from '../../core/triggers/headless-core-notify-trigger.js';
 
 /**
  * Creates a `NotifyTrigger` controller instance.

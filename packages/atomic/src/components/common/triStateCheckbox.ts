@@ -1,14 +1,14 @@
-import {multiClassMap, tw} from '@/src/directives/multi-class-map';
-import {FunctionalComponent} from '@/src/utils/functional-component-utils';
-import {FacetValueState} from '@coveo/headless';
+import type {FacetValueState} from '@coveo/headless';
 import {html} from 'lit';
 import {classMap} from 'lit/directives/class-map.js';
 import {ifDefined} from 'lit/directives/if-defined.js';
 import {ref} from 'lit/directives/ref.js';
+import {multiClassMap, tw} from '@/src/directives/multi-class-map';
+import type {FunctionalComponent} from '@/src/utils/functional-component-utils';
 import Tick from '../../images/checkbox.svg';
 import Close from '../../images/close.svg';
 import '../common/atomic-icon/atomic-icon';
-import {CheckboxProps} from './checkbox';
+import type {CheckboxProps} from './checkbox';
 
 export type TriStateCheckboxProps = Omit<CheckboxProps, 'checked'> & {
   state: FacetValueState;

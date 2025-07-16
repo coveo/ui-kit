@@ -1,7 +1,7 @@
-import {ExternalCartPurchaseResponse} from '@/external-services/external-cart-service';
-import {useCart} from '@/lib/commerce-engine';
 import {useFetcher} from '@remix-run/react';
 import {useEffect} from 'react';
+import type {ExternalCartPurchaseResponse} from '@/external-services/external-cart-service';
+import {useCart} from '@/lib/commerce-engine';
 
 export default function PurchaseButton() {
   const fetcher = useFetcher<ExternalCartPurchaseResponse>();
@@ -16,11 +16,13 @@ export default function PurchaseButton() {
       id: fetcher.data.transactionId,
       revenue: fetcher.data.transactionRevenue,
     });
-  }, [fetcher.data]);
+  }, [fetcher.data, methods]);
 
   return (
     <fetcher.Form method="post" action="/cart/purchase">
-      <button disabled={!methods || fetcher.state !== 'idle'}>Purchase</button>
+      <button type="button" disabled={!methods || fetcher.state !== 'idle'}>
+        Purchase
+      </button>
     </fetcher.Form>
   );
 }

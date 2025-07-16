@@ -1,15 +1,15 @@
-import {CoreEngine} from '../../../app/engine.js';
-import {
+import type {CoreEngine} from '../../../app/engine.js';
+import type {
   InsightAction,
   LegacySearchAction,
 } from '../../../features/analytics/analytics-utils.js';
 import {triggerReducer as triggers} from '../../../features/triggers/triggers-slice.js';
-import {TriggerSection} from '../../../state/state-sections.js';
+import type {TriggerSection} from '../../../state/state-sections.js';
 import {arrayEqual} from '../../../utils/compare-utils.js';
 import {loadReducerError} from '../../../utils/errors.js';
 import {
   buildController,
-  Controller,
+  type Controller,
 } from '../../controller/headless-controller.js';
 
 /**

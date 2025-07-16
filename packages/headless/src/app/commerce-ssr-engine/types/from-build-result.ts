@@ -1,6 +1,6 @@
-import {ControllersMap} from '../../ssr-engine/types/common.js';
-import {SSRCommerceEngine} from '../factories/build-factory.js';
-import {EngineDefinitionBuildResult} from './common.js';
+import type {ControllersMap} from '../../ssr-engine/types/common.js';
+import type {SSRCommerceEngine} from '../factories/build-factory.js';
+import type {EngineDefinitionBuildResult} from './common.js';
 
 export interface FromBuildResultOptions<TControllers extends ControllersMap> {
   /**
@@ -17,10 +17,10 @@ export interface FromBuildResultOptions<TControllers extends ControllersMap> {
   allowedRecommendationKeys?: string[];
 }
 
-export interface FromBuildResult<
+export type FromBuildResult<
   TControllers extends ControllersMap,
   TOptions,
   TReturn,
-> {
-  (options: FromBuildResultOptions<TControllers> & TOptions): Promise<TReturn>;
-}
+> = (
+  options: FromBuildResultOptions<TControllers> & TOptions
+) => Promise<TReturn>;

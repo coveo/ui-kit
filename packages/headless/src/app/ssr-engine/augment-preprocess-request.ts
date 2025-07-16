@@ -1,11 +1,11 @@
-import {
+import type {
   PlatformClientOrigin,
   PlatformRequestOptions,
   PreprocessRequest,
   RequestMetadata,
 } from '../../api/preprocess-request.js';
-import {buildLogger, LoggerOptions} from '../logger.js';
-import {NavigatorContextProvider} from '../navigator-context-provider.js';
+import {buildLogger, type LoggerOptions} from '../logger.js';
+import type {NavigatorContextProvider} from '../navigator-context-provider.js';
 
 export interface AugmentPreprocessRequestOptions {
   preprocessRequest?: PreprocessRequest;

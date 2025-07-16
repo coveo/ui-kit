@@ -3,8 +3,8 @@ import {
   requiredNonEmptyString,
   validatePayload,
 } from '../../utils/validate-payload.js';
-import {DateRangeRequest} from '../facets/range-facets/date-facet-set/interfaces/request.js';
-import {NumericRangeRequest} from '../facets/range-facets/numeric-facet-set/interfaces/request.js';
+import type {DateRangeRequest} from '../facets/range-facets/date-facet-set/interfaces/request.js';
+import type {NumericRangeRequest} from '../facets/range-facets/numeric-facet-set/interfaces/request.js';
 import {searchParametersDefinition} from './search-parameter-schema.js';
 
 /**

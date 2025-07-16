@@ -18,12 +18,12 @@ import {
   toggleExcludeFacetValue,
   toggleSelectFacetValue,
 } from '../facets/regular-facet/regular-facet-actions.js';
-import {Parameters} from '../parameters/parameters-actions.js';
-import {restoreProductListingParameters} from '../product-listing-parameters/product-listing-parameters-actions.js';
+import type {Parameters} from '../parameters/parameters-actions.js';
 import {fetchProductListing} from '../product-listing/product-listing-actions.js';
+import {restoreProductListingParameters} from '../product-listing-parameters/product-listing-parameters-actions.js';
 import {fetchRecommendations} from '../recommendations/recommendations-actions.js';
-import {restoreSearchParameters} from '../search-parameters/search-parameters-actions.js';
 import {executeSearch} from '../search/search-actions.js';
+import {restoreSearchParameters} from '../search-parameters/search-parameters-actions.js';
 import {applySort} from '../sort/sort-actions.js';
 import {
   nextPage,
@@ -33,7 +33,7 @@ import {
   setPageSize,
 } from './pagination-actions.js';
 import {
-  CommercePaginationState,
+  type CommercePaginationState,
   getCommercePaginationInitialSlice,
   getCommercePaginationInitialState,
 } from './pagination-state.js';

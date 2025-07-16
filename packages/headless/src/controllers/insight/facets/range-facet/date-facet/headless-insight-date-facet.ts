@@ -1,25 +1,25 @@
-import {InsightEngine} from '../../../../../app/insight-engine/insight-engine.js';
+import type {InsightEngine} from '../../../../../app/insight-engine/insight-engine.js';
 import {facetClearAll} from '../../../../../features/facets/facet-set/facet-set-analytics-actions.js';
 import {
   logFacetClearAll,
   logFacetUpdateSort,
 } from '../../../../../features/facets/facet-set/facet-set-insight-analytics-actions.js';
-import {DateRangeRequest} from '../../../../../features/facets/range-facets/date-facet-set/interfaces/request.js';
-import {DateFacetValue} from '../../../../../features/facets/range-facets/date-facet-set/interfaces/response.js';
-import {RangeFacetSortCriterion} from '../../../../../features/facets/range-facets/generic/interfaces/request.js';
+import type {DateRangeRequest} from '../../../../../features/facets/range-facets/date-facet-set/interfaces/request.js';
+import type {DateFacetValue} from '../../../../../features/facets/range-facets/date-facet-set/interfaces/response.js';
+import type {RangeFacetSortCriterion} from '../../../../../features/facets/range-facets/generic/interfaces/request.js';
 import {getInsightAnalyticsActionForToggleRangeFacetSelect} from '../../../../../features/facets/range-facets/generic/range-facet-insight-utils.js';
 import {getAnalyticsActionForToggleFacetSelect} from '../../../../../features/facets/range-facets/generic/range-facet-utils.js';
 import {executeSearch} from '../../../../../features/insight-search/insight-search-actions.js';
 import {
   buildCoreDateFacet,
   buildDateRange,
-  DateFacet,
-  DateFacetProps,
-  DateFacetState,
-  DateRangeInput,
-  DateRangeOptions,
+  type DateFacet,
+  type DateFacetProps,
+  type DateFacetState,
+  type DateRangeInput,
+  type DateRangeOptions,
 } from '../../../../core/facets/range-facet/date-facet/headless-core-date-facet.js';
-import {DateFacetOptions} from '../../../../core/facets/range-facet/date-facet/headless-date-facet-options.js';
+import type {DateFacetOptions} from '../../../../core/facets/range-facet/date-facet/headless-date-facet-options.js';
 
 export type {
   DateFacetOptions,

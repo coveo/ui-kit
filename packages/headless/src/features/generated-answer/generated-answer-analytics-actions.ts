@@ -1,13 +1,13 @@
-import {Rga} from '@coveo/relay-event-types';
+import type {Rga} from '@coveo/relay-event-types';
 import {
+  type CustomAction,
   citationDocumentIdentifier,
-  CustomAction,
-  LegacySearchAction,
+  type LegacySearchAction,
   makeAnalyticsAction,
   partialCitationInformation,
 } from '../analytics/analytics-utils.js';
 import {SearchPageEvents} from '../analytics/search-action-cause.js';
-import {SearchAction} from '../search/search-actions.js';
+import type {SearchAction} from '../search/search-actions.js';
 import {
   citationSourceSelector,
   generativeQuestionAnsweringIdSelector,

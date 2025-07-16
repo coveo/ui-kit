@@ -1,5 +1,5 @@
 import {isArray} from '@coveo/bueno';
-import {describe, it, expect, vi, beforeEach} from 'vitest';
+import {beforeEach, describe, expect, it, vi} from 'vitest';
 import {possiblyWarnOnBadFieldType} from './field-warning';
 
 vi.mock('@coveo/bueno', {spy: true});

@@ -1,5 +1,5 @@
-import {AxeFixture, makeAxeBuilder} from '@/playwright-utils/base-fixture';
 import {test as base} from '@playwright/test';
+import {type AxeFixture, makeAxeBuilder} from '@/playwright-utils/base-fixture';
 import {ProductMultiValueTextPageObject} from './page-object';
 
 type MyFixtures = {

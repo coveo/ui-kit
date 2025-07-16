@@ -1,8 +1,8 @@
+import type {i18n} from 'i18next';
+import {html} from 'lit';
+import {beforeAll, describe, expect, it, vi} from 'vitest';
 import {renderFunctionFixture} from '@/vitest-utils/testing-helpers/fixture';
 import {createTestI18n} from '@/vitest-utils/testing-helpers/i18n-utils';
-import {i18n} from 'i18next';
-import {html} from 'lit';
-import {expect, describe, beforeAll, it, vi} from 'vitest';
 import {renderBreadcrumbContent} from './breadcrumb-content';
 import {getFirstBreadcrumbValue} from './breadcrumb-utils';
 

@@ -1,5 +1,5 @@
-import {BrowserStorage} from './browser-storage';
-import {buildSamlState, SamlState} from './saml-state';
+import type {BrowserStorage} from './browser-storage';
+import {buildSamlState, type SamlState} from './saml-state';
 
 describe('buildSamlState', () => {
   let storage: BrowserStorage;

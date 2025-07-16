@@ -1,4 +1,4 @@
-import {SearchAppState} from '../../../state/search-app-state.js';
+import type {SearchAppState} from '../../../state/search-app-state.js';
 import {buildMockCategoryFacetRequest} from '../../../test/mock-category-facet-request.js';
 import {buildMockCategoryFacetResponse} from '../../../test/mock-category-facet-response.js';
 import {buildMockCategoryFacetSlice} from '../../../test/mock-category-facet-slice.js';
@@ -8,8 +8,8 @@ import {buildMockFacetResponse} from '../../../test/mock-facet-response.js';
 import {buildMockFacetSlice} from '../../../test/mock-facet-slice.js';
 import {createMockState} from '../../../test/mock-state.js';
 import {
-  categoryFacetResponseSelector,
   categoryFacetResponseSelectedValuesSelector,
+  categoryFacetResponseSelector,
 } from './category-facet-set-selectors.js';
 
 describe('category facet selectors', () => {

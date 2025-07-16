@@ -6,20 +6,20 @@ import {
 } from '../search-parameters/search-parameter-actions.js';
 import {updateActiveTab} from '../tab-set/tab-set-actions.js';
 import {
-  updateBasicConfiguration,
-  updateSearchConfiguration,
   disableAnalytics,
   enableAnalytics,
-  updateAnalyticsConfiguration,
   setOriginLevel2,
   setOriginLevel3,
-  UpdateBasicConfigurationActionCreatorPayload,
-  UpdateSearchConfigurationActionCreatorPayload,
-  UpdateAnalyticsConfigurationActionCreatorPayload,
+  type UpdateAnalyticsConfigurationActionCreatorPayload,
+  type UpdateBasicConfigurationActionCreatorPayload,
+  type UpdateSearchConfigurationActionCreatorPayload,
+  updateAnalyticsConfiguration,
+  updateBasicConfiguration,
+  updateSearchConfiguration,
 } from './configuration-actions.js';
 import {
+  type ConfigurationState,
   getConfigurationInitialState,
-  ConfigurationState,
 } from './configuration-state.js';
 import getMagicCookie from './magic-cookie.js';
 

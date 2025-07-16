@@ -6,7 +6,7 @@ import {
   updateStandaloneSearchBoxRedirectionUrl,
 } from './standalone-search-box-set-actions.js';
 import {commerceStandaloneSearchBoxSetReducer} from './standalone-search-box-set-slice.js';
-import {CommerceStandaloneSearchBoxSetState} from './standalone-search-box-set-state.js';
+import type {CommerceStandaloneSearchBoxSetState} from './standalone-search-box-set-state.js';
 
 describe('commerce standalone search box slice', () => {
   const id = '1';

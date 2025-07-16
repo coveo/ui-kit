@@ -1,7 +1,7 @@
 {
   "name": "ui-kit",
   "private": true,
-  "version": "3.0.44",
+  "version": "3.0.45",
   "scripts": {
     "postinstall": "husky install && patch-package && npx playwright install",
     "reset:install": "git checkout origin/master package-lock.json && npm i",
@@ -10,8 +10,8 @@
     "build": "nx run-many --target=build",
     "test": "nx run-many --target=test",
     "e2e": "nx run-many --target=e2e",
-    "lint:check": "npx @biomejs/biome check . && npx nx run quantic:lint:check && cspell **/*.md --no-progress --show-suggestions --show-context",
-    "lint:fix": "npx @biomejs/biome check --write . && npx nx run quantic:lint:fix && cspell **/*.md --no-progress --show-suggestions --show-context",
+    "lint:check": "npx @biomejs/biome check --error-on-warnings . && npx nx run quantic:lint:check && cspell **/*.md --no-progress --show-suggestions --show-context",
+    "lint:fix": "npx @biomejs/biome check --write --error-on-warnings . && npx nx run quantic:lint:fix && cspell **/*.md --no-progress --show-suggestions --show-context",
     "package-compatibility": "node ./scripts/ci/package-compatibility.mjs",
     "pr:report": "node ./scripts/reports/pr-report.mjs",
     "report:bundle-size:time-series": "node ./scripts/reports/bundle-size/time-series.mjs",
@@ -42,11 +42,11 @@
     "@tsconfig/node20": "20.1.6",
     "@types/execa": "2.0.2",
     "@types/jest": "29.5.14",
-    "@types/node": "22.15.32",
-    "@vitest/browser": "3.2.3",
+    "@vitest/browser": "3.2.1",
+    "@types/node": "22.16.0",
     "aws-sdk": "2.1692.0",
     "commitizen": "4.3.1",
-    "concurrently": "9.1.2",
+    "concurrently": "9.2.0",
     "cspell": "8.19.4",
     "cz-conventional-changelog": "3.3.0",
     "esbuild": "0.25.5",
@@ -91,7 +91,9 @@
     "packages/samples/headless-ssr/*",
     "packages/shopify",
     "utils/cdn",
-    "utils/ci"
+    "utils/ci",
+    "packages/create-atomic-template",
+    "packages/create-atomic"
   ],
   "config": {
     "commitizen": {

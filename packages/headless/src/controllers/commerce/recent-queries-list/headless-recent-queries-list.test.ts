@@ -11,12 +11,12 @@ import {commerceSearchReducer as search} from '../../../features/commerce/search
 import {buildMockCommerceState} from '../../../test/mock-commerce-state.js';
 import {
   buildMockCommerceEngine,
-  MockedCommerceEngine,
+  type MockedCommerceEngine,
 } from '../../../test/mock-engine-v2.js';
 import {buildMockQueryState} from '../../../test/mock-query-state.js';
 import {
   buildRecentQueriesList,
-  RecentQueriesList,
+  type RecentQueriesList,
 } from './headless-recent-queries-list.js';
 
 vi.mock('../../../features/commerce/facets/core-facet/core-facet-actions');

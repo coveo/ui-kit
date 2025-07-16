@@ -1,3 +1,4 @@
+// biome-ignore lint/correctness/noUnusedImports: <>
 import {Component, h} from '@stencil/core';
 
 @Component({

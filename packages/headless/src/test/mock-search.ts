@@ -1,7 +1,7 @@
 import {logSearchboxSubmit} from '../features/query/query-analytics-actions.js';
-import {ExecuteSearchThunkReturn as LegacyExecuteSearchThunkReturn} from '../features/search/legacy/search-actions.js';
-import {ExecuteSearchThunkReturn} from '../features/search/search-actions.js';
-import {SearchState} from '../features/search/search-state.js';
+import type {ExecuteSearchThunkReturn as LegacyExecuteSearchThunkReturn} from '../features/search/legacy/search-actions.js';
+import type {ExecuteSearchThunkReturn} from '../features/search/search-actions.js';
+import type {SearchState} from '../features/search/search-state.js';
 import {buildMockSearchResponse} from './mock-search-response.js';
 
 export function buildMockSearch(

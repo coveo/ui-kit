@@ -1,7 +1,7 @@
 import {configuration} from '../../app/common-reducers.js';
-import {SearchEngine} from '../../app/search-engine/search-engine.js';
+import type {SearchEngine} from '../../app/search-engine/search-engine.js';
 import {toggleSelectAutomaticFacetValue} from '../../features/facets/automatic-facet-set/automatic-facet-set-actions.js';
-import {AutomaticFacetResponse} from '../../features/facets/automatic-facet-set/interfaces/response.js';
+import type {AutomaticFacetResponse} from '../../features/facets/automatic-facet-set/interfaces/response.js';
 import {deselectAllCategoryFacetValues} from '../../features/facets/category-facet-set/category-facet-set-actions.js';
 import {
   categoryBreadcrumbFacet,
@@ -20,8 +20,8 @@ import {
 } from '../../features/facets/facet-set/facet-set-analytics-actions.js';
 import {facetResponseActiveValuesSelector} from '../../features/facets/facet-set/facet-set-selectors.js';
 import {facetSetReducer as facetSet} from '../../features/facets/facet-set/facet-set-slice.js';
-import {FacetSlice} from '../../features/facets/facet-set/facet-set-state.js';
-import {FacetValue} from '../../features/facets/facet-set/interfaces/response.js';
+import type {FacetSlice} from '../../features/facets/facet-set/facet-set-state.js';
+import type {FacetValue} from '../../features/facets/facet-set/interfaces/response.js';
 import {logClearBreadcrumbs} from '../../features/facets/generic/facet-generic-analytics-actions.js';
 import {
   toggleExcludeDateFacetValue,
@@ -33,7 +33,7 @@ import {
 } from '../../features/facets/range-facets/date-facet-set/date-facet-analytics-actions.js';
 import {dateFacetActiveValuesSelector} from '../../features/facets/range-facets/date-facet-set/date-facet-selectors.js';
 import {dateFacetSetReducer as dateFacetSet} from '../../features/facets/range-facets/date-facet-set/date-facet-set-slice.js';
-import {DateFacetSlice} from '../../features/facets/range-facets/date-facet-set/date-facet-set-state.js';
+import type {DateFacetSlice} from '../../features/facets/range-facets/date-facet-set/date-facet-set-state.js';
 import {
   toggleExcludeNumericFacetValue,
   toggleSelectNumericFacetValue,
@@ -44,7 +44,7 @@ import {
 } from '../../features/facets/range-facets/numeric-facet-set/numeric-facet-analytics-actions.js';
 import {numericFacetActiveValuesSelector} from '../../features/facets/range-facets/numeric-facet-set/numeric-facet-selectors.js';
 import {numericFacetSetReducer as numericFacetSet} from '../../features/facets/range-facets/numeric-facet-set/numeric-facet-set-slice.js';
-import {NumericFacetSlice} from '../../features/facets/range-facets/numeric-facet-set/numeric-facet-set-state.js';
+import type {NumericFacetSlice} from '../../features/facets/range-facets/numeric-facet-set/numeric-facet-set-state.js';
 import {executeSearch} from '../../features/search/search-actions.js';
 import {searchReducer as search} from '../../features/search/search-slice.js';
 import {
@@ -52,11 +52,11 @@ import {
   toggleExcludeStaticFilterValue,
   toggleSelectStaticFilterValue,
 } from '../../features/static-filter-set/static-filter-set-actions.js';
-import {
+import type {
   StaticFilterSlice,
   StaticFilterValue,
 } from '../../features/static-filter-set/static-filter-set-state.js';
-import {
+import type {
   CategoryFacetSection,
   ConfigurationSection,
   DateFacetSection,
@@ -66,19 +66,19 @@ import {
 } from '../../state/state-sections.js';
 import {loadReducerError} from '../../utils/errors.js';
 import {
-  Breadcrumb,
-  BreadcrumbManager as CoreBreadcrumbManager,
-  BreadcrumbManagerState as CoreBreadcrumbManagerState,
-  BreadcrumbValue,
+  type Breadcrumb,
+  type BreadcrumbValue,
   buildCoreBreadcrumbManager,
-  CategoryFacetBreadcrumb,
-  DateFacetBreadcrumb,
-  DeselectableValue,
-  FacetBreadcrumb,
+  type CategoryFacetBreadcrumb,
+  type BreadcrumbManager as CoreBreadcrumbManager,
+  type BreadcrumbManagerState as CoreBreadcrumbManagerState,
+  type DateFacetBreadcrumb,
+  type DeselectableValue,
+  type FacetBreadcrumb,
+  type GetBreadcrumbsConfiguration,
   getBreadcrumbs,
-  GetBreadcrumbsConfiguration,
-  NumericFacetBreadcrumb,
-  StaticFilterBreadcrumb,
+  type NumericFacetBreadcrumb,
+  type StaticFilterBreadcrumb,
 } from '../core/breadcrumb-manager/headless-core-breadcrumb-manager.js';
 
 export type {

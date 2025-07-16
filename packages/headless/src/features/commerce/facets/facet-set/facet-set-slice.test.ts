@@ -1,5 +1,5 @@
-import {Action} from '@reduxjs/toolkit';
-import {
+import type {Action} from '@reduxjs/toolkit';
+import type {
   DateRangeRequest,
   FacetValueRequest,
   NumericRangeRequest,
@@ -26,7 +26,7 @@ import {buildMockDateFacetValue} from '../../../../test/mock-date-facet-value.js
 import {buildMockFacetSearchResult} from '../../../../test/mock-facet-search-result.js';
 import {buildFetchProductListingResponse} from '../../../../test/mock-product-listing.js';
 import {
-  FacetValueState,
+  type FacetValueState,
   facetValueStates,
 } from '../../../facets/facet-api/value.js';
 import {selectCategoryFacetSearchResult} from '../../../facets/facet-search-set/category/category-facet-search-actions.js';
@@ -39,26 +39,26 @@ import {convertToDateRangeRequests} from '../../../facets/range-facets/date-face
 import {findExactRangeValue} from '../../../facets/range-facets/generic/range-facet-reducers.js';
 import {convertToNumericRangeRequests} from '../../../facets/range-facets/numeric-facet-set/numeric-facet-set-slice.js';
 import {setContext, setView} from '../../context/context-actions.js';
-import {restoreProductListingParameters} from '../../product-listing-parameters/product-listing-parameters-actions.js';
 import {fetchProductListing} from '../../product-listing/product-listing-actions.js';
+import {restoreProductListingParameters} from '../../product-listing-parameters/product-listing-parameters-actions.js';
 import {
+  type FetchQuerySuggestionsThunkReturn,
   fetchQuerySuggestions,
-  FetchQuerySuggestionsThunkReturn,
 } from '../../query-suggest/query-suggest-actions.js';
-import {restoreSearchParameters} from '../../search-parameters/search-parameters-actions.js';
 import {executeSearch} from '../../search/search-actions.js';
+import {restoreSearchParameters} from '../../search-parameters/search-parameters-actions.js';
 import {
   toggleSelectCategoryFacetValue,
   updateCategoryFacetNumberOfValues,
 } from '../category-facet/category-facet-actions.js';
 import {
+  clearAllCoreFacets,
+  deleteAllCoreFacets,
   deselectAllValuesInCoreFacet,
+  updateAutoSelectionForAllCoreFacets,
   updateCoreFacetFreezeCurrentValues,
   updateCoreFacetIsFieldExpanded,
   updateCoreFacetNumberOfValues,
-  updateAutoSelectionForAllCoreFacets,
-  clearAllCoreFacets,
-  deleteAllCoreFacets,
 } from '../core-facet/core-facet-actions.js';
 import {
   toggleExcludeDateFacetValue,
@@ -82,17 +82,17 @@ import {
   convertLocationFacetValueToRequest,
 } from './facet-set-slice.js';
 import {
-  CommerceFacetSetState,
+  type CommerceFacetSetState,
   getCommerceFacetSetInitialState,
 } from './facet-set-state.js';
-import {FacetType} from './interfaces/common.js';
-import {
+import type {FacetType} from './interfaces/common.js';
+import type {
   CategoryFacetValueRequest,
   LocationFacetValueRequest,
 } from './interfaces/request.js';
-import {AnyFacetResponse} from './interfaces/response.js';
+import type {AnyFacetResponse} from './interfaces/response.js';
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+// biome-ignore lint/suspicious/noExplicitAny: <>
 type ActionCreator = (payload: any) => Action;
 
 describe('commerceFacetSetReducer', () => {
@@ -137,7 +137,7 @@ describe('commerceFacetSetReducer', () => {
         const response = responseBuilder();
         response.response.facets = facets;
 
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        // biome-ignore lint/suspicious/noExplicitAny: <>
         return action(response as any, '');
       }
 
@@ -2034,7 +2034,9 @@ describe('commerceFacetSetReducer', () => {
 
     describe('#toggleSelectCategoryFacetValue', () => {
       const initialNumberOfValues = 5;
-      let categoryFacetRequest;
+      let categoryFacetRequest: ReturnType<
+        typeof buildMockCommerceFacetRequest
+      >;
 
       beforeEach(() => {
         categoryFacetRequest = buildMockCommerceFacetRequest({
@@ -2867,7 +2869,7 @@ describe('commerceFacetSetReducer', () => {
         })
       );
 
-      const firstRequest = finalState['regular_facet_1'].request;
+      const firstRequest = finalState.regular_facet_1.request;
       expect(firstRequest.type).toEqual('regular');
       expect(firstRequest.values).toEqual(
         expect.arrayContaining([
@@ -2882,7 +2884,7 @@ describe('commerceFacetSetReducer', () => {
         ])
       );
 
-      const secondRequest = finalState['regular_facet_2'].request;
+      const secondRequest = finalState.regular_facet_2.request;
       expect(secondRequest.type).toEqual('regular');
       expect(secondRequest.values).toEqual(
         expect.arrayContaining([
@@ -2905,7 +2907,7 @@ describe('commerceFacetSetReducer', () => {
         })
       );
 
-      const firstRequest = finalState['location_facet_1'].request;
+      const firstRequest = finalState.location_facet_1.request;
       expect(firstRequest.type).toEqual('location');
       expect(firstRequest.values).toEqual(
         expect.arrayContaining([
@@ -2920,7 +2922,7 @@ describe('commerceFacetSetReducer', () => {
         ])
       );
 
-      const secondRequest = finalState['location_facet_2'].request;
+      const secondRequest = finalState.location_facet_2.request;
       expect(secondRequest.type).toEqual('location');
       expect(secondRequest.values).toEqual(
         expect.arrayContaining([
@@ -2960,7 +2962,7 @@ describe('commerceFacetSetReducer', () => {
         })
       );
 
-      const firstRequest = finalState['numeric_facet_1'].request;
+      const firstRequest = finalState.numeric_facet_1.request;
       expect(firstRequest.type).toEqual('numericalRange');
       expect(firstRequest.values).toEqual(
         expect.arrayContaining([
@@ -2979,7 +2981,7 @@ describe('commerceFacetSetReducer', () => {
         ])
       );
 
-      const secondRequest = finalState['numeric_facet_2'].request;
+      const secondRequest = finalState.numeric_facet_2.request;
       expect(secondRequest.type).toEqual('numericalRange');
       expect(secondRequest.values).toEqual(
         expect.arrayContaining([
@@ -3021,7 +3023,7 @@ describe('commerceFacetSetReducer', () => {
         })
       );
 
-      const firstRequest = finalState['manual_numeric_facet_1'].request;
+      const firstRequest = finalState.manual_numeric_facet_1.request;
       expect(firstRequest.type).toEqual('numericalRange');
       expect(firstRequest.values).toEqual(
         expect.arrayContaining([
@@ -3040,7 +3042,7 @@ describe('commerceFacetSetReducer', () => {
         ])
       );
 
-      const secondRequest = finalState['manual_numeric_facet_2'].request;
+      const secondRequest = finalState.manual_numeric_facet_2.request;
       expect(secondRequest.type).toEqual('numericalRange');
       expect(secondRequest.values).toEqual(
         expect.arrayContaining([
@@ -3082,7 +3084,7 @@ describe('commerceFacetSetReducer', () => {
         })
       );
 
-      const firstRequest = finalState['date_facet_1'].request;
+      const firstRequest = finalState.date_facet_1.request;
       expect(firstRequest.type).toEqual('dateRange');
       expect(firstRequest.values).toEqual(
         expect.arrayContaining([
@@ -3101,7 +3103,7 @@ describe('commerceFacetSetReducer', () => {
         ])
       );
 
-      const secondRequest = finalState['date_facet_2'].request;
+      const secondRequest = finalState.date_facet_2.request;
       expect(secondRequest.type).toEqual('dateRange');
       expect(secondRequest.values).toEqual(
         expect.arrayContaining([
@@ -3126,7 +3128,7 @@ describe('commerceFacetSetReducer', () => {
         })
       );
 
-      const firstRequest = finalState['category_facet_1'].request;
+      const firstRequest = finalState.category_facet_1.request;
       expect(firstRequest.type).toEqual('hierarchical');
       expect(firstRequest.values).toEqual(
         expect.arrayContaining([
@@ -3149,7 +3151,7 @@ describe('commerceFacetSetReducer', () => {
         ])
       );
 
-      const secondRequest = finalState['category_facet_2'].request;
+      const secondRequest = finalState.category_facet_2.request;
       expect(secondRequest.type).toEqual('hierarchical');
       expect(secondRequest.values).toEqual(
         expect.arrayContaining([

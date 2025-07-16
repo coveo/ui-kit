@@ -1,10 +1,10 @@
 import {
   buildSmartSnippet,
-  SmartSnippet as HeadlessSmartSnippet,
-  SmartSnippetState,
-  Unsubscribe,
+  type SmartSnippet as HeadlessSmartSnippet,
+  type SmartSnippetState,
+  type Unsubscribe,
 } from '@coveo/headless';
-import {Component, ContextType, createRef} from 'react';
+import {Component, type ContextType, createRef} from 'react';
 import {AppContext} from '../../context/engine';
 import {filterProtocol} from '../../utils/filter-protocol';
 
@@ -150,6 +150,7 @@ export class SmartSnippet extends Component<{}, SmartSnippetState> {
           <dt>{question}</dt>
           <dd>
             <div
+              // biome-ignore lint/security/noDangerouslySetInnerHtml: <>
               dangerouslySetInnerHTML={{__html: answer}}
               style={this.answerStyles(expanded)}
             ></div>

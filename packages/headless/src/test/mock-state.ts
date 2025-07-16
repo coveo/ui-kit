@@ -22,20 +22,20 @@ import {getHistoryInitialState} from '../features/history/history-state.js';
 import {getInstantResultsInitialState} from '../features/instant-results/instant-results-state.js';
 import {getPaginationInitialState} from '../features/pagination/pagination-state.js';
 import {getPipelineInitialState} from '../features/pipeline/pipeline-state.js';
-import {getQuerySetInitialState} from '../features/query-set/query-set-state.js';
 import {getQueryInitialState} from '../features/query/query-state.js';
+import {getQuerySetInitialState} from '../features/query-set/query-set-state.js';
 import {getQuestionAnsweringInitialState} from '../features/question-answering/question-answering-state.js';
 import {getRecentQueriesInitialState} from '../features/recent-queries/recent-queries-state.js';
 import {getRecentResultsInitialState} from '../features/recent-results/recent-results-state.js';
 import {getResultPreviewInitialState} from '../features/result-preview/result-preview-state.js';
-import {getSearchHubInitialState} from '../features/search-hub/search-hub-state.js';
 import {getSearchInitialState} from '../features/search/search-state.js';
+import {getSearchHubInitialState} from '../features/search-hub/search-hub-state.js';
 import {getSortCriteriaInitialState} from '../features/sort-criteria/sort-criteria-state.js';
 import {getStandaloneSearchBoxSetInitialState} from '../features/standalone-search-box-set/standalone-search-box-set-state.js';
 import {getStaticFilterSetInitialState} from '../features/static-filter-set/static-filter-set-state.js';
 import {getTabSetInitialState} from '../features/tab-set/tab-set-state.js';
 import {getTriggerInitialState} from '../features/triggers/triggers-state.js';
-import {SearchAppState} from '../state/search-app-state.js';
+import type {SearchAppState} from '../state/search-app-state.js';
 
 /**
  * For internal use only.

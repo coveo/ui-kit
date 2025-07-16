@@ -8,8 +8,8 @@ import headlessJson from '../../headless/package.json';
 const isCDN = process.env.DEPLOYMENT_ENVIRONMENT === 'CDN';
 const packageMappings = generateExternalPackageMappings(__dirname);
 
-const headlessVersion = 'v' + headlessJson.version;
-const buenoVersion = 'v' + buenoJson.version;
+const headlessVersion = `v${headlessJson.version}`;
+const buenoVersion = `v${buenoJson.version}`;
 
 const externalizeDependenciesPlugin = () => {
   return {

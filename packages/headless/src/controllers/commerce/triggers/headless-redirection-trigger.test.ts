@@ -1,12 +1,12 @@
-import {Mock} from 'vitest';
+import type {Mock} from 'vitest';
 import {stateKey} from '../../../app/state-key.js';
 import {commerceTriggersReducer as triggers} from '../../../features/commerce/triggers/triggers-slice.js';
 import {buildMockCommerceState} from '../../../test/mock-commerce-state.js';
 import {
-  MockedCommerceEngine,
   buildMockCommerceEngine,
+  type MockedCommerceEngine,
 } from '../../../test/mock-engine-v2.js';
-import {RedirectionTrigger} from '../../core/triggers/headless-core-redirection-trigger.js';
+import type {RedirectionTrigger} from '../../core/triggers/headless-core-redirection-trigger.js';
 import {buildRedirectionTrigger} from './headless-redirection-trigger.js';
 
 describe('RedirectionTrigger', () => {

@@ -1,11 +1,11 @@
 import {beforeEach, describe, expect, it, vi} from 'vitest';
 import {
-  once,
-  camelToKebab,
-  randomID,
-  kebabToCamel,
   aggregate,
+  camelToKebab,
   isInDocument,
+  kebabToCamel,
+  once,
+  randomID,
 } from './utils';
 
 describe('utils', () => {

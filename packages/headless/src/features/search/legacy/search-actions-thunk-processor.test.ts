@@ -1,7 +1,7 @@
-import {Relay} from '@coveo/relay';
-import {Logger} from 'pino';
-import {Mock} from 'vitest';
-import {SearchAPIClient} from '../../../api/search/search-api-client.js';
+import type {Relay} from '@coveo/relay';
+import type {Logger} from 'pino';
+import type {Mock} from 'vitest';
+import type {SearchAPIClient} from '../../../api/search/search-api-client.js';
 import {defaultNodeJSNavigatorContextProvider} from '../../../app/navigator-context-provider.js';
 import {buildMockResult} from '../../../test/mock-result.js';
 import {buildMockSearchRequest} from '../../../test/mock-search-request.js';
@@ -11,11 +11,11 @@ import {getConfigurationInitialState} from '../../configuration/configuration-st
 import {updateQuery} from '../../query/query-actions.js';
 import {logSearchboxSubmit} from '../../query/query-analytics-actions.js';
 import {logQueryError} from '../search-analytics-actions.js';
+import type {ExecuteSearchThunkReturn} from './search-actions.js';
 import {
   AsyncSearchThunkProcessor,
-  AsyncThunkConfig,
+  type AsyncThunkConfig,
 } from './search-actions-thunk-processor.js';
-import {ExecuteSearchThunkReturn} from './search-actions.js';
 
 vi.mock('../search-analytics-actions');
 

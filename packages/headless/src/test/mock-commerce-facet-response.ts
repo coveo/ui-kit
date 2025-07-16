@@ -1,10 +1,10 @@
-import {
-  RegularFacetResponse,
-  NumericFacetResponse,
-  DateFacetResponse,
+import type {
   AnyFacetResponse,
   CategoryFacetResponse,
+  DateFacetResponse,
   LocationFacetResponse,
+  NumericFacetResponse,
+  RegularFacetResponse,
 } from '../features/commerce/facets/facet-set/interfaces/response.js';
 
 function getMockBaseCommerceFacetResponse(): Omit<
