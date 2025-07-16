@@ -2974,7 +2974,7 @@ export declare interface AtomicCommerceText extends LitAtomicCommerceText {
 
 @ProxyCmp({
   inputs: ['hrefTemplate'],
-  methods: ['initialize', 'slots', '_slotsInitialized', 'adoptChildren', 'getSlotNameForChild', 'isTextNodeEmpty', 'isSlotEmpty', 'yield'],
+  methods: ['initialize', 'slots', '_slotsInitialized', '_slotPlaceholders', '_pendingSlotRelocation', 'adoptChildren', 'renderDefaultSlotContent', 'getSlotNameForChild', 'isTextNodeEmpty', 'isSlotEmpty', '_initializeSlotState', '_ensureSlotsInitialized', '_hasDefaultSlotContent', '_mapChildrenToSlots', '_addChildToSlot', '_createSlotPlaceholder', '_relocateSingleSlot', '_moveNodeIfNeeded'],
   defineCustomElementFn: () => {customElements.get('atomic-product-link') || customElements.define('atomic-product-link', LitAtomicProductLink);}
 })
 @Component({
