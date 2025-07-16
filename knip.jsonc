@@ -1,10 +1,19 @@
 {
+  "ignoreWorkspaces": ["packages/quantic"],
+  "ignore": ["packages/quantic/force-app/main/default/staticresources/**"],
   "workspaces": {
+    ".": {
+      "entry": ["hooks/*.js", "scripts/**/*.{js,mjs}", "vitest.workspace.js"]
+    },
     "packages/headless": {
       "entry": ["src/*index.ts"],
       "project": ["**/*.{js,ts}"],
       "ignore": ["ponyfills/*.js"]
     },
+    "packages/atomic": {
+      "ignore": ["**/*"]
+    },
+
     "packages/atomic-angular/projects/atomic-angular": {
       "entry": ["src/public-api.ts"],
       "project": ["**/*.{js,ts}"],
@@ -18,11 +27,31 @@
     "packages/atomic-react": {
       "entry": ["src/*index.ts"],
       "ignore": ["src/components/stencil-generated/**/*.{ts,tsx}"]
+    },
+    "packages/auth": {
+      "entry": ["src/auth.ts"]
+    },
+    "packages/create-atomic": {
+      "ignore": ["**/*"]
+    },
+    "packages/create-atomic-template": {
+      "ignore": ["**/*"]
+    },
+    "packages/samples/stencil": {
+      "ignore": ["**/*"]
+    },
+    "packages/documentation": {
+      "entry": ["**/assets/**/*.js", "**/lib/*.ts"]
+    },
+    "packages/samples/headless-commerce-react": {
+      // Remove once the controller is removed from headless
+      "ignore": ["src/components/legacy-field-suggestions/**"]
+    },
+    "packages/samples/headless-react": {
+      "entry": ["server/server.tsx", "src/index.tsx"]
+    },
+    "packages/samples/headless-ssr": {
+      "ignore": ["**/*"]
     }
-  },
-  "ignoreWorkspaces": [
-    "packages/quantic",
-    "packages/samples/*",
-    "packages/atomic"
-  ]
+  }
 }

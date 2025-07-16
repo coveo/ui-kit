@@ -3,6 +3,7 @@ import {headers} from 'next/headers';
 import * as externalCartAPI from '@/actions/external-cart-api';
 import BreadcrumbManager from '@/components/breadcrumb-manager';
 import ContextDropdown from '@/components/context-dropdown';
+import DidYouMean from '@/components/did-you-mean';
 import FacetGenerator from '@/components/facets/facet-generator';
 import ParameterManager from '@/components/parameter-manager';
 import ProductList from '@/components/product-list';
@@ -68,6 +69,7 @@ export default async function Search({
             <BreadcrumbManager />
             <Summary />
             <ProductList />
+            <DidYouMean />
             {/* The ShowMore and Pagination components showcase two frequent ways to implement pagination. */}
             {/* <Pagination
           staticState={staticState.controllers.pagination.state}
