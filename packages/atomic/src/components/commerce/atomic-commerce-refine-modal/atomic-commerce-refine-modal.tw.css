@@ -1,4 +1,5 @@
-@import '../../common/refine-modal/refine-modal-common.pcss';
+@import '../../common/refine-modal/refine-modal-common.tw.css';
+@reference '../../../utils/coveo.tw.css';
 
 :host {
   position: absolute;
