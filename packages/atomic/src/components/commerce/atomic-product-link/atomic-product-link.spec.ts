@@ -118,12 +118,14 @@ describe('atomic-product-link', () => {
     expect(productText()?.getAttribute('default')).toBe('no-title');
   });
 
-  it('should render slot content when provided', async () => {
-    const {element} = await renderProductLink({
-      slotContent: 'Custom slot content',
+  it('should render default slot content inside the link element when provided', async () => {
+    const {link} = await renderProductLink({
+      slotContent: 'Custom link content',
     });
 
-    expect(element?.textContent).toContain('Custom slot content');
+    expect(link.first().element()?.textContent).toContain(
+      'Custom link content'
+    );
   });
 
   describe('#initialize', () => {
@@ -173,30 +175,6 @@ describe('atomic-product-link', () => {
 
         expect(eventListener).toHaveBeenCalled();
       }
-    });
-  });
-
-  describe('#connectedCallback', () => {
-    it('should detect default slot content', async () => {
-      const {element} = await renderProductLink({
-        slotContent: html`<span>Custom content</span>`,
-      });
-
-      await element.updateComplete;
-      expect((element as any).hasDefaultSlot).toBe(true);
-    });
-
-    it('should detect absence of default slot content', async () => {
-      const {element} = await renderProductLink();
-
-      expect((element as any).hasDefaultSlot).toBe(false);
-    });
-
-    it('should extract attributes from attributes slot', async () => {
-      const {element} = await renderProductLink({
-        attributes: 'target="_blank" rel="noopener"',
-      });
-      expect((element as any).linkAttributes).toBeDefined();
     });
   });
 

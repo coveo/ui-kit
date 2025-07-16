@@ -76,10 +76,6 @@ export class AtomicProductLink
   }
 
   private extractAttributesFromSlot() {
-    if (!this.hasUpdated && Object.keys(this.slots).length === 0) {
-      this.adoptChildren();
-    }
-
     const slotName = 'attributes';
     const attributes = getAttributesFromLinkSlot(this, slotName);
 
@@ -173,8 +169,7 @@ export class AtomicProductLink
             },
           },
         })(html`
-          ${this.yield(
-            '',
+          ${this.renderDefaultSlotContent(
             html`<atomic-product-text
             field="ec_name"
             default="no-title"
