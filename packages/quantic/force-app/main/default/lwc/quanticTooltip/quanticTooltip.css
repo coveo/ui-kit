@@ -1,5 +1,6 @@
 :host {
-  --x-translation: var(--adapted-x-translation, 0);
+  /* Inline linter suppression is not supported by SLDS linter, we need the px unit for the translation despite the length-zero-no-unit warning */
+  --x-translation: var(--adapted-x-translation, 0px);
   --max-width: var(--adapted-max-width, 20rem);
 }
 
