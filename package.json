@@ -27,7 +27,7 @@
     "release:phase3": "nx run-many --targets=release:phase3 --all --parallel=false --output-style=stream",
     "release:phase4": "npm run-script -w=@coveo/ci reify",
     "release:phase5": "npm run-script -w=@coveo/ci git-publish-all",
-    "knip": "knip -W packages/atomic-hosted-page"
+    "knip": "knip -W packages/auth --fix"
   },
   "devDependencies": {
     "@actions/core": "1.11.1",

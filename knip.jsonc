@@ -9,6 +9,15 @@
       "entry": ["src/public-api.ts"],
       "project": ["**/*.{js,ts}"],
       "ignore": ["src/lib/stencil-generated/**/*.ts"]
+    },
+    "packages/atomic-hosted-page": {
+      "entry": ["src/atomic-hosted-page.esm.ts", "loader/index.js"],
+      "project": ["**/*.{js,ts}"],
+      "ignore": ["cdn/**"]
+    },
+    "packages/atomic-react": {
+      "entry": ["src/*index.ts"],
+      "ignore": ["src/components/stencil-generated/**/*.{ts,tsx}"]
     }
   },
   "ignoreWorkspaces": [
