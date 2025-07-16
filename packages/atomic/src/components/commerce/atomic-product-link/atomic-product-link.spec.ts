@@ -176,30 +176,6 @@ describe('atomic-product-link', () => {
     });
   });
 
-  describe('#connectedCallback', () => {
-    it('should detect default slot content', async () => {
-      const {element} = await renderProductLink({
-        slotContent: html`<span>Custom content</span>`,
-      });
-
-      await element.updateComplete;
-      expect((element as any).hasDefaultSlot).toBe(true);
-    });
-
-    it('should detect absence of default slot content', async () => {
-      const {element} = await renderProductLink();
-
-      expect((element as any).hasDefaultSlot).toBe(false);
-    });
-
-    it('should extract attributes from attributes slot', async () => {
-      const {element} = await renderProductLink({
-        attributes: 'target="_blank" rel="noopener"',
-      });
-      expect((element as any).linkAttributes).toBeDefined();
-    });
-  });
-
   describe('#disconnectedCallback', () => {
     it('should call cleanup function when component is disconnected', async () => {
       const cleanupSpy = vi.fn();

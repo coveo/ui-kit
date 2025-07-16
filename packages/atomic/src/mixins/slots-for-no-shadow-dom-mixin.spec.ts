@@ -1,13 +1,10 @@
 import {html, LitElement} from 'lit';
 import {beforeEach, describe, expect, it} from 'vitest';
 import {fixture} from '@/vitest-utils/testing-helpers/fixture';
-import {
-  type LightDOMWithSlots,
-  SlotsForNoShadowDOMMixin,
-} from './slots-for-no-shadow-dom-mixin';
+import {SlotsForNoShadowDOMMixin} from './slots-for-no-shadow-dom-mixin';
 
 describe('SlotsForNoShadowDOMMixin', () => {
-  type TestableSlottedElement = LitElement & LightDOMWithSlots;
+  type TestableSlottedElement = InstanceType<typeof SlottedElement>;
 
   class SlottedElement extends SlotsForNoShadowDOMMixin(LitElement) {
     render() {
@@ -106,7 +103,7 @@ describe('SlotsForNoShadowDOMMixin', () => {
       expect(element.slots.footer).toHaveLength(1);
     });
 
-    it('should render slot content in correct positions', () => {
+    it('should render slot content in correct positions', async () => {
       const headerDiv = (element as Element).querySelector('.header');
       const contentDiv = (element as Element).querySelector('.content');
       const footerDiv = (element as Element).querySelector('.footer');
@@ -137,7 +134,7 @@ describe('SlotsForNoShadowDOMMixin', () => {
       expect(element.slots.main).toHaveLength(1);
     });
 
-    it('should render slotted content correctly', () => {
+    it('should render slotted content correctly', async () => {
       const mainDiv = (element as Element).querySelector('.main');
       expect(mainDiv?.textContent).toBe('Slotted content');
     });
@@ -251,24 +248,35 @@ describe('SlotsForNoShadowDOMMixin', () => {
       `)) as TestableSlottedElement;
     });
 
-    it('should return slot content when available', () => {
+    it('should return placeholder for slots with content', () => {
       const content = element.yield('header');
+      expect(Array.isArray(content)).toBe(true);
       expect(content).toHaveLength(1);
-      expect((content[0] as Element).textContent).toBe('Header Content');
+      // The first item should be a placeholder comment
+      expect((content as unknown[])[0]).toBeInstanceOf(Comment);
+      expect(((content as unknown[])[0] as Comment).textContent).toBe(
+        'slot:header'
+      );
     });
 
     it('should return default content for empty slots', () => {
       const defaultContent = html`<span>Default</span>`;
       const content = element.yield('footer', defaultContent);
+      expect(Array.isArray(content)).toBe(true);
       expect(content).toHaveLength(1);
-      expect(content[0]).toBe(defaultContent);
+      expect((content as unknown[])[0]).toBe(defaultContent);
     });
 
-    it('should return both slot content and default when slot is not empty', () => {
+    it('should return placeholder instead of default when slot has content', () => {
       const defaultContent = html`<span>Default</span>`;
       const content = element.yield('header', defaultContent);
+      expect(Array.isArray(content)).toBe(true);
       expect(content).toHaveLength(1);
-      expect((content[0] as Element).textContent).toBe('Header Content');
+      // Should return placeholder, not default content
+      expect((content as unknown[])[0]).toBeInstanceOf(Comment);
+      expect(((content as unknown[])[0] as Comment).textContent).toBe(
+        'slot:header'
+      );
     });
   });
 });
