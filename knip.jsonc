@@ -4,7 +4,16 @@
       "entry": ["src/*index.ts"],
       "project": ["**/*.{js,ts}"],
       "ignore": ["ponyfills/*.js"]
+    },
+    "packages/atomic-angular/projects/atomic-angular": {
+      "entry": ["src/public-api.ts"],
+      "project": ["**/*.{js,ts}"],
+      "ignore": ["src/lib/stencil-generated/**/*.ts"]
     }
   },
-  "ignoreWorkspaces": ["packages/quantic"]
+  "ignoreWorkspaces": [
+    "packages/quantic",
+    "packages/samples/*",
+    "packages/atomic"
+  ]
 }
