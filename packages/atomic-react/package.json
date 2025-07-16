@@ -19,7 +19,7 @@
     "publish:npm": "npm run-script -w=@coveo/ci npm-publish",
     "publish:bump": "npm run-script -w=@coveo/ci bump",
     "promote:npm:latest": "npm run-script -w=@coveo/ci promote-npm-prod",
-    "build:assets": "ncp ../atomic/dist/atomic/assets dist/assets && ncp ../atomic/dist/atomic/lang dist/lang "
+    "build:assets": "mkdir -p dist/assets && ncp ../atomic/dist/atomic/assets dist/assets && mkdir -p dist/lang && ncp ../atomic/dist/atomic/lang dist/lang"
   },
   "module": "./dist/esm/atomic-react.mjs",
   "main": "./dist/cjs/atomic-react.cjs",
