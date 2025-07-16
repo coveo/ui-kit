@@ -1,19 +1,25 @@
 {
+  "$schema": "https://unpkg.com/knip@5/schema.json",
   "ignoreWorkspaces": ["packages/quantic"],
-  "ignore": ["packages/quantic/force-app/main/default/staticresources/**"],
+  "ignore": ["packages/quantic/**"],
+  "ignoreDependencies": ["jsdom"],
+  "biome": false,
   "workspaces": {
     ".": {
-      "entry": ["hooks/*.js", "scripts/**/*.{js,mjs}", "vitest.workspace.js"]
+      "entry": ["hooks/*.js", "scripts/**/*.{js,mjs}"],
+      "ignoreBinaries": ["cypress", "playwright"]
     },
     "packages/headless": {
       "entry": ["src/*index.ts"],
       "project": ["**/*.{js,ts}"],
       "ignore": ["ponyfills/*.js"]
     },
+    "packages/headless-react": {
+      "ignoreDependencies": ["@types/react-dom", "@types/react"]
+    },
     "packages/atomic": {
       "ignore": ["**/*"]
     },
-
     "packages/atomic-angular/projects/atomic-angular": {
       "entry": ["src/public-api.ts"],
       "project": ["**/*.{js,ts}"],
@@ -51,6 +57,9 @@
       "entry": ["server/server.tsx", "src/index.tsx"]
     },
     "packages/samples/headless-ssr": {
+      "ignore": ["**/*"]
+    },
+    "packages/samples/iife": {
       "ignore": ["**/*"]
     }
   }

@@ -25,7 +25,8 @@
     "@coveo/headless": "3.27.2",
     "ng-packagr": "19.2.0",
     "typescript": "5.8.3",
-    "ncp": "2.0.0"
+    "ncp": "2.0.0",
+    "tslib": "2.8.1"
   },
   "engines": {
     "node": "^20.9.0 || ^22.11.0"

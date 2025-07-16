@@ -6,7 +6,7 @@ export const toCoveoCartItems = (items: ExternalCartItem[]): CartItem[] => {
   return items.map(toCoveoCartItem);
 };
 
-export const toCoveoCartItem = (item: ExternalCartItem): CartItem => {
+const toCoveoCartItem = (item: ExternalCartItem): CartItem => {
   return {
     productId: item.uniqueId,
     name: item.productName,

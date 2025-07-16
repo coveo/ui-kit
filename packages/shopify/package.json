@@ -57,13 +57,11 @@
     "promote:npm:latest": "npm run-script -w=@coveo/ci promote-npm-prod"
   },
   "devDependencies": {
-    "@coveo/ci": "1.0.0",
     "vitest": "3.2.1"
   },
   "dependencies": {
     "@coveo/relay": "1.2.5",
-    "@coveo/headless": "3.27.2",
-    "uuid": "^11.0.0"
+    "@coveo/headless": "3.27.2"
   },
   "engines": {
     "node": "^20.9.0 || ^22.11.0"

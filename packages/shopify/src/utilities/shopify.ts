@@ -1,7 +1,5 @@
 import type {CoveoShopifyCustomEvent} from '../types';
 
-export type {CoveoShopifyCustomEvent} from '../types';
-
 declare global {
   interface Window {
     Shopify?: {
