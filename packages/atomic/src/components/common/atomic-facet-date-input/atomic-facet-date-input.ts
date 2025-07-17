@@ -21,8 +21,8 @@ import styles from './atomic-facet-date-input.tw.css';
  * @internal
  */
 @customElement('atomic-facet-date-input')
-@injectStylesForNoShadowDOM // TODO: check if can be removed
-@withTailwindStyles // TODO: check if can be removed
+@injectStylesForNoShadowDOM
+@withTailwindStyles
 export class AtomicFacetDateInput
   extends LitElement
   implements LitElementWithError
@@ -63,7 +63,7 @@ export class AtomicFacetDateInput
   private validateParentComponent(): void {
     const validParents = [
       'atomic-commerce-timeframe-facet',
-      'atomic-timeframe-facet', // TODO: check that the non commerce date facet works as well
+      'atomic-timeframe-facet',
     ];
     const parentElement = this.parentElement;
 
