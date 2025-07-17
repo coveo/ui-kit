@@ -8,14 +8,12 @@ import * as sfdx from './util/sfdx-commands';
 import {SfdxJWTAuth, authorizeOrg} from './util/sfdx-commands';
 import dotenv from 'dotenv';
 import {
-  getLockerServiceNext,
   getOrgNameFromScratchDefFile,
   getScratchOrgDefPath,
 } from './util/scratchOrgDefUtils';
 dotenv.config({path: path.resolve(__dirname, '.env')});
 
 interface Options {
-  configFile: string;
   community: {
     name: string;
     path: string;
@@ -152,7 +150,6 @@ async function buildOptions(scratchOrgDefPath): Promise<Options> {
   }
 
   return {
-    configFile: path.resolve('cypress/plugins/config/examples-community.json'),
     community: {
       name: 'Quantic Examples',
       path: 'examples',
@@ -291,36 +288,6 @@ async function publishCommunity(
   return response.result.url;
 }
 
-async function updateCommunityConfigFile(
-  log: StepLogger,
-  options: Options,
-  communityUrl: string
-): Promise<void> {
-  let baseConfig = {
-    env: {
-      examplesUrl: '',
-    },
-  };
-
-  log(`Searching for configuration file '${options.configFile}'...`);
-  if (fs.existsSync(options.configFile)) {
-    log('Configuration file found. Merging settings.');
-    baseConfig = JSON.parse(
-      fs.readFileSync(options.configFile, {
-        encoding: 'utf-8',
-      })
-    );
-  } else {
-    log('Creating configuration file...');
-  }
-  baseConfig.env.examplesUrl = communityUrl;
-
-  fs.writeFileSync(options.configFile, JSON.stringify(baseConfig, null, 2), {
-    encoding: 'utf-8',
-  });
-  log('Configuration file updated.');
-}
-
 async function setCommunityBaseUrlAsEnvVariable(log, communityUrl, orgName) {
   const pathSegments = [__dirname, '..', '..', '.env'];
   const envFilePath = path.join(...pathSegments);
@@ -367,7 +334,6 @@ async function deleteScratchOrg(
 (async function () {
   const scratchOrgDefPath = getScratchOrgDefPath(process.argv);
   const orgName = getOrgNameFromScratchDefFile(scratchOrgDefPath);
-  const lockerServiceNext = getLockerServiceNext(scratchOrgDefPath);
 
   const options = await buildOptions(scratchOrgDefPath);
 
@@ -396,14 +362,6 @@ async function deleteScratchOrg(
         communityUrl = await publishCommunity(log, options);
       })
       .add(
-        // Update the community configuration file with the examples URL (used only in Cypress tests)
-        async (log) => {
-          if (lockerServiceNext) {
-            await updateCommunityConfigFile(log, options, communityUrl);
-          }
-        }
-      )
-      .add(
         async (log) =>
           await setCommunityBaseUrlAsEnvVariable(log, communityUrl, orgName)
       )
@@ -415,8 +373,6 @@ async function deleteScratchOrg(
       `\nThe '${options.community.name}' community is ready, you can access it at the following URL:`
     );
     console.log(communityUrl);
-    console.log('\nTo open Cypress, run:');
-    console.log('npm run e2e:watch');
   } catch (error) {
     console.error('Failed to complete');
     console.error(error);
