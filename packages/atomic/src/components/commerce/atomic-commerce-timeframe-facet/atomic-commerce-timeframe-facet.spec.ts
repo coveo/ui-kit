@@ -501,43 +501,6 @@ describe('atomic-commerce-timeframe-facet', () => {
     const {element} = await setupElement();
     expect(() => element.initialize()).not.toThrow();
   });
-
-  // TODO: also check if we need to tests for the initializePopover call
-
-  // TODO:  not sure we need to test this. depends if we keep the subscribe method in the component
-  // it('should subscribe to facet state changes', async () => {
-  //   const mockSubscribe = vi.fn(() => vi.fn());
-  //   mockedFacet = buildFakeDateFacet({
-  //     implementation: {
-  //       subscribe: mockSubscribe,
-  //     },
-  //   });
-  //   await setupElement();
-
-  //   expect(mockSubscribe).toHaveBeenCalled();
-  // });
-
-  // TODO: unsure
-  // describe('#disconnectedCallback', () => {
-  //   // TODO: remove only if we don't need to manually unsubscribe
-  //   it('should call super.disconnectedCallback()', async () => {
-  //     const mockUnsubscribe = vi.fn();
-  //     const mockSubscribe = vi.fn(() => mockUnsubscribe);
-
-  //     mockedFacet = buildFakeDateFacet({
-  //       implementation: {
-  //         subscribe: mockSubscribe,
-  //       },
-  //     });
-
-  //     const {element} = await setupElement();
-  //     const superSpy = vi.spyOn(LitElement.prototype, 'disconnectedCallback');
-
-  //     element.disconnectedCallback();
-
-  //     expect(superSpy).toHaveBeenCalledOnce();
-  //   });
-  // });
 });
 
 /**
