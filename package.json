@@ -23,11 +23,11 @@
     "@typescript-eslint/parser": "^8.0.0",
     "conventional-changelog-angular": "^8.0.0",
     "eslint": "^8.56.0",
-    "pnpm": "10.12.4",
+    "pnpm": "10.13.1",
     "prettier": "^3.0.0",
     "ts-dedent": "^2.2.0",
     "turbo": "latest"
   },
   "name": "relay",
-  "packageManager": "pnpm@10.12.4"
+  "packageManager": "pnpm@10.13.1"
 }
