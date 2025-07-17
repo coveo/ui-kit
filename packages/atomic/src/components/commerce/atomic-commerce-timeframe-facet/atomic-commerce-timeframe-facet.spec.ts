@@ -457,6 +457,23 @@ describe('atomic-commerce-timeframe-facet', () => {
     expect(mockSetRanges).toHaveBeenCalledWith([]);
   });
 
+  it('should limit the start date to the selected end date', async () => {
+    const mockSetRanges = vi.fn();
+    mockedFacet = await buildFakeDateFacet({
+      implementation: {
+        setRanges: mockSetRanges,
+      },
+    });
+
+    const {inputStart, inputEnd, inputApplyButton} = await setupElement();
+
+    await userEvent.type(inputStart, '2023{ArrowRight}01{ArrowRight}01');
+    await userEvent.type(inputEnd, '1999{ArrowRight}01{ArrowRight}01');
+    await userEvent.click(inputApplyButton);
+
+    expect(mockSetRanges).not.toHaveBeenCalled();
+  });
+
   it('should toggle collapse state', async () => {
     const {element, labelButton} = await setupElement({
       isCollapsed: true,
@@ -522,3 +539,13 @@ describe('atomic-commerce-timeframe-facet', () => {
   //   });
   // });
 });
+
+/**
+## when selecting a start date
+
+- should limit the end date to the selected start date
+
+## when selecting an end date
+
+- should limit the start date to the selected end date
+*/

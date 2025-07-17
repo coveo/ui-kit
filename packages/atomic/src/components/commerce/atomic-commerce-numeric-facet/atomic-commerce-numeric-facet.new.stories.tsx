@@ -1,7 +1,7 @@
 import {
-  wrapInCommerceInterface,
   playExecuteFirstRequest,
   playKeepOnlyFirstFacetOfType,
+  wrapInCommerceInterface,
 } from '@/storybook-utils/commerce/commerce-interface-wrapper';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {renderComponent} from '@/storybook-utils/common/render-component';

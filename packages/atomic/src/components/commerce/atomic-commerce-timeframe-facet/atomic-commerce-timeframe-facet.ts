@@ -6,29 +6,29 @@ import {renderFacetValuesGroup} from '@/src/components/common/facets/facet-value
 import {booleanConverter} from '@/src/converters/boolean-converter';
 import {bindStateToController} from '@/src/decorators/bind-state';
 import {bindingGuard} from '@/src/decorators/binding-guard';
-import {bindings} from '@/src/decorators/bindings';
 import {errorGuard} from '@/src/decorators/error-guard';
 import type {InitializableComponent} from '@/src/decorators/types';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles.js';
+import {InitializeBindingsMixin} from '@/src/mixins/bindings-mixin';
 import {FocusTargetController} from '@/src/utils/accessibility-utils';
 import {parseDate} from '@/src/utils/date-utils';
 import {
   type DateFacet,
-  type DateFilterRange,
-  deserializeRelativeDate,
-  type DateFacetValue,
   type DateFacetState,
+  type DateFacetValue,
+  type DateFilterRange,
   type DateRangeRequest,
-  type SearchSummaryState,
+  deserializeRelativeDate,
   type ProductListingSummaryState,
+  type SearchSummaryState,
   type Summary,
 } from '@coveo/headless/commerce';
 import {type CSSResultGroup, html, LitElement, unsafeCSS} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {when} from 'lit/directives/when.js';
+import '../../common/atomic-facet-date-input/atomic-facet-date-input';
 import {shouldDisplayInputForFacetRange} from '../../common/facets/facet-common';
 import type {FacetInfo} from '../../common/facets/facet-common-store';
-import '../../common/facets/facet-date-input/atomic-facet-date-input/atomic-facet-date-input';
 import {initializePopover} from '../../common/facets/popover/popover-type';
 import type {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface';
 import styles from './atomic-commerce-timeframe-facet.tw.css';
@@ -56,9 +56,8 @@ import styles from './atomic-commerce-timeframe-facet.tw.css';
  */
 @customElement('atomic-commerce-timeframe-facet')
 @withTailwindStyles
-@bindings()
 export class AtomicCommerceTimeframeFacet
-  extends LitElement
+  extends InitializeBindingsMixin(LitElement)
   implements InitializableComponent<CommerceBindings>
 {
   static styles: CSSResultGroup = [unsafeCSS(styles)];
@@ -72,7 +71,7 @@ export class AtomicCommerceTimeframeFacet
   /**
    * The date facet controller instance.
    */
-  @property({type: Object}) public facet!: DateFacet;
+  @property({type: Object}) facet!: DateFacet;
   /**
    * Specifies whether the facet is collapsed.
    */
@@ -82,22 +81,22 @@ export class AtomicCommerceTimeframeFacet
     converter: booleanConverter,
     attribute: 'is-collapsed',
   })
-  public isCollapsed = false;
+  isCollapsed = false;
   /**
    * The field identifier for this facet.
    */
   @property({reflect: true}) field?: string;
 
   @state() bindings!: CommerceBindings;
-  @state() public error!: Error;
+  @state() error!: Error;
 
   @bindStateToController('summary')
   @state()
-  public summaryState!: SearchSummaryState | ProductListingSummaryState;
+  summaryState!: SearchSummaryState | ProductListingSummaryState;
 
   @bindStateToController('facet')
   @state()
-  public facetState!: DateFacetState;
+  facetState!: DateFacetState;
 
   @state() private inputRange?: DateFilterRange;
 
@@ -115,11 +114,6 @@ export class AtomicCommerceTimeframeFacet
       this.headerFocus = new FocusTargetController(this, this.bindings);
     }
     return this.headerFocus;
-  }
-
-  connectedCallback(): void {
-    super.connectedCallback();
-    this.validateFacet();
   }
 
   public initialize() {
