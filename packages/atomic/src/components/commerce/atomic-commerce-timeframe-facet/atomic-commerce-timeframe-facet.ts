@@ -155,14 +155,6 @@ export class AtomicCommerceTimeframeFacet
     });
   }
 
-  private get hasValues() {
-    if (this.facetState.values.length) {
-      return true;
-    }
-
-    return !!this.valuesToRender.length;
-  }
-
   private get numberOfSelectedValues() {
     if (this.hasInputRange) {
       return 1;
