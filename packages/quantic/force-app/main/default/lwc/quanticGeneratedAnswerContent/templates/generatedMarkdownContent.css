@@ -112,7 +112,7 @@ blockquote {
 }
 
 .scrollable-table th {
-  top: 0px;
+  top: 0;
   position: sticky;
 }
 

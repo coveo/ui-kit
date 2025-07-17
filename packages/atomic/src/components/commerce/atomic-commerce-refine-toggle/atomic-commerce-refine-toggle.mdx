@@ -1,25 +1,16 @@
 import { Canvas, ArgTypes, Meta, Title, Description, Stories, Subtitle } from '@storybook/blocks';
 import * as AtomicCommerceRefineToggleStories from './atomic-commerce-refine-toggle.new.stories';
+import { CanvasWithGithub } from '../../../../storybook-utils/documentation/canvas-with-github';
 
-<Meta of={ AtomicCommerceRefineToggleStories } />
+<Meta of={ AtomicCommerceRefineToggleStories } name="AtomicCommerceRefineToggle" />
 
 <Title />
 <Subtitle ><Description/></Subtitle>
 
 
-<Canvas
-  additionalActions={[
-    {
-      title: 'Open in GitHub',
-      onClick: () => {
-        window.open(
-          'https://github.com/coveo/ui-kit/blob/master/packages/atomic/src/components/commerce/atomic-commerce-refine-toggle/atomic-commerce-refine-toggle.ts',
-          '_blank'
-        );
-      },
-    },
-  ]}
+<CanvasWithGithub
   of={AtomicCommerceRefineToggleStories.Default}
+  githubPath="commerce/atomic-commerce-refine-toggle/atomic-commerce-refine-toggle.ts"
 />
 
 ## Usage
