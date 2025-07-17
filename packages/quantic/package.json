@@ -69,6 +69,7 @@
     "@octokit/graphql": "8.2.2",
     "@octokit/graphql-schema": "15.26.0",
     "@playwright/test": "1.53.2",
+    "@salesforce-ux/slds-linter": "0.3.0",
     "@salesforce/eslint-config-lwc": "3.7.2",
     "@salesforce/sfdx-lwc-jest": "5.1.0",
     "@types/node": "22.16.0",
