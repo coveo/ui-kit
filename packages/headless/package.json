@@ -56,7 +56,7 @@
   },
   "types": "./dist/definitions/index.d.ts",
   "license": "Apache-2.0",
-  "version": "3.27.2",
+  "version": "3.27.4",
   "files": [
     "dist/"
   ],
@@ -98,7 +98,7 @@
     }
   },
   "dependencies": {
-    "@coveo/bueno": "1.0.19",
+    "@coveo/bueno": "1.0.21",
     "@coveo/relay": "1.2.5",
     "@coveo/relay-event-types": "14.7.5",
     "@reduxjs/toolkit": "2.6.0",
@@ -118,7 +118,6 @@
     "@coveo/ci": "1.0.0",
     "chalk": "5.4.1",
     "esbuild-plugin-alias-path": "2.0.2",
-    "eslint-plugin-canonical": "4.18.0",
     "execa": "9.6.0",
     "live-server": "1.2.2",
     "ts-node": "10.9.2",

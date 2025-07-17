@@ -1,0 +1,189 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "enabled": true,
+  "extends": [
+    "github>coveo/renovate-presets",
+    "helpers:pinGitHubActionDigests"
+  ],
+  "labels": ["dependencies"],
+  "dependencyDashboard": true,
+  "packageRules": [
+    {
+      "groupName": "all dependencies",
+      "groupSlug": "all",
+      "matchPackageNames": ["*"]
+    },
+    {
+      "groupName": "typedoc",
+      "groupSlug": "typedoc",
+      "rangeStrategy": "replace",
+      "description": "Isolate typedoc updates to monitor for breaking changes",
+      "matchPackageNames": ["/typedoc/"]
+    },
+    {
+      "groupName": "tailwind",
+      "groupSlug": "tailwind",
+      "rangeStrategy": "replace",
+      "description": "Isolate tailwind for breaking changes",
+      "matchPackageNames": [
+        "tailwindcss",
+        "@tailwindcss/postcss",
+        "@tailwindcss/vite"
+      ]
+    },
+    {
+      "groupName": "Angular",
+      "groupSlug": "angular",
+      "rangeStrategy": "replace",
+      "allowedVersions": "18.x",
+      "matchPackageNames": [
+        "/^@angular/*/",
+        "/^@angular-devkit/*/",
+        "/ng-packagr/"
+      ]
+    },
+    {
+      "groupName": "React",
+      "groupSlug": "react",
+      "rangeStrategy": "replace",
+      "matchPackageNames": [
+        "/react/",
+        "/react-router-dom/",
+        "/react-dom/",
+        "/@types/react/",
+        "next",
+        "/@remix-run/.*/"
+      ]
+    },
+    {
+      "groupName": "Redux",
+      "groupSlug": "Redux",
+      "rangeStrategy": "replace",
+      "matchPackageNames": ["/^redux-*/", "/^@redux/*/"]
+    },
+    {
+      "groupName": "Stencil",
+      "groupSlug": "stencil",
+      "rangeStrategy": "replace",
+      "matchPackageNames": ["/^@stencil/*/"]
+    },
+    {
+      "groupName": "LWC Compiler",
+      "groupSlug": "lwc-compiler",
+      "rangeStrategy": "replace",
+      "matchPackageNames": ["/^@lwc/compiler$/"]
+    },
+    {
+      "matchFileNames": ["packages/atomic/package.json"],
+      "groupSlug": "atomic-jest",
+      "rangeStrategy": "replace",
+      "allowedVersions": "27.x",
+      "description": "Stencil do not support Jest >27 https://stenciljs.com/docs/support-policy#testing-libraries",
+      "matchPackageNames": [
+        "/^jest$/",
+        "/^jest-cli$/",
+        "/@types/jest/",
+        "/jest-environment-node/"
+      ]
+    },
+    {
+      "matchFileNames": ["packages/quantic/package.json"],
+      "groupSlug": "quantic-chalk",
+      "rangeStrategy": "replace",
+      "allowedVersions": "4.x",
+      "description": "Cypress custom reporter are CJS, and Chalk 5.x is ESM only",
+      "matchPackageNames": ["/^chalk$/"]
+    },
+    {
+      "matchFileNames": ["packages/quantic/package.json"],
+      "groupSlug": "change-case",
+      "rangeStrategy": "replace",
+      "allowedVersions": "4.x",
+      "description": "Quantic uses JSDOC that does not support ESM modules for template",
+      "matchPackageNames": ["/^change-case$/"]
+    },
+    {
+      "groupName": "marked",
+      "groupSlug": "marked",
+      "rangeStrategy": "replace",
+      "description": "Isolate marked",
+      "matchPackageNames": ["marked"]
+    },
+    {
+      "groupName": "relay",
+      "groupSlug": "relay",
+      "rangeStrategy": "replace",
+      "description": "Isolate relay since it is causing issues with stencil projetcs",
+      "matchPackageNames": ["@coveo/relay"]
+    },
+    {
+      "matchFileNames": ["packages/quantic/package.json"],
+      "groupSlug": "sfdx-lwc-jest",
+      "rangeStrategy": "replace",
+      "allowedVersions": "3.x",
+      "description": "sfdx-lwc-jest uses a not GA version of Salesforce API (60)",
+      "matchPackageNames": ["/^@​salesforce/sfdx-lwc-jest$/"]
+    },
+    {
+      "groupName": "lightningcss",
+      "groupSlug": "lightningcss",
+      "rangeStrategy": "replace",
+      "description": "Isolate lightningcss",
+      "matchPackageNames": ["lightningcss"]
+    },
+    {
+      "matchFileNames": [
+        "packages/samples/headless-commerce-ssr-remix/package.json"
+      ],
+      "groupName": "React 18 for Remix sample",
+      "groupSlug": "remix-react18",
+      "rangeStrategy": "replace",
+      "allowedVersions": "18.x",
+      "matchPackageNames": [
+        "react",
+        "react-dom",
+        "@types/react",
+        "@types/react-dom"
+      ]
+    }
+  ],
+  "lockFileMaintenance": {
+    "enabled": true
+  },
+  "rangeStrategy": "auto",
+  "commitMessageSuffix": "J:KIT-282",
+  "vulnerabilityAlerts": {
+    "enabled": false
+  },
+  "ignoreDeps": [
+    "@salesforce/sfdx-lwc-jest",
+    // Ignore cypress since it is getting removed.
+    "cypress",
+    "cypress-split",
+    "cypress-repeat",
+    "cypress-real-events",
+    "cypress-web-vitals",
+    "cypress-axe",
+    // Ignore marked to not have a floating PR
+    "marked",
+    // Ignore stencil since it is getting removed.
+    "@stencil/core",
+    "@stencil/angular-output-target",
+    "@stencil/react-output-target",
+    "@stencil-community/postcss",
+    // Ignore gts since it is getting removed.
+    "gts",
+    // Ignore storybook since it breaks because of stencil. We will update after migration.
+    "@storybook/addon-a11y",
+    "@storybook/addon-essentials",
+    "@storybook/addon-interactions",
+    "@storybook/components",
+    "@storybook/core-events",
+    "@storybook/manager-api",
+    "@storybook/router",
+    "@storybook/test",
+    "@storybook/web-components",
+    "@storybook/web-components-vite",
+    "storybook"
+  ]
+}
