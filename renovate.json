@@ -185,9 +185,5 @@
   "vulnerabilityAlerts": {
     "enabled": false
   },
-  "ignoreDeps": [
-    "eslint-plugin-canonical",
-    "@salesforce/sfdx-lwc-jest",
-    "cypress"
-  ]
+  "ignoreDeps": ["@salesforce/sfdx-lwc-jest", "cypress"]
 }
