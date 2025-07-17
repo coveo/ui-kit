@@ -1,28 +1,27 @@
 {
-  "name": "@coveo/headless-ssr-samples-pages-router",
-  "description": "Examples of framework agnostic @coveo/headless/ssr utils and @coveo/headless-react/ssr using Next.js pages router",
-  "version": "0.0.0",
-  "private": true,
-  "scripts": {
-    "dev": "next dev",
-    "build": "nx build",
-    "build:next": "next build",
-    "prod": "next start",
-    "lint": "next lint",
-    "e2e": "cypress run --browser chrome --e2e --project ../ --env NEXTJS_ROUTER=pages",
-    "e2e:watch": "cypress open --browser chrome --e2e --project ../"
-  },
-  "dependencies": {
-    "@coveo/headless-ssr-samples-common": "0.0.0",
-    "next": "15.2.4",
-    "react": "19.1.0",
-    "react-dom": "19.1.0"
-  },
-  "devDependencies": {
-    "@types/node": "22.16.0",
-    "@types/react": "19.1.1",
-    "@types/react-dom": "19.1.2",
-    "eslint": "9.30.1",
-    "typescript": "5.8.3"
-  }
+	"name": "@coveo/headless-ssr-samples-pages-router",
+	"description": "Examples of framework agnostic @coveo/headless/ssr utils and @coveo/headless-react/ssr using Next.js pages router",
+	"version": "0.0.0",
+	"private": true,
+	"scripts": {
+		"dev": "next dev",
+		"build": "nx build",
+		"build:next": "next build",
+		"prod": "next start",
+		"lint": "next lint",
+		"e2e": "cypress run --browser chrome --e2e --project ../ --env NEXTJS_ROUTER=pages",
+		"e2e:watch": "cypress open --browser chrome --e2e --project ../"
+	},
+	"dependencies": {
+		"@coveo/headless-ssr-samples-common": "0.0.0",
+		"next": "15.2.4",
+		"react": "19.1.0",
+		"react-dom": "19.1.0"
+	},
+	"devDependencies": {
+		"@types/node": "22.16.0",
+		"@types/react": "19.1.1",
+		"@types/react-dom": "19.1.2",
+		"typescript": "5.8.3"
+	}
 }

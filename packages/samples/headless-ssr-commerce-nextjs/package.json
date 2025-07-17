@@ -1,27 +1,26 @@
 {
-  "name": "@coveo/headless-ssr-commerce-samples",
-  "description": "Examples of @coveo/headless-react/ssr-commerce utils using Next.js app router",
-  "version": "0.0.0",
-  "private": true,
-  "scripts": {
-    "dev": "next dev",
-    "build": "nx build",
-    "prod": "next start",
-    "lint": "next lint",
-    "build:next": "next build"
-  },
-  "dependencies": {
-    "@coveo/headless-react": "2.4.36",
-    "next": "15.2.4",
-    "react": "19.1.0",
-    "react-dom": "19.1.0"
-  },
-  "devDependencies": {
-    "@types/node": "22.16.0",
-    "@types/react": "19.1.1",
-    "@types/react-dom": "19.1.2",
-    "@playwright/test": "1.53.2",
-    "eslint": "9.30",
-    "typescript": "5.8.3"
-  }
+	"name": "@coveo/headless-ssr-commerce-samples",
+	"description": "Examples of @coveo/headless-react/ssr-commerce utils using Next.js app router",
+	"version": "0.0.0",
+	"private": true,
+	"scripts": {
+		"dev": "next dev",
+		"build": "nx build",
+		"prod": "next start",
+		"lint": "next lint",
+		"build:next": "next build"
+	},
+	"dependencies": {
+		"@coveo/headless-react": "2.4.36",
+		"next": "15.2.4",
+		"react": "19.1.0",
+		"react-dom": "19.1.0"
+	},
+	"devDependencies": {
+		"@types/node": "22.16.0",
+		"@types/react": "19.1.1",
+		"@types/react-dom": "19.1.2",
+		"@playwright/test": "1.53.2",
+		"typescript": "5.8.3"
+	}
 }

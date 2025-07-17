@@ -159,17 +159,6 @@
       "matchPackageNames": ["/^@​salesforce/sfdx-lwc-jest$/"]
     },
     {
-      "groupSlug": "eslint",
-      "groupName": "eslint",
-      "rangeStrategy": "replace",
-      "description": "Isolated until ready to handle v9 https://coveord.atlassian.net/browse/KIT-3085",
-      "matchPackageNames": [
-        "/^eslint$/",
-        "/^eslint-plugin-.*/",
-        "/@typescript-eslint/.*/"
-      ]
-    },
-    {
       "groupName": "lightningcss",
       "groupSlug": "lightningcss",
       "rangeStrategy": "replace",
