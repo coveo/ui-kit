@@ -12,7 +12,9 @@
     "template/.gitignore"
   ],
   "scripts": {
-    "release:phase1": "npx -p=@coveord/release npm-publish"
+    "publish:npm": "npm run-script -w=@coveo/ci npm-publish",
+    "publish:bump": "npm run-script -w=@coveo/ci bump",
+    "promote:npm:latest": "npm run-script -w=@coveo/ci promote-npm-prod"
   },
   "keywords": [
     "coveo",

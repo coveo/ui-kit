@@ -12,6 +12,8 @@
     "template/.gitignore"
   ],
   "scripts": {
+    "publish:npm": "npm run-script -w=@coveo/ci npm-publish",
+    "publish:bump": "npm run-script -w=@coveo/ci bump",
     "promote:npm:latest": "npm run-script -w=@coveo/ci promote-npm-prod"
   },
   "keywords": [
@@ -26,5 +28,10 @@
   },
   "dependencies": {
     "@coveo/create-atomic-component-project": "1.2.16"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/coveo/ui-kit.git",
+    "directory": "packages/create-atomic-component"
   }
 }

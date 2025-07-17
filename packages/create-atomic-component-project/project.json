@@ -1,7 +1,11 @@
 {
   "name": "create-atomic-component-project",
-  "root": "packages/ui/atomic/create-atomic-component-project",
-  "sourceRoot": "packages/ui/atomic/create-atomic-component-project/template",
+  "root": "packages/create-atomic-component-project",
+  "sourceRoot": "packages/create-atomic-component-project/template",
   "projectType": "application",
-  "implicitDependencies": ["create-atomic-component-project-template"]
+  "implicitDependencies": ["create-atomic-component-project-template"],
+  "targets": {
+    "release:phase1": {},
+    "release:phase3": {}
+  }
 }
