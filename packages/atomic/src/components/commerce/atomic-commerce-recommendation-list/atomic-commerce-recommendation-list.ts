@@ -519,6 +519,10 @@ export class AtomicCommerceRecommendationList
 
     const productClasses = `${listClasses} ${!this.isEveryProductReady && 'hidden'}`;
 
+    // Products must be rendered immediately (though hidden) to start their initialization and loading processes.
+    // If we wait to render products until placeholders are removed, the components won't begin loading until then,
+    // causing a longer delay. The `isEveryProductsReady` flag hides products while preserving placeholders,
+    // then removes placeholders once products are fully loaded to prevent content flash.
     return html`
       ${when(this.isAppLoaded, () =>
         renderDisplayWrapper({
