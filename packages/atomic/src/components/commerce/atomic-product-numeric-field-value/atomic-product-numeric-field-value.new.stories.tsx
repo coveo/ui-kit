@@ -4,7 +4,6 @@ import {wrapInCommerceProductList} from '@/storybook-utils/commerce/commerce-pro
 import {wrapInProductTemplate} from '@/storybook-utils/commerce/commerce-product-template-wrapper';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {renderComponent} from '@/storybook-utils/common/render-component';
-import './atomic-product-numeric-field-value.js';
 
 const {
   decorator: commerceInterfaceDecorator,

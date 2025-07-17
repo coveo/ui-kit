@@ -73,6 +73,9 @@ export class AtomicProductNumericFieldValue
       'atomic/numberFormat',
       this.handleNumberFormatEvent as EventListener
     );
+
+    // Add hydrated class for compatibility with Stencil-based test infrastructure
+    this.classList.add('hydrated');
   }
 
   disconnectedCallback() {
