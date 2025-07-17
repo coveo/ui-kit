@@ -4,7 +4,7 @@ import {buildTabManager, type TabManager} from './headless-tab-manager.js';
 
 export * from './headless-tab-manager.js';
 
-export interface TabManagerDefinition
+interface TabManagerDefinition
   extends ControllerDefinitionWithoutProps<SearchEngine, TabManager> {}
 
 /**

@@ -1,8 +1,3 @@
-import type {
-  SearchAPIErrorWithExceptionInBody,
-  SearchAPIErrorWithStatusCode,
-} from '../search-api-error-response.js';
-
 /**
  * Field description
  */
@@ -62,8 +57,3 @@ export interface FieldDescriptionsResponseSuccess {
    */
   fields: FieldDescription[];
 }
-
-export type FieldDescriptions =
-  | FieldDescriptionsResponseSuccess
-  | SearchAPIErrorWithExceptionInBody
-  | SearchAPIErrorWithStatusCode;

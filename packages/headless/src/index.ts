@@ -469,6 +469,7 @@ export * from './features/dictionary-field-context/dictionary-field-context-acti
 export * from './features/did-you-mean/did-you-mean-actions-loader.js';
 export * from './features/excerpt-length/excerpt-length-actions-loader.js';
 export * from './features/facet-options/facet-options-actions-loader.js';
+export * from './features/facets/automatic-facet-set/automatic-facet-set-actions-loader.js';
 export * from './features/facets/category-facet-set/category-facet-set-actions-loader.js';
 export * from './features/facets/facet-set/facet-set-actions-loader.js';
 // Selectors

@@ -98,7 +98,7 @@ export interface RecentResultsState {
   maxLength: number;
 }
 
-export function validateRecentResultsProps(
+function validateRecentResultsProps(
   engine: SearchEngine,
   props?: RecentResultsListProps
 ) {

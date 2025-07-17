@@ -54,13 +54,12 @@ import {
 import {determineFacetId} from '../_common/facet-id-determinor.js';
 import {
   type FacetOptions,
-  type FacetSearchOptions,
   facetOptionsSchema,
 } from './headless-core-facet-options.js';
 
-export type {FacetOptions, FacetSearchOptions, FacetValueState};
+export type {FacetOptions, FacetValueState};
 
-export interface CoreFacetProps {
+interface CoreFacetProps {
   /**
    * The options for the core `Facet` controller.
    * */

@@ -1,5 +1,3 @@
-import {ArrayValue, EnumValue, RecordValue, StringValue} from '@coveo/bueno';
-
 export enum SortBy {
   Relevance = 'relevance',
   Fields = 'fields',
@@ -28,28 +26,4 @@ export type SortCriterion = SortByRelevance | SortByFields;
 
 export const buildRelevanceSortCriterion = (): SortByRelevance => ({
   by: SortBy.Relevance,
-});
-
-export const buildFieldsSortCriterion = (
-  fields: SortByFieldsFields[]
-): SortByFields => ({
-  by: SortBy.Fields,
-  fields,
-});
-
-export const sortCriterionDefinition = new RecordValue({
-  options: {
-    required: false,
-  },
-  values: {
-    by: new EnumValue({enum: SortBy, required: true}),
-    fields: new ArrayValue({
-      each: new RecordValue({
-        values: {
-          name: new StringValue(),
-          direction: new EnumValue({enum: SortDirection}),
-        },
-      }),
-    }),
-  },
 });

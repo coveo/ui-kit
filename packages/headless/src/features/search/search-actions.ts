@@ -50,8 +50,6 @@ export interface SearchAction {
   actionCause: string;
 }
 
-export type {StateNeededByExecuteSearch} from './search-actions-thunk-processor.js';
-
 export interface ExecuteSearchThunkReturn {
   /** The successful search response. */
   response: SearchResponseSuccess;
@@ -310,7 +308,7 @@ const buildFetchMoreRequest = async (
   return mappedRequest;
 };
 
-export const buildInstantResultSearchRequest = async (
+const buildInstantResultSearchRequest = async (
   state: StateNeededByExecuteSearch,
   navigatorContext: NavigatorContext,
   q: string,

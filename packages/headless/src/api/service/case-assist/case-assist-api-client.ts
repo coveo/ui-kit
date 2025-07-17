@@ -33,14 +33,14 @@ export interface AsyncThunkCaseAssistOptions<
 /**
  * Defines a Case Assist API response. It can represent an error or a successful response.
  */
-export type CaseAssistAPIResponse<TSuccessContent> =
+type CaseAssistAPIResponse<TSuccessContent> =
   | CaseAssistAPISuccessResponse<TSuccessContent>
   | CaseAssistAPIErrorResponse;
 
 /**
  * Defines a Case Assist API successful response.
  */
-export interface CaseAssistAPISuccessResponse<TContent> {
+interface CaseAssistAPISuccessResponse<TContent> {
   success: TContent;
 }
 
@@ -57,7 +57,7 @@ export interface CaseAssistAPIErrorStatusResponse {
 /**
  * Defines a Case Assist API error response.
  */
-export interface CaseAssistAPIErrorResponse {
+interface CaseAssistAPIErrorResponse {
   error: CaseAssistAPIErrorStatusResponse;
 }
 

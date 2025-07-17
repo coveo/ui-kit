@@ -51,7 +51,6 @@ import type {
 import {buildCategoryFacetSearch} from './headless-category-facet-search.js';
 
 export type {
-  CategoryFacetValue,
   CategoryFacetOptions,
   CategoryFacetSearchOptions,
   CategoryFacetProps,

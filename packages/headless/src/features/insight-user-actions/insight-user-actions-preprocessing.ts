@@ -12,7 +12,7 @@ const SESSION_INACTIVITY_THRESHOLD_IN_MS = 30 * MINUTE;
 const NUMBER_OF_PRECEDING_SESSIONS = 2;
 const NUMBER_OF_FOLLOWING_SESSIONS = 2;
 
-export interface RawUserAction {
+interface RawUserAction {
   name: string;
   value: string;
   time: string;

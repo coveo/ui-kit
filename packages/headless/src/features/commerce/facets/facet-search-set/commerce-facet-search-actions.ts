@@ -94,7 +94,7 @@ export const executeCommerceFieldSuggest = createAsyncThunk<
   getExecuteFacetSearchThunkPayloadCreator(true)
 );
 
-export const isRegularFacetSearchState = (
+const isRegularFacetSearchState = (
   s: StateNeededForAnyFacetSearch,
   facetId: string
 ): s is StateNeededForRegularFacetSearch => {
@@ -105,7 +105,7 @@ export const isRegularFacetSearchState = (
   );
 };
 
-export const isRegularFieldSuggestionsState = (
+const isRegularFieldSuggestionsState = (
   s: StateNeededForAnyFacetSearch,
   facetId: string
 ): s is StateNeededForRegularFacetSearch => {

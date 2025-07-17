@@ -6,7 +6,7 @@ import {
   validatePayload,
 } from '../../utils/validate-payload.js';
 
-export interface SetCaseAssistConfigurationActionCreatorPayload {
+interface SetCaseAssistConfigurationActionCreatorPayload {
   /**
    * The unique identifier of the target case assist configuration. See [Retrieving a Case Assist ID](https://docs.coveo.com/en/3328/service/manage-case-assist-configurations#retrieving-a-case-assist-id).
    */

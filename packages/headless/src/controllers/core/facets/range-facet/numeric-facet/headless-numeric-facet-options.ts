@@ -132,9 +132,7 @@ const numericRangeRequestDefinition: SchemaDefinition<NumericRangeRequest> = {
   state: new StringValue({constrainTo: facetValueStates}),
 };
 
-export const numericFacetOptionsSchema = new Schema<
-  Required<NumericFacetOptions>
->({
+const numericFacetOptionsSchema = new Schema<Required<NumericFacetOptions>>({
   facetId,
   tabs: new RecordValue({
     options: {

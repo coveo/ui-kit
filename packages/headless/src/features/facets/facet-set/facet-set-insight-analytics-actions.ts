@@ -107,7 +107,7 @@ export const logFacetClearAll = (facetId: string): InsightAction =>
     }
   );
 
-export interface LogFacetSelectActionCreatorPayload {
+interface LogFacetSelectActionCreatorPayload {
   /**
    * The facet id.
    */
@@ -139,7 +139,7 @@ export const logFacetSelect = (
     }
   );
 
-export interface LogFacetDeselectActionCreatorPayload {
+interface LogFacetDeselectActionCreatorPayload {
   /**
    * The facet id.
    */

@@ -185,7 +185,7 @@ export function selectPath(
   request.preventAutoSelect = true;
 }
 
-export function buildCurrentValuesFromPath(path: string[]) {
+function buildCurrentValuesFromPath(path: string[]) {
   if (!path.length) {
     return [];
   }

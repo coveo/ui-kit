@@ -34,7 +34,7 @@ export class URLPath {
   }
 }
 
-export type PlatformCombination =
+type PlatformCombination =
   | {env: 'dev'; region: 'us' | 'eu'}
   | {env: 'stg'; region: 'us'}
   | {env: 'hipaa'; region: 'us'}

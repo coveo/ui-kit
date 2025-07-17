@@ -7,7 +7,6 @@ export type {
   RedirectionTrigger,
   RedirectionTriggerState,
 } from '../core/triggers/headless-core-redirection-trigger.js';
-export {buildRedirectionTrigger} from './headless-redirection-trigger.js';
 
 export interface RedirectionTriggerDefinition
   extends ControllerDefinitionWithoutProps<SearchEngine, RedirectionTrigger> {}

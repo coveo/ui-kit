@@ -110,7 +110,7 @@ export interface AsyncThunkConfig {
 
 type QueryCorrectionCallback = (modification: string) => void;
 
-export interface FetchFromAPIOptions {
+interface FetchFromAPIOptions {
   origin: SearchOrigin;
   disableAbortWarning?: boolean;
 }

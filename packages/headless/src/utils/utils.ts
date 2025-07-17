@@ -29,7 +29,7 @@ export function removeDuplicates<T>(arr: T[], predicate: (value: T) => string) {
   ];
 }
 
-export function encodedBtoa(stringToEncode: string) {
+function encodedBtoa(stringToEncode: string) {
   return btoa(encodeURI(stringToEncode))!;
 }
 
