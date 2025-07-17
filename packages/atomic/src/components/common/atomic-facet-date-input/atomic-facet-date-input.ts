@@ -82,7 +82,7 @@ export class AtomicFacetDateInput
 
     if (!isValidParent) {
       const error = new Error(
-        'atomic-facet-date-input is an internal component and should only be used within <atomic-commerce-timeframe-facet>.'
+        'atomic-facet-date-input is an internal component and should only be used within a timeframe facet.'
       );
       this.error = error;
     }

@@ -1,62 +1,60 @@
-import {AnyBindings} from '@/src/components';
-import {fixture} from '@/vitest-utils/testing-helpers/fixture';
-import {DateFilterRange} from '@coveo/headless';
-import {page} from '@vitest/browser/context';
+/** biome-ignore-all lint/style/noNonNullAssertion: For testing, locators should always exist */
+import {renderInAtomicCommerceInterface} from '@/vitest-utils/testing-helpers/fixtures/atomic/commerce/atomic-commerce-interface-fixture';
+import type {DateFilterRange} from '@coveo/headless';
+import {page, userEvent} from '@vitest/browser/context';
 import {html} from 'lit';
-import {describe, it, expect, vi} from 'vitest';
+import {when} from 'lit/directives/when.js';
+import {describe, it, expect, beforeEach, vi, type MockInstance} from 'vitest';
 import './atomic-facet-date-input';
 import {AtomicFacetDateInput} from './atomic-facet-date-input';
 
 describe('AtomicFacetDateInput', () => {
+  let consoleErrorSpy: MockInstance;
+
   const setupElement = async (
     props: Partial<{
       facetId: string;
       label: string;
       rangeGetter: () => DateFilterRange | undefined;
       rangeSetter: (range: DateFilterRange) => void;
-      parentNode: HTMLElement;
+      validParent: boolean;
     }> = {}
   ) => {
-    const timeFrameFacet =
-      props.parentNode ||
-      document.createElement('atomic-commerce-timeframe-facet');
+    const dateInputTemplate = html`<atomic-facet-date-input
+      .facetId=${props.facetId ?? 'test-facet'}
+      .label=${props.label ?? 'test-label'}
+      .rangeGetter=${props.rangeGetter ?? vi.fn(() => undefined)}
+      .rangeSetter=${props.rangeSetter ?? vi.fn()}
+    ></atomic-facet-date-input>`;
 
-    const element = await fixture<AtomicFacetDateInput>(
-      html`<atomic-facet-date-input
-        .facetId=${props.facetId ?? 'test-facet'}
-        .label=${props.label ?? 'test-label'}
-        .rangeGetter=${props.rangeGetter ?? vi.fn(() => undefined)}
-        .rangeSetter=${props.rangeSetter ?? vi.fn()}
-        .bindings=${{
-          i18n: {
-            t: vi.fn((key: string, values?: Record<string, unknown>) => {
-              const translations: Record<string, string> = {
-                start: 'Start',
-                end: 'End',
-                apply: 'Apply',
-                'date-input-start': `Start date for ${values?.label || 'facet'}`,
-                'date-input-end': `End date for ${values?.label || 'facet'}`,
-                'date-input-apply': `Apply date range for ${values?.label || 'facet'}`,
-              };
-              return translations[key] || key;
-            }),
-          },
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        } as unknown as AnyBindings}
-      ></atomic-facet-date-input>`,
-      timeFrameFacet
-    );
-
+    const {element} =
+      await renderInAtomicCommerceInterface<AtomicFacetDateInput>({
+        template: html`${when(
+          props.validParent ?? true,
+          () =>
+            html`<atomic-timeframe-facet>
+              ${dateInputTemplate}
+            </atomic-timeframe-facet> `,
+          () => dateInputTemplate
+        )} `,
+        selector: 'atomic-facet-date-input',
+      });
     return {
       element,
       get form() {
-        return element.shadowRoot?.querySelector('form');
+        return element.querySelector('form');
       },
       get startInput() {
-        return page.getByLabelText(/Start date/);
+        return element.querySelector('[part="input-start"]')!;
+      },
+      get startInputLabel() {
+        return page.getByText('Start:', {exact: true});
       },
       get endInput() {
-        return page.getByLabelText(/End date/);
+        return element.querySelector('[part="input-end"]')!;
+      },
+      get endInputLabel() {
+        return page.getByText('End:', {exact: true});
       },
       get applyButton() {
         return page.getByRole('button', {name: /Apply/});
@@ -64,69 +62,96 @@ describe('AtomicFacetDateInput', () => {
     };
   };
 
+  beforeEach(() => {
+    consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+  });
+
   it('is defined', () => {
     const el = document.createElement('atomic-facet-date-input');
     expect(el).toBeInstanceOf(AtomicFacetDateInput);
   });
 
-  it('should render the component', async () => {
-    const {element, form} = await setupElement();
-    expect(element.shadowRoot).toBeTruthy();
-    expect(form).toBeTruthy();
+  it('should render the form', async () => {
+    const {form} = await setupElement();
+    expect(form).toBeInTheDocument();
   });
 
-  it('should render start and end date inputs', async () => {
+  it('should render the inputs ', async () => {
+    const {startInput, startInputLabel, endInput, endInputLabel} =
+      await setupElement();
+    expect(startInput).toBeInTheDocument();
+    expect(startInputLabel).toBeInTheDocument();
+    expect(endInput).toBeInTheDocument();
+    expect(endInputLabel).toBeInTheDocument();
+  });
+
+  it('should have the correct parts on input labels ', async () => {
+    const {startInputLabel, endInputLabel} = await setupElement();
+    expect(startInputLabel).toHaveAttribute('part', 'input-label');
+    expect(endInputLabel).toHaveAttribute('part', 'input-label');
+  });
+
+  it('should have the correct type on inputs ', async () => {
     const {startInput, endInput} = await setupElement();
 
-    await expect.element(startInput).toBeInTheDocument();
-    await expect.element(endInput).toBeInTheDocument();
-    await expect.element(startInput).toHaveAttribute('type', 'date');
-    await expect.element(endInput).toHaveAttribute('type', 'date');
+    expect(startInput).toHaveAttribute('type', 'date');
+    expect(endInput).toHaveAttribute('type', 'date');
   });
 
   it('should render apply button', async () => {
     const {applyButton} = await setupElement();
 
     await expect.element(applyButton).toBeInTheDocument();
-    await expect.element(applyButton).toHaveAttribute('type', 'submit');
   });
 
-  it('should have proper parts attributes', async () => {
-    const {element} = await setupElement();
-
-    const startInput = element.shadowRoot?.querySelector(
-      'input[type="date"]:first-of-type'
-    );
-    const endInput = element.shadowRoot?.querySelector(
-      'input[type="date"]:last-of-type'
-    );
-    const applyButton = element.shadowRoot?.querySelector(
-      'button[type="submit"]'
-    );
-
-    expect(startInput).toHaveAttribute('part', 'input-start');
-    expect(endInput).toHaveAttribute('part', 'input-end');
-    expect(applyButton).toHaveAttribute('part', 'input-apply-button');
+  it('should have correct part and type on apply button', async () => {
+    const {applyButton} = await setupElement();
+    await expect.element(applyButton).toHaveAttribute('type', 'submit');
+    await expect
+      .element(applyButton)
+      .toHaveAttribute('part', 'input-apply-button');
   });
 
   it('should display an error when parent is invalid', async () => {
-    const consoleErrorSpy = vi
-      .spyOn(console, 'error')
-      .mockImplementation(() => {});
-
     const {element} = await setupElement({
-      parentNode: document.createElement('div'),
+      validParent: false,
     });
 
     expect(consoleErrorSpy).toHaveBeenCalledWith(
       expect.objectContaining({
         message: expect.stringContaining(
-          'atomic-facet-date-input is an internal component and should only be used within <atomic-commerce-timeframe-facet>'
+          'atomic-facet-date-input is an internal component and should only be used within a timeframe facet'
         ),
       }),
       element
     );
+  });
 
-    consoleErrorSpy.mockRestore();
+  it('should call rangeGetter when component is connected', async () => {
+    const rangeGetterSpy = vi.fn(() => undefined);
+
+    await setupElement({
+      rangeGetter: rangeGetterSpy,
+    });
+
+    expect(rangeGetterSpy).toHaveBeenCalled();
+  });
+
+  it('should call rangeSetter when form is submitted', async () => {
+    const rangeSetterSpy = vi.fn();
+    const {applyButton, startInput, endInput} = await setupElement({
+      rangeSetter: rangeSetterSpy,
+    });
+
+    const {start, end} = {
+      start: '2023{ArrowRight}01{ArrowRight}01',
+      end: '2023{ArrowRight}12{ArrowRight}31',
+    };
+
+    await userEvent.type(startInput, start);
+    await userEvent.type(endInput, end);
+    await userEvent.click(applyButton);
+
+    expect(rangeSetterSpy).toHaveBeenCalled();
   });
 });
