@@ -1,3 +1,9 @@
+## <small>2.0.22 (2025-07-16)</small>
+
+* style: enable biome recommended rules in auth package (#5631) ([3151a5d](https://github.com/coveo/ui-kit/commits/3151a5d)), closes [#5631](https://github.com/coveo/ui-kit/issues/5631)
+
+
+
 ## <small>2.0.20 (2025-07-02)</small>
 
 * chore(lint): integrate biome (#5507) ([53bcada](https://github.com/coveo/ui-kit/commits/53bcada)), closes [#5507](https://github.com/coveo/ui-kit/issues/5507)

@@ -1,3 +1,13 @@
+## <small>1.40.10 (2025-07-16)</small>
+
+* chore(ci): change create-atomic release process from cli to ui-kit (#5648) ([2a906d4](https://github.com/coveo/ui-kit/commits/2a906d4)), closes [#5648](https://github.com/coveo/ui-kit/issues/5648)
+* chore(create-atomic): add missing repository metadata (#5674) ([17a99ce](https://github.com/coveo/ui-kit/commits/17a99ce)), closes [#5674](https://github.com/coveo/ui-kit/issues/5674)
+* fix(create-atomic): add missing build script to package.json (#5671) ([b17ab99](https://github.com/coveo/ui-kit/commits/b17ab99)), closes [#5671](https://github.com/coveo/ui-kit/issues/5671)
+* ci(create-atomic): fix create-atomic release (#5661) ([296d1f4](https://github.com/coveo/ui-kit/commits/296d1f4)), closes [#5661](https://github.com/coveo/ui-kit/issues/5661)
+* feat(cli): port over create-atomic from cli repo (#5623) ([94e8280](https://github.com/coveo/ui-kit/commits/94e8280)), closes [#5623](https://github.com/coveo/ui-kit/issues/5623)
+
+
+
 ## 1.40.9 (2025-03-25)
 
 ## 1.40.8 (2025-03-25)

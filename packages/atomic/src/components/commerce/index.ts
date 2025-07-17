@@ -11,6 +11,7 @@ export {AtomicCommerceProductsPerPage} from './atomic-commerce-products-per-page
 export {AtomicCommerceQuerySummary} from './atomic-commerce-query-summary/atomic-commerce-query-summary.js';
 export {AtomicCommerceRecommendationInterface} from './atomic-commerce-recommendation-interface/atomic-commerce-recommendation-interface.js';
 export {AtomicCommerceRecommendationList} from './atomic-commerce-recommendation-list/atomic-commerce-recommendation-list.js';
+export {AtomicCommerceRefineModal} from './atomic-commerce-refine-modal/atomic-commerce-refine-modal.js';
 export {AtomicCommerceRefineToggle} from './atomic-commerce-refine-toggle/atomic-commerce-refine-toggle.js';
 export {AtomicCommerceSearchBox} from './atomic-commerce-search-box/atomic-commerce-search-box.js';
 export {AtomicCommerceSearchBoxInstantProducts} from './atomic-commerce-search-box-instant-products/atomic-commerce-search-box-instant-products.js';
