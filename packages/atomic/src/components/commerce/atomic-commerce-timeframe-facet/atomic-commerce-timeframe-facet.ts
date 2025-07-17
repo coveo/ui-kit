@@ -274,7 +274,6 @@ export class AtomicCommerceTimeframeFacet
   private renderDateInput() {
     return html`
       <atomic-facet-date-input
-        .bindings=${this.bindings}
         .label=${this.displayName}
         .rangeGetter=${() => this.inputRange}
         .facetId=${this.facetState.facetId}

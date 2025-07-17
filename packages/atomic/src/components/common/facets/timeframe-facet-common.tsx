@@ -354,7 +354,6 @@ export class TimeframeFacetCommon {
       <atomic-facet-date-input
         min={this.props.min}
         max={this.props.max}
-        bindings={this.props.bindings}
         label={this.props.label}
         facetId={this.filter!.state!.facetId}
         rangeGetter={() => this.filter!.state.range}

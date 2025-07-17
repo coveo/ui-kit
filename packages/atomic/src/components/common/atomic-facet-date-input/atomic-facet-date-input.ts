@@ -1,9 +1,11 @@
 import {AnyBindings} from '@/src/components';
 import {renderButton} from '@/src/components/common/button';
+import {bindingGuard} from '@/src/decorators/binding-guard';
 import {errorGuard} from '@/src/decorators/error-guard';
 import {injectStylesForNoShadowDOM} from '@/src/decorators/light-dom';
 import type {LitElementWithError} from '@/src/decorators/types';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles.js';
+import {InitializeBindingsMixin} from '@/src/mixins/bindings-mixin';
 import {parseDate} from '@/src/utils/date-utils';
 import {
   buildDateRange,
@@ -24,7 +26,7 @@ import styles from './atomic-facet-date-input.tw.css';
 @injectStylesForNoShadowDOM
 @withTailwindStyles
 export class AtomicFacetDateInput
-  extends LitElement
+  extends InitializeBindingsMixin(LitElement)
   implements LitElementWithError
 {
   static styles = unsafeCSS(styles);
@@ -34,7 +36,6 @@ export class AtomicFacetDateInput
   private startRef: Ref<HTMLInputElement> = createRef();
   private endRef: Ref<HTMLInputElement> = createRef();
 
-  @property({type: Object}) public bindings!: AnyBindings;
   @property({type: Object}) public rangeGetter!: () =>
     | DateFilterRange
     | undefined;
@@ -47,6 +48,8 @@ export class AtomicFacetDateInput
   @property() public max?: string;
 
   @state() error!: Error;
+
+  @state() bindings!: AnyBindings;
 
   connectedCallback() {
     super.connectedCallback();
@@ -137,6 +140,7 @@ export class AtomicFacetDateInput
     return parseDate(date).format('YYYY-MM-DD');
   }
 
+  @bindingGuard()
   @errorGuard()
   render() {
     const label = this.bindings.i18n.t(this.label);
