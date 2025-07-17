@@ -23,7 +23,6 @@ import {
 export type {
   NumericRangeOptions,
   NumericRangeRequest,
-  NumericFacetValue,
   NumericFacetOptions,
   NumericFacetProps,
   NumericFacet,

@@ -213,7 +213,7 @@ export type GetBreadcrumbsConfiguration<T extends AnyFacetSetState> = {
 type InferFacetSliceValueRequestType<T extends AnyFacetSetState> =
   T[string]['request']['currentValues'][number];
 
-export type InferFacetSliceValueType<T extends AnyFacetSetState> =
+type InferFacetSliceValueType<T extends AnyFacetSetState> =
   InferFacetSliceValueRequestType<T> extends FacetValueRequest
     ? FacetValue
     : InferFacetSliceValueRequestType<T> extends NumericRangeRequest

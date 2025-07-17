@@ -33,7 +33,7 @@ import {
   type RegularFacetSearchState,
 } from '../core/facets/regular/headless-commerce-regular-facet-search.js';
 
-export type {SpecificFacetSearchResult};
+;
 
 /**
  * The state of the `FilterSuggestions` controller.
