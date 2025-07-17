@@ -28,8 +28,6 @@ import {customElement, property, state} from 'lit/decorators.js';
 import {when} from 'lit/directives/when.js';
 import '../../common/atomic-facet-date-input/atomic-facet-date-input';
 import {shouldDisplayInputForFacetRange} from '../../common/facets/facet-common';
-import type {FacetInfo} from '../../common/facets/facet-common-store';
-import {initializePopover} from '../../common/facets/popover/popover-type';
 import type {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface';
 import styles from './atomic-commerce-timeframe-facet.tw.css';
 
@@ -102,9 +100,6 @@ export class AtomicCommerceTimeframeFacet
 
   private headerFocus?: FocusTargetController;
 
-  // TODO: check if this is needed
-  private unsubscribeFacetController?: () => void;
-
   private get displayName() {
     return this.facetState.displayName || 'no-label';
   }
@@ -118,17 +113,6 @@ export class AtomicCommerceTimeframeFacet
 
   public initialize() {
     this.validateFacet();
-    this.ensureSubscribed();
-    this.registerFacetToStore();
-  }
-
-  disconnectedCallback(): void {
-    super.disconnectedCallback();
-    if (!this.isConnected) {
-      // TODO: check if still needed
-      this.unsubscribeFacetController?.();
-      this.unsubscribeFacetController = undefined;
-    }
   }
 
   private applyDateInput(event: CustomEvent<DateFilterRange>) {
@@ -197,22 +181,6 @@ export class AtomicCommerceTimeframeFacet
   private resetRange() {
     this.inputRange = undefined;
     this.facet.setRanges([]);
-  }
-
-  private registerFacetToStore() {
-    const facetInfo: FacetInfo = {
-      label: () => this.bindings.i18n.t(this.displayName),
-      facetId: this.facetState.facetId,
-      element: this,
-      isHidden: () => !this.shouldRenderFacet,
-    };
-
-    // TODO: remove KIT-4549
-    initializePopover(this, {
-      ...facetInfo,
-      hasValues: () => this.hasValues,
-      numberOfActiveValues: () => this.numberOfSelectedValues,
-    });
   }
 
   private formatFacetValue(facetValue: DateFacetValue) {
@@ -323,16 +291,6 @@ export class AtomicCommerceTimeframeFacet
         @atomic-date-input-apply=${this.applyDateInput}
       ></atomic-facet-date-input>
     `;
-  }
-
-  private ensureSubscribed() {
-    // TODO: check if this is needed...
-    if (this.unsubscribeFacetController) {
-      return;
-    }
-    this.unsubscribeFacetController = this.facet?.subscribe(() => {
-      this.facetState = this.facet.state;
-    });
   }
 
   @bindingGuard()
