@@ -31,27 +31,6 @@
       ]
     },
     {
-      "groupName": "typescript",
-      "groupSlug": "typescript",
-      "rangeStrategy": "replace",
-      "description": "Isolate typescript",
-      "matchPackageNames": ["/typescript/"]
-    },
-    {
-      "groupName": "vite",
-      "groupSlug": "vite",
-      "rangeStrategy": "replace",
-      "description": "Isolate vite until green with @nx/vite",
-      "matchPackageNames": ["vite", "vitest", "@vitest/browser"]
-    },
-    {
-      "groupName": "gts",
-      "groupSlug": "gts",
-      "rangeStrategy": "replace",
-      "description": "Isolate gts since it is causing memory issues when running the lint:check",
-      "matchPackageNames": ["gts"]
-    },
-    {
       "groupName": "Angular",
       "groupSlug": "angular",
       "rangeStrategy": "replace",
@@ -80,12 +59,6 @@
       "groupSlug": "Redux",
       "rangeStrategy": "replace",
       "matchPackageNames": ["/^redux-*/", "/^@redux/*/"]
-    },
-    {
-      "groupName": "Storybook",
-      "groupSlug": "storybook",
-      "rangeStrategy": "replace",
-      "matchPackageNames": ["/^@storybook/*/", "/^storybook$/"]
     },
     {
       "groupName": "Stencil",
@@ -143,31 +116,12 @@
       "matchPackageNames": ["@coveo/relay"]
     },
     {
-      "groupName": "Cypress Split",
-      "groupSlug": "cypress-split",
-      "rangeStrategy": "replace",
-      "allowedVersions": "1.5.0",
-      "description": "Lock until bahmutov/cypress-repeat#52 is fixed",
-      "matchPackageNames": ["/^cypress-split$/"]
-    },
-    {
       "matchFileNames": ["packages/quantic/package.json"],
       "groupSlug": "sfdx-lwc-jest",
       "rangeStrategy": "replace",
       "allowedVersions": "3.x",
       "description": "sfdx-lwc-jest uses a not GA version of Salesforce API (60)",
       "matchPackageNames": ["/^@​salesforce/sfdx-lwc-jest$/"]
-    },
-    {
-      "groupSlug": "eslint",
-      "groupName": "eslint",
-      "rangeStrategy": "replace",
-      "description": "Isolated until ready to handle v9 https://coveord.atlassian.net/browse/KIT-3085",
-      "matchPackageNames": [
-        "/^eslint$/",
-        "/^eslint-plugin-.*/",
-        "/@typescript-eslint/.*/"
-      ]
     },
     {
       "groupName": "lightningcss",
@@ -185,5 +139,35 @@
   "vulnerabilityAlerts": {
     "enabled": false
   },
-  "ignoreDeps": ["@salesforce/sfdx-lwc-jest", "cypress"]
+  "ignoreDeps": [
+    "@salesforce/sfdx-lwc-jest",
+    // Ignore cypress since it is getting removed.
+    "cypress",
+    "cypress-split",
+    "cypress-repeat",
+    "cypress-real-events",
+    "cypress-web-vitals",
+    "cypress-axe",
+    // Ignore marked to not have a floating PR
+    "marked",
+    // Ignore stencil since it is getting removed.
+    "@stencil/core",
+    "@stencil/angular-output-target",
+    "@stencil/react-output-target",
+    "@stencil-community/postcss",
+    // Ignore gts since it is getting removed.
+    "gts",
+    // Ignore storybook since it breaks because of stencil. We will update after migration.
+    "@storybook/addon-a11y",
+    "@storybook/addon-essentials",
+    "@storybook/addon-interactions",
+    "@storybook/components",
+    "@storybook/core-events",
+    "@storybook/manager-api",
+    "@storybook/router",
+    "@storybook/test",
+    "@storybook/web-components",
+    "@storybook/web-components-vite",
+    "storybook"
+  ]
 }
