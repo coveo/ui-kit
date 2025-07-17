@@ -35,7 +35,7 @@ import type {CategoryFacetOptions} from '../core/facets/category/headless-commer
 import {buildCategoryFacetSearch} from '../core/facets/category/headless-commerce-category-facet-search.js';
 import type {FacetControllerType} from '../core/facets/headless-core-commerce-facet.js';
 
-export type {CategoryFieldSuggestionsValue};
+;
 
 /**
  * The state of the `CategoryFilterSuggestions` controller.

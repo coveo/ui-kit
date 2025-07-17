@@ -16,7 +16,7 @@ export interface InstantResultOptions {
   cacheTimeout?: number;
 }
 
-export const instantResultsOptionDefinitions = {
+const instantResultsOptionDefinitions = {
   searchBoxId: nonEmptyString,
   maxResultsPerQuery: new NumberValue({
     required: true,
