@@ -514,14 +514,14 @@ export declare interface AtomicFormatUnit extends Components.AtomicFormatUnit {}
 
 
 @ProxyCmp({
-  inputs: ['answerConfigurationId', 'collapsible', 'disableHtmlCitationAnchoring', 'fieldsToIncludeInCitations', 'maxCollapsedHeight', 'tabsExcluded', 'tabsIncluded', 'withToggle']
+  inputs: ['answerConfigurationId', 'collapsible', 'disableCitationAnchoring', 'fieldsToIncludeInCitations', 'maxCollapsedHeight', 'tabsExcluded', 'tabsIncluded', 'withToggle']
 , defineCustomElementFn: defineCustomElementAtomicGeneratedAnswer})
 @Component({standalone:false,
   selector: 'atomic-generated-answer',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
   // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: ['answerConfigurationId', 'collapsible', 'disableHtmlCitationAnchoring', 'fieldsToIncludeInCitations', 'maxCollapsedHeight', 'tabsExcluded', 'tabsIncluded', 'withToggle'],
+  inputs: ['answerConfigurationId', 'collapsible', 'disableCitationAnchoring', 'fieldsToIncludeInCitations', 'maxCollapsedHeight', 'tabsExcluded', 'tabsIncluded', 'withToggle'],
 })
 export class AtomicGeneratedAnswer {
   protected el: HTMLElement;

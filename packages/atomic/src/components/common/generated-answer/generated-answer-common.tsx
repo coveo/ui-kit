@@ -27,7 +27,7 @@ interface GeneratedAnswerCommonOptions {
   host: HTMLElement;
   withToggle?: boolean;
   collapsible?: boolean;
-  disableHtmlCitationAnchoring?: boolean;
+  disableCitationAnchoring?: boolean;
   getGeneratedAnswer: () => GeneratedAnswer | undefined;
   getGeneratedAnswerState: () => GeneratedAnswerState | undefined;
   getSearchStatusState: () => SearchStatusState | undefined;
@@ -193,7 +193,7 @@ export class GeneratedAnswerCommon {
       getGeneratedAnswerState,
       buildInteractiveCitation,
       getGeneratedAnswer,
-      disableHtmlCitationAnchoring,
+      disableCitationAnchoring,
     } = this.props;
     const {citations} = getGeneratedAnswerState() ?? {};
     const {logCitationHover} = getGeneratedAnswer() ?? {};
@@ -214,7 +214,7 @@ export class GeneratedAnswerCommon {
                 logCitationHover?.(citation.id, citationHoverTimeMs);
               }}
               interactiveCitation={interactiveCitation}
-              disableHtmlCitationAnchoring={disableHtmlCitationAnchoring}
+              disableCitationAnchoring={disableCitationAnchoring}
               exportparts="citation,citation-popover"
             />
           </li>

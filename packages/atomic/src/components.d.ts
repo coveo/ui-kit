@@ -191,10 +191,10 @@ export namespace Components {
          */
         "citation": GeneratedAnswerCitation;
         /**
-          * Option to disable anchoring for HTML citations.
+          * Option to disable citation anchoring.
           * @default false
          */
-        "disableHtmlCitationAnchoring": boolean;
+        "disableCitationAnchoring": boolean;
         /**
           * The citation index.
          */
@@ -703,10 +703,10 @@ export namespace Components {
          */
         "collapsible"?: boolean;
         /**
-          * Option to disable anchoring for HTML citations.
+          * Option to disable citation anchoring.
           * @default false
          */
-        "disableHtmlCitationAnchoring"?: boolean;
+        "disableCitationAnchoring"?: boolean;
         /**
           * A list of fields to include with the citations used to generate the answer.
          */
@@ -852,10 +852,10 @@ export namespace Components {
          */
         "collapsible"?: boolean;
         /**
-          * Option to disable anchoring for HTML citations.
+          * Option to disable citation anchoring.
           * @default false
          */
-        "disableHtmlCitationAnchoring"?: boolean;
+        "disableCitationAnchoring"?: boolean;
         /**
           * A list of fields to include with the citations used to generate the answer.
          */
@@ -5632,10 +5632,10 @@ declare namespace LocalJSX {
          */
         "citation": GeneratedAnswerCitation;
         /**
-          * Option to disable anchoring for HTML citations.
+          * Option to disable citation anchoring.
           * @default false
          */
-        "disableHtmlCitationAnchoring"?: boolean;
+        "disableCitationAnchoring"?: boolean;
         /**
           * The citation index.
          */
@@ -6143,10 +6143,10 @@ declare namespace LocalJSX {
          */
         "collapsible"?: boolean;
         /**
-          * Option to disable anchoring for HTML citations.
+          * Option to disable citation anchoring.
           * @default false
          */
-        "disableHtmlCitationAnchoring"?: boolean;
+        "disableCitationAnchoring"?: boolean;
         /**
           * A list of fields to include with the citations used to generate the answer.
          */
@@ -6289,10 +6289,10 @@ declare namespace LocalJSX {
          */
         "collapsible"?: boolean;
         /**
-          * Option to disable anchoring for HTML citations.
+          * Option to disable citation anchoring.
           * @default false
          */
-        "disableHtmlCitationAnchoring"?: boolean;
+        "disableCitationAnchoring"?: boolean;
         /**
           * A list of fields to include with the citations used to generate the answer.
          */

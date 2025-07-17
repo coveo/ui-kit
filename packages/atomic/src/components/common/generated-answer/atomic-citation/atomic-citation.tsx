@@ -36,10 +36,10 @@ export class AtomicCitation {
    */
   @Prop() interactiveCitation!: InteractiveCitation;
   /**
-   * Option to disable anchoring for HTML citations.
+   * Option to disable citation anchoring.
    * @default false
    */
-  @Prop() disableHtmlCitationAnchoring: boolean = false;
+  @Prop() disableCitationAnchoring: boolean = false;
 
   @State() public isOpen = false;
 
@@ -107,7 +107,7 @@ export class AtomicCitation {
     text?: string,
     filetype?: string
   ) {
-    if (this.disableHtmlCitationAnchoring || filetype !== 'html' || !text) {
+    if (this.disableCitationAnchoring || filetype !== 'html' || !text) {
       return uri;
     }
     const highlight = extractTextToHighlight(text);
