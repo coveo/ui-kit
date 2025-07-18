@@ -9,26 +9,13 @@
       rel="stylesheet"
       href="https://fonts.googleapis.com/css?family=Lexend:200,300,400,500,600,700,900&display=swap"
     />
-    <link href="/atomic/themes/coveo.css" rel="stylesheet" />
+    <link
+      href="https://static.cloud.coveo.com/atomic/v3/themes/coveo.css"
+      rel="stylesheet"
+    />
     <link href="/index.css" rel="stylesheet" />
-    <!--
-      When using the Coveo CDN - Make sure you're using the same minor version as the packaged Atomic.
-      E.g., if you have "@coveo/atomic@1.44.3" installed, use the "/atomic/v1.44/" path.
-
-      <script type="module" src="https://static.cloud.coveo.com/atomic/vMAJOR.MINOR/atomic.esm.js"></script>
-    -->
-    <script type="module" src="/atomic/atomic.esm.js"></script>
     <!-- Custom Elements Lazy Loading -->
     <script type="module" src="/build/my-custom-components.esm.js"></script>
-    <!-- <script type="module">
-      /**
-       * To import modules from `@coveo/headless`, you can use the following syntax:
-       * import { moduleName } from "./headless/headless.esm.js";
-       * Replace `moduleName` with the specific module you want to import from the `@coveo/headless` library.
-       * For example, if you want to import the `buildSearchEngine`,  you would use:
-       */
-      import { buildSearchEngine } from "./headless/headless.esm.js";
-    </script> -->
   </head>
   <body>
     <atomic-search-interface
