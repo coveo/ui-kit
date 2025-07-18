@@ -30,7 +30,13 @@ const meta: Meta = {
   title: 'Atomic-Commerce/Product Template Components/ProductRating',
   id: 'atomic-product-rating',
   render: renderComponent,
+  decorators: [
+    productTemplateDecorator,
+    commerceProductListDecorator,
+    commerceInterfaceDecorator,
+  ],
   parameters,
+  play: initializeCommerceInterface,
   argTypes: {
     'attributes-field': {
       name: 'field',
@@ -60,22 +66,10 @@ export default meta;
 
 export const Default: Story = {
   name: 'atomic-product-rating',
-  decorators: [
-    productTemplateDecorator,
-    commerceProductListDecorator,
-    commerceInterfaceDecorator,
-  ],
-  play: initializeCommerceInterface,
 };
 
 export const WithARatingDetailsField: Story = {
   name: 'With Rating Details Field',
-  decorators: [
-    productTemplateDecorator,
-    commerceProductListDecorator,
-    commerceInterfaceDecorator,
-  ],
-  play: initializeCommerceInterface,
   args: {
     'attributes-rating-details-field': 'ec_rating',
   },
@@ -83,12 +77,6 @@ export const WithARatingDetailsField: Story = {
 
 export const WithAMaxValueInIndex: Story = {
   name: 'With Custom Max Value',
-  decorators: [
-    productTemplateDecorator,
-    commerceProductListDecorator,
-    commerceInterfaceDecorator,
-  ],
-  play: initializeCommerceInterface,
   args: {
     'attributes-max-value-in-index': 10,
   },
@@ -96,12 +84,6 @@ export const WithAMaxValueInIndex: Story = {
 
 export const WithADifferentIcon: Story = {
   name: 'With Custom Icon',
-  decorators: [
-    productTemplateDecorator,
-    commerceProductListDecorator,
-    commerceInterfaceDecorator,
-  ],
-  play: initializeCommerceInterface,
   args: {
     'attributes-icon':
       'https://raw.githubusercontent.com/Rush/Font-Awesome-SVG-PNG/master/black/svg/circle.svg',
