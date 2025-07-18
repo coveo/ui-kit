@@ -10,6 +10,7 @@ runs:
   steps:
     - run: npx cypress install
       shell: bash
+      working-directory: packages/samples/headless-ssr
     - uses: cypress-io/github-action@v5
       name: Run Cypress
       with:

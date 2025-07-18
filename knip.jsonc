@@ -1,0 +1,124 @@
+{
+  "$schema": "https://unpkg.com/knip@5/schema.json",
+
+  // Always ignoring quantic since it throws errors. Adding those two lines is necessary for 100% of quantic to be ignored.
+  "ignoreWorkspaces": ["packages/quantic"],
+  "ignore": ["packages/quantic/**"],
+
+  // Enable back the plugin once https://github.com/webpro-nl/knip/issues/1154 is resolved.
+  "biome": false,
+  "workspaces": {
+    // The root workspace is the entry point for the monorepo scripts and tools.
+    ".": {
+      "entry": ["hooks/*.js", "scripts/**/*.{js,mjs}"],
+      "ignoreDependencies": ["@commitlint/config-conventional"],
+      "ignoreBinaries": ["ts-node", "dev"]
+      //   "ignore": ["**/*"]
+    },
+
+    // Projects to enable back bunch by bunch.
+
+    // Modifying entry points and ignored files for certain packages.
+    "packages/headless": {
+      //   "entry": ["src/*index.ts", "ponyfills/*.js"],
+      //   "ignoreDependencies": ["navigator.sendbeacon"]
+      "ignore": ["**/*"]
+    },
+    "packages/atomic-angular/projects/atomic-angular": {
+      //   "entry": ["src/public-api.ts"],
+      //   "ignore": ["src/lib/stencil-generated/**/*.ts"]
+      "ignore": ["**/*"]
+    },
+    "packages/atomic-hosted-page": {
+      //   "entry": [
+      //     "src/atomic-hosted-page.esm.ts",
+      //     "loader/index.js",
+      //     "dev/vite.config.ts"
+      //   ],
+      //   "ignore": ["cdn/**"]
+      "ignore": ["**/*"]
+    },
+    "packages/atomic-react": {
+      //   "entry": ["src/*index.ts"],
+      //   "ignore": ["src/components/stencil-generated/**/*.{ts,tsx}"]
+      "ignore": ["**/*"]
+    },
+    "packages/headless-react": {
+      //   "ignoreDependencies": ["@types/react-dom", "@types/react"]
+      "ignore": ["**/*"]
+    },
+    "packages/documentation": {
+      //   "entry": ["**/assets/**/*.js", "**/lib/*.ts"]
+      "ignore": ["**/*"]
+    },
+    "packages/auth": {
+      //   "entry": ["src/auth.ts"],
+      "ignore": ["**/*"]
+    },
+    "packages/samples/headless-commerce-react": {
+      // Can be removed once the deprecated controller is removed from headless.
+      //   "ignore": ["src/components/legacy-field-suggestions/**"]
+      "ignore": ["**/*"]
+    },
+    "packages/samples/headless-react": {
+      //   "entry": ["server/server.tsx", "src/index.tsx"]
+      "ignore": ["**/*"]
+    },
+
+    "packages/samples/headless-commerce-ssr-remix": {
+      "ignore": ["**/*"]
+    },
+    "packages/samples/headless-ssr-commerce-nextjs": {
+      "ignore": ["**/*"]
+    },
+    "utils/ci": {
+      "ignore": ["**/*"]
+    },
+    "utils/cdn": {
+      "ignore": ["**/*"]
+    },
+    "packages/bueno": {
+      "ignore": ["**/*"]
+    },
+    "packages/samples/atomic-next": {
+      "ignore": ["**/*"]
+    },
+    "packages/samples/vuejs": {
+      "ignore": ["**/*"]
+    },
+    "packages/samples/atomic-react": {
+      "ignore": ["**/*"]
+    },
+    "packages/atomic-angular": {
+      "ignore": ["**/*"]
+    },
+    "packages/samples/angular": {
+      "ignore": ["**/*"]
+    },
+    "packages/shopify": {
+      "ignore": ["**/*"]
+    },
+
+    // Disabling a bunch of packages since they cause issues with knip.
+    // Particularly, projects using stencil don't really have a proper entry point because of stencil's magic.
+    // We can enable some of those later.
+    "packages/atomic": {
+      "ignore": ["**/*"]
+    },
+    "packages/create-atomic": {
+      "ignore": ["**/*"]
+    },
+    "packages/create-atomic-template": {
+      "ignore": ["**/*"]
+    },
+    "packages/samples/stencil": {
+      "ignore": ["**/*"]
+    },
+    "packages/samples/headless-ssr": {
+      "ignore": ["**/*"]
+    },
+    "packages/samples/iife": {
+      "ignore": ["**/*"]
+    }
+  }
+}
