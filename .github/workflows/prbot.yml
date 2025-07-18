@@ -41,6 +41,8 @@ jobs:
   build-windows:
     name: 'Build Windows'
     runs-on: windows-latest
+    permissions:
+      contents: read
     steps:
       - name: Harden Runner
         uses: step-security/harden-runner@0634a2670c59f64b4a01f0f96f84700a4088b9f0 # v2.12.0
