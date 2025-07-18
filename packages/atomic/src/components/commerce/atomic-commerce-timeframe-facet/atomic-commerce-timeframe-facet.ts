@@ -17,7 +17,6 @@ import {
   type DateFacetState,
   type DateFacetValue,
   type DateFilterRange,
-  type DateRangeRequest,
   deserializeRelativeDate,
   type ProductListingSummaryState,
   type SearchSummaryState,
@@ -27,6 +26,7 @@ import {type CSSResultGroup, html, LitElement, unsafeCSS} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {when} from 'lit/directives/when.js';
 import '../../common/atomic-facet-date-input/atomic-facet-date-input';
+import type {FacetDateInputEventDetails} from '../../common/atomic-facet-date-input/atomic-facet-date-input';
 import {shouldDisplayInputForFacetRange} from '../../common/facets/facet-common';
 import type {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface';
 import styles from './atomic-commerce-timeframe-facet.tw.css';
@@ -267,9 +267,12 @@ export class AtomicCommerceTimeframeFacet
     return html`
       <atomic-facet-date-input
         .label=${this.displayName}
-        .rangeGetter=${() => this.inputRange}
+        .inputRange=${this.inputRange}
         .facetId=${this.facetState.facetId}
-        .rangeSetter=${({start, end, endInclusive}: DateRangeRequest) => {
+        @atomic-date-input-apply=${(
+          event: CustomEvent<FacetDateInputEventDetails>
+        ) => {
+          const {start, end, endInclusive} = event.detail;
           this.facet.setRanges([
             {
               start,
@@ -278,8 +281,8 @@ export class AtomicCommerceTimeframeFacet
               state: 'selected',
             },
           ]);
+          this.applyDateInput(event);
         }}
-        @atomic-date-input-apply=${this.applyDateInput}
       ></atomic-facet-date-input>
     `;
   }

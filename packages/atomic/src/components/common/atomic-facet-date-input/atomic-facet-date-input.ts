@@ -1,4 +1,4 @@
-import {AnyBindings} from '@/src/components';
+import type {AnyBindings} from '@/src/components';
 import {renderButton} from '@/src/components/common/button';
 import {bindingGuard} from '@/src/decorators/binding-guard';
 import {errorGuard} from '@/src/decorators/error-guard';
@@ -18,8 +18,14 @@ import {ifDefined} from 'lit/directives/if-defined.js';
 import {createRef, ref, type Ref} from 'lit/directives/ref.js';
 import styles from './atomic-facet-date-input.tw.css';
 
+export type FacetDateInputEventDetails = Omit<DateRangeRequest, 'state'>;
+
 /**
  * Internal component made to be integrated in a TimeframeFacet.
+ *
+ * @event atomic-date-input-apply: FacetDateInputEventDetails - Fired when the user applies a date range selection.
+ * The event detail contains the date range with start and end dates.
+ *
  * @internal
  */
 @customElement('atomic-facet-date-input')
@@ -36,12 +42,7 @@ export class AtomicFacetDateInput
   private startRef: Ref<HTMLInputElement> = createRef();
   private endRef: Ref<HTMLInputElement> = createRef();
 
-  @property({type: Object}) public rangeGetter!: () =>
-    | DateFilterRange
-    | undefined;
-  @property({type: Object}) public rangeSetter!: (
-    range: DateRangeRequest
-  ) => void;
+  @property({type: Object}) public inputRange: DateFilterRange | undefined;
   @property() public facetId!: string;
   @property() public label!: string;
   @property() public min?: string;
@@ -54,9 +55,13 @@ export class AtomicFacetDateInput
   connectedCallback() {
     super.connectedCallback();
     this.validateParentComponent();
-    const range = this.rangeGetter();
-    this.start = range ? parseDate(range.start).toDate() : undefined;
-    this.end = range ? parseDate(range.end).toDate() : undefined;
+
+    this.start = this.inputRange
+      ? parseDate(this.inputRange.start).toDate()
+      : undefined;
+    this.end = this.inputRange
+      ? parseDate(this.inputRange.end).toDate()
+      : undefined;
   }
 
   /**
@@ -112,25 +117,29 @@ export class AtomicFacetDateInput
       return;
     }
 
-    const eventDict = {
-      detail: {
-        start: this.start,
-        end: this.end,
-      },
-      bubbles: true,
-    };
-
-    this.dispatchEvent(new CustomEvent('atomic-date-input-apply', eventDict));
-
-    // Backwards compatibility for stencil components listening this event
-    this.dispatchEvent(new CustomEvent('atomic/dateInputApply', eventDict));
-
     const rangeRequest = buildDateRange({
       start: this.start!,
       end: new Date(this.end!.getTime()).setHours(23, 59, 59, 999),
     });
 
-    this.rangeSetter(rangeRequest);
+    const eventDict = {
+      detail: {
+        start: rangeRequest.start,
+        end: rangeRequest.end,
+        endInclusive: rangeRequest.endInclusive,
+      },
+      bubbles: true,
+    };
+
+    this.dispatchEvent(
+      new CustomEvent<FacetDateInputEventDetails>(
+        'atomic-date-input-apply',
+        eventDict
+      )
+    );
+
+    // Backwards compatibility for stencil components listening this event
+    this.dispatchEvent(new CustomEvent('atomic/dateInputApply', eventDict));
   }
 
   private formattedDateValue(date?: string | Date) {
@@ -158,8 +167,6 @@ export class AtomicFacetDateInput
     // Fallback for Safari < 14.1, date with format yyyy-mm-dd over 1400 (API limit)
     const pattern =
       '^(1[4-9]\\d{2}|2\\d{3})-(0[1-9]|1[0-2])-(0[1-9]|[12]\\d|3[01])$';
-
-    const range = this.rangeGetter();
 
     return html`
       <form
@@ -191,7 +198,7 @@ export class AtomicFacetDateInput
           max=${ifDefined(
             this.end ? this.formattedDateValue(this.end) : this.max
           )}
-          .value=${this.formattedDateValue(range?.start)}
+          .value=${this.formattedDateValue(this.inputRange?.start)}
           @input=${(e: Event) => {
             this.start = parseDate(
               (e.target as HTMLInputElement).value
@@ -217,7 +224,7 @@ export class AtomicFacetDateInput
           required
           min=${ifDefined(this.formattedDateValue(this.start) || this.min)}
           max=${ifDefined(this.max)}
-          .value=${this.formattedDateValue(range?.end)}
+          .value=${this.formattedDateValue(this.inputRange?.end)}
           @input=${(e: Event) => {
             this.end = parseDate((e.target as HTMLInputElement).value).toDate();
           }}

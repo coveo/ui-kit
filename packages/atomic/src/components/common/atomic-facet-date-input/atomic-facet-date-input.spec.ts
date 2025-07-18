@@ -15,16 +15,17 @@ describe('AtomicFacetDateInput', () => {
     props: Partial<{
       facetId: string;
       label: string;
-      rangeGetter: () => DateFilterRange | undefined;
-      rangeSetter: (range: DateFilterRange) => void;
+      inputRange: DateFilterRange;
+      dateInputCallback: () => DateFilterRange;
       validParent: boolean;
     }> = {}
   ) => {
     const dateInputTemplate = html`<atomic-facet-date-input
       .facetId=${props.facetId ?? 'test-facet'}
       .label=${props.label ?? 'test-label'}
-      .rangeGetter=${props.rangeGetter ?? vi.fn(() => undefined)}
-      .rangeSetter=${props.rangeSetter ?? vi.fn()}
+      .inputRange=${props.inputRange ?? {start: '', end: ''}}
+      @atomic-date-input-apply=${() =>
+        props.dateInputCallback ? props.dateInputCallback() : vi.fn()}
     ></atomic-facet-date-input>`;
 
     const {element} =
@@ -127,20 +128,19 @@ describe('AtomicFacetDateInput', () => {
     );
   });
 
-  it('should call rangeGetter when component is connected', async () => {
-    const rangeGetterSpy = vi.fn(() => undefined);
-
-    await setupElement({
-      rangeGetter: rangeGetterSpy,
+  it('should set the inputs to the provided input range', async () => {
+    const {startInput, endInput} = await setupElement({
+      inputRange: {start: '2023-01-01', end: '2023-12-31'},
     });
 
-    expect(rangeGetterSpy).toHaveBeenCalled();
+    expect(startInput).toHaveValue('2023-01-01');
+    expect(endInput).toHaveValue('2023-12-31');
   });
 
   it('should call rangeSetter when form is submitted', async () => {
-    const rangeSetterSpy = vi.fn();
+    const dateInputCallback = vi.fn();
     const {applyButton, startInput, endInput} = await setupElement({
-      rangeSetter: rangeSetterSpy,
+      dateInputCallback,
     });
 
     const {start, end} = {
@@ -152,6 +152,6 @@ describe('AtomicFacetDateInput', () => {
     await userEvent.type(endInput, end);
     await userEvent.click(applyButton);
 
-    expect(rangeSetterSpy).toHaveBeenCalled();
+    expect(dateInputCallback).toHaveBeenCalled();
   });
 });

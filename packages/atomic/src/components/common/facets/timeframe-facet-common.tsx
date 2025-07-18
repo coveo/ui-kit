@@ -351,16 +351,17 @@ export class TimeframeFacetCommon {
 
   private renderDateInput() {
     return (
-      <atomic-facet-date-input
+      <atomic-stencil-facet-date-input
         min={this.props.min}
         max={this.props.max}
+        bindings={this.props.bindings}
         label={this.props.label}
         facetId={this.filter!.state!.facetId}
         rangeGetter={() => this.filter!.state.range}
         rangeSetter={(request: DateRangeRequest) => {
           this.filter!.setRange(request);
         }}
-      ></atomic-facet-date-input>
+      ></atomic-stencil-facet-date-input>
     );
   }
 
