@@ -33,7 +33,7 @@ describe('filters', () => {
       return {
         filterSection: element.querySelector('div[part="filter-section"]'),
         sectionTitle: element.querySelector(
-          'h1[part*="section-filters-title"]'
+          'h2[part*="section-filters-title"]'
         ),
         facetsSlot: element.querySelector('slot[name="facets"]'),
         automaticFacetsSlot: element.querySelector(
