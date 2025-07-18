@@ -1,10 +1,10 @@
 @reference '../../../../utils/coveo.tw.css';
 
-input[type='text']:focus-visible ~ .search-icon {
+input[type="text"]:focus-visible ~ .search-icon {
   @apply text-primary;
 }
 
-input[type='text']:hover ~ .search-icon {
+input[type="text"]:hover ~ .search-icon {
   @apply text-primary-light;
 }
 

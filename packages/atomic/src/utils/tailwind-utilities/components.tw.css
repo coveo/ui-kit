@@ -1,5 +1,5 @@
-@import 'tailwindcss/theme' theme(reference);
-@import '../coveo.tw.css' theme(reference);
+@reference 'tailwindcss/theme';
+@reference '../coveo.tw.css';
 
 @layer theme, base, components, utilities;
 

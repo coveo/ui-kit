@@ -1,6 +1,6 @@
-@import 'tailwindcss';
+@import "tailwindcss";
 
-@import './tailwind-utilities/components.tw.css';
+@import "./tailwind-utilities/components.tw.css";
 @reference './coveo.tw.css';
 
 @layer base {

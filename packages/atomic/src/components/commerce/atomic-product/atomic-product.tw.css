@@ -1,4 +1,5 @@
-@import '../../common/template-system/template-system.pcss';
+@import "../../common/template-system/template-system.pcss";
+@reference '../../../utils/coveo.tw.css';
 
 :host {
   @apply atomic-template-system;
@@ -12,6 +13,7 @@
         display: none;
       }
     }
+
     &.display-grid {
       &.image-large,
       &.image-small,
@@ -24,50 +26,39 @@
       }
 
       @media (width >= theme(--breakpoint-desktop)) {
-        &.image-large {
-          atomic-product-section-children .product-child {
-            @apply aspect-square-[auto];
-            width: 16.65%;
-          }
+        &.image-large atomic-product-section-children .product-child {
+          @apply aspect-square-[auto];
+          width: 16.65%;
         }
 
-        &.image-small {
-          atomic-product-section-children .product-child {
-            @apply aspect-square-[auto];
-            width: 16.65%;
-          }
+        &.image-small atomic-product-section-children .product-child {
+          @apply aspect-square-[auto];
+          width: 16.65%;
         }
 
-        &.image-icon,
-        &.image-none {
-          atomic-product-section-children .product-child {
-            width: 2rem;
-            height: 2rem;
-          }
+        &.image-icon atomic-product-section-children .product-child,
+        &.image-none atomic-product-section-children .product-child {
+          width: 2rem;
+          height: 2rem;
         }
       }
 
       @media not all and (width >= theme(--breakpoint-desktop)) {
-        &.image-large {
-          atomic-product-section-children .product-child {
-            @apply aspect-square-[auto];
-            width: 16.65%;
-          }
-        }
-        &.image-small {
-          atomic-product-section-children .product-child {
-            @apply aspect-square-[auto];
-            width: 16.65%;
-            max-width: 4.75rem;
-          }
+        &.image-large atomic-product-section-children .product-child {
+          @apply aspect-square-[auto];
+          width: 16.65%;
         }
 
-        &.image-icon,
-        &.image-none {
-          atomic-product-section-children .product-child {
-            width: 2rem;
-            height: 2rem;
-          }
+        &.image-small atomic-product-section-children .product-child {
+          @apply aspect-square-[auto];
+          width: 16.65%;
+          max-width: 4.75rem;
+        }
+
+        &.image-icon atomic-product-section-children .product-child,
+        &.image-none atomic-product-section-children .product-child {
+          width: 2rem;
+          height: 2rem;
         }
       }
 
@@ -81,6 +72,7 @@
           }
         }
       }
+
       &.density-normal {
         &.image-icon,
         &.image-none,
@@ -114,30 +106,26 @@
           }
         }
 
-        &.image-small,
-        &.image-large.density-compact,
-        &.image-icon {
-          atomic-product-section-children .product-child {
-            width: 2rem;
-            height: 2rem;
-          }
+        &.image-small atomic-product-section-children .product-child,
+        &.image-large.density-compact
+          atomic-product-section-children
+          .product-child,
+        &.image-icon atomic-product-section-children .product-child {
+          width: 2rem;
+          height: 2rem;
         }
       }
 
       @media not all and (width >= theme(--breakpoint-desktop)) {
-        &.image-large {
-          atomic-product-section-children .product-child {
-            @apply aspect-square-[auto];
-            width: 16.65%;
-          }
+        &.image-large atomic-product-section-children .product-child {
+          @apply aspect-square-[auto];
+          width: 16.65%;
         }
 
-        &.image-small,
-        &.image-icon {
-          atomic-product-section-children .product-child {
-            width: 2rem;
-            height: 2rem;
-          }
+        &.image-small atomic-product-section-children .product-child,
+        &.image-icon atomic-product-section-children .product-child {
+          width: 2rem;
+          height: 2rem;
         }
       }
     }

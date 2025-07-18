@@ -3,7 +3,7 @@
 .value-count {
   @apply text-neutral-dark ml-1.5;
 
-  [part='value-exclude-button'] + & {
+  [part="value-exclude-button"] + & {
     @apply mr-2;
   }
 }
