@@ -1756,17 +1756,6 @@ export namespace Components {
         "ratingDetailsField"?: string;
     }
     /**
-     * @alpha This section is intended to display components that allow the user to perform an action on a product without having to view its details.
-     * In commerce interface, the user can usually add the product to their cart or wish list.
-     * Behavior:
-     * * Exposes the `--line-height` CSS variable so child elements can adjust to the current line height.
-     * ** You should ensure that elements inside of it have `height: var(--line-height)`.
-     * * Is a wrapping flexbox with a gap.
-     * * May appear over, next to, or beneath the visual section.
-     */
-    interface AtomicProductSectionActions {
-    }
-    /**
      * @alpha This section is meant to render badges that highlight special features of the product.
      * Behavior:
      * * Exposes the `--line-height` CSS variable so child elements can adjust to the current line height.
@@ -4302,21 +4291,6 @@ declare global {
         new (): HTMLAtomicProductRatingElement;
     };
     /**
-     * @alpha This section is intended to display components that allow the user to perform an action on a product without having to view its details.
-     * In commerce interface, the user can usually add the product to their cart or wish list.
-     * Behavior:
-     * * Exposes the `--line-height` CSS variable so child elements can adjust to the current line height.
-     * ** You should ensure that elements inside of it have `height: var(--line-height)`.
-     * * Is a wrapping flexbox with a gap.
-     * * May appear over, next to, or beneath the visual section.
-     */
-    interface HTMLAtomicProductSectionActionsElement extends Components.AtomicProductSectionActions, HTMLStencilElement {
-    }
-    var HTMLAtomicProductSectionActionsElement: {
-        prototype: HTMLAtomicProductSectionActionsElement;
-        new (): HTMLAtomicProductSectionActionsElement;
-    };
-    /**
      * @alpha This section is meant to render badges that highlight special features of the product.
      * Behavior:
      * * Exposes the `--line-height` CSS variable so child elements can adjust to the current line height.
@@ -5382,7 +5356,6 @@ declare global {
         "atomic-product-numeric-field-value": HTMLAtomicProductNumericFieldValueElement;
         "atomic-product-price": HTMLAtomicProductPriceElement;
         "atomic-product-rating": HTMLAtomicProductRatingElement;
-        "atomic-product-section-actions": HTMLAtomicProductSectionActionsElement;
         "atomic-product-section-badges": HTMLAtomicProductSectionBadgesElement;
         "atomic-product-section-bottom-metadata": HTMLAtomicProductSectionBottomMetadataElement;
         "atomic-product-section-children": HTMLAtomicProductSectionChildrenElement;
@@ -7105,17 +7078,6 @@ declare namespace LocalJSX {
         "ratingDetailsField"?: string;
     }
     /**
-     * @alpha This section is intended to display components that allow the user to perform an action on a product without having to view its details.
-     * In commerce interface, the user can usually add the product to their cart or wish list.
-     * Behavior:
-     * * Exposes the `--line-height` CSS variable so child elements can adjust to the current line height.
-     * ** You should ensure that elements inside of it have `height: var(--line-height)`.
-     * * Is a wrapping flexbox with a gap.
-     * * May appear over, next to, or beneath the visual section.
-     */
-    interface AtomicProductSectionActions {
-    }
-    /**
      * @alpha This section is meant to render badges that highlight special features of the product.
      * Behavior:
      * * Exposes the `--line-height` CSS variable so child elements can adjust to the current line height.
@@ -8714,7 +8676,6 @@ declare namespace LocalJSX {
         "atomic-product-numeric-field-value": AtomicProductNumericFieldValue;
         "atomic-product-price": AtomicProductPrice;
         "atomic-product-rating": AtomicProductRating;
-        "atomic-product-section-actions": AtomicProductSectionActions;
         "atomic-product-section-badges": AtomicProductSectionBadges;
         "atomic-product-section-bottom-metadata": AtomicProductSectionBottomMetadata;
         "atomic-product-section-children": AtomicProductSectionChildren;
@@ -9079,16 +9040,6 @@ declare module "@stencil/core" {
              * @alpha 
              */
             "atomic-product-rating": LocalJSX.AtomicProductRating & JSXBase.HTMLAttributes<HTMLAtomicProductRatingElement>;
-            /**
-             * @alpha This section is intended to display components that allow the user to perform an action on a product without having to view its details.
-             * In commerce interface, the user can usually add the product to their cart or wish list.
-             * Behavior:
-             * * Exposes the `--line-height` CSS variable so child elements can adjust to the current line height.
-             * ** You should ensure that elements inside of it have `height: var(--line-height)`.
-             * * Is a wrapping flexbox with a gap.
-             * * May appear over, next to, or beneath the visual section.
-             */
-            "atomic-product-section-actions": LocalJSX.AtomicProductSectionActions & JSXBase.HTMLAttributes<HTMLAtomicProductSectionActionsElement>;
             /**
              * @alpha This section is meant to render badges that highlight special features of the product.
              * Behavior:
