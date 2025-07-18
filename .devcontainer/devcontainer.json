@@ -1,22 +1,90 @@
 // For format details, see https://aka.ms/devcontainer.json. For config options, see the
 // README at: https://github.com/devcontainers/templates/tree/main/src/typescript-node
 {
-  "name": "Node.js & TypeScript",
-  // Or use a Dockerfile or Docker Compose file. More info: https://containers.dev/guide/dockerfile
-  "image": "mcr.microsoft.com/devcontainers/typescript-node:1-20-bookworm",
+  "name": "Coveo UI Kit",
+  // Use Node.js 22 to match package.json engines requirement
+  "image": "mcr.microsoft.com/devcontainers/typescript-node:1-22-bookworm",
 
-  // Features to add to the dev container. More info: https://containers.dev/features.
-  // "features": {},
+  // Features to add to the dev container for better caching and tooling
+  "features": {
+    "ghcr.io/devcontainers/features/github-cli:1": {},
+    "ghcr.io/devcontainers/features/node:1": {
+      "nodeGypDependencies": true,
+      "version": "22"
+    }
+  },
 
-  // Use 'forwardPorts' to make a list of ports inside the container available locally.
-  // "forwardPorts": [],
+  // Forward common development ports
+  "forwardPorts": [3000, 3333, 4000, 8080, 9001],
+  "portsAttributes": {
+    "3000": {
+      "label": "Atomic Dev Server",
+      "onAutoForward": "notify"
+    },
+    "3333": {
+      "label": "Storybook",
+      "onAutoForward": "notify"
+    }
+  },
 
-  // Use 'updateContentCommand ' to run commands when the prebuild is created or updated https://docs.github.com/en/codespaces/prebuilding-your-codespaces/configuring-prebuilds#configuring-time-consuming-tasks-to-be-included-in-the-prebuild
-  "onCreateCommand": "CI=true bash -c 'npm ci && npm run build'"
+  // Use updateContentCommand for prebuilds - runs during prebuild creation/update
+  // This significantly reduces time-to-code by pre-installing and building in the prebuild
+  "updateContentCommand": "bash -c 'npm ci --prefer-offline --no-audit --progress=false && npm run build'",
 
-  // Configure tool-specific properties.
-  // "customizations": {},
+  // Fast post-prebuild setup - only runs essential commands after prebuild
+  "postCreateCommand": "npm run postinstall",
 
-  // Uncomment to connect as root instead. More info: https://aka.ms/dev-containers-non-root.
-  // "remoteUser": "root"
+  // Configure VS Code for optimal development experience
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ms-vscode.vscode-typescript-next",
+        "esbenp.prettier-vscode",
+        "bradlc.vscode-tailwindcss",
+        "ms-playwright.playwright",
+        "ms-vscode.vscode-json",
+        "biomejs.biome",
+        "GitHub.copilot",
+        "GitHub.copilot-chat",
+        "ms-vscode.vscode-eslint"
+      ],
+      "settings": {
+        "typescript.preferences.quoteStyle": "single",
+        "editor.formatOnSave": true,
+        "editor.defaultFormatter": "biomejs.biome",
+        "editor.codeActionsOnSave": {
+          "source.organizeImports": "explicit",
+          "source.fixAll": "explicit"
+        },
+        "files.watcherExclude": {
+          "**/node_modules/**": true,
+          "**/dist/**": true,
+          "**/build/**": true
+        },
+        "search.exclude": {
+          "**/node_modules": true,
+          "**/dist": true,
+          "**/build": true,
+          "**/*.lock": true
+        }
+      }
+    }
+  },
+
+  // Environment variables for faster builds and better caching
+  "containerEnv": {
+    "CI": "true",
+    "NODE_OPTIONS": "--max-old-space-size=6144",
+    "NPM_CONFIG_PREFER_OFFLINE": "true",
+    "NPM_CONFIG_AUDIT": "false",
+    "NPM_CONFIG_PROGRESS": "false"
+  },
+
+  // Mount node_modules as a named volume for better performance
+  "mounts": [
+    "source=ui-kit-node_modules,target=${containerWorkspaceFolder}/node_modules,type=volume"
+  ],
+
+  // Use 'vscode' user for better permissions
+  "remoteUser": "vscode"
 }
