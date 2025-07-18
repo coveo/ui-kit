@@ -1,31 +1,31 @@
-atomic-color-facet[field='cat_color']::part(value-Black) {
+atomic-color-facet[field="cat_color"]::part(value-Black) {
   background-color: #222222;
 }
 
-atomic-color-facet[field='cat_color']::part(value-White) {
+atomic-color-facet[field="cat_color"]::part(value-White) {
   background-color: white;
   border: 1px solid var(--atomic-neutral);
 }
 
-atomic-color-facet[field='cat_color']::part(value-Stainless) {
+atomic-color-facet[field="cat_color"]::part(value-Stainless) {
   background-image: linear-gradient(315deg, #d3d3d3 0%, #57606f 74%);
 }
 
-atomic-color-facet[field='cat_color']::part(value-Silver) {
+atomic-color-facet[field="cat_color"]::part(value-Silver) {
   background-color: silver;
   border: 1px solid var(--atomic-neutral);
 }
 
-atomic-color-facet[field='cat_color']::part(value-Gray) {
+atomic-color-facet[field="cat_color"]::part(value-Gray) {
   background-color: gray;
   border: 1px solid var(--atomic-neutral);
 }
 
-atomic-color-facet[field='cat_color']::part(value-Blue) {
+atomic-color-facet[field="cat_color"]::part(value-Blue) {
   background-color: rgb(73, 73, 255);
 }
 
-atomic-color-facet[field='cat_color']::part(value-Multi) {
+atomic-color-facet[field="cat_color"]::part(value-Multi) {
   background-image: linear-gradient(
     315deg,
     #b43a3a 0%,
@@ -52,13 +52,13 @@ atomic-search-interface {
   display: grid;
   grid-template-columns: var(--spacing) 1fr var(--spacing);
   grid-template-areas:
-    '. search      .'
-    '. status      .'
-    '. breadbox    .'
-    '. topbar      .'
-    '. results     .'
-    '. pagination  .'
-    '. .           .';
+    ". search      ."
+    ". status      ."
+    ". breadbox    ."
+    ". topbar      ."
+    ". results     ."
+    ". pagination  ."
+    ". .           .";
 }
 
 .search {
@@ -108,15 +108,15 @@ atomic-did-you-mean {
   margin: var(--spacing) 0;
   display: grid;
   grid-template-areas:
-    'header header header'
-    'pager  .      rpp';
+    "header header header"
+    "pager  .      rpp";
   grid-template-columns: auto 1fr auto;
 }
 
 .pagination {
   grid-template-areas:
-    'header header header'
-    'lmr    lmr    lmr';
+    "header header header"
+    "lmr    lmr    lmr";
 }
 
 atomic-load-more-results {
@@ -145,13 +145,13 @@ atomic-load-more-results {
     column-gap: var(--spacing-col);
     grid-template-columns: 1fr minmax(150px, 325px) minmax(500px, 1100px) 1fr;
     grid-template-areas:
-      '. .      search      .'
-      '. facets breadbox .'
-      '. facets topbar      .'
-      '. facets results     .'
-      '. facets pagination  .'
-      '. facets status      .'
-      '. facets .           .';
+      ". .      search      ."
+      ". facets breadbox ."
+      ". facets topbar      ."
+      ". facets results     ."
+      ". facets pagination  ."
+      ". facets status      ."
+      ". facets .           .";
   }
 
   atomic-refine-toggle {
