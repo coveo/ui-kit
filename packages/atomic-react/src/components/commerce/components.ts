@@ -23,10 +23,17 @@ import {
   AtomicIcon as LitAtomicIcon,
   AtomicLayoutSection as LitAtomicLayoutSection,
   AtomicProduct as LitAtomicProduct,
+  AtomicProductSectionDescription as LitAtomicProductSectionDescription,
   AtomicProductText as LitAtomicProductText,
 } from '@coveo/atomic/components';
 import {createComponent} from '@lit/react';
 import React from 'react';
+
+export const AtomicProductSectionDescription = createComponent({
+  tagName: 'atomic-product-section-description',
+  react: React,
+  elementClass: LitAtomicProductSectionDescription,
+});
 
 export const AtomicCommerceBreadbox = createComponent({
   tagName: 'atomic-commerce-breadbox',

@@ -1794,16 +1794,6 @@ export namespace Components {
     interface AtomicProductSectionChildren {
     }
     /**
-     * @alpha This section is intended to render an informative summary of the product's description.
-     * Behavior:
-     * * Has a fixed height of one to three lines, depending on the layout and density.
-     * * Ellipses overflowing text.
-     * * Exposes the `--line-height` CSS variable so child elements can adjust to the current line height.
-     * * Has a defined CSS `color` property for text.
-     */
-    interface AtomicProductSectionDescription {
-    }
-    /**
      * @alpha This section is intended to display the field that's important for its search criteria.
      * For example, in Commerce, a product's price is often more important than the title itself.
      * Behavior:
@@ -4356,20 +4346,6 @@ declare global {
         new (): HTMLAtomicProductSectionChildrenElement;
     };
     /**
-     * @alpha This section is intended to render an informative summary of the product's description.
-     * Behavior:
-     * * Has a fixed height of one to three lines, depending on the layout and density.
-     * * Ellipses overflowing text.
-     * * Exposes the `--line-height` CSS variable so child elements can adjust to the current line height.
-     * * Has a defined CSS `color` property for text.
-     */
-    interface HTMLAtomicProductSectionDescriptionElement extends Components.AtomicProductSectionDescription, HTMLStencilElement {
-    }
-    var HTMLAtomicProductSectionDescriptionElement: {
-        prototype: HTMLAtomicProductSectionDescriptionElement;
-        new (): HTMLAtomicProductSectionDescriptionElement;
-    };
-    /**
      * @alpha This section is intended to display the field that's important for its search criteria.
      * For example, in Commerce, a product's price is often more important than the title itself.
      * Behavior:
@@ -5386,7 +5362,6 @@ declare global {
         "atomic-product-section-badges": HTMLAtomicProductSectionBadgesElement;
         "atomic-product-section-bottom-metadata": HTMLAtomicProductSectionBottomMetadataElement;
         "atomic-product-section-children": HTMLAtomicProductSectionChildrenElement;
-        "atomic-product-section-description": HTMLAtomicProductSectionDescriptionElement;
         "atomic-product-section-emphasized": HTMLAtomicProductSectionEmphasizedElement;
         "atomic-product-section-metadata": HTMLAtomicProductSectionMetadataElement;
         "atomic-product-section-name": HTMLAtomicProductSectionNameElement;
@@ -7143,16 +7118,6 @@ declare namespace LocalJSX {
     interface AtomicProductSectionChildren {
     }
     /**
-     * @alpha This section is intended to render an informative summary of the product's description.
-     * Behavior:
-     * * Has a fixed height of one to three lines, depending on the layout and density.
-     * * Ellipses overflowing text.
-     * * Exposes the `--line-height` CSS variable so child elements can adjust to the current line height.
-     * * Has a defined CSS `color` property for text.
-     */
-    interface AtomicProductSectionDescription {
-    }
-    /**
      * @alpha This section is intended to display the field that's important for its search criteria.
      * For example, in Commerce, a product's price is often more important than the title itself.
      * Behavior:
@@ -8718,7 +8683,6 @@ declare namespace LocalJSX {
         "atomic-product-section-badges": AtomicProductSectionBadges;
         "atomic-product-section-bottom-metadata": AtomicProductSectionBottomMetadata;
         "atomic-product-section-children": AtomicProductSectionChildren;
-        "atomic-product-section-description": AtomicProductSectionDescription;
         "atomic-product-section-emphasized": AtomicProductSectionEmphasized;
         "atomic-product-section-metadata": AtomicProductSectionMetadata;
         "atomic-product-section-name": AtomicProductSectionName;
@@ -9113,15 +9077,6 @@ declare module "@stencil/core" {
              * * Shows children at the bottom of the result, indented and wrapped in a border.
              */
             "atomic-product-section-children": LocalJSX.AtomicProductSectionChildren & JSXBase.HTMLAttributes<HTMLAtomicProductSectionChildrenElement>;
-            /**
-             * @alpha This section is intended to render an informative summary of the product's description.
-             * Behavior:
-             * * Has a fixed height of one to three lines, depending on the layout and density.
-             * * Ellipses overflowing text.
-             * * Exposes the `--line-height` CSS variable so child elements can adjust to the current line height.
-             * * Has a defined CSS `color` property for text.
-             */
-            "atomic-product-section-description": LocalJSX.AtomicProductSectionDescription & JSXBase.HTMLAttributes<HTMLAtomicProductSectionDescriptionElement>;
             /**
              * @alpha This section is intended to display the field that's important for its search criteria.
              * For example, in Commerce, a product's price is often more important than the title itself.
