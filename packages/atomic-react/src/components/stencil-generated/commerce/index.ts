@@ -1,11 +1,11 @@
 /* eslint-disable */
 /* tslint:disable */
 /* auto-generated react proxies */
-import { createReactComponent } from './react-component-lib/index.js';
+import { createReactComponent } from './react-component-lib';
 
 import type { JSX } from '@coveo/atomic';
 
-import { defineCustomElements } from '@coveo/atomic/loader';
+import { defineCustomElements } from '@coveo/atomic/dist/atomic/loader';
 
 defineCustomElements();
 export const AtomicCommerceCategoryFacet = /*@__PURE__*/createReactComponent<JSX.AtomicCommerceCategoryFacet, HTMLAtomicCommerceCategoryFacetElement>('atomic-commerce-category-facet');
@@ -34,6 +34,5 @@ export const AtomicProductSectionDescription = /*@__PURE__*/createReactComponent
 export const AtomicProductSectionEmphasized = /*@__PURE__*/createReactComponent<JSX.AtomicProductSectionEmphasized, HTMLAtomicProductSectionEmphasizedElement>('atomic-product-section-emphasized');
 export const AtomicProductSectionMetadata = /*@__PURE__*/createReactComponent<JSX.AtomicProductSectionMetadata, HTMLAtomicProductSectionMetadataElement>('atomic-product-section-metadata');
 export const AtomicProductSectionName = /*@__PURE__*/createReactComponent<JSX.AtomicProductSectionName, HTMLAtomicProductSectionNameElement>('atomic-product-section-name');
-export const AtomicProductSectionVisual = /*@__PURE__*/createReactComponent<JSX.AtomicProductSectionVisual, HTMLAtomicProductSectionVisualElement>('atomic-product-section-visual');
 export const AtomicResultLocalizedText = /*@__PURE__*/createReactComponent<JSX.AtomicResultLocalizedText, HTMLAtomicResultLocalizedTextElement>('atomic-result-localized-text');
 export const AtomicTimeframe = /*@__PURE__*/createReactComponent<JSX.AtomicTimeframe, HTMLAtomicTimeframeElement>('atomic-timeframe');

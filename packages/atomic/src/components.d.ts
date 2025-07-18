@@ -22,7 +22,6 @@ import { Actions, InsightResultActionClickedEvent } from "./components/insight/a
 import { InsightResultAttachToCaseEvent } from "./components/insight/atomic-insight-result-attach-to-case-action/atomic-insight-result-attach-to-case-action";
 import { SelectChildProductEventArgs } from "./components/commerce/atomic-product-children/select-child-product-event";
 import { TruncateAfter } from "./components/common/expandable-text/stencil-expandable-text";
-import { ItemDisplayImageSize as ItemDisplayImageSize1 } from "./components.d";
 import { RecommendationEngine, InteractiveResult as RecsInteractiveResult, LogLevel as RecsLogLevel, Result as RecsResult, ResultTemplate as RecsResultTemplate, ResultTemplateCondition as RecsResultTemplateCondition } from "@coveo/headless/recommendation";
 import { RecsInitializationOptions } from "./components/recommendations/atomic-recs-interface/atomic-recs-interface";
 import { RecsStore } from "./components/recommendations/atomic-recs-interface/store";
@@ -50,7 +49,6 @@ export { Actions, InsightResultActionClickedEvent } from "./components/insight/a
 export { InsightResultAttachToCaseEvent } from "./components/insight/atomic-insight-result-attach-to-case-action/atomic-insight-result-attach-to-case-action";
 export { SelectChildProductEventArgs } from "./components/commerce/atomic-product-children/select-child-product-event";
 export { TruncateAfter } from "./components/common/expandable-text/stencil-expandable-text";
-export { ItemDisplayImageSize as ItemDisplayImageSize1 } from "./components.d";
 export { RecommendationEngine, InteractiveResult as RecsInteractiveResult, LogLevel as RecsLogLevel, Result as RecsResult, ResultTemplate as RecsResultTemplate, ResultTemplateCondition as RecsResultTemplateCondition } from "@coveo/headless/recommendation";
 export { RecsInitializationOptions } from "./components/recommendations/atomic-recs-interface/atomic-recs-interface";
 export { RecsStore } from "./components/recommendations/atomic-recs-interface/store";
@@ -1830,20 +1828,6 @@ export namespace Components {
      * * Has a defined CSS `color` property for text.
      */
     interface AtomicProductSectionName {
-    }
-    /**
-     * @alpha This section is intended to provide visual information about the product.
-     * In commerce, an image is a great shorthand for a product category.
-     * Behavior:
-     * * Has a fixed size that depends on the specified image size, the layout, the density, and the screen size.
-     * ** You should ensure that elements inside of it take the available space.
-     * * Always has a 1:1 aspect ratio.
-     */
-    interface AtomicProductSectionVisual {
-        /**
-          * How large or small the visual section of product using this template should be.
-         */
-        "imageSize"?: Omit<ItemDisplayImageSize, 'icon'>;
     }
     /**
      * The `atomic-query-error` component handles fatal errors when performing a query on the index or Search API. When the error is known, it displays a link to relevant documentation link for debugging purposes. When the error is unknown, it displays a small text area with the JSON content of the error.
@@ -4410,20 +4394,6 @@ declare global {
         new (): HTMLAtomicProductSectionNameElement;
     };
     /**
-     * @alpha This section is intended to provide visual information about the product.
-     * In commerce, an image is a great shorthand for a product category.
-     * Behavior:
-     * * Has a fixed size that depends on the specified image size, the layout, the density, and the screen size.
-     * ** You should ensure that elements inside of it take the available space.
-     * * Always has a 1:1 aspect ratio.
-     */
-    interface HTMLAtomicProductSectionVisualElement extends Components.AtomicProductSectionVisual, HTMLStencilElement {
-    }
-    var HTMLAtomicProductSectionVisualElement: {
-        prototype: HTMLAtomicProductSectionVisualElement;
-        new (): HTMLAtomicProductSectionVisualElement;
-    };
-    /**
      * The `atomic-query-error` component handles fatal errors when performing a query on the index or Search API. When the error is known, it displays a link to relevant documentation link for debugging purposes. When the error is unknown, it displays a small text area with the JSON content of the error.
      */
     interface HTMLAtomicQueryErrorElement extends Components.AtomicQueryError, HTMLStencilElement {
@@ -5390,7 +5360,6 @@ declare global {
         "atomic-product-section-emphasized": HTMLAtomicProductSectionEmphasizedElement;
         "atomic-product-section-metadata": HTMLAtomicProductSectionMetadataElement;
         "atomic-product-section-name": HTMLAtomicProductSectionNameElement;
-        "atomic-product-section-visual": HTMLAtomicProductSectionVisualElement;
         "atomic-query-error": HTMLAtomicQueryErrorElement;
         "atomic-query-summary": HTMLAtomicQuerySummaryElement;
         "atomic-quickview": HTMLAtomicQuickviewElement;
@@ -7181,20 +7150,6 @@ declare namespace LocalJSX {
     interface AtomicProductSectionName {
     }
     /**
-     * @alpha This section is intended to provide visual information about the product.
-     * In commerce, an image is a great shorthand for a product category.
-     * Behavior:
-     * * Has a fixed size that depends on the specified image size, the layout, the density, and the screen size.
-     * ** You should ensure that elements inside of it take the available space.
-     * * Always has a 1:1 aspect ratio.
-     */
-    interface AtomicProductSectionVisual {
-        /**
-          * How large or small the visual section of product using this template should be.
-         */
-        "imageSize"?: Omit<ItemDisplayImageSize, 'icon'>;
-    }
-    /**
      * The `atomic-query-error` component handles fatal errors when performing a query on the index or Search API. When the error is known, it displays a link to relevant documentation link for debugging purposes. When the error is unknown, it displays a small text area with the JSON content of the error.
      */
     interface AtomicQueryError {
@@ -8722,7 +8677,6 @@ declare namespace LocalJSX {
         "atomic-product-section-emphasized": AtomicProductSectionEmphasized;
         "atomic-product-section-metadata": AtomicProductSectionMetadata;
         "atomic-product-section-name": AtomicProductSectionName;
-        "atomic-product-section-visual": AtomicProductSectionVisual;
         "atomic-query-error": AtomicQueryError;
         "atomic-query-summary": AtomicQuerySummary;
         "atomic-quickview": AtomicQuickview;
@@ -9147,15 +9101,6 @@ declare module "@stencil/core" {
              * * Has a defined CSS `color` property for text.
              */
             "atomic-product-section-name": LocalJSX.AtomicProductSectionName & JSXBase.HTMLAttributes<HTMLAtomicProductSectionNameElement>;
-            /**
-             * @alpha This section is intended to provide visual information about the product.
-             * In commerce, an image is a great shorthand for a product category.
-             * Behavior:
-             * * Has a fixed size that depends on the specified image size, the layout, the density, and the screen size.
-             * ** You should ensure that elements inside of it take the available space.
-             * * Always has a 1:1 aspect ratio.
-             */
-            "atomic-product-section-visual": LocalJSX.AtomicProductSectionVisual & JSXBase.HTMLAttributes<HTMLAtomicProductSectionVisualElement>;
             /**
              * The `atomic-query-error` component handles fatal errors when performing a query on the index or Search API. When the error is known, it displays a link to relevant documentation link for debugging purposes. When the error is unknown, it displays a small text area with the JSON content of the error.
              */
