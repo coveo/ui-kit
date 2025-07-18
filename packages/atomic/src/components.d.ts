@@ -191,6 +191,11 @@ export namespace Components {
          */
         "citation": GeneratedAnswerCitation;
         /**
+          * Option to disable citation anchoring.
+          * @default false
+         */
+        "disableCitationAnchoring": boolean;
+        /**
           * The citation index.
          */
         "index": number;
@@ -685,6 +690,11 @@ export namespace Components {
          */
         "collapsible"?: boolean;
         /**
+          * Option to disable citation anchoring.
+          * @default false
+         */
+        "disableCitationAnchoring"?: boolean;
+        /**
           * A list of fields to include with the citations used to generate the answer.
          */
         "fieldsToIncludeInCitations": string;
@@ -828,6 +838,11 @@ export namespace Components {
           * @default false
          */
         "collapsible"?: boolean;
+        /**
+          * Option to disable citation anchoring.
+          * @default false
+         */
+        "disableCitationAnchoring"?: boolean;
         /**
           * A list of fields to include with the citations used to generate the answer.
          */
@@ -5592,6 +5607,11 @@ declare namespace LocalJSX {
          */
         "citation": GeneratedAnswerCitation;
         /**
+          * Option to disable citation anchoring.
+          * @default false
+         */
+        "disableCitationAnchoring"?: boolean;
+        /**
           * The citation index.
          */
         "index": number;
@@ -6085,6 +6105,11 @@ declare namespace LocalJSX {
          */
         "collapsible"?: boolean;
         /**
+          * Option to disable citation anchoring.
+          * @default false
+         */
+        "disableCitationAnchoring"?: boolean;
+        /**
           * A list of fields to include with the citations used to generate the answer.
          */
         "fieldsToIncludeInCitations"?: string;
@@ -6225,6 +6250,11 @@ declare namespace LocalJSX {
           * @default false
          */
         "collapsible"?: boolean;
+        /**
+          * Option to disable citation anchoring.
+          * @default false
+         */
+        "disableCitationAnchoring"?: boolean;
         /**
           * A list of fields to include with the citations used to generate the answer.
          */
