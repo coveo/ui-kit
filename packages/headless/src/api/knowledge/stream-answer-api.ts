@@ -336,13 +336,14 @@ export const constructAnswerQueryParams = (
   const context = selectContext(state);
 
   // For 'select' usage, exclude volatile analytics fields to match serializeQueryArgs behavior
-  const baseAnalyticsParams = fromAnalyticsStateToAnalyticsParams(
-    state.configuration.analytics,
-    navigatorContext,
-    {actionCause: selectSearchActionCause(state)}
-  );
-
-  const analyticsParams = usage === 'select' ? {} : (baseAnalyticsParams ?? {});
+  const analyticsParams =
+    usage === 'select'
+      ? {}
+      : fromAnalyticsStateToAnalyticsParams(
+          state.configuration.analytics,
+          navigatorContext,
+          {actionCause: selectSearchActionCause(state)}
+        );
 
   const searchHub = selectSearchHub(state);
   const pipeline = selectPipeline(state);
