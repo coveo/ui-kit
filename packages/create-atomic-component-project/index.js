@@ -1,13 +1,13 @@
 #!/usr/bin/env node
-import {dirname, resolve} from 'node:path';
 import {
   cpSync,
+  readdirSync,
+  readFileSync,
   renameSync,
   unlinkSync,
   writeFileSync,
-  readFileSync,
-  readdirSync,
 } from 'node:fs';
+import {dirname, resolve} from 'node:path';
 import {cwd} from 'node:process';
 import {fileURLToPath} from 'node:url';
 
@@ -18,9 +18,6 @@ const templateDirPath = resolve(__dirname, templateRelativeDir);
 // TODO: CDX-1428
 class InvalidProjectDirectory extends Error {
   name = 'Invalid project directory';
-  constructor(message) {
-    super(message);
-  }
 
   toJSON() {
     return {

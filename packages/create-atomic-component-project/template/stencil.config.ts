@@ -1,7 +1,6 @@
-import {Config} from '@stencil/core';
-import {spawnSync} from 'node:child_process';
-import html from 'rollup-plugin-html';
 import {coveoCdnResolve} from '@coveo/create-atomic-rollup-plugin';
+import type {Config} from '@stencil/core';
+import html from 'rollup-plugin-html';
 
 export const config: Config = {
   namespace: 'my-custom-components',

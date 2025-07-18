@@ -1,22 +1,18 @@
 #!/usr/bin/env node
 import '@coveo/create-atomic-component-project';
-import {dirname, resolve} from 'node:path';
 import {
   cpSync,
+  readFileSync,
   renameSync,
   unlinkSync,
   writeFileSync,
-  readFileSync,
 } from 'node:fs';
+import {dirname, resolve} from 'node:path';
 import {cwd} from 'node:process';
 import {fileURLToPath} from 'node:url';
 
 /***************** TODO: CDX-1428: Move to @coveo/create-atomic-commons package ******************/
 class SerializableAggregateError extends AggregateError {
-  constructor(errors, name, options) {
-    super(errors, name, options);
-  }
-
   toJSON() {
     return {
       name: this.name,
@@ -87,7 +83,7 @@ const transform = (transformers) => {
  */
 const ensureComponentValidity = (tag) => {
   const errors = [];
-  const alphaAndHyphenOnly = /^[a-z\-]+$/;
+  const alphaAndHyphenOnly = /^[a-z-]+$/;
   const forbiddenLeadingHyphen = /^-/;
   const forbiddenTrailingHyphen = /-$/;
   const forbiddenMultiHyphen = /-{2,}/;
@@ -129,7 +125,7 @@ cpSync(templateDirPath, cwd(), {
   recursive: true,
 });
 
-let componentName = process.argv[2];
+const componentName = process.argv[2];
 if (componentName) {
   ensureComponentValidity(componentName);
   const transformers = [

@@ -6,6 +6,9 @@
   "targets": {
     "build": {
       "executor": "nx:noop"
+    },
+    "test": {
+      "executor": "nx:noop"
     }
   }
 }

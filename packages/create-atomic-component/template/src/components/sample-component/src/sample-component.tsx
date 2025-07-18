@@ -1,13 +1,13 @@
-import {Bindings, initializeBindings} from '@coveo/atomic';
-import {Component, Element, h, State, forceUpdate} from '@stencil/core';
+import {type Bindings, initializeBindings} from '@coveo/atomic';
 import {
-  PagerState,
-  Pager,
-  SearchStatusState,
-  buildSearchStatus,
   buildPager,
-  Unsubscribe,
+  buildSearchStatus,
+  type Pager,
+  type PagerState,
+  type SearchStatusState,
+  type Unsubscribe,
 } from '@coveo/headless';
+import {Component, Element, forceUpdate, h, State} from '@stencil/core';
 
 /**
  * Sample custom Atomic component, initializing itself against a parent search interface in order to retrieve the bindings.
@@ -98,6 +98,7 @@ export class SampleComponent {
     const isSelected = this.pagerController.isCurrentPage(page);
     return (
       <button
+        type='button'
         onClick={() => {
           this.pagerController.selectPage(page);
         }}
@@ -111,6 +112,7 @@ export class SampleComponent {
   private get previous() {
     return (
       <button
+        type='button'
         onClick={() => {
           this.pagerController.previousPage();
         }}
@@ -123,6 +125,7 @@ export class SampleComponent {
   private get next() {
     return (
       <button
+        type='button'
         onClick={() => {
           this.pagerController.nextPage();
         }}
