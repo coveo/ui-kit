@@ -1,4 +1,4 @@
-import {IManifest} from '../fetch-page.js';
+import type {IManifest} from '../fetch-page.js';
 import {defaultLayout} from './default-layout.js';
 import defaultResultTemplate from './default-result-template.js';
 import defaultSearchInterface from './default-search-interface.js';

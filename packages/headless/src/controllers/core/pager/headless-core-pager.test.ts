@@ -37,7 +37,10 @@ describe('Pager', () => {
   function initPager({
     initialState,
     options,
-  }: {initialState?: PagerInitialState; options?: PagerOptions} = {}) {
+  }: {
+    initialState?: PagerInitialState;
+    options?: PagerOptions;
+  } = {}) {
     pager = buildCorePager(engine, {
       options: options ?? {},
       initialState: initialState ?? {},

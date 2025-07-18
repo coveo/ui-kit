@@ -175,7 +175,8 @@ export function buildFilterSuggestions(
       facetSearch.search();
     },
 
-    getSearchParameters: (value: SpecificFacetSearchResult): string => searchSerializer.serialize({
+    getSearchParameters: (value: SpecificFacetSearchResult): string =>
+      searchSerializer.serialize({
         q: facetSearchStateSelector(getState()).query,
         f: {[options.facetId]: [value.rawValue]},
       }),
@@ -193,8 +194,9 @@ export function buildFilterSuggestions(
     },
 
     get state() {
-      const {displayName, field, facetId} =
-        facetForFieldSuggestionsSelector(getState());
+      const {displayName, field, facetId} = facetForFieldSuggestionsSelector(
+        getState()
+      );
       return {
         displayName,
         field,

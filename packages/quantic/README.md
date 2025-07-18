@@ -105,8 +105,6 @@ https://your-salesforce-lws-enabled-scratch-org-instance.force.com/examples
 The 'Quantic Examples' community (LWS disabled) is ready, you can access it at the following URL:
 https://your-salesforce-lws-disabled-scratch-org-instance.force.com/examples
 
-To open Cypress, run:
-npm run e2e:watch
 ```
 
 Once the community has been deployed, you can deploy the `main` or `example` components to a specific org only when needed by running the corresponding commands:
@@ -121,34 +119,6 @@ You can replace Quantic\_\_LWS_enabled with your target org alias. For example:
 ```bash
 npm run deploy:main --target-org MyCustomOrg
 npm run deploy:examples --target-org MyCustomOrg
-```
-
-### Run Cypress for Quantic Components
-
-**Note** Before attempting to run [Cypress](https://docs.cypress.io) tests, make sure the `Quantic Examples` community is deployed as described in the previous section.
-
-**Note** Cypress tests run on the org with **LWS enabled**, aliased as `Quantic__LWS_enabled`.
-
-To learn how to add tests, see [adding tests](./docs/adding-tests.md).
-
-- All the tests will need to be under folder `cypress/integration`.
-
-To open Cypress in browser mode, run:
-
-```bash
-npm run e2e:watch
-```
-
-To run Cypress tests directly in your console, run:
-
-```bash
-npm run e2e
-```
-
-To get the [detailed report](./docs/detailed-reporting.md), run:
-
-```bash
-npm run e2e:detailed
 ```
 
 ### Run Playwright for Quantic Components
