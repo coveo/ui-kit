@@ -1,6 +1,6 @@
 import replace from '@rollup/plugin-replace';
-import {Config} from '@stencil/core';
-import {coveoCdnResolve} from '@coveo/create-atomic-rollup-plugin';
+import type {Config} from '@stencil/core';
+import {spawnSync} from 'node:child_process';
 import dotenvPlugin from 'rollup-plugin-dotenv';
 import html from 'rollup-plugin-html';
 import nodePolyfills from 'rollup-plugin-node-polyfills';

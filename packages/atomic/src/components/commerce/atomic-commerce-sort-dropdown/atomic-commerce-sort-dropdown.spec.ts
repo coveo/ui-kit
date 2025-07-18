@@ -7,7 +7,7 @@ import {buildFakeSearch} from '@/vitest-utils/testing-helpers/fixtures/headless/
 import {buildFakeSort} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/sort-subcontroller';
 import '@vitest/browser/matchers.d.ts';
 import {html} from 'lit';
-import {beforeEach, describe, expect, it, vi } from 'vitest';
+import {beforeEach, describe, expect, it, vi} from 'vitest';
 import type {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface';
 import {AtomicCommerceSortDropdown} from './atomic-commerce-sort-dropdown';
 import './atomic-commerce-sort-dropdown';
@@ -50,7 +50,9 @@ describe('AtomicCommerceSortDropdown', () => {
   const setupElement = async (
     {
       interfaceType,
-    }: {interfaceType: CommerceBindings['interfaceElement']['type']} = {
+    }: {
+      interfaceType: CommerceBindings['interfaceElement']['type'];
+    } = {
       interfaceType: 'product-listing',
     }
   ) => {

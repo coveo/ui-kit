@@ -1,9 +1,0 @@
-# Exclude deployment configuration files
-.deployment.config.json
-
-# Exclude all package.json files to avoid formatting diffs
-**/package.json
-
-# Other problematic files for zero-diff migration
-**/*.tw.css
-**/components.d.ts

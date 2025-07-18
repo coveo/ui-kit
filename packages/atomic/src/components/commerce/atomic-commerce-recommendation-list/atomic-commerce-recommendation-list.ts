@@ -36,7 +36,7 @@ import {errorGuard} from '@/src/decorators/error-guard';
 import type {InitializableComponent} from '@/src/decorators/types';
 import {watch} from '@/src/decorators/watch';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
-import {InitializeBindingsMixin} from '@/src/mixins/bindings-mixin';
+import {ChildrenUpdateCompleteMixin} from '@/src/mixins/children-update-complete-mixin';
 import {FocusTargetController} from '@/src/utils/accessibility-utils';
 import {randomID} from '@/src/utils/utils';
 import type {CommerceBindings} from '../atomic-commerce-recommendation-interface/atomic-commerce-recommendation-interface';
@@ -63,9 +63,8 @@ import styles from './atomic-commerce-recommendation-list.tw.css';
 @customElement('atomic-commerce-recommendation-list')
 @bindings()
 @withTailwindStyles
-// TODO: Remove the mixin once atomic-commerce-recommendation-interface is merged (KIT-3934)
 export class AtomicCommerceRecommendationList
-  extends InitializeBindingsMixin(LitElement)
+  extends ChildrenUpdateCompleteMixin(LitElement)
   implements InitializableComponent<CommerceBindings>
 {
   static styles: CSSResultGroup = [unsafeCSS(styles)];
@@ -90,6 +89,8 @@ export class AtomicCommerceRecommendationList
   private productTemplateRegistered = false;
   @state()
   private templateHasError = false;
+  @state()
+  private isEveryProductReady = false;
 
   @bindStateToController('recommendations')
   @state()
@@ -202,6 +203,29 @@ export class AtomicCommerceRecommendationList
     );
   }
 
+  public async updated(changedProperties: Map<string, unknown>) {
+    super.updated(changedProperties);
+    if (
+      changedProperties.has('recommendationsState') &&
+      this.isEveryProductReady
+    ) {
+      this.isEveryProductReady = false;
+    }
+    await this.updateProductsReadyState();
+  }
+
+  private async updateProductsReadyState() {
+    if (
+      this.isAppLoaded &&
+      !this.isEveryProductReady &&
+      this.summaryState?.firstRequestExecuted &&
+      this.recommendationsState?.products?.length > 0
+    ) {
+      await this.getUpdateComplete();
+      this.isEveryProductReady = true;
+    }
+  }
+
   private get focusTarget() {
     if (!this.nextNewProductTarget) {
       this.nextNewProductTarget = new FocusTargetController(
@@ -260,6 +284,15 @@ export class AtomicCommerceRecommendationList
       return;
     }
 
+    if (!this.isEveryProductReady && this.isAppLoaded) {
+      return html`
+        <div
+          aria-hidden="true"
+          class="bg-neutral my-2 h-8 w-60 animate-pulse rounded"
+        ></div>
+      `;
+    }
+
     return html`${renderHeading({
       props: {
         level: this.headingLevel,
@@ -310,7 +343,6 @@ export class AtomicCommerceRecommendationList
     this.recommendations.refresh();
   }
 
-  // TODO: Remove once atomic-commerce-recommendation-interface is merged (KIT-3934)
   private initSummary() {
     this.summary = this.recommendations.summary();
     this.unsubscribeSummary = this.summary.subscribe(() => {
@@ -392,7 +424,7 @@ export class AtomicCommerceRecommendationList
   }
 
   private computeListDisplayClasses() {
-    const displayPlaceholders = !this.isAppLoaded;
+    const displayPlaceholders = !(this.isAppLoaded && this.isEveryProductReady);
 
     return getItemListDisplayClasses(
       'grid',
@@ -484,13 +516,23 @@ export class AtomicCommerceRecommendationList
     if (!this.productTemplateRegistered || this.error) {
       return;
     }
-    return renderDisplayWrapper({
-      props: {listClasses, display: 'list'},
-    })(html`
-      ${when(
-        this.isAppLoaded,
-        () => html`${this.renderAsGrid()}`,
-        () =>
+
+    const productClasses = `${listClasses} ${!this.isEveryProductReady && 'hidden'}`;
+
+    // Products must be rendered immediately (though hidden) to start their initialization and loading processes.
+    // If we wait to render products until placeholders are removed, the components won't begin loading until then,
+    // causing a longer delay. The `isEveryProductsReady` flag hides products while preserving placeholders,
+    // then removes placeholders once products are fully loaded to prevent content flash.
+    return html`
+      ${when(this.isAppLoaded, () =>
+        renderDisplayWrapper({
+          props: {listClasses: productClasses, display: 'list'},
+        })(html`${this.renderAsGrid()}`)
+      )}
+      ${when(!this.isEveryProductReady, () =>
+        renderDisplayWrapper({
+          props: {listClasses, display: 'list'},
+        })(
           renderItemPlaceholders({
             props: {
               density: this.density,
@@ -501,8 +543,9 @@ export class AtomicCommerceRecommendationList
                 this.recommendationsState.products.length,
             },
           })
+        )
       )}
-    `);
+    `;
   }
 
   private get shouldRender() {

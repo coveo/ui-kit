@@ -1,7 +1,7 @@
 {
   "name": "@coveo/create-atomic",
   "description": "Coveo Atomic Generator",
-  "version": "1.40.9",
+  "version": "1.40.10",
   "files": [
     "/lib",
     "/template",
@@ -10,6 +10,11 @@
   "bin": "./index.mjs",
   "type": "module",
   "main": "index.mjs",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/coveo/ui-kit.git",
+    "directory": "packages/create-atomic"
+  },
   "scripts": {
     "start": "node ./index.mjs",
     "build": "nx build",

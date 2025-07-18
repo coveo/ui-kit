@@ -3,8 +3,5 @@
 // to ensure consistent localization using Atomic's state instead of runtime locale
 
 `$obj.toLocaleString()` where {
-    register_diagnostic(
-        span = $obj,
-        message = "Use explicit locale argument: toLocaleString(locale). Get locale from Atomic i18n state to ensure consistent localization."
-    )
+  register_diagnostic(span=$obj, message="Use explicit locale argument: toLocaleString(locale). Get locale from Atomic i18n state to ensure consistent localization.")
 }
