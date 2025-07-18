@@ -106,8 +106,8 @@ describe('c-quantic-citation', () => {
   });
 
   it('should properly display the citation', async () => {
-      const element = createTestComponent();
-      await flushPromises();
+    const element = createTestComponent();
+    await flushPromises();
 
     const citation = element.shadowRoot.querySelector(selectors.citation);
     const citationLink = element.shadowRoot.querySelector(
