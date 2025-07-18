@@ -1,5 +1,5 @@
 import {afterEach, beforeEach, describe, expect, it, vi} from 'vitest';
-import {hideEmptySection} from '@/src/utils/item-section-utils';
+import {hideEmptySection} from '@/src/utils/stencil-item-section-utils';
 import {AtomicProductSectionActions} from './atomic-product-section-actions';
 
 vi.mock('@/src/utils/item-section-utils', () => ({

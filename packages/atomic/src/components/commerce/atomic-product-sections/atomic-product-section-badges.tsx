@@ -1,4 +1,4 @@
-import {hideEmptySection} from '@/src/utils/item-section-utils';
+import {hideEmptySection} from '@/src/utils/stencil-item-section-utils';
 import {Element, Component} from '@stencil/core';
 
 /**
