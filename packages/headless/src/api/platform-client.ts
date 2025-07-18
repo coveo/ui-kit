@@ -1,6 +1,6 @@
 import {backOff} from 'exponential-backoff';
 import type {Logger} from 'pino';
-import {DisconnectedError, ExpiredTokenError} from '../utils/errors.js';
+import {DisconnectedError} from '../utils/errors.js';
 import type {PlatformEnvironment} from '../utils/url-utils.js';
 import {clone} from '../utils/utils.js';
 import {canBeFormUrlEncoded, encodeAsFormUrl} from './form-url-encoder.js';
@@ -40,10 +40,7 @@ export interface PlatformResponse<T> {
   response: Response;
 }
 
-export type PlatformClientCallError =
-  | ExpiredTokenError
-  | DisconnectedError
-  | Error;
+export type PlatformClientCallError = DisconnectedError | Error;
 
 // biome-ignore lint/complexity/noStaticOnlyClass: Maybe change this into a function someday. Not worth the effort right now.
 export class PlatformClient {
@@ -78,10 +75,6 @@ export class PlatformClient {
         },
       });
       switch (response.status) {
-        case 419:
-        case 401:
-          logger.info('Platform renewing token');
-          throw new ExpiredTokenError();
         case 404:
           throw new DisconnectedError(url, response.status);
         default:

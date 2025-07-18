@@ -1,7 +1,6 @@
 import * as BackOff from 'exponential-backoff';
 import {pino} from 'pino';
 import type {Mock} from 'vitest';
-import {ExpiredTokenError} from '../utils/errors.js';
 import type {PlatformEnvironment} from '../utils/url-utils.js';
 import {
   getAnalyticsNextApiBaseUrl,
@@ -295,18 +294,6 @@ describe('PlatformClient call', () => {
       expect.not.objectContaining({body: expect.anything()})
     );
   });
-
-  it.each([401, 419])(
-    'when status is %d should return a TokenExpiredError',
-    async (status) => {
-      mockFetch.mockReturnValueOnce(
-        Promise.resolve(new Response(JSON.stringify({}), {status}))
-      );
-
-      const response = await platformCall();
-      expect(response).toBeInstanceOf(ExpiredTokenError);
-    }
-  );
 
   it('when status is 429 should try exponential backOff', async () => {
     mockFetch
