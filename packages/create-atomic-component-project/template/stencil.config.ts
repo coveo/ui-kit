@@ -1,5 +1,8 @@
 import {Config} from '@stencil/core';
+import {spawnSync} from 'node:child_process';
 import html from 'rollup-plugin-html';
+import {coveoCdnResolve} from '@coveo/create-atomic-rollup-plugin';
+
 export const config: Config = {
   namespace: 'my-custom-components',
   globalStyle: 'src/pages/index.css',
@@ -8,14 +11,7 @@ export const config: Config = {
     {
       type: 'www',
       serviceWorker: null, // disable service workers
-      copy: [
-        {src: 'pages', keepDirStructure: false},
-        {
-          src: '../node_modules/@coveo/atomic/dist/atomic',
-          dest: 'atomic',
-          keepDirStructure: false,
-        },
-      ],
+      copy: [{src: 'pages', keepDirStructure: false}],
     },
   ],
   rollupPlugins: {
@@ -23,6 +19,8 @@ export const config: Config = {
       html({
         include: 'src/components/**/*.html',
       }),
+      // Replace by `coveoNpmResolve()` to bundle Atomic & Headless directly, instead of using the CDN.
+      coveoCdnResolve(),
     ],
   },
 };

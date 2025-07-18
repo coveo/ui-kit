@@ -1,6 +1,6 @@
 import replace from '@rollup/plugin-replace';
 import {Config} from '@stencil/core';
-import {spawnSync} from 'node:child_process';
+import {coveoCdnResolve} from '@coveo/create-atomic-rollup-plugin';
 import dotenvPlugin from 'rollup-plugin-dotenv';
 import html from 'rollup-plugin-html';
 import nodePolyfills from 'rollup-plugin-node-polyfills';
@@ -48,63 +48,3 @@ export const config: Config = {
     after: [nodePolyfills()],
   },
 };
-
-function coveoCdnResolve() {
-  return {
-    resolveId(source: string, importer: string) {
-      if (source === '@coveo/atomic/loader') {
-        return {
-          id: 'https://static.cloud.coveo.com/atomic/v3/index.js',
-          external: true,
-        };
-      }
-      if (source.startsWith('@coveo/atomic/themes')) {
-        return {
-          id: source.replace(
-            '@coveo/atomic/themes',
-            'https://static.cloud.coveo.com/atomic/v3/themes'
-          ),
-          external: true,
-        };
-      }
-      if (source === '@coveo/atomic') {
-        return {
-          id: 'https://static.cloud.coveo.com/atomic/v3/index.esm.js',
-          external: true,
-        };
-      }
-      if (source === '@coveo/headless') {
-        return {
-          id: 'https://static.cloud.coveo.com/headless/v3/headless.esm.js',
-          external: true,
-        };
-      }
-    },
-  };
-}
-
-function coveoNpmResolve() {
-  return {
-    resolveId(source: string, importer: string) {
-      if (source.startsWith('@coveo')) {
-        return nodeResolve(source, importer, ['browser', 'default', 'import']);
-      }
-    },
-  };
-}
-
-function nodeResolve(
-  source: string,
-  importer: string,
-  conditions: string[] = []
-) {
-  return spawnSync(
-    process.argv[0],
-    [
-      ...conditions.flatMap((condition) => ['-C', condition]),
-      '-p',
-      `require.resolve('${source}')`,
-    ],
-    {encoding: 'utf-8'}
-  ).stdout.trim();
-}
