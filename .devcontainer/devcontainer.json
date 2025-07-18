@@ -88,8 +88,5 @@
   // Mount node_modules as a named volume for better performance
   "mounts": [
     "source=ui-kit-node_modules,target=${containerWorkspaceFolder}/node_modules,type=volume"
-  ],
-
-  // Use 'vscode' user for better permissions
-  "remoteUser": "vscode"
+  ]
 }
