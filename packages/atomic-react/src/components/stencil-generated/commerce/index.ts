@@ -1,11 +1,11 @@
 /* eslint-disable */
 /* tslint:disable */
 /* auto-generated react proxies */
-import { createReactComponent } from './react-component-lib';
+import { createReactComponent } from './react-component-lib/index.js';
 
 import type { JSX } from '@coveo/atomic';
 
-import { defineCustomElements } from '@coveo/atomic/dist/atomic/loader';
+import { defineCustomElements } from '@coveo/atomic/loader';
 
 defineCustomElements();
 export const AtomicCommerceCategoryFacet = /*@__PURE__*/createReactComponent<JSX.AtomicCommerceCategoryFacet, HTMLAtomicCommerceCategoryFacetElement>('atomic-commerce-category-facet');
@@ -26,13 +26,5 @@ export const AtomicProductMultiValueText = /*@__PURE__*/createReactComponent<JSX
 export const AtomicProductNumericFieldValue = /*@__PURE__*/createReactComponent<JSX.AtomicProductNumericFieldValue, HTMLAtomicProductNumericFieldValueElement>('atomic-product-numeric-field-value');
 export const AtomicProductPrice = /*@__PURE__*/createReactComponent<JSX.AtomicProductPrice, HTMLAtomicProductPriceElement>('atomic-product-price');
 export const AtomicProductRating = /*@__PURE__*/createReactComponent<JSX.AtomicProductRating, HTMLAtomicProductRatingElement>('atomic-product-rating');
-export const AtomicProductSectionBadges = /*@__PURE__*/createReactComponent<JSX.AtomicProductSectionBadges, HTMLAtomicProductSectionBadgesElement>('atomic-product-section-badges');
-export const AtomicProductSectionBottomMetadata = /*@__PURE__*/createReactComponent<JSX.AtomicProductSectionBottomMetadata, HTMLAtomicProductSectionBottomMetadataElement>('atomic-product-section-bottom-metadata');
-export const AtomicProductSectionChildren = /*@__PURE__*/createReactComponent<JSX.AtomicProductSectionChildren, HTMLAtomicProductSectionChildrenElement>('atomic-product-section-children');
-export const AtomicProductSectionDescription = /*@__PURE__*/createReactComponent<JSX.AtomicProductSectionDescription, HTMLAtomicProductSectionDescriptionElement>('atomic-product-section-description');
-export const AtomicProductSectionEmphasized = /*@__PURE__*/createReactComponent<JSX.AtomicProductSectionEmphasized, HTMLAtomicProductSectionEmphasizedElement>('atomic-product-section-emphasized');
-export const AtomicProductSectionMetadata = /*@__PURE__*/createReactComponent<JSX.AtomicProductSectionMetadata, HTMLAtomicProductSectionMetadataElement>('atomic-product-section-metadata');
-export const AtomicProductSectionName = /*@__PURE__*/createReactComponent<JSX.AtomicProductSectionName, HTMLAtomicProductSectionNameElement>('atomic-product-section-name');
-export const AtomicProductSectionVisual = /*@__PURE__*/createReactComponent<JSX.AtomicProductSectionVisual, HTMLAtomicProductSectionVisualElement>('atomic-product-section-visual');
 export const AtomicResultLocalizedText = /*@__PURE__*/createReactComponent<JSX.AtomicResultLocalizedText, HTMLAtomicResultLocalizedTextElement>('atomic-result-localized-text');
 export const AtomicTimeframe = /*@__PURE__*/createReactComponent<JSX.AtomicTimeframe, HTMLAtomicTimeframeElement>('atomic-timeframe');

@@ -1,6 +1,6 @@
 import {LitElement} from 'lit';
 import {customElement} from 'lit/decorators.js';
-import {hideEmptySection} from '@/src/utils/item-section-utils';
+import {ProductSectionMixin} from '@/src/mixins/product-section-mixin';
 
 /**
  * @alpha
@@ -15,15 +15,9 @@ import {hideEmptySection} from '@/src/utils/item-section-utils';
  * * May appear over, next to, or beneath the visual section.
  */
 @customElement('atomic-product-section-actions')
-export class AtomicProductSectionActions extends LitElement {
-  protected createRenderRoot() {
-    return this;
-  }
-
-  protected updated() {
-    hideEmptySection(this);
-  }
-}
+export class AtomicProductSectionActions extends ProductSectionMixin(
+  LitElement
+) {}
 
 declare global {
   interface HTMLElementTagNameMap {

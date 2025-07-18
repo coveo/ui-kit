@@ -22,7 +22,6 @@ import { Actions, InsightResultActionClickedEvent } from "./components/insight/a
 import { InsightResultAttachToCaseEvent } from "./components/insight/atomic-insight-result-attach-to-case-action/atomic-insight-result-attach-to-case-action";
 import { SelectChildProductEventArgs } from "./components/commerce/atomic-product-children/select-child-product-event";
 import { TruncateAfter } from "./components/common/expandable-text/stencil-expandable-text";
-import { ItemDisplayImageSize as ItemDisplayImageSize1 } from "./components.d";
 import { RecommendationEngine, InteractiveResult as RecsInteractiveResult, LogLevel as RecsLogLevel, Result as RecsResult, ResultTemplate as RecsResultTemplate, ResultTemplateCondition as RecsResultTemplateCondition } from "@coveo/headless/recommendation";
 import { RecsInitializationOptions } from "./components/recommendations/atomic-recs-interface/atomic-recs-interface";
 import { RecsStore } from "./components/recommendations/atomic-recs-interface/store";
@@ -50,7 +49,6 @@ export { Actions, InsightResultActionClickedEvent } from "./components/insight/a
 export { InsightResultAttachToCaseEvent } from "./components/insight/atomic-insight-result-attach-to-case-action/atomic-insight-result-attach-to-case-action";
 export { SelectChildProductEventArgs } from "./components/commerce/atomic-product-children/select-child-product-event";
 export { TruncateAfter } from "./components/common/expandable-text/stencil-expandable-text";
-export { ItemDisplayImageSize as ItemDisplayImageSize1 } from "./components.d";
 export { RecommendationEngine, InteractiveResult as RecsInteractiveResult, LogLevel as RecsLogLevel, Result as RecsResult, ResultTemplate as RecsResultTemplate, ResultTemplateCondition as RecsResultTemplateCondition } from "@coveo/headless/recommendation";
 export { RecsInitializationOptions } from "./components/recommendations/atomic-recs-interface/atomic-recs-interface";
 export { RecsStore } from "./components/recommendations/atomic-recs-interface/store";
@@ -1754,85 +1752,6 @@ export namespace Components {
           * @type {string}
          */
         "ratingDetailsField"?: string;
-    }
-    /**
-     * @alpha This section is meant to render badges that highlight special features of the product.
-     * Behavior:
-     * * Exposes the `--line-height` CSS variable so child elements can adjust to the current line height.
-     * ** You should ensure that elements inside of it have `height: var(--line-height)`.
-     * * Is a wrapping flexbox with a gap.
-     * * May appear over, next to, or beneath the visual section.
-     */
-    interface AtomicProductSectionBadges {
-    }
-    /**
-     * @alpha This section is meant to render additional descriptive information about the product.
-     * Behavior:
-     * * Has a maximum height of two lines.
-     * * Exposes the `--line-height` variable so child elements can adjust to the current line height.
-     * * Has a defined CSS `color` property for text.
-     * * Has a font weight.
-     */
-    interface AtomicProductSectionBottomMetadata {
-    }
-    /**
-     * @alpha This section is meant to render child products, available when using the <atomic-product-children> component.
-     * Behavior:
-     * * Shows children at the bottom of the result, indented and wrapped in a border.
-     */
-    interface AtomicProductSectionChildren {
-    }
-    /**
-     * @alpha This section is intended to render an informative summary of the product's description.
-     * Behavior:
-     * * Has a fixed height of one to three lines, depending on the layout and density.
-     * * Ellipses overflowing text.
-     * * Exposes the `--line-height` CSS variable so child elements can adjust to the current line height.
-     * * Has a defined CSS `color` property for text.
-     */
-    interface AtomicProductSectionDescription {
-    }
-    /**
-     * @alpha This section is intended to display the field that's important for its search criteria.
-     * For example, in Commerce, a product's price is often more important than the title itself.
-     * Behavior:
-     * * Has a very large font size.
-     * * Is the second closest element beneath the name section.
-     */
-    interface AtomicProductSectionEmphasized {
-    }
-    /**
-     * @alpha This section is intended to display some fields that are directly related to the name of the product.
-     * In commerce, this could be the product rating, which is tied to the nature of the product itself,
-     * rather than to the product's description.
-     * Behavior:
-     * * Has a very small font size.
-     * * Is the closest element beneath the title section.
-     */
-    interface AtomicProductSectionMetadata {
-    }
-    /**
-     * @alpha This section is intended to display the product's name, and its main use is to make the product list scannable.
-     * Behavior:
-     * * Has a fixed height of two lines on grid layouts.
-     * * Exposes the `--line-height` CSS variable so child elements can adjust to the current line height.
-     * * Has a defined CSS `color` property for text.
-     */
-    interface AtomicProductSectionName {
-    }
-    /**
-     * @alpha This section is intended to provide visual information about the product.
-     * In commerce, an image is a great shorthand for a product category.
-     * Behavior:
-     * * Has a fixed size that depends on the specified image size, the layout, the density, and the screen size.
-     * ** You should ensure that elements inside of it take the available space.
-     * * Always has a 1:1 aspect ratio.
-     */
-    interface AtomicProductSectionVisual {
-        /**
-          * How large or small the visual section of product using this template should be.
-         */
-        "imageSize"?: Omit<ItemDisplayImageSize, 'icon'>;
     }
     /**
      * The `atomic-query-error` component handles fatal errors when performing a query on the index or Search API. When the error is known, it displays a link to relevant documentation link for debugging purposes. When the error is unknown, it displays a small text area with the JSON content of the error.
@@ -4291,113 +4210,6 @@ declare global {
         new (): HTMLAtomicProductRatingElement;
     };
     /**
-     * @alpha This section is meant to render badges that highlight special features of the product.
-     * Behavior:
-     * * Exposes the `--line-height` CSS variable so child elements can adjust to the current line height.
-     * ** You should ensure that elements inside of it have `height: var(--line-height)`.
-     * * Is a wrapping flexbox with a gap.
-     * * May appear over, next to, or beneath the visual section.
-     */
-    interface HTMLAtomicProductSectionBadgesElement extends Components.AtomicProductSectionBadges, HTMLStencilElement {
-    }
-    var HTMLAtomicProductSectionBadgesElement: {
-        prototype: HTMLAtomicProductSectionBadgesElement;
-        new (): HTMLAtomicProductSectionBadgesElement;
-    };
-    /**
-     * @alpha This section is meant to render additional descriptive information about the product.
-     * Behavior:
-     * * Has a maximum height of two lines.
-     * * Exposes the `--line-height` variable so child elements can adjust to the current line height.
-     * * Has a defined CSS `color` property for text.
-     * * Has a font weight.
-     */
-    interface HTMLAtomicProductSectionBottomMetadataElement extends Components.AtomicProductSectionBottomMetadata, HTMLStencilElement {
-    }
-    var HTMLAtomicProductSectionBottomMetadataElement: {
-        prototype: HTMLAtomicProductSectionBottomMetadataElement;
-        new (): HTMLAtomicProductSectionBottomMetadataElement;
-    };
-    /**
-     * @alpha This section is meant to render child products, available when using the <atomic-product-children> component.
-     * Behavior:
-     * * Shows children at the bottom of the result, indented and wrapped in a border.
-     */
-    interface HTMLAtomicProductSectionChildrenElement extends Components.AtomicProductSectionChildren, HTMLStencilElement {
-    }
-    var HTMLAtomicProductSectionChildrenElement: {
-        prototype: HTMLAtomicProductSectionChildrenElement;
-        new (): HTMLAtomicProductSectionChildrenElement;
-    };
-    /**
-     * @alpha This section is intended to render an informative summary of the product's description.
-     * Behavior:
-     * * Has a fixed height of one to three lines, depending on the layout and density.
-     * * Ellipses overflowing text.
-     * * Exposes the `--line-height` CSS variable so child elements can adjust to the current line height.
-     * * Has a defined CSS `color` property for text.
-     */
-    interface HTMLAtomicProductSectionDescriptionElement extends Components.AtomicProductSectionDescription, HTMLStencilElement {
-    }
-    var HTMLAtomicProductSectionDescriptionElement: {
-        prototype: HTMLAtomicProductSectionDescriptionElement;
-        new (): HTMLAtomicProductSectionDescriptionElement;
-    };
-    /**
-     * @alpha This section is intended to display the field that's important for its search criteria.
-     * For example, in Commerce, a product's price is often more important than the title itself.
-     * Behavior:
-     * * Has a very large font size.
-     * * Is the second closest element beneath the name section.
-     */
-    interface HTMLAtomicProductSectionEmphasizedElement extends Components.AtomicProductSectionEmphasized, HTMLStencilElement {
-    }
-    var HTMLAtomicProductSectionEmphasizedElement: {
-        prototype: HTMLAtomicProductSectionEmphasizedElement;
-        new (): HTMLAtomicProductSectionEmphasizedElement;
-    };
-    /**
-     * @alpha This section is intended to display some fields that are directly related to the name of the product.
-     * In commerce, this could be the product rating, which is tied to the nature of the product itself,
-     * rather than to the product's description.
-     * Behavior:
-     * * Has a very small font size.
-     * * Is the closest element beneath the title section.
-     */
-    interface HTMLAtomicProductSectionMetadataElement extends Components.AtomicProductSectionMetadata, HTMLStencilElement {
-    }
-    var HTMLAtomicProductSectionMetadataElement: {
-        prototype: HTMLAtomicProductSectionMetadataElement;
-        new (): HTMLAtomicProductSectionMetadataElement;
-    };
-    /**
-     * @alpha This section is intended to display the product's name, and its main use is to make the product list scannable.
-     * Behavior:
-     * * Has a fixed height of two lines on grid layouts.
-     * * Exposes the `--line-height` CSS variable so child elements can adjust to the current line height.
-     * * Has a defined CSS `color` property for text.
-     */
-    interface HTMLAtomicProductSectionNameElement extends Components.AtomicProductSectionName, HTMLStencilElement {
-    }
-    var HTMLAtomicProductSectionNameElement: {
-        prototype: HTMLAtomicProductSectionNameElement;
-        new (): HTMLAtomicProductSectionNameElement;
-    };
-    /**
-     * @alpha This section is intended to provide visual information about the product.
-     * In commerce, an image is a great shorthand for a product category.
-     * Behavior:
-     * * Has a fixed size that depends on the specified image size, the layout, the density, and the screen size.
-     * ** You should ensure that elements inside of it take the available space.
-     * * Always has a 1:1 aspect ratio.
-     */
-    interface HTMLAtomicProductSectionVisualElement extends Components.AtomicProductSectionVisual, HTMLStencilElement {
-    }
-    var HTMLAtomicProductSectionVisualElement: {
-        prototype: HTMLAtomicProductSectionVisualElement;
-        new (): HTMLAtomicProductSectionVisualElement;
-    };
-    /**
      * The `atomic-query-error` component handles fatal errors when performing a query on the index or Search API. When the error is known, it displays a link to relevant documentation link for debugging purposes. When the error is unknown, it displays a small text area with the JSON content of the error.
      */
     interface HTMLAtomicQueryErrorElement extends Components.AtomicQueryError, HTMLStencilElement {
@@ -5356,14 +5168,6 @@ declare global {
         "atomic-product-numeric-field-value": HTMLAtomicProductNumericFieldValueElement;
         "atomic-product-price": HTMLAtomicProductPriceElement;
         "atomic-product-rating": HTMLAtomicProductRatingElement;
-        "atomic-product-section-badges": HTMLAtomicProductSectionBadgesElement;
-        "atomic-product-section-bottom-metadata": HTMLAtomicProductSectionBottomMetadataElement;
-        "atomic-product-section-children": HTMLAtomicProductSectionChildrenElement;
-        "atomic-product-section-description": HTMLAtomicProductSectionDescriptionElement;
-        "atomic-product-section-emphasized": HTMLAtomicProductSectionEmphasizedElement;
-        "atomic-product-section-metadata": HTMLAtomicProductSectionMetadataElement;
-        "atomic-product-section-name": HTMLAtomicProductSectionNameElement;
-        "atomic-product-section-visual": HTMLAtomicProductSectionVisualElement;
         "atomic-query-error": HTMLAtomicQueryErrorElement;
         "atomic-query-summary": HTMLAtomicQuerySummaryElement;
         "atomic-quickview": HTMLAtomicQuickviewElement;
@@ -7078,85 +6882,6 @@ declare namespace LocalJSX {
         "ratingDetailsField"?: string;
     }
     /**
-     * @alpha This section is meant to render badges that highlight special features of the product.
-     * Behavior:
-     * * Exposes the `--line-height` CSS variable so child elements can adjust to the current line height.
-     * ** You should ensure that elements inside of it have `height: var(--line-height)`.
-     * * Is a wrapping flexbox with a gap.
-     * * May appear over, next to, or beneath the visual section.
-     */
-    interface AtomicProductSectionBadges {
-    }
-    /**
-     * @alpha This section is meant to render additional descriptive information about the product.
-     * Behavior:
-     * * Has a maximum height of two lines.
-     * * Exposes the `--line-height` variable so child elements can adjust to the current line height.
-     * * Has a defined CSS `color` property for text.
-     * * Has a font weight.
-     */
-    interface AtomicProductSectionBottomMetadata {
-    }
-    /**
-     * @alpha This section is meant to render child products, available when using the <atomic-product-children> component.
-     * Behavior:
-     * * Shows children at the bottom of the result, indented and wrapped in a border.
-     */
-    interface AtomicProductSectionChildren {
-    }
-    /**
-     * @alpha This section is intended to render an informative summary of the product's description.
-     * Behavior:
-     * * Has a fixed height of one to three lines, depending on the layout and density.
-     * * Ellipses overflowing text.
-     * * Exposes the `--line-height` CSS variable so child elements can adjust to the current line height.
-     * * Has a defined CSS `color` property for text.
-     */
-    interface AtomicProductSectionDescription {
-    }
-    /**
-     * @alpha This section is intended to display the field that's important for its search criteria.
-     * For example, in Commerce, a product's price is often more important than the title itself.
-     * Behavior:
-     * * Has a very large font size.
-     * * Is the second closest element beneath the name section.
-     */
-    interface AtomicProductSectionEmphasized {
-    }
-    /**
-     * @alpha This section is intended to display some fields that are directly related to the name of the product.
-     * In commerce, this could be the product rating, which is tied to the nature of the product itself,
-     * rather than to the product's description.
-     * Behavior:
-     * * Has a very small font size.
-     * * Is the closest element beneath the title section.
-     */
-    interface AtomicProductSectionMetadata {
-    }
-    /**
-     * @alpha This section is intended to display the product's name, and its main use is to make the product list scannable.
-     * Behavior:
-     * * Has a fixed height of two lines on grid layouts.
-     * * Exposes the `--line-height` CSS variable so child elements can adjust to the current line height.
-     * * Has a defined CSS `color` property for text.
-     */
-    interface AtomicProductSectionName {
-    }
-    /**
-     * @alpha This section is intended to provide visual information about the product.
-     * In commerce, an image is a great shorthand for a product category.
-     * Behavior:
-     * * Has a fixed size that depends on the specified image size, the layout, the density, and the screen size.
-     * ** You should ensure that elements inside of it take the available space.
-     * * Always has a 1:1 aspect ratio.
-     */
-    interface AtomicProductSectionVisual {
-        /**
-          * How large or small the visual section of product using this template should be.
-         */
-        "imageSize"?: Omit<ItemDisplayImageSize, 'icon'>;
-    }
-    /**
      * The `atomic-query-error` component handles fatal errors when performing a query on the index or Search API. When the error is known, it displays a link to relevant documentation link for debugging purposes. When the error is unknown, it displays a small text area with the JSON content of the error.
      */
     interface AtomicQueryError {
@@ -8676,14 +8401,6 @@ declare namespace LocalJSX {
         "atomic-product-numeric-field-value": AtomicProductNumericFieldValue;
         "atomic-product-price": AtomicProductPrice;
         "atomic-product-rating": AtomicProductRating;
-        "atomic-product-section-badges": AtomicProductSectionBadges;
-        "atomic-product-section-bottom-metadata": AtomicProductSectionBottomMetadata;
-        "atomic-product-section-children": AtomicProductSectionChildren;
-        "atomic-product-section-description": AtomicProductSectionDescription;
-        "atomic-product-section-emphasized": AtomicProductSectionEmphasized;
-        "atomic-product-section-metadata": AtomicProductSectionMetadata;
-        "atomic-product-section-name": AtomicProductSectionName;
-        "atomic-product-section-visual": AtomicProductSectionVisual;
         "atomic-query-error": AtomicQueryError;
         "atomic-query-summary": AtomicQuerySummary;
         "atomic-quickview": AtomicQuickview;
@@ -9040,73 +8757,6 @@ declare module "@stencil/core" {
              * @alpha 
              */
             "atomic-product-rating": LocalJSX.AtomicProductRating & JSXBase.HTMLAttributes<HTMLAtomicProductRatingElement>;
-            /**
-             * @alpha This section is meant to render badges that highlight special features of the product.
-             * Behavior:
-             * * Exposes the `--line-height` CSS variable so child elements can adjust to the current line height.
-             * ** You should ensure that elements inside of it have `height: var(--line-height)`.
-             * * Is a wrapping flexbox with a gap.
-             * * May appear over, next to, or beneath the visual section.
-             */
-            "atomic-product-section-badges": LocalJSX.AtomicProductSectionBadges & JSXBase.HTMLAttributes<HTMLAtomicProductSectionBadgesElement>;
-            /**
-             * @alpha This section is meant to render additional descriptive information about the product.
-             * Behavior:
-             * * Has a maximum height of two lines.
-             * * Exposes the `--line-height` variable so child elements can adjust to the current line height.
-             * * Has a defined CSS `color` property for text.
-             * * Has a font weight.
-             */
-            "atomic-product-section-bottom-metadata": LocalJSX.AtomicProductSectionBottomMetadata & JSXBase.HTMLAttributes<HTMLAtomicProductSectionBottomMetadataElement>;
-            /**
-             * @alpha This section is meant to render child products, available when using the <atomic-product-children> component.
-             * Behavior:
-             * * Shows children at the bottom of the result, indented and wrapped in a border.
-             */
-            "atomic-product-section-children": LocalJSX.AtomicProductSectionChildren & JSXBase.HTMLAttributes<HTMLAtomicProductSectionChildrenElement>;
-            /**
-             * @alpha This section is intended to render an informative summary of the product's description.
-             * Behavior:
-             * * Has a fixed height of one to three lines, depending on the layout and density.
-             * * Ellipses overflowing text.
-             * * Exposes the `--line-height` CSS variable so child elements can adjust to the current line height.
-             * * Has a defined CSS `color` property for text.
-             */
-            "atomic-product-section-description": LocalJSX.AtomicProductSectionDescription & JSXBase.HTMLAttributes<HTMLAtomicProductSectionDescriptionElement>;
-            /**
-             * @alpha This section is intended to display the field that's important for its search criteria.
-             * For example, in Commerce, a product's price is often more important than the title itself.
-             * Behavior:
-             * * Has a very large font size.
-             * * Is the second closest element beneath the name section.
-             */
-            "atomic-product-section-emphasized": LocalJSX.AtomicProductSectionEmphasized & JSXBase.HTMLAttributes<HTMLAtomicProductSectionEmphasizedElement>;
-            /**
-             * @alpha This section is intended to display some fields that are directly related to the name of the product.
-             * In commerce, this could be the product rating, which is tied to the nature of the product itself,
-             * rather than to the product's description.
-             * Behavior:
-             * * Has a very small font size.
-             * * Is the closest element beneath the title section.
-             */
-            "atomic-product-section-metadata": LocalJSX.AtomicProductSectionMetadata & JSXBase.HTMLAttributes<HTMLAtomicProductSectionMetadataElement>;
-            /**
-             * @alpha This section is intended to display the product's name, and its main use is to make the product list scannable.
-             * Behavior:
-             * * Has a fixed height of two lines on grid layouts.
-             * * Exposes the `--line-height` CSS variable so child elements can adjust to the current line height.
-             * * Has a defined CSS `color` property for text.
-             */
-            "atomic-product-section-name": LocalJSX.AtomicProductSectionName & JSXBase.HTMLAttributes<HTMLAtomicProductSectionNameElement>;
-            /**
-             * @alpha This section is intended to provide visual information about the product.
-             * In commerce, an image is a great shorthand for a product category.
-             * Behavior:
-             * * Has a fixed size that depends on the specified image size, the layout, the density, and the screen size.
-             * ** You should ensure that elements inside of it take the available space.
-             * * Always has a 1:1 aspect ratio.
-             */
-            "atomic-product-section-visual": LocalJSX.AtomicProductSectionVisual & JSXBase.HTMLAttributes<HTMLAtomicProductSectionVisualElement>;
             /**
              * The `atomic-query-error` component handles fatal errors when performing a query on the index or Search API. When the error is known, it displays a link to relevant documentation link for debugging purposes. When the error is unknown, it displays a small text area with the JSON content of the error.
              */
