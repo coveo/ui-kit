@@ -1787,13 +1787,6 @@ export namespace Components {
     interface AtomicProductSectionBottomMetadata {
     }
     /**
-     * @alpha This section is meant to render child products, available when using the <atomic-product-children> component.
-     * Behavior:
-     * * Shows children at the bottom of the result, indented and wrapped in a border.
-     */
-    interface AtomicProductSectionChildren {
-    }
-    /**
      * @alpha This section is intended to render an informative summary of the product's description.
      * Behavior:
      * * Has a fixed height of one to three lines, depending on the layout and density.
@@ -4345,17 +4338,6 @@ declare global {
         new (): HTMLAtomicProductSectionBottomMetadataElement;
     };
     /**
-     * @alpha This section is meant to render child products, available when using the <atomic-product-children> component.
-     * Behavior:
-     * * Shows children at the bottom of the result, indented and wrapped in a border.
-     */
-    interface HTMLAtomicProductSectionChildrenElement extends Components.AtomicProductSectionChildren, HTMLStencilElement {
-    }
-    var HTMLAtomicProductSectionChildrenElement: {
-        prototype: HTMLAtomicProductSectionChildrenElement;
-        new (): HTMLAtomicProductSectionChildrenElement;
-    };
-    /**
      * @alpha This section is intended to render an informative summary of the product's description.
      * Behavior:
      * * Has a fixed height of one to three lines, depending on the layout and density.
@@ -5385,7 +5367,6 @@ declare global {
         "atomic-product-section-actions": HTMLAtomicProductSectionActionsElement;
         "atomic-product-section-badges": HTMLAtomicProductSectionBadgesElement;
         "atomic-product-section-bottom-metadata": HTMLAtomicProductSectionBottomMetadataElement;
-        "atomic-product-section-children": HTMLAtomicProductSectionChildrenElement;
         "atomic-product-section-description": HTMLAtomicProductSectionDescriptionElement;
         "atomic-product-section-emphasized": HTMLAtomicProductSectionEmphasizedElement;
         "atomic-product-section-metadata": HTMLAtomicProductSectionMetadataElement;
@@ -7136,13 +7117,6 @@ declare namespace LocalJSX {
     interface AtomicProductSectionBottomMetadata {
     }
     /**
-     * @alpha This section is meant to render child products, available when using the <atomic-product-children> component.
-     * Behavior:
-     * * Shows children at the bottom of the result, indented and wrapped in a border.
-     */
-    interface AtomicProductSectionChildren {
-    }
-    /**
      * @alpha This section is intended to render an informative summary of the product's description.
      * Behavior:
      * * Has a fixed height of one to three lines, depending on the layout and density.
@@ -8717,7 +8691,6 @@ declare namespace LocalJSX {
         "atomic-product-section-actions": AtomicProductSectionActions;
         "atomic-product-section-badges": AtomicProductSectionBadges;
         "atomic-product-section-bottom-metadata": AtomicProductSectionBottomMetadata;
-        "atomic-product-section-children": AtomicProductSectionChildren;
         "atomic-product-section-description": AtomicProductSectionDescription;
         "atomic-product-section-emphasized": AtomicProductSectionEmphasized;
         "atomic-product-section-metadata": AtomicProductSectionMetadata;
@@ -9107,12 +9080,6 @@ declare module "@stencil/core" {
              * * Has a font weight.
              */
             "atomic-product-section-bottom-metadata": LocalJSX.AtomicProductSectionBottomMetadata & JSXBase.HTMLAttributes<HTMLAtomicProductSectionBottomMetadataElement>;
-            /**
-             * @alpha This section is meant to render child products, available when using the <atomic-product-children> component.
-             * Behavior:
-             * * Shows children at the bottom of the result, indented and wrapped in a border.
-             */
-            "atomic-product-section-children": LocalJSX.AtomicProductSectionChildren & JSXBase.HTMLAttributes<HTMLAtomicProductSectionChildrenElement>;
             /**
              * @alpha This section is intended to render an informative summary of the product's description.
              * Behavior:
