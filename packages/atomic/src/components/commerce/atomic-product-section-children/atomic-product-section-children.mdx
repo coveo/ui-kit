@@ -1,0 +1,76 @@
+import { Canvas, ArgTypes, Meta, Title, Description, Stories, Subtitle } from '@storybook/blocks';
+import * as AtomicProductSectionChildrenStories from './atomic-product-section-children.new.stories';
+import { CanvasWithGithub } from '../../../../storybook-utils/documentation/canvas-with-github';
+
+<Meta of={AtomicProductSectionChildrenStories} />
+
+<Title />
+<Subtitle><Description/></Subtitle>
+
+<CanvasWithGithub
+  of={AtomicProductSectionChildrenStories.Default}
+  githubPath="commerce/atomic-product-section-children/atomic-product-section-children.ts"
+/>
+
+## Usage
+This section is meant to render child products, available when using the `<atomic-product-children>` component.
+It displays related products, variants, accessories, or bundle options that are associated with the main product.
+
+**Key Features:**
+- Shows children at the bottom of the result, visually separated from the main product
+- Content is indented and wrapped in a border to distinguish it from the parent product
+- Typically used for displaying product bundles, accessories, variants, or related items
+- Automatically hides when empty (no child content)
+
+### Example within a Product Template
+```html
+<atomic-commerce-product-list>
+  <atomic-product-template>
+    <template>
+      <atomic-product-section-visual>
+        <atomic-product-image field="ec_thumbnails"></atomic-product-image>
+      </atomic-product-section-visual>
+
+      <atomic-product-section-name>
+        <atomic-product-link class="font-bold"></atomic-product-link>
+      </atomic-product-section-name>
+
+      <atomic-product-section-emphasized>
+        <atomic-product-price currency="USD"></atomic-product-price>
+      </atomic-product-section-emphasized>
+
+      <atomic-product-section-children>
+        <atomic-product-children>
+          <!-- Child products will be rendered here -->
+        </atomic-product-children>
+      </atomic-product-section-children>
+    </template>
+  </atomic-product-template>
+</atomic-commerce-product-list>
+```
+
+### Common Use Cases
+- **Product Bundles**: Display items that come together as a package
+- **Accessories**: Show compatible accessories or add-ons
+- **Product Variants**: List different colors, sizes, or configurations
+- **Related Products**: Display complementary or alternative items
+- **Upsell/Cross-sell**: Present premium options or additional products
+
+### Styling Guidelines
+- Use indentation (margin-left) to visually separate child products from the parent
+- Apply borders or background colors to clearly distinguish the child section
+- Keep child product information concise to avoid overwhelming the user
+- Consider using smaller font sizes for child product details
+- Maintain visual hierarchy with the parent product remaining prominent
+
+### Content Structure Recommendations
+- Lead with a clear heading that describes the relationship (e.g., "Bundle Options", "Available in")
+- List child products in a logical order (price, popularity, relevance)
+- Include pricing information when relevant
+- Use consistent formatting for all child items
+
+## Examples
+<Stories title={""}/>
+
+## Reference
+<ArgTypes />

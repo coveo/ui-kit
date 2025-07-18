@@ -1,0 +1,78 @@
+import { Canvas, ArgTypes, Meta, Title, Description, Stories, Subtitle } from '@storybook/blocks';
+import * as AtomicProductSectionBottomMetadataStories from './atomic-product-section-bottom-metadata.new.stories';
+import { CanvasWithGithub } from '../../../../storybook-utils/documentation/canvas-with-github';
+
+<Meta of={AtomicProductSectionBottomMetadataStories} />
+
+<Title />
+<Subtitle><Description/></Subtitle>
+
+<CanvasWithGithub
+  of={AtomicProductSectionBottomMetadataStories.Default}
+  githubPath="commerce/atomic-product-section-bottom-metadata/atomic-product-section-bottom-metadata.ts"
+/>
+
+## Usage
+This section is meant to render additional descriptive information about the product.
+It typically appears at the bottom of the product card and provides supplementary details that help customers make informed decisions.
+
+**Key Features:**
+- Has a maximum height of two lines to maintain consistent layout
+- Exposes the `--line-height` variable so child elements can adjust to the current line height
+- Has a defined CSS `color` property for text consistency
+- Has a specific font weight for visual hierarchy
+- Automatically hides when empty (no child content)
+
+### Example within a Product Template
+```html
+<atomic-commerce-product-list>
+  <atomic-product-template>
+    <template>
+      <atomic-product-section-visual>
+        <atomic-product-image field="ec_thumbnails"></atomic-product-image>
+      </atomic-product-section-visual>
+
+      <atomic-product-section-name>
+        <atomic-product-link class="font-bold"></atomic-product-link>
+      </atomic-product-section-name>
+
+      <atomic-product-section-emphasized>
+        <atomic-product-price currency="USD"></atomic-product-price>
+      </atomic-product-section-emphasized>
+
+      <atomic-product-section-description>
+        <atomic-product-excerpt field="ec_description"></atomic-product-excerpt>
+      </atomic-product-section-description>
+
+      <atomic-product-section-bottom-metadata>
+        <span class="text-green-600">✓ In Stock</span>
+        <span class="text-gray-500">• Free shipping</span>
+      </atomic-product-section-bottom-metadata>
+    </template>
+  </atomic-product-template>
+</atomic-commerce-product-list>
+```
+
+### CSS Variables
+The component exposes the following CSS variable for styling consistency:
+- `--line-height`: The current line height that child elements should align to
+
+### Common Use Cases
+- **Shipping Information**: Display delivery options, shipping costs, or delivery timeframes
+- **Availability Status**: Show stock status, availability, or inventory levels
+- **Return Policy**: Highlight return periods or warranty information
+- **Promotions**: Display special offers, discounts, or promotional badges
+- **Trust Signals**: Show certifications, guarantees, or quality assurances
+
+### Styling Guidelines
+- Respect the two-line height constraint: `max-height: calc(var(--line-height) * 2)`
+- Use appropriate line height: `line-height: var(--line-height)`
+- Keep text size small and unobtrusive (typically 11px-12px)
+- Use muted colors that don't compete with primary product information
+- Consider using icons or small badges to convey information quickly
+
+## Examples
+<Stories title={""}/>
+
+## Reference
+<ArgTypes />

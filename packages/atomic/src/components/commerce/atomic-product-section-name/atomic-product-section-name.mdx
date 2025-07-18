@@ -1,0 +1,66 @@
+import { Canvas, ArgTypes, Meta, Title, Description, Stories, Subtitle } from '@storybook/blocks';
+import * as AtomicProductSectionNameStories from './atomic-product-section-name.new.stories';
+import { CanvasWithGithub } from '../../../../storybook-utils/documentation/canvas-with-github';
+
+<Meta of={AtomicProductSectionNameStories} />
+
+<Title />
+<Subtitle><Description/></Subtitle>
+
+<CanvasWithGithub
+  of={AtomicProductSectionNameStories.Default}
+  githubPath="commerce/atomic-product-section-name/atomic-product-section-name.ts"
+/>
+
+## Usage
+This section is intended to display the product's name, and its main use is to make the product list scannable.
+It serves as the primary identifier for products in listings and helps users quickly understand what each product is.
+
+**Key Features:**
+- Has a fixed height of two lines on grid layouts to maintain consistent visual spacing
+- Exposes the `--line-height` CSS variable so child elements can adjust to the current line height
+- Has a defined CSS `color` property for text consistency
+- Automatically truncates overflow text to maintain layout integrity
+- Automatically hides when empty (no child content)
+
+### Example within a Product Template
+```html
+<atomic-commerce-product-list>
+  <atomic-product-template>
+    <template>
+      <atomic-product-section-visual>
+        <atomic-product-image field="ec_thumbnails"></atomic-product-image>
+      </atomic-product-section-visual>
+
+      <atomic-product-section-name>
+        <atomic-product-link class="font-bold"></atomic-product-link>
+      </atomic-product-section-name>
+
+      <atomic-product-section-metadata>
+        <atomic-product-rating field="ec_rating"></atomic-product-rating>
+      </atomic-product-section-metadata>
+
+      <atomic-product-section-emphasized>
+        <atomic-product-price currency="USD"></atomic-product-price>
+      </atomic-product-section-emphasized>
+    </template>
+  </atomic-product-template>
+</atomic-commerce-product-list>
+```
+
+### CSS Variables
+The component exposes the following CSS variable for styling consistency:
+- `--line-height`: The current line height that child elements should align to
+
+### Styling Guidelines
+- Child elements should respect the two-line height limit: `height: calc(var(--line-height) * 2)`
+- Use `line-height: var(--line-height)` for consistent spacing
+- Implement text overflow handling with ellipsis or line clamping for long titles
+- Ensure sufficient contrast and readability for the product name text
+- Consider using semantic HTML elements like `<h3>` or `<h4>` for accessibility
+
+## Examples
+<Stories title={""}/>
+
+## Reference
+<ArgTypes />
