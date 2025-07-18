@@ -11,9 +11,9 @@ import {html} from 'lit';
 const {play, decorator} = wrapInCommerceInterface({skipFirstRequest: true});
 
 const meta: Meta = {
-  component: 'atomic-commerce-numeric-facet',
-  title: 'Commerce/atomic-commerce-numeric-facet',
-  id: 'atomic-commerce-numeric-facet',
+  component: 'atomic-commerce-timeframe-facet',
+  title: 'Commerce/atomic-commerce-timeframe-facet',
+  id: 'atomic-commerce-timeframe-facet',
   render: renderComponent,
   decorators: [decorator],
   parameters,
@@ -23,7 +23,7 @@ const meta: Meta = {
 export default meta;
 
 export const Default: Story = {
-  name: 'atomic-commerce-numeric-facet',
+  name: 'atomic-commerce-timeframe-facet',
   decorators: [
     (_) => {
       return html`<div id="code-root">
@@ -34,6 +34,6 @@ export const Default: Story = {
   play: async (context) => {
     await play(context);
     await playExecuteFirstRequest(context);
-    playKeepOnlyFirstFacetOfType('atomic-commerce-numeric-facet', context);
+    playKeepOnlyFirstFacetOfType('atomic-commerce-timeframe-facet', context);
   },
 };

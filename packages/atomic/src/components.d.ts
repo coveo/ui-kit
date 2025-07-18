@@ -6,7 +6,7 @@
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
 import { AutomaticFacet, CategoryFacetSortCriterion, DateFilterRange, DateRangeRequest, FacetResultsMustMatch, FacetSortCriterion, FoldedResult, GeneratedAnswer, GeneratedAnswerCitation, InlineLink, InteractiveCitation, InteractiveResult, LogLevel, NumericFilter, NumericFilterState, RangeFacetRangeAlgorithm, RangeFacetSortCriterion, RelativeDateUnit, Result, ResultTemplate, ResultTemplateCondition, SearchEngine, SearchStatus } from "@coveo/headless";
-import { CategoryFacet, CommerceEngine, DateFacet, ProductListingSummaryState, SearchSummaryState, Summary } from "@coveo/headless/commerce";
+import { CategoryFacet, CommerceEngine, ProductListingSummaryState, SearchSummaryState, Summary } from "@coveo/headless/commerce";
 import { i18n } from "i18next";
 import { AtomicInterface } from "./utils/initialization-utils";
 import { AnyBindings } from "./components/common/interface/bindings";
@@ -32,7 +32,7 @@ import { InitializationOptions } from "./components/search/atomic-search-interfa
 import { StandaloneSearchBoxData } from "./utils/local-storage-utils";
 import { SearchBoxSuggestionElement } from "./components/common/suggestions/suggestions-common";
 export { AutomaticFacet, CategoryFacetSortCriterion, DateFilterRange, DateRangeRequest, FacetResultsMustMatch, FacetSortCriterion, FoldedResult, GeneratedAnswer, GeneratedAnswerCitation, InlineLink, InteractiveCitation, InteractiveResult, LogLevel, NumericFilter, NumericFilterState, RangeFacetRangeAlgorithm, RangeFacetSortCriterion, RelativeDateUnit, Result, ResultTemplate, ResultTemplateCondition, SearchEngine, SearchStatus } from "@coveo/headless";
-export { CategoryFacet, CommerceEngine, DateFacet, ProductListingSummaryState, SearchSummaryState, Summary } from "@coveo/headless/commerce";
+export { CategoryFacet, CommerceEngine, ProductListingSummaryState, SearchSummaryState, Summary } from "@coveo/headless/commerce";
 export { i18n } from "i18next";
 export { AtomicInterface } from "./utils/initialization-utils";
 export { AnyBindings } from "./components/common/interface/bindings";
@@ -432,29 +432,6 @@ export namespace Components {
         "value": string;
     }
     /**
-     * A facet is a list of values for a certain field occurring in the results.
-     * An `atomic-commerce-timeframe-facet` displays a facet of the results for the current query as date intervals.
-     * @alpha 
-     */
-    interface AtomicCommerceTimeframeFacet {
-        /**
-          * The date facet controller instance.
-         */
-        "facet": DateFacet;
-        /**
-          * The field identifier for this facet.
-         */
-        "field"?: string;
-        /**
-          * Specifies whether the facet is collapsed.
-         */
-        "isCollapsed": boolean;
-        /**
-          * The summary controller instance.
-         */
-        "summary": Summary<SearchSummaryState | ProductListingSummaryState>;
-    }
-    /**
      * The `atomic-did-you-mean` component is responsible for handling query corrections. When a query returns no result but finds a possible query correction, the component either suggests the correction or automatically triggers a new query with the suggested term.
      */
     interface AtomicDidYouMean {
@@ -557,18 +534,6 @@ export namespace Components {
           * Whether this facet should contain a search box.
          */
         "withSearch": boolean;
-    }
-    /**
-     * Internal component made to be integrated in a TimeframeFacet.
-     */
-    interface AtomicFacetDateInput {
-        "bindings": AnyBindings;
-        "facetId": string;
-        "label": string;
-        "max"?: string;
-        "min"?: string;
-        "rangeGetter": () => DateFilterRange | undefined;
-        "rangeSetter": (range: DateRangeRequest) => void;
     }
     /**
      * The `atomic-facet-manager` helps reorder facets and their values to match the most recent search response with the most relevant results.
@@ -3226,6 +3191,19 @@ export namespace Components {
         "tabsIncluded": string[] | string;
     }
     /**
+     * @deprecated Use `atomic-facet-date-input` instead. This component is meant to be used with Stencil components only.
+     * Internal component made to be integrated in a TimeframeFacet.
+     */
+    interface AtomicStencilFacetDateInput {
+        "bindings": AnyBindings;
+        "facetId": string;
+        "label": string;
+        "max"?: string;
+        "min"?: string;
+        "rangeGetter": () => DateFilterRange | undefined;
+        "rangeSetter": (range: DateRangeRequest) => void;
+    }
+    /**
      * The `atomic-suggestion-renderer` component is used to render individual suggestions. It was created to isolate
      * the rendering logic of the 'content' property of the `SearchBoxSuggestionElement` interface. This property can be Stencil
      * VNode or native Element so there must be a Stencil component to render it. For Lit components using this component, they will
@@ -3404,10 +3382,6 @@ export interface AtomicCommerceProductsPerPageCustomEvent<T> extends CustomEvent
     detail: T;
     target: HTMLAtomicCommerceProductsPerPageElement;
 }
-export interface AtomicFacetDateInputCustomEvent<T> extends CustomEvent<T> {
-    detail: T;
-    target: HTMLAtomicFacetDateInputElement;
-}
 export interface AtomicFacetNumberInputCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLAtomicFacetNumberInputElement;
@@ -3487,6 +3461,10 @@ export interface AtomicSmartSnippetFeedbackModalCustomEvent<T> extends CustomEve
 export interface AtomicSmartSnippetSourceCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLAtomicSmartSnippetSourceElement;
+}
+export interface AtomicStencilFacetDateInputCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLAtomicStencilFacetDateInputElement;
 }
 declare global {
     /**
@@ -3693,17 +3671,6 @@ declare global {
         new (): HTMLAtomicCommerceTextElement;
     };
     /**
-     * A facet is a list of values for a certain field occurring in the results.
-     * An `atomic-commerce-timeframe-facet` displays a facet of the results for the current query as date intervals.
-     * @alpha 
-     */
-    interface HTMLAtomicCommerceTimeframeFacetElement extends Components.AtomicCommerceTimeframeFacet, HTMLStencilElement {
-    }
-    var HTMLAtomicCommerceTimeframeFacetElement: {
-        prototype: HTMLAtomicCommerceTimeframeFacetElement;
-        new (): HTMLAtomicCommerceTimeframeFacetElement;
-    };
-    /**
      * The `atomic-did-you-mean` component is responsible for handling query corrections. When a query returns no result but finds a possible query correction, the component either suggests the correction or automatically triggers a new query with the suggested term.
      */
     interface HTMLAtomicDidYouMeanElement extends Components.AtomicDidYouMean, HTMLStencilElement {
@@ -3730,26 +3697,6 @@ declare global {
     var HTMLAtomicFacetElement: {
         prototype: HTMLAtomicFacetElement;
         new (): HTMLAtomicFacetElement;
-    };
-    interface HTMLAtomicFacetDateInputElementEventMap {
-        "atomic/dateInputApply": any;
-    }
-    /**
-     * Internal component made to be integrated in a TimeframeFacet.
-     */
-    interface HTMLAtomicFacetDateInputElement extends Components.AtomicFacetDateInput, HTMLStencilElement {
-        addEventListener<K extends keyof HTMLAtomicFacetDateInputElementEventMap>(type: K, listener: (this: HTMLAtomicFacetDateInputElement, ev: AtomicFacetDateInputCustomEvent<HTMLAtomicFacetDateInputElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
-        removeEventListener<K extends keyof HTMLAtomicFacetDateInputElementEventMap>(type: K, listener: (this: HTMLAtomicFacetDateInputElement, ev: AtomicFacetDateInputCustomEvent<HTMLAtomicFacetDateInputElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
-    }
-    var HTMLAtomicFacetDateInputElement: {
-        prototype: HTMLAtomicFacetDateInputElement;
-        new (): HTMLAtomicFacetDateInputElement;
     };
     /**
      * The `atomic-facet-manager` helps reorder facets and their values to match the most recent search response with the most relevant results.
@@ -5361,6 +5308,27 @@ declare global {
         prototype: HTMLAtomicSortExpressionElement;
         new (): HTMLAtomicSortExpressionElement;
     };
+    interface HTMLAtomicStencilFacetDateInputElementEventMap {
+        "atomic/dateInputApply": any;
+    }
+    /**
+     * @deprecated Use `atomic-facet-date-input` instead. This component is meant to be used with Stencil components only.
+     * Internal component made to be integrated in a TimeframeFacet.
+     */
+    interface HTMLAtomicStencilFacetDateInputElement extends Components.AtomicStencilFacetDateInput, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLAtomicStencilFacetDateInputElementEventMap>(type: K, listener: (this: HTMLAtomicStencilFacetDateInputElement, ev: AtomicStencilFacetDateInputCustomEvent<HTMLAtomicStencilFacetDateInputElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLAtomicStencilFacetDateInputElementEventMap>(type: K, listener: (this: HTMLAtomicStencilFacetDateInputElement, ev: AtomicStencilFacetDateInputCustomEvent<HTMLAtomicStencilFacetDateInputElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
+    }
+    var HTMLAtomicStencilFacetDateInputElement: {
+        prototype: HTMLAtomicStencilFacetDateInputElement;
+        new (): HTMLAtomicStencilFacetDateInputElement;
+    };
     /**
      * The `atomic-suggestion-renderer` component is used to render individual suggestions. It was created to isolate
      * the rendering logic of the 'content' property of the `SearchBoxSuggestionElement` interface. This property can be Stencil
@@ -5470,11 +5438,9 @@ declare global {
         "atomic-commerce-refine-modal": HTMLAtomicCommerceRefineModalElement;
         "atomic-commerce-refine-toggle": HTMLAtomicCommerceRefineToggleElement;
         "atomic-commerce-text": HTMLAtomicCommerceTextElement;
-        "atomic-commerce-timeframe-facet": HTMLAtomicCommerceTimeframeFacetElement;
         "atomic-did-you-mean": HTMLAtomicDidYouMeanElement;
         "atomic-external": HTMLAtomicExternalElement;
         "atomic-facet": HTMLAtomicFacetElement;
-        "atomic-facet-date-input": HTMLAtomicFacetDateInputElement;
         "atomic-facet-manager": HTMLAtomicFacetManagerElement;
         "atomic-facet-number-input": HTMLAtomicFacetNumberInputElement;
         "atomic-field-condition": HTMLAtomicFieldConditionElement;
@@ -5623,6 +5589,7 @@ declare global {
         "atomic-smart-snippet-suggestions": HTMLAtomicSmartSnippetSuggestionsElement;
         "atomic-sort-dropdown": HTMLAtomicSortDropdownElement;
         "atomic-sort-expression": HTMLAtomicSortExpressionElement;
+        "atomic-stencil-facet-date-input": HTMLAtomicStencilFacetDateInputElement;
         "atomic-suggestion-renderer": HTMLAtomicSuggestionRendererElement;
         "atomic-tab": HTMLAtomicTabElement;
         "atomic-tab-bar": HTMLAtomicTabBarElement;
@@ -6004,29 +5971,6 @@ declare namespace LocalJSX {
         "value": string;
     }
     /**
-     * A facet is a list of values for a certain field occurring in the results.
-     * An `atomic-commerce-timeframe-facet` displays a facet of the results for the current query as date intervals.
-     * @alpha 
-     */
-    interface AtomicCommerceTimeframeFacet {
-        /**
-          * The date facet controller instance.
-         */
-        "facet": DateFacet;
-        /**
-          * The field identifier for this facet.
-         */
-        "field"?: string;
-        /**
-          * Specifies whether the facet is collapsed.
-         */
-        "isCollapsed"?: boolean;
-        /**
-          * The summary controller instance.
-         */
-        "summary": Summary<SearchSummaryState | ProductListingSummaryState>;
-    }
-    /**
      * The `atomic-did-you-mean` component is responsible for handling query corrections. When a query returns no result but finds a possible query correction, the component either suggests the correction or automatically triggers a new query with the suggested term.
      */
     interface AtomicDidYouMean {
@@ -6129,19 +6073,6 @@ declare namespace LocalJSX {
           * Whether this facet should contain a search box.
          */
         "withSearch"?: boolean;
-    }
-    /**
-     * Internal component made to be integrated in a TimeframeFacet.
-     */
-    interface AtomicFacetDateInput {
-        "bindings": AnyBindings;
-        "facetId": string;
-        "label": string;
-        "max"?: string;
-        "min"?: string;
-        "onAtomic/dateInputApply"?: (event: AtomicFacetDateInputCustomEvent<any>) => void;
-        "rangeGetter": () => DateFilterRange | undefined;
-        "rangeSetter": (range: DateRangeRequest) => void;
     }
     /**
      * The `atomic-facet-manager` helps reorder facets and their values to match the most recent search response with the most relevant results.
@@ -8706,6 +8637,20 @@ declare namespace LocalJSX {
         "tabsIncluded"?: string[] | string;
     }
     /**
+     * @deprecated Use `atomic-facet-date-input` instead. This component is meant to be used with Stencil components only.
+     * Internal component made to be integrated in a TimeframeFacet.
+     */
+    interface AtomicStencilFacetDateInput {
+        "bindings": AnyBindings;
+        "facetId": string;
+        "label": string;
+        "max"?: string;
+        "min"?: string;
+        "onAtomic/dateInputApply"?: (event: AtomicStencilFacetDateInputCustomEvent<any>) => void;
+        "rangeGetter": () => DateFilterRange | undefined;
+        "rangeSetter": (range: DateRangeRequest) => void;
+    }
+    /**
      * The `atomic-suggestion-renderer` component is used to render individual suggestions. It was created to isolate
      * the rendering logic of the 'content' property of the `SearchBoxSuggestionElement` interface. This property can be Stencil
      * VNode or native Element so there must be a Stencil component to render it. For Lit components using this component, they will
@@ -8896,11 +8841,9 @@ declare namespace LocalJSX {
         "atomic-commerce-refine-modal": AtomicCommerceRefineModal;
         "atomic-commerce-refine-toggle": AtomicCommerceRefineToggle;
         "atomic-commerce-text": AtomicCommerceText;
-        "atomic-commerce-timeframe-facet": AtomicCommerceTimeframeFacet;
         "atomic-did-you-mean": AtomicDidYouMean;
         "atomic-external": AtomicExternal;
         "atomic-facet": AtomicFacet;
-        "atomic-facet-date-input": AtomicFacetDateInput;
         "atomic-facet-manager": AtomicFacetManager;
         "atomic-facet-number-input": AtomicFacetNumberInput;
         "atomic-field-condition": AtomicFieldCondition;
@@ -9049,6 +8992,7 @@ declare namespace LocalJSX {
         "atomic-smart-snippet-suggestions": AtomicSmartSnippetSuggestions;
         "atomic-sort-dropdown": AtomicSortDropdown;
         "atomic-sort-expression": AtomicSortExpression;
+        "atomic-stencil-facet-date-input": AtomicStencilFacetDateInput;
         "atomic-suggestion-renderer": AtomicSuggestionRenderer;
         "atomic-tab": AtomicTab;
         "atomic-tab-bar": AtomicTabBar;
@@ -9163,12 +9107,6 @@ declare module "@stencil/core" {
              */
             "atomic-commerce-text": LocalJSX.AtomicCommerceText & JSXBase.HTMLAttributes<HTMLAtomicCommerceTextElement>;
             /**
-             * A facet is a list of values for a certain field occurring in the results.
-             * An `atomic-commerce-timeframe-facet` displays a facet of the results for the current query as date intervals.
-             * @alpha 
-             */
-            "atomic-commerce-timeframe-facet": LocalJSX.AtomicCommerceTimeframeFacet & JSXBase.HTMLAttributes<HTMLAtomicCommerceTimeframeFacetElement>;
-            /**
              * The `atomic-did-you-mean` component is responsible for handling query corrections. When a query returns no result but finds a possible query correction, the component either suggests the correction or automatically triggers a new query with the suggested term.
              */
             "atomic-did-you-mean": LocalJSX.AtomicDidYouMean & JSXBase.HTMLAttributes<HTMLAtomicDidYouMeanElement>;
@@ -9181,10 +9119,6 @@ declare module "@stencil/core" {
              * An `atomic-facet` displays a facet of the results for the current query.
              */
             "atomic-facet": LocalJSX.AtomicFacet & JSXBase.HTMLAttributes<HTMLAtomicFacetElement>;
-            /**
-             * Internal component made to be integrated in a TimeframeFacet.
-             */
-            "atomic-facet-date-input": LocalJSX.AtomicFacetDateInput & JSXBase.HTMLAttributes<HTMLAtomicFacetDateInputElement>;
             /**
              * The `atomic-facet-manager` helps reorder facets and their values to match the most recent search response with the most relevant results.
              */
@@ -9824,6 +9758,11 @@ declare module "@stencil/core" {
              * The `atomic-sort-expression` component defines a sort expression. This component must be inside an `atomic-sort-dropdown` component.
              */
             "atomic-sort-expression": LocalJSX.AtomicSortExpression & JSXBase.HTMLAttributes<HTMLAtomicSortExpressionElement>;
+            /**
+             * @deprecated Use `atomic-facet-date-input` instead. This component is meant to be used with Stencil components only.
+             * Internal component made to be integrated in a TimeframeFacet.
+             */
+            "atomic-stencil-facet-date-input": LocalJSX.AtomicStencilFacetDateInput & JSXBase.HTMLAttributes<HTMLAtomicStencilFacetDateInputElement>;
             /**
              * The `atomic-suggestion-renderer` component is used to render individual suggestions. It was created to isolate
              * the rendering logic of the 'content' property of the `SearchBoxSuggestionElement` interface. This property can be Stencil

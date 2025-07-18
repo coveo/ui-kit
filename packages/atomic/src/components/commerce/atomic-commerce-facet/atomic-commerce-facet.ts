@@ -110,7 +110,10 @@ export class AtomicCommerceFacet
   @state()
   public summaryState!: SearchSummaryState | ProductListingSummaryState;
 
-  @state() public facetState!: RegularFacetState;
+  @bindStateToController('facet')
+  @state()
+  public facetState!: RegularFacetState;
+
   @state() public error!: Error;
 
   static styles: CSSResultGroup = [unsafeCSS(styles)];
