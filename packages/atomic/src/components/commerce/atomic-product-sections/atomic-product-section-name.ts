@@ -1,5 +1,6 @@
+import {LitElement} from 'lit';
+import {customElement} from 'lit/decorators.js';
 import {hideEmptySection} from '@/src/utils/item-section-utils';
-import {Element, Component} from '@stencil/core';
 
 /**
  * @alpha
@@ -11,14 +12,19 @@ import {Element, Component} from '@stencil/core';
  * * Exposes the `--line-height` CSS variable so child elements can adjust to the current line height.
  * * Has a defined CSS `color` property for text.
  */
-@Component({
-  tag: 'atomic-product-section-name',
-  shadow: false,
-})
-export class AtomicProductSectionName {
-  @Element() private host!: HTMLElement;
+@customElement('atomic-product-section-name')
+export class AtomicProductSectionName extends LitElement {
+  createRenderRoot() {
+    return this;
+  }
 
-  public componentDidRender() {
-    hideEmptySection(this.host);
+  updated() {
+    hideEmptySection(this);
+  }
+}
+
+declare global {
+  interface HTMLElementTagNameMap {
+    'atomic-product-section-name': AtomicProductSectionName;
   }
 }

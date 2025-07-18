@@ -1823,15 +1823,6 @@ export namespace Components {
     interface AtomicProductSectionMetadata {
     }
     /**
-     * @alpha This section is intended to display the product's name, and its main use is to make the product list scannable.
-     * Behavior:
-     * * Has a fixed height of two lines on grid layouts.
-     * * Exposes the `--line-height` CSS variable so child elements can adjust to the current line height.
-     * * Has a defined CSS `color` property for text.
-     */
-    interface AtomicProductSectionName {
-    }
-    /**
      * @alpha This section is intended to provide visual information about the product.
      * In commerce, an image is a great shorthand for a product category.
      * Behavior:
@@ -4397,19 +4388,6 @@ declare global {
         new (): HTMLAtomicProductSectionMetadataElement;
     };
     /**
-     * @alpha This section is intended to display the product's name, and its main use is to make the product list scannable.
-     * Behavior:
-     * * Has a fixed height of two lines on grid layouts.
-     * * Exposes the `--line-height` CSS variable so child elements can adjust to the current line height.
-     * * Has a defined CSS `color` property for text.
-     */
-    interface HTMLAtomicProductSectionNameElement extends Components.AtomicProductSectionName, HTMLStencilElement {
-    }
-    var HTMLAtomicProductSectionNameElement: {
-        prototype: HTMLAtomicProductSectionNameElement;
-        new (): HTMLAtomicProductSectionNameElement;
-    };
-    /**
      * @alpha This section is intended to provide visual information about the product.
      * In commerce, an image is a great shorthand for a product category.
      * Behavior:
@@ -5389,7 +5367,6 @@ declare global {
         "atomic-product-section-description": HTMLAtomicProductSectionDescriptionElement;
         "atomic-product-section-emphasized": HTMLAtomicProductSectionEmphasizedElement;
         "atomic-product-section-metadata": HTMLAtomicProductSectionMetadataElement;
-        "atomic-product-section-name": HTMLAtomicProductSectionNameElement;
         "atomic-product-section-visual": HTMLAtomicProductSectionVisualElement;
         "atomic-query-error": HTMLAtomicQueryErrorElement;
         "atomic-query-summary": HTMLAtomicQuerySummaryElement;
@@ -7172,15 +7149,6 @@ declare namespace LocalJSX {
     interface AtomicProductSectionMetadata {
     }
     /**
-     * @alpha This section is intended to display the product's name, and its main use is to make the product list scannable.
-     * Behavior:
-     * * Has a fixed height of two lines on grid layouts.
-     * * Exposes the `--line-height` CSS variable so child elements can adjust to the current line height.
-     * * Has a defined CSS `color` property for text.
-     */
-    interface AtomicProductSectionName {
-    }
-    /**
      * @alpha This section is intended to provide visual information about the product.
      * In commerce, an image is a great shorthand for a product category.
      * Behavior:
@@ -8721,7 +8689,6 @@ declare namespace LocalJSX {
         "atomic-product-section-description": AtomicProductSectionDescription;
         "atomic-product-section-emphasized": AtomicProductSectionEmphasized;
         "atomic-product-section-metadata": AtomicProductSectionMetadata;
-        "atomic-product-section-name": AtomicProductSectionName;
         "atomic-product-section-visual": AtomicProductSectionVisual;
         "atomic-query-error": AtomicQueryError;
         "atomic-query-summary": AtomicQuerySummary;
@@ -9139,14 +9106,6 @@ declare module "@stencil/core" {
              * * Is the closest element beneath the title section.
              */
             "atomic-product-section-metadata": LocalJSX.AtomicProductSectionMetadata & JSXBase.HTMLAttributes<HTMLAtomicProductSectionMetadataElement>;
-            /**
-             * @alpha This section is intended to display the product's name, and its main use is to make the product list scannable.
-             * Behavior:
-             * * Has a fixed height of two lines on grid layouts.
-             * * Exposes the `--line-height` CSS variable so child elements can adjust to the current line height.
-             * * Has a defined CSS `color` property for text.
-             */
-            "atomic-product-section-name": LocalJSX.AtomicProductSectionName & JSXBase.HTMLAttributes<HTMLAtomicProductSectionNameElement>;
             /**
              * @alpha This section is intended to provide visual information about the product.
              * In commerce, an image is a great shorthand for a product category.
