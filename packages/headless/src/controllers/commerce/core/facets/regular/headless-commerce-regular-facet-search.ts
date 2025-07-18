@@ -39,20 +39,24 @@ export function buildRegularFacetSearch(
     throw loadReducerError;
   }
 
-  const {showMoreResults, state, updateCaptions, ...restOfFacetSearch} =
-    buildFacetSearch(engine, {
-      ...props,
-      executeFacetSearchActionCreator: (facetId: string) =>
-        executeCommerceFacetSearch({
-          facetId,
-          facetSearchType: props.options.type,
-        }),
-      executeFieldSuggestActionCreator: (facetId: string) =>
-        executeCommerceFieldSuggest({
-          facetId,
-          facetSearchType: props.options.type,
-        }),
-    });
+  const {
+    showMoreResults: _showMoreResults,
+    state: _state,
+    updateCaptions: _updateCaptions,
+    ...restOfFacetSearch
+  } = buildFacetSearch(engine, {
+    ...props,
+    executeFacetSearchActionCreator: (facetId: string) =>
+      executeCommerceFacetSearch({
+        facetId,
+        facetSearchType: props.options.type,
+      }),
+    executeFieldSuggestActionCreator: (facetId: string) =>
+      executeCommerceFieldSuggest({
+        facetId,
+        facetSearchType: props.options.type,
+      }),
+  });
 
   return {
     ...restOfFacetSearch,

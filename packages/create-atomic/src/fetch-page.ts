@@ -27,7 +27,7 @@ export async function fetchPageManifest(
     let manifest: IManifest;
     try {
       manifest = await manifestGetter(client, pageId);
-    } catch (error) {
+    } catch (_) {
       continue;
     }
     return replaceResultsPlaceholder(manifest);

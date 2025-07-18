@@ -213,7 +213,7 @@ export function buildFacetGenerator(
       ? buildProductListing(engine).facetGenerator()
       : buildSearch(engine).facetGenerator();
 
-  const {state, ...restOfBaseController} = baseController;
+  const {state: _state, ...restOfBaseController} = baseController;
 
   return {
     ...restOfBaseController,

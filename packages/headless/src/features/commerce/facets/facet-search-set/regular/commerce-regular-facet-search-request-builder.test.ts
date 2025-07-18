@@ -85,8 +85,12 @@ describe('#buildFacetSearchRequest', () => {
     });
 
     it('returned request includes all properties returned by #buildFilterableCommerceAPIRequest except the #facets, #page, and #sort properties', () => {
-      const {facets, page, sort, ...expectedBaseRequest} =
-        buildFilterableCommerceAPIRequestMock.mock.results[0].value;
+      const {
+        facets: _facets,
+        page: _page,
+        sort: _sort,
+        ...expectedBaseRequest
+      } = buildFilterableCommerceAPIRequestMock.mock.results[0].value;
 
       expect(request).toEqual({
         ...expectedBaseRequest,

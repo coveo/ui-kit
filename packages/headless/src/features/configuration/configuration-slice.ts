@@ -129,9 +129,7 @@ function handleUpdateAnalyticsConfiguration(
       state.analytics.analyticsMode = 'next';
       state.analytics.trackingId = magicCookie;
     }
-  } catch (error) {
-    // Ignore error
-  }
+  } catch (_) {}
 
   if (!isNullOrUndefined(payload.runtimeEnvironment)) {
     state.analytics.runtimeEnvironment = payload.runtimeEnvironment;

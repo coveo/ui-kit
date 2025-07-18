@@ -51,11 +51,11 @@ describe('#buildPaginatedCommerceAPIRequest', () => {
   });
 
   it('sets base properties to the value returned by #buildBaseCommerceAPIRequest(#state, #navigatorContext)', () => {
-    const {page, perPage, ...restOfRequest} = buildPaginatedCommerceAPIRequest(
-      state,
-      navigatorContext,
-      slotId
-    );
+    const {
+      page: _page,
+      perPage: _perPage,
+      ...restOfRequest
+    } = buildPaginatedCommerceAPIRequest(state, navigatorContext, slotId);
 
     expect(buildBaseCommerceAPIRequest).toHaveBeenCalledWith(
       state,

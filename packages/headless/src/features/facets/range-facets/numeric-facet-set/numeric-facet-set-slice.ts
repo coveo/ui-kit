@@ -107,7 +107,7 @@ export function convertToNumericRangeRequests(
   values: NumericFacetValue[]
 ): NumericRangeRequest[] {
   return values.map((value) => {
-    const {numberOfResults, ...rest} = value;
+    const {numberOfResults: _numberOfResults, ...rest} = value;
     return rest;
   });
 }

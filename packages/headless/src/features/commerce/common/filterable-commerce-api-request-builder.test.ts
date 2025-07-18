@@ -64,10 +64,11 @@ describe('#buildFilterableCommerceAPIRequest', () => {
   });
 
   it('sets base properties to the value returned by #buildPaginatedCommerceAPIRequest(#state, #navigatorContext)', () => {
-    const {facets, sort, ...restOfRequest} = buildFilterableCommerceAPIRequest(
-      state,
-      navigatorContext
-    );
+    const {
+      facets: _facets,
+      sort: _sort,
+      ...restOfRequest
+    } = buildFilterableCommerceAPIRequest(state, navigatorContext);
 
     expect(buildPaginatedCommerceAPIRequest).toHaveBeenCalledWith(
       state,

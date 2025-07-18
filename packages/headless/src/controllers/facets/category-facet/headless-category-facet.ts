@@ -107,7 +107,7 @@ export function buildCategoryFacet(
     isForFieldSuggestions: false,
   });
 
-  const {state, ...restOfFacetSearch} = facetSearch;
+  const {state: _state, ...restOfFacetSearch} = facetSearch;
 
   return {
     ...coreController,

@@ -86,7 +86,7 @@ const decodeJSONWebToken = (token: string): CoveoJSONWebToken | false => {
     );
 
     return JSON.parse(jsonPayload) as CoveoJSONWebToken;
-  } catch (e) {
+  } catch (_) {
     return false;
   }
 };

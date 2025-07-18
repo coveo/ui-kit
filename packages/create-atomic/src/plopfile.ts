@@ -146,7 +146,7 @@ export default function (plop: NodePlopAPI) {
               input,
               'unknown'
             ));
-          } catch (error) {
+          } catch (_) {
             return `The search page with the id "${input}" does not exist.`;
           }
         },
