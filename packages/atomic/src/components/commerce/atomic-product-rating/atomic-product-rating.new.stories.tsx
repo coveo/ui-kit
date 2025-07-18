@@ -30,34 +30,78 @@ const meta: Meta = {
   title: 'Atomic-Commerce/Product Template Components/ProductRating',
   id: 'atomic-product-rating',
   render: renderComponent,
-  decorators: [
-    productTemplateDecorator,
-    commerceProductListDecorator,
-    commerceInterfaceDecorator,
-  ],
   parameters,
-  play: initializeCommerceInterface,
+  argTypes: {
+    'attributes-field': {
+      name: 'field',
+      type: 'string',
+      description: 'The field to use for the rating value',
+    },
+    'attributes-rating-details-field': {
+      name: 'rating-details-field',
+      type: 'string',
+      description:
+        'The field to use for rating details (e.g., number of reviews)',
+    },
+    'attributes-max-value-in-index': {
+      name: 'max-value-in-index',
+      type: 'number',
+      description: 'The maximum rating value in the index',
+    },
+    'attributes-icon': {
+      name: 'icon',
+      type: 'string',
+      description: 'The URL of the icon to use for rating display',
+    },
+  },
 };
 
 export default meta;
 
 export const Default: Story = {
   name: 'atomic-product-rating',
+  decorators: [
+    productTemplateDecorator,
+    commerceProductListDecorator,
+    commerceInterfaceDecorator,
+  ],
+  play: initializeCommerceInterface,
 };
 
 export const WithARatingDetailsField: Story = {
+  name: 'With Rating Details Field',
+  decorators: [
+    productTemplateDecorator,
+    commerceProductListDecorator,
+    commerceInterfaceDecorator,
+  ],
+  play: initializeCommerceInterface,
   args: {
     'attributes-rating-details-field': 'ec_rating',
   },
 };
 
 export const WithAMaxValueInIndex: Story = {
+  name: 'With Custom Max Value',
+  decorators: [
+    productTemplateDecorator,
+    commerceProductListDecorator,
+    commerceInterfaceDecorator,
+  ],
+  play: initializeCommerceInterface,
   args: {
     'attributes-max-value-in-index': 10,
   },
 };
 
 export const WithADifferentIcon: Story = {
+  name: 'With Custom Icon',
+  decorators: [
+    productTemplateDecorator,
+    commerceProductListDecorator,
+    commerceInterfaceDecorator,
+  ],
+  play: initializeCommerceInterface,
   args: {
     'attributes-icon':
       'https://raw.githubusercontent.com/Rush/Font-Awesome-SVG-PNG/master/black/svg/circle.svg',
