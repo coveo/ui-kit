@@ -1804,15 +1804,6 @@ export namespace Components {
     interface AtomicProductSectionDescription {
     }
     /**
-     * @alpha This section is intended to display the field that's important for its search criteria.
-     * For example, in Commerce, a product's price is often more important than the title itself.
-     * Behavior:
-     * * Has a very large font size.
-     * * Is the second closest element beneath the name section.
-     */
-    interface AtomicProductSectionEmphasized {
-    }
-    /**
      * @alpha This section is intended to display some fields that are directly related to the name of the product.
      * In commerce, this could be the product rating, which is tied to the nature of the product itself,
      * rather than to the product's description.
@@ -4370,19 +4361,6 @@ declare global {
         new (): HTMLAtomicProductSectionDescriptionElement;
     };
     /**
-     * @alpha This section is intended to display the field that's important for its search criteria.
-     * For example, in Commerce, a product's price is often more important than the title itself.
-     * Behavior:
-     * * Has a very large font size.
-     * * Is the second closest element beneath the name section.
-     */
-    interface HTMLAtomicProductSectionEmphasizedElement extends Components.AtomicProductSectionEmphasized, HTMLStencilElement {
-    }
-    var HTMLAtomicProductSectionEmphasizedElement: {
-        prototype: HTMLAtomicProductSectionEmphasizedElement;
-        new (): HTMLAtomicProductSectionEmphasizedElement;
-    };
-    /**
      * @alpha This section is intended to display some fields that are directly related to the name of the product.
      * In commerce, this could be the product rating, which is tied to the nature of the product itself,
      * rather than to the product's description.
@@ -5387,7 +5365,6 @@ declare global {
         "atomic-product-section-bottom-metadata": HTMLAtomicProductSectionBottomMetadataElement;
         "atomic-product-section-children": HTMLAtomicProductSectionChildrenElement;
         "atomic-product-section-description": HTMLAtomicProductSectionDescriptionElement;
-        "atomic-product-section-emphasized": HTMLAtomicProductSectionEmphasizedElement;
         "atomic-product-section-metadata": HTMLAtomicProductSectionMetadataElement;
         "atomic-product-section-name": HTMLAtomicProductSectionNameElement;
         "atomic-product-section-visual": HTMLAtomicProductSectionVisualElement;
@@ -7153,15 +7130,6 @@ declare namespace LocalJSX {
     interface AtomicProductSectionDescription {
     }
     /**
-     * @alpha This section is intended to display the field that's important for its search criteria.
-     * For example, in Commerce, a product's price is often more important than the title itself.
-     * Behavior:
-     * * Has a very large font size.
-     * * Is the second closest element beneath the name section.
-     */
-    interface AtomicProductSectionEmphasized {
-    }
-    /**
      * @alpha This section is intended to display some fields that are directly related to the name of the product.
      * In commerce, this could be the product rating, which is tied to the nature of the product itself,
      * rather than to the product's description.
@@ -8719,7 +8687,6 @@ declare namespace LocalJSX {
         "atomic-product-section-bottom-metadata": AtomicProductSectionBottomMetadata;
         "atomic-product-section-children": AtomicProductSectionChildren;
         "atomic-product-section-description": AtomicProductSectionDescription;
-        "atomic-product-section-emphasized": AtomicProductSectionEmphasized;
         "atomic-product-section-metadata": AtomicProductSectionMetadata;
         "atomic-product-section-name": AtomicProductSectionName;
         "atomic-product-section-visual": AtomicProductSectionVisual;
@@ -9122,14 +9089,6 @@ declare module "@stencil/core" {
              * * Has a defined CSS `color` property for text.
              */
             "atomic-product-section-description": LocalJSX.AtomicProductSectionDescription & JSXBase.HTMLAttributes<HTMLAtomicProductSectionDescriptionElement>;
-            /**
-             * @alpha This section is intended to display the field that's important for its search criteria.
-             * For example, in Commerce, a product's price is often more important than the title itself.
-             * Behavior:
-             * * Has a very large font size.
-             * * Is the second closest element beneath the name section.
-             */
-            "atomic-product-section-emphasized": LocalJSX.AtomicProductSectionEmphasized & JSXBase.HTMLAttributes<HTMLAtomicProductSectionEmphasizedElement>;
             /**
              * @alpha This section is intended to display some fields that are directly related to the name of the product.
              * In commerce, this could be the product rating, which is tied to the nature of the product itself,

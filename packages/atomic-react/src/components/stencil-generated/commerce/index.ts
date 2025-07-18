@@ -1,11 +1,11 @@
 /* eslint-disable */
 /* tslint:disable */
 /* auto-generated react proxies */
-import { createReactComponent } from './react-component-lib/index.js';
+import { createReactComponent } from './react-component-lib';
 
 import type { JSX } from '@coveo/atomic';
 
-import { defineCustomElements } from '@coveo/atomic/loader';
+import { defineCustomElements } from '@coveo/atomic/dist/atomic/loader';
 
 defineCustomElements();
 export const AtomicCommerceCategoryFacet = /*@__PURE__*/createReactComponent<JSX.AtomicCommerceCategoryFacet, HTMLAtomicCommerceCategoryFacetElement>('atomic-commerce-category-facet');
@@ -31,7 +31,6 @@ export const AtomicProductSectionBadges = /*@__PURE__*/createReactComponent<JSX.
 export const AtomicProductSectionBottomMetadata = /*@__PURE__*/createReactComponent<JSX.AtomicProductSectionBottomMetadata, HTMLAtomicProductSectionBottomMetadataElement>('atomic-product-section-bottom-metadata');
 export const AtomicProductSectionChildren = /*@__PURE__*/createReactComponent<JSX.AtomicProductSectionChildren, HTMLAtomicProductSectionChildrenElement>('atomic-product-section-children');
 export const AtomicProductSectionDescription = /*@__PURE__*/createReactComponent<JSX.AtomicProductSectionDescription, HTMLAtomicProductSectionDescriptionElement>('atomic-product-section-description');
-export const AtomicProductSectionEmphasized = /*@__PURE__*/createReactComponent<JSX.AtomicProductSectionEmphasized, HTMLAtomicProductSectionEmphasizedElement>('atomic-product-section-emphasized');
 export const AtomicProductSectionMetadata = /*@__PURE__*/createReactComponent<JSX.AtomicProductSectionMetadata, HTMLAtomicProductSectionMetadataElement>('atomic-product-section-metadata');
 export const AtomicProductSectionName = /*@__PURE__*/createReactComponent<JSX.AtomicProductSectionName, HTMLAtomicProductSectionNameElement>('atomic-product-section-name');
 export const AtomicProductSectionVisual = /*@__PURE__*/createReactComponent<JSX.AtomicProductSectionVisual, HTMLAtomicProductSectionVisualElement>('atomic-product-section-visual');
