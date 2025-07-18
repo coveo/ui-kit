@@ -1,0 +1,29 @@
+{
+  "name": "@coveo/create-atomic-component-project",
+  "version": "1.2.16",
+  "description": "Initialize a Coveo Atomic Library Project",
+  "type": "module",
+  "main": "index.js",
+  "bin": "index.js",
+  "files": [
+    "index.js",
+    "template/**/*",
+    "!template/**/project.json",
+    "template/.gitignore"
+  ],
+  "scripts": {
+    "publish:npm": "npm run-script -w=@coveo/ci npm-publish",
+    "publish:bump": "npm run-script -w=@coveo/ci bump",
+    "promote:npm:latest": "npm run-script -w=@coveo/ci promote-npm-prod"
+  },
+  "keywords": [
+    "coveo",
+    "cli",
+    "atomic"
+  ],
+  "author": "Coveo",
+  "license": "Apache-2.0",
+  "publishConfig": {
+    "access": "public"
+  }
+}
