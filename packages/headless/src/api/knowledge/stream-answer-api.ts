@@ -200,16 +200,11 @@ export const answerApi = answerSlice.injectEndpoints({
       serializeQueryArgs: ({endpointName, queryArgs}) => {
         // RTK Query serialize our endpoints and they're serialized state arguments as the key in the store.
         // Keys must match, because if anything in the query changes, it's not the same query anymore.
-        // Some fields need to be excluded in the projection though, in this case some analytics fields,
-        // as they will change during the streaming.
-        const clone = JSON.parse(JSON.stringify(queryArgs));
-        if (clone.analytics) {
-          delete clone.analytics.clientTimestamp;
-          delete clone.analytics.actionCause;
-        }
+        // Analytics data is excluded entirely as it contains volatile fields that change during streaming.
+        const {analytics, ...queryArgsWithoutAnalytics} = queryArgs;
 
-        // Standard RTK key, with some fields removed
-        return `${endpointName}(${JSON.stringify(clone)})`;
+        // Standard RTK key, with analytics excluded
+        return `${endpointName}(${JSON.stringify(queryArgsWithoutAnalytics)})`;
       },
       async onCacheEntryAdded(
         args,
@@ -340,6 +335,15 @@ export const constructAnswerQueryParams = (
 
   const context = selectContext(state);
 
+  // For 'select' usage, exclude volatile analytics fields to match serializeQueryArgs behavior
+  const baseAnalyticsParams = fromAnalyticsStateToAnalyticsParams(
+    state.configuration.analytics,
+    navigatorContext,
+    {actionCause: selectSearchActionCause(state)}
+  );
+
+  const analyticsParams = usage === 'select' ? {} : (baseAnalyticsParams ?? {});
+
   const searchHub = selectSearchHub(state);
   const pipeline = selectPipeline(state);
   const citationsFieldToInclude = selectFieldsToIncludeInCitation(state) ?? [];
@@ -389,13 +393,7 @@ export const constructAnswerQueryParams = (
       firstResult: state.pagination.firstResult,
     }),
     tab: selectActiveTab(state.tabSet),
-    ...fromAnalyticsStateToAnalyticsParams(
-      state.configuration.analytics,
-      navigatorContext,
-      {
-        actionCause: selectSearchActionCause(state),
-      }
-    ),
+    ...analyticsParams,
   };
 };
 
