@@ -46,6 +46,7 @@ const defaultOptions = {
     beginDelayedSelect: () => functionsMocks.exampleBeginDelayedSelect(),
     cancelPendingSelect: () => functionsMocks.exampleCancelPendingSelect(),
   },
+  disableCitationAnchoring: false,
 };
 
 const selectors = {
@@ -264,6 +265,16 @@ describe('c-quantic-citation', () => {
         );
         expect(link.href).toBe(`${exampleSalesforceLink}/`);
       });
+    });
+  });
+
+  describe('when citation anchoring is disabled', () => {
+    it('should leave the hrefValue as the citation uri', async () => {
+      const element = createTestComponent({...defaultOptions, disableCitationAnchoring: true});
+      await flushPromises();
+
+      const link = element.shadowRoot.querySelector(selectors.citationLink);
+      expect(link.href).toBe(element.citation.uri);
     });
   });
 });
