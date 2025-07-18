@@ -141,7 +141,7 @@ describe('#streamAnswerApi', () => {
       );
     });
 
-    it('should exclude volatile analytics fields when usage is select', () => {
+    it('should exclude analytics fields when usage is select', () => {
       const queryParams = constructAnswerQueryParams(
         streamAnswerAPIStateMock as any,
         'select',
@@ -149,14 +149,7 @@ describe('#streamAnswerApi', () => {
       );
 
       // Verify that volatile fields (clientTimestamp, actionCause) are not present
-      expect(queryParams.analytics).toBeDefined();
-      expect(queryParams.analytics?.clientTimestamp).toBeUndefined();
-      expect(queryParams.analytics?.actionCause).toBeUndefined();
-
-      // Verify that other analytics fields are still present
-      expect(queryParams.analytics?.capture).toBeDefined();
-      expect(queryParams.analytics?.clientId).toBeDefined();
-      expect(queryParams.analytics?.originContext).toBeDefined();
+      expect(queryParams.analytics).toBeUndefined();
     });
 
     it('should include all analytics fields when usage is fetch', () => {
