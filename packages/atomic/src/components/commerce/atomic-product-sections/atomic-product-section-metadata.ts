@@ -1,5 +1,6 @@
+import {LitElement} from 'lit';
+import {customElement} from 'lit/decorators.js';
 import {hideEmptySection} from '@/src/utils/item-section-utils';
-import {Element, Component} from '@stencil/core';
 
 /**
  * @alpha
@@ -12,14 +13,19 @@ import {Element, Component} from '@stencil/core';
  * * Has a very small font size.
  * * Is the closest element beneath the title section.
  */
-@Component({
-  tag: 'atomic-product-section-metadata',
-  shadow: false,
-})
-export class AtomicProductSectionMetadata {
-  @Element() private host!: HTMLElement;
+@customElement('atomic-product-section-metadata')
+export class AtomicProductSectionMetadata extends LitElement {
+  protected createRenderRoot() {
+    return this;
+  }
 
-  public componentDidRender() {
-    hideEmptySection(this.host);
+  protected updated() {
+    hideEmptySection(this);
+  }
+}
+
+declare global {
+  interface HTMLElementTagNameMap {
+    'atomic-product-section-metadata': AtomicProductSectionMetadata;
   }
 }

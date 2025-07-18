@@ -1813,16 +1813,6 @@ export namespace Components {
     interface AtomicProductSectionEmphasized {
     }
     /**
-     * @alpha This section is intended to display some fields that are directly related to the name of the product.
-     * In commerce, this could be the product rating, which is tied to the nature of the product itself,
-     * rather than to the product's description.
-     * Behavior:
-     * * Has a very small font size.
-     * * Is the closest element beneath the title section.
-     */
-    interface AtomicProductSectionMetadata {
-    }
-    /**
      * @alpha This section is intended to display the product's name, and its main use is to make the product list scannable.
      * Behavior:
      * * Has a fixed height of two lines on grid layouts.
@@ -4383,20 +4373,6 @@ declare global {
         new (): HTMLAtomicProductSectionEmphasizedElement;
     };
     /**
-     * @alpha This section is intended to display some fields that are directly related to the name of the product.
-     * In commerce, this could be the product rating, which is tied to the nature of the product itself,
-     * rather than to the product's description.
-     * Behavior:
-     * * Has a very small font size.
-     * * Is the closest element beneath the title section.
-     */
-    interface HTMLAtomicProductSectionMetadataElement extends Components.AtomicProductSectionMetadata, HTMLStencilElement {
-    }
-    var HTMLAtomicProductSectionMetadataElement: {
-        prototype: HTMLAtomicProductSectionMetadataElement;
-        new (): HTMLAtomicProductSectionMetadataElement;
-    };
-    /**
      * @alpha This section is intended to display the product's name, and its main use is to make the product list scannable.
      * Behavior:
      * * Has a fixed height of two lines on grid layouts.
@@ -5388,7 +5364,6 @@ declare global {
         "atomic-product-section-children": HTMLAtomicProductSectionChildrenElement;
         "atomic-product-section-description": HTMLAtomicProductSectionDescriptionElement;
         "atomic-product-section-emphasized": HTMLAtomicProductSectionEmphasizedElement;
-        "atomic-product-section-metadata": HTMLAtomicProductSectionMetadataElement;
         "atomic-product-section-name": HTMLAtomicProductSectionNameElement;
         "atomic-product-section-visual": HTMLAtomicProductSectionVisualElement;
         "atomic-query-error": HTMLAtomicQueryErrorElement;
@@ -7162,16 +7137,6 @@ declare namespace LocalJSX {
     interface AtomicProductSectionEmphasized {
     }
     /**
-     * @alpha This section is intended to display some fields that are directly related to the name of the product.
-     * In commerce, this could be the product rating, which is tied to the nature of the product itself,
-     * rather than to the product's description.
-     * Behavior:
-     * * Has a very small font size.
-     * * Is the closest element beneath the title section.
-     */
-    interface AtomicProductSectionMetadata {
-    }
-    /**
      * @alpha This section is intended to display the product's name, and its main use is to make the product list scannable.
      * Behavior:
      * * Has a fixed height of two lines on grid layouts.
@@ -8720,7 +8685,6 @@ declare namespace LocalJSX {
         "atomic-product-section-children": AtomicProductSectionChildren;
         "atomic-product-section-description": AtomicProductSectionDescription;
         "atomic-product-section-emphasized": AtomicProductSectionEmphasized;
-        "atomic-product-section-metadata": AtomicProductSectionMetadata;
         "atomic-product-section-name": AtomicProductSectionName;
         "atomic-product-section-visual": AtomicProductSectionVisual;
         "atomic-query-error": AtomicQueryError;
@@ -9130,15 +9094,6 @@ declare module "@stencil/core" {
              * * Is the second closest element beneath the name section.
              */
             "atomic-product-section-emphasized": LocalJSX.AtomicProductSectionEmphasized & JSXBase.HTMLAttributes<HTMLAtomicProductSectionEmphasizedElement>;
-            /**
-             * @alpha This section is intended to display some fields that are directly related to the name of the product.
-             * In commerce, this could be the product rating, which is tied to the nature of the product itself,
-             * rather than to the product's description.
-             * Behavior:
-             * * Has a very small font size.
-             * * Is the closest element beneath the title section.
-             */
-            "atomic-product-section-metadata": LocalJSX.AtomicProductSectionMetadata & JSXBase.HTMLAttributes<HTMLAtomicProductSectionMetadataElement>;
             /**
              * @alpha This section is intended to display the product's name, and its main use is to make the product list scannable.
              * Behavior:
