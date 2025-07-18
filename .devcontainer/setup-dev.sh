@@ -15,14 +15,20 @@ fi
 
 # Check if build artifacts exist and are recent
 if [ ! -d "packages/atomic/dist" ] || [ "packages/atomic/package.json" -nt "packages/atomic/dist" ]; then
-    echo "🔨 Building core packages..."
+    echo "🔨 Building essential packages for demo..."
     
-    # Build only essential packages for demo
+    # Build headless first (dependency for atomic)
+    echo "  📦 Building headless..."
     npx nx run headless:build
+    
+    # Build only minimal atomic components needed for demo
+    echo "  🎨 Building atomic locales..."
     npx nx run atomic:build:locales
+    
+    echo "  ⚡ Building atomic components..."
     npx nx run atomic:build:stencil-lit
     
-    echo "✅ Essential build complete!"
+    echo "✅ Essential build complete! Demo-ready in ~2 minutes."
 else
     echo "✅ Build artifacts are up to date, skipping build"
 fi
