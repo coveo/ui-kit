@@ -1777,16 +1777,6 @@ export namespace Components {
     interface AtomicProductSectionBadges {
     }
     /**
-     * @alpha This section is meant to render additional descriptive information about the product.
-     * Behavior:
-     * * Has a maximum height of two lines.
-     * * Exposes the `--line-height` variable so child elements can adjust to the current line height.
-     * * Has a defined CSS `color` property for text.
-     * * Has a font weight.
-     */
-    interface AtomicProductSectionBottomMetadata {
-    }
-    /**
      * @alpha This section is meant to render child products, available when using the <atomic-product-children> component.
      * Behavior:
      * * Shows children at the bottom of the result, indented and wrapped in a border.
@@ -4331,20 +4321,6 @@ declare global {
         new (): HTMLAtomicProductSectionBadgesElement;
     };
     /**
-     * @alpha This section is meant to render additional descriptive information about the product.
-     * Behavior:
-     * * Has a maximum height of two lines.
-     * * Exposes the `--line-height` variable so child elements can adjust to the current line height.
-     * * Has a defined CSS `color` property for text.
-     * * Has a font weight.
-     */
-    interface HTMLAtomicProductSectionBottomMetadataElement extends Components.AtomicProductSectionBottomMetadata, HTMLStencilElement {
-    }
-    var HTMLAtomicProductSectionBottomMetadataElement: {
-        prototype: HTMLAtomicProductSectionBottomMetadataElement;
-        new (): HTMLAtomicProductSectionBottomMetadataElement;
-    };
-    /**
      * @alpha This section is meant to render child products, available when using the <atomic-product-children> component.
      * Behavior:
      * * Shows children at the bottom of the result, indented and wrapped in a border.
@@ -5384,7 +5360,6 @@ declare global {
         "atomic-product-rating": HTMLAtomicProductRatingElement;
         "atomic-product-section-actions": HTMLAtomicProductSectionActionsElement;
         "atomic-product-section-badges": HTMLAtomicProductSectionBadgesElement;
-        "atomic-product-section-bottom-metadata": HTMLAtomicProductSectionBottomMetadataElement;
         "atomic-product-section-children": HTMLAtomicProductSectionChildrenElement;
         "atomic-product-section-description": HTMLAtomicProductSectionDescriptionElement;
         "atomic-product-section-emphasized": HTMLAtomicProductSectionEmphasizedElement;
@@ -7126,16 +7101,6 @@ declare namespace LocalJSX {
     interface AtomicProductSectionBadges {
     }
     /**
-     * @alpha This section is meant to render additional descriptive information about the product.
-     * Behavior:
-     * * Has a maximum height of two lines.
-     * * Exposes the `--line-height` variable so child elements can adjust to the current line height.
-     * * Has a defined CSS `color` property for text.
-     * * Has a font weight.
-     */
-    interface AtomicProductSectionBottomMetadata {
-    }
-    /**
      * @alpha This section is meant to render child products, available when using the <atomic-product-children> component.
      * Behavior:
      * * Shows children at the bottom of the result, indented and wrapped in a border.
@@ -8716,7 +8681,6 @@ declare namespace LocalJSX {
         "atomic-product-rating": AtomicProductRating;
         "atomic-product-section-actions": AtomicProductSectionActions;
         "atomic-product-section-badges": AtomicProductSectionBadges;
-        "atomic-product-section-bottom-metadata": AtomicProductSectionBottomMetadata;
         "atomic-product-section-children": AtomicProductSectionChildren;
         "atomic-product-section-description": AtomicProductSectionDescription;
         "atomic-product-section-emphasized": AtomicProductSectionEmphasized;
@@ -9098,15 +9062,6 @@ declare module "@stencil/core" {
              * * May appear over, next to, or beneath the visual section.
              */
             "atomic-product-section-badges": LocalJSX.AtomicProductSectionBadges & JSXBase.HTMLAttributes<HTMLAtomicProductSectionBadgesElement>;
-            /**
-             * @alpha This section is meant to render additional descriptive information about the product.
-             * Behavior:
-             * * Has a maximum height of two lines.
-             * * Exposes the `--line-height` variable so child elements can adjust to the current line height.
-             * * Has a defined CSS `color` property for text.
-             * * Has a font weight.
-             */
-            "atomic-product-section-bottom-metadata": LocalJSX.AtomicProductSectionBottomMetadata & JSXBase.HTMLAttributes<HTMLAtomicProductSectionBottomMetadataElement>;
             /**
              * @alpha This section is meant to render child products, available when using the <atomic-product-children> component.
              * Behavior:
