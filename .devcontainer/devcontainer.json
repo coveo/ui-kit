@@ -32,7 +32,7 @@
   "updateContentCommand": "bash -c 'npm ci --prefer-offline --no-audit --progress=false && npm run build'",
 
   // Fast post-prebuild setup - only runs essential commands after prebuild
-  "postCreateCommand": "bash -c 'husky install && patch-package'",
+  "postCreateCommand": "npm run postinstall",
 
   // Configure VS Code for optimal development experience
   "customizations": {
