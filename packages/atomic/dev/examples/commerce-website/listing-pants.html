@@ -1,5 +1,6 @@
 <!doctype html>
 <html dir="ltr" lang="en">
+
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0" />
@@ -7,7 +8,7 @@
 
     <script type="module">
       if (import.meta.env) {
-        const {defineCustomElements} = await import('@coveo/atomic/loader');
+        const { defineCustomElements } = await import('@coveo/atomic/loader');
         import('@coveo/atomic/themes/coveo.css');
         defineCustomElements();
       } else {
@@ -20,7 +21,7 @@
     </script>
 
     <script type="module">
-      import {commerceEngine} from './engine.mjs';
+      import { commerceEngine } from './engine.mjs';
 
       (async () => {
         await customElements.whenDefined('atomic-commerce-interface');
@@ -38,9 +39,8 @@
 
     <atomic-commerce-interface type="product-listing" language-assets-path="./lang" icon-assets-path="./assets">
       <atomic-commerce-layout>
-        <atomic-layout-section section="facets"
-          ><atomic-commerce-facets></atomic-commerce-facets
-        ></atomic-layout-section>
+        <atomic-layout-section
+          section="facets"><atomic-commerce-facets></atomic-commerce-facets></atomic-layout-section>
         <atomic-layout-section section="main">
           <atomic-layout-section section="status">
             <atomic-commerce-breadbox></atomic-commerce-breadbox>
@@ -67,7 +67,7 @@
                     <atomic-product-rating field="ec_rating"></atomic-product-rating>
                   </atomic-product-section-metadata>
                   <atomic-product-section-emphasized>
-                    <atomic-product-price currency="USD" class="text-2xl"></atomic-product-price>
+                    <atomic-product-price currency="USD"></atomic-product-price>
                   </atomic-product-section-emphasized>
                   <atomic-product-section-description>
                     <atomic-product-description></atomic-product-description>
@@ -91,4 +91,5 @@
     <script src="../../header.js" type="text/javascript"></script>
     <script src="commerce-nav.mjs" type="module"></script>
   </body>
+
 </html>
