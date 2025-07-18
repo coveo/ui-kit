@@ -40,7 +40,7 @@ jobs:
   # What is slow is the "npm ci" step, which takes about 30 minutes and is out of our control. We will skip this job for now.
   build-windows:
     name: 'Build Windows'
-    runs-on: windows-latest
+    runs-on: windows-11-arm
     steps:
       - name: Harden Runner
         uses: step-security/harden-runner@0634a2670c59f64b4a01f0f96f84700a4088b9f0 # v2.12.0
