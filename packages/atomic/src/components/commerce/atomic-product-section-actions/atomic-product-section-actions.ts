@@ -1,5 +1,6 @@
-import {hideEmptySection} from '@/src/utils/item-section-utils';
-import {Element, Component} from '@stencil/core';
+import {LitElement} from 'lit';
+import {customElement} from 'lit/decorators.js';
+import {ProductSectionMixin} from '@/src/mixins/product-section-mixin';
 
 /**
  * @alpha
@@ -13,14 +14,13 @@ import {Element, Component} from '@stencil/core';
  * * Is a wrapping flexbox with a gap.
  * * May appear over, next to, or beneath the visual section.
  */
-@Component({
-  tag: 'atomic-product-section-actions',
-  shadow: false,
-})
-export class AtomicProductSectionActions {
-  @Element() private host!: HTMLElement;
+@customElement('atomic-product-section-actions')
+export class AtomicProductSectionActions extends ProductSectionMixin(
+  LitElement
+) {}
 
-  public componentDidRender() {
-    hideEmptySection(this.host);
+declare global {
+  interface HTMLElementTagNameMap {
+    'atomic-product-section-actions': AtomicProductSectionActions;
   }
 }
