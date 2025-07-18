@@ -100,7 +100,7 @@ describe('atomic-product-rating', () => {
     it('should render rating with default field ec_rating', async () => {
       const element = await renderComponent();
       const ratingContainer = locators.getRatingContainer(element);
-      
+
       expect(element).toBeDefined();
       expect(ratingContainer).toBeInTheDocument();
     });
@@ -108,14 +108,14 @@ describe('atomic-product-rating', () => {
     it('should use default maxValueInIndex of 5', async () => {
       const element = await renderComponent();
       const icons = locators.getRatingIcons(element);
-      
+
       expect(icons).toHaveLength(10); // 5 empty + 5 filled icons
     });
 
     it('should display rating for ec_rating field', async () => {
       const element = await renderComponent(); // ec_rating: 4.0, maxValueInIndex: 5
       const ratingContainer = locators.getRatingContainer(element);
-      
+
       expect(ratingContainer).toBeInTheDocument();
       expect(ratingContainer).toHaveAttribute('aria-label', '4 stars out of 5');
     });
@@ -125,15 +125,18 @@ describe('atomic-product-rating', () => {
     it('should render rating using custom field', async () => {
       const element = await renderComponent({field: 'custom_rating'});
       const ratingContainer = locators.getRatingContainer(element);
-      
+
       expect(ratingContainer).toBeInTheDocument();
-      expect(ratingContainer).toHaveAttribute('aria-label', '3.5 stars out of 5');
+      expect(ratingContainer).toHaveAttribute(
+        'aria-label',
+        '3.5 stars out of 5'
+      );
     });
 
     it('should render nothing when field value is null', async () => {
       const element = await renderComponent({field: 'null_rating'});
       const ratingContainer = locators.getRatingContainer(element);
-      
+
       expect(ratingContainer).toBeNull();
       expect(element.textContent?.trim()).toBe('');
     });
@@ -141,7 +144,7 @@ describe('atomic-product-rating', () => {
     it('should handle zero rating', async () => {
       const element = await renderComponent({field: 'zero_rating'});
       const ratingContainer = locators.getRatingContainer(element);
-      
+
       expect(ratingContainer).toBeInTheDocument();
       expect(ratingContainer).toHaveAttribute('aria-label', '0 stars out of 5');
     });
@@ -153,7 +156,7 @@ describe('atomic-product-rating', () => {
         ratingDetailsField: 'ec_reviews',
       });
       const ratingDetails = locators.getRatingDetails(element);
-      
+
       expect(ratingDetails).toBeInTheDocument();
       expect(ratingDetails?.textContent).toContain('150');
     });
@@ -161,7 +164,7 @@ describe('atomic-product-rating', () => {
     it('should not display rating details when field is not provided', async () => {
       const element = await renderComponent();
       const ratingDetails = locators.getRatingDetails(element);
-      
+
       expect(ratingDetails).toBeNull();
     });
 
@@ -170,7 +173,7 @@ describe('atomic-product-rating', () => {
         ratingDetailsField: 'null_rating',
       });
       const ratingDetails = locators.getRatingDetails(element);
-      
+
       expect(ratingDetails).toBeNull();
     });
   });
@@ -179,16 +182,19 @@ describe('atomic-product-rating', () => {
     it('should render correct number of icons for custom max value', async () => {
       const element = await renderComponent({maxValueInIndex: 10});
       const icons = locators.getRatingIcons(element);
-      
+
       expect(icons).toHaveLength(20); // 10 empty + 10 filled icons
     });
 
     it('should display rating with custom max value', async () => {
       const element = await renderComponent({maxValueInIndex: 10});
       const ratingContainer = locators.getRatingContainer(element);
-      
+
       expect(ratingContainer).toBeInTheDocument();
-      expect(ratingContainer).toHaveAttribute('aria-label', '4 stars out of 10');
+      expect(ratingContainer).toHaveAttribute(
+        'aria-label',
+        '4 stars out of 10'
+      );
     });
   });
 
@@ -197,8 +203,8 @@ describe('atomic-product-rating', () => {
       const customIcon = '<svg>custom-star</svg>';
       const element = await renderComponent({icon: customIcon});
       const icons = locators.getRatingIcons(element);
-      
-      icons?.forEach(icon => {
+
+      icons?.forEach((icon) => {
         expect(icon).toHaveAttribute('icon', customIcon);
       });
     });
@@ -208,14 +214,14 @@ describe('atomic-product-rating', () => {
     it('should have correct aria-label for rating', async () => {
       const element = await renderComponent();
       const ratingContainer = locators.getRatingContainer(element);
-      
+
       expect(ratingContainer).toHaveAttribute('aria-label', '4 stars out of 5');
     });
 
     it('should have role="img" for rating container', async () => {
       const element = await renderComponent();
       const ratingContainer = locators.getRatingContainer(element);
-      
+
       expect(ratingContainer).toHaveAttribute('role', 'img');
     });
   });
@@ -224,7 +230,7 @@ describe('atomic-product-rating', () => {
     it('should handle invalid field values gracefully', async () => {
       const element = await renderComponent({field: 'invalid_rating'});
       const ratingContainer = locators.getRatingContainer(element);
-      
+
       // Should not render when there's an error
       expect(ratingContainer).toBeNull();
       expect(element.error).toBeDefined();
@@ -233,7 +239,7 @@ describe('atomic-product-rating', () => {
     it('should handle missing product gracefully', async () => {
       const element = await renderComponent({product: null});
       const ratingContainer = locators.getRatingContainer(element);
-      
+
       expect(ratingContainer).toBeNull();
       expect(element.textContent?.trim()).toBe('');
     });
@@ -242,26 +248,26 @@ describe('atomic-product-rating', () => {
   describe('property reflection', () => {
     it('should reflect field property to attribute', async () => {
       const element = await renderComponent({field: 'custom_field'});
-      
+
       expect(element).toHaveAttribute('field', 'custom_field');
     });
 
     it('should reflect rating-details-field property to attribute', async () => {
       const element = await renderComponent({ratingDetailsField: 'reviews'});
-      
+
       expect(element).toHaveAttribute('rating-details-field', 'reviews');
     });
 
     it('should reflect max-value-in-index property to attribute', async () => {
       const element = await renderComponent({maxValueInIndex: 10});
-      
+
       expect(element).toHaveAttribute('max-value-in-index', '10');
     });
 
     it('should reflect icon property to attribute', async () => {
       const customIcon = 'custom-icon';
       const element = await renderComponent({icon: customIcon});
-      
+
       expect(element).toHaveAttribute('icon', customIcon);
     });
   });
@@ -269,31 +275,37 @@ describe('atomic-product-rating', () => {
   describe('component lifecycle', () => {
     it('should initialize correctly', async () => {
       const element = await renderComponent();
-      
+
       expect(element.bindings).toBeDefined();
       expect(element.product).toBeDefined();
     });
 
     it('should update when properties change', async () => {
       const element = await renderComponent();
-      
+
       // Change the field property
       element.field = 'custom_rating';
       await element.updateComplete;
-      
+
       const ratingContainer = locators.getRatingContainer(element);
-      expect(ratingContainer).toHaveAttribute('aria-label', '3.5 stars out of 5');
+      expect(ratingContainer).toHaveAttribute(
+        'aria-label',
+        '3.5 stars out of 5'
+      );
     });
 
     it('should update when maxValueInIndex changes', async () => {
       const element = await renderComponent();
-      
+
       // Change the maxValueInIndex property
       element.maxValueInIndex = 10;
       await element.updateComplete;
-      
+
       const ratingContainer = locators.getRatingContainer(element);
-      expect(ratingContainer).toHaveAttribute('aria-label', '4 stars out of 10');
+      expect(ratingContainer).toHaveAttribute(
+        'aria-label',
+        '4 stars out of 10'
+      );
     });
   });
 });

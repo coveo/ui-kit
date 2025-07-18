@@ -4,7 +4,7 @@ import {html, render} from 'lit';
 import {afterEach, beforeEach, describe, expect, it, vi} from 'vitest';
 import {createTestI18n} from '@/vitest-utils/testing-helpers/i18n-utils';
 import {FieldValueIsNaNError} from '../commerce/product-template-component-utils/error';
-import {computeNumberOfStars, renderRating, type RatingProps} from './rating';
+import {computeNumberOfStars, type RatingProps, renderRating} from './rating';
 
 describe('renderRating', () => {
   let container: HTMLElement;
@@ -14,14 +14,16 @@ describe('renderRating', () => {
     container = document.createElement('div');
     document.body.appendChild(container);
     mockI18n = await createTestI18n();
-    
+
     // Mock the i18n.t function to return a predictable string
-    vi.spyOn(mockI18n, 't').mockImplementation((key: string, options?: any) => {
-      if (key === 'stars') {
-        return `${options?.count} stars out of ${options?.max}`;
+    vi.spyOn(mockI18n, 't').mockImplementation(
+      (key: string, options?: Record<string, unknown>) => {
+        if (key === 'stars') {
+          return `${options?.count} stars out of ${options?.max}`;
+        }
+        return key;
       }
-      return key;
-    });
+    );
   });
 
   afterEach(() => {
@@ -39,10 +41,7 @@ describe('renderRating', () => {
       ...props,
     };
 
-    render(
-      html`${renderRating({props: defaultProps})}`,
-      container
-    );
+    render(html`${renderRating({props: defaultProps})}`, container);
 
     return within(container).getByRole('img');
   };
@@ -57,7 +56,7 @@ describe('renderRating', () => {
       numberOfActiveIcons: 4,
       numberOfTotalIcons: 5,
     });
-    
+
     expect(ratingElement).toHaveAttribute('aria-label', '4 stars out of 5');
     expect(mockI18n.t).toHaveBeenCalledWith('stars', {
       count: 4,
@@ -67,10 +66,10 @@ describe('renderRating', () => {
 
   it('should render the correct number of total icons', () => {
     renderComponent({numberOfTotalIcons: 7});
-    
+
     const emptyIcons = container.querySelectorAll('.z-0 atomic-icon');
     const filledIcons = container.querySelectorAll('.z-1 atomic-icon');
-    
+
     expect(emptyIcons).toHaveLength(7);
     expect(filledIcons).toHaveLength(7);
   });
@@ -78,25 +77,25 @@ describe('renderRating', () => {
   it('should apply the correct icon attribute', () => {
     const customIcon = 'custom-star-icon';
     renderComponent({icon: customIcon});
-    
+
     const icons = container.querySelectorAll('atomic-icon');
-    icons.forEach(icon => {
+    icons.forEach((icon) => {
       expect(icon).toHaveAttribute('icon', customIcon);
     });
   });
 
   it('should apply correct CSS classes to active and inactive icons', () => {
     renderComponent({});
-    
+
     const emptyIcons = container.querySelectorAll('.z-0 atomic-icon');
     const filledIcons = container.querySelectorAll('.z-1 atomic-icon');
-    
-    emptyIcons.forEach(icon => {
+
+    emptyIcons.forEach((icon) => {
       expect(icon).toHaveClass('icon-inactive');
       expect(icon).not.toHaveClass('icon-active');
     });
-    
-    filledIcons.forEach(icon => {
+
+    filledIcons.forEach((icon) => {
       expect(icon).toHaveClass('icon-active');
       expect(icon).not.toHaveClass('icon-inactive');
     });
@@ -109,54 +108,62 @@ describe('renderRating', () => {
 
   it('should apply the correct part attribute to icons', () => {
     renderComponent({});
-    
+
     const icons = container.querySelectorAll('atomic-icon');
-    icons.forEach(icon => {
+    icons.forEach((icon) => {
       expect(icon).toHaveAttribute('part', 'value-rating-icon');
     });
   });
 
   it('should have the correct DOM structure', () => {
     renderComponent({});
-    
+
     const ratingContainer = container.querySelector('[part="value-rating"]');
     expect(ratingContainer).toBeInTheDocument();
     expect(ratingContainer).toHaveClass('relative', 'w-max');
-    
+
     const emptyContainer = container.querySelector('.z-0');
     expect(emptyContainer).toBeInTheDocument();
     expect(emptyContainer).toHaveClass('flex', 'gap-0.5');
-    
+
     const filledContainer = container.querySelector('.z-1');
     expect(filledContainer).toBeInTheDocument();
-    expect(filledContainer).toHaveClass('absolute', 'top-0', 'left-0', 'z-1', 'flex', 'gap-0.5', 'overflow-hidden');
+    expect(filledContainer).toHaveClass(
+      'absolute',
+      'top-0',
+      'left-0',
+      'z-1',
+      'flex',
+      'gap-0.5',
+      'overflow-hidden'
+    );
   });
 
   it('should render icons with shrink-0 class', () => {
     renderComponent({});
-    
+
     const icons = container.querySelectorAll('atomic-icon');
-    icons.forEach(icon => {
+    icons.forEach((icon) => {
       expect(icon).toHaveClass('shrink-0');
     });
   });
 
   it('should render with different icon counts', () => {
     renderComponent({numberOfTotalIcons: 3});
-    
+
     const emptyIcons = container.querySelectorAll('.z-0 atomic-icon');
     const filledIcons = container.querySelectorAll('.z-1 atomic-icon');
-    
+
     expect(emptyIcons).toHaveLength(3);
     expect(filledIcons).toHaveLength(3);
   });
 
   it('should render with large icon counts', () => {
     renderComponent({numberOfTotalIcons: 10});
-    
+
     const emptyIcons = container.querySelectorAll('.z-0 atomic-icon');
     const filledIcons = container.querySelectorAll('.z-1 atomic-icon');
-    
+
     expect(emptyIcons).toHaveLength(10);
     expect(filledIcons).toHaveLength(10);
   });
