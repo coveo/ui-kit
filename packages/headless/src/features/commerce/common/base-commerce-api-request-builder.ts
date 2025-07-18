@@ -1,3 +1,4 @@
+import type {Relay} from '@coveo/relay';
 import {getAnalyticsSource} from '../../../api/analytics/analytics-selectors.js';
 import {getCommerceApiBaseUrl} from '../../../api/commerce/commerce-api-client.js';
 import type {BaseCommerceAPIRequest} from '../../../api/commerce/common/request.js';
@@ -18,9 +19,11 @@ export type StateNeededForBaseCommerceAPIRequest =
 
 export const buildBaseCommerceAPIRequest = (
   state: StateNeededForBaseCommerceAPIRequest,
-  navigatorContext: NavigatorContext
+  navigatorContext: NavigatorContext,
+  relay: Relay
 ): BaseCommerceAPIRequest => {
   const {view, location, ...restOfContext} = state.commerceContext;
+  const {clientId, referrer, userAgent} = relay.getMeta('');
   return {
     accessToken: state.configuration.accessToken,
     url:
@@ -32,21 +35,15 @@ export const buildBaseCommerceAPIRequest = (
     organizationId: state.configuration.organizationId,
     trackingId: state.configuration.analytics.trackingId!,
     ...restOfContext,
-    ...(state.configuration.analytics.enabled
-      ? {clientId: navigatorContext.clientId}
-      : {}),
+    ...(state.configuration.analytics.enabled ? {clientId} : {}),
     context: {
       user: {
         ...location,
-        ...(navigatorContext.userAgent
-          ? {userAgent: navigatorContext.userAgent}
-          : {}),
+        ...(userAgent ? {userAgent} : {}),
       },
       view: {
         ...view,
-        ...(navigatorContext.referrer
-          ? {referrer: navigatorContext.referrer}
-          : {}),
+        ...(referrer ? {referrer} : {}),
       },
       capture:
         navigatorContext.capture ?? state.configuration.analytics.enabled,

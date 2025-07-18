@@ -70,7 +70,7 @@ export const executeSearch = createAsyncThunk<
 >('commerce/search/executeSearch', async (_action, config) => {
   const {getState} = config;
   const state = getState();
-  const {navigatorContext} = config.extra;
+  const {navigatorContext, relay} = config.extra;
 
   const request = buildFilterableCommerceAPIRequest(state, navigatorContext);
   const query = querySelector(state);
@@ -151,10 +151,10 @@ export const fetchInstantProducts = createAsyncThunk<
   'commerce/search/fetchInstantProducts',
   async (payload, {getState, rejectWithValue, extra}) => {
     const state = getState();
-    const {apiClient, navigatorContext} = extra;
+    const {apiClient, navigatorContext, relay} = extra;
     const {q} = payload;
     const fetched = await apiClient.productSuggestions({
-      ...buildBaseCommerceAPIRequest(state, navigatorContext),
+      ...buildBaseCommerceAPIRequest(state, navigatorContext, relay),
       query: q,
     });
 
