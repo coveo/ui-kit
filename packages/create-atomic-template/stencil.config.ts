@@ -4,6 +4,7 @@ import {spawnSync} from 'node:child_process';
 import dotenvPlugin from 'rollup-plugin-dotenv';
 import html from 'rollup-plugin-html';
 import nodePolyfills from 'rollup-plugin-node-polyfills';
+import {coveoCdnResolve} from '@coveo/create-atomic-rollup-plugin';
 
 // https://stenciljs.com/docs/config
 
