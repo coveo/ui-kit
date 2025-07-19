@@ -2,6 +2,24 @@
 	"version": "2.0.0",
 	"tasks": [
 		{
+			"label": "🚀 Quick Setup (Codespaces)",
+			"type": "shell",
+			"command": "bash .devcontainer/setup-dev.sh",
+			"group": "build",
+			"presentation": {
+				"echo": true,
+				"reveal": "always",
+				"focus": false,
+				"panel": "shared",
+				"showReuseMessage": true,
+				"clear": false
+			},
+			"problemMatcher": [],
+			"runOptions": {
+				"runOn": "folderOpen"
+			}
+		},
+		{
 			"label": "reinstall dependencies & rebuild",
 			"dependsOn": [
 				"reinstall dependencies",
