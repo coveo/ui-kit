@@ -1,5 +1,5 @@
 import {streamAnswerAPIStateMock} from '../../api/knowledge/tests/stream-answer-api-state-mock.js';
-import {SearchAppState} from '../../state/search-app-state.js';
+import type {SearchAppState} from '../../state/search-app-state.js';
 import {generativeQuestionAnsweringIdSelector} from './generated-answer-selectors.js';
 
 vi.mock('../../api/knowledge/stream-answer-api', () => ({

@@ -1,34 +1,33 @@
+import {
+  buildCommerceEngine,
+  type CommerceEngineConfiguration,
+  getSampleCommerceEngineConfiguration,
+  type ProductListing,
+  type Search,
+  type UrlManager,
+} from '@coveo/headless/commerce';
+import {html, LitElement} from 'lit';
+import {customElement, state} from 'lit/decorators.js';
+import {within} from 'shadow-dom-testing-library';
+import {
+  afterEach,
+  beforeEach,
+  describe,
+  expect,
+  type MockInstance,
+  test,
+  vi,
+} from 'vitest';
 import {bindings} from '@/src/decorators/bindings';
-import {InitializableComponent} from '@/src/decorators/types';
+import type {InitializableComponent} from '@/src/decorators/types';
 import {InitializeBindingsMixin} from '@/src/mixins/bindings-mixin';
 import {StorageItems} from '@/src/utils/local-storage-utils';
 import {fixture} from '@/vitest-utils/testing-helpers/fixture';
 import {fixtureCleanup} from '@/vitest-utils/testing-helpers/fixture-wrapper';
-import {
-  CommerceEngineConfiguration,
-  getSampleCommerceEngineConfiguration,
-  ProductListing,
-  Search,
-  UrlManager,
-} from '@coveo/headless/commerce';
-import {buildCommerceEngine} from '@coveo/headless/commerce';
-import {html} from 'lit';
-import {LitElement} from 'lit';
-import {customElement, state} from 'lit/decorators.js';
-import {within} from 'shadow-dom-testing-library';
-import {
-  describe,
-  test,
-  expect,
-  vi,
-  MockInstance,
-  beforeEach,
-  afterEach,
-} from 'vitest';
 import {stateKey} from '../../../../../headless/src/app/state-key';
 import {
   AtomicCommerceInterface,
-  CommerceBindings,
+  type CommerceBindings,
 } from './atomic-commerce-interface';
 
 vi.mock('@coveo/headless/commerce', async () => {
@@ -108,23 +107,13 @@ vi.mock('@coveo/headless/commerce', async () => {
 
 @customElement('test-element')
 @bindings()
-export class TestElement
+class TestElement
   extends InitializeBindingsMixin(LitElement)
   implements InitializableComponent<CommerceBindings>
 {
   @state()
   public bindings: CommerceBindings = {} as CommerceBindings;
   @state() public error!: Error;
-
-  public addStyles(styles: string | CSSStyleSheet) {
-    if (typeof styles === 'string') {
-      const styleSheet = new CSSStyleSheet();
-      styleSheet.replaceSync(styles);
-      this.bindings.addAdoptedStyleSheets(styleSheet);
-    } else if (styles instanceof CSSStyleSheet) {
-      this.bindings.addAdoptedStyleSheets(styles);
-    }
-  }
 
   public initialized = false;
 
@@ -256,20 +245,6 @@ describe('AtomicCommerceInterface', () => {
       expect(warnSpy).toHaveBeenCalledWith(
         `Could not find the scroll container with the selector "${element.scrollContainer}". This will prevent UX interactions that require a scroll from working correctly. Please review the CSS selector in the scrollContainer option`
       );
-    });
-
-    test('should add a stylesheet to adoptedStyleSheets', async () => {
-      const styles = 'body { background-color: red; }';
-      childElement.addStyles(styles);
-
-      const parent = element.getRootNode();
-
-      if (parent instanceof Document || parent instanceof ShadowRoot) {
-        const styleSheet = parent.adoptedStyleSheets.find((sheet) =>
-          sheet.cssRules[0]?.cssText.includes(styles)
-        );
-        expect(styleSheet).toBeDefined();
-      }
     });
 
     describe('when properties changes', () => {
@@ -523,7 +498,7 @@ describe('AtomicCommerceInterface', () => {
       } as unknown as Search | ProductListing;
 
       const replaceStateSpy = vi.spyOn(history, 'replaceState');
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      // biome-ignore lint/suspicious/noExplicitAny: <>
       (element as any).updateHash();
 
       expect(replaceStateSpy).toHaveBeenCalledWith(
@@ -539,7 +514,7 @@ describe('AtomicCommerceInterface', () => {
       } as unknown as Search | ProductListing;
 
       const pushStateSpy = vi.spyOn(history, 'pushState');
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      // biome-ignore lint/suspicious/noExplicitAny: <>
       (element as any).updateHash();
 
       expect(pushStateSpy).toHaveBeenCalledWith(

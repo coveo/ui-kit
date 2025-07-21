@@ -20,8 +20,8 @@
 }
 
 .searchbox__input-with-button {
-  border-bottom-right-radius: 0rem;
-  border-top-right-radius: 0rem;
+  border-bottom-right-radius: 0;
+  border-top-right-radius: 0;
   border-right: none;
 }
 

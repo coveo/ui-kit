@@ -1,3 +1,9 @@
+import {
+  type NavigatorContext,
+  SolutionType,
+} from '@coveo/headless-react/ssr-commerce';
+import type {LoaderFunctionArgs} from '@remix-run/node';
+import {useLoaderData} from '@remix-run/react';
 import Cart from '@/app/components/cart';
 import ContextDropdown from '@/app/components/context-dropdown';
 import {
@@ -6,10 +12,10 @@ import {
 } from '@/app/components/providers/providers';
 import PopularRecommendations from '@/app/components/recommendations/popular-recommendations';
 import externalCartService, {
-  ExternalCartItem,
+  type ExternalCartItem,
 } from '@/external-services/external-cart-service';
 import externalContextService from '@/external-services/external-context-service';
-import {
+import type {
   RecommendationStaticState,
   StandaloneStaticState,
 } from '@/lib/commerce-engine';
@@ -18,12 +24,6 @@ import {
   getEngineDefinition,
 } from '@/lib/commerce-engine.server';
 import {getNavigatorContext} from '@/lib/navigator-context';
-import {
-  NavigatorContext,
-  SolutionType,
-} from '@coveo/headless-react/ssr-commerce';
-import {LoaderFunctionArgs} from '@remix-run/node';
-import {useLoaderData} from '@remix-run/react';
 
 export const loader = async ({request}: LoaderFunctionArgs) => {
   const navigatorContext = await getNavigatorContext(request);

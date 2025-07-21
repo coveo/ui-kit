@@ -1,7 +1,7 @@
-import {CurrentValues, Type} from '../../../facet-api/request.js';
-import {FacetValueState} from '../../../facet-api/value.js';
-import {AnyFacetRequest} from '../../../generic/interfaces/generic-facet-request.js';
-import {BaseRangeFacetRequest} from '../../generic/interfaces/request.js';
+import type {CurrentValues, Type} from '../../../facet-api/request.js';
+import type {FacetValueState} from '../../../facet-api/value.js';
+import type {AnyFacetRequest} from '../../../generic/interfaces/generic-facet-request.js';
+import type {BaseRangeFacetRequest} from '../../generic/interfaces/request.js';
 
 /**
  * The options defining a value to display in a `DateFacet`.
@@ -26,6 +26,11 @@ export interface DateRangeRequest {
    * The current facet value state.
    */
   state: FacetValueState;
+
+  /**
+   * The previous facet value state in the search interface.
+   */
+  previousState?: FacetValueState;
 }
 
 export function isDateFacetRequest(

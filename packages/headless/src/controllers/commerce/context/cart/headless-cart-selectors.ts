@@ -1,7 +1,7 @@
 import {createSelector} from '@reduxjs/toolkit';
 import {itemsSelector} from '../../../../features/commerce/context/cart/cart-selector.js';
-import {CartState} from '../../../../features/commerce/context/cart/cart-state.js';
-import {CartItem, createCartKey} from './headless-cart.js';
+import type {CartState} from '../../../../features/commerce/context/cart/cart-state.js';
+import {type CartItem, createCartKey} from './headless-cart.js';
 
 export function itemSelector(cartState: CartState, item: CartItem) {
   return cartState.cart[createCartKey(item)];

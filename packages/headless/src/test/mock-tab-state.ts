@@ -1,4 +1,4 @@
-import {TabSlice} from '../features/tab-set/tab-set-state.js';
+import type {TabSlice} from '../features/tab-set/tab-set-state.js';
 
 export function buildMockTabSlice(config: Partial<TabSlice>): TabSlice {
   return {

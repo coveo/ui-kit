@@ -1,8 +1,8 @@
+import type {i18n} from 'i18next';
+import {html} from 'lit';
+import {beforeAll, describe, expect, it, vi} from 'vitest';
 import {renderFunctionFixture} from '@/vitest-utils/testing-helpers/fixture';
 import {createTestI18n} from '@/vitest-utils/testing-helpers/i18n-utils';
-import {i18n} from 'i18next';
-import {html} from 'lit';
-import {beforeAll, describe, vi, it, expect} from 'vitest';
 import {renderBreadcrumbShowLess} from './breadcrumb-show-less';
 
 describe('#renderBreadcrumbShowLess', () => {
@@ -17,7 +17,6 @@ describe('#renderBreadcrumbShowLess', () => {
       html`${renderBreadcrumbShowLess({
         props: {
           i18n,
-          setRef: vi.fn(),
           onShowLess: vi.fn(),
           isCollapsed: false,
           ...overrides,
@@ -57,11 +56,5 @@ describe('#renderBreadcrumbShowLess', () => {
       const {button} = await renderComponent({isCollapsed: true});
       expect(button).toBeNull();
     });
-  });
-
-  it('should set the ref on the button', async () => {
-    const setRef = vi.fn();
-    const {button} = await renderComponent({setRef});
-    expect(setRef).toHaveBeenCalledWith(button);
   });
 });

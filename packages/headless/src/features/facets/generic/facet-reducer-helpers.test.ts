@@ -1,10 +1,10 @@
 import {buildMockFacetRequest} from '../../../test/mock-facet-request.js';
 import {buildMockFacetSlice} from '../../../test/mock-facet-slice.js';
 import {buildMockFacetValueRequest} from '../../../test/mock-facet-value-request.js';
-import {FacetRequest} from '../facet-set/interfaces/request.js';
+import type {FacetRequest} from '../facet-set/interfaces/request.js';
 import {
-  handleFacetSortCriterionUpdate,
   handleFacetDeselectAll,
+  handleFacetSortCriterionUpdate,
   handleFacetUpdateNumberOfValues,
 } from './facet-reducer-helpers.js';
 
@@ -54,6 +54,99 @@ describe('generic facet reducers', () => {
 
         handleFacetDeselectAll(request);
         expect(request.preventAutoSelect).toBe(true);
+      });
+
+      it('sets #previousState correctly when transitioning from selected to idle', () => {
+        const selectedValue = buildMockFacetValueRequest({
+          value: 'selected-value',
+          state: 'selected',
+        });
+        const request = buildMockFacetRequest({
+          currentValues: [selectedValue],
+        });
+
+        handleFacetDeselectAll(request);
+
+        expect(request.currentValues[0]).toEqual({
+          value: 'selected-value',
+          state: 'idle',
+          previousState: 'selected',
+        });
+      });
+
+      it('sets #previousState correctly when transitioning from excluded to idle', () => {
+        const excludedValue = buildMockFacetValueRequest({
+          value: 'excluded-value',
+          state: 'excluded',
+        });
+        const request = buildMockFacetRequest({
+          currentValues: [excludedValue],
+        });
+
+        handleFacetDeselectAll(request);
+
+        expect(request.currentValues[0]).toEqual({
+          value: 'excluded-value',
+          state: 'idle',
+          previousState: 'excluded',
+        });
+      });
+
+      it('handles mixed state transitions correctly', () => {
+        const selectedValue = buildMockFacetValueRequest({
+          value: 'selected-value',
+          state: 'selected',
+        });
+        const excludedValue = buildMockFacetValueRequest({
+          value: 'excluded-value',
+          state: 'excluded',
+        });
+        const idleValue = buildMockFacetValueRequest({
+          value: 'idle-value',
+          state: 'idle',
+        });
+        const request = buildMockFacetRequest({
+          currentValues: [selectedValue, excludedValue, idleValue],
+        });
+
+        handleFacetDeselectAll(request);
+
+        expect(request.currentValues).toEqual([
+          {
+            value: 'selected-value',
+            state: 'idle',
+            previousState: 'selected',
+          },
+          {
+            value: 'excluded-value',
+            state: 'idle',
+            previousState: 'excluded',
+          },
+          {
+            value: 'idle-value',
+            state: 'idle',
+          },
+        ]);
+        expect(request.currentValues[2].previousState).toBeUndefined();
+      });
+
+      it('does not preserve existing #previousState when value was already idle', () => {
+        const idleValueWithPreviousState = buildMockFacetValueRequest({
+          value: 'idle-with-previous',
+          state: 'idle',
+          previousState: 'selected',
+        });
+        const request = buildMockFacetRequest({
+          currentValues: [idleValueWithPreviousState],
+        });
+
+        handleFacetDeselectAll(request);
+
+        expect(request.currentValues[0]).toEqual({
+          value: 'idle-with-previous',
+          state: 'idle',
+        });
+        expect(request.currentValues[0].previousState).toBeUndefined();
       });
     });
 

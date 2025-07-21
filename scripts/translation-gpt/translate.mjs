@@ -1,5 +1,5 @@
-import {existsSync, openSync, readFileSync, writeFileSync} from 'fs';
-import {env} from 'process';
+import {existsSync, openSync, readFileSync, writeFileSync} from 'node:fs';
+import {env} from 'node:process';
 
 const localeToTranslate = JSON.parse(
   readFileSync('../../packages/atomic/src/locales.json')
@@ -62,7 +62,7 @@ async function main() {
       continue;
     }
 
-    const englishTranslation = localeToTranslate[translationKey]['en'];
+    const englishTranslation = localeToTranslate[translationKey].en;
     const existingTranslation = Object.keys(localeToTranslate[translationKey]);
     const languagesThatNeedTranslation = supportedLanguages.filter(
       (l) => !existingTranslation.includes(l)
@@ -127,7 +127,7 @@ async function main() {
 
   writeFileSync(
     '../../packages/atomic/src/locales.json',
-    readFileSync('temporary.json') + '\n'
+    `${readFileSync('temporary.json')}\n`
   );
   writeFileSync('temporary.json', JSON.stringify({}, null, 2));
 }

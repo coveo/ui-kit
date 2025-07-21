@@ -41,6 +41,12 @@ export abstract class TemplateProvider<ItemType> {
   private async registerResultTemplates() {
     const customTemplates = await Promise.all(
       this.props.templateElements.map(async (resultTemplateElement) => {
+        if (!('getTemplate' in resultTemplateElement)) {
+          await customElements.whenDefined(
+            (resultTemplateElement as HTMLElement).tagName.toLowerCase()
+          );
+        }
+
         const template = await resultTemplateElement.getTemplate();
         if (!template) {
           this.props.setTemplateHasError(true);

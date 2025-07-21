@@ -1,5 +1,3 @@
-export const SHOPIFY_COOKIE_KEY = '_shopify_y';
-
 /**
  * The key used for storing and emitting the app proxy configuration.
  *

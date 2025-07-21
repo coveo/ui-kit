@@ -1,12 +1,12 @@
-import {Result} from '../../api/search/search/result.js';
-import {SearchEngine} from '../../app/search-engine/search-engine.js';
+import type {Result} from '../../api/search/search/result.js';
+import type {SearchEngine} from '../../app/search-engine/search-engine.js';
 import {pushRecentResult} from '../../features/recent-results/recent-results-actions.js';
 import {logDocumentOpen} from '../../features/result/result-analytics-actions.js';
 import {
   buildInteractiveResultCore,
-  InteractiveResultCore,
-  InteractiveResultCoreOptions,
-  InteractiveResultCoreProps,
+  type InteractiveResultCore,
+  type InteractiveResultCoreOptions,
+  type InteractiveResultCoreProps,
 } from '../core/interactive-result/headless-core-interactive-result.js';
 
 export interface InteractiveResultOptions extends InteractiveResultCoreOptions {

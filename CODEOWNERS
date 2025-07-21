@@ -1,11 +1,11 @@
 # Default owners for everything in the repo. Later matches take precedence.
 
-* @coveo/search
+* @coveo/dxui
 
 # Owners of the Quantic package
 
 /packages/quantic/ @coveo/salesforce-integration
-/packages/quantic/package.json @coveo/salesforce-integration @coveo/search
+/packages/quantic/package.json @coveo/salesforce-integration @coveo/dxui
 
 # Owners of the Atomic Insight components
 
@@ -13,7 +13,7 @@
 
 # Owners of Atomic's Cypress Tests
 
-/packages/atomic/cypress/ @coveo/search @coveo/search-qa
+/packages/atomic/cypress/ @coveo/dxui @coveo/search-qa
 
 # Owners of Atomic IPX components
 
@@ -31,4 +31,4 @@
 # Owners of the Shopify headless package
 
 /packages/shopify/ @coveo/shopify
-/packages/shopify/package.json @coveo/shopify @coveo/search
+/packages/shopify/package.json @coveo/shopify @coveo/dxui

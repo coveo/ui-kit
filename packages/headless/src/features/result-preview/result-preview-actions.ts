@@ -2,21 +2,21 @@ import {ArrayValue} from '@coveo/bueno';
 import {createAction, createAsyncThunk} from '@reduxjs/toolkit';
 import {
   buildContentURL,
-  HtmlApiClient,
+  type HtmlApiClient,
 } from '../../api/search/html/html-api-client.js';
-import {
+import type {
   HtmlRequest,
   HtmlRequestOptions,
 } from '../../api/search/html/html-request.js';
-import {isErrorResponse} from '../../api/search/search-api-client.js';
-import {SearchAPIErrorWithStatusCode} from '../../api/search/search-api-error-response.js';
 import type {Result} from '../../api/search/search/result.js';
-import {AsyncThunkOptions} from '../../app/async-thunk-options.js';
-import {ClientThunkExtraArguments} from '../../app/thunk-extra-arguments.js';
+import {isErrorResponse} from '../../api/search/search-api-client.js';
+import type {SearchAPIErrorWithStatusCode} from '../../api/search/search-api-error-response.js';
+import type {AsyncThunkOptions} from '../../app/async-thunk-options.js';
+import type {ClientThunkExtraArguments} from '../../app/thunk-extra-arguments.js';
 import {validatePayload} from '../../utils/validate-payload.js';
 import {
   buildResultPreviewRequest,
-  StateNeededByHtmlEndpoint,
+  type StateNeededByHtmlEndpoint,
 } from './result-preview-request-builder.js';
 
 export interface FetchResultContentThunkReturn {

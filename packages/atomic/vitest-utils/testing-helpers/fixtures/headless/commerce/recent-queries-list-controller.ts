@@ -1,4 +1,7 @@
-import {RecentQueriesList, RecentQueriesState} from '@coveo/headless/commerce';
+import type {
+  RecentQueriesList,
+  RecentQueriesState,
+} from '@coveo/headless/commerce';
 import {vi} from 'vitest';
 
 export const defaultState = {

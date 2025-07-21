@@ -1,3 +1,33 @@
+## <small>1.7.4 (2025-07-16)</small>
+
+* chore(deps): Revert "chore(deps): update vite to v3.2.3 j:kit-282" (#5487) ([b9ad867](https://github.com/coveo/ui-kit/commits/b9ad867)), closes [#5487](https://github.com/coveo/ui-kit/issues/5487)
+* chore(deps): update vite to v3.2.4 j:kit-282 (#5604) ([8e8dd6a](https://github.com/coveo/ui-kit/commits/8e8dd6a)), closes [#5604](https://github.com/coveo/ui-kit/issues/5604)
+* chore(shopify): enable biome recommended rules (#5635) ([979bb01](https://github.com/coveo/ui-kit/commits/979bb01)), closes [#5635](https://github.com/coveo/ui-kit/issues/5635)
+* fix(deps): update dependency @coveo/relay to v1.2.5 j:kit-282 (#5606) ([1ff9835](https://github.com/coveo/ui-kit/commits/1ff9835)), closes [#5606](https://github.com/coveo/ui-kit/issues/5606)
+
+
+
+## <small>1.7.2 (2025-07-09)</small>
+
+* fix(shopify): get memoized fetch working in browsers (#5561) ([b11d812](https://github.com/coveo/ui-kit/commits/b11d812)), closes [#5561](https://github.com/coveo/ui-kit/issues/5561)
+
+
+
+## <small>1.7.1 (2025-07-02)</small>
+
+* chore(lint): integrate biome (#5507) ([53bcada](https://github.com/coveo/ui-kit/commits/53bcada)), closes [#5507](https://github.com/coveo/ui-kit/issues/5507)
+
+
+
+## 1.7.0 (2025-06-25)
+
+- feat(shopify): add init function to make it easy to emit custom events on pages with no search (#552 ([5eb2d5d](https://github.com/coveo/ui-kit/commits/5eb2d5d)), closes [#5524](https://github.com/coveo/ui-kit/issues/5524)
+
+## 1.6.0 (2025-06-18)
+
+- feat(shopify): emit clientId in custom event (#5472) ([cc79bee](https://github.com/coveo/ui-kit/commits/cc79bee)), closes [#5472](https://github.com/coveo/ui-kit/issues/5472)
+- chore(deps): update vite to v3.2.3 j:kit-282 (#5475) ([32f2b2e](https://github.com/coveo/ui-kit/commits/32f2b2e)), closes [#5475](https://github.com/coveo/ui-kit/issues/5475)
+
 ## <small>1.5.1 (2025-06-11)</small>
 
 - chore(deps): update vite to v3.2.1 j:kit-282 (#5410) ([02b0045](https://github.com/coveo/ui-kit/commits/02b0045)), closes [#5410](https://github.com/coveo/ui-kit/issues/5410)

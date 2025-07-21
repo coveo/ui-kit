@@ -1,11 +1,11 @@
 import {
   buildNumericFilter,
-  NumericFilter as HeadlessNumericFilter,
-  NumericFilterOptions,
-  NumericFilterState,
-  Unsubscribe,
+  type NumericFilter as HeadlessNumericFilter,
+  type NumericFilterOptions,
+  type NumericFilterState,
+  type Unsubscribe,
 } from '@coveo/headless';
-import {Component, ContextType} from 'react';
+import {Component, type ContextType} from 'react';
 import {AppContext} from '../../context/engine';
 
 interface NumericFilterProps extends NumericFilterOptions {
@@ -55,14 +55,18 @@ export class NumericFilter extends Component<
       <input
         key="start"
         type="number"
-        ref={(ref) => (this.startRef = ref!)}
+        ref={(ref) => {
+          this.startRef = ref!;
+        }}
         defaultValue={range?.start}
         placeholder="Start"
       />,
       <input
         key="end"
         type="number"
-        ref={(ref) => (this.endRef = ref!)}
+        ref={(ref) => {
+          this.endRef = ref!;
+        }}
         defaultValue={range?.end}
         placeholder="End"
       />,

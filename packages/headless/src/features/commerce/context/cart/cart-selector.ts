@@ -1,9 +1,9 @@
-import {Ec} from '@coveo/relay-event-types';
+import type {Ec} from '@coveo/relay-event-types';
 import {createSelector} from '@reduxjs/toolkit';
-import {CommerceEngineState} from '../../../../app/commerce-engine/commerce-engine.js';
-import {CartKey} from '../../../../controllers/commerce/context/cart/headless-cart.js';
+import type {CommerceEngineState} from '../../../../app/commerce-engine/commerce-engine.js';
+import type {CartKey} from '../../../../controllers/commerce/context/cart/headless-cart.js';
 import {getCurrency} from '../context-selector.js';
-import {CartState} from './cart-state.js';
+import type {CartState} from './cart-state.js';
 
 /**
  * The purchase transaction.

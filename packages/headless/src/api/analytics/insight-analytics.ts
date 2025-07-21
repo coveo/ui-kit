@@ -1,19 +1,19 @@
 import {
-  AnalyticsClientSendEventHook,
-  InsightClientProvider,
+  type AnalyticsClientSendEventHook,
   CoveoInsightClient,
+  type InsightClientProvider,
 } from 'coveo.analytics';
 import type {SearchEventRequest} from 'coveo.analytics/dist/definitions/events.js';
-import {Logger} from 'pino';
+import type {Logger} from 'pino';
 import {
   buildFacetStateMetadata,
   getStateNeededForFacetMetadata,
-  SectionNeededForFacetMetadata,
+  type SectionNeededForFacetMetadata,
 } from '../../features/facets/facet-set/facet-set-analytics-actions-utils.js';
 import {getQueryInitialState} from '../../features/query/query-state.js';
 import {getSearchInitialState} from '../../features/search/search-state.js';
-import {InsightAppState} from '../../state/insight-app-state.js';
-import {
+import type {InsightAppState} from '../../state/insight-app-state.js';
+import type {
   ConfigurationSection,
   GeneratedAnswerSection,
   PipelineSection,
@@ -23,7 +23,7 @@ import {
   TriggerSection,
 } from '../../state/state-sections.js';
 import {getOrganizationEndpoint} from '../platform-client.js';
-import {PreprocessRequest} from '../preprocess-request.js';
+import type {PreprocessRequest} from '../preprocess-request.js';
 import {BaseAnalyticsProvider} from './base-analytics.js';
 import {
   wrapAnalyticsClientSendEventHook,
@@ -83,8 +83,7 @@ export class InsightAnalyticsProvider
       state.search?.response?.extendedResults?.generativeQuestionAnsweringId;
 
     if (generativeQuestionAnsweringId) {
-      baseObject['generativeQuestionAnsweringId'] =
-        generativeQuestionAnsweringId;
+      baseObject.generativeQuestionAnsweringId = generativeQuestionAnsweringId;
     }
 
     return baseObject;

@@ -1,5 +1,19 @@
-import {BaseFacetResponse} from '../../../facet-api/response.js';
-import {FacetValueState} from '../../../facet-api/value.js';
+import type {BaseFacetResponse} from '../../../facet-api/response.js';
+import type {FacetValueState} from '../../../facet-api/value.js';
+
+/**
+ * The domain of a date facet.
+ */
+export interface DateFacetDomain {
+  /**
+   * The most recent date available value in the range.
+   */
+  end: string;
+  /**
+   * The least recent date available value in the range.
+   */
+  start: string;
+}
 
 export interface DateFacetValue {
   /**
@@ -28,4 +42,6 @@ export interface DateFacetValue {
   state: FacetValueState;
 }
 
-export type DateFacetResponse = BaseFacetResponse<DateFacetValue>;
+export type DateFacetResponse = BaseFacetResponse<DateFacetValue> & {
+  domain: DateFacetDomain;
+};

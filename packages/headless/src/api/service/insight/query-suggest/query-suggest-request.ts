@@ -1,12 +1,15 @@
-import {ContextParam, LocaleParam} from '../../../platform-service-params.js';
-import {
+import type {
+  ContextParam,
+  LocaleParam,
+} from '../../../platform-service-params.js';
+import type {
   ActionsHistoryParam,
   AnalyticsParam,
   AuthenticationParam,
   QueryParam,
   TimezoneParam,
 } from '../../../search/search-api-params.js';
-import {InsightParam} from '../insight-params.js';
+import type {InsightParam} from '../insight-params.js';
 
 export type InsightQuerySuggestRequest = InsightParam &
   QueryParam &

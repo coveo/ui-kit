@@ -1,4 +1,4 @@
-import {
+import type {
   AutomaticFacetState,
   AutomaticFacet as HeadlessAutomaticFacet,
   Unsubscribe,

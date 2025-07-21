@@ -1,11 +1,11 @@
-import {NumberValue, SchemaDefinition, StringValue} from '@coveo/bueno';
+import {NumberValue, type SchemaDefinition, StringValue} from '@coveo/bueno';
 import {createAction, createAsyncThunk} from '@reduxjs/toolkit';
+import type {Result} from '../../api/search/search/result.js';
 import {
-  AsyncThunkSearchOptions,
+  type AsyncThunkSearchOptions,
   isErrorResponse,
 } from '../../api/search/search-api-client.js';
-import {Result} from '../../api/search/search/result.js';
-import {
+import type {
   ConfigurationSection,
   FoldingSection,
   QuerySection,
@@ -13,8 +13,8 @@ import {
 import {validatePayload} from '../../utils/validate-payload.js';
 import {buildSearchAndFoldingLoadCollectionRequest as legacyBuildSearchAndFoldingLoadCollectionRequest} from '../search-and-folding/legacy/search-and-folding-request.js';
 import {buildSearchAndFoldingLoadCollectionRequest} from '../search-and-folding/search-and-folding-request.js';
-import {ResultWithFolding} from './folding-slice.js';
-import {CollectionId} from './folding-state.js';
+import type {ResultWithFolding} from './folding-slice.js';
+import type {CollectionId} from './folding-state.js';
 
 export interface RegisterFoldingActionCreatorPayload {
   /**

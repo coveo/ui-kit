@@ -1,5 +1,5 @@
-import {existsSync, readFileSync, writeFileSync} from 'fs';
-import {env} from 'process';
+import {existsSync, readFileSync, writeFileSync} from 'node:fs';
+import {env} from 'node:process';
 
 const keysToValidate = process.argv.slice(2);
 
@@ -39,9 +39,9 @@ async function main() {
     if (keysToValidate.length > 0 && !keysToValidate.includes(translationKey))
       continue;
     try {
-      const englishTranslation = fileToValidate[translationKey]['en'];
+      const englishTranslation = fileToValidate[translationKey].en;
       const translationsToValidate = fileToValidate[translationKey];
-      delete translationsToValidate['en'];
+      delete translationsToValidate.en;
 
       const res = await fetch(env.COVEO_AZURE_OPEN_AI_ENDPOINT, {
         method: 'POST',

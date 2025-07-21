@@ -1,4 +1,4 @@
-import {SearchParametersState} from '../../state/search-app-state.js';
+import type {SearchParametersState} from '../../state/search-app-state.js';
 import {getAdvancedSearchQueriesInitialState} from '../advanced-search-queries/advanced-search-queries-state.js';
 import {getContextInitialState} from '../context/context-state.js';
 import {getDebugInitialState} from '../debug/debug-state.js';
@@ -12,8 +12,8 @@ import {getDateFacetSetInitialState} from '../facets/range-facets/date-facet-set
 import {getNumericFacetSetInitialState} from '../facets/range-facets/numeric-facet-set/numeric-facet-set-state.js';
 import {getPaginationInitialState} from '../pagination/pagination-state.js';
 import {getPipelineInitialState} from '../pipeline/pipeline-state.js';
-import {getQuerySetInitialState} from '../query-set/query-set-state.js';
 import {getQueryInitialState} from '../query/query-state.js';
+import {getQuerySetInitialState} from '../query-set/query-set-state.js';
 import {getSearchHubInitialState} from '../search-hub/search-hub-state.js';
 import {getSortCriteriaInitialState} from '../sort-criteria/sort-criteria-state.js';
 import {getStaticFilterSetInitialState} from '../static-filter-set/static-filter-set-state.js';

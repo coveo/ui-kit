@@ -1,4 +1,4 @@
-import {ThunkExtraArguments} from '../../../app/thunk-extra-arguments.js';
+import type {ThunkExtraArguments} from '../../../app/thunk-extra-arguments.js';
 import {buildMockCategoryFacetRequest} from '../../../test/mock-category-facet-request.js';
 import {buildMockInsightEngine} from '../../../test/mock-engine-v2.js';
 import {buildMockInsightState} from '../../../test/mock-insight-state.js';

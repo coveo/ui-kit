@@ -1,7 +1,7 @@
 import {
   defineSearchEngine,
-  InferStaticState,
-  InferHydratedState,
+  type InferHydratedState,
+  type InferStaticState,
 } from '@coveo/headless/ssr';
 import {config} from '../../components/common/search-engine-config';
 

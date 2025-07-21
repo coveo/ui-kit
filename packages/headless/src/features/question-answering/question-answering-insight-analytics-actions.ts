@@ -1,21 +1,21 @@
-import {SmartSnippets} from '@coveo/relay-event-types';
+import type {SmartSnippets} from '@coveo/relay-event-types';
 import {validatePayload} from '../../utils/validate-payload.js';
 import {
-  InsightAction,
   documentIdentifier,
+  type InsightAction,
   makeInsightAnalyticsActionFactory,
   partialDocumentInformation,
 } from '../analytics/analytics-utils.js';
 import {SearchPageEvents} from '../analytics/search-action-cause.js';
 import {getCaseContextAnalyticsMetadata} from '../case-context/case-context-state.js';
 import {
-  SmartSnippetFeedback,
+  type SmartSnippetFeedback,
   smartSnippetFeedbackMap,
 } from './question-answering-analytics-actions.js';
 import {
   inlineLinkPayloadDefinition,
-  QuestionAnsweringInlineLinkActionCreatorPayload,
-  QuestionAnsweringUniqueIdentifierActionCreatorPayload,
+  type QuestionAnsweringInlineLinkActionCreatorPayload,
+  type QuestionAnsweringUniqueIdentifierActionCreatorPayload,
   uniqueIdentifierPayloadDefinition,
   validateQuestionAnsweringActionCreatorPayload,
 } from './question-answering-document-id.js';

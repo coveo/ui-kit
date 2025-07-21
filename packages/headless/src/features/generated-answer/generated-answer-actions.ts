@@ -6,8 +6,8 @@ import {
   StringValue,
 } from '@coveo/bueno';
 import {createAction, createAsyncThunk} from '@reduxjs/toolkit';
-import {AsyncThunkGeneratedAnswerOptions} from '../../api/generated-answer/generated-answer-client.js';
-import {
+import type {AsyncThunkGeneratedAnswerOptions} from '../../api/generated-answer/generated-answer-client.js';
+import type {
   GeneratedAnswerCitationsPayload,
   GeneratedAnswerEndOfStreamPayload,
   GeneratedAnswerHeaderMessagePayload,
@@ -15,8 +15,8 @@ import {
   GeneratedAnswerPayloadType,
   GeneratedAnswerStreamEventData,
 } from '../../api/generated-answer/generated-answer-event-payload.js';
-import {GeneratedAnswerStreamRequest} from '../../api/generated-answer/generated-answer-request.js';
-import {
+import type {GeneratedAnswerStreamRequest} from '../../api/generated-answer/generated-answer-request.js';
+import type {
   ConfigurationSection,
   DebugSection,
   GeneratedAnswerSection,
@@ -29,8 +29,8 @@ import {
 import {logGeneratedAnswerStreamEnd} from './generated-answer-analytics-actions.js';
 import {buildStreamingRequest} from './generated-answer-request.js';
 import {
-  GeneratedContentFormat,
-  GeneratedResponseFormat,
+  type GeneratedContentFormat,
+  type GeneratedResponseFormat,
   generatedContentFormat,
 } from './generated-response-format.js';
 

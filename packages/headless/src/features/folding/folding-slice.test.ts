@@ -1,21 +1,25 @@
-import {Action} from '@reduxjs/toolkit';
-import {SearchAPIClient} from '../../api/search/search-api-client.js';
-import {Result} from '../../api/search/search/result.js';
-import {ClientThunkExtraArguments} from '../../app/thunk-extra-arguments.js';
+import type {Action} from '@reduxjs/toolkit';
+import type {Result} from '../../api/search/search/result.js';
+import type {SearchAPIClient} from '../../api/search/search-api-client.js';
+import type {ClientThunkExtraArguments} from '../../app/thunk-extra-arguments.js';
 import {
-  MockedSearchEngine,
   buildMockSearchEngine,
+  type MockedSearchEngine,
 } from '../../test/mock-engine-v2.js';
 import {buildMockNavigatorContextProvider} from '../../test/mock-navigator-context-provider.js';
-import {buildMockResultWithFolding} from '../../test/mock-result-with-folding.js';
 import {buildMockResult} from '../../test/mock-result.js';
-import {buildMockSearchResponse} from '../../test/mock-search-response.js';
+import {buildMockResultWithFolding} from '../../test/mock-result-with-folding.js';
 import {buildMockSearch} from '../../test/mock-search.js';
+import {buildMockSearchResponse} from '../../test/mock-search-response.js';
 import {createMockState} from '../../test/mock-state.js';
 import {executeSearch, fetchMoreResults} from '../search/search-actions.js';
 import {loadCollection} from './folding-actions.js';
-import {foldingReducer, ResultWithFolding} from './folding-slice.js';
-import {FoldedResult, FoldingFields, FoldingState} from './folding-state.js';
+import {foldingReducer, type ResultWithFolding} from './folding-slice.js';
+import type {
+  FoldedResult,
+  FoldingFields,
+  FoldingState,
+} from './folding-state.js';
 
 interface MockFoldingHierarchy {
   name: string;
@@ -475,7 +479,9 @@ describe('folding slice', () => {
         'thread',
         testThreadHierarchy
       );
-      indexedResults.forEach((result) => (result.raw.id = [result.raw.id]));
+      indexedResults.forEach((result) => {
+        result.raw.id = [result.raw.id];
+      });
       const rootResult = emulateAPIFolding(indexedResults);
 
       dispatchSearch([rootResult]);
@@ -539,15 +545,14 @@ describe('folding slice', () => {
         'thread',
         testThreadHierarchy
       );
-      indexedResults.forEach(
-        (result) =>
-          (result.raw = {
-            urihash: '',
-            col: result.raw.collection,
-            p: result.raw.parent,
-            c: result.raw.id,
-          })
-      );
+      indexedResults.forEach((result) => {
+        result.raw = {
+          urihash: '',
+          col: result.raw.collection,
+          p: result.raw.parent,
+          c: result.raw.id,
+        };
+      });
       const rootResult = emulateAPIFolding(
         indexedResults,
         indexedResults[0],
@@ -657,7 +662,7 @@ describe('folding slice', () => {
       childResult.raw.collection = childResult.parentResult.raw.collection =
         'the_collection';
       dispatchSearch([childResult]);
-      expect(state.collections['the_collection'].result).toEqual(
+      expect(state.collections.the_collection.result).toEqual(
         childResult.parentResult
       );
     });

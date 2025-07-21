@@ -3,8 +3,8 @@ import {emptyNextCorrection} from '../../did-you-mean/did-you-mean-state.js';
 import {executeSearch} from '../search/search-actions.js';
 import {didYouMeanReducer} from './did-you-mean-slice.js';
 import {
+  type DidYouMeanState,
   getDidYouMeanInitialState,
-  DidYouMeanState,
 } from './did-you-mean-state.js';
 
 describe('did you mean slice', () => {

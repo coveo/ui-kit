@@ -1,4 +1,4 @@
-import {Controller} from '../../controller/headless-controller.js';
+import type {Controller} from '../../controller/headless-controller.js';
 
 /**
  * The `RedirectionTrigger` controller handles redirection triggers. A [Redirection trigger](https://docs.coveo.com/en/3413#redirect) query pipeline rule lets you define a URL to redirect the user's browser to when a certain condition is met.

@@ -1,10 +1,10 @@
 import {
   buildQuerySummary,
-  QuerySummary as HeadlessQuerySummary,
-  QuerySummaryState,
-  Unsubscribe,
+  type QuerySummary as HeadlessQuerySummary,
+  type QuerySummaryState,
+  type Unsubscribe,
 } from '@coveo/headless';
-import {Component, ContextType} from 'react';
+import {Component, type ContextType} from 'react';
 import {AppContext} from '../../context/engine';
 
 export class QuerySummary extends Component<{}, QuerySummaryState> {

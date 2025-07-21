@@ -1,0 +1,18 @@
+{
+  "name": "{{project}}",
+  "description": "{{titleCase project}} project",
+  "version": "0.1.0",
+  "private": true,
+  "main": "dist/index.cjs.js",
+  "module": "dist/index.js",
+  "types": "dist/types/index.d.ts",
+  "collection": "dist/collection/collection-manifest.json",
+  "collection:main": "dist/index.js",
+  "scripts": {
+    "setup-cleanup": "node ./scripts/clean-up.js",
+    "start": "stencil build --dev --watch --serve",
+    "build": "stencil build && node deployment.esbuild.mjs",
+    "deploy": "npm run build && coveo ui:deploy",
+    "postinstall": "npm run setup-cleanup && prettier --write . --loglevel warn"
+  }
+}

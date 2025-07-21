@@ -1,10 +1,10 @@
 #!/usr/bin/env node
+import {readFileSync, writeFileSync} from 'node:fs';
+import {resolve} from 'node:path';
 import {
   getCurrentVersion,
   getNextVersion,
 } from '@coveo/semantic-monorepo-tools';
-import {readFileSync, writeFileSync} from 'node:fs';
-import {resolve} from 'node:path';
 
 if (!process.env.INIT_CWD) {
   throw new Error('Should be called using npm run-script');

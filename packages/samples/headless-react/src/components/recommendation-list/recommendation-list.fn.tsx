@@ -1,9 +1,9 @@
 import {
-  RecommendationList as HeadlessRecommendationList,
+  type RecommendationList as HeadlessRecommendationList,
   loadClickAnalyticsActions,
-  Result,
+  type Result,
 } from '@coveo/headless/recommendation';
-import {useEffect, useState, FunctionComponent, useContext} from 'react';
+import {type FunctionComponent, useContext, useEffect, useState} from 'react';
 import {AppContext} from '../../context/engine';
 import {filterProtocol} from '../../utils/filter-protocol';
 

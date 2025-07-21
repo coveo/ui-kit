@@ -1,5 +1,5 @@
-import {SmartSnippet as HeadlessSmartSnippet} from '@coveo/headless';
-import {useEffect, useState, FunctionComponent, useRef} from 'react';
+import type {SmartSnippet as HeadlessSmartSnippet} from '@coveo/headless';
+import {type FunctionComponent, useEffect, useRef, useState} from 'react';
 import {filterProtocol} from '../../utils/filter-protocol';
 
 interface SmartSnippetProps {
@@ -117,6 +117,7 @@ export const SmartSnippet: FunctionComponent<SmartSnippetProps> = (props) => {
         <dt>{question}</dt>
         <dd>
           <div
+            // biome-ignore lint/security/noDangerouslySetInnerHtml: <>
             dangerouslySetInnerHTML={{__html: answer}}
             style={answerStyles(expanded)}
           ></div>

@@ -1,3 +1,4 @@
+/** biome-ignore-all lint/suspicious/noDocumentCookie: <> */
 /**
  * Sets a document cookie with the provided name, value, path, and maxAge.
  *

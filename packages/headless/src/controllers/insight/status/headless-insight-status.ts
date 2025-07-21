@@ -1,8 +1,8 @@
-import {InsightEngine} from '../../../app/insight-engine/insight-engine.js';
+import type {InsightEngine} from '../../../app/insight-engine/insight-engine.js';
 import {
-  SearchStatusState,
   buildCoreStatus,
-  SearchStatus,
+  type SearchStatus,
+  type SearchStatusState,
 } from '../../core/status/headless-core-status.js';
 
 export type {SearchStatus, SearchStatusState};

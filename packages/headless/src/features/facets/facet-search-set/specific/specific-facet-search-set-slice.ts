@@ -1,5 +1,5 @@
 import {createReducer} from '@reduxjs/toolkit';
-import {SpecificFacetSearchResponse} from '../../../../api/search/facet-search/specific-facet-search/specific-facet-search-response.js';
+import type {SpecificFacetSearchResponse} from '../../../../api/search/facet-search/specific-facet-search/specific-facet-search-response.js';
 import {setView} from '../../../commerce/context/context-actions.js';
 import {
   executeCommerceFacetSearch,

@@ -1,10 +1,10 @@
-import {HtmlRequestOptions} from '../../api/search/html/html-request.js';
+import type {HtmlRequestOptions} from '../../api/search/html/html-request.js';
 import {getConfigurationInitialState} from '../configuration/configuration-state.js';
 import {getQueryInitialState} from '../query/query-state.js';
 import {getResultPreviewInitialState} from '../result-preview/result-preview-state.js';
 import {
   buildInsightResultPreviewRequest,
-  StateNeededByInsightHtmlEndpoint,
+  type StateNeededByInsightHtmlEndpoint,
 } from './insight-result-preview-request-builder.js';
 
 describe('ResultPreviewRequestBuilder', () => {

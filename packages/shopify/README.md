@@ -6,7 +6,7 @@ It includes functions to fetch app proxy configurations and build a commerce eng
 
 ## Benefits
 
-Using the `@coveo/shopify` package ensures that the commerce engine will emit events using the same `clientId` both inside and outside Shopify Web Pixels. This provides consistent tracking and analytics across the entire Shopify ecosystem. When initializing the commerce engine, a custom event is emitted using the `coveo_shopify_config` key. This event enables Shopify Web Pixels to access the app proxy configuration, ensuring consistent tracking and personalization across storefronts and pixels.
+Using the `@coveo/shopify` package ensures that the commerce engine will activate Shopify Web Pixels by emitting an event that contains everything they need to ensure consistent tracking and personalization across storefronts and pixels.
 
 ## Installation
 
@@ -19,6 +19,52 @@ yarn add @coveo/shopify
 ```
 
 ## Features
+
+### `init`
+
+Initializes the Coveo Shopify integration to ensure that web pixels work correctly. This function should be called on every page of your Shopify store to maintain consistent tracking and personalization.
+
+The `init` function publishes a custom event with the configuration data that the web pixels need to function properly.
+
+#### Parameters
+
+- `options` (required): A `CoveoShopifyOptions` object containing:
+  - `accessToken` (required): The access token for the Coveo API.
+  - `organizationId` (required): The organization ID.
+  - `environment` (required): The environment configuration ('dev', 'stg', 'prod', etc.).
+  - `trackingId` (required): The tracking ID for analytics.
+
+#### Returns
+
+This function doesn't return a value but publishes a custom event that web pixels can listen to.
+
+#### Example
+
+```typescript
+import {init} from '@coveo/shopify/utilities';
+
+// Initialize on every page
+init({
+  accessToken: 'your-access-token',
+  organizationId: 'your-org-id',
+  environment: 'prod',
+  trackingId: 'your-tracking-id',
+});
+```
+
+#### Usage with App Proxy Configuration
+
+You can combine the `init` function with `fetchAppProxyConfig` to initialize the integration:
+
+```typescript
+import {init, fetchAppProxyConfig} from '@coveo/shopify/utilities';
+
+const config = await fetchAppProxyConfig({
+  marketId: 'market_123432',
+});
+
+init(config);
+```
 
 ### `fetchAppProxyConfig`
 
@@ -56,8 +102,6 @@ Builds a commerce engine instance configured for Shopify.
 #### Parameters
 
 - `commerceEngineOptions` (required): Options for the commerce engine.
-- `shopifyCookie` (optional): The value of the Shopify `_shopify_y` cookie. If not provided, it will attempt to retrieve it from the browser's cookies.
-- `environment` (optional): A custom environment configuration (useful for testing & SSR).
 
 #### Returns
 
@@ -102,31 +146,8 @@ console.log(engine);
 </script>
 ```
 
-### `getClientId`
-
-Generates a unique client identifier for the Shopify store, based on the value of the Shopify `_shopify_y` cookie. This ensures consistent identification of users across storefronts and Shopify Web Pixels.
-
-#### Parameters
-
-- `shopifyCookie` (required): The value of the Shopify `_shopify_y` cookie.
-
-#### Returns
-
-A version 5 UUID string uniquely representing the client.
-
-#### Example
-
-```typescript
-import {getClientId, getShopifyCookie} from '@coveo/shopify/utilities';
-
-const shopifyCookie = getShopifyCookie();
-const clientId = getClientId(shopifyCookie!);
-console.log(clientId);
-```
-
 **Key constants:**
 
-- `SHOPIFY_COOKIE_KEY`: The name of the Shopify cookie used for client identification (`_shopify_y`).
 - `COVEO_SHOPIFY_CONFIG_KEY`: The key for the custom event and cookie used to share app proxy configuration (`coveo_shopify_config`).
 
 ---

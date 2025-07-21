@@ -1,13 +1,13 @@
 import {executeSearch} from '../../../features/insight-search/insight-search-actions.js';
 import {
   buildMockInsightEngine,
-  MockedInsightEngine,
+  type MockedInsightEngine,
 } from '../../../test/mock-engine-v2.js';
 import {buildMockInsightState} from '../../../test/mock-insight-state.js';
 import {
   buildGeneratedAnswer,
-  GeneratedAnswer,
-  GeneratedAnswerProps,
+  type GeneratedAnswer,
+  type GeneratedAnswerProps,
 } from './headless-insight-generated-answer.js';
 
 vi.mock('../../../features/generated-answer/generated-answer-actions');

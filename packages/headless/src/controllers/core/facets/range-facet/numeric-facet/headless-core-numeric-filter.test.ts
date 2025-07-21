@@ -1,4 +1,4 @@
-import {Mock} from 'vitest';
+import type {Mock} from 'vitest';
 import {configuration} from '../../../../../app/common-reducers.js';
 import {facetOptionsReducer as facetOptions} from '../../../../../features/facet-options/facet-options-slice.js';
 import {
@@ -8,10 +8,10 @@ import {
 } from '../../../../../features/facets/range-facets/numeric-facet-set/numeric-facet-actions.js';
 import {numericFacetSetReducer as numericFacetSet} from '../../../../../features/facets/range-facets/numeric-facet-set/numeric-facet-set-slice.js';
 import {searchReducer as search} from '../../../../../features/search/search-slice.js';
-import {SearchAppState} from '../../../../../state/search-app-state.js';
+import type {SearchAppState} from '../../../../../state/search-app-state.js';
 import {
-  MockedSearchEngine,
   buildMockSearchEngine,
+  type MockedSearchEngine,
 } from '../../../../../test/mock-engine-v2.js';
 import {buildMockNumericFacetResponse} from '../../../../../test/mock-numeric-facet-response.js';
 import {buildMockNumericFacetSlice} from '../../../../../test/mock-numeric-facet-slice.js';
@@ -20,9 +20,9 @@ import {createMockState} from '../../../../../test/mock-state.js';
 import * as FacetIdDeterminor from '../../_common/facet-id-determinor.js';
 import {
   buildCoreNumericFilter,
-  NumericFilter,
-  NumericFilterInitialState,
-  NumericFilterOptions,
+  type NumericFilter,
+  type NumericFilterInitialState,
+  type NumericFilterOptions,
 } from './headless-core-numeric-filter.js';
 import {buildNumericRange} from './numeric-range.js';
 

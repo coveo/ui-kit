@@ -1,6 +1,6 @@
-import {Result} from '../../api/search/search/result.js';
-import {buildMockSearchResponse} from '../../test/mock-search-response.js';
+import type {Result} from '../../api/search/search/result.js';
 import {buildMockSearch} from '../../test/mock-search.js';
+import {buildMockSearchResponse} from '../../test/mock-search-response.js';
 import {logSearchEvent} from '../analytics/analytics-actions.js';
 import {executeSearch} from '../search/search-actions.js';
 import {
@@ -10,7 +10,7 @@ import {
 import {recentQueriesReducer} from './recent-queries-slice.js';
 import {
   getRecentQueriesInitialState,
-  RecentQueriesState,
+  type RecentQueriesState,
 } from './recent-queries-state.js';
 
 function withResult(rest = {}) {

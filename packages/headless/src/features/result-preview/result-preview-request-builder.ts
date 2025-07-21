@@ -1,9 +1,9 @@
 import {getSearchApiBaseUrl} from '../../api/platform-client.js';
-import {
+import type {
   HtmlRequest,
   HtmlRequestOptions,
 } from '../../api/search/html/html-request.js';
-import {
+import type {
   ConfigurationSection,
   QuerySection,
   ResultPreviewSection,

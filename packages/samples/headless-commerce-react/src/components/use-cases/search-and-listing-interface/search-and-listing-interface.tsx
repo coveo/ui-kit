@@ -1,10 +1,10 @@
-import {
+import type {
   Cart,
   ChildProduct,
   Search as HeadlessSearch,
   ProductListing,
 } from '@coveo/headless/commerce';
-import {useState, useEffect} from 'react';
+import {useEffect, useState} from 'react';
 import BreadcrumbManager from '../../breadcrumb-manager/breadcrumb-manager.js';
 import FacetGenerator from '../../facets/facet-generator/facet-generator.js';
 import Pagination from '../../pagination/pagination.js';

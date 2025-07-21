@@ -1,12 +1,12 @@
 'use client';
 
-import {NavigatorContext} from '@coveo/headless/ssr';
-import {useEffect, useState, PropsWithChildren} from 'react';
+import type {NavigatorContext} from '@coveo/headless/ssr';
+import {type PropsWithChildren, useEffect, useState} from 'react';
 import {
-  SearchStaticState,
-  SearchHydratedState,
-  hydrateStaticState,
   HydratedStateProvider,
+  hydrateStaticState,
+  type SearchHydratedState,
+  type SearchStaticState,
   StaticStateProvider,
   setNavigatorContextProvider,
 } from '../../lib/react/engine';

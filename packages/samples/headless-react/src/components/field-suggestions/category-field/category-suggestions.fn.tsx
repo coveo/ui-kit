@@ -1,5 +1,5 @@
-import {CategoryFieldSuggestions as HeadlessCategoryFieldSuggestions} from '@coveo/headless';
-import {useEffect, useState, FunctionComponent} from 'react';
+import type {CategoryFieldSuggestions as HeadlessCategoryFieldSuggestions} from '@coveo/headless';
+import {type FunctionComponent, useEffect, useState} from 'react';
 
 interface CategoryFieldSuggestionsProps {
   controller: HeadlessCategoryFieldSuggestions;
@@ -31,6 +31,11 @@ export const CategoryFieldSuggestions: FunctionComponent<
               '>'
             )}
             onClick={() => controller.select(facetSearchValue)}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                controller.select(facetSearchValue);
+              }
+            }}
           >
             {[...facetSearchValue.path, facetSearchValue.displayValue].join(
               ' > '

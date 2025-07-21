@@ -1,5 +1,5 @@
-import {context} from '@actions/github';
 import {execSync} from 'node:child_process';
+import {context} from '@actions/github';
 
 export function getBaseHeadSHAs() {
   switch (context.eventName) {

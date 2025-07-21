@@ -1,4 +1,4 @@
-import {statSync, readdirSync} from 'node:fs';
+import {readdirSync, statSync} from 'node:fs';
 import {resolve} from 'node:path';
 import {execute} from '../../exec.mjs';
 

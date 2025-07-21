@@ -1,7 +1,7 @@
 import {
   buildCart,
   buildContext,
-  CommerceEngine,
+  type CommerceEngine,
 } from '@coveo/headless/commerce';
 import {useEffect, useState, useTransition} from 'react';
 import Layout from '../layout/layout.js';
@@ -53,7 +53,7 @@ export default function Router(props: IRouterProps) {
     };
   }, [previousPage]);
 
-  let content;
+  let content: React.ReactNode;
   if (/\/listing\/surf-accessories/.test(page)) {
     content = (
       <ProductListingPage

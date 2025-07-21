@@ -1,8 +1,8 @@
+import type {i18n} from 'i18next';
+import {html} from 'lit';
+import {beforeAll, describe, expect, it} from 'vitest';
 import {renderFunctionFixture} from '@/vitest-utils/testing-helpers/fixture';
 import {createTestI18n} from '@/vitest-utils/testing-helpers/i18n-utils';
-import {i18n} from 'i18next';
-import {html} from 'lit';
-import {describe, it, expect, beforeAll} from 'vitest';
 import {
   getProductQuerySummaryI18nParameters,
   getQuerySummaryI18nParameters,
@@ -79,6 +79,15 @@ describe('#getQuerySummaryI18nParameters', () => {
     expect(highlights[1]).toHaveAttribute('part', 'highlight');
     expect(highlights[2]).toHaveAttribute('part', 'highlight');
     expect(highlights[3]).toHaveAttribute('part', 'highlight query');
+  });
+
+  it('should render highlights as bold text', async () => {
+    const {highlights} = await setup();
+
+    expect(highlights[0]).toHaveStyle({fontWeight: 'bold'});
+    expect(highlights[1]).toHaveStyle({fontWeight: 'bold'});
+    expect(highlights[2]).toHaveStyle({fontWeight: 'bold'});
+    expect(highlights[3]).toHaveStyle({fontWeight: 'bold'});
   });
 });
 

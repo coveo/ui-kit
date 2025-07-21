@@ -2,15 +2,15 @@ import {
   interfaceChange,
   logInterfaceChange,
 } from '../analytics/analytics-actions.js';
-import {LegacySearchAction} from '../analytics/analytics-utils.js';
+import type {LegacySearchAction} from '../analytics/analytics-utils.js';
 import {
+  facetClearAll,
+  facetDeselect,
+  facetExclude,
   logFacetClearAll,
   logFacetDeselect,
-  logFacetSelect,
   logFacetExclude,
-  facetDeselect,
-  facetClearAll,
-  facetExclude,
+  logFacetSelect,
   logFacetUnexclude,
 } from '../facets/facet-set/facet-set-analytics-actions.js';
 import {

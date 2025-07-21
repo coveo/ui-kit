@@ -1,5 +1,5 @@
+import type {InferHydratedState, InferStaticState} from '@coveo/headless/ssr';
 import {defineSearchEngine} from '@coveo/headless-react/ssr';
-import {InferStaticState, InferHydratedState} from '@coveo/headless/ssr';
 import {config} from '../../components/common/search-engine-config';
 
 const engineDefinition = defineSearchEngine(config);

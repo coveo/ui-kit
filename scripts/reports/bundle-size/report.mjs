@@ -29,7 +29,7 @@ function toOneDecimal(num) {
 function buildVisualReport(rows) {
   console.log('building visual report');
 
-  const rowsWithColumnsConcatenated = rows.map((row) => '|' + row.join('|'));
+  const rowsWithColumnsConcatenated = rows.map((row) => `|${row.join('|')}`);
   const presentableRows = rowsWithColumnsConcatenated.join('\n');
   const tableHead = `
 | File | Old (kb) | New (kb) | Change (%)

@@ -1,10 +1,10 @@
-import {Mock} from 'vitest';
+import type {Mock} from 'vitest';
 import {
   buildMockSearchEngine,
-  MockedSearchEngine,
+  type MockedSearchEngine,
 } from '../../test/mock-engine-v2.js';
 import {createMockState} from '../../test/mock-state.js';
-import {buildController, Controller} from './headless-controller.js';
+import {buildController, type Controller} from './headless-controller.js';
 
 describe('Controller', () => {
   let engine: MockedSearchEngine;

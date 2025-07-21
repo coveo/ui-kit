@@ -1,4 +1,4 @@
-import {StandaloneSearchBoxAnalytics} from '@coveo/headless';
+import type {StandaloneSearchBoxAnalytics} from '@coveo/headless';
 
 export enum StorageItems {
   RECENT_QUERIES = 'coveo-recent-queries',
@@ -17,7 +17,6 @@ export interface GeneratedAnswerData {
 }
 
 export class SafeStorage implements Storage {
-  constructor() {}
   public clear() {
     return this.tryAccessLocalStorageOrWarn(
       () => localStorage.clear(),

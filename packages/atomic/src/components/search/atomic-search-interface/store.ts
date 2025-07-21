@@ -1,22 +1,22 @@
-import {
-  NumericFacetValue,
+import type {
   DateFacetValue,
-  SortCriterion,
+  NumericFacetValue,
   SearchEngine,
+  SortCriterion,
 } from '@coveo/headless';
 import {DEFAULT_MOBILE_BREAKPOINT} from '../../../utils/replace-breakpoint';
-import {
+import type {
   FacetInfo,
   FacetStore,
   FacetType,
   FacetValueFormat,
 } from '../../common/facets/facet-common-store';
 import {
-  BaseStore,
+  type BaseStore,
   createBaseStore,
   getFacetElements,
+  type ResultListInfo,
   registerFacet,
-  ResultListInfo,
   setLoadingFlag,
   unsetLoadingFlag,
   waitUntilAppLoaded,

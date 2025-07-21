@@ -1,23 +1,23 @@
 import {ArrayValue, RecordValue, Schema, StringValue} from '@coveo/bueno';
 import {
+  type CategoryFacetSortCriterion,
   categoryFacetSortCriteria,
-  CategoryFacetSortCriterion,
 } from '../../../../features/facets/category-facet-set/interfaces/request.js';
 import {
-  facetId,
-  field,
   basePath,
   delimitingCharacter,
+  facetId,
+  facetSearch,
+  field,
   filterByBasePath,
   filterFacetCount,
   injectionDepth,
   numberOfValues,
-  facetSearch,
 } from '../_common/facet-option-definitions.js';
 
 export interface CategoryFacetOptions {
   /**
-   * The field whose values you want to display in the facet.
+   * The field from which to display values in the facet.
    * */
   field: string;
 

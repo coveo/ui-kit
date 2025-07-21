@@ -1,4 +1,4 @@
-import {
+import type {
   Product,
   ProductList,
   Recommendations,
@@ -28,7 +28,11 @@ export default function ProductButtonWithImage({
   };
 
   return (
-    <button disabled={!methods} onClick={() => onProductClick(product)}>
+    <button
+      type="button"
+      disabled={!methods}
+      onClick={() => onProductClick(product)}
+    >
       {product.ec_name}
       <Image
         src={product.ec_images[0]}

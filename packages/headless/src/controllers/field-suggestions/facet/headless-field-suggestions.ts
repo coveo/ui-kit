@@ -1,7 +1,7 @@
 import {configuration} from '../../../app/common-reducers.js';
-import {CoreEngine} from '../../../app/engine.js';
-import {SearchEngine} from '../../../app/search-engine/search-engine.js';
-import {SearchThunkExtraArguments} from '../../../app/search-thunk-extra-arguments.js';
+import type {CoreEngine} from '../../../app/engine.js';
+import type {SearchEngine} from '../../../app/search-engine/search-engine.js';
+import type {SearchThunkExtraArguments} from '../../../app/search-thunk-extra-arguments.js';
 import {updateFacetOptions} from '../../../features/facet-options/facet-options-actions.js';
 import {
   executeFacetSearch,
@@ -15,24 +15,26 @@ import {
   logFacetExclude,
   logFacetSelect,
 } from '../../../features/facets/facet-set/facet-set-analytics-actions.js';
-import {facetSetReducer as facetSet} from '../../../features/facets/facet-set/facet-set-slice.js';
-import {defaultFacetOptions} from '../../../features/facets/facet-set/facet-set-slice.js';
+import {
+  defaultFacetOptions,
+  facetSetReducer as facetSet,
+} from '../../../features/facets/facet-set/facet-set-slice.js';
 import {executeSearch} from '../../../features/search/search-actions.js';
 import {searchReducer as search} from '../../../features/search/search-slice.js';
-import {
-  FacetSection,
+import type {
   ConfigurationSection,
   FacetSearchSection,
+  FacetSection,
   SearchSection,
 } from '../../../state/state-sections.js';
 import {loadReducerError} from '../../../utils/errors.js';
 import {
   buildController,
-  Subscribable,
+  type Subscribable,
 } from '../../controller/headless-controller.js';
 import {determineFacetId} from '../../core/facets/_common/facet-id-determinor.js';
 import {buildFacetSearch} from '../../core/facets/facet-search/specific/headless-facet-search.js';
-import {FacetOptions} from '../../facets/facet/headless-facet-options.js';
+import type {FacetOptions} from '../../facets/facet/headless-facet-options.js';
 
 export interface FieldSuggestionsValue {
   /**
@@ -223,7 +225,7 @@ export function buildFieldSuggestions(
   return {
     ...controller,
     ...facetSearch,
-    updateText: function (text: string) {
+    updateText: (text: string) => {
       facetSearch.updateText(text);
       facetSearch.search();
     },

@@ -1,9 +1,9 @@
 import {
   buildFacet,
   buildSearchEngine,
-  Facet as HeadlessFacet,
   getSampleSearchEngineConfiguration,
-  SearchEngine,
+  type Facet as HeadlessFacet,
+  type SearchEngine,
 } from '@coveo/headless';
 import {Component} from 'react';
 import {MultilevelDependentFacet} from '../components/dependent-facet/multi-level-dependent-facet';

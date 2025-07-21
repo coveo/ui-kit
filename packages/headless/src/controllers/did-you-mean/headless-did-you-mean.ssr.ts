@@ -1,6 +1,6 @@
-import {SearchEngine} from '../../app/search-engine/search-engine.js';
-import {ControllerDefinitionWithoutProps} from '../../app/ssr-engine/types/common.js';
-import {DidYouMean, buildDidYouMean} from './headless-did-you-mean.js';
+import type {SearchEngine} from '../../app/search-engine/search-engine.js';
+import type {ControllerDefinitionWithoutProps} from '../../app/ssr-engine/types/common.js';
+import {buildDidYouMean, type DidYouMean} from './headless-did-you-mean.js';
 
 export * from './headless-did-you-mean.js';
 

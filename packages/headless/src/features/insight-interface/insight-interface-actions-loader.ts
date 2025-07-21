@@ -1,11 +1,11 @@
-import {AsyncThunkAction} from '@reduxjs/toolkit';
-import {AsyncThunkInsightOptions} from '../../api/service/insight/insight-api-client.js';
-import {InsightEngine} from '../../app/insight-engine/insight-engine.js';
+import type {AsyncThunkAction} from '@reduxjs/toolkit';
+import type {AsyncThunkInsightOptions} from '../../api/service/insight/insight-api-client.js';
+import type {InsightEngine} from '../../app/insight-engine/insight-engine.js';
 import {insightInterfaceReducer as insightInterface} from '../../features/insight-interface/insight-interface-slice.js';
 import {
+  type FetchInterfaceThunkReturn,
   fetchInterface,
-  FetchInterfaceThunkReturn,
-  StateNeededByFetchInterface,
+  type StateNeededByFetchInterface,
 } from './insight-interface-actions.js';
 
 /**

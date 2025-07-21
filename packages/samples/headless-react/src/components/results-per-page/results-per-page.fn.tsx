@@ -1,5 +1,5 @@
-import {ResultsPerPage as HeadlessResultsPerPage} from '@coveo/headless';
-import {useEffect, useState, FunctionComponent} from 'react';
+import type {ResultsPerPage as HeadlessResultsPerPage} from '@coveo/headless';
+import {type FunctionComponent, useEffect, useState} from 'react';
 
 interface ResultsPerPageProps {
   controller: HeadlessResultsPerPage;

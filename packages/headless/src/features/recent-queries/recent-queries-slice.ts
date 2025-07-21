@@ -1,14 +1,13 @@
-import {type Draft as WritableDraft} from '@reduxjs/toolkit';
-import {createReducer} from '@reduxjs/toolkit';
-import {registerRecentQueries as registerCommerceRecentQueries} from '../commerce/recent-queries/recent-queries-actions.js';
+import {createReducer, type Draft as WritableDraft} from '@reduxjs/toolkit';
+import type {registerRecentQueries as registerCommerceRecentQueries} from '../commerce/recent-queries/recent-queries-actions.js';
 import {executeSearch} from '../search/search-actions.js';
 import {
-  registerRecentQueries,
   clearRecentQueries,
+  registerRecentQueries,
 } from './recent-queries-actions.js';
 import {
-  RecentQueriesState,
   getRecentQueriesInitialState,
+  type RecentQueriesState,
 } from './recent-queries-state.js';
 
 export const recentQueriesReducer = createReducer(

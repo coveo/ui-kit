@@ -1,10 +1,10 @@
 import {StringValue} from '@coveo/bueno';
 import {createAction} from '@reduxjs/toolkit';
 import {
-  validatePayload,
   requiredNonEmptyString,
+  validatePayload,
 } from '../../utils/validate-payload.js';
-import {CorrectionMode} from './did-you-mean-state.js';
+import type {CorrectionMode} from './did-you-mean-state.js';
 
 export const enableDidYouMean = createAction('didYouMean/enable');
 

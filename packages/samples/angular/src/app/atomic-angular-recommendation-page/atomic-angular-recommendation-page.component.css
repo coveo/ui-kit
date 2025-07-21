@@ -1,4 +1,5 @@
-div.result-root.with-sections.display-list.image-small atomic-result-section-visual {
+div.result-root.with-sections.display-list.image-small
+  atomic-result-section-visual {
   height: 120px;
 }
 .rating-wrapper {

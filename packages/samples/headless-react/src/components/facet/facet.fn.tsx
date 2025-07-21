@@ -1,5 +1,5 @@
-import {Facet as HeadlessFacet} from '@coveo/headless';
-import {useEffect, useState, FunctionComponent} from 'react';
+import type {Facet as HeadlessFacet} from '@coveo/headless';
+import {type FunctionComponent, useEffect, useState} from 'react';
 import {FacetSearch} from './facet-search';
 
 interface FacetProps {

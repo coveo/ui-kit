@@ -1,25 +1,27 @@
-import {Middleware, UnknownAction} from '@reduxjs/toolkit';
-import {SearchResponseSuccess} from '../../api/search/search/search-response.js';
+import type {Middleware, UnknownAction} from '@reduxjs/toolkit';
+import type {SearchResponseSuccess} from '../../api/search/search/search-response.js';
 import {
   buildController,
-  Controller,
+  type Controller,
 } from '../../controllers/controller/headless-controller.js';
 import {defineResultList} from '../../controllers/result-list/headless-result-list.ssr.js';
 import {loadPaginationActions} from '../../features/pagination/pagination-actions-loader.js';
-import {executeSearch} from '../../features/search/search-actions.js';
+import type {executeSearch} from '../../features/search/search-actions.js';
 import {buildMockNavigatorContextProvider} from '../../test/mock-navigator-context-provider.js';
 import {buildMockResult} from '../../test/mock-result.js';
-import {LoggerOptions} from '../logger.js';
+import type {LoggerOptions} from '../logger.js';
 import * as augmentModule from '../ssr-engine/augment-preprocess-request.js';
-import {ControllerDefinitionWithoutProps} from '../ssr-engine/types/common.js';
-import {InferHydratedState} from '../ssr-engine/types/core-engine.js';
-import {InferStaticState} from '../ssr-engine/types/core-engine.js';
-import {InferBuildResult} from '../ssr-engine/types/core-engine.js';
+import type {ControllerDefinitionWithoutProps} from '../ssr-engine/types/common.js';
+import type {
+  InferBuildResult,
+  InferHydratedState,
+  InferStaticState,
+} from '../ssr-engine/types/core-engine.js';
 import {getSampleSearchEngineConfiguration} from './search-engine.js';
 import {
-  SSRSearchEngine,
-  SearchEngineDefinition,
   defineSearchEngine,
+  type SearchEngineDefinition,
+  type SSRSearchEngine,
 } from './search-engine.ssr.js';
 
 interface CustomEngineStateReader<TState extends {}> extends Controller {
@@ -72,7 +74,7 @@ function createMockResultsMiddleware(options: {
     if (isSearchPendingAction(possibleSearchActionWithPayload)) {
       const state = api.getState() as SSRSearchEngine['state'];
       numberOfResultsPerRequestId[
-        possibleSearchActionWithPayload['meta']['requestId']
+        possibleSearchActionWithPayload.meta.requestId
       ] = state.pagination?.numberOfResults ?? options.defaultNumberOfResults;
       return next(action);
     }

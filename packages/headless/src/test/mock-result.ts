@@ -1,4 +1,4 @@
-import {Result} from '../api/search/search/result.js';
+import type {Result} from '../api/search/search/result.js';
 import {buildMockRaw} from './mock-raw.js';
 
 /**

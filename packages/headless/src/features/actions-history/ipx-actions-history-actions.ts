@@ -1,6 +1,6 @@
 import {createAsyncThunk} from '@reduxjs/toolkit';
 import HistoryStore from '../../api/analytics/coveo.analytics/history-store.js';
-import {SearchAppState} from '../../state/search-app-state.js';
+import type {SearchAppState} from '../../state/search-app-state.js';
 
 export const addPageViewEntryInActionsHistory = createAsyncThunk(
   'analytics/addPageViewEntry',

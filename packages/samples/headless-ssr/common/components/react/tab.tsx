@@ -17,6 +17,7 @@ export default function Tab({
 }) {
   const tabManager = useTabManager();
 
+  // biome-ignore lint/suspicious/noImplicitAnyLet: <>
   let controller;
 
   if (tabName === 'all') {

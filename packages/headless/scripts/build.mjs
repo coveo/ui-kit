@@ -1,17 +1,17 @@
+import {basename, dirname, relative} from 'node:path';
+import {argv} from 'node:process';
+import {fileURLToPath} from 'node:url';
 import chalk from 'chalk';
-import {dirname, basename, relative, join} from 'path';
-import {argv} from 'process';
 import {
-  readConfigFile,
-  getLineAndCharacterOfPosition,
-  sys,
-  parseJsonConfigFileContent,
-  getPreEmitDiagnostics,
   createProgram,
-  flattenDiagnosticMessageText,
   DiagnosticCategory,
+  flattenDiagnosticMessageText,
+  getLineAndCharacterOfPosition,
+  getPreEmitDiagnostics,
+  parseJsonConfigFileContent,
+  readConfigFile,
+  sys,
 } from 'typescript';
-import {fileURLToPath} from 'url';
 import analyticsTransformer from './analytics-transform.mjs';
 import versionTransformer from './version-transform.mjs';
 
@@ -23,7 +23,6 @@ if (configArg === undefined) {
   throw new Error('Missing --config=[PATH] argument');
 }
 const tsConfigPath = configArg.split('=')[1];
-const isCDN = process.env.DEPLOYMENT_ENVIRONMENT === 'CDN';
 const transformers = [versionTransformer, analyticsTransformer];
 
 function loadTsConfig(configPath) {
@@ -107,17 +106,12 @@ function compileWithTransformer() {
     }
   });
 
-  let exitCode = emitResult.emitSkipped || hasError ? 1 : 0;
+  const exitCode = emitResult.emitSkipped || hasError ? 1 : 0;
   console.log(`Process exiting with code '${exitCode}'.`);
   process.exit(exitCode);
 }
 
 try {
-  const {options} = loadTsConfig(tsConfigPath);
-
-  const srcDir = join(__dirname, '../src');
-  const outDir = options.outDir;
-
   console.log(chalk.blue('Starting TypeScript compilation'));
   compileWithTransformer();
 } catch (error) {

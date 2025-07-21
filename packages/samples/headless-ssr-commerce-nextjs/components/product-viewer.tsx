@@ -1,7 +1,7 @@
 'use client';
 
-import {useProductView} from '@/lib/commerce-engine';
 import {useEffect} from 'react';
+import {useProductView} from '@/lib/commerce-engine';
 
 interface Product {
   productId: string;
@@ -18,7 +18,7 @@ export default function ProductViewer({productId, name, price}: Product) {
       methods?.view({productId, name, price});
       productViewEventEmitted = true;
     }
-  }, []);
+  }, [methods, name, price, productId, productViewEventEmitted]);
 
   return null;
 }

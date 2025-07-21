@@ -1,6 +1,7 @@
 import {getSampleSearchEngineConfiguration} from '@coveo/headless';
+// biome-ignore lint/correctness/noUnusedImports: <>
 import {Component, h, Prop} from '@stencil/core';
-import {Router} from 'stencil-router-v2';
+import type {Router} from 'stencil-router-v2';
 
 @Component({
   tag: 'standalone-search-box',

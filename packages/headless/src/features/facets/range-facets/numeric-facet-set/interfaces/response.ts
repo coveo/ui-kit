@@ -1,5 +1,19 @@
-import {BaseFacetResponse} from '../../../facet-api/response.js';
-import {FacetValueState} from '../../../facet-api/value.js';
+import type {BaseFacetResponse} from '../../../facet-api/response.js';
+import type {FacetValueState} from '../../../facet-api/value.js';
+
+/**
+ * The domain of a numeric facet.
+ */
+export interface NumericFacetDomain {
+  /**
+   * The largest available value in the range.
+   */
+  end: number;
+  /**
+   * The smallest available value in the range.
+   */
+  start: number;
+}
 
 export interface NumericFacetValue {
   /**
@@ -28,4 +42,6 @@ export interface NumericFacetValue {
   state: FacetValueState;
 }
 
-export type NumericFacetResponse = BaseFacetResponse<NumericFacetValue>;
+export type NumericFacetResponse = BaseFacetResponse<NumericFacetValue> & {
+  domain: NumericFacetDomain;
+};

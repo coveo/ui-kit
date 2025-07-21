@@ -1,8 +1,8 @@
-import {Product} from '../../../api/commerce/common/product.js';
+import type {Product} from '../../../api/commerce/common/product.js';
 import {
   buildTemplatesManager,
-  Template,
-  TemplateCondition,
+  type Template,
+  type TemplateCondition,
 } from '../../templates/templates-manager.js';
 
 export type ProductTemplate<Content = unknown> = Template<Product, Content>;

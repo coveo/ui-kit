@@ -1,14 +1,14 @@
 import {fieldsReducer as fields} from '../../features/fields/fields-slice.js';
 import {
   buildMockSearchEngine,
-  MockedSearchEngine,
+  type MockedSearchEngine,
 } from '../../test/mock-engine-v2.js';
 import {buildMockResult} from '../../test/mock-result.js';
 import {createMockState} from '../../test/mock-state.js';
 import {
-  ResultTemplatesManager,
   buildResultTemplatesManager,
-  ResultTemplate,
+  type ResultTemplate,
+  type ResultTemplatesManager,
 } from './result-templates-manager.js';
 
 describe('result template manager', () => {

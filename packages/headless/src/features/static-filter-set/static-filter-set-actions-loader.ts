@@ -1,13 +1,13 @@
-import {PayloadAction} from '@reduxjs/toolkit';
-import {SearchEngine} from '../../app/search-engine/search-engine.js';
+import type {PayloadAction} from '@reduxjs/toolkit';
+import type {SearchEngine} from '../../app/search-engine/search-engine.js';
 import {staticFilterSetReducer as staticFilterSet} from '../../features/static-filter-set/static-filter-set-slice.js';
 import {
-  registerStaticFilter,
-  RegisterStaticFilterActionCreatorPayload,
-  toggleSelectStaticFilterValue,
-  ToggleSelectStaticFilterValueActionCreatorPayload,
   deselectAllStaticFilterValues,
+  type RegisterStaticFilterActionCreatorPayload,
+  registerStaticFilter,
+  type ToggleSelectStaticFilterValueActionCreatorPayload,
   toggleExcludeStaticFilterValue,
+  toggleSelectStaticFilterValue,
 } from './static-filter-set-actions.js';
 
 export type {

@@ -1,4 +1,4 @@
-import {NumericRangeRequest} from '../../../facets/range-facets/numeric-facet-set/interfaces/request.js';
+import type {NumericRangeRequest} from '../../../facets/range-facets/numeric-facet-set/interfaces/request.js';
 
 export interface ManualNumericFacetSetSlice {
   manualRange: NumericRangeRequest | undefined;

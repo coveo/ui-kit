@@ -1,10 +1,10 @@
-import {CommerceEngine} from '../../../app/commerce-engine/commerce-engine.js';
+import type {CommerceEngine} from '../../../app/commerce-engine/commerce-engine.js';
 import {stateKey} from '../../../app/state-key.js';
 import {commerceTriggersReducer as triggers} from '../../../features/commerce/triggers/triggers-slice.js';
-import {TriggerSection} from '../../../state/state-sections.js';
+import type {TriggerSection} from '../../../state/state-sections.js';
 import {loadReducerError} from '../../../utils/errors.js';
 import {buildController} from '../../controller/headless-controller.js';
-import {RedirectionTrigger} from '../../core/triggers/headless-core-redirection-trigger.js';
+import type {RedirectionTrigger} from '../../core/triggers/headless-core-redirection-trigger.js';
 
 /**
  * Creates a `RedirectionTrigger` controller instance.

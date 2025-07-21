@@ -1,12 +1,12 @@
 import '@/src/components/common/atomic-icon/atomic-icon';
-import {
+import type {i18n} from 'i18next';
+import {html} from 'lit';
+import type {
   FunctionalComponent,
   FunctionalComponentWithChildren,
 } from '@/src/utils/functional-component-utils';
-import {i18n} from 'i18next';
-import {html} from 'lit';
-import {renderButton, ButtonProps} from '../button';
-import {radioButton, RadioButtonProps} from '../radio-button';
+import {type ButtonProps, renderButton} from '../button';
+import {type RadioButtonProps, renderRadioButton} from '../radio-button';
 
 interface PagerNavigationButtonProps
   extends Omit<ButtonProps, 'style' | 'part' | 'class'> {
@@ -14,7 +14,7 @@ interface PagerNavigationButtonProps
   i18n: i18n;
 }
 
-export const pagerPreviousButton: FunctionalComponent<
+export const renderPagerPreviousButton: FunctionalComponent<
   PagerNavigationButtonProps
 > = ({props}) => {
   return renderButton({
@@ -34,7 +34,7 @@ export const pagerPreviousButton: FunctionalComponent<
   );
 };
 
-export const pagerNextButton: FunctionalComponent<
+export const renderPagerNextButton: FunctionalComponent<
   PagerNavigationButtonProps
 > = ({props}) => {
   return renderButton({
@@ -64,10 +64,10 @@ interface PagerPageButtonProps
   text: string;
 }
 
-export const pagerPageButton: FunctionalComponent<PagerPageButtonProps> = ({
-  props,
-}) => {
-  return radioButton({
+export const renderPagerPageButton: FunctionalComponent<
+  PagerPageButtonProps
+> = ({props}) => {
+  return renderRadioButton({
     props: {
       ...props,
       selectWhenFocused: false,
@@ -85,7 +85,7 @@ interface PagerPageButtonsProps {
   i18n: i18n;
 }
 
-export const pagerPageButtons: FunctionalComponentWithChildren<
+export const renderPageButtons: FunctionalComponentWithChildren<
   PagerPageButtonsProps
 > =
   ({props}) =>

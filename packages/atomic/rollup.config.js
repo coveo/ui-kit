@@ -1,8 +1,8 @@
+import {resolve as resolvePath} from 'node:path';
 import commonjs from '@rollup/plugin-commonjs';
 import json from '@rollup/plugin-json';
 import resolve from '@rollup/plugin-node-resolve';
 import replace from '@rollup/plugin-replace';
-import {resolve as resolvePath} from 'path';
 import copy from 'rollup-plugin-copy';
 import {generateExternalPackageMappings} from './scripts/externalPackageMappings.mjs';
 

@@ -1,7 +1,7 @@
-import {ThunkExtraArguments} from '../../../../app/thunk-extra-arguments.js';
+import type {ThunkExtraArguments} from '../../../../app/thunk-extra-arguments.js';
 import {
   buildMockSearchEngine,
-  MockedSearchEngine,
+  type MockedSearchEngine,
 } from '../../../../test/mock-engine-v2.js';
 import {buildMockNumericFacetValue} from '../../../../test/mock-numeric-facet-value.js';
 import {createMockState} from '../../../../test/mock-state.js';
@@ -9,8 +9,8 @@ import {updateFacetOptions} from '../../../facet-options/facet-options-actions.j
 import {executeToggleRangeFacetSelect} from '../generic/range-facet-controller-actions.js';
 import {toggleSelectNumericFacetValue} from './numeric-facet-actions.js';
 import {
-  executeToggleNumericFacetSelect,
   executeToggleNumericFacetExclude,
+  executeToggleNumericFacetSelect,
 } from './numeric-facet-controller-actions.js';
 
 vi.mock('../generic/range-facet-controller-actions');

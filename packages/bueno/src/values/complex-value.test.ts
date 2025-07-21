@@ -1,6 +1,6 @@
-import {describe, it, expect} from 'vitest';
+import {describe, expect, it} from 'vitest';
 import {BooleanValue} from './boolean-value.js';
-import {RecordValue, ArrayValue} from './complex-value.js';
+import {ArrayValue, RecordValue} from './complex-value.js';
 import {NumberValue} from './number-value.js';
 import {StringValue} from './string-value.js';
 

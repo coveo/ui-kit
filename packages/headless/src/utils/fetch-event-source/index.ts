@@ -1,6 +1,6 @@
 export {
-  fetchEventSource,
-  type FetchEventSourceInit,
   EventStreamContentType,
+  type FetchEventSourceInit,
+  fetchEventSource,
 } from './fetch.js';
-export {type EventSourceMessage} from './parse.js';
+export type {EventSourceMessage} from './parse.js';

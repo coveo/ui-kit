@@ -1,7 +1,7 @@
-import {type Controller} from '@coveo/headless';
+import type {Controller} from '@coveo/headless';
 import {LitElement} from 'lit';
 import {customElement} from 'lit/decorators.js';
-import {vi, describe, beforeEach, afterEach, it, expect} from 'vitest';
+import {afterEach, beforeEach, describe, expect, it, vi} from 'vitest';
 import type {Bindings} from '../components/search/atomic-search-interface/interfaces';
 import {bindStateToController} from './bind-state';
 import type {InitializableComponent} from './types';

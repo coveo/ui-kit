@@ -1,0 +1,38 @@
+<html lang='en'>
+  <head>
+    <meta charset='UTF-8' />
+    <meta http-equiv='X-UA-Compatible' content='IE=edge' />
+    <meta name='viewport' content='width=device-width, initial-scale=1.0' />
+    <!--
+      Modifying any <head> attributes of the page locally (including the title attribute) will have no effect when the page is uploaded to the Coveo platform.
+      If you wish to modify the page title, you should modify the `name` property defined in the coveo.deploy.json configuration file.
+    -->
+    <title>{{titleCase project}}</title>
+    <link href="https://static.cloud.coveo.com/atomic/v3/themes/coveo.css" rel="stylesheet" />
+    <link href="/build/{{project}}.css" rel="stylesheet" />
+    <!-- 
+      When using the Coveo CDN - Make sure you're using the same minor version as the packaged Atomic.
+      E.g., if you have "@coveo/atomic@2.0.0" installed, use the "/atomic/v2.0.0/" path.
+      When deploying with the Coveo CLI, the Atomic CDN defined in the coveo.deploy.json configuration file will be used.
+    
+      <script type="module" src="https://static.cloud.coveo.com/atomic/vMAJOR.MINOR/atomic.esm.js"></script> 
+    -->
+    <!-- Custom Elements Lazy Loading -->
+    <script type='module' src='/build/{{project}}.esm.js'></script>
+    <!-- Global initialization script -->
+    <script type='module' src='/build/index.esm.js'></script>
+    <!--
+      To import modules from `@coveo/headless`, you need to do so from a TypeScript file and use npm specifier `@coveo/headless` (or one of its subpath exports when relevant).
+      import { buildSearchEngine } from "@coveo/headless";
+    </script> -->
+  </head>
+  <body>
+    <!-- 
+      This is a non-functional element.
+      Contents of this element will be parsed and injected in the bundle's HTML when deploying.
+    -->
+    <atomic-hosted-page>
+      {{{page.markup}}}
+    </atomic-hosted-page>
+  </body>
+</html>

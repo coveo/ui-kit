@@ -2,7 +2,7 @@ import {setInsightConfiguration} from './insight-configuration-actions.js';
 import {insightConfigurationReducer} from './insight-configuration-slice.js';
 import {
   getInsightConfigurationInitialState,
-  InsightConfigurationState,
+  type InsightConfigurationState,
 } from './insight-configuration-state.js';
 
 describe('insight configuration slice', () => {

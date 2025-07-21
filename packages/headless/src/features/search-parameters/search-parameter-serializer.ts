@@ -10,12 +10,12 @@ import {
 } from '../../api/search/date/relative-date.js';
 import {
   buildDateRange,
-  DateRangeRequest,
+  type DateRangeRequest,
 } from '../../controllers/facets/range-facet/date-facet/headless-date-facet.js';
 import {buildNumericRange} from '../../controllers/facets/range-facet/numeric-facet/headless-numeric-facet.js';
-import {FacetValueState} from '../../ssr.index.js';
-import {RangeValueRequest} from '../facets/range-facets/generic/interfaces/range-facet.js';
-import {SearchParameters} from './search-parameter-actions.js';
+import type {FacetValueState} from '../../ssr.index.js';
+import type {RangeValueRequest} from '../facets/range-facets/generic/interfaces/range-facet.js';
+import type {SearchParameters} from './search-parameter-actions.js';
 
 export const rangeDelimiterExclusive = '..';
 export const rangeDelimiterInclusive = '...';
@@ -146,7 +146,7 @@ export function isRangeFacetObject(
 }
 
 export function isObject(obj: unknown): obj is object {
-  return obj && typeof obj === 'object' ? true : false;
+  return !!(obj && typeof obj === 'object');
 }
 
 export function allEntriesAreValid(
@@ -204,9 +204,11 @@ function deserialize(fragment: string): SearchParameters {
 
     if (keyHasObjectValue(key)) {
       const mergedValues = {...acc[key], ...(val as object)};
+      // biome-ignore lint/performance/noAccumulatingSpread: <>
       return {...acc, [key]: mergedValues};
     }
 
+    // biome-ignore lint/performance/noAccumulatingSpread: <>
     return {...acc, [key]: val};
   }, {});
 }

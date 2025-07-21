@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-import {gitPull, getSHA1fromRef} from '@coveo/semantic-monorepo-tools';
+import {getSHA1fromRef, gitPull} from '@coveo/semantic-monorepo-tools';
 import {dedent} from 'ts-dedent';
 import {REPO_MAIN_BRANCH} from './common/constants.mjs';
 import {

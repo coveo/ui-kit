@@ -1,11 +1,11 @@
-import {FacetType} from '../../../../../features/commerce/facets/facet-set/interfaces/common.js';
-import {NumericFacetRequest} from '../../../../../features/commerce/facets/facet-set/interfaces/request.js';
+import type {FacetType} from '../../../../../features/commerce/facets/facet-set/interfaces/common.js';
+import type {NumericFacetRequest} from '../../../../../features/commerce/facets/facet-set/interfaces/request.js';
 import {
   toggleExcludeNumericFacetValue,
   toggleSelectNumericFacetValue,
   updateManualNumericFacetRange,
 } from '../../../../../features/commerce/facets/numeric-facet/numeric-facet-actions.js';
-import {CommerceAppState} from '../../../../../state/commerce-app-state.js';
+import type {CommerceAppState} from '../../../../../state/commerce-app-state.js';
 import {buildMockCommerceFacetRequest} from '../../../../../test/mock-commerce-facet-request.js';
 import {buildMockCommerceNumericFacetResponse} from '../../../../../test/mock-commerce-facet-response.js';
 import {buildMockCommerceFacetSlice} from '../../../../../test/mock-commerce-facet-slice.js';
@@ -13,13 +13,13 @@ import {buildMockCommerceNumericFacetValue} from '../../../../../test/mock-comme
 import {buildMockCommerceState} from '../../../../../test/mock-commerce-state.js';
 import {
   buildMockCommerceEngine,
-  MockedCommerceEngine,
+  type MockedCommerceEngine,
 } from '../../../../../test/mock-engine-v2.js';
-import {NumericRangeRequest} from '../headless-core-commerce-facet.js';
+import type {NumericRangeRequest} from '../headless-core-commerce-facet.js';
 import {
-  NumericFacet,
-  NumericFacetOptions,
   buildCommerceNumericFacet,
+  type NumericFacet,
+  type NumericFacetOptions,
 } from './headless-commerce-numeric-facet.js';
 
 vi.mock(

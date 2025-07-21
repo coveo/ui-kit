@@ -1,33 +1,33 @@
-import {bindStateToController} from '@/src/decorators/bind-state';
-import {bindingGuard} from '@/src/decorators/binding-guard';
-import {bindings} from '@/src/decorators/bindings';
-import {errorGuard} from '@/src/decorators/error-guard';
-import {InitializableComponent} from '@/src/decorators/types';
-import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
-import {randomID} from '@/src/utils/utils';
 import {NumberValue, Schema} from '@coveo/bueno';
 import {
   buildProductListing,
   buildSearch,
-  Pagination,
-  PaginationState,
-  ProductListing,
-  Search,
+  type Pagination,
+  type PaginationState,
+  type ProductListing,
+  type Search,
 } from '@coveo/headless/commerce';
 import {html, LitElement} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
+import {bindStateToController} from '@/src/decorators/bind-state';
+import {bindingGuard} from '@/src/decorators/binding-guard';
+import {bindings} from '@/src/decorators/bindings';
+import {errorGuard} from '@/src/decorators/error-guard';
+import type {InitializableComponent} from '@/src/decorators/types';
+import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
+import {randomID} from '@/src/utils/utils';
 import ArrowLeftIcon from '../../../images/arrow-left-rounded.svg';
 import ArrowRightIcon from '../../../images/arrow-right-rounded.svg';
 import {createAppLoadedListener} from '../../common/interface/store';
 import {
-  pagerNextButton,
-  pagerPageButton,
-  pagerPageButtons,
-  pagerPreviousButton,
+  renderPageButtons,
+  renderPagerNextButton,
+  renderPagerPageButton,
+  renderPagerPreviousButton,
 } from '../../common/pager/pager-buttons';
-import {pagerGuard} from '../../common/pager/pager-guard';
-import {pagerNavigation} from '../../common/pager/pager-navigation';
-import {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface';
+import {renderPagerGuard} from '../../common/pager/pager-guard';
+import {renderPagerNavigation} from '../../common/pager/pager-navigation';
+import type {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface';
 import {getCurrentPagesRange} from './commerce-pager-utils';
 
 /**
@@ -121,43 +121,43 @@ export class AtomicCommercePager
       this.numberOfPages,
       this.pagerState.totalPages - 1
     );
-    return html`${pagerGuard({
+    return html`${renderPagerGuard({
       props: {
         hasItems: this.pagerState.totalPages > 1,
         isAppLoaded: this.isAppLoaded,
       },
     })(
-      html`${pagerNavigation({
+      html`${renderPagerNavigation({
         props: {
           i18n: this.bindings.i18n,
         },
       })(html`
-        ${pagerPreviousButton({
+        ${renderPagerPreviousButton({
           props: {
             icon: this.previousButtonIcon,
             disabled: this.pagerState.page === 0,
             i18n: this.bindings.i18n,
-            onClick: () => {
+            onClick: async () => {
               this.pager.previousPage();
-              this.focusOnFirstResultAndScrollToTop();
+              await this.focusOnFirstResultAndScrollToTop();
             },
           },
         })}
-        ${pagerPageButtons({
+        ${renderPageButtons({
           props: {
             i18n: this.bindings.i18n,
           },
         })(
           html`${pagesRange.map((pageNumber) =>
-            pagerPageButton({
+            renderPagerPageButton({
               props: {
                 isSelected: pageNumber === this.pagerState.page,
                 ariaLabel: this.bindings.i18n.t('page-number', {
                   pageNumber: pageNumber + 1,
                 }),
-                onChecked: () => {
+                onChecked: async () => {
                   this.pager.selectPage(pageNumber);
-                  this.focusOnFirstResultAndScrollToTop();
+                  await this.focusOnFirstResultAndScrollToTop();
                 },
                 page: pageNumber,
                 groupName: this.radioGroupName,
@@ -168,14 +168,14 @@ export class AtomicCommercePager
             })
           )}`
         )}
-        ${pagerNextButton({
+        ${renderPagerNextButton({
           props: {
             icon: this.nextButtonIcon,
             disabled: this.pagerState.page + 1 >= this.pagerState.totalPages,
             i18n: this.bindings.i18n,
-            onClick: () => {
+            onClick: async () => {
               this.pager.nextPage();
-              this.focusOnFirstResultAndScrollToTop();
+              await this.focusOnFirstResultAndScrollToTop();
             },
           },
         })}

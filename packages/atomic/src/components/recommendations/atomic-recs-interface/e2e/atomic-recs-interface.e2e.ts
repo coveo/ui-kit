@@ -1,4 +1,4 @@
-import {test, expect} from './fixture';
+import {expect, test} from './fixture';
 
 test.describe('before being initialized', () => {
   test('should return error if request is executed', async ({

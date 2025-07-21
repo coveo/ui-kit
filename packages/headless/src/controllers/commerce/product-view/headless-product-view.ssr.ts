@@ -1,12 +1,12 @@
-import {CommerceEngine} from '../../../app/commerce-engine/commerce-engine.js';
-import {NonRecommendationControllerDefinitionWithoutProps} from '../../../app/commerce-ssr-engine/types/common.js';
+import type {CommerceEngine} from '../../../app/commerce-engine/commerce-engine.js';
+import type {NonRecommendationControllerDefinitionWithoutProps} from '../../../app/commerce-ssr-engine/types/common.js';
 import {
   buildController,
-  Controller,
+  type Controller,
 } from '../../controller/headless-controller.js';
 import {
+  type ProductView as BaseProductView,
   buildProductView,
-  ProductView as BaseProductView,
 } from './headless-product-view.js';
 
 export interface ProductViewDefinition

@@ -5,11 +5,11 @@ import {
 } from '../../features/sort-criteria/criteria.js';
 import {updateSortCriterion} from '../../features/sort-criteria/sort-criteria-actions.js';
 import {
-  MockedSearchEngine,
   buildMockSearchEngine,
+  type MockedSearchEngine,
 } from '../../test/mock-engine-v2.js';
 import {createMockState} from '../../test/mock-state.js';
-import {Sort, SortProps, buildSort} from './headless-sort.js';
+import {buildSort, type Sort, type SortProps} from './headless-sort.js';
 
 vi.mock('../../features/sort-criteria/sort-criteria-actions');
 vi.mock('../../features/search/search-actions');

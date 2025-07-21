@@ -1,6 +1,6 @@
 import {createAction} from '@reduxjs/toolkit';
 import {validatePayload} from '../../../utils/validate-payload.js';
-import {Parameters} from '../parameters/parameters-actions.js';
+import type {Parameters} from '../parameters/parameters-actions.js';
 import {searchParametersDefinition} from './search-parameters-schema.js';
 
 /**

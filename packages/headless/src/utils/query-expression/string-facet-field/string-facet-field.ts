@@ -1,9 +1,9 @@
-import {getNegationPrefix, Negatable} from '../common/negatable.js';
+import {getNegationPrefix, type Negatable} from '../common/negatable.js';
 import {
   getOperatorSymbol,
-  StringFacetFieldOperator,
+  type StringFacetFieldOperator,
 } from '../common/operator.js';
-import {Part} from '../common/part.js';
+import type {Part} from '../common/part.js';
 
 export interface StringFacetFieldExpression extends Negatable {
   /**

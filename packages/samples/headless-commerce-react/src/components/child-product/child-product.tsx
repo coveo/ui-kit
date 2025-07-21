@@ -1,4 +1,4 @@
-import {ChildProduct as HeadlessChildProduct} from '@coveo/headless/commerce';
+import type {ChildProduct as HeadlessChildProduct} from '@coveo/headless/commerce';
 
 interface IChildProductProps {
   headlessChildProduct: HeadlessChildProduct;
@@ -9,11 +9,16 @@ export default function ChildProduct(props: IChildProductProps) {
   const {headlessChildProduct, promoteChildToParent} = props;
   return (
     <button
+      type="button"
       className="ChildProduct"
       key={headlessChildProduct.permanentid}
       onClick={() => promoteChildToParent!(headlessChildProduct)}
     >
-      <img height="25px" src={headlessChildProduct.ec_images[0]}></img>
+      <img
+        alt={headlessChildProduct.ec_name!}
+        height="25px"
+        src={headlessChildProduct.ec_images[0]}
+      ></img>
     </button>
   );
 }

@@ -1,7 +1,7 @@
-import {PaginatedCommerceAPIRequest} from '../../../api/commerce/common/request.js';
+import type {PaginatedCommerceAPIRequest} from '../../../api/commerce/common/request.js';
 import {
   defaultNodeJSNavigatorContextProvider,
-  NavigatorContext,
+  type NavigatorContext,
 } from '../../../app/navigator-context-provider.js';
 import {buildMockBaseCommerceAPIRequest} from '../../../test/mock-commerce-api-request.js';
 import {getConfigurationInitialState} from '../configuration/configuration-state.js';
@@ -11,7 +11,7 @@ import {getCommercePaginationInitialState} from '../pagination/pagination-state.
 import {buildBaseCommerceAPIRequest} from './base-commerce-api-request-builder.js';
 import {
   buildPaginatedCommerceAPIRequest,
-  StateNeededForPaginatedCommerceAPIRequest,
+  type StateNeededForPaginatedCommerceAPIRequest,
 } from './paginated-commerce-api-request-builder.js';
 
 vi.mock('./base-commerce-api-request-builder.js');

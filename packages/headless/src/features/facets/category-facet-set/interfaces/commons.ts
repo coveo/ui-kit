@@ -1,4 +1,4 @@
-import {FacetValueState} from '../../facet-api/value.js';
+import type {FacetValueState} from '../../facet-api/value.js';
 
 export interface CategoryFacetValueCommon {
   /**

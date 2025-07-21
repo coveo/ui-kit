@@ -1,6 +1,6 @@
+import type {Meta, StoryObj as Story} from '@storybook/web-components';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {renderComponent} from '@/storybook-utils/common/render-component';
-import type {Meta, StoryObj as Story} from '@storybook/web-components';
 
 async function initializeRecsInterface(canvasElement: HTMLElement) {
   await customElements.whenDefined('atomic-recs-interface');

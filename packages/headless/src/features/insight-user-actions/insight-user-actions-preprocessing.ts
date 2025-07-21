@@ -1,9 +1,9 @@
 import {
-  UserAction,
-  UserActionsState,
-  UserActionTimeline,
+  type UserAction,
+  type UserActionsState,
+  type UserActionTimeline,
   UserActionType,
-  UserSession,
+  type UserSession,
 } from './insight-user-actions-state.js';
 
 const SECOND = 1000;

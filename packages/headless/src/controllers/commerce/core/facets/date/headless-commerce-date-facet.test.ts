@@ -3,9 +3,9 @@ import {
   toggleSelectDateFacetValue,
   updateDateFacetValues,
 } from '../../../../../features/commerce/facets/date-facet/date-facet-actions.js';
-import {FacetType} from '../../../../../features/commerce/facets/facet-set/interfaces/common.js';
-import {DateFacetRequest} from '../../../../../features/commerce/facets/facet-set/interfaces/request.js';
-import {CommerceAppState} from '../../../../../state/commerce-app-state.js';
+import type {FacetType} from '../../../../../features/commerce/facets/facet-set/interfaces/common.js';
+import type {DateFacetRequest} from '../../../../../features/commerce/facets/facet-set/interfaces/request.js';
+import type {CommerceAppState} from '../../../../../state/commerce-app-state.js';
 import {buildMockCommerceFacetRequest} from '../../../../../test/mock-commerce-facet-request.js';
 import {buildMockCommerceDateFacetResponse} from '../../../../../test/mock-commerce-facet-response.js';
 import {buildMockCommerceFacetSlice} from '../../../../../test/mock-commerce-facet-slice.js';
@@ -13,13 +13,13 @@ import {buildMockCommerceDateFacetValue} from '../../../../../test/mock-commerce
 import {buildMockCommerceState} from '../../../../../test/mock-commerce-state.js';
 import {
   buildMockCommerceEngine,
-  MockedCommerceEngine,
+  type MockedCommerceEngine,
 } from '../../../../../test/mock-engine-v2.js';
-import {DateRangeRequest} from '../headless-core-commerce-facet.js';
+import type {DateRangeRequest} from '../headless-core-commerce-facet.js';
 import {
-  DateFacet,
-  DateFacetOptions,
   buildCommerceDateFacet,
+  type DateFacet,
+  type DateFacetOptions,
 } from './headless-commerce-date-facet.js';
 
 vi.mock(

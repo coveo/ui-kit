@@ -1,18 +1,18 @@
-import {CommerceEngine} from '../../../../app/commerce-engine/commerce-engine.js';
+import type {CommerceEngine} from '../../../../app/commerce-engine/commerce-engine.js';
 import {stateKey} from '../../../../app/state-key.js';
-import {Parameters} from '../../../../features/commerce/parameters/parameters-actions.js';
-import {Serializer} from '../../../../features/commerce/parameters/parameters-serializer.js';
+import type {Parameters} from '../../../../features/commerce/parameters/parameters-actions.js';
+import type {Serializer} from '../../../../features/commerce/parameters/parameters-serializer.js';
 import {deepEqualAnyOrder} from '../../../../utils/compare-utils.js';
 import {validateInitialState} from '../../../../utils/validate-payload.js';
 import {buildController} from '../../../controller/headless-controller.js';
 import {
-  initialStateSchema,
-  UrlManager,
-  UrlManagerInitialState,
   type UrlManagerProps as BaseUrlManagerProps,
-  UrlManagerState,
+  initialStateSchema,
+  type UrlManager,
+  type UrlManagerInitialState,
+  type UrlManagerState,
 } from '../../../url-manager/headless-url-manager.js';
-import {
+import type {
   ParameterManager,
   ParameterManagerProps,
 } from '../parameter-manager/headless-core-parameter-manager.js';

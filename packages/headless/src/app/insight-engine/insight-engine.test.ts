@@ -1,11 +1,11 @@
 import * as InsightInterfaceActions from '../../features/insight-interface/insight-interface-actions.js';
-import {getSampleEngineConfiguration} from '../engine-configuration.js';
 import {nextAnalyticsUsageWithServiceFeatureWarning} from '../engine.js';
+import {getSampleEngineConfiguration} from '../engine-configuration.js';
 import {
   buildInsightEngine,
-  InsightEngine,
-  InsightEngineConfiguration,
-  InsightEngineOptions,
+  type InsightEngine,
+  type InsightEngineConfiguration,
+  type InsightEngineOptions,
 } from './insight-engine.js';
 
 const fetchInterfaceSpy = vi.spyOn(InsightInterfaceActions, 'fetchInterface');
@@ -155,5 +155,13 @@ describe('buildInsightEngine', () => {
 
   it('exposes an #executeFirstSearch method', () => {
     expect(engine.executeFirstSearch).toBeTruthy();
+  });
+
+  it('should ensure that engine.relay is the same reference as thunk extra args relay', async () => {
+    const thunkRelay = await engine.dispatch(
+      (_dispatch, _getState, extra) => extra.relay
+    );
+
+    expect(thunkRelay).toBe(engine.relay);
   });
 });

@@ -15,8 +15,6 @@
     "e2e": {
       "dependsOn": ["build"]
     },
-    "lint:check": {},
-    "lint:fix": {},
     "publish:sfdx": {
       "dependsOn": ["build"]
     },

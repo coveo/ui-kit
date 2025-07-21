@@ -1,11 +1,11 @@
-import {InsightEngine} from '../../../app/insight-engine/insight-engine.js';
+import type {InsightEngine} from '../../../app/insight-engine/insight-engine.js';
 import {fetchMoreResults} from '../../../features/insight-search/insight-search-actions.js';
 import {
   buildCoreResultList,
-  ResultList,
-  ResultListOptions,
-  ResultListProps,
-  ResultListState,
+  type ResultList,
+  type ResultListOptions,
+  type ResultListProps,
+  type ResultListState,
 } from '../../core/result-list/headless-core-result-list.js';
 
 export type {ResultListOptions, ResultListProps, ResultListState, ResultList};

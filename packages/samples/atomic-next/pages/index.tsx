@@ -4,6 +4,7 @@ import {
   AtomicDidYouMean,
   AtomicFacet,
   AtomicFacetManager,
+  AtomicFormatCurrency,
   AtomicLayoutSection,
   AtomicLoadMoreResults,
   AtomicNoResults,
@@ -14,18 +15,10 @@ import {
   AtomicRatingFacet,
   AtomicRatingRangeFacet,
   AtomicRefineToggle,
-  AtomicSearchBox,
-  AtomicSearchInterface,
-  AtomicSearchLayout,
-  AtomicSortDropdown,
-  AtomicSortExpression,
-  AtomicTimeframe,
-  AtomicTimeframeFacet,
-  AtomicFormatCurrency,
   AtomicResultBadge,
+  AtomicResultDate,
   AtomicResultFieldsList,
   AtomicResultImage,
-  AtomicResultDate,
   AtomicResultLink,
   AtomicResultList,
   AtomicResultMultiValueText,
@@ -40,9 +33,16 @@ import {
   AtomicResultSectionTitleMetadata,
   AtomicResultSectionVisual,
   AtomicResultText,
+  AtomicSearchBox,
+  AtomicSearchInterface,
+  AtomicSearchLayout,
+  AtomicSortDropdown,
+  AtomicSortExpression,
   AtomicText,
+  AtomicTimeframe,
+  AtomicTimeframeFacet,
 } from '@coveo/atomic-react';
-import {buildSearchEngine, Result} from '@coveo/headless';
+import {buildSearchEngine, type Result} from '@coveo/headless';
 import type {NextPage} from 'next';
 import dynamic from 'next/dynamic';
 import {useMemo} from 'react';
@@ -195,8 +195,9 @@ function MyTemplate(result: Result) {
       </AtomicResultSectionExcerpt>
       <AtomicResultSectionBottomMetadata>
         <AtomicResultFieldsList>
+          <AtomicResultDate format="ddd MMM D YYYY" />
+          {/** biome-ignore lint/complexity/noUselessFragments: <> */}
           <>
-            <AtomicResultDate format="ddd MMM D YYYY" />
             {result.raw.cat_platform && (
               <>
                 <span className="field-label">

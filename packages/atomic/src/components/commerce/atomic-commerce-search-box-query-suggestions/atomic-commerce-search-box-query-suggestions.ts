@@ -1,25 +1,25 @@
 import {
+  type CommerceEngine,
+  loadQuerySuggestActions,
+  type SearchBox,
+  type Suggestion,
+} from '@coveo/headless/commerce';
+import {html, LitElement, nothing} from 'lit';
+import {customElement, property, state} from 'lit/decorators.js';
+import {
   getPartialSearchBoxSuggestionElement,
   renderQuerySuggestion,
 } from '@/src/components/common/suggestions/query-suggestions';
 import {
   dispatchSearchBoxSuggestionsEvent,
-  SearchBoxSuggestionElement,
-  SearchBoxSuggestions,
-  SearchBoxSuggestionsBindings,
+  type SearchBoxSuggestionElement,
+  type SearchBoxSuggestions,
+  type SearchBoxSuggestionsBindings,
 } from '@/src/components/common/suggestions/suggestions-common';
 import {errorGuard} from '@/src/decorators/error-guard';
-import {SearchBoxSuggestionsComponent} from '@/src/decorators/types';
-import {
-  CommerceEngine,
-  loadQuerySuggestActions,
-  SearchBox,
-  Suggestion,
-} from '@coveo/headless/commerce';
-import {html, LitElement, nothing} from 'lit';
-import {customElement, property, state} from 'lit/decorators.js';
+import type {SearchBoxSuggestionsComponent} from '@/src/decorators/types';
 import SearchIcon from '../../../images/search.svg';
-import {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface';
+import type {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface';
 
 /**
  * The `atomic-commerce-search-box-query-suggestions` component can be added as a child of an `atomic-search-box` component, allowing for the configuration of query suggestion behavior.
@@ -75,6 +75,18 @@ export class AtomicCommerceSearchBoxQuerySuggestions
     const engine = this.bindings.engine as CommerceEngine<{querySet: string}>;
     const {registerQuerySuggest, fetchQuerySuggestions} =
       loadQuerySuggestActions(engine);
+
+    const numberOfQueries = this.bindings.numberOfQueries;
+    const maxWithQuery = this.maxWithQuery;
+
+    if (numberOfQueries < maxWithQuery) {
+      const logger = this.bindings.engine.logger;
+      logger.warn(
+        `Query suggestions configuration mismatch: atomic-commerce-search-box has number-of-queries="${numberOfQueries}" but atomic-commerce-search-box-query-suggestions has max-with-query="${maxWithQuery}". ` +
+          `This may cause inconsistent behavior where the search box requests ${numberOfQueries} suggestions but the component tries to display up to ${maxWithQuery}. ` +
+          `Consider updating max-with-query to ${numberOfQueries} or increasing number-of-queries to ${maxWithQuery}.`
+      );
+    }
 
     engine.dispatch(
       registerQuerySuggest({

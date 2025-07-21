@@ -1,12 +1,12 @@
+import type {Meta, StoryObj as Story} from '@storybook/web-components';
+import {html} from 'lit';
 import {
-  wrapInCommerceInterface,
   playExecuteFirstRequest,
   playKeepOnlyFirstFacetOfType,
+  wrapInCommerceInterface,
 } from '@/storybook-utils/commerce/commerce-interface-wrapper';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {renderComponent} from '@/storybook-utils/common/render-component';
-import type {Meta, StoryObj as Story} from '@storybook/web-components';
-import {html} from 'lit';
 
 const {play, decorator} = wrapInCommerceInterface({skipFirstRequest: true});
 

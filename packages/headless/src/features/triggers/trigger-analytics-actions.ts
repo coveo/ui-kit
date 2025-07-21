@@ -4,8 +4,8 @@ import {
   validatePayload,
 } from '../../utils/validate-payload.js';
 import {
+  type LegacySearchAction,
   makeAnalyticsAction,
-  LegacySearchAction,
 } from '../analytics/analytics-utils.js';
 
 export interface LogUndoTriggerQueryActionCreatorPayload {

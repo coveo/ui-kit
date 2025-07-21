@@ -1,8 +1,8 @@
-import {SearchEngine} from '../../app/search-engine/search-engine.js';
+import type {SearchEngine} from '../../app/search-engine/search-engine.js';
 import {
   buildCoreQuerySummary,
-  QuerySummary,
-  QuerySummaryState,
+  type QuerySummary,
+  type QuerySummaryState,
 } from '../core/query-summary/headless-core-query-summary.js';
 
 export type {QuerySummary, QuerySummaryState};

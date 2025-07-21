@@ -1,10 +1,10 @@
-import {FunctionalComponentWithChildren} from '@/src/utils/functional-component-utils';
 import {html, nothing} from 'lit';
 import {map} from 'lit/directives/map.js';
+import type {FunctionalComponentWithChildren} from '@/src/utils/functional-component-utils';
 import ArrowRight from '../../images/arrow-right.svg';
 import './atomic-icon/atomic-icon';
-import {ButtonProps, renderButton} from './button';
-import {AnyBindings} from './interface/bindings';
+import {type ButtonProps, renderButton} from './button';
+import type {AnyBindings} from './interface/bindings';
 
 export interface CarouselProps {
   bindings: AnyBindings;
@@ -31,7 +31,7 @@ const renderPreviousButton = (
   const buttonProps: ButtonProps = {
     style: 'outline-primary',
     part: 'previous-button',
-    class: commonPaginationClasses + ' -translate-x-1/2',
+    class: `${commonPaginationClasses} -translate-x-1/2`,
     onClick: previousPage,
     ariaLabel: bindings.i18n.t('previous'),
   };
@@ -57,7 +57,7 @@ const renderNextButton = (
   const buttonProps: ButtonProps = {
     style: 'outline-primary',
     part: 'next-button',
-    class: commonPaginationClasses + ' right-0 translate-x-1/2',
+    class: `${commonPaginationClasses} right-0 translate-x-1/2`,
     onClick: nextPage,
     ariaLabel: bindings.i18n.t('next'),
   };
@@ -110,12 +110,13 @@ export const renderCarousel: FunctionalComponentWithChildren<CarouselProps> =
         aria-roledescription="carousel"
         aria-label=${props.ariaLabel}
       >
-        ${renderPreviousButton(
-          numberOfPages,
-          previousPage,
-          props.bindings
-        )}${children}
-        ${renderNextButton(numberOfPages, nextPage, props.bindings)}
+        <div class="carousel-inner relative">
+          <div class="carousel-controls">
+            ${renderPreviousButton(numberOfPages, previousPage, props.bindings)}
+            ${renderNextButton(numberOfPages, nextPage, props.bindings)}
+          </div>
+          <div class="carousel-items">${children}</div>
+        </div>
         ${renderIndicators(numberOfPages, currentPage)}
       </div>
     `;

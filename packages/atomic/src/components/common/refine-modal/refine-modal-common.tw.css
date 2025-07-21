@@ -1,0 +1,9 @@
+.adjust-for-scroll-bar {
+  /* Explanation:
+  100 vw = full width of the view port including the scrollbar.
+  (100% + 3rem) = width of the div the CSS class is on, plus the padding added by the parent div.
+  The difference is the width of the scroll bar.
+  The value is multiplied by -1 to shift right by the width of the scrollbar.
+  */
+  margin-right: calc(-1 * (100vw - 3rem - 100%));
+}

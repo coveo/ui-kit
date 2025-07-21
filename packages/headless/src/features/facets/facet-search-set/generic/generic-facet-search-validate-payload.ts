@@ -1,4 +1,4 @@
-import {RecordValue, NumberValue, StringValue} from '@coveo/bueno';
+import {NumberValue, RecordValue, StringValue} from '@coveo/bueno';
 import {facetIdDefinition} from '../../generic/facet-actions-validation.js';
 
 export const facetSearchOptionsDefinition = {

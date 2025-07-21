@@ -1,6 +1,6 @@
 import {
-  sectionSelector,
   findSection,
+  sectionSelector,
 } from '../../common/atomic-layout-section/sections';
 
 const tabsSelector = 'atomic-insight-tabs';

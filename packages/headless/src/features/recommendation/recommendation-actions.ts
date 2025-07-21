@@ -1,24 +1,24 @@
 import {createAction, createAsyncThunk} from '@reduxjs/toolkit';
 import HistoryStore from '../../api/analytics/coveo.analytics/history-store.js';
 import {getSearchApiBaseUrl} from '../../api/platform-client.js';
-import {RecommendationRequest} from '../../api/search/recommendation/recommendation-request.js';
+import type {RecommendationRequest} from '../../api/search/recommendation/recommendation-request.js';
+import type {Result} from '../../api/search/search/result.js';
 import {
-  AsyncThunkSearchOptions,
+  type AsyncThunkSearchOptions,
   isErrorResponse,
 } from '../../api/search/search-api-client.js';
-import {Result} from '../../api/search/search/result.js';
-import {RecommendationAppState} from '../../state/recommendation-app-state.js';
-import {
+import type {RecommendationAppState} from '../../state/recommendation-app-state.js';
+import type {
   ConfigurationSection,
   RecommendationSection,
 } from '../../state/state-sections.js';
 import {
-  validatePayload,
   requiredNonEmptyString,
+  validatePayload,
 } from '../../utils/validate-payload.js';
-import {AnalyticsAsyncThunk} from '../analytics/analytics-utils.js';
+import type {AnalyticsAsyncThunk} from '../analytics/analytics-utils.js';
 import {fromAnalyticsStateToAnalyticsParams} from '../configuration/legacy-analytics-params.js';
-import {SearchAction} from '../search/search-actions.js';
+import type {SearchAction} from '../search/search-actions.js';
 import {
   logRecommendationUpdate,
   recommendationInterfaceLoad,
@@ -60,10 +60,10 @@ export const getRecommendations = createAsyncThunk<
   'recommendation/get',
   async (_, {getState, rejectWithValue, extra: {apiClient}}) => {
     const state = getState();
-    const startedAt = new Date().getTime();
+    const startedAt = Date.now();
     const request = await buildRecommendationRequest(state);
     const fetched = await apiClient.recommendations(request);
-    const duration = new Date().getTime() - startedAt;
+    const duration = Date.now() - startedAt;
     if (isErrorResponse(fetched)) {
       return rejectWithValue(fetched.error);
     }

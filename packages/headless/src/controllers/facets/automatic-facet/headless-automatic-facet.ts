@@ -1,4 +1,4 @@
-import {SearchEngine} from '../../../app/search-engine/search-engine.js';
+import type {SearchEngine} from '../../../app/search-engine/search-engine.js';
 import {
   deselectAllAutomaticFacetValues,
   toggleSelectAutomaticFacetValue,
@@ -8,13 +8,13 @@ import {
   logFacetClearAll,
 } from '../../../features/facets/facet-set/facet-set-analytics-actions.js';
 import {
-  getLegacyAnalyticsActionForToggleFacetSelect,
   getAnalyticsActionForToggleFacetSelect,
+  getLegacyAnalyticsActionForToggleFacetSelect,
 } from '../../../features/facets/facet-set/facet-set-utils.js';
-import {FacetValue} from '../../../features/facets/facet-set/interfaces/response.js';
+import type {FacetValue} from '../../../features/facets/facet-set/interfaces/response.js';
 import {executeSearch} from '../../../features/search/search-actions.js';
 import {buildController} from '../../controller/headless-controller.js';
-import {AutomaticFacet} from '../automatic-facet-generator/headless-automatic-facet-generator.js';
+import type {AutomaticFacet} from '../automatic-facet-generator/headless-automatic-facet-generator.js';
 
 /**
  * @internal
@@ -22,7 +22,7 @@ import {AutomaticFacet} from '../automatic-facet-generator/headless-automatic-fa
  */
 export interface AutomaticFacetProps {
   /**
-   * The field whose values you want to display in the facet.
+   * The field from which to display values in the facet.
    */
   field: string;
 }

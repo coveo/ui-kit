@@ -151,20 +151,8 @@ export default class QuanticCategoryFacet extends LightningElement {
    * **Supported facets:** Dependencies can only be created on a basic or category facet.
    * Dependencies on numeric, timeframe, or date facets are not supported.
    *
-   * Example usage:
-   * - To show a facet when any value is selected in the parent facet:
-   *   ```javascript
-   *   {
-   *     parentFacetId: 'filetype'
-   *   }
-   *   ```
-   * - To show a facet only when a specific value is selected:
-   *   ```javascript
-   *   {
-   *     parentFacetId: 'filetype',
-   *     expectedValue: 'txt'
-   *   }
-   *   ```
+   * For example usage and more details, see:
+   * https://docs.coveo.com/en/quantic/latest/usage/display-facet-based-on-selection-of-another-facet/
    *
    * @api
    * @type {DependsOn}

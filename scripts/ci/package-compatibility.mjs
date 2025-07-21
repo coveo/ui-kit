@@ -1,4 +1,4 @@
-import {EOL} from 'os';
+import {EOL} from 'node:os';
 import {publint} from 'publint';
 
 let exitCode = 0;

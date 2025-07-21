@@ -1,7 +1,7 @@
-import {Ec, Product} from '@coveo/relay-event-types';
+import type {Ec, Product} from '@coveo/relay-event-types';
 import {createAsyncThunk} from '@reduxjs/toolkit';
-import {AsyncThunkCommerceOptions} from '../../../api/commerce/commerce-api-client.js';
-import {CommerceEngineState} from '../../../app/commerce-engine/commerce-engine.js';
+import type {AsyncThunkCommerceOptions} from '../../../api/commerce/commerce-api-client.js';
+import type {CommerceEngineState} from '../../../app/commerce-engine/commerce-engine.js';
 import {getCurrency} from '../context/context-selector.js';
 
 export type ProductViewPayload = Product;

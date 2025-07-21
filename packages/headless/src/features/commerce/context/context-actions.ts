@@ -1,8 +1,8 @@
-import {CurrencyCodeISO4217} from '@coveo/relay-event-types';
+import type {CurrencyCodeISO4217} from '@coveo/relay-event-types';
 import {createAction} from '@reduxjs/toolkit';
-import {ViewParams} from '../../../api/commerce/commerce-api-params.js';
+import type {ViewParams} from '../../../api/commerce/commerce-api-params.js';
 import {validatePayload} from '../../../utils/validate-payload.js';
-import {LocationState} from './context-state.js';
+import type {LocationState} from './context-state.js';
 import {
   contextDefinition,
   locationDefinition,

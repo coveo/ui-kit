@@ -1,13 +1,13 @@
-import {ChildProduct} from '../../../api/commerce/common/product.js';
-import {SearchCommerceSuccessResponse} from '../../../api/commerce/search/response.js';
+import type {ChildProduct} from '../../../api/commerce/common/product.js';
+import type {SearchCommerceSuccessResponse} from '../../../api/commerce/search/response.js';
 import {
+  buildMockBaseProduct,
   buildMockChildProduct,
   buildMockProduct,
-  buildMockBaseProduct,
 } from '../../../test/mock-product.js';
 import {
   fetchInstantProducts,
-  QuerySearchCommerceAPIThunkReturn,
+  type QuerySearchCommerceAPIThunkReturn,
 } from '../search/search-actions.js';
 import {
   promoteChildToParent,
@@ -15,7 +15,7 @@ import {
   updateInstantProductsQuery,
 } from './instant-products-actions.js';
 import {instantProductsReducer} from './instant-products-slice.js';
-import {
+import type {
   InstantProductsCache,
   InstantProductsState,
 } from './instant-products-state.js';

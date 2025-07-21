@@ -6,10 +6,10 @@ import {
 import {contextReducer} from '../../../features/context/context-slice.js';
 import {
   buildMockSearchEngine,
-  MockedSearchEngine,
+  type MockedSearchEngine,
 } from '../../../test/mock-engine-v2.js';
 import {createMockState} from '../../../test/mock-state.js';
-import {buildCoreContext, Context} from './headless-core-context.js';
+import {buildCoreContext, type Context} from './headless-core-context.js';
 
 vi.mock('../../../features/context/context-actions');
 

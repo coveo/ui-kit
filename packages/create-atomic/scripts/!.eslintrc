@@ -1,0 +1,11 @@
+{
+  "extends": "./node_modules/gts",
+  "overrides": [
+    {
+      "files": "stencil.config.ts",
+      "rules": {
+        "node/no-unpublished-import": "off"
+      }
+    }
+  ]
+}

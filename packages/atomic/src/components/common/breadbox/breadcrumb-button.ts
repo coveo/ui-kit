@@ -1,17 +1,17 @@
-import {FunctionalComponentWithChildren} from '@/src/utils/functional-component-utils';
-import {i18n} from 'i18next';
+import type {i18n} from 'i18next';
 import {html} from 'lit';
 import {keyed} from 'lit/directives/keyed.js';
+import type {FunctionalComponentWithChildren} from '@/src/utils/functional-component-utils';
 import {renderButton} from '../button';
-import {Breadcrumb} from './breadcrumb-types';
+import type {Breadcrumb} from './breadcrumb-types';
 import {
-  joinBreadcrumbValues,
   getFirstBreadcrumbValue,
+  joinBreadcrumbValues,
 } from './breadcrumb-utils';
 
 export interface BreadcrumbButtonProps {
   onSelectBreadcrumb: () => void;
-  setRef: (el?: HTMLButtonElement) => void;
+  refCallback: (el?: HTMLButtonElement) => void;
   pathLimit: number;
   breadcrumb: Breadcrumb;
   i18n: i18n;
@@ -33,7 +33,7 @@ export const renderBreadcrumbButton: FunctionalComponentWithChildren<
         html`<li class="breadcrumb">
           ${renderButton({
             props: {
-              ref: (el) => props.setRef(el as HTMLButtonElement),
+              ref: (el) => props.refCallback(el as HTMLButtonElement),
               part: 'breadcrumb-button',
               style: isExclusion ? 'outline-error' : 'outline-bg-neutral',
               class: 'py-2 px-3 flex items-center rounded-xl group',
@@ -48,7 +48,7 @@ export const renderBreadcrumbButton: FunctionalComponentWithChildren<
               ),
               onClick: props.onSelectBreadcrumb,
             },
-          })(html`${children}`)}
+          })(children)}
         </li>`
       )}
     `;

@@ -1,10 +1,10 @@
 import {
   buildSmartSnippetQuestionsList,
-  SmartSnippetQuestionsList as HeadlessSmartSnippetQuestionsList,
-  SmartSnippetQuestionsListState,
-  Unsubscribe,
+  type SmartSnippetQuestionsList as HeadlessSmartSnippetQuestionsList,
+  type SmartSnippetQuestionsListState,
+  type Unsubscribe,
 } from '@coveo/headless';
-import {Component, ContextType} from 'react';
+import {Component, type ContextType} from 'react';
 import {AppContext} from '../../context/engine';
 
 export class SmartSnippetQuestionsList extends Component<
@@ -54,6 +54,7 @@ export class SmartSnippetQuestionsList extends Component<
                 <dd>
                   <div
                     style={{display: question.expanded ? 'block' : 'none'}}
+                    // biome-ignore lint/security/noDangerouslySetInnerHtml: <>
                     dangerouslySetInnerHTML={{__html: question.answer}}
                   ></div>
                   <button

@@ -1,3 +1,30 @@
+## <small>1.1.30 (2025-07-16)</small>
+
+* style: enable recommended biome rules in atomic-hosted-page (#5628) ([aae7fab](https://github.com/coveo/ui-kit/commits/aae7fab)), closes [#5628](https://github.com/coveo/ui-kit/issues/5628)
+* fix(deps): update all dependencies j:kit-282 (#5605) ([8132ed8](https://github.com/coveo/ui-kit/commits/8132ed8)), closes [#5605](https://github.com/coveo/ui-kit/issues/5605)
+
+
+
+## <small>1.1.28 (2025-07-09)</small>
+
+* fix(atomic): broaden autoloader shadowDOM sniffing (#5533) ([9833a8b](https://github.com/coveo/ui-kit/commits/9833a8b)), closes [#5533](https://github.com/coveo/ui-kit/issues/5533)
+
+
+
+## <small>1.1.27 (2025-07-02)</small>
+
+* chore(lint): integrate biome (#5507) ([53bcada](https://github.com/coveo/ui-kit/commits/53bcada)), closes [#5507](https://github.com/coveo/ui-kit/issues/5507)
+
+
+
+## <small>1.1.26 (2025-06-25)</small>
+
+- fix(deps): update all dependencies j:kit-282 (#5522) ([ee7a9ab](https://github.com/coveo/ui-kit/commits/ee7a9ab)), closes [#5522](https://github.com/coveo/ui-kit/issues/5522)
+
+## <small>1.1.25 (2025-06-18)</small>
+
+- fix(deps): update all dependencies j:kit-282 (#5476) ([c5ea600](https://github.com/coveo/ui-kit/commits/c5ea600)), closes [#5476](https://github.com/coveo/ui-kit/issues/5476)
+
 ## <small>1.1.24 (2025-06-11)</small>
 
 - fix(deps): update all dependencies j:kit-282 (#5068) ([2a0d833](https://github.com/coveo/ui-kit/commits/2a0d833)), closes [#5068](https://github.com/coveo/ui-kit/issues/5068)

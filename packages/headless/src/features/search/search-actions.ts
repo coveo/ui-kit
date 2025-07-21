@@ -1,18 +1,18 @@
 import {BooleanValue, NumberValue, StringValue} from '@coveo/bueno';
-import {createAsyncThunk} from '@reduxjs/toolkit';
+import {createAction, createAsyncThunk} from '@reduxjs/toolkit';
 import type {EventDescription} from 'coveo.analytics';
 import HistoryStore from '../../api/analytics/coveo.analytics/history-store.js';
-import {AsyncThunkSearchOptions} from '../../api/search/search-api-client.js';
-import {SearchResponseSuccess} from '../../api/search/search/search-response.js';
-import {AsyncThunkOptions} from '../../app/async-thunk-options.js';
-import {NavigatorContext} from '../../app/navigator-context-provider.js';
-import {InstantResultSection} from '../../state/state-sections.js';
+import type {SearchResponseSuccess} from '../../api/search/search/search-response.js';
+import type {AsyncThunkSearchOptions} from '../../api/search/search-api-client.js';
+import type {AsyncThunkOptions} from '../../app/async-thunk-options.js';
+import type {NavigatorContext} from '../../app/navigator-context-provider.js';
+import type {InstantResultSection} from '../../state/state-sections.js';
 import {
   requiredNonEmptyString,
   validatePayload,
 } from '../../utils/validate-payload.js';
 import {
-  LegacySearchAction,
+  type LegacySearchAction,
   makeBasicNewSearchAnalyticsAction,
 } from '../analytics/analytics-utils.js';
 import {SearchPageEvents} from '../analytics/search-action-cause.js';
@@ -23,14 +23,14 @@ import {
 import {updateFacetAutoSelection} from '../facets/generic/facet-actions.js';
 import {searchboxAsYouType} from '../instant-results/instant-result-analytics-actions.js';
 import {
-  FetchInstantResultsActionCreatorPayload,
-  FetchInstantResultsThunkReturn,
+  type FetchInstantResultsActionCreatorPayload,
+  type FetchInstantResultsThunkReturn,
   updateInstantResultsQuery,
 } from '../instant-results/instant-results-actions.js';
 import {updatePage} from '../pagination/pagination-actions.js';
 import {
+  type UpdateQueryActionCreatorPayload,
   updateQuery,
-  UpdateQueryActionCreatorPayload,
 } from '../query/query-actions.js';
 import {buildSearchAndFoldingLoadCollectionRequest} from '../search-and-folding/search-and-folding-request.js';
 import {
@@ -41,9 +41,9 @@ import {
 } from './legacy/search-actions.js';
 import {
   AsyncSearchThunkProcessor,
-  StateNeededByExecuteSearch,
+  type StateNeededByExecuteSearch,
 } from './search-actions-thunk-processor.js';
-import {MappedSearchRequest, mapSearchRequest} from './search-mappings.js';
+import {type MappedSearchRequest, mapSearchRequest} from './search-mappings.js';
 import {buildSearchRequest} from './search-request.js';
 
 export interface SearchAction {
@@ -102,6 +102,10 @@ export interface TransitiveSearchAction {
   next?: SearchAction;
 }
 
+export const updateSearchAction = createAction<SearchAction | undefined>(
+  'search/updateSearchAction'
+);
+
 export const executeSearch = createAsyncThunk<
   ExecuteSearchThunkReturn,
   TransitiveSearchAction,
@@ -117,6 +121,8 @@ export const executeSearch = createAsyncThunk<
     const analyticsAction = searchAction.next
       ? buildSearchReduxAction(searchAction.next)
       : undefined;
+
+    config.dispatch(updateSearchAction(searchAction.next));
 
     const request = await buildSearchRequest(
       state,

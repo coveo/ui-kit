@@ -1,3 +1,5 @@
+import type {AtomicLayoutSection} from './atomic-layout-section';
+
 export type Section =
   | 'search'
   | 'facets'
@@ -11,7 +13,7 @@ export type Section =
 export function findSection(element: HTMLElement, section: Section) {
   return element.querySelector(
     sectionSelector(section)
-  ) as HTMLAtomicLayoutSectionElement | null;
+  ) as AtomicLayoutSection | null;
 }
 
 export function sectionSelector(section: Section) {

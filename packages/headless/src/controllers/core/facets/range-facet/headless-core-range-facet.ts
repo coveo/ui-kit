@@ -1,4 +1,4 @@
-import {CoreEngine} from '../../../../app/engine.js';
+import type {CoreEngine} from '../../../../app/engine.js';
 import {
   disableFacet,
   enableFacet,
@@ -10,17 +10,17 @@ import {
   baseFacetResponseSelector,
   isFacetLoadingResponseSelector,
 } from '../../../../features/facets/facet-set/facet-set-selectors.js';
-import {
-  RangeFacetResponse,
+import type {
   RangeFacetRequest,
+  RangeFacetResponse,
 } from '../../../../features/facets/range-facets/generic/interfaces/range-facet.js';
-import {RangeFacetSortCriterion} from '../../../../features/facets/range-facets/generic/interfaces/request.js';
+import type {RangeFacetSortCriterion} from '../../../../features/facets/range-facets/generic/interfaces/request.js';
 import {updateRangeFacetSortCriterion} from '../../../../features/facets/range-facets/generic/range-facet-actions.js';
 import {
   isRangeFacetValueExcluded,
   isRangeFacetValueSelected,
 } from '../../../../features/facets/range-facets/generic/range-facet-utils.js';
-import {
+import type {
   ConfigurationSection,
   FacetOptionsSection,
   SearchSection,
@@ -94,6 +94,7 @@ export function buildCoreRangeFacet<
       const hasActiveValues = values.some(
         (facetValue: RangeFacetValue) => facetValue.state !== 'idle'
       );
+      const domain = response?.domain;
 
       return {
         facetId,
@@ -103,22 +104,8 @@ export function buildCoreRangeFacet<
         hasActiveValues,
         isLoading,
         enabled,
+        domain,
       };
     },
   };
-}
-
-interface AssertRangeFacetOptions {
-  generateAutomaticRanges: boolean;
-  currentValues?: unknown[];
-}
-
-export function assertRangeFacetOptions(
-  options: AssertRangeFacetOptions,
-  controllerName: 'buildNumericFacet' | 'buildDateFacet'
-) {
-  if (!options.generateAutomaticRanges && options.currentValues === undefined) {
-    const message = `currentValues should be specified for ${controllerName} when generateAutomaticRanges is false.`;
-    throw new Error(message);
-  }
 }

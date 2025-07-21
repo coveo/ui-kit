@@ -1,11 +1,11 @@
 import {
   buildInteractiveResult,
-  SearchEngine,
-  Result,
+  type Result,
   ResultTemplatesHelpers,
+  type SearchEngine,
 } from '@coveo/headless';
-import {RecsBindings} from '../components/recommendations/atomic-recs-interface/atomic-recs-interface';
-import {Bindings} from '../components/search/atomic-search-interface/atomic-search-interface';
+import type {RecsBindings} from '../components/recommendations/atomic-recs-interface/atomic-recs-interface';
+import type {Bindings} from '../components/search/atomic-search-interface/atomic-search-interface';
 import {readFromObject} from './object-utils';
 
 /**

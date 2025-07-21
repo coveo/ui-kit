@@ -1,12 +1,12 @@
 import {
   buildNumericFacet,
-  NumericFacet as HeadlessNumericFacet,
-  NumericFacetOptions,
-  NumericFacetState,
-  NumericFacetValue,
-  Unsubscribe,
+  type NumericFacet as HeadlessNumericFacet,
+  type NumericFacetOptions,
+  type NumericFacetState,
+  type NumericFacetValue,
+  type Unsubscribe,
 } from '@coveo/headless';
-import {Component, ContextType} from 'react';
+import {Component, type ContextType} from 'react';
 import {AppContext} from '../../context/engine';
 
 interface NumericFacetProps extends NumericFacetOptions {

@@ -1,4 +1,4 @@
-export const isFacetIncludedOnTab = (
+export const isFacetVisibleOnTab = (
   facetTabs: {excluded?: string[]; included?: string[]} | undefined,
   activeTab: string | undefined
 ) => {
@@ -11,7 +11,7 @@ export const isFacetIncludedOnTab = (
     return true;
   }
 
-  if (facetTabs.excluded && facetTabs.excluded.includes(activeTab)) {
+  if (facetTabs.excluded?.includes(activeTab)) {
     return false;
   }
 

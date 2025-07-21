@@ -1,4 +1,4 @@
-import {
+import type {
   DocumentSuggestionResponse,
   GetDocumentSuggestionsResponse,
 } from '../../api/service/case-assist/get-document-suggestions/get-document-suggestions-response.js';
@@ -6,8 +6,8 @@ import {buildMockDocumentSuggestion} from '../../test/mock-case-assist-document-
 import {fetchDocumentSuggestions} from './document-suggestion-actions.js';
 import {documentSuggestionReducer} from './document-suggestion-slice.js';
 import {
+  type DocumentSuggestionState,
   getDocumentSuggestionInitialState,
-  DocumentSuggestionState,
 } from './document-suggestion-state.js';
 
 describe('document suggestion slice', () => {

@@ -1,21 +1,21 @@
 {
-    "name": "cdn",
-    "$schema": "../../node_modules/nx/schemas/project-schema.json",
-    "targets": {
-        "deploy": {
-            "executor": "nx:run-commands",
-            "options": {
-              "command": "node ./scripts/deploy-local-cdn.mjs",
-              "cwd": "{projectRoot}"
-            }
-        },
-        "serve": {
-            "dependsOn": ["deploy"],
-            "executor": "nx:run-commands",
-            "options": {
-              "command": "node ./scripts/serve.mjs",
-              "cwd": "{projectRoot}"
-            }
-        },
+  "name": "cdn",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "targets": {
+    "deploy": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "node ./scripts/deploy-local-cdn.mjs",
+        "cwd": "{projectRoot}"
+      }
+    },
+    "serve": {
+      "dependsOn": ["deploy"],
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "node ./scripts/serve.mjs",
+        "cwd": "{projectRoot}"
+      }
     }
+  }
 }

@@ -1,8 +1,8 @@
-import {SearchEngine} from '../../app/search-engine/search-engine.js';
+import type {SearchEngine} from '../../app/search-engine/search-engine.js';
 import {
   buildCoreQueryError,
-  QueryError,
-  QueryErrorState,
+  type QueryError,
+  type QueryErrorState,
 } from '../core/query-error/headless-core-query-error.js';
 
 export type {QueryError, QueryErrorState};

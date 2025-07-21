@@ -1,8 +1,8 @@
 import {buildBundleSizeReport} from './bundle-size/bundle-size.mjs';
 import {
+  createPullRequestComment,
   getPullRequestComments,
   updatePullRequestComment,
-  createPullRequestComment,
 } from './github-client.mjs';
 import {buildLiveExampleReport} from './live-examples/live-examples.mjs';
 import {buildTitleReport} from './title/verify-title.mjs';

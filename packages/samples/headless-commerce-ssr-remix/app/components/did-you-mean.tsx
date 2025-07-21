@@ -24,7 +24,15 @@ export default function DidYouMean() {
     <div>
       <p>
         Search for
-        <span onClick={() => methods?.applyCorrection()}>
+        {/** biome-ignore lint/a11y/noStaticElementInteractions: <> */}
+        <span
+          onClick={() => methods?.applyCorrection()}
+          onKeyUp={(e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+              methods?.applyCorrection();
+            }
+          }}
+        >
           <b>{state.queryCorrection.correctedQuery}</b>
         </span>
         instead?

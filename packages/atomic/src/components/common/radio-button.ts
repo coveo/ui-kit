@@ -1,11 +1,11 @@
-import {multiClassMap} from '@/src/directives/multi-class-map';
-import {FunctionalComponent} from '@/src/utils/functional-component-utils';
 import {html, nothing} from 'lit';
 import {ifDefined} from 'lit/directives/if-defined.js';
-import {ref, RefOrCallback} from 'lit/directives/ref.js';
+import {type RefOrCallback, ref} from 'lit/directives/ref.js';
+import {multiClassMap} from '@/src/directives/multi-class-map';
+import type {FunctionalComponent} from '@/src/utils/functional-component-utils';
 import {createRipple} from '../../utils/ripple';
 import {
-  ButtonStyle,
+  type ButtonStyle,
   getClassNameForButtonStyle,
   getRippleColorForButtonStyle,
 } from './button-style';
@@ -32,7 +32,9 @@ export interface RadioButtonProps {
   ref?: RefOrCallback;
 }
 
-export const radioButton: FunctionalComponent<RadioButtonProps> = ({props}) => {
+export const renderRadioButton: FunctionalComponent<RadioButtonProps> = ({
+  props,
+}) => {
   const classNames = {
     'btn-radio': true,
     selected: Boolean(props.checked),
@@ -40,10 +42,10 @@ export const radioButton: FunctionalComponent<RadioButtonProps> = ({props}) => {
     ...(props.style && {[getClassNameForButtonStyle(props.style)]: true}),
   };
 
-  const onMouseDown = (e: MouseEvent) => {
+  const onMouseDown = async (e: MouseEvent) => {
     if (props.style) {
       const rippleColor = getRippleColorForButtonStyle(props.style);
-      createRipple(e, {color: rippleColor});
+      await createRipple(e, {color: rippleColor});
     }
   };
 

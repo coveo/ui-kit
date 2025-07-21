@@ -1,4 +1,4 @@
-import {GeneratedAnswerCitation} from '../../../api/generated-answer/generated-answer-event-payload.js';
+import type {GeneratedAnswerCitation} from '../../../api/generated-answer/generated-answer-event-payload.js';
 
 export function filterOutDuplicatedCitations(
   citations: GeneratedAnswerCitation[]

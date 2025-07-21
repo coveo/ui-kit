@@ -1,4 +1,4 @@
-import {AnyFacetRequest} from '../features/commerce/facets/facet-set/interfaces/request.js';
+import type {AnyFacetRequest} from '../features/commerce/facets/facet-set/interfaces/request.js';
 
 export function buildMockCommerceFacetRequest(
   config: Partial<AnyFacetRequest> = {}

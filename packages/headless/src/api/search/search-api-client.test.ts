@@ -1,5 +1,5 @@
 import {pino} from 'pino';
-import {Mock} from 'vitest';
+import type {Mock} from 'vitest';
 import {buildCategoryFacetSearchRequest} from '../../features/facets/facet-search-set/category/category-facet-search-request-builder.js';
 import {buildSpecificFacetSearchRequest} from '../../features/facets/facet-search-set/specific/specific-facet-search-request-builder.js';
 import {buildQuerySuggestRequest} from '../../features/query-suggest/query-suggest-actions.js';
@@ -8,7 +8,7 @@ import {buildResultPreviewRequest} from '../../features/result-preview/result-pr
 import {buildSearchRequest} from '../../features/search/search-request.js';
 import {emptyQuestionAnswer} from '../../features/search/search-state.js';
 import {buildPlanRequest} from '../../features/standalone-search-box-set/standalone-search-box-set-actions.js';
-import {SearchAppState} from '../../state/search-app-state.js';
+import type {SearchAppState} from '../../state/search-app-state.js';
 import {buildMockAnalyticsState} from '../../test/mock-analytics-state.js';
 import {buildMockCategoryFacetRequest} from '../../test/mock-category-facet-request.js';
 import {buildMockCategoryFacetSearch} from '../../test/mock-category-facet-search.js';
@@ -16,8 +16,8 @@ import {buildMockCategoryFacetSlice} from '../../test/mock-category-facet-slice.
 import {buildMockFacetSearch} from '../../test/mock-facet-search.js';
 import {buildMockFacetSlice} from '../../test/mock-facet-slice.js';
 import {buildMockNavigatorContextProvider} from '../../test/mock-navigator-context-provider.js';
-import {buildMockQuerySuggestCompletion} from '../../test/mock-query-suggest-completion.js';
 import {buildMockQuerySuggest} from '../../test/mock-query-suggest.js';
+import {buildMockQuerySuggestCompletion} from '../../test/mock-query-suggest-completion.js';
 import {createMockRecommendationState} from '../../test/mock-recommendation-state.js';
 import {buildMockSearchAPIClient} from '../../test/mock-search-api-client.js';
 import {buildMockSearchResponse} from '../../test/mock-search-response.js';
@@ -25,26 +25,26 @@ import {createMockState} from '../../test/mock-state.js';
 import {
   getSearchApiBaseUrl,
   PlatformClient,
-  PlatformClientCallOptions,
+  type PlatformClientCallOptions,
 } from '../platform-client.js';
 import {NoopPreprocessRequest} from '../preprocess-request.js';
-import {FacetSearchRequest} from './facet-search/facet-search-request.js';
-import {HtmlRequest} from './html/html-request.js';
-import {PlanRequest} from './plan/plan-request.js';
-import {QuerySuggestRequest} from './query-suggest/query-suggest-request.js';
-import {RecommendationRequest} from './recommendation/recommendation-request.js';
+import type {FacetSearchRequest} from './facet-search/facet-search-request.js';
+import type {HtmlRequest} from './html/html-request.js';
+import type {PlanRequest} from './plan/plan-request.js';
+import type {QuerySuggestRequest} from './query-suggest/query-suggest-request.js';
+import type {RecommendationRequest} from './recommendation/recommendation-request.js';
+import type {QuestionsAnswers} from './search/question-answering.js';
+import type {SearchRequest} from './search/search-request.js';
+import type {SearchResponseSuccess} from './search/search-response.js';
 import {
   isErrorResponse,
-  SearchAPIClient,
-  SearchAPIClientOptions,
+  type SearchAPIClient,
+  type SearchAPIClientOptions,
 } from './search-api-client.js';
 import {
   getAuthenticationQueryParam,
   getOrganizationIdQueryParam,
 } from './search-api-params.js';
-import {QuestionsAnswers} from './search/question-answering.js';
-import {SearchRequest} from './search/search-request.js';
-import {SearchResponseSuccess} from './search/search-response.js';
 
 vi.mock('../platform-client');
 

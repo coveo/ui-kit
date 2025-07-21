@@ -1,16 +1,16 @@
-import {AsyncThunkAction, PayloadAction} from '@reduxjs/toolkit';
-import {AsyncThunkCommerceOptions} from '../../../api/commerce/commerce-api-client.js';
-import {CommerceEngine} from '../../../app/commerce-engine/commerce-engine.js';
-import {StateNeededByExecuteSearch} from './search-actions-thunk-processor.js';
+import type {AsyncThunkAction, PayloadAction} from '@reduxjs/toolkit';
+import type {AsyncThunkCommerceOptions} from '../../../api/commerce/commerce-api-client.js';
+import type {CommerceEngine} from '../../../app/commerce-engine/commerce-engine.js';
 import {
-  PrepareForSearchWithQueryPayload,
-  PromoteChildToParentPayload,
-  QuerySearchCommerceAPIThunkReturn,
   executeSearch,
   fetchMoreProducts,
+  type PrepareForSearchWithQueryPayload,
+  type PromoteChildToParentPayload,
   prepareForSearchWithQuery,
   promoteChildToParent,
+  type QuerySearchCommerceAPIThunkReturn,
 } from './search-actions.js';
+import type {StateNeededByExecuteSearch} from './search-actions-thunk-processor.js';
 import {commerceSearchReducer as commerceSearch} from './search-slice.js';
 
 export type {PrepareForSearchWithQueryPayload};

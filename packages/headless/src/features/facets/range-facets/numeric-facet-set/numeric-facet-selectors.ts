@@ -1,10 +1,10 @@
-import {
+import type {
   NumericFacetSection,
   SearchSection,
 } from '../../../../state/state-sections.js';
 import {baseFacetResponseSelector} from '../../facet-set/facet-set-selectors.js';
-import {AnyFacetResponse} from '../../generic/interfaces/generic-facet-response.js';
-import {
+import type {AnyFacetResponse} from '../../generic/interfaces/generic-facet-response.js';
+import type {
   NumericFacetResponse,
   NumericFacetValue,
 } from './interfaces/response.js';

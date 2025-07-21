@@ -1,5 +1,5 @@
-import {BreadcrumbManager as HeadlessBreadcrumbManager} from '@coveo/headless';
-import {useEffect, useState, FunctionComponent} from 'react';
+import type {BreadcrumbManager as HeadlessBreadcrumbManager} from '@coveo/headless';
+import {type FunctionComponent, useEffect, useState} from 'react';
 
 interface BreadcrumbManagerProps {
   controller: HeadlessBreadcrumbManager;

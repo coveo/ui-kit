@@ -1,11 +1,11 @@
-import {QuerySuggestCompletion} from '../../api/search/query-suggest/query-suggest-response.js';
-import {buildMockQuerySuggestCompletion} from '../../test/mock-query-suggest-completion.js';
+import type {QuerySuggestCompletion} from '../../api/search/query-suggest/query-suggest-response.js';
 import {buildMockQuerySuggest} from '../../test/mock-query-suggest.js';
+import {buildMockQuerySuggestCompletion} from '../../test/mock-query-suggest-completion.js';
 import {buildMockSearchApiErrorWithStatusCode} from '../../test/mock-search-api-error-with-status-code.js';
 import {
+  clearQuerySuggest as clearCommerceQuerySuggest,
   fetchQuerySuggestions as fetchCommerceQuerySuggestions,
   registerQuerySuggest as registerCommerceQuerySuggest,
-  clearQuerySuggest as clearCommerceQuerySuggest,
 } from '../commerce/query-suggest/query-suggest-actions.js';
 import {
   clearQuerySuggest,
@@ -13,7 +13,7 @@ import {
   registerQuerySuggest,
 } from './query-suggest-actions.js';
 import {querySuggestReducer} from './query-suggest-slice.js';
-import {QuerySuggestSet} from './query-suggest-state.js';
+import type {QuerySuggestSet} from './query-suggest-state.js';
 
 describe('querySuggest slice', () => {
   let state: QuerySuggestSet;

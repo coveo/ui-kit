@@ -1,4 +1,4 @@
-import {test, expect} from './fixture';
+import {expect, test} from './fixture';
 
 test.describe('AtomicCommerceSearchBoxRecentQueries', () => {
   test.beforeEach(async ({commerceSearchBoxRecentQueries, page}) => {
@@ -26,7 +26,7 @@ test.describe('AtomicCommerceSearchBoxRecentQueries', () => {
     ).not.toBeVisible();
   });
 
-  test.skip('when clicking clear recent queries, it should clear the recent queries', async ({
+  test('when clicking clear recent queries, it should clear the recent queries', async ({
     commerceSearchBoxRecentQueries,
   }) => {
     await commerceSearchBoxRecentQueries.clearButton.click();

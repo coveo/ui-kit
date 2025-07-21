@@ -1,6 +1,6 @@
-import {FunctionalComponent} from '@/src/utils/functional-component-utils';
-import {i18n} from 'i18next';
+import type {i18n} from 'i18next';
 import {html} from 'lit';
+import type {FunctionalComponent} from '@/src/utils/functional-component-utils';
 
 interface i18nKeyProps {
   first: number;
@@ -22,7 +22,7 @@ const renderWrapHighlight: FunctionalComponent<{
   content: string;
 }> = ({props}) => {
   const part = `highlight${props.part ? ` ${props.part}` : ''}`;
-  return html` <span class="front-bold" part="${part}">${props.content}</span>`;
+  return html`<span class="font-bold" part="${part}">${props.content}</span>`;
 };
 
 export const getQuerySummaryI18nParameters = (props: i18nKeyProps) => {

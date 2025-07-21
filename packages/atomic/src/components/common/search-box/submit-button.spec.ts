@@ -1,9 +1,8 @@
-import {renderFunctionFixture} from '@/vitest-utils/testing-helpers/fixture';
-import {createTestI18n} from '@/vitest-utils/testing-helpers/i18n-utils';
 import {userEvent} from '@storybook/test';
 import {html} from 'lit';
-import {describe, vi, beforeAll, it} from 'vitest';
-import {expect} from 'vitest';
+import {beforeAll, describe, expect, it, vi} from 'vitest';
+import {renderFunctionFixture} from '@/vitest-utils/testing-helpers/fixture';
+import {createTestI18n} from '@/vitest-utils/testing-helpers/i18n-utils';
 import {renderSubmitButton} from './submit-button';
 
 describe('#renderSubmitButton', () => {
@@ -20,7 +19,6 @@ describe('#renderSubmitButton', () => {
           i18n,
           disabled: false,
           onClick: () => {},
-          title: 'search',
           ...additionalProps,
         },
       })}`
@@ -84,11 +82,5 @@ describe('#renderSubmitButton', () => {
     await userEvent.click(button!);
 
     expect(onClick).toHaveBeenCalled();
-  });
-
-  it('should have the correct title attribute', async () => {
-    const title = 'Search';
-    const {button} = await renderComponent({title});
-    expect(button).toHaveAttribute('title', title);
   });
 });

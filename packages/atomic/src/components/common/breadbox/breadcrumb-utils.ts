@@ -1,4 +1,4 @@
-import {Breadcrumb} from './breadcrumb-types';
+import type {Breadcrumb} from './breadcrumb-types';
 
 const ELLIPSIS = '...';
 const SEPARATOR = ' / ';

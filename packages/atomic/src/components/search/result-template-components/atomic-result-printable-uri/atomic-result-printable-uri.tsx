@@ -10,7 +10,7 @@ import {InitializeBindings} from '../../../../utils/initialization-utils';
 import {FocusTargetController} from '../../../../utils/stencil-accessibility-utils';
 import {parseXML} from '../../../../utils/utils';
 import {getAttributesFromLinkSlot} from '../../../common/item-link/attributes-slot';
-import {LinkWithItemAnalytics} from '../../../common/item-link/item-link';
+import {LinkWithItemAnalytics} from '../../../common/item-link/stencil-item-link';
 import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
 import {ResultContext} from '../result-template-decorators';
 

@@ -1,8 +1,9 @@
 import {
   loadSearchActions,
   loadSearchAnalyticsActions,
-  SearchEngine,
+  type SearchEngine,
 } from '@coveo/headless';
+// biome-ignore lint/correctness/noUnusedImports: <>
 import {Component, h, Prop} from '@stencil/core';
 import template from './template.html';
 

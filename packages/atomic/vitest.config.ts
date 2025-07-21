@@ -1,6 +1,6 @@
-import {readFileSync} from 'fs';
-import path from 'node:path';
-import {dirname, resolve} from 'path';
+import {readFileSync} from 'node:fs';
+import path, {dirname, resolve} from 'node:path';
+import tailwindcss from '@tailwindcss/vite';
 import {defineConfig} from 'vitest/config';
 //@ts-expect-error - normal json import
 import packageJson from './package.json' with {type: 'json'};
@@ -35,7 +35,7 @@ export default defineConfig({
   },
   resolve: {
     alias: [
-      {find: '@/', replacement: path.resolve(import.meta.dirname, './') + '/'},
+      {find: '@/', replacement: `${path.resolve(import.meta.dirname, './')}/`},
       {
         find: /^@coveo\/headless\/(.*)$/,
         replacement: path.resolve(
@@ -70,6 +70,7 @@ export default defineConfig({
         return null;
       },
     },
+    tailwindcss(),
     {
       name: 'svg-transform',
       enforce: 'pre',
@@ -86,6 +87,7 @@ export default defineConfig({
     },
   ],
   test: {
+    css: true,
     include: ['src/**/*.spec.ts', 'scripts/stencil-proxy.spec.mjs'],
     exclude: [
       'src/**/initialization-utils.spec.ts',

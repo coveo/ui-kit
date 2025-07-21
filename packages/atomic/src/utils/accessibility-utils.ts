@@ -1,5 +1,5 @@
-import {ReactiveController, ReactiveControllerHost} from 'lit';
-import {AnyBindings} from '../components';
+import type {ReactiveController, ReactiveControllerHost} from 'lit';
+import type {AnyBindings} from '../components';
 import {buildCustomEvent} from './event-utils';
 import {defer} from './utils';
 
@@ -55,7 +55,8 @@ export class FocusTargetController implements ReactiveController {
   private bindings: AnyBindings;
   private lastSearchId?: string;
   private element?: HTMLElement;
-  private onFocusCallback?: Function;
+  private internalOnFocusCallback?: Function;
+  private publicOnFocusCallbacks: Function[] = [];
   private doFocusAfterSearch = false;
   private doFocusOnNextTarget = false;
 
@@ -68,14 +69,25 @@ export class FocusTargetController implements ReactiveController {
     this.host.addController(this);
   }
 
-  public setTarget(el?: HTMLElement) {
+  public registerFocusCallback(callback: Function): void {
+    this.publicOnFocusCallbacks.push(callback);
+  }
+
+  private clearFocusCallbacks() {
+    this.internalOnFocusCallback?.();
+    while (this.publicOnFocusCallbacks.length) {
+      this.publicOnFocusCallbacks.pop()?.();
+    }
+  }
+
+  public async setTarget(el?: HTMLElement) {
     if (!el) {
       return;
     }
     this.element = el;
     if (this.doFocusOnNextTarget) {
       this.doFocusOnNextTarget = false;
-      this.focus();
+      await this.focus();
     }
   }
 
@@ -83,7 +95,7 @@ export class FocusTargetController implements ReactiveController {
     // Not sure why this is needed; should be investigated after Lit Migration (KIT-4235)
     await defer();
     this.element?.focus();
-    this.onFocusCallback?.();
+    this.clearFocusCallbacks();
   }
 
   public focusAfterSearch() {
@@ -91,12 +103,16 @@ export class FocusTargetController implements ReactiveController {
       this.bindings.engine
     );
     this.doFocusAfterSearch = true;
-    return new Promise((resolve) => (this.onFocusCallback = resolve));
+    return new Promise((resolve) => {
+      this.internalOnFocusCallback = resolve;
+    });
   }
 
   public focusOnNextTarget() {
     this.doFocusOnNextTarget = true;
-    return new Promise((resolve) => (this.onFocusCallback = resolve));
+    return new Promise((resolve) => {
+      this.internalOnFocusCallback = resolve;
+    });
   }
 
   public disableForCurrentSearch() {
@@ -108,7 +124,7 @@ export class FocusTargetController implements ReactiveController {
     }
   }
 
-  hostUpdated() {
+  async hostUpdated() {
     if (
       this.doFocusAfterSearch &&
       this.bindings.store.getUniqueIDFromEngine(this.bindings.engine) !==
@@ -118,9 +134,9 @@ export class FocusTargetController implements ReactiveController {
       if (this.element) {
         const el = this.element;
         // The focus seems to be flaky without deferring, especially on iOS; should be investigated after Lit Migration (KIT-4235)
-        defer().then(() => {
+        await defer().then(() => {
           el.focus();
-          this.onFocusCallback?.();
+          this.clearFocusCallbacks();
         });
       }
     }

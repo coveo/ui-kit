@@ -4,7 +4,7 @@
 
   <article>
     <c:exampleInsightPanel oninsightpanel_auraposttofeed="{!c.handleQuickAction}"
-      oninsightpanel_aurasendasemail="{!c.handleQuickAction}">
+      oninsightpanel_aurasendasemail="{!c.handleQuickAction}" caseId="{!v.recordId}">
     </c:exampleInsightPanel>
   </article>
 </aura:component>

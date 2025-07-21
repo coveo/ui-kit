@@ -7,7 +7,7 @@ import {
 } from './standalone-search-box-set-actions.js';
 import {
   getCommerceStandaloneSearchBoxSetInitialState,
-  StandaloneSearchBoxEntry,
+  type StandaloneSearchBoxEntry,
 } from './standalone-search-box-set-state.js';
 
 export const commerceStandaloneSearchBoxSetReducer = createReducer(

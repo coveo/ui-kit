@@ -4,7 +4,7 @@
  *
  * If you wish to implement filter suggestions in your project, please contact your Coveo representative.
  */
-import {
+import type {
   CategoryFacetSearchResult,
   CategoryFieldSuggestions,
   FieldSuggestionsGenerator,

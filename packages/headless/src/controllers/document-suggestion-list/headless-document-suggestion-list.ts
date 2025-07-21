@@ -1,23 +1,23 @@
-import {CaseAssistAPIErrorStatusResponse} from '../../api/service/case-assist/case-assist-api-client.js';
-import {DocumentSuggestionResponse} from '../../api/service/case-assist/get-document-suggestions/get-document-suggestions-response.js';
-import {CaseAssistEngine} from '../../app/case-assist-engine/case-assist-engine.js';
+import type {CaseAssistAPIErrorStatusResponse} from '../../api/service/case-assist/case-assist-api-client.js';
+import type {DocumentSuggestionResponse} from '../../api/service/case-assist/get-document-suggestions/get-document-suggestions-response.js';
+import type {CaseAssistEngine} from '../../app/case-assist-engine/case-assist-engine.js';
 import {configuration} from '../../app/common-reducers.js';
 import {caseAssistConfigurationReducer as caseAssistConfiguration} from '../../features/case-assist-configuration/case-assist-configuration-slice.js';
 import {caseFieldReducer as caseField} from '../../features/case-field/case-field-slice.js';
 import {caseInputReducer as caseInput} from '../../features/case-input/case-input-slice.js';
 import {fetchDocumentSuggestions} from '../../features/document-suggestion/document-suggestion-actions.js';
 import {documentSuggestionReducer as documentSuggestion} from '../../features/document-suggestion/document-suggestion-slice.js';
-import {
-  ConfigurationSection,
+import type {
   CaseAssistConfigurationSection,
-  CaseInputSection,
-  DocumentSuggestionSection,
   CaseFieldSection,
+  CaseInputSection,
+  ConfigurationSection,
+  DocumentSuggestionSection,
 } from '../../state/state-sections.js';
 import {loadReducerError} from '../../utils/errors.js';
 import {
   buildController,
-  Controller,
+  type Controller,
 } from '../controller/headless-controller.js';
 
 /**

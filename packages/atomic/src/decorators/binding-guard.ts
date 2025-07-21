@@ -1,4 +1,4 @@
-import {html, LitElement, nothing} from 'lit';
+import {html, type LitElement, nothing} from 'lit';
 import type {TemplateResultType} from 'lit/directive-helpers.js';
 import type {
   GenericRender,

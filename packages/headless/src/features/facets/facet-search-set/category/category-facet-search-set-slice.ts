@@ -1,5 +1,5 @@
 import {createReducer} from '@reduxjs/toolkit';
-import {CategoryFacetSearchResponse} from '../../../../api/search/facet-search/category-facet-search/category-facet-search-response.js';
+import type {CategoryFacetSearchResponse} from '../../../../api/search/facet-search/category-facet-search/category-facet-search-response.js';
 import {
   executeCommerceFacetSearch,
   executeCommerceFieldSuggest,
@@ -10,16 +10,16 @@ import {fetchQuerySuggestions} from '../../../commerce/query-suggest/query-sugge
 import {executeSearch as executeCommerceSearch} from '../../../commerce/search/search-actions.js';
 import {executeSearch} from '../../../search/search-actions.js';
 import {
-  handleFacetSearchRegistration,
-  handleFacetSearchUpdate,
-  handleFacetSearchPending,
-  handleFacetSearchRejected,
-  handleFacetSearchFulfilled,
-  handleFacetSearchClear,
-  handleFacetSearchSetClear,
-  handleCommerceFacetSearchFulfilled,
   handleCommerceFacetFieldSuggestionsFulfilled,
+  handleCommerceFacetSearchFulfilled,
   handleCommerceFetchQuerySuggestionsFulfilledForCategoryFacet,
+  handleFacetSearchClear,
+  handleFacetSearchFulfilled,
+  handleFacetSearchPending,
+  handleFacetSearchRegistration,
+  handleFacetSearchRejected,
+  handleFacetSearchSetClear,
+  handleFacetSearchUpdate,
 } from '../facet-search-reducer-helpers.js';
 import {
   clearFacetSearch,

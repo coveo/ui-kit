@@ -2,21 +2,21 @@ import {configuration} from '../../../app/common-reducers.js';
 import {deselectAllBreadcrumbs} from '../../../features/breadcrumb/breadcrumb-actions.js';
 import {deselectAllCategoryFacetValues} from '../../../features/facets/category-facet-set/category-facet-set-actions.js';
 import {categoryFacetSetReducer as categoryFacetSet} from '../../../features/facets/category-facet-set/category-facet-set-slice.js';
-import {CategoryFacetValue} from '../../../features/facets/category-facet-set/interfaces/response.js';
+import type {CategoryFacetValue} from '../../../features/facets/category-facet-set/interfaces/response.js';
 import {
   toggleExcludeFacetValue,
   toggleSelectFacetValue,
   updateFreezeCurrentValues,
 } from '../../../features/facets/facet-set/facet-set-actions.js';
 import {facetSetReducer as facetSet} from '../../../features/facets/facet-set/facet-set-slice.js';
-import {FacetValue} from '../../../features/facets/facet-set/interfaces/response.js';
+import type {FacetValue} from '../../../features/facets/facet-set/interfaces/response.js';
 import {
   toggleExcludeDateFacetValue,
   toggleSelectDateFacetValue,
 } from '../../../features/facets/range-facets/date-facet-set/date-facet-actions.js';
 import {dateFacetSetReducer as dateFacetSet} from '../../../features/facets/range-facets/date-facet-set/date-facet-set-slice.js';
-import {DateFacetValue} from '../../../features/facets/range-facets/date-facet-set/interfaces/response.js';
-import {NumericFacetValue} from '../../../features/facets/range-facets/numeric-facet-set/interfaces/response.js';
+import type {DateFacetValue} from '../../../features/facets/range-facets/date-facet-set/interfaces/response.js';
+import type {NumericFacetValue} from '../../../features/facets/range-facets/numeric-facet-set/interfaces/response.js';
 import {
   toggleExcludeNumericFacetValue,
   toggleSelectNumericFacetValue,
@@ -29,7 +29,7 @@ import {
   toggleExcludeStaticFilterValue,
   toggleSelectStaticFilterValue,
 } from '../../../features/static-filter-set/static-filter-set-actions.js';
-import {InsightAppState} from '../../../state/insight-app-state.js';
+import type {InsightAppState} from '../../../state/insight-app-state.js';
 import {buildMockCategoryFacetRequest} from '../../../test/mock-category-facet-request.js';
 import {buildMockCategoryFacetResponse} from '../../../test/mock-category-facet-response.js';
 import {buildMockCategoryFacetValue} from '../../../test/mock-category-facet-value.js';
@@ -39,7 +39,7 @@ import {buildMockDateFacetSlice} from '../../../test/mock-date-facet-slice.js';
 import {buildMockDateFacetValue} from '../../../test/mock-date-facet-value.js';
 import {
   buildMockInsightEngine,
-  MockedInsightEngine,
+  type MockedInsightEngine,
 } from '../../../test/mock-engine-v2.js';
 import {buildMockFacetRequest} from '../../../test/mock-facet-request.js';
 import {buildMockFacetResponse} from '../../../test/mock-facet-response.js';
@@ -53,12 +53,12 @@ import {buildMockNumericFacetValue} from '../../../test/mock-numeric-facet-value
 import {buildMockStaticFilterSlice} from '../../../test/mock-static-filter-slice.js';
 import {buildMockStaticFilterValue} from '../../../test/mock-static-filter-value.js';
 import {
-  BreadcrumbManager,
-  CategoryFacetBreadcrumb,
-  DateFacetBreadcrumb,
-  FacetBreadcrumb,
-  NumericFacetBreadcrumb,
+  type BreadcrumbManager,
   buildBreadcrumbManager,
+  type CategoryFacetBreadcrumb,
+  type DateFacetBreadcrumb,
+  type FacetBreadcrumb,
+  type NumericFacetBreadcrumb,
 } from './headless-insight-breadcrumb-manager.js';
 
 vi.mock('../../../features/breadcrumb/breadcrumb-actions');

@@ -1,3 +1,4 @@
+import {headers} from 'next/headers';
 import * as externalCartAPI from '@/actions/external-cart-api';
 import Cart from '@/components/cart';
 import ContextDropdown from '@/components/context-dropdown';
@@ -13,7 +14,6 @@ import {
 } from '@/lib/commerce-engine';
 import {NextJsNavigatorContext} from '@/lib/navigatorContextProvider';
 import {defaultContext} from '@/utils/context';
-import {headers} from 'next/headers';
 
 export default async function Search() {
   // Sets the navigator context provider to use the newly created `navigatorContext` before fetching the app static state

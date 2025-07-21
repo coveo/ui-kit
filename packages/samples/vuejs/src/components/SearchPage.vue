@@ -1,8 +1,9 @@
 <script setup lang="ts">
+/** biome-ignore-all lint/correctness/noUnusedImports: <> */
 import {onMounted} from 'vue';
-import TopBar from './TopBar.vue';
-import SearchPageFacets from './SearchPageFacets.vue';
 import ResultsList from './ResultsList.vue';
+import SearchPageFacets from './SearchPageFacets.vue';
+import TopBar from './TopBar.vue';
 
 async function initInterface() {
   await customElements.whenDefined('atomic-search-interface');

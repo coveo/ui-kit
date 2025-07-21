@@ -2,9 +2,9 @@ import {
   buildSearchEngine,
   getSampleSearchEngineConfiguration,
 } from '@coveo/headless';
-import {LitElement, html} from 'lit';
+import {html, LitElement} from 'lit';
 import {customElement, state} from 'lit/decorators.js';
-import {vi, describe, beforeEach, afterEach, it, expect} from 'vitest';
+import {afterEach, beforeEach, describe, expect, it, vi} from 'vitest';
 import type {Bindings} from '../components/search/atomic-search-interface/interfaces';
 import {bindingGuard} from './binding-guard';
 

@@ -1,10 +1,10 @@
 import {setSearchHub} from '../../features/search-hub/search-hub-actions.js';
-import {getSampleRecommendationEngineConfiguration} from './recommendation-engine-configuration.js';
 import {
   buildRecommendationEngine,
-  RecommendationEngine,
-  RecommendationEngineOptions,
+  type RecommendationEngine,
+  type RecommendationEngineOptions,
 } from './recommendation-engine.js';
+import {getSampleRecommendationEngineConfiguration} from './recommendation-engine-configuration.js';
 
 describe('buildRecommendationEngine', () => {
   let options: RecommendationEngineOptions;
@@ -126,5 +126,13 @@ describe('buildRecommendationEngine', () => {
     initEngine();
 
     expect(engine.state.configuration.search.locale).toBe(locale);
+  });
+
+  it('should ensure that engine.relay is the same reference as thunk extra args relay', async () => {
+    const thunkRelay = await engine.dispatch(
+      (_dispatch, _getState, extra) => extra.relay
+    );
+
+    expect(thunkRelay).toBe(engine.relay);
   });
 });

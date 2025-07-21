@@ -1,10 +1,10 @@
-import {CoreEngine} from '../../../app/engine.js';
+import type {CoreEngine} from '../../../app/engine.js';
 import {caseContextReducer as insightCaseContext} from '../../../features/case-context/case-context-slice.js';
 import {loadReducerError} from '../../../utils/errors.js';
 import {
-  Context as CoreContext,
-  ContextProps as CoreContextProps,
   buildContext as buildCoreContext,
+  type Context as CoreContext,
+  type ContextProps as CoreContextProps,
 } from '../../context/headless-context.js';
 
 type AdditionalProperties<AdditionalContext extends CoreContext> = Omit<

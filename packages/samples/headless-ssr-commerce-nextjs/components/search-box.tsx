@@ -1,12 +1,12 @@
 'use client';
 
+import {useState} from 'react';
 import {useInitializeRecentQueries} from '@/hooks/use-recent-queries';
 import {
   useInstantProducts,
   useRecentQueriesList,
   useSearchBox,
 } from '@/lib/commerce-engine';
-import {useState} from 'react';
 import InstantProducts from './instant-product';
 import RecentQueries from './recent-queries';
 
@@ -59,10 +59,14 @@ export default function SearchBox() {
       ></input>
       {state.value !== '' && (
         <span>
-          <button onClick={methods?.clear}>X</button>
+          <button type="button" onClick={methods?.clear}>
+            X
+          </button>
         </span>
       )}
-      <button onClick={methods?.submit}>Search</button>
+      <button type="button" onClick={methods?.submit}>
+        Search
+      </button>
 
       {isInputFocused && (
         <>
@@ -70,9 +74,10 @@ export default function SearchBox() {
           {state.suggestions.length > 0 && (
             <ul>
               Suggestions :
-              {state.suggestions.map((suggestion, index) => (
-                <li key={index}>
+              {state.suggestions.map((suggestion) => (
+                <li key={suggestion.rawValue}>
                   <button
+                    type="button"
                     onMouseEnter={() =>
                       instantProductsController?.updateQuery(
                         suggestion.rawValue
@@ -81,6 +86,7 @@ export default function SearchBox() {
                     onClick={() =>
                       methods?.selectSuggestion(suggestion.rawValue)
                     }
+                    // biome-ignore lint/security/noDangerouslySetInnerHtml: <>
                     dangerouslySetInnerHTML={{
                       __html: suggestion.highlightedValue,
                     }}

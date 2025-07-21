@@ -1,13 +1,13 @@
 import {NumberValue, Schema, SchemaValidationError} from '@coveo/bueno';
-import {CoreEngine} from '../app/engine.js';
+import type {CoreEngine} from '../app/engine.js';
 import {buildMockSearchEngine} from '../test/mock-engine-v2.js';
 import {createMockState} from '../test/mock-state.js';
 import {
+  serializeSchemaValidationError,
+  validateInitialState,
+  validateOptions,
   validatePayload,
   validatePayloadAndThrow,
-  validateOptions,
-  validateInitialState,
-  serializeSchemaValidationError,
 } from './validate-payload.js';
 
 const definition = {
@@ -47,7 +47,7 @@ describe('validatePayload', () => {
   it('when SchemaDefinition is an object, validating a payload that is not an object should be invalid', () => {
     const notAnObject = ['foo', 11, true];
     for (const testCase in notAnObject) {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      // biome-ignore lint/suspicious/noExplicitAny: <>
       const validatedPayload = validatePayload(testCase, definition as any);
       expect(validatedPayload.payload).toEqual(testCase);
       expect(validatedPayload.error).toBeDefined();

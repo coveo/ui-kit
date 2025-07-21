@@ -4,12 +4,12 @@ import {
   requiredNonEmptyString,
   validatePayload,
 } from '../../../../utils/validate-payload.js';
-import {
+import type {
   UpdateFacetIsFieldExpandedActionCreatorPayload,
   UpdateFacetNumberOfValuesActionCreatorPayload,
   UpdateFreezeCurrentValuesActionCreatorPayload,
 } from '../../../facets/facet-set/facet-set-actions.js';
-import {UpdateFacetAutoSelectionActionCreatorPayload} from '../../../facets/generic/facet-actions.js';
+import type {UpdateFacetAutoSelectionActionCreatorPayload} from '../../../facets/generic/facet-actions.js';
 
 export type UpdateCoreFacetNumberOfValuesPayload =
   UpdateFacetNumberOfValuesActionCreatorPayload;

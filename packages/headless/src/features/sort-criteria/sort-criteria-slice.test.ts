@@ -12,7 +12,7 @@ import {
 import {sortCriteriaReducer} from './sort-criteria-slice.js';
 import {
   getSortCriteriaInitialState,
-  SortCriteriaState,
+  type SortCriteriaState,
 } from './sort-criteria-state.js';
 
 describe('sortCriteria', () => {

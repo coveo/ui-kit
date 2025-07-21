@@ -1,0 +1,14 @@
+<template>
+  <template if:false={readOnly}>
+    <c-quantic-result-action event-name={eventName} result={result} icon-name="utility:attach"
+      selected-icon-name="utility:detach" label={displayedLabel} selected-label={displayedLabel} selected={_isAttached}
+      loading={_isLoading}>
+    </c-quantic-result-action>
+  </template>
+  <template if:true={readOnly}>
+    <template if:true={_isAttached}>
+      <lightning-icon icon-name="utility:attach" alternative-text={labels.resultIsAttached}
+        title={labels.resultIsAttached} size="xx-small" class="slds-var-m-horizontal_x-small"></lightning-icon>
+    </template>
+  </template>
+</template>

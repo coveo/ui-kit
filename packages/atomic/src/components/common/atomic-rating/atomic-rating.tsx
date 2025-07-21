@@ -1,6 +1,6 @@
 import {FunctionalComponent, h, VNode} from '@stencil/core';
 import {i18n} from 'i18next';
-import {FieldValueIsNaNError} from '../../commerce/product-template-components/error';
+import {FieldValueIsNaNError} from '../../commerce/product-template-component-utils/error';
 
 interface RatingProps {
   i18n: i18n;

@@ -1,4 +1,4 @@
-import {Pagination as HeadlessPagination} from '@coveo/headless/commerce';
+import type {Pagination as HeadlessPagination} from '@coveo/headless/commerce';
 import {useEffect, useState} from 'react';
 
 interface IPaginationProps {
@@ -43,6 +43,7 @@ export default function Pagination(props: IPaginationProps) {
   return (
     <div className="Pagination">
       <button
+        type="button"
         className="PreviousPage"
         disabled={state.page === 0}
         onClick={controller.previousPage}
@@ -51,6 +52,7 @@ export default function Pagination(props: IPaginationProps) {
       </button>
       {renderPageRadioButtons()}
       <button
+        type="button"
         className="NextPage"
         disabled={state.page === state.totalPages - 1}
         onClick={controller.nextPage}

@@ -1,3 +1,8 @@
+import {
+  buildSSRSearchParameterSerializer,
+  type NavigatorContext,
+} from '@coveo/headless-react/ssr';
+import type {GetServerSidePropsContext} from 'next';
 import {AuthorFacet} from '@/common/components/react/facets';
 import ResultList from '@/common/components/react/result-list';
 import SearchBox from '@/common/components/react/search-box';
@@ -5,15 +10,10 @@ import {SearchPageProvider} from '@/common/components/react/search-page';
 import SearchSearchParameterManager from '@/common/components/react/search-parameter-manager';
 import TabManager from '@/common/components/react/tab-manager';
 import {
-  SearchStaticState,
   fetchStaticState,
+  type SearchStaticState,
   setNavigatorContextProvider,
 } from '@/common/lib/react/engine';
-import {
-  NavigatorContext,
-  buildSSRSearchParameterSerializer,
-} from '@coveo/headless-react/ssr';
-import {GetServerSidePropsContext} from 'next';
 import {NextJsPagesRouterNavigatorContext} from '../../navigatorContextProvider';
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {

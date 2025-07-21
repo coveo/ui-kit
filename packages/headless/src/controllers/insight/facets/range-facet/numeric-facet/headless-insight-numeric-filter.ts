@@ -1,4 +1,4 @@
-import {InsightEngine} from '../../../../../app/insight-engine/insight-engine.js';
+import type {InsightEngine} from '../../../../../app/insight-engine/insight-engine.js';
 import {
   facetClearAll,
   facetSelect,
@@ -9,13 +9,13 @@ import {
 } from '../../../../../features/facets/facet-set/facet-set-insight-analytics-actions.js';
 import {executeSearch} from '../../../../../features/insight-search/insight-search-actions.js';
 import {
-  NumericFilterOptions,
-  NumericFilterInitialState,
-  NumericFilterRange,
-  NumericFilterProps,
-  NumericFilterState,
-  NumericFilter,
   buildCoreNumericFilter,
+  type NumericFilter,
+  type NumericFilterInitialState,
+  type NumericFilterOptions,
+  type NumericFilterProps,
+  type NumericFilterRange,
+  type NumericFilterState,
 } from '../../../../core/facets/range-facet/numeric-facet/headless-core-numeric-filter.js';
 
 export type {

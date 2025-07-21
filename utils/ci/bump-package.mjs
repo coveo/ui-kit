@@ -1,20 +1,20 @@
 #!/usr/bin/env node
+import {spawnSync} from 'node:child_process';
+import {appendFileSync, readFileSync, writeFileSync} from 'node:fs';
+import {join, resolve} from 'node:path';
 import {
-  getLastTag,
-  parseCommits,
+  describeNpmTag,
+  generateChangelog,
   getCommits,
   getCurrentVersion,
+  getLastTag,
   getNextVersion,
-  generateChangelog,
-  writeChangelog,
-  describeNpmTag,
   getSHA1fromRef,
+  parseCommits,
+  writeChangelog,
 } from '@coveo/semantic-monorepo-tools';
 // @ts-ignore no dts is ok
 import changelogConvention from 'conventional-changelog-conventionalcommits';
-import {spawnSync} from 'node:child_process';
-import {appendFileSync, readFileSync, writeFileSync} from 'node:fs';
-import {resolve, join} from 'node:path';
 import {gt, SemVer} from 'semver';
 import {
   REPO_FS_ROOT,
@@ -92,8 +92,8 @@ await (async () => {
     return;
   }
   const parsedCommits = parseCommits(commits, convention.parserOpts);
-  let currentGitVersion = getCurrentVersion(PATH);
-  let currentNpmVersion = new SemVer(
+  const currentGitVersion = getCurrentVersion(PATH);
+  const currentNpmVersion = new SemVer(
     privatePackage
       ? '0.0.0' // private package does not have a npm version, so we default to the 'lowest' possible
       : await describeNpmTag(packageJson.name, 'beta')

@@ -1,3 +1,21 @@
+## <small>1.0.21 (2025-07-16)</small>
+
+* chore: enable recommended biome rules in bueno (#5632) ([b6d7cce](https://github.com/coveo/ui-kit/commits/b6d7cce)), closes [#5632](https://github.com/coveo/ui-kit/issues/5632)
+* chore(deps): Revert "chore(deps): update vite to v3.2.3 j:kit-282" (#5487) ([b9ad867](https://github.com/coveo/ui-kit/commits/b9ad867)), closes [#5487](https://github.com/coveo/ui-kit/issues/5487)
+* chore(deps): update vite to v3.2.4 j:kit-282 (#5604) ([8e8dd6a](https://github.com/coveo/ui-kit/commits/8e8dd6a)), closes [#5604](https://github.com/coveo/ui-kit/issues/5604)
+
+
+
+## <small>1.0.19 (2025-07-02)</small>
+
+* chore(lint): integrate biome (#5507) ([53bcada](https://github.com/coveo/ui-kit/commits/53bcada)), closes [#5507](https://github.com/coveo/ui-kit/issues/5507)
+
+
+
+## <small>1.0.18 (2025-06-18)</small>
+
+- chore(deps): update vite to v3.2.3 j:kit-282 (#5475) ([32f2b2e](https://github.com/coveo/ui-kit/commits/32f2b2e)), closes [#5475](https://github.com/coveo/ui-kit/issues/5475)
+
 ## <small>1.0.17 (2025-06-11)</small>
 
 - chore(deps): update vite to v3.2.1 j:kit-282 (#5410) ([02b0045](https://github.com/coveo/ui-kit/commits/02b0045)), closes [#5410](https://github.com/coveo/ui-kit/issues/5410)

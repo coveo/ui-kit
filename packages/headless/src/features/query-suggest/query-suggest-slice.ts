@@ -1,22 +1,25 @@
-import {AnyAction, type Draft as WritableDraft} from '@reduxjs/toolkit';
-import {createReducer} from '@reduxjs/toolkit';
+import {
+  type AnyAction,
+  createReducer,
+  type Draft as WritableDraft,
+} from '@reduxjs/toolkit';
 import {
   clearQuerySuggest as clearCommerceQuerySuggest,
   fetchQuerySuggestions as fetchCommerceQuerySuggestions,
   registerQuerySuggest as registerCommerceQuerySuggest,
 } from '../commerce/query-suggest/query-suggest-actions.js';
 import {
-  ClearQuerySuggestActionCreatorPayload,
-  RegisterQuerySuggestActionCreatorPayload,
+  type ClearQuerySuggestActionCreatorPayload,
   clearQuerySuggest,
   fetchQuerySuggestions,
+  type RegisterQuerySuggestActionCreatorPayload,
   registerQuerySuggest,
   unregisterQuerySuggest,
 } from './query-suggest-actions.js';
 import {
   getQuerySuggestSetInitialState,
-  QuerySuggestSet,
-  QuerySuggestState,
+  type QuerySuggestSet,
+  type QuerySuggestState,
 } from './query-suggest-state.js';
 
 export const querySuggestReducer = createReducer(

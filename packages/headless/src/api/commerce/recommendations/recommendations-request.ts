@@ -1,6 +1,9 @@
-import {SlotIdParam} from '../commerce-api-params.js';
-import {CommerceApiMethod} from '../commerce-metadata.js';
-import {PaginatedCommerceAPIRequest, baseRequest} from '../common/request.js';
+import type {SlotIdParam} from '../commerce-api-params.js';
+import type {CommerceApiMethod} from '../commerce-metadata.js';
+import {
+  baseRequest,
+  type PaginatedCommerceAPIRequest,
+} from '../common/request.js';
 
 export type CommerceRecommendationsRequest = PaginatedCommerceAPIRequest &
   SlotIdParam;

@@ -1,4 +1,4 @@
-import {AdvancedSearchQueriesState} from './advanced-search-queries-state.js';
+import type {AdvancedSearchQueriesState} from './advanced-search-queries-state.js';
 import {selectAdvancedSearchQueries} from './advanced-search-query-selectors.js';
 
 describe('advancedQuerySearch Selectors test suite', () => {

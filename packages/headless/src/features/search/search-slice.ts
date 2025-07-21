@@ -1,14 +1,15 @@
-import {createReducer, PayloadAction} from '@reduxjs/toolkit';
+import {createReducer, type PayloadAction} from '@reduxjs/toolkit';
 import {
   executeSearch,
   fetchFacetValues,
   fetchMoreResults,
   fetchPage,
 } from './legacy/search-actions.js';
+import {updateSearchAction} from './search-actions.js';
 import {
   emptyQuestionAnswer,
   getSearchInitialState,
-  SearchState,
+  type SearchState,
 } from './search-state.js';
 
 type SearchAction = typeof executeSearch | typeof fetchMoreResults;
@@ -108,5 +109,8 @@ export const searchReducer = createReducer(
     builder.addCase(executeSearch.pending, handlePendingSearch);
     builder.addCase(fetchMoreResults.pending, handlePendingSearch);
     builder.addCase(fetchPage.pending, handlePendingSearch);
+    builder.addCase(updateSearchAction, (state, action) => {
+      state.searchAction = action.payload;
+    });
   }
 );

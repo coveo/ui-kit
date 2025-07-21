@@ -1,17 +1,17 @@
-import {EventDescription} from 'coveo.analytics';
+import type {EventDescription} from 'coveo.analytics';
 import {getOrganizationEndpoint} from '../../api/platform-client.js';
-import {InsightQueryRequest} from '../../api/service/insight/query/query-request.js';
-import {InsightAppState} from '../../state/insight-app-state.js';
-import {
+import type {InsightQueryRequest} from '../../api/service/insight/query/query-request.js';
+import type {InsightAppState} from '../../state/insight-app-state.js';
+import type {
   ConfigurationSection,
   InsightConfigurationSection,
 } from '../../state/state-sections.js';
 import {fromAnalyticsStateToAnalyticsParams} from '../configuration/legacy-analytics-params.js';
 import {getFacetRequests} from '../facets/generic/interfaces/generic-facet-request.js';
-import {CollectionId} from '../folding/folding-state.js';
+import type {CollectionId} from '../folding/folding-state.js';
 import {maximumNumberOfResultsFromIndex} from '../pagination/pagination-constants.js';
 import {
-  MappedSearchRequest,
+  type MappedSearchRequest,
   mapSearchRequest,
 } from '../search/search-mappings.js';
 

@@ -1,5 +1,5 @@
 /* eslint-disable @cspell/spellchecker */
-import {test, expect} from './fixture';
+import {expect, test} from './fixture';
 
 test.describe('with an alt text field', async () => {
   test.describe('when imageAltField is a valid string & the image is not found', () => {

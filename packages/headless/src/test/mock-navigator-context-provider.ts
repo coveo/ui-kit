@@ -1,4 +1,4 @@
-import {
+import type {
   NavigatorContext,
   NavigatorContextProvider,
 } from '../app/navigator-context-provider.js';

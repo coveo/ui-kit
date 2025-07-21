@@ -1,0 +1,30 @@
+{
+  "name": "{{project}}",
+  "dir": "dist/bundle",
+  "htmlEntryFile": {
+    "path": "index.html"
+  },
+  "javascriptEntryFiles": [
+    {
+      "path": "index.js",
+      "isModule": true
+    }
+  ],
+  "javascriptUrls": [
+    {
+      "path": "https://static.cloud.coveo.com/atomic/v3/atomic.esm.js",
+      "isModule": true
+    }
+  ],
+  "cssEntryFiles": [
+    {
+      "path": "index.css"
+    }
+  ],
+  "cssUrls": [
+    {
+      "path": "https://static.cloud.coveo.com/atomic/v3/themes/coveo.css"
+    }
+  ],
+  "schemaVersion": "1.0.0"
+}

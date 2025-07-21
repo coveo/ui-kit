@@ -1,10 +1,10 @@
-import {parameters} from '@/storybook-utils/common/common-meta-parameters';
-import {renderComponent} from '@/storybook-utils/common/render-component';
-import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
-import {userEvent, waitFor, expect} from '@storybook/test';
+import {expect, userEvent, waitFor} from '@storybook/test';
 import type {Meta, StoryObj as Story} from '@storybook/web-components';
 import {html} from 'lit/static-html.js';
 import {within} from 'shadow-dom-testing-library';
+import {parameters} from '@/storybook-utils/common/common-meta-parameters';
+import {renderComponent} from '@/storybook-utils/common/render-component';
+import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
 
 const {decorator, play} = wrapInSearchInterface();
 
@@ -72,4 +72,24 @@ export const Default: Story = {
       );
     });
   },
+};
+
+export const WithRatingFacet: Story = {
+  name: 'atomic-breadbox with rating facet',
+  decorators: [
+    (story) => html`
+      ${story()}
+      <div style="margin:20px 0">
+        Select a rating facet value to see the Breadbox component.
+      </div>
+      <div style="display: flex; justify-content: flex-start;">
+        <atomic-rating-facet
+          field="snrating"
+          label="Rating"
+          number-of-intervals="5"
+        >
+        </atomic-rating-facet>
+      </div>
+    `,
+  ],
 };

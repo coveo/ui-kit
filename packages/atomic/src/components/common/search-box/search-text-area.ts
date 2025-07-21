@@ -1,9 +1,9 @@
-import {FunctionalComponent} from '@/src/utils/functional-component-utils';
-import {i18n} from 'i18next';
+import type {i18n} from 'i18next';
 import {html} from 'lit';
 import {ifDefined} from 'lit/directives/if-defined.js';
-import {Ref, ref} from 'lit/directives/ref.js';
+import {type Ref, ref} from 'lit/directives/ref.js';
 import {when} from 'lit/directives/when.js';
+import type {FunctionalComponent} from '@/src/utils/functional-component-utils';
 import {renderTextAreaClearButton} from './text-area-clear-button';
 
 interface Props {

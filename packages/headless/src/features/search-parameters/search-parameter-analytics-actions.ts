@@ -1,21 +1,21 @@
-import {DateRangeRequest} from '../../controllers/core/facets/range-facet/date-facet/headless-core-date-facet.js';
-import {NumericRangeRequest} from '../../controllers/facets/range-facet/numeric-facet/headless-numeric-facet.js';
+import type {DateRangeRequest} from '../../controllers/core/facets/range-facet/date-facet/headless-core-date-facet.js';
+import type {NumericRangeRequest} from '../../controllers/facets/range-facet/numeric-facet/headless-numeric-facet.js';
 import {
-  logFacetClearAll,
-  logFacetDeselect,
-  logFacetSelect,
-  logFacetExclude,
   facetClearAll,
   facetDeselect,
   facetExclude,
   facetSelect,
+  logFacetClearAll,
+  logFacetDeselect,
+  logFacetExclude,
+  logFacetSelect,
   logFacetUnexclude,
 } from '../../features/facets/facet-set/facet-set-analytics-actions.js';
 import {
   logSearchboxSubmit,
   searchboxSubmit,
 } from '../../features/query/query-analytics-actions.js';
-import {SearchParameters} from '../../features/search-parameters/search-parameter-actions.js';
+import type {SearchParameters} from '../../features/search-parameters/search-parameter-actions.js';
 import {
   logResultsSort,
   resultsSort,
@@ -24,12 +24,12 @@ import {
   interfaceChange,
   logInterfaceChange,
 } from '../analytics/analytics-actions.js';
-import {LegacySearchAction} from '../analytics/analytics-utils.js';
+import type {LegacySearchAction} from '../analytics/analytics-utils.js';
 import {
   logPageNumber,
   logPagerResize,
 } from '../pagination/pagination-analytics-actions.js';
-import {SearchAction} from '../search/search-actions.js';
+import type {SearchAction} from '../search/search-actions.js';
 
 //TODO: KIT-2859
 export function legacyLogParametersChange(
@@ -325,11 +325,10 @@ function facetAction(
 
 function parseRangeFacetParams(facetsParams: RangeFacetParameters = {}) {
   const formattedParams: FacetParameters = {};
-  Object.keys(facetsParams).forEach(
-    (key) =>
-      (formattedParams[key] = facetsParams[key].map(
-        (facetValue) => `${facetValue.start}..${facetValue.end}`
-      ))
-  );
+  Object.keys(facetsParams).forEach((key) => {
+    formattedParams[key] = facetsParams[key].map(
+      (facetValue) => `${facetValue.start}..${facetValue.end}`
+    );
+  });
   return formattedParams;
 }

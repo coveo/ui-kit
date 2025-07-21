@@ -130,7 +130,7 @@ export function isFocusingOut(event: FocusEvent) {
 // https://terodox.tech/how-to-tell-if-an-element-is-in-the-dom-including-the-shadow-dom/
 export function isInDocument(element: Node) {
   let currentElement = element;
-  while (currentElement && currentElement.parentNode) {
+  while (currentElement?.parentNode) {
     if (currentElement.parentNode === document) {
       return true;
     } else if (currentElement.parentNode instanceof ShadowRoot) {

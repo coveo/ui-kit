@@ -22,6 +22,7 @@ export default function ShowMore() {
         {state.totalEntries} products
       </div>
       <button
+        type="button"
         className="ShowMore"
         disabled={isDisabled()}
         onClick={() => handleFetchMore()}

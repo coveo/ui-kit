@@ -12,7 +12,7 @@
  * @param {NextRequest} request - The incoming request object provided by Next.js.
  * @returns {NextResponse} - The modified response object with the 'x-coveo-client-id' header set.
  */
-import {NextRequest, NextResponse} from 'next/server';
+import {type NextRequest, NextResponse} from 'next/server';
 
 export default function middleware(request: NextRequest) {
   // Generate the next response object.

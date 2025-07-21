@@ -1,5 +1,6 @@
-import {Pagination, PaginationState} from '@coveo/headless/commerce';
+import type {Pagination, PaginationState} from '@coveo/headless/commerce';
 import {vi} from 'vitest';
+import {genericSubscribe} from '../common';
 
 export const defaultState = {
   page: 0,
@@ -9,13 +10,13 @@ export const defaultState = {
 };
 
 export const defaultImplementation = {
-  subscribe: (subscribedFunction: () => void) => {
-    subscribedFunction();
-  },
+  subscribe: genericSubscribe,
   state: defaultState,
   previousPage: vi.fn(),
   selectPage: vi.fn(),
   nextPage: vi.fn(),
+  fetchMoreProducts: vi.fn(),
+  setPageSize: vi.fn(),
 };
 
 export const buildFakePager = ({

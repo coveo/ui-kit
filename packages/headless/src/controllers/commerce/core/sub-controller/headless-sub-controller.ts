@@ -1,65 +1,65 @@
-import {SchemaDefinition} from '@coveo/bueno';
-import {UnknownAction} from '@reduxjs/toolkit';
-import {CommerceAPIErrorStatusResponse} from '../../../../api/commerce/commerce-api-error-response.js';
-import {FacetSearchType} from '../../../../api/commerce/facet-search/facet-search-request.js';
-import {
+import type {SchemaDefinition} from '@coveo/bueno';
+import type {UnknownAction} from '@reduxjs/toolkit';
+import type {CommerceAPIErrorStatusResponse} from '../../../../api/commerce/commerce-api-error-response.js';
+import type {FacetSearchType} from '../../../../api/commerce/facet-search/facet-search-request.js';
+import type {
   CommerceEngine,
   CommerceEngineState,
 } from '../../../../app/commerce-engine/commerce-engine.js';
-import {stateKey} from '../../../../app/state-key.js';
-import {AnyFacetResponse} from '../../../../features/commerce/facets/facet-set/interfaces/response.js';
-import {Parameters} from '../../../../features/commerce/parameters/parameters-actions.js';
-import {Serializer} from '../../../../features/commerce/parameters/parameters-serializer.js';
-import {ProductListingParameters} from '../../../../features/commerce/product-listing-parameters/product-listing-parameters-actions.js';
-import {CommerceSearchParameters} from '../../../../features/commerce/search-parameters/search-parameters-actions.js';
-import {ProductListingSummaryState} from '../../product-listing/summary/headless-product-listing-summary.js';
+import type {stateKey} from '../../../../app/state-key.js';
+import type {AnyFacetResponse} from '../../../../features/commerce/facets/facet-set/interfaces/response.js';
+import type {Parameters} from '../../../../features/commerce/parameters/parameters-actions.js';
+import type {Serializer} from '../../../../features/commerce/parameters/parameters-serializer.js';
+import type {ProductListingParameters} from '../../../../features/commerce/product-listing-parameters/product-listing-parameters-actions.js';
+import type {CommerceSearchParameters} from '../../../../features/commerce/search-parameters/search-parameters-actions.js';
+import type {ProductListingSummaryState} from '../../product-listing/summary/headless-product-listing-summary.js';
 import {
   buildDidYouMean,
-  DidYouMean,
+  type DidYouMean,
 } from '../../search/did-you-mean/headless-did-you-mean.js';
-import {SearchSummaryState} from '../../search/summary/headless-search-summary.js';
+import type {SearchSummaryState} from '../../search/summary/headless-search-summary.js';
 import {
-  BreadcrumbManager,
+  type BreadcrumbManager,
   buildCoreBreadcrumbManager,
 } from '../breadcrumb-manager/headless-core-breadcrumb-manager.js';
-import {FetchProductsActionCreator} from '../common.js';
+import type {FetchProductsActionCreator} from '../common.js';
 import {buildCategoryFacet} from '../facets/category/headless-commerce-category-facet.js';
 import {buildCommerceDateFacet} from '../facets/date/headless-commerce-date-facet.js';
 import {
   buildFacetGenerator,
-  FacetGenerator,
+  type FacetGenerator,
 } from '../facets/generator/headless-commerce-facet-generator.js';
 import {buildCommerceLocationFacet} from '../facets/location/headless-commerce-location-facet.js';
 import {buildCommerceNumericFacet} from '../facets/numeric/headless-commerce-numeric-facet.js';
 import {buildCommerceRegularFacet} from '../facets/regular/headless-commerce-regular-facet.js';
 import {
   buildCoreInteractiveProduct,
-  InteractiveProduct,
-  InteractiveProductProps,
+  type InteractiveProduct,
+  type InteractiveProductProps,
 } from '../interactive-product/headless-core-interactive-product.js';
 import {
   buildCorePagination,
-  Pagination,
-  PaginationProps,
+  type Pagination,
+  type PaginationProps,
 } from '../pagination/headless-core-commerce-pagination.js';
 import {
   buildCoreParameterManager,
-  ParameterManager,
-  ParameterManagerProps,
+  type ParameterManager,
+  type ParameterManagerProps,
 } from '../parameter-manager/headless-core-parameter-manager.js';
 import {
   buildCoreSort,
-  Sort,
-  SortProps,
+  type Sort,
+  type SortProps,
 } from '../sort/headless-core-commerce-sort.js';
 import {
   buildCoreSummary,
-  Summary,
-  SummaryState,
+  type Summary,
+  type SummaryState,
 } from '../summary/headless-core-summary.js';
 import {
   buildCoreUrlManager,
-  UrlManager,
+  type UrlManager,
   type UrlManagerProps,
 } from '../url-manager/headless-core-url-manager.js';
 

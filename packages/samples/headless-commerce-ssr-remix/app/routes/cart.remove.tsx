@@ -1,5 +1,5 @@
+import type {ActionFunctionArgs} from '@remix-run/node';
 import externalCartService from '@/external-services/external-cart-service';
-import {ActionFunctionArgs} from '@remix-run/node';
 
 export const action = async ({request}: ActionFunctionArgs) => {
   const formData = await request.formData();

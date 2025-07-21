@@ -1,10 +1,10 @@
 import {
   buildDidYouMean,
-  DidYouMean as HeadlessDidYouMean,
-  DidYouMeanState,
-  Unsubscribe,
+  type DidYouMeanState,
+  type DidYouMean as HeadlessDidYouMean,
+  type Unsubscribe,
 } from '@coveo/headless';
-import {Component, ContextType} from 'react';
+import {Component, type ContextType} from 'react';
 import {AppContext} from '../../context/engine';
 
 export class DidYouMean extends Component<{}, DidYouMeanState> {

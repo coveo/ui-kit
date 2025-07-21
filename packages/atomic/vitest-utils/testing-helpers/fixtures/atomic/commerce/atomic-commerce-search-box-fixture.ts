@@ -1,15 +1,15 @@
-import {
+import type {SearchBox, StandaloneSearchBox} from '@coveo/headless/commerce';
+import type {i18n} from 'i18next';
+import {html, LitElement, nothing, render, type TemplateResult} from 'lit';
+import {customElement, property, state} from 'lit/decorators.js';
+import {vi} from 'vitest';
+import type {
   SearchBoxSuggestions,
   SearchBoxSuggestionsBindings,
   SearchBoxSuggestionsEvent,
 } from '@/src/components/common/suggestions/suggestions-common';
 import {fixture} from '@/vitest-utils/testing-helpers/fixture';
 import {createTestI18n} from '@/vitest-utils/testing-helpers/i18n-utils';
-import {SearchBox, StandaloneSearchBox} from '@coveo/headless/commerce';
-import {i18n} from 'i18next';
-import {html, LitElement, nothing, render, TemplateResult} from 'lit';
-import {customElement, property, state} from 'lit/decorators.js';
-import {vi} from 'vitest';
 
 type CommerceSearchBoxBindings = SearchBoxSuggestionsBindings<
   SearchBox | StandaloneSearchBox
@@ -78,8 +78,12 @@ export class FixtureAtomicCommerceSearchBox extends LitElement {
 export const defaultBindings = {
   engine: {
     dispatch: vi.fn(),
+    logger: {
+      warn: vi.fn(),
+    },
   } as unknown as CommerceSearchBoxBindings['engine'],
   id: 'search-box-1',
+  numberOfQueries: 3,
   store: {
     onChange: vi.fn(),
     isMobile: vi.fn(() => false),

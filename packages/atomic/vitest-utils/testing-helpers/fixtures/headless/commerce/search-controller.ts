@@ -1,4 +1,5 @@
-import {Search, SearchState} from '@coveo/headless/commerce';
+import type {Search, SearchState} from '@coveo/headless/commerce';
+import {genericSubscribe} from '../common';
 
 export const defaultState = {
   responseId: 'some-id',
@@ -7,9 +8,7 @@ export const defaultState = {
   error: null,
 };
 export const defaultImplementation = {
-  subscribe: (subscribedFunction: () => void) => {
-    subscribedFunction();
-  },
+  subscribe: genericSubscribe,
   state: defaultState,
 };
 

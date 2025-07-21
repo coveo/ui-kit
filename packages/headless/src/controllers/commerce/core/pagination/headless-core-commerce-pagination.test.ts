@@ -1,21 +1,21 @@
 import {stateKey} from '../../../../app/state-key.js';
 import {
-  selectPage,
   nextPage,
   previousPage,
-  setPageSize,
   registerRecommendationsSlotPagination,
+  selectPage,
+  setPageSize,
 } from '../../../../features/commerce/pagination/pagination-actions.js';
 import {paginationReducer as commercePagination} from '../../../../features/commerce/pagination/pagination-slice.js';
 import {buildMockCommerceState} from '../../../../test/mock-commerce-state.js';
 import {
-  MockedCommerceEngine,
   buildMockCommerceEngine,
+  type MockedCommerceEngine,
 } from '../../../../test/mock-engine-v2.js';
 import {
   buildCorePagination,
-  CorePaginationOptions,
-  Pagination,
+  type CorePaginationOptions,
+  type Pagination,
 } from './headless-core-commerce-pagination.js';
 
 vi.mock('../../../../features/commerce/pagination/pagination-actions');

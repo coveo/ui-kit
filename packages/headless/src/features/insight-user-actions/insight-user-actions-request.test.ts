@@ -1,5 +1,5 @@
 import {getOrganizationEndpoint} from '../../api/platform-client.js';
-import {InsightAppState} from '../../state/insight-app-state.js';
+import type {InsightAppState} from '../../state/insight-app-state.js';
 import {buildMockInsightState} from '../../test/mock-insight-state.js';
 import {buildFetchUserActionsRequest} from './insight-user-actions-request.js';
 

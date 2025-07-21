@@ -1,7 +1,7 @@
 import {NumberValue, Schema, StringValue} from '@coveo/bueno';
-import {Result} from '../../api/search/search/result.js';
+import type {Result} from '../../api/search/search/result.js';
 import {configuration} from '../../app/common-reducers.js';
-import {RecommendationEngine} from '../../app/recommendation-engine/recommendation-engine.js';
+import type {RecommendationEngine} from '../../app/recommendation-engine/recommendation-engine.js';
 import {loadPaginationActions} from '../../features/pagination/pagination-actions-loader.js';
 import {
   getRecommendations,
@@ -10,10 +10,10 @@ import {
 import {recommendationReducer as recommendation} from '../../features/recommendation/recommendation-slice.js';
 import {loadReducerError} from '../../utils/errors.js';
 import {validateOptions} from '../../utils/validate-payload.js';
-import {ErrorPayload} from '../controller/error-payload.js';
+import type {ErrorPayload} from '../controller/error-payload.js';
 import {
   buildController,
-  Controller,
+  type Controller,
 } from '../controller/headless-controller.js';
 
 const optionsSchema = new Schema<RecommendationListOptions>({

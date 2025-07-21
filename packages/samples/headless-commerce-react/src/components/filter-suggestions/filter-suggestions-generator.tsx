@@ -3,12 +3,12 @@
  *
  * If you wish to implement filter suggestions in your project, please contact your Coveo representative.
  */
-import {
-  FilterSuggestionsGenerator as HeadlessFilterSuggestionsGenerator,
-  FilterSuggestions as HeadlessFilterSuggestions,
-  CategoryFilterSuggestions,
-  RegularFacetSearchResult,
+import type {
   CategoryFacetSearchResult,
+  CategoryFilterSuggestions,
+  FilterSuggestions as HeadlessFilterSuggestions,
+  FilterSuggestionsGenerator as HeadlessFilterSuggestionsGenerator,
+  RegularFacetSearchResult,
 } from '@coveo/headless/commerce';
 import {useEffect, useState} from 'react';
 import FilterSuggestions from './filter-suggestions.js';

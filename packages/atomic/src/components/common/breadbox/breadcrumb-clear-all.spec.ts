@@ -1,8 +1,8 @@
+import type {i18n} from 'i18next';
+import {html} from 'lit';
+import {beforeAll, describe, expect, it, vi} from 'vitest';
 import {renderFunctionFixture} from '@/vitest-utils/testing-helpers/fixture';
 import {createTestI18n} from '@/vitest-utils/testing-helpers/i18n-utils';
-import {i18n} from 'i18next';
-import {html} from 'lit';
-import {describe, beforeAll, it, expect, vi} from 'vitest';
 import {renderBreadcrumbClearAll} from './breadcrumb-clear-all';
 
 describe('#renderBreadcrumbClearAll', () => {
@@ -16,7 +16,7 @@ describe('#renderBreadcrumbClearAll', () => {
     const element = await renderFunctionFixture(
       html`${renderBreadcrumbClearAll({
         props: {
-          setRef: () => {},
+          refCallback: () => {},
           onClick: () => {},
           isCollapsed: false,
           i18n,
@@ -30,13 +30,13 @@ describe('#renderBreadcrumbClearAll', () => {
     };
   };
 
-  it('should set the ref', async () => {
-    const setRef = vi.fn();
+  it('should call the refCallback', async () => {
+    const refCallback = vi.fn();
     const {button} = await renderComponent({
-      setRef,
+      refCallback,
     });
 
-    expect(setRef).toHaveBeenCalledWith(button);
+    expect(refCallback).toHaveBeenCalledWith(button);
   });
 
   it('should have the "clear" part', async () => {

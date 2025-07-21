@@ -1,11 +1,11 @@
 import {configuration} from '../../app/common-reducers.js';
-import {InsightEngine} from '../../app/insight-engine/insight-engine.js';
+import type {InsightEngine} from '../../app/insight-engine/insight-engine.js';
 import {insightConfigurationReducer as insightConfiguration} from '../../features/insight-configuration/insight-configuration-slice.js';
 import {fetchInterface} from '../../features/insight-interface/insight-interface-actions.js';
 import {insightInterfaceReducer as insightInterface} from '../../features/insight-interface/insight-interface-slice.js';
-import {InsightInterfaceState} from '../../features/insight-interface/insight-interface-state.js';
+import type {InsightInterfaceState} from '../../features/insight-interface/insight-interface-state.js';
 import {searchHubReducer as searchHub} from '../../features/search-hub/search-hub-slice.js';
-import {
+import type {
   ConfigurationSection,
   InsightConfigurationSection,
   InsightInterfaceSection,
@@ -14,7 +14,7 @@ import {
 import {loadReducerError} from '../../utils/errors.js';
 import {
   buildController,
-  Controller,
+  type Controller,
 } from '../controller/headless-controller.js';
 
 /**

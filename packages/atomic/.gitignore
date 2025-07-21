@@ -16,7 +16,8 @@ log.txt
 
 .stencil/
 .idea/
-.vscode/
+.vscode/*
+!.vscode/settings.json
 .sass-cache/
 .versions/
 node_modules/
@@ -32,7 +33,6 @@ src/components/search/atomic-search-interface/lang/
 src/generated
 
 cypress/screenshots/*
-
 
 /test-results/
 /playwright-report/

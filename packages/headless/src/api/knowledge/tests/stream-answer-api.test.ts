@@ -1,27 +1,28 @@
-/* eslint-disable canonical/no-barrel-import */
-/* eslint-disable @typescript-eslint/no-explicit-any */
+/** biome-ignore-all lint/suspicious/noExplicitAny: Just tests */
 import {buildMockNavigatorContextProvider} from '../../../test/mock-navigator-context-provider.js';
-import {EventSourceMessage} from '../../../utils/fetch-event-source/parse.js';
+import type {EventSourceMessage} from '../../../utils/fetch-event-source/parse.js';
 import {
   constructAnswerQueryParams,
-  GeneratedAnswerStream,
+  type GeneratedAnswerStream,
   updateCacheWithEvent,
 } from '../stream-answer-api.js';
 import {
   expectedStreamAnswerAPIParam,
   expectedStreamAnswerAPIParamWithATabWithAnExpression,
   expectedStreamAnswerAPIParamWithoutAnyTab,
+  expectedStreamAnswerAPIParamWithoutSearchAction,
   expectedStreamAnswerAPIParamWithStaticFiltersAndTabExpression,
+  expectedStreamAnswerAPIParamWithStaticFiltersAndTabExpressionWithoutAdvancedCQ,
   expectedStreamAnswerAPIParamWithStaticFiltersSelected,
   streamAnswerAPIStateMock,
   streamAnswerAPIStateMockWithATabWithAnExpression,
+  streamAnswerAPIStateMockWithNonValidFilters,
   streamAnswerAPIStateMockWithoutAnyFilters,
   streamAnswerAPIStateMockWithoutAnyTab,
-  streamAnswerAPIStateMockWithNonValidFilters,
+  streamAnswerAPIStateMockWithoutSearchAction,
   streamAnswerAPIStateMockWithStaticFiltersAndTabExpression,
-  streamAnswerAPIStateMockWithStaticFiltersSelected,
   streamAnswerAPIStateMockWithStaticFiltersAndTabExpressionWithEmptyCQ,
-  expectedStreamAnswerAPIParamWithStaticFiltersAndTabExpressionWithoutAdvancedCQ,
+  streamAnswerAPIStateMockWithStaticFiltersSelected,
 } from './stream-answer-api-state-mock.js';
 
 describe('#streamAnswerApi', () => {
@@ -115,6 +116,7 @@ describe('#streamAnswerApi', () => {
         expectedStreamAnswerAPIParamWithStaticFiltersAndTabExpression
       );
     });
+
     it('should not include advanced search queries when there are no advanced search queries', () => {
       const queryParams = constructAnswerQueryParams(
         streamAnswerAPIStateMockWithStaticFiltersAndTabExpressionWithEmptyCQ as any,
@@ -123,6 +125,18 @@ describe('#streamAnswerApi', () => {
       );
       expect(queryParams).toEqual(
         expectedStreamAnswerAPIParamWithStaticFiltersAndTabExpressionWithoutAdvancedCQ
+      );
+    });
+
+    it('should accept an undefined SearchAction', () => {
+      const queryParams = constructAnswerQueryParams(
+        streamAnswerAPIStateMockWithoutSearchAction as any,
+        'select',
+        buildMockNavigatorContextProvider()()
+      );
+
+      expect(queryParams).toEqual(
+        expectedStreamAnswerAPIParamWithoutSearchAction
       );
     });
   });

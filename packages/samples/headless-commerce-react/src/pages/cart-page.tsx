@@ -1,8 +1,8 @@
 import {
-  Cart as HeadlessCart,
-  CommerceEngine,
   buildRecommendations,
-  Context,
+  type CommerceEngine,
+  type Context,
+  type Cart as HeadlessCart,
 } from '@coveo/headless/commerce';
 import {useEffect} from 'react';
 import Cart from '../components/cart/cart.js';

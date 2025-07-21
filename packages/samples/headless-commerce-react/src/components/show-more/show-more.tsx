@@ -1,4 +1,4 @@
-import {Pagination, Summary} from '@coveo/headless/commerce';
+import type {Pagination, Summary} from '@coveo/headless/commerce';
 import {useEffect, useState} from 'react';
 
 interface IShowMoreProps {
@@ -25,6 +25,7 @@ export default function ShowMore(props: IShowMoreProps) {
 
   return (
     <button
+      type="button"
       className="ShowMore"
       disabled={isDisabled()}
       onClick={() => handleFetchMore()}

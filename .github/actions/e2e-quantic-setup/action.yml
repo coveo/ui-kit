@@ -27,9 +27,5 @@ runs:
         SFDX_AUTH_JWT_INSTANCE_URL: https://login.salesforce.com
     - uses: actions/cache@5a3ec84eff668545956fd18022155c47e93e2684 # v4
       with:
-        path: packages/quantic/cypress/plugins/config
-        key: quantic-cypress-config-${{ github.sha }}
-    - uses: actions/cache@5a3ec84eff668545956fd18022155c47e93e2684 # v4
-      with:
         path: packages/quantic/.env
         key: quantic-playwright-env-${{ github.sha }}

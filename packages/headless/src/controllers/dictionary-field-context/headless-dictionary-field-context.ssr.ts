@@ -1,8 +1,8 @@
-import {CoreEngine} from '../../app/engine.js';
-import {ControllerDefinitionWithoutProps} from '../../app/ssr-engine/types/common.js';
+import type {CoreEngine} from '../../app/engine.js';
+import type {ControllerDefinitionWithoutProps} from '../../app/ssr-engine/types/common.js';
 import {
-  DictionaryFieldContext,
   buildDictionaryFieldContext,
+  type DictionaryFieldContext,
 } from './headless-dictionary-field-context.js';
 
 export * from './headless-dictionary-field-context.js';

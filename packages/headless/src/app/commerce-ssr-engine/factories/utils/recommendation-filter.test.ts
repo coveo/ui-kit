@@ -1,15 +1,15 @@
-import {describe, it, expect, vi} from 'vitest';
+import {describe, expect, it, vi} from 'vitest';
 import {defineCart} from '../../../../controllers/commerce/context/cart/headless-cart.ssr.js';
 import {defineSummary} from '../../../../controllers/commerce/core/summary/headless-core-summary.ssr.js';
 import {defineProductList} from '../../../../controllers/commerce/product-list/headless-product-list.ssr.js';
 import {
   defineRecommendations,
-  Recommendations,
+  type Recommendations,
 } from '../../../../controllers/commerce/recommendations/headless-recommendations.ssr.js';
 import {defineSearchBox} from '../../../../controllers/commerce/search-box/headless-search-box.ssr.js';
-import {Controller} from '../../../../controllers/controller/headless-controller.js';
+import type {Controller} from '../../../../controllers/controller/headless-controller.js';
 import {MultipleRecommendationError} from '../../../../utils/errors.js';
-import {ControllerDefinitionsMap} from '../../types/common.js';
+import type {ControllerDefinitionsMap} from '../../types/common.js';
 import {filterRecommendationControllers} from './recommendation-filter.js';
 
 describe('filterRecommendationControllers', () => {

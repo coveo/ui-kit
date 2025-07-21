@@ -2,20 +2,20 @@ import {buildMockNumericFacetRequest} from '../../../../test/mock-numeric-facet-
 import {buildMockNumericFacetResponse} from '../../../../test/mock-numeric-facet-response.js';
 import {buildMockNumericFacetSlice} from '../../../../test/mock-numeric-facet-slice.js';
 import {buildMockNumericFacetValue} from '../../../../test/mock-numeric-facet-value.js';
-import {
+import type {
   NumericFacetRequest,
   NumericRangeRequest,
 } from '../numeric-facet-set/interfaces/request.js';
-import {NumericFacetValue} from '../numeric-facet-set/interfaces/response.js';
-import {RegisterNumericFacetActionCreatorPayload} from '../numeric-facet-set/numeric-facet-actions.js';
-import {NumericFacetSlice} from '../numeric-facet-set/numeric-facet-set-state.js';
-import {AutomaticRangeFacetOptions} from './interfaces/options.js';
+import type {NumericFacetValue} from '../numeric-facet-set/interfaces/response.js';
+import type {RegisterNumericFacetActionCreatorPayload} from '../numeric-facet-set/numeric-facet-actions.js';
+import type {NumericFacetSlice} from '../numeric-facet-set/numeric-facet-set-state.js';
+import type {AutomaticRangeFacetOptions} from './interfaces/options.js';
 import {
-  registerRangeFacet,
-  toggleSelectRangeValue,
-  onRangeFacetRequestFulfilled,
   handleRangeFacetDeselectAll,
   handleRangeFacetSearchParameterRestoration,
+  onRangeFacetRequestFulfilled,
+  registerRangeFacet,
+  toggleSelectRangeValue,
   updateRangeValues,
 } from './range-facet-reducers.js';
 
@@ -213,6 +213,107 @@ describe('range facet reducers', () => {
 
     it('when the passed id is not registered, it does not throw', () => {
       expect(() => handleRangeFacetDeselectAll({}, '1')).not.toThrow();
+    });
+
+    it('sets #previousState correctly when transitioning from selected to idle', () => {
+      const id = '1';
+      const selectedValue: NumericRangeRequest = {
+        start: 0,
+        end: 10,
+        endInclusive: false,
+        state: 'selected',
+      };
+      const state = {
+        [id]: buildMockNumericFacetSlice({
+          request: buildMockNumericFacetRequest({
+            currentValues: [selectedValue],
+          }),
+        }),
+      };
+
+      handleRangeFacetDeselectAll(state, id);
+
+      expect(selectedValue.previousState).toBe('selected');
+    });
+
+    it('sets #previousState correctly when transitioning from excluded to idle', () => {
+      const id = '1';
+      const excludedValue: NumericRangeRequest = {
+        start: 0,
+        end: 10,
+        endInclusive: false,
+        state: 'excluded',
+      };
+      const state = {
+        [id]: buildMockNumericFacetSlice({
+          request: buildMockNumericFacetRequest({
+            currentValues: [excludedValue],
+          }),
+        }),
+      };
+
+      handleRangeFacetDeselectAll(state, id);
+
+      expect(excludedValue.previousState).toBe('excluded');
+    });
+
+    it('handles mixed state transitions correctly', () => {
+      const id = '1';
+      const selectedValue: NumericRangeRequest = {
+        start: 0,
+        end: 10,
+        endInclusive: false,
+        state: 'selected',
+      };
+      const excludedValue: NumericRangeRequest = {
+        start: 10,
+        end: 20,
+        endInclusive: false,
+        state: 'excluded',
+      };
+      const idleValue: NumericRangeRequest = {
+        start: 20,
+        end: 30,
+        endInclusive: false,
+        state: 'idle',
+      };
+      const state = {
+        [id]: buildMockNumericFacetSlice({
+          request: buildMockNumericFacetRequest({
+            currentValues: [selectedValue, excludedValue, idleValue],
+          }),
+        }),
+      };
+
+      handleRangeFacetDeselectAll(state, id);
+
+      expect(selectedValue.previousState).toBe('selected');
+      expect(excludedValue.previousState).toBe('excluded');
+      expect(idleValue.previousState).toBeUndefined();
+    });
+
+    it('preserves existing #previousState when value was already idle', () => {
+      const id = '1';
+      const idleValueWithPreviousState: NumericRangeRequest = {
+        start: 0,
+        end: 10,
+        endInclusive: false,
+        state: 'idle',
+        previousState: 'selected',
+      };
+      const state = {
+        [id]: buildMockNumericFacetSlice({
+          request: buildMockNumericFacetRequest({
+            currentValues: [idleValueWithPreviousState],
+          }),
+        }),
+      };
+
+      handleRangeFacetDeselectAll(state, id);
+
+      expect(idleValueWithPreviousState.state).toBe('idle');
+      // Should not change existing previousState since the value was already idle
+      expect(idleValueWithPreviousState.previousState).toBe('selected');
     });
   });
 

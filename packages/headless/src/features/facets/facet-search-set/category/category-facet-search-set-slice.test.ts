@@ -5,16 +5,16 @@ import {
 } from '../../../commerce/facets/facet-search-set/commerce-facet-search-actions.js';
 import {
   fetchProductListing,
-  QueryCommerceAPIThunkReturn,
+  type QueryCommerceAPIThunkReturn,
 } from '../../../commerce/product-listing/product-listing-actions.js';
 import {fetchQuerySuggestions} from '../../../commerce/query-suggest/query-suggest-actions.js';
 import {
   executeSearch as executeCommerceSearch,
-  QuerySearchCommerceAPIThunkReturn,
+  type QuerySearchCommerceAPIThunkReturn,
 } from '../../../commerce/search/search-actions.js';
 import {
+  type ExecuteSearchThunkReturn,
   executeSearch,
-  ExecuteSearchThunkReturn,
 } from '../../../search/search-actions.js';
 import * as FacetSearchReducerHelpers from '../facet-search-reducer-helpers.js';
 import {
@@ -25,7 +25,7 @@ import {updateFacetSearch} from '../specific/specific-facet-search-actions.js';
 import {registerCategoryFacetSearch} from './category-facet-search-actions.js';
 import {categoryFacetSearchSetReducer} from './category-facet-search-set-slice.js';
 import {
-  CategoryFacetSearchSetState,
+  type CategoryFacetSearchSetState,
   getCategoryFacetSearchSetInitialState,
 } from './category-facet-search-set-state.js';
 

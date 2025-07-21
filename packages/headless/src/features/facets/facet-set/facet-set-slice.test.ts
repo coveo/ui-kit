@@ -1,10 +1,10 @@
-import {PayloadAction} from '@reduxjs/toolkit';
+import type {PayloadAction} from '@reduxjs/toolkit';
 import {buildMockFacetRequest} from '../../../test/mock-facet-request.js';
 import {buildMockFacetResponse} from '../../../test/mock-facet-response.js';
 import {buildMockFacetSearchResult} from '../../../test/mock-facet-search-result.js';
 import {buildMockFacetSlice} from '../../../test/mock-facet-slice.js';
-import {buildMockFacetValueRequest} from '../../../test/mock-facet-value-request.js';
 import {buildMockFacetValue} from '../../../test/mock-facet-value.js';
+import {buildMockFacetValueRequest} from '../../../test/mock-facet-value-request.js';
 import {buildMockSearch} from '../../../test/mock-search.js';
 import {logSearchEvent} from '../../analytics/analytics-actions.js';
 import {
@@ -13,36 +13,39 @@ import {
 } from '../../breadcrumb/breadcrumb-actions.js';
 import {change} from '../../history/history-actions.js';
 import {getHistoryInitialState} from '../../history/history-state.js';
-import {restoreSearchParameters} from '../../search-parameters/search-parameter-actions.js';
 import {
+  type ExecuteSearchThunkReturn,
   executeSearch,
-  ExecuteSearchThunkReturn,
   fetchFacetValues,
 } from '../../search/search-actions.js';
+import {restoreSearchParameters} from '../../search-parameters/search-parameter-actions.js';
+import {type FacetValueState, facetValueStates} from './../facet-api/value.js';
 import {
   excludeFacetSearchResult,
   selectFacetSearchResult,
 } from '../facet-search-set/specific/specific-facet-search-actions.js';
 import {updateFacetAutoSelection} from '../generic/facet-actions.js';
 import * as FacetReducers from '../generic/facet-reducer-helpers.js';
-import {FacetValueState, facetValueStates} from './../facet-api/value.js';
 import {
-  registerFacet,
-  toggleSelectFacetValue,
-  toggleExcludeFacetValue,
   deselectAllFacetValues,
-  updateFacetSortCriterion,
-  updateFacetNumberOfValues,
+  type RegisterFacetActionCreatorPayload,
+  registerFacet,
+  toggleExcludeFacetValue,
+  toggleSelectFacetValue,
   updateFacetIsFieldExpanded,
+  updateFacetNumberOfValues,
+  updateFacetSortCriterion,
   updateFreezeCurrentValues,
-  RegisterFacetActionCreatorPayload,
 } from './facet-set-actions.js';
 import {
-  facetSetReducer,
   convertFacetValueToRequest,
+  facetSetReducer,
 } from './facet-set-slice.js';
-import {FacetSetState, getFacetSetInitialState} from './facet-set-state.js';
-import {FacetResponse} from './interfaces/response.js';
+import {
+  type FacetSetState,
+  getFacetSetInitialState,
+} from './facet-set-state.js';
+import type {FacetResponse} from './interfaces/response.js';
 
 describe('facet-set slice', () => {
   let state: FacetSetState;
@@ -192,6 +195,54 @@ describe('facet-set slice', () => {
           (req) => req.value === facetValue.value
         );
         expect(targetValue?.state).toBe(facetValueState);
+        expect(targetValue?.previousState).toBe('idle');
+      });
+
+      it(`sets the previousState of a ${facetValueState} value to idle`, () => {
+        const facetValue = buildMockFacetValue({
+          value: 'TED',
+          state: facetValueState,
+        });
+        const facetValueRequest = convertFacetValueToRequest(facetValue);
+
+        state[id] = buildMockFacetSlice({
+          request: buildMockFacetRequest({
+            currentValues: [facetValueRequest],
+          }),
+        });
+
+        const action = toggleAction({
+          facetId: id,
+          selection: facetValue,
+        });
+        const finalState = facetSetReducer(state, action);
+
+        const targetValue = finalState[id]?.request.currentValues.find(
+          (req) => req.value === facetValue.value
+        );
+        expect(targetValue?.previousState).toBe(facetValueState);
+      });
+
+      it(`does not set the previousState of value transitioning from ${facetValueState} to ${facetValueState}`, () => {
+        const facetValue = buildMockFacetValue({
+          value: 'TED',
+          state: 'selected',
+        });
+        const facetValueRequest = convertFacetValueToRequest(facetValue);
+        state[id] = buildMockFacetSlice({
+          request: buildMockFacetRequest({currentValues: [facetValueRequest]}),
+        });
+
+        const action = toggleSelectFacetValue({
+          facetId: id,
+          selection: buildMockFacetValue(),
+        });
+        const finalState = facetSetReducer(state, action);
+
+        const targetValue = finalState[id]?.request.currentValues.find(
+          (req) => req.value === facetValue.value
+        );
+        expect(targetValue?.previousState).toBeUndefined();
       });
 
       it(`sets the state of an ${oppositeFacetValueState} value to ${facetValueState}`, () => {
@@ -217,6 +268,7 @@ describe('facet-set slice', () => {
           (req) => req.value === facetValue.value
         );
         expect(targetValue?.state).toBe(facetValueState);
+        expect(targetValue?.previousState).toBe(oppositeFacetValueState);
       });
 
       it(`sets the state of a ${facetValueState} value to idle`, () => {
@@ -242,6 +294,7 @@ describe('facet-set slice', () => {
           (req) => req.value === facetValue.value
         );
         expect(targetValue?.state).toBe('idle');
+        expect(targetValue?.previousState).toBe(facetValueState);
       });
 
       it('sets #freezeCurrentValues to true', () => {
@@ -781,12 +834,12 @@ describe('facet-set slice', () => {
         const currentValues = [
           buildMockFacetValueRequest({state: facetValueState}),
         ];
-        state['author'] = buildMockFacetSlice({
+        state.author = buildMockFacetSlice({
           request: buildMockFacetRequest({currentValues}),
         });
 
         const finalState = facetSetReducer(state, restoreSearchParameters({}));
-        expect(finalState['author']?.request.currentValues).toEqual([
+        expect(finalState.author?.request.currentValues).toEqual([
           buildMockFacetValueRequest(),
         ]);
       }

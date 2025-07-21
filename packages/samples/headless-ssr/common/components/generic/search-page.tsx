@@ -1,12 +1,12 @@
 'use client';
 
-import {NavigatorContext} from '@coveo/headless/ssr';
+import type {NavigatorContext} from '@coveo/headless/ssr';
 import {useEffect, useState} from 'react';
 import {useSyncSearchParameterManager} from '../../hooks/generic/search-parameter-manager';
 import {
-  SearchStaticState,
-  SearchHydratedState,
   hydrateStaticState,
+  type SearchHydratedState,
+  type SearchStaticState,
   setNavigatorContextProvider,
 } from '../../lib/generic/engine';
 import {HydrationMetadata} from '../common/hydration-metadata';
@@ -91,7 +91,6 @@ export default function SearchPage({
         title="Author"
         staticState={staticState.controllers.authorFacet.state}
         controller={hydratedState?.controllers.authorFacet}
-        tabManager={hydratedState?.controllers.tabManager}
       />
       <ResultList
         staticState={staticState.controllers.resultList.state}

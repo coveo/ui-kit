@@ -8,6 +8,4 @@ import {Component, Input} from '@angular/core';
 export class LabelAndFieldValueComponent {
   @Input('field') field!: string;
   @Input('label') label!: string;
-
-  constructor() {}
 }

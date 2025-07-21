@@ -1,14 +1,14 @@
 import {
-  AsyncThunkPayloadCreator,
+  type AsyncThunkPayloadCreator,
   createAction,
   createAsyncThunk,
 } from '@reduxjs/toolkit';
-import {CategoryFacetSearchRequest} from '../../../../api/search/facet-search/category-facet-search/category-facet-search-request.js';
-import {FacetSearchResponse} from '../../../../api/search/facet-search/facet-search-response.js';
-import {SpecificFacetSearchRequest} from '../../../../api/search/facet-search/specific-facet-search/specific-facet-search-request.js';
-import {FacetSearchAPIClient} from '../../../../api/search/search-api-client.js';
-import {AsyncThunkOptions} from '../../../../app/async-thunk-options.js';
-import {ClientThunkExtraArguments} from '../../../../app/thunk-extra-arguments.js';
+import type {CategoryFacetSearchRequest} from '../../../../api/search/facet-search/category-facet-search/category-facet-search-request.js';
+import type {FacetSearchResponse} from '../../../../api/search/facet-search/facet-search-response.js';
+import type {SpecificFacetSearchRequest} from '../../../../api/search/facet-search/specific-facet-search/specific-facet-search-request.js';
+import type {FacetSearchAPIClient} from '../../../../api/search/search-api-client.js';
+import type {AsyncThunkOptions} from '../../../../app/async-thunk-options.js';
+import type {ClientThunkExtraArguments} from '../../../../app/thunk-extra-arguments.js';
 import {
   requiredNonEmptyString,
   validatePayload,
@@ -16,7 +16,7 @@ import {
 import {facetIdDefinition} from '../../generic/facet-actions-validation.js';
 import {buildCategoryFacetSearchRequest} from '../category/category-facet-search-request-builder.js';
 import {buildSpecificFacetSearchRequest} from '../specific/specific-facet-search-request-builder.js';
-import {
+import type {
   StateNeededForCategoryFacetSearch,
   StateNeededForFacetSearch,
   StateNeededForSpecificFacetSearch,

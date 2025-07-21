@@ -1,7 +1,7 @@
-import {SerializedError} from '@reduxjs/toolkit';
-import {SearchAPIErrorWithStatusCode} from '../../api/search/search-api-error-response.js';
-import {Result} from '../../api/search/search/result.js';
-import {SearchEngine} from '../../app/search-engine/search-engine.js';
+import type {SerializedError} from '@reduxjs/toolkit';
+import type {Result} from '../../api/search/search/result.js';
+import type {SearchAPIErrorWithStatusCode} from '../../api/search/search-api-error-response.js';
+import type {SearchEngine} from '../../app/search-engine/search-engine.js';
 import {hasExpired} from '../../features/instant-items/instant-items-state.js';
 import {
   clearExpiredResults,
@@ -10,16 +10,16 @@ import {
 } from '../../features/instant-results/instant-results-actions.js';
 import {instantResultsReducer as instantResults} from '../../features/instant-results/instant-results-slice.js';
 import {fetchInstantResults} from '../../features/search/search-actions.js';
-import {InstantResultSection} from '../../state/state-sections.js';
+import type {InstantResultSection} from '../../state/state-sections.js';
 import {loadReducerError} from '../../utils/errors.js';
 import {randomID} from '../../utils/utils.js';
 import {validateOptions} from '../../utils/validate-payload.js';
 import {
   buildController,
-  Controller,
+  type Controller,
 } from '../controller/headless-controller.js';
 import {
-  InstantResultOptions,
+  type InstantResultOptions,
   instantResultsOptionsSchema,
 } from './instant-results-options.js';
 

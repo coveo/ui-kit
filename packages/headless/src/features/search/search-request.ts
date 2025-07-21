@@ -1,14 +1,16 @@
-import {EventDescription} from 'coveo.analytics';
-import {NavigatorContext} from '../../app/navigator-context-provider.js';
-import {SearchAppState} from '../../state/search-app-state.js';
-import {ConfigurationSection} from '../../state/state-sections.js';
+import type {EventDescription} from 'coveo.analytics';
+import type {NavigatorContext} from '../../app/navigator-context-provider.js';
+import type {SearchAppState} from '../../state/search-app-state.js';
+import type {ConfigurationSection} from '../../state/state-sections.js';
 import {sortCriteriaMap, sortFacets} from '../../utils/facet-utils.js';
-import {AutomaticFacetRequest} from '../facets/automatic-facet-set/interfaces/request.js';
-import {AutomaticFacetResponse} from '../facets/automatic-facet-set/interfaces/response.js';
-import {FacetSetState} from '../facets/facet-set/facet-set-state.js';
-import {getFacetRequests} from '../facets/generic/interfaces/generic-facet-request.js';
-import {AnyFacetValue} from '../facets/generic/interfaces/generic-facet-response.js';
-import {RangeFacetSetState} from '../facets/range-facets/generic/interfaces/range-facet.js';
+import type {AutomaticFacetRequest} from '../facets/automatic-facet-set/interfaces/request.js';
+import type {AutomaticFacetResponse} from '../facets/automatic-facet-set/interfaces/response.js';
+import type {FacetSetState} from '../facets/facet-set/facet-set-state.js';
+import {
+  type AnyFacetRequest,
+  getFacetRequests,
+} from '../facets/generic/interfaces/generic-facet-request.js';
+import type {RangeFacetSetState} from '../facets/range-facets/generic/interfaces/range-facet.js';
 import {maximumNumberOfResultsFromIndex} from '../pagination/pagination-constants.js';
 import {buildSearchAndFoldingLoadCollectionRequest as legacyBuildSearchAndFoldingLoadCollectionRequest} from '../search-and-folding/legacy/search-and-folding-request.js';
 import {buildSearchAndFoldingLoadCollectionRequest} from '../search-and-folding/search-and-folding-request.js';
@@ -166,10 +168,18 @@ function getSpecificFacetRequests<T extends FacetSetState>(state: T) {
 
 function getRangeFacetRequests<T extends RangeFacetSetState>(state: T) {
   return getFacetRequests(state).map((request) => {
-    const currentValues = request.currentValues as AnyFacetValue[];
+    const currentValues =
+      request.currentValues as AnyFacetRequest['currentValues'];
     const hasActiveValues = currentValues.some(({state}) => state !== 'idle');
+    const hasPreviousStateValues = currentValues.some(
+      (value) => value.previousState
+    );
 
-    if (request.generateAutomaticRanges && !hasActiveValues) {
+    if (
+      request.generateAutomaticRanges &&
+      !hasActiveValues &&
+      !hasPreviousStateValues
+    ) {
       return {...request, currentValues: []};
     }
 

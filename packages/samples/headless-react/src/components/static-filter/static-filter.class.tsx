@@ -1,11 +1,11 @@
 import {
   buildStaticFilter,
-  StaticFilter as HeadlessStaticFilter,
-  StaticFilterOptions,
-  StaticFilterState,
-  Unsubscribe,
+  type StaticFilter as HeadlessStaticFilter,
+  type StaticFilterOptions,
+  type StaticFilterState,
+  type Unsubscribe,
 } from '@coveo/headless';
-import {Component, ContextType} from 'react';
+import {Component, type ContextType} from 'react';
 import {AppContext} from '../../context/engine';
 
 export class StaticFilter extends Component<

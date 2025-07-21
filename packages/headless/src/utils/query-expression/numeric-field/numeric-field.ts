@@ -1,6 +1,6 @@
-import {getNegationPrefix, Negatable} from '../common/negatable.js';
-import {getOperatorSymbol, NumericOperator} from '../common/operator.js';
-import {Part} from '../common/part.js';
+import {getNegationPrefix, type Negatable} from '../common/negatable.js';
+import {getOperatorSymbol, type NumericOperator} from '../common/operator.js';
+import type {Part} from '../common/part.js';
 
 export interface NumericFieldExpression extends Negatable {
   /**

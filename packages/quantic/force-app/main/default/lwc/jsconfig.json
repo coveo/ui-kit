@@ -93,6 +93,9 @@
         "quanticGeneratedAnswer/quanticGeneratedAnswer.js"
       ],
       "c/quanticAriaLive": ["quanticAriaLive/quanticAriaLive.js"],
+      "c/quanticFoldedResultList": [
+        "quanticFoldedResultList/quanticFoldedResultList.js"
+      ],
       "c/quanticRefineModalContent": [
         "quanticRefineModalContent/quanticRefineModalContent.js"
       ],

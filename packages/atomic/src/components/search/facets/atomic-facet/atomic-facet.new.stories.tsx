@@ -1,9 +1,9 @@
+import type {Meta, StoryObj as Story} from '@storybook/web-components';
+import {html} from 'lit';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {facetDecorator} from '@/storybook-utils/common/facets-decorator';
 import {renderComponent} from '@/storybook-utils/common/render-component';
 import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
-import type {Meta, StoryObj as Story} from '@storybook/web-components';
-import {html} from 'lit';
 
 const {decorator, play} = wrapInSearchInterface();
 
@@ -71,7 +71,6 @@ export const CustomSort: Story = {
   decorators: [
     facetDecorator,
     (_Story, context) => {
-      console.log(context);
       return html`<atomic-facet
         field=${context.args['attributes-field']}
         custom-sort=${context.args['attributes-custom-sort']}

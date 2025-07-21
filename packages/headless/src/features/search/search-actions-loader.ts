@@ -1,27 +1,27 @@
-import {AsyncThunkAction} from '@reduxjs/toolkit';
-import {
+import type {AsyncThunkAction} from '@reduxjs/toolkit';
+import type {
   AsyncThunkSearchOptions,
   SearchAPIClient,
 } from '../../api/search/search-api-client.js';
-import {AsyncThunkOptions} from '../../app/async-thunk-options.js';
-import {SearchEngine} from '../../app/search-engine/search-engine.js';
-import {ClientThunkExtraArguments} from '../../app/thunk-extra-arguments.js';
+import type {AsyncThunkOptions} from '../../app/async-thunk-options.js';
+import type {SearchEngine} from '../../app/search-engine/search-engine.js';
+import type {ClientThunkExtraArguments} from '../../app/thunk-extra-arguments.js';
 import {searchReducer as search} from '../../features/search/search-slice.js';
-import {InstantResultSection} from '../../state/state-sections.js';
-import {LegacySearchAction} from '../analytics/analytics-utils.js';
-import {
+import type {InstantResultSection} from '../../state/state-sections.js';
+import type {LegacySearchAction} from '../analytics/analytics-utils.js';
+import type {
   FetchInstantResultsActionCreatorPayload,
   FetchInstantResultsThunkReturn,
 } from '../instant-results/instant-results-actions.js';
-import {StateNeededByExecuteSearch} from './legacy/search-actions-thunk-processor.js';
 import {
+  type ExecuteSearchThunkReturn,
   executeSearch,
-  ExecuteSearchThunkReturn,
-  fetchMoreResults,
   fetchFacetValues,
-  fetchPage,
   fetchInstantResults,
+  fetchMoreResults,
+  fetchPage,
 } from './legacy/search-actions.js';
+import type {StateNeededByExecuteSearch} from './legacy/search-actions-thunk-processor.js';
 
 /**
  * The search action creators.

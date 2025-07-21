@@ -1,8 +1,8 @@
+import type {i18n} from 'i18next';
+import {html} from 'lit';
+import {beforeAll, beforeEach, describe, expect, it, vi} from 'vitest';
 import {renderFunctionFixture} from '@/vitest-utils/testing-helpers/fixture';
 import {createTestI18n} from '@/vitest-utils/testing-helpers/i18n-utils';
-import {i18n} from 'i18next';
-import {html} from 'lit';
-import {expect, describe, beforeAll, it, vi, beforeEach} from 'vitest';
 import {renderBreadcrumbButton} from './breadcrumb-button';
 
 describe('#renderBreadcrumbButton', () => {
@@ -18,7 +18,7 @@ describe('#renderBreadcrumbButton', () => {
         props: {
           i18n,
           onSelectBreadcrumb: () => {},
-          setRef: () => {},
+          refCallback: () => {},
           pathLimit: 0,
           breadcrumb: {
             label: 'test',
@@ -37,13 +37,13 @@ describe('#renderBreadcrumbButton', () => {
     };
   };
 
-  it('should set the ref on the button', async () => {
-    const setRef = vi.fn();
+  it('should call the refCallback on the button', async () => {
+    const refCallback = vi.fn();
     const {button} = await renderComponent({
-      setRef,
+      refCallback,
     });
 
-    expect(setRef).toHaveBeenCalledWith(button);
+    expect(refCallback).toHaveBeenCalledWith(button);
   });
 
   it('should have the "breadcrumb-button" part on the button', async () => {

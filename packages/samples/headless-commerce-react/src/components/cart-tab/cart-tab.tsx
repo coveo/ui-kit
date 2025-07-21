@@ -1,4 +1,4 @@
-import {Cart} from '@coveo/headless/commerce';
+import type {Cart} from '@coveo/headless/commerce';
 import {useEffect, useState} from 'react';
 
 interface ICartTab {

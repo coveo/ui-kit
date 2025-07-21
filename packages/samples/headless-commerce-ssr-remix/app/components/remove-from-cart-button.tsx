@@ -1,7 +1,7 @@
-import {ExternalCartItem} from '@/external-services/external-cart-service';
-import {useCart} from '@/lib/commerce-engine';
 import {useFetcher} from '@remix-run/react';
 import {useEffect} from 'react';
+import type {ExternalCartItem} from '@/external-services/external-cart-service';
+import {useCart} from '@/lib/commerce-engine';
 
 export default function RemoveFromCartButton({
   productId,
@@ -37,14 +37,14 @@ export default function RemoveFromCartButton({
         quantity,
       });
     }
-  }, [fetcher.data]);
+  }, [fetcher.data, methods, name, price, productId]);
 
   return (
     <fetcher.Form method="post" action="/cart/remove">
       <input type="hidden" name="uniqueId" value={productId} />
       <input type="hidden" name="pricePerUnit" value={price} />
       <input type="hidden" name="productName" value={name} />
-      <button disabled={!methods || fetcher.state !== 'idle'}>
+      <button type="button" disabled={!methods || fetcher.state !== 'idle'}>
         Remove one from cart
       </button>
     </fetcher.Form>

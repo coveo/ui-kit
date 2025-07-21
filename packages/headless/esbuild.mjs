@@ -1,8 +1,8 @@
-import alias from 'esbuild-plugin-alias';
-import {umdWrapper} from 'esbuild-plugin-umd-wrapper';
 import {readFileSync, writeFileSync} from 'node:fs';
 import {createRequire} from 'node:module';
 import {dirname, resolve} from 'node:path';
+import alias from 'esbuild-plugin-alias';
+import {umdWrapper} from 'esbuild-plugin-umd-wrapper';
 import {build} from '../../scripts/esbuild/build.mjs';
 import {apacheLicense} from '../../scripts/license/apache.mjs';
 
@@ -20,7 +20,7 @@ const isNightly = process.env.IS_NIGHTLY === 'true';
 
 const buenoVersion = isNightly
   ? `v${buenoJson.version.split('.').shift()}-nightly`
-  : 'v' + buenoJson.version;
+  : `v${buenoJson.version}`;
 const buenoPath = isCDN
   ? `/bueno/${buenoVersion}/bueno.esm.js`
   : '@coveo/bueno';
@@ -136,7 +136,7 @@ const codeReplacerPlugin = (filePath, target, replacement) => ({
   setup(build) {
     build.onLoad({filter: /\.ts$/}, async (args) => {
       if (args.path.endsWith(filePath)) {
-        const fs = require('fs');
+        const fs = require('node:fs');
         const source = await fs.promises.readFile(args.path, 'utf8');
         const modifiedSource = source.replace(target, replacement);
         return {
@@ -224,7 +224,7 @@ function resolveEsm(moduleName) {
   const packageJson = require(packageJsonPath);
   return resolve(
     dirname(packageJsonPath),
-    packageJson['module'] || packageJson['main']
+    packageJson.module || packageJson.main
   );
 }
 
@@ -233,7 +233,7 @@ function resolveBrowser(moduleName) {
   const packageJson = require(packageJsonPath);
   return resolve(
     dirname(packageJsonPath),
-    packageJson['browser'] || packageJson['main']
+    packageJson.browser || packageJson.main
   );
 }
 
@@ -246,7 +246,7 @@ async function buildBrowserConfig(options, outDir) {
     {
       name: 'replace-bueno-import',
       setup(build) {
-        build.onResolve({filter: /^@coveo\/bueno$/}, (args) => {
+        build.onResolve({filter: /^@coveo\/bueno$/}, () => {
           return {path: buenoPath, external: true};
         });
       },

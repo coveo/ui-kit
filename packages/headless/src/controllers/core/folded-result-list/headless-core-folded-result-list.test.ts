@@ -1,5 +1,5 @@
-import {Raw} from '../../../api/search/search/raw.js';
-import {Result} from '../../../api/search/search/result.js';
+import type {Raw} from '../../../api/search/search/raw.js';
+import type {Result} from '../../../api/search/search/result.js';
 import {configurationReducer as configuration} from '../../../features/configuration/configuration-slice.js';
 import {
   loadCollection,
@@ -11,7 +11,7 @@ import {
 } from '../../../features/folding/folding-analytics-actions.js';
 import {foldingReducer as folding} from '../../../features/folding/folding-slice.js';
 import {
-  FoldedCollection,
+  type FoldedCollection,
   getFoldingInitialState,
 } from '../../../features/folding/folding-state.js';
 import {queryReducer as query} from '../../../features/query/query-slice.js';
@@ -19,15 +19,15 @@ import {fetchMoreResults} from '../../../features/search/search-actions.js';
 import {searchReducer as search} from '../../../features/search/search-slice.js';
 import {
   buildMockSearchEngine,
-  MockedSearchEngine,
+  type MockedSearchEngine,
 } from '../../../test/mock-engine-v2.js';
 import {buildMockResult} from '../../../test/mock-result.js';
 import {createMockState} from '../../../test/mock-state.js';
 import {
   buildCoreFoldedResultList,
-  FoldedResultList,
-  CoreFoldedResultListProps,
-  FoldedResultListOptions,
+  type CoreFoldedResultListProps,
+  type FoldedResultList,
+  type FoldedResultListOptions,
 } from './headless-core-folded-result-list.js';
 
 vi.mock('../../../features/folding/folding-actions');

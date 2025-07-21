@@ -2,11 +2,11 @@ import {executeFieldSuggest} from '../../../features/facets/facet-search-set/gen
 import {updateFacetSearch} from '../../../features/facets/facet-search-set/specific/specific-facet-search-actions.js';
 import {registerFacet} from '../../../features/facets/facet-set/facet-set-actions.js';
 import {defaultFacetOptions} from '../../../features/facets/facet-set/facet-set-slice.js';
-import {FacetRequest} from '../../../features/facets/facet-set/interfaces/request.js';
-import {SearchAppState} from '../../../state/search-app-state.js';
+import type {FacetRequest} from '../../../features/facets/facet-set/interfaces/request.js';
+import type {SearchAppState} from '../../../state/search-app-state.js';
 import {
   buildMockSearchEngine,
-  MockedSearchEngine,
+  type MockedSearchEngine,
 } from '../../../test/mock-engine-v2.js';
 import {buildMockFacetRequest} from '../../../test/mock-facet-request.js';
 import {buildMockFacetSearch} from '../../../test/mock-facet-search.js';
@@ -14,8 +14,8 @@ import {buildMockFacetSlice} from '../../../test/mock-facet-slice.js';
 import {createMockState} from '../../../test/mock-state.js';
 import {
   buildFieldSuggestions,
-  FieldSuggestions,
-  FieldSuggestionsOptions,
+  type FieldSuggestions,
+  type FieldSuggestionsOptions,
 } from './headless-field-suggestions.js';
 
 vi.mock('../../../features/facets/facet-set/facet-set-actions');

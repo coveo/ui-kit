@@ -1,4 +1,4 @@
-import {SchemaValue} from '../schema.js';
+import type {SchemaValue} from '../schema.js';
 
 export type PrimitivesValues =
   | boolean

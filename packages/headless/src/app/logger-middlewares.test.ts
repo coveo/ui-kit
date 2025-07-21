@@ -1,5 +1,5 @@
 import {SchemaValidationError} from '@coveo/bueno';
-import {Logger} from 'pino';
+import type {Logger} from 'pino';
 import {serializeSchemaValidationError} from '../utils/validate-payload.js';
 import {
   logActionErrorMiddleware,

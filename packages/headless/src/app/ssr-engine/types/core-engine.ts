@@ -1,17 +1,17 @@
-import {AnyAction} from '@reduxjs/toolkit';
+import type {AnyAction} from '@reduxjs/toolkit';
 import type {Controller} from '../../../controllers/controller/headless-controller.js';
-import {EngineConfiguration} from '../../engine-configuration.js';
-import {CoreEngine, CoreEngineNext} from '../../engine.js';
-import {NavigatorContextProvider} from '../../navigator-context-provider.js';
-import {Build} from './build.js';
-import {
+import type {CoreEngine, CoreEngineNext} from '../../engine.js';
+import type {EngineConfiguration} from '../../engine-configuration.js';
+import type {NavigatorContextProvider} from '../../navigator-context-provider.js';
+import type {Build} from './build.js';
+import type {
   ControllerDefinitionsMap,
   InferControllerPropsMapFromDefinitions,
   InferControllerStaticStateMapFromDefinitions,
   InferControllersMapFromDefinition,
 } from './common.js';
-import {FetchStaticState} from './fetch-static-state.js';
-import {HydrateStaticState} from './hydrate-static-state.js';
+import type {FetchStaticState} from './fetch-static-state.js';
+import type {HydrateStaticState} from './hydrate-static-state.js';
 
 export type EngineDefinitionOptions<
   TOptions extends {configuration: EngineConfiguration},

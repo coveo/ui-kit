@@ -1,5 +1,5 @@
-import {RangeFacetOptionalParameters} from './interfaces/options.js';
-import {
+import type {RangeFacetOptionalParameters} from './interfaces/options.js';
+import type {
   RangeFacetRequest,
   RangeFacetResponse,
   RangeFacetValue,
@@ -72,6 +72,7 @@ export function toggleSelectRangeValue<
   }
 
   const isSelected = value.state === 'selected';
+  value.previousState = value.state;
   value.state = isSelected ? 'idle' : 'selected';
 
   request.preventAutoSelect = true;
@@ -94,6 +95,7 @@ export function toggleExcludeRangeValue<
   }
 
   const isExcluded = value.state === 'excluded';
+  value.previousState = value.state;
   value.state = isExcluded ? 'idle' : 'excluded';
 
   request.preventAutoSelect = true;
@@ -109,7 +111,12 @@ export function handleRangeFacetDeselectAll<T extends RangeFacetSlice>(
     return;
   }
 
-  facetRequest.currentValues.forEach((request) => (request.state = 'idle'));
+  facetRequest.currentValues.forEach((request) => {
+    if (request.state !== 'idle') {
+      request.previousState = request.state;
+    }
+    request.state = 'idle';
+  });
 }
 
 export function handleRangeFacetSearchParameterRestoration<

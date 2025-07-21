@@ -1,10 +1,17 @@
-import {ChoiceIsNaNError, InitialChoiceNotInChoicesError} from './error';
+import {
+  ChoiceIsNaNError,
+  ChoiceIsNonPositiveError,
+  InitialChoiceNotInChoicesError,
+} from './error';
 
 export function convertChoicesToNumbers(choices: string) {
   return choices.split(',').map((choice) => {
     const parsedChoice = parseInt(choice);
-    if (isNaN(parsedChoice)) {
+    if (Number.isNaN(parsedChoice)) {
       throw new ChoiceIsNaNError(choice);
+    }
+    if (parsedChoice <= 0) {
+      throw new ChoiceIsNonPositiveError(parsedChoice);
     }
 
     return parsedChoice;

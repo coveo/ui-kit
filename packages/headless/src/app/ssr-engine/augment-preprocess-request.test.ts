@@ -1,14 +1,14 @@
-import {Logger} from 'pino';
-import {describe, it, expect, vi} from 'vitest';
-import {
+import type {Logger} from 'pino';
+import {describe, expect, it, vi} from 'vitest';
+import type {
   PlatformRequestOptions,
   PreprocessRequest,
 } from '../../api/preprocess-request.js';
 import * as loggerModule from '../logger.js';
-import {NavigatorContextProvider} from '../navigator-context-provider.js';
+import type {NavigatorContextProvider} from '../navigator-context-provider.js';
 import {
+  type AugmentPreprocessRequestOptions,
   augmentPreprocessRequestWithForwardedFor,
-  AugmentPreprocessRequestOptions,
 } from './augment-preprocess-request.js';
 
 function buildMockRequest(

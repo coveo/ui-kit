@@ -1,6 +1,6 @@
 import {configuration} from '../../app/common-reducers.js';
-import {caseAssistConfigurationReducer as caseAssistConfiguration} from '../../features/case-assist-configuration/case-assist-configuration-slice.js';
 import {logUpdateCaseField} from '../../features/case-assist/case-assist-analytics-actions.js';
+import {caseAssistConfigurationReducer as caseAssistConfiguration} from '../../features/case-assist-configuration/case-assist-configuration-slice.js';
 import {fetchCaseClassifications} from '../../features/case-field/case-field-actions.js';
 import {caseFieldReducer as caseField} from '../../features/case-field/case-field-slice.js';
 import {updateCaseInput} from '../../features/case-input/case-input-actions.js';
@@ -10,12 +10,12 @@ import {documentSuggestionReducer as documentSuggestion} from '../../features/do
 import {buildMockCaseAssistState} from '../../test/mock-case-assist-state.js';
 import {
   buildMockCaseAssistEngine,
-  MockedCaseAssistEngine,
+  type MockedCaseAssistEngine,
 } from '../../test/mock-engine-v2.js';
 import {
-  CaseInput,
-  CaseInputOptions,
   buildCaseInput,
+  type CaseInput,
+  type CaseInputOptions,
 } from './headless-case-input.js';
 
 vi.mock('../../features/case-input/case-input-actions');

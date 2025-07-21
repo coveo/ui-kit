@@ -1,5 +1,5 @@
-import {i18n} from 'i18next';
-import {KnownErrorType} from './known-error-types';
+import type {i18n} from 'i18next';
+import type {KnownErrorType} from './known-error-types';
 
 export const getErrorTitleFromErrorType = (
   i18n: i18n,
@@ -9,7 +9,6 @@ export const getErrorTitleFromErrorType = (
   switch (errorType as KnownErrorType) {
     case 'Disconnected':
       return i18n.t('disconnected');
-
     case 'NoEndpointsException':
       return i18n.t('no-endpoints', {org: organizationId});
     case 'InvalidTokenException':
