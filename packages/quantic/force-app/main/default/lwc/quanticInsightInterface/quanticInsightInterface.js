@@ -35,8 +35,9 @@ export default class QuanticInsightInterface extends LightningElement {
    * @type {string}
    */
   @api insightId;
-    /**
-   * The record ID.
+  /**
+   * The ID of the record used to retrieve the user ID of its creator.
+   * This is required to assign the correct privileges for enabling the User Actions feature.
    * @api
    * @type {string}
    */
