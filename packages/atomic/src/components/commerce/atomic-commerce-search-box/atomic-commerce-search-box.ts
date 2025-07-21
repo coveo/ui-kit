@@ -503,6 +503,11 @@ export class AtomicCommerceSearchBox
       case 'Tab':
         this.suggestionManager.clearSuggestions();
         break;
+      default:
+        if (this.suggestionManager.keyboardActiveDescendant) {
+          this.suggestionManager.updateKeyboardActiveDescendant();
+          this.suggestionManager.updateActiveDescendant();
+        }
     }
   }
 
