@@ -21,5 +21,6 @@ export {AtomicCommerceSearchBoxRecentQueries} from './atomic-commerce-search-box
 export {AtomicCommerceSortDropdown} from './atomic-commerce-sort-dropdown/atomic-commerce-sort-dropdown.js';
 export {AtomicCommerceText} from './atomic-commerce-text/atomic-commerce-text.js';
 export {AtomicProduct} from './atomic-product/atomic-product.js';
+export {AtomicProductFieldCondition} from './atomic-product-field-condition/atomic-product-field-condition.js';
 export {AtomicProductTemplate} from './atomic-product-template/atomic-product-template.js';
 export {AtomicProductText} from './atomic-product-text/atomic-product-text.js';

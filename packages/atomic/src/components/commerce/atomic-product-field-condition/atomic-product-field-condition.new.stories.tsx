@@ -1,0 +1,23 @@
+// import {wrapInCommerceInterface} from '@/storybook-utils/commerce/commerce-interface-wrapper';
+import type {Meta, StoryObj as Story} from '@storybook/web-components';
+import {parameters} from '@/storybook-utils/common/common-meta-parameters';
+import {renderComponent} from '@/storybook-utils/common/render-component';
+import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
+
+// Wrap it in whatever interface/component you need
+const {decorator, play} = wrapInSearchInterface();
+// const {decorator, play} = wrapInCommerceInterface();
+
+const meta: Meta = {
+  component: 'atomic-product-field-condition',
+  title: 'TODO/atomic-product-field-condition',
+  id: 'atomic-product-field-condition',
+  render: renderComponent,
+  decorators: [decorator],
+  parameters,
+  play,
+};
+
+export default meta;
+
+export const Default: Story = {};

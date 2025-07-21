@@ -74,6 +74,10 @@ export default {
     await import('./atomic-commerce-text/atomic-commerce-text.js'),
   'atomic-product': async () =>
     await import('./atomic-product/atomic-product.js'),
+  'atomic-product-field-condition': async () =>
+    await import(
+      './atomic-product-field-condition/atomic-product-field-condition.js'
+    ),
   'atomic-product-template': async () =>
     await import('./atomic-product-template/atomic-product-template.js'),
   'atomic-product-text': async () =>

@@ -1629,31 +1629,6 @@ export namespace Components {
         "truncateAfter": TruncateAfter;
     }
     /**
-     * The `atomic-product-field-condition` component takes a list of conditions that, if fulfilled, apply the template in which it's defined.
-     * The condition properties can be based on any top-level product property of the `product` object, not restricted to fields (e.g., `ec_name`).
-     * @alpha 
-     */
-    interface AtomicProductFieldCondition {
-        /**
-          * Verifies whether the specified fields are defined.
-         */
-        "ifDefined"?: string;
-        /**
-          * Verifies whether the specified fields are not defined.
-         */
-        "ifNotDefined"?: string;
-        /**
-          * Verifies whether the specified fields match the specified values.
-          * @type {Record<string, string[]>}
-         */
-        "mustMatch": Record<string, string[]>;
-        /**
-          * Verifies whether the specified fields do not match the specified values.
-          * @type {Record<string, string[]>}
-         */
-        "mustNotMatch": Record<string, string[]>;
-    }
-    /**
      * The `atomic-product-image` component renders an image from a product field.
      * @alpha 
      */
@@ -4218,17 +4193,6 @@ declare global {
         new (): HTMLAtomicProductExcerptElement;
     };
     /**
-     * The `atomic-product-field-condition` component takes a list of conditions that, if fulfilled, apply the template in which it's defined.
-     * The condition properties can be based on any top-level product property of the `product` object, not restricted to fields (e.g., `ec_name`).
-     * @alpha 
-     */
-    interface HTMLAtomicProductFieldConditionElement extends Components.AtomicProductFieldCondition, HTMLStencilElement {
-    }
-    var HTMLAtomicProductFieldConditionElement: {
-        prototype: HTMLAtomicProductFieldConditionElement;
-        new (): HTMLAtomicProductFieldConditionElement;
-    };
-    /**
      * The `atomic-product-image` component renders an image from a product field.
      * @alpha 
      */
@@ -5358,7 +5322,6 @@ declare global {
         "atomic-product-children": HTMLAtomicProductChildrenElement;
         "atomic-product-description": HTMLAtomicProductDescriptionElement;
         "atomic-product-excerpt": HTMLAtomicProductExcerptElement;
-        "atomic-product-field-condition": HTMLAtomicProductFieldConditionElement;
         "atomic-product-image": HTMLAtomicProductImageElement;
         "atomic-product-link": HTMLAtomicProductLinkElement;
         "atomic-product-multi-value-text": HTMLAtomicProductMultiValueTextElement;
@@ -6972,31 +6935,6 @@ declare namespace LocalJSX {
           * The number of lines after which the product excerpt should be truncated. A value of "none" will disable truncation.
          */
         "truncateAfter"?: TruncateAfter;
-    }
-    /**
-     * The `atomic-product-field-condition` component takes a list of conditions that, if fulfilled, apply the template in which it's defined.
-     * The condition properties can be based on any top-level product property of the `product` object, not restricted to fields (e.g., `ec_name`).
-     * @alpha 
-     */
-    interface AtomicProductFieldCondition {
-        /**
-          * Verifies whether the specified fields are defined.
-         */
-        "ifDefined"?: string;
-        /**
-          * Verifies whether the specified fields are not defined.
-         */
-        "ifNotDefined"?: string;
-        /**
-          * Verifies whether the specified fields match the specified values.
-          * @type {Record<string, string[]>}
-         */
-        "mustMatch"?: Record<string, string[]>;
-        /**
-          * Verifies whether the specified fields do not match the specified values.
-          * @type {Record<string, string[]>}
-         */
-        "mustNotMatch"?: Record<string, string[]>;
     }
     /**
      * The `atomic-product-image` component renders an image from a product field.
@@ -8683,7 +8621,6 @@ declare namespace LocalJSX {
         "atomic-product-children": AtomicProductChildren;
         "atomic-product-description": AtomicProductDescription;
         "atomic-product-excerpt": AtomicProductExcerpt;
-        "atomic-product-field-condition": AtomicProductFieldCondition;
         "atomic-product-image": AtomicProductImage;
         "atomic-product-link": AtomicProductLink;
         "atomic-product-multi-value-text": AtomicProductMultiValueText;
@@ -9017,12 +8954,6 @@ declare module "@stencil/core" {
              * @alpha The `atomic-product-excerpt` component renders the excerpt of a product generated at query time.
              */
             "atomic-product-excerpt": LocalJSX.AtomicProductExcerpt & JSXBase.HTMLAttributes<HTMLAtomicProductExcerptElement>;
-            /**
-             * The `atomic-product-field-condition` component takes a list of conditions that, if fulfilled, apply the template in which it's defined.
-             * The condition properties can be based on any top-level product property of the `product` object, not restricted to fields (e.g., `ec_name`).
-             * @alpha 
-             */
-            "atomic-product-field-condition": LocalJSX.AtomicProductFieldCondition & JSXBase.HTMLAttributes<HTMLAtomicProductFieldConditionElement>;
             /**
              * The `atomic-product-image` component renders an image from a product field.
              * @alpha 
