@@ -1,4 +1,4 @@
-import {createAction, createAsyncThunk} from '@reduxjs/toolkit';
+import {createAsyncThunk} from '@reduxjs/toolkit';
 import HistoryStore from '../../api/analytics/coveo.analytics/history-store.js';
 import {
   isErrorResponse,
@@ -36,9 +36,10 @@ import type {
   FetchQuerySuggestionsActionCreatorPayload,
   FetchQuerySuggestionsThunkReturn,
 } from '../query-suggest/query-suggest-actions.js';
-import type {
-  ExecuteSearchThunkReturn,
-  SearchAction,
+import {
+  type ExecuteSearchThunkReturn,
+  type SearchAction,
+  updateSearchAction,
 } from '../search/search-actions.js';
 import {
   type MappedSearchRequest,
@@ -105,10 +106,6 @@ interface TransitiveInsightSearchAction {
   legacy: LegacyInsightAction;
   next?: SearchAction;
 }
-
-export const updateSearchAction = createAction<SearchAction | undefined>(
-  'search/updateSearchAction'
-);
 
 export const executeSearch = createAsyncThunk<
   ExecuteSearchThunkReturn,
