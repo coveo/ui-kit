@@ -139,6 +139,19 @@ jobs:
       - name: Log affected projects
         run: |
           echo "Affected projects: ${{ steps.set.outputs.projects }}"
+  knip: 
+    name: 'Look for unused code or dependencies'
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Harden the runner (Audit all outbound calls)
+        uses: step-security/harden-runner@6c439dc8bdf85cadbbce9ed30d1c7b959517bc49 # v2.12.2
+        with:
+          egress-policy: audit
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+      - uses: ./.github/actions/setup
+      - name: Run knip
+        run: npm run knip
   cdn-checks:
     name: 'CDN Checks'
     needs: [affected, build-cdn]
