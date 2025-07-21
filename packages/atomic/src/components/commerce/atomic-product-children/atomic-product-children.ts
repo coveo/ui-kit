@@ -50,7 +50,7 @@ export class AtomicProductChildren
   }
 
   /**
-   * The non-localized label to display for the product children section.
+   * The i18n key for the localized label to display for the product children section.
    *
    * Set this to an empty string if you do not want to render the label at all.
    */
@@ -134,6 +134,10 @@ export class AtomicProductChildren
         ></atomic-commerce-text>
       </div>
     `;
+  }
+
+  get count() {
+    return this.productController.item?.totalNumberOfChildren! - 5;
   }
 
   @errorGuard()
