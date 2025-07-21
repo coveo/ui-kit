@@ -33,8 +33,6 @@ import {
   type RegularFacetSearchState,
 } from '../core/facets/regular/headless-commerce-regular-facet-search.js';
 
-;
-
 /**
  * The state of the `FilterSuggestions` controller.
  *
@@ -175,7 +173,8 @@ export function buildFilterSuggestions(
       facetSearch.search();
     },
 
-    getSearchParameters: (value: SpecificFacetSearchResult): string => searchSerializer.serialize({
+    getSearchParameters: (value: SpecificFacetSearchResult): string =>
+      searchSerializer.serialize({
         q: facetSearchStateSelector(getState()).query,
         f: {[options.facetId]: [value.rawValue]},
       }),
@@ -193,8 +192,9 @@ export function buildFilterSuggestions(
     },
 
     get state() {
-      const {displayName, field, facetId} =
-        facetForFieldSuggestionsSelector(getState());
+      const {displayName, field, facetId} = facetForFieldSuggestionsSelector(
+        getState()
+      );
       return {
         displayName,
         field,

@@ -1,4 +1,5 @@
 {
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "enabled": true,
   "extends": [
     "github>coveo/renovate-presets",
@@ -144,6 +145,13 @@
         "@types/react",
         "@types/react-dom"
       ]
+    },
+    {
+      "groupName": "biome",
+      "groupSlug": "biome",
+      "rangeStrategy": "replace",
+      "description": "Isolate biome since it has memory issues in 2.1.1",
+      "matchPackageNames": ["@biomejs/biome"]
     }
   ],
   "lockFileMaintenance": {
@@ -156,6 +164,7 @@
   },
   "ignoreDeps": [
     "@salesforce/sfdx-lwc-jest",
+    "fix-esm-import-path",
     // Ignore cypress since it is getting removed.
     "cypress",
     "cypress-split",

@@ -14,12 +14,12 @@ export const renderRefineModalSortSection: FunctionalComponentWithChildren<
   ({props}) =>
   (children) => {
     return html`
-      <h1
+      <h2
         part="section-title section-sort-title"
         class="mb-3 truncate text-2xl font-bold"
       >
         ${props.i18n.t('sort')}
-      </h1>
+      </h2>
       <div part="select-wrapper" class="relative">
         <select
           class="btn-outline-neutral w-full grow cursor-pointer appearance-none rounded-lg px-6 py-5 text-lg font-bold"

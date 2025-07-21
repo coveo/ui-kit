@@ -47,9 +47,7 @@ export type RecommendationControllerSettings = {
   enabled?: boolean;
 };
 
-interface ControllerDefinitionWithoutProps<
-  TController extends Controller,
-> {
+interface ControllerDefinitionWithoutProps<TController extends Controller> {
   /**
    * Creates an instance of the given controller.
    *
@@ -111,19 +109,15 @@ export interface ControllerDefinitionsMap<TController extends Controller> {
 
 export type InferControllerPropsFromDefinition<
   TController extends ControllerDefinition<Controller>,
-> =
-  TController extends ControllerDefinitionWithProps<Controller, infer Props>
+> = TController extends ControllerDefinitionWithProps<Controller, infer Props>
+  ? HasKey<TController, typeof recommendationInternalOptionKey> extends never
+    ? Props
+    : Props & RecommendationControllerSettings
+  : TController extends ControllerDefinitionWithoutProps<Controller>
     ? HasKey<TController, typeof recommendationInternalOptionKey> extends never
-      ? Props
-      : Props & RecommendationControllerSettings
-    : TController extends ControllerDefinitionWithoutProps<Controller>
-      ? HasKey<
-          TController,
-          typeof recommendationInternalOptionKey
-        > extends never
-        ? {}
-        : RecommendationControllerSettings
-      : unknown;
+      ? {}
+      : RecommendationControllerSettings
+    : unknown;
 
 export type InferControllerPropsMapFromDefinitions<
   TControllers extends ControllerDefinitionsMap<Controller>,
@@ -137,10 +131,9 @@ export type InferControllerPropsMapFromDefinitions<
 
 export type InferControllerFromDefinition<
   TDefinition extends ControllerDefinition<Controller>,
-> =
-  TDefinition extends ControllerDefinition<infer TController>
-    ? TController
-    : never;
+> = TDefinition extends ControllerDefinition<infer TController>
+  ? TController
+  : never;
 
 export type InferControllersMapFromDefinition<
   TControllers extends ControllerDefinitionsMap<Controller>,

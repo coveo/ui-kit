@@ -1,6 +1,6 @@
 #!/usr/bin/env node
-import {describeNpmTag, npmSetTag} from '@coveo/semantic-monorepo-tools';
 import {readFileSync} from 'node:fs';
+import {describeNpmTag, npmSetTag} from '@coveo/semantic-monorepo-tools';
 import {gt} from 'semver';
 import {NPM_LATEST_TAG} from './common/constants.mjs';
 

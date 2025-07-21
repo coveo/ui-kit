@@ -1,9 +1,8 @@
 #!/usr/bin/env node
-'use strict';
 
-const childProcess = require('child_process');
-const fs = require('fs');
-const os = require('os');
+const childProcess = require('node:child_process');
+const fs = require('node:fs');
+const os = require('node:os');
 const urlBase = 'https://coveord.atlassian.net/browse/';
 const projectAcronym = 'KIT';
 
@@ -11,7 +10,7 @@ let issueNumber;
 const branchName = childProcess
   .execSync('git symbolic-ref --short HEAD', {encoding: 'utf8'})
   .trim();
-const issueRegex = new RegExp(projectAcronym + '-[\\d]+', 'i');
+const issueRegex = new RegExp(`${projectAcronym}-[\\d]+`, 'i');
 
 const match = branchName.match(issueRegex);
 if (match) {
