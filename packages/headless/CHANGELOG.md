@@ -1,3 +1,13 @@
+## <small>3.27.4 (2025-07-16)</small>
+
+* chore: remove all traces of eslint-plugin-canonical (#5663) ([2d3a8a3](https://github.com/coveo/ui-kit/commits/2d3a8a3)), closes [#5663](https://github.com/coveo/ui-kit/issues/5663)
+* chore(deps): update vite to v3.2.4 j:kit-282 (#5604) ([8e8dd6a](https://github.com/coveo/ui-kit/commits/8e8dd6a)), closes [#5604](https://github.com/coveo/ui-kit/issues/5604)
+* chore(headless): enable biome recommended rules (#5617) ([af474bd](https://github.com/coveo/ui-kit/commits/af474bd)), closes [#5617](https://github.com/coveo/ui-kit/issues/5617)
+* docs(headless): Updates the docstring according to the style guide (#5612) ([1b7a157](https://github.com/coveo/ui-kit/commits/1b7a157)), closes [#5612](https://github.com/coveo/ui-kit/issues/5612)
+* fix(deps): update dependency @coveo/relay to v1.2.5 j:kit-282 (#5606) ([1ff9835](https://github.com/coveo/ui-kit/commits/1ff9835)), closes [#5606](https://github.com/coveo/ui-kit/issues/5606)
+
+
+
 ## <small>3.27.2 (2025-07-09)</small>
 
 * chore(deps): update dependency typedoc to v0.28.7 j:kit-282 (#5591) ([f769419](https://github.com/coveo/ui-kit/commits/f769419)), closes [#5591](https://github.com/coveo/ui-kit/issues/5591)

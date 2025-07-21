@@ -48,8 +48,8 @@ export const renderFacetHeader: FunctionalComponent<FacetHeaderProps> = ({
       },
     })(
       html`${renderHeading({
-          props: {level: props.headingLevel, class: 'truncate'},
-        })(html`${label}`)}
+        props: {level: props.headingLevel, class: 'truncate'},
+      })(html`${label}`)}
         <atomic-icon
           part="label-button-icon"
           class="ml-4 w-3 shrink-0 self-center"

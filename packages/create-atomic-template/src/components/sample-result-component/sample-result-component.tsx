@@ -1,4 +1,4 @@
-import {Result} from '@coveo/headless';
+import type {Result} from '@coveo/headless';
 import {Component, h, Element, State} from '@stencil/core';
 import {resultContext} from '@coveo/atomic';
 

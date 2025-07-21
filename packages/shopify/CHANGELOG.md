@@ -1,3 +1,12 @@
+## <small>1.7.4 (2025-07-16)</small>
+
+* chore(deps): Revert "chore(deps): update vite to v3.2.3 j:kit-282" (#5487) ([b9ad867](https://github.com/coveo/ui-kit/commits/b9ad867)), closes [#5487](https://github.com/coveo/ui-kit/issues/5487)
+* chore(deps): update vite to v3.2.4 j:kit-282 (#5604) ([8e8dd6a](https://github.com/coveo/ui-kit/commits/8e8dd6a)), closes [#5604](https://github.com/coveo/ui-kit/issues/5604)
+* chore(shopify): enable biome recommended rules (#5635) ([979bb01](https://github.com/coveo/ui-kit/commits/979bb01)), closes [#5635](https://github.com/coveo/ui-kit/issues/5635)
+* fix(deps): update dependency @coveo/relay to v1.2.5 j:kit-282 (#5606) ([1ff9835](https://github.com/coveo/ui-kit/commits/1ff9835)), closes [#5606](https://github.com/coveo/ui-kit/issues/5606)
+
+
+
 ## <small>1.7.2 (2025-07-09)</small>
 
 * fix(shopify): get memoized fetch working in browsers (#5561) ([b11d812](https://github.com/coveo/ui-kit/commits/b11d812)), closes [#5561](https://github.com/coveo/ui-kit/issues/5561)
