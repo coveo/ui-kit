@@ -115,16 +115,22 @@ describe('atomic-commerce-timeframe-facet', () => {
         return element.shadowRoot!.querySelectorAll('[part=value-link]');
       },
       get inputApplyButton() {
-        return element.shadowRoot!.querySelector('[part=input-apply-button]')!;
+        return element.shadowRoot!.querySelector(
+          '[part=input-apply-button]'
+        )! as HTMLButtonElement;
       },
       get dateInput() {
         return element.shadowRoot!.querySelector('atomic-facet-date-input')!;
       },
       get inputStart() {
-        return element.shadowRoot!.querySelector('[part=input-start]')!;
+        return element.shadowRoot!.querySelector(
+          '[part=input-start]'
+        )! as HTMLInputElement;
       },
       get inputEnd() {
-        return element.shadowRoot!.querySelector('[part=input-end]')!;
+        return element.shadowRoot!.querySelector(
+          '[part=input-end]'
+        )! as HTMLInputElement;
       },
     };
   };
@@ -431,14 +437,17 @@ describe('atomic-commerce-timeframe-facet', () => {
       await setupElement();
 
     const {start, end} = {
-      start: '2023{ArrowRight}01{ArrowRight}01',
-      end: '2023{ArrowRight}12{ArrowRight}31',
+      start: '2023-01-01',
+      end: '2023-12-31',
     };
 
     // Simulate date input application
-    await userEvent.type(inputStart, start);
-    await userEvent.type(inputEnd, end);
-    await userEvent.click(inputApplyButton);
+    const inputEvent = new Event('input', {bubbles: true, composed: true});
+    inputStart.value = start;
+    inputEnd.value = end;
+    inputStart.dispatchEvent(inputEvent);
+    inputEnd.dispatchEvent(inputEvent);
+    inputApplyButton.click();
 
     // Verify facet has been set with the correct date range
     expect(mockSetRanges).toHaveBeenCalledWith([
