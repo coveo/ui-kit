@@ -36,16 +36,16 @@ export const AtomicCommerceBreadbox = createComponent({
   elementClass: LitAtomicCommerceBreadbox,
 });
 
-export const AtomicCommerceInterface = createComponent({
-  tagName: 'atomic-commerce-interface',
-  react: React,
-  elementClass: LitAtomicCommerceInterface,
-});
-
 export const AtomicCommerceDidYouMean = createComponent({
   tagName: 'atomic-commerce-did-you-mean',
   react: React,
   elementClass: LitAtomicCommerceDidYouMean,
+});
+
+export const AtomicCommerceInterface = createComponent({
+  tagName: 'atomic-commerce-interface',
+  react: React,
+  elementClass: LitAtomicCommerceInterface,
 });
 
 export const AtomicCommerceLayout = createComponent({
@@ -114,16 +114,16 @@ export const AtomicCommerceRefineModal = createComponent({
   elementClass: LitAtomicCommerceRefineModal,
 });
 
-export const AtomicCommerceSearchBox = createComponent({
-  tagName: 'atomic-commerce-search-box',
-  react: React,
-  elementClass: LitAtomicCommerceSearchBox,
-});
-
 export const AtomicCommerceRefineToggle = createComponent({
   tagName: 'atomic-commerce-refine-toggle',
   react: React,
   elementClass: LitAtomicCommerceRefineToggle,
+});
+
+export const AtomicCommerceSearchBox = createComponent({
+  tagName: 'atomic-commerce-search-box',
+  react: React,
+  elementClass: LitAtomicCommerceSearchBox,
 });
 
 export const AtomicCommerceSearchBoxInstantProducts = createComponent({
@@ -138,16 +138,16 @@ export const AtomicCommerceSearchBoxQuerySuggestions = createComponent({
   elementClass: LitAtomicCommerceSearchBoxQuerySuggestions,
 });
 
-export const AtomicCommerceSortDropdown = createComponent({
-  tagName: 'atomic-commerce-sort-dropdown',
-  react: React,
-  elementClass: LitAtomicCommerceSortDropdown,
-});
-
 export const AtomicCommerceSearchBoxRecentQueries = createComponent({
   tagName: 'atomic-commerce-search-box-recent-queries',
   react: React,
   elementClass: LitAtomicCommerceSearchBoxRecentQueries,
+});
+
+export const AtomicCommerceSortDropdown = createComponent({
+  tagName: 'atomic-commerce-sort-dropdown',
+  react: React,
+  elementClass: LitAtomicCommerceSortDropdown,
 });
 
 export const AtomicCommerceText = createComponent({
