@@ -271,8 +271,9 @@ describe('atomic-product-children', () => {
       totalNumberOfChildren: total,
     });
 
+    // 6 is the number of child in the product object. Plus 1 since the parent is included in the children count.
     expect(childProducts[childProducts.length - 1]).toHaveTextContent(
-      (total - 5).toString()
+      (total - 6 + 1).toString()
     );
   });
 });
