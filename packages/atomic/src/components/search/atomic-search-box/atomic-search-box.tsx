@@ -479,8 +479,8 @@ export class AtomicSearchBox implements InitializableComponent<Bindings> {
       default:
         if (this.suggestionManager.keyboardActiveDescendant) {
           this.suggestionManager.updateKeyboardActiveDescendant();
-          this.suggestionManager.updateActiveDescendant();
         }
+        break;
     }
   }
 

@@ -506,8 +506,8 @@ export class AtomicCommerceSearchBox
       default:
         if (this.suggestionManager.keyboardActiveDescendant) {
           this.suggestionManager.updateKeyboardActiveDescendant();
-          this.suggestionManager.updateActiveDescendant();
         }
+        break;
     }
   }
 
