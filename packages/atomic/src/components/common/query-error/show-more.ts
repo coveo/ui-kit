@@ -6,13 +6,13 @@ import {renderButton} from '../button';
 interface QueryErrorShowMoreProps {
   onShowMore: () => void;
   i18n: i18n;
-  link?: TemplateResult;
+  link: TemplateResult | typeof nothing;
 }
 
 export const renderQueryErrorShowMore: FunctionalComponent<
   QueryErrorShowMoreProps
 > = ({props}) => {
-  if (props.link) {
+  if (props.link !== nothing) {
     return props.link;
   }
 
