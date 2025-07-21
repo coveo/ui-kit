@@ -2,6 +2,10 @@
  * Simple Apex Controller to fetch data for Headless initialization specific to the Insight use case.
  */
 global with sharing class InsightController {
+  public static String getHeadlessConfiguration() {
+    return getHeadlessConfiguration('');
+  }
+
   /**
    * Get the configuration object (serialized) for the initialization of Coveo Headless through a class implementing `ITokenProvider`.
    * @return {String} A serialized object containing the following keys:
