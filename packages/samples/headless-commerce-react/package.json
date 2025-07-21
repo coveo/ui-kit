@@ -35,6 +35,6 @@
     "local-web-server": "5.4.0",
     "vite": "6.3.5",
     "vite-plugin-static-copy": "2.3.1",
-    "vitest": "3.2.1"
+    "vitest": "3.2.4"
   }
 }

@@ -58,7 +58,7 @@
   },
   "devDependencies": {
     "@coveo/ci": "1.0.0",
-    "vitest": "3.2.1"
+    "vitest": "3.2.4"
   },
   "dependencies": {
     "@coveo/relay": "1.2.5",
