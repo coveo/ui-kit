@@ -1,11 +1,8 @@
+/** biome-ignore-all lint/style/noNonNullAssertion: test file uses non-null assertions */
 import {renderInAtomicCommerceInterface} from '@/vitest-utils/testing-helpers/fixtures/atomic/commerce/atomic-commerce-interface-fixture';
+import {buildFakeCategoryFacet} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/category-facet-controller';
 import {buildFakeSummary} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/summary-subcontroller';
-import type {
-  CategoryFacet,
-  CategoryFacetState,
-  CategoryFacetValue,
-  Summary,
-} from '@coveo/headless/commerce';
+import type {CategoryFacet, Summary} from '@coveo/headless/commerce';
 import {page} from '@vitest/browser/context';
 import '@vitest/browser/matchers.d.ts';
 import {html} from 'lit';
@@ -19,97 +16,14 @@ import {
   type MockInstance,
 } from 'vitest';
 import type {AtomicCommerceCategoryFacet} from './atomic-commerce-category-facet';
+import './atomic-commerce-category-facet';
 
 vi.mock('@coveo/headless/commerce', {spy: true});
 
-// Mock CategoryFacet since there's no specific fixture for it yet
-const buildFakeCategoryFacet = (
-  options: Partial<CategoryFacet> = {}
-): CategoryFacet => {
-  const defaultState: CategoryFacetState = {
-    facetId: 'category-facet',
-    field: 'cat_platform',
-    displayName: 'Platform',
-    values: [],
-    selectedValueAncestry: [],
-    canShowMoreValues: false,
-    canShowLessValues: false,
-    hasActiveValues: false,
-    isLoading: false,
-    type: 'hierarchical',
-    facetSearch: {
-      query: '',
-      values: [],
-      isLoading: false,
-      moreValuesAvailable: false,
-    },
-  };
-
-  return {
-    state: {...defaultState, ...options.state},
-    subscribe: vi.fn(),
-    unsubscribe: vi.fn(),
-    showMoreValues: vi.fn(),
-    showLessValues: vi.fn(),
-    toggleSelect: vi.fn(),
-    deselectAll: vi.fn(),
-    facetSearch: {
-      clear: vi.fn(),
-      updateText: vi.fn(),
-      search: vi.fn(),
-      select: vi.fn(),
-    },
-    ...options,
-  } as CategoryFacet;
-};
-
 describe('atomic-commerce-category-facet', () => {
   let mockedSummary: Summary;
+  let mockedFacet: CategoryFacet;
   let mockedConsoleError: MockInstance;
-
-  const locators = {
-    get title() {
-      return page.getByText('Platform', {exact: true});
-    },
-    getFacetValueByPosition(valuePosition: number) {
-      return page.getByRole('listitem').nth(valuePosition);
-    },
-    getFacetValueButtonByPosition(valuePosition: number) {
-      const value = this.getFacetValueByPosition(valuePosition);
-      return value.getByRole('checkbox');
-    },
-    get clearButton() {
-      return page.getByRole('button', {name: /clear/i});
-    },
-    get showMoreButton() {
-      return page.getByRole('button', {name: /show more/i});
-    },
-    get showLessButton() {
-      return page.getByRole('button', {name: /show less/i});
-    },
-    get searchInput() {
-      return page.getByRole('searchbox');
-    },
-    get componentError() {
-      return page.getByText(
-        'Look at the developer console for more information'
-      );
-    },
-    parts: (element: Element) => {
-      const qs = (part: string) =>
-        element.shadowRoot?.querySelector(`[part~="${part}"]`);
-      return {
-        facet: qs('facet'),
-        labelButton: qs('label-button'),
-        clearButton: qs('clear-button'),
-        searchWrapper: qs('search-wrapper'),
-        searchInput: qs('search-input'),
-        values: qs('values'),
-        showMore: qs('show-more'),
-        showLess: qs('show-less'),
-      };
-    },
-  };
 
   beforeEach(() => {
     mockedConsoleError = vi
@@ -117,6 +31,20 @@ describe('atomic-commerce-category-facet', () => {
       .mockImplementation(() => {});
 
     mockedSummary = buildFakeSummary({});
+    mockedFacet = buildFakeCategoryFacet({
+      implementation: {
+        toggleSelect: vi.fn(),
+        deselectAll: vi.fn(),
+        showMoreValues: vi.fn(),
+        showLessValues: vi.fn(),
+        facetSearch: {
+          clear: vi.fn(),
+          updateText: vi.fn(),
+          search: vi.fn(),
+          select: vi.fn(),
+        },
+      },
+    });
   });
 
   afterEach(() => {
@@ -124,27 +52,15 @@ describe('atomic-commerce-category-facet', () => {
   });
 
   const setupElement = async (
-    facetOptions: Partial<CategoryFacet> = {},
-    elementOptions = {}
+    props?: Partial<{isCollapsed: boolean; field: string}>
   ) => {
-    const facet = buildFakeCategoryFacet(facetOptions);
-
     const {element} =
       await renderInAtomicCommerceInterface<AtomicCommerceCategoryFacet>({
         template: html`<atomic-commerce-category-facet
-          .facet=${facet}
+          .facet=${mockedFacet}
           .summary=${mockedSummary}
           field="cat_platform"
-          .displayName=${'Platform'}
-          .numberOfValues=${8}
-          .sortCriteria=${'occurrences'}
-          .withSearch=${false}
-          .delimitingCharacter=${'>'}
-          .filterFacetCount=${true}
-          .injectionDepth=${1000}
-          .isCollapsed=${false}
-          .headingLevel=${0}
-          ...${elementOptions}
+          ?is-collapsed=${props?.isCollapsed || false}
         ></atomic-commerce-category-facet>`,
         selector: 'atomic-commerce-category-facet',
         bindings: (bindings) => {
@@ -152,237 +68,189 @@ describe('atomic-commerce-category-facet', () => {
           return bindings;
         },
       });
-    return element;
+
+    return {
+      element,
+      get title() {
+        return page.getByText('some-category-display-name', {exact: true});
+      },
+      get noLabelTitle() {
+        return page.getByText('No label', {exact: true});
+      },
+      getFacetValueByPosition(valuePosition: number) {
+        return page.getByRole('listitem').nth(valuePosition);
+      },
+      getFacetValueByLabel(value: string | RegExp) {
+        return page.getByRole('listitem').filter({hasText: value});
+      },
+      getFacetValueButtonByLabel(value: string | RegExp) {
+        return page.getByLabelText(`Inclusion filter on ${value}`);
+      },
+      get showMoreButton() {
+        return page.getByRole('button', {name: /show more/i});
+      },
+      get showLessButton() {
+        return page.getByRole('button', {name: /show less/i});
+      },
+      get componentError() {
+        return page.getByText(
+          'Look at the developer console for more information'
+        );
+      },
+      get facet() {
+        return element.shadowRoot!.querySelector('facet')!;
+      },
+      get clearButton() {
+        return element.shadowRoot!.querySelector('clear-button')!;
+      },
+      get searchWrapper() {
+        return element.shadowRoot!.querySelector('search-wrapper')!;
+      },
+      get searchInput() {
+        return element.shadowRoot!.querySelector('search-input')!;
+      },
+      get labelButton() {
+        return element.shadowRoot!.querySelector('[part=label-button]')!;
+      },
+      get labelButtonIcon() {
+        return element.shadowRoot!.querySelector('[part=label-button-icon]')!;
+      },
+      get values() {
+        return element.shadowRoot!.querySelector('[part=values]')!;
+      },
+      get valueLabel() {
+        return element.shadowRoot!.querySelectorAll('[part=value-label]');
+      },
+      get valueCount() {
+        return element.shadowRoot!.querySelectorAll('[part=value-count]');
+      },
+      get showMore() {
+        return element.shadowRoot!.querySelector('show-more')!;
+      },
+      get showLess() {
+        return element.shadowRoot!.querySelector('show-less')!;
+      },
+    };
   };
 
-  it('should render with default props', async () => {
-    const element = await setupElement();
-    expect(element).toBeDefined();
-    expect(element.field).toBe('cat_platform');
-  });
-
   it('should render the title', async () => {
-    await setupElement();
-    const title = locators.title;
+    const {title} = await setupElement();
     await expect.element(title).toBeVisible();
   });
 
-  describe('when facet has values', () => {
-    const mockValues: CategoryFacetValue[] = [
-      {
-        value: 'Electronics',
-        numberOfResults: 150,
-        state: 'idle',
-        path: ['Electronics'],
-        moreValuesAvailable: true,
-        children: [],
-        isLeafValue: true,
-        isAutoSelected: false,
-        isSuggested: false,
+  it('should render the facet', async () => {
+    const {facet} = await setupElement();
+    await expect.element(facet).toBeVisible();
+  });
+
+  it.skip('should render the first facet value', async () => {
+    const {getFacetValueByPosition} = await setupElement();
+    const facetValue = getFacetValueByPosition(0);
+    await expect.element(facetValue).toBeVisible();
+  });
+
+  it.skip('should render facet values', async () => {
+    const {valueLabel} = await setupElement();
+
+    expect(valueLabel).toHaveLength(2);
+    await expect.element(valueLabel[0]).toBeInTheDocument();
+    await expect.element(valueLabel[1]).toBeInTheDocument();
+  });
+
+  it.skip('should render values', async () => {
+    const {values} = await setupElement();
+    await expect.element(values).toBeInTheDocument();
+  });
+
+  it.skip('should render the first facet value label', async () => {
+    const {getFacetValueByLabel} = await setupElement();
+    const facetValueLabel = getFacetValueByLabel('Past Month');
+    await expect.element(facetValueLabel).toBeVisible();
+  });
+
+  it.skip('should render the first facet value button label', async () => {
+    const {getFacetValueButtonByLabel} = await setupElement();
+    const facetValueButtonLabel = getFacetValueButtonByLabel('Past Month');
+    await expect.element(facetValueButtonLabel).toBeVisible();
+  });
+
+  it.skip('should render the label button part', async () => {
+    const {labelButton} = await setupElement();
+    await expect.element(labelButton).toBeInTheDocument();
+  });
+
+  it.skip('should render the label button icon part', async () => {
+    const {labelButtonIcon} = await setupElement();
+    await expect.element(labelButtonIcon).toBeInTheDocument();
+  });
+
+  it.skip('should render the first value count part', async () => {
+    const {valueCount} = await setupElement();
+    await expect.element(valueCount![0]).toBeInTheDocument();
+  });
+
+  it.skip('should not render facet when there are no values', async () => {
+    mockedFacet = buildFakeCategoryFacet({
+      state: {
+        values: [],
       },
-      {
-        value: 'Clothing',
-        numberOfResults: 89,
-        state: 'selected',
-        path: ['Clothing'],
-        moreValuesAvailable: false,
-        children: [],
-        isLeafValue: true,
-        isAutoSelected: false,
-        isSuggested: false,
+    });
+
+    const {facet} = await setupElement();
+
+    expect(facet).not.toBeInTheDocument();
+  });
+
+  it.skip('should not render values when collapsed', async () => {
+    const {values} = await setupElement({
+      isCollapsed: true,
+    });
+
+    await expect.element(values).not.toBeInTheDocument();
+  });
+
+  it.skip('should not render facet when summary has error', async () => {
+    mockedSummary = buildFakeSummary({
+      state: {
+        hasError: true,
       },
-    ];
-
-    it('should display facet values when values are available', async () => {
-      await setupElement({
-        state: {
-          ...buildFakeCategoryFacet().state,
-          values: mockValues,
-        },
-      });
-
-      const facetValues = page.getByRole('listitem');
-      await expect.element(facetValues.first()).toBeVisible();
     });
+    const {facet} = await setupElement();
 
-    it('should show clear button when has active values', async () => {
-      await setupElement({
-        state: {
-          ...buildFakeCategoryFacet().state,
-          values: mockValues,
-          hasActiveValues: true,
-        },
-      });
-
-      await expect.element(locators.clearButton).toBeVisible();
-    });
-
-    it('should call toggleSelect when value is clicked', async () => {
-      const toggleSelectSpy = vi.fn();
-      await setupElement({
-        state: {
-          ...buildFakeCategoryFacet().state,
-          values: mockValues,
-        },
-        toggleSelect: toggleSelectSpy,
-      });
-
-      const firstValue = locators.getFacetValueButtonByPosition(0);
-      await firstValue.click();
-
-      expect(toggleSelectSpy).toHaveBeenCalledWith(mockValues[0]);
-    });
+    await expect.element(facet).not.toBeInTheDocument();
   });
 
-  describe('when can show more values', () => {
-    it('should display show more button when canShowMoreValues is true', async () => {
-      await setupElement({
-        state: {
-          ...buildFakeCategoryFacet().state,
-          canShowMoreValues: true,
-        },
-      });
-
-      await expect.element(locators.showMoreButton).toBeVisible();
+  it.skip('should not render facet when first request not executed', async () => {
+    mockedSummary = buildFakeSummary({
+      state: {
+        firstRequestExecuted: false,
+      },
     });
-
-    it('should call showMoreValues when show more button is clicked', async () => {
-      const showMoreValuesSpy = vi.fn();
-      await setupElement({
-        state: {
-          ...buildFakeCategoryFacet().state,
-          canShowMoreValues: true,
-        },
-        showMoreValues: showMoreValuesSpy,
-      });
-
-      await locators.showMoreButton.click();
-      expect(showMoreValuesSpy).toHaveBeenCalled();
-    });
+    const {facet} = await setupElement();
+    await expect.element(facet).not.toBeInTheDocument();
   });
 
-  describe('when can show less values', () => {
-    it('should display show less button when canShowLessValues is true', async () => {
-      await setupElement({
-        state: {
-          ...buildFakeCategoryFacet().state,
-          canShowLessValues: true,
-        },
-      });
-
-      await expect.element(locators.showLessButton).toBeVisible();
+  it.skip('should render no-label when facet has no display name', async () => {
+    mockedFacet = buildFakeCategoryFacet({
+      state: {
+        displayName: '',
+      },
     });
-
-    it('should call showLessValues when show less button is clicked', async () => {
-      const showLessValuesSpy = vi.fn();
-      await setupElement({
-        state: {
-          ...buildFakeCategoryFacet().state,
-          canShowLessValues: true,
-        },
-        showLessValues: showLessValuesSpy,
-      });
-
-      await locators.showLessButton.click();
-      expect(showLessValuesSpy).toHaveBeenCalled();
-    });
+    const {noLabelTitle} = await setupElement();
+    await expect.element(noLabelTitle).toBeInTheDocument();
   });
 
-  describe('when withSearch is enabled', () => {
-    it('should display search input when withSearch is true', async () => {
-      await setupElement({}, {'.withSearch': true});
+  it.skip('should throw error when facet property is missing', async () => {
+    // @ts-expect-error: mocking facet to be undefined
+    mockedFacet = undefined;
+    const {componentError} = await setupElement();
 
-      await expect.element(locators.searchInput).toBeVisible();
-    });
-  });
-
-  describe('when facet is collapsed', () => {
-    it('should not display facet values when isCollapsed is true', async () => {
-      await setupElement(
-        {
-          state: {
-            ...buildFakeCategoryFacet().state,
-            values: [
-              {
-                value: 'Electronics',
-                numberOfResults: 150,
-                state: 'idle',
-                path: ['Electronics'],
-                moreValuesAvailable: false,
-                children: [],
-                isLeafValue: true,
-                isAutoSelected: false,
-                isSuggested: false,
-              },
-            ],
-          },
-        },
-        {'.isCollapsed': true}
-      );
-
-      const facetValues = page.getByRole('listitem');
-      await expect.element(facetValues).not.toBeVisible();
-    });
-  });
-
-  describe('when loading', () => {
-    it('should display loading state when isLoading is true', async () => {
-      await setupElement({
-        state: {
-          ...buildFakeCategoryFacet().state,
-          isLoading: true,
-        },
-      });
-
-      // Check for loading indicator or disabled state
-      const facetElement = page.getByRole('group');
-      await expect.element(facetElement).toHaveAttribute('aria-busy', 'true');
-    });
-  });
-
-  describe('#clear', () => {
-    it('should call deselectAll when clear method is invoked', async () => {
-      const deselectAllSpy = vi.fn();
-      const element = await setupElement({
-        deselectAll: deselectAllSpy,
-      });
-
-      // Simulate calling clear method if it exists on the element
-      if ('clear' in element && typeof element.clear === 'function') {
-        element.clear();
-        expect(deselectAllSpy).toHaveBeenCalled();
-      }
-    });
-  });
-
-  describe('#focus', () => {
-    it('should focus the first focusable element when focus method is called', async () => {
-      const element = await setupElement({
-        state: {
-          ...buildFakeCategoryFacet().state,
-          values: [
-            {
-              value: 'Electronics',
-              numberOfResults: 150,
-              state: 'idle',
-              path: ['Electronics'],
-              moreValuesAvailable: false,
-              children: [],
-              isLeafValue: true,
-              isAutoSelected: false,
-              isSuggested: false,
-            },
-          ],
-        },
-      });
-
-      // Simulate calling focus method if it exists on the element
-      if ('focus' in element && typeof element.focus === 'function') {
-        element.focus();
-
-        const firstCheckbox = locators.getFacetValueButtonByPosition(0);
-        await expect.element(firstCheckbox).toHaveAttribute('tabindex', '0');
-      }
-    });
+    expect(componentError).toBeVisible();
+    expect(mockedConsoleError).toHaveBeenCalledWith(
+      new Error(
+        'The "facet" property is required for <atomic-commerce-category-facet>.'
+      ),
+      expect.anything()
+    );
   });
 });

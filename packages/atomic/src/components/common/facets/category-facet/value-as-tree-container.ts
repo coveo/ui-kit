@@ -1,8 +1,7 @@
-import type {FunctionalComponentWithChildren} from '@/src/utils/functional-component-utils';
+import type {FunctionalComponentWithChildrenNoProps} from '@/src/utils/functional-component-utils';
 import {html} from 'lit';
 
-export const renderCategoryFacetTreeValueContainer: FunctionalComponentWithChildren<
-  Record<string, never>
-> = () => (children) => {
-  return html`<li class="contents">${children}</li>`;
-};
+export const renderCategoryFacetTreeValueContainer: FunctionalComponentWithChildrenNoProps =
+  () => (children) => {
+    return html`<li class="contents">${children}</li>`;
+  };

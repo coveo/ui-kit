@@ -1,5 +1,4 @@
 import type {CommerceBindings} from '@/src/components/commerce/atomic-commerce-interface/atomic-commerce-interface';
-import type {FacetInfo} from '@/src/components/common/facets/facet-common-store';
 import {renderFacetContainer} from '@/src/components/common/facets/facet-container/facet-container';
 import {renderFacetHeader} from '@/src/components/common/facets/facet-header/facet-header';
 import {announceFacetSearchResultsWithAriaLive} from '@/src/components/common/facets/facet-search/facet-search-aria-live';
@@ -11,7 +10,6 @@ import {
 } from '@/src/components/common/facets/facet-search/facet-search-utils';
 import {renderFacetShowMoreLess} from '@/src/components/common/facets/facet-show-more-less/facet-show-more-less';
 import {renderFacetValuesGroup} from '@/src/components/common/facets/facet-values-group/facet-values-group';
-import {initializePopover} from '@/src/components/common/facets/popover/popover-type';
 import {booleanConverter} from '@/src/converters/boolean-converter';
 import {bindStateToController} from '@/src/decorators/bind-state';
 import {bindingGuard} from '@/src/decorators/binding-guard';
@@ -32,10 +30,20 @@ import type {
   SearchSummaryState,
   Summary,
 } from '@coveo/headless/commerce';
-import type {CSSResultGroup} from 'lit';
-import {html, LitElement, unsafeCSS} from 'lit';
+import type {CSSResultGroup, TemplateResult} from 'lit';
+import {html, LitElement, nothing, unsafeCSS} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
+import {map} from 'lit/directives/map.js';
 import {when} from 'lit/directives/when.js';
+import {renderCategoryFacetAllCategoryButton} from '../../common/facets/category-facet/all-categories-button';
+import {renderCategoryFacetChildrenAsTreeContainer} from '../../common/facets/category-facet/children-as-tree-container';
+import {renderCategoryFacetParentAsTreeContainer} from '../../common/facets/category-facet/parent-as-tree-container';
+import {renderCategoryFacetParentButton} from '../../common/facets/category-facet/parent-button';
+import {renderCategoryFacetParentValueLink} from '../../common/facets/category-facet/parent-value-link';
+import {renderCategoryFacetSearchResultsContainer} from '../../common/facets/category-facet/search-results-container';
+import {renderCategoryFacetSearchValue} from '../../common/facets/category-facet/search-value';
+import {renderCategoryFacetTreeValueContainer} from '../../common/facets/category-facet/value-as-tree-container';
+import {renderCategoryFacetValueLink} from '../../common/facets/category-facet/value-link';
 import styles from './atomic-commerce-category-facet.tw.css';
 
 /**
@@ -132,7 +140,6 @@ export class AtomicCommerceCategoryFacet
   private showMoreFocus?: FocusTargetController;
   private headerFocus?: FocusTargetController;
   private activeValueFocus?: FocusTargetController;
-  private unsubscribeFacetController?: () => void;
 
   private facetSearchAriaMessage = new AriaLiveRegionController(
     this,
@@ -140,35 +147,16 @@ export class AtomicCommerceCategoryFacet
   );
 
   public initialize() {
-    console.log('*********************');
-    console.log(this.facet);
-    console.log('*********************');
-
-    if (!this.facet) {
-      return;
-    }
-    this.ensureSubscribed();
-    announceFacetSearchResultsWithAriaLive(
-      this.facet,
-      this.displayName,
-      (msg) => {
-        this.facetSearchAriaMessage.message = msg;
-      },
-      this.bindings.i18n
-    );
-
-    const facetInfo: FacetInfo = {
-      label: () => this.bindings.i18n.t(this.displayName),
-      facetId: this.facetState.facetId,
-      element: this,
-      isHidden: () => this.isHidden,
-    };
-
-    initializePopover(this, {
-      ...facetInfo,
-      hasValues: () => !!this.facetState.values.length,
-      numberOfActiveValues: () => (this.facetState.hasActiveValues ? 1 : 0),
-    });
+    this.validateFacet();
+    this.facet &&
+      announceFacetSearchResultsWithAriaLive(
+        this.facet,
+        this.displayName,
+        (msg) => {
+          this.facetSearchAriaMessage.message = msg;
+        },
+        this.bindings.i18n
+      );
   }
 
   private get displayName() {
@@ -195,27 +183,6 @@ export class AtomicCommerceCategoryFacet
       headerFocus: this.headerFocus,
       activeValueFocus: this.activeValueFocus,
     };
-  }
-
-  public disconnectedCallback() {
-    super.disconnectedCallback();
-    if (!this.isConnected) {
-      this.unsubscribeFacetController?.();
-      this.unsubscribeFacetController = undefined;
-    }
-  }
-
-  public connectedCallback(): void {
-    super.connectedCallback();
-    this.ensureSubscribed();
-  }
-
-  private get isHidden() {
-    return (
-      this.summaryState.hasError ||
-      (!this.facetState.values.length &&
-        !this.facetState.selectedValueAncestry?.length)
-    );
   }
 
   public shouldUpdate(
@@ -267,55 +234,54 @@ export class AtomicCommerceCategoryFacet
     });
   }
 
-  private renderSearchInput() {
-    return renderFacetSearchInput({
-      props: {
-        i18n: this.bindings.i18n,
-        label: this.displayName,
-        query: this.facetState.facetSearch.query,
-        onChange: (value: string) => {
-          if (value === '') {
-            this.facet.facetSearch.clear();
-            return;
-          }
-          this.facet.facetSearch.updateText(value);
-          this.facet.facetSearch.search();
-        },
-        onClear: () => this.facet.facetSearch.clear(),
-      },
-    });
-  }
-
   private renderValuesTree(
     parents: CategoryFacetValue[],
     isRoot: boolean
-  ): unknown {
+  ): TemplateResult {
     if (!this.hasParents) {
       return this.renderChildren();
     }
 
     if (isRoot) {
-      return html`
-        <div class="tree-value-container">
-          ${this.renderAllCategoriesButton()}
-          <div class="parent-as-tree-container not-top-level">
-            ${this.renderValuesTree(parents, false)}
-          </div>
-        </div>
-      `;
+      return renderCategoryFacetTreeValueContainer()(html`
+        ${renderCategoryFacetAllCategoryButton({
+          props: {
+            i18n: this.bindings.i18n,
+            onClick: () => {
+              this.focusTargets.activeValueFocus.focusAfterSearch();
+              this.facet.deselectAll();
+            },
+          },
+        })}
+        ${renderCategoryFacetParentAsTreeContainer({
+          props: {
+            isTopLevel: false,
+          },
+        })(html`${this.renderValuesTree(parents, false)} `)}
+      `);
     }
 
     if (parents.length > 1) {
       const parentValue = parents[0];
 
-      return html`
-        <div class="tree-value-container">
-          ${this.renderParentButton(parentValue)}
-          <div class="parent-as-tree-container not-top-level">
-            ${this.renderValuesTree(parents.slice(1), false)}
-          </div>
-        </div>
-      `;
+      return renderCategoryFacetTreeValueContainer()(html`
+        ${renderCategoryFacetParentButton({
+          props: {
+            i18n: this.bindings.i18n,
+            field: this.facetState?.field,
+            facetValue: parentValue,
+            onClick: () => {
+              this.focusTargets.activeValueFocus.focusAfterSearch();
+              this.facet.toggleSelect(parentValue);
+            },
+          },
+        })}
+        ${renderCategoryFacetParentAsTreeContainer({
+          props: {
+            isTopLevel: false,
+          },
+        })(this.renderValuesTree(parents.slice(1), false))}
+      `);
     }
 
     const activeParent = parents[0];
@@ -326,71 +292,33 @@ export class AtomicCommerceCategoryFacet
     );
 
     return html`
-      <div
-        class="parent-value-link"
-        part="active-parent value-link"
-        @click=${() => {
-          this.focusTargets.activeValueFocus.focusAfterSearch();
-          this.facet.deselectAll();
-        }}
-      >
-        <div class="value-content">
-          <span class="value-label" part="value-label">
-            ${activeParentDisplayValue}
-          </span>
-          <span class="value-count" part="value-count">
-            ${activeParent.numberOfResults}
-          </span>
-        </div>
-        <div class="children-as-tree-container">${this.renderChildren()}</div>
-      </div>
-    `;
-  }
-
-  private renderAllCategoriesButton() {
-    return html`
-      <button
-        class="all-categories-button"
-        part="all-categories-button"
-        @click=${() => {
-          this.focusTargets.activeValueFocus.focusAfterSearch();
-          this.facet.deselectAll();
-        }}
-      >
-        ${this.bindings.i18n.t('all-categories')}
-      </button>
-    `;
-  }
-
-  private renderParentButton(parentValue: CategoryFacetValue) {
-    const displayValue = getFieldValueCaption(
-      this.facetState?.field,
-      parentValue.value,
-      this.bindings.i18n
-    );
-
-    return html`
-      <button
-        class="parent-button"
-        part="parent-button"
-        @click=${() => {
-          this.focusTargets.activeValueFocus.focusAfterSearch();
-          this.facet.toggleSelect(parentValue);
-        }}
-      >
-        <div class="back-arrow" part="back-arrow"></div>
-        <span class="value-label" part="value-label">${displayValue}</span>
-        <span class="value-count" part="value-count">
-          ${parentValue.numberOfResults}
-        </span>
-      </button>
+      ${renderCategoryFacetParentValueLink({
+        props: {
+          displayValue: activeParentDisplayValue,
+          numberOfResults: activeParent.numberOfResults,
+          i18n: this.bindings.i18n,
+          isLeafValue: activeParent.isLeafValue,
+          onClick: () => {
+            this.focusTargets.activeValueFocus.focusAfterSearch();
+            this.facet.deselectAll();
+          },
+          searchQuery: this.facetState.facetSearch.query,
+          setRef: (el) => {
+            this.focusTargets.activeValueFocus.setTarget(el as HTMLElement);
+          },
+        },
+      })(html`
+        ${renderCategoryFacetChildrenAsTreeContainer({props: {}})(
+          html` ${this.renderChildren()}`
+        )}
+      `)}
     `;
   }
 
   private renderChild(
     facetValue: CategoryFacetValue,
-    _isShowLessFocusTarget: boolean,
-    _isShowMoreFocusTarget: boolean
+    isShowLessFocusTarget: boolean,
+    isShowMoreFocusTarget: boolean
   ) {
     const displayValue = getFieldValueCaption(
       this.facetState?.field,
@@ -399,26 +327,27 @@ export class AtomicCommerceCategoryFacet
     );
     const isSelected = facetValue.state === 'selected';
 
-    // TODO: is missing <CategoryFacetChildValueLink> component
-    return html`
-      <button
-        class=${`child-value-link ${isSelected ? 'selected' : ''} ${
-          facetValue.isLeafValue ? 'leaf-value' : 'node-value'
-        }`}
-        part="value-link ${facetValue.isLeafValue
-          ? 'leaf-value'
-          : 'node-value'}"
-        @click=${() => {
+    return html`${renderCategoryFacetValueLink({
+      props: {
+        displayValue,
+        numberOfResults: facetValue.numberOfResults,
+        i18n: this.bindings.i18n,
+        onClick: () => {
           this.focusTargets.activeValueFocus.focusAfterSearch();
           this.facet.toggleSelect(facetValue);
-        }}
-      >
-        <span class="value-label" part="value-label">${displayValue}</span>
-        <span class="value-count" part="value-count">
-          ${facetValue.numberOfResults}
-        </span>
-      </button>
-    `;
+        },
+        isParent: false,
+        isSelected,
+        searchQuery: this.facetState.facetSearch.query,
+        isLeafValue: facetValue.isLeafValue,
+        setRef: (el) => {
+          isShowLessFocusTarget &&
+            this.focusTargets.showLessFocus.setTarget(el as HTMLElement);
+          isShowMoreFocusTarget &&
+            this.focusTargets.showMoreFocus.setTarget(el as HTMLElement);
+        },
+      },
+    })()} `;
   }
 
   private renderChildren() {
@@ -431,46 +360,28 @@ export class AtomicCommerceCategoryFacet
         : nextValues
       : [];
 
-    return children.map((value, i) =>
+    return html`${map(children, (value, i) =>
       this.renderChild(value, i === 0, i === this.resultIndexToFocusOnShowMore)
-    );
+    )}`;
   }
 
   private renderSearchResults() {
-    return html`
-      <div class="search-results-container" part="search-results">
-        ${this.facetState.facetSearch.values.map(
-          (value) => html`
-            <button
-              class="search-result"
-              part="search-result"
-              @click=${() => {
-                this.focusTargets.activeValueFocus.focusAfterSearch();
-                this.facet.facetSearch.select(value);
-              }}
-            >
-              <span class="value-label" part="value-label">
-                ${value.displayValue}
-              </span>
-              <span class="value-count" part="value-count">
-                ${value.count}
-              </span>
-            </button>
-          `
-        )}
-      </div>
-    `;
-  }
-
-  private renderMatches() {
-    return renderFacetSearchMatches({
-      props: {
-        i18n: this.bindings.i18n,
-        query: this.facetState.facetSearch.query,
-        numberOfMatches: this.facetState.facetSearch.values.length,
-        hasMoreMatches: this.facetState.facetSearch.moreValuesAvailable,
-      },
-    });
+    return renderCategoryFacetSearchResultsContainer()(
+      html`${map(this.facetState.facetSearch.values, (value) =>
+        renderCategoryFacetSearchValue({
+          props: {
+            value,
+            field: this.facetState.field,
+            searchQuery: this.facetState.facetSearch.query,
+            i18n: this.bindings.i18n,
+            onClick: () => {
+              this.focusTargets.activeValueFocus.focusAfterSearch();
+              this.facet.facetSearch.select(value);
+            },
+          },
+        })
+      )}`
+    );
   }
 
   private renderShowMoreLess() {
@@ -507,9 +418,8 @@ export class AtomicCommerceCategoryFacet
 
     const {hasError, firstRequestExecuted} = this.summaryState;
 
-    // Simple guard logic inline
     if (!firstRequestExecuted || hasError || values.length === 0) {
-      return html``;
+      return html`${nothing}`;
     }
 
     return renderFacetContainer()(html`
@@ -517,20 +427,46 @@ export class AtomicCommerceCategoryFacet
       ${when(
         !this.isCollapsed,
         () => html`
-          ${this.renderSearchInput()}
+          ${renderFacetSearchInput({
+            props: {
+              i18n: this.bindings.i18n,
+              label: this.displayName,
+              query: this.facetState.facetSearch.query,
+              onChange: (value: string) => {
+                if (value === '') {
+                  this.facet.facetSearch.clear();
+                  return;
+                }
+                this.facet.facetSearch.updateText(value);
+                this.facet.facetSearch.search();
+              },
+              onClear: () => this.facet.facetSearch.clear(),
+            },
+          })}
           ${when(
             shouldDisplaySearchResults(facetSearch),
             () => html`
-              ${facetSearch.values.length
-                ? renderFacetValuesGroup({
+              ${when(
+                facetSearch.values.length > 0,
+                () =>
+                  renderFacetValuesGroup({
                     props: {
                       i18n,
                       label: this.displayName,
                       query: facetSearch.query,
                     },
-                  })(this.renderSearchResults())
-                : html`<div class="mt-3"></div>`}
-              ${this.renderMatches()}
+                  })(this.renderSearchResults()),
+                () => html`<div class="mt-3"></div>`
+              )}
+              ${renderFacetSearchMatches({
+                props: {
+                  i18n: this.bindings.i18n,
+                  query: this.facetState.facetSearch.query,
+                  numberOfMatches: this.facetState.facetSearch.values.length,
+                  hasMoreMatches:
+                    this.facetState.facetSearch.moreValuesAvailable,
+                },
+              })}
             `,
             () => html`
               ${renderFacetValuesGroup({
@@ -539,18 +475,28 @@ export class AtomicCommerceCategoryFacet
                   label: this.displayName,
                 },
               })(
-                this.hasParents
-                  ? html`
-                      <div class="parent-as-tree-container top-level mt-3">
-                        ${selectedValueAncestry &&
-                        this.renderValuesTree(selectedValueAncestry, true)}
-                      </div>
-                    `
-                  : html`
-                      <div class="children-as-tree-container mt-3">
-                        ${this.renderChildren()}
-                      </div>
-                    `
+                when(
+                  this.hasParents,
+                  () => html`
+                    ${renderCategoryFacetParentAsTreeContainer({
+                      props: {isTopLevel: true, className: 'mt-3'},
+                    })(
+                      html`${when(
+                        selectedValueAncestry,
+                        () =>
+                          selectedValueAncestry &&
+                          this.renderValuesTree(selectedValueAncestry, true)
+                      )}`
+                    )}
+                  `,
+                  () => html`
+                    ${renderCategoryFacetChildrenAsTreeContainer({
+                      props: {
+                        className: 'mt-3',
+                      },
+                    })(this.renderChildren())}
+                  `
+                )
               )}
               ${this.renderShowMoreLess()}
             `
@@ -558,15 +504,6 @@ export class AtomicCommerceCategoryFacet
         `
       )}
     `);
-  }
-
-  private ensureSubscribed() {
-    if (this.unsubscribeFacetController) {
-      return;
-    }
-    this.unsubscribeFacetController = this.facet?.subscribe(() => {
-      this.facetState = this.facet.state;
-    });
   }
 
   public updated(changedProps: Map<string, unknown>) {
