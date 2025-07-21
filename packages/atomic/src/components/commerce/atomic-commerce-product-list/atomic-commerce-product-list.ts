@@ -26,6 +26,7 @@ import {bindings} from '@/src/decorators/bindings.js';
 import {errorGuard} from '@/src/decorators/error-guard.js';
 import type {InitializableComponent} from '@/src/decorators/types.js';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles.js';
+import {ChildrenUpdateCompleteMixin} from '@/src/mixins/children-update-complete-mixin.js';
 import {FocusTargetController} from '@/src/utils/accessibility-utils.js';
 import {randomID} from '@/src/utils/utils.js';
 import {renderItemPlaceholders} from '../../common/atomic-result-placeholder/item-placeholders.js';
@@ -72,7 +73,7 @@ import styles from './atomic-commerce-product-list.tw.css';
 @bindings()
 @withTailwindStyles
 export class AtomicCommerceProductList
-  extends LitElement
+  extends ChildrenUpdateCompleteMixin(LitElement)
   implements InitializableComponent<CommerceBindings>
 {
   static styles: CSSResultGroup = [unsafeCSS(styles)];
@@ -93,6 +94,8 @@ export class AtomicCommerceProductList
   error!: Error;
   @state()
   private isAppLoaded = false;
+  @state()
+  private isEveryProductsReady = false;
   @state()
   private resultTemplateRegistered = false;
   @state()
@@ -167,6 +170,28 @@ export class AtomicCommerceProductList
       this.selectChildProductCallback
     );
   }
+  public async updated(changedProperties: Map<string, unknown>) {
+    super.updated(changedProperties);
+    if (
+      changedProperties.has('searchOrListingState') &&
+      this.isEveryProductsReady
+    ) {
+      this.isEveryProductsReady = false;
+    }
+    await this.updateProductsReadyState();
+  }
+
+  private async updateProductsReadyState() {
+    if (
+      this.isAppLoaded &&
+      !this.isEveryProductsReady &&
+      this.summaryState?.firstRequestExecuted &&
+      this.searchOrListingState?.products?.length > 0
+    ) {
+      await this.getUpdateComplete();
+      this.isEveryProductsReady = true;
+    }
+  }
 
   @bindingGuard()
   @errorGuard()
@@ -179,12 +204,17 @@ export class AtomicCommerceProductList
           () => html`<slot></slot>`,
           () => {
             const listClasses = this.computeListDisplayClasses();
-            return renderDisplayWrapper({
-              props: {listClasses, display: this.display},
-            })(html`
-              ${when(
-                this.isAppLoaded,
-                () =>
+            const productClasses = `${listClasses} ${!this.isEveryProductsReady && 'hidden'}`;
+
+            // Products must be rendered immediately (though hidden) to start their initialization and loading processes.
+            // If we wait to render products until placeholders are removed, the components won't begin loading until then,
+            // causing a longer delay. The `isEveryProductsReady` flag hides products while preserving placeholders,
+            // then removes placeholders once products are fully loaded to prevent content flash.
+            return html`
+              ${when(this.isAppLoaded, () =>
+                renderDisplayWrapper({
+                  props: {listClasses: productClasses, display: this.display},
+                })(
                   html`${when(
                     this.display === 'grid',
                     () => this.renderGrid(),
@@ -194,8 +224,13 @@ export class AtomicCommerceProductList
                         () => this.renderList(),
                         () => this.renderTable()
                       )}`
-                  )}`,
-                () =>
+                  )}`
+                )
+              )}
+              ${when(!this.isEveryProductsReady, () =>
+                renderDisplayWrapper({
+                  props: {listClasses, display: this.display},
+                })(
                   renderItemPlaceholders({
                     props: {
                       density: this.density,
@@ -204,8 +239,9 @@ export class AtomicCommerceProductList
                       numberOfPlaceholders: this.numberOfPlaceholders,
                     },
                   })
+                )
               )}
-            `);
+            `;
           }
         )}`,
       () => nothing
@@ -292,7 +328,9 @@ export class AtomicCommerceProductList
   }
 
   private computeListDisplayClasses() {
-    const displayPlaceholders = !this.isAppLoaded;
+    const displayPlaceholders = !(
+      this.isAppLoaded && this.isEveryProductsReady
+    );
 
     return getItemListDisplayClasses(
       this.display,

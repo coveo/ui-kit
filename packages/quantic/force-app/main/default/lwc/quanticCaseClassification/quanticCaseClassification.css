@@ -1,5 +1,5 @@
 lightning-icon {
-  --sds-c-icon-color-foreground-default: white;
+  --slds-c-icon-color-foreground-default: var(--slds-g-color-brand-base-100, white);
 }
 .slds-visual-picker__figure {
   width: 9.6rem;
@@ -12,17 +12,12 @@ lightning-icon {
 }
 
 .loading-holder {
-  position: relative;
   width: 9.6rem;
   height: 2rem;
 }
 
 .slds-form-element__label {
   color: unset;
-}
-
-.slds-visual-picker {
-  overflow: hidden;
 }
 
 .row {

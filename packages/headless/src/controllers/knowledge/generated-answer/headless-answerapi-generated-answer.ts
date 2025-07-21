@@ -61,7 +61,7 @@ interface ParseEvaluationArgumentsParams {
 
 const parseEvaluationDetails = (
   detail: 'yes' | 'no' | 'unknown'
-): Boolean | null => {
+): boolean | null => {
   if (detail === 'yes') {
     return true;
   }
