@@ -2640,7 +2640,7 @@ export declare interface AtomicCommercePager extends LitAtomicCommercePager {
 
 @ProxyCmp({
   inputs: ['density', 'display', 'imageSize', 'numberOfPlaceholders'],
-  methods: ['setRenderFunction', 'initialize'],
+  methods: ['setRenderFunction', 'initialize', 'getUpdateComplete'],
   defineCustomElementFn: () => {customElements.get('atomic-commerce-product-list') || customElements.define('atomic-commerce-product-list', LitAtomicCommerceProductList);}
 })
 @Component({
@@ -2744,7 +2744,7 @@ export declare interface AtomicCommerceRecommendationInterface extends LitAtomic
 
 @ProxyCmp({
   inputs: ['slotId', 'productId', 'display', 'density', 'imageSize', 'productsPerPage', 'headingLevel'],
-  methods: ['watchNumberOfRecommendationsPerPage', 'setRenderFunction', 'previousPage', 'nextPage', 'initialize', 'initBindings'],
+  methods: ['watchNumberOfRecommendationsPerPage', 'setRenderFunction', 'previousPage', 'nextPage', 'initialize', 'getUpdateComplete'],
   defineCustomElementFn: () => {customElements.get('atomic-commerce-recommendation-list') || customElements.define('atomic-commerce-recommendation-list', LitAtomicCommerceRecommendationList);}
 })
 @Component({
@@ -3056,7 +3056,7 @@ export declare interface AtomicProductText extends LitAtomicProductText {
 
 @ProxyCmp({
   inputs: ['stopPropagation', 'product', 'interactiveProduct', 'store', 'content', 'linkContent', 'display', 'density', 'imageSize', 'classes'],
-  methods: [],
+  methods: ['getUpdateComplete'],
   defineCustomElementFn: () => {customElements.get('atomic-product') || customElements.define('atomic-product', LitAtomicProduct);}
 })
 @Component({
