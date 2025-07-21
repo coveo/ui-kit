@@ -80,8 +80,13 @@ export class PlatformClient {
       switch (response.status) {
         case 419:
         case 401:
-          logger.info('Platform renewing token');
-          throw new ExpiredTokenError();
+          // If the token contains a dot, it means it's a JWT token.
+          // Therefore, we can throw the ExpiredTokenError to trigger the renewAccessToken middleware.
+          if (options.accessToken.includes('.')) {
+            logger.info('Platform renewing token');
+            throw new ExpiredTokenError();
+          }
+          return response;
         case 404:
           throw new DisconnectedError(url, response.status);
         default:
