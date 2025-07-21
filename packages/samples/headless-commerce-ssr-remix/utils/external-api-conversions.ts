@@ -1,6 +1,6 @@
-import {ExternalCartItem} from '@/external-services/external-cart-service';
-import {CartItem} from '@coveo/headless-react/ssr-commerce';
-import {CurrencyCodeISO4217} from '@coveo/relay-event-types';
+import type {CartItem} from '@coveo/headless-react/ssr-commerce';
+import type {CurrencyCodeISO4217} from '@coveo/relay-event-types';
+import type {ExternalCartItem} from '@/external-services/external-cart-service';
 
 export const toCoveoCartItems = (items: ExternalCartItem[]): CartItem[] => {
   return items.map(toCoveoCartItem);

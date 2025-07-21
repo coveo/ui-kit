@@ -1,4 +1,4 @@
-import {CartItemWithMetadata, CartState} from '@coveo/headless/commerce';
+import type {CartItemWithMetadata, CartState} from '@coveo/headless/commerce';
 
 export function saveCartItemsToLocaleStorage(cartState: CartState): void {
   try {

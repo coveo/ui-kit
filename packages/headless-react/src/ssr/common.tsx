@@ -1,4 +1,4 @@
-import {
+import type {
   Controller,
   ControllerDefinitionsMap,
   CoreEngine,
@@ -7,16 +7,16 @@ import {
   InferControllersMapFromDefinition,
 } from '@coveo/headless/ssr';
 import {
-  useContext,
+  type Context,
+  type PropsWithChildren,
   useCallback,
+  useContext,
   useMemo,
-  Context,
-  PropsWithChildren,
 } from 'react';
 import {useSyncMemoizedStore} from '../client-utils.js';
 import {MissingEngineProviderError} from '../errors.js';
-import {SingletonGetter, capitalize, mapObject} from '../utils.js';
-import {
+import {capitalize, mapObject, type SingletonGetter} from '../utils.js';
+import type {
   ContextHydratedState,
   ContextState,
   ControllerHook,
@@ -52,9 +52,12 @@ function buildControllerHook<
         isHydratedStateContext(ctx)
           ? ctx.controllers[key].subscribe(listener)
           : () => {},
-      [ctx]
+      [ctx, key]
     );
-    const getStaticState = useCallback(() => ctx.controllers[key].state, [ctx]);
+    const getStaticState = useCallback(
+      () => ctx.controllers[key].state,
+      [ctx, key]
+    );
     const state = useSyncMemoizedStore(subscribe, getStaticState);
     const methods = useMemo(() => {
       if (!isHydratedStateContext(ctx)) {
@@ -65,7 +68,7 @@ function buildControllerHook<
       return mapObject(remainder, (member) =>
         typeof member === 'function' ? member.bind(controller) : member
       ) as Omit<typeof controller, 'state' | 'subscribe'>;
-    }, [ctx]);
+    }, [ctx, key]);
     return {state, methods};
   };
 }

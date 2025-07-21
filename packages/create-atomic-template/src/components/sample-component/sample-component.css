@@ -1,0 +1,10 @@
+nav {
+  width: 300px;
+  display: flex;
+  justify-content: space-around;
+}
+
+button {
+  color: var(--atomic-on-primary);
+  background-color: var(--atomic-primary);
+}

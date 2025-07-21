@@ -1,23 +1,23 @@
+import {randomUUID} from 'node:crypto';
 import {
-  getSampleSearchEngineConfiguration,
-  InferStaticState,
-  InferHydratedState,
   defineResultList,
   defineSearchBox,
-  Result,
-  NavigatorContextProvider,
+  getSampleSearchEngineConfiguration,
+  type InferHydratedState,
+  type InferStaticState,
+  type NavigatorContextProvider,
+  type Result,
 } from '@coveo/headless/ssr';
 import {act, render, renderHook, screen} from '@testing-library/react';
-import {randomUUID} from 'crypto';
-import {PropsWithChildren} from 'react';
+import type {PropsWithChildren} from 'react';
 import {
-  vi,
-  expect,
-  describe,
-  test,
-  beforeEach,
-  MockInstance,
   afterEach,
+  beforeEach,
+  describe,
+  expect,
+  type MockInstance,
+  test,
+  vi,
 } from 'vitest';
 import {MissingEngineProviderError} from '../errors.js';
 import {defineSearchEngine} from './search-engine.js';
@@ -166,7 +166,7 @@ describe('Headless react SSR utils', () => {
       renderFunction: CallableFunction,
       expectedErrMsg: string
     ) {
-      let err: Error | undefined = undefined;
+      let err: Error | undefined;
       // Prevent expected error from being thrown in console when running tests
       const consoleErrorStub = vi
         .spyOn(console, 'error')

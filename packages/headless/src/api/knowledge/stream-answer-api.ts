@@ -1,4 +1,3 @@
-/* eslint-disable canonical/no-barrel-import */
 import {
   createSelector,
   type ThunkDispatch,

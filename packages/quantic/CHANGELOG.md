@@ -1,3 +1,10 @@
+## <small>3.26.2 (2025-07-16)</small>
+
+* style(quantic): properly lint check and lint fix (#5619) ([e000a11](https://github.com/coveo/ui-kit/commits/e000a11)), closes [#5619](https://github.com/coveo/ui-kit/issues/5619)
+* fix(deps): update all dependencies j:kit-282 (#5605) ([8132ed8](https://github.com/coveo/ui-kit/commits/8132ed8)), closes [#5605](https://github.com/coveo/ui-kit/issues/5605)
+
+
+
 ## 3.26.0 (2025-07-09)
 
 * feat(quantic): wire clearFiltersOnTabChange in quanticTab (#5574) ([40e5fe6](https://github.com/coveo/ui-kit/commits/40e5fe6)), closes [#5574](https://github.com/coveo/ui-kit/issues/5574)

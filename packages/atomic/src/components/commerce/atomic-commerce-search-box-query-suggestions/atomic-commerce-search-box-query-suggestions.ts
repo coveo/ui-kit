@@ -76,6 +76,18 @@ export class AtomicCommerceSearchBoxQuerySuggestions
     const {registerQuerySuggest, fetchQuerySuggestions} =
       loadQuerySuggestActions(engine);
 
+    const numberOfQueries = this.bindings.numberOfQueries;
+    const maxWithQuery = this.maxWithQuery;
+
+    if (numberOfQueries < maxWithQuery) {
+      const logger = this.bindings.engine.logger;
+      logger.warn(
+        `Query suggestions configuration mismatch: atomic-commerce-search-box has number-of-queries="${numberOfQueries}" but atomic-commerce-search-box-query-suggestions has max-with-query="${maxWithQuery}". ` +
+          `This may cause inconsistent behavior where the search box requests ${numberOfQueries} suggestions but the component tries to display up to ${maxWithQuery}. ` +
+          `Consider updating max-with-query to ${numberOfQueries} or increasing number-of-queries to ${maxWithQuery}.`
+      );
+    }
+
     engine.dispatch(
       registerQuerySuggest({
         id: this.bindings.id,

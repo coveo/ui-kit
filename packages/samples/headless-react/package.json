@@ -8,8 +8,8 @@
     "node": "^20.9.0 || ^22.11.0"
   },
   "dependencies": {
-    "@coveo/auth": "2.0.20",
-    "@coveo/headless": "3.27.2",
+    "@coveo/auth": "2.0.22",
+    "@coveo/headless": "3.27.4",
     "@testing-library/jest-dom": "6.6.3",
     "@testing-library/react": "16.3.0",
     "@testing-library/user-event": "14.6.1",
@@ -56,6 +56,6 @@
     "cypress-repeat": "2.3.9",
     "gts": "5.3.1",
     "vite": "6.3.5",
-    "vitest": "3.2.3"
+    "vitest": "3.2.4"
   }
 }

@@ -1,5 +1,3 @@
-import {createComponent} from '@lit/react';
-import React from 'react';
 import {
   AtomicCommerceBreadbox as LitAtomicCommerceBreadbox,
   AtomicCommerceDidYouMean as LitAtomicCommerceDidYouMean,
@@ -10,9 +8,11 @@ import {
   AtomicCommercePager as LitAtomicCommercePager,
   AtomicCommerceProductList as LitAtomicCommerceProductList,
   AtomicCommerceProductsPerPage as LitAtomicCommerceProductsPerPage,
+  AtomicCommerceQueryError as LitAtomicCommerceQueryError,
   AtomicCommerceQuerySummary as LitAtomicCommerceQuerySummary,
   AtomicCommerceRecommendationInterface as LitAtomicCommerceRecommendationInterface,
   AtomicCommerceRecommendationList as LitAtomicCommerceRecommendationList,
+  AtomicCommerceRefineModal as LitAtomicCommerceRefineModal,
   AtomicCommerceRefineToggle as LitAtomicCommerceRefineToggle,
   AtomicCommerceSearchBox as LitAtomicCommerceSearchBox,
   AtomicCommerceSearchBoxInstantProducts as LitAtomicCommerceSearchBoxInstantProducts,
@@ -27,6 +27,8 @@ import {
   AtomicProductChildren as LitAtomicProductChildren,
   AtomicProductText as LitAtomicProductText,
 } from '@coveo/atomic/components';
+import {createComponent} from '@lit/react';
+import React from 'react';
 
 export const AtomicCommerceBreadbox = createComponent({
   tagName: 'atomic-commerce-breadbox',
@@ -82,6 +84,12 @@ export const AtomicCommerceProductsPerPage = createComponent({
   elementClass: LitAtomicCommerceProductsPerPage,
 });
 
+export const AtomicCommerceQueryError = createComponent({
+  tagName: 'atomic-commerce-query-error',
+  react: React,
+  elementClass: LitAtomicCommerceQueryError,
+});
+
 export const AtomicCommerceQuerySummary = createComponent({
   tagName: 'atomic-commerce-query-summary',
   react: React,
@@ -98,6 +106,12 @@ export const AtomicCommerceRecommendationList = createComponent({
   tagName: 'atomic-commerce-recommendation-list',
   react: React,
   elementClass: LitAtomicCommerceRecommendationList,
+});
+
+export const AtomicCommerceRefineModal = createComponent({
+  tagName: 'atomic-commerce-refine-modal',
+  react: React,
+  elementClass: LitAtomicCommerceRefineModal,
 });
 
 export const AtomicCommerceRefineToggle = createComponent({

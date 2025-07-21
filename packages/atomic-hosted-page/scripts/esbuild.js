@@ -1,7 +1,7 @@
-import esbuild from 'esbuild';
 import {readFileSync} from 'node:fs';
-import {resolve, dirname} from 'node:path';
+import {dirname, resolve} from 'node:path';
 import {fileURLToPath} from 'node:url';
+import esbuild from 'esbuild';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const buenoJson = JSON.parse(
@@ -13,10 +13,10 @@ const headlessJson = JSON.parse(
 const isNightly = process.env.IS_NIGHTLY === 'true';
 const headlessVersion = isNightly
   ? `v${headlessJson.version.split('.').shift()}-nightly`
-  : 'v' + headlessJson.version;
+  : `v${headlessJson.version}`;
 const buenoVersion = isNightly
   ? `v${buenoJson.version.split('.').shift()}-nightly`
-  : 'v' + buenoJson.version;
+  : `v${buenoJson.version}`;
 const packageMappings = {
   '@coveo/headless': `/headless/${headlessVersion}/headless.esm.js`,
   '@coveo/bueno': `/bueno/${buenoVersion}/bueno.esm.js`,

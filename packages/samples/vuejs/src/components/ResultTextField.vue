@@ -1,11 +1,11 @@
 <script setup lang="ts">
-const props = defineProps({
-  label: String,
+const _props = defineProps({
   field: String,
+  label: String,
 });
 </script>
 
 <template>
-  <atomic-text :value="props.label"></atomic-text>:
-  <atomic-result-text :field="props.field"></atomic-result-text>
+  <atomic-text :value="_props.label"></atomic-text>:
+  <atomic-result-text :field="_props.field"></atomic-result-text>
 </template>

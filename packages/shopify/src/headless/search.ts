@@ -1,13 +1,12 @@
-import {buildSearchEngine, SearchEngineOptions} from '@coveo/headless';
+import {buildSearchEngine, type SearchEngineOptions} from '@coveo/headless';
 import {COVEO_SHOPIFY_CONFIG_KEY} from '../constants';
-import {CoveoShopifyOptions} from '../types';
+import type {CoveoShopifyOptions} from '../types';
 import {publishCustomShopifyEvent} from '../utilities/shopify';
 
-export {COVEO_SHOPIFY_CONFIG_KEY} from '../constants';
-
-export type * from '../types';
 export * from '@coveo/headless';
 export * from '../constants';
+export {COVEO_SHOPIFY_CONFIG_KEY} from '../constants';
+export type * from '../types';
 export * from '../utilities';
 
 export interface BuildShopifySearchEngineOptions {

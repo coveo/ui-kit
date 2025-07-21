@@ -1,7 +1,7 @@
+import {getOrganizationEndpoint} from '@coveo/headless-react/ssr-commerce';
+import type {LoaderFunctionArgs} from '@remix-run/node';
 import engineDefinitionOptions from '@/lib/commerce-engine-config';
 import {isExpired, parseJwt} from '@/utils/access-token-utils';
-import {getOrganizationEndpoint} from '@coveo/headless-react/ssr-commerce';
-import {LoaderFunctionArgs} from '@remix-run/node';
 import {coveo_accessToken} from '../cookies.server';
 
 export const loader = async ({request}: LoaderFunctionArgs) => {

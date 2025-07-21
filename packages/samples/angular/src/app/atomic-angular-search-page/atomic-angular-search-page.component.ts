@@ -1,5 +1,5 @@
-import {AfterViewInit, Component, ViewChild} from '@angular/core';
-import {AtomicSearchInterface} from '@coveo/atomic-angular';
+import {type AfterViewInit, Component, ViewChild} from '@angular/core';
+import type {AtomicSearchInterface} from '@coveo/atomic-angular';
 
 @Component({
   standalone: false,
@@ -11,7 +11,6 @@ export class AtomicAngularSearchPageComponent implements AfterViewInit {
   @ViewChild('searchInterface2')
   searchInterface!: AtomicSearchInterface;
 
-  constructor() {}
   async ngAfterViewInit(): Promise<void> {
     this.searchInterface
       ?.initialize({
