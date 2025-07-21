@@ -30,24 +30,6 @@ import {
 import {createComponent} from '@lit/react';
 import React from 'react';
 
-export const AtomicComponentError = createComponent({
-  tagName: 'atomic-component-error',
-  react: React,
-  elementClass: LitAtomicComponentError,
-});
-
-export const AtomicLayoutSection = createComponent({
-  tagName: 'atomic-layout-section',
-  react: React,
-  elementClass: LitAtomicLayoutSection,
-});
-
-export const AtomicIcon = createComponent({
-  tagName: 'atomic-icon',
-  react: React,
-  elementClass: LitAtomicIcon,
-});
-
 export const AtomicCommerceBreadbox = createComponent({
   tagName: 'atomic-commerce-breadbox',
   react: React,
@@ -138,16 +120,16 @@ export const AtomicCommerceRefineToggle = createComponent({
   elementClass: LitAtomicCommerceRefineToggle,
 });
 
-export const AtomicCommerceSearchBoxInstantProducts = createComponent({
-  tagName: 'atomic-commerce-search-box-instant-products',
-  react: React,
-  elementClass: LitAtomicCommerceSearchBoxInstantProducts,
-});
-
 export const AtomicCommerceSearchBox = createComponent({
   tagName: 'atomic-commerce-search-box',
   react: React,
   elementClass: LitAtomicCommerceSearchBox,
+});
+
+export const AtomicCommerceSearchBoxInstantProducts = createComponent({
+  tagName: 'atomic-commerce-search-box-instant-products',
+  react: React,
+  elementClass: LitAtomicCommerceSearchBoxInstantProducts,
 });
 
 export const AtomicCommerceSearchBoxQuerySuggestions = createComponent({
@@ -190,4 +172,22 @@ export const AtomicProductText = createComponent({
   tagName: 'atomic-product-text',
   react: React,
   elementClass: LitAtomicProductText,
+});
+
+export const AtomicComponentError = createComponent({
+  tagName: 'atomic-component-error',
+  react: React,
+  elementClass: LitAtomicComponentError,
+});
+
+export const AtomicIcon = createComponent({
+  tagName: 'atomic-icon',
+  react: React,
+  elementClass: LitAtomicIcon,
+});
+
+export const AtomicLayoutSection = createComponent({
+  tagName: 'atomic-layout-section',
+  react: React,
+  elementClass: LitAtomicLayoutSection,
 });
