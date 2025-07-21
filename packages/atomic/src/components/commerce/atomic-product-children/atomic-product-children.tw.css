@@ -3,22 +3,29 @@ atomic-product-children .children-container {
   flex-wrap: wrap;
 }
 
-.display-grid {
-  atomic-product-children .children-container {
-    .product-child:nth-child(n + 6) {
-      display: none;
-    }
-
-    .product-child:nth-child(6) ~ .plus-button {
-      display: block;
-    }
-
-    .product-child:nth-child(6):last-child ~ .plus-button {
-      display: none;
-    }
-  }
+atomic-product-children .children-container .plus-button {
+  display: none;
 }
 
-atomic-product-children .children-container .plus-button {
+.display-grid
+  atomic-product-children
+  .children-container
+  .product-child:nth-child(n + 6) {
+  display: none;
+}
+
+.display-grid
+  atomic-product-children
+  .children-container
+  .product-child:nth-child(6)
+  ~ .plus-button {
+  display: block;
+}
+
+.display-grid
+  atomic-product-children
+  .children-container
+  .product-child:nth-child(6):last-child
+  ~ .plus-button {
   display: none;
 }
