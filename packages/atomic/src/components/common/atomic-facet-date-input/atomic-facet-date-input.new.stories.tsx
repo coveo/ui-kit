@@ -16,8 +16,8 @@ const meta: Meta = {
     <atomic-facet-date-input
       .facetId=${'test-facet'}
       .label=${'Date Range'}
-      .rangeGetter=${() => undefined}
-      .rangeSetter=${() => {}}
+      .inputRange=${{start: '', end: ''}}
+      @atomic-date-input-apply=${() => {}}
     ></atomic-facet-date-input>
   `,
   decorators: [decorator],
