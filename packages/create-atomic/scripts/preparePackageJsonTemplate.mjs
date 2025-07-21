@@ -1,8 +1,11 @@
 import fs from 'fs-extra';
+
 const {readFileSync, writeFileSync, copySync, copyFileSync} = fs;
-import {join, resolve, dirname} from 'path';
+
+import {dirname, join, resolve} from 'node:path';
+import {fileURLToPath} from 'node:url';
 import detectIndent from 'detect-indent';
-import {fileURLToPath} from 'url';
+
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 const atomicTemplatePath = resolve(

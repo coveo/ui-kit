@@ -12,6 +12,7 @@ import {
   AtomicCommerceQuerySummary as LitAtomicCommerceQuerySummary,
   AtomicCommerceRecommendationInterface as LitAtomicCommerceRecommendationInterface,
   AtomicCommerceRecommendationList as LitAtomicCommerceRecommendationList,
+  AtomicCommerceRefineModal as LitAtomicCommerceRefineModal,
   AtomicCommerceRefineToggle as LitAtomicCommerceRefineToggle,
   AtomicCommerceSearchBox as LitAtomicCommerceSearchBox,
   AtomicCommerceSearchBoxInstantProducts as LitAtomicCommerceSearchBoxInstantProducts,
@@ -104,6 +105,12 @@ export const AtomicCommerceRecommendationList = createComponent({
   tagName: 'atomic-commerce-recommendation-list',
   react: React,
   elementClass: LitAtomicCommerceRecommendationList,
+});
+
+export const AtomicCommerceRefineModal = createComponent({
+  tagName: 'atomic-commerce-refine-modal',
+  react: React,
+  elementClass: LitAtomicCommerceRefineModal,
 });
 
 export const AtomicCommerceRefineToggle = createComponent({

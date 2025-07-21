@@ -1,5 +1,5 @@
 import {readFileSync} from 'node:fs';
-import path, {dirname, resolve } from 'node:path';
+import path, {dirname, resolve} from 'node:path';
 import type {StorybookConfig} from '@storybook/web-components-vite';
 import type {PluginImpl} from 'rollup';
 import {mergeConfig} from 'vite';
