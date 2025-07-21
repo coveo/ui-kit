@@ -505,6 +505,7 @@ export {ResultTemplatesHelpers} from './features/result-templates/result-templat
 export {buildResultTemplatesManager} from './features/result-templates/result-templates-manager.js';
 export * from './features/search/search-actions-loader.js';
 export * from './features/search-hub/search-hub-actions-loader.js';
+export * from './features/search-parameters/search-parameter-actions-loader.js';
 export * from './features/sort-criteria/sort-criteria-actions-loader.js';
 export * from './features/standalone-search-box-set/standalone-search-box-set-actions-loader.js';
 export * from './features/static-filter-set/static-filter-set-actions-loader.js';
