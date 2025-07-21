@@ -38,7 +38,7 @@ function mockLogger(logger: Logger): MockedLogger {
 
 type MockedRelay = Relay & Pick<Relay, 'emit'>;
 
-export function mockRelay(): MockedRelay {
+function mockRelay(): MockedRelay {
   return {
     emit: vi.fn(),
     getMeta: vi.fn().mockReturnValue({clientId: 'test'}),
@@ -57,7 +57,7 @@ type MockedCoreEngine<
   relay: MockedRelay;
 } & SpyEverything<Omit<CoreEngine, 'logger' | 'state' | 'relay'>>;
 
-export function buildMockCoreEngine<State extends StateFromEngine<CoreEngine>>(
+function buildMockCoreEngine<State extends StateFromEngine<CoreEngine>>(
   initialState: State
 ): MockedCoreEngine<State> {
   const state: State = initialState;
@@ -92,7 +92,7 @@ type MockedCoreEngineNext<
   relay: MockedRelay;
 } & SpyEverything<Omit<CoreEngineNext, 'logger' | 'stateKey' | 'relay'>>;
 
-export function buildMockCoreEngineNext<
+function buildMockCoreEngineNext<
   State extends StateFromEngineNext<CoreEngineNext>,
 >(initialState: State): MockedCoreEngineNext<State> {
   const state: State = initialState;
