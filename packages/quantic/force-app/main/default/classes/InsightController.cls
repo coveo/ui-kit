@@ -9,10 +9,10 @@ global with sharing class InsightController {
    *    - `organizationId`: the ID of the organization to query (see https://docs.coveo.com/en/148/manage-an-organization/retrieve-the-organization-id).
    */
   @AuraEnabled(cacheable=true)
-  public static String getHeadlessConfiguration() {
+  public static String getHeadlessConfiguration(String recordId) {
     /**
      * e.g. To switch to the Insight Token Provider, you simply need to replace the following line by:
-     * `return InsightTokenProvider.getHeadlessConfiguration();`
+     * `return InsightTokenProvider.getHeadlessConfiguration(recordId);`
      */
     return SampleTokenProvider.getHeadlessConfiguration();
   }

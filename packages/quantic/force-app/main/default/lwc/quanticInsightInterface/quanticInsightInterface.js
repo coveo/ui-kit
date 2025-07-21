@@ -35,6 +35,12 @@ export default class QuanticInsightInterface extends LightningElement {
    * @type {string}
    */
   @api insightId;
+    /**
+   * The record ID.
+   * @api
+   * @type {string}
+   */
+  @api recordId;
 
   /** @type {InsightEngineOptions} */
   engineOptions;
@@ -69,7 +75,7 @@ export default class QuanticInsightInterface extends LightningElement {
     loadDependencies(this, HeadlessBundleNames.insight)
       .then(() => {
         if (!getHeadlessBindings(this.engineId)?.engine) {
-          getHeadlessConfiguration()
+          getHeadlessConfiguration({recordId: this.recordId})
             .then((data) => {
               if (data) {
                 const {organizationId, accessToken, ...rest} = JSON.parse(data);

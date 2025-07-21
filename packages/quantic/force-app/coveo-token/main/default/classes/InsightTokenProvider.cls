@@ -1,66 +1,22 @@
-global with sharing class InsightTokenProvider implements ITokenProvider {
-  public static final String TYPE_VIEW = 'VIEW';
-  public static final String TYPE_EDIT = 'EDIT';
-  public static final String TYPE_ENABLE = 'ENABLE';
-  public static final String OWNER_USAGE_ANALYTICS = 'USAGE_ANALYTICS';
-  public static final String OWNER_CUSTOMER_SERVICE = 'CUSTOMER_SERVICE';
-  public static final String OWNER_SEARCH_API = 'SEARCH_API';
-  public static final String DOMAIN_ANALYTICS_ANALYTICS_DATA = 'ANALYTICS_DATA';
-  public static final String DOMAIN_CUSTOMER_SERVICE_INSIGHT_PANEL_INTERFACE = 'INSIGHT_PANEL_INTERFACE';
-  public static final String DOMAIN_CUSTOMER_SERVICE_INSIGHT_PANEL_DOCUMENTS = 'INSIGHT_PANEL_DOCUMENTS';
-  public static final String DOMAIN_SEARCH_API_EXECUTE_QUERY = 'EXECUTE_QUERY';
-
-  /**
-   * Returns the privileges needed to put in a Platform token in order to use the Hosted Insight Panel feature.
-   * The required privileges will be these:
-   * UsageAnalytics --> Write (to send events)
-   * Insight Panel Interface --> View (to query the configuration of your Insight Panel)
-   * Insight Panel Documents --> View (to send a search request)
-   * @return A list containing the required privileges.
-   */
-  private static List<CoveoV2.PlatformToken.TokenPrivilege> buildInsightTokenPrivileges() {
-    List<CoveoV2.PlatformToken.TokenPrivilege> privileges = new List<CoveoV2.PlatformToken.TokenPrivilege>();
-    privileges.add(
-      new CoveoV2.PlatformToken.TokenPrivilege(
-        OWNER_CUSTOMER_SERVICE,
-        DOMAIN_CUSTOMER_SERVICE_INSIGHT_PANEL_INTERFACE,
-        TYPE_VIEW
-      )
-    );
-    privileges.add(
-      new CoveoV2.PlatformToken.TokenPrivilege(
-        OWNER_USAGE_ANALYTICS,
-        DOMAIN_ANALYTICS_ANALYTICS_DATA,
-        TYPE_EDIT
-      )
-    );
-    privileges.add(
-      new CoveoV2.PlatformToken.TokenPrivilege(
-        OWNER_CUSTOMER_SERVICE,
-        DOMAIN_CUSTOMER_SERVICE_INSIGHT_PANEL_DOCUMENTS,
-        TYPE_VIEW
-      )
-    );
-    privileges.add(
-      new CoveoV2.PlatformToken.TokenPrivilege(
-        OWNER_SEARCH_API,
-        DOMAIN_SEARCH_API_EXECUTE_QUERY,
-        TYPE_ENABLE
-      )
-    );
-    return privileges;
-  }
-
+global with sharing class InsightTokenProvider implements IInsightTokenProvider {
   /**
    * Calls the Coveo for Salesforce package to retrieve information about the linked organization and to get an Insight platform token.
    * Note: To use the InsightTokenProvider class, Coveo for Salesforce must be installed and configured in your environment.
    * For more information, @see https://docs.coveo.com/en/1158/coveo-for-salesforce/getting-started-with-coveo-for-salesforce.
    */
   @AuraEnabled(continuation=true cacheable=false)
-  global static String getHeadlessConfiguration() {
+  global static String getHeadlessConfiguration(String recordId) {
     Map<String, Object> coveoEndpointData = CoveoV2.Globals.getEndpointData();
     try {
-      List<CoveoV2.PlatformToken.TokenPrivilege> tokenPrivileges = buildInsightTokenPrivileges();
+      List<CoveoV2.PlatformToken.TokenPrivilege> tokenPrivileges;
+      String[] userActionIds = CoveoV2.Globals.getUserActionIds(recordId, new List<String>{ 'CreatedBy.Email' });
+      if (userActionIds.size() > 0) {
+        String userActionTarget = userActionIds[0];
+        Map<String, Object> tokenPrivilegesParams = new Map<String, Object>{ 'userActionTarget' => userActionTarget };
+        tokenPrivileges = CoveoV2.PlatformToken.buildInsightTokenPrivileges(tokenPrivilegesParams);
+      } else {
+        tokenPrivileges = CoveoV2.PlatformToken.buildInsightTokenPrivileges();
+      }
       Map<String, Object> platformTokenParams = new Map<String, Object>();
       platformTokenParams.put('privileges', tokenPrivileges);
       String token = CoveoV2.Globals.generatePlatformToken(platformTokenParams);
