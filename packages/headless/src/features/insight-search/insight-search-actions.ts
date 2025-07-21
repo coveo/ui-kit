@@ -1,4 +1,4 @@
-import {createAsyncThunk} from '@reduxjs/toolkit';
+import {createAction, createAsyncThunk} from '@reduxjs/toolkit';
 import HistoryStore from '../../api/analytics/coveo.analytics/history-store.js';
 import {
   isErrorResponse,
@@ -106,6 +106,10 @@ interface TransitiveInsightSearchAction {
   next?: SearchAction;
 }
 
+export const updateSearchAction = createAction<SearchAction | undefined>(
+  'search/updateSearchAction'
+);
+
 export const executeSearch = createAsyncThunk<
   ExecuteSearchThunkReturn,
   TransitiveInsightSearchAction,
@@ -130,6 +134,9 @@ export const executeSearch = createAsyncThunk<
     const eventDescription = analyticsAction.next
       ? buildEventDescription(analyticsAction.next)
       : undefined;
+
+    config.dispatch(updateSearchAction(analyticsAction.next));
+
     const request = await buildInsightSearchRequest(state, eventDescription);
     const fetched = await processor.fetchFromAPI(request);
 
