@@ -32,7 +32,7 @@ jest.mock('c/quanticUtils', () => ({
 
 /** @type {Object} */
 const defaultOptions = {
-  fieldsToIncludeInCitations: 'sfid,sfkbid,sfkavid',
+  fieldsToIncludeInCitations: 'sfid,sfkbid,sfkavid,filetype',
   answerConfigurationId: undefined,
   withToggle: false,
   collapsible: false,

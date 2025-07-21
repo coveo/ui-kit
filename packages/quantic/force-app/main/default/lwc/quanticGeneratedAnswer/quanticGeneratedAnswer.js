@@ -71,9 +71,9 @@ export default class QuanticGeneratedAnswer extends LightningElement {
    * A list of fields to fetch with the citations used to generate the answer.
    * @api
    * @type {string}
-   * @defaultValue `'sfid,sfkbid,sfkavid'`
+   * @defaultValue `'sfid,sfkbid,sfkavid,filetype'`
    */
-  @api fieldsToIncludeInCitations = 'sfid,sfkbid,sfkavid';
+  @api fieldsToIncludeInCitations = 'sfid,sfkbid,sfkavid,filetype';
   /**
    * Whether the generated answer should be collapsible when it exceeds the maximum height of 250px.
    * @api

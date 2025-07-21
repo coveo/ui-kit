@@ -21,6 +21,9 @@ const exampleCitation = {
   clickUri: 'https://example.com/',
   permanentid: '1',
   text: 'text 01',
+  fields: {
+    filetype: 'html',
+  },
 };
 
 const exampleSalesforceCitation = {
@@ -38,6 +41,7 @@ const exampleSalesforceKnowledgeArticleCitation = {
   },
 };
 const exampleSalesforceLink = 'https://www.example-salesforce.com';
+const exampleCitationTextFragmentUrl = 'https://example.com/#:~:text=text%2001';
 
 const defaultOptions = {
   citation: exampleCitation,
@@ -125,7 +129,7 @@ describe('c-quantic-citation', () => {
     expect(citationTitle).not.toBeNull();
     expect(citationTooltip).not.toBeNull();
 
-    expect(citationLink.href).toBe(exampleCitation.clickUri);
+    expect(citationLink.href).toBe(exampleCitationTextFragmentUrl);
     expect(citationLink.target).toBe('_blank');
     expect(citationTitle.textContent).toBe(exampleCitation.title);
   });
