@@ -59,7 +59,7 @@ vi.mock('../../../api/knowledge/stream-answer-api', async () => {
       actionCause: '',
     },
     {
-      q: 'this est une question in next mode without action cause',
+      q: 'this est une question in next mode with an action cause',
       requestId: '781',
       analyticsMode: 'next',
       actionCause: 'searchboxSubmit',
