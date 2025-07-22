@@ -1,6 +1,5 @@
 import {useDidYouMean} from '@/lib/commerce-engine';
 
-      }),
 export default function DidYouMean() {
   const {state, methods} = useDidYouMean();
 
