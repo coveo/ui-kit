@@ -24,6 +24,15 @@ import {
   AtomicIcon as LitAtomicIcon,
   AtomicLayoutSection as LitAtomicLayoutSection,
   AtomicProduct as LitAtomicProduct,
+  AtomicProductSectionActions as LitAtomicProductSectionActions,
+  AtomicProductSectionBadges as LitAtomicProductSectionBadges,
+  AtomicProductSectionBottomMetadata as LitAtomicProductSectionBottomMetadata,
+  AtomicProductSectionChildren as LitAtomicProductSectionChildren,
+  AtomicProductSectionDescription as LitAtomicProductSectionDescription,
+  AtomicProductSectionEmphasized as LitAtomicProductSectionEmphasized,
+  AtomicProductSectionMetadata as LitAtomicProductSectionMetadata,
+  AtomicProductSectionName as LitAtomicProductSectionName,
+  AtomicProductSectionVisual as LitAtomicProductSectionVisual,
   AtomicProductText as LitAtomicProductText,
 } from '@coveo/atomic/components';
 import {createComponent} from '@lit/react';
@@ -159,6 +168,60 @@ export const AtomicProduct = createComponent({
   tagName: 'atomic-product',
   react: React,
   elementClass: LitAtomicProduct,
+});
+
+export const AtomicProductSectionActions = createComponent({
+  tagName: 'atomic-product-section-actions',
+  react: React,
+  elementClass: LitAtomicProductSectionActions,
+});
+
+export const AtomicProductSectionBadges = createComponent({
+  tagName: 'atomic-product-section-badges',
+  react: React,
+  elementClass: LitAtomicProductSectionBadges,
+});
+
+export const AtomicProductSectionBottomMetadata = createComponent({
+  tagName: 'atomic-product-section-bottom-metadata',
+  react: React,
+  elementClass: LitAtomicProductSectionBottomMetadata,
+});
+
+export const AtomicProductSectionChildren = createComponent({
+  tagName: 'atomic-product-section-children',
+  react: React,
+  elementClass: LitAtomicProductSectionChildren,
+});
+
+export const AtomicProductSectionDescription = createComponent({
+  tagName: 'atomic-product-section-description',
+  react: React,
+  elementClass: LitAtomicProductSectionDescription,
+});
+
+export const AtomicProductSectionEmphasized = createComponent({
+  tagName: 'atomic-product-section-emphasized',
+  react: React,
+  elementClass: LitAtomicProductSectionEmphasized,
+});
+
+export const AtomicProductSectionMetadata = createComponent({
+  tagName: 'atomic-product-section-metadata',
+  react: React,
+  elementClass: LitAtomicProductSectionMetadata,
+});
+
+export const AtomicProductSectionName = createComponent({
+  tagName: 'atomic-product-section-name',
+  react: React,
+  elementClass: LitAtomicProductSectionName,
+});
+
+export const AtomicProductSectionVisual = createComponent({
+  tagName: 'atomic-product-section-visual',
+  react: React,
+  elementClass: LitAtomicProductSectionVisual,
 });
 
 export const AtomicProductText = createComponent({

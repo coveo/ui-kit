@@ -1,0 +1,72 @@
+import { Canvas, ArgTypes, Meta, Title, Description, Stories, Subtitle } from '@storybook/blocks';
+import * as AtomicProductSectionDescriptionStories from './atomic-product-section-description.new.stories';
+import { CanvasWithGithub } from '../../../../storybook-utils/documentation/canvas-with-github';
+
+<Meta of={AtomicProductSectionDescriptionStories} />
+
+<Title />
+<Subtitle><Description/></Subtitle>
+
+<CanvasWithGithub
+  of={AtomicProductSectionDescriptionStories.Default}
+  githubPath="commerce/atomic-product-section-description/atomic-product-section-description.ts"
+/>
+
+## Usage
+This section is intended to render an informative summary of the product's description.
+It provides customers with essential details about the product to help them make informed purchasing decisions.
+
+**Key Features:**
+- Has a fixed height of one to three lines, depending on the layout and density
+- Ellipses overflowing text to maintain consistent layout spacing
+- Exposes the `--line-height` CSS variable so child elements can adjust to the current line height
+- Has a defined CSS `color` property for text consistency
+- Automatically hides when empty (no child content)
+
+### Example within a Product Template
+```html
+<atomic-commerce-product-list>
+  <atomic-product-template>
+    <template>
+      <atomic-product-section-visual>
+        <atomic-product-image field="ec_thumbnails"></atomic-product-image>
+      </atomic-product-section-visual>
+
+      <atomic-product-section-name>
+        <atomic-product-link class="font-bold"></atomic-product-link>
+      </atomic-product-section-name>
+
+      <atomic-product-section-emphasized>
+        <atomic-product-price currency="USD"></atomic-product-price>
+      </atomic-product-section-emphasized>
+
+      <atomic-product-section-description>
+        <atomic-product-excerpt field="ec_description"></atomic-product-excerpt>
+      </atomic-product-section-description>
+    </template>
+  </atomic-product-template>
+</atomic-commerce-product-list>
+```
+
+### CSS Variables
+The component exposes the following CSS variable for styling consistency:
+- `--line-height`: The current line height that child elements should align to
+
+### Styling Guidelines
+- Use the line height variable to ensure consistent spacing: `line-height: var(--line-height)`
+- Implement proper text overflow handling with ellipsis or line clamping
+- Respect the height constraints: typically 1-3 lines depending on layout
+- Use appropriate text color that provides good contrast while being secondary to the product name
+- Consider using semantic HTML elements like `<p>` for better accessibility
+
+### Content Recommendations
+- Keep descriptions concise and focused on key selling points
+- Highlight unique features or benefits that differentiate the product
+- Use bullet points for multiple features when space allows
+- Ensure the most important information appears first (in case of truncation)
+
+## Examples
+<Stories title={""}/>
+
+## Reference
+<ArgTypes />

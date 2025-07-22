@@ -894,188 +894,6 @@ export class AtomicProductRating {
 export declare interface AtomicProductRating extends Components.AtomicProductRating {}
 
 
-@ProxyCmp({defineCustomElementFn: defineCustomElementAtomicProductSectionActions})
-@Component({standalone:false,
-  selector: 'atomic-product-section-actions',
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  template: '<ng-content></ng-content>',
-  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: [],
-})
-export class AtomicProductSectionActions {
-  protected el: HTMLElement;
-  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
-    c.detach();
-    this.el = r.nativeElement;
-  }
-}
-
-
-export declare interface AtomicProductSectionActions extends Components.AtomicProductSectionActions {}
-
-
-@ProxyCmp({defineCustomElementFn: defineCustomElementAtomicProductSectionBadges})
-@Component({standalone:false,
-  selector: 'atomic-product-section-badges',
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  template: '<ng-content></ng-content>',
-  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: [],
-})
-export class AtomicProductSectionBadges {
-  protected el: HTMLElement;
-  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
-    c.detach();
-    this.el = r.nativeElement;
-  }
-}
-
-
-export declare interface AtomicProductSectionBadges extends Components.AtomicProductSectionBadges {}
-
-
-@ProxyCmp({defineCustomElementFn: defineCustomElementAtomicProductSectionBottomMetadata})
-@Component({standalone:false,
-  selector: 'atomic-product-section-bottom-metadata',
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  template: '<ng-content></ng-content>',
-  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: [],
-})
-export class AtomicProductSectionBottomMetadata {
-  protected el: HTMLElement;
-  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
-    c.detach();
-    this.el = r.nativeElement;
-  }
-}
-
-
-export declare interface AtomicProductSectionBottomMetadata extends Components.AtomicProductSectionBottomMetadata {}
-
-
-@ProxyCmp({defineCustomElementFn: defineCustomElementAtomicProductSectionChildren})
-@Component({standalone:false,
-  selector: 'atomic-product-section-children',
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  template: '<ng-content></ng-content>',
-  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: [],
-})
-export class AtomicProductSectionChildren {
-  protected el: HTMLElement;
-  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
-    c.detach();
-    this.el = r.nativeElement;
-  }
-}
-
-
-export declare interface AtomicProductSectionChildren extends Components.AtomicProductSectionChildren {}
-
-
-@ProxyCmp({defineCustomElementFn: defineCustomElementAtomicProductSectionDescription})
-@Component({standalone:false,
-  selector: 'atomic-product-section-description',
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  template: '<ng-content></ng-content>',
-  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: [],
-})
-export class AtomicProductSectionDescription {
-  protected el: HTMLElement;
-  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
-    c.detach();
-    this.el = r.nativeElement;
-  }
-}
-
-
-export declare interface AtomicProductSectionDescription extends Components.AtomicProductSectionDescription {}
-
-
-@ProxyCmp({defineCustomElementFn: defineCustomElementAtomicProductSectionEmphasized})
-@Component({standalone:false,
-  selector: 'atomic-product-section-emphasized',
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  template: '<ng-content></ng-content>',
-  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: [],
-})
-export class AtomicProductSectionEmphasized {
-  protected el: HTMLElement;
-  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
-    c.detach();
-    this.el = r.nativeElement;
-  }
-}
-
-
-export declare interface AtomicProductSectionEmphasized extends Components.AtomicProductSectionEmphasized {}
-
-
-@ProxyCmp({defineCustomElementFn: defineCustomElementAtomicProductSectionMetadata})
-@Component({standalone:false,
-  selector: 'atomic-product-section-metadata',
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  template: '<ng-content></ng-content>',
-  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: [],
-})
-export class AtomicProductSectionMetadata {
-  protected el: HTMLElement;
-  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
-    c.detach();
-    this.el = r.nativeElement;
-  }
-}
-
-
-export declare interface AtomicProductSectionMetadata extends Components.AtomicProductSectionMetadata {}
-
-
-@ProxyCmp({defineCustomElementFn: defineCustomElementAtomicProductSectionName})
-@Component({standalone:false,
-  selector: 'atomic-product-section-name',
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  template: '<ng-content></ng-content>',
-  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: [],
-})
-export class AtomicProductSectionName {
-  protected el: HTMLElement;
-  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
-    c.detach();
-    this.el = r.nativeElement;
-  }
-}
-
-
-export declare interface AtomicProductSectionName extends Components.AtomicProductSectionName {}
-
-
-@ProxyCmp({
-  inputs: ['imageSize']
-, defineCustomElementFn: defineCustomElementAtomicProductSectionVisual})
-@Component({standalone:false,
-  selector: 'atomic-product-section-visual',
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  template: '<ng-content></ng-content>',
-  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: ['imageSize'],
-})
-export class AtomicProductSectionVisual {
-  protected el: HTMLElement;
-  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
-    c.detach();
-    this.el = r.nativeElement;
-  }
-}
-
-
-export declare interface AtomicProductSectionVisual extends Components.AtomicProductSectionVisual {}
-
-
 @ProxyCmp({defineCustomElementFn: defineCustomElementAtomicQueryError})
 @Component({standalone:false,
   selector: 'atomic-query-error',
@@ -3001,6 +2819,240 @@ export class AtomicCommerceText {
 }
 
 export declare interface AtomicCommerceText extends LitAtomicCommerceText {
+
+}
+
+@ProxyCmp({
+  inputs: [],
+  methods: [],
+  defineCustomElementFn: () => {customElements.get('atomic-product-section-actions') || customElements.define('atomic-product-section-actions', LitAtomicProductSectionActions);}
+})
+@Component({
+  selector: 'atomic-product-section-actions',
+  standalone: false,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
+  inputs: []
+})
+export class AtomicProductSectionActions {
+  protected readonly el: HTMLElement;
+  constructor(c: ChangeDetectorRef, el: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = el.nativeElement;
+    
+  }
+}
+
+export declare interface AtomicProductSectionActions extends LitAtomicProductSectionActions {
+
+}
+
+@ProxyCmp({
+  inputs: [],
+  methods: [],
+  defineCustomElementFn: () => {customElements.get('atomic-product-section-badges') || customElements.define('atomic-product-section-badges', LitAtomicProductSectionBadges);}
+})
+@Component({
+  selector: 'atomic-product-section-badges',
+  standalone: false,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
+  inputs: []
+})
+export class AtomicProductSectionBadges {
+  protected readonly el: HTMLElement;
+  constructor(c: ChangeDetectorRef, el: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = el.nativeElement;
+    
+  }
+}
+
+export declare interface AtomicProductSectionBadges extends LitAtomicProductSectionBadges {
+
+}
+
+@ProxyCmp({
+  inputs: [],
+  methods: [],
+  defineCustomElementFn: () => {customElements.get('atomic-product-section-bottom-metadata') || customElements.define('atomic-product-section-bottom-metadata', LitAtomicProductSectionBottomMetadata);}
+})
+@Component({
+  selector: 'atomic-product-section-bottom-metadata',
+  standalone: false,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
+  inputs: []
+})
+export class AtomicProductSectionBottomMetadata {
+  protected readonly el: HTMLElement;
+  constructor(c: ChangeDetectorRef, el: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = el.nativeElement;
+    
+  }
+}
+
+export declare interface AtomicProductSectionBottomMetadata extends LitAtomicProductSectionBottomMetadata {
+
+}
+
+@ProxyCmp({
+  inputs: [],
+  methods: [],
+  defineCustomElementFn: () => {customElements.get('atomic-product-section-children') || customElements.define('atomic-product-section-children', LitAtomicProductSectionChildren);}
+})
+@Component({
+  selector: 'atomic-product-section-children',
+  standalone: false,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
+  inputs: []
+})
+export class AtomicProductSectionChildren {
+  protected readonly el: HTMLElement;
+  constructor(c: ChangeDetectorRef, el: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = el.nativeElement;
+    
+  }
+}
+
+export declare interface AtomicProductSectionChildren extends LitAtomicProductSectionChildren {
+
+}
+
+@ProxyCmp({
+  inputs: [],
+  methods: [],
+  defineCustomElementFn: () => {customElements.get('atomic-product-section-description') || customElements.define('atomic-product-section-description', LitAtomicProductSectionDescription);}
+})
+@Component({
+  selector: 'atomic-product-section-description',
+  standalone: false,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
+  inputs: []
+})
+export class AtomicProductSectionDescription {
+  protected readonly el: HTMLElement;
+  constructor(c: ChangeDetectorRef, el: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = el.nativeElement;
+    
+  }
+}
+
+export declare interface AtomicProductSectionDescription extends LitAtomicProductSectionDescription {
+
+}
+
+@ProxyCmp({
+  inputs: [],
+  methods: [],
+  defineCustomElementFn: () => {customElements.get('atomic-product-section-emphasized') || customElements.define('atomic-product-section-emphasized', LitAtomicProductSectionEmphasized);}
+})
+@Component({
+  selector: 'atomic-product-section-emphasized',
+  standalone: false,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
+  inputs: []
+})
+export class AtomicProductSectionEmphasized {
+  protected readonly el: HTMLElement;
+  constructor(c: ChangeDetectorRef, el: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = el.nativeElement;
+    
+  }
+}
+
+export declare interface AtomicProductSectionEmphasized extends LitAtomicProductSectionEmphasized {
+
+}
+
+@ProxyCmp({
+  inputs: [],
+  methods: [],
+  defineCustomElementFn: () => {customElements.get('atomic-product-section-metadata') || customElements.define('atomic-product-section-metadata', LitAtomicProductSectionMetadata);}
+})
+@Component({
+  selector: 'atomic-product-section-metadata',
+  standalone: false,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
+  inputs: []
+})
+export class AtomicProductSectionMetadata {
+  protected readonly el: HTMLElement;
+  constructor(c: ChangeDetectorRef, el: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = el.nativeElement;
+    
+  }
+}
+
+export declare interface AtomicProductSectionMetadata extends LitAtomicProductSectionMetadata {
+
+}
+
+@ProxyCmp({
+  inputs: [],
+  methods: [],
+  defineCustomElementFn: () => {customElements.get('atomic-product-section-name') || customElements.define('atomic-product-section-name', LitAtomicProductSectionName);}
+})
+@Component({
+  selector: 'atomic-product-section-name',
+  standalone: false,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
+  inputs: []
+})
+export class AtomicProductSectionName {
+  protected readonly el: HTMLElement;
+  constructor(c: ChangeDetectorRef, el: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = el.nativeElement;
+    
+  }
+}
+
+export declare interface AtomicProductSectionName extends LitAtomicProductSectionName {
+
+}
+
+@ProxyCmp({
+  inputs: ['imageSize'],
+  methods: [],
+  defineCustomElementFn: () => {customElements.get('atomic-product-section-visual') || customElements.define('atomic-product-section-visual', LitAtomicProductSectionVisual);}
+})
+@Component({
+  selector: 'atomic-product-section-visual',
+  standalone: false,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
+  inputs: ['imageSize']
+})
+export class AtomicProductSectionVisual {
+  protected readonly el: HTMLElement;
+  constructor(c: ChangeDetectorRef, el: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = el.nativeElement;
+    
+  }
+}
+
+export declare interface AtomicProductSectionVisual extends LitAtomicProductSectionVisual {
 
 }
 

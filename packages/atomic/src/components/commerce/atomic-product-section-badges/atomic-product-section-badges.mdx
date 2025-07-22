@@ -1,0 +1,66 @@
+import { Canvas, ArgTypes, Meta, Title, Description, Stories, Subtitle } from '@storybook/blocks';
+import * as AtomicProductSectionBadgesStories from './atomic-product-section-badges.new.stories';
+import { CanvasWithGithub } from '../../../../storybook-utils/documentation/canvas-with-github';
+
+<Meta of={AtomicProductSectionBadgesStories} />
+
+<Title />
+<Subtitle><Description/></Subtitle>
+
+<CanvasWithGithub
+  of={AtomicProductSectionBadgesStories.Default}
+  githubPath="commerce/atomic-product-section-badges/atomic-product-section-badges.ts"
+/>
+
+## Usage
+This section is meant to render badges that highlight special features of the product.
+In commerce interfaces, badges are used to draw attention to product qualities like "NEW", "SALE", "BESTSELLER", or discount percentages.
+
+**Key Features:**
+- Exposes the `--line-height` CSS variable so child elements can adjust to the current line height
+- Child elements should use `height: var(--line-height)` for consistent sizing
+- Implements a wrapping flexbox layout with gap spacing
+- May appear over, next to, or beneath the visual section depending on layout configuration
+- Automatically hides when empty (no child content)
+
+### Example within a Product Template
+```html
+<atomic-commerce-product-list>
+  <atomic-product-template>
+    <template>
+      <atomic-product-section-visual>
+        <atomic-product-image field="ec_thumbnails"></atomic-product-image>
+      </atomic-product-section-visual>
+
+      <atomic-product-section-badges>
+        <span class="badge badge-primary">NEW</span>
+        <span class="badge badge-warning">SALE</span>
+      </atomic-product-section-badges>
+
+      <atomic-product-section-name>
+        <atomic-product-link class="font-bold"></atomic-product-link>
+      </atomic-product-section-name>
+
+      <atomic-product-section-emphasized>
+        <atomic-product-price currency="USD"></atomic-product-price>
+      </atomic-product-section-emphasized>
+    </template>
+  </atomic-product-template>
+</atomic-commerce-product-list>
+```
+
+### CSS Variables
+The component exposes the following CSS variable for styling consistency:
+- `--line-height`: The current line height that child elements should align to
+
+### Styling Guidelines
+- Child badges should use `height: var(--line-height)` for consistent sizing
+- The section uses flexbox with gap spacing, so individual margins between badges are not needed
+- Badges are typically displayed horizontally but will wrap if space is limited
+- Keep badge text concise and impactful for maximum visual effect
+
+## Examples
+<Stories title={""}/>
+
+## Reference
+<ArgTypes />

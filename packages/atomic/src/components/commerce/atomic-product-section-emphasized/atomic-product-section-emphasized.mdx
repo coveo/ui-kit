@@ -1,0 +1,66 @@
+import { Canvas, ArgTypes, Meta, Title, Description, Stories, Subtitle } from '@storybook/blocks';
+import * as AtomicProductSectionEmphasizedStories from './atomic-product-section-emphasized.new.stories';
+import { CanvasWithGithub } from '../../../../storybook-utils/documentation/canvas-with-github';
+
+<Meta of={AtomicProductSectionEmphasizedStories} />
+
+<Title />
+<Subtitle><Description/></Subtitle>
+
+<CanvasWithGithub
+  of={AtomicProductSectionEmphasizedStories.Default}
+  githubPath="commerce/atomic-product-section-emphasized/atomic-product-section-emphasized.ts"
+/>
+
+## Usage
+This section is intended to display the field that's important for its search criteria.
+For example, in Commerce, a product's price is often more important than the title itself and needs to stand out prominently.
+
+**Key Features:**
+- Has a very large font size to draw attention to critical information
+- Is the second closest element beneath the name section in the layout hierarchy
+- Typically used for product pricing, but can contain any emphasized information
+- Automatically hides when empty (no child content)
+
+### Example within a Product Template
+```html
+<atomic-commerce-product-list>
+  <atomic-product-template>
+    <template>
+      <atomic-product-section-visual>
+        <atomic-product-image field="ec_thumbnails"></atomic-product-image>
+      </atomic-product-section-visual>
+
+      <atomic-product-section-name>
+        <atomic-product-link class="font-bold"></atomic-product-link>
+      </atomic-product-section-name>
+
+      <atomic-product-section-emphasized>
+        <atomic-product-price currency="USD"></atomic-product-price>
+      </atomic-product-section-emphasized>
+
+      <atomic-product-section-description>
+        <atomic-product-excerpt field="ec_description"></atomic-product-excerpt>
+      </atomic-product-section-description>
+    </template>
+  </atomic-product-template>
+</atomic-commerce-product-list>
+```
+
+### Common Use Cases
+- **Product Pricing**: Display current price, sale prices, and original prices
+- **Ratings/Scores**: Highlight overall rating or review scores
+- **Availability**: Show stock status or availability information
+- **Discount Information**: Emphasize percentage discounts or savings amounts
+
+### Styling Guidelines
+- Use large, bold typography to ensure the emphasized content stands out
+- Consider using colors that align with your brand and convey the right message (e.g., green for savings, red for urgency)
+- Ensure sufficient contrast for accessibility
+- Keep content concise as this section is meant for quick scanning
+
+## Examples
+<Stories title={""}/>
+
+## Reference
+<ArgTypes />
