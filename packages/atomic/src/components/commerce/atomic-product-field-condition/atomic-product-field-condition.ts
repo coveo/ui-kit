@@ -13,7 +13,7 @@ import {
 import type {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface';
 
 /**
- * The `atomic-product-field-condition` component takes a list of conditions that, if fulfilled, apply the template in which it's defined.
+ * The `atomic-product-field-condition` component renders its children only when all of the conditions specified through its props are satisfied.
  * The condition properties can be based on any top-level product property of the `product` object, not restricted to fields (e.g., `ec_name`).
  *
  * @slot default - The content to render if the conditions are met.
@@ -36,24 +36,24 @@ export class AtomicProductFieldCondition
   private productController = createProductContextController(this);
 
   /**
-   * Verifies whether the specified fields are defined.
+   * A condition that is satisfied when the specified field is defined on a product (e.g., `if-defined="cat_gender"` is satisfied when a product has the `cat_gender` field).
    */
   @property({type: String, attribute: 'if-defined'}) ifDefined?: string;
 
   /**
-   * Verifies whether the specified fields are not defined.
+   * A condition that is satisfied when the specified field is not defined on a product (e.g., `if-not-defined="cat_gender"` is satisfied when a product does not have the `cat_gender` field).
    */
   @property({type: String, attribute: 'if-not-defined'}) ifNotDefined?: string;
 
   /**
-   * Verifies whether the specified fields match the specified values.
+   * A condition that is satisfied when the specified field matches one of the specified values on a product (e.g., `must-match-ec_color="Pink,Purple"` is satisfied when a product is either pink or purple).
    * @type {Record<string, string[]>}
    */
   @mapProperty({splitValues: true, attributePrefix: 'must-match-'})
   mustMatch: Record<string, string[]> = {};
 
   /**
-   * Verifies whether the specified fields do not match the specified values.
+   * A condition that is satisfied when the specified field does not match any of the specified values on a product (e.g., `must-not-match-ec_color="Green,Black"` is satisfied when a product is neither green nor black).
    * @type {Record<string, string[]>}
    */
   @mapProperty({splitValues: true, attributePrefix: 'must-not-match-'})
