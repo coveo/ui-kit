@@ -2,7 +2,10 @@
   "$schema": "https://unpkg.com/knip@5/schema.json",
 
   // Always ignoring quantic since it throws errors. Adding those two lines is necessary for 100% of quantic to be ignored.
-  "ignoreWorkspaces": ["packages/quantic", "packages/create-atomic-component-project/template"],
+  "ignoreWorkspaces": [
+    "packages/quantic",
+    "packages/create-atomic-component-project/template"
+  ],
   "ignore": ["packages/quantic/**"],
 
   // Enable back the plugin once https://github.com/webpro-nl/knip/issues/1154 is resolved.
