@@ -401,6 +401,68 @@ describe('AtomicCommerceSearchBox', () => {
 
       expect(suggestions()).toHaveLength(0);
     });
+
+    describe('when navigating suggestions with arrow keys', () => {
+      it('should call the #submit method on the search box controller when pressing Enter after clearing an active suggestion by typing', async () => {
+        const {element, textArea, suggestions} = await renderSearchBox();
+
+        submitMock.mockClear();
+
+        await userEvent.click(element);
+        expect(suggestions()).toHaveLength(3);
+
+        await userEvent.keyboard('{ArrowDown}');
+        await userEvent.type(textArea, 'new text');
+        await userEvent.keyboard('{Enter}');
+
+        expect(submitMock).toHaveBeenCalledTimes(1);
+      });
+
+      it('should call the #submit method on the search box controller when pressing Enter after clearing an active suggestion by using backspace', async () => {
+        const {element, textArea, suggestions} = await renderSearchBox({
+          searchBoxValue: 'test',
+        });
+
+        submitMock.mockClear();
+
+        await userEvent.click(element);
+        expect(suggestions()).toHaveLength(3);
+
+        await userEvent.keyboard('{ArrowDown}');
+        await userEvent.type(textArea, '{Backspace}');
+        await userEvent.keyboard('{Enter}');
+
+        expect(submitMock).toHaveBeenCalledTimes(1);
+      });
+
+      it('should call the #submit method on the search box controller when pressing Enter after clearing an active suggestion by typing space', async () => {
+        const {element, textArea, suggestions} = await renderSearchBox();
+
+        submitMock.mockClear();
+
+        await userEvent.click(element);
+        expect(suggestions()).toHaveLength(3);
+
+        await userEvent.keyboard('{ArrowDown}');
+        await userEvent.type(textArea, ' ');
+        await userEvent.keyboard('{Enter}');
+
+        expect(submitMock).toHaveBeenCalledTimes(1);
+      });
+
+      it('should call the #submit method on the search box controller when Enter is pressed without any active suggestion', async () => {
+        const {element, suggestions} = await renderSearchBox();
+
+        submitMock.mockClear();
+
+        await userEvent.click(element);
+        expect(suggestions()).toHaveLength(3);
+
+        await userEvent.keyboard('{Enter}');
+
+        expect(submitMock).toHaveBeenCalledTimes(1);
+      });
+    });
   });
 
   describe('when clicking the clear button', () => {

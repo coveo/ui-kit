@@ -32,11 +32,11 @@
   "dependencies": {
     "@coveo/bueno": "1.0.21",
     "@coveo/headless": "3.27.4",
-    "lit": "3.2.1"
+    "lit": "3.3.1"
   },
   "devDependencies": {
-    "@playwright/test": "1.53.2",
-    "@types/node": "22.16.0",
+    "@playwright/test": "1.54.1",
+    "@types/node": "22.16.4",
     "rimraf": "3.0.2",
     "vite": "6.3.5"
   },
