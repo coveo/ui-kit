@@ -90,7 +90,7 @@ export const SlotsForNoShadowDOMMixin = <T extends Constructor<LitElement>>(
       this._pendingSlotRelocation = false;
     }
 
-    public adoptChildren(): void {
+    private adoptChildren(): void {
       this.slots = {};
       this._slotPlaceholders = [];
       this._mapChildrenToSlots();
