@@ -90,6 +90,8 @@ export default {
     ),
   'atomic-product-price': async () =>
     await import('./atomic-product-price/atomic-product-price.js'),
+  'atomic-product-image': async () =>
+    await import('./atomic-product-image/atomic-product-image.js'),
   'atomic-product-template': async () =>
     await import('./atomic-product-template/atomic-product-template.js'),
   'atomic-product-text': async () =>

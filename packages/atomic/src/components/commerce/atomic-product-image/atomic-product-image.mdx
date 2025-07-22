@@ -1,0 +1,16 @@
+import {Canvas, ArgTypes, Meta, Title, Description} from '@storybook/blocks';
+import * as AtomicProductImageStories from './atomic-product-image.new.stories';
+
+{/* Storybook provides a number of blocs to construct documentation pages */}
+{/* https://storybook.js.org/docs/writing-docs/doc-blocks#available-blocks */}
+
+<Meta of={ AtomicProductImageStories } />
+
+<Title />
+<Description />
+
+<Canvas of={ AtomicProductImageStories.Default } />
+
+## Properties
+<ArgTypes />
+
