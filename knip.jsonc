@@ -51,6 +51,9 @@
       "entry": ["server/server.tsx", "src/index.tsx"],
       "ignoreDependencies": ["jsdom"]
     },
+    "utils/ci": {
+      "ignoreDependencies": ["@types/conventional-changelog-writer"]
+    },
 
     // Projects to enable bunch by bunch.
     // Projects using stencil don't really have a proper entry point because of stencil's magic so they have problems with knip.

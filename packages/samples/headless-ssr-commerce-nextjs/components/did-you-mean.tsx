@@ -1,3 +1,5 @@
+'use client';
+
 import {useDidYouMean} from '@/lib/commerce-engine';
 
 export default function DidYouMean() {

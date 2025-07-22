@@ -15,6 +15,7 @@
   },
   "devDependencies": {
     "@types/npmcli__arborist": "6.3.1",
+    "@types/conventional-changelog-writer": "4.0.10",
     "typescript": "5.8.3"
   },
   "scripts": {
