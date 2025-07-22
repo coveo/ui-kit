@@ -15,15 +15,13 @@
       "ignoreBinaries": ["ts-node", "dev"]
       //   "ignore": ["**/*"]
     },
+    "packages/headless": {
+      "entry": ["src/*index.ts", "ponyfills/*.js"],
+      "ignoreDependencies": ["navigator.sendbeacon"]
+    },
 
     // Projects to enable back bunch by bunch.
 
-    // Modifying entry points and ignored files for certain packages.
-    "packages/headless": {
-      //   "entry": ["src/*index.ts", "ponyfills/*.js"],
-      //   "ignoreDependencies": ["navigator.sendbeacon"]
-      "ignore": ["**/*"]
-    },
     "packages/atomic-angular/projects/atomic-angular": {
       //   "entry": ["src/public-api.ts"],
       //   "ignore": ["src/lib/stencil-generated/**/*.ts"]

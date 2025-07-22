@@ -37,19 +37,19 @@
     "@commitlint/lint": "19.8.1",
     "@commitlint/load": "19.8.1",
     "@coveo/ci": "1.0.0",
-    "@cspell/dict-fr-fr": "2.3.0",
+    "@cspell/dict-fr-fr": "2.3.1",
     "@octokit/rest": "21.1.1",
     "@tsconfig/node20": "20.1.6",
     "@types/execa": "2.0.2",
     "@types/jest": "29.5.14",
-    "@types/node": "22.16.0",
+    "@types/node": "22.16.4",
     "@vitest/browser": "3.2.4",
     "aws-sdk": "2.1692.0",
     "commitizen": "4.3.1",
     "concurrently": "9.2.0",
     "cspell": "8.19.4",
     "cz-conventional-changelog": "3.3.0",
-    "esbuild": "0.25.5",
+    "esbuild": "0.25.6",
     "esbuild-plugin-alias": "0.2.1",
     "esbuild-plugin-umd-wrapper": "3.0.0",
     "execa": "9.6.0",
@@ -64,7 +64,7 @@
     "typescript": "5.8.3",
     "vitest": "3.2.4",
     "@npmcli/package-json": "6.2.0",
-    "playwright": "1.53.2"
+    "playwright": "1.54.1"
   },
   "overrides": {
     "@coveo/ci": {

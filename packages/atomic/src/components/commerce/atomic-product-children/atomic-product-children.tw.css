@@ -1,0 +1,31 @@
+atomic-product-children .children-container {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+atomic-product-children .children-container .plus-button {
+  display: none;
+}
+
+.display-grid
+  atomic-product-children
+  .children-container
+  .product-child:nth-child(n + 6) {
+  display: none;
+}
+
+.display-grid
+  atomic-product-children
+  .children-container
+  .product-child:nth-child(6)
+  ~ .plus-button {
+  display: block;
+}
+
+.display-grid
+  atomic-product-children
+  .children-container
+  .product-child:nth-child(6):last-child
+  ~ .plus-button {
+  display: none;
+}

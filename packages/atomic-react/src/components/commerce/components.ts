@@ -24,7 +24,7 @@ import {
   AtomicIcon as LitAtomicIcon,
   AtomicLayoutSection as LitAtomicLayoutSection,
   AtomicProduct as LitAtomicProduct,
-  AtomicProductFieldCondition as LitAtomicProductFieldCondition,
+  AtomicProductChildren as LitAtomicProductChildren,
   AtomicProductText as LitAtomicProductText,
 } from '@coveo/atomic/components';
 import {createComponent} from '@lit/react';
@@ -162,10 +162,10 @@ export const AtomicProduct = createComponent({
   elementClass: LitAtomicProduct,
 });
 
-export const AtomicProductFieldCondition = createComponent({
-  tagName: 'atomic-product-field-condition',
+export const AtomicProductChildren = createComponent({
+  tagName: 'atomic-product-children',
   react: React,
-  elementClass: LitAtomicProductFieldCondition,
+  elementClass: LitAtomicProductChildren,
 });
 
 export const AtomicProductText = createComponent({

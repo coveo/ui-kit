@@ -64,7 +64,7 @@ export interface RegisterStandaloneSearchBoxPayload {
   overwrite?: boolean;
 }
 
-export interface UpdateStandaloneSearchBoxPayload {
+interface UpdateStandaloneSearchBoxPayload {
   /**
    * The standalone search box id.
    */
