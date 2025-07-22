@@ -165,7 +165,7 @@ export interface FacetGeneratorOptions {
   props: FacetGeneratorProps;
 }
 
-export interface FacetGeneratorProps {
+interface FacetGeneratorProps {
   solutionType: SolutionType;
 }
 

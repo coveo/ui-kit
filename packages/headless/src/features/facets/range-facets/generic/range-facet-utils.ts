@@ -1,9 +1,7 @@
 import type {SearchAction} from '../../../search/search-actions.js';
 import {
   facetDeselect,
-  facetExclude,
   facetSelect,
-  facetUnexclude,
   logFacetDeselect,
   logFacetExclude,
   logFacetSelect,
@@ -48,12 +46,4 @@ export const getLegacyAnalyticsActionForToggleRangeFacetExclude = (
   return isRangeFacetValueExcluded(selection)
     ? logFacetUnexclude(payload)
     : logFacetExclude(payload);
-};
-
-export const getAnalyticsActionForToggleRangeFacetExclude = (
-  selection: RangeFacetValue
-): SearchAction => {
-  return isRangeFacetValueExcluded(selection)
-    ? facetUnexclude()
-    : facetExclude();
 };

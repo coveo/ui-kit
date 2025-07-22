@@ -8,6 +8,8 @@ module.exports = {
       // Exclude root deployment config
       if (file.endsWith('.deployment.config.json')) return false;
 
+      if (file.endsWith('package-lock.json')) return false;
+
       // Exclude atomic package cypress, tsx (except stories), and d.ts files
       if (
         file.includes('/packages/atomic/') &&

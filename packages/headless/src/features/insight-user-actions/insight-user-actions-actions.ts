@@ -40,7 +40,7 @@ export interface FetchUserActionsThunkReturn {
 export type StateNeededByFetchUserActions = ConfigurationSection &
   InsightUserActionsSection;
 
-export type UserId = string;
+type UserId = string;
 
 export const fetchUserActions = createAsyncThunk<
   FetchUserActionsThunkReturn,

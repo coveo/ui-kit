@@ -1,4 +1,4 @@
-@import '../coveo.tw.css' theme(reference);
+@reference '../coveo.tw.css';
 
 @utility link-style {
   @apply text-on-background;
