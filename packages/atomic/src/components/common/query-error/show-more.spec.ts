@@ -1,5 +1,5 @@
 import type {i18n} from 'i18next';
-import {html, type TemplateResult} from 'lit';
+import {html, nothing, type TemplateResult} from 'lit';
 import {beforeEach, describe, expect, it, vi} from 'vitest';
 import {renderFunctionFixture} from '@/vitest-utils/testing-helpers/fixture';
 import {createTestI18n} from '@/vitest-utils/testing-helpers/i18n-utils';
@@ -14,7 +14,7 @@ describe('#renderQueryErrorShowMore', () => {
 
   const renderComponent = async (
     onShowMore = vi.fn(),
-    link?: TemplateResult
+    link: TemplateResult | typeof nothing = nothing
   ) => {
     const element = await renderFunctionFixture(
       html`${renderQueryErrorShowMore({props: {onShowMore, i18n, link}})}`

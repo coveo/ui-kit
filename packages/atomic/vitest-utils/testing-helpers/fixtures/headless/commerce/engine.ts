@@ -26,7 +26,12 @@ export const buildFakeCommerceEngine = ({
       debug: vi.fn(),
     },
     subscribe: vi.fn(() => ({unsubscribe: vi.fn()})),
-    configuration: getSampleCommerceEngineConfiguration(),
+    configuration: {
+      ...getSampleCommerceEngineConfiguration(),
+      commerce: {
+        apiBaseUrl: 'https://fake-commerce-api.com',
+      },
+    },
   };
 
   return {

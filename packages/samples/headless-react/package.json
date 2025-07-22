@@ -15,7 +15,7 @@
     "@testing-library/user-event": "14.6.1",
     "@types/escape-html": "1.0.4",
     "@types/express": "5.0.3",
-    "@types/node": "22.16.0",
+    "@types/node": "22.16.4",
     "@types/react": "19.1.1",
     "@types/react-dom": "19.1.2",
     "@types/react-router-dom": "5.3.3",
@@ -56,6 +56,6 @@
     "cypress-repeat": "2.3.9",
     "gts": "5.3.1",
     "vite": "6.3.5",
-    "vitest": "3.2.1"
+    "vitest": "3.2.4"
   }
 }

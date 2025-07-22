@@ -26,8 +26,7 @@ import {
   type GeneratedAnswerProps,
 } from './headless-core-generated-answer.js';
 
-export interface SearchAPIGeneratedAnswer extends GeneratedAnswer {}
-export interface SearchAPIGeneratedAnswerProps extends GeneratedAnswerProps {}
+interface SearchAPIGeneratedAnswer extends GeneratedAnswer {}
 
 interface SubscribeStateManager {
   engines: Record<
@@ -112,7 +111,7 @@ export const subscribeStateManager: SubscribeStateManager = {
   },
 };
 
-export interface SearchAPIGeneratedAnswerAnalyticsClient
+interface SearchAPIGeneratedAnswerAnalyticsClient
   extends GeneratedAnswerAnalyticsClient {}
 
 /**

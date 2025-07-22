@@ -36,10 +36,7 @@
       "!**/packages/headless/**/coveo.analytics/**/*",
 
       // atomic-stencil-samples excluded files.
-      "!**/packages/samples/stencil/**/*.d.ts",
-
-      // TODO: https://coveord.atlassian.net/browse/KIT-4553
-      "!**/*.tw.css"
+      "!**/packages/samples/stencil/**/*.d.ts"
     ]
   },
   "formatter": {
@@ -56,7 +53,7 @@
       // TODO: https://coveord.atlassian.net/browse/KIT-4556
       "complexity": {"noBannedTypes": "off"},
       // TODO: https://coveord.atlassian.net/browse/KIT-4555
-      "correctness": {"noUnusedVariables": "off"}
+      "correctness": {"noUnusedVariables": "off", "noUnknownFunction": "off"}
     },
     "includes": ["**"]
   },

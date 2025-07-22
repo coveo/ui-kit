@@ -184,11 +184,11 @@ function applyRangeFacetValuesToSearchParams(
   });
 }
 
-export function isValidKey(key: string): key is CommerceSearchParametersKey {
+function isValidKey(key: string): key is CommerceSearchParametersKey {
   return isValidBasicKey(key) || keyHasObjectValue(key);
 }
 
-export function isValidBasicKey(
+function isValidBasicKey(
   key: string
 ): key is Exclude<CommerceSearchParametersKey, keyof FacetParameters> {
   const supportedBasicParameters: Record<
@@ -209,7 +209,7 @@ export function isValidBasicKey(
  * @param key - The key of the search parameter.
  * @param value - The value of the search parameter.
  */
-export function extendSearchParams(
+function extendSearchParams(
   commerceSearchParams: Record<string, unknown>,
   key: string,
   value: CommerceSearchParamValue
@@ -268,7 +268,7 @@ export function extendSearchParams(
   }
 }
 
-export function cast<K extends CommerceSearchParametersKey>(
+function cast<K extends CommerceSearchParametersKey>(
   pair: [K, string],
   decode = true
 ): [K, unknown] {
@@ -289,11 +289,11 @@ export function cast<K extends CommerceSearchParametersKey>(
   return [key, decode ? decodeURIComponent(value) : value];
 }
 
-export function isValidSearchParam(key: string) {
+function isValidSearchParam(key: string) {
   return commerceFacetsRegex.exec(key) !== null || isValidBasicKey(key);
 }
 
-export function isSortPair(
+function isSortPair(
   pair: [CommerceSearchParametersKey, unknown]
 ): pair is CommerceSearchParamPair<SortCriterion> {
   const [key, value] = pair;
@@ -302,7 +302,7 @@ export function isSortPair(
   return isValidKey && isValidValue;
 }
 
-export function isFacetPair(
+function isFacetPair(
   pair: [CommerceSearchParametersKey, unknown]
 ): pair is CommerceSearchParamPair<FacetValueSearchParam> {
   const [key, value] = pair;
@@ -320,7 +320,7 @@ const validRangeFacetKeys = [
   'dfExcluded',
 ];
 
-export function isRangeFacetPair(
+function isRangeFacetPair(
   pair: [CommerceSearchParametersKey, unknown]
 ): pair is CommerceSearchParamPair<RangeFacetValueSearchParam> {
   const [key, value] = pair;
@@ -329,7 +329,7 @@ export function isRangeFacetPair(
   return isValidKey && isValidValue;
 }
 
-export function isRangeFacetObject(
+function isRangeFacetObject(
   obj: unknown
 ): obj is Record<string, (DateRangeRequest | NumericRangeRequest)[]> {
   if (!isObject(obj)) {
@@ -341,7 +341,7 @@ export function isRangeFacetObject(
   return allEntriesAreValid(obj, isRangeValue);
 }
 
-export function addFacetValuesToSearchParams(
+function addFacetValuesToSearchParams(
   facetId: string,
   paramKey: CommerceSearchParametersKey
 ) {

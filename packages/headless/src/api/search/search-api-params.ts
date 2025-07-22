@@ -86,23 +86,6 @@ export interface RecommendationParam {
   recommendation: string;
 }
 
-export interface MachineLearningParam {
-  mlParameters: MachineLearningECommerceParameters;
-}
-
-export interface MachineLearningECommerceParameters {
-  itemIds?: string[];
-  categoryFilter?: string;
-  brandFilter?: string;
-  itemIdsToFilterOut?: string[];
-  removeRecentlySeen?: boolean;
-  recentlySeenConsideredMinutes?: number;
-}
-
-export interface MaximumAgeParam {
-  maximumAge: number;
-}
-
 export interface ActionsHistoryParam {
   actionsHistory?: HistoryElement[];
 }
@@ -148,18 +131,18 @@ export interface PipelineRuleParams {
   pipelineRuleParameters?: PipelineRuleParameters;
 }
 
-export interface PipelineRuleParameters {
+type PipelineRuleParameters = {
   mlGenerativeQuestionAnswering?: GenQAParameters;
-}
+};
 
-export interface GenQAParameters {
+type GenQAParameters = {
   responseFormat: ResponseFormatParameters;
   citationsFieldToInclude: string[];
-}
+};
 
-export interface ResponseFormatParameters {
+type ResponseFormatParameters = {
   contentFormat?: GeneratedContentFormat[];
-}
+};
 
 export const baseSearchRequest = (
   req: BaseParam & AuthenticationParam,
