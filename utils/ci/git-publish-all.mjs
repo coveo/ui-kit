@@ -1,6 +1,6 @@
 #!/usr/bin/env node
-import {gitTag, gitPushTags} from '@coveo/semantic-monorepo-tools';
-import {existsSync, readFileSync} from 'fs';
+import {existsSync, readFileSync} from 'node:fs';
+import {gitPushTags, gitTag} from '@coveo/semantic-monorepo-tools';
 import {Octokit} from 'octokit';
 import {dedent} from 'ts-dedent';
 import {

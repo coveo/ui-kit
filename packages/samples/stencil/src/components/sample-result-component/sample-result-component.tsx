@@ -1,6 +1,7 @@
 import {resultContext} from '@coveo/atomic';
-import {Result} from '@coveo/headless';
-import {Component, h, Element, State} from '@stencil/core';
+import type {Result} from '@coveo/headless';
+// biome-ignore lint/correctness/noUnusedImports: <>
+import {Component, Element, h, State} from '@stencil/core';
 
 @Component({
   tag: 'sample-result-component',
@@ -26,7 +27,7 @@ export class SampleResultComponent {
       return;
     }
 
-    const author = this.result.raw['author'] || 'anonymous';
+    const author = this.result.raw.author || 'anonymous';
     return (
       <h4>
         Written by: <b>{author}</b>

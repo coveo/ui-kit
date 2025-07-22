@@ -1,5 +1,6 @@
 import {describe, expect, it, vi} from 'vitest';
 import './atomic-product-children';
+import type {ChildProduct} from '@coveo/headless/commerce';
 import {html} from 'lit';
 import {ifDefined} from 'lit/directives/if-defined.js';
 import {renderInAtomicProduct} from '@/vitest-utils/testing-helpers/fixtures/atomic/commerce/atomic-product-fixture';
@@ -14,8 +15,8 @@ describe('atomic-product-children', () => {
       label?: string;
       field?: string;
       fallback?: string;
-      // biome-ignore lint/suspicious/noExplicitAny: <>
-      childProducts?: any[];
+      childProducts?: ChildProduct[];
+      totalNumberOfChildren?: number;
     } = {}
   ) => {
     const childProducts = Array.from({length: 6}, (_, i) =>
@@ -43,6 +44,7 @@ describe('atomic-product-children', () => {
         null_field: null,
       },
       children: props.childProducts ? props.childProducts : childProducts,
+      totalNumberOfChildren: props.totalNumberOfChildren ?? 6,
     });
 
     const {element} = await renderInAtomicProduct({
@@ -262,10 +264,15 @@ describe('atomic-product-children', () => {
     expect(image?.src).toBe('https://example.com/fallback.jpg');
   });
 
-  //TODO: Add more tests for this while fixing KIT-4408
-  it('should render the count button with the correct count', async () => {
-    const {childProducts} = await renderProductChildren();
+  it('should render the count button with the correct count according to the totalNumberOfChildren', async () => {
+    const total = 7;
+    const {childProducts} = await renderProductChildren({
+      totalNumberOfChildren: total,
+    });
 
-    expect(childProducts[childProducts.length - 1]).toHaveTextContent('+1');
+    // 6 is the number of child in the product object. Plus 1 since the parent is included in the children count.
+    expect(childProducts[childProducts.length - 1]).toHaveTextContent(
+      (total - 6 + 1).toString()
+    );
   });
 });

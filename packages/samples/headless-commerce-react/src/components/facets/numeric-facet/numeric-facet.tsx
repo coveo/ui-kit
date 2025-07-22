@@ -1,4 +1,4 @@
-import {NumericFacet as HeadlessNumericFacet} from '@coveo/headless/commerce';
+import type {NumericFacet as HeadlessNumericFacet} from '@coveo/headless/commerce';
 import {useEffect, useRef, useState} from 'react';
 
 interface INumericFacetProps {
@@ -26,19 +26,19 @@ export default function NumericFacet(props: INumericFacetProps) {
 
   useEffect(() => {
     controller.subscribe(() => {
-      setState(controller.state),
-        setCurrentManualRange({
-          start:
-            controller.state.manualRange?.start ??
-            controller.state.domain?.min ??
-            controller.state.values[0]?.start ??
-            0,
-          end:
-            controller.state.manualRange?.end ??
-            controller.state.domain?.max ??
-            controller.state.values[0]?.end ??
-            0,
-        });
+      setState(controller.state);
+      setCurrentManualRange({
+        start:
+          controller.state.manualRange?.start ??
+          controller.state.domain?.min ??
+          controller.state.values[0]?.start ??
+          0,
+        end:
+          controller.state.manualRange?.end ??
+          controller.state.domain?.max ??
+          controller.state.values[0]?.end ??
+          0,
+      });
     });
   }, [controller]);
 
@@ -48,8 +48,8 @@ export default function NumericFacet(props: INumericFacetProps) {
 
   const invalidRange =
     currentManualRange.start >= currentManualRange.end ||
-    isNaN(currentManualRange.start) ||
-    isNaN(currentManualRange.end);
+    Number.isNaN(currentManualRange.start) ||
+    Number.isNaN(currentManualRange.end);
 
   const onChangeManualRangeStart = (e: React.ChangeEvent<HTMLInputElement>) => {
     setCurrentManualRange({
@@ -147,10 +147,10 @@ export default function NumericFacet(props: INumericFacetProps) {
         </button>
         {state.isLoading && <span> Facet is loading...</span>}
         <ul>
-          {state.values.map((value, index) => {
+          {state.values.map((value) => {
             const id = `${value.start}-${value.end}-${value.endInclusive}`;
             return (
-              <li className="FacetValue" key={index}>
+              <li className="FacetValue" key={value.start}>
                 <input
                   className="FacetValueCheckbox"
                   disabled={state.isLoading}
@@ -173,6 +173,7 @@ export default function NumericFacet(props: INumericFacetProps) {
           })}
         </ul>
         <button
+          type="button"
           aria-label="Show more facet values"
           className="FacetShowMore"
           disabled={state.isLoading || !state.canShowMoreValues}
@@ -181,6 +182,7 @@ export default function NumericFacet(props: INumericFacetProps) {
           +
         </button>
         <button
+          type="button"
           aria-label="Show less facet values"
           className="FacetShowLess"
           disabled={state.isLoading || !state.canShowLessValues}

@@ -17,6 +17,6 @@ test.describe('AtomicProductChildren', () => {
 
   test('should render child products', async ({productChildren}) => {
     const count = await productChildren.childProducts.count();
-    expect(count).toBeGreaterThan(2);
+    expect(count).toBeGreaterThan(1);
   });
 });

@@ -1,4 +1,3 @@
-/* eslint-disable canonical/no-barrel-import */
 /** biome-ignore-all lint/suspicious/noExplicitAny: <mock> */
 /* eslint-disable @cspell/spellchecker */
 import type {StateNeededByAnswerAPI} from '../stream-answer-api.js';

@@ -29,7 +29,7 @@ describe('#renderRefineModalSortSection', () => {
     );
 
     return {
-      sectionTitle: element.querySelector('h1[part*="section-sort-title"]'),
+      sectionTitle: element.querySelector('h2[part*="section-sort-title"]'),
       selectWrapper: element.querySelector('div[part="select-wrapper"]'),
       select: element.querySelector('select[part="select"]'),
       selectIconWrapper: element.querySelector(

@@ -1,5 +1,5 @@
-import {promises as fs} from 'fs';
-import path from 'path';
+import {promises as fs} from 'node:fs';
+import path from 'node:path';
 
 const files = [
   path.resolve('src/components/stencil-generated/commerce/index.ts'),
@@ -15,7 +15,7 @@ const updateFiles = async () => {
   await Promise.all(
     files.map(async (filePath) => {
       try {
-        let data = await fs.readFile(filePath, 'utf8');
+        const data = await fs.readFile(filePath, 'utf8');
         const updatedData = data.replace(oldImport, newImport);
         await fs.writeFile(filePath, updatedData, 'utf8');
         console.log(`File updated: ${filePath}`);

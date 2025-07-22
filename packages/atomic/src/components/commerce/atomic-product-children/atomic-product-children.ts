@@ -50,7 +50,7 @@ export class AtomicProductChildren
   }
 
   /**
-   * The non-localized label to display for the product children section.
+   * The i18n key for the localized label to display for the product children section.
    *
    * Set this to an empty string if you do not want to render the label at all.
    */
@@ -136,6 +136,24 @@ export class AtomicProductChildren
     `;
   }
 
+  /**
+   * Gets the total count of items, including the parent item itself.
+   *
+   * The calculation subtracts the number of child items from the total number of children,
+   * then adds 1 to include the parent item in the count. This is necessary because
+   * `children.length` only represents the number of children of the parent, while
+   * the parent is also included in the `atomic-product-children` component.
+   *
+   * @returns The total count of items, including the parent.
+   */
+  get count() {
+    return (
+      this.productController.item?.totalNumberOfChildren! -
+      this.productController.item?.children.length! +
+      1
+    );
+  }
+
   @errorGuard()
   render() {
     if (this.childProducts.length === 0) {
@@ -151,7 +169,7 @@ export class AtomicProductChildren
             style: 'text-primary',
             class: 'product-child plus-button',
           },
-        })(html`+${this.childProducts.length - 5}`)}
+        })(html`+${this.count}`)}
       </div>
     `;
   }

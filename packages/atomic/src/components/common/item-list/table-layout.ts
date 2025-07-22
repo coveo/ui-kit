@@ -75,9 +75,11 @@ export const renderTableRow: FunctionalComponentWithChildren<TableRowProps> = ({
     html`${keyed(
       key,
       html`<tr
-        .part="result-table-row${rowIndex % 2 === 1
-          ? ' result-table-row-even'
-          : ' result-table-row-odd'}"
+        .part="result-table-row${
+          rowIndex % 2 === 1
+            ? ' result-table-row-even'
+            : ' result-table-row-odd'
+        }"
         ${ref((element?: Element) => setRef(element))}
       >
         ${children}

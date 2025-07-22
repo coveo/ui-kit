@@ -1,5 +1,5 @@
-import {NavigatorContext} from '@coveo/headless-react/ssr-commerce';
-import {randomUUID} from 'crypto';
+import {randomUUID} from 'node:crypto';
+import type {NavigatorContext} from '@coveo/headless-react/ssr-commerce';
 import {coveo_capture, coveo_visitorId} from '../app/cookies.server';
 
 export interface CoveoAnalyticsContext
@@ -28,7 +28,7 @@ export const shouldCapture = async (request: Request): Promise<boolean> => {
  */
 const isUserTrackingAllowedByRequest = async (
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  request: Request
+  _request: Request
 ): Promise<boolean> => {
   // Actual implementation should verify whether the user has somehow indicated that they do not wish to be tracked.
 

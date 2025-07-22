@@ -1,5 +1,5 @@
-import {AfterViewInit, Component, ViewChild} from '@angular/core';
-import {AtomicCommerceInterface} from '@coveo/atomic-angular';
+import {type AfterViewInit, Component, ViewChild} from '@angular/core';
+import type {AtomicCommerceInterface} from '@coveo/atomic-angular';
 
 @Component({
   standalone: false,
@@ -11,7 +11,6 @@ export class AtomicCommerceAngularPageComponent implements AfterViewInit {
   @ViewChild('commerceInterface')
   commerceInterface!: AtomicCommerceInterface;
 
-  constructor() {}
   async ngAfterViewInit(): Promise<void> {
     this.commerceInterface
       ?.initialize({

@@ -3,7 +3,7 @@ import {
   getSampleSearchEngineConfiguration,
 } from '@coveo/headless';
 import {render} from '@testing-library/react';
-import {vi, MockInstance} from 'vitest';
+import {type MockInstance, vi} from 'vitest';
 import App from './App';
 
 let errorSpy: MockInstance;

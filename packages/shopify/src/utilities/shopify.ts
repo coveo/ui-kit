@@ -1,4 +1,4 @@
-import {CoveoShopifyCustomEvent} from '../types';
+import type {CoveoShopifyCustomEvent} from '../types';
 
 export type {CoveoShopifyCustomEvent} from '../types';
 

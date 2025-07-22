@@ -25,7 +25,7 @@ async function main() {
     /* cspell:disable-next-line */
     DistributionId: 'E2VWLFSCSD1GLA',
     InvalidationBatch: {
-      CallerReference: new Date().getTime().toString(),
+      CallerReference: Date.now().toString(),
       Paths: {
         Quantity: pathsToInvalidate.length,
         Items: pathsToInvalidate,
