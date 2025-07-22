@@ -1,23 +1,8 @@
-import type {
-  DidYouMean as DidYouMeanController,
-  DidYouMeanState,
-} from '@coveo/headless/ssr-commerce';
-import {useEffect, useState} from 'react';
+import {useDidYouMean} from '@/lib/commerce-engine';
 
-interface DidYouMeanProps {
-  staticState: DidYouMeanState;
-  controller?: DidYouMeanController;
-}
-export default function DidYouMean({staticState, controller}: DidYouMeanProps) {
-  const [state, setState] = useState(staticState);
-
-  useEffect(
-    () =>
-      controller?.subscribe(() => {
-        setState({...controller.state});
       }),
-    [controller]
-  );
+export default function DidYouMean() {
+  const {state, methods} = useDidYouMean();
 
   if (!state.hasQueryCorrection) {
     return null;
@@ -42,10 +27,10 @@ export default function DidYouMean({staticState, controller}: DidYouMeanProps) {
         Search for
         {/** biome-ignore lint/a11y/noStaticElementInteractions: <> */}
         <span
-          onClick={() => controller?.applyCorrection()}
-          onKeyDown={(e) => {
-            if (e.key === 'Enter') {
-              controller?.applyCorrection();
+          onClick={() => methods?.applyCorrection()}
+          onKeyUp={(e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+              methods?.applyCorrection();
             }
           }}
         >

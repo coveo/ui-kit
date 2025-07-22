@@ -66,26 +66,6 @@
     "packages/shopify": {
       "ignore": ["**/*"]
     },
-
-    // Samples that we can enable later.
-    "packages/samples/headless-commerce-ssr-remix": {
-      "ignore": ["**/*"]
-    },
-    "packages/samples/headless-ssr-commerce-nextjs": {
-      "ignore": ["**/*"]
-    },
-    "packages/samples/atomic-next": {
-      "ignore": ["**/*"]
-    },
-    "packages/samples/vuejs": {
-      "ignore": ["**/*"]
-    },
-    "packages/samples/atomic-react": {
-      "ignore": ["**/*"]
-    },
-    "packages/samples/angular": {
-      "ignore": ["**/*"]
-    },
     "packages/samples/stencil": {
       "ignore": ["**/*"]
     },
