@@ -25,10 +25,8 @@ import {
   AtomicLayoutSection as LitAtomicLayoutSection,
   AtomicProduct as LitAtomicProduct,
   AtomicProductChildren as LitAtomicProductChildren,
-  AtomicProductExcerpt as LitAtomicProductExcerpt,
-  AtomicProductMultiValueText as LitAtomicProductMultiValueText,
+  AtomicProductImage as LitAtomicProductImage,
   AtomicProductNumericFieldValue as LitAtomicProductNumericFieldValue,
-  AtomicProductPrice as LitAtomicProductPrice,
   AtomicProductText as LitAtomicProductText,
 } from '@coveo/atomic/components';
 import {createComponent} from '@lit/react';
@@ -172,22 +170,10 @@ export const AtomicProductChildren = createComponent({
   elementClass: LitAtomicProductChildren,
 });
 
-export const AtomicProductExcerpt = createComponent({
-  tagName: 'atomic-product-excerpt',
+export const AtomicProductImage = createComponent({
+  tagName: 'atomic-product-image',
   react: React,
-  elementClass: LitAtomicProductExcerpt,
-});
-
-export const AtomicProductMultiValueText = createComponent({
-  tagName: 'atomic-product-multi-value-text',
-  react: React,
-  elementClass: LitAtomicProductMultiValueText,
-});
-
-export const AtomicProductNumericFieldValue = createComponent({
-  tagName: 'atomic-product-numeric-field-value',
-  react: React,
-  elementClass: LitAtomicProductNumericFieldValue,
+  elementClass: LitAtomicProductImage,
 });
 
 export const AtomicProductPrice = createComponent({

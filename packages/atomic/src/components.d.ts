@@ -1621,38 +1621,6 @@ export namespace Components {
         "mustNotMatch": Record<string, string[]>;
     }
     /**
-     * The `atomic-product-image` component renders an image from a product field.
-     * @alpha 
-     */
-    interface AtomicProductImage {
-        /**
-          * An fallback image URL that will be used in case the specified image is not available or an error is encountered.
-         */
-        "fallback": string;
-        /**
-          * The product field which the component should use. This will look for the field in the product object first, then in the product.additionalFields object.
-         */
-        "field": string;
-        /**
-          * The product field that contains the alt text for the images. This will look for the field in the product object first, then in the product.additionalFields object. If the product has multiple images, the value of the `imageAltField` will be used as the alt text for every image.  If the field is not specified, or does not contain a valid value, the alt text will be set to "Image {index} out of {totalImages} for {productName}".
-          * @type {string}
-         */
-        "imageAltField"?: string;
-        /**
-          * Navigates to the specified image index.
-          * @param index - The index of the image to navigate to.
-         */
-        "navigateToImage": (index: number) => Promise<void>;
-        /**
-          * Moves to the next image, when the carousel is activated.
-         */
-        "nextImage": () => Promise<void>;
-        /**
-          * Moves to the previous image, when the carousel is activated.
-         */
-        "previousImage": () => Promise<void>;
-    }
-    /**
      * @alpha The `atomic-product-link` component automatically transforms a search product title into a clickable link that points to the original item.
      */
     interface AtomicProductLink {
@@ -4130,16 +4098,6 @@ declare global {
         new (): HTMLAtomicProductFieldConditionElement;
     };
     /**
-     * The `atomic-product-image` component renders an image from a product field.
-     * @alpha 
-     */
-    interface HTMLAtomicProductImageElement extends Components.AtomicProductImage, HTMLStencilElement {
-    }
-    var HTMLAtomicProductImageElement: {
-        prototype: HTMLAtomicProductImageElement;
-        new (): HTMLAtomicProductImageElement;
-    };
-    /**
      * @alpha The `atomic-product-link` component automatically transforms a search product title into a clickable link that points to the original item.
      */
     interface HTMLAtomicProductLinkElement extends Components.AtomicProductLink, HTMLStencilElement {
@@ -5230,7 +5188,6 @@ declare global {
         "atomic-popover": HTMLAtomicPopoverElement;
         "atomic-product-description": HTMLAtomicProductDescriptionElement;
         "atomic-product-field-condition": HTMLAtomicProductFieldConditionElement;
-        "atomic-product-image": HTMLAtomicProductImageElement;
         "atomic-product-link": HTMLAtomicProductLinkElement;
         "atomic-product-rating": HTMLAtomicProductRatingElement;
         "atomic-product-section-actions": HTMLAtomicProductSectionActionsElement;
@@ -6833,25 +6790,6 @@ declare namespace LocalJSX {
           * @type {Record<string, string[]>}
          */
         "mustNotMatch"?: Record<string, string[]>;
-    }
-    /**
-     * The `atomic-product-image` component renders an image from a product field.
-     * @alpha 
-     */
-    interface AtomicProductImage {
-        /**
-          * An fallback image URL that will be used in case the specified image is not available or an error is encountered.
-         */
-        "fallback"?: string;
-        /**
-          * The product field which the component should use. This will look for the field in the product object first, then in the product.additionalFields object.
-         */
-        "field"?: string;
-        /**
-          * The product field that contains the alt text for the images. This will look for the field in the product object first, then in the product.additionalFields object. If the product has multiple images, the value of the `imageAltField` will be used as the alt text for every image.  If the field is not specified, or does not contain a valid value, the alt text will be set to "Image {index} out of {totalImages} for {productName}".
-          * @type {string}
-         */
-        "imageAltField"?: string;
     }
     /**
      * @alpha The `atomic-product-link` component automatically transforms a search product title into a clickable link that points to the original item.
@@ -8486,7 +8424,6 @@ declare namespace LocalJSX {
         "atomic-popover": AtomicPopover;
         "atomic-product-description": AtomicProductDescription;
         "atomic-product-field-condition": AtomicProductFieldCondition;
-        "atomic-product-image": AtomicProductImage;
         "atomic-product-link": AtomicProductLink;
         "atomic-product-rating": AtomicProductRating;
         "atomic-product-section-actions": AtomicProductSectionActions;
@@ -8813,11 +8750,6 @@ declare module "@stencil/core" {
              * @alpha 
              */
             "atomic-product-field-condition": LocalJSX.AtomicProductFieldCondition & JSXBase.HTMLAttributes<HTMLAtomicProductFieldConditionElement>;
-            /**
-             * The `atomic-product-image` component renders an image from a product field.
-             * @alpha 
-             */
-            "atomic-product-image": LocalJSX.AtomicProductImage & JSXBase.HTMLAttributes<HTMLAtomicProductImageElement>;
             /**
              * @alpha The `atomic-product-link` component automatically transforms a search product title into a clickable link that points to the original item.
              */
