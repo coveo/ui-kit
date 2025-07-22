@@ -27,21 +27,21 @@ export interface InlineLink {
 /**
  * @internal
  */
-export interface SmartSnippetInteractiveInlineLinksOptions {
+interface SmartSnippetInteractiveInlineLinksOptions {
   selectionDelay?: number;
 }
 
 /**
  * @internal
  */
-export interface SmartSnippetInteractiveInlineLinksProps {
+interface SmartSnippetInteractiveInlineLinksProps {
   options?: SmartSnippetInteractiveInlineLinksOptions;
 }
 
 /**
  * @internal
  */
-export interface SmartSnippetInteractiveInlineLinks {
+interface SmartSnippetInteractiveInlineLinks {
   selectInlineLink(link: InlineLink, questionAnswerId?: string): void;
   beginDelayedSelectInlineLink(
     link: InlineLink,

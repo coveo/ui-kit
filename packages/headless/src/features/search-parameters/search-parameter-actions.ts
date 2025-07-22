@@ -100,7 +100,7 @@ export interface SearchParameters {
 /**
  * The unique identifier of a tab.
  */
-export type TabId = string;
+type TabId = string;
 
 export const restoreSearchParameters = createAction(
   'searchParameters/restore',

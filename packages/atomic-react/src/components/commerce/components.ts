@@ -8,6 +8,7 @@ import {
   AtomicCommercePager as LitAtomicCommercePager,
   AtomicCommerceProductList as LitAtomicCommerceProductList,
   AtomicCommerceProductsPerPage as LitAtomicCommerceProductsPerPage,
+  AtomicCommerceQueryError as LitAtomicCommerceQueryError,
   AtomicCommerceQuerySummary as LitAtomicCommerceQuerySummary,
   AtomicCommerceRecommendationInterface as LitAtomicCommerceRecommendationInterface,
   AtomicCommerceRecommendationList as LitAtomicCommerceRecommendationList,
@@ -89,6 +90,12 @@ export const AtomicCommerceProductsPerPage = createComponent({
   tagName: 'atomic-commerce-products-per-page',
   react: React,
   elementClass: LitAtomicCommerceProductsPerPage,
+});
+
+export const AtomicCommerceQueryError = createComponent({
+  tagName: 'atomic-commerce-query-error',
+  react: React,
+  elementClass: LitAtomicCommerceQueryError,
 });
 
 export const AtomicCommerceQuerySummary = createComponent({

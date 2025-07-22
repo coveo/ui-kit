@@ -75,7 +75,10 @@
   --color-disabled: var(--atomic-disabled);
   --color-inline-code: var(--atomic-inline-code);
 
-  --color-rating-icon-inactive: var(--atomic-rating-icon-inactive-color, var(--atomic-neutral));
+  --color-rating-icon-inactive: var(
+    --atomic-rating-icon-inactive-color,
+    var(--atomic-neutral)
+  );
   --color-rating-icon-active: var(--atomic-rating-icon-active-color, #f6ce3c);
 
   --color-more-results-progress-bar-color-from: var(
@@ -115,5 +118,6 @@
 
 @theme {
   --animate-slide-down-modal: slideDown 0.5s linear forwards;
-  --animate-scale-up-modal: scaleUp 0.5s cubic-bezier(0.165, 0.84, 0.44, 1) forwards;
+  --animate-scale-up-modal: scaleUp 0.5s cubic-bezier(0.165, 0.84, 0.44, 1)
+    forwards;
 }

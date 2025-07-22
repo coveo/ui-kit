@@ -130,7 +130,7 @@ type Definition<
   TControllerDefinitions extends CommerceControllerDefinitionsMap,
 > = CommerceEngineDefinition<TControllerDefinitions, SolutionType>;
 
-export type BuildFunction<
+type BuildFunction<
   TControllerDefinitions extends CommerceControllerDefinitionsMap,
 > = Definition<TControllerDefinitions>['build'];
 
@@ -142,11 +142,11 @@ export type HydrateStaticStateFunction<
   TControllerDefinitions extends CommerceControllerDefinitionsMap,
 > = Definition<TControllerDefinitions>['hydrateStaticState'];
 
-export type FetchStaticStateFromBuildResultFunction<
+type FetchStaticStateFromBuildResultFunction<
   TControllerDefinitions extends CommerceControllerDefinitionsMap,
 > = FetchStaticStateFunction<TControllerDefinitions>['fromBuildResult'];
 
-export type HydrateStaticStateFromBuildResultFunction<
+type HydrateStaticStateFromBuildResultFunction<
   TControllerDefinitions extends CommerceControllerDefinitionsMap,
 > = HydrateStaticStateFunction<TControllerDefinitions>['fromBuildResult'];
 
@@ -172,7 +172,7 @@ export type HydrateStaticStateFromBuildResultParameters<
   HydrateStaticStateFromBuildResultFunction<TControllerDefinitions>
 >;
 
-export type Controllers<
+type Controllers<
   TControllerDefinitions extends CommerceControllerDefinitionsMap,
 > = InferControllersMapFromDefinition<TControllerDefinitions, SolutionType>;
 

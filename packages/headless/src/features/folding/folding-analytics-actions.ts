@@ -18,7 +18,7 @@ export const logShowMoreFoldedResults = (result: Result): ClickAction =>
     );
   });
 
-export const logShowLessFoldedResults = (): CustomAction =>
+const logShowLessFoldedResults = (): CustomAction =>
   makeAnalyticsAction('analytics/folding/showLess', (client) => {
     return client.makeShowLessFoldedResults();
   });
