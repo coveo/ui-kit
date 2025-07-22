@@ -5,7 +5,6 @@ import {facetSetReducer as facetSet} from '../facets/facet-set/facet-set-slice.j
 import {paginationReducer as pagination} from '../pagination/pagination-slice.js';
 import {queryReducer as query} from '../query/query-slice.js';
 import {querySetReducer as querySet} from '../query-set/query-set-slice.js';
-import {sortReducer as sort} from '../sort/sort-slice.js';
 import {
   restoreSearchParameters,
   restoreTab,
@@ -59,7 +58,6 @@ export function loadSearchParameterActions(
     pagination,
     query,
     querySet,
-    sort,
   });
 
   return {

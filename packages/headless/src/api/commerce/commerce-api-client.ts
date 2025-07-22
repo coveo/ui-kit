@@ -60,7 +60,7 @@ export type CommerceAPIResponse<T> =
   | CommerceAPISuccessResponse<T>
   | CommerceAPIErrorResponse;
 
-export interface CommerceAPISuccessResponse<T> {
+interface CommerceAPISuccessResponse<T> {
   success: T;
 }
 

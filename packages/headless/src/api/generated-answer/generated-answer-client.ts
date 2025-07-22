@@ -9,7 +9,7 @@ import {resetTimeout} from '../../utils/utils.js';
 import type {GeneratedAnswerStreamEventData} from './generated-answer-event-payload.js';
 import type {GeneratedAnswerStreamRequest} from './generated-answer-request.js';
 
-export interface GeneratedAnswerAPIClientOptions {
+interface GeneratedAnswerAPIClientOptions {
   logger: Logger;
 }
 

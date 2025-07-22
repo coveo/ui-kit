@@ -35,7 +35,7 @@ import {
   type GeneratedAnswerProps,
 } from '../../core/generated-answer/headless-core-generated-answer.js';
 
-export interface AnswerApiGeneratedAnswer
+interface AnswerApiGeneratedAnswer
   extends Omit<GeneratedAnswer, 'sendFeedback'> {
   /**
    * Resets the last answer.
@@ -50,7 +50,7 @@ export interface AnswerApiGeneratedAnswer
 
 interface AnswerApiGeneratedAnswerProps extends GeneratedAnswerProps {}
 
-export interface SearchAPIGeneratedAnswerAnalyticsClient
+interface SearchAPIGeneratedAnswerAnalyticsClient
   extends GeneratedAnswerAnalyticsClient {}
 
 interface ParseEvaluationArgumentsParams {
@@ -61,7 +61,7 @@ interface ParseEvaluationArgumentsParams {
 
 const parseEvaluationDetails = (
   detail: 'yes' | 'no' | 'unknown'
-): Boolean | null => {
+): boolean | null => {
   if (detail === 'yes') {
     return true;
   }
@@ -112,7 +112,8 @@ const subscribeToSearchRequest = (
     if (
       triggerParams.q.length === 0 ||
       triggerParams.requestId.length === 0 ||
-      triggerParams.requestId === lastTriggerParams.requestId
+      triggerParams.requestId === lastTriggerParams.requestId ||
+      (triggerParams.analyticsMode === 'next' && !triggerParams.actionCause) // If analytics mode is next, we need to wait for the action cause to be set
     ) {
       return;
     }

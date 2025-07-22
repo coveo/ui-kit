@@ -28,6 +28,10 @@ export default {
     await import(
       './atomic-commerce-products-per-page/atomic-commerce-products-per-page.js'
     ),
+  'atomic-commerce-query-error': async () =>
+    await import(
+      './atomic-commerce-query-error/atomic-commerce-query-error.js'
+    ),
   'atomic-commerce-query-summary': async () =>
     await import(
       './atomic-commerce-query-summary/atomic-commerce-query-summary.js'
@@ -39,6 +43,10 @@ export default {
   'atomic-commerce-recommendation-list': async () =>
     await import(
       './atomic-commerce-recommendation-list/atomic-commerce-recommendation-list.js'
+    ),
+  'atomic-commerce-refine-modal': async () =>
+    await import(
+      './atomic-commerce-refine-modal/atomic-commerce-refine-modal.js'
     ),
   'atomic-commerce-refine-toggle': async () =>
     await import(
@@ -66,6 +74,8 @@ export default {
     await import('./atomic-commerce-text/atomic-commerce-text.js'),
   'atomic-product': async () =>
     await import('./atomic-product/atomic-product.js'),
+  'atomic-product-children': async () =>
+    await import('./atomic-product-children/atomic-product-children.js'),
   'atomic-product-template': async () =>
     await import('./atomic-product-template/atomic-product-template.js'),
   'atomic-product-text': async () =>

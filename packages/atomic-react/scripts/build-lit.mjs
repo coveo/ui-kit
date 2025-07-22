@@ -50,8 +50,8 @@ for (const module of cem.modules) {
     continue;
   }
   // Use toSorted() to create a new sorted array without mutating the original
-  const sortedDeclarations = module.declarations.toSorted((a, b) => 
-    a.name.localeCompare(b.name, 'en-US', { sensitivity: 'base' })
+  const sortedDeclarations = module.declarations.toSorted((a, b) =>
+    a.name.localeCompare(b.name, 'en-US', {sensitivity: 'base'})
   );
   for (const declaration of sortedDeclarations) {
     if (isLitDeclaration(declaration)) {
@@ -67,32 +67,34 @@ for (const module of cem.modules) {
         entry.computedComponentImports.push(
           declarationToLitImport(declaration)
         );
-        entry.content+=(declarationToComponent(declaration));
+        entry.content += declarationToComponent(declaration);
       }
     }
   }
 }
 
 for (const entry of entries) {
-  if(entry.computedComponentImports.length===0) {
+  if (entry.computedComponentImports.length === 0) {
     writeFileSync(entry.path, 'export {}');
     // Format with Biome, like the original prettier.format() calls
-    execSync(`npx @biomejs/biome format --write "${entry.path}"`, {stdio: 'pipe'});
+    execSync(`npx @biomejs/biome format --write "${entry.path}"`, {
+      stdio: 'pipe',
+    });
     continue;
   }
-  
+
   // Sort imports deterministically to ensure consistent output across environments
-  const sortedImports = entry.computedComponentImports.toSorted((a, b) => 
-    a.localeCompare(b, 'en-US', { sensitivity: 'base' })
+  const sortedImports = entry.computedComponentImports.toSorted((a, b) =>
+    a.localeCompare(b, 'en-US', {sensitivity: 'base'})
   );
-  
+
   writeFileSync(
     entry.path,
     [
       `import {createComponent} from '@lit/react';`,
       `import React from 'react';`,
       `import {${sortedImports.join(',')}} from '@coveo/atomic/components';`,
-      entry.content
+      entry.content,
     ].join('\n')
   );
   // Format with Biome, like the original prettier.format() calls

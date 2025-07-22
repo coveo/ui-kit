@@ -95,7 +95,7 @@ export async function formatAllGeneratedLitExports() {
     ];
   });
 
-  execSync(`../../node_modules/.bin/biome format --write ${files.join(' ')}`);
+  execSync(`npx @biomejs/biome format --write ${files.join(' ')}`);
 }
 
 export async function generateLitExports() {

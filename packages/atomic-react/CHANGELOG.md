@@ -1,3 +1,11 @@
+## <small>3.2.51 (2025-07-16)</small>
+
+* chore(atomic-react): enable recommended rule for atomic-react (#5629) ([eb8cb02](https://github.com/coveo/ui-kit/commits/eb8cb02)), closes [#5629](https://github.com/coveo/ui-kit/issues/5629)
+* chore(deps): update dependency @rollup/plugin-typescript to v12.1.4 j:kit-282 (#5590) ([86ce689](https://github.com/coveo/ui-kit/commits/86ce689)), closes [#5590](https://github.com/coveo/ui-kit/issues/5590)
+* fix(deps): update all dependencies j:kit-282 (#5605) ([8132ed8](https://github.com/coveo/ui-kit/commits/8132ed8)), closes [#5605](https://github.com/coveo/ui-kit/issues/5605)
+
+
+
 ## <small>3.2.49 (2025-07-09)</small>
 
 * chore(atomic commerce): migrate atomic-commerce-load-more-products to Lit (#5551) ([9a77990](https://github.com/coveo/ui-kit/commits/9a77990)), closes [#5551](https://github.com/coveo/ui-kit/issues/5551)

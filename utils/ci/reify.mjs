@@ -35,9 +35,7 @@ function buildDependencyGraph(rootNode) {
         : node.edgesOut;
     const workspaces = edgesOut.filter(
       (edge) =>
-        edge.to &&
-        edge.to.package.name &&
-        rootNode.workspaces?.has(edge.to.package.name)
+        edge.to?.package.name && rootNode.workspaces?.has(edge.to.package.name)
     );
     return workspaces.map((edge) =>
       edge.to instanceof Arborist.Link ? edge.to.target : edge.to

@@ -81,7 +81,7 @@ export const fetchCaseClassifications = createAsyncThunk<
     };
   }
 );
-export const buildFetchClassificationRequest = async (
+const buildFetchClassificationRequest = async (
   state: StateNeededByFetchClassifications
 ): Promise<GetCaseClassificationsRequest> => ({
   accessToken: state.configuration.accessToken,

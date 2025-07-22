@@ -20,7 +20,10 @@ export class BasePageObject {
   async load({
     args,
     story = 'default',
-  }: {args?: Record<string, unknown>; story?: string} = {}) {
+  }: {
+    args?: Record<string, unknown>;
+    story?: string;
+  } = {}) {
     if (args) {
       await this.page.goto(
         `${this.urlRoot}?id=${this.tag}--${story}&args=${buildArgsParam(undefined, this.camelToKebab(args))}`
@@ -58,7 +61,7 @@ export class BasePageObject {
       const response = await route.fetch();
       const body = await response.json();
       if (numberOfRecommendations !== undefined) {
-        body['products'] = body['products'].slice(0, numberOfRecommendations);
+        body.products = body.products.slice(0, numberOfRecommendations);
       }
       await route.fulfill({
         response,

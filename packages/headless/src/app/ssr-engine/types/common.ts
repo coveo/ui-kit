@@ -32,7 +32,7 @@ export type HasOptionalKeys<TObject> = TObject extends {}
     : true
   : boolean;
 
-export type ExtractRequiredOptions<TOptions> = {
+type ExtractRequiredOptions<TOptions> = {
   [TKey in keyof TOptions as Pick<TOptions, TKey> extends Required<
     Pick<TOptions, TKey>
   >
@@ -40,14 +40,15 @@ export type ExtractRequiredOptions<TOptions> = {
     : never]: TOptions[TKey];
 };
 
-export type OptionsTuple<TOptions> =
-  HasKeys<TOptions> extends false
-    ? []
-    : HasKeys<ExtractRequiredOptions<TOptions>> extends false
-      ? [options?: TOptions]
-      : [options: TOptions];
+export type OptionsTuple<TOptions> = HasKeys<TOptions> extends false
+  ? []
+  : HasKeys<ExtractRequiredOptions<TOptions>> extends false
+    ? [options?: TOptions]
+    : [options: TOptions];
 
-export type OptionsExtender<TOptions> = (options: TOptions) => TOptions | Promise<TOptions>
+export type OptionsExtender<TOptions> = (
+  options: TOptions
+) => TOptions | Promise<TOptions>;
 
 export interface ControllersPropsMap {
   [customName: string]: unknown;
@@ -57,7 +58,7 @@ export interface ControllersMap {
   [customName: string]: Controller;
 }
 
-export interface ControllerStaticState<TState> {
+interface ControllerStaticState<TState> {
   state: TState;
 }
 
@@ -133,19 +134,18 @@ export type InferControllerPropsFromDefinition<
     CoreEngine | CoreEngineNext,
     Controller
   >,
-> =
-  TController extends ControllerDefinitionWithProps<
-    CoreEngine | CoreEngineNext,
-    Controller,
-    infer Props
-  >
-    ? Props
-    : TController extends ControllerDefinitionWithoutProps<
-          CoreEngine | CoreEngineNext,
-          Controller
-        >
-      ? {}
-      : unknown;
+> = TController extends ControllerDefinitionWithProps<
+  CoreEngine | CoreEngineNext,
+  Controller,
+  infer Props
+>
+  ? Props
+  : TController extends ControllerDefinitionWithoutProps<
+        CoreEngine | CoreEngineNext,
+        Controller
+      >
+    ? {}
+    : unknown;
 
 export type InferControllerPropsMapFromDefinitions<
   TControllers extends ControllerDefinitionsMap<
@@ -165,10 +165,9 @@ export type InferControllerFromDefinition<
     CoreEngine | CoreEngineNext,
     Controller
   >,
-> =
-  TDefinition extends ControllerDefinition<infer _, infer TController>
-    ? TController
-    : never;
+> = TDefinition extends ControllerDefinition<infer _, infer TController>
+  ? TController
+  : never;
 
 export type InferControllersMapFromDefinition<
   TControllers extends ControllerDefinitionsMap<
@@ -202,9 +201,8 @@ export type InferControllerStaticStateMapFromControllers<
 
 export type EngineDefinitionControllersPropsOption<
   TControllersPropsMap extends ControllersPropsMap,
-> =
-  HasKeys<TControllersPropsMap> extends false
-    ? {}
-    : {
-        controllers: TControllersPropsMap;
-      };
+> = HasKeys<TControllersPropsMap> extends false
+  ? {}
+  : {
+      controllers: TControllersPropsMap;
+    };

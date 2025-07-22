@@ -1,14 +1,20 @@
 import {execSync} from 'node:child_process';
 import {parse} from 'semver';
-import atomicHostedPageJson from '../../packages/atomic-hosted-page/package.json' with {type: 'json'};
-import atomicReactJson from '../../packages/atomic-react/package.json' with {type: 'json'};
-import atomicJson from '../../packages/atomic/package.json' with {type: 'json'};
-import headlessJson from '../../packages/headless/package.json' with {type: 'json'};
-import buenoJson from '../../packages/bueno/package.json' with {type: 'json'};
-import shopifyJson from '../../packages/shopify/package.json' with {type: 'json'};
 import rootJson from '../../package.json' with {type: 'json'};
-
-const releaseCommit = execSync('git rev-parse HEAD').toString().trim();
+import atomicJson from '../../packages/atomic/package.json' with {type: 'json'};
+import atomicHostedPageJson from '../../packages/atomic-hosted-page/package.json' with {
+  type: 'json',
+};
+import atomicReactJson from '../../packages/atomic-react/package.json' with {
+  type: 'json',
+};
+import buenoJson from '../../packages/bueno/package.json' with {type: 'json'};
+import headlessJson from '../../packages/headless/package.json' with {
+  type: 'json',
+};
+import shopifyJson from '../../packages/shopify/package.json' with {
+  type: 'json',
+};
 
 function getVersionComposants(version) {
   const parsedVersion = parse(version);
@@ -16,7 +22,7 @@ function getVersionComposants(version) {
     major: parsedVersion?.major,
     minor: parsedVersion?.minor,
     patch: parsedVersion?.patch,
-    build: parsedVersion.prerelease[0]
+    build: parsedVersion.prerelease[0],
   };
 }
 const root = getVersionComposants(rootJson.version);
@@ -28,7 +34,9 @@ const atomicHostedPage = getVersionComposants(atomicHostedPageJson.version);
 const shopify = getVersionComposants(shopifyJson.version);
 const IS_NIGHTLY = !!root.build;
 
-console.log(execSync(`
+console.log(
+  execSync(
+    `
   deployment-package package create --with-deploy \
     --version ${root.major}.${root.minor}.${root.patch}${root.build ? `.${root.build}` : ''} \
     --resolve IS_NIGHTLY=${IS_NIGHTLY} \
@@ -51,4 +59,8 @@ console.log(execSync(`
     --resolve SHOPIFY_MAJOR_VERSION=${shopify.major} \
     --resolve SHOPIFY_MINOR_VERSION=${shopify.major}.${shopify.minor} \
     --resolve SHOPIFY_PATCH_VERSION=${shopify.major}.${shopify.minor}.${shopify.patch} \
-    --resolve GITHUB_RUN_ID=${process.env.RUN_ID}`.replaceAll(/\s+/g, ' ').trim()).toString());
+    --resolve GITHUB_RUN_ID=${process.env.RUN_ID}`
+      .replaceAll(/\s+/g, ' ')
+      .trim()
+  ).toString()
+);
