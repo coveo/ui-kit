@@ -39,7 +39,7 @@ interface Badge {
   color: string;
 }
 
-export type InsightFieldType = 'string' | 'date' | 'number' | 'multi';
+type InsightFieldType = 'string' | 'date' | 'number' | 'multi';
 
 interface Detail {
   field: string;
@@ -54,7 +54,7 @@ type ResultAction =
   | 'sendAsEmail'
   | 'sendToFeed';
 
-export type InsightFacetType = 'standard' | 'numeric' | 'timeframe';
+type InsightFacetType = 'standard' | 'numeric' | 'timeframe';
 
 interface InsightOption {
   enabled: boolean;

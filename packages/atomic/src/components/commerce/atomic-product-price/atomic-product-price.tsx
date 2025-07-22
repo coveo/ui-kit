@@ -85,7 +85,7 @@ export class AtomicProductPrice
     return (
       <Host class="flex flex-wrap gap-1">
         <div
-          class={`truncate break-keep ${this.hasPromotionalPrice && 'text-error'}`}
+          class={`truncate break-keep text-2xl ${this.hasPromotionalPrice && 'text-error'}`}
         >
           {mainPrice}
         </div>

@@ -2,7 +2,6 @@ export enum LegacySearchPageEvents {
   /**
    * Identifies the custom event that gets logged when the Results per page component is selected.
    */
-  pagerResize = 'pagerResize',
   /**
    * Identifies the custom event that gets logged when a page number is selected and more items are loaded.
    */
@@ -18,5 +17,4 @@ export enum LegacySearchPageEvents {
   /**
    * Identifies the custom event that gets logged when the user scrolls to the bottom of the item page and more results are loaded.
    */
-  pagerScrolling = 'pagerScrolling',
 }

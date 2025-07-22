@@ -65,7 +65,7 @@ export const querySelector = createSelector(
   (query) => query ?? ''
 );
 
-export const queryExecutedSelector = createSelector(
+const queryExecutedSelector = createSelector(
   (state: CommerceSearchSection) => state.commerceSearch?.queryExecuted,
   (query) => query
 );

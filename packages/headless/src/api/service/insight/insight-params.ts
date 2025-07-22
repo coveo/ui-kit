@@ -18,7 +18,7 @@ export const baseInsightUrl = (req: InsightParam, path?: string) =>
     req.insightId
   }${path ?? ''}`;
 
-export const baseInsightUserActionsUrl = (req: InsightUserActionsRequest) =>
+const baseInsightUserActionsUrl = (req: InsightUserActionsRequest) =>
   `${req.url}/rest/organizations/${req.organizationId}/machinelearning/user/actions`;
 
 export const baseInsightRequest = (

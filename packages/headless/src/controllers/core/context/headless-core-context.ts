@@ -26,8 +26,6 @@ import {
   ReservedContextKeyError,
 } from './headless-context-reserved-keys.js';
 
-export type {ContextPayload, ContextValue};
-
 export interface ContextProps {
   /**
    * Represents the initial state of the context.

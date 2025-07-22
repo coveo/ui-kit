@@ -26,7 +26,8 @@
     "release:phase2": "npm run-script -w=@coveo/ci bump:root",
     "release:phase3": "nx run-many --targets=release:phase3 --all --parallel=false --output-style=stream",
     "release:phase4": "npm run-script -w=@coveo/ci reify",
-    "release:phase5": "npm run-script -w=@coveo/ci git-publish-all"
+    "release:phase5": "npm run-script -w=@coveo/ci git-publish-all",
+    "knip": "knip"
   },
   "devDependencies": {
     "@actions/core": "1.11.1",
@@ -37,13 +38,12 @@
     "@commitlint/load": "19.8.1",
     "@coveo/ci": "1.0.0",
     "@cspell/dict-fr-fr": "2.3.0",
-    "@nx/web": "20.8.2",
     "@octokit/rest": "21.1.1",
     "@tsconfig/node20": "20.1.6",
     "@types/execa": "2.0.2",
     "@types/jest": "29.5.14",
     "@types/node": "22.16.0",
-    "@vitest/browser": "3.2.1",
+    "@vitest/browser": "3.2.4",
     "aws-sdk": "2.1692.0",
     "commitizen": "4.3.1",
     "concurrently": "9.2.0",
@@ -53,19 +53,18 @@
     "esbuild-plugin-alias": "0.2.1",
     "esbuild-plugin-umd-wrapper": "3.0.0",
     "execa": "9.6.0",
-    "glob": "11.0.3",
-    "gts": "5.3.1",
     "husky": "9.1.7",
+    "knip": "5.61.3",
     "lint-staged": "15.5.2",
     "nx": "20.8.2",
     "patch-package": "8.0.0",
     "publint": "0.3.12",
-    "react": "19.1.0",
-    "react-dom": "19.1.0",
     "rimraf": "6.0.1",
     "semver": "7.7.2",
     "typescript": "5.8.3",
-    "vite": "6.3.5"
+    "vitest": "3.2.4",
+    "@npmcli/package-json": "6.2.0",
+    "playwright": "1.53.2"
   },
   "overrides": {
     "@coveo/ci": {
@@ -115,9 +114,6 @@
   "engines": {
     "node": "^22.14.0",
     "npm": ">=8.6.0"
-  },
-  "dependencies": {
-    "upgrade": "1.1.0"
   },
   "packageManager": "npm@11.4.2"
 }

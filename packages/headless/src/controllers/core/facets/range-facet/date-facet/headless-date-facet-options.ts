@@ -117,7 +117,7 @@ const dateRangeRequestDefinition: SchemaDefinition<DateRangeRequest> = {
   state: new StringValue({constrainTo: facetValueStates}),
 };
 
-export const dateFacetOptionsSchema = new Schema<Required<DateFacetOptions>>({
+const dateFacetOptionsSchema = new Schema<Required<DateFacetOptions>>({
   facetId,
   field,
   tabs: new RecordValue({
