@@ -8,6 +8,10 @@ interface CarouselIndicatorProps {
   maxImagesBeforeAndAfter?: number;
 }
 
+
+/**
+ * @deprecated Should only be used for Stencil components;
+ */
 const CarouselIndicator: FunctionalComponent<CarouselIndicatorProps> = ({
   numberOfImages,
   currentImage: currentImage,

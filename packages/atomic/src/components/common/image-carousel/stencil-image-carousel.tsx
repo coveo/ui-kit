@@ -3,7 +3,7 @@ import {JSXBase} from '@stencil/core/internal';
 import ArrowRight from '../../../images/arrow-right.svg';
 import {AnyBindings} from '../interface/bindings';
 import {Button} from '../stencil-button';
-import CarouselIndicator from './image-carousel-indicators';
+import CarouselIndicator from './stencil-image-carousel-indicators';
 
 export interface CarouselProps {
   bindings: AnyBindings;
@@ -14,6 +14,9 @@ export interface CarouselProps {
   currentImage: number;
 }
 
+/**
+ * @deprecated Should only be used for Stencil components;
+ */
 export const ImageCarousel: FunctionalComponent<
   CarouselProps & JSXBase.HTMLAttributes<HTMLHeadingElement>
 > = (props, children) => {
