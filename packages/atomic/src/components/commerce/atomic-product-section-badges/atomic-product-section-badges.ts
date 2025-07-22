@@ -3,8 +3,6 @@ import {customElement} from 'lit/decorators.js';
 import {ProductSectionMixin} from '@/src/mixins/product-section-mixin';
 
 /**
- * @alpha
- *
  * This section is meant to render badges that highlight special features of the product.
  *
  * Behavior:

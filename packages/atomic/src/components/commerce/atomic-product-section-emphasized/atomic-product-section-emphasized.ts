@@ -3,8 +3,6 @@ import {customElement} from 'lit/decorators.js';
 import {ProductSectionMixin} from '@/src/mixins/product-section-mixin';
 
 /**
- * @alpha
- *
  * This section is intended to display the field that's important for its search criteria.
  * For example, in Commerce, a product's price is often more important than the title itself.
  *

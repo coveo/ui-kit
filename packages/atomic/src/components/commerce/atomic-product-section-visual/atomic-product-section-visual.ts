@@ -4,8 +4,6 @@ import type {ItemDisplayImageSize} from '@/src/components/common/layout/display-
 import {ProductSectionMixin} from '@/src/mixins/product-section-mixin';
 
 /**
- * @alpha
- *
  * This section is intended to provide visual information about the product.
  * In commerce, an image is a great shorthand for a product category.
  *

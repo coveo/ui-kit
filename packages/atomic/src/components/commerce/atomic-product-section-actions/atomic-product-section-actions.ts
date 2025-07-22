@@ -3,8 +3,6 @@ import {customElement} from 'lit/decorators.js';
 import {ProductSectionMixin} from '@/src/mixins/product-section-mixin';
 
 /**
- * @alpha
- *
  * This section is intended to display components that allow the user to perform an action on a product without having to view its details.
  * In commerce interface, the user can usually add the product to their cart or wish list.
  *

@@ -3,8 +3,6 @@ import {customElement} from 'lit/decorators.js';
 import {ProductSectionMixin} from '@/src/mixins/product-section-mixin';
 
 /**
- * @alpha
- *
  * This section is meant to render additional descriptive information about the product.
  *
  * Behavior:
