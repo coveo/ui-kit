@@ -29,8 +29,6 @@ import {
   type Controller,
 } from '../../controller/headless-controller.js';
 
-export type {SearchParameters};
-
 export interface SearchParameterManagerProps {
   /**
    * The initial state that should be applied to the `SearchParameterManager` controller.
@@ -208,15 +206,13 @@ function facetIsEnabled(state: CoreEngine['state']) {
   };
 }
 
-export function getSelectedValues(request: FacetRequest) {
+function getSelectedValues(request: FacetRequest) {
   return request.currentValues
     .filter((fv) => fv.state === 'selected')
     .map((fv) => fv.value);
 }
 
-export function getSelectedRangeValues(
-  request: CurrentValues<BaseFacetValueRequest>
-) {
+function getSelectedRangeValues(request: CurrentValues<BaseFacetValueRequest>) {
   return request.currentValues.filter((fv) => fv.state === 'selected');
 }
 

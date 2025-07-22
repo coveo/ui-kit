@@ -9,7 +9,7 @@ import {
   buildProductView,
 } from './headless-product-view.js';
 
-export interface ProductViewDefinition
+interface ProductViewDefinition
   extends NonRecommendationControllerDefinitionWithoutProps<ProductView> {}
 
 /**
