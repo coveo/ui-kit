@@ -1,7 +1,7 @@
 import type {GeneratedContentFormat} from '../../features/generated-answer/generated-response-format.js';
 import type {Raw} from '../search/search/raw.js';
 
-export type GeneratedAnswerStreamFinishReason = 'COMPLETED' | 'ERROR';
+type GeneratedAnswerStreamFinishReason = 'COMPLETED' | 'ERROR';
 
 export type GeneratedAnswerPayloadType =
   | 'genqa.headerMessageType'

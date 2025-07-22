@@ -19,8 +19,6 @@ import {
 } from '../../controller/headless-controller.js';
 import type {SmartSnippetAnalyticsClient} from '../smart-snippet/headless-core-smart-snippet.js';
 
-export type {QuestionAnswerDocumentIdentifier} from '../../../api/search/search/question-answering.js';
-
 export interface SmartSnippetQuestionsListOptions {
   /**
    * The amount of time in milliseconds to wait before selecting the source after calling `beginDelayedSelect`.

@@ -28,6 +28,10 @@ export default {
     await import(
       './atomic-commerce-products-per-page/atomic-commerce-products-per-page.js'
     ),
+  'atomic-commerce-query-error': async () =>
+    await import(
+      './atomic-commerce-query-error/atomic-commerce-query-error.js'
+    ),
   'atomic-commerce-query-summary': async () =>
     await import(
       './atomic-commerce-query-summary/atomic-commerce-query-summary.js'
