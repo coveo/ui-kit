@@ -1,7 +1,7 @@
-import {
-  PlatformClient,
+import type {
   IManifestResponse,
   ISearchInterfaceConfigurationResponse,
+  PlatformClient,
 } from '@coveo/platform-client';
 
 /**
@@ -16,7 +16,7 @@ export async function fetchPageManifest(
   pageId: string,
   type: 'next-gen' | 'legacy' | 'unknown'
 ) {
-  let manifestGetters = [];
+  const manifestGetters = [];
   if (type !== 'legacy') {
     manifestGetters.push(getNextGenManifest);
   }

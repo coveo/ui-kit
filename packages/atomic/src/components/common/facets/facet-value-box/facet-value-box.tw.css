@@ -5,7 +5,10 @@
  */
 .box-container {
   @apply grid px-2;
-  grid-template-columns: repeat(var(--atomic-facet-boxes-per-row, 4), minmax(0, 1fr));
+  grid-template-columns: repeat(
+      var(--atomic-facet-boxes-per-row, 4),
+      minmax(0, 1fr)
+    );
   gap: var(--atomic-facet-boxes-gap, 0.5rem);
 }
 

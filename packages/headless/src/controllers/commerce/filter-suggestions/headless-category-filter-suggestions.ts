@@ -35,8 +35,6 @@ import type {CategoryFacetOptions} from '../core/facets/category/headless-commer
 import {buildCategoryFacetSearch} from '../core/facets/category/headless-commerce-category-facet-search.js';
 import type {FacetControllerType} from '../core/facets/headless-core-commerce-facet.js';
 
-;
-
 /**
  * The state of the `CategoryFilterSuggestions` controller.
  *
@@ -179,7 +177,8 @@ export function buildCategoryFilterSuggestions(
       facetSearch.search();
     },
 
-    getSearchParameters: (value: CategoryFacetSearchResult) => searchSerializer.serialize({
+    getSearchParameters: (value: CategoryFacetSearchResult) =>
+      searchSerializer.serialize({
         q: facetSearchStateSelector(getState()).query,
         cf: {[options.facetId]: [...value.path, value.rawValue]},
       }),
@@ -200,8 +199,9 @@ export function buildCategoryFilterSuggestions(
     },
 
     get state() {
-      const {displayName, field, facetId} =
-        facetForFieldSuggestionsSelector(getState());
+      const {displayName, field, facetId} = facetForFieldSuggestionsSelector(
+        getState()
+      );
       return {
         displayName,
         field,

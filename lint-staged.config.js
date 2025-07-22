@@ -1,16 +1,61 @@
 module.exports = {
-  '**/*.{ts?(x),?(m)js,json,css,html,md}': (files) => {
-    const filteredFiles = files.filter(
-      (file) =>
-        !(file.includes('/stencil-generated/') && file.endsWith('.ts')) &&
-        !file.includes('/packages/quantic/') &&
-        !file.includes('.github/prompts') &&
-        !file.includes('.github/instructions') &&
-        !file.endsWith('.tw.css') &&
-        !file.endsWith('.pcss') &&
-        !file.endsWith('/package.json') &&
-        !file.endsWith('/package-lock.json')
-    );
+  '**/*.{ts?(x),?(m)js,json,css,html}': (files) => {
+    const filteredFiles = files.filter((file) => {
+      // Exclude quantic and create-atomic-template packages
+      if (file.includes('/packages/quantic/')) return false;
+      if (file.includes('/packages/create-atomic-template/')) return false;
+
+      // Exclude root deployment config
+      if (file.endsWith('.deployment.config.json')) return false;
+
+      if (file.endsWith('package-lock.json')) return false;
+
+      // Exclude atomic package cypress, tsx (except stories), and d.ts files
+      if (
+        file.includes('/packages/atomic/') &&
+        (file.includes('/cypress/') ||
+          (file.endsWith('.tsx') && !file.endsWith('.stories.tsx')) ||
+          file.endsWith('.d.ts'))
+      )
+        return false;
+
+      // Exclude atomic-angular stencil-generated
+      if (
+        file.includes('/packages/atomic-angular/') &&
+        file.includes('/stencil-generated/')
+      )
+        return false;
+
+      // Exclude atomic-react stencil-generated
+      if (
+        file.includes('/packages/atomic-react/') &&
+        file.includes('/stencil-generated/')
+      )
+        return false;
+
+      // Exclude documentation assets
+      if (
+        file.includes('/packages/documentation/') &&
+        file.includes('/assets/')
+      )
+        return false;
+
+      // Exclude headless coveo.analytics
+      if (
+        file.includes('/packages/headless/') &&
+        file.includes('/coveo.analytics/')
+      )
+        return false;
+
+      // Exclude atomic-stencil-samples d.ts
+      if (file.includes('/packages/samples/stencil/') && file.endsWith('.d.ts'))
+        return false;
+
+      // Exclude tailwind css files
+      if (file.endsWith('.tw.css')) return false;
+
+      return true;
+    });
     if (filteredFiles.length === 0) {
       return 'echo "No files to process with Biome"';
     }
