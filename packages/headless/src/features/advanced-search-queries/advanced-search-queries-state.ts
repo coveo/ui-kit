@@ -1,4 +1,4 @@
-export interface AdvancedSearchQueriesDefaultFiltersState {
+type AdvancedSearchQueriesDefaultFiltersState = {
   /**
    * The initial cq filter (e.g., `((q AND aq) OR dq) AND cq).
    */
@@ -18,7 +18,7 @@ export interface AdvancedSearchQueriesDefaultFiltersState {
    * The initial dq filter, or disjunction query expression filter (e.g., `((q AND aq) OR dq) AND cq).
    */
   dq: string;
-}
+};
 
 export interface AdvancedSearchQueriesState {
   /**

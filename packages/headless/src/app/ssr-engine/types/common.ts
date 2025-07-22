@@ -32,7 +32,7 @@ export type HasOptionalKeys<TObject> = TObject extends {}
     : true
   : boolean;
 
-export type ExtractRequiredOptions<TOptions> = {
+type ExtractRequiredOptions<TOptions> = {
   [TKey in keyof TOptions as Pick<TOptions, TKey> extends Required<
     Pick<TOptions, TKey>
   >
@@ -58,7 +58,7 @@ export interface ControllersMap {
   [customName: string]: Controller;
 }
 
-export interface ControllerStaticState<TState> {
+interface ControllerStaticState<TState> {
   state: TState;
 }
 

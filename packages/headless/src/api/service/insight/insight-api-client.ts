@@ -37,7 +37,7 @@ import type {InsightUserActionsResponse} from './user-actions/user-actions-respo
 /**
  * Initialization options for the `InsightAPIClient`.
  */
-export interface InsightAPIClientOptions extends HtmlAPIClientOptions {
+interface InsightAPIClientOptions extends HtmlAPIClientOptions {
   logger: Logger;
   preprocessRequest: PreprocessRequest;
 }
@@ -47,11 +47,11 @@ export interface AsyncThunkInsightOptions<T extends Partial<InsightAppState>>
   rejectValue: InsightAPIErrorStatusResponse;
 }
 
-export type InsightAPIResponse<TSuccessContent> =
+type InsightAPIResponse<TSuccessContent> =
   | InsightAPISuccessResponse<TSuccessContent>
   | InsightAPIErrorResponse;
 
-export interface InsightAPISuccessResponse<TContent> {
+interface InsightAPISuccessResponse<TContent> {
   success: TContent;
 }
 
@@ -62,7 +62,7 @@ export interface InsightAPIErrorStatusResponse {
   ignored?: boolean;
 }
 
-export interface InsightAPIErrorResponse {
+interface InsightAPIErrorResponse {
   error: InsightAPIErrorStatusResponse;
 }
 
