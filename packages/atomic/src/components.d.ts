@@ -1585,36 +1585,29 @@ export namespace Components {
     interface AtomicPopover {
     }
     /**
-     * The `atomic-product-image` component renders an image from a product field.
+     * The `atomic-product-field-condition` component takes a list of conditions that, if fulfilled, apply the template in which it's defined.
+     * The condition properties can be based on any top-level product property of the `product` object, not restricted to fields (e.g., `ec_name`).
      * @alpha 
      */
-    interface AtomicProductImage {
+    interface AtomicProductFieldCondition {
         /**
-          * An fallback image URL that will be used in case the specified image is not available or an error is encountered.
+          * Verifies whether the specified fields are defined.
          */
-        "fallback": string;
+        "ifDefined"?: string;
         /**
-          * The product field which the component should use. This will look for the field in the product object first, then in the product.additionalFields object.
+          * Verifies whether the specified fields are not defined.
          */
-        "field": string;
+        "ifNotDefined"?: string;
         /**
-          * The product field that contains the alt text for the images. This will look for the field in the product object first, then in the product.additionalFields object. If the product has multiple images, the value of the `imageAltField` will be used as the alt text for every image.  If the field is not specified, or does not contain a valid value, the alt text will be set to "Image {index} out of {totalImages} for {productName}".
-          * @type {string}
+          * Verifies whether the specified fields match the specified values.
+          * @type {Record<string, string[]>}
          */
-        "imageAltField"?: string;
+        "mustMatch": Record<string, string[]>;
         /**
-          * Navigates to the specified image index.
-          * @param index - The index of the image to navigate to.
+          * Verifies whether the specified fields do not match the specified values.
+          * @type {Record<string, string[]>}
          */
-        "navigateToImage": (index: number) => Promise<void>;
-        /**
-          * Moves to the next image, when the carousel is activated.
-         */
-        "nextImage": () => Promise<void>;
-        /**
-          * Moves to the previous image, when the carousel is activated.
-         */
-        "previousImage": () => Promise<void>;
+        "mustNotMatch": Record<string, string[]>;
     }
     /**
      * The `atomic-product-rating` element renders a star rating.
@@ -4056,14 +4049,15 @@ declare global {
         new (): HTMLAtomicPopoverElement;
     };
     /**
-     * The `atomic-product-image` component renders an image from a product field.
+     * The `atomic-product-field-condition` component takes a list of conditions that, if fulfilled, apply the template in which it's defined.
+     * The condition properties can be based on any top-level product property of the `product` object, not restricted to fields (e.g., `ec_name`).
      * @alpha 
      */
-    interface HTMLAtomicProductImageElement extends Components.AtomicProductImage, HTMLStencilElement {
+    interface HTMLAtomicProductFieldConditionElement extends Components.AtomicProductFieldCondition, HTMLStencilElement {
     }
-    var HTMLAtomicProductImageElement: {
-        prototype: HTMLAtomicProductImageElement;
-        new (): HTMLAtomicProductImageElement;
+    var HTMLAtomicProductFieldConditionElement: {
+        prototype: HTMLAtomicProductFieldConditionElement;
+        new (): HTMLAtomicProductFieldConditionElement;
     };
     /**
      * The `atomic-product-rating` element renders a star rating.
@@ -5144,7 +5138,7 @@ declare global {
         "atomic-numeric-range": HTMLAtomicNumericRangeElement;
         "atomic-pager": HTMLAtomicPagerElement;
         "atomic-popover": HTMLAtomicPopoverElement;
-        "atomic-product-image": HTMLAtomicProductImageElement;
+        "atomic-product-field-condition": HTMLAtomicProductFieldConditionElement;
         "atomic-product-rating": HTMLAtomicProductRatingElement;
         "atomic-product-section-actions": HTMLAtomicProductSectionActionsElement;
         "atomic-product-section-badges": HTMLAtomicProductSectionBadgesElement;
@@ -6716,23 +6710,29 @@ declare namespace LocalJSX {
     interface AtomicPopover {
     }
     /**
-     * The `atomic-product-image` component renders an image from a product field.
+     * The `atomic-product-field-condition` component takes a list of conditions that, if fulfilled, apply the template in which it's defined.
+     * The condition properties can be based on any top-level product property of the `product` object, not restricted to fields (e.g., `ec_name`).
      * @alpha 
      */
-    interface AtomicProductImage {
+    interface AtomicProductFieldCondition {
         /**
-          * An fallback image URL that will be used in case the specified image is not available or an error is encountered.
+          * Verifies whether the specified fields are defined.
          */
-        "fallback"?: string;
+        "ifDefined"?: string;
         /**
-          * The product field which the component should use. This will look for the field in the product object first, then in the product.additionalFields object.
+          * Verifies whether the specified fields are not defined.
          */
-        "field"?: string;
+        "ifNotDefined"?: string;
         /**
-          * The product field that contains the alt text for the images. This will look for the field in the product object first, then in the product.additionalFields object. If the product has multiple images, the value of the `imageAltField` will be used as the alt text for every image.  If the field is not specified, or does not contain a valid value, the alt text will be set to "Image {index} out of {totalImages} for {productName}".
-          * @type {string}
+          * Verifies whether the specified fields match the specified values.
+          * @type {Record<string, string[]>}
          */
-        "imageAltField"?: string;
+        "mustMatch"?: Record<string, string[]>;
+        /**
+          * Verifies whether the specified fields do not match the specified values.
+          * @type {Record<string, string[]>}
+         */
+        "mustNotMatch"?: Record<string, string[]>;
     }
     /**
      * The `atomic-product-rating` element renders a star rating.
@@ -8355,7 +8355,7 @@ declare namespace LocalJSX {
         "atomic-numeric-range": AtomicNumericRange;
         "atomic-pager": AtomicPager;
         "atomic-popover": AtomicPopover;
-        "atomic-product-image": AtomicProductImage;
+        "atomic-product-field-condition": AtomicProductFieldCondition;
         "atomic-product-rating": AtomicProductRating;
         "atomic-product-section-actions": AtomicProductSectionActions;
         "atomic-product-section-badges": AtomicProductSectionBadges;
@@ -8668,10 +8668,11 @@ declare module "@stencil/core" {
              */
             "atomic-popover": LocalJSX.AtomicPopover & JSXBase.HTMLAttributes<HTMLAtomicPopoverElement>;
             /**
-             * The `atomic-product-image` component renders an image from a product field.
+             * The `atomic-product-field-condition` component takes a list of conditions that, if fulfilled, apply the template in which it's defined.
+             * The condition properties can be based on any top-level product property of the `product` object, not restricted to fields (e.g., `ec_name`).
              * @alpha 
              */
-            "atomic-product-image": LocalJSX.AtomicProductImage & JSXBase.HTMLAttributes<HTMLAtomicProductImageElement>;
+            "atomic-product-field-condition": LocalJSX.AtomicProductFieldCondition & JSXBase.HTMLAttributes<HTMLAtomicProductFieldConditionElement>;
             /**
              * The `atomic-product-rating` element renders a star rating.
              * @alpha 
