@@ -18,7 +18,6 @@ export const AtomicNumericRange = /*@__PURE__*/createReactComponent<JSX.AtomicNu
 export const AtomicProductDescription = /*@__PURE__*/createReactComponent<JSX.AtomicProductDescription, HTMLAtomicProductDescriptionElement>('atomic-product-description');
 export const AtomicProductExcerpt = /*@__PURE__*/createReactComponent<JSX.AtomicProductExcerpt, HTMLAtomicProductExcerptElement>('atomic-product-excerpt');
 export const AtomicProductFieldCondition = /*@__PURE__*/createReactComponent<JSX.AtomicProductFieldCondition, HTMLAtomicProductFieldConditionElement>('atomic-product-field-condition');
-export const AtomicProductImage = /*@__PURE__*/createReactComponent<JSX.AtomicProductImage, HTMLAtomicProductImageElement>('atomic-product-image');
 export const AtomicProductLink = /*@__PURE__*/createReactComponent<JSX.AtomicProductLink, HTMLAtomicProductLinkElement>('atomic-product-link');
 export const AtomicProductMultiValueText = /*@__PURE__*/createReactComponent<JSX.AtomicProductMultiValueText, HTMLAtomicProductMultiValueTextElement>('atomic-product-multi-value-text');
 export const AtomicProductPrice = /*@__PURE__*/createReactComponent<JSX.AtomicProductPrice, HTMLAtomicProductPriceElement>('atomic-product-price');
