@@ -1612,7 +1612,9 @@ export const expectedStreamAnswerAPIParamWithoutSearchAction = {
 };
 
 export const expectedStreamAnswerAPIParamForSelect = (() => {
-  const {analytics, ...expectedStreamAnswerAPIParamWithoutAnalytics} =
-    expectedStreamAnswerAPIParam;
+  const {
+    analytics: _analytics,
+    ...expectedStreamAnswerAPIParamWithoutAnalytics
+  } = expectedStreamAnswerAPIParam;
   return expectedStreamAnswerAPIParamWithoutAnalytics;
 })();

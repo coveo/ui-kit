@@ -201,7 +201,7 @@ export const answerApi = answerSlice.injectEndpoints({
         // RTK Query serialize our endpoints and they're serialized state arguments as the key in the store.
         // Keys must match, because if anything in the query changes, it's not the same query anymore.
         // Analytics data is excluded entirely as it contains volatile fields that change during streaming.
-        const {analytics, ...queryArgsWithoutAnalytics} = queryArgs;
+        const {analytics: _analytics, ...queryArgsWithoutAnalytics} = queryArgs;
 
         // Standard RTK key, with analytics excluded
         return `${endpointName}(${JSON.stringify(queryArgsWithoutAnalytics)})`;
