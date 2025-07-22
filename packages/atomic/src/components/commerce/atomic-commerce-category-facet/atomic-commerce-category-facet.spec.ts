@@ -3,7 +3,7 @@ import {renderInAtomicCommerceInterface} from '@/vitest-utils/testing-helpers/fi
 import {buildFakeCategoryFacet} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/category-facet-controller';
 import {buildFakeSummary} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/summary-subcontroller';
 import type {CategoryFacet, Summary} from '@coveo/headless/commerce';
-import {page} from '@vitest/browser/context';
+import {page, userEvent} from '@vitest/browser/context';
 import '@vitest/browser/matchers.d.ts';
 import {html} from 'lit';
 import {
@@ -97,17 +97,24 @@ describe('atomic-commerce-category-facet', () => {
           'Look at the developer console for more information'
         );
       },
+      get allCategoryButton() {
+        return element.shadowRoot!.querySelector(
+          '[part=all-categories-button]'
+        )! as HTMLButtonElement;
+      },
       get facet() {
-        return element.shadowRoot!.querySelector('facet')!;
+        return element.shadowRoot!.querySelector('[part=facet]')!;
       },
       get clearButton() {
-        return element.shadowRoot!.querySelector('clear-button')!;
+        return element.shadowRoot!.querySelector('[part=clear-button]')!;
       },
       get searchWrapper() {
         return element.shadowRoot!.querySelector('search-wrapper')!;
       },
       get searchInput() {
-        return element.shadowRoot!.querySelector('search-input')!;
+        return element.shadowRoot!.querySelector(
+          '[part=search-input]'
+        )! as HTMLInputElement;
       },
       get labelButton() {
         return element.shadowRoot!.querySelector('[part=label-button]')!;
@@ -143,13 +150,13 @@ describe('atomic-commerce-category-facet', () => {
     await expect.element(facet).toBeVisible();
   });
 
-  it.skip('should render the first facet value', async () => {
+  it('should render the first facet value', async () => {
     const {getFacetValueByPosition} = await setupElement();
     const facetValue = getFacetValueByPosition(0);
     await expect.element(facetValue).toBeVisible();
   });
 
-  it.skip('should render facet values', async () => {
+  it('should render facet values', async () => {
     const {valueLabel} = await setupElement();
 
     expect(valueLabel).toHaveLength(2);
@@ -157,39 +164,39 @@ describe('atomic-commerce-category-facet', () => {
     await expect.element(valueLabel[1]).toBeInTheDocument();
   });
 
-  it.skip('should render values', async () => {
+  it('should render values', async () => {
     const {values} = await setupElement();
     await expect.element(values).toBeInTheDocument();
   });
 
-  it.skip('should render the first facet value label', async () => {
+  it('should render the first facet value label', async () => {
     const {getFacetValueByLabel} = await setupElement();
-    const facetValueLabel = getFacetValueByLabel('Past Month');
+    const facetValueLabel = getFacetValueByLabel('Electronics');
     await expect.element(facetValueLabel).toBeVisible();
   });
 
-  it.skip('should render the first facet value button label', async () => {
+  it('should render the first facet value button label', async () => {
     const {getFacetValueButtonByLabel} = await setupElement();
-    const facetValueButtonLabel = getFacetValueButtonByLabel('Past Month');
+    const facetValueButtonLabel = getFacetValueButtonByLabel('Electronics');
     await expect.element(facetValueButtonLabel).toBeVisible();
   });
 
-  it.skip('should render the label button part', async () => {
+  it('should render the label button part', async () => {
     const {labelButton} = await setupElement();
     await expect.element(labelButton).toBeInTheDocument();
   });
 
-  it.skip('should render the label button icon part', async () => {
+  it('should render the label button icon part', async () => {
     const {labelButtonIcon} = await setupElement();
     await expect.element(labelButtonIcon).toBeInTheDocument();
   });
 
-  it.skip('should render the first value count part', async () => {
+  it('should render the first value count part', async () => {
     const {valueCount} = await setupElement();
     await expect.element(valueCount![0]).toBeInTheDocument();
   });
 
-  it.skip('should not render facet when there are no values', async () => {
+  it('should not render facet when there are no values', async () => {
     mockedFacet = buildFakeCategoryFacet({
       state: {
         values: [],
@@ -201,7 +208,7 @@ describe('atomic-commerce-category-facet', () => {
     expect(facet).not.toBeInTheDocument();
   });
 
-  it.skip('should not render values when collapsed', async () => {
+  it('should not render values when collapsed', async () => {
     const {values} = await setupElement({
       isCollapsed: true,
     });
@@ -209,7 +216,7 @@ describe('atomic-commerce-category-facet', () => {
     await expect.element(values).not.toBeInTheDocument();
   });
 
-  it.skip('should not render facet when summary has error', async () => {
+  it('should not render facet when summary has error', async () => {
     mockedSummary = buildFakeSummary({
       state: {
         hasError: true,
@@ -220,7 +227,7 @@ describe('atomic-commerce-category-facet', () => {
     await expect.element(facet).not.toBeInTheDocument();
   });
 
-  it.skip('should not render facet when first request not executed', async () => {
+  it('should not render facet when first request not executed', async () => {
     mockedSummary = buildFakeSummary({
       state: {
         firstRequestExecuted: false,
@@ -230,7 +237,29 @@ describe('atomic-commerce-category-facet', () => {
     await expect.element(facet).not.toBeInTheDocument();
   });
 
-  it.skip('should render no-label when facet has no display name', async () => {
+  it('should not render show more button when canShowMoreValues is false', async () => {
+    mockedFacet = buildFakeCategoryFacet({
+      state: {
+        canShowMoreValues: false,
+      },
+    });
+
+    const {showMore} = await setupElement();
+    expect(showMore).not.toBeInTheDocument();
+  });
+
+  it('should not render show less button when canShowLessValues is false', async () => {
+    mockedFacet = buildFakeCategoryFacet({
+      state: {
+        canShowLessValues: false,
+      },
+    });
+
+    const {showLess} = await setupElement();
+    expect(showLess).not.toBeInTheDocument();
+  });
+
+  it('should render no-label when facet has no display name', async () => {
     mockedFacet = buildFakeCategoryFacet({
       state: {
         displayName: '',
@@ -240,7 +269,7 @@ describe('atomic-commerce-category-facet', () => {
     await expect.element(noLabelTitle).toBeInTheDocument();
   });
 
-  it.skip('should throw error when facet property is missing', async () => {
+  it('should throw error when facet property is missing', async () => {
     // @ts-expect-error: mocking facet to be undefined
     mockedFacet = undefined;
     const {componentError} = await setupElement();
@@ -252,5 +281,99 @@ describe('atomic-commerce-category-facet', () => {
       ),
       expect.anything()
     );
+  });
+
+  it('should #toggleSelect when facet value is clicked', async () => {
+    const {getFacetValueButtonByLabel} = await setupElement();
+    const facetValueButton = getFacetValueButtonByLabel('Electronics');
+
+    await facetValueButton.click();
+    expect(mockedFacet.toggleSelect).toHaveBeenCalled();
+  });
+
+  it('should #showMoreValues when show more button is clicked', async () => {
+    const {showMoreButton} = await setupElement();
+
+    await showMoreButton.click();
+    expect(mockedFacet.showMoreValues).toHaveBeenCalled();
+  });
+
+  it('should #showLessValues when show less button is clicked', async () => {
+    const {showLessButton} = await setupElement();
+
+    await showLessButton.click();
+    expect(mockedFacet.showLessValues).toHaveBeenCalled();
+  });
+
+  it('should toggle collapse state when label button is clicked', async () => {
+    const {labelButton, values} = await setupElement();
+
+    await expect.element(values).toBeInTheDocument();
+    await userEvent.click(labelButton);
+
+    await expect.element(values).not.toBeInTheDocument();
+  });
+
+  it('should call facet search methods when search functionality is used', async () => {
+    const {searchInput} = await setupElement();
+
+    // Simulate typing in search input
+    await userEvent.type(searchInput, 'test search');
+
+    expect(mockedFacet.facetSearch.updateText).toHaveBeenCalledWith(
+      'test search'
+    );
+    expect(mockedFacet.facetSearch.search).toHaveBeenCalled();
+  });
+
+  it('should #facetSearch.clear when search is cleared', async () => {
+    const {searchInput} = await setupElement();
+
+    await userEvent.type(searchInput, 'foo');
+    await userEvent.type(searchInput, '{backspace}{backspace}{backspace}');
+
+    expect(mockedFacet.facetSearch.clear).toHaveBeenCalled();
+  });
+
+  describe('when there are selected value ancestry', () => {
+    const mockedDeselectAll = vi.fn();
+
+    beforeEach(() => {
+      mockedFacet = buildFakeCategoryFacet({
+        implementation: {
+          deselectAll: mockedDeselectAll,
+          toggleSelect: vi.fn(),
+        },
+        state: {
+          hasActiveValues: true,
+          selectedValueAncestry: [
+            {
+              value: 'Electronics',
+              numberOfResults: 25,
+              moreValuesAvailable: true,
+              state: 'selected',
+              path: ['Electronics'],
+              children: [],
+              isLeafValue: false,
+              isAutoSelected: false,
+              isSuggested: false,
+            },
+          ],
+        },
+      });
+    });
+
+    it('should render parent navigation when there are selected value ancestry', async () => {
+      const {allCategoryButton} = await setupElement();
+      await expect.element(allCategoryButton).toBeInTheDocument();
+    });
+
+    it('should #deselectAll when all categories button is clicked', async () => {
+      const {allCategoryButton} = await setupElement();
+
+      await userEvent.click(allCategoryButton);
+
+      expect(mockedDeselectAll).toHaveBeenCalled();
+    });
   });
 });

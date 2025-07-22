@@ -516,7 +516,7 @@ export class AtomicCommerceCategoryFacet
   private validateFacet() {
     if (!this.facet) {
       this.error = new Error(
-        'The "facet" property is required for <atomic-commerce-facet>.'
+        'The "facet" property is required for <atomic-commerce-category-facet>.'
       );
     }
   }
