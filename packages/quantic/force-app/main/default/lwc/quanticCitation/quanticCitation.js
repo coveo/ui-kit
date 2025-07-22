@@ -118,7 +118,7 @@ export default class QuanticCitation extends NavigationMixin(LightningElement) {
   }
 
   handleClick(event) {
-    if (this.isSalesforceLink) {
+    if (this.isSalesforceLink && this.disableCitationAnchoring) {
       event.preventDefault();
       this.navigateToSalesforceRecord(event);
     }
@@ -139,20 +139,14 @@ export default class QuanticCitation extends NavigationMixin(LightningElement) {
   /**
    * Generates an encoded text fragment URL for the citation.
    * This URL will highlight the text in the citation if it is an HTML file.
-   * If the file type is not HTML or if no text is provided, it returns the original URI.
    * @param {string} uri
    * @param {string} text
-   * @param {string} fileType
    * @returns {string}
    * @example
-   * generateTextFragmentUrl('https://example.com', 'This is a sample text.', 'html');
+   * generateTextFragmentUrl('https://example.com', 'This is a sample text.');
    * // Returns: 'https://example.com#:~:text=This%20is%20a%20sample%20text.'
    */
-  generateTextFragmentUrl(uri, text, fileType) {
-    if (this.disableCitationAnchoring || fileType !== 'html' || !text) {
-      return uri;
-    }
-
+  generateTextFragmentUrl(uri, text) {
     const highlight = extractTextToHighlight(text);
     const encodedTextFragment = encodeURIComponent(highlight).replace(
       /-/g,
@@ -178,7 +172,7 @@ export default class QuanticCitation extends NavigationMixin(LightningElement) {
 
   get hrefValue() {
     if (this.isSalesforceLink) {
-      return this.salesforceRecordUrl;
+      return this.generateTextFragmentUrl(this.salesforceRecordUrl, this.text);
     }
     return this.textFragmentUrl;
   }
@@ -214,10 +208,13 @@ export default class QuanticCitation extends NavigationMixin(LightningElement) {
   }
 
   get textFragmentUrl() {
-    return this.generateTextFragmentUrl(
-      this.citation.clickUri ?? this.citation.uri,
-      this.citation.text,
-      this.citation.fields?.filetype
-    );
+    const uri = this.clickUri ?? this.citation?.uri;
+    const fileType = this.citation?.fields?.filetype;
+
+    if (this.disableCitationAnchoring || fileType !== 'html' || !this.text) {
+      return uri;
+    }
+
+    return this.generateTextFragmentUrl(uri, this.text);
   }
 }
