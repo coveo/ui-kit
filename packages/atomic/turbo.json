@@ -1,0 +1,36 @@
+{
+  "extends": ["//"],
+  "tasks": {
+    "build": {
+      "dependsOn": ["build:storybook"],
+      "outputs": []
+    },
+    "build:storybook": {
+      "dependsOn": ["build:cem", "build:list-assets"],
+      "outputs": ["./dist-storybook"]
+    },
+    "build:cem": {
+      "dependsOn": ["build:stencil-lit"],
+      "outputs": ["./custom-elements.json"]
+    },
+    "build:stencil-lit": {
+      "dependsOn": ["build:locales"],
+      "outputs": [
+        "./dist",
+        "./cdn",
+        "./docs",
+        "./src/components.d.ts",
+        "./.stencil",
+        "./src/lit-components.d.ts"
+      ]
+    },
+    "build:locales": {
+      "dependsOn": ["^build"],
+      "outputs": ["./src/generated/**"]
+    },
+    "build:list-assets": {
+      "dependsOn": ["build:stencil-lit"],
+      "outputs": ["./dist/atomic/assets/**", "./docs/assets.json"]
+    }
+  }
+}
