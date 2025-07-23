@@ -1,3 +1,10 @@
+## <small>2.4.37 (2025-07-23)</small>
+
+* fix(deps): update all dependencies j:kit-282 (#5723) ([6c032c9](https://github.com/coveo/ui-kit/commits/6c032c9)), closes [#5723](https://github.com/coveo/ui-kit/issues/5723)
+* chore: enable recommended biome rules for entire repo (#5662) ([015a764](https://github.com/coveo/ui-kit/commits/015a764)), closes [#5662](https://github.com/coveo/ui-kit/issues/5662)
+
+
+
 ## <small>2.4.36 (2025-07-16)</small>
 
 * chore(deps): update vite to v3.2.4 j:kit-282 (#5604) ([8e8dd6a](https://github.com/coveo/ui-kit/commits/8e8dd6a)), closes [#5604](https://github.com/coveo/ui-kit/issues/5604)

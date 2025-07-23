@@ -49,7 +49,7 @@ export class StringValue<T extends string = string>
     if (url) {
       try {
         new URL(value);
-      } catch (e) {
+      } catch (_) {
         return 'value is not a valid URL.';
       }
     }

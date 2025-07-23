@@ -65,7 +65,7 @@ export const baseInsightUserActionRequest = (
 };
 
 export const pickNonInsightParams = (req: InsightParam) => {
-  const {insightId, ...nonInsightParams} = pickNonBaseParams(req);
+  const {insightId: _insightId, ...nonInsightParams} = pickNonBaseParams(req);
   return nonInsightParams;
 };
 
