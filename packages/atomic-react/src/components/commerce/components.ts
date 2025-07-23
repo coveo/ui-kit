@@ -61,22 +61,16 @@ export const AtomicCommerceLoadMoreProducts = createComponent({
   elementClass: LitAtomicCommerceLoadMoreProducts,
 });
 
-export const AtomicCommercePager = createComponent({
-  tagName: 'atomic-commerce-pager',
-  react: React,
-  elementClass: LitAtomicCommercePager,
-});
-
 export const AtomicCommerceNoProducts = createComponent({
   tagName: 'atomic-commerce-no-products',
   react: React,
   elementClass: LitAtomicCommerceNoProducts,
 });
 
-export const AtomicCommerceProductsPerPage = createComponent({
-  tagName: 'atomic-commerce-products-per-page',
+export const AtomicCommercePager = createComponent({
+  tagName: 'atomic-commerce-pager',
   react: React,
-  elementClass: LitAtomicCommerceProductsPerPage,
+  elementClass: LitAtomicCommercePager,
 });
 
 export const AtomicCommerceProductList = createComponent({
@@ -85,16 +79,22 @@ export const AtomicCommerceProductList = createComponent({
   elementClass: LitAtomicCommerceProductList,
 });
 
-export const AtomicCommerceQuerySummary = createComponent({
-  tagName: 'atomic-commerce-query-summary',
+export const AtomicCommerceProductsPerPage = createComponent({
+  tagName: 'atomic-commerce-products-per-page',
   react: React,
-  elementClass: LitAtomicCommerceQuerySummary,
+  elementClass: LitAtomicCommerceProductsPerPage,
 });
 
 export const AtomicCommerceQueryError = createComponent({
   tagName: 'atomic-commerce-query-error',
   react: React,
   elementClass: LitAtomicCommerceQueryError,
+});
+
+export const AtomicCommerceQuerySummary = createComponent({
+  tagName: 'atomic-commerce-query-summary',
+  react: React,
+  elementClass: LitAtomicCommerceQuerySummary,
 });
 
 export const AtomicCommerceRecommendationInterface = createComponent({
@@ -109,16 +109,16 @@ export const AtomicCommerceRecommendationList = createComponent({
   elementClass: LitAtomicCommerceRecommendationList,
 });
 
-export const AtomicCommerceRefineToggle = createComponent({
-  tagName: 'atomic-commerce-refine-toggle',
-  react: React,
-  elementClass: LitAtomicCommerceRefineToggle,
-});
-
 export const AtomicCommerceRefineModal = createComponent({
   tagName: 'atomic-commerce-refine-modal',
   react: React,
   elementClass: LitAtomicCommerceRefineModal,
+});
+
+export const AtomicCommerceRefineToggle = createComponent({
+  tagName: 'atomic-commerce-refine-toggle',
+  react: React,
+  elementClass: LitAtomicCommerceRefineToggle,
 });
 
 export const AtomicCommerceSearchBox = createComponent({
