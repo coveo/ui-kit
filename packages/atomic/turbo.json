@@ -26,12 +26,25 @@
     },
     "build:locales": {
       "dependsOn": ["^build"],
-      "outputs": ["./src/generated/**", "./src/components/search/atomic-search-interface/lang/**"],
+      "outputs": [
+        "./src/generated/**",
+        "./src/components/search/atomic-search-interface/lang/**"
+      ],
       "inputs": ["./src/locales.json"]
     },
     "build:list-assets": {
       "dependsOn": ["build:stencil-lit"],
       "outputs": ["./dist/atomic/assets/**", "./docs/assets.json"]
+    },
+    "test:stencil": {
+      "dependsOn": ["build:locales"],
+      "outputs": ["coverage/**"],
+      "inputs": ["src/**", "test/**", "stencil.config.ts"]
+    },
+    "test:lit": {
+      "dependsOn": ["^build", "build"],
+      "outputs": ["coverage/**"],
+      "inputs": ["src/**", "test/**", "vitest.config.*"]
     }
   }
 }
