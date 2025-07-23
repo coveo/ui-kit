@@ -22,7 +22,6 @@
     "typescript": "5.8.3"
   },
   "scripts": {
-    "build": "echo 'No build needed for ci utilities'",
     "add-generated-files": "node ./add-generated-files.mjs",
     "promote-npm-prod": "node ./promote-npm-tag-to-latest.mjs",
     "git-lock": "node ./git-lock.mjs",

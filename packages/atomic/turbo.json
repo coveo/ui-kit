@@ -14,7 +14,7 @@
       "outputs": ["./custom-elements.json"]
     },
     "build:stencil-lit": {
-      "dependsOn": ["build:locales"],
+      "dependsOn": ["^build", "build:locales"],
       "outputs": [
         "./dist",
         "./cdn",
@@ -26,7 +26,8 @@
     },
     "build:locales": {
       "dependsOn": ["^build"],
-      "outputs": ["./src/generated/**"]
+      "outputs": ["./src/generated/**", "./src/components/search/atomic-search-interface/lang/**"],
+      "inputs": ["./src/locales.json"]
     },
     "build:list-assets": {
       "dependsOn": ["build:stencil-lit"],

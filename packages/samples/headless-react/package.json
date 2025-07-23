@@ -31,8 +31,7 @@
   },
   "scripts": {
     "dev": "vite",
-    "build": "nx build",
-    "build:client": "vite build",
+    "build": "vite build",
     "serve": "vite preview",
     "test": "vitest run",
     "prod:ssr": "node ./build/server/server/server.js"

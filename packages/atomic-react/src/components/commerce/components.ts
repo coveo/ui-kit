@@ -60,16 +60,16 @@ export const AtomicCommerceLoadMoreProducts = createComponent({
   elementClass: LitAtomicCommerceLoadMoreProducts,
 });
 
-export const AtomicCommerceNoProducts = createComponent({
-  tagName: 'atomic-commerce-no-products',
-  react: React,
-  elementClass: LitAtomicCommerceNoProducts,
-});
-
 export const AtomicCommercePager = createComponent({
   tagName: 'atomic-commerce-pager',
   react: React,
   elementClass: LitAtomicCommercePager,
+});
+
+export const AtomicCommerceNoProducts = createComponent({
+  tagName: 'atomic-commerce-no-products',
+  react: React,
+  elementClass: LitAtomicCommerceNoProducts,
 });
 
 export const AtomicCommerceProductList = createComponent({
@@ -150,16 +150,16 @@ export const AtomicCommerceSortDropdown = createComponent({
   elementClass: LitAtomicCommerceSortDropdown,
 });
 
-export const AtomicCommerceText = createComponent({
-  tagName: 'atomic-commerce-text',
-  react: React,
-  elementClass: LitAtomicCommerceText,
-});
-
 export const AtomicProduct = createComponent({
   tagName: 'atomic-product',
   react: React,
   elementClass: LitAtomicProduct,
+});
+
+export const AtomicCommerceText = createComponent({
+  tagName: 'atomic-commerce-text',
+  react: React,
+  elementClass: LitAtomicCommerceText,
 });
 
 export const AtomicProductChildren = createComponent({
@@ -174,12 +174,6 @@ export const AtomicProductText = createComponent({
   elementClass: LitAtomicProductText,
 });
 
-export const AtomicComponentError = createComponent({
-  tagName: 'atomic-component-error',
-  react: React,
-  elementClass: LitAtomicComponentError,
-});
-
 export const AtomicIcon = createComponent({
   tagName: 'atomic-icon',
   react: React,
@@ -190,4 +184,10 @@ export const AtomicLayoutSection = createComponent({
   tagName: 'atomic-layout-section',
   react: React,
   elementClass: LitAtomicLayoutSection,
+});
+
+export const AtomicComponentError = createComponent({
+  tagName: 'atomic-component-error',
+  react: React,
+  elementClass: LitAtomicComponentError,
 });
