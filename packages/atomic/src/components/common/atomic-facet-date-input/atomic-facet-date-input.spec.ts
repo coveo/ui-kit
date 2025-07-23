@@ -105,9 +105,13 @@ describe('AtomicFacetDateInput', () => {
     await expect.element(applyButton).toBeInTheDocument();
   });
 
-  it('should have correct part and type on apply button', async () => {
+  it('should have correct type on apply button', async () => {
     const {applyButton} = await setupElement();
     await expect.element(applyButton).toHaveAttribute('type', 'submit');
+  });
+
+  it('should have correct part on apply button', async () => {
+    const {applyButton} = await setupElement();
     await expect
       .element(applyButton)
       .toHaveAttribute('part', 'input-apply-button');

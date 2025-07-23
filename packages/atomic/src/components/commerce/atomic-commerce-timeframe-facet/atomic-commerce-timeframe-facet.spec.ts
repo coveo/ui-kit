@@ -8,15 +8,7 @@ import {buildFakeSummary} from '@/vitest-utils/testing-helpers/fixtures/headless
 import type {DateFacet, Summary} from '@coveo/headless/commerce';
 import {page, userEvent} from '@vitest/browser/context';
 import {html} from 'lit';
-import {
-  describe,
-  it,
-  vi,
-  expect,
-  beforeEach,
-  afterEach,
-  type MockInstance,
-} from 'vitest';
+import {describe, it, vi, expect, beforeEach, type MockInstance} from 'vitest';
 import type {AtomicCommerceTimeframeFacet} from './atomic-commerce-timeframe-facet';
 import './atomic-commerce-timeframe-facet';
 
@@ -41,10 +33,6 @@ describe('atomic-commerce-timeframe-facet', () => {
         setRanges: vi.fn(),
       },
     });
-  });
-
-  afterEach(() => {
-    mockedConsoleError.mockRestore();
   });
 
   const setupElement = async (
@@ -342,7 +330,7 @@ describe('atomic-commerce-timeframe-facet', () => {
     expect(mockedShouldDisplayInput).toHaveBeenCalledWith(
       expect.objectContaining({
         facetValues: [expect.objectContaining(mockValue)],
-        hasInputRange: false, // TODO: one test for that
+        hasInputRange: false,
       })
     );
   });
@@ -417,53 +405,63 @@ describe('atomic-commerce-timeframe-facet', () => {
     expect(focusAfterSearchSpy).toHaveBeenCalled();
   });
 
-  it('should call #mockSetRanges with correct values when range is applied', async () => {
+  describe('when range is applied', () => {
     const mockSetRanges = vi.fn();
-    mockedFacet = await buildFakeDateFacet({
-      implementation: {
-        setRanges: mockSetRanges,
-      },
-      state: {
-        values: [
-          buildFakeCommerceDateFacetValue({
-            state: 'selected',
-            numberOfResults: 5,
-          }),
-        ],
-      },
+    let clearButton: Awaited<ReturnType<typeof setupElement>>['clearButton'];
+
+    beforeEach(async () => {
+      mockedFacet = await buildFakeDateFacet({
+        implementation: {
+          setRanges: mockSetRanges,
+        },
+        state: {
+          values: [
+            buildFakeCommerceDateFacetValue({
+              state: 'selected',
+              numberOfResults: 5,
+            }),
+          ],
+        },
+      });
+
+      const {
+        inputStart,
+        inputEnd,
+        inputApplyButton,
+        clearButton: btn,
+      } = await setupElement();
+
+      clearButton = btn;
+
+      const {start, end} = {
+        start: '2023-01-01',
+        end: '2023-12-31',
+      };
+
+      // Simulate date input application
+      const inputEvent = new Event('input', {bubbles: true, composed: true});
+      inputStart.value = start;
+      inputEnd.value = end;
+      inputStart.dispatchEvent(inputEvent);
+      inputEnd.dispatchEvent(inputEvent);
+      inputApplyButton.click();
     });
 
-    const {inputStart, inputEnd, inputApplyButton, clearButton} =
-      await setupElement();
+    it('should call #mockSetRanges with correct values ', async () => {
+      expect(mockSetRanges).toHaveBeenCalledWith([
+        {
+          end: '2023/12/31@23:59:59',
+          endInclusive: false,
+          start: '2023/01/01@00:00:00',
+          state: 'selected',
+        },
+      ]);
+    });
 
-    const {start, end} = {
-      start: '2023-01-01',
-      end: '2023-12-31',
-    };
-
-    // Simulate date input application
-    const inputEvent = new Event('input', {bubbles: true, composed: true});
-    inputStart.value = start;
-    inputEnd.value = end;
-    inputStart.dispatchEvent(inputEvent);
-    inputEnd.dispatchEvent(inputEvent);
-    inputApplyButton.click();
-
-    // Verify facet has been set with the correct date range
-    expect(mockSetRanges).toHaveBeenCalledWith([
-      {
-        end: '2023/12/31@23:59:59',
-        endInclusive: false,
-        start: '2023/01/01@00:00:00',
-        state: 'selected',
-      },
-    ]);
-
-    // Clear the date input
-    await clearButton.click();
-
-    // Verify that the input range is cleared
-    expect(mockSetRanges).toHaveBeenCalledWith([]);
+    it('should call #mockSetRanges with an empty array when clicking on clear button', async () => {
+      await clearButton.click();
+      expect(mockSetRanges).toHaveBeenCalledWith([]);
+    });
   });
 
   it('should toggle collapse state', async () => {
@@ -476,17 +474,6 @@ describe('atomic-commerce-timeframe-facet', () => {
 
     await userEvent.click(labelButton);
     expect(element.isCollapsed).toBe(true);
-  });
-
-  describe('#focusTarget', () => {
-    it('should handle focus after clear', async () => {
-      const {element} = await setupElement();
-      // @ts-expect-error: Accessing private property for testing
-      const focusTarget = element.focusTarget;
-
-      expect(focusTarget).toBeDefined();
-      expect(typeof focusTarget.focusAfterSearch).toBe('function');
-    });
   });
 
   it('should validate facet on initialization', async () => {

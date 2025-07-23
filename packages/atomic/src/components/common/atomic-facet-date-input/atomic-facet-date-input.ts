@@ -2,7 +2,6 @@ import type {AnyBindings} from '@/src/components';
 import {renderButton} from '@/src/components/common/button';
 import {bindingGuard} from '@/src/decorators/binding-guard';
 import {errorGuard} from '@/src/decorators/error-guard';
-import {injectStylesForNoShadowDOM} from '@/src/decorators/light-dom';
 import type {LitElementWithError} from '@/src/decorators/types';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles.js';
 import {InitializeBindingsMixin} from '@/src/mixins/bindings-mixin';
@@ -12,11 +11,10 @@ import {
   type DateFilterRange,
   type DateRangeRequest,
 } from '@coveo/headless';
-import {html, LitElement, unsafeCSS} from 'lit';
+import {html, LitElement} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {ifDefined} from 'lit/directives/if-defined.js';
 import {createRef, ref, type Ref} from 'lit/directives/ref.js';
-import styles from './atomic-facet-date-input.tw.css';
 
 export type FacetDateInputEventDetails = Omit<DateRangeRequest, 'state'>;
 
@@ -29,14 +27,11 @@ export type FacetDateInputEventDetails = Omit<DateRangeRequest, 'state'>;
  * @internal
  */
 @customElement('atomic-facet-date-input')
-@injectStylesForNoShadowDOM
 @withTailwindStyles
 export class AtomicFacetDateInput
   extends InitializeBindingsMixin(LitElement)
   implements LitElementWithError
 {
-  static styles = unsafeCSS(styles);
-
   @state() private start?: Date;
   @state() private end?: Date;
   private startRef: Ref<HTMLInputElement> = createRef();
@@ -62,6 +57,10 @@ export class AtomicFacetDateInput
     this.end = this.inputRange
       ? parseDate(this.inputRange.end).toDate()
       : undefined;
+  }
+
+  createRenderRoot() {
+    return this;
   }
 
   /**

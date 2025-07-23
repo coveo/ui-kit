@@ -90,7 +90,7 @@ export class AtomicCommerceFacet
    */
   @property({type: Object}) public facet!: RegularFacet;
   /**
-   * Specifies whether the facet is collapsed.
+   * Whether the facet is collapsed.
    */
   @property({
     type: Boolean,
