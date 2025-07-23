@@ -18,7 +18,6 @@ export interface LightDOMWithSlots {
   _slotsInitialized: boolean;
   _slotPlaceholders: SlotPlaceholder[];
   _pendingSlotRelocation: boolean;
-  adoptChildren(): void;
   getSlotNameForChild(child: AdoptedNode): string;
   isTextNodeEmpty(node: Text): boolean;
   isSlotEmpty(slot: string): boolean;
