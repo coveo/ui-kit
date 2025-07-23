@@ -1,7 +1,5 @@
-import {
-  getNavigatorContext,
-  type NavigatorContextProvider,
-} from './navigator-context-provider.js';
+import {buildMockNavigatorContextProvider} from '../test/mock-navigator-context-provider.js';
+import {getNavigatorContext} from './navigator-context-provider.js';
 
 describe('getNavigatorContext', () => {
   it('given nodejs environment, it returns falsy values', () => {
@@ -14,16 +12,14 @@ describe('getNavigatorContext', () => {
   });
 
   it('given custom context provider, it returns the values from the custom provider', () => {
-    const customProvider: NavigatorContextProvider = () => {
-      return {
-        clientId: 'b6ab9151-5886-48b5-b254-a381ed8f8a91',
-        location: 'http://example.com/',
-        referrer: 'http://example.com/referrer',
-        userAgent: 'Mozilla/5.0',
-        capture: true,
-        forwardedFor: '203.0.113.195',
-      };
-    };
+    const customProvider = buildMockNavigatorContextProvider({
+      clientId: 'b6ab9151-5886-48b5-b254-a381ed8f8a91',
+      location: 'http://example.com/',
+      referrer: 'http://example.com/referrer',
+      userAgent: 'Mozilla/5.0',
+      capture: true,
+      forwardedFor: '203.0.113.195',
+    });
 
     expect(getNavigatorContext(customProvider)).toEqual(customProvider());
   });
@@ -32,14 +28,12 @@ describe('getNavigatorContext', () => {
     const urlLimit = 1024;
     const longUrl = 'a'.repeat(urlLimit * 2);
 
-    const customProvider: NavigatorContextProvider = () => {
-      return {
-        clientId: 'b6ab9151-5886-48b5-b254-a381ed8f8a91',
-        location: longUrl,
-        referrer: longUrl,
-        userAgent: 'Mozilla/5.0',
-      };
-    };
+    const customProvider = buildMockNavigatorContextProvider({
+      clientId: 'b6ab9151-5886-48b5-b254-a381ed8f8a91',
+      location: longUrl,
+      referrer: longUrl,
+      userAgent: 'Mozilla/5.0',
+    });
 
     const context = getNavigatorContext(customProvider);
 
