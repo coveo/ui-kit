@@ -1,5 +1,5 @@
 :host {
-  --slds-c-toast-sizing-min-width: 100%;
+  min-width: 100%;
 }
 
 .notification {
