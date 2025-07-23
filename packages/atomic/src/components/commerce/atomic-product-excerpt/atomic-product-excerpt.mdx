@@ -1,6 +1,6 @@
-import {Canvas, ArgTypes, Meta, Title, Description, Stories, Subtitle} from '@storybook/blocks';
+import { Canvas, ArgTypes, Meta, Title, Description, Stories, Subtitle } from '@storybook/blocks';
 import * as AtomicProductExcerptStories from './atomic-product-excerpt.new.stories';
-import {CanvasWithGithub} from '../../../../storybook-utils/documentation/canvas-with-github';
+import { CanvasWithGithub } from '../../../../storybook-utils/documentation/canvas-with-github';
 
 <Meta of={ AtomicProductExcerptStories } />
 
@@ -9,11 +9,30 @@ import {CanvasWithGithub} from '../../../../storybook-utils/documentation/canvas
 
 <CanvasWithGithub
   of={ AtomicProductExcerptStories.Default }
-  githubPath="TODO/atomic-product-excerpt/atomic-product-excerpt.ts"
+  githubPath="commerce/atomic-product-excerpt/atomic-product-excerpt.ts"
 />
 
 ## Usage
-TODO: Add usage instructions here.
+The `atomic-product-excerpt` component is used to display a brief summary of a product.
+
+It is typically used within `atomic-product-template` components to display product information in a concise format.
+
+```html
+<atomic-commerce-interface>
+  ...
+  <atomic-commerce-product-list>
+    <atomic-product-template>
+      <template>
+        ...
+        <atomic-product-section-description>
+          <atomic-product-excerpt></atomic-product-excerpt>
+        </atomic-product-section-description>
+
+      </template>
+    </atomic-product-template>
+  </atomic-commerce-product-list>
+</atomic-commerce-interface>
+```
 
 ## Examples
 <Stories title={""}/>

@@ -2,6 +2,7 @@ import {Schema, StringValue} from '@coveo/bueno';
 import type {Product} from '@coveo/headless/commerce';
 import {html, LitElement, nothing, unsafeCSS} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
+import {booleanConverter} from '@/src/converters/boolean-converter';
 import {bindings} from '@/src/decorators/bindings';
 import {createProductContextController} from '@/src/decorators/commerce/product-template-decorators';
 import {errorGuard} from '@/src/decorators/error-guard';
@@ -16,7 +17,9 @@ import type {CommerceBindings} from '../atomic-commerce-interface/atomic-commerc
 import styles from './atomic-product-excerpt.tw.css';
 
 /**
- * The `atomic-product-excerpt` component renders the excerpt of a product generated at query time.
+ * The `atomic-product-excerpt` component renders the excerpt of a product.
+ *
+ * @part expandable-text - The part that contains the product excerpt text.
  * @alpha
  */
 @customElement('atomic-product-excerpt')
@@ -49,8 +52,12 @@ export class AtomicProductExcerpt
   /**
    * Whether the excerpt should be collapsible after being expanded.
    */
-  @property({type: Boolean, attribute: 'is-collapsible'}) public isCollapsible =
-    false;
+  @property({
+    type: Boolean,
+    attribute: 'is-collapsible',
+    converter: booleanConverter,
+  })
+  public isCollapsible = false;
 
   public initialize() {
     this.validateProps();
@@ -129,5 +136,11 @@ export class AtomicProductExcerpt
         isCollapsible: this.isCollapsible,
       },
     })(html`<atomic-product-text field="excerpt"></atomic-product-text>`)}`;
+  }
+}
+
+declare global {
+  interface HTMLElementTagNameMap {
+    'atomic-product-excerpt': AtomicProductExcerpt;
   }
 }
