@@ -1,6 +1,6 @@
 import type {Meta} from '@coveo/relay';
 
-export const buildMockMeta = (context: Partial<Meta>): Meta => {
+export const buildMockMeta = (config: Partial<Meta>): Meta => {
   return {
     type: '',
     config: {trackingId: null},
@@ -10,6 +10,6 @@ export const buildMockMeta = (context: Partial<Meta>): Meta => {
     userAgent: null,
     referrer: null,
     location: null,
-    ...context,
+    ...config,
   };
 };
