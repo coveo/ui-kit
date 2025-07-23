@@ -63,9 +63,9 @@ export const getNavigatorContext = (
   });
 
   const {referrer, userAgent, location, clientId} = relay.getMeta('');
-  const customProviderContext = customProvider ? customProvider() : {};
+  const customContext = customProvider ? customProvider() : {};
 
-  return {...customProviderContext, referrer, userAgent, location, clientId};
+  return {...customContext, referrer, userAgent, location, clientId};
 };
 
 const getEnvironment = (customProvider?: NavigatorContextProvider) => {
@@ -73,10 +73,12 @@ const getEnvironment = (customProvider?: NavigatorContextProvider) => {
     return undefined;
   }
 
+  const customContext = customProvider();
+
   return {
-    getLocation: () => customProvider().location,
-    getReferrer: () => customProvider().referrer,
-    getUserAgent: () => customProvider().userAgent,
-    generateUUID: () => customProvider().clientId,
+    getLocation: () => customContext.location,
+    getReferrer: () => customContext.referrer,
+    getUserAgent: () => customContext.userAgent,
+    generateUUID: () => customContext.clientId,
   };
 };
