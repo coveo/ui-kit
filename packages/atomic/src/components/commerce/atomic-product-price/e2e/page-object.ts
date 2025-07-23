@@ -17,25 +17,4 @@ export class ProductPricePageObject extends BasePageObject {
   get AquaMarinaPromoPrice() {
     return this.page.getByText('$36.00');
   }
-
-  async withCustomPrices({
-    price,
-    promoPrice,
-  }: {
-    price: number;
-    promoPrice: number;
-  }) {
-    await this.page.route('**/commerce/v2/listing', async (route) => {
-      const response = await route.fetch();
-      const body = await response.json();
-      body.products[0].ec_price = price;
-      body.products[0].ec_promo_price = promoPrice;
-      await route.fulfill({
-        response,
-        json: body,
-      });
-    });
-
-    return this;
-  }
 }
