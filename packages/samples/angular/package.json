@@ -29,7 +29,7 @@
     "@angular/compiler-cli": "19.2.2",
     "@playwright/test": "1.54.1",
     "@types/node": "22.16.4",
-    "@typescript-eslint/eslint-plugin": "7.18.0",
+    "@typescript-eslint/eslint-plugin": "8.37.0",
     "gts": "5.3.1",
     "typescript": "5.8.3"
   }
