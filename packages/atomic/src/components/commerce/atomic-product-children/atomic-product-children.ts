@@ -5,7 +5,6 @@ import {customElement, property, state} from 'lit/decorators.js';
 import {bindings} from '@/src/decorators/bindings';
 import {createProductContextController} from '@/src/decorators/commerce/product-template-decorators';
 import {errorGuard} from '@/src/decorators/error-guard';
-import {injectStylesForNoShadowDOM} from '@/src/decorators/light-dom';
 import type {InitializableComponent} from '@/src/decorators/types';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles.js';
 import {filterProtocol} from '../../../utils/xss-utils';
@@ -14,6 +13,7 @@ import type {CommerceBindings} from '../atomic-commerce-interface/atomic-commerc
 import styles from './atomic-product-children.tw.css';
 import type {SelectChildProductEventArgs} from './select-child-product-event';
 import '../atomic-commerce-text/atomic-commerce-text';
+import {injectStylesForNoShadowDOM} from '@/src/decorators/inject-styles-for-no-shadow-dom';
 import {multiClassMap, tw} from '@/src/directives/multi-class-map';
 
 /**
