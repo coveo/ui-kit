@@ -5,6 +5,7 @@ import {
   getSampleSearchEngineConfiguration,
   type SearchEngine,
 } from '../../app/search-engine/search-engine.js';
+import {buildMockMeta} from '../../test/mock-meta.js';
 import {buildMockNonEmptyResult} from '../../test/mock-result.js';
 import {clearMicrotaskQueue} from '../../test/unit-test-utils.js';
 import {logDocumentOpen} from './result-analytics-actions.js';
@@ -27,7 +28,7 @@ describe('result analytics actions', () => {
       } as unknown as CoveoSearchPageClient);
       vi.mocked(createRelay).mockReturnValue({
         emit,
-        getMeta: vi.fn(),
+        getMeta: vi.fn(buildMockMeta),
         on: vi.fn(),
         off: vi.fn(),
         updateConfig: vi.fn(),
