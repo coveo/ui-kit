@@ -556,7 +556,7 @@ const handleUpdateManualNumericFacetRange = (
     payload
   );
 
-  const {facetId, ...restOfPayload} = payload;
+  const {facetId: _facetId, ...restOfPayload} = payload;
 
   switch (payload.state) {
     case 'idle':
@@ -604,7 +604,8 @@ const handleToggleSelectDateFacetValue = (
     payload.selection
   );
 
-  const {numberOfResults, ...restOfPayload} = payload.selection;
+  const {numberOfResults: _numberOfResults, ...restOfPayload} =
+    payload.selection;
 
   switch (payload.selection.state) {
     case 'selected':
@@ -637,7 +638,8 @@ const handleToggleExcludeDateFacetValue = (
 
   unsetRangeValue(state, 'df', state.df, payload.facetId, payload.selection);
 
-  const {numberOfResults, ...restOfPayload} = payload.selection;
+  const {numberOfResults: _numberOfResults, ...restOfPayload} =
+    payload.selection;
 
   switch (payload.selection.state) {
     case 'excluded':

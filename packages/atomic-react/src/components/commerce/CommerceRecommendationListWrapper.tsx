@@ -43,6 +43,8 @@ interface AtomicCommerceRecommendationListProps {
 interface HTMLAtomicCommerceRecommendationListElement
   extends AtomicCommerceRecommendationList,
     HTMLElement {}
+
+// biome-ignore lint/correctness/noUnusedVariables: <>
 var HTMLAtomicCommerceRecommendationListElement: {
   prototype: HTMLAtomicCommerceRecommendationListElement;
   new (): HTMLAtomicCommerceRecommendationListElement;
