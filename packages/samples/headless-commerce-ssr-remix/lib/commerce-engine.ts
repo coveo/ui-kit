@@ -1,6 +1,5 @@
 import {
   defineCommerceEngine,
-  type InferHydratedState,
   type InferStaticState,
 } from '@coveo/headless-react/ssr-commerce';
 import options from './commerce-engine-config';
@@ -40,20 +39,15 @@ export const {
 
 export type ListingEngineDefinition = typeof _listingEngineDefinition;
 export type ListingStaticState = InferStaticState<ListingEngineDefinition>;
-type ListingHydratedState = InferHydratedState<ListingEngineDefinition>;
 
 export type SearchEngineDefinition = typeof _searchEngineDefinition;
 export type SearchStaticState = InferStaticState<SearchEngineDefinition>;
-type SearchHydratedState = InferHydratedState<SearchEngineDefinition>;
 
 export type StandaloneEngineDefinition = typeof _standaloneEngineDefinition;
 export type StandaloneStaticState =
   InferStaticState<StandaloneEngineDefinition>;
-type StandaloneHydratedState = InferHydratedState<StandaloneEngineDefinition>;
 
 export type RecommendationEngineDefinition =
   typeof _recommendationEngineDefinition;
 export type RecommendationStaticState =
   InferStaticState<RecommendationEngineDefinition>;
-type RecommendationHydratedState =
-  InferHydratedState<RecommendationEngineDefinition>;
