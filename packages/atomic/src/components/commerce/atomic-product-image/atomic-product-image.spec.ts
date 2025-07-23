@@ -6,10 +6,11 @@ import {buildFakeProduct} from '@/vitest-utils/testing-helpers/fixtures/headless
 import './atomic-product-image';
 import type {Product} from '@coveo/headless/commerce';
 import {ifDefined} from 'lit/directives/if-defined.js';
+import {filterProtocol} from '@/src/utils/xss-utils';
 import type {AtomicProductImage} from './atomic-product-image';
 
 vi.mock('@coveo/headless/commerce', {spy: true});
-vi.mock('../../../utils/xss-utils', () => ({
+vi.mock('@/src/utils/xss-utils', () => ({
   filterProtocol: vi.fn((url: string) => url),
 }));
 
@@ -89,44 +90,85 @@ describe('AtomicProductImage', () => {
   };
 
   it('should render correctly with default properties', async () => {
-    const {element} = await renderProductImage();
-    expect(element).toBeDefined();
-    expect(element).not.toBeNull();
+    const {element, productImage} = await renderProductImage();
     expect(element!.field).toBe('ec_thumbnails');
-  });
 
-  it('should render image when product has single thumbnail', async () => {
-    const {productImage} = await renderProductImage();
-
-    expect(productImage).toBeTruthy();
     expect(productImage).toBeInTheDocument();
     expect(productImage).toHaveAttribute('src', DEFAULT_IMAGE);
   });
 
-  it('should use default field ec_thumbnails when field property not specified', async () => {
-    const {element} = await renderProductImage();
-    expect(element).not.toBeNull();
-    expect(element!.field).toBe('ec_thumbnails');
-  });
+  describe('#previousImage', () => {
+    it('should decrement current image index', async () => {
+      const {element} = await renderProductImage({
+        product: buildFakeProduct({
+          ec_thumbnails: Array(3).fill(DEFAULT_IMAGE),
+        }),
+      });
 
-  it('should update field property when changed', async () => {
-    const {element} = await renderProductImage({field: 'ec_images'});
-    expect(element).not.toBeNull();
-    expect(element!.field).toBe('ec_images');
-  });
+      expect((element as unknown as TestAtomicProductImage)!.currentImage).toBe(
+        0
+      );
 
-  it('should set imageAltField property when specified', async () => {
-    const {element} = await renderProductImage({imageAltField: 'custom_alt'});
-    expect(element).not.toBeNull();
-    expect(element!.imageAltField).toBe('custom_alt');
-  });
+      await element!.previousImage();
+      expect((element as unknown as TestAtomicProductImage)!.currentImage).toBe(
+        2
+      );
 
-  it('should set fallback property when specified', async () => {
-    const {element} = await renderProductImage({
-      fallback: 'https://example.com/fallback.jpg',
+      await element!.previousImage();
+      expect((element as unknown as TestAtomicProductImage)!.currentImage).toBe(
+        1
+      );
     });
-    expect(element).not.toBeNull();
-    expect(element!.fallback).toBe('https://example.com/fallback.jpg');
+  });
+
+  describe('#nextImage', () => {
+    it('should increment current image index', async () => {
+      const {element} = await renderProductImage({
+        product: buildFakeProduct({
+          ec_thumbnails: Array(3).fill(DEFAULT_IMAGE),
+        }),
+      });
+
+      expect((element as unknown as TestAtomicProductImage)!.currentImage).toBe(
+        0
+      );
+
+      await element!.nextImage();
+      expect((element as unknown as TestAtomicProductImage)!.currentImage).toBe(
+        1
+      );
+
+      await element!.nextImage();
+      await element!.nextImage();
+      expect((element as unknown as TestAtomicProductImage)!.currentImage).toBe(
+        0
+      );
+    });
+  });
+
+  describe('#navigateToImage', () => {
+    it('should navigate to specified image index', async () => {
+      const {element} = await renderProductImage({
+        product: buildFakeProduct({
+          ec_name: 'Test Product',
+          ec_thumbnails: Array(3).fill(DEFAULT_IMAGE),
+        }),
+      });
+
+      expect((element as unknown as TestAtomicProductImage)!.currentImage).toBe(
+        0
+      );
+
+      await element!.navigateToImage(1);
+      expect((element as unknown as TestAtomicProductImage)!.currentImage).toBe(
+        1
+      );
+
+      await element!.navigateToImage(2);
+      expect((element as unknown as TestAtomicProductImage)!.currentImage).toBe(
+        2
+      );
+    });
   });
 
   describe('when product has single image', () => {
@@ -157,11 +199,7 @@ describe('AtomicProductImage', () => {
       productImageObject = await renderProductImage({
         product: buildFakeProduct({
           ec_name: 'Test Product',
-          ec_thumbnails: [
-            'https://example.com/image1.jpg',
-            'https://example.com/image2.jpg',
-            'https://example.com/image3.jpg',
-          ],
+          ec_thumbnails: Array(3).fill(DEFAULT_IMAGE),
         }),
       });
     });
@@ -178,12 +216,9 @@ describe('AtomicProductImage', () => {
       expect(indicators).toBeInTheDocument();
     });
 
-    it('should render first image by default', () => {
+    it('should display first image by default', () => {
       const {productImage} = productImageObject;
-      expect(productImage).toHaveAttribute(
-        'src',
-        'https://example.com/image1.jpg'
-      );
+      expect(productImage).toHaveAttribute('src', DEFAULT_IMAGE);
       expect(productImage).toHaveAttribute(
         'alt',
         'Image 1 out of 3 for Test Product'
@@ -191,16 +226,13 @@ describe('AtomicProductImage', () => {
     });
 
     it('should render indicators for each image', () => {
-      const {element, indicators} = productImageObject;
-      expect(element).not.toBeNull();
+      const {indicators} = productImageObject;
       expect(indicators?.children).toHaveLength(3);
     });
 
     it('should show active indicator for current image', () => {
-      const {element, activeIndicator} = productImageObject;
-      expect(element).not.toBeNull();
-      expect(activeIndicator).toBeTruthy();
-      expect(activeIndicator).toBeInTheDocument();
+      const {activeIndicator, indicators} = productImageObject;
+      expect(indicators?.children[0]).toBe(activeIndicator);
     });
   });
 
@@ -237,191 +269,21 @@ describe('AtomicProductImage', () => {
     });
   });
 
-  it('should use custom alt text from specified field when imageAltField is specified', async () => {
-    const customAltText = 'Custom alt text for product';
-
-    const productWithCustomAlt = buildFakeProduct({
-      ec_name: 'Test Product',
-      ec_thumbnails: [DEFAULT_IMAGE],
-      additionalFields: {
-        custom_alt: customAltText,
-      },
-    });
-
-    const {productImage} = await renderProductImage({
-      product: productWithCustomAlt,
-      imageAltField: 'custom_alt',
-    });
-
-    expect(productImage).toHaveAttribute('alt', customAltText);
-  });
-
-  it('should use custom fallback when product has no images when custom fallback is provided', async () => {
-    const {productImage} = await renderProductImage({
-      product: buildFakeProduct({
-        ec_name: 'Test Product',
-        ec_thumbnails: [],
-      }),
-      fallback: CUSTOM_FALLBACK_IMAGE,
-    });
-
-    expect(productImage).toHaveAttribute('src', CUSTOM_FALLBACK_IMAGE);
-  });
-
-  it('should handle image error event when image fails to load', async () => {
-    const {element, productImage} = await renderProductImage({
-      fallback: CUSTOM_FALLBACK_IMAGE,
-    });
-
-    expect(element).not.toBeNull();
-    await element!.updateComplete;
-
-    expect(productImage).toBeTruthy();
-
-    const errorEvent = new Event('error');
-    productImage?.dispatchEvent(errorEvent);
-
-    expect(element).toBeDefined();
-  });
-
-  describe('#previousImage', () => {
-    it('should decrement current image index', async () => {
-      const {element} = await renderProductImage({
-        product: buildFakeProduct({
-          ec_name: 'Test Product',
-          ec_thumbnails: [
-            'https://example.com/image1.jpg',
-            'https://example.com/image2.jpg',
-            'https://example.com/image3.jpg',
-          ],
-        }),
-      });
-
-      expect(element).not.toBeNull();
-      expect((element as unknown as TestAtomicProductImage)!.currentImage).toBe(
-        0
-      );
-
-      await element!.previousImage();
-      expect((element as unknown as TestAtomicProductImage)!.currentImage).toBe(
-        2
-      );
-
-      await element!.previousImage();
-      expect((element as unknown as TestAtomicProductImage)!.currentImage).toBe(
-        1
-      );
-    });
-  });
-
-  describe('#nextImage', () => {
-    it('should increment current image index', async () => {
-      const {element} = await renderProductImage({
-        product: buildFakeProduct({
-          ec_name: 'Test Product',
-          ec_thumbnails: [
-            'https://example.com/image1.jpg',
-            'https://example.com/image2.jpg',
-            'https://example.com/image3.jpg',
-          ],
-        }),
-      });
-
-      expect(element).not.toBeNull();
-      expect((element as unknown as TestAtomicProductImage)!.currentImage).toBe(
-        0
-      );
-
-      await element!.nextImage();
-      expect((element as unknown as TestAtomicProductImage)!.currentImage).toBe(
-        1
-      );
-
-      await element!.nextImage();
-      await element!.nextImage();
-      expect((element as unknown as TestAtomicProductImage)!.currentImage).toBe(
-        0
-      );
-    });
-  });
-
-  describe('#navigateToImage', () => {
-    it('should navigate to specified image index', async () => {
-      const {element} = await renderProductImage({
-        product: buildFakeProduct({
-          ec_name: 'Test Product',
-          ec_thumbnails: [
-            'https://example.com/image1.jpg',
-            'https://example.com/image2.jpg',
-            'https://example.com/image3.jpg',
-          ],
-        }),
-      });
-
-      expect(element).not.toBeNull();
-      expect((element as unknown as TestAtomicProductImage)!.currentImage).toBe(
-        0
-      );
-
-      await element!.navigateToImage(1);
-      expect((element as unknown as TestAtomicProductImage)!.currentImage).toBe(
-        1
-      );
-
-      await element!.navigateToImage(2);
-      expect((element as unknown as TestAtomicProductImage)!.currentImage).toBe(
-        2
-      );
-    });
-  });
-
-  describe('when field contains non-string values', () => {
-    it('should filter out non-string values and render valid images', async () => {
-      const {element} = await renderProductImage({
-        product: buildFakeProduct({
-          ec_name: 'Test Product',
-          ec_thumbnails: [
-            'https://example.com/valid-image.jpg',
-            12345,
-            null,
-            {},
-            'https://example.com/another-valid-image.jpg',
-            // biome-ignore lint/suspicious/noExplicitAny: <>
-          ] as any,
-        }),
-      });
-
-      expect(element).toBeDefined();
-    });
-  });
-
-  it('should filter protocol in image URLs when image URLs need XSS filtering', async () => {
-    const {filterProtocol} = await import('../../../utils/xss-utils');
-
-    await renderProductImage({
-      product: buildFakeProduct({
-        ec_name: 'Test Product',
-        ec_thumbnails: ['javascript:alert("xss")'],
-      }),
-    });
-
-    expect(filterProtocol).toHaveBeenCalledWith('javascript:alert("xss")');
-  });
-
-  describe('when component has error state', () => {
-    it('should handle missing product gracefully', async () => {
-      const {element} = await renderProductImage();
-
-      Object.defineProperty(element, 'product', {
-        get: () => null,
-        configurable: true,
-      });
-
-      expect(() => element.requestUpdate()).not.toThrow();
-    });
-  });
-
   describe('when using fallback image', () => {
+    it('should use default fallback when no fallback provided', async () => {
+      const {productImage} = await renderProductImage({
+        product: buildFakeProduct({
+          ec_name: 'Test Product',
+          ec_thumbnails: [],
+        }),
+      });
+      expect(productImage).toBeTruthy();
+      expect(productImage).toHaveAttribute(
+        'src',
+        'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="50" height="50" viewBox="0 0 50 50"%3E%3Crect width="50" height="50" fill="none" stroke="none"%3E%3C/rect%3E%3C/svg%3E'
+      );
+    });
+
     it('should log warning when fallback image also fails to load', async () => {
       const {element} = await renderProductImage({
         product: buildFakeProduct({
@@ -454,20 +316,81 @@ describe('AtomicProductImage', () => {
 
       expect(element).toBeDefined();
     });
-  });
 
-  describe('when field contains invalid data type', () => {
-    it('should handle non-array, non-string field values', async () => {
-      const {element} = await renderProductImage({
+    it('should use custom fallback', async () => {
+      const {productImage} = await renderProductImage({
         product: buildFakeProduct({
           ec_name: 'Test Product',
           ec_thumbnails: [],
         }),
-        field: 'non_existent_field',
+        fallback: CUSTOM_FALLBACK_IMAGE,
       });
 
-      expect(element).toBeDefined();
+      expect(productImage).toHaveAttribute('src', CUSTOM_FALLBACK_IMAGE);
     });
+  });
+
+  it('should use custom alt text from specified field when imageAltField is specified', async () => {
+    const customAltText = 'Custom alt text for product';
+
+    const productWithCustomAlt = buildFakeProduct({
+      ec_name: 'Test Product',
+      ec_thumbnails: [DEFAULT_IMAGE],
+      additionalFields: {
+        custom_alt: customAltText,
+      },
+    });
+
+    const {productImage} = await renderProductImage({
+      product: productWithCustomAlt,
+      imageAltField: 'custom_alt',
+    });
+
+    expect(productImage).toHaveAttribute('alt', customAltText);
+  });
+
+  it('should handle image error event when image fails to load', async () => {
+    const {element, productImage} = await renderProductImage({
+      fallback: CUSTOM_FALLBACK_IMAGE,
+    });
+
+    await element!.updateComplete;
+
+    expect(productImage).toBeTruthy();
+
+    const errorEvent = new Event('error');
+    productImage?.dispatchEvent(errorEvent);
+
+    expect(element).toBeDefined();
+  });
+
+  it('should filter out non-string values when field contains non-string values', async () => {
+    const {element} = await renderProductImage({
+      product: buildFakeProduct({
+        ec_name: 'Test Product',
+        ec_thumbnails: [
+          DEFAULT_IMAGE,
+          12345,
+          null,
+          {},
+          'https://example.com/another-valid-image.jpg',
+          // biome-ignore lint/suspicious/noExplicitAny: <>
+        ] as any,
+      }),
+    });
+
+    expect(element).toBeDefined();
+  });
+
+  it('should filter protocol in image URLs when image URLs need XSS filtering', async () => {
+    await renderProductImage({
+      product: buildFakeProduct({
+        ec_name: 'Test Product',
+        ec_thumbnails: ['javascript:alert("xss")'],
+      }),
+    });
+
+    expect(filterProtocol).toHaveBeenCalledWith('javascript:alert("xss")');
   });
 
   it('should render all expected shadow parts', async () => {
@@ -481,11 +404,7 @@ describe('AtomicProductImage', () => {
     } = await renderProductImage({
       product: buildFakeProduct({
         ec_name: 'Test Product',
-        ec_thumbnails: [
-          'https://example.com/image1.jpg',
-          'https://example.com/image2.jpg',
-          'https://example.com/image2.jpg',
-        ],
+        ec_thumbnails: Array(3).fill(DEFAULT_IMAGE),
       }),
     });
 

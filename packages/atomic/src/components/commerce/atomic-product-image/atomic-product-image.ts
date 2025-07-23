@@ -21,8 +21,6 @@ type Image = {
 /**
  * The `atomic-product-image` component renders an image from a product field. When the product has multiple images, it displays a carousel with navigation buttons and indicators.
  *
- * @alpha
- *
  * @part product-image - The image element that displays the product image.
  * @part previous-button - The container for the previous image button in the carousel.
  * @part next-button - The container for the next image button in the carousel.
@@ -37,14 +35,13 @@ export class AtomicProductImage
   extends LitElement
   implements InitializableComponent<Bindings>
 {
-  @state()
-  bindings!: Bindings;
+  @state() public bindings!: Bindings;
 
-  private productController = createProductContextController(this);
+  public productController = createProductContextController(this);
 
   @state() private product!: Product;
 
-  @state() error!: Error;
+  @state() public error!: Error;
   @state() private useFallback = false;
   @state() private currentImage = 0;
 
@@ -76,7 +73,7 @@ export class AtomicProductImage
     'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="50" height="50" viewBox="0 0 50 50"%3E%3Crect width="50" height="50" fill="none" stroke="none"%3E%3C/rect%3E%3C/svg%3E';
 
   /**
-   * Moves to the previous image, when the carousel is activated.
+   * Navigates to the previous image in the carousel.
    */
   public async previousImage() {
     this.currentImage =
@@ -86,7 +83,7 @@ export class AtomicProductImage
   }
 
   /**
-   * Moves to the next image, when the carousel is activated.
+   * Navigates to the next image in the carousel.
    */
   public async nextImage() {
     this.currentImage = (this.currentImage + 1) % this.numberOfImages;
@@ -223,6 +220,10 @@ export class AtomicProductImage
   @bindingGuard()
   @errorGuard()
   render() {
+    if (!this.product) {
+      return html``;
+    }
+
     const imagesToRender = this.images.map((image: Image) => {
       return {
         src: image.src,
