@@ -97,7 +97,7 @@ export function convertToDateRangeRequests(
   values: DateFacetValue[]
 ): DateRangeRequest[] {
   return values.map((value) => {
-    const {numberOfResults, ...rest} = value;
+    const {numberOfResults: _numberOfResults, ...rest} = value;
     return rest;
   });
 }
