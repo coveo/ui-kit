@@ -1,0 +1,13 @@
+
+
+> @coveo/bueno@1.0.22 build
+> npm run build:bundles && npm run build:definitions
+
+
+> @coveo/bueno@1.0.22 build:bundles
+> node esbuild.mjs
+
+
+> @coveo/bueno@1.0.22 build:definitions
+> tsc -p tsconfig.build.json -d --emitDeclarationOnly --declarationDir dist/definitions
+

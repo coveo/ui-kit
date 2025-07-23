@@ -22,7 +22,7 @@
   ],
   "scripts": {
     "clean": "rimraf -rf dist/*",
-    "build": "nx build",
+    "build": "rimraf -rf dist cdn && tsc --outdir dist && tsc --outdir cdn --project tsconfig.cdn.json && node ./scripts/esbuild.js",
     "start": "node ./scripts/start.js",
     "e2e": "playwright test",
     "publish:npm": "npm run-script -w=@coveo/ci npm-publish",

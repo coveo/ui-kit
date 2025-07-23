@@ -47,7 +47,7 @@
   },
   "scripts": {
     "dev": "npm run build:bundles -- dev",
-    "build": "nx build",
+    "build": "npm run build:bundles && npm run build:definitions",
     "build:bundles": "node esbuild.mjs",
     "build:definitions": "tsc -p src/tsconfig.build.json && node ./scripts/copy-types.mjs",
     "test": "vitest run",

@@ -1,0 +1,204 @@
+{
+  "$schema": "https://turbo.build/schema.json",
+  "ui": "tui",
+  "tasks": {
+    "build": {
+      "dependsOn": ["^build"],
+      "outputs": [
+        "dist/**",
+        "cdn/**",
+        "docs/**",
+        "src/components.d.ts",
+        ".stencil/**",
+        "src/lit-components.d.ts",
+        "custom-elements.json",
+        "dist-storybook/**",
+        "src/generated/**",
+        "temp/**",
+        "build/**",
+        "lib/**",
+        "coverage/**"
+      ],
+      "inputs": [
+        "src/**",
+        "scripts/**",
+        "*.config.*",
+        "*.json",
+        "*.js",
+        "*.ts",
+        "*.mjs",
+        "rollup.config.js",
+        "tsconfig*.json",
+        "esbuild.mjs",
+        "!**/*.spec.*",
+        "!**/*.test.*",
+        "!**/*.e2e.*"
+      ]
+    },
+    "build:locales": {
+      "dependsOn": ["^build"],
+      "outputs": ["src/generated/**"],
+      "inputs": [
+        "scripts/**",
+        "locale-data/**",
+        "src/locales/**"
+      ]
+    },
+    "build:stencil-lit": {
+      "dependsOn": ["build:locales"],
+      "outputs": [
+        "dist/**",
+        "cdn/**",
+        "docs/**",
+        "src/components.d.ts",
+        ".stencil/**",
+        "src/lit-components.d.ts"
+      ],
+      "inputs": [
+        "src/**",
+        "scripts/**",
+        "*.config.*",
+        "rollup.config.js",
+        "tsconfig*.json",
+        "esbuild.mjs"
+      ]
+    },
+    "build:cem": {
+      "dependsOn": ["build:stencil-lit"],
+      "outputs": ["custom-elements.json"],
+      "inputs": ["src/**", "cem.config.mjs"]
+    },
+    "build:storybook": {
+      "dependsOn": ["build:cem", "build:list-assets"],
+      "outputs": ["dist-storybook/**"],
+      "inputs": [
+        "src/**",
+        ".storybook/**",
+        "stories/**",
+        "custom-elements.json"
+      ]
+    },
+    "dev": {
+      "dependsOn": ["^build"],
+      "cache": false,
+      "persistent": true
+    },
+    "start": {
+      "dependsOn": ["^build"],
+      "cache": false,
+      "persistent": true
+    },
+    "test": {
+      "dependsOn": ["^build"],
+      "outputs": ["coverage/**"],
+      "inputs": [
+        "src/**",
+        "test/**",
+        "tests/**",
+        "spec/**",
+        "*.config.*",
+        "vitest.config.*",
+        "jest.config.*",
+        "cypress.config.*"
+      ]
+    },
+    "test:stencil": {
+      "dependsOn": ["build:locales"],
+      "outputs": ["coverage/**"],
+      "inputs": [
+        "src/**",
+        "test/**",
+        "stencil.config.ts"
+      ]
+    },
+    "test:lit": {
+      "dependsOn": ["^build", "build"],
+      "outputs": ["coverage/**"],
+      "inputs": [
+        "src/**",
+        "test/**",
+        "vitest.config.*"
+      ]
+    },
+    "test:watch": {
+      "cache": false,
+      "persistent": true
+    },
+    "e2e": {
+      "dependsOn": ["build"],
+      "outputs": ["playwright-report/**", "cypress/screenshots/**", "cypress/videos/**"],
+      "inputs": [
+        "src/**",
+        "cypress/**",
+        "playwright/**",
+        "e2e/**",
+        "*.config.*"
+      ]
+    },
+    "lint": {
+      "outputs": [],
+      "inputs": [
+        "src/**",
+        "test/**",
+        "*.config.*",
+        ".eslintrc.*",
+        "biome.jsonc"
+      ]
+    },
+    "lint:check": {
+      "outputs": [],
+      "inputs": [
+        "src/**",
+        "test/**",
+        "*.config.*",
+        ".eslintrc.*",
+        "biome.jsonc"
+      ]
+    },
+    "lint:fix": {
+      "outputs": [],
+      "inputs": [
+        "src/**",
+        "test/**",
+        "*.config.*",
+        ".eslintrc.*",
+        "biome.jsonc"
+      ]
+    },
+    "clean": {
+      "cache": false
+    },
+    "publish:npm": {
+      "dependsOn": [],
+      "cache": false
+    },
+    "publish:bump": {
+      "dependsOn": [],
+      "cache": false
+    },
+    "promote:npm:latest": {
+      "dependsOn": [],
+      "cache": false
+    },
+    "release:phase1": {
+      "dependsOn": ["^release:phase1"],
+      "cache": false
+    },
+    "release:phase3": {
+      "dependsOn": ["^release:phase3"],
+      "cache": false
+    }
+  },
+  "globalDependencies": [
+    "package.json",
+    "package-lock.json",
+    ".npmrc",
+    "tsconfig.json",
+    "biome.jsonc",
+    ".cspell.json"
+  ],
+  "globalEnv": [
+    "NODE_ENV",
+    "CI"
+  ]
+}

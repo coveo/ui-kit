@@ -48,8 +48,8 @@
   ],
   "scripts": {
     "clean": "rimraf -rf dist/* dist-storybook/* www/* docs/* playwright-report/*",
-    "build": "nx build",
-    "build:locales": "nx build:locales atomic",
+    "build": "npm run build:storybook",
+    "build:locales": "npm run build:locales",
     "start": "nx dev atomic",
     "prod": "npx serve www -l 3333 --no-request-logging",
     "test": "nx test atomic",

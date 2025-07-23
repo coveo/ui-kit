@@ -10,7 +10,7 @@
     "directory": "packages/atomic-react"
   },
   "scripts": {
-    "build": "nx build",
+    "build": "node ./scripts/build-lit.mjs && npm run build:fixLoaderImportPaths && npm run build:fixGeneratedImportPaths && npm run build:bundles && npm run build:types && npm run build:assets",
     "clean": "rimraf -rf dist",
     "build:fixLoaderImportPaths": "node ./scripts/fix-loader-import-paths.js",
     "build:fixGeneratedImportPaths": "fix-esm-import-path src/components/stencil-generated",

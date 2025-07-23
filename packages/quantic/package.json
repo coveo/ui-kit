@@ -16,7 +16,7 @@
     "lint:fix": "nx run lint:fix",
     "lint:fix:apex": "prettier \"force-app/{,**}/*.{cls,trigger}\" --write",
     "build:staticresources": "node build-static-resources.js",
-    "build": "nx build",
+    "build": "npm run babel:headless && npm run build:staticresources && npm run build:doc",
     "dev": "npx rimraf .localdevserver && npm run build:staticresources && npm run dev:sfdx",
     "dev:sfdx": "sf project deploy start --source-dir force-app/main && sfdx force:lightning:lwc:start --port 3334",
     "test:unit": "lwc-jest",

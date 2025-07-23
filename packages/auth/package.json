@@ -13,7 +13,7 @@
   ],
   "scripts": {
     "dev": "concurrently \"npm run build:definitions -- -w\" \"npm run build:bundles -- dev\"",
-    "build": "nx build",
+    "build": "npm run build:bundles && npm run build:definitions",
     "test": "jest",
     "test:watch": "jest --watch --colors --no-cache --silent=false",
     "build:bundles": "node esbuild.mjs",

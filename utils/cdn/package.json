@@ -4,7 +4,9 @@
   "authors": "Coveo",
   "version": "1.0.0",
   "type": "module",
-  "scripts": {},
+  "scripts": {
+    "build": "echo 'No build needed for cdn utilities'"
+  },
   "engines": {
     "node": ">=22.14.0"
   },

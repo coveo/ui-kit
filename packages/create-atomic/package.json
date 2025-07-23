@@ -17,7 +17,7 @@
   },
   "scripts": {
     "start": "node ./index.mjs",
-    "build": "nx build",
+    "build": "rimraf template && npm run build:ts && node ./scripts/preparePackageJsonTemplate.mjs",
     "build:ts": "tsc -p tsconfig.json",
     "lint": "prettier --check . && eslint .",
     "publish:npm": "npm run-script -w=@coveo/ci npm-publish",
