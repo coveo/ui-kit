@@ -1,6 +1,6 @@
 import {isUndefined} from '@coveo/bueno';
 import type {InteractiveProduct, Product} from '@coveo/headless/commerce';
-import {html, LitElement, nothing, unsafeCSS} from 'lit';
+import {html, LitElement, unsafeCSS} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {when} from 'lit/directives/when.js';
 import {getAttributesFromLinkSlot} from '@/src/components/common/item-link/attributes-slot';
@@ -26,11 +26,9 @@ import {
 import styles from './atomic-product-link.tw.css';
 
 /**
- * @alpha
  * The `atomic-product-link` component automatically transforms a search product title into a clickable link that points to the original item.
- * @slot default - Default content displayed inside the link.
- * @slot attributes - Attributes element: Use `<a slot="attributes" target="_blank"></a>` to pass attributes to the generated link.
- *
+ * @slot default - The content to display inside the link.
+ * @slot attributes - Use `<a slot="attributes" target="_blank"></a>` to pass custom attributes to the generated link.
  */
 @customElement('atomic-product-link')
 @bindings()
@@ -55,11 +53,11 @@ export class AtomicProductLink
   @property({type: String, attribute: 'href-template', reflect: true})
   hrefTemplate?: string;
 
-  @state() private product!: Product;
-  @state() private interactiveProduct!: InteractiveProduct;
+  @state() public product?: Product;
+  @state() public interactiveProduct?: InteractiveProduct;
 
-  private productController = createProductContextController(this);
-  private interactiveProductController =
+  public productController = createProductContextController(this);
+  public interactiveProductController =
     createInteractiveProductContextController(this);
 
   @state() public bindings!: CommerceBindings;
@@ -69,7 +67,7 @@ export class AtomicProductLink
   private stopPropagation?: boolean;
   private removeLinkEventHandlers?: () => void;
 
-  private logWarningIfNeed(warning?: string) {
+  private logWarningIfNeeded(warning?: string) {
     if (warning) {
       this.bindings.engine.logger.warn(warning);
     }
@@ -130,45 +128,46 @@ export class AtomicProductLink
   @bindingGuard()
   @errorGuard()
   render() {
-    return html`${when(
-      this.product && this.interactiveProduct,
-      () => {
-        const href = isUndefined(this.hrefTemplate)
-          ? this.product.clickUri
-          : buildStringTemplateFromProduct(
-              this.hrefTemplate,
-              this.product,
-              this.bindings
-            );
+    return html`${when(this.product && this.interactiveProduct, () => {
+      const product = this.product!;
+      const interactiveProduct = this.interactiveProduct!;
 
-        const {warningMessage} = this.interactiveProduct;
-        this.extractAttributesFromSlot();
+      const href = isUndefined(this.hrefTemplate)
+        ? product.clickUri
+        : buildStringTemplateFromProduct(
+            this.hrefTemplate,
+            product,
+            this.bindings
+          );
 
-        return renderLinkWithItemAnalytics({
-          props: {
-            href,
-            onSelect: () => {
-              this.logWarningIfNeed(warningMessage);
-              this.interactiveProduct.select();
-            },
-            onBeginDelayedSelect: () => {
-              this.logWarningIfNeed(warningMessage);
-              this.interactiveProduct.beginDelayedSelect();
-            },
-            onCancelPendingSelect: () => {
-              this.logWarningIfNeed(warningMessage);
-              this.interactiveProduct.cancelPendingSelect();
-            },
-            attributes: this.linkAttributes,
-            stopPropagation: this.stopPropagation,
-            onInitializeLink: (cleanupCallback) => {
-              if (this.removeLinkEventHandlers) {
-                this.removeLinkEventHandlers();
-              }
-              this.removeLinkEventHandlers = cleanupCallback;
-            },
+      const {warningMessage} = interactiveProduct;
+      this.extractAttributesFromSlot();
+
+      return renderLinkWithItemAnalytics({
+        props: {
+          href,
+          onSelect: () => {
+            this.logWarningIfNeeded(warningMessage);
+            interactiveProduct.select();
           },
-        })(html`
+          onBeginDelayedSelect: () => {
+            this.logWarningIfNeeded(warningMessage);
+            interactiveProduct.beginDelayedSelect();
+          },
+          onCancelPendingSelect: () => {
+            this.logWarningIfNeeded(warningMessage);
+            interactiveProduct.cancelPendingSelect();
+          },
+          attributes: this.linkAttributes,
+          stopPropagation: this.stopPropagation,
+          onInitializeLink: (cleanupCallback) => {
+            if (this.removeLinkEventHandlers) {
+              this.removeLinkEventHandlers();
+            }
+            this.removeLinkEventHandlers = cleanupCallback;
+          },
+        },
+      })(html`
           ${this.renderDefaultSlotContent(
             html`<atomic-product-text
             field="ec_name"
@@ -176,9 +175,7 @@ export class AtomicProductLink
           ></atomic-product-text>`
           )}
         `);
-      },
-      () => nothing
-    )}`;
+    })}`;
   }
 }
 
