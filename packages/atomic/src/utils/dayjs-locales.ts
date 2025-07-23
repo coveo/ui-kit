@@ -28,7 +28,7 @@ export function loadDayjsLocale(languageInput: string) {
 
   try {
     locales[language]().then(() => dayjs.locale(language));
-  } catch (error) {
+  } catch (_) {
     warn(language);
   }
 }
