@@ -22,3 +22,7 @@ packages/atomic/custom-elements.json
 .vscode/*
 !.vscode/extensions.json
 !.vscode/mcp.json
+
+# turbo
+.turbo
+.turbo/*
