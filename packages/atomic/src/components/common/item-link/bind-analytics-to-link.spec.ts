@@ -111,7 +111,8 @@ describe('#bindAnalyticsToLink', () => {
   });
 
   it('should default to stopPropagation=true when not specified', () => {
-    const {stopPropagation, ...propsWithoutStopPropagation} = eventProps;
+    const {stopPropagation: _stopPropagation, ...propsWithoutStopPropagation} =
+      eventProps;
     bindAnalyticsToLink(mockLink, propsWithoutStopPropagation);
 
     const clickEvent = new MouseEvent('click', {bubbles: true});
