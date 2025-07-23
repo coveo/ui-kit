@@ -27,11 +27,11 @@ const externalizeDependenciesPlugin = () => {
     // Clean up side-effects imports from Headless & Bueno
     renderChunk(code) {
       const cleanedCode = code
-        .replace(
-          /^\s*import\s+.*['"][^'"]*\/(headless|bueno)\/[^'"]*['"];?\s*$/gm,
+        .replaceAll(
+          /^\s*import\s+['"][^'"]*\/(headless|bueno)\/[^'"]*['"];?\s*$/gm,
           ''
         )
-        .replace(/\n\s*\n/g, '\n'); // Clean up extra empty lines
+        .replaceAll(/\n\s*\n/g, '\n'); // Clean up extra empty lines
 
       return cleanedCode;
     },
