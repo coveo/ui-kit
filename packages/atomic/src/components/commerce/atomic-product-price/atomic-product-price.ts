@@ -22,8 +22,8 @@ import {parseValue} from '../product-template-component-utils/product-utils.js';
 import styles from './atomic-product-price.tw.css';
 
 /**
- * @alpha
  * The `atomic-product-price` component renders the price of a product.
+ * @alpha
  */
 @customElement('atomic-product-price')
 @bindings()
