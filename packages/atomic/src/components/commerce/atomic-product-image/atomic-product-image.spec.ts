@@ -4,7 +4,6 @@ import {renderInAtomicProduct} from '@/vitest-utils/testing-helpers/fixtures/ato
 import {buildFakeCommerceEngine} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/engine';
 import {buildFakeProduct} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/product';
 import './atomic-product-image';
-import type {Product} from '@coveo/headless/commerce';
 import {ifDefined} from 'lit/directives/if-defined.js';
 import {filterProtocol} from '@/src/utils/xss-utils';
 import type {AtomicProductImage} from './atomic-product-image';
@@ -19,22 +18,6 @@ const DEFAULT_IMAGE =
 
 const CUSTOM_FALLBACK_IMAGE =
   'data:image/svg+xml;base64,PHN2ZyBjbGFzcz0idy02IGgtNiB0ZXh0LWdyYXktODAwIGRhcms6dGV4dC13aGl0ZSIgYXJpYS1oaWRkZW49InRydWUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgd2lkdGg9IjI0IiBoZWlnaHQ9IjI0IiBmaWxsPSJjdXJyZW50Q29sb3IiIHZpZXdCb3g9IjAgMCAyNCAyNCI+CiAgPHBhdGggZmlsbC1ydWxlPSJldmVub2RkIiBkPSJNMiAxMkMyIDYuNDc3IDYuNDc3IDIgMTIgMnMxMCA0LjQ3NyAxMCAxMC00LjQ3NyAxMC0xMCAxMFMyIDE3LjUyMyAyIDEyWm05LjAwOC0zLjAxOGExLjUwMiAxLjUwMiAwIDAgMSAyLjUyMiAxLjE1OXYuMDI0YTEuNDQgMS40NCAwIDAgMS0xLjQ5MyAxLjQxOCAxIDEgMCAwIDAtMS4wMzcuOTk5VjE0YTEgMSAwIDEgMCAyIDB2LS41MzlhMy40NCAzLjQ0IDAgMCAwIDIuNTI5LTMuMjU2IDMuNTAyIDMuNTAyIDAgMCAwLTctLjI1NSAxIDEgMCAwIDAgMiAuMDc2Yy4wMTQtLjM5OC4xODctLjc3NC40OC0xLjA0NFptLjk4MiA3LjAyNmExIDEgMCAxIDAgMCAySDEyYTEgMSAwIDEgMCAwLTJoLS4wMVoiIGNsaXAtcnVsZT0iZXZlbm9kZCIvPgo8L3N2Zz4K';
-
-interface TestAtomicProductImage {
-  initialize: () => void;
-  field: string;
-  imageAltField?: string;
-  fallback?: string;
-  previousImage: () => void;
-  nextImage: () => void;
-  navigateToImage: (index: number) => void;
-  currentImage: number;
-  product: Product;
-  images: {
-    src: string;
-    alt: string;
-  }[];
-}
 
 describe('AtomicProductImage', () => {
   const mockedEngine = buildFakeCommerceEngine();
@@ -105,19 +88,16 @@ describe('AtomicProductImage', () => {
         }),
       });
 
-      expect((element as unknown as TestAtomicProductImage)!.currentImage).toBe(
-        0
-      );
+      // @ts-expect-error private property access for testing
+      expect(element.currentImage).toBe(0);
 
       await element!.previousImage();
-      expect((element as unknown as TestAtomicProductImage)!.currentImage).toBe(
-        2
-      );
+      // @ts-expect-error private property access for testing
+      expect(element.currentImage).toBe(2);
 
       await element!.previousImage();
-      expect((element as unknown as TestAtomicProductImage)!.currentImage).toBe(
-        1
-      );
+      // @ts-expect-error private property access for testing
+      expect(element.currentImage).toBe(1);
     });
   });
 
@@ -129,20 +109,17 @@ describe('AtomicProductImage', () => {
         }),
       });
 
-      expect((element as unknown as TestAtomicProductImage)!.currentImage).toBe(
-        0
-      );
+      // @ts-expect-error private property access for testing
+      expect(element.currentImage).toBe(0);
 
       await element!.nextImage();
-      expect((element as unknown as TestAtomicProductImage)!.currentImage).toBe(
-        1
-      );
+      // @ts-expect-error private property access for testing
+      expect(element.currentImage).toBe(1);
 
       await element!.nextImage();
       await element!.nextImage();
-      expect((element as unknown as TestAtomicProductImage)!.currentImage).toBe(
-        0
-      );
+      // @ts-expect-error private property access for testing
+      expect(element.currentImage).toBe(0);
     });
   });
 
@@ -155,19 +132,16 @@ describe('AtomicProductImage', () => {
         }),
       });
 
-      expect((element as unknown as TestAtomicProductImage)!.currentImage).toBe(
-        0
-      );
+      // @ts-expect-error private property access for testing
+      expect(element.currentImage).toBe(0);
 
       await element!.navigateToImage(1);
-      expect((element as unknown as TestAtomicProductImage)!.currentImage).toBe(
-        1
-      );
+      // @ts-expect-error private property access for testing
+      expect(element.currentImage).toBe(1);
 
       await element!.navigateToImage(2);
-      expect((element as unknown as TestAtomicProductImage)!.currentImage).toBe(
-        2
-      );
+      // @ts-expect-error private property access for testing
+      expect(element.currentImage).toBe(2);
     });
   });
 
