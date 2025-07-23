@@ -49,17 +49,15 @@ export class AtomicProductFieldCondition
    * A condition that is satisfied when the specified field matches one of the specified values on a product (e.g., `must-match-ec_color="Pink,Purple"` is satisfied when a product is either pink or purple).
    * @type {Record<string, string[]>}
    */
-  @mapProperty({splitValues: true, attributePrefix: 'must-match-'})
-  mustMatch: Record<string, string[]> = {};
+  @mapProperty({splitValues: true, attributePrefix: 'must-match'})
+  mustMatch!: Record<string, string[]>;
 
   /**
    * A condition that is satisfied when the specified field does not match any of the specified values on a product (e.g., `must-not-match-ec_color="Green,Black"` is satisfied when a product is neither green nor black).
    * @type {Record<string, string[]>}
    */
-  @mapProperty({splitValues: true, attributePrefix: 'must-not-match-'})
-  mustNotMatch: Record<string, string[]> = {};
-
-  shouldBeRemoved = false;
+  @mapProperty({splitValues: true, attributePrefix: 'must-not-match'})
+  mustNotMatch!: Record<string, string[]>;
 
   initialize() {}
 
