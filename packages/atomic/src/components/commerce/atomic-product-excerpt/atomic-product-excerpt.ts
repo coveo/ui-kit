@@ -52,11 +52,12 @@ export class AtomicProductExcerpt
   @property({type: Boolean, attribute: 'is-collapsible'}) public isCollapsible =
     false;
 
-  public initialize() {}
+  public initialize() {
+    this.validateProps();
+  }
 
   constructor() {
     super();
-    console.log(this.truncateAfter);
     this.resizeObserver = new ResizeObserver(() => {
       if (
         this.excerptText &&
@@ -67,8 +68,6 @@ export class AtomicProductExcerpt
         this.isTruncated = false;
       }
     });
-    console.log(this.truncateAfter);
-    this.validateProps();
   }
 
   private validateProps() {

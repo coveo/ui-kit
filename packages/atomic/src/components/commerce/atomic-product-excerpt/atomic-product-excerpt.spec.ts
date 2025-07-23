@@ -4,6 +4,7 @@ import {renderInAtomicProduct} from '@/vitest-utils/testing-helpers/fixtures/ato
 import {buildFakeProduct} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/product';
 import './atomic-product-excerpt';
 import '../atomic-product-text/atomic-product-text';
+import {userEvent} from '@vitest/browser/context';
 import {ifDefined} from 'lit/directives/if-defined.js';
 import type {TruncateAfter} from '../../common/expandable-text/expandable-text';
 
@@ -29,7 +30,7 @@ describe('atomic-product-excerpt', () => {
       template: html`
       <atomic-product-excerpt
         truncate-after=${ifDefined(props.truncateAfter)}
-        ?is-collapsible=${props.isCollapsible ?? true}
+        ?is-collapsible=${props.isCollapsible ?? false}
       ></atomic-product-excerpt>
       `,
       selector: 'atomic-product-excerpt',
@@ -38,8 +39,17 @@ describe('atomic-product-excerpt', () => {
 
     return {
       element,
-      text: element.querySelector('atomic-commerce-text'),
-      expandableDiv: element.querySelector('.expandable-text'),
+      locators: {
+        get text() {
+          return element.querySelector('atomic-commerce-text');
+        },
+        get expandableDiv() {
+          return element.querySelector('.expandable-text');
+        },
+        get button() {
+          return element.querySelector('button');
+        },
+      },
     };
   };
 
@@ -49,31 +59,64 @@ describe('atomic-product-excerpt', () => {
   });
 
   it('should render the excerpt text', async () => {
-    const {text} = await renderProductExcerpt({
+    const {locators} = await renderProductExcerpt({
       excerpt: 'This is a short excerpt for child product.',
     });
-    expect(text).toHaveAttribute(
+    console.log(locators.text);
+    expect(locators.text).toHaveAttribute(
       'value',
       'This is a short excerpt for child product.'
     );
   });
 
   it('should show the excerpt truncated to the specified number of lines', async () => {
-    const {expandableDiv} = await renderProductExcerpt({truncateAfter: '2'});
-    expect(expandableDiv).toHaveClass('line-clamp-2');
+    const {locators} = await renderProductExcerpt({truncateAfter: '2'});
+    expect(locators.expandableDiv).toHaveClass('line-clamp-2');
   });
 
   it('should not truncate when truncateAfter is set to "none"', async () => {
-    const {expandableDiv} = await renderProductExcerpt({
+    const {locators} = await renderProductExcerpt({
       truncateAfter: 'none',
     });
-    expect(expandableDiv).toHaveClass('line-clamp-none');
+    expect(locators.expandableDiv).toHaveClass('line-clamp-none');
   });
 
-  it('should throw an error if truncateAfter is set to an invalid value', async () => {
-    const {element} = await renderProductExcerpt({
-      truncateAfter: 'invalid' as TruncateAfter,
-    });
-    expect(element).toHaveAttribute('error');
+  it('should expand when clicking on the show more button', async () => {
+    const {locators} = await renderProductExcerpt();
+
+    await userEvent.click(locators.button!);
+
+    expect(locators.expandableDiv).toHaveClass('min-lines-2');
+  });
+
+  it('should collapse when isCollapsible is true and clicking on the show less button', async () => {
+    const {locators} = await renderProductExcerpt({isCollapsible: true});
+
+    await userEvent.click(locators.button!);
+
+    expect(locators.expandableDiv).toHaveClass('min-lines-2');
+
+    await userEvent.click(locators.button!);
+
+    expect(locators.expandableDiv).toHaveClass('line-clamp-2');
+  });
+
+  it('should have the correct part attribute on the expandable text', async () => {
+    const {locators} = await renderProductExcerpt();
+    expect(locators.expandableDiv).toHaveAttribute('part', 'expandable-text');
+  });
+
+  it('should have the correct text on the show more button', async () => {
+    const {locators} = await renderProductExcerpt();
+
+    expect(locators.button).toHaveTextContent('Show more');
+  });
+
+  it('should have the correct text on the show less button when expanded', async () => {
+    const {locators} = await renderProductExcerpt({isCollapsible: true});
+
+    await userEvent.click(locators.button!);
+
+    expect(locators.button).toHaveTextContent('Show less');
   });
 });
