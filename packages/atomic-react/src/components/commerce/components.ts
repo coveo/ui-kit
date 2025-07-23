@@ -1,4 +1,5 @@
 import {
+  AtomicCommerceCategoryFacet as LitAtomicCommerceCategoryFacet,
   AtomicCommerceFacet as LitAtomicCommerceFacet,
   AtomicCommerceInterface as LitAtomicCommerceInterface,
   AtomicCommerceLayout as LitAtomicCommerceLayout,
@@ -17,6 +18,12 @@ import {
 } from '@coveo/atomic/components';
 import {createComponent} from '@lit/react';
 import React from 'react';
+
+export const AtomicCommerceCategoryFacet = createComponent({
+  tagName: 'atomic-commerce-category-facet',
+  react: React,
+  elementClass: LitAtomicCommerceCategoryFacet,
+});
 
 export const AtomicCommerceFacet = createComponent({
   tagName: 'atomic-commerce-facet',
