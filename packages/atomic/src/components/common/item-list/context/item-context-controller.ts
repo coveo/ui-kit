@@ -56,7 +56,6 @@ export class ItemContextController<T = Record<string, unknown>>
     options: {parentName?: string; folded?: boolean} = {}
   ) {
     this.host = host;
-    // Don't like that. Preferably no mentions of results in this file.
     this.parentName = options.parentName ?? 'atomic-result';
     this.folded = options.folded ?? false;
     host.addController(this);

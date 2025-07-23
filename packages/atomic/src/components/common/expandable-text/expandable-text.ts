@@ -58,8 +58,7 @@ export const renderExpandableText: FunctionalComponentWithChildren<
 
     return html`<div class="flex flex-col items-start">
         <div part="expandable-text"
-        class="${expandableTextClass}"
-        >
+        class="${expandableTextClass}">
         ${children}
         </div>
 
