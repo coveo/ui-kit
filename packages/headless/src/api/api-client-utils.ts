@@ -10,9 +10,13 @@ import type {AuthenticationParam} from './search/search-api-params.js';
 export function pickNonBaseParams<
   Params extends BaseParam & AuthenticationParam,
 >(req: Params) {
-  // cheap version of _.omit
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const {url, accessToken, organizationId, authentication, ...nonBase} = req;
+  const {
+    url: _url,
+    accessToken: _accessToken,
+    organizationId: _organizationId,
+    authentication: _authentication,
+    ...nonBase
+  } = req;
   return nonBase;
 }
 
