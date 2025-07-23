@@ -152,7 +152,7 @@ const validateArgs = (
   ) {
     console.error(
       chalk.red(
-        'Usage: npx nx run atomic:web:cdn --args="--env <local|prod|dev|staging> --atomic <vX.Y.Z> [--headless <vX.Y.Z>]"'
+        'Usage: npm run web:cdn --filter=atomic -- --env <local|prod|dev|staging> --atomic <vX.Y.Z> [--headless <vX.Y.Z>]'
       )
     );
     process.exit(1);

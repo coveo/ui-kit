@@ -46,7 +46,7 @@ export default defineConfig({
   webServer: process.env.CI
     ? {
         command: isCDN
-          ? 'npx nx run cdn:serve'
+          ? 'npm run serve --filter=cdn'
           : 'npx ws -d ./dist-storybook -p 4400',
 
         stdout: 'pipe',

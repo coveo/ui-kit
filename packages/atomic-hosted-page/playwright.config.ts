@@ -83,7 +83,7 @@ export default defineConfig({
       stderr: 'pipe',
     },
     isCDN && {
-      command: 'npx nx run cdn:serve',
+      command: 'npm run serve --filter=cdn',
       timeout: 10 * 60e3,
       port: 3000,
       reuseExistingServer: !process.env.CI,

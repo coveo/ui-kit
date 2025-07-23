@@ -56,7 +56,7 @@ A sub-package groups together exports (i.e. engine, controllers, action loaders,
 
 ## Testing your sub-package:
 
-1. Build the headless project: `npx nx run headless:build`.
+1. Build the headless project: `turbo build --filter=headless`.
 2. Create a tarball: from the `/packages/headless` directory, run `npm pack`.
 3. Install the tarball as a dependency of a different project: `npm i <path to the tarball>`.
 4. Import an export from your sub-package: `import {...} from '@coveo/headless/<sub-package>'`

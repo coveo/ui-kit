@@ -10,7 +10,7 @@ inputs:
 runs:
   using: composite
   steps:
-    - run: npx nx run quantic:build
+    - run: turbo build --filter=quantic
       shell: bash
     - run: |
         echo "${{ inputs.jwtkey }}" > server.key

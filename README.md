@@ -34,7 +34,7 @@ npm run build
 To build a single project for production (for instance, the `atomic` package), run:
 
 ```sh
-npx nx run atomic:build
+turbo build --filter=atomic
 ```
 
 ## Development mode
@@ -42,7 +42,7 @@ npx nx run atomic:build
 To start Atomic & Headless simultaneously in development (recommended), run:
 
 ```sh
-npx nx run atomic:dev
+turbo dev --filter=atomic
 ```
 
 Add the `--stencil` switch if you are changing stencil files.
@@ -50,19 +50,19 @@ Add the `--stencil` switch if you are changing stencil files.
 To start a single project in development (for instance, the `quantic` package), run:
 
 ```sh
-npx nx run quantic:dev
+turbo dev --filter=quantic
 ```
 
 To run a specific task in a package separate it with colon e.g. to run `test:watch` inside quantic
 
 ```sh
-npx nx run quantic:test:watch
+turbo test:watch --filter=quantic
 ```
 
 To start story book in development, run:
 
 ```sh
-npx nx run atomic-storybook:dev
+turbo dev --filter=atomic-storybook
 ```
 
 ## Test
@@ -70,21 +70,21 @@ npx nx run atomic-storybook:dev
 To run the tests for a specific package (recommended) e.g. `atomic` package
 
 ```sh
-npx nx run atomic:test
+turbo test --filter=atomic
 ```
 
 For e2e tests
 
 ```sh
-npx nx run atomic:dev
+turbo dev --filter=atomic
 # In a separate terminal
-npx nx run atomic:e2e
+turbo e2e --filter=atomic
 ```
 
 To run e2e tests for specific files/components using the Cypress GUI
 
 ```sh
-npx nx run atomic:e2e:watch
+npm run e2e:watch --filter=atomic
 ```
 
 ## Lint
