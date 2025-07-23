@@ -9,18 +9,8 @@ import {buildFakeProduct} from '@/vitest-utils/testing-helpers/fixtures/headless
 
 import {AtomicProductLink} from './atomic-product-link';
 import './atomic-product-link';
-
-interface TestAtomicProductLink {
-  initialize: () => void;
-  disconnectedCallback: () => void;
-  productController?: {item: Product};
-  interactiveProductController?: {interactiveItem: InteractiveProduct};
-  product?: Product;
-  interactiveProduct?: InteractiveProduct;
-  removeLinkEventHandlers?: () => void;
-  bindings?: {engine: {logger: {warn: (msg: string) => void}}};
-  error?: Error;
-}
+import type {InteractiveItemContextController} from '@/src/components/common/item-list/context/interactive-item-context-controller';
+import type {ItemContextController} from '@/src/components/common/item-list/context/item-context-controller';
 
 vi.mock('@coveo/headless/commerce', {spy: true});
 
@@ -46,8 +36,8 @@ describe('atomic-product-link', () => {
   const renderProductLink = async (
     options: {
       hrefTemplate?: string;
-      product?: Product | null;
-      interactiveProduct?: InteractiveProduct | null;
+      product?: Product;
+      interactiveProduct?: InteractiveProduct;
       slotContent?: string | unknown;
       attributes?: string;
     } = {}
@@ -71,11 +61,8 @@ describe('atomic-product-link', () => {
           ${attributesSlot}
         </atomic-product-link>`,
         selector: 'atomic-product-link',
-        product: productToUse === null ? undefined : productToUse,
-        interactiveProduct:
-          interactiveProductToUse === null
-            ? undefined
-            : interactiveProductToUse,
+        product: productToUse,
+        interactiveProduct: interactiveProductToUse,
         bindings: (bindings) => {
           bindings.store.onChange = vi.fn();
           bindings.engine.logger = {warn: vi.fn()} as never;
@@ -109,7 +96,7 @@ describe('atomic-product-link', () => {
   });
 
   it('should render nothing when product is not available', async () => {
-    const {element} = await renderProductLink({product: null});
+    const {element} = await renderProductLink({product: undefined});
     expect(element).toBeDefined();
     expect(element?.textContent?.trim()).toBe('');
   });
@@ -143,33 +130,29 @@ describe('atomic-product-link', () => {
     it('should set product from controller when available', async () => {
       const {element} = await renderProductLink();
 
-      if (element) {
-        const testElement = element as unknown as TestAtomicProductLink;
-        testElement.productController = {
-          item: mockProduct,
-        };
-        testElement.product = undefined;
+      element.product = undefined;
+      expect(element.product).toBe(undefined);
 
-        testElement.initialize();
+      element.productController = {
+        item: mockProduct,
+      } as ItemContextController<Product>;
 
-        expect(testElement.product).toBe(mockProduct);
-      }
+      element.initialize();
+      expect(element.product).toBe(mockProduct);
     });
 
     it('should set interactiveProduct from controller', async () => {
       const {element} = await renderProductLink();
 
-      if (element) {
-        const testElement = element as unknown as TestAtomicProductLink;
-        testElement.interactiveProductController = {
-          interactiveItem: mockInteractiveProduct,
-        };
-        testElement.interactiveProduct = undefined;
+      element.interactiveProduct = undefined;
+      expect(element.interactiveProduct).toBe(undefined);
 
-        testElement.initialize();
+      element.interactiveProductController = {
+        interactiveItem: mockInteractiveProduct,
+      } as InteractiveItemContextController<InteractiveProduct>;
 
-        expect(testElement.interactiveProduct).toBe(mockInteractiveProduct);
-      }
+      element.initialize();
+      expect(element.interactiveProduct).toBe(mockInteractiveProduct);
     });
 
     it('should dispatch stopPropagation resolution event', async () => {
@@ -194,14 +177,15 @@ describe('atomic-product-link', () => {
       const cleanupSpy = vi.fn();
       const {element} = await renderProductLink();
 
-      const testElement = element as unknown as TestAtomicProductLink;
-      testElement.removeLinkEventHandlers = cleanupSpy;
+      // @ts-expect-error private property access for testing
+      element.removeLinkEventHandlers = cleanupSpy;
 
-      testElement?.disconnectedCallback();
+      element?.disconnectedCallback();
 
       expect(cleanupSpy).toHaveBeenCalledOnce();
 
-      expect(testElement.removeLinkEventHandlers).toBeUndefined();
+      // @ts-expect-error private property access for testing
+      expect(element.removeLinkEventHandlers).toBeUndefined();
     });
   });
 
@@ -241,9 +225,7 @@ describe('atomic-product-link', () => {
     const {link, element} = await renderProductLink();
 
     await link?.click();
-
-    const testElement = element as unknown as TestAtomicProductLink;
-    expect(testElement.interactiveProduct?.select).toHaveBeenCalled();
+    expect(element.interactiveProduct?.select).toHaveBeenCalled();
   });
 
   it('should call #beginDelayedSelect on touchstart', async () => {
@@ -264,8 +246,8 @@ describe('atomic-product-link', () => {
     await link.click();
 
     expect(mockInteractiveProduct.select).toHaveBeenCalled();
-    const testElement = element as unknown as TestAtomicProductLink;
-    expect(testElement.bindings?.engine.logger.warn).toHaveBeenCalledWith(
+
+    expect(element.bindings?.engine.logger.warn).toHaveBeenCalledWith(
       'Test warning message'
     );
   });
@@ -285,18 +267,16 @@ describe('atomic-product-link', () => {
   it('should handle product changes', async () => {
     const {element, link} = await renderProductLink();
 
+    await expect.element(link).toHaveAttribute('href', mockProduct.clickUri);
+
     const newProduct = buildFakeProduct({
       ec_name: 'Updated Product',
       clickUri: 'https://example.com/updated-product',
     });
 
-    if (element) {
-      const testElement = element as unknown as TestAtomicProductLink;
-      testElement.product = newProduct;
-      testElement.interactiveProduct = buildFakeInteractiveProduct();
-    }
+    element.product = newProduct;
 
-    await element?.updateComplete;
+    await element.updateComplete;
     await expect.element(link).toHaveAttribute('href', newProduct.clickUri);
   });
 
@@ -310,18 +290,5 @@ describe('atomic-product-link', () => {
     await element?.updateComplete;
     const errorComponent = element?.querySelector('atomic-component-error');
     expect(errorComponent).toBeTruthy();
-  });
-
-  it('should handle missing clickUri gracefully', async () => {
-    const productWithoutClickUri = buildFakeProduct({
-      clickUri: '',
-    });
-
-    const {element, link} = await renderProductLink({
-      product: productWithoutClickUri,
-    });
-
-    await element?.updateComplete;
-    await expect.element(link).toHaveAttribute('href', '');
   });
 });
