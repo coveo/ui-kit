@@ -6,11 +6,11 @@ export class ConfigurationObject {
   }
 
   get tryButton(): Locator {
-    return this.page.locator('lightning-button[data-cy="cfg-try"]');
+    return this.page.locator('lightning-button[data-testid="cfg-try"]');
   }
 
   get resetButton(): Locator {
-    return this.page.locator('lightning-button[data-cy="cfg-reset"]');
+    return this.page.locator('lightning-button[data-testid="cfg-reset"]');
   }
 
   get configurationForm(): Locator {
@@ -18,7 +18,7 @@ export class ConfigurationObject {
   }
 
   private getInputSelector(field: string): string {
-    return `lightning-input[data-cy="cfg-${field}"] input`;
+    return `lightning-input[data-testid="cfg-${field}"] input`;
   }
 
   async waitForConfigurationToLoad(): Promise<void> {
