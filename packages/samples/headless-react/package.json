@@ -52,7 +52,7 @@
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "8.7.0",
     "@vitejs/plugin-react": "4.3.4",
-    "cypress": "13.7.3",
+    "cypress": "13.17.0",
     "cypress-repeat": "2.3.9",
     "gts": "5.3.1",
     "vite": "6.3.5",

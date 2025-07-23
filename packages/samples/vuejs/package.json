@@ -17,7 +17,7 @@
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "5.2.4",
-    "cypress": "13.7.3",
+    "cypress": "13.17.0",
     "cypress-repeat": "2.3.9",
     "ncp": "2.0.0",
     "typescript": "5.8.3",
