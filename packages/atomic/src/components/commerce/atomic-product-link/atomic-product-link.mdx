@@ -27,49 +27,6 @@ The `atomic-product-link` component renders a product title as a clickable link.
 </atomic-commerce-interface>
 ```
 
-### Basic Usage
-
-By default, the component will use the product's `clickUri` and display the product name (`ec_name` field):
-
-```html
-<atomic-product-link></atomic-product-link>
-```
-
-### Custom Content
-
-You can provide custom content to display inside the link:
-
-```html
-<atomic-product-link>
-    <atomic-product-text
-    field="ec_name"
-    class="font-bold">
-    </atomic-product-text>
-    <div class="text-xs">View Product Details</div>
-</atomic-product-link>
-```
-
-### Custom href Template
-
-You can customize the link URL using a template literal that references product properties:
-
-```html
-<atomic-product-link href-template="${clickUri}?id=${permanentId}"></atomic-product-link>
-```
-
-The template can reference any product field and even the window object for more complex URL generation.
-
-### Link Attributes
-
-You can pass additional attributes to the underlying anchor element using the `attributes` slot:
-
-```html
-<atomic-product-link>
-  <a slot="attributes" target="_blank" rel="noopener"></a>
-  View in New Tab
-</atomic-product-link>
-```
-
 ## Examples
 <Stories title={""}/>
 
