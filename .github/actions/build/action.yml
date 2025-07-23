@@ -1,7 +1,7 @@
 name: 'Install, build & cache'
 description: 'Installs dependencies, builds all packages, and saves the cache of Nx'
 inputs:
-  cache-suffix:
+  cache-prefix:
     description: 'Suffix to add to the cache key for different environments'
     required: false
     default: 'default'
@@ -14,15 +14,5 @@ runs:
   steps:
     - uses: ./.github/actions/setup
       with:
-        load-cache: 'false'
-        save-cache: ${{ inputs.skip-cache != 'true' }}
-        cache-suffix: ${{ inputs.cache-suffix }}
-    - uses: actions/cache@5a3ec84eff668545956fd18022155c47e93e2684 # v4
-      if: ${{ inputs.skip-cache != 'true' }}
-      id: nx-cache
-      with:
-        path: .nx/cache
-        key: nx-${{ github.sha }}-${{ inputs.cache-suffix }}
-    - if: inputs.skip-cache != 'true' && steps.nx-cache.outputs.cache-hit != 'true'
-      run: npm run build
-      shell: bash
+        use-cache: 'false'
+        cache-prefix: ${{ inputs.cache-prefix }}
