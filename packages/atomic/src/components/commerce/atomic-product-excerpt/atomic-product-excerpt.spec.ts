@@ -25,7 +25,6 @@ describe('atomic-product-excerpt', () => {
       This is a test to see how the excerpt behaves with long content.`,
     });
 
-    console.log(props.truncateAfter);
     const {element} = await renderInAtomicProduct({
       template: html`
       <atomic-product-excerpt
@@ -62,7 +61,7 @@ describe('atomic-product-excerpt', () => {
     const {locators} = await renderProductExcerpt({
       excerpt: 'This is a short excerpt for child product.',
     });
-    console.log(locators.text);
+
     expect(locators.text).toHaveAttribute(
       'value',
       'This is a short excerpt for child product.'
