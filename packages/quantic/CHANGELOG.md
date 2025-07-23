@@ -1,3 +1,14 @@
+## 3.27.0 (2025-07-23)
+
+* fix(deps): update all dependencies j:kit-282 (#5723) ([6c032c9](https://github.com/coveo/ui-kit/commits/6c032c9)), closes [#5723](https://github.com/coveo/ui-kit/issues/5723)
+* fix(quantic): ignore console error check in flaky/failing test (#5717) ([e2a9111](https://github.com/coveo/ui-kit/commits/e2a9111)), closes [#5717](https://github.com/coveo/ui-kit/issues/5717)
+* chore(quantic): cypress removed from the quantic library (#5668) ([16192e6](https://github.com/coveo/ui-kit/commits/16192e6)), closes [#5668](https://github.com/coveo/ui-kit/issues/5668)
+* chore(quantic): remove ckeditor (#5685) ([83ceb31](https://github.com/coveo/ui-kit/commits/83ceb31)), closes [#5685](https://github.com/coveo/ui-kit/issues/5685)
+* feat(quantic): fix issues with zero length no unit errors in slds 2 linter (#5615) ([b571e53](https://github.com/coveo/ui-kit/commits/b571e53)), closes [#5615](https://github.com/coveo/ui-kit/issues/5615)
+* feat(quantic): replaced sds styling hooks (#5616) ([8d42056](https://github.com/coveo/ui-kit/commits/8d42056)), closes [#5616](https://github.com/coveo/ui-kit/issues/5616)
+
+
+
 ## <small>3.26.2 (2025-07-16)</small>
 
 * style(quantic): properly lint check and lint fix (#5619) ([e000a11](https://github.com/coveo/ui-kit/commits/e000a11)), closes [#5619](https://github.com/coveo/ui-kit/issues/5619)

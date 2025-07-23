@@ -1610,3 +1610,11 @@ export const expectedStreamAnswerAPIParamWithoutSearchAction = {
     actionCause: '',
   },
 };
+
+export const expectedStreamAnswerAPIParamForSelect = (() => {
+  const {
+    analytics: _analytics,
+    ...expectedStreamAnswerAPIParamWithoutAnalytics
+  } = expectedStreamAnswerAPIParam;
+  return expectedStreamAnswerAPIParamWithoutAnalytics;
+})();

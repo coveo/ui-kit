@@ -4,15 +4,15 @@
   "private": true,
   "type": "module",
   "dependencies": {
-    "@coveo/atomic": "3.29.1",
-    "@coveo/atomic-react": "3.2.51",
-    "@coveo/headless": "3.27.4",
+    "@coveo/atomic": "3.30.0",
+    "@coveo/atomic-react": "3.2.52",
+    "@coveo/headless": "3.27.5",
     "next": "15.2.4",
     "react": "19.1.0",
     "react-dom": "19.1.0"
   },
   "devDependencies": {
-    "@types/node": "22.16.0",
+    "@types/node": "22.16.4",
     "@types/react": "19.1.1",
     "@types/react-dom": "19.1.2",
     "cypress": "13.7.3",
