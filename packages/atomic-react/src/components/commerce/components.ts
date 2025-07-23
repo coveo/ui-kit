@@ -25,10 +25,17 @@ import {
   AtomicLayoutSection as LitAtomicLayoutSection,
   AtomicProduct as LitAtomicProduct,
   AtomicProductChildren as LitAtomicProductChildren,
+  AtomicProductPrice as LitAtomicProductPrice,
   AtomicProductText as LitAtomicProductText,
 } from '@coveo/atomic/components';
 import {createComponent} from '@lit/react';
 import React from 'react';
+
+export const AtomicCommerceInterface = createComponent({
+  tagName: 'atomic-commerce-interface',
+  react: React,
+  elementClass: LitAtomicCommerceInterface,
+});
 
 export const AtomicCommerceBreadbox = createComponent({
   tagName: 'atomic-commerce-breadbox',
@@ -40,12 +47,6 @@ export const AtomicCommerceDidYouMean = createComponent({
   tagName: 'atomic-commerce-did-you-mean',
   react: React,
   elementClass: LitAtomicCommerceDidYouMean,
-});
-
-export const AtomicCommerceInterface = createComponent({
-  tagName: 'atomic-commerce-interface',
-  react: React,
-  elementClass: LitAtomicCommerceInterface,
 });
 
 export const AtomicCommerceLayout = createComponent({
@@ -166,6 +167,12 @@ export const AtomicProductChildren = createComponent({
   tagName: 'atomic-product-children',
   react: React,
   elementClass: LitAtomicProductChildren,
+});
+
+export const AtomicProductPrice = createComponent({
+  tagName: 'atomic-product-price',
+  react: React,
+  elementClass: LitAtomicProductPrice,
 });
 
 export const AtomicProductText = createComponent({
