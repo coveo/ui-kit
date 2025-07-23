@@ -71,7 +71,7 @@ export class AtomicCommerceTimeframeFacet
    */
   @property({type: Object}) facet!: DateFacet;
   /**
-   * Specifies whether the facet is collapsed.
+   * Whether the facet is collapsed.
    */
   @property({
     type: Boolean,

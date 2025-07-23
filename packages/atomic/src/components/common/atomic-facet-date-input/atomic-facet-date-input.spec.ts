@@ -67,7 +67,7 @@ describe('AtomicFacetDateInput', () => {
     consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
   });
 
-  it('is defined', () => {
+  it('should initialize', () => {
     const el = document.createElement('atomic-facet-date-input');
     expect(el).toBeInstanceOf(AtomicFacetDateInput);
   });
