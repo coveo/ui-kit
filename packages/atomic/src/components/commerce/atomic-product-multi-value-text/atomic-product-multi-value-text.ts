@@ -7,14 +7,7 @@ import {
   type RegularFacetValue,
   type Search,
 } from '@coveo/headless/commerce';
-import {
-  type CSSResultGroup,
-  html,
-  LitElement,
-  nothing,
-  type TemplateResult,
-  unsafeCSS,
-} from 'lit';
+import {html, LitElement, nothing, type TemplateResult, unsafeCSS} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {bindingGuard} from '@/src/decorators/binding-guard';
 import {bindings} from '@/src/decorators/bindings';
@@ -45,7 +38,7 @@ export class AtomicProductMultiValueText
   extends LitElement
   implements InitializableComponent<CommerceBindings>
 {
-  static styles: CSSResultGroup = [unsafeCSS(styles)];
+  static styles = [unsafeCSS(styles)];
 
   @state()
   bindings!: CommerceBindings;

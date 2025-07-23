@@ -253,7 +253,6 @@ describe('atomic-product-multi-value-text', () => {
 
   it('should render every part', async () => {
     const {element} = await renderProductMultiValueText();
-
     Object.entries(parts(element)).forEach(([_key, el]) => {
       expect(el).toBeInTheDocument();
     });

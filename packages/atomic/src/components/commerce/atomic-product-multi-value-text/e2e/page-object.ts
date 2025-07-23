@@ -1,7 +1,7 @@
 import type {Page} from '@playwright/test';
-import {BasePageObject} from '@/playwright-utils/base-page-object';
+import {BasePageObject} from '@/playwright-utils/lit-base-page-object';
 
-export class ProductMultiValueTextPageObject extends BasePageObject<'atomic-product-multi-value-text'> {
+export class ProductMultiValueTextPageObject extends BasePageObject {
   constructor(page: Page) {
     super(page, 'atomic-product-multi-value-text');
   }
@@ -13,7 +13,9 @@ export class ProductMultiValueTextPageObject extends BasePageObject<'atomic-prod
   }
 
   get separators() {
-    return this.hydrated.first().locator('li[class="separator"]');
+    return this.hydrated
+      .first()
+      .locator('li[part="product-multi-value-text-separator"]');
   }
 
   moreValuesIndicator(expectedNumber?: number) {
@@ -22,27 +24,5 @@ export class ProductMultiValueTextPageObject extends BasePageObject<'atomic-prod
       .getByText(
         `${expectedNumber ? `${expectedNumber.toString()} ` : ''}more...`
       );
-  }
-
-  async withCustomDelimiter({
-    delimiter,
-    values,
-    field,
-  }: {
-    delimiter: string;
-    values: string[];
-    field: string;
-  }) {
-    await this.page.route('**/commerce/v2/listing', async (route) => {
-      const response = await route.fetch();
-      const body = await response.json();
-      body.products[0][field] = values.join(delimiter);
-      await route.fulfill({
-        response,
-        json: body,
-      });
-    });
-
-    return this;
   }
 }
