@@ -2,6 +2,7 @@
 export {AtomicCommerceCategoryFacet} from './atomic-commerce-category-facet/atomic-commerce-category-facet.js';
 export {AtomicCommerceFacet} from './atomic-commerce-facet/atomic-commerce-facet.js';
 export {AtomicCommerceFacetNumberInput} from './atomic-commerce-facet-number-input/atomic-commerce-facet-number-input.js';
+export {AtomicCommerceFacets} from './atomic-commerce-facets/atomic-commerce-facets.js';
 export {AtomicCommerceInterface} from './atomic-commerce-interface/atomic-commerce-interface.js';
 export {AtomicCommerceLayout} from './atomic-commerce-layout/atomic-commerce-layout.js';
 export {AtomicCommerceNumericFacet} from './atomic-commerce-numeric-facet/atomic-commerce-numeric-facet.js';

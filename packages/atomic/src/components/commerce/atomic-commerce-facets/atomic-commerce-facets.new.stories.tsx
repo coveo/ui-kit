@@ -11,7 +11,7 @@ const {decorator, play} = wrapInCommerceInterface({skipFirstRequest: true});
 
 const meta: Meta = {
   component: 'atomic-commerce-facets',
-  title: 'Atomic-Commerce/Facets',
+  title: 'Commerce/atomic-commerce-facets',
   id: 'atomic-commerce-facets',
   render: renderComponent,
   decorators: [decorator],

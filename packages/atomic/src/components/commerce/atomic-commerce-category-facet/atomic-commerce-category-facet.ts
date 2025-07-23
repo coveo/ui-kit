@@ -101,8 +101,9 @@ export class AtomicCommerceCategoryFacet
   /**
    * The summary controller instance.
    */
+  // TODO: make sure it is an object
   @property({type: Object})
-  summary!: Summary<SearchSummaryState | ProductListingSummaryState>;
+  public summary!: Summary<SearchSummaryState | ProductListingSummaryState>;
 
   /**
    * The category facet controller instance.
