@@ -68,7 +68,7 @@ test.describe('default', () => {
     await categoryFacet.searchInput.fill('accessories');
 
     const foundValue = page.getByRole('button', {
-      name: /Accessories \([0-9]+\) in All Categories/,
+      name: /Inclusion filter on Accessories; [0-9]+ results under All Categories/,
     });
 
     await foundValue.click();
