@@ -203,8 +203,12 @@ describe('#buildCategoryFacetSearchRequest', () => {
       navigatorContext
     );
 
-    const {facets, page, sort, ...expectedBaseRequest} =
-      buildFilterableCommerceAPIRequestMock.mock.results[0].value;
+    const {
+      facets: _facets,
+      page: _page,
+      sort: _sort,
+      ...expectedBaseRequest
+    } = buildFilterableCommerceAPIRequestMock.mock.results[0].value;
 
     expect(request).toEqual({
       ...expectedBaseRequest,

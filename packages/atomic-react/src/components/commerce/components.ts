@@ -8,6 +8,7 @@ import {
   AtomicCommercePager as LitAtomicCommercePager,
   AtomicCommerceProductList as LitAtomicCommerceProductList,
   AtomicCommerceProductsPerPage as LitAtomicCommerceProductsPerPage,
+  AtomicCommerceQueryError as LitAtomicCommerceQueryError,
   AtomicCommerceQuerySummary as LitAtomicCommerceQuerySummary,
   AtomicCommerceRecommendationInterface as LitAtomicCommerceRecommendationInterface,
   AtomicCommerceRecommendationList as LitAtomicCommerceRecommendationList,
@@ -23,7 +24,7 @@ import {
   AtomicIcon as LitAtomicIcon,
   AtomicLayoutSection as LitAtomicLayoutSection,
   AtomicProduct as LitAtomicProduct,
-  AtomicProductExcerpt as LitAtomicProductExcerpt,
+  AtomicProductChildren as LitAtomicProductChildren,
   AtomicProductText as LitAtomicProductText,
 } from '@coveo/atomic/components';
 import {createComponent} from '@lit/react';
@@ -81,6 +82,12 @@ export const AtomicCommerceProductsPerPage = createComponent({
   tagName: 'atomic-commerce-products-per-page',
   react: React,
   elementClass: LitAtomicCommerceProductsPerPage,
+});
+
+export const AtomicCommerceQueryError = createComponent({
+  tagName: 'atomic-commerce-query-error',
+  react: React,
+  elementClass: LitAtomicCommerceQueryError,
 });
 
 export const AtomicCommerceQuerySummary = createComponent({
@@ -155,10 +162,10 @@ export const AtomicProduct = createComponent({
   elementClass: LitAtomicProduct,
 });
 
-export const AtomicProductExcerpt = createComponent({
-  tagName: 'atomic-product-excerpt',
+export const AtomicProductChildren = createComponent({
+  tagName: 'atomic-product-children',
   react: React,
-  elementClass: LitAtomicProductExcerpt,
+  elementClass: LitAtomicProductChildren,
 });
 
 export const AtomicProductText = createComponent({

@@ -63,9 +63,7 @@ export interface LocationFacetValue extends BaseFacetValue {
   value: string;
 }
 
-export interface RangeFacetValue<T>
-  extends BaseFacetValue,
-    NonLocationFacetValue {
+interface RangeFacetValue<T> extends BaseFacetValue, NonLocationFacetValue {
   start: T;
   end: T;
   endInclusive: boolean;
@@ -75,7 +73,7 @@ export interface RangeFacetValue<T>
   moreValuesAvailable: boolean;
 }
 
-export interface BaseFacetResponse<
+interface BaseFacetResponse<
   Value extends BaseFacetValue,
   Type extends FacetType,
 > {

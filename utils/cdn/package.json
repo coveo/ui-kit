@@ -9,11 +9,11 @@
     "node": ">=22.14.0"
   },
   "devDependencies": {
-    "@coveo/atomic": "3.29.1",
-    "@coveo/atomic-hosted-page": "1.1.30",
-    "@coveo/atomic-react": "3.2.51",
-    "@coveo/bueno": "1.0.21",
-    "@coveo/headless": "3.27.4",
-    "@coveo/shopify": "1.7.4"
+    "@coveo/atomic": "3.30.0",
+    "@coveo/atomic-hosted-page": "1.1.31",
+    "@coveo/atomic-react": "3.2.52",
+    "@coveo/bueno": "1.0.22",
+    "@coveo/headless": "3.27.5",
+    "@coveo/shopify": "1.7.5"
   }
 }

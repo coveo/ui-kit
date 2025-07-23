@@ -3,10 +3,7 @@ import {logNotifyTrigger} from '../../features/triggers/trigger-analytics-action
 import {
   buildCoreNotifyTrigger,
   type NotifyTrigger,
-  type NotifyTriggerState,
 } from '../core/triggers/headless-core-notify-trigger.js';
-
-export type {NotifyTrigger, NotifyTriggerState};
 
 /**
  * Creates a `NotifyTrigger` controller instance.

@@ -42,7 +42,7 @@ const supportedFacetParameters: Record<FacetSearchParameters, boolean> = {
 };
 
 export const delimiter = '&';
-export const equal = '=';
+const equal = '=';
 
 export function buildSearchParameterSerializer() {
   return {serialize: serialize(serializePair), deserialize: deserialize};
@@ -100,7 +100,7 @@ export const serialize =
       .join(delimiter);
   };
 
-export function serializePair(pair: [string, unknown]) {
+function serializePair(pair: [string, unknown]) {
   const [key, val] = pair;
 
   if (!isValidKey(key)) {
@@ -286,7 +286,7 @@ function isValidDateRangeValue(date: string) {
     }
 
     return false;
-  } catch (error) {
+  } catch (_) {
     return false;
   }
 }
