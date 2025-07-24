@@ -95,7 +95,7 @@ export class AtomicProductNumericFieldValue
     try {
       const languages = this.bindings?.i18n?.languages || ['en'];
       return this.formatter(value, [...languages]);
-    } catch (error) {
+    } catch (_) {
       // Don't set this.error for formatting errors - they should not prevent rendering
       return value.toString();
     }
