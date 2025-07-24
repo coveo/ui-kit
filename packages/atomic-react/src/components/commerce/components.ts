@@ -31,34 +31,16 @@ import {
 import {createComponent} from '@lit/react';
 import React from 'react';
 
-export const AtomicIcon = createComponent({
-  tagName: 'atomic-icon',
+export const AtomicCommerceBreadbox = createComponent({
+  tagName: 'atomic-commerce-breadbox',
   react: React,
-  elementClass: LitAtomicIcon,
-});
-
-export const AtomicComponentError = createComponent({
-  tagName: 'atomic-component-error',
-  react: React,
-  elementClass: LitAtomicComponentError,
-});
-
-export const AtomicLayoutSection = createComponent({
-  tagName: 'atomic-layout-section',
-  react: React,
-  elementClass: LitAtomicLayoutSection,
+  elementClass: LitAtomicCommerceBreadbox,
 });
 
 export const AtomicCommerceDidYouMean = createComponent({
   tagName: 'atomic-commerce-did-you-mean',
   react: React,
   elementClass: LitAtomicCommerceDidYouMean,
-});
-
-export const AtomicCommerceBreadbox = createComponent({
-  tagName: 'atomic-commerce-breadbox',
-  react: React,
-  elementClass: LitAtomicCommerceBreadbox,
 });
 
 export const AtomicCommerceInterface = createComponent({
@@ -73,16 +55,16 @@ export const AtomicCommerceLayout = createComponent({
   elementClass: LitAtomicCommerceLayout,
 });
 
-export const AtomicCommerceNoProducts = createComponent({
-  tagName: 'atomic-commerce-no-products',
-  react: React,
-  elementClass: LitAtomicCommerceNoProducts,
-});
-
 export const AtomicCommerceLoadMoreProducts = createComponent({
   tagName: 'atomic-commerce-load-more-products',
   react: React,
   elementClass: LitAtomicCommerceLoadMoreProducts,
+});
+
+export const AtomicCommerceNoProducts = createComponent({
+  tagName: 'atomic-commerce-no-products',
+  react: React,
+  elementClass: LitAtomicCommerceNoProducts,
 });
 
 export const AtomicCommercePager = createComponent({
@@ -197,4 +179,22 @@ export const AtomicProductText = createComponent({
   tagName: 'atomic-product-text',
   react: React,
   elementClass: LitAtomicProductText,
+});
+
+export const AtomicComponentError = createComponent({
+  tagName: 'atomic-component-error',
+  react: React,
+  elementClass: LitAtomicComponentError,
+});
+
+export const AtomicIcon = createComponent({
+  tagName: 'atomic-icon',
+  react: React,
+  elementClass: LitAtomicIcon,
+});
+
+export const AtomicLayoutSection = createComponent({
+  tagName: 'atomic-layout-section',
+  react: React,
+  elementClass: LitAtomicLayoutSection,
 });
