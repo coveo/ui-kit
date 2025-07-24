@@ -9,7 +9,7 @@ import App from './App';
 let errorSpy: MockInstance;
 
 beforeEach(() => {
-  errorSpy = vi.spyOn(global.console, 'error');
+  errorSpy = vi.spyOn(globalThis.console, 'error');
 });
 
 test('renders without error', async () => {
