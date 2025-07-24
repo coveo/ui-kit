@@ -84,16 +84,16 @@ export const AtomicCommerceProductsPerPage = createComponent({
   elementClass: LitAtomicCommerceProductsPerPage,
 });
 
-export const AtomicCommerceQuerySummary = createComponent({
-  tagName: 'atomic-commerce-query-summary',
-  react: React,
-  elementClass: LitAtomicCommerceQuerySummary,
-});
-
 export const AtomicCommerceQueryError = createComponent({
   tagName: 'atomic-commerce-query-error',
   react: React,
   elementClass: LitAtomicCommerceQueryError,
+});
+
+export const AtomicCommerceQuerySummary = createComponent({
+  tagName: 'atomic-commerce-query-summary',
+  react: React,
+  elementClass: LitAtomicCommerceQuerySummary,
 });
 
 export const AtomicCommerceRecommendationInterface = createComponent({
@@ -102,16 +102,16 @@ export const AtomicCommerceRecommendationInterface = createComponent({
   elementClass: LitAtomicCommerceRecommendationInterface,
 });
 
-export const AtomicCommerceRefineModal = createComponent({
-  tagName: 'atomic-commerce-refine-modal',
-  react: React,
-  elementClass: LitAtomicCommerceRefineModal,
-});
-
 export const AtomicCommerceRecommendationList = createComponent({
   tagName: 'atomic-commerce-recommendation-list',
   react: React,
   elementClass: LitAtomicCommerceRecommendationList,
+});
+
+export const AtomicCommerceRefineModal = createComponent({
+  tagName: 'atomic-commerce-refine-modal',
+  react: React,
+  elementClass: LitAtomicCommerceRefineModal,
 });
 
 export const AtomicCommerceRefineToggle = createComponent({
@@ -150,16 +150,16 @@ export const AtomicCommerceSortDropdown = createComponent({
   elementClass: LitAtomicCommerceSortDropdown,
 });
 
-export const AtomicProduct = createComponent({
-  tagName: 'atomic-product',
-  react: React,
-  elementClass: LitAtomicProduct,
-});
-
 export const AtomicCommerceText = createComponent({
   tagName: 'atomic-commerce-text',
   react: React,
   elementClass: LitAtomicCommerceText,
+});
+
+export const AtomicProduct = createComponent({
+  tagName: 'atomic-product',
+  react: React,
+  elementClass: LitAtomicProduct,
 });
 
 export const AtomicProductChildren = createComponent({
