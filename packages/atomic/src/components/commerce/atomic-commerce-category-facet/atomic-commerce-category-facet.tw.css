@@ -1,5 +1,7 @@
-@import '../../../common/facets/facet-common.pcss';
-@import '../../../common/facets/facet-search/facet-search.pcss';
+@import '../../common/facets/facet-search/facet-search.tw.css';
+@import '../../common/facets/facet-common.tw.css';
+@reference '../../../utils/tailwind.global.tw.css';
+@reference '../../../utils/coveo.tw.css';
 
 [part~='active-parent'] {
   @apply pl-9;

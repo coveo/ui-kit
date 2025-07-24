@@ -1,6 +1,6 @@
 import {renderFacetValueLabelHighlight} from '@/src/components/common/facets/facet-value-label-highlight/facet-value-label-highlight';
 import {renderFacetValueLink} from '@/src/components/common/facets/facet-value-link/facet-value-link';
-import type {FunctionalComponentWithChildren} from '@/src/utils/functional-component-utils';
+import type {FunctionalComponentWithOptionalChildren} from '@/src/utils/functional-component-utils';
 import type {i18n} from 'i18next';
 import type {TemplateResult} from 'lit';
 import {html} from 'lit';
@@ -17,7 +17,7 @@ export interface CategoryFacetValueLinkProps {
   setRef: (el?: Element) => void;
 }
 
-export const renderCategoryFacetValueLink: FunctionalComponentWithChildren<
+export const renderCategoryFacetValueLink: FunctionalComponentWithOptionalChildren<
   CategoryFacetValueLinkProps
 > =
   ({
@@ -33,7 +33,7 @@ export const renderCategoryFacetValueLink: FunctionalComponentWithChildren<
       setRef,
     },
   }) =>
-  (children) => {
+  (children?) => {
     const partNames = [];
     if (isParent) {
       partNames.push('active-parent');

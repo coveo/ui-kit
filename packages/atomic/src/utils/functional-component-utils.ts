@@ -5,6 +5,16 @@ export interface FunctionalComponent<T = {}> {
   ({props}: {props: T}): TemplateResult | typeof nothing;
 }
 
+export interface FunctionalComponentWithOptionalChildren<T> {
+  ({
+    props,
+  }: {
+    props: T;
+  }): (
+    children?: FunctionalComponentChildren
+  ) => TemplateResult | typeof nothing;
+}
+
 export interface FunctionalComponentWithChildren<T> {
   ({
     props,

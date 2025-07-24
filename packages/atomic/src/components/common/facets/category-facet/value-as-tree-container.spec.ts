@@ -6,7 +6,7 @@ import {renderCategoryFacetTreeValueContainer} from './value-as-tree-container';
 describe('#renderCategoryFacetTreeValueContainer', () => {
   const renderComponent = async (children = html`<span>Test child</span>`) => {
     const container = await renderFunctionFixture(
-      html`${renderCategoryFacetTreeValueContainer({props: {}})(children)}`
+      html`${renderCategoryFacetTreeValueContainer()(children)}`
     );
 
     return {
