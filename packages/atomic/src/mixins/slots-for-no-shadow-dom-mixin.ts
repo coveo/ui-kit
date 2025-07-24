@@ -49,9 +49,21 @@ export const SlotsForNoShadowDOMMixin = <T extends Constructor<LitElement>>(
     extends superClass
     implements LightDOMWithSlots
   {
+    /*
+     * @internal
+     */
     slots: SlotMapping = {};
+    /*
+     * @internal
+     */
     private _slotsInitialized = false;
+    /*
+     * @internal
+     */
     private _slotPlaceholders: SlotPlaceholder[] = [];
+    /*
+     * @internal
+     */
     private _pendingSlotRelocation = false;
 
     createRenderRoot() {
