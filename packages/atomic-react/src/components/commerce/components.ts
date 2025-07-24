@@ -24,7 +24,6 @@ import {
   AtomicIcon as LitAtomicIcon,
   AtomicLayoutSection as LitAtomicLayoutSection,
   AtomicProduct as LitAtomicProduct,
-  AtomicProductRating as LitAtomicProductRating,
   AtomicProductText as LitAtomicProductText,
 } from '@coveo/atomic/components';
 import {createComponent} from '@lit/react';
@@ -162,10 +161,6 @@ export const AtomicProduct = createComponent({
   elementClass: LitAtomicProduct,
 });
 
-export const AtomicProductRating = createComponent({
-  tagName: 'atomic-product-rating',
-  react: React,
-  elementClass: LitAtomicProductRating,
 });
 
 export const AtomicProductText = createComponent({

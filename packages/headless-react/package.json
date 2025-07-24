@@ -1,6 +1,6 @@
 {
   "name": "@coveo/headless-react",
-  "version": "2.4.36",
+  "version": "2.4.37",
   "description": "React utilities for SSR (Server Side Rendering) with headless",
   "homepage": "https://docs.coveo.com/en/headless/latest/",
   "repository": {
@@ -28,7 +28,6 @@
     "clean": "rimraf dist",
     "test": "vitest run",
     "test:watch": "vitest",
-    "lint": "eslint .; publint",
     "publish:npm": "npm run-script -w=@coveo/ci npm-publish",
     "publish:bump": "npm run-script -w=@coveo/ci bump",
     "promote:npm:latest": "npm run-script -w=@coveo/ci promote-npm-prod",
@@ -40,21 +39,16 @@
     "serve:typedoc": "live-server ./docs"
   },
   "dependencies": {
-    "@coveo/headless": "3.27.4"
+    "@coveo/headless": "3.27.5"
   },
   "devDependencies": {
-    "@coveo/ci": "1.0.0",
     "@testing-library/react": "16.3.0",
-    "@typescript-eslint/eslint-plugin": "7.18.0",
-    "eslint-plugin-react": "7.37.5",
-    "eslint-plugin-testing-library": "7.1.1",
-    "gts": "5.3.1",
     "live-server": "1.2.2",
-    "publint": "0.3.12",
     "rimraf": "6.0.1",
     "typescript": "5.8.3",
     "typedoc": "0.28.7",
-    "vitest": "3.2.4"
+    "vitest": "3.2.4",
+    "@coveo/documentation": "1.0.0"
   },
   "peerDependencies": {
     "react": "^18 || ^19",

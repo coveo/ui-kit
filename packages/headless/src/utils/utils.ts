@@ -34,7 +34,7 @@ function encodedBtoa(stringToEncode: string) {
 }
 
 export function omit<T>(key: keyof T, obj: T) {
-  const {[key]: omitted, ...rest} = obj;
+  const {[key]: _omitted, ...rest} = obj;
   return rest;
 }
 
@@ -125,7 +125,7 @@ export function clone<T>(value: T): T {
   // add defensive code to prevent the whole app from crashing
   try {
     return JSON.parse(JSON.stringify(value));
-  } catch (e) {
+  } catch (_) {
     return value;
   }
 }

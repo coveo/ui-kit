@@ -49,19 +49,21 @@ describe('#buildPlanRequest', () => {
   });
 
   it('sets base properties, except #context.capture, to the value returned by #buildBaseCommerceAPIRequest(#state, #navigatorContext)', () => {
-    const {query, page, perPage, ...restOfPlanRequest} = buildPlanRequest(
-      state,
-      navigatorContext
-    );
+    const {
+      query: _query,
+      page: _page,
+      perPage: _perPage,
+      ...restOfPlanRequest
+    } = buildPlanRequest(state, navigatorContext);
 
-    const {capture: planRequestCapture, ...restOfPlanRequestContext} =
+    const {capture: _planRequestCapture, ...restOfPlanRequestContext} =
       restOfPlanRequest.context;
     const basePropertiesWithoutCapture = {
       ...restOfPlanRequest,
       context: {...restOfPlanRequestContext},
     };
 
-    const {capture: baseRequestCapture, ...restOfBaseRequestContext} =
+    const {capture: _baseRequestCapture, ...restOfBaseRequestContext} =
       baseRequest.context;
     const baseRequestWithoutCapture = {
       ...baseRequest,

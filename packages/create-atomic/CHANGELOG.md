@@ -1,3 +1,10 @@
+## <small>1.40.11 (2025-07-23)</small>
+
+* fix(deps): update all dependencies j:kit-282 (#5723) ([6c032c9](https://github.com/coveo/ui-kit/commits/6c032c9)), closes [#5723](https://github.com/coveo/ui-kit/issues/5723)
+* chore: enable recommended biome rules for entire repo (#5662) ([015a764](https://github.com/coveo/ui-kit/commits/015a764)), closes [#5662](https://github.com/coveo/ui-kit/issues/5662)
+
+
+
 ## <small>1.40.10 (2025-07-16)</small>
 
 * chore(ci): change create-atomic release process from cli to ui-kit (#5648) ([2a906d4](https://github.com/coveo/ui-kit/commits/2a906d4)), closes [#5648](https://github.com/coveo/ui-kit/issues/5648)
