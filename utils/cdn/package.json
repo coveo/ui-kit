@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "serve": "node ./scripts/serve.mjs",
-    "deploy": "node ./scripts/deploy.mjs"
+    "deploy": "node ./scripts/deploy-local-cdn.mjs"
   },
   "engines": {
     "node": ">=22.14.0"
