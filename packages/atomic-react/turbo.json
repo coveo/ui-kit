@@ -1,0 +1,9 @@
+{
+  "extends": ["//"],
+  "tasks": {
+    "gen:lit": {
+      "dependsOn": ["@coveo/atomic#build:cem"],
+      "outputs": ["./src/stencil-generated/**/*"]
+    }
+  }
+}

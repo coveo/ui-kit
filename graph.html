@@ -1,0 +1,41 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Graph</title>
+</head>
+<body>
+  <script src="https://cdn.jsdelivr.net/npm/viz.js@2.1.2-pre.1/viz.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/viz.js@2.1.2-pre.1/full.render.js"></script>
+  <script>
+const s = `
+digraph {
+	compound = "true"
+	newrank = "true"
+	subgraph "root" {
+		"[root] @coveo/atomic#build" -> "[root] @coveo/atomic#build:storybook"
+		"[root] @coveo/atomic#build" -> "[root] @coveo/atomic-angular-builder#gen:lit"
+		"[root] @coveo/atomic#build" -> "[root] @coveo/atomic-react#gen:lit"
+		"[root] @coveo/atomic#build:cem" -> "[root] @coveo/atomic#build:stencil-lit"
+		"[root] @coveo/atomic#build:list-assets" -> "[root] @coveo/atomic#build:stencil-lit"
+		"[root] @coveo/atomic#build:locales" -> "[root] @coveo/bueno#build"
+		"[root] @coveo/atomic#build:locales" -> "[root] @coveo/headless#build"
+		"[root] @coveo/atomic#build:stencil-lit" -> "[root] @coveo/atomic#build:locales"
+		"[root] @coveo/atomic#build:stencil-lit" -> "[root] @coveo/bueno#build"
+		"[root] @coveo/atomic#build:stencil-lit" -> "[root] @coveo/headless#build"
+		"[root] @coveo/atomic#build:storybook" -> "[root] @coveo/atomic#build:cem"
+		"[root] @coveo/atomic#build:storybook" -> "[root] @coveo/atomic#build:list-assets"
+		"[root] @coveo/atomic-angular-builder#gen:lit" -> "[root] @coveo/atomic#build:cem"
+		"[root] @coveo/atomic-react#gen:lit" -> "[root] @coveo/atomic#build:cem"
+		"[root] @coveo/bueno#build" -> "[root] ___ROOT___"
+		"[root] @coveo/documentation#build" -> "[root] ___ROOT___"
+		"[root] @coveo/headless#build" -> "[root] @coveo/bueno#build"
+		"[root] @coveo/headless#build" -> "[root] @coveo/documentation#build"
+	}
+}
+
+`.replace(/\_\_\_ROOT\_\_\_/g, "Root").replace(/\[root\]/g, "");new Viz().renderSVGElement(s).then(el => document.body.appendChild(el)).catch(e => console.error(e));
+  </script>
+</body>
+</html>
