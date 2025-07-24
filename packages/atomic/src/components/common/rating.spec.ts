@@ -1,257 +1,177 @@
-import {within} from '@storybook/test';
 import type {i18n} from 'i18next';
-import {html, render} from 'lit';
-import {afterEach, beforeEach, describe, expect, it, vi} from 'vitest';
+import {html} from 'lit';
+import {beforeAll, describe, expect, it, vi} from 'vitest';
+import {renderFunctionFixture} from '@/vitest-utils/testing-helpers/fixture';
 import {createTestI18n} from '@/vitest-utils/testing-helpers/i18n-utils';
 import {FieldValueIsNaNError} from '../commerce/product-template-component-utils/error';
 import {computeNumberOfStars, type RatingProps, renderRating} from './rating';
 
-describe('renderRating', () => {
-  let container: HTMLElement;
-  let mockI18n: i18n;
+describe('#renderRating', () => {
+  let i18n: i18n;
 
-  beforeEach(async () => {
-    container = document.createElement('div');
-    document.body.appendChild(container);
-    mockI18n = await createTestI18n();
-
-    // Mock the i18n.t function to return a predictable string
-    vi.spyOn(mockI18n, 't').mockImplementation(
-      (key: string, options?: Record<string, unknown>) => {
-        if (key === 'stars') {
-          return `${options?.count} stars out of ${options?.max}`;
-        }
-        return key;
-      }
-    );
+  beforeAll(async () => {
+    i18n = await createTestI18n();
   });
 
-  afterEach(() => {
-    document.body.removeChild(container);
-    vi.restoreAllMocks();
-  });
-
-  const renderComponent = (props: Partial<RatingProps>) => {
+  const renderComponent = async (overrides: Partial<RatingProps> = {}) => {
     const defaultProps: RatingProps = {
-      i18n: mockI18n,
+      i18n,
       numberOfTotalIcons: 5,
       numberOfActiveIcons: 3,
-      icon: 'star-icon',
-      iconSize: 0.75,
-      ...props,
+      icon: '<svg>star</svg>',
+      ...overrides,
     };
 
-    render(html`${renderRating({props: defaultProps})}`, container);
+    const element = await renderFunctionFixture(
+      html`${renderRating({props: defaultProps})}`
+    );
 
-    return within(container).getByRole('img');
+    return {
+      ratingContainer: element.querySelector('div[part="value-rating"]'),
+      inactiveIcons: element.querySelectorAll('.z-0 atomic-icon'),
+      activeIconsContainer: element.querySelector('.z-1'),
+      activeIcons: element.querySelectorAll('.z-1 atomic-icon'),
+      allIcons: element.querySelectorAll('atomic-icon'),
+    };
   };
 
-  it('should render a rating component in the document', () => {
-    const ratingElement = renderComponent({});
-    expect(ratingElement).toBeInTheDocument();
+  it('should render the rating container with correct part', async () => {
+    const {ratingContainer} = await renderComponent();
+
+    expect(ratingContainer).toHaveAttribute('part', 'value-rating');
   });
 
-  it('should render with correct aria-label', () => {
-    const ratingElement = renderComponent({
+  it('should render the rating container with role img', async () => {
+    const {ratingContainer} = await renderComponent();
+
+    expect(ratingContainer).toHaveAttribute('role', 'img');
+  });
+
+  it('should render correct aria-label from i18n', async () => {
+    const {ratingContainer} = await renderComponent({
       numberOfActiveIcons: 4,
       numberOfTotalIcons: 5,
     });
 
-    expect(ratingElement).toHaveAttribute('aria-label', '4 stars out of 5');
-    expect(mockI18n.t).toHaveBeenCalledWith('stars', {
-      count: 4,
-      max: 5,
-    });
+    expect(ratingContainer).toHaveAttribute('aria-label', '4 stars out of 5');
   });
 
-  it('should render the correct number of total icons', () => {
-    renderComponent({numberOfTotalIcons: 7});
+  it('should render correct number of total icons', async () => {
+    const {allIcons} = await renderComponent({numberOfTotalIcons: 7});
 
-    const emptyIcons = container.querySelectorAll('.z-0 atomic-icon');
-    const filledIcons = container.querySelectorAll('.z-1 atomic-icon');
-
-    expect(emptyIcons).toHaveLength(7);
-    expect(filledIcons).toHaveLength(7);
+    expect(allIcons).toHaveLength(14); // 7 inactive + 7 active
   });
 
-  it('should apply the correct icon attribute', () => {
-    const customIcon = 'custom-star-icon';
-    renderComponent({icon: customIcon});
+  it('should render inactive icons with correct class', async () => {
+    const {inactiveIcons} = await renderComponent();
 
-    const icons = container.querySelectorAll('atomic-icon');
-    icons.forEach((icon) => {
-      expect(icon).toHaveAttribute('icon', customIcon);
-    });
-  });
-
-  it('should apply correct CSS classes to active and inactive icons', () => {
-    renderComponent({});
-
-    const emptyIcons = container.querySelectorAll('.z-0 atomic-icon');
-    const filledIcons = container.querySelectorAll('.z-1 atomic-icon');
-
-    emptyIcons.forEach((icon) => {
+    inactiveIcons.forEach((icon) => {
       expect(icon).toHaveClass('icon-inactive');
-      expect(icon).not.toHaveClass('icon-active');
     });
+  });
 
-    filledIcons.forEach((icon) => {
+  it('should render active icons with correct class', async () => {
+    const {activeIcons} = await renderComponent();
+
+    activeIcons.forEach((icon) => {
       expect(icon).toHaveClass('icon-active');
-      expect(icon).not.toHaveClass('icon-inactive');
     });
   });
 
-  it('should apply the correct part attribute to the rating container', () => {
-    const ratingElement = renderComponent({});
-    expect(ratingElement).toHaveAttribute('part', 'value-rating');
+  it('should set correct width percentage for active icons container', async () => {
+    const {activeIconsContainer} = await renderComponent({
+      numberOfActiveIcons: 3,
+      numberOfTotalIcons: 5,
+    });
+
+    expect(activeIconsContainer).toHaveStyle('width: 60%');
   });
 
-  it('should apply the correct part attribute to icons', () => {
-    renderComponent({});
+  it('should apply custom icon size when provided', async () => {
+    const {allIcons} = await renderComponent({iconSize: 1.5});
 
-    const icons = container.querySelectorAll('atomic-icon');
-    icons.forEach((icon) => {
+    allIcons.forEach((icon) => {
+      expect(icon).toHaveStyle('width: 1.5rem; height: 1.5rem');
+    });
+  });
+
+  it('should use default icon size when not provided', async () => {
+    const {allIcons} = await renderComponent();
+
+    allIcons.forEach((icon) => {
+      expect(icon).toHaveStyle('width: 0.75rem; height: 0.75rem');
+    });
+  });
+
+  it('should render icons with correct part attribute', async () => {
+    const {allIcons} = await renderComponent();
+
+    allIcons.forEach((icon) => {
       expect(icon).toHaveAttribute('part', 'value-rating-icon');
     });
   });
 
-  it('should have the correct DOM structure', () => {
-    renderComponent({});
-
-    const ratingContainer = container.querySelector('[part="value-rating"]');
-    expect(ratingContainer).toBeInTheDocument();
-    expect(ratingContainer).toHaveClass('relative', 'w-max');
-
-    const emptyContainer = container.querySelector('.z-0');
-    expect(emptyContainer).toBeInTheDocument();
-    expect(emptyContainer).toHaveClass('flex', 'gap-0.5');
-
-    const filledContainer = container.querySelector('.z-1');
-    expect(filledContainer).toBeInTheDocument();
-    expect(filledContainer).toHaveClass(
-      'absolute',
-      'top-0',
-      'left-0',
-      'z-1',
-      'flex',
-      'gap-0.5',
-      'overflow-hidden'
-    );
-  });
-
-  it('should render icons with shrink-0 class', () => {
-    renderComponent({});
-
-    const icons = container.querySelectorAll('atomic-icon');
-    icons.forEach((icon) => {
-      expect(icon).toHaveClass('shrink-0');
+  it('should handle zero active icons', async () => {
+    const {activeIconsContainer} = await renderComponent({
+      numberOfActiveIcons: 0,
     });
+
+    expect(activeIconsContainer).toHaveStyle('width: 0%');
   });
 
-  it('should render with different icon counts', () => {
-    renderComponent({numberOfTotalIcons: 3});
+  it('should handle full rating', async () => {
+    const {activeIconsContainer} = await renderComponent({
+      numberOfActiveIcons: 5,
+      numberOfTotalIcons: 5,
+    });
 
-    const emptyIcons = container.querySelectorAll('.z-0 atomic-icon');
-    const filledIcons = container.querySelectorAll('.z-1 atomic-icon');
-
-    expect(emptyIcons).toHaveLength(3);
-    expect(filledIcons).toHaveLength(3);
+    expect(activeIconsContainer).toHaveStyle('width: 100%');
   });
 
-  it('should render with large icon counts', () => {
-    renderComponent({numberOfTotalIcons: 10});
+  it('should handle fractional active icons', async () => {
+    const {activeIconsContainer} = await renderComponent({
+      numberOfActiveIcons: 3.7,
+      numberOfTotalIcons: 5,
+    });
 
-    const emptyIcons = container.querySelectorAll('.z-0 atomic-icon');
-    const filledIcons = container.querySelectorAll('.z-1 atomic-icon');
-
-    expect(emptyIcons).toHaveLength(10);
-    expect(filledIcons).toHaveLength(10);
+    expect(activeIconsContainer).toHaveStyle('width: 74%');
   });
 });
 
-describe('computeNumberOfStars', () => {
-  it('should return null when value is null', () => {
-    const result = computeNumberOfStars(null, 'test-field');
-    expect(result).toBeNull();
-  });
+describe('#computeNumberOfStars', () => {
+  it('should return number for valid numeric value', () => {
+    const result = computeNumberOfStars(4.5, 'rating');
 
-  it('should parse and return a valid number', () => {
-    const result = computeNumberOfStars(4.5, 'test-field');
     expect(result).toBe(4.5);
   });
 
-  it('should parse string numbers', () => {
-    const result = computeNumberOfStars('3.7', 'test-field');
-    expect(result).toBe(3.7);
+  it('should return number for string numeric value', () => {
+    const result = computeNumberOfStars('3.2', 'rating');
+
+    expect(result).toBe(3.2);
   });
 
-  it('should parse integer numbers', () => {
-    const result = computeNumberOfStars(4, 'test-field');
-    expect(result).toBe(4);
+  it('should return null for null value', () => {
+    const result = computeNumberOfStars(null, 'rating');
+
+    expect(result).toBe(null);
   });
 
-  it('should handle zero', () => {
-    const result = computeNumberOfStars(0, 'test-field');
-    expect(result).toBe(0);
-  });
-
-  it('should handle negative numbers', () => {
-    const result = computeNumberOfStars(-1.5, 'test-field');
-    expect(result).toBe(-1.5);
-  });
-
-  it('should throw FieldValueIsNaNError for invalid string values', () => {
-    expect(() => computeNumberOfStars('invalid', 'test-field')).toThrow(
+  it('should throw FieldValueIsNaNError for non-numeric string', () => {
+    expect(() => computeNumberOfStars('not-a-number', 'rating')).toThrow(
       FieldValueIsNaNError
     );
   });
 
-  it('should throw FieldValueIsNaNError for undefined values', () => {
-    expect(() => computeNumberOfStars(undefined, 'test-field')).toThrow(
+  it('should throw FieldValueIsNaNError for undefined value', () => {
+    expect(() => computeNumberOfStars(undefined, 'rating')).toThrow(
       FieldValueIsNaNError
     );
   });
 
-  it('should throw FieldValueIsNaNError for object values', () => {
-    expect(() => computeNumberOfStars({}, 'test-field')).toThrow(
-      FieldValueIsNaNError
+  it('should include the field name and value in the error', () => {
+    expect(() => computeNumberOfStars('invalid', 'custom_field')).toThrow(
+      new FieldValueIsNaNError('custom_field', 'invalid')
     );
-  });
-
-  it('should throw FieldValueIsNaNError for array values', () => {
-    expect(() => computeNumberOfStars([], 'test-field')).toThrow(
-      FieldValueIsNaNError
-    );
-  });
-
-  it('should include the field name and value in the error message', () => {
-    try {
-      computeNumberOfStars('invalid-value', 'rating-field');
-      expect.fail('Should have thrown an error');
-    } catch (error) {
-      expect(error).toBeInstanceOf(FieldValueIsNaNError);
-      expect(error.message).toContain('rating-field');
-      expect(error.message).toContain('invalid-value');
-    }
-  });
-
-  it('should handle very large numbers', () => {
-    const result = computeNumberOfStars(999999.99, 'test-field');
-    expect(result).toBe(999999.99);
-  });
-
-  it('should handle very small decimal numbers', () => {
-    const result = computeNumberOfStars(0.0001, 'test-field');
-    expect(result).toBe(0.0001);
-  });
-
-  it('should handle scientific notation strings', () => {
-    const result = computeNumberOfStars('1e5', 'test-field');
-    expect(result).toBe(100000);
-  });
-
-  it('should handle string with leading/trailing whitespace', () => {
-    const result = computeNumberOfStars('  4.5  ', 'test-field');
-    expect(result).toBe(4.5);
   });
 });

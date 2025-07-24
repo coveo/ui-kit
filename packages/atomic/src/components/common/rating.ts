@@ -11,6 +11,8 @@ interface RatingProps {
   iconSize?: number;
 }
 
+export type {RatingProps};
+
 export const renderRating: FunctionalComponent<RatingProps> = ({props}) => {
   const width =
     ((props.numberOfActiveIcons / props.numberOfTotalIcons) * 100).toString() +

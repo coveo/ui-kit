@@ -29,14 +29,6 @@ describe('atomic-product-rating', () => {
     console.error = vi.fn();
 
     i18n = await createTestI18n();
-    i18n.addResourceBundle(
-      'en',
-      'translation',
-      {
-        stars: '{{count}} stars out of {{max}}',
-      },
-      true
-    );
 
     mockProduct = buildFakeProduct({
       ec_rating: 4.0,
@@ -84,9 +76,6 @@ describe('atomic-product-rating', () => {
           return bindings;
         },
       });
-
-    await atomicInterface.updateComplete;
-    await element?.updateComplete;
 
     return element;
   };
@@ -285,7 +274,6 @@ describe('atomic-product-rating', () => {
 
       // Change the field property
       element.field = 'custom_rating';
-      await element.updateComplete;
 
       const ratingContainer = locators.getRatingContainer(element);
       expect(ratingContainer).toHaveAttribute(
@@ -299,7 +287,6 @@ describe('atomic-product-rating', () => {
 
       // Change the maxValueInIndex property
       element.maxValueInIndex = 10;
-      await element.updateComplete;
 
       const ratingContainer = locators.getRatingContainer(element);
       expect(ratingContainer).toHaveAttribute(

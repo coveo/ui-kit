@@ -1,26 +1,15 @@
-import {Canvas, ArgTypes, Meta, Title, Description, Stories, Subtitle} from '@storybook/blocks';
+import { Canvas, ArgTypes, Meta, Title, Description, Stories, Subtitle } from '@storybook/blocks';
 import * as AtomicProductRatingStories from './atomic-product-rating.new.stories';
+import { CanvasWithGithub } from '../../../../storybook-utils/documentation/canvas-with-github';
 
-<Meta of={AtomicProductRatingStories} />
+<Meta of={ AtomicProductRatingStories } />
 
 <Title />
-<Subtitle>
-  <Description />
-</Subtitle>
+<Subtitle><Description/></Subtitle>
 
-<Canvas
-  additionalActions={[
-    {
-      title: 'Open in GitHub',
-      onClick: () => {
-        window.open(
-          'https://github.com/coveo/ui-kit/blob/master/packages/atomic/src/components/commerce/atomic-product-rating/atomic-product-rating.ts',
-          '_blank'
-        );
-      },
-    },
-  ]}
-  of={AtomicProductRatingStories.Default}
+<CanvasWithGithub
+  of={ AtomicProductRatingStories.Default }
+  githubPath="commerce/atomic-product-rating/atomic-product-rating.ts"
 />
 
 ## Usage
@@ -36,64 +25,12 @@ This component is used within `atomic-product-template` components inside the pr
     <atomic-product-template>
       <template>
         <atomic-product-rating></atomic-product-rating>
-        <atomic-product-rating field="rating" max-value-in-index="10"></atomic-product-rating>
-        <atomic-product-rating icon="https://example.com/custom-icon.svg"></atomic-product-rating>
       </template>
     </atomic-product-template>
   </atomic-commerce-product-list>
   ...
 </atomic-commerce-interface>
 ```
-
-### Basic Usage
-
-To display the default product rating:
-
-```html
-<atomic-product-rating></atomic-product-rating>
-```
-
-### With Custom Field
-
-When the rating data is stored in a different field:
-
-```html
-<atomic-product-rating field="custom_rating_field"></atomic-product-rating>
-```
-
-### With Rating Details
-
-To display additional rating information (like number of reviews):
-
-```html
-<atomic-product-rating rating-details-field="ec_rating_count"></atomic-product-rating>
-```
-
-### With Custom Maximum Value
-
-When your rating system uses a different scale than the default 5-star system:
-
-```html
-<atomic-product-rating max-value-in-index="10"></atomic-product-rating>
-```
-
-### With Custom Icon
-
-To use a different icon instead of the default star:
-
-```html
-<atomic-product-rating icon="https://example.com/custom-rating-icon.svg"></atomic-product-rating>
-```
-
-### Rating Calculation
-
-The component automatically calculates the percentage width for the active (filled) icons based on:
-- The rating value from the specified field
-- The maximum value (default: 5, or specified via `max-value-in-index`)
-
-For example, a rating of 3.5 out of 5 will show 70% filled icons.
-
-## Examples
 
 <Stories title={""} />
 
