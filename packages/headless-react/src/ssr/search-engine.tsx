@@ -23,7 +23,7 @@ export type ReactSearchEngineDefinition<
 > = ReactEngineDefinition<SearchEngine, TControllers, SearchEngineOptions>;
 
 // Wrapper to workaround the limitation that `createContext()` cannot be called directly during SSR in next.js
-export function createSingletonContext<
+function createSingletonContext<
   TControllers extends ControllerDefinitionsMap<SearchEngine, Controller>,
 >() {
   return singleton(() =>
