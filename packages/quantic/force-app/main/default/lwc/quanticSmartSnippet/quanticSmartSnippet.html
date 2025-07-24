@@ -6,10 +6,10 @@
   <template lwc:else>
     <template if:true={answerFound}>
       <div class="smart-snippet slds-var-m-bottom_xx-small">
-        <lightning-card data-cy="smart-snippet-card" title={question}>
+        <lightning-card title={question}>
           <div class="slds-p-horizontal_medium slds-p-top_small slds-border_top">
             <div class="slds-var-m-bottom_small">
-              <div data-cy="expandable-smart-snippet-answer" class={expandableAnswerClass}>
+              <div class={expandableAnswerClass}>
                 <c-quantic-smart-snippet-answer answer={answer}
                   actions={smartSnippetAnswerActions}></c-quantic-smart-snippet-answer>
               </div>
