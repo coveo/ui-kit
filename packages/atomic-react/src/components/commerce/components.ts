@@ -156,24 +156,6 @@ export const AtomicCommerceText = createComponent({
   elementClass: LitAtomicCommerceText,
 });
 
-export const AtomicProduct = createComponent({
-  tagName: 'atomic-product',
-  react: React,
-  elementClass: LitAtomicProduct,
-});
-
-export const AtomicProductChildren = createComponent({
-  tagName: 'atomic-product-children',
-  react: React,
-  elementClass: LitAtomicProductChildren,
-});
-
-export const AtomicProductText = createComponent({
-  tagName: 'atomic-product-text',
-  react: React,
-  elementClass: LitAtomicProductText,
-});
-
 export const AtomicComponentError = createComponent({
   tagName: 'atomic-component-error',
   react: React,
@@ -190,4 +172,22 @@ export const AtomicLayoutSection = createComponent({
   tagName: 'atomic-layout-section',
   react: React,
   elementClass: LitAtomicLayoutSection,
+});
+
+export const AtomicProduct = createComponent({
+  tagName: 'atomic-product',
+  react: React,
+  elementClass: LitAtomicProduct,
+});
+
+export const AtomicProductChildren = createComponent({
+  tagName: 'atomic-product-children',
+  react: React,
+  elementClass: LitAtomicProductChildren,
+});
+
+export const AtomicProductText = createComponent({
+  tagName: 'atomic-product-text',
+  react: React,
+  elementClass: LitAtomicProductText,
 });
