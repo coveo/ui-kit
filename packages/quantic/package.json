@@ -11,12 +11,13 @@
     "url": "git+https://github.com/coveo/ui-kit.git"
   },
   "scripts": {
-    "test": "lwc-jest",
+    "test": "turbo run transit:test",
     "lint:check:tests": "eslint force-app/main/default/lwc/ --format junit -o reports/eslint.xml",
-    "lint:fix": "eslint force-app/main/default/lwc/ --format junit -o reports/eslint.xml --fix",
+    "lint:check": "eslint force-app/main/default/lwc/ && eslint force-app/examples/main/lwc/ && prettier \"force-app/{,**}/*.js\" --check && prettier \"force-app/{,**}/*.{js}\" --check",
+    "lint:fix": "eslint --fix force-app/main/default/lwc/ && eslint --fix force-app/examples/main/lwc/ && prettier \"force-app/{,**}/*.js\" --write",
     "lint:fix:apex": "prettier \"force-app/{,**}/*.{cls,trigger}\" --write",
     "build:staticresources": "node build-static-resources.js",
-    "build": "npm run babel:headless && npm run build:staticresources && npm run build:doc",
+    "build": "turbo run transit:build",
     "dev": "npx rimraf .localdevserver && npm run build:staticresources && npm run dev:sfdx",
     "dev:sfdx": "sf project deploy start --source-dir force-app/main && sfdx force:lightning:lwc:start --port 3334",
     "test:unit": "lwc-jest",

@@ -1,0 +1,56 @@
+{
+  "extends": ["//"],
+  "tasks": {
+    "transit:build": {
+      "dependsOn": [
+        "build:staticresources",
+        "build:docs",
+        "babel:headless"
+      ],
+      "outputs":[]
+    },
+    "build:staticresources": {
+      "dependsOn": ["^build"],
+      "outputs": [
+        "./force-app/main/default/staticresources/coveobueno",
+        "./force-app/main/default/staticresources/coveoheadless",
+        "./force-app/main/default/staticresources/dompurify",
+        "./force-app/main/default/staticresources/marked"
+      ]
+    },
+    "build:docs": {
+      "dependsOn": ["^build"],
+      "outputs": ["./docs/out"]
+    },
+    "babel:headless": {
+      "dependsOn": ["^build"],
+      "outputs": [
+        "./tmp/quantic-compiled"
+      ]
+    },
+    "promote:sfdx": {
+      "dependsOn": ["build"],
+      "outputs": []
+    },
+    "promote:sfdx:ci": {
+      "dependsOn": ["build"],
+      "outputs": []
+    },
+    "transit:test": {
+      "outputs": [],
+      "dependsOn": ["test:unit", "lint:check:tests", "validate:types"]
+    },
+    "test:unit": {
+      "dependsOn": ["build"],
+      "outputs": []
+    },
+    "validate:types": {
+      "dependsOn": ["build"],
+      "outputs": []
+    },
+    "lint:check:tests": {
+      "dependsOn": ["build"],
+      "outputs": []
+    }
+  }
+}
