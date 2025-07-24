@@ -1,5 +1,6 @@
-import {bindStateToController} from '@/src/decorators/bind-state';
+import {bindingGuard} from '@/src/decorators/binding-guard';
 import {bindings} from '@/src/decorators/bindings';
+import {errorGuard} from '@/src/decorators/error-guard';
 import type {InitializableComponent} from '@/src/decorators/types';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles.js';
 import {NumberValue, Schema} from '@coveo/bueno';
@@ -14,22 +15,20 @@ import type {
   CategoryFacet,
   DateFacet,
   NumericFacet,
-  FacetGeneratorState,
   SearchSummaryState,
   ProductListingSummaryState,
 } from '@coveo/headless/commerce';
-import {provide} from '@lit/context';
 import {html, LitElement, nothing} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {map} from 'lit/directives/map.js';
 import {when} from 'lit/directives/when.js';
+import '../../common/facets/atomic-facet-placeholder/atomic-facet-placeholder';
 import {createAppLoadedListener} from '../../common/interface/store';
 import '../atomic-commerce-category-facet/atomic-commerce-category-facet';
 import '../atomic-commerce-facet/atomic-commerce-facet';
 import type {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface';
 import '../atomic-commerce-numeric-facet/atomic-commerce-numeric-facet';
 import '../atomic-commerce-timeframe-facet/atomic-commerce-timeframe-facet';
-import {commerceContext, type CommerceContext} from '../commerce-context';
 
 /**
  * The `atomic-commerce-facets` component automatically renders commerce facets based on the Commerce API response.
@@ -52,10 +51,6 @@ export class AtomicCommerceFacets
   public facetGenerator!: FacetGenerator;
   public summary!: Summary<SearchSummaryState | ProductListingSummaryState>;
 
-  // TODO: try to use the commerce Context values if it is easier
-  @provide({context: commerceContext})
-  public commerceContextValue!: CommerceContext;
-
   /**
    * The maximum number of facets to expand.
    * Remaining facets are automatically collapsed.
@@ -66,10 +61,6 @@ export class AtomicCommerceFacets
   @property({reflect: true, attribute: 'collapse-facets-after', type: Number})
   public collapseFacetsAfter = 4;
 
-  @bindStateToController('facetGenerator')
-  @state()
-  public facetGeneratorState!: FacetGeneratorState;
-
   @state() private isAppLoaded = false;
 
   public initialize() {
@@ -78,13 +69,6 @@ export class AtomicCommerceFacets
     const controller = this.controllerBuilder(engine);
     this.facetGenerator = controller.facetGenerator();
     this.summary = controller.summary();
-
-    // Provide context to child components
-    this.commerceContextValue = {
-      summary: this.summary,
-      facetGenerator: this.facetGenerator,
-    };
-
     createAppLoadedListener(this.bindings.store, (isAppLoaded) => {
       this.isAppLoaded = isAppLoaded;
     });
@@ -119,34 +103,13 @@ export class AtomicCommerceFacets
       : true;
   }
 
-  // TODO: create Placeholder render function
   private renderFacetPlaceholders() {
-    const placeholderCount =
-      this.collapseFacetsAfter > 0 ? this.collapseFacetsAfter : 4;
-    const placeholders = Array.from({length: placeholderCount});
-
     return map(
-      placeholders,
-      () => html`
-        <div
-          part="placeholder"
-          class="bg-background border-neutral mb-4 animate-pulse rounded-lg border p-7"
-          aria-hidden="true"
-        >
-          <div class="bg-neutral h-8 rounded" style="width: 75%;"></div>
-          <div class="mt-7">
-            ${map(
-              Array.from({length: 8}),
-              () => html`
-                <div
-                  class="bg-neutral mt-4 flex h-5"
-                  style="width: 100%; opacity: 0.5;"
-                ></div>
-              `
-            )}
-          </div>
-        </div>
-      `
+      Array.from({length: this.collapseFacetsAfter}),
+      () =>
+        html`<atomic-facet-placeholder
+          value-count="8"
+        ></atomic-facet-placeholder>`
     );
   }
 
@@ -158,7 +121,6 @@ export class AtomicCommerceFacets
 
       const isCollapsed = this.shouldCollapseFacet(index);
 
-      // TODO: find a way to avoid passing complex objects
       switch (facet.state.type) {
         case 'regular':
           return html`<atomic-commerce-facet
@@ -197,12 +159,14 @@ export class AtomicCommerceFacets
     });
   }
 
+  @bindingGuard()
+  @errorGuard()
   render() {
-    return when(
+    return html`${when(
       this.isAppLoaded,
       () => this.renderFacets(),
       () => this.renderFacetPlaceholders()
-    );
+    )}`;
   }
 }
 
