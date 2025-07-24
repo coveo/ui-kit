@@ -9,11 +9,13 @@ import {Button} from '../../../common/stencil-button';
 import {AnyBindings} from '../../interface/bindings';
 
 /**
+ * @deprecated
+ * Use `atomic-facet-date-input` instead. This component is meant to be used with Stencil components only.
  * Internal component made to be integrated in a TimeframeFacet.
  * @internal
  */
 @Component({
-  tag: 'atomic-facet-date-input',
+  tag: 'atomic-stencil-facet-date-input',
   shadow: false,
 })
 export class FacetDateInput {

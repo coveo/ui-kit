@@ -90,7 +90,7 @@ export class AtomicCommerceFacet
    */
   @property({type: Object}) public facet!: RegularFacet;
   /**
-   * Specifies whether the facet is collapsed.
+   * Whether the facet is collapsed.
    */
   @property({
     type: Boolean,
@@ -110,7 +110,10 @@ export class AtomicCommerceFacet
   @state()
   public summaryState!: SearchSummaryState | ProductListingSummaryState;
 
-  @state() public facetState!: RegularFacetState;
+  @bindStateToController('facet')
+  @state()
+  public facetState!: RegularFacetState;
+
   @state() public error!: Error;
 
   static styles: CSSResultGroup = [unsafeCSS(styles)];
