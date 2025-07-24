@@ -25,5 +25,6 @@ export {AtomicProductChildren} from './atomic-product-children/atomic-product-ch
 export {AtomicProductExcerpt} from './atomic-product-excerpt/atomic-product-excerpt.js';
 export {AtomicProductNumericFieldValue} from './atomic-product-numeric-field-value/atomic-product-numeric-field-value.js';
 export {AtomicProductPrice} from './atomic-product-price/atomic-product-price.js';
+export {AtomicProductRating} from './atomic-product-rating/atomic-product-rating.js';
 export {AtomicProductTemplate} from './atomic-product-template/atomic-product-template.js';
 export {AtomicProductText} from './atomic-product-text/atomic-product-text.js';

@@ -28,6 +28,7 @@ import {
   AtomicProductExcerpt as LitAtomicProductExcerpt,
   AtomicProductNumericFieldValue as LitAtomicProductNumericFieldValue,
   AtomicProductPrice as LitAtomicProductPrice,
+  AtomicProductRating as LitAtomicProductRating,
   AtomicProductText as LitAtomicProductText,
 } from '@coveo/atomic/components';
 import {createComponent} from '@lit/react';
@@ -187,6 +188,12 @@ export const AtomicProductPrice = createComponent({
   tagName: 'atomic-product-price',
   react: React,
   elementClass: LitAtomicProductPrice,
+});
+
+export const AtomicProductRating = createComponent({
+  tagName: 'atomic-product-rating',
+  react: React,
+  elementClass: LitAtomicProductRating,
 });
 
 export const AtomicProductText = createComponent({

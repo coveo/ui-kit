@@ -1679,29 +1679,6 @@ export namespace Components {
         "maxValuesToDisplay": number;
     }
     /**
-     * The `atomic-product-rating` element renders a star rating.
-     * @alpha 
-     */
-    interface AtomicProductRating {
-        /**
-          * The numerical field whose values you want to display as a rating.
-         */
-        "field": string;
-        /**
-          * The SVG icon to use to display the rating.  - Use a value that starts with `http://`, `https://`, `./`, or `../`, to fetch and display an icon from a given location. - Use a value that starts with `assets://`, to display an icon from the Atomic package. - Use a stringified SVG to display it directly.  When using a custom icon, at least part of your icon should have the color set to `fill="currentColor"`. This part of the SVG will take on the colors set in the following [variables](https://developer.mozilla.org/en-US/docs/Web/CSS/Using_CSS_custom_properties):  - `--atomic-rating-icon-active-color` - `--atomic-rating-icon-inactive-color`
-         */
-        "icon": string;
-        /**
-          * The maximum value of the field. This value is also used as the number of icons to be displayed.
-         */
-        "maxValueInIndex": number;
-        /**
-          * The field whose value you want to display next to the rating. This field can be used to display the number of reviews or the numerical value of the rating, for example.
-          * @type {string}
-         */
-        "ratingDetailsField"?: string;
-    }
-    /**
      * @alpha This section is intended to display components that allow the user to perform an action on a product without having to view its details.
      * In commerce interface, the user can usually add the product to their cart or wish list.
      * Behavior:
@@ -4175,16 +4152,6 @@ declare global {
         new (): HTMLAtomicProductMultiValueTextElement;
     };
     /**
-     * The `atomic-product-rating` element renders a star rating.
-     * @alpha 
-     */
-    interface HTMLAtomicProductRatingElement extends Components.AtomicProductRating, HTMLStencilElement {
-    }
-    var HTMLAtomicProductRatingElement: {
-        prototype: HTMLAtomicProductRatingElement;
-        new (): HTMLAtomicProductRatingElement;
-    };
-    /**
      * @alpha This section is intended to display components that allow the user to perform an action on a product without having to view its details.
      * In commerce interface, the user can usually add the product to their cart or wish list.
      * Behavior:
@@ -5259,7 +5226,6 @@ declare global {
         "atomic-product-image": HTMLAtomicProductImageElement;
         "atomic-product-link": HTMLAtomicProductLinkElement;
         "atomic-product-multi-value-text": HTMLAtomicProductMultiValueTextElement;
-        "atomic-product-rating": HTMLAtomicProductRatingElement;
         "atomic-product-section-actions": HTMLAtomicProductSectionActionsElement;
         "atomic-product-section-badges": HTMLAtomicProductSectionBadgesElement;
         "atomic-product-section-bottom-metadata": HTMLAtomicProductSectionBottomMetadataElement;
@@ -6907,29 +6873,6 @@ declare namespace LocalJSX {
         "maxValuesToDisplay"?: number;
     }
     /**
-     * The `atomic-product-rating` element renders a star rating.
-     * @alpha 
-     */
-    interface AtomicProductRating {
-        /**
-          * The numerical field whose values you want to display as a rating.
-         */
-        "field"?: string;
-        /**
-          * The SVG icon to use to display the rating.  - Use a value that starts with `http://`, `https://`, `./`, or `../`, to fetch and display an icon from a given location. - Use a value that starts with `assets://`, to display an icon from the Atomic package. - Use a stringified SVG to display it directly.  When using a custom icon, at least part of your icon should have the color set to `fill="currentColor"`. This part of the SVG will take on the colors set in the following [variables](https://developer.mozilla.org/en-US/docs/Web/CSS/Using_CSS_custom_properties):  - `--atomic-rating-icon-active-color` - `--atomic-rating-icon-inactive-color`
-         */
-        "icon"?: string;
-        /**
-          * The maximum value of the field. This value is also used as the number of icons to be displayed.
-         */
-        "maxValueInIndex"?: number;
-        /**
-          * The field whose value you want to display next to the rating. This field can be used to display the number of reviews or the numerical value of the rating, for example.
-          * @type {string}
-         */
-        "ratingDetailsField"?: string;
-    }
-    /**
      * @alpha This section is intended to display components that allow the user to perform an action on a product without having to view its details.
      * In commerce interface, the user can usually add the product to their cart or wish list.
      * Behavior:
@@ -8533,7 +8476,6 @@ declare namespace LocalJSX {
         "atomic-product-image": AtomicProductImage;
         "atomic-product-link": AtomicProductLink;
         "atomic-product-multi-value-text": AtomicProductMultiValueText;
-        "atomic-product-rating": AtomicProductRating;
         "atomic-product-section-actions": AtomicProductSectionActions;
         "atomic-product-section-badges": AtomicProductSectionBadges;
         "atomic-product-section-bottom-metadata": AtomicProductSectionBottomMetadata;
@@ -8871,11 +8813,6 @@ declare module "@stencil/core" {
              * @alpha The `atomic-product-multi-value-text` component renders the values of a multi-value string field.
              */
             "atomic-product-multi-value-text": LocalJSX.AtomicProductMultiValueText & JSXBase.HTMLAttributes<HTMLAtomicProductMultiValueTextElement>;
-            /**
-             * The `atomic-product-rating` element renders a star rating.
-             * @alpha 
-             */
-            "atomic-product-rating": LocalJSX.AtomicProductRating & JSXBase.HTMLAttributes<HTMLAtomicProductRatingElement>;
             /**
              * @alpha This section is intended to display components that allow the user to perform an action on a product without having to view its details.
              * In commerce interface, the user can usually add the product to their cart or wish list.
