@@ -46,6 +46,10 @@ export default {
     await import(
       './atomic-commerce-sort-dropdown/atomic-commerce-sort-dropdown.js'
     ),
+  'atomic-commerce-timeframe-facet': async () =>
+    await import(
+      './atomic-commerce-timeframe-facet/atomic-commerce-timeframe-facet.js'
+    ),
   'atomic-product': async () =>
     await import('./atomic-product/atomic-product.js'),
   'atomic-product-template': async () =>
