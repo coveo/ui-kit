@@ -16,7 +16,7 @@ runs:
     #   with:
     #     browser: chrome
     #     command-prefix: 'npx -w @coveo/atomic-vuejs-samples cypress-repeat run -n 3 --until-passes --rerun-failed-only --'
-    #     start: turbo dev --filter=atomic-vuejs-samples
+    #     start: turbo @coveo/atomic-vuejs-samples#dev
     #     wait-on: 'http://[::1]:5173'
     #     wait-on-timeout: 600000
     #     install: false

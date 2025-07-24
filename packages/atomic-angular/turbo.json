@@ -3,9 +3,7 @@
   "tasks": {
     "build": {
       "dependsOn": ["^build"],
-      "outputs": [
-        "./projects/atomic-angular/**/*"
-      ]
+      "outputs": ["./projects/atomic-angular/**/*"]
     }
   }
 }

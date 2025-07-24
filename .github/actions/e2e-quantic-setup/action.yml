@@ -10,7 +10,7 @@ inputs:
 runs:
   using: composite
   steps:
-    - run: turbo build --filter=quantic
+    - run: turbo build --filter=@coveo/quantic
       shell: bash
     - run: |
         echo "${{ inputs.jwtkey }}" > server.key

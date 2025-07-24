@@ -46,7 +46,7 @@ export default defineConfig({
   webServer: process.env.CI
     ? {
         command: isCDN
-          ? 'npm run serve --filter=cdn'
+          ? 'npm run serve -w=@coveo/cdn'
           : 'npx ws -d ./dist-storybook -p 4400',
 
         stdout: 'pipe',

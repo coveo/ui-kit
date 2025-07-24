@@ -139,7 +139,7 @@ export class AtomicResultComponent {
 To generate a new component, use the following command:
 
 ```bash
-npm run generate-component --filter=atomic -- --name=<component-name> --output=<path-to-output-directory>
+npm run generate-component -w=@coveo/atomic -- --name=<component-name> --output=<path-to-output-directory>
 ```
 
 The `output` argument is optional. If not provided, it will default to `src/components/commerce`.
@@ -147,7 +147,7 @@ The `output` argument is optional. If not provided, it will default to `src/comp
 For example, to generate a component named `atomic-ball`, run:
 
 ```bash
-npm run generate-component --filter=atomic -- --name=ball
+npm run generate-component -w=@coveo/atomic -- --name=ball
 ```
 
 This will create the necessary component files under the default path `src/components/commerce/atomic-ball`.
@@ -155,7 +155,7 @@ This will create the necessary component files under the default path `src/compo
 If you'd like to specify a different path, you can use the `--output` flag. For example, to generate the component under `src/components/search`, run:
 
 ```bash
-npm run generate-component --filter=atomic -- --name=ball --output=src/components/search
+npm run generate-component -w=@coveo/atomic -- --name=ball --output=src/components/search
 ```
 
 You can also use `--name=atomic-ball` if you'd like, but the script will automatically add the "atomic" prefix if necessary.

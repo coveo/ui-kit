@@ -16,7 +16,7 @@ runs:
       with:
         browser: chrome
         command-prefix: 'npx -w @coveo/atomic-stencil-samples cypress-repeat run -n 3 --until-passes --rerun-failed-only --'
-        start: turbo dev --filter=atomic-stencil-samples
+        start: turbo dev --filter=@coveo/atomic-stencil-samples
         wait-on: 'http://localhost:3666'
         wait-on-timeout: 600000
         install: false

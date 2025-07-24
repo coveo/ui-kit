@@ -83,7 +83,7 @@ export default defineConfig({
       stderr: 'pipe',
     },
     isCDN && {
-      command: 'npm run serve --filter=cdn',
+      command: 'npm run serve -w=@coveo/cdn',
       timeout: 10 * 60e3,
       port: 3000,
       reuseExistingServer: !process.env.CI,
