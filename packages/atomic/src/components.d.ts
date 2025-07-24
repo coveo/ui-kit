@@ -1579,23 +1579,6 @@ export namespace Components {
     interface AtomicPopover {
     }
     /**
-     * @alpha The `atomic-product-description` component renders the description of a product.
-     */
-    interface AtomicProductDescription {
-        /**
-          * The name of the description field to use.
-         */
-        "field": 'ec_description' | 'ec_shortdesc';
-        /**
-          * Whether the description should be collapsible after being expanded.
-         */
-        "isCollapsible": boolean;
-        /**
-          * The number of lines after which the product description should be truncated. A value of "none" will disable truncation.
-         */
-        "truncateAfter": TruncateAfter;
-    }
-    /**
      * @alpha The `atomic-product-excerpt` component renders the excerpt of a product generated at query time.
      */
     interface AtomicProductExcerpt {
@@ -4145,15 +4128,6 @@ declare global {
         new (): HTMLAtomicPopoverElement;
     };
     /**
-     * @alpha The `atomic-product-description` component renders the description of a product.
-     */
-    interface HTMLAtomicProductDescriptionElement extends Components.AtomicProductDescription, HTMLStencilElement {
-    }
-    var HTMLAtomicProductDescriptionElement: {
-        prototype: HTMLAtomicProductDescriptionElement;
-        new (): HTMLAtomicProductDescriptionElement;
-    };
-    /**
      * @alpha The `atomic-product-excerpt` component renders the excerpt of a product generated at query time.
      */
     interface HTMLAtomicProductExcerptElement extends Components.AtomicProductExcerpt, HTMLStencilElement {
@@ -5290,7 +5264,6 @@ declare global {
         "atomic-numeric-range": HTMLAtomicNumericRangeElement;
         "atomic-pager": HTMLAtomicPagerElement;
         "atomic-popover": HTMLAtomicPopoverElement;
-        "atomic-product-description": HTMLAtomicProductDescriptionElement;
         "atomic-product-excerpt": HTMLAtomicProductExcerptElement;
         "atomic-product-field-condition": HTMLAtomicProductFieldConditionElement;
         "atomic-product-image": HTMLAtomicProductImageElement;
@@ -6856,23 +6829,6 @@ declare namespace LocalJSX {
      * The `atomic-popover` component displays any facet as a popover menu.
      */
     interface AtomicPopover {
-    }
-    /**
-     * @alpha The `atomic-product-description` component renders the description of a product.
-     */
-    interface AtomicProductDescription {
-        /**
-          * The name of the description field to use.
-         */
-        "field"?: 'ec_description' | 'ec_shortdesc';
-        /**
-          * Whether the description should be collapsible after being expanded.
-         */
-        "isCollapsible"?: boolean;
-        /**
-          * The number of lines after which the product description should be truncated. A value of "none" will disable truncation.
-         */
-        "truncateAfter"?: TruncateAfter;
     }
     /**
      * @alpha The `atomic-product-excerpt` component renders the excerpt of a product generated at query time.
@@ -8584,7 +8540,6 @@ declare namespace LocalJSX {
         "atomic-numeric-range": AtomicNumericRange;
         "atomic-pager": AtomicPager;
         "atomic-popover": AtomicPopover;
-        "atomic-product-description": AtomicProductDescription;
         "atomic-product-excerpt": AtomicProductExcerpt;
         "atomic-product-field-condition": AtomicProductFieldCondition;
         "atomic-product-image": AtomicProductImage;
@@ -8906,10 +8861,6 @@ declare module "@stencil/core" {
              * The `atomic-popover` component displays any facet as a popover menu.
              */
             "atomic-popover": LocalJSX.AtomicPopover & JSXBase.HTMLAttributes<HTMLAtomicPopoverElement>;
-            /**
-             * @alpha The `atomic-product-description` component renders the description of a product.
-             */
-            "atomic-product-description": LocalJSX.AtomicProductDescription & JSXBase.HTMLAttributes<HTMLAtomicProductDescriptionElement>;
             /**
              * @alpha The `atomic-product-excerpt` component renders the excerpt of a product generated at query time.
              */

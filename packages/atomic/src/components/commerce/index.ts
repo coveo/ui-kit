@@ -22,6 +22,7 @@ export {AtomicCommerceSortDropdown} from './atomic-commerce-sort-dropdown/atomic
 export {AtomicCommerceText} from './atomic-commerce-text/atomic-commerce-text.js';
 export {AtomicProduct} from './atomic-product/atomic-product.js';
 export {AtomicProductChildren} from './atomic-product-children/atomic-product-children.js';
+export {AtomicProductDescription} from './atomic-product-description/atomic-product-description.js';
 export {AtomicProductNumericFieldValue} from './atomic-product-numeric-field-value/atomic-product-numeric-field-value.js';
 export {AtomicProductTemplate} from './atomic-product-template/atomic-product-template.js';
 export {AtomicProductText} from './atomic-product-text/atomic-product-text.js';
