@@ -2,6 +2,7 @@ import {Schema, StringValue} from '@coveo/bueno';
 import type {Product} from '@coveo/headless/commerce';
 import {html, LitElement, nothing, unsafeCSS} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
+import {createRef} from 'lit/directives/ref.js';
 import {booleanConverter} from '@/src/converters/boolean-converter';
 import {bindingGuard} from '@/src/decorators/binding-guard';
 import {bindings} from '@/src/decorators/bindings';
@@ -42,8 +43,9 @@ export class AtomicProductExcerpt
   @state() private isExpanded = false;
   @state() private isTruncated = false;
 
-  private excerptText!: HTMLDivElement;
   private resizeObserver: ResizeObserver;
+  private excerptRef = createRef<HTMLDivElement>();
+
   /**
    * The number of lines after which the product excerpt should be truncated. A value of "none" will disable truncation.
    */
@@ -60,20 +62,15 @@ export class AtomicProductExcerpt
   })
   public isCollapsible = false;
 
-  public initialize() {
-    this.validateProps();
-  }
+  public initialize() {}
 
   constructor() {
     super();
     this.resizeObserver = new ResizeObserver(() => {
-      if (
-        this.excerptText &&
-        this.excerptText.scrollHeight > this.excerptText.offsetHeight
-      ) {
-        this.isTruncated = true;
-      } else {
-        this.isTruncated = false;
+      if (this.excerptRef.value) {
+        this.isTruncated =
+          this.excerptRef.value.scrollHeight >
+          this.excerptRef.value.clientHeight;
       }
     });
   }
@@ -93,11 +90,11 @@ export class AtomicProductExcerpt
     if (changedProperties.has('truncateAfter')) {
       this.validateProps();
     }
-    this.excerptText = this?.querySelector(
-      '.expandable-text'
-    ) as HTMLDivElement;
-    if (this.excerptText) {
-      this.resizeObserver.observe(this.excerptText);
+  }
+
+  firstUpdated() {
+    if (this.excerptRef.value) {
+      this.resizeObserver.observe(this.excerptRef.value);
     }
   }
 
@@ -136,6 +133,7 @@ export class AtomicProductExcerpt
         showMoreLabel: this.bindings.i18n.t('show-more'),
         showLessLabel: this.bindings.i18n.t('show-less'),
         isCollapsible: this.isCollapsible,
+        textRef: this.excerptRef,
       },
     })(html`<atomic-product-text field="excerpt"></atomic-product-text>`)}`;
   }
