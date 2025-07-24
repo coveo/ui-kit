@@ -1692,16 +1692,6 @@ export namespace Components {
         "maxValuesToDisplay": number;
     }
     /**
-     * @alpha The `atomic-product-numeric-field-value` component renders the value of a number product field.
-     * The number can be formatted by adding a `atomic-format-number`, `atomic-format-currency` or `atomic-format-unit` component into this component.
-     */
-    interface AtomicProductNumericFieldValue {
-        /**
-          * The field that the component should use. The component will try to find this field in the `Product.additionalFields` object unless it finds it in the `Product` object first.
-         */
-        "field": string;
-    }
-    /**
      * @alpha The `atomic-product-price` component renders the price of a product.
      */
     interface AtomicProductPrice {
@@ -4212,16 +4202,6 @@ declare global {
         new (): HTMLAtomicProductMultiValueTextElement;
     };
     /**
-     * @alpha The `atomic-product-numeric-field-value` component renders the value of a number product field.
-     * The number can be formatted by adding a `atomic-format-number`, `atomic-format-currency` or `atomic-format-unit` component into this component.
-     */
-    interface HTMLAtomicProductNumericFieldValueElement extends Components.AtomicProductNumericFieldValue, HTMLStencilElement {
-    }
-    var HTMLAtomicProductNumericFieldValueElement: {
-        prototype: HTMLAtomicProductNumericFieldValueElement;
-        new (): HTMLAtomicProductNumericFieldValueElement;
-    };
-    /**
      * @alpha The `atomic-product-price` component renders the price of a product.
      */
     interface HTMLAtomicProductPriceElement extends Components.AtomicProductPrice, HTMLStencilElement {
@@ -5316,7 +5296,6 @@ declare global {
         "atomic-product-image": HTMLAtomicProductImageElement;
         "atomic-product-link": HTMLAtomicProductLinkElement;
         "atomic-product-multi-value-text": HTMLAtomicProductMultiValueTextElement;
-        "atomic-product-numeric-field-value": HTMLAtomicProductNumericFieldValueElement;
         "atomic-product-price": HTMLAtomicProductPriceElement;
         "atomic-product-rating": HTMLAtomicProductRatingElement;
         "atomic-product-section-actions": HTMLAtomicProductSectionActionsElement;
@@ -6979,16 +6958,6 @@ declare namespace LocalJSX {
         "maxValuesToDisplay"?: number;
     }
     /**
-     * @alpha The `atomic-product-numeric-field-value` component renders the value of a number product field.
-     * The number can be formatted by adding a `atomic-format-number`, `atomic-format-currency` or `atomic-format-unit` component into this component.
-     */
-    interface AtomicProductNumericFieldValue {
-        /**
-          * The field that the component should use. The component will try to find this field in the `Product.additionalFields` object unless it finds it in the `Product` object first.
-         */
-        "field": string;
-    }
-    /**
      * @alpha The `atomic-product-price` component renders the price of a product.
      */
     interface AtomicProductPrice {
@@ -8621,7 +8590,6 @@ declare namespace LocalJSX {
         "atomic-product-image": AtomicProductImage;
         "atomic-product-link": AtomicProductLink;
         "atomic-product-multi-value-text": AtomicProductMultiValueText;
-        "atomic-product-numeric-field-value": AtomicProductNumericFieldValue;
         "atomic-product-price": AtomicProductPrice;
         "atomic-product-rating": AtomicProductRating;
         "atomic-product-section-actions": AtomicProductSectionActions;
@@ -8965,11 +8933,6 @@ declare module "@stencil/core" {
              * @alpha The `atomic-product-multi-value-text` component renders the values of a multi-value string field.
              */
             "atomic-product-multi-value-text": LocalJSX.AtomicProductMultiValueText & JSXBase.HTMLAttributes<HTMLAtomicProductMultiValueTextElement>;
-            /**
-             * @alpha The `atomic-product-numeric-field-value` component renders the value of a number product field.
-             * The number can be formatted by adding a `atomic-format-number`, `atomic-format-currency` or `atomic-format-unit` component into this component.
-             */
-            "atomic-product-numeric-field-value": LocalJSX.AtomicProductNumericFieldValue & JSXBase.HTMLAttributes<HTMLAtomicProductNumericFieldValueElement>;
             /**
              * @alpha The `atomic-product-price` component renders the price of a product.
              */
