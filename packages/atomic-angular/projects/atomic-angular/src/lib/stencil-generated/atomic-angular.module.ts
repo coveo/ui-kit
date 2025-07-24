@@ -5,7 +5,6 @@ import {APP_INITIALIZER, ModuleWithProviders, NgModule, Provider} from '@angular
 
         
 import {
-AtomicAriaLive,
 AtomicCommerceBreadbox,
 AtomicCommerceDidYouMean,
 AtomicCommerceInterface,
@@ -147,7 +146,6 @@ AtomicTimeframeFacet
 
         
 const DECLARATIONS = [
-AtomicAriaLive,
 AtomicCommerceBreadbox,
 AtomicCommerceDidYouMean,
 AtomicCommerceInterface,
