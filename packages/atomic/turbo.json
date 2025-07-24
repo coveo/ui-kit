@@ -2,12 +2,27 @@
   "extends": ["//"],
   "tasks": {
     "build": {
-      "dependsOn": ["build:storybook"],
+      "dependsOn": [
+        "build:storybook",
+        "build:angular",
+        "build:react",
+        "build:stencil-lit",
+        "build:locales",
+        "build:list-assets"
+      ],
       "outputs": []
     },
     "build:storybook": {
       "dependsOn": ["build:cem", "build:list-assets"],
       "outputs": ["./dist-storybook"]
+    },
+    "build:angular": {
+      "dependsOn": ["build:cem"],
+      "outputs": ["./projects/atomic-angular/**/*"]
+    },
+    "build:react": {
+      "dependsOn": ["build:cem"],
+      "outputs": ["./projects/atomic-react/**/*"]
     },
     "build:cem": {
       "dependsOn": ["build:stencil-lit"],
