@@ -2,10 +2,10 @@ import {randomUUID} from 'node:crypto';
 import type {NavigatorContext} from '@coveo/headless-react/ssr-commerce';
 import {coveo_capture, coveo_visitorId} from '../app/cookies.server';
 
-export interface CoveoAnalyticsContext
+interface CoveoAnalyticsContext
   extends Required<Pick<NavigatorContext, 'clientId' | 'capture'>> {}
 
-export type SetCookieHeader = {'Set-Cookie': string} | Record<string, never>;
+type SetCookieHeader = {'Set-Cookie': string} | Record<string, never>;
 
 /**
  * Determines whether analytics data should be captured by Coveo requests, based on the provided request object.

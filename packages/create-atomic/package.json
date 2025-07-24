@@ -1,7 +1,7 @@
 {
   "name": "@coveo/create-atomic",
   "description": "Coveo Atomic Generator",
-  "version": "1.40.10",
+  "version": "1.40.11",
   "files": [
     "/lib",
     "/template",
@@ -41,14 +41,14 @@
     "abortcontroller-polyfill": "1.7.5",
     "detect-indent": "7.0.1",
     "https-proxy-agent": "5.0.1",
-    "inquirer": "9.2.0",
+    "inquirer": "9.3.7",
     "isomorphic-fetch": "3.0.0",
     "minimist": "1.2.8",
-    "node-plop": "^0.31.0",
+    "node-plop": "^0.32.0",
     "plop": "3.1.2"
   },
   "devDependencies": {
-    "fs-extra": "11.1.1",
+    "fs-extra": "11.3.0",
     "typescript": "5.8.3"
   }
 }

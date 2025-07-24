@@ -20,8 +20,20 @@ const externalizeDependenciesPlugin = () => {
           external: 'absolute',
         };
       }
-
       return null;
+    },
+    // TODO KIT-4574: This is hackish, we should find better way to handle this.
+    // (moduleSideEffects didn't work, maybe it'll work better with Lit only)
+    // Clean up side-effects imports from Headless & Bueno
+    renderChunk(code) {
+      const cleanedCode = code
+        .replaceAll(
+          /^\s*import\s+['"][^'"]*\/(headless|bueno)\/[^'"]*['"];?\s*$/gm,
+          ''
+        )
+        .replaceAll(/\n\s*\n/g, '\n'); // Clean up extra empty lines
+
+      return cleanedCode;
     },
   };
 };

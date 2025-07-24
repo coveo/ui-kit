@@ -14,7 +14,7 @@ import {
 export type StateNeededForPlanCommerceAPIRequest =
   StateNeededForBaseCommerceAPIRequest & CommerceQuerySection;
 
-export type CommercePlanRequest = BaseCommerceAPIRequest &
+type CommercePlanRequest = BaseCommerceAPIRequest &
   QueryParam &
   PageParam &
   PerPageParam;

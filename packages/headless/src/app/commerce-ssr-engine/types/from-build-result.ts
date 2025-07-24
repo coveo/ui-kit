@@ -2,7 +2,7 @@ import type {ControllersMap} from '../../ssr-engine/types/common.js';
 import type {SSRCommerceEngine} from '../factories/build-factory.js';
 import type {EngineDefinitionBuildResult} from './common.js';
 
-export interface FromBuildResultOptions<TControllers extends ControllersMap> {
+interface FromBuildResultOptions<TControllers extends ControllersMap> {
   /**
    * The build result of the engine
    */

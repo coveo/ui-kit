@@ -11,100 +11,55 @@
   // Enable back the plugin once https://github.com/webpro-nl/knip/issues/1154 is resolved.
   "biome": false,
   "workspaces": {
-    // The root workspace is the entry point for the monorepo scripts and tools.
     ".": {
       "entry": ["hooks/*.js", "scripts/**/*.{js,mjs}"],
       "ignoreDependencies": ["@commitlint/config-conventional"],
       "ignoreBinaries": ["ts-node", "dev"]
-      //   "ignore": ["**/*"]
     },
-
-    // Projects to enable back bunch by bunch.
-
-    // Modifying entry points and ignored files for certain packages.
     "packages/headless": {
-      //   "entry": ["src/*index.ts", "ponyfills/*.js"],
-      //   "ignoreDependencies": ["navigator.sendbeacon"]
-      "ignore": ["**/*"]
-    },
-    "packages/atomic-angular/projects/atomic-angular": {
-      //   "entry": ["src/public-api.ts"],
-      //   "ignore": ["src/lib/stencil-generated/**/*.ts"]
-      "ignore": ["**/*"]
+      "entry": ["src/*index.ts", "ponyfills/*.js"],
+      "ignoreDependencies": ["navigator.sendbeacon"]
     },
     "packages/atomic-hosted-page": {
-      //   "entry": [
-      //     "src/atomic-hosted-page.esm.ts",
-      //     "loader/index.js",
-      //     "dev/vite.config.ts"
-      //   ],
-      //   "ignore": ["cdn/**"]
-      "ignore": ["**/*"]
+      "entry": [
+        "src/atomic-hosted-page.esm.ts",
+        "loader/index.js",
+        "dev/vite.config.ts"
+      ],
+      "ignore": ["cdn/**"]
+    },
+    "packages/atomic-angular/projects/atomic-angular": {
+      "entry": ["src/public-api.ts"],
+      "ignore": ["src/lib/stencil-generated/**/*.ts"]
     },
     "packages/atomic-react": {
-      //   "entry": ["src/*index.ts"],
-      //   "ignore": ["src/components/stencil-generated/**/*.{ts,tsx}"]
-      "ignore": ["**/*"]
+      "entry": ["src/*index.ts"],
+      "ignore": ["src/components/stencil-generated/**/*.{ts,tsx}"]
     },
     "packages/headless-react": {
-      //   "ignoreDependencies": ["@types/react-dom", "@types/react"]
-      "ignore": ["**/*"]
-    },
-    "packages/documentation": {
-      //   "entry": ["**/assets/**/*.js", "**/lib/*.ts"]
-      "ignore": ["**/*"]
+      "ignoreDependencies": ["@types/react-dom", "@types/react", "jsdom"]
     },
     "packages/auth": {
-      //   "entry": ["src/auth.ts"],
-      "ignore": ["**/*"]
+      "entry": ["src/auth.ts"]
+    },
+    "packages/documentation": {
+      "entry": ["**/assets/**/*.js", "**/lib/*.ts"]
     },
     "packages/samples/headless-commerce-react": {
       // Can be removed once the deprecated controller is removed from headless.
-      //   "ignore": ["src/components/legacy-field-suggestions/**"]
-      "ignore": ["**/*"]
+      "ignore": ["src/components/legacy-field-suggestions/**"],
+      "ignoreDependencies": ["jsdom"]
     },
     "packages/samples/headless-react": {
-      //   "entry": ["server/server.tsx", "src/index.tsx"]
-      "ignore": ["**/*"]
-    },
-
-    "packages/samples/headless-commerce-ssr-remix": {
-      "ignore": ["**/*"]
-    },
-    "packages/samples/headless-ssr-commerce-nextjs": {
-      "ignore": ["**/*"]
+      "entry": ["server/server.tsx", "src/index.tsx"],
+      "ignoreDependencies": ["jsdom"]
     },
     "utils/ci": {
-      "ignore": ["**/*"]
-    },
-    "utils/cdn": {
-      "ignore": ["**/*"]
-    },
-    "packages/bueno": {
-      "ignore": ["**/*"]
-    },
-    "packages/samples/atomic-next": {
-      "ignore": ["**/*"]
-    },
-    "packages/samples/vuejs": {
-      "ignore": ["**/*"]
-    },
-    "packages/samples/atomic-react": {
-      "ignore": ["**/*"]
-    },
-    "packages/atomic-angular": {
-      "ignore": ["**/*"]
-    },
-    "packages/samples/angular": {
-      "ignore": ["**/*"]
-    },
-    "packages/shopify": {
-      "ignore": ["**/*"]
+      "ignoreDependencies": ["@types/conventional-changelog-writer"]
     },
 
-    // Disabling a bunch of packages since they cause issues with knip.
-    // Particularly, projects using stencil don't really have a proper entry point because of stencil's magic.
-    // We can enable some of those later.
+    // Projects to enable bunch by bunch.
+    // Projects using stencil don't really have a proper entry point because of stencil's magic so they have problems with knip.
     "packages/atomic": {
       "ignore": ["**/*"]
     },
@@ -112,6 +67,9 @@
       "ignore": ["**/*"]
     },
     "packages/create-atomic-template": {
+      "ignore": ["**/*"]
+    },
+    "packages/shopify": {
       "ignore": ["**/*"]
     },
     "packages/samples/stencil": {

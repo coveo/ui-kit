@@ -10,7 +10,6 @@ import type {InlineLink} from '../../smart-snippet/headless-smart-snippet-intera
 import {buildSmartSnippetInteractiveInlineLinks} from '../smart-snippet/headless-insight-smart-snippet-interactive-inline-links.js';
 import {buildInsightSmartSnippetInteractiveQuestions} from './headless-insight-smart-snippet-interactive-questions.js';
 
-export type {QuestionAnswerDocumentIdentifier} from '../../../api/search/search/question-answering.js';
 export type {
   CoreSmartSnippetQuestionsList,
   CoreSmartSnippetQuestionsListState,

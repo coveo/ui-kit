@@ -26,6 +26,7 @@ const mockBindings = () =>
   }) as Bindings;
 
 @customElement('test-element')
+// biome-ignore lint/correctness/noUnusedVariables: <used as an element>
 class TestElement
   extends InitializeBindingsMixin(LitElement)
   implements InitializableComponent<Bindings>

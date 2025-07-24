@@ -87,7 +87,7 @@ export interface QueryRankingExpressionWeights {
 
 export type TermWeightReport = Record<string, StemmedTermInformation>;
 
-export interface StemmedTermInformation {
+interface StemmedTermInformation {
   Weights: TermWeights | null;
   terms: Record<string, TermWeightsPerDocument>;
 }

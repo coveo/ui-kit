@@ -102,7 +102,7 @@ export class PlatformClient {
     options: PlatformClientCallOptions
   ) {
     const {origin, preprocessRequest, logger, requestMetadata} = options;
-    const {signal, ...withoutSignal} = defaultRequestOptions;
+    const {signal: _signal, ...withoutSignal} = defaultRequestOptions;
     const untaintedOutput: PlatformRequestOptions = clone(withoutSignal);
 
     try {
@@ -143,13 +143,6 @@ export function getOrganizationEndpoint(
     endpointType === 'platform' ? '' : `.${endpointType}`;
 
   return `https://${organizationId}${endpointTypePart}.org${environmentSuffix}.coveo.com`;
-}
-
-export function getAdministrationOrganizationEndpoint(
-  organizationId: string,
-  environment: PlatformEnvironment = 'prod'
-) {
-  return getOrganizationEndpoint(organizationId, environment, 'admin');
 }
 
 export function getSearchApiBaseUrl(

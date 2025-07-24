@@ -13,7 +13,6 @@ import {
 } from '../smart-snippet/headless-smart-snippet-interactive-inline-links.js';
 import {buildSmartSnippetInteractiveQuestions} from './headless-smart-snippet-interactive-questions.js';
 
-export type {QuestionAnswerDocumentIdentifier} from '../../api/search/search/question-answering.js';
 export type {
   CoreSmartSnippetQuestionsList,
   CoreSmartSnippetQuestionsListState,
