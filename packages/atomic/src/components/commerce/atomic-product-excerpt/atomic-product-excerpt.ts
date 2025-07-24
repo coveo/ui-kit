@@ -90,9 +90,6 @@ export class AtomicProductExcerpt
     if (changedProperties.has('truncateAfter')) {
       this.validateProps();
     }
-  }
-
-  firstUpdated() {
     if (this.excerptRef.value) {
       this.resizeObserver.observe(this.excerptRef.value);
     }
