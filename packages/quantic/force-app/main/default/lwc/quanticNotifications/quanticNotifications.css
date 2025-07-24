@@ -1,7 +1,3 @@
-:host {
-  min-width: 100%;
-}
-
 .notification {
   background-color: var(---lwc-colorBackgroundAlt, white);
   border: 1px solid var(--lwc-colorBackgroundToast, rgb(116, 116, 116));
