@@ -1,7 +1,7 @@
 import type {RecentResultsList as HeadlessRecentResultsList} from '@coveo/headless';
 import {useEffect, useState} from 'react';
 
-export interface RecentResultsProps {
+interface RecentResultsProps {
   controller: HeadlessRecentResultsList;
 }
 

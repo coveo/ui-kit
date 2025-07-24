@@ -7,7 +7,7 @@ import {
 import {Component, type ContextType, type PropsWithChildren} from 'react';
 import {AppContext} from '../../context/engine';
 
-export interface TabProps {
+interface TabProps {
   id: string;
   expression: string;
   active?: boolean;

@@ -24,6 +24,7 @@
     "@types/react-dom": "18.3.0",
     "@vitejs/plugin-react": "4.3.4",
     "typescript": "5.8.3",
-    "vite": "6.3.5"
+    "vite": "6.3.5",
+    "ncp": "2.0.0"
   }
 }

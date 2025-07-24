@@ -13,8 +13,6 @@
     "build": "tsc -p tsconfig.json"
   },
   "devDependencies": {
-    "@types/react": "18.3.20",
-    "@types/react-dom": "18.3.0",
     "typedoc": "0.28.7"
   }
 }
