@@ -8,6 +8,7 @@ import {randomID} from '../../../utils/utils';
 type Regions = {[regionName: string]: {assertive: boolean; message: string}};
 
 /**
+ * @internal
  * The `atomic-aria-live` component notifies screen readers of changes in the search and commerce interfaces.
  */
 @customElement('atomic-aria-live')
@@ -20,28 +21,13 @@ export class AtomicAriaLive extends LitElement {
   private messagesQueue = buildDebouncedQueue({delay: 500});
   private ariaLiveId!: string;
 
-  private get isInSupportedInterface() {
-    let element: Element | null = this as Element;
-    while (element) {
-      if (
-        element.tagName === 'ATOMIC-SEARCH-INTERFACE' ||
-        element.tagName === 'ATOMIC-COMMERCE-INTERFACE' ||
-        element.tagName === 'ATOMIC-COMMERCE-RECOMMENDATION-INTERFACE'
-      ) {
-        return true;
-      }
-      element = element.parentElement;
-    }
-    return false;
-  }
-
   connectedCallback() {
     super.connectedCallback();
     this.ariaLiveId = randomID('atomic-aria-live-');
 
     document.addEventListener(
       'atomic/accessibility/findAriaLive',
-      this.onFindAriaLive as EventListener
+      this.onFindAriaLive
     );
   }
 
@@ -50,16 +36,13 @@ export class AtomicAriaLive extends LitElement {
     this.messagesQueue.clear();
     document.removeEventListener(
       'atomic/accessibility/findAriaLive',
-      this.onFindAriaLive as EventListener
+      this.onFindAriaLive
     );
   }
 
   private onFindAriaLive = (event: Event) => {
     const customEvent = event as CustomEvent<FindAriaLiveEventArgs>;
-    const args = customEvent.detail;
-    if (!args.element || !this.isInSupportedInterface) {
-      args.element = this as unknown as AtomicAriaLive;
-    }
+    customEvent.detail.element = this;
   };
 
   /**
