@@ -13,53 +13,21 @@ import { CanvasWithGithub } from '../../../../storybook-utils/documentation/canv
 />
 
 ## Usage
-This section is intended to display some fields that are directly related to the name of the product.
-In commerce, this could be the product rating, which is tied to the nature of the product itself, rather than to the product's description.
 
-**Key Features:**
-- Has a very small font size to provide supplementary information without overwhelming the design
-- Is the closest element beneath the title section in the layout hierarchy
-- Typically contains ratings, reviews, brand information, or other product-specific metadata
-- Automatically hides when empty (no child content)
-
-### Example within a Product Template
+### Example within a product template
 ```html
 <atomic-commerce-product-list>
   <atomic-product-template>
     <template>
-      <atomic-product-section-visual>
-        <atomic-product-image field="ec_thumbnails"></atomic-product-image>
-      </atomic-product-section-visual>
-
-      <atomic-product-section-name>
-        <atomic-product-link class="font-bold"></atomic-product-link>
-      </atomic-product-section-name>
-
+      <!-- ... -->
       <atomic-product-section-metadata>
-        <atomic-product-rating field="ec_rating"></atomic-product-rating>
-        <span class="text-gray-500">(124 reviews)</span>
+        <span class="text-sm text-gray-500">SKU: WH-1000XM4</span>
       </atomic-product-section-metadata>
-
-      <atomic-product-section-emphasized>
-        <atomic-product-price currency="USD"></atomic-product-price>
-      </atomic-product-section-emphasized>
+      <!-- ... -->
     </template>
   </atomic-product-template>
 </atomic-commerce-product-list>
 ```
-
-### Common Use Cases
-- **Product Ratings**: Display star ratings and review counts
-- **Brand Information**: Show manufacturer or brand name
-- **Product Identifiers**: Display SKU, model numbers, or product codes
-- **Quality Indicators**: Show certifications, awards, or quality badges
-- **Social Proof**: Display number of purchases, popularity indicators
-
-### Styling Guidelines
-- Use small, subtle typography that doesn't compete with the product name
-- Maintain good contrast while keeping the text secondary to the main product information
-- Consider using icons or symbols (like stars for ratings) to convey information quickly
-- Group related metadata logically with appropriate spacing and separators
 
 ## Examples
 <Stories title={""}/>

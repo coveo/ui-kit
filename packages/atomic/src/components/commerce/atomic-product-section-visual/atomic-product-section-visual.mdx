@@ -13,54 +13,21 @@ import { CanvasWithGithub } from '../../../../storybook-utils/documentation/canv
 />
 
 ## Usage
-This section is intended to provide visual information about the product.
-In commerce, an image is a great shorthand for a product category and helps customers quickly identify and evaluate products.
 
-**Key Features:**
-- Has a fixed size that depends on the specified image size, the layout, the density, and the screen size
-- Child elements should take the available space for optimal visual presentation
-- Always maintains a 1:1 aspect ratio for consistent layout
-- Supports configurable image sizes through the `image-size` attribute
-- Automatically hides when empty (no child content)
-
-### Example within a Product Template
+### Example within a product template
 ```html
 <atomic-commerce-product-list>
   <atomic-product-template>
     <template>
-      <atomic-product-section-visual image-size="large">
+      <!-- ... -->
+      <atomic-product-section-visual>
         <atomic-product-image field="ec_thumbnails"></atomic-product-image>
       </atomic-product-section-visual>
-
-      <atomic-product-section-name>
-        <atomic-product-link class="font-bold"></atomic-product-link>
-      </atomic-product-section-name>
-
-      <atomic-product-section-emphasized>
-        <atomic-product-price currency="USD"></atomic-product-price>
-      </atomic-product-section-emphasized>
+      <!-- ... -->
     </template>
   </atomic-product-template>
 </atomic-commerce-product-list>
 ```
-
-### Image Size Options
-The `image-size` attribute controls the visual section size:
-- `small`: Compact size suitable for dense listings
-- `large`: Expanded size for better visual impact (default)
-
-### Styling Guidelines
-- Ensure child elements use the full available space: `width: 100%; height: 100%`
-- Use `object-fit: cover` for images to maintain aspect ratio while filling the container
-- Consider border radius for a polished appearance
-- Maintain good contrast and visual hierarchy
-- Use placeholder content or loading states for better user experience
-
-### Content Recommendations
-- Use high-quality product images that clearly show the item
-- Consider showing multiple angles or features in image carousels
-- Include badges or overlays sparingly to avoid cluttering the visual
-- Ensure images are optimized for web performance
 
 ## Examples
 <Stories title={""}/>

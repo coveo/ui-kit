@@ -1,4 +1,4 @@
-import { camelToDashCase } from './case.js';
+import { camelToDashCase } from './case';
 
 export const attachProps = (node: HTMLElement, newProps: any, oldProps: any = {}) => {
   // some test frameworks don't render DOM elements, so we test here to make sure we are dealing with DOM first
