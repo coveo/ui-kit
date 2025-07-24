@@ -76,6 +76,14 @@ export default {
     await import('./atomic-product/atomic-product.js'),
   'atomic-product-children': async () =>
     await import('./atomic-product-children/atomic-product-children.js'),
+  'atomic-product-numeric-field-value': async () =>
+    await import(
+      './atomic-product-numeric-field-value/atomic-product-numeric-field-value.js'
+    ),
+  'atomic-product-price': async () =>
+    await import('./atomic-product-price/atomic-product-price.js'),
+  'atomic-product-rating': async () =>
+    await import('./atomic-product-rating/atomic-product-rating.js'),
   'atomic-product-template': async () =>
     await import('./atomic-product-template/atomic-product-template.js'),
   'atomic-product-text': async () =>

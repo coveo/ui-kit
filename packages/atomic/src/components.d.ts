@@ -1692,8 +1692,6 @@ export namespace Components {
         "maxValuesToDisplay": number;
     }
     /**
-    }
-    /**
      * @alpha This section is intended to display components that allow the user to perform an action on a product without having to view its details.
      * In commerce interface, the user can usually add the product to their cart or wish list.
      * Behavior:
@@ -4174,8 +4172,6 @@ declare global {
     var HTMLAtomicProductMultiValueTextElement: {
         prototype: HTMLAtomicProductMultiValueTextElement;
         new (): HTMLAtomicProductMultiValueTextElement;
-    };
-    /**
     };
     /**
      * @alpha This section is intended to display components that allow the user to perform an action on a product without having to view its details.
@@ -6913,8 +6909,6 @@ declare namespace LocalJSX {
         "maxValuesToDisplay"?: number;
     }
     /**
-    }
-    /**
      * @alpha This section is intended to display components that allow the user to perform an action on a product without having to view its details.
      * In commerce interface, the user can usually add the product to their cart or wish list.
      * Behavior:
@@ -8860,7 +8854,6 @@ declare module "@stencil/core" {
              * @alpha The `atomic-product-multi-value-text` component renders the values of a multi-value string field.
              */
             "atomic-product-multi-value-text": LocalJSX.AtomicProductMultiValueText & JSXBase.HTMLAttributes<HTMLAtomicProductMultiValueTextElement>;
-            /**
             /**
              * @alpha This section is intended to display components that allow the user to perform an action on a product without having to view its details.
              * In commerce interface, the user can usually add the product to their cart or wish list.
