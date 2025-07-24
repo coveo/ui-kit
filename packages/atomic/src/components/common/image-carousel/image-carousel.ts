@@ -1,5 +1,4 @@
 import {html, nothing} from 'lit';
-import {when} from 'lit/directives/when.js';
 import type {FunctionalComponentWithChildren} from '@/src/utils/functional-component-utils';
 import ArrowRight from '../../../images/arrow-right.svg';
 import '../atomic-icon/atomic-icon';
@@ -74,19 +73,13 @@ export const renderImageCarousel: FunctionalComponentWithChildren<
 
   return (children) => {
     if (!children || children === nothing) {
-      return html``;
+      return nothing;
     }
-    return html`${when(
-      !!children,
-      () => html`
-      <div class="relative flex w-full min-w-full items-center justify-center">
+    return html` <div class="relative flex w-full min-w-full items-center justify-center">
         ${renderPreviousButton()}
         ${children}
         ${renderNextButton()}
         ${renderIndicators()}
-      </div>
-    `,
-      () => html``
-    )}`;
+      </div>`;
   };
 };

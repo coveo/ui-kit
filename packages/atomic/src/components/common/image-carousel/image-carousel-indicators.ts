@@ -35,15 +35,11 @@ export const renderCarouselIndicator: FunctionalComponent<
             );
 
         const isLastDisplayed =
-          index ===
-            Math.min(
-              currentImage + maxImagesBeforeAndAfter,
-              numberOfImages - 1
-            ) && index < numberOfImages - 1;
+          index === currentImage + maxImagesBeforeAndAfter &&
+          index < numberOfImages - 1;
 
         const isFirstDisplayed =
-          index === Math.max(0, currentImage - maxImagesBeforeAndAfter) &&
-          index > 0;
+          index === currentImage - maxImagesBeforeAndAfter && index > 0;
 
         return html`
           <li
