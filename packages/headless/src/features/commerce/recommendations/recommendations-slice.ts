@@ -6,6 +6,7 @@ import type {
   Product,
 } from '../../../api/commerce/common/product.js';
 import type {RecommendationsCommerceSuccessResponse} from '../../../api/commerce/recommendations/recommendations-response.js';
+import {setError} from '../../error/error-actions.js';
 import {
   fetchMoreRecommendations,
   fetchRecommendations,
@@ -121,6 +122,12 @@ export const recommendationsReducer = createReducer(
         };
 
         products.splice(currentParentIndex, 1, newParent);
+      })
+      .addCase(setError, (state, action) => {
+        //Don't know the slotId here, I need to take then all error.
+        Object.keys(state).forEach((slotId) => {
+          handleError(state, slotId, action.payload);
+        });
       });
   }
 );

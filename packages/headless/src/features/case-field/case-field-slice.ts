@@ -1,4 +1,5 @@
 import {createReducer} from '@reduxjs/toolkit';
+import {setError} from '../error/error-actions.js';
 import {
   fetchCaseClassifications,
   registerCaseField,
@@ -43,6 +44,10 @@ export const caseFieldReducer = createReducer(
       })
       .addCase(fetchCaseClassifications.pending, (state) => {
         state.status.loading = true;
+      })
+      .addCase(setError, (state, action) => {
+        state.status.error = action.payload;
+        state.status.loading = false;
       });
   }
 );
