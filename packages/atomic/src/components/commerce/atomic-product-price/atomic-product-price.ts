@@ -75,10 +75,8 @@ export class AtomicProductPrice
   }
 
   private get hasPromotionalPrice() {
-    if (!this.product) {
-      return false;
-    }
     return (
+      this.product! &&
       this.product.ec_promo_price !== null &&
       this.product.ec_price !== null &&
       this.product.ec_promo_price < this.product.ec_price
