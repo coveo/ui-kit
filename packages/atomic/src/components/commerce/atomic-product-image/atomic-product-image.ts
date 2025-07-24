@@ -24,6 +24,8 @@ type Image = {
  * @part product-image - The image element that displays the product image.
  * @part previous-button - The container for the previous image button in the carousel.
  * @part next-button - The container for the next image button in the carousel.
+ * @part next-icon - The icon for the next image button in the carousel.
+ * @part previous-icon - The icon for the previous image button in the carousel.
  * @part indicators - The container for the carousel indicators.
  * @part indicator - The individual indicator for each image in the carousel.
  * @part active-indicator - The currently active indicator in the carousel.
