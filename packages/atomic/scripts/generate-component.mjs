@@ -89,7 +89,3 @@ if (!componentName) {
 }
 
 generateFiles(normalizedComponentName, resolvedOutputDir).catch(console.error);
-
-// add the import to the lazy index file
-// add the import to the index file
-// change the output arg to always start with search/commerce/insight/ipx/recommendations
