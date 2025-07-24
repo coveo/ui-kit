@@ -102,7 +102,7 @@ export class PlatformClient {
     options: PlatformClientCallOptions
   ) {
     const {origin, preprocessRequest, logger, requestMetadata} = options;
-    const {signal, ...withoutSignal} = defaultRequestOptions;
+    const {signal: _signal, ...withoutSignal} = defaultRequestOptions;
     const untaintedOutput: PlatformRequestOptions = clone(withoutSignal);
 
     try {

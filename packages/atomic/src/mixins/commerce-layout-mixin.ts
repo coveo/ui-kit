@@ -1,6 +1,6 @@
 import {type CSSResult, type LitElement, unsafeCSS} from 'lit';
 import {buildCommerceLayout} from '../components/commerce/atomic-commerce-layout/commerce-layout';
-import {injectStylesForNoShadowDOM} from '../decorators/light-dom';
+import {injectStylesForNoShadowDOM} from '../decorators/inject-styles-for-no-shadow-dom';
 import {randomID} from '../utils/utils';
 import type {Constructor} from './mixin-common';
 

@@ -1,3 +1,23 @@
+## 3.30.0 (2025-07-23)
+
+* fix(atomic commerce): fix price font size in table display (#5682) ([e4f0574](https://github.com/coveo/ui-kit/commits/e4f0574)), closes [#5682](https://github.com/coveo/ui-kit/issues/5682)
+* fix(atomic): add data to filterProtocol for fallback images  (#5626) ([dbda419](https://github.com/coveo/ui-kit/commits/dbda419)), closes [#5626](https://github.com/coveo/ui-kit/issues/5626)
+* fix(atomic): clear keyboard active descendant when search box input changes due to keypress (#5724) ([3906b15](https://github.com/coveo/ui-kit/commits/3906b15)), closes [#5724](https://github.com/coveo/ui-kit/issues/5724)
+* fix(atomic): fix placeholders not showing for atomic-product (#5620) ([e25491c](https://github.com/coveo/ui-kit/commits/e25491c)), closes [#5620](https://github.com/coveo/ui-kit/issues/5620)
+* fix(atomic): have only a single h1 in the refine modal (#5681) ([6d5f1e2](https://github.com/coveo/ui-kit/commits/6d5f1e2)), closes [#5681](https://github.com/coveo/ui-kit/issues/5681) [/developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/Heading_Elements#avoid_using_multiple_h1](https://github.com//developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/Heading_Elements/issues/avoid_using_multiple_h1)
+* fix(deps): update all dependencies j:kit-282 (#5723) ([6c032c9](https://github.com/coveo/ui-kit/commits/6c032c9)), closes [#5723](https://github.com/coveo/ui-kit/issues/5723)
+* chore: enable biome on tw.css files (#5669) ([c359bfa](https://github.com/coveo/ui-kit/commits/c359bfa)), closes [#5669](https://github.com/coveo/ui-kit/issues/5669)
+* chore: enable recommended biome rules for entire repo (#5662) ([015a764](https://github.com/coveo/ui-kit/commits/015a764)), closes [#5662](https://github.com/coveo/ui-kit/issues/5662)
+* chore: introduce knip to root (#5687) ([77cf23e](https://github.com/coveo/ui-kit/commits/77cf23e)), closes [#5687](https://github.com/coveo/ui-kit/issues/5687)
+* chore(atomic): migrate atomic-commerce-refine-modal (#5543) ([1b0a4b3](https://github.com/coveo/ui-kit/commits/1b0a4b3)), closes [#5543](https://github.com/coveo/ui-kit/issues/5543)
+* chore(atomic): migrate atomic-commere-query-error (#5570) ([85d3010](https://github.com/coveo/ui-kit/commits/85d3010)), closes [#5570](https://github.com/coveo/ui-kit/issues/5570)
+* chore(atomic): migrate atomic-product-children (#5624) ([0be84d8](https://github.com/coveo/ui-kit/commits/0be84d8)), closes [#5624](https://github.com/coveo/ui-kit/issues/5624)
+* chore(deps): lock file maintenance j:kit-282 (#5684) ([33edaac](https://github.com/coveo/ui-kit/commits/33edaac)), closes [#5684](https://github.com/coveo/ui-kit/issues/5684)
+* build: fix windows build by calling npx instead of direct executable (#5678) ([022af85](https://github.com/coveo/ui-kit/commits/022af85)), closes [#5678](https://github.com/coveo/ui-kit/issues/5678)
+* feat(atomic): add warning when numberOfQueries clashes with maxWithQuery in query suggestions (#5649 ([8a21c30](https://github.com/coveo/ui-kit/commits/8a21c30)), closes [#5649](https://github.com/coveo/ui-kit/issues/5649)
+
+
+
 ## <small>3.29.1 (2025-07-16)</small>
 
 * chore(atomic): enable biome recommended rules (#5582) ([595a264](https://github.com/coveo/ui-kit/commits/595a264)), closes [#5582](https://github.com/coveo/ui-kit/issues/5582)
