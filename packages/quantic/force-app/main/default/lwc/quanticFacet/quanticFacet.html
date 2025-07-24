@@ -76,7 +76,6 @@
                               item={v}
                               key={v.value}
                               is-checked={v.checked}
-                              data-cy={v.value}
                               display-as-link={isDisplayAsLink}
                               formatting-function={remoteGetValueCaption}
                             >
@@ -93,7 +92,6 @@
                           variant="base"
                           class="facet__show-less slds-p-around_none"
                           onclick={showLess}
-                          data-cy="less"
                           aria-label={showLessFacetValuesLabel}
                           data-testid="facet-values__show-less"
                         >
@@ -107,7 +105,6 @@
                           variant="base"
                           class="facet__show-more slds-p-around_none"
                           onclick={showMore}
-                          data-cy="more"
                           aria-label={showMoreFacetValuesLabel}
                           data-testid="facet-values__show-more"
                         >

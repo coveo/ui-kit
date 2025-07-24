@@ -13,6 +13,8 @@ import '../atomic-commerce-text/atomic-commerce-text';
 import '../atomic-product-text/atomic-product-text';
 import '../atomic-product/atomic-product';
 import '../atomic-product-children/atomic-product-children';
+import '../atomic-product-price/atomic-product-price';
+import '../atomic-product-numeric-field-value/atomic-product-numeric-field-value';
 
 /**
  * * A product template determines the format of the query results, depending on the conditions that are defined for each template.
