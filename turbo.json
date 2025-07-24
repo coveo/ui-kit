@@ -20,21 +20,6 @@
         "coverage/**",
         ".next/**",
         "!.next/cache/**"
-      ],
-      "inputs": [
-        "src/**",
-        "scripts/**",
-        "*.config.*",
-        "*.json",
-        "*.js",
-        "*.ts",
-        "*.mjs",
-        "rollup.config.js",
-        "tsconfig*.json",
-        "esbuild.mjs",
-        "!**/*.spec.*",
-        "!**/*.test.*",
-        "!**/*.e2e.*"
       ]
     },
     "dev": {
@@ -49,17 +34,7 @@
     },
     "test": {
       "dependsOn": ["build"],
-      "outputs": ["coverage/**"],
-      "inputs": [
-        "src/**",
-        "test/**",
-        "tests/**",
-        "spec/**",
-        "*.config.*",
-        "vitest.config.*",
-        "jest.config.*",
-        "cypress.config.*"
-      ]
+      "outputs": ["coverage/**"]
     },
     "test:watch": {
       "cache": false,
@@ -71,44 +46,16 @@
         "playwright-report/**",
         "cypress/screenshots/**",
         "cypress/videos/**"
-      ],
-      "inputs": [
-        "src/**",
-        "cypress/**",
-        "playwright/**",
-        "e2e/**",
-        "*.config.*"
       ]
     },
     "lint": {
-      "outputs": [],
-      "inputs": [
-        "src/**",
-        "test/**",
-        "*.config.*",
-        ".eslintrc.*",
-        "biome.jsonc"
-      ]
+      "outputs": []
     },
     "lint:check": {
-      "outputs": [],
-      "inputs": [
-        "src/**",
-        "test/**",
-        "*.config.*",
-        ".eslintrc.*",
-        "biome.jsonc"
-      ]
+      "outputs": []
     },
     "lint:fix": {
-      "outputs": [],
-      "inputs": [
-        "src/**",
-        "test/**",
-        "*.config.*",
-        ".eslintrc.*",
-        "biome.jsonc"
-      ]
+      "outputs": []
     },
     "clean": {
       "cache": false

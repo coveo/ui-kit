@@ -33,8 +33,7 @@
       "outputs": [
         "./src/generated/**",
         "./src/components/search/atomic-search-interface/lang/**"
-      ],
-      "inputs": ["./src/locales.json"]
+      ]
     },
     "build:list-assets": {
       "dependsOn": ["build:stencil-lit"],
@@ -42,13 +41,11 @@
     },
     "test:stencil": {
       "dependsOn": ["build:locales"],
-      "outputs": ["coverage/**"],
-      "inputs": ["src/**", "test/**", "stencil.config.ts"]
+      "outputs": ["coverage/**"]
     },
     "test:lit": {
       "dependsOn": ["^build", "build"],
-      "outputs": ["coverage/**"],
-      "inputs": ["src/**", "test/**", "vitest.config.*"]
+      "outputs": ["coverage/**"]
     }
   }
 }
