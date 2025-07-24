@@ -76,6 +76,48 @@ export default {
     await import('./atomic-product/atomic-product.js'),
   'atomic-product-children': async () =>
     await import('./atomic-product-children/atomic-product-children.js'),
+  'atomic-product-numeric-field-value': async () =>
+    await import(
+      './atomic-product-numeric-field-value/atomic-product-numeric-field-value.js'
+    ),
+  'atomic-product-price': async () =>
+    await import('./atomic-product-price/atomic-product-price.js'),
+  'atomic-product-section-actions': async () =>
+    await import(
+      './atomic-product-section-actions/atomic-product-section-actions.js'
+    ),
+  'atomic-product-section-badges': async () =>
+    await import(
+      './atomic-product-section-badges/atomic-product-section-badges.js'
+    ),
+  'atomic-product-section-bottom-metadata': async () =>
+    await import(
+      './atomic-product-section-bottom-metadata/atomic-product-section-bottom-metadata.js'
+    ),
+  'atomic-product-section-children': async () =>
+    await import(
+      './atomic-product-section-children/atomic-product-section-children.js'
+    ),
+  'atomic-product-section-description': async () =>
+    await import(
+      './atomic-product-section-description/atomic-product-section-description.js'
+    ),
+  'atomic-product-section-emphasized': async () =>
+    await import(
+      './atomic-product-section-emphasized/atomic-product-section-emphasized.js'
+    ),
+  'atomic-product-section-metadata': async () =>
+    await import(
+      './atomic-product-section-metadata/atomic-product-section-metadata.js'
+    ),
+  'atomic-product-section-name': async () =>
+    await import(
+      './atomic-product-section-name/atomic-product-section-name.js'
+    ),
+  'atomic-product-section-visual': async () =>
+    await import(
+      './atomic-product-section-visual/atomic-product-section-visual.js'
+    ),
   'atomic-product-template': async () =>
     await import('./atomic-product-template/atomic-product-template.js'),
   'atomic-product-text': async () =>
