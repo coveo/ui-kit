@@ -25,6 +25,7 @@ import {
   AtomicLayoutSection as LitAtomicLayoutSection,
   AtomicProduct as LitAtomicProduct,
   AtomicProductChildren as LitAtomicProductChildren,
+  AtomicProductExcerpt as LitAtomicProductExcerpt,
   AtomicProductNumericFieldValue as LitAtomicProductNumericFieldValue,
   AtomicProductPrice as LitAtomicProductPrice,
   AtomicProductText as LitAtomicProductText,
@@ -186,6 +187,12 @@ export const AtomicProductChildren = createComponent({
   tagName: 'atomic-product-children',
   react: React,
   elementClass: LitAtomicProductChildren,
+});
+
+export const AtomicProductExcerpt = createComponent({
+  tagName: 'atomic-product-excerpt',
+  react: React,
+  elementClass: LitAtomicProductExcerpt,
 });
 
 export const AtomicProductNumericFieldValue = createComponent({
