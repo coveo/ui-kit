@@ -1,4 +1,9 @@
 global with sharing class InsightTokenProvider implements IInsightTokenProvider {
+  @AuraEnabled()
+  global static String getHeadlessConfiguration() {
+    return getHeadlessConfiguration('');
+  }
+
   /**
    * Calls the Coveo for Salesforce package to retrieve information about the linked organization and to get an Insight platform token.
    * Note: To use the InsightTokenProvider class, Coveo for Salesforce must be installed and configured in your environment.
@@ -9,14 +14,18 @@ global with sharing class InsightTokenProvider implements IInsightTokenProvider 
     Map<String, Object> coveoEndpointData = CoveoV2.Globals.getEndpointData();
     try {
       List<CoveoV2.PlatformToken.TokenPrivilege> tokenPrivileges;
+
+    if(String.isNotBlank(recordId)) {
       String[] userActionIds = CoveoV2.Globals.getUserActionIds(recordId, new List<String>{ 'CreatedBy.Email' });
-      if (userActionIds.size() > 0) {
-        String userActionTarget = userActionIds[0];
-        Map<String, Object> tokenPrivilegesParams = new Map<String, Object>{ 'userActionTarget' => userActionTarget };
-        tokenPrivileges = CoveoV2.PlatformToken.buildInsightTokenPrivileges(tokenPrivilegesParams);
-      } else {
-        tokenPrivileges = CoveoV2.PlatformToken.buildInsightTokenPrivileges();
-      }
+      String userActionTarget = (userActionIds.isEmpty()) ? null : userActionIds[0];
+      Map<String, Object> tokenPrivilegesParams = (userActionTarget != null)
+        ? new Map<String, Object>{ 'userActionTarget' => userActionTarget }
+        : null;
+      tokenPrivileges = CoveoV2.PlatformToken.buildInsightTokenPrivileges(tokenPrivilegesParams);
+    } else {
+      tokenPrivileges = CoveoV2.PlatformToken.buildInsightTokenPrivileges();
+    }
+
       Map<String, Object> platformTokenParams = new Map<String, Object>();
       platformTokenParams.put('privileges', tokenPrivileges);
       String token = CoveoV2.Globals.generatePlatformToken(platformTokenParams);

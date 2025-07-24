@@ -41,7 +41,7 @@ export default class QuanticInsightInterface extends LightningElement {
    * @api
    * @type {string}
    */
-  @api recordId;
+  @api recordId = '';
 
   /** @type {InsightEngineOptions} */
   engineOptions;
