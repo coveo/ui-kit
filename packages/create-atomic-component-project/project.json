@@ -5,6 +5,9 @@
   "projectType": "application",
   "implicitDependencies": ["create-atomic-component-project-template"],
   "targets": {
+    "build": {
+      "executor": "nx:noop"
+    },
     "release:phase1": {},
     "release:phase3": {}
   }
