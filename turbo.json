@@ -94,5 +94,5 @@
     "biome.jsonc",
     ".cspell.json"
   ],
-  "globalEnv": ["NODE_ENV", "CI"]
+  "globalEnv": ["DEPLOYMENT_ENVIRONMENT", "NODE_ENV", "CI"]
 }
