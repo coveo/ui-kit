@@ -1,5 +1,5 @@
 import {render} from '@testing-library/react';
-import {type MockInstance, vi} from 'vitest';
+import {beforeEach, type MockInstance, test, vi} from 'vitest';
 import App from './App.js';
 
 let errorSpy: MockInstance<{
