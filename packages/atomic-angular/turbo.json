@@ -3,11 +3,11 @@
   "tasks": {
     "build": {
       "dependsOn": ["^build"],
-      "outputs": ["./projects/atomic-angular/dist/**/*"]
+      "outputs": ["projects/atomic-angular/dist/**/*"]
     },
     "gen:lit": {
       "dependsOn": ["@coveo/atomic#build:cem"],
-      "outputs": ["./projects/atomic-angular/src/lib/stencil-generated/**/*"]
+      "outputs": ["projects/atomic-angular/src/lib/stencil-generated/**/*"]
     }
   }
 }

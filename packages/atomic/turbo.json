@@ -20,25 +20,25 @@
     "build:stencil-lit": {
       "dependsOn": ["^build", "build:locales"],
       "outputs": [
-        "./dist/**",
-        "!./dist/atomic/assets/**",
-        "./cdn/**",
-        "./docs/**",
-        "!./docs/assets.json",
-        "./src/components.d.ts",
-        "./.stencil/**"
+        "dist/**",
+        "!dist/atomic/assets/**",
+        "cdn/**",
+        "docs/**",
+        "!docs/assets.json",
+        "src/components.d.ts",
+        ".stencil/**"
       ]
     },
     "build:locales": {
       "dependsOn": ["^build"],
       "outputs": [
-        "./src/generated/**",
-        "./src/components/search/atomic-search-interface/lang/**"
+        "src/generated/**",
+        "src/components/search/atomic-search-interface/lang/**"
       ]
     },
     "build:list-assets": {
       "dependsOn": ["build:stencil-lit"],
-      "outputs": ["./dist/atomic/assets/**", "./docs/assets.json"]
+      "outputs": ["dist/atomic/assets/**", "docs/assets.json"]
     },
     "test:stencil": {
       "dependsOn": ["build:locales"],

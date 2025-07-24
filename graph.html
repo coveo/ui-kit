@@ -14,24 +14,13 @@ digraph {
 	compound = "true"
 	newrank = "true"
 	subgraph "root" {
-		"[root] @coveo/atomic#build" -> "[root] @coveo/atomic#build:storybook"
-		"[root] @coveo/atomic#build" -> "[root] @coveo/atomic-angular-builder#gen:lit"
-		"[root] @coveo/atomic#build" -> "[root] @coveo/atomic-react#gen:lit"
-		"[root] @coveo/atomic#build:cem" -> "[root] @coveo/atomic#build:stencil-lit"
-		"[root] @coveo/atomic#build:list-assets" -> "[root] @coveo/atomic#build:stencil-lit"
-		"[root] @coveo/atomic#build:locales" -> "[root] @coveo/bueno#build"
-		"[root] @coveo/atomic#build:locales" -> "[root] @coveo/headless#build"
-		"[root] @coveo/atomic#build:stencil-lit" -> "[root] @coveo/atomic#build:locales"
-		"[root] @coveo/atomic#build:stencil-lit" -> "[root] @coveo/bueno#build"
-		"[root] @coveo/atomic#build:stencil-lit" -> "[root] @coveo/headless#build"
-		"[root] @coveo/atomic#build:storybook" -> "[root] @coveo/atomic#build:cem"
-		"[root] @coveo/atomic#build:storybook" -> "[root] @coveo/atomic#build:list-assets"
-		"[root] @coveo/atomic-angular-builder#gen:lit" -> "[root] @coveo/atomic#build:cem"
-		"[root] @coveo/atomic-react#gen:lit" -> "[root] @coveo/atomic#build:cem"
 		"[root] @coveo/bueno#build" -> "[root] ___ROOT___"
 		"[root] @coveo/documentation#build" -> "[root] ___ROOT___"
 		"[root] @coveo/headless#build" -> "[root] @coveo/bueno#build"
 		"[root] @coveo/headless#build" -> "[root] @coveo/documentation#build"
+		"[root] @coveo/headless-react#build" -> "[root] @coveo/documentation#build"
+		"[root] @coveo/headless-react#build" -> "[root] @coveo/headless#build"
+		"[root] @coveo/headless-react#test" -> "[root] @coveo/headless-react#build"
 	}
 }
 

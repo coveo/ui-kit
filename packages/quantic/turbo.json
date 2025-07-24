@@ -1,7 +1,7 @@
 {
   "extends": ["//"],
   "tasks": {
-    "transit:build": {
+    "build": {
       "dependsOn": [
         "build:staticresources",
         "build:docs",
@@ -12,20 +12,20 @@
     "build:staticresources": {
       "dependsOn": ["^build", "babel:headless"],
       "outputs": [
-        "./force-app/main/default/staticresources/coveobueno",
-        "./force-app/main/default/staticresources/coveoheadless",
-        "./force-app/main/default/staticresources/dompurify",
-        "./force-app/main/default/staticresources/marked"
+        "force-app/main/default/staticresources/coveobueno/**",
+        "force-app/main/default/staticresources/coveoheadless/**",
+        "force-app/main/default/staticresources/dompurify/**",
+        "force-app/main/default/staticresources/marked/**"
       ]
     },
     "build:docs": {
       "dependsOn": ["^build"],
-      "outputs": ["./docs/out"]
+      "outputs": ["docs/out/**"]
     },
     "babel:headless": {
       "dependsOn": ["^build"],
       "outputs": [
-        "./tmp/quantic-compiled"
+        "tmp/quantic-compiled/**"
       ]
     },
     "promote:sfdx": {
@@ -36,7 +36,7 @@
       "dependsOn": ["build"],
       "outputs": []
     },
-    "transit:test": {
+    "test": {
       "outputs": [],
       "dependsOn": ["test:unit", "lint:check:tests", "validate:types"]
     },
