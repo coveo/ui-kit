@@ -30,6 +30,12 @@ import {
 import {createComponent} from '@lit/react';
 import React from 'react';
 
+export const AtomicCommerceBreadbox = createComponent({
+  tagName: 'atomic-commerce-breadbox',
+  react: React,
+  elementClass: LitAtomicCommerceBreadbox,
+});
+
 export const AtomicCommerceDidYouMean = createComponent({
   tagName: 'atomic-commerce-did-you-mean',
   react: React,
@@ -42,22 +48,16 @@ export const AtomicCommerceInterface = createComponent({
   elementClass: LitAtomicCommerceInterface,
 });
 
-export const AtomicCommerceBreadbox = createComponent({
-  tagName: 'atomic-commerce-breadbox',
+export const AtomicCommerceLayout = createComponent({
+  tagName: 'atomic-commerce-layout',
   react: React,
-  elementClass: LitAtomicCommerceBreadbox,
+  elementClass: LitAtomicCommerceLayout,
 });
 
 export const AtomicCommerceLoadMoreProducts = createComponent({
   tagName: 'atomic-commerce-load-more-products',
   react: React,
   elementClass: LitAtomicCommerceLoadMoreProducts,
-});
-
-export const AtomicCommerceLayout = createComponent({
-  tagName: 'atomic-commerce-layout',
-  react: React,
-  elementClass: LitAtomicCommerceLayout,
 });
 
 export const AtomicCommerceNoProducts = createComponent({
@@ -78,12 +78,6 @@ export const AtomicCommerceProductList = createComponent({
   elementClass: LitAtomicCommerceProductList,
 });
 
-export const AtomicCommerceQuerySummary = createComponent({
-  tagName: 'atomic-commerce-query-summary',
-  react: React,
-  elementClass: LitAtomicCommerceQuerySummary,
-});
-
 export const AtomicCommerceProductsPerPage = createComponent({
   tagName: 'atomic-commerce-products-per-page',
   react: React,
@@ -94,6 +88,12 @@ export const AtomicCommerceQueryError = createComponent({
   tagName: 'atomic-commerce-query-error',
   react: React,
   elementClass: LitAtomicCommerceQueryError,
+});
+
+export const AtomicCommerceQuerySummary = createComponent({
+  tagName: 'atomic-commerce-query-summary',
+  react: React,
+  elementClass: LitAtomicCommerceQuerySummary,
 });
 
 export const AtomicCommerceRecommendationInterface = createComponent({
