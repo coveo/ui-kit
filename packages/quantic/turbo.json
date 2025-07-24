@@ -25,7 +25,7 @@
     "babel:headless": {
       "dependsOn": ["^build"],
       "outputs": [
-        "tmp/quantic-compiled/**"
+        "tmp/quantic-compiled"
       ]
     },
     "promote:sfdx": {
