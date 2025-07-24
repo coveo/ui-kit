@@ -3,7 +3,8 @@
   "tasks": {
     "serve": {
       "dependsOn": ["^deploy"],
-      "outputs": []
+      "outputs": [],
+      "persistent": true
     }
   }
 }
