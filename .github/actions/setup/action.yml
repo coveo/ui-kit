@@ -16,6 +16,7 @@ runs:
       with:
         registry-url: 'https://registry.npmjs.org'
         node-version-file: '.nvmrc'
+        cache: 'npm'
     - name: Ensure Nx cache can be shared between different CI environments # Source: https://nx.dev/recipes/troubleshooting/unknown-local-cache
       run: echo "NX_REJECT_UNKNOWN_LOCAL_CACHE=0" >> $GITHUB_ENV
       shell: bash
@@ -28,18 +29,22 @@ runs:
         path: |
           **/node_modules/
           !.nx/cache/
-        key: npm-${{ hashFiles('package-lock.json', 'patches/*') }}
+        key: ${{ runner.os }}-${{ inputs.cache-prefix }}-npm-${{ github.sha }}
+        restore-keys: |
+          ${{ runner.os }}-${{ inputs.cache-prefix }}-npm-
     - uses: actions/cache@5a3ec84eff668545956fd18022155c47e93e2684 # v4s
       with:
         path: packages/quantic/force-app/main/default/staticresources
-        key: quantic-${{ hashFiles('package-lock.json') }}
+        key: ${{ runner.os }}-${{ inputs.cache-prefix }}-quantic-${{ github.sha }}
+        restore-keys: |
+          ${{ runner.os }}-${{ inputs.cache-prefix }}-quantic-
     - uses: actions/cache@5a3ec84eff668545956fd18022155c47e93e2684 # v4
       with:
         path: ~/.cache/Cypress
-        key: cy-${{ hashFiles('package-lock.json') }}
-    - if: ${{ inputs.use-cache == 'true' }}
-      uses: actions/cache@5a3ec84eff668545956fd18022155c47e93e2684 # v4
-      id: turbo-cache
+        key: ${{ runner.os }}-${{ inputs.cache-prefix }}-cy-${{ github.sha }}
+        restore-keys: |
+          ${{ runner.os }}-${{ inputs.cache-prefix }}-cy-
+    - uses: actions/cache@5a3ec84eff668545956fd18022155c47e93e2684 # v4
       with:
         path: .turbo
         key: ${{ runner.os }}-${{ inputs.cache-prefix }}-turbo-${{ github.sha }}
