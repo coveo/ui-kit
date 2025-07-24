@@ -21,7 +21,7 @@ export const renderQuerySummaryGuard: FunctionalComponentWithChildren<
         <div
           part="placeholder"
           aria-hidden="true"
-          class="bg-neutral mb-2 h-6 w-44 animate-pulse rounded"
+          class="bg-neutral mb-4 h-4 w-36 animate-pulse rounded"
         ></div>
       `;
     }
