@@ -6,6 +6,7 @@
     "clean": "rimraf www/cdn",
     "dev": "npm run build && npm run prod",
     "prod": "serve www",
+    "build": "npm run-script -w=@coveo/ci if-not-cdn -- \"npm run build:assets\"",
     "build:assets": "node build-assets.mjs",
     "e2e:watch": "cypress open --browser chrome --e2e",
     "e2e": "cypress run --browser chrome"

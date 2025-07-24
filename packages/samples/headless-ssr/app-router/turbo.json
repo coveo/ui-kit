@@ -4,10 +4,6 @@
     "build": {
       "dependsOn": ["^build"],
       "outputs": [""]
-    },
-    "prod": {
-      "dependsOn": ["build"],
-      "outputs": []
     }
   }
 }

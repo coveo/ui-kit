@@ -23,12 +23,17 @@
       ]
     },
     "dev": {
-      "dependsOn": ["^build"],
+      "dependsOn": ["build"],
       "cache": false,
       "persistent": true
     },
     "start": {
-      "dependsOn": ["^build"],
+      "dependsOn": ["build"],
+      "cache": false,
+      "persistent": true
+    },
+    "prod": {
+      "dependsOn": ["build"],
       "cache": false,
       "persistent": true
     },
