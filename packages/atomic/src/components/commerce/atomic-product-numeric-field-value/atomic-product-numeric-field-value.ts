@@ -1,5 +1,6 @@
-import {html, LitElement, nothing} from 'lit';
+import {html, LitElement} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
+import {when} from 'lit/directives/when.js';
 import {bindingGuard} from '@/src/decorators/binding-guard.js';
 import {bindings} from '@/src/decorators/bindings.js';
 import {createProductContextController} from '@/src/decorators/commerce/product-template-decorators.js';
@@ -82,10 +83,7 @@ export class AtomicProductNumericFieldValue
   @errorGuard()
   @bindingGuard()
   render() {
-    if (this.value === null) {
-      return html`${nothing}`;
-    }
-    return html`${this.value}`;
+    return html`${when(this.value !== null, () => html`${this.value}`)}`;
   }
 }
 
