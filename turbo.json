@@ -17,7 +17,9 @@
         "temp/**",
         "build/**",
         "lib/**",
-        "coverage/**"
+        "coverage/**",
+        ".next/**",
+        "!.next/cache/**"
       ],
       "inputs": [
         "src/**",
