@@ -11,7 +11,7 @@
     },
     "build:storybook": {
       "dependsOn": ["build:cem", "build:list-assets"],
-      "outputs": ["./dist-storybook"]
+      "outputs": ["./dist-storybook/**"]
     },
     "build:cem": {
       "dependsOn": ["build:stencil-lit"],
@@ -20,12 +20,13 @@
     "build:stencil-lit": {
       "dependsOn": ["^build", "build:locales"],
       "outputs": [
-        "./dist",
-        "./cdn",
-        "./docs",
+        "./dist/**",
+        "!./dist/atomic/assets/**",
+        "./cdn/**",
+        "./docs/**",
+        "!./docs/assets.json",
         "./src/components.d.ts",
-        "./.stencil",
-        "./src/lit-components.d.ts"
+        "./.stencil/**"
       ]
     },
     "build:locales": {
