@@ -1,11 +1,11 @@
 /* eslint-disable */
 /* tslint:disable */
 /* auto-generated react proxies */
-import { createReactComponent } from './react-component-lib/index.js';
+import { createReactComponent } from './react-component-lib';
 
 import type { JSX } from '@coveo/atomic';
 
-import { defineCustomElements } from '@coveo/atomic/loader';
+import { defineCustomElements } from '@coveo/atomic/dist/atomic/loader';
 
 defineCustomElements();
 export const AtomicAriaLive = /*@__PURE__*/createReactComponent<JSX.AtomicAriaLive, HTMLAtomicAriaLiveElement>('atomic-aria-live');
