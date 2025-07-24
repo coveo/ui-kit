@@ -1,5 +1,5 @@
 import {Element, Component, Prop} from '@stencil/core';
-import {hideEmptySection} from '../../../../utils/stencil-item-section-utils';
+import {hideEmptySection} from '../../../../utils/item-section-utils';
 import {ItemDisplayImageSize} from '../../../common/layout/display-options';
 
 /**
