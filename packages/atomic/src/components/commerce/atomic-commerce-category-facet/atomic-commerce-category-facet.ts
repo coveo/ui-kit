@@ -101,7 +101,7 @@ export class AtomicCommerceCategoryFacet
   /**
    * The summary controller instance.
    */
-  @property({attribute: false})
+  @property({type: Object})
   summary!: Summary<SearchSummaryState | ProductListingSummaryState>;
 
   /**
@@ -360,7 +360,7 @@ export class AtomicCommerceCategoryFacet
         : nextValues
       : [];
 
-    return html`${map(children, (value, i) =>
+    return html`${map(children, (value: CategoryFacetValue, i: number) =>
       this.renderChild(value, i === 0, i === this.resultIndexToFocusOnShowMore)
     )}`;
   }
