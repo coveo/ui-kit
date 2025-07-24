@@ -3,20 +3,16 @@ import {expect, test} from './fixture';
 test.describe('atomic-product-numeric-field-value', () => {
   test.beforeEach(async ({numericFieldValue}) => {
     await numericFieldValue.load();
-    await numericFieldValue.hydrated.first().waitFor({state: 'visible'});
+    await numericFieldValue.hydrated.waitFor();
   });
 
-  test('should be a11y compliant', async ({
-    numericFieldValue,
-    makeAxeBuilder,
-  }) => {
-    await numericFieldValue.hydrated.first().waitFor();
+  test('should be accessible', async ({makeAxeBuilder}) => {
     const accessibilityResults = await makeAxeBuilder().analyze();
     expect(accessibilityResults.violations).toEqual([]);
   });
 
   test('should render the value', async ({numericFieldValue}) => {
-    const value = numericFieldValue.value.first();
+    const value = numericFieldValue.hydrated.first();
     await expect(value).toBeVisible();
   });
 
