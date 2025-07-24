@@ -80,6 +80,7 @@ export class PlatformClient {
       switch (response.status) {
         case 419:
         case 401:
+          logger.info('Platform renewing token');
           throw new UnauthorizedTokenError();
         case 404:
           throw new DisconnectedError(url, response.status);

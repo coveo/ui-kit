@@ -94,6 +94,7 @@ export const commerceSearchReducer = createReducer(
       .addCase(setContext, () => getCommerceSearchInitialState())
       .addCase(setError, (state, action) => {
         state.error = action.payload;
+        state.isLoading = false;
       });
   }
 );

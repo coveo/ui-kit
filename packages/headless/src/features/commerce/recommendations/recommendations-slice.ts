@@ -124,7 +124,7 @@ export const recommendationsReducer = createReducer(
         products.splice(currentParentIndex, 1, newParent);
       })
       .addCase(setError, (state, action) => {
-        //Don't know the slotId here, I need to take then all error.
+        // We do not know the slotId here, so we need to error on all slots.
         Object.keys(state).forEach((slotId) => {
           handleError(state, slotId, action.payload);
         });
