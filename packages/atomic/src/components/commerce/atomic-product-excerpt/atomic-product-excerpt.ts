@@ -8,7 +8,7 @@ import {bindingGuard} from '@/src/decorators/binding-guard';
 import {bindings} from '@/src/decorators/bindings';
 import {createProductContextController} from '@/src/decorators/commerce/product-template-decorators';
 import {errorGuard} from '@/src/decorators/error-guard';
-import {injectStylesForNoShadowDOM} from '@/src/decorators/light-dom';
+import {injectStylesForNoShadowDOM} from '@/src/decorators/inject-styles-for-no-shadow-dom';
 import type {InitializableComponent} from '@/src/decorators/types';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
 import {
