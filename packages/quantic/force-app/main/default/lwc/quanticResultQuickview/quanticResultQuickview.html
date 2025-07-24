@@ -47,7 +47,7 @@
           result={result} content-url={contentURL}
           onquantic__loadingstatechange={handleLoadingStateChange}></c-quantic-quickview-content>
         <template if:false={isLoading}>
-          <footer onclick={stopPropagation} class="slds-modal__footer slds-p-top_none slds-p-bottom_none">
+          <footer onclick={stopPropagation} class="slds-modal__footer modal__footer slds-p-top_none slds-p-bottom_none">
             <slot name="footer"></slot>
           </footer>
         </template>
