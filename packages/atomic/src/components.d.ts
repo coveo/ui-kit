@@ -1594,19 +1594,6 @@ export namespace Components {
         "truncateAfter": TruncateAfter;
     }
     /**
-     * @alpha The `atomic-product-excerpt` component renders the excerpt of a product generated at query time.
-     */
-    interface AtomicProductExcerpt {
-        /**
-          * Whether the excerpt should be collapsible after being expanded.
-         */
-        "isCollapsible": boolean;
-        /**
-          * The number of lines after which the product excerpt should be truncated. A value of "none" will disable truncation.
-         */
-        "truncateAfter": TruncateAfter;
-    }
-    /**
      * The `atomic-product-field-condition` component takes a list of conditions that, if fulfilled, apply the template in which it's defined.
      * The condition properties can be based on any top-level product property of the `product` object, not restricted to fields (e.g., `ec_name`).
      * @alpha 
@@ -4057,15 +4044,6 @@ declare global {
         new (): HTMLAtomicProductDescriptionElement;
     };
     /**
-     * @alpha The `atomic-product-excerpt` component renders the excerpt of a product generated at query time.
-     */
-    interface HTMLAtomicProductExcerptElement extends Components.AtomicProductExcerpt, HTMLStencilElement {
-    }
-    var HTMLAtomicProductExcerptElement: {
-        prototype: HTMLAtomicProductExcerptElement;
-        new (): HTMLAtomicProductExcerptElement;
-    };
-    /**
      * The `atomic-product-field-condition` component takes a list of conditions that, if fulfilled, apply the template in which it's defined.
      * The condition properties can be based on any top-level product property of the `product` object, not restricted to fields (e.g., `ec_name`).
      * @alpha 
@@ -5063,7 +5041,6 @@ declare global {
         "atomic-pager": HTMLAtomicPagerElement;
         "atomic-popover": HTMLAtomicPopoverElement;
         "atomic-product-description": HTMLAtomicProductDescriptionElement;
-        "atomic-product-excerpt": HTMLAtomicProductExcerptElement;
         "atomic-product-field-condition": HTMLAtomicProductFieldConditionElement;
         "atomic-product-image": HTMLAtomicProductImageElement;
         "atomic-product-link": HTMLAtomicProductLinkElement;
@@ -6633,19 +6610,6 @@ declare namespace LocalJSX {
         "isCollapsible"?: boolean;
         /**
           * The number of lines after which the product description should be truncated. A value of "none" will disable truncation.
-         */
-        "truncateAfter"?: TruncateAfter;
-    }
-    /**
-     * @alpha The `atomic-product-excerpt` component renders the excerpt of a product generated at query time.
-     */
-    interface AtomicProductExcerpt {
-        /**
-          * Whether the excerpt should be collapsible after being expanded.
-         */
-        "isCollapsible"?: boolean;
-        /**
-          * The number of lines after which the product excerpt should be truncated. A value of "none" will disable truncation.
          */
         "truncateAfter"?: TruncateAfter;
     }
@@ -8252,7 +8216,6 @@ declare namespace LocalJSX {
         "atomic-pager": AtomicPager;
         "atomic-popover": AtomicPopover;
         "atomic-product-description": AtomicProductDescription;
-        "atomic-product-excerpt": AtomicProductExcerpt;
         "atomic-product-field-condition": AtomicProductFieldCondition;
         "atomic-product-image": AtomicProductImage;
         "atomic-product-link": AtomicProductLink;
@@ -8567,10 +8530,6 @@ declare module "@stencil/core" {
              * @alpha The `atomic-product-description` component renders the description of a product.
              */
             "atomic-product-description": LocalJSX.AtomicProductDescription & JSXBase.HTMLAttributes<HTMLAtomicProductDescriptionElement>;
-            /**
-             * @alpha The `atomic-product-excerpt` component renders the excerpt of a product generated at query time.
-             */
-            "atomic-product-excerpt": LocalJSX.AtomicProductExcerpt & JSXBase.HTMLAttributes<HTMLAtomicProductExcerptElement>;
             /**
              * The `atomic-product-field-condition` component takes a list of conditions that, if fulfilled, apply the template in which it's defined.
              * The condition properties can be based on any top-level product property of the `product` object, not restricted to fields (e.g., `ec_name`).
