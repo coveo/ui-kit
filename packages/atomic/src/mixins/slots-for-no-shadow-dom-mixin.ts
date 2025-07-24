@@ -15,12 +15,6 @@ interface SlotPlaceholder {
 
 export interface LightDOMWithSlots {
   slots: SlotMapping;
-  _slotsInitialized: boolean;
-  _slotPlaceholders: SlotPlaceholder[];
-  _pendingSlotRelocation: boolean;
-  getSlotNameForChild(child: AdoptedNode): string;
-  isTextNodeEmpty(node: Text): boolean;
-  isSlotEmpty(slot: string): boolean;
   renderDefaultSlotContent(
     defaultContent?: unknown
   ): TemplateResult | unknown[];
@@ -56,9 +50,9 @@ export const SlotsForNoShadowDOMMixin = <T extends Constructor<LitElement>>(
     implements LightDOMWithSlots
   {
     slots: SlotMapping = {};
-    _slotsInitialized = false;
-    _slotPlaceholders: SlotPlaceholder[] = [];
-    _pendingSlotRelocation = false;
+    private _slotsInitialized = false;
+    private _slotPlaceholders: SlotPlaceholder[] = [];
+    private _pendingSlotRelocation = false;
 
     createRenderRoot() {
       return this;
@@ -106,7 +100,7 @@ export const SlotsForNoShadowDOMMixin = <T extends Constructor<LitElement>>(
       return defaultContent ? [defaultContent] : [];
     }
 
-    public getSlotNameForChild(child: AdoptedNode): string {
+    private getSlotNameForChild(child: AdoptedNode): string {
       if (child instanceof Comment && child.nextSibling instanceof Element) {
         return this.getSlotNameForChild(child.nextSibling);
       }
@@ -116,11 +110,11 @@ export const SlotsForNoShadowDOMMixin = <T extends Constructor<LitElement>>(
       return '';
     }
 
-    public isTextNodeEmpty(node: Text): boolean {
+    private isTextNodeEmpty(node: Text): boolean {
       return !node.textContent || !node.textContent.trim();
     }
 
-    public isSlotEmpty(slot: string): boolean {
+    private isSlotEmpty(slot: string): boolean {
       const content = this.slots[slot];
       return (
         !content ||
