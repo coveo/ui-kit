@@ -5,20 +5,13 @@ import {wrapInProductTemplate} from '@/storybook-utils/commerce/commerce-product
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {renderComponent} from '@/storybook-utils/common/render-component';
 
-const {
-  decorator: commerceInterfaceDecorator,
-  play: initializeCommerceInterface,
-} = wrapInCommerceInterface({
-  skipFirstRequest: false,
-  type: 'product-listing',
+const {decorator: commerceInterfaceDecorator, play} = wrapInCommerceInterface({
   engineConfig: {
-    context: {
-      view: {
-        url: 'https://sports.barca.group/browse/promotions/ui-kit-testing',
-      },
-      language: 'en',
-      country: 'US',
-      currency: 'USD',
+    preprocessRequest: (request) => {
+      const parsed = JSON.parse(request.body as string);
+      parsed.perPage = 1;
+      request.body = JSON.stringify(parsed);
+      return request;
     },
   },
 });
@@ -27,7 +20,7 @@ const {decorator: productTemplateDecorator} = wrapInProductTemplate();
 
 const meta: Meta = {
   component: 'atomic-product-numeric-field-value',
-  title: 'Atomic-Commerce/Product Template Components/ProductNumericFieldValue',
+  title: 'Commerce/atomic-product-numeric-field-value',
   id: 'atomic-product-numeric-field-value',
   render: renderComponent,
   decorators: [
@@ -36,20 +29,12 @@ const meta: Meta = {
     commerceInterfaceDecorator,
   ],
   parameters,
-  play: initializeCommerceInterface,
+  play,
   args: {
     'attributes-field': 'ec_rating',
-  },
-  argTypes: {
-    'attributes-field': {
-      name: 'field',
-      type: 'string',
-    },
   },
 };
 
 export default meta;
 
-export const Default: Story = {
-  name: 'atomic-product-numeric-field-value',
-};
+export const Default: Story = {};

@@ -10,17 +10,6 @@ import type {
 } from '@coveo/headless/ssr-commerce';
 import type {FunctionComponent, PropsWithChildren} from 'react';
 
-export type ContextStaticState<
-  TControllers extends ControllerDefinitionsMap<Controller>,
-  TSolutionType extends SolutionType,
-> = {
-  controllers: InferControllerStaticStateMapFromDefinitionsWithSolutionType<
-    TControllers,
-    TSolutionType
-  >;
-  solutionType: TSolutionType;
-};
-
 export type ContextHydratedState<
   TControllers extends ControllerDefinitionsMap<Controller>,
   TSolutionType extends SolutionType,
