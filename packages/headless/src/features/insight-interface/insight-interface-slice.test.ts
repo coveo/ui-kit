@@ -137,7 +137,8 @@ describe('insight interface slice', () => {
         fetchInterface.fulfilled(fetchInterfaceResponse, requestId)
       );
 
-      const {searchHub, ...expectedConfig} = fetchInterfaceResponse.response;
+      const {searchHub: _searchHub, ...expectedConfig} =
+        fetchInterfaceResponse.response;
 
       expect(modifiedState.config).toStrictEqual(expectedConfig);
     });
@@ -148,7 +149,7 @@ describe('insight interface slice', () => {
         fetchInterface.fulfilled(fetchInterfaceResponseWithInterface, requestId)
       );
 
-      const {searchHub, ...expectedConfig} =
+      const {searchHub: _searchHub, ...expectedConfig} =
         fetchInterfaceResponseWithInterface.response;
 
       expect(modifiedState.config).toStrictEqual(expectedConfig);

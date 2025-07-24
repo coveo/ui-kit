@@ -12,16 +12,15 @@
   },
   "dependencies": {
     "@babel/standalone": "7.28.1",
-    "@coveo/atomic": "3.29.1",
-    "@coveo/atomic-hosted-page": "1.1.30",
-    "@coveo/atomic-react": "3.2.51",
-    "@coveo/headless": "3.27.4",
+    "@coveo/atomic": "3.30.0",
+    "@coveo/atomic-hosted-page": "1.1.31",
+    "@coveo/atomic-react": "3.2.52",
+    "@coveo/headless": "3.27.5",
     "react": "19.1.0",
     "react-dom": "19.1.0"
   },
   "devDependencies": {
     "cypress": "13.7.3",
-    "cypress-repeat": "2.3.9",
     "resolve": "1.22.10",
     "rimraf": "6.0.1",
     "serve": "14.2.4"

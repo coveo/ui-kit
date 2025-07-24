@@ -51,7 +51,7 @@ export function buildSamlFlow(config: SamlFlowOptions): SamlFlow {
         );
         const data = await response.json();
         return data.token;
-      } catch (e) {
+      } catch (_) {
         return '';
       }
     },

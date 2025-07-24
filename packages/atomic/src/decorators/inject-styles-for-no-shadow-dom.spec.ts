@@ -1,7 +1,7 @@
 import {css, html, LitElement, unsafeCSS} from 'lit';
 import {beforeEach, describe, expect, it} from 'vitest';
 import {fixture} from '@/vitest-utils/testing-helpers/fixture';
-import {injectStylesForNoShadowDOM} from './light-dom';
+import {injectStylesForNoShadowDOM} from './inject-styles-for-no-shadow-dom';
 
 describe('injectStylesForNoShadowDOM', () => {
   const styles = 'body { background-color: red; }';

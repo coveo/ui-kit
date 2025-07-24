@@ -1,7 +1,7 @@
 {
   "name": "ui-kit",
   "private": true,
-  "version": "3.0.46",
+  "version": "3.0.47",
   "scripts": {
     "postinstall": "husky install && patch-package && npx playwright install",
     "reset:install": "git checkout origin/master package-lock.json && npm i",
@@ -38,6 +38,7 @@
     "@commitlint/load": "19.8.1",
     "@coveo/ci": "1.0.0",
     "@cspell/dict-fr-fr": "2.3.1",
+    "@npmcli/package-json": "6.2.0",
     "@octokit/rest": "21.1.1",
     "@tsconfig/node20": "20.1.6",
     "@types/execa": "2.0.2",
@@ -58,13 +59,12 @@
     "lint-staged": "15.5.2",
     "nx": "20.8.2",
     "patch-package": "8.0.0",
+    "playwright": "1.54.1",
     "publint": "0.3.12",
     "rimraf": "6.0.1",
     "semver": "7.7.2",
     "typescript": "5.8.3",
-    "vitest": "3.2.4",
-    "@npmcli/package-json": "6.2.0",
-    "playwright": "1.54.1"
+    "vitest": "3.2.4"
   },
   "overrides": {
     "@coveo/ci": {
