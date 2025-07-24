@@ -76,6 +76,8 @@ export default {
     await import('./atomic-product/atomic-product.js'),
   'atomic-product-children': async () =>
     await import('./atomic-product-children/atomic-product-children.js'),
+  'atomic-product-description': async () =>
+    await import('./atomic-product-description/atomic-product-description.js'),
   'atomic-product-numeric-field-value': async () =>
     await import(
       './atomic-product-numeric-field-value/atomic-product-numeric-field-value.js'
