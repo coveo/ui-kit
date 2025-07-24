@@ -1,5 +1,5 @@
 name: 'Install, build & cache'
-description: 'Installs dependencies, builds all packages, and saves the cache of Nx'
+description: 'Installs dependencies, builds all packages, and saves the cache of Turborepo'
 inputs:
   cache-prefix:
     description: 'Suffix to add to the cache key for different environments'

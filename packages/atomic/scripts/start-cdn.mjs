@@ -220,7 +220,7 @@ try {
       versionType,
       cdnType
     );
-    spawn('npx', ['nx', 'run', 'cdn:serve'], {
+    spawn('npx', ['turbo', 'serve', '--filter=@coveo/cdn'], {
       stdio: 'inherit',
     });
 
