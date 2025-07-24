@@ -1,9 +1,9 @@
 {
   "extends": ["//"],
   "tasks": {
-    "build": {
-      "dependsOn": ["^build"],
-      "outputs": [""]
+    "serve": {
+      "dependsOn": ["^deploy"],
+      "outputs": []
     }
   }
 }

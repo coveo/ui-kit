@@ -5,7 +5,8 @@
   "version": "1.0.0",
   "type": "module",
   "scripts": {
-    "serve": "node ./scripts/serve.mjs"
+    "serve": "node ./scripts/serve.mjs",
+    "deploy": "node ./scripts/deploy.mjs"
   },
   "engines": {
     "node": ">=22.14.0"

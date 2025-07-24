@@ -10,7 +10,7 @@
       "outputs":[]
     },
     "build:staticresources": {
-      "dependsOn": ["^build"],
+      "dependsOn": ["^build", "babel:headless"],
       "outputs": [
         "./force-app/main/default/staticresources/coveobueno",
         "./force-app/main/default/staticresources/coveoheadless",
