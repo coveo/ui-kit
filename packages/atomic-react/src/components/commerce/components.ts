@@ -187,6 +187,12 @@ export const AtomicProductChildren = createComponent({
   elementClass: LitAtomicProductChildren,
 });
 
+export const AtomicProductNumericFieldValue = createComponent({
+  tagName: 'atomic-product-numeric-field-value',
+  react: React,
+  elementClass: LitAtomicProductNumericFieldValue,
+});
+
 export const AtomicProductText = createComponent({
   tagName: 'atomic-product-text',
   react: React,
