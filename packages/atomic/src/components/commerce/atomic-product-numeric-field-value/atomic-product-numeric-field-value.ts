@@ -1,154 +1,94 @@
-import type {Product} from '@coveo/headless/commerce';
-import {html, LitElement, nothing, type PropertyValues} from 'lit';
+import {html, LitElement} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {when} from 'lit/directives/when.js';
-import {bindingGuard} from '@/src/decorators/binding-guard';
-import {bindings} from '@/src/decorators/bindings';
+import {bindingGuard} from '@/src/decorators/binding-guard.js';
+import {bindings} from '@/src/decorators/bindings.js';
 import {createProductContextController} from '@/src/decorators/commerce/product-template-decorators.js';
-import {errorGuard} from '@/src/decorators/error-guard';
-import type {InitializableComponent} from '@/src/decorators/types';
+import {errorGuard} from '@/src/decorators/error-guard.js';
+import type {InitializableComponent} from '@/src/decorators/types.js';
+import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles.js';
 import {
   defaultNumberFormatter,
   type NumberFormatter,
-} from '../../common/formats/format-common';
-import type {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface';
+} from '../../common/formats/format-common.js';
+import type {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface.js';
 import {parseValue} from '../product-template-component-utils/product-utils.js';
 
 /**
- * @alpha
  * The `atomic-product-numeric-field-value` component renders the value of a number product field.
  *
  * The number can be formatted by adding a `atomic-format-number`, `atomic-format-currency` or `atomic-format-unit` component into this component.
+ * @alpha
  */
 @customElement('atomic-product-numeric-field-value')
 @bindings()
+@withTailwindStyles
 export class AtomicProductNumericFieldValue
   extends LitElement
   implements InitializableComponent<CommerceBindings>
 {
+  createRenderRoot() {
+    return this;
+  }
+  @state()
+  bindings!: CommerceBindings;
+
+  @state() error!: Error;
+
+  private productController = createProductContextController(this);
+
   /**
    * The field that the component should use.
    * The component will try to find this field in the `Product.additionalFields` object unless it finds it in the `Product` object first.
    */
-  @property({type: String, reflect: true}) public field!: string;
+  @property({reflect: true}) field!: string;
 
-  @state() private _product!: Product;
-
-  get product(): Product {
-    // Give priority to directly set product over controller
-    return this._product || this.productController.item;
-  }
-
-  set product(value: Product) {
-    if (this._product !== value) {
-      this._product = value;
-      this.updateValueToDisplay();
-      this.requestUpdate();
-    }
-  }
   @state() private formatter: NumberFormatter = defaultNumberFormatter;
-  @state() private valueToDisplay: string | null = null;
 
-  private productController = createProductContextController(this);
-
-  @state() public bindings!: CommerceBindings;
-
-  @state() public error!: Error;
-
-  protected createRenderRoot() {
-    return this;
-  }
-
-  private handleNumberFormatEvent = (event: CustomEvent<NumberFormatter>) => {
-    event.preventDefault();
-    event.stopPropagation();
-    this.formatter = event.detail;
-    this.updateValueToDisplay();
-    this.requestUpdate();
-  };
-
-  connectedCallback() {
-    super.connectedCallback();
+  initialize() {
     this.addEventListener(
       'atomic/numberFormat',
-      this.handleNumberFormatEvent as EventListener
+      this.setFormat as EventListener
     );
-
-    // Add hydrated class for compatibility with Stencil-based test infrastructure
-    this.classList.add('hydrated');
   }
 
   disconnectedCallback() {
+    super.disconnectedCallback();
     this.removeEventListener(
       'atomic/numberFormat',
-      this.handleNumberFormatEvent as EventListener
+      this.setFormat as EventListener
     );
-    super.disconnectedCallback();
   }
 
-  initialize() {
-    this.updateProductFromController();
-    this.updateValueToDisplay();
-  }
+  private setFormat = (event: Event) => {
+    const customEvent = event as CustomEvent<NumberFormatter>;
+    customEvent.preventDefault();
+    customEvent.stopPropagation();
+    this.formatter = customEvent.detail;
+  };
 
-  private formatValue(value: number): string {
-    try {
-      const languages = this.bindings?.i18n?.languages || ['en'];
-      return this.formatter(value, [...languages]);
-    } catch (_) {
-      // Don't set this.error for formatting errors - they should not prevent rendering
-      return value.toString();
+  private get value() {
+    const product = this.productController.item;
+
+    if (!product) {
+      return null;
     }
+    const value = parseValue(product, this.field);
+    if (value === null) {
+      return null;
+    }
+    return this.formatter(value, this.bindings.i18n.languages as string[]);
   }
 
-  private updateValueToDisplay() {
-    if (!this.product || !this.field) {
-      this.valueToDisplay = null;
-      return;
-    }
-
-    try {
-      const value = parseValue(this.product, this.field);
-      if (value !== null) {
-        this.valueToDisplay = this.formatValue(value);
-      } else {
-        this.valueToDisplay = null;
-      }
-    } catch (error) {
-      this.error = error as Error;
-      this.valueToDisplay = null;
-    }
-  }
-
-  private updateProductFromController() {
-    // Only update from controller if no product has been set directly
-    if (!this._product && this.productController.item) {
-      this._product = this.productController.item;
-    }
-  }
-
-  protected willUpdate(changedProperties: PropertyValues): void {
-    this.updateProductFromController();
-
-    // Update value display when relevant properties change
-    if (
-      changedProperties.has('field') ||
-      changedProperties.has('_product') ||
-      changedProperties.has('formatter')
-    ) {
-      this.updateValueToDisplay();
-    }
-  }
-
-  @bindingGuard()
   @errorGuard()
+  @bindingGuard()
   render() {
-    return html`
-      ${when(
-        this.valueToDisplay !== null,
-        () => html`${this.valueToDisplay}`,
-        () => nothing
-      )}
-    `;
+    return html`${when(this.value !== null, () => html`${this.value}`)}`;
+  }
+}
+
+declare global {
+  interface HTMLElementTagNameMap {
+    'atomic-product-numeric-field-value': AtomicProductNumericFieldValue;
   }
 }
