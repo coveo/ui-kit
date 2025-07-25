@@ -6,6 +6,7 @@ import utilities from '@/src/utils/tailwind-utilities/utilities.tw.css';
 let tailwindPropertiesInjected = false;
 
 function injectTailwindProperties() {
+  if (typeof document === 'undefined') return;
   if (tailwindPropertiesInjected) return;
   const propCss = styles as unknown as string[] | string;
   const fullCss = Array.isArray(propCss) ? propCss.join('') : propCss;
