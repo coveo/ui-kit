@@ -6,7 +6,7 @@ import {
   InitializeBindings,
 } from '../../../utils/initialization-utils';
 import {filterProtocol} from '../../../utils/xss-utils';
-import {ImageCarousel} from '../../common/image-carousel/image-carousel';
+import {ImageCarousel} from '../../common/image-carousel/stencil-image-carousel';
 import {CommerceBindings as Bindings} from '../atomic-commerce-interface/atomic-commerce-interface';
 import {ProductContext} from '../product-template-component-utils/stencil-product-template-decorators';
 
