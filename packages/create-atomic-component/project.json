@@ -1,0 +1,14 @@
+{
+  "name": "create-atomic-component",
+  "root": "packages/create-atomic-component",
+  "sourceRoot": "packages/create-atomic-component/template",
+  "projectType": "application",
+  "implicitDependencies": ["create-atomic-component-template"],
+  "targets": {
+    "build": {
+      "executor": "nx:noop"
+    },
+    "release:phase1": {},
+    "release:phase3": {}
+  }
+}
