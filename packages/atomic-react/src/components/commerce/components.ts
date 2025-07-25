@@ -1,4 +1,5 @@
 import {
+  AtomicAriaLive as LitAtomicAriaLive,
   AtomicCommerceBreadbox as LitAtomicCommerceBreadbox,
   AtomicCommerceDidYouMean as LitAtomicCommerceDidYouMean,
   AtomicCommerceInterface as LitAtomicCommerceInterface,
@@ -34,16 +35,16 @@ import {
 import {createComponent} from '@lit/react';
 import React from 'react';
 
-export const AtomicCommerceBreadbox = createComponent({
-  tagName: 'atomic-commerce-breadbox',
-  react: React,
-  elementClass: LitAtomicCommerceBreadbox,
-});
-
 export const AtomicCommerceDidYouMean = createComponent({
   tagName: 'atomic-commerce-did-you-mean',
   react: React,
   elementClass: LitAtomicCommerceDidYouMean,
+});
+
+export const AtomicCommerceBreadbox = createComponent({
+  tagName: 'atomic-commerce-breadbox',
+  react: React,
+  elementClass: LitAtomicCommerceBreadbox,
 });
 
 export const AtomicCommerceInterface = createComponent({
@@ -82,16 +83,16 @@ export const AtomicCommerceProductList = createComponent({
   elementClass: LitAtomicCommerceProductList,
 });
 
-export const AtomicCommerceProductsPerPage = createComponent({
-  tagName: 'atomic-commerce-products-per-page',
-  react: React,
-  elementClass: LitAtomicCommerceProductsPerPage,
-});
-
 export const AtomicCommerceQueryError = createComponent({
   tagName: 'atomic-commerce-query-error',
   react: React,
   elementClass: LitAtomicCommerceQueryError,
+});
+
+export const AtomicCommerceProductsPerPage = createComponent({
+  tagName: 'atomic-commerce-products-per-page',
+  react: React,
+  elementClass: LitAtomicCommerceProductsPerPage,
 });
 
 export const AtomicCommerceQuerySummary = createComponent({
@@ -178,16 +179,16 @@ export const AtomicProductExcerpt = createComponent({
   elementClass: LitAtomicProductExcerpt,
 });
 
-export const AtomicProductMultiValueText = createComponent({
-  tagName: 'atomic-product-multi-value-text',
-  react: React,
-  elementClass: LitAtomicProductMultiValueText,
-});
-
 export const AtomicProductNumericFieldValue = createComponent({
   tagName: 'atomic-product-numeric-field-value',
   react: React,
   elementClass: LitAtomicProductNumericFieldValue,
+});
+
+export const AtomicProductMultiValueText = createComponent({
+  tagName: 'atomic-product-multi-value-text',
+  react: React,
+  elementClass: LitAtomicProductMultiValueText,
 });
 
 export const AtomicProductPrice = createComponent({
@@ -202,16 +203,22 @@ export const AtomicProductText = createComponent({
   elementClass: LitAtomicProductText,
 });
 
-export const AtomicComponentError = createComponent({
-  tagName: 'atomic-component-error',
+export const AtomicAriaLive = createComponent({
+  tagName: 'atomic-aria-live',
   react: React,
-  elementClass: LitAtomicComponentError,
+  elementClass: LitAtomicAriaLive,
 });
 
 export const AtomicIcon = createComponent({
   tagName: 'atomic-icon',
   react: React,
   elementClass: LitAtomicIcon,
+});
+
+export const AtomicComponentError = createComponent({
+  tagName: 'atomic-component-error',
+  react: React,
+  elementClass: LitAtomicComponentError,
 });
 
 export const AtomicLayoutSection = createComponent({

@@ -8,8 +8,9 @@ import {randomID} from '../../../utils/utils';
 type Regions = {[regionName: string]: {assertive: boolean; message: string}};
 
 /**
- * @internal
  * The `atomic-aria-live` component notifies screen readers of changes in the search and commerce interfaces.
+ *
+ * @event atomic/accessibility/findAriaLive - Dispatches an event to find the `atomic-aria-live` element.
  */
 @customElement('atomic-aria-live')
 export class AtomicAriaLive extends LitElement {
@@ -46,7 +47,13 @@ export class AtomicAriaLive extends LitElement {
   };
 
   /**
-   * @internal
+   * Updates the message and assertiveness for a specific ARIA live region.
+   * If a message is provided, the update is debounced to avoid rapid changes.
+   * If the message is empty, any pending update is canceled and the region is cleared immediately.
+   *
+   * @param region - The name of the ARIA live region to update.
+   * @param message - The message to announce in the region.
+   * @param assertive - Whether the region should use 'assertive' or 'polite' mode.
    */
   public updateMessage(region: string, message: string, assertive: boolean) {
     const updateRegion = () => {
@@ -62,7 +69,10 @@ export class AtomicAriaLive extends LitElement {
   }
 
   /**
-   * @internal
+   * Registers a new ARIA live region if it does not already exist.
+   *
+   * @param region - The name of the ARIA live region to register.
+   * @param assertive - Whether the region should use 'assertive' or 'polite' mode.
    */
   public registerRegion(region: string, assertive: boolean) {
     if (region in this.regions) {

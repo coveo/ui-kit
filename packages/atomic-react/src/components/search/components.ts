@@ -1,4 +1,5 @@
 import {
+  AtomicAriaLive as LitAtomicAriaLive,
   AtomicComponentError as LitAtomicComponentError,
   AtomicIcon as LitAtomicIcon,
   AtomicLayoutSection as LitAtomicLayoutSection,
@@ -6,16 +7,22 @@ import {
 import {createComponent} from '@lit/react';
 import React from 'react';
 
-export const AtomicComponentError = createComponent({
-  tagName: 'atomic-component-error',
+export const AtomicAriaLive = createComponent({
+  tagName: 'atomic-aria-live',
   react: React,
-  elementClass: LitAtomicComponentError,
+  elementClass: LitAtomicAriaLive,
 });
 
 export const AtomicIcon = createComponent({
   tagName: 'atomic-icon',
   react: React,
   elementClass: LitAtomicIcon,
+});
+
+export const AtomicComponentError = createComponent({
+  tagName: 'atomic-component-error',
+  react: React,
+  elementClass: LitAtomicComponentError,
 });
 
 export const AtomicLayoutSection = createComponent({
