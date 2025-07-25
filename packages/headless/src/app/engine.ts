@@ -271,7 +271,7 @@ export function buildCoreEngine<
   ExtraArguments,
   Configuration
 > {
-  const {reducers} = options;
+  const {reducers, navigatorContextProvider} = options;
   const reducerManager = createReducerManager(
     {...reducers, configurationReducer},
     options.preloadedState ?? {}
@@ -283,10 +283,10 @@ export function buildCoreEngine<
   const thunkExtraArgumentsWithRelay: CoreExtraArguments & ExtraArguments = {
     ...thunkExtraArguments,
     get relay() {
-      return getRelayInstanceFromState(engine.state);
+      return getRelayInstanceFromState(engine.state, navigatorContextProvider);
     },
     get navigatorContext() {
-      return getNavigatorContext(options.navigatorContextProvider);
+      return getNavigatorContext(this.relay, navigatorContextProvider);
     },
   };
   const store = createStore(
@@ -322,11 +322,11 @@ export function buildCoreEngine<
     },
 
     get relay() {
-      return getRelayInstanceFromState(this.state);
+      return getRelayInstanceFromState(this.state, navigatorContextProvider);
     },
 
     get navigatorContext() {
-      return getNavigatorContext(options.navigatorContextProvider);
+      return getNavigatorContext(this.relay, navigatorContextProvider);
     },
 
     logger,

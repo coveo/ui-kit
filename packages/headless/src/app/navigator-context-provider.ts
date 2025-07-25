@@ -1,4 +1,4 @@
-import {createRelay} from '@coveo/relay';
+import type {Relay} from '@coveo/relay';
 
 /**
  * The `NavigatorContext` interface represents the context of the browser client.
@@ -52,33 +52,11 @@ export const defaultNodeJSNavigatorContextProvider: NavigatorContextProvider =
   });
 
 export const getNavigatorContext = (
+  relay: Relay,
   customProvider?: NavigatorContextProvider
 ): NavigatorContext => {
-  const environment = getEnvironment(customProvider);
-  const relay = createRelay({
-    url: '',
-    token: '',
-    trackingId: null,
-    environment,
-  });
-
   const {referrer, userAgent, location, clientId} = relay.getMeta('');
   const customContext = customProvider ? customProvider() : {};
 
   return {...customContext, referrer, userAgent, location, clientId};
-};
-
-const getEnvironment = (customProvider?: NavigatorContextProvider) => {
-  if (!customProvider) {
-    return undefined;
-  }
-
-  const customContext = customProvider();
-
-  return {
-    getLocation: () => customContext.location,
-    getReferrer: () => customContext.referrer,
-    getUserAgent: () => customContext.userAgent,
-    generateUUID: () => customContext.clientId,
-  };
 };
