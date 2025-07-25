@@ -17,7 +17,7 @@
       "!**/packages/create-atomic-component-project/template/**/*",
 
       // Root excluded files.
-      "!**/.deployment.config.json",
+      "!**/.deployment.config/**/*",
 
       // atomic excluded files.
       "!**/packages/atomic/**/cypress/**/*",

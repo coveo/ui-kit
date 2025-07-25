@@ -1,0 +1,162 @@
+{
+  "deployment_config_version": 19,
+  "product": "ui-kit-pr",
+  "team_name": "searchui",
+  "general": {
+    "aws_regions": {
+      "sequential": [
+        "FIRST_MAIN_REGION"
+      ]
+    },
+    "environments_order": {
+      "sequential": [
+        "dev"
+      ]
+    },
+    "team_jenkins": "searchuibuilds",
+    "start_environment_automatically": false,
+    "notifications": {
+      "slack_channels": [
+        "#searchuibuilds"
+      ]
+    }
+  },
+  "dag_phases": [
+    {
+      "id": "deploy-bueno-patch-to-s3-version",
+      "s3": {
+        "bucket": "{terraform.infra.infra.bucket_binaries}",
+        "directory": "proda/StaticCDN/bueno/v$[BUENO_PATCH_VERSION]",
+        "source": "packages/bueno/cdn",
+        "parameters": {
+          "acl": "public-read"
+        }
+      }
+    },
+    {
+      "id": "deploy-headless-patch-to-s3-version",
+      "s3": {
+        "bucket": "{terraform.infra.infra.bucket_binaries}",
+        "directory": "proda/StaticCDN/headless/v$[HEADLESS_PATCH_VERSION]",
+        "source": "packages/headless/cdn",
+        "parameters": {
+          "acl": "public-read"
+        }
+      }
+    },
+    {
+      "id": "deploy-atomic-patch-to-s3-version",
+      "s3": {
+        "bucket": "{terraform.infra.infra.bucket_binaries}",
+        "directory": "proda/StaticCDN/atomic/v$[ATOMIC_PATCH_VERSION]",
+        "source": "packages/atomic/cdn",
+        "parameters": {
+          "acl": "public-read"
+        }
+      }
+    },
+    {
+      "id": "deploy-atomic-patch-storybook-to-s3-version",
+      "s3": {
+        "bucket": "{terraform.infra.infra.bucket_binaries}",
+        "directory": "proda/StaticCDN/atomic/v$[ATOMIC_PATCH_VERSION]/storybook",
+        "source": "packages/atomic/dist-storybook",
+        "parameters": {
+          "acl": "public-read"
+        }
+      }
+    },
+    {
+      "id": "deploy-atomic-nightly-storybook-to-s3-version",
+      "s3": {
+        "bucket": "{terraform.infra.infra.bucket_binaries}",
+        "directory": "proda/StaticCDN/atomic/v$[ATOMIC_MAJOR_VERSION]-nightly/storybook",
+        "source": "packages/atomic/dist-storybook",
+        "parameters": {
+          "acl": "public-read"
+        }
+      }
+    },
+    {
+      "id": "deploy-atomic-react-patch-to-s3-version",
+      "s3": {
+        "bucket": "{terraform.infra.infra.bucket_binaries}",
+        "directory": "proda/StaticCDN/atomic-react/v$[ATOMIC_REACT_PATCH_VERSION]",
+        "source": "packages/atomic-react/dist",
+        "parameters": {
+          "acl": "public-read"
+        }
+      }
+    },
+    {
+      "id": "deploy-atomic-hosted-page-patch-to-s3-version",
+      "s3": {
+        "bucket": "{terraform.infra.infra.bucket_binaries}",
+        "directory": "proda/StaticCDN/atomic-hosted-page/v$[ATOMIC_HOSTED_PAGE_PATCH_VERSION]/atomic-hosted-page",
+        "source": "packages/atomic-hosted-page/cdn",
+        "parameters": {
+          "acl": "public-read"
+        }
+      }
+    },
+    {
+      "id": "deploy-shopify-patch-to-s3-version",
+      "s3": {
+        "bucket": "{terraform.infra.infra.bucket_binaries}",
+        "directory": "proda/StaticCDN/shopify/v$[SHOPIFY_PATCH_VERSION]",
+        "source": "packages/shopify/cdn",
+        "parameters": {
+          "acl": "public-read"
+        }
+      }
+    },
+    {
+      "id": "deploy-shopify-minor-to-s3-version",
+      "s3": {
+        "bucket": "{terraform.infra.infra.bucket_binaries}",
+        "directory": "proda/StaticCDN/shopify/v$[SHOPIFY_MINOR_VERSION]",
+        "source": "packages/shopify/cdn",
+        "parameters": {
+          "acl": "public-read"
+        }
+      }
+    },
+    {
+      "id": "deploy-shopify-major-to-s3-version",
+      "s3": {
+        "bucket": "{terraform.infra.infra.bucket_binaries}",
+        "directory": "proda/StaticCDN/shopify/v$[SHOPIFY_MAJOR_VERSION]",
+        "source": "packages/shopify/cdn",
+        "parameters": {
+          "acl": "public-read"
+        }
+      }
+    },
+    {
+      "id": "deploy-shopify-nightly-to-s3-version",
+      "s3": {
+        "bucket": "{terraform.infra.infra.bucket_binaries}",
+        "directory": "proda/StaticCDN/shopify/v$[SHOPIFY_MAJOR_VERSION]-nightly",
+        "source": "packages/shopify/cdn",
+        "parameters": {
+          "acl": "public-read"
+        }
+      }
+    }
+  ],
+  "certifiers": {
+    "observatory": {
+      "no_endpoint": true
+    },
+    "package_rollout": {
+      "only_consider_changesets_after": "b244fe702d8e96d016a52715e92c8131acfde3ba",
+      "jira_issues_discovery": {
+        "stop_after_first_issue": true,
+        "branch_name": false,
+        "commit_message": false,
+        "pull_request_title": true,
+        "pull_request_description": true
+      }
+    }
+  }
+}
