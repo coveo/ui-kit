@@ -1,5 +1,5 @@
-/* eslint-disable @cspell/spellchecker */
-import {FunctionalComponent, h} from '@stencil/core';
+import {html} from 'lit';
+import type {FunctionalComponent} from '@/src/utils/functional-component-utils';
 
 interface CarouselIndicatorProps {
   numberOfImages: number;
@@ -8,18 +8,22 @@ interface CarouselIndicatorProps {
   maxImagesBeforeAndAfter?: number;
 }
 
-const CarouselIndicator: FunctionalComponent<CarouselIndicatorProps> = ({
-  numberOfImages,
-  currentImage: currentImage,
-  navigateToImage: navigateToImage,
-  maxImagesBeforeAndAfter = 2,
+export const renderCarouselIndicator: FunctionalComponent<
+  CarouselIndicatorProps
+> = ({
+  props: {
+    numberOfImages,
+    currentImage,
+    navigateToImage,
+    maxImagesBeforeAndAfter = 2,
+  },
 }) => {
-  return (
+  return html`
     <ul
       part="indicators"
       class="absolute bottom-2 mt-6 mb-1 flex max-w-4/5 items-center justify-center gap-2"
     >
-      {Array.from({length: numberOfImages}, (_, index) => {
+      ${Array.from({length: numberOfImages}, (_, index) => {
         const isActive = index === currentImage % numberOfImages;
 
         const shouldDisplay =
@@ -31,35 +35,29 @@ const CarouselIndicator: FunctionalComponent<CarouselIndicatorProps> = ({
             );
 
         const isLastDisplayed =
-          index ===
-            Math.min(
-              currentImage + maxImagesBeforeAndAfter,
-              numberOfImages - 1
-            ) && index < numberOfImages - 1;
+          index === currentImage + maxImagesBeforeAndAfter &&
+          index < numberOfImages - 1;
 
         const isFirstDisplayed =
-          index === Math.max(0, currentImage - maxImagesBeforeAndAfter) &&
-          index > 0;
+          index === currentImage - maxImagesBeforeAndAfter && index > 0;
 
-        return (
+        return html`
           <li
-            part={`indicator ${isActive ? 'active-indicator' : ''}`}
-            class={`hover:bg-primary-light cursor-pointer rounded-md shadow transition-all duration-200 ease-in-out ${
+            part=${`indicator${isActive ? ' active-indicator' : ''}`}
+            class=${`hover:bg-primary-light cursor-pointer rounded-md shadow transition-all duration-200 ease-in-out ${
               isActive ? 'bg-primary' : 'bg-neutral'
             } ${isLastDisplayed || isFirstDisplayed ? 'mobile-only:w-2 mobile-only:h-2 h-1 w-1 scale-75 transform' : 'mobile-only:w-3 mobile-only:h-3 h-2 w-2 scale-100 transform'} ${
               shouldDisplay
                 ? 'pointer-events-auto opacity-80'
                 : 'pointer-events-none hidden opacity-0'
             }`}
-            onClick={(event) => {
+            @click=${(event: Event) => {
               event.stopPropagation();
               navigateToImage(index);
             }}
           ></li>
-        );
+        `;
       })}
     </ul>
-  );
+  `;
 };
-
-export default CarouselIndicator;
