@@ -36,24 +36,6 @@ import {
 import {createComponent} from '@lit/react';
 import React from 'react';
 
-export const AtomicComponentError = createComponent({
-  tagName: 'atomic-component-error',
-  react: React,
-  elementClass: LitAtomicComponentError,
-});
-
-export const AtomicIcon = createComponent({
-  tagName: 'atomic-icon',
-  react: React,
-  elementClass: LitAtomicIcon,
-});
-
-export const AtomicLayoutSection = createComponent({
-  tagName: 'atomic-layout-section',
-  react: React,
-  elementClass: LitAtomicLayoutSection,
-});
-
 export const AtomicCommerceBreadbox = createComponent({
   tagName: 'atomic-commerce-breadbox',
   react: React,
@@ -96,16 +78,22 @@ export const AtomicCommercePager = createComponent({
   elementClass: LitAtomicCommercePager,
 });
 
+export const AtomicCommerceProductList = createComponent({
+  tagName: 'atomic-commerce-product-list',
+  react: React,
+  elementClass: LitAtomicCommerceProductList,
+});
+
 export const AtomicCommerceProductsPerPage = createComponent({
   tagName: 'atomic-commerce-products-per-page',
   react: React,
   elementClass: LitAtomicCommerceProductsPerPage,
 });
 
-export const AtomicCommerceProductList = createComponent({
-  tagName: 'atomic-commerce-product-list',
+export const AtomicCommerceQueryError = createComponent({
+  tagName: 'atomic-commerce-query-error',
   react: React,
-  elementClass: LitAtomicCommerceProductList,
+  elementClass: LitAtomicCommerceQueryError,
 });
 
 export const AtomicCommerceQuerySummary = createComponent({
@@ -118,12 +106,6 @@ export const AtomicCommerceRecommendationInterface = createComponent({
   tagName: 'atomic-commerce-recommendation-interface',
   react: React,
   elementClass: LitAtomicCommerceRecommendationInterface,
-});
-
-export const AtomicCommerceQueryError = createComponent({
-  tagName: 'atomic-commerce-query-error',
-  react: React,
-  elementClass: LitAtomicCommerceQueryError,
 });
 
 export const AtomicCommerceRecommendationList = createComponent({
@@ -180,16 +162,22 @@ export const AtomicCommerceText = createComponent({
   elementClass: LitAtomicCommerceText,
 });
 
+export const AtomicProduct = createComponent({
+  tagName: 'atomic-product',
+  react: React,
+  elementClass: LitAtomicProduct,
+});
+
 export const AtomicProductChildren = createComponent({
   tagName: 'atomic-product-children',
   react: React,
   elementClass: LitAtomicProductChildren,
 });
 
-export const AtomicProduct = createComponent({
-  tagName: 'atomic-product',
+export const AtomicProductExcerpt = createComponent({
+  tagName: 'atomic-product-excerpt',
   react: React,
-  elementClass: LitAtomicProduct,
+  elementClass: LitAtomicProductExcerpt,
 });
 
 export const AtomicProductImage = createComponent({
@@ -198,10 +186,10 @@ export const AtomicProductImage = createComponent({
   elementClass: LitAtomicProductImage,
 });
 
-export const AtomicProductExcerpt = createComponent({
-  tagName: 'atomic-product-excerpt',
+export const AtomicProductMultiValueText = createComponent({
+  tagName: 'atomic-product-multi-value-text',
   react: React,
-  elementClass: LitAtomicProductExcerpt,
+  elementClass: LitAtomicProductMultiValueText,
 });
 
 export const AtomicProductNumericFieldValue = createComponent({
@@ -216,14 +204,26 @@ export const AtomicProductPrice = createComponent({
   elementClass: LitAtomicProductPrice,
 });
 
-export const AtomicProductMultiValueText = createComponent({
-  tagName: 'atomic-product-multi-value-text',
-  react: React,
-  elementClass: LitAtomicProductMultiValueText,
-});
-
 export const AtomicProductText = createComponent({
   tagName: 'atomic-product-text',
   react: React,
   elementClass: LitAtomicProductText,
+});
+
+export const AtomicComponentError = createComponent({
+  tagName: 'atomic-component-error',
+  react: React,
+  elementClass: LitAtomicComponentError,
+});
+
+export const AtomicIcon = createComponent({
+  tagName: 'atomic-icon',
+  react: React,
+  elementClass: LitAtomicIcon,
+});
+
+export const AtomicLayoutSection = createComponent({
+  tagName: 'atomic-layout-section',
+  react: React,
+  elementClass: LitAtomicLayoutSection,
 });
