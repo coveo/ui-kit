@@ -250,7 +250,7 @@ export class AtomicProductImage
               class="aspect-square w-full h-full object-contain"
               alt=${alt}
               src="${this.fallback}"
-              loading="eager"
+              loading="lazy"
             />
           `;
         },
