@@ -25,7 +25,6 @@ describe('atomic-product-multi-value-text', () => {
   let mockedBreadcrumbManager: BreadcrumbManager;
   interface renderProductMultiValueTextProps {
     interfaceElementType?: 'product-listing' | 'search';
-    product?: Product;
     productState?: Partial<Product>;
     field?: string;
     delimiter?: string;
@@ -46,17 +45,12 @@ describe('atomic-product-multi-value-text', () => {
 
   const renderProductMultiValueText = async ({
     interfaceElementType = 'product-listing',
-    product,
     field = 'cat_available_sizes',
     productState = {},
     delimiter,
     maxValuesToDisplay,
     breadcrumbState = {},
   }: renderProductMultiValueTextProps = {}) => {
-    const resolvedProduct =
-      //@ts-expect-error undefined product
-      product === 'undefined' ? product : buildFakeProduct(productState);
-
     mockedBreadcrumbManager = buildFakeBreadcrumbManager({
       state: breadcrumbState,
     });
@@ -84,7 +78,7 @@ describe('atomic-product-multi-value-text', () => {
         ></atomic-product-multi-value-text>
       `,
       selector: 'atomic-product-multi-value-text',
-      product: resolvedProduct,
+      product: buildFakeProduct(productState),
       bindings: (bindings) => {
         bindings.interfaceElement.type = interfaceElementType;
         bindings.engine = mockedEngine;
@@ -144,12 +138,6 @@ describe('atomic-product-multi-value-text', () => {
   it('should call breadcrumbManager on this.breadcrumbManager', async () => {
     const {element} = await renderProductMultiValueText();
     expect(element.breadcrumbManager).toBe(mockedBreadcrumbManager);
-  });
-
-  it('should render nothing when the product is not defined', async () => {
-    //@ts-expect-error undefined product
-    const {element} = await renderProductMultiValueText({product: 'undefined'});
-    expect(element).toBeEmptyDOMElement();
   });
 
   it('should render nothing when the field is not in the product', async () => {

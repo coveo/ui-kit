@@ -2,10 +2,8 @@ import {
   type BreadcrumbManager,
   buildProductListing,
   buildSearch,
-  type ProductListing,
   ProductTemplatesHelpers,
   type RegularFacetValue,
-  type Search,
 } from '@coveo/headless/commerce';
 import {html, LitElement, nothing, type TemplateResult, unsafeCSS} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
@@ -74,16 +72,12 @@ export class AtomicProductMultiValueText
   @state() private values: string[] = [];
 
   public initialize() {
-    let searchOrListing: ProductListing | Search;
-
-    if (this.bindings.interfaceElement.type === 'product-listing') {
-      searchOrListing = buildProductListing(this.bindings.engine);
-    } else {
-      searchOrListing = buildSearch(this.bindings.engine);
-    }
+    const searchOrListing =
+      this.bindings.interfaceElement.type === 'product-listing'
+        ? buildProductListing(this.bindings.engine)
+        : buildSearch(this.bindings.engine);
 
     this.breadcrumbManager = searchOrListing.breadcrumbManager();
-
     this.values = this.initializeValues();
   }
 
@@ -116,13 +110,17 @@ export class AtomicProductMultiValueText
   }
 
   private get facetSelectedValues() {
-    return this.breadcrumbManager.state.facetBreadcrumbs
-      .filter((facet) => facet.field === this.field)
-      .reduce((values, facet) => {
+    return this.breadcrumbManager.state.facetBreadcrumbs.reduce(
+      (values, facet) => {
+        if (facet.field !== this.field) {
+          return values;
+        }
         return values.concat(
           facet.values.map(({value}) => (value as RegularFacetValue).value)
         );
-      }, [] as string[]);
+      },
+      [] as string[]
+    );
   }
 
   private get sortedValues() {
@@ -176,10 +174,9 @@ export class AtomicProductMultiValueText
 
   private renderListItems(values: string[]) {
     const templates: TemplateResult[] = [];
-    for (let i = 0; i < this.numberOfValuesToDisplay; i++) {
-      if (i > 0) {
-        templates.push(this.renderSeparator());
-      }
+    templates.push(this.renderValue(values[0]));
+    for (let i = 1; i < this.numberOfValuesToDisplay; i++) {
+      templates.push(this.renderSeparator());
       templates.push(this.renderValue(values[i]));
     }
     if (this.shouldDisplayLabel) {
