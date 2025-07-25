@@ -5,7 +5,7 @@ import {
   getSampleSearchEngineConfiguration,
   type SearchEngine,
 } from '../../app/search-engine/search-engine.js';
-import {buildMockMeta} from '../../test/mock-meta.js';
+import {buildMockRelay} from '../../test/mock-relay.js';
 import {buildMockNonEmptyResult} from '../../test/mock-result.js';
 import {clearMicrotaskQueue} from '../../test/unit-test-utils.js';
 import {logDocumentOpen} from './result-analytics-actions.js';
@@ -26,14 +26,7 @@ describe('result analytics actions', () => {
       vi.mocked(CoveoSearchPageClient).mockReturnValue({
         makeDocumentOpen,
       } as unknown as CoveoSearchPageClient);
-      vi.mocked(createRelay).mockReturnValue({
-        emit,
-        getMeta: vi.fn(buildMockMeta),
-        on: vi.fn(),
-        off: vi.fn(),
-        updateConfig: vi.fn(),
-        version: 'foo',
-      });
+      vi.mocked(createRelay).mockReturnValue(buildMockRelay({emit}));
     });
 
     it('when analyticsMode is `legacy` should call coveo.analytics.makeDocumentOpen properly', async () => {
