@@ -1,4 +1,4 @@
-import {LinkUtils} from 'c/quanticUtils';
+import {LinkUtils, extractTextToHighlight} from 'c/quanticUtils';
 import {NavigationMixin} from 'lightning/navigation';
 import {LightningElement, api} from 'lwc';
 
@@ -18,7 +18,7 @@ export default class QuanticCitation extends NavigationMixin(LightningElement) {
   /**
    * The citation item information.
    * @api
-   * @type {{title: string, index: number, text: string, clickUri: string, fields: object}}
+   * @type {{title: string, index: number, text: string, uri: string, clickUri: string, fields: object}}
    */
   @api citation;
   /**
@@ -27,6 +27,13 @@ export default class QuanticCitation extends NavigationMixin(LightningElement) {
    * @type {InteractiveCitation}
    */
   @api interactiveCitation;
+  /**
+   * Whether to disable citation anchoring.
+   * @api
+   * @type {boolean}
+   * @default false
+   */
+  @api disableCitationAnchoring = false;
 
   /** @type {Object} */
   timeout;
@@ -111,7 +118,7 @@ export default class QuanticCitation extends NavigationMixin(LightningElement) {
   }
 
   handleClick(event) {
-    if (this.isSalesforceLink) {
+    if (this.isSalesforceLink && this.disableCitationAnchoring) {
       event.preventDefault();
       this.navigateToSalesforceRecord(event);
     }
@@ -127,6 +134,25 @@ export default class QuanticCitation extends NavigationMixin(LightningElement) {
       },
     };
     this[NavigationMixin.Navigate](targetPageRef);
+  }
+
+  /**
+   * Generates an encoded text fragment URL for the citation.
+   * This URL will highlight the text in the citation if it is an HTML file.
+   * @param {string} uri
+   * @param {string} text
+   * @returns {string}
+   * @example
+   * generateTextFragmentUrl('https://example.com', 'This is a sample text.');
+   * // Returns: 'https://example.com#:~:text=This%20is%20a%20sample%20text.'
+   */
+  generateTextFragmentUrl(uri, text) {
+    const highlight = extractTextToHighlight(text);
+    const encodedTextFragment = encodeURIComponent(highlight).replace(
+      /-/g,
+      '%2D'
+    );
+    return `${uri}#:~:text=${encodedTextFragment}`;
   }
 
   /**
@@ -146,9 +172,9 @@ export default class QuanticCitation extends NavigationMixin(LightningElement) {
 
   get hrefValue() {
     if (this.isSalesforceLink) {
-      return this.salesforceRecordUrl;
+      return this.generateTextFragmentUrl(this.salesforceRecordUrl, this.text);
     }
-    return this.clickUri;
+    return this.textFragmentUrl;
   }
 
   /**
@@ -179,5 +205,16 @@ export default class QuanticCitation extends NavigationMixin(LightningElement) {
 
   get index() {
     return this.citation?.index;
+  }
+
+  get textFragmentUrl() {
+    const uri = this.clickUri ?? this.citation?.uri;
+    const fileType = this.citation?.fields?.filetype;
+
+    if (this.disableCitationAnchoring || fileType !== 'html' || !this.text) {
+      return uri;
+    }
+
+    return this.generateTextFragmentUrl(uri, this.text);
   }
 }

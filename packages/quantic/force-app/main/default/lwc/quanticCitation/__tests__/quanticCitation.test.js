@@ -21,6 +21,9 @@ const exampleCitation = {
   clickUri: 'https://example.com/',
   permanentid: '1',
   text: 'text 01',
+  fields: {
+    filetype: 'html',
+  },
 };
 
 const exampleSalesforceCitation = {
@@ -37,7 +40,9 @@ const exampleSalesforceKnowledgeArticleCitation = {
     sfkavid: 'bar',
   },
 };
-const exampleSalesforceLink = 'https://www.example-salesforce.com';
+const exampleSalesforceLink = 'https://www.example-salesforce.com/#:~:text=text%2001';
+const exampleSalesforceLinkTooltip = 'https://www.example-salesforce.com#:~:text=text%2001';
+const exampleCitationTextFragmentUrl = 'https://example.com/#:~:text=text%2001';
 
 const defaultOptions = {
   citation: exampleCitation,
@@ -46,6 +51,7 @@ const defaultOptions = {
     beginDelayedSelect: () => functionsMocks.exampleBeginDelayedSelect(),
     cancelPendingSelect: () => functionsMocks.exampleCancelPendingSelect(),
   },
+  disableCitationAnchoring: false,
 };
 
 const selectors = {
@@ -124,9 +130,28 @@ describe('c-quantic-citation', () => {
     expect(citationTitle).not.toBeNull();
     expect(citationTooltip).not.toBeNull();
 
-    expect(citationLink.href).toBe(exampleCitation.clickUri);
+    expect(citationLink.href).toBe(exampleCitationTextFragmentUrl);
     expect(citationLink.target).toBe('_blank');
     expect(citationTitle.textContent).toBe(exampleCitation.title);
+  });
+
+  describe('when the citation source is of type Salesforce', () => {
+    it('should not prevent default behavior and not call the navigation mixin to open the link', async () => {
+      const element = createTestComponent({
+        ...defaultOptions,
+        citation: exampleSalesforceCitation,
+      });
+      await flushPromises();
+
+      const link = element.shadowRoot.querySelector(selectors.citationLink);
+      link.click();
+
+      const {pageReference} = getNavigateCalledWith();
+      expect(pageReference).toBeUndefined();
+
+      expect(link.href).toBe(exampleSalesforceLink);
+      expect(link.target).toBe('_blank');
+    });
   });
 
   describe('the analytics bindings of the link within the citation', () => {
@@ -198,59 +223,43 @@ describe('c-quantic-citation', () => {
     });
   });
 
-  describe('when the citation source is of type Salesforce', () => {
-    it('should call the navigation mixin to get the Salesforce record URL', async () => {
-      const element = createTestComponent({
-        ...defaultOptions,
-        citation: exampleSalesforceCitation,
+  describe('when citation anchoring is disabled', () => {
+    describe('when the citation source is not of type Salesforce', () => {
+      it('should leave the hrefValue as the citation uri', async () => {
+        const element = createTestComponent({
+          ...defaultOptions,
+          disableCitationAnchoring: true,
+        });
+        await flushPromises();
+
+        const link = element.shadowRoot.querySelector(selectors.citationLink);
+        expect(link.href).toBe(element.citation.uri);
       });
-      await flushPromises();
-
-      const link = element.shadowRoot.querySelector(selectors.citationLink);
-      const {pageReference} = getGenerateUrlCalledWith();
-
-      expect(pageReference.attributes.recordId).toBe(
-        exampleSalesforceCitation.fields.sfid
-      );
-      expect(link.href).toBe(`${exampleSalesforceLink}/`);
     });
 
-    it('should open the citation link inside Salesforce', async () => {
-      const element = createTestComponent({
-        ...defaultOptions,
-        citation: exampleSalesforceCitation,
+    describe('when the citation source is of type Salesforce', () => {
+      it('should call the navigation mixin to get the Salesforce record URL', async () => {
+        const element = createTestComponent({
+          ...defaultOptions,
+          citation: exampleSalesforceCitation,
+          disableCitationAnchoring: true,
+        });
+        await flushPromises();
+
+        const link = element.shadowRoot.querySelector(selectors.citationLink);
+        const {pageReference} = getGenerateUrlCalledWith();
+
+        expect(pageReference.attributes.recordId).toBe(
+          exampleSalesforceCitation.fields.sfid
+        );
+        expect(link.href).toBe(`${exampleSalesforceLink}`);
       });
-      await flushPromises();
 
-      const link = element.shadowRoot.querySelector(selectors.citationLink);
-      link.click();
-
-      const {pageReference} = getNavigateCalledWith();
-
-      expect(pageReference.attributes.recordId).toBe(
-        exampleSalesforceCitation.fields.sfid
-      );
-    });
-
-    it('should display the salesforce link inside the tooltip url', async () => {
-      const element = createTestComponent({
-        ...defaultOptions,
-        citation: exampleSalesforceCitation,
-      });
-      await flushPromises();
-
-      const citationTooltipUrl = element.shadowRoot.querySelector(
-        selectors.citationTooltipUrl
-      );
-      expect(citationTooltipUrl).not.toBeNull();
-      expect(citationTooltipUrl.textContent).toBe(exampleSalesforceLink);
-    });
-
-    describe('when the result is a knowledge article', () => {
       it('should open the citation link inside Salesforce', async () => {
         const element = createTestComponent({
           ...defaultOptions,
-          citation: exampleSalesforceKnowledgeArticleCitation,
+          citation: exampleSalesforceCitation,
+          disableCitationAnchoring: true,
         });
         await flushPromises();
 
@@ -260,9 +269,44 @@ describe('c-quantic-citation', () => {
         const {pageReference} = getNavigateCalledWith();
 
         expect(pageReference.attributes.recordId).toBe(
-          exampleSalesforceKnowledgeArticleCitation.fields.sfkavid
+          exampleSalesforceCitation.fields.sfid
         );
-        expect(link.href).toBe(`${exampleSalesforceLink}/`);
+      });
+
+      it('should display the salesforce link inside the tooltip url', async () => {
+        const element = createTestComponent({
+          ...defaultOptions,
+          citation: exampleSalesforceCitation,
+          disableCitationAnchoring: true,
+        });
+        await flushPromises();
+
+        const citationTooltipUrl = element.shadowRoot.querySelector(
+          selectors.citationTooltipUrl
+        );
+        expect(citationTooltipUrl).not.toBeNull();
+        expect(citationTooltipUrl.textContent).toBe(exampleSalesforceLinkTooltip);
+      });
+
+      describe('when the result is a knowledge article', () => {
+        it('should open the citation link inside Salesforce', async () => {
+          const element = createTestComponent({
+            ...defaultOptions,
+            citation: exampleSalesforceKnowledgeArticleCitation,
+            disableCitationAnchoring: true,
+          });
+          await flushPromises();
+
+          const link = element.shadowRoot.querySelector(selectors.citationLink);
+          link.click();
+
+          const {pageReference} = getNavigateCalledWith();
+
+          expect(pageReference.attributes.recordId).toBe(
+            exampleSalesforceKnowledgeArticleCitation.fields.sfkavid
+          );
+          expect(link.href).toBe(`${exampleSalesforceLink}`);
+        });
       });
     });
   });
