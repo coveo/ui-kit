@@ -139,8 +139,8 @@ export default class QuanticTooltip extends LightningElement {
   get tooltipArrowCSSClass() {
     return `tooltip__arrow slds-fall-into-ground slds-is-absolute ${
       this.displayTooltipAboveTarget
-        ? 'tooltip__arrow--positioned-above slds-nubbin_bottom tooltip-nubbin_bottom'
-        : 'tooltip__arrow--positioned-below slds-nubbin_top tooltip-nubbin_top'
+        ? 'tooltip__arrow--positioned-above slds-nubbin_bottom tooltip__nubbin--bottom'
+        : 'tooltip__arrow--positioned-below slds-nubbin_top tooltip__nubbin--top'
     } ${this.lightTheme ? 'tooltip__arrow--light' : 'tooltip__arrow--dark'} ${
       this.isVisible ? 'tooltip__content--visible' : ''
     }`;

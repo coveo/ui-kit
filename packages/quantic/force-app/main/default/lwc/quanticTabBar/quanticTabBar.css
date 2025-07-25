@@ -2,6 +2,6 @@
   max-width: 150px;
 }
 
-.tab-bar_more-button:focus {
+.tab-bar__more-button:focus {
   text-decoration: none;
 }

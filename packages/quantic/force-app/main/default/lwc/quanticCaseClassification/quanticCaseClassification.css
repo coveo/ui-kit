@@ -1,7 +1,7 @@
 lightning-icon {
   --slds-c-icon-color-foreground-default: var(--slds-g-color-brand-base-100, white);
 }
-.visual-picker__figure {
+.caseClassification-visual-picker__figure {
   width: 9.6rem;
   height: 2rem;
 }

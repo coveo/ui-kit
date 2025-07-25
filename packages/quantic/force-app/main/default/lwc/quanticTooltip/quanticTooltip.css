@@ -61,14 +61,14 @@
   width: fit-content;
 }
 
-.tooltip-nubbin_bottom:before,
-.tooltip-nubbin_bottom:after {
+.tooltip__nubbin--bottom:before,
+.tooltip__nubbin--bottom:after {
   clip-path: polygon(100% 0, 0% 100%, 100% 100%);
   border: solid 0.5px rgba(0, 0, 0, 0.16);
 }
 
-.tooltip-nubbin_top:before,
-.tooltip-nubbin_top:after {
+.tooltip__nubbin--top:before,
+.tooltip__nubbin--top:after {
   clip-path: polygon(100% 0, 0 0, 0 100%);
   border: solid 0.5px rgba(0, 0, 0, 0.16);
 }
