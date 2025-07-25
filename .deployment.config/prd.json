@@ -7,7 +7,7 @@
       "sequential": ["FIRST_MAIN_REGION"]
     },
     "environments_order": {
-      "sequential": ["dev", "stg", "prd"]
+      "sequential": ["stg", "prd"]
     },
     "team_jenkins": "searchuibuilds",
     "start_environment_automatically": false,
