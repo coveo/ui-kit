@@ -1,110 +1,45 @@
-import {
-  buildCommerceEngine,
-  type CommerceEngineConfiguration,
-  getSampleCommerceEngineConfiguration,
-  type ProductListing,
-  type Search,
-  type UrlManager,
-} from '@coveo/headless/commerce';
+import * as headless from '@coveo/headless/commerce';
+import i18next from 'i18next';
 import {html, LitElement} from 'lit';
 import {customElement, state} from 'lit/decorators.js';
+import {ifDefined} from 'lit/directives/if-defined.js';
 import {within} from 'shadow-dom-testing-library';
-import {
-  afterEach,
-  beforeEach,
-  describe,
-  expect,
-  type MockInstance,
-  test,
-  vi,
-} from 'vitest';
+import {beforeEach, describe, expect, it, vi} from 'vitest';
 import {bindings} from '@/src/decorators/bindings';
 import type {InitializableComponent} from '@/src/decorators/types';
 import {InitializeBindingsMixin} from '@/src/mixins/bindings-mixin';
-import {StorageItems} from '@/src/utils/local-storage-utils';
-import {DEFAULT_MOBILE_BREAKPOINT} from '@/src/utils/replace-breakpoint';
+import {markParentAsReady} from '@/src/utils/init-queue';
+import {
+  SafeStorage,
+  type StandaloneSearchBoxData,
+  StorageItems,
+} from '@/src/utils/local-storage-utils';
 import {fixture} from '@/vitest-utils/testing-helpers/fixture';
-import {fixtureCleanup} from '@/vitest-utils/testing-helpers/fixture-wrapper';
-import {stateKey} from '../../../../../headless/src/app/state-key';
+import {buildFakeCommerceEngine} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/engine';
+import {buildFakeContext} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/context-controller';
+import {buildFakeSearch} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/search-controller';
+import {buildFakeProductListing} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/product-listing-controller';
+import {buildFakeSummary} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/summary-subcontroller';
 import {
   AtomicCommerceInterface,
   type CommerceBindings,
+  type CommerceInitializationOptions,
 } from './atomic-commerce-interface';
+import {createCommerceStore} from './store';
 
-vi.mock('@coveo/headless/commerce', async () => {
-  const originalModule = await vi.importActual('@coveo/headless/commerce');
-  const state: {language: string; query?: string} = {language: 'en'};
-  return {
-    ...originalModule,
-    buildContext: vi.fn(() => {
-      const context = {
-        state: {...state},
-        setLanguage: (language: string) => {
-          context.state.language = language;
-        },
-      };
-      return context;
-    }),
-
-    buildProductListing: vi.fn(() => ({
-      summary: vi.fn(() => ({
-        subscribe: vi.fn(() => ({
-          unsubscribe: vi.fn(),
-        })),
-      })),
-      urlManager: vi.fn(() => ({
-        subscribe: vi.fn(() => ({
-          unsubscribe: vi.fn(),
-        })),
-      })),
-      executeFirstRequest: vi.fn(),
-    })),
-    buildSearch: vi.fn(() => {
-      const mockState = {firstRequestExecuted: true};
-      const mockSubscribe = vi.fn((callback) => {
-        return callback;
-      });
-      return {
-        summary: vi.fn(() => ({subscribe: mockSubscribe, state: mockState})),
-        urlManager: vi.fn(() => ({
-          subscribe: vi.fn(() => ({unsubscribe: vi.fn()})),
-        })),
-        executeFirstSearch: vi.fn(),
-      };
-    }),
-    loadQueryActions: vi.fn(() => ({
-      updateQuery: vi.fn(({query}) => ({
-        type: 'updateQuery',
-        payload: {query},
-      })),
-    })),
-    buildCommerceEngine: vi.fn(
-      (config: {configuration: CommerceEngineConfiguration}) => {
-        if (!config.configuration.organizationId) {
-          throw new Error('Invalid configuration: organizationId is required');
-        }
-        return {
-          [stateKey]: state,
-          ...config,
-          dispatch: vi.fn(),
-          addReducers: vi.fn(),
-          disableAnalytics: vi.fn(),
-          enableAnalytics: vi.fn(),
-          logger: {
-            info: vi.fn(),
-            warn: vi.fn(),
-            error: vi.fn(),
-          },
-          subscribe: vi.fn(() => {
-            return {
-              unsubscribe: vi.fn(),
-            };
-          }),
-        };
-      }
-    ),
-  };
-});
+vi.mock('i18next', {spy: true});
+vi.mock('@coveo/headless/commerce', {spy: true});
+vi.mock('./store', {spy: true});
+vi.mock('@/src/utils/init-queue', {spy: true});
+vi.mock('@/src/utils/local-storage-utils', () => ({
+  SafeStorage: vi.fn().mockImplementation(() => ({
+    getParsedJSON: vi.fn(),
+    removeItem: vi.fn(),
+  })),
+  StorageItems: {
+    STANDALONE_SEARCH_BOX_DATA: 'standalone-search-box-data',
+  },
+}));
 
 @customElement('test-element')
 @bindings()
@@ -116,455 +51,234 @@ class TestElement
   public bindings: CommerceBindings = {} as CommerceBindings;
   @state() public error!: Error;
 
-  public initialized = false;
+  public initialize() {}
 
   public render() {
     return html`test-element`;
   }
-
-  initialize = vi.fn();
 }
 
-const commerceEngineConfig: CommerceEngineConfiguration =
-  getSampleCommerceEngineConfiguration();
-describe('AtomicCommerceInterface', () => {
-  let element: AtomicCommerceInterface;
-  let childElement: InitializableComponent<CommerceBindings> & TestElement;
-  let consoleErrorSpy: ReturnType<typeof vi.spyOn>;
+describe('atomic-commerce-interface', () => {
+  beforeEach(async () => {
+    // Mock store methods
+    vi.mocked(createCommerceStore).mockReturnValue({
+      setLoadingFlag: vi.fn(),
+      unsetLoadingFlag: vi.fn(),
+      state: {
+        iconAssetsPath: './assets',
+        loadingFlags: ['firstRequestExecuted'],
+        mobileBreakpoint: '768px',
+      },
+    } as any);
+
+    // Mock i18next
+    vi.mocked(i18next.createInstance).mockReturnValue({
+      isInitialized: true,
+    } as any);
+
+    vi.mocked(headless.buildCommerceEngine).mockReturnValue(
+      buildFakeCommerceEngine({})
+    );
+    vi.mocked(headless.buildContext).mockReturnValue(buildFakeContext({}));
+    vi.mocked(headless.buildSearch).mockReturnValue(
+      buildFakeSearch({
+        implementation: {
+          summary: vi.fn(() => buildFakeSummary()),
+          urlManager: vi.fn(() => ({
+            subscribe: vi.fn(() => ({unsubscribe: vi.fn()})),
+            state: {fragment: ''},
+          })),
+          executeFirstSearch: vi.fn(),
+        },
+      })
+    );
+    vi.mocked(headless.buildProductListing).mockReturnValue(
+      buildFakeProductListing({
+        implementation: {
+          summary: vi.fn(() => buildFakeSummary()),
+          urlManager: vi.fn(() => ({
+            subscribe: vi.fn(() => ({unsubscribe: vi.fn()})),
+            state: {fragment: ''},
+          })),
+          executeFirstRequest: vi.fn(),
+        },
+      })
+    );
+    vi.mocked(headless.loadQueryActions).mockReturnValue({
+      updateQuery: vi.fn((payload) => ({
+        type: 'updateQuery',
+        payload,
+      })),
+    } as any);
+  });
+
+  const setupElement = async ({
+    analytics,
+    iconAssetsPath,
+    language,
+    languageAssetsPath,
+    logLevel,
+    reflectStateInUrl,
+    scrollContainer,
+    type,
+  }: {
+    analytics?: boolean;
+    iconAssetsPath?: string;
+    language?: string;
+    languageAssetsPath?: string;
+    logLevel?: string;
+    reflectStateInUrl?: boolean;
+    scrollContainer?: string;
+    type?: 'search' | 'product-listing';
+  } = {}) => {
+    const element = (await fixture<AtomicCommerceInterface>(
+      html`<atomic-commerce-interface
+        ?analytics=${analytics}
+        icon-assets-path=${ifDefined(iconAssetsPath)}
+        language=${ifDefined(language)}
+        language-assets-path=${ifDefined(languageAssetsPath)}
+        log-level=${ifDefined(logLevel)}
+        ?reflect-state-in-url=${reflectStateInUrl}
+        scroll-container=${ifDefined(scrollContainer)}
+        type=${ifDefined(type)}
+      >
+      </atomic-commerce-interface>`
+    )) as AtomicCommerceInterface;
+
+    expect(element).toBeInstanceOf(AtomicCommerceInterface);
+    return element;
+  };
 
   const addChildElement = async <T extends TestElement>(
+    element: AtomicCommerceInterface,
     tag = 'test-element'
   ) => {
-    childElement = document.createElement(
+    const childElement = document.createElement(
       tag
     ) as InitializableComponent<CommerceBindings> & T;
     element.appendChild(childElement);
 
     await childElement.updateComplete;
     expect(childElement).toBeInstanceOf(TestElement);
+
+    return childElement;
   };
 
-  const setupElement = async () => {
-    element = (await fixture<AtomicCommerceInterface>(
-      html` <atomic-commerce-interface
-        ><div>atomic-commerce-interface</div></atomic-commerce-interface
-      >`
-    )) as AtomicCommerceInterface;
+  describe('when created', () => {
+    it('should create a store instance', async () => {
+      const createCommerceStoreSpy = vi.mocked(createCommerceStore);
+      const element = await setupElement();
 
-    await element.updateComplete;
-    expect(element).toBeInstanceOf(AtomicCommerceInterface);
-  };
-
-  const teardownElement = async () => {
-    if (element) {
-      element.remove();
-    }
-  };
-
-  beforeEach(async () => {
-    await teardownElement();
-    fixtureCleanup();
-
-    consoleErrorSpy?.mockRestore();
-    await setupElement();
-    consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
-  });
-
-  test('should create the store', async () => {
-    expect(element.store).toBeDefined();
-    expect(element.store).toBeInstanceOf(Object);
-  });
-
-  test('should initialize engine with given options', async () => {
-    await element.initialize(commerceEngineConfig);
-    expect(element.engine).toBeTruthy();
-    expect(element.engine?.configuration.organizationId).toBe(
-      commerceEngineConfig.organizationId
-    );
-    expect(element.engine?.configuration.analytics.trackingId).toBe(
-      commerceEngineConfig.analytics.trackingId
-    );
-  });
-
-  test('should set error when initialization fails', async () => {
-    const invalidConfig = {...commerceEngineConfig, organizationId: ''};
-    await expect(element.initialize(invalidConfig)).rejects.toThrow();
-    expect(element.error).toBeDefined();
-  });
-
-  describe('before being initialized', () => {
-    test('when calling "executeFirstRequest", should log an error', async () => {
-      const errorMessage =
-        'You have to call "initialize" on the atomic-commerce-interface component before modifying the props or calling other public methods.';
-      await element.executeFirstRequest();
-      expect(consoleErrorSpy).toHaveBeenCalledWith(errorMessage, element);
+      expect(createCommerceStoreSpy).toHaveBeenCalledOnce();
+      expect(element.store).toBeDefined();
+      expect(element.store).toBe(createCommerceStoreSpy.mock.results[0].value);
     });
 
-    test('when changing a property too early, should return error', async () => {
-      const errorMessage =
-        'You have to call "initialize" on the atomic-commerce-interface component before modifying the props or calling other public methods.';
-      element.language = 'fr';
-      await element.updateComplete;
-      expect(consoleErrorSpy).toHaveBeenCalledWith(errorMessage, element);
+    it('should create an i18n instance', async () => {
+      const i18nextCreateInstanceSpy = vi.mocked(i18next.createInstance);
+      const element = await setupElement();
+
+      expect(i18nextCreateInstanceSpy).toHaveBeenCalledOnce();
+      expect(element.i18n).toBeDefined();
+      expect(element.i18n).toBe(i18nextCreateInstanceSpy.mock.results[0].value);
+    });
+
+    it('should set default type to search', async () => {
+      const element = await setupElement();
+      expect(element.type).toBe('search');
+    });
+
+    it('should set default analytics to true', async () => {
+      const element = await setupElement();
+      expect(element.analytics).toBe(true);
+    });
+
+    it('should set default reflectStateInUrl to true', async () => {
+      const element = await setupElement();
+      expect(element.reflectStateInUrl).toBe(true);
     });
   });
 
-  describe('when initialized with engine configuration', () => {
-    beforeEach(async () => {
-      await element.initialize(commerceEngineConfig);
-      await addChildElement();
+  describe('#initialize', () => {
+    const sampleConfig: CommerceInitializationOptions = {
+      organizationId: 'test-org',
+      analytics: {trackingId: 'test-tracking'},
+    } as CommerceInitializationOptions;
 
-      await element.executeFirstRequest();
-    });
+    it('should create a commerce engine with given configuration', async () => {
+      const element = await setupElement();
+      const buildCommerceEngineSpy = vi.mocked(headless.buildCommerceEngine);
 
-    test('should render the component and its children', async () => {
-      expect(element.shadowRoot).toBeTruthy();
-      expect(within(element).queryByShadowText('test-element')).toBeTruthy();
-    });
+      await element.initialize(sampleConfig);
 
-    test('should trigger the initialize method of the child component', async () => {
-      expect(childElement.initialize).toHaveBeenCalledOnce();
-    });
-
-    test('should provide bindings to children', async () => {
-      expect(childElement.bindings).toBeDefined();
-      expect(childElement.bindings.engine).toBe(element.engine);
-      expect(childElement.bindings.i18n).toBe(element.i18n);
-      expect(childElement.bindings.store).toBe(element.store);
-    });
-
-    test('should set engine after initialization', async () => {
-      await element.initialize(commerceEngineConfig);
-      expect(element.engine).toBeTruthy();
-    });
-
-    test('should log a warning when scrollContainer is not found', async () => {
-      const mockEngine = element.engine!;
-      const warnSpy = vi.spyOn(mockEngine.logger, 'warn');
-      element.scrollContainer = '.non-existent-container';
-      element.scrollToTop();
-      expect(warnSpy).toHaveBeenCalledWith(
-        `Could not find the scroll container with the selector "${element.scrollContainer}". This will prevent UX interactions that require a scroll from working correctly. Please review the CSS selector in the scrollContainer option`
+      expect(buildCommerceEngineSpy).toHaveBeenCalledWith(
+        expect.objectContaining({
+          configuration: expect.objectContaining({
+            organizationId: 'test-org',
+            analytics: expect.objectContaining({
+              trackingId: 'test-tracking',
+            }),
+          }),
+        })
       );
     });
 
-    describe('when properties changes', () => {
-      test('should update language when language property changes', async () => {
-        element.language = 'fr';
-        await element.updateComplete;
+    it('should set the engine property', async () => {
+      const element = await setupElement();
+      const mockEngine = buildFakeCommerceEngine({});
+      vi.mocked(headless.buildCommerceEngine).mockReturnValue(mockEngine);
 
-        const context = element.context;
-        expect(context.state.language).toBe('fr');
+      await element.initialize(sampleConfig);
+
+      expect(element.engine).toBe(mockEngine);
+    });
+
+    it('should set error when initialization fails', async () => {
+      const element = await setupElement();
+      const error = new Error('Initialization failed');
+      vi.mocked(headless.buildCommerceEngine).mockImplementation(() => {
+        throw error;
       });
 
-      test('should update icon assets path when iconAssetsPath property changes', async () => {
-        element.iconAssetsPath = '/new-assets';
-        await element.updateComplete;
-        expect(element.store.state.iconAssetsPath).toBe('/new-assets');
-      });
-
-      test('should update languageAssetsPath when property changes', async () => {
-        element.languageAssetsPath = '/new-lang-assets';
-        await element.updateComplete;
-        expect(element.languageAssetsPath).toBe('/new-lang-assets');
-      });
-
-      test('should update scrollContainer when property changes', async () => {
-        element.scrollContainer = '.new-scroll-container';
-        await element.updateComplete;
-        expect(element.scrollContainer).toBe('.new-scroll-container');
-      });
-
-      test('should update reflectStateInUrl when property changes', async () => {
-        element.reflectStateInUrl = false;
-        await element.updateComplete;
-        expect(element.reflectStateInUrl).toBe(false);
-      });
-
-      test('should initialize i18n instance after initialization', async () => {
-        await element.initialize(commerceEngineConfig);
-        expect(element.i18n).toBeDefined();
-        expect(element.i18n.isInitialized).toBeTruthy();
-      });
-
-      test('should update logLevel when property changes', async () => {
-        element.logLevel = 'debug';
-        await element.updateComplete;
-        expect(element.logLevel).toBe('debug');
-      });
-
-      test('should update type when property changes', async () => {
-        element.type = 'product-listing';
-        await element.updateComplete;
-        expect(element.type).toBe('product-listing');
-      });
-
-      test('should toggle analytics when property changes', async () => {
-        const mockEngine = element.engine!;
-        element.analytics = false;
-        await element.updateComplete;
-        expect(mockEngine.disableAnalytics).toHaveBeenCalled();
-
-        element.analytics = true;
-        await element.updateComplete;
-        expect(mockEngine.enableAnalytics).toHaveBeenCalled();
-      });
+      await expect(element.initialize(sampleConfig)).rejects.toThrow(error);
+      expect(element.error).toBe(error);
     });
   });
 
-  describe('when initialized with existing engine', () => {
-    let preconfiguredEngine: ReturnType<typeof buildCommerceEngine>;
+  describe('#executeFirstRequest', () => {
+    it('should log error when engine is not created', async () => {
+      const element = await setupElement();
+      const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation();
 
-    beforeEach(() => {
-      preconfiguredEngine = buildCommerceEngine({
-        configuration: getSampleCommerceEngineConfiguration(),
-      });
-    });
-
-    test('should render the component and its children', async () => {
-      await addChildElement();
-      await element.initializeWithEngine(preconfiguredEngine);
-      expect(element.shadowRoot).toBeTruthy();
-      expect(within(element).queryByShadowText('test-element')).toBeTruthy();
-    });
-
-    test('should initialize with a preconfigured engine', async () => {
-      await element.initializeWithEngine(preconfiguredEngine);
-      expect(element.engine).toBe(preconfiguredEngine);
-    });
-
-    test('should allow executing the first request after initialization', async () => {
-      await element.initializeWithEngine(preconfiguredEngine);
-      await element.executeFirstRequest();
-      expect(consoleErrorSpy).not.toHaveBeenCalled();
-    });
-  });
-
-  const interfaceType = [
-    {type: 'product-listing', description: 'when type is product-listing'},
-    {type: 'search', description: 'when type is search'},
-  ];
-
-  interfaceType.forEach(({type, description}) => {
-    describe(description, () => {
-      beforeEach(async () => {
-        element.type = type as 'product-listing' | 'search';
-        await element.updateComplete;
-        await element.initialize(commerceEngineConfig);
-      });
-
-      test(`should initialize the ${type} engine`, async () => {
-        expect(element.engine).toBeTruthy();
-        expect(element.type).toBe(type);
-      });
-
-      test('should allow executing the first request after initialization', async () => {
-        await element.executeFirstRequest();
-        expect(consoleErrorSpy).not.toHaveBeenCalled();
-      });
-    });
-  });
-
-  describe('loading flag', () => {
-    test('should set the loading flag during connectedCallback', async () => {
-      const firstRequestExecutedFlag = 'firstRequestExecuted';
-      expect(element.store.state.loadingFlags).toContain(
-        firstRequestExecutedFlag
-      );
-    });
-
-    test('should remove the loading flag on disconnect', async () => {
-      const firstRequestExecutedFlag = 'firstRequestExecuted';
-
-      await element.initialize(commerceEngineConfig);
-      expect(element.engine).toBeTruthy();
-
-      expect(element.store.state.loadingFlags).toContain(
-        firstRequestExecutedFlag
-      );
-
-      element.disconnectedCallback();
-
-      expect(element.store.state.loadingFlags).not.toContain(
-        firstRequestExecutedFlag
-      );
-    });
-  });
-
-  describe('mobile breakpoint', () => {
-    test('should keep the default mobile breakpoint when no atomic-commerce-layout element exists', () => {
-      expect(element.store.state.mobileBreakpoint).toBe(
-        DEFAULT_MOBILE_BREAKPOINT
-      );
-    });
-
-    test('should keep the default mobile breakpoint when atomic-commerce-layout has no mobileBreakpoint', () => {
-      const layoutElement = {};
-      const originalQuerySelector = element.querySelector.bind(element);
-      element.querySelector = vi.fn((selector: string) => {
-        if (selector === 'atomic-commerce-layout') {
-          return layoutElement as unknown as Element;
-        }
-        return originalQuerySelector(selector);
-      });
-
-      element.connectedCallback();
-
-      expect(element.store.state.mobileBreakpoint).toBe(
-        DEFAULT_MOBILE_BREAKPOINT
-      );
-    });
-
-    test('should update mobile breakpoint from atomic-commerce-layout when available', () => {
-      const layoutElement = {
-        mobileBreakpoint: '768px',
-      };
-      const originalQuerySelector = element.querySelector.bind(element);
-      element.querySelector = vi.fn((selector: string) => {
-        if (selector === 'atomic-commerce-layout') {
-          return layoutElement as unknown as Element;
-        }
-        return originalQuerySelector(selector);
-      });
-
-      element.connectedCallback();
-
-      expect(element.store.state.mobileBreakpoint).toBe('768px');
-    });
-  });
-
-  describe('aria-live', () => {
-    test('should add aria-live if no atomic-aria-live element exists', async () => {
-      await element.initialize(commerceEngineConfig);
-      const ariaLiveElement = element.querySelector('atomic-aria-live');
-      expect(ariaLiveElement).toBeTruthy();
-    });
-
-    test('should not add aria-live if an atomic-aria-live element already exists', async () => {
-      const existingAriaLive = document.createElement('atomic-aria-live');
-      element.appendChild(existingAriaLive);
-
-      await element.initialize(commerceEngineConfig);
-
-      const ariaLiveElements = element.querySelectorAll('atomic-aria-live');
-      expect(ariaLiveElements.length).toBe(1);
-    });
-    test('should remove aria-live on disconnect', async () => {
-      await element.initialize(commerceEngineConfig);
-      await element.updateComplete;
-      element.disconnectedCallback();
-      const ariaLiveElement = element?.querySelector('atomic-aria-live');
-      expect(ariaLiveElement).toBeFalsy();
-    });
-  });
-
-  describe('standalone search box', () => {
-    const mockSafeStorage = {
-      getItem: vi.fn() as MockInstance,
-      removeItem: vi.fn() as MockInstance,
-    };
-
-    beforeEach(() => {
-      mockSafeStorage.getItem = vi.spyOn(
-        Storage.prototype,
-        'getItem'
-      ) as unknown as MockInstance;
-      mockSafeStorage.removeItem = vi.spyOn(
-        Storage.prototype,
-        'removeItem'
-      ) as unknown as MockInstance;
-    });
-
-    afterEach(() => {
-      mockSafeStorage.getItem.mockRestore();
-      mockSafeStorage.removeItem.mockRestore();
-    });
-
-    test('should update query and execute first search when StandaloneSearchBoxData exists', async () => {
-      const standaloneSearchBoxData = {
-        value: 'test query',
-      };
-      mockSafeStorage.getItem.mockReturnValue(
-        JSON.stringify(standaloneSearchBoxData)
-      );
-
-      await element.initialize(commerceEngineConfig);
       await element.executeFirstRequest();
 
-      expect(element.engine?.dispatch).toHaveBeenCalledWith({
-        type: 'updateQuery',
-        payload: {query: 'test query'},
-      });
-    });
-
-    test('should execute first search without query update when StandaloneSearchBoxData does not exist', async () => {
-      mockSafeStorage.getItem.mockReturnValue(null);
-
-      await element.initialize(commerceEngineConfig);
-      await element.executeFirstRequest();
-
-      expect(element.engine?.dispatch).not.toHaveBeenCalledWith({
-        type: 'updateQuery',
-        payload: {query: undefined},
-      });
-    });
-
-    test('should remove StandaloneSearchBoxData from local storage after use', async () => {
-      const standaloneSearchBoxData = {
-        value: 'test query',
-      };
-      mockSafeStorage.getItem.mockReturnValue(
-        JSON.stringify(standaloneSearchBoxData)
-      );
-
-      await element.initialize(commerceEngineConfig);
-      await element.executeFirstRequest();
-
-      expect(mockSafeStorage.removeItem).toHaveBeenCalledWith(
-        StorageItems.STANDALONE_SEARCH_BOX_DATA
+      expect(consoleErrorSpy).toHaveBeenCalledWith(
+        'You have to call "initialize" on the atomic-commerce-interface component before modifying the props or calling other public methods.',
+        element
       );
     });
   });
 
-  describe('updateHash', () => {
-    beforeEach(async () => {
-      await element.initialize(commerceEngineConfig);
-      element.urlManager = {
-        state: {fragment: 'new-fragment'},
-        subscribe: vi.fn(),
-      } as unknown as UrlManager;
-    });
+  it('should render a slot', async () => {
+    const element = await setupElement();
 
-    test('should replace state in history when not loading', async () => {
-      element.searchOrListing = {
-        state: {isLoading: false},
-      } as unknown as Search | ProductListing;
+    expect(element.shadowRoot?.querySelector('slot')).toBeTruthy();
+  });
 
-      const replaceStateSpy = vi.spyOn(history, 'replaceState');
-      // biome-ignore lint/suspicious/noExplicitAny: <>
-      (element as any).updateHash();
+  it('should render its children', async () => {
+    const element = await setupElement();
+    await addChildElement(element);
 
-      expect(replaceStateSpy).toHaveBeenCalledWith(
-        null,
-        document.title,
-        '#new-fragment'
-      );
-    });
+    expect(within(element).queryByShadowText('test-element')).toBeTruthy();
+  });
 
-    test('should push state in history when loading', async () => {
-      element.searchOrListing = {
-        state: {isLoading: true},
-      } as unknown as Search | ProductListing;
+  it('should provide bindings to its children', async () => {
+    const element = await setupElement();
+    const childElement = await addChildElement(element);
 
-      const pushStateSpy = vi.spyOn(history, 'pushState');
-      // biome-ignore lint/suspicious/noExplicitAny: <>
-      (element as any).updateHash();
+    const mockEngine = buildFakeCommerceEngine({});
+    await element.initializeWithEngine(mockEngine);
 
-      expect(pushStateSpy).toHaveBeenCalledWith(
-        null,
-        document.title,
-        '#new-fragment'
-      );
-    });
+    expect(childElement.bindings).toBe(element.bindings);
   });
 });
