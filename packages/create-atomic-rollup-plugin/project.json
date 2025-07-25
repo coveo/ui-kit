@@ -1,0 +1,18 @@
+{
+  "name": "create-atomic-rollup-plugin",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "targets": {
+    "release:phase1": {},
+    "release:phase3": {},
+    "build": {
+      "executor": "nx:run-commands",
+      "outputs": ["{projectRoot}/lib"],
+      "cache": true,
+      "options": {
+        "commands": ["rimraf lib", "npm run build:ts"],
+        "parallel": false,
+        "cwd": "{projectRoot}"
+      }
+    }
+  }
+}

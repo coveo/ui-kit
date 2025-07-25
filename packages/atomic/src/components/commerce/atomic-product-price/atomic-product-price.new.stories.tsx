@@ -46,7 +46,7 @@ const {decorator: productTemplateDecorator} = wrapInProductTemplate();
 
 const meta: Meta = {
   component: 'atomic-product-price',
-  title: 'Atomic-Commerce/Product Template Components/ProductPrice',
+  title: 'Commerce/atomic-product-price',
   id: 'atomic-product-price',
   render: renderComponent,
   parameters,
@@ -55,7 +55,6 @@ const meta: Meta = {
 export default meta;
 
 export const Default: Story = {
-  name: 'atomic-product-price',
   decorators: [
     productTemplateDecorator,
     commerceProductListDecorator,
@@ -65,6 +64,7 @@ export const Default: Story = {
 };
 
 export const WithEURCurrency: Story = {
+  name: 'With a different currency',
   decorators: [
     productTemplateDecorator,
     commerceProductListDecorator,

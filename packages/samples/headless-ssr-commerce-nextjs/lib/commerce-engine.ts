@@ -1,7 +1,7 @@
 import {defineCommerceEngine} from '@coveo/headless-react/ssr-commerce';
 import engineConfig from './commerce-engine-config';
 
-export const engineDefinition = defineCommerceEngine(engineConfig);
+const engineDefinition = defineCommerceEngine(engineConfig);
 
 export const {
   listingEngineDefinition,
@@ -25,7 +25,7 @@ export const {
   useProductView,
   useQueryTrigger,
   useRecentQueriesList,
-  useRedirectionTrigger,
+
   useSearchBox,
   useSort,
   useStandaloneSearchBox,

@@ -22,6 +22,7 @@ import {bindings} from '@/src/decorators/bindings';
 import type {InitializableComponent} from '@/src/decorators/types';
 import {InitializeBindingsMixin} from '@/src/mixins/bindings-mixin';
 import {StorageItems} from '@/src/utils/local-storage-utils';
+import {DEFAULT_MOBILE_BREAKPOINT} from '@/src/utils/replace-breakpoint';
 import {fixture} from '@/vitest-utils/testing-helpers/fixture';
 import {fixtureCleanup} from '@/vitest-utils/testing-helpers/fixture-wrapper';
 import {stateKey} from '../../../../../headless/src/app/state-key';
@@ -387,6 +388,48 @@ describe('AtomicCommerceInterface', () => {
       expect(element.store.state.loadingFlags).not.toContain(
         firstRequestExecutedFlag
       );
+    });
+  });
+
+  describe('mobile breakpoint', () => {
+    test('should keep the default mobile breakpoint when no atomic-commerce-layout element exists', () => {
+      expect(element.store.state.mobileBreakpoint).toBe(
+        DEFAULT_MOBILE_BREAKPOINT
+      );
+    });
+
+    test('should keep the default mobile breakpoint when atomic-commerce-layout has no mobileBreakpoint', () => {
+      const layoutElement = {};
+      const originalQuerySelector = element.querySelector.bind(element);
+      element.querySelector = vi.fn((selector: string) => {
+        if (selector === 'atomic-commerce-layout') {
+          return layoutElement as unknown as Element;
+        }
+        return originalQuerySelector(selector);
+      });
+
+      element.connectedCallback();
+
+      expect(element.store.state.mobileBreakpoint).toBe(
+        DEFAULT_MOBILE_BREAKPOINT
+      );
+    });
+
+    test('should update mobile breakpoint from atomic-commerce-layout when available', () => {
+      const layoutElement = {
+        mobileBreakpoint: '768px',
+      };
+      const originalQuerySelector = element.querySelector.bind(element);
+      element.querySelector = vi.fn((selector: string) => {
+        if (selector === 'atomic-commerce-layout') {
+          return layoutElement as unknown as Element;
+        }
+        return originalQuerySelector(selector);
+      });
+
+      element.connectedCallback();
+
+      expect(element.store.state.mobileBreakpoint).toBe('768px');
     });
   });
 

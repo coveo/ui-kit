@@ -51,8 +51,7 @@
         "/react-router-dom/",
         "/react-dom/",
         "/@types/react/",
-        "next",
-        "/@remix-run/.*/"
+        "next"
       ]
     },
     {
@@ -130,21 +129,6 @@
       "rangeStrategy": "replace",
       "description": "Isolate lightningcss",
       "matchPackageNames": ["lightningcss"]
-    },
-    {
-      "matchFileNames": [
-        "packages/samples/headless-commerce-ssr-remix/package.json"
-      ],
-      "groupName": "React 18 for Remix sample",
-      "groupSlug": "remix-react18",
-      "rangeStrategy": "replace",
-      "allowedVersions": "18.x",
-      "matchPackageNames": [
-        "react",
-        "react-dom",
-        "@types/react",
-        "@types/react-dom"
-      ]
     },
     {
       "groupName": "biome",

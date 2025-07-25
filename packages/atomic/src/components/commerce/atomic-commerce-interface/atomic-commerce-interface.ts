@@ -184,6 +184,7 @@ export class AtomicCommerceInterface
   public connectedCallback() {
     super.connectedCallback();
     this.store.setLoadingFlag(FirstRequestExecutedFlag);
+    this.updateMobileBreakpoint();
 
     this.addEventListener(
       'atomic/initializeComponent',
@@ -243,6 +244,15 @@ export class AtomicCommerceInterface
     const ariaLive = this.querySelector('atomic-aria-live');
     if (ariaLive) {
       ariaLive.remove();
+    }
+  }
+
+  private updateMobileBreakpoint() {
+    const breakpoint = this.querySelector(
+      'atomic-commerce-layout'
+    )?.mobileBreakpoint;
+    if (breakpoint) {
+      this.store.state.mobileBreakpoint = breakpoint;
     }
   }
 

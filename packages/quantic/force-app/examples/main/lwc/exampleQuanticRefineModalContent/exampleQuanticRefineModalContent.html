@@ -11,7 +11,7 @@
     ></c-configurator>
 
     <c-quantic-search-interface slot="preview" engine-id={engineId}>
-      <c-quantic-sort engine-id={engineId} data-cy="main-sort">
+      <c-quantic-sort engine-id={engineId}>
         <template for:each={sortOptions} for:item="sortOption">
           <c-quantic-sort-option
             key={sortOption.value}

@@ -19,10 +19,7 @@
     "@types/react": "19.1.1",
     "@types/react-dom": "19.1.2",
     "cypress": "13.7.3",
-    "cypress-repeat": "2.3.9",
     "cypress-web-vitals": "4.2.0",
-    "eslint": "8.57.1",
-    "eslint-config-react-app": "7.0.1",
     "typescript": "5.8.3"
   }
 }
