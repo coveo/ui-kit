@@ -154,4 +154,21 @@ describe('withTailwindStyles decorator', () => {
       });
     });
   });
+
+  it('should inject Tailwind properties into document head', () => {
+    const tailwindPropertyStyles = Array.from(
+      document.head.querySelectorAll('style')
+    ).filter((el) => el.textContent?.startsWith('/* tailwind properties */'));
+    expect(tailwindPropertyStyles.length).toBe(1);
+  });
+
+  it('should not inject properties more than once when adding multiple components', () => {
+    setupElement('test-tailwind-element');
+    setupElement('test-tailwind-element-without-array');
+    setupElement('test-tailwind-element-no-styles');
+    const count = Array.from(document.head.querySelectorAll('style')).filter(
+      (el) => el.textContent?.startsWith('/* tailwind properties */')
+    ).length;
+    expect(count).toBe(1);
+  });
 });
