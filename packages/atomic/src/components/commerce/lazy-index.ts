@@ -78,8 +78,8 @@ export default {
     await import('./atomic-product-children/atomic-product-children.js'),
   'atomic-product-excerpt': async () =>
     await import('./atomic-product-excerpt/atomic-product-excerpt.js'),
-  'atomic-product-link': async () =>
-    await import('./atomic-product-link/atomic-product-link.js'),
+  'atomic-product-image': async () =>
+    await import('./atomic-product-image/atomic-product-image.js'),
   'atomic-product-multi-value-text': async () =>
     await import(
       './atomic-product-multi-value-text/atomic-product-multi-value-text.js'
@@ -90,8 +90,6 @@ export default {
     ),
   'atomic-product-price': async () =>
     await import('./atomic-product-price/atomic-product-price.js'),
-  'atomic-product-image': async () =>
-    await import('./atomic-product-image/atomic-product-image.js'),
   'atomic-product-template': async () =>
     await import('./atomic-product-template/atomic-product-template.js'),
   'atomic-product-text': async () =>
