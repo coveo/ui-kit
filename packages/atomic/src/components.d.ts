@@ -1596,19 +1596,6 @@ export namespace Components {
         "truncateAfter": TruncateAfter;
     }
     /**
-     * @alpha The `atomic-product-excerpt` component renders the excerpt of a product generated at query time.
-     */
-    interface AtomicProductExcerpt {
-        /**
-          * Whether the excerpt should be collapsible after being expanded.
-         */
-        "isCollapsible": boolean;
-        /**
-          * The number of lines after which the product excerpt should be truncated. A value of "none" will disable truncation.
-         */
-        "truncateAfter": TruncateAfter;
-    }
-    /**
      * The `atomic-product-field-condition` component takes a list of conditions that, if fulfilled, apply the template in which it's defined.
      * The condition properties can be based on any top-level product property of the `product` object, not restricted to fields (e.g., `ec_name`).
      * @alpha 
@@ -1675,19 +1662,21 @@ export namespace Components {
         "hrefTemplate"?: string;
     }
     /**
-     * @alpha The `atomic-product-numeric-field-value` component renders the value of a number product field.
-     * The number can be formatted by adding a `atomic-format-number`, `atomic-format-currency` or `atomic-format-unit` component into this component.
+     * @alpha The `atomic-product-multi-value-text` component renders the values of a multi-value string field.
      */
-    interface AtomicProductNumericFieldValue {
+    interface AtomicProductMultiValueText {
         /**
-          * The field that the component should use. The component will try to find this field in the `Product.additionalFields` object unless it finds it in the `Product` object first.
+          * The delimiter used to separate values when the field isn't indexed as a multi value field.
+         */
+        "delimiter": string | null;
+        /**
+          * The field that the component should use. The component will try to find this field in the `Product.additionalFields` object unless it finds it in the `Product` object first. Make sure this field is present in the `fieldsToInclude` property of the `atomic-commerce-interface` component.
          */
         "field": string;
-    }
-    /**
-     * @alpha The `atomic-product-price` component renders the price of a product.
-     */
-    interface AtomicProductPrice {
+        /**
+          * The maximum number of field values to display. If there are _n_ more values than the specified maximum, the last displayed value will be "_n_ more...".
+         */
+        "maxValuesToDisplay": number;
     }
     /**
      * The `atomic-product-rating` element renders a star rating.
@@ -4147,15 +4136,6 @@ declare global {
         new (): HTMLAtomicProductDescriptionElement;
     };
     /**
-     * @alpha The `atomic-product-excerpt` component renders the excerpt of a product generated at query time.
-     */
-    interface HTMLAtomicProductExcerptElement extends Components.AtomicProductExcerpt, HTMLStencilElement {
-    }
-    var HTMLAtomicProductExcerptElement: {
-        prototype: HTMLAtomicProductExcerptElement;
-        new (): HTMLAtomicProductExcerptElement;
-    };
-    /**
      * The `atomic-product-field-condition` component takes a list of conditions that, if fulfilled, apply the template in which it's defined.
      * The condition properties can be based on any top-level product property of the `product` object, not restricted to fields (e.g., `ec_name`).
      * @alpha 
@@ -4186,23 +4166,13 @@ declare global {
         new (): HTMLAtomicProductLinkElement;
     };
     /**
-     * @alpha The `atomic-product-numeric-field-value` component renders the value of a number product field.
-     * The number can be formatted by adding a `atomic-format-number`, `atomic-format-currency` or `atomic-format-unit` component into this component.
+     * @alpha The `atomic-product-multi-value-text` component renders the values of a multi-value string field.
      */
-    interface HTMLAtomicProductNumericFieldValueElement extends Components.AtomicProductNumericFieldValue, HTMLStencilElement {
+    interface HTMLAtomicProductMultiValueTextElement extends Components.AtomicProductMultiValueText, HTMLStencilElement {
     }
-    var HTMLAtomicProductNumericFieldValueElement: {
-        prototype: HTMLAtomicProductNumericFieldValueElement;
-        new (): HTMLAtomicProductNumericFieldValueElement;
-    };
-    /**
-     * @alpha The `atomic-product-price` component renders the price of a product.
-     */
-    interface HTMLAtomicProductPriceElement extends Components.AtomicProductPrice, HTMLStencilElement {
-    }
-    var HTMLAtomicProductPriceElement: {
-        prototype: HTMLAtomicProductPriceElement;
-        new (): HTMLAtomicProductPriceElement;
+    var HTMLAtomicProductMultiValueTextElement: {
+        prototype: HTMLAtomicProductMultiValueTextElement;
+        new (): HTMLAtomicProductMultiValueTextElement;
     };
     /**
      * The `atomic-product-rating` element renders a star rating.
@@ -5285,12 +5255,10 @@ declare global {
         "atomic-pager": HTMLAtomicPagerElement;
         "atomic-popover": HTMLAtomicPopoverElement;
         "atomic-product-description": HTMLAtomicProductDescriptionElement;
-        "atomic-product-excerpt": HTMLAtomicProductExcerptElement;
         "atomic-product-field-condition": HTMLAtomicProductFieldConditionElement;
         "atomic-product-image": HTMLAtomicProductImageElement;
         "atomic-product-link": HTMLAtomicProductLinkElement;
-        "atomic-product-numeric-field-value": HTMLAtomicProductNumericFieldValueElement;
-        "atomic-product-price": HTMLAtomicProductPriceElement;
+        "atomic-product-multi-value-text": HTMLAtomicProductMultiValueTextElement;
         "atomic-product-rating": HTMLAtomicProductRatingElement;
         "atomic-product-section-actions": HTMLAtomicProductSectionActionsElement;
         "atomic-product-section-badges": HTMLAtomicProductSectionBadgesElement;
@@ -6869,19 +6837,6 @@ declare namespace LocalJSX {
         "truncateAfter"?: TruncateAfter;
     }
     /**
-     * @alpha The `atomic-product-excerpt` component renders the excerpt of a product generated at query time.
-     */
-    interface AtomicProductExcerpt {
-        /**
-          * Whether the excerpt should be collapsible after being expanded.
-         */
-        "isCollapsible"?: boolean;
-        /**
-          * The number of lines after which the product excerpt should be truncated. A value of "none" will disable truncation.
-         */
-        "truncateAfter"?: TruncateAfter;
-    }
-    /**
      * The `atomic-product-field-condition` component takes a list of conditions that, if fulfilled, apply the template in which it's defined.
      * The condition properties can be based on any top-level product property of the `product` object, not restricted to fields (e.g., `ec_name`).
      * @alpha 
@@ -6935,19 +6890,21 @@ declare namespace LocalJSX {
         "hrefTemplate"?: string;
     }
     /**
-     * @alpha The `atomic-product-numeric-field-value` component renders the value of a number product field.
-     * The number can be formatted by adding a `atomic-format-number`, `atomic-format-currency` or `atomic-format-unit` component into this component.
+     * @alpha The `atomic-product-multi-value-text` component renders the values of a multi-value string field.
      */
-    interface AtomicProductNumericFieldValue {
+    interface AtomicProductMultiValueText {
         /**
-          * The field that the component should use. The component will try to find this field in the `Product.additionalFields` object unless it finds it in the `Product` object first.
+          * The delimiter used to separate values when the field isn't indexed as a multi value field.
+         */
+        "delimiter"?: string | null;
+        /**
+          * The field that the component should use. The component will try to find this field in the `Product.additionalFields` object unless it finds it in the `Product` object first. Make sure this field is present in the `fieldsToInclude` property of the `atomic-commerce-interface` component.
          */
         "field": string;
-    }
-    /**
-     * @alpha The `atomic-product-price` component renders the price of a product.
-     */
-    interface AtomicProductPrice {
+        /**
+          * The maximum number of field values to display. If there are _n_ more values than the specified maximum, the last displayed value will be "_n_ more...".
+         */
+        "maxValuesToDisplay"?: number;
     }
     /**
      * The `atomic-product-rating` element renders a star rating.
@@ -8572,12 +8529,10 @@ declare namespace LocalJSX {
         "atomic-pager": AtomicPager;
         "atomic-popover": AtomicPopover;
         "atomic-product-description": AtomicProductDescription;
-        "atomic-product-excerpt": AtomicProductExcerpt;
         "atomic-product-field-condition": AtomicProductFieldCondition;
         "atomic-product-image": AtomicProductImage;
         "atomic-product-link": AtomicProductLink;
-        "atomic-product-numeric-field-value": AtomicProductNumericFieldValue;
-        "atomic-product-price": AtomicProductPrice;
+        "atomic-product-multi-value-text": AtomicProductMultiValueText;
         "atomic-product-rating": AtomicProductRating;
         "atomic-product-section-actions": AtomicProductSectionActions;
         "atomic-product-section-badges": AtomicProductSectionBadges;
@@ -8898,10 +8853,6 @@ declare module "@stencil/core" {
              */
             "atomic-product-description": LocalJSX.AtomicProductDescription & JSXBase.HTMLAttributes<HTMLAtomicProductDescriptionElement>;
             /**
-             * @alpha The `atomic-product-excerpt` component renders the excerpt of a product generated at query time.
-             */
-            "atomic-product-excerpt": LocalJSX.AtomicProductExcerpt & JSXBase.HTMLAttributes<HTMLAtomicProductExcerptElement>;
-            /**
              * The `atomic-product-field-condition` component takes a list of conditions that, if fulfilled, apply the template in which it's defined.
              * The condition properties can be based on any top-level product property of the `product` object, not restricted to fields (e.g., `ec_name`).
              * @alpha 
@@ -8917,14 +8868,9 @@ declare module "@stencil/core" {
              */
             "atomic-product-link": LocalJSX.AtomicProductLink & JSXBase.HTMLAttributes<HTMLAtomicProductLinkElement>;
             /**
-             * @alpha The `atomic-product-numeric-field-value` component renders the value of a number product field.
-             * The number can be formatted by adding a `atomic-format-number`, `atomic-format-currency` or `atomic-format-unit` component into this component.
+             * @alpha The `atomic-product-multi-value-text` component renders the values of a multi-value string field.
              */
-            "atomic-product-numeric-field-value": LocalJSX.AtomicProductNumericFieldValue & JSXBase.HTMLAttributes<HTMLAtomicProductNumericFieldValueElement>;
-            /**
-             * @alpha The `atomic-product-price` component renders the price of a product.
-             */
-            "atomic-product-price": LocalJSX.AtomicProductPrice & JSXBase.HTMLAttributes<HTMLAtomicProductPriceElement>;
+            "atomic-product-multi-value-text": LocalJSX.AtomicProductMultiValueText & JSXBase.HTMLAttributes<HTMLAtomicProductMultiValueTextElement>;
             /**
              * The `atomic-product-rating` element renders a star rating.
              * @alpha 

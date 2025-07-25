@@ -19,7 +19,7 @@ export const buildFakeProduct = (product?: Partial<Product>): Product => ({
   ec_item_group_id: 'itemGroupId',
   ec_listing: 'listing',
   ec_promo_price: 0,
-  ec_rating: 0,
+  ec_rating: 4.37,
   ec_shortdesc: 'shortdesc',
   ec_thumbnails: [],
   permanentid: 'permanentId',
