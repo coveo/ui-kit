@@ -31,7 +31,7 @@
     "commerce/"
   ],
   "dependencies": {
-    "@coveo/atomic": "3.30.0",
+    "@coveo/atomic": "workspace:*",
     "@lit/react": "1.0.6"
   },
   "devDependencies": {
@@ -50,7 +50,7 @@
     "ncp": "2.0.0"
   },
   "peerDependencies": {
-    "@coveo/headless": "3.27.5",
+    "@coveo/headless": "workspace:*",
     "react": ">=18.0.0",
     "react-dom": ">=18.0.0"
   },

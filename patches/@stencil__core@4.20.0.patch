@@ -1,7 +1,7 @@
-diff --git a/node_modules/@stencil/core/compiler/stencil.js b/node_modules/@stencil/core/compiler/stencil.js
-index 05c98c9..1ae35e5 100644
---- a/node_modules/@stencil/core/compiler/stencil.js
-+++ b/node_modules/@stencil/core/compiler/stencil.js
+diff --git a/compiler/stencil.js b/compiler/stencil.js
+index 05c98c95bc0910bbe1675d0aca93512df550da13..6a651a6e9ee0ed5cc3cd8c0bfdd06c6fc64ea79f 100644
+--- a/compiler/stencil.js
++++ b/compiler/stencil.js
 @@ -234904,8 +234904,8 @@ var getTsOptionsToExtend = (config) => {
      // if the `DIST_TYPES` output target is present then we'd like to emit
      // declaration files
@@ -52,20 +52,21 @@ index 05c98c9..1ae35e5 100644
    for (const member2 of classMembers) {
      if (shouldInitializeInConstructor(member2, importAliasMap) && import_typescript54.default.isPropertyDeclaration(member2)) {
        const memberName = tsPropDeclNameAsString(member2, typeChecker);
-@@ -259686,8 +259681,6 @@ function handleClassFields(classNode, classMembers, typeChecker, importAliasMap)
+@@ -259686,9 +259681,6 @@ function handleClassFields(classNode, classMembers, typeChecker, importAliasMap)
            )
          )
        );
 -    } else {
 -      updatedClassMembers.push(member2);
-     }
+-    }
    }
    if (statements.length === 0) {
-diff --git a/node_modules/@stencil/core/internal/stencil-private.d.ts b/node_modules/@stencil/core/internal/stencil-private.d.ts
-index 602cf1f..6dbb9d8 100644
---- a/node_modules/@stencil/core/internal/stencil-private.d.ts
-+++ b/node_modules/@stencil/core/internal/stencil-private.d.ts
-@@ -1756,103 +1756,7 @@ export interface Workbox {
+     return updatedClassMembers;
+diff --git a/internal/stencil-private.d.ts b/internal/stencil-private.d.ts
+index 602cf1f8064483c52234ca9d2e6bf88b2ee21365..c52862718b9d488a326bfe0eed5bbcaeac1832bf 100644
+--- a/internal/stencil-private.d.ts
++++ b/internal/stencil-private.d.ts
+@@ -1756,103 +1756,6 @@ export interface Workbox {
      injectManifest(swConfig: any): Promise<any>;
      copyWorkboxLibraries(wwwDir: string): Promise<any>;
  }
@@ -166,7 +167,6 @@ index 602cf1f..6dbb9d8 100644
 -        }
 -    }
 -}
-+
  export interface MatchScreenshotOptions {
      /**
       * The `allowableMismatchedPixels` value is the total number of pixels

@@ -1,24 +1,34 @@
 packages:
-  - 'packages/bueno'
-  - 'packages/auth'
-  - 'packages/headless'
-  - 'packages/atomic'
-  - 'packages/quantic'
-  - 'packages/headless-react'
-  - 'packages/ssr'
-  - 'packages/atomic-hosted-page'
-  - 'packages/atomic-react'
-  - 'packages/atomic-angular'
-  - 'packages/documentation'
-  - 'packages/atomic-angular/projects/*'
-  - 'packages/samples/*'
-  - 'packages/samples/headless-ssr/*'
-  - 'packages/shopify'
-  - 'utils/cdn'
-  - 'utils/ci'
-  - 'packages/create-atomic-template'
-  - 'packages/create-atomic'
-  - 'packages/create-atomic-component'
-  - 'packages/create-atomic-component-project'
-  - 'packages/create-atomic-component-project/template'
-  - 'packages/create-atomic-rollup-plugin'
+  - packages/bueno
+  - packages/auth
+  - packages/headless
+  - packages/atomic
+  - packages/quantic
+  - packages/headless-react
+  - packages/ssr
+  - packages/atomic-hosted-page
+  - packages/atomic-react
+  - packages/atomic-angular
+  - packages/documentation
+  - packages/atomic-angular/projects/*
+  - packages/samples/*
+  - packages/samples/headless-ssr/*
+  - packages/shopify
+  - utils/cdn
+  - utils/ci
+  - packages/create-atomic-template
+  - packages/create-atomic
+  - packages/create-atomic-component
+  - packages/create-atomic-component-project
+  - packages/create-atomic-component-project/template
+  - packages/create-atomic-rollup-plugin
+
+linkWorkspacePackages: deep
+
+patchedDependencies:
+  '@stencil/angular-output-target@0.8.4': patches/@stencil__angular-output-target@0.8.4.patch
+  '@stencil/core@4.20.0': patches/@stencil__core@4.20.0.patch
+  '@stencil/react-output-target@0.5.3': patches/@stencil__react-output-target@0.5.3.patch
+  '@storybook/blocks@8.1.11': patches/@storybook__blocks@8.1.11.patch
+  'fix-esm-import-path@1.10.1': patches/fix-esm-import-path@1.10.1.patch
+  'jest-environment-jsdom@29.7.0': patches/jest-environment-jsdom@29.7.0.patch

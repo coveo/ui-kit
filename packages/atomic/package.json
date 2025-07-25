@@ -83,8 +83,8 @@
   },
   "dependencies": {
     "@lit/context": "1.1.6",
-    "@coveo/bueno": "1.0.22",
-    "@coveo/headless": "3.27.5",
+    "@coveo/bueno": "workspace:*",
+    "@coveo/headless": "workspace:*",
     "@popperjs/core": "2.11.8",
     "@salesforce-ux/design-system": "2.27.2",
     "@stencil/core": "4.20.0",
@@ -169,8 +169,8 @@
     "wait-on": "8.0.3"
   },
   "peerDependencies": {
-    "@coveo/bueno": "1.0.22",
-    "@coveo/headless": "3.27.5",
+    "@coveo/bueno": "workspace:*",
+    "@coveo/headless": "workspace:*",
     "typescript": ">=5.0.0"
   },
   "peerDependenciesMeta": {

@@ -97,7 +97,7 @@
     }
   },
   "dependencies": {
-    "@coveo/bueno": "1.0.22",
+    "@coveo/bueno": "workspace:*",
     "@coveo/relay": "1.2.5",
     "@coveo/relay-event-types": "14.7.5",
     "@reduxjs/toolkit": "2.6.0",
@@ -117,7 +117,7 @@
     "live-server": "1.2.2",
     "typedoc": "0.28.7",
     "vitest": "3.2.4",
-    "@coveo/documentation": "1.0.0"
+    "@coveo/documentation": "workspace:*"
   },
   "engines": {
     "node": "^20.9.0 || ^22.11.0"

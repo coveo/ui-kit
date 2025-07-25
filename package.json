@@ -3,7 +3,7 @@
   "private": true,
   "version": "3.0.47",
   "scripts": {
-    "postinstall": "husky install && patch-package && pnpm exec playwright install",
+    "postinstall": "husky install && pnpm exec playwright install",
     "reset:install": "git checkout origin/master pnpm-lock.yaml && pnpm i",
     "clean:install": "git clean -xfd && pnpm run reset:install",
     "dev:atomic": "concurrently \"pnpm run --filter @coveo/headless dev\" \"pnpm run --filter @coveo/atomic start\"",
@@ -36,12 +36,11 @@
     "@commitlint/config-conventional": "19.8.1",
     "@commitlint/lint": "19.8.1",
     "@commitlint/load": "19.8.1",
-    "@coveo/ci": "1.0.0",
+    "@coveo/ci": "workspace:*",
     "@cspell/dict-fr-fr": "2.3.1",
     "@npmcli/package-json": "6.2.0",
     "@octokit/rest": "21.1.1",
     "@tsconfig/node20": "20.1.6",
-    "@types/execa": "2.0.2",
     "@types/jest": "29.5.14",
     "@types/node": "22.16.4",
     "@vitest/browser": "3.2.4",
@@ -57,7 +56,6 @@
     "husky": "9.1.7",
     "knip": "5.61.3",
     "lint-staged": "15.5.2",
-    "patch-package": "8.0.0",
     "playwright": "1.54.1",
     "publint": "0.3.12",
     "rimraf": "6.0.1",
@@ -65,15 +63,6 @@
     "turbo": "2.5.5",
     "typescript": "5.8.3",
     "vitest": "3.2.4"
-  },
-  "pnpm": {
-    "overrides": {
-      "@coveo/ci": {
-        "@types/async-retry": {
-          "@types/retry": "0.12.5"
-        }
-      }
-    }
   },
   "workspaces": [
     "packages/bueno",
@@ -121,5 +110,5 @@
     "node": "^22.14.0",
     "pnpm": ">=9.0.0"
   },
-  "packageManager": "pnpm@9.15.0"
+  "packageManager": "pnpm@10.13.1"
 }

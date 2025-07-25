@@ -13,18 +13,18 @@
   },
   "private": true,
   "dependencies": {
-    "@coveo/atomic": "3.30.0",
+    "@coveo/atomic": "workspace:*",
     "rxjs": "7.8.2"
   },
   "peerDependencies": {
-    "@coveo/headless": "3.27.5"
+    "@coveo/headless": "workspace:*"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "19.2.3",
     "@angular/cli": "19.2.3",
     "@angular/compiler-cli": "19.2.2",
     "@types/node": "22.16.4",
-    "@coveo/headless": "3.27.5",
+    "@coveo/headless": "workspace:*",
     "ng-packagr": "19.2.0",
     "typescript": "5.8.3",
     "ncp": "2.0.0",
