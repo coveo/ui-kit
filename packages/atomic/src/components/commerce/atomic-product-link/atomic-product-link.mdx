@@ -1,0 +1,34 @@
+import {Canvas, ArgTypes, Meta, Title, Description, Stories, Subtitle} from '@storybook/blocks';
+import * as AtomicProductLinkStories from './atomic-product-link.new.stories';
+import {CanvasWithGithub} from '../../../../storybook-utils/documentation/canvas-with-github';
+
+<Meta of={ AtomicProductLinkStories } />
+
+<Title />
+<Subtitle><Description/></Subtitle>
+
+<CanvasWithGithub
+  of={ AtomicProductLinkStories.Default }
+  githubPath="commerce/atomic-product-link/atomic-product-link.ts"
+/>
+
+## Usage
+
+The `atomic-product-link` component renders a product title as a clickable link. This component is used within `atomic-product-template` components inside the product list:
+
+```html
+<atomic-commerce-interface>
+  ...
+  <atomic-commerce-product-list>
+    <atomic-product-template>
+      <atomic-product-link></atomic-product-link>
+    </atomic-product-template>
+  </atomic-commerce-product-list>
+</atomic-commerce-interface>
+```
+
+## Examples
+<Stories title={""}/>
+
+## Reference
+<ArgTypes />
