@@ -28,7 +28,7 @@ jobs:
         with:
           registry-url: 'https://registry.npmjs.org'
           node-version-file: '.nvmrc'
-      - uses: pnpm/action-setup@a7487c7e89a18df4991f7f222e4898a00d66ddda # v4
+      - uses: pnpm/action-setup@fe02b34f77f8bc703788d5817da081398fad5dd2 # v4
       - run: pnpm install --frozen-lockfile
         shell: bash
       - name: Release
@@ -55,7 +55,7 @@ jobs:
         with:
           registry-url: 'https://registry.npmjs.org'
           node-version-file: '.nvmrc'
-      - uses: pnpm/action-setup@a7487c7e89a18df4991f7f222e4898a00d66ddda # v4
+      - uses: pnpm/action-setup@fe02b34f77f8bc703788d5817da081398fad5dd2 # v4
       - run: pnpm install --frozen-lockfile
         shell: bash
       - name: Call ui-kit-cd for dev
