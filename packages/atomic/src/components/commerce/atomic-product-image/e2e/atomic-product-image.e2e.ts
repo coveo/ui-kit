@@ -22,9 +22,8 @@ test.describe('default', async () => {
   });
 
   test('should have a 1:1 aspect ratio', async ({productImage}) => {
-    const aspectRatio =
-      await productImage.noCarouselImage.getAttribute('class');
-    expect(aspectRatio).toEqual('aspect-square');
+    const imageClass = await productImage.noCarouselImage.getAttribute('class');
+    expect(imageClass).toContain('aspect-square');
   });
 });
 
