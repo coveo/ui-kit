@@ -24,11 +24,11 @@ jobs:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
         with:
           fetch-depth: 0
+      - uses: pnpm/action-setup@fe02b34f77f8bc703788d5817da081398fad5dd2 # v4
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         with:
           registry-url: 'https://registry.npmjs.org'
           node-version-file: '.nvmrc'
-      - uses: pnpm/action-setup@fe02b34f77f8bc703788d5817da081398fad5dd2 # v4
       - run: pnpm install --frozen-lockfile
         shell: bash
       - name: Release
@@ -51,11 +51,11 @@ jobs:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
         with:
           fetch-depth: 0
+      - uses: pnpm/action-setup@fe02b34f77f8bc703788d5817da081398fad5dd2 # v4
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         with:
           registry-url: 'https://registry.npmjs.org'
           node-version-file: '.nvmrc'
-      - uses: pnpm/action-setup@fe02b34f77f8bc703788d5817da081398fad5dd2 # v4
       - run: pnpm install --frozen-lockfile
         shell: bash
       - name: Call ui-kit-cd for dev
