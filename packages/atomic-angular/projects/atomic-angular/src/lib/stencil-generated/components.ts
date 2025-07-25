@@ -3080,7 +3080,7 @@ export declare interface AtomicProduct extends LitAtomicProduct {
 
 @ProxyCmp({
   inputs: [],
-  methods: [],
+  methods: ['updateMessage', 'registerRegion'],
   defineCustomElementFn: () => {customElements.get('atomic-aria-live') || customElements.define('atomic-aria-live', LitAtomicAriaLive);}
 })
 @Component({
@@ -3096,12 +3096,12 @@ export class AtomicAriaLive {
   constructor(c: ChangeDetectorRef, el: ElementRef, protected z: NgZone) {
     c.detach();
     this.el = el.nativeElement;
-    
+    proxyOutputs(this, this.el, ['atomic/accessibility/findAriaLive']);
   }
 }
 
 export declare interface AtomicAriaLive extends LitAtomicAriaLive {
-
+  'atomic/accessibility/findAriaLive': EventEmitter<CustomEvent<any>>;
 }
 
 @ProxyCmp({
