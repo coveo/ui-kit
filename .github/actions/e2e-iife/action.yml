@@ -16,7 +16,7 @@ runs:
       with:
         browser: chrome
         command-prefix: 'npx -w @coveo/iife-samples cypress-repeat run -n 3 --until-passes --rerun-failed-only --'
-        start: npm run prod -w=@coveo/iife-samples
+        start: pnpm run prod --filter @coveo/iife-samples
         wait-on: 'http://localhost:3000'
         wait-on-timeout: 600000
         install: false

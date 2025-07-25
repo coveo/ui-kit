@@ -3,15 +3,15 @@
   "private": true,
   "version": "3.0.47",
   "scripts": {
-    "postinstall": "husky install && patch-package && npx playwright install",
-    "reset:install": "git checkout origin/master package-lock.json && npm i",
-    "clean:install": "git clean -xfd && npm run reset:install",
-    "dev:atomic": "concurrently \"npm run -w @coveo/headless dev\" \"npm run -w @coveo/atomic start\"",
+    "postinstall": "husky install && patch-package && pnpm exec playwright install",
+    "reset:install": "git checkout origin/master pnpm-lock.yaml && pnpm i",
+    "clean:install": "git clean -xfd && pnpm run reset:install",
+    "dev:atomic": "concurrently \"pnpm run --filter @coveo/headless dev\" \"pnpm run --filter @coveo/atomic start\"",
     "build": "turbo build",
     "test": "turbo test",
     "e2e": "turbo e2e",
-    "lint:check": "npx @biomejs/biome check --error-on-warnings . && turbo lint:check --filter=@coveo/quantic && cspell **/*.md --no-progress --show-suggestions --show-context",
-    "lint:fix": "npx @biomejs/biome check --write --error-on-warnings . && turbo lint:fix --filter=@coveo/quantic && cspell **/*.md --no-progress --show-suggestions --show-context",
+    "lint:check": "pnpm exec @biomejs/biome check --error-on-warnings . && turbo lint:check --filter=@coveo/quantic && cspell **/*.md --no-progress --show-suggestions --show-context",
+    "lint:fix": "pnpm exec @biomejs/biome check --write --error-on-warnings . && turbo lint:fix --filter=@coveo/quantic && cspell **/*.md --no-progress --show-suggestions --show-context",
     "package-compatibility": "node ./scripts/ci/package-compatibility.mjs",
     "pr:report": "node ./scripts/reports/pr-report.mjs",
     "report:bundle-size:time-series": "node ./scripts/reports/bundle-size/time-series.mjs",
@@ -19,14 +19,14 @@
     "pre-commit": "lint-staged",
     "promote:npm:latest": "turbo promote:npm:latest",
     "notify:docs": "node ./scripts/notify-docs/published-ui-kit.mjs",
-    "release": "npm run topology:graph && npm run release:phase0 && npm run release:phase1 && npm run release:phase2 && npm run release:phase3 && npm run release:phase4 && npm run release:phase5",
-    "topology:graph": "npx turbo build --dry-run=json > topology-raw.json && node scripts/transform-topology.mjs topology-raw.json topology.json",
-    "release:phase0": "npm run-script -w=@coveo/ci git-lock",
+    "release": "pnpm run topology:graph && pnpm run release:phase0 && pnpm run release:phase1 && pnpm run release:phase2 && pnpm run release:phase3 && pnpm run release:phase4 && pnpm run release:phase5",
+    "topology:graph": "pnpm exec turbo build --dry-run=json > topology-raw.json && node scripts/transform-topology.mjs topology-raw.json topology.json",
+    "release:phase0": "pnpm run --filter @coveo/ci git-lock",
     "release:phase1": "turbo release:phase1 --concurrency=1",
-    "release:phase2": "npm run-script -w=@coveo/ci bump:root",
+    "release:phase2": "pnpm run --filter @coveo/ci bump:root",
     "release:phase3": "turbo release:phase3 --concurrency=1",
-    "release:phase4": "npm run-script -w=@coveo/ci reify",
-    "release:phase5": "npm run-script -w=@coveo/ci git-publish-all",
+    "release:phase4": "pnpm run --filter @coveo/ci reify",
+    "release:phase5": "pnpm run --filter @coveo/ci git-publish-all",
     "knip": "knip"
   },
   "devDependencies": {
@@ -66,10 +66,12 @@
     "typescript": "5.8.3",
     "vitest": "3.2.4"
   },
-  "overrides": {
-    "@coveo/ci": {
-      "@types/async-retry": {
-        "@types/retry": "0.12.5"
+  "pnpm": {
+    "overrides": {
+      "@coveo/ci": {
+        "@types/async-retry": {
+          "@types/retry": "0.12.5"
+        }
       }
     }
   },
@@ -117,7 +119,7 @@
   },
   "engines": {
     "node": "^22.14.0",
-    "npm": ">=8.6.0"
+    "pnpm": ">=9.0.0"
   },
-  "packageManager": "npm@11.4.2"
+  "packageManager": "pnpm@9.15.0"
 }

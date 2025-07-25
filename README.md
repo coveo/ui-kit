@@ -20,7 +20,7 @@ npm i
 To install a dependency in a specific package, specify the workspace:
 
 ```sh
-npm i lodash -w @coveo/headless-react-samples
+pnpm add lodash --filter @coveo/headless-react-samples
 ```
 
 ## Build

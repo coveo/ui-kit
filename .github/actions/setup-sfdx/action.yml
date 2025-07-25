@@ -4,4 +4,4 @@ runs:
   using: composite
   steps:
     - shell: bash
-      run: npm i -g @salesforce/cli@2.27.6
+      run: pnpm add -g @salesforce/cli@2.27.6

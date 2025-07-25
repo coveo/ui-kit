@@ -14,22 +14,22 @@
 			"type": "shell",
 			"problemMatcher": [],
 			"label": "reinstall dependencies",
-			"command": "rimraf **/node_modules && npm run setup",
+			"command": "rimraf **/node_modules && pnpm run setup",
 			"dependsOn": [
-				"discard package-lock.json changes"
+				"discard pnpm-lock.yaml changes"
 			]
 		},
 		{
 			"type": "shell",
 			"problemMatcher": [],
-			"label": "discard package-lock.json changes",
-			"command": "git checkout HEAD -- **/package-lock.json"
+			"label": "discard pnpm-lock.yaml changes",
+			"command": "git checkout HEAD -- **/pnpm-lock.yaml"
 		},
 		{
 			"type": "shell",
 			"problemMatcher": [],
 			"label": "build",
-			"command": "npm run build"
+			"command": "pnpm run build"
 		}
 	]
 }

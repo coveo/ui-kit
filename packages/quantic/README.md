@@ -46,7 +46,7 @@ Optionally install the [VSCode Salesforce Extension Pack](https://marketplace.vi
 
 - Make sure you are at the root of `packages/quantic`.
 
-- Run `npm run setup:examples`.
+- Run `pnpm run setup:examples`.
 
 This command will create two scratch orgs for you:
 
@@ -69,7 +69,7 @@ Or you can run the individual commands below.
 #### Create a Default Scratch Org
 
 - Make sure you are in the `packages/quantic` root folder.
-- Run this command to create the default scratch org. `npm run scratch:create`.
+- Run this command to create the default scratch org. `pnpm run scratch:create`.
 - In VS Code, press Command + Shift P, enter sfdx, and select SFDX: Create a Default Scratch Org.
 - You can also run this command from the command line. `sf org create scratch --set-default --definition-file config/lws-enabled-scratch-def.json --alias Quantic__LWS_enabled`
 - `Quantic__LWS_enabled` is an alias for the scratch org that you can use in other Salesforce CLI commands. You can create any alias that you like.
@@ -87,7 +87,7 @@ Example components are available as Salesforce communities (Digital Experiences)
 To set up both communities in scratch orgs, run:
 
 ```bash
-npm run setup:examples
+pnpm run setup:examples
 ```
 
 This script creates, configures, and deploys everything required to have fully working examples in **two scratch orgs**:
@@ -110,14 +110,14 @@ https://your-salesforce-lws-disabled-scratch-org-instance.force.com/examples
 Once the community has been deployed, you can deploy the `main` or `example` components to a specific org only when needed by running the corresponding commands:
 
 ```bash
-npm run deploy:main --target-org Quantic__LWS_enabled
-npm run deploy:examples --target-org Quantic__LWS_enabled
+pnpm run deploy:main --target-org Quantic__LWS_enabled
+pnpm run deploy:examples --target-org Quantic__LWS_enabled
 ```
 
 You can replace Quantic\_\_LWS_enabled with your target org alias. For example:
 
 ```bash
-npm run deploy:main --target-org MyCustomOrg
+pnpm run deploy:main --target-org MyCustomOrg
 npm run deploy:examples --target-org MyCustomOrg
 ```
 
@@ -161,7 +161,7 @@ npm run test:unit -p force-app/main/default/lwc/nameOfComponent/
 
 ## Use Quantic From Source
 
-After you have cloned the repository and have run `npm install`, run the following commands:
+After you have cloned the repository and have run `pnpm install`, run the following commands:
 
 - `npm run build`
 - `sf project deploy start --source-dir force-app/main/default`

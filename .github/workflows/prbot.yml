@@ -32,12 +32,15 @@ jobs:
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         with:
           node-version-file: '.nvmrc'
-      - run: npm ci
-      - run: npm run pr:report
+      - uses: pnpm/action-setup@fe02b34f77f8bc703788d5817da081398fad5dd2 # v4.0.0
+        with:
+          version: 9.15.0
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm run pr:report
         env:
           GITHUB_CREDENTIALS: ${{ steps.generate-token.outputs.token }}
   # TODO: KIT-4396 - https://coveord.atlassian.net/browse/KIT-4396 This action takes currently over 50 minutes to run, which is too long for a PR workflow.
-  # What is slow is the "npm ci" step, which takes about 30 minutes and is out of our control. We will skip this job for now.
+  # What is slow is the "pnpm install" step, which takes about 30 minutes and is out of our control. We will skip this job for now.
   build-windows:
     name: 'Build Windows'
     runs-on: windows-latest
@@ -56,14 +59,14 @@ jobs:
         with:
           registry-url: 'https://registry.npmjs.org'
           node-version-file: '.nvmrc'
-      - name: Install npm
-        run: npm i -g npm@11.4.2
-        shell: bash
+      - uses: pnpm/action-setup@fe02b34f77f8bc703788d5817da081398fad5dd2 # v4.0.0
+        with:
+          version: 9.15.0
       - name: Install dependencies
-        run: npm ci
+        run: pnpm install --frozen-lockfile
         shell: bash
       - name: Build packages
-        run: npm run build
+        run: pnpm run build
         shell: bash
   build:
     name: 'Build'
@@ -98,7 +101,7 @@ jobs:
           repositories: 'ui-kit'
       - name: Commit files
         if: ${{ steps.check-changes.outputs.has_changes == 'true' && github.event_name == 'pull_request' }}
-        run: npm run-script -w=@coveo/ci add-generated-files
+        run: pnpm run --filter @coveo/ci add-generated-files
         env:
           GITHUB_INSTALLATION_TOKEN: ${{ steps.generate-token.outputs.token }}
           DEBUG: '*'
@@ -153,7 +156,7 @@ jobs:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
       - uses: ./.github/actions/setup
       - name: Run knip
-        run: npm run knip
+        run: pnpm run knip
   cdn-checks:
     name: 'CDN Checks'
     needs: [affected, build-cdn]
@@ -188,7 +191,7 @@ jobs:
 
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
       - uses: ./.github/actions/setup
-      - run: npm run lint:check
+      - run: pnpm run lint:check
   unit-test:
     name: 'Run unit tests'
     needs: build
@@ -219,7 +222,7 @@ jobs:
 
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
       - uses: ./.github/actions/setup
-      - run: npm run package-compatibility
+      - run: pnpm run package-compatibility
   typedoc:
     name: 'Build typedoc'
     needs: affected
@@ -234,10 +237,10 @@ jobs:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
       - uses: ./.github/actions/setup
       - name: 'Build headless typedoc'
-        run: npm run build:typedoc
+        run: pnpm run build:typedoc
         working-directory: packages/headless
       - name: 'Build headless-react typedoc'
-        run: npm run build:typedoc
+        run: pnpm run build:typedoc
         working-directory: packages/headless-react
   e2e-atomic-csp-test:
     name: 'Run e2e tests on Atomic CSP'

@@ -5,8 +5,10 @@ runs:
   steps:
     - name: Complementary setup
       run: |
-        npm ci
-        npm run build -w=@coveo/atomic
+        pnpm install --frozen-lockfile
+        cd packages/atomic
+        pnpm run build
+        pnpm run server:csp
       shell: bash
     - name: Run tests
       # TODO KIT-3105
