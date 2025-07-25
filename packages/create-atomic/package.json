@@ -48,6 +48,7 @@
     "plop": "3.1.2"
   },
   "devDependencies": {
+    "@types/inquirer": "9.0.8",
     "fs-extra": "11.3.0",
     "typescript": "5.8.3"
   }

@@ -561,6 +561,9 @@ importers:
         specifier: 3.1.2
         version: 3.1.2
     devDependencies:
+      '@types/inquirer':
+        specifier: 9.0.8
+        version: 9.0.8
       fs-extra:
         specifier: 11.3.0
         version: 11.3.0
