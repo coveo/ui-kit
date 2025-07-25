@@ -679,7 +679,7 @@ export namespace Components {
         /**
           * A list of fields to include with the citations used to generate the answer.
          */
-        "fieldsToIncludeInCitations": string;
+        "fieldsToIncludeInCitations"?: string;
         /**
           * The maximum height (in rem units) of the answer when collapsed.
          */
@@ -823,7 +823,7 @@ export namespace Components {
         /**
           * A list of fields to include with the citations used to generate the answer.
          */
-        "fieldsToIncludeInCitations": string;
+        "fieldsToIncludeInCitations"?: string;
         /**
           * The maximum height (in rem units) of the answer when collapsed.
          */
