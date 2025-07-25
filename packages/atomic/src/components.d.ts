@@ -290,17 +290,6 @@ export namespace Components {
     interface AtomicCommerceDidYouMean {
     }
     /**
-     * The `atomic-commerce-facets` component automatically renders commerce facets based on the Commerce API response.
-     * Unlike regular facets, which require explicit definition and request in the query, the `atomic-commerce-facets` component dynamically generates facets.
-     * @alpha 
-     */
-    interface AtomicCommerceFacets {
-        /**
-          * The maximum number of facets to expand. Remaining facets are automatically collapsed.  Using the value `0` collapses all facets. Using the value `-1` disables the feature and keeps all facets expanded.
-         */
-        "collapseFacetsAfter": number;
-    }
-    /**
      * The `atomic-commerce-load-more-products` component allows the user to load additional products if more are available.
      * @alpha 
      */
@@ -3536,17 +3525,6 @@ declare global {
         new (): HTMLAtomicCommerceDidYouMeanElement;
     };
     /**
-     * The `atomic-commerce-facets` component automatically renders commerce facets based on the Commerce API response.
-     * Unlike regular facets, which require explicit definition and request in the query, the `atomic-commerce-facets` component dynamically generates facets.
-     * @alpha 
-     */
-    interface HTMLAtomicCommerceFacetsElement extends Components.AtomicCommerceFacets, HTMLStencilElement {
-    }
-    var HTMLAtomicCommerceFacetsElement: {
-        prototype: HTMLAtomicCommerceFacetsElement;
-        new (): HTMLAtomicCommerceFacetsElement;
-    };
-    /**
      * The `atomic-commerce-load-more-products` component allows the user to load additional products if more are available.
      * @alpha 
      */
@@ -5394,7 +5372,6 @@ declare global {
         "atomic-color-facet": HTMLAtomicColorFacetElement;
         "atomic-commerce-breadbox": HTMLAtomicCommerceBreadboxElement;
         "atomic-commerce-did-you-mean": HTMLAtomicCommerceDidYouMeanElement;
-        "atomic-commerce-facets": HTMLAtomicCommerceFacetsElement;
         "atomic-commerce-load-more-products": HTMLAtomicCommerceLoadMoreProductsElement;
         "atomic-commerce-no-products": HTMLAtomicCommerceNoProductsElement;
         "atomic-commerce-products-per-page": HTMLAtomicCommerceProductsPerPageElement;
@@ -5795,17 +5772,6 @@ declare namespace LocalJSX {
      * @alpha The `atomic-commerce-query-correction` component is responsible for handling query corrections. When a query returns no products but finds a possible query correction, the component either suggests the correction or automatically triggers a new query with the suggested term.
      */
     interface AtomicCommerceDidYouMean {
-    }
-    /**
-     * The `atomic-commerce-facets` component automatically renders commerce facets based on the Commerce API response.
-     * Unlike regular facets, which require explicit definition and request in the query, the `atomic-commerce-facets` component dynamically generates facets.
-     * @alpha 
-     */
-    interface AtomicCommerceFacets {
-        /**
-          * The maximum number of facets to expand. Remaining facets are automatically collapsed.  Using the value `0` collapses all facets. Using the value `-1` disables the feature and keeps all facets expanded.
-         */
-        "collapseFacetsAfter"?: number;
     }
     /**
      * The `atomic-commerce-load-more-products` component allows the user to load additional products if more are available.
@@ -8773,7 +8739,6 @@ declare namespace LocalJSX {
         "atomic-color-facet": AtomicColorFacet;
         "atomic-commerce-breadbox": AtomicCommerceBreadbox;
         "atomic-commerce-did-you-mean": AtomicCommerceDidYouMean;
-        "atomic-commerce-facets": AtomicCommerceFacets;
         "atomic-commerce-load-more-products": AtomicCommerceLoadMoreProducts;
         "atomic-commerce-no-products": AtomicCommerceNoProducts;
         "atomic-commerce-products-per-page": AtomicCommerceProductsPerPage;
@@ -8996,12 +8961,6 @@ declare module "@stencil/core" {
              * @alpha The `atomic-commerce-query-correction` component is responsible for handling query corrections. When a query returns no products but finds a possible query correction, the component either suggests the correction or automatically triggers a new query with the suggested term.
              */
             "atomic-commerce-did-you-mean": LocalJSX.AtomicCommerceDidYouMean & JSXBase.HTMLAttributes<HTMLAtomicCommerceDidYouMeanElement>;
-            /**
-             * The `atomic-commerce-facets` component automatically renders commerce facets based on the Commerce API response.
-             * Unlike regular facets, which require explicit definition and request in the query, the `atomic-commerce-facets` component dynamically generates facets.
-             * @alpha 
-             */
-            "atomic-commerce-facets": LocalJSX.AtomicCommerceFacets & JSXBase.HTMLAttributes<HTMLAtomicCommerceFacetsElement>;
             /**
              * The `atomic-commerce-load-more-products` component allows the user to load additional products if more are available.
              * @alpha 

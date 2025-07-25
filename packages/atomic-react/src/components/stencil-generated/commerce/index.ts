@@ -10,7 +10,6 @@ import { defineCustomElements } from '@coveo/atomic/loader';
 defineCustomElements();
 export const AtomicCommerceBreadbox = /*@__PURE__*/createReactComponent<JSX.AtomicCommerceBreadbox, HTMLAtomicCommerceBreadboxElement>('atomic-commerce-breadbox');
 export const AtomicCommerceDidYouMean = /*@__PURE__*/createReactComponent<JSX.AtomicCommerceDidYouMean, HTMLAtomicCommerceDidYouMeanElement>('atomic-commerce-did-you-mean');
-export const AtomicCommerceFacets = /*@__PURE__*/createReactComponent<JSX.AtomicCommerceFacets, HTMLAtomicCommerceFacetsElement>('atomic-commerce-facets');
 export const AtomicCommerceLoadMoreProducts = /*@__PURE__*/createReactComponent<JSX.AtomicCommerceLoadMoreProducts, HTMLAtomicCommerceLoadMoreProductsElement>('atomic-commerce-load-more-products');
 export const AtomicCommerceNoProducts = /*@__PURE__*/createReactComponent<JSX.AtomicCommerceNoProducts, HTMLAtomicCommerceNoProductsElement>('atomic-commerce-no-products');
 export const AtomicCommerceProductsPerPage = /*@__PURE__*/createReactComponent<JSX.AtomicCommerceProductsPerPage, HTMLAtomicCommerceProductsPerPageElement>('atomic-commerce-products-per-page');
