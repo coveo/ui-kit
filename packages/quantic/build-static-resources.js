@@ -144,7 +144,6 @@ async function main() {
   console.info('Bueno copied.');
 
   await copyLibrary(LIBRARY_CONFIG.headless);
-  await fs.rm(TEMP_DIR, {recursive: true});
   console.info('Headless copied.');
 
   LIBRARY_CONFIG.headless.files.forEach(async ({dest}) => {

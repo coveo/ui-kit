@@ -5,10 +5,9 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "nx build",
+    "build": "next build",
     "prod": "next start",
-    "lint": "next lint",
-    "build:next": "next build"
+    "lint": "next lint"
   },
   "dependencies": {
     "@coveo/headless-react": "2.4.37",

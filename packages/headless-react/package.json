@@ -24,7 +24,7 @@
     "dist"
   ],
   "scripts": {
-    "build": "nx build",
+    "build": "tsc --project ./tsconfig.build.json",
     "clean": "rimraf dist",
     "test": "vitest run",
     "test:watch": "vitest",

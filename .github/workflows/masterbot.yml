@@ -35,7 +35,7 @@ jobs:
         shell: bash
       - name: Release
         run: |
-          npm run nx:graph
+          npm run topology:graph
           npm run release:phase1
           npm run release:phase3
           npm run release:phase4

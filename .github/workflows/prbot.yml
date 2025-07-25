@@ -116,7 +116,7 @@ jobs:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
       - uses: ./.github/actions/build
         with:
-          cache-suffix: 'cdn'
+          cache-prefix: 'cdn'
   affected:
     name: 'Determine affected projects'
     runs-on: ubuntu-latest
@@ -136,7 +136,7 @@ jobs:
       - name: Get affected projects
         id: set
         run: |
-          AFFECTED=$(npx nx show projects --affected --base=origin/master | tr '\n' ' ')
+          AFFECTED=$(npx turbo build --affected --dry-run 2>/dev/null | awk '/^@coveo/ && !/#/ {print $1}' | sed 's/@coveo\///g' | tr '\n' ' ')
           echo "projects=$AFFECTED" >> "$GITHUB_OUTPUT"
       - name: Log affected projects
         run: |
@@ -171,7 +171,7 @@ jobs:
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
       - uses: ./.github/actions/setup
         with:
-          cache-suffix: 'cdn'
+          cache-prefix: 'cdn'
         env:
           DEPLOYMENT_ENVIRONMENT: CDN
       - name: 'Run CDN checks'
@@ -206,7 +206,7 @@ jobs:
       - uses: ./.github/actions/setup
       - name: Install Playwright Browsers
         run: npx playwright install --with-deps
-      - run: npx nx affected --target=test --base=origin/master --head=HEAD
+      - run: npx turbo test --affected
   package-compatibility:
     name: 'Verify compatibility of packages'
     needs: build

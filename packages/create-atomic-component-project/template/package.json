@@ -4,11 +4,11 @@
   "version": "0.0.1",
   "description": "A project containing Coveo Atomic components",
   "scripts": {
-    "prepublishOnly": "npm run build && npm version patch",
-    "build": "npm run build --workspaces",
-    "start": "stencil build --dev --watch --serve",
-    "test": "stencil test --spec --e2e",
-    "test.watch": "stencil test --spec --e2e --watchAll"
+    "!prepublishOnly": "npm run build && npm version patch",
+    "!build": "npm run build --workspaces",
+    "!start": "stencil build --dev --watch --serve",
+    "!test": "stencil test --spec --e2e",
+    "!test.watch": "stencil test --spec --e2e --watchAll"
   },
   "dependencies": {
     "@coveo/atomic": "3.27.4",

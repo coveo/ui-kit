@@ -104,7 +104,7 @@ async function startServers() {
   exec('npx vite serve dev', {stdio: 'ignore'});
 
   // Run headless in dev as well
-  exec('nx run headless:dev', {
+  exec('npx turbo run dev --filter=@coveo/headless', {
     stdio: 'ignore',
   });
 

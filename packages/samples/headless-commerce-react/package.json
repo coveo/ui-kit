@@ -10,8 +10,7 @@
   },
   "scripts": {
     "dev": "vite",
-    "build": "nx build",
-    "build:client": "vite build",
+    "build": "vite build",
     "preview": "vite preview",
     "test": "vitest run"
   },

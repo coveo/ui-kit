@@ -58,6 +58,17 @@ const main = () => {
   const transformers = [
     // https://github.com/npm/cli/issues/5756
     {srcPath: '.npmignore', destPath: '.gitignore'},
+    {
+      srcPath: 'package.json',
+      destPath: 'package.json',
+      transform: (content) => {
+        const packageJson = JSON.parse(content);
+        for (const script of packageJson.scripts) {
+          script.name = script.name.substring(1);
+        }
+        return JSON.stringify(packageJson, null, 2);
+      },
+    },
   ];
 
   // TODO: Refactor the transformers processing in an utils package
