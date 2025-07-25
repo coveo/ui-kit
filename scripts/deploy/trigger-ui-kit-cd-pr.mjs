@@ -6,6 +6,7 @@ await octokit.rest.repos.createDispatchEvent({
   event_type: 'deploy-dev',
   client_payload: {
     run_Id: context.runId,
+    sha: context.sha,
     patch_only: 'true',
   },
   owner: 'coveo-platform',
