@@ -98,9 +98,7 @@ function createMockResultsMiddleware(options: {
 }
 
 describe('SSR', () => {
-  const mockNavigatorContextProvider = vi
-    .fn()
-    .mockReturnValue(buildMockNavigatorContextProvider());
+  const mockNavigatorContextProvider = buildMockNavigatorContextProvider();
   const mockPreprocessRequest = vi.fn(async (req) => req);
 
   describe('define search engine', () => {
