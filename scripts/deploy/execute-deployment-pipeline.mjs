@@ -25,13 +25,17 @@ function getVersionComposants(version) {
     build: parsedVersion.prerelease[0],
   };
 }
+
+function getResolveVariableString(version, packageName, build) {
+  const resolvedVersion = getVersionComposants(version);
+  return `
+    --resolve ${packageName}_MAJOR_VERSION=${process.env.PATCH_ONLY ? 0 : resolvedVersion.major} \
+    --resolve ${packageName}_MINOR_VERSION=${process.env.PATCH_ONLY ? 0 : resolvedVersion.major}.${process.env.PATCH_ONLY ? 0 : resolvedVersion.minor} \
+    --resolve ${packageName}_PATCH_VERSION=${[resolvedVersion.major, resolvedVersion.minor, resolvedVersion.patch, ...(build ? [build] : [])].join('.')} \
+  `.trim();
+}
+
 const root = getVersionComposants(rootJson.version);
-const bueno = getVersionComposants(buenoJson.version);
-const headless = getVersionComposants(headlessJson.version);
-const atomic = getVersionComposants(atomicJson.version);
-const atomicReact = getVersionComposants(atomicReactJson.version);
-const atomicHostedPage = getVersionComposants(atomicHostedPageJson.version);
-const shopify = getVersionComposants(shopifyJson.version);
 const IS_NIGHTLY = !!root.build;
 
 console.log(
@@ -41,24 +45,12 @@ console.log(
     --version ${root.major}.${root.minor}.${root.patch}${root.build ? `.${root.build}` : ''} \
     --resolve IS_NIGHTLY=${IS_NIGHTLY} \
     --resolve IS_NOT_NIGHTLY=${!IS_NIGHTLY} \
-    --resolve BUENO_MAJOR_VERSION=${bueno.major} \
-    --resolve BUENO_MINOR_VERSION=${bueno.major}.${bueno.minor} \
-    --resolve BUENO_PATCH_VERSION=${bueno.major}.${bueno.minor}.${bueno.patch} \
-    --resolve HEADLESS_MAJOR_VERSION=${headless.major} \
-    --resolve HEADLESS_MINOR_VERSION=${headless.major}.${headless.minor} \
-    --resolve HEADLESS_PATCH_VERSION=${headless.major}.${headless.minor}.${headless.patch} \
-    --resolve ATOMIC_MAJOR_VERSION=${atomic.major} \
-    --resolve ATOMIC_MINOR_VERSION=${atomic.major}.${atomic.minor} \
-    --resolve ATOMIC_PATCH_VERSION=${atomic.major}.${atomic.minor}.${atomic.patch} \
-    --resolve ATOMIC_REACT_MAJOR_VERSION=${atomicReact.major} \
-    --resolve ATOMIC_REACT_MINOR_VERSION=${atomicReact.major}.${atomicReact.minor} \
-    --resolve ATOMIC_REACT_PATCH_VERSION=${atomicReact.major}.${atomicReact.minor}.${atomicReact.patch} \
-    --resolve ATOMIC_HOSTED_PAGE_MAJOR_VERSION=${atomicHostedPage.major} \
-    --resolve ATOMIC_HOSTED_PAGE_MINOR_VERSION=${atomicHostedPage.major}.${atomicHostedPage.minor} \
-    --resolve ATOMIC_HOSTED_PAGE_PATCH_VERSION=${atomicHostedPage.major}.${atomicHostedPage.minor}.${atomicHostedPage.patch} \
-    --resolve SHOPIFY_MAJOR_VERSION=${shopify.major} \
-    --resolve SHOPIFY_MINOR_VERSION=${shopify.major}.${shopify.minor} \
-    --resolve SHOPIFY_PATCH_VERSION=${shopify.major}.${shopify.minor}.${shopify.patch} \
+    ${getResolveVariableString(buenoJson.version, 'BUENO', root.build)} \
+    ${getResolveVariableString(headlessJson.version, 'HEADLESS', root.build)}
+    ${getResolveVariableString(atomicJson.version, 'ATOMIC', root.build)}
+    ${getResolveVariableString(atomicReactJson.version, 'ATOMIC_REACT', root.build)}
+    ${getResolveVariableString(atomicHostedPageJson.version, 'ATOMIC_HOSTED_PAGE', root.build)}
+    ${getResolveVariableString(shopifyJson.version, 'SHOPIFY', root.build)}
     --resolve GITHUB_RUN_ID=${process.env.RUN_ID}`
       .replaceAll(/\s+/g, ' ')
       .trim()
