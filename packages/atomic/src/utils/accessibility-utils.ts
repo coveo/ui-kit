@@ -1,10 +1,11 @@
 import type {ReactiveController, ReactiveControllerHost} from 'lit';
 import type {AnyBindings} from '../components';
+import type {AtomicAriaLive} from '../components/common/atomic-aria-live/atomic-aria-live';
 import {buildCustomEvent} from './event-utils';
 import {defer} from './utils';
 
 export interface FindAriaLiveEventArgs {
-  element?: HTMLAtomicAriaLiveElement;
+  element?: AtomicAriaLive;
 }
 
 export class AriaLiveRegionController implements ReactiveController {
