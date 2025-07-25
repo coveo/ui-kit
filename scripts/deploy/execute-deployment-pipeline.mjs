@@ -31,7 +31,7 @@ function getResolveVariableString(version, packageName, build) {
   return `
     --resolve ${packageName}_MAJOR_VERSION=${process.env.PATCH_ONLY ? 0 : resolvedVersion.major} \
     --resolve ${packageName}_MINOR_VERSION=${process.env.PATCH_ONLY ? 0 : resolvedVersion.major}.${process.env.PATCH_ONLY ? 0 : resolvedVersion.minor} \
-    --resolve ${packageName}_PATCH_VERSION=${[resolvedVersion.major, resolvedVersion.minor, resolvedVersion.patch, ...(build ? [build] : [])].join('.')} \
+    --resolve ${packageName}_PATCH_VERSION=${[resolvedVersion.major, resolvedVersion.minor, resolvedVersion.patch, ...(build && process.env.PATCH_ONLY  ? [build] : [])].join('.')} \
   `.trim();
 }
 
