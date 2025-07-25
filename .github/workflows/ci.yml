@@ -698,9 +698,9 @@ jobs:
             echo "Build is invalid"
             exit 1
           fi
-  prerelease_approve:
+  prerelease-approve:
     needs: build
-    if: ${{ github.event_name == 'workflow_dispatch' }}
+    if: ${{ github.event_name == 'pull_request'}}
     runs-on: ubuntu-latest
     environment: 'Prerelease approver'
     steps:
@@ -711,7 +711,7 @@ jobs:
       - run: exit 0;
   prerelease:
     if: ${{ !cancelled() }}
-    needs: prerelease_approve
+    needs: prerelease-approve
     timeout-minutes: 40
     name: Pre-release NPM at alpha
     env:
@@ -747,7 +747,7 @@ jobs:
           TAG_SUFFIX: ${{ github.event_name == 'pull_request' && github.event.number || '' }}
   prerelease-cdn:
     if: ${{ !cancelled() }}
-    needs: prerelease_approve
+    needs: prerelease-approve
     name: Pre-release CDN in dev
     environment: 'Prerelease (CDN)'
     runs-on: ubuntu-latest
