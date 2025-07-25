@@ -22,7 +22,7 @@ import {html, LitElement, nothing} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {map} from 'lit/directives/map.js';
 import {when} from 'lit/directives/when.js';
-import '../../common/facets/atomic-facet-placeholder/atomic-facet-placeholder';
+import '../../common/atomic-facet-placeholder/atomic-facet-placeholder';
 import {createAppLoadedListener} from '../../common/interface/store';
 import '../atomic-commerce-category-facet/atomic-commerce-category-facet';
 import '../atomic-commerce-facet/atomic-commerce-facet';
@@ -48,8 +48,8 @@ export class AtomicCommerceFacets
 
   @state() error!: Error;
 
-  public facetGenerator!: FacetGenerator;
-  public summary!: Summary<SearchSummaryState | ProductListingSummaryState>;
+  private facetGenerator!: FacetGenerator;
+  private summary!: Summary<SearchSummaryState | ProductListingSummaryState>;
 
   /**
    * The maximum number of facets to expand.
@@ -65,8 +65,7 @@ export class AtomicCommerceFacets
 
   public initialize() {
     this.validateProps();
-    const {engine} = this.bindings;
-    const controller = this.controllerBuilder(engine);
+    const controller = this.controllerBuilder(this.bindings.engine);
     this.facetGenerator = controller.facetGenerator();
     this.summary = controller.summary();
     createAppLoadedListener(this.bindings.store, (isAppLoaded) => {
