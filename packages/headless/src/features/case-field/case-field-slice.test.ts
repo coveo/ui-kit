@@ -1,4 +1,5 @@
 import type {GetCaseClassificationsResponse} from '../../api/service/case-assist/get-case-classifications/get-case-classifications-response.js';
+import {setError} from '../error/error-actions.js';
 import {
   fetchCaseClassifications,
   registerCaseField,
@@ -132,6 +133,21 @@ describe('case field slice', () => {
       const pendingAction = fetchCaseClassifications.pending('');
       const finalState = caseFieldReducer(state, pendingAction);
       expect(finalState.status.loading).toBe(true);
+    });
+  });
+
+  describe('#setError', () => {
+    it('should set the error state and set isLoading to false', () => {
+      const error = {
+        status: 400,
+        statusCode: 401,
+        message: 'message',
+        type: 'Error',
+      };
+      const finalState = caseFieldReducer(state, setError(error));
+
+      expect(finalState.status.error).toEqual(error);
+      expect(finalState.status.loading).toBe(false);
     });
   });
 });
