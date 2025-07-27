@@ -26,12 +26,12 @@ function getVersionComposants(version) {
   };
 }
 
-function getResolveVariableString(version, packageName, build) {
+function getResolveVariableString(version, packageName) {
   const resolvedVersion = getVersionComposants(version);
   return `
     --resolve ${packageName}_MAJOR_VERSION=${process.env.PATCH_ONLY ? 0 : resolvedVersion.major} \
     --resolve ${packageName}_MINOR_VERSION=${process.env.PATCH_ONLY ? 0 : resolvedVersion.major}.${process.env.PATCH_ONLY ? 0 : resolvedVersion.minor} \
-    --resolve ${packageName}_PATCH_VERSION=${[resolvedVersion.major, resolvedVersion.minor, resolvedVersion.patch, ...(build ? [build] : [])].join('.')} \
+    --resolve ${packageName}_PATCH_VERSION=${[resolvedVersion.major, resolvedVersion.minor, resolvedVersion.patch, ...(process.env.PATCH_ONLY && process.env.PR_NUM ? [process.env.PR_NUM] : [])].join('.')} \
   `.trim();
 }
 
@@ -45,12 +45,12 @@ console.log(
     --version ${root.major}.${root.minor}.${root.patch}${root.build ? `.${root.build}` : ''} \
     --resolve IS_NIGHTLY=${IS_NIGHTLY} \
     --resolve IS_NOT_NIGHTLY=${!IS_NIGHTLY} \
-    ${getResolveVariableString(buenoJson.version, 'BUENO', root.build)} \
-    ${getResolveVariableString(headlessJson.version, 'HEADLESS', root.build)}
-    ${getResolveVariableString(atomicJson.version, 'ATOMIC', root.build)}
-    ${getResolveVariableString(atomicReactJson.version, 'ATOMIC_REACT', root.build)}
-    ${getResolveVariableString(atomicHostedPageJson.version, 'ATOMIC_HOSTED_PAGE', root.build)}
-    ${getResolveVariableString(shopifyJson.version, 'SHOPIFY', root.build)}
+    ${getResolveVariableString(buenoJson.version, 'BUENO')} \
+    ${getResolveVariableString(headlessJson.version, 'HEADLESS')}
+    ${getResolveVariableString(atomicJson.version, 'ATOMIC')}
+    ${getResolveVariableString(atomicReactJson.version, 'ATOMIC_REACT')}
+    ${getResolveVariableString(atomicHostedPageJson.version, 'ATOMIC_HOSTED_PAGE')}
+    ${getResolveVariableString(shopifyJson.version, 'SHOPIFY')}
     --resolve GITHUB_RUN_ID=${process.env.RUN_ID}`
       .replaceAll(/\s+/g, ' ')
       .trim()
