@@ -67,17 +67,6 @@
       }
     },
     {
-      "id": "deploy-atomic-nightly-storybook-to-s3-version",
-      "s3": {
-        "bucket": "{terraform.infra.infra.bucket_binaries}",
-        "directory": "proda/StaticCDN/atomic/v$[ATOMIC_MAJOR_VERSION]-nightly/storybook",
-        "source": "packages/atomic/dist-storybook",
-        "parameters": {
-          "acl": "public-read"
-        }
-      }
-    },
-    {
       "id": "deploy-atomic-react-patch-to-s3-version",
       "s3": {
         "bucket": "{terraform.infra.infra.bucket_binaries}",
@@ -104,39 +93,6 @@
       "s3": {
         "bucket": "{terraform.infra.infra.bucket_binaries}",
         "directory": "proda/StaticCDN/shopify/v$[SHOPIFY_PATCH_VERSION]",
-        "source": "packages/shopify/cdn",
-        "parameters": {
-          "acl": "public-read"
-        }
-      }
-    },
-    {
-      "id": "deploy-shopify-minor-to-s3-version",
-      "s3": {
-        "bucket": "{terraform.infra.infra.bucket_binaries}",
-        "directory": "proda/StaticCDN/shopify/v$[SHOPIFY_MINOR_VERSION]",
-        "source": "packages/shopify/cdn",
-        "parameters": {
-          "acl": "public-read"
-        }
-      }
-    },
-    {
-      "id": "deploy-shopify-major-to-s3-version",
-      "s3": {
-        "bucket": "{terraform.infra.infra.bucket_binaries}",
-        "directory": "proda/StaticCDN/shopify/v$[SHOPIFY_MAJOR_VERSION]",
-        "source": "packages/shopify/cdn",
-        "parameters": {
-          "acl": "public-read"
-        }
-      }
-    },
-    {
-      "id": "deploy-shopify-nightly-to-s3-version",
-      "s3": {
-        "bucket": "{terraform.infra.infra.bucket_binaries}",
-        "directory": "proda/StaticCDN/shopify/v$[SHOPIFY_MAJOR_VERSION]-nightly",
         "source": "packages/shopify/cdn",
         "parameters": {
           "acl": "public-read"
