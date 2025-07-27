@@ -41,15 +41,12 @@ function getResolveVariableString(version, packageName) {
 }
 
 const root = getVersionComposants(rootJson.version);
-const IS_NIGHTLY = root.includes(undefined);
 
 console.log(
   execSync(
     `
   deployment-package package create --with-deploy
     --version ${root.join('.')}
-    --resolve IS_NIGHTLY=${IS_NIGHTLY}
-    --resolve IS_NOT_NIGHTLY=${!IS_NIGHTLY}
     ${getResolveVariableString(buenoJson.version, 'BUENO')}
     ${getResolveVariableString(headlessJson.version, 'HEADLESS')}
     ${getResolveVariableString(atomicJson.version, 'ATOMIC')}
