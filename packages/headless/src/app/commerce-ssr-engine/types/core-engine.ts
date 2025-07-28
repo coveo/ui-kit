@@ -1,9 +1,9 @@
 import type {UnknownAction} from '@reduxjs/toolkit';
 import type {Controller} from '../../../controllers/controller/headless-controller.js';
+import type {FromBuildResultOptions} from '../../../ssr/common/types/from-build-result.js';
 import type {CommerceEngineDefinition} from '../../commerce-engine/commerce-engine.ssr.js';
 import type {EngineConfiguration} from '../../engine-configuration.js';
 import type {NavigatorContextProvider} from '../../navigator-context-provider.js';
-import type {FromBuildResultOptions} from '../../ssr-engine/types/from-build-result.js';
 import type {SSRCommerceEngine} from '../factories/build-factory.js';
 import type {Build, BuildOptions} from './build.js';
 import type {

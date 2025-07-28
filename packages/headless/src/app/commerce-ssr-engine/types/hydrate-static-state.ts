@@ -5,7 +5,7 @@ import type {
   ControllersPropsMap,
   HydratedState,
   OptionsTuple,
-} from '../../ssr-engine/types/common.js';
+} from '../../../ssr/common/types/common.js';
 import type {SSRCommerceEngine} from '../factories/build-factory.js';
 import type {
   ControllerDefinitionsMap,

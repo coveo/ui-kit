@@ -1,4 +1,4 @@
-import type {ControllersMap} from '../../ssr-engine/types/common.js';
+import type {ControllersMap} from '../../../ssr/common/types/common.js';
 import type {SSRCommerceEngine} from '../factories/build-factory.js';
 import type {EngineDefinitionBuildResult} from './common.js';
 

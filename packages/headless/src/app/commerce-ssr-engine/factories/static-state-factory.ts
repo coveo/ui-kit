@@ -1,8 +1,8 @@
 import type {UnknownAction} from '@reduxjs/toolkit';
 import {buildProductListing} from '../../../controllers/commerce/product-listing/headless-product-listing.js';
 import {buildSearch} from '../../../controllers/commerce/search/headless-search.js';
-import {augmentPreprocessRequestWithForwardedFor} from '../../ssr-engine/augment-preprocess-request.js';
-import {composeFunction} from '../../ssr-engine/common.js';
+import {augmentPreprocessRequestWithForwardedFor} from '../../../ssr/common/augment-preprocess-request.js';
+import {composeFunction} from '../../../ssr/common/controller-utils.js';
 import {createStaticState} from '../common.js';
 import {
   type EngineStaticState,

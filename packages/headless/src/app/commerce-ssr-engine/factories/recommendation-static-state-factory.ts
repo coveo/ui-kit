@@ -1,6 +1,6 @@
 import type {UnknownAction} from '@reduxjs/toolkit';
+import {composeFunction} from '../../../ssr/common/controller-utils.js';
 import {filterObject} from '../../../utils/utils.js';
-import {composeFunction} from '../../ssr-engine/common.js';
 import {createStaticState} from '../common.js';
 import {
   type EngineStaticState,

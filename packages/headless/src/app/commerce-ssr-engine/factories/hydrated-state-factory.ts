@@ -1,4 +1,4 @@
-import {composeFunction} from '../../ssr-engine/common.js';
+import {composeFunction} from '../../../ssr/common/controller-utils.js';
 import type {SolutionType} from '../types/common.js';
 import type {
   BuildParameters,

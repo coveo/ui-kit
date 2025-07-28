@@ -1,6 +1,7 @@
 import type {Action, UnknownAction} from '@reduxjs/toolkit';
 import {stateKey} from '../../../app/state-key.js';
 import type {Controller} from '../../../controllers/controller/headless-controller.js';
+import type {ControllersPropsMap} from '../../../ssr/common/types/common.js';
 import {
   createWaitForActionMiddleware,
   createWaitForActionMiddlewareForRecommendation,
@@ -11,7 +12,6 @@ import {
   type CommerceEngineOptions,
 } from '../../commerce-engine/commerce-engine.js';
 import {buildLogger} from '../../logger.js';
-import type {ControllersPropsMap} from '../../ssr-engine/types/common.js';
 import {buildControllerDefinitions} from '../common.js';
 import {
   type ControllerDefinitionsMap,
