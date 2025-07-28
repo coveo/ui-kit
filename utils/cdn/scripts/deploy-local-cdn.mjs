@@ -80,7 +80,7 @@ const preprocessConfig = async (configContent) => {
 
 const deploymentConfigPath = path.resolve(
   currentDir,
-  '../../../.deployment.config.json'
+  '../../../.deployment.config/prd.json'
 );
 const rawConfigContent = await fs.readFile(deploymentConfigPath, 'utf-8');
 const processedConfigContent = await preprocessConfig(rawConfigContent);
