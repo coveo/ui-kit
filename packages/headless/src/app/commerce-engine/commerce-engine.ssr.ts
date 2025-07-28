@@ -37,6 +37,13 @@ export interface CommerceEngineDefinition<
  * You can use the {@link InferStaticState} and {@link InferHydratedState} utility types with the returned engine definitions
  * to infer the types of static and hydrated state for your controllers.
  *
+ * @example
+ * ```ts
+ * const engineDefinition = defineCommerceEngine(engineConfig);
+ * type SearchStaticState = InferStaticState<typeof engineDefinition>;
+ * type SearchHydratedState = InferHydratedState<typeof engineDefinition>;
+ * ```
+ *
  * @group Engine
  */
 export function defineCommerceEngine<
