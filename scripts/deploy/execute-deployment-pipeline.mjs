@@ -52,7 +52,7 @@ function getResolveVariableString(version, packageName) {
 }
 
 const root = getVersionComposants(rootJson.version);
-const IS_NIGHTLY = !root.includes(undefined);
+const IS_NIGHTLY = root.length > 3;
 
 console.log(
   execSync(
