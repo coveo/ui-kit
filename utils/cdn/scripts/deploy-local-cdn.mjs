@@ -1,43 +1,14 @@
 import fs from 'node:fs/promises';
-import {findPackageJSON} from 'node:module';
 import path from 'node:path';
 import chalk from 'chalk';
 import ncp from 'ncp';
 
 const currentDir = import.meta.dirname;
-const getVersionFromPackageJson = async (packageName, versionType) => {
-  const packageJsonPath = findPackageJSON(
-    `@coveo/${packageName}`,
-    import.meta.url
-  );
-  try {
-    const packageJson = JSON.parse(await fs.readFile(packageJsonPath, 'utf-8'));
-    const version = packageJson.version;
-    const [major, minor] = version.split('.');
-    return (
-      {
-        major: major,
-        minor: `${major}.${minor}`,
-        patch: version,
-      }[versionType] || version
-    );
-  } catch (err) {
-    throw new Error(
-      `Error reading or parsing ${packageJsonPath}: ${err.message}`
-    );
-  }
-};
 
 const preprocessConfig = async (configContent) => {
-  const versionPlaceholders = {
-    IS_NIGHTLY: 'false',
-    IS_NOT_NIGHTLY: 'true',
-  };
-
   const versionPlaceholderRegex =
     /\$\[([A-Z_]+?)_(MAJOR|MINOR|PATCH)_VERSION\]/g;
 
-  const promises = [];
   const processedPlaceholderKeys = new Set();
 
   let match;
@@ -50,32 +21,9 @@ const preprocessConfig = async (configContent) => {
       continue;
     }
     processedPlaceholderKeys.add(placeholderKey);
-
-    const packageIdentifier = match[1];
-    const versionTypeIdentifier = match[2];
-
-    const packageName = packageIdentifier.replace(/_/g, '-').toLowerCase();
-    const versionType = versionTypeIdentifier.toLowerCase();
-
-    promises.push(
-      (async () => {
-        const version = await getVersionFromPackageJson(
-          packageName,
-          versionType
-        );
-        versionPlaceholders[placeholderKey] = version;
-      })()
-    );
   }
 
-  await Promise.all(promises);
-
-  return configContent.replace(/\$\[([A-Z_]+)\]/g, (_, key) => {
-    if (Object.hasOwn(versionPlaceholders, key)) {
-      return versionPlaceholders[key];
-    }
-    return '';
-  });
+  return configContent.replace(/\$\[([A-Z_]+)\]/g, '');
 };
 
 const deploymentConfigPath = path.resolve(
