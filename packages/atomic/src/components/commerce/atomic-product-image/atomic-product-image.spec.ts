@@ -1,9 +1,9 @@
 import {html} from 'lit';
 import {beforeEach, describe, expect, it, vi} from 'vitest';
 import {renderInAtomicProduct} from '@/vitest-utils/testing-helpers/fixtures/atomic/commerce/atomic-product-fixture';
-import {buildFakeCommerceEngine} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/engine';
 import {buildFakeProduct} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/product';
 import './atomic-product-image';
+import type {Product} from '@coveo/headless/commerce';
 import {ifDefined} from 'lit/directives/if-defined.js';
 import {filterProtocol} from '@/src/utils/xss-utils';
 import type {AtomicProductImage} from './atomic-product-image';
@@ -19,15 +19,15 @@ const DEFAULT_IMAGE =
 const CUSTOM_FALLBACK_IMAGE =
   'data:image/svg+xml;base64,PHN2ZyBjbGFzcz0idy02IGgtNiB0ZXh0LWdyYXktODAwIGRhcms6dGV4dC13aGl0ZSIgYXJpYS1oaWRkZW49InRydWUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgd2lkdGg9IjI0IiBoZWlnaHQ9IjI0IiBmaWxsPSJjdXJyZW50Q29sb3IiIHZpZXdCb3g9IjAgMCAyNCAyNCI+CiAgPHBhdGggZmlsbC1ydWxlPSJldmVub2RkIiBkPSJNMiAxMkMyIDYuNDc3IDYuNDc3IDIgMTIgMnMxMCA0LjQ3NyAxMCAxMC00LjQ3NyAxMC0xMCAxMFMyIDE3LjUyMyAyIDEyWm05LjAwOC0zLjAxOGExLjUwMiAxLjUwMiAwIDAgMSAyLjUyMiAxLjE1OXYuMDI0YTEuNDQgMS40NCAwIDAgMS0xLjQ5MyAxLjQxOCAxIDEgMCAwIDAtMS4wMzcuOTk5VjE0YTEgMSAwIDEgMCAyIDB2LS41MzlhMy40NCAzLjQ0IDAgMCAwIDIuNTI5LTMuMjU2IDMuNTAyIDMuNTAyIDAgMCAwLTctLjI1NSAxIDEgMCAwIDAgMiAuMDc2Yy4wMTQtLjM5OC4xODctLjc3NC40OC0xLjA0NFptLjk4MiA3LjAyNmExIDEgMCAxIDAgMCAySDEyYTEgMSAwIDEgMCAwLTJoLS4wMVoiIGNsaXAtcnVsZT0iZXZlbm9kZCIvPgo8L3N2Zz4K';
 
-describe('AtomicProductImage', () => {
-  const mockedEngine = buildFakeCommerceEngine();
+describe('atomic-product-image', () => {
+  const mockProduct = buildFakeProduct({
+    ec_name: 'Test Product',
+    ec_thumbnails: [DEFAULT_IMAGE],
+    permanentid: 'test-product-id',
+  });
 
   const renderProductImage = async ({
-    product = buildFakeProduct({
-      ec_name: 'Test Product',
-      ec_thumbnails: [DEFAULT_IMAGE],
-      permanentid: 'test-product-id',
-    }),
+    product = mockProduct,
     field,
     imageAltField,
     fallback,
@@ -46,7 +46,7 @@ describe('AtomicProductImage', () => {
       selector: 'atomic-product-image',
       product: product,
       bindings: (bindings) => {
-        bindings.engine = mockedEngine;
+        bindings.engine.logger = {warn: vi.fn()} as never;
         bindings.interfaceElement.type = 'product-listing';
         bindings.store.onChange = vi.fn();
         return bindings;
@@ -62,10 +62,14 @@ describe('AtomicProductImage', () => {
       ),
       previousButton: element?.shadowRoot?.querySelector(
         '[part="previous-button"]'
-      ),
-      nextButton: element?.shadowRoot?.querySelector('[part="next-button"]'),
+      ) as HTMLButtonElement | null,
+      nextButton: element?.shadowRoot?.querySelector(
+        '[part="next-button"]'
+      ) as HTMLButtonElement | null,
       indicators: element?.shadowRoot?.querySelector('[part="indicators"]'),
-      indicator: element?.shadowRoot?.querySelector('[part="indicator"]'),
+      indicator: element?.shadowRoot?.querySelectorAll(
+        '[part="indicator"], [part="indicator active-indicator"]'
+      ) as NodeListOf<HTMLLIElement>,
       activeIndicator: element?.shadowRoot?.querySelector(
         '[part="indicator active-indicator"]'
       ),
@@ -80,69 +84,14 @@ describe('AtomicProductImage', () => {
     expect(productImage).toHaveAttribute('src', DEFAULT_IMAGE);
   });
 
-  describe('#previousImage', () => {
-    it('should decrement current image index', async () => {
-      const {element} = await renderProductImage({
-        product: buildFakeProduct({
-          ec_thumbnails: Array(3).fill(DEFAULT_IMAGE),
-        }),
-      });
-
-      // @ts-expect-error private property access for testing
-      expect(element.currentImage).toBe(0);
-
-      await element!.previousImage();
-      // @ts-expect-error private property access for testing
-      expect(element.currentImage).toBe(2);
-
-      await element!.previousImage();
-      // @ts-expect-error private property access for testing
-      expect(element.currentImage).toBe(1);
+  it('should render nothing when product is not available', async () => {
+    const {element, productImage} = await renderProductImage({
+      product: null as unknown as Product,
     });
-  });
 
-  describe('#nextImage', () => {
-    it('should increment current image index', async () => {
-      const {element} = await renderProductImage({
-        product: buildFakeProduct({
-          ec_thumbnails: Array(3).fill(DEFAULT_IMAGE),
-        }),
-      });
-
-      // @ts-expect-error private property access for testing
-      expect(element.currentImage).toBe(0);
-
-      await element!.nextImage();
-      // @ts-expect-error private property access for testing
-      expect(element.currentImage).toBe(1);
-
-      await element!.nextImage();
-      await element!.nextImage();
-      // @ts-expect-error private property access for testing
-      expect(element.currentImage).toBe(0);
-    });
-  });
-
-  describe('#navigateToImage', () => {
-    it('should navigate to specified image index', async () => {
-      const {element} = await renderProductImage({
-        product: buildFakeProduct({
-          ec_name: 'Test Product',
-          ec_thumbnails: Array(3).fill(DEFAULT_IMAGE),
-        }),
-      });
-
-      // @ts-expect-error private property access for testing
-      expect(element.currentImage).toBe(0);
-
-      await element!.navigateToImage(1);
-      // @ts-expect-error private property access for testing
-      expect(element.currentImage).toBe(1);
-
-      await element!.navigateToImage(2);
-      // @ts-expect-error private property access for testing
-      expect(element.currentImage).toBe(2);
-    });
+    expect(element).toBeDefined();
+    expect(productImage).toBeNull();
+    expect(element).toHaveTextContent('');
   });
 
   describe('when product has single image', () => {
@@ -169,11 +118,19 @@ describe('AtomicProductImage', () => {
   describe('when product has multiple images', () => {
     let productImageObject: Awaited<ReturnType<typeof renderProductImage>>;
 
+    const IMAGES = [
+      'image1.jpg',
+      'image2.jpg',
+      'image3.jpg',
+      'image4.jpg',
+      'image5.jpg',
+    ];
+
     beforeEach(async () => {
       productImageObject = await renderProductImage({
         product: buildFakeProduct({
           ec_name: 'Test Product',
-          ec_thumbnails: Array(3).fill(DEFAULT_IMAGE),
+          ec_thumbnails: IMAGES,
         }),
       });
     });
@@ -192,21 +149,76 @@ describe('AtomicProductImage', () => {
 
     it('should display first image by default', () => {
       const {productImage} = productImageObject;
-      expect(productImage).toHaveAttribute('src', DEFAULT_IMAGE);
+      expect(productImage).toHaveAttribute('src', IMAGES[0]);
       expect(productImage).toHaveAttribute(
         'alt',
-        'Image 1 out of 3 for Test Product'
+        `Image 1 out of ${IMAGES.length} for Test Product`
       );
     });
 
     it('should render indicators for each image', () => {
       const {indicators} = productImageObject;
-      expect(indicators?.children).toHaveLength(3);
+      expect(indicators?.children).toHaveLength(IMAGES.length);
     });
 
     it('should show active indicator for current image', () => {
       const {activeIndicator, indicators} = productImageObject;
       expect(indicators?.children[0]).toBe(activeIndicator);
+    });
+
+    describe('when clicking carousel controls', () => {
+      it('should go to next image when not on last image', async () => {
+        const {element, productImage, nextButton} = productImageObject;
+
+        expect(productImage).toHaveAttribute('src', IMAGES[0]);
+        nextButton!.click();
+        await element.updateComplete;
+        expect(productImage).toHaveAttribute('src', IMAGES[1]);
+      });
+
+      it('should go to first image when on last image', async () => {
+        const {element, productImage, indicator, nextButton} =
+          productImageObject;
+
+        indicator[IMAGES.length - 1].click();
+        await element.updateComplete;
+        expect(productImage).toHaveAttribute('src', IMAGES[IMAGES.length - 1]);
+
+        nextButton!.click();
+        await element.updateComplete;
+        expect(productImage).toHaveAttribute('src', IMAGES[0]);
+      });
+
+      it('should go to previous image when not on first image', async () => {
+        const {element, productImage, indicator, previousButton} =
+          productImageObject;
+
+        indicator[1].click();
+        await element.updateComplete;
+        expect(productImage).toHaveAttribute('src', IMAGES[1]);
+
+        previousButton!.click();
+        await element.updateComplete;
+        expect(productImage).toHaveAttribute('src', IMAGES[0]);
+      });
+
+      it('should go to last image when on first image', async () => {
+        const {element, productImage, previousButton} = productImageObject;
+
+        expect(productImage).toHaveAttribute('src', IMAGES[0]);
+        previousButton!.click();
+        await element.updateComplete;
+        expect(productImage).toHaveAttribute('src', IMAGES[IMAGES.length - 1]);
+      });
+    });
+
+    it('should navigate to image when clicking indicator', async () => {
+      const {element, productImage, indicator} = productImageObject;
+
+      expect(productImage).toHaveAttribute('src', IMAGES[0]);
+      indicator[2].click();
+      await element.updateComplete;
+      expect(productImage).toHaveAttribute('src', IMAGES[2]);
     });
   });
 
@@ -387,7 +399,7 @@ describe('AtomicProductImage', () => {
     expect(nextButton).toBeInTheDocument();
     expect(indicators).toBeInTheDocument();
 
-    expect(indicator).toBeInTheDocument();
+    expect(indicator[0]).toBeInTheDocument();
     expect(activeIndicator).toBeInTheDocument();
   });
 });
