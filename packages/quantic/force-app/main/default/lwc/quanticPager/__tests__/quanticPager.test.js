@@ -124,7 +124,6 @@ describe('c-quantic-pager', () => {
   afterEach(() => {
     cleanup();
     isInitialized = false;
-    // Reset state to initial values
     pagerState = {...initialPagerState};
     searchStatusState = {...initialSearchStatusState};
   });
@@ -135,19 +134,16 @@ describe('c-quantic-pager', () => {
       prepareHeadlessState();
     });
 
-    it('should subscribe to the headless state changes', async () => {
+    it('should build the necessary controllers and subscribe to the headless state changes', async () => {
       createTestComponent();
       await flushPromises();
 
       expect(functionsMocks.buildPager).toHaveBeenCalledTimes(1);
-      expect(functionsMocks.buildPager).toHaveBeenCalledWith(
-        exampleEngine,
-        expect.objectContaining({
-          options: expect.objectContaining({
-            numberOfPages: defaultOptions.numberOfPages,
-          }),
-        })
-      );
+      expect(functionsMocks.buildPager).toHaveBeenCalledWith(exampleEngine, {
+        options: {
+          numberOfPages: defaultOptions.numberOfPages,
+        },
+      });
       expect(functionsMocks.subscribePager).toHaveBeenCalledTimes(1);
       expect(functionsMocks.buildSearchStatus).toHaveBeenCalledTimes(1);
       expect(functionsMocks.subscribeSearchStatus).toHaveBeenCalledTimes(1);
@@ -162,14 +158,11 @@ describe('c-quantic-pager', () => {
         await flushPromises();
 
         expect(functionsMocks.buildPager).toHaveBeenCalledTimes(1);
-        expect(functionsMocks.buildPager).toHaveBeenCalledWith(
-          exampleEngine,
-          expect.objectContaining({
-            options: expect.objectContaining({
-              numberOfPages: customNumberOfPages,
-            }),
-          })
-        );
+        expect(functionsMocks.buildPager).toHaveBeenCalledWith(exampleEngine, {
+          options: {
+            numberOfPages: customNumberOfPages,
+          },
+        });
       });
     });
   });
@@ -185,12 +178,18 @@ describe('c-quantic-pager', () => {
       const element = createTestComponent();
       await flushPromises();
 
-      expect(element.shadowRoot.querySelector(selectors.pagerContainer)).not.toBeNull();
-      expect(element.shadowRoot.querySelector(selectors.previousButton)).not.toBeNull();
-      expect(element.shadowRoot.querySelector(selectors.nextButton)).not.toBeNull();
-      expect(element.shadowRoot.querySelectorAll(selectors.pageButton).length).toBe(
-        initialPagerState.currentPages.length
-      );
+      expect(
+        element.shadowRoot.querySelector(selectors.pagerContainer)
+      ).not.toBeNull();
+      expect(
+        element.shadowRoot.querySelector(selectors.previousButton)
+      ).not.toBeNull();
+      expect(
+        element.shadowRoot.querySelector(selectors.nextButton)
+      ).not.toBeNull();
+      expect(
+        element.shadowRoot.querySelectorAll(selectors.pageButton).length
+      ).toBe(initialPagerState.currentPages.length);
     });
 
     describe('previous button', () => {
@@ -199,7 +198,9 @@ describe('c-quantic-pager', () => {
         const element = createTestComponent();
         await flushPromises();
 
-        const previousButton = element.shadowRoot.querySelector(selectors.previousButton);
+        const previousButton = element.shadowRoot.querySelector(
+          selectors.previousButton
+        );
         expect(previousButton).not.toBeNull();
         expect(previousButton.disabled).toBe(true);
       });
@@ -209,7 +210,9 @@ describe('c-quantic-pager', () => {
         const element = createTestComponent();
         await flushPromises();
 
-        const previousButton = element.shadowRoot.querySelector(selectors.previousButton);
+        const previousButton = element.shadowRoot.querySelector(
+          selectors.previousButton
+        );
         expect(previousButton).not.toBeNull();
         expect(previousButton.disabled).toBe(false);
       });
@@ -219,7 +222,9 @@ describe('c-quantic-pager', () => {
         const element = createTestComponent();
         await flushPromises();
 
-        const previousButton = element.shadowRoot.querySelector(selectors.previousButton);
+        const previousButton = element.shadowRoot.querySelector(
+          selectors.previousButton
+        );
         expect(previousButton).not.toBeNull();
         previousButton.click();
         expect(functionsMocks.previousPage).toHaveBeenCalledTimes(1);
@@ -232,7 +237,9 @@ describe('c-quantic-pager', () => {
         const element = createTestComponent();
         await flushPromises();
 
-        const nextButton = element.shadowRoot.querySelector(selectors.nextButton);
+        const nextButton = element.shadowRoot.querySelector(
+          selectors.nextButton
+        );
         expect(nextButton).not.toBeNull();
         expect(nextButton.disabled).toBe(true);
       });
@@ -242,7 +249,9 @@ describe('c-quantic-pager', () => {
         const element = createTestComponent();
         await flushPromises();
 
-        const nextButton = element.shadowRoot.querySelector(selectors.nextButton);
+        const nextButton = element.shadowRoot.querySelector(
+          selectors.nextButton
+        );
         expect(nextButton).not.toBeNull();
         expect(nextButton.disabled).toBe(false);
       });
@@ -252,7 +261,9 @@ describe('c-quantic-pager', () => {
         const element = createTestComponent();
         await flushPromises();
 
-        const nextButton = element.shadowRoot.querySelector(selectors.nextButton);
+        const nextButton = element.shadowRoot.querySelector(
+          selectors.nextButton
+        );
         nextButton.click();
         expect(functionsMocks.nextPage).toHaveBeenCalledTimes(1);
       });
@@ -265,7 +276,9 @@ describe('c-quantic-pager', () => {
         const element = createTestComponent();
         await flushPromises();
 
-        const pageObjects = Array.from(element.shadowRoot.querySelectorAll(selectors.pageButton)).map((button) => ({
+        const pageObjects = Array.from(
+          element.shadowRoot.querySelectorAll(selectors.pageButton)
+        ).map((button) => ({
           number: button.number,
           selected: button.selected,
           ariaLabelValue: button.ariaLabelValue,
@@ -303,7 +316,9 @@ describe('c-quantic-pager', () => {
         const element = createTestComponent();
         await flushPromises();
 
-        const allButtons = Array.from(element.shadowRoot.querySelectorAll(selectors.pageButton));
+        const allButtons = Array.from(
+          element.shadowRoot.querySelectorAll(selectors.pageButton)
+        );
         const thirdPageButton = allButtons[2];
         const quanticSelectEvent = new CustomEvent('quantic__select', {
           detail: 3, // Simulating click on the third page button
@@ -326,10 +341,16 @@ describe('c-quantic-pager', () => {
       const element = createTestComponent();
       await flushPromises();
 
-      expect(element.shadowRoot.querySelector(selectors.pagerContainer)).toBeNull();
-      expect(element.shadowRoot.querySelector(selectors.previousButton)).toBeNull();
+      expect(
+        element.shadowRoot.querySelector(selectors.pagerContainer)
+      ).toBeNull();
+      expect(
+        element.shadowRoot.querySelector(selectors.previousButton)
+      ).toBeNull();
       expect(element.shadowRoot.querySelector(selectors.nextButton)).toBeNull();
-      expect(element.shadowRoot.querySelectorAll(selectors.pageButton).length).toBe(0);
+      expect(
+        element.shadowRoot.querySelectorAll(selectors.pageButton).length
+      ).toBe(0);
     });
   });
 
@@ -359,7 +380,9 @@ describe('c-quantic-pager', () => {
       const element = createTestComponent();
       await flushPromises();
 
-      expect(element.shadowRoot.querySelector(selectors.componentError)).not.toBeNull();
+      expect(
+        element.shadowRoot.querySelector(selectors.componentError)
+      ).not.toBeNull();
     });
   });
 
@@ -369,20 +392,28 @@ describe('c-quantic-pager', () => {
       prepareHeadlessState();
     });
 
-    it('should handle empty currentPages array', async () => {
+    it('should not cause any error with and empty currentPages array', async () => {
       pagerState.currentPages = [];
       const element = createTestComponent();
       await flushPromises();
 
-      expect(element.shadowRoot.querySelector(selectors.pagerContainer)).not.toBeNull();
-      expect(element.shadowRoot.querySelector(selectors.previousButton)).not.toBeNull();
-      expect(element.shadowRoot.querySelector(selectors.nextButton)).not.toBeNull();
-      expect(element.shadowRoot.querySelectorAll(selectors.pageButton).length).toBe(0);
+      expect(
+        element.shadowRoot.querySelector(selectors.pagerContainer)
+      ).not.toBeNull();
+      expect(
+        element.shadowRoot.querySelector(selectors.previousButton)
+      ).not.toBeNull();
+      expect(
+        element.shadowRoot.querySelector(selectors.nextButton)
+      ).not.toBeNull();
+      expect(
+        element.shadowRoot.querySelectorAll(selectors.pageButton).length
+      ).toBe(0);
     });
 
     it('should handle numberOfPages as string and convert to number', async () => {
       createTestComponent({
-        numberOfPages: '7', // string value
+        numberOfPages: '7',
       });
       await flushPromises();
 
