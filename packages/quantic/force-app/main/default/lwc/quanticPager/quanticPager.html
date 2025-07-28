@@ -14,10 +14,17 @@
           class="slds-m-left_x-small"
           onclick={previous}
           aria-label={labels.previousPage}
+          data-testid="previous-button"
         ></lightning-button>
 
         <template for:each={currentPagesObjects} for:item="page">
-          <c-quantic-number-button key={page.number} number={page.number} selected={page.selected} onquantic__select={goto} aria-label-value={page.ariaLabelValue}></c-quantic-number-button>
+          <c-quantic-number-button
+            key={page.number}
+            number={page.number}
+            selected={page.selected}
+            onquantic__select={goto}
+            aria-label-value={page.ariaLabelValue}
+          ></c-quantic-number-button>
         </template>
 
         <lightning-button
@@ -28,6 +35,7 @@
           class="slds-m-left_x-small"
           onclick={next}
           aria-label={labels.nextPage}
+          data-testid="next-button"
         ></lightning-button>
       </lightning-button-group>
     </template>

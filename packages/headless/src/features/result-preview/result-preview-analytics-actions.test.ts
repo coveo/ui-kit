@@ -5,6 +5,7 @@ import {
   getSampleSearchEngineConfiguration,
   type SearchEngine,
 } from '../../app/search-engine/search-engine.js';
+import {buildMockRelay} from '../../test/mock-relay.js';
 import {buildMockNonEmptyResult} from '../../test/mock-result.js';
 import {clearMicrotaskQueue} from '../../test/unit-test-utils.js';
 import {logDocumentQuickview} from './result-preview-analytics-actions.js';
@@ -23,14 +24,7 @@ describe('result preview analytics actions', () => {
       vi.mocked(CoveoSearchPageClient).mockReturnValue({
         makeDocumentQuickview,
       } as unknown as CoveoSearchPageClient);
-      vi.mocked(createRelay).mockReturnValue({
-        emit,
-        getMeta: vi.fn(),
-        on: vi.fn(),
-        off: vi.fn(),
-        updateConfig: vi.fn(),
-        version: 'foo',
-      });
+      vi.mocked(createRelay).mockReturnValue(buildMockRelay({emit}));
     });
 
     it('when analyticsMode is `legacy` should call coveo.analytics.makeRecommendationOpen properly', async () => {
