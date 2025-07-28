@@ -27,6 +27,7 @@ import {
   AtomicProductChildren as LitAtomicProductChildren,
   AtomicProductExcerpt as LitAtomicProductExcerpt,
   AtomicProductImage as LitAtomicProductImage,
+  AtomicProductLink as LitAtomicProductLink,
   AtomicProductMultiValueText as LitAtomicProductMultiValueText,
   AtomicProductNumericFieldValue as LitAtomicProductNumericFieldValue,
   AtomicProductPrice as LitAtomicProductPrice,
@@ -125,16 +126,16 @@ export const AtomicCommerceRefineToggle = createComponent({
   elementClass: LitAtomicCommerceRefineToggle,
 });
 
-export const AtomicCommerceSearchBox = createComponent({
-  tagName: 'atomic-commerce-search-box',
-  react: React,
-  elementClass: LitAtomicCommerceSearchBox,
-});
-
 export const AtomicCommerceSearchBoxInstantProducts = createComponent({
   tagName: 'atomic-commerce-search-box-instant-products',
   react: React,
   elementClass: LitAtomicCommerceSearchBoxInstantProducts,
+});
+
+export const AtomicCommerceSearchBox = createComponent({
+  tagName: 'atomic-commerce-search-box',
+  react: React,
+  elementClass: LitAtomicCommerceSearchBox,
 });
 
 export const AtomicCommerceSearchBoxQuerySuggestions = createComponent({
@@ -161,16 +162,16 @@ export const AtomicCommerceText = createComponent({
   elementClass: LitAtomicCommerceText,
 });
 
-export const AtomicProduct = createComponent({
-  tagName: 'atomic-product',
-  react: React,
-  elementClass: LitAtomicProduct,
-});
-
 export const AtomicProductChildren = createComponent({
   tagName: 'atomic-product-children',
   react: React,
   elementClass: LitAtomicProductChildren,
+});
+
+export const AtomicProduct = createComponent({
+  tagName: 'atomic-product',
+  react: React,
+  elementClass: LitAtomicProduct,
 });
 
 export const AtomicProductExcerpt = createComponent({
@@ -183,6 +184,12 @@ export const AtomicProductImage = createComponent({
   tagName: 'atomic-product-image',
   react: React,
   elementClass: LitAtomicProductImage,
+});
+
+export const AtomicProductLink = createComponent({
+  tagName: 'atomic-product-link',
+  react: React,
+  elementClass: LitAtomicProductLink,
 });
 
 export const AtomicProductMultiValueText = createComponent({
