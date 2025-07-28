@@ -5,6 +5,7 @@ import {
   type RecommendationEngine,
 } from '../../app/recommendation-engine/recommendation-engine.js';
 import {getSampleSearchEngineConfiguration} from '../../app/search-engine/search-engine.js';
+import {buildMockRelay} from '../../test/mock-relay.js';
 import {buildMockNonEmptyResult} from '../../test/mock-result.js';
 import {clearMicrotaskQueue} from '../../test/unit-test-utils.js';
 import {logRecommendationOpen} from './recommendation-analytics-actions.js';
@@ -25,14 +26,7 @@ describe('recommendation analytics actions', () => {
       vi.mocked(CoveoSearchPageClient).mockReturnValue({
         makeRecommendationOpen,
       } as unknown as CoveoSearchPageClient);
-      vi.mocked(createRelay).mockReturnValue({
-        emit,
-        getMeta: vi.fn(),
-        on: vi.fn(),
-        off: vi.fn(),
-        updateConfig: vi.fn(),
-        version: 'foo',
-      });
+      vi.mocked(createRelay).mockReturnValue(buildMockRelay({emit}));
     });
 
     it('when analyticsMode is `legacy` should call coveo.analytics.makeRecommendationOpen properly', async () => {
