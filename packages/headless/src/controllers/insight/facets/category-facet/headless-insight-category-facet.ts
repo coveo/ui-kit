@@ -88,7 +88,7 @@ export function buildCategoryFacet(
 
   const facetSearch = createNoopCategoryFacetSearch();
 
-  const {state, ...restOfFacetSearch} = facetSearch;
+  const {state: _state, ...restOfFacetSearch} = facetSearch;
 
   return {
     ...coreController,
@@ -175,7 +175,7 @@ function getToggleSelectInsightAnalyticsAction(
   return isSelected ? logFacetDeselect(payload) : logFacetSelect(payload);
 }
 
-export function getToggleSelectAnalyticsAction(
+function getToggleSelectAnalyticsAction(
   selection: CategoryFacetValue
 ): SearchAction {
   const isSelected = selection.state === 'selected';

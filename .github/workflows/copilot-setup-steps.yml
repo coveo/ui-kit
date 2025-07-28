@@ -34,3 +34,4 @@ jobs:
         with:
           fetch-depth: 0
       - uses: ./.github/actions/setup
+        continue-on-error: true # Allow Copilot to keep on working even if it goofed up midway

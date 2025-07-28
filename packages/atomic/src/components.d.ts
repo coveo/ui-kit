@@ -20,7 +20,6 @@ import { InsightInitializationOptions } from "./components/insight/atomic-insigh
 import { InsightStore } from "./components/insight/atomic-insight-interface/store";
 import { Actions, InsightResultActionClickedEvent } from "./components/insight/atomic-insight-result-action/atomic-insight-result-action";
 import { InsightResultAttachToCaseEvent } from "./components/insight/atomic-insight-result-attach-to-case-action/atomic-insight-result-attach-to-case-action";
-import { SelectChildProductEventArgs } from "./components/commerce/atomic-product-children/select-child-product-event";
 import { TruncateAfter } from "./components/common/expandable-text/stencil-expandable-text";
 import { ItemDisplayImageSize as ItemDisplayImageSize1 } from "./components.d";
 import { RecommendationEngine, InteractiveResult as RecsInteractiveResult, LogLevel as RecsLogLevel, Result as RecsResult, ResultTemplate as RecsResultTemplate, ResultTemplateCondition as RecsResultTemplateCondition } from "@coveo/headless/recommendation";
@@ -48,7 +47,6 @@ export { InsightInitializationOptions } from "./components/insight/atomic-insigh
 export { InsightStore } from "./components/insight/atomic-insight-interface/store";
 export { Actions, InsightResultActionClickedEvent } from "./components/insight/atomic-insight-result-action/atomic-insight-result-action";
 export { InsightResultAttachToCaseEvent } from "./components/insight/atomic-insight-result-attach-to-case-action/atomic-insight-result-attach-to-case-action";
-export { SelectChildProductEventArgs } from "./components/commerce/atomic-product-children/select-child-product-event";
 export { TruncateAfter } from "./components/common/expandable-text/stencil-expandable-text";
 export { ItemDisplayImageSize as ItemDisplayImageSize1 } from "./components.d";
 export { RecommendationEngine, InteractiveResult as RecsInteractiveResult, LogLevel as RecsLogLevel, Result as RecsResult, ResultTemplate as RecsResultTemplate, ResultTemplateCondition as RecsResultTemplateCondition } from "@coveo/headless/recommendation";
@@ -190,6 +188,11 @@ export namespace Components {
           * The citation item information.
          */
         "citation": GeneratedAnswerCitation;
+        /**
+          * Option to disable citation anchoring.
+          * @default false
+         */
+        "disableCitationAnchoring": boolean;
         /**
           * The citation index.
          */
@@ -679,9 +682,14 @@ export namespace Components {
          */
         "collapsible"?: boolean;
         /**
+          * Option to disable citation anchoring.
+          * @default false
+         */
+        "disableCitationAnchoring"?: boolean;
+        /**
           * A list of fields to include with the citations used to generate the answer.
          */
-        "fieldsToIncludeInCitations": string;
+        "fieldsToIncludeInCitations"?: string;
         /**
           * The maximum height (in rem units) of the answer when collapsed.
          */
@@ -823,9 +831,14 @@ export namespace Components {
          */
         "collapsible"?: boolean;
         /**
+          * Option to disable citation anchoring.
+          * @default false
+         */
+        "disableCitationAnchoring"?: boolean;
+        /**
           * A list of fields to include with the citations used to generate the answer.
          */
-        "fieldsToIncludeInCitations": string;
+        "fieldsToIncludeInCitations"?: string;
         /**
           * The maximum height (in rem units) of the answer when collapsed.
          */
@@ -1581,24 +1594,6 @@ export namespace Components {
     interface AtomicPopover {
     }
     /**
-     * @alpha The `atomic-product-children` component renders a section that allows the user to select a nested product (e.g., a color variant of a given product).
-     * This component leverages the [product grouping](https://docs.coveo.com/en/l78i2152/) feature.
-     */
-    interface AtomicProductChildren {
-        /**
-          * A fallback image URL to use when the specified `field` is not defined on a given child product, or when its value is invalid.
-         */
-        "fallback": string;
-        /**
-          * The child product field to use to render product children images. Fields in the `additionalFields` property of the child products are supported.  This field should be defined on each child product, and its value should be an image URL (or an array of image URLs, in which case the component will use the first one in the array).
-         */
-        "field": string;
-        /**
-          * The non-localized label to display for the product children section.  Set this to an empty string if you do not want to render the label at all.
-         */
-        "label": string;
-    }
-    /**
      * @alpha The `atomic-product-description` component renders the description of a product.
      */
     interface AtomicProductDescription {
@@ -1612,19 +1607,6 @@ export namespace Components {
         "isCollapsible": boolean;
         /**
           * The number of lines after which the product description should be truncated. A value of "none" will disable truncation.
-         */
-        "truncateAfter": TruncateAfter;
-    }
-    /**
-     * @alpha The `atomic-product-excerpt` component renders the excerpt of a product generated at query time.
-     */
-    interface AtomicProductExcerpt {
-        /**
-          * Whether the excerpt should be collapsible after being expanded.
-         */
-        "isCollapsible": boolean;
-        /**
-          * The number of lines after which the product excerpt should be truncated. A value of "none" will disable truncation.
          */
         "truncateAfter": TruncateAfter;
     }
@@ -1684,47 +1666,6 @@ export namespace Components {
           * Moves to the previous image, when the carousel is activated.
          */
         "previousImage": () => Promise<void>;
-    }
-    /**
-     * @alpha The `atomic-product-link` component automatically transforms a search product title into a clickable link that points to the original item.
-     */
-    interface AtomicProductLink {
-        /**
-          * The [template literal](https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Template_literals) from which to generate the `href` attribute value  The template literal can reference any number of product properties from the parent product. It can also reference the window object.  For example, the following markup generates an `href` value such as `http://uri.com?id=itemTitle`, using the product's `clickUri` and `itemtitle` fields. ```html <atomic-product-link href-template='${clickUri}?id=${permanentId}'></atomic-product-link> ```
-         */
-        "hrefTemplate"?: string;
-    }
-    /**
-     * @alpha The `atomic-product-multi-value-text` component renders the values of a multi-value string field.
-     */
-    interface AtomicProductMultiValueText {
-        /**
-          * The delimiter used to separate values when the field isn't indexed as a multi value field.
-         */
-        "delimiter": string | null;
-        /**
-          * The field that the component should use. The component will try to find this field in the `Product.additionalFields` object unless it finds it in the `Product` object first. Make sure this field is present in the `fieldsToInclude` property of the `atomic-commerce-interface` component.
-         */
-        "field": string;
-        /**
-          * The maximum number of field values to display. If there are _n_ more values than the specified maximum, the last displayed value will be "_n_ more...".
-         */
-        "maxValuesToDisplay": number;
-    }
-    /**
-     * @alpha The `atomic-product-numeric-field-value` component renders the value of a number product field.
-     * The number can be formatted by adding a `atomic-format-number`, `atomic-format-currency` or `atomic-format-unit` component into this component.
-     */
-    interface AtomicProductNumericFieldValue {
-        /**
-          * The field that the component should use. The component will try to find this field in the `Product.additionalFields` object unless it finds it in the `Product` object first.
-         */
-        "field": string;
-    }
-    /**
-     * @alpha The `atomic-product-price` component renders the price of a product.
-     */
-    interface AtomicProductPrice {
     }
     /**
      * The `atomic-product-rating` element renders a star rating.
@@ -3360,10 +3301,6 @@ export interface AtomicPagerCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLAtomicPagerElement;
 }
-export interface AtomicProductChildrenCustomEvent<T> extends CustomEvent<T> {
-    detail: T;
-    target: HTMLAtomicProductChildrenElement;
-}
 export interface AtomicQuickviewModalCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLAtomicQuickviewModalElement;
@@ -4178,27 +4115,6 @@ declare global {
         prototype: HTMLAtomicPopoverElement;
         new (): HTMLAtomicPopoverElement;
     };
-    interface HTMLAtomicProductChildrenElementEventMap {
-        "atomic/selectChildProduct": SelectChildProductEventArgs;
-    }
-    /**
-     * @alpha The `atomic-product-children` component renders a section that allows the user to select a nested product (e.g., a color variant of a given product).
-     * This component leverages the [product grouping](https://docs.coveo.com/en/l78i2152/) feature.
-     */
-    interface HTMLAtomicProductChildrenElement extends Components.AtomicProductChildren, HTMLStencilElement {
-        addEventListener<K extends keyof HTMLAtomicProductChildrenElementEventMap>(type: K, listener: (this: HTMLAtomicProductChildrenElement, ev: AtomicProductChildrenCustomEvent<HTMLAtomicProductChildrenElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
-        removeEventListener<K extends keyof HTMLAtomicProductChildrenElementEventMap>(type: K, listener: (this: HTMLAtomicProductChildrenElement, ev: AtomicProductChildrenCustomEvent<HTMLAtomicProductChildrenElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
-    }
-    var HTMLAtomicProductChildrenElement: {
-        prototype: HTMLAtomicProductChildrenElement;
-        new (): HTMLAtomicProductChildrenElement;
-    };
     /**
      * @alpha The `atomic-product-description` component renders the description of a product.
      */
@@ -4207,15 +4123,6 @@ declare global {
     var HTMLAtomicProductDescriptionElement: {
         prototype: HTMLAtomicProductDescriptionElement;
         new (): HTMLAtomicProductDescriptionElement;
-    };
-    /**
-     * @alpha The `atomic-product-excerpt` component renders the excerpt of a product generated at query time.
-     */
-    interface HTMLAtomicProductExcerptElement extends Components.AtomicProductExcerpt, HTMLStencilElement {
-    }
-    var HTMLAtomicProductExcerptElement: {
-        prototype: HTMLAtomicProductExcerptElement;
-        new (): HTMLAtomicProductExcerptElement;
     };
     /**
      * The `atomic-product-field-condition` component takes a list of conditions that, if fulfilled, apply the template in which it's defined.
@@ -4237,43 +4144,6 @@ declare global {
     var HTMLAtomicProductImageElement: {
         prototype: HTMLAtomicProductImageElement;
         new (): HTMLAtomicProductImageElement;
-    };
-    /**
-     * @alpha The `atomic-product-link` component automatically transforms a search product title into a clickable link that points to the original item.
-     */
-    interface HTMLAtomicProductLinkElement extends Components.AtomicProductLink, HTMLStencilElement {
-    }
-    var HTMLAtomicProductLinkElement: {
-        prototype: HTMLAtomicProductLinkElement;
-        new (): HTMLAtomicProductLinkElement;
-    };
-    /**
-     * @alpha The `atomic-product-multi-value-text` component renders the values of a multi-value string field.
-     */
-    interface HTMLAtomicProductMultiValueTextElement extends Components.AtomicProductMultiValueText, HTMLStencilElement {
-    }
-    var HTMLAtomicProductMultiValueTextElement: {
-        prototype: HTMLAtomicProductMultiValueTextElement;
-        new (): HTMLAtomicProductMultiValueTextElement;
-    };
-    /**
-     * @alpha The `atomic-product-numeric-field-value` component renders the value of a number product field.
-     * The number can be formatted by adding a `atomic-format-number`, `atomic-format-currency` or `atomic-format-unit` component into this component.
-     */
-    interface HTMLAtomicProductNumericFieldValueElement extends Components.AtomicProductNumericFieldValue, HTMLStencilElement {
-    }
-    var HTMLAtomicProductNumericFieldValueElement: {
-        prototype: HTMLAtomicProductNumericFieldValueElement;
-        new (): HTMLAtomicProductNumericFieldValueElement;
-    };
-    /**
-     * @alpha The `atomic-product-price` component renders the price of a product.
-     */
-    interface HTMLAtomicProductPriceElement extends Components.AtomicProductPrice, HTMLStencilElement {
-    }
-    var HTMLAtomicProductPriceElement: {
-        prototype: HTMLAtomicProductPriceElement;
-        new (): HTMLAtomicProductPriceElement;
     };
     /**
      * The `atomic-product-rating` element renders a star rating.
@@ -5355,15 +5225,9 @@ declare global {
         "atomic-numeric-range": HTMLAtomicNumericRangeElement;
         "atomic-pager": HTMLAtomicPagerElement;
         "atomic-popover": HTMLAtomicPopoverElement;
-        "atomic-product-children": HTMLAtomicProductChildrenElement;
         "atomic-product-description": HTMLAtomicProductDescriptionElement;
-        "atomic-product-excerpt": HTMLAtomicProductExcerptElement;
         "atomic-product-field-condition": HTMLAtomicProductFieldConditionElement;
         "atomic-product-image": HTMLAtomicProductImageElement;
-        "atomic-product-link": HTMLAtomicProductLinkElement;
-        "atomic-product-multi-value-text": HTMLAtomicProductMultiValueTextElement;
-        "atomic-product-numeric-field-value": HTMLAtomicProductNumericFieldValueElement;
-        "atomic-product-price": HTMLAtomicProductPriceElement;
         "atomic-product-rating": HTMLAtomicProductRatingElement;
         "atomic-product-section-actions": HTMLAtomicProductSectionActionsElement;
         "atomic-product-section-badges": HTMLAtomicProductSectionBadgesElement;
@@ -5574,6 +5438,11 @@ declare namespace LocalJSX {
           * The citation item information.
          */
         "citation": GeneratedAnswerCitation;
+        /**
+          * Option to disable citation anchoring.
+          * @default false
+         */
+        "disableCitationAnchoring"?: boolean;
         /**
           * The citation index.
          */
@@ -6062,6 +5931,11 @@ declare namespace LocalJSX {
          */
         "collapsible"?: boolean;
         /**
+          * Option to disable citation anchoring.
+          * @default false
+         */
+        "disableCitationAnchoring"?: boolean;
+        /**
           * A list of fields to include with the citations used to generate the answer.
          */
         "fieldsToIncludeInCitations"?: string;
@@ -6202,6 +6076,11 @@ declare namespace LocalJSX {
           * @default false
          */
         "collapsible"?: boolean;
+        /**
+          * Option to disable citation anchoring.
+          * @default false
+         */
+        "disableCitationAnchoring"?: boolean;
         /**
           * A list of fields to include with the citations used to generate the answer.
          */
@@ -6925,25 +6804,6 @@ declare namespace LocalJSX {
     interface AtomicPopover {
     }
     /**
-     * @alpha The `atomic-product-children` component renders a section that allows the user to select a nested product (e.g., a color variant of a given product).
-     * This component leverages the [product grouping](https://docs.coveo.com/en/l78i2152/) feature.
-     */
-    interface AtomicProductChildren {
-        /**
-          * A fallback image URL to use when the specified `field` is not defined on a given child product, or when its value is invalid.
-         */
-        "fallback"?: string;
-        /**
-          * The child product field to use to render product children images. Fields in the `additionalFields` property of the child products are supported.  This field should be defined on each child product, and its value should be an image URL (or an array of image URLs, in which case the component will use the first one in the array).
-         */
-        "field"?: string;
-        /**
-          * The non-localized label to display for the product children section.  Set this to an empty string if you do not want to render the label at all.
-         */
-        "label"?: string;
-        "onAtomic/selectChildProduct"?: (event: AtomicProductChildrenCustomEvent<SelectChildProductEventArgs>) => void;
-    }
-    /**
      * @alpha The `atomic-product-description` component renders the description of a product.
      */
     interface AtomicProductDescription {
@@ -6957,19 +6817,6 @@ declare namespace LocalJSX {
         "isCollapsible"?: boolean;
         /**
           * The number of lines after which the product description should be truncated. A value of "none" will disable truncation.
-         */
-        "truncateAfter"?: TruncateAfter;
-    }
-    /**
-     * @alpha The `atomic-product-excerpt` component renders the excerpt of a product generated at query time.
-     */
-    interface AtomicProductExcerpt {
-        /**
-          * Whether the excerpt should be collapsible after being expanded.
-         */
-        "isCollapsible"?: boolean;
-        /**
-          * The number of lines after which the product excerpt should be truncated. A value of "none" will disable truncation.
          */
         "truncateAfter"?: TruncateAfter;
     }
@@ -7016,47 +6863,6 @@ declare namespace LocalJSX {
           * @type {string}
          */
         "imageAltField"?: string;
-    }
-    /**
-     * @alpha The `atomic-product-link` component automatically transforms a search product title into a clickable link that points to the original item.
-     */
-    interface AtomicProductLink {
-        /**
-          * The [template literal](https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Template_literals) from which to generate the `href` attribute value  The template literal can reference any number of product properties from the parent product. It can also reference the window object.  For example, the following markup generates an `href` value such as `http://uri.com?id=itemTitle`, using the product's `clickUri` and `itemtitle` fields. ```html <atomic-product-link href-template='${clickUri}?id=${permanentId}'></atomic-product-link> ```
-         */
-        "hrefTemplate"?: string;
-    }
-    /**
-     * @alpha The `atomic-product-multi-value-text` component renders the values of a multi-value string field.
-     */
-    interface AtomicProductMultiValueText {
-        /**
-          * The delimiter used to separate values when the field isn't indexed as a multi value field.
-         */
-        "delimiter"?: string | null;
-        /**
-          * The field that the component should use. The component will try to find this field in the `Product.additionalFields` object unless it finds it in the `Product` object first. Make sure this field is present in the `fieldsToInclude` property of the `atomic-commerce-interface` component.
-         */
-        "field": string;
-        /**
-          * The maximum number of field values to display. If there are _n_ more values than the specified maximum, the last displayed value will be "_n_ more...".
-         */
-        "maxValuesToDisplay"?: number;
-    }
-    /**
-     * @alpha The `atomic-product-numeric-field-value` component renders the value of a number product field.
-     * The number can be formatted by adding a `atomic-format-number`, `atomic-format-currency` or `atomic-format-unit` component into this component.
-     */
-    interface AtomicProductNumericFieldValue {
-        /**
-          * The field that the component should use. The component will try to find this field in the `Product.additionalFields` object unless it finds it in the `Product` object first.
-         */
-        "field": string;
-    }
-    /**
-     * @alpha The `atomic-product-price` component renders the price of a product.
-     */
-    interface AtomicProductPrice {
     }
     /**
      * The `atomic-product-rating` element renders a star rating.
@@ -8680,15 +8486,9 @@ declare namespace LocalJSX {
         "atomic-numeric-range": AtomicNumericRange;
         "atomic-pager": AtomicPager;
         "atomic-popover": AtomicPopover;
-        "atomic-product-children": AtomicProductChildren;
         "atomic-product-description": AtomicProductDescription;
-        "atomic-product-excerpt": AtomicProductExcerpt;
         "atomic-product-field-condition": AtomicProductFieldCondition;
         "atomic-product-image": AtomicProductImage;
-        "atomic-product-link": AtomicProductLink;
-        "atomic-product-multi-value-text": AtomicProductMultiValueText;
-        "atomic-product-numeric-field-value": AtomicProductNumericFieldValue;
-        "atomic-product-price": AtomicProductPrice;
         "atomic-product-rating": AtomicProductRating;
         "atomic-product-section-actions": AtomicProductSectionActions;
         "atomic-product-section-badges": AtomicProductSectionBadges;
@@ -9005,18 +8805,9 @@ declare module "@stencil/core" {
              */
             "atomic-popover": LocalJSX.AtomicPopover & JSXBase.HTMLAttributes<HTMLAtomicPopoverElement>;
             /**
-             * @alpha The `atomic-product-children` component renders a section that allows the user to select a nested product (e.g., a color variant of a given product).
-             * This component leverages the [product grouping](https://docs.coveo.com/en/l78i2152/) feature.
-             */
-            "atomic-product-children": LocalJSX.AtomicProductChildren & JSXBase.HTMLAttributes<HTMLAtomicProductChildrenElement>;
-            /**
              * @alpha The `atomic-product-description` component renders the description of a product.
              */
             "atomic-product-description": LocalJSX.AtomicProductDescription & JSXBase.HTMLAttributes<HTMLAtomicProductDescriptionElement>;
-            /**
-             * @alpha The `atomic-product-excerpt` component renders the excerpt of a product generated at query time.
-             */
-            "atomic-product-excerpt": LocalJSX.AtomicProductExcerpt & JSXBase.HTMLAttributes<HTMLAtomicProductExcerptElement>;
             /**
              * The `atomic-product-field-condition` component takes a list of conditions that, if fulfilled, apply the template in which it's defined.
              * The condition properties can be based on any top-level product property of the `product` object, not restricted to fields (e.g., `ec_name`).
@@ -9028,23 +8819,6 @@ declare module "@stencil/core" {
              * @alpha 
              */
             "atomic-product-image": LocalJSX.AtomicProductImage & JSXBase.HTMLAttributes<HTMLAtomicProductImageElement>;
-            /**
-             * @alpha The `atomic-product-link` component automatically transforms a search product title into a clickable link that points to the original item.
-             */
-            "atomic-product-link": LocalJSX.AtomicProductLink & JSXBase.HTMLAttributes<HTMLAtomicProductLinkElement>;
-            /**
-             * @alpha The `atomic-product-multi-value-text` component renders the values of a multi-value string field.
-             */
-            "atomic-product-multi-value-text": LocalJSX.AtomicProductMultiValueText & JSXBase.HTMLAttributes<HTMLAtomicProductMultiValueTextElement>;
-            /**
-             * @alpha The `atomic-product-numeric-field-value` component renders the value of a number product field.
-             * The number can be formatted by adding a `atomic-format-number`, `atomic-format-currency` or `atomic-format-unit` component into this component.
-             */
-            "atomic-product-numeric-field-value": LocalJSX.AtomicProductNumericFieldValue & JSXBase.HTMLAttributes<HTMLAtomicProductNumericFieldValueElement>;
-            /**
-             * @alpha The `atomic-product-price` component renders the price of a product.
-             */
-            "atomic-product-price": LocalJSX.AtomicProductPrice & JSXBase.HTMLAttributes<HTMLAtomicProductPriceElement>;
             /**
              * The `atomic-product-rating` element renders a star rating.
              * @alpha 

@@ -8,6 +8,7 @@ import {
 } from '../stream-answer-api.js';
 import {
   expectedStreamAnswerAPIParam,
+  expectedStreamAnswerAPIParamForSelect,
   expectedStreamAnswerAPIParamWithATabWithAnExpression,
   expectedStreamAnswerAPIParamWithoutAnyTab,
   expectedStreamAnswerAPIParamWithoutSearchAction,
@@ -51,13 +52,13 @@ describe('#streamAnswerApi', () => {
         buildMockNavigatorContextProvider()()
       );
 
-      expect(queryParams).toEqual(expectedStreamAnswerAPIParam);
+      expect(queryParams).toEqual(expectedStreamAnswerAPIParamForSelect);
     });
 
     it('should merge tab expression in request constant query when expression is not a blank string', () => {
       const queryParams = constructAnswerQueryParams(
         streamAnswerAPIStateMockWithATabWithAnExpression as any,
-        'select',
+        'fetch',
         buildMockNavigatorContextProvider()()
       );
 
@@ -69,7 +70,7 @@ describe('#streamAnswerApi', () => {
     it('should not include tab info when there is NO tab', () => {
       const queryParams = constructAnswerQueryParams(
         streamAnswerAPIStateMockWithoutAnyTab as any,
-        'select',
+        'fetch',
         buildMockNavigatorContextProvider()()
       );
 
@@ -79,7 +80,7 @@ describe('#streamAnswerApi', () => {
     it('should merge filter expressions in request constant query when expression is selected', () => {
       const queryParams = constructAnswerQueryParams(
         streamAnswerAPIStateMockWithStaticFiltersSelected as any,
-        'select',
+        'fetch',
         buildMockNavigatorContextProvider()()
       );
 
@@ -91,7 +92,7 @@ describe('#streamAnswerApi', () => {
     it('should not include filter info when there is NO filter', () => {
       const queryParams = constructAnswerQueryParams(
         streamAnswerAPIStateMockWithoutAnyFilters as any,
-        'select',
+        'fetch',
         buildMockNavigatorContextProvider()()
       );
       expect(queryParams).toEqual(expectedStreamAnswerAPIParam);
@@ -100,7 +101,7 @@ describe('#streamAnswerApi', () => {
     it('should not include non-selected filters and empty filters', () => {
       const queryParams = constructAnswerQueryParams(
         streamAnswerAPIStateMockWithNonValidFilters as any,
-        'select',
+        'fetch',
         buildMockNavigatorContextProvider()()
       );
       expect(queryParams).toEqual(expectedStreamAnswerAPIParam);
@@ -109,7 +110,7 @@ describe('#streamAnswerApi', () => {
     it('should merge multiple filter expressions and a tab expression', () => {
       const queryParams = constructAnswerQueryParams(
         streamAnswerAPIStateMockWithStaticFiltersAndTabExpression as any,
-        'select',
+        'fetch',
         buildMockNavigatorContextProvider()()
       );
       expect(queryParams).toEqual(
@@ -120,7 +121,7 @@ describe('#streamAnswerApi', () => {
     it('should not include advanced search queries when there are no advanced search queries', () => {
       const queryParams = constructAnswerQueryParams(
         streamAnswerAPIStateMockWithStaticFiltersAndTabExpressionWithEmptyCQ as any,
-        'select',
+        'fetch',
         buildMockNavigatorContextProvider()()
       );
       expect(queryParams).toEqual(
@@ -131,13 +132,40 @@ describe('#streamAnswerApi', () => {
     it('should accept an undefined SearchAction', () => {
       const queryParams = constructAnswerQueryParams(
         streamAnswerAPIStateMockWithoutSearchAction as any,
-        'select',
+        'fetch',
         buildMockNavigatorContextProvider()()
       );
 
       expect(queryParams).toEqual(
         expectedStreamAnswerAPIParamWithoutSearchAction
       );
+    });
+
+    it('should exclude analytics fields when usage is select', () => {
+      const queryParams = constructAnswerQueryParams(
+        streamAnswerAPIStateMock as any,
+        'select',
+        buildMockNavigatorContextProvider()()
+      );
+
+      // Verify that volatile fields (clientTimestamp, actionCause) are not present
+      expect(queryParams.analytics).toBeUndefined();
+    });
+
+    it('should include all analytics fields when usage is fetch', () => {
+      const queryParams = constructAnswerQueryParams(
+        streamAnswerAPIStateMock as any,
+        'fetch',
+        buildMockNavigatorContextProvider()()
+      );
+
+      // Verify that all analytics fields are present including volatile ones
+      expect(queryParams.analytics).toBeDefined();
+      expect(queryParams.analytics?.clientTimestamp).toBeDefined();
+      expect(queryParams.analytics?.actionCause).toBeDefined();
+      expect(queryParams.analytics?.capture).toBeDefined();
+      expect(queryParams.analytics?.clientId).toBeDefined();
+      expect(queryParams.analytics?.originContext).toBeDefined();
     });
   });
 

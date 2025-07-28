@@ -1,3 +1,9 @@
+## <small>2.0.23 (2025-07-23)</small>
+
+* chore: enable recommended biome rules for entire repo (#5662) ([015a764](https://github.com/coveo/ui-kit/commits/015a764)), closes [#5662](https://github.com/coveo/ui-kit/issues/5662)
+
+
+
 ## <small>2.0.22 (2025-07-16)</small>
 
 * style: enable biome recommended rules in auth package (#5631) ([3151a5d](https://github.com/coveo/ui-kit/commits/3151a5d)), closes [#5631](https://github.com/coveo/ui-kit/issues/5631)

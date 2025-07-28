@@ -34,7 +34,7 @@ export type ReactCommerceEngineDefinition<
 > = ReactEngineDefinition<TControllers, CommerceEngineOptions, TSolutionType>;
 
 // Wrapper to workaround the limitation that `createContext()` cannot be called directly during SSR in next.js
-export function createSingletonContext<
+function createSingletonContext<
   TControllers extends ControllerDefinitionsMap<Controller>,
   TSolutionType extends SolutionType = SolutionType,
 >() {

@@ -165,7 +165,7 @@ export interface FacetGeneratorOptions {
   props: FacetGeneratorProps;
 }
 
-export interface FacetGeneratorProps {
+interface FacetGeneratorProps {
   solutionType: SolutionType;
 }
 
@@ -213,7 +213,7 @@ export function buildFacetGenerator(
       ? buildProductListing(engine).facetGenerator()
       : buildSearch(engine).facetGenerator();
 
-  const {state, ...restOfBaseController} = baseController;
+  const {state: _state, ...restOfBaseController} = baseController;
 
   return {
     ...restOfBaseController,

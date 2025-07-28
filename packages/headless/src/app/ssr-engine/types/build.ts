@@ -8,7 +8,7 @@ import type {
   OptionsTuple,
 } from './common.js';
 
-export interface BuildOptions<TEngineOptions> {
+interface BuildOptions<TEngineOptions> {
   extend?: OptionsExtender<TEngineOptions>;
 }
 

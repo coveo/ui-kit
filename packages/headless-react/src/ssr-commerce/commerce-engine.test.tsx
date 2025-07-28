@@ -76,6 +76,7 @@ describe('Headless react SSR utils', () => {
       searchEngineDefinition,
       standaloneEngineDefinition,
       listingEngineDefinition,
+      recommendationEngineDefinition,
     ];
 
     functions.forEach((returnValue) =>

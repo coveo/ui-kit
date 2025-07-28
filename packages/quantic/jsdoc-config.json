@@ -4,7 +4,7 @@
   },
   "plugins": [
     "plugins/markdown",
-    "@ckeditor/jsdoc-plugins/lib/export-fixer/export-fixer.js",
+    "jsdoc-plugins/export-fixer",
     "jsdoc-tsimport-plugin/index.js"
   ],
   "recurseDepth": 10,

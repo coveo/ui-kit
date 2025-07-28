@@ -1,5 +1,6 @@
 {
   "private": true,
+  "version": "1.0.0",
   "name": "@coveo/documentation",
   "type": "module",
   "main": "dist/index.js",
@@ -12,8 +13,6 @@
     "build": "nx build"
   },
   "devDependencies": {
-    "@types/react": "18.3.20",
-    "@types/react-dom": "18.3.0",
     "typedoc": "0.28.7"
   }
 }

@@ -14,7 +14,7 @@ import {setSearchHub} from '../../features/search-hub/search-hub-actions.js';
 import {getSearchHubInitialState} from '../../features/search-hub/search-hub-state.js';
 import type {SearchAppState} from '../../state/search-app-state.js';
 
-export interface CoveoJSONWebToken {
+interface CoveoJSONWebToken {
   searchHub?: string;
   pipeline?: string;
   userDisplayName?: string;
@@ -86,7 +86,7 @@ const decodeJSONWebToken = (token: string): CoveoJSONWebToken | false => {
     );
 
     return JSON.parse(jsonPayload) as CoveoJSONWebToken;
-  } catch (e) {
+  } catch (_) {
     return false;
   }
 };
