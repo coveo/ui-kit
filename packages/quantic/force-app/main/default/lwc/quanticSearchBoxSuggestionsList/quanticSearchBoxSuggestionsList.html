@@ -2,7 +2,6 @@
   <div class={listboxCssClass}>
     <ul
       id="listbox-id"
-      data-cy="suggestion-list"
       data-testid="suggestion-list"
       class="slds-listbox slds-listbox_vertical"
       tabindex="-1"
@@ -53,7 +52,6 @@
               <span class="slds-media__body slds-grid">
                 <lightning-formatted-rich-text
                   class="slds-truncate"
-                  data-cy="suggestions-option-text"
                   value={option.value}
                   title={option.rawValue}
                 ></lightning-formatted-rich-text>
