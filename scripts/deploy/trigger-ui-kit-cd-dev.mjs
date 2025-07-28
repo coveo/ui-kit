@@ -7,6 +7,7 @@ await octokit.rest.repos.createDispatchEvent({
   client_payload: {
     run_Id: context.runId,
     sha: context.sha,
+    pr_number: context.payload.pull_request.number,
   },
   owner: 'coveo-platform',
   repo: 'ui-kit-cd',
