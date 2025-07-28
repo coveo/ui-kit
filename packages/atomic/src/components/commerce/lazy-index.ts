@@ -78,6 +78,8 @@ export default {
     await import('./atomic-product-children/atomic-product-children.js'),
   'atomic-product-excerpt': async () =>
     await import('./atomic-product-excerpt/atomic-product-excerpt.js'),
+  'atomic-product-link': async () =>
+    await import('./atomic-product-link/atomic-product-link.js'),
   'atomic-product-multi-value-text': async () =>
     await import(
       './atomic-product-multi-value-text/atomic-product-multi-value-text.js'
