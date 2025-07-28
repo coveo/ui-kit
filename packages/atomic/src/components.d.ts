@@ -1610,15 +1610,6 @@ export namespace Components {
         "mustNotMatch": Record<string, string[]>;
     }
     /**
-     * @alpha The `atomic-product-link` component automatically transforms a search product title into a clickable link that points to the original item.
-     */
-    interface AtomicProductLink {
-        /**
-          * The [template literal](https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Template_literals) from which to generate the `href` attribute value  The template literal can reference any number of product properties from the parent product. It can also reference the window object.  For example, the following markup generates an `href` value such as `http://uri.com?id=itemTitle`, using the product's `clickUri` and `itemtitle` fields. ```html <atomic-product-link href-template='${clickUri}?id=${permanentId}'></atomic-product-link> ```
-         */
-        "hrefTemplate"?: string;
-    }
-    /**
      * The `atomic-product-rating` element renders a star rating.
      * @alpha 
      */
@@ -4069,15 +4060,6 @@ declare global {
         new (): HTMLAtomicProductFieldConditionElement;
     };
     /**
-     * @alpha The `atomic-product-link` component automatically transforms a search product title into a clickable link that points to the original item.
-     */
-    interface HTMLAtomicProductLinkElement extends Components.AtomicProductLink, HTMLStencilElement {
-    }
-    var HTMLAtomicProductLinkElement: {
-        prototype: HTMLAtomicProductLinkElement;
-        new (): HTMLAtomicProductLinkElement;
-    };
-    /**
      * The `atomic-product-rating` element renders a star rating.
      * @alpha 
      */
@@ -5157,7 +5139,6 @@ declare global {
         "atomic-pager": HTMLAtomicPagerElement;
         "atomic-popover": HTMLAtomicPopoverElement;
         "atomic-product-field-condition": HTMLAtomicProductFieldConditionElement;
-        "atomic-product-link": HTMLAtomicProductLinkElement;
         "atomic-product-rating": HTMLAtomicProductRatingElement;
         "atomic-product-section-actions": HTMLAtomicProductSectionActionsElement;
         "atomic-product-section-badges": HTMLAtomicProductSectionBadgesElement;
@@ -6752,15 +6733,6 @@ declare namespace LocalJSX {
           * @type {Record<string, string[]>}
          */
         "mustNotMatch"?: Record<string, string[]>;
-    }
-    /**
-     * @alpha The `atomic-product-link` component automatically transforms a search product title into a clickable link that points to the original item.
-     */
-    interface AtomicProductLink {
-        /**
-          * The [template literal](https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Template_literals) from which to generate the `href` attribute value  The template literal can reference any number of product properties from the parent product. It can also reference the window object.  For example, the following markup generates an `href` value such as `http://uri.com?id=itemTitle`, using the product's `clickUri` and `itemtitle` fields. ```html <atomic-product-link href-template='${clickUri}?id=${permanentId}'></atomic-product-link> ```
-         */
-        "hrefTemplate"?: string;
     }
     /**
      * The `atomic-product-rating` element renders a star rating.
@@ -8384,7 +8356,6 @@ declare namespace LocalJSX {
         "atomic-pager": AtomicPager;
         "atomic-popover": AtomicPopover;
         "atomic-product-field-condition": AtomicProductFieldCondition;
-        "atomic-product-link": AtomicProductLink;
         "atomic-product-rating": AtomicProductRating;
         "atomic-product-section-actions": AtomicProductSectionActions;
         "atomic-product-section-badges": AtomicProductSectionBadges;
@@ -8702,10 +8673,6 @@ declare module "@stencil/core" {
              * @alpha 
              */
             "atomic-product-field-condition": LocalJSX.AtomicProductFieldCondition & JSXBase.HTMLAttributes<HTMLAtomicProductFieldConditionElement>;
-            /**
-             * @alpha The `atomic-product-link` component automatically transforms a search product title into a clickable link that points to the original item.
-             */
-            "atomic-product-link": LocalJSX.AtomicProductLink & JSXBase.HTMLAttributes<HTMLAtomicProductLinkElement>;
             /**
              * The `atomic-product-rating` element renders a star rating.
              * @alpha 

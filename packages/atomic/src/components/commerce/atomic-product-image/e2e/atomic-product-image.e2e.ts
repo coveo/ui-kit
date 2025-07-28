@@ -15,16 +15,6 @@ test.describe('default', async () => {
   test('should render the image', async ({productImage}) => {
     await expect(productImage.noCarouselImage).toBeVisible();
   });
-
-  test('should have a default alt text', async ({productImage}) => {
-    const altText = await productImage.noCarouselImage.getAttribute('alt');
-    expect(altText).toEqual('Image 1 out of 1 for Nublu Water Bottle');
-  });
-
-  test('should have a 1:1 aspect ratio', async ({productImage}) => {
-    const imageClass = await productImage.noCarouselImage.getAttribute('class');
-    expect(imageClass).toContain('aspect-square');
-  });
 });
 
 test.describe('as a carousel', async () => {

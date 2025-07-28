@@ -47,6 +47,8 @@ export class AtomicProductImage
   @state() private useFallback = false;
   @state() private currentImage = 0;
 
+  private isFallbackMissing = false;
+
   public initialize() {
     if (!this.product && this.productController.item) {
       this.product = this.productController.item;
@@ -74,29 +76,19 @@ export class AtomicProductImage
     // eslint-disable-next-line @cspell/spellchecker
     'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="50" height="50" viewBox="0 0 50 50"%3E%3Crect width="50" height="50" fill="none" stroke="none"%3E%3C/rect%3E%3C/svg%3E';
 
-  /**
-   * Navigates to the previous image in the carousel.
-   */
-  public async previousImage() {
+  private previousImage() {
     this.currentImage =
-      this.currentImage - 1 < 0
-        ? this.numberOfImages - 1
-        : this.currentImage - 1;
+      this.currentImage >= 1 ? this.currentImage - 1 : this.numberOfImages - 1;
   }
 
-  /**
-   * Navigates to the next image in the carousel.
-   */
-  public async nextImage() {
+  private nextImage() {
     this.currentImage = (this.currentImage + 1) % this.numberOfImages;
   }
 
-  /**
-   * Navigates to the specified image index.
-   *
-   * @param index - The index of the image to navigate to.
-   */
-  public async navigateToImage(index: number) {
+  private navigateToImage(index: number) {
+    if (index < 0 || index >= this.numberOfImages) {
+      return;
+    }
     this.currentImage = index;
   }
 
@@ -109,7 +101,6 @@ export class AtomicProductImage
     const message = `The image url "${image.src}" is not valid or could not be loaded. You might want to add a "fallback" property.`;
     if (this.fallback && image.src !== this.fallback) {
       this.useFallback = true;
-      image.src = this.fallback;
     } else if (image.src === this.fallback) {
       this.logWarning('The fallback image failed to load.');
     } else {
@@ -120,7 +111,7 @@ export class AtomicProductImage
   private handleMissingFallback(message: string) {
     if (!this.fallback) {
       this.logWarning(message);
-      this.remove();
+      this.isFallbackMissing = true;
       return null;
     }
     return this.fallback;
@@ -140,34 +131,46 @@ export class AtomicProductImage
     return url;
   }
 
-  private get images(): Image[] {
-    const validImages = this.imageUrls.filter(
-      (image) => typeof image === 'string'
+  private filterValidImageUrls(): string[] {
+    return this.imageUrls.filter(
+      (image): image is string => typeof image === 'string'
     );
+  }
 
+  private getAltText(
+    index: number,
+    max: number,
+    validImageAlt: string | null
+  ): string {
+    if (typeof validImageAlt === 'string') {
+      return validImageAlt;
+    }
+    return this.bindings.i18n.t('image-alt-fallback-multiple', {
+      count: index + 1,
+      max,
+      itemName: this.product.ec_name,
+    });
+  }
+
+  private buildImage(url: string, index: number): Image {
+    const finalUrl = this.useFallback ? this.fallback : url;
+    this.validateUrl(finalUrl);
     const validImageAlt = this.imageAlt;
+    const altText = this.getAltText(
+      index,
+      this.filterValidImageUrls().length,
+      validImageAlt
+    );
+    return {
+      src: filterProtocol(finalUrl),
+      alt: altText,
+    };
+  }
 
-    return validImages.map((url, index) => {
-      const finalUrl = this.useFallback ? this.fallback : url;
-
-      this.validateUrl(finalUrl);
-      let altText = '';
-
-      if (typeof validImageAlt === 'string') {
-        altText = validImageAlt;
-      } else {
-        altText = this.bindings.i18n.t('image-alt-fallback-multiple', {
-          count: index + 1,
-          max: validImages?.length,
-          itemName: this.product.ec_name,
-        });
-      }
-
-      return {
-        src: filterProtocol(finalUrl),
-        alt: altText,
-      };
-    }) as Image[];
+  private get images(): Image[] {
+    return this.filterValidImageUrls().map((url, index) =>
+      this.buildImage(url, index)
+    );
   }
 
   private get imageUrls() {
@@ -222,17 +225,12 @@ export class AtomicProductImage
   @bindingGuard()
   @errorGuard()
   render() {
-    if (!this.product) {
-      return html``;
+    if (this.product === null || this.product === undefined) {
+      return html`${nothing}`;
     }
-
-    const imagesToRender = this.images.map((image: Image) => {
-      return {
-        src: image.src,
-        alt: image.alt,
-      };
-    });
-
+    if (this.isFallbackMissing) {
+      return html`${nothing}`;
+    }
     const alt = this.imageAlt
       ? this.imageAlt
       : this.bindings.i18n.t('image-not-found-alt', {
@@ -257,7 +255,7 @@ export class AtomicProductImage
         () =>
           when(
             this.images.length === 1,
-            () => this.renderCurrentImage(imagesToRender[this.currentImage]),
+            () => this.renderCurrentImage(this.images[this.currentImage]),
             () =>
               renderImageCarousel({
                 props: {
