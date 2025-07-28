@@ -49,6 +49,7 @@ const MAX_VALID_COLLAPSED_HEIGHT = 500;
 const MIN_VALID_COLLAPSED_HEIGHT = 150;
 
 const GENERATED_ANSWER_DATA_KEY = 'coveo-generated-answer-data';
+const DEFAULT_CITATION_FIELDS = ['sfid', 'sfkbid', 'sfkavid', 'filetype'];
 
 /**
  * The `QuanticGeneratedAnswer` component automatically generates an answer using Coveo machine learning models to answer the query executed by the user.
@@ -530,10 +531,18 @@ export default class QuanticGeneratedAnswer extends LightningElement {
   }
 
   get citationFields() {
-    return this.fieldsToIncludeInCitations
-      ?.split(',')
-      .map((field) => field.trim())
-      .filter((field) => field.length > 0);
+    const userCitationFields =
+      this.fieldsToIncludeInCitations
+        ?.split(',')
+        .map((field) => field.trim())
+        .filter((field) => field.length > 0) || [];
+
+    // Combine default fields with user fields, removing duplicates to make sure we don't
+    // override the following default ones: 'sfid,sfkbid,sfkavid,filetype'
+    const combinedCitationFields = [...DEFAULT_CITATION_FIELDS, ...userCitationFields];
+    const uniqueCitationFields = [...new Set(combinedCitationFields)];
+
+    return uniqueCitationFields;
   }
 
   get shouldShowDisclaimer() {

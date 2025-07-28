@@ -1,4 +1,4 @@
-import {LinkUtils, extractTextToHighlight} from 'c/quanticUtils';
+import {LinkUtils, generateTextFragmentUrl} from 'c/quanticUtils';
 import {NavigationMixin} from 'lightning/navigation';
 import {LightningElement, api} from 'lwc';
 
@@ -137,25 +137,6 @@ export default class QuanticCitation extends NavigationMixin(LightningElement) {
   }
 
   /**
-   * Generates an encoded text fragment URL for the citation.
-   * This URL will highlight the text in the citation if it is an HTML file.
-   * @param {string} uri
-   * @param {string} text
-   * @returns {string}
-   * @example
-   * generateTextFragmentUrl('https://example.com', 'This is a sample text.');
-   * // Returns: 'https://example.com#:~:text=This%20is%20a%20sample%20text.'
-   */
-  generateTextFragmentUrl(uri, text) {
-    const highlight = extractTextToHighlight(text);
-    const encodedTextFragment = encodeURIComponent(highlight).replace(
-      /-/g,
-      '%2D'
-    );
-    return `${uri}#:~:text=${encodedTextFragment}`;
-  }
-
-  /**
    * Checks if the citation source type is Salesforce.
    */
   get isSalesforceLink() {
@@ -172,7 +153,7 @@ export default class QuanticCitation extends NavigationMixin(LightningElement) {
 
   get hrefValue() {
     if (this.isSalesforceLink) {
-      return this.generateTextFragmentUrl(this.salesforceRecordUrl, this.text);
+      return generateTextFragmentUrl(this.salesforceRecordUrl, this.text);
     }
     return this.textFragmentUrl;
   }
@@ -215,6 +196,6 @@ export default class QuanticCitation extends NavigationMixin(LightningElement) {
       return uri;
     }
 
-    return this.generateTextFragmentUrl(uri, this.text);
+    return generateTextFragmentUrl(uri, this.text);
   }
 }

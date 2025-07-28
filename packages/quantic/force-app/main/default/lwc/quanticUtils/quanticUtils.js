@@ -35,6 +35,7 @@ import pastYear_plural from '@salesforce/label/c.quantic_PastYear_plural';
 export * from './recentQueriesUtils';
 export * from './markdownUtils';
 export * from './facetDependenciesUtils';
+export * from './citationAnchoringUtils';
 
 export class Debouncer {
   _timeout;
@@ -926,29 +927,4 @@ export function getAbsoluteWidth(element) {
 
   // @ts-ignore
   return Math.ceil(element.offsetWidth + padding);
-}
-
-/**
- * Extracts a text to highlight from a given text.
- * It tries to extract the first sentence, and if it fails, it returns the first few words.
- * @param {string} text The text from which to extract the text to highlight.
- * @returns {string} The extracted text to highlight.
- */
-export function extractTextToHighlight(text) {
-  const fallbackWordCount = 5;
-
-  const trimmedText = text.trim();
-  if (!trimmedText || typeof trimmedText !== 'string') {
-    return '';
-  }
-
-  const sentenceRegex =
-    /(?<=^|\p{P}\s)\p{P}?\p{Lu}.*?[.!?]+(?=\s+(?:\p{Lu}|\d)|$)/gu;
-  const sentences = trimmedText.match(sentenceRegex);
-
-  if (Array.isArray(sentences) && sentences?.length > 0) {
-    return sentences[0].trim();
-  }
-
-  return trimmedText.split(/\s+/).slice(0, fallbackWordCount).join(' ');
 }
