@@ -1,11 +1,11 @@
 import type {UnknownAction} from '@reduxjs/toolkit';
 import type {Controller} from '../../controllers/controller/headless-controller.js';
 import {clone, filterObject, mapObject} from '../../utils/utils.js';
+import {InvalidControllerDefinition} from '../common/errors.js';
 import type {
   ControllersMap,
   InferControllerStaticStateMapFromControllers,
 } from '../common/types/common.js';
-import {InvalidControllerDefinition} from './errors.js';
 import type {SSRCommerceEngine} from './factories/build-factory.js';
 import type {
   ControllerDefinition,

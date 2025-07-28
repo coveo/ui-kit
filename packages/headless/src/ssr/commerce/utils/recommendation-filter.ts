@@ -3,8 +3,8 @@ import type {
   RecommendationsOptions,
 } from '../../../controllers/commerce/recommendations/headless-recommendations.js';
 import type {Controller} from '../../../controllers/controller/headless-controller.js';
+import {MultipleRecommendationError} from '../../common/errors.js';
 import type {RecommendationsDefinitionMeta} from '../controllers/recommendations/headless-recommendations.ssr.js';
-import {MultipleRecommendationError} from '../errors.js';
 import {
   type ControllerDefinition,
   type ControllerDefinitionsMap,

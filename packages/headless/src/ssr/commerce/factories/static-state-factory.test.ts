@@ -1,19 +1,19 @@
 import type {Mock, MockInstance} from 'vitest';
 import {getSampleCommerceEngineConfiguration} from '../../../app/commerce-engine/commerce-engine-configuration.js';
 import type {LoggerOptions} from '../../../app/logger.js';
-import {buildMockCommerceState} from '../../../test/mock-commerce-state.js';
-import {buildMockSSRCommerceEngine} from '../../../test/mock-engine-v2.js';
-import * as augmentModule from '../../common/augment-preprocess-request.js';
-import {defineProductList} from '../../controllers/product-list/headless-product-list.ssr.js';
 import {
   buildProductListing,
   type ProductListing,
-} from '../../controllers/product-listing/headless-product-listing.js';
+} from '../../../controllers/commerce/product-listing/headless-product-listing.js';
 import {
   buildSearch,
   type Search,
-} from '../../controllers/search/headless-search.js';
-import {defineSearchBox} from '../../controllers/search-box/headless-search-box.ssr.js';
+} from '../../../controllers/commerce/search/headless-search.js';
+import {buildMockCommerceState} from '../../../test/mock-commerce-state.js';
+import {buildMockSSRCommerceEngine} from '../../../test/mock-engine-v2.js';
+import * as augmentModule from '../../common/augment-preprocess-request.js';
+import {defineProductList} from '../controllers/product-list/headless-product-list.ssr.js';
+import {defineSearchBox} from '../controllers/search-box/headless-search-box.ssr.js';
 import {
   type InferControllersMapFromDefinition,
   SolutionType,
@@ -22,8 +22,10 @@ import type {CommerceControllerDefinitionsMap} from '../types/core-engine.js';
 import * as buildFactory from './build-factory.js';
 import {fetchStaticStateFactory} from './static-state-factory.js';
 
-vi.mock('../../controllers/product-listing/headless-product-listing.js');
-vi.mock('../../controllers/search/headless-search.js');
+vi.mock(
+  '../../../controllers/commerce/product-listing/headless-product-listing.js'
+);
+vi.mock('../../../controllers/commerce/search/headless-search.js');
 
 describe('fetchStaticStateFactory', () => {
   let engineSpy: MockInstance;

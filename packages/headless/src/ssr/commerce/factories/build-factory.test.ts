@@ -8,10 +8,10 @@ import {defineSearchBox} from '../controllers/search-box/headless-search-box.ssr
 import {SolutionType} from '../types/common.js';
 import {buildFactory} from './build-factory.js';
 import {buildMockNavigatorContextProvider} from '../../../test/mock-navigator-context-provider.js';
-import { defineCart } from '../controllers/cart/headless-cart.ssr.js';
-import { defineRecommendations } from '../controllers/recommendations/headless-recommendations.ssr.js';
+import {defineCart} from '../controllers/cart/headless-cart.ssr.js';
+import {defineRecommendations} from '../controllers/recommendations/headless-recommendations.ssr.js';
 
-vi.mock('../../logger.js');
+vi.mock('../../../app/logger.js');
 
 describe('buildFactory', () => {
   const mockLogger = {

@@ -13,7 +13,7 @@ import type {
   InferControllerStaticStateMapFromControllers,
   OptionsTuple,
 } from '../../../ssr/common/types/common.js';
-import type {InvalidControllerDefinition} from '../errors.js';
+import type {InvalidControllerDefinition} from '../../common/errors.js';
 import type {SSRCommerceEngine} from '../factories/build-factory.js';
 import type {Kind} from './kind.js';
 

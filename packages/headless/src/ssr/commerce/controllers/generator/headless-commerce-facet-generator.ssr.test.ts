@@ -1,29 +1,29 @@
-import type {AnyFacetResponse} from '../../../../../features/commerce/facets/facet-set/interfaces/response.js';
-import type {CommerceAppState} from '../../../../../state/commerce-app-state.js';
-import {buildMockCategoryFacetSearch} from '../../../../../test/mock-category-facet-search.js';
-import {buildMockCommerceFacetRequest} from '../../../../../test/mock-commerce-facet-request.js';
+import type {GeneratedFacetControllers} from '../../../../controllers/commerce/core/facets/generator/headless-commerce-facet-generator.js';
+import {buildProductListing} from '../../../../controllers/commerce/product-listing/headless-product-listing.js';
+import {buildSearch} from '../../../../controllers/commerce/search/headless-search.js';
+import type {AnyFacetResponse} from '../../../../features/commerce/facets/facet-set/interfaces/response.js';
+import type {CommerceAppState} from '../../../../state/commerce-app-state.js';
+import {buildMockCategoryFacetSearch} from '../../../../test/mock-category-facet-search.js';
+import {buildMockCommerceFacetRequest} from '../../../../test/mock-commerce-facet-request.js';
 import {
   buildMockCategoryFacetResponse,
   buildMockCommerceDateFacetResponse,
   buildMockCommerceLocationFacetResponse,
   buildMockCommerceNumericFacetResponse,
   buildMockCommerceRegularFacetResponse,
-} from '../../../../../test/mock-commerce-facet-response.js';
-import {buildMockCommerceState} from '../../../../../test/mock-commerce-state.js';
+} from '../../../../test/mock-commerce-facet-response.js';
+import {buildMockCommerceState} from '../../../../test/mock-commerce-state.js';
 import {
   buildMockSSRCommerceEngine,
   type MockedCommerceEngine,
-} from '../../../../../test/mock-engine-v2.js';
-import {buildMockFacetSearch} from '../../../../../test/mock-facet-search.js';
-import {SolutionType} from '../../../../types/common.js';
-import {buildProductListing} from '../../../product-listing/headless-product-listing.js';
-import {buildSearch} from '../../../search/headless-search.js';
-import type {FacetType} from '../headless-core-commerce-facet.js';
-import type {GeneratedFacetControllers} from './headless-commerce-facet-generator.js';
+} from '../../../../test/mock-engine-v2.js';
+import {buildMockFacetSearch} from '../../../../test/mock-facet-search.js';
+import {SolutionType} from '../../types/common.js';
 import {
   buildFacetGenerator,
   type FacetGenerator,
   type FacetGeneratorOptions,
+  type FacetType,
 } from './headless-commerce-facet-generator.ssr.js';
 
 describe('SSR FacetGenerator', () => {

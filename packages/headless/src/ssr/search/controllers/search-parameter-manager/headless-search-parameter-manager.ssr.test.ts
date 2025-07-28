@@ -2,10 +2,6 @@ import {
   buildSearchParameterManager,
   type SearchParameterManager,
 } from '../../../../controllers/search-parameter-manager/headless-search-parameter-manager.js';
-import {
-  defineSearchParameterManager,
-  type SearchParameterManagerBuildProps,
-} from '../../../../controllers/search-parameter-manager/headless-search-parameter-manager.ssr.js';
 import {advancedSearchQueriesReducer} from '../../../../features/advanced-search-queries/advanced-search-queries-slice.js';
 import {configurationReducer} from '../../../../features/configuration/configuration-slice.js';
 import {debugReducer} from '../../../../features/debug/debug-slice.js';
@@ -24,8 +20,14 @@ import {buildMockSSRSearchEngine} from '../../../../test/mock-engine-v2.js';
 import {createMockState} from '../../../../test/mock-state.js';
 import type {ControllerDefinitionWithProps} from '../../../common/types/common.js';
 import type {SSRSearchEngine} from '../../engine/search-engine.ssr.js';
+import {
+  defineSearchParameterManager,
+  type SearchParameterManagerBuildProps,
+} from './headless-search-parameter-manager.ssr.js';
 
-vi.mock('./headless-search-parameter-manager');
+vi.mock(
+  '../../../../controllers/search-parameter-manager/headless-search-parameter-manager.js'
+);
 const buildSearchParameterManagerMock = vi.mocked(buildSearchParameterManager);
 
 type SearchParameterManagerDefinitionType = ControllerDefinitionWithProps<

@@ -1,14 +1,14 @@
 import {describe, expect, it, vi} from 'vitest';
-import {defineCart} from '../../../controllers/context/cart/headless-cart.ssr.js';
 import type {Controller} from '../../../controllers/controller/headless-controller.js';
-import {defineSummary} from '../../../controllers/core/summary/headless-core-summary.ssr.js';
-import {defineProductList} from '../../../controllers/product-list/headless-product-list.ssr.js';
-import {defineSearchBox} from '../../../controllers/search-box/headless-search-box.ssr.js';
-import {MultipleRecommendationError} from '../../../utils/errors.js';
+import {MultipleRecommendationError} from '../../common/errors.js';
+import {defineCart} from '../controllers/cart/headless-cart.ssr.js';
+import {defineProductList} from '../controllers/product-list/headless-product-list.ssr.js';
 import {
   defineRecommendations,
   type Recommendations,
 } from '../controllers/recommendations/headless-recommendations.ssr.js';
+import {defineSearchBox} from '../controllers/search-box/headless-search-box.ssr.js';
+import {defineSummary} from '../controllers/summary/headless-core-summary.ssr.js';
 import type {ControllerDefinitionsMap} from '../types/common.js';
 import {filterRecommendationControllers} from './recommendation-filter.js';
 

@@ -7,7 +7,7 @@ import {
   type UserLocation,
   type View,
 } from '../../../../controllers/commerce/context/headless-context.js';
-import {MissingControllerProps} from '../../errors.js';
+import {MissingControllerProps} from '../../../common/errors.js';
 import type {UniversalControllerDefinitionWithProps} from '../../types/common.js';
 import {createControllerWithKind, Kind} from '../../types/kind.js';
 

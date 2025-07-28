@@ -6,7 +6,6 @@ import {
   buildController,
   type Controller,
 } from '../../../controllers/controller/headless-controller.js';
-import {defineResultList} from '../../../controllers/result-list/headless-result-list.ssr.js';
 import {loadPaginationActions} from '../../../features/pagination/pagination-actions-loader.js';
 import type {executeSearch} from '../../../features/search/search-actions.js';
 import {buildMockNavigatorContextProvider} from '../../../test/mock-navigator-context-provider.js';
@@ -18,6 +17,7 @@ import type {
   InferHydratedState,
   InferStaticState,
 } from '../../common/types/core-engine.js';
+import {defineResultList} from '../controllers/result-list/headless-result-list.ssr.js';
 import {
   defineSearchEngine,
   type SearchEngineDefinition,

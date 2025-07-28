@@ -1,15 +1,15 @@
-import type {SSRSearchEngine} from '../../app/search-engine/search-engine.ssr.js';
-import {buildMockSSRSearchEngine} from '../../test/mock-engine-v2.js';
-import {createMockState} from '../../test/mock-state.js';
-import {MissingControllerProps} from '../../utils/errors.js';
-import {buildContext} from './headless-context.js';
+import {buildContext} from '../../../../controllers/context/headless-context.js';
+import {buildMockSSRSearchEngine} from '../../../../test/mock-engine-v2.js';
+import {createMockState} from '../../../../test/mock-state.js';
+import {MissingControllerProps} from '../../../common/errors.js';
+import type {SSRSearchEngine} from '../../engine/search-engine.ssr.js';
 import {
   type ContextDefinition,
   type ContextProps,
   defineContext,
 } from './headless-context.ssr.js';
 
-vi.mock('./headless-context');
+vi.mock('../../../../controllers/context/headless-context.js');
 const buildContextMock = vi.mocked(buildContext);
 
 describe('define context', () => {
