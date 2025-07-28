@@ -119,6 +119,13 @@ export default class QuanticGeneratedAnswer extends LightningElement {
       this._maxCollapsedHeight = DEFAULT_COLLAPSED_HEIGHT;
     }
   }
+  /**
+   * Whether to disable citation anchoring.
+   * @api
+   * @type {boolean}
+   * @default false
+   */
+  @api disableCitationAnchoring = false;
 
   labels = {
     generatedAnswerForYou,
