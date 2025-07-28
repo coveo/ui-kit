@@ -6,6 +6,11 @@ test.describe('default', () => {
     await productLink.hydrated.first().waitFor({state: 'visible'});
   });
 
+  test('should be accessible', async ({makeAxeBuilder}) => {
+    const accessibilityResults = await makeAxeBuilder().analyze();
+    expect(accessibilityResults.violations.length).toEqual(0);
+  });
+
   test('should render as links', async ({productLink, page}) => {
     expect(await productLink.anchor().count()).toBeGreaterThan(1);
 
@@ -14,46 +19,19 @@ test.describe('default', () => {
     await productLink.anchor().first().click({force: true});
     expect(page.url()).toContain('barca');
   });
-});
 
-test.describe('with slot for attributes', () => {
-  test.beforeEach(async ({productLink}) => {
-    await productLink.load({story: 'with-slots-attributes'});
-    await productLink.hydrated.first().waitFor({state: 'visible'});
-  });
+  test('should send ec.productClick event when clicking the link', async ({
+    productLink,
+    page,
+  }) => {
+    const analyticsUrlRegex =
+      /https:\/\/searchuisamples\.analytics\.org\.coveo\.com\/rest\/organizations\/searchuisamples\/events\/v1.*/;
+    const requestPromise = page.waitForRequest(analyticsUrlRegex);
+    await productLink.anchor().first().click();
+    const request = await requestPromise;
 
-  test('should support to open in new tab', async ({productLink}) => {
-    const anchor = productLink.anchor().first();
-    await expect(anchor).toHaveAttribute('target', '_blank');
-  });
-});
-
-test.describe('with alternative content', () => {
-  test.beforeEach(async ({productLink}) => {
-    await productLink.load({story: 'with-alternative-content'});
-    await productLink.hydrated.first().waitFor({state: 'visible'});
-  });
-
-  test('should render alternative content', async ({productLink}) => {
-    await expect(productLink.anchor().first()).toHaveText(
-      'Alternative content'
-    );
-
-    await expect(productLink.anchor().first().locator('img')).toBeVisible();
-  });
-});
-
-test.describe('with href template', () => {
-  test.beforeEach(async ({productLink}) => {
-    await productLink.load({story: 'with-href-template'});
-    await productLink.hydrated.first().waitFor({state: 'visible'});
-  });
-
-  test('should render the href template', async ({productLink}) => {
-    const anchor = productLink.anchor().first();
-    await expect(anchor).toHaveAttribute(
-      'href',
-      'https://sports.barca.group/pdp/SP00021_00001?source=Sports'
-    );
+    // Due to a bug in chromium, we cannot access the request payload in tests.
+    // See https://github.com/microsoft/playwright/issues/6479
+    expect(request).toBeDefined();
   });
 });

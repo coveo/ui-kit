@@ -182,6 +182,11 @@ export namespace Components {
          */
         "citation": GeneratedAnswerCitation;
         /**
+          * Option to disable citation anchoring.
+          * @default false
+         */
+        "disableCitationAnchoring": boolean;
+        /**
           * The citation index.
          */
         "index": number;
@@ -670,9 +675,14 @@ export namespace Components {
          */
         "collapsible"?: boolean;
         /**
+          * Option to disable citation anchoring.
+          * @default false
+         */
+        "disableCitationAnchoring"?: boolean;
+        /**
           * A list of fields to include with the citations used to generate the answer.
          */
-        "fieldsToIncludeInCitations": string;
+        "fieldsToIncludeInCitations"?: string;
         /**
           * The maximum height (in rem units) of the answer when collapsed.
          */
@@ -814,9 +824,14 @@ export namespace Components {
          */
         "collapsible"?: boolean;
         /**
+          * Option to disable citation anchoring.
+          * @default false
+         */
+        "disableCitationAnchoring"?: boolean;
+        /**
           * A list of fields to include with the citations used to generate the answer.
          */
-        "fieldsToIncludeInCitations": string;
+        "fieldsToIncludeInCitations"?: string;
         /**
           * The maximum height (in rem units) of the answer when collapsed.
          */
@@ -1644,15 +1659,6 @@ export namespace Components {
           * Moves to the previous image, when the carousel is activated.
          */
         "previousImage": () => Promise<void>;
-    }
-    /**
-     * @alpha The `atomic-product-link` component automatically transforms a search product title into a clickable link that points to the original item.
-     */
-    interface AtomicProductLink {
-        /**
-          * The [template literal](https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Template_literals) from which to generate the `href` attribute value  The template literal can reference any number of product properties from the parent product. It can also reference the window object.  For example, the following markup generates an `href` value such as `http://uri.com?id=itemTitle`, using the product's `clickUri` and `itemtitle` fields. ```html <atomic-product-link href-template='${clickUri}?id=${permanentId}'></atomic-product-link> ```
-         */
-        "hrefTemplate"?: string;
     }
     /**
      * The `atomic-product-rating` element renders a star rating.
@@ -4124,15 +4130,6 @@ declare global {
         new (): HTMLAtomicProductImageElement;
     };
     /**
-     * @alpha The `atomic-product-link` component automatically transforms a search product title into a clickable link that points to the original item.
-     */
-    interface HTMLAtomicProductLinkElement extends Components.AtomicProductLink, HTMLStencilElement {
-    }
-    var HTMLAtomicProductLinkElement: {
-        prototype: HTMLAtomicProductLinkElement;
-        new (): HTMLAtomicProductLinkElement;
-    };
-    /**
      * The `atomic-product-rating` element renders a star rating.
      * @alpha 
      */
@@ -5214,7 +5211,6 @@ declare global {
         "atomic-product-description": HTMLAtomicProductDescriptionElement;
         "atomic-product-field-condition": HTMLAtomicProductFieldConditionElement;
         "atomic-product-image": HTMLAtomicProductImageElement;
-        "atomic-product-link": HTMLAtomicProductLinkElement;
         "atomic-product-rating": HTMLAtomicProductRatingElement;
         "atomic-product-section-actions": HTMLAtomicProductSectionActionsElement;
         "atomic-product-section-badges": HTMLAtomicProductSectionBadgesElement;
@@ -5420,6 +5416,11 @@ declare namespace LocalJSX {
           * The citation item information.
          */
         "citation": GeneratedAnswerCitation;
+        /**
+          * Option to disable citation anchoring.
+          * @default false
+         */
+        "disableCitationAnchoring"?: boolean;
         /**
           * The citation index.
          */
@@ -5908,6 +5909,11 @@ declare namespace LocalJSX {
          */
         "collapsible"?: boolean;
         /**
+          * Option to disable citation anchoring.
+          * @default false
+         */
+        "disableCitationAnchoring"?: boolean;
+        /**
           * A list of fields to include with the citations used to generate the answer.
          */
         "fieldsToIncludeInCitations"?: string;
@@ -6048,6 +6054,11 @@ declare namespace LocalJSX {
           * @default false
          */
         "collapsible"?: boolean;
+        /**
+          * Option to disable citation anchoring.
+          * @default false
+         */
+        "disableCitationAnchoring"?: boolean;
         /**
           * A list of fields to include with the citations used to generate the answer.
          */
@@ -6830,15 +6841,6 @@ declare namespace LocalJSX {
           * @type {string}
          */
         "imageAltField"?: string;
-    }
-    /**
-     * @alpha The `atomic-product-link` component automatically transforms a search product title into a clickable link that points to the original item.
-     */
-    interface AtomicProductLink {
-        /**
-          * The [template literal](https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Template_literals) from which to generate the `href` attribute value  The template literal can reference any number of product properties from the parent product. It can also reference the window object.  For example, the following markup generates an `href` value such as `http://uri.com?id=itemTitle`, using the product's `clickUri` and `itemtitle` fields. ```html <atomic-product-link href-template='${clickUri}?id=${permanentId}'></atomic-product-link> ```
-         */
-        "hrefTemplate"?: string;
     }
     /**
      * The `atomic-product-rating` element renders a star rating.
@@ -8464,7 +8466,6 @@ declare namespace LocalJSX {
         "atomic-product-description": AtomicProductDescription;
         "atomic-product-field-condition": AtomicProductFieldCondition;
         "atomic-product-image": AtomicProductImage;
-        "atomic-product-link": AtomicProductLink;
         "atomic-product-rating": AtomicProductRating;
         "atomic-product-section-actions": AtomicProductSectionActions;
         "atomic-product-section-badges": AtomicProductSectionBadges;
@@ -8791,10 +8792,6 @@ declare module "@stencil/core" {
              * @alpha 
              */
             "atomic-product-image": LocalJSX.AtomicProductImage & JSXBase.HTMLAttributes<HTMLAtomicProductImageElement>;
-            /**
-             * @alpha The `atomic-product-link` component automatically transforms a search product title into a clickable link that points to the original item.
-             */
-            "atomic-product-link": LocalJSX.AtomicProductLink & JSXBase.HTMLAttributes<HTMLAtomicProductLinkElement>;
             /**
              * The `atomic-product-rating` element renders a star rating.
              * @alpha 
