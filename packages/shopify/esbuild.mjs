@@ -16,7 +16,9 @@ const buenoJson = JSON.parse(readFileSync(buenoJsonPath, 'utf-8'));
 
 const buenoVersion = isNightly
   ? `v${buenoJson.version.split('.').shift()}-nightly`
-  : `v${buenoJson.version}`;
+  : isPrRelease
+    ? `v${buenoJson.version}.${process.env.PR_NUMBER}`
+    : `v${buenoJson.version}`;
 const buenoPath = isCDN
   ? `/bueno/${buenoVersion}/bueno.esm.js`
   : '@coveo/bueno';

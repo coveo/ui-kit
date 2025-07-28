@@ -10,14 +10,20 @@ const headlessJsonPath = new URL(
 const headlessJson = JSON.parse(readFileSync(headlessJsonPath, 'utf-8'));
 
 const isNightly = process.env.IS_NIGHTLY === 'true';
+const isPrRelease =
+  process.env.IS_PRERELEASE === 'true' && process.env.PR_NUMBER;
 
 const headlessVersion = isNightly
   ? `v${headlessJson.version.split('.').shift()}-nightly`
-  : `v${headlessJson.version}`;
+  : isPrRelease
+    ? `v${headlessJson.version}.${process.env.PR_NUMBER}`
+    : `v${headlessJson.version}`;
 
 const buenoVersion = isNightly
   ? `v${buenoJson.version.split('.').shift()}-nightly`
-  : `v${buenoJson.version}`;
+  : isPrRelease
+    ? `v${buenoJson.version}.${process.env.PR_NUMBER}`
+    : `v${buenoJson.version}`;
 
 export function generateExternalPackageMappings() {
   return {
