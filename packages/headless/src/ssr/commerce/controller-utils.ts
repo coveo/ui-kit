@@ -18,7 +18,7 @@ import type {
   InferControllerPropsMapFromDefinitions,
   InferControllersMapFromDefinition,
   SolutionType,
-} from './types/common.js'; // TODO: these are not common. so they should renamed accordingly
+} from './types/common.js';
 
 function hasKindProperty(
   controller: Controller | ControllerWithKind

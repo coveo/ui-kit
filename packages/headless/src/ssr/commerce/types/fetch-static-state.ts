@@ -11,7 +11,7 @@ import type {
   EngineDefinitionControllersPropsOption,
   EngineStaticState,
   SolutionType,
-} from './common.js'; // TODO: does are not common. so they should renamed accordingly
+} from './common.js';
 import type {FromBuildResult} from './from-build-result.js';
 
 export type FetchStaticStateOptions = {};
