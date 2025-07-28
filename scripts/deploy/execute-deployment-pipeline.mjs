@@ -22,7 +22,7 @@ function getVersionComposants(version) {
     parsedVersion?.major,
     parsedVersion?.minor,
     parsedVersion?.patch,
-    parsedVersion.prerelease[0] || undefined,
+    ...(parsedVersion?.prerelease[0] ? [parsedVersion.prerelease[0]] : []),
   ];
 }
 
