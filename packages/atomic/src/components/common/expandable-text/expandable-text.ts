@@ -4,6 +4,7 @@ import MinusIcon from '../../../images/minus.svg';
 import PlusIcon from '../../../images/plus.svg';
 import {renderButton} from '../button';
 import '../atomic-icon/atomic-icon';
+import {type Ref, ref} from 'lit/directives/ref.js';
 
 export type TruncateAfter = 'none' | '1' | '2' | '3' | '4';
 
@@ -26,6 +27,7 @@ export interface ExpandableTextProps {
   onToggleExpand: (e: MouseEvent | undefined) => void;
   showMoreLabel: string;
   showLessLabel: string;
+  textRef: Ref<HTMLDivElement>;
 }
 
 export const renderExpandableText: FunctionalComponentWithChildren<
@@ -40,6 +42,7 @@ export const renderExpandableText: FunctionalComponentWithChildren<
       onToggleExpand,
       showMoreLabel,
       showLessLabel,
+      textRef,
     },
   }) =>
   (children) => {
@@ -58,7 +61,9 @@ export const renderExpandableText: FunctionalComponentWithChildren<
 
     return html`<div class="flex flex-col items-start">
         <div part="expandable-text"
-        class="${expandableTextClass}">
+        class="${expandableTextClass}"
+        ${ref(textRef)}
+        >
         ${children}
         </div>
 

@@ -13,7 +13,7 @@ export default class Configurator extends LightningElement {
       description: option.description ?? '',
       defaultValue: option.defaultValue,
       defaultValueAsText: this.formatDefaultValue(option.defaultValue),
-      cyId: `cfg-${option.attribute}`,
+      testId: `cfg-${option.attribute}`,
     }));
   }
 
