@@ -599,8 +599,8 @@ jobs:
     secrets:
       SFDX_AUTH_CLIENT_ID: ${{ secrets.SFDX_AUTH_CLIENT_ID }}
       SFDX_AUTH_JWT_KEY: ${{ secrets.SFDX_AUTH_JWT_KEY }}
-  prerelease-npm:
-    if: ${{ !cancelled() }}
+  prerelease-npm-pr:
+    if: ${{ !cancelled() && github.event_name == 'pull_request' }}
     needs: build
     timeout-minutes: 40
     name: Pre-release NPM at alpha
@@ -634,9 +634,9 @@ jobs:
           npm run release:phase4
         env:
           IS_PRERELEASE: 'true'
-          TAG_SUFFIX: ${{ github.event_name == 'pull_request' && github.event.number || '' }}
-  prerelease-cdn:
-    if: ${{ !cancelled() }}
+          TAG_SUFFIX: ${{ github.event.number }}
+  prerelease-cdn-pr:
+    if: ${{ !cancelled() && github.event_name == 'pull_request' }}
     needs: build
     name: Pre-release CDN in dev
     environment: 'Prerelease (CDN)'
@@ -685,8 +685,8 @@ jobs:
       - 'e2e-atomic-insight-panel-test'
       - 'e2e-headless-ssr-test-app'
       - 'e2e-headless-ssr-test-pages'
-      - 'prerelease-npm'
-      - 'prerelease-cdn'
+      - 'prerelease-npm-pr'
+      - 'prerelease-cdn-pr'
     runs-on: ubuntu-latest
     steps:
       - name: Harden Runner
@@ -725,8 +725,6 @@ jobs:
       - 'e2e-atomic-insight-panel-test'
       - 'e2e-headless-ssr-test-app'
       - 'e2e-headless-ssr-test-pages'
-      - 'prerelease-npm'
-      - 'prerelease-cdn'
     runs-on: ubuntu-latest
     steps:
       - name: Harden Runner
@@ -765,3 +763,66 @@ jobs:
             echo "Build is invalid"
             exit 1
           fi
+  prerelease-npm-merge:
+    if: ${{ !cancelled() && github.event_name == 'merge_group' }}
+    needs: is-valid
+    timeout-minutes: 40
+    name: Pre-release NPM at alpha
+    env:
+      NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+    runs-on: ubuntu-latest
+    environment: 'Prerelease'
+    steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@6c439dc8bdf85cadbbce9ed30d1c7b959517bc49 # v2.12.2
+        with:
+          egress-policy: audit
+
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          registry-url: 'https://registry.npmjs.org'
+          node-version-file: '.nvmrc'
+      - name: Install npm
+        run: npm i -g npm@11.4.2
+        shell: bash
+      - run: npm ci
+        shell: bash
+      - name: Release
+        run: |
+          npm run nx:graph
+          npm run release:phase1
+          npm run release:phase3
+          npm run release:phase4
+        env:
+          IS_PRERELEASE: 'true'
+          TAG_SUFFIX: ${{ github.event.number }}
+  prerelease-cdn-merge:
+    if: ${{ !cancelled() && github.event_name ==  'merge_group' }}
+    needs: is-valid
+    name: Pre-release CDN in dev
+    environment: 'Prerelease (CDN)'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@6c439dc8bdf85cadbbce9ed30d1c7b959517bc49 # v2.12.2
+        with:
+          egress-policy: audit
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          registry-url: 'https://registry.npmjs.org'
+          node-version-file: '.nvmrc'
+      - name: Install npm
+        run: npm i -g npm@11.4.2
+        shell: bash
+      - run: npm ci
+        shell: bash
+      - name: Call ui-kit-cd for dev
+        run: node ./scripts/deploy/trigger-ui-kit-cd-pr.mjs
+        env:
+          GH_TOKEN: ${{ secrets.UI_KIT_CD_DISPATCHER }}
