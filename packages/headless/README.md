@@ -64,6 +64,8 @@ The headless project intensively uses ["Redux"](https://redux.js.org) along with
 
 The base of the `/src` folder should only contain exports.
 
+`/ssr` TODO:
+
 `/app` contains app-wide setup: Redux store, root reducer, middlewares.
 
 `/state` contains interfaces for the various application states.

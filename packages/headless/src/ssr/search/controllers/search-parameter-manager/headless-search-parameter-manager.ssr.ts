@@ -19,10 +19,8 @@ import {queryReducer as query} from '../../../../features/query/query-slice.js';
 import {sortCriteriaReducer as sortCriteria} from '../../../../features/sort-criteria/sort-criteria-slice.js';
 import {staticFilterSetReducer as staticFilterSet} from '../../../../features/static-filter-set/static-filter-set-slice.js';
 import {tabSetReducer as tabSet} from '../../../../features/tab-set/tab-set-slice.js';
-import {
-  loadReducerError,
-  MissingControllerProps,
-} from '../../../../utils/errors.js';
+import {loadReducerError} from '../../../../utils/errors.js';
+import {MissingControllerProps} from '../../../commerce/errors.js';
 import type {ControllerDefinitionWithProps} from '../../../common/types/common.js';
 
 export * from '../../../../controllers/search-parameter-manager/headless-search-parameter-manager.js';

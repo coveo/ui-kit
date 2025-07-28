@@ -4,7 +4,7 @@ import {
   type Context,
 } from '../../../../controllers/context/headless-context.js';
 import type {ContextProps} from '../../../../controllers/core/context/headless-core-context.js';
-import {MissingControllerProps} from '../../../../utils/errors.js';
+import {MissingControllerProps} from '../../../commerce/errors.js';
 import type {ControllerDefinitionWithProps} from '../../../common/types/common.js';
 
 export * from '../../../../controllers/context/headless-context.js';
