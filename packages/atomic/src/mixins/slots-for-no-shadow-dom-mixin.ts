@@ -15,12 +15,6 @@ interface SlotPlaceholder {
 
 export interface LightDOMWithSlots {
   slots: SlotMapping;
-  _slotsInitialized: boolean;
-  _slotPlaceholders: SlotPlaceholder[];
-  _pendingSlotRelocation: boolean;
-  getSlotNameForChild(child: AdoptedNode): string;
-  isTextNodeEmpty(node: Text): boolean;
-  isSlotEmpty(slot: string): boolean;
   renderDefaultSlotContent(
     defaultContent?: unknown
   ): TemplateResult | unknown[];
@@ -55,10 +49,22 @@ export const SlotsForNoShadowDOMMixin = <T extends Constructor<LitElement>>(
     extends superClass
     implements LightDOMWithSlots
   {
+    /**
+     * @internal
+     */
     slots: SlotMapping = {};
-    _slotsInitialized = false;
-    _slotPlaceholders: SlotPlaceholder[] = [];
-    _pendingSlotRelocation = false;
+    /**
+     * @internal
+     */
+    private slotsInitialized = false;
+    /**
+     * @internal
+     */
+    private slotPlaceholders: SlotPlaceholder[] = [];
+    /**
+     * @internal
+     */
+    private pendingSlotRelocation = false;
 
     createRenderRoot() {
       return this;
@@ -71,7 +77,7 @@ export const SlotsForNoShadowDOMMixin = <T extends Constructor<LitElement>>(
 
     willUpdate(changedProperties: PropertyValues): void {
       super.willUpdate?.(changedProperties);
-      if (!this.hasUpdated && !this._slotsInitialized) {
+      if (!this.hasUpdated && !this.slotsInitialized) {
         this.adoptChildren();
       }
     }
@@ -79,21 +85,21 @@ export const SlotsForNoShadowDOMMixin = <T extends Constructor<LitElement>>(
     public updated(changedProperties: PropertyValues): void {
       super.updated?.(changedProperties);
       // Relocate slot content after Lit has finished updating the DOM
-      if (!this._pendingSlotRelocation) {
+      if (!this.pendingSlotRelocation) {
         return;
       }
-      for (const placeholderInfo of this._slotPlaceholders) {
+      for (const placeholderInfo of this.slotPlaceholders) {
         this._relocateSingleSlot(placeholderInfo);
       }
-      this._slotPlaceholders = [];
-      this._pendingSlotRelocation = false;
+      this.slotPlaceholders = [];
+      this.pendingSlotRelocation = false;
     }
 
     private adoptChildren(): void {
       this.slots = {};
-      this._slotPlaceholders = [];
+      this.slotPlaceholders = [];
       this._mapChildrenToSlots();
-      this._slotsInitialized = true;
+      this.slotsInitialized = true;
     }
 
     public renderDefaultSlotContent(
@@ -106,7 +112,7 @@ export const SlotsForNoShadowDOMMixin = <T extends Constructor<LitElement>>(
       return defaultContent ? [defaultContent] : [];
     }
 
-    public getSlotNameForChild(child: AdoptedNode): string {
+    private getSlotNameForChild(child: AdoptedNode): string {
       if (child instanceof Comment && child.nextSibling instanceof Element) {
         return this.getSlotNameForChild(child.nextSibling);
       }
@@ -116,11 +122,11 @@ export const SlotsForNoShadowDOMMixin = <T extends Constructor<LitElement>>(
       return '';
     }
 
-    public isTextNodeEmpty(node: Text): boolean {
+    private isTextNodeEmpty(node: Text): boolean {
       return !node.textContent || !node.textContent.trim();
     }
 
-    public isSlotEmpty(slot: string): boolean {
+    private isSlotEmpty(slot: string): boolean {
       const content = this.slots[slot];
       return (
         !content ||
@@ -135,13 +141,13 @@ export const SlotsForNoShadowDOMMixin = <T extends Constructor<LitElement>>(
 
     private _initializeSlotState(): void {
       this.slots = {};
-      this._slotsInitialized = false;
-      this._slotPlaceholders = [];
-      this._pendingSlotRelocation = false;
+      this.slotsInitialized = false;
+      this.slotPlaceholders = [];
+      this.pendingSlotRelocation = false;
     }
 
     private _ensureSlotsInitialized(): void {
-      if (!this._slotsInitialized) {
+      if (!this.slotsInitialized) {
         this.adoptChildren();
       }
     }
@@ -173,12 +179,12 @@ export const SlotsForNoShadowDOMMixin = <T extends Constructor<LitElement>>(
       const placeholder = document.createComment(
         `slot:${slotName || 'default'}`
       );
-      this._slotPlaceholders.push({
+      this.slotPlaceholders.push({
         slotName,
         placeholder,
         originalNodes: slotContent,
       });
-      this._pendingSlotRelocation = true;
+      this.pendingSlotRelocation = true;
       return [placeholder];
     }
 

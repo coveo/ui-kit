@@ -20,6 +20,7 @@ export const AtomicProductFieldCondition = /*@__PURE__*/createReactComponent<JSX
 export const AtomicProductImage = /*@__PURE__*/createReactComponent<JSX.AtomicProductImage, HTMLAtomicProductImageElement>('atomic-product-image');
 export const AtomicProductLink = /*@__PURE__*/createReactComponent<JSX.AtomicProductLink, HTMLAtomicProductLinkElement>('atomic-product-link');
 export const AtomicProductMultiValueText = /*@__PURE__*/createReactComponent<JSX.AtomicProductMultiValueText, HTMLAtomicProductMultiValueTextElement>('atomic-product-multi-value-text');
+export const AtomicProductRating = /*@__PURE__*/createReactComponent<JSX.AtomicProductRating, HTMLAtomicProductRatingElement>('atomic-product-rating');
 export const AtomicProductSectionActions = /*@__PURE__*/createReactComponent<JSX.AtomicProductSectionActions, HTMLAtomicProductSectionActionsElement>('atomic-product-section-actions');
 export const AtomicProductSectionBadges = /*@__PURE__*/createReactComponent<JSX.AtomicProductSectionBadges, HTMLAtomicProductSectionBadgesElement>('atomic-product-section-badges');
 export const AtomicProductSectionBottomMetadata = /*@__PURE__*/createReactComponent<JSX.AtomicProductSectionBottomMetadata, HTMLAtomicProductSectionBottomMetadataElement>('atomic-product-section-bottom-metadata');
