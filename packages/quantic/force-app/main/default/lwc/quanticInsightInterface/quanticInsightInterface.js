@@ -35,6 +35,13 @@ export default class QuanticInsightInterface extends LightningElement {
    * @type {string}
    */
   @api insightId;
+  /**
+   * The ID of the record used to retrieve the user ID of its creator.
+   * This is required to assign the correct privileges for enabling the User Actions feature.
+   * @api
+   * @type {string}
+   */
+  @api recordId = '';
 
   /** @type {InsightEngineOptions} */
   engineOptions;
@@ -69,7 +76,7 @@ export default class QuanticInsightInterface extends LightningElement {
     loadDependencies(this, HeadlessBundleNames.insight)
       .then(() => {
         if (!getHeadlessBindings(this.engineId)?.engine) {
-          getHeadlessConfiguration()
+          getHeadlessConfiguration({recordId: this.recordId})
             .then((data) => {
               if (data) {
                 const {organizationId, accessToken, ...rest} = JSON.parse(data);

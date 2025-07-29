@@ -3,6 +3,7 @@ import {defineCart} from '../../../controllers/commerce/context/cart/headless-ca
 import {defineProductList} from '../../../controllers/commerce/product-list/headless-product-list.ssr.js';
 import {defineRecommendations} from '../../../controllers/commerce/recommendations/headless-recommendations.ssr.js';
 import {defineSearchBox} from '../../../controllers/commerce/search-box/headless-search-box.ssr.js';
+import {buildMockNavigatorContextProvider} from '../../../test/mock-navigator-context-provider.js';
 import type {CommerceEngineOptions} from '../../commerce-engine/commerce-engine.js';
 import * as commerceEngine from '../../commerce-engine/commerce-engine.js';
 import {getSampleCommerceEngineConfiguration} from '../../commerce-engine/commerce-engine-configuration.js';
@@ -20,7 +21,7 @@ describe('buildFactory', () => {
 
   const mockEngineOptions: CommerceEngineOptions = {
     configuration: getSampleCommerceEngineConfiguration(),
-    navigatorContextProvider: vi.fn(),
+    navigatorContextProvider: buildMockNavigatorContextProvider(),
   };
 
   const mockEmptyDefinition = {};
