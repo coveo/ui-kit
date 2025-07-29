@@ -3,13 +3,13 @@ import type {CommerceEngineOptions} from '../../../app/commerce-engine/commerce-
 import * as commerceEngine from '../../../app/commerce-engine/commerce-engine.js';
 import {getSampleCommerceEngineConfiguration} from '../../../app/commerce-engine/commerce-engine-configuration.js';
 import {buildLogger} from '../../../app/logger.js';
+import {buildMockNavigatorContextProvider} from '../../../test/mock-navigator-context-provider.js';
+import {defineCart} from '../controllers/cart/headless-cart.ssr.js';
 import {defineProductList} from '../controllers/product-list/headless-product-list.ssr.js';
+import {defineRecommendations} from '../controllers/recommendations/headless-recommendations.ssr.js';
 import {defineSearchBox} from '../controllers/search-box/headless-search-box.ssr.js';
 import {SolutionType} from '../types/controller-constants.js';
 import {buildFactory} from './build-factory.js';
-import {buildMockNavigatorContextProvider} from '../../../test/mock-navigator-context-provider.js';
-import {defineCart} from '../controllers/cart/headless-cart.ssr.js';
-import {defineRecommendations} from '../controllers/recommendations/headless-recommendations.ssr.js';
 
 vi.mock('../../../app/logger.js');
 
