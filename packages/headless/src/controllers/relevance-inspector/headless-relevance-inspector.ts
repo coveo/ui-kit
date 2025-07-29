@@ -285,8 +285,8 @@ export function buildRelevanceInspector(
       engine.logger.warn(
         `For production environment, please specify the necessary fields either when instantiating a ResultList controller, or by dispatching a registerFieldsToInclude action.
         
-        https://docs.coveo.com/en/headless/latest/reference/search/controllers/result-list/#resultlistoptions
-        https://docs.coveo.com/en/headless/latest/reference/search/actions/field/#registerfieldstoinclude`
+        https://docs.coveo.com/en/headless/latest/reference/interfaces/Search.ResultListOptions.html
+        https://docs.coveo.com/en/headless/latest/reference/interfaces/Search.FieldActionCreators.html#registerfieldstoinclude`
       );
     },
   };
