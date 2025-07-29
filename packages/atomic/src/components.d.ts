@@ -2841,7 +2841,7 @@ export namespace Components {
          */
         "initialize": (options: InitializationOptions) => Promise<void>;
         /**
-          * Initializes the connection with an already preconfigured [headless search engine](https://docs.coveo.com/en/headless/latest/reference/search/), as opposed to the `initialize` method, which will internally create a new search engine instance. This bypasses the properties set on the component, such as analytics, searchHub, pipeline, language, timezone & logLevel.
+          * Initializes the connection with an already preconfigured [headless search engine](https://docs.coveo.com/en/headless/latest/reference/modules/Search.html), as opposed to the `initialize` method, which will internally create a new search engine instance. This bypasses the properties set on the component, such as analytics, searchHub, pipeline, language, timezone & logLevel.
          */
         "initializeWithSearchEngine": (engine: SearchEngine) => Promise<void>;
         /**

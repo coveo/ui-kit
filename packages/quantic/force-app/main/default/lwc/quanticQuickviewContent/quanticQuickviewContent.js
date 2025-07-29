@@ -16,7 +16,7 @@ const allowedHost = {youtube: 'https://youtube.com/'};
  */
 export default class QuanticQuickviewContent extends LightningElement {
   /**
-   * The [result item](https://docs.coveo.com/en/headless/latest/reference/search/controllers/result-list/#result).
+   * The [result item](https://docs.coveo.com/en/headless/latest/reference/interfaces/Search.FacetValue.html).
    * @api
    * @type {Result}
    */

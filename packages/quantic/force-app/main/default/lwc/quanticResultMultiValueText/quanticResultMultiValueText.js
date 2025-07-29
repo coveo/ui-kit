@@ -16,7 +16,7 @@ import {LightningElement, api} from 'lwc';
  */
 export default class QuanticResultMultiValueText extends LightningElement {
   /**
-   * The [result item](https://docs.coveo.com/en/headless/latest/reference/search/controllers/result-list/#result) to use.
+   * The [result item](https://docs.coveo.com/en/headless/latest/reference/interfaces/Search.FacetValue.html) to use.
    * @api
    * @type {Result}
    */
