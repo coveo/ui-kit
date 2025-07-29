@@ -3,11 +3,7 @@ import theme from '@/src/utils/coveo.tw.css';
 import styles from '@/src/utils/tailwind.global.tw.css';
 import utilities from '@/src/utils/tailwind-utilities/utilities.tw.css';
 
-let tailwindPropertiesInjected = false;
-
-function injectTailwindProperties() {
-  if (typeof document === 'undefined') return;
-  if (tailwindPropertiesInjected) return;
+const tailwindPropertiesSheet = (() => {
   const propCss = styles as unknown as string[] | string;
   const fullCss = Array.isArray(propCss) ? propCss.join('') : propCss;
 
@@ -16,22 +12,44 @@ function injectTailwindProperties() {
     /@layer\s+properties\s*{[^{}]*@supports[^{}]*{([^}]*)}|@layer\s+properties\s*{([^}]*)}/
   );
   const cssString = (match?.[1] || match?.[2] || '').trim();
-  const styleEl = document.createElement('style');
-  styleEl.textContent = `/* tailwind properties */${cssString}`;
-  document.head.appendChild(styleEl);
-  tailwindPropertiesInjected = true;
+  const sheet = new CSSStyleSheet();
+  sheet.replaceSync(cssString);
+  return sheet;
+})();
+
+// biome-ignore lint/suspicious/noExplicitAny: <>
+function injectTailwindProperties(element: any) {
+  if (typeof document === 'undefined') return;
+
+  const parent = element.getRootNode();
+  const isDocumentOrShadowRoot =
+    parent instanceof Document || parent instanceof ShadowRoot;
+
+  if (isDocumentOrShadowRoot) {
+    if (!parent.adoptedStyleSheets.includes(tailwindPropertiesSheet)) {
+      parent.adoptedStyleSheets.push(tailwindPropertiesSheet);
+    }
+  } else {
+    element.adoptedStyleSheets.push(tailwindPropertiesSheet);
+  }
 }
 
-export function withTailwindStyles<
+injectTailwindProperties(document);
+
+export const withTailwindStyles = <
   T extends {
     styles?: CSSResultGroup | CSSStyleSheet | undefined;
     // biome-ignore lint/suspicious/noExplicitAny: <>
-    new (...args: any[]): {};
+    new (...args: any[]): any;
   },
->(Base: T): T {
-  injectTailwindProperties();
-
+>(
+  Base: T
+): T => {
   return class extends Base {
+    public connectedCallback() {
+      super.connectedCallback();
+      injectTailwindProperties(this);
+    }
     static get styles(): CSSResultGroup {
       const baseStyles = [
         unsafeCSS(theme),
@@ -48,4 +66,4 @@ export function withTailwindStyles<
       return baseStyles;
     }
   };
-}
+};
