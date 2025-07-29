@@ -1,5 +1,5 @@
 import {composeFunction} from '../../common/controller-utils.js';
-import type {SolutionType} from '../types/controllers.js';
+import type {SolutionType} from '../types/controller-constants.js';
 import type {
   BuildParameters,
   CommerceControllerDefinitionsMap,

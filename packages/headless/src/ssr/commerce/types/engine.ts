@@ -2,17 +2,18 @@ import type {UnknownAction} from '@reduxjs/toolkit';
 import type {EngineConfiguration} from '../../../app/engine-configuration.js';
 import type {NavigatorContextProvider} from '../../../app/navigator-context-provider.js';
 import type {Controller} from '../../../controllers/controller/headless-controller.js';
+import type {ControllerStaticStateMap} from '../../common/types/controllers.js';
 import type {FromBuildResultOptions} from '../../common/types/from-build-result.js';
 import type {CommerceEngineDefinition} from '../engine/commerce-engine.ssr.js';
 import type {SSRCommerceEngine} from '../factories/build-factory.js';
 import type {Build, BuildOptions} from './build.js';
+import type {SolutionType} from './controller-constants.js';
+import type {ControllerDefinitionsMap} from './controller-definitions.js';
 import type {
-  ControllerDefinitionsMap,
   InferControllerPropsMapFromDefinitions,
   InferControllerStaticStateMapFromDefinitionsWithSolutionType,
   InferControllersMapFromDefinition,
-  SolutionType,
-} from './controllers.js';
+} from './controller-inference.js';
 import type {
   FetchStaticState,
   FetchStaticStateOptions,
@@ -33,6 +34,15 @@ export type {
   Build,
   BuildOptions,
 };
+
+export interface EngineStaticState<
+  TSearchAction extends UnknownAction,
+  TControllers extends ControllerStaticStateMap,
+> {
+  searchActions: TSearchAction[];
+  controllers: TControllers;
+}
+
 export type EngineDefinitionOptions<
   TOptions extends {configuration: EngineConfiguration},
   TControllers extends ControllerDefinitionsMap<Controller>,
@@ -104,24 +114,6 @@ export interface EngineDefinition<
    */
   setAccessToken: (accessToken: string) => void;
 }
-
-export type InferStaticState<
-  T extends {
-    fetchStaticState(...args: unknown[]): Promise<unknown>;
-  },
-> = Awaited<ReturnType<T['fetchStaticState']>>;
-
-export type InferHydratedState<
-  T extends {
-    hydrateStaticState(...args: unknown[]): Promise<unknown>;
-  },
-> = Awaited<ReturnType<T['hydrateStaticState']>>;
-
-export type InferBuildResult<
-  T extends {
-    build(...args: unknown[]): Promise<unknown>;
-  },
-> = Awaited<ReturnType<T['build']>>;
 
 export type CommerceControllerDefinitionsMap =
   ControllerDefinitionsMap<Controller>;

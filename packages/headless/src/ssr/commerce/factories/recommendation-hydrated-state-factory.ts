@@ -1,5 +1,5 @@
 import {composeFunction} from '../../common/controller-utils.js';
-import {SolutionType} from '../types/controllers.js';
+import {SolutionType} from '../types/controller-constants.js';
 import type {
   BuildParameters,
   BuildResult,

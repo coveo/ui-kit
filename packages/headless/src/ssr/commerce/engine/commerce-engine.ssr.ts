@@ -13,10 +13,8 @@ import {hydratedStaticStateFactory} from '../factories/hydrated-state-factory.js
 import {hydratedRecommendationStaticStateFactory} from '../factories/recommendation-hydrated-state-factory.js';
 import {fetchRecommendationStaticStateFactory} from '../factories/recommendation-static-state-factory.js';
 import {fetchStaticStateFactory} from '../factories/static-state-factory.js';
-import {
-  type ControllerDefinitionsMap,
-  SolutionType,
-} from '../types/controllers.js';
+import {SolutionType} from '../types/controller-constants.js';
+import type {ControllerDefinitionsMap} from '../types/controller-definitions.js';
 import type {EngineDefinition} from '../types/engine.js';
 
 export interface CommerceEngineDefinition<

@@ -1,10 +1,6 @@
-import type {UnknownAction} from '@reduxjs/toolkit';
 import type {Controller} from '../../../controllers/controller/headless-controller.js';
 import type {InvalidControllerDefinition} from '../../common/errors.js';
-import type {
-  ControllerStaticStateMap,
-  ControllersPropsMap,
-} from '../../common/types/controllers.js';
+import type {ControllersPropsMap} from '../../common/types/controllers.js';
 import type {EngineDefinitionBuildResult} from '../../common/types/engine.js';
 import type {HydratedState} from '../../common/types/hydrate-static-state.js';
 import type {
@@ -13,12 +9,24 @@ import type {
 } from '../../common/types/inference.js';
 import type {
   HasKey,
-  HasKeys,
   HasOptionalKeys,
   HasRequiredKeys,
   OptionsTuple,
 } from '../../common/types/utilities.js';
 import type {SSRCommerceEngine} from '../factories/build-factory.js';
+import {
+  type recommendationInternalOptionKey,
+  SolutionType,
+} from './controller-constants.js';
+import type {
+  ListingAndStandaloneController,
+  ListingOnlyController,
+  NonRecommendationController,
+  RecommendationOnlyController,
+  SearchAndListingController,
+  SearchOnlyController,
+  UniversalController,
+} from './controller-scopes.js';
 import type {Kind} from './kind.js';
 
 export type {
@@ -28,18 +36,6 @@ export type {
   InferControllerStaticStateFromController,
   InferControllerStaticStateMapFromControllers,
 };
-
-export enum SolutionType {
-  search = 'search',
-  listing = 'listing',
-  standalone = 'standalone',
-  recommendation = 'recommendation',
-}
-
-const recommendationOptionKey = 'recommendation-internal-options';
-export const recommendationInternalOptionKey = Symbol.for(
-  recommendationOptionKey
-);
 
 export type RecommendationControllerSettings = {
   /**
@@ -51,7 +47,9 @@ export type RecommendationControllerSettings = {
   enabled?: boolean;
 };
 
-interface ControllerDefinitionWithoutProps<TController extends Controller> {
+export interface ControllerDefinitionWithoutProps<
+  TController extends Controller,
+> {
   /**
    * Creates an instance of the given controller.
    *
@@ -66,7 +64,7 @@ export interface ControllerWithKind extends Controller {
   _kind: Kind;
 }
 
-interface ControllerDefinitionWithProps<
+export interface ControllerDefinitionWithProps<
   TController extends Controller,
   TProps,
 > {
@@ -83,14 +81,6 @@ interface ControllerDefinitionWithProps<
     props?: TProps,
     solutionType?: SolutionType
   ): TController & ControllerWithKind;
-}
-
-export interface EngineStaticState<
-  TSearchAction extends UnknownAction,
-  TControllers extends ControllerStaticStateMap,
-> {
-  searchActions: TSearchAction[];
-  controllers: TControllers;
 }
 
 interface SolutionTypeAvailability {
@@ -110,60 +100,6 @@ export type ControllerDefinition<TController extends Controller> =
 export interface ControllerDefinitionsMap<TController extends Controller> {
   [customName: string]: ControllerDefinition<TController>;
 }
-
-export type InferControllerPropsFromDefinition<
-  TController extends ControllerDefinition<Controller>,
-> = TController extends ControllerDefinitionWithProps<Controller, infer Props>
-  ? HasKey<TController, typeof recommendationInternalOptionKey> extends never
-    ? Props
-    : Props & RecommendationControllerSettings
-  : TController extends ControllerDefinitionWithoutProps<Controller>
-    ? HasKey<TController, typeof recommendationInternalOptionKey> extends never
-      ? {}
-      : RecommendationControllerSettings
-    : unknown;
-
-export type InferControllerPropsMapFromDefinitions<
-  TControllers extends ControllerDefinitionsMap<Controller>,
-> = {
-  [K in keyof TControllers as HasKeys<
-    InferControllerPropsFromDefinition<TControllers[K]>
-  > extends false
-    ? never
-    : K]: InferControllerPropsFromDefinition<TControllers[K]>;
-};
-
-export type InferControllerFromDefinition<
-  TDefinition extends ControllerDefinition<Controller>,
-> = TDefinition extends ControllerDefinition<infer TController>
-  ? TController
-  : never;
-
-export type InferControllersMapFromDefinition<
-  TControllers extends ControllerDefinitionsMap<Controller>,
-  TSolutionType extends SolutionType,
-> = {
-  [K in keyof TControllers as HasKey<
-    TControllers[K],
-    TSolutionType
-  > extends never
-    ? never
-    : K]: InferControllerFromDefinition<TControllers[K]>;
-};
-
-export type InferControllerStaticStateMapFromDefinitionsWithSolutionType<
-  TControllers extends ControllerDefinitionsMap<Controller>,
-  TSolutionType extends SolutionType,
-> = {
-  [K in keyof TControllers as HasKey<
-    TControllers[K],
-    TSolutionType
-  > extends never
-    ? never
-    : K]: InferControllerStaticStateFromController<
-    InferControllerFromDefinition<TControllers[K]>
-  >;
-};
 
 /**
  * This type defines the required and optional controller props for the engine definition.
@@ -386,83 +322,6 @@ export interface ControllerDefinitionOption {
    * @defaultValue true
    */
   search?: boolean;
-}
-
-interface NonRecommendationController {
-  /**
-   * @internal
-   */
-  [SolutionType.search]: true;
-  /**
-   * @internal
-   */
-  [SolutionType.listing]: true;
-  /**
-   * @internal
-   */
-  [SolutionType.standalone]: true;
-}
-
-interface UniversalController {
-  /**
-   * @internal
-   */
-  [SolutionType.search]: true;
-  /**
-   * @internal
-   */
-  [SolutionType.listing]: true;
-  /**
-   * @internal
-   */
-  [SolutionType.standalone]: true;
-  /**
-   * @internal
-   */
-  [SolutionType.recommendation]: true;
-}
-
-interface SearchOnlyController {
-  /**
-   * @internal
-   */
-  [SolutionType.search]: true;
-}
-
-interface ListingOnlyController {
-  /**
-   * @internal
-   */
-  [SolutionType.listing]: true;
-}
-
-interface RecommendationOnlyController {
-  /**
-   * @internal
-   */
-  [SolutionType.recommendation]: true;
-}
-
-interface SearchAndListingController {
-  /**
-   * @internal
-   */
-  [SolutionType.search]: true;
-  /**
-   * @internal
-   */
-  [SolutionType.listing]: true;
-}
-
-interface ListingAndStandaloneController {
-  /**
-   * @internal
-   */
-  [SolutionType.listing]: true;
-  /**
-   * @internal
-   */
-  [SolutionType.standalone]: true;
 }
 
 export type SearchOnlyControllerDefinitionWithoutProps<

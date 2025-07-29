@@ -8,7 +8,7 @@ import {
   type View,
 } from '../../../../controllers/commerce/context/headless-context.js';
 import {MissingControllerProps} from '../../../common/errors.js';
-import type {UniversalControllerDefinitionWithProps} from '../../types/controllers.js';
+import type {UniversalControllerDefinitionWithProps} from '../../types/controller-definitions.js';
 import {createControllerWithKind, Kind} from '../../types/kind.js';
 
 export type {

@@ -19,11 +19,11 @@ import {facetOrderReducer as facetOrder} from '../../../../features/facets/facet
 import {querySetReducer as querySet} from '../../../../features/query-set/query-set-slice.js';
 import {ensureAtLeastOneSolutionType} from '../../../../ssr/commerce/controller-utils.js';
 import {loadReducerError} from '../../../../utils/errors.js';
-import {
-  type ControllerDefinitionOption,
-  SolutionType,
-  type SubControllerDefinitionWithProps,
-} from '../../types/controllers.js';
+import {SolutionType} from '../../types/controller-constants.js';
+import type {
+  ControllerDefinitionOption,
+  SubControllerDefinitionWithProps,
+} from '../../types/controller-definitions.js';
 import {createControllerWithKind, Kind} from '../../types/kind.js';
 
 export type {

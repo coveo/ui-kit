@@ -4,19 +4,21 @@ import {clone, filterObject, mapObject} from '../../utils/utils.js';
 import {InvalidControllerDefinition} from '../common/errors.js';
 import type {ControllersMap} from '../common/types/controllers.js';
 import type {SSRCommerceEngine} from './factories/build-factory.js';
+import type {SolutionType} from './types/controller-constants.js';
 import type {
   ControllerDefinition,
   ControllerDefinitionOption,
   ControllerDefinitionsMap,
   ControllerWithKind,
-  EngineStaticState,
+  InferControllerStaticStateMapFromControllers,
+} from './types/controller-definitions.js';
+import type {
   InferControllerFromDefinition,
   InferControllerPropsFromDefinition,
   InferControllerPropsMapFromDefinitions,
-  InferControllerStaticStateMapFromControllers,
   InferControllersMapFromDefinition,
-  SolutionType,
-} from './types/controllers.js';
+} from './types/controller-inference.js';
+import type {EngineStaticState} from './types/engine.js';
 
 function hasKindProperty(
   controller: Controller | ControllerWithKind

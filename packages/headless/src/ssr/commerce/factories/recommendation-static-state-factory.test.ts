@@ -3,10 +3,8 @@ import {getSampleCommerceEngineConfiguration} from '../../../app/commerce-engine
 import {buildMockCommerceState} from '../../../test/mock-commerce-state.js';
 import {buildMockSSRCommerceEngine} from '../../../test/mock-engine-v2.js';
 import {defineRecommendations} from '../controllers/recommendations/headless-recommendations.ssr.js';
-import type {
-  InferControllersMapFromDefinition,
-  SolutionType,
-} from '../types/controllers.js';
+import type {SolutionType} from '../types/controller-constants.js';
+import type {InferControllersMapFromDefinition} from '../types/controller-inference.js';
 import type {CommerceControllerDefinitionsMap} from '../types/engine.js';
 import * as buildFactory from './build-factory.js';
 import {fetchRecommendationStaticStateFactory} from './recommendation-static-state-factory.js';

@@ -4,13 +4,11 @@ import {buildSearch} from '../../../controllers/commerce/search/headless-search.
 import {augmentPreprocessRequestWithForwardedFor} from '../../common/augment-preprocess-request.js';
 import {composeFunction} from '../../common/controller-utils.js';
 import {createStaticState} from '../controller-utils.js';
-import {
-  type EngineStaticState,
-  type InferControllerStaticStateMapFromDefinitionsWithSolutionType,
-  SolutionType,
-} from '../types/controllers.js';
+import {SolutionType} from '../types/controller-constants.js';
+import type {InferControllerStaticStateMapFromDefinitionsWithSolutionType} from '../types/controller-inference.js';
 import type {
   CommerceControllerDefinitionsMap,
+  EngineStaticState,
   FetchStaticStateFromBuildResultParameters,
   FetchStaticStateFunction,
   FetchStaticStateParameters,

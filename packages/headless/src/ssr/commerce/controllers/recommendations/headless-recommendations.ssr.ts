@@ -5,10 +5,8 @@ import {
   type RecommendationsProps,
   type RecommendationsState,
 } from '../../../../controllers/commerce/recommendations/headless-recommendations.js';
-import {
-  type RecommendationOnlyControllerDefinitionWithProps,
-  recommendationInternalOptionKey,
-} from '../../types/controllers.js';
+import {recommendationInternalOptionKey} from '../../types/controller-constants.js';
+import type {RecommendationOnlyControllerDefinitionWithProps} from '../../types/controller-definitions.js';
 import {createControllerWithKind, Kind} from '../../types/kind.js';
 
 export type {Recommendations, RecommendationsState};

@@ -270,36 +270,38 @@ export type {
   CommerceEngineDefinitionOptions,
   SSRCommerceEngine as CommerceEngine,
 } from './ssr/commerce/factories/build-factory.js';
+export {SolutionType} from './ssr/commerce/types/controller-constants.js';
 export type {
   ControllerDefinition,
   ControllerDefinitionsMap,
   ControllerWithKind,
   EngineDefinitionBuildResult,
   EngineDefinitionControllersPropsOption,
-  EngineStaticState,
   HydratedState,
-  InferControllerFromDefinition,
-  InferControllerPropsMapFromDefinitions,
   InferControllerStaticStateFromController,
   InferControllerStaticStateMapFromControllers,
+  OptionsTuple,
+} from './ssr/commerce/types/controller-definitions.js';
+export type {
+  InferBuildResult,
+  InferControllerFromDefinition,
+  InferControllerPropsMapFromDefinitions,
   InferControllerStaticStateMapFromDefinitionsWithSolutionType,
   InferControllersMapFromDefinition,
-  OptionsTuple,
-} from './ssr/commerce/types/controllers.js';
-export {SolutionType} from './ssr/commerce/types/controllers.js';
+  InferHydratedState,
+  InferStaticState,
+} from './ssr/commerce/types/controller-inference.js';
 export type {
   Build,
   BuildOptions,
   EngineDefinition,
+  EngineStaticState,
   FetchStaticState,
   FetchStaticStateOptions,
   FromBuildResult,
   FromBuildResultOptions,
   HydrateStaticState,
   HydrateStaticStateOptions,
-  InferBuildResult,
-  InferHydratedState,
-  InferStaticState,
 } from './ssr/commerce/types/engine.js';
 export {Kind} from './ssr/commerce/types/kind.js';
 // State

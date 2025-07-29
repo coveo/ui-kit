@@ -5,11 +5,11 @@ import type {
 import type {Controller} from '../../../controllers/controller/headless-controller.js';
 import {MultipleRecommendationError} from '../../common/errors.js';
 import type {RecommendationsDefinitionMeta} from '../controllers/recommendations/headless-recommendations.ssr.js';
-import {
-  type ControllerDefinition,
-  type ControllerDefinitionsMap,
-  recommendationInternalOptionKey,
-} from '../types/controllers.js';
+import {recommendationInternalOptionKey} from '../types/controller-constants.js';
+import type {
+  ControllerDefinition,
+  ControllerDefinitionsMap,
+} from '../types/controller-definitions.js';
 
 export function filterRecommendationControllers<
   TControllerDefinitions extends ControllerDefinitionsMap<Controller>,

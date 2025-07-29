@@ -8,11 +8,11 @@ import {
   type Search,
 } from '../../../../controllers/commerce/search/headless-search.js';
 import {ensureAtLeastOneSolutionType} from '../../controller-utils.js';
-import {
-  type ControllerDefinitionOption,
-  SolutionType,
-  type SubControllerDefinitionWithoutProps,
-} from '../../types/controllers.js';
+import {SolutionType} from '../../types/controller-constants.js';
+import type {
+  ControllerDefinitionOption,
+  SubControllerDefinitionWithoutProps,
+} from '../../types/controller-definitions.js';
 
 export type {Search, ProductListing, ProductListingState as ProductListState};
 

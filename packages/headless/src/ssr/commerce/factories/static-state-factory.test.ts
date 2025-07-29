@@ -14,10 +14,8 @@ import {buildMockSSRCommerceEngine} from '../../../test/mock-engine-v2.js';
 import * as augmentModule from '../../common/augment-preprocess-request.js';
 import {defineProductList} from '../controllers/product-list/headless-product-list.ssr.js';
 import {defineSearchBox} from '../controllers/search-box/headless-search-box.ssr.js';
-import {
-  type InferControllersMapFromDefinition,
-  SolutionType,
-} from '../types/controllers.js';
+import {SolutionType} from '../types/controller-constants.js';
+import type {InferControllersMapFromDefinition} from '../types/controller-inference.js';
 import type {CommerceControllerDefinitionsMap} from '../types/engine.js';
 import * as buildFactory from './build-factory.js';
 import {fetchStaticStateFactory} from './static-state-factory.js';

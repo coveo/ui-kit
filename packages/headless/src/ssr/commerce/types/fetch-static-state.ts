@@ -5,13 +5,13 @@ import type {
   ControllersMap,
   ControllersPropsMap,
 } from '../../common/types/controllers.js';
+import type {SolutionType} from './controller-constants.js';
 import type {
   ControllerDefinitionsMap,
   EngineDefinitionControllersPropsOption,
-  EngineStaticState,
   OptionsTuple,
-  SolutionType,
-} from './controllers.js';
+} from './controller-definitions.js';
+import type {EngineStaticState} from './engine.js';
 import type {FromBuildResult} from './from-build-result.js';
 
 export type FetchStaticStateOptions = {};

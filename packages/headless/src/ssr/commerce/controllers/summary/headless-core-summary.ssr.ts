@@ -8,11 +8,11 @@ import type {RecommendationsSummaryState} from '../../../../controllers/commerce
 import {buildSearch} from '../../../../controllers/commerce/search/headless-search.js';
 import type {SearchSummaryState} from '../../../../controllers/commerce/search/summary/headless-search-summary.js';
 import {ensureAtLeastOneSolutionType} from '../../../../ssr/commerce/controller-utils.js';
-import {
-  type ControllerDefinitionOption,
-  SolutionType,
-  type SubControllerDefinitionWithoutProps,
-} from '../../types/controllers.js';
+import {SolutionType} from '../../types/controller-constants.js';
+import type {
+  ControllerDefinitionOption,
+  SubControllerDefinitionWithoutProps,
+} from '../../types/controller-definitions.js';
 
 export type {
   Summary,

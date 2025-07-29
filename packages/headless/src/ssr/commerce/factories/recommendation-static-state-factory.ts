@@ -2,15 +2,13 @@ import type {UnknownAction} from '@reduxjs/toolkit';
 import {filterObject} from '../../../utils/utils.js';
 import {composeFunction} from '../../common/controller-utils.js';
 import {createStaticState} from '../controller-utils.js';
-import {
-  type EngineStaticState,
-  type InferControllerStaticStateMapFromDefinitionsWithSolutionType,
-  type RecommendationControllerSettings,
-  SolutionType,
-} from '../types/controllers.js';
+import {SolutionType} from '../types/controller-constants.js';
+import type {RecommendationControllerSettings} from '../types/controller-definitions.js';
+import type {InferControllerStaticStateMapFromDefinitionsWithSolutionType} from '../types/controller-inference.js';
 import type {
   BuildResult,
   CommerceControllerDefinitionsMap,
+  EngineStaticState,
   FetchStaticStateFromBuildResultParameters,
   FetchStaticStateFunction,
   FetchStaticStateParameters,

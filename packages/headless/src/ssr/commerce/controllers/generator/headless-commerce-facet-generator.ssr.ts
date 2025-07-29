@@ -63,11 +63,11 @@ import {specificFacetSearchStateSelector} from '../../../../features/facets/face
 import {ensureAtLeastOneSolutionType} from '../../../../ssr/commerce/controller-utils.js';
 import type {ManualRangeSection} from '../../../../state/state-sections.js';
 import {loadReducerError} from '../../../../utils/errors.js';
-import {
-  type ControllerDefinitionOption,
-  SolutionType,
-  type SubControllerDefinitionWithoutProps,
-} from '../../types/controllers.js';
+import {SolutionType} from '../../types/controller-constants.js';
+import type {
+  ControllerDefinitionOption,
+  SubControllerDefinitionWithoutProps,
+} from '../../types/controller-definitions.js';
 
 export type {
   BaseFacetSearchResult,

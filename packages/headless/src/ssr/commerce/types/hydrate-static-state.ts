@@ -6,12 +6,12 @@ import type {
 } from '../../common/types/controllers.js';
 import type {HydratedState} from '../../common/types/hydrate-static-state.js';
 import type {SSRCommerceEngine} from '../factories/build-factory.js';
+import type {SolutionType} from './controller-constants.js';
 import type {
   ControllerDefinitionsMap,
   EngineDefinitionControllersPropsOption,
   OptionsTuple,
-  SolutionType,
-} from './controllers.js';
+} from './controller-definitions.js';
 import type {FromBuildResult} from './from-build-result.js';
 
 export interface HydrateStaticStateOptions<TSearchAction> {

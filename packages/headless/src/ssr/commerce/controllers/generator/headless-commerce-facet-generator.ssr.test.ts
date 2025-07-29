@@ -18,7 +18,7 @@ import {
   type MockedCommerceEngine,
 } from '../../../../test/mock-engine-v2.js';
 import {buildMockFacetSearch} from '../../../../test/mock-facet-search.js';
-import {SolutionType} from '../../types/controllers.js';
+import {SolutionType} from '../../types/controller-constants.js';
 import {
   buildFacetGenerator,
   type FacetGenerator,

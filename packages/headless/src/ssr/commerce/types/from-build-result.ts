@@ -1,6 +1,6 @@
 import type {ControllersMap} from '../../common/types/controllers.js';
 import type {SSRCommerceEngine} from '../factories/build-factory.js';
-import type {EngineDefinitionBuildResult} from './controllers.js';
+import type {EngineDefinitionBuildResult} from './controller-definitions.js';
 
 interface FromBuildResultOptions<TControllers extends ControllersMap> {
   /**

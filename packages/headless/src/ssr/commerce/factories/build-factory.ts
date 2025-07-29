@@ -13,11 +13,9 @@ import {
 } from '../../../utils/utils.js';
 import type {ControllersPropsMap} from '../../common/types/controllers.js';
 import {buildControllerDefinitions} from '../controller-utils.js';
-import {
-  type ControllerDefinitionsMap,
-  type InferControllerPropsMapFromDefinitions,
-  SolutionType,
-} from '../types/controllers.js';
+import {SolutionType} from '../types/controller-constants.js';
+import type {ControllerDefinitionsMap} from '../types/controller-definitions.js';
+import type {InferControllerPropsMapFromDefinitions} from '../types/controller-inference.js';
 import type {
   BuildParameters,
   CommerceControllerDefinitionsMap,
