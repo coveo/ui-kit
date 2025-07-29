@@ -6,15 +6,7 @@ import type {CategoryFacet, Summary} from '@coveo/headless/commerce';
 import {page, userEvent} from '@vitest/browser/context';
 import '@vitest/browser/matchers.d.ts';
 import {html} from 'lit';
-import {
-  describe,
-  expect,
-  vi,
-  beforeEach,
-  it,
-  afterEach,
-  type MockInstance,
-} from 'vitest';
+import {describe, expect, vi, beforeEach, it, type MockInstance} from 'vitest';
 import type {AtomicCommerceCategoryFacet} from './atomic-commerce-category-facet';
 import './atomic-commerce-category-facet';
 
@@ -45,10 +37,6 @@ describe('atomic-commerce-category-facet', () => {
         },
       },
     });
-  });
-
-  afterEach(() => {
-    mockedConsoleError.mockRestore();
   });
 
   const setupElement = async (

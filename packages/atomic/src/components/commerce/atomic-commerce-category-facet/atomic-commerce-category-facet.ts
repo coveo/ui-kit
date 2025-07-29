@@ -147,7 +147,6 @@ export class AtomicCommerceCategoryFacet
   );
 
   public initialize() {
-    this.validateFacet();
     this.facet &&
       announceFacetSearchResultsWithAriaLive(
         this.facet,
