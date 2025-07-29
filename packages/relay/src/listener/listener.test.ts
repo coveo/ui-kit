@@ -1,5 +1,5 @@
-import { createMockEvent } from "../__mocks__/event";
-import { createListenerManager } from "./listener";
+import { createMockEvent } from "../__mocks__/event.js";
+import { createListenerManager } from "./listener.js";
 
 describe("createListenerManager", () => {
   describe("add", () => {

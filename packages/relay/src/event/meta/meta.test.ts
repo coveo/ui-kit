@@ -1,8 +1,8 @@
-import { createMockClientIdManager } from "../../__mocks__/client-id";
-import { createMockEnvironment } from "../../__mocks__/environment";
-import { createMockConfig } from "../../__mocks__/config";
-import { createMeta } from "./meta";
-import { Environment } from "../../relay";
+import { createMockClientIdManager } from "../../__mocks__/client-id.js";
+import { createMockEnvironment } from "../../__mocks__/environment.js";
+import { createMockConfig } from "../../__mocks__/config.js";
+import { createMeta } from "./meta.js";
+import type { Environment } from "../../relay.js";
 
 describe("createMeta", () => {
   let mockEnv: Environment;

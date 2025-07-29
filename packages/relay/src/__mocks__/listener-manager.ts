@@ -1,4 +1,4 @@
-import { ListenerManager } from "../listener/listener";
+import { ListenerManager } from "../listener/listener.js";
 
 export function createMockListenerManager(
   config: Partial<ListenerManager> = {},

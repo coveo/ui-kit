@@ -1,7 +1,7 @@
-import { Environment } from "../environment/environment";
-import { ListenerManager } from "../listener/listener";
-import { RelayEvent } from "../event/relay-event";
-import { RelayConfig } from "../relay";
+import { Environment } from "../environment/environment.js";
+import { ListenerManager } from "../listener/listener.js";
+import { RelayEvent } from "../event/relay-event.js";
+import { RelayConfig } from "../relay.js";
 
 export interface EmitParams {
   config: RelayConfig;

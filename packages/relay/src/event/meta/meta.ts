@@ -1,8 +1,8 @@
-import { ClientIdManager } from "../../client-id/client-id";
-import { Environment } from "../../environment/environment";
-import { RelayConfig } from "../../config/config";
-import { version } from "../../version";
-import { truncateUrl } from "../../utils/url-shortener";
+import type { ClientIdManager } from "../../client-id/client-id.js";
+import type { Environment } from "../../environment/environment.js";
+import type { RelayConfig } from "../../config/config.js";
+import { version } from "../../version.js";
+import { truncateUrl } from "../../utils/url-shortener.js";
 
 /**
  * The `EventConfig` object provides additional information for the configuration associated with the event.

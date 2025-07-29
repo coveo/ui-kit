@@ -2,8 +2,8 @@
  * @jest-environment jsdom
  */
 
-import { buildBrowserEnvironment } from "./browser";
-import { createMockEvent } from "../../__mocks__/event";
+import { buildBrowserEnvironment } from "./browser.js";
+import { createMockEvent } from "../../__mocks__/event.js";
 
 jest.mock("uuid", () => ({
   v4: () => "2136b353-74be-42d7-904f-ea33a8f4a43c",

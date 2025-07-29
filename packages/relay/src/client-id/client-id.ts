@@ -1,6 +1,6 @@
 import { validate } from "uuid";
-import { EnvironmentManager } from "../environment/manager/manager";
-import { clientIdKey } from "../constants";
+import { EnvironmentManager } from "../environment/manager/manager.js";
+import { clientIdKey } from "../constants.js";
 
 export interface ClientIdManager {
   getClientId: () => string;

@@ -1,5 +1,5 @@
-import { Environment } from "../environment";
-import { Storage } from "../storage";
+import type { Environment } from "../environment.js";
+import type { Storage } from "../storage.js";
 
 /**
  * Partial override of the `Environment` interface, used to customize Relay’s behavior

@@ -1,4 +1,4 @@
-import { RelayEvent } from "../event/relay-event";
+import type { RelayEvent } from "../event/relay-event.js";
 
 const ANY_EVENT_TYPE = "*";
 

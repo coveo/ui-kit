@@ -1,17 +1,20 @@
-import { emit } from "./emit/emit";
-import { createClientIdManager } from "./client-id/client-id";
-import { createRelayEvent, RelayEvent } from "./event/relay-event";
-import { version } from "./version";
-import { createMeta, Meta, EventConfig } from "./event/meta/meta";
-import { createListenerManager, EventCallback } from "./listener/listener";
-import { createConfigManager, RelayConfig } from "./config/config";
-import { Environment } from "./environment/environment";
-import { CustomEnvironment } from "./environment/custom/custom";
-import { Storage } from "./environment/storage";
-import { createEnvironmentManager } from "./environment/manager/manager";
-import { RelayPayload } from "./relay-payload";
-export { buildBrowserEnvironment } from "./environment/browser/browser";
-export { clientIdKey } from "./constants";
+import { emit } from "./emit/emit.js";
+import { createClientIdManager } from "./client-id/client-id.js";
+import { createRelayEvent, type RelayEvent } from "./event/relay-event.js";
+import { version } from "./version.js";
+import { createMeta, type Meta, type EventConfig } from "./event/meta/meta.js";
+import {
+  createListenerManager,
+  type EventCallback,
+} from "./listener/listener.js";
+import { createConfigManager, type RelayConfig } from "./config/config.js";
+import type { Environment } from "./environment/environment.js";
+import type { CustomEnvironment } from "./environment/custom/custom.js";
+import type { Storage } from "./environment/storage.js";
+import { createEnvironmentManager } from "./environment/manager/manager.js";
+import type { RelayPayload } from "./relay-payload.js";
+export { buildBrowserEnvironment } from "./environment/browser/browser.js";
+export { clientIdKey } from "./constants.js";
 
 /**
  * Function that detaches an event callback.

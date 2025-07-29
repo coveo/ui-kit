@@ -1,5 +1,5 @@
-import { Storage } from "../../storage";
-import { cookieManager } from "./cookie";
+import type { Storage } from "../../storage.js";
+import { cookieManager } from "./cookie.js";
 
 export function createBrowserStorage(): Storage {
   return {

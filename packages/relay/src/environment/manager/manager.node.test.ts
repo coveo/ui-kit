@@ -1,5 +1,5 @@
-import { createMockConfigManager } from "../../__mocks__/config";
-import { createEnvironmentManager } from "./manager";
+import { createMockConfigManager } from "../../__mocks__/config.js";
+import { createEnvironmentManager } from "./manager.js";
 
 describe("createEnvironmentManager - node", () => {
   describe("get", () => {

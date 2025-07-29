@@ -1,8 +1,8 @@
-import { ClientIdManager } from "../client-id/client-id";
-import { Environment } from "../environment/environment";
-import { RelayPayload } from "../relay-payload";
-import { RelayConfig } from "../relay";
-import { createMeta, Meta } from "./meta/meta";
+import type { ClientIdManager } from "../client-id/client-id.js";
+import type { Environment } from "../environment/environment.js";
+import type { RelayPayload } from "../relay-payload.js";
+import type { RelayConfig } from "../relay.js";
+import { createMeta, type Meta } from "./meta/meta.js";
 
 /**
  * Defines the structure of a RelayEvent, extending the RelayPayload.

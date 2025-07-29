@@ -1,8 +1,8 @@
-import { createMockEnvironment } from "../__mocks__/environment";
-import { createMockEvent } from "../__mocks__/event";
-import { createMockConfig } from "../__mocks__/config";
-import { EmitParams, emit } from "./emit";
-import { createMockListenerManager } from "../__mocks__/listener-manager";
+import { createMockEnvironment } from "../__mocks__/environment.js";
+import { createMockEvent } from "../__mocks__/event.js";
+import { createMockConfig } from "../__mocks__/config.js";
+import { emit, type EmitParams } from "./emit.js";
+import { createMockListenerManager } from "../__mocks__/listener-manager.js";
 
 describe("emit", () => {
   let params = createEmitParams();

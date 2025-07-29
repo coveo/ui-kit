@@ -2,9 +2,9 @@
  * @jest-environment jsdom
  */
 
-import { Storage } from "../../storage";
-import { cookieManager } from "./cookie";
-import { createBrowserStorage } from "./storage";
+import type { Storage } from "../../storage.js";
+import { cookieManager } from "./cookie.js";
+import { createBrowserStorage } from "./storage.js";
 
 describe("BrowserStorage", () => {
   const key = "hello";

@@ -1,4 +1,4 @@
-import { truncateUrl } from "./url-shortener";
+import { truncateUrl } from "./url-shortener.js";
 
 describe("truncateUrl", () => {
   // Note: to obtain a UTF-8 encoded escape sequence, run encodeUriComponent('<value>') in your browser console or NodeJS REPL

@@ -1,5 +1,5 @@
-import { createMockEvent } from "../../__mocks__/event";
-import { buildNullEnvironment } from "./null";
+import { createMockEvent } from "../../__mocks__/event.js";
+import { buildNullEnvironment } from "./null.js";
 
 describe("null environment", () => {
   it("returns the correct runtime", () => {

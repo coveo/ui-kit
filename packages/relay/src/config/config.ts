@@ -1,4 +1,4 @@
-import { CustomEnvironment } from "../environment/custom/custom";
+import { CustomEnvironment } from "../environment/custom/custom.js";
 
 /**
  * The `RelayConfig` object defines the configuration options for initializing a Relay instance.

@@ -5,5 +5,6 @@ export default {
   testMatch: ["**/*.test.ts"],
   moduleNameMapper: {
     "^@coveo/explorer-messenger$": "<rootDir>/src/__mocks__/messenger",
+    "^(.*)\\.js$": "$1",
   },
 };

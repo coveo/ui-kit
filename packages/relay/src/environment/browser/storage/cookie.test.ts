@@ -3,7 +3,7 @@
  * @jest-environment-options {"url": "http://docs.foo.bar.com/tamtam"}
  */
 
-import { cookieManager } from "./cookie";
+import { cookieManager } from "./cookie.js";
 
 describe("CookieManager", () => {
   const key = "wow";

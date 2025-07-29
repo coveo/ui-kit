@@ -1,4 +1,4 @@
-import { Storage } from "../environment/storage";
+import { Storage } from "../environment/storage.js";
 
 export function createMockStorage(storage: Partial<Storage> = {}): Storage {
   return {

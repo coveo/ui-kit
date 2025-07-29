@@ -1,9 +1,9 @@
 import {
   createMockEnvironment,
   createMockEnvironmentManager,
-} from "../__mocks__/environment";
-import { createMockStorage } from "../__mocks__/storage";
-import { createClientIdManager } from "./client-id";
+} from "../__mocks__/environment.js";
+import { createMockStorage } from "../__mocks__/storage.js";
+import { createClientIdManager } from "./client-id.js";
 
 describe("createClientIdManager", () => {
   it("generates a clientId if storage does not contain one", () => {

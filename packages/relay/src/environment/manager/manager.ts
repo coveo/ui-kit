@@ -1,8 +1,8 @@
-import { ConfigManager } from "../../config/config";
-import { buildBrowserEnvironment } from "../browser/browser";
-import { localStorageAvailable } from "../browser/storage/availability";
-import { Environment } from "../environment";
-import { buildNullEnvironment } from "../null/null";
+import type { ConfigManager } from "../../config/config.js";
+import { buildBrowserEnvironment } from "../browser/browser.js";
+import { localStorageAvailable } from "../browser/storage/availability.js";
+import type { Environment } from "../environment.js";
+import { buildNullEnvironment } from "../null/null.js";
 
 export interface EnvironmentManager {
   get: () => Readonly<Environment>;

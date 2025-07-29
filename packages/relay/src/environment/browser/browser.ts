@@ -1,7 +1,7 @@
 import { createExplorerMessenger } from "@coveo/explorer-messenger";
-import { Environment } from "../environment";
-import { createBrowserStorage } from "./storage/storage";
-import { RelayEvent } from "../../event/relay-event";
+import type { Environment } from "../environment.js";
+import { createBrowserStorage } from "./storage/storage.js";
+import type { RelayEvent } from "../../event/relay-event.js";
 import { v4 as uuidv4 } from "uuid";
 
 function getReferrer(): string | null {

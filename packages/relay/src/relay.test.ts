@@ -2,8 +2,8 @@
  * @jest-environment jsdom
  */
 
-import { createMockConfig } from "./__mocks__/config";
-import { createRelay } from "./relay";
+import { createMockConfig } from "./__mocks__/config.js";
+import { createRelay } from "./relay.js";
 
 jest.mock("uuid", () => ({
   v4: () => "da3248bd-48f3-4dbf-b898-6fee32069b53",

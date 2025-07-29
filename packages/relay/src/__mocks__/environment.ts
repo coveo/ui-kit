@@ -1,6 +1,6 @@
-import { Environment } from "../environment/environment";
-import { EnvironmentManager } from "../environment/manager/manager";
-import { createMockStorage } from "./storage";
+import { Environment } from "../environment/environment.js";
+import { EnvironmentManager } from "../environment/manager/manager.js";
+import { createMockStorage } from "./storage.js";
 
 const defaultEnvironment: Environment = {
   runtime: "null",

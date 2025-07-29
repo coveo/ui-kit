@@ -1,5 +1,5 @@
-import { createMockConfig } from "../__mocks__/config";
-import { createConfigManager, RelayConfig } from "./config";
+import { createMockConfig } from "../__mocks__/config.js";
+import { createConfigManager, type RelayConfig } from "./config.js";
 
 describe("createConfigManager", () => {
   const initialConfig: RelayConfig = createMockConfig({

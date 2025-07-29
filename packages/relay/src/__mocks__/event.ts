@@ -1,6 +1,6 @@
-import { Meta } from "../event/meta/meta";
-import { RelayEvent } from "../event/relay-event";
-import { RelayPayload } from "../relay-payload";
+import { Meta } from "../event/meta/meta.js";
+import { RelayEvent } from "../event/relay-event.js";
+import { RelayPayload } from "../relay-payload.js";
 
 const defaultMeta: Meta = {
   type: "itemClick",

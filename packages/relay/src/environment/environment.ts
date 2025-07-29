@@ -1,5 +1,5 @@
-import { RelayEvent } from "../event/relay-event";
-import { Storage } from "./storage";
+import type { RelayEvent } from "../event/relay-event.js";
+import type { Storage } from "./storage.js";
 
 /**
  * Platform abstraction interface used by Relay to operate in different execution environments,
