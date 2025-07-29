@@ -1,3 +1,11 @@
+## 2.2.9 (2025-07-29)
+
+### Bug Fixes
+
+- **deps:** update all non-major dependencies ([#190](https://github.com/coveo/relay/issues/190)) ([7c50b51](https://github.com/coveo/relay/commits/))
+- **deps:** update all non-major dependencies ([#193](https://github.com/coveo/relay/issues/193)) ([5625014](https://github.com/coveo/relay/commits/))
+- **relay:** use node16 moduleResolution ([#192](https://github.com/coveo/relay/issues/192)) ([c4b900d](https://github.com/coveo/relay/commits/))
+
 ## 2.2.8 (2025-07-16)
 
 ### Bug Fixes
