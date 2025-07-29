@@ -188,6 +188,24 @@ describe('atomic-commerce-recommendation-interface', () => {
 
   // #initializeWithEngine
   describe('#initializeWithEngine', () => {
+    it('should dispatch an updateAnalyticsConfiguration action with the correct source and trackingId', async () => {
+      const element = await setupElement();
+      const engine = buildFakeCommerceEngine({});
+      vi.spyOn(engine, 'dispatch');
+
+      expect(engine.dispatch).not.toHaveBeenCalled();
+
+      await element.initializeWithEngine(engine);
+
+      expect(engine.dispatch).toHaveBeenCalledExactlyOnceWith({
+        type: 'commerce/configuration/updateAnalyticsConfiguration',
+        payload: {
+          trackingId: engine.configuration.analytics.trackingId,
+          source: {'@coveo/atomic': '0.0.0'},
+        },
+      });
+    });
+
     it('should call CommonInterfaceHelper.onInitialization with a function that sets engine', async () => {
       vi.spyOn(console, 'error').mockImplementation(() => {});
       const element = await setupElement();
