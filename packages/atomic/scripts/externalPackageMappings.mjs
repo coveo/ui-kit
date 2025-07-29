@@ -16,13 +16,13 @@ const isPrRelease =
 const headlessVersion = isNightly
   ? `v${headlessJson.version.split('.').shift()}-nightly`
   : isPrRelease
-    ? `v${headlessJson.version}.${process.env.PR_NUMBER}`
+    ? `v${headlessJson.version.split('.').slice(0, 3).concat(process.env.PR_NUMBER).join('.')}`
     : `v${headlessJson.version}`;
 
 const buenoVersion = isNightly
   ? `v${buenoJson.version.split('.').shift()}-nightly`
   : isPrRelease
-    ? `v${buenoJson.version}.${process.env.PR_NUMBER}`
+    ? `v${buenoJson.version.split('.').slice(0, 3).concat(process.env.PR_NUMBER).join('.')}`
     : `v${buenoJson.version}`;
 
 export function generateExternalPackageMappings() {

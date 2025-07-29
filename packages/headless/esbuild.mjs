@@ -23,7 +23,7 @@ const isPrRelease =
 const buenoVersion = isNightly
   ? `v${buenoJson.version.split('.').shift()}-nightly`
   : isPrRelease
-    ? `v${buenoJson.version}.${process.env.PR_NUMBER}`
+    ? `v${buenoJson.version.split('.').slice(0, 3).concat(process.env.PR_NUMBER).join('.')}`
     : `v${buenoJson.version}`;
 const buenoPath = isCDN
   ? `/bueno/${buenoVersion}/bueno.esm.js`
