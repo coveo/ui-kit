@@ -1,4 +1,4 @@
-import {CSSResult, type CSSResultGroup, unsafeCSS} from 'lit';
+import {type CSSResult, type CSSResultGroup, unsafeCSS} from 'lit';
 import theme from '@/src/utils/coveo.tw.css';
 import styles from '@/src/utils/tailwind.global.tw.css';
 import utilities from '@/src/utils/tailwind-utilities/utilities.tw.css';
@@ -14,8 +14,12 @@ const tailwindPropertiesSheet: CSSStyleSheet | null =
           /@layer\s+properties\s*{[^{}]*@supports[^{}]*{([^}]*)}|@layer\s+properties\s*{([^}]*)}/
         );
         const cssString = (match?.[1] || match?.[2] || '').trim();
+        if (!cssString) {
+          return null;
+        }
+        const wrappedCss = `@layer properties { ${cssString} }`;
         const sheet = new CSSStyleSheet();
-        sheet.replaceSync(cssString);
+        sheet.replaceSync(wrappedCss);
         return sheet;
       })()
     : null;
@@ -37,8 +41,6 @@ function injectTailwindProperties(element: any) {
   }
 }
 
-injectTailwindProperties(document);
-
 export const withTailwindStyles = <
   T extends {
     styles?: CSSResultGroup | CSSStyleSheet | undefined;
@@ -54,18 +56,22 @@ export const withTailwindStyles = <
       injectTailwindProperties(this);
     }
     static get styles(): CSSResultGroup {
-      const baseStyles = [
+      const baseStyles: Array<CSSStyleSheet | CSSResult> = [
         unsafeCSS(theme),
         unsafeCSS(styles),
         unsafeCSS(utilities),
       ];
+
       const customStyles = Base.styles;
 
-      if (customStyles instanceof CSSResult) {
-        return [...baseStyles, customStyles];
-      } else if (Array.isArray(customStyles)) {
+      if (Array.isArray(customStyles)) {
         return [...baseStyles, ...customStyles];
       }
+
+      if (customStyles) {
+        return [...baseStyles, customStyles];
+      }
+
       return baseStyles;
     }
   };
