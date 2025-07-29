@@ -59,7 +59,7 @@ import styles from './atomic-commerce-category-facet.tw.css';
  * @part search-wrapper - The search box wrapper.
  * @part search-input - The search box input.
  * @part search-icon - The search box submit button.
- * @part search-clear-button - The button to clear the search box of input.
+ * @part search-clear-button - The button to clear the search box input.
  * @part more-matches - The label indicating there are more matches for the current facet search query.
  * @part no-matches - The label indicating there are no matches for the current facet search query.
  * @part matches-query - The highlighted query inside the matches labels.
@@ -71,7 +71,7 @@ import styles from './atomic-commerce-category-facet.tw.css';
  * @part parents - The container surrounding the whole hierarchy of values.
  * @part sub-parents - The container surrounding a sub-hierarchy of values.
  * @part values - The container surrounding either the children of the active value or the values at the base.
- * @part all-categories-button - The "View all" button displayed first within the parents.
+ * @part all-categories-button - The "All categories" button displayed first within the parents.
  * @part parent-button - The clickable parent button displayed first within sub-parents.
  * @part active-parent - The clickable active parent displayed first within the last sub-parents.
  * @part value-link - The clickable value displayed first within values.
@@ -81,11 +81,10 @@ import styles from './atomic-commerce-category-facet.tw.css';
  * @part leaf-value - A facet value with no child value.
  * @part node-value - A facet value with child values.
  *
- * @part show-more - The show more results button.
- * @part show-less - The show less results button.
- * @part show-more-less-icon - The icons of the show more & show less buttons.
+ * @part show-more - The "Show more" button.
+ * @part show-less - The "Show less" button.
+ * @part show-more-less-icon - The icons of the "Show more" and "Show less" buttons.
  *
- * @alpha
  */
 @customElement('atomic-commerce-category-facet')
 @withTailwindStyles
@@ -101,9 +100,8 @@ export class AtomicCommerceCategoryFacet
   /**
    * The summary controller instance.
    */
-  // TODO: make sure it is an object
   @property({type: Object})
-  public summary!: Summary<SearchSummaryState | ProductListingSummaryState>;
+  summary!: Summary<SearchSummaryState | ProductListingSummaryState>;
 
   /**
    * The category facet controller instance.
@@ -111,7 +109,7 @@ export class AtomicCommerceCategoryFacet
   @property({type: Object}) public facet!: CategoryFacet;
 
   /**
-   * Specifies whether the facet is collapsed.
+   * Whether the facet is collapsed.
    */
   @property({
     reflect: true,

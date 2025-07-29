@@ -6,15 +6,7 @@ import type {CategoryFacet, Summary} from '@coveo/headless/commerce';
 import {page, userEvent} from '@vitest/browser/context';
 import '@vitest/browser/matchers.d.ts';
 import {html} from 'lit';
-import {
-  describe,
-  expect,
-  vi,
-  beforeEach,
-  it,
-  afterEach,
-  type MockInstance,
-} from 'vitest';
+import {describe, expect, vi, beforeEach, it, type MockInstance} from 'vitest';
 import type {AtomicCommerceCategoryFacet} from './atomic-commerce-category-facet';
 import './atomic-commerce-category-facet';
 
@@ -45,10 +37,6 @@ describe('atomic-commerce-category-facet', () => {
         },
       },
     });
-  });
-
-  afterEach(() => {
-    mockedConsoleError.mockRestore();
   });
 
   const setupElement = async (
@@ -109,12 +97,39 @@ describe('atomic-commerce-category-facet', () => {
         return element.shadowRoot!.querySelector('[part=clear-button]')!;
       },
       get searchWrapper() {
-        return element.shadowRoot!.querySelector('search-wrapper')!;
+        return element.shadowRoot!.querySelector('[part=search-wrapper]')!;
+      },
+      get searchClearButton() {
+        return element.shadowRoot!.querySelector('[part=search-clear-button]')!;
+      },
+      get searchHighlight() {
+        return element.shadowRoot!.querySelector('[part=search-highlight]')!;
+      },
+      get searchIcon() {
+        return element.shadowRoot!.querySelector('[part=search-icon]')!;
+      },
+      get searchResult() {
+        return element.shadowRoot!.querySelector('[part=search-result]')!;
+      },
+      get searchResultPath() {
+        return element.shadowRoot!.querySelector('[part=search-result-path]')!;
+      },
+      get searchResults() {
+        return element.shadowRoot!.querySelector('[part=search-results]')!;
       },
       get searchInput() {
         return element.shadowRoot!.querySelector(
           '[part=search-input]'
         )! as HTMLInputElement;
+      },
+      get matchesQuery() {
+        return element.shadowRoot!.querySelector('[part=matches-query]')!;
+      },
+      get moreMatches() {
+        return element.shadowRoot!.querySelector('[part=more-matches]')!;
+      },
+      get noMatches() {
+        return element.shadowRoot!.querySelector('[part=no-matches]')!;
       },
       get labelButton() {
         return element.shadowRoot!.querySelector('[part=label-button]')!;
@@ -131,11 +146,29 @@ describe('atomic-commerce-category-facet', () => {
       get valueCount() {
         return element.shadowRoot!.querySelectorAll('[part=value-count]');
       },
+      get valueLinks() {
+        return element.shadowRoot!.querySelectorAll('[part~=value-link]');
+      },
       get showMore() {
-        return element.shadowRoot!.querySelector('show-more')!;
+        return element.shadowRoot!.querySelector('[part=show-more]')!;
       },
       get showLess() {
-        return element.shadowRoot!.querySelector('show-less')!;
+        return element.shadowRoot!.querySelector('[part=show-less]')!;
+      },
+      get activeParent() {
+        return element.shadowRoot!.querySelector('[part~=active-parent]')!;
+      },
+      get backArrow() {
+        return element.shadowRoot!.querySelector('[part=back-arrow]')!;
+      },
+      get leafValue() {
+        return element.shadowRoot!.querySelector('[part=leaf-value]')!;
+      },
+      get parents() {
+        return element.shadowRoot!.querySelector('[part=parents]')!;
+      },
+      get subParents() {
+        return element.shadowRoot!.querySelector('[part=sub-parents]')!;
       },
     };
   };
@@ -169,6 +202,11 @@ describe('atomic-commerce-category-facet', () => {
     await expect.element(values).toBeInTheDocument();
   });
 
+  it('should render value links', async () => {
+    const {valueLinks} = await setupElement();
+    await expect.element(valueLinks[0]).toBeInTheDocument();
+  });
+
   it('should render the first facet value label', async () => {
     const {getFacetValueByLabel} = await setupElement();
     const facetValueLabel = getFacetValueByLabel('Electronics');
@@ -194,6 +232,61 @@ describe('atomic-commerce-category-facet', () => {
   it('should render the first value count part', async () => {
     const {valueCount} = await setupElement();
     await expect.element(valueCount![0]).toBeInTheDocument();
+  });
+
+  it('should render search parts when there are search results', async () => {
+    mockedFacet = buildFakeCategoryFacet({
+      state: {
+        facetSearch: {
+          isLoading: false,
+          query: 'ele',
+          moreValuesAvailable: true,
+          values: [
+            {
+              displayValue: 'Electronics',
+              rawValue: 'electronics',
+              path: ['Electronics'],
+              count: 100,
+            },
+          ],
+        },
+      },
+    });
+    const {
+      searchClearButton,
+      searchIcon,
+      searchHighlight,
+      searchResult,
+      searchResultPath,
+      searchResults,
+      matchesQuery,
+      moreMatches,
+    } = await setupElement();
+
+    await expect.element(searchClearButton).toBeInTheDocument();
+    await expect.element(searchHighlight).toBeInTheDocument();
+    await expect.element(searchResult).toBeInTheDocument();
+    await expect.element(searchResultPath).toBeInTheDocument();
+    await expect.element(searchResults).toBeInTheDocument();
+    await expect.element(searchIcon).toBeInTheDocument();
+    await expect.element(searchIcon).toBeInTheDocument();
+    await expect.element(matchesQuery).toBeInTheDocument();
+    await expect.element(moreMatches).toBeInTheDocument();
+  });
+
+  it('should render noMatches when there are no search results', async () => {
+    mockedFacet = buildFakeCategoryFacet({
+      state: {
+        facetSearch: {
+          isLoading: false,
+          query: 'ele',
+          moreValuesAvailable: false,
+          values: [],
+        },
+      },
+    });
+    const {noMatches} = await setupElement();
+    await expect.element(noMatches).toBeInTheDocument();
   });
 
   it('should not render facet when there are no values', async () => {
@@ -353,7 +446,19 @@ describe('atomic-commerce-category-facet', () => {
               moreValuesAvailable: true,
               state: 'selected',
               path: ['Electronics'],
-              children: [],
+              children: [
+                {
+                  value: 'Laptops',
+                  numberOfResults: 10,
+                  moreValuesAvailable: false,
+                  state: 'idle',
+                  path: ['Electronics', 'Laptops'],
+                  children: [],
+                  isLeafValue: true,
+                  isAutoSelected: false,
+                  isSuggested: false,
+                },
+              ],
               isLeafValue: false,
               isAutoSelected: false,
               isSuggested: false,
@@ -363,9 +468,14 @@ describe('atomic-commerce-category-facet', () => {
       });
     });
 
-    it('should render parent navigation when there are selected value ancestry', async () => {
-      const {allCategoryButton} = await setupElement();
+    it('should render the hierarchical tree with correct parts', async () => {
+      const {activeParent, allCategoryButton, backArrow, parents, subParents} =
+        await setupElement();
+      await expect.element(activeParent).toBeInTheDocument();
+      await expect.element(backArrow).toBeInTheDocument();
       await expect.element(allCategoryButton).toBeInTheDocument();
+      await expect.element(parents).toBeInTheDocument();
+      await expect.element(subParents).toBeInTheDocument();
     });
 
     it('should #deselectAll when all categories button is clicked', async () => {
