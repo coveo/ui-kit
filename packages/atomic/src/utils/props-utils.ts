@@ -64,6 +64,9 @@ export function MapProp(opts?: MapPropOptions) {
   };
 }
 
+/**
+ * @deprecated In Lit, you can achieve the same behavior by using `@property({type: Array})`.
+ */
 export function ArrayProp() {
   return (component: ComponentInterface, variableName: string) => {
     const {componentWillLoad} = component;
