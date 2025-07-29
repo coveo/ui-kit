@@ -52,7 +52,7 @@ export default function Sort() {
         {state.availableSorts.map((sort) => (
           <option
             key={getSortId(sort)}
-            value={getSortId(sort)}
+            value={JSON.stringify(sort)}
             onSelect={() => methods?.sortBy(sort)}
           >
             {getSortLabel(sort)}
