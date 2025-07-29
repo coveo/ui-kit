@@ -20,9 +20,11 @@ import {provide} from '@lit/context';
 import i18next, {type i18n} from 'i18next';
 import {type CSSResultGroup, html, LitElement, unsafeCSS} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
+import {booleanConverter} from '@/src/converters/boolean-converter';
+import {errorGuard} from '@/src/decorators/error-guard';
 import {watch} from '@/src/decorators/watch';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles.js';
-import {markParentAsReady} from '@/src/utils/init-queue';
+import {type InitializeEvent, markParentAsReady} from '@/src/utils/init-queue';
 import {
   SafeStorage,
   type StandaloneSearchBoxData,
@@ -32,9 +34,8 @@ import {ChildrenUpdateCompleteMixin} from '../../../mixins/children-update-compl
 import type {CommonBindings} from '../../common/interface/bindings';
 import {
   type BaseAtomicInterface,
-  CommonAtomicInterfaceHelper,
-  type InitializeEvent,
-} from '../../common/interface/interface-common';
+  InterfaceController,
+} from '../../common/interface/interface-controller';
 import {bindingsContext} from '../../context/bindings-context';
 import {
   type CommerceStore,
@@ -80,9 +81,12 @@ export class AtomicCommerceInterface
   private unsubscribeSummary?: Unsubscribe;
   private initialized = false;
   public store: CommerceStore;
-  private commonInterfaceHelper: CommonAtomicInterfaceHelper<CommerceEngine>;
+  private interfaceController = new InterfaceController<CommerceEngine>(
+    this,
+    'CoveoAtomic'
+  );
 
-  @state() public error?: Error;
+  @state() public error!: Error;
 
   static styles: CSSResultGroup = [unsafeCSS(styles)];
 
@@ -99,9 +103,7 @@ export class AtomicCommerceInterface
    */
   @property({
     type: Boolean,
-    converter: {
-      fromAttribute: (value) => value !== 'false',
-    },
+    converter: booleanConverter,
     reflect: true,
   })
   analytics = true;
@@ -137,9 +139,7 @@ export class AtomicCommerceInterface
     type: Boolean,
     attribute: 'reflect-state-in-url',
     reflect: true,
-    converter: {
-      fromAttribute: (value) => value !== 'false',
-    },
+    converter: booleanConverter,
   })
   reflectStateInUrl = true;
 
@@ -171,10 +171,6 @@ export class AtomicCommerceInterface
 
   public constructor() {
     super();
-    this.commonInterfaceHelper = new CommonAtomicInterfaceHelper(
-      this,
-      'CoveoAtomic'
-    );
     this.store = createCommerceStore(this.type);
     const {promise, resolve} = Promise.withResolvers<void>();
     this.i18Initialized = promise;
@@ -199,13 +195,13 @@ export class AtomicCommerceInterface
 
   @watch('analytics')
   public toggleAnalytics() {
-    this.commonInterfaceHelper.onAnalyticsChange();
+    this.interfaceController.onAnalyticsChange();
   }
 
   @watch('language')
   public updateLanguage() {
     if (
-      !this.commonInterfaceHelper.engineIsCreated(this.engine) ||
+      !this.interfaceController.engineIsCreated(this.engine) ||
       !this.language ||
       !this.context
     ) {
@@ -213,7 +209,7 @@ export class AtomicCommerceInterface
     }
 
     this.context.setLanguage(this.language);
-    return this.commonInterfaceHelper.onLanguageChange();
+    return this.interfaceController.onLanguageChange();
   }
 
   @watch('iconAssetsPath')
@@ -241,10 +237,6 @@ export class AtomicCommerceInterface
       'atomic/scrollToTop',
       this.scrollToTop as EventListener
     );
-    const ariaLive = this.querySelector('atomic-aria-live');
-    if (ariaLive) {
-      ariaLive.remove();
-    }
   }
 
   private updateMobileBreakpoint() {
@@ -257,7 +249,7 @@ export class AtomicCommerceInterface
   }
 
   private handleInitialization = (event: InitializeEvent) => {
-    this.commonInterfaceHelper.onComponentInitializing(event);
+    this.interfaceController.onComponentInitializing(event);
   };
 
   public scrollToTop() {
@@ -294,7 +286,7 @@ export class AtomicCommerceInterface
    * Executes the first request after initializing connection to the headless commerce engine.
    */
   public async executeFirstRequest() {
-    if (!this.commonInterfaceHelper.engineIsCreated(this.engine)) {
+    if (!this.interfaceController.engineIsCreated(this.engine)) {
       return;
     }
 
@@ -338,10 +330,9 @@ export class AtomicCommerceInterface
 
   private async internalInitialization(initEngine: () => void) {
     await Promise.all([
-      this.commonInterfaceHelper.onInitialization(initEngine),
+      this.interfaceController.onInitialization(initEngine),
       this.i18Initialized,
     ]);
-    this.initAriaLive();
     this.initContext();
     this.updateLanguage();
     this.bindings = this.getBindings();
@@ -383,18 +374,6 @@ export class AtomicCommerceInterface
 
   private get fragment() {
     return window.location.hash.slice(1);
-  }
-
-  private initAriaLive() {
-    if (
-      Array.from(this.children).some(
-        (element) => element.tagName === 'ATOMIC-ARIA-LIVE'
-      )
-    ) {
-      return;
-    }
-    const ariaLive = document.createElement('atomic-aria-live');
-    this.prepend(ariaLive);
   }
 
   private initUrlManager() {
@@ -467,6 +446,7 @@ export class AtomicCommerceInterface
     this.urlManager.synchronize(this.fragment);
   };
 
+  @errorGuard()
   render() {
     return html`<slot></slot>`;
   }
