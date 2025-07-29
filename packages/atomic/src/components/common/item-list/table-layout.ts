@@ -8,7 +8,7 @@ import type {
   FunctionalComponentWithChildren,
 } from '@/src/utils/functional-component-utils';
 import {tableElementTagName} from '../../search/atomic-table-result/table-element-utils';
-import type {AnyItem} from '../interface/item';
+import type {AnyItem} from '../item-list/unfolded-item';
 
 interface TableColumnsProps {
   firstItem: AnyItem;
