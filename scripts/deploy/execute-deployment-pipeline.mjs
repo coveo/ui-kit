@@ -36,7 +36,10 @@ function getResolveVariableString(version, packageName) {
       ? {
           major: '0',
           minor: '0.0',
-          patch: versionComposantsOrdered.concat(prNumber).join('.'),
+          patch: versionComposantsOrdered
+            .slice(0, 3)
+            .concat(prNumber)
+            .join('.'),
         }
       : {
           major: versionComposantsOrdered.slice(0, 1),
