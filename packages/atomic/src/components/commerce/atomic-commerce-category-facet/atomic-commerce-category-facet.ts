@@ -71,7 +71,7 @@ import styles from './atomic-commerce-category-facet.tw.css';
  * @part parents - The container surrounding the whole hierarchy of values.
  * @part sub-parents - The container surrounding a sub-hierarchy of values.
  * @part values - The container surrounding either the children of the active value or the values at the base.
- * @part all-categories-button - The "View all" button displayed first within the parents.
+ * @part all-categories-button - The "All categories" button displayed first within the parents.
  * @part parent-button - The clickable parent button displayed first within sub-parents.
  * @part active-parent - The clickable active parent displayed first within the last sub-parents.
  * @part value-link - The clickable value displayed first within values.
@@ -82,10 +82,9 @@ import styles from './atomic-commerce-category-facet.tw.css';
  * @part node-value - A facet value with child values.
  *
  * @part show-more - The "Show more" button.
- * @part show-less - The show less results button.
- * @part show-more-less-icon - The icons of the show more & show less buttons.
+ * @part show-less - The "Show less" button.
+ * @part show-more-less-icon - The icons of the "Show more" and "Show less" buttons.
  *
- * @alpha
  */
 @customElement('atomic-commerce-category-facet')
 @withTailwindStyles
@@ -110,7 +109,7 @@ export class AtomicCommerceCategoryFacet
   @property({type: Object}) public facet!: CategoryFacet;
 
   /**
-   * Specifies whether the facet is collapsed.
+   * Whether the facet is collapsed.
    */
   @property({
     reflect: true,
