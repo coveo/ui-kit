@@ -33,16 +33,16 @@ import {
 import {createComponent} from '@lit/react';
 import React from 'react';
 
-export const AtomicCommerceDidYouMean = createComponent({
-  tagName: 'atomic-commerce-did-you-mean',
-  react: React,
-  elementClass: LitAtomicCommerceDidYouMean,
-});
-
 export const AtomicCommerceBreadbox = createComponent({
   tagName: 'atomic-commerce-breadbox',
   react: React,
   elementClass: LitAtomicCommerceBreadbox,
+});
+
+export const AtomicCommerceDidYouMean = createComponent({
+  tagName: 'atomic-commerce-did-you-mean',
+  react: React,
+  elementClass: LitAtomicCommerceDidYouMean,
 });
 
 export const AtomicCommerceInterface = createComponent({
@@ -69,6 +69,12 @@ export const AtomicCommerceNoProducts = createComponent({
   elementClass: LitAtomicCommerceNoProducts,
 });
 
+export const AtomicCommercePager = createComponent({
+  tagName: 'atomic-commerce-pager',
+  react: React,
+  elementClass: LitAtomicCommercePager,
+});
+
 export const AtomicCommerceProductList = createComponent({
   tagName: 'atomic-commerce-product-list',
   react: React,
@@ -79,12 +85,6 @@ export const AtomicCommerceProductsPerPage = createComponent({
   tagName: 'atomic-commerce-products-per-page',
   react: React,
   elementClass: LitAtomicCommerceProductsPerPage,
-});
-
-export const AtomicCommercePager = createComponent({
-  tagName: 'atomic-commerce-pager',
-  react: React,
-  elementClass: LitAtomicCommercePager,
 });
 
 export const AtomicCommerceQueryError = createComponent({
@@ -99,16 +99,16 @@ export const AtomicCommerceQuerySummary = createComponent({
   elementClass: LitAtomicCommerceQuerySummary,
 });
 
-export const AtomicCommerceRecommendationList = createComponent({
-  tagName: 'atomic-commerce-recommendation-list',
-  react: React,
-  elementClass: LitAtomicCommerceRecommendationList,
-});
-
 export const AtomicCommerceRecommendationInterface = createComponent({
   tagName: 'atomic-commerce-recommendation-interface',
   react: React,
   elementClass: LitAtomicCommerceRecommendationInterface,
+});
+
+export const AtomicCommerceRecommendationList = createComponent({
+  tagName: 'atomic-commerce-recommendation-list',
+  react: React,
+  elementClass: LitAtomicCommerceRecommendationList,
 });
 
 export const AtomicCommerceRefineModal = createComponent({
