@@ -131,7 +131,10 @@ test.describe('Default', () => {
         .locator('span')
         .first()
         .textContent()) as string;
-      await breadbox.getFacetValue('category', firstValueText).click();
+      await breadbox
+        .getFacetValue('category', firstValueText)
+        .locator('button')
+        .click();
       await breadbox
         .getBreadcrumbButtons(firstValueText)
         .waitFor({state: 'visible'});
@@ -185,7 +188,11 @@ test.describe('Default', () => {
             .locator('span')
             .first()
             .textContent());
-        await breadbox.getFacetValue('nestedCategory').first().click();
+        await breadbox
+          .getFacetValue('nestedCategory')
+          .first()
+          .locator('button')
+          .click();
         await breadbox
           .getBreadcrumbButtons()
           .first()
@@ -318,7 +325,12 @@ test.describe('Default', () => {
     let firstValueText: string | RegExp;
 
     test.beforeEach(async ({breadbox, page}) => {
-      await page.getByRole('button', {name: 'Expand the Date facet'}).click();
+      const expandButton = page.getByRole('button', {
+        name: 'Expand the Date facet',
+      });
+      if (await expandButton.isVisible()) {
+        await expandButton.click();
+      }
       await breadbox.getFacetValue('dateRange').first().click();
       firstValueText = (await breadbox
         .getFacetValue('dateRange')
