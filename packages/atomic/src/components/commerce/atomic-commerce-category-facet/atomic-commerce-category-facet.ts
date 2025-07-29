@@ -81,7 +81,7 @@ import styles from './atomic-commerce-category-facet.tw.css';
  * @part leaf-value - A facet value with no child value.
  * @part node-value - A facet value with child values.
  *
- * @part show-more - The show more results button.
+ * @part show-more - The "Show more" button.
  * @part show-less - The show less results button.
  * @part show-more-less-icon - The icons of the show more & show less buttons.
  *
