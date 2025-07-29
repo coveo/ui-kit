@@ -1,4 +1,4 @@
-import type {AnyAction} from '@reduxjs/toolkit';
+import type {AnyAction, UnknownAction} from '@reduxjs/toolkit';
 import type {CoreEngine, CoreEngineNext} from '../../../app/engine.js';
 import type {EngineConfiguration} from '../../../app/engine-configuration.js';
 import type {NavigatorContextProvider} from '../../../app/navigator-context-provider.js';
@@ -6,12 +6,18 @@ import type {Controller} from '../../../controllers/controller/headless-controll
 import type {Build} from './build.js';
 import type {
   ControllerDefinitionsMap,
+  ControllerStaticStateMap,
+  ControllersMap,
+  ControllersPropsMap,
+} from './controllers.js';
+import type {FetchStaticState} from './fetch-static-state.js';
+import type {HydrateStaticState} from './hydrate-static-state.js';
+import type {
   InferControllerPropsMapFromDefinitions,
   InferControllerStaticStateMapFromDefinitions,
   InferControllersMapFromDefinition,
-} from './common.js';
-import type {FetchStaticState} from './fetch-static-state.js';
-import type {HydrateStaticState} from './hydrate-static-state.js';
+} from './inference.js';
+import type {HasKeys} from './utilities.js';
 
 export type EngineDefinitionOptions<
   TOptions extends {configuration: EngineConfiguration},
@@ -70,6 +76,31 @@ export interface EngineDefinition<
   >;
 }
 
+// TODO: KIT-4610: Remove this type
+export interface EngineDefinitionBuildResult<
+  TEngine extends CoreEngine | CoreEngineNext,
+  TControllers extends ControllersMap,
+> {
+  engine: TEngine;
+  controllers: TControllers;
+}
+
+export type EngineDefinitionControllersPropsOption<
+  TControllersPropsMap extends ControllersPropsMap,
+> = HasKeys<TControllersPropsMap> extends false
+  ? {}
+  : {
+      controllers: TControllersPropsMap;
+    };
+
+export interface EngineStaticState<
+  TSearchAction extends UnknownAction,
+  TControllers extends ControllerStaticStateMap,
+> {
+  searchAction: TSearchAction;
+  controllers: TControllers;
+}
+
 export type InferStaticState<
   T extends {
     fetchStaticState(...args: unknown[]): Promise<unknown>;
@@ -82,6 +113,7 @@ export type InferHydratedState<
   },
 > = Awaited<ReturnType<T['hydrateStaticState']>>;
 
+// TODO: KIT-4610: Remove this type
 export type InferBuildResult<
   T extends {
     build(...args: unknown[]): Promise<unknown>;

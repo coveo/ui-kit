@@ -8,7 +8,7 @@ import {
 import {
   type RecommendationOnlyControllerDefinitionWithProps,
   recommendationInternalOptionKey,
-} from '../../types/common.js';
+} from '../../types/controllers.js';
 import {createControllerWithKind, Kind} from '../../types/kind.js';
 
 export type {Recommendations, RecommendationsState};

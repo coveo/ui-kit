@@ -6,13 +6,15 @@ import type {
   ControllerDefinition,
   ControllerDefinitionsMap,
   ControllersMap,
-  EngineStaticState,
+} from './types/controllers.js';
+import type {EngineStaticState} from './types/engine.js';
+import type {
   InferControllerFromDefinition,
   InferControllerPropsFromDefinition,
   InferControllerPropsMapFromDefinitions,
   InferControllerStaticStateMapFromControllers,
   InferControllersMapFromDefinition,
-} from './types/common.js';
+} from './types/inference.js';
 
 function buildControllerFromDefinition<
   TControllerDefinition extends ControllerDefinition<TEngine, Controller>,

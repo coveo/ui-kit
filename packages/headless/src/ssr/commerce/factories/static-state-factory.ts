@@ -8,13 +8,13 @@ import {
   type EngineStaticState,
   type InferControllerStaticStateMapFromDefinitionsWithSolutionType,
   SolutionType,
-} from '../types/common.js';
+} from '../types/controllers.js';
 import type {
   CommerceControllerDefinitionsMap,
   FetchStaticStateFromBuildResultParameters,
   FetchStaticStateFunction,
   FetchStaticStateParameters,
-} from '../types/core-engine.js';
+} from '../types/engine.js';
 import {
   buildFactory,
   type CommerceEngineDefinitionOptions,

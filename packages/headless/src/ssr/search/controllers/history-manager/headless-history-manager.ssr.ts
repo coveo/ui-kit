@@ -3,7 +3,7 @@ import {
   buildHistoryManager,
   type HistoryManager,
 } from '../../../../controllers/history-manager/headless-history-manager.js';
-import type {ControllerDefinitionWithoutProps} from '../../../common/types/common.js';
+import type {ControllerDefinitionWithoutProps} from '../../../common/types/controllers.js';
 
 export * from '../../../../controllers/history-manager/headless-history-manager.js';
 

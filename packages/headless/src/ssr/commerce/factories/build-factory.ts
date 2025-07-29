@@ -11,18 +11,18 @@ import {
   createWaitForActionMiddleware,
   createWaitForActionMiddlewareForRecommendation,
 } from '../../../utils/utils.js';
-import type {ControllersPropsMap} from '../../common/types/common.js';
+import type {ControllersPropsMap} from '../../common/types/controllers.js';
 import {buildControllerDefinitions} from '../controller-utils.js';
 import {
   type ControllerDefinitionsMap,
   type InferControllerPropsMapFromDefinitions,
   SolutionType,
-} from '../types/common.js';
+} from '../types/controllers.js';
 import type {
   BuildParameters,
   CommerceControllerDefinitionsMap,
   EngineDefinitionOptions,
-} from '../types/core-engine.js';
+} from '../types/engine.js';
 
 /**
  * The SSR commerce engine.

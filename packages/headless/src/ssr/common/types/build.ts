@@ -1,12 +1,10 @@
 import type {CoreEngine, CoreEngineNext} from '../../../app/engine.js';
+import type {ControllersMap, ControllersPropsMap} from './controllers.js';
 import type {
-  ControllersMap,
-  ControllersPropsMap,
   EngineDefinitionBuildResult,
   EngineDefinitionControllersPropsOption,
-  OptionsExtender,
-  OptionsTuple,
-} from './common.js';
+} from './engine.js';
+import type {OptionsExtender, OptionsTuple} from './utilities.js';
 
 interface BuildOptions<TEngineOptions> {
   extend?: OptionsExtender<TEngineOptions>;

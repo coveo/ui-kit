@@ -3,7 +3,7 @@ import {
   buildDictionaryFieldContext,
   type DictionaryFieldContext,
 } from '../../../../controllers/dictionary-field-context/headless-dictionary-field-context.js';
-import type {ControllerDefinitionWithoutProps} from '../../../common/types/common.js';
+import type {ControllerDefinitionWithoutProps} from '../../../common/types/controllers.js';
 
 export * from '../../../../controllers/dictionary-field-context/headless-dictionary-field-context.js';
 

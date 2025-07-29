@@ -3,7 +3,7 @@ import type {
   RedirectionTrigger,
   RedirectionTriggerState,
 } from '../../../../controllers/core/triggers/headless-core-redirection-trigger.js';
-import type {SearchOnlyControllerDefinitionWithoutProps} from '../../types/common.js';
+import type {SearchOnlyControllerDefinitionWithoutProps} from '../../types/controllers.js';
 
 export type {RedirectionTrigger, RedirectionTriggerState};
 

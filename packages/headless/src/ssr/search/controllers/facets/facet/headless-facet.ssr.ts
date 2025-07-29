@@ -4,7 +4,7 @@ import {
   type Facet,
   type FacetProps,
 } from '../../../../../controllers/facets/facet/headless-facet.js';
-import type {ControllerDefinitionWithoutProps} from '../../../../common/types/common.js';
+import type {ControllerDefinitionWithoutProps} from '../../../../common/types/controllers.js';
 
 export * from '../../../../../controllers/facets/facet/headless-facet.js';
 

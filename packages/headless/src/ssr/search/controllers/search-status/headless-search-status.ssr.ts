@@ -3,7 +3,7 @@ import {
   buildSearchStatus,
   type SearchStatus,
 } from '../../../../controllers/search-status/headless-search-status.js';
-import type {ControllerDefinitionWithoutProps} from '../../../common/types/common.js';
+import type {ControllerDefinitionWithoutProps} from '../../../common/types/controllers.js';
 
 export * from '../../../../controllers/search-status/headless-search-status.js';
 

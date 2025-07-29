@@ -4,7 +4,7 @@ import {
   type SmartSnippet,
   type SmartSnippetProps,
 } from '../../../../controllers/smart-snippet/headless-smart-snippet.js';
-import type {ControllerDefinitionWithoutProps} from '../../../common/types/common.js';
+import type {ControllerDefinitionWithoutProps} from '../../../common/types/controllers.js';
 
 export * from '../../../../controllers/smart-snippet/headless-smart-snippet.js';
 

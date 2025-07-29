@@ -3,7 +3,7 @@ import {
   buildFacetManager,
   type FacetManager,
 } from '../../../../controllers/facet-manager/headless-facet-manager.js';
-import type {ControllerDefinitionWithoutProps} from '../../../common/types/common.js';
+import type {ControllerDefinitionWithoutProps} from '../../../common/types/controllers.js';
 
 export * from '../../../../controllers/facet-manager/headless-facet-manager.js';
 

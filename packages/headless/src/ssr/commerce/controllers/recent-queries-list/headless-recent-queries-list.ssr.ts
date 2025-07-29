@@ -6,7 +6,7 @@ import {
   type RecentQueriesListProps,
   type RecentQueriesState,
 } from '../../../../controllers/commerce/recent-queries-list/headless-recent-queries-list.js';
-import type {NonRecommendationControllerDefinitionWithoutProps} from '../../types/common.js';
+import type {NonRecommendationControllerDefinitionWithoutProps} from '../../types/controllers.js';
 
 export type {
   RecentQueriesListInitialState,

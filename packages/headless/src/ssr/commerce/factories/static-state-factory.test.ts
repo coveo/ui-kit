@@ -17,8 +17,8 @@ import {defineSearchBox} from '../controllers/search-box/headless-search-box.ssr
 import {
   type InferControllersMapFromDefinition,
   SolutionType,
-} from '../types/common.js';
-import type {CommerceControllerDefinitionsMap} from '../types/core-engine.js';
+} from '../types/controllers.js';
+import type {CommerceControllerDefinitionsMap} from '../types/engine.js';
 import * as buildFactory from './build-factory.js';
 import {fetchStaticStateFactory} from './static-state-factory.js';
 

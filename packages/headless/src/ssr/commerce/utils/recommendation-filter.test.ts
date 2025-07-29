@@ -9,7 +9,7 @@ import {
 } from '../controllers/recommendations/headless-recommendations.ssr.js';
 import {defineSearchBox} from '../controllers/search-box/headless-search-box.ssr.js';
 import {defineSummary} from '../controllers/summary/headless-core-summary.ssr.js';
-import type {ControllerDefinitionsMap} from '../types/common.js';
+import type {ControllerDefinitionsMap} from '../types/controllers.js';
 import {filterRecommendationControllers} from './recommendation-filter.js';
 
 describe('filterRecommendationControllers', () => {

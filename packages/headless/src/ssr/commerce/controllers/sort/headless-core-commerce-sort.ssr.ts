@@ -10,7 +10,7 @@ import {
   type ControllerDefinitionOption,
   SolutionType,
   type SubControllerDefinitionWithoutProps,
-} from '../../types/common.js';
+} from '../../types/controllers.js';
 
 export type {Sort, SortProps, SortState};
 

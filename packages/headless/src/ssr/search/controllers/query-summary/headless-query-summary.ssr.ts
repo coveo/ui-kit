@@ -3,7 +3,7 @@ import {
   buildQuerySummary,
   type QuerySummary,
 } from '../../../../controllers/query-summary/headless-query-summary.js';
-import type {ControllerDefinitionWithoutProps} from '../../../common/types/common.js';
+import type {ControllerDefinitionWithoutProps} from '../../../common/types/controllers.js';
 
 export * from '../../../../controllers/query-summary/headless-query-summary.js';
 

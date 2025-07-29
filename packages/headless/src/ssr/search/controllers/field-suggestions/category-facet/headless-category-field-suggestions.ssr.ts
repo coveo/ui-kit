@@ -4,7 +4,7 @@ import {
   type CategoryFieldSuggestions,
   type CategoryFieldSuggestionsProps,
 } from '../../../../../controllers/field-suggestions/category-facet/headless-category-field-suggestions.js';
-import type {ControllerDefinitionWithoutProps} from '../../../../common/types/common.js';
+import type {ControllerDefinitionWithoutProps} from '../../../../common/types/controllers.js';
 
 export * from '../../../../../controllers/field-suggestions/category-facet/headless-category-field-suggestions.js';
 

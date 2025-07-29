@@ -285,8 +285,8 @@ export type {
   InferControllerStaticStateMapFromDefinitionsWithSolutionType,
   InferControllersMapFromDefinition,
   OptionsTuple,
-} from './ssr/commerce/types/common.js';
-export {SolutionType} from './ssr/commerce/types/common.js';
+} from './ssr/commerce/types/controllers.js';
+export {SolutionType} from './ssr/commerce/types/controllers.js';
 export type {
   Build,
   BuildOptions,
@@ -300,7 +300,7 @@ export type {
   InferBuildResult,
   InferHydratedState,
   InferStaticState,
-} from './ssr/commerce/types/core-engine.js';
+} from './ssr/commerce/types/engine.js';
 export {Kind} from './ssr/commerce/types/kind.js';
 // State
 export type {

@@ -5,7 +5,7 @@ import {
   type InstantProductsProps,
   type InstantProductsState,
 } from '../../../../controllers/commerce/instant-products/headless-instant-products.js';
-import type {NonRecommendationControllerDefinitionWithoutProps} from '../../types/common.js';
+import type {NonRecommendationControllerDefinitionWithoutProps} from '../../types/controllers.js';
 
 export type {
   InstantProductsOptions,

@@ -3,7 +3,7 @@ import {
   buildQueryError,
   type QueryError,
 } from '../../../../controllers/query-error/headless-query-error.js';
-import type {ControllerDefinitionWithoutProps} from '../../../common/types/common.js';
+import type {ControllerDefinitionWithoutProps} from '../../../common/types/controllers.js';
 
 export * from '../../../../controllers/query-error/headless-query-error.js';
 

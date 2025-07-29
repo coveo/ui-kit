@@ -4,7 +4,7 @@ import {
   type RecentResultsList,
   type RecentResultsListProps,
 } from '../../../../controllers/recent-results-list/headless-recent-results-list.js';
-import type {ControllerDefinitionWithoutProps} from '../../../common/types/common.js';
+import type {ControllerDefinitionWithoutProps} from '../../../common/types/controllers.js';
 
 export * from '../../../../controllers/recent-results-list/headless-recent-results-list.js';
 

@@ -7,14 +7,14 @@ import {
   type InferControllerStaticStateMapFromDefinitionsWithSolutionType,
   type RecommendationControllerSettings,
   SolutionType,
-} from '../types/common.js';
+} from '../types/controllers.js';
 import type {
   BuildResult,
   CommerceControllerDefinitionsMap,
   FetchStaticStateFromBuildResultParameters,
   FetchStaticStateFunction,
   FetchStaticStateParameters,
-} from '../types/core-engine.js';
+} from '../types/engine.js';
 import {filterRecommendationControllers} from '../utils/recommendation-filter.js';
 import {
   buildFactory,

@@ -3,7 +3,7 @@ import {
   type BreadcrumbManager,
   buildBreadcrumbManager,
 } from '../../../../controllers/breadcrumb-manager/headless-breadcrumb-manager.js';
-import type {ControllerDefinitionWithoutProps} from '../../../common/types/common.js';
+import type {ControllerDefinitionWithoutProps} from '../../../common/types/controllers.js';
 
 export * from '../../../../controllers/breadcrumb-manager/headless-breadcrumb-manager.js';
 

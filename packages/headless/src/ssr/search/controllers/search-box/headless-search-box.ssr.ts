@@ -4,7 +4,7 @@ import {
   type SearchBox,
   type SearchBoxProps,
 } from '../../../../controllers/search-box/headless-search-box.js';
-import type {ControllerDefinitionWithoutProps} from '../../../common/types/common.js';
+import type {ControllerDefinitionWithoutProps} from '../../../common/types/controllers.js';
 
 export * from '../../../../controllers/search-box/headless-search-box.js';
 

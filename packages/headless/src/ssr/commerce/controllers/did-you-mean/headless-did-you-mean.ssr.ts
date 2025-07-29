@@ -3,7 +3,7 @@ import type {
   DidYouMeanState,
 } from '../../../../controllers/commerce/search/did-you-mean/headless-did-you-mean.js';
 import {buildSearch} from '../../../../controllers/commerce/search/headless-search.js';
-import type {SearchOnlyControllerDefinitionWithoutProps} from '../../types/common.js';
+import type {SearchOnlyControllerDefinitionWithoutProps} from '../../types/controllers.js';
 
 export type {DidYouMean, DidYouMeanState};
 

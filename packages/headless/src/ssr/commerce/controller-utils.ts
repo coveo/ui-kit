@@ -2,10 +2,7 @@ import type {UnknownAction} from '@reduxjs/toolkit';
 import type {Controller} from '../../controllers/controller/headless-controller.js';
 import {clone, filterObject, mapObject} from '../../utils/utils.js';
 import {InvalidControllerDefinition} from '../common/errors.js';
-import type {
-  ControllersMap,
-  InferControllerStaticStateMapFromControllers,
-} from '../common/types/common.js';
+import type {ControllersMap} from '../common/types/controllers.js';
 import type {SSRCommerceEngine} from './factories/build-factory.js';
 import type {
   ControllerDefinition,
@@ -16,9 +13,10 @@ import type {
   InferControllerFromDefinition,
   InferControllerPropsFromDefinition,
   InferControllerPropsMapFromDefinitions,
+  InferControllerStaticStateMapFromControllers,
   InferControllersMapFromDefinition,
   SolutionType,
-} from './types/common.js';
+} from './types/controllers.js';
 
 function hasKindProperty(
   controller: Controller | ControllerWithKind

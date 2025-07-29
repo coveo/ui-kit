@@ -4,7 +4,7 @@ import {
   type DateFilter,
   type DateFilterProps,
 } from '../../../../../../controllers/facets/range-facet/date-facet/headless-date-filter.js';
-import type {ControllerDefinitionWithoutProps} from '../../../../../common/types/common.js';
+import type {ControllerDefinitionWithoutProps} from '../../../../../common/types/controllers.js';
 
 export * from '../../../../../../controllers/facets/range-facet/date-facet/headless-date-filter.js';
 

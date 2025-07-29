@@ -4,7 +4,7 @@ import {
   type RecentQueriesList,
   type RecentQueriesListProps,
 } from '../../../../controllers/recent-queries-list/headless-recent-queries-list.js';
-import type {ControllerDefinitionWithoutProps} from '../../../common/types/common.js';
+import type {ControllerDefinitionWithoutProps} from '../../../common/types/controllers.js';
 
 export * from '../../../../controllers/recent-queries-list/headless-recent-queries-list.js';
 

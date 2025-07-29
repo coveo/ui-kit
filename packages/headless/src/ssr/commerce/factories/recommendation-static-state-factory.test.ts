@@ -6,8 +6,8 @@ import {defineRecommendations} from '../controllers/recommendations/headless-rec
 import type {
   InferControllersMapFromDefinition,
   SolutionType,
-} from '../types/common.js';
-import type {CommerceControllerDefinitionsMap} from '../types/core-engine.js';
+} from '../types/controllers.js';
+import type {CommerceControllerDefinitionsMap} from '../types/engine.js';
 import * as buildFactory from './build-factory.js';
 import {fetchRecommendationStaticStateFactory} from './recommendation-static-state-factory.js';
 

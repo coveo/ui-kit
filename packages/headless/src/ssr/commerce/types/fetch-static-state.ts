@@ -4,14 +4,14 @@ import type {
   ControllerStaticStateMap,
   ControllersMap,
   ControllersPropsMap,
-  OptionsTuple,
-} from '../../../ssr/common/types/common.js';
+} from '../../common/types/controllers.js';
 import type {
   ControllerDefinitionsMap,
   EngineDefinitionControllersPropsOption,
   EngineStaticState,
+  OptionsTuple,
   SolutionType,
-} from './common.js';
+} from './controllers.js';
 import type {FromBuildResult} from './from-build-result.js';
 
 export type FetchStaticStateOptions = {};

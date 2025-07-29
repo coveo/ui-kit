@@ -9,7 +9,7 @@ import {
   type ControllerDefinition,
   type ControllerDefinitionsMap,
   recommendationInternalOptionKey,
-} from '../types/common.js';
+} from '../types/controllers.js';
 
 export function filterRecommendationControllers<
   TControllerDefinitions extends ControllerDefinitionsMap<Controller>,

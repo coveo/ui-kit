@@ -2,16 +2,18 @@ import type {Controller} from '../../../controllers/controller/headless-controll
 import type {
   ControllersMap,
   ControllersPropsMap,
-  EngineDefinitionBuildResult,
+} from '../../common/types/controllers.js';
+import type {
   OptionsExtender,
   OptionsTuple,
-} from '../../../ssr/common/types/common.js';
+} from '../../common/types/utilities.js';
 import type {SSRCommerceEngine} from '../factories/build-factory.js';
 import type {
   ControllerDefinitionsMap,
+  EngineDefinitionBuildResult,
   EngineDefinitionControllersPropsOption,
   SolutionType,
-} from './common.js';
+} from './controllers.js';
 
 export interface BuildOptions<TEngineOptions> {
   extend?: OptionsExtender<TEngineOptions>;

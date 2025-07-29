@@ -11,12 +11,12 @@ import type {executeSearch} from '../../../features/search/search-actions.js';
 import {buildMockNavigatorContextProvider} from '../../../test/mock-navigator-context-provider.js';
 import {buildMockResult} from '../../../test/mock-result.js';
 import * as augmentModule from '../../common/augment-preprocess-request.js';
-import type {ControllerDefinitionWithoutProps} from '../../common/types/common.js';
+import type {ControllerDefinitionWithoutProps} from '../../common/types/controllers.js';
 import type {
   InferBuildResult,
   InferHydratedState,
   InferStaticState,
-} from '../../common/types/core-engine.js';
+} from '../../common/types/engine.js';
 import {defineResultList} from '../controllers/result-list/headless-result-list.ssr.js';
 import {
   defineSearchEngine,

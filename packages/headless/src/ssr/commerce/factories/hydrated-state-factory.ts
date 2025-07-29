@@ -1,12 +1,12 @@
 import {composeFunction} from '../../common/controller-utils.js';
-import type {SolutionType} from '../types/common.js';
+import type {SolutionType} from '../types/controllers.js';
 import type {
   BuildParameters,
   CommerceControllerDefinitionsMap,
   HydrateStaticStateFromBuildResultParameters,
   HydrateStaticStateFunction,
   HydrateStaticStateParameters,
-} from '../types/core-engine.js';
+} from '../types/engine.js';
 import {
   buildFactory,
   type CommerceEngineDefinitionOptions,

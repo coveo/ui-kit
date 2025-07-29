@@ -1,4 +1,4 @@
-import {SolutionType} from '../commerce/types/common.js';
+import {SolutionType} from '../commerce/types/controllers.js';
 
 export class InvalidControllerDefinition extends Error {
   constructor() {

@@ -7,7 +7,7 @@ import {
   type CartState,
 } from '../../../../controllers/commerce/context/cart/headless-cart.js';
 import {MissingControllerProps} from '../../../common/errors.js';
-import type {UniversalControllerDefinitionWithProps} from '../../types/common.js';
+import type {UniversalControllerDefinitionWithProps} from '../../types/controllers.js';
 import {createControllerWithKind, Kind} from '../../types/kind.js';
 
 export type {Cart, CartInitialState, CartItem, CartProps, CartState};

@@ -3,7 +3,7 @@ import {
   buildDidYouMean,
   type DidYouMean,
 } from '../../../../controllers/did-you-mean/headless-did-you-mean.js';
-import type {ControllerDefinitionWithoutProps} from '../../../common/types/common.js';
+import type {ControllerDefinitionWithoutProps} from '../../../common/types/controllers.js';
 
 export * from '../../../../controllers/did-you-mean/headless-did-you-mean.js';
 

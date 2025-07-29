@@ -82,18 +82,20 @@ export type {
   ControllerDefinitionsMap,
   ControllerDefinitionWithoutProps,
   ControllerDefinitionWithProps,
-  InferControllerFromDefinition,
-  InferControllerStaticStateFromController,
-  InferControllerStaticStateMapFromControllers,
-  InferControllerStaticStateMapFromDefinitions,
-  InferControllersMapFromDefinition,
-} from './ssr/common/types/common.js';
+} from './ssr/common/types/controllers.js';
 export type {
   EngineDefinition,
   InferBuildResult,
   InferHydratedState,
   InferStaticState,
-} from './ssr/common/types/core-engine.js';
+} from './ssr/common/types/engine.js';
+export type {
+  InferControllerFromDefinition,
+  InferControllerStaticStateFromController,
+  InferControllerStaticStateMapFromControllers,
+  InferControllerStaticStateMapFromDefinitions,
+  InferControllersMapFromDefinition,
+} from './ssr/common/types/inference.js';
 export type {
   AutomaticFacetBreadcrumb,
   Breadcrumb,

@@ -1,7 +1,7 @@
 import {describe, expect, it, vi} from 'vitest';
 import {getSampleCommerceEngineConfiguration} from '../../../app/commerce-engine/commerce-engine-configuration.js';
 import {defineRecommendations} from '../controllers/recommendations/headless-recommendations.ssr.js';
-import {SolutionType} from '../types/common.js';
+import {SolutionType} from '../types/controllers.js';
 import {buildFactory} from './build-factory.js';
 import {hydratedRecommendationStaticStateFactory} from './recommendation-hydrated-state-factory.js';
 

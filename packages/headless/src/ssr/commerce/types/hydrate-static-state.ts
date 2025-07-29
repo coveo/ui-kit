@@ -3,15 +3,15 @@ import type {Controller} from '../../../controllers/controller/headless-controll
 import type {
   ControllersMap,
   ControllersPropsMap,
-  HydratedState,
-  OptionsTuple,
-} from '../../../ssr/common/types/common.js';
+} from '../../common/types/controllers.js';
+import type {HydratedState} from '../../common/types/hydrate-static-state.js';
 import type {SSRCommerceEngine} from '../factories/build-factory.js';
 import type {
   ControllerDefinitionsMap,
   EngineDefinitionControllersPropsOption,
+  OptionsTuple,
   SolutionType,
-} from './common.js';
+} from './controllers.js';
 import type {FromBuildResult} from './from-build-result.js';
 
 export interface HydrateStaticStateOptions<TSearchAction> {

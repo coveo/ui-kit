@@ -1,5 +1,5 @@
 import {composeFunction} from '../../common/controller-utils.js';
-import {SolutionType} from '../types/common.js';
+import {SolutionType} from '../types/controllers.js';
 import type {
   BuildParameters,
   BuildResult,
@@ -7,7 +7,7 @@ import type {
   HydrateStaticStateFromBuildResultParameters,
   HydrateStaticStateFunction,
   HydrateStaticStateParameters,
-} from '../types/core-engine.js';
+} from '../types/engine.js';
 import {
   buildFactory,
   type CommerceEngineDefinitionOptions,

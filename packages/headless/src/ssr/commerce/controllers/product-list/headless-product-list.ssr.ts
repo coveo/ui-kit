@@ -12,7 +12,7 @@ import {
   type ControllerDefinitionOption,
   SolutionType,
   type SubControllerDefinitionWithoutProps,
-} from '../../types/common.js';
+} from '../../types/controllers.js';
 
 export type {Search, ProductListing, ProductListingState as ProductListState};
 

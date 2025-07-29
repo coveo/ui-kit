@@ -4,7 +4,7 @@ import {
   type Tab,
   type TabProps,
 } from '../../../../controllers/tab/headless-tab.js';
-import type {ControllerDefinitionWithoutProps} from '../../../common/types/common.js';
+import type {ControllerDefinitionWithoutProps} from '../../../common/types/controllers.js';
 
 export * from '../../../../controllers/tab/headless-tab.js';
 

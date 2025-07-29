@@ -23,7 +23,7 @@ import {
   type ControllerDefinitionOption,
   SolutionType,
   type SubControllerDefinitionWithProps,
-} from '../../types/common.js';
+} from '../../types/controllers.js';
 import {createControllerWithKind, Kind} from '../../types/kind.js';
 
 export type {

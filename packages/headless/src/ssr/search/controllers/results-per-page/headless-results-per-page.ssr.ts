@@ -4,7 +4,7 @@ import {
   type ResultsPerPage,
   type ResultsPerPageProps,
 } from '../../../../controllers/results-per-page/headless-results-per-page.js';
-import type {ControllerDefinitionWithoutProps} from '../../../common/types/common.js';
+import type {ControllerDefinitionWithoutProps} from '../../../common/types/controllers.js';
 
 export * from '../../../../controllers/results-per-page/headless-results-per-page.js';
 

@@ -7,7 +7,7 @@ import {
   buildController,
   type Controller,
 } from '../../../../controllers/controller/headless-controller.js';
-import type {NonRecommendationControllerDefinitionWithoutProps} from '../../types/common.js';
+import type {NonRecommendationControllerDefinitionWithoutProps} from '../../types/controllers.js';
 
 interface ProductViewDefinition
   extends NonRecommendationControllerDefinitionWithoutProps<ProductView> {}

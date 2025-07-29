@@ -5,7 +5,7 @@ import {
   type UrlManagerInitialState,
 } from '../../../../controllers/url-manager/headless-url-manager.js';
 import {MissingControllerProps} from '../../../common/errors.js';
-import type {ControllerDefinitionWithProps} from '../../../common/types/common.js';
+import type {ControllerDefinitionWithProps} from '../../../common/types/controllers.js';
 
 export * from '../../../../controllers/url-manager/headless-url-manager.js';
 

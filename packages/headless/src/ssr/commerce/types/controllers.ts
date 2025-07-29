@@ -1,19 +1,23 @@
 import type {UnknownAction} from '@reduxjs/toolkit';
 import type {Controller} from '../../../controllers/controller/headless-controller.js';
+import type {InvalidControllerDefinition} from '../../common/errors.js';
 import type {
   ControllerStaticStateMap,
   ControllersPropsMap,
-  EngineDefinitionBuildResult,
+} from '../../common/types/controllers.js';
+import type {EngineDefinitionBuildResult} from '../../common/types/engine.js';
+import type {HydratedState} from '../../common/types/hydrate-static-state.js';
+import type {
+  InferControllerStaticStateFromController,
+  InferControllerStaticStateMapFromControllers,
+} from '../../common/types/inference.js';
+import type {
   HasKey,
   HasKeys,
   HasOptionalKeys,
   HasRequiredKeys,
-  HydratedState,
-  InferControllerStaticStateFromController,
-  InferControllerStaticStateMapFromControllers,
   OptionsTuple,
-} from '../../../ssr/common/types/common.js';
-import type {InvalidControllerDefinition} from '../../common/errors.js';
+} from '../../common/types/utilities.js';
 import type {SSRCommerceEngine} from '../factories/build-factory.js';
 import type {Kind} from './kind.js';
 

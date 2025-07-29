@@ -18,16 +18,16 @@ import {
   composeFunction,
   createStaticState,
 } from '../../common/controller-utils.js';
-import type {
-  ControllerDefinitionsMap,
-  EngineStaticState,
-  InferControllerPropsMapFromDefinitions,
-  InferControllerStaticStateMapFromDefinitions,
-} from '../../common/types/common.js';
+import type {ControllerDefinitionsMap} from '../../common/types/controllers.js';
 import type {
   EngineDefinition,
   EngineDefinitionOptions,
-} from '../../common/types/core-engine.js';
+  EngineStaticState,
+} from '../../common/types/engine.js';
+import type {
+  InferControllerPropsMapFromDefinitions,
+  InferControllerStaticStateMapFromDefinitions,
+} from '../../common/types/inference.js';
 
 /**
  * The SSR search engine.
