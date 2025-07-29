@@ -59,7 +59,7 @@ import styles from './atomic-commerce-category-facet.tw.css';
  * @part search-wrapper - The search box wrapper.
  * @part search-input - The search box input.
  * @part search-icon - The search box submit button.
- * @part search-clear-button - The button to clear the search box of input.
+ * @part search-clear-button - The button to clear the search box input.
  * @part more-matches - The label indicating there are more matches for the current facet search query.
  * @part no-matches - The label indicating there are no matches for the current facet search query.
  * @part matches-query - The highlighted query inside the matches labels.
