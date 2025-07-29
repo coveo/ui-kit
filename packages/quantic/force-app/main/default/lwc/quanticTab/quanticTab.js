@@ -44,8 +44,23 @@ export default class QuanticTab extends LightningElement {
    * Whether to clear the filters when the active tab changes.
    * @api
    * @type {boolean}
+   * @defaultValue `false`
    */
-  @api clearFiltersOnTabChange = false;
+  @api get clearFiltersOnTabChange() {
+    return this._clearFiltersOnTabChange;
+  }
+  set clearFiltersOnTabChange(value) {
+    // Explicit boolean conversion to handle string values like "false"
+    // Handle string values like "true" or "false"
+    if (typeof value === 'string') {
+      // @ts-ignore
+      this._clearFiltersOnTabChange = value.toLowerCase() === 'true';
+    } else {
+      // Handle boolean, null, undefined, and other types
+      this._clearFiltersOnTabChange = Boolean(value);
+    }
+  }
+  _clearFiltersOnTabChange = false;
   /**
    * Whether the tab should be active.
    * @api
