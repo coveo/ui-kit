@@ -137,7 +137,7 @@ describe('case field slice', () => {
   });
 
   describe('#setError', () => {
-    it('should set the error state and set isLoading to false', () => {
+    it('should set the error state and set loading to false', () => {
       const error = {
         status: 400,
         statusCode: 401,

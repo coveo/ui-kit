@@ -71,7 +71,7 @@ describe('document suggestion slice', () => {
   });
 
   describe('#setError', () => {
-    it('should set the error state and set isLoading to false', () => {
+    it('should set the error state and set loading to false', () => {
       const error = {
         message: 'Something went wrong',
         statusCode: 401,
