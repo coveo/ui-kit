@@ -38,7 +38,7 @@ export default function Sort() {
       >
         {state.availableSorts.map((sort) => (
           <option
-            key={sort.by}
+            key={JSON.stringify(sort)}
             value={JSON.stringify(sort)}
             onSelect={() => methods?.sortBy(sort)}
           >
