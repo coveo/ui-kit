@@ -3,14 +3,14 @@ import {type Logger, pino} from 'pino';
 import {type Mock, vi} from 'vitest';
 import type {CaseAssistEngine} from '../app/case-assist-engine/case-assist-engine.js';
 import type {CommerceEngine} from '../app/commerce-engine/commerce-engine.js';
-import type {SSRCommerceEngine} from '../app/commerce-ssr-engine/factories/build-factory.js';
 import type {CoreEngine, CoreEngineNext} from '../app/engine.js';
 import type {InsightEngine} from '../app/insight-engine/insight-engine.js';
 import {defaultNodeJSNavigatorContextProvider} from '../app/navigator-context-provider.js';
 import type {RecommendationEngine} from '../app/recommendation-engine/recommendation-engine.js';
 import type {SearchEngine} from '../app/search-engine/search-engine.js';
-import type {SSRSearchEngine} from '../app/search-engine/search-engine.ssr.js';
 import {stateKey} from '../app/state-key.js';
+import type {SSRCommerceEngine} from '../ssr/commerce/factories/build-factory.js';
+import type {SSRSearchEngine} from '../ssr/search/engine/search-engine.ssr.js';
 
 type SpyEverything<T> = {
   [K in keyof T]: T[K] extends (...args: infer A) => infer R
