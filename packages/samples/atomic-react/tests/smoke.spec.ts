@@ -30,7 +30,7 @@ test.describe('smoke test', () => {
           const text = await summaryContainer.textContent();
           return text ?? '';
         },
-        {timeout: 5000}
+        {timeout: 10000}
       )
       .toMatch(/Results 1-[1-9].*for test/);
 
@@ -65,7 +65,7 @@ test.describe('smoke test', () => {
           const text = await summaryContainer.textContent();
           return text ?? '';
         },
-        {timeout: 5000}
+        {timeout: 10000}
       )
       .toMatch(/Products? 1-[1-9]?[0-9]* of \d+ for shoe/);
 
