@@ -36,6 +36,8 @@ const useCaseEntries = {
   insight: 'src/insight.index.ts',
   ssr: 'src/ssr.index.ts',
   'ssr-commerce': 'src/ssr-commerce.index.ts',
+  'ssr-next': 'src/ssr.index.ts',
+  'ssr-commerce-next': 'src/ssr-commerce.index.ts',
   commerce: 'src/commerce.index.ts',
 };
 
