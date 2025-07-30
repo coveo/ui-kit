@@ -81,7 +81,7 @@ export class AtomicIPXRefineModal implements InitializableComponent {
 
   private renderHeader() {
     return (
-      <div class="mb-3 flex w-full justify-between">
+      <div class="flex justify-between w-full mb-3">
         {this.breadcrumbManagerState.hasBreadcrumbs && (
           <Button
             onClick={() => this.breadcrumbManager.deselectAll()}
@@ -100,7 +100,7 @@ export class AtomicIPXRefineModal implements InitializableComponent {
     }
 
     return (
-      <aside slot="body" class="adjust-for-scroll-bar flex w-full flex-col">
+      <aside slot="body" class="mr-[calc(-1*(100vw-3rem-100%))] flex w-full flex-col">
         {this.renderHeader()}
         <slot name="facets"></slot>
       </aside>
