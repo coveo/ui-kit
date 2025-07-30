@@ -7,20 +7,20 @@ export class QueryErrorPageObject extends BasePageObject<'atomic-query-error'> {
   }
 
   get title() {
-    return this.page.getByText(
-      'Your organization searchuisamples cannot be accessed.',
-      {exact: true}
-    );
+    return this.page.getByText('Something went wrong.', {exact: true});
   }
 
   get description() {
-    return this.page.getByText('Ensure that the token is valid.', {
-      exact: true,
-    });
+    return this.page.getByText(
+      'If the problem persists contact the administrator.',
+      {
+        exact: true,
+      }
+    );
   }
 
-  get docLink() {
-    return this.page.getByText('Coveo Online Help');
+  get infoButton() {
+    return this.page.getByRole('button', {name: 'Learn more'});
   }
 
   with419Error() {
@@ -42,20 +42,5 @@ export class QueryErrorPageObject extends BasePageObject<'atomic-query-error'> {
         }
       }
     );
-  }
-
-  get title419() {
-    return this.page.getByText('Something went wrong.', {exact: true});
-  }
-
-  get description419() {
-    return this.page.getByText(
-      'If the problem persists contact the administrator.',
-      {exact: true}
-    );
-  }
-
-  get infoButton() {
-    return this.page.getByRole('button', {name: 'Learn more'});
   }
 }

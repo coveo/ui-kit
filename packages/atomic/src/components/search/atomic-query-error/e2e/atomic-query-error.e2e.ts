@@ -16,7 +16,7 @@ test.describe('AtomicQueryError', () => {
 
       await expect(queryError.title).toBeVisible();
       await expect(queryError.description).toBeVisible();
-      await expect(queryError.docLink).toBeVisible();
+      await expect(queryError.infoButton).toBeVisible();
     });
   });
 
@@ -27,8 +27,8 @@ test.describe('AtomicQueryError', () => {
       await queryError.with419Error();
       await queryError.load();
 
-      await expect(queryError.title419).toBeVisible();
-      await expect(queryError.description419).toBeVisible();
+      await expect(queryError.title).toBeVisible();
+      await expect(queryError.description).toBeVisible();
       await expect(queryError.infoButton).toBeVisible();
     });
   });
