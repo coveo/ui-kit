@@ -16,21 +16,19 @@ export interface HydratedState<
   TControllers extends ControllersMap,
 > extends EngineDefinitionBuildResult<TEngine, TControllers> {}
 
+/**
+ * Creates a new engine from the snapshot of the engine created in SSR with fetchStaticState.
+ *
+ * Useful when hydrating a server-side-rendered engine.
+ */
 export type HydrateStaticState<
   TEngine extends CoreEngine | CoreEngineNext,
   TControllers extends ControllersMap,
   TSearchAction extends UnknownAction,
   TControllersProps extends ControllersPropsMap,
-> = {
-  /**
-   * Creates a new engine from the snapshot of the engine created in SSR with fetchStaticState.
-   *
-   * Useful when hydrating a server-side-rendered engine.
-   */
-  (
-    ...params: OptionsTuple<
-      HydrateStaticStateOptions<TSearchAction> &
-        EngineDefinitionControllersPropsOption<TControllersProps>
-    >
-  ): Promise<HydratedState<TEngine, TControllers>>;
-};
+> = (
+  ...params: OptionsTuple<
+    HydrateStaticStateOptions<TSearchAction> &
+      EngineDefinitionControllersPropsOption<TControllersProps>
+  >
+) => Promise<HydratedState<TEngine, TControllers>>;

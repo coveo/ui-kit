@@ -19,7 +19,9 @@ export interface BuildOptions<TEngineOptions> {
   extend?: OptionsExtender<TEngineOptions>;
 }
 
-// TODO: KIT-4610: Remove this type
+/**
+ * @internal
+ */
 export type Build<
   TEngineOptions,
   TControllersMap extends ControllersMap,

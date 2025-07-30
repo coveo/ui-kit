@@ -1,12 +1,11 @@
 import type {UnknownAction} from '@reduxjs/toolkit';
+import type {CommerceEngineOptions} from '../../../app/commerce-engine/commerce-engine.js';
 import type {EngineConfiguration} from '../../../app/engine-configuration.js';
 import type {NavigatorContextProvider} from '../../../app/navigator-context-provider.js';
 import type {Controller} from '../../../controllers/controller/headless-controller.js';
 import type {ControllerStaticStateMap} from '../../common/types/controllers.js';
-import type {FromBuildResultOptions} from '../../common/types/from-build-result.js';
-import type {CommerceEngineDefinition} from '../engine/commerce-engine.ssr.js';
 import type {SSRCommerceEngine} from '../factories/build-factory.js';
-import type {Build, BuildOptions} from './build.js';
+import type {Build} from './build.js';
 import type {SolutionType} from './controller-constants.js';
 import type {ControllerDefinitionsMap} from './controller-definitions.js';
 import type {
@@ -26,13 +25,10 @@ import type {
 
 export type {
   FromBuildResult,
-  FromBuildResultOptions,
   HydrateStaticState,
   HydrateStaticStateOptions,
   FetchStaticState,
   FetchStaticStateOptions,
-  Build,
-  BuildOptions,
 };
 
 export interface EngineStaticState<
@@ -53,16 +49,14 @@ export type EngineDefinitionOptions<
   controllers?: TControllers;
 };
 
-export interface EngineDefinition<
+export interface CommerceEngineDefinition<
   TControllers extends ControllerDefinitionsMap<Controller>,
-  TEngineOptions,
   TSolutionType extends SolutionType,
 > {
   /**
    * Fetches the static state on the server side using your engine definition.
    */
   fetchStaticState: FetchStaticState<
-    InferControllersMapFromDefinition<TControllers, TSolutionType>,
     UnknownAction,
     InferControllerStaticStateMapFromDefinitionsWithSolutionType<
       TControllers,
@@ -82,17 +76,6 @@ export interface EngineDefinition<
     TControllers,
     TSolutionType
   >;
-  /**
-   * Builds an engine and its controllers from an engine definition.
-   */
-  build: Build<
-    TEngineOptions,
-    InferControllersMapFromDefinition<TControllers, TSolutionType>,
-    InferControllerPropsMapFromDefinitions<TControllers>,
-    TControllers,
-    TSolutionType
-  >;
-
   /**
    * Sets the navigator context provider.
    * This provider is essential for retrieving navigation-related data such as referrer, userAgent, location, and clientId, which are crucial for handling both server-side and client-side API requests effectively.
@@ -122,10 +105,6 @@ type Definition<
   TControllerDefinitions extends CommerceControllerDefinitionsMap,
 > = CommerceEngineDefinition<TControllerDefinitions, SolutionType>;
 
-type BuildFunction<
-  TControllerDefinitions extends CommerceControllerDefinitionsMap,
-> = Definition<TControllerDefinitions>['build'];
-
 export type FetchStaticStateFunction<
   TControllerDefinitions extends CommerceControllerDefinitionsMap,
 > = Definition<TControllerDefinitions>['fetchStaticState'];
@@ -134,17 +113,17 @@ export type HydrateStaticStateFunction<
   TControllerDefinitions extends CommerceControllerDefinitionsMap,
 > = Definition<TControllerDefinitions>['hydrateStaticState'];
 
-type FetchStaticStateFromBuildResultFunction<
-  TControllerDefinitions extends CommerceControllerDefinitionsMap,
-> = FetchStaticStateFunction<TControllerDefinitions>['fromBuildResult'];
-
-type HydrateStaticStateFromBuildResultFunction<
-  TControllerDefinitions extends CommerceControllerDefinitionsMap,
-> = HydrateStaticStateFunction<TControllerDefinitions>['fromBuildResult'];
-
 export type BuildParameters<
   TControllerDefinitions extends CommerceControllerDefinitionsMap,
-> = Parameters<BuildFunction<TControllerDefinitions>>;
+> = Parameters<
+  Build<
+    CommerceEngineOptions,
+    InferControllersMapFromDefinition<TControllerDefinitions, SolutionType>,
+    InferControllerPropsMapFromDefinitions<TControllerDefinitions>,
+    TControllerDefinitions,
+    SolutionType
+  >
+>;
 
 export type FetchStaticStateParameters<
   TControllerDefinitions extends CommerceControllerDefinitionsMap,
@@ -153,17 +132,6 @@ export type FetchStaticStateParameters<
 export type HydrateStaticStateParameters<
   TControllerDefinitions extends CommerceControllerDefinitionsMap,
 > = Parameters<HydrateStaticStateFunction<TControllerDefinitions>>;
-
-// TODO: KIT-4610: no longer needed along with build()
-export type FetchStaticStateFromBuildResultParameters<
-  TControllerDefinitions extends CommerceControllerDefinitionsMap,
-> = Parameters<FetchStaticStateFromBuildResultFunction<TControllerDefinitions>>;
-
-export type HydrateStaticStateFromBuildResultParameters<
-  TControllerDefinitions extends CommerceControllerDefinitionsMap,
-> = Parameters<
-  HydrateStaticStateFromBuildResultFunction<TControllerDefinitions>
->;
 
 type Controllers<
   TControllerDefinitions extends CommerceControllerDefinitionsMap,

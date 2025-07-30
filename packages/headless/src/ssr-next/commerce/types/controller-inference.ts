@@ -25,12 +25,6 @@ export type InferHydratedState<
   },
 > = Awaited<ReturnType<T['hydrateStaticState']>>;
 
-export type InferBuildResult<
-  T extends {
-    build(...args: unknown[]): Promise<unknown>;
-  },
-> = Awaited<ReturnType<T['build']>>;
-
 export type InferControllerPropsFromDefinition<
   TController extends ControllerDefinition<Controller>,
 > = TController extends ControllerDefinitionWithProps<Controller, infer Props>

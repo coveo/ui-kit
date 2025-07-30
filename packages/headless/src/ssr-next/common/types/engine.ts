@@ -75,7 +75,6 @@ export interface EngineDefinition<
   ) => void;
 }
 
-// TODO: KIT-4610: Remove this type
 export interface EngineDefinitionBuildResult<
   TEngine extends CoreEngine | CoreEngineNext,
   TControllers extends ControllersMap,
@@ -111,10 +110,3 @@ export type InferHydratedState<
     hydrateStaticState(...args: unknown[]): Promise<unknown>;
   },
 > = Awaited<ReturnType<T['hydrateStaticState']>>;
-
-// TODO: KIT-4610: Remove this type
-export type InferBuildResult<
-  T extends {
-    build(...args: unknown[]): Promise<unknown>;
-  },
-> = Awaited<ReturnType<T['build']>>;
