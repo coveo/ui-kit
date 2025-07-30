@@ -1,0 +1,7 @@
+.display-grid atomic-product-price {
+  @apply flex flex-wrap flex-col;
+}
+
+.display-grid atomic-product-price .original-price {
+  @apply leading-none;
+}

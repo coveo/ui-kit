@@ -1,0 +1,10 @@
+{
+  "name": "create-atomic-component-template",
+  "root": "packages/create-atomic-component/template/src/components/sample-component",
+  "sourceRoot": "packages/create-atomic-component/template/src/components/sample-component",
+  "targets": {
+    "test": {
+      "executor": "nx:noop"
+    }
+  }
+}

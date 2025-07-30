@@ -8,6 +8,7 @@
   left: 50%;
   transition: transform 0s linear 0s, opacity 0.1s linear 0s, visibility 0.1s linear 0s;
   z-index: 40;
+  width: max-content;
 }
 
 .tooltip__content--positioned-above {
@@ -22,11 +23,6 @@
 .tooltip__content--visible {
   visibility: visible;
   opacity: 1;
-}
-
-.tooltip__content--light,
-.slds-popover_tooltip {
-  width: max-content;
 }
 
 .tooltip__arrow {
@@ -65,18 +61,14 @@
   width: fit-content;
 }
 
-.slds-nubbin_bottom:after,
-.slds-nubbin--bottom:after,
-.slds-nubbin_bottom:before,
-.slds-nubbin--bottom:before {
+.tooltip__nubbin--bottom:before,
+.tooltip__nubbin--bottom:after {
   clip-path: polygon(100% 0, 0% 100%, 100% 100%);
   border: solid 0.5px rgba(0, 0, 0, 0.16);
 }
 
-.slds-nubbin_top:after,
-.slds-nubbin--top:after,
-.slds-nubbin_top:before,
-.slds-nubbin--top:before {
+.tooltip__nubbin--top:before,
+.tooltip__nubbin--top:after {
   clip-path: polygon(100% 0, 0 0, 0 100%);
   border: solid 0.5px rgba(0, 0, 0, 0.16);
 }
