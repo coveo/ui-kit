@@ -5,7 +5,6 @@ import type {
   EngineDefinitionBuildResult,
   EngineDefinitionControllersPropsOption,
 } from './engine.js';
-import type {FromBuildResult} from './from-build-result.js';
 import type {OptionsTuple} from './utilities.js';
 
 interface HydrateStaticStateOptions<TSearchAction> {
@@ -34,12 +33,4 @@ export type HydrateStaticState<
         EngineDefinitionControllersPropsOption<TControllersProps>
     >
   ): Promise<HydratedState<TEngine, TControllers>>;
-
-  // TODO: KIT-4610: Remove this type
-  fromBuildResult: FromBuildResult<
-    TEngine,
-    TControllers,
-    HydrateStaticStateOptions<TSearchAction>,
-    HydratedState<TEngine, TControllers>
-  >;
 };

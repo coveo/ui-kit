@@ -77,7 +77,7 @@ export type {
   Subscribable,
 } from './controllers/controller/headless-controller.js';
 export type {InlineLink} from './controllers/smart-snippet/headless-smart-snippet-interactive-inline-links.js';
-export type {Build} from './ssr-next/common/types/build.js';
+// export type {Build} from './ssr-next/common/types/build.js'; // TODO: remove all build related stuff
 export type {
   ControllerDefinitionsMap,
   ControllerDefinitionWithoutProps,

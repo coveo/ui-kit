@@ -154,6 +154,7 @@ export type HydrateStaticStateParameters<
   TControllerDefinitions extends CommerceControllerDefinitionsMap,
 > = Parameters<HydrateStaticStateFunction<TControllerDefinitions>>;
 
+// TODO: KIT-4610: no longer needed along with build()
 export type FetchStaticStateFromBuildResultParameters<
   TControllerDefinitions extends CommerceControllerDefinitionsMap,
 > = Parameters<FetchStaticStateFromBuildResultFunction<TControllerDefinitions>>;
