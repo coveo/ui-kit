@@ -19,8 +19,8 @@
   "exports": {
     "./ssr": "./dist/ssr/index.js",
     "./ssr-commerce": "./dist/ssr-commerce/index.js",
-    "./ssr-next": "./dist/ssr/index.js",
-    "./ssr-commerce-next": "./dist/ssr-commerce/index.js"
+    "./ssr-next": "./dist/ssr-next/index.js",
+    "./ssr-commerce-next": "./dist/ssr-commerce-next/index.js"
   },
   "files": [
     "dist"
