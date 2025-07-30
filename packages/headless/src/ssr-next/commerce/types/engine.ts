@@ -17,14 +17,12 @@ import type {
   FetchStaticState,
   FetchStaticStateOptions,
 } from './fetch-static-state.js';
-import type {FromBuildResult} from './from-build-result.js';
 import type {
   HydrateStaticState,
   HydrateStaticStateOptions,
 } from './hydrate-static-state.js';
 
 export type {
-  FromBuildResult,
   HydrateStaticState,
   HydrateStaticStateOptions,
   FetchStaticState,
