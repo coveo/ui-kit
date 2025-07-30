@@ -1,0 +1,15 @@
+# Build output
+lib/
+
+# IDEs
+.idea/
+jsconfig.json
+.vscode/
+
+# Misc
+node_modules/
+npm-debug.log*
+yarn-error.log*
+
+# TypeScript
+*.tsbuildinfo

@@ -25,8 +25,11 @@ import {
   AtomicLayoutSection as LitAtomicLayoutSection,
   AtomicProduct as LitAtomicProduct,
   AtomicProductChildren as LitAtomicProductChildren,
-  AtomicProductDescription as LitAtomicProductDescription,
+  AtomicProductExcerpt as LitAtomicProductExcerpt,
+  AtomicProductLink as LitAtomicProductLink,
+  AtomicProductMultiValueText as LitAtomicProductMultiValueText,
   AtomicProductNumericFieldValue as LitAtomicProductNumericFieldValue,
+  AtomicProductPrice as LitAtomicProductPrice,
   AtomicProductText as LitAtomicProductText,
 } from '@coveo/atomic/components';
 import {createComponent} from '@lit/react';
@@ -116,16 +119,16 @@ export const AtomicCommerceRefineModal = createComponent({
   elementClass: LitAtomicCommerceRefineModal,
 });
 
-export const AtomicCommerceSearchBox = createComponent({
-  tagName: 'atomic-commerce-search-box',
-  react: React,
-  elementClass: LitAtomicCommerceSearchBox,
-});
-
 export const AtomicCommerceRefineToggle = createComponent({
   tagName: 'atomic-commerce-refine-toggle',
   react: React,
   elementClass: LitAtomicCommerceRefineToggle,
+});
+
+export const AtomicCommerceSearchBox = createComponent({
+  tagName: 'atomic-commerce-search-box',
+  react: React,
+  elementClass: LitAtomicCommerceSearchBox,
 });
 
 export const AtomicCommerceSearchBoxInstantProducts = createComponent({
@@ -164,22 +167,40 @@ export const AtomicProduct = createComponent({
   elementClass: LitAtomicProduct,
 });
 
-export const AtomicProductDescription = createComponent({
-  tagName: 'atomic-product-description',
-  react: React,
-  elementClass: LitAtomicProductDescription,
-});
-
 export const AtomicProductChildren = createComponent({
   tagName: 'atomic-product-children',
   react: React,
   elementClass: LitAtomicProductChildren,
 });
 
+export const AtomicProductExcerpt = createComponent({
+  tagName: 'atomic-product-excerpt',
+  react: React,
+  elementClass: LitAtomicProductExcerpt,
+});
+
+export const AtomicProductLink = createComponent({
+  tagName: 'atomic-product-link',
+  react: React,
+  elementClass: LitAtomicProductLink,
+});
+
+export const AtomicProductMultiValueText = createComponent({
+  tagName: 'atomic-product-multi-value-text',
+  react: React,
+  elementClass: LitAtomicProductMultiValueText,
+});
+
 export const AtomicProductNumericFieldValue = createComponent({
   tagName: 'atomic-product-numeric-field-value',
   react: React,
   elementClass: LitAtomicProductNumericFieldValue,
+});
+
+export const AtomicProductPrice = createComponent({
+  tagName: 'atomic-product-price',
+  react: React,
+  elementClass: LitAtomicProductPrice,
 });
 
 export const AtomicProductText = createComponent({

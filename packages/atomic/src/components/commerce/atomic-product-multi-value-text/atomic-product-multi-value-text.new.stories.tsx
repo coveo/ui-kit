@@ -1,4 +1,3 @@
-import {getSampleCommerceEngineConfiguration} from '@coveo/headless/commerce';
 import type {Meta, StoryObj as Story} from '@storybook/web-components';
 import {html} from 'lit';
 import {wrapInCommerceInterface} from '@/storybook-utils/commerce/commerce-interface-wrapper';
@@ -7,26 +6,22 @@ import {wrapInProductTemplate} from '@/storybook-utils/commerce/commerce-product
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {renderComponent} from '@/storybook-utils/common/render-component';
 
-const baseConfiguration = getSampleCommerceEngineConfiguration();
-
 const {decorator: productDecorator} = wrapInProductTemplate();
 const {decorator: commerceProductListDecorator} = wrapInCommerceProductList();
 const {decorator: commerceInterfaceDecorator, play} = wrapInCommerceInterface({
   engineConfig: {
-    ...baseConfiguration,
-    context: {
-      ...baseConfiguration.context,
-      view: {
-        url: 'https://sports.barca.group/browse/promotions/ui-kit-testing-product-multi-value-text',
-      },
+    preprocessRequest: (request) => {
+      const parsed = JSON.parse(request.body as string);
+      parsed.perPage = 1;
+      request.body = JSON.stringify(parsed);
+      return request;
     },
   },
-  type: 'product-listing',
 });
 
 const meta: Meta = {
   component: 'atomic-product-multi-value-text',
-  title: 'Atomic-Commerce/Product Template Components/MultiValueText',
+  title: 'Commerce/atomic-product-multi-value-text',
   id: 'atomic-product-multi-value-text',
   render: renderComponent,
   parameters,
@@ -39,29 +34,15 @@ const meta: Meta = {
 export default meta;
 
 export const Default: Story = {
-  name: 'atomic-product-multi-value-text',
   decorators: [
     productDecorator,
     commerceProductListDecorator,
     commerceInterfaceDecorator,
   ],
-};
-
-export const WithDelimiter: Story = {
-  name: 'With delimiter',
-  decorators: [
-    productDecorator,
-    commerceProductListDecorator,
-    commerceInterfaceDecorator,
-  ],
-  args: {
-    'attributes-field': 'ec_product_id',
-    'attributes-delimiter': '_',
-  },
 };
 
 export const WithMaxValuesToDisplaySetToMinimum: Story = {
-  name: 'With max values to display set to minimum',
+  name: 'With max-values-set-to-display set to minimum',
   decorators: [
     productDecorator,
     commerceProductListDecorator,
@@ -73,7 +54,7 @@ export const WithMaxValuesToDisplaySetToMinimum: Story = {
 };
 
 export const WithMaxValuesToDisplaySetToTotalNumberOfValues: Story = {
-  name: 'With max values to display set to total number of values',
+  name: 'With max-values-set-to-display set to total number of values',
   decorators: [
     productDecorator,
     commerceProductListDecorator,
