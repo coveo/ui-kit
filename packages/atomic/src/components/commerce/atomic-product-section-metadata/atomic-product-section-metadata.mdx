@@ -1,0 +1,36 @@
+import { Canvas, ArgTypes, Meta, Title, Description, Stories, Subtitle } from '@storybook/blocks';
+import * as AtomicProductSectionMetadataStories from './atomic-product-section-metadata.new.stories';
+import { CanvasWithGithub } from '../../../../storybook-utils/documentation/canvas-with-github';
+
+<Meta of={AtomicProductSectionMetadataStories} />
+
+<Title />
+<Subtitle><Description/></Subtitle>
+
+<CanvasWithGithub
+  of={AtomicProductSectionMetadataStories.Default}
+  githubPath="commerce/atomic-product-section-metadata/atomic-product-section-metadata.ts"
+/>
+
+## Usage
+
+### Example within a product template
+```html
+<atomic-commerce-product-list>
+  <atomic-product-template>
+    <template>
+      <!-- ... -->
+      <atomic-product-section-metadata>
+        <span class="text-sm text-gray-500">SKU: WH-1000XM4</span>
+      </atomic-product-section-metadata>
+      <!-- ... -->
+    </template>
+  </atomic-product-template>
+</atomic-commerce-product-list>
+```
+
+## Examples
+<Stories title={""}/>
+
+## Reference
+<ArgTypes />
