@@ -50,8 +50,10 @@ export default class QuanticTab extends LightningElement {
   }
   set clearFiltersOnTabChange(value) {
     // Explicit boolean conversion to handle string values like "false" or "true"
-    // @ts-ignore
-    this._clearFiltersOnTabChange = value === true || (typeof value === 'string' && value.toLowerCase() === 'true');
+    this._clearFiltersOnTabChange =
+      value === true ||
+      // @ts-ignore
+      (typeof value === 'string' && value.toLowerCase() === 'true');
   }
   _clearFiltersOnTabChange = false;
   /**
