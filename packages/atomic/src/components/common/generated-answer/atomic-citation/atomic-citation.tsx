@@ -35,6 +35,11 @@ export class AtomicCitation {
    * An `InteractiveCitation` controller instance. It is used when the user interacts with the citation by selecting or hovering over it.
    */
   @Prop() interactiveCitation!: InteractiveCitation;
+  /**
+   * Option to disable citation anchoring.
+   * @default false
+   */
+  @Prop() disableCitationAnchoring: boolean = false;
 
   @State() public isOpen = false;
 
@@ -102,7 +107,7 @@ export class AtomicCitation {
     text?: string,
     filetype?: string
   ) {
-    if (filetype !== 'html' || !text) {
+    if (this.disableCitationAnchoring || filetype !== 'html' || !text) {
       return uri;
     }
     const highlight = extractTextToHighlight(text);

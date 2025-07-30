@@ -1,3 +1,25 @@
+## <small>3.2.54 (2025-07-30)</small>
+
+* chore: enable noUnusedVariables rule (#5670) ([6809d57](https://github.com/coveo/ui-kit/commits/6809d57)), closes [#5670](https://github.com/coveo/ui-kit/issues/5670)
+* chore(atomic): migrate atomic-product-excerpt (#5735) ([7d5a246](https://github.com/coveo/ui-kit/commits/7d5a246)), closes [#5735](https://github.com/coveo/ui-kit/issues/5735)
+* chore(atomic): migrate atomic-product-link (#5618) ([20e0245](https://github.com/coveo/ui-kit/commits/20e0245)), closes [#5618](https://github.com/coveo/ui-kit/issues/5618)
+* chore(atomic): migrate atomic-product-multi-value-text (#5739) ([99f9284](https://github.com/coveo/ui-kit/commits/99f9284)), closes [#5739](https://github.com/coveo/ui-kit/issues/5739)
+* chore(atomic): migrate atomic-product-numeric-field-value (#5745) ([487f65a](https://github.com/coveo/ui-kit/commits/487f65a)), closes [#5745](https://github.com/coveo/ui-kit/issues/5745)
+* chore(atomic): migrate atomic-product-price (#5744) ([a09bdf6](https://github.com/coveo/ui-kit/commits/a09bdf6)), closes [#5744](https://github.com/coveo/ui-kit/issues/5744)
+* chore(atomic-angular, atomic-react, auth, bueno, headless-react): remove unused exports, code and de ([6f8efc1](https://github.com/coveo/ui-kit/commits/6f8efc1)), closes [#5690](https://github.com/coveo/ui-kit/issues/5690)
+
+
+
+## <small>3.2.52 (2025-07-23)</small>
+
+* fix(deps): update all dependencies j:kit-282 (#5723) ([6c032c9](https://github.com/coveo/ui-kit/commits/6c032c9)), closes [#5723](https://github.com/coveo/ui-kit/issues/5723)
+* chore: enable recommended biome rules for entire repo (#5662) ([015a764](https://github.com/coveo/ui-kit/commits/015a764)), closes [#5662](https://github.com/coveo/ui-kit/issues/5662)
+* chore(atomic): migrate atomic-commerce-refine-modal (#5543) ([1b0a4b3](https://github.com/coveo/ui-kit/commits/1b0a4b3)), closes [#5543](https://github.com/coveo/ui-kit/issues/5543)
+* chore(atomic): migrate atomic-commere-query-error (#5570) ([85d3010](https://github.com/coveo/ui-kit/commits/85d3010)), closes [#5570](https://github.com/coveo/ui-kit/issues/5570)
+* chore(atomic): migrate atomic-product-children (#5624) ([0be84d8](https://github.com/coveo/ui-kit/commits/0be84d8)), closes [#5624](https://github.com/coveo/ui-kit/issues/5624)
+
+
+
 ## <small>3.2.51 (2025-07-16)</small>
 
 * chore(atomic-react): enable recommended rule for atomic-react (#5629) ([eb8cb02](https://github.com/coveo/ui-kit/commits/eb8cb02)), closes [#5629](https://github.com/coveo/ui-kit/issues/5629)

@@ -1,7 +1,7 @@
 {
   "name": "@coveo/atomic",
   "type": "module",
-  "version": "3.29.1",
+  "version": "3.31.1",
   "description": "A web-component library for building modern UIs interfacing with the Coveo platform",
   "homepage": "https://docs.coveo.com/en/atomic/latest/",
   "repository": {
@@ -71,8 +71,8 @@
   },
   "dependencies": {
     "@lit/context": "1.1.6",
-    "@coveo/bueno": "1.0.21",
-    "@coveo/headless": "3.27.4",
+    "@coveo/bueno": "1.0.24",
+    "@coveo/headless": "3.27.7",
     "@popperjs/core": "2.11.8",
     "@salesforce-ux/design-system": "2.27.2",
     "@stencil/core": "4.20.0",
@@ -89,10 +89,8 @@
   },
   "devDependencies": {
     "@axe-core/playwright": "4.10.2",
-    "@coveo/ci": "1.0.0",
     "@custom-elements-manifest/analyzer": "0.10.4",
     "@playwright/test": "1.54.1",
-    "@rollup/plugin-alias": "5.1.1",
     "@rollup/plugin-commonjs": "28.0.6",
     "@rollup/plugin-json": "6.1.0",
     "@rollup/plugin-node-resolve": "16.0.1",
@@ -153,15 +151,14 @@
     "tailwindcss": "4.1.11",
     "ts-dedent": "2.2.0",
     "ts-lit-plugin": "2.0.2",
-    "ts-node": "10.9.2",
     "typescript": "5.8.3",
     "vite": "6.3.5",
     "vitest": "3.2.4",
     "wait-on": "8.0.3"
   },
   "peerDependencies": {
-    "@coveo/bueno": "1.0.21",
-    "@coveo/headless": "3.27.4",
+    "@coveo/bueno": "1.0.24",
+    "@coveo/headless": "3.27.7",
     "typescript": ">=5.0.0"
   },
   "peerDependenciesMeta": {

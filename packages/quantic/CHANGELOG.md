@@ -1,3 +1,27 @@
+## <small>3.28.1 (2025-07-30)</small>
+
+* fix(quantic): fixed the console error test that was skipped  (#5759) ([21695c0](https://github.com/coveo/ui-kit/commits/21695c0)), closes [#5759](https://github.com/coveo/ui-kit/issues/5759)
+* fix(quantic): remove/replace unsupported styling hooks for slds2 (#5743) ([ca99131](https://github.com/coveo/ui-kit/commits/ca99131)), closes [#5743](https://github.com/coveo/ui-kit/issues/5743)
+* fix(quantic): wrong event name used in resultSendAsEmail (#5767) ([3768ab6](https://github.com/coveo/ui-kit/commits/3768ab6)), closes [#5767](https://github.com/coveo/ui-kit/issues/5767)
+* chore(quantic): fix issues with class overrides for slds2 migration (#5749) ([6a5d453](https://github.com/coveo/ui-kit/commits/6a5d453)), closes [#5749](https://github.com/coveo/ui-kit/issues/5749)
+* chore(quantic): removed unnecessary usage of data-cy selectors following cypress removal (#5742) ([6e5dfd7](https://github.com/coveo/ui-kit/commits/6e5dfd7)), closes [#5742](https://github.com/coveo/ui-kit/issues/5742)
+* test(quantic): add unit tests for QuanticPager (#5761) ([dee27ba](https://github.com/coveo/ui-kit/commits/dee27ba)), closes [#5761](https://github.com/coveo/ui-kit/issues/5761)
+* feat(quantic): user actions feature integrated in the example insight panel (#5721) ([a37c371](https://github.com/coveo/ui-kit/commits/a37c371)), closes [#5721](https://github.com/coveo/ui-kit/issues/5721)
+* chore(atomic-angular, atomic-react, auth, bueno, headless-react): remove unused exports, code and de ([6f8efc1](https://github.com/coveo/ui-kit/commits/6f8efc1)), closes [#5690](https://github.com/coveo/ui-kit/issues/5690)
+
+
+
+## 3.27.0 (2025-07-23)
+
+* fix(deps): update all dependencies j:kit-282 (#5723) ([6c032c9](https://github.com/coveo/ui-kit/commits/6c032c9)), closes [#5723](https://github.com/coveo/ui-kit/issues/5723)
+* fix(quantic): ignore console error check in flaky/failing test (#5717) ([e2a9111](https://github.com/coveo/ui-kit/commits/e2a9111)), closes [#5717](https://github.com/coveo/ui-kit/issues/5717)
+* chore(quantic): cypress removed from the quantic library (#5668) ([16192e6](https://github.com/coveo/ui-kit/commits/16192e6)), closes [#5668](https://github.com/coveo/ui-kit/issues/5668)
+* chore(quantic): remove ckeditor (#5685) ([83ceb31](https://github.com/coveo/ui-kit/commits/83ceb31)), closes [#5685](https://github.com/coveo/ui-kit/issues/5685)
+* feat(quantic): fix issues with zero length no unit errors in slds 2 linter (#5615) ([b571e53](https://github.com/coveo/ui-kit/commits/b571e53)), closes [#5615](https://github.com/coveo/ui-kit/issues/5615)
+* feat(quantic): replaced sds styling hooks (#5616) ([8d42056](https://github.com/coveo/ui-kit/commits/8d42056)), closes [#5616](https://github.com/coveo/ui-kit/issues/5616)
+
+
+
 ## <small>3.26.2 (2025-07-16)</small>
 
 * style(quantic): properly lint check and lint fix (#5619) ([e000a11](https://github.com/coveo/ui-kit/commits/e000a11)), closes [#5619](https://github.com/coveo/ui-kit/issues/5619)

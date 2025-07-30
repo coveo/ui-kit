@@ -1,3 +1,17 @@
+## <small>1.0.24 (2025-07-30)</small>
+
+* chore(atomic-angular, atomic-react, auth, bueno, headless-react): remove unused exports, code and de ([6f8efc1](https://github.com/coveo/ui-kit/commits/6f8efc1)), closes [#5690](https://github.com/coveo/ui-kit/issues/5690)
+* chore: enable noUnusedVariables rule (#5670) ([6809d57](https://github.com/coveo/ui-kit/commits/6809d57)), closes [#5670](https://github.com/coveo/ui-kit/issues/5670)
+
+
+
+## <small>1.0.22 (2025-07-23)</small>
+
+* chore: enable recommended biome rules for entire repo (#5662) ([015a764](https://github.com/coveo/ui-kit/commits/015a764)), closes [#5662](https://github.com/coveo/ui-kit/issues/5662)
+* chore: introduce knip to root (#5687) ([77cf23e](https://github.com/coveo/ui-kit/commits/77cf23e)), closes [#5687](https://github.com/coveo/ui-kit/issues/5687)
+
+
+
 ## <small>1.0.21 (2025-07-16)</small>
 
 * chore: enable recommended biome rules in bueno (#5632) ([b6d7cce](https://github.com/coveo/ui-kit/commits/b6d7cce)), closes [#5632](https://github.com/coveo/ui-kit/issues/5632)

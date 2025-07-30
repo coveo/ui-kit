@@ -1,3 +1,24 @@
+## <small>3.5.1 (2025-07-30)</small>
+
+* chore(atomic): migrate atomic-product-excerpt (#5735) ([7d5a246](https://github.com/coveo/ui-kit/commits/7d5a246)), closes [#5735](https://github.com/coveo/ui-kit/issues/5735)
+* chore(atomic): migrate atomic-product-link (#5618) ([20e0245](https://github.com/coveo/ui-kit/commits/20e0245)), closes [#5618](https://github.com/coveo/ui-kit/issues/5618)
+* chore(atomic): migrate atomic-product-multi-value-text (#5739) ([99f9284](https://github.com/coveo/ui-kit/commits/99f9284)), closes [#5739](https://github.com/coveo/ui-kit/issues/5739)
+* chore(atomic): migrate atomic-product-numeric-field-value (#5745) ([487f65a](https://github.com/coveo/ui-kit/commits/487f65a)), closes [#5745](https://github.com/coveo/ui-kit/issues/5745)
+* chore(atomic): migrate atomic-product-price (#5744) ([a09bdf6](https://github.com/coveo/ui-kit/commits/a09bdf6)), closes [#5744](https://github.com/coveo/ui-kit/issues/5744)
+* feat(atomic): add disableCitationAnchoring property (#5660) ([b038209](https://github.com/coveo/ui-kit/commits/b038209)), closes [#5660](https://github.com/coveo/ui-kit/issues/5660)
+
+
+
+## <small>3.4.3 (2025-07-23)</small>
+
+* chore: enable recommended biome rules for entire repo (#5662) ([015a764](https://github.com/coveo/ui-kit/commits/015a764)), closes [#5662](https://github.com/coveo/ui-kit/issues/5662)
+* chore(atomic): migrate atomic-commerce-refine-modal (#5543) ([1b0a4b3](https://github.com/coveo/ui-kit/commits/1b0a4b3)), closes [#5543](https://github.com/coveo/ui-kit/issues/5543)
+* chore(atomic): migrate atomic-commere-query-error (#5570) ([85d3010](https://github.com/coveo/ui-kit/commits/85d3010)), closes [#5570](https://github.com/coveo/ui-kit/issues/5570)
+* chore(atomic): migrate atomic-product-children (#5624) ([0be84d8](https://github.com/coveo/ui-kit/commits/0be84d8)), closes [#5624](https://github.com/coveo/ui-kit/issues/5624)
+* fix(atomic): fix placeholders not showing for atomic-product (#5620) ([e25491c](https://github.com/coveo/ui-kit/commits/e25491c)), closes [#5620](https://github.com/coveo/ui-kit/issues/5620)
+
+
+
 ## <small>3.4.2 (2025-07-16)</small>
 
 * style: enable biome recommended rules in atomic-angular (#5627) ([0dae41d](https://github.com/coveo/ui-kit/commits/0dae41d)), closes [#5627](https://github.com/coveo/ui-kit/issues/5627)

@@ -32,6 +32,7 @@ async function generateFiles(name, outputDir) {
   ];
 
   const outputPaths = [];
+
   for (const file of files) {
     const templatePath = path.join(templatesDir, file.template);
 
@@ -55,7 +56,6 @@ async function generateFiles(name, outputDir) {
     await fs.writeFile(outputPath, content, 'utf8');
     console.log(`Created: ${outputPath}`);
   }
-
   execSync(`npx @biomejs/biome check --write ${outputPaths.join(' ')}`);
 }
 
@@ -89,7 +89,3 @@ if (!componentName) {
 }
 
 generateFiles(normalizedComponentName, resolvedOutputDir).catch(console.error);
-
-// add the import to the lazy index file
-// add the import to the index file
-// change the output arg to always start with search/commerce/insight/ipx/recommendations

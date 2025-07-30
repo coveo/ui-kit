@@ -13,6 +13,8 @@
       // Packages that should be excluded: quantic uses eslint, create-atomic-template is a template.
       "!**/packages/quantic/**/*",
       "!**/packages/create-atomic-template/**/*",
+      "!**/packages/create-atomic-component/template/**/*",
+      "!**/packages/create-atomic-component-project/template/**/*",
 
       // Root excluded files.
       "!**/.deployment.config.json",
@@ -50,10 +52,8 @@
     "rules": {
       "recommended": true,
       "style": {"noNonNullAssertion": "off"},
-      // TODO: https://coveord.atlassian.net/browse/KIT-4556
       "complexity": {"noBannedTypes": "off"},
-      // TODO: https://coveord.atlassian.net/browse/KIT-4555
-      "correctness": {"noUnusedVariables": "off", "noUnknownFunction": "off"}
+      "correctness": {"noUnknownFunction": "off"}
     },
     "includes": ["**"]
   },

@@ -9,7 +9,7 @@
   "module": "./dist/bueno.esm.js",
   "types": "./dist/definitions/index.d.ts",
   "license": "Apache-2.0",
-  "version": "1.0.21",
+  "version": "1.0.24",
   "files": [
     "dist/"
   ],
@@ -35,7 +35,6 @@
     "promote:npm:latest": "npm run-script -w=@coveo/ci promote-npm-prod"
   },
   "devDependencies": {
-    "@coveo/ci": "1.0.0",
     "vitest": "3.2.4"
   },
   "engines": {
