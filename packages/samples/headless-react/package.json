@@ -8,8 +8,8 @@
     "node": "^20.9.0 || ^22.11.0"
   },
   "dependencies": {
-    "@coveo/auth": "2.0.23",
-    "@coveo/headless": "3.27.5",
+    "@coveo/auth": "2.0.25",
+    "@coveo/headless": "3.27.7",
     "@testing-library/jest-dom": "6.6.3",
     "@testing-library/react": "16.3.0",
     "@types/escape-html": "1.0.4",
