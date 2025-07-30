@@ -99,7 +99,6 @@ describe('atomic-product-image', () => {
       const {productImage, previousButton, nextButton, indicators} =
         await renderProductImage();
 
-      expect(productImage).toBeTruthy();
       expect(productImage).toBeInTheDocument();
       expect(previousButton).not.toBeInTheDocument();
       expect(nextButton).not.toBeInTheDocument();
@@ -138,12 +137,9 @@ describe('atomic-product-image', () => {
     it('should render carousel with navigation controls', () => {
       const {productImage, previousButton, nextButton, indicators} =
         productImageObject;
-      expect(productImage).toBeTruthy();
-      expect(previousButton).toBeTruthy();
+      expect(productImage).toBeInTheDocument();
       expect(previousButton).toBeInTheDocument();
-      expect(nextButton).toBeTruthy();
       expect(nextButton).toBeInTheDocument();
-      expect(indicators).toBeTruthy();
       expect(indicators).toBeInTheDocument();
     });
 
@@ -166,7 +162,7 @@ describe('atomic-product-image', () => {
       expect(indicators?.children[0]).toBe(activeIndicator);
     });
 
-    describe('when clicking carousel controls', () => {
+    describe('when clicking the next button', () => {
       it('should go to next image when not on last image', async () => {
         const {element, productImage, nextButton} = productImageObject;
 
@@ -188,7 +184,9 @@ describe('atomic-product-image', () => {
         await element.updateComplete;
         expect(productImage).toHaveAttribute('src', IMAGES[0]);
       });
+    });
 
+    describe('when clicking the previous button', () => {
       it('should go to previous image when not on first image', async () => {
         const {element, productImage, indicator, previousButton} =
           productImageObject;
@@ -212,13 +210,15 @@ describe('atomic-product-image', () => {
       });
     });
 
-    it('should navigate to image when clicking indicator', async () => {
-      const {element, productImage, indicator} = productImageObject;
+    describe('when clicking an indicator', () => {
+      it('should navigate to image when clicking indicator', async () => {
+        const {element, productImage, indicator} = productImageObject;
 
-      expect(productImage).toHaveAttribute('src', IMAGES[0]);
-      indicator[2].click();
-      await element.updateComplete;
-      expect(productImage).toHaveAttribute('src', IMAGES[2]);
+        expect(productImage).toHaveAttribute('src', IMAGES[0]);
+        indicator[2].click();
+        await element.updateComplete;
+        expect(productImage).toHaveAttribute('src', IMAGES[2]);
+      });
     });
   });
 
