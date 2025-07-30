@@ -10,8 +10,8 @@
     "build": "nx build"
   },
   "dependencies": {
-    "@coveo/atomic-react": "3.2.52",
-    "@coveo/headless": "3.27.5",
+    "@coveo/atomic-react": "3.2.54",
+    "@coveo/headless": "3.27.7",
     "react": "18.3.1",
     "react-dom": "18.3.1"
   },

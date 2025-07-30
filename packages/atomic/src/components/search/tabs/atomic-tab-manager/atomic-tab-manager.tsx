@@ -23,6 +23,12 @@ import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
  * @part tab-button-active - The container for the active tab button.
  * @part dropdown-area - The dropdown area.
  * @part tab-area - The tab area.
+ * @part popover-button - The "More" button shown when the tabs are collapsed.
+ * @part value-label - The label shown on the "More" button.
+ * @part arrow-icon - The down chevron icon shown on the "More" button.
+ * @part overflow-tabs - The list of tabs shown when the "More" button is clicked.
+ * @part popover-tab - The individual tab buttons shown when the "More" button is clicked.
+ * @part backdrop - The backdrop shown when the "More" button is clicked.
  * @slot default
  */
 @Component({
