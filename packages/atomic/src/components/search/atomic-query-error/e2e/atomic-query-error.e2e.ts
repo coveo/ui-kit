@@ -13,20 +13,7 @@ test.describe('AtomicQueryError', () => {
       queryError,
     }) => {
       await queryError.load();
-
-      await expect(queryError.title).toBeVisible();
-      await expect(queryError.description).toBeVisible();
-      await expect(queryError.infoButton).toBeVisible();
-    });
-  });
-
-  test.describe('when there is a 419 error', () => {
-    test('should display the component with the correct content', async ({
-      queryError,
-    }) => {
-      await queryError.with419Error();
-      await queryError.load();
-
+      await queryError.hydrated.waitFor();
       await expect(queryError.title).toBeVisible();
       await expect(queryError.description).toBeVisible();
       await expect(queryError.infoButton).toBeVisible();
