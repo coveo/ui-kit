@@ -2,7 +2,6 @@
  * Utility functions to be used for Server Side Rendering.
  */
 import type {UnknownAction} from '@reduxjs/toolkit';
-import {getSampleEngineConfiguration} from '../../../app/engine-configuration.js';
 import {buildLogger} from '../../../app/logger.js';
 import type {NavigatorContextProvider} from '../../../app/navigator-context-provider.js';
 import {
@@ -29,7 +28,6 @@ import type {
   InferControllerPropsMapFromDefinitions,
   InferControllerStaticStateMapFromDefinitions,
 } from '../../common/types/inference.js';
-import {definePager} from '../controllers/pager/headless-pager.ssr.js';
 
 /**
  * The SSR search engine.
@@ -188,21 +186,4 @@ export function defineSearchEngine<
     hydrateStaticState,
     setNavigatorContextProvider,
   };
-}
-
-// Sandbox example to demonstrate the usage of the search engine definition
-export async function main() {
-  const engine = defineSearchEngine({
-    configuration: getSampleEngineConfiguration(),
-    controllers: {
-      rec1: definePager(),
-      rec2: definePager(),
-    },
-  });
-
-  const staticState = await engine.fetchStaticState();
-  const hydrated = await engine.hydrateStaticState({
-    searchAction: staticState.searchAction,
-  });
-  hydrated.controllers.rec1.nextPage;
 }
