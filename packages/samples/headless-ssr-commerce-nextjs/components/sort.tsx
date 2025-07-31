@@ -26,6 +26,19 @@ export default function Sort() {
     }
   };
 
+  const getSortId = (sort: SortCriterion) => {
+    switch (sort.by) {
+      case SortBy.Relevance:
+        return 'relevance';
+      case SortBy.Fields:
+        return sort.fields
+          .map((field) => `${field.name}-${field.direction ?? ''}`)
+          .join(',');
+      default:
+        return '';
+    }
+  };
+
   return (
     <div className="Sort">
       <label htmlFor="sport-select">Sort by: </label>
@@ -38,7 +51,7 @@ export default function Sort() {
       >
         {state.availableSorts.map((sort) => (
           <option
-            key={JSON.stringify(sort)}
+            key={getSortId(sort)}
             value={JSON.stringify(sort)}
             onSelect={() => methods?.sortBy(sort)}
           >
