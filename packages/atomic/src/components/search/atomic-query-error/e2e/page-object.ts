@@ -22,4 +22,25 @@ export class QueryErrorPageObject extends BasePageObject<'atomic-query-error'> {
   get infoButton() {
     return this.page.getByRole('button', {name: 'Learn more'});
   }
+
+  with419Error() {
+    return this.page.route(
+      'https://searchuisamples.org.coveo.com/rest/search/v2?organizationId=searchuisamples',
+      async (route, request) => {
+        if (request.method() === 'POST') {
+          await route.fulfill({
+            status: 419,
+            contentType: 'application/json',
+            body: JSON.stringify({
+              message: 'Expired token',
+              statusCode: 419,
+              type: 'ExpiredTokenException',
+            }),
+          });
+        } else {
+          await route.continue();
+        }
+      }
+    );
+  }
 }
