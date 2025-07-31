@@ -39,7 +39,7 @@
     "@coveo/ci": "1.0.0",
     "@cspell/dict-fr-fr": "2.3.1",
     "@npmcli/package-json": "6.2.0",
-    "@octokit/rest": "21.1.1",
+    "@octokit/rest": "22.0.0",
     "@tsconfig/node20": "20.1.6",
     "@types/execa": "2.0.2",
     "@types/jest": "29.5.14",
