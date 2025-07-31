@@ -15,7 +15,7 @@ import type {
   EngineDefinitionControllersPropsOption,
 } from './controller-definitions.js';
 
-export interface BuildOptions<TEngineOptions> {
+interface BuildOptions<TEngineOptions> {
   extend?: OptionsExtender<TEngineOptions>;
 }
 
