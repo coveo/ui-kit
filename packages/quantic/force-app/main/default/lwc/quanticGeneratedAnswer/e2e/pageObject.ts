@@ -4,6 +4,7 @@ import {
   AnalyticsModeEnum,
 } from '../../../../../../playwright/utils/analyticsMode';
 import {AnalyticsObject} from '../../../../../../playwright/page-object/analytics';
+import {isRgaEvaluationRequest} from '../../../../../../playwright/utils/requests';
 
 const minimumCitationTooltipDisplayDurationMs = 1500;
 
@@ -13,12 +14,14 @@ export class GeneratedAnswerObject {
   constructor(
     private page: Page,
     private streamId: string,
-    private analytics: AnalyticsObject
+    private analytics: AnalyticsObject,
+    private answerApiEnabled: boolean
   ) {
     this.page = page;
     this.streamId = streamId;
     this.analytics = analytics;
     this.analyticsMode = this.analytics.analyticsMode;
+    this.answerApiEnabled = answerApiEnabled;
   }
 
   get likeButton(): Locator {
@@ -74,8 +77,8 @@ export class GeneratedAnswerObject {
   }
 
   async hoverOverCitation(index: number): Promise<void> {
-    // waiting 500ms to allow the component to render completely, cause any re-rendering abort the hover action.
-    await this.page.waitForTimeout(500);
+    // waiting 1000ms to allow the component to render completely, cause any re-rendering abort the hover action.
+    await this.page.waitForTimeout(1000);
     await this.citationLink.nth(index).hover();
     await this.page.waitForTimeout(minimumCitationTooltipDisplayDurationMs);
     await this.page.mouse.move(0, 0);
@@ -129,7 +132,11 @@ export class GeneratedAnswerObject {
           eventValue: 'generatedAnswerStreamEnd',
         },
         (event) =>
-          event?.customData?.generativeQuestionAnsweringId === this.streamId
+          event?.customData?.[
+            this.answerApiEnabled
+              ? 'answerAPIStreamId'
+              : 'generativeQuestionAnsweringId'
+          ] === this.streamId
       );
     }
     return this.analytics.waitForEventProtocolAnalytics(
@@ -146,7 +153,11 @@ export class GeneratedAnswerObject {
           eventValue: 'likeGeneratedAnswer',
         },
         (event) =>
-          event?.customData?.generativeQuestionAnsweringId === this.streamId
+          event?.customData?.[
+            this.answerApiEnabled
+              ? 'answerAPIStreamId'
+              : 'generativeQuestionAnsweringId'
+          ] === this.streamId
       );
     }
     return this.analytics.waitForEventProtocolAnalytics(
@@ -163,7 +174,11 @@ export class GeneratedAnswerObject {
           eventValue: 'dislikeGeneratedAnswer',
         },
         (event) =>
-          event?.customData?.generativeQuestionAnsweringId === this.streamId
+          event?.customData?.[
+            this.answerApiEnabled
+              ? 'answerAPIStreamId'
+              : 'generativeQuestionAnsweringId'
+          ] === this.streamId
       );
     }
     return this.analytics.waitForEventProtocolAnalytics(
@@ -180,7 +195,11 @@ export class GeneratedAnswerObject {
           eventValue: 'generatedAnswerCopyToClipboard',
         },
         (event) =>
-          event?.customData?.generativeQuestionAnsweringId === this.streamId
+          event?.customData?.[
+            this.answerApiEnabled
+              ? 'answerAPIStreamId'
+              : 'generativeQuestionAnsweringId'
+          ] === this.streamId
       );
     }
     return this.analytics.waitForEventProtocolAnalytics(
@@ -197,7 +216,11 @@ export class GeneratedAnswerObject {
           eventValue: 'generatedAnswerShowAnswers',
         },
         (event) =>
-          event?.customData?.generativeQuestionAnsweringId === this.streamId
+          event?.customData?.[
+            this.answerApiEnabled
+              ? 'answerAPIStreamId'
+              : 'generativeQuestionAnsweringId'
+          ] === this.streamId
       );
     }
     return this.analytics.waitForEventProtocolAnalytics(
@@ -214,7 +237,11 @@ export class GeneratedAnswerObject {
           eventValue: 'generatedAnswerHideAnswers',
         },
         (event) =>
-          event?.customData?.generativeQuestionAnsweringId === this.streamId
+          event?.customData?.[
+            this.answerApiEnabled
+              ? 'answerAPIStreamId'
+              : 'generativeQuestionAnsweringId'
+          ] === this.streamId
       );
     }
     return this.analytics.waitForEventProtocolAnalytics(
@@ -248,9 +275,43 @@ export class GeneratedAnswerObject {
     );
   }
 
-  async waitForFeedbackSubmitAnalytics(
+  async waitForEvaluationsRequest(
+    expectedPayload?: Record<string, any>
+  ): Promise<Request> {
+    const removeUnknownFields = (object: Record<string, unknown>) => {
+      return Object.fromEntries(
+        Object.entries(object).filter(([, value]) => value !== 'unknown')
+      );
+    };
+    const payloadToMatch = removeUnknownFields(expectedPayload);
+
+    const request = this.page.waitForRequest((request) => {
+      const event = request.postDataJSON?.();
+      if (isRgaEvaluationRequest(request)) {
+        return AnalyticsObject.isMatchingPayload(
+          {
+            correctTopic: event.details?.correctTopic ? 'yes' : 'no',
+            readable: event.details?.readable ? 'yes' : 'no',
+            hallucinationFree: event.details?.hallucinationFree ? 'yes' : 'no',
+            documented: event.details?.documented ? 'yes' : 'no',
+            helpful: event.helpful,
+            details: event.additionalNotes,
+            documentUrl: event.correctAnswerUrl,
+          },
+          payloadToMatch
+        );
+      }
+      return false;
+    });
+    return request;
+  }
+
+  async waitForFeedbackSubmitRequest(
     expectedPayload: Record<string, any>
   ): Promise<Request> {
+    if (this.answerApiEnabled) {
+      return this.waitForEvaluationsRequest(expectedPayload);
+    }
     if (this.analyticsMode === AnalyticsModeEnum.legacy) {
       return this.analytics.waitForCustomUaAnalytics(
         {
@@ -258,7 +319,11 @@ export class GeneratedAnswerObject {
           eventValue: 'generatedAnswerFeedbackSubmitV2',
         },
         (event) =>
-          event?.customData?.generativeQuestionAnsweringId === this.streamId &&
+          event?.customData?.[
+            this.answerApiEnabled
+              ? 'answerAPIStreamId'
+              : 'generativeQuestionAnsweringId'
+          ] === this.streamId &&
           Object.keys(expectedPayload).every(
             (key) => event?.customData?.[key] === expectedPayload[key]
           )
@@ -337,24 +402,30 @@ export class GeneratedAnswerObject {
   }
 
   async mockStreamResponse(
-    body: Array<{payloadType: string; payload: string; finishReason?: string}>
+    url: string,
+    body: Array<{payloadType: string; payload: string; finishReason?: string}>,
+    answerId?: string
   ) {
-    await this.page.route(
-      `**/machinelearning/streaming/${this.streamId}`,
-      (route) => {
-        let bodyText = '';
-        body.forEach((data) => {
-          bodyText += `data: ${JSON.stringify(data)} \n\n`;
-        });
+    await this.page.route(url, (route) => {
+      let bodyText = '';
+      body.forEach((data) => {
+        bodyText += `data: ${JSON.stringify(data)} \n\n`;
+      });
 
+      // eslint-disable-next-line @lwc/lwc/no-async-operation
+      setTimeout(() => {
         route.fulfill({
           status: 200,
           body: bodyText,
           headers: {
+            'access-control-expose-headers': 'X-Request-Id, X-Answer-Id',
             'content-type': 'text/event-stream',
+            ...(answerId && {'x-answer-id': answerId}),
           },
         });
-      }
-    );
+      }, 500);
+    });
   }
+
+  streamEndAnalyticRequestPromise!: Promise<boolean | Request>;
 }
