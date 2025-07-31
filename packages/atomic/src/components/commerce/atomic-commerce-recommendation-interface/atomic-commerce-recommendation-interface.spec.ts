@@ -188,6 +188,22 @@ describe('atomic-commerce-recommendation-interface', () => {
 
   // #initializeWithEngine
   describe('#initializeWithEngine', () => {
+    it('should dispatch an updateAnalyticsConfiguration action with the correct source and trackingId', async () => {
+      const element = await setupElement();
+      const engine = buildFakeCommerceEngine({});
+      const updateAnalyticsConfigurationMock = vi.fn();
+      vi.mocked(headless.loadConfigurationActions).mockReturnValue({
+        updateAnalyticsConfiguration: updateAnalyticsConfigurationMock,
+      } as unknown as ReturnType<typeof headless.loadConfigurationActions>);
+
+      await element.initializeWithEngine(engine);
+
+      expect(updateAnalyticsConfigurationMock).toHaveBeenCalledExactlyOnceWith({
+        trackingId: engine.configuration.analytics.trackingId,
+        source: {'@coveo/atomic': '0.0.0'},
+      });
+    });
+
     it('should call CommonInterfaceHelper.onInitialization with a function that sets engine', async () => {
       vi.spyOn(console, 'error').mockImplementation(() => {});
       const element = await setupElement();
@@ -407,6 +423,9 @@ describe('atomic-commerce-recommendation-interface', () => {
       beforeEach(async () => {
         element = await setupElement();
         engine = buildFakeCommerceEngine({});
+
+        await element.initializeWithEngine(engine);
+
         setContextMock = vi.fn();
         vi.mocked(headless.loadContextActions).mockReturnValue({
           setContext: setContextMock,
@@ -415,12 +434,6 @@ describe('atomic-commerce-recommendation-interface', () => {
           InterfaceController.prototype,
           'onLanguageChange'
         );
-        await element.initializeWithEngine(engine);
-
-        // Reset spies after initialization
-        onLanguageChangeSpy.mockReset();
-        setContextMock.mockReset();
-        vi.mocked(headless.loadContextActions).mockClear();
       });
 
       it('should call onLanguageChange when language parameter is provided', async () => {
@@ -446,11 +459,7 @@ describe('atomic-commerce-recommendation-interface', () => {
       it('should dispatch setContext with only the language when only the language parameter is provided', async () => {
         element.updateLocale('fr');
 
-        expect(setContextMock).toHaveBeenCalledOnce();
-        expect(engine.dispatch).toHaveBeenCalledExactlyOnceWith(
-          setContextMock.mock.results[0].value
-        );
-        expect(setContextMock).toHaveBeenCalledWith({
+        expect(setContextMock).toHaveBeenCalledExactlyOnceWith({
           ...element.context.state,
           language: 'fr',
         });
@@ -459,11 +468,7 @@ describe('atomic-commerce-recommendation-interface', () => {
       it('should dispatch setContext with only the country when only the country parameter is provided', async () => {
         element.updateLocale(undefined, 'FR');
 
-        expect(setContextMock).toHaveBeenCalledOnce();
-        expect(engine.dispatch).toHaveBeenCalledExactlyOnceWith(
-          setContextMock.mock.results[0].value
-        );
-        expect(setContextMock).toHaveBeenCalledWith({
+        expect(setContextMock).toHaveBeenCalledExactlyOnceWith({
           ...element.context.state,
           country: 'FR',
         });
@@ -472,11 +477,7 @@ describe('atomic-commerce-recommendation-interface', () => {
       it('should dispatch setContext with only the currency when only the currency parameter is provided', async () => {
         element.updateLocale(undefined, undefined, 'EUR');
 
-        expect(setContextMock).toHaveBeenCalledOnce();
-        expect(engine.dispatch).toHaveBeenCalledExactlyOnceWith(
-          setContextMock.mock.results[0].value
-        );
-        expect(setContextMock).toHaveBeenCalledWith({
+        expect(setContextMock).toHaveBeenCalledExactlyOnceWith({
           ...element.context.state,
           currency: 'EUR',
         });
@@ -485,11 +486,7 @@ describe('atomic-commerce-recommendation-interface', () => {
       it('should dispatch setContext with all values when all parameters are provided', async () => {
         element.updateLocale('fr', 'FR', 'EUR');
 
-        expect(setContextMock).toHaveBeenCalledOnce();
-        expect(engine.dispatch).toHaveBeenCalledExactlyOnceWith(
-          setContextMock.mock.results[0].value
-        );
-        expect(setContextMock).toHaveBeenCalledWith({
+        expect(setContextMock).toHaveBeenCalledExactlyOnceWith({
           ...element.context.state,
           language: 'fr',
           country: 'FR',

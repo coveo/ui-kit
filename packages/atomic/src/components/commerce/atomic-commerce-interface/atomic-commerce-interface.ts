@@ -7,6 +7,7 @@ import {
   type CommerceEngineConfiguration,
   type Context,
   type LogLevel,
+  loadConfigurationActions,
   loadQueryActions,
   type ProductListing,
   type ProductListingSummaryState,
@@ -31,6 +32,7 @@ import {
   StorageItems,
 } from '@/src/utils/local-storage-utils';
 import {ChildrenUpdateCompleteMixin} from '../../../mixins/children-update-complete-mixin';
+import {augmentAnalyticsConfigWithAtomicVersion} from '../../common/interface/analytics-config';
 import type {CommonBindings} from '../../common/interface/bindings';
 import {
   type BaseAtomicInterface,
@@ -276,6 +278,12 @@ export class AtomicCommerceInterface
    * This bypasses the properties set on the component, such as analytics and language.
    */
   public initializeWithEngine(engine: CommerceEngine) {
+    engine.dispatch(
+      loadConfigurationActions(engine).updateAnalyticsConfiguration({
+        trackingId: engine.configuration.analytics.trackingId,
+        ...augmentAnalyticsConfigWithAtomicVersion(),
+      })
+    );
     return this.internalInitialization(() => {
       this.engine = engine;
     });

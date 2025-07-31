@@ -3,6 +3,7 @@ import {
   type CommerceEngine,
   type CommerceEngineConfiguration,
   type Context,
+  loadConfigurationActions,
   loadContextActions,
 } from '@coveo/headless/commerce';
 import type {CurrencyCodeISO4217} from '@coveo/relay-event-types';
@@ -16,6 +17,7 @@ import {watch} from '@/src/decorators/watch';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles.js';
 import {ChildrenUpdateCompleteMixin} from '@/src/mixins/children-update-complete-mixin.js';
 import {type InitializeEvent, markParentAsReady} from '@/src/utils/init-queue';
+import {augmentAnalyticsConfigWithAtomicVersion} from '../../common/interface/analytics-config.js';
 import type {CommonBindings} from '../../common/interface/bindings.js';
 import {
   type BaseAtomicInterface,
@@ -145,6 +147,13 @@ export class AtomicCommerceRecommendationInterface
    * Initializes the connection with an already preconfigured [headless commerce engine](https://docs.coveo.com/en/headless/latest/reference/commerce/).
    */
   public initializeWithEngine(engine: CommerceEngine) {
+    engine.dispatch(
+      loadConfigurationActions(engine).updateAnalyticsConfiguration({
+        trackingId: engine.configuration.analytics.trackingId,
+        ...augmentAnalyticsConfigWithAtomicVersion(),
+      })
+    );
+
     return this.internalInitialization(() => {
       this.engine = engine;
     });
