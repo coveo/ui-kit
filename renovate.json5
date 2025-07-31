@@ -176,6 +176,7 @@
     "@storybook/test",
     "@storybook/web-components",
     "@storybook/web-components-vite",
+    "@whitespace/storybook-addon-html",
     "storybook"
   ]
 }

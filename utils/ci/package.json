@@ -5,7 +5,7 @@
   "version": "1.0.0",
   "type": "module",
   "dependencies": {
-    "@coveo/semantic-monorepo-tools": "2.6.10",
+    "@coveo/semantic-monorepo-tools": "2.6.11",
     "@npmcli/arborist": "9.1.2",
     "conventional-changelog-conventionalcommits": "8.0.0",
     "dependency-graph": "1.0.0",
