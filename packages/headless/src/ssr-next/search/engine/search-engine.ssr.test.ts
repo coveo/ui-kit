@@ -15,6 +15,7 @@ import type {
   InferHydratedState,
   InferStaticState,
 } from '../../common/types/engine.js';
+import {defineContext} from '../controllers/context/headless-context.ssr.js';
 import {defineResultList} from '../controllers/result-list/headless-result-list.ssr.js';
 import {
   defineSearchEngine,
@@ -108,6 +109,7 @@ describe('SSR', () => {
     let engineDefinition: SearchEngineDefinition<{
       engineStateReader: ReturnType<typeof defineCustomEngineStateReader>;
       resultList: ReturnType<typeof defineResultList>;
+      context: ReturnType<typeof defineContext>;
     }>;
 
     function getResultsPerPage(state: AnyState) {
@@ -127,6 +129,7 @@ describe('SSR', () => {
         controllers: {
           engineStateReader: defineCustomEngineStateReader(),
           resultList: defineResultList(),
+          context: defineContext(),
         },
         navigatorContextProvider: mockNavigatorContextProvider,
         loggerOptions: {level: 'warn'} as LoggerOptions,
@@ -141,10 +144,45 @@ describe('SSR', () => {
     });
 
     it('fetches initial state of engine', async () => {
-      const fetchStaticState = vi.mocked(engineDefinition.fetchStaticState);
-      const staticState = await fetchStaticState();
+      const staticState = await engineDefinition.fetchStaticState({
+        controllers: {
+          context: {
+            initialState: {
+              values: {
+                foo: 'bar',
+              },
+            },
+          },
+        },
+      });
       expect(staticState).toBeTruthy();
       expect(getResultsPerPage(staticState)).toBe(defaultNumberOfResults);
+    });
+
+    // TODO: find a way to make the test cleaner. instead of having to call existing controller. create mock controllers and fixtures
+    it('should return the context controller static with the `initialState` property', async () => {
+      const staticState = await engineDefinition.fetchStaticState({
+        controllers: {
+          context: {
+            initialState: {
+              values: {
+                foo: 'bar',
+              },
+            },
+          },
+        },
+      });
+      // Controllers with props should have an initialState property
+      expect(staticState.controllers.context.initialState).toEqual({
+        values: {
+          foo: 'bar',
+        },
+      });
+
+      // Other Controllers should not have an initialState property
+      expect(Object.keys(staticState.controllers.resultList)).not.toContain(
+        'initialState'
+      );
     });
 
     it('should call augmentPreprocessRequestWithForwardedFor when fetchStaticState is invoked', async () => {
@@ -153,8 +191,17 @@ describe('SSR', () => {
         'augmentPreprocessRequestWithForwardedFor'
       );
 
-      const fetchStaticState = engineDefinition.fetchStaticState;
-      await fetchStaticState();
+      await engineDefinition.fetchStaticState({
+        controllers: {
+          context: {
+            initialState: {
+              values: {
+                foo: 'bar',
+              },
+            },
+          },
+        },
+      });
       expect(spy).toHaveBeenCalledWith({
         loggerOptions: {level: 'warn'},
         navigatorContextProvider: mockNavigatorContextProvider,
@@ -167,15 +214,22 @@ describe('SSR', () => {
     describe('with a static state', () => {
       let staticState: StaticState;
       beforeEach(async () => {
-        const fetchStaticState = vi.mocked(engineDefinition.fetchStaticState);
-        staticState = await fetchStaticState();
+        staticState = await engineDefinition.fetchStaticState({
+          controllers: {
+            context: {
+              initialState: {
+                values: {
+                  foo: 'bar',
+                },
+              },
+            },
+          },
+        });
       });
 
       it('hydrates engine', async () => {
-        const hydrateStaticState = vi.mocked(
-          engineDefinition.hydrateStaticState
-        );
-        const hydratedState = await hydrateStaticState(staticState);
+        const hydratedState =
+          await engineDefinition.hydrateStaticState(staticState);
         expect(hydratedState.engine.state.configuration.organizationId).toEqual(
           getSampleSearchEngineConfiguration().organizationId
         );
