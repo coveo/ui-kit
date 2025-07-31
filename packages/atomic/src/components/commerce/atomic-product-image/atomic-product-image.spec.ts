@@ -94,7 +94,7 @@ describe('atomic-product-image', () => {
     expect(element).toHaveTextContent('');
   });
 
-  describe('when product has single image', () => {
+  describe('when product has a single image', () => {
     it('should render single image without carousel controls', async () => {
       const {productImage, previousButton, nextButton, indicators} =
         await renderProductImage();
@@ -114,6 +114,7 @@ describe('atomic-product-image', () => {
       );
     });
   });
+
   describe('when product has multiple images', () => {
     let productImageObject: Awaited<ReturnType<typeof renderProductImage>>;
 

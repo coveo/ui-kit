@@ -267,10 +267,7 @@ export class AtomicProductImage
                   previousImage: () => this.previousImage(),
                   numberOfImages: this.numberOfImages,
                 },
-              })(
-                this.renderCurrentImage(this.images[this.currentImage]) ||
-                  html``
-              )
+              })(this.renderCurrentImage(this.images[this.currentImage]))
           )
       )}
     `;
