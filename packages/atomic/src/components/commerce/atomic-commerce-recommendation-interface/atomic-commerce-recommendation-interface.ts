@@ -11,19 +11,18 @@ import {provide} from '@lit/context';
 import i18next, {type i18n} from 'i18next';
 import {type CSSResultGroup, html, LitElement, unsafeCSS} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
+import {booleanConverter} from '@/src/converters/boolean-converter.js';
+import {errorGuard} from '@/src/decorators/error-guard.js';
 import {watch} from '@/src/decorators/watch';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles.js';
 import {ChildrenUpdateCompleteMixin} from '@/src/mixins/children-update-complete-mixin.js';
 import {type InitializeEvent, markParentAsReady} from '@/src/utils/init-queue';
 import {augmentAnalyticsConfigWithAtomicVersion} from '../../common/interface/analytics-config.js';
-import type {
-  AdoptedStylesBindings,
-  CommonBindings,
-} from '../../common/interface/bindings.js';
+import type {CommonBindings} from '../../common/interface/bindings.js';
 import {
   type BaseAtomicInterface,
-  CommonAtomicInterfaceHelper,
-} from '../../common/interface/interface-common.js';
+  InterfaceController,
+} from '../../common/interface/interface-controller.js';
 import {bindingsContext} from '../../context/bindings-context.js';
 import styles from './atomic-commerce-recommendation-interface.tw.css';
 import {
@@ -36,8 +35,7 @@ export type CommerceBindings = CommonBindings<
   CommerceEngine,
   CommerceRecommendationStore,
   AtomicCommerceRecommendationInterface
-> &
-  AdoptedStylesBindings;
+>;
 
 /**
  * The `atomic-commerce-recommendation-interface` component is meant to be used
@@ -54,13 +52,15 @@ export class AtomicCommerceRecommendationInterface
   @state()
   @provide({context: bindingsContext})
   public bindings: CommerceBindings = {} as CommerceBindings;
-  @state() public error?: Error;
+  @state() public error!: Error;
 
   public context!: Context;
   public store: CommerceRecommendationStore;
 
-  private commonInterfaceHelper: CommonAtomicInterfaceHelper<CommerceEngine>;
-
+  private interfaceController = new InterfaceController<CommerceEngine>(
+    this,
+    'CoveoAtomic'
+  );
   static styles: CSSResultGroup = [unsafeCSS(styles)];
 
   /**
@@ -115,9 +115,7 @@ export class AtomicCommerceRecommendationInterface
    */
   @property({
     type: Boolean,
-    converter: {
-      fromAttribute: (value) => value !== 'false',
-    },
+    converter: booleanConverter,
     reflect: true,
   })
   analytics = true;
@@ -126,10 +124,6 @@ export class AtomicCommerceRecommendationInterface
 
   public constructor() {
     super();
-    this.commonInterfaceHelper = new CommonAtomicInterfaceHelper(
-      this,
-      'CoveoAtomic'
-    );
     this.store = createCommerceRecommendationStore();
     const {promise, resolve} = Promise.withResolvers<void>();
     this.i18Initialized = promise;
@@ -190,13 +184,13 @@ export class AtomicCommerceRecommendationInterface
     currency?: CurrencyCodeISO4217
   ): void {
     if (
-      !this.commonInterfaceHelper.engineIsCreated(this.engine) ||
+      !this.interfaceController.engineIsCreated(this.engine) ||
       !this.context
     ) {
       return;
     }
 
-    language && this.commonInterfaceHelper.onLanguageChange(language);
+    language && this.interfaceController.onLanguageChange(language);
 
     const {setContext} = loadContextActions(this.engine);
 
@@ -212,7 +206,7 @@ export class AtomicCommerceRecommendationInterface
 
   @watch('analytics')
   public toggleAnalytics() {
-    this.commonInterfaceHelper.onAnalyticsChange();
+    this.interfaceController.onAnalyticsChange();
   }
 
   @watch('iconAssetsPath')
@@ -223,7 +217,7 @@ export class AtomicCommerceRecommendationInterface
   @watch('language')
   public async updateLanguage() {
     if (
-      !this.commonInterfaceHelper.engineIsCreated(this.engine) ||
+      !this.interfaceController.engineIsCreated(this.engine) ||
       !this.language ||
       !this.context
     ) {
@@ -236,7 +230,7 @@ export class AtomicCommerceRecommendationInterface
 
     this.context.setLanguage(this.language);
 
-    return this.commonInterfaceHelper.onLanguageChange();
+    return this.interfaceController.onLanguageChange();
   }
 
   public disconnectedCallback() {
@@ -250,18 +244,15 @@ export class AtomicCommerceRecommendationInterface
       'atomic/scrollToTop',
       this.scrollToTop as EventListener
     );
-    const ariaLive = this.querySelector('atomic-aria-live');
-    if (ariaLive) {
-      ariaLive.remove();
-    }
   }
 
+  @errorGuard()
   render() {
     return html`<slot></slot>`;
   }
 
   private handleInitialization = (event: InitializeEvent) => {
-    this.commonInterfaceHelper.onComponentInitializing(event);
+    this.interfaceController.onComponentInitializing(event);
   };
 
   private scrollToTop() {
@@ -278,27 +269,14 @@ export class AtomicCommerceRecommendationInterface
 
   private async internalInitialization(initEngine: () => void) {
     await Promise.all([
-      this.commonInterfaceHelper.onInitialization(initEngine),
+      this.interfaceController.onInitialization(initEngine),
       this.i18Initialized,
     ]);
-    this.initAriaLive();
     this.initContext();
     this.language && this.updateLanguage();
     this.bindings = this.getBindings();
     markParentAsReady(this);
     this.initLanguage();
-  }
-
-  private initAriaLive() {
-    if (
-      Array.from(this.children).some(
-        (element) => element.tagName === 'ATOMIC-ARIA-LIVE'
-      )
-    ) {
-      return;
-    }
-    const ariaLive = document.createElement('atomic-aria-live');
-    this.prepend(ariaLive);
   }
 
   private initContext() {
@@ -311,26 +289,12 @@ export class AtomicCommerceRecommendationInterface
       i18n: this.i18n,
       store: this.store,
       interfaceElement: this as AtomicCommerceRecommendationInterface,
-      addAdoptedStyleSheets: (stylesheet) => {
-        const parent = this.getRootNode();
-        const styleSheet = stylesheet;
-        const isDocumentOrShadowRoot =
-          parent instanceof Document || parent instanceof ShadowRoot;
-
-        if (
-          styleSheet &&
-          isDocumentOrShadowRoot &&
-          !parent.adoptedStyleSheets.includes(styleSheet)
-        ) {
-          parent.adoptedStyleSheets.push(styleSheet);
-        }
-      },
     };
   }
 
   private initLanguage() {
     if (!this.language) {
-      this.commonInterfaceHelper.onLanguageChange(this.context.state.language);
+      this.interfaceController.onLanguageChange(this.context.state.language);
     }
   }
 }
