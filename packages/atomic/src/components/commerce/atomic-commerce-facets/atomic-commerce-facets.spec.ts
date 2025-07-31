@@ -238,6 +238,25 @@ describe('atomic-commerce-facets', () => {
   });
 
   describe('#collapseFacetsAfter', () => {
+    it('should throw an error when collapseFacetsAfter is not a number', async () => {
+      const mockedConsoleError = vi.spyOn(console, 'error');
+
+      await renderCommerceFacets({
+        isAppLoaded: false,
+        // @ts-expect-error - testing invalid prop type
+        collapseFacetsAfter: 'invalid',
+      });
+
+      expect(mockedConsoleError).toHaveBeenCalledWith(
+        expect.objectContaining({
+          message: expect.stringContaining(
+            'collapseFacetsAfter: value is not a number.'
+          ),
+        }),
+        expect.anything()
+      );
+    });
+
     it('should collapse facets after the specified number when collapseFacetsAfter is positive', async () => {
       const {header} = await renderCommerceFacets({
         collapseFacetsAfter: 2,
