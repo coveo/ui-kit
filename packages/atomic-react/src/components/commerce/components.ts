@@ -224,6 +224,12 @@ export const AtomicProductText = createComponent({
   elementClass: LitAtomicProductText,
 });
 
+export const AtomicAriaLive = createComponent({
+  tagName: 'atomic-aria-live',
+  react: React,
+  elementClass: LitAtomicAriaLive,
+});
+
 export const AtomicComponentError = createComponent({
   tagName: 'atomic-component-error',
   react: React,
