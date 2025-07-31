@@ -37,6 +37,12 @@ import {
 import {createComponent} from '@lit/react';
 import React from 'react';
 
+export const AtomicAriaLive = createComponent({
+  tagName: 'atomic-aria-live',
+  react: React,
+  elementClass: LitAtomicAriaLive,
+});
+
 export const AtomicCommerceBreadbox = createComponent({
   tagName: 'atomic-commerce-breadbox',
   react: React,
