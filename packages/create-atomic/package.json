@@ -3,7 +3,7 @@
   "description": "Coveo Atomic Generator",
   "version": "1.40.13",
   "files": [
-    "/lib",
+    "/dist",
     "/template",
     "/template/.gitignore"
   ],
