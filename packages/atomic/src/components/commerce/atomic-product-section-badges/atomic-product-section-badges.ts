@@ -1,6 +1,6 @@
 import {LitElement} from 'lit';
 import {customElement} from 'lit/decorators.js';
-import {ProductSectionMixin} from '@/src/mixins/product-section-mixin';
+import {ItemSectionMixin} from '@/src/mixins/item-section-mixin';
 
 /**
  * This section is meant to render badges that highlight special features of the product.
@@ -12,9 +12,7 @@ import {ProductSectionMixin} from '@/src/mixins/product-section-mixin';
  * * May appear over, next to, or beneath the visual section.
  */
 @customElement('atomic-product-section-badges')
-export class AtomicProductSectionBadges extends ProductSectionMixin(
-  LitElement
-) {}
+export class AtomicProductSectionBadges extends ItemSectionMixin(LitElement) {}
 
 declare global {
   interface HTMLElementTagNameMap {

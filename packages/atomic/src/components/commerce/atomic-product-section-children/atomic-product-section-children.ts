@@ -1,6 +1,6 @@
 import {LitElement} from 'lit';
 import {customElement} from 'lit/decorators.js';
-import {ProductSectionMixin} from '@/src/mixins/product-section-mixin';
+import {ItemSectionMixin} from '@/src/mixins/item-section-mixin';
 
 /**
  * This section is meant to render child products, available when using the <atomic-product-children> component.
@@ -9,7 +9,7 @@ import {ProductSectionMixin} from '@/src/mixins/product-section-mixin';
  * * Shows children at the bottom of the result, indented and wrapped in a border.
  */
 @customElement('atomic-product-section-children')
-export class AtomicProductSectionChildren extends ProductSectionMixin(
+export class AtomicProductSectionChildren extends ItemSectionMixin(
   LitElement
 ) {}
 

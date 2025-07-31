@@ -1,6 +1,6 @@
 import {LitElement} from 'lit';
 import {customElement} from 'lit/decorators.js';
-import {ProductSectionMixin} from '@/src/mixins/product-section-mixin';
+import {ItemSectionMixin} from '@/src/mixins/item-section-mixin';
 
 /**
  * This section is intended to display the field that's important for its search criteria.
@@ -11,7 +11,7 @@ import {ProductSectionMixin} from '@/src/mixins/product-section-mixin';
  * * Is the second closest element beneath the name section.
  */
 @customElement('atomic-product-section-emphasized')
-export class AtomicProductSectionEmphasized extends ProductSectionMixin(
+export class AtomicProductSectionEmphasized extends ItemSectionMixin(
   LitElement
 ) {}
 

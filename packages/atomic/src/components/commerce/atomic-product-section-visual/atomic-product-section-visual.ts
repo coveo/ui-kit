@@ -1,7 +1,7 @@
 import {LitElement} from 'lit';
 import {customElement, property} from 'lit/decorators.js';
 import type {ItemDisplayImageSize} from '@/src/components/common/layout/display-options';
-import {ProductSectionMixin} from '@/src/mixins/product-section-mixin';
+import {ItemSectionMixin} from '@/src/mixins/item-section-mixin';
 
 /**
  * This section is intended to provide visual information about the product.
@@ -13,9 +13,7 @@ import {ProductSectionMixin} from '@/src/mixins/product-section-mixin';
  * * Always has a 1:1 aspect ratio.
  */
 @customElement('atomic-product-section-visual')
-export class AtomicProductSectionVisual extends ProductSectionMixin(
-  LitElement
-) {
+export class AtomicProductSectionVisual extends ItemSectionMixin(LitElement) {
   /**
    * How large or small the visual section of product using this template should be.
    */

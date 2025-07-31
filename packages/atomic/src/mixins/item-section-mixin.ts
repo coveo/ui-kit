@@ -1,6 +1,6 @@
 import type {LitElement} from 'lit';
 import {hideEmptySection} from '@/src/utils/item-section-utils';
-import type {Constructor} from './mixin-common';
+import type {Constructor} from './mixin-common.js';
 
 /**
  * Mixin for product section components that provides common functionality.
@@ -9,7 +9,7 @@ import type {Constructor} from './mixin-common';
  * @param superClass - The base class to extend
  * @returns A class that extends the superClass with product section functionality
  */
-export function ProductSectionMixin<T extends Constructor<LitElement>>(
+export function ItemSectionMixin<T extends Constructor<LitElement>>(
   superClass: T
 ) {
   class ProductSectionMixinClass extends superClass {

@@ -1,6 +1,6 @@
 import {LitElement} from 'lit';
 import {customElement} from 'lit/decorators.js';
-import {ProductSectionMixin} from '@/src/mixins/product-section-mixin';
+import {ItemSectionMixin} from '@/src/mixins/item-section-mixin';
 
 /**
  * This section is meant to render additional descriptive information about the product.
@@ -12,7 +12,7 @@ import {ProductSectionMixin} from '@/src/mixins/product-section-mixin';
  * * Has a font weight.
  */
 @customElement('atomic-product-section-bottom-metadata')
-export class AtomicProductSectionBottomMetadata extends ProductSectionMixin(
+export class AtomicProductSectionBottomMetadata extends ItemSectionMixin(
   LitElement
 ) {}
 

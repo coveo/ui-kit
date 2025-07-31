@@ -1,6 +1,6 @@
 import {LitElement} from 'lit';
 import {customElement} from 'lit/decorators.js';
-import {ProductSectionMixin} from '@/src/mixins/product-section-mixin';
+import {ItemSectionMixin} from '@/src/mixins/item-section-mixin';
 
 /**
  * This section is intended to display some fields that are directly related to the name of the product.
@@ -12,7 +12,7 @@ import {ProductSectionMixin} from '@/src/mixins/product-section-mixin';
  * * Is the closest element beneath the title section.
  */
 @customElement('atomic-product-section-metadata')
-export class AtomicProductSectionMetadata extends ProductSectionMixin(
+export class AtomicProductSectionMetadata extends ItemSectionMixin(
   LitElement
 ) {}
 

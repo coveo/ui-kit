@@ -1,6 +1,6 @@
 import {LitElement} from 'lit';
 import {customElement} from 'lit/decorators.js';
-import {ProductSectionMixin} from '@/src/mixins/product-section-mixin';
+import {ItemSectionMixin} from '@/src/mixins/item-section-mixin';
 
 /**
  * This section is intended to display the product's name, and its main use is to make the product list scannable.
@@ -11,7 +11,7 @@ import {ProductSectionMixin} from '@/src/mixins/product-section-mixin';
  * * Has a defined CSS `color` property for text.
  */
 @customElement('atomic-product-section-name')
-export class AtomicProductSectionName extends ProductSectionMixin(LitElement) {}
+export class AtomicProductSectionName extends ItemSectionMixin(LitElement) {}
 
 declare global {
   interface HTMLElementTagNameMap {

@@ -1,6 +1,6 @@
 import {LitElement} from 'lit';
 import {customElement} from 'lit/decorators.js';
-import {ProductSectionMixin} from '@/src/mixins/product-section-mixin';
+import {ItemSectionMixin} from '@/src/mixins/item-section-mixin';
 
 /**
  * This section is intended to display components that allow the user to perform an action on a product without having to view its details.
@@ -13,9 +13,7 @@ import {ProductSectionMixin} from '@/src/mixins/product-section-mixin';
  * * May appear over, next to, or beneath the visual section.
  */
 @customElement('atomic-product-section-actions')
-export class AtomicProductSectionActions extends ProductSectionMixin(
-  LitElement
-) {}
+export class AtomicProductSectionActions extends ItemSectionMixin(LitElement) {}
 
 declare global {
   interface HTMLElementTagNameMap {
