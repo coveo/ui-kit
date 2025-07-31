@@ -1585,31 +1585,6 @@ export namespace Components {
     interface AtomicPopover {
     }
     /**
-     * The `atomic-product-field-condition` component takes a list of conditions that, if fulfilled, apply the template in which it's defined.
-     * The condition properties can be based on any top-level product property of the `product` object, not restricted to fields (e.g., `ec_name`).
-     * @alpha 
-     */
-    interface AtomicProductFieldCondition {
-        /**
-          * Verifies whether the specified fields are defined.
-         */
-        "ifDefined"?: string;
-        /**
-          * Verifies whether the specified fields are not defined.
-         */
-        "ifNotDefined"?: string;
-        /**
-          * Verifies whether the specified fields match the specified values.
-          * @type {Record<string, string[]>}
-         */
-        "mustMatch": Record<string, string[]>;
-        /**
-          * Verifies whether the specified fields do not match the specified values.
-          * @type {Record<string, string[]>}
-         */
-        "mustNotMatch": Record<string, string[]>;
-    }
-    /**
      * The `atomic-product-image` component renders an image from a product field.
      * @alpha 
      */
@@ -4081,17 +4056,6 @@ declare global {
         new (): HTMLAtomicPopoverElement;
     };
     /**
-     * The `atomic-product-field-condition` component takes a list of conditions that, if fulfilled, apply the template in which it's defined.
-     * The condition properties can be based on any top-level product property of the `product` object, not restricted to fields (e.g., `ec_name`).
-     * @alpha 
-     */
-    interface HTMLAtomicProductFieldConditionElement extends Components.AtomicProductFieldCondition, HTMLStencilElement {
-    }
-    var HTMLAtomicProductFieldConditionElement: {
-        prototype: HTMLAtomicProductFieldConditionElement;
-        new (): HTMLAtomicProductFieldConditionElement;
-    };
-    /**
      * The `atomic-product-image` component renders an image from a product field.
      * @alpha 
      */
@@ -5180,7 +5144,6 @@ declare global {
         "atomic-numeric-range": HTMLAtomicNumericRangeElement;
         "atomic-pager": HTMLAtomicPagerElement;
         "atomic-popover": HTMLAtomicPopoverElement;
-        "atomic-product-field-condition": HTMLAtomicProductFieldConditionElement;
         "atomic-product-image": HTMLAtomicProductImageElement;
         "atomic-product-rating": HTMLAtomicProductRatingElement;
         "atomic-product-section-actions": HTMLAtomicProductSectionActionsElement;
@@ -6751,31 +6714,6 @@ declare namespace LocalJSX {
      * The `atomic-popover` component displays any facet as a popover menu.
      */
     interface AtomicPopover {
-    }
-    /**
-     * The `atomic-product-field-condition` component takes a list of conditions that, if fulfilled, apply the template in which it's defined.
-     * The condition properties can be based on any top-level product property of the `product` object, not restricted to fields (e.g., `ec_name`).
-     * @alpha 
-     */
-    interface AtomicProductFieldCondition {
-        /**
-          * Verifies whether the specified fields are defined.
-         */
-        "ifDefined"?: string;
-        /**
-          * Verifies whether the specified fields are not defined.
-         */
-        "ifNotDefined"?: string;
-        /**
-          * Verifies whether the specified fields match the specified values.
-          * @type {Record<string, string[]>}
-         */
-        "mustMatch"?: Record<string, string[]>;
-        /**
-          * Verifies whether the specified fields do not match the specified values.
-          * @type {Record<string, string[]>}
-         */
-        "mustNotMatch"?: Record<string, string[]>;
     }
     /**
      * The `atomic-product-image` component renders an image from a product field.
@@ -8417,7 +8355,6 @@ declare namespace LocalJSX {
         "atomic-numeric-range": AtomicNumericRange;
         "atomic-pager": AtomicPager;
         "atomic-popover": AtomicPopover;
-        "atomic-product-field-condition": AtomicProductFieldCondition;
         "atomic-product-image": AtomicProductImage;
         "atomic-product-rating": AtomicProductRating;
         "atomic-product-section-actions": AtomicProductSectionActions;
@@ -8730,12 +8667,6 @@ declare module "@stencil/core" {
              * The `atomic-popover` component displays any facet as a popover menu.
              */
             "atomic-popover": LocalJSX.AtomicPopover & JSXBase.HTMLAttributes<HTMLAtomicPopoverElement>;
-            /**
-             * The `atomic-product-field-condition` component takes a list of conditions that, if fulfilled, apply the template in which it's defined.
-             * The condition properties can be based on any top-level product property of the `product` object, not restricted to fields (e.g., `ec_name`).
-             * @alpha 
-             */
-            "atomic-product-field-condition": LocalJSX.AtomicProductFieldCondition & JSXBase.HTMLAttributes<HTMLAtomicProductFieldConditionElement>;
             /**
              * The `atomic-product-image` component renders an image from a product field.
              * @alpha 

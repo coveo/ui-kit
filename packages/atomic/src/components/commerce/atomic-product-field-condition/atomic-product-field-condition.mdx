@@ -1,0 +1,39 @@
+import { Canvas, ArgTypes, Meta, Title, Description, Stories, Subtitle } from '@storybook/blocks';
+import * as AtomicProductFieldConditionStories from './atomic-product-field-condition.new.stories';
+import { CanvasWithGithub } from '../../../../storybook-utils/documentation/canvas-with-github';
+
+<Meta of={ AtomicProductFieldConditionStories } />
+
+<Title />
+<Subtitle><Description/></Subtitle>
+
+<CanvasWithGithub
+  of={ AtomicProductFieldConditionStories.Default }
+  githubPath="commerce/atomic-product-field-condition/atomic-product-field-condition.ts"
+/>
+
+## Usage
+
+`atomic-product-field-condition` conditionally renders its content based on product attributes.
+This component can verify whether specified fields are defined, not defined, match specific values, or do not match specific values.
+
+It is typically used within `atomic-product-template`.
+
+```html
+<atomic-product-template>
+  ... 
+
+  <atomic-product-field-condition
+    attributes-if-defined="ec_name"
+ 
+  >
+  <span>Render me if <strong>ec_name</strong> is defined.</span>
+  </atomic-product-field-condition>
+  
+</atomic-product-template>
+```
+## Examples
+<Stories title={""}/>
+
+## Reference
+<ArgTypes />
