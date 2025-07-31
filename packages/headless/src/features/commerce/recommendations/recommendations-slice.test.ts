@@ -7,6 +7,7 @@ import {
 } from '../../../test/mock-product.js';
 import {buildMockRecommendationsResponse} from '../../../test/mock-recommendations.js';
 import {buildMockRecommendationsSlice} from '../../../test/mock-recommendations-slice.js';
+import {setError} from '../../error/error-actions.js';
 import {
   fetchMoreRecommendations,
   fetchRecommendations,
@@ -385,6 +386,27 @@ describe('recommendation-slice', () => {
           position: parentProduct.position,
         }),
       ]);
+    });
+  });
+
+  describe('on #setError', () => {
+    it('should set the error state and set isLoading to false for every slotId', () => {
+      const error = {
+        message: 'Something went wrong',
+        statusCode: 401,
+        status: 401,
+        type: 'BadRequest',
+      };
+      Object.keys(state).forEach((slotId) => {
+        state[slotId] = buildMockRecommendationsSlice({isLoading: true});
+      });
+
+      const finalState = recommendationsReducer(state, setError(error));
+
+      Object.keys(finalState).forEach((slotId) => {
+        expect(finalState[slotId]!.error).toEqual(error);
+        expect(finalState[slotId]!.isLoading).toBe(false);
+      });
     });
   });
 
