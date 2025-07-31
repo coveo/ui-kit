@@ -23,6 +23,9 @@ export const searchQuickviewRequestRegex = /\/rest\/search\/v2\/html.*/;
 export const insightQuickviewRequestRegex =
   /\/rest\/organizations\/.*\/insight\/v1\/configs\/.*\/quickview/;
 
+export const rgaEvaluationsRequestRegex =
+  /\/rest\/organizations\/.*\/answer\/v1\/configs\/.*\/evaluations/;
+
 /**
  * Indicates whether the specified request corresponds to a Search Usage Analytics request.
  * @param request The request to check.
@@ -40,6 +43,16 @@ export function isUaSearchEvent(request: Request): boolean {
 export function isUaCustomEvent(request: Request): boolean {
   return (
     request.method() === 'POST' && analyticsCustomUrlRegex.test(request.url())
+  );
+}
+
+/**
+ * Indicates whether the specified request corresponds to a Custom Usage Analytics request.
+ * @param request The request to check.
+ */
+export function isRgaEvaluationRequest(request: Request): boolean {
+  return (
+    request.method() === 'POST' && rgaEvaluationsRequestRegex.test(request.url())
   );
 }
 
