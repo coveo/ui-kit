@@ -285,7 +285,7 @@ export class GeneratedAnswerObject {
     };
     const payloadToMatch = removeUnknownFields(expectedPayload);
 
-    const request = this.page.waitForRequest((request) => {
+    const evaluationRequest = this.page.waitForRequest((request) => {
       const event = request.postDataJSON?.();
       if (isRgaEvaluationRequest(request)) {
         return AnalyticsObject.isMatchingPayload(
@@ -303,7 +303,7 @@ export class GeneratedAnswerObject {
       }
       return false;
     });
-    return request;
+    return evaluationRequest;
   }
 
   async waitForFeedbackSubmitRequest(
