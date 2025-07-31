@@ -24,12 +24,12 @@
     "dist"
   ],
   "scripts": {
-    "build": "nx build",
+    "build": "tsc --project ./tsconfig.build.json",
     "clean": "rimraf dist",
     "test": "vitest run",
     "test:watch": "vitest",
-    "publish:npm": "npm run-script -w=@coveo/ci npm-publish",
-    "publish:bump": "npm run-script -w=@coveo/ci bump",
+    "release:phase3": "npm run-script -w=@coveo/ci npm-publish",
+    "release:phase1": "npm run-script -w=@coveo/ci bump",
     "promote:npm:latest": "npm run-script -w=@coveo/ci promote-npm-prod",
     "build:typedoc": "npm run build:typedoc:docs && npm run build:typedoc:merge",
     "build:typedoc:docs": "concurrently \"npm run build:typedoc:ssr\" \"npm run build:typedoc:ssr-commerce\"",

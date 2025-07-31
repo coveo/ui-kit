@@ -4,11 +4,12 @@
   "scripts": {
     "ng": "ng",
     "dev": "ng serve",
-    "build": "nx build",
+    "gen:lit": "node ./scripts/build-lit.mjs",
+    "build": "npm run build:bundles && npm run build:assets",
     "build:bundles": "ng build",
     "build:assets": "ncp ../atomic/dist/atomic/assets projects/atomic-angular/dist/assets && ncp ../atomic/dist/atomic/lang projects/atomic-angular/dist/lang",
-    "publish:npm": "node ./scripts/publish-npm.mjs",
-    "publish:bump": "node ./scripts/bump.mjs"
+    "release:phase3": "node ./scripts/publish-npm.mjs",
+    "release:phase1": "node ./scripts/bump.mjs"
   },
   "private": true,
   "dependencies": {
