@@ -1,4 +1,5 @@
 import {
+  AtomicAriaLive as LitAtomicAriaLive,
   AtomicCommerceBreadbox as LitAtomicCommerceBreadbox,
   AtomicCommerceDidYouMean as LitAtomicCommerceDidYouMean,
   AtomicCommerceInterface as LitAtomicCommerceInterface,
@@ -27,6 +28,7 @@ import {
   AtomicProductChildren as LitAtomicProductChildren,
   AtomicProductDescription as LitAtomicProductDescription,
   AtomicProductExcerpt as LitAtomicProductExcerpt,
+  AtomicProductFieldCondition as LitAtomicProductFieldCondition,
   AtomicProductLink as LitAtomicProductLink,
   AtomicProductMultiValueText as LitAtomicProductMultiValueText,
   AtomicProductNumericFieldValue as LitAtomicProductNumericFieldValue,
@@ -204,6 +206,12 @@ export const AtomicProductExcerpt = createComponent({
   elementClass: LitAtomicProductExcerpt,
 });
 
+export const AtomicProductFieldCondition = createComponent({
+  tagName: 'atomic-product-field-condition',
+  react: React,
+  elementClass: LitAtomicProductFieldCondition,
+});
+
 export const AtomicProductLink = createComponent({
   tagName: 'atomic-product-link',
   react: React,
@@ -232,4 +240,28 @@ export const AtomicProductText = createComponent({
   tagName: 'atomic-product-text',
   react: React,
   elementClass: LitAtomicProductText,
+});
+
+export const AtomicAriaLive = createComponent({
+  tagName: 'atomic-aria-live',
+  react: React,
+  elementClass: LitAtomicAriaLive,
+});
+
+export const AtomicComponentError = createComponent({
+  tagName: 'atomic-component-error',
+  react: React,
+  elementClass: LitAtomicComponentError,
+});
+
+export const AtomicIcon = createComponent({
+  tagName: 'atomic-icon',
+  react: React,
+  elementClass: LitAtomicIcon,
+});
+
+export const AtomicLayoutSection = createComponent({
+  tagName: 'atomic-layout-section',
+  react: React,
+  elementClass: LitAtomicLayoutSection,
 });
