@@ -1,4 +1,5 @@
 import {
+  AtomicAriaLive as LitAtomicAriaLive,
   AtomicCommerceBreadbox as LitAtomicCommerceBreadbox,
   AtomicCommerceDidYouMean as LitAtomicCommerceDidYouMean,
   AtomicCommerceInterface as LitAtomicCommerceInterface,
@@ -214,6 +215,12 @@ export const AtomicProductText = createComponent({
   tagName: 'atomic-product-text',
   react: React,
   elementClass: LitAtomicProductText,
+});
+
+export const AtomicAriaLive = createComponent({
+  tagName: 'atomic-aria-live',
+  react: React,
+  elementClass: LitAtomicAriaLive,
 });
 
 export const AtomicComponentError = createComponent({
