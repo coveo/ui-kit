@@ -14,6 +14,7 @@ import {errorGuard} from '@/src/decorators/error-guard.js';
 import {injectStylesForNoShadowDOM} from '@/src/decorators/inject-styles-for-no-shadow-dom.js';
 import type {InitializableComponent} from '@/src/decorators/types.js';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles.js';
+import {displayIf} from '@/src/directives/display-if.js';
 import {multiClassMap, tw} from '@/src/directives/multi-class-map.js';
 import {defaultCurrencyFormatter} from '../../common/formats/format-common.js';
 import type {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface.js';
@@ -89,10 +90,6 @@ export class AtomicProductPrice
   @bindingGuard()
   render() {
     const hasPromo = this.hasPromotionalPrice;
-    const mainPrice = this.getFormattedValue(
-      hasPromo ? 'ec_promo_price' : 'ec_price'
-    );
-    const originalPrice = hasPromo ? this.getFormattedValue('ec_price') : null;
 
     const priceClasses = tw({
       'truncate break-keep text-2xl leading-[1.5]': true,
@@ -106,11 +103,15 @@ export class AtomicProductPrice
     return html`
       <div class="flex flex-wrap gap-1">
         <div class=${multiClassMap(priceClasses)}>
-          ${mainPrice}
+          ${this.getFormattedValue(hasPromo ? 'ec_promo_price' : 'ec_price')}
         </div>
-        <div class=${multiClassMap(originalPriceClasses)}>
-          ${originalPrice ?? html`&#8203;`}
-        </div>
+         ${displayIf(
+           hasPromo,
+           () => html`
+          <div class=${multiClassMap(originalPriceClasses)}>
+            ${this.getFormattedValue('ec_price')}
+          </div>`
+         )}
       </div>
     `;
   }
