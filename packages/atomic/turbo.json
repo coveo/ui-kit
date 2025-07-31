@@ -47,6 +47,11 @@
     "test:lit": {
       "dependsOn": ["^build", "build"],
       "outputs": ["coverage/**"]
+    },
+    "web:dev": {
+      "dependsOn": ["build"],
+      "cache": false,
+      "persistent": true
     }
   }
 }
