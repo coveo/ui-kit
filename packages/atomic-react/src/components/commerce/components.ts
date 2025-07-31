@@ -28,6 +28,8 @@ import {
   AtomicProductChildren as LitAtomicProductChildren,
   AtomicProductDescription as LitAtomicProductDescription,
   AtomicProductExcerpt as LitAtomicProductExcerpt,
+  AtomicProductFieldCondition as LitAtomicProductFieldCondition,
+  AtomicProductImage as LitAtomicProductImage,
   AtomicProductLink as LitAtomicProductLink,
   AtomicProductMultiValueText as LitAtomicProductMultiValueText,
   AtomicProductNumericFieldValue as LitAtomicProductNumericFieldValue,
@@ -185,6 +187,18 @@ export const AtomicProductExcerpt = createComponent({
   tagName: 'atomic-product-excerpt',
   react: React,
   elementClass: LitAtomicProductExcerpt,
+});
+
+export const AtomicProductFieldCondition = createComponent({
+  tagName: 'atomic-product-field-condition',
+  react: React,
+  elementClass: LitAtomicProductFieldCondition,
+});
+
+export const AtomicProductImage = createComponent({
+  tagName: 'atomic-product-image',
+  react: React,
+  elementClass: LitAtomicProductImage,
 });
 
 export const AtomicProductLink = createComponent({

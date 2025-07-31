@@ -32,17 +32,25 @@ export type EngineDefinitionOptions<
   controllers?: TControllers;
 };
 
-export interface EngineDefinition<
+export type EngineBuildResult<
   TEngine extends CoreEngine | CoreEngineNext,
   TControllers extends ControllerDefinitionsMap<TEngine, Controller>,
   TEngineOptions,
+> = Build<
+  TEngine,
+  TEngineOptions,
+  InferControllersMapFromDefinition<TControllers>,
+  InferControllerPropsMapFromDefinitions<TControllers>
+>;
+
+export interface EngineDefinition<
+  TEngine extends CoreEngine | CoreEngineNext,
+  TControllers extends ControllerDefinitionsMap<TEngine, Controller>,
 > {
   /**
    * Fetches the static state on the server side using your engine definition.
    */
   fetchStaticState: FetchStaticState<
-    TEngine,
-    InferControllersMapFromDefinition<TControllers>,
     AnyAction,
     InferControllerStaticStateMapFromDefinitions<TControllers>,
     InferControllerPropsMapFromDefinitions<TControllers>
@@ -65,18 +73,8 @@ export interface EngineDefinition<
   setNavigatorContextProvider: (
     navigatorContextProvider: NavigatorContextProvider
   ) => void;
-  /**
-   * Builds an engine and its controllers from an engine definition.
-   */
-  build: Build<
-    TEngine,
-    TEngineOptions,
-    InferControllersMapFromDefinition<TControllers>,
-    InferControllerPropsMapFromDefinitions<TControllers>
-  >;
 }
 
-// TODO: KIT-4610: Remove this type
 export interface EngineDefinitionBuildResult<
   TEngine extends CoreEngine | CoreEngineNext,
   TControllers extends ControllersMap,
@@ -112,8 +110,10 @@ export type InferHydratedState<
     hydrateStaticState(...args: unknown[]): Promise<unknown>;
   },
 > = Awaited<ReturnType<T['hydrateStaticState']>>;
-
-// TODO: KIT-4610: Remove this type
+/**
+ * @deprecated This type is deprecated and will be removed in a future version.
+ * {@link EngineDefinition.build} will be removed in a future version.
+ */
 export type InferBuildResult<
   T extends {
     build(...args: unknown[]): Promise<unknown>;
