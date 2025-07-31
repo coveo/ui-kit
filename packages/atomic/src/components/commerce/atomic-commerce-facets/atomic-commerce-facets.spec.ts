@@ -338,7 +338,7 @@ describe('atomic-commerce-facets', () => {
     expect(mockedLogger).toHaveBeenCalledWith('Unexpected facet type.');
   });
 
-  it('should render empty when no facets are available when facet generator has no facets', async () => {
+  it('should render nothing when facet generator has no facets', async () => {
     mockedFacetGenerator = buildFakeFacetGenerator({
       state: [],
       implementation: {

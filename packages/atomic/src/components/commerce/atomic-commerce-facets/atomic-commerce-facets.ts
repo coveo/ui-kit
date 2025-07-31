@@ -87,9 +87,9 @@ export class AtomicCommerceFacets
 
   private validateProps() {
     new Schema({
-      collapseFacetAfter: new NumberValue({min: -1, required: true}),
+      collapseFacetsAfter: new NumberValue({min: -1, required: true}),
     }).validate({
-      collapseFacetAfter: this.collapseFacetsAfter,
+      collapseFacetsAfter: this.collapseFacetsAfter,
     });
   }
 
