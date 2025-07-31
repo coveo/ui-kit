@@ -45,7 +45,9 @@ class TestTailwindElementWithoutArray extends LitElement {
     unsafeCSS(componentStyles);
 
   render() {
-    return html`<div class="rounded-3xl border">Test Element Without Array</div>`;
+    return html`<div class="rounded-3xl border">
+      Test Element Without Array
+    </div>`;
   }
 }
 
@@ -81,11 +83,9 @@ describe('withTailwindStyles decorator', () => {
     let styles: CSSResultGroup | CSSStyleSheet | undefined;
 
     beforeEach(async () => {
-      const element = await fixture<TestTailwindElement>(
+      await fixture<TestTailwindElement>(
         html`<test-tailwind-element></test-tailwind-element>`
       );
-      await element.connectedCallback;
-      await element.updateComplete;
     });
 
     testCases.forEach(({description, index, expected}) => {
@@ -147,15 +147,15 @@ describe('withTailwindStyles decorator', () => {
 
   it('should not adopt properties more than once', async () => {
     await fixture(html`
-          <test-tailwind-element></test-tailwind-element>
-          <test-tailwind-element-without-array></test-tailwind-element-without-array>
-          <test-tailwind-element-no-styles></test-tailwind-element-no-styles>
-      `);
+      <test-tailwind-element></test-tailwind-element>
+      <test-tailwind-element-without-array></test-tailwind-element-without-array>
+      <test-tailwind-element-no-styles></test-tailwind-element-no-styles>
+    `);
 
     expect(document.adoptedStyleSheets.length).toBe(1);
   });
 
-  it('should style all element types with the injected tailwind properties', async () => {
+  it('should style all element types with the injected Tailwind properties', async () => {
     const templates = [
       html`<test-tailwind-element></test-tailwind-element>`,
       html`<test-tailwind-element-without-array></test-tailwind-element-without-array>`,
