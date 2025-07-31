@@ -2,8 +2,8 @@ import {expect, test, triggerError} from './fixture';
 
 test.describe('AtomicCommerceQueryError', () => {
   test.beforeEach(async ({queryError}) => {
-    await queryError.load();
     await triggerError(queryError.page);
+    await queryError.load();
   });
 
   test('should be A11y compliant', async ({queryError, makeAxeBuilder}) => {
