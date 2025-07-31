@@ -1,4 +1,5 @@
 import {createReducer, type PayloadAction} from '@reduxjs/toolkit';
+import {setError} from '../error/error-actions.js';
 import {
   executeSearch,
   fetchFacetValues,
@@ -111,6 +112,10 @@ export const searchReducer = createReducer(
     builder.addCase(fetchPage.pending, handlePendingSearch);
     builder.addCase(updateSearchAction, (state, action) => {
       state.searchAction = action.payload;
+    });
+    builder.addCase(setError, (state, action) => {
+      state.error = action.payload;
+      state.isLoading = false;
     });
   }
 );
