@@ -4,9 +4,8 @@ import {
   type ContextState,
   type Product,
 } from '@coveo/headless/commerce';
-import {html, LitElement, unsafeCSS} from 'lit';
+import {css, html, LitElement} from 'lit';
 import {customElement, state} from 'lit/decorators.js';
-import {when} from 'lit/directives/when.js';
 import {bindStateToController} from '@/src/decorators/bind-state.js';
 import {bindingGuard} from '@/src/decorators/binding-guard.js';
 import {bindings} from '@/src/decorators/bindings.js';
@@ -19,7 +18,6 @@ import {multiClassMap, tw} from '@/src/directives/multi-class-map.js';
 import {defaultCurrencyFormatter} from '../../common/formats/format-common.js';
 import type {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface.js';
 import {parseValue} from '../product-template-component-utils/product-utils.js';
-import styles from './atomic-product-price.tw.css';
 
 /**
  * The `atomic-product-price` component renders the price of a product.
@@ -33,7 +31,11 @@ export class AtomicProductPrice
   extends LitElement
   implements InitializableComponent<CommerceBindings>
 {
-  static styles = unsafeCSS(styles);
+  static styles = css`
+    atomic-product-price.display-grid div {
+      flex-direction: column;
+    }
+  `;
 
   @state()
   bindings!: CommerceBindings;
@@ -86,29 +88,30 @@ export class AtomicProductPrice
   @errorGuard()
   @bindingGuard()
   render() {
-    const priceClasses = tw({
-      'truncate break-keep text-2xl': true,
-      'text-error': this.hasPromotionalPrice,
-    });
-    return html`
-      <div class="flex flex-wrap gap-1">
-        <div
-          class=${multiClassMap(priceClasses)}
-        >
-          ${this.getFormattedValue(
-            this.hasPromotionalPrice ? 'ec_promo_price' : 'ec_price'
-          )}
-        </div>
+    const hasPromo = this.hasPromotionalPrice;
+    const mainPrice = this.getFormattedValue(
+      hasPromo ? 'ec_promo_price' : 'ec_price'
+    );
+    const originalPrice = hasPromo ? this.getFormattedValue('ec_price') : null;
 
-        ${when(
-          this.hasPromotionalPrice,
-          () => html`
-            <div class="original-price content-center truncate text-xl break-keep line-through">
-              ${this.getFormattedValue('ec_price')}
-            </div>
-          `
-        )}
-    </div>
+    const priceClasses = tw({
+      'truncate break-keep text-2xl leading-[1.5]': true,
+      'text-error': hasPromo,
+    });
+    const originalPriceClasses = tw({
+      'original-price content-center truncate text-xl break-keep line-through leading-none': true,
+      invisible: !hasPromo,
+    });
+
+    return html`
+      <div class="flex flex-wrap gap-1 [.display-grid]:flex-col">
+        <div class=${multiClassMap(priceClasses)}>
+          ${mainPrice}
+        </div>
+        <div class=${multiClassMap(originalPriceClasses)}>
+          ${originalPrice ?? html`&#8203;`}
+        </div>
+      </div>
     `;
   }
 }
