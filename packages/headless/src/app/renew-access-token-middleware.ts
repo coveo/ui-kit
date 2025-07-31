@@ -66,7 +66,7 @@ function isExpiredTokenError(
     action !== null &&
     'error' in action &&
     // biome-ignore lint/suspicious/noExplicitAny: any action is possible here.
-    (action as any).error?.name === UnauthorizedTokenError.name
+    (action as any).error?.name === new UnauthorizedTokenError().name
   );
 }
 
