@@ -20,7 +20,6 @@
     "dayjs": "1.11.13",
     "escape-html": "1.0.3",
     "express": "5.1.0",
-    "filesize": "10.1.6",
     "react": "19.1.0",
     "react-dom": "19.1.0",
     "react-router-dom": "6.26.0",
