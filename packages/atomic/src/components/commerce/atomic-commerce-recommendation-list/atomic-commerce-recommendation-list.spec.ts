@@ -31,7 +31,7 @@ describe('AtomicCommerceRecommendationList', () => {
 
   beforeEach(() => {
     summary.mockReturnValue(buildFakeSummary());
-
+    vi.spyOn(console, 'error').mockImplementation(() => {});
     vi.mocked(buildRecommendations).mockReturnValue(
       buildFakeRecommendations({
         implementation: {
