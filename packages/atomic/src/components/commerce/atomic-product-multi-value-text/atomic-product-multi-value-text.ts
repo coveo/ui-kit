@@ -156,7 +156,7 @@ export class AtomicProductMultiValueText
       <li
         aria-hidden="true"
         part="product-multi-value-text-separator"
-        class="${String.raw`separator inline-block before:inline before:content-[',\00a0']`}"
+        class="${String.raw`inline-block before:inline before:content-[',\00a0']`}"
       ></li>
     `;
   }
