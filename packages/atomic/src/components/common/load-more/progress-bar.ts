@@ -6,7 +6,10 @@ interface LoadMoreProgressBarProps {
   from: number;
   to: number;
 }
-
+/**
+ * @cssprop --atomic-more-results-progress-bar-color-from - Color of the start of the gradient for the load more results progress bar.
+ * @cssprop --atomic-more-results-progress-bar-color-to - Color of the end of the gradient for the load more results progress bar.
+ */
 export const renderLoadMoreProgressBar: FunctionalComponent<
   LoadMoreProgressBarProps
 > = ({props}) => {
@@ -17,7 +20,7 @@ export const renderLoadMoreProgressBar: FunctionalComponent<
   return html`
     <div part="progress-bar" class="bg-neutral relative my-2 h-1 w-72 rounded">
       <div
-        class="progress-bar absolute top-0 left-0 z-1 h-full overflow-hidden rounded bg-linear-to-r"
+        class="from-more-results-progress-bar-color-from to-more-results-progress-bar-color-to absolute top-0 left-0 z-1 h-full overflow-hidden rounded bg-linear-to-r"
         style=${styleMap({width})}
       ></div>
     </div>
