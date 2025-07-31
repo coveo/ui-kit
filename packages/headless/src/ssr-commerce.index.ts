@@ -72,46 +72,8 @@ export type {Relay} from '@coveo/relay';
 export type {Middleware, Unsubscribe} from '@reduxjs/toolkit';
 // Main App
 export type {CommerceEngineOptions} from './app/commerce-engine/commerce-engine.js';
-export type {CommerceEngineDefinition} from './app/commerce-engine/commerce-engine.ssr.js';
-export {defineCommerceEngine} from './app/commerce-engine/commerce-engine.ssr.js';
 export type {CommerceEngineConfiguration} from './app/commerce-engine/commerce-engine-configuration.js';
 export {getSampleCommerceEngineConfiguration} from './app/commerce-engine/commerce-engine-configuration.js';
-export type {
-  CommerceEngineDefinitionOptions,
-  SSRCommerceEngine as CommerceEngine,
-} from './app/commerce-ssr-engine/factories/build-factory.js';
-export type {
-  ControllerDefinition,
-  ControllerDefinitionsMap,
-  ControllerWithKind,
-  EngineDefinitionBuildResult,
-  EngineDefinitionControllersPropsOption,
-  EngineStaticState,
-  HydratedState,
-  InferControllerFromDefinition,
-  InferControllerPropsMapFromDefinitions,
-  InferControllerStaticStateFromController,
-  InferControllerStaticStateMapFromControllers,
-  InferControllerStaticStateMapFromDefinitionsWithSolutionType,
-  InferControllersMapFromDefinition,
-  OptionsTuple,
-} from './app/commerce-ssr-engine/types/common.js';
-export {SolutionType} from './app/commerce-ssr-engine/types/common.js';
-export type {
-  Build,
-  BuildOptions,
-  EngineDefinition,
-  FetchStaticState,
-  FetchStaticStateOptions,
-  FromBuildResult,
-  FromBuildResultOptions,
-  HydrateStaticState,
-  HydrateStaticStateOptions,
-  InferBuildResult,
-  InferHydratedState,
-  InferStaticState,
-} from './app/commerce-ssr-engine/types/core-engine.js';
-export {Kind} from './app/commerce-ssr-engine/types/kind.js';
 // export type
 export type {CoreEngineNext, ExternalEngineOptions} from './app/engine.js';
 export type {
@@ -126,6 +88,21 @@ export type {
   NavigatorContextProvider,
 } from './app/navigator-context-provider.js';
 export type {
+  InteractiveProduct,
+  InteractiveProductOptions,
+  InteractiveProductProps,
+} from './controllers/commerce/core/interactive-product/headless-core-interactive-product.js';
+//#region Controllers
+export type {
+  Controller,
+  Subscribable,
+} from './controllers/controller/headless-controller.js';
+export type {
+  BreadcrumbManager,
+  BreadcrumbManagerState,
+} from './ssr/commerce/controllers/breadcrumb-manager/headless-core-breadcrumb-manager.ssr.js';
+export {defineBreadcrumbManager} from './ssr/commerce/controllers/breadcrumb-manager/headless-core-breadcrumb-manager.ssr.js';
+export type {
   Cart,
   CartBuildProps,
   CartDefinition,
@@ -133,8 +110,8 @@ export type {
   CartItem,
   CartProps,
   CartState,
-} from './controllers/commerce/context/cart/headless-cart.ssr.js';
-export {defineCart} from './controllers/commerce/context/cart/headless-cart.ssr.js';
+} from './ssr/commerce/controllers/cart/headless-cart.ssr.js';
+export {defineCart} from './ssr/commerce/controllers/cart/headless-cart.ssr.js';
 export type {
   Context,
   ContextDefinition,
@@ -143,13 +120,24 @@ export type {
   ContextState,
   UserLocation,
   View,
-} from './controllers/commerce/context/headless-context.ssr.js';
-export {defineContext} from './controllers/commerce/context/headless-context.ssr.js';
+} from './ssr/commerce/controllers/context/headless-context.ssr.js';
+export {defineContext} from './ssr/commerce/controllers/context/headless-context.ssr.js';
 export type {
-  BreadcrumbManager,
-  BreadcrumbManagerState,
-} from './controllers/commerce/core/breadcrumb-manager/headless-core-breadcrumb-manager.ssr.js';
-export {defineBreadcrumbManager} from './controllers/commerce/core/breadcrumb-manager/headless-core-breadcrumb-manager.ssr.js';
+  DidYouMean,
+  DidYouMeanState,
+} from './ssr/commerce/controllers/did-you-mean/headless-did-you-mean.ssr.js';
+export {defineDidYouMean} from './ssr/commerce/controllers/did-you-mean/headless-did-you-mean.ssr.js';
+export type {
+  CategoryFilterSuggestions,
+  CategoryFilterSuggestionsState,
+  FieldSuggestionsFacet,
+  FilterSuggestions,
+  FilterSuggestionsGenerator,
+  FilterSuggestionsGeneratorDefinition,
+  FilterSuggestionsState,
+  GeneratedFilterSuggestionsControllers,
+} from './ssr/commerce/controllers/filter-suggestions/headless-filter-suggestions-generator.ssr.js';
+export {defineFilterSuggestionsGenerator} from './ssr/commerce/controllers/filter-suggestions/headless-filter-suggestions-generator.ssr.js';
 export type {
   BaseFacetSearchResult,
   CategoryFacet,
@@ -175,21 +163,24 @@ export type {
   RegularFacet,
   RegularFacetState,
   RegularFacetValue,
-} from './controllers/commerce/core/facets/generator/headless-commerce-facet-generator.ssr.js';
-export {defineFacetGenerator} from './controllers/commerce/core/facets/generator/headless-commerce-facet-generator.ssr.js';
+} from './ssr/commerce/controllers/generator/headless-commerce-facet-generator.ssr.js';
+export {defineFacetGenerator} from './ssr/commerce/controllers/generator/headless-commerce-facet-generator.ssr.js';
 export type {
-  InteractiveProduct,
-  InteractiveProductOptions,
-  InteractiveProductProps,
-} from './controllers/commerce/core/interactive-product/headless-core-interactive-product.js';
+  InstantProducts,
+  InstantProductsDefinition,
+  InstantProductsOptions,
+  InstantProductsProps,
+  InstantProductsState,
+} from './ssr/commerce/controllers/instant-products/headless-instant-products.ssr.js';
+export {defineInstantProducts} from './ssr/commerce/controllers/instant-products/headless-instant-products.ssr.js';
 export type {
   CorePaginationOptions,
   Pagination,
   PaginationOptions,
   PaginationProps,
   PaginationState,
-} from './controllers/commerce/core/pagination/headless-core-commerce-pagination.ssr.js';
-export {definePagination} from './controllers/commerce/core/pagination/headless-core-commerce-pagination.ssr.js';
+} from './ssr/commerce/controllers/pagination/headless-core-commerce-pagination.ssr.js';
+export {definePagination} from './ssr/commerce/controllers/pagination/headless-core-commerce-pagination.ssr.js';
 export type {
   CommerceSearchParameters,
   ParameterManager,
@@ -198,50 +189,17 @@ export type {
   Parameters,
   ProductListingParameters,
   SSRParameterManagerProps,
-} from './controllers/commerce/core/parameter-manager/headless-core-parameter-manager.ssr.js';
-export {defineParameterManager} from './controllers/commerce/core/parameter-manager/headless-core-parameter-manager.ssr.js';
-export type {
-  Sort,
-  SortProps,
-  SortState,
-} from './controllers/commerce/core/sort/headless-core-commerce-sort.ssr.js';
-export {defineSort} from './controllers/commerce/core/sort/headless-core-commerce-sort.ssr.js';
-export type {
-  ProductListingSummaryState,
-  RecommendationsSummaryState,
-  SearchSummaryState,
-  Summary,
-  SummaryState,
-} from './controllers/commerce/core/summary/headless-core-summary.ssr.js';
-export {defineSummary} from './controllers/commerce/core/summary/headless-core-summary.ssr.js';
-export type {
-  CategoryFilterSuggestions,
-  CategoryFilterSuggestionsState,
-  FieldSuggestionsFacet,
-  FilterSuggestions,
-  FilterSuggestionsGenerator,
-  FilterSuggestionsGeneratorDefinition,
-  FilterSuggestionsState,
-  GeneratedFilterSuggestionsControllers,
-} from './controllers/commerce/filter-suggestions/headless-filter-suggestions-generator.ssr.js';
-export {defineFilterSuggestionsGenerator} from './controllers/commerce/filter-suggestions/headless-filter-suggestions-generator.ssr.js';
-export type {
-  InstantProducts,
-  InstantProductsDefinition,
-  InstantProductsOptions,
-  InstantProductsProps,
-  InstantProductsState,
-} from './controllers/commerce/instant-products/headless-instant-products.ssr.js';
-export {defineInstantProducts} from './controllers/commerce/instant-products/headless-instant-products.ssr.js';
+} from './ssr/commerce/controllers/parameter-manager/headless-core-parameter-manager.ssr.js';
+export {defineParameterManager} from './ssr/commerce/controllers/parameter-manager/headless-core-parameter-manager.ssr.js';
 export type {
   ProductList,
   ProductListing,
   ProductListState,
   Search,
-} from './controllers/commerce/product-list/headless-product-list.ssr.js';
-export {defineProductList} from './controllers/commerce/product-list/headless-product-list.ssr.js';
-export type {ProductView} from './controllers/commerce/product-view/headless-product-view.ssr.js';
-export {defineProductView} from './controllers/commerce/product-view/headless-product-view.ssr.js';
+} from './ssr/commerce/controllers/product-list/headless-product-list.ssr.js';
+export {defineProductList} from './ssr/commerce/controllers/product-list/headless-product-list.ssr.js';
+export type {ProductView} from './ssr/commerce/controllers/product-view/headless-product-view.ssr.js';
+export {defineProductView} from './ssr/commerce/controllers/product-view/headless-product-view.ssr.js';
 export type {
   RecentQueriesList,
   RecentQueriesListDefinition,
@@ -249,19 +207,14 @@ export type {
   RecentQueriesListOptions,
   RecentQueriesListProps,
   RecentQueriesState,
-} from './controllers/commerce/recent-queries-list/headless-recent-queries-list.ssr.js';
-export {defineRecentQueriesList} from './controllers/commerce/recent-queries-list/headless-recent-queries-list.ssr.js';
+} from './ssr/commerce/controllers/recent-queries-list/headless-recent-queries-list.ssr.js';
+export {defineRecentQueriesList} from './ssr/commerce/controllers/recent-queries-list/headless-recent-queries-list.ssr.js';
 export type {
   Recommendations,
   RecommendationsDefinition,
   RecommendationsState,
-} from './controllers/commerce/recommendations/headless-recommendations.ssr.js';
-export {defineRecommendations} from './controllers/commerce/recommendations/headless-recommendations.ssr.js';
-export type {
-  DidYouMean,
-  DidYouMeanState,
-} from './controllers/commerce/search/did-you-mean/headless-did-you-mean.ssr.js';
-export {defineDidYouMean} from './controllers/commerce/search/did-you-mean/headless-did-you-mean.ssr.js';
+} from './ssr/commerce/controllers/recommendations/headless-recommendations.ssr.js';
+export {defineRecommendations} from './ssr/commerce/controllers/recommendations/headless-recommendations.ssr.js';
 export type {
   CoreSearchBox,
   SearchBox,
@@ -270,38 +223,87 @@ export type {
   SearchBoxProps,
   SearchBoxState,
   Suggestion,
-} from './controllers/commerce/search-box/headless-search-box.ssr.js';
-export {defineSearchBox} from './controllers/commerce/search-box/headless-search-box.ssr.js';
+} from './ssr/commerce/controllers/search-box/headless-search-box.ssr.js';
+export {defineSearchBox} from './ssr/commerce/controllers/search-box/headless-search-box.ssr.js';
+export type {
+  Sort,
+  SortProps,
+  SortState,
+} from './ssr/commerce/controllers/sort/headless-core-commerce-sort.ssr.js';
+export {defineSort} from './ssr/commerce/controllers/sort/headless-core-commerce-sort.ssr.js';
 export type {
   StandaloneSearchBox,
   StandaloneSearchBoxDefinition,
   StandaloneSearchBoxProps,
   StandaloneSearchBoxState,
-} from './controllers/commerce/standalone-search-box/headless-standalone-search-box.ssr.js';
-export {defineStandaloneSearchBox} from './controllers/commerce/standalone-search-box/headless-standalone-search-box.ssr.js';
+} from './ssr/commerce/controllers/standalone-search-box/headless-standalone-search-box.ssr.js';
+export {defineStandaloneSearchBox} from './ssr/commerce/controllers/standalone-search-box/headless-standalone-search-box.ssr.js';
+export type {
+  ProductListingSummaryState,
+  RecommendationsSummaryState,
+  SearchSummaryState,
+  Summary,
+  SummaryState,
+} from './ssr/commerce/controllers/summary/headless-core-summary.ssr.js';
+export {defineSummary} from './ssr/commerce/controllers/summary/headless-core-summary.ssr.js';
 export type {
   NotifyTrigger,
   NotifyTriggerDefinition,
   NotifyTriggerState,
-} from './controllers/commerce/triggers/headless-notify-trigger.ssr.js';
-export {defineNotifyTrigger} from './controllers/commerce/triggers/headless-notify-trigger.ssr.js';
+} from './ssr/commerce/controllers/triggers/headless-notify-trigger.ssr.js';
+export {defineNotifyTrigger} from './ssr/commerce/controllers/triggers/headless-notify-trigger.ssr.js';
 export type {
   QueryTrigger,
   QueryTriggerDefinition,
   QueryTriggerState,
-} from './controllers/commerce/triggers/headless-query-trigger.ssr.js';
-export {defineQueryTrigger} from './controllers/commerce/triggers/headless-query-trigger.ssr.js';
+} from './ssr/commerce/controllers/triggers/headless-query-trigger.ssr.js';
+export {defineQueryTrigger} from './ssr/commerce/controllers/triggers/headless-query-trigger.ssr.js';
 export type {
   RedirectionTrigger,
   RedirectionTriggerDefinition,
   RedirectionTriggerState,
-} from './controllers/commerce/triggers/headless-redirection-trigger.ssr.js';
-export {defineRedirectionTrigger} from './controllers/commerce/triggers/headless-redirection-trigger.ssr.js';
-//#region Controllers
+} from './ssr/commerce/controllers/triggers/headless-redirection-trigger.ssr.js';
+export {defineRedirectionTrigger} from './ssr/commerce/controllers/triggers/headless-redirection-trigger.ssr.js';
+export type {CommerceEngineDefinition} from './ssr/commerce/engine/commerce-engine.ssr.js';
+export {defineCommerceEngine} from './ssr/commerce/engine/commerce-engine.ssr.js';
 export type {
-  Controller,
-  Subscribable,
-} from './controllers/controller/headless-controller.js';
+  CommerceEngineDefinitionOptions,
+  SSRCommerceEngine as CommerceEngine,
+} from './ssr/commerce/factories/build-factory.js';
+export {SolutionType} from './ssr/commerce/types/controller-constants.js';
+export type {
+  ControllerDefinition,
+  ControllerDefinitionsMap,
+  ControllerWithKind,
+  EngineDefinitionBuildResult,
+  EngineDefinitionControllersPropsOption,
+  HydratedState,
+  InferControllerStaticStateFromController,
+  InferControllerStaticStateMapFromControllers,
+  OptionsTuple,
+} from './ssr/commerce/types/controller-definitions.js';
+export type {
+  InferBuildResult,
+  InferControllerFromDefinition,
+  InferControllerPropsMapFromDefinitions,
+  InferControllerStaticStateMapFromDefinitionsWithSolutionType,
+  InferControllersMapFromDefinition,
+  InferHydratedState,
+  InferStaticState,
+} from './ssr/commerce/types/controller-inference.js';
+export type {
+  Build,
+  BuildOptions,
+  EngineDefinition,
+  EngineStaticState,
+  FetchStaticState,
+  FetchStaticStateOptions,
+  FromBuildResult,
+  FromBuildResultOptions,
+  HydrateStaticState,
+  HydrateStaticStateOptions,
+} from './ssr/commerce/types/engine.js';
+export {Kind} from './ssr/commerce/types/kind.js';
 // State
 export type {
   CommerceAppState,

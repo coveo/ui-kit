@@ -36,7 +36,7 @@
   },
   "devDependencies": {
     "@playwright/test": "1.54.1",
-    "@types/node": "22.16.4",
+    "@types/node": "22.16.5",
     "rimraf": "3.0.2",
     "vite": "6.3.5"
   },
