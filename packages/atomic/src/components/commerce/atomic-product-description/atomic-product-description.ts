@@ -1,6 +1,6 @@
 import {Schema, StringValue} from '@coveo/bueno';
 import type {Product} from '@coveo/headless/commerce';
-import {html, LitElement, nothing, unsafeCSS} from 'lit';
+import {html, LitElement, nothing} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {createRef} from 'lit/directives/ref.js';
 import {booleanConverter} from '@/src/converters/boolean-converter.js';
@@ -16,7 +16,6 @@ import {
   type TruncateAfter,
 } from '../../common/expandable-text/expandable-text.js';
 import type {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface.js';
-import styles from './atomic-product-description.tw.css';
 import '../atomic-product-text/atomic-product-text.js';
 
 /**
@@ -32,7 +31,7 @@ export class AtomicProductDescription
   extends LitElement
   implements InitializableComponent<CommerceBindings>
 {
-  static styles = unsafeCSS(styles);
+  static styles = [];
   @state()
   bindings!: CommerceBindings;
 
