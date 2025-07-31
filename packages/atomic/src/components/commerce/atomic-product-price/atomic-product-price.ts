@@ -104,7 +104,7 @@ export class AtomicProductPrice
     });
 
     return html`
-      <div class="flex flex-wrap gap-1 [.display-grid]:flex-col">
+      <div class="flex flex-wrap gap-1">
         <div class=${multiClassMap(priceClasses)}>
           ${mainPrice}
         </div>
