@@ -298,12 +298,17 @@ export class AtomicProduct extends ChildrenUpdateCompleteMixin(LitElement) {
   }
 
   private getCombinedClasses(additionalContent?: string): string[] {
-    const layoutClasses = this.layout.getClasses(additionalContent);
+    const layoutClasses = this.layout
+      ? this.layout.getClasses(additionalContent)
+      : [];
     const extraClasses = this.classes.split(/\s+/).filter((c) => c);
     return [...layoutClasses, ...extraClasses];
   }
 
   private applyClassesToChildren(): void {
+    if (!this.layout) {
+      return;
+    }
     const classes = this.getCombinedClasses();
     const root = this.shadowRoot?.querySelector('.result-root');
     if (!root) {
