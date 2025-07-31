@@ -13,6 +13,23 @@ test.describe('atomic-generated-answer citation', () => {
       expect(citationCount).toBeGreaterThan(0);
       await generatedAnswer.citation.first().screenshot();
     });
+
+    test('should only append text fragment to HTML citations', async ({
+      generatedAnswer,
+    }) => {
+      const citationCount = await generatedAnswer.getCitationCount();
+
+      for (let i = 0; i < citationCount; i++) {
+        const filetype = await generatedAnswer.getCitationFiletype(i);
+        const href = await generatedAnswer.getCitationHref(i);
+
+        if (filetype === 'html') {
+          expect(href).toMatch(/#:~:text=/);
+        } else {
+          expect(href).not.toMatch(/#:~:text=/);
+        }
+      }
+    });
   });
 
   test.describe('with citation anchoring disabled', () => {
