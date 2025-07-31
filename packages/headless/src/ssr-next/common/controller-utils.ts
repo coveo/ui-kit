@@ -5,14 +5,13 @@ import {clone, mapObject} from '../../utils/utils.js';
 import type {
   ControllerDefinition,
   ControllerDefinitionsMap,
-  ControllersMap,
 } from './types/controllers.js';
 import type {EngineStaticState} from './types/engine.js';
 import type {
   InferControllerFromDefinition,
   InferControllerPropsFromDefinition,
   InferControllerPropsMapFromDefinitions,
-  InferControllerStaticStateMapFromControllers,
+  InferControllerStaticStateMapFromDefinitions,
   InferControllersMapFromDefinition,
 } from './types/inference.js';
 
@@ -31,8 +30,11 @@ function buildControllerFromDefinition<
   return (
     'build' in definition
       ? definition.build(engine)
-      : definition.buildWithProps(engine, props)
-  ) as InferControllerFromDefinition<TControllerDefinition>;
+      : (() => {
+          const controller = definition.buildWithProps(engine, props);
+          return {...controller, initialState: controller.state};
+        })()
+  ) as InferControllerFromDefinition<TControllerDefinition>; // TODO: ensure the type follow and that initial state is mandatory
 }
 
 export function buildControllerDefinitions<
@@ -59,20 +61,32 @@ export function buildControllerDefinitions<
   ) as InferControllersMapFromDefinition<TControllerDefinitionsMap>;
 }
 
-export function createStaticState<TSearchAction extends UnknownAction>({
+export function createStaticState<
+  TSearchAction extends UnknownAction,
+  TControllerDefinitions extends ControllerDefinitionsMap<
+    CoreEngine | CoreEngineNext,
+    Controller
+  >,
+>({
   searchAction,
   controllers,
 }: {
   searchAction: TSearchAction;
-  controllers: ControllersMap;
+  controllers: InferControllersMapFromDefinition<TControllerDefinitions>;
 }): EngineStaticState<
   TSearchAction,
-  InferControllerStaticStateMapFromControllers<ControllersMap>
+  InferControllerStaticStateMapFromDefinitions<TControllerDefinitions>
 > {
   return {
-    controllers: mapObject(controllers, (controller) => ({
-      state: clone(controller.state),
-    })) as InferControllerStaticStateMapFromControllers<ControllersMap>,
+    controllers: mapObject(controllers, (controller) => {
+      const base = {state: clone(controller.state)};
+      // TODO: check if initialState is an object
+      if ('initialState' in controller) {
+        // TODO: check if that works!!!
+        return {...base, initialState: clone(controller.initialState)};
+      }
+      return base;
+    }) as InferControllerStaticStateMapFromDefinitions<TControllerDefinitions>,
     searchAction: clone(searchAction),
   };
 }
