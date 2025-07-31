@@ -117,6 +117,11 @@ export default class QuanticCitation extends NavigationMixin(LightningElement) {
     );
   }
 
+  /**
+   * If the citation is a Salesforce link and anchoring is disabled (this.disableCitationAnchoring = true), navigate using the navigationMixin as before.
+   * Otherwise rely on the hrefValue. This is to ensure that the anchoring using the fragment works correctly.
+   * @param {MouseEvent} event
+   */
   handleClick(event) {
     if (this.isSalesforceLink && this.disableCitationAnchoring) {
       event.preventDefault();

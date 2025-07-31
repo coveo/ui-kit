@@ -544,12 +544,11 @@ export default class QuanticGeneratedAnswer extends LightningElement {
         .map((field) => field.trim())
         .filter((field) => field.length > 0) || [];
 
-    // Combine default fields with user fields, removing duplicates to make sure we don't
-    // override the following default ones: 'sfid,sfkbid,sfkavid,filetype'
-    const combinedCitationFields = [...DEFAULT_CITATION_FIELDS, ...userCitationFields];
-    const uniqueCitationFields = [...new Set(combinedCitationFields)];
-
-    return uniqueCitationFields;
+    const combinedCitationFields = [
+      ...DEFAULT_CITATION_FIELDS,
+      ...userCitationFields,
+    ];
+    return [...new Set(combinedCitationFields)];
   }
 
   get shouldShowDisclaimer() {
