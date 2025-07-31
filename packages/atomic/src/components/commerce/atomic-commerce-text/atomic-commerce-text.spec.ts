@@ -9,7 +9,6 @@ describe('atomic-commerce-text', () => {
   let i18n: i18n;
 
   beforeEach(async () => {
-    vi.spyOn(console, 'error').mockImplementation(() => {});
     i18n = await createTestI18n();
     i18n.addResourceBundle(
       'en',
