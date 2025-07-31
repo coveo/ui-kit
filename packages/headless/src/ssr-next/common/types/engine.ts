@@ -110,12 +110,3 @@ export type InferHydratedState<
     hydrateStaticState(...args: unknown[]): Promise<unknown>;
   },
 > = Awaited<ReturnType<T['hydrateStaticState']>>;
-/**
- * @deprecated This type is deprecated and will be removed in a future version.
- * {@link EngineDefinition.build} will be removed in a future version.
- */
-export type InferBuildResult<
-  T extends {
-    build(...args: unknown[]): Promise<unknown>;
-  },
-> = Awaited<ReturnType<T['build']>>;
