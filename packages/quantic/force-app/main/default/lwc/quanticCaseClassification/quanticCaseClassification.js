@@ -319,7 +319,7 @@ export default class QuanticCaseClassification extends LightningElement {
    * @returns {string}
    */
   get formClass() {
-    return `slds-form-element ${this.hasError ? 'slds-has-error' : ''}`;
+    return `slds-form-element slds-grid slds-grid_vertical ${this.hasError ? 'slds-has-error' : ''}`;
   }
 
   /**

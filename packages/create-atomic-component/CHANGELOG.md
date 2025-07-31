@@ -1,3 +1,10 @@
+## 1.3.0 (2025-07-30)
+
+* ci(create-atomic): fix release phase 1 for new create-atomic packages (#5751) ([ca79c40](https://github.com/coveo/ui-kit/commits/ca79c40)), closes [#5751](https://github.com/coveo/ui-kit/issues/5751)
+* feat(cli): port over create-atomic-component from cli  (#5656) ([da1e125](https://github.com/coveo/ui-kit/commits/da1e125)), closes [#5656](https://github.com/coveo/ui-kit/issues/5656)
+
+
+
 ## 1.2.21 (2024-05-13)
 
 ## 1.2.18 (2024-02-21)
