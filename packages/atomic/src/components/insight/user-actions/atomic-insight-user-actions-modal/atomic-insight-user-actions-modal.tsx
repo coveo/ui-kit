@@ -112,7 +112,7 @@ export class AtomicInsightUserActionsModal
         <aside
           style={{height: '100%'}}
           slot="body"
-          class="mr-[calc(-1*(100vw-3rem-100%))] flex w-full flex-col px-2"
+          class="flex flex-col w-full px-2"
         >
           <atomic-insight-user-actions-timeline
             userId={this.userId}

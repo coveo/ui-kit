@@ -100,7 +100,7 @@ export class AtomicIPXRefineModal implements InitializableComponent {
     }
 
     return (
-      <aside slot="body" class="mr-[calc(-1*(100vw-3rem-100%))] flex w-full flex-col">
+      <aside slot="body" class="flex flex-col w-full">
         {this.renderHeader()}
         <slot name="facets"></slot>
       </aside>
