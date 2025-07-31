@@ -2,15 +2,15 @@ import type {CommerceEngine} from '@coveo/headless/commerce';
 import Backend from 'i18next-http-backend';
 import {html} from 'lit';
 import {describe, expect, it, vi} from 'vitest';
+import {setCoveoGlobal} from '@/src/global/environment';
+import {loadDayjsLocale} from '@/src/utils/dayjs-locales';
+import {renderInAtomicCommerceInterface} from '@/vitest-utils/testing-helpers/fixtures/atomic/commerce/atomic-commerce-interface-fixture';
+import {buildFakeCommerceEngine} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/engine';
+import {init18n} from './i18n';
 import {
   type BaseAtomicInterface,
-  CommonAtomicInterfaceHelper,
-} from '@/src/components/common/interface/interface-common.js';
-import {setCoveoGlobal} from '@/src/global/environment.js';
-import {loadDayjsLocale} from '@/src/utils/dayjs-locales.js';
-import {renderInAtomicCommerceInterface} from '@/vitest-utils/testing-helpers/fixtures/atomic/commerce/atomic-commerce-interface-fixture.js';
-import {buildFakeCommerceEngine} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/engine.js';
-import {init18n} from './i18n.js';
+  InterfaceController,
+} from './interface-controller';
 
 vi.mock('@/src/global/environment.js', {spy: true});
 vi.mock('./i18n.js', () => ({
@@ -28,7 +28,7 @@ vi.mock('i18next-http-backend', () => {
   };
 });
 
-describe('#CommonAtomicInterfaceHelper', () => {
+describe('#InterfaceController', () => {
   const setupElement = async () => {
     const {atomicInterface} = await renderInAtomicCommerceInterface({
       template: html``,
@@ -40,95 +40,52 @@ describe('#CommonAtomicInterfaceHelper', () => {
   describe('#constructor', () => {
     it('should call the #setCoveoGlobal function with the provided global variable name', async () => {
       const atomicInterface = await setupElement();
-
-      new CommonAtomicInterfaceHelper(atomicInterface, 'CoveoAtomic');
-
+      new InterfaceController(atomicInterface, 'CoveoAtomic');
       expect(setCoveoGlobal).toHaveBeenCalledWith('CoveoAtomic');
     });
+  });
 
-    describe('when the provided atomic interface has #connectedCallback and #render methods', async () => {
-      it('should override the #connectedCallback method to initialize i18n before calling the original method', async () => {
-        const atomicInterface = await setupElement();
-        const originalConnectedCallbackSpy = vi.spyOn(
-          atomicInterface,
-          'connectedCallback'
-        );
-
-        new CommonAtomicInterfaceHelper(atomicInterface, 'CoveoAtomic');
-
-        expect(init18n).not.toHaveBeenCalled();
-        expect(originalConnectedCallbackSpy).not.toHaveBeenCalled();
-
-        atomicInterface.connectedCallback();
-
-        expect(init18n).toHaveBeenCalledExactlyOnceWith(atomicInterface);
-        expect(originalConnectedCallbackSpy).toHaveBeenCalledOnce();
-      });
-
-      it('should override the #render method to render an atomic-component-error if necessary, or the original method otherwise', async () => {
-        vi.spyOn(console, 'error').mockImplementation(() => {});
-        const atomicInterface = await setupElement();
-        atomicInterface.error = new Error('Test error');
-        const render = vi.fn();
-        // @ts-expect-error - Mocking the render method
-        atomicInterface.render = render;
-
-        expect(render).not.toHaveBeenCalled();
-
-        new CommonAtomicInterfaceHelper(atomicInterface, 'CoveoAtomic');
-        atomicInterface.requestUpdate();
-        await atomicInterface.updateComplete;
-
-        const errorComponentElement = atomicInterface.shadowRoot?.querySelector(
-          'atomic-component-error'
-        );
-
-        expect(render).not.toHaveBeenCalled();
-        await expect.element(errorComponentElement!).toBeInTheDocument();
-
-        atomicInterface.error = undefined;
-        atomicInterface.requestUpdate();
-        await atomicInterface.updateComplete;
-
-        await expect.element(errorComponentElement!).not.toBeInTheDocument();
-        expect(render).toHaveBeenCalledOnce();
-      });
+  describe('#hostConnected', () => {
+    it('should initialize i18n', async () => {
+      const atomicInterface = await setupElement();
+      const controller = new InterfaceController(
+        atomicInterface,
+        'CoveoAtomic'
+      );
+      controller.hostConnected();
+      expect(vi.mocked(init18n)).toHaveBeenCalledWith(atomicInterface);
     });
 
-    it('should call #init18n with the provided atomic interface when its #connectedCallback or its #render method is missing', async () => {
+    it('should add an atomic-aria-live component as a child to the interface', async () => {
       const atomicInterface = await setupElement();
-
-      const incompleteAtomicInterface = {
-        ...atomicInterface,
-        bindings: atomicInterface.bindings,
-        updateIconAssetsPath: atomicInterface.updateIconAssetsPath,
-      } as BaseAtomicInterface<never> &
-        HTMLElement & {connectedCallback?: () => void; render?: () => void};
-
-      delete incompleteAtomicInterface.connectedCallback;
-      delete incompleteAtomicInterface.render;
-
-      new CommonAtomicInterfaceHelper(incompleteAtomicInterface, 'CoveoAtomic');
-
-      expect(init18n).toHaveBeenCalledWith(incompleteAtomicInterface);
+      const controller = new InterfaceController(
+        atomicInterface,
+        'CoveoAtomic'
+      );
+      controller.hostConnected();
+      const ariaLive = atomicInterface!.querySelector('atomic-aria-live');
+      expect(ariaLive).not.toBeNull();
     });
+  });
 
-    it('should not initialize i18n when #connectedCallback or #render are present in the provided atomic interface', async () => {
+  describe('#hostDisconnected', () => {
+    it('should remove the aria-live component from the interface', async () => {
       const atomicInterface = await setupElement();
-
-      new CommonAtomicInterfaceHelper(atomicInterface, 'CoveoAtomic');
-
-      expect(init18n).not.toHaveBeenCalled();
+      const controller = new InterfaceController(
+        atomicInterface,
+        'CoveoAtomic'
+      );
+      controller.hostConnected();
+      controller.hostDisconnected();
+      const ariaLive = atomicInterface!.querySelector('atomic-aria-live');
+      expect(ariaLive).toBeNull();
     });
   });
 
   describe('#onComponentInitializing', () => {
     it('should call the initialize event #preventDefault and #stopPropagation functions', async () => {
       const atomicInterface = await setupElement();
-      const helper = new CommonAtomicInterfaceHelper(
-        atomicInterface,
-        'CoveoAtomic'
-      );
+      const helper = new InterfaceController(atomicInterface, 'CoveoAtomic');
       const initializeEvent = {
         preventDefault: vi.fn(),
         stopPropagation: vi.fn(),
@@ -146,10 +103,7 @@ describe('#CommonAtomicInterfaceHelper', () => {
       (atomicInterface as BaseAtomicInterface<CommerceEngine>).engine =
         buildFakeCommerceEngine();
 
-      const helper = new CommonAtomicInterfaceHelper(
-        atomicInterface,
-        'CoveoAtomic'
-      );
+      const helper = new InterfaceController(atomicInterface, 'CoveoAtomic');
 
       const mockEventDetail = vi.fn();
       const mockEvent = {
@@ -167,10 +121,7 @@ describe('#CommonAtomicInterfaceHelper', () => {
 
     it('should add initialize event to hanging list when #engine does not exist', async () => {
       const atomicInterface = await setupElement();
-      const helper = new CommonAtomicInterfaceHelper(
-        atomicInterface,
-        'CoveoAtomic'
-      );
+      const helper = new InterfaceController(atomicInterface, 'CoveoAtomic');
       const initializeEvent = {
         preventDefault: vi.fn(),
         stopPropagation: vi.fn(),
@@ -193,10 +144,7 @@ describe('#CommonAtomicInterfaceHelper', () => {
       const atomicInterface = await setupElement();
       const engine = buildFakeCommerceEngine();
       (atomicInterface as BaseAtomicInterface<CommerceEngine>).engine = engine;
-      const helper = new CommonAtomicInterfaceHelper(
-        atomicInterface,
-        'CoveoAtomic'
-      );
+      const helper = new InterfaceController(atomicInterface, 'CoveoAtomic');
       const initEngine = vi.fn();
 
       await helper.onInitialization(initEngine);
@@ -215,10 +163,7 @@ describe('#CommonAtomicInterfaceHelper', () => {
           atomicInterface,
           'updateIconAssetsPath'
         );
-        const helper = new CommonAtomicInterfaceHelper(
-          atomicInterface,
-          'CoveoAtomic'
-        );
+        const helper = new InterfaceController(atomicInterface, 'CoveoAtomic');
 
         await helper.onInitialization(vi.fn());
 
@@ -228,10 +173,7 @@ describe('#CommonAtomicInterfaceHelper', () => {
       it('should call the provided init engine function', async () => {
         const atomicInterface = await setupElement();
         const initEngine = vi.fn();
-        const helper = new CommonAtomicInterfaceHelper(
-          atomicInterface,
-          'CoveoAtomic'
-        );
+        const helper = new InterfaceController(atomicInterface, 'CoveoAtomic');
 
         await helper.onInitialization(initEngine);
 
@@ -240,10 +182,7 @@ describe('#CommonAtomicInterfaceHelper', () => {
 
       it('should call the atomic interface #registerFieldsToInclude function when defined', async () => {
         const atomicInterface = await setupElement();
-        const helper = new CommonAtomicInterfaceHelper(
-          atomicInterface,
-          'CoveoAtomic'
-        );
+        const helper = new InterfaceController(atomicInterface, 'CoveoAtomic');
 
         await helper.onInitialization(vi.fn());
 
@@ -260,10 +199,7 @@ describe('#CommonAtomicInterfaceHelper', () => {
         const atomicInterface = await setupElement();
         (atomicInterface as BaseAtomicInterface<CommerceEngine>).language =
           'fr';
-        const helper = new CommonAtomicInterfaceHelper(
-          atomicInterface,
-          'CoveoAtomic'
-        );
+        const helper = new InterfaceController(atomicInterface, 'CoveoAtomic');
 
         await helper.onInitialization(vi.fn());
 
@@ -273,10 +209,7 @@ describe('#CommonAtomicInterfaceHelper', () => {
       it("should call the #loadDayjsLocale function with 'en' when atomic interface #language is not defined", async () => {
         const loadDayjsLocaleSpy = vi.mocked(loadDayjsLocale);
         const atomicInterface = await setupElement();
-        const helper = new CommonAtomicInterfaceHelper(
-          atomicInterface,
-          'CoveoAtomic'
-        );
+        const helper = new InterfaceController(atomicInterface, 'CoveoAtomic');
 
         await helper.onInitialization(vi.fn());
 
@@ -285,10 +218,7 @@ describe('#CommonAtomicInterfaceHelper', () => {
 
       it('should process hanging initialize events', async () => {
         const atomicInterface = await setupElement();
-        const helper = new CommonAtomicInterfaceHelper(
-          atomicInterface,
-          'CoveoAtomic'
-        );
+        const helper = new InterfaceController(atomicInterface, 'CoveoAtomic');
         const hangingEvent1 = {
           preventDefault: vi.fn(),
           stopPropagation: vi.fn(),
@@ -318,10 +248,7 @@ describe('#CommonAtomicInterfaceHelper', () => {
     it('should call #engineIsCreated with the atomic interface #engine', async () => {
       vi.spyOn(console, 'error').mockImplementation(() => {});
       const atomicInterface = await setupElement();
-      const helper = new CommonAtomicInterfaceHelper(
-        atomicInterface,
-        'CoveoAtomic'
-      );
+      const helper = new InterfaceController(atomicInterface, 'CoveoAtomic');
       const engineIsCreatedSpy = vi.spyOn(helper, 'engineIsCreated');
 
       helper.onAnalyticsChange();
@@ -341,10 +268,7 @@ describe('#CommonAtomicInterfaceHelper', () => {
       atomicInterface.analytics = false;
       const engine = buildFakeCommerceEngine();
       (atomicInterface as BaseAtomicInterface<CommerceEngine>).engine = engine;
-      const helper = new CommonAtomicInterfaceHelper(
-        atomicInterface,
-        'CoveoAtomic'
-      );
+      const helper = new InterfaceController(atomicInterface, 'CoveoAtomic');
 
       helper.onAnalyticsChange();
 
@@ -356,10 +280,7 @@ describe('#CommonAtomicInterfaceHelper', () => {
       atomicInterface.analytics = true;
       const engine = buildFakeCommerceEngine();
       (atomicInterface as BaseAtomicInterface<CommerceEngine>).engine = engine;
-      const helper = new CommonAtomicInterfaceHelper(
-        atomicInterface,
-        'CoveoAtomic'
-      );
+      const helper = new InterfaceController(atomicInterface, 'CoveoAtomic');
 
       helper.onAnalyticsChange();
 
@@ -383,10 +304,7 @@ describe('#CommonAtomicInterfaceHelper', () => {
         atomicInterface.i18n,
         'changeLanguage'
       );
-      const helper = new CommonAtomicInterfaceHelper(
-        atomicInterface,
-        'CoveoAtomic'
-      );
+      const helper = new InterfaceController(atomicInterface, 'CoveoAtomic');
 
       helper.onLanguageChange('it');
 
@@ -418,10 +336,7 @@ describe('#CommonAtomicInterfaceHelper', () => {
         atomicInterface.i18n,
         'changeLanguage'
       );
-      const helper = new CommonAtomicInterfaceHelper(
-        atomicInterface,
-        'CoveoAtomic'
-      );
+      const helper = new InterfaceController(atomicInterface, 'CoveoAtomic');
 
       helper.onLanguageChange();
 
@@ -444,10 +359,7 @@ describe('#CommonAtomicInterfaceHelper', () => {
       const loadDayjsLocaleSpy = vi.mocked(loadDayjsLocale);
       const atomicInterface = await setupElement();
       (atomicInterface as BaseAtomicInterface<CommerceEngine>).language = 'fr';
-      const helper = new CommonAtomicInterfaceHelper(
-        atomicInterface,
-        'CoveoAtomic'
-      );
+      const helper = new InterfaceController(atomicInterface, 'CoveoAtomic');
 
       helper.onLanguageChange();
 
@@ -457,10 +369,7 @@ describe('#CommonAtomicInterfaceHelper', () => {
     it("should call #loadDayjsLocale with 'en' when atomic interface language is not defined", async () => {
       const loadDayjsLocaleSpy = vi.mocked(loadDayjsLocale);
       const atomicInterface = await setupElement();
-      const helper = new CommonAtomicInterfaceHelper(
-        atomicInterface,
-        'CoveoAtomic'
-      );
+      const helper = new InterfaceController(atomicInterface, 'CoveoAtomic');
 
       helper.onLanguageChange();
 
@@ -470,10 +379,7 @@ describe('#CommonAtomicInterfaceHelper', () => {
     it('should create a new #Backend instance with i18n services and backend options', async () => {
       const BackendSpy = vi.mocked(Backend);
       const atomicInterface = await setupElement();
-      const helper = new CommonAtomicInterfaceHelper(
-        atomicInterface,
-        'CoveoAtomic'
-      );
+      const helper = new InterfaceController(atomicInterface, 'CoveoAtomic');
 
       helper.onLanguageChange();
 
@@ -495,10 +401,7 @@ describe('#CommonAtomicInterfaceHelper', () => {
       const atomicInterface = await setupElement();
       (atomicInterface as BaseAtomicInterface<CommerceEngine>).language =
         'fr-CA';
-      const helper = new CommonAtomicInterfaceHelper(
-        atomicInterface,
-        'CoveoAtomic'
-      );
+      const helper = new InterfaceController(atomicInterface, 'CoveoAtomic');
 
       helper.onLanguageChange();
 
@@ -521,10 +424,7 @@ describe('#CommonAtomicInterfaceHelper', () => {
 
       const atomicInterface = await setupElement();
       (atomicInterface as BaseAtomicInterface<CommerceEngine>).language = 'es';
-      const helper = new CommonAtomicInterfaceHelper(
-        atomicInterface,
-        'CoveoAtomic'
-      );
+      const helper = new InterfaceController(atomicInterface, 'CoveoAtomic');
 
       helper.onLanguageChange();
 
@@ -553,10 +453,7 @@ describe('#CommonAtomicInterfaceHelper', () => {
           atomicInterface.i18n,
           'addResourceBundle'
         );
-        const helper = new CommonAtomicInterfaceHelper(
-          atomicInterface,
-          'CoveoAtomic'
-        );
+        const helper = new InterfaceController(atomicInterface, 'CoveoAtomic');
 
         helper.onLanguageChange();
 
@@ -590,10 +487,7 @@ describe('#CommonAtomicInterfaceHelper', () => {
           atomicInterface.i18n,
           'changeLanguage'
         );
-        const helper = new CommonAtomicInterfaceHelper(
-          atomicInterface,
-          'CoveoAtomic'
-        );
+        const helper = new InterfaceController(atomicInterface, 'CoveoAtomic');
 
         helper.onLanguageChange();
 
@@ -626,10 +520,7 @@ describe('#CommonAtomicInterfaceHelper', () => {
         atomicInterface.i18n,
         'changeLanguage'
       );
-      const helper = new CommonAtomicInterfaceHelper(
-        atomicInterface,
-        'CoveoAtomic'
-      );
+      const helper = new InterfaceController(atomicInterface, 'CoveoAtomic');
 
       helper.onLanguageChange();
 
@@ -666,10 +557,7 @@ describe('#CommonAtomicInterfaceHelper', () => {
       const atomicInterface = await setupElement();
       (atomicInterface as BaseAtomicInterface<CommerceEngine>).language =
         'zh-Hans-CN';
-      const helper = new CommonAtomicInterfaceHelper(
-        atomicInterface,
-        'CoveoAtomic'
-      );
+      const helper = new InterfaceController(atomicInterface, 'CoveoAtomic');
 
       helper.onLanguageChange();
 
@@ -690,10 +578,7 @@ describe('#CommonAtomicInterfaceHelper', () => {
       const atomicInterface = await setupElement();
       const engine = buildFakeCommerceEngine();
       (atomicInterface as BaseAtomicInterface<CommerceEngine>).engine = engine;
-      const helper = new CommonAtomicInterfaceHelper(
-        atomicInterface,
-        'CoveoAtomic'
-      );
+      const helper = new InterfaceController(atomicInterface, 'CoveoAtomic');
 
       const result = helper.engineIsCreated(engine);
 
@@ -706,10 +591,7 @@ describe('#CommonAtomicInterfaceHelper', () => {
         .spyOn(console, 'error')
         .mockImplementation(() => {});
       const atomicInterface = await setupElement();
-      const helper = new CommonAtomicInterfaceHelper(
-        atomicInterface,
-        'CoveoAtomic'
-      );
+      const helper = new InterfaceController(atomicInterface, 'CoveoAtomic');
 
       const result = helper.engineIsCreated(undefined);
 
