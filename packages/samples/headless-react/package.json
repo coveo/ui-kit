@@ -48,7 +48,7 @@
   "devDependencies": {
     "@vitejs/plugin-react": "4.3.4",
     "cypress": "13.7.3",
-    "vite": "6.3.5",
+    "vite": "7.0.6",
     "vitest": "3.2.4"
   }
 }

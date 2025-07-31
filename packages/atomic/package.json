@@ -152,7 +152,7 @@
     "ts-dedent": "2.2.0",
     "ts-lit-plugin": "2.0.2",
     "typescript": "5.8.3",
-    "vite": "6.3.5",
+    "vite": "7.0.6",
     "vitest": "3.2.4",
     "wait-on": "8.0.4"
   },
