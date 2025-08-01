@@ -53,6 +53,7 @@ useCaseTestCases.forEach((useCase) => {
               test('should send positive feedback analytics containing all details', async ({
                 generatedAnswer,
               }) => {
+                await generatedAnswer.streamEndAnalyticRequestPromise;
                 const likeAnalyticRequestPromise =
                   generatedAnswer.waitForLikeGeneratedAnswerAnalytics();
                 await generatedAnswer.clickLikeButton();
@@ -93,6 +94,7 @@ useCaseTestCases.forEach((useCase) => {
               test('should send negative feedback analytics containing all details', async ({
                 generatedAnswer,
               }) => {
+                await generatedAnswer.streamEndAnalyticRequestPromise;
                 const dislikeAnalyticRequestPromise =
                   generatedAnswer.waitForDislikeGeneratedAnswerAnalytics();
                 await generatedAnswer.clickDislikeButton();
@@ -132,6 +134,7 @@ useCaseTestCases.forEach((useCase) => {
               test('should send a copy to clipboard analytics event', async ({
                 generatedAnswer,
               }) => {
+                await generatedAnswer.streamEndAnalyticRequestPromise;
                 const analyticRequestPromise =
                   generatedAnswer.waitForCopyToClipboardAnalytics();
                 await generatedAnswer.clickCopyToClipboardButton();
@@ -149,8 +152,8 @@ useCaseTestCases.forEach((useCase) => {
 
               test('should allow toggling the generated OFF and ON and log analytics', async ({
                 generatedAnswer,
-                
               }) => {
+                await generatedAnswer.streamEndAnalyticRequestPromise;
                 const hideAnswerAnalyticRequestPromise =
                   generatedAnswer.waitForHideAnswersAnalytics();
                 await generatedAnswer.clickToggleButton();
@@ -168,6 +171,7 @@ useCaseTestCases.forEach((useCase) => {
                 test('should log citation hover analytics', async ({
                   generatedAnswer,
                 }) => {
+                  await generatedAnswer.streamEndAnalyticRequestPromise;
                   const citationIndex = 0;
                   const {id, permanentid} = genQaData.citations[citationIndex];
                   const citationHoverAnalyticRequestPromise =
@@ -185,6 +189,7 @@ useCaseTestCases.forEach((useCase) => {
                 test('should log citation click analytics', async ({
                   generatedAnswer,
                 }) => {
+                  await generatedAnswer.streamEndAnalyticRequestPromise;
                   const citationIndex = 0;
                   const {id, title, source, uri, clickUri, permanentid} =
                     genQaData.citations[citationIndex];
@@ -215,6 +220,7 @@ useCaseTestCases.forEach((useCase) => {
               test('should display the answer as collapsed', async ({
                 generatedAnswer,
               }) => {
+                await generatedAnswer.streamEndAnalyticRequestPromise;
                 const expectedShowMoreLabel = 'Show more';
                 await generatedAnswer.streamEndAnalyticRequestPromise;
 
