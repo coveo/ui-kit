@@ -102,6 +102,22 @@ export class AtomicCitation {
     );
   }
 
+  private anchorUrl(
+    uri: string,
+    text?: string,
+    filetype?: string, 
+    pageNumber?: number
+  ) {
+    switch (filetype) {
+      case 'html':
+        return this.generateTextFragmentUrl(uri, text, filetype);
+      case 'pdf':
+        return this.generatePdfPageUrl(uri, pageNumber);
+      default:
+        return uri;
+    }
+  }
+
   private generateTextFragmentUrl(
     uri: string,
     text?: string,
@@ -117,6 +133,16 @@ export class AtomicCitation {
     );
     return `${uri}#:~:text=${encodedTextFragment}`;
   }
+
+  private generatePdfPageUrl(
+    uri: string,
+    pageNumber?: number
+  ){
+    if (!pageNumber || pageNumber <= 0) {
+      return uri;
+    }
+    return `${uri}#page=${pageNumber}`;
+  } 
 
   private openPopover = () => {
     this.isOpen = true;
@@ -160,10 +186,10 @@ export class AtomicCitation {
     return (
       <div class="relative">
         <LinkWithItemAnalytics
-          href={this.generateTextFragmentUrl(
+          href={this.anchorUrl(
             this.citation.clickUri ?? this.citation.uri,
             this.citation.text,
-            this.citation.fields?.filetype
+            this.citation.fields?.filetype,
           )}
           ref={(el) => (this.citationRef = el!)}
           part="citation"
