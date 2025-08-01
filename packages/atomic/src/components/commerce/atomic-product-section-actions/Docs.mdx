@@ -1,0 +1,108 @@
+import { Meta, Title, Description, Canvas, Subtitle, Story } from '@storybook/blocks';
+import * as ProductSectionActionsStories from './atomic-product-section-actions.new.stories';
+import * as ProductSectionBadgesStories from '../atomic-product-section-badges/atomic-product-section-badges.new.stories';
+import { CanvasWithGithub } from '../../../../storybook-utils/documentation/canvas-with-github';
+import * as ProductSectionBottomMetadataStories from '../atomic-product-section-bottom-metadata/atomic-product-section-bottom-metadata.new.stories';
+import * as ProductSectionChildrenStories from '../atomic-product-section-children/atomic-product-section-children.new.stories';
+import * as ProductSectionDescriptionStories from '../atomic-product-section-description/atomic-product-section-description.new.stories';
+import * as ProductSectionEmphasizedStories from '../atomic-product-section-emphasized/atomic-product-section-emphasized.new.stories';
+import * as ProductSectionMetadataStories from '../atomic-product-section-metadata/atomic-product-section-metadata.new.stories';
+import * as ProductSectionNameStories from '../atomic-product-section-name/atomic-product-section-name.new.stories';
+import * as ProductSectionVisualStories from '../atomic-product-section-visual/atomic-product-section-visual.new.stories';
+
+<Meta of={ProductSectionActionsStories} />
+
+# Product Sections
+
+<Subtitle >
+The product section components are the building blocks for creating product templates in commerce interfaces. Each section handles a specific aspect of product presentation, from visual elements to metadata and actions.
+</Subtitle>
+
+
+## Usage 
+These components are typically used within an `atomic-product-template` to create cohesive product displays.
+They work together to present a complete product view, including images, descriptions, metadata, and actions.
+
+```html
+<atomic-product-template>
+  <template>
+    <atomic-product-section-badges>
+      <span class="badge">NEW</span>
+    </atomic-product-section-badges>
+    
+    <atomic-product-section-visual>
+      <atomic-product-image field="ec_images"></atomic-product-image>
+    </atomic-product-section-visual>
+    
+    <atomic-product-section-name>
+      <atomic-product-text field="ec_name"></atomic-product-text>
+    </atomic-product-section-name>
+    
+    <atomic-product-section-metadata>
+      <atomic-product-text field="ec_brand"></atomic-product-text>
+      <atomic-product-text field="ec_price"></atomic-product-text>
+    </atomic-product-section-metadata>
+    
+    <atomic-product-section-description>
+      <atomic-product-text field="ec_description"></atomic-product-text>
+    </atomic-product-section-description>
+    
+    <atomic-product-section-actions>
+      <button class="add-to-cart">Add to Cart</button>
+    </atomic-product-section-actions>
+    
+    <atomic-product-section-bottom-metadata>
+      <span>Free shipping • 2-day delivery</span>
+    </atomic-product-section-bottom-metadata>
+  </template>
+</atomic-product-template>
+```
+
+## Components 
+
+### atomic-product-section-badges
+<CanvasWithGithub of={ProductSectionBadgesStories.Default}  
+  githubPath="commerce/atomic-product-section-badges/atomic-product-section-badges.ts"
+/>
+
+### atomic-product-section-actions
+<CanvasWithGithub of={ProductSectionActionsStories.Default}  
+  githubPath="commerce/atomic-product-section-actions/atomic-product-section-actions.ts"
+/>
+
+### atomic-product-section-bottom-metadata
+<CanvasWithGithub of={ProductSectionBottomMetadataStories.Default}  
+  githubPath="commerce/atomic-product-section-bottom-metadata/atomic-product-section-bottom-metadata.ts"
+/>
+
+### atomic-product-section-children
+<CanvasWithGithub of={ProductSectionChildrenStories.Default}  
+  githubPath="commerce/atomic-product-section-children/atomic-product-section-children.ts"
+/>
+
+### atomic-product-section-description
+<CanvasWithGithub of={ProductSectionDescriptionStories.Default}  
+  githubPath="commerce/atomic-product-section-description/atomic-product-section-description.ts"
+/>
+
+### atomic-product-section-emphasized
+<CanvasWithGithub of={ProductSectionEmphasizedStories.Default}  
+  githubPath="commerce/atomic-product-section-emphasized/atomic-product-section-emphasized.ts"
+/>
+
+### atomic-product-section-metadata
+<CanvasWithGithub of={ProductSectionMetadataStories.Default}  
+  githubPath="commerce/atomic-product-section-metadata/atomic-product-section-metadata.ts"
+/>
+
+### atomic-product-section-name
+<CanvasWithGithub of={ProductSectionNameStories.Default}  
+  githubPath="commerce/atomic-product-section-name/atomic-product-section-name.ts"
+/>
+
+### atomic-product-section-visual
+<CanvasWithGithub of={ProductSectionVisualStories.Default}  
+  githubPath="commerce/atomic-product-section-visual/atomic-product-section-visual.ts"
+/>
+
+
