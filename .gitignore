@@ -26,3 +26,6 @@ packages/atomic/custom-elements.json
 
 # turbo
 .turbo
+
+# Test screenshots
+**/__screenshots__/
