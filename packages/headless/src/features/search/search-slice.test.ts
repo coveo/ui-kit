@@ -5,6 +5,7 @@ import {buildMockResult} from '../../test/mock-result.js';
 import {buildMockSearch} from '../../test/mock-search.js';
 import {buildMockSearchResponse} from '../../test/mock-search-response.js';
 import {buildMockSearchState} from '../../test/mock-search-state.js';
+import {setError} from '../error/error-actions.js';
 import {logFacetShowMore} from '../facets/facet-set/facet-set-analytics-actions.js';
 import {logPageNext} from '../pagination/pagination-analytics-actions.js';
 import {logSearchboxSubmit} from '../query/query-analytics-actions.js';
@@ -478,5 +479,17 @@ describe('search-slice', () => {
       expect(finalState.response.searchUid).toEqual(response.searchUid);
       expect(finalState.searchResponseId).not.toEqual('test');
     });
+  });
+
+  it('should set the error state and set isLoading to false on setError', () => {
+    const error = {
+      message: 'Something went wrong',
+      statusCode: 401,
+      status: 401,
+      type: 'BadRequest',
+    };
+    const finalState = searchReducer(state, setError(error));
+    expect(finalState.error).toEqual(error);
+    expect(finalState.isLoading).toBe(false);
   });
 });

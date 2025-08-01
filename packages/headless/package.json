@@ -52,6 +52,18 @@
       "require": "./dist/cjs/ssr-commerce/headless.cjs",
       "default": "./dist/esm/ssr-commerce.index.js"
     },
+    "./ssr-next": {
+      "types": "./dist/definitions/ssr-next.index.d.ts",
+      "import": "./dist/esm/ssr-next.index.js",
+      "require": "./dist/cjs/ssr-next/headless.cjs",
+      "default": "./dist/esm/ssr-next.index.js"
+    },
+    "./ssr-commerce-next": {
+      "types": "./dist/definitions/ssr-commerce-next.index.d.ts",
+      "import": "./dist/esm/ssr-commerce-next.index.js",
+      "require": "./dist/cjs/ssr-commerce-next/headless.cjs",
+      "default": "./dist/esm/ssr-commerce-next.index.js"
+    },
     "./package.json": "./package.json"
   },
   "types": "./dist/definitions/index.d.ts",

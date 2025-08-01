@@ -1,5 +1,7 @@
 // Auto-generated file
 export default {
+  'atomic-aria-live': async () =>
+    await import('./atomic-aria-live/atomic-aria-live.js'),
   'atomic-component-error': async () =>
     await import('./atomic-component-error/atomic-component-error.js'),
   'atomic-facet-date-input': async () =>

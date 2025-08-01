@@ -6,6 +6,7 @@ import type {
   Product,
 } from '../../../api/commerce/common/product.js';
 import type {CommerceSuccessResponse} from '../../../api/commerce/common/response.js';
+import {setError} from '../../error/error-actions.js';
 import {setContext, setView} from '../context/context-actions.js';
 import {
   executeSearch,
@@ -90,7 +91,11 @@ export const commerceSearchReducer = createReducer(
         products.splice(currentParentIndex, 1, newParent);
       })
       .addCase(setView, () => getCommerceSearchInitialState())
-      .addCase(setContext, () => getCommerceSearchInitialState());
+      .addCase(setContext, () => getCommerceSearchInitialState())
+      .addCase(setError, (state, action) => {
+        state.error = action.payload;
+        state.isLoading = false;
+      });
   }
 );
 
