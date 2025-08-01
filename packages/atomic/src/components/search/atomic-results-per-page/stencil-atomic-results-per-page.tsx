@@ -38,7 +38,7 @@ import {Bindings} from '../atomic-search-interface/atomic-search-interface';
  */
 @Component({
   tag: 'atomic-results-per-page',
-  styleUrl: 'atomic-results-per-page.pcss',
+  styleUrl: 'stencil-atomic-results-per-page.pcss',
   shadow: true,
 })
 export class AtomicResultsPerPage implements InitializableComponent {
