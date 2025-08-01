@@ -22,7 +22,6 @@ export type {RatingProps};
  *
  * @cssprop --atomic-rating-icon-active-color - Color of the icon when active.
  * @cssprop --atomic-rating-icon-inactive-color - Color of the icon when inactive.
- * @cssprop --atomic-rating-icon-outline - Outline color of the icon.
  */
 export const renderRating: FunctionalComponent<RatingProps> = ({props}) => {
   const width =
@@ -40,7 +39,6 @@ export const renderRating: FunctionalComponent<RatingProps> = ({props}) => {
     const iconStyle = {
       width: iconSize,
       height: iconSize,
-      stroke: 'var(--atomic-rating-icon-outline)',
     };
     return html`<atomic-icon
       icon=${props.icon}
