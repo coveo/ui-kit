@@ -15,7 +15,6 @@ export const AtomicCommerceFacets = /*@__PURE__*/createReactComponent<JSX.Atomic
 export const AtomicCommerceNumericFacet = /*@__PURE__*/createReactComponent<JSX.AtomicCommerceNumericFacet, HTMLAtomicCommerceNumericFacetElement>('atomic-commerce-numeric-facet');
 export const AtomicCommerceTimeframeFacet = /*@__PURE__*/createReactComponent<JSX.AtomicCommerceTimeframeFacet, HTMLAtomicCommerceTimeframeFacetElement>('atomic-commerce-timeframe-facet');
 export const AtomicNumericRange = /*@__PURE__*/createReactComponent<JSX.AtomicNumericRange, HTMLAtomicNumericRangeElement>('atomic-numeric-range');
-export const AtomicProductRating = /*@__PURE__*/createReactComponent<JSX.AtomicProductRating, HTMLAtomicProductRatingElement>('atomic-product-rating');
 export const AtomicProductSectionActions = /*@__PURE__*/createReactComponent<JSX.AtomicProductSectionActions, HTMLAtomicProductSectionActionsElement>('atomic-product-section-actions');
 export const AtomicProductSectionBadges = /*@__PURE__*/createReactComponent<JSX.AtomicProductSectionBadges, HTMLAtomicProductSectionBadgesElement>('atomic-product-section-badges');
 export const AtomicProductSectionBottomMetadata = /*@__PURE__*/createReactComponent<JSX.AtomicProductSectionBottomMetadata, HTMLAtomicProductSectionBottomMetadataElement>('atomic-product-section-bottom-metadata');
