@@ -19,7 +19,7 @@ import {
 } from '@coveo/headless/commerce';
 import {provide} from '@lit/context';
 import i18next, {type i18n} from 'i18next';
-import {type CSSResultGroup, html, LitElement, unsafeCSS} from 'lit';
+import {type CSSResultGroup, css, html, LitElement} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {booleanConverter} from '@/src/converters/boolean-converter';
 import {errorGuard} from '@/src/decorators/error-guard';
@@ -49,7 +49,6 @@ import {
   noProductsSelector,
 } from '../atomic-commerce-layout/commerce-layout';
 import {getAnalyticsConfig} from './analytics-config';
-import styles from './atomic-commerce-interface.tw.css';
 
 export type CommerceInitializationOptions = CommerceEngineConfiguration;
 export type CommerceBindings = CommonBindings<
@@ -90,7 +89,18 @@ export class AtomicCommerceInterface
 
   @state() public error!: Error;
 
-  static styles: CSSResultGroup = [unsafeCSS(styles)];
+  static styles: CSSResultGroup = [
+    css`
+      :host {
+        display: block;
+        height: inherit;
+        width: inherit;
+        & > slot {
+          height: inherit;
+        }
+      }
+    `,
+  ];
 
   /**
    * The type of the interface.
