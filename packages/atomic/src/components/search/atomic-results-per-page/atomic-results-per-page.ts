@@ -18,11 +18,9 @@ import {
   validateInitialChoice,
 } from '@/src/components/common/items-per-page/validate.js';
 import {renderPagerGuard} from '@/src/components/common/pager/pager-guard.js';
-import {
-  BindStateToController,
-  InitializableComponent,
-  InitializeBindings,
-} from '@/src/utils/initialization-utils.js';
+import {bindStateToController} from '@/src/decorators/bind-state.js';
+import {bindings} from '@/src/decorators/bindings.js';
+import type {InitializableComponent} from '@/src/decorators/types.js';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles.js';
 import {randomID} from '@/src/utils/utils.js';
 import {
@@ -40,20 +38,23 @@ import {
  */
 @customElement('atomic-results-per-page')
 @withTailwindStyles
+@bindings()
 export class AtomicResultsPerPage
   extends LitElement
-  implements InitializableComponent
+  implements InitializableComponent<Bindings>
 {
-  @InitializeBindings() public bindings!: Bindings;
+  @state() public bindings!: Bindings;
+  public initialized = false;
+  public unsubscribeLanguage?: () => void;
   public resultPerPage!: ResultsPerPage;
   public searchStatus!: SearchStatus;
   private choices!: number[];
   private readonly radioGroupName = randomID('atomic-results-per-page-');
 
   @state()
-  @BindStateToController('resultPerPage')
+  @bindStateToController('resultPerPage')
   public resultPerPageState!: ResultsPerPageState;
-  @BindStateToController('searchStatus')
+  @bindStateToController('searchStatus')
   @state()
   private searchStatusState!: SearchStatusState;
   @state() public error!: Error;
