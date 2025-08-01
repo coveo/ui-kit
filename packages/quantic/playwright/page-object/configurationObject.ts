@@ -6,19 +6,19 @@ export class ConfigurationObject {
   }
 
   get tryButton(): Locator {
-    return this.page.locator('lightning-button[data-cy="cfg-try"]');
+    return this.page.getByTestId('cfg-try');
   }
 
   get resetButton(): Locator {
-    return this.page.locator('lightning-button[data-cy="cfg-reset"]');
+    return this.page.getByTestId('cfg-reset');
   }
 
   get configurationForm(): Locator {
     return this.page.locator('slot[name="configuration"]');
   }
 
-  private getInputSelector(field: string): string {
-    return `lightning-input[data-cy="cfg-${field}"] input`;
+  private getInputSelector(field: string): Locator {
+    return this.page.getByTestId(`cfg-${field}`).locator('input');
   }
 
   async waitForConfigurationToLoad(): Promise<void> {
@@ -31,11 +31,9 @@ export class ConfigurationObject {
     await this.waitForConfigurationToLoad();
 
     for (const key of Object.keys(options)) {
-      await this.page.fill(
-        this.getInputSelector(key),
-        options[key].toString(),
-        {timeout: 5000}
-      );
+      await this.getInputSelector(key).fill(options[key].toString(), {
+        timeout: 5000,
+      });
     }
 
     await this.tryButton.click();

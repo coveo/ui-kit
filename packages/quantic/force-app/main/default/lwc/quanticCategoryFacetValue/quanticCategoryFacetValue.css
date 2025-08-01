@@ -8,7 +8,7 @@
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  color: var(--sds-c-color-gray-8, #8E959D);
+  color: var(--slds-g-color-palette-neutral-60, #8E959D);
   float: left;
 }
 
@@ -18,5 +18,5 @@
 }
 
 .facet__value:hover {
-  color: var(--sds-c-color-gray-8, #8E959D);
+  color: var(--slds-g-color-palette-neutral-60, #8E959D);
 }

@@ -48,6 +48,9 @@ import {
 import type {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface';
 import type {SelectChildProductEventArgs} from '../atomic-product-children/select-child-product-event';
 import styles from './atomic-commerce-search-box.tw.css';
+import '../atomic-commerce-search-box-instant-products/atomic-commerce-search-box-instant-products';
+import '../atomic-commerce-search-box-query-suggestions/atomic-commerce-search-box-query-suggestions';
+import '../atomic-commerce-search-box-recent-queries/atomic-commerce-search-box-recent-queries';
 
 /**
  * The `atomic-commerce-search-box` component enables users to perform product searches with built-in query suggestions and optional redirection to a search results page.

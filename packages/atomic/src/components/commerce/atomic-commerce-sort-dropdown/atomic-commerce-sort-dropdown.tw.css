@@ -1,8 +1,0 @@
-@reference '../../../utils/coveo.tw.css';
-
-@layer components {
-  select:hover + div,
-  select:focus-visible + div {
-    @apply border-primary-light text-primary-light;
-  }
-}

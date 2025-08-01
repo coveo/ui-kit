@@ -6,6 +6,7 @@ import type {
   Product,
 } from '../../../api/commerce/common/product.js';
 import type {CommerceSuccessResponse} from '../../../api/commerce/common/response.js';
+import {setError} from '../../error/error-actions.js';
 import {setContext, setView} from '../context/context-actions.js';
 import {
   fetchMoreProducts,
@@ -82,7 +83,10 @@ export const productListingReducer = createReducer(
         products.splice(currentParentIndex, 1, newParent);
       })
       .addCase(setView, () => getProductListingInitialState())
-      .addCase(setContext, () => getProductListingInitialState());
+      .addCase(setContext, () => getProductListingInitialState())
+      .addCase(setError, (state, action) => {
+        handleError(state, action.payload);
+      });
   }
 );
 

@@ -6,6 +6,7 @@ import {
   buildMockChildProduct,
   buildMockProduct,
 } from '../../../test/mock-product.js';
+import {setError} from '../../error/error-actions.js';
 import {setContext, setView} from '../context/context-actions.js';
 import {
   executeSearch,
@@ -362,5 +363,22 @@ describe('search-slice', () => {
     );
 
     expect(finalState).toEqual(getCommerceSearchInitialState());
+  });
+
+  describe('on #setError', () => {
+    it('should set the error state and set isLoading to false', () => {
+      const error = {
+        message: 'Something went wrong',
+        statusCode: 401,
+        status: 401,
+        type: 'BadRequest',
+      };
+      state.isLoading = true;
+
+      const finalState = commerceSearchReducer(state, setError(error));
+
+      expect(finalState.error).toEqual(error);
+      expect(finalState.isLoading).toBe(false);
+    });
   });
 });

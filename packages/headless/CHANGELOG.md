@@ -1,3 +1,12 @@
+## <small>3.27.7 (2025-07-30)</small>
+
+* chore: allow prerelease on CI (#5756) ([de2c411](https://github.com/coveo/ui-kit/commits/de2c411)), closes [#5756](https://github.com/coveo/ui-kit/issues/5756)
+* chore: enable noUnusedVariables rule (#5670) ([6809d57](https://github.com/coveo/ui-kit/commits/6809d57)), closes [#5670](https://github.com/coveo/ui-kit/issues/5670)
+* fix(headless): align logic for setting category facet previousState with expectations from RFC (#573 ([227ba19](https://github.com/coveo/ui-kit/commits/227ba19)), closes [#5738](https://github.com/coveo/ui-kit/issues/5738)
+* fix(headless): populate browser navigator context using relay  (#5680) ([76e8d6f](https://github.com/coveo/ui-kit/commits/76e8d6f)), closes [#5680](https://github.com/coveo/ui-kit/issues/5680)
+
+
+
 ## <small>3.27.5 (2025-07-23)</small>
 
 * fix: do not inject forwardedFor header in when in browser (#5640) ([5626f3a](https://github.com/coveo/ui-kit/commits/5626f3a)), closes [#5640](https://github.com/coveo/ui-kit/issues/5640)

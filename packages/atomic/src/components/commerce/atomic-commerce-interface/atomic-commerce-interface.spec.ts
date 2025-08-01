@@ -22,6 +22,7 @@ import {bindings} from '@/src/decorators/bindings';
 import type {InitializableComponent} from '@/src/decorators/types';
 import {InitializeBindingsMixin} from '@/src/mixins/bindings-mixin';
 import {StorageItems} from '@/src/utils/local-storage-utils';
+import {DEFAULT_MOBILE_BREAKPOINT} from '@/src/utils/replace-breakpoint';
 import {fixture} from '@/vitest-utils/testing-helpers/fixture';
 import {fixtureCleanup} from '@/vitest-utils/testing-helpers/fixture-wrapper';
 import {stateKey} from '../../../../../headless/src/app/state-key';
@@ -320,6 +321,22 @@ describe('AtomicCommerceInterface', () => {
       });
     });
 
+    test('should dispatch an updateAnalyticsConfiguration action with the correct source and trackingId', async () => {
+      vi.spyOn(preconfiguredEngine, 'dispatch');
+
+      expect(preconfiguredEngine.dispatch).not.toHaveBeenCalled();
+
+      await element.initializeWithEngine(preconfiguredEngine);
+
+      expect(preconfiguredEngine.dispatch).toHaveBeenCalledExactlyOnceWith({
+        type: 'commerce/configuration/updateAnalyticsConfiguration',
+        payload: {
+          trackingId: preconfiguredEngine.configuration.analytics.trackingId,
+          source: {'@coveo/atomic': '0.0.0'},
+        },
+      });
+    });
+
     test('should render the component and its children', async () => {
       await addChildElement();
       await element.initializeWithEngine(preconfiguredEngine);
@@ -390,6 +407,48 @@ describe('AtomicCommerceInterface', () => {
     });
   });
 
+  describe('mobile breakpoint', () => {
+    test('should keep the default mobile breakpoint when no atomic-commerce-layout element exists', () => {
+      expect(element.store.state.mobileBreakpoint).toBe(
+        DEFAULT_MOBILE_BREAKPOINT
+      );
+    });
+
+    test('should keep the default mobile breakpoint when atomic-commerce-layout has no mobileBreakpoint', () => {
+      const layoutElement = {};
+      const originalQuerySelector = element.querySelector.bind(element);
+      element.querySelector = vi.fn((selector: string) => {
+        if (selector === 'atomic-commerce-layout') {
+          return layoutElement as unknown as Element;
+        }
+        return originalQuerySelector(selector);
+      });
+
+      element.connectedCallback();
+
+      expect(element.store.state.mobileBreakpoint).toBe(
+        DEFAULT_MOBILE_BREAKPOINT
+      );
+    });
+
+    test('should update mobile breakpoint from atomic-commerce-layout when available', () => {
+      const layoutElement = {
+        mobileBreakpoint: '768px',
+      };
+      const originalQuerySelector = element.querySelector.bind(element);
+      element.querySelector = vi.fn((selector: string) => {
+        if (selector === 'atomic-commerce-layout') {
+          return layoutElement as unknown as Element;
+        }
+        return originalQuerySelector(selector);
+      });
+
+      element.connectedCallback();
+
+      expect(element.store.state.mobileBreakpoint).toBe('768px');
+    });
+  });
+
   describe('aria-live', () => {
     test('should add aria-live if no atomic-aria-live element exists', async () => {
       await element.initialize(commerceEngineConfig);
@@ -398,14 +457,12 @@ describe('AtomicCommerceInterface', () => {
     });
 
     test('should not add aria-live if an atomic-aria-live element already exists', async () => {
-      const existingAriaLive = document.createElement('atomic-aria-live');
-      element.appendChild(existingAriaLive);
-
-      await element.initialize(commerceEngineConfig);
+      element.connectedCallback();
 
       const ariaLiveElements = element.querySelectorAll('atomic-aria-live');
       expect(ariaLiveElements.length).toBe(1);
     });
+
     test('should remove aria-live on disconnect', async () => {
       await element.initialize(commerceEngineConfig);
       await element.updateComplete;

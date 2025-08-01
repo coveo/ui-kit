@@ -1,3 +1,27 @@
+## <small>3.31.1 (2025-07-30)</small>
+
+* chore: allow prerelease on CI (#5756) ([de2c411](https://github.com/coveo/ui-kit/commits/de2c411)), closes [#5756](https://github.com/coveo/ui-kit/issues/5756)
+* chore: enable noUnusedVariables rule (#5670) ([6809d57](https://github.com/coveo/ui-kit/commits/6809d57)), closes [#5670](https://github.com/coveo/ui-kit/issues/5670)
+* chore(atomic): add SlotsForNoShadowDOM mixin (#5664) ([4b54d2b](https://github.com/coveo/ui-kit/commits/4b54d2b)), closes [#5664](https://github.com/coveo/ui-kit/issues/5664)
+* chore(atomic): deprecate internal ArrayProp (#5778) ([a78af0e](https://github.com/coveo/ui-kit/commits/a78af0e)), closes [#5778](https://github.com/coveo/ui-kit/issues/5778)
+* chore(atomic): migrate atomic-product-excerpt (#5735) ([7d5a246](https://github.com/coveo/ui-kit/commits/7d5a246)), closes [#5735](https://github.com/coveo/ui-kit/issues/5735)
+* chore(atomic): migrate atomic-product-link (#5618) ([20e0245](https://github.com/coveo/ui-kit/commits/20e0245)), closes [#5618](https://github.com/coveo/ui-kit/issues/5618)
+* chore(atomic): migrate atomic-product-multi-value-text (#5739) ([99f9284](https://github.com/coveo/ui-kit/commits/99f9284)), closes [#5739](https://github.com/coveo/ui-kit/issues/5739)
+* chore(atomic): migrate atomic-product-numeric-field-value (#5745) ([487f65a](https://github.com/coveo/ui-kit/commits/487f65a)), closes [#5745](https://github.com/coveo/ui-kit/issues/5745)
+* chore(atomic): migrate atomic-product-price (#5744) ([a09bdf6](https://github.com/coveo/ui-kit/commits/a09bdf6)), closes [#5744](https://github.com/coveo/ui-kit/issues/5744)
+* chore(atomic): migrate image-carousel and image-carousel-indicators (#5729) ([ac43d3a](https://github.com/coveo/ui-kit/commits/ac43d3a)), closes [#5729](https://github.com/coveo/ui-kit/issues/5729)
+* refactor(atomic): move common/interface/item.ts to relevant folder (#5766) ([916cd26](https://github.com/coveo/ui-kit/commits/916cd26)), closes [#5766](https://github.com/coveo/ui-kit/issues/5766)
+* doc(atomic): expose tab-popover and tab-bar parts in the atomic-tab-manager public documentation (#5 ([2def40e](https://github.com/coveo/ui-kit/commits/2def40e)), closes [#5765](https://github.com/coveo/ui-kit/issues/5765)
+* feat(atomic): add disableCitationAnchoring property (#5660) ([b038209](https://github.com/coveo/ui-kit/commits/b038209)), closes [#5660](https://github.com/coveo/ui-kit/issues/5660)
+* fix(atomic commerce): fix status section placeholders sizing (#5752) ([b9a94ab](https://github.com/coveo/ui-kit/commits/b9a94ab)), closes [#5752](https://github.com/coveo/ui-kit/issues/5752)
+* fix(atomic commerce): update mobileBreakpoint in store from atomic-commerce-layout value when availa ([83e04df](https://github.com/coveo/ui-kit/commits/83e04df)), closes [#5737](https://github.com/coveo/ui-kit/issues/5737)
+* fix(atomic): add back type declaration (#5746) ([2e3c5c3](https://github.com/coveo/ui-kit/commits/2e3c5c3)), closes [#5746](https://github.com/coveo/ui-kit/issues/5746)
+* fix(atomic): always add fileType to the list of fieldsToIncludeInCitations (#5748) ([dcc8482](https://github.com/coveo/ui-kit/commits/dcc8482)), closes [#5748](https://github.com/coveo/ui-kit/issues/5748)
+* fix(atomic): remove useless side-effects imports (#5692) ([edce9b8](https://github.com/coveo/ui-kit/commits/edce9b8)), closes [#5692](https://github.com/coveo/ui-kit/issues/5692)
+* chore(atomic-angular, atomic-react, auth, bueno, headless-react): remove unused exports, code and de ([6f8efc1](https://github.com/coveo/ui-kit/commits/6f8efc1)), closes [#5690](https://github.com/coveo/ui-kit/issues/5690)
+
+
+
 ## 3.30.0 (2025-07-23)
 
 * fix(atomic commerce): fix price font size in table display (#5682) ([e4f0574](https://github.com/coveo/ui-kit/commits/e4f0574)), closes [#5682](https://github.com/coveo/ui-kit/issues/5682)

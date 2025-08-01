@@ -9,7 +9,7 @@ import {CommerceRecommendationStore} from '../../commerce/atomic-commerce-recomm
 import {InsightStore} from '../../insight/atomic-insight-interface/store';
 import {RecsStore} from '../../recommendations/atomic-recs-interface/store';
 import {SearchStore} from '../../search/atomic-search-interface/store';
-import {AnyItem} from '../interface/item';
+import {AnyItem} from './unfolded-item';
 import {
   ItemDisplayDensity,
   ItemDisplayImageSize,

@@ -544,7 +544,16 @@ export const makeAnalyticsAction = makeAnalyticsActionFactory<
   StateNeededBySearchAnalyticsProvider,
   CoveoSearchPageClient,
   SearchPageClientProvider
->(configureLegacyAnalytics, (original) => original, SearchAnalyticsProvider);
+>(
+  (options) =>
+    configureLegacyAnalytics({
+      ...options,
+      provider:
+        options.provider || new SearchAnalyticsProvider(options.getState),
+    }),
+  (original) => original,
+  SearchAnalyticsProvider
+);
 
 export const makeCaseAssistAnalyticsAction = makeAnalyticsActionFactory<
   StateNeededByCaseAssistAnalytics,

@@ -10,13 +10,17 @@ const __dirname = dirname(new URL(import.meta.url).pathname).slice(
 const isDevMode = process.argv[2] === 'dev';
 const isCDN = process.env.DEPLOYMENT_ENVIRONMENT === 'CDN';
 const isNightly = process.env.IS_NIGHTLY === 'true';
+const isPrRelease =
+  process.env.IS_PRERELEASE === 'true' && process.env.PR_NUMBER;
 
 const buenoJsonPath = resolve(__dirname, '../bueno/package.json');
 const buenoJson = JSON.parse(readFileSync(buenoJsonPath, 'utf-8'));
 
 const buenoVersion = isNightly
   ? `v${buenoJson.version.split('.').shift()}-nightly`
-  : `v${buenoJson.version}`;
+  : isPrRelease
+    ? `v${buenoJson.version.split('-').shift()}.${process.env.PR_NUMBER}`
+    : `v${buenoJson.version}`;
 const buenoPath = isCDN
   ? `/bueno/${buenoVersion}/bueno.esm.js`
   : '@coveo/bueno';

@@ -81,7 +81,6 @@ import {
   type StaticFilterValue,
   type Unsubscribe,
 } from '@coveo/headless';
-import {filesize} from 'filesize';
 import {Component} from 'react';
 import {AutomaticFacetGenerator} from '../components/automatic-facet-generator/automatic-facet-generator.class';
 import {AutomaticFacetGenerator as AutomaticFacetGeneratorFn} from '../components/automatic-facet-generator/automatic-facet-generator.fn';
@@ -171,6 +170,28 @@ declare global {
 const isServerSideRendered = globalThis.window?.HEADLESS_STATE;
 
 const [KB, MB, GB] = [1e3, 1e6, 1e9];
+
+/**
+ * Formats a byte value into a human-readable file size string.
+ * Uses decimal (base 10) units like the filesize library with {base: 10}.
+ */
+function formatFileSize(bytes: number): string {
+  if (bytes === 0) return '0 B';
+
+  const units = ['B', 'kB', 'MB', 'GB', 'TB', 'PB'];
+  const base = 1000;
+
+  const exponent = Math.floor(Math.log(Math.abs(bytes)) / Math.log(base));
+  const value = bytes / base ** exponent;
+  const unit = units[Math.min(exponent, units.length - 1)];
+
+  const formatter = new Intl.NumberFormat('en-US', {
+    minimumFractionDigits: 0,
+    maximumFractionDigits: value >= 100 ? 0 : value >= 10 ? 1 : 2,
+  });
+
+  return `${formatter.format(value)} ${unit}`;
+}
 
 const criteria: [string, SortCriterion][] = [
   ['Relevance', buildRelevanceSortCriterion()],
@@ -604,13 +625,13 @@ export class SearchPage extends Component {
               />
               <Facet field="author" facetId="author-1" />
               <NumericFacet
-                format={(bytes) => filesize(bytes, {base: 10})}
+                format={(bytes) => formatFileSize(bytes)}
                 field="size"
                 facetId="size-1"
                 generateAutomaticRanges={true}
               />
               <NumericFacet
-                format={(bytes) => filesize(bytes, {base: 10})}
+                format={(bytes) => formatFileSize(bytes)}
                 field="size"
                 facetId="size-2"
                 generateAutomaticRanges={false}
@@ -648,11 +669,11 @@ export class SearchPage extends Component {
               <FacetFn controller={this.objectTypeFacet} />
               <NumericFacetFn
                 controller={this.fileSizeAutomaticNumericFacet}
-                format={(bytes) => filesize(bytes, {base: 10})}
+                format={(bytes) => formatFileSize(bytes)}
               />
               <NumericFacetFn
                 controller={this.fileSizeManualNumericFacet}
-                format={(bytes) => filesize(bytes, {base: 10})}
+                format={(bytes) => formatFileSize(bytes)}
               />
               <NumericFilterFn controller={this.fileSizeNumericFilter} />
               <DateFacetFn controller={this.dateAutomaticDateFacet} />

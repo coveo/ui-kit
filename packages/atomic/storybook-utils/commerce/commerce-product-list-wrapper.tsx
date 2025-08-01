@@ -1,14 +1,14 @@
 import {Decorator} from '@storybook/web-components';
 import {html} from 'lit';
 
-export const wrapInCommerceProductList = (): {
+export const wrapInCommerceProductList = (display?: string): {
   decorator: Decorator;
 } => ({
   decorator: (story) => html`
     <atomic-commerce-product-list
       id="code-root"
+      display="${display ?? 'list'}"
       number-of-placeholders="24"
-      display="list"
       density="compact"
       image-size="small"
     >

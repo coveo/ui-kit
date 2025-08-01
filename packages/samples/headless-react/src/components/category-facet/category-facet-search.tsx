@@ -4,7 +4,7 @@ import type {
 } from '@coveo/headless';
 import type {FunctionComponent} from 'react';
 
-export interface CategoryFacetSearchProps {
+interface CategoryFacetSearchProps {
   controller: HeadlessCategoryFacetSearch;
   searchState: CategoryFacetSearchState;
 }

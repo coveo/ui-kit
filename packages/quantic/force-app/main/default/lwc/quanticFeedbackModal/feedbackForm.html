@@ -8,7 +8,7 @@
           message-when-value-missing={labels.selectOneOfOptions}></lightning-radio-group>
         <div class="details-input__container">
           <template if:true={shouldDisplayDetailsInput}>
-            <lightning-textarea data-cy="feedback-modal-body__details-input" required={detailsAreRequired} value={detailsValue} label={labels.provideDetails}
+            <lightning-textarea required={detailsAreRequired} value={detailsValue} label={labels.provideDetails}
               message-when-value-missing={labels.fillOutField} onchange={handleDetailsChange}></lightning-textarea>
           </template>
         </div>

@@ -17,10 +17,14 @@ const devMode = process.argv[2] === 'dev';
 
 const isCDN = process.env.DEPLOYMENT_ENVIRONMENT === 'CDN';
 const isNightly = process.env.IS_NIGHTLY === 'true';
+const isPrRelease =
+  process.env.IS_PRERELEASE === 'true' && process.env.PR_NUMBER;
 
 const buenoVersion = isNightly
   ? `v${buenoJson.version.split('.').shift()}-nightly`
-  : `v${buenoJson.version}`;
+  : isPrRelease
+    ? `v${buenoJson.version.split('-').shift()}.${process.env.PR_NUMBER}`
+    : `v${buenoJson.version}`;
 const buenoPath = isCDN
   ? `/bueno/${buenoVersion}/bueno.esm.js`
   : '@coveo/bueno';
@@ -32,6 +36,8 @@ const useCaseEntries = {
   insight: 'src/insight.index.ts',
   ssr: 'src/ssr.index.ts',
   'ssr-commerce': 'src/ssr-commerce.index.ts',
+  'ssr-next': 'src/ssr.index.ts',
+  'ssr-commerce-next': 'src/ssr-commerce.index.ts',
   commerce: 'src/commerce.index.ts',
 };
 
@@ -51,6 +57,8 @@ function getUmdGlobalName(useCase) {
     insight: 'CoveoHeadlessInsight',
     ssr: 'CoveoHeadlessSSR',
     'ssr-commerce': 'CoveoHeadlessCommerceSSR',
+    'ssr-next': 'CoveoHeadlessSSRNext',
+    'ssr-commerce-next': 'CoveoHeadlessCommerceSSRNext',
     commerce: 'CoveoHeadlessCommerce',
   };
 

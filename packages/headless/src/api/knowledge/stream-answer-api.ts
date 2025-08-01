@@ -363,6 +363,7 @@ export const constructAnswerQueryParams = (
     ...(cq && {cq}),
     ...(dq && {dq}),
     ...(lq && {lq}),
+    ...(state.query && {enableQuerySyntax: state.query.enableQuerySyntax}),
     ...(context?.contextValues && {
       context: context.contextValues,
     }),

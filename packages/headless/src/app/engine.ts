@@ -26,7 +26,6 @@ import type {
 } from '../features/configuration/configuration-state.js';
 import {versionReducer as version} from '../features/debug/version-slice.js';
 import type {SearchParametersState} from '../state/search-app-state.js';
-import {isBrowser} from '../utils/runtime.js';
 import {doNotTrack} from '../utils/utils.js';
 import {analyticsMiddleware} from './analytics-middleware.js';
 import {configuration} from './common-reducers.js';
@@ -35,8 +34,7 @@ import {instantlyCallableThunkActionMiddleware} from './instantly-callable-middl
 import type {LoggerOptions} from './logger.js';
 import {logActionErrorMiddleware} from './logger-middlewares.js';
 import {
-  defaultBrowserNavigatorContextProvider,
-  defaultNodeJSNavigatorContextProvider,
+  getNavigatorContext,
   type NavigatorContext,
   type NavigatorContextProvider,
 } from './navigator-context-provider.js';
@@ -273,7 +271,7 @@ export function buildCoreEngine<
   ExtraArguments,
   Configuration
 > {
-  const {reducers} = options;
+  const {reducers, navigatorContextProvider} = options;
   const reducerManager = createReducerManager(
     {...reducers, configurationReducer},
     options.preloadedState ?? {}
@@ -282,29 +280,13 @@ export function buildCoreEngine<
     reducerManager.addCrossReducer(options.crossReducer);
   }
   const logger = thunkExtraArguments.logger;
-  const getClientId = () => {
-    let clientId = '';
-    try {
-      clientId = getRelayInstanceFromState(engine.state).getMeta('').clientId;
-    } catch (e) {
-      logger.warn('Error while obtaining clientID from relay', e);
-    }
-    return clientId;
-  };
   const thunkExtraArgumentsWithRelay: CoreExtraArguments & ExtraArguments = {
     ...thunkExtraArguments,
     get relay() {
-      return getRelayInstanceFromState(engine.state);
+      return getRelayInstanceFromState(engine.state, navigatorContextProvider);
     },
     get navigatorContext() {
-      if (options.navigatorContextProvider) {
-        return options.navigatorContextProvider();
-      }
-      if (!isBrowser()) {
-        return defaultNodeJSNavigatorContextProvider();
-      }
-
-      return defaultBrowserNavigatorContextProvider(getClientId());
+      return getNavigatorContext(this.relay, navigatorContextProvider);
     },
   };
   const store = createStore(
@@ -340,18 +322,11 @@ export function buildCoreEngine<
     },
 
     get relay() {
-      return getRelayInstanceFromState(this.state);
+      return getRelayInstanceFromState(this.state, navigatorContextProvider);
     },
 
     get navigatorContext() {
-      if (options.navigatorContextProvider) {
-        return options.navigatorContextProvider();
-      }
-      if (!isBrowser()) {
-        return defaultNodeJSNavigatorContextProvider();
-      }
-
-      return defaultBrowserNavigatorContextProvider(getClientId());
+      return getNavigatorContext(this.relay, navigatorContextProvider);
     },
 
     logger,

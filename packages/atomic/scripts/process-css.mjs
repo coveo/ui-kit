@@ -42,7 +42,7 @@ function generateFileContent(imports, result) {
   if (imports.length === 0) {
     return dedent`
     ${cssJs}
-    export default [css];
+    export default css;
     `;
   }
 
@@ -58,7 +58,7 @@ function generateFileContent(imports, result) {
       .map((_, index) => `...dep${index}`)
       .concat('css')
       .join(', ')}];
-    export default allCss;
+    export default allCss.join('');
     `;
 
   return dedent`

@@ -3,7 +3,7 @@ import Backend, {type HttpBackendOptions} from 'i18next-http-backend';
 import {getAssetPath} from '@/src/utils/asset-path-utils';
 import availableLocales from '../../../generated/availableLocales.json';
 import type {AnyEngineType} from './bindings';
-import type {BaseAtomicInterface} from './interface-common';
+import type {BaseAtomicInterface} from './interface-controller';
 
 export const i18nTranslationNamespace = 'translation';
 

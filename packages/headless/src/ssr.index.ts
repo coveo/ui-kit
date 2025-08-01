@@ -70,30 +70,32 @@ export type {
   SearchEngineOptions,
 } from './app/search-engine/search-engine.js';
 export {getSampleSearchEngineConfiguration} from './app/search-engine/search-engine.js';
+export type {ErrorPayload} from './controllers/controller/error-payload.js';
+//#region Controllers
 export type {
-  SearchCompletedAction,
-  SearchEngineDefinition,
-  SearchEngineDefinitionOptions,
-  SSRSearchEngine as SearchEngine,
-} from './app/search-engine/search-engine.ssr.js';
-export {defineSearchEngine} from './app/search-engine/search-engine.ssr.js';
-export type {Build} from './app/ssr-engine/types/build.js';
+  Controller,
+  Subscribable,
+} from './controllers/controller/headless-controller.js';
+export type {InlineLink} from './controllers/smart-snippet/headless-smart-snippet-interactive-inline-links.js';
+export type {Build} from './ssr/common/types/build.js';
 export type {
   ControllerDefinitionsMap,
   ControllerDefinitionWithoutProps,
   ControllerDefinitionWithProps,
-  InferControllerFromDefinition,
-  InferControllerStaticStateFromController,
-  InferControllerStaticStateMapFromControllers,
-  InferControllerStaticStateMapFromDefinitions,
-  InferControllersMapFromDefinition,
-} from './app/ssr-engine/types/common.js';
+} from './ssr/common/types/controllers.js';
 export type {
   EngineDefinition,
   InferBuildResult,
   InferHydratedState,
   InferStaticState,
-} from './app/ssr-engine/types/core-engine.js';
+} from './ssr/common/types/engine.js';
+export type {
+  InferControllerFromDefinition,
+  InferControllerStaticStateFromController,
+  InferControllerStaticStateMapFromControllers,
+  InferControllerStaticStateMapFromDefinitions,
+  InferControllersMapFromDefinition,
+} from './ssr/common/types/inference.js';
 export type {
   AutomaticFacetBreadcrumb,
   Breadcrumb,
@@ -109,8 +111,8 @@ export type {
   FacetBreadcrumb,
   NumericFacetBreadcrumb,
   StaticFilterBreadcrumb,
-} from './controllers/breadcrumb-manager/headless-breadcrumb-manager.ssr.js';
-export {defineBreadcrumbManager} from './controllers/breadcrumb-manager/headless-breadcrumb-manager.ssr.js';
+} from './ssr/search/controllers/breadcrumb-manager/headless-breadcrumb-manager.ssr.js';
+export {defineBreadcrumbManager} from './ssr/search/controllers/breadcrumb-manager/headless-breadcrumb-manager.ssr.js';
 export type {
   Context,
   ContextDefinition,
@@ -119,36 +121,30 @@ export type {
   ContextProps,
   ContextState,
   ContextValue,
-} from './controllers/context/headless-context.ssr.js';
-export {defineContext} from './controllers/context/headless-context.ssr.js';
-export type {ErrorPayload} from './controllers/controller/error-payload.js';
-//#region Controllers
-export type {
-  Controller,
-  Subscribable,
-} from './controllers/controller/headless-controller.js';
+} from './ssr/search/controllers/context/headless-context.ssr.js';
+export {defineContext} from './ssr/search/controllers/context/headless-context.ssr.js';
 export type {
   DictionaryFieldContext,
   DictionaryFieldContextDefinition,
   DictionaryFieldContextPayload,
   DictionaryFieldContextState,
-} from './controllers/dictionary-field-context/headless-dictionary-field-context.ssr.js';
-export {defineDictionaryFieldContext} from './controllers/dictionary-field-context/headless-dictionary-field-context.ssr.js';
+} from './ssr/search/controllers/dictionary-field-context/headless-dictionary-field-context.ssr.js';
+export {defineDictionaryFieldContext} from './ssr/search/controllers/dictionary-field-context/headless-dictionary-field-context.ssr.js';
 export type {
   DidYouMean,
   DidYouMeanDefinition,
   DidYouMeanState,
   QueryCorrection,
   WordCorrection,
-} from './controllers/did-you-mean/headless-did-you-mean.ssr.js';
-export {defineDidYouMean} from './controllers/did-you-mean/headless-did-you-mean.ssr.js';
+} from './ssr/search/controllers/did-you-mean/headless-did-you-mean.ssr.js';
+export {defineDidYouMean} from './ssr/search/controllers/did-you-mean/headless-did-you-mean.ssr.js';
 export type {
   FacetManager,
   FacetManagerDefinition,
   FacetManagerPayload,
   FacetManagerState,
-} from './controllers/facet-manager/headless-facet-manager.ssr.js';
-export {defineFacetManager} from './controllers/facet-manager/headless-facet-manager.ssr.js';
+} from './ssr/search/controllers/facet-manager/headless-facet-manager.ssr.js';
+export {defineFacetManager} from './ssr/search/controllers/facet-manager/headless-facet-manager.ssr.js';
 export type {
   AutomaticFacet,
   AutomaticFacetGenerator,
@@ -157,8 +153,8 @@ export type {
   AutomaticFacetGeneratorProps,
   AutomaticFacetGeneratorState,
   AutomaticFacetState,
-} from './controllers/facets/automatic-facet-generator/headless-automatic-facet-generator.ssr.js';
-export {defineAutomaticFacetGenerator} from './controllers/facets/automatic-facet-generator/headless-automatic-facet-generator.ssr.js';
+} from './ssr/search/controllers/facets/automatic-facet-generator/headless-automatic-facet-generator.ssr.js';
+export {defineAutomaticFacetGenerator} from './ssr/search/controllers/facets/automatic-facet-generator/headless-automatic-facet-generator.ssr.js';
 export type {
   CategoryFacet,
   CategoryFacetDefinition,
@@ -171,8 +167,8 @@ export type {
   CategoryFacetState,
   CoreCategoryFacet,
   CoreCategoryFacetState,
-} from './controllers/facets/category-facet/headless-category-facet.ssr.js';
-export {defineCategoryFacet} from './controllers/facets/category-facet/headless-category-facet.ssr.js';
+} from './ssr/search/controllers/facets/category-facet/headless-category-facet.ssr.js';
+export {defineCategoryFacet} from './ssr/search/controllers/facets/category-facet/headless-category-facet.ssr.js';
 export type {
   CoreFacet,
   CoreFacetState,
@@ -187,8 +183,8 @@ export type {
   FacetValue,
   FacetValueState,
   SpecificFacetSearchResult,
-} from './controllers/facets/facet/headless-facet.ssr.js';
-export {defineFacet} from './controllers/facets/facet/headless-facet.ssr.js';
+} from './ssr/search/controllers/facets/facet/headless-facet.ssr.js';
+export {defineFacet} from './ssr/search/controllers/facets/facet/headless-facet.ssr.js';
 export type {
   DateFacet,
   DateFacetDefinition,
@@ -197,11 +193,11 @@ export type {
   DateFacetState,
   DateRangeInput,
   DateRangeOptions,
-} from './controllers/facets/range-facet/date-facet/headless-date-facet.ssr.js';
+} from './ssr/search/controllers/facets/range-facet/date-facet/headless-date-facet.ssr.js';
 export {
   buildDateRange,
   defineDateFacet,
-} from './controllers/facets/range-facet/date-facet/headless-date-facet.ssr.js';
+} from './ssr/search/controllers/facets/range-facet/date-facet/headless-date-facet.ssr.js';
 export type {
   DateFilter,
   DateFilterDefinition,
@@ -210,8 +206,8 @@ export type {
   DateFilterProps,
   DateFilterRange,
   DateFilterState,
-} from './controllers/facets/range-facet/date-facet/headless-date-filter.ssr.js';
-export {defineDateFilter} from './controllers/facets/range-facet/date-facet/headless-date-filter.ssr.js';
+} from './ssr/search/controllers/facets/range-facet/date-facet/headless-date-filter.ssr.js';
+export {defineDateFilter} from './ssr/search/controllers/facets/range-facet/date-facet/headless-date-filter.ssr.js';
 export type {
   NumericFacet,
   NumericFacetDefinition,
@@ -219,11 +215,11 @@ export type {
   NumericFacetProps,
   NumericFacetState,
   NumericRangeOptions,
-} from './controllers/facets/range-facet/numeric-facet/headless-numeric-facet.ssr.js';
+} from './ssr/search/controllers/facets/range-facet/numeric-facet/headless-numeric-facet.ssr.js';
 export {
   buildNumericRange,
   defineNumericFacet,
-} from './controllers/facets/range-facet/numeric-facet/headless-numeric-facet.ssr.js';
+} from './ssr/search/controllers/facets/range-facet/numeric-facet/headless-numeric-facet.ssr.js';
 export type {
   NumericFilter,
   NumericFilterDefinition,
@@ -232,8 +228,8 @@ export type {
   NumericFilterProps,
   NumericFilterRange,
   NumericFilterState,
-} from './controllers/facets/range-facet/numeric-facet/headless-numeric-filter.ssr.js';
-export {defineNumericFilter} from './controllers/facets/range-facet/numeric-facet/headless-numeric-filter.ssr.js';
+} from './ssr/search/controllers/facets/range-facet/numeric-facet/headless-numeric-filter.ssr.js';
+export {defineNumericFilter} from './ssr/search/controllers/facets/range-facet/numeric-facet/headless-numeric-filter.ssr.js';
 export type {
   CategoryFieldSuggestions,
   CategoryFieldSuggestionsDefinition,
@@ -241,8 +237,8 @@ export type {
   CategoryFieldSuggestionsProps,
   CategoryFieldSuggestionsState,
   CategoryFieldSuggestionsValue,
-} from './controllers/field-suggestions/category-facet/headless-category-field-suggestions.ssr.js';
-export {defineCategoryFieldSuggestions} from './controllers/field-suggestions/category-facet/headless-category-field-suggestions.ssr.js';
+} from './ssr/search/controllers/field-suggestions/category-facet/headless-category-field-suggestions.ssr.js';
+export {defineCategoryFieldSuggestions} from './ssr/search/controllers/field-suggestions/category-facet/headless-category-field-suggestions.ssr.js';
 export type {
   FieldSuggestions,
   FieldSuggestionsDefinition,
@@ -250,8 +246,8 @@ export type {
   FieldSuggestionsProps,
   FieldSuggestionsState,
   FieldSuggestionsValue,
-} from './controllers/field-suggestions/facet/headless-field-suggestions.ssr.js';
-export {defineFieldSuggestions} from './controllers/field-suggestions/facet/headless-field-suggestions.ssr.js';
+} from './ssr/search/controllers/field-suggestions/facet/headless-field-suggestions.ssr.js';
+export {defineFieldSuggestions} from './ssr/search/controllers/field-suggestions/facet/headless-field-suggestions.ssr.js';
 export type {
   FoldedCollection,
   FoldedResult,
@@ -261,22 +257,22 @@ export type {
   FoldedResultListProps,
   FoldedResultListState,
   FoldingOptions,
-} from './controllers/folded-result-list/headless-folded-result-list.ssr.js';
-export {defineFoldedResultList} from './controllers/folded-result-list/headless-folded-result-list.ssr.js';
+} from './ssr/search/controllers/folded-result-list/headless-folded-result-list.ssr.js';
+export {defineFoldedResultList} from './ssr/search/controllers/folded-result-list/headless-folded-result-list.ssr.js';
 export type {
   HistoryManager,
   HistoryManagerDefinition,
   HistoryManagerState,
-} from './controllers/history-manager/headless-history-manager.ssr.js';
-export {defineHistoryManager} from './controllers/history-manager/headless-history-manager.ssr.js';
+} from './ssr/search/controllers/history-manager/headless-history-manager.ssr.js';
+export {defineHistoryManager} from './ssr/search/controllers/history-manager/headless-history-manager.ssr.js';
 export type {
   InstantResultOptions,
   InstantResultProps,
   InstantResults,
   InstantResultsDefinition,
   InstantResultsState,
-} from './controllers/instant-results/instant-results.ssr.js';
-export {defineInstantResults} from './controllers/instant-results/instant-results.ssr.js';
+} from './ssr/search/controllers/instant-results/instant-results.ssr.js';
+export {defineInstantResults} from './ssr/search/controllers/instant-results/instant-results.ssr.js';
 export type {
   Pager,
   PagerDefinition,
@@ -284,20 +280,20 @@ export type {
   PagerOptions,
   PagerProps,
   PagerState,
-} from './controllers/pager/headless-pager.ssr.js';
-export {definePager} from './controllers/pager/headless-pager.ssr.js';
+} from './ssr/search/controllers/pager/headless-pager.ssr.js';
+export {definePager} from './ssr/search/controllers/pager/headless-pager.ssr.js';
 export type {
   QueryError,
   QueryErrorDefinition,
   QueryErrorState,
-} from './controllers/query-error/headless-query-error.ssr.js';
-export {defineQueryError} from './controllers/query-error/headless-query-error.ssr.js';
+} from './ssr/search/controllers/query-error/headless-query-error.ssr.js';
+export {defineQueryError} from './ssr/search/controllers/query-error/headless-query-error.ssr.js';
 export type {
   QuerySummary,
   QuerySummaryDefinition,
   QuerySummaryState,
-} from './controllers/query-summary/headless-query-summary.ssr.js';
-export {defineQuerySummary} from './controllers/query-summary/headless-query-summary.ssr.js';
+} from './ssr/search/controllers/query-summary/headless-query-summary.ssr.js';
+export {defineQuerySummary} from './ssr/search/controllers/query-summary/headless-query-summary.ssr.js';
 export type {
   CoreQuickview,
   CoreQuickviewState,
@@ -306,8 +302,8 @@ export type {
   QuickviewOptions,
   QuickviewProps,
   QuickviewState,
-} from './controllers/quickview/headless-quickview.ssr.js';
-export {defineQuickview} from './controllers/quickview/headless-quickview.ssr.js';
+} from './ssr/search/controllers/quickview/headless-quickview.ssr.js';
+export {defineQuickview} from './ssr/search/controllers/quickview/headless-quickview.ssr.js';
 export type {
   RecentQueriesList,
   RecentQueriesListDefinition,
@@ -315,8 +311,8 @@ export type {
   RecentQueriesListOptions,
   RecentQueriesListProps,
   RecentQueriesState,
-} from './controllers/recent-queries-list/headless-recent-queries-list.ssr.js';
-export {defineRecentQueriesList} from './controllers/recent-queries-list/headless-recent-queries-list.ssr.js';
+} from './ssr/search/controllers/recent-queries-list/headless-recent-queries-list.ssr.js';
+export {defineRecentQueriesList} from './ssr/search/controllers/recent-queries-list/headless-recent-queries-list.ssr.js';
 export type {
   RecentResultsList,
   RecentResultsListDefinition,
@@ -324,8 +320,8 @@ export type {
   RecentResultsListOptions,
   RecentResultsListProps,
   RecentResultsState,
-} from './controllers/recent-results-list/headless-recent-results-list.ssr.js';
-export {defineRecentResultsList} from './controllers/recent-results-list/headless-recent-results-list.ssr.js';
+} from './ssr/search/controllers/recent-results-list/headless-recent-results-list.ssr.js';
+export {defineRecentResultsList} from './ssr/search/controllers/recent-results-list/headless-recent-results-list.ssr.js';
 export type {
   DocumentWeights,
   ExecutionReport,
@@ -342,24 +338,24 @@ export type {
   ResultRankingInformation,
   SecurityIdentity,
   TermWeightReport,
-} from './controllers/relevance-inspector/headless-relevance-inspector.ssr.js';
-export {defineRelevanceInspector} from './controllers/relevance-inspector/headless-relevance-inspector.ssr.js';
+} from './ssr/search/controllers/relevance-inspector/headless-relevance-inspector.ssr.js';
+export {defineRelevanceInspector} from './ssr/search/controllers/relevance-inspector/headless-relevance-inspector.ssr.js';
 export type {
   ResultList,
   ResultListDefinition,
   ResultListOptions,
   ResultListProps,
   ResultListState,
-} from './controllers/result-list/headless-result-list.ssr.js';
-export {defineResultList} from './controllers/result-list/headless-result-list.ssr.js';
+} from './ssr/search/controllers/result-list/headless-result-list.ssr.js';
+export {defineResultList} from './ssr/search/controllers/result-list/headless-result-list.ssr.js';
 export type {
   ResultsPerPage,
   ResultsPerPageDefinition,
   ResultsPerPageInitialState,
   ResultsPerPageProps,
   ResultsPerPageState,
-} from './controllers/results-per-page/headless-results-per-page.ssr.js';
-export {defineResultsPerPage} from './controllers/results-per-page/headless-results-per-page.ssr.js';
+} from './ssr/search/controllers/results-per-page/headless-results-per-page.ssr.js';
+export {defineResultsPerPage} from './ssr/search/controllers/results-per-page/headless-results-per-page.ssr.js';
 export type {
   Delimiters,
   SearchBox,
@@ -369,8 +365,8 @@ export type {
   SearchBoxState,
   Suggestion,
   SuggestionHighlightingOptions,
-} from './controllers/search-box/headless-search-box.ssr.js';
-export {defineSearchBox} from './controllers/search-box/headless-search-box.ssr.js';
+} from './ssr/search/controllers/search-box/headless-search-box.ssr.js';
+export {defineSearchBox} from './ssr/search/controllers/search-box/headless-search-box.ssr.js';
 export type {
   SearchParameterManager,
   SearchParameterManagerBuildProps,
@@ -378,14 +374,14 @@ export type {
   SearchParameterManagerInitialState,
   SearchParameterManagerState,
   SearchParameters,
-} from './controllers/search-parameter-manager/headless-search-parameter-manager.ssr.js';
-export {defineSearchParameterManager} from './controllers/search-parameter-manager/headless-search-parameter-manager.ssr.js';
+} from './ssr/search/controllers/search-parameter-manager/headless-search-parameter-manager.ssr.js';
+export {defineSearchParameterManager} from './ssr/search/controllers/search-parameter-manager/headless-search-parameter-manager.ssr.js';
 export type {
   SearchStatus,
   SearchStatusDefinition,
   SearchStatusState,
-} from './controllers/search-status/headless-search-status.ssr.js';
-export {defineSearchStatus} from './controllers/search-status/headless-search-status.ssr.js';
+} from './ssr/search/controllers/search-status/headless-search-status.ssr.js';
+export {defineSearchStatus} from './ssr/search/controllers/search-status/headless-search-status.ssr.js';
 export type {
   QuestionAnswerDocumentIdentifier,
   SmartSnippet,
@@ -394,9 +390,8 @@ export type {
   SmartSnippetOptions,
   SmartSnippetProps,
   SmartSnippetState,
-} from './controllers/smart-snippet/headless-smart-snippet.ssr.js';
-export {defineSmartSnippet} from './controllers/smart-snippet/headless-smart-snippet.ssr.js';
-export type {InlineLink} from './controllers/smart-snippet/headless-smart-snippet-interactive-inline-links.js';
+} from './ssr/search/controllers/smart-snippet/headless-smart-snippet.ssr.js';
+export {defineSmartSnippet} from './ssr/search/controllers/smart-snippet/headless-smart-snippet.ssr.js';
 export type {
   CoreSmartSnippetQuestionsList,
   CoreSmartSnippetQuestionsListState,
@@ -406,16 +401,16 @@ export type {
   SmartSnippetQuestionsListProps,
   SmartSnippetQuestionsListState,
   SmartSnippetRelatedQuestion,
-} from './controllers/smart-snippet-questions-list/headless-smart-snippet-questions-list.ssr.js';
-export {defineSmartSnippetQuestionsList} from './controllers/smart-snippet-questions-list/headless-smart-snippet-questions-list.ssr.js';
+} from './ssr/search/controllers/smart-snippet-questions-list/headless-smart-snippet-questions-list.ssr.js';
+export {defineSmartSnippetQuestionsList} from './ssr/search/controllers/smart-snippet-questions-list/headless-smart-snippet-questions-list.ssr.js';
 export type {
   Sort,
   SortDefinition,
   SortInitialState,
   SortProps,
   SortState,
-} from './controllers/sort/headless-sort.ssr.js';
-export {defineSort} from './controllers/sort/headless-sort.ssr.js';
+} from './ssr/search/controllers/sort/headless-sort.ssr.js';
+export {defineSort} from './ssr/search/controllers/sort/headless-sort.ssr.js';
 export type {
   StandaloneSearchBox,
   StandaloneSearchBoxAnalytics,
@@ -423,8 +418,8 @@ export type {
   StandaloneSearchBoxOptions,
   StandaloneSearchBoxProps,
   StandaloneSearchBoxState,
-} from './controllers/standalone-search-box/headless-standalone-search-box.ssr.js';
-export {defineStandaloneSearchBox} from './controllers/standalone-search-box/headless-standalone-search-box.ssr.js';
+} from './ssr/search/controllers/standalone-search-box/headless-standalone-search-box.ssr.js';
+export {defineStandaloneSearchBox} from './ssr/search/controllers/standalone-search-box/headless-standalone-search-box.ssr.js';
 export type {
   StaticFilter,
   StaticFilterDefinition,
@@ -434,11 +429,11 @@ export type {
   StaticFilterValue,
   StaticFilterValueOptions,
   StaticFilterValueState,
-} from './controllers/static-filter/headless-static-filter.ssr.js';
+} from './ssr/search/controllers/static-filter/headless-static-filter.ssr.js';
 export {
   buildStaticFilterValue,
   defineStaticFilter,
-} from './controllers/static-filter/headless-static-filter.ssr.js';
+} from './ssr/search/controllers/static-filter/headless-static-filter.ssr.js';
 export type {
   Tab,
   TabDefinition,
@@ -446,45 +441,52 @@ export type {
   TabOptions,
   TabProps,
   TabState,
-} from './controllers/tab/headless-tab.ssr.js';
-export {defineTab} from './controllers/tab/headless-tab.ssr.js';
+} from './ssr/search/controllers/tab/headless-tab.ssr.js';
+export {defineTab} from './ssr/search/controllers/tab/headless-tab.ssr.js';
 export type {
   TabManager,
   TabManagerState,
-} from './controllers/tab-manager/headless-tab-manager.ssr.js';
-export {defineTabManager} from './controllers/tab-manager/headless-tab-manager.ssr.js';
+} from './ssr/search/controllers/tab-manager/headless-tab-manager.ssr.js';
+export {defineTabManager} from './ssr/search/controllers/tab-manager/headless-tab-manager.ssr.js';
 export type {
   ExecuteTrigger,
   ExecuteTriggerDefinition,
   ExecuteTriggerState,
-} from './controllers/triggers/headless-execute-trigger.ssr.js';
-export {defineExecuteTrigger} from './controllers/triggers/headless-execute-trigger.ssr.js';
+} from './ssr/search/controllers/triggers/headless-execute-trigger.ssr.js';
+export {defineExecuteTrigger} from './ssr/search/controllers/triggers/headless-execute-trigger.ssr.js';
 export type {
   NotifyTrigger,
   NotifyTriggerDefinition,
   NotifyTriggerState,
-} from './controllers/triggers/headless-notify-trigger.ssr.js';
-export {defineNotifyTrigger} from './controllers/triggers/headless-notify-trigger.ssr.js';
+} from './ssr/search/controllers/triggers/headless-notify-trigger.ssr.js';
+export {defineNotifyTrigger} from './ssr/search/controllers/triggers/headless-notify-trigger.ssr.js';
 export type {
   QueryTrigger,
   QueryTriggerDefinition,
   QueryTriggerState,
-} from './controllers/triggers/headless-query-trigger.ssr.js';
-export {defineQueryTrigger} from './controllers/triggers/headless-query-trigger.ssr.js';
+} from './ssr/search/controllers/triggers/headless-query-trigger.ssr.js';
+export {defineQueryTrigger} from './ssr/search/controllers/triggers/headless-query-trigger.ssr.js';
 export type {
   RedirectionTrigger,
   RedirectionTriggerDefinition,
   RedirectionTriggerState,
-} from './controllers/triggers/headless-redirection-trigger.ssr.js';
-export {defineRedirectionTrigger} from './controllers/triggers/headless-redirection-trigger.ssr.js';
+} from './ssr/search/controllers/triggers/headless-redirection-trigger.ssr.js';
+export {defineRedirectionTrigger} from './ssr/search/controllers/triggers/headless-redirection-trigger.ssr.js';
 export type {
   UrlManager,
   UrlManagerBuildProps,
   UrlManagerInitialState,
   UrlManagerProps,
   UrlManagerState,
-} from './controllers/url-manager/headless-url-manager.ssr.js';
-export {defineUrlManager} from './controllers/url-manager/headless-url-manager.ssr.js';
+} from './ssr/search/controllers/url-manager/headless-url-manager.ssr.js';
+export {defineUrlManager} from './ssr/search/controllers/url-manager/headless-url-manager.ssr.js';
+export type {
+  SearchCompletedAction,
+  SearchEngineDefinition,
+  SearchEngineDefinitionOptions,
+  SSRSearchEngine as SearchEngine,
+} from './ssr/search/engine/search-engine.ssr.js';
+export {defineSearchEngine} from './ssr/search/engine/search-engine.ssr.js';
 // State
 export type {
   SearchAppState,

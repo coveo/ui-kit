@@ -2,7 +2,6 @@ import {spawn} from 'node:child_process';
 import {writeFileSync} from 'node:fs';
 import {join} from 'node:path';
 import type PlatformClient from '@coveo/platform-client';
-import ListPrompt from 'inquirer/lib/prompts/list.js';
 import type {PromptQuestion} from 'node-plop';
 import type {NodePlopAPI} from 'plop';
 import {createPlatformClient} from './client.js';
@@ -67,8 +66,6 @@ export default function (plop: NodePlopAPI) {
   }
 
   plop.setHelper('inc', (value) => parseInt(value) + 1);
-
-  plop.setPrompt('customList', ListPrompt);
 
   plop.setGenerator('@coveo/atomic', {
     description: 'A Coveo Atomic Generator',

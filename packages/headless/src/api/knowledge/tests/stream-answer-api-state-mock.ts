@@ -1226,6 +1226,7 @@ export const expectedStreamAnswerAPIParam = {
   cq: 'cq-test-query',
   dq: 'dq-test-query',
   lq: 'lq-test-query',
+  enableQuerySyntax: false,
   context: {
     testKey: 'testValue',
   },
