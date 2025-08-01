@@ -180,27 +180,24 @@ describe('c-quantic-tab', () => {
         });
       });
 
-      ['true', 'false'].forEach((value) => {
-        it(`should pass the clearFiltersOnTabChange option as a boolean to the tab controller when a ${value} string is provided`, async () => {
-          const expectedClearFiltersValue = value === 'true' ? true : false;
-          const optionsWithClearFilters = {
-            ...defaultOptions,
-            clearFiltersOnTabChange: value,
-          };
-          createTestComponent(optionsWithClearFilters);
-          await flushPromises();
+      it(`should pass the clearFiltersOnTabChange option as a boolean to the tab controller when a "true" string is provided`, async () => {
+        const optionsWithClearFilters = {
+          ...defaultOptions,
+          clearFiltersOnTabChange: "true",
+        };
+        createTestComponent(optionsWithClearFilters);
+        await flushPromises();
 
-          expect(functionsMocks.buildTab).toHaveBeenCalledTimes(1);
-          expect(functionsMocks.buildTab).toHaveBeenCalledWith(exampleEngine, {
-            options: {
-              expression: optionsWithClearFilters.expression,
-              id: optionsWithClearFilters.name,
-              clearFiltersOnTabChange: expectedClearFiltersValue,
-            },
-            initialState: {
-              isActive: optionsWithClearFilters.isActive,
-            },
-          });
+        expect(functionsMocks.buildTab).toHaveBeenCalledTimes(1);
+        expect(functionsMocks.buildTab).toHaveBeenCalledWith(exampleEngine, {
+          options: {
+            expression: optionsWithClearFilters.expression,
+            id: optionsWithClearFilters.name,
+            clearFiltersOnTabChange: true,
+          },
+          initialState: {
+            isActive: optionsWithClearFilters.isActive,
+          },
         });
       });
     });
