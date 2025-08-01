@@ -1,34 +1,34 @@
 import {
-  ResultsPerPage,
   buildResultsPerPage,
-  ResultsPerPageState,
   buildSearchStatus,
-  SearchStatus,
-  SearchStatusState,
+  type ResultsPerPage,
+  type ResultsPerPageState,
+  type SearchStatus,
+  type SearchStatusState,
 } from '@coveo/headless';
 import {html, LitElement} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
-import type {Bindings} from '@/src/components/search/atomic-search-interface/atomic-search-interface.js';
 import {renderFieldsetGroup} from '@/src/components/common/fieldset-group.js';
 import {createAppLoadedListener} from '@/src/components/common/interface/store.js';
 import {renderChoices} from '@/src/components/common/items-per-page/choices.js';
+import {
+  ChoiceIsNaNError,
+  InitialChoiceNotInChoicesError,
+} from '@/src/components/common/items-per-page/error.js';
 import {renderLabel} from '@/src/components/common/items-per-page/label.js';
 import {
   convertChoicesToNumbers,
   validateInitialChoice,
 } from '@/src/components/common/items-per-page/validate.js';
 import {renderPagerGuard} from '@/src/components/common/pager/pager-guard.js';
+import type {Bindings} from '@/src/components/search/atomic-search-interface/interfaces.js';
 import {bindStateToController} from '@/src/decorators/bind-state.js';
 import {bindingGuard} from '@/src/decorators/binding-guard.js';
 import {errorGuard} from '@/src/decorators/error-guard.js';
 import type {InitializableComponent} from '@/src/decorators/types.js';
-import {InitializeBindingsMixin} from '@/src/mixins/bindings-mixin.js';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles.js';
+import {InitializeBindingsMixin} from '@/src/mixins/bindings-mixin.js';
 import {randomID} from '@/src/utils/utils.js';
-import {
-  ChoiceIsNaNError,
-  InitialChoiceNotInChoicesError,
-} from '@/src/components/common/items-per-page/error.js';
 
 /**
  * The `atomic-results-per-page` component determines how many results to display per page.
