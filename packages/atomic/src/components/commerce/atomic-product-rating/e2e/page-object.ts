@@ -1,14 +1,14 @@
 import type {Page} from '@playwright/test';
-import {BasePageObject} from '@/playwright-utils/base-page-object';
+import {BasePageObject} from '@/playwright-utils/lit-base-page-object';
 
-export class ProductRatingPageObject extends BasePageObject<'atomic-product-rating'> {
+export class ProductRatingPageObject extends BasePageObject {
   constructor(page: Page) {
     super(page, 'atomic-product-rating');
   }
 
   get blueLagoonYellowIcons() {
     return this.page
-      .getByLabel('4 stars out of', {exact: false})
+      .getByRole('img', {name: /stars out of \d+/})
       .locator('div')
       .nth(1);
   }

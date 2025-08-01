@@ -9,7 +9,9 @@ interface RatingProps {
   icon: string;
   iconSize?: number;
 }
-
+/** 
+ * @deprecated Use `renderRating` instead. 
+*/
 export const Rating: FunctionalComponent<RatingProps> = (props) => {
   const width =
     ((props.numberOfActiveIcons / props.numberOfTotalIcons) * 100).toString() +

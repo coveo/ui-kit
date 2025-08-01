@@ -34,6 +34,7 @@ import {
   AtomicProductMultiValueText as LitAtomicProductMultiValueText,
   AtomicProductNumericFieldValue as LitAtomicProductNumericFieldValue,
   AtomicProductPrice as LitAtomicProductPrice,
+  AtomicProductRating as LitAtomicProductRating,
   AtomicProductSectionActions as LitAtomicProductSectionActions,
   AtomicProductSectionBadges as LitAtomicProductSectionBadges,
   AtomicProductSectionBottomMetadata as LitAtomicProductSectionBottomMetadata,
@@ -232,6 +233,12 @@ export const AtomicProductPrice = createComponent({
   tagName: 'atomic-product-price',
   react: React,
   elementClass: LitAtomicProductPrice,
+});
+
+export const AtomicProductRating = createComponent({
+  tagName: 'atomic-product-rating',
+  react: React,
+  elementClass: LitAtomicProductRating,
 });
 
 export const AtomicProductSectionActions = createComponent({

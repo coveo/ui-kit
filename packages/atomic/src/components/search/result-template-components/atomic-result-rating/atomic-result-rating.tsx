@@ -8,7 +8,7 @@ import {
 import {
   Rating,
   computeNumberOfStars,
-} from '../../../common/atomic-rating/atomic-rating';
+} from '../../../common/atomic-rating/stencil-rating';
 import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
 import {ResultContext} from '../result-template-decorators';
 

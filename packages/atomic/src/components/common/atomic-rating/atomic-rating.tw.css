@@ -1,0 +1,9 @@
+/**
+ * @prop --atomic-rating-icon-outline: currentColor;line: Color of the icon's outline.
+ */
+.text-rating-icon-active,
+.text-rating-icon-inactive {
+  & svg path {
+    stroke: var(--atomic-rating-icon-outline);
+  }
+}
