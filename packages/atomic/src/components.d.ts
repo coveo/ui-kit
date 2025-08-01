@@ -1454,29 +1454,6 @@ export namespace Components {
     interface AtomicPopover {
     }
     /**
-     * The `atomic-product-rating` element renders a star rating.
-     * @alpha 
-     */
-    interface AtomicProductRating {
-        /**
-          * The numerical field whose values you want to display as a rating.
-         */
-        "field": string;
-        /**
-          * The SVG icon to use to display the rating.  - Use a value that starts with `http://`, `https://`, `./`, or `../`, to fetch and display an icon from a given location. - Use a value that starts with `assets://`, to display an icon from the Atomic package. - Use a stringified SVG to display it directly.  When using a custom icon, at least part of your icon should have the color set to `fill="currentColor"`. This part of the SVG will take on the colors set in the following [variables](https://developer.mozilla.org/en-US/docs/Web/CSS/Using_CSS_custom_properties):  - `--atomic-rating-icon-active-color` - `--atomic-rating-icon-inactive-color`
-         */
-        "icon": string;
-        /**
-          * The maximum value of the field. This value is also used as the number of icons to be displayed.
-         */
-        "maxValueInIndex": number;
-        /**
-          * The field whose value you want to display next to the rating. This field can be used to display the number of reviews or the numerical value of the rating, for example.
-          * @type {string}
-         */
-        "ratingDetailsField"?: string;
-    }
-    /**
      * The `atomic-query-error` component handles fatal errors when performing a query on the index or Search API. When the error is known, it displays a link to relevant documentation link for debugging purposes. When the error is unknown, it displays a small text area with the JSON content of the error.
      */
     interface AtomicQueryError {
@@ -3718,16 +3695,6 @@ declare global {
         new (): HTMLAtomicPopoverElement;
     };
     /**
-     * The `atomic-product-rating` element renders a star rating.
-     * @alpha 
-     */
-    interface HTMLAtomicProductRatingElement extends Components.AtomicProductRating, HTMLStencilElement {
-    }
-    var HTMLAtomicProductRatingElement: {
-        prototype: HTMLAtomicProductRatingElement;
-        new (): HTMLAtomicProductRatingElement;
-    };
-    /**
      * The `atomic-query-error` component handles fatal errors when performing a query on the index or Search API. When the error is known, it displays a link to relevant documentation link for debugging purposes. When the error is unknown, it displays a small text area with the JSON content of the error.
      */
     interface HTMLAtomicQueryErrorElement extends Components.AtomicQueryError, HTMLStencilElement {
@@ -4688,7 +4655,6 @@ declare global {
         "atomic-numeric-range": HTMLAtomicNumericRangeElement;
         "atomic-pager": HTMLAtomicPagerElement;
         "atomic-popover": HTMLAtomicPopoverElement;
-        "atomic-product-rating": HTMLAtomicProductRatingElement;
         "atomic-query-error": HTMLAtomicQueryErrorElement;
         "atomic-query-summary": HTMLAtomicQuerySummaryElement;
         "atomic-quickview": HTMLAtomicQuickviewElement;
@@ -6124,29 +6090,6 @@ declare namespace LocalJSX {
      * The `atomic-popover` component displays any facet as a popover menu.
      */
     interface AtomicPopover {
-    }
-    /**
-     * The `atomic-product-rating` element renders a star rating.
-     * @alpha 
-     */
-    interface AtomicProductRating {
-        /**
-          * The numerical field whose values you want to display as a rating.
-         */
-        "field"?: string;
-        /**
-          * The SVG icon to use to display the rating.  - Use a value that starts with `http://`, `https://`, `./`, or `../`, to fetch and display an icon from a given location. - Use a value that starts with `assets://`, to display an icon from the Atomic package. - Use a stringified SVG to display it directly.  When using a custom icon, at least part of your icon should have the color set to `fill="currentColor"`. This part of the SVG will take on the colors set in the following [variables](https://developer.mozilla.org/en-US/docs/Web/CSS/Using_CSS_custom_properties):  - `--atomic-rating-icon-active-color` - `--atomic-rating-icon-inactive-color`
-         */
-        "icon"?: string;
-        /**
-          * The maximum value of the field. This value is also used as the number of icons to be displayed.
-         */
-        "maxValueInIndex"?: number;
-        /**
-          * The field whose value you want to display next to the rating. This field can be used to display the number of reviews or the numerical value of the rating, for example.
-          * @type {string}
-         */
-        "ratingDetailsField"?: string;
     }
     /**
      * The `atomic-query-error` component handles fatal errors when performing a query on the index or Search API. When the error is known, it displays a link to relevant documentation link for debugging purposes. When the error is unknown, it displays a small text area with the JSON content of the error.
@@ -7663,7 +7606,6 @@ declare namespace LocalJSX {
         "atomic-numeric-range": AtomicNumericRange;
         "atomic-pager": AtomicPager;
         "atomic-popover": AtomicPopover;
-        "atomic-product-rating": AtomicProductRating;
         "atomic-query-error": AtomicQueryError;
         "atomic-query-summary": AtomicQuerySummary;
         "atomic-quickview": AtomicQuickview;
@@ -7929,11 +7871,6 @@ declare module "@stencil/core" {
              * The `atomic-popover` component displays any facet as a popover menu.
              */
             "atomic-popover": LocalJSX.AtomicPopover & JSXBase.HTMLAttributes<HTMLAtomicPopoverElement>;
-            /**
-             * The `atomic-product-rating` element renders a star rating.
-             * @alpha 
-             */
-            "atomic-product-rating": LocalJSX.AtomicProductRating & JSXBase.HTMLAttributes<HTMLAtomicProductRatingElement>;
             /**
              * The `atomic-query-error` component handles fatal errors when performing a query on the index or Search API. When the error is known, it displays a link to relevant documentation link for debugging purposes. When the error is unknown, it displays a small text area with the JSON content of the error.
              */
