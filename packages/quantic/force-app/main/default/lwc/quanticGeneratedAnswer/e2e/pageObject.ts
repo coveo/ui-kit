@@ -76,9 +76,16 @@ export class GeneratedAnswerObject {
     return this.page.getByTestId('generated-answer__answer-toggle');
   }
 
+  private isMatchingStreamId(customData?: Record<string, any>): boolean {
+    const key = this.answerApiEnabled
+      ? 'answerAPIStreamId'
+      : 'generativeQuestionAnsweringId';
+    return customData?.[key] === this.streamId;
+  }
+
   async hoverOverCitation(index: number): Promise<void> {
-    // waiting 1000ms to allow the component to render completely, cause any re-rendering abort the hover action.
-    await this.page.waitForTimeout(1000);
+    // waiting 500ms to allow the component to render completely, cause any re-rendering abort the hover action.
+    await this.page.waitForTimeout(500);
     await this.citationLink.nth(index).hover();
     await this.page.waitForTimeout(minimumCitationTooltipDisplayDurationMs);
     await this.page.mouse.move(0, 0);
@@ -131,12 +138,7 @@ export class GeneratedAnswerObject {
           eventType: 'generatedAnswer',
           eventValue: 'generatedAnswerStreamEnd',
         },
-        (event) =>
-          event?.customData?.[
-            this.answerApiEnabled
-              ? 'answerAPIStreamId'
-              : 'generativeQuestionAnsweringId'
-          ] === this.streamId
+        (event) => this.isMatchingStreamId(event?.customData)
       );
     }
     return this.analytics.waitForEventProtocolAnalytics(
@@ -152,12 +154,7 @@ export class GeneratedAnswerObject {
           eventType: 'generatedAnswer',
           eventValue: 'likeGeneratedAnswer',
         },
-        (event) =>
-          event?.customData?.[
-            this.answerApiEnabled
-              ? 'answerAPIStreamId'
-              : 'generativeQuestionAnsweringId'
-          ] === this.streamId
+        (event) => this.isMatchingStreamId(event?.customData)
       );
     }
     return this.analytics.waitForEventProtocolAnalytics(
@@ -173,12 +170,7 @@ export class GeneratedAnswerObject {
           eventType: 'generatedAnswer',
           eventValue: 'dislikeGeneratedAnswer',
         },
-        (event) =>
-          event?.customData?.[
-            this.answerApiEnabled
-              ? 'answerAPIStreamId'
-              : 'generativeQuestionAnsweringId'
-          ] === this.streamId
+        (event) => this.isMatchingStreamId(event?.customData)
       );
     }
     return this.analytics.waitForEventProtocolAnalytics(
@@ -194,12 +186,7 @@ export class GeneratedAnswerObject {
           eventType: 'generatedAnswer',
           eventValue: 'generatedAnswerCopyToClipboard',
         },
-        (event) =>
-          event?.customData?.[
-            this.answerApiEnabled
-              ? 'answerAPIStreamId'
-              : 'generativeQuestionAnsweringId'
-          ] === this.streamId
+        (event) => this.isMatchingStreamId(event?.customData)
       );
     }
     return this.analytics.waitForEventProtocolAnalytics(
@@ -215,12 +202,7 @@ export class GeneratedAnswerObject {
           eventType: 'generatedAnswer',
           eventValue: 'generatedAnswerShowAnswers',
         },
-        (event) =>
-          event?.customData?.[
-            this.answerApiEnabled
-              ? 'answerAPIStreamId'
-              : 'generativeQuestionAnsweringId'
-          ] === this.streamId
+        (event) => this.isMatchingStreamId(event?.customData)
       );
     }
     return this.analytics.waitForEventProtocolAnalytics(
@@ -236,12 +218,7 @@ export class GeneratedAnswerObject {
           eventType: 'generatedAnswer',
           eventValue: 'generatedAnswerHideAnswers',
         },
-        (event) =>
-          event?.customData?.[
-            this.answerApiEnabled
-              ? 'answerAPIStreamId'
-              : 'generativeQuestionAnsweringId'
-          ] === this.streamId
+        (event) => this.isMatchingStreamId(event?.customData)
       );
     }
     return this.analytics.waitForEventProtocolAnalytics(
@@ -259,11 +236,15 @@ export class GeneratedAnswerObject {
           eventType: 'generatedAnswer',
           eventValue: 'generatedAnswerSourceHover',
         },
-        (event) =>
-          event?.customData?.generativeQuestionAnsweringId === this.streamId &&
-          Object.keys(expectedPayload).every(
-            (key) => event?.customData?.[key] === expectedPayload[key]
-          )
+        (event) => {
+          return (
+            event?.customData?.generativeQuestionAnsweringId ===
+              this.streamId &&
+            Object.keys(expectedPayload).every(
+              (key) => event?.customData?.[key] === expectedPayload[key]
+            )
+          );
+        }
       );
     }
     return this.analytics.waitForEventProtocolAnalytics(
@@ -276,7 +257,7 @@ export class GeneratedAnswerObject {
   }
 
   async waitForEvaluationsRequest(
-    expectedPayload?: Record<string, any>
+    expectedPayload: Record<string, any>
   ): Promise<Request> {
     const removeUnknownFields = (object: Record<string, unknown>) => {
       return Object.fromEntries(
@@ -319,11 +300,7 @@ export class GeneratedAnswerObject {
           eventValue: 'generatedAnswerFeedbackSubmitV2',
         },
         (event) =>
-          event?.customData?.[
-            this.answerApiEnabled
-              ? 'answerAPIStreamId'
-              : 'generativeQuestionAnsweringId'
-          ] === this.streamId &&
+          this.isMatchingStreamId(event?.customData) &&
           Object.keys(expectedPayload).every(
             (key) => event?.customData?.[key] === expectedPayload[key]
           )
@@ -412,18 +389,15 @@ export class GeneratedAnswerObject {
         bodyText += `data: ${JSON.stringify(data)} \n\n`;
       });
 
-      // eslint-disable-next-line @lwc/lwc/no-async-operation
-      setTimeout(() => {
-        route.fulfill({
-          status: 200,
-          body: bodyText,
-          headers: {
-            'access-control-expose-headers': 'X-Request-Id, X-Answer-Id',
-            'content-type': 'text/event-stream',
-            ...(answerId && {'x-answer-id': answerId}),
-          },
-        });
-      }, 500);
+      route.fulfill({
+        status: 200,
+        body: bodyText,
+        headers: {
+          'access-control-expose-headers': 'X-Request-Id, X-Answer-Id',
+          'content-type': 'text/event-stream',
+          ...(answerId && {'x-answer-id': answerId}),
+        },
+      });
     });
   }
 
