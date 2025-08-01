@@ -34,7 +34,15 @@ function buildControllerFromDefinition<
           const controller = definition.buildWithProps(engine, props);
           return {...controller, initialState: controller.state};
         })()
-  ) as InferControllerFromDefinition<TControllerDefinition>; // TODO: ensure the type follow and that initial state is mandatory
+  ) as InferControllerFromDefinition<TControllerDefinition>;
+}
+
+function getStaticControllerState(controller: Controller) {
+  const base = {state: clone(controller.state)};
+  if ('initialState' in controller) {
+    return {...base, initialState: clone(controller.initialState)};
+  }
+  return base;
 }
 
 export function buildControllerDefinitions<
@@ -78,15 +86,10 @@ export function createStaticState<
   InferControllerStaticStateMapFromDefinitions<TControllerDefinitions>
 > {
   return {
-    controllers: mapObject(controllers, (controller) => {
-      const base = {state: clone(controller.state)};
-      // TODO: check if initialState is an object
-      if ('initialState' in controller) {
-        // TODO: check if that works!!!
-        return {...base, initialState: clone(controller.initialState)};
-      }
-      return base;
-    }) as InferControllerStaticStateMapFromDefinitions<TControllerDefinitions>,
+    controllers: mapObject(
+      controllers,
+      getStaticControllerState
+    ) as InferControllerStaticStateMapFromDefinitions<TControllerDefinitions>,
     searchAction: clone(searchAction),
   };
 }
