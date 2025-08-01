@@ -1,7 +1,7 @@
 import type {FunctionalComponentWithChildren} from '@/src/utils/functional-component-utils';
 import {
-  renderCategoryFacetValueLink,
   type CategoryFacetValueLinkProps,
+  renderCategoryFacetValueLink,
 } from './value-link';
 
 interface CategoryFacetParentValueLinkProps

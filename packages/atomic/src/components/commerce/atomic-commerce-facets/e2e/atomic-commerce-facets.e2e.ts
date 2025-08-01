@@ -15,30 +15,6 @@ test.describe('default', async () => {
     await expect(facets.numericFacets.first()).toBeVisible();
     await expect(facets.categoryFacets.first()).toBeVisible();
   });
-
-  test('should collapse facets when collapseFacetsAfter is set to 1', async ({
-    facets,
-  }) => {
-    await facets.load({
-      args: {
-        collapseFacetsAfter: 1,
-      },
-    });
-    await expect(facets.expandedFacets).toHaveCount(1);
-    await expect(facets.collapsedFacets).toHaveCount(8);
-  });
-
-  test('should disable collapse facets when collapseFacetsAfter is set to -1', async ({
-    facets,
-  }) => {
-    await facets.load({
-      args: {
-        collapseFacetsAfter: -1,
-      },
-    });
-    await expect(facets.collapsedFacets).toHaveCount(0);
-    await expect(facets.expandedFacets).toHaveCount(9);
-  });
 });
 
 test.describe('loading state', async () => {

@@ -1,7 +1,7 @@
 import type {
-  CategoryFacetValue,
   CategoryFacet,
   CategoryFacetState,
+  CategoryFacetValue,
 } from '@coveo/headless/commerce';
 
 const defaultValues: CategoryFacetValue[] = [

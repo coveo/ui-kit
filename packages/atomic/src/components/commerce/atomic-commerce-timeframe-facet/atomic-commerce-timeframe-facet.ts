@@ -1,3 +1,16 @@
+import {
+  type DateFacet,
+  type DateFacetState,
+  type DateFacetValue,
+  type DateFilterRange,
+  deserializeRelativeDate,
+  type ProductListingSummaryState,
+  type SearchSummaryState,
+  type Summary,
+} from '@coveo/headless/commerce';
+import {type CSSResultGroup, html, LitElement, unsafeCSS} from 'lit';
+import {customElement, property, state} from 'lit/decorators.js';
+import {when} from 'lit/directives/when.js';
 import {renderFacetContainer} from '@/src/components/common/facets/facet-container/facet-container';
 import {renderFacetHeader} from '@/src/components/common/facets/facet-header/facet-header';
 import {renderFacetValueLabelHighlight} from '@/src/components/common/facets/facet-value-label-highlight/facet-value-label-highlight';
@@ -12,19 +25,6 @@ import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles.js';
 import {InitializeBindingsMixin} from '@/src/mixins/bindings-mixin';
 import {FocusTargetController} from '@/src/utils/accessibility-utils';
 import {parseDate} from '@/src/utils/date-utils';
-import {
-  type DateFacet,
-  type DateFacetState,
-  type DateFacetValue,
-  type DateFilterRange,
-  deserializeRelativeDate,
-  type ProductListingSummaryState,
-  type SearchSummaryState,
-  type Summary,
-} from '@coveo/headless/commerce';
-import {type CSSResultGroup, html, LitElement, unsafeCSS} from 'lit';
-import {customElement, property, state} from 'lit/decorators.js';
-import {when} from 'lit/directives/when.js';
 import '../../common/atomic-facet-date-input/atomic-facet-date-input';
 import type {FacetDateInputEventDetails} from '../../common/atomic-facet-date-input/atomic-facet-date-input';
 import {shouldDisplayInputForFacetRange} from '../../common/facets/facet-common';

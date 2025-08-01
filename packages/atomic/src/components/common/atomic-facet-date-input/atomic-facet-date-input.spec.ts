@@ -1,10 +1,11 @@
 /** biome-ignore-all lint/style/noNonNullAssertion: For testing, locators should always exist */
-import {renderInAtomicCommerceInterface} from '@/vitest-utils/testing-helpers/fixtures/atomic/commerce/atomic-commerce-interface-fixture';
+
 import type {DateFilterRange} from '@coveo/headless';
 import {page, userEvent} from '@vitest/browser/context';
 import {html} from 'lit';
 import {when} from 'lit/directives/when.js';
-import {describe, it, expect, beforeEach, vi, type MockInstance} from 'vitest';
+import {beforeEach, describe, expect, it, type MockInstance, vi} from 'vitest';
+import {renderInAtomicCommerceInterface} from '@/vitest-utils/testing-helpers/fixtures/atomic/commerce/atomic-commerce-interface-fixture';
 import './atomic-facet-date-input';
 import {AtomicFacetDateInput} from './atomic-facet-date-input';
 

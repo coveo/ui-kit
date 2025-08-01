@@ -1,7 +1,7 @@
-import {
-  RegularFacetValue,
+import type {
   RegularFacet,
   RegularFacetState,
+  RegularFacetValue,
 } from '@coveo/headless/commerce';
 
 const defaultValues: RegularFacetValue[] = [

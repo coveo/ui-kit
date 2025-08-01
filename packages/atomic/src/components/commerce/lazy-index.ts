@@ -16,6 +16,8 @@ export default {
     await import(
       './atomic-commerce-facet-number-input/atomic-commerce-facet-number-input.js'
     ),
+  'atomic-commerce-facets': async () =>
+    await import('./atomic-commerce-facets/atomic-commerce-facets.js'),
   'atomic-commerce-interface': async () =>
     await import('./atomic-commerce-interface/atomic-commerce-interface.js'),
   'atomic-commerce-layout': async () =>

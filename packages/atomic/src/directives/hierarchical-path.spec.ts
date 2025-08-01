@@ -1,8 +1,8 @@
 import {html, render} from 'lit';
-import {describe, beforeEach, afterEach, it, expect} from 'vitest';
+import {afterEach, beforeEach, describe, expect, it} from 'vitest';
 import {
-  hierarchicalPath,
   type HierarchicalPathProps,
+  hierarchicalPath,
 } from './hierarchical-path';
 
 describe('#hierarchicalPath', () => {

@@ -1,12 +1,13 @@
 /** biome-ignore-all lint/style/noNonNullAssertion: test file uses non-null assertions */
+
+import type {CategoryFacet, Summary} from '@coveo/headless/commerce';
+import {page, userEvent} from '@vitest/browser/context';
 import {renderInAtomicCommerceInterface} from '@/vitest-utils/testing-helpers/fixtures/atomic/commerce/atomic-commerce-interface-fixture';
 import {buildFakeCategoryFacet} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/category-facet-controller';
 import {buildFakeSummary} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/summary-subcontroller';
-import type {CategoryFacet, Summary} from '@coveo/headless/commerce';
-import {page, userEvent} from '@vitest/browser/context';
 import '@vitest/browser/matchers.d.ts';
 import {html} from 'lit';
-import {describe, expect, vi, beforeEach, it, type MockInstance} from 'vitest';
+import {beforeEach, describe, expect, it, type MockInstance, vi} from 'vitest';
 import type {AtomicCommerceCategoryFacet} from './atomic-commerce-category-facet';
 import './atomic-commerce-category-facet';
 

@@ -1,9 +1,10 @@
 /* eslint-disable @cspell/spellchecker */
-import {renderFunctionFixture} from '@/vitest-utils/testing-helpers/fixture';
-import {createTestI18n} from '@/vitest-utils/testing-helpers/i18n-utils';
+
 import {page} from '@vitest/browser/context';
 import {html} from 'lit';
-import {vi, expect, describe, it, beforeAll} from 'vitest';
+import {beforeAll, describe, expect, it, vi} from 'vitest';
+import {renderFunctionFixture} from '@/vitest-utils/testing-helpers/fixture';
+import {createTestI18n} from '@/vitest-utils/testing-helpers/i18n-utils';
 import type {CategoryFacetAllCategoryButtonProps} from './all-categories-button';
 import {renderCategoryFacetAllCategoryButton} from './all-categories-button';
 

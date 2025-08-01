@@ -1,14 +1,15 @@
 /** biome-ignore-all lint/style/noNonNullAssertion: For testing, locators should always exist */
+
+import type {DateFacet, Summary} from '@coveo/headless/commerce';
+import {page, userEvent} from '@vitest/browser/context';
+import {html} from 'lit';
+import {beforeEach, describe, expect, it, type MockInstance, vi} from 'vitest';
 import {shouldDisplayInputForFacetRange} from '@/src/components/common/facets/facet-common';
 import {FocusTargetController} from '@/src/utils/accessibility-utils';
 import {renderInAtomicCommerceInterface} from '@/vitest-utils/testing-helpers/fixtures/atomic/commerce/atomic-commerce-interface-fixture';
 import {buildFakeDateFacet} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/date-facet-subcontroller';
 import {buildFakeCommerceDateFacetValue} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/date-facet-value';
 import {buildFakeSummary} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/summary-subcontroller';
-import type {DateFacet, Summary} from '@coveo/headless/commerce';
-import {page, userEvent} from '@vitest/browser/context';
-import {html} from 'lit';
-import {describe, it, vi, expect, beforeEach, type MockInstance} from 'vitest';
 import type {AtomicCommerceTimeframeFacet} from './atomic-commerce-timeframe-facet';
 import './atomic-commerce-timeframe-facet';
 

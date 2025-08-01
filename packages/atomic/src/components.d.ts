@@ -266,17 +266,6 @@ export namespace Components {
         "withSearch": boolean;
     }
     /**
-     * The `atomic-commerce-facets` component automatically renders commerce facets based on the Commerce API response.
-     * Unlike regular facets, which require explicit definition and request in the query, the `atomic-commerce-facets` component dynamically generates facets.
-     * @alpha 
-     */
-    interface AtomicCommerceFacets {
-        /**
-          * The maximum number of facets to expand. Remaining facets are automatically collapsed.  Using the value `0` collapses all facets. Using the value `-1` disables the feature and keeps all facets expanded.
-         */
-        "collapseFacetsAfter": number;
-    }
-    /**
      * The `atomic-did-you-mean` component is responsible for handling query corrections. When a query returns no result but finds a possible query correction, the component either suggests the correction or automatically triggers a new query with the suggested term.
      */
     interface AtomicDidYouMean {
@@ -3206,17 +3195,6 @@ declare global {
         new (): HTMLAtomicColorFacetElement;
     };
     /**
-     * The `atomic-commerce-facets` component automatically renders commerce facets based on the Commerce API response.
-     * Unlike regular facets, which require explicit definition and request in the query, the `atomic-commerce-facets` component dynamically generates facets.
-     * @alpha 
-     */
-    interface HTMLAtomicCommerceFacetsElement extends Components.AtomicCommerceFacets, HTMLStencilElement {
-    }
-    var HTMLAtomicCommerceFacetsElement: {
-        prototype: HTMLAtomicCommerceFacetsElement;
-        new (): HTMLAtomicCommerceFacetsElement;
-    };
-    /**
      * The `atomic-did-you-mean` component is responsible for handling query corrections. When a query returns no result but finds a possible query correction, the component either suggests the correction or automatically triggers a new query with the suggested term.
      */
     interface HTMLAtomicDidYouMeanElement extends Components.AtomicDidYouMean, HTMLStencilElement {
@@ -4856,7 +4834,6 @@ declare global {
         "atomic-category-facet": HTMLAtomicCategoryFacetElement;
         "atomic-citation": HTMLAtomicCitationElement;
         "atomic-color-facet": HTMLAtomicColorFacetElement;
-        "atomic-commerce-facets": HTMLAtomicCommerceFacetsElement;
         "atomic-did-you-mean": HTMLAtomicDidYouMeanElement;
         "atomic-external": HTMLAtomicExternalElement;
         "atomic-facet": HTMLAtomicFacetElement;
@@ -5222,17 +5199,6 @@ declare namespace LocalJSX {
           * Whether this facet should contain a search box.
          */
         "withSearch"?: boolean;
-    }
-    /**
-     * The `atomic-commerce-facets` component automatically renders commerce facets based on the Commerce API response.
-     * Unlike regular facets, which require explicit definition and request in the query, the `atomic-commerce-facets` component dynamically generates facets.
-     * @alpha 
-     */
-    interface AtomicCommerceFacets {
-        /**
-          * The maximum number of facets to expand. Remaining facets are automatically collapsed.  Using the value `0` collapses all facets. Using the value `-1` disables the feature and keeps all facets expanded.
-         */
-        "collapseFacetsAfter"?: number;
     }
     /**
      * The `atomic-did-you-mean` component is responsible for handling query corrections. When a query returns no result but finds a possible query correction, the component either suggests the correction or automatically triggers a new query with the suggested term.
@@ -7942,7 +7908,6 @@ declare namespace LocalJSX {
         "atomic-category-facet": AtomicCategoryFacet;
         "atomic-citation": AtomicCitation;
         "atomic-color-facet": AtomicColorFacet;
-        "atomic-commerce-facets": AtomicCommerceFacets;
         "atomic-did-you-mean": AtomicDidYouMean;
         "atomic-external": AtomicExternal;
         "atomic-facet": AtomicFacet;
@@ -8133,12 +8098,6 @@ declare module "@stencil/core" {
              * An `atomic-color-facet` displays a facet of the results for the current query as colors.
              */
             "atomic-color-facet": LocalJSX.AtomicColorFacet & JSXBase.HTMLAttributes<HTMLAtomicColorFacetElement>;
-            /**
-             * The `atomic-commerce-facets` component automatically renders commerce facets based on the Commerce API response.
-             * Unlike regular facets, which require explicit definition and request in the query, the `atomic-commerce-facets` component dynamically generates facets.
-             * @alpha 
-             */
-            "atomic-commerce-facets": LocalJSX.AtomicCommerceFacets & JSXBase.HTMLAttributes<HTMLAtomicCommerceFacetsElement>;
             /**
              * The `atomic-did-you-mean` component is responsible for handling query corrections. When a query returns no result but finds a possible query correction, the component either suggests the correction or automatically triggers a new query with the suggested term.
              */

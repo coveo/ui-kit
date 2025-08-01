@@ -4,6 +4,7 @@ export {AtomicCommerceCategoryFacet} from './atomic-commerce-category-facet/atom
 export {AtomicCommerceDidYouMean} from './atomic-commerce-did-you-mean/atomic-commerce-did-you-mean.js';
 export {AtomicCommerceFacet} from './atomic-commerce-facet/atomic-commerce-facet.js';
 export {AtomicCommerceFacetNumberInput} from './atomic-commerce-facet-number-input/atomic-commerce-facet-number-input.js';
+export {AtomicCommerceFacets} from './atomic-commerce-facets/atomic-commerce-facets.js';
 export {AtomicCommerceInterface} from './atomic-commerce-interface/atomic-commerce-interface.js';
 export {AtomicCommerceLayout} from './atomic-commerce-layout/atomic-commerce-layout.js';
 export {AtomicCommerceLoadMoreProducts} from './atomic-commerce-load-more-products/atomic-commerce-load-more-products.js';

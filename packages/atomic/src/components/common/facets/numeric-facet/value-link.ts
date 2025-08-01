@@ -1,5 +1,5 @@
-import {FunctionalComponent} from '@/src/utils/functional-component-utils';
 import {html, nothing} from 'lit';
+import type {FunctionalComponent} from '@/src/utils/functional-component-utils';
 import {renderFacetValueCheckbox} from '../facet-value-checkbox/facet-value-checkbox';
 import {renderFacetValueLabelHighlight} from '../facet-value-label-highlight/facet-value-label-highlight';
 import {renderFacetValueLink} from '../facet-value-link/facet-value-link';

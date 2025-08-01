@@ -2,11 +2,11 @@ import {renderFunctionFixture} from '@/vitest-utils/testing-helpers/fixture';
 import {createTestI18n} from '@/vitest-utils/testing-helpers/i18n-utils';
 import '@vitest/browser/matchers.d.ts';
 import {html, type TemplateResult} from 'lit';
-import {vi, expect, describe, beforeAll, beforeEach, it} from 'vitest';
+import {beforeAll, beforeEach, describe, expect, it, vi} from 'vitest';
 import {renderFacetValuesGroup} from '../facet-values-group/facet-values-group';
 import {
-  renderNumericFacetValuesGroup,
   type NumericFacetValuesContainerProps,
+  renderNumericFacetValuesGroup,
 } from './values-container';
 
 vi.mock('../facet-values-group/facet-values-group', {spy: true});

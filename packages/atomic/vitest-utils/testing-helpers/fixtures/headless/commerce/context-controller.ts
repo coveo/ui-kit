@@ -1,4 +1,4 @@
-import {Context, ContextState} from '@coveo/headless/commerce';
+import type {Context, ContextState} from '@coveo/headless/commerce';
 import {vi} from 'vitest';
 import {genericSubscribe} from '../common';
 

@@ -1,9 +1,3 @@
-/** biome-ignore-all lint/style/noNonNullAssertion: <explanation> */
-import {renderInAtomicCommerceInterface} from '@/vitest-utils/testing-helpers/fixtures/atomic/commerce/atomic-commerce-interface-fixture';
-import {buildFakeContext} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/context-controller';
-import {buildFakeCommerceEngine} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/engine';
-import {buildFakeNumericFacet} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/numeric-facet-controller';
-import {buildFakeSummary} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/summary-subcontroller';
 import {
   buildContext,
   type Context,
@@ -13,14 +7,19 @@ import {
 import {page, userEvent} from '@vitest/browser/context';
 import {html, LitElement} from 'lit';
 import {
+  afterEach,
+  beforeEach,
   describe,
   expect,
-  vi,
-  beforeEach,
   it,
   type MockInstance,
-  afterEach,
+  vi,
 } from 'vitest';
+import {renderInAtomicCommerceInterface} from '@/vitest-utils/testing-helpers/fixtures/atomic/commerce/atomic-commerce-interface-fixture';
+import {buildFakeContext} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/context-controller';
+import {buildFakeCommerceEngine} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/engine';
+import {buildFakeNumericFacet} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/numeric-facet-controller';
+import {buildFakeSummary} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/summary-subcontroller';
 import type {AtomicCommerceNumericFacet} from './atomic-commerce-numeric-facet';
 import './atomic-commerce-numeric-facet';
 
