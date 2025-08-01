@@ -5,7 +5,7 @@ import {
   ProductTemplatesHelpers,
   type RegularFacetValue,
 } from '@coveo/headless/commerce';
-import {html, LitElement, nothing, type TemplateResult} from 'lit';
+import {css, html, LitElement, nothing, type TemplateResult} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {bindingGuard} from '@/src/decorators/binding-guard';
 import {bindings} from '@/src/decorators/bindings';
@@ -35,6 +35,28 @@ export class AtomicProductMultiValueText
   extends LitElement
   implements InitializableComponent<CommerceBindings>
 {
+  static styles = css`
+  :host {
+    > ul {
+      display: flex;
+      list-style: none;
+      margin: 0;
+      padding: 0;
+  
+      li {
+        display: inline-block;
+      }
+
+      @apply set-font-size-sm;
+    }
+  }
+  
+  .separator {
+    &::before {
+      display: inline;
+      content: ",\00a0";
+    }
+  }`;
   @state()
   bindings!: CommerceBindings;
 
