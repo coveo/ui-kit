@@ -9,7 +9,10 @@ import {errorGuard} from '@/src/decorators/error-guard';
 import type {InitializableComponent} from '@/src/decorators/types.js';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles.js';
 import Star from '../../../images/star.svg';
-import {computeNumberOfStars, renderRating} from '../../common/rating.js';
+import {
+  computeNumberOfStars,
+  renderRating,
+} from '../../common/atomic-rating/rating.js';
 import type {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface.js';
 
 /**
