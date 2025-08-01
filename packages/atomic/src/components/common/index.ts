@@ -5,3 +5,4 @@ export {AtomicFacetDateInput} from './atomic-facet-date-input/atomic-facet-date-
 export {AtomicFacetPlaceholder} from './atomic-facet-placeholder/atomic-facet-placeholder.js';
 export {AtomicIcon} from './atomic-icon/atomic-icon.js';
 export {AtomicLayoutSection} from './atomic-layout-section/atomic-layout-section.js';
+export {AtomicSuggestionLitRenderer} from './atomic-suggestion-lit-renderer/atomic-suggestion-lit-renderer.js';

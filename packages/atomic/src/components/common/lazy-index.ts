@@ -11,6 +11,10 @@ export default {
   'atomic-icon': async () => await import('./atomic-icon/atomic-icon.js'),
   'atomic-layout-section': async () =>
     await import('./atomic-layout-section/atomic-layout-section.js'),
+  'atomic-suggestion-lit-renderer': async () =>
+    await import(
+      './atomic-suggestion-lit-renderer/atomic-suggestion-lit-renderer.js'
+    ),
 } as Record<string, () => Promise<unknown>>;
 
 export type * from './index.js';

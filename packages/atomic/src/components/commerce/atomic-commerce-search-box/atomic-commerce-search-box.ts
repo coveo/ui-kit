@@ -51,6 +51,7 @@ import styles from './atomic-commerce-search-box.tw.css';
 import '../atomic-commerce-search-box-instant-products/atomic-commerce-search-box-instant-products';
 import '../atomic-commerce-search-box-query-suggestions/atomic-commerce-search-box-query-suggestions';
 import '../atomic-commerce-search-box-recent-queries/atomic-commerce-search-box-recent-queries';
+import '@/src/components/common/atomic-suggestion-lit-renderer/atomic-suggestion-lit-renderer';
 
 /**
  * The `atomic-commerce-search-box` component enables users to perform product searches with built-in query suggestions and optional redirection to a search results page.
@@ -680,7 +681,7 @@ export class AtomicCommerceSearchBox
       return null;
     }
     return html`
-      <atomic-suggestion-renderer
+      <atomic-suggestion-lit-renderer
         .i18n=${this.bindings.i18n}
         .id=${id}
         .suggestion=${item}
@@ -700,7 +701,7 @@ export class AtomicCommerceSearchBox
         .onMouseOver=${async () => {
           await this.suggestionManager.onSuggestionMouseOver(item, side, id);
         }}
-      ></atomic-suggestion-renderer>
+      ></atomic-suggestion-lit-renderer>
     `;
   }
 

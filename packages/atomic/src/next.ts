@@ -1,5 +1,7 @@
-import elementMap from './components/commerce/lazy-index.js';
+import commerceElementMap from './components/commerce/lazy-index.js';
+import commonElementMap from './components/common/lazy-index.js';
 
+const elementMap = Object.assign({}, commerceElementMap, commonElementMap);
 export function registerAutoloader(
   roots?:
     | (Element | ShadowRoot | DocumentFragment)[]
