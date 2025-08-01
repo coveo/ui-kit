@@ -4,6 +4,7 @@ import {
   AtomicCommerceCategoryFacet as LitAtomicCommerceCategoryFacet,
   AtomicCommerceDidYouMean as LitAtomicCommerceDidYouMean,
   AtomicCommerceFacet as LitAtomicCommerceFacet,
+  AtomicCommerceFacets as LitAtomicCommerceFacets,
   AtomicCommerceInterface as LitAtomicCommerceInterface,
   AtomicCommerceLayout as LitAtomicCommerceLayout,
   AtomicCommerceLoadMoreProducts as LitAtomicCommerceLoadMoreProducts,
@@ -65,6 +66,18 @@ export const AtomicCommerceFacet = createComponent({
   elementClass: LitAtomicCommerceFacet,
 });
 
+export const AtomicCommerceFacets = createComponent({
+  tagName: 'atomic-commerce-facets',
+  react: React,
+  elementClass: LitAtomicCommerceFacets,
+});
+
+export const AtomicCommerceInterface = createComponent({
+  tagName: 'atomic-commerce-interface',
+  react: React,
+  elementClass: LitAtomicCommerceInterface,
+});
+
 export const AtomicCommerceLayout = createComponent({
   tagName: 'atomic-commerce-layout',
   react: React,
@@ -77,22 +90,10 @@ export const AtomicCommerceLoadMoreProducts = createComponent({
   elementClass: LitAtomicCommerceLoadMoreProducts,
 });
 
-export const AtomicCommerceInterface = createComponent({
-  tagName: 'atomic-commerce-interface',
-  react: React,
-  elementClass: LitAtomicCommerceInterface,
-});
-
 export const AtomicCommerceNoProducts = createComponent({
   tagName: 'atomic-commerce-no-products',
   react: React,
   elementClass: LitAtomicCommerceNoProducts,
-});
-
-export const AtomicCommerceProductList = createComponent({
-  tagName: 'atomic-commerce-product-list',
-  react: React,
-  elementClass: LitAtomicCommerceProductList,
 });
 
 export const AtomicCommercePager = createComponent({
@@ -101,16 +102,22 @@ export const AtomicCommercePager = createComponent({
   elementClass: LitAtomicCommercePager,
 });
 
-export const AtomicCommerceQueryError = createComponent({
-  tagName: 'atomic-commerce-query-error',
+export const AtomicCommerceProductList = createComponent({
+  tagName: 'atomic-commerce-product-list',
   react: React,
-  elementClass: LitAtomicCommerceQueryError,
+  elementClass: LitAtomicCommerceProductList,
 });
 
 export const AtomicCommerceProductsPerPage = createComponent({
   tagName: 'atomic-commerce-products-per-page',
   react: React,
   elementClass: LitAtomicCommerceProductsPerPage,
+});
+
+export const AtomicCommerceQueryError = createComponent({
+  tagName: 'atomic-commerce-query-error',
+  react: React,
+  elementClass: LitAtomicCommerceQueryError,
 });
 
 export const AtomicCommerceQuerySummary = createComponent({
@@ -137,16 +144,16 @@ export const AtomicCommerceRefineModal = createComponent({
   elementClass: LitAtomicCommerceRefineModal,
 });
 
-export const AtomicCommerceSearchBox = createComponent({
-  tagName: 'atomic-commerce-search-box',
-  react: React,
-  elementClass: LitAtomicCommerceSearchBox,
-});
-
 export const AtomicCommerceRefineToggle = createComponent({
   tagName: 'atomic-commerce-refine-toggle',
   react: React,
   elementClass: LitAtomicCommerceRefineToggle,
+});
+
+export const AtomicCommerceSearchBox = createComponent({
+  tagName: 'atomic-commerce-search-box',
+  react: React,
+  elementClass: LitAtomicCommerceSearchBox,
 });
 
 export const AtomicCommerceSearchBoxInstantProducts = createComponent({
