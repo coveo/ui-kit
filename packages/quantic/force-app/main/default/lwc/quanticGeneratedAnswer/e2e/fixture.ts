@@ -11,7 +11,7 @@ import genQaData from './data';
 import type {GenQaData} from './data';
 import {AnalyticsModeEnum} from '../../../../../../playwright/utils/analyticsMode';
 
-const MACHINE_LEARNING_API_URL = '**/machinelearning/streaming/';
+const MACHINE_LEARNING_API_URL = '**/machinelearning/streaming';
 const ANSWER_API_URL = '**/answer/v1/configs/**/generate';
 const ANSWER_API_INSIGHT_URL = '**/insight/v1/configs/**/answer/**/generate';
 
@@ -61,8 +61,7 @@ export const testSearch =
 
       const streamingUrl = options.answerConfigurationId
         ? ANSWER_API_URL
-        : `${MACHINE_LEARNING_API_URL}${data.streamId}`;
-
+        : `${MACHINE_LEARNING_API_URL}/${data.streamId}`;
       await generatedAnswerObject.mockStreamResponse(
         streamingUrl,
         data.streams,
@@ -73,15 +72,14 @@ export const testSearch =
       await configuration.configure(options);
       await search.waitForSearchResponse();
 
-      const streamEndAnalyticRequestPromise =
-        generatedAnswerObject.waitForStreamEndAnalytics();
       generatedAnswerObject.streamEndAnalyticRequestPromise =
-        streamEndAnalyticRequestPromise;
+        generatedAnswerObject.waitForStreamEndAnalytics();
 
       await search.fillSearchInput(exampleQuery);
       await search.mockSearchWithGenerativeQuestionAnsweringId(data.streamId);
       await search.performSearch();
       await search.waitForSearchResponse();
+
       await use(generatedAnswerObject);
     },
   });
@@ -119,8 +117,7 @@ export const testInsight =
 
       const streamingUrl = options.answerConfigurationId
         ? ANSWER_API_INSIGHT_URL
-        : `${MACHINE_LEARNING_API_URL}${data.streamId}`;
-
+        : `${MACHINE_LEARNING_API_URL}/${data.streamId}`;
       await generatedAnswerObject.mockStreamResponse(
         streamingUrl,
         data.streams,
@@ -128,7 +125,6 @@ export const testInsight =
       );
 
       await page.goto(pageUrl);
-      await page.waitForTimeout(3000);
       configuration.configure({...options, useCase: useCaseEnum.insight});
 
       await insightSetup.waitForInsightInterfaceInitialization();
@@ -136,10 +132,8 @@ export const testInsight =
       await search.waitForSearchResponse();
 
       await search.mockSearchWithGenerativeQuestionAnsweringId(data.streamId);
-      const streamEndAnalyticRequestPromise =
-        generatedAnswerObject.waitForStreamEndAnalytics();
       generatedAnswerObject.streamEndAnalyticRequestPromise =
-        streamEndAnalyticRequestPromise;
+        generatedAnswerObject.waitForStreamEndAnalytics();
 
       await search.fillSearchInput(exampleQuery);
       await search.performSearch();
