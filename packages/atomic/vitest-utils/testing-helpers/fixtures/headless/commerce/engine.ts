@@ -1,6 +1,6 @@
 import {
-  CommerceEngine,
-  CommerceEngineConfiguration,
+  type CommerceEngine,
+  type CommerceEngineConfiguration,
   getSampleCommerceEngineConfiguration,
 } from '@coveo/headless/commerce';
 import {vi} from 'vitest';
@@ -26,7 +26,12 @@ export const buildFakeCommerceEngine = ({
       debug: vi.fn(),
     },
     subscribe: vi.fn(() => ({unsubscribe: vi.fn()})),
-    configuration: getSampleCommerceEngineConfiguration(),
+    configuration: {
+      ...getSampleCommerceEngineConfiguration(),
+      commerce: {
+        apiBaseUrl: 'https://fake-commerce-api.com',
+      },
+    },
   };
 
   return {

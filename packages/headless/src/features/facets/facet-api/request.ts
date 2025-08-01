@@ -1,5 +1,5 @@
-import {FacetSortOrder} from '../facet-set/interfaces/request.js';
-import {FacetValueState} from './value.js';
+import type {FacetSortOrder} from '../facet-set/interfaces/request.js';
+import type {FacetValueState} from './value.js';
 
 export interface BaseFacetRequest {
   /**
@@ -7,7 +7,7 @@ export interface BaseFacetRequest {
    * By default, a unique random identifier is generated.
    */
   facetId: string;
-  /** The field whose values you want to display in the facet.*/
+  /** The field from which to display values in the facet.*/
   field: string;
   /** Whether to exclude folded result parents when estimating the result count for each facet value.
    *
@@ -50,6 +50,10 @@ export interface BaseFacetValueRequest {
    * @defaultValue `idle`
    */
   state: FacetValueState;
+  /**
+   * The previous facet value state in the search interface.
+   */
+  previousState?: FacetValueState;
 }
 
 export interface CurrentValues<T> {

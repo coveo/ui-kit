@@ -1,11 +1,11 @@
+import {page} from '@vitest/browser/context';
 import {renderFunctionFixture} from '@/vitest-utils/testing-helpers/fixture';
 import {createTestI18n} from '@/vitest-utils/testing-helpers/i18n-utils';
-import {page} from '@vitest/browser/context';
 import '@vitest/browser/matchers.d.ts';
 import {html} from 'lit';
-import {expect, vi, describe, beforeAll, it} from 'vitest';
+import {beforeAll, describe, expect, it, vi} from 'vitest';
 import {
-  FacetSearchMatchesProps,
+  type FacetSearchMatchesProps,
   renderFacetSearchMatches,
 } from './facet-search-matches';
 

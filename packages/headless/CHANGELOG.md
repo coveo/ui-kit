@@ -1,3 +1,49 @@
+## <small>3.27.7 (2025-07-30)</small>
+
+* chore: allow prerelease on CI (#5756) ([de2c411](https://github.com/coveo/ui-kit/commits/de2c411)), closes [#5756](https://github.com/coveo/ui-kit/issues/5756)
+* chore: enable noUnusedVariables rule (#5670) ([6809d57](https://github.com/coveo/ui-kit/commits/6809d57)), closes [#5670](https://github.com/coveo/ui-kit/issues/5670)
+* fix(headless): align logic for setting category facet previousState with expectations from RFC (#573 ([227ba19](https://github.com/coveo/ui-kit/commits/227ba19)), closes [#5738](https://github.com/coveo/ui-kit/issues/5738)
+* fix(headless): populate browser navigator context using relay  (#5680) ([76e8d6f](https://github.com/coveo/ui-kit/commits/76e8d6f)), closes [#5680](https://github.com/coveo/ui-kit/issues/5680)
+
+
+
+## <small>3.27.5 (2025-07-23)</small>
+
+* fix: do not inject forwardedFor header in when in browser (#5640) ([5626f3a](https://github.com/coveo/ui-kit/commits/5626f3a)), closes [#5640](https://github.com/coveo/ui-kit/issues/5640)
+* fix(deps): update all dependencies j:kit-282 (#5723) ([6c032c9](https://github.com/coveo/ui-kit/commits/6c032c9)), closes [#5723](https://github.com/coveo/ui-kit/issues/5723)
+* fix(headless commerce): canShowLessValues should be false when fewer values are shown than the initi ([45e1413](https://github.com/coveo/ui-kit/commits/45e1413)), closes [#5610](https://github.com/coveo/ui-kit/issues/5610)
+* fix(headless): fix ua events not firing with answer-api (#5719) ([81509e0](https://github.com/coveo/ui-kit/commits/81509e0)), closes [#5719](https://github.com/coveo/ui-kit/issues/5719) [/github.com/coveo/ui-kit/blob/65c2238aff401a813cff3ec5c116938c1dc1c716/packages/headless/src/features/generated-answer/generated-answer-analytics-actions.ts#L353](https://github.com//github.com/coveo/ui-kit/blob/65c2238aff401a813cff3ec5c116938c1dc1c716/packages/headless/src/features/generated-answer/generated-answer-analytics-actions.ts/issues/L353) [/github.com/coveo/ui-kit/blob/65c2238aff401a813cff3ec5c116938c1dc1c716/packages/headless/src/controllers/knowledge/generated-answer/headless-answerapi-generated-answer.ts#L167](https://github.com//github.com/coveo/ui-kit/blob/65c2238aff401a813cff3ec5c116938c1dc1c716/packages/headless/src/controllers/knowledge/generated-answer/headless-answerapi-generated-answer.ts/issues/L167) [/github.com/coveo/ui-kit/blob/65c2238aff401a813cff3ec5c116938c1dc1c716/packages/headless/src/features/generated-answer/generated-answer-selectors.ts#L19](https://github.com//github.com/coveo/ui-kit/blob/65c2238aff401a813cff3ec5c116938c1dc1c716/packages/headless/src/features/generated-answer/generated-answer-selectors.ts/issues/L19) [/github.com/coveo/ui-kit/blob/65c2238aff401a813cff3ec5c116938c1dc1c716/packages/headless/src/features/generated-answer/generated-answer-analytics-actions.ts#L352](https://github.com//github.com/coveo/ui-kit/blob/65c2238aff401a813cff3ec5c116938c1dc1c716/packages/headless/src/features/generated-answer/generated-answer-analytics-actions.ts/issues/L352) [/github.com/coveo/ui-kit/blob/65c2238aff401a813cff3ec5c116938c1dc1c716/packages/headless/src/api/knowledge/stream-answer-api.ts#L201](https://github.com//github.com/coveo/ui-kit/blob/65c2238aff401a813cff3ec5c116938c1dc1c716/packages/headless/src/api/knowledge/stream-answer-api.ts/issues/L201)
+* chore: enable recommended biome rules for entire repo (#5662) ([015a764](https://github.com/coveo/ui-kit/commits/015a764)), closes [#5662](https://github.com/coveo/ui-kit/issues/5662)
+* chore(headless): remove unused exports, code and deps (#5689) ([245ea22](https://github.com/coveo/ui-kit/commits/245ea22)), closes [#5689](https://github.com/coveo/ui-kit/issues/5689)
+
+
+
+## <small>3.27.4 (2025-07-16)</small>
+
+* chore: remove all traces of eslint-plugin-canonical (#5663) ([2d3a8a3](https://github.com/coveo/ui-kit/commits/2d3a8a3)), closes [#5663](https://github.com/coveo/ui-kit/issues/5663)
+* chore(deps): update vite to v3.2.4 j:kit-282 (#5604) ([8e8dd6a](https://github.com/coveo/ui-kit/commits/8e8dd6a)), closes [#5604](https://github.com/coveo/ui-kit/issues/5604)
+* chore(headless): enable biome recommended rules (#5617) ([af474bd](https://github.com/coveo/ui-kit/commits/af474bd)), closes [#5617](https://github.com/coveo/ui-kit/issues/5617)
+* docs(headless): Updates the docstring according to the style guide (#5612) ([1b7a157](https://github.com/coveo/ui-kit/commits/1b7a157)), closes [#5612](https://github.com/coveo/ui-kit/issues/5612)
+* fix(deps): update dependency @coveo/relay to v1.2.5 j:kit-282 (#5606) ([1ff9835](https://github.com/coveo/ui-kit/commits/1ff9835)), closes [#5606](https://github.com/coveo/ui-kit/issues/5606)
+
+
+
+## <small>3.27.2 (2025-07-09)</small>
+
+* chore(deps): update dependency typedoc to v0.28.7 j:kit-282 (#5591) ([f769419](https://github.com/coveo/ui-kit/commits/f769419)), closes [#5591](https://github.com/coveo/ui-kit/issues/5591)
+* fix(headless commerce): ensure headless uses the same relay reference between engine and thunk (#557 ([915daea](https://github.com/coveo/ui-kit/commits/915daea)), closes [#5578](https://github.com/coveo/ui-kit/issues/5578) [/github.com/coveo/ui-kit/blob/9e01022db1d190ed5f8c13fd720b83886a32a3f9/packages/headless/src/app/commerce-engine/commerce-engine.ts#L138](https://github.com//github.com/coveo/ui-kit/blob/9e01022db1d190ed5f8c13fd720b83886a32a3f9/packages/headless/src/app/commerce-engine/commerce-engine.ts/issues/L138)
+* fix(headless): add previous selection state to facet state object. (#5544) ([c05dd1a](https://github.com/coveo/ui-kit/commits/c05dd1a)), closes [#5544](https://github.com/coveo/ui-kit/issues/5544)
+* fix(headless): send action cause in legacy analytics mode (#5566) ([9e01022](https://github.com/coveo/ui-kit/commits/9e01022)), closes [#5566](https://github.com/coveo/ui-kit/issues/5566) [/github.com/coveo/ui-kit/blob/fix/SVCC-5218/packages/headless/src/features/search/search-actions.ts#L118](https://github.com//github.com/coveo/ui-kit/blob/fix/SVCC-5218/packages/headless/src/features/search/search-actions.ts/issues/L118) [/github.com/coveo/ui-kit/blob/fix/SVCC-5218/packages/headless/src/features/search/search-actions.ts#L126](https://github.com//github.com/coveo/ui-kit/blob/fix/SVCC-5218/packages/headless/src/features/search/search-actions.ts/issues/L126)
+
+
+
+## <small>3.27.1 (2025-07-02)</small>
+
+* chore(headless): deprecate restoreTab action (KIT-4398) (#5527) ([e5f54e7](https://github.com/coveo/ui-kit/commits/e5f54e7)), closes [#5527](https://github.com/coveo/ui-kit/issues/5527)
+* chore(lint): integrate biome (#5507) ([53bcada](https://github.com/coveo/ui-kit/commits/53bcada)), closes [#5507](https://github.com/coveo/ui-kit/issues/5507)
+
+
+
 ## 3.27.0 (2025-06-25)
 
 - fix(deps): update all dependencies j:kit-282 (#5522) ([ee7a9ab](https://github.com/coveo/ui-kit/commits/ee7a9ab)), closes [#5522](https://github.com/coveo/ui-kit/issues/5522)

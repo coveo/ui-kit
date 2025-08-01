@@ -1,7 +1,7 @@
+import {mkdirSync, readdirSync, readFileSync, writeFileSync} from 'node:fs';
+import {dirname, join, relative} from 'node:path';
 import chalk from 'chalk';
-import {readdirSync, mkdirSync, readFileSync, writeFileSync} from 'fs';
 import * as lightningcss from 'lightningcss';
-import {join, dirname, relative} from 'path';
 import postcss from 'postcss';
 import postcssLoadConfig from 'postcss-load-config';
 import {dedent} from 'ts-dedent';
@@ -90,15 +90,13 @@ async function convertCssToJs(srcPath, distPath, file) {
       chalk.green(`${srcPath} -> ${distPath}`)
     );
 
-    const imports = Array.from(data.matchAll(importMatcher)).flatMap(
-      (match) => match
-    );
+    const imports = Array.from(data.matchAll(importMatcher)).flat();
     pushImports(srcPath, imports, files);
     const cleanedData = data.replace(importWholeLineMatcher, '');
     const result = await processAndMinifyCss(cleanedData, srcPath);
 
     const fileContent = generateFileContent(imports, result);
-    const jsPath = distPath + '.js';
+    const jsPath = `${distPath}.js`;
     writeFileSync(jsPath, fileContent);
     console.log(chalk.blue('Successfully processed:'), chalk.green(jsPath));
   } catch (err) {

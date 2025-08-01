@@ -8,7 +8,7 @@ import {
 } from './configuration-actions.js';
 import {configurationReducer} from './configuration-slice.js';
 import {
-  ConfigurationState,
+  type ConfigurationState,
   getConfigurationInitialState,
 } from './configuration-state.js';
 

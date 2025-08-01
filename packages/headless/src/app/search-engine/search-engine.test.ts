@@ -1,11 +1,11 @@
 import {enableDebug} from '../../features/debug/debug-actions.js';
 import {setSearchHub} from '../../features/search-hub/search-hub-actions.js';
-import {getSampleSearchEngineConfiguration} from './search-engine-configuration.js';
 import {
   buildSearchEngine,
-  SearchEngine,
-  SearchEngineOptions,
+  type SearchEngine,
+  type SearchEngineOptions,
 } from './search-engine.js';
+import {getSampleSearchEngineConfiguration} from './search-engine-configuration.js';
 
 describe('searchEngine', () => {
   let engine: SearchEngine;
@@ -184,6 +184,14 @@ describe('searchEngine', () => {
       it('sets the apiBaseUrl correctly', () => {
         expect(engine.state.configuration.search.apiBaseUrl).toBe(proxyBaseUrl);
       });
+    });
+
+    it('should ensure that engine.relay is the same reference as thunk extra args relay', async () => {
+      const thunkRelay = await engine.dispatch(
+        (_dispatch, _getState, extra) => extra.relay
+      );
+
+      expect(thunkRelay).toBe(engine.relay);
     });
   });
 });

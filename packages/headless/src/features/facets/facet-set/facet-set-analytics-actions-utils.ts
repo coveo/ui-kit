@@ -1,5 +1,5 @@
 import type {FacetStateMetadata} from 'coveo.analytics/dist/definitions/searchPage/searchPageEvents.js';
-import {
+import type {
   AutomaticFacetSection,
   CategoryFacetSection,
   DateFacetSection,
@@ -7,27 +7,27 @@ import {
   NumericFacetSection,
 } from '../../../state/state-sections.js';
 import {getAutomaticFacetSetInitialState} from '../automatic-facet-set/automatic-facet-set-state.js';
-import {AutomaticFacetResponse} from '../automatic-facet-set/interfaces/response.js';
+import type {AutomaticFacetResponse} from '../automatic-facet-set/interfaces/response.js';
 import {categoryFacetRequestSelectedValuesSelector} from '../category-facet-set/category-facet-set-selectors.js';
 import {getCategoryFacetSetInitialState} from '../category-facet-set/category-facet-set-state.js';
-import {CategoryFacetRequest} from '../category-facet-set/interfaces/request.js';
-import {FacetType} from '../facet-api/request.js';
-import {
+import type {CategoryFacetRequest} from '../category-facet-set/interfaces/request.js';
+import type {FacetType} from '../facet-api/request.js';
+import type {
   AnyFacetRequest,
   AnyFacetValueRequest,
 } from '../generic/interfaces/generic-facet-request.js';
 import {getDateFacetSetInitialState} from '../range-facets/date-facet-set/date-facet-set-state.js';
-import {
+import type {
   DateFacetRequest,
   DateRangeRequest,
 } from '../range-facets/date-facet-set/interfaces/request.js';
-import {
+import type {
   NumericFacetRequest,
   NumericRangeRequest,
 } from '../range-facets/numeric-facet-set/interfaces/request.js';
 import {getNumericFacetSetInitialState} from '../range-facets/numeric-facet-set/numeric-facet-set-state.js';
 import {getFacetSetInitialState} from './facet-set-state.js';
-import {FacetRequest, FacetValueRequest} from './interfaces/request.js';
+import type {FacetRequest, FacetValueRequest} from './interfaces/request.js';
 
 export type SectionNeededForFacetMetadata = FacetSection &
   CategoryFacetSection &

@@ -1,11 +1,9 @@
-import {Result} from '../../api/search/search/result.js';
+import type {Result} from '../../api/search/search/result.js';
 import {
-  ClickAction,
-  CustomAction,
-  makeAnalyticsAction,
-} from '../analytics/analytics-utils.js';
-import {
+  type ClickAction,
+  type CustomAction,
   documentIdentifier,
+  makeAnalyticsAction,
   partialDocumentInformation,
   validateResultPayload,
 } from '../analytics/analytics-utils.js';
@@ -20,7 +18,7 @@ export const logShowMoreFoldedResults = (result: Result): ClickAction =>
     );
   });
 
-export const logShowLessFoldedResults = (): CustomAction =>
+const logShowLessFoldedResults = (): CustomAction =>
   makeAnalyticsAction('analytics/folding/showLess', (client) => {
     return client.makeShowLessFoldedResults();
   });

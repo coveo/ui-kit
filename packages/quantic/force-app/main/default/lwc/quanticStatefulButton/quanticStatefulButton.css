@@ -23,14 +23,14 @@
 }
 
 .stateful-button--selected {
-  --slds-c-button-outline-brand-color-border-hover: var(--main-color);
-  --slds-c-button-outline-brand-color-border: var(--main-color);
+  border-color: var(--main-color);
   --slds-c-button-shadow-focus: 0 0 3px var(--main-color);
 }
 
 .stateful-button--selected,
 .stateful-button--selected:hover,
 .stateful-button--selected:focus {
+  border-color: var(--main-color);
   color: var(--main-color);
   background-color: white;
 }

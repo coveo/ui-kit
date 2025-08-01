@@ -1,5 +1,8 @@
-import {FunctionComponent} from 'react';
-import {SearchHydratedState, SearchStaticState} from '../../lib/generic/engine';
+import type {FunctionComponent} from 'react';
+import type {
+  SearchHydratedState,
+  SearchStaticState,
+} from '../../lib/generic/engine';
 
 export interface HydrationMetadataProps {
   staticState: SearchStaticState;

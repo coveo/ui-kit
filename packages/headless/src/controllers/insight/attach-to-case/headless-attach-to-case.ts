@@ -1,7 +1,7 @@
 import {isNullOrUndefined} from '@coveo/bueno';
-import {Result} from '../../../api/search/search/result.js';
+import type {Result} from '../../../api/search/search/result.js';
 import {configuration} from '../../../app/common-reducers.js';
-import {InsightEngine} from '../../../app/insight-engine/insight-engine.js';
+import type {InsightEngine} from '../../../app/insight-engine/insight-engine.js';
 import {
   attachResult,
   detachResult,
@@ -12,14 +12,14 @@ import {
 } from '../../../features/attached-results/attached-results-analytics-actions.js';
 import {attachedResultsReducer as attachedResults} from '../../../features/attached-results/attached-results-slice.js';
 import {buildAttachedResultFromSearchResult} from '../../../features/attached-results/attached-results-utils.js';
-import {
+import type {
   AttachedResultsSection,
   ConfigurationSection,
 } from '../../../state/state-sections.js';
 import {loadReducerError} from '../../../utils/errors.js';
 import {
   buildController,
-  Controller,
+  type Controller,
 } from '../../controller/headless-controller.js';
 
 export interface AttachToCaseProps {

@@ -4,15 +4,15 @@ import {NUMBER_OF_VALUE_DEFAULT} from '../../../features/facets/automatic-facet-
 import {automaticFacetSetReducer as automaticFacetSet} from '../../../features/facets/automatic-facet-set/automatic-facet-set-slice.js';
 import {searchReducer as search} from '../../../features/search/search-slice.js';
 import {
-  MockedSearchEngine,
   buildMockSearchEngine,
+  type MockedSearchEngine,
 } from '../../../test/mock-engine-v2.js';
 import {createMockState} from '../../../test/mock-state.js';
 import {
-  AutomaticFacetGeneratorProps,
-  AutomaticFacetGenerator,
+  type AutomaticFacetGenerator,
+  type AutomaticFacetGeneratorOptions,
+  type AutomaticFacetGeneratorProps,
   buildAutomaticFacetGenerator,
-  AutomaticFacetGeneratorOptions,
 } from './headless-automatic-facet-generator.js';
 
 vi.mock(

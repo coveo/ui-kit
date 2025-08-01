@@ -1,11 +1,11 @@
-import {GeneratedAnswerCitation} from '../../../api/generated-answer/generated-answer-event-payload.js';
-import {CoreEngine} from '../../../app/engine.js';
-import {CustomAction} from '../../../features/analytics/analytics-utils.js';
+import type {GeneratedAnswerCitation} from '../../../api/generated-answer/generated-answer-event-payload.js';
+import type {CoreEngine} from '../../../app/engine.js';
+import type {CustomAction} from '../../../features/analytics/analytics-utils.js';
 import {
   buildInteractiveResultCore,
-  InteractiveResultCore,
-  InteractiveResultCoreOptions,
-  InteractiveResultCoreProps,
+  type InteractiveResultCore,
+  type InteractiveResultCoreOptions,
+  type InteractiveResultCoreProps,
 } from '../../core/interactive-result/headless-core-interactive-result.js';
 
 export interface InteractiveCitationOptions
@@ -31,7 +31,7 @@ export interface InteractiveCitationProps extends InteractiveResultCoreProps {
  */
 export interface InteractiveCitation extends InteractiveResultCore {}
 
-export interface InteractiveCitationAnalyticsClient {
+interface InteractiveCitationAnalyticsClient {
   logOpenGeneratedAnswerSource(citationId: string): CustomAction;
 }
 

@@ -1,6 +1,9 @@
-import {CommerceAPIErrorStatusResponse} from '../../../api/commerce/commerce-api-error-response.js';
-import {ChildProduct, Product} from '../../../api/commerce/common/product.js';
-import {CommerceEngine} from '../../../app/commerce-engine/commerce-engine.js';
+import type {CommerceAPIErrorStatusResponse} from '../../../api/commerce/commerce-api-error-response.js';
+import type {
+  ChildProduct,
+  Product,
+} from '../../../api/commerce/common/product.js';
+import type {CommerceEngine} from '../../../app/commerce-engine/commerce-engine.js';
 import {configuration} from '../../../app/common-reducers.js';
 import {stateKey} from '../../../app/state-key.js';
 import {contextReducer as commerceContext} from '../../../features/commerce/context/context-slice.js';
@@ -11,8 +14,6 @@ import {
 } from '../../../features/commerce/pagination/pagination-selectors.js';
 import {searchSerializer} from '../../../features/commerce/parameters/parameters-serializer.js';
 import {queryReducer as commerceQuery} from '../../../features/commerce/query/query-slice.js';
-import {restoreSearchParameters} from '../../../features/commerce/search-parameters/search-parameters-actions.js';
-import {searchParametersDefinition} from '../../../features/commerce/search-parameters/search-parameters-schema.js';
 import {
   executeSearch,
   fetchMoreProducts,
@@ -28,14 +29,16 @@ import {
   responseIdSelector,
 } from '../../../features/commerce/search/search-selectors.js';
 import {commerceSearchReducer as commerceSearch} from '../../../features/commerce/search/search-slice.js';
+import {restoreSearchParameters} from '../../../features/commerce/search-parameters/search-parameters-actions.js';
+import {searchParametersDefinition} from '../../../features/commerce/search-parameters/search-parameters-schema.js';
 import {loadReducerError} from '../../../utils/errors.js';
 import {
   buildController,
-  Controller,
+  type Controller,
 } from '../../controller/headless-controller.js';
 import {
   buildSearchSubControllers,
-  SearchSubControllers,
+  type SearchSubControllers,
 } from '../core/sub-controller/headless-sub-controller.js';
 import {
   facetResponseSelector,

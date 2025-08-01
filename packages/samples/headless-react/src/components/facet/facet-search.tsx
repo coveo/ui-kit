@@ -1,11 +1,11 @@
-import {
-  FacetSearch as HeadlessFacetSearch,
+import type {
   FacetSearchState,
+  FacetSearch as HeadlessFacetSearch,
   SpecificFacetSearchResult,
 } from '@coveo/headless';
-import {FunctionComponent} from 'react';
+import type {FunctionComponent} from 'react';
 
-export interface FacetSearchProps {
+interface FacetSearchProps {
   controller: HeadlessFacetSearch;
   facetState: FacetSearchState;
   isValueSelected: (facetSearchValue: SpecificFacetSearchResult) => boolean;

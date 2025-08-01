@@ -1,6 +1,6 @@
-import {GeneratedAnswerStreamRequest} from '../../api/generated-answer/generated-answer-request.js';
+import type {GeneratedAnswerStreamRequest} from '../../api/generated-answer/generated-answer-request.js';
 import {getOrganizationEndpoint} from '../../api/platform-client.js';
-import {
+import type {
   ConfigurationSection,
   GeneratedAnswerSection,
   SearchSection,

@@ -1,0 +1,39 @@
+import {Canvas, ArgTypes, Meta, Title, Description, Stories, Subtitle} from '@storybook/blocks';
+import * as AtomicCommerceDidYouMeanStories from './atomic-commerce-did-you-mean.new.stories';
+import {CanvasWithGithub} from '../../../../storybook-utils/documentation/canvas-with-github';
+
+<Meta of={AtomicCommerceDidYouMeanStories} />
+
+
+<Title />
+<Subtitle ><Description/></Subtitle>
+
+<CanvasWithGithub
+  of={AtomicCommerceDidYouMeanStories.Default}
+  githubPath="commerce/atomic-commerce-did-you-mean/atomic-commerce-did-you-mean.ts"
+/>
+
+## Usage
+This component is typically placed within the "status" section of the layout.
+```html
+<atomic-commerce-interface>
+  ...
+  <atomic-commerce-layout>
+    ...
+    <atomic-layout-section section="main">
+      ...
+      <atomic-layout-section section="status">
+        
+        <atomic-commerce-did-you-mean></atomic-commerce-did-you-mean>
+
+      </atomic-layout-section>
+    </atomic-layout-section>
+  </atomic-commerce-layout>
+</atomic-commerce-interface>
+```
+
+## Examples
+<Stories title={""}/>
+
+## Reference
+<ArgTypes />

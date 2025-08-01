@@ -1,12 +1,12 @@
-import {
-  StandaloneSearchBox as HeadlessStandaloneSearchBox,
-  InstantProducts as HeadlessInstantProducts,
-  Suggestion,
-  FilterSuggestionsGenerator as HeadlessFilterSuggestionsGenerator,
-  FilterSuggestions,
-  CategoryFilterSuggestions,
-  RegularFacetSearchResult,
+import type {
   CategoryFacetSearchResult,
+  CategoryFilterSuggestions,
+  FilterSuggestions,
+  FilterSuggestionsGenerator as HeadlessFilterSuggestionsGenerator,
+  InstantProducts as HeadlessInstantProducts,
+  StandaloneSearchBox as HeadlessStandaloneSearchBox,
+  RegularFacetSearchResult,
+  Suggestion,
 } from '@coveo/headless/commerce';
 import {useEffect, useRef, useState} from 'react';
 import FilterSuggestionsGenerator from '../filter-suggestions/filter-suggestions-generator.js';
@@ -170,9 +170,11 @@ export default function StandaloneSearchBox(props: IStandaloneSearchBoxProps) {
                   className="QuerySuggestion"
                 >
                   <button
+                    type="button"
                     onMouseOver={() => onFocusSuggestion(suggestion)}
                     onFocus={() => onFocusSuggestion(suggestion)}
                     onClick={() => onSelectSuggestion(suggestion)}
+                    // biome-ignore lint/security/noDangerouslySetInnerHtml: <>
                     dangerouslySetInnerHTML={{
                       __html: suggestion.highlightedValue,
                     }}

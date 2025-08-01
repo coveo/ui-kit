@@ -1,3 +1,8 @@
+import {loadQuerySuggestActions} from '@coveo/headless/commerce';
+import {page} from '@vitest/browser/context';
+import {html} from 'lit';
+import {ifDefined} from 'lit/directives/if-defined.js';
+import {beforeEach, describe, expect, it, type MockInstance, vi} from 'vitest';
 import {buildCustomEvent} from '@/src/utils/event-utils';
 import {fixture} from '@/vitest-utils/testing-helpers/fixture';
 import {
@@ -5,12 +10,7 @@ import {
   renderInAtomicCommerceSearchBox,
 } from '@/vitest-utils/testing-helpers/fixtures/atomic/commerce/atomic-commerce-search-box-fixture';
 import {buildFakeLoadQuerySuggestActions} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/query-suggest-actions';
-import {loadQuerySuggestActions} from '@coveo/headless/commerce';
-import {page} from '@vitest/browser/context';
-import {html} from 'lit';
-import {ifDefined} from 'lit/directives/if-defined.js';
-import {describe, it, vi, expect, beforeEach, MockInstance} from 'vitest';
-import {
+import type {
   SearchBoxSuggestionElement,
   SearchBoxSuggestions,
 } from '../../common/suggestions/suggestions-common';
@@ -118,15 +118,43 @@ describe('AtomicCommerceSearchBoxQuerySuggestions', () => {
 
   describe('#initialize', () => {
     it('should dispatch registerQuerySuggest with the correct id and count', async () => {
-      const {element} = await renderElements();
+      const {element} = await renderElements({
+        numberOfQueries: 3,
+      });
+
       expect(
         loadQuerySuggestActions(element.bindings.engine).registerQuerySuggest
       ).toHaveBeenCalledWith(
         expect.objectContaining({
           id: element.bindings.id,
-          count: element.bindings.numberOfQueries,
+          count: 3,
         })
       );
+    });
+
+    it('should log a warning when numberOfQueries < maxWithQuery', async () => {
+      const warnSpy = vi.fn();
+
+      const {element} = await renderElements({
+        numberOfQueries: 3,
+        engine: {
+          ...defaultBindings.engine,
+          logger: {
+            warn: warnSpy,
+          },
+        },
+      });
+      element.maxWithQuery = 5;
+
+      element.initialize();
+
+      expect(warnSpy).toHaveBeenCalledOnce();
+      const warningMessage = warnSpy.mock.calls[0][0];
+      expect(warningMessage).toContain(
+        'Query suggestions configuration mismatch'
+      );
+      expect(warningMessage).toContain('number-of-queries="3"');
+      expect(warningMessage).toContain('max-with-query="5"');
     });
 
     it('should return a position that is the index of the element', async () => {
@@ -189,8 +217,9 @@ describe('AtomicCommerceSearchBoxQuerySuggestions', () => {
         expect(items.length).toBe(1);
       });
 
-      it('should return the correct number of items when there is more suggestions that the maxWithQuery', async () => {
+      it('should return the correct number of items when numberOfQueries < maxWithQuery (uses maxWithQuery)', async () => {
         await setupRenderItemsTest({
+          numberOfQueries: 2,
           searchBoxController: {
             state: {
               suggestions: [
@@ -217,7 +246,12 @@ describe('AtomicCommerceSearchBoxQuerySuggestions', () => {
           },
         });
 
-        expect(items.length).toBe(3);
+        element.maxWithQuery = 5;
+
+        object = element.initialize();
+        items = object.renderItems();
+
+        expect(items.length).toBe(4);
       });
 
       it('should return the correct number of items when there is more suggestions than the maxWithoutQuery', async () => {

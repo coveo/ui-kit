@@ -1,12 +1,20 @@
-import {describe, it, expect, beforeEach, afterEach, vi, Mocked} from 'vitest';
 import {
-  HistoryStore,
-  HistoryElement,
-  STORE_KEY,
+  afterEach,
+  beforeEach,
+  describe,
+  expect,
+  it,
+  type Mocked,
+  vi,
+} from 'vitest';
+import {
+  type HistoryElement,
   MAX_NUMBER_OF_HISTORY_ELEMENTS,
   MAX_VALUE_SIZE,
+  STORE_KEY,
 } from './history-store.js';
-import {WebStorage} from './storage.js';
+import HistoryStore from './history-store.js';
+import type {WebStorage} from './storage.js';
 
 describe('HistoryStore', () => {
   let mockStorage: Mocked<WebStorage>;

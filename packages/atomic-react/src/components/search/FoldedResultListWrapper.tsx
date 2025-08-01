@@ -1,5 +1,6 @@
 import type {JSX as AtomicJSX} from '@coveo/atomic';
 import type {FoldedResult} from '@coveo/headless';
+// biome-ignore lint/style/useImportType: <React is needed>
 import React, {useEffect, useRef} from 'react';
 import {createRoot} from 'react-dom/client';
 import {renderToString} from 'react-dom/server';
@@ -30,6 +31,6 @@ export const FoldedResultListWrapper: React.FC<WrapperProps> = (props) => {
       createRoot(root).render(template(foldedResult as FoldedResult));
       return renderToString(template(foldedResult as FoldedResult));
     });
-  }, [foldedResultListRef]);
+  }, [template]);
   return <AtomicFoldedResultList ref={foldedResultListRef} {...otherProps} />;
 };

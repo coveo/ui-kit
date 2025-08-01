@@ -1,8 +1,11 @@
-/* eslint-disable canonical/no-barrel-import */
-import {createSelector, ThunkDispatch, UnknownAction} from '@reduxjs/toolkit';
+import {
+  createSelector,
+  type ThunkDispatch,
+  type UnknownAction,
+} from '@reduxjs/toolkit';
 import {
   defaultNodeJSNavigatorContextProvider,
-  NavigatorContext,
+  type NavigatorContext,
 } from '../../app/navigator-context-provider.js';
 import {selectAdvancedSearchQueries} from '../../features/advanced-search-queries/advanced-search-query-selectors.js';
 import {fromAnalyticsStateToAnalyticsParams} from '../../features/configuration/analytics-params.js';
@@ -15,23 +18,23 @@ import {
 } from '../../features/generated-answer/generated-answer-actions.js';
 import {logGeneratedAnswerStreamEnd} from '../../features/generated-answer/generated-answer-analytics-actions.js';
 import {selectFieldsToIncludeInCitation} from '../../features/generated-answer/generated-answer-selectors.js';
-import {GeneratedContentFormat} from '../../features/generated-answer/generated-response-format.js';
+import type {GeneratedContentFormat} from '../../features/generated-answer/generated-response-format.js';
 import {maximumNumberOfResultsFromIndex} from '../../features/pagination/pagination-constants.js';
 import {selectPipeline} from '../../features/pipeline/select-pipeline.js';
 import {selectQuery} from '../../features/query/query-selectors.js';
-import {selectSearchHub} from '../../features/search-hub/search-hub-selectors.js';
 import {
   initialSearchMappings,
   mapFacetRequest,
 } from '../../features/search/search-mappings.js';
 import {selectSearchActionCause} from '../../features/search/search-selectors.js';
+import {selectSearchHub} from '../../features/search-hub/search-hub-selectors.js';
 import {selectStaticFilterExpressions} from '../../features/static-filter-set/static-filter-set-selectors.js';
 import {
   selectActiveTab,
   selectActiveTabExpression,
 } from '../../features/tab-set/tab-set-selectors.js';
-import {SearchAppState} from '../../state/search-app-state.js';
-import {
+import type {SearchAppState} from '../../state/search-app-state.js';
+import type {
   ConfigurationSection,
   GeneratedAnswerSection,
   InsightConfigurationSection,
@@ -39,10 +42,10 @@ import {
 } from '../../state/state-sections.js';
 import {getFacets} from '../../utils/facet-utils.js';
 import {fetchEventSource} from '../../utils/fetch-event-source/fetch.js';
-import {EventSourceMessage} from '../../utils/fetch-event-source/parse.js';
-import {GeneratedAnswerCitation} from '../generated-answer/generated-answer-event-payload.js';
+import type {EventSourceMessage} from '../../utils/fetch-event-source/parse.js';
+import type {GeneratedAnswerCitation} from '../generated-answer/generated-answer-event-payload.js';
 import {getOrganizationEndpoint} from '../platform-client.js';
-import {SearchRequest} from '../search/search/search-request.js';
+import type {SearchRequest} from '../search/search/search-request.js';
 import {answerSlice} from './answer-slice.js';
 
 export type StateNeededByAnswerAPI = {
@@ -197,16 +200,11 @@ export const answerApi = answerSlice.injectEndpoints({
       serializeQueryArgs: ({endpointName, queryArgs}) => {
         // RTK Query serialize our endpoints and they're serialized state arguments as the key in the store.
         // Keys must match, because if anything in the query changes, it's not the same query anymore.
-        // Some fields need to be excluded in the projection though, in this case some analytics fields,
-        // as they will change during the streaming.
-        const clone = JSON.parse(JSON.stringify(queryArgs));
-        if (clone.analytics) {
-          delete clone.analytics.clientTimestamp;
-          delete clone.analytics.actionCause;
-        }
+        // Analytics data is excluded entirely as it contains volatile fields that change during streaming.
+        const {analytics: _analytics, ...queryArgsWithoutAnalytics} = queryArgs;
 
-        // Standard RTK key, with some fields removed
-        return `${endpointName}(${JSON.stringify(clone)})`;
+        // Standard RTK key, with analytics excluded
+        return `${endpointName}(${JSON.stringify(queryArgsWithoutAnalytics)})`;
       },
       async onCacheEntryAdded(
         args,
@@ -270,7 +268,16 @@ export const answerApi = answerSlice.injectEndpoints({
 export const selectAnswerTriggerParams = createSelector(
   (state) => selectQuery(state)?.q,
   (state) => state.search.requestId,
-  (q, requestId) => ({q, requestId})
+  (state) => state.generatedAnswer.cannotAnswer,
+  (state) => state.configuration.analytics.analyticsMode,
+  (state) => state.search.searchAction?.actionCause,
+  (q, requestId, cannotAnswer, analyticsMode, actionCause) => ({
+    q,
+    requestId,
+    cannotAnswer,
+    analyticsMode,
+    actionCause,
+  })
 );
 
 let generateFacetParams: Record<string, ReturnType<typeof getFacets>> = {};
@@ -332,6 +339,16 @@ export const constructAnswerQueryParams = (
 
   const context = selectContext(state);
 
+  // For 'select' usage, exclude volatile analytics fields to match serializeQueryArgs behavior
+  const analyticsParams =
+    usage === 'select'
+      ? {}
+      : fromAnalyticsStateToAnalyticsParams(
+          state.configuration.analytics,
+          navigatorContext,
+          {actionCause: selectSearchActionCause(state)}
+        );
+
   const searchHub = selectSearchHub(state);
   const pipeline = selectPipeline(state);
   const citationsFieldToInclude = selectFieldsToIncludeInCitation(state) ?? [];
@@ -346,6 +363,7 @@ export const constructAnswerQueryParams = (
     ...(cq && {cq}),
     ...(dq && {dq}),
     ...(lq && {lq}),
+    ...(state.query && {enableQuerySyntax: state.query.enableQuerySyntax}),
     ...(context?.contextValues && {
       context: context.contextValues,
     }),
@@ -381,13 +399,7 @@ export const constructAnswerQueryParams = (
       firstResult: state.pagination.firstResult,
     }),
     tab: selectActiveTab(state.tabSet),
-    ...fromAnalyticsStateToAnalyticsParams(
-      state.configuration.analytics,
-      navigatorContext,
-      {
-        actionCause: selectSearchActionCause(state),
-      }
-    ),
+    ...analyticsParams,
   };
 };
 

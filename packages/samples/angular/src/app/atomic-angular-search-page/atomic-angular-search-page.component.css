@@ -1,5 +1,5 @@
 atomic-color-facet::part(default-color-value) {
-  background-image: url('/assets/document.svg');
+  background-image: url("/assets/document.svg");
   background-position: center;
   background-size: contain;
   background-repeat: no-repeat;
@@ -7,7 +7,7 @@ atomic-color-facet::part(default-color-value) {
 }
 
 atomic-color-facet::part(value-dynamicscrmitem) {
-  background-image: url('/assets/email.svg');
+  background-image: url("/assets/email.svg");
   background-position: center;
   background-size: contain;
   background-repeat: no-repeat;
@@ -15,7 +15,7 @@ atomic-color-facet::part(value-dynamicscrmitem) {
 }
 
 atomic-color-facet::part(value-lithiumuser) {
-  background-image: url('/assets/folder.svg');
+  background-image: url("/assets/folder.svg");
   background-position: center;
   background-size: contain;
   background-repeat: no-repeat;
@@ -23,7 +23,7 @@ atomic-color-facet::part(value-lithiumuser) {
 }
 
 atomic-color-facet::part(value-YouTubeVideo) {
-  background-image: url('/assets/video.svg');
+  background-image: url("/assets/video.svg");
   background-position: center;
   background-size: contain;
   background-repeat: no-repeat;
@@ -31,7 +31,7 @@ atomic-color-facet::part(value-YouTubeVideo) {
 }
 
 atomic-color-facet::part(value-lithiummessage) {
-  background-image: url('/assets/knowledge.svg');
+  background-image: url("/assets/knowledge.svg");
   background-position: center;
   background-size: contain;
   background-repeat: no-repeat;
@@ -39,7 +39,7 @@ atomic-color-facet::part(value-lithiummessage) {
 }
 
 atomic-color-facet::part(value-lithiumthread) {
-  background-image: url('/assets/post.svg');
+  background-image: url("/assets/post.svg");
   background-position: center;
   background-size: contain;
   background-repeat: no-repeat;
@@ -47,7 +47,7 @@ atomic-color-facet::part(value-lithiumthread) {
 }
 
 atomic-color-facet::part(value-html) {
-  background-image: url('/assets/html.svg');
+  background-image: url("/assets/html.svg");
   background-position: center;
   background-size: contain;
   background-repeat: no-repeat;

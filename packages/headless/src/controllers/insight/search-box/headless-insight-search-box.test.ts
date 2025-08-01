@@ -2,18 +2,18 @@ import {
   executeSearch,
   fetchQuerySuggestions,
 } from '../../../features/insight-search/insight-search-actions.js';
-import {InsightAppState} from '../../../state/insight-app-state.js';
+import type {InsightAppState} from '../../../state/insight-app-state.js';
 import {
   buildMockInsightEngine,
-  MockedInsightEngine,
+  type MockedInsightEngine,
 } from '../../../test/mock-engine-v2.js';
 import {buildMockInsightState} from '../../../test/mock-insight-state.js';
 import {buildMockQuerySuggest} from '../../../test/mock-query-suggest.js';
 import {
-  SearchBox,
-  SearchBoxProps,
-  SearchBoxOptions,
   buildSearchBox,
+  type SearchBox,
+  type SearchBoxOptions,
+  type SearchBoxProps,
 } from './headless-insight-search-box.js';
 
 vi.mock('../../../features/query/query-insight-analytics-actions', () => ({

@@ -1,57 +1,22 @@
 import type {SearchPageEvents as LegacySearchPageEvents} from 'coveo.analytics/dist/definitions/searchPage/searchPageEvents.js';
-import {Result} from '../../api/search/search/result.js';
+import type {Result} from '../../api/search/search/result.js';
 import {
-  validatePayload,
-  requiredNonEmptyString,
   nonEmptyString,
+  requiredNonEmptyString,
+  validatePayload,
 } from '../../utils/validate-payload.js';
-import {OmniboxSuggestionMetadata} from '../query-suggest/query-suggest-analytics-actions.js';
-import {SearchAction} from '../search/search-actions.js';
+import type {OmniboxSuggestionMetadata} from '../query-suggest/query-suggest-analytics-actions.js';
+import type {SearchAction} from '../search/search-actions.js';
 import {
-  ClickAction,
-  CustomAction,
+  type ClickAction,
+  type CustomAction,
   documentIdentifier,
+  type LegacySearchAction,
   makeAnalyticsAction,
   partialDocumentInformation,
-  LegacySearchAction,
   validateResultPayload,
 } from './analytics-utils.js';
 import {SearchPageEvents} from './search-action-cause.js';
-
-export interface SearchEventPayload {
-  /** The identifier of the search action (e.g., `interfaceLoad`). */
-  evt: LegacySearchPageEvents | string;
-  /** The event metadata. */
-  meta?: Record<string, unknown>;
-}
-
-export interface ClickEventPayload {
-  /**
-   * The identifier of the click action.
-   */
-  evt: LegacySearchPageEvents | string;
-  /**
-   * The result associated with the click event.
-   */
-  result: Result;
-  /**
-   * The event metadata.
-   */
-  meta?: Record<string, unknown>;
-}
-
-export interface CustomEventPayload {
-  /**
-   * The event cause identifier of the custom action
-   */
-  evt: LegacySearchPageEvents | string;
-  /**
-   * The event type identifier of the custom action
-   */
-  type: string;
-  /** The event metadata. */
-  meta?: Record<string, unknown>;
-}
 
 const validateEvent = (p: {evt: string; type?: string}) =>
   validatePayload(p, {

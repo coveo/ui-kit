@@ -1,12 +1,12 @@
-import type {Product} from '@coveo/headless/commerce';
-import {html, LitElement, nothing, TemplateResult} from 'lit';
+import type {InteractiveProduct, Product} from '@coveo/headless/commerce';
+import {html, LitElement, nothing, type TemplateResult} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import type {CommerceBindings} from '../../../../../src/components/commerce/atomic-commerce-interface/atomic-commerce-interface.js';
 import {fixture} from '../../../fixture.js';
 import {
   defaultBindings as commerceDefaultBindings,
-  renderInAtomicCommerceInterface,
   type FixtureAtomicCommerceInterface,
+  renderInAtomicCommerceInterface,
 } from './atomic-commerce-interface-fixture.js';
 
 @customElement('atomic-product')
@@ -14,6 +14,8 @@ export class FixtureAtomicProduct extends LitElement {
   @state() template!: TemplateResult;
   @property({type: Object}) product?: Product;
   @property({type: Object}) content?: ParentNode;
+  @property({type: Object, attribute: 'interactive-product'})
+  interactiveProduct?: InteractiveProduct;
 
   get ready() {
     return Boolean(this.template);
@@ -26,11 +28,19 @@ export class FixtureAtomicProduct extends LitElement {
   connectedCallback() {
     super.connectedCallback();
     this.addEventListener('atomic/resolveResult', this.resolveProduct);
+    this.addEventListener(
+      'atomic/resolveInteractiveResult',
+      this.resolveInteractiveProduct
+    );
   }
 
   disconnectedCallback() {
     super.disconnectedCallback();
     this.removeEventListener('atomic/resolveResult', this.resolveProduct);
+    this.removeEventListener(
+      'atomic/resolveInteractiveResult',
+      this.resolveInteractiveProduct
+    );
   }
 
   private resolveProduct = (event: CustomEvent) => {
@@ -38,6 +48,14 @@ export class FixtureAtomicProduct extends LitElement {
     event.stopPropagation();
     if (this.product && typeof event.detail === 'function') {
       event.detail(this.product);
+    }
+  };
+
+  private resolveInteractiveProduct = (event: CustomEvent) => {
+    event.preventDefault();
+    event.stopPropagation();
+    if (this.interactiveProduct && typeof event.detail === 'function') {
+      event.detail(this.interactiveProduct);
     }
   };
 
@@ -58,6 +76,7 @@ export function renderInAtomicProduct<T extends LitElement>({
   selector,
   bindings,
   product,
+  interactiveProduct,
 }: {
   template: TemplateResult;
   selector?: string;
@@ -65,6 +84,7 @@ export function renderInAtomicProduct<T extends LitElement>({
     | Partial<CommerceBindings>
     | ((bindings: MinimalBindings) => MinimalBindings);
   product?: Product;
+  interactiveProduct?: InteractiveProduct;
 }): Promise<{
   element: T;
   atomicProduct: FixtureAtomicProduct;
@@ -76,6 +96,7 @@ export async function renderInAtomicProduct<T extends LitElement>({
   selector,
   bindings,
   product,
+  interactiveProduct,
 }: {
   template: TemplateResult;
   selector?: string | never;
@@ -83,13 +104,14 @@ export async function renderInAtomicProduct<T extends LitElement>({
     | Partial<CommerceBindings>
     | ((bindings: MinimalBindings) => MinimalBindings);
   product?: Product;
+  interactiveProduct?: InteractiveProduct;
 }): Promise<{
   element: null | T;
   atomicProduct: FixtureAtomicProduct;
   atomicInterface: FixtureAtomicCommerceInterface;
 }> {
   const atomicProduct = await fixture<FixtureAtomicProduct>(
-    html`<atomic-product .product=${product}></atomic-product>`
+    html`<atomic-product .product=${product} .interactiveProduct=${interactiveProduct}></atomic-product>`
   );
 
   atomicProduct.setRenderTemplate(template);

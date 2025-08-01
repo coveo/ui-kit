@@ -4,7 +4,7 @@ import {
   requiredEmptyAllowedString,
   validatePayload,
 } from '../../utils/validate-payload.js';
-import {DictionaryFieldContextPayload} from './dictionary-field-context-state.js';
+import type {DictionaryFieldContextPayload} from './dictionary-field-context-state.js';
 
 export const setContext = createAction(
   'dictionaryFieldContext/set',

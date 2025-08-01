@@ -1,11 +1,11 @@
 import {pickNonBaseParams} from '../../api-client-utils.js';
-import {
+import type {
   HTTPContentType,
   HttpMethods,
   PlatformClientCallOptions,
 } from '../../platform-client.js';
-import {BaseParam} from '../../platform-service-params.js';
-import {InsightUserActionsRequest} from './user-actions/user-actions-request.js';
+import type {BaseParam} from '../../platform-service-params.js';
+import type {InsightUserActionsRequest} from './user-actions/user-actions-request.js';
 
 export interface InsightIdParam {
   insightId: string;
@@ -18,7 +18,7 @@ export const baseInsightUrl = (req: InsightParam, path?: string) =>
     req.insightId
   }${path ?? ''}`;
 
-export const baseInsightUserActionsUrl = (req: InsightUserActionsRequest) =>
+const baseInsightUserActionsUrl = (req: InsightUserActionsRequest) =>
   `${req.url}/rest/organizations/${req.organizationId}/machinelearning/user/actions`;
 
 export const baseInsightRequest = (
@@ -65,7 +65,7 @@ export const baseInsightUserActionRequest = (
 };
 
 export const pickNonInsightParams = (req: InsightParam) => {
-  const {insightId, ...nonInsightParams} = pickNonBaseParams(req);
+  const {insightId: _insightId, ...nonInsightParams} = pickNonBaseParams(req);
   return nonInsightParams;
 };
 

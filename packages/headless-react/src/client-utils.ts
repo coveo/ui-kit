@@ -1,13 +1,13 @@
 'use client';
 
-import {DependencyList, useEffect, useReducer, useRef} from 'react';
+import {type DependencyList, useEffect, useReducer, useRef} from 'react';
 
 /**
  * Subscriber is a function that takes a single argument, which is another function `listener` that returns `void`. The Subscriber function itself returns another function that can be used to unsubscribe the `listener`.
  */
-export type Subscriber = (listener: () => void) => () => void;
+type Subscriber = (listener: () => void) => () => void;
 
-export type SnapshotGetter<T> = () => T;
+type SnapshotGetter<T> = () => T;
 
 /**
  * Determine if the given list of dependencies has changed.

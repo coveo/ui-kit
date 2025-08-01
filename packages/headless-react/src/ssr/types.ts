@@ -1,15 +1,15 @@
-import {
+import type {
   Controller,
-  CoreEngine,
   ControllerDefinitionsMap,
-  InferControllerFromDefinition,
-  InferControllersMapFromDefinition,
-  InferControllerStaticStateMapFromDefinitions,
+  CoreEngine,
   EngineDefinition,
+  InferControllerFromDefinition,
+  InferControllerStaticStateMapFromDefinitions,
+  InferControllersMapFromDefinition,
 } from '@coveo/headless/ssr';
-import {FunctionComponent, PropsWithChildren} from 'react';
+import type {FunctionComponent, PropsWithChildren} from 'react';
 
-export type ContextStaticState<
+type ContextStaticState<
   TEngine extends CoreEngine,
   TControllers extends ControllerDefinitionsMap<TEngine, Controller>,
 > = {controllers: InferControllerStaticStateMapFromDefinitions<TControllers>};

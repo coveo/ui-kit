@@ -1,14 +1,14 @@
-import {Mock} from 'vitest';
+import type {Mock} from 'vitest';
 import {configuration} from '../../app/common-reducers.js';
+import {executeSearch} from '../../features/search/search-actions.js';
 import {restoreSearchParameters} from '../../features/search-parameters/search-parameter-actions.js';
 import {initialSearchParameterSelector} from '../../features/search-parameters/search-parameter-selectors.js';
-import {executeSearch} from '../../features/search/search-actions.js';
 import {
   buildMockSearchEngine,
-  MockedSearchEngine,
+  type MockedSearchEngine,
 } from '../../test/mock-engine-v2.js';
 import {createMockState} from '../../test/mock-state.js';
-import {UrlManager, buildUrlManager} from './headless-url-manager.js';
+import {buildUrlManager, type UrlManager} from './headless-url-manager.js';
 
 vi.mock('../../features/search-parameters/search-parameter-actions');
 vi.mock('../../features/search/search-actions');
@@ -78,7 +78,7 @@ describe('url manager', () => {
       engine.state.query!.q = 'test';
       manager.synchronize('');
 
-      const {tab, ...initialParametersWithoutTab} =
+      const {tab: _tab, ...initialParametersWithoutTab} =
         initialSearchParameterSelector(engine.state);
 
       expect(restoreSearchParameters).toHaveBeenCalledWith(

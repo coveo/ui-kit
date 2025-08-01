@@ -1,6 +1,9 @@
+import {buildParameterSerializer} from '@coveo/headless-react/ssr-commerce';
+import {headers} from 'next/headers';
 import * as externalCartAPI from '@/actions/external-cart-api';
 import BreadcrumbManager from '@/components/breadcrumb-manager';
 import ContextDropdown from '@/components/context-dropdown';
+import DidYouMean from '@/components/did-you-mean';
 import FacetGenerator from '@/components/facets/facet-generator';
 import ParameterManager from '@/components/parameter-manager';
 import ProductList from '@/components/product-list';
@@ -13,8 +16,6 @@ import QueryTrigger from '@/components/triggers/query-trigger';
 import {searchEngineDefinition} from '@/lib/commerce-engine';
 import {NextJsNavigatorContext} from '@/lib/navigatorContextProvider';
 import {defaultContext} from '@/utils/context';
-import {buildParameterSerializer} from '@coveo/headless-react/ssr-commerce';
-import {headers} from 'next/headers';
 
 export default async function Search({
   searchParams,
@@ -56,6 +57,7 @@ export default async function Search({
         navigatorContext={navigatorContext.marshal}
       >
         <ParameterManager url={navigatorContext.location} />
+        <DidYouMean />
         <NotifyTrigger />
         <QueryTrigger />
         <ContextDropdown useCase="search" />

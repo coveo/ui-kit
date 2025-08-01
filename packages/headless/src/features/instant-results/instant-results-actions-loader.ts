@@ -1,15 +1,13 @@
-import {PayloadAction} from '@reduxjs/toolkit';
-import {SearchEngine} from '../../app/search-engine/search-engine.js';
+import type {PayloadAction} from '@reduxjs/toolkit';
+import type {SearchEngine} from '../../app/search-engine/search-engine.js';
 import {instantResultsReducer as instantResults} from '../../features/instant-results/instant-results-slice.js';
 import {
-  UpdateInstantResultQueryActionCreatorPayload,
-  RegisterInstantResultActionCreatorPayload,
+  type ClearExpiredInstantResultsActionCreatorPayload,
   clearExpiredResults,
-  ClearExpiredInstantResultsActionCreatorPayload,
-  FetchInstantResultsActionCreatorPayload,
-} from './instant-results-actions.js';
-import {
+  type FetchInstantResultsActionCreatorPayload,
+  type RegisterInstantResultActionCreatorPayload,
   registerInstantResults,
+  type UpdateInstantResultQueryActionCreatorPayload,
   updateInstantResultsQuery,
 } from './instant-results-actions.js';
 

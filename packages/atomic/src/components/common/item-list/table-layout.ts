@@ -1,14 +1,14 @@
-import {ItemRenderingFunction} from '@/src/components';
-import {
-  FunctionalComponent,
-  FunctionalComponentWithChildren,
-} from '@/src/utils/functional-component-utils';
-import {html, TemplateResult} from 'lit';
+import {html, type TemplateResult} from 'lit';
 import {keyed} from 'lit/directives/keyed.js';
 import {map} from 'lit/directives/map.js';
 import {ref} from 'lit/directives/ref.js';
+import type {ItemRenderingFunction} from '@/src/components';
+import type {
+  FunctionalComponent,
+  FunctionalComponentWithChildren,
+} from '@/src/utils/functional-component-utils';
 import {tableElementTagName} from '../../search/atomic-table-result/table-element-utils';
-import {AnyItem} from '../interface/item';
+import type {AnyItem} from '../item-list/unfolded-item';
 
 interface TableColumnsProps {
   firstItem: AnyItem;
@@ -75,9 +75,11 @@ export const renderTableRow: FunctionalComponentWithChildren<TableRowProps> = ({
     html`${keyed(
       key,
       html`<tr
-        .part="result-table-row${rowIndex % 2 === 1
-          ? ' result-table-row-even'
-          : ' result-table-row-odd'}"
+        .part="result-table-row${
+          rowIndex % 2 === 1
+            ? ' result-table-row-even'
+            : ' result-table-row-odd'
+        }"
         ${ref((element?: Element) => setRef(element))}
       >
         ${children}

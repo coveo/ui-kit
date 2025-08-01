@@ -1,5 +1,5 @@
 import {configuration} from '../../../../app/common-reducers.js';
-import {SearchEngine} from '../../../../app/search-engine/search-engine.js';
+import type {SearchEngine} from '../../../../app/search-engine/search-engine.js';
 import {
   facetClearAll,
   facetSelect,
@@ -9,20 +9,20 @@ import {
 import {numericFacetSetReducer as numericFacetSet} from '../../../../features/facets/range-facets/numeric-facet-set/numeric-facet-set-slice.js';
 import {executeSearch} from '../../../../features/search/search-actions.js';
 import {searchReducer as search} from '../../../../features/search/search-slice.js';
-import {
+import type {
   ConfigurationSection,
   NumericFacetSection,
   SearchSection,
 } from '../../../../state/state-sections.js';
 import {loadReducerError} from '../../../../utils/errors.js';
 import {
-  NumericFilterOptions,
-  NumericFilterInitialState,
-  NumericFilterRange,
-  NumericFilterProps,
-  NumericFilterState,
-  NumericFilter,
   buildCoreNumericFilter,
+  type NumericFilter,
+  type NumericFilterInitialState,
+  type NumericFilterOptions,
+  type NumericFilterProps,
+  type NumericFilterRange,
+  type NumericFilterState,
 } from '../../../core/facets/range-facet/numeric-facet/headless-core-numeric-filter.js';
 
 export type {

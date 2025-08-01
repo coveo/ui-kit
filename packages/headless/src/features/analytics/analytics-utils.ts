@@ -1,73 +1,74 @@
+/** biome-ignore-all lint/suspicious/noConfusingVoidType: <> */
 import {
   isNullOrUndefined,
   RecordValue,
   Schema,
   StringValue,
 } from '@coveo/bueno';
-import {type createRelay} from '@coveo/relay';
-import {ItemMetaData} from '@coveo/relay-event-types';
+import type {createRelay} from '@coveo/relay';
+import type {ItemMetaData} from '@coveo/relay-event-types';
 import {
-  AsyncThunk,
-  AsyncThunkPayloadCreator,
+  type AsyncThunk,
+  type AsyncThunkPayloadCreator,
   createAsyncThunk,
 } from '@reduxjs/toolkit';
 import type {
-  CoveoSearchPageClient,
-  SearchPageClientProvider,
+  AnalyticsClientSendEventHook,
   CaseAssistClient,
   CoveoInsightClient,
+  CoveoSearchPageClient,
   EventBuilder,
   EventDescription,
-  AnalyticsClientSendEventHook,
+  SearchPageClientProvider,
 } from 'coveo.analytics';
 import type {AnalyticsClient} from 'coveo.analytics/dist/definitions/client/analytics.js';
 import type {SearchEventResponse} from 'coveo.analytics/dist/definitions/events.js';
 import type {
-  PartialDocumentInformation,
   DocumentIdentifier,
+  PartialDocumentInformation,
 } from 'coveo.analytics/dist/definitions/searchPage/searchPageEvents.js';
-import {Logger} from 'pino';
+import type {Logger} from 'pino';
 import {getRelayInstanceFromState} from '../../api/analytics/analytics-relay-client.js';
 import {
   CaseAssistAnalyticsProvider,
   configureCaseAssistAnalytics,
-  StateNeededByCaseAssistAnalytics,
+  type StateNeededByCaseAssistAnalytics,
 } from '../../api/analytics/case-assist-analytics.js';
 import {
   configureInsightAnalytics,
   InsightAnalyticsProvider,
-  StateNeededByInsightAnalyticsProvider,
+  type StateNeededByInsightAnalyticsProvider,
 } from '../../api/analytics/insight-analytics.js';
-import {StateNeededByInstantResultsAnalyticsProvider} from '../../api/analytics/instant-result-analytics.js';
+import type {StateNeededByInstantResultsAnalyticsProvider} from '../../api/analytics/instant-result-analytics.js';
 import {
   configureLegacyAnalytics,
   SearchAnalyticsProvider,
-  StateNeededBySearchAnalyticsProvider,
+  type StateNeededBySearchAnalyticsProvider,
 } from '../../api/analytics/search-analytics.js';
-import {GeneratedAnswerCitation} from '../../api/generated-answer/generated-answer-event-payload.js';
-import {PreprocessRequest} from '../../api/preprocess-request.js';
-import {Raw} from '../../api/search/search/raw.js';
-import {Result} from '../../api/search/search/result.js';
-import {ThunkExtraArguments} from '../../app/thunk-extra-arguments.js';
-import {RecommendationAppState} from '../../state/recommendation-app-state.js';
-import {SearchAppState} from '../../state/search-app-state.js';
-import {
+import type {GeneratedAnswerCitation} from '../../api/generated-answer/generated-answer-event-payload.js';
+import type {PreprocessRequest} from '../../api/preprocess-request.js';
+import type {Raw} from '../../api/search/search/raw.js';
+import type {Result} from '../../api/search/search/result.js';
+import type {ThunkExtraArguments} from '../../app/thunk-extra-arguments.js';
+import type {RecommendationAppState} from '../../state/recommendation-app-state.js';
+import type {SearchAppState} from '../../state/search-app-state.js';
+import type {
   ConfigurationSection,
   PipelineSection,
 } from '../../state/state-sections.js';
 import {requiredNonEmptyString} from '../../utils/validate-payload.js';
-import {ResultWithFolding} from '../folding/folding-slice.js';
+import type {ResultWithFolding} from '../folding/folding-slice.js';
 import {getAllIncludedResultsFrom} from '../folding/folding-utils.js';
 import {getPipelineInitialState} from '../pipeline/pipeline-state.js';
 
-export interface PreparableAnalyticsActionOptions<
+type PreparableAnalyticsActionOptions<
   StateNeeded extends ConfigurationSection,
-> {
+> = {
   analyticsClientMiddleware: AnalyticsClientSendEventHook;
   preprocessRequest: PreprocessRequest | undefined;
   logger: Logger;
   getState(): StateNeeded;
-}
+};
 
 export type AnalyticsAsyncThunk<
   StateNeeded extends
@@ -85,13 +86,13 @@ export function makeBasicNewSearchAnalyticsAction(
   };
 }
 
-export interface PreparedAnalyticsAction<
+type PreparedAnalyticsAction<
   StateNeeded extends
     ConfigurationSection = StateNeededBySearchAnalyticsProvider,
-> {
+> = {
   description?: EventDescription;
   action: AnalyticsAsyncThunk<StateNeeded>;
-}
+};
 
 type PrepareAnalyticsFunction<
   StateNeeded extends
@@ -100,12 +101,12 @@ type PrepareAnalyticsFunction<
   options: PreparableAnalyticsActionOptions<StateNeeded>
 ) => Promise<PreparedAnalyticsAction<StateNeeded>>;
 
-export interface PreparableAnalyticsAction<
+type PreparableAnalyticsAction<
   StateNeeded extends
     ConfigurationSection = StateNeededBySearchAnalyticsProvider,
-> extends AnalyticsAsyncThunk<StateNeeded> {
+> = AnalyticsAsyncThunk<StateNeeded> & {
   prepare: PrepareAnalyticsFunction<StateNeeded>;
-}
+};
 
 export type LegacySearchAction =
   PreparableAnalyticsAction<StateNeededBySearchAnalyticsProvider>;
@@ -128,19 +129,12 @@ export type InsightAction =
 export type CaseAssistAction =
   PreparableAnalyticsAction<StateNeededByCaseAssistAnalytics>;
 
-export interface AsyncThunkAnalyticsOptions<
+type AsyncThunkAnalyticsOptions<
   T extends StateNeededBySearchAnalyticsProvider,
-> {
+> = {
   state: T;
   extra: ThunkExtraArguments;
-}
-
-export interface AsyncThunkInsightAnalyticsOptions<
-  T extends Partial<StateNeededByInsightAnalyticsProvider>,
-> {
-  state: T;
-  extra: ThunkExtraArguments;
-}
+};
 
 function makeInstantlyCallable<T extends object>(action: T) {
   return Object.assign(action, {instantlyCallable: true}) as T;
@@ -216,7 +210,7 @@ function makePreparableAnalyticsAction<
   return rootAction as PreparableAnalyticsAction<StateNeeded>;
 }
 
-export type AnalyticsActionOptions<
+type AnalyticsActionOptions<
   LegacyStateNeeded extends StateNeededBySearchAnalyticsProvider,
   StateNeeded extends StateNeededBySearchAnalyticsProvider,
   LegacyGetBuilderType,
@@ -231,14 +225,14 @@ export type AnalyticsActionOptions<
     __legacy__getBuilder: LegacyGetBuilderType;
   };
 
-export interface NextAnalyticsOptions<
+interface NextAnalyticsOptions<
   StateNeeded extends InternalLegacyStateNeeded,
   PayloadType,
 > {
   analyticsType: string;
   analyticsPayloadBuilder: (state: StateNeeded) => PayloadType;
 }
-export interface LegacyAnalyticsOptions<
+interface LegacyAnalyticsOptions<
   StateNeeded extends InternalLegacyStateNeeded,
   Client,
   Provider,
@@ -579,12 +573,6 @@ export const makeInsightAnalyticsActionFactory = (actionCause: string) => {
   return makeInsightAnalyticsAction;
 };
 
-export const makeNoopAnalyticsAction = () =>
-  makeAnalyticsAction('analytics/noop', () => null);
-
-export const noopSearchAnalyticsAction = (): LegacySearchAction =>
-  makeNoopAnalyticsAction();
-
 export const partialDocumentInformation = (
   result: Result,
   state: Partial<SearchAppState>
@@ -725,7 +713,7 @@ function partialResultPayload(result: Result): Partial<Result> {
 }
 
 function getDocumentAuthor(result: Result) {
-  const author = result.raw['author'];
+  const author = result.raw.author;
   if (isNullOrUndefined(author)) {
     return 'unknown';
   }
@@ -734,7 +722,7 @@ function getDocumentAuthor(result: Result) {
 }
 
 function getSourceName(result: Result) {
-  const source = result.raw['source'];
+  const source = result.raw.source;
   if (isNullOrUndefined(source)) {
     return 'unknown';
   }

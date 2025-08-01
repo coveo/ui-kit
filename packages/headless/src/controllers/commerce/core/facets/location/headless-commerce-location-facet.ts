@@ -1,13 +1,13 @@
-import {CommerceEngine} from '../../../../../app/commerce-engine/commerce-engine.js';
-import {LocationFacetValue} from '../../../../../features/commerce/facets/facet-set/interfaces/response.js';
+import type {CommerceEngine} from '../../../../../app/commerce-engine/commerce-engine.js';
+import type {LocationFacetValue} from '../../../../../features/commerce/facets/facet-set/interfaces/response.js';
 import {toggleSelectLocationFacetValue} from '../../../../../features/commerce/facets/location-facet/location-facet-actions.js';
 import {
-  CoreCommerceFacet,
-  CoreCommerceFacetOptions,
-  CoreCommerceFacetState,
-  FacetControllerType,
-  FacetValueRequest,
   buildCoreCommerceFacet,
+  type CoreCommerceFacet,
+  type CoreCommerceFacetOptions,
+  type CoreCommerceFacetState,
+  type FacetControllerType,
+  type FacetValueRequest,
 } from '../headless-core-commerce-facet.js';
 
 /**
@@ -61,9 +61,9 @@ export function buildCommerceLocationFacet(
   options: LocationFacetOptions
 ): LocationFacet {
   const {
-    toggleSingleExclude,
-    toggleExclude,
-    isValueExcluded,
+    toggleSingleExclude: _toggleSingleExclude,
+    toggleExclude: _toggleExclude,
+    isValueExcluded: _isValueExcluded,
     ...coreController
   } = buildCoreCommerceFacet<FacetValueRequest, LocationFacetValue>(engine, {
     options: {

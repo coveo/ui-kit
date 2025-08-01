@@ -1,10 +1,10 @@
 import {executeSearch} from '../../features/search/search-actions.js';
 import {
-  MockedSearchEngine,
   buildMockSearchEngine,
+  type MockedSearchEngine,
 } from '../../test/mock-engine-v2.js';
 import {createMockState} from '../../test/mock-state.js';
-import {buildTab, Tab, TabProps} from './headless-tab.js';
+import {buildTab, type Tab, type TabProps} from './headless-tab.js';
 
 vi.mock('../../features/search/search-actions');
 

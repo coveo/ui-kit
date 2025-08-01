@@ -1,4 +1,5 @@
 <script setup lang="ts">
+// biome-ignore lint/correctness/noUnusedImports: <>
 import resultTemplate from '../templates/result-template.html?raw';
 </script>
 

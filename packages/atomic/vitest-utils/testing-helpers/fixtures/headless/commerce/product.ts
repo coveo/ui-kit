@@ -1,8 +1,10 @@
-import {Product} from '@coveo/headless/commerce';
+import type {Product} from '@coveo/headless/commerce';
 
 export const buildFakeProduct = (product?: Partial<Product>): Product => ({
   clickUri: '',
-  additionalFields: {},
+  additionalFields: {
+    cat_available_sizes: ['XS', 'S', 'M', 'L', 'XL'],
+  },
   children: [],
   ec_brand: 'brand',
   ec_category: [],
@@ -17,7 +19,7 @@ export const buildFakeProduct = (product?: Partial<Product>): Product => ({
   ec_item_group_id: 'itemGroupId',
   ec_listing: 'listing',
   ec_promo_price: 0,
-  ec_rating: 0,
+  ec_rating: 4.37,
   ec_shortdesc: 'shortdesc',
   ec_thumbnails: [],
   permanentid: 'permanentId',

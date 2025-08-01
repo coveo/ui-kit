@@ -1,33 +1,18 @@
 lightning-icon {
-  --sds-c-icon-color-foreground-default: white;
+  --slds-c-icon-color-foreground-default: var(--slds-g-color-brand-base-100, white);
 }
-.slds-visual-picker__figure {
+.case-classification-visual-picker__figure {
   width: 9.6rem;
   height: 2rem;
-}
-
-.slds-form-element {
-  display: flex;
-  flex-direction: column;
 }
 
 .loading-holder {
-  position: relative;
   width: 9.6rem;
   height: 2rem;
 }
 
-.slds-form-element__label {
+.text-color-inherit {
   color: unset;
-}
-
-.slds-visual-picker {
-  overflow: hidden;
-}
-
-.row {
-  display: flex;
-  flex-wrap: wrap;
 }
 
 .visual-picker__hidden {
@@ -42,14 +27,8 @@ lightning-icon {
   }
 }
 
-.slds-visual-picker input:checked ~ label .slds-visual-picker__text:after {
+.slds-visual-picker input:checked ~ label .visual-picker__figure:after {
   border-right-color: var(--lwc-colorBorderRowSelectedHover, rgb(27, 150, 255));
   border-top-color: var(--lwc-colorBorderRowSelectedHover, rgb(27, 150, 255));
   border-radius: 4px;
-}
-
-.content-center {
-  display: flex;
-  justify-content: center;
-  align-items: center;
 }

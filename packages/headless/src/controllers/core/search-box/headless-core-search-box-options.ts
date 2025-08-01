@@ -1,11 +1,11 @@
 import {
   BooleanValue,
   NumberValue,
+  RecordValue,
   Schema,
   StringValue,
-  RecordValue,
 } from '@coveo/bueno';
-import {SuggestionHighlightingOptions} from '../../../utils/highlight.js';
+import type {SuggestionHighlightingOptions} from '../../../utils/highlight.js';
 import {requiredNonEmptyString} from '../../../utils/validate-payload.js';
 
 export interface SearchBoxOptions {
@@ -54,7 +54,7 @@ export const defaultSearchBoxOptions: Required<DefaultSearchBoxOptions> = {
   clearFilters: true,
 };
 
-export const openCloseDelimitersDefinition = {
+const openCloseDelimitersDefinition = {
   open: new StringValue(),
   close: new StringValue(),
 };

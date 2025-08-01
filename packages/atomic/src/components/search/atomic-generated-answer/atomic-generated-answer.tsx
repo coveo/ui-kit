@@ -76,6 +76,7 @@ export class AtomicGeneratedAnswer implements InitializableComponent {
   private readonly DEFAULT_COLLAPSED_HEIGHT = 16;
   private readonly MAX_COLLAPSED_HEIGHT = 32;
   private readonly MIN_COLLAPSED_HEIGHT = 9;
+  private readonly REQUIRED_FIELDS_TO_INCLUDE_IN_CITATIONS = ['filetype'];
 
   @BindStateToController('generatedAnswer', {
     onUpdateCallbackMethod: 'onGeneratedAnswerStateUpdate',
@@ -128,6 +129,17 @@ export class AtomicGeneratedAnswer implements InitializableComponent {
   @Prop() answerConfigurationId?: string;
 
   /**
+   * A list of fields to include with the citations used to generate the answer.
+   */
+  @Prop() fieldsToIncludeInCitations?: string;
+
+  /**
+   * Option to disable citation anchoring.
+   * @default false
+   */
+  @Prop() disableCitationAnchoring?: boolean;
+
+  /**
    * The tabs on which the generated answer can be displayed. This property should not be used at the same time as `tabs-excluded`.
    *
    * Set this property as a stringified JSON array, e.g.,
@@ -172,6 +184,7 @@ export class AtomicGeneratedAnswer implements InitializableComponent {
       host: this.host,
       withToggle: this.withToggle,
       collapsible: this.collapsible,
+      disableCitationAnchoring: this.disableCitationAnchoring,
       getGeneratedAnswer: () => this.generatedAnswer,
       getGeneratedAnswerState: () => this.generatedAnswerState,
       getSearchStatusState: () => this.searchStatusState,
@@ -194,6 +207,7 @@ export class AtomicGeneratedAnswer implements InitializableComponent {
       ...(this.answerConfigurationId && {
         answerConfigurationId: this.answerConfigurationId,
       }),
+      fieldsToIncludeInCitations: this.getCitationFields(),
     });
     this.searchStatus = buildSearchStatus(this.bindings.engine);
     this.generatedAnswerCommon.insertFeedbackModal();
@@ -290,6 +304,14 @@ export class AtomicGeneratedAnswer implements InitializableComponent {
     return this.host?.shadowRoot?.querySelector(
       '[part="generated-answer-footer"]'
     );
+  }
+
+  private getCitationFields() {
+    return (this.fieldsToIncludeInCitations ?? '')
+      .split(',')
+      .map((field) => field.trim())
+      .filter((field) => field.length > 0)
+      .concat(this.REQUIRED_FIELDS_TO_INCLUDE_IN_CITATIONS)
   }
 
   private validateMaxCollapsedHeight(): number {

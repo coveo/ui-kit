@@ -1,7 +1,7 @@
-import {QuerySuggestRequest} from '../../../api/commerce/search/query-suggest/query-suggest-request.js';
+import type {QuerySuggestRequest} from '../../../api/commerce/search/query-suggest/query-suggest-request.js';
 import {
   defaultNodeJSNavigatorContextProvider,
-  NavigatorContext,
+  type NavigatorContext,
 } from '../../../app/navigator-context-provider.js';
 import {buildMockBaseCommerceAPIRequest} from '../../../test/mock-commerce-api-request.js';
 import {buildBaseCommerceAPIRequest} from '../common/base-commerce-api-request-builder.js';
@@ -11,7 +11,7 @@ import {getContextInitialState} from '../context/context-state.js';
 import {getCommerceQueryInitialState} from '../query/query-state.js';
 import {
   buildPlanRequest,
-  StateNeededForPlanCommerceAPIRequest,
+  type StateNeededForPlanCommerceAPIRequest,
 } from './plan-request-builder.js';
 
 vi.mock('../common/base-commerce-api-request-builder.js');
@@ -49,19 +49,21 @@ describe('#buildPlanRequest', () => {
   });
 
   it('sets base properties, except #context.capture, to the value returned by #buildBaseCommerceAPIRequest(#state, #navigatorContext)', () => {
-    const {query, page, perPage, ...restOfPlanRequest} = buildPlanRequest(
-      state,
-      navigatorContext
-    );
+    const {
+      query: _query,
+      page: _page,
+      perPage: _perPage,
+      ...restOfPlanRequest
+    } = buildPlanRequest(state, navigatorContext);
 
-    const {capture: planRequestCapture, ...restOfPlanRequestContext} =
+    const {capture: _planRequestCapture, ...restOfPlanRequestContext} =
       restOfPlanRequest.context;
     const basePropertiesWithoutCapture = {
       ...restOfPlanRequest,
       context: {...restOfPlanRequestContext},
     };
 
-    const {capture: baseRequestCapture, ...restOfBaseRequestContext} =
+    const {capture: _baseRequestCapture, ...restOfBaseRequestContext} =
       baseRequest.context;
     const baseRequestWithoutCapture = {
       ...baseRequest,

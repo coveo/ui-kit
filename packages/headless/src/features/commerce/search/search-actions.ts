@@ -1,11 +1,11 @@
 import {BooleanValue, RecordValue, StringValue} from '@coveo/bueno';
 import {createAction, createAsyncThunk} from '@reduxjs/toolkit';
 import {
-  AsyncThunkCommerceOptions,
+  type AsyncThunkCommerceOptions,
   isErrorResponse,
 } from '../../../api/commerce/commerce-api-client.js';
-import {ChildProduct} from '../../../api/commerce/common/product.js';
-import {SearchCommerceSuccessResponse} from '../../../api/commerce/search/response.js';
+import type {ChildProduct} from '../../../api/commerce/common/product.js';
+import type {SearchCommerceSuccessResponse} from '../../../api/commerce/search/response.js';
 import {validatePayload} from '../../../utils/validate-payload.js';
 import {buildBaseCommerceAPIRequest} from '../common/base-commerce-api-request-builder.js';
 import {buildFilterableCommerceAPIRequest} from '../common/filterable-commerce-api-request-builder.js';
@@ -15,15 +15,15 @@ import {
 } from '../facets/core-facet/core-facet-actions.js';
 import {selectPage} from '../pagination/pagination-actions.js';
 import {perPagePrincipalSelector} from '../pagination/pagination-selectors.js';
-import {UpdateQueryPayload, updateQuery} from '../query/query-actions.js';
+import {type UpdateQueryPayload, updateQuery} from '../query/query-actions.js';
 import {
   AsyncSearchThunkProcessor,
-  StateNeededByExecuteSearch,
+  type StateNeededByExecuteSearch,
 } from './search-actions-thunk-processor.js';
 import {
-  querySelector,
   moreProductsAvailableSelector,
   numberOfProductsSelector,
+  querySelector,
 } from './search-selectors.js';
 
 export interface QuerySearchCommerceAPIThunkReturn {
@@ -43,7 +43,7 @@ export interface PrepareForSearchWithQueryOptions {
   clearFilters: boolean;
 }
 
-export interface FetchInstantProductsPayload {
+interface FetchInstantProductsPayload {
   /**
    * The search box ID.
    */
@@ -58,7 +58,7 @@ export interface FetchInstantProductsPayload {
   cacheTimeout?: number;
 }
 
-export interface FetchInstantProductsThunkReturn {
+interface FetchInstantProductsThunkReturn {
   /** The successful response. */
   response: SearchCommerceSuccessResponse;
 }
@@ -172,7 +172,7 @@ export interface PromoteChildToParentPayload {
   child: ChildProduct;
 }
 
-export const promoteChildToParentDefinition = {
+const promoteChildToParentDefinition = {
   child: new RecordValue({
     options: {required: true},
     values: {

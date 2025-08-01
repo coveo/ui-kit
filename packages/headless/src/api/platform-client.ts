@@ -1,10 +1,10 @@
 import {backOff} from 'exponential-backoff';
-import {Logger} from 'pino';
+import type {Logger} from 'pino';
 import {DisconnectedError, ExpiredTokenError} from '../utils/errors.js';
-import {PlatformEnvironment} from '../utils/url-utils.js';
+import type {PlatformEnvironment} from '../utils/url-utils.js';
 import {clone} from '../utils/utils.js';
 import {canBeFormUrlEncoded, encodeAsFormUrl} from './form-url-encoder.js';
-import {
+import type {
   PlatformClientOrigin,
   PlatformRequestOptions,
   PreprocessRequest,
@@ -45,6 +45,7 @@ export type PlatformClientCallError =
   | DisconnectedError
   | Error;
 
+// biome-ignore lint/complexity/noStaticOnlyClass: Maybe change this into a function someday. Not worth the effort right now.
 export class PlatformClient {
   static async call(
     options: PlatformClientCallOptions
@@ -101,7 +102,7 @@ export class PlatformClient {
     options: PlatformClientCallOptions
   ) {
     const {origin, preprocessRequest, logger, requestMetadata} = options;
-    const {signal, ...withoutSignal} = defaultRequestOptions;
+    const {signal: _signal, ...withoutSignal} = defaultRequestOptions;
     const untaintedOutput: PlatformRequestOptions = clone(withoutSignal);
 
     try {
@@ -142,13 +143,6 @@ export function getOrganizationEndpoint(
     endpointType === 'platform' ? '' : `.${endpointType}`;
 
   return `https://${organizationId}${endpointTypePart}.org${environmentSuffix}.coveo.com`;
-}
-
-export function getAdministrationOrganizationEndpoint(
-  organizationId: string,
-  environment: PlatformEnvironment = 'prod'
-) {
-  return getOrganizationEndpoint(organizationId, environment, 'admin');
 }
 
 export function getSearchApiBaseUrl(

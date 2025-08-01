@@ -9,11 +9,7 @@
     "node": ">=22.14.0"
   },
   "devDependencies": {
-    "@coveo/atomic": "3.27.3",
-    "@coveo/atomic-hosted-page": "1.1.26",
-    "@coveo/atomic-react": "3.2.47",
-    "@coveo/bueno": "1.0.18",
-    "@coveo/headless": "3.27.0",
-    "@coveo/shopify": "1.7.0"
+    "ncp": "2.0.0",
+    "chalk": "5.4.1"
   }
 }

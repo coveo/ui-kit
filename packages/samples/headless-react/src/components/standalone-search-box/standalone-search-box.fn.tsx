@@ -1,8 +1,8 @@
 import {
   buildStandaloneSearchBox,
-  StandaloneSearchBoxOptions,
+  type StandaloneSearchBoxOptions,
 } from '@coveo/headless';
-import {useEffect, useState, FunctionComponent, useContext} from 'react';
+import {type FunctionComponent, useContext, useEffect, useState} from 'react';
 import {AppContext} from '../../context/engine';
 import {standaloneSearchBoxStorageKey} from './standalone-search-box-storage-key';
 
@@ -42,7 +42,15 @@ export const StandaloneSearchBox: FunctionComponent<
         {state.suggestions.map((suggestion) => {
           const value = suggestion.rawValue;
           return (
-            <li key={value} onClick={() => controller.selectSuggestion(value)}>
+            <li
+              key={value}
+              onClick={() => controller.selectSuggestion(value)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                  controller.selectSuggestion(value);
+                }
+              }}
+            >
               {value}
             </li>
           );

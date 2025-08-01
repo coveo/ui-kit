@@ -1,9 +1,9 @@
+import {userEvent} from '@storybook/test';
+import type {i18n} from 'i18next';
+import {html} from 'lit';
+import {beforeAll, describe, expect, it, vi} from 'vitest';
 import {renderFunctionFixture} from '@/vitest-utils/testing-helpers/fixture';
 import {createTestI18n} from '@/vitest-utils/testing-helpers/i18n-utils';
-import {userEvent} from '@storybook/test';
-import {i18n} from 'i18next';
-import {html} from 'lit';
-import {describe, beforeAll, it, expect, vi} from 'vitest';
 import {renderRefineModalSortSection} from './sort';
 
 describe('#renderRefineModalSortSection', () => {
@@ -29,7 +29,7 @@ describe('#renderRefineModalSortSection', () => {
     );
 
     return {
-      sectionTitle: element.querySelector('h1[part*="section-sort-title"]'),
+      sectionTitle: element.querySelector('h2[part*="section-sort-title"]'),
       selectWrapper: element.querySelector('div[part="select-wrapper"]'),
       select: element.querySelector('select[part="select"]'),
       selectIconWrapper: element.querySelector(

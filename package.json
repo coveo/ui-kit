@@ -1,7 +1,7 @@
 {
   "name": "ui-kit",
   "private": true,
-  "version": "3.0.43",
+  "version": "3.0.48",
   "scripts": {
     "postinstall": "husky install && patch-package && npx playwright install",
     "reset:install": "git checkout origin/master package-lock.json && npm i",
@@ -10,8 +10,8 @@
     "build": "nx run-many --target=build",
     "test": "nx run-many --target=test",
     "e2e": "nx run-many --target=e2e",
-    "lint:check": "eslint . && cspell **/*.md --no-progress --show-suggestions --show-context && prettier --check '**/*.{css,pcss,html,md,yml,ts,tsx,js,mjs,json}'",
-    "lint:fix": "eslint --fix . && prettier --write '**/*.{css,pcss,html,md,yml,ts,tsx,js,mjs,json}'",
+    "lint:check": "npx @biomejs/biome check --error-on-warnings . && npx nx run quantic:lint:check && cspell **/*.md --no-progress --show-suggestions --show-context",
+    "lint:fix": "npx @biomejs/biome check --write --error-on-warnings . && npx nx run quantic:lint:fix && cspell **/*.md --no-progress --show-suggestions --show-context",
     "package-compatibility": "node ./scripts/ci/package-compatibility.mjs",
     "pr:report": "node ./scripts/reports/pr-report.mjs",
     "report:bundle-size:time-series": "node ./scripts/reports/bundle-size/time-series.mjs",
@@ -26,55 +26,45 @@
     "release:phase2": "npm run-script -w=@coveo/ci bump:root",
     "release:phase3": "nx run-many --targets=release:phase3 --all --parallel=false --output-style=stream",
     "release:phase4": "npm run-script -w=@coveo/ci reify",
-    "release:phase5": "npm run-script -w=@coveo/ci git-publish-all"
+    "release:phase5": "npm run-script -w=@coveo/ci git-publish-all",
+    "knip": "knip"
   },
   "devDependencies": {
     "@actions/core": "1.11.1",
     "@actions/github": "6.0.1",
+    "@biomejs/biome": "2.0.6",
     "@commitlint/config-conventional": "19.8.1",
     "@commitlint/lint": "19.8.1",
     "@commitlint/load": "19.8.1",
     "@coveo/ci": "1.0.0",
-    "@cspell/dict-fr-fr": "2.3.0",
-    "@cspell/eslint-plugin": "8.19.4",
-    "@nx/web": "20.8.2",
+    "@cspell/dict-fr-fr": "2.3.1",
+    "@npmcli/package-json": "6.2.0",
     "@octokit/rest": "21.1.1",
-    "@trivago/prettier-plugin-sort-imports": "5.2.2",
     "@tsconfig/node20": "20.1.6",
     "@types/execa": "2.0.2",
     "@types/jest": "29.5.14",
-    "@types/node": "22.15.32",
-    "@typescript-eslint/eslint-plugin": "7.18.0",
-    "@typescript-eslint/parser": "7.18.0",
-    "@vitest/browser": "3.2.3",
+    "@types/node": "22.16.4",
+    "@vitest/browser": "3.2.4",
     "aws-sdk": "2.1692.0",
     "commitizen": "4.3.1",
-    "concurrently": "9.1.2",
+    "concurrently": "9.2.0",
     "cspell": "8.19.4",
     "cz-conventional-changelog": "3.3.0",
-    "esbuild": "0.25.5",
+    "esbuild": "0.25.6",
     "esbuild-plugin-alias": "0.2.1",
     "esbuild-plugin-umd-wrapper": "3.0.0",
-    "eslint": "8.57.1",
-    "eslint-config-prettier": "10.1.5",
-    "eslint-plugin-cypress": "2.15.2",
-    "eslint-plugin-package-lock": "1.0.0",
     "execa": "9.6.0",
-    "glob": "11.0.3",
-    "gts": "5.3.1",
     "husky": "9.1.7",
+    "knip": "5.61.3",
     "lint-staged": "15.5.2",
     "nx": "20.8.2",
     "patch-package": "8.0.0",
-    "prettier": "3.5.3",
-    "prettier-plugin-tailwindcss": "0.6.12",
+    "playwright": "1.54.1",
     "publint": "0.3.12",
-    "react": "19.1.0",
-    "react-dom": "19.1.0",
     "rimraf": "6.0.1",
     "semver": "7.7.2",
     "typescript": "5.8.3",
-    "vite": "6.3.5"
+    "vitest": "3.2.4"
   },
   "overrides": {
     "@coveo/ci": {
@@ -100,7 +90,13 @@
     "packages/samples/headless-ssr/*",
     "packages/shopify",
     "utils/cdn",
-    "utils/ci"
+    "utils/ci",
+    "packages/create-atomic-template",
+    "packages/create-atomic",
+    "packages/create-atomic-component",
+    "packages/create-atomic-component-project",
+    "packages/create-atomic-component-project/template",
+    "packages/create-atomic-rollup-plugin"
   ],
   "config": {
     "commitizen": {
@@ -122,9 +118,6 @@
   "engines": {
     "node": "^22.14.0",
     "npm": ">=8.6.0"
-  },
-  "dependencies": {
-    "upgrade": "1.1.0"
   },
   "packageManager": "npm@11.4.2"
 }

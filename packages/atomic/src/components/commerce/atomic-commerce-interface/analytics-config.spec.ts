@@ -1,5 +1,5 @@
 import {
-  CommerceEngineConfiguration,
+  type CommerceEngineConfiguration,
   getSampleCommerceEngineConfiguration,
 } from '@coveo/headless/commerce';
 import {describe, expect, it, vi} from 'vitest';
@@ -15,6 +15,9 @@ describe('getAnalyticsConfig', () => {
 
     expect(config).toEqual({
       enabled,
+      source: {
+        '@coveo/atomic': '0.0.0',
+      },
     });
   });
 
@@ -26,6 +29,9 @@ describe('getAnalyticsConfig', () => {
 
     expect(config).toEqual({
       enabled,
+      source: {
+        '@coveo/atomic': '0.0.0',
+      },
       trackingId: commerceEngineConfig.analytics.trackingId,
     });
   });

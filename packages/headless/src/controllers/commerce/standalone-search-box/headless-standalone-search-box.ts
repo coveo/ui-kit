@@ -1,9 +1,9 @@
-import {CommerceEngine} from '../../../app/commerce-engine/commerce-engine.js';
+import type {CommerceEngine} from '../../../app/commerce-engine/commerce-engine.js';
 import {configuration} from '../../../app/common-reducers.js';
 import {stateKey} from '../../../app/state-key.js';
-import {selectQuerySuggestion} from '../../../features/commerce/query-suggest/query-suggest-actions.js';
 import {updateQuery} from '../../../features/commerce/query/query-actions.js';
 import {queryReducer as commerceQuery} from '../../../features/commerce/query/query-slice.js';
+import {selectQuerySuggestion} from '../../../features/commerce/query-suggest/query-suggest-actions.js';
 import {
   fetchRedirectUrl,
   registerStandaloneSearchBox,
@@ -12,24 +12,24 @@ import {
 } from '../../../features/commerce/standalone-search-box-set/standalone-search-box-set-actions.js';
 import {commerceStandaloneSearchBoxSetReducer as commerceStandaloneSearchBoxSet} from '../../../features/commerce/standalone-search-box-set/standalone-search-box-set-slice.js';
 import {querySuggestReducer as querySuggest} from '../../../features/query-suggest/query-suggest-slice.js';
-import {
+import type {
   CommerceQuerySection,
+  CommerceStandaloneSearchBoxSection,
   ConfigurationSection,
   QuerySuggestionSection,
-  CommerceStandaloneSearchBoxSection,
 } from '../../../state/state-sections.js';
 import {loadReducerError} from '../../../utils/errors.js';
 import {randomID} from '../../../utils/utils.js';
 import {validateOptions} from '../../../utils/validate-payload.js';
-import {StandaloneSearchBoxProps} from '../../standalone-search-box/headless-standalone-search-box.js';
+import type {StandaloneSearchBoxProps} from '../../standalone-search-box/headless-standalone-search-box.js';
+import {
+  buildSearchBox,
+  type SearchBox,
+  type SearchBoxState,
+} from '../search-box/headless-search-box.js';
 import {defaultSearchBoxOptions} from '../search-box/headless-search-box-options.js';
 import {
-  SearchBox,
-  SearchBoxState,
-  buildSearchBox,
-} from '../search-box/headless-search-box.js';
-import {
-  StandaloneSearchBoxOptions,
+  type StandaloneSearchBoxOptions,
   standaloneSearchBoxSchema,
 } from './headless-standalone-search-box-options.js';
 

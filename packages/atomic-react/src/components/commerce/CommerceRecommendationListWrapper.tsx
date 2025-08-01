@@ -1,15 +1,18 @@
-import {AtomicCommerceRecommendationList} from '@coveo/atomic/components';
-import {
+import type {AtomicCommerceRecommendationList} from '@coveo/atomic/components';
+import type {
   ItemDisplayBasicLayout,
   ItemDisplayDensity,
   ItemDisplayImageSize,
 } from '@coveo/atomic/loader';
 import type {Product} from '@coveo/headless/commerce';
+// biome-ignore lint/style/useImportType: <React is needed>
 import React, {useEffect, useRef} from 'react';
 import {createRoot} from 'react-dom/client';
 import {renderToString} from 'react-dom/server';
-import {AtomicProductLink} from '../stencil-generated/commerce/index.js';
-import {AtomicCommerceRecommendationList as LitAtomicCommerceRecommendationList} from './components.js';
+import {
+  AtomicProductLink,
+  AtomicCommerceRecommendationList as LitAtomicCommerceRecommendationList,
+} from './components.js';
 
 interface Template {
   contentTemplate: JSX.Element;
@@ -42,6 +45,8 @@ interface AtomicCommerceRecommendationListProps {
 interface HTMLAtomicCommerceRecommendationListElement
   extends AtomicCommerceRecommendationList,
     HTMLElement {}
+
+// biome-ignore lint/correctness/noUnusedVariables: <>
 var HTMLAtomicCommerceRecommendationListElement: {
   prototype: HTMLAtomicCommerceRecommendationListElement;
   new (): HTMLAtomicCommerceRecommendationListElement;
@@ -82,12 +87,13 @@ export const ListWrapper: React.FC<WrapperProps> = (props) => {
             ? createRoot(linkContainer!).render(
                 <AtomicProductLink></AtomicProductLink>
               )
-            : createRoot(linkContainer!).render(<></>);
+            : // biome-ignore lint/complexity/noUselessFragments: <>
+              createRoot(linkContainer!).render(<></>);
           return renderToString(templateResult);
         }
       }
     );
-  }, [commerceRecommendationListRef]);
+  }, [otherProps.display, template]);
   return (
     <LitAtomicCommerceRecommendationList
       ref={commerceRecommendationListRef}

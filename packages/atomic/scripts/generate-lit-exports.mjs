@@ -1,8 +1,17 @@
+import {execSync} from 'node:child_process';
+import fs from 'node:fs';
+import path from 'node:path';
+import {fileURLToPath} from 'node:url';
 import chalk from 'chalk';
-import fs from 'fs';
-import path from 'path';
-import {fileURLToPath} from 'url';
-import {formatWithPrettier} from './format-with-prettier.mjs';
+
+const directories = [
+  'commerce',
+  'common',
+  'search',
+  'insight',
+  'ipx',
+  'recommendations',
+];
 
 const baseComponentsDir = path.resolve(
   path.dirname(fileURLToPath(import.meta.url)),
@@ -46,7 +55,7 @@ async function generateLitExportsForDir(dir) {
     .map((file) => file.name)
     .sort();
 
-  let indexFileContent = `
+  const indexFileContent = `
     // Auto-generated file
     ${
       litComponents.length > 0
@@ -59,7 +68,7 @@ async function generateLitExportsForDir(dir) {
         : 'export {};'
     }
   `;
-  let lazyIndexFileContent = `
+  const lazyIndexFileContent = `
     // Auto-generated file
     export default {
        ${litComponents
@@ -73,30 +82,26 @@ async function generateLitExportsForDir(dir) {
     export type * from './index.js';
   `;
 
-  indexFileContent = await formatWithPrettier(
-    indexFileContent,
-    outputIndexFile
-  );
-  lazyIndexFileContent = await formatWithPrettier(
-    lazyIndexFileContent,
-    outputLazyIndexFile
-  );
-
   fs.writeFileSync(outputIndexFile, indexFileContent);
   fs.writeFileSync(outputLazyIndexFile, lazyIndexFileContent);
 }
 
+export async function formatAllGeneratedLitExports() {
+  const files = directories.flatMap((dir) => {
+    const componentsDir = path.join(baseComponentsDir, dir);
+    return [
+      path.join(componentsDir, 'index.ts'),
+      path.join(componentsDir, 'lazy-index.ts'),
+    ];
+  });
+
+  execSync(`npx @biomejs/biome format --write ${files.join(' ')}`);
+}
+
 export async function generateLitExports() {
-  const directories = [
-    'commerce',
-    'common',
-    'search',
-    'insight',
-    'ipx',
-    'recommendations',
-  ];
   for (const dir of directories) {
     console.log(chalk.blue('Directory:'), chalk.green(dir));
     await generateLitExportsForDir(dir);
   }
+  await formatAllGeneratedLitExports();
 }

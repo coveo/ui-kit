@@ -1,8 +1,8 @@
 'use client';
 
+import {SortBy, type SortCriterion} from '@coveo/headless-react/ssr-commerce';
 // import {SortBy, SortCriterion} from '@coveo/headless-react/ssr-commerce';
 import {useSort} from '@/lib/commerce-engine';
-import {SortBy, SortCriterion} from '@coveo/headless-react/ssr-commerce';
 
 export default function Sort() {
   const {state, methods} = useSort();
@@ -26,6 +26,19 @@ export default function Sort() {
     }
   };
 
+  const getSortId = (sort: SortCriterion) => {
+    switch (sort.by) {
+      case SortBy.Relevance:
+        return 'relevance';
+      case SortBy.Fields:
+        return sort.fields
+          .map((field) => `${field.name}-${field.direction ?? ''}`)
+          .join(',');
+      default:
+        return '';
+    }
+  };
+
   return (
     <div className="Sort">
       <label htmlFor="sport-select">Sort by: </label>
@@ -36,9 +49,9 @@ export default function Sort() {
         onChange={(e) => methods?.sortBy(JSON.parse(e.target.value))}
         disabled={!methods}
       >
-        {state.availableSorts.map((sort, index) => (
+        {state.availableSorts.map((sort) => (
           <option
-            key={index}
+            key={getSortId(sort)}
             value={JSON.stringify(sort)}
             onSelect={() => methods?.sortBy(sort)}
           >

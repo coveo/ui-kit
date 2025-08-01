@@ -1,30 +1,25 @@
 import {
-  defaultBindings,
-  renderInAtomicCommerceRecommendationInterface,
-} from '@/vitest-utils/testing-helpers/fixtures/atomic/commerce/atomic-commerce-recommendation-interface-fixture.js';
+  buildRecommendations,
+  type InteractiveProduct,
+  type InteractiveProductProps,
+  type Product,
+} from '@coveo/headless/commerce';
+import {page} from '@vitest/browser/context';
+import {renderInAtomicCommerceRecommendationInterface} from '@/vitest-utils/testing-helpers/fixtures/atomic/commerce/atomic-commerce-recommendation-interface-fixture.js';
 import {buildFakeProduct} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/product.js';
 import {buildFakeRecommendations} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/recommendations-controller.js';
 import {buildFakeSummary} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/summary-subcontroller.js';
 import {genericSubscribe} from '@/vitest-utils/testing-helpers/fixtures/headless/common.js';
-import {
-  buildRecommendations,
-  InteractiveProduct,
-  InteractiveProductProps,
-  Product,
-} from '@coveo/headless/commerce';
-import {page} from '@vitest/browser/context';
 import '@vitest/browser/matchers.d.ts';
 import {html} from 'lit';
-import {describe, expect, vi, beforeEach, it} from 'vitest';
-import {
+import {beforeEach, describe, expect, it, vi} from 'vitest';
+import type {
   ItemDisplayBasicLayout,
   ItemDisplayDensity,
   ItemDisplayImageSize,
 } from '../../common/layout/display-options.js';
-// TODO: Replace with atomic-commerce-recommendation-interface bindings once it is merged (KIT-3934)
-import {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface.js';
 import './atomic-commerce-recommendation-list';
-import {AtomicCommerceRecommendationList} from './atomic-commerce-recommendation-list.js';
+import {AtomicCommerceRecommendationList} from './atomic-commerce-recommendation-list';
 
 vi.mock('@/src/components/common/interface/store', {spy: true});
 vi.mock('@coveo/headless/commerce', {spy: true});
@@ -47,79 +42,6 @@ describe('AtomicCommerceRecommendationList', () => {
       })
     );
   });
-
-  const setupElement = async ({
-    display = 'grid',
-    density = 'normal',
-    imageSize = 'small',
-    productsPerPage = 3,
-    isAppLoaded = true,
-  }: {
-    display?: ItemDisplayBasicLayout;
-    density?: ItemDisplayDensity;
-    imageSize?: ItemDisplayImageSize;
-    productsPerPage?: number;
-    isAppLoaded?: boolean;
-  } = {}) => {
-    const {element} =
-      await renderInAtomicCommerceRecommendationInterface<AtomicCommerceRecommendationList>(
-        {
-          template: html`<atomic-commerce-recommendation-list
-            .display=${display}
-            .density=${density}
-            .imageSize=${imageSize}
-            .productsPerPage=${productsPerPage}
-          ></atomic-commerce-recommendation-list>`,
-          selector: 'atomic-commerce-recommendation-list',
-          bindings: (
-            bindings: Partial<CommerceBindings> & typeof defaultBindings
-          ) => {
-            bindings.store.state.loadingFlags = isAppLoaded
-              ? []
-              : ['loading-flag'];
-            bindings.engine.logger = {error: vi.fn()} as never;
-            return bindings;
-          },
-        }
-      );
-
-    return element;
-  };
-
-  const getParts = (element: AtomicCommerceRecommendationList) => {
-    const qs = (part: string, exact = true) =>
-      element.shadowRoot?.querySelectorAll(
-        `[part${exact ? '' : '*'}="${part}"]`
-      );
-
-    return {
-      grid: {
-        outline: qs('outline', false),
-        resultList: qs('result-list'),
-        resultListGridClickableContainer: qs(
-          'result-list-grid-clickable-container',
-          false
-        ),
-        resultListGridClickable: qs('result-list-grid-clickable'),
-        label: qs('label'),
-        previousButton: qs('previous-button'),
-        nextButton: qs('next-button'),
-        indicators: qs('indicators'),
-        indicator: qs('indicator'),
-        activeIndicator: qs('active-indicator', false),
-      },
-      list: {
-        outline: qs('outline'),
-        resultList: qs('result-list'),
-        label: qs('label'),
-        previousButton: qs('previous-button'),
-        nextButton: qs('next-button'),
-        indicators: qs('indicators'),
-        indicator: qs('indicator'),
-        activeIndicator: qs('active-indicator', false),
-      },
-    };
-  };
 
   it('should initialize', async () => {
     const element = await setupElement();
@@ -691,8 +613,10 @@ describe('AtomicCommerceRecommendationList', () => {
 
         const element = await setupElement({display});
 
-        await element.updateComplete;
+        interactiveProduct.mockClear();
 
+        element.requestUpdate();
+        await element.updateComplete;
         const renderedProductElements =
           element.shadowRoot?.querySelectorAll('atomic-product');
 
@@ -870,3 +794,72 @@ describe('AtomicCommerceRecommendationList', () => {
     });
   };
 });
+const setupElement = async ({
+  display = 'grid',
+  density = 'normal',
+  imageSize = 'small',
+  productsPerPage = 3,
+  isAppLoaded = true,
+}: {
+  display?: ItemDisplayBasicLayout;
+  density?: ItemDisplayDensity;
+  imageSize?: ItemDisplayImageSize;
+  productsPerPage?: number;
+  isAppLoaded?: boolean;
+} = {}) => {
+  const {element} =
+    await renderInAtomicCommerceRecommendationInterface<AtomicCommerceRecommendationList>(
+      {
+        template: html`<atomic-commerce-recommendation-list
+            .display=${display}
+            .density=${density}
+            .imageSize=${imageSize}
+            .productsPerPage=${productsPerPage}
+          ></atomic-commerce-recommendation-list>`,
+        selector: 'atomic-commerce-recommendation-list',
+        bindings: (bindings) => {
+          bindings.store.state.loadingFlags = isAppLoaded
+            ? []
+            : ['loading-flag'];
+          bindings.engine.logger = {error: vi.fn()} as never;
+          return bindings;
+        },
+      }
+    );
+
+  await element.updateComplete;
+  return element;
+};
+
+const getParts = (element: AtomicCommerceRecommendationList) => {
+  const qs = (part: string, exact = true) =>
+    element.shadowRoot?.querySelectorAll(`[part${exact ? '' : '*'}="${part}"]`);
+
+  return {
+    grid: {
+      outline: qs('outline', false),
+      resultList: qs('result-list'),
+      resultListGridClickableContainer: qs(
+        'result-list-grid-clickable-container',
+        false
+      ),
+      resultListGridClickable: qs('result-list-grid-clickable'),
+      label: qs('label'),
+      previousButton: qs('previous-button'),
+      nextButton: qs('next-button'),
+      indicators: qs('indicators'),
+      indicator: qs('indicator'),
+      activeIndicator: qs('active-indicator', false),
+    },
+    list: {
+      outline: qs('outline'),
+      resultList: qs('result-list'),
+      label: qs('label'),
+      previousButton: qs('previous-button'),
+      nextButton: qs('next-button'),
+      indicators: qs('indicators'),
+      indicator: qs('indicator'),
+      activeIndicator: qs('active-indicator', false),
+    },
+  };
+};

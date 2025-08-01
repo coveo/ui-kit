@@ -1,6 +1,8 @@
-import {CommerceEngine} from '../../../app/commerce-engine/commerce-engine.js';
+import type {CommerceEngine} from '../../../app/commerce-engine/commerce-engine.js';
 import {configuration} from '../../../app/common-reducers.js';
 import {stateKey} from '../../../app/state-key.js';
+import type {UpdateQueryPayload} from '../../../features/commerce/query/query-actions.js';
+import {queryReducer as commerceQuery} from '../../../features/commerce/query/query-slice.js';
 import {
   registerQuerySetQuery,
   updateQuerySetQuery,
@@ -11,17 +13,15 @@ import {
   registerQuerySuggest,
   selectQuerySuggestion,
 } from '../../../features/commerce/query-suggest/query-suggest-actions.js';
-import {UpdateQueryPayload} from '../../../features/commerce/query/query-actions.js';
-import {queryReducer as commerceQuery} from '../../../features/commerce/query/query-slice.js';
-import {executeSearch} from '../../../features/commerce/search/search-actions.js';
 import {
-  PrepareForSearchWithQueryOptions,
+  executeSearch,
+  type PrepareForSearchWithQueryOptions,
   prepareForSearchWithQuery,
 } from '../../../features/commerce/search/search-actions.js';
 import {commerceSearchReducer as commerceSearch} from '../../../features/commerce/search/search-slice.js';
 import {querySetReducer as querySet} from '../../../features/query-set/query-set-slice.js';
 import {querySuggestReducer as querySuggest} from '../../../features/query-suggest/query-suggest-slice.js';
-import {
+import type {
   CommerceQuerySection,
   CommerceSearchSection,
   ConfigurationSection,
@@ -29,33 +29,22 @@ import {
   QuerySuggestionSection,
 } from '../../../state/state-sections.js';
 import {loadReducerError} from '../../../utils/errors.js';
-import {
-  Delimiters,
-  SuggestionHighlightingOptions,
-} from '../../../utils/highlight.js';
 import {randomID} from '../../../utils/utils.js';
 import {validateOptions} from '../../../utils/validate-payload.js';
 import {buildController} from '../../controller/headless-controller.js';
 import {
+  type SearchBox as CoreSearchBox,
   getSuggestions,
-  SearchBoxState,
-  SearchBox as CoreSearchBox,
-  Suggestion,
+  type SearchBoxState,
+  type Suggestion,
 } from '../../core/search-box/headless-core-search-box.js';
 import {
   defaultSearchBoxOptions,
-  SearchBoxOptions,
+  type SearchBoxOptions,
   searchBoxOptionsSchema,
 } from './headless-search-box-options.js';
 
-export type {
-  SearchBoxOptions,
-  SearchBoxState,
-  SuggestionHighlightingOptions,
-  Suggestion,
-  Delimiters,
-  CoreSearchBox,
-};
+export type {SearchBoxOptions, SearchBoxState, Suggestion, CoreSearchBox};
 
 export interface SearchBoxProps {
   /**

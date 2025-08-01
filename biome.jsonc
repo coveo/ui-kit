@@ -1,0 +1,71 @@
+{
+  "$schema": "https://biomejs.dev/schemas/2.0.6/schema.json",
+  "vcs": {"enabled": true, "clientKind": "git", "useIgnoreFile": true},
+  "root": true,
+  "plugins": [
+    "./packages/atomic/biome-rules/no-tolocalestring-without-locale.grit"
+  ],
+  "files": {
+    "ignoreUnknown": false,
+    "maxSize": 2097152,
+    "includes": [
+      "**",
+      // Packages that should be excluded: quantic uses eslint, create-atomic-template is a template.
+      "!**/packages/quantic/**/*",
+      "!**/packages/create-atomic-template/**/*",
+      "!**/packages/create-atomic-component/template/**/*",
+      "!**/packages/create-atomic-component-project/template/**/*",
+
+      // Root excluded files.
+      "!**/.deployment.config.json",
+
+      // atomic excluded files.
+      "!**/packages/atomic/**/cypress/**/*",
+      "!**/packages/atomic/**/*.tsx", // Exclude tsx files during Lit migration.
+      "**/packages/atomic/**/*.stories.tsx", // Reinclude storybook stories.
+      "!**/packages/atomic/**/*.d.ts",
+
+      // atomic-angular excluded files.
+      "!**/packages/atomic-angular/**/stencil-generated/**/*",
+
+      // atomic-react excluded files.
+      "!**/packages/atomic-react/**/stencil-generated/**/*",
+
+      // documentation excluded files.
+      "!**/packages/documentation/**/assets/**/*",
+
+      // headless excluded files.
+      "!**/packages/headless/**/coveo.analytics/**/*",
+
+      // atomic-stencil-samples excluded files.
+      "!**/packages/samples/stencil/**/*.d.ts"
+    ]
+  },
+  "formatter": {
+    "enabled": true,
+    "indentStyle": "space",
+    "bracketSpacing": false,
+    "includes": ["**"]
+  },
+  "linter": {
+    "enabled": true,
+    "rules": {
+      "recommended": true,
+      "style": {"noNonNullAssertion": "off"},
+      "complexity": {"noBannedTypes": "off"},
+      "correctness": {"noUnknownFunction": "off"}
+    },
+    "includes": ["**"]
+  },
+  "javascript": {
+    "formatter": {
+      "trailingCommas": "es5",
+      "quoteStyle": "single"
+    }
+  },
+  "html": {"formatter": {"selfCloseVoidElements": "always"}},
+  "assist": {
+    "enabled": true,
+    "actions": {"source": {"organizeImports": "on"}}
+  }
+}

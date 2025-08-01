@@ -1,12 +1,12 @@
+import {readFileSync} from 'node:fs';
+import {dirname, join} from 'node:path';
+import {fileURLToPath} from 'node:url';
 import commonjs from '@rollup/plugin-commonjs';
 import json from '@rollup/plugin-json';
 import {nodeResolve} from '@rollup/plugin-node-resolve';
 import typescript from '@rollup/plugin-typescript';
-import {readFileSync} from 'fs';
-import {join, dirname} from 'path';
 import {defineConfig} from 'rollup';
 import nodePolyfills from 'rollup-plugin-polyfill-node';
-import {fileURLToPath} from 'url';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -35,7 +35,7 @@ if (isCDN) {
     );
     headlessVersion = isNightly
       ? `v${headlessPackageJson.version.split('.').shift()}-nightly`
-      : 'v' + headlessPackageJson.version;
+      : `v${headlessPackageJson.version}`;
     console.log('Using headless version from package.json:', headlessVersion);
 
     const atomicPackageJson = JSON.parse(
@@ -43,7 +43,7 @@ if (isCDN) {
     );
     atomicVersion = isNightly
       ? `v${atomicPackageJson.version.split('.').shift()}-nightly`
-      : 'v' + atomicPackageJson.version;
+      : `v${atomicPackageJson.version}`;
     console.log('Using atomic version from package.json:', atomicVersion);
   } catch (error) {
     console.error('Error reading headless package.json:', error);

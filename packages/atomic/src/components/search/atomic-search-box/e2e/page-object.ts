@@ -1,5 +1,5 @@
+import type {Page} from '@playwright/test';
 import {BasePageObject} from '@/playwright-utils/base-page-object';
-import {Page} from '@playwright/test';
 
 export class SearchBoxPageObject extends BasePageObject<'atomic-search-box'> {
   constructor(page: Page) {
@@ -38,7 +38,11 @@ export class SearchBoxPageObject extends BasePageObject<'atomic-search-box'> {
     index,
     total,
     listSide,
-  }: {index?: number; total?: number; listSide?: 'Left' | 'Right'} = {}) {
+  }: {
+    index?: number;
+    total?: number;
+    listSide?: 'Left' | 'Right';
+  } = {}) {
     return this.page.getByLabel(
       new RegExp(
         `suggested query\\.(?: Button\\.)? ${index ?? '\\d'} of ${total ?? '\\d'}\\.${this.listSideAffix(listSide)}`
@@ -50,7 +54,11 @@ export class SearchBoxPageObject extends BasePageObject<'atomic-search-box'> {
     index,
     total,
     listSide,
-  }: {index?: number; total?: number; listSide?: 'Left' | 'Right'} = {}) {
+  }: {
+    index?: number;
+    total?: number;
+    listSide?: 'Left' | 'Right';
+  } = {}) {
     return this.page.getByLabel(
       new RegExp(
         `recent query\\.(?: Button\\.)? ${index ?? '\\d'} of ${total ?? '\\d'}\\.${this.listSideAffix(listSide)}`
@@ -62,7 +70,11 @@ export class SearchBoxPageObject extends BasePageObject<'atomic-search-box'> {
     index,
     total,
     listSide,
-  }: {index?: number; total?: number; listSide?: 'Left' | 'Right'} = {}) {
+  }: {
+    index?: number;
+    total?: number;
+    listSide?: 'Left' | 'Right';
+  } = {}) {
     return this.page.getByLabel(
       new RegExp(
         `instant result\\.(?: Button\\.)? ${index ?? '\\d'} of ${total ?? '\\d'}\\.${this.listSideAffix(listSide)}`

@@ -1,21 +1,21 @@
 import {createReducer} from '@reduxjs/toolkit';
-import {CommerceAPIErrorStatusResponse} from '../../../api/commerce/commerce-api-error-response.js';
-import {
-  Product,
+import type {CommerceAPIErrorStatusResponse} from '../../../api/commerce/commerce-api-error-response.js';
+import type {
   BaseProduct,
   ChildProduct,
+  Product,
 } from '../../../api/commerce/common/product.js';
-import {CommerceSuccessResponse} from '../../../api/commerce/common/response.js';
+import type {CommerceSuccessResponse} from '../../../api/commerce/common/response.js';
 import {setContext, setView} from '../context/context-actions.js';
 import {
   fetchMoreProducts,
   fetchProductListing,
   promoteChildToParent,
-  QueryCommerceAPIThunkReturn,
+  type QueryCommerceAPIThunkReturn,
 } from './product-listing-actions.js';
 import {
-  ProductListingState,
   getProductListingInitialState,
+  type ProductListingState,
 } from './product-listing-state.js';
 
 export const productListingReducer = createReducer(
@@ -57,7 +57,7 @@ export const productListingReducer = createReducer(
       })
       .addCase(promoteChildToParent, (state, action) => {
         const {products} = state;
-        let childToPromote;
+        let childToPromote: ChildProduct | undefined;
         const currentParentIndex = products.findIndex((product) => {
           childToPromote = product.children.find(
             (child) => child.permanentid === action.payload.child.permanentid
@@ -122,7 +122,11 @@ function preprocessProduct(product: BaseProduct, position: number): Product {
     return {...product, position};
   }
 
-  const {children, totalNumberOfChildren, ...restOfProduct} = product;
+  const {
+    children,
+    totalNumberOfChildren: _totalNumberOfChildren,
+    ...restOfProduct
+  } = product;
 
   return {
     ...product,

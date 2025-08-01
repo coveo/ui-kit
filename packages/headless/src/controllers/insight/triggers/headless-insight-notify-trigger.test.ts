@@ -1,11 +1,11 @@
 import {
   buildMockInsightEngine,
-  MockedInsightEngine,
+  type MockedInsightEngine,
 } from '../../../test/mock-engine-v2.js';
 import {buildMockInsightState} from '../../../test/mock-insight-state.js';
 import {
-  NotifyTrigger,
   buildNotifyTrigger,
+  type NotifyTrigger,
 } from './headless-insight-notify-trigger.js';
 
 vi.mock('../../../features/insight-search/insight-search-actions');

@@ -1,15 +1,15 @@
-import {AsyncThunkAction, PayloadAction} from '@reduxjs/toolkit';
-import {AsyncThunkCommerceOptions} from '../../../api/commerce/commerce-api-client.js';
-import {CommerceEngine} from '../../../app/commerce-engine/commerce-engine.js';
+import type {AsyncThunkAction, PayloadAction} from '@reduxjs/toolkit';
+import type {AsyncThunkCommerceOptions} from '../../../api/commerce/commerce-api-client.js';
+import type {CommerceEngine} from '../../../app/commerce-engine/commerce-engine.js';
 import {
-  ClearQuerySuggestPayload,
-  FetchQuerySuggestionsPayload,
-  FetchQuerySuggestionsThunkReturn,
-  RegisterQuerySuggestPayload,
-  SelectQuerySuggestionPayload,
-  StateNeededByQuerySuggest,
+  type ClearQuerySuggestPayload,
   clearQuerySuggest,
+  type FetchQuerySuggestionsPayload,
+  type FetchQuerySuggestionsThunkReturn,
+  type RegisterQuerySuggestPayload,
   registerQuerySuggest,
+  type SelectQuerySuggestionPayload,
+  type StateNeededByQuerySuggest,
   selectQuerySuggestion,
 } from '../../../features/commerce/query-suggest/query-suggest-actions.js';
 import {querySuggestReducer as querySuggest} from '../../query-suggest/query-suggest-slice.js';

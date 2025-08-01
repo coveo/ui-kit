@@ -1,4 +1,4 @@
-import {test, expect} from '@playwright/test';
+import {expect, test} from '@playwright/test';
 
 test.describe('smoke test', () => {
   test.use({viewport: {width: 2000, height: 2000}});
@@ -11,6 +11,11 @@ test.describe('smoke test', () => {
     const searchBox = page.locator('atomic-search-box');
     await expect(searchBox).toBeVisible();
 
+    const querySummary = page.locator('atomic-query-summary');
+
+    await querySummary.waitFor();
+    await querySummary.locator('div[part="container"]').waitFor();
+
     const textarea = searchBox.locator('textarea[part="textarea"]');
     await textarea.fill('test');
     await textarea.press('Enter');
@@ -20,7 +25,6 @@ test.describe('smoke test', () => {
     await expect(facet).toBeVisible();
 
     // Verify query summary
-    const querySummary = page.locator('atomic-query-summary');
     await expect(querySummary).toBeVisible();
 
     const summaryContainer = querySummary.locator('div[part="container"]');
@@ -49,13 +53,17 @@ test.describe('smoke test', () => {
     const searchBox = page.locator('atomic-commerce-search-box');
     await expect(searchBox).toBeVisible();
 
+    const querySummary = page.locator('atomic-commerce-query-summary');
+
+    await querySummary.waitFor();
+    await querySummary.locator('div[part="container"]').waitFor();
+
     // Perform a search query
     const textarea = searchBox.locator('textarea[part="textarea"]');
     await textarea.fill('shoe');
     await textarea.press('Enter');
 
     // Verify query summary
-    const querySummary = page.locator('atomic-commerce-query-summary');
     await expect(querySummary).toBeVisible();
 
     const summaryContainer = querySummary.locator('div[part="container"]');

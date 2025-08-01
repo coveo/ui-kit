@@ -11,17 +11,16 @@
     "build:next": "next build"
   },
   "dependencies": {
-    "@coveo/headless-react": "2.4.32",
+    "@coveo/headless-react": "2.4.39",
     "next": "15.2.4",
     "react": "19.1.0",
     "react-dom": "19.1.0"
   },
   "devDependencies": {
-    "@types/node": "22.15.32",
+    "@types/node": "22.16.4",
     "@types/react": "19.1.1",
     "@types/react-dom": "19.1.2",
-    "@playwright/test": "1.53.0",
-    "eslint": "8.57",
+    "@playwright/test": "1.54.1",
     "typescript": "5.8.3"
   }
 }

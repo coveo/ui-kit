@@ -1,4 +1,4 @@
-import {
+import type {
   Product,
   ProductList,
   Recommendations,
@@ -6,7 +6,7 @@ import {
 import Image from 'next/image';
 import {useRouter} from 'next/navigation';
 
-export interface ProductButtonWithImageProps {
+interface ProductButtonWithImageProps {
   methods:
     | Omit<Recommendations, 'state' | 'subscribe'>
     | Omit<ProductList, 'state' | 'subscribe'>
@@ -28,7 +28,11 @@ export default function ProductButtonWithImage({
   };
 
   return (
-    <button disabled={!methods} onClick={() => onProductClick(product)}>
+    <button
+      type="button"
+      disabled={!methods}
+      onClick={() => onProductClick(product)}
+    >
       {product.ec_name}
       <Image
         src={product.ec_images[0]}

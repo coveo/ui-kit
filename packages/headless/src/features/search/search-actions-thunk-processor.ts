@@ -1,16 +1,16 @@
 import {isNullOrUndefined} from '@coveo/bueno';
-import {AnyAction} from '@reduxjs/toolkit';
-import {ThunkDispatch} from 'redux-thunk';
+import type {AnyAction} from '@reduxjs/toolkit';
+import type {ThunkDispatch} from 'redux-thunk';
+import type {SearchRequest} from '../../api/search/search/search-request.js';
 import {
   isErrorResponse,
   isSuccessResponse,
-  SearchAPIClient,
+  type SearchAPIClient,
 } from '../../api/search/search-api-client.js';
-import {SearchAPIErrorWithStatusCode} from '../../api/search/search-api-error-response.js';
-import {SearchOrigin} from '../../api/search/search-metadata.js';
-import {SearchRequest} from '../../api/search/search/search-request.js';
-import {ClientThunkExtraArguments} from '../../app/thunk-extra-arguments.js';
-import {
+import type {SearchAPIErrorWithStatusCode} from '../../api/search/search-api-error-response.js';
+import type {SearchOrigin} from '../../api/search/search-metadata.js';
+import type {ClientThunkExtraArguments} from '../../app/thunk-extra-arguments.js';
+import type {
   AdvancedSearchQueriesSection,
   CategoryFacetSection,
   ConfigurationSection,
@@ -42,17 +42,17 @@ import {
   applyQueryTriggerModification,
   updateIgnoreQueryTrigger,
 } from '../triggers/triggers-actions.js';
-import {ExecuteSearchThunkReturn} from './search-actions.js';
+import type {ExecuteSearchThunkReturn} from './search-actions.js';
 import {logQueryError} from './search-analytics-actions.js';
 import {
-  ErrorResponse,
-  MappedSearchRequest,
+  type ErrorResponse,
+  type MappedSearchRequest,
   mapSearchResponse,
-  SuccessResponse,
+  type SuccessResponse,
 } from './search-mappings.js';
 import {buildSearchRequest} from './search-request.js';
 
-export interface AnalyticsAction {
+interface AnalyticsAction {
   actionCause?: string;
 }
 
@@ -91,7 +91,7 @@ type ValidReturnTypeFromProcessingStep<RejectionType> =
   | ExecuteSearchThunkReturn
   | RejectionType;
 
-export interface AsyncThunkConfig {
+interface AsyncThunkConfig {
   getState: () => StateNeededByExecuteSearch;
   dispatch: ThunkDispatch<
     StateNeededByExecuteSearch,
@@ -108,7 +108,7 @@ export interface AsyncThunkConfig {
 
 type QueryCorrectionCallback = (modification: string) => void;
 
-export interface FetchFromAPIOptions {
+interface FetchFromAPIOptions {
   origin: SearchOrigin;
   disableAbortWarning?: boolean;
 }
@@ -127,12 +127,12 @@ export class AsyncSearchThunkProcessor<RejectionType> {
     {mappings, request}: MappedSearchRequest,
     options: FetchFromAPIOptions
   ) {
-    const startedAt = new Date().getTime();
+    const startedAt = Date.now();
     const response = mapSearchResponse(
       await this.extra.apiClient.search(request, options),
       mappings
     );
-    const duration = new Date().getTime() - startedAt;
+    const duration = Date.now() - startedAt;
     const queryExecuted = this.getState().query?.q || '';
     return {response, duration, queryExecuted, requestExecuted: request};
   }

@@ -10,7 +10,7 @@ import {
 } from '@stencil/core';
 import DOMPurify from 'dompurify';
 import {sanitizeStyle} from '../../../../utils/utils';
-import {bindAnalyticsToLink} from '../../item-link/item-link';
+import {bindAnalyticsToLink} from '../../item-link/bind-analytics-to-link';
 
 /**
  * @part answer - The container displaying the full document excerpt.

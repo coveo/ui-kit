@@ -1,36 +1,36 @@
 import {createSelector} from '@reduxjs/toolkit';
-import {
+import type {
   CommerceEngine,
   CommerceEngineState,
 } from '../../../../../app/commerce-engine/commerce-engine.js';
 import {stateKey} from '../../../../../app/state-key.js';
 import {clearAllCoreFacets} from '../../../../../features/commerce/facets/core-facet/core-facet-actions.js';
 import {commerceFacetSetReducer as commerceFacetSet} from '../../../../../features/commerce/facets/facet-set/facet-set-slice.js';
-import {CommerceFacetSetState} from '../../../../../features/commerce/facets/facet-set/facet-set-state.js';
-import {FacetType} from '../../../../../features/commerce/facets/facet-set/interfaces/common.js';
-import {AnyFacetValueResponse} from '../../../../../features/commerce/facets/facet-set/interfaces/response.js';
+import type {CommerceFacetSetState} from '../../../../../features/commerce/facets/facet-set/facet-set-state.js';
+import type {FacetType} from '../../../../../features/commerce/facets/facet-set/interfaces/common.js';
+import type {AnyFacetValueResponse} from '../../../../../features/commerce/facets/facet-set/interfaces/response.js';
 import {facetOrderReducer as facetOrder} from '../../../../../features/facets/facet-order/facet-order-slice.js';
-import {AnyFacetValueRequest} from '../../../../../features/facets/generic/interfaces/generic-facet-request.js';
-import {
+import type {AnyFacetValueRequest} from '../../../../../features/facets/generic/interfaces/generic-facet-request.js';
+import type {
   CommerceFacetSetSection,
   FacetOrderSection,
 } from '../../../../../state/state-sections.js';
 import {loadReducerError} from '../../../../../utils/errors.js';
 import {
-  Controller,
   buildController,
+  type Controller,
 } from '../../../../controller/headless-controller.js';
-import {FetchProductsActionCreator} from '../../common.js';
-import {CategoryFacet} from '../category/headless-commerce-category-facet.js';
-import {DateFacet} from '../date/headless-commerce-date-facet.js';
-import {
+import type {FetchProductsActionCreator} from '../../common.js';
+import type {CategoryFacet} from '../category/headless-commerce-category-facet.js';
+import type {DateFacet} from '../date/headless-commerce-date-facet.js';
+import type {
   CommerceFacetOptions,
   CoreCommerceFacet,
 } from '../headless-core-commerce-facet.js';
-import {LocationFacet} from '../location/headless-commerce-location-facet.js';
-import {NumericFacet} from '../numeric/headless-commerce-numeric-facet.js';
-import {RegularFacet} from '../regular/headless-commerce-regular-facet.js';
-import {SearchableFacetOptions} from '../searchable/headless-commerce-searchable-facet.js';
+import type {LocationFacet} from '../location/headless-commerce-location-facet.js';
+import type {NumericFacet} from '../numeric/headless-commerce-numeric-facet.js';
+import type {RegularFacet} from '../regular/headless-commerce-regular-facet.js';
+import type {SearchableFacetOptions} from '../searchable/headless-commerce-searchable-facet.js';
 
 /**
  * The `FacetGenerator` headless sub-controller creates commerce facet sub-controllers from the Commerce API search or

@@ -1,24 +1,18 @@
 import {testInsight, expect} from './fixture';
 
 const test = testInsight;
-let consoleErrors: string[] = [];
 
 test.describe('Example Insight Panel E2E Tests', () => {
-  test.beforeEach(async ({page}) => {
-    consoleErrors = [];
-    page.on('console', (msg) => {
-      if (msg.type() === 'error') {
-        consoleErrors.push(msg.text());
-      }
-    });
-  });
-
   test.describe('when loading the Insight Panel', () => {
     test('should render correctly and load results automatically', async ({
       insightPanel,
+      consoleErrors,
     }) => {
       await expect(insightPanel.errorComponent).not.toBeVisible();
-      expect(consoleErrors.length).toBe(0);
+      // Check for console errors, excluding a common 403 error that can occur because we use an API key and not a platform token.
+      const consoleErrorWithout403 = consoleErrors.filter((error) => !error.includes('Failed to load resource: the server responded with a status of 403 ()'));
+      expect(consoleErrorWithout403.length).toBe(0);
+
       expect(insightPanel.insightPanel).toBeVisible();
       expect(insightPanel.searchbox).toBeVisible();
       expect(insightPanel.refineToggle).toBeVisible();

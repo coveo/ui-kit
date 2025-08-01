@@ -1,11 +1,11 @@
 import {
-  RecentResultsListOptions,
-  RecentResultsList as HeadlessRecentResultsList,
-  Unsubscribe,
   buildRecentResultsList,
-  RecentResultsState,
+  type RecentResultsList as HeadlessRecentResultsList,
+  type RecentResultsListOptions,
+  type RecentResultsState,
+  type Unsubscribe,
 } from '@coveo/headless';
-import {Component, ContextType} from 'react';
+import {Component, type ContextType} from 'react';
 import {AppContext} from '../../context/engine';
 
 export class RecentResultsList extends Component<

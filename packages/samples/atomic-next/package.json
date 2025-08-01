@@ -4,19 +4,18 @@
   "private": true,
   "type": "module",
   "dependencies": {
-    "@coveo/atomic": "3.27.3",
-    "@coveo/atomic-react": "3.2.47",
-    "@coveo/headless": "3.27.0",
+    "@coveo/atomic": "3.31.1",
+    "@coveo/atomic-react": "3.2.54",
+    "@coveo/headless": "3.27.7",
     "next": "15.2.4",
     "react": "19.1.0",
     "react-dom": "19.1.0"
   },
   "devDependencies": {
-    "@types/node": "22.15.32",
+    "@types/node": "22.16.4",
     "@types/react": "19.1.1",
     "@types/react-dom": "19.1.2",
     "cypress": "13.7.3",
-    "cypress-repeat": "2.3.9",
     "ncp": "2.0.0",
     "typescript": "5.8.3"
   },

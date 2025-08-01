@@ -1,6 +1,6 @@
-import {BrowserFetch, getBrowserFetch} from './browser-fetch';
-import {getBrowserHistory, BrowserHistory} from './browser-history';
-import {getBrowserLocation, BrowserLocation} from './browser-location';
+import {type BrowserFetch, getBrowserFetch} from './browser-fetch';
+import {type BrowserHistory, getBrowserHistory} from './browser-history';
+import {type BrowserLocation, getBrowserLocation} from './browser-location';
 
 export interface SamlFlowOptions {
   organizationId: string;
@@ -51,7 +51,7 @@ export function buildSamlFlow(config: SamlFlowOptions): SamlFlow {
         );
         const data = await response.json();
         return data.token;
-      } catch (e) {
+      } catch (_) {
         return '';
       }
     },

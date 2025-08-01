@@ -1,9 +1,9 @@
-import {InsightPanel} from '@coveo/relay-event-types';
-import {Result} from '../../api/search/search/result.js';
+import type {InsightPanel} from '@coveo/relay-event-types';
+import type {Result} from '../../api/search/search/result.js';
 import {
   analyticsEventItemMetadata,
   documentIdentifier,
-  InsightAction,
+  type InsightAction,
   makeInsightAnalyticsActionFactory,
   partialDocumentInformation,
   validateResultPayload,

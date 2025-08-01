@@ -1,5 +1,5 @@
-import {Result} from '../../api/search/search/result.js';
-import {SearchEngine} from '../../app/search-engine/search-engine.js';
+import type {Result} from '../../api/search/search/result.js';
+import type {SearchEngine} from '../../app/search-engine/search-engine.js';
 import {logOpenSmartSnippetSuggestionSource} from '../../features/question-answering/question-answering-analytics-actions.js';
 import {
   answerSourceSelector,
@@ -8,31 +8,31 @@ import {
 import {questionAnsweringReducer as questionAnswering} from '../../features/question-answering/question-answering-slice.js';
 import {pushRecentResult} from '../../features/recent-results/recent-results-actions.js';
 import {searchReducer as search} from '../../features/search/search-slice.js';
-import {QuestionAnsweringSection} from '../../state/state-sections.js';
+import type {QuestionAnsweringSection} from '../../state/state-sections.js';
 import {loadReducerError} from '../../utils/errors.js';
 import {
   buildInteractiveResultCore,
-  InteractiveResultCore,
+  type InteractiveResultCore,
 } from '../core/interactive-result/headless-core-interactive-result.js';
 
 /**
  * @internal
  */
-export interface SmartSnippetInteractiveQuestionsOptions {
+interface SmartSnippetInteractiveQuestionsOptions {
   selectionDelay?: number;
 }
 
 /**
  * @internal
  */
-export interface SmartSnippetInteractiveQuestionsProps {
+interface SmartSnippetInteractiveQuestionsProps {
   options?: SmartSnippetInteractiveQuestionsOptions;
 }
 
 /**
  * @internal
  */
-export interface SmartSnippetInteractiveQuestions {
+interface SmartSnippetInteractiveQuestions {
   selectSource(questionAnswerId: string): void;
   beginDelayedSelectSource(questionAnswerId: string): void;
   cancelPendingSelectSource(questionAnswerId: string): void;

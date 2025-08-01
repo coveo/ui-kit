@@ -1,7 +1,7 @@
-import {FunctionalComponent} from '@/src/utils/functional-component-utils';
-import {i18n} from 'i18next';
+import type {i18n} from 'i18next';
 import {html, nothing} from 'lit';
 import {when} from 'lit/directives/when.js';
+import type {FunctionalComponent} from '@/src/utils/functional-component-utils';
 import ArrowBottomIcon from '../../../../images/arrow-bottom-rounded.svg';
 import ArrowTopIcon from '../../../../images/arrow-top-rounded.svg';
 import CloseIcon from '../../../../images/close.svg';
@@ -48,8 +48,8 @@ export const renderFacetHeader: FunctionalComponent<FacetHeaderProps> = ({
       },
     })(
       html`${renderHeading({
-          props: {level: props.headingLevel, class: 'truncate'},
-        })(html`${label}`)}
+        props: {level: props.headingLevel, class: 'truncate'},
+      })(html`${label}`)}
         <atomic-icon
           part="label-button-icon"
           class="ml-4 w-3 shrink-0 self-center"

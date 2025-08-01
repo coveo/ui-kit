@@ -22,10 +22,10 @@
 
 .quickview__button-base:not([disabled]):hover {
   background-color: #f6f7f9;
-  box-shadow: 0 0 0px 0.25rem #f6f7f9;
+  box-shadow: 0 0 0 0.25rem #f6f7f9;
 }
 
-.slds-modal__footer{
+.quickview-modal__footer {
   background-color: white;
   text-align: unset;
 }

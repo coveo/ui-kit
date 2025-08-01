@@ -1,6 +1,6 @@
 import {html, LitElement} from 'lit';
 import {customElement, property} from 'lit/decorators.js';
-import {describe, beforeEach, afterEach, test, expect} from 'vitest';
+import {afterEach, beforeEach, describe, expect, test} from 'vitest';
 import {displayIf} from './display-if';
 
 describe('displayIf', () => {

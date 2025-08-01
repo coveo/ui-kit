@@ -2,11 +2,11 @@ import {createAction, createAsyncThunk} from '@reduxjs/toolkit';
 import {getVisitorID} from '../../api/analytics/coveo-analytics-utils.js';
 import {getOrganizationEndpoint} from '../../api/platform-client.js';
 import {isErrorResponse} from '../../api/search/search-api-client.js';
-import {AsyncThunkCaseAssistOptions} from '../../api/service/case-assist/case-assist-api-client.js';
+import type {AsyncThunkCaseAssistOptions} from '../../api/service/case-assist/case-assist-api-client.js';
 import {prepareContextFromFields} from '../../api/service/case-assist/case-assist-params.js';
-import {GetCaseClassificationsRequest} from '../../api/service/case-assist/get-case-classifications/get-case-classifications-request.js';
-import {GetCaseClassificationsResponse} from '../../api/service/case-assist/get-case-classifications/get-case-classifications-response.js';
-import {
+import type {GetCaseClassificationsRequest} from '../../api/service/case-assist/get-case-classifications/get-case-classifications-request.js';
+import type {GetCaseClassificationsResponse} from '../../api/service/case-assist/get-case-classifications/get-case-classifications-response.js';
+import type {
   CaseAssistConfigurationSection,
   CaseFieldSection,
   CaseInputSection,
@@ -14,9 +14,9 @@ import {
   DebugSection,
 } from '../../state/state-sections.js';
 import {
-  validatePayload,
-  requiredNonEmptyString,
   requiredEmptyAllowedString,
+  requiredNonEmptyString,
+  validatePayload,
 } from '../../utils/validate-payload.js';
 
 export interface SetCaseFieldActionCreatorPayload {
@@ -81,7 +81,7 @@ export const fetchCaseClassifications = createAsyncThunk<
     };
   }
 );
-export const buildFetchClassificationRequest = async (
+const buildFetchClassificationRequest = async (
   state: StateNeededByFetchClassifications
 ): Promise<GetCaseClassificationsRequest> => ({
   accessToken: state.configuration.accessToken,

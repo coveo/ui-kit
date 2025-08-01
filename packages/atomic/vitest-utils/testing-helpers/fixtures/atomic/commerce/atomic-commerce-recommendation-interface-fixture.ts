@@ -1,21 +1,21 @@
-import type {CommerceStore} from '@/src/components.js';
+import type {CommerceEngine} from '@coveo/headless/commerce';
+import {provide} from '@lit/context';
+import type {i18n} from 'i18next';
+import {html, LitElement, nothing, type TemplateResult} from 'lit';
+import {customElement, property, state} from 'lit/decorators.js';
+import {vi} from 'vitest';
+import type {CommerceStore} from '@/src/components/commerce/atomic-commerce-interface/store';
 import type {CommerceBindings} from '@/src/components/commerce/atomic-commerce-recommendation-interface/atomic-commerce-recommendation-interface.js';
 import type {BaseAtomicInterface} from '@/src/components/common/interface/interface-common.js';
 import {bindingsContext} from '@/src/components/context/bindings-context.js';
 import {
-  markParentAsReady,
   type InitializeEvent,
+  markParentAsReady,
 } from '@/src/utils/init-queue.js';
 import {initializeEventName} from '@/src/utils/initialization-lit-stencil-common-utils.js';
 import {fixture} from '@/vitest-utils/testing-helpers/fixture.js';
 import {genericSubscribe} from '@/vitest-utils/testing-helpers/fixtures/headless/common.js';
 import {createTestI18n} from '@/vitest-utils/testing-helpers/i18n-utils.js';
-import type {CommerceEngine} from '@coveo/headless/commerce';
-import {provide} from '@lit/context';
-import {type i18n} from 'i18next';
-import {html, LitElement, nothing, TemplateResult} from 'lit';
-import {customElement, property, state} from 'lit/decorators.js';
-import {vi} from 'vitest';
 
 @customElement('atomic-commerce-recommendation-interface')
 export class FixtureAtomicCommerceRecommendationInterface

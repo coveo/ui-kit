@@ -1,4 +1,4 @@
-import {SearchSection} from '../../state/state-sections.js';
+import type {SearchSection} from '../../state/state-sections.js';
 import {parseRankingInfo} from './ranking-info-parser.js';
 
 export function rankingInformationSelector(state: SearchSection) {

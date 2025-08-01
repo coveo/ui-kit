@@ -1,50 +1,48 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import {type Relay} from '@coveo/relay';
-import {
+import type {Relay} from '@coveo/relay';
+import type {
   Dispatch,
-  ThunkDispatch,
-  Unsubscribe,
-  ReducersMapObject,
-  StateFromReducersMapObject,
   Middleware,
   Reducer,
+  ReducersMapObject,
+  StateFromReducersMapObject,
+  ThunkDispatch,
   UnknownAction,
+  Unsubscribe,
 } from '@reduxjs/toolkit';
-import {Logger} from 'pino';
+import type {Logger} from 'pino';
 import {getRelayInstanceFromState} from '../api/analytics/analytics-relay-client.js';
 import {answerApi} from '../api/knowledge/stream-answer-api.js';
 import {
   disableAnalytics,
   enableAnalytics,
+  type UpdateAnalyticsConfigurationActionCreatorPayload,
   updateAnalyticsConfiguration,
-  UpdateAnalyticsConfigurationActionCreatorPayload,
   updateBasicConfiguration,
 } from '../features/configuration/configuration-actions.js';
-import {
+import type {
   ConfigurationState,
   CoreConfigurationState,
 } from '../features/configuration/configuration-state.js';
 import {versionReducer as version} from '../features/debug/version-slice.js';
-import {SearchParametersState} from '../state/search-app-state.js';
-import {isBrowser} from '../utils/runtime.js';
+import type {SearchParametersState} from '../state/search-app-state.js';
 import {doNotTrack} from '../utils/utils.js';
 import {analyticsMiddleware} from './analytics-middleware.js';
 import {configuration} from './common-reducers.js';
-import {EngineConfiguration} from './engine-configuration.js';
+import type {EngineConfiguration} from './engine-configuration.js';
 import {instantlyCallableThunkActionMiddleware} from './instantly-callable-middleware.js';
+import type {LoggerOptions} from './logger.js';
 import {logActionErrorMiddleware} from './logger-middlewares.js';
-import {LoggerOptions} from './logger.js';
 import {
-  NavigatorContext,
-  NavigatorContextProvider,
-  defaultBrowserNavigatorContextProvider,
-  defaultNodeJSNavigatorContextProvider,
+  getNavigatorContext,
+  type NavigatorContext,
+  type NavigatorContextProvider,
 } from './navigator-context-provider.js';
-import {createReducerManager, ReducerManager} from './reducer-manager.js';
+import {createReducerManager, type ReducerManager} from './reducer-manager.js';
 import {createRenewAccessTokenMiddleware} from './renew-access-token-middleware.js';
 import {stateKey} from './state-key.js';
-import {CoreExtraArguments, Store, configureStore} from './store.js';
-import {ThunkExtraArguments} from './thunk-extra-arguments.js';
+import {type CoreExtraArguments, configureStore, type Store} from './store.js';
+import type {ThunkExtraArguments} from './thunk-extra-arguments.js';
 
 export type CoreState<
   Configuration extends CoreConfigurationState = CoreConfigurationState,
@@ -273,7 +271,7 @@ export function buildCoreEngine<
   ExtraArguments,
   Configuration
 > {
-  const {reducers} = options;
+  const {reducers, navigatorContextProvider} = options;
   const reducerManager = createReducerManager(
     {...reducers, configurationReducer},
     options.preloadedState ?? {}
@@ -282,29 +280,13 @@ export function buildCoreEngine<
     reducerManager.addCrossReducer(options.crossReducer);
   }
   const logger = thunkExtraArguments.logger;
-  const getClientId = () => {
-    let clientId = '';
-    try {
-      clientId = getRelayInstanceFromState(engine.state).getMeta('').clientId;
-    } catch (e) {
-      logger.warn('Error while obtaining clientID from relay', e);
-    }
-    return clientId;
-  };
   const thunkExtraArgumentsWithRelay: CoreExtraArguments & ExtraArguments = {
     ...thunkExtraArguments,
     get relay() {
-      return getRelayInstanceFromState(engine.state);
+      return getRelayInstanceFromState(engine.state, navigatorContextProvider);
     },
     get navigatorContext() {
-      if (options.navigatorContextProvider) {
-        return options.navigatorContextProvider();
-      }
-      if (!isBrowser()) {
-        return defaultNodeJSNavigatorContextProvider();
-      }
-
-      return defaultBrowserNavigatorContextProvider(getClientId());
+      return getNavigatorContext(this.relay, navigatorContextProvider);
     },
   };
   const store = createStore(
@@ -340,18 +322,11 @@ export function buildCoreEngine<
     },
 
     get relay() {
-      return getRelayInstanceFromState(this.state);
+      return getRelayInstanceFromState(this.state, navigatorContextProvider);
     },
 
     get navigatorContext() {
-      if (options.navigatorContextProvider) {
-        return options.navigatorContextProvider();
-      }
-      if (!isBrowser()) {
-        return defaultNodeJSNavigatorContextProvider();
-      }
-
-      return defaultBrowserNavigatorContextProvider(getClientId());
+      return getNavigatorContext(this.relay, navigatorContextProvider);
     },
 
     logger,

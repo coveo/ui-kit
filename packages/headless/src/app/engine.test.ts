@@ -1,16 +1,15 @@
 import {
-  StateFromReducersMapObject,
   createAction,
   createReducer,
+  type StateFromReducersMapObject,
 } from '@reduxjs/toolkit';
 import * as Store from '../app/store.js';
 import {updateAnalyticsConfiguration} from '../features/configuration/configuration-actions.js';
-import {ConfigurationState} from '../features/configuration/configuration-state.js';
+import {buildMockNavigatorContextProvider} from '../test/mock-navigator-context-provider.js';
 import {buildMockThunkExtraArguments} from '../test/mock-thunk-extra-arguments.js';
 import {configuration} from './common-reducers.js';
+import {buildEngine, type CoreEngine, type EngineOptions} from './engine.js';
 import {getSampleEngineConfiguration} from './engine-configuration.js';
-import {buildEngine, CoreEngine, EngineOptions} from './engine.js';
-import {ThunkExtraArguments} from './thunk-extra-arguments.js';
 
 vi.mock(import('pino'), async (importOriginal) => {
   const mod = await importOriginal(); // type is inferred
@@ -25,13 +24,11 @@ vi.mock(import('pino'), async (importOriginal) => {
 
 describe('engine', () => {
   let options: EngineOptions<{}>;
-  let engine: CoreEngine<{}, ThunkExtraArguments, ConfigurationState>;
   let organizationId: string;
 
   function initEngine() {
     const thunkArguments = buildMockThunkExtraArguments();
-    engine = buildEngine(options, thunkArguments);
-    return engine;
+    return buildEngine(options, thunkArguments);
   }
 
   beforeEach(() => {
@@ -48,7 +45,7 @@ describe('engine', () => {
 
   it('registers the basic configuration', () => {
     const {accessToken, environment, organizationId} = options.configuration;
-    initEngine();
+    const engine = initEngine();
     expect(engine.state.configuration.accessToken).toBe(accessToken);
     expect(engine.state.configuration.environment).toBe(environment);
     expect(engine.state.configuration.organizationId).toBe(organizationId);
@@ -59,7 +56,7 @@ describe('engine', () => {
   it('when no reducers are specified, still registers the basic configuration correctly', () => {
     options.reducers = {};
     const {accessToken, environment, organizationId} = options.configuration;
-    initEngine();
+    const engine = initEngine();
     expect(engine.state.configuration.accessToken).toBe(accessToken);
     expect(engine.state.configuration.environment).toBe(environment);
     expect(engine.state.configuration.organizationId).toBe(organizationId);
@@ -86,7 +83,7 @@ describe('engine', () => {
       userDisplayName: 'userDisplayName',
     };
 
-    initEngine();
+    const engine = initEngine();
 
     const {analytics} = engine.state.configuration;
     const {proxyBaseUrl, ...restOfAnalyticsConfiguration} =
@@ -101,7 +98,7 @@ describe('engine', () => {
   it('should not throw an error if trackingId is not set in the analytics configuration and analyticsMode is next', () => {
     options.configuration.analytics = {analyticsMode: 'next'};
     delete options.configuration.analytics.trackingId;
-    initEngine();
+    const engine = initEngine();
 
     const {analytics} = engine.state.configuration;
     expect(analytics.enabled).toBe(true);
@@ -110,7 +107,7 @@ describe('engine', () => {
 
   it('calling #enableAnalytics sets #analytics.enabled to true', () => {
     options.configuration.analytics = {enabled: false};
-    initEngine();
+    const engine = initEngine();
 
     engine.enableAnalytics();
 
@@ -120,7 +117,7 @@ describe('engine', () => {
 
   it('calling #disableAnalytics sets #analytics.enabled to false', () => {
     options.configuration.analytics = {enabled: true};
-    initEngine();
+    const engine = initEngine();
 
     engine.disableAnalytics();
 
@@ -153,7 +150,7 @@ describe('engine', () => {
 
   it('when calling addReducers and all keys already exist, it does not update state', () => {
     options.reducers = {configuration};
-    initEngine();
+    const engine = initEngine();
 
     const stateListener = vi.fn();
 
@@ -258,5 +255,53 @@ describe('engine', () => {
       updateAnalyticsConfiguration({trackingId: 'newTrackingId'})
     );
     expect(engine.relay).not.toBe(oldRelay);
+  });
+
+  describe('navigatorContext', () => {
+    it('given nodejs environment, it returns falsy values', () => {
+      const engine = initEngine();
+      expect(engine.navigatorContext).toEqual({
+        referrer: null,
+        userAgent: null,
+        location: null,
+        clientId: '',
+      });
+    });
+
+    it('given custom context provider, it returns the values from the custom provider', () => {
+      const customProvider = buildMockNavigatorContextProvider({
+        clientId: 'b6ab9151-5886-48b5-b254-a381ed8f8a91',
+        location: 'http://example.com/',
+        referrer: 'http://example.com/referrer',
+        userAgent: 'Mozilla/5.0',
+        capture: true,
+        forwardedFor: '203.0.113.195',
+      });
+
+      options.navigatorContextProvider = customProvider;
+
+      const engine = initEngine();
+      expect(engine.navigatorContext).toEqual(customProvider());
+    });
+
+    it('given custom context provider, it truncates long urls', () => {
+      const urlLimit = 1024;
+      const longUrl = 'a'.repeat(urlLimit * 2);
+
+      const customProvider = buildMockNavigatorContextProvider({
+        clientId: 'b6ab9151-5886-48b5-b254-a381ed8f8a91',
+        location: longUrl,
+        referrer: longUrl,
+        userAgent: 'Mozilla/5.0',
+      });
+
+      options.navigatorContextProvider = customProvider;
+
+      const engine = initEngine();
+      const context = engine.navigatorContext;
+
+      expect(context.location).toHaveLength(urlLimit);
+      expect(context.referrer).toHaveLength(urlLimit);
+    });
   });
 });

@@ -1,9 +1,7 @@
-import {
+import type {
   BaseCommerceAPIRequest,
-  FilterableCommerceAPIRequest,
   PaginatedCommerceAPIRequest,
 } from '../api/commerce/common/request.js';
-import {SortBy, SortDirection} from '../features/sort/sort.js';
 
 export const buildMockBaseCommerceAPIRequest = (
   config?: Partial<BaseCommerceAPIRequest>
@@ -43,37 +41,5 @@ export const buildMockPaginatedCommerceAPIRequest = (
     page: 0,
     perPage: 10,
     ...config,
-  };
-};
-
-export const buildMockFilterableCommerceAPIRequest = (
-  config?: Partial<FilterableCommerceAPIRequest>
-): FilterableCommerceAPIRequest => {
-  return {
-    ...buildMockPaginatedCommerceAPIRequest(config),
-    facets: [
-      {
-        type: 'regular',
-        field: 'mock-regular-facet-field',
-        values: [
-          {state: 'selected', value: 'mock-selected-value'},
-          {state: 'excluded', value: 'mock-excluded-value'},
-          {state: 'idle', value: 'mock-idle-value'},
-        ],
-        facetId: 'mock-regular-facet-id',
-        initialNumberOfValues: 3,
-        isFieldExpanded: false,
-      },
-    ],
-    sort: {
-      sortCriteria: SortBy.Fields,
-      fields: [
-        {
-          field: 'mock-sort-field',
-          direction: SortDirection.Ascending,
-          displayName: 'Mock Sort Field (Ascending)',
-        },
-      ],
-    },
   };
 };

@@ -3,10 +3,10 @@ import {
   BooleanValue,
   NumberValue,
   RecordValue,
-  SchemaDefinition,
+  type SchemaDefinition,
   StringValue,
 } from '@coveo/bueno';
-import {FacetSearchRequestOptions} from '../../../../api/search/facet-search/base/base-facet-search-request.js';
+import type {FacetSearchRequestOptions} from '../../../../api/search/facet-search/base/base-facet-search-request.js';
 
 export const facetId = new StringValue({
   regex: /^[a-zA-Z0-9-_]+$/,
@@ -25,8 +25,8 @@ export const generateAutomaticRanges = new BooleanValue({
   required: true,
 }) as never;
 
-export const captions = new RecordValue();
-export const query = new StringValue();
+const captions = new RecordValue();
+const query = new StringValue();
 
 const facetSearchOptionDefinitions: SchemaDefinition<FacetSearchRequestOptions> =
   {

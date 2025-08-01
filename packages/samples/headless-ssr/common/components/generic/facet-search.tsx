@@ -1,5 +1,5 @@
-import {FacetState, Facet as FacetController} from '@coveo/headless/ssr';
-import {FunctionComponent, useEffect, useState} from 'react';
+import type {Facet as FacetController, FacetState} from '@coveo/headless/ssr';
+import {type FunctionComponent, useEffect, useState} from 'react';
 
 interface FacetSearchProps {
   staticState: FacetState;
@@ -32,6 +32,7 @@ export const FacetSearch: FunctionComponent<FacetSearchProps> = ({
         {state.facetSearch.values.map((facetSearchValue) => (
           <li key={facetSearchValue.rawValue}>
             <button
+              type="button"
               onClick={() => controller?.facetSearch.select(facetSearchValue)}
               disabled={state.values.some(
                 (value) =>

@@ -1,10 +1,10 @@
-import {createRipple} from '@/src/utils/ripple';
 import {fireEvent, within} from '@storybook/test';
 import {html, render} from 'lit';
-import {vi, describe, beforeEach, afterEach, it, expect} from 'vitest';
-import {renderRadioButton, RadioButtonProps} from './radio-button';
+import {afterEach, beforeEach, describe, expect, it, vi} from 'vitest';
+import {createRipple} from '@/src/utils/ripple';
+import {type RadioButtonProps, renderRadioButton} from './radio-button';
 
-vi.mock('@/src/utils/ripple');
+vi.mock('../../utils/ripple');
 
 describe('radioButton', () => {
   let container: HTMLElement;

@@ -1,14 +1,14 @@
-import {InsightEngine} from '../../../app/insight-engine/insight-engine.js';
+import type {InsightEngine} from '../../../app/insight-engine/insight-engine.js';
 import {interfaceChange} from '../../../features/analytics/analytics-actions.js';
 import {executeSearch} from '../../../features/insight-search/insight-search-actions.js';
 import {logInsightInterfaceChange} from '../../../features/insight-search/insight-search-analytics-actions.js';
 import {
   buildCoreTab,
-  Tab,
-  TabProps,
-  TabState,
-  TabInitialState,
-  TabOptions,
+  type Tab,
+  type TabInitialState,
+  type TabOptions,
+  type TabProps,
+  type TabState,
 } from '../../core/tab/headless-core-tab.js';
 
 export type {Tab, TabProps, TabState, TabInitialState, TabOptions};

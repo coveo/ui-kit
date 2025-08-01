@@ -3,7 +3,7 @@ import {triggerSearchRequest} from '../../../api/knowledge/stream-answer-actions
 import {
   answerApi,
   fetchAnswer,
-  StateNeededByAnswerAPI,
+  type StateNeededByAnswerAPI,
 } from '../../../api/knowledge/stream-answer-api.js';
 import {getConfigurationInitialState} from '../../../features/configuration/configuration-state.js';
 import {
@@ -12,18 +12,18 @@ import {
   updateResponseFormat,
 } from '../../../features/generated-answer/generated-answer-actions.js';
 import {
+  type GeneratedAnswerFeedback,
   generatedAnswerAnalyticsClient,
-  GeneratedAnswerFeedback,
 } from '../../../features/generated-answer/generated-answer-analytics-actions.js';
 import {getGeneratedAnswerInitialState} from '../../../features/generated-answer/generated-answer-state.js';
 import {queryReducer} from '../../../features/query/query-slice.js';
 import {buildMockAnalyticsState} from '../../../test/mock-analytics-state.js';
 import {
   buildMockSearchEngine,
-  MockedSearchEngine,
+  type MockedSearchEngine,
 } from '../../../test/mock-engine-v2.js';
 import {createMockState} from '../../../test/mock-state.js';
-import {
+import type {
   GeneratedAnswerProps,
   GeneratedResponseFormat,
 } from '../../generated-answer/headless-generated-answer.js';
@@ -47,6 +47,23 @@ vi.mock('../../../api/knowledge/stream-answer-api', async () => {
     {q: 'this est une another question', requestId: '12'},
     {q: '', requestId: '34'},
     {q: 'this est une yet another question', requestId: '56'},
+    {
+      q: 'this est une question in legacy mode without action cause',
+      requestId: '78',
+      analyticsMode: 'legacy',
+    },
+    {
+      q: 'this est une question in next mode without action cause',
+      requestId: '7822',
+      analyticsMode: 'next',
+      actionCause: '',
+    },
+    {
+      q: 'this est une question in next mode with an action cause',
+      requestId: '781',
+      analyticsMode: 'next',
+      actionCause: 'searchboxSubmit',
+    },
   ];
   return {
     ...originalStreamAnswerApi,
@@ -221,6 +238,18 @@ describe('knowledge-generated-answer', () => {
       // new request id, call
       listener();
       expect(triggerSearchRequest).toHaveBeenCalledTimes(2);
+
+      // new query, new request id, legacy mode, no action cause, call
+      listener();
+      expect(triggerSearchRequest).toHaveBeenCalledTimes(3);
+
+      // new query, new request id, next mode, no action cause, no call
+      listener();
+      expect(triggerSearchRequest).toHaveBeenCalledTimes(3);
+
+      // new query, new request id, next mode, with action cause, call
+      listener();
+      expect(triggerSearchRequest).toHaveBeenCalledTimes(4);
     });
   });
 

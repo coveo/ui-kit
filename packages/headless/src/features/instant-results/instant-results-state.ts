@@ -1,7 +1,7 @@
-import {SerializedError} from '@reduxjs/toolkit';
-import {SearchAPIErrorWithStatusCode} from '../../api/search/search-api-error-response.js';
-import {Result} from '../../api/search/search/result.js';
-import {
+import type {SerializedError} from '@reduxjs/toolkit';
+import type {Result} from '../../api/search/search/result.js';
+import type {SearchAPIErrorWithStatusCode} from '../../api/search/search-api-error-response.js';
+import type {
   InstantItemsCache,
   InstantItemsState,
 } from '../instant-items/instant-items-state.js';

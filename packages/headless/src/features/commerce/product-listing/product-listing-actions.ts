@@ -1,16 +1,16 @@
 import {RecordValue, StringValue} from '@coveo/bueno';
 import {createAction, createAsyncThunk} from '@reduxjs/toolkit';
 import {
-  AsyncThunkCommerceOptions,
+  type AsyncThunkCommerceOptions,
   isErrorResponse,
 } from '../../../api/commerce/commerce-api-client.js';
-import {ChildProduct} from '../../../api/commerce/common/product.js';
-import {CommerceSuccessResponse} from '../../../api/commerce/common/response.js';
-import {ProductListingSection} from '../../../state/state-sections.js';
+import type {ChildProduct} from '../../../api/commerce/common/product.js';
+import type {CommerceSuccessResponse} from '../../../api/commerce/common/response.js';
+import type {ProductListingSection} from '../../../state/state-sections.js';
 import {validatePayload} from '../../../utils/validate-payload.js';
 import {
   buildFilterableCommerceAPIRequest,
-  StateNeededForFilterableCommerceAPIRequest,
+  type StateNeededForFilterableCommerceAPIRequest,
 } from '../common/filterable-commerce-api-request-builder.js';
 import {perPagePrincipalSelector} from '../pagination/pagination-selectors.js';
 import {
@@ -89,7 +89,7 @@ export interface PromoteChildToParentPayload {
   child: ChildProduct;
 }
 
-export const promoteChildToParentDefinition = {
+const promoteChildToParentDefinition = {
   child: new RecordValue({
     options: {required: true},
     values: {
