@@ -16,8 +16,10 @@ interface RatingProps {
 export type {RatingProps};
 /**
  * Renders a rating component.
+ *
  * @part value-rating
  * @part value-rating-icon
+ *
  * @cssprop --atomic-rating-icon-active-color - Color of the icon when active.
  * @cssprop --atomic-rating-icon-inactive-color - Color of the icon when inactive.
  * @cssprop --atomic-rating-icon-outline - Outline color of the icon.

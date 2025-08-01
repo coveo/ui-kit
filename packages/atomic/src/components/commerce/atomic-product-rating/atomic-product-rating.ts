@@ -1,5 +1,5 @@
 import {type Product, ProductTemplatesHelpers} from '@coveo/headless/commerce';
-import {html, LitElement, nothing} from 'lit';
+import {html, LitElement} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {when} from 'lit/directives/when.js';
 import {bindingGuard} from '@/src/decorators/binding-guard';
@@ -20,6 +20,10 @@ import type {CommerceBindings} from '../atomic-commerce-interface/atomic-commerc
  *
  * @part value-rating - The wrapper that contains the row of inactive stars and the row of active stars.
  * @part value-rating-icon - The individual star icons used in the rating display.
+ *
+ * @cssprop --atomic-rating-icon-active-color - Color of the icon when active.
+ * @cssprop --atomic-rating-icon-inactive-color - Color of the icon when inactive.
+ * @cssprop --atomic-rating-icon-outline - Outline color of the icon.
  *
  * @alpha
  */
@@ -132,8 +136,7 @@ export class AtomicProductRating
 
     return html`
       ${when(
-        this.numberOfStars === null,
-        () => nothing,
+        this.numberOfStars !== null,
         () => html`
           <div class="flex items-center align-middle">
             ${renderRating({

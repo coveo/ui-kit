@@ -140,12 +140,12 @@ describe('atomic-product-rating', () => {
   describe('with rating details field', () => {
     it('should display rating details when field is provided', async () => {
       const element = await renderComponent({
-        ratingDetailsField: 'ec_reviews',
+        ratingDetailsField: 'ec_rating',
       });
       const ratingDetails = locators.getRatingDetails(element);
 
       expect(ratingDetails).toBeInTheDocument();
-      expect(ratingDetails?.textContent).toContain('150');
+      expect(ratingDetails).toHaveTextContent('(4)');
     });
 
     it('should not display rating details when field is not provided', async () => {
