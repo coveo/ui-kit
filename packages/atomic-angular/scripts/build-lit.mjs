@@ -50,7 +50,7 @@ export class ${declaration.name} {
   constructor(c: ChangeDetectorRef, el: ElementRef, protected z: NgZone) {
     c.detach();
     this.el = el.nativeElement;
-    ${declaration.events.length ? `proxyOutputs(this, this.el, [${declaration.events.map((event) => `'${event.name}'`).join(', ')}]);` : ''}
+    ${declaration.events?.length ? `proxyOutputs(this, this.el, [${declaration.events.map((event) => `'${event.name}'`).join(', ')}]);` : ''}
   }
 }
 

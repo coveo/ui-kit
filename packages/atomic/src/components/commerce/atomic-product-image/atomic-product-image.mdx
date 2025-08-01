@@ -1,0 +1,44 @@
+import { Canvas, ArgTypes, Meta, Title, Description, Stories, Subtitle } from '@storybook/blocks';
+import * as AtomicProductImageStories from './atomic-product-image.new.stories';
+import { CanvasWithGithub } from '../../../../storybook-utils/documentation/canvas-with-github';
+
+<Meta of={ AtomicProductImageStories } />
+
+<Title />
+<Subtitle><Description/></Subtitle>
+
+<CanvasWithGithub
+  of={ AtomicProductImageStories.Default }
+  githubPath="commerce/atomic-product-image/atomic-product-image.ts"
+/>
+
+## Properties
+<ArgTypes />
+
+## Usage
+The `atomic-product-image` component is used to display the images of a product.
+It uses the `ec_thumbnails` field by default.
+
+When more than one image is available, it will display a carousel of images instead.
+
+```html
+<atomic-commerce-interface>
+  ...
+  <atomic-commerce-product-list>
+    <atomic-product-template>
+      <template>
+        ...
+        <atomic-product-section-visual>
+          <atomic-product-image></atomic-product-image>
+        </atomic-product-section-visual>
+      </template>
+    </atomic-product-template>
+  </atomic-commerce-product-list>
+</atomic-commerce-interface>
+```
+
+## Examples
+<Stories title={""}/>
+
+## Reference
+<ArgTypes />
