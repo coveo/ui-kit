@@ -54,7 +54,8 @@ export default class QuanticCitation extends NavigationMixin(LightningElement) {
 
   connectedCallback() {
     const fileType = this.citation?.fields?.filetype;
-    this.isWithTextFragment = !this.disableCitationAnchoring || fileType !== 'html' || !this.text;
+    this.isWithTextFragment =
+      !this.disableCitationAnchoring || fileType !== 'html' || !this.text;
   }
 
   renderedCallback() {
@@ -161,7 +162,9 @@ export default class QuanticCitation extends NavigationMixin(LightningElement) {
   }
 
   get hrefValue() {
-    return this.isWithTextFragment ? generateTextFragmentUrl(this.sourceUri, this.text) : this.sourceUri;
+    return this.isWithTextFragment
+      ? generateTextFragmentUrl(this.sourceUri, this.text)
+      : this.sourceUri;
   }
 
   /**
@@ -195,6 +198,8 @@ export default class QuanticCitation extends NavigationMixin(LightningElement) {
   }
 
   get sourceUri() {
-    return this.isSalesforceLink ? this.salesforceRecordUrl : (this.clickUri ?? this.citation?.uri);
+    return this.isSalesforceLink
+      ? this.salesforceRecordUrl
+      : (this.clickUri ?? this.citation?.uri);
   }
 }

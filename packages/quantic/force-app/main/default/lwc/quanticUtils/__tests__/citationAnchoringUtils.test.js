@@ -1,4 +1,7 @@
-import {extractTextToHighlight, generateTextFragmentUrl} from '../citationAnchoringUtils';
+import {
+  extractTextToHighlight,
+  generateTextFragmentUrl,
+} from '../citationAnchoringUtils';
 
 describe('c/citationAnchoringUtils', () => {
   describe('extractTextToHighlight', () => {

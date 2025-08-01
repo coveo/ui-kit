@@ -40,8 +40,10 @@ const exampleSalesforceKnowledgeArticleCitation = {
     sfkavid: 'bar',
   },
 };
-const exampleSalesforceLink = 'https://www.example-salesforce.com/#:~:text=text%2001';
-const exampleSalesforceLinkTooltip = 'https://www.example-salesforce.com#:~:text=text%2001';
+const exampleSalesforceLink =
+  'https://www.example-salesforce.com/#:~:text=text%2001';
+const exampleSalesforceLinkTooltip =
+  'https://www.example-salesforce.com#:~:text=text%2001';
 const exampleCitationTextFragmentUrl = 'https://example.com/#:~:text=text%2001';
 
 const defaultOptions = {
@@ -285,7 +287,9 @@ describe('c-quantic-citation', () => {
           selectors.citationTooltipUrl
         );
         expect(citationTooltipUrl).not.toBeNull();
-        expect(citationTooltipUrl.textContent).toBe(exampleSalesforceLinkTooltip);
+        expect(citationTooltipUrl.textContent).toBe(
+          exampleSalesforceLinkTooltip
+        );
       });
 
       describe('when the result is a knowledge article', () => {
