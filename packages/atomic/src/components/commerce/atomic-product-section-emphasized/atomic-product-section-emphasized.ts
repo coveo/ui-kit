@@ -9,6 +9,8 @@ import {ItemSectionMixin} from '@/src/mixins/item-section-mixin';
  * Behavior:
  * * Has a very large font size.
  * * Is the second closest element beneath the name section.
+ *
+ * @slot default - The emphasized field to display.
  */
 @customElement('atomic-product-section-emphasized')
 export class AtomicProductSectionEmphasized extends ItemSectionMixin(

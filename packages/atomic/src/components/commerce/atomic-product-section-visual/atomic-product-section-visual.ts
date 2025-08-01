@@ -11,6 +11,8 @@ import {ItemSectionMixin} from '@/src/mixins/item-section-mixin';
  * * Has a fixed size that depends on the specified image size, the layout, the density, and the screen size.
  * ** You should ensure that elements inside of it take the available space.
  * * Always has a 1:1 aspect ratio.
+ *
+ * @slot default - The image to display.
  */
 @customElement('atomic-product-section-visual')
 export class AtomicProductSectionVisual extends ItemSectionMixin(LitElement) {

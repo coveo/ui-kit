@@ -10,6 +10,8 @@ import {ItemSectionMixin} from '@/src/mixins/item-section-mixin';
  * ** You should ensure that elements inside of it have `height: var(--line-height)`.
  * * Is a wrapping flexbox with a gap.
  * * May appear over, next to, or beneath the visual section.
+ *
+ * @slot default - The badges to display.
  */
 @customElement('atomic-product-section-badges')
 export class AtomicProductSectionBadges extends ItemSectionMixin(LitElement) {}

@@ -1,21 +1,28 @@
 import type {Meta, StoryObj as Story} from '@storybook/web-components';
 import {wrapInCommerceInterface} from '@/storybook-utils/commerce/commerce-interface-wrapper';
 import {wrapInCommerceProductList} from '@/storybook-utils/commerce/commerce-product-list-wrapper';
-import {wrapInProductTemplate} from '@/storybook-utils/commerce/commerce-product-template-wrapper';
+import {wrapInProductTemplateForSections} from '@/storybook-utils/commerce/product-template-section-wrapper';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {renderComponent} from '@/storybook-utils/common/render-component';
 
-const {
-  decorator: commerceInterfaceDecorator,
-  play: initializeCommerceInterface,
-} = wrapInCommerceInterface();
-
-const {decorator: commerceProductListDecorator} = wrapInCommerceProductList();
-const {decorator: productTemplateDecorator} = wrapInProductTemplate();
+const {decorator: commerceInterfaceDecorator, play} = wrapInCommerceInterface({
+  engineConfig: {
+    preprocessRequest: (request) => {
+      const parsed = JSON.parse(request.body as string);
+      parsed.perPage = 1;
+      request.body = JSON.stringify(parsed);
+      return request;
+    },
+  },
+});
+const {decorator: commerceProductListDecorator} =
+  wrapInCommerceProductList('grid');
+const {decorator: productTemplateDecorator} =
+  wrapInProductTemplateForSections();
 
 const meta: Meta = {
   component: 'atomic-product-section-badges',
-  title: 'Atomic-Commerce/Product Template Components/ProductSectionBadges',
+  title: 'Commerce/Sections',
   id: 'atomic-product-section-badges',
   render: renderComponent,
   parameters,
@@ -30,25 +37,14 @@ export const Default: Story = {
     commerceProductListDecorator,
     commerceInterfaceDecorator,
   ],
-  play: initializeCommerceInterface,
-  args: {
-    'slots-default': `<span class="badge badge-primary">NEW</span>`,
-  },
-};
-
-export const WithMultipleBadges: Story = {
-  name: 'With Multiple Badges',
-  decorators: [
-    productTemplateDecorator,
-    commerceProductListDecorator,
-    commerceInterfaceDecorator,
-  ],
-  play: initializeCommerceInterface,
+  play,
   args: {
     'slots-default': `
-      <span class="badge badge-primary">NEW</span>
-      <span class="badge badge-warning">SALE</span>
-      <span class="badge badge-success">BESTSELLER</span>
+      <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+        <span class="badge badge-primary" style="background: #ef4444; color: white; padding: 4px 8px; border-radius: 4px; font-size: 12px; font-weight: bold;">NEW</span>
+        <span class="badge badge-secondary" style="background: #f59e0b; color: white; padding: 4px 8px; border-radius: 4px; font-size: 12px; font-weight: bold;">SALE</span>
+        <span class="badge badge-success" style="background: #10b981; color: white; padding: 4px 8px; border-radius: 4px; font-size: 12px; font-weight: bold;">BESTSELLER</span>
+      </div>
     `,
   },
 };

@@ -10,6 +10,8 @@ import {ItemSectionMixin} from '@/src/mixins/item-section-mixin';
  * Behavior:
  * * Has a very small font size.
  * * Is the closest element beneath the title section.
+ *
+ * @slot default - The metadata to display.
  */
 @customElement('atomic-product-section-metadata')
 export class AtomicProductSectionMetadata extends ItemSectionMixin(

@@ -10,6 +10,8 @@ import {ItemSectionMixin} from '@/src/mixins/item-section-mixin';
  * * Exposes the `--line-height` variable so child elements can adjust to the current line height.
  * * Has a defined CSS `color` property for text.
  * * Has a font weight.
+ *
+ * @slot default - The metadata to display.
  */
 @customElement('atomic-product-section-bottom-metadata')
 export class AtomicProductSectionBottomMetadata extends ItemSectionMixin(
