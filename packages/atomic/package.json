@@ -97,7 +97,7 @@
     "dompurify": "3.2.6",
     "escape-html": "1.0.3",
     "focus-visible": "5.2.1",
-    "i18next": "24.2.3",
+    "i18next": "25.3.2",
     "i18next-http-backend": "3.0.2",
     "lit": "3.3.1",
     "marked": "12.0.2",
@@ -170,7 +170,7 @@
     "ts-dedent": "2.2.0",
     "ts-lit-plugin": "2.0.2",
     "typescript": "5.8.3",
-    "vite": "6.3.5",
+    "vite": "7.0.6",
     "vitest": "3.2.4",
     "wait-on": "8.0.4"
   },

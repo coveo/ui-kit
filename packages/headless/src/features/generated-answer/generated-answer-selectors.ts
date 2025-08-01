@@ -13,24 +13,32 @@ import type {
 
 export const generativeQuestionAnsweringIdSelector = (
   state: Partial<SearchAppState>
-): {answerAPIEnabled: boolean; id: string | undefined} => {
+): {generativeQuestionAnsweringId: string | undefined} => {
+  // If using the AnswerApi, we return the answerId first.
   if (isGeneratedAnswerSection(state)) {
-    return {answerAPIEnabled: true, id: selectAnswer(state).data?.answerId};
-  }
-
-  if (isSearchSection(state)) {
     return {
-      answerAPIEnabled: false,
-      id: state.search.response.extendedResults.generativeQuestionAnsweringId,
+      generativeQuestionAnsweringId: selectAnswer(state).data?.answerId,
     };
   }
 
-  return {answerAPIEnabled: false, id: undefined};
+  // Used for type narrowing.
+  if (isSearchSection(state)) {
+    const generativeQuestionAnsweringId =
+      state.search?.response?.extendedResults?.generativeQuestionAnsweringId;
+    return {
+      generativeQuestionAnsweringId,
+    };
+  }
+
+  return {generativeQuestionAnsweringId: undefined};
 };
 
 const isSearchSection = (
   state: Partial<SearchAppState> | StateNeededByAnswerAPI
-): state is SearchSection => 'search' in state;
+): state is SearchSection =>
+  'search' in state &&
+  state.search !== undefined &&
+  typeof state.search === 'object';
 
 const isGeneratedAnswerSection = (
   state: Partial<SearchAppState>
