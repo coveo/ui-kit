@@ -19,8 +19,10 @@ import {
 } from '@/src/components/common/items-per-page/validate.js';
 import {renderPagerGuard} from '@/src/components/common/pager/pager-guard.js';
 import {bindStateToController} from '@/src/decorators/bind-state.js';
-import {bindings} from '@/src/decorators/bindings.js';
+import {bindingGuard} from '@/src/decorators/binding-guard.js';
+import {errorGuard} from '@/src/decorators/error-guard.js';
 import type {InitializableComponent} from '@/src/decorators/types.js';
+import {InitializeBindingsMixin} from '@/src/mixins/bindings-mixin.js';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles.js';
 import {randomID} from '@/src/utils/utils.js';
 import {
@@ -38,14 +40,12 @@ import {
  */
 @customElement('atomic-results-per-page')
 @withTailwindStyles
-@bindings()
 export class AtomicResultsPerPage
-  extends LitElement
+  extends InitializeBindingsMixin(LitElement)
   implements InitializableComponent<Bindings>
 {
   @state() public bindings!: Bindings;
-  public initialized = false;
-  public unsubscribeLanguage?: () => void;
+  @state() public error!: Error;
   public resultPerPage!: ResultsPerPage;
   public searchStatus!: SearchStatus;
   private choices!: number[];
@@ -57,7 +57,6 @@ export class AtomicResultsPerPage
   @bindStateToController('searchStatus')
   @state()
   private searchStatusState!: SearchStatusState;
-  @state() public error!: Error;
   @state() public isAppLoaded = false;
 
   /**
@@ -109,6 +108,8 @@ export class AtomicResultsPerPage
     return this.bindings.i18n.t('results-per-page');
   }
 
+  @bindingGuard()
+  @errorGuard()
   render() {
     return html`
       ${renderPagerGuard({
