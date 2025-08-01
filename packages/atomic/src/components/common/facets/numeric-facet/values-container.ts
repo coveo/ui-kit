@@ -1,6 +1,6 @@
-import {FunctionalComponentWithChildren} from '@/src/utils/functional-component-utils';
 import type {i18n} from 'i18next';
 import {html} from 'lit';
+import type {FunctionalComponentWithChildren} from '@/src/utils/functional-component-utils';
 import {renderFacetValuesGroup} from '../facet-values-group/facet-values-group';
 
 export interface NumericFacetValuesContainerProps {

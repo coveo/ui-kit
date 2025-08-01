@@ -1,3 +1,13 @@
+import type {
+  ProductListingSummaryState,
+  RegularFacet,
+  RegularFacetState,
+  SearchSummaryState,
+  Summary,
+} from '@coveo/headless/commerce';
+import {type CSSResultGroup, html, LitElement, nothing, unsafeCSS} from 'lit';
+import {customElement, property, state} from 'lit/decorators.js';
+import {when} from 'lit/directives/when.js';
 import {renderFacetContainer} from '@/src/components/common/facets/facet-container/facet-container';
 import {renderFacetHeader} from '@/src/components/common/facets/facet-header/facet-header';
 import {renderFacetSearchInput} from '@/src/components/common/facets/facet-search/facet-search-input';
@@ -10,32 +20,22 @@ import {booleanConverter} from '@/src/converters/boolean-converter';
 import {bindStateToController} from '@/src/decorators/bind-state';
 import {bindingGuard} from '@/src/decorators/binding-guard';
 import {errorGuard} from '@/src/decorators/error-guard';
-import {InitializableComponent} from '@/src/decorators/types';
+import type {InitializableComponent} from '@/src/decorators/types';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
 import {InitializeBindingsMixin} from '@/src/mixins/bindings-mixin';
 import {
   AriaLiveRegionController,
   FocusTargetController,
 } from '@/src/utils/accessibility-utils';
-import type {
-  ProductListingSummaryState,
-  RegularFacet,
-  RegularFacetState,
-  SearchSummaryState,
-  Summary,
-} from '@coveo/headless/commerce';
-import {CSSResultGroup, LitElement, html, nothing, unsafeCSS} from 'lit';
-import {customElement, property, state} from 'lit/decorators.js';
-import {when} from 'lit/directives/when.js';
-import {FacetInfo} from '../../common/facets/facet-common-store';
+import type {FacetInfo} from '../../common/facets/facet-common-store';
 import {announceFacetSearchResultsWithAriaLive} from '../../common/facets/facet-search/facet-search-aria-live';
 import {
   shouldDisplaySearchResults,
   shouldUpdateFacetSearchComponent,
 } from '../../common/facets/facet-search/facet-search-utils';
-import {FacetValueProps} from '../../common/facets/facet-value/facet-value';
+import type {FacetValueProps} from '../../common/facets/facet-value/facet-value';
 import {initializePopover} from '../../common/facets/popover/popover-type';
-import {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface';
+import type {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface';
 import styles from './atomic-commerce-facet.tw.css';
 
 /**
@@ -164,7 +164,9 @@ export class AtomicCommerceFacet
         numberOfActiveValues: this.activeValues.length,
         isCollapsed: this.isCollapsed,
         headingLevel: 0,
-        onToggleCollapse: () => (this.isCollapsed = !this.isCollapsed),
+        onToggleCollapse: () => {
+          this.isCollapsed = !this.isCollapsed;
+        },
         onClearFilters: () => {
           this.focusTargets.header.focusAfterSearch();
           this.facet.deselectAll();
@@ -203,9 +205,11 @@ export class AtomicCommerceFacet
             },
           })}`
       )}
-      ${shouldDisplaySearchResults(this.facetState.facetSearch)
-        ? [this.renderSearchResults(), this.renderMatches()]
-        : [this.renderValues(), this.renderShowMoreLess()]}
+      ${
+        shouldDisplaySearchResults(this.facetState.facetSearch)
+          ? [this.renderSearchResults(), this.renderMatches()]
+          : [this.renderValues(), this.renderShowMoreLess()]
+      }
     `;
   }
 
@@ -353,7 +357,9 @@ export class AtomicCommerceFacet
     announceFacetSearchResultsWithAriaLive(
       this.facet,
       this.displayName,
-      (msg) => (this.ariaLiveRegion.message = msg),
+      (msg) => {
+        this.ariaLiveRegion.message = msg;
+      },
       this.bindings.i18n
     );
   }
@@ -393,9 +399,9 @@ export class AtomicCommerceFacet
     if (this.unsubscribeFacetController) {
       return;
     }
-    this.unsubscribeFacetController = this.facet?.subscribe(
-      () => (this.facetState = this.facet.state)
-    );
+    this.unsubscribeFacetController = this.facet?.subscribe(() => {
+      this.facetState = this.facet.state;
+    });
   }
 
   @bindingGuard()

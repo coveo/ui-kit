@@ -1,17 +1,17 @@
-import {NumberFormatter} from '@/src/components/common/formats/format-common';
+import {page} from '@vitest/browser/context';
+import type {NumberFormatter} from '@/src/components/common/formats/format-common';
 import {renderFunctionFixture} from '@/vitest-utils/testing-helpers/fixture';
 import {createTestI18n} from '@/vitest-utils/testing-helpers/i18n-utils';
-import {page} from '@vitest/browser/context';
 import '@vitest/browser/matchers.d.ts';
 import {html} from 'lit';
-import {vi, expect, describe, beforeAll, beforeEach, it} from 'vitest';
+import {beforeAll, beforeEach, describe, expect, it, vi} from 'vitest';
 import {renderFacetValueCheckbox} from '../facet-value-checkbox/facet-value-checkbox';
 import {renderFacetValueLabelHighlight} from '../facet-value-label-highlight/facet-value-label-highlight';
 import {renderFacetValueLink} from '../facet-value-link/facet-value-link';
 import {formatHumanReadable} from './formatter';
 import {
-  renderNumericFacetValue,
   type NumericFacetValueLinkProps,
+  renderNumericFacetValue,
 } from './value-link';
 
 // Mock the dependencies

@@ -1,3 +1,16 @@
+import type {
+  CategoryFacet,
+  CategoryFacetState,
+  CategoryFacetValue,
+  ProductListingSummaryState,
+  SearchSummaryState,
+  Summary,
+} from '@coveo/headless/commerce';
+import type {CSSResultGroup, TemplateResult} from 'lit';
+import {html, LitElement, nothing, unsafeCSS} from 'lit';
+import {customElement, property, state} from 'lit/decorators.js';
+import {map} from 'lit/directives/map.js';
+import {when} from 'lit/directives/when.js';
 import type {CommerceBindings} from '@/src/components/commerce/atomic-commerce-interface/atomic-commerce-interface';
 import {renderFacetContainer} from '@/src/components/common/facets/facet-container/facet-container';
 import {renderFacetHeader} from '@/src/components/common/facets/facet-header/facet-header';
@@ -22,19 +35,6 @@ import {
   FocusTargetController,
 } from '@/src/utils/accessibility-utils';
 import {getFieldValueCaption} from '@/src/utils/field-utils';
-import type {
-  CategoryFacet,
-  CategoryFacetState,
-  CategoryFacetValue,
-  ProductListingSummaryState,
-  SearchSummaryState,
-  Summary,
-} from '@coveo/headless/commerce';
-import type {CSSResultGroup, TemplateResult} from 'lit';
-import {html, LitElement, nothing, unsafeCSS} from 'lit';
-import {customElement, property, state} from 'lit/decorators.js';
-import {map} from 'lit/directives/map.js';
-import {when} from 'lit/directives/when.js';
 import {renderCategoryFacetAllCategoryButton} from '../../common/facets/category-facet/all-categories-button';
 import {renderCategoryFacetChildrenAsTreeContainer} from '../../common/facets/category-facet/children-as-tree-container';
 import {renderCategoryFacetParentAsTreeContainer} from '../../common/facets/category-facet/parent-as-tree-container';

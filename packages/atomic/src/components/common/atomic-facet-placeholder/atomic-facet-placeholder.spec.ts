@@ -1,7 +1,7 @@
-import {fixture} from '@/vitest-utils/testing-helpers/fixture';
 import {html} from 'lit';
 import {ifDefined} from 'lit/directives/if-defined.js';
 import {describe, expect, it} from 'vitest';
+import {fixture} from '@/vitest-utils/testing-helpers/fixture';
 import './atomic-facet-placeholder';
 import type {AtomicFacetPlaceholder} from './atomic-facet-placeholder';
 

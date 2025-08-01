@@ -1,10 +1,10 @@
+import {html} from 'lit';
+import {beforeAll, describe, expect, it, vi} from 'vitest';
 import {renderFunctionFixture} from '@/vitest-utils/testing-helpers/fixture';
 import {createTestI18n} from '@/vitest-utils/testing-helpers/i18n-utils';
-import {html} from 'lit';
-import {vi, describe, it, expect, beforeAll} from 'vitest';
 import {
-  renderCategoryFacetParentButton,
   type CategoryFacetParentButtonProps,
+  renderCategoryFacetParentButton,
 } from './parent-button';
 
 vi.mock('../../../../utils/field-utils', () => ({

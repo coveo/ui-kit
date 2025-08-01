@@ -1,8 +1,8 @@
-import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles.js';
 import type {TemplateResult} from 'lit';
 import {html, LitElement} from 'lit';
 import {customElement, property} from 'lit/decorators.js';
 import {map} from 'lit/directives/map.js';
+import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles.js';
 
 /**
  *

@@ -1,3 +1,16 @@
+import {
+  buildContext,
+  type Context,
+  type ContextState,
+  type NumericFacet,
+  type NumericFacetState,
+  type ProductListingSummaryState,
+  type SearchSummaryState,
+  type Summary,
+} from '@coveo/headless/commerce';
+import {type CSSResultGroup, html, LitElement, unsafeCSS} from 'lit';
+import {customElement, property, state} from 'lit/decorators.js';
+import {when} from 'lit/directives/when.js';
 import {renderNumericFacetValuesGroup} from '@/src/components/common/facets/numeric-facet/values-container';
 import {booleanConverter} from '@/src/converters/boolean-converter';
 import {bindStateToController} from '@/src/decorators/bind-state';
@@ -7,19 +20,6 @@ import type {InitializableComponent} from '@/src/decorators/types';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
 import {InitializeBindingsMixin} from '@/src/mixins/bindings-mixin';
 import {FocusTargetController} from '@/src/utils/accessibility-utils';
-import {
-  type NumericFacet,
-  type NumericFacetState,
-  type ProductListingSummaryState,
-  type SearchSummaryState,
-  type Summary,
-  type Context,
-  type ContextState,
-  buildContext,
-} from '@coveo/headless/commerce';
-import {type CSSResultGroup, LitElement, html, unsafeCSS} from 'lit';
-import {customElement, property, state} from 'lit/decorators.js';
-import {when} from 'lit/directives/when.js';
 import {shouldDisplayInputForFacetRange} from '../../common/facets/facet-common';
 import type {FacetInfo} from '../../common/facets/facet-common-store';
 import {renderFacetContainer} from '../../common/facets/facet-container/facet-container';

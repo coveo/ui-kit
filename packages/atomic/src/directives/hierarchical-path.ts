@@ -40,9 +40,11 @@ class HierarchicalPathDirective extends Directive {
 
     return ellipsedPath.map(
       (value, index) => html`
-        ${index > 0
-          ? html`<span class=${separatorClass}>${separator}</span>`
-          : ''}
+        ${
+          index > 0
+            ? html`<span class=${separatorClass}>${separator}</span>`
+            : ''
+        }
         <span class=${value === ellipsis ? ellipsisClass : itemClass}>
           ${value}
         </span>

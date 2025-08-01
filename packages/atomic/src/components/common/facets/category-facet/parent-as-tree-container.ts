@@ -1,6 +1,6 @@
-import type {FunctionalComponentWithChildren} from '@/src/utils/functional-component-utils';
 import {html} from 'lit';
 import {ifDefined} from 'lit/directives/if-defined.js';
+import type {FunctionalComponentWithChildren} from '@/src/utils/functional-component-utils';
 
 export interface CategoryFacetParentAsTreeContainerProps {
   isTopLevel: boolean;

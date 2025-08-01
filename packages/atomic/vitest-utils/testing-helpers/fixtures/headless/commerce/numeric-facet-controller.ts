@@ -1,7 +1,7 @@
-import {
-  NumericFacetValue,
+import type {
   NumericFacet,
   NumericFacetState,
+  NumericFacetValue,
 } from '@coveo/headless/commerce';
 
 const defaultValues: NumericFacetValue[] = [

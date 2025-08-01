@@ -1,21 +1,21 @@
-import {NumberFormatter} from '@/src/components/common/formats/format-common';
+import type {NumberFormatter} from '@/src/components/common/formats/format-common';
 import {getFieldValueCaption} from '@/src/utils/field-utils';
 import {createTestI18n} from '@/vitest-utils/testing-helpers/i18n-utils';
 import '@vitest/browser/matchers.d.ts';
 import {
-  vi,
-  expect,
-  describe,
   beforeAll,
   beforeEach,
+  describe,
+  expect,
   it,
   type MockInstance,
+  vi,
 } from 'vitest';
 import {
+  type FacetValueRange,
+  type FormatFacetValueRange,
   formatHumanReadable,
   formatNumberLocalized,
-  type FormatFacetValueRange,
-  type FacetValueRange,
 } from './formatter';
 
 vi.mock('@/src/utils/field-utils', () => ({

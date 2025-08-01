@@ -1,4 +1,4 @@
-import {test, expect} from './fixture';
+import {expect, test} from './fixture';
 
 // TODO: KIT-4570: need to return Date Facet in organization
 test.describe.skip('AtomicCommerceTimeframeFacet', () => {

@@ -1,27 +1,27 @@
-import {bindingGuard} from '@/src/decorators/binding-guard';
-import {bindings} from '@/src/decorators/bindings';
-import {errorGuard} from '@/src/decorators/error-guard';
-import type {InitializableComponent} from '@/src/decorators/types';
-import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles.js';
 import {NumberValue, Schema} from '@coveo/bueno';
+import type {
+  CategoryFacet,
+  DateFacet,
+  NumericFacet,
+  ProductListingSummaryState,
+  RegularFacet,
+  SearchSummaryState,
+} from '@coveo/headless/commerce';
 import {
   buildProductListing,
   buildSearch,
   type FacetGenerator,
   type Summary,
 } from '@coveo/headless/commerce';
-import type {
-  RegularFacet,
-  CategoryFacet,
-  DateFacet,
-  NumericFacet,
-  SearchSummaryState,
-  ProductListingSummaryState,
-} from '@coveo/headless/commerce';
 import {html, LitElement, nothing} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {map} from 'lit/directives/map.js';
 import {when} from 'lit/directives/when.js';
+import {bindingGuard} from '@/src/decorators/binding-guard';
+import {bindings} from '@/src/decorators/bindings';
+import {errorGuard} from '@/src/decorators/error-guard';
+import type {InitializableComponent} from '@/src/decorators/types';
+import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles.js';
 import '../../common/atomic-facet-placeholder/atomic-facet-placeholder';
 import {createAppLoadedListener} from '../../common/interface/store';
 import '../atomic-commerce-category-facet/atomic-commerce-category-facet';
