@@ -151,6 +151,17 @@ if (componentName) {
       transform: (text) =>
         text.replaceAll(/(@coveo\/)?sample-component/g, componentName),
     },
+    {
+      srcPath: 'package.json',
+      destPath: 'package.json',
+      transform: (content) => {
+        const packageJson = JSON.parse(content);
+        for (const script of packageJson.scripts) {
+          script.name = script.name.substring(1);
+        }
+        return JSON.stringify(packageJson, null, 2);
+      },
+    },
   ];
 
   transform(transformers);

@@ -15,12 +15,12 @@
     "loader/"
   ],
   "scripts": {
-    "prepublishOnly": "npm run build && atomic-meta-check && npm version patch",
-    "prebuild": "rimraf dist",
-    "build": "stencil build --docs",
-    "test": "stencil test --spec --e2e",
-    "test.watch": "stencil test --spec --e2e --watchAll",
-    "generate": "stencil generate"
+    "!prepublishOnly": "npm run build && atomic-meta-check && npm version patch",
+    "!prebuild": "rimraf dist",
+    "!build": "stencil build --docs",
+    "!test": "stencil test --spec --e2e",
+    "!test.watch": "stencil test --spec --e2e --watchAll",
+    "!generate": "stencil generate"
   },
   "dependencies": {
     "@coveo/atomic": "3.31.1",

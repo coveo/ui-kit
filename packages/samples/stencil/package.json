@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "stencil build --dev --watch --serve --port 3666 --no-open",
-    "build": "nx build",
+    "build": "npm run-script -w=@coveo/ci if-not-cdn -- \"node --max_old_space_size=6144 ../../../node_modules/@stencil/core/bin/stencil build\"",
     "e2e:watch": "cypress open --browser chrome --e2e"
   },
   "dependencies": {
