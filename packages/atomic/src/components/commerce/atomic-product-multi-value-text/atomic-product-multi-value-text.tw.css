@@ -1,3 +1,4 @@
+@reference '../../../utils/tailwind.global.tw.css';
 :host {
   > ul {
     display: flex;
@@ -9,7 +10,9 @@
       display: inline-block;
     }
   }
+  @apply set-font-size-sm;
 }
+
 
 .separator {
   &::before {
