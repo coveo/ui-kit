@@ -5,7 +5,8 @@
       "dependsOn": [
         "build:storybook",
         "@coveo/atomic-angular-builder#gen:lit",
-        "@coveo/atomic-react#gen:lit"
+        "@coveo/atomic-react#gen:lit",
+        "build:next"
       ],
       "outputs": []
     },
@@ -29,6 +30,10 @@
         "src/components.d.ts",
         ".stencil/**"
       ]
+    },
+    "build:next": {
+      "dependsOn": ["build:stencil-lit"],
+      "outputs": ["dist/next/**", "cdn/next/**"]
     },
     "build:locales": {
       "dependsOn": ["^build"],

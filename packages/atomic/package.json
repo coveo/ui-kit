@@ -40,8 +40,8 @@
       "import": "./dist/atomic/components/index.js"
     },
     "./next": {
-      "types": "./dist/atomic/next/types/next.d.ts",
-      "import": "./dist/atomic/next/esm/index.js"
+      "types": "./dist/next/types/next.d.ts",
+      "import": "./dist/next/esm/next.js"
     },
     "./custom-elements-manifest": "./custom-elements.json"
   },
@@ -56,6 +56,7 @@
     "build:storybook": "storybook build -o dist-storybook",
     "build:cem": "cem analyze",
     "build:stencil-lit": "node --max_old_space_size=6144 ../../node_modules/@stencil/core/bin/stencil build --tsConfig tsconfig.stencil.json && node ./scripts/stencil-proxy.mjs && node ./scripts/build.mjs --config=tsconfig.lit.json && esbuild src/autoloader/index.ts --format=esm --outfile=dist/atomic/autoloader/index.esm.js && esbuild src/autoloader/index.ts --format=cjs --outfile=dist/atomic/autoloader/index.cjs.js && rollup -c rollup.config.js && rimraf ./dist/atomic/loader/package.json && tsc --noEmit --esModuleInterop --skipLibCheck ./dist/types/components.d.ts",
+    "build:next": "node ./scripts/build.mjs --config=tsconfig.next.json && rollup -c rollup.next.config.js",
     "build:angular": "npx turbo gen:lit --filter=@coveo/atomic-angular-builder",
     "build:react": "npx turbo gen:lit --filter=@coveo/atomic-react",
     "build:locales": "node ./scripts/create-generated-folder.mjs && node ./scripts/split-locales.mjs && node ./scripts/copy-dayjs-locales.mjs",
@@ -86,9 +87,9 @@
     "validate:definitions": "tsc --noEmit --esModuleInterop --skipLibCheck ./dist/types/components.d.ts"
   },
   "dependencies": {
-    "@lit/context": "1.1.6",
     "@coveo/bueno": "1.0.24",
     "@coveo/headless": "3.27.7",
+    "@lit/context": "1.1.6",
     "@popperjs/core": "2.11.8",
     "@salesforce-ux/design-system": "2.27.2",
     "@stencil/core": "4.20.0",
@@ -111,6 +112,7 @@
     "@rollup/plugin-json": "6.1.0",
     "@rollup/plugin-node-resolve": "16.0.1",
     "@rollup/plugin-replace": "6.0.2",
+    "@rollup/plugin-typescript": "12.1.4",
     "@stencil-community/postcss": "2.2.0",
     "@stencil/angular-output-target": "0.8.4",
     "@stencil/react-output-target": "0.5.3",
