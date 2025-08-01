@@ -49,6 +49,13 @@ export default class QuanticCitation extends NavigationMixin(LightningElement) {
   isInitialRender = true;
   /** @type {string} */
   salesforceRecordUrl;
+  /** @type {boolean} */
+  isWithTextFragment = false;
+
+  connectedCallback() {
+    const fileType = this.citation?.fields?.filetype;
+    this.isWithTextFragment = !this.disableCitationAnchoring || fileType !== 'html' || !this.text;
+  }
 
   renderedCallback() {
     if (this.isInitialRender) {
@@ -117,12 +124,9 @@ export default class QuanticCitation extends NavigationMixin(LightningElement) {
     );
   }
 
-  /**
-   * If the citation is a Salesforce link and anchoring is disabled (this.disableCitationAnchoring = true), navigate using the navigationMixin as before.
-   * Otherwise rely on the hrefValue. This is to ensure that the anchoring using the fragment works correctly.
-   * @param {MouseEvent} event
-   */
   handleClick(event) {
+    // Only apply the Salesforce navigation using the mixin for Salesforce documents and when citation anchoring is disabled.
+    // Otherwise we rely on the default behavior of the browser with a `hrefValue`.
     if (this.isSalesforceLink && this.disableCitationAnchoring) {
       event.preventDefault();
       this.navigateToSalesforceRecord(event);
@@ -157,10 +161,7 @@ export default class QuanticCitation extends NavigationMixin(LightningElement) {
   }
 
   get hrefValue() {
-    if (this.isSalesforceLink) {
-      return generateTextFragmentUrl(this.salesforceRecordUrl, this.text);
-    }
-    return this.textFragmentUrl;
+    return this.isWithTextFragment ? generateTextFragmentUrl(this.sourceUri, this.text) : this.sourceUri;
   }
 
   /**
@@ -193,14 +194,7 @@ export default class QuanticCitation extends NavigationMixin(LightningElement) {
     return this.citation?.index;
   }
 
-  get textFragmentUrl() {
-    const uri = this.clickUri ?? this.citation?.uri;
-    const fileType = this.citation?.fields?.filetype;
-
-    if (this.disableCitationAnchoring || fileType !== 'html' || !this.text) {
-      return uri;
-    }
-
-    return generateTextFragmentUrl(uri, this.text);
+  get sourceUri() {
+    return this.isSalesforceLink ? this.salesforceRecordUrl : (this.clickUri ?? this.citation?.uri);
   }
 }
