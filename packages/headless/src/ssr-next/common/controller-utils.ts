@@ -5,14 +5,13 @@ import {clone, mapObject} from '../../utils/utils.js';
 import type {
   ControllerDefinition,
   ControllerDefinitionsMap,
-  ControllersMap,
 } from './types/controllers.js';
 import type {EngineStaticState} from './types/engine.js';
 import type {
   InferControllerFromDefinition,
   InferControllerPropsFromDefinition,
   InferControllerPropsMapFromDefinitions,
-  InferControllerStaticStateMapFromControllers,
+  InferControllerStaticStateMapFromDefinitions,
   InferControllersMapFromDefinition,
 } from './types/inference.js';
 
@@ -31,8 +30,19 @@ function buildControllerFromDefinition<
   return (
     'build' in definition
       ? definition.build(engine)
-      : definition.buildWithProps(engine, props)
+      : (() => {
+          const controller = definition.buildWithProps(engine, props);
+          return {...controller, initialState: controller.state};
+        })()
   ) as InferControllerFromDefinition<TControllerDefinition>;
+}
+
+function getStaticControllerState(controller: Controller) {
+  const base = {state: clone(controller.state)};
+  if ('initialState' in controller) {
+    return {...base, initialState: clone(controller.initialState)};
+  }
+  return base;
 }
 
 export function buildControllerDefinitions<
@@ -48,7 +58,7 @@ export function buildControllerDefinitions<
 }: {
   definitionsMap: TControllerDefinitionsMap;
   engine: TEngine;
-  propsMap: InferControllerPropsMapFromDefinitions<TControllerDefinitionsMap>;
+  propsMap?: InferControllerPropsMapFromDefinitions<TControllerDefinitionsMap>;
 }): InferControllersMapFromDefinition<TControllerDefinitionsMap> {
   return mapObject(definitionsMap, (definition, key) =>
     buildControllerFromDefinition({
@@ -59,20 +69,27 @@ export function buildControllerDefinitions<
   ) as InferControllersMapFromDefinition<TControllerDefinitionsMap>;
 }
 
-export function createStaticState<TSearchAction extends UnknownAction>({
+export function createStaticState<
+  TSearchAction extends UnknownAction,
+  TControllerDefinitions extends ControllerDefinitionsMap<
+    CoreEngine | CoreEngineNext,
+    Controller
+  >,
+>({
   searchAction,
   controllers,
 }: {
   searchAction: TSearchAction;
-  controllers: ControllersMap;
+  controllers: InferControllersMapFromDefinition<TControllerDefinitions>;
 }): EngineStaticState<
   TSearchAction,
-  InferControllerStaticStateMapFromControllers<ControllersMap>
+  InferControllerStaticStateMapFromDefinitions<TControllerDefinitions>
 > {
   return {
-    controllers: mapObject(controllers, (controller) => ({
-      state: clone(controller.state),
-    })) as InferControllerStaticStateMapFromControllers<ControllersMap>,
+    controllers: mapObject(
+      controllers,
+      getStaticControllerState
+    ) as InferControllerStaticStateMapFromDefinitions<TControllerDefinitions>,
     searchAction: clone(searchAction),
   };
 }

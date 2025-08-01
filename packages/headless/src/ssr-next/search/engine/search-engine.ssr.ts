@@ -22,12 +22,8 @@ import type {
   EngineBuildResult,
   EngineDefinition,
   EngineDefinitionOptions,
-  EngineStaticState,
 } from '../../common/types/engine.js';
-import type {
-  InferControllerPropsMapFromDefinitions,
-  InferControllerStaticStateMapFromDefinitions,
-} from '../../common/types/inference.js';
+import type {InferControllerPropsMapFromDefinitions} from '../../common/types/inference.js';
 
 /**
  * The SSR search engine.
@@ -164,10 +160,7 @@ export function defineSearchEngine<
     const staticState = createStaticState({
       searchAction: await engine.waitForSearchCompletedAction(),
       controllers: controllers,
-    }) as EngineStaticState<
-      UnknownAction,
-      InferControllerStaticStateMapFromDefinitions<TControllerDefinitions>
-    >;
+    });
 
     return staticState;
   };
