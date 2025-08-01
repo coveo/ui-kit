@@ -13,9 +13,7 @@
     }
   }
   @apply set-font-size-sm;
-  margin-top: 0.475rem;
 }
-
 
 .separator {
   &::before {
