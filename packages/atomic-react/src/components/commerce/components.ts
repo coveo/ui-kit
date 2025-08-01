@@ -222,6 +222,12 @@ export const AtomicProductMultiValueText = createComponent({
   elementClass: LitAtomicProductMultiValueText,
 });
 
+export const AtomicProductNumericFieldValue = createComponent({
+  tagName: 'atomic-product-numeric-field-value',
+  react: React,
+  elementClass: LitAtomicProductNumericFieldValue,
+});
+
 export const AtomicProductPrice = createComponent({
   tagName: 'atomic-product-price',
   react: React,
@@ -280,12 +286,6 @@ export const AtomicProductSectionVisual = createComponent({
   tagName: 'atomic-product-section-visual',
   react: React,
   elementClass: LitAtomicProductSectionVisual,
-});
-
-export const AtomicProductNumericFieldValue = createComponent({
-  tagName: 'atomic-product-numeric-field-value',
-  react: React,
-  elementClass: LitAtomicProductNumericFieldValue,
 });
 
 export const AtomicProductText = createComponent({
