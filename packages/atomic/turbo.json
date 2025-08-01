@@ -22,6 +22,7 @@
       "outputs": [
         "dist/**",
         "!dist/atomic/assets/**",
+        "!dist/next/**",
         "cdn/**",
         "docs/**",
         "!docs/assets.json",

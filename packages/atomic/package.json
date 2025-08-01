@@ -39,6 +39,10 @@
       "types": "./dist/atomic/components/index.d.ts",
       "import": "./dist/atomic/components/index.js"
     },
+    "./next": {
+      "types": "./dist/atomic/next/types/next.d.ts",
+      "import": "./dist/atomic/next/esm/index.js"
+    },
     "./custom-elements-manifest": "./custom-elements.json"
   },
   "files": [
