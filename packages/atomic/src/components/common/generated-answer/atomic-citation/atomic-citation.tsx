@@ -108,16 +108,14 @@ export class AtomicCitation {
     filetype?: string, 
     pageNumber?: number
   ) {
-    if (this.disableCitationAnchoring || !text) {
-      return uri;
+    switch (filetype) {
+      case 'html':
+        return this.generateTextFragmentUrl(uri, text, filetype);
+      case 'pdf':
+        return this.generatePdfPageUrl(uri, pageNumber);
+      default:
+        return uri;
     }
-    if (filetype === 'html') {
-      return this.generateTextFragmentUrl(uri, text, filetype);
-    } 
-    if (filetype === 'pdf') {
-      return this.generatePdfPageUrl(uri, pageNumber);
-    }
-    return uri;
   }
 
   private generateTextFragmentUrl(
@@ -191,7 +189,7 @@ export class AtomicCitation {
           href={this.anchorUrl(
             this.citation.clickUri ?? this.citation.uri,
             this.citation.text,
-            this.citation.fields?.filetype
+            this.citation.fields?.filetype,
           )}
           ref={(el) => (this.citationRef = el!)}
           part="citation"
