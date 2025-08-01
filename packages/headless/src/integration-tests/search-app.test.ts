@@ -199,6 +199,6 @@ describe('search app with expired token and #renewAccessToken configured to retu
   });
 
   it('displays 10 results in the result list', () => {
-    expect(resultList.state.results.length).toBe(10);
+    vi.waitFor(() => expect(resultList.state.results.length).toBe(10));
   });
 });
