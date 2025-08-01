@@ -1,3 +1,6 @@
+@import '../../../utils/tailwind-utilities/set-font-size.tw.css';
+@reference '../../../global/global.pcss';
+
 :host {
   > ul {
     display: flex;
@@ -9,7 +12,10 @@
       display: inline-block;
     }
   }
+  @apply set-font-size-sm;
+  margin-top: 0.475rem;
 }
+
 
 .separator {
   &::before {
