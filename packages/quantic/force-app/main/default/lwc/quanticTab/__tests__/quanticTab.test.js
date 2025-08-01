@@ -183,7 +183,7 @@ describe('c-quantic-tab', () => {
       it(`should pass the clearFiltersOnTabChange option as a boolean to the tab controller when a "true" string is provided`, async () => {
         const optionsWithClearFilters = {
           ...defaultOptions,
-          clearFiltersOnTabChange: "true",
+          clearFiltersOnTabChange: 'true',
         };
         createTestComponent(optionsWithClearFilters);
         await flushPromises();
