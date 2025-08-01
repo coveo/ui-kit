@@ -9,7 +9,7 @@ import {
 import type {CurrencyCodeISO4217} from '@coveo/relay-event-types';
 import {provide} from '@lit/context';
 import i18next, {type i18n} from 'i18next';
-import {type CSSResultGroup, html, LitElement, unsafeCSS} from 'lit';
+import {type CSSResultGroup, css, html, LitElement} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {booleanConverter} from '@/src/converters/boolean-converter.js';
 import {errorGuard} from '@/src/decorators/error-guard.js';
@@ -24,7 +24,6 @@ import {
   InterfaceController,
 } from '../../common/interface/interface-controller.js';
 import {bindingsContext} from '../../context/bindings-context.js';
-import styles from './atomic-commerce-recommendation-interface.tw.css';
 import {
   type CommerceRecommendationStore,
   createCommerceRecommendationStore,
@@ -61,7 +60,19 @@ export class AtomicCommerceRecommendationInterface
     this,
     'CoveoAtomic'
   );
-  static styles: CSSResultGroup = [unsafeCSS(styles)];
+
+  static styles: CSSResultGroup = [
+    css`
+      :host {
+        display: block;
+        height: inherit;
+        width: inherit;
+        & > slot {
+          height: inherit;
+        }
+      }
+    `,
+  ];
 
   /**
    * The commerce interface i18next instance.

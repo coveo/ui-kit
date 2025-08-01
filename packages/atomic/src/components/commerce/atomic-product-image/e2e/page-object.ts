@@ -25,37 +25,4 @@ export class ProductImageObject extends BasePageObject<'atomic-product-image'> {
   get indicatorDot() {
     return this.page.getByRole('listitem').nth(1);
   }
-
-  // biome-ignore lint/suspicious/noExplicitAny: <>
-  async withCustomThumbnails(thumbnails: any[]) {
-    await this.page.route('**/commerce/v2/listing', async (route) => {
-      const response = await route.fetch();
-      const body = await response.json();
-      body.products[0].ec_thumbnails = thumbnails;
-
-      await route.fulfill({
-        response,
-        json: body,
-      });
-    });
-    return this;
-  }
-
-  async withCustomField(
-    fieldNoCarousel: string | string[],
-    fieldCarousel: string | string[]
-  ) {
-    await this.page.route('**/commerce/v2/listing', async (route) => {
-      const response = await route.fetch();
-      const body = await response.json();
-      body.products[0].custom_alt_field = fieldNoCarousel;
-      body.products[1].custom_alt_field = fieldCarousel;
-
-      await route.fulfill({
-        response,
-        json: body,
-      });
-    });
-    return this;
-  }
 }

@@ -2,7 +2,8 @@ import type {Middleware, MiddlewareAPI} from '@reduxjs/toolkit';
 import {type Logger, pino} from 'pino';
 import type {Mock} from 'vitest';
 import {updateBasicConfiguration} from '../features/configuration/configuration-actions.js';
-import {ExpiredTokenError} from '../utils/errors.js';
+import {setError} from '../features/error/error-actions.js';
+import {UnauthorizedTokenError} from '../utils/errors.js';
 import {createRenewAccessTokenMiddleware} from './renew-access-token-middleware.js';
 
 describe('createRenewAccessTokenMiddleware', () => {
@@ -15,7 +16,10 @@ describe('createRenewAccessTokenMiddleware', () => {
 
   function buildExpiredTokenPayload() {
     return {
-      error: {name: new ExpiredTokenError().name},
+      error: {
+        name: new UnauthorizedTokenError().name,
+        message: new UnauthorizedTokenError().message,
+      },
     };
   }
 
@@ -112,8 +116,16 @@ describe('createRenewAccessTokenMiddleware', () => {
       await callMiddleware(middleware, action);
     });
 
-    it('the middleware stops dispatching actions on the store to prevent an infinite loop', () => {
-      expect(store.dispatch).not.toHaveBeenCalled();
+    it('the middleware dispatches the setError action to the store', () => {
+      const error = new UnauthorizedTokenError();
+      expect(store.dispatch).toHaveBeenCalledWith(
+        setError({
+          status: 401,
+          statusCode: 401,
+          message: error.message,
+          type: error.name,
+        })
+      );
     });
 
     it('the middleware logs a warning to check the configured function', () => {
