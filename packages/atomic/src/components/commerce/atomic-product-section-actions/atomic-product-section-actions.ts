@@ -1,9 +1,8 @@
-import {hideEmptySection} from '@/src/utils/item-section-utils';
-import {Element, Component} from '@stencil/core';
+import {LitElement} from 'lit';
+import {customElement} from 'lit/decorators.js';
+import {ItemSectionMixin} from '@/src/mixins/item-section-mixin';
 
 /**
- * @alpha
- *
  * This section is intended to display components that allow the user to perform an action on a product without having to view its details.
  * In commerce interface, the user can usually add the product to their cart or wish list.
  *
@@ -12,15 +11,14 @@ import {Element, Component} from '@stencil/core';
  * ** You should ensure that elements inside of it have `height: var(--line-height)`.
  * * Is a wrapping flexbox with a gap.
  * * May appear over, next to, or beneath the visual section.
+ *
+ * @slot default - The actions to display.
  */
-@Component({
-  tag: 'atomic-product-section-actions',
-  shadow: false,
-})
-export class AtomicProductSectionActions {
-  @Element() private host!: HTMLElement;
+@customElement('atomic-product-section-actions')
+export class AtomicProductSectionActions extends ItemSectionMixin(LitElement) {}
 
-  public componentDidRender() {
-    hideEmptySection(this.host);
+declare global {
+  interface HTMLElementTagNameMap {
+    'atomic-product-section-actions': AtomicProductSectionActions;
   }
 }
