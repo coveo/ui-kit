@@ -95,10 +95,6 @@ export class AtomicProductPrice
       'truncate break-keep text-2xl leading-[1.5]': true,
       'text-error': hasPromo,
     });
-    const originalPriceClasses = tw({
-      'original-price content-center truncate text-xl break-keep line-through leading-none': true,
-      invisible: !hasPromo,
-    });
 
     return html`
       <div class="flex flex-wrap gap-1">
@@ -108,7 +104,7 @@ export class AtomicProductPrice
          ${displayIf(
            hasPromo,
            () => html`
-          <div class=${multiClassMap(originalPriceClasses)}>
+          <div class='original-price content-center truncate text-xl break-keep line-through leading-none'>
             ${this.getFormattedValue('ec_price')}
           </div>`
          )}
