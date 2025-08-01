@@ -10,7 +10,7 @@ export const wrapInProductTemplateForSections = (): {
 
     const storyResult = story();
 
-    // Render the story to extract its content
+    // Render the story to extract its content.
     let storyContent = '';
     if (
       storyResult &&
@@ -23,11 +23,11 @@ export const wrapInProductTemplateForSections = (): {
       storyContent = String(storyResult);
     }
 
-    // Extract the section tag name from the story content
+    // Extract the section tag name from the story content.
     const sectionMatch = storyContent.match(/<(atomic-product-section-[\w-]+)/);
     const storySectionTag = sectionMatch ? sectionMatch[1] : null;
 
-    // Define all available sections with their placeholder content
+    // Define all available sections with their placeholder content.
     const allSections = [
       {tag: 'atomic-product-section-name', content: 'name'},
       {tag: 'atomic-product-section-children', content: 'children'},
@@ -40,15 +40,15 @@ export const wrapInProductTemplateForSections = (): {
       {tag: 'atomic-product-section-bottom-metadata', content: 'bottom metadata'},
     ];
 
-    // Build the template content
+    // Build the template content.
     let templateContent = '';
     
     allSections.forEach(section => {
       if (section.tag === storySectionTag) {
-        // Use the story content for the matching section with purple border
+        // Use the story content for the matching section with purple border.
         templateContent += `<div style="border: 3px solid #8b5cf6; border-radius: 4px; padding: 8px; margin: 4px 0; background-color: rgba(139, 92, 246, 0.05);">${storyContent}</div>`;
       } else {
-        // Use placeholder content for other sections
+        // Use placeholder content for other sections.
         templateContent += `<${section.tag}>${section.content}</${section.tag}>`;
       }
     });
