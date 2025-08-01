@@ -15,7 +15,7 @@ import {
 import resourceUrlTransformer from './asset-path-transformer.mjs';
 import {generateLitExports} from './generate-lit-exports.mjs';
 import pathTransformer from './path-transform.mjs';
-import {processCssFiles} from './process-css.mjs';
+import {processAllCss} from './process-css.mjs';
 import svgTransformer from './svg-transform.mjs';
 import versionTransformer from './version-transform.mjs';
 
@@ -119,7 +119,7 @@ function compileWithTransformer() {
 
   const exitCode = emitResult.emitSkipped || hasError ? 1 : 0;
   console.log(`Process exiting with code '${exitCode}'.`);
-  process.exit(exitCode);
+  return exitCode;
 }
 
 try {
@@ -132,11 +132,12 @@ try {
   console.log(chalk.blue('Generating Lit exports'));
   await generateLitExports();
 
-  console.log(chalk.blue('Starting CSS processing'));
-  await processCssFiles(srcDir, outDir);
-
   console.log(chalk.blue('Starting TypeScript compilation'));
-  compileWithTransformer();
+  const tsExitCode = compileWithTransformer();
+
+  await processAllCss(srcDir, outDir);
+
+  process.exit(tsExitCode);
 } catch (error) {
   console.error(chalk.red('Build failed:'), error);
   process.exit(1);
