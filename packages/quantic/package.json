@@ -68,7 +68,7 @@
     "@salesforce-ux/slds-linter": "0.3.0",
     "@salesforce/eslint-config-lwc": "3.7.2",
     "@salesforce/sfdx-lwc-jest": "5.1.0",
-    "@types/node": "22.16.4",
+    "@types/node": "22.16.5",
     "@types/strip-color": "0.1.2",
     "@types/wait-on": "5.3.4",
     "chalk": "4.1.2",
@@ -83,7 +83,7 @@
     "prettier-plugin-apex": "2.2.6",
     "strip-color": "0.1.0",
     "ts-node": "10.9.2",
-    "wait-on": "8.0.3",
+    "wait-on": "8.0.4",
     "xml2js": "0.6.2",
     "eslint": "8.57",
     "eslint-config-prettier": "10.1.8"

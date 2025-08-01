@@ -3,6 +3,14 @@ import type {DirectiveResult} from 'lit/directive.js';
 
 export type FunctionalComponentNoProps = () => TemplateResult | typeof nothing;
 
+export type FunctionalComponentWithOptionalChildren<T> = ({
+  props,
+}: {
+  props: T;
+}) => (
+  children?: FunctionalComponentChildren
+) => TemplateResult | typeof nothing;
+
 export type FunctionalComponent<T = {}> = ({
   props,
 }: {

@@ -1,4 +1,5 @@
 import {createReducer} from '@reduxjs/toolkit';
+import {setError} from '../error/error-actions.js';
 import {fetchDocumentSuggestions} from './document-suggestion-actions.js';
 import {getDocumentSuggestionInitialState} from './document-suggestion-state.js';
 
@@ -19,6 +20,10 @@ export const documentSuggestionReducer = createReducer(
       })
       .addCase(fetchDocumentSuggestions.pending, (state) => {
         state.status.loading = true;
+      })
+      .addCase(setError, (state, action) => {
+        state.status.error = action.payload;
+        state.status.loading = false;
       });
   }
 );

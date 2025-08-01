@@ -8,9 +8,8 @@ import type { JSX } from '@coveo/atomic';
 import { defineCustomElements } from '@coveo/atomic/loader';
 
 defineCustomElements();
+
 export const AtomicNumericRange = /*@__PURE__*/createReactComponent<JSX.AtomicNumericRange, HTMLAtomicNumericRangeElement>('atomic-numeric-range');
-export const AtomicProductFieldCondition = /*@__PURE__*/createReactComponent<JSX.AtomicProductFieldCondition, HTMLAtomicProductFieldConditionElement>('atomic-product-field-condition');
-export const AtomicProductImage = /*@__PURE__*/createReactComponent<JSX.AtomicProductImage, HTMLAtomicProductImageElement>('atomic-product-image');
 export const AtomicProductRating = /*@__PURE__*/createReactComponent<JSX.AtomicProductRating, HTMLAtomicProductRatingElement>('atomic-product-rating');
 export const AtomicProductSectionActions = /*@__PURE__*/createReactComponent<JSX.AtomicProductSectionActions, HTMLAtomicProductSectionActionsElement>('atomic-product-section-actions');
 export const AtomicProductSectionBadges = /*@__PURE__*/createReactComponent<JSX.AtomicProductSectionBadges, HTMLAtomicProductSectionBadgesElement>('atomic-product-section-badges');

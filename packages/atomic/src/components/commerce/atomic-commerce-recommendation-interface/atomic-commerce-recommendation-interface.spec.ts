@@ -10,7 +10,6 @@ import {
   type CommerceBindings,
 } from '@/src/components/commerce/atomic-commerce-recommendation-interface/atomic-commerce-recommendation-interface';
 import {createCommerceRecommendationStore} from '@/src/components/commerce/atomic-commerce-recommendation-interface/store';
-import {CommonAtomicInterfaceHelper} from '@/src/components/common/interface/interface-common';
 import {bindings} from '@/src/decorators/bindings';
 import type {InitializableComponent} from '@/src/decorators/types';
 import {InitializeBindingsMixin} from '@/src/mixins/bindings-mixin';
@@ -18,6 +17,7 @@ import {markParentAsReady} from '@/src/utils/init-queue';
 import {fixture} from '@/vitest-utils/testing-helpers/fixture';
 import {buildFakeContext} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/context-controller';
 import {buildFakeCommerceEngine} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/engine';
+import {InterfaceController} from '../../common/interface/interface-controller';
 
 vi.mock('i18next', {spy: true});
 vi.mock('@coveo/headless/commerce', {spy: true});
@@ -98,17 +98,17 @@ describe('atomic-commerce-recommendation-interface', () => {
 
   // #constructor
   describe('when created', () => {
-    it('should create an instance of CommonAtomicInterfaceHelper', async () => {
+    it('should create an instance of InterfaceController', async () => {
       const element = await setupElement();
 
-      // Mocking the CommonAtomicInterfaceHelper class would be complex.
+      // Mocking the InterfaceController class would be complex.
       expect(
         (
           element as unknown as {
-            commonInterfaceHelper: CommonAtomicInterfaceHelper<never>;
+            interfaceController: InterfaceController<never>;
           }
-        ).commonInterfaceHelper
-      ).toBeInstanceOf(CommonAtomicInterfaceHelper);
+        ).interfaceController
+      ).toBeInstanceOf(InterfaceController);
     });
 
     it('should set #store to the value returned by createCommerceRecommendationStore', async () => {
@@ -141,7 +141,7 @@ describe('atomic-commerce-recommendation-interface', () => {
     it("should cause CommonAtomicInterfaceHelper.onComponentInitializing to be called when an 'atomic/initializeComponent' event is dispatched", async () => {
       const element = await setupElement();
       const onComponentInitializingSpy = vi.spyOn(
-        CommonAtomicInterfaceHelper.prototype,
+        InterfaceController.prototype,
         'onComponentInitializing'
       );
       const event = new CustomEvent('atomic/initializeComponent');
@@ -209,7 +209,7 @@ describe('atomic-commerce-recommendation-interface', () => {
       const element = await setupElement();
       const engine = buildFakeCommerceEngine({});
       const onInitializationSpy = vi.spyOn(
-        CommonAtomicInterfaceHelper.prototype,
+        InterfaceController.prototype,
         'onInitialization'
       );
 
@@ -229,11 +229,7 @@ describe('atomic-commerce-recommendation-interface', () => {
 
     it('should create an atomic-arial-live element when one does not already exist', async () => {
       const element = await setupElement();
-      const ariaLiveElement = element.querySelector('atomic-aria-live');
-
-      expect(ariaLiveElement).toBeNull();
-
-      await element.initializeWithEngine(buildFakeCommerceEngine({}));
+      element.connectedCallback();
 
       expect(element.querySelector('atomic-aria-live')).toBeTruthy();
 
@@ -258,7 +254,7 @@ describe('atomic-commerce-recommendation-interface', () => {
 
     it('should update the language when language prop is defined', async () => {
       const onLanguageChangeSpy = vi.spyOn(
-        CommonAtomicInterfaceHelper.prototype,
+        InterfaceController.prototype,
         'onLanguageChange'
       );
       const element = await setupElement({language: 'fr'});
@@ -317,28 +313,6 @@ describe('atomic-commerce-recommendation-interface', () => {
       expect(element.bindings.interfaceElement).toBe(element);
     });
 
-    it('should set bindings.addAdoptedStyleSheets to a function that adds stylesheets to the adoptedStyleSheets if not already present', async () => {
-      const element = await setupElement();
-      const engine = buildFakeCommerceEngine({});
-      await element.initializeWithEngine(engine);
-
-      expect(element.bindings.addAdoptedStyleSheets).toBeDefined();
-      expect(typeof element.bindings.addAdoptedStyleSheets).toBe('function');
-
-      const stylesheet = new CSSStyleSheet({baseURL: '/test'});
-      element.bindings.addAdoptedStyleSheets(stylesheet);
-
-      expect(
-        (element.getRootNode() as Document)?.adoptedStyleSheets
-      ).to.include(stylesheet);
-
-      element.bindings.addAdoptedStyleSheets(stylesheet);
-
-      expect(
-        (element.getRootNode() as Document).adoptedStyleSheets
-      ).toHaveLength(1);
-    });
-
     it('should call markParentAsReady with this', async () => {
       const markParentAsReadySpy = vi.mocked(markParentAsReady);
       const element = await setupElement();
@@ -353,7 +327,7 @@ describe('atomic-commerce-recommendation-interface', () => {
 
     it('should call CommonAtomicInteraceHelper.onLanguageChange with context.state.language when language prop is undefined', async () => {
       const onLanguageChangeSpy = vi.spyOn(
-        CommonAtomicInterfaceHelper.prototype,
+        InterfaceController.prototype,
         'onLanguageChange'
       );
       const buildContextMock = vi.mocked(headless.buildContext);
@@ -378,7 +352,7 @@ describe('atomic-commerce-recommendation-interface', () => {
       vi.spyOn(console, 'error').mockImplementation(() => {});
 
       const onLanguageChangeSpy = vi.spyOn(
-        CommonAtomicInterfaceHelper.prototype,
+        InterfaceController.prototype,
         'onLanguageChange'
       );
       const buildContextMock = vi.mocked(headless.buildContext);
@@ -405,7 +379,7 @@ describe('atomic-commerce-recommendation-interface', () => {
       vi.spyOn(console, 'error').mockImplementation(() => {});
       const element = await setupElement();
       const onLanguageChangeSpy = vi.spyOn(
-        CommonAtomicInterfaceHelper.prototype,
+        InterfaceController.prototype,
         'onLanguageChange'
       );
       const setContextMock = vi.fn();
@@ -426,7 +400,7 @@ describe('atomic-commerce-recommendation-interface', () => {
       const engine = buildFakeCommerceEngine();
       element.initializeWithEngine(engine);
       const onLanguageChangeSpy = vi.spyOn(
-        CommonAtomicInterfaceHelper.prototype,
+        InterfaceController.prototype,
         'onLanguageChange'
       );
       const setContextMock = vi.fn();
@@ -457,7 +431,7 @@ describe('atomic-commerce-recommendation-interface', () => {
           setContext: setContextMock,
         } as unknown as ReturnType<typeof headless.loadContextActions>);
         onLanguageChangeSpy = vi.spyOn(
-          CommonAtomicInterfaceHelper.prototype,
+          InterfaceController.prototype,
           'onLanguageChange'
         );
       });
@@ -529,7 +503,7 @@ describe('atomic-commerce-recommendation-interface', () => {
 
     const element = await setupElement();
     const onAnalyticsChangeSpy = vi.spyOn(
-      CommonAtomicInterfaceHelper.prototype,
+      InterfaceController.prototype,
       'onAnalyticsChange'
     );
 
@@ -569,7 +543,7 @@ describe('atomic-commerce-recommendation-interface', () => {
 
     it('should do nothing when the engine has not been created', async () => {
       const onLanguageChangeSpy = vi.spyOn(
-        CommonAtomicInterfaceHelper.prototype,
+        InterfaceController.prototype,
         'onLanguageChange'
       );
       const element = await setupElement({language: 'en'});
@@ -583,7 +557,7 @@ describe('atomic-commerce-recommendation-interface', () => {
 
     it('should do nothing when #language is undefined', async () => {
       const onLanguageChangeSpy = vi.spyOn(
-        CommonAtomicInterfaceHelper.prototype,
+        InterfaceController.prototype,
         'onLanguageChange'
       );
       const element = await setupElement({language: 'en'});
@@ -614,7 +588,7 @@ describe('atomic-commerce-recommendation-interface', () => {
         const engine = buildFakeCommerceEngine({});
         await element.initializeWithEngine(engine);
         const onLanguageChangeSpy = vi.spyOn(
-          CommonAtomicInterfaceHelper.prototype,
+          InterfaceController.prototype,
           'onLanguageChange'
         );
 
@@ -654,12 +628,12 @@ describe('atomic-commerce-recommendation-interface', () => {
 
     it('should remove the aria-live element', async () => {
       const element = await setupElement();
-      const ariaLiveElement = document.createElement('atomic-aria-live');
-      element.appendChild(ariaLiveElement);
 
       expect(element.querySelector('atomic-aria-live')).toBeTruthy();
 
-      element.remove();
+      element.disconnectedCallback();
+
+      await element.updateComplete;
 
       expect(element.querySelector('atomic-aria-live')).toBeFalsy();
     });

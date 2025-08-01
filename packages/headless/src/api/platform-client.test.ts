@@ -1,7 +1,7 @@
 import * as BackOff from 'exponential-backoff';
 import {pino} from 'pino';
 import type {Mock} from 'vitest';
-import {ExpiredTokenError} from '../utils/errors.js';
+import {UnauthorizedTokenError} from '../utils/errors.js';
 import type {PlatformEnvironment} from '../utils/url-utils.js';
 import {
   getAnalyticsNextApiBaseUrl,
@@ -304,7 +304,7 @@ describe('PlatformClient call', () => {
       );
 
       const response = await platformCall();
-      expect(response).toBeInstanceOf(ExpiredTokenError);
+      expect(response).toBeInstanceOf(UnauthorizedTokenError);
     }
   );
 
