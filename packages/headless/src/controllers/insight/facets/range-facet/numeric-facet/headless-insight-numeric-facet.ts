@@ -1,29 +1,28 @@
-import {InsightEngine} from '../../../../../app/insight-engine/insight-engine.js';
+import type {InsightEngine} from '../../../../../app/insight-engine/insight-engine.js';
 import {facetClearAll} from '../../../../../features/facets/facet-set/facet-set-analytics-actions.js';
 import {
   logFacetClearAll,
   logFacetUpdateSort,
 } from '../../../../../features/facets/facet-set/facet-set-insight-analytics-actions.js';
-import {RangeFacetSortCriterion} from '../../../../../features/facets/range-facets/generic/interfaces/request.js';
+import type {RangeFacetSortCriterion} from '../../../../../features/facets/range-facets/generic/interfaces/request.js';
 import {getInsightAnalyticsActionForToggleRangeFacetSelect} from '../../../../../features/facets/range-facets/generic/range-facet-insight-utils.js';
 import {getAnalyticsActionForToggleFacetSelect} from '../../../../../features/facets/range-facets/generic/range-facet-utils.js';
-import {NumericRangeRequest} from '../../../../../features/facets/range-facets/numeric-facet-set/interfaces/request.js';
-import {NumericFacetValue} from '../../../../../features/facets/range-facets/numeric-facet-set/interfaces/response.js';
+import type {NumericRangeRequest} from '../../../../../features/facets/range-facets/numeric-facet-set/interfaces/request.js';
+import type {NumericFacetValue} from '../../../../../features/facets/range-facets/numeric-facet-set/interfaces/response.js';
 import {executeSearch} from '../../../../../features/insight-search/insight-search-actions.js';
 import {
   buildCoreNumericFacet,
   buildNumericRange,
-  NumericFacet,
-  NumericFacetOptions,
-  NumericFacetProps,
-  NumericFacetState,
-  NumericRangeOptions,
+  type NumericFacet,
+  type NumericFacetOptions,
+  type NumericFacetProps,
+  type NumericFacetState,
+  type NumericRangeOptions,
 } from '../../../../core/facets/range-facet/numeric-facet/headless-core-numeric-facet.js';
 
 export type {
   NumericRangeOptions,
   NumericRangeRequest,
-  NumericFacetValue,
   NumericFacetOptions,
   NumericFacetProps,
   NumericFacet,

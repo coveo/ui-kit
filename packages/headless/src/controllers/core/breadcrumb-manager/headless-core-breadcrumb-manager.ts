@@ -1,15 +1,15 @@
-import {CoreEngine} from '../../../app/engine.js';
+import type {CoreEngine} from '../../../app/engine.js';
 import {deselectAllBreadcrumbs} from '../../../features/breadcrumb/breadcrumb-actions.js';
-import {CategoryFacetValue} from '../../../features/facets/category-facet-set/interfaces/response.js';
-import {BaseFacetValue} from '../../../features/facets/facet-api/response.js';
-import {FacetValueRequest} from '../../../features/facets/facet-set/interfaces/request.js';
-import {FacetValue} from '../../../features/facets/facet-set/interfaces/response.js';
-import {AnyFacetSetState} from '../../../features/facets/generic/interfaces/generic-facet-section.js';
-import {DateRangeRequest} from '../../../features/facets/range-facets/date-facet-set/interfaces/request.js';
-import {DateFacetValue} from '../../../features/facets/range-facets/date-facet-set/interfaces/response.js';
-import {NumericRangeRequest} from '../../../features/facets/range-facets/numeric-facet-set/interfaces/request.js';
-import {NumericFacetValue} from '../../../features/facets/range-facets/numeric-facet-set/interfaces/response.js';
-import {
+import type {CategoryFacetValue} from '../../../features/facets/category-facet-set/interfaces/response.js';
+import type {BaseFacetValue} from '../../../features/facets/facet-api/response.js';
+import type {FacetValueRequest} from '../../../features/facets/facet-set/interfaces/request.js';
+import type {FacetValue} from '../../../features/facets/facet-set/interfaces/response.js';
+import type {AnyFacetSetState} from '../../../features/facets/generic/interfaces/generic-facet-section.js';
+import type {DateRangeRequest} from '../../../features/facets/range-facets/date-facet-set/interfaces/request.js';
+import type {DateFacetValue} from '../../../features/facets/range-facets/date-facet-set/interfaces/response.js';
+import type {NumericRangeRequest} from '../../../features/facets/range-facets/numeric-facet-set/interfaces/request.js';
+import type {NumericFacetValue} from '../../../features/facets/range-facets/numeric-facet-set/interfaces/response.js';
+import type {
   CategoryFacetSection,
   ConfigurationSection,
   DateFacetSection,
@@ -19,9 +19,9 @@ import {
 } from '../../../state/state-sections.js';
 import {
   buildController,
-  Controller,
+  type Controller,
 } from '../../controller/headless-controller.js';
-import {StaticFilterValue} from '../../static-filter/headless-static-filter.js';
+import type {StaticFilterValue} from '../../static-filter/headless-static-filter.js';
 
 /**
  * The `BreadcrumbManager` headless controller manages a summary of the currently active facet filters.
@@ -213,7 +213,7 @@ export type GetBreadcrumbsConfiguration<T extends AnyFacetSetState> = {
 type InferFacetSliceValueRequestType<T extends AnyFacetSetState> =
   T[string]['request']['currentValues'][number];
 
-export type InferFacetSliceValueType<T extends AnyFacetSetState> =
+type InferFacetSliceValueType<T extends AnyFacetSetState> =
   InferFacetSliceValueRequestType<T> extends FacetValueRequest
     ? FacetValue
     : InferFacetSliceValueRequestType<T> extends NumericRangeRequest

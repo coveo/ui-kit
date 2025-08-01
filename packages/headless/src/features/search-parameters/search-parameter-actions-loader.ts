@@ -1,15 +1,14 @@
-import {PayloadAction} from '@reduxjs/toolkit';
-import {CoreEngine} from '../../app/engine.js';
+import type {PayloadAction} from '@reduxjs/toolkit';
+import type {CoreEngine} from '../../app/engine.js';
 import {facetOrderReducer as facetOrder} from '../facets/facet-order/facet-order-slice.js';
 import {facetSetReducer as facetSet} from '../facets/facet-set/facet-set-slice.js';
 import {paginationReducer as pagination} from '../pagination/pagination-slice.js';
-import {querySetReducer as querySet} from '../query-set/query-set-slice.js';
 import {queryReducer as query} from '../query/query-slice.js';
-import {sortReducer as sort} from '../sort/sort-slice.js';
+import {querySetReducer as querySet} from '../query-set/query-set-slice.js';
 import {
   restoreSearchParameters,
   restoreTab,
-  SearchParameters,
+  type SearchParameters,
 } from './search-parameter-actions.js';
 
 export type {SearchParameters} from './search-parameter-actions.js';
@@ -59,7 +58,6 @@ export function loadSearchParameterActions(
     pagination,
     query,
     querySet,
-    sort,
   });
 
   return {

@@ -1,12 +1,12 @@
-import * as externalCartAPI from '@/actions/external-cart-api';
-import {
+import type {
   Cart as HeadlessCart,
   CartItem as HeadlessCartItem,
-  Product as HeadlessProduct,
   CartState as HeadlessCartState,
+  Product as HeadlessProduct,
   InstantProducts,
   ProductList,
 } from '@coveo/headless-react/ssr-commerce';
+import * as externalCartAPI from '@/actions/external-cart-api';
 
 type HeadlessSSRCart = Omit<HeadlessCart, 'state' | 'subscribe'>;
 

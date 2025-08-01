@@ -1,19 +1,22 @@
-import {AsyncThunkPayloadCreator, createAsyncThunk} from '@reduxjs/toolkit';
 import {
+  type AsyncThunkPayloadCreator,
+  createAsyncThunk,
+} from '@reduxjs/toolkit';
+import type {
   CommerceAPIResponse,
   CommerceFacetSearchAPIClient,
 } from '../../../../api/commerce/commerce-api-client.js';
-import {FacetSearchType} from '../../../../api/commerce/facet-search/facet-search-request.js';
-import {CategoryFacetSearchResponse} from '../../../../api/search/facet-search/category-facet-search/category-facet-search-response.js';
-import {SpecificFacetSearchResponse} from '../../../../api/search/facet-search/specific-facet-search/specific-facet-search-response.js';
-import {AsyncThunkOptions} from '../../../../app/async-thunk-options.js';
-import {ClientThunkExtraArguments} from '../../../../app/thunk-extra-arguments.js';
+import type {FacetSearchType} from '../../../../api/commerce/facet-search/facet-search-request.js';
+import type {CategoryFacetSearchResponse} from '../../../../api/search/facet-search/category-facet-search/category-facet-search-response.js';
+import type {SpecificFacetSearchResponse} from '../../../../api/search/facet-search/specific-facet-search/specific-facet-search-response.js';
+import type {AsyncThunkOptions} from '../../../../app/async-thunk-options.js';
+import type {ClientThunkExtraArguments} from '../../../../app/thunk-extra-arguments.js';
 import {requiredNonEmptyString} from '../../../../utils/validate-payload.js';
-import {FieldSuggestionsOrderState} from '../field-suggestions-order/field-suggestions-order-state.js';
+import type {FieldSuggestionsOrderState} from '../field-suggestions-order/field-suggestions-order-state.js';
 import {buildCategoryFacetSearchRequest} from './category/commerce-category-facet-search-request-builder.js';
-import {StateNeededForAnyFacetSearch} from './commerce-facet-search-state.js';
+import type {StateNeededForAnyFacetSearch} from './commerce-facet-search-state.js';
 import {buildFacetSearchRequest} from './regular/commerce-regular-facet-search-request-builder.js';
-import {StateNeededForRegularFacetSearch} from './regular/commerce-regular-facet-search-state.js';
+import type {StateNeededForRegularFacetSearch} from './regular/commerce-regular-facet-search-state.js';
 
 type ExecuteCommerceFacetSearchThunkReturn = {
   facetId: string;
@@ -91,7 +94,7 @@ export const executeCommerceFieldSuggest = createAsyncThunk<
   getExecuteFacetSearchThunkPayloadCreator(true)
 );
 
-export const isRegularFacetSearchState = (
+const isRegularFacetSearchState = (
   s: StateNeededForAnyFacetSearch,
   facetId: string
 ): s is StateNeededForRegularFacetSearch => {
@@ -102,7 +105,7 @@ export const isRegularFacetSearchState = (
   );
 };
 
-export const isRegularFieldSuggestionsState = (
+const isRegularFieldSuggestionsState = (
   s: StateNeededForAnyFacetSearch,
   facetId: string
 ): s is StateNeededForRegularFacetSearch => {

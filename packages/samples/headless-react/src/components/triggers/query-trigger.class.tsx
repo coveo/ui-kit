@@ -1,10 +1,10 @@
 import {
   buildQueryTrigger,
-  QueryTrigger as HeadlessQueryTrigger,
-  QueryTriggerState,
-  Unsubscribe,
+  type QueryTrigger as HeadlessQueryTrigger,
+  type QueryTriggerState,
+  type Unsubscribe,
 } from '@coveo/headless';
-import {Component, ContextType} from 'react';
+import {Component, type ContextType} from 'react';
 import {AppContext} from '../../context/engine';
 
 export class QueryTrigger extends Component<{}, QueryTriggerState> {
@@ -35,7 +35,7 @@ export class QueryTrigger extends Component<{}, QueryTriggerState> {
     if (this.state.wasQueryModified) {
       return (
         <div>
-          The query changed from {this.state.originalQuery + ' '}
+          The query changed from {`${this.state.originalQuery} `}
           to {this.state.newQuery}
         </div>
       );

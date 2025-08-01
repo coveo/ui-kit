@@ -1,18 +1,22 @@
-import {PlatformResponse} from './platform-client.js';
-import {BaseParam} from './platform-service-params.js';
-import {AllSearchAPIResponse} from './search/search-api-client.js';
-import {
-  SearchAPIErrorWithStatusCode,
+import type {PlatformResponse} from './platform-client.js';
+import type {BaseParam} from './platform-service-params.js';
+import type {AllSearchAPIResponse} from './search/search-api-client.js';
+import type {
   SearchAPIErrorWithExceptionInBody,
+  SearchAPIErrorWithStatusCode,
 } from './search/search-api-error-response.js';
-import {AuthenticationParam} from './search/search-api-params.js';
+import type {AuthenticationParam} from './search/search-api-params.js';
 
 export function pickNonBaseParams<
   Params extends BaseParam & AuthenticationParam,
 >(req: Params) {
-  // cheap version of _.omit
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const {url, accessToken, organizationId, authentication, ...nonBase} = req;
+  const {
+    url: _url,
+    accessToken: _accessToken,
+    organizationId: _organizationId,
+    authentication: _authentication,
+    ...nonBase
+  } = req;
   return nonBase;
 }
 

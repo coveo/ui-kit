@@ -1,6 +1,6 @@
 import {configuration} from '../../../../app/common-reducers.js';
-import {InsightEngine} from '../../../../app/insight-engine/insight-engine.js';
-import {FacetValueState} from '../../../../features/facets/facet-api/value.js';
+import type {InsightEngine} from '../../../../app/insight-engine/insight-engine.js';
+import type {FacetValueState} from '../../../../features/facets/facet-api/value.js';
 import {specificFacetSearchSetReducer as facetSearchSet} from '../../../../features/facets/facet-search-set/specific/specific-facet-search-set-slice.js';
 import {facetClearAll} from '../../../../features/facets/facet-set/facet-set-analytics-actions.js';
 import {
@@ -12,35 +12,35 @@ import {
 import {getInsightAnalyticsActionForToggleFacetSelect} from '../../../../features/facets/facet-set/facet-set-insight-utils.js';
 import {facetSetReducer as facetSet} from '../../../../features/facets/facet-set/facet-set-slice.js';
 import {getAnalyticsActionForToggleFacetSelect} from '../../../../features/facets/facet-set/facet-set-utils.js';
-import {FacetSortCriterion} from '../../../../features/facets/facet-set/interfaces/request.js';
+import type {FacetSortCriterion} from '../../../../features/facets/facet-set/interfaces/request.js';
 import {
   executeSearch,
   fetchFacetValues,
 } from '../../../../features/insight-search/insight-search-actions.js';
 import {searchReducer as search} from '../../../../features/search/search-slice.js';
-import {
-  FacetSection,
+import type {
   ConfigurationSection,
   FacetSearchSection,
+  FacetSection,
   SearchSection,
 } from '../../../../state/state-sections.js';
 import {loadReducerError} from '../../../../utils/errors.js';
 import {
   buildCoreFacet,
-  CoreFacet,
-  CoreFacetState,
-  Facet,
-  FacetSearch,
-  FacetSearchState,
-  FacetState,
-  FacetValue,
-  SpecificFacetSearchResult,
+  type CoreFacet,
+  type CoreFacetState,
+  type Facet,
+  type FacetSearch,
+  type FacetSearchState,
+  type FacetState,
+  type FacetValue,
+  type SpecificFacetSearchResult,
 } from '../../../core/facets/facet/headless-core-facet.js';
 import {
-  FacetOptions,
-  FacetSearchOptions,
+  type CoreFacetOptions,
+  type FacetOptions,
+  type FacetSearchOptions,
   facetOptionsSchema,
-  CoreFacetOptions,
 } from './headless-insight-facet-options.js';
 
 export type {
@@ -122,7 +122,7 @@ export function buildFacet(engine: InsightEngine, props: FacetProps): Facet {
   };
 
   const facetSearch = createNoopFacetSearch();
-  const {state, ...restOfFacetSearch} = facetSearch;
+  const {state: _state, ...restOfFacetSearch} = facetSearch;
 
   return {
     ...coreController,

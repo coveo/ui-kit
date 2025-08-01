@@ -1,40 +1,38 @@
-import {nothing, TemplateResult} from 'lit';
-import {DirectiveResult} from 'lit/directive.js';
+import type {nothing, TemplateResult} from 'lit';
+import type {DirectiveResult} from 'lit/directive.js';
 
-export interface FunctionalComponent<T = {}> {
-  ({props}: {props: T}): TemplateResult | typeof nothing;
-}
+export type FunctionalComponentNoProps = () => TemplateResult | typeof nothing;
 
-export interface FunctionalComponentWithOptionalChildren<T> {
-  ({
-    props,
-  }: {
-    props: T;
-  }): (
-    children?: FunctionalComponentChildren
-  ) => TemplateResult | typeof nothing;
-}
+export type FunctionalComponent<T = {}> = ({
+  props,
+}: {
+  props: T;
+}) => TemplateResult | typeof nothing;
 
-export interface FunctionalComponentWithChildren<T> {
-  ({
-    props,
-  }: {
-    props: T;
-  }): (
-    children: FunctionalComponentChildren
-  ) => TemplateResult | typeof nothing;
-}
+export type FunctionalComponentWithChildren<T> = ({
+  props,
+}: {
+  props: T;
+}) => (
+  children: FunctionalComponentChildren
+) => TemplateResult | typeof nothing;
 
-export interface FunctionalComponentWithChildrenNoProps {
-  (): (children: FunctionalComponentChildren) => TemplateResult;
-}
+export type FunctionalComponentWithChildrenNoProps = () => (
+  children: FunctionalComponentChildren
+) => TemplateResult;
 
-export interface FunctionalComponentGuard<T> {
-  ({
-    props,
-  }: {
-    props: T;
-  }): (children: FunctionalComponentChildren) => DirectiveResult;
-}
+export type FunctionalComponentWithOptionalChildren<T> = ({
+  props,
+}: {
+  props: T;
+}) => (
+  children?: FunctionalComponentChildren
+) => TemplateResult | typeof nothing;
+
+export type FunctionalComponentGuard<T> = ({
+  props,
+}: {
+  props: T;
+}) => (children: FunctionalComponentChildren) => DirectiveResult;
 
 type FunctionalComponentChildren = TemplateResult | typeof nothing;

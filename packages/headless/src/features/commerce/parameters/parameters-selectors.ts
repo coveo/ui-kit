@@ -1,14 +1,14 @@
-import {CommerceEngine} from '../../../app/commerce-engine/commerce-engine.js';
-import {stateKey} from '../../../app/state-key.js';
-import {FacetValueState} from '../../../ssr.index.js';
-import {CommerceFacetSetSection} from '../../../state/state-sections.js';
+import type {CommerceEngine} from '../../../app/commerce-engine/commerce-engine.js';
+import type {stateKey} from '../../../app/state-key.js';
+import type {FacetValueState} from '../../../ssr.index.js';
+import type {CommerceFacetSetSection} from '../../../state/state-sections.js';
 import {findActiveValueAncestry} from '../../facets/category-facet-set/category-facet-utils.js';
 import {
   getFacets,
   getSortCriteria,
 } from '../../parameter-manager/parameter-manager-selectors.js';
-import {FacetType} from '../facets/facet-set/interfaces/common.js';
-import {
+import type {FacetType} from '../facets/facet-set/interfaces/common.js';
+import type {
   AnyFacetRequest,
   CategoryFacetRequest,
   DateFacetRequest,
@@ -16,39 +16,13 @@ import {
   NumericFacetRequest,
   RegularFacetRequest,
 } from '../facets/facet-set/interfaces/request.js';
-import {ManualNumericFacetSetState} from '../facets/numeric-facet/manual-numeric-facet-state.js';
+import type {ManualNumericFacetSetState} from '../facets/numeric-facet/manual-numeric-facet-state.js';
 import {
-  CommercePaginationState,
+  type CommercePaginationState,
   getCommercePaginationInitialSlice,
 } from '../pagination/pagination-state.js';
 import {getCommerceSortInitialState} from '../sort/sort-state.js';
-import {Parameters as ManagedParameters} from './parameters-actions.js';
-
-export function initialParametersSelector(
-  state: CommerceEngine[typeof stateKey]
-): Required<ManagedParameters> {
-  return {
-    page:
-      state.commercePagination.principal.page ??
-      getCommercePaginationInitialSlice().page,
-    perPage:
-      state.commercePagination.principal.perPage ??
-      getCommercePaginationInitialSlice().perPage,
-    sortCriteria:
-      state.commerceSort.appliedSort ??
-      getCommerceSortInitialState().appliedSort,
-    cf: {},
-    nf: {},
-    nfExcluded: {},
-    mnf: {},
-    mnfExcluded: {},
-    df: {},
-    dfExcluded: {},
-    f: {},
-    fExcluded: {},
-    lf: {},
-  };
-}
+import type {Parameters as ManagedParameters} from './parameters-actions.js';
 
 export function activeParametersSelector(
   state: CommerceEngine[typeof stateKey]
@@ -199,6 +173,7 @@ function getManualNumericFacet(
       return {[facetId]: [manualFacetRange.manualRange]};
     })
     .filter((manualRange) => manualRange !== undefined)
+    // biome-ignore lint/performance/noAccumulatingSpread: <>
     .reduce((acc, obj) => ({...acc, ...obj}), {});
 
   return state === 'selected'

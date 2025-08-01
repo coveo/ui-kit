@@ -431,7 +431,7 @@ export class AtomicSearchBox implements InitializableComponent<Bindings> {
     this.searchBox.submit();
   }
 
-  private onKeyDown(e: KeyboardEvent) {
+  private async onKeyDown(e: KeyboardEvent) {
     if (this.isSearchDisabledForEndUser(this.searchBoxState.value)) {
       return;
     }
@@ -445,12 +445,12 @@ export class AtomicSearchBox implements InitializableComponent<Bindings> {
         break;
       case 'ArrowDown':
         e.preventDefault();
-        this.suggestionManager.focusNextValue();
+        await this.suggestionManager.focusNextValue();
         this.announceNewActiveSuggestionToScreenReader();
         break;
       case 'ArrowUp':
         e.preventDefault();
-        this.suggestionManager.focusPreviousValue();
+        await this.suggestionManager.focusPreviousValue();
         this.announceNewActiveSuggestionToScreenReader();
         break;
       case 'ArrowRight':
@@ -475,6 +475,11 @@ export class AtomicSearchBox implements InitializableComponent<Bindings> {
         break;
       case 'Tab':
         this.suggestionManager.clearSuggestions();
+        break;
+      default:
+        if (this.suggestionManager.keyboardActiveDescendant) {
+          this.suggestionManager.updateKeyboardActiveDescendant();
+        }
         break;
     }
   }
@@ -515,7 +520,6 @@ export class AtomicSearchBox implements InitializableComponent<Bindings> {
           }
 
           this.isExpanded = false;
-          this.triggerTextAreaChange(item.query ?? '');
         }}
         onMouseOver={() => {
           this.suggestionManager.onSuggestionMouseOver(item, side, id);

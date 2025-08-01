@@ -1,4 +1,4 @@
-import {PrimitivesValues} from '@coveo/bueno';
+import type {PrimitivesValues} from '@coveo/bueno';
 import {createCustomEqual} from 'fast-equals';
 
 export function arrayEqual<T>(
@@ -73,8 +73,7 @@ export const arrayEqualStrictlyDifferentOrder = <
 };
 
 export const deepEqualAnyOrder: <T>(a: T, b: T) => boolean = createCustomEqual({
-  //@ts-expect-error any
-  createCustomConfig: (config) => {
+  createCustomConfig: (config: {}) => {
     return {
       ...config,
       areArraysEqual: arrayEqualAnyOrder,

@@ -1,5 +1,6 @@
 import type {JSX as AtomicJSX} from '@coveo/atomic';
 import type {Result} from '@coveo/headless';
+// biome-ignore lint/style/useImportType: <React is needed>
 import React, {useEffect, useRef} from 'react';
 import {createRoot} from 'react-dom/client';
 import {renderToString} from 'react-dom/server';
@@ -46,11 +47,12 @@ export const ResultListWrapper: React.FC<WrapperProps> = (props) => {
           ? createRoot(linkContainer!).render(
               <AtomicResultLink></AtomicResultLink>
             )
-          : createRoot(linkContainer!).render(<></>);
+          : // biome-ignore lint/complexity/noUselessFragments: <>
+            createRoot(linkContainer!).render(<></>);
         return renderToString(templateResult);
       }
     });
-  }, [resultListRef]);
+  }, [otherProps.display, template]);
   return <AtomicResultList ref={resultListRef} {...otherProps} />;
 };
 

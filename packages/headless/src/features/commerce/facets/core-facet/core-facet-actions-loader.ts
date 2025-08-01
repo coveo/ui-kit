@@ -1,19 +1,19 @@
-import {PayloadAction} from '@reduxjs/toolkit';
-import {CommerceEngine} from '../../../../app/commerce-engine/commerce-engine.js';
+import type {PayloadAction} from '@reduxjs/toolkit';
+import type {CommerceEngine} from '../../../../app/commerce-engine/commerce-engine.js';
 import {commerceFacetSetReducer as commerceFacetSet} from '../facet-set/facet-set-slice.js';
 import {
-  DeselectAllValuesInCoreFacetPayload,
-  UpdateCoreFacetFreezeCurrentValuesPayload,
-  UpdateCoreFacetIsFieldExpandedPayload,
-  UpdateCoreFacetNumberOfValuesPayload,
-  UpdateAutoSelectionForAllCoreFacetsPayload,
+  clearAllCoreFacets,
+  type DeselectAllValuesInCoreFacetPayload,
+  deleteAllCoreFacets,
   deselectAllValuesInCoreFacet,
+  type UpdateAutoSelectionForAllCoreFacetsPayload,
+  type UpdateCoreFacetFreezeCurrentValuesPayload,
+  type UpdateCoreFacetIsFieldExpandedPayload,
+  type UpdateCoreFacetNumberOfValuesPayload,
+  updateAutoSelectionForAllCoreFacets,
   updateCoreFacetFreezeCurrentValues,
   updateCoreFacetIsFieldExpanded,
   updateCoreFacetNumberOfValues,
-  updateAutoSelectionForAllCoreFacets,
-  clearAllCoreFacets,
-  deleteAllCoreFacets,
 } from './core-facet-actions.js';
 
 export type {

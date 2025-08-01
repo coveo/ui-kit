@@ -1,18 +1,18 @@
 import i18next from 'i18next';
-import {LitElement, html} from 'lit';
+import {html, LitElement} from 'lit';
 import {customElement, state} from 'lit/decorators.js';
 import {
-  Mock,
-  vi,
-  describe,
-  beforeEach,
   afterEach,
-  it,
-  test,
+  beforeEach,
+  describe,
   expect,
+  it,
+  type Mock,
+  test,
+  vi,
 } from 'vitest';
 import type {Bindings} from '../components/search/atomic-search-interface/interfaces';
-import {InitializableComponent} from '../decorators/types';
+import type {InitializableComponent} from '../decorators/types';
 import {fetchBindings} from '../utils/initialization-lit-stencil-common-utils';
 import {InitializeBindingsMixin} from './bindings-mixin';
 
@@ -26,7 +26,8 @@ const mockBindings = () =>
   }) as Bindings;
 
 @customElement('test-element')
-export class TestElement
+// biome-ignore lint/correctness/noUnusedVariables: <used as an element>
+class TestElement
   extends InitializeBindingsMixin(LitElement)
   implements InitializableComponent<Bindings>
 {
@@ -70,8 +71,8 @@ describe('InitializeBindingsMixin mixin', () => {
     consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
   });
 
-  afterEach(() => {
-    teardownElement();
+  afterEach(async () => {
+    await teardownElement();
     consoleErrorSpy.mockRestore();
     mockedFetchBindings.mockRestore();
   });

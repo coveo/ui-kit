@@ -1,46 +1,45 @@
-import {watch} from '@/src/decorators/watch';
-import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles.js';
-import {markParentAsReady} from '@/src/utils/init-queue';
-import {
-  SafeStorage,
-  StandaloneSearchBoxData,
-  StorageItems,
-} from '@/src/utils/local-storage-utils';
 import {
   buildCommerceEngine,
   buildContext,
   buildProductListing,
   buildSearch,
-  CommerceEngine,
-  CommerceEngineConfiguration,
-  Context,
+  type CommerceEngine,
+  type CommerceEngineConfiguration,
+  type Context,
+  type LogLevel,
+  loadConfigurationActions,
   loadQueryActions,
-  LogLevel,
-  ProductListing,
-  ProductListingSummaryState,
-  Search,
-  SearchSummaryState,
-  Summary,
-  Unsubscribe,
-  UrlManager,
+  type ProductListing,
+  type ProductListingSummaryState,
+  type Search,
+  type SearchSummaryState,
+  type Summary,
+  type Unsubscribe,
+  type UrlManager,
 } from '@coveo/headless/commerce';
 import {provide} from '@lit/context';
-import i18next, {i18n} from 'i18next';
-import {CSSResultGroup, html, LitElement, unsafeCSS} from 'lit';
+import i18next, {type i18n} from 'i18next';
+import {type CSSResultGroup, html, LitElement, unsafeCSS} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
+import {watch} from '@/src/decorators/watch';
+import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles.js';
+import {markParentAsReady} from '@/src/utils/init-queue';
+import {
+  SafeStorage,
+  type StandaloneSearchBoxData,
+  StorageItems,
+} from '@/src/utils/local-storage-utils';
 import {ChildrenUpdateCompleteMixin} from '../../../mixins/children-update-complete-mixin';
+import {augmentAnalyticsConfigWithAtomicVersion} from '../../common/interface/analytics-config';
+import type {CommonBindings} from '../../common/interface/bindings';
 import {
-  AdoptedStylesBindings,
-  CommonBindings,
-} from '../../common/interface/bindings';
-import {
-  BaseAtomicInterface,
+  type BaseAtomicInterface,
   CommonAtomicInterfaceHelper,
-  InitializeEvent,
+  type InitializeEvent,
 } from '../../common/interface/interface-common';
 import {bindingsContext} from '../../context/bindings-context';
 import {
-  CommerceStore,
+  type CommerceStore,
   createCommerceStore,
 } from '../atomic-commerce-interface/store';
 import {
@@ -56,8 +55,7 @@ export type CommerceBindings = CommonBindings<
   CommerceEngine,
   CommerceStore,
   AtomicCommerceInterface
-> &
-  AdoptedStylesBindings;
+>;
 
 const FirstRequestExecutedFlag = 'firstRequestExecuted';
 
@@ -188,6 +186,7 @@ export class AtomicCommerceInterface
   public connectedCallback() {
     super.connectedCallback();
     this.store.setLoadingFlag(FirstRequestExecutedFlag);
+    this.updateMobileBreakpoint();
 
     this.addEventListener(
       'atomic/initializeComponent',
@@ -250,6 +249,15 @@ export class AtomicCommerceInterface
     }
   }
 
+  private updateMobileBreakpoint() {
+    const breakpoint = this.querySelector(
+      'atomic-commerce-layout'
+    )?.mobileBreakpoint;
+    if (breakpoint) {
+      this.store.state.mobileBreakpoint = breakpoint;
+    }
+  }
+
   private handleInitialization = (event: InitializeEvent) => {
     this.commonInterfaceHelper.onComponentInitializing(event);
   };
@@ -278,7 +286,15 @@ export class AtomicCommerceInterface
    * This bypasses the properties set on the component, such as analytics and language.
    */
   public initializeWithEngine(engine: CommerceEngine) {
-    return this.internalInitialization(() => (this.engine = engine));
+    engine.dispatch(
+      loadConfigurationActions(engine).updateAnalyticsConfiguration({
+        trackingId: engine.configuration.analytics.trackingId,
+        ...augmentAnalyticsConfigWithAtomicVersion(),
+      })
+    );
+    return this.internalInitialization(() => {
+      this.engine = engine;
+    });
   }
 
   /**
@@ -352,21 +368,6 @@ export class AtomicCommerceInterface
       i18n: this.i18n,
       store: this.store,
       interfaceElement: this as AtomicCommerceInterface,
-      addAdoptedStyleSheets: (stylesheet) => {
-        // TODO: KIT-4333: remove and only keep decorator
-        const parent = this.getRootNode();
-        const styleSheet = stylesheet;
-        const isDocumentOrShadowRoot =
-          parent instanceof Document || parent instanceof ShadowRoot;
-
-        if (
-          styleSheet &&
-          isDocumentOrShadowRoot &&
-          !parent.adoptedStyleSheets.includes(styleSheet)
-        ) {
-          parent.adoptedStyleSheets.push(styleSheet);
-        }
-      },
     };
   }
 

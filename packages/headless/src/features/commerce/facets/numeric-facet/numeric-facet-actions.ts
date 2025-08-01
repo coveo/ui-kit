@@ -1,9 +1,9 @@
 import {
   ArrayValue,
-  RecordValue,
-  NumberValue,
-  StringValue,
   BooleanValue,
+  NumberValue,
+  RecordValue,
+  StringValue,
 } from '@coveo/bueno';
 import {createAction} from '@reduxjs/toolkit';
 import {
@@ -12,7 +12,7 @@ import {
   validatePayload,
   validatePayloadAndThrow,
 } from '../../../../utils/validate-payload.js';
-import {NumericRangeRequest} from '../../../facets/range-facets/numeric-facet-set/interfaces/request.js';
+import type {NumericRangeRequest} from '../../../facets/range-facets/numeric-facet-set/interfaces/request.js';
 import {validateManualNumericRanges} from '../../../facets/range-facets/numeric-facet-set/numeric-facet-actions.js';
 
 export interface ToggleSelectNumericFacetValuePayload {
@@ -85,7 +85,7 @@ export type UpdateManualNumericFacetRangePayload = {
    * The unique identifier of the facet (e.g., `"1"`).
    */
   facetId: string;
-} & NumericRangeRequest;
+} & Omit<NumericRangeRequest, 'previousState'>;
 
 export const updateManualNumericFacetRange = createAction(
   'commerce/facets/numericFacet/updateManualRange',

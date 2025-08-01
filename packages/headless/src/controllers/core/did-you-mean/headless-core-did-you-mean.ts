@@ -1,9 +1,6 @@
-import {
-  QueryCorrection,
-  WordCorrection,
-} from '../../../api/search/search/query-corrections.js';
+import type {QueryCorrection} from '../../../api/search/search/query-corrections.js';
 import {configuration} from '../../../app/common-reducers.js';
-import {CoreEngine} from '../../../app/engine.js';
+import type {CoreEngine} from '../../../app/engine.js';
 import {
   applyDidYouMeanCorrection,
   disableAutomaticQueryCorrection,
@@ -12,17 +9,15 @@ import {
 } from '../../../features/did-you-mean/did-you-mean-actions.js';
 import {hasQueryCorrectionSelector} from '../../../features/did-you-mean/did-you-mean-selectors.js';
 import {didYouMeanReducer as didYouMean} from '../../../features/did-you-mean/did-you-mean-slice.js';
-import {
+import type {
   ConfigurationSection,
   DidYouMeanSection,
 } from '../../../state/state-sections.js';
 import {loadReducerError} from '../../../utils/errors.js';
 import {
   buildController,
-  Controller,
+  type Controller,
 } from '../../controller/headless-controller.js';
-
-export type {QueryCorrection, WordCorrection};
 
 export interface DidYouMeanProps {
   options?: DidYouMeanOptions;

@@ -1,8 +1,8 @@
-import {
+import type {
   FoldedResult,
   FoldedResultList as HeadlessFoldedResultList,
 } from '@coveo/headless';
-import {useEffect, useState, FunctionComponent} from 'react';
+import {type FunctionComponent, useEffect, useState} from 'react';
 import {ResultLink} from '../result-list/result-link';
 
 interface FoldedResultListProps {

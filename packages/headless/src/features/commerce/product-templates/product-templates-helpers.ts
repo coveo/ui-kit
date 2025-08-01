@@ -1,6 +1,9 @@
 import {isArray, isNullOrUndefined} from '@coveo/bueno';
-import {ChildProduct, Product} from '../../../api/commerce/common/product.js';
-import {ProductTemplateCondition} from './product-templates-manager.js';
+import type {
+  ChildProduct,
+  Product,
+} from '../../../api/commerce/common/product.js';
+import type {ProductTemplateCondition} from './product-templates-manager.js';
 
 /**
  * Extracts a property from a product object.
@@ -8,7 +11,7 @@ import {ProductTemplateCondition} from './product-templates-manager.js';
  * @param property (string) - The property to extract.
  * @returns (unknown) The value of the specified property in the specified product, or null if the property does not exist.
  */
-export const getProductProperty = (
+const getProductProperty = (
   product: Product | ChildProduct,
   property: string
 ) => {
@@ -30,7 +33,7 @@ export const getProductProperty = (
  * @param fieldNames (string[]) - A list of fields that must be defined.
  * @returns (ProductTemplateCondition) A function that takes a product and checks if every field in the specified list is defined.
  */
-export const fieldsMustBeDefined = (
+const fieldsMustBeDefined = (
   fieldNames: string[]
 ): ProductTemplateCondition => {
   return (product: Product) => {
@@ -45,7 +48,7 @@ export const fieldsMustBeDefined = (
  * @param fieldNames (string[]) - A list of fields that must not be defined.
  * @returns (ProductTemplateCondition) A function that takes a product and checks if every field in the specified list is not defined.
  */
-export const fieldsMustNotBeDefined = (
+const fieldsMustNotBeDefined = (
   fieldNames: string[]
 ): ProductTemplateCondition => {
   return (product: Product) => {
@@ -61,7 +64,7 @@ export const fieldsMustNotBeDefined = (
  * @param allowedValues (string[]) - The list of values that the field value can be equal to in order for the condition to evaluate to "true" (case insensitive).
  * @returns (ProductTemplateCondition) - A function that takes a Product as an argument and returns "true" if the value for the specified field is equal to any of the values in the specified list (case insensitive), and "false" otherwise.
  */
-export const fieldMustMatch = (
+const fieldMustMatch = (
   fieldName: string,
   valuesToMatch: string[]
 ): ProductTemplateCondition => {
@@ -82,7 +85,7 @@ export const fieldMustMatch = (
  * @param disallowedValues (string[]) - The list of values that the field value must not be equal to in order for the condition to evaluate to "true" (case insensitive).
  * @returns (ProductTemplateCondition) A function that takes a Product as an argument and returns "true" if the value for the specified field is not equal to any of the values in the given list (case insensitive), or "false" otherwise.
  */
-export const fieldMustNotMatch = (
+const fieldMustNotMatch = (
   fieldName: string,
   disallowedValues: string[]
 ): ProductTemplateCondition => {

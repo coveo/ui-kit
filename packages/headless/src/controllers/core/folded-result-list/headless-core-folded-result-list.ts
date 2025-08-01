@@ -1,8 +1,8 @@
 import {Schema} from '@coveo/bueno';
-import {AsyncThunkAction} from '@reduxjs/toolkit';
-import {Result} from '../../../api/search/search/result.js';
-import {CoreEngine} from '../../../app/engine.js';
-import {
+import type {AsyncThunkAction} from '@reduxjs/toolkit';
+import type {Result} from '../../../api/search/search/result.js';
+import type {CoreEngine} from '../../../app/engine.js';
+import type {
   ClickAction,
   CustomAction,
 } from '../../../features/analytics/analytics-utils.js';
@@ -12,14 +12,14 @@ import {
   registerFolding,
 } from '../../../features/folding/folding-actions.js';
 import {foldingReducer as folding} from '../../../features/folding/folding-slice.js';
-import {
+import type {
   CollectionId,
   FoldedCollection,
   FoldedResult,
 } from '../../../features/folding/folding-state.js';
 import {queryReducer as query} from '../../../features/query/query-slice.js';
 import {searchReducer as search} from '../../../features/search/search-slice.js';
-import {
+import type {
   ConfigurationSection,
   FoldingSection,
   QuerySection,
@@ -27,12 +27,12 @@ import {
 } from '../../../state/state-sections.js';
 import {loadReducerError} from '../../../utils/errors.js';
 import {validateOptions} from '../../../utils/validate-payload.js';
-import {Controller} from '../../controller/headless-controller.js';
+import type {Controller} from '../../controller/headless-controller.js';
 import {
-  ResultListOptions,
   buildCoreResultList,
+  type ResultListOptions,
 } from '../result-list/headless-core-result-list.js';
-import {SearchStatusState} from '../status/headless-core-status.js';
+import type {SearchStatusState} from '../status/headless-core-status.js';
 
 export type {FoldedCollection, FoldedResult};
 
@@ -81,12 +81,13 @@ export interface CoreFoldedResultListProps {
    */
   loadCollectionActionCreator: (
     collectionId: CollectionId
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    // biome-ignore lint/suspicious/noExplicitAny: third-party API requires 'any'
   ) => AsyncThunkAction<any, CollectionId, any>;
   /**
    * The action creator to build the `fetchMoreResults` action.
    */
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
+  // biome-ignore lint/suspicious/noExplicitAny: third-party API requires 'any'
   fetchMoreResultsActionCreator: () => AsyncThunkAction<unknown, void, any>;
 }
 
@@ -165,7 +166,7 @@ export interface FoldedResultListState extends SearchStatusState {
   moreResultsAvailable: boolean;
 }
 
-export interface FoldedResultAnalyticsClient {
+interface FoldedResultAnalyticsClient {
   logShowMoreFoldedResults: (result: Result) => ClickAction;
   logShowLessFoldedResults: () => CustomAction;
 }

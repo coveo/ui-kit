@@ -1,5 +1,5 @@
-import {Product} from '../../../../api/commerce/common/product.js';
-import {
+import type {Product} from '../../../../api/commerce/common/product.js';
+import type {
   CommerceEngine,
   CommerceEngineState,
 } from '../../../../app/commerce-engine/commerce-engine.js';
@@ -7,9 +7,9 @@ import {stateKey} from '../../../../app/state-key.js';
 import {productClick} from '../../../../features/commerce/product/product-actions.js';
 import {
   buildInteractiveResultCore,
-  InteractiveResultCore,
-  InteractiveResultCoreOptions as InteractiveProductCoreOptions,
-  InteractiveResultCoreProps as InteractiveResultHeadlessCoreProps,
+  type InteractiveResultCoreOptions as InteractiveProductCoreOptions,
+  type InteractiveResultCore,
+  type InteractiveResultCoreProps as InteractiveResultHeadlessCoreProps,
 } from '../../../core/interactive-result/headless-core-interactive-result.js';
 
 export interface InteractiveProductOptions

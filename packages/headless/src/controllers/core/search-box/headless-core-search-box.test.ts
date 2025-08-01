@@ -1,35 +1,35 @@
 import {configuration} from '../../../app/common-reducers.js';
+import {logSearchboxSubmit} from '../../../features/query/query-analytics-actions.js';
+import {queryReducer as query} from '../../../features/query/query-slice.js';
 import {
   registerQuerySetQuery,
   updateQuerySetQuery,
 } from '../../../features/query-set/query-set-actions.js';
 import {querySetReducer as querySet} from '../../../features/query-set/query-set-slice.js';
 import {
-  registerQuerySuggest,
   clearQuerySuggest,
   fetchQuerySuggestions,
+  registerQuerySuggest,
   selectQuerySuggestion,
 } from '../../../features/query-suggest/query-suggest-actions.js';
 import {querySuggestReducer as querySuggest} from '../../../features/query-suggest/query-suggest-slice.js';
-import {logSearchboxSubmit} from '../../../features/query/query-analytics-actions.js';
-import {queryReducer as query} from '../../../features/query/query-slice.js';
 import {
   executeSearch,
   prepareForSearchWithQuery,
 } from '../../../features/search/search-actions.js';
 import {searchReducer as search} from '../../../features/search/search-slice.js';
-import {SearchAppState} from '../../../state/search-app-state.js';
+import type {SearchAppState} from '../../../state/search-app-state.js';
 import {
   buildMockSearchEngine,
-  MockedSearchEngine,
+  type MockedSearchEngine,
 } from '../../../test/mock-engine-v2.js';
 import {buildMockQuerySuggest} from '../../../test/mock-query-suggest.js';
 import {createMockState} from '../../../test/mock-state.js';
 import {
-  SearchBox,
-  SearchBoxProps,
-  SearchBoxOptions,
   buildCoreSearchBox,
+  type SearchBox,
+  type SearchBoxOptions,
+  type SearchBoxProps,
 } from './headless-core-search-box.js';
 
 vi.mock('../../../features/query/query-analytics-actions', () => ({

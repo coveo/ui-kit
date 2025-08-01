@@ -7,19 +7,19 @@ import {
 } from '../../../../features/commerce/context/cart/cart-actions.js';
 import {itemsSelector} from '../../../../features/commerce/context/cart/cart-selector.js';
 import {cartReducer} from '../../../../features/commerce/context/cart/cart-slice.js';
-import {CartItemWithMetadata} from '../../../../features/commerce/context/cart/cart-state.js';
+import type {CartItemWithMetadata} from '../../../../features/commerce/context/cart/cart-state.js';
 import {getContextInitialState} from '../../../../features/commerce/context/context-state.js';
 import {buildMockCommerceState} from '../../../../test/mock-commerce-state.js';
 import {
-  MockedCommerceEngine,
   buildMockCommerceEngine,
+  type MockedCommerceEngine,
 } from '../../../../test/mock-engine-v2.js';
+import {buildCart, type Cart, type CartInitialState} from './headless-cart.js';
 import {
   itemSelector,
   totalPriceSelector,
   totalQuantitySelector,
 } from './headless-cart-selectors.js';
-import {buildCart, Cart, CartInitialState} from './headless-cart.js';
 
 vi.mock('../../../../features/commerce/context/cart/cart-actions');
 vi.mock('../../../../features/commerce/context/cart/cart-selector');

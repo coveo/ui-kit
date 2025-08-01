@@ -14,7 +14,7 @@
 
 .citation__link:focus {
   border: 1px solid var(--lwc-brandAccessible, #0070d2);
-  box-shadow: 0px 0px 3px 0px var(--lwc-brandAccessible, #0070d2);
+  box-shadow: 0 0 3px 0 var(--lwc-brandAccessible, #0070d2);
 }
 
 .citation__link:hover .citation__title {

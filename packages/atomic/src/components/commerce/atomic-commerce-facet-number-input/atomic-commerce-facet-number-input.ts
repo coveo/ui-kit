@@ -1,14 +1,14 @@
+import {isUndefined} from '@coveo/bueno';
+import type {NumericFacet} from '@coveo/headless/commerce';
+import {html, LitElement, unsafeCSS} from 'lit';
+import {customElement, property, state} from 'lit/decorators.js';
+import {ref} from 'lit/directives/ref.js';
 import {bindingGuard} from '@/src/decorators/binding-guard';
 import {bindings} from '@/src/decorators/bindings';
 import {errorGuard} from '@/src/decorators/error-guard';
-import {injectStylesForNoShadowDOM} from '@/src/decorators/light-dom';
+import {injectStylesForNoShadowDOM} from '@/src/decorators/inject-styles-for-no-shadow-dom';
 import type {InitializableComponent} from '@/src/decorators/types';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
-import {isUndefined} from '@coveo/bueno';
-import type {NumericFacet} from '@coveo/headless/commerce';
-import {LitElement, html, unsafeCSS} from 'lit';
-import {customElement, property, state} from 'lit/decorators.js';
-import {ref} from 'lit/directives/ref.js';
 import type {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface';
 import styles from './atomic-commerce-facet-number-input.tw.css';
 

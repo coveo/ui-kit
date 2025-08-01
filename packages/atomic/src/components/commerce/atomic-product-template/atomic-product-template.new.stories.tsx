@@ -1,3 +1,5 @@
+import type {Meta, StoryObj as Story} from '@storybook/web-components';
+import {within} from 'shadow-dom-testing-library';
 import {wrapInCommerceInterface} from '@/storybook-utils/commerce/commerce-interface-wrapper';
 import {wrapInCommerceProductList} from '@/storybook-utils/commerce/commerce-product-list-wrapper';
 import {wrapInCommerceRecommendationInterface} from '@/storybook-utils/commerce/commerce-recommendation-interface-wrapper';
@@ -5,8 +7,7 @@ import {wrapInCommerceRecommendationList} from '@/storybook-utils/commerce/comme
 import {wrapInCommerceSearchBoxInstantProducts} from '@/storybook-utils/commerce/commerce-searchbox-instant-products-wrapper';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {renderComponentWithoutCodeRoot} from '@/storybook-utils/common/render-component';
-import type {Meta, StoryObj as Story} from '@storybook/web-components';
-import {within} from 'shadow-dom-testing-library';
+import {parameters as searchBoxParameters} from '@/storybook-utils/common/search-box-suggestions-parameters';
 
 const TEMPLATE_EXAMPLE = `<template>
   <atomic-product-section-name>
@@ -44,7 +45,7 @@ const TEMPLATE_EXAMPLE = `<template>
 
 const meta: Meta = {
   component: 'atomic-product-template',
-  title: 'Atomic-Commerce/Product Template Components/atomic-product-template',
+  title: 'Commerce/atomic-product-template',
   id: 'atomic-product-template',
   render: renderComponentWithoutCodeRoot,
   parameters,
@@ -58,7 +59,17 @@ export default meta;
 const {
   decorator: commerceInterfaceDecorator,
   play: initializeCommerceInterface,
-} = wrapInCommerceInterface({skipFirstRequest: false});
+} = wrapInCommerceInterface({
+  skipFirstRequest: false,
+  engineConfig: {
+    preprocessRequest: (request) => {
+      const parsed = JSON.parse(request.body as string);
+      parsed.perPage = 4;
+      request.body = JSON.stringify(parsed);
+      return request;
+    },
+  },
+});
 const {decorator: commerceProductListDecorator} = wrapInCommerceProductList();
 
 export const InAProductList: Story = {
@@ -93,6 +104,7 @@ export const InASearchBoxInstantProducts: Story = {
     commerceSearchBoxInstantsProductsDecorator,
     commerceInterfaceDecorator,
   ],
+  parameters: searchBoxParameters,
   play: async (context) => {
     await initializeCommerceInterface(context);
     const {canvasElement, step} = context;

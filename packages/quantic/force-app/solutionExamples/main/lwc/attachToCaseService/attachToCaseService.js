@@ -34,6 +34,9 @@
  *
  * This function should be replaced with a real Apex implementation in the customer project.
  * It returns a mock success response.
+ *
+ * @param {{[key: string]: any}} resultToAttach - The result object to attach, typically includes case ID and result metadata.
+ * @returns {Promise<string>} A promise that resolves to a JSON stringified response, e.g., `{"succeeded": true}`.
  */
 // eslint-disable-next-line no-unused-vars
 export function attachToCase(resultToAttach) {

@@ -1,7 +1,7 @@
+import type {Meta, StoryObj as Story} from '@storybook/web-components';
 import {wrapInCommerceRecommendationInterface} from '@/storybook-utils/commerce/commerce-recommendation-interface-wrapper';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {renderComponent} from '@/storybook-utils/common/render-component';
-import type {Meta, StoryObj as Story} from '@storybook/web-components';
 
 const {decorator, play} = wrapInCommerceRecommendationInterface({});
 
@@ -69,7 +69,6 @@ const meta: Meta = {
 export default meta;
 
 export const Default: Story = {
-  name: 'atomic-commerce-recommendation-list',
   play: async (context) => {
     await play(context);
   },

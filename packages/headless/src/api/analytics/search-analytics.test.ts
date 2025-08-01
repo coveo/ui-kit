@@ -3,29 +3,29 @@ import {pino} from 'pino';
 import {getConfigurationInitialState} from '../../features/configuration/configuration-state.js';
 import {getCategoryFacetSetInitialState} from '../../features/facets/category-facet-set/category-facet-set-state.js';
 import {getFacetSetInitialState} from '../../features/facets/facet-set/facet-set-state.js';
-import {FacetSortCriterion} from '../../features/facets/facet-set/interfaces/request.js';
-import {DateFacetValue} from '../../features/facets/range-facets/date-facet-set/interfaces/response.js';
+import type {FacetSortCriterion} from '../../features/facets/facet-set/interfaces/request.js';
+import type {DateFacetValue} from '../../features/facets/range-facets/date-facet-set/interfaces/response.js';
 import {getGeneratedAnswerInitialState} from '../../features/generated-answer/generated-answer-state.js';
-import {OmniboxSuggestionMetadata} from '../../features/query-suggest/query-suggest-analytics-actions.js';
+import type {OmniboxSuggestionMetadata} from '../../features/query-suggest/query-suggest-analytics-actions.js';
 import {getQuerySuggestSetInitialState} from '../../features/query-suggest/query-suggest-state.js';
-import {StaticFilterValueMetadata} from '../../features/static-filter-set/static-filter-set-actions.js';
+import type {StaticFilterValueMetadata} from '../../features/static-filter-set/static-filter-set-actions.js';
 import {buildMockCategoryFacetSlice} from '../../test/mock-category-facet-slice.js';
 import {buildMockFacetRequest} from '../../test/mock-facet-request.js';
 import {buildMockFacetResponse} from '../../test/mock-facet-response.js';
 import {buildMockFacetSlice} from '../../test/mock-facet-slice.js';
-import {buildMockFacetValueRequest} from '../../test/mock-facet-value-request.js';
 import {buildMockFacetValue} from '../../test/mock-facet-value.js';
+import {buildMockFacetValueRequest} from '../../test/mock-facet-value-request.js';
 import {buildMockQueryState} from '../../test/mock-query-state.js';
 import {buildMockQuerySuggestSet} from '../../test/mock-query-suggest-slice.js';
 import {buildMockResult} from '../../test/mock-result.js';
 import {buildMockSearchState} from '../../test/mock-search-state.js';
 import {createMockState} from '../../test/mock-state.js';
-import {QuerySuggestCompletion} from '../search/query-suggest/query-suggest-response.js';
+import type {QuerySuggestCompletion} from '../search/query-suggest/query-suggest-response.js';
 import {
   configureLegacyAnalytics,
   getPageID,
   SearchAnalyticsProvider,
-  StateNeededBySearchAnalyticsProvider,
+  type StateNeededBySearchAnalyticsProvider,
 } from './search-analytics.js';
 
 vi.mock('@coveo/relay');

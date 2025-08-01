@@ -1,6 +1,6 @@
+import {executeSearch} from '../../features/search/search-actions.js';
 import {restoreSearchParameters} from '../../features/search-parameters/search-parameter-actions.js';
 import {initialSearchParameterSelector} from '../../features/search-parameters/search-parameter-selectors.js';
-import {executeSearch} from '../../features/search/search-actions.js';
 import {buildMockAutomaticFacetResponse} from '../../test/mock-automatic-facet-response.js';
 import {buildMockAutomaticFacetSlice} from '../../test/mock-automatic-facet-slice.js';
 import {buildMockCategoryFacetRequest} from '../../test/mock-category-facet-request.js';
@@ -10,13 +10,13 @@ import {buildMockDateFacetRequest} from '../../test/mock-date-facet-request.js';
 import {buildMockDateFacetSlice} from '../../test/mock-date-facet-slice.js';
 import {buildMockDateFacetValue} from '../../test/mock-date-facet-value.js';
 import {
-  MockedSearchEngine,
   buildMockSearchEngine,
+  type MockedSearchEngine,
 } from '../../test/mock-engine-v2.js';
 import {buildMockFacetRequest} from '../../test/mock-facet-request.js';
 import {buildMockFacetSlice} from '../../test/mock-facet-slice.js';
-import {buildMockFacetValueRequest} from '../../test/mock-facet-value-request.js';
 import {buildMockFacetValue} from '../../test/mock-facet-value.js';
+import {buildMockFacetValueRequest} from '../../test/mock-facet-value-request.js';
 import {buildMockNumericFacetRequest} from '../../test/mock-numeric-facet-request.js';
 import {buildMockNumericFacetSlice} from '../../test/mock-numeric-facet-slice.js';
 import {buildMockNumericFacetValue} from '../../test/mock-numeric-facet-value.js';
@@ -27,8 +27,8 @@ import {buildMockStaticFilterValue} from '../../test/mock-static-filter-value.js
 import {buildMockTabSlice} from '../../test/mock-tab-state.js';
 import {
   buildSearchParameterManager,
-  SearchParameterManager,
-  SearchParameterManagerProps,
+  type SearchParameterManager,
+  type SearchParameterManagerProps,
 } from './headless-search-parameter-manager.js';
 
 vi.mock('../../features/search-parameters/search-parameter-actions');

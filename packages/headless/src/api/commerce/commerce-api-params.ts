@@ -1,5 +1,5 @@
-import {AnyFacetRequest} from '../../features/commerce/facets/facet-set/interfaces/request.js';
-import {SortOption} from './common/sort.js';
+import type {AnyFacetRequest} from '../../features/commerce/facets/facet-set/interfaces/request.js';
+import type {SortOption} from './common/sort.js';
 
 export interface TrackingIdParam {
   trackingId: string;
@@ -25,11 +25,11 @@ export interface ContextParam {
   context: ContextParams;
 }
 
-export interface ProductParam {
+type ProductParam = {
   productId: string;
-}
+};
 
-export interface ContextParams {
+type ContextParams = {
   view: ViewParams;
   user?: UserParams;
   product?: ProductParam;
@@ -37,7 +37,7 @@ export interface ContextParams {
   purchased?: CartItemParam[];
   capture: boolean;
   source: string[];
-}
+};
 
 export interface ViewParams {
   url: string;

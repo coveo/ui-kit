@@ -8,9 +8,9 @@ import {
 } from '../../../../utils/initialization-utils';
 import {buildStringTemplateFromResult} from '../../../../utils/result-utils';
 import {getDefaultSlotFromHost} from '../../../../utils/slot-utils';
-import {AnyUnfoldedItem} from '../../../common/interface/item';
+import {AnyUnfoldedItem} from '../../../common/item-list/unfolded-item';
 import {getAttributesFromLinkSlot} from '../../../common/item-link/attributes-slot';
-import {LinkWithItemAnalytics} from '../../../common/item-link/item-link';
+import {LinkWithItemAnalytics} from '../../../common/item-link/stencil-item-link';
 import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
 import {
   InteractiveResultContext,

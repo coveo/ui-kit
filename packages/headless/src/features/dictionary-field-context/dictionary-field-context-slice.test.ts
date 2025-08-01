@@ -1,16 +1,16 @@
 import {change} from '../history/history-actions.js';
 import {
   getHistoryInitialState,
-  HistoryState,
+  type HistoryState,
 } from '../history/history-state.js';
 import {
+  type AddDictionaryFieldContextActionCreatorPayload,
   addContext,
-  AddDictionaryFieldContextActionCreatorPayload,
   removeContext,
   setContext,
 } from './dictionary-field-context-actions.js';
 import {dictionaryFieldContextReducer} from './dictionary-field-context-slice.js';
-import {
+import type {
   DictionaryFieldContextPayload,
   DictionaryFieldContextState,
 } from './dictionary-field-context-state.js';

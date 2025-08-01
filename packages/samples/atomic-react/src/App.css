@@ -4,7 +4,6 @@ header {
 
 header ul li {
   display: inline-block;
-  list-decoration: none;
   cursor: pointer;
   color: var(--atomic-primary);
   margin-right: 24px;
@@ -26,34 +25,34 @@ atomic-recs-list {
   --atomic-recs-number-of-columns: 3;
 }
 
-atomic-color-facet[field='cat_color']::part(value-Black) {
+atomic-color-facet[field="cat_color"]::part(value-Black) {
   background-color: #222222;
 }
 
-atomic-color-facet[field='cat_color']::part(value-White) {
+atomic-color-facet[field="cat_color"]::part(value-White) {
   background-color: white;
   border: 1px solid var(--atomic-neutral);
 }
 
-atomic-color-facet[field='cat_color']::part(value-Stainless) {
+atomic-color-facet[field="cat_color"]::part(value-Stainless) {
   background-image: linear-gradient(315deg, #d3d3d3 0%, #57606f 74%);
 }
 
-atomic-color-facet[field='cat_color']::part(value-Silver) {
+atomic-color-facet[field="cat_color"]::part(value-Silver) {
   background-color: silver;
   border: 1px solid var(--atomic-neutral);
 }
 
-atomic-color-facet[field='cat_color']::part(value-Gray) {
+atomic-color-facet[field="cat_color"]::part(value-Gray) {
   background-color: gray;
   border: 1px solid var(--atomic-neutral);
 }
 
-atomic-color-facet[field='cat_color']::part(value-Blue) {
+atomic-color-facet[field="cat_color"]::part(value-Blue) {
   background-color: rgb(73, 73, 255);
 }
 
-atomic-color-facet[field='cat_color']::part(value-Multi) {
+atomic-color-facet[field="cat_color"]::part(value-Multi) {
   background-image: linear-gradient(
     315deg,
     #b43a3a 0%,

@@ -1,6 +1,6 @@
-import {Trigger} from '../../api/common/trigger.js';
-import {ApplyQueryTriggerModificationPayload} from './triggers-actions.js';
-import {FunctionExecutionTrigger, TriggerState} from './triggers-state.js';
+import type {Trigger} from '../../api/common/trigger.js';
+import type {ApplyQueryTriggerModificationPayload} from './triggers-actions.js';
+import type {FunctionExecutionTrigger, TriggerState} from './triggers-state.js';
 
 export function handleFetchItemsPending(state: TriggerState) {
   state.query = '';

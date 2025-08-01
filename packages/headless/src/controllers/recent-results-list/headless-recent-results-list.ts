@@ -1,13 +1,13 @@
 import {ArrayValue, NumberValue, Schema} from '@coveo/bueno';
-import {Result} from '../../api/search/search/result.js';
-import {SearchEngine} from '../../app/search-engine/search-engine.js';
+import type {Result} from '../../api/search/search/result.js';
+import type {SearchEngine} from '../../app/search-engine/search-engine.js';
 import {
   clearRecentResults,
   registerRecentResults,
 } from '../../features/recent-results/recent-results-actions.js';
 import {logClearRecentResults} from '../../features/recent-results/recent-results-analytics-actions.js';
 import {recentResultsReducer as recentResults} from '../../features/recent-results/recent-results-slice.js';
-import {RecentResultsSection} from '../../state/state-sections.js';
+import type {RecentResultsSection} from '../../state/state-sections.js';
 import {loadReducerError} from '../../utils/errors.js';
 import {
   validateInitialState,
@@ -15,7 +15,7 @@ import {
 } from '../../utils/validate-payload.js';
 import {
   buildController,
-  Controller,
+  type Controller,
 } from '../controller/headless-controller.js';
 
 export interface RecentResultsListProps {
@@ -98,7 +98,7 @@ export interface RecentResultsState {
   maxLength: number;
 }
 
-export function validateRecentResultsProps(
+function validateRecentResultsProps(
   engine: SearchEngine,
   props?: RecentResultsListProps
 ) {

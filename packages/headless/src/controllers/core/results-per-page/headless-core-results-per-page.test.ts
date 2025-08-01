@@ -5,15 +5,15 @@ import {
 } from '../../../features/pagination/pagination-actions.js';
 import {paginationReducer as pagination} from '../../../features/pagination/pagination-slice.js';
 import {
-  MockedSearchEngine,
   buildMockSearchEngine,
+  type MockedSearchEngine,
 } from '../../../test/mock-engine-v2.js';
 import {buildMockPagination} from '../../../test/mock-pagination.js';
 import {createMockState} from '../../../test/mock-state.js';
 import {
-  ResultsPerPage,
-  ResultsPerPageProps,
   buildCoreResultsPerPage,
+  type ResultsPerPage,
+  type ResultsPerPageProps,
 } from './headless-core-results-per-page.js';
 
 vi.mock('../../../features/pagination/pagination-actions');

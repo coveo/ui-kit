@@ -1,8 +1,8 @@
-import {CSSResult, LitElement, unsafeCSS} from 'lit';
+import {type CSSResult, type LitElement, unsafeCSS} from 'lit';
 import {buildCommerceLayout} from '../components/commerce/atomic-commerce-layout/commerce-layout';
-import {injectStylesForNoShadowDOM} from '../decorators/light-dom';
+import {injectStylesForNoShadowDOM} from '../decorators/inject-styles-for-no-shadow-dom';
 import {randomID} from '../utils/utils';
-import {Constructor} from './mixin-common';
+import type {Constructor} from './mixin-common';
 
 export interface CommerceLayoutRequirements {
   error: Error;
@@ -28,7 +28,7 @@ export const CommerceLayoutMixin = <T extends Constructor<LitElement>>(
   class CommerceLayoutMixinClass extends superClass {
     static styles = [cssResult];
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    // biome-ignore lint/suspicious/noExplicitAny: <>
     constructor(...args: any[]) {
       super(...args);
       if (!this.id) {

@@ -1,8 +1,14 @@
 // Auto-generated file
 export default {
+  'atomic-commerce-breadbox': async () =>
+    await import('./atomic-commerce-breadbox/atomic-commerce-breadbox.js'),
   'atomic-commerce-category-facet': async () =>
     await import(
       './atomic-commerce-category-facet/atomic-commerce-category-facet.js'
+    ),
+  'atomic-commerce-did-you-mean': async () =>
+    await import(
+      './atomic-commerce-did-you-mean/atomic-commerce-did-you-mean.js'
     ),
   'atomic-commerce-facet': async () =>
     await import('./atomic-commerce-facet/atomic-commerce-facet.js'),
@@ -16,6 +22,14 @@ export default {
     await import('./atomic-commerce-interface/atomic-commerce-interface.js'),
   'atomic-commerce-layout': async () =>
     await import('./atomic-commerce-layout/atomic-commerce-layout.js'),
+  'atomic-commerce-load-more-products': async () =>
+    await import(
+      './atomic-commerce-load-more-products/atomic-commerce-load-more-products.js'
+    ),
+  'atomic-commerce-no-products': async () =>
+    await import(
+      './atomic-commerce-no-products/atomic-commerce-no-products.js'
+    ),
   'atomic-commerce-numeric-facet': async () =>
     await import(
       './atomic-commerce-numeric-facet/atomic-commerce-numeric-facet.js'
@@ -26,13 +40,33 @@ export default {
     await import(
       './atomic-commerce-product-list/atomic-commerce-product-list.js'
     ),
+  'atomic-commerce-products-per-page': async () =>
+    await import(
+      './atomic-commerce-products-per-page/atomic-commerce-products-per-page.js'
+    ),
+  'atomic-commerce-query-error': async () =>
+    await import(
+      './atomic-commerce-query-error/atomic-commerce-query-error.js'
+    ),
   'atomic-commerce-query-summary': async () =>
     await import(
       './atomic-commerce-query-summary/atomic-commerce-query-summary.js'
     ),
+  'atomic-commerce-recommendation-interface': async () =>
+    await import(
+      './atomic-commerce-recommendation-interface/atomic-commerce-recommendation-interface.js'
+    ),
   'atomic-commerce-recommendation-list': async () =>
     await import(
       './atomic-commerce-recommendation-list/atomic-commerce-recommendation-list.js'
+    ),
+  'atomic-commerce-refine-modal': async () =>
+    await import(
+      './atomic-commerce-refine-modal/atomic-commerce-refine-modal.js'
+    ),
+  'atomic-commerce-refine-toggle': async () =>
+    await import(
+      './atomic-commerce-refine-toggle/atomic-commerce-refine-toggle.js'
     ),
   'atomic-commerce-search-box': async () =>
     await import('./atomic-commerce-search-box/atomic-commerce-search-box.js'),
@@ -52,14 +86,36 @@ export default {
     await import(
       './atomic-commerce-sort-dropdown/atomic-commerce-sort-dropdown.js'
     ),
+  'atomic-commerce-text': async () =>
+    await import('./atomic-commerce-text/atomic-commerce-text.js'),
   'atomic-commerce-timeframe-facet': async () =>
     await import(
       './atomic-commerce-timeframe-facet/atomic-commerce-timeframe-facet.js'
     ),
   'atomic-product': async () =>
     await import('./atomic-product/atomic-product.js'),
+  'atomic-product-children': async () =>
+    await import('./atomic-product-children/atomic-product-children.js'),
+  'atomic-product-description': async () =>
+    await import('./atomic-product-description/atomic-product-description.js'),
+  'atomic-product-excerpt': async () =>
+    await import('./atomic-product-excerpt/atomic-product-excerpt.js'),
+  'atomic-product-link': async () =>
+    await import('./atomic-product-link/atomic-product-link.js'),
+  'atomic-product-multi-value-text': async () =>
+    await import(
+      './atomic-product-multi-value-text/atomic-product-multi-value-text.js'
+    ),
+  'atomic-product-numeric-field-value': async () =>
+    await import(
+      './atomic-product-numeric-field-value/atomic-product-numeric-field-value.js'
+    ),
+  'atomic-product-price': async () =>
+    await import('./atomic-product-price/atomic-product-price.js'),
   'atomic-product-template': async () =>
     await import('./atomic-product-template/atomic-product-template.js'),
+  'atomic-product-text': async () =>
+    await import('./atomic-product-text/atomic-product-text.js'),
 } as Record<string, () => Promise<unknown>>;
 
 export type * from './index.js';

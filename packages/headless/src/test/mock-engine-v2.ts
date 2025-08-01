@@ -1,16 +1,16 @@
-import {Relay} from '@coveo/relay';
-import {pino, Logger} from 'pino';
-import {vi, Mock} from 'vitest';
-import {CaseAssistEngine} from '../app/case-assist-engine/case-assist-engine.js';
-import {CommerceEngine} from '../app/commerce-engine/commerce-engine.js';
-import {SSRCommerceEngine} from '../app/commerce-ssr-engine/factories/build-factory.js';
+import type {Relay} from '@coveo/relay';
+import {type Logger, pino} from 'pino';
+import {type Mock, vi} from 'vitest';
+import type {CaseAssistEngine} from '../app/case-assist-engine/case-assist-engine.js';
+import type {CommerceEngine} from '../app/commerce-engine/commerce-engine.js';
 import type {CoreEngine, CoreEngineNext} from '../app/engine.js';
-import {InsightEngine} from '../app/insight-engine/insight-engine.js';
+import type {InsightEngine} from '../app/insight-engine/insight-engine.js';
 import {defaultNodeJSNavigatorContextProvider} from '../app/navigator-context-provider.js';
-import {RecommendationEngine} from '../app/recommendation-engine/recommendation-engine.js';
-import {SearchEngine} from '../app/search-engine/search-engine.js';
-import {SSRSearchEngine} from '../app/search-engine/search-engine.ssr.js';
+import type {RecommendationEngine} from '../app/recommendation-engine/recommendation-engine.js';
+import type {SearchEngine} from '../app/search-engine/search-engine.js';
 import {stateKey} from '../app/state-key.js';
+import type {SSRCommerceEngine} from '../ssr/commerce/factories/build-factory.js';
+import type {SSRSearchEngine} from '../ssr/search/engine/search-engine.ssr.js';
 
 type SpyEverything<T> = {
   [K in keyof T]: T[K] extends (...args: infer A) => infer R
@@ -38,7 +38,7 @@ function mockLogger(logger: Logger): MockedLogger {
 
 type MockedRelay = Relay & Pick<Relay, 'emit'>;
 
-export function mockRelay(): MockedRelay {
+function mockRelay(): MockedRelay {
   return {
     emit: vi.fn(),
     getMeta: vi.fn().mockReturnValue({clientId: 'test'}),
@@ -57,7 +57,7 @@ type MockedCoreEngine<
   relay: MockedRelay;
 } & SpyEverything<Omit<CoreEngine, 'logger' | 'state' | 'relay'>>;
 
-export function buildMockCoreEngine<State extends StateFromEngine<CoreEngine>>(
+function buildMockCoreEngine<State extends StateFromEngine<CoreEngine>>(
   initialState: State
 ): MockedCoreEngine<State> {
   const state: State = initialState;
@@ -92,7 +92,7 @@ type MockedCoreEngineNext<
   relay: MockedRelay;
 } & SpyEverything<Omit<CoreEngineNext, 'logger' | 'stateKey' | 'relay'>>;
 
-export function buildMockCoreEngineNext<
+function buildMockCoreEngineNext<
   State extends StateFromEngineNext<CoreEngineNext>,
 >(initialState: State): MockedCoreEngineNext<State> {
   const state: State = initialState;

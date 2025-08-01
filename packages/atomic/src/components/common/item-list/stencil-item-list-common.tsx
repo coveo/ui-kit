@@ -9,7 +9,7 @@ import {CommerceRecommendationStore} from '../../commerce/atomic-commerce-recomm
 import {InsightStore} from '../../insight/atomic-insight-interface/store';
 import {RecsStore} from '../../recommendations/atomic-recs-interface/store';
 import {SearchStore} from '../../search/atomic-search-interface/store';
-import {AnyItem} from '../interface/item';
+import {AnyItem} from './unfolded-item';
 import {
   ItemDisplayDensity,
   ItemDisplayImageSize,
@@ -49,6 +49,9 @@ export class ItemListCommon {
     this.props.store.setLoadingFlag(this.props.loadingFlag);
     this.props.store.state.resultList = this;
     this.updateBreakpointsOnce = once(() => updateBreakpoints(this.props.host));
+    this.props.nextNewItemTarget.registerFocusCallback(() => {
+      this.indexOfResultToFocus = undefined;
+    });
   }
 
   public updateBreakpoints() {

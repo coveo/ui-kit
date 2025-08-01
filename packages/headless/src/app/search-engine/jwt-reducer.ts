@@ -1,6 +1,7 @@
 import {isNullOrUndefined} from '@coveo/bueno';
-import {createReducer, Reducer} from '@reduxjs/toolkit';
-import P, {Logger} from 'pino';
+import {createReducer, type Reducer} from '@reduxjs/toolkit';
+import type P from 'pino';
+import type {Logger} from 'pino';
 import {
   updateAnalyticsConfiguration,
   updateBasicConfiguration,
@@ -11,9 +12,9 @@ import {setPipeline} from '../../features/pipeline/pipeline-actions.js';
 import {getPipelineInitialState} from '../../features/pipeline/pipeline-state.js';
 import {setSearchHub} from '../../features/search-hub/search-hub-actions.js';
 import {getSearchHubInitialState} from '../../features/search-hub/search-hub-state.js';
-import {SearchAppState} from '../../state/search-app-state.js';
+import type {SearchAppState} from '../../state/search-app-state.js';
 
-export interface CoveoJSONWebToken {
+interface CoveoJSONWebToken {
   searchHub?: string;
   pipeline?: string;
   userDisplayName?: string;
@@ -79,13 +80,13 @@ const decodeJSONWebToken = (token: string): CoveoJSONWebToken | false => {
       base64decoded
         .split('')
         .map((character) => {
-          return '%' + ('00' + character.charCodeAt(0).toString(16)).slice(-2);
+          return `%${(`00${character.charCodeAt(0).toString(16)}`).slice(-2)}`;
         })
         .join('')
     );
 
     return JSON.parse(jsonPayload) as CoveoJSONWebToken;
-  } catch (e) {
+  } catch (_) {
     return false;
   }
 };

@@ -1,29 +1,29 @@
 import {isArray} from '../../../utils/utils.js';
 import {
   castUnknownObject,
+  serialize as coreSerialize,
   delimiter,
   isFacetObject,
   isObject,
   isRangeFacetKey,
   isRangeFacetObject,
   preprocessObjectPairs,
-  SearchParameterKey,
-  serialize as coreSerialize,
+  type SearchParameterKey,
   serializeFacets,
   serializeRangeFacets,
   serializeSpecialCharacters,
   splitOnFirstEqual,
 } from '../../search-parameters/search-parameter-serializer.js';
-import {ProductListingParameters} from '../product-listing-parameters/product-listing-parameters-actions.js';
-import {CommerceSearchParameters} from '../search-parameters/search-parameters-actions.js';
+import type {ProductListingParameters} from '../product-listing-parameters/product-listing-parameters-actions.js';
+import type {CommerceSearchParameters} from '../search-parameters/search-parameters-actions.js';
 import {
   buildFieldsSortCriterion,
   buildRelevanceSortCriterion,
   SortBy,
-  SortCriterion,
+  type SortCriterion,
   SortDirection,
 } from '../sort/sort.js';
-import {Parameters} from './parameters-actions.js';
+import type {Parameters} from './parameters-actions.js';
 
 const sortFieldAndDirectionSeparator = ' ';
 const sortFieldsJoiner = ',';
@@ -190,14 +190,17 @@ function deserialize<T extends Parameters>(fragment: string): T {
 
     if (keyHasObjectValue(key)) {
       const mergedValues = {...acc[key], ...(val as object)};
+      // biome-ignore lint/performance/noAccumulatingSpread: <>
       return {...acc, [key]: mergedValues};
     }
 
     if (key === 'sortCriteria') {
       const sortCriteria = deserializeSortCriteria(val as string);
+      // biome-ignore lint/performance/noAccumulatingSpread: <>
       return {...acc, [key]: sortCriteria};
     }
 
+    // biome-ignore lint/performance/noAccumulatingSpread: <>
     return {...acc, [key]: val};
   }, {}) as T;
 }
@@ -252,13 +255,8 @@ export function deserializeSortCriteria(
     const field = fieldAndDirection[0].toLowerCase();
     const direction = fieldAndDirection[1].toLowerCase();
 
-    return {
-      ...acc,
-      fields: [
-        ...acc.fields,
-        {name: field, direction: direction as SortDirection},
-      ],
-    };
+    acc.fields.push({name: field, direction: direction as SortDirection});
+    return acc;
   }, buildFieldsSortCriterion([]));
 }
 

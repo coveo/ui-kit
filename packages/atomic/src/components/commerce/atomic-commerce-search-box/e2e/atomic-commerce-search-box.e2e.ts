@@ -1,4 +1,4 @@
-import {test, expect, setSuggestions, setRecentQueries} from './fixture';
+import {expect, setRecentQueries, setSuggestions, test} from './fixture';
 
 test.describe('AtomicCommerceSearchBox', () => {
   test.describe('default', () => {
@@ -307,7 +307,7 @@ test.describe('AtomicCommerceSearchBox', () => {
           await page.waitForURL(
             '**/iframe.html?id=atomic-commerce-search-box--in-page*'
           );
-          await expect(searchBox.searchInput).toHaveValue('');
+          await expect(searchBox.searchInput).toHaveValue('surfboard');
         });
       });
     });

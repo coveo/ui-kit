@@ -1,5 +1,5 @@
-import {Middleware, Action, PayloadAction} from '@reduxjs/toolkit';
-import {FetchRecommendationsPayload} from '../features/commerce/recommendations/recommendations-actions.js';
+import type {Action, Middleware, PayloadAction} from '@reduxjs/toolkit';
+import type {FetchRecommendationsPayload} from '../features/commerce/recommendations/recommendations-actions.js';
 
 export const randomID = (prepend?: string, length = 5) =>
   prepend +
@@ -29,12 +29,12 @@ export function removeDuplicates<T>(arr: T[], predicate: (value: T) => string) {
   ];
 }
 
-export function encodedBtoa(stringToEncode: string) {
+function encodedBtoa(stringToEncode: string) {
   return btoa(encodeURI(stringToEncode))!;
 }
 
 export function omit<T>(key: keyof T, obj: T) {
-  const {[key]: omitted, ...rest} = obj;
+  const {[key]: _omitted, ...rest} = obj;
   return rest;
 }
 
@@ -57,9 +57,9 @@ export function doNotTrack() {
   if (typeof navigator === 'undefined' || typeof window === 'undefined') {
     return false;
   }
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: <>
   const nav = <any>navigator;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: <>
   const win = <any>window;
   return [
     nav.globalPrivacyControl,
@@ -80,7 +80,7 @@ export function fromEntries<K extends PropertyKey, V>(
 }
 
 export function resetTimeout(
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: <>
   callback: (...args: any[]) => void,
   timeoutId?: ReturnType<typeof setTimeout>,
   ms?: number | undefined
@@ -125,7 +125,7 @@ export function clone<T>(value: T): T {
   // add defensive code to prevent the whole app from crashing
   try {
     return JSON.parse(JSON.stringify(value));
-  } catch (e) {
+  } catch (_) {
     return value;
   }
 }

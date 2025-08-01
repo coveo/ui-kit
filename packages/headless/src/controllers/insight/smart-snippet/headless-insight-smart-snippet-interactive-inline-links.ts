@@ -1,11 +1,11 @@
-import {InsightEngine} from '../../../app/insight-engine/insight-engine.js';
+import type {InsightEngine} from '../../../app/insight-engine/insight-engine.js';
 import {
   logOpenSmartSnippetInlineLink,
   logOpenSmartSnippetSuggestionInlineLink,
 } from '../../../features/question-answering/question-answering-insight-analytics-actions.js';
 import {questionAnsweringReducer as questionAnswering} from '../../../features/question-answering/question-answering-slice.js';
 import {searchReducer as search} from '../../../features/search/search-slice.js';
-import {
+import type {
   QuestionAnsweringSection,
   SearchSection,
 } from '../../../state/state-sections.js';
@@ -13,11 +13,11 @@ import {loadReducerError} from '../../../utils/errors.js';
 import {getObjectHash} from '../../../utils/utils.js';
 import {
   buildInteractiveResultCore,
-  InteractiveResultCore,
+  type InteractiveResultCore,
 } from '../../core/interactive-result/headless-core-interactive-result.js';
-import {InlineLink} from '../../smart-snippet/headless-smart-snippet-interactive-inline-links.js';
+import type {InlineLink} from '../../smart-snippet/headless-smart-snippet-interactive-inline-links.js';
 
-export interface SmartSnippetInteractiveInlineLinksOptions {
+interface SmartSnippetInteractiveInlineLinksOptions {
   /**
    * The amount of time to wait before selecting the result after calling `beginDelayedSelect`.
    *
@@ -26,14 +26,14 @@ export interface SmartSnippetInteractiveInlineLinksOptions {
   selectionDelay?: number;
 }
 
-export interface SmartSnippetInteractiveInlineLinksProps {
+interface SmartSnippetInteractiveInlineLinksProps {
   /**
    * The options for the result controller core.
    */
   options?: SmartSnippetInteractiveInlineLinksOptions;
 }
 
-export interface SmartSnippetInteractiveInlineLinks {
+interface SmartSnippetInteractiveInlineLinks {
   /**
    * Selects the result, logging a UA event to the Coveo Platform if the result wasn't selected before.
    *

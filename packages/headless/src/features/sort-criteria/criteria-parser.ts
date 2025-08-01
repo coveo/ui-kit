@@ -1,12 +1,12 @@
 import {
-  buildRelevanceSortCriterion,
-  buildQueryRankingExpressionSortCriterion,
-  buildNoSortCriterion,
   buildDateSortCriterion,
   buildFieldSortCriterion,
-  SortCriterion,
-  SortOrder,
+  buildNoSortCriterion,
+  buildQueryRankingExpressionSortCriterion,
+  buildRelevanceSortCriterion,
   SortBy,
+  type SortCriterion,
+  SortOrder,
 } from './criteria.js';
 
 function parseCriterion(criterion: {
@@ -55,7 +55,7 @@ function isSortOrder(order?: string): order is SortOrder {
  * - `relevancy`
  * - `date ascending`/`date descending`
  * - `qre`
- * - `field ascending`/`field descending`, where you must replace `field` with the name of a sortable field in your index (e.g., `criteria="size ascending"`).
+ * - `field ascending`/`field descending`, where you replace `field` with the name of a sortable field in your index (e.g., `criteria="size ascending"`).
  *
  * You can specify multiple sort criteria to be used in the same request by separating them with a comma (e.g., `criteria="size ascending, date ascending"` ).
  */
@@ -71,7 +71,7 @@ export function parseCriterionExpression(expression: string) {
   return criteria.map((criterion) => {
     const criterionValues = criterion.trim().split(' ');
     const by = criterionValues[0].toLowerCase();
-    const order = criterionValues[1] && criterionValues[1].toLowerCase();
+    const order = criterionValues[1]?.toLowerCase();
 
     if (criterionValues.length > 2) {
       throw wrongFormatError;

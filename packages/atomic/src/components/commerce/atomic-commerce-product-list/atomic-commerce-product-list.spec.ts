@@ -1,20 +1,20 @@
+import {
+  buildProductListing,
+  buildSearch,
+  type InteractiveProduct,
+  type InteractiveProductProps,
+  type Product,
+} from '@coveo/headless/commerce';
+import {page} from '@vitest/browser/context';
+import {html} from 'lit';
+import {beforeEach, describe, expect, it, type MockInstance, vi} from 'vitest';
 import {renderInAtomicCommerceInterface} from '@/vitest-utils/testing-helpers/fixtures/atomic/commerce/atomic-commerce-interface-fixture';
 import {buildFakeProduct} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/product';
 import {buildFakeProductListing} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/product-listing-controller';
 import {buildFakeSearch} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/search-controller';
 import {buildFakeSummary} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/summary-subcontroller';
 import {genericSubscribe} from '@/vitest-utils/testing-helpers/fixtures/headless/common';
-import {
-  buildProductListing,
-  buildSearch,
-  InteractiveProduct,
-  InteractiveProductProps,
-  Product,
-} from '@coveo/headless/commerce';
-import {page} from '@vitest/browser/context';
-import {html} from 'lit';
-import {beforeEach, describe, expect, it, MockInstance, vi} from 'vitest';
-import {
+import type {
   ItemDisplayDensity,
   ItemDisplayImageSize,
   ItemDisplayLayout,
@@ -991,6 +991,10 @@ describe('AtomicCommerceProductList', () => {
 
         display === 'table' && (await setupTableTemplate(element));
 
+        interactiveProduct.mockClear();
+
+        element.requestUpdate();
+        await element.updateComplete;
         const atomicProductElements =
           element.shadowRoot?.querySelectorAll('atomic-product');
 

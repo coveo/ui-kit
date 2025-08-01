@@ -1,4 +1,7 @@
-import {InstantProducts, InstantProductsState} from '@coveo/headless/commerce';
+import type {
+  InstantProducts,
+  InstantProductsState,
+} from '@coveo/headless/commerce';
 import {vi} from 'vitest';
 
 export const defaultState = {

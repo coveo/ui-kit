@@ -1,6 +1,6 @@
-import {test, expect, triggerError} from './fixture';
+import {expect, test, triggerError} from './fixture';
 
-test.describe('when search returns an error', () => {
+test.describe('AtomicCommerceQueryError', () => {
   test.beforeEach(async ({queryError}) => {
     await queryError.load();
     await triggerError(queryError.page);
@@ -21,6 +21,7 @@ test.describe('when search returns an error', () => {
   test('should display an error title', async ({queryError}) => {
     await expect(queryError.title).toBeVisible();
   });
+
   test('should display an error description', async ({queryError}) => {
     await expect(queryError.description).toBeVisible();
     await expect(queryError.description).toHaveText(
@@ -31,6 +32,7 @@ test.describe('when search returns an error', () => {
   test('should display an icon', async ({queryError}) => {
     await expect(queryError.icon).toBeVisible();
   });
+
   test('should render a show more info button that displays error information on click', async ({
     queryError,
   }) => {

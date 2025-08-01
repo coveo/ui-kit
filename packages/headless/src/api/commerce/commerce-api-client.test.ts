@@ -1,15 +1,15 @@
-import {Mock} from 'vitest';
+import type {Mock} from 'vitest';
 import {SortBy} from '../../features/sort/sort.js';
 import {buildMockCommerceAPIClient} from '../../test/mock-commerce-api-client.js';
 import {VERSION} from '../../utils/version.js';
 import {PlatformClient} from '../platform-client.js';
 import {
-  CommerceAPIClient,
+  type CommerceAPIClient,
   getCommerceApiBaseUrl,
 } from './commerce-api-client.js';
-import {FilterableCommerceAPIRequest} from './common/request.js';
-import {CommerceResponse} from './common/response.js';
-import {CommerceRecommendationsRequest} from './recommendations/recommendations-request.js';
+import type {FilterableCommerceAPIRequest} from './common/request.js';
+import type {CommerceResponse} from './common/response.js';
+import type {CommerceRecommendationsRequest} from './recommendations/recommendations-request.js';
 
 describe('commerce api client', () => {
   const organizationId = 'organization';
@@ -238,8 +238,12 @@ describe('commerce api client', () => {
   });
 
   it('#facetSearch should call the platform endpoint with the correct arguments', async () => {
-    const {accessToken, organizationId, url, ...searchContext} =
-      await buildCommerceAPIRequest();
+    const {
+      accessToken: _accessToken,
+      organizationId,
+      url: _url,
+      ...searchContext
+    } = await buildCommerceAPIRequest();
     const request = {
       ...(await buildCommerceAPIRequest()),
       facetId: 'some-facet-id',

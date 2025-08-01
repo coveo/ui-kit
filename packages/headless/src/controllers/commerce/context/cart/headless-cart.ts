@@ -1,7 +1,7 @@
-import {CommerceEngine} from '../../../../app/commerce-engine/commerce-engine.js';
+import type {CommerceEngine} from '../../../../app/commerce-engine/commerce-engine.js';
 import {stateKey} from '../../../../app/state-key.js';
 import {
-  CartActionPayload,
+  type CartActionPayload,
   emitCartActionEvent,
   emitPurchaseEvent,
   purchase,
@@ -9,18 +9,18 @@ import {
   updateItemQuantity,
 } from '../../../../features/commerce/context/cart/cart-actions.js';
 import {
-  Transaction,
   itemsSelector,
+  type Transaction,
 } from '../../../../features/commerce/context/cart/cart-selector.js';
 import {cartReducer as cart} from '../../../../features/commerce/context/cart/cart-slice.js';
-import {CartItemWithMetadata} from '../../../../features/commerce/context/cart/cart-state.js';
+import type {CartItemWithMetadata} from '../../../../features/commerce/context/cart/cart-state.js';
 import {cartSchema} from '../../../../features/commerce/context/cart/cart-validation.js';
-import {CartSection} from '../../../../state/state-sections.js';
+import type {CartSection} from '../../../../state/state-sections.js';
 import {loadReducerError} from '../../../../utils/errors.js';
 import {validateInitialState} from '../../../../utils/validate-payload.js';
 import {
   buildController,
-  Controller,
+  type Controller,
 } from '../../../controller/headless-controller.js';
 import {
   itemSelector,

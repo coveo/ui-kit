@@ -1,43 +1,43 @@
-import {Logger} from 'pino';
-import {AsyncThunkOptions} from '../../../app/async-thunk-options.js';
-import {ClientThunkExtraArguments} from '../../../app/thunk-extra-arguments.js';
-import {InsightAppState} from '../../../state/insight-app-state.js';
+import type {Logger} from 'pino';
+import type {AsyncThunkOptions} from '../../../app/async-thunk-options.js';
+import type {ClientThunkExtraArguments} from '../../../app/thunk-extra-arguments.js';
+import type {InsightAppState} from '../../../state/insight-app-state.js';
 import {PlatformClient} from '../../platform-client.js';
-import {PreprocessRequest} from '../../preprocess-request.js';
+import type {PreprocessRequest} from '../../preprocess-request.js';
 import {
   getHtml,
-  HtmlAPIClientOptions,
+  type HtmlAPIClientOptions,
 } from '../../search/html/html-api-client.js';
-import {HtmlRequest} from '../../search/html/html-request.js';
-import {QuerySuggestSuccessResponse} from '../../search/query-suggest/query-suggest-response.js';
+import type {HtmlRequest} from '../../search/html/html-request.js';
+import type {QuerySuggestSuccessResponse} from '../../search/query-suggest/query-suggest-response.js';
+import type {SearchResponseSuccess} from '../../search/search/search-response.js';
 import {
   isSuccessSearchResponse,
-  SearchOptions,
+  type SearchOptions,
   shimResponse,
 } from '../../search/search-api-client.js';
 import {buildAPIResponseFromErrorOrThrow} from '../../search/search-api-error-response.js';
-import {SearchResponseSuccess} from '../../search/search/search-response.js';
 import {
   buildGetInsightInterfaceConfigRequest,
-  GetInsightInterfaceConfigRequest,
+  type GetInsightInterfaceConfigRequest,
 } from './get-interface/get-interface-config-request.js';
-import {GetInsightInterfaceConfigResponse} from './get-interface/get-interface-config-response.js';
-import {InsightQuerySuggestRequest} from './query-suggest/query-suggest-request.js';
+import type {GetInsightInterfaceConfigResponse} from './get-interface/get-interface-config-response.js';
 import {
   buildInsightQueryRequest,
   buildInsightQuerySuggestRequest,
-  InsightQueryRequest,
+  type InsightQueryRequest,
 } from './query/query-request.js';
+import type {InsightQuerySuggestRequest} from './query-suggest/query-suggest-request.js';
 import {
   buildInsightUserActionsRequest,
-  InsightUserActionsRequest,
+  type InsightUserActionsRequest,
 } from './user-actions/user-actions-request.js';
-import {InsightUserActionsResponse} from './user-actions/user-actions-response.js';
+import type {InsightUserActionsResponse} from './user-actions/user-actions-response.js';
 
 /**
  * Initialization options for the `InsightAPIClient`.
  */
-export interface InsightAPIClientOptions extends HtmlAPIClientOptions {
+interface InsightAPIClientOptions extends HtmlAPIClientOptions {
   logger: Logger;
   preprocessRequest: PreprocessRequest;
 }
@@ -47,11 +47,11 @@ export interface AsyncThunkInsightOptions<T extends Partial<InsightAppState>>
   rejectValue: InsightAPIErrorStatusResponse;
 }
 
-export type InsightAPIResponse<TSuccessContent> =
+type InsightAPIResponse<TSuccessContent> =
   | InsightAPISuccessResponse<TSuccessContent>
   | InsightAPIErrorResponse;
 
-export interface InsightAPISuccessResponse<TContent> {
+interface InsightAPISuccessResponse<TContent> {
   success: TContent;
 }
 
@@ -62,7 +62,7 @@ export interface InsightAPIErrorStatusResponse {
   ignored?: boolean;
 }
 
-export interface InsightAPIErrorResponse {
+interface InsightAPIErrorResponse {
   error: InsightAPIErrorStatusResponse;
 }
 

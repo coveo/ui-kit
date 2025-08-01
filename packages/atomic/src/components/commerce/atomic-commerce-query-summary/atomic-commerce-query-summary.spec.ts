@@ -1,19 +1,19 @@
-import {renderInAtomicCommerceInterface} from '@/vitest-utils/testing-helpers/fixtures/atomic/commerce/atomic-commerce-interface-fixture';
-import {buildFakeCommerceEngine} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/engine';
-import {buildFakeProductListing} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/product-listing-controller';
-import {buildFakeQuerySummary} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/query-summary-subcontroller';
-import {buildFakeSearch} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/search-controller';
 import {
   buildProductListing,
   buildSearch,
-  ProductListingSummaryState,
-  SearchSummaryState,
-  Summary,
+  type ProductListingSummaryState,
+  type SearchSummaryState,
+  type Summary,
 } from '@coveo/headless/commerce';
 import {html} from 'lit';
-import {describe, vi, it, expect} from 'vitest';
+import {describe, expect, it, vi} from 'vitest';
+import {renderInAtomicCommerceInterface} from '@/vitest-utils/testing-helpers/fixtures/atomic/commerce/atomic-commerce-interface-fixture';
+import {buildFakeCommerceEngine} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/engine';
+import {buildFakeProductListing} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/product-listing-controller';
+import {buildFakeSearch} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/search-controller';
+import {buildFakeSummary} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/summary-subcontroller';
 import './atomic-commerce-query-summary';
-import {AtomicCommerceQuerySummary} from './atomic-commerce-query-summary';
+import type {AtomicCommerceQuerySummary} from './atomic-commerce-query-summary';
 
 vi.mock('@coveo/headless/commerce', {spy: true});
 
@@ -31,7 +31,7 @@ describe('AtomicCommerceQuerySummary', () => {
       | Partial<SearchSummaryState>
       | Partial<ProductListingSummaryState>;
   } = {}) => {
-    mockedQuerySummary = buildFakeQuerySummary({state: querySummaryState});
+    mockedQuerySummary = buildFakeSummary({state: querySummaryState});
 
     vi.mocked(buildProductListing).mockReturnValue(
       buildFakeProductListing({

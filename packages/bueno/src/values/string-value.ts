@@ -1,5 +1,5 @@
-import {SchemaValue} from '../schema.js';
-import {ValueConfig, Value, isUndefined} from './value.js';
+import type {SchemaValue} from '../schema.js';
+import {isUndefined, Value, type ValueConfig} from './value.js';
 
 interface StringValueConfig<T extends string> extends ValueConfig<T> {
   emptyAllowed?: boolean;
@@ -49,7 +49,7 @@ export class StringValue<T extends string = string>
     if (url) {
       try {
         new URL(value);
-      } catch (e) {
+      } catch (_) {
         return 'value is not a valid URL.';
       }
     }

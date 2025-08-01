@@ -1,6 +1,6 @@
 import {
   buildMockSearchEngine,
-  MockedSearchEngine,
+  type MockedSearchEngine,
 } from '../../../../test/mock-engine-v2.js';
 import {buildMockFacetIdConfig} from '../../../../test/mock-facet-id-config.js';
 import {createMockState} from '../../../../test/mock-state.js';

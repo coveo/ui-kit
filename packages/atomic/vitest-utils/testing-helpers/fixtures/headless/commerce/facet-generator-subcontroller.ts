@@ -1,10 +1,10 @@
 import type {
-  FacetGenerator,
-  FacetGeneratorState,
-  RegularFacet,
-  NumericFacet,
   CategoryFacet,
   DateFacet,
+  FacetGenerator,
+  FacetGeneratorState,
+  NumericFacet,
+  RegularFacet,
 } from '@coveo/headless/commerce';
 import {vi} from 'vitest';
 import {genericSubscribe} from '../common';
@@ -15,14 +15,14 @@ export type AnyCommerceFacet =
   | CategoryFacet
   | DateFacet;
 
-export const defaultState: FacetGeneratorState = [];
+export const defaultState = ['facet1', 'facet2'] satisfies FacetGeneratorState;
 
-export const defaultImplementation: Partial<FacetGenerator> = {
+export const defaultImplementation = {
   subscribe: genericSubscribe,
   state: defaultState,
-  facets: [],
   deselectAll: vi.fn(),
-};
+  facets: [],
+} satisfies FacetGenerator;
 
 export const buildFakeFacetGenerator = ({
   implementation,

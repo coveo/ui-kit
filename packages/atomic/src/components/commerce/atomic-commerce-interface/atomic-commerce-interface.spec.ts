@@ -1,34 +1,34 @@
-import {bindings} from '@/src/decorators/bindings';
-import {InitializableComponent} from '@/src/decorators/types';
-import {InitializeBindingsMixin} from '@/src/mixins/bindings-mixin';
-import {StorageItems} from '@/src/utils/local-storage-utils';
-import {fixture} from '@/vitest-utils/testing-helpers/fixture';
-import {fixtureCleanup} from '@/vitest-utils/testing-helpers/fixture-wrapper';
 import {
-  CommerceEngineConfiguration,
+  buildCommerceEngine,
+  type CommerceEngineConfiguration,
   getSampleCommerceEngineConfiguration,
-  ProductListing,
-  Search,
-  UrlManager,
+  type ProductListing,
+  type Search,
+  type UrlManager,
 } from '@coveo/headless/commerce';
-import {buildCommerceEngine} from '@coveo/headless/commerce';
-import {html} from 'lit';
-import {LitElement} from 'lit';
+import {html, LitElement} from 'lit';
 import {customElement, state} from 'lit/decorators.js';
 import {within} from 'shadow-dom-testing-library';
 import {
-  describe,
-  test,
-  expect,
-  vi,
-  MockInstance,
-  beforeEach,
   afterEach,
+  beforeEach,
+  describe,
+  expect,
+  type MockInstance,
+  test,
+  vi,
 } from 'vitest';
+import {bindings} from '@/src/decorators/bindings';
+import type {InitializableComponent} from '@/src/decorators/types';
+import {InitializeBindingsMixin} from '@/src/mixins/bindings-mixin';
+import {StorageItems} from '@/src/utils/local-storage-utils';
+import {DEFAULT_MOBILE_BREAKPOINT} from '@/src/utils/replace-breakpoint';
+import {fixture} from '@/vitest-utils/testing-helpers/fixture';
+import {fixtureCleanup} from '@/vitest-utils/testing-helpers/fixture-wrapper';
 import {stateKey} from '../../../../../headless/src/app/state-key';
 import {
   AtomicCommerceInterface,
-  CommerceBindings,
+  type CommerceBindings,
 } from './atomic-commerce-interface';
 
 vi.mock('@coveo/headless/commerce', async () => {
@@ -108,25 +108,13 @@ vi.mock('@coveo/headless/commerce', async () => {
 
 @customElement('test-element')
 @bindings()
-export class TestElement
+class TestElement
   extends InitializeBindingsMixin(LitElement)
   implements InitializableComponent<CommerceBindings>
 {
   @state()
   public bindings: CommerceBindings = {} as CommerceBindings;
   @state() public error!: Error;
-
-  // TODO: KIT-4333: do not add stylesheet in the bindings
-  // use @injectStylesForNoShadowDOM instead
-  public addStyles(styles: string | CSSStyleSheet) {
-    if (typeof styles === 'string') {
-      const styleSheet = new CSSStyleSheet();
-      styleSheet.replaceSync(styles);
-      this.bindings.addAdoptedStyleSheets(styleSheet);
-    } else if (styles instanceof CSSStyleSheet) {
-      this.bindings.addAdoptedStyleSheets(styles);
-    }
-  }
 
   public initialized = false;
 
@@ -260,20 +248,6 @@ describe('AtomicCommerceInterface', () => {
       );
     });
 
-    test('should add a stylesheet to adoptedStyleSheets', async () => {
-      const styles = 'body { background-color: red; }';
-      childElement.addStyles(styles);
-
-      const parent = element.getRootNode();
-
-      if (parent instanceof Document || parent instanceof ShadowRoot) {
-        const styleSheet = parent.adoptedStyleSheets.find((sheet) =>
-          sheet.cssRules[0]?.cssText.includes(styles)
-        );
-        expect(styleSheet).toBeDefined();
-      }
-    });
-
     describe('when properties changes', () => {
       test('should update language when language property changes', async () => {
         element.language = 'fr';
@@ -347,6 +321,22 @@ describe('AtomicCommerceInterface', () => {
       });
     });
 
+    test('should dispatch an updateAnalyticsConfiguration action with the correct source and trackingId', async () => {
+      vi.spyOn(preconfiguredEngine, 'dispatch');
+
+      expect(preconfiguredEngine.dispatch).not.toHaveBeenCalled();
+
+      await element.initializeWithEngine(preconfiguredEngine);
+
+      expect(preconfiguredEngine.dispatch).toHaveBeenCalledExactlyOnceWith({
+        type: 'commerce/configuration/updateAnalyticsConfiguration',
+        payload: {
+          trackingId: preconfiguredEngine.configuration.analytics.trackingId,
+          source: {'@coveo/atomic': '0.0.0'},
+        },
+      });
+    });
+
     test('should render the component and its children', async () => {
       await addChildElement();
       await element.initializeWithEngine(preconfiguredEngine);
@@ -414,6 +404,48 @@ describe('AtomicCommerceInterface', () => {
       expect(element.store.state.loadingFlags).not.toContain(
         firstRequestExecutedFlag
       );
+    });
+  });
+
+  describe('mobile breakpoint', () => {
+    test('should keep the default mobile breakpoint when no atomic-commerce-layout element exists', () => {
+      expect(element.store.state.mobileBreakpoint).toBe(
+        DEFAULT_MOBILE_BREAKPOINT
+      );
+    });
+
+    test('should keep the default mobile breakpoint when atomic-commerce-layout has no mobileBreakpoint', () => {
+      const layoutElement = {};
+      const originalQuerySelector = element.querySelector.bind(element);
+      element.querySelector = vi.fn((selector: string) => {
+        if (selector === 'atomic-commerce-layout') {
+          return layoutElement as unknown as Element;
+        }
+        return originalQuerySelector(selector);
+      });
+
+      element.connectedCallback();
+
+      expect(element.store.state.mobileBreakpoint).toBe(
+        DEFAULT_MOBILE_BREAKPOINT
+      );
+    });
+
+    test('should update mobile breakpoint from atomic-commerce-layout when available', () => {
+      const layoutElement = {
+        mobileBreakpoint: '768px',
+      };
+      const originalQuerySelector = element.querySelector.bind(element);
+      element.querySelector = vi.fn((selector: string) => {
+        if (selector === 'atomic-commerce-layout') {
+          return layoutElement as unknown as Element;
+        }
+        return originalQuerySelector(selector);
+      });
+
+      element.connectedCallback();
+
+      expect(element.store.state.mobileBreakpoint).toBe('768px');
     });
   });
 
@@ -525,7 +557,7 @@ describe('AtomicCommerceInterface', () => {
       } as unknown as Search | ProductListing;
 
       const replaceStateSpy = vi.spyOn(history, 'replaceState');
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      // biome-ignore lint/suspicious/noExplicitAny: <>
       (element as any).updateHash();
 
       expect(replaceStateSpy).toHaveBeenCalledWith(
@@ -541,7 +573,7 @@ describe('AtomicCommerceInterface', () => {
       } as unknown as Search | ProductListing;
 
       const pushStateSpy = vi.spyOn(history, 'pushState');
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      // biome-ignore lint/suspicious/noExplicitAny: <>
       (element as any).updateHash();
 
       expect(pushStateSpy).toHaveBeenCalledWith(

@@ -1,17 +1,18 @@
-import {Mock} from 'vitest';
+/** biome-ignore-all lint/complexity/noExcessiveNestedTestSuites: <> */
+import type {Mock} from 'vitest';
 import {
   disableFacet,
   enableFacet,
 } from '../../../../features/facet-options/facet-options-actions.js';
 import {isFacetVisibleOnTab} from '../../../../features/facet-options/facet-options-utils.js';
-import {SearchAppState} from '../../../../state/search-app-state.js';
+import type {SearchAppState} from '../../../../state/search-app-state.js';
 import {buildMockCategoryFacetSlice} from '../../../../test/mock-category-facet-slice.js';
 import {buildMockCategoryFacetValueRequest} from '../../../../test/mock-category-facet-value-request.js';
 import {buildMockDateFacetSlice} from '../../../../test/mock-date-facet-slice.js';
 import {buildMockDateFacetValue} from '../../../../test/mock-date-facet-value.js';
 import {
-  MockedSearchEngine,
   buildMockSearchEngine,
+  type MockedSearchEngine,
 } from '../../../../test/mock-engine-v2.js';
 import {buildFacetOptionsSlice} from '../../../../test/mock-facet-options-slice.js';
 import {buildMockFacetRequest} from '../../../../test/mock-facet-request.js';
@@ -20,10 +21,10 @@ import {buildMockFacetValueRequest} from '../../../../test/mock-facet-value-requ
 import {buildMockNumericFacetSlice} from '../../../../test/mock-numeric-facet-slice.js';
 import {buildMockNumericFacetValue} from '../../../../test/mock-numeric-facet-value.js';
 import {createMockState} from '../../../../test/mock-state.js';
-import {FacetValueState} from '../facet/headless-core-facet.js';
+import type {FacetValueState} from '../facet/headless-core-facet.js';
 import {
   buildCoreFacetConditionsManager,
-  FacetConditionsManager,
+  type FacetConditionsManager,
 } from './headless-facet-conditions-manager.js';
 
 vi.mock('../../../../features/facet-options/facet-options-actions');
@@ -41,7 +42,8 @@ describe('facet conditions manager', () => {
     engine = buildMockSearchEngine(state);
     engine.subscribe = vi.fn((listener) => {
       engineListener = listener;
-      return (engineUnsubscriber = vi.fn());
+      engineUnsubscriber = vi.fn();
+      return engineUnsubscriber;
     });
   });
 
@@ -59,12 +61,13 @@ describe('facet conditions manager', () => {
       function initCondition() {
         state.facetSet[facetId] = buildMockFacetSlice();
         state.facetOptions.facets[facetId] = buildFacetOptionsSlice();
+        condition = vi.fn(() => false);
         facetConditionsManager = buildCoreFacetConditionsManager(engine, {
           facetId: facetId,
           conditions: [
             {
               parentFacetId,
-              condition: (condition = vi.fn(() => false)),
+              condition,
             },
           ],
         });
@@ -477,12 +480,13 @@ describe('facet conditions manager', () => {
       function initCondition() {
         state.facetSet[facetId] = buildMockFacetSlice();
         state.facetOptions.facets[facetId] = buildFacetOptionsSlice();
+        condition = vi.fn(() => false);
         facetConditionsManager = buildCoreFacetConditionsManager(engine, {
           facetId: facetId,
           conditions: [
             {
               parentFacetId,
-              condition: (condition = vi.fn(() => false)),
+              condition,
             },
           ],
         });

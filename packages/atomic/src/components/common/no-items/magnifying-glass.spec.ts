@@ -1,12 +1,12 @@
-import {renderFunctionFixture} from '@/vitest-utils/testing-helpers/fixture';
 import {html} from 'lit';
-import {describe, it, expect} from 'vitest';
+import {describe, expect, it} from 'vitest';
+import {renderFunctionFixture} from '@/vitest-utils/testing-helpers/fixture';
 import {renderMagnifyingGlass} from './magnifying-glass';
 
 describe('#renderMagnifyingGlass', () => {
   const renderComponent = async () => {
     const element = await renderFunctionFixture(
-      html`${renderMagnifyingGlass({props: {}})}`
+      html`${renderMagnifyingGlass()}`
     );
 
     return {

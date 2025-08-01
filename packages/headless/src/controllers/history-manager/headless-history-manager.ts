@@ -1,7 +1,7 @@
 import {isNullOrUndefined} from '@coveo/bueno';
 import {configuration} from '../../app/common-reducers.js';
-import {SearchEngine} from '../../app/search-engine/search-engine.js';
-import {StateWithHistory} from '../../app/undoable.js';
+import type {SearchEngine} from '../../app/search-engine/search-engine.js';
+import type {StateWithHistory} from '../../app/undoable.js';
 import {facetOrderReducer as facetOrder} from '../../features/facets/facet-order/facet-order-slice.js';
 import {back, forward} from '../../features/history/history-actions.js';
 import {
@@ -10,16 +10,16 @@ import {
   logNoResultsBack,
 } from '../../features/history/history-analytics-actions.js';
 import {history} from '../../features/history/history-slice.js';
-import {HistoryState} from '../../features/history/history-state.js';
+import type {HistoryState} from '../../features/history/history-state.js';
 import {executeSearch} from '../../features/search/search-actions.js';
-import {
+import type {
   ConfigurationSection,
   HistorySection,
 } from '../../state/state-sections.js';
 import {loadReducerError} from '../../utils/errors.js';
 import {
   buildController,
-  Controller,
+  type Controller,
 } from '../controller/headless-controller.js';
 
 /**

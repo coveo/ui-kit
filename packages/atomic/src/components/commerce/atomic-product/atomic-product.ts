@@ -1,27 +1,28 @@
-import {booleanConverter} from '@/src/converters/boolean-converter';
-import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
-import {Product, InteractiveProduct} from '@coveo/headless/commerce';
-import {CSSResultGroup, LitElement, html, unsafeCSS} from 'lit';
+import type {InteractiveProduct, Product} from '@coveo/headless/commerce';
+import {type CSSResultGroup, html, LitElement, unsafeCSS} from 'lit';
 import {customElement, property} from 'lit/decorators.js';
 import {ref} from 'lit/directives/ref.js';
-import {parentNodeToString} from '../../../utils/dom-utils';
-import {DisplayConfig} from '../../common/item-list/context/item-display-config-context-controller';
+import type {DisplayConfig} from '@/src/components/common/item-list/context/item-display-config-context-controller';
 import {
-  ItemRenderingFunction,
+  type ItemRenderingFunction,
   resultComponentClass,
-} from '../../common/item-list/item-list-common';
+} from '@/src/components/common/item-list/item-list-common';
 import {
+  type ItemDisplayDensity,
+  type ItemDisplayImageSize,
+  type ItemDisplayLayout,
   ItemLayout,
-  ItemDisplayDensity,
-  ItemDisplayImageSize,
-  ItemDisplayLayout,
-} from '../../common/layout/display-options';
-import {CommerceStore} from '../atomic-commerce-interface/store';
-import {CommerceRecommendationStore} from '../atomic-commerce-recommendation-interface/store';
-import {
+} from '@/src/components/common/layout/display-options';
+import {booleanConverter} from '@/src/converters/boolean-converter';
+import type {
   InteractiveProductContextEvent,
   ProductContextEvent,
-} from '../product-template-components/product-template-decorators';
+} from '@/src/decorators/commerce/product-template-decorators';
+import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
+import {ChildrenUpdateCompleteMixin} from '@/src/mixins/children-update-complete-mixin';
+import {parentNodeToString} from '@/src/utils/dom-utils';
+import type {CommerceStore} from '../atomic-commerce-interface/store';
+import type {CommerceRecommendationStore} from '../atomic-commerce-recommendation-interface/store';
 import styles from './atomic-product.tw.css';
 
 /**
@@ -29,7 +30,7 @@ import styles from './atomic-product.tw.css';
  */
 @customElement('atomic-product')
 @withTailwindStyles
-export class AtomicProduct extends LitElement {
+export class AtomicProduct extends ChildrenUpdateCompleteMixin(LitElement) {
   private layout!: ItemLayout;
   private productRootRef?: HTMLElement;
   private linkContainerRef?: HTMLElement;
@@ -162,7 +163,7 @@ export class AtomicProduct extends LitElement {
       ?.click();
   };
 
-  public connectedCallback() {
+  public async connectedCallback() {
     super.connectedCallback();
 
     if (!this.content) {
@@ -197,6 +198,9 @@ export class AtomicProduct extends LitElement {
       this.resolveProductDisplayConfig as EventListener
     );
     this.addEventListener('click', this.handleClick);
+
+    await this.getUpdateComplete();
+    this.classList.add('hydrated');
   }
 
   public disconnectedCallback() {
@@ -254,11 +258,15 @@ export class AtomicProduct extends LitElement {
         <div class=${resultComponentClass}>
           <div
             class="result-root"
-            ${ref((el) => (this.productRootRef = el as HTMLElement))}
+            ${ref((el) => {
+              this.productRootRef = el as HTMLElement;
+            })}
           ></div>
           <div
             class="link-container"
-            ${ref((el) => (this.linkContainerRef = el as HTMLElement))}
+            ${ref((el) => {
+              this.linkContainerRef = el as HTMLElement;
+            })}
           ></div>
         </div>
       `;

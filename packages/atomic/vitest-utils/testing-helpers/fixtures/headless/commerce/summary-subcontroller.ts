@@ -1,31 +1,38 @@
-import {SearchSummaryState, Summary} from '@coveo/headless/commerce';
+import type {
+  ProductListingSummaryState,
+  SearchSummaryState,
+  Summary,
+} from '@coveo/headless/commerce';
 import {genericSubscribe} from '../common';
 
-export const defaultState: SearchSummaryState = {
-  firstProduct: 0,
-  lastProduct: 3,
+type SummaryType = Summary<SearchSummaryState | ProductListingSummaryState>;
+type SummaryState = SearchSummaryState | ProductListingSummaryState;
+
+export const defaultState = {
+  query: '',
+  firstProduct: 1,
+  lastProduct: 10,
   firstRequestExecuted: true,
-  hasError: false,
+  totalNumberOfProducts: 100,
   hasProducts: true,
   isLoading: false,
-  query: 'query',
-  totalNumberOfProducts: 3,
-};
+  hasError: false,
+} satisfies SummaryState;
 
-export const defaultImplementation: Partial<Summary> = {
+export const defaultImplementation = {
   subscribe: genericSubscribe,
   state: defaultState,
-};
+} satisfies SummaryType;
 
 export const buildFakeSummary = ({
   implementation,
   state,
 }: Partial<{
-  implementation?: Partial<Summary>;
-  state?: Partial<SearchSummaryState>;
-}> = {}): Summary =>
+  implementation?: Partial<SummaryType>;
+  state?: Partial<SummaryState>;
+}> = {}): SummaryType =>
   ({
     ...defaultImplementation,
     ...implementation,
     ...(state && {state: {...defaultState, ...state}}),
-  }) as Summary;
+  }) as SummaryType;

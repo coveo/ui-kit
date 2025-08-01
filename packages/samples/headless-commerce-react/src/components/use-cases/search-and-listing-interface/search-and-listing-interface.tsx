@@ -1,19 +1,19 @@
-import {
+import type {
   Cart,
   ChildProduct,
   Search as HeadlessSearch,
   ProductListing,
 } from '@coveo/headless/commerce';
-import {useState, useEffect} from 'react';
+import {useEffect, useState} from 'react';
 import BreadcrumbManager from '../../breadcrumb-manager/breadcrumb-manager.js';
 import FacetGenerator from '../../facets/facet-generator/facet-generator.js';
 import Pagination from '../../pagination/pagination.js';
 import ProductList from '../../product-list/product-list.js';
 import ProductsPerPage from '../../products-per-page/products-per-page.js';
-//import ShowMore from '../../show-more/show-more.js';
 import Sort from '../../sort/sort.js';
 import Summary from '../../summary/summary.js';
 import './search-and-listing-interface.css';
+import ShowMore from '../../show-more/show-more.js';
 
 interface ISearchAndListingInterface {
   searchOrListingController: HeadlessSearch | ProductListing;
@@ -65,10 +65,10 @@ export default function SearchAndListingInterface(
           navigate={navigate}
         ></ProductList>
         <ProductsPerPage controller={paginationController} />
-        {/* <ShowMore
+        <ShowMore
           controller={paginationController}
           summaryController={summaryController}
-        /> */}
+        />
         <Pagination controller={paginationController} />
       </div>
     </div>

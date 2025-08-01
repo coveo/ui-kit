@@ -1,0 +1,14 @@
+{
+  "name": "create-atomic-component-project-template",
+  "root": "packages/create-atomic-component-project/template",
+  "sourceRoot": "packages/create-atomic-component-project/template",
+  "projectType": "library",
+  "targets": {
+    "build": {
+      "executor": "nx:noop"
+    },
+    "test": {
+      "executor": "nx:noop"
+    }
+  }
+}

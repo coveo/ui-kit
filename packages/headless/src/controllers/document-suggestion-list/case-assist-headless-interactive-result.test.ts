@@ -1,15 +1,15 @@
-import {Mock} from 'vitest';
+import type {Mock} from 'vitest';
 import {logDocumentSuggestionOpen} from '../../features/case-assist/case-assist-analytics-actions.js';
 import {buildMockCaseAssistState} from '../../test/mock-case-assist-state.js';
 import {
   buildMockCaseAssistEngine,
-  MockedCaseAssistEngine,
+  type MockedCaseAssistEngine,
 } from '../../test/mock-engine-v2.js';
 import {buildMockResult} from '../../test/mock-result.js';
 import {buildInteractiveResultCore} from '../core/interactive-result/headless-core-interactive-result.js';
 import {
   buildCaseAssistInteractiveResult,
-  CaseAssistInteractiveResultProps,
+  type CaseAssistInteractiveResultProps,
 } from './case-assist-headless-interactive-result.js';
 
 vi.mock('../core/interactive-result/headless-core-interactive-result');

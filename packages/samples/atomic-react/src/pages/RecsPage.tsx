@@ -1,31 +1,31 @@
 import {
   AtomicFormatCurrency,
   AtomicRecsInterface,
-  AtomicResultImage,
-  AtomicResultSectionTitle,
-  AtomicResultLink,
-  AtomicResultSectionTitleMetadata,
-  AtomicResultRating,
-  AtomicResultNumber,
-  AtomicResultSectionVisual,
-  AtomicResultSectionBadges,
+  AtomicRecsList,
   AtomicResultBadge,
+  AtomicResultDate,
+  AtomicResultFieldsList,
+  AtomicResultImage,
+  AtomicResultLink,
+  AtomicResultMultiValueText,
+  AtomicResultNumber,
+  AtomicResultPrintableUri,
+  AtomicResultRating,
+  AtomicResultSectionBadges,
+  AtomicResultSectionBottomMetadata,
   AtomicResultSectionEmphasized,
   AtomicResultSectionExcerpt,
-  AtomicResultSectionBottomMetadata,
-  AtomicResultFieldsList,
-  AtomicResultDate,
-  AtomicText,
-  AtomicResultPrintableUri,
-  AtomicResultMultiValueText,
+  AtomicResultSectionTitle,
+  AtomicResultSectionTitleMetadata,
+  AtomicResultSectionVisual,
   AtomicResultText,
-  AtomicRecsList,
+  AtomicText,
 } from '@coveo/atomic-react/recommendation';
 import {
   buildRecommendationEngine,
-  Result,
+  type Result,
 } from '@coveo/headless/recommendation';
-import {FunctionComponent, useMemo} from 'react';
+import {type FunctionComponent, useMemo} from 'react';
 
 export const RecsPage: FunctionComponent = () => {
   const organizationId = 'electronicscoveodemocomo0n2fu8v';

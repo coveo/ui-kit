@@ -1,13 +1,13 @@
 import {
   buildTab,
-  Tab as HeadlessTab,
-  TabState,
-  Unsubscribe,
+  type Tab as HeadlessTab,
+  type TabState,
+  type Unsubscribe,
 } from '@coveo/headless';
-import {Component, ContextType, PropsWithChildren} from 'react';
+import {Component, type ContextType, type PropsWithChildren} from 'react';
 import {AppContext} from '../../context/engine';
 
-export interface TabProps {
+interface TabProps {
   id: string;
   expression: string;
   active?: boolean;

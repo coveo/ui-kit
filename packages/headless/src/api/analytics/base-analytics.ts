@@ -1,5 +1,5 @@
 import {getSearchHubInitialState} from '../../features/search-hub/search-hub-state.js';
-import {
+import type {
   ConfigurationSection,
   ContextSection,
   PipelineSection,
@@ -8,7 +8,7 @@ import {
 } from '../../state/state-sections.js';
 import {VERSION} from '../../utils/version.js';
 
-export const getLanguage = (state: ConfigurationSection) => {
+const getLanguage = (state: ConfigurationSection) => {
   const langKey = state.configuration.search.locale.split('-')[0];
   if (!langKey || langKey.length !== 2) {
     return 'en';
@@ -42,7 +42,7 @@ export abstract class BaseAnalyticsProvider<
       formattedObject[formattedKey] = value;
     }
     if (configuration.analytics.analyticsMode === 'legacy') {
-      formattedObject['coveoHeadlessVersion'] = VERSION;
+      formattedObject.coveoHeadlessVersion = VERSION;
     }
     return formattedObject;
   }

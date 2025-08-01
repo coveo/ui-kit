@@ -87,7 +87,7 @@ export interface QueryRankingExpressionWeights {
 
 export type TermWeightReport = Record<string, StemmedTermInformation>;
 
-export interface StemmedTermInformation {
+interface StemmedTermInformation {
   Weights: TermWeights | null;
   terms: Record<string, TermWeightsPerDocument>;
 }
@@ -221,7 +221,11 @@ const parseWeights = <T extends Record<string, number>>(
 const matchExec = (value: string, regex: RegExp) => {
   const results: string[][] = [];
   let arr: RegExpExecArray | null;
-  while ((arr = regex.exec(value)) !== null) {
+  while (true) {
+    arr = regex.exec(value);
+    if (arr === null) {
+      break;
+    }
     results.push(arr);
   }
   return results;

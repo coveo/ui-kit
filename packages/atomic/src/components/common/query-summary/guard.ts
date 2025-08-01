@@ -1,5 +1,5 @@
-import {FunctionalComponentWithChildren} from '@/src/utils/functional-component-utils';
 import {html, nothing} from 'lit';
+import type {FunctionalComponentWithChildren} from '@/src/utils/functional-component-utils';
 
 interface QuerySummaryGuardProps {
   hasResults: boolean;
@@ -21,7 +21,7 @@ export const renderQuerySummaryGuard: FunctionalComponentWithChildren<
         <div
           part="placeholder"
           aria-hidden="true"
-          class="bg-neutral my-2 h-6 w-60 animate-pulse rounded"
+          class="bg-neutral mb-4 h-4 w-36 animate-pulse rounded"
         ></div>
       `;
     }

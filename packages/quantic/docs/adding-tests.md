@@ -124,33 +124,77 @@ Finally, extract the `experiences` folder, and overwrite the content of `quantic
 
 ## Write Your Test Suite
 
-You are now ready to write the Cypress tests for your component. All tests should be added in `cypress/integration`. For our example, we create a `cypress/integration/quantic-greeting.cypress.ts` file.
+Each component in Quantic has its own folder and E2E test suite under a local e2e/ folder. A typical test suite consists of:
 
-Let's walk through a simple test case:
+- fixture.ts – Configures the test setup using Playwright fixtures.
+
+- pageObject.ts – Encapsulates selectors and interactions with the component under test.
+
+- quanticGreetings.e2e.ts – The actual test file with test cases using the fixture and page object.
+
+Here’s a simple example for the quantic-greeting component.
+
+### 📁 `lwc/quantic-greeting/e2e/fixture.ts`
 
 ```typescript
-// cypress/integration/quantic-greeting.cypress.ts
-import {configure} from '../page-objects/configurator';
+import {quanticBase} from '../../../../../../playwright/fixtures/baseFixture';
+import {GreetingObject} from './pageObject';
 
-describe('quantic greeting', () => {
-  it('should display greeting message with specified name', () => {
-    // `examplesUrl` is set in `cypress/plugins/config/examples-community.json`
-    cy.visit(`${Cypress.env('examplesUrl')}/s/quantic-greeting`)
+const pageUrl = 's/quantic-greeting';
 
-      // The `configure` function sets the options and then clicks the `Try it now` button.
-      // When specifying an option, you must use the HTML attribute name (e.g., `no-search`).
-      // For example: `() => configure({ 'no-search': 'true' })`
-      .then(() => configure({name: 'Alex'}))
+interface GreetingOptions {
+  name: string;
+}
 
-      // The test component is now initialized with the correct options.
-      .get('c-quantic-greeting')
+type QuanticGreetingFixtures = {
+  greeting: GreetingObject;
+  options: Partial<GreetingOptions>;
+};
 
-      // And you can validate it displays the right greeting message.
-      .should('contain', 'Hello Alex!');
+export const test = quanticBase.extend<QuanticGreetingFixtures>({
+  options: {name: 'John'},
+  greeting: async ({page, options, configuration}, use) => {
+    const greeting = new GreetingObject(page);
+    await page.goto(pageUrl);
+    await configuration.configure({...options});
+    await greeting.component.waitFor();
+    await use(greeting);
+  },
+});
+
+export {expect} from '@playwright/test';
+```
+
+### 📁 `lwc/quantic-greeting/e2e/pageObject.ts`
+
+```typescript
+import type {Locator, Page} from '@playwright/test';
+
+export class GreetingObject {
+  constructor(public page: Page) {}
+
+  get component(): Locator {
+    return this.page.locator('c-quantic-greeting');
+  }
+
+  get greetingMessage(): Locator {
+    return this.component.getByTestId('message');
+  }
+}
+```
+
+### 📁 `lwc/quantic-greeting/e2e/quanticGreetings.e2e.ts`
+
+```typescript
+import {test, expect} from './fixture';
+
+test.describe('quantic greeting', () => {
+  test('should display greeting message with specified name', async ({
+    greeting,
+  }) => {
+    await expect(greeting.greetingMessage).toContainText('Hello John!');
   });
 });
 ```
-
-**Tip** As soon as you create the test file, run `npm run e2e:watch` to see your tests run live as you write them. Writing and debugging your tests is much more efficient this way.
 
 **Tip** When writing a test, use `describe.only(...)` or `it.only(...)` to focus only on the test at hand.

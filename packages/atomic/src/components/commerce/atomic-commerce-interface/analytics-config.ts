@@ -1,4 +1,5 @@
-import {CommerceEngineConfiguration} from '@coveo/headless/commerce';
+import type {CommerceEngineConfiguration} from '@coveo/headless/commerce';
+import {augmentAnalyticsConfigWithAtomicVersion} from '../../common/interface/analytics-config';
 
 export function getAnalyticsConfig(
   commerceEngineConfig: CommerceEngineConfiguration,
@@ -7,5 +8,6 @@ export function getAnalyticsConfig(
   return {
     enabled,
     ...commerceEngineConfig.analytics,
+    ...augmentAnalyticsConfigWithAtomicVersion(),
   };
 }

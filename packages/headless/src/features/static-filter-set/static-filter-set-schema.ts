@@ -3,7 +3,7 @@ import {
   requiredEmptyAllowedString,
   requiredNonEmptyString,
 } from '../../utils/validate-payload.js';
-import {StaticFilterValueState} from './static-filter-set-state.js';
+import type {StaticFilterValueState} from './static-filter-set-state.js';
 
 export const staticFilterIdSchema = requiredNonEmptyString;
 

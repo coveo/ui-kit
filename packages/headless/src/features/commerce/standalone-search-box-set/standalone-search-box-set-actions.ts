@@ -1,7 +1,7 @@
 import {BooleanValue, StringValue} from '@coveo/bueno';
 import {createAction, createAsyncThunk} from '@reduxjs/toolkit';
 import {
-  AsyncThunkCommerceOptions,
+  type AsyncThunkCommerceOptions,
   isErrorResponse,
 } from '../../../api/commerce/commerce-api-client.js';
 import {isRedirectTrigger} from '../../../api/common/trigger.js';
@@ -11,7 +11,7 @@ import {
 } from '../../../utils/validate-payload.js';
 import {
   buildPlanRequest,
-  StateNeededForPlanCommerceAPIRequest,
+  type StateNeededForPlanCommerceAPIRequest,
 } from './plan-request-builder.js';
 
 export interface FetchRedirectUrlPayload {
@@ -64,7 +64,7 @@ export interface RegisterStandaloneSearchBoxPayload {
   overwrite?: boolean;
 }
 
-export interface UpdateStandaloneSearchBoxPayload {
+interface UpdateStandaloneSearchBoxPayload {
   /**
    * The standalone search box id.
    */

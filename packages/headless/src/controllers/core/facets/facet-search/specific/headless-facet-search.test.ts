@@ -1,5 +1,5 @@
-import {describe, it, vi, expect, beforeEach} from 'vitest';
-import {CoreEngine} from '../../../../../app/engine.js';
+import {beforeEach, describe, expect, it, vi} from 'vitest';
+import type {CoreEngine} from '../../../../../app/engine.js';
 import {
   executeFacetSearch,
   executeFieldSuggest,
@@ -10,22 +10,22 @@ import {
   selectFacetSearchResult,
 } from '../../../../../features/facets/facet-search-set/specific/specific-facet-search-actions.js';
 import {deselectAllFacetValues} from '../../../../../features/facets/facet-set/facet-set-actions.js';
-import {
+import type {
   ConfigurationSection,
   FacetSearchSection,
 } from '../../../../../state/state-sections.js';
 import {
   buildMockSearchEngine,
-  MockedSearchEngine,
+  type MockedSearchEngine,
 } from '../../../../../test/mock-engine-v2.js';
-import {buildMockFacetSearchResult} from '../../../../../test/mock-facet-search-result.js';
 import {buildMockFacetSearch} from '../../../../../test/mock-facet-search.js';
+import {buildMockFacetSearchResult} from '../../../../../test/mock-facet-search-result.js';
 import {createMockState} from '../../../../../test/mock-state.js';
-import {CategoryFacetSearchResult} from '../../../../facets/category-facet/headless-category-facet.js';
+import type {CategoryFacetSearchResult} from '../../../../facets/category-facet/headless-category-facet.js';
 import {
   buildFacetSearch,
-  FacetSearch,
-  FacetSearchProps,
+  type FacetSearch,
+  type FacetSearchProps,
 } from './headless-facet-search.js';
 
 vi.mock(

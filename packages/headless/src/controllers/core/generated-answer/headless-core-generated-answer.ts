@@ -1,42 +1,35 @@
-import {GeneratedAnswerCitation} from '../../../api/generated-answer/generated-answer-event-payload.js';
-import {CoreEngine} from '../../../app/engine.js';
-import {
+import type {CoreEngine} from '../../../app/engine.js';
+import type {
   CustomAction,
   LegacySearchAction,
 } from '../../../features/analytics/analytics-utils.js';
 import {
-  likeGeneratedAnswer,
-  dislikeGeneratedAnswer,
-  updateResponseFormat,
-  openGeneratedAnswerFeedbackModal,
   closeGeneratedAnswerFeedbackModal,
-  setIsVisible,
-  sendGeneratedAnswerFeedback,
-  registerFieldsToIncludeInCitations,
-  expandGeneratedAnswer,
   collapseGeneratedAnswer,
+  dislikeGeneratedAnswer,
+  expandGeneratedAnswer,
+  likeGeneratedAnswer,
+  openGeneratedAnswerFeedbackModal,
+  registerFieldsToIncludeInCitations,
+  sendGeneratedAnswerFeedback,
   setIsEnabled,
+  setIsVisible,
+  updateResponseFormat,
 } from '../../../features/generated-answer/generated-answer-actions.js';
-import {GeneratedAnswerFeedback} from '../../../features/generated-answer/generated-answer-analytics-actions.js';
+import type {GeneratedAnswerFeedback} from '../../../features/generated-answer/generated-answer-analytics-actions.js';
 import {generatedAnswerReducer as generatedAnswer} from '../../../features/generated-answer/generated-answer-slice.js';
-import {GeneratedAnswerState} from '../../../features/generated-answer/generated-answer-state.js';
-import {GeneratedResponseFormat} from '../../../features/generated-answer/generated-response-format.js';
-import {
+import type {GeneratedAnswerState} from '../../../features/generated-answer/generated-answer-state.js';
+import type {GeneratedResponseFormat} from '../../../features/generated-answer/generated-response-format.js';
+import type {
   DebugSection,
   GeneratedAnswerSection,
   SearchSection,
 } from '../../../state/state-sections.js';
 import {loadReducerError} from '../../../utils/errors.js';
 import {
-  Controller,
   buildController,
+  type Controller,
 } from '../../controller/headless-controller.js';
-
-export type {
-  GeneratedAnswerCitation,
-  GeneratedResponseFormat,
-  GeneratedAnswerState,
-};
 
 /**
  * The `GeneratedAnswer` controller uses Coveo Machine Learning (Coveo ML) models to automatically generate an answer to a query executed by the user.

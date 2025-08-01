@@ -1,6 +1,6 @@
 /* eslint-disable @cspell/spellchecker */
-import {Locator} from '@playwright/test';
-import {test, expect} from './fixture';
+import type {Locator} from '@playwright/test';
+import {expect, test} from './fixture';
 
 test.describe('Default', () => {
   test.beforeEach(async ({breadbox}) => {
@@ -19,27 +19,27 @@ test.describe('Default', () => {
       {
         facetType: 'regular',
         filter: '&f-cat_color=Brown',
-        breadcrumbLabel: 'Color:Brown',
+        breadcrumbLabel: 'Color: Brown',
       },
       {
         facetType: 'numerical range',
         filter: '&nf-ec_price=15..20 ',
-        breadcrumbLabel: 'Price:$15.00 to $20.00',
+        breadcrumbLabel: 'Price: $15.00 to $20.00',
       },
       {
         facetType: 'date range',
         filter: '&df-date=2024/05/27@14:32:01..2025/05/27@14:32:01',
-        breadcrumbLabel: 'Date:2024-05-27 to 2025-05-27',
+        breadcrumbLabel: 'Date: 2024-05-27 to 2025-05-27',
       },
       {
         facetType: 'category',
         filter: '&cf-ec_category=Accessories',
-        breadcrumbLabel: 'Category:Accessories',
+        breadcrumbLabel: 'Category: Accessories',
       },
       {
         facetType: 'category (nested)',
         filter: '&cf-ec_category=Accessories,Surf%20Accessories',
-        breadcrumbLabel: 'Category:Accessories / Surf Accessories',
+        breadcrumbLabel: 'Category: Accessories / Surf Accessories',
       },
     ].forEach(({facetType, filter, breadcrumbLabel}) => {
       const baseUrl =
@@ -67,7 +67,7 @@ test.describe('Default', () => {
       './iframe.html?args=&id=atomic-commerce-breadbox--default&viewMode=story#sortCriteria=relevance&mnf-ec_price=20..30';
     await page.goto(baseUrl);
 
-    const expectedBreadcrumbLabel = 'Price:$20.00 to $30.00';
+    const expectedBreadcrumbLabel = 'Price: $20.00 to $30.00';
 
     const breadcrumbButton = breadbox.getBreadcrumbButtons(
       expectedBreadcrumbLabel
@@ -119,7 +119,7 @@ test.describe('Default', () => {
     }) => {
       const breadcrumbButton = breadbox.getBreadcrumbButtons(firstValueText);
 
-      await expect(breadcrumbButton).toHaveText(`Brand:${firstValueText}`);
+      await expect(breadcrumbButton).toHaveText(`Brand: ${firstValueText}`);
     });
   });
   test.describe('when a category facet value is selected', () => {
@@ -168,8 +168,9 @@ test.describe('Default', () => {
     }) => {
       const breadcrumbButton = breadbox.getBreadcrumbButtons(firstValueText);
 
-      await expect(breadcrumbButton).toHaveText(`Category:${firstValueText}`);
+      await expect(breadcrumbButton).toHaveText(`Category: ${firstValueText}`);
     });
+
     test.describe('when a nested category facet value is selected', () => {
       let breadcrumbText: string | RegExp;
 
@@ -227,7 +228,9 @@ test.describe('Default', () => {
       }) => {
         const breadcrumbButton = breadbox.getBreadcrumbButtons().first();
 
-        await expect(breadcrumbButton).toHaveText(`Category:${breadcrumbText}`);
+        await expect(breadcrumbButton).toHaveText(
+          `Category: ${breadcrumbText}`
+        );
       });
     });
   });
@@ -274,7 +277,7 @@ test.describe('Default', () => {
     }) => {
       const breadcrumbButton = breadbox.getBreadcrumbButtons(firstValueText);
 
-      await expect(breadcrumbButton).toHaveText('Price:' + firstValueText);
+      await expect(breadcrumbButton).toHaveText(`Price: ${firstValueText}`);
     });
   });
 
@@ -317,7 +320,7 @@ test.describe('Default', () => {
     }) => {
       const breadcrumbButton = breadbox.getBreadcrumbButtons(firstValueText);
 
-      await expect(breadcrumbButton).toHaveText('Price:' + firstValueText);
+      await expect(breadcrumbButton).toHaveText(`Price: ${firstValueText}`);
     });
   });
 
@@ -371,7 +374,7 @@ test.describe('Default', () => {
     }) => {
       const breadcrumbButton = breadbox.getBreadcrumbButtons(firstValueText);
 
-      await expect(breadcrumbButton).toHaveText('Date:' + firstValueText);
+      await expect(breadcrumbButton).toHaveText(`Date: ${firstValueText}`);
     });
   });
 
@@ -451,7 +454,7 @@ test.describe('Default', () => {
       });
 
       test('should update the "Show More" button count', async ({breadbox}) => {
-        await expect(breadbox.getShowMorebutton()).toContainText('+ 5');
+        await expect(breadbox.getShowMorebutton()).toContainText('+ 6');
       });
     });
 
@@ -479,5 +482,25 @@ test.describe('Default', () => {
         await expect(breadbox.getShowLessbutton()).not.toBeVisible();
       });
     });
+  });
+
+  test('should hide the breadcrumb while selecting facets and while viewport does not change', async ({
+    breadbox,
+    page,
+  }) => {
+    await page.setViewportSize({width: 640, height: 480});
+
+    for (let i = 0; i < 4; i++) {
+      await breadbox.getFacetValue('regular').nth(i).click();
+      if (i < 3) {
+        await breadbox
+          .getBreadcrumbButtons()
+          .nth(i)
+          .waitFor({state: 'visible'});
+      }
+    }
+
+    await expect(breadbox.getShowMorebutton()).toBeVisible();
+    await expect(breadbox.getShowMorebutton()).toHaveText('+ 1');
   });
 });

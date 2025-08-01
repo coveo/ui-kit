@@ -1,6 +1,6 @@
-/* eslint-disable canonical/no-barrel-import */
+/** biome-ignore-all lint/suspicious/noExplicitAny: <mock> */
 /* eslint-disable @cspell/spellchecker */
-import {StateNeededByAnswerAPI} from '../stream-answer-api.js';
+import type {StateNeededByAnswerAPI} from '../stream-answer-api.js';
 
 const atomicVersion = '2.77.0';
 
@@ -1226,6 +1226,7 @@ export const expectedStreamAnswerAPIParam = {
   cq: 'cq-test-query',
   dq: 'dq-test-query',
   lq: 'lq-test-query',
+  enableQuerySyntax: false,
   context: {
     testKey: 'testValue',
   },
@@ -1610,3 +1611,11 @@ export const expectedStreamAnswerAPIParamWithoutSearchAction = {
     actionCause: '',
   },
 };
+
+export const expectedStreamAnswerAPIParamForSelect = (() => {
+  const {
+    analytics: _analytics,
+    ...expectedStreamAnswerAPIParamWithoutAnalytics
+  } = expectedStreamAnswerAPIParam;
+  return expectedStreamAnswerAPIParamWithoutAnalytics;
+})();

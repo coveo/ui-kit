@@ -1,7 +1,5 @@
 /* eslint-disable @cspell/spellchecker */
-import {parameters} from '@/storybook-utils/common/common-meta-parameters';
-import {renderComponent} from '@/storybook-utils/common/render-component';
-import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
+
 import {userEvent} from '@storybook/test';
 import type {
   Decorator,
@@ -11,6 +9,9 @@ import type {
 } from '@storybook/web-components';
 import {html} from 'lit/static-html.js';
 import {within} from 'shadow-dom-testing-library';
+import {parameters} from '@/storybook-utils/common/common-meta-parameters';
+import {renderComponent} from '@/storybook-utils/common/render-component';
+import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
 
 const {decorator, play} = wrapInSearchInterface();
 
@@ -33,33 +34,31 @@ const searchBoxDecorator: Decorator = (story) => html`
   ${story()}
 `;
 
-const searchPlay: (
-  context: StoryContext,
-  query: string
-) => Promise<void> = async (context, query) => {
-  await play(context);
-  const {canvasElement, step} = context;
-  const canvas = within(canvasElement);
+const searchPlay: (context: StoryContext, query: string) => Promise<void> =
+  async (context, query) => {
+    await play(context);
+    const {canvasElement, step} = context;
+    const canvas = within(canvasElement);
 
-  const searchBox = (
-    await canvas.findAllByShadowTitle('Search field with suggestions.', {
-      exact: false,
-    })
-  )?.find(
-    (el) => el.getAttribute('part') === 'textarea'
-  ) as HTMLTextAreaElement;
+    const searchBox = (
+      await canvas.findAllByShadowTitle('Search field with suggestions.', {
+        exact: false,
+      })
+    )?.find(
+      (el) => el.getAttribute('part') === 'textarea'
+    ) as HTMLTextAreaElement;
 
-  const submitButton = (
-    await canvas.findAllByShadowTitle('Search field with suggestions.', {
-      exact: false,
-    })
-  )?.find((el) => el.getAttribute('part') === 'submit-button');
+    const submitButton = (
+      await canvas.findAllByShadowTitle('Search field with suggestions.', {
+        exact: false,
+      })
+    )?.find((el) => el.getAttribute('part') === 'submit-button');
 
-  await step(`Search "${query}"`, async () => {
-    await userEvent.type(searchBox!, query);
-    await userEvent.click(submitButton!);
-  });
-};
+    await step(`Search "${query}"`, async () => {
+      await userEvent.type(searchBox!, query);
+      await userEvent.click(submitButton!);
+    });
+  };
 
 export const Default: Story = {
   name: 'atomic-did-you-mean',

@@ -1,14 +1,14 @@
-import {MockInstance} from 'vitest';
+import type {MockInstance} from 'vitest';
 import {
   PlatformClient,
-  PlatformClientCallError,
+  type PlatformClientCallError,
 } from '../api/platform-client.js';
 import {getSampleEngineConfiguration} from '../app/engine-configuration.js';
 import {
-  InsightEngineConfiguration,
   buildInsightEngine,
+  type InsightEngineConfiguration,
 } from '../app/insight-engine/insight-engine.js';
-import {NumericFacetValue} from '../controllers/facets/range-facet/numeric-facet/headless-numeric-facet.js';
+import type {NumericFacetValue} from '../controllers/facets/range-facet/numeric-facet/headless-numeric-facet.js';
 import {
   interfaceChange,
   interfaceLoad,
@@ -38,7 +38,7 @@ import {registerDateFacet} from '../features/facets/range-facets/date-facet-set/
 import {dateBreadcrumbFacet} from '../features/facets/range-facets/date-facet-set/date-facet-analytics-actions.js';
 import {logDateFacetBreadcrumb} from '../features/facets/range-facets/date-facet-set/date-facet-insight-analytics-actions.js';
 import {dateFacetSetReducer} from '../features/facets/range-facets/date-facet-set/date-facet-set-slice.js';
-import {DateFacetValue} from '../features/facets/range-facets/date-facet-set/interfaces/response.js';
+import type {DateFacetValue} from '../features/facets/range-facets/date-facet-set/interfaces/response.js';
 import {registerNumericFacet} from '../features/facets/range-facets/numeric-facet-set/numeric-facet-actions.js';
 import {numericBreadcrumbFacet} from '../features/facets/range-facets/numeric-facet-set/numeric-facet-analytics-actions.js';
 import {logNumericFacetBreadcrumb} from '../features/facets/range-facets/numeric-facet-set/numeric-facet-insight-analytics-actions.js';
@@ -57,8 +57,8 @@ import {
 import {browseResults} from '../features/pagination/pagination-analytics-actions.js';
 import {
   logPageNext,
-  logPagePrevious,
   logPageNumber,
+  logPagePrevious,
 } from '../features/pagination/pagination-insight-analytics-actions.js';
 import {searchboxSubmit} from '../features/query/query-analytics-actions.js';
 import {logSearchboxSubmit} from '../features/query/query-insight-analytics-actions.js';

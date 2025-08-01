@@ -1,9 +1,9 @@
 import {
-  UserAction,
-  UserActionsState,
-  UserActionTimeline,
+  type UserAction,
+  type UserActionsState,
+  type UserActionTimeline,
   UserActionType,
-  UserSession,
+  type UserSession,
 } from './insight-user-actions-state.js';
 
 const SECOND = 1000;
@@ -12,7 +12,7 @@ const SESSION_INACTIVITY_THRESHOLD_IN_MS = 30 * MINUTE;
 const NUMBER_OF_PRECEDING_SESSIONS = 2;
 const NUMBER_OF_FOLLOWING_SESSIONS = 2;
 
-export interface RawUserAction {
+interface RawUserAction {
   name: string;
   value: string;
   time: string;
@@ -95,7 +95,7 @@ export const mapAndSortActionsByMostRecent = (
       try {
         const userAction: UserAction = mapRawActionToUserAction(rawAction);
         acc.push(userAction);
-      } catch (error) {
+      } catch (_) {
         parsingError = true;
       }
       return acc;

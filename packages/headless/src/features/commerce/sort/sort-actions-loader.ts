@@ -1,6 +1,6 @@
-import {PayloadAction} from '@reduxjs/toolkit';
-import {CommerceEngine} from '../../../app/commerce-engine/commerce-engine.js';
-import {ApplySortPayload, applySort} from './sort-actions.js';
+import type {PayloadAction} from '@reduxjs/toolkit';
+import type {CommerceEngine} from '../../../app/commerce-engine/commerce-engine.js';
+import {type ApplySortPayload, applySort} from './sort-actions.js';
 import {sortReducer as commerceSort} from './sort-slice.js';
 
 export type {ApplySortPayload};

@@ -1,5 +1,5 @@
-import {BaseFacetResponse} from '../../facet-api/response.js';
-import {CategoryFacetValueCommon} from './commons.js';
+import type {BaseFacetResponse} from '../../facet-api/response.js';
+import type {CategoryFacetValueCommon} from './commons.js';
 
 export type {CategoryFacetValueCommon} from './commons.js';
 export interface CategoryFacetValue extends CategoryFacetValueCommon {

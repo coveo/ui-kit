@@ -1,7 +1,7 @@
 import {RecordValue} from '@coveo/bueno';
 import {createAsyncThunk} from '@reduxjs/toolkit';
-import {AsyncThunkOptions} from '../../../../app/async-thunk-options.js';
-import {
+import type {AsyncThunkOptions} from '../../../../app/async-thunk-options.js';
+import type {
   ConfigurationSection,
   NumericFacetSection,
 } from '../../../../state/state-sections.js';
@@ -12,7 +12,7 @@ import {
   executeToggleRangeFacetSelect,
 } from '../generic/range-facet-controller-actions.js';
 import {numericFacetValueDefinition} from '../generic/range-facet-validate-payload.js';
-import {NumericFacetValue} from './interfaces/response.js';
+import type {NumericFacetValue} from './interfaces/response.js';
 import {
   toggleExcludeNumericFacetValue,
   toggleSelectNumericFacetValue,

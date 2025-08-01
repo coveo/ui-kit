@@ -29,8 +29,8 @@ import type {CommerceFacetSetSection} from '../../../../state/state-sections.js'
 import {loadReducerError} from '../../../../utils/errors.js';
 import {buildController} from '../../../controller/headless-controller.js';
 import type {
-  CoreFacet as HeadlessCoreFacet,
   CoreFacetState,
+  CoreFacet as HeadlessCoreFacet,
 } from '../../../core/facets/facet/headless-core-facet.js';
 import type {DateRangeRequest} from '../../../core/facets/range-facet/date-facet/headless-core-date-facet.js';
 import type {NumericRangeRequest} from '../../../core/facets/range-facet/numeric-facet/headless-core-numeric-facet.js';
@@ -63,7 +63,7 @@ export interface FacetControllerType<T extends FacetType> {
  *
  * The configurable `CoreCommerceFacet` properties used internally.
  */
-export interface CoreCommerceFacetProps {
+interface CoreCommerceFacetProps {
   options: CoreCommerceFacetOptions;
 }
 
@@ -159,8 +159,6 @@ export type CoreCommerceFacetState<
   values: ValueResponse[];
 };
 
-export type CoreCommerceFacetBuilder = typeof buildCoreCommerceFacet;
-
 export function buildCoreCommerceFacet<
   ValueRequest extends AnyFacetValueRequest,
   ValueResponse extends AnyFacetValueResponse,
@@ -254,7 +252,7 @@ export function buildCoreCommerceFacet<
 
     showMoreValues() {
       const numberInState = getRequest()?.numberOfValues ?? 0;
-      const initialNumberOfValues = getRequest()?.initialNumberOfValues ?? 0;
+      const initialNumberOfValues = getRequest()?.initialNumberOfValues ?? 1;
       const numberToNextMultipleOfConfigured =
         initialNumberOfValues - (numberInState % initialNumberOfValues);
       const numberOfValues = numberInState + numberToNextMultipleOfConfigured;
@@ -267,7 +265,7 @@ export function buildCoreCommerceFacet<
     },
 
     showLessValues() {
-      const initialNumberOfValues = getRequest()?.initialNumberOfValues ?? 0;
+      const initialNumberOfValues = getRequest()?.initialNumberOfValues ?? 1;
       const newNumberOfValues = Math.max(
         initialNumberOfValues,
         getNumberOfActiveValues()
@@ -304,16 +302,10 @@ function loadCommerceFacetReducers(
 }
 
 const canShowLessValues = (request: AnyFacetRequest | undefined) => {
-  if (!request) {
-    return false;
-  }
-
-  const initialNumberOfValues = request.initialNumberOfValues;
-  const hasIdleValues = !!request.values.find((v) => v.state === 'idle');
-
   return (
-    (initialNumberOfValues ?? 0) < (request.numberOfValues ?? 0) &&
-    hasIdleValues
+    !!request &&
+    request.values.length > (request.initialNumberOfValues ?? 1) &&
+    request.values.some((v) => v.state === 'idle')
   );
 };
 

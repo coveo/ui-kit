@@ -1,5 +1,5 @@
 import {html, render} from 'lit';
-import {describe, beforeEach, afterEach, it, expect} from 'vitest';
+import {afterEach, beforeEach, describe, expect, it} from 'vitest';
 import {multiClassMap, tw} from './multi-class-map';
 
 describe('MultiClassMapDirective', () => {

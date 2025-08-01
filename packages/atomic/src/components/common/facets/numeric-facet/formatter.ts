@@ -1,6 +1,6 @@
-import {i18n} from 'i18next';
+import type {i18n} from 'i18next';
 import {getFieldValueCaption} from '../../../../utils/field-utils';
-import {NumberFormatter} from '../../formats/format-common';
+import type {NumberFormatter} from '../../formats/format-common';
 
 export interface FacetValueRange {
   endInclusive: boolean;

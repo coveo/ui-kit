@@ -1,6 +1,6 @@
 import {
   getRecommendationsSliceInitialState,
-  RecommendationsSlice,
+  type RecommendationsSlice,
 } from '../features/commerce/recommendations/recommendations-state.js';
 
 export function buildMockRecommendationsSlice(

@@ -1,12 +1,12 @@
+import {userEvent} from '@storybook/test';
+import type {i18n} from 'i18next';
+import {html} from 'lit';
+import {beforeAll, describe, expect, it, vi} from 'vitest';
 import {renderFunctionFixture} from '@/vitest-utils/testing-helpers/fixture';
 import {createTestI18n} from '@/vitest-utils/testing-helpers/i18n-utils';
-import {userEvent} from '@storybook/test';
-import {i18n} from 'i18next';
-import {html} from 'lit';
-import {describe, beforeAll, it, expect, vi} from 'vitest';
 import {
-  renderRefineModalFiltersSection,
   renderRefineModalFiltersClearButton,
+  renderRefineModalFiltersSection,
 } from './filters';
 
 describe('filters', () => {
@@ -33,7 +33,7 @@ describe('filters', () => {
       return {
         filterSection: element.querySelector('div[part="filter-section"]'),
         sectionTitle: element.querySelector(
-          'h1[part*="section-filters-title"]'
+          'h2[part*="section-filters-title"]'
         ),
         facetsSlot: element.querySelector('slot[name="facets"]'),
         automaticFacetsSlot: element.querySelector(

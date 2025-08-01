@@ -1,7 +1,7 @@
-import {QuestionAnswerDocumentIdentifier} from '../../../api/search/search/question-answering.js';
-import {Result} from '../../../api/search/search/result.js';
-import {CoreEngine} from '../../../app/engine.js';
-import {
+import type {QuestionAnswerDocumentIdentifier} from '../../../api/search/search/question-answering.js';
+import type {Result} from '../../../api/search/search/result.js';
+import type {CoreEngine} from '../../../app/engine.js';
+import type {
   ClickAction,
   CustomAction,
 } from '../../../features/analytics/analytics-utils.js';
@@ -13,8 +13,8 @@ import {
   likeSmartSnippet,
   openFeedbackModal,
 } from '../../../features/question-answering/question-answering-actions.js';
-import {SmartSnippetFeedback} from '../../../features/question-answering/question-answering-analytics-actions.js';
-import {
+import type {SmartSnippetFeedback} from '../../../features/question-answering/question-answering-analytics-actions.js';
+import type {
   QuestionAnsweringInlineLinkActionCreatorPayload,
   QuestionAnsweringUniqueIdentifierActionCreatorPayload,
 } from '../../../features/question-answering/question-answering-document-id.js';
@@ -22,19 +22,17 @@ import {answerSourceSelector} from '../../../features/question-answering/questio
 import {questionAnsweringReducer as questionAnswering} from '../../../features/question-answering/question-answering-slice.js';
 import {pushRecentResult} from '../../../features/recent-results/recent-results-actions.js';
 import {searchReducer as search} from '../../../features/search/search-slice.js';
-import {
+import type {
   QuestionAnsweringSection,
   SearchSection,
 } from '../../../state/state-sections.js';
 import {loadReducerError} from '../../../utils/errors.js';
 import {
-  Controller,
   buildController,
+  type Controller,
 } from '../../controller/headless-controller.js';
-import {InlineLink} from '../../smart-snippet/headless-smart-snippet-interactive-inline-links.js';
+import type {InlineLink} from '../../smart-snippet/headless-smart-snippet-interactive-inline-links.js';
 import {buildInteractiveResultCore} from '../interactive-result/headless-core-interactive-result.js';
-
-export type {QuestionAnswerDocumentIdentifier} from '../../../api/search/search/question-answering.js';
 
 export interface SmartSnippetOptions {
   /**
@@ -94,7 +92,7 @@ export interface SmartSnippetCore extends Controller {
   /**
    * Selects the source, logging a UA event to the Coveo Platform if the source wasn't already selected before.
    *
-   * In a DOM context, we recommend calling this method on all of the following events:
+   * In a DOM context, call this method on all of the following events:
    * * `contextmenu`
    * * `click`
    * * `mouseup`
@@ -104,13 +102,13 @@ export interface SmartSnippetCore extends Controller {
   /**
    * Prepares to select the source after a certain delay, sending analytics if it was never selected before.
    *
-   * In a DOM context, we recommend calling this method on the `touchstart` event.
+   * In a DOM context, call this method on the `touchstart` event.
    */
   beginDelayedSelectSource(): void;
   /**
    * Cancels the pending selection caused by `beginDelayedSelectSource`.
    *
-   * In a DOM context, we recommend calling this method on the `touchend` event.
+   * In a DOM context, call this method on the `touchend` event.
    */
   cancelPendingSelectSource(): void;
 }
@@ -127,7 +125,7 @@ export interface SmartSnippet extends SmartSnippetCore {
   /**
    * Selects a link inside the answer, logging a UA event to the Coveo Platform if it was never selected before.
    *
-   * In a DOM context, we recommend calling this method on all of the following events:
+   * In a DOM context, call this method on all of the following events:
    * * `contextmenu`
    * * `click`
    * * `mouseup`
@@ -139,7 +137,7 @@ export interface SmartSnippet extends SmartSnippetCore {
   /**
    * Prepares to select a link inside the answer after a certain delay, sending analytics if it was never selected before.
    *
-   * In a DOM context, we recommend calling this method on the `touchstart` event.
+   * In a DOM context, call this method on the `touchstart` event.
    *
    * @param link - The link to select.
    */
@@ -147,7 +145,7 @@ export interface SmartSnippet extends SmartSnippetCore {
   /**
    * Cancels the pending selection caused by `beginDelayedSelectInlineLink`.
    *
-   * In a DOM context, we recommend calling this method on the `touchend` event.
+   * In a DOM context, call this method on the `touchend` event.
    *
    * @param link - The link to select.
    */

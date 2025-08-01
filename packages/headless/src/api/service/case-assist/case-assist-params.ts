@@ -1,19 +1,19 @@
-import {
+import type {
   HTTPContentType,
   HttpMethods,
   PlatformClientCallOptions,
 } from '../../platform-client.js';
-import {BaseParam} from '../../platform-service-params.js';
+import type {BaseParam} from '../../platform-service-params.js';
 
 export interface CaseAssistIdParam {
   caseAssistId: string;
 }
 
-export interface CaseFields {
+type CaseFields = {
   [fieldName: string]: {
     value: string;
   };
-}
+};
 
 export interface FieldsParam {
   fields: CaseFields;
@@ -61,13 +61,10 @@ export const prepareSuggestionRequestFields = (
 ): CaseFields =>
   Object.keys(fields)
     .filter((fieldName) => fields[fieldName].value !== '')
-    .reduce(
-      (obj: CaseFields, fieldName) => ({
-        ...obj,
-        [fieldName]: fields[fieldName],
-      }),
-      {}
-    );
+    .reduce((obj: CaseFields, fieldName) => {
+      obj[fieldName] = fields[fieldName];
+      return obj;
+    }, {});
 
 export const prepareContextFromFields = (
   fields: CaseFields
@@ -75,11 +72,11 @@ export const prepareContextFromFields = (
   Object.keys(fields)
     .filter((fieldName) => fields[fieldName].value !== '')
     .reduce(
-      (obj, fieldName) => ({
-        ...obj,
-        [fieldName]: fields[fieldName].value,
-      }),
-      {}
+      (obj: Record<string, string | string[]>, fieldName) => {
+        obj[fieldName] = fields[fieldName].value;
+        return obj;
+      },
+      {} as Record<string, string | string[]>
     );
 
 const validateCaseAssistRequestParams = (req: CaseAssistParam) => {

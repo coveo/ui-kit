@@ -10,13 +10,17 @@ const __dirname = dirname(new URL(import.meta.url).pathname).slice(
 const isDevMode = process.argv[2] === 'dev';
 const isCDN = process.env.DEPLOYMENT_ENVIRONMENT === 'CDN';
 const isNightly = process.env.IS_NIGHTLY === 'true';
+const isPrRelease =
+  process.env.IS_PRERELEASE === 'true' && process.env.PR_NUMBER;
 
 const buenoJsonPath = resolve(__dirname, '../bueno/package.json');
 const buenoJson = JSON.parse(readFileSync(buenoJsonPath, 'utf-8'));
 
 const buenoVersion = isNightly
   ? `v${buenoJson.version.split('.').shift()}-nightly`
-  : 'v' + buenoJson.version;
+  : isPrRelease
+    ? `v${buenoJson.version.split('-').shift()}.${process.env.PR_NUMBER}`
+    : `v${buenoJson.version}`;
 const buenoPath = isCDN
   ? `/bueno/${buenoVersion}/bueno.esm.js`
   : '@coveo/bueno';
@@ -71,7 +75,7 @@ function browserEsm(base, outfile) {
   const replaceBuenoImport = {
     name: 'replace-bueno-import',
     setup(build) {
-      build.onResolve({filter: /^@coveo\/bueno$/}, (args) => {
+      build.onResolve({filter: /^@coveo\/bueno$/}, () => {
         return {path: buenoPath, external: true};
       });
     },
@@ -90,12 +94,10 @@ function browserEsm(base, outfile) {
 
 async function main() {
   await Promise.all(
-    entries
-      .map(async ({entryPoint, outfile}) => {
-        const base = getBase(entryPoint);
-        return [nodeEsm(base, outfile), browserEsm(base, outfile)];
-      })
-      .flat()
+    entries.flatMap(async ({entryPoint, outfile}) => {
+      const base = getBase(entryPoint);
+      return [nodeEsm(base, outfile), browserEsm(base, outfile)];
+    })
   );
 }
 

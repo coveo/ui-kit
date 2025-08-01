@@ -12,13 +12,12 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "vue": "3.5.16",
-    "@coveo/atomic": "3.27.3"
+    "vue": "3.5.17",
+    "@coveo/atomic": "3.31.1"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "5.2.4",
     "cypress": "13.7.3",
-    "cypress-repeat": "2.3.9",
     "ncp": "2.0.0",
     "typescript": "5.8.3",
     "vite": "6.3.5"

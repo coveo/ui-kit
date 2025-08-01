@@ -1,5 +1,5 @@
-import {RangeFacetRequest} from './range-facet.js';
-import {AutomaticRanges} from './request.js';
+import type {RangeFacetRequest} from './range-facet.js';
+import type {AutomaticRanges} from './request.js';
 
 type RangeFacetRequiredParameters = Pick<
   RangeFacetRequest,
@@ -15,12 +15,6 @@ export type RangeFacetOptionalParameters = Pick<
   | 'rangeAlgorithm'
   | 'resultsMustMatch'
 >;
-
-export type ManualRangeFacetOptions<T extends RangeFacetRequest> =
-  RangeFacetRequiredParameters &
-    Pick<T, 'currentValues'> &
-    AutomaticRanges<false> &
-    Partial<RangeFacetOptionalParameters>;
 
 export type AutomaticRangeFacetOptions<T extends RangeFacetRequest> =
   RangeFacetRequiredParameters &

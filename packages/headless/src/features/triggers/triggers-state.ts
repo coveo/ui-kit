@@ -1,4 +1,4 @@
-import {ExecuteTriggerParams} from '../../api/common/trigger.js';
+import type {ExecuteTriggerParams} from '../../api/common/trigger.js';
 
 /**
  * The name of a function to execute and its parameters.

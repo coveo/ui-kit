@@ -1,7 +1,7 @@
 import {createSelector} from '@reduxjs/toolkit';
-import {FieldSuggestionsFacet} from '../../../api/commerce/search/query-suggest/query-suggest-response.js';
-import {SpecificFacetSearchResult} from '../../../api/search/facet-search/specific-facet-search/specific-facet-search-response.js';
-import {
+import type {FieldSuggestionsFacet} from '../../../api/commerce/search/query-suggest/query-suggest-response.js';
+import type {SpecificFacetSearchResult} from '../../../api/search/facet-search/specific-facet-search/specific-facet-search-response.js';
+import type {
   CommerceEngine,
   CommerceEngineState,
 } from '../../../app/commerce-engine/commerce-engine.js';
@@ -15,7 +15,7 @@ import {updateQuery} from '../../../features/commerce/query/query-actions.js';
 import {queryReducer as commerceQuery} from '../../../features/commerce/query/query-slice.js';
 import {selectFacetSearchResult} from '../../../features/facets/facet-search-set/specific/specific-facet-search-actions.js';
 import {specificFacetSearchSetReducer as facetSearchSet} from '../../../features/facets/facet-search-set/specific/specific-facet-search-set-slice.js';
-import {
+import type {
   CommerceFacetSetSection,
   CommerceQuerySection,
   FacetSearchSection,
@@ -24,16 +24,14 @@ import {
 import {loadReducerError} from '../../../utils/errors.js';
 import {
   buildController,
-  Controller,
+  type Controller,
 } from '../../controller/headless-controller.js';
-import {FacetControllerType} from '../core/facets/headless-core-commerce-facet.js';
+import type {FacetControllerType} from '../core/facets/headless-core-commerce-facet.js';
+import type {RegularFacetOptions} from '../core/facets/regular/headless-commerce-regular-facet.js';
 import {
   buildRegularFacetSearch,
-  RegularFacetSearchState,
+  type RegularFacetSearchState,
 } from '../core/facets/regular/headless-commerce-regular-facet-search.js';
-import {RegularFacetOptions} from '../core/facets/regular/headless-commerce-regular-facet.js';
-
-export type {SpecificFacetSearchResult};
 
 /**
  * The state of the `FilterSuggestions` controller.
@@ -170,19 +168,18 @@ export function buildFilterSuggestions(
 
     clear,
 
-    updateQuery: function (text: string) {
+    updateQuery: (text: string) => {
       facetSearch.updateText(text);
       facetSearch.search();
     },
 
-    getSearchParameters: function (value: SpecificFacetSearchResult): string {
-      return searchSerializer.serialize({
+    getSearchParameters: (value: SpecificFacetSearchResult): string =>
+      searchSerializer.serialize({
         q: facetSearchStateSelector(getState()).query,
         f: {[options.facetId]: [value.rawValue]},
-      });
-    },
+      }),
 
-    select: function (value: SpecificFacetSearchResult) {
+    select: (value: SpecificFacetSearchResult) => {
       dispatch(clearAllCoreFacets());
       dispatch(selectFacetSearchResult({facetId: options.facetId, value}));
       dispatch(
@@ -195,8 +192,9 @@ export function buildFilterSuggestions(
     },
 
     get state() {
-      const {displayName, field, facetId} =
-        facetForFieldSuggestionsSelector(getState());
+      const {displayName, field, facetId} = facetForFieldSuggestionsSelector(
+        getState()
+      );
       return {
         displayName,
         field,

@@ -1,13 +1,21 @@
-import {describe, it, expect, beforeEach, afterEach, vi, Mocked} from 'vitest';
+import {
+  afterEach,
+  beforeEach,
+  describe,
+  expect,
+  it,
+  type Mocked,
+  vi,
+} from 'vitest';
 import {Cookie} from './cookie.js';
 import * as detector from './detector.js';
 import {
-  getAvailableStorage,
-  CookieStorage,
   CookieAndLocalStorage,
+  CookieStorage,
+  getAvailableStorage,
   NullStorage,
   preferredStorage,
-  WebStorage,
+  type WebStorage,
 } from './storage.js';
 
 // Mock the detector module

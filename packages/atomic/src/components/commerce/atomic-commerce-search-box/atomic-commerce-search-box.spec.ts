@@ -3,19 +3,19 @@ import {isMacOS} from '@/src/utils/device-utils';
 import * as replaceBreakpoint from '@/src/utils/replace-breakpoint';
 import {renderInAtomicCommerceInterface} from '@/vitest-utils/testing-helpers/fixtures/atomic/commerce/atomic-commerce-interface-fixture';
 import '@/vitest-utils/testing-helpers/fixtures/atomic/commerce/fake-atomic-commerce-search-box-suggestions-fixture';
-import {buildFakeLoadQuerySetActions} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/query-set-actions';
-import {buildFakeSearchBox} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/search-box-controller';
-import {buildFakeStandaloneSearchBox} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/standalone-search-box-controller';
 import {
   buildSearchBox,
   buildStandaloneSearchBox,
-  CommerceEngine,
+  type CommerceEngine,
   loadQuerySetActions,
 } from '@coveo/headless/commerce';
 import {userEvent} from '@vitest/browser/context';
 import {html} from 'lit';
 import {ifDefined} from 'lit/directives/if-defined.js';
-import {describe, it, expect, vi} from 'vitest';
+import {describe, expect, it, vi} from 'vitest';
+import {buildFakeLoadQuerySetActions} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/query-set-actions';
+import {buildFakeSearchBox} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/search-box-controller';
+import {buildFakeStandaloneSearchBox} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/standalone-search-box-controller';
 import {randomID} from '../../../utils/utils';
 import {AtomicCommerceSearchBox} from './atomic-commerce-search-box';
 import './atomic-commerce-search-box';
@@ -400,6 +400,68 @@ describe('AtomicCommerceSearchBox', () => {
       await userEvent.type(element, '{tab}');
 
       expect(suggestions()).toHaveLength(0);
+    });
+
+    describe('when navigating suggestions with arrow keys', () => {
+      it('should call the #submit method on the search box controller when pressing Enter after clearing an active suggestion by typing', async () => {
+        const {element, textArea, suggestions} = await renderSearchBox();
+
+        submitMock.mockClear();
+
+        await userEvent.click(element);
+        expect(suggestions()).toHaveLength(3);
+
+        await userEvent.keyboard('{ArrowDown}');
+        await userEvent.type(textArea, 'new text');
+        await userEvent.keyboard('{Enter}');
+
+        expect(submitMock).toHaveBeenCalledTimes(1);
+      });
+
+      it('should call the #submit method on the search box controller when pressing Enter after clearing an active suggestion by using backspace', async () => {
+        const {element, textArea, suggestions} = await renderSearchBox({
+          searchBoxValue: 'test',
+        });
+
+        submitMock.mockClear();
+
+        await userEvent.click(element);
+        expect(suggestions()).toHaveLength(3);
+
+        await userEvent.keyboard('{ArrowDown}');
+        await userEvent.type(textArea, '{Backspace}');
+        await userEvent.keyboard('{Enter}');
+
+        expect(submitMock).toHaveBeenCalledTimes(1);
+      });
+
+      it('should call the #submit method on the search box controller when pressing Enter after clearing an active suggestion by typing space', async () => {
+        const {element, textArea, suggestions} = await renderSearchBox();
+
+        submitMock.mockClear();
+
+        await userEvent.click(element);
+        expect(suggestions()).toHaveLength(3);
+
+        await userEvent.keyboard('{ArrowDown}');
+        await userEvent.type(textArea, ' ');
+        await userEvent.keyboard('{Enter}');
+
+        expect(submitMock).toHaveBeenCalledTimes(1);
+      });
+
+      it('should call the #submit method on the search box controller when Enter is pressed without any active suggestion', async () => {
+        const {element, suggestions} = await renderSearchBox();
+
+        submitMock.mockClear();
+
+        await userEvent.click(element);
+        expect(suggestions()).toHaveLength(3);
+
+        await userEvent.keyboard('{Enter}');
+
+        expect(submitMock).toHaveBeenCalledTimes(1);
+      });
     });
   });
 

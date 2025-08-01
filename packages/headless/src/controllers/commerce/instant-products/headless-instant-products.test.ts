@@ -1,19 +1,19 @@
-import {ChildProduct} from '../../../api/commerce/common/product.js';
+import type {ChildProduct} from '../../../api/commerce/common/product.js';
 import {stateKey} from '../../../app/state-key.js';
 import {
-  registerInstantProducts,
   promoteChildToParent,
+  registerInstantProducts,
 } from '../../../features/commerce/instant-products/instant-products-actions.js';
 import {instantProductsReducer} from '../../../features/commerce/instant-products/instant-products-slice.js';
-import {CommerceAppState} from '../../../state/commerce-app-state.js';
+import type {CommerceAppState} from '../../../state/commerce-app-state.js';
 import {buildMockCommerceState} from '../../../test/mock-commerce-state.js';
 import {
-  MockedCommerceEngine,
   buildMockCommerceEngine,
+  type MockedCommerceEngine,
 } from '../../../test/mock-engine-v2.js';
 import {
-  InstantProducts,
   buildInstantProducts,
+  type InstantProducts,
 } from './headless-instant-products.js';
 
 vi.mock('../../../features/commerce/instant-products/instant-products-actions');

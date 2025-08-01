@@ -1,10 +1,10 @@
-import {
+import type {i18n} from 'i18next';
+import {html, nothing} from 'lit';
+import {when} from 'lit/directives/when.js';
+import type {
   FunctionalComponent,
   FunctionalComponentWithChildren,
 } from '@/src/utils/functional-component-utils';
-import {i18n} from 'i18next';
-import {html, nothing} from 'lit';
-import {when} from 'lit/directives/when.js';
 import {renderButton} from '../button';
 
 interface RefineModalFiltersSectionProps {
@@ -20,12 +20,12 @@ export const renderRefineModalFiltersSection: FunctionalComponentWithChildren<
   (children) => {
     return html`
       <div part="filter-section" class="mt-8 mb-3 flex w-full justify-between">
-        <h1
+        <h2
           part="section-title section-filters-title"
           class="truncate text-2xl font-bold"
         >
           ${props.i18n.t('filters')}
-        </h1>
+        </h2>
         ${children}
       </div>
       ${when(props.withFacets, () => html`<slot name="facets"></slot>`)}

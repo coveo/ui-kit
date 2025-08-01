@@ -1,6 +1,6 @@
 import {isArray} from '@coveo/bueno';
-import {ComponentInterface, getElement} from '@stencil/core';
-import {ReactiveElement} from 'lit';
+import {type ComponentInterface, getElement} from '@stencil/core';
+import type {ReactiveElement} from 'lit';
 import {camelToKebab, kebabToCamel} from './utils';
 
 interface MapPropOptions {
@@ -50,7 +50,7 @@ export function MapProp(opts?: MapPropOptions) {
     }
 
     component.componentWillLoad = function () {
-      const prefix = (opts && opts.attributePrefix) || variableName;
+      const prefix = opts?.attributePrefix || variableName;
       const variable = this[variableName];
       const attributes = getElement(this).attributes;
       mapAttributesToProp(
@@ -64,6 +64,9 @@ export function MapProp(opts?: MapPropOptions) {
   };
 }
 
+/**
+ * @deprecated In Lit, you can achieve the same behavior by using `@property({type: Array})`.
+ */
 export function ArrayProp() {
   return (component: ComponentInterface, variableName: string) => {
     const {componentWillLoad} = component;
@@ -126,6 +129,7 @@ export function mapAttributesToProp(
 function stringMapToStringArrayMap(map: Record<string, string>) {
   return Object.entries(map).reduce(
     (acc, [key, value]) => ({
+      // biome-ignore lint/performance/noAccumulatingSpread: <>
       ...acc,
       [key]: splitAttributeValueOnCommas(value).map((subValue) =>
         subValue.trim()
@@ -140,7 +144,7 @@ function attributesToStringMap(
   attributes: {name: string; value: string}[]
 ) {
   const mapVariable: Record<string, string> = {};
-  const kebabPrefix = camelToKebab(prefix) + '-';
+  const kebabPrefix = `${camelToKebab(prefix)}-`;
   for (let i = 0; i < attributes.length; i++) {
     const attribute = attributes[i];
     if (attribute.name.indexOf(kebabPrefix) !== 0) {

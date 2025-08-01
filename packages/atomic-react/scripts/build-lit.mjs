@@ -1,6 +1,6 @@
-import cem from '@coveo/atomic/custom-elements-manifest' with {type: 'json'};
+import {execSync} from 'node:child_process';
 import {writeFileSync} from 'node:fs';
-import * as prettier from 'prettier';
+import cem from '@coveo/atomic/custom-elements-manifest' with {type: 'json'};
 
 const isLitDeclaration = (declaration) =>
   declaration?.superclass?.name === 'LitElement';
@@ -45,14 +45,13 @@ export const ${declaration.name} = createComponent({
 });
 `;
 
-// Sort modules by path to ensure deterministic processing order
-const sortedModules = [...cem.modules].toSorted((a, b) => (a.path || '').localeCompare(b.path || ''));
-for (const module of sortedModules) {
+for (const module of cem.modules) {
   if (module.declarations.length === 0) {
     continue;
   }
+  // Use toSorted() to create a new sorted array without mutating the original
   const sortedDeclarations = module.declarations.toSorted((a, b) =>
-    a.name.localeCompare(b.name)
+    a.name.localeCompare(b.name, 'en-US', {sensitivity: 'base'})
   );
   for (const declaration of sortedDeclarations) {
     if (isLitDeclaration(declaration)) {
@@ -68,33 +67,36 @@ for (const module of sortedModules) {
         entry.computedComponentImports.push(
           declarationToLitImport(declaration)
         );
-        entry.content+=(declarationToComponent(declaration));
+        entry.content += declarationToComponent(declaration);
       }
     }
   }
 }
 
 for (const entry of entries) {
-  const prettierConfig = {
-    ...(await prettier.resolveConfig(entry.path)),
-    parser: 'typescript'
-  };
-  if(entry.computedComponentImports.length===0) {
-    writeFileSync(entry.path, await prettier.format('export {}', prettierConfig));
+  if (entry.computedComponentImports.length === 0) {
+    writeFileSync(entry.path, 'export {}');
+    // Format with Biome, like the original prettier.format() calls
+    execSync(`npx @biomejs/biome format --write "${entry.path}"`, {
+      stdio: 'pipe',
+    });
     continue;
   }
-  // Sort component imports to ensure deterministic order
-  entry.computedComponentImports = entry.computedComponentImports.toSorted();
+
+  // Sort imports deterministically to ensure consistent output across environments
+  const sortedImports = entry.computedComponentImports.toSorted((a, b) =>
+    a.localeCompare(b, 'en-US', {sensitivity: 'base'})
+  );
+
   writeFileSync(
     entry.path,
-    await prettier.format(
-      [
-        `import {createComponent} from '@lit/react';`,
-        `import React from 'react';`,
-        `import {${entry.computedComponentImports.join(',')}} from '@coveo/atomic/components';`,
-        entry.content
-      ].join('\n'),
-      prettierConfig
-    )
-  )
+    [
+      `import {createComponent} from '@lit/react';`,
+      `import React from 'react';`,
+      `import {${sortedImports.join(',')}} from '@coveo/atomic/components';`,
+      entry.content,
+    ].join('\n')
+  );
+  // Format with Biome, like the original prettier.format() calls
+  execSync(`npx @biomejs/biome check --write "${entry.path}"`, {stdio: 'pipe'});
 }

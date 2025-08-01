@@ -1,6 +1,6 @@
 import {configuration} from '../../../../app/common-reducers.js';
-import {CoreEngine} from '../../../../app/engine.js';
-import {SearchThunkExtraArguments} from '../../../../app/search-thunk-extra-arguments.js';
+import type {CoreEngine} from '../../../../app/engine.js';
+import type {SearchThunkExtraArguments} from '../../../../app/search-thunk-extra-arguments.js';
 import {
   disableFacet,
   enableFacet,
@@ -8,15 +8,15 @@ import {
 } from '../../../../features/facet-options/facet-options-actions.js';
 import {isFacetEnabledSelector} from '../../../../features/facet-options/facet-options-selectors.js';
 import {facetOptionsReducer as facetOptions} from '../../../../features/facet-options/facet-options-slice.js';
-import {FacetValueState} from '../../../../features/facets/facet-api/value.js';
+import type {FacetValueState} from '../../../../features/facets/facet-api/value.js';
 import {defaultFacetSearchOptions} from '../../../../features/facets/facet-search-set/facet-search-reducer-helpers.js';
 import {specificFacetSearchSetReducer as facetSearchSet} from '../../../../features/facets/facet-search-set/specific/specific-facet-search-set-slice.js';
 import {
-  registerFacet,
   deselectAllFacetValues,
-  updateFacetSortCriterion,
-  updateFacetNumberOfValues,
+  registerFacet,
   updateFacetIsFieldExpanded,
+  updateFacetNumberOfValues,
+  updateFacetSortCriterion,
 } from '../../../../features/facets/facet-set/facet-set-actions.js';
 import {
   executeToggleFacetExclude,
@@ -27,15 +27,17 @@ import {
   facetResponseSelector,
   isFacetLoadingResponseSelector,
 } from '../../../../features/facets/facet-set/facet-set-selectors.js';
-import {facetSetReducer as facetSet} from '../../../../features/facets/facet-set/facet-set-slice.js';
-import {defaultFacetOptions} from '../../../../features/facets/facet-set/facet-set-slice.js';
+import {
+  defaultFacetOptions,
+  facetSetReducer as facetSet,
+} from '../../../../features/facets/facet-set/facet-set-slice.js';
 import {
   isFacetValueExcluded,
   isFacetValueSelected,
 } from '../../../../features/facets/facet-set/facet-set-utils.js';
-import {FacetSortCriterion} from '../../../../features/facets/facet-set/interfaces/request.js';
+import type {FacetSortCriterion} from '../../../../features/facets/facet-set/interfaces/request.js';
 import {selectActiveTab} from '../../../../features/tab-set/tab-set-selectors.js';
-import {
+import type {
   ConfigurationSection,
   FacetOptionsSection,
   FacetSearchSection,
@@ -47,18 +49,17 @@ import {omit} from '../../../../utils/utils.js';
 import {validateOptions} from '../../../../utils/validate-payload.js';
 import {
   buildController,
-  Controller,
+  type Controller,
 } from '../../../controller/headless-controller.js';
 import {determineFacetId} from '../_common/facet-id-determinor.js';
 import {
-  FacetOptions,
+  type FacetOptions,
   facetOptionsSchema,
-  FacetSearchOptions,
 } from './headless-core-facet-options.js';
 
-export type {FacetOptions, FacetSearchOptions, FacetValueState};
+export type {FacetOptions, FacetValueState};
 
-export interface CoreFacetProps {
+interface CoreFacetProps {
   /**
    * The options for the core `Facet` controller.
    * */

@@ -1,5 +1,5 @@
-import {FacetValueState} from '../../../../facets/facet-api/value.js';
-import {
+import type {FacetValueState} from '../../../../facets/facet-api/value.js';
+import type {
   CategoryFacetDelimitingCharacter,
   FacetType,
   NumericFacetExtraProperties,
@@ -63,9 +63,7 @@ export interface LocationFacetValue extends BaseFacetValue {
   value: string;
 }
 
-export interface RangeFacetValue<T>
-  extends BaseFacetValue,
-    NonLocationFacetValue {
+interface RangeFacetValue<T> extends BaseFacetValue, NonLocationFacetValue {
   start: T;
   end: T;
   endInclusive: boolean;
@@ -75,7 +73,7 @@ export interface RangeFacetValue<T>
   moreValuesAvailable: boolean;
 }
 
-export interface BaseFacetResponse<
+interface BaseFacetResponse<
   Value extends BaseFacetValue,
   Type extends FacetType,
 > {

@@ -1,6 +1,6 @@
 import {
   baseInsightRequest,
-  InsightParam,
+  type InsightParam,
   pickNonInsightParams,
 } from './insight-params.js';
 

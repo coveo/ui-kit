@@ -2,7 +2,7 @@ import {
   selectActiveTab,
   selectActiveTabExpression,
 } from './tab-set-selectors.js';
-import {TabSetState} from './tab-set-state.js';
+import type {TabSetState} from './tab-set-state.js';
 
 describe('Tabset Selectors test suite', () => {
   describe('#selectActiveTab', () => {

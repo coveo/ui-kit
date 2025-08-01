@@ -1,11 +1,17 @@
-import {SearchEngine} from '../app/search-engine/search-engine.js';
-import {getSampleSearchEngineConfiguration} from '../app/search-engine/search-engine.js';
-import {buildSearchEngine} from '../app/search-engine/search-engine.js';
-import {Facet} from '../controllers/facets/facet/headless-facet.js';
-import {buildFacet} from '../controllers/facets/facet/headless-facet.js';
-import {FieldSuggestionsValue} from '../controllers/field-suggestions/facet/headless-field-suggestions.js';
-import {FieldSuggestions} from '../controllers/field-suggestions/facet/headless-field-suggestions.js';
-import {buildFieldSuggestions} from '../controllers/field-suggestions/facet/headless-field-suggestions.js';
+import {
+  buildSearchEngine,
+  getSampleSearchEngineConfiguration,
+  type SearchEngine,
+} from '../app/search-engine/search-engine.js';
+import {
+  buildFacet,
+  type Facet,
+} from '../controllers/facets/facet/headless-facet.js';
+import {
+  buildFieldSuggestions,
+  type FieldSuggestions,
+  type FieldSuggestionsValue,
+} from '../controllers/field-suggestions/facet/headless-field-suggestions.js';
 import {waitForNextStateChange} from '../test/functional-test-utils.js';
 
 describe('field suggestions', () => {
@@ -34,14 +40,17 @@ describe('field suggestions', () => {
 
     beforeEach(async () => {
       await waitForNextStateChange(engine, {
-        action: () => (facet = buildFacet(engine, {options: {field}})),
+        action: () => {
+          facet = buildFacet(engine, {options: {field}});
+        },
         expectedSubscriberCalls: 4,
       });
       await waitForNextStateChange(engine, {
-        action: () =>
-          (fieldSuggestions = buildFieldSuggestions(engine, {
+        action: () => {
+          fieldSuggestions = buildFieldSuggestions(engine, {
             options: {facet: {field, facetId: facet.state.facetId}},
-          })),
+          });
+        },
         expectedSubscriberCalls: 2,
       });
     });
@@ -97,12 +106,13 @@ describe('field suggestions', () => {
 
   describe('initialized without a facet', () => {
     let fieldSuggestions: FieldSuggestions;
+
     beforeEach(async () => {
+      fieldSuggestions = buildFieldSuggestions(engine, {
+        options: {facet: {field}},
+      });
       await waitForNextStateChange(engine, {
-        action: () =>
-          (fieldSuggestions = buildFieldSuggestions(engine, {
-            options: {facet: {field}},
-          })),
+        action: () => {},
         expectedSubscriberCalls: 3,
       });
     });
@@ -148,8 +158,9 @@ describe('field suggestions', () => {
     it('is unaffected by the current search context', async () => {
       let facet!: Facet;
       await waitForNextStateChange(engine, {
-        action: () =>
-          (facet = buildFacet(engine, {options: {field: facetField}})),
+        action: () => {
+          facet = buildFacet(engine, {options: {field: facetField}});
+        },
         expectedSubscriberCalls: 3,
       });
       await waitForNextStateChange(facet, {

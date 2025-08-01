@@ -1,10 +1,10 @@
 #!/usr/bin/env node
+import {readdirSync, statSync} from 'node:fs';
+import {EOL} from 'node:os';
+import {basename, dirname, join, relative} from 'node:path';
 import {setOutput} from '@actions/core';
-import {readdirSync, statSync} from 'fs';
-import {EOL} from 'os';
-import {basename, dirname, join, relative} from 'path';
 import {getBaseHeadSHAs, getChangedFiles} from './git-utils.mjs';
-import {listImports, ensureFileExists} from './list-imports.mjs';
+import {ensureFileExists, listImports} from './list-imports.mjs';
 
 class NoRelevantChangesError extends Error {
   constructor() {

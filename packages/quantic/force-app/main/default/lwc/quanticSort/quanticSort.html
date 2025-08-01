@@ -10,7 +10,7 @@
     <template lwc:if={hasResults}>
       <template lwc:if={isVariantWide}>
         <div class="slds-align_absolute-center sort__container sort__container--wide slds-var-m-bottom_small">
-          <div data-cy="filters-title" class="slds-text-heading_small">
+          <div data-testid="filters-title" class="slds-text-heading_small">
             {labels.sortBy}
           </div>
         </div>
@@ -25,7 +25,6 @@
             dropdown-alignment="auto"
             onchange={handleChange}
             class="slds-text-heading_small combobox--wide"
-            data-cy="sort-dropdown"
           >
           </lightning-combobox>
         </lightning-layout-item>
@@ -47,7 +46,6 @@
               options={options}
               dropdown-alignment="auto"
               onchange={handleChange}
-              data-cy="sort-dropdown"
             >
             </lightning-combobox>
           </lightning-layout-item>
