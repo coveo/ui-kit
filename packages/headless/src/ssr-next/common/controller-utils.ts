@@ -50,7 +50,7 @@ export function buildControllerDefinitions<
 }: {
   definitionsMap: TControllerDefinitionsMap;
   engine: TEngine;
-  propsMap: InferControllerPropsMapFromDefinitions<TControllerDefinitionsMap>;
+  propsMap?: InferControllerPropsMapFromDefinitions<TControllerDefinitionsMap>;
 }): InferControllersMapFromDefinition<TControllerDefinitionsMap> {
   return mapObject(definitionsMap, (definition, key) =>
     buildControllerFromDefinition({
