@@ -20,7 +20,7 @@ export const renderLoadMoreProgressBar: FunctionalComponent<
   return html`
     <div part="progress-bar" class="bg-neutral relative my-2 h-1 w-72 rounded">
       <div
-        class="from-more-results-progress-bar-color-from to-more-results-progress-bar-color-to absolute top-0 left-0 z-1 h-full overflow-hidden rounded bg-linear-to-r"
+        class="progress-bar from-more-results-progress-bar-color-from to-more-results-progress-bar-color-to absolute top-0 left-0 z-1 h-full overflow-hidden rounded bg-linear-to-r"
         style=${styleMap({width})}
       ></div>
     </div>
