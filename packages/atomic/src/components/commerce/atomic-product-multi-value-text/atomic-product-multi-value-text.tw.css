@@ -1,6 +1,4 @@
-@import '../../../utils/tailwind-utilities/set-font-size.tw.css';
-@reference '../../../global/global.pcss';
-
+@reference '../../../utils/tailwind.global.tw.css';
 :host {
   > ul {
     display: flex;
@@ -14,6 +12,7 @@
   }
   @apply set-font-size-sm;
 }
+
 
 .separator {
   &::before {
