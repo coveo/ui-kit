@@ -1,7 +1,5 @@
 import elementMap from './components/commerce/lazy-index.js';
 
-export * from './components/commerce/index.js';
-
 export function registerAutoloader(
   roots?:
     | (Element | ShadowRoot | DocumentFragment)[]
