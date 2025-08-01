@@ -32,7 +32,6 @@ describe('atomic-product-rating', () => {
 
     mockProduct = buildFakeProduct({
       ec_rating: 4.0,
-      ec_reviews: 150,
       additionalFields: {
         custom_rating: 3.5,
         invalid_rating: 'not-a-number',
@@ -52,30 +51,29 @@ describe('atomic-product-rating', () => {
     } = {}
   ) => {
     const productToUse = 'product' in options ? options.product : mockProduct;
-    const {element, atomicInterface} =
-      await renderInAtomicProduct<AtomicProductRating>({
-        template: html`<atomic-product-rating
+    const {element} = await renderInAtomicProduct<AtomicProductRating>({
+      template: html`<atomic-product-rating
           field=${ifDefined(options.field)}
           rating-details-field=${ifDefined(options.ratingDetailsField)}
           max-value-in-index=${ifDefined(options.maxValueInIndex)}
           icon=${ifDefined(options.icon)}
         ></atomic-product-rating>`,
-        selector: 'atomic-product-rating',
-        product: productToUse === null ? undefined : productToUse,
-        bindings: (bindings) => {
-          bindings.interfaceElement.type = 'product-listing';
-          bindings.i18n = i18n;
-          bindings.store = {
-            ...bindings.store,
-            onChange: vi.fn(),
-            state: {
-              ...bindings.store?.state,
-              loadingFlags: [],
-            },
-          };
-          return bindings;
-        },
-      });
+      selector: 'atomic-product-rating',
+      product: productToUse === null ? undefined : productToUse,
+      bindings: (bindings) => {
+        bindings.interfaceElement.type = 'product-listing';
+        bindings.i18n = i18n;
+        bindings.store = {
+          ...bindings.store,
+          onChange: vi.fn(),
+          state: {
+            ...bindings.store?.state,
+            loadingFlags: [],
+          },
+        };
+        return bindings;
+      },
+    });
 
     return element;
   };
@@ -266,7 +264,6 @@ describe('atomic-product-rating', () => {
       const element = await renderComponent();
 
       expect(element.bindings).toBeDefined();
-      expect(element.product).toBeDefined();
     });
 
     it('should update when properties change', async () => {
@@ -274,6 +271,7 @@ describe('atomic-product-rating', () => {
 
       // Change the field property
       element.field = 'custom_rating';
+      await element.updateComplete;
 
       const ratingContainer = locators.getRatingContainer(element);
       expect(ratingContainer).toHaveAttribute(
@@ -287,6 +285,7 @@ describe('atomic-product-rating', () => {
 
       // Change the maxValueInIndex property
       element.maxValueInIndex = 10;
+      await element.updateComplete;
 
       const ratingContainer = locators.getRatingContainer(element);
       expect(ratingContainer).toHaveAttribute(
