@@ -127,9 +127,10 @@ export class AtomicInsightGeneratedAnswer
 
   /**
    * Option to disable citation anchoring.
-   * @default false
+   * @default 'false'
    */
-  @Prop() disableCitationAnchoring?: boolean;
+  @Prop() disableCitationAnchoring?: string;
+  // disableCitationAnchoring is a boolean, but we use a string to allow defaulting to "false" in the HTML template.
 
   @AriaLiveRegion('generated-answer')
   protected ariaMessage!: string;
@@ -142,7 +143,7 @@ export class AtomicInsightGeneratedAnswer
       host: this.host,
       withToggle: this.withToggle,
       collapsible: this.collapsible,
-      disableCitationAnchoring: this.disableCitationAnchoring,
+      disableCitationAnchoring: this.disableCitationAnchoring === 'true',
       getGeneratedAnswer: () => this.generatedAnswer,
       getGeneratedAnswerState: () => this.generatedAnswerState,
       getSearchStatusState: () => this.searchStatusState,
@@ -155,6 +156,8 @@ export class AtomicInsightGeneratedAnswer
       buildInteractiveCitation: (props) =>
         buildInsightInteractiveCitation(this.bindings.engine, props),
     });
+    this.generatedAnswerCommon.validateProps();
+    
     this.generatedAnswer = buildInsightGeneratedAnswer(this.bindings.engine, {
       initialState: {
         isVisible: this.generatedAnswerCommon.data.isVisible,
@@ -263,7 +266,7 @@ export class AtomicInsightGeneratedAnswer
     );
   }
 
-  private getCitationFields() {
+  public getCitationFields() {
     return (this.fieldsToIncludeInCitations ?? '')
       .split(',')
       .map((field) => field.trim())
