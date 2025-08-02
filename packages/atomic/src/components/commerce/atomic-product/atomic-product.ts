@@ -297,6 +297,31 @@ export class AtomicProduct extends ChildrenUpdateCompleteMixin(LitElement) {
     }
   }
 
+  private getCombinedClasses(additionalContent?: string): string[] {
+    const layoutClasses = this.layout
+      ? this.layout.getClasses(additionalContent)
+      : [];
+    const extraClasses = this.classes.split(/\s+/).filter((c) => c);
+    return [...layoutClasses, ...extraClasses];
+  }
+
+  private applyClassesToChildren(): void {
+    if (!this.layout) {
+      return;
+    }
+    const classes = this.getCombinedClasses();
+    const root = this.shadowRoot?.querySelector('.result-root');
+    if (!root) {
+      return;
+    }
+    root.querySelectorAll('*').forEach((el) => {
+      const tag = el.tagName.toLowerCase();
+      if (tag.startsWith('atomic-product-')) {
+        (el as HTMLElement).classList.add(...classes);
+      }
+    });
+  }
+
   public updated(_changedProperties: Map<string, unknown>) {
     if (this.shouldExecuteRenderFunction()) {
       const customRenderOutputAsString = this.renderingFunction!(
@@ -306,13 +331,15 @@ export class AtomicProduct extends ChildrenUpdateCompleteMixin(LitElement) {
       );
 
       if (this.layout) {
-        this.productRootRef!.className += ` ${this.layout
-          .getClasses(customRenderOutputAsString)
-          .concat(this.classes)
-          .join(' ')}`;
+        const classes = this.getCombinedClasses(customRenderOutputAsString);
+        this.productRootRef!.classList.add(...classes);
       }
 
       this.executedRenderingFunctionOnce = true;
+    }
+
+    if (!this.isCustomRenderFunctionMode) {
+      this.applyClassesToChildren();
     }
   }
 }
