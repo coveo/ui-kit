@@ -158,24 +158,47 @@ describe('c-quantic-tab', () => {
       );
     });
 
-    it('should pass the clearFiltersOnTabChange option to the tab controller when set to true', async () => {
-      const optionsWithClearFilters = {
-        ...defaultOptions,
-        clearFiltersOnTabChange: true,
-      };
-      createTestComponent(optionsWithClearFilters);
-      await flushPromises();
-
-      expect(functionsMocks.buildTab).toHaveBeenCalledTimes(1);
-      expect(functionsMocks.buildTab).toHaveBeenCalledWith(exampleEngine, {
-        options: {
-          expression: optionsWithClearFilters.expression,
-          id: optionsWithClearFilters.name,
+    describe('the clearFiltersOnTabChange property', () => {
+      it('should pass the clearFiltersOnTabChange option to the tab controller when set to true', async () => {
+        const optionsWithClearFilters = {
+          ...defaultOptions,
           clearFiltersOnTabChange: true,
-        },
-        initialState: {
-          isActive: optionsWithClearFilters.isActive,
-        },
+        };
+        createTestComponent(optionsWithClearFilters);
+        await flushPromises();
+
+        expect(functionsMocks.buildTab).toHaveBeenCalledTimes(1);
+        expect(functionsMocks.buildTab).toHaveBeenCalledWith(exampleEngine, {
+          options: {
+            expression: optionsWithClearFilters.expression,
+            id: optionsWithClearFilters.name,
+            clearFiltersOnTabChange: true,
+          },
+          initialState: {
+            isActive: optionsWithClearFilters.isActive,
+          },
+        });
+      });
+
+      it(`should pass the clearFiltersOnTabChange option as a boolean to the tab controller when a "true" string is provided`, async () => {
+        const optionsWithClearFilters = {
+          ...defaultOptions,
+          clearFiltersOnTabChange: 'true',
+        };
+        createTestComponent(optionsWithClearFilters);
+        await flushPromises();
+
+        expect(functionsMocks.buildTab).toHaveBeenCalledTimes(1);
+        expect(functionsMocks.buildTab).toHaveBeenCalledWith(exampleEngine, {
+          options: {
+            expression: optionsWithClearFilters.expression,
+            id: optionsWithClearFilters.name,
+            clearFiltersOnTabChange: true,
+          },
+          initialState: {
+            isActive: optionsWithClearFilters.isActive,
+          },
+        });
       });
     });
 

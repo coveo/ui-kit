@@ -45,7 +45,17 @@ export default class QuanticTab extends LightningElement {
    * @api
    * @type {boolean}
    */
-  @api clearFiltersOnTabChange = false;
+  @api get clearFiltersOnTabChange() {
+    return this._clearFiltersOnTabChange;
+  }
+  set clearFiltersOnTabChange(value) {
+    if (value === false) {
+      this._clearFiltersOnTabChange = false;
+    } else {
+      this._clearFiltersOnTabChange = true;
+    }
+  }
+  _clearFiltersOnTabChange = false;
   /**
    * Whether the tab should be active.
    * @api
