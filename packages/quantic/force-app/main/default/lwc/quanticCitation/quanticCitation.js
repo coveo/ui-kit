@@ -1,4 +1,4 @@
-import {LinkUtils} from 'c/quanticUtils';
+import {LinkUtils, generateTextFragmentUrl} from 'c/quanticUtils';
 import {NavigationMixin} from 'lightning/navigation';
 import {LightningElement, api} from 'lwc';
 
@@ -18,7 +18,7 @@ export default class QuanticCitation extends NavigationMixin(LightningElement) {
   /**
    * The citation item information.
    * @api
-   * @type {{title: string, index: number, text: string, clickUri: string, fields: object}}
+   * @type {{title: string, index: number, text: string, uri: string, clickUri: string, fields: object}}
    */
   @api citation;
   /**
@@ -27,6 +27,13 @@ export default class QuanticCitation extends NavigationMixin(LightningElement) {
    * @type {InteractiveCitation}
    */
   @api interactiveCitation;
+  /**
+   * Whether to disable citation anchoring.
+   * @api
+   * @type {boolean}
+   * @default false
+   */
+  @api disableCitationAnchoring = false;
 
   /** @type {Object} */
   timeout;
@@ -42,6 +49,14 @@ export default class QuanticCitation extends NavigationMixin(LightningElement) {
   isInitialRender = true;
   /** @type {string} */
   salesforceRecordUrl;
+  /** @type {boolean} */
+  isWithTextFragment = false;
+
+  connectedCallback() {
+    const fileType = this.citation?.fields?.filetype;
+    this.isWithTextFragment =
+      !this.disableCitationAnchoring || fileType !== 'html' || !this.text;
+  }
 
   renderedCallback() {
     if (this.isInitialRender) {
@@ -111,7 +126,9 @@ export default class QuanticCitation extends NavigationMixin(LightningElement) {
   }
 
   handleClick(event) {
-    if (this.isSalesforceLink) {
+    // Only apply the Salesforce navigation using the mixin for Salesforce documents and when citation anchoring is disabled.
+    // Otherwise we rely on the default behavior of the browser with a `hrefValue`.
+    if (this.isSalesforceLink && this.disableCitationAnchoring) {
       event.preventDefault();
       this.navigateToSalesforceRecord(event);
     }
@@ -145,10 +162,9 @@ export default class QuanticCitation extends NavigationMixin(LightningElement) {
   }
 
   get hrefValue() {
-    if (this.isSalesforceLink) {
-      return this.salesforceRecordUrl;
-    }
-    return this.clickUri;
+    return this.isWithTextFragment
+      ? generateTextFragmentUrl(this.sourceUri, this.text)
+      : this.sourceUri;
   }
 
   /**
@@ -179,5 +195,11 @@ export default class QuanticCitation extends NavigationMixin(LightningElement) {
 
   get index() {
     return this.citation?.index;
+  }
+
+  get sourceUri() {
+    return this.isSalesforceLink
+      ? this.salesforceRecordUrl
+      : (this.clickUri ?? this.citation?.uri);
   }
 }
