@@ -213,7 +213,9 @@ describe('atomic-commerce-load-more-products', () => {
         totalNumberOfProducts: 123,
       });
       const progressBar = locators.progressBar;
-      const progressBarFill = progressBar?.querySelector('.progress-bar');
+      const progressBarFill = progressBar?.querySelector(
+        '[part="progress-bar"] div'
+      );
 
       expect(progressBar).toBeInTheDocument();
       // Math.ceil(Math.min((12 / 123) * 100, 100)) = 10, so width will be 10%
