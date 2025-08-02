@@ -135,9 +135,11 @@ export class AtomicGeneratedAnswer implements InitializableComponent {
 
   /**
    * Option to disable citation anchoring.
-   * @default false
+   * @default 'false'
    */
-  @Prop() disableCitationAnchoring?: boolean;
+  @Prop() disableCitationAnchoring?: string;
+  // disableCitationAnchoring is a boolean, but we use a string to allow defaulting to "false" in the HTML template.
+
 
   /**
    * The tabs on which the generated answer can be displayed. This property should not be used at the same time as `tabs-excluded`.
@@ -170,7 +172,7 @@ export class AtomicGeneratedAnswer implements InitializableComponent {
 
   private generatedAnswerCommon!: GeneratedAnswerCommon;
   private fullAnswerHeight?: number;
-
+  
   public initialize() {
     if (
       [...this.tabsIncluded].length > 0 &&
@@ -184,7 +186,7 @@ export class AtomicGeneratedAnswer implements InitializableComponent {
       host: this.host,
       withToggle: this.withToggle,
       collapsible: this.collapsible,
-      disableCitationAnchoring: this.disableCitationAnchoring,
+      disableCitationAnchoring: this.disableCitationAnchoring === 'true',
       getGeneratedAnswer: () => this.generatedAnswer,
       getGeneratedAnswerState: () => this.generatedAnswerState,
       getSearchStatusState: () => this.searchStatusState,
@@ -197,6 +199,8 @@ export class AtomicGeneratedAnswer implements InitializableComponent {
       buildInteractiveCitation: (props) =>
         buildInteractiveCitation(this.bindings.engine, props),
     });
+    this.generatedAnswerCommon.validateProps();
+    
     this.generatedAnswer = buildGeneratedAnswer(this.bindings.engine, {
       initialState: {
         isVisible: this.generatedAnswerCommon.data.isVisible,
@@ -223,7 +227,7 @@ export class AtomicGeneratedAnswer implements InitializableComponent {
     this.tabManager = buildTabManager(this.bindings.engine);
   }
 
-  @Watch('generatedAnswerState')
+  @Watch("generatedAnswerState")
   public updateAnswerCollapsed(
     newState: GeneratedAnswerState,
     oldState: GeneratedAnswerState
@@ -306,12 +310,12 @@ export class AtomicGeneratedAnswer implements InitializableComponent {
     );
   }
 
-  private getCitationFields() {
+  public getCitationFields() {
     return (this.fieldsToIncludeInCitations ?? '')
       .split(',')
       .map((field) => field.trim())
       .filter((field) => field.length > 0)
-      .concat(this.REQUIRED_FIELDS_TO_INCLUDE_IN_CITATIONS)
+      .concat(this.REQUIRED_FIELDS_TO_INCLUDE_IN_CITATIONS);
   }
 
   private validateMaxCollapsedHeight(): number {

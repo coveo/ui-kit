@@ -1,3 +1,4 @@
+import {BooleanValue, Schema, Value} from '@coveo/bueno';
 import {
   GeneratedAnswer,
   GeneratedAnswerCitation,
@@ -470,4 +471,28 @@ export class GeneratedAnswerCommon {
       </div>
     );
   }
+
+  public validateProps() {
+    const schema = new Schema({
+      host: new Value({required: true}),
+      withToggle: new BooleanValue({required: false, default: true}),
+      collapsible: new BooleanValue({required: false, default: true}),
+      disableCitationAnchoring: new BooleanValue({
+        required: false,
+        default: false,
+      }),
+      getGeneratedAnswer: new Value({required: true}),
+      getGeneratedAnswerState: new Value({required: true}),
+      getSearchStatusState: new Value({required: true}),
+      getBindings: new Value({required: true}),
+      getCopied: new Value({required: true}),
+      setCopied: new Value({required: true}),
+      getCopyError: new Value({required: true}),
+      setCopyError: new Value({required: true}),
+      setAriaMessage: new Value({required: true}),
+      buildInteractiveCitation: new Value({required: true}),
+    });
+    schema.validate(this.props);
+  }
+
 }
