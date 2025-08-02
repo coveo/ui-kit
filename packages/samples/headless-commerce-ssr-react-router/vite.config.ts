@@ -6,5 +6,6 @@ export default defineConfig({
   plugins: [reactRouter(), tsconfigPaths()],
   build: {
     target: 'esnext',
+    outDir: 'dist',
   },
 });

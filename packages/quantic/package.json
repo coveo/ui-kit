@@ -11,12 +11,11 @@
     "url": "git+https://github.com/coveo/ui-kit.git"
   },
   "scripts": {
-    "test": "nx test quantic",
     "lint:check:tests": "eslint force-app/main/default/lwc/ --format junit -o reports/eslint.xml",
-    "lint:fix": "nx run lint:fix",
+    "lint:check": "eslint force-app/main/default/lwc/ && eslint force-app/examples/main/lwc/ && prettier \"force-app/{,**}/*.js\" --check",
+    "lint:fix": "eslint --fix force-app/main/default/lwc/ && eslint --fix force-app/examples/main/lwc/ && prettier \"force-app/{,**}/*.js\" --write",
     "lint:fix:apex": "prettier \"force-app/{,**}/*.{cls,trigger}\" --write",
     "build:staticresources": "node build-static-resources.js",
-    "build": "nx build",
     "dev": "npx rimraf .localdevserver && npm run build:staticresources && npm run dev:sfdx",
     "dev:sfdx": "sf project deploy start --source-dir force-app/main && sfdx force:lightning:lwc:start --port 3334",
     "test:unit": "lwc-jest",
@@ -40,12 +39,12 @@
     "publish:sfdx": "../../node_modules/.bin/ts-node scripts/build/create-package.ts --remove-translations",
     "promote:sfdx": "npm run publish:sfdx -- --promote",
     "promote:sfdx:ci": "npm run publish:sfdx -- --promote --ci",
-    "publish:npm": "npm run-script -w=@coveo/ci npm-publish",
-    "publish:bump": "npm run-script -w=@coveo/ci bump",
+    "release:phase1": "npm run-script -w=@coveo/ci bump",
+    "release:phase3": "npm run-script -w=@coveo/ci npm-publish",
     "promote:npm:latest": "npm run-script -w=@coveo/ci promote-npm-prod",
     "preinstall": "node scripts/npm/check-sfdx-project.js",
     "postinstall": "node scripts/npm/setup-quantic.js",
-    "babel:headless": "babel ../../node_modules/@coveo/headless/dist/quantic --out-dir .tmp/quantic-compiled --extensions .js --minified"
+    "babel:headless": "babel ../../node_modules/@coveo/headless/dist/quantic --delete-dir-on-start --out-dir .tmp/quantic-compiled --extensions .js --minified"
   },
   "dependencies": {
     "@coveo/bueno": "1.0.24",

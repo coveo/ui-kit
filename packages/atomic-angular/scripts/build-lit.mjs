@@ -61,7 +61,7 @@ ${(declaration.events || [])
 }
 `;
 
-atomicAngularComponentFileContent = `${atomicAngularComponentFileContent.replace(new RegExp(`${startTag}.*?${endTag}`, 'gm'), '').trimEnd()}\n\n${startTag}\n`;
+atomicAngularComponentFileContent = `${atomicAngularComponentFileContent.replace(new RegExp(`${startTag.replaceAll('/', '\\/')}.*?${endTag.replaceAll('/', '\\/')}`, 'gms'), '').trimEnd()}\n\n${startTag}\n`;
 
 function processLitDeclaration(declaration) {
   atomicAngularComponentFileContent += declarationToProxyCmp(
@@ -77,7 +77,7 @@ function processNonLitDeclaration(declaration) {
 
   const regex = new RegExp(
     `@ProxyCmp\\(\\{([^}]*)\\}\\)\\s*\\n@Component\\(\\{([^}]*)\\}\\)\\s*\\nexport class\\s+${declaration.name}\\b`,
-    'gm'
+    'gms'
   );
 
   if (!regex.test(atomicAngularComponentFileContent)) {

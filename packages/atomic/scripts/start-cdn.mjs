@@ -152,7 +152,7 @@ const validateArgs = (
   ) {
     console.error(
       chalk.red(
-        'Usage: npx nx run atomic:web:cdn --args="--env <local|prod|dev|staging> --atomic <vX.Y.Z> [--headless <vX.Y.Z>]"'
+        'Usage: npm run web:cdn -w=@coveo/atomic -- --env <local|prod|dev|staging> --atomic <vX.Y.Z> [--headless <vX.Y.Z>]'
       )
     );
     process.exit(1);
@@ -220,7 +220,7 @@ try {
       versionType,
       cdnType
     );
-    spawn('npx', ['nx', 'run', 'cdn:serve'], {
+    spawn('npx', ['turbo', 'serve', '--filter=@coveo/cdn'], {
       stdio: 'inherit',
     });
 

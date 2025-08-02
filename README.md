@@ -34,35 +34,23 @@ npm run build
 To build a single project for production (for instance, the `atomic` package), run:
 
 ```sh
-npx nx run atomic:build
+turbo run @coveo/atomic#build
 ```
 
 ## Development mode
-
-To start Atomic & Headless simultaneously in development (recommended), run:
-
-```sh
-npx nx run atomic:dev
-```
 
 Add the `--stencil` switch if you are changing stencil files.
 
 To start a single project in development (for instance, the `quantic` package), run:
 
 ```sh
-npx nx run quantic:dev
+turbo run @coveo/quantic#dev
 ```
 
 To run a specific task in a package separate it with colon e.g. to run `test:watch` inside quantic
 
 ```sh
-npx nx run quantic:test:watch
-```
-
-To start story book in development, run:
-
-```sh
-npx nx run atomic-storybook:dev
+turbo test:watch --filter=@coveo/quantic
 ```
 
 ## Test
@@ -70,21 +58,21 @@ npx nx run atomic-storybook:dev
 To run the tests for a specific package (recommended) e.g. `atomic` package
 
 ```sh
-npx nx run atomic:test
+turbo test --filter=@coveo/atomic
 ```
 
 For e2e tests
 
 ```sh
-npx nx run atomic:dev
+turbo run @coveo/atomic#dev
 # In a separate terminal
-npx nx run atomic:e2e
+turbo run @coveo/atomic#e2e
 ```
 
 To run e2e tests for specific files/components using the Cypress GUI
 
 ```sh
-npx nx run atomic:e2e:watch
+npx turbo e2e:watch --filter=@coveo/atomic
 ```
 
 ## Lint

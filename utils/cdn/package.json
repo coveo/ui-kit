@@ -4,7 +4,10 @@
   "authors": "Coveo",
   "version": "1.0.0",
   "type": "module",
-  "scripts": {},
+  "scripts": {
+    "serve": "node ./scripts/serve.mjs",
+    "deploy": "node ./scripts/deploy-local-cdn.mjs"
+  },
   "engines": {
     "node": ">=22.14.0"
   },
