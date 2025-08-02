@@ -76,21 +76,3 @@ export function createStaticState<TSearchAction extends UnknownAction>({
     searchAction: clone(searchAction),
   };
 }
-
-// TODO: KIT-4610: no longer needed along with build()
-export function composeFunction<
-  TParameters extends Array<unknown>,
-  TReturn,
-  TChildren extends {},
->(
-  parentFunction: (...params: TParameters) => TReturn,
-  children: TChildren
-): TChildren & ((...params: TParameters) => TReturn) {
-  const newFunction = ((...params: TParameters) =>
-    parentFunction(...params)) as ((...params: TParameters) => TReturn) &
-    TChildren;
-  for (const [key, value] of Object.entries(children)) {
-    (newFunction as unknown as Record<typeof key, typeof value>)[key] = value;
-  }
-  return newFunction;
-}

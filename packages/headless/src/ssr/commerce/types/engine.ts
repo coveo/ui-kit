@@ -53,6 +53,9 @@ export type EngineDefinitionOptions<
   controllers?: TControllers;
 };
 
+/**
+ * @deprecated This type will be removed in the future. Use {@link CommerceEngineDefinition} instead.
+ */
 export interface EngineDefinition<
   TControllers extends ControllerDefinitionsMap<Controller>,
   TEngineOptions,

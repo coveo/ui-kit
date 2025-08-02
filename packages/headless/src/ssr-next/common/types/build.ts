@@ -10,7 +10,9 @@ interface BuildOptions<TEngineOptions> {
   extend?: OptionsExtender<TEngineOptions>;
 }
 
-// TODO: KIT-4610: Remove this type
+/**
+ * @internal
+ */
 export type Build<
   TEngine extends CoreEngine | CoreEngineNext,
   TEngineOptions,
