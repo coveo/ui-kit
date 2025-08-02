@@ -1,10 +1,15 @@
 // Auto-generated file
 export {AtomicCommerceBreadbox} from './atomic-commerce-breadbox/atomic-commerce-breadbox.js';
+export {AtomicCommerceCategoryFacet} from './atomic-commerce-category-facet/atomic-commerce-category-facet.js';
 export {AtomicCommerceDidYouMean} from './atomic-commerce-did-you-mean/atomic-commerce-did-you-mean.js';
+export {AtomicCommerceFacet} from './atomic-commerce-facet/atomic-commerce-facet.js';
+export {AtomicCommerceFacetNumberInput} from './atomic-commerce-facet-number-input/atomic-commerce-facet-number-input.js';
+export {AtomicCommerceFacets} from './atomic-commerce-facets/atomic-commerce-facets.js';
 export {AtomicCommerceInterface} from './atomic-commerce-interface/atomic-commerce-interface.js';
 export {AtomicCommerceLayout} from './atomic-commerce-layout/atomic-commerce-layout.js';
 export {AtomicCommerceLoadMoreProducts} from './atomic-commerce-load-more-products/atomic-commerce-load-more-products.js';
 export {AtomicCommerceNoProducts} from './atomic-commerce-no-products/atomic-commerce-no-products.js';
+export {AtomicCommerceNumericFacet} from './atomic-commerce-numeric-facet/atomic-commerce-numeric-facet.js';
 export {AtomicCommercePager} from './atomic-commerce-pager/atomic-commerce-pager.js';
 export {AtomicCommerceProductList} from './atomic-commerce-product-list/atomic-commerce-product-list.js';
 export {AtomicCommerceProductsPerPage} from './atomic-commerce-products-per-page/atomic-commerce-products-per-page.js';
@@ -20,6 +25,7 @@ export {AtomicCommerceSearchBoxQuerySuggestions} from './atomic-commerce-search-
 export {AtomicCommerceSearchBoxRecentQueries} from './atomic-commerce-search-box-recent-queries/atomic-commerce-search-box-recent-queries.js';
 export {AtomicCommerceSortDropdown} from './atomic-commerce-sort-dropdown/atomic-commerce-sort-dropdown.js';
 export {AtomicCommerceText} from './atomic-commerce-text/atomic-commerce-text.js';
+export {AtomicCommerceTimeframeFacet} from './atomic-commerce-timeframe-facet/atomic-commerce-timeframe-facet.js';
 export {AtomicProduct} from './atomic-product/atomic-product.js';
 export {AtomicProductChildren} from './atomic-product-children/atomic-product-children.js';
 export {AtomicProductDescription} from './atomic-product-description/atomic-product-description.js';

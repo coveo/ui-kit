@@ -1,0 +1,29 @@
+import {Canvas, ArgTypes, Meta, Title, Description} from '@storybook/blocks';
+import * as AtomicCommerceFacetsStories from './atomic-commerce-facets.new.stories';
+
+<Meta of={AtomicCommerceFacetsStories} />
+
+<Title />
+<Description />
+
+<Canvas of={AtomicCommerceFacetsStories.Default} />
+
+## Usage
+This component is typically placed within the "facets" section of the layout.
+```html
+<atomic-commerce-interface>
+  ...
+  <atomic-commerce-layout>
+    ...
+    <atomic-layout-section section="facets">
+      <atomic-commerce-facets></atomic-commerce-facets>
+    </atomic-layout-section>
+  </atomic-commerce-layout>
+</atomic-commerce-interface>
+```
+## Examples
+<Stories title={""}/>
+
+## Properties
+
+<ArgTypes />
