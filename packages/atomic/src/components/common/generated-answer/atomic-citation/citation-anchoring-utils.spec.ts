@@ -1,5 +1,22 @@
 import {describe, expect, it} from 'vitest';
-import {extractTextToHighlight} from './text-fragment-utils';
+import {
+  extractTextToHighlight,
+  generatePdfPageUrl,
+} from './citation-anchoring-utils';
+
+describe('generatePdfPageUrl', () => {
+  it('generates PDF page URL given a positive page number', () => {
+    const uri = 'https://example.com/document.pdf';
+    const result = generatePdfPageUrl(uri, 5);
+    expect(result).toBe('https://example.com/document.pdf#page=5');
+  });
+
+  it('returns the original URL when page number is negative', () => {
+    const uri = 'https://example.com/document.pdf';
+    const result = generatePdfPageUrl(uri, -1);
+    expect(result).toBe(uri);
+  });
+});
 
 describe('extractTextToHighlight', () => {
   it('returns the first sentence of a passage', () => {
