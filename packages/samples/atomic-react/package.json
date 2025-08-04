@@ -7,22 +7,24 @@
     "dev": "npm run build:assets && npm run dev:vite",
     "build:assets": "ncp ../../atomic-react/dist/assets public/assets && ncp ../../atomic-react/dist/lang public/lang public/assets && ncp ../../atomic/dist/atomic/themes public/themes",
     "dev:vite": "vite",
-    "build": "nx build"
+    "build": "npm run build:ts && npm run build:vite",
+    "build:ts": "npm run-script -w=@coveo/ci if-not-cdn -- \"tsc -b\"",
+    "build:vite": "npm run-script -w=@coveo/ci if-not-cdn -- \"vite build\""
   },
   "dependencies": {
-    "@coveo/atomic-react": "3.2.52",
-    "@coveo/headless": "3.27.5",
+    "@coveo/atomic-react": "3.2.54",
+    "@coveo/headless": "3.27.7",
     "react": "18.3.1",
     "react-dom": "18.3.1"
   },
   "devDependencies": {
     "@playwright/test": "1.54.1",
-    "@types/node": "22.16.4",
+    "@types/node": "22.16.5",
     "@types/react": "18.3.3",
     "@types/react-dom": "18.3.0",
-    "@vitejs/plugin-react": "4.3.4",
+    "@vitejs/plugin-react": "4.7.0",
+    "ncp": "2.0.0",
     "typescript": "5.8.3",
-    "vite": "6.3.5",
-    "ncp": "2.0.0"
+    "vite": "7.0.6"
   }
 }

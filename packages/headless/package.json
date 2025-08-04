@@ -52,18 +52,29 @@
       "require": "./dist/cjs/ssr-commerce/headless.cjs",
       "default": "./dist/esm/ssr-commerce.index.js"
     },
+    "./ssr-next": {
+      "types": "./dist/definitions/ssr-next.index.d.ts",
+      "import": "./dist/esm/ssr-next.index.js",
+      "require": "./dist/cjs/ssr-next/headless.cjs",
+      "default": "./dist/esm/ssr-next.index.js"
+    },
+    "./ssr-commerce-next": {
+      "types": "./dist/definitions/ssr-commerce-next.index.d.ts",
+      "import": "./dist/esm/ssr-commerce-next.index.js",
+      "require": "./dist/cjs/ssr-commerce-next/headless.cjs",
+      "default": "./dist/esm/ssr-commerce-next.index.js"
+    },
     "./package.json": "./package.json"
   },
   "types": "./dist/definitions/index.d.ts",
   "license": "Apache-2.0",
-  "version": "3.27.5",
+  "version": "3.27.7",
   "files": [
     "dist/"
   ],
   "scripts": {
     "dev": "concurrently \"npm run build:definitions -- -w\" \"npm run build:bundles -- dev\"",
-    "build": "nx build",
-    "build:prod": "npm run build:definitions && npm run build:bundles && npm run build:esm",
+    "build": "npm run build:definitions && npm run build:bundles && npm run build:esm",
     "build:bundles": "node esbuild.mjs",
     "build:esm": "node ./scripts/build.mjs --config=tsconfig.build-esm.json",
     "build:definitions": "tsc -p src/tsconfig.build.json -d --emitDeclarationOnly --declarationDir dist/definitions",
@@ -72,8 +83,8 @@
     "test:watch": "vitest --exclude \"src/integration-tests/**\"",
     "integration-test": "vitest run --poolOptions.threads.singleThread src/integration-tests/**",
     "integration-test:watch": "vitest --poolOptions.threads.singleThread src/integration-tests/**",
-    "publish:npm": "npm run-script -w=@coveo/ci npm-publish",
-    "publish:bump": "npm run-script -w=@coveo/ci bump",
+    "release:phase3": "npm run-script -w=@coveo/ci npm-publish",
+    "release:phase1": "npm run-script -w=@coveo/ci bump",
     "build:typedoc": "npm run build:typedoc:docs && npm run build:typedoc:merge",
     "build:typedoc:docs": "concurrently \"npm run build:typedoc:search\" \"npm run build:typedoc:commerce\" \"npm run build:typedoc:case-assist\" \"npm run build:typedoc:insight\" \"npm run build:typedoc:recommendation\" \"npm run build:typedoc:ssr\" \"npm run build:typedoc:ssr-commerce\"",
     "build:typedoc:merge": "typedoc --tsconfig tsconfig.typedoc.json",
@@ -98,9 +109,9 @@
     }
   },
   "dependencies": {
-    "@coveo/bueno": "1.0.22",
-    "@coveo/relay": "1.2.5",
-    "@coveo/relay-event-types": "14.7.5",
+    "@coveo/bueno": "1.0.24",
+    "@coveo/relay": "1.2.6",
+    "@coveo/relay-event-types": "15.1.0",
     "@reduxjs/toolkit": "2.6.0",
     "abortcontroller-polyfill": "1.7.8",
     "coveo.analytics": "2.30.45",
@@ -114,11 +125,11 @@
     "ts-debounce": "4.0.0"
   },
   "devDependencies": {
+    "@coveo/documentation": "1.0.0",
     "chalk": "5.4.1",
     "live-server": "1.2.2",
     "typedoc": "0.28.7",
-    "vitest": "3.2.4",
-    "@coveo/documentation": "1.0.0"
+    "vitest": "3.2.4"
   },
   "engines": {
     "node": "^20.9.0 || ^22.11.0"

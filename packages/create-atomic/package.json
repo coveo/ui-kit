@@ -1,9 +1,9 @@
 {
   "name": "@coveo/create-atomic",
   "description": "Coveo Atomic Generator",
-  "version": "1.40.11",
+  "version": "1.40.13",
   "files": [
-    "/lib",
+    "/dist",
     "/template",
     "/template/.gitignore"
   ],
@@ -17,11 +17,11 @@
   },
   "scripts": {
     "start": "node ./index.mjs",
-    "build": "nx build",
+    "build": "rimraf template && npm run build:ts && node ./scripts/preparePackageJsonTemplate.mjs",
     "build:ts": "tsc -p tsconfig.json",
     "lint": "prettier --check . && eslint .",
-    "publish:npm": "npm run-script -w=@coveo/ci npm-publish",
-    "publish:bump": "npm run-script -w=@coveo/ci bump",
+    "release:phase3": "npm run-script -w=@coveo/ci npm-publish",
+    "release:phase1": "npm run-script -w=@coveo/ci bump",
     "promote:npm:latest": "npm run-script -w=@coveo/ci promote-npm-prod"
   },
   "keywords": [
@@ -37,15 +37,14 @@
     "access": "public"
   },
   "dependencies": {
-    "@coveo/platform-client": "60.3.0",
+    "@coveo/platform-client": "60.4.0",
     "abortcontroller-polyfill": "1.7.5",
     "detect-indent": "7.0.1",
-    "https-proxy-agent": "5.0.1",
-    "inquirer": "9.3.7",
+    "https-proxy-agent": "7.0.6",
     "isomorphic-fetch": "3.0.0",
     "minimist": "1.2.8",
     "node-plop": "^0.32.0",
-    "plop": "3.1.2"
+    "plop": "4.0.1"
   },
   "devDependencies": {
     "fs-extra": "11.3.0",

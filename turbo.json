@@ -1,0 +1,95 @@
+{
+  "$schema": "https://turbo.build/schema.json",
+  "ui": "tui",
+  "tasks": {
+    "build": {
+      "dependsOn": ["^build"],
+      "outputs": [
+        "dist/**",
+        "cdn/**",
+        "docs/**",
+        ".stencil/**",
+        "temp/**",
+        "coverage/**",
+        ".next/**",
+        "!.next/cache/**",
+        "**/*.tsbuildinfo"
+      ]
+    },
+    "dev": {
+      "dependsOn": ["build"],
+      "cache": false,
+      "persistent": true
+    },
+    "start": {
+      "dependsOn": ["build"],
+      "cache": false,
+      "persistent": true
+    },
+    "prod": {
+      "dependsOn": ["build"],
+      "cache": false,
+      "persistent": true
+    },
+    "test": {
+      "dependsOn": ["build"],
+      "outputs": []
+    },
+    "test:watch": {
+      "cache": false,
+      "persistent": true
+    },
+    "e2e": {
+      "dependsOn": ["build"],
+      "outputs": [
+        "playwright-report/**",
+        "cypress/screenshots/**",
+        "cypress/videos/**"
+      ]
+    },
+    "lint": {
+      "outputs": []
+    },
+    "lint:check": {
+      "outputs": []
+    },
+    "lint:fix": {
+      "outputs": []
+    },
+    "clean": {
+      "cache": false
+    },
+    "publish:bump": {
+      "dependsOn": [],
+      "cache": false
+    },
+    "promote:npm:latest": {
+      "dependsOn": [],
+      "cache": false
+    },
+    "release:phase1": {
+      "dependsOn": ["^release:phase1"],
+      "cache": false
+    },
+    "release:phase3": {
+      "dependsOn": ["^release:phase3"],
+      "env": ["NODE_AUTH_TOKEN", "NPM_CONFIG_USERCONFIG"],
+      "cache": false
+    }
+  },
+  "globalDependencies": [
+    "package.json",
+    "package-lock.json",
+    ".npmrc",
+    "tsconfig.json",
+    "biome.jsonc",
+    ".cspell.json"
+  ],
+  "globalEnv": [
+    "DEPLOYMENT_ENVIRONMENT",
+    "IS_PRERELEASE",
+    "PR_NUMBER",
+    "NODE_ENV",
+    "CI"
+  ]
+}
