@@ -383,9 +383,11 @@ export class GeneratedAnswerObject {
         status: 200,
         body: bodyText,
         headers: {
-          'access-control-expose-headers': 'X-Answer-Id',
           'content-type': 'text/event-stream',
-          ...(answerId && {'x-answer-id': answerId}),
+          ...(answerId && {
+            'access-control-expose-headers': 'X-Answer-Id',
+            'x-answer-id': answerId,
+          }),
         },
       });
     });
