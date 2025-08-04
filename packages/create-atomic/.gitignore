@@ -13,4 +13,4 @@ yarn-error.log*
 .DS_Store
 
 # Compiled
-lib
+dist

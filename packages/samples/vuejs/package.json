@@ -4,7 +4,7 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "build": "nx build",
+    "build": "npm run build:assets && npm run build:vue",
     "dev": "npm run build:assets && npm run dev:vue",
     "build:assets": "ncp ../../atomic/dist/atomic/assets public/assets && ncp ../../atomic/dist/atomic/lang public/lang",
     "dev:vue": "vite",

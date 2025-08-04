@@ -14,6 +14,7 @@ const entries = [
       'atomic-recs-result-template',
       'atomic-field-condition',
     ],
+    declarations: [],
     excludedComponentDirectories: ['src/components/commerce'],
     computedComponentImports: [],
   },
@@ -25,6 +26,7 @@ const entries = [
       'atomic-recs-result-template',
       'atomic-field-condition',
     ],
+    declarations: [],
     excludedComponentDirectories: [
       'src/components/search',
       'src/components/recommendations',
@@ -49,11 +51,7 @@ for (const module of cem.modules) {
   if (module.declarations.length === 0) {
     continue;
   }
-  // Use toSorted() to create a new sorted array without mutating the original
-  const sortedDeclarations = module.declarations.toSorted((a, b) =>
-    a.name.localeCompare(b.name, 'en-US', {sensitivity: 'base'})
-  );
-  for (const declaration of sortedDeclarations) {
+  for (const declaration of module.declarations) {
     if (isLitDeclaration(declaration)) {
       for (const entry of entries) {
         if (
@@ -64,12 +62,22 @@ for (const module of cem.modules) {
         ) {
           continue;
         }
-        entry.computedComponentImports.push(
-          declarationToLitImport(declaration)
-        );
-        entry.content += declarationToComponent(declaration);
+        entry.declarations.push(declaration);
       }
     }
+  }
+}
+
+for (const entry of entries) {
+  if (entry.declarations.length === 0) {
+    continue;
+  }
+  entry.declarations.sort((a, b) =>
+    a.name.localeCompare(b.name, 'en-US', {sensitivity: 'base'})
+  );
+  for (const declaration of entry.declarations) {
+    entry.computedComponentImports.push(declarationToLitImport(declaration));
+    entry.content += declarationToComponent(declaration);
   }
 }
 

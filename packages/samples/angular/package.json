@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "build": "nx build",
+    "build": "npm run-script -w=@coveo/ci if-not-cdn -- \"npm run build:assets\" && npm run-script -w=@coveo/ci if-not-cdn -- \"npm run build:angular\"",
     "build:angular": "ng build",
     "dev": "npm run build:assets && npm run dev:angular",
     "dev:angular": "ng serve --host=0.0.0.0 --prebundle=false",
