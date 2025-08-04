@@ -2,7 +2,9 @@ import type {Product} from '@coveo/headless/commerce';
 
 export const buildFakeProduct = (product?: Partial<Product>): Product => ({
   clickUri: '',
-  additionalFields: {},
+  additionalFields: {
+    cat_available_sizes: ['XS', 'S', 'M', 'L', 'XL'],
+  },
   children: [],
   ec_brand: 'brand',
   ec_category: [],

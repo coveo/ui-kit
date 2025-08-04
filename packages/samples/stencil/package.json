@@ -5,12 +5,12 @@
   "type": "module",
   "scripts": {
     "dev": "stencil build --dev --watch --serve --port 3666 --no-open",
-    "build": "nx build",
+    "build": "npm run-script -w=@coveo/ci if-not-cdn -- \"node --max_old_space_size=6144 ../../../node_modules/@stencil/core/bin/stencil build\"",
     "e2e:watch": "cypress open --browser chrome --e2e"
   },
   "dependencies": {
-    "@coveo/atomic": "3.30.0",
-    "@coveo/headless": "3.27.5",
+    "@coveo/atomic": "3.31.1",
+    "@coveo/headless": "3.27.7",
     "@stencil/core": "4.20.0",
     "stencil-router-v2": "0.6.0"
   },

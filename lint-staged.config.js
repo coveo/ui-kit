@@ -4,6 +4,10 @@ module.exports = {
       // Exclude quantic and create-atomic-template packages
       if (file.includes('/packages/quantic/')) return false;
       if (file.includes('/packages/create-atomic-template/')) return false;
+      if (file.includes('/packages/create-atomic-component/template/'))
+        return false;
+      if (file.includes('/packages/create-atomic-component-project/template/'))
+        return false;
 
       // Exclude root deployment config
       if (file.includes('/.deployment.config/')) return false;
