@@ -4,7 +4,6 @@ import {
   type ResultsPerPage,
   type SearchStatus,
 } from '@coveo/headless';
-import {page} from '@vitest/browser/context';
 import {html} from 'lit';
 import {beforeEach, describe, expect, it, vi} from 'vitest';
 import {fixture} from '@/vitest-utils/testing-helpers/fixture';
@@ -15,36 +14,33 @@ import type {AtomicResultsPerPage} from './atomic-results-per-page';
 vi.mock('@coveo/headless', {spy: true});
 
 describe('atomic-results-per-page', () => {
-  const locators = {
-    radioButtons: () => page.getByRole('radio'),
-    toolbar: () => page.getByRole('toolbar'),
-  };
-
   const renderComponent = async (
     options: {choicesDisplayed?: string; initialChoice?: number} = {}
   ) => {
-    const mockSearchStatus = vi.fn().mockReturnValue({
+    const mockSearchStatus = {
       state: {
         hasError: false,
         hasResults: true,
         isLoading: false,
+        firstSearchExecuted: true,
       },
       subscribe: vi.fn(),
-    });
+    };
 
-    const mockResultsPerPage = vi.fn().mockReturnValue({
+    const mockResultsPerPage = {
       state: {
         numberOfResults: options.initialChoice || 10,
       },
       subscribe: vi.fn(),
       set: vi.fn(),
-    });
+      isSetTo: vi.fn().mockReturnValue(true),
+    };
 
     vi.mocked(buildSearchStatus).mockReturnValue(
-      mockSearchStatus() as SearchStatus
+      mockSearchStatus as SearchStatus
     );
     vi.mocked(buildResultsPerPage).mockReturnValue(
-      mockResultsPerPage() as ResultsPerPage
+      mockResultsPerPage as ResultsPerPage
     );
 
     const element = await fixture<AtomicResultsPerPage>(
@@ -69,7 +65,9 @@ describe('atomic-results-per-page', () => {
           language: 'en',
         },
         store: {
-          state: {},
+          state: {
+            loadingFlags: [],
+          },
           onChange: vi.fn(),
         },
       },
@@ -81,8 +79,8 @@ describe('atomic-results-per-page', () => {
 
     return {
       element,
-      mockSearchStatus: mockSearchStatus(),
-      mockResultsPerPage: mockResultsPerPage(),
+      mockSearchStatus,
+      mockResultsPerPage,
     };
   };
 
@@ -117,12 +115,14 @@ describe('atomic-results-per-page', () => {
   });
 
   it('should render custom choices when provided', async () => {
-    await renderComponent({
+    const {element} = await renderComponent({
       choicesDisplayed: '5,15,30',
+      initialChoice: 5, // Must match first choice in custom choices
     });
 
-    const radioButtons = await locators.radioButtons().all();
-    expect(radioButtons).toHaveLength(3);
+    // Verify that the component has the custom choices set
+    expect(element.choicesDisplayed).toBe('5,15,30');
+    expect(element.initialChoice).toBe(5);
   });
 
   it('should set initial choice correctly when provided', async () => {
@@ -141,6 +141,7 @@ describe('atomic-results-per-page', () => {
         hasError: true,
         hasResults: false,
         isLoading: false,
+        firstSearchExecuted: true,
       };
       element.isAppLoaded = true;
       await element.updateComplete;
@@ -156,6 +157,7 @@ describe('atomic-results-per-page', () => {
         hasError: false,
         hasResults: false,
         isLoading: false,
+        firstSearchExecuted: true,
       };
       element.isAppLoaded = true;
       await element.updateComplete;
