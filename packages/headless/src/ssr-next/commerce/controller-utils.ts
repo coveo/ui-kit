@@ -4,7 +4,6 @@ import {clone, filterObject, mapObject} from '../../utils/utils.js';
 import {HydratedControllerBuilder} from '../common/builders/hydrated-controller-builder.js';
 import {createStaticControllerBuilder} from '../common/builders/static-controller-builder.js';
 import {InvalidControllerDefinition} from '../common/errors.js';
-import type {InferControllerStaticStateMapFromDefinitions} from '../common/types/inference.js';
 import type {SSRCommerceEngine} from './factories/build-factory.js';
 import type {SolutionType} from './types/controller-constants.js';
 import type {
@@ -13,6 +12,7 @@ import type {
 } from './types/controller-definitions.js';
 import type {
   InferControllerPropsMapFromDefinitions,
+  InferControllerStaticStateMapFromDefinitionsWithSolutionType,
   InferControllersMapFromDefinition,
 } from './types/controller-inference.js';
 import type {EngineStaticState} from './types/engine.js';
@@ -31,12 +31,18 @@ export function createStaticState<
   >;
 }): EngineStaticState<
   TSearchAction,
-  InferControllerStaticStateMapFromDefinitions<TControllerDefinitions>
+  InferControllerStaticStateMapFromDefinitionsWithSolutionType<
+    TControllerDefinitions,
+    SolutionType
+  >
 > {
   return {
     controllers: mapObject(controllers, (controller) =>
       createStaticControllerBuilder(controller).build()
-    ) as InferControllerStaticStateMapFromDefinitions<TControllerDefinitions>,
+    ) as InferControllerStaticStateMapFromDefinitionsWithSolutionType<
+      TControllerDefinitions,
+      SolutionType
+    >,
     searchActions: searchActions.map((action) => clone(action)),
   };
 }
