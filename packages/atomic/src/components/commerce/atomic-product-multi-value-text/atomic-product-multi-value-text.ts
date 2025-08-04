@@ -5,7 +5,7 @@ import {
   ProductTemplatesHelpers,
   type RegularFacetValue,
 } from '@coveo/headless/commerce';
-import {css, html, LitElement, nothing, type TemplateResult} from 'lit';
+import {html, LitElement, nothing, type TemplateResult} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {bindingGuard} from '@/src/decorators/binding-guard';
 import {bindings} from '@/src/decorators/bindings';
@@ -35,12 +35,6 @@ export class AtomicProductMultiValueText
   extends LitElement
   implements InitializableComponent<CommerceBindings>
 {
-  static styles = css`
-  @reference '../../../utils/tailwind.global.tw.css';
-  :host {
-    @apply set-font-size-sm;
-  }
-  `;
   @state()
   bindings!: CommerceBindings;
 
@@ -199,7 +193,7 @@ export class AtomicProductMultiValueText
     }
 
     return html`
-      <ul part="product-multi-value-text-list" class="m-0 flex list-none p-0">
+      <ul part="product-multi-value-text-list" class="m-0 flex list-none p-0 set-font-size-sm">
         ${this.renderListItems(this.sortedValues)}
       </ul>
     `;
