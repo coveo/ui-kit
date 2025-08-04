@@ -76,6 +76,13 @@ export class GeneratedAnswerObject {
     return this.page.getByTestId('generated-answer__answer-toggle');
   }
 
+  private isMatchingStreamId(customData?: Record<string, any>): boolean {
+    const key = this.answerApiEnabled
+      ? 'answerAPIStreamId'
+      : 'generativeQuestionAnsweringId';
+    return customData?.[key] === this.streamId;
+  }
+
   async hoverOverCitation(index: number): Promise<void> {
     // waiting 500ms to allow the component to render completely, cause any re-rendering abort the hover action.
     await this.page.waitForTimeout(500);
@@ -131,8 +138,7 @@ export class GeneratedAnswerObject {
           eventType: 'generatedAnswer',
           eventValue: 'generatedAnswerStreamEnd',
         },
-        (event) =>
-          event?.customData?.generativeQuestionAnsweringId === this.streamId
+        (event) => this.isMatchingStreamId(event?.customData)
       );
     }
     return this.analytics.waitForEventProtocolAnalytics(
@@ -148,8 +154,7 @@ export class GeneratedAnswerObject {
           eventType: 'generatedAnswer',
           eventValue: 'likeGeneratedAnswer',
         },
-        (event) =>
-          event?.customData?.generativeQuestionAnsweringId === this.streamId
+        (event) => this.isMatchingStreamId(event?.customData)
       );
     }
     return this.analytics.waitForEventProtocolAnalytics(
@@ -165,8 +170,7 @@ export class GeneratedAnswerObject {
           eventType: 'generatedAnswer',
           eventValue: 'dislikeGeneratedAnswer',
         },
-        (event) =>
-          event?.customData?.generativeQuestionAnsweringId === this.streamId
+        (event) => this.isMatchingStreamId(event?.customData)
       );
     }
     return this.analytics.waitForEventProtocolAnalytics(
@@ -182,8 +186,7 @@ export class GeneratedAnswerObject {
           eventType: 'generatedAnswer',
           eventValue: 'generatedAnswerCopyToClipboard',
         },
-        (event) =>
-          event?.customData?.generativeQuestionAnsweringId === this.streamId
+        (event) => this.isMatchingStreamId(event?.customData)
       );
     }
     return this.analytics.waitForEventProtocolAnalytics(
@@ -199,8 +202,7 @@ export class GeneratedAnswerObject {
           eventType: 'generatedAnswer',
           eventValue: 'generatedAnswerShowAnswers',
         },
-        (event) =>
-          event?.customData?.generativeQuestionAnsweringId === this.streamId
+        (event) => this.isMatchingStreamId(event?.customData)
       );
     }
     return this.analytics.waitForEventProtocolAnalytics(
@@ -216,8 +218,7 @@ export class GeneratedAnswerObject {
           eventType: 'generatedAnswer',
           eventValue: 'generatedAnswerHideAnswers',
         },
-        (event) =>
-          event?.customData?.generativeQuestionAnsweringId === this.streamId
+        (event) => this.isMatchingStreamId(event?.customData)
       );
     }
     return this.analytics.waitForEventProtocolAnalytics(
@@ -299,7 +300,7 @@ export class GeneratedAnswerObject {
           eventValue: 'generatedAnswerFeedbackSubmitV2',
         },
         (event) =>
-          event?.customData?.generativeQuestionAnsweringId === this.streamId &&
+          this.isMatchingStreamId(event?.customData) &&
           Object.keys(expectedPayload).every(
             (key) => event?.customData?.[key] === expectedPayload[key]
           )
