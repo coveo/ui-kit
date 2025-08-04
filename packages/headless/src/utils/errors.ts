@@ -1,10 +1,11 @@
 export const loadReducerError = new Error('Failed to load reducers.');
 
-export class ExpiredTokenError extends Error {
+export class UnauthorizedTokenError extends Error {
   constructor() {
     super();
-    this.name = 'ExpiredToken';
-    this.message = 'The token being used to perform the request is expired.';
+    this.name = 'UnauthorizedTokenError';
+    this.message =
+      'The token being used to perform the request is unauthorized. It may be expired or invalid.';
   }
 }
 

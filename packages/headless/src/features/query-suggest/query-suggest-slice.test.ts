@@ -7,6 +7,7 @@ import {
   fetchQuerySuggestions as fetchCommerceQuerySuggestions,
   registerQuerySuggest as registerCommerceQuerySuggest,
 } from '../commerce/query-suggest/query-suggest-actions.js';
+import {setError} from '../error/error-actions.js';
 import {
   clearQuerySuggest,
   fetchQuerySuggestions,
@@ -416,5 +417,22 @@ describe('querySuggest slice', () => {
     });
 
     describeRejected(fetchCommerceQuerySuggestions);
+  });
+
+  describe('#setError', () => {
+    it('should set the error state and set isLoading to false', () => {
+      const error = {
+        message: 'Something went wrong',
+        statusCode: 401,
+        status: 401,
+        type: 'BadRequest',
+      };
+      state[id]!.isLoading = true;
+
+      const finalState = querySuggestReducer(state, setError(error));
+
+      expect(finalState[id]?.error).toEqual(error);
+      expect(finalState[id]?.isLoading).toBe(false);
+    });
   });
 });
