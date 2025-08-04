@@ -36,27 +36,11 @@ export class AtomicProductMultiValueText
   implements InitializableComponent<CommerceBindings>
 {
   static styles = css`
+  @reference '../../../utils/tailwind.global.tw.css';
   :host {
-    > ul {
-      display: flex;
-      list-style: none;
-      margin: 0;
-      padding: 0;
-  
-      li {
-        display: inline-block;
-      }
-
-      @apply set-font-size-sm;
-    }
+    @apply set-font-size-sm;
   }
-  
-  .separator {
-    &::before {
-      display: inline;
-      content: ",\00a0";
-    }
-  }`;
+  `;
   @state()
   bindings!: CommerceBindings;
 
