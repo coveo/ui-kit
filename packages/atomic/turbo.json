@@ -52,6 +52,19 @@
       "dependsOn": ["build"],
       "cache": false,
       "persistent": true
+    },
+    "dev": {
+      "with": ["dev:stencil", "dev:main"],
+      "cache": false,
+      "persistent": true
+    },
+    "dev:stencil": {
+      "cache": false,
+      "persistent": true
+    },
+    "dev:main": {
+      "cache": false,
+      "persistent": true
     }
   }
 }
