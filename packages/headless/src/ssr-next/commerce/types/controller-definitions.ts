@@ -1,6 +1,10 @@
 import type {Controller} from '../../../controllers/controller/headless-controller.js';
 import type {InvalidControllerDefinition} from '../../common/errors.js';
-import type {ControllersPropsMap} from '../../common/types/controllers.js';
+import type {
+  BaseControllerDefinitionWithoutProps,
+  BaseControllerDefinitionWithProps,
+  ControllersPropsMap,
+} from '../../common/types/controllers.js';
 import type {EngineDefinitionBuildResult} from '../../common/types/engine.js';
 import type {HydratedState} from '../../common/types/hydrate-static-state.js';
 import type {
@@ -49,7 +53,7 @@ export type RecommendationControllerSettings = {
 
 export interface ControllerDefinitionWithoutProps<
   TController extends Controller,
-> {
+> extends BaseControllerDefinitionWithoutProps<SSRCommerceEngine, TController> {
   /**
    * Creates an instance of the given controller.
    *
@@ -67,7 +71,11 @@ export interface ControllerWithKind extends Controller {
 export interface ControllerDefinitionWithProps<
   TController extends Controller,
   TProps,
-> {
+> extends BaseControllerDefinitionWithProps<
+    SSRCommerceEngine,
+    TController,
+    TProps
+  > {
   /**
    * Creates an instance of the given controller.
    *
