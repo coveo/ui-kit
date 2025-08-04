@@ -13,7 +13,6 @@ import type {FacetSortCriterion} from '../../features/facets/facet-set/interface
 import type {DateFacetValue} from '../../features/facets/range-facets/date-facet-set/interfaces/response.js';
 import type {RangeFacetSortCriterion} from '../../features/facets/range-facets/generic/interfaces/request.js';
 import type {NumericFacetValue} from '../../features/facets/range-facets/numeric-facet-set/interfaces/response.js';
-import {generativeQuestionAnsweringIdSelector} from '../../features/generated-answer/generated-answer-selectors.js';
 import {getQueryInitialState} from '../../features/query/query-state.js';
 import type {OmniboxSuggestionMetadata} from '../../features/query-suggest/query-suggest-analytics-actions.js';
 import {getSearchInitialState} from '../../features/search/search-state.js';
@@ -92,8 +91,8 @@ export class SearchAnalyticsProvider
     const state = this.getState();
     const baseObject = super.getBaseMetadata();
 
-    const {generativeQuestionAnsweringId} =
-      generativeQuestionAnsweringIdSelector(state);
+    const generativeQuestionAnsweringId =
+      state.search?.response?.extendedResults?.generativeQuestionAnsweringId;
 
     if (generativeQuestionAnsweringId) {
       baseObject.generativeQuestionAnsweringId = generativeQuestionAnsweringId;
@@ -286,28 +285,22 @@ export class SearchAnalyticsProvider
   }
 }
 
-interface LegacyConfigureAnalyticsOptions<
-  State extends ConfigurationSection = StateNeededBySearchAnalyticsProvider,
-> {
+interface LegacyConfigureAnalyticsOptions {
   logger: Logger;
   analyticsClientMiddleware?: AnalyticsClientSendEventHook;
   preprocessRequest?: PreprocessRequest;
   provider?: SearchPageClientProvider;
-  getState(): State;
+  getState(): StateNeededBySearchAnalyticsProvider;
 }
 
 //TODO: KIT-2859
-export const configureLegacyAnalytics = <
-  State extends ConfigurationSection = StateNeededBySearchAnalyticsProvider,
->({
+export const configureLegacyAnalytics = ({
   logger,
   getState,
   analyticsClientMiddleware = (_, p) => p,
   preprocessRequest,
-  provider,
-}: LegacyConfigureAnalyticsOptions<State> & {
-  provider: SearchPageClientProvider;
-}) => {
+  provider = new SearchAnalyticsProvider(getState),
+}: LegacyConfigureAnalyticsOptions) => {
   const state = getState();
   const token = state.configuration.accessToken;
   const endpoint =
