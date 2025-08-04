@@ -5,7 +5,7 @@ import {
   ProductTemplatesHelpers,
   type RegularFacetValue,
 } from '@coveo/headless/commerce';
-import {html, LitElement, nothing, type TemplateResult, unsafeCSS} from 'lit';
+import {html, LitElement, nothing, type TemplateResult} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {bindingGuard} from '@/src/decorators/binding-guard';
 import {bindings} from '@/src/decorators/bindings';
@@ -16,7 +16,6 @@ import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
 import {getFieldValueCaption} from '../../../utils/field-utils';
 import {titleToKebab} from '../../../utils/utils';
 import type {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface';
-import styles from './atomic-product-multi-value-text.tw.css';
 
 /**
  * @alpha
@@ -36,8 +35,6 @@ export class AtomicProductMultiValueText
   extends LitElement
   implements InitializableComponent<CommerceBindings>
 {
-  static styles = [unsafeCSS(styles)];
-
   @state()
   bindings!: CommerceBindings;
 
@@ -159,7 +156,7 @@ export class AtomicProductMultiValueText
       <li
         aria-hidden="true"
         part="product-multi-value-text-separator"
-        class="separator inline-block"
+        class="${String.raw`inline-block before:inline before:content-[',\00a0']`}"
       ></li>
     `;
   }
@@ -196,7 +193,7 @@ export class AtomicProductMultiValueText
     }
 
     return html`
-      <ul part="product-multi-value-text-list" class="flex list-none m-0 p-0">
+      <ul part="product-multi-value-text-list" class="m-0 flex list-none p-0">
         ${this.renderListItems(this.sortedValues)}
       </ul>
     `;
