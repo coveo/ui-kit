@@ -29,22 +29,23 @@ const exampleCitation = {
 const exampleSalesforceCitation = {
   ...exampleCitation,
   fields: {
+    ...exampleCitation.fields,
     sfid: '123',
   },
 };
 const exampleSalesforceKnowledgeArticleCitation = {
   ...exampleCitation,
   fields: {
+    ...exampleCitation.fields,
     sfid: '123',
     sfkbid: 'foo',
     sfkavid: 'bar',
   },
 };
-const exampleSalesforceLink =
-  'https://www.example-salesforce.com/#:~:text=text%2001';
-const exampleSalesforceLinkTooltip =
-  'https://www.example-salesforce.com#:~:text=text%2001';
-const exampleCitationTextFragmentUrl = 'https://example.com/#:~:text=text%2001';
+const exampleSalesforceLink = 'https://www.example-salesforce.com/';
+const urlFragment = '#:~:text=text%2001';
+const exampleSalesforceLinkTooltip = 'https://www.example-salesforce.com';
+const exampleCitationUrl = 'https://example.com/';
 
 const defaultOptions = {
   citation: exampleCitation,
@@ -132,7 +133,7 @@ describe('c-quantic-citation', () => {
     expect(citationTitle).not.toBeNull();
     expect(citationTooltip).not.toBeNull();
 
-    expect(citationLink.href).toBe(exampleCitationTextFragmentUrl);
+    expect(citationLink.href).toBe(`${exampleCitationUrl}${urlFragment}`);
     expect(citationLink.target).toBe('_blank');
     expect(citationTitle.textContent).toBe(exampleCitation.title);
   });
@@ -151,7 +152,7 @@ describe('c-quantic-citation', () => {
       const {pageReference} = getNavigateCalledWith();
       expect(pageReference).toBeUndefined();
 
-      expect(link.href).toBe(exampleSalesforceLink);
+      expect(link.href).toBe(`${exampleSalesforceLink}${urlFragment}`);
       expect(link.target).toBe('_blank');
     });
   });
@@ -312,6 +313,41 @@ describe('c-quantic-citation', () => {
           expect(link.href).toBe(`${exampleSalesforceLink}`);
         });
       });
+    });
+  });
+
+  describe('when the file type is not HTML', () => {
+    it('should not generate a text fragment URL', async () => {
+      const element = createTestComponent({
+        ...defaultOptions,
+        citation: {
+          ...exampleCitation,
+          fields: {
+            ...exampleCitation.fields,
+            filetype: 'pdf',
+          },
+        },
+      });
+      await flushPromises();
+
+      const link = element.shadowRoot.querySelector(selectors.citationLink);
+      expect(link.href).toBe(exampleCitationUrl);
+    });
+  });
+
+  describe('when the citation does not contain text', () => {
+    it('should not generate a text fragment URL', async () => {
+      const element = createTestComponent({
+        ...defaultOptions,
+        citation: {
+          ...exampleCitation,
+          text: '',
+        },
+      });
+      await flushPromises();
+
+      const link = element.shadowRoot.querySelector(selectors.citationLink);
+      expect(link.href).toBe(exampleCitationUrl);
     });
   });
 });

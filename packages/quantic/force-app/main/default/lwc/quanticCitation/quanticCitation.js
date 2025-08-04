@@ -50,12 +50,12 @@ export default class QuanticCitation extends NavigationMixin(LightningElement) {
   /** @type {string} */
   salesforceRecordUrl;
   /** @type {boolean} */
-  isWithTextFragment = false;
+  isHrefWithTextFragment = false;
 
   connectedCallback() {
     const fileType = this.citation?.fields?.filetype;
-    this.isWithTextFragment =
-      !this.disableCitationAnchoring || fileType !== 'html' || !this.text;
+    this.isHrefWithTextFragment =
+      !this.disableCitationAnchoring && fileType === 'html' && !!this.text;
   }
 
   renderedCallback() {
@@ -162,7 +162,7 @@ export default class QuanticCitation extends NavigationMixin(LightningElement) {
   }
 
   get hrefValue() {
-    return this.isWithTextFragment
+    return this.isHrefWithTextFragment
       ? generateTextFragmentUrl(this.sourceUri, this.text)
       : this.sourceUri;
   }
