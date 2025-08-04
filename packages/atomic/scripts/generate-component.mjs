@@ -83,7 +83,7 @@ if (outputDir) {
 
 if (!componentName) {
   console.error(
-    'Usage: npx nx run atomic:generate-component --name=<component-name> --output=<output-dir>'
+    'Usage: npm run generate-component -w=@coveo/atomic -- --name=<component-name> --output=<output-dir>'
   );
   process.exit(1);
 }
