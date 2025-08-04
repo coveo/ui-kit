@@ -36,6 +36,7 @@ export {AtomicProductLink} from './atomic-product-link/atomic-product-link.js';
 export {AtomicProductMultiValueText} from './atomic-product-multi-value-text/atomic-product-multi-value-text.js';
 export {AtomicProductNumericFieldValue} from './atomic-product-numeric-field-value/atomic-product-numeric-field-value.js';
 export {AtomicProductPrice} from './atomic-product-price/atomic-product-price.js';
+export {AtomicProductRating} from './atomic-product-rating/atomic-product-rating.js';
 export {AtomicProductSectionActions} from './atomic-product-section-actions/atomic-product-section-actions.js';
 export {AtomicProductSectionBadges} from './atomic-product-section-badges/atomic-product-section-badges.js';
 export {AtomicProductSectionBottomMetadata} from './atomic-product-section-bottom-metadata/atomic-product-section-bottom-metadata.js';
