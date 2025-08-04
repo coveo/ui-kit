@@ -128,7 +128,7 @@ export default class QuanticCitation extends NavigationMixin(LightningElement) {
   handleClick(event) {
     // Only apply the Salesforce navigation using the mixin for Salesforce documents and when citation anchoring is disabled.
     // Otherwise we rely on the default behavior of the browser with a `hrefValue`.
-    if (this.isSalesforceLink && this.disableCitationAnchoring) {
+    if (this.isSalesforceLink && !this.isHrefWithTextFragment) {
       event.preventDefault();
       this.navigateToSalesforceRecord(event);
     }
