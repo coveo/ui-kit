@@ -45,7 +45,7 @@
     "fix-esm-import-path": "1.10.1",
     "react": "19.1.1",
     "react-dom": "19.1.0",
-    "rollup": "4.45.0",
+    "rollup": "4.46.2",
     "rollup-plugin-polyfill-node": "^0.13.0",
     "ncp": "2.0.0"
   },
