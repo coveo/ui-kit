@@ -649,28 +649,6 @@ export class AtomicPopover {
 export declare interface AtomicPopover extends Components.AtomicPopover {}
 
 
-@ProxyCmp({
-  inputs: ['field', 'icon', 'maxValueInIndex', 'ratingDetailsField']
-, defineCustomElementFn: defineCustomElementAtomicProductRating})
-@Component({standalone:false,
-  selector: 'atomic-product-rating',
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  template: '<ng-content></ng-content>',
-  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: ['field', 'icon', 'maxValueInIndex', 'ratingDetailsField'],
-})
-export class AtomicProductRating {
-  protected el: HTMLElement;
-  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
-    c.detach();
-    this.el = r.nativeElement;
-  }
-}
-
-
-export declare interface AtomicProductRating extends Components.AtomicProductRating {}
-
-
 @ProxyCmp({defineCustomElementFn: defineCustomElementAtomicQueryError})
 @Component({standalone:false,
   selector: 'atomic-query-error',
@@ -2804,6 +2782,32 @@ export class AtomicProductPrice {
 }
 
 export declare interface AtomicProductPrice extends LitAtomicProductPrice {
+
+}
+
+@ProxyCmp({
+  inputs: ['field', 'ratingDetailsField', 'maxValueInIndex', 'icon'],
+  methods: ['initialize'],
+  defineCustomElementFn: () => {customElements.get('atomic-product-rating') || customElements.define('atomic-product-rating', LitAtomicProductRating);}
+})
+@Component({
+  selector: 'atomic-product-rating',
+  standalone: false,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
+  inputs: ['field', 'ratingDetailsField', 'maxValueInIndex', 'icon']
+})
+export class AtomicProductRating {
+  protected readonly el: HTMLElement;
+  constructor(c: ChangeDetectorRef, el: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = el.nativeElement;
+    
+  }
+}
+
+export declare interface AtomicProductRating extends LitAtomicProductRating {
 
 }
 

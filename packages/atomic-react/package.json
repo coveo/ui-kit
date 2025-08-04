@@ -10,14 +10,15 @@
     "directory": "packages/atomic-react"
   },
   "scripts": {
-    "build": "nx build",
+    "gen:lit": "node ./scripts/build-lit.mjs && npm run build:fixLoaderImportPaths && npm run build:fixGeneratedImportPaths",
+    "build": "npm run build:bundles && npm run build:types && npm run build:assets",
     "clean": "rimraf -rf dist",
     "build:fixLoaderImportPaths": "node ./scripts/fix-loader-import-paths.js",
     "build:fixGeneratedImportPaths": "fix-esm-import-path src/components/stencil-generated",
     "build:bundles": "rollup --config rollup.config.js",
     "build:types": "tsc --project tsconfig.types.json",
-    "publish:npm": "npm run-script -w=@coveo/ci npm-publish",
-    "publish:bump": "npm run-script -w=@coveo/ci bump",
+    "release:phase3": "npm run-script -w=@coveo/ci npm-publish",
+    "release:phase1": "npm run-script -w=@coveo/ci bump",
     "promote:npm:latest": "npm run-script -w=@coveo/ci promote-npm-prod",
     "build:assets": "ncp ../atomic/dist/atomic/assets dist/assets && ncp ../atomic/dist/atomic/lang dist/lang "
   },

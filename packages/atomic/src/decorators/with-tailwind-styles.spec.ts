@@ -6,11 +6,19 @@ import {
   unsafeCSS,
 } from 'lit';
 import {customElement} from 'lit/decorators.js';
-import {afterEach, beforeEach, describe, expect, it} from 'vitest';
+import {beforeAll, beforeEach, describe, expect, it} from 'vitest';
 import theme from '@/src/utils/coveo.tw.css';
 import globalStyles from '@/src/utils/tailwind.global.tw.css';
 import utilities from '@/src/utils/tailwind-utilities/utilities.tw.css';
+import {fixture} from '@/vitest-utils/testing-helpers/fixture';
 import {withTailwindStyles} from './with-tailwind-styles';
+
+// Remove any global CSS injected in setup before running this suite
+beforeAll(() => {
+  document.head
+    .querySelectorAll('style, link[rel="stylesheet"]')
+    .forEach((el) => el.remove());
+});
 
 const componentStyles = `
   div {
@@ -26,7 +34,7 @@ class TestTailwindElement extends LitElement {
   ];
 
   render() {
-    return html`<div>Test Element</div>`;
+    return html`<div class="rounded-3xl border">Test Element</div>`;
   }
 }
 
@@ -37,7 +45,9 @@ class TestTailwindElementWithoutArray extends LitElement {
     unsafeCSS(componentStyles);
 
   render() {
-    return html`<div>Test Element Without Array</div>`;
+    return html`<div class="rounded-3xl border">
+      Test Element Without Array
+    </div>`;
   }
 }
 
@@ -45,14 +55,8 @@ class TestTailwindElementWithoutArray extends LitElement {
 @withTailwindStyles
 class TestTailwindElementNoStyles extends LitElement {
   render() {
-    return html`<div>Test Element No Styles</div>`;
+    return html`<div class="rounded-3xl border">Test Element No Styles</div>`;
   }
-}
-
-function setupElement(elementTag: string) {
-  const element = document.createElement(elementTag) as TestTailwindElement;
-  document.body.appendChild(element);
-  return element;
 }
 
 describe('withTailwindStyles decorator', () => {
@@ -76,16 +80,12 @@ describe('withTailwindStyles decorator', () => {
   ];
 
   describe('when styles is an array', () => {
-    let element: TestTailwindElement;
     let styles: CSSResultGroup | CSSStyleSheet | undefined;
 
-    beforeEach(() => {
-      element = setupElement('test-tailwind-element');
-      styles = (element.constructor as typeof TestTailwindElement).styles;
-    });
-
-    afterEach(() => {
-      document.body.removeChild(element);
+    beforeEach(async () => {
+      await fixture<TestTailwindElement>(
+        html`<test-tailwind-element></test-tailwind-element>`
+      );
     });
 
     testCases.forEach(({description, index, expected}) => {
@@ -94,25 +94,18 @@ describe('withTailwindStyles decorator', () => {
           const stylesheet = styles[index] as CSSResult;
           expect(styles.length).toBe(4);
           expect(stylesheet.cssText).toContain(expected);
-        } else {
-          fail('Styles is not an array');
         }
       });
     });
   });
 
   describe('when styles is not an array', () => {
-    let element: TestTailwindElementWithoutArray;
     let styles: CSSResultGroup | CSSStyleSheet | undefined;
 
-    beforeEach(() => {
-      element = setupElement('test-tailwind-element-without-array');
-      styles = (element.constructor as typeof TestTailwindElementWithoutArray)
-        .styles;
-    });
-
-    afterEach(() => {
-      document.body.removeChild(element);
+    beforeEach(async () => {
+      await fixture<TestTailwindElementWithoutArray>(
+        html`<test-tailwind-element-without-array></test-tailwind-element-without-array>`
+      );
     });
 
     testCases.forEach(({description, index, expected}) => {
@@ -121,25 +114,18 @@ describe('withTailwindStyles decorator', () => {
           const stylesheet = styles[index] as CSSResult;
           expect(styles.length).toBe(4);
           expect(stylesheet.cssText).toContain(expected);
-        } else {
-          fail('Styles is not an array');
         }
       });
     });
   });
 
   describe('when styles is undefined', () => {
-    let element: TestTailwindElementNoStyles;
     let styles: CSSResultGroup | CSSStyleSheet | undefined;
 
-    beforeEach(() => {
-      element = setupElement('test-tailwind-element-no-styles');
-      styles = (element.constructor as typeof TestTailwindElementNoStyles)
-        .styles;
-    });
-
-    afterEach(() => {
-      document.body.removeChild(element);
+    beforeEach(async () => {
+      await fixture<TestTailwindElementNoStyles>(
+        html`<test-tailwind-element-no-styles></test-tailwind-element-no-styles>`
+      );
     });
 
     testCases.slice(0, 3).forEach(({description, index, expected}) => {
@@ -148,10 +134,39 @@ describe('withTailwindStyles decorator', () => {
           const stylesheet = styles[index] as CSSResult;
           expect(styles.length).toBe(3);
           expect(stylesheet.cssText).toContain(expected);
-        } else {
-          fail('Styles is not an array');
         }
       });
     });
+  });
+
+  it('should adopt Tailwind properties stylesheet on document', async () => {
+    await fixture(html`<test-tailwind-element></test-tailwind-element>`);
+
+    expect(document.adoptedStyleSheets.length).toBe(1);
+  });
+
+  it('should not adopt properties more than once', async () => {
+    await fixture(html`
+      <test-tailwind-element></test-tailwind-element>
+      <test-tailwind-element-without-array></test-tailwind-element-without-array>
+      <test-tailwind-element-no-styles></test-tailwind-element-no-styles>
+    `);
+
+    expect(document.adoptedStyleSheets.length).toBe(1);
+  });
+
+  it('should style all element types with the injected Tailwind properties', async () => {
+    const templates = [
+      html`<test-tailwind-element></test-tailwind-element>`,
+      html`<test-tailwind-element-without-array></test-tailwind-element-without-array>`,
+      html`<test-tailwind-element-no-styles></test-tailwind-element-no-styles>`,
+    ];
+    for (const template of templates) {
+      const element = await fixture(template);
+      const div = element.shadowRoot?.querySelector('div');
+      expect(div).toBeDefined();
+      expect(getComputedStyle(div!).borderRadius).toBe('24px');
+      expect(getComputedStyle(div!).borderWidth).toBe('1px');
+    }
   });
 });

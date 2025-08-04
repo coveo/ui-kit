@@ -5,8 +5,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "nx build",
-    "build:next": "next build",
+    "build": "next build",
     "prod": "next start",
     "lint": "next lint",
     "e2e": "cypress run --browser chrome --e2e --project ../ --env NEXTJS_ROUTER=pages",

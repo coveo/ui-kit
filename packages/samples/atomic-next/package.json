@@ -20,7 +20,10 @@
     "typescript": "5.8.3"
   },
   "scripts": {
-    "build": "nx build",
+    "build": "npm run build:next && npm run build:ts-esm && npm run build:ts-cjs",
+    "build:next": "npm run-script -w=@coveo/ci if-not-cdn -- \"npx next build\"",
+    "build:ts-esm": "npm run-script -w=@coveo/ci if-not-cdn -- \"tsc --noEmit\"",
+    "build:ts-cjs": "npm run-script -w=@coveo/ci if-not-cdn -- \"tsc --module commonjs --noEmit\"",
     "dev": "npm run build:assets && npm run dev:nextjs",
     "dev:nextjs": "next dev",
     "build:assets": "ncp ../../atomic-react/dist/assets public/assets && ncp ../../atomic-react/dist/lang public/lang public/assets",
