@@ -136,7 +136,7 @@ jobs:
       - name: Get affected projects
         id: set
         run: |
-          AFFECTED=$(npx turbo build --affected --dry-run 2>/dev/null | awk '/^@coveo/ && !/#/ {print $1}' | sed 's/@coveo\///g' | tr '\n' ' ')
+          AFFECTED=$(npx turbo build --filter="...[master...HEAD]" --dry-run 2>/dev/null | awk '/^@coveo/ && !/#/ {print $1}' | sed 's/@coveo\///g' | tr '\n' ' ')
           echo "projects=$AFFECTED" >> "$GITHUB_OUTPUT"
       - name: Log affected projects
         run: |
@@ -206,7 +206,7 @@ jobs:
       - uses: ./.github/actions/setup
       - name: Install Playwright Browsers
         run: npx playwright install --with-deps
-      - run: npx turbo test --affected
+      - run: npx turbo test --filter="...[master...HEAD]"
   package-compatibility:
     name: 'Verify compatibility of packages'
     needs: build
