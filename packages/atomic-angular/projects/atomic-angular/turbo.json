@@ -1,0 +1,13 @@
+{
+  "extends": ["//"],
+  "tasks": {
+    "build": {
+      "dependsOn": ["@coveo/atomic-angular-builder#build"],
+      "outputs": []
+    },
+    "release:phase1": {
+      "dependsOn": ["^release:phase1", "@coveo/headless#release:phase1"],
+      "outputs": []
+    }
+  }
+}

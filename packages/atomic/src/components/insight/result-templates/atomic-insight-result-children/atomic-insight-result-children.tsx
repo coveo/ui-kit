@@ -11,7 +11,7 @@ import {
   InitializeBindings,
 } from '../../../../utils/initialization-utils';
 import {elementHasAncestorTag} from '../../../../utils/utils';
-import {extractUnfoldedItem} from '../../../common/interface/item';
+import {extractUnfoldedItem} from '../../../common/item-list/unfolded-item';
 import {
   FoldedItemListContext,
   FoldedItemListStateContext,

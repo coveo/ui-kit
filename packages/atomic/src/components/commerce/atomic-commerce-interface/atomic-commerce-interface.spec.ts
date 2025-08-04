@@ -321,6 +321,22 @@ describe('AtomicCommerceInterface', () => {
       });
     });
 
+    test('should dispatch an updateAnalyticsConfiguration action with the correct source and trackingId', async () => {
+      vi.spyOn(preconfiguredEngine, 'dispatch');
+
+      expect(preconfiguredEngine.dispatch).not.toHaveBeenCalled();
+
+      await element.initializeWithEngine(preconfiguredEngine);
+
+      expect(preconfiguredEngine.dispatch).toHaveBeenCalledExactlyOnceWith({
+        type: 'commerce/configuration/updateAnalyticsConfiguration',
+        payload: {
+          trackingId: preconfiguredEngine.configuration.analytics.trackingId,
+          source: {'@coveo/atomic': '0.0.0'},
+        },
+      });
+    });
+
     test('should render the component and its children', async () => {
       await addChildElement();
       await element.initializeWithEngine(preconfiguredEngine);
@@ -441,14 +457,12 @@ describe('AtomicCommerceInterface', () => {
     });
 
     test('should not add aria-live if an atomic-aria-live element already exists', async () => {
-      const existingAriaLive = document.createElement('atomic-aria-live');
-      element.appendChild(existingAriaLive);
-
-      await element.initialize(commerceEngineConfig);
+      element.connectedCallback();
 
       const ariaLiveElements = element.querySelectorAll('atomic-aria-live');
       expect(ariaLiveElements.length).toBe(1);
     });
+
     test('should remove aria-live on disconnect', async () => {
       await element.initialize(commerceEngineConfig);
       await element.updateComplete;

@@ -10,9 +10,24 @@ type InsightPanelE2EFixtures = {
   insightPanel: InsightPanelObject;
   search: SearchObject;
   insightSetup: InsightSetupObject;
+  consoleErrors: string[];
 };
 
 export const testInsight = quanticBase.extend<InsightPanelE2EFixtures>({
+  consoleErrors: async ({page}, use) => {
+    const consoleErrors: string[] = [];
+
+    // Listening for console errors before the page is loaded.
+    page.on('console', (msg) => {
+      if (msg.type() === 'error') {
+        console.log(`[CAPTURED] Console error: ${msg.text()}`);
+        consoleErrors.push(msg.text());
+      }
+    });
+
+    await use(consoleErrors);
+  },
+
   search: async ({page}, use) => {
     await use(new SearchObject(page, insightSearchRequestRegex));
   },
@@ -24,6 +39,8 @@ export const testInsight = quanticBase.extend<InsightPanelE2EFixtures>({
 
     await insightSetup.waitForInsightInterfaceInitialization();
     await search.waitForSearchResponse();
+    // This is needed in order to ensure the console errors are properly captured.
+    await page.waitForTimeout(100);
     await use(new InsightPanelObject(page));
   },
 });

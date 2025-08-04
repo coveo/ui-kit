@@ -1,16 +1,12 @@
 name: 'Setup & build'
 description: 'Setup node, install dependencies & build'
 inputs:
-  save-cache:
+  use-cache:
     description: 'Whether to save the cache.'
     required: false
     default: 'true'
-  load-cache:
-    description: 'Whether to restore the Nx cache.'
-    required: false
-    default: 'true'
-  cache-suffix:
-    description: 'Suffix to add to the cache key for different environments'
+  cache-prefix:
+    description: 'Prefix to add to the cache key for different environments'
     required: false
     default: 'default'
 runs:
@@ -20,39 +16,24 @@ runs:
       with:
         registry-url: 'https://registry.npmjs.org'
         node-version-file: '.nvmrc'
-    - name: Ensure Nx cache can be shared between different CI environments # Source: https://nx.dev/recipes/troubleshooting/unknown-local-cache
-      run: echo "NX_REJECT_UNKNOWN_LOCAL_CACHE=0" >> $GITHUB_ENV
-      shell: bash
+        cache: 'npm'
     - name: Install npm
       run: npm i -g npm@11.4.2
       shell: bash
     - uses: actions/cache@5a3ec84eff668545956fd18022155c47e93e2684 # v4
-      if: inputs.save-cache == 'true'
-      id: npm-cache
-      with:
-        path: |
-          **/node_modules/
-          !.nx/cache/
-        key: npm-${{ hashFiles('package-lock.json', 'patches/*') }}
-    - uses: actions/cache@5a3ec84eff668545956fd18022155c47e93e2684 # v4
-      if: inputs.save-cache == 'true'
-      with:
-        path: packages/quantic/force-app/main/default/staticresources
-        key: quantic-${{ hashFiles('package-lock.json') }}
-    - uses: actions/cache@5a3ec84eff668545956fd18022155c47e93e2684 # v4
       with:
         path: ~/.cache/Cypress
-        key: cy-${{ hashFiles('package-lock.json') }}
-    - if: inputs.load-cache == 'true'
-      uses: actions/cache/restore@5a3ec84eff668545956fd18022155c47e93e2684 # v4
-      id: nx-cache
+        key: ${{ runner.os }}-${{ inputs.cache-prefix }}-cy-${{ github.sha }}
+        restore-keys: |
+          ${{ runner.os }}-${{ inputs.cache-prefix }}-cy-
+    - uses: actions/cache@5a3ec84eff668545956fd18022155c47e93e2684 # v4
       with:
-        path: .nx/cache
-        key: nx-${{ github.sha }}-${{ inputs.cache-suffix }}
+        path: .turbo
+        key: ${{ runner.os }}-${{ inputs.cache-prefix }}-turbo-${{ github.sha }}
+        restore-keys: |
+          ${{ runner.os }}-${{ inputs.cache-prefix }}-turbo-
     - if: steps.npm-cache.outputs.cache-hit != 'true'
       run: npm ci
       shell: bash
-    # TODO KIT-3483: Move to artifact
-    # - if: steps.nx-cache.outputs.cache-hit != 'true'
     - run: npm run build
       shell: bash
