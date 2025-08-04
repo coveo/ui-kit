@@ -1,4 +1,4 @@
-const exampleStreamId = crypto.randomUUID();
+const exampleStreamId = '123';
 const genQaMarkdownTextPayload = {
   payloadType: 'genqa.messageType',
   payload: JSON.stringify({

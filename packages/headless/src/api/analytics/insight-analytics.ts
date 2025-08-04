@@ -10,7 +10,6 @@ import {
   getStateNeededForFacetMetadata,
   type SectionNeededForFacetMetadata,
 } from '../../features/facets/facet-set/facet-set-analytics-actions-utils.js';
-import {generativeQuestionAnsweringIdSelector} from '../../features/generated-answer/generated-answer-selectors.js';
 import {getQueryInitialState} from '../../features/query/query-state.js';
 import {getSearchInitialState} from '../../features/search/search-state.js';
 import type {InsightAppState} from '../../state/insight-app-state.js';
@@ -79,8 +78,9 @@ export class InsightAnalyticsProvider
   public getBaseMetadata() {
     const state = this.getState();
     const baseObject = super.getBaseMetadata();
-    const {generativeQuestionAnsweringId} =
-      generativeQuestionAnsweringIdSelector(state);
+
+    const generativeQuestionAnsweringId =
+      state.search?.response?.extendedResults?.generativeQuestionAnsweringId;
 
     if (generativeQuestionAnsweringId) {
       baseObject.generativeQuestionAnsweringId = generativeQuestionAnsweringId;
