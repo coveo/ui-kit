@@ -17,7 +17,7 @@
     "@coveo/atomic-hosted-page": "1.1.33",
     "@coveo/atomic-react": "3.2.54",
     "@coveo/headless": "3.27.7",
-    "react": "19.1.0",
+    "react": "19.1.1",
     "react-dom": "19.1.0"
   },
   "devDependencies": {
