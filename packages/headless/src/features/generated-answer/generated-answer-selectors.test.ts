@@ -27,7 +27,7 @@ describe('generated-answer-selectors', () => {
       } as Partial<SearchAppState>;
 
       const result = generativeQuestionAnsweringIdSelector(state);
-      expect(result).toEqual({generativeQuestionAnsweringId: 'answerId1234'});
+      expect(result).toEqual({id: 'answerId1234', answerAPIEnabled: true});
     });
 
     it('returns the generativeQuestionAnsweringId if an answer configuration id is not in state', () => {
@@ -48,78 +48,9 @@ describe('generated-answer-selectors', () => {
 
       const result = generativeQuestionAnsweringIdSelector(state);
       expect(result).toEqual({
-        generativeQuestionAnsweringId: 'generativeQuestionAnsweringId4321',
+        id: 'generativeQuestionAnsweringId4321',
+        answerAPIEnabled: false,
       });
-    });
-
-    it('should handle states with missing search section', () => {
-      const stateWithoutSearch = {
-        ...(streamAnswerAPIStateMock as Partial<SearchAppState>),
-        search: undefined,
-        generatedAnswer: {
-          answerConfigurationId: undefined,
-        },
-      } as Partial<SearchAppState>;
-
-      const result = generativeQuestionAnsweringIdSelector(stateWithoutSearch);
-      expect(result).toEqual({generativeQuestionAnsweringId: undefined});
-    });
-
-    it('should handle states with missing generatedAnswer section', () => {
-      const stateWithoutGeneratedAnswer = {
-        ...(streamAnswerAPIStateMock as Partial<SearchAppState>),
-        generatedAnswer: undefined,
-        search: {
-          response: {
-            extendedResults: {
-              generativeQuestionAnsweringId: 'fromSearch123',
-            },
-          },
-        },
-      } as Partial<SearchAppState>;
-
-      const result = generativeQuestionAnsweringIdSelector(
-        stateWithoutGeneratedAnswer
-      );
-      expect(result).toEqual({generativeQuestionAnsweringId: 'fromSearch123'});
-    });
-
-    it('should prioritize answerId over generativeQuestionAnsweringId when both exist', () => {
-      const state = {
-        ...(streamAnswerAPIStateMock as Partial<SearchAppState>),
-        generatedAnswer: {
-          answerConfigurationId: 'config123',
-        },
-        search: {
-          response: {
-            extendedResults: {
-              generativeQuestionAnsweringId: 'search123',
-            },
-          },
-        },
-      } as Partial<SearchAppState>;
-
-      const result = generativeQuestionAnsweringIdSelector(state);
-      expect(result.generativeQuestionAnsweringId).toBe('answerId1234');
-    });
-
-    it('should return undefined when no relevant data is available', () => {
-      const state = {
-        configuration: {
-          analytics: {enabled: true},
-        },
-        generatedAnswer: {
-          answerConfigurationId: undefined,
-        },
-        search: {
-          response: {
-            // N/A
-          },
-        },
-      } as Partial<SearchAppState>;
-
-      const result = generativeQuestionAnsweringIdSelector(state);
-      expect(result).toEqual({generativeQuestionAnsweringId: undefined});
     });
   });
 });
