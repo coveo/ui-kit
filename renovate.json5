@@ -73,7 +73,11 @@
       "matchPackageNames": ["/^@lwc/compiler$/"]
     },
     {
-      "matchFileNames": ["packages/atomic/package.json"],
+      "matchFileNames": [
+        "packages/atomic/package.json",
+        "packages/create-atomic-component/template/src/components/sample-component/package.json",
+        "packages/create-atomic-component-project/template/package.json"
+      ],
       "groupSlug": "atomic-jest",
       "rangeStrategy": "replace",
       "allowedVersions": "27.x",
