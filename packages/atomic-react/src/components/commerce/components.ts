@@ -181,6 +181,24 @@ export const AtomicCommerceText = createComponent({
   elementClass: LitAtomicCommerceText,
 });
 
+export const AtomicComponentError = createComponent({
+  tagName: 'atomic-component-error',
+  react: React,
+  elementClass: LitAtomicComponentError,
+});
+
+export const AtomicIcon = createComponent({
+  tagName: 'atomic-icon',
+  react: React,
+  elementClass: LitAtomicIcon,
+});
+
+export const AtomicLayoutSection = createComponent({
+  tagName: 'atomic-layout-section',
+  react: React,
+  elementClass: LitAtomicLayoutSection,
+});
+
 export const AtomicProduct = createComponent({
   tagName: 'atomic-product',
   react: React,
