@@ -240,15 +240,11 @@ export class GeneratedAnswerObject {
           eventType: 'generatedAnswer',
           eventValue: 'generatedAnswerSourceHover',
         },
-        (event) => {
-          return (
-            event?.customData?.generativeQuestionAnsweringId ===
-              this.streamId &&
-            Object.keys(expectedPayload).every(
-              (key) => event?.customData?.[key] === expectedPayload[key]
-            )
-          );
-        }
+        (event) =>
+          event?.customData?.generativeQuestionAnsweringId === this.streamId &&
+          Object.keys(expectedPayload).every(
+            (key) => event?.customData?.[key] === expectedPayload[key]
+          )
       );
     }
     return this.analytics.waitForEventProtocolAnalytics(
@@ -387,7 +383,7 @@ export class GeneratedAnswerObject {
         status: 200,
         body: bodyText,
         headers: {
-          'access-control-expose-headers': 'X-Request-Id, X-Answer-Id',
+          'access-control-expose-headers': 'X-Answer-Id',
           'content-type': 'text/event-stream',
           ...(answerId && {'x-answer-id': answerId}),
         },
