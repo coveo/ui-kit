@@ -6,14 +6,12 @@ import {
   buildController,
   type Controller,
 } from '../../../controllers/controller/headless-controller.js';
-import {loadPaginationActions} from '../../../features/pagination/pagination-actions-loader.js';
 import type {executeSearch} from '../../../features/search/search-actions.js';
 import {buildMockNavigatorContextProvider} from '../../../test/mock-navigator-context-provider.js';
 import {buildMockResult} from '../../../test/mock-result.js';
 import * as augmentModule from '../../common/augment-preprocess-request.js';
 import type {ControllerDefinitionWithoutProps} from '../../common/types/controllers.js';
 import type {
-  InferBuildResult,
   InferHydratedState,
   InferStaticState,
 } from '../../common/types/engine.js';
@@ -104,8 +102,7 @@ describe('SSR', () => {
   describe('define search engine', () => {
     type StaticState = InferStaticState<typeof engineDefinition>;
     type HydratedState = InferHydratedState<typeof engineDefinition>;
-    type BuildResult = InferBuildResult<typeof engineDefinition>;
-    type AnyState = StaticState | HydratedState | BuildResult;
+    type AnyState = StaticState | HydratedState;
 
     const defaultNumberOfResults = 12;
     let engineDefinition: SearchEngineDefinition<{
@@ -137,20 +134,10 @@ describe('SSR', () => {
       });
     });
 
-    it('returns 3 functions (where two are composite)', () => {
-      const {build, fetchStaticState, hydrateStaticState} = engineDefinition;
-      expect(typeof build).toBe('function');
+    it('returns 2 functions (where two are composite)', () => {
+      const {fetchStaticState, hydrateStaticState} = engineDefinition;
       expect(typeof fetchStaticState).toBe('function');
       expect(typeof hydrateStaticState).toBe('function');
-      expect(typeof fetchStaticState.fromBuildResult).toBe('function');
-      expect(typeof hydrateStaticState.fromBuildResult).toBe('function');
-    });
-
-    it('gets build result', async () => {
-      const {build} = engineDefinition;
-      const buildResult = await build();
-      expect(buildResult.engine).toBeTruthy();
-      expect(buildResult.controllers).toBeTruthy();
     });
 
     it('fetches initial state of engine', async () => {
@@ -193,52 +180,6 @@ describe('SSR', () => {
           getSampleSearchEngineConfiguration().organizationId
         );
         expect(getResultsPerPage(hydratedState)).toBe(defaultNumberOfResults);
-      });
-    });
-
-    describe('with a buildResult that has a customized numberOfResults', () => {
-      const newNumberOfResults = 6;
-
-      async function fetchBuildResultWithNewNumberOfResults() {
-        const build = vi.mocked(engineDefinition.build);
-        const buildResult = await build();
-        const {registerNumberOfResults} = loadPaginationActions(
-          buildResult.engine
-        );
-        buildResult.engine.dispatch(
-          registerNumberOfResults(newNumberOfResults)
-        );
-        expect(getResultsPerPage(buildResult)).toBe(newNumberOfResults);
-        return buildResult;
-      }
-
-      it('fetches initial state of engine from build result', async () => {
-        const fetchStaticState = vi.mocked(engineDefinition.fetchStaticState);
-        const staticState = await fetchStaticState.fromBuildResult({
-          buildResult: await fetchBuildResultWithNewNumberOfResults(),
-        });
-        expect(staticState).toBeTruthy();
-        expect(getResultsPerPage(staticState)).toBe(newNumberOfResults);
-      });
-
-      describe('with the default static state', () => {
-        let staticState: StaticState;
-        beforeEach(async () => {
-          const fetchStaticState = vi.mocked(engineDefinition.fetchStaticState);
-          staticState = await fetchStaticState();
-        });
-
-        it('hydrates engine from build result', async () => {
-          const hydrateStaticState = vi.mocked(
-            engineDefinition.hydrateStaticState
-          );
-          const buildResult = await fetchBuildResultWithNewNumberOfResults();
-          const hydratedState = await hydrateStaticState.fromBuildResult({
-            buildResult: buildResult,
-            searchAction: staticState.searchAction,
-          });
-          expect(getResultsPerPage(hydratedState)).toBe(newNumberOfResults);
-        });
       });
     });
   });
