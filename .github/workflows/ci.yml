@@ -208,7 +208,7 @@ jobs:
       - uses: ./.github/actions/setup
       - name: Install Playwright Browsers
         run: npx playwright install --with-deps
-      - run: npx turbo test --affected
+      - run: npx turbo test --affected -vvv
   package-compatibility:
     name: "Verify compatibility of packages"
     needs: build
