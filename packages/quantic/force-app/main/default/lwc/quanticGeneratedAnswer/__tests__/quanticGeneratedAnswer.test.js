@@ -10,7 +10,18 @@ let mockedConsoleWarn;
 const exampleItemOne = document.createElement('div');
 exampleItemOne.innerText = 'Custom error message';
 const exampleAssignedElements = [exampleItemOne];
-
+const exampleCitations = [
+  {
+    id: 'citation1',
+    title: 'Example Citation 1',
+    uri: 'https://example.com/1',
+  },
+  {
+    id: 'citation2',
+    title: 'Example Citation 2',
+    uri: 'https://example.com/2',
+  },
+];
 jest.mock('c/quanticHeadlessLoader');
 jest.mock('c/quanticUtils', () => ({
   AriaLiveRegion: jest.fn(() => ({
@@ -32,7 +43,7 @@ jest.mock('c/quanticUtils', () => ({
 
 /** @type {Object} */
 const defaultOptions = {
-  fieldsToIncludeInCitations: 'sfid,sfkbid,sfkavid',
+  fieldsToIncludeInCitations: 'sfid,sfkbid,sfkavid,filetype',
   answerConfigurationId: undefined,
   withToggle: false,
   collapsible: false,
@@ -68,6 +79,7 @@ const selectors = {
   generatedAnswerDisclaimer: '[data-testid="generated-answer__disclaimer"]',
   generatedAnswerNoAnswerCard:
     '[data-testid="generated-answer__no-answer-card"]',
+  generatedAnswerCitations: 'c-quantic-source-citations',
 };
 
 const initialSearchStatusState = {
@@ -470,6 +482,7 @@ describe('c-quantic-generated-answer', () => {
           isStreaming: false,
           answer: exampleAnswer,
           answerContentFormat: exampleAnswerContentFormat,
+          citations: exampleCitations,
         };
         mockSuccessfulHeadlessInitialization();
         prepareHeadlessState();
@@ -720,6 +733,17 @@ describe('c-quantic-generated-answer', () => {
         );
 
         expect(generatedAnswerDisclaimer).not.toBeNull();
+      });
+
+      it('should pass the disableCitationAnchoring property to the source citations component', async () => {
+        const element = createTestComponent();
+        await flushPromises();
+
+        const generatedAnswerCitations = element.shadowRoot.querySelector(
+          selectors.generatedAnswerCitations
+        );
+        expect(generatedAnswerCitations).not.toBeNull();
+        expect(generatedAnswerCitations.disableCitationAnchoring).toBe(false);
       });
     });
 
