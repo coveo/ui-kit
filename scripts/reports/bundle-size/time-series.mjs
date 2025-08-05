@@ -4,8 +4,8 @@ import {computeFileSizes} from './command.mjs';
 const branch = process.env.GIT_BRANCH;
 const fileName = 'bundle-size-time-series.csv';
 
-function isMasterBranch() {
-  return branch === 'origin/master';
+function isMainBranch() {
+  return branch === 'origin/main';
 }
 
 function dataFileExists() {
@@ -41,7 +41,7 @@ function appendToDataFile(row) {
 }
 
 async function main() {
-  if (!isMasterBranch()) {
+  if (!isMainBranch()) {
     return console.log(`cancelling build on branch: ${branch}`);
   }
 

@@ -16,6 +16,6 @@
   "name": "Case Assist",
   "readme": "none",
   "entryPoints": ["../src/case-assist.index.ts"],
-  "gitRevision": "master",
+  "gitRevision": "main",
   "plugin": ["@coveo/documentation"]
 }

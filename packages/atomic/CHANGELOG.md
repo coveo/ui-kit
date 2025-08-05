@@ -541,7 +541,7 @@
 
 - fix(atomic): add isMobile to insight store (#4959) ([73341a3](https://github.com/coveo/ui-kit/commits/73341a3)), closes [#4959](https://github.com/coveo/ui-kit/issues/4959)
 - fix(atomic): don't redirect when hovering a instant result & pressing Enter (#4938) ([eea90a2](https://github.com/coveo/ui-kit/commits/eea90a2)), closes [#4938](https://github.com/coveo/ui-kit/issues/4938)
-- fix(atomic): using `_blank` target on custom recommendation link template opens two tabs on click (# ([de34ef6](https://github.com/coveo/ui-kit/commits/de34ef6)), closes [#4953](https://github.com/coveo/ui-kit/issues/4953) [/github.com/coveo/ui-kit/blob/master/packages/atomic/src/components/common/item-list/display-grid.tsx#L26](https://github.com//github.com/coveo/ui-kit/blob/master/packages/atomic/src/components/common/item-list/display-grid.tsx/issues/L26)
+- fix(atomic): using `_blank` target on custom recommendation link template opens two tabs on click (# ([de34ef6](https://github.com/coveo/ui-kit/commits/de34ef6)), closes [#4953](https://github.com/coveo/ui-kit/issues/4953) [/github.com/coveo/ui-kit/blob/main/packages/atomic/src/components/common/item-list/display-grid.tsx#L26](https://github.com//github.com/coveo/ui-kit/blob/main/packages/atomic/src/components/common/item-list/display-grid.tsx/issues/L26)
 
 ## 3.19.0 (2025-02-12)
 
@@ -747,7 +747,7 @@
 ## <small>3.6.2 (2024-10-23)</small>
 
 - chore(deps): bump rollup (#4525) ([874286e](https://github.com/coveo/ui-kit/commits/874286e)), closes [#4525](https://github.com/coveo/ui-kit/issues/4525)
-- fix(atomic): broken HTML because of formatting in CRGA markdown heading (#4522) ([9e15c6c](https://github.com/coveo/ui-kit/commits/9e15c6c)), closes [#4522](https://github.com/coveo/ui-kit/issues/4522) [/github.com/coveo/ui-kit/blob/master/packages/atomic/src/components/common/generated-answer/generated-content/markdown-utils.ts#L50](https://github.com//github.com/coveo/ui-kit/blob/master/packages/atomic/src/components/common/generated-answer/generated-content/markdown-utils.ts/issues/L50)
+- fix(atomic): broken HTML because of formatting in CRGA markdown heading (#4522) ([9e15c6c](https://github.com/coveo/ui-kit/commits/9e15c6c)), closes [#4522](https://github.com/coveo/ui-kit/issues/4522) [/github.com/coveo/ui-kit/blob/main/packages/atomic/src/components/common/generated-answer/generated-content/markdown-utils.ts#L50](https://github.com//github.com/coveo/ui-kit/blob/main/packages/atomic/src/components/common/generated-answer/generated-content/markdown-utils.ts/issues/L50)
 - fix(atomic): delete ./loader/package.json when building atomic (#4539) ([c39f716](https://github.com/coveo/ui-kit/commits/c39f716)), closes [#4539](https://github.com/coveo/ui-kit/issues/4539)
 - fix(atomic): fix layout issue on product variants with imageSize set to none (#4521) ([cbfca7f](https://github.com/coveo/ui-kit/commits/cbfca7f)), closes [#4521](https://github.com/coveo/ui-kit/issues/4521)
 - fix(atomic): prevent clicks on atomic-product-image indicators from opening the product page (#4534) ([4d53962](https://github.com/coveo/ui-kit/commits/4d53962)), closes [#4534](https://github.com/coveo/ui-kit/issues/4534)
