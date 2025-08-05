@@ -57,7 +57,9 @@ export default class QuanticCitation extends NavigationMixin(LightningElement) {
   connectedCallback() {
     const fileType = this.citation?.fields?.filetype;
     this.isHrefWithTextFragment =
-      !this.disableCitationAnchoring && supportedFileTypesForTextFragment.includes(fileType) && !!this.text;
+      !this.disableCitationAnchoring &&
+      supportedFileTypesForTextFragment.includes(fileType) &&
+      !!this.text;
   }
 
   renderedCallback() {
