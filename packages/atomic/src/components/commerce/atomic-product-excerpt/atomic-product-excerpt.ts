@@ -20,9 +20,6 @@ import styles from './atomic-product-excerpt.tw.css';
 
 /**
  * The `atomic-product-excerpt` component renders the excerpt of a product.
- *
- * @part expandable-text - The part that contains the product excerpt text.
- * @alpha
  */
 @customElement('atomic-product-excerpt')
 @bindings()
