@@ -1698,7 +1698,7 @@
     "tr": "{{query}} için {{total}} / {{first}} sonuç",
     "zh": "结果数 {{first}}，总数 {{total}}, 搜索 {{query}}",
     "zh-CN": "结果数 {{first}}，总数 {{total}}, 搜索 {{query}}",
-    "zh-TW": "結果數 {{first}}，總數 {{total}}, 搜索 {{query}}"
+    "zh-TW": "結果數 {{first}}，總數 {{total}}, 搜尋 {{query}}"
   },
   "showing-products-of-with-query_other": {
     "en": "Products {{first}}-{{last}} of {{total}} for {{query}}",
@@ -1752,7 +1752,7 @@
     "tr": "{{query}} için {{total}} / {{first}}-{{last}} sonuç",
     "zh": "结果数 {{first}}-{{last}}，总数 {{total}}, 搜索 {{query}}",
     "zh-CN": "结果数 {{first}}-{{last}}，总数 {{total}}, 搜索 {{query}}",
-    "zh-TW": "結果數 {{first}}-{{last}}，總數 {{total}}, 搜索 {{query}}"
+    "zh-TW": "結果數 {{first}}-{{last}}，總數 {{total}}, 搜尋 {{query}}"
   },
   "showing-products-of-load-more": {
     "en": "Showing {{last}} of {{total}} products",

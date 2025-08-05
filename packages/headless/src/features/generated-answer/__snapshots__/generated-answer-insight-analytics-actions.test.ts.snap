@@ -5,7 +5,7 @@ exports[`generated answer insight analytics actions > when analyticsMode is \`ne
   "Rga.AnswerAction",
   {
     "action": "copyToClipboard",
-    "answerId": "123",
+    "answerId": "456",
   },
 ]
 `;
@@ -15,7 +15,7 @@ exports[`generated answer insight analytics actions > when analyticsMode is \`ne
   "Rga.AnswerAction",
   {
     "action": "dislike",
-    "answerId": "123",
+    "answerId": "456",
   },
 ]
 `;
@@ -25,7 +25,7 @@ exports[`generated answer insight analytics actions > when analyticsMode is \`ne
   "Rga.AnswerAction",
   {
     "action": "collapse",
-    "answerId": "123",
+    "answerId": "456",
   },
 ]
 `;
@@ -35,7 +35,7 @@ exports[`generated answer insight analytics actions > when analyticsMode is \`ne
   "Rga.AnswerAction",
   {
     "action": "expand",
-    "answerId": "123",
+    "answerId": "456",
   },
 ]
 `;
@@ -45,7 +45,7 @@ exports[`generated answer insight analytics actions > when analyticsMode is \`ne
   "Rga.SubmitFeedback",
   {
     "additionalNotes": undefined,
-    "answerId": "123",
+    "answerId": "456",
     "correctAnswerUrl": undefined,
     "details": {
       "correctTopic": false,
@@ -63,7 +63,7 @@ exports[`generated answer insight analytics actions > when analyticsMode is \`ne
   "Rga.AnswerAction",
   {
     "action": "hide",
-    "answerId": "123",
+    "answerId": "456",
   },
 ]
 `;
@@ -73,7 +73,7 @@ exports[`generated answer insight analytics actions > when analyticsMode is \`ne
   "Rga.AnswerAction",
   {
     "action": "show",
-    "answerId": "123",
+    "answerId": "456",
   },
 ]
 `;
@@ -83,7 +83,7 @@ exports[`generated answer insight analytics actions > when analyticsMode is \`ne
   "Rga.AnswerReceived",
   {
     "answerGenerated": true,
-    "answerId": "123",
+    "answerId": "456",
   },
 ]
 `;
@@ -93,7 +93,7 @@ exports[`generated answer insight analytics actions > when analyticsMode is \`ne
   "Rga.AnswerReceived",
   {
     "answerGenerated": false,
-    "answerId": "123",
+    "answerId": "456",
   },
 ]
 `;
@@ -102,7 +102,7 @@ exports[`generated answer insight analytics actions > when analyticsMode is \`ne
 [
   "Rga.CitationHover",
   {
-    "answerId": "123",
+    "answerId": "456",
     "citationHoverTimeInMs": 100,
     "citationId": "citation_id",
     "itemMetadata": {
@@ -120,7 +120,7 @@ exports[`generated answer insight analytics actions > when analyticsMode is \`ne
   "Rga.AnswerAction",
   {
     "action": "like",
-    "answerId": "123",
+    "answerId": "456",
   },
 ]
 `;
@@ -129,7 +129,7 @@ exports[`generated answer insight analytics actions > when analyticsMode is \`ne
 [
   "Rga.CitationClick",
   {
-    "answerId": "123",
+    "answerId": "456",
     "citationId": "citation_id",
     "itemMetadata": {
       "title": "example title",

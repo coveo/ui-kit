@@ -32,6 +32,17 @@ export interface CommerceEngineDefinition<
  * @returns Three utility functions to fetch the initial state of the engine in SSR, hydrate the state in CSR,
  *  and a build function that can be used for edge cases requiring more control.
  *
+ * @remarks
+ * You can use the {@link InferStaticState} and {@link InferHydratedState} utility types with the returned engine definitions
+ * to infer the types of static and hydrated state for your controllers.
+ *
+ * @example
+ * ```ts
+ * const engineDefinition = defineCommerceEngine(engineConfig);
+ * type SearchStaticState = InferStaticState<typeof engineDefinition>;
+ * type SearchHydratedState = InferHydratedState<typeof engineDefinition>;
+ * ```
+ *
  * @group Engine
  */
 export function defineCommerceEngine<
