@@ -275,10 +275,12 @@ function insertNewValue(
   const indexToInsertAt =
     firstIdleIndex === -1 ? currentValues.length : firstIdleIndex;
 
-  const valuesBefore = currentValues.slice(0, indexToInsertAt);
-  const valuesAfter = currentValues.slice(indexToInsertAt + 1);
+  facetRequest.currentValues.splice(indexToInsertAt, 0, facetValue);
 
-  facetRequest.currentValues = [...valuesBefore, facetValue, ...valuesAfter];
+  if (firstIdleIndex > -1) {
+    facetRequest.currentValues.pop();
+  }
+
   facetRequest.numberOfValues = facetRequest.currentValues.length;
 }
 
