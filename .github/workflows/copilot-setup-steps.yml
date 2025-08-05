@@ -33,6 +33,5 @@ jobs:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
         with:
           fetch-depth: 0
-      - run: git branch main origin/main
       - uses: ./.github/actions/setup
         continue-on-error: true # Allow Copilot to keep on working even if it goofed up midway
