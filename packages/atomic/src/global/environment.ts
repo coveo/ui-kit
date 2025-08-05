@@ -1,4 +1,4 @@
-export interface AtomicEnvironment {
+interface AtomicEnvironment {
   version: string;
   headlessVersion: string;
 }
@@ -20,6 +20,10 @@ export function getAtomicEnvironment(
     version: process.env.VERSION!,
     headlessVersion,
   };
+}
+
+export function getAtomicVersion(): string {
+  return getAtomicEnvironment('').version;
 }
 
 export function setCoveoGlobal(
