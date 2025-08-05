@@ -8,7 +8,7 @@ import {
   type Search,
   type SearchState,
 } from '@coveo/headless/commerce';
-import {type CSSResultGroup, html, LitElement, unsafeCSS} from 'lit';
+import {html, LitElement} from 'lit';
 import {customElement, state} from 'lit/decorators.js';
 import {when} from 'lit/directives/when.js';
 import {bindStateToController} from '@/src/decorators/bind-state';
@@ -23,7 +23,6 @@ import {renderLoadMoreContainer} from '../../common/load-more/container';
 import {renderLoadMoreProgressBar} from '../../common/load-more/progress-bar';
 import {renderLoadMoreSummary} from '../../common/load-more/summary';
 import type {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface';
-import styles from './atomic-commerce-load-more-products.tw.css';
 
 /**
  * The `atomic-commerce-load-more-products` component allows the user to load additional products if more are available.
@@ -34,7 +33,8 @@ import styles from './atomic-commerce-load-more-products.tw.css';
  * @part progress-bar - The progress bar displaying a percentage of results shown over the total number of products available.
  * @part load-more-results-button - The "Load more products" button.
  *
- * @alpha
+ * @cssprop --atomic-more-results-progress-bar-color-from - Color of the start of the gradient for the load more results progress bar.
+ * @cssprop --atomic-more-results-progress-bar-color-to - Color of the end of the gradient for the load more results progress bar.
  */
 @customElement('atomic-commerce-load-more-products')
 @bindings()
@@ -43,8 +43,6 @@ export class AtomicCommerceLoadMoreProducts
   extends LitElement
   implements InitializableComponent<CommerceBindings>
 {
-  static styles: CSSResultGroup = [unsafeCSS(styles)];
-
   @state()
   bindings!: CommerceBindings;
 

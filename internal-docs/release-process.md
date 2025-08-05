@@ -25,7 +25,7 @@ Versions for any given commit are determined based on the [conventional commits]
 
 Specifically, a commit will determine its version by looking for the last scheduled release version and bumping it based on how breaking the changes are between then and the current commit. This ensures that implementers can safely update their dependencies on our packages without unexpectedly causing errors.
 
-When triggered, releases processes will execute a series of [Nx tasks](https://nx.dev/core-features/run-tasks). Some tasks are run at the root of the repository, and some will be run on each individual package.
+When triggered, releases processes will execute a series of [Turborepo tasks](https://turbo.build/repo/docs/core-concepts/monorepos/running-tasks). Some tasks are run at the root of the repository, and some will be run on each individual package.
 
 ## `release:phase0` (lock the main branch)
 
