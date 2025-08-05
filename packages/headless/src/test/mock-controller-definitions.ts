@@ -44,8 +44,8 @@ export function buildMockControllerWithInitialState(
  */
 export function defineMockController(): MockControllerDefinitionWithoutProps {
   return {
-    build: vi.fn((engine) => {
-      return buildMockController(engine);
+    build: vi.fn((_engine) => {
+      return buildMockController();
     }),
   };
 }
