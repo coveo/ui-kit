@@ -6,6 +6,7 @@ import {
   type CommerceEngine,
   type CommerceEngineConfiguration,
   type Context,
+  VERSION as HEADLESS_VERSION,
   type LogLevel,
   loadConfigurationActions,
   loadQueryActions,
@@ -84,7 +85,8 @@ export class AtomicCommerceInterface
   public store: CommerceStore;
   private interfaceController = new InterfaceController<CommerceEngine>(
     this,
-    'CoveoAtomic'
+    'CoveoAtomic',
+    HEADLESS_VERSION
   );
 
   @state() public error!: Error;
