@@ -328,13 +328,11 @@ test.describe('Default', () => {
     let firstValueText: string | RegExp;
 
     test.beforeEach(async ({breadbox, page}) => {
-      const expandButton = page.getByRole('button', {
+      const expandButton = await page.getByRole('button', {
         name: 'Expand the Date facet',
       });
-      if (await expandButton.isVisible()) {
-        await expandButton.click();
-      }
-      await breadbox.getFacetValue('dateRange').first().click();
+      await expandButton.click();
+      await breadbox.getFacetValue('dateRange').first().click(); //TODO: here
       firstValueText = (await breadbox
         .getFacetValue('dateRange')
         .first()
