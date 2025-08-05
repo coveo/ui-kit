@@ -76,5 +76,6 @@ export type InferControllerStaticStateMapFromDefinitionsWithSolutionType<
     ? never
     : K]: InferControllerStaticStateFromController<
     InferControllerFromDefinition<TControllers[K]>
-  >;
+  > &
+    InferControllerPropsFromDefinition<TControllers[K]>;
 };
