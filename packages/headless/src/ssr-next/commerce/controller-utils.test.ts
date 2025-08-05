@@ -1,1 +1,309 @@
-// TODO:
+import type {UnknownAction} from '@reduxjs/toolkit';
+import {beforeEach, describe, expect, it, vi} from 'vitest';
+import type {Controller} from '../../controllers/controller/headless-controller.js';
+import {buildMockCommerceState} from '../../test/mock-commerce-state.js';
+import {
+  buildMockController,
+  buildMockControllerWithInitialState,
+} from '../../test/mock-controller-definitions.js';
+import {buildMockCommerceEngine} from '../../test/mock-engine-v2.js';
+import * as utils from '../../utils/utils.js';
+import {HydratedControllerBuilder} from '../common/builders/hydrated-controller-builder.js';
+import {createStaticControllerBuilder} from '../common/builders/static-controller-builder.js';
+import {InvalidControllerDefinition} from '../common/errors.js';
+import {
+  buildControllerDefinitions,
+  createStaticState,
+  ensureAtLeastOneSolutionType,
+} from './controller-utils.js';
+import type {SSRCommerceEngine} from './factories/build-factory.js';
+import {SolutionType} from './types/controller-constants.js';
+import type {ControllerDefinition} from './types/controller-definitions.js';
+
+vi.mock('../../utils/utils.js', {spy: true});
+vi.mock('../common/builders/static-controller-builder.js', {spy: true});
+vi.mock('../common/builders/hydrated-controller-builder.js', {spy: true});
+
+type SolutionTypeAvailabilities = {
+  listing?: boolean;
+  search?: boolean;
+  standalone?: boolean;
+  recommendation?: boolean;
+};
+// TODO: move to mock fixture file
+const createMockControllerDefinitionWithoutProps = (
+  options?: SolutionTypeAvailabilities
+) => ({
+  build: vi.fn().mockReturnValue({
+    state: {},
+    subscribe: vi.fn(),
+  }),
+  //   TODO: test with options here below when set to false
+  listing: options?.listing ?? true,
+  search: options?.search ?? true,
+  standalone: options?.standalone ?? true,
+  recommendation: options?.recommendation ?? true,
+});
+
+const createMockControllerDefinitionWithProps = (
+  options?: SolutionTypeAvailabilities
+) => ({
+  buildWithProps: vi.fn().mockReturnValue({
+    state: {prop1: 'value1', prop2: 42},
+    subscribe: vi.fn(),
+  }),
+  //   TODO: test with options here below when set to false
+  listing: options?.listing ?? true,
+  search: options?.search ?? true,
+  standalone: options?.standalone ?? true,
+  recommendation: options?.recommendation ?? true,
+});
+
+describe('commerce controller-utils', () => {
+  let mockSearchActions: UnknownAction[];
+  let mockEngine: SSRCommerceEngine;
+
+  beforeEach(() => {
+    mockEngine = buildMockCommerceEngine(
+      buildMockCommerceState()
+    ) as SSRCommerceEngine;
+    mockSearchActions = [
+      {type: 'search/executeSearch/fulfilled', payload: {q: 'test'}},
+      {type: 'products/fetch/fulfilled', payload: {products: []}},
+    ];
+  });
+
+  afterEach(() => {
+    vi.clearAllMocks();
+  });
+
+  describe('#buildControllerDefinitions', () => {
+    let mockHydratedBuilder: {
+      setAdditionalArgs: ReturnType<typeof vi.fn>;
+      build: ReturnType<typeof vi.fn>;
+    };
+
+    const buildControllersWithDefaultSetup = () => {
+      const definitionsMap = {
+        controller1: createMockControllerDefinitionWithoutProps(),
+        controller2: createMockControllerDefinitionWithProps(),
+      };
+
+      buildControllerDefinitions({
+        definitionsMap,
+        engine: mockEngine,
+        solutionType: SolutionType.search,
+        propsMap: {
+          controller2: {initialState: {prop1: 'value1', prop2: 42}},
+        },
+      });
+    };
+
+    beforeEach(() => {
+      mockHydratedBuilder = {
+        setAdditionalArgs: vi.fn().mockReturnThis(),
+        build: vi.fn().mockReturnValue(buildMockController()),
+      };
+
+      // @ts-expect-error: do not care about mocking all the class methods
+      vi.mocked(HydratedControllerBuilder).mockReturnValue(mockHydratedBuilder);
+    });
+
+    it('should call #HydratedControllerBuilder as many times as there are definitions', () => {
+      buildControllersWithDefaultSetup();
+      expect(HydratedControllerBuilder).toHaveBeenCalledTimes(2);
+      expect(mockHydratedBuilder.build).toHaveBeenCalledTimes(2);
+    });
+
+    it('should call #setAdditionalArgs with solutionType for each controller', () => {
+      buildControllersWithDefaultSetup();
+      expect(mockHydratedBuilder.setAdditionalArgs).toHaveBeenCalledTimes(2);
+      expect(mockHydratedBuilder.setAdditionalArgs).toHaveBeenCalledWith([
+        SolutionType.search,
+      ]);
+    });
+
+    it('should call #HydratedControllerBuilder for the controller without props with the correct arguments', () => {
+      buildControllersWithDefaultSetup();
+      expect(HydratedControllerBuilder).toHaveBeenNthCalledWith(
+        1,
+        {
+          build: expect.any(Function),
+          listing: true,
+          search: true,
+          standalone: true,
+          recommendation: true,
+        },
+        mockEngine,
+        undefined
+      );
+    });
+
+    it('should call #HydratedControllerBuilder for the controller with props with the correct arguments', () => {
+      buildControllersWithDefaultSetup();
+      expect(HydratedControllerBuilder).toHaveBeenNthCalledWith(
+        2,
+        {
+          buildWithProps: expect.any(Function),
+          listing: true,
+          search: true,
+          standalone: true,
+          recommendation: true,
+        },
+        mockEngine,
+        {
+          initialState: {
+            prop1: 'value1',
+            prop2: 42,
+          },
+        }
+      );
+    });
+
+    describe('when the definition contains a mix of solution type controllers', () => {
+      let controller1: ControllerDefinition<Controller>;
+      let controller2: ControllerDefinition<Controller>;
+
+      beforeEach(() => {
+        controller1 = createMockControllerDefinitionWithoutProps({
+          search: true,
+          recommendation: false,
+        });
+        controller2 = createMockControllerDefinitionWithoutProps({
+          search: false,
+          recommendation: false,
+        });
+      });
+
+      it('should call #HydratedControllerBuilder for the controllers with the appropriate solution type', () => {
+        buildControllerDefinitions({
+          definitionsMap: {controller1, controller2},
+          engine: mockEngine,
+          solutionType: SolutionType.search,
+        });
+
+        // should only call for controller1 with listing and search
+        expect(HydratedControllerBuilder).toHaveBeenCalledTimes(1);
+      });
+
+      it('should call #HydratedControllerBuilder with the appropriate arguments', () => {
+        buildControllerDefinitions({
+          definitionsMap: {controller1, controller2},
+          engine: mockEngine,
+          solutionType: SolutionType.search,
+        });
+
+        expect(HydratedControllerBuilder).toHaveBeenCalledWith(
+          expect.objectContaining({
+            build: expect.any(Function),
+            search: true,
+          }),
+          mockEngine,
+          undefined
+        );
+      });
+
+      it('should not call #HydratedControllerBuilder if no controller is defined for the solution type', () => {
+        controller1 = createMockControllerDefinitionWithoutProps({
+          search: false,
+        });
+        controller2 = createMockControllerDefinitionWithoutProps({
+          search: false,
+        });
+
+        buildControllerDefinitions({
+          definitionsMap: {controller1, controller2},
+          engine: mockEngine,
+          solutionType: SolutionType.search,
+        });
+
+        expect(HydratedControllerBuilder).not.toHaveBeenCalled();
+      });
+    });
+  });
+
+  describe('#createStaticState', () => {
+    beforeEach(() => {
+      const mockStaticBuilder = {
+        withState: vi.fn().mockReturnThis(),
+        withKind: vi.fn().mockReturnThis(),
+        withInitialState: vi.fn().mockReturnThis(),
+        build: vi.fn().mockReturnValue({
+          state: {},
+        }),
+      };
+
+      vi.mocked(createStaticControllerBuilder).mockReturnValue(
+        mockStaticBuilder
+      );
+
+      const controllers = {
+        controller1: buildMockController(),
+        controller2: buildMockControllerWithInitialState(mockEngine, {
+          initialState: {prop1: 'value1', prop2: 42},
+        }),
+      };
+
+      createStaticState({
+        searchActions: mockSearchActions,
+        controllers,
+      });
+    });
+
+    it('should call #createStaticControllerBuilder as many times as there are controllers', () => {
+      expect(createStaticControllerBuilder).toHaveBeenCalledTimes(2);
+    });
+
+    it('should call #createStaticControllerBuilder with the correct arguments', () => {
+      expect(createStaticControllerBuilder).toHaveBeenNthCalledWith(
+        1,
+        expect.objectContaining({
+          state: {},
+        })
+      );
+
+      expect(createStaticControllerBuilder).toHaveBeenNthCalledWith(
+        2,
+        expect.objectContaining({
+          state: {prop1: 'value1', prop2: 42},
+        })
+      );
+    });
+
+    it('should call #clone for each search action with the proper arguments', () => {
+      expect(utils.clone).toHaveBeenCalledTimes(2);
+      expect(utils.clone).toHaveBeenNthCalledWith(1, mockSearchActions[0]);
+      expect(utils.clone).toHaveBeenNthCalledWith(2, mockSearchActions[1]);
+    });
+  });
+
+  describe('#ensureAtLeastOneSolutionType', () => {
+    it('should not throw when no options provided', () => {
+      expect(() => ensureAtLeastOneSolutionType()).not.toThrow();
+    });
+
+    it('should not throw when listing is true', () => {
+      expect(() =>
+        ensureAtLeastOneSolutionType({listing: true, search: false})
+      ).not.toThrow();
+    });
+
+    it('should not throw when search is true', () => {
+      expect(() =>
+        ensureAtLeastOneSolutionType({listing: false, search: true})
+      ).not.toThrow();
+    });
+
+    it('should not throw when both listing and search are true', () => {
+      expect(() =>
+        ensureAtLeastOneSolutionType({listing: true, search: true})
+      ).not.toThrow();
+    });
+
+    it('should throw InvalidControllerDefinition when both listing and search are false', () => {
+      expect(() =>
+        ensureAtLeastOneSolutionType({listing: false, search: false})
+      ).toThrow(InvalidControllerDefinition);
+    });
+  });
+});

@@ -6,33 +6,24 @@ import {
   buildMockControllerWithInitialState,
   defineMockController,
   defineMockControllerWithProps,
-  type MockControllerDefinitionWithoutProps,
-  type MockControllerDefinitionWithProps,
 } from '../../test/mock-controller-definitions.js';
 import {buildMockSearchEngine} from '../../test/mock-engine-v2.js';
 import {createMockState} from '../../test/mock-state.js';
 import * as utils from '../../utils/utils.js';
+import {HydratedControllerBuilder} from './builders/hydrated-controller-builder.js';
+import {createStaticControllerBuilder} from './builders/static-controller-builder.js';
 import {
   buildControllerDefinitions,
   createStaticState,
 } from './controller-utils.js';
-import type {EngineStaticState} from './types/engine.js';
-import type {
-  InferControllerStaticStateMapFromDefinitions,
-  InferControllersMapFromDefinition,
-} from './types/inference.js';
 
 vi.mock('../../utils/utils.js', {spy: true});
+vi.mock('./builders/static-controller-builder.js', {spy: true});
+vi.mock('./builders/hydrated-controller-builder.js', {spy: true});
 
 describe('controller-utils', () => {
-  type DefinitionsMap = {
-    controller1: MockControllerDefinitionWithoutProps;
-    controller2: MockControllerDefinitionWithProps;
-  };
   let mockSearchAction: UnknownAction;
   let mockEngine: CoreEngine;
-  let definitionsMap: DefinitionsMap;
-  let definition: InferControllersMapFromDefinition<DefinitionsMap>;
 
   beforeEach(() => {
     mockEngine = buildMockSearchEngine(createMockState());
@@ -43,13 +34,26 @@ describe('controller-utils', () => {
   });
 
   describe('#buildControllerDefinitions', () => {
+    let mockHydratedBuilder: {
+      setAdditionalArgs: ReturnType<typeof vi.fn>;
+      build: ReturnType<typeof vi.fn>;
+    };
+
     beforeEach(() => {
-      definitionsMap = {
+      mockHydratedBuilder = {
+        setAdditionalArgs: vi.fn().mockReturnThis(),
+        build: vi.fn().mockReturnValue(buildMockController()),
+      };
+
+      // @ts-expect-error: do not care about mocking all the class methods
+      vi.mocked(HydratedControllerBuilder).mockReturnValue(mockHydratedBuilder);
+
+      const definitionsMap = {
         controller1: defineMockController(),
         controller2: defineMockControllerWithProps(),
       };
 
-      definition = buildControllerDefinitions({
+      buildControllerDefinitions({
         definitionsMap,
         engine: mockEngine,
         propsMap: {
@@ -58,87 +62,91 @@ describe('controller-utils', () => {
       });
     });
 
-    it.skip('should use #build method for controllers without initial state', () => {
-      expect(definitionsMap.controller1.build).toHaveBeenCalledWith(mockEngine);
+    it('should call #HydratedControllerBuilder as many times as there are definitions', () => {
+      expect(HydratedControllerBuilder).toHaveBeenCalledTimes(2);
+      expect(mockHydratedBuilder.build).toHaveBeenCalledTimes(2);
     });
 
-    it.skip('should use #buildWithProps method for controllers with initial state', () => {
-      expect(definitionsMap.controller2.buildWithProps).toHaveBeenCalledWith(
-        mockEngine,
+    it('should call a #HydratedControllerBuilder for the controller without props with the correct arguments', () => {
+      const noProps = undefined;
+      expect(HydratedControllerBuilder).toHaveBeenNthCalledWith(
+        1,
         {
-          initialState: {prop1: 'value1', prop2: 42},
-        }
+          build: expect.any(Function),
+        },
+        mockEngine,
+        noProps
       );
     });
 
-    it.skip('should return a definition with 2 controllers', () => {
-      expect(Object.keys(definition).length).toBe(2);
-      expect(definition).toHaveProperty('controller');
-      expect(definition).toHaveProperty('controllerWithProps');
-    });
-
-    it.skip('should only add an initialState to controllers built with props', () => {
-      expect(Object.keys(definition.controller1)).not.contain('initialState');
-      expect(Object.keys(definition.controller2)).contain('initialState');
-    });
-
-    it.skip('should call #mapObject with the proper definition map', () => {
-      expect(utils.mapObject).toHaveBeenCalledWith(
-        definitionsMap,
-        expect.any(Function)
+    it('should call a #HydratedControllerBuilder for the controller with props with the correct arguments', () => {
+      expect(HydratedControllerBuilder).toHaveBeenNthCalledWith(
+        2,
+        {
+          buildWithProps: expect.any(Function),
+        },
+        mockEngine,
+        {
+          initialState: {
+            prop1: 'value1',
+            prop2: 42,
+          },
+        }
       );
     });
   });
 
   describe('#createStaticState', () => {
-    let controllers: InferControllersMapFromDefinition<DefinitionsMap>;
-    let staticState: EngineStaticState<
-      UnknownAction,
-      InferControllerStaticStateMapFromDefinitions<DefinitionsMap>
-    >;
-
     beforeEach(() => {
       mockSearchAction = {type: 'search', payload: {q: 'test'}};
-      controllers = {
-        controller1: buildMockController(mockEngine),
+      const mockStaticBuilder = {
+        withState: vi.fn().mockReturnThis(),
+        withKind: vi.fn().mockReturnThis(),
+        withInitialState: vi.fn().mockReturnThis(),
+        build: vi.fn().mockReturnValue({
+          state: {},
+        }),
+      };
+
+      vi.mocked(createStaticControllerBuilder).mockReturnValue(
+        mockStaticBuilder
+      );
+
+      const controllers = {
+        controller1: buildMockController(),
         controller2: buildMockControllerWithInitialState(mockEngine, {
           initialState: {prop1: 'value1', prop2: 42},
         }),
       };
-      staticState = createStaticState({
+      createStaticState({
         searchAction: mockSearchAction,
         controllers,
       });
     });
 
-    it('should return static state with controllers and searchAction', () => {
-      expect(staticState).toStrictEqual({
-        controllers: {
-          controller1: {
-            state: {},
-          },
-          controller2: {
-            state: {prop1: 'value1', prop2: 42},
-          },
-        },
-        searchAction: mockSearchAction,
-      });
+    it('should call #createStaticControllerBuilder as many times as there are controllers', () => {
+      expect(createStaticControllerBuilder).toHaveBeenCalledTimes(2);
     });
 
-    it('should call #clone 3 times with the proper arguments', () => {
-      expect(utils.clone).toHaveBeenCalledTimes(3);
+    it('should call #createStaticControllerBuilder with the correct arguments', () => {
+      expect(createStaticControllerBuilder).toHaveBeenNthCalledWith(
+        1,
+        expect.objectContaining({
+          state: {},
+        })
+      );
 
-      // Cloning the first controller state
-      expect(utils.clone).toHaveBeenNthCalledWith(1, {});
+      expect(createStaticControllerBuilder).toHaveBeenNthCalledWith(
+        2,
+        expect.objectContaining({
+          state: {prop1: 'value1', prop2: 42},
+        })
+      );
+    });
 
-      // Cloning the second controller state
-      expect(utils.clone).toHaveBeenNthCalledWith(2, {
-        prop1: 'value1',
-        prop2: 42,
-      });
-
-      // Cloning the search action
-      expect(utils.clone).toHaveBeenNthCalledWith(3, mockSearchAction);
+    it('should call #clone once with the proper arguments', () => {
+      expect(utils.clone).toHaveBeenCalledTimes(1);
+      expect(utils.clone).toHaveBeenCalledWith(mockSearchAction);
     });
   });
 });

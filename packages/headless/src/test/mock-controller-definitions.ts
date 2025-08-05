@@ -1,7 +1,8 @@
 import {vi} from 'vitest';
-import type {CoreEngine} from '../app/engine.js';
+import type {CoreEngine, CoreEngineNext} from '../app/engine.js';
 import type {SearchEngine} from '../app/search-engine/search-engine.js';
 import type {Controller} from '../controllers/controller/headless-controller.js';
+import type {SSRCommerceEngine} from '../ssr/commerce/factories/build-factory.js';
 import type {
   ControllerDefinitionWithoutProps,
   ControllerDefinitionWithProps,
@@ -21,7 +22,7 @@ export interface MockControllerDefinitionWithProps
     MockController
   > {}
 
-export function buildMockController(_engine: CoreEngine): Controller {
+export function buildMockController(): Controller {
   return {
     subscribe: vi.fn(),
     state: {},
@@ -29,7 +30,7 @@ export function buildMockController(_engine: CoreEngine): Controller {
 }
 
 export function buildMockControllerWithInitialState(
-  _engine: CoreEngine,
+  _engine: CoreEngine | CoreEngineNext | SSRCommerceEngine,
   props: MockController
 ): Controller {
   return {
