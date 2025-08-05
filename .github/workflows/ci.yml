@@ -206,6 +206,8 @@ jobs:
           fetch-depth: 0
           filter: blob:none
       - uses: ./.github/actions/setup
+      - name: Beep-boop I am turbo
+        run: git rev-parse main
       - name: Install Playwright Browsers
         run: npx playwright install --with-deps
       - run: npx turbo test --affected -vvv
