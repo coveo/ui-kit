@@ -7,6 +7,8 @@ import {LightningElement, api} from 'lwc';
 const minimumTooltipDisplayDurationMs = 1000;
 const debounceDurationBeforeHoverMs = 200;
 
+const supportedFileTypesForTextFragment = ['html', 'SalesforceItem'];
+
 /**
  * The `QuanticCitation` component renders an individual citation.
  * @fires CustomEvent#quantic__citationhover
@@ -55,7 +57,7 @@ export default class QuanticCitation extends NavigationMixin(LightningElement) {
   connectedCallback() {
     const fileType = this.citation?.fields?.filetype;
     this.isHrefWithTextFragment =
-      !this.disableCitationAnchoring && fileType === 'html' && !!this.text;
+      !this.disableCitationAnchoring && supportedFileTypesForTextFragment.includes(fileType) && !!this.text;
   }
 
   renderedCallback() {

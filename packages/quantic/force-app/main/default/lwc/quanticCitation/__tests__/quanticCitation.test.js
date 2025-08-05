@@ -29,7 +29,7 @@ const exampleCitation = {
 const exampleSalesforceCitation = {
   ...exampleCitation,
   fields: {
-    ...exampleCitation.fields,
+    filetype: 'SalesforceItem',
     sfid: '123',
   },
 };
