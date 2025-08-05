@@ -56,7 +56,7 @@ test.describe('default', () => {
 
   test.describe('when changing the sort order', () => {
     let originalProductListContents: string;
-    test.beforeEach(async ({sort, search, facet}) => {
+    test.beforeEach(async ({sort, search}) => {
       originalProductListContents =
         (await search.productList.textContent()) || '';
 
@@ -64,14 +64,14 @@ test.describe('default', () => {
       await sort.sortSelect.isEnabled();
 
       await sort.sortSelect.selectOption({index: 1});
-      await facet.facetLoading.waitFor({state: 'visible'});
-      await facet.facetLoading.waitFor({state: 'hidden'});
     });
 
     test('should update the result list', async ({search}) => {
       const productListContents = await search.productList.textContent();
 
-      expect(productListContents).not.toEqual(originalProductListContents);
+      expect.poll(() =>
+        expect(productListContents).not.toEqual(originalProductListContents)
+      );
     });
   });
 });

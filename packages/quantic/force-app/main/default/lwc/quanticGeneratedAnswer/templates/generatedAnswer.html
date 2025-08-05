@@ -25,7 +25,6 @@
                 question=""
                 hide-explain-why-button
                 hide-labels
-                data-cy="generated-answer__feedback"
               ></c-quantic-feedback>
               <c-quantic-generated-answer-copy-to-clipboard
                 data-testid="generated-answer__copy-to-clipboard"
@@ -44,28 +43,21 @@
         </div>
       </div>
       <template lwc:if={isVisible}>
-        <div
-          data-cy="generated-answer__content"
-          class="generated-answer__content slds-var-m-top_medium"
-        >
-          <div data-testid="generated-answer__answer" class={generatedAnswerClass}>
+        <div class="generated-answer__content slds-var-m-top_medium">
+          <div
+            data-testid="generated-answer__answer"
+            class={generatedAnswerClass}
+          >
             <c-quantic-generated-answer-content
               answer-content-format={answerContentFormat}
               answer={answer}
               is-streaming={isStreaming}
               onquantic__answercontentupdated={handleAnswerContentUpdated}
-              data-cy="generated-answer__content"
             >
             </c-quantic-generated-answer-content>
           </div>
-          <div
-            data-cy="generated-answer__footer"
-            class={generatedAnswerFooterCssClass}
-          >
-            <div
-              class={generatedAnswerFooterRowClass}
-              data-cy="generated-answer__footer-row"
-            >
+          <div class={generatedAnswerFooterCssClass}>
+            <div class={generatedAnswerFooterRowClass}>
               <template lwc:if={shouldDisplayCitations}>
                 <div class="slds-var-m-top_small">
                   <c-quantic-source-citations
@@ -80,7 +72,6 @@
             </div>
             <div
               class={generatedAnswerFooterRowClass}
-              data-cy="generated-answer__footer-row"
             >
               <template lwc:if={shouldShowCollapseGeneratingMessage}>
                 <div
@@ -117,18 +108,19 @@
     </div>
   </template>
   <template lwc:if={shouldDisplayCustomNoAnswerMessage}>
-      <div data-testid="generated-answer__no-answer-card" class="slds-box">
-        <div class="generated-answer__card-header slds-grid">
-          <span class="generated-answer__badge slds-var-p-around_x-small slds-text-title_bold"
-            >{labels.generatedAnswerForYou}</span
-          >
-        </div>
-          <div class="generated-answer__content slds-var-m-top_medium">
-            <div class={generatedAnswerClass}>
-              <slot name="no-answer-message"></slot>
-            </div>
-          </div>
+    <div data-testid="generated-answer__no-answer-card" class="slds-box">
+      <div class="generated-answer__card-header slds-grid">
+        <span
+          class="generated-answer__badge slds-var-p-around_x-small slds-text-title_bold"
+          >{labels.generatedAnswerForYou}</span
+        >
       </div>
+      <div class="generated-answer__content slds-var-m-top_medium">
+        <div class={generatedAnswerClass}>
+          <slot name="no-answer-message"></slot>
+        </div>
+      </div>
+    </div>
   </template>
   <div class="slds-hide">
     <slot name="no-answer-message"></slot>

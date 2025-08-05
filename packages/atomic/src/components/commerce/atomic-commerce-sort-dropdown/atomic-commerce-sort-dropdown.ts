@@ -8,7 +8,7 @@ import {
   type Sort,
   type SortState,
 } from '@coveo/headless/commerce';
-import {type CSSResultGroup, html, LitElement, unsafeCSS} from 'lit';
+import {html, LitElement} from 'lit';
 import {customElement, state} from 'lit/decorators.js';
 import {guard} from 'lit/directives/guard.js';
 import {map} from 'lit/directives/map.js';
@@ -24,7 +24,6 @@ import {renderSortSelect} from '../../common/sort/select';
 import {sortGuard} from '../../common/sort/sort-guard';
 import type {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface';
 import {getSortByLabel, renderCommerceSortOption} from '../sort/option';
-import styles from './atomic-commerce-sort-dropdown.tw.css';
 
 /**
  * The `atomic-commerce-sort-dropdown` component renders a dropdown that the end user can interact with to select the criteria to use when sorting products.
@@ -59,8 +58,6 @@ export class AtomicCommerceSortDropdown
   searchOrListingState?: SearchState | ProductListingState;
 
   @state() error!: Error;
-
-  static styles: CSSResultGroup = [unsafeCSS(styles)];
 
   public initialize() {
     if (this.bindings.interfaceElement.type === 'product-listing') {

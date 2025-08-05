@@ -20,7 +20,7 @@ import successTemplate from './success.html';
  * The `QuanticFeedbackModal` component overlays a message modal on top of the current app window, the modal contains a form that allows the user to give feedback.
  *
  * Under the hood, the component relies on a [`lightningModal`](https://developer.salesforce.com/docs/component-library/bundle/lightning-modal/documentation) component.
- * For an example of how to use the `QuanticFeedbackModal` component, see the [`quanticSmartSnippet`](https://github.com/coveo/ui-kit/blob/master/packages/quantic/force-app/main/default/lwc/quanticSmartSnippet/quanticSmartSnippet.js) implementation.
+ * For an example of how to use the `QuanticFeedbackModal` component, see the [`quanticSmartSnippet`](https://github.com/coveo/ui-kit/blob/main/packages/quantic/force-app/main/default/lwc/quanticSmartSnippet/quanticSmartSnippet.js) implementation.
  *
  * @category Search
  * @category Insight Panel

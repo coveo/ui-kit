@@ -5,8 +5,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "nx build",
-    "build:next": "next build",
+    "build": "next build",
     "prod": "next start",
     "lint": "next lint",
     "e2e": "cypress run --browser chrome --e2e --project ../ --env NEXTJS_ROUTER=pages",
@@ -19,10 +18,9 @@
     "react-dom": "19.1.0"
   },
   "devDependencies": {
-    "@types/node": "22.16.4",
+    "@types/node": "22.16.5",
     "@types/react": "19.1.1",
     "@types/react-dom": "19.1.2",
-    "eslint": "8.57.1",
     "typescript": "5.8.3"
   }
 }

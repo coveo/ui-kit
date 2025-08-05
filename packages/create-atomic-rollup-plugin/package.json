@@ -1,0 +1,40 @@
+{
+  "name": "@coveo/create-atomic-rollup-plugin",
+  "version": "1.1.1",
+  "description": "Rollup plugin for resolving Coveo Atomic dependencies from CDN or npm",
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "/dist"
+  ],
+  "scripts": {
+    "build": "npm run clean && npm run build:ts",
+    "clean": "rimraf dist",
+    "build:ts": "tsc -p tsconfig.json",
+    "lint": "npx @biomejs/biome check .",
+    "release:phase3": "npm run-script -w=@coveo/ci npm-publish",
+    "release:phase1": "npm run-script -w=@coveo/ci bump",
+    "promote:npm:latest": "npm run-script -w=@coveo/ci promote-npm-prod"
+  },
+  "keywords": [
+    "coveo",
+    "atomic",
+    "rollup",
+    "plugin",
+    "bundler"
+  ],
+  "author": "Coveo",
+  "license": "Apache-2.0",
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/coveo/ui-kit.git",
+    "directory": "packages/create-atomic-rollup-plugin"
+  },
+  "devDependencies": {
+    "typescript": "5.8.3"
+  }
+}

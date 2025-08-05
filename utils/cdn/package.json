@@ -4,16 +4,15 @@
   "authors": "Coveo",
   "version": "1.0.0",
   "type": "module",
-  "scripts": {},
+  "scripts": {
+    "serve": "node ./scripts/serve.mjs",
+    "deploy": "node ./scripts/deploy-local-cdn.mjs"
+  },
   "engines": {
     "node": ">=22.14.0"
   },
   "devDependencies": {
-    "@coveo/atomic": "3.30.0",
-    "@coveo/atomic-hosted-page": "1.1.31",
-    "@coveo/atomic-react": "3.2.52",
-    "@coveo/bueno": "1.0.22",
-    "@coveo/headless": "3.27.5",
-    "@coveo/shopify": "1.7.5"
+    "ncp": "2.0.0",
+    "chalk": "5.4.1"
   }
 }

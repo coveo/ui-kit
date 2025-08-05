@@ -1,7 +1,7 @@
 import {closest} from '@/src/utils/dom-utils';
 import {ComponentInterface, getElement} from '@stencil/core';
 import {buildCustomEvent} from '../../../utils/event-utils';
-import {AnyItem} from '../interface/item';
+import {AnyItem} from './unfolded-item';
 import {
   ItemDisplayDensity,
   ItemDisplayImageSize,

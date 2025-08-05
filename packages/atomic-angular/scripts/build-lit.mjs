@@ -50,7 +50,7 @@ export class ${declaration.name} {
   constructor(c: ChangeDetectorRef, el: ElementRef, protected z: NgZone) {
     c.detach();
     this.el = el.nativeElement;
-    ${declaration.events.length ? `proxyOutputs(this, this.el, [${declaration.events.map((event) => `'${event.name}'`).join(', ')}]);` : ''}
+    ${declaration.events?.length ? `proxyOutputs(this, this.el, [${declaration.events.map((event) => `'${event.name}'`).join(', ')}]);` : ''}
   }
 }
 
@@ -61,7 +61,7 @@ ${(declaration.events || [])
 }
 `;
 
-atomicAngularComponentFileContent = `${atomicAngularComponentFileContent.replace(new RegExp(`${startTag}.*?${endTag}`, 'gm'), '').trimEnd()}\n\n${startTag}\n`;
+atomicAngularComponentFileContent = `${atomicAngularComponentFileContent.replace(new RegExp(`${startTag.replaceAll('/', '\\/')}.*?${endTag.replaceAll('/', '\\/')}`, 'gms'), '').trimEnd()}\n\n${startTag}\n`;
 
 function processLitDeclaration(declaration) {
   atomicAngularComponentFileContent += declarationToProxyCmp(
@@ -77,7 +77,7 @@ function processNonLitDeclaration(declaration) {
 
   const regex = new RegExp(
     `@ProxyCmp\\(\\{([^}]*)\\}\\)\\s*\\n@Component\\(\\{([^}]*)\\}\\)\\s*\\nexport class\\s+${declaration.name}\\b`,
-    'gm'
+    'gms'
   );
 
   if (!regex.test(atomicAngularComponentFileContent)) {
