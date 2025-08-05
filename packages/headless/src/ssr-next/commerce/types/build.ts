@@ -15,11 +15,13 @@ import type {
   EngineDefinitionControllersPropsOption,
 } from './controller-definitions.js';
 
-export interface BuildOptions<TEngineOptions> {
+interface BuildOptions<TEngineOptions> {
   extend?: OptionsExtender<TEngineOptions>;
 }
 
-// TODO: KIT-4610: Remove this type
+/**
+ * @internal
+ */
 export type Build<
   TEngineOptions,
   TControllersMap extends ControllersMap,
