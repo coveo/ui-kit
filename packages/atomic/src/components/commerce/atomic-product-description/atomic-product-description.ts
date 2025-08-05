@@ -69,7 +69,9 @@ export class AtomicProductDescription
   })
   public isCollapsible = true;
 
-  initialize() {}
+  initialize() {
+    this.validateProps();
+  }
 
   createRenderRoot() {
     return this;
