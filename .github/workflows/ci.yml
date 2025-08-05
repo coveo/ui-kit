@@ -29,6 +29,7 @@ jobs:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
         with:
           fetch-depth: 0
+      - run: git branch main origin/main
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         with:
           node-version-file: ".nvmrc"
@@ -133,6 +134,7 @@ jobs:
         with:
           fetch-depth: 0
           filter: blob:none
+      - run: git branch main origin/main
       - uses: ./.github/actions/setup
       - name: Get affected projects
         id: set
@@ -205,8 +207,8 @@ jobs:
         with:
           fetch-depth: 0
           filter: blob:none
+      - run: git branch main origin/main
       - uses: ./.github/actions/setup
-      - run: git remote set-head origin --auto
       - name: Install Playwright Browsers
         run: npx playwright install --with-deps
       - run: npx turbo test --affected -vvv
@@ -276,6 +278,7 @@ jobs:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
         with:
           fetch-depth: 0
+      - run: git branch main origin/main
       - uses: ./.github/actions/setup
       - run: npm run build
       - name: Identify E2E Test Files to run
@@ -620,6 +623,7 @@ jobs:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
         with:
           fetch-depth: 0
+      - run: git branch main origin/main
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         with:
           registry-url: "https://registry.npmjs.org"
@@ -652,6 +656,7 @@ jobs:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
         with:
           fetch-depth: 0
+      - run: git branch main origin/main
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         with:
           registry-url: "https://registry.npmjs.org"
@@ -786,6 +791,7 @@ jobs:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
         with:
           fetch-depth: 0
+      - run: git branch main origin/main
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         with:
           registry-url: "https://registry.npmjs.org"
@@ -818,6 +824,7 @@ jobs:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
         with:
           fetch-depth: 0
+      - run: git branch main origin/main
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         with:
           registry-url: "https://registry.npmjs.org"
