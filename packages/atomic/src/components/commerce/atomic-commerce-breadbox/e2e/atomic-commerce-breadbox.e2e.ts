@@ -28,7 +28,7 @@ test.describe('Default', () => {
       },
       {
         facetType: 'date range',
-        filter: '&df-cat_date_added=2021/01/01@00:00:00..2021/12/31@23:59:59',
+        filter: '&df-cat_date_added=2021/01/01@12:00:00..2021/12/31@12:00:00',
         breadcrumbLabel: 'Date:2021-01-01 to 2021-12-31',
       },
       {
