@@ -25,7 +25,9 @@ async function isPublished(name, version, tag = version) {
   }
 }
 
-const isPrerelease = process.env.IS_PRERELEASE === 'true';
+const shouldProvideProvenance =
+  !isPrerelease &&
+  process.env.npm_config_registry !== 'https://npm.pkg.github.com';
 const tagSuffix = process.env.TAG_SUFFIX || '';
 const shouldProvideProvenance =
   process.env.npm_config_registry !== 'https://npm.pkg.github.com';
