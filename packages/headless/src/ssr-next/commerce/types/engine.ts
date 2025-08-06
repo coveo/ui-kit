@@ -4,6 +4,7 @@ import type {EngineConfiguration} from '../../../app/engine-configuration.js';
 import type {NavigatorContextProvider} from '../../../app/navigator-context-provider.js';
 import type {Controller} from '../../../controllers/controller/headless-controller.js';
 import type {ControllerStaticStateMap} from '../../common/types/controllers.js';
+import type {BakeInControllers} from '../../common/types/engine.js';
 import type {SSRCommerceEngine} from '../factories/build-factory.js';
 import type {Build} from './build.js';
 import type {SolutionType} from './controller-constants.js';
@@ -76,7 +77,8 @@ export interface CommerceEngineDefinition<
    * Fetches the hydrated state on the client side using your engine definition and the static state.
    */
   hydrateStaticState: HydrateStaticState<
-    InferControllersMapFromDefinition<TControllers, TSolutionType>,
+    InferControllersMapFromDefinition<TControllers, TSolutionType> &
+      BakeInControllers,
     UnknownAction,
     InferControllerPropsMapFromDefinitions<TControllers>,
     TControllers,
@@ -147,5 +149,5 @@ export type BuildResult<
   TControllerDefinitions extends CommerceControllerDefinitionsMap,
 > = {
   engine: SSRCommerceEngine;
-  controllers: Controllers<TControllerDefinitions>;
+  controllers: Controllers<TControllerDefinitions> & BakeInControllers;
 };

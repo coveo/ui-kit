@@ -12,10 +12,14 @@ import {
   createWaitForActionMiddlewareForRecommendation,
 } from '../../../utils/utils.js';
 import type {ControllersPropsMap} from '../../common/types/controllers.js';
+import type {BakeInControllers} from '../../common/types/engine.js';
 import {buildControllerDefinitions} from '../controller-utils.js';
 import {SolutionType} from '../types/controller-constants.js';
 import type {ControllerDefinitionsMap} from '../types/controller-definitions.js';
-import type {InferControllerPropsMapFromDefinitions} from '../types/controller-inference.js';
+import type {
+  InferControllerPropsMapFromDefinitions,
+  InferControllersMapFromDefinition,
+} from '../types/controller-inference.js';
 import type {
   BuildParameters,
   CommerceControllerDefinitionsMap,
@@ -178,7 +182,8 @@ export const buildFactory =
       propsMap: (buildOptions && 'controllers' in buildOptions
         ? buildOptions.controllers
         : {}) as InferControllerPropsMapFromDefinitions<TControllerDefinitions>,
-    });
+    }) as InferControllersMapFromDefinition<TControllerDefinitions, T> &
+      BakeInControllers;
 
     return {
       engine,
