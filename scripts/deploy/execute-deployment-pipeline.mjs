@@ -78,7 +78,7 @@ function getResolveVariableString(version, packageName) {
 
 function generateCloudFrontInvalidationPaths() {
   const invalidationVariablePath =
-    './infrastructure/terraform/ui-kit/@default.tfvars';
+    './infrastructure/terraform/ui-kit/default.tfvars';
   const s3basePath = '/proda/StaticCDN';
   const pathsToInvalidate = [];
   for (const {s3Dir, version} of packagesAndVersions) {
