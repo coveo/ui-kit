@@ -18,6 +18,12 @@ import type {
   InferControllersMapFromDefinition,
 } from './inference.js';
 import type {HasKeys} from './utilities.js';
+import {Cart} from '../../commerce/controllers/cart/headless-cart.ssr.js';
+import {Context} from '../../commerce/controllers/context/headless-context.ssr.js';
+import {
+  ParameterManager,
+  Parameters,
+} from '../../commerce/controllers/parameter-manager/headless-core-parameter-manager.ssr.js';
 
 export type EngineDefinitionOptions<
   TOptions extends {configuration: EngineConfiguration},
@@ -75,12 +81,19 @@ export interface EngineDefinition<
   ) => void;
 }
 
+// TODO: should be specific to commerce and search
+export interface BakeInControllers {
+  parameterManager: ParameterManager<Parameters>;
+  context: Context;
+  cart: Cart;
+}
+
 export interface EngineDefinitionBuildResult<
   TEngine extends CoreEngine | CoreEngineNext,
-  TControllers extends ControllersMap,
+  TControllers extends ControllersMap, // TODO: check if can add the backedin controller in the controllerMaps
 > {
   engine: TEngine;
-  controllers: TControllers;
+  controllers: TControllers & BakeInControllers;
 }
 
 export type EngineDefinitionControllersPropsOption<

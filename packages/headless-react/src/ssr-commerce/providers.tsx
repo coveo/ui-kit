@@ -73,6 +73,7 @@ export function buildProviderWithDefinition<
       for (const [key, controller] of Object.entries(controllers)) {
         const typedController = controller as ControllerWithKind;
 
+        // TODO: not needed anymore since can use the same state for static and hydrated method
         switch (typedController._kind) {
           case Kind.Cart: {
             const cart = getController<Cart>(controllers, key);

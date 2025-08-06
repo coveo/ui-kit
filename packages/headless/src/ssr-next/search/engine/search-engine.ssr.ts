@@ -28,6 +28,9 @@ import type {
   InferControllerPropsMapFromDefinitions,
   InferControllerStaticStateMapFromDefinitions,
 } from '../../common/types/inference.js';
+import {defineContext} from '../controllers/context/headless-context.ssr.js';
+import {defineSearchParameterManager} from '../controllers/search-parameter-manager/headless-search-parameter-manager.ssr.js';
+import {getSampleEngineConfiguration} from '../../../app/engine-configuration.js';
 
 /**
  * The SSR search engine.
@@ -187,3 +190,61 @@ export function defineSearchEngine<
     setNavigatorContextProvider,
   };
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*
+============================================================
+🚀 SSR Search Engine Demo 🚀
+============================================================
+
+This demo showcases how to use the SSR Search Engine utilities for server-side rendering.
+
+Key Steps:
+1️⃣ Define your engine and controllers using `defineSearchEngine`.
+2️⃣ Fetch the static state for SSR with `fetchStaticState`.
+3️⃣ Hydrate the state on the client with `hydrateStaticState`.
+
+============================================================
+*/
+
+async () => {
+  // 1️⃣ Define the SSR search engine and controllers
+  const engineDefinition = defineSearchEngine({
+    configuration: getSampleEngineConfiguration(),
+    controllers: {
+      paramManager: defineSearchParameterManager(),
+      context: defineContext(),
+    },
+  });
+
+  const {fetchStaticState, hydrateStaticState} = engineDefinition;
+
+  // 2️⃣ Fetch static state for SSR
+  const staticState = await fetchStaticState({
+    controllers: {
+      paramManager: {
+        initialState: {parameters: {q: 'test'}},
+      },
+      context: {
+        initialState: {values: {}},
+      },
+    },
+  });
+
+  // 3️⃣ Hydrate the state on the client
+  await hydrateStaticState(staticState);
+};

@@ -2,8 +2,25 @@
  * Utility functions to be used for Commerce Server Side Rendering.
  */
 
+import {getSampleCommerceEngineConfiguration} from '../../../app/commerce-engine/commerce-engine-configuration.js';
 import type {NavigatorContextProvider} from '../../../app/navigator-context-provider.js';
 import type {Controller} from '../../../controllers/controller/headless-controller.js';
+import {definePagination} from '../controllers/pagination/headless-core-commerce-pagination.ssr.js';
+import {
+  ContextDefinition,
+  defineContext,
+} from '../controllers/context/headless-context.ssr.js';
+import {
+  defineParameterManager,
+  ParameterManagerDefinition,
+} from '../controllers/parameter-manager/headless-core-parameter-manager.ssr.js';
+import {
+  CartDefinition,
+  defineCart,
+  defineCustomController,
+} from '../controllers/cart/headless-cart.ssr.js';
+import {defineProductList} from '../controllers/product-list/headless-product-list.ssr.js';
+import {defineRecommendations} from '../controllers/recommendations/headless-recommendations.ssr.js';
 import type {CommerceEngineDefinitionOptions} from '../factories/build-factory.js';
 import {hydratedStaticStateFactory} from '../factories/hydrated-state-factory.js';
 import {hydratedRecommendationStaticStateFactory} from '../factories/recommendation-hydrated-state-factory.js';
@@ -70,22 +87,47 @@ export function defineCommerceEngine<
     engineOptions.configuration.accessToken = accessToken;
   };
 
+  // TODO: runtime validation to ensure the user did not enter controllers with the names of context, cart and parameterManager
+  const validateControllerNames = (controllers: Record<string, unknown>) => {
+    const reservedNames = ['context', 'cart', 'parameterManager'];
+    const invalidNames = Object.keys(controllers).filter((name) =>
+      reservedNames.includes(name)
+    );
+    if (invalidNames.length > 0) {
+      throw new Error(
+        `Reserved controller names found: ${invalidNames.join(', ')}. Please use different controller names than ${reservedNames.join(', ')}.`
+      );
+    }
+  };
+  controllerDefinitions && validateControllerNames(controllerDefinitions);
+
+  const augmentedControllerDefinitions = {
+    ...controllerDefinitions,
+    parameterManager: defineParameterManager(),
+    context: defineContext(),
+    cart: defineCart(),
+  } as TControllerDefinitions & {
+    parameterManager: ParameterManagerDefinition<{listing: true; search: true}>; // TODO: KIT-4611: stop exposing this TOption param
+    context: ContextDefinition;
+    cart: CartDefinition;
+  };
+
   const fetchStaticState = fetchStaticStateFactory<TControllerDefinitions>(
-    controllerDefinitions,
+    augmentedControllerDefinitions,
     getOptions()
   );
   const hydrateStaticState = hydratedStaticStateFactory<TControllerDefinitions>(
-    controllerDefinitions,
+    augmentedControllerDefinitions,
     getOptions()
   );
   const fetchRecommendationStaticState =
     fetchRecommendationStaticStateFactory<TControllerDefinitions>(
-      controllerDefinitions,
+      augmentedControllerDefinitions,
       getOptions()
     );
   const hydrateRecommendationStaticState =
     hydratedRecommendationStaticStateFactory<TControllerDefinitions>(
-      controllerDefinitions,
+      augmentedControllerDefinitions,
       getOptions()
     );
   const commonMethods = {
@@ -124,3 +166,61 @@ export function defineCommerceEngine<
     >,
   };
 }
+
+async function main() {
+  const {
+    listingEngineDefinition,
+    searchEngineDefinition,
+    standaloneEngineDefinition,
+    recommendationEngineDefinition,
+  } = defineCommerceEngine({
+    controllers: {
+      // param: defineParameterManager(),
+      // context: defineContext(),
+      // cart: defineCart(),
+      // TODO: add warning if the user tries to register parameterManager, context, or cart
+      customController: defineCustomController(),
+      products: defineProductList(),
+      context: defineProductList(), // should throw an error
+      pagination: definePagination({
+        options: {
+          pageSize: 1,
+        },
+      }),
+      rec1: defineRecommendations({
+        options: {
+          slotId: 's',
+        },
+      }),
+    },
+    configuration: getSampleCommerceEngineConfiguration(),
+  });
+
+  const staticState = await listingEngineDefinition.fetchStaticState({
+    cart: {
+      items: [],
+    },
+    country: 'CA',
+    currency: 'CAD',
+    language: 'fr',
+    url: '/products/laptops',
+    controllers: {
+      customController: {
+        foo: 'bar',
+      },
+    },
+  });
+  // console.log('*********************');
+  // console.log('00000', staticState.controllers.context);
+  // console.log('*********************');
+
+  const hydrated =
+    await listingEngineDefinition.hydrateStaticState(staticState);
+  // TODO: should always be included in the controller list RETURN ONLY !!!!!!
+  // That means update the hydrateStatic return type to contains those
+  console.log('********************ssssss*');
+  console.log(hydrated.controllers);
+  console.log('*********************');
+}
+
+main();

@@ -36,6 +36,7 @@ export function fetchRecommendationStaticStateFactory<
     return [];
   };
 
+  // TODO: apply the same wiring logic as in search and listing
   return async (
     ...params: FetchStaticStateParameters<TControllerDefinitions>
   ) => {
@@ -48,6 +49,7 @@ export function fetchRecommendationStaticStateFactory<
     )(SolutionType.recommendation);
 
     const {engine, controllers} = (await solutionTypeBuild(
+      // TODO: apply the same wiring logic as in search and listing
       ...params
     )) as BuildResult<TControllerDefinitions>;
 

@@ -60,6 +60,7 @@ export interface ControllerDefinitionWithoutProps<
   build(engine: SSRCommerceEngine, solutionType?: SolutionType): TController;
 }
 
+// TODO: deprecate this type since no longer needed
 export interface ControllerWithKind extends Controller {
   _kind: Kind;
 }
