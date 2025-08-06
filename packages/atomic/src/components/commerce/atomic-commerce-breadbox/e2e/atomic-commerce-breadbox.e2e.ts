@@ -28,8 +28,8 @@ test.describe('Default', () => {
       },
       {
         facetType: 'date range',
-        filter: '&df-date=2024/05/27@14:32:01..2025/05/27@14:32:01',
-        breadcrumbLabel: 'Date: 2024-05-27 to 2025-05-27',
+        filter: '&df-cat_date_added=2021/01/01@12:00:00..2021/12/31@12:00:00',
+        breadcrumbLabel: 'Date: 2021-01-01 to 2021-12-31',
       },
       {
         facetType: 'category',
@@ -320,8 +320,7 @@ test.describe('Default', () => {
   test.describe('when a date range facet value is selected', () => {
     let firstValueText: string | RegExp;
 
-    test.beforeEach(async ({breadbox, page}) => {
-      await page.getByRole('button', {name: 'Expand the Date facet'}).click();
+    test.beforeEach(async ({breadbox}) => {
       await breadbox.getFacetValue('dateRange').first().click();
       firstValueText = (await breadbox
         .getFacetValue('dateRange')
