@@ -297,7 +297,7 @@ describe('facet-set slice', () => {
     ])(
       'when the facet value does not exist',
       ({facetValueState, toggleAction}) => {
-        it('replaces the first idle value with the new value', () => {
+        it('inserts the new value before the first idle value and removes the last value', () => {
           const newFacetValue = buildMockFacetValue({
             value: 'TED',
             state: facetValueState,
@@ -305,6 +305,7 @@ describe('facet-set slice', () => {
 
           state[id] = buildMockFacetSlice({
             request: buildMockFacetRequest({
+              numberOfValues: 4,
               currentValues: [
                 buildMockFacetValue({
                   value: 'active1',
@@ -696,30 +697,34 @@ describe('facet-set slice', () => {
     });
 
     it('when there are idle values, the search result replaces the first idle value', () => {
-      // [KIT-107] If the selected result is appended, we will request one extra value than
-      // we need, creating an inconsistent UX. If the numberOfValues is kept the same (e.g. because
-      // we detect at an idle value), then the showLess button will momentarily flicker as the
-      // number of currentValues is greater than the original number of requested values.
-      // Instead, we replace an idle value, keeping the number of values the same.
       const valueA = buildMockFacetValueRequest({value: 'A'});
       const valueB = buildMockFacetValueRequest({value: 'B'});
 
       state[facetId]!.request.currentValues = [valueA, valueB];
+      state[facetId]!.request.numberOfValues = 2;
       dispatchFacetSearchResultAction();
 
       const {currentValues} = getFacetRequest();
-      expect(currentValues).toEqual([expectedSearchResultValue, valueB]);
+      expect(currentValues).toEqual([expectedSearchResultValue, valueA]);
     });
 
     it(`when there are only ${facetValueState} values, it adds the search result to the end`, () => {
       const activeValue = buildMockFacetValueRequest({
         state: facetValueState,
       });
-      state[facetId]!.request.currentValues = [activeValue];
+      const activeValue2 = buildMockFacetValueRequest({
+        state: facetValueState,
+      });
+      state[facetId]!.request.currentValues = [activeValue, activeValue2];
+      state[facetId]!.request.numberOfValues = 2;
       dispatchFacetSearchResultAction();
 
       const {currentValues} = getFacetRequest();
-      expect(currentValues).toEqual([activeValue, expectedSearchResultValue]);
+      expect(currentValues).toEqual([
+        activeValue,
+        activeValue2,
+        expectedSearchResultValue,
+      ]);
     });
   });
 

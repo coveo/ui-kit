@@ -28,8 +28,8 @@ test.describe('Default', () => {
       },
       {
         facetType: 'date range',
-        filter: '&df-date=2024/05/27@14:32:01..2025/05/27@14:32:01',
-        breadcrumbLabel: 'Date:2024-05-27 to 2025-05-27',
+        filter: '&df-cat_date_added=2021/01/01@00:00:00..2021/12/31@23:59:59',
+        breadcrumbLabel: 'Date:2021-01-01 to 2021-12-31',
       },
       {
         facetType: 'category',
@@ -88,7 +88,7 @@ test.describe('Default', () => {
     }) => {
       const breadcrumbButton = breadbox.getBreadcrumbButtons(firstValueText);
 
-      await expect(breadcrumbButton).toHaveText(`Color:${firstValueText}`);
+      await expect(breadcrumbButton).toHaveText(`Brand:${firstValueText}`);
     });
   });
   test.describe('when a category facet value is selected', () => {

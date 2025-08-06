@@ -644,11 +644,11 @@ function insertNewValue(
   const indexToInsertAt =
     firstIdleIndex === -1 ? values.length : firstIdleIndex;
 
-  const valuesBefore = values.slice(0, indexToInsertAt);
-  const valuesAfter = values.slice(indexToInsertAt + 1);
+  facetRequest.values.splice(indexToInsertAt, 0, facetValue);
 
-  facetRequest.values = [...valuesBefore, facetValue, ...valuesAfter];
-
+  if (firstIdleIndex > -1) {
+    facetRequest.values.pop();
+  }
   facetRequest.numberOfValues = facetRequest.values.length;
 }
 
