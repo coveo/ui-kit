@@ -73,7 +73,7 @@
     },
     "release:phase3": {
       "dependsOn": ["^release:phase3"],
-      "env": ["NODE_AUTH_TOKEN", "NPM_CONFIG_USERCONFIG"],
+      "env": ["NODE_AUTH_TOKEN", "NPM_CONFIG_USERCONFIG", "GITHUB_ACTIONS"],
       "cache": false
     }
   },
@@ -91,5 +91,6 @@
     "PR_NUMBER",
     "NODE_ENV",
     "CI"
-  ]
+  ],
+  "globalPassThroughEnv": ["GITHUB_*", "RUNNER_*", "SFDX_*"]
 }
