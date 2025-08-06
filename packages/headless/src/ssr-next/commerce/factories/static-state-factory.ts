@@ -2,8 +2,10 @@ import type {UnknownAction} from '@reduxjs/toolkit';
 import {buildProductListing} from '../../../controllers/commerce/product-listing/headless-product-listing.js';
 import {buildSearch} from '../../../controllers/commerce/search/headless-search.js';
 import {augmentPreprocessRequestWithForwardedFor} from '../../common/augment-preprocess-request.js';
+import type {ControllersPropsMap} from '../../common/types/controllers.js';
 import {createStaticState} from '../controller-utils.js';
 import {SolutionType} from '../types/controller-constants.js';
+import type {AugmentedControllerDefinition} from '../types/controller-definitions.js';
 import type {InferControllerStaticStateMapFromDefinitionsWithSolutionType} from '../types/controller-inference.js';
 import type {
   BuildParameters,
@@ -20,15 +22,8 @@ import {
   buildFactory,
   type CommerceEngineDefinitionOptions,
 } from './build-factory.js';
-import type {ParameterManagerDefinition} from '../controllers/parameter-manager/headless-core-parameter-manager.ssr.js';
-import type {ContextDefinition} from '../controllers/context/headless-context.ssr.js';
-import type {CartDefinition} from '../controllers/cart/headless-cart.ssr.js';
 
-/**
- * Transform simplified config to the complex format expected by buildFactory
- */
-// TODO: rename this function to be specific to fetchStaticState wiring
-function augmentParams<
+function wireControllerParams<
   TControllerDefinitions extends CommerceControllerDefinitionsMap,
 >(
   solutionType: SolutionType,
@@ -39,11 +34,9 @@ function augmentParams<
     return params as BuildParameters<TControllerDefinitions>;
   }
 
-  const {controllers, ...config} = params[0];
+  const controllers = params[0].controllers as ControllersPropsMap;
+  const {language, country, currency, cart} = params[0] as CommonFetchConfig;
 
-  // TODO: not sure about that
-
-  const {language, country, currency, cart} = config as CommonFetchConfig;
   if (controllerDefinitions && 'context' in controllerDefinitions) {
     controllers.context = {
       language: language,
@@ -59,7 +52,7 @@ function augmentParams<
   switch (solutionType) {
     case SolutionType.search: {
       const {query, searchParams} =
-        config as FetchStaticStateOptions<SolutionType.search>;
+        params[0] as FetchStaticStateOptions<SolutionType.search>;
       if (
         controllerDefinitions &&
         'parameterManager' in controllerDefinitions
@@ -77,8 +70,8 @@ function augmentParams<
     }
 
     case SolutionType.listing: {
-      const {url, language, country, currency, searchParams} =
-        config as FetchStaticStateOptions<SolutionType.listing>;
+      const {url, searchParams} =
+        params[0] as FetchStaticStateOptions<SolutionType.listing>;
       if (controllerDefinitions && 'context' in controllerDefinitions) {
         controllers.context = {
           view: {url},
@@ -131,12 +124,7 @@ function augmentParams<
 export function fetchStaticStateFactory<
   TControllerDefinitions extends CommerceControllerDefinitionsMap,
 >(
-  controllerDefinitions: TControllerDefinitions & {
-    // TODO: avoid replicating this type
-    parameterManager: ParameterManagerDefinition<{listing: true; search: true}>; // TODO: KIT-4611: stop exposing this TOption param
-    context: ContextDefinition;
-    cart: CartDefinition;
-  },
+  controllerDefinitions: AugmentedControllerDefinition<TControllerDefinitions>,
   options: CommerceEngineDefinitionOptions<TControllerDefinitions>
 ) {
   return (
@@ -144,7 +132,7 @@ export function fetchStaticStateFactory<
   ): FetchStaticStateFunction<TControllerDefinitions> =>
     async (...params: FetchStaticStateParameters<TControllerDefinitions>) => {
       // Transform the simplified config into the complex format expected by buildFactory
-      const augmentedParams = augmentParams(
+      const augmentedParams = wireControllerParams(
         solutionType,
         controllerDefinitions,
         params

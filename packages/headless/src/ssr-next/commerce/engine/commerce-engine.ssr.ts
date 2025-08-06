@@ -4,25 +4,19 @@
 
 import type {NavigatorContextProvider} from '../../../app/navigator-context-provider.js';
 import type {Controller} from '../../../controllers/controller/headless-controller.js';
-import {
-  type CartDefinition,
-  defineCart,
-} from '../controllers/cart/headless-cart.ssr.js';
-import {
-  type ContextDefinition,
-  defineContext,
-} from '../controllers/context/headless-context.ssr.js';
-import {
-  defineParameterManager,
-  type ParameterManagerDefinition,
-} from '../controllers/parameter-manager/headless-core-parameter-manager.ssr.js';
+import {defineCart} from '../controllers/cart/headless-cart.ssr.js';
+import {defineContext} from '../controllers/context/headless-context.ssr.js';
+import {defineParameterManager} from '../controllers/parameter-manager/headless-core-parameter-manager.ssr.js';
 import type {CommerceEngineDefinitionOptions} from '../factories/build-factory.js';
 import {hydratedStaticStateFactory} from '../factories/hydrated-state-factory.js';
 import {hydratedRecommendationStaticStateFactory} from '../factories/recommendation-hydrated-state-factory.js';
 import {fetchRecommendationStaticStateFactory} from '../factories/recommendation-static-state-factory.js';
 import {fetchStaticStateFactory} from '../factories/static-state-factory.js';
 import {SolutionType} from '../types/controller-constants.js';
-import type {ControllerDefinitionsMap} from '../types/controller-definitions.js';
+import type {
+  AugmentedControllerDefinition,
+  ControllerDefinitionsMap,
+} from '../types/controller-definitions.js';
 import type {CommerceEngineDefinition} from '../types/engine.js';
 
 /**
@@ -82,7 +76,7 @@ export function defineCommerceEngine<
     engineOptions.configuration.accessToken = accessToken;
   };
 
-  // TODO: test the validation works
+  // TODO: runtime validation to ensure the user did not enter controllers with the names of context, cart and parameterManager
   const validateControllerNames = (controllers: Record<string, unknown>) => {
     const reservedNames = ['context', 'cart', 'parameterManager'];
     const invalidNames = Object.keys(controllers).filter((name) =>
@@ -101,11 +95,7 @@ export function defineCommerceEngine<
     parameterManager: defineParameterManager(),
     context: defineContext(),
     cart: defineCart(),
-  } as TControllerDefinitions & {
-    parameterManager: ParameterManagerDefinition<{listing: true; search: true}>; // TODO: KIT-4611: stop exposing this TOption param
-    context: ContextDefinition;
-    cart: CartDefinition;
-  };
+  } as AugmentedControllerDefinition<TControllerDefinitions>;
 
   const fetchStaticState = fetchStaticStateFactory<TControllerDefinitions>(
     augmentedControllerDefinitions,

@@ -13,6 +13,9 @@ import type {
   HasRequiredKeys,
   OptionsTuple,
 } from '../../common/types/utilities.js';
+import type {CartDefinition} from '../controllers/cart/headless-cart.ssr.js';
+import type {ContextDefinition} from '../controllers/context/headless-context.ssr.js';
+import type {ParameterManagerDefinition} from '../controllers/parameter-manager/headless-core-parameter-manager.ssr.js';
 import type {SSRCommerceEngine} from '../factories/build-factory.js';
 import {
   type recommendationInternalOptionKey,
@@ -101,6 +104,15 @@ export type ControllerDefinition<TController extends Controller> =
 export interface ControllerDefinitionsMap<TController extends Controller> {
   [customName: string]: ControllerDefinition<TController>;
 }
+
+// TODO: find better name
+export type AugmentedControllerDefinition<
+  TControllerDefinitions extends ControllerDefinitionsMap<Controller>,
+> = TControllerDefinitions & {
+  parameterManager: ParameterManagerDefinition<{listing: true; search: true}>; // TODO: KIT-4611: stop exposing this TOption param
+  context: ContextDefinition;
+  cart: CartDefinition;
+};
 
 /**
  * This type defines the required and optional controller props for the engine definition.
