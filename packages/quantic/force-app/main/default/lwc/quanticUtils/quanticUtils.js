@@ -35,6 +35,7 @@ import pastYear_plural from '@salesforce/label/c.quantic_PastYear_plural';
 export * from './recentQueriesUtils';
 export * from './markdownUtils';
 export * from './facetDependenciesUtils';
+export * from './citationAnchoringUtils';
 
 export class Debouncer {
   _timeout;

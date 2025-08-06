@@ -6,6 +6,7 @@
     "clean": "rimraf www/cdn",
     "dev": "npm run build && npm run prod",
     "prod": "serve www",
+    "build": "npm run-script -w=@coveo/ci if-not-cdn -- \"npm run build:assets\"",
     "build:assets": "node build-assets.mjs",
     "e2e:watch": "cypress open --browser chrome --e2e",
     "e2e": "cypress run --browser chrome"
@@ -16,7 +17,7 @@
     "@coveo/atomic-hosted-page": "1.1.33",
     "@coveo/atomic-react": "3.2.54",
     "@coveo/headless": "3.27.7",
-    "react": "19.1.0",
+    "react": "19.1.1",
     "react-dom": "19.1.0"
   },
   "devDependencies": {

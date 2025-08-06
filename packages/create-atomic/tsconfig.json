@@ -5,7 +5,7 @@
     "esModuleInterop": true,
     "resolveJsonModule": true,
     "moduleResolution": "node",
-    "outDir": "lib"
+    "outDir": "dist"
   },
   "include": ["src/**/*"]
 }
