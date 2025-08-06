@@ -320,8 +320,7 @@ test.describe('Default', () => {
   test.describe('when a date range facet value is selected', () => {
     let firstValueText: string | RegExp;
 
-    test.beforeEach(async ({breadbox, page}) => {
-      await page.getByRole('button', {name: 'Expand the Date facet'}).click();
+    test.beforeEach(async ({breadbox}) => {
       await breadbox.getFacetValue('dateRange').first().click();
       firstValueText = (await breadbox
         .getFacetValue('dateRange')
