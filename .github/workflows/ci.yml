@@ -78,7 +78,7 @@ jobs:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
         with:
           ref: ${{ github.head_ref }}
-      - uses: ./.github/actions/build
+      - uses: ./.github/actions/setup
       - name: Check for uncommitted changes
         id: check-changes
         run: |
@@ -114,9 +114,24 @@ jobs:
           egress-policy: audit
 
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
-      - uses: ./.github/actions/build
+      - uses: ./.github/actions/setup
         with:
           cache-prefix: 'cdn'
+          skip-build: 'true'
+      - name: Build CDN
+        if: github.event_name == 'merge_group'
+        run: npm run build
+        env:
+          DEPLOYMENT_ENVIRONMENT: CDN
+          IS_PRERELEASE: 'true'
+      - name: Build CDN
+        if: github.event_name == 'pull_request'
+        run: npm run build
+        env:
+          DEPLOYMENT_ENVIRONMENT: CDN
+          IS_PRERELEASE: 'true'
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+      # TODO: Upload .turbo as artifact
   affected:
     name: 'Determine affected projects'
     runs-on: ubuntu-latest
