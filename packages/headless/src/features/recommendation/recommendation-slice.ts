@@ -1,4 +1,5 @@
 import {createReducer} from '@reduxjs/toolkit';
+import {setError} from '../error/error-actions.js';
 import {
   getRecommendations,
   setRecommendationId,
@@ -33,6 +34,10 @@ export const recommendationReducer = createReducer(
       })
       .addCase(getRecommendations.pending, (state) => {
         state.isLoading = true;
+      })
+      .addCase(setError, (state, action) => {
+        state.error = action.payload;
+        state.isLoading = false;
       });
   }
 );

@@ -1,6 +1,6 @@
 import {Schema, StringValue} from '@coveo/bueno';
 import type {Product} from '@coveo/headless/commerce';
-import {html, LitElement, nothing, unsafeCSS} from 'lit';
+import {html, LitElement, nothing} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {createRef} from 'lit/directives/ref.js';
 import {booleanConverter} from '@/src/converters/boolean-converter';
@@ -8,7 +8,6 @@ import {bindingGuard} from '@/src/decorators/binding-guard';
 import {bindings} from '@/src/decorators/bindings';
 import {createProductContextController} from '@/src/decorators/commerce/product-template-decorators';
 import {errorGuard} from '@/src/decorators/error-guard';
-import {injectStylesForNoShadowDOM} from '@/src/decorators/inject-styles-for-no-shadow-dom';
 import type {InitializableComponent} from '@/src/decorators/types';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
 import {
@@ -16,7 +15,6 @@ import {
   type TruncateAfter,
 } from '../../common/expandable-text/expandable-text';
 import type {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface';
-import styles from './atomic-product-excerpt.tw.css';
 
 /**
  * The `atomic-product-excerpt` component renders the excerpt of a product.
@@ -26,13 +24,11 @@ import styles from './atomic-product-excerpt.tw.css';
  */
 @customElement('atomic-product-excerpt')
 @bindings()
-@injectStylesForNoShadowDOM
 @withTailwindStyles
 export class AtomicProductExcerpt
   extends LitElement
   implements InitializableComponent<CommerceBindings>
 {
-  static styles = unsafeCSS(styles);
   @state()
   bindings!: CommerceBindings;
 
@@ -63,6 +59,10 @@ export class AtomicProductExcerpt
   public isCollapsible = false;
 
   public initialize() {}
+
+  createRenderRoot() {
+    return this;
+  }
 
   constructor() {
     super();

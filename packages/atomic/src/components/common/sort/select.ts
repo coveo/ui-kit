@@ -19,7 +19,7 @@ export const renderSortSelect: FunctionalComponentWithChildren<
       <div class="relative" part="select-parent">
         <select
           id=${id}
-          class="btn-outline-neutral h-10 flex-grow cursor-pointer appearance-none pr-24 pl-3"
+          class="btn-outline-neutral h-10 flex-grow cursor-pointer appearance-none pr-24 pl-3 peer"
           part="select"
           aria-label=${i18n.t('sort-by')}
           @change=${onSelect}
@@ -28,7 +28,7 @@ export const renderSortSelect: FunctionalComponentWithChildren<
         </select>
         <div
           part="select-separator"
-          class="border-neutral pointer-events-none absolute top-px right-0 bottom-px flex w-10 items-center justify-center border-l"
+          class="border-neutral peer-hover:border-primary-light peer-focus-within:border-primary-light peer-hover:text-primary-light peer-focus-within:text-primary-light pointer-events-none absolute top-px right-0 bottom-px flex w-10 items-center justify-center border-l"
         >
           <atomic-icon class="w-3" icon=${ArrowBottomIcon}></atomic-icon>
         </div>

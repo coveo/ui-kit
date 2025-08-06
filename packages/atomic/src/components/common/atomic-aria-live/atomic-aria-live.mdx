@@ -1,0 +1,38 @@
+import { Canvas, ArgTypes, Meta, Title, Description, Stories, Subtitle } from '@storybook/blocks';
+import * as AtomicAriaLiveStories from './atomic-aria-live.new.stories';
+import { CanvasWithGithub } from '../../../../storybook-utils/documentation/canvas-with-github';
+
+<Meta of={ AtomicAriaLiveStories } />
+
+<Title />
+<Subtitle><Description/></Subtitle>
+
+<CanvasWithGithub
+  of={ AtomicAriaLiveStories.Default }
+  githubPath="common/atomic-aria-live/atomic-aria-live.ts"
+/>
+
+## Usage
+
+This component should not be needed if you use an interface, as those will automatically create an `atomic-aria-live` component. However, you might want to be able to add regions and messages to that aria-live region from another custom component. You can do so using the `findAriaLive` event.
+
+The `atomic-aria-live` component listens for `atomic/accessibility/findAriaLive` events dispatched on the document. When such an event is received, it sets itself as the `element` property in the event details, allowing other components to interact with it programmatically.
+
+To use this from a custom component, you can dispatch the event and then call methods on the returned element:
+
+```typescript
+// Find the aria-live component
+const event = new CustomEvent('atomic/accessibility/findAriaLive', {
+  detail: {}
+});
+document.dispatchEvent(event);
+const ariaLiveElement = event.detail.element;
+
+// Register a new region and update its message
+ariaLiveElement?.registerRegion('my-region', false); // false = polite, true = assertive
+ariaLiveElement?.updateMessage('my-region', 'This is an announcement', false);
+```
+
+
+## Reference
+<ArgTypes />

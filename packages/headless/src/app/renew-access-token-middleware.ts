@@ -1,8 +1,14 @@
-import type {Middleware, UnknownAction} from '@reduxjs/toolkit';
+import type {
+  Dispatch,
+  Middleware,
+  MiddlewareAPI,
+  UnknownAction,
+} from '@reduxjs/toolkit';
 import type {Logger} from 'pino';
 import {debounce} from 'ts-debounce';
 import {updateBasicConfiguration} from '../features/configuration/configuration-actions.js';
-import {ExpiredTokenError} from '../utils/errors.js';
+import {setError} from '../features/error/error-actions.js';
+import {UnauthorizedTokenError} from '../utils/errors.js';
 
 export function createRenewAccessTokenMiddleware(
   logger: Logger,
@@ -30,6 +36,7 @@ export function createRenewAccessTokenMiddleware(
       logger.warn(
         'Unable to renew the expired token because a renew function was not provided. Please specify the #renewAccessToken option when initializing the engine.'
       );
+      dispatchError(store, payload.error);
       return payload;
     }
 
@@ -37,6 +44,7 @@ export function createRenewAccessTokenMiddleware(
       logger.warn(
         'Attempted to renew the token but was not successful. Please check the #renewAccessToken function.'
       );
+      dispatchError(store, payload.error);
       return payload;
     }
 
@@ -50,9 +58,31 @@ export function createRenewAccessTokenMiddleware(
   };
 }
 
-// biome-ignore lint/suspicious/noExplicitAny: legacy API requires 'any'
-function isExpiredTokenError(action: any) {
-  return action?.error?.name === new ExpiredTokenError().name;
+function isExpiredTokenError(
+  action: unknown
+): action is {error: UnauthorizedTokenError} {
+  return (
+    typeof action === 'object' &&
+    action !== null &&
+    'error' in action &&
+    // biome-ignore lint/suspicious/noExplicitAny: any action is possible here.
+    (action as any).error?.name === new UnauthorizedTokenError().name
+  );
+}
+
+function dispatchError(
+  // biome-ignore lint/suspicious/noExplicitAny: any action is possible here.
+  store: MiddlewareAPI<Dispatch<UnknownAction>, any>,
+  error: UnauthorizedTokenError
+) {
+  store.dispatch(
+    setError({
+      status: 401,
+      statusCode: 401,
+      message: error.message,
+      type: error.name,
+    })
+  );
 }
 
 async function attempt(fn: () => Promise<string>) {

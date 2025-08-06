@@ -6,6 +6,7 @@ import {
   buildMockProduct,
 } from '../../../test/mock-product.js';
 import {buildFetchProductListingResponse} from '../../../test/mock-product-listing.js';
+import {setError} from '../../error/error-actions.js';
 import {setContext, setView} from '../context/context-actions.js';
 import {
   fetchMoreProducts,
@@ -351,5 +352,22 @@ describe('product-listing-slice', () => {
     );
 
     expect(finalState).toEqual(getProductListingInitialState());
+  });
+
+  describe('on #setError', () => {
+    it('should set the error state and set isLoading to false', () => {
+      const error = {
+        message: 'Something went wrong',
+        statusCode: 401,
+        status: 401,
+        type: 'BadRequest',
+      };
+      state.isLoading = true;
+
+      const finalState = productListingReducer(state, setError(error));
+
+      expect(finalState.error).toEqual(error);
+      expect(finalState.isLoading).toBe(false);
+    });
   });
 });

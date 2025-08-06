@@ -457,14 +457,12 @@ describe('AtomicCommerceInterface', () => {
     });
 
     test('should not add aria-live if an atomic-aria-live element already exists', async () => {
-      const existingAriaLive = document.createElement('atomic-aria-live');
-      element.appendChild(existingAriaLive);
-
-      await element.initialize(commerceEngineConfig);
+      element.connectedCallback();
 
       const ariaLiveElements = element.querySelectorAll('atomic-aria-live');
       expect(ariaLiveElements.length).toBe(1);
     });
+
     test('should remove aria-live on disconnect', async () => {
       await element.initialize(commerceEngineConfig);
       await element.updateComplete;
