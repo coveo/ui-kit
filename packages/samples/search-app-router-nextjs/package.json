@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "npm run build:assets && next dev",
-    "build": "npm run build:assets && next build",
+    "build": "npm run-script -w=@coveo/ci if-not-cdn -- \"npm run build:assets && next build\"",
     "build:assets": "ncp ../../atomic-react/dist/assets public/assets && ncp ../../atomic-react/dist/lang public/lang public/assets",
     "start": "next start",
     "lint": "next lint"
