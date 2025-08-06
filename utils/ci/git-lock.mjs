@@ -5,7 +5,7 @@ import {REPO_MAIN_BRANCH} from './common/constants.mjs';
 import {
   limitWriteAccessToBot,
   removeWriteAccessRestrictions,
-} from './lock-master.mjs';
+} from './lock-main.mjs';
 
 if (!process.env.INIT_CWD) {
   throw new Error('Should be called using npm run-script');
@@ -15,17 +15,17 @@ process.chdir(process.env.INIT_CWD);
 const isPrerelease = process.env.IS_PRERELEASE === 'true';
 
 const ensureUpToDateBranch = async () => {
-  // Lock-out master
+  // Lock-out main
   await limitWriteAccessToBot();
 
-  // Verify master has not changed
+  // Verify main has not changed
   const local = await getSHA1fromRef(REPO_MAIN_BRANCH);
   await gitPull();
   const remote = await getSHA1fromRef(REPO_MAIN_BRANCH);
   if (local !== remote) {
     await removeWriteAccessRestrictions();
     throw new Error(dedent`
-        master branch changed before lockout.
+        Main branch changed before lockout.
         pre-lock:${local}
         post-lock:${remote}
       `);

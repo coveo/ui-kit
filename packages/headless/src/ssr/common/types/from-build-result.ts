@@ -1,7 +1,11 @@
 import type {CoreEngine, CoreEngineNext} from '../../../app/engine.js';
 import type {ControllersMap} from './controllers.js';
-import type {EngineDefinitionBuildResult} from './engine.js';
+import type {EngineDefinition, EngineDefinitionBuildResult} from './engine.js';
 
+/**
+ * @deprecated This type is deprecated and will be removed in a future version.
+ * {@link EngineDefinition.build} will be removed in a future version.
+ */
 export interface FromBuildResultOptions<
   TEngine extends CoreEngine | CoreEngineNext,
   TControllers extends ControllersMap,
@@ -10,7 +14,10 @@ export interface FromBuildResultOptions<
   allowedRecommendationKeys?: (keyof TControllers)[];
 }
 
-// TODO: KIT-4610: Remove this type
+/**
+ * @deprecated This type is deprecated and will be removed in a future version.
+ * {@link EngineDefinition.build} will be removed in a future version.
+ */
 export type FromBuildResult<
   TEngine extends CoreEngine | CoreEngineNext,
   TControllers extends ControllersMap,

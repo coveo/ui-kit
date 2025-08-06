@@ -17,6 +17,6 @@
   "name": "SSR Search",
   "readme": "../SEARCHREADME.md",
   "entryPoints": ["../src/ssr/index.ts"],
-  "gitRevision": "master",
+  "gitRevision": "main",
   "plugin": ["@coveo/documentation"]
 }
