@@ -30,22 +30,18 @@ function getResolveVariableString(version, packageName) {
   const prNumber = process.env.PR_NUMBER;
   const versionComposantsOrdered = getVersionComposants(version);
 
-  // Use PR number as build if available and PATCH_ONLY is set
-  const {major, minor, patch} =
-    process.env.PATCH_ONLY && prNumber
-      ? {
-          major: '0',
-          minor: '0.0',
-          patch: versionComposantsOrdered
-            .slice(0, 3)
-            .concat(prNumber)
-            .join('.'),
-        }
-      : {
-          major: versionComposantsOrdered.slice(0, 1),
-          minor: versionComposantsOrdered.slice(0, 2).join('.'),
-          patch: versionComposantsOrdered.slice(0, 3).join('.'),
-        };
+  // Use PR number as build if available
+  const {major, minor, patch} = prNumber
+    ? {
+        major: '0',
+        minor: '0.0',
+        patch: versionComposantsOrdered.slice(0, 3).concat(prNumber).join('.'),
+      }
+    : {
+        major: versionComposantsOrdered.slice(0, 1),
+        minor: versionComposantsOrdered.slice(0, 2).join('.'),
+        patch: versionComposantsOrdered.slice(0, 3).join('.'),
+      };
 
   return `
     --resolve ${packageName}_MAJOR_VERSION=${major} \
