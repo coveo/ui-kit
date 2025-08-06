@@ -131,7 +131,10 @@ test.describe('Default', () => {
         .locator('span')
         .first()
         .textContent()) as string;
-      await breadbox.getFacetValue('category', firstValueText).click();
+      await breadbox
+        .getFacetValue('category', firstValueText)
+        .locator('button')
+        .click();
       await breadbox
         .getBreadcrumbButtons(firstValueText)
         .waitFor({state: 'visible'});
@@ -186,7 +189,11 @@ test.describe('Default', () => {
             .locator('span')
             .first()
             .textContent());
-        await breadbox.getFacetValue('nestedCategory').first().click();
+        await breadbox
+          .getFacetValue('nestedCategory')
+          .first()
+          .locator('button')
+          .click();
         await breadbox
           .getBreadcrumbButtons()
           .first()
@@ -479,7 +486,7 @@ test.describe('Default', () => {
 
     for (let i = 0; i < 4; i++) {
       await breadbox.getFacetValue('regular').nth(i).click();
-      if (i < 3) {
+      if (i < 2) {
         await breadbox
           .getBreadcrumbButtons()
           .nth(i)
@@ -488,6 +495,6 @@ test.describe('Default', () => {
     }
 
     await expect(breadbox.getShowMorebutton()).toBeVisible();
-    await expect(breadbox.getShowMorebutton()).toHaveText('+ 1');
+    await expect(breadbox.getShowMorebutton()).toHaveText('+ 2');
   });
 });

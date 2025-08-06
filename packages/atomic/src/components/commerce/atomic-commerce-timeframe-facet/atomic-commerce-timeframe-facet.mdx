@@ -1,0 +1,53 @@
+import {
+  Canvas,
+  ArgTypes,
+  Meta,
+  Title,
+  Description,
+  Stories,
+  Subtitle,
+} from '@storybook/blocks';
+import * as AtomicCommerceTimeframeFacet from './atomic-commerce-timeframe-facet.new.stories';
+
+<Meta of={AtomicCommerceTimeframeFacet} />
+
+<Title />
+<Subtitle>
+  <Description />
+</Subtitle>
+
+<Canvas
+  additionalActions={[
+    {
+      title: 'Open in GitHub',
+      onClick: () => {
+        window.open(
+          'https://github.com/coveo/ui-kit/blob/master/packages/atomic/src/components/commerce/atomic-commerce-timeframe-facet/atomic-commerce-timeframe-facet.ts',
+          '_blank'
+        );
+      },
+    },
+  ]}
+  of={AtomicCommerceTimeframeFacet.Default}
+/>
+
+## Usage
+
+This component is not meant to be used directly in the layout. You should use the `<atomic-commerce-facets>` component instead, which will automatically render the appropriate facets.
+
+```html
+<atomic-commerce-interface>
+  ...
+  <atomic-layout-section section="facets">
+    <atomic-commerce-facets></atomic-commerce-facets>
+  </atomic-layout-section>
+</atomic-commerce-interface>
+```
+
+## Examples
+
+<Stories title={''} />
+
+## Reference
+
+<ArgTypes />
