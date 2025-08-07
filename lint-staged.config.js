@@ -10,7 +10,7 @@ module.exports = {
         return false;
 
       // Exclude root deployment config
-      if (file.endsWith('.deployment.config.json')) return false;
+      if (file.includes('/.deployment.config/')) return false;
 
       if (file.endsWith('package-lock.json')) return false;
 
