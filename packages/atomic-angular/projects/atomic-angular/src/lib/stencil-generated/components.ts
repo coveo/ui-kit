@@ -2677,7 +2677,7 @@ export declare interface AtomicProductImage extends LitAtomicProductImage {
 
 @ProxyCmp({
   inputs: ['hrefTemplate'],
-  methods: ['initialize', 'adoptChildren', 'renderDefaultSlotContent', 'getSlotNameForChild', 'isTextNodeEmpty', 'isSlotEmpty', '_initializeSlotState', '_ensureSlotsInitialized', '_hasDefaultSlotContent', '_mapChildrenToSlots', '_addChildToSlot', '_createSlotPlaceholder', '_relocateSingleSlot', '_moveNodeIfNeeded'],
+  methods: ['initialize', 'adoptChildren', 'isTextNodeEmpty', 'isSlotEmpty', 'renderDefaultSlotContent', 'createSlotPlaceholder'],
   defineCustomElementFn: () => {customElements.get('atomic-product-link') || customElements.define('atomic-product-link', LitAtomicProductLink);}
 })
 @Component({
