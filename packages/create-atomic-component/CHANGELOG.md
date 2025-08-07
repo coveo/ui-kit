@@ -1,3 +1,11 @@
+## 1.4.0 (2025-08-07)
+
+* feat: Migrate monorepo build system from NX to Turborepo (#5733) ([e7e1237](https://github.com/coveo/ui-kit/commits/e7e1237)), closes [#5733](https://github.com/coveo/ui-kit/issues/5733)
+* chore: update dependencies (major) (#5793) ([8cbf5bc](https://github.com/coveo/ui-kit/commits/8cbf5bc)), closes [#5793](https://github.com/coveo/ui-kit/issues/5793)
+* fix(deps): update all dependencies j:kit-282 (#5770) ([214bb00](https://github.com/coveo/ui-kit/commits/214bb00)), closes [#5770](https://github.com/coveo/ui-kit/issues/5770)
+
+
+
 ## 1.3.0 (2025-07-30)
 
 * ci(create-atomic): fix release phase 1 for new create-atomic packages (#5751) ([ca79c40](https://github.com/coveo/ui-kit/commits/ca79c40)), closes [#5751](https://github.com/coveo/ui-kit/issues/5751)

@@ -19,8 +19,6 @@ import '../atomic-product-text/atomic-product-text.js';
 
 /**
  * The `atomic-product-description` component renders the description of a product.
- *
- * @part expandable-text - The part that contains the product description text.
  */
 @customElement('atomic-product-description')
 @withTailwindStyles
@@ -69,7 +67,9 @@ export class AtomicProductDescription
   })
   public isCollapsible = true;
 
-  initialize() {}
+  initialize() {
+    this.validateProps();
+  }
 
   createRenderRoot() {
     return this;
