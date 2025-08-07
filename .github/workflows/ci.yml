@@ -131,7 +131,11 @@ jobs:
           DEPLOYMENT_ENVIRONMENT: CDN
           IS_PRERELEASE: 'true'
           PR_NUMBER: ${{ github.event.pull_request.number }}
-      # TODO: Upload .turbo as artifact
+      - name: Upload CDN Turbo Cache
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          path: '.turbo'
+          name: 'turborepo-cdn-cache'
   affected:
     name: 'Determine affected projects'
     runs-on: ubuntu-latest
