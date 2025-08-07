@@ -120,13 +120,13 @@ jobs:
           cache-prefix: "cdn"
           skip-build: "true"
       - name: Build CDN
-        if: github.event_name == "merge_group"
+        if: github.event_name == 'merge_group'
         run: npm run build
         env:
           DEPLOYMENT_ENVIRONMENT: CDN
           IS_PRERELEASE: "true"
       - name: Build CDN
-        if: github.event_name == "pull_request"
+        if: github.event_name == 'pull_request'
         run: npm run build
         env:
           DEPLOYMENT_ENVIRONMENT: CDN
@@ -629,6 +629,9 @@ jobs:
     needs: build
     timeout-minutes: 40
     name: Pre-release NPM at alpha (PR)
+    permissions:
+      contents: read
+      id-token: write
     env:
       NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
     runs-on: ubuntu-latest
@@ -801,6 +804,9 @@ jobs:
       NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
     runs-on: ubuntu-latest
     environment: "Prerelease"
+    permissions:
+      contents: read
+      id-token: write
     steps:
       - name: Harden Runner
         uses: step-security/harden-runner@ec9f2d5744a09debf3a187a3f4f675c53b671911 # v2.13.0
