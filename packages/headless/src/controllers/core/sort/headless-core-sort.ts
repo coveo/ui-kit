@@ -83,7 +83,7 @@ export interface Sort extends Controller {
    *
    * @param criterion - The sort criterion to evaluate.
    * Can be a single criterion or an array of criteria.
-   * The criteria in an array will be applied sequentially, i.e., if there's a tie on the 1st criterion, the API uses the 2nd criterion to break the tie. However, this only works when combining:
+   * The criteria in an array will be applied sequentially. For example, if there's a tie on the 1st criterion, the API uses the 2nd criterion to break the tie. However, this only works when combining:
    * `SortByRelevancy` followed by one or more `SortByField` or `SortByDate` criteria.
    * `SortByQRE` followed by one or more `SortByField` or `SortByDate` criteria.
    * Two or more `SortByField` criteria.
