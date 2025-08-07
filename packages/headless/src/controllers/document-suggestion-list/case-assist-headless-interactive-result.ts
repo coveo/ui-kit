@@ -33,8 +33,8 @@ export interface CaseAssistInteractiveResultProps
  * The `CaseAssistInteractiveResult` controller provides an interface for triggering desirable side effects, such as logging UA events to the Coveo Platform, when a user selects a query result.
  *
  * For example implementations, see the following [Coveo Quantic Case Assist components](https://docs.coveo.com/en/quantic/latest/reference/case-assist-components/):
- * * [quanticCaseClassification.js](https://github.com/coveo/ui-kit/blob/master/packages/quantic/force-app/main/default/lwc/quanticCaseClassification/quanticCaseClassification.js)
- * * [quanticDocumentSuggestion](https://github.com/coveo/ui-kit/blob/master/packages/quantic/force-app/main/default/lwc/quanticDocumentSuggestion/quanticDocumentSuggestion.js)
+ * * [quanticCaseClassification.js](https://github.com/coveo/ui-kit/blob/main/packages/quantic/force-app/main/default/lwc/quanticCaseClassification/quanticCaseClassification.js)
+ * * [quanticDocumentSuggestion](https://github.com/coveo/ui-kit/blob/main/packages/quantic/force-app/main/default/lwc/quanticDocumentSuggestion/quanticDocumentSuggestion.js)
  *
  * @group Controllers
  * @category CaseAssistInteractiveResult

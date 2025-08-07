@@ -3,7 +3,7 @@ import {Canvas} from '@storybook/blocks';
 import React from 'react';
 
 export const CanvasWithGithub = ({of, githubPath}) => {
-  const githubUrl = `https://github.com/coveo/ui-kit/blob/master/packages/atomic/src/components/${githubPath}`;
+  const githubUrl = `https://github.com/coveo/ui-kit/blob/main/packages/atomic/src/components/${githubPath}`;
 
   return (
     <Canvas

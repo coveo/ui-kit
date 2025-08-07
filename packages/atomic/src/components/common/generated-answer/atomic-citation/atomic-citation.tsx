@@ -7,7 +7,7 @@ import {
 import {Component, h, State, Prop, Element, Watch} from '@stencil/core';
 import {LinkWithItemAnalytics} from '../../item-link/stencil-item-link';
 import {Heading} from '../../stencil-heading';
-import {extractTextToHighlight} from './text-fragment-utils';
+import {generateTextFragmentUrl, generatePdfPageUrl} from './citation-anchoring-utils';
 
 /**
  * @internal
@@ -102,20 +102,24 @@ export class AtomicCitation {
     );
   }
 
-  private generateTextFragmentUrl(
+  private anchorUrl(
     uri: string,
     text?: string,
-    filetype?: string
+    filetype?: string, 
+    pageNumber?: number
   ) {
-    if (this.disableCitationAnchoring || filetype !== 'html' || !text) {
+    if (this.disableCitationAnchoring) {
       return uri;
     }
-    const highlight = extractTextToHighlight(text);
-    const encodedTextFragment = encodeURIComponent(highlight).replace(
-      /-/g,
-      '%2D'
-    );
-    return `${uri}#:~:text=${encodedTextFragment}`;
+
+    switch (filetype) {
+      case 'html':
+        return generateTextFragmentUrl(uri, text, filetype);
+      case 'pdf':
+        return generatePdfPageUrl(uri, pageNumber);
+      default:
+        return uri;
+    }
   }
 
   private openPopover = () => {
@@ -160,10 +164,10 @@ export class AtomicCitation {
     return (
       <div class="relative">
         <LinkWithItemAnalytics
-          href={this.generateTextFragmentUrl(
+          href={this.anchorUrl(
             this.citation.clickUri ?? this.citation.uri,
             this.citation.text,
-            this.citation.fields?.filetype
+            this.citation.fields?.filetype,
           )}
           ref={(el) => (this.citationRef = el!)}
           part="citation"
