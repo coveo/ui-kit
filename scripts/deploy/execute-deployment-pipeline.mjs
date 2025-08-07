@@ -58,7 +58,6 @@ function getVersionsSubpaths(version) {
         minor: versionComposantsOrdered.slice(0, 2).join('.'),
         patch: versionComposantsOrdered.slice(0, 3).join('.'),
       };
-}
 
 function getResolveVariableString(version, packageName) {
   const {major, minor, patch} = {

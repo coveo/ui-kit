@@ -9,7 +9,6 @@
     "environments_order": {
       "sequential": ["dev"]
     },
-    "team_jenkins": "searchuibuilds",
     "start_environment_automatically": false,
     "notifications": {
       "slack_channels": ["#searchuibuilds"]
