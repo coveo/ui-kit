@@ -140,12 +140,12 @@ export async function processCssFiles(srcDir, distDir) {
 function getAllJsFiles(dir) {
   let results = [];
   for (const name of readdirSync(dir)) {
-    const p = join(dir, name);
-    const stat = statSync(p);
+    const filePath = join(dir, name);
+    const stat = statSync(filePath);
     if (stat.isDirectory()) {
-      results = results.concat(getAllJsFiles(p));
-    } else if (stat.isFile() && p.endsWith('.js')) {
-      results.push(p);
+      results = results.concat(getAllJsFiles(filePath));
+    } else if (stat.isFile() && filePath.endsWith('.js')) {
+      results.push(filePath);
     }
   }
   return results;
