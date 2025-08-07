@@ -77,6 +77,12 @@ describe('fetchStaticStateFactory', () => {
     vi.clearAllMocks();
   });
 
+  // TODO: test that context is passed correctly to the engine
+
+  // TODO:
+  // TODO:
+  // TODO:
+  // TODO:
   it('should call buildFactory with the correct parameters', async () => {
     const factory = fetchStaticStateFactory(definition, mockEngineOptions);
     await factory(SolutionType.listing)();

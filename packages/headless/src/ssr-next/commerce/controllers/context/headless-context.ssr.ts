@@ -21,7 +21,10 @@ export type {
 };
 
 export interface ContextDefinition
-  extends UniversalControllerDefinitionWithProps<Context, {initialState: ContextOptions}> {} // All controllers with props should have an initialState. and since it is not already defiend in the controller itslf, we have to add it here as a fallback
+  extends UniversalControllerDefinitionWithProps<
+    Context,
+    {initialState: ContextOptions}
+  > {}
 
 /**
  * Defines a `Context` controller instance.
@@ -40,7 +43,7 @@ export function defineContext(): ContextDefinition {
         throw new MissingControllerProps(Kind.Context);
       }
       const controller = buildContext(engine, {options: props.initialState});
-      return createControllerWithKind(controller, Kind.Context); // TODO: can get rid of the controllerWithKind
+      return createControllerWithKind(controller, Kind.Context);
     },
   };
 }

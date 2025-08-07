@@ -3,6 +3,7 @@ import type {CoreEngine, CoreEngineNext} from '../app/engine.js';
 import type {SearchEngine} from '../app/search-engine/search-engine.js';
 import type {Controller} from '../controllers/controller/headless-controller.js';
 import type {SSRCommerceEngine} from '../ssr/commerce/factories/build-factory.js';
+import type {Kind} from '../ssr/commerce/types/kind.js';
 import type {
   ControllerDefinitionWithoutProps,
   ControllerDefinitionWithProps,
@@ -21,6 +22,13 @@ export interface MockControllerDefinitionWithProps
     Controller,
     MockController
   > {}
+
+type SolutionTypeAvailabilities = {
+  listing?: boolean;
+  search?: boolean;
+  standalone?: boolean;
+  recommendation?: boolean;
+};
 
 export function buildMockController(): Controller {
   return {
@@ -60,5 +68,42 @@ export function defineMockControllerWithProps(): MockControllerDefinitionWithPro
         initialState: props?.initialState,
       });
     }),
+  };
+}
+
+/**
+ * For SSR use only.
+ */
+export function defineMockCommerceController(
+  options?: SolutionTypeAvailabilities
+) {
+  return {
+    build: vi.fn((_engine) => {
+      return buildMockController();
+    }),
+    listing: options?.listing ?? true,
+    search: options?.search ?? true,
+    standalone: options?.standalone ?? true,
+    recommendation: options?.recommendation ?? true,
+  };
+}
+
+/**
+ * For SSR use only.
+ */
+export function defineMockCommerceControllerWithProps(
+  options?: SolutionTypeAvailabilities
+) {
+  return {
+    buildWithProps: vi.fn((engine, props) => ({
+      _kind: 'some-kind' as Kind,
+      ...buildMockControllerWithInitialState(engine, {
+        initialState: props?.initialState,
+      }),
+    })),
+    listing: options?.listing ?? true,
+    search: options?.search ?? true,
+    standalone: options?.standalone ?? true,
+    recommendation: options?.recommendation ?? true,
   };
 }

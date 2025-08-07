@@ -9,7 +9,7 @@ import type {
 /**
  * Builder class for creating controllers from definitions
  */
-export class HydratedControllerBuilder<
+export class ControllerBuilder<
   TDefinition extends Partial<
     BaseControllerDefinitionWithoutProps<TEngine, TController>
   > &

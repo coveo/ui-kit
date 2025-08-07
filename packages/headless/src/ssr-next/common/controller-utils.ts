@@ -2,7 +2,7 @@ import type {UnknownAction} from '@reduxjs/toolkit';
 import type {CoreEngine, CoreEngineNext} from '../../app/engine.js';
 import type {Controller} from '../../controllers/controller/headless-controller.js';
 import {clone, mapObject} from '../../utils/utils.js';
-import {HydratedControllerBuilder} from './builders/hydrated-controller-builder.js';
+import {ControllerBuilder} from './builders/controller-builder.js';
 import {createStaticControllerBuilder} from './builders/static-controller-builder.js';
 import type {ControllerDefinitionsMap} from './types/controllers.js';
 import type {EngineStaticState} from './types/engine.js';
@@ -29,7 +29,7 @@ export function buildControllerDefinitions<
 }): InferControllersMapFromDefinition<TControllerDefinitionsMap> {
   return mapObject(definitionsMap, (definition, key) => {
     const props = propsMap?.[key as keyof typeof propsMap];
-    return new HydratedControllerBuilder(definition, engine, props).build();
+    return new ControllerBuilder(definition, engine, props).build();
   }) as InferControllersMapFromDefinition<TControllerDefinitionsMap>;
 }
 

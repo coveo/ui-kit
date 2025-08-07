@@ -2,7 +2,10 @@ import type {UnknownAction} from '@reduxjs/toolkit';
 import {filterObject} from '../../../utils/utils.js';
 import {createStaticState} from '../controller-utils.js';
 import {SolutionType} from '../types/controller-constants.js';
-import type {RecommendationControllerSettings} from '../types/controller-definitions.js';
+import type {
+  AugmentedControllerDefinition,
+  RecommendationControllerSettings,
+} from '../types/controller-definitions.js';
 import type {InferControllerStaticStateMapFromDefinitionsWithSolutionType} from '../types/controller-inference.js';
 import type {
   BuildResult,
@@ -12,6 +15,7 @@ import type {
   FetchStaticStateParameters,
 } from '../types/engine.js';
 import {filterRecommendationControllers} from '../utils/recommendation-filter.js';
+import {wireControllerParams} from '../utils/state-wiring.js';
 import {
   buildFactory,
   type CommerceEngineDefinitionOptions,
@@ -20,7 +24,7 @@ import {
 export function fetchRecommendationStaticStateFactory<
   TControllerDefinitions extends CommerceControllerDefinitionsMap,
 >(
-  controllerDefinitions: TControllerDefinitions | undefined,
+  controllerDefinitions: AugmentedControllerDefinition<TControllerDefinitions>,
   options: CommerceEngineDefinitionOptions<TControllerDefinitions>
 ): FetchStaticStateFunction<TControllerDefinitions> {
   const getAllowedRecommendationKeys = (
@@ -36,12 +40,17 @@ export function fetchRecommendationStaticStateFactory<
     return [];
   };
 
-  // TODO: apply the same wiring logic as in search and listing
   return async (
     ...params: FetchStaticStateParameters<TControllerDefinitions>
   ) => {
     const [props] = params;
     const allowedRecommendationKeys = getAllowedRecommendationKeys(props);
+
+    wireControllerParams(
+      SolutionType.recommendation,
+      controllerDefinitions,
+      params
+    );
 
     const solutionTypeBuild = await buildFactory(
       controllerDefinitions,
@@ -49,7 +58,7 @@ export function fetchRecommendationStaticStateFactory<
     )(SolutionType.recommendation);
 
     const {engine, controllers} = (await solutionTypeBuild(
-      // TODO: apply the same wiring logic as in search and listing
+      // TODO: fix the typing
       ...params
     )) as BuildResult<TControllerDefinitions>;
 

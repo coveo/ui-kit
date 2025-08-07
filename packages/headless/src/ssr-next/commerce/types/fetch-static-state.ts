@@ -4,6 +4,12 @@ import type {
   ControllerStaticStateMap,
   ControllersPropsMap,
 } from '../../common/types/controllers.js';
+import type {BakeInControllers} from '../../common/types/engine.js';
+import type {CartInitialState} from '../controllers/cart/headless-cart.ssr.js';
+import type {
+  ParameterManagerState,
+  Parameters,
+} from '../controllers/parameter-manager/headless-core-parameter-manager.ssr.js';
 import type {SolutionType} from './controller-constants.js';
 import type {
   ControllerDefinitionsMap,
@@ -11,34 +17,26 @@ import type {
   OptionsTuple,
 } from './controller-definitions.js';
 import type {EngineStaticState} from './engine.js';
-import type {
-  ParameterManagerState,
-  Parameters,
-} from '../controllers/parameter-manager/headless-core-parameter-manager.ssr.js';
-import type {CartInitialState} from '../controllers/cart/headless-cart.ssr.js';
 
-// Simplified configuration types for each solution type
 export interface SearchFetchConfig extends CommonFetchConfig {
   query: string;
-  searchParams?: Omit<ParameterManagerState<Parameters>['parameters'], 'q'>;
-}
-
-export interface ListingFetchConfig extends CommonFetchConfig {
-  url: string;
-  searchParams?: Omit<ParameterManagerState<Parameters>['parameters'], 'q'>;
 }
 
 export interface RecommendationFetchConfig extends CommonFetchConfig {
   recommendations?: Array<{slotId: string; productId?: string}>;
 }
 
+export interface ListingFetchConfig extends CommonFetchConfig {}
+
 export interface StandaloneFetchConfig extends CommonFetchConfig {}
 
 export interface CommonFetchConfig {
+  url: string; // TODO: what is the point of having the url for other solution types than search
   language: string;
   country: string;
   currency: string;
   cart?: CartInitialState;
+  searchParams?: Omit<ParameterManagerState<Parameters>['parameters'], 'q'>;
 }
 
 // TODO: This should be in build type and not be called FetchStaticStateOptions because it is used by everyone
@@ -73,4 +71,6 @@ export type FetchStaticState<
         TSolutionType
       >
   >
-) => Promise<EngineStaticState<TSearchAction, TControllersStaticState>>;
+) => Promise<
+  EngineStaticState<TSearchAction, TControllersStaticState & BakeInControllers>
+>;

@@ -1,7 +1,7 @@
 import type {UnknownAction} from '@reduxjs/toolkit';
 import type {Controller} from '../../controllers/controller/headless-controller.js';
 import {clone, filterObject, mapObject} from '../../utils/utils.js';
-import {HydratedControllerBuilder} from '../common/builders/hydrated-controller-builder.js';
+import {ControllerBuilder} from '../common/builders/controller-builder.js';
 import {createStaticControllerBuilder} from '../common/builders/static-controller-builder.js';
 import {InvalidControllerDefinition} from '../common/errors.js';
 import type {SSRCommerceEngine} from './factories/build-factory.js';
@@ -76,7 +76,7 @@ export function buildControllerDefinitions<
       return null;
     }
 
-    return new HydratedControllerBuilder(definition, engine, props)
+    return new ControllerBuilder(definition, engine, props)
       .setAdditionalArgs([solutionType])
       .build();
   });

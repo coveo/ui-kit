@@ -10,7 +10,7 @@ import {
 import {buildMockSearchEngine} from '../../test/mock-engine-v2.js';
 import {createMockState} from '../../test/mock-state.js';
 import * as utils from '../../utils/utils.js';
-import {HydratedControllerBuilder} from './builders/hydrated-controller-builder.js';
+import {ControllerBuilder} from './builders/controller-builder.js';
 import {createStaticControllerBuilder} from './builders/static-controller-builder.js';
 import {
   buildControllerDefinitions,
@@ -46,7 +46,7 @@ describe('controller-utils', () => {
       };
 
       // @ts-expect-error: do not care about mocking all the class methods
-      vi.mocked(HydratedControllerBuilder).mockReturnValue(mockHydratedBuilder);
+      vi.mocked(ControllerBuilder).mockReturnValue(mockHydratedBuilder);
 
       const definitionsMap = {
         controller1: defineMockController(),
@@ -63,13 +63,13 @@ describe('controller-utils', () => {
     });
 
     it('should call #HydratedControllerBuilder as many times as there are definitions', () => {
-      expect(HydratedControllerBuilder).toHaveBeenCalledTimes(2);
+      expect(ControllerBuilder).toHaveBeenCalledTimes(2);
       expect(mockHydratedBuilder.build).toHaveBeenCalledTimes(2);
     });
 
     it('should call a #HydratedControllerBuilder for the controller without props with the correct arguments', () => {
       const noProps = undefined;
-      expect(HydratedControllerBuilder).toHaveBeenNthCalledWith(
+      expect(ControllerBuilder).toHaveBeenNthCalledWith(
         1,
         {
           build: expect.any(Function),
@@ -80,7 +80,7 @@ describe('controller-utils', () => {
     });
 
     it('should call a #HydratedControllerBuilder for the controller with props with the correct arguments', () => {
-      expect(HydratedControllerBuilder).toHaveBeenNthCalledWith(
+      expect(ControllerBuilder).toHaveBeenNthCalledWith(
         2,
         {
           buildWithProps: expect.any(Function),

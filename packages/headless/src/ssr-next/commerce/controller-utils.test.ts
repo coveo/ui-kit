@@ -5,10 +5,12 @@ import {buildMockCommerceState} from '../../test/mock-commerce-state.js';
 import {
   buildMockController,
   buildMockControllerWithInitialState,
+  defineMockCommerceController,
+  defineMockCommerceControllerWithProps,
 } from '../../test/mock-controller-definitions.js';
 import {buildMockCommerceEngine} from '../../test/mock-engine-v2.js';
 import * as utils from '../../utils/utils.js';
-import {HydratedControllerBuilder} from '../common/builders/hydrated-controller-builder.js';
+import {ControllerBuilder} from '../common/builders/controller-builder.js';
 import {createStaticControllerBuilder} from '../common/builders/static-controller-builder.js';
 import {InvalidControllerDefinition} from '../common/errors.js';
 import {
@@ -23,41 +25,6 @@ import type {ControllerDefinition} from './types/controller-definitions.js';
 vi.mock('../../utils/utils.js', {spy: true});
 vi.mock('../common/builders/static-controller-builder.js', {spy: true});
 vi.mock('../common/builders/hydrated-controller-builder.js', {spy: true});
-
-type SolutionTypeAvailabilities = {
-  listing?: boolean;
-  search?: boolean;
-  standalone?: boolean;
-  recommendation?: boolean;
-};
-// TODO: move to mock fixture file
-const createMockControllerDefinitionWithoutProps = (
-  options?: SolutionTypeAvailabilities
-) => ({
-  build: vi.fn().mockReturnValue({
-    state: {},
-    subscribe: vi.fn(),
-  }),
-  //   TODO: test with options here below when set to false
-  listing: options?.listing ?? true,
-  search: options?.search ?? true,
-  standalone: options?.standalone ?? true,
-  recommendation: options?.recommendation ?? true,
-});
-
-const createMockControllerDefinitionWithProps = (
-  options?: SolutionTypeAvailabilities
-) => ({
-  buildWithProps: vi.fn().mockReturnValue({
-    state: {prop1: 'value1', prop2: 42},
-    subscribe: vi.fn(),
-  }),
-  //   TODO: test with options here below when set to false
-  listing: options?.listing ?? true,
-  search: options?.search ?? true,
-  standalone: options?.standalone ?? true,
-  recommendation: options?.recommendation ?? true,
-});
 
 describe('commerce controller-utils', () => {
   let mockSearchActions: UnknownAction[];
@@ -85,8 +52,8 @@ describe('commerce controller-utils', () => {
 
     const buildControllersWithDefaultSetup = () => {
       const definitionsMap = {
-        controller1: createMockControllerDefinitionWithoutProps(),
-        controller2: createMockControllerDefinitionWithProps(),
+        controller1: defineMockCommerceController(),
+        controller2: defineMockCommerceControllerWithProps(),
       };
 
       buildControllerDefinitions({
@@ -106,12 +73,12 @@ describe('commerce controller-utils', () => {
       };
 
       // @ts-expect-error: do not care about mocking all the class methods
-      vi.mocked(HydratedControllerBuilder).mockReturnValue(mockHydratedBuilder);
+      vi.mocked(ControllerBuilder).mockReturnValue(mockHydratedBuilder);
     });
 
     it('should call #HydratedControllerBuilder as many times as there are definitions', () => {
       buildControllersWithDefaultSetup();
-      expect(HydratedControllerBuilder).toHaveBeenCalledTimes(2);
+      expect(ControllerBuilder).toHaveBeenCalledTimes(2);
       expect(mockHydratedBuilder.build).toHaveBeenCalledTimes(2);
     });
 
@@ -125,7 +92,7 @@ describe('commerce controller-utils', () => {
 
     it('should call #HydratedControllerBuilder for the controller without props with the correct arguments', () => {
       buildControllersWithDefaultSetup();
-      expect(HydratedControllerBuilder).toHaveBeenNthCalledWith(
+      expect(ControllerBuilder).toHaveBeenNthCalledWith(
         1,
         {
           build: expect.any(Function),
@@ -141,7 +108,7 @@ describe('commerce controller-utils', () => {
 
     it('should call #HydratedControllerBuilder for the controller with props with the correct arguments', () => {
       buildControllersWithDefaultSetup();
-      expect(HydratedControllerBuilder).toHaveBeenNthCalledWith(
+      expect(ControllerBuilder).toHaveBeenNthCalledWith(
         2,
         {
           buildWithProps: expect.any(Function),
@@ -165,11 +132,11 @@ describe('commerce controller-utils', () => {
       let controller2: ControllerDefinition<Controller>;
 
       beforeEach(() => {
-        controller1 = createMockControllerDefinitionWithoutProps({
+        controller1 = defineMockCommerceController({
           search: true,
           recommendation: false,
         });
-        controller2 = createMockControllerDefinitionWithoutProps({
+        controller2 = defineMockCommerceController({
           search: false,
           recommendation: false,
         });
@@ -183,7 +150,7 @@ describe('commerce controller-utils', () => {
         });
 
         // should only call for controller1 with listing and search
-        expect(HydratedControllerBuilder).toHaveBeenCalledTimes(1);
+        expect(ControllerBuilder).toHaveBeenCalledTimes(1);
       });
 
       it('should call #HydratedControllerBuilder with the appropriate arguments', () => {
@@ -193,7 +160,7 @@ describe('commerce controller-utils', () => {
           solutionType: SolutionType.search,
         });
 
-        expect(HydratedControllerBuilder).toHaveBeenCalledWith(
+        expect(ControllerBuilder).toHaveBeenCalledWith(
           expect.objectContaining({
             build: expect.any(Function),
             search: true,
@@ -204,10 +171,10 @@ describe('commerce controller-utils', () => {
       });
 
       it('should not call #HydratedControllerBuilder if no controller is defined for the solution type', () => {
-        controller1 = createMockControllerDefinitionWithoutProps({
+        controller1 = defineMockCommerceController({
           search: false,
         });
-        controller2 = createMockControllerDefinitionWithoutProps({
+        controller2 = defineMockCommerceController({
           search: false,
         });
 
@@ -217,7 +184,7 @@ describe('commerce controller-utils', () => {
           solutionType: SolutionType.search,
         });
 
-        expect(HydratedControllerBuilder).not.toHaveBeenCalled();
+        expect(ControllerBuilder).not.toHaveBeenCalled();
       });
     });
   });
