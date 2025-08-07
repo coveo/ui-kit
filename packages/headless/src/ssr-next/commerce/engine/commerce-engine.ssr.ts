@@ -18,6 +18,7 @@ import type {
   ControllerDefinitionsMap,
 } from '../types/controller-definitions.js';
 import type {CommerceEngineDefinition} from '../types/engine.js';
+import {validateControllerNames} from '../validation/controller-validation.js';
 
 /**
  * Initializes a Commerce engine definition in SSR with given controllers definitions and commerce engine config.
@@ -76,21 +77,9 @@ export function defineCommerceEngine<
     engineOptions.configuration.accessToken = accessToken;
   };
 
-  // TODO: runtime validation to ensure the user did not enter controllers with the names of context, cart and parameterManager
-  const validateControllerNames = (controllers: Record<string, unknown>) => {
-    const reservedNames = ['context', 'cart', 'parameterManager'];
-    const invalidNames = Object.keys(controllers).filter((name) =>
-      reservedNames.includes(name)
-    );
-    if (invalidNames.length > 0) {
-      throw new Error(
-        `Reserved controller names found: ${invalidNames.join(', ')}. Please use different controller names than ${reservedNames.join(', ')}.`
-      );
-    }
-  };
   controllerDefinitions && validateControllerNames(controllerDefinitions);
 
-  const augmentedControllerDefinitions = {
+  const augmentedControllerDefinition = {
     ...controllerDefinitions,
     parameterManager: defineParameterManager(),
     context: defineContext(),
@@ -98,21 +87,21 @@ export function defineCommerceEngine<
   } as AugmentedControllerDefinition<TControllerDefinitions>;
 
   const fetchStaticState = fetchStaticStateFactory<TControllerDefinitions>(
-    augmentedControllerDefinitions,
+    augmentedControllerDefinition,
     getOptions()
   );
   const hydrateStaticState = hydratedStaticStateFactory<TControllerDefinitions>(
-    augmentedControllerDefinitions,
+    augmentedControllerDefinition,
     getOptions()
   );
   const fetchRecommendationStaticState =
     fetchRecommendationStaticStateFactory<TControllerDefinitions>(
-      augmentedControllerDefinitions,
+      augmentedControllerDefinition,
       getOptions()
     );
   const hydrateRecommendationStaticState =
     hydratedRecommendationStaticStateFactory<TControllerDefinitions>(
-      augmentedControllerDefinitions,
+      augmentedControllerDefinition,
       getOptions()
     );
   const commonMethods = {
