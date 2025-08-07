@@ -109,47 +109,66 @@ describe('SlotsForNoShadowDOMMixin', () => {
   });
 
   describe('#renderDefaultSlotContent', () => {
-    let element: TestableSlottedElement;
+    describe('when the default slot has content', () => {
+      let element: TestableSlottedElement;
 
-    beforeEach(async () => {
-      element = (await fixture(html`
-        <slotted-element><span>Default Content</span></slotted-element>
+      beforeEach(async () => {
+        element = (await fixture(html`
+        <slotted-element><span>Custom Content</span></slotted-element>
       `)) as TestableSlottedElement;
+      });
+
+      it('should return placeholder', () => {
+        const content = element.renderDefaultSlotContent();
+        expect(Array.isArray(content)).toBe(true);
+        expect(content).toHaveLength(1);
+        expect((content as unknown[])[0]).toBeInstanceOf(Comment);
+        expect(((content as unknown[])[0] as Comment).textContent).toBe('slot');
+      });
+
+      it('should return default slot content instead of fallback', () => {
+        const fallbackContent = html`<span>Default</span>`;
+        const content = element.renderDefaultSlotContent(fallbackContent);
+        expect(Array.isArray(content)).toBe(true);
+
+        const contentDiv = (element as Element).querySelector('.content');
+        expect(contentDiv?.innerHTML).toContain('Custom Content');
+      });
     });
 
-    it('should return placeholder for default slot with content', () => {
-      const content = element.renderDefaultSlotContent();
-      expect(Array.isArray(content)).toBe(true);
-      expect(content).toHaveLength(1);
-      // The first item should be a placeholder comment
-      expect((content as unknown[])[0]).toBeInstanceOf(Comment);
-      expect(((content as unknown[])[0] as Comment).textContent).toBe(
-        'slot:default'
-      );
-    });
-
-    it('should return default content for empty default slot', async () => {
+    it('should return fallback content when default slot has no content', async () => {
       const emptyElement = (await fixture(html`
         <slotted-element></slotted-element>
       `)) as TestableSlottedElement;
 
-      const defaultContent = html`<span>Default</span>`;
-      const content = emptyElement.renderDefaultSlotContent(defaultContent);
+      const fallbackContent = html`<span>Fallback</span>`;
+      const content = emptyElement.renderDefaultSlotContent(fallbackContent);
       expect(Array.isArray(content)).toBe(true);
       expect(content).toHaveLength(1);
-      expect((content as unknown[])[0]).toBe(defaultContent);
+      expect((content as unknown[])[0]).toBe(fallbackContent);
     });
 
-    it('should return placeholder instead of default when default slot has content', () => {
-      const defaultContent = html`<span>Default</span>`;
-      const content = element.renderDefaultSlotContent(defaultContent);
-      expect(Array.isArray(content)).toBe(true);
-      expect(content).toHaveLength(1);
-      // Should return placeholder, not default content
-      expect((content as unknown[])[0]).toBeInstanceOf(Comment);
-      expect(((content as unknown[])[0] as Comment).textContent).toBe(
-        'slot:default'
-      );
+    it('should return fallback content when default slot contains only comments or empty text nodes', async () => {
+      // Only a comment node
+      const commentElement = (await fixture(html`
+        <slotted-element><!-- a comment --></slotted-element>
+      `)) as TestableSlottedElement;
+      const fallbackContent = html`<span>Fallback</span>`;
+      const contentComment =
+        commentElement.renderDefaultSlotContent(fallbackContent);
+      expect(Array.isArray(contentComment)).toBe(true);
+      expect(contentComment).toHaveLength(1);
+      expect((contentComment as unknown[])[0]).toBe(fallbackContent);
+
+      // Only empty text node
+      const emptyTextElement = (await fixture(html`
+        <slotted-element>   \n   </slotted-element>
+      `)) as TestableSlottedElement;
+      const contentEmptyText =
+        emptyTextElement.renderDefaultSlotContent(fallbackContent);
+      expect(Array.isArray(contentEmptyText)).toBe(true);
+      expect(contentEmptyText).toHaveLength(1);
+      expect((contentEmptyText as unknown[])[0]).toBe(fallbackContent);
     });
   });
 });
