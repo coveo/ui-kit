@@ -1,6 +1,6 @@
 import {Schema, StringValue} from '@coveo/bueno';
 import type {Product} from '@coveo/headless/commerce';
-import {html, LitElement, nothing, unsafeCSS} from 'lit';
+import {html, LitElement, nothing} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {createRef} from 'lit/directives/ref.js';
 import {booleanConverter} from '@/src/converters/boolean-converter.js';
@@ -8,7 +8,6 @@ import {bindingGuard} from '@/src/decorators/binding-guard.js';
 import {bindings} from '@/src/decorators/bindings.js';
 import {createProductContextController} from '@/src/decorators/commerce/product-template-decorators.js';
 import {errorGuard} from '@/src/decorators/error-guard.js';
-import {injectStylesForNoShadowDOM} from '@/src/decorators/inject-styles-for-no-shadow-dom.js';
 import type {InitializableComponent} from '@/src/decorators/types.js';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles.js';
 import {
@@ -16,23 +15,18 @@ import {
   type TruncateAfter,
 } from '../../common/expandable-text/expandable-text.js';
 import type {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface.js';
-import styles from './atomic-product-description.tw.css';
 import '../atomic-product-text/atomic-product-text.js';
 
 /**
  * The `atomic-product-description` component renders the description of a product.
- *
- * @part expandable-text - The part that contains the product description text.
  */
 @customElement('atomic-product-description')
 @withTailwindStyles
-@injectStylesForNoShadowDOM
 @bindings()
 export class AtomicProductDescription
   extends LitElement
   implements InitializableComponent<CommerceBindings>
 {
-  static styles = unsafeCSS(styles);
   @state()
   bindings!: CommerceBindings;
 
@@ -73,7 +67,13 @@ export class AtomicProductDescription
   })
   public isCollapsible = true;
 
-  initialize() {}
+  initialize() {
+    this.validateProps();
+  }
+
+  createRenderRoot() {
+    return this;
+  }
 
   constructor() {
     super();
