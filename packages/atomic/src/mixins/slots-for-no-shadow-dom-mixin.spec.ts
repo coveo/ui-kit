@@ -77,7 +77,7 @@ describe('SlotsForNoShadowDOMMixin', () => {
     });
 
     it('should adopt children into default slot', () => {
-      expect(element.slots['']).toHaveLength(1);
+      expect(element.slotContent['']).toHaveLength(1);
     });
 
     it('should render slot content in correct position', async () => {
@@ -96,8 +96,8 @@ describe('SlotsForNoShadowDOMMixin', () => {
     });
 
     it('should adopt unslotted content to default slot', () => {
-      expect(element.slots['']).toBeDefined();
-      expect(element.slots['']).toContain(
+      expect(element.slotContent['']).toBeDefined();
+      expect(element.slotContent['']).toContain(
         (element as Element).querySelector('p')
       );
     });
@@ -148,10 +148,9 @@ describe('SlotsForNoShadowDOMMixin', () => {
       expect((content as unknown[])[0]).toBe(fallbackContent);
     });
 
-    it('should return fallback content when default slot contains only comments or empty text nodes', async () => {
-      // Only a comment node
+    it('should return fallback content when default slot contains only comments', async () => {
       const commentElement = (await fixture(html`
-        <slotted-element><!-- a comment --></slotted-element>
+      <slotted-element><!-- a comment --></slotted-element>
       `)) as TestableSlottedElement;
       const fallbackContent = html`<span>Fallback</span>`;
       const contentComment =
@@ -159,11 +158,13 @@ describe('SlotsForNoShadowDOMMixin', () => {
       expect(Array.isArray(contentComment)).toBe(true);
       expect(contentComment).toHaveLength(1);
       expect((contentComment as unknown[])[0]).toBe(fallbackContent);
+    });
 
-      // Only empty text node
+    it('should return fallback content when default slot contains only empty text nodes', async () => {
       const emptyTextElement = (await fixture(html`
-        <slotted-element>   \n   </slotted-element>
+      <slotted-element>   \n   </slotted-element>
       `)) as TestableSlottedElement;
+      const fallbackContent = html`<span>Fallback</span>`;
       const contentEmptyText =
         emptyTextElement.renderDefaultSlotContent(fallbackContent);
       expect(Array.isArray(contentEmptyText)).toBe(true);
