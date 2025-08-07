@@ -11,29 +11,18 @@ import {
   AtomicLoadMoreResults,
   AtomicNoResults,
   AtomicNumericFacet,
-  AtomicNumericRange,
   AtomicQueryError,
   AtomicQuerySummary,
   AtomicRatingFacet,
   AtomicRatingRangeFacet,
   AtomicRefineToggle,
-  AtomicResultBadge,
   AtomicResultDate,
   AtomicResultFieldsList,
-  AtomicResultImage,
   AtomicResultLink,
   AtomicResultList,
   AtomicResultMultiValueText,
-  AtomicResultNumber,
-  AtomicResultPrintableUri,
-  AtomicResultRating,
-  AtomicResultSectionBadges,
   AtomicResultSectionBottomMetadata,
-  AtomicResultSectionEmphasized,
-  AtomicResultSectionExcerpt,
   AtomicResultSectionTitle,
-  AtomicResultSectionTitleMetadata,
-  AtomicResultSectionVisual,
   AtomicResultText,
   AtomicSearchBox,
   AtomicSearchInterface,
@@ -53,31 +42,15 @@ const SearchPage: NextPage = () => {
     () =>
       buildSearchEngine({
         configuration: {
-          accessToken: 'xxc23ce82a-3733-496e-b37e-9736168c4fd9',
-          organizationId: 'electronicscoveodemocomo0n2fu8v',
-          search: {
-            pipeline: 'UI_KIT_E2E',
-            searchHub: 'UI_KIT_E2E',
-          },
-          analytics: {
-            analyticsMode: 'legacy',
-          },
+          accessToken: 'xx564559b1-0045-48e1-953c-3addd1ee4457',
+          organizationId: 'searchuisamples',
         },
       }),
     []
   );
 
   return (
-    <AtomicSearchInterface
-      engine={engine}
-      fieldsToInclude={[
-        'cat_platform',
-        'cat_condition',
-        'cat_categories',
-        'cat_review_count',
-        'cat_color',
-      ]}
-    >
+    <AtomicSearchInterface engine={engine}>
       <AtomicSearchLayout>
         <AtomicLayoutSection section="search">
           <AtomicSearchBox />
@@ -86,19 +59,6 @@ const SearchPage: NextPage = () => {
           <AtomicFacetManager>
             <AtomicFacet field="source" label="Source" />
             <AtomicFacet field="objecttype" label="Type" />
-            <AtomicNumericFacet
-              field="cat_review_count"
-              label="Amount of reviews"
-              displayValuesAs="link"
-            >
-              <AtomicNumericRange start={0} end={150} label="Few" />
-              <AtomicNumericRange
-                start={150}
-                end={650}
-                label="A moderate amount"
-              />
-              <AtomicNumericRange start={650} end={9999999999} label="A lot" />
-            </AtomicNumericFacet>
             <AtomicColorFacet
               field="cat_color"
               label="Color"
@@ -173,27 +133,9 @@ const SearchPage: NextPage = () => {
 function MyTemplate(result: Result) {
   return (
     <>
-      <AtomicResultSectionBadges>
-        <AtomicResultBadge field="ec_brand" />
-      </AtomicResultSectionBadges>
-      <AtomicResultSectionVisual>
-        <AtomicResultImage field="ec_images" />
-      </AtomicResultSectionVisual>
       <AtomicResultSectionTitle>
         <AtomicResultLink />
       </AtomicResultSectionTitle>
-      <AtomicResultSectionTitleMetadata>
-        <AtomicResultRating field="ec_rating" />
-        <AtomicResultPrintableUri maxNumberOfParts={3} />
-      </AtomicResultSectionTitleMetadata>
-      <AtomicResultSectionEmphasized>
-        <AtomicResultNumber field="ec_price">
-          <AtomicFormatCurrency currency="USD" />
-        </AtomicResultNumber>
-      </AtomicResultSectionEmphasized>
-      <AtomicResultSectionExcerpt>
-        <AtomicResultText field="ec_shortdesc" />
-      </AtomicResultSectionExcerpt>
       <AtomicResultSectionBottomMetadata>
         <AtomicResultFieldsList>
           <AtomicResultDate format="ddd MMM D YYYY" />
