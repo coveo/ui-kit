@@ -1,7 +1,7 @@
 import {describe, expect, it} from 'vitest';
 import {parseJWT, shouldRenewJWT} from './jwt-utils.js';
 
-describe('JWT utilities', () => {
+describe('jwt-utils', () => {
   describe('#parseJWT', () => {
     it('should return null for invalid token', () => {
       expect(parseJWT('')).toBeNull();

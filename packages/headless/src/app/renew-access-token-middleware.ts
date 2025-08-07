@@ -8,6 +8,10 @@ import type {Logger} from 'pino';
 import {debounce} from 'ts-debounce';
 import {updateBasicConfiguration} from '../features/configuration/configuration-actions.js';
 import {setError} from '../features/error/error-actions.js';
+import type {
+  CommerceConfigurationSection,
+  ConfigurationSection,
+} from '../state/state-sections.js';
 import {UnauthorizedTokenError} from '../utils/errors.js';
 import {shouldRenewJWT as shouldRenewAccessToken} from '../utils/jwt-utils.js';
 
@@ -36,7 +40,7 @@ export function createRenewAccessTokenMiddleware(
 
       if (accessToken && shouldRenewAccessToken(accessToken)) {
         logger.debug(
-          'Access token is expired or about to expire, attempting renewal'
+          'Access token is expired or about to expire, attempting renewal.'
         );
         try {
           const newAccessToken = await renewToken();
@@ -44,7 +48,7 @@ export function createRenewAccessTokenMiddleware(
             store.dispatch(
               updateBasicConfiguration({accessToken: newAccessToken})
             );
-            logger.debug('Access token was renewed');
+            logger.debug('Access token was renewed.');
           } else {
             logger.warn(
               'Access token renewal returned an empty token. Please check the #renewAccessToken function.'
@@ -53,20 +57,22 @@ export function createRenewAccessTokenMiddleware(
         } catch (error) {
           logger.warn(
             error,
-            'Access token renewal failed, will retry on failure if needed'
+            'Access token renewal failed. A retry will occur if necessary.'
           );
         }
       }
     }
 
-    // Note: No race condition with updateBasicConfiguration dispatch above because:
-    // 1. store.dispatch() with synchronous actions completes immediately and updates state
-    // 2. The state is guaranteed to contain the fresh token before we reach this point
+    // Notes:
     //
-    // We don't short-circuit execution after successful proactive renewal because:
-    // 1. The API server is the authoritative source for token validation (401/419 responses)
-    // 2. Reactive error handling provides defense-in-depth for edge cases
-    // 3. Ensures consistent error handling across all action types
+    // - No race condition with the preceding `updateBasicConfiguration` dispatch because:
+    //   1. `store.dispatch()` with synchronous actions completes immediately and updates the state.
+    //   2. The state is guaranteed to contain the fresh token before this point is reached.
+    //
+    // - Execution is not short-circuited after successful proactive renewal because:
+    //   1. The API is the authoritative source for token validity (401/419 responses).
+    //   2. Reactive error handling provides defense-in-depth for rare edge cases.
+    //   3. This ensures consistent error handling across all action types
     const payload = await next(action);
 
     if (!isExpiredTokenError(payload)) {
@@ -134,22 +140,12 @@ async function attempt(fn: () => Promise<string>) {
   }
 }
 
-/**
- * Extracts the access token from different possible state structures.
- * This function handles various engine state formats:
- * - Search engine: state.configuration.accessToken
- * - Commerce engine: state.commerceContext.accessToken
- * - Other engines: state.accessToken
- *
- * @param state - Redux state from any engine type
- * @returns The access token string or undefined if not found
- */
-// biome-ignore lint/suspicious/noExplicitAny: State structure varies between engine types, runtime safety provided by optional chaining
-function getAccessTokenFromState(state: any): string | undefined {
-  // Handle different state structures across engine types
-  return (
-    state?.configuration?.accessToken ||
-    state?.commerceContext?.accessToken ||
-    state?.accessToken
-  );
+type EngineStateWithAccessToken =
+  | (ConfigurationSection & Record<string, unknown>)
+  | (CommerceConfigurationSection & Record<string, unknown>);
+
+function getAccessTokenFromState(
+  state: EngineStateWithAccessToken
+): string | undefined {
+  return state.configuration.accessToken;
 }
