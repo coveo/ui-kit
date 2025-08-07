@@ -27,9 +27,6 @@ async function isPublished(name, version, tag = version) {
 
 const isPrerelease = process.env.IS_PRERELEASE === 'true';
 const tagSuffix = process.env.TAG_SUFFIX || '';
-const shouldProvideProvenance =
-  !isPrerelease &&
-  process.env.npm_config_registry !== 'https://npm.pkg.github.com';
 /** @type {import('@npmcli/package-json').PackageJson} */
 const {name, version} = JSON.parse(
   readFileSync('package.json', {encoding: 'utf-8'})
@@ -43,7 +40,7 @@ if (!(await isPublished(name, version))) {
     : 'beta';
   await npmPublish('.', {
     tag: tagToPublish,
-    provenance: shouldProvideProvenance,
+    provenance: true,
   });
 } else {
   console.log(`Version ${version} is already published.`);
