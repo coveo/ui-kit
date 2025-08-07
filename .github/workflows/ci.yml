@@ -609,7 +609,7 @@ jobs:
     if: ${{ !cancelled() && github.event_name == 'pull_request' }}
     needs: build
     timeout-minutes: 40
-    name: Pre-release NPM at alpha
+    name: Pre-release NPM at alpha (PR)
     permissions:
       contents: read
       id-token: write
@@ -648,8 +648,8 @@ jobs:
   prerelease-cdn-pr:
     if: ${{ !cancelled() && github.event_name == 'pull_request' }}
     needs: build
-    name: Pre-release CDN in dev
-    environment: "Prerelease (CDN)"
+    name: Pre-release CDN in dev (PR)
+    environment: 'Prerelease (CDN)'
     runs-on: ubuntu-latest
     steps:
       - name: Harden Runner
@@ -780,7 +780,7 @@ jobs:
     if: ${{ !cancelled() && github.event_name == 'merge_group' }}
     needs: is-valid
     timeout-minutes: 40
-    name: Pre-release NPM at alpha
+    name: Pre-release NPM at alpha (Merge group)
     env:
       NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
     runs-on: ubuntu-latest
@@ -819,8 +819,8 @@ jobs:
   prerelease-cdn-merge:
     if: ${{ !cancelled() && github.event_name ==  'merge_group' }}
     needs: is-valid
-    name: Pre-release CDN in dev
-    environment: "Prerelease (CDN)"
+    name: Pre-release CDN in dev (Merge group)
+    environment: 'Prerelease (CDN)'
     runs-on: ubuntu-latest
     steps:
       - name: Harden Runner
