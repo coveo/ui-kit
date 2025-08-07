@@ -70,11 +70,6 @@ export const SlotsForNoShadowDOMMixin = <T extends Constructor<LitElement>>(
       return this;
     }
 
-    connectedCallback() {
-      this._initializeSlotState();
-      super.connectedCallback?.();
-    }
-
     willUpdate(changedProperties: PropertyValues): void {
       super.willUpdate?.(changedProperties);
       if (!this.hasUpdated && !this.slotsInitialized) {
@@ -137,13 +132,6 @@ export const SlotsForNoShadowDOMMixin = <T extends Constructor<LitElement>>(
           );
         })
       );
-    }
-
-    private _initializeSlotState(): void {
-      this.slots = {};
-      this.slotsInitialized = false;
-      this.slotPlaceholders = [];
-      this.pendingSlotRelocation = false;
     }
 
     private _ensureSlotsInitialized(): void {
