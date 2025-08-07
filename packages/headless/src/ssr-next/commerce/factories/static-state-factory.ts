@@ -2,12 +2,12 @@ import type {UnknownAction} from '@reduxjs/toolkit';
 import {buildProductListing} from '../../../controllers/commerce/product-listing/headless-product-listing.js';
 import {buildSearch} from '../../../controllers/commerce/search/headless-search.js';
 import {augmentPreprocessRequestWithForwardedFor} from '../../common/augment-preprocess-request.js';
-import type {BakeInControllers} from '../../common/types/engine.js';
 import {createStaticState} from '../controller-utils.js';
 import {SolutionType} from '../types/controller-constants.js';
 import type {AugmentedControllerDefinition} from '../types/controller-definitions.js';
 import type {InferControllerStaticStateMapFromDefinitionsWithSolutionType} from '../types/controller-inference.js';
 import type {
+  BakedInControllers,
   BuildParameters,
   CommerceControllerDefinitionsMap,
   EngineStaticState,
@@ -68,7 +68,7 @@ export function fetchStaticStateFactory<
           TControllerDefinitions,
           SolutionType
         > &
-          BakeInControllers
+          BakedInControllers
       >;
       return staticState;
     };

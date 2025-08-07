@@ -1,7 +1,6 @@
 import type {Controller} from '../../../controllers/controller/headless-controller.js';
 import type {InvalidControllerDefinition} from '../../common/errors.js';
 import type {ControllersPropsMap} from '../../common/types/controllers.js';
-import type {EngineDefinitionBuildResult} from '../../common/types/engine.js';
 import type {HydratedState} from '../../common/types/hydrate-static-state.js';
 import type {
   InferControllerStaticStateFromController,
@@ -30,10 +29,11 @@ import type {
   SearchOnlyController,
   UniversalController,
 } from './controller-scopes.js';
+import type {CommerceEngineDefinitionBuildResult} from './engine.js';
 import type {Kind} from './kind.js';
 
 export type {
-  EngineDefinitionBuildResult,
+  CommerceEngineDefinitionBuildResult,
   HydratedState,
   OptionsTuple,
   InferControllerStaticStateFromController,

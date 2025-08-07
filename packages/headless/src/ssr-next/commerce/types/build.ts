@@ -7,11 +7,10 @@ import type {
   OptionsExtender,
   OptionsTuple,
 } from '../../common/types/utilities.js';
-import type {SSRCommerceEngine} from '../factories/build-factory.js';
 import type {SolutionType} from './controller-constants.js';
 import type {
+  CommerceEngineDefinitionBuildResult,
   ControllerDefinitionsMap,
-  EngineDefinitionBuildResult,
   EngineDefinitionControllersPropsOption,
 } from './controller-definitions.js';
 
@@ -37,4 +36,4 @@ export type Build<
         TSolutionType
       >
   >
-) => Promise<EngineDefinitionBuildResult<SSRCommerceEngine, TControllersMap>>;
+) => Promise<CommerceEngineDefinitionBuildResult<TControllersMap>>;

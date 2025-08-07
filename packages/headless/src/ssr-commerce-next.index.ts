@@ -271,10 +271,10 @@ export type {
 } from './ssr-next/commerce/factories/build-factory.js';
 export {SolutionType} from './ssr-next/commerce/types/controller-constants.js';
 export type {
+  CommerceEngineDefinitionBuildResult,
   ControllerDefinition,
   ControllerDefinitionsMap,
   ControllerWithKind,
-  EngineDefinitionBuildResult,
   EngineDefinitionControllersPropsOption,
   HydratedState,
   InferControllerStaticStateFromController,

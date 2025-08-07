@@ -4,7 +4,6 @@ import type {
   ControllerStaticStateMap,
   ControllersPropsMap,
 } from '../../common/types/controllers.js';
-import type {BakeInControllers} from '../../common/types/engine.js';
 import type {CartInitialState} from '../controllers/cart/headless-cart.ssr.js';
 import type {
   ParameterManagerState,
@@ -16,7 +15,7 @@ import type {
   EngineDefinitionControllersPropsOption,
   OptionsTuple,
 } from './controller-definitions.js';
-import type {EngineStaticState} from './engine.js';
+import type {BakedInControllers, EngineStaticState} from './engine.js';
 
 export interface SearchFetchConfig extends CommonFetchConfig {
   query: string;
@@ -72,5 +71,5 @@ export type FetchStaticState<
       >
   >
 ) => Promise<
-  EngineStaticState<TSearchAction, TControllersStaticState & BakeInControllers>
+  EngineStaticState<TSearchAction, TControllersStaticState & BakedInControllers>
 >;

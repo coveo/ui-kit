@@ -3,8 +3,16 @@ import type {CommerceEngineOptions} from '../../../app/commerce-engine/commerce-
 import type {EngineConfiguration} from '../../../app/engine-configuration.js';
 import type {NavigatorContextProvider} from '../../../app/navigator-context-provider.js';
 import type {Controller} from '../../../controllers/controller/headless-controller.js';
-import type {ControllerStaticStateMap} from '../../common/types/controllers.js';
-import type {BakeInControllers} from '../../common/types/engine.js';
+import type {
+  ControllerStaticStateMap,
+  ControllersMap,
+} from '../../common/types/controllers.js';
+import type {Cart} from '../controllers/cart/headless-cart.ssr.js';
+import type {Context} from '../controllers/context/headless-context.ssr.js';
+import type {
+  ParameterManager,
+  Parameters as ParameterManagerParameters,
+} from '../controllers/parameter-manager/headless-core-parameter-manager.ssr.js';
 import type {SSRCommerceEngine} from '../factories/build-factory.js';
 import type {Build} from './build.js';
 import type {SolutionType} from './controller-constants.js';
@@ -78,7 +86,7 @@ export interface CommerceEngineDefinition<
    */
   hydrateStaticState: HydrateStaticState<
     InferControllersMapFromDefinition<TControllers, TSolutionType> &
-      BakeInControllers,
+      BakedInControllers,
     UnknownAction,
     InferControllerPropsMapFromDefinitions<TControllers>,
     TControllers,
@@ -104,6 +112,19 @@ export interface CommerceEngineDefinition<
    * @param accessToken - The access token to update.
    */
   setAccessToken: (accessToken: string) => void;
+}
+
+export interface BakedInControllers {
+  parameterManager: ParameterManager<ParameterManagerParameters>;
+  context: Context;
+  cart: Cart;
+}
+
+export interface CommerceEngineDefinitionBuildResult<
+  TControllers extends ControllersMap,
+> {
+  engine: SSRCommerceEngine;
+  controllers: TControllers & BakedInControllers;
 }
 
 export type CommerceControllerDefinitionsMap =
@@ -149,5 +170,5 @@ export type BuildResult<
   TControllerDefinitions extends CommerceControllerDefinitionsMap,
 > = {
   engine: SSRCommerceEngine;
-  controllers: Controllers<TControllerDefinitions> & BakeInControllers;
+  controllers: Controllers<TControllerDefinitions> & BakedInControllers;
 };

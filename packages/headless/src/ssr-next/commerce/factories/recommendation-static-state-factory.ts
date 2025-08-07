@@ -8,6 +8,7 @@ import type {
 } from '../types/controller-definitions.js';
 import type {InferControllerStaticStateMapFromDefinitionsWithSolutionType} from '../types/controller-inference.js';
 import type {
+  BakedInControllers,
   BuildResult,
   CommerceControllerDefinitionsMap,
   EngineStaticState,
@@ -79,7 +80,8 @@ export function fetchRecommendationStaticStateFactory<
       InferControllerStaticStateMapFromDefinitionsWithSolutionType<
         TControllerDefinitions,
         SolutionType
-      >
+      > &
+        BakedInControllers
     >;
   };
 }
