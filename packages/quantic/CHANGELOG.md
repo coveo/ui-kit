@@ -1,3 +1,16 @@
+## 3.29.0 (2025-08-07)
+
+* feat: Migrate monorepo build system from NX to Turborepo (#5733) ([e7e1237](https://github.com/coveo/ui-kit/commits/e7e1237)), closes [#5733](https://github.com/coveo/ui-kit/issues/5733)
+* feat(quantic): added citation anchoring logic to the quantic citations (#5718) ([cf4a881](https://github.com/coveo/ui-kit/commits/cf4a881)), closes [#5718](https://github.com/coveo/ui-kit/issues/5718)
+* chore: migrate from master to main (#5822) ([5372fa4](https://github.com/coveo/ui-kit/commits/5372fa4)), closes [#5822](https://github.com/coveo/ui-kit/issues/5822)
+* chore: update dependencies (major) (#5793) ([8cbf5bc](https://github.com/coveo/ui-kit/commits/8cbf5bc)), closes [#5793](https://github.com/coveo/ui-kit/issues/5793)
+* fix: Revert "fix(analytics): generativeQuestionAnsweringId (#5787)" (#5811) ([b3a9f93](https://github.com/coveo/ui-kit/commits/b3a9f93)), closes [#5787](https://github.com/coveo/ui-kit/issues/5787) [#5811](https://github.com/coveo/ui-kit/issues/5811)
+* fix(analytics): generativeQuestionAnsweringId (#5787) ([d50bade](https://github.com/coveo/ui-kit/commits/d50bade)), closes [#5787](https://github.com/coveo/ui-kit/issues/5787)
+* fix(deps): update all dependencies j:kit-282 (#5770) ([214bb00](https://github.com/coveo/ui-kit/commits/214bb00)), closes [#5770](https://github.com/coveo/ui-kit/issues/5770)
+* fix(quantic): made sure that clearFiltersOnTabChange value is properly parsed as boolean (#5774) ([cf7009e](https://github.com/coveo/ui-kit/commits/cf7009e)), closes [#5774](https://github.com/coveo/ui-kit/issues/5774)
+
+
+
 ## <small>3.28.1 (2025-07-30)</small>
 
 * fix(quantic): fixed the console error test that was skipped  (#5759) ([21695c0](https://github.com/coveo/ui-kit/commits/21695c0)), closes [#5759](https://github.com/coveo/ui-kit/issues/5759)
