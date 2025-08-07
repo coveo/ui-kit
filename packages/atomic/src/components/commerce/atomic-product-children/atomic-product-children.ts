@@ -26,7 +26,7 @@ const AMOUNT_OF_VISIBLE_CHILDREN = 5;
  *
  * This component leverages the [product grouping](https://docs.coveo.com/en/l78i2152/) feature.
  *
- * By default, the component displays up to 5 child products before showing a "+N" button for additional variants.
+ * The component displays up to 5 child products before showing a "+N" button for additional variants.
  * This limit ensures consistent UI layout while preventing performance issues with large product variant collections.
  */
 @customElement('atomic-product-children')
