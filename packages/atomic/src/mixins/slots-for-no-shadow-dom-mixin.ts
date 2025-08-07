@@ -8,7 +8,7 @@ interface SlotMapping {
 }
 
 export interface LightDOMWithSlots {
-  slots: SlotMapping;
+  slotContent: SlotMapping;
   renderDefaultSlotContent(
     defaultContent?: unknown
   ): TemplateResult | unknown[];
@@ -43,7 +43,7 @@ export const SlotsForNoShadowDOMMixin = <T extends Constructor<LitElement>>(
     /**
      * @internal
      */
-    public slots: SlotMapping = {};
+    public slotContent: SlotMapping = {};
     /**
      * @internal
      */
@@ -89,10 +89,10 @@ export const SlotsForNoShadowDOMMixin = <T extends Constructor<LitElement>>(
         const slotName =
           child instanceof Element ? child.getAttribute('slot') || '' : '';
 
-        if (!this.slots[slotName]) {
-          this.slots[slotName] = [];
+        if (!this.slotContent[slotName]) {
+          this.slotContent[slotName] = [];
         }
-        this.slots[slotName]!.push(child);
+        this.slotContent[slotName]!.push(child);
         child.remove();
       }
     }
@@ -102,9 +102,8 @@ export const SlotsForNoShadowDOMMixin = <T extends Constructor<LitElement>>(
     }
 
     private isSlotEmpty(slot: string): boolean {
-      const content = this.slots[slot];
+      const content = this.slotContent[slot];
 
-      console.log(content);
       return (
         !content ||
         content.every((child: AdoptedNode) => {
@@ -127,7 +126,7 @@ export const SlotsForNoShadowDOMMixin = <T extends Constructor<LitElement>>(
       defaultContent?: unknown
     ): TemplateResult | unknown[] {
       if (!this.isSlotEmpty('')) {
-        return this.createSlotPlaceholder(this.slots['']!);
+        return this.createSlotPlaceholder(this.slotContent['']!);
       }
       return defaultContent ? [defaultContent] : [];
     }
