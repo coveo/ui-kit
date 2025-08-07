@@ -8,8 +8,8 @@
     "node": "^20.9.0 || ^22.11.0"
   },
   "dependencies": {
-    "@coveo/auth": "2.0.25",
-    "@coveo/headless": "3.27.7",
+    "@coveo/auth": "2.1.0",
+    "@coveo/headless": "3.28.0",
     "@testing-library/jest-dom": "6.6.3",
     "@testing-library/react": "16.3.0",
     "@types/escape-html": "1.0.4",
@@ -20,7 +20,7 @@
     "dayjs": "1.11.13",
     "escape-html": "1.0.3",
     "express": "5.1.0",
-    "react": "19.1.0",
+    "react": "19.1.1",
     "react-dom": "19.1.0",
     "react-router-dom": "6.26.0",
     "typescript": "5.8.3"
@@ -45,7 +45,7 @@
     ]
   },
   "devDependencies": {
-    "@vitejs/plugin-react": "4.3.4",
+    "@vitejs/plugin-react": "4.7.0",
     "cypress": "13.7.3",
     "vite": "7.0.6",
     "vitest": "3.2.4"

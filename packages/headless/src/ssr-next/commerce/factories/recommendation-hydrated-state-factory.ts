@@ -1,10 +1,8 @@
-import {composeFunction} from '../../common/controller-utils.js';
 import {SolutionType} from '../types/controller-constants.js';
 import type {
   BuildParameters,
   BuildResult,
   CommerceControllerDefinitionsMap,
-  HydrateStaticStateFromBuildResultParameters,
   HydrateStaticStateFunction,
   HydrateStaticStateParameters,
 } from '../types/engine.js';
@@ -19,43 +17,24 @@ export function hydratedRecommendationStaticStateFactory<
   controllerDefinitions: TControllerDefinitions | undefined,
   options: CommerceEngineDefinitionOptions<TControllerDefinitions>
 ): HydrateStaticStateFunction<TControllerDefinitions> {
-  return composeFunction(
-    async (...params: HydrateStaticStateParameters<TControllerDefinitions>) => {
-      const solutionTypeBuild = await buildFactory(
-        controllerDefinitions,
-        options
-      )(SolutionType.recommendation);
+  return async (
+    ...params: HydrateStaticStateParameters<TControllerDefinitions>
+  ) => {
+    const solutionTypeBuild = await buildFactory(
+      controllerDefinitions,
+      options
+    )(SolutionType.recommendation);
 
-      const buildResult = (await solutionTypeBuild(
-        ...(params as BuildParameters<TControllerDefinitions>)
-      )) as BuildResult<TControllerDefinitions>;
+    const {engine, controllers} = (await solutionTypeBuild(
+      ...(params as BuildParameters<TControllerDefinitions>)
+    )) as BuildResult<TControllerDefinitions>;
 
-      const staticState = await hydratedRecommendationStaticStateFactory(
-        controllerDefinitions,
-        options
-      ).fromBuildResult({
-        buildResult,
-        searchActions: params[0]!.searchActions,
-      });
-      return staticState;
-    },
-    {
-      fromBuildResult: async (
-        ...params: HydrateStaticStateFromBuildResultParameters<TControllerDefinitions>
-      ) => {
-        const [
-          {
-            buildResult: {engine, controllers},
-            searchActions,
-          },
-        ] = params;
+    params[0]!.searchActions.forEach((action) => {
+      engine.dispatch(action);
+    });
 
-        searchActions.forEach((action) => {
-          engine.dispatch(action);
-        });
-        await engine.waitForRequestCompletedAction();
-        return {engine, controllers};
-      },
-    }
-  );
+    await engine.waitForRequestCompletedAction();
+
+    return {engine, controllers};
+  };
 }
