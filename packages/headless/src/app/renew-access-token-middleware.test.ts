@@ -74,7 +74,7 @@ describe('createRenewAccessTokenMiddleware', () => {
     expect(store.dispatch).toHaveBeenCalledWith(
       updateBasicConfiguration({accessToken: 'new-token'})
     );
-    expect(logger.debug).toHaveBeenCalledWith('Access token was renewed');
+    expect(logger.debug).toHaveBeenCalledWith('Access token was renewed.');
   });
 
   it('should not attempt renewal when JWT is not expired', async () => {
@@ -104,7 +104,7 @@ describe('createRenewAccessTokenMiddleware', () => {
 
     expect(logger.warn).toHaveBeenCalledWith(
       expect.any(Error),
-      'Access token renewal failed, will retry on failure if needed'
+      'Access token renewal failed. A retry will occur if necessary.'
     );
   });
 
