@@ -43,43 +43,51 @@ describe('atomic-results-per-page', () => {
       mockResultsPerPage as ResultsPerPage
     );
 
-    const {atomicInterface} = await renderInAtomicSearchInterface<AtomicResultsPerPage>({
-      template: html`<atomic-results-per-page
+    const {atomicInterface} =
+      await renderInAtomicSearchInterface<AtomicResultsPerPage>({
+        template: html`<atomic-results-per-page
         choices-displayed=${options.choicesDisplayed || '10,25,50,100'}
         initial-choice=${options.initialChoice || 10}
       ></atomic-results-per-page>`,
-      bindings: {
-        engine: {
-          subscribe: vi.fn(),
-          logger: {
-            error: vi.fn(),
-            warn: vi.fn(),
-            info: vi.fn(),
-            debug: vi.fn(),
-          },
-        } as any,
-        i18n: {
-          t: vi.fn((key: string) =>
-            key === 'results-per-page' ? 'Results per page' : key
-          ),
-          language: 'en',
-          on: vi.fn(),
-          off: vi.fn(),
-        } as any,
-        store: {
-          state: {
-            loadingFlags: [],
-          },
-          onChange: vi.fn(),
-        } as any,
-      },
-    });
+        bindings: {
+          engine: {
+            subscribe: vi.fn(),
+            logger: {
+              error: vi.fn(),
+              warn: vi.fn(),
+              info: vi.fn(),
+              debug: vi.fn(),
+            },
+            // biome-ignore lint/suspicious/noExplicitAny: test mock
+          } as any,
+          i18n: {
+            t: vi.fn((key: string) =>
+              key === 'results-per-page' ? 'Results per page' : key
+            ),
+            language: 'en',
+            on: vi.fn(),
+            off: vi.fn(),
+            // biome-ignore lint/suspicious/noExplicitAny: test mock
+          } as any,
+          store: {
+            state: {
+              loadingFlags: [],
+            },
+            onChange: vi.fn(),
+            // biome-ignore lint/suspicious/noExplicitAny: test mock
+          } as any,
+        },
+      });
 
     // Get the element and set state before it renders
-    const element = atomicInterface.shadowRoot!.querySelector<AtomicResultsPerPage>('atomic-results-per-page')!;
-    
+    const element =
+      atomicInterface.shadowRoot!.querySelector<AtomicResultsPerPage>(
+        'atomic-results-per-page'
+      )!;
+
     // Ensure the component has the expected state for testing
     // This must be done immediately after component creation but before rendering
+    // biome-ignore lint/suspicious/noExplicitAny: test mock assignment
     (element as any).searchStatusState = mockSearchStatus.state;
     element.resultPerPageState = mockResultsPerPage.state;
 
@@ -95,19 +103,24 @@ describe('atomic-results-per-page', () => {
 
   it('should render correctly with radio buttons container', async () => {
     const {element} = await renderComponent();
-    
-    const buttonsContainer = element.shadowRoot?.querySelector('[part="buttons"]');
+
+    const buttonsContainer =
+      element.shadowRoot?.querySelector('[part="buttons"]');
     expect(buttonsContainer).toBeDefined();
     expect(buttonsContainer?.getAttribute('role')).toBe('radiogroup');
   });
 
   it('should render default choices as radio buttons', async () => {
     const {element} = await renderComponent();
-    
-    const radioButtons = element.shadowRoot?.querySelectorAll('input[type="radio"]');
+
+    const radioButtons = element.shadowRoot?.querySelectorAll(
+      'input[type="radio"]'
+    );
     expect(radioButtons).toHaveLength(4); // Default: 10,25,50,100
-    
-    const values = Array.from(radioButtons || []).map(button => (button as HTMLInputElement).value);
+
+    const values = Array.from(radioButtons || []).map(
+      (button) => (button as HTMLInputElement).value
+    );
     expect(values).toEqual(['10', '25', '50', '100']);
   });
 
@@ -133,10 +146,14 @@ describe('atomic-results-per-page', () => {
       initialChoice: 5,
     });
 
-    const radioButtons = element.shadowRoot?.querySelectorAll('input[type="radio"]');
+    const radioButtons = element.shadowRoot?.querySelectorAll(
+      'input[type="radio"]'
+    );
     expect(radioButtons).toHaveLength(3);
-    
-    const values = Array.from(radioButtons || []).map(button => (button as HTMLInputElement).value);
+
+    const values = Array.from(radioButtons || []).map(
+      (button) => (button as HTMLInputElement).value
+    );
     expect(values).toEqual(['5', '15', '30']);
   });
 
@@ -146,21 +163,29 @@ describe('atomic-results-per-page', () => {
       initialChoice: 25,
     });
 
-    const radioButtons = element.shadowRoot?.querySelectorAll('input[type="radio"]');
-    const checkedButton = Array.from(radioButtons || []).find(button => (button as HTMLInputElement).checked);
-    
+    const radioButtons = element.shadowRoot?.querySelectorAll(
+      'input[type="radio"]'
+    );
+    const checkedButton = Array.from(radioButtons || []).find(
+      (button) => (button as HTMLInputElement).checked
+    );
+
     expect(checkedButton).toBeDefined();
     expect((checkedButton as HTMLInputElement).value).toBe('25');
   });
 
   it('should have correct radio button group name for all buttons', async () => {
     const {element} = await renderComponent();
-    
-    const radioButtons = element.shadowRoot?.querySelectorAll('input[type="radio"]');
-    const groupNames = Array.from(radioButtons || []).map(button => (button as HTMLInputElement).name);
-    
+
+    const radioButtons = element.shadowRoot?.querySelectorAll(
+      'input[type="radio"]'
+    );
+    const groupNames = Array.from(radioButtons || []).map(
+      (button) => (button as HTMLInputElement).name
+    );
+
     // All radio buttons should have the same group name
-    expect(groupNames.every(name => name === groupNames[0])).toBe(true);
+    expect(groupNames.every((name) => name === groupNames[0])).toBe(true);
     expect(groupNames[0]).toMatch(/^atomic-results-per-page-/); // Should start with component prefix
   });
 
@@ -170,11 +195,17 @@ describe('atomic-results-per-page', () => {
       initialChoice: 25,
     });
 
-    const radioButtons = element.shadowRoot?.querySelectorAll('input[type="radio"]');
-    
-    const button10 = Array.from(radioButtons || []).find(button => (button as HTMLInputElement).value === '10');
-    const button25 = Array.from(radioButtons || []).find(button => (button as HTMLInputElement).value === '25');
-    
+    const radioButtons = element.shadowRoot?.querySelectorAll(
+      'input[type="radio"]'
+    );
+
+    const button10 = Array.from(radioButtons || []).find(
+      (button) => (button as HTMLInputElement).value === '10'
+    );
+    const button25 = Array.from(radioButtons || []).find(
+      (button) => (button as HTMLInputElement).value === '25'
+    );
+
     expect(button10?.getAttribute('part')).toBe('button');
     expect(button25?.getAttribute('part')).toBe('button active-button');
   });
@@ -182,8 +213,9 @@ describe('atomic-results-per-page', () => {
   describe('when search has error', () => {
     it('should not render when search status has error', async () => {
       const {element} = await renderComponent();
-      
+
       // Update the bound state to simulate error condition
+      // biome-ignore lint/suspicious/noExplicitAny: test mock assignment
       (element as any).searchStatusState = {
         hasError: true,
         hasResults: false,
@@ -191,7 +223,7 @@ describe('atomic-results-per-page', () => {
         firstSearchExecuted: true,
       };
       element.isAppLoaded = true;
-      
+
       // Trigger re-render
       element.requestUpdate();
       await element.updateComplete;
@@ -203,8 +235,9 @@ describe('atomic-results-per-page', () => {
   describe('when no results available', () => {
     it('should not render when search has no results', async () => {
       const {element} = await renderComponent();
-      
-      // Update the bound state to simulate no results condition  
+
+      // Update the bound state to simulate no results condition
+      // biome-ignore lint/suspicious/noExplicitAny: test mock assignment
       (element as any).searchStatusState = {
         hasError: false,
         hasResults: false,
@@ -212,7 +245,7 @@ describe('atomic-results-per-page', () => {
         firstSearchExecuted: true,
       };
       element.isAppLoaded = true;
-      
+
       // Trigger re-render
       element.requestUpdate();
       await element.updateComplete;
