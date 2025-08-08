@@ -1,20 +1,16 @@
-import { Canvas, ArgTypes, Meta, Title, Description, Subtitle } from '@storybook/blocks';
+import { Meta } from '@storybook/blocks';
 import * as AtomicProductTextStories from './atomic-product-text.new.stories';
-import { CanvasWithGithub } from '../../../../storybook-utils/documentation/canvas-with-github';
+import { AtomicDocTemplate } from '../../../../storybook-utils/documentation/atomic-doc-template';
+
 
 <Meta of={AtomicProductTextStories} />
 
-<Title />
-<Subtitle>
-  <Description />
-</Subtitle>
-
-<CanvasWithGithub
-  of={ AtomicProductTextStories.Default }
+<AtomicDocTemplate
+  stories={AtomicProductTextStories}
   githubPath="commerce/atomic-product-text/atomic-product-text.ts"
-/>
-
-## Usage
+  tagName="atomic-product-text"
+  className="AtomicProductText"
+>
 
 The `atomic-product-text` component renders the value of a string product field.
 
@@ -66,6 +62,4 @@ The component looks for fields in this order:
 1. First in the Product object properties
 2. Then in the `product.additionalFields` object
 
-## Reference
-
-<ArgTypes />
+</AtomicDocTemplate>

@@ -8,11 +8,23 @@ import {
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {renderComponent} from '@/storybook-utils/common/render-component';
 
-const {play, decorator} = wrapInCommerceInterface();
+const {play, decorator} = wrapInCommerceInterface({
+  engineConfig: {
+    context: {
+      country: 'US',
+      currency: 'USD',
+      language: 'en',
+      view: {
+        url: 'https://sports.barca.group/browse/promotions/ui-kit-testing',
+      },
+    },
+  },
+  type: 'product-listing',
+});
 
 const meta: Meta = {
   component: 'atomic-commerce-timeframe-facet',
-  title: 'Commerce/atomic-commerce-timeframe-facet',
+  title: 'Commerce/Facet (Timeframe)',
   id: 'atomic-commerce-timeframe-facet',
   render: renderComponent,
   decorators: [commerceFacetWidthDecorator, decorator],
@@ -23,7 +35,6 @@ const meta: Meta = {
 export default meta;
 
 export const Default: Story = {
-  name: 'atomic-commerce-timeframe-facet',
   decorators: [
     (_) => {
       return html`<div id="code-root">

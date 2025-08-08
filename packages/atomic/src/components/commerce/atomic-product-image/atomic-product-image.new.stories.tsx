@@ -30,7 +30,7 @@ const {decorator: productTemplateDecorator} = wrapInProductTemplate();
 
 const meta: Meta = {
   component: 'atomic-product-image',
-  title: 'Commerce/atomic-product-image',
+  title: 'Commerce/Product Image',
   id: 'atomic-product-image',
   render: renderComponent,
   decorators: [

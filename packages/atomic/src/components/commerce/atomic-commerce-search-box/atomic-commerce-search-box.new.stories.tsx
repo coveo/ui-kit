@@ -15,7 +15,7 @@ const normalWidthDecorator: Decorator = (story) =>
 
 const meta: Meta = {
   component: 'atomic-commerce-search-box',
-  title: 'Commerce/atomic-commerce-search-box',
+  title: 'Commerce/Search Box',
   id: 'atomic-commerce-search-box',
   render: renderComponent,
   decorators: [normalWidthDecorator, decorator],

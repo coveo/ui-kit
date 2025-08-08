@@ -15,7 +15,7 @@ const {decorator: commerceSearchBoxDecorator} = wrapInCommerceSearchBox(html`
 
 const meta: Meta = {
   component: 'atomic-commerce-search-box-instant-products',
-  title: 'Commerce/atomic-commerce-search-box-instant-products',
+  title: 'Commerce/Search Box Instant Products',
   id: 'atomic-commerce-search-box-instant-products',
   render: renderComponentWithoutCodeRoot,
   decorators: [commerceSearchBoxDecorator, commerceInterfaceDecorator],

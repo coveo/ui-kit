@@ -16,7 +16,7 @@ const {decorator, play} = wrapInCommerceInterface();
 
 const meta: Meta = {
   component: 'atomic-commerce-sort-dropdown',
-  title: 'Commerce/atomic-commerce-sort-dropdown',
+  title: 'Commerce/Sort Dropdown',
   id: 'atomic-commerce-sort-dropdown',
   render: renderComponent,
   decorators: [decorator],
