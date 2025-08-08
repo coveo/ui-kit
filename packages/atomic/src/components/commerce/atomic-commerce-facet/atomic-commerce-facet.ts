@@ -27,14 +27,12 @@ import {
   AriaLiveRegionController,
   FocusTargetController,
 } from '@/src/utils/accessibility-utils';
-import type {FacetInfo} from '../../common/facets/facet-common-store';
 import {announceFacetSearchResultsWithAriaLive} from '../../common/facets/facet-search/facet-search-aria-live';
 import {
   shouldDisplaySearchResults,
   shouldUpdateFacetSearchComponent,
 } from '../../common/facets/facet-search/facet-search-utils';
 import type {FacetValueProps} from '../../common/facets/facet-value/facet-value';
-import {initializePopover} from '../../common/facets/popover/popover-type';
 import type {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface';
 import styles from './atomic-commerce-facet.tw.css';
 
@@ -129,7 +127,6 @@ export class AtomicCommerceFacet
     this.initFocusTargets();
     this.ensureSubscribed();
     this.initAriaLive();
-    this.initPopover();
   }
 
   public disconnectedCallback(): void {
@@ -329,18 +326,6 @@ export class AtomicCommerceFacet
     };
   }
 
-  private get isHidden() {
-    return !this.facetState.values.length;
-  }
-
-  private initPopover() {
-    initializePopover(this, {
-      ...this.facetInfo,
-      hasValues: () => !!this.facetState.values.length,
-      numberOfActiveValues: () => this.activeValues.length,
-    });
-  }
-
   private initFocusTargets() {
     if (!this.showLessFocus) {
       this.showLessFocus = new FocusTargetController(this, this.bindings);
@@ -362,15 +347,6 @@ export class AtomicCommerceFacet
       },
       this.bindings.i18n
     );
-  }
-
-  private get facetInfo(): FacetInfo {
-    return {
-      label: () => this.bindings.i18n.t(this.displayName),
-      facetId: this.facetState.facetId,
-      element: this,
-      isHidden: () => this.isHidden,
-    };
   }
 
   private get focusTargets(): {

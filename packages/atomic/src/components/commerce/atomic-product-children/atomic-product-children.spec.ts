@@ -264,15 +264,129 @@ describe('atomic-product-children', () => {
     expect(image?.src).toBe('https://example.com/fallback.jpg');
   });
 
-  it('should render the count button with the correct count according to the totalNumberOfChildren', async () => {
-    const total = 7;
-    const {childProducts} = await renderProductChildren({
-      totalNumberOfChildren: total,
+  describe('when there are more than 5 child products', () => {
+    it('should render only 5 visible child products', async () => {
+      const childProductsArray = Array.from({length: 8}, (_, i) =>
+        buildFakeProduct({
+          ec_name: `Test Child Product ${i + 1}`,
+          permanentid: i === 0 ? 'permanentId' : `child-permanent-id-${i + 1}`,
+          ec_thumbnails: [`https://example.com/image${i + 1}.jpg`],
+        })
+      );
+
+      const {childProducts} = await renderProductChildren({
+        childProducts: childProductsArray,
+        totalNumberOfChildren: 8,
+      });
+
+      expect(childProducts).toHaveLength(6);
+      const childButtons = Array.from(childProducts).slice(0, 5);
+      childButtons.forEach((button, index) => {
+        expect(button.title).toBe(`Test Child Product ${index + 1}`);
+      });
     });
 
-    // 6 is the number of child in the product object. Plus 1 since the parent is included in the children count.
-    expect(childProducts[childProducts.length - 1]).toHaveTextContent(
-      (total - 6 + 1).toString()
-    );
+    it('should render the count button with correct count for additional children', async () => {
+      const childProductsArray = Array.from({length: 8}, (_, i) =>
+        buildFakeProduct({
+          ec_name: `Test Child Product ${i + 1}`,
+          permanentid: i === 0 ? 'permanentId' : `child-permanent-id-${i + 1}`,
+          ec_thumbnails: [`https://example.com/image${i + 1}.jpg`],
+        })
+      );
+
+      const {childProducts} = await renderProductChildren({
+        childProducts: childProductsArray,
+        totalNumberOfChildren: 8,
+      });
+
+      const plusButton = childProducts[childProducts.length - 1];
+      expect(plusButton).toHaveTextContent('+3');
+    });
+
+    it('should calculate the count button correctly', async () => {
+      const childProductsArray = Array.from({length: 10}, (_, i) =>
+        buildFakeProduct({
+          ec_name: `Test Child Product ${i + 1}`,
+          permanentid: i === 0 ? 'permanentId' : `child-permanent-id-${i + 1}`,
+          ec_thumbnails: [`https://example.com/image${i + 1}.jpg`],
+        })
+      );
+
+      const {childProducts} = await renderProductChildren({
+        childProducts: childProductsArray,
+        totalNumberOfChildren: 10,
+      });
+
+      const plusButton = childProducts[childProducts.length - 1];
+      expect(plusButton).toHaveTextContent('+5');
+    });
+  });
+
+  describe('when there are 5 or fewer child products', () => {
+    it('should render all child products without a count button when there are exactly 5', async () => {
+      const childProductsArray = Array.from({length: 5}, (_, i) =>
+        buildFakeProduct({
+          ec_name: `Test Child Product ${i + 1}`,
+          permanentid: i === 0 ? 'permanentId' : `child-permanent-id-${i + 1}`,
+          ec_thumbnails: [`https://example.com/image${i + 1}.jpg`],
+        })
+      );
+
+      const {childProducts} = await renderProductChildren({
+        childProducts: childProductsArray,
+        totalNumberOfChildren: 5,
+      });
+
+      expect(childProducts).toHaveLength(5);
+
+      Array.from(childProducts).forEach((button, index) => {
+        expect(button.title).toBe(`Test Child Product ${index + 1}`);
+      });
+    });
+
+    it('should render all child products without a count button when there are fewer than 5', async () => {
+      const childProductsArray = Array.from({length: 3}, (_, i) =>
+        buildFakeProduct({
+          ec_name: `Test Child Product ${i + 1}`,
+          permanentid: i === 0 ? 'permanentId' : `child-permanent-id-${i + 1}`,
+          ec_thumbnails: [`https://example.com/image${i + 1}.jpg`],
+        })
+      );
+
+      const {childProducts} = await renderProductChildren({
+        childProducts: childProductsArray,
+        totalNumberOfChildren: 3,
+      });
+
+      expect(childProducts).toHaveLength(3);
+
+      Array.from(childProducts).forEach((button, index) => {
+        expect(button.title).toBe(`Test Child Product ${index + 1}`);
+      });
+    });
+
+    it('should render all child products with a count button when there are fewer than 5 but totalNumberOfChildren is greater than children.length', async () => {
+      const childProductsArray = Array.from({length: 3}, (_, i) =>
+        buildFakeProduct({
+          ec_name: `Test Child Product ${i + 1}`,
+          permanentid: i === 0 ? 'permanentId' : `child-permanent-id-${i + 1}`,
+          ec_thumbnails: [`https://example.com/image${i + 1}.jpg`],
+        })
+      );
+
+      const {childProducts} = await renderProductChildren({
+        childProducts: childProductsArray,
+        totalNumberOfChildren: 7,
+      });
+
+      expect(childProducts).toHaveLength(4);
+      const childButtons = Array.from(childProducts).slice(0, 3);
+      childButtons.forEach((button, index) => {
+        expect(button.title).toBe(`Test Child Product ${index + 1}`);
+      });
+      const plusButton = childProducts[childProducts.length - 1];
+      expect(plusButton).toHaveTextContent('+4');
+    });
   });
 });
