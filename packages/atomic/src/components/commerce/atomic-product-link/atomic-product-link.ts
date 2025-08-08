@@ -26,7 +26,8 @@ import {
 import styles from './atomic-product-link.tw.css';
 
 /**
- * The `atomic-product-link` component automatically transforms a search product title into a clickable link that points to the original item.
+ * The `atomic-product-link` component automatically transforms a product `ec_name` into a clickable link that points to the original item.
+ *
  * @slot default - The content to display inside the link.
  * @slot attributes - Use `<a slot="attributes" target="_blank"></a>` to pass custom attributes to the generated link.
  */

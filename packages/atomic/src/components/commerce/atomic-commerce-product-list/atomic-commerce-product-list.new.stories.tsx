@@ -70,11 +70,11 @@ const meta: Meta = {
 export default meta;
 
 export const Default: Story = {
-  name: 'Grid display',
+  name: 'Using grid display',
 };
 
 export const GridDisplayWithTemplate: Story = {
-  name: 'Grid display with template',
+  name: 'Using grid display with template',
   args: {
     'slots-default': `<atomic-product-template>
   <template>
@@ -117,21 +117,21 @@ export const GridDisplayWithTemplate: Story = {
 };
 
 export const GridDisplayBeforeQuery: Story = {
-  name: 'Grid display before query',
+  name: 'Using grid display before query',
   play: async (context) => {
     await playNoFirstQuery(context);
   },
 };
 
 export const ListDisplay: Story = {
-  name: 'List display',
+  name: 'Using list display',
   args: {
     'attributes-display': 'list',
   },
 };
 
 export const ListDisplayWithTemplate: Story = {
-  name: 'List display with template',
+  name: 'Using list display with template',
   args: {
     'attributes-display': 'list',
     'slots-default': `<atomic-product-template>
@@ -175,7 +175,7 @@ export const ListDisplayWithTemplate: Story = {
 };
 
 export const ListDisplayBeforeQuery: Story = {
-  name: 'List display before query',
+  name: 'Using list display before query',
   args: {
     'attributes-display': 'list',
   },
@@ -185,7 +185,7 @@ export const ListDisplayBeforeQuery: Story = {
 };
 
 export const TableDisplay: Story = {
-  name: 'Table display',
+  name: 'Using table display',
   args: {
     'attributes-display': 'table',
     'slots-default': `<atomic-product-template>
@@ -209,7 +209,7 @@ export const TableDisplay: Story = {
 };
 
 export const TableDisplayBeforeQuery: Story = {
-  name: 'Table display before query',
+  name: 'Using table display before query',
   args: {
     'attributes-display': 'table',
   },
@@ -219,6 +219,7 @@ export const TableDisplayBeforeQuery: Story = {
 };
 
 export const NoProducts: Story = {
+  tags: ['!dev'],
   name: 'No products',
   decorators: [(story) => story()],
   play: async (context) => {

@@ -120,9 +120,3 @@ export const InASearchBoxInstantProducts: Story = {
     });
   },
 };
-
-export const WithoutValidParent: Story = {
-  name: 'Without a valid parent',
-  tags: ['test'],
-  play: initializeCommerceInterface,
-};

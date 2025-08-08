@@ -68,14 +68,10 @@ const meta: Meta = {
 };
 export default meta;
 
-export const Default: Story = {
-  play: async (context) => {
-    await play(context);
-  },
-};
+export const Default: Story = {};
 
 export const WithFullTemplate: Story = {
-  tags: ['test'],
+  name: 'With a full template',
   args: {
     'slots-default': ` <atomic-product-template>
                   <template>
@@ -108,26 +104,8 @@ export const WithFullTemplate: Story = {
   },
 };
 
-export const RecsOpeningInNewTab: Story = {
-  tags: ['test'],
-  args: {
-    'attributes-display': 'grid',
-    'slots-default': ` <atomic-product-template>
-                <template slot="link">
-                  <atomic-product-link>
-                    <a slot="attributes" target="_blank"></a>
-                  </atomic-product-link>
-                </template>
-                <template>
-                  <atomic-product-section-title>
-                    <atomic-product-text field="ec_name"></atomic-product-text>
-                  </atomic-product-section-title>
-                </template>
-              </atomic-product-template>`,
-  },
-};
-
 export const AsCarousel: Story = {
+  name: 'As a carousel',
   args: {
     'attributes-products-per-page': 3,
   },

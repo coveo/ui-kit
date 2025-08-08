@@ -6,11 +6,7 @@ import {wrapInProductTemplate} from '@/storybook-utils/commerce/commerce-product
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {renderComponent} from '@/storybook-utils/common/render-component';
 
-const {
-  decorator: commerceInterfaceDecorator,
-  play: initializeCommerceInterface,
-} = wrapInCommerceInterface({
-  skipFirstRequest: false,
+const {decorator: commerceInterfaceDecorator, play} = wrapInCommerceInterface({
   type: 'product-listing',
   engineConfig: {
     context: {
@@ -21,6 +17,12 @@ const {
       country: 'US',
       currency: 'USD',
     },
+    preprocessRequest: (request) => {
+      const parsed = JSON.parse(request.body as string);
+      parsed.perPage = 1;
+      request.body = JSON.stringify(parsed);
+      return request;
+    },
   },
 });
 const {decorator: commerceProductListDecorator} = wrapInCommerceProductList();
@@ -28,7 +30,7 @@ const {decorator: productTemplateDecorator} = wrapInProductTemplate();
 
 const meta: Meta = {
   component: 'atomic-product-link',
-  title: 'Atomic-Commerce/Product Template Components/ProductLink',
+  title: 'Commerce/atomic-product-link',
   id: 'atomic-product-link',
   render: renderComponent,
   decorators: [
@@ -37,17 +39,15 @@ const meta: Meta = {
     commerceInterfaceDecorator,
   ],
   parameters,
-  play: initializeCommerceInterface,
+  play,
 };
 
 export default meta;
 
-export const Default: Story = {
-  name: 'atomic-product-link',
-};
+export const Default: Story = {};
 
 export const WithSlotsAttributes: Story = {
-  name: 'opens in a new browser tab',
+  name: 'With a slot for attributes',
   decorators: [
     () => {
       return html`
@@ -60,13 +60,12 @@ export const WithSlotsAttributes: Story = {
 };
 
 export const WithAlternativeContent: Story = {
-  name: 'with alternative content',
+  name: 'With alternative content',
   decorators: [
     () => {
       return html`
         <atomic-product-link>
           <div>
-            Alternative content
             <img src="https://picsum.photos/350" class="thumbnail" />
           </div>
         </atomic-product-link>
@@ -76,7 +75,7 @@ export const WithAlternativeContent: Story = {
 };
 
 export const WithHrefTemplate: Story = {
-  name: 'with href template',
+  name: 'With an href template',
   decorators: [
     () => {
       return html`

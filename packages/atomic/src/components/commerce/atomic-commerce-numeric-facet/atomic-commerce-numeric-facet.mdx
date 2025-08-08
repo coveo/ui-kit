@@ -11,6 +11,7 @@ import {
   Subtitle,
 } from '@storybook/blocks';
 import * as AtomicCommerceNumericFacet from './atomic-commerce-numeric-facet.new.stories';
+import { CanvasWithGithub } from '../../../../storybook-utils/documentation/canvas-with-github';
 
 <Meta of={AtomicCommerceNumericFacet} />
 
@@ -19,19 +20,9 @@ import * as AtomicCommerceNumericFacet from './atomic-commerce-numeric-facet.new
   <Description />
 </Subtitle>
 
-<Canvas
-  additionalActions={[
-    {
-      title: 'Open in GitHub',
-      onClick: () => {
-        window.open(
-          'https://github.com/coveo/ui-kit/blob/master/packages/atomic/src/components/commerce/atomic-commerce-numeric-facet/atomic-commerce-numeric-facet.ts',
-          '_blank'
-        );
-      },
-    },
-  ]}
+<CanvasWithGithub
   of={AtomicCommerceNumericFacet.Default}
+  githubPath="commerce/atomic-commerce-numeric-facet/atomic-commerce-numeric-facet.ts"
 />
 
 ## Usage

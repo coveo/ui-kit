@@ -1,10 +1,16 @@
-import {Canvas, ArgTypes, Meta, Title, Description} from '@storybook/blocks';
+import { Canvas, ArgTypes, Meta, Title, Description } from '@storybook/blocks';
 import * as AtomicCommerceFacetsStories from './atomic-commerce-facets.new.stories';
+import { CanvasWithGithub } from '../../../../storybook-utils/documentation/canvas-with-github';
 
 <Meta of={AtomicCommerceFacetsStories} />
 
 <Title />
 <Description />
+
+<CanvasWithGithub
+  of={AtomicCommerceFacetsStories.Default}
+  githubPath="commerce/atomic-commerce-facets/atomic-commerce-facets.ts"
+/>
 
 <Canvas of={AtomicCommerceFacetsStories.Default} />
 

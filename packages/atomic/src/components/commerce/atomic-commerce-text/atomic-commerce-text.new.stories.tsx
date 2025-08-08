@@ -9,7 +9,7 @@ const {decorator, play} = wrapInCommerceInterface({skipFirstRequest: true});
 
 const meta: Meta = {
   component: 'atomic-commerce-text',
-  title: 'Atomic-Commerce/Product Template Components/Text',
+  title: 'Commerce/atomic-commerce-text',
   id: 'atomic-commerce-text',
   render: renderComponent,
   decorators: [decorator],
@@ -20,7 +20,6 @@ const meta: Meta = {
 export default meta;
 
 export const Default: Story = {
-  name: 'atomic-commerce-text',
   args: {
     'attributes-value': 'Atomic Commerce Text',
   },

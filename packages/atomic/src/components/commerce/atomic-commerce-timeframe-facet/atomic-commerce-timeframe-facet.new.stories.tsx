@@ -1,21 +1,21 @@
 import type {Meta, StoryObj as Story} from '@storybook/web-components';
 import {html} from 'lit';
+import {commerceFacetWidthDecorator} from '@/storybook-utils/commerce/commerce-facet-width-decorator';
 import {
-  playExecuteFirstRequest,
-  playKeepOnlyFirstFacetOfType,
+  playHideFacetTypes,
   wrapInCommerceInterface,
 } from '@/storybook-utils/commerce/commerce-interface-wrapper';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {renderComponent} from '@/storybook-utils/common/render-component';
 
-const {play, decorator} = wrapInCommerceInterface({skipFirstRequest: true});
+const {play, decorator} = wrapInCommerceInterface();
 
 const meta: Meta = {
   component: 'atomic-commerce-timeframe-facet',
   title: 'Commerce/atomic-commerce-timeframe-facet',
   id: 'atomic-commerce-timeframe-facet',
   render: renderComponent,
-  decorators: [decorator],
+  decorators: [commerceFacetWidthDecorator, decorator],
   parameters,
   play,
 };
@@ -33,7 +33,6 @@ export const Default: Story = {
   ],
   play: async (context) => {
     await play(context);
-    await playExecuteFirstRequest(context);
-    playKeepOnlyFirstFacetOfType('atomic-commerce-timeframe-facet', context);
+    await playHideFacetTypes('atomic-commerce-timeframe-facet', context);
   },
 };

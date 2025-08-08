@@ -15,6 +15,7 @@ const meta: Meta = {
   decorators: [decorator],
   parameters: {
     ...parameters,
+    layout: 'fullscreen',
     docs: {
       ...parameters.docs,
       story: {

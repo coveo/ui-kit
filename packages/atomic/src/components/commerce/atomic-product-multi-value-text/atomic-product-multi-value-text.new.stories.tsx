@@ -1,5 +1,4 @@
 import type {Meta, StoryObj as Story} from '@storybook/web-components';
-import {html} from 'lit';
 import {wrapInCommerceInterface} from '@/storybook-utils/commerce/commerce-interface-wrapper';
 import {wrapInCommerceProductList} from '@/storybook-utils/commerce/commerce-product-list-wrapper';
 import {wrapInProductTemplate} from '@/storybook-utils/commerce/commerce-product-template-wrapper';
@@ -25,6 +24,11 @@ const meta: Meta = {
   id: 'atomic-product-multi-value-text',
   render: renderComponent,
   parameters,
+  decorators: [
+    productDecorator,
+    commerceProductListDecorator,
+    commerceInterfaceDecorator,
+  ],
   play,
   args: {
     'attributes-field': 'cat_available_sizes',
@@ -33,21 +37,10 @@ const meta: Meta = {
 
 export default meta;
 
-export const Default: Story = {
-  decorators: [
-    productDecorator,
-    commerceProductListDecorator,
-    commerceInterfaceDecorator,
-  ],
-};
+export const Default: Story = {};
 
 export const WithMaxValuesToDisplaySetToMinimum: Story = {
   name: 'With max-values-set-to-display set to minimum',
-  decorators: [
-    productDecorator,
-    commerceProductListDecorator,
-    commerceInterfaceDecorator,
-  ],
   args: {
     'attributes-max-values-to-display': 1,
   },
@@ -55,33 +48,7 @@ export const WithMaxValuesToDisplaySetToMinimum: Story = {
 
 export const WithMaxValuesToDisplaySetToTotalNumberOfValues: Story = {
   name: 'With max-values-set-to-display set to total number of values',
-  decorators: [
-    productDecorator,
-    commerceProductListDecorator,
-    commerceInterfaceDecorator,
-  ],
   args: {
     'attributes-max-values-to-display': 6,
   },
-};
-
-export const InAPageWithTheCorrespondingFacet: Story = {
-  name: 'In a page with the corresponding facet',
-  decorators: [
-    productDecorator,
-    commerceProductListDecorator,
-    (story) => {
-      return html`
-        <atomic-commerce-layout>
-          <atomic-layout-section section="facets"
-            ><atomic-commerce-facets></atomic-commerce-facets>
-          </atomic-layout-section>
-          <atomic-layout-section section="main">
-            ${story()}
-          </atomic-layout-section>
-        </atomic-commerce-layout>
-      `;
-    },
-    commerceInterfaceDecorator,
-  ],
 };

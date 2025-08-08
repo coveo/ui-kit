@@ -37,7 +37,9 @@ const meta: Meta = {
 export default meta;
 
 export const Default: Story = {
-  name: 'atomic-commerce-recommendation-interface',
+  args: {
+    'slots-default': `<span>Interface content</span>`,
+  },
 };
 
 const recommendationList = `<style>
@@ -88,7 +90,7 @@ const recommendationList = `<style>
 </atomic-commerce-layout>`;
 
 export const WithRecommendationList: Story = {
-  tags: ['commerce', 'test'],
+  name: 'With a recommendation list',
   args: {
     'slots-default': recommendationList,
   },
