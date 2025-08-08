@@ -73,28 +73,6 @@ export class AtomicProductLink
     }
   }
 
-  private extractAttributesFromSlot() {
-    const slotName = 'attributes';
-    const attributes = getAttributesFromLinkSlot(this, slotName);
-
-    if (!attributes) {
-      this.linkAttributes = undefined;
-      return;
-    }
-
-    const attributesSlot = this.slots.attributes?.[0];
-    if (
-      attributesSlot instanceof Element &&
-      !attributesSlot.hasAttribute('hidden')
-    ) {
-      attributesSlot.setAttribute('hidden', '');
-    }
-
-    this.linkAttributes = attributes.filter(
-      (attr: Attr) => attr.nodeName !== 'hidden'
-    );
-  }
-
   initialize() {
     if (!this.product && this.productController.item) {
       this.product = this.productController.item;
@@ -141,7 +119,7 @@ export class AtomicProductLink
           );
 
       const {warningMessage} = interactiveProduct;
-      this.extractAttributesFromSlot();
+      this.linkAttributes = getAttributesFromLinkSlot(this, 'attributes');
 
       return renderLinkWithItemAnalytics({
         props: {
