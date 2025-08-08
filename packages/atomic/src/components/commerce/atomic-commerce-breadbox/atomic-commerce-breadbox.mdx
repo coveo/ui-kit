@@ -1,21 +1,18 @@
-import {Canvas, ArgTypes, Meta, Title, Description, Stories, Subtitle} from '@storybook/blocks';
+import { Meta } from '@storybook/blocks';
 import * as AtomicCommerceBreadboxStories from './atomic-commerce-breadbox.new.stories';
-import {CanvasWithGithub} from '../../../../storybook-utils/documentation/canvas-with-github';
+import { AtomicDocTemplate } from '../../../../storybook-utils/documentation/atomic-doc-template';
 
 <Meta of={AtomicCommerceBreadboxStories} />
 
-
-<Title />
-<Subtitle ><Description/></Subtitle>
-
-
-<CanvasWithGithub
-  of={AtomicCommerceBreadboxStories.Default}
+<AtomicDocTemplate
+  stories={AtomicCommerceBreadboxStories}
   githubPath="commerce/atomic-commerce-breadbox/atomic-commerce-breadbox.ts"
-/>
+  tagName="atomic-commerce-breadbox"
+  className="AtomicCommerceBreadbox"
+>
 
-## Usage
 This component is typically placed within the "status" section of the layout.
+
 ```html
 <atomic-commerce-interface>
   ...
@@ -32,9 +29,4 @@ This component is typically placed within the "status" section of the layout.
   </atomic-commerce-layout>
 </atomic-commerce-interface>
 ```
-
-## Examples
-<Stories title={""}/>
-
-## Reference
-<ArgTypes />
+</AtomicDocTemplate>

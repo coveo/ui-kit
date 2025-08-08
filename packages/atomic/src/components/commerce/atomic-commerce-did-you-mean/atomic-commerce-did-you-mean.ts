@@ -21,8 +21,6 @@ import {renderTriggerCorrection} from '../../common/query-correction/trigger-cor
 import type {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface';
 
 /**
- * @alpha
- *
  * The `atomic-commerce-did-you-mean` component is responsible for handling query corrections. When a query returns no products but finds a possible query correction, the component either suggests the correction or automatically triggers a new query with the suggested term.
  *
  * @part no-results - The text displayed when there are no results.

@@ -26,8 +26,6 @@ import type {CommerceBindings} from '../atomic-commerce-interface/atomic-commerc
 
 /**
  * The `atomic-commerce-search-box-recent-queries` component can be added as a child of an `atomic-commerce-search-box` component, allowing for the configuration of recent query suggestions.
- *
- * @alpha
  */
 @customElement('atomic-commerce-search-box-recent-queries')
 export class AtomicCommerceSearchBoxRecentQueries

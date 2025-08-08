@@ -25,8 +25,6 @@ import type {AtomicCommerceRefineModal} from '../atomic-commerce-refine-modal/at
  *
  * @part button - The refine toggle button.
  * @part placeholder - The placeholder shown while the first request is being executed.
- *
- * @alpha
  */
 @customElement('atomic-commerce-refine-toggle')
 @bindings()

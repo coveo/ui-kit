@@ -18,8 +18,6 @@ import {titleToKebab} from '../../../utils/utils';
 import type {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface';
 
 /**
- * @alpha
- *
  * The `atomic-product-multi-value-text` component renders the values of a multi-value string field.
  *
  * @part product-multi-value-text-list - The list of field values.

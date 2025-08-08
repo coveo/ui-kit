@@ -1,18 +1,16 @@
 import { Meta } from '@storybook/blocks';
-import * as AtomicCommerceTimeframeFacetStories from './atomic-commerce-timeframe-facet.new.stories';
+import * as AtomicCommerceFacetStories from './atomic-commerce-facet.new.stories';
 import { AtomicDocTemplate } from '../../../../storybook-utils/documentation/atomic-doc-template';
 
 
-<Meta of={AtomicCommerceTimeframeFacetStories} />
+<Meta of={AtomicCommerceFacetStories} />
 
 <AtomicDocTemplate
-  stories={AtomicCommerceTimeframeFacetStories}
-  githubPath="commerce/atomic-commerce-timeframe-facet/atomic-commerce-timeframe-facet.ts"
-  tagName="atomic-commerce-timeframe-facet"
-  className="AtomicCommerceTimeframeFacet"
+  stories={AtomicCommerceFacetStories}
+  githubPath="commerce/atomic-commerce-facet/atomic-commerce-facet.ts"
+  tagName="atomic-commerce-facet"
+  className="AtomicCommerceCategoryFacet"
 >
-
-## Usage
 
 This component is not meant to be used directly in the layout. You should use the `<atomic-commerce-facets>` component instead, which will automatically render the appropriate facets.
 

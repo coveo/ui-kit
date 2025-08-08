@@ -33,7 +33,6 @@ import '../atomic-commerce-timeframe-facet/atomic-commerce-timeframe-facet';
 /**
  * The `atomic-commerce-facets` component automatically renders commerce facets based on the Commerce API response.
  * Unlike regular facets, which require explicit definition and request in the query, the `atomic-commerce-facets` component dynamically generates facets.
- *
  */
 @customElement('atomic-commerce-facets')
 @bindings()

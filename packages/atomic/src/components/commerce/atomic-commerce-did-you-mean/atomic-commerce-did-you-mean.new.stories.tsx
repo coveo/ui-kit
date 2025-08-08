@@ -16,7 +16,7 @@ const {decorator, play} = wrapInCommerceInterface({
 
 const meta: Meta = {
   component: 'atomic-commerce-did-you-mean',
-  title: 'Commerce/atomic-commerce-did-you-mean',
+  title: 'Commerce/Did You Mean',
   id: 'atomic-commerce-did-you-mean',
   render: renderComponent,
   decorators: [decorator],

@@ -64,8 +64,6 @@ type AnyFacetValue =
  * @part show-less - The button to display less breadcrumbs.
  * @part label - The "Filters" label.
  * @part clear - The button to clear all filters.
- *
- * @alpha
  */
 @customElement('atomic-commerce-breadbox')
 @bindings()

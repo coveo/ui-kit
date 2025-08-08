@@ -7,7 +7,8 @@ import styles from './atomic-commerce-layout.tw.css';
 
 /**
  * The `atomic-commerce-layout` helps organize elements in the commerce page.
- * @alpha
+ *
+ * @slot default - The default slot where you can add child components to the layout.
  */
 @customElement('atomic-commerce-layout')
 export class AtomicCommerceLayout extends CommerceLayoutMixin(

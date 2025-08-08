@@ -1,27 +1,17 @@
-import {Canvas, Markdown, ArgTypes, Meta, Title, Description, Controls, Primary, Stories, Subtitle} from '@storybook/blocks';
+import { Meta } from '@storybook/blocks';
 import * as AtomicLayoutSectionStories from './atomic-layout-section.new.stories';
+import { AtomicDocTemplate } from '../../../../storybook-utils/documentation/atomic-doc-template';
+
 
 <Meta of={AtomicLayoutSectionStories} />
 
-<Title />
-<Subtitle ><Description/></Subtitle>
+<AtomicDocTemplate
+  stories={AtomicLayoutSectionStories}
+  githubPath="common/atomic-layout-section/atomic-layout-section.ts"
+  tagName="atomic-layout-section"
+  className="AtomicLayoutSection"
+>
 
-<Canvas
-  additionalActions={[
-    {
-      title: 'Open in GitHub',
-      onClick: () => {
-        window.open(
-          'https://github.com/coveo/ui-kit/blob/main/packages/atomic/src/components/common/atomic-layout-section/atomic-layout-section.ts',
-          '_blank'
-        );
-      },
-    },
-  ]}
-  of={AtomicLayoutSectionStories.Default}
-/>
-
-## Usage
 This component is used to define a section within a layout. 
 Each `atomic-layout-section` reserves space based on its section attribute, 
 allowing the layout to position and style content consistently within the `atomic-search-layout` or `atomic-commerce-layout`.
@@ -55,9 +45,4 @@ An example using the `atomic-commerce-interface` and `atomic-commerce-layout` wh
   </atomic-commerce-layout>
 </atomic-commerce-interface>
 ```
-
-## Examples
-<Stories title={""}/>
-
-## Reference
-<ArgTypes />
+</AtomicDocTemplate>

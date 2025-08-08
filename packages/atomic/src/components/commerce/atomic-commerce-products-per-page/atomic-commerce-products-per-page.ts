@@ -34,8 +34,6 @@ import {randomID} from '@/src/utils/utils.js';
  * @part buttons - The list of buttons.
  * @part button - The individual products per page buttons.
  * @part active-button - The active products per page button.
- *
- * @alpha
  */
 @customElement('atomic-commerce-products-per-page')
 @bindings()

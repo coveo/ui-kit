@@ -9,6 +9,7 @@ import {
   AtomicCommerceLayout as LitAtomicCommerceLayout,
   AtomicCommerceLoadMoreProducts as LitAtomicCommerceLoadMoreProducts,
   AtomicCommerceNoProducts as LitAtomicCommerceNoProducts,
+  AtomicCommerceNumericFacet as LitAtomicCommerceNumericFacet,
   AtomicCommercePager as LitAtomicCommercePager,
   AtomicCommerceProductList as LitAtomicCommerceProductList,
   AtomicCommerceProductsPerPage as LitAtomicCommerceProductsPerPage,
@@ -24,6 +25,7 @@ import {
   AtomicCommerceSearchBoxRecentQueries as LitAtomicCommerceSearchBoxRecentQueries,
   AtomicCommerceSortDropdown as LitAtomicCommerceSortDropdown,
   AtomicCommerceText as LitAtomicCommerceText,
+  AtomicCommerceTimeframeFacet as LitAtomicCommerceTimeframeFacet,
   AtomicComponentError as LitAtomicComponentError,
   AtomicIcon as LitAtomicIcon,
   AtomicLayoutSection as LitAtomicLayoutSection,
@@ -110,6 +112,12 @@ export const AtomicCommerceNoProducts = createComponent({
   tagName: 'atomic-commerce-no-products',
   react: React,
   elementClass: LitAtomicCommerceNoProducts,
+});
+
+export const AtomicCommerceNumericFacet = createComponent({
+  tagName: 'atomic-commerce-numeric-facet',
+  react: React,
+  elementClass: LitAtomicCommerceNumericFacet,
 });
 
 export const AtomicCommercePager = createComponent({
@@ -200,6 +208,12 @@ export const AtomicCommerceText = createComponent({
   tagName: 'atomic-commerce-text',
   react: React,
   elementClass: LitAtomicCommerceText,
+});
+
+export const AtomicCommerceTimeframeFacet = createComponent({
+  tagName: 'atomic-commerce-timeframe-facet',
+  react: React,
+  elementClass: LitAtomicCommerceTimeframeFacet,
 });
 
 export const AtomicComponentError = createComponent({

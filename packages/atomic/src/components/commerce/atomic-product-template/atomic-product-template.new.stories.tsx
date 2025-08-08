@@ -45,7 +45,7 @@ const TEMPLATE_EXAMPLE = `<template>
 
 const meta: Meta = {
   component: 'atomic-product-template',
-  title: 'Commerce/atomic-product-template',
+  title: 'Commerce/Product Template',
   id: 'atomic-product-template',
   render: renderComponentWithoutCodeRoot,
   parameters,
@@ -119,10 +119,4 @@ export const InASearchBoxInstantProducts: Story = {
         ?.focus();
     });
   },
-};
-
-export const WithoutValidParent: Story = {
-  name: 'Without a valid parent',
-  tags: ['test'],
-  play: initializeCommerceInterface,
 };
