@@ -16,6 +16,6 @@
   "name": "Commerce",
   "readme": "none",
   "entryPoints": ["../src/commerce.index.ts"],
-  "gitRevision": "master",
+  "gitRevision": "main",
   "plugin": ["@coveo/documentation"]
 }

@@ -1,6 +1,5 @@
 import type {UnknownAction} from '@reduxjs/toolkit';
 import {filterObject} from '../../../utils/utils.js';
-import {composeFunction} from '../../common/controller-utils.js';
 import {createStaticState} from '../controller-utils.js';
 import {SolutionType} from '../types/controller-constants.js';
 import type {RecommendationControllerSettings} from '../types/controller-definitions.js';
@@ -9,7 +8,6 @@ import type {
   BuildResult,
   CommerceControllerDefinitionsMap,
   EngineStaticState,
-  FetchStaticStateFromBuildResultParameters,
   FetchStaticStateFunction,
   FetchStaticStateParameters,
 } from '../types/engine.js';
@@ -38,60 +36,39 @@ export function fetchRecommendationStaticStateFactory<
     return [];
   };
 
-  return composeFunction(
-    async (...params: FetchStaticStateParameters<TControllerDefinitions>) => {
-      const [props] = params;
-      const allowedRecommendationKeys = getAllowedRecommendationKeys(props);
+  return async (
+    ...params: FetchStaticStateParameters<TControllerDefinitions>
+  ) => {
+    const [props] = params;
+    const allowedRecommendationKeys = getAllowedRecommendationKeys(props);
 
-      const solutionTypeBuild = await buildFactory(
-        controllerDefinitions,
-        options
-      )(SolutionType.recommendation);
+    const solutionTypeBuild = await buildFactory(
+      controllerDefinitions,
+      options
+    )(SolutionType.recommendation);
 
-      const buildResult = (await solutionTypeBuild(
-        ...params
-      )) as BuildResult<TControllerDefinitions>;
+    const {engine, controllers} = (await solutionTypeBuild(
+      ...params
+    )) as BuildResult<TControllerDefinitions>;
 
-      const staticState = await fetchRecommendationStaticStateFactory(
-        controllerDefinitions,
-        options
-      ).fromBuildResult({
-        buildResult,
-        allowedRecommendationKeys,
-      });
-      return staticState;
-    },
-    {
-      fromBuildResult: async (
-        ...params: FetchStaticStateFromBuildResultParameters<TControllerDefinitions>
-      ) => {
-        const [
-          {
-            buildResult: {engine, controllers},
-            allowedRecommendationKeys,
-          },
-        ] = params;
+    filterRecommendationControllers(
+      controllers,
+      controllerDefinitions ?? {}
+    ).refresh(allowedRecommendationKeys);
 
-        filterRecommendationControllers(
-          controllers,
-          controllerDefinitions ?? {}
-        ).refresh(allowedRecommendationKeys);
+    const searchActions = await Promise.all(
+      engine.waitForRequestCompletedAction()
+    );
 
-        const searchActions = await Promise.all(
-          engine.waitForRequestCompletedAction()
-        );
-
-        return createStaticState({
-          searchActions,
-          controllers,
-        }) as EngineStaticState<
-          UnknownAction,
-          InferControllerStaticStateMapFromDefinitionsWithSolutionType<
-            TControllerDefinitions,
-            SolutionType
-          >
-        >;
-      },
-    }
-  );
+    return createStaticState({
+      searchActions,
+      controllers,
+    }) as EngineStaticState<
+      UnknownAction,
+      InferControllerStaticStateMapFromDefinitionsWithSolutionType<
+        TControllerDefinitions,
+        SolutionType
+      >
+    >;
+  };
 }

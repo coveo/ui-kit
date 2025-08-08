@@ -160,7 +160,7 @@
     "cypress-real-events",
     "cypress-web-vitals",
     "cypress-axe",
-    // Ignore marked to not have a floating PR
+    // Ignore marked to not have a floating PR.
     "marked",
     // Ignore stencil since it is getting removed.
     "@stencil/core",
