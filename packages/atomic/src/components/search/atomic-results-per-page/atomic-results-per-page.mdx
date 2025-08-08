@@ -13,7 +13,30 @@ import {CanvasWithGithub} from '../../../../storybook-utils/documentation/canvas
 />
 
 ## Usage
-TODO: Add usage instructions here.
+
+The `atomic-results-per-page` component allows users to select how many search results to display per page. It provides a set of radio button options for different page sizes.
+
+This component should be placed within an `atomic-search-interface` component.
+
+### Example
+
+```html
+<atomic-search-interface>
+  <!-- Other search components -->
+  
+  <atomic-results-per-page 
+    choices-displayed="10,25,50,100" 
+    initial-choice="25">
+  </atomic-results-per-page>
+  
+  <!-- Other search components -->
+</atomic-search-interface>
+```
+
+### Properties
+
+- **`choices-displayed`**: A comma-separated list of page size options (default: "10,25,50,100")
+- **`initial-choice`**: The initially selected page size, must be one of the choices (default: first choice)
 
 ## Examples
 <Stories title={""}/>
