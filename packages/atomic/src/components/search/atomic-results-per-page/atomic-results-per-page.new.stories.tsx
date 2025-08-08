@@ -7,7 +7,7 @@ const {decorator, play} = wrapInSearchInterface();
 
 const meta: Meta = {
   component: 'atomic-results-per-page',
-  title: 'Atomic/ResultsPerPage',
+  title: 'Search/ResultsPerPage',
   id: 'atomic-results-per-page',
 
   render: renderComponent,
