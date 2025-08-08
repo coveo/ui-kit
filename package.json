@@ -43,7 +43,7 @@
     "@tsconfig/node20": "20.1.6",
     "@types/execa": "2.0.2",
     "@types/jest": "29.5.14",
-    "@types/node": "22.16.5",
+    "@types/node": "22.17.0",
     "@vitest/browser": "3.2.4",
     "aws-sdk": "2.1692.0",
     "commitizen": "4.3.1",
@@ -58,12 +58,12 @@
     "knip": "5.62.0",
     "lint-staged": "16.1.2",
     "patch-package": "8.0.0",
-    "playwright": "1.54.1",
+    "playwright": "1.54.2",
     "publint": "0.3.12",
     "rimraf": "6.0.1",
     "semver": "7.7.2",
     "turbo": "2.5.5",
-    "typescript": "5.8.3",
+    "typescript": "5.9.2",
     "vitest": "3.2.4"
   },
   "overrides": {
@@ -119,5 +119,5 @@
     "node": "^22.14.0",
     "npm": ">=8.6.0"
   },
-  "packageManager": "npm@11.4.2"
+  "packageManager": "npm@11.5.2"
 }

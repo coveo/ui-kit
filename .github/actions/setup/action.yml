@@ -20,13 +20,13 @@ runs:
     - name: Install npm
       run: npm i -g npm@11.4.2
       shell: bash
-    - uses: actions/cache@5a3ec84eff668545956fd18022155c47e93e2684 # v4
+    - uses: actions/cache@0400d5f644dc74513175e3cd8d07132dd4860809 # v4
       with:
         path: ~/.cache/Cypress
         key: ${{ runner.os }}-${{ inputs.cache-prefix }}-cy-${{ github.sha }}
         restore-keys: |
           ${{ runner.os }}-${{ inputs.cache-prefix }}-cy-
-    - uses: actions/cache@5a3ec84eff668545956fd18022155c47e93e2684 # v4
+    - uses: actions/cache@0400d5f644dc74513175e3cd8d07132dd4860809 # v4
       with:
         path: .turbo
         key: ${{ runner.os }}-${{ inputs.cache-prefix }}-turbo-${{ github.sha }}
