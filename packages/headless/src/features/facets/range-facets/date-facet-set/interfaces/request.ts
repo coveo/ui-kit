@@ -8,12 +8,12 @@ import type {BaseRangeFacetRequest} from '../../generic/interfaces/request.js';
  */
 export interface DateRangeRequest {
   /**
-   * The starting value for the date range, formatted as `YYYY/MM/DD@HH:mm:ss` or the [Relative Date](https://docs.coveo.com/en/headless/latest/reference/search/controllers/date-facet/relative-date-format/) format "period-amount-unit".
+   * The starting value for the date range, formatted as `YYYY/MM/DD@HH:mm:ss` or the [Relative Date](https://docs.coveo.com/en/headless/latest/reference/documents/Search.DateFacet.relative-date-format.html) format "period-amount-unit".
    */
   start: string;
 
   /**
-   * The ending value for the date range, formatted as `YYYY/MM/DD@HH:mm:ss` or the [Relative Date](https://docs.coveo.com/en/headless/latest/reference/search/controllers/date-facet/relative-date-format/) format "period-amount-unit".
+   * The ending value for the date range, formatted as `YYYY/MM/DD@HH:mm:ss` or the [Relative Date](https://docs.coveo.com/en/headless/latest/reference/documents/Search.DateFacet.relative-date-format.html) format "period-amount-unit".
    */
   end: string;
 
