@@ -3,7 +3,6 @@ import type {Meta, StoryObj as Story} from '@storybook/web-components';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {renderComponent} from '@/storybook-utils/common/render-component';
 
-//TODO here
 async function initializeCommerceInterface(canvasElement: HTMLElement) {
   await customElements.whenDefined('atomic-commerce-interface');
   const commerceInterface = canvasElement.querySelector(
@@ -13,7 +12,7 @@ async function initializeCommerceInterface(canvasElement: HTMLElement) {
 }
 const meta: Meta = {
   component: 'atomic-commerce-interface',
-  title: 'Commerce/atomic-commerce-interface',
+  title: 'Commerce/Interface',
   id: 'atomic-commerce-interface',
   render: renderComponent,
   parameters,

@@ -19,7 +19,7 @@ async function initializeCommerceRecommendationInterface(
 }
 const meta: Meta = {
   component: 'atomic-commerce-recommendation-interface',
-  title: 'Commerce/atomic-commerce-recommendation-interface',
+  title: 'Commerce/Interface (Recommendation)',
   id: 'atomic-commerce-recommendation-interface',
   render: renderComponent,
   parameters,

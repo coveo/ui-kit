@@ -1,18 +1,16 @@
-import { Canvas, Markdown, ArgTypes, Meta, Title, Description, Controls, Primary, Stories, Subtitle } from '@storybook/blocks';
+import { Meta } from '@storybook/blocks';
 import * as AtomicCommercePagerStories from './atomic-commerce-pager.new.stories';
-import { CanvasWithGithub } from '../../../../storybook-utils/documentation/canvas-with-github';
+import { AtomicDocTemplate } from '../../../../storybook-utils/documentation/atomic-doc-template';
+
 
 <Meta of={AtomicCommercePagerStories} />
 
-<Title />
-<Subtitle ><Description/></Subtitle>
-
-<CanvasWithGithub
-  of={AtomicCommercePagerStories.Default}
+<AtomicDocTemplate
+  stories={AtomicCommercePagerStories}
   githubPath="commerce/atomic-commerce-pager/atomic-commerce-pager.ts"
-/>
-
-## Usage
+  tagName="atomic-commerce-pager"
+  className="AtomicCommercePager"
+>
 This component is typically placed within the "pagination" section of the layout.
 
 **Note:** Use either `atomic-commerce-pager` OR `atomic-commerce-load-more-products` for pagination, but not both. These components provide alternative pagination approaches:
@@ -36,8 +34,4 @@ This component is typically placed within the "pagination" section of the layout
 </atomic-commerce-interface>
 ```
 
-## Examples
-<Stories title={""}/>
-
-## Reference
-<ArgTypes />
+</AtomicDocTemplate>

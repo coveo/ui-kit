@@ -12,7 +12,7 @@ const {play, decorator} = wrapInCommerceInterface();
 
 const meta: Meta = {
   component: 'atomic-commerce-facet',
-  title: 'Commerce/atomic-commerce-facet',
+  title: 'Commerce/Facet (Regular)',
   id: 'atomic-commerce-facet',
   render: renderComponent,
   decorators: [commerceFacetWidthDecorator, decorator],
@@ -23,7 +23,6 @@ const meta: Meta = {
 export default meta;
 
 export const Default: Story = {
-  name: 'atomic-commerce-facet',
   decorators: [
     (_) => {
       return html`<div id="code-root">

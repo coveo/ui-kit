@@ -7,7 +7,7 @@ const {decorator, play} = wrapInCommerceInterface();
 
 const meta: Meta = {
   component: 'atomic-commerce-pager',
-  title: 'Commerce/atomic-commerce-pager',
+  title: 'Commerce/Pager',
   id: 'atomic-commerce-pager',
   render: renderComponent,
   decorators: [decorator],

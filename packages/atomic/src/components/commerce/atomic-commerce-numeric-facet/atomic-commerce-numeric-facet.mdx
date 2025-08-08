@@ -1,31 +1,16 @@
-import {
-  Canvas,
-  Markdown,
-  ArgTypes,
-  Meta,
-  Title,
-  Description,
-  Controls,
-  Primary,
-  Stories,
-  Subtitle,
-} from '@storybook/blocks';
-import * as AtomicCommerceNumericFacet from './atomic-commerce-numeric-facet.new.stories';
-import { CanvasWithGithub } from '../../../../storybook-utils/documentation/canvas-with-github';
+import { Meta } from '@storybook/blocks';
+import * as AtomicCommerceNumericFacetStories from './atomic-commerce-numeric-facet.new.stories';
+import { AtomicDocTemplate } from '../../../../storybook-utils/documentation/atomic-doc-template';
 
-<Meta of={AtomicCommerceNumericFacet} />
 
-<Title />
-<Subtitle>
-  <Description />
-</Subtitle>
+<Meta of={AtomicCommerceNumericFacetStories} />
 
-<CanvasWithGithub
-  of={AtomicCommerceNumericFacet.Default}
+<AtomicDocTemplate
+  stories={AtomicCommerceNumericFacetStories}
   githubPath="commerce/atomic-commerce-numeric-facet/atomic-commerce-numeric-facet.ts"
-/>
-
-## Usage
+  tagName="atomic-commerce-numeric-facet"
+  className="AtomicCommerceNumericFacet"
+>
 
 This component is not meant to be used directly in the layout. You should use the `<atomic-commerce-facets>` component instead, which will automatically render the appropriate facets.
 
@@ -37,11 +22,4 @@ This component is not meant to be used directly in the layout. You should use th
   </atomic-layout-section>
 </atomic-commerce-interface>
 ```
-
-## Examples
-
-<Stories title={''} />
-
-## Reference
-
-<ArgTypes />
+</AtomicDocTemplate>

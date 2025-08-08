@@ -9,7 +9,7 @@ const {decorator, play} = wrapInCommerceInterface({
 
 const meta: Meta = {
   component: 'atomic-commerce-query-summary',
-  title: 'Commerce/atomic-commerce-query-summary',
+  title: 'Commerce/Query Summary',
   id: 'atomic-commerce-query-summary',
   render: renderComponent,
   decorators: [decorator],

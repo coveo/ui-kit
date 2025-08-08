@@ -1,20 +1,17 @@
-import { Canvas, ArgTypes, Meta, Title, Description } from '@storybook/blocks';
+import { Meta } from '@storybook/blocks';
 import * as AtomicCommerceFacetsStories from './atomic-commerce-facets.new.stories';
-import { CanvasWithGithub } from '../../../../storybook-utils/documentation/canvas-with-github';
+import { AtomicDocTemplate } from '../../../../storybook-utils/documentation/atomic-doc-template';
+
 
 <Meta of={AtomicCommerceFacetsStories} />
 
-<Title />
-<Description />
-
-<CanvasWithGithub
-  of={AtomicCommerceFacetsStories.Default}
+<AtomicDocTemplate
+  stories={AtomicCommerceFacetsStories}
   githubPath="commerce/atomic-commerce-facets/atomic-commerce-facets.ts"
-/>
+  tagName="atomic-commerce-facets"
+  className="AtomicCommerceFacets"
+>
 
-<Canvas of={AtomicCommerceFacetsStories.Default} />
-
-## Usage
 This component is typically placed within the "facets" section of the layout.
 ```html
 <atomic-commerce-interface>
@@ -27,9 +24,4 @@ This component is typically placed within the "facets" section of the layout.
   </atomic-commerce-layout>
 </atomic-commerce-interface>
 ```
-## Examples
-<Stories title={""}/>
-
-## Properties
-
-<ArgTypes />
+</AtomicDocTemplate>

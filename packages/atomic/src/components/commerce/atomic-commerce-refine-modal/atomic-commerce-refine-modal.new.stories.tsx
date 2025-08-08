@@ -9,7 +9,7 @@ const {decorator, play} = wrapInCommerceInterface();
 
 const meta: Meta = {
   component: 'atomic-commerce-refine-modal',
-  title: 'Commerce/atomic-commerce-refine-modal',
+  title: 'Commerce/Refine Modal',
   id: 'atomic-commerce-refine-toggle',
   render: renderComponent,
   decorators: [decorator],

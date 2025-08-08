@@ -7,7 +7,7 @@ const {decorator, play} = wrapInCommerceRecommendationInterface({});
 
 const meta: Meta = {
   component: 'atomic-commerce-recommendation-list',
-  title: 'Commerce/atomic-commerce-recommendation-list',
+  title: 'Commerce/Recommendation List',
   id: 'atomic-commerce-recommendation-list',
   render: renderComponent,
   decorators: [decorator],

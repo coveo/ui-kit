@@ -1,19 +1,16 @@
-import { Canvas, Markdown, ArgTypes, Meta, Title, Description, Controls, Primary, Stories, Subtitle } from '@storybook/blocks';
+import { Meta } from '@storybook/blocks';
 import * as AtomicCommerceRecommendationListStories from './atomic-commerce-recommendation-list.new.stories';
-import { CanvasWithGithub } from '../../../../storybook-utils/documentation/canvas-with-github';
+import { AtomicDocTemplate } from '../../../../storybook-utils/documentation/atomic-doc-template';
+
 
 <Meta of={AtomicCommerceRecommendationListStories} />
 
-
-<Title />
-<Subtitle ><Description/></Subtitle>
-
-<CanvasWithGithub
-  of={AtomicCommerceRecommendationListStories.Default}
+<AtomicDocTemplate
+  stories={AtomicCommerceRecommendationListStories}
   githubPath="commerce/atomic-commerce-recommendation-list/atomic-commerce-recommendation-list.ts"
-/>
-
-## Usage
+  tagName="atomic-commerce-recommendation-list"
+  className="AtomicCommerceRecommendationList"
+>
 
 The `atomic-commerce-recommendation-list` component must be placed inside an `atomic-commerce-recommendation-interface` to work properly.
 
@@ -32,8 +29,4 @@ You can include multiple recommendation lists within a single interface:
 </atomic-commerce-recommendation-interface>
 ```
 
-## Examples
-<Stories title={""}/>
-
-## Reference
-<ArgTypes />
+</AtomicDocTemplate>

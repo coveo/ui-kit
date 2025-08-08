@@ -32,7 +32,7 @@ const {decorator, play} = wrapInCommerceInterface({
 
 const meta: Meta = {
   component: 'atomic-commerce-breadbox',
-  title: 'Commerce/atomic-commerce-breadbox',
+  title: 'Commerce/Breadbox',
   id: 'atomic-commerce-breadbox',
   render: renderComponent,
   decorators: [decorator],
