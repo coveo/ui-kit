@@ -22,6 +22,16 @@ import {
 import {MissingEngineProviderError} from '../errors.js';
 import {defineCommerceEngine} from './commerce-engine.js';
 
+/**
+ * Utility function to flush asynchronous updates in React components.
+ * This ensures all async operations and state updates are completed before proceeding.
+ */
+async function flushAsyncUpdates(): Promise<void> {
+  await act(async () => {
+    await new Promise((resolve) => setTimeout(resolve, 0));
+  });
+}
+
 describe('Headless react SSR utils', () => {
   let errorSpy: MockInstance;
   const mockedNavigatorContextProvider: NavigatorContextProvider = () => {
@@ -40,9 +50,7 @@ describe('Headless react SSR utils', () => {
   afterEach(async () => {
     errorSpy.mockClear();
 
-    await act(async () => {
-      await new Promise((resolve) => setTimeout(resolve, 0));
-    });
+    await flushAsyncUpdates();
 
     vi.clearAllTimers();
     vi.clearAllMocks();
@@ -145,9 +153,7 @@ describe('Headless react SSR utils', () => {
         renderResult = null;
       }
 
-      await act(async () => {
-        await new Promise((resolve) => setTimeout(resolve, 0));
-      });
+      await flushAsyncUpdates();
     });
 
     function TestProductList() {
