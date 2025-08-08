@@ -339,3 +339,4 @@ export {
   productListingSerializer,
   searchSerializer,
 } from './features/commerce/parameters/parameters-serializer.js';
+export {VERSION} from './utils/version.js';

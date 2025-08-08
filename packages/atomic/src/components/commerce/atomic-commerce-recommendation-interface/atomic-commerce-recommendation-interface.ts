@@ -3,6 +3,7 @@ import {
   type CommerceEngine,
   type CommerceEngineConfiguration,
   type Context,
+  VERSION as HEADLESS_VERSION,
   loadConfigurationActions,
   loadContextActions,
 } from '@coveo/headless/commerce';
@@ -58,7 +59,8 @@ export class AtomicCommerceRecommendationInterface
 
   private interfaceController = new InterfaceController<CommerceEngine>(
     this,
-    'CoveoAtomic'
+    'CoveoAtomic',
+    HEADLESS_VERSION
   );
 
   static styles: CSSResultGroup = [
