@@ -181,14 +181,20 @@ describe('atomic-results-per-page', () => {
 
   describe('when search has error', () => {
     it('should not render when search status has error', async () => {
-      const {element, mockSearchStatus} = await renderComponent();
-      mockSearchStatus.state = {
+      const {element} = await renderComponent();
+      
+      // Update the bound state to simulate error condition
+      (element as any).searchStatusState = {
         hasError: true,
         hasResults: false,
         isLoading: false,
         firstSearchExecuted: true,
       };
       element.isAppLoaded = true;
+      
+      // Trigger re-render
+      element.requestUpdate();
+      await element.updateComplete;
 
       expect(element.shadowRoot?.textContent?.trim()).toBe('');
     });
@@ -196,14 +202,20 @@ describe('atomic-results-per-page', () => {
 
   describe('when no results available', () => {
     it('should not render when search has no results', async () => {
-      const {element, mockSearchStatus} = await renderComponent();
-      mockSearchStatus.state = {
+      const {element} = await renderComponent();
+      
+      // Update the bound state to simulate no results condition  
+      (element as any).searchStatusState = {
         hasError: false,
         hasResults: false,
         isLoading: false,
         firstSearchExecuted: true,
       };
       element.isAppLoaded = true;
+      
+      // Trigger re-render
+      element.requestUpdate();
+      await element.updateComplete;
 
       expect(element.shadowRoot?.textContent?.trim()).toBe('');
     });
