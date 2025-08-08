@@ -89,6 +89,11 @@ export interface Sort extends Controller {
    * Two or more `SortByField` criteria.
    * A single `SortByDate` criterion and one or more `SortByField` criteria in any order.
    *
+   * Examples:
+   * * `SortByRelevancy`, `SortByField`
+   * * `SortByQRE`, `SortByField`
+   * * `SortByDate`, `SortByField`, `SortByField`
+   *
    * @returns `true` if the specified sort criterion is the currently active one; `false` otherwise.
    */
   isSortedBy(criterion: SortCriterion | SortCriterion[]): boolean;
