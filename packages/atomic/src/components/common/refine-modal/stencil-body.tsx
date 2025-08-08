@@ -5,7 +5,7 @@ export const RefineModalBody: FunctionalComponent = (_, children) => {
     <aside
       part="content"
       slot="body"
-      class="adjust-for-scroll-bar flex w-full flex-col"
+      class="flex flex-col w-full"
     >
       {children}
     </aside>

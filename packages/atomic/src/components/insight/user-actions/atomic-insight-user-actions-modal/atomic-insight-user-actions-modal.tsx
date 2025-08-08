@@ -87,7 +87,7 @@ export class AtomicInsightUserActionsModal
     const renderHeader = () => {
       return (
         <div slot="header" class="contents">
-          <div part="title" class="truncate font-light">
+          <div part="title" class="font-light truncate">
             {this.bindings.i18n.t('user-actions')}
           </div>
           <Button
@@ -99,7 +99,7 @@ export class AtomicInsightUserActionsModal
           >
             <atomic-icon
               part="close-icon"
-              class="h-5 w-5"
+              class="w-5 h-5"
               icon={CloseIcon}
             ></atomic-icon>
           </Button>
@@ -112,7 +112,7 @@ export class AtomicInsightUserActionsModal
         <aside
           style={{height: '100%'}}
           slot="body"
-          class="adjust-for-scroll-bar flex w-full flex-col px-2"
+          class="flex flex-col w-full px-2"
         >
           <atomic-insight-user-actions-timeline
             userId={this.userId}
@@ -124,7 +124,7 @@ export class AtomicInsightUserActionsModal
       );
     };
     return (
-      <Host>
+      <Host class="absolute">
         {this.interfaceDimensions && (
           <style>
             {`atomic-modal::part(backdrop) {
