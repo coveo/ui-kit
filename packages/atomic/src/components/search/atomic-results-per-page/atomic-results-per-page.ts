@@ -24,6 +24,7 @@ import {renderPagerGuard} from '@/src/components/common/pager/pager-guard.js';
 import type {Bindings} from '@/src/components/search/atomic-search-interface/interfaces.js';
 import {bindStateToController} from '@/src/decorators/bind-state.js';
 import {bindingGuard} from '@/src/decorators/binding-guard.js';
+import {bindings} from '@/src/decorators/bindings.js';
 import {errorGuard} from '@/src/decorators/error-guard.js';
 import type {InitializableComponent} from '@/src/decorators/types.js';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles.js';
@@ -39,6 +40,7 @@ import {randomID} from '@/src/utils/utils.js';
  * @part active-button - The active result per page button.
  */
 @customElement('atomic-results-per-page')
+@bindings()
 @withTailwindStyles
 export class AtomicResultsPerPage
   extends InitializeBindingsMixin(LitElement)
