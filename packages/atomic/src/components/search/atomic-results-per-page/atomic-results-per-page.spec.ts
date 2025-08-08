@@ -6,7 +6,7 @@ import {
 } from '@coveo/headless';
 import {html} from 'lit';
 import {beforeEach, describe, expect, it, vi} from 'vitest';
-import {fixture} from '@/vitest-utils/testing-helpers/fixture';
+import {renderInAtomicSearchInterface} from '@/vitest-utils/testing-helpers/fixtures/atomic/search/atomic-search-interface-fixture.js';
 import './atomic-results-per-page';
 import type {AtomicResultsPerPage} from './atomic-results-per-page';
 
@@ -42,38 +42,37 @@ describe('atomic-results-per-page', () => {
       mockResultsPerPage as ResultsPerPage
     );
 
-    const element = await fixture<AtomicResultsPerPage>(
-      html`<atomic-results-per-page
+    const {element} = await renderInAtomicSearchInterface<AtomicResultsPerPage>({
+      template: html`<atomic-results-per-page
         choices-displayed=${options.choicesDisplayed || '10,25,50,100'}
         initial-choice=${options.initialChoice || 10}
-      ></atomic-results-per-page>`
-    );
-
-    // Set minimal bindings needed for the component to work
-    Object.defineProperty(element, 'bindings', {
-      value: {
+      ></atomic-results-per-page>`,
+      selector: 'atomic-results-per-page',
+      bindings: {
         engine: {
-          logger: {
-            error: vi.fn(),
-          },
-        },
+          subscribe: vi.fn(),
+        } as any,
         i18n: {
           t: vi.fn((key: string) =>
             key === 'results-per-page' ? 'Results per page' : key
           ),
           language: 'en',
-        },
+        } as any,
         store: {
           state: {
             loadingFlags: [],
           },
           onChange: vi.fn(),
-        },
+        } as any,
       },
-      writable: true,
     });
 
-    element.initialize();
+    // Mock the searchStatusState property to provide the state that the component expects
+    Object.defineProperty(element, 'searchStatusState', {
+      get: () => mockSearchStatus.state,
+      configurable: true,
+    });
+
     await element.updateComplete;
 
     return {
