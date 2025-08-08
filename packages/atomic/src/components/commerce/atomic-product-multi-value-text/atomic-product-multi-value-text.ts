@@ -193,7 +193,7 @@ export class AtomicProductMultiValueText
     }
 
     return html`
-      <ul part="product-multi-value-text-list" class="m-0 flex list-none p-0">
+      <ul part="product-multi-value-text-list" class="m-0 flex list-none p-0 set-font-size-sm">
         ${this.renderListItems(this.sortedValues)}
       </ul>
     `;

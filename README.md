@@ -34,7 +34,7 @@ npm run build
 To build a single project for production (for instance, the `atomic` package), run:
 
 ```sh
-turbo run @coveo/atomic#build
+npx turbo run @coveo/atomic#build
 ```
 
 ## Development mode
@@ -44,13 +44,13 @@ Add the `--stencil` switch if you are changing stencil files.
 To start a single project in development (for instance, the `quantic` package), run:
 
 ```sh
-turbo run @coveo/quantic#dev
+npx turbo run @coveo/quantic#dev
 ```
 
 To run a specific task in a package separate it with colon e.g. to run `test:watch` inside quantic
 
 ```sh
-turbo test:watch --filter=@coveo/quantic
+npx turbo test:watch --filter=@coveo/quantic
 ```
 
 ## Test
@@ -58,15 +58,15 @@ turbo test:watch --filter=@coveo/quantic
 To run the tests for a specific package (recommended) e.g. `atomic` package
 
 ```sh
-turbo test --filter=@coveo/atomic
+npx turbo test --filter=@coveo/atomic
 ```
 
 For e2e tests
 
 ```sh
-turbo run @coveo/atomic#dev
+npx turbo run @coveo/atomic#dev
 # In a separate terminal
-turbo run @coveo/atomic#e2e
+npx turbo run @coveo/atomic#e2e
 ```
 
 To run e2e tests for specific files/components using the Cypress GUI
