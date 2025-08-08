@@ -9,7 +9,7 @@ const {decorator, play} = wrapInSearchInterface();
 
 const meta: Meta = {
   component: 'atomic-search-box-query-suggestions',
-  title: 'Atomic/SearchBox/QuerySuggestions',
+  title: 'Search/SearchBox/QuerySuggestions',
   id: 'atomic-search-box-query-suggestions',
   render: renderComponent,
   decorators: [

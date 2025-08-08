@@ -11,7 +11,7 @@ const {decorator, play} = wrapInSearchInterface();
 
 const meta: Meta = {
   component: 'atomic-load-more-results',
-  title: 'Atomic/LoadMoreResults',
+  title: 'Search/LoadMoreResults',
   id: 'atomic-load-more-results',
 
   render: renderComponent,

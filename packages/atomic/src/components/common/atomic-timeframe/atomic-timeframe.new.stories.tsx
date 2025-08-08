@@ -8,7 +8,7 @@ const {decorator, play} = wrapInSearchInterface();
 
 const meta: Meta = {
   component: 'atomic-timeframe',
-  title: 'Atomic/TimeframeFacet/Timeframe',
+  title: 'Common/Timeframe',
   id: 'atomic-timeframe',
 
   render: renderComponent,

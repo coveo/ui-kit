@@ -17,7 +17,7 @@ const {decorator, play} = wrapInSearchInterface({
 
 const meta: Meta = {
   component: 'atomic-timeframe-facet',
-  title: 'Atomic/TimeframeFacet',
+  title: 'Search/TimeframeFacet',
   id: 'atomic-timeframe-facet',
   argTypes: {
     'attributes-min': {

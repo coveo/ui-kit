@@ -2,6 +2,7 @@ import {RelativeDateUnit} from '@coveo/headless';
 import {Component, Prop} from '@stencil/core';
 import {Timeframe} from '../facets/timeframe-facet-common';
 
+
 /**
  * The `atomic-timeframe` component defines a timeframe of an `atomic-timeframe-facet`, and therefore must be defined within an `atomic-timeframe-facet` component.
  *

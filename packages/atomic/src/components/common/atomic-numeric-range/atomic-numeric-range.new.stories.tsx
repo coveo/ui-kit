@@ -8,7 +8,7 @@ const {decorator, play} = wrapInSearchInterface();
 
 const meta: Meta = {
   component: 'atomic-numeric-range',
-  title: 'Atomic/NumericFacet/Range',
+  title: 'Common/Numeric Range',
   id: 'atomic-numeric-range',
 
   render: renderComponent,

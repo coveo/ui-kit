@@ -132,7 +132,7 @@ const {decorator, play} = wrapInSearchInterface({
 
 const meta: Meta = {
   component: 'atomic-folded-result-list',
-  title: 'Atomic/FoldedResultList',
+  title: 'Search/FoldedResultList',
   id: 'atomic-folded-result-list',
   render: renderComponent,
   decorators: [decorator],

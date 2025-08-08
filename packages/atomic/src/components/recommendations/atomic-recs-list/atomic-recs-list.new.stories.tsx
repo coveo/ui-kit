@@ -8,7 +8,7 @@ const {decorator, play} = wrapInRecommendationInterface();
 
 const meta: Meta = {
   component: 'atomic-recs-list',
-  title: 'Atomic/RecsList',
+  title: 'Recommendations/RecsList',
   id: 'atomic-recs-list',
   render: renderComponent,
   decorators: [decorator],

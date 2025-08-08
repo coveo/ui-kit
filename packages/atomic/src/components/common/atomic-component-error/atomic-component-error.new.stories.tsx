@@ -7,7 +7,7 @@ const {decorator, play} = wrapInSearchInterface();
 
 const meta: Meta = {
   component: 'atomic-component-error',
-  title: 'Atomic/Common',
+  title: 'Common/Component Error',
   id: 'atomic-component-error',
 
   render: (args) => {

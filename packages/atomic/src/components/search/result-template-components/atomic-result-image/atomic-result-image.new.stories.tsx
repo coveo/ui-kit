@@ -20,7 +20,7 @@ const {decorator: searchInterfaceDecorator, play} =
 
 const meta: Meta = {
   component: 'atomic-result-image',
-  title: 'Atomic/ResultList/ResultImage',
+  title: 'Search/ResultList/ResultImage',
   id: 'atomic-result-image',
   render: renderComponent,
   decorators: [resultDecorator, searchInterfaceDecorator],
