@@ -10,7 +10,6 @@ import {fixture} from '@/vitest-utils/testing-helpers/fixture';
 import './atomic-results-per-page';
 import type {AtomicResultsPerPage} from './atomic-results-per-page';
 
-// Mock headless at the top level
 vi.mock('@coveo/headless', {spy: true});
 
 describe('atomic-results-per-page', () => {
