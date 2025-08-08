@@ -2,17 +2,6 @@ import {streamAnswerAPIStateMock} from '../../api/knowledge/tests/stream-answer-
 import type {SearchAppState} from '../../state/search-app-state.js';
 import {generativeQuestionAnsweringIdSelector} from './generated-answer-selectors.js';
 
-vi.mock('../../api/knowledge/stream-answer-api', () => ({
-  ...vi.importActual<Record<string, Partial<SearchAppState>>>(
-    '../../api/knowledge/stream-answer-api'
-  ),
-  selectAnswer: (_state: Partial<SearchAppState>) => ({
-    data: {
-      answerId: 'answerId1234',
-    },
-  }),
-}));
-
 describe('generated-answer-selectors', () => {
   describe('generativeQuestionAnsweringIdSelector', () => {
     afterAll(() => {

@@ -1,3 +1,13 @@
+import type {
+  BaseQueryFn,
+  CombinedState,
+  FetchArgs,
+  FetchBaseQueryError,
+  QueryDefinition,
+  RetryOptions,
+} from '@reduxjs/toolkit/query';
+import type {GeneratedAnswerStream} from '../api/knowledge/generated-answer-stream.js';
+import type {SearchRequest} from '../api/search/search/search-request.js';
 import type {StateWithHistory} from '../app/undoable.js';
 import type {AdvancedSearchQueriesState} from '../features/advanced-search-queries/advanced-search-queries-state.js';
 import type {AttachedResultsState} from '../features/attached-results/attached-results-state.js';
@@ -500,4 +510,26 @@ export interface InsightUserActionsSection {
 
 export interface ManualRangeSection {
   manualNumericFacetSet: ManualNumericFacetSetState;
+}
+
+export interface GetAnswerQuerySection {
+  answer: CombinedState<
+    {
+      getAnswer: QueryDefinition<
+        Partial<SearchRequest>,
+        BaseQueryFn<
+          string | FetchArgs,
+          unknown,
+          FetchBaseQueryError,
+          {} & RetryOptions,
+          {}
+        >,
+        never,
+        GeneratedAnswerStream,
+        'answer'
+      >;
+    },
+    never,
+    'answer'
+  >;
 }
