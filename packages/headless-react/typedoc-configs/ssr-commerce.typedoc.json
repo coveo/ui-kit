@@ -18,7 +18,7 @@
   "name": "SSR Commerce",
   "readme": "../COMMERCEREADME.md",
   "entryPoints": ["../src/ssr-commerce/index.ts"],
-  "gitRevision": "master",
+  "gitRevision": "main",
   "plugin": ["@coveo/documentation"],
   "projectDocuments": ["../documents/headless-react/*.md"]
 }
