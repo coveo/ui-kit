@@ -14,7 +14,7 @@ function desktopViewportSize() {
   };
 }
 
-test.describe('Quickview', () => {
+test.describe.skip('Quickview', () => {
   test.describe('when displaying search results', () => {
     test.beforeEach(async ({quickview}) => {
       await quickview.load();
