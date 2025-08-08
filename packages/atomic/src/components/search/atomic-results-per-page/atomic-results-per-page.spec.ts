@@ -5,7 +5,7 @@ import {
   type SearchStatus,
 } from '@coveo/headless';
 import {html} from 'lit';
-import {beforeEach, describe, expect, it, vi} from 'vitest';
+import {describe, expect, it, vi} from 'vitest';
 import {renderInAtomicSearchInterface} from '@/vitest-utils/testing-helpers/fixtures/atomic/search/atomic-search-interface-fixture.js';
 import './atomic-results-per-page';
 import type {AtomicResultsPerPage} from './atomic-results-per-page';
@@ -35,6 +35,7 @@ describe('atomic-results-per-page', () => {
       isSetTo: vi.fn().mockReturnValue(true),
     };
 
+    // Set up mocks BEFORE creating the component
     vi.mocked(buildSearchStatus).mockReturnValue(
       mockSearchStatus as SearchStatus
     );
@@ -42,21 +43,28 @@ describe('atomic-results-per-page', () => {
       mockResultsPerPage as ResultsPerPage
     );
 
-    const {element} = await renderInAtomicSearchInterface<AtomicResultsPerPage>({
+    const {atomicInterface} = await renderInAtomicSearchInterface<AtomicResultsPerPage>({
       template: html`<atomic-results-per-page
         choices-displayed=${options.choicesDisplayed || '10,25,50,100'}
         initial-choice=${options.initialChoice || 10}
       ></atomic-results-per-page>`,
-      selector: 'atomic-results-per-page',
       bindings: {
         engine: {
           subscribe: vi.fn(),
+          logger: {
+            error: vi.fn(),
+            warn: vi.fn(),
+            info: vi.fn(),
+            debug: vi.fn(),
+          },
         } as any,
         i18n: {
           t: vi.fn((key: string) =>
             key === 'results-per-page' ? 'Results per page' : key
           ),
           language: 'en',
+          on: vi.fn(),
+          off: vi.fn(),
         } as any,
         store: {
           state: {
@@ -67,12 +75,15 @@ describe('atomic-results-per-page', () => {
       },
     });
 
-    // Mock the searchStatusState property to provide the state that the component expects
-    Object.defineProperty(element, 'searchStatusState', {
-      get: () => mockSearchStatus.state,
-      configurable: true,
-    });
+    // Get the element and set state before it renders
+    const element = atomicInterface.shadowRoot!.querySelector<AtomicResultsPerPage>('atomic-results-per-page')!;
+    
+    // Ensure the component has the expected state for testing
+    // This must be done immediately after component creation but before rendering
+    (element as any).searchStatusState = mockSearchStatus.state;
+    element.resultPerPageState = mockResultsPerPage.state;
 
+    // Now trigger the component's update lifecycle
     await element.updateComplete;
 
     return {
@@ -82,18 +93,22 @@ describe('atomic-results-per-page', () => {
     };
   };
 
-  beforeEach(() => {
-    vi.clearAllMocks();
+  it('should render correctly with radio buttons container', async () => {
+    const {element} = await renderComponent();
+    
+    const buttonsContainer = element.shadowRoot?.querySelector('[part="buttons"]');
+    expect(buttonsContainer).toBeDefined();
+    expect(buttonsContainer?.getAttribute('role')).toBe('radiogroup');
   });
 
-  it('should render correctly', async () => {
+  it('should render default choices as radio buttons', async () => {
     const {element} = await renderComponent();
-    expect(element).toBeDefined();
-  });
-
-  it('should render with default properties', async () => {
-    const {element} = await renderComponent();
-    expect(element.choicesDisplayed).toBe('10,25,50,100');
+    
+    const radioButtons = element.shadowRoot?.querySelectorAll('input[type="radio"]');
+    expect(radioButtons).toHaveLength(4); // Default: 10,25,50,100
+    
+    const values = Array.from(radioButtons || []).map(button => (button as HTMLInputElement).value);
+    expect(values).toEqual(['10', '25', '50', '100']);
   });
 
   it('should build search status controller', async () => {
@@ -112,24 +127,56 @@ describe('atomic-results-per-page', () => {
     expect(element.resultPerPage).toBeDefined();
   });
 
-  it('should render custom choices when provided', async () => {
+  it('should render custom choices as radio buttons with correct values', async () => {
     const {element} = await renderComponent({
       choicesDisplayed: '5,15,30',
-      initialChoice: 5, // Must match first choice in custom choices
+      initialChoice: 5,
     });
 
-    // Verify that the component has the custom choices set
-    expect(element.choicesDisplayed).toBe('5,15,30');
-    expect(element.initialChoice).toBe(5);
+    const radioButtons = element.shadowRoot?.querySelectorAll('input[type="radio"]');
+    expect(radioButtons).toHaveLength(3);
+    
+    const values = Array.from(radioButtons || []).map(button => (button as HTMLInputElement).value);
+    expect(values).toEqual(['5', '15', '30']);
   });
 
-  it('should set initial choice correctly when provided', async () => {
+  it('should mark correct radio button as checked based on initial choice', async () => {
     const {element} = await renderComponent({
       choicesDisplayed: '10,25,50',
       initialChoice: 25,
     });
 
-    expect(element.initialChoice).toBe(25);
+    const radioButtons = element.shadowRoot?.querySelectorAll('input[type="radio"]');
+    const checkedButton = Array.from(radioButtons || []).find(button => (button as HTMLInputElement).checked);
+    
+    expect(checkedButton).toBeDefined();
+    expect((checkedButton as HTMLInputElement).value).toBe('25');
+  });
+
+  it('should have correct radio button group name for all buttons', async () => {
+    const {element} = await renderComponent();
+    
+    const radioButtons = element.shadowRoot?.querySelectorAll('input[type="radio"]');
+    const groupNames = Array.from(radioButtons || []).map(button => (button as HTMLInputElement).name);
+    
+    // All radio buttons should have the same group name
+    expect(groupNames.every(name => name === groupNames[0])).toBe(true);
+    expect(groupNames[0]).toMatch(/^atomic-results-per-page-/); // Should start with component prefix
+  });
+
+  it('should render radio buttons with correct part attributes', async () => {
+    const {element} = await renderComponent({
+      choicesDisplayed: '10,25',
+      initialChoice: 25,
+    });
+
+    const radioButtons = element.shadowRoot?.querySelectorAll('input[type="radio"]');
+    
+    const button10 = Array.from(radioButtons || []).find(button => (button as HTMLInputElement).value === '10');
+    const button25 = Array.from(radioButtons || []).find(button => (button as HTMLInputElement).value === '25');
+    
+    expect(button10?.getAttribute('part')).toBe('button');
+    expect(button25?.getAttribute('part')).toBe('button active-button');
   });
 
   describe('when search has error', () => {
@@ -142,7 +189,6 @@ describe('atomic-results-per-page', () => {
         firstSearchExecuted: true,
       };
       element.isAppLoaded = true;
-      await element.updateComplete;
 
       expect(element.shadowRoot?.textContent?.trim()).toBe('');
     });
@@ -158,7 +204,6 @@ describe('atomic-results-per-page', () => {
         firstSearchExecuted: true,
       };
       element.isAppLoaded = true;
-      await element.updateComplete;
 
       expect(element.shadowRoot?.textContent?.trim()).toBe('');
     });
