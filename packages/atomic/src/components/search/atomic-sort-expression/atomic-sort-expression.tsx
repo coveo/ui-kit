@@ -28,19 +28,16 @@ export class AtomicSortExpression {
    *
    * You can specify multiple sort criteria to be used in the same request by separating them with a comma (`criteria="size ascending, date ascending"`).
    * 
-   * .Combining Sort Criteria
-   * [%collapsible]
-   * ====
    * You can specify a list of comma-separated sort criteria which will be applied sequentially. For example, if there's a tie on the 1st criterion, the API uses the 2nd criterion to break the tie. However, this only works when combining:
    * * a relevancy criterion followed by one or more field or date criteria.
    * * a qre criterion followed by one or more field or date criteria.
    * * two or more field criteria (`<FIELD>` descending, `<FIELD>` descending).
    * * a single date criterion and one or more field criteria in any order (`<FIELD>` descending, date ascending).
+   * 
    * Examples:
    * * `relevancy`, `<FIELD> descending`
    * * `qre`, `<FIELD> ascending`
    * * `date descending`, `<FIELD> descending`, `<FIELD> ascending`
-   * ====
    */
   @Prop({reflect: true}) public expression!: string;
   /**
