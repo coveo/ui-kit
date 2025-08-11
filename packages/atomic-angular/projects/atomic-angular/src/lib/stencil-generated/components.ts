@@ -2105,7 +2105,7 @@ export declare interface AtomicCommerceNoProducts extends LitAtomicCommerceNoPro
 
 @ProxyCmp({
   inputs: ['summary', 'facet', 'isCollapsed', 'field'],
-  methods: ['initialize', 'initBindings'],
+  methods: ['initialize'],
   defineCustomElementFn: () => {customElements.get('atomic-commerce-numeric-facet') || customElements.define('atomic-commerce-numeric-facet', LitAtomicCommerceNumericFacet);}
 })
 @Component({
@@ -2521,7 +2521,7 @@ export declare interface AtomicCommerceText extends LitAtomicCommerceText {
 
 @ProxyCmp({
   inputs: ['summary', 'facet', 'isCollapsed', 'field'],
-  methods: ['initialize', 'initBindings'],
+  methods: ['initialize'],
   defineCustomElementFn: () => {customElements.get('atomic-commerce-timeframe-facet') || customElements.define('atomic-commerce-timeframe-facet', LitAtomicCommerceTimeframeFacet);}
 })
 @Component({
