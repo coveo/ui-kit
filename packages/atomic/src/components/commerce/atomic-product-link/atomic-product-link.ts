@@ -1,6 +1,6 @@
 import {isUndefined} from '@coveo/bueno';
 import type {InteractiveProduct, Product} from '@coveo/headless/commerce';
-import {html, LitElement, unsafeCSS} from 'lit';
+import {html, LitElement} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {when} from 'lit/directives/when.js';
 import {getAttributesFromLinkSlot} from '@/src/components/common/item-link/attributes-slot';
@@ -39,7 +39,7 @@ export class AtomicProductLink
   extends SlotsForNoShadowDOMMixin(LitElement)
   implements InitializableComponent<CommerceBindings>
 {
-  static styles = unsafeCSS(styles);
+  static styles = styles;
 
   /**
    * The [template literal](https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Template_literals) from which to generate the `href` attribute value

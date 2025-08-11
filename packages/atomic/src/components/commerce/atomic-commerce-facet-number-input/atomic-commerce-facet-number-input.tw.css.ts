@@ -1,4 +1,6 @@
-[part="input-form"] {
+import {css} from 'lit';
+
+const styles = css`[part="input-form"] {
   display: grid;
   grid-template-areas:
     "label-start label-end ."
@@ -22,3 +24,6 @@
 [part="input-apply-button"] {
   grid-area: apply-button;
 }
+`;
+
+export default styles;
