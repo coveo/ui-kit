@@ -1,5 +1,5 @@
 {
-  "name": "@coveo/atomic-stencil-samples",
+  "name": "@samples/atomic-search-stencil",
   "version": "0.0.0",
   "private": true,
   "type": "module",

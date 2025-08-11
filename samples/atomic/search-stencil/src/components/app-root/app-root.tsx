@@ -5,7 +5,7 @@ import {
 // biome-ignore lint/correctness/noUnusedImports: <>
 import {Component, h} from '@stencil/core';
 import {createRouter, Route} from 'stencil-router-v2';
-import {Header, homePath, searchPath} from '../header/header';
+import {Header, homePath, searchPath} from '../header/header.js';
 
 const Router = createRouter();
 
