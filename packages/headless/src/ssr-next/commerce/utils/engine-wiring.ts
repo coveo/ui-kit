@@ -3,27 +3,12 @@ import type {CommerceEngineDefinitionOptions} from '../factories/build-factory.j
 import type {CommonBuildConfig} from '../types/build.js';
 import type {CommerceControllerDefinitionsMap} from '../types/engine.js';
 
-// TODO: KIT-4742: Add tests
-export function extendEngineOptions<
+export function assembleEngineConfiguration<
   TControllerDefinitions extends CommerceControllerDefinitionsMap,
 >(
   opts: CommerceEngineDefinitionOptions<TControllerDefinitions>,
-  commonBuildOptions?: CommonBuildConfig
+  _commonBuildOptions?: CommonBuildConfig
 ): CommerceEngineOptions {
-  const {configuration, ...rest} = opts;
-  // TODO: KIT-4742: wire engine configuration with validation
-  const {country, currency, language, url, location} = commonBuildOptions!;
-  return {
-    configuration: {
-      ...configuration,
-      context: {
-        country,
-        currency,
-        language,
-        view: {url},
-        location,
-      },
-    },
-    ...rest,
-  };
+  // TODO: KIT-4742: Implement: wire engine configuration with validation
+  return opts as CommerceEngineOptions;
 }

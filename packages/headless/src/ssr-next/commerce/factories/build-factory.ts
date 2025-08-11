@@ -26,7 +26,7 @@ import type {
   CommerceControllerDefinitionsMap,
   EngineDefinitionOptions,
 } from '../types/engine.js';
-import {extendEngineOptions} from '../utils/engine-wiring.js';
+import {assembleEngineConfiguration} from '../utils/engine-wiring.js';
 
 /**
  * The SSR commerce engine.
@@ -171,7 +171,7 @@ export const buildFactory =
 
     const engine = buildSSRCommerceEngine(
       solutionType,
-      extendEngineOptions(options, buildOptions),
+      assembleEngineConfiguration(options, buildOptions),
       enabledRecommendationControllers
     );
 
