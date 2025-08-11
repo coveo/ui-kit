@@ -1,5 +1,5 @@
 {
-  "name": "@coveo/headless-commerce-react-samples",
+  "name": "@samples/headless-commerce-react",
   "version": "0.1.0",
   "private": true,
   "type": "module",
