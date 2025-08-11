@@ -34,6 +34,7 @@ import {
 } from '../../common/facets/facet-search/facet-search-utils';
 import type {FacetValueProps} from '../../common/facets/facet-value/facet-value';
 import type {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface';
+import styles from './atomic-commerce-facet.tw.css';
 
 /**
  * The `atomic-commerce-facet` component renders a commerce facet that the end user can interact with to filter products.
