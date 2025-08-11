@@ -1,3 +1,14 @@
+## <small>3.32.1 (2025-08-11)</small>
+
+* fix: observer stencil more and always (#5853) ([aae3cee](https://github.com/coveo/ui-kit/commits/aae3cee)), closes [#5853](https://github.com/coveo/ui-kit/issues/5853)
+* fix(atomic): improve product children layout for any child count (#5826) ([029b11d](https://github.com/coveo/ui-kit/commits/029b11d)), closes [#5826](https://github.com/coveo/ui-kit/issues/5826)
+* chore(atomic): add postcss/tailwindcss support for CSSStylesheets (#5808) ([c1cda14](https://github.com/coveo/ui-kit/commits/c1cda14)), closes [#5808](https://github.com/coveo/ui-kit/issues/5808)
+* chore(atomic): atomic-product-multi-value-text font size override not applied correctly (#5806) ([e613f7f](https://github.com/coveo/ui-kit/commits/e613f7f)), closes [#5806](https://github.com/coveo/ui-kit/issues/5806) [/github.com/coveo/ui-kit/pull/5802/files#diff-913ab5c20cb2c3af53f6e5de776c7b0cd155ecfbae2b4fdf6e241cefee4c0a91](https://github.com//github.com/coveo/ui-kit/pull/5802/files/issues/diff-913ab5c20cb2c3af53f6e5de776c7b0cd155ecfbae2b4fdf6e241cefee4c0a91)
+* perf: remove initializePopover unused code from commerce facets (#5847) ([c45ce38](https://github.com/coveo/ui-kit/commits/c45ce38)), closes [#5847](https://github.com/coveo/ui-kit/issues/5847)
+* style: lint forgotten files (#5848) ([8b77db5](https://github.com/coveo/ui-kit/commits/8b77db5)), closes [#5848](https://github.com/coveo/ui-kit/issues/5848)
+
+
+
 ## 3.32.0 (2025-08-07)
 
 * chore: fix atomic dev command (#5813) ([ff5a3b5](https://github.com/coveo/ui-kit/commits/ff5a3b5)), closes [#5813](https://github.com/coveo/ui-kit/issues/5813)

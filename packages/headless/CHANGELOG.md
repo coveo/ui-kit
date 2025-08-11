@@ -1,3 +1,9 @@
+## <small>3.28.1 (2025-08-11)</small>
+
+* fix(headless): reset numberOfValue when deselecting a manual numeric facet range (#5845) ([450bb60](https://github.com/coveo/ui-kit/commits/450bb60)), closes [#5845](https://github.com/coveo/ui-kit/issues/5845)
+
+
+
 ## 3.28.0 (2025-08-07)
 
 * refactor(headless-ssr): remove build() method (#5785) ([a56afa5](https://github.com/coveo/ui-kit/commits/a56afa5)), closes [#5785](https://github.com/coveo/ui-kit/issues/5785)
