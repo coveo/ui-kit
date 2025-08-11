@@ -47,7 +47,7 @@ export class AtomicProductLink
    *
    * For example, the following markup generates an `href` value such as `http://uri.com?id=itemTitle`, using the product's `clickUri` and `itemtitle` fields.
    * ```html
-   * <atomic-product-link href-template='${clickUri}?id=${permanentId}'></atomic-product-link>
+   * <atomic-product-link href-template='${clickUri}?id=${permanentid}'></atomic-product-link>
    * ```
    */
   @property({type: String, attribute: 'href-template', reflect: true})
