@@ -18,6 +18,7 @@ export const renderFacetValueLink: FunctionalComponentWithChildren<
     const ariaLabel = props.i18n.t('facet-value', {
       value: props.displayValue,
       count: props.numberOfResults,
+      formattedCount: count,
       interpolation: {escapeValue: false},
     });
 
