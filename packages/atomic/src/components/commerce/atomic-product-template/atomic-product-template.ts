@@ -33,8 +33,6 @@ import '../atomic-product-rating/atomic-product-rating';
  * @MapProp name: mustNotMatch;attr: must-not-match;docs: The field and values that must not be matched by a product item for the template to apply. For example, a template with the following attribute only applies to product items whose `filetype` is not `lithiummessage`: `must-not-match-filetype="lithiummessage";type: Record<string, string[]> ;default: {}
  * @slot default - The default slot where to insert the template element.
  * @slot link - A `template` element that contains a single `atomic-product-link` component.
- *
- * @alpha
  */
 @customElement('atomic-product-template')
 export class AtomicProductTemplate
