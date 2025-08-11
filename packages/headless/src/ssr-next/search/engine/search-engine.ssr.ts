@@ -123,7 +123,6 @@ export function defineSearchEngine<
     engineOptions.navigatorContextProvider = navigatorContextProvider;
   };
 
-  // TODO: fix
   const build: BuildFunction = async (...[buildOptions]: BuildParameters) => {
     const logger = buildLogger(options.loggerOptions);
     if (!getOptions().navigatorContextProvider) {
@@ -164,7 +163,6 @@ export function defineSearchEngine<
     engine.executeFirstSearch();
     const staticState = createStaticState({
       searchAction: await engine.waitForSearchCompletedAction(),
-      // TODO: fix: somehow some commerce code went into common types
       controllers: controllers,
     }) as EngineStaticState<
       UnknownAction,

@@ -38,7 +38,6 @@ export interface CommonFetchConfig {
   searchParams?: Omit<ParameterManagerState<Parameters>['parameters'], 'q'>;
 }
 
-// TODO: This should be in build type and not be called FetchStaticStateOptions because it is used by everyone
 export type FetchStaticStateOptions<TSolutionType extends SolutionType> =
   TSolutionType extends SolutionType.search
     ? SearchFetchConfig

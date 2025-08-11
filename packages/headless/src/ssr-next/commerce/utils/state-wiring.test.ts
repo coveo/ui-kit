@@ -62,6 +62,7 @@ describe('state-wiring', () => {
       }).not.toThrow();
     });
 
+    // TODO: KIT-4619: test recommendation array
     it.todo('should throw for missing recommendations', () => {
       expect(() => {
         recommendationsDefinitionSchema.validate(validCommonConfig);

@@ -129,10 +129,7 @@ describe('Commerce Engine SSR', () => {
   });
 
   describe('#recommendationEngineDefinition', () => {
-    // TODO:
+    // TODO: KIT-4619: validate recommendation array
     it.todo('should throw if the recommendations are missing');
   });
-
-  // TODO: same thing with other recommendation
-  // TODO: same thing with other standalone
 });

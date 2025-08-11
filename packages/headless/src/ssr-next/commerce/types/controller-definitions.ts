@@ -105,7 +105,6 @@ export interface ControllerDefinitionsMap<TController extends Controller> {
   [customName: string]: ControllerDefinition<TController>;
 }
 
-// TODO: find better name
 export type AugmentedControllerDefinition<
   TControllerDefinitions extends ControllerDefinitionsMap<Controller>,
 > = TControllerDefinitions & {

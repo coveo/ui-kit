@@ -75,7 +75,6 @@ export interface EngineDefinition<
   ) => void;
 }
 
-// TODO: move to search and rename SearchEngineDefinitionBuildResult
 export interface EngineDefinitionBuildResult<
   TEngine extends CoreEngine | CoreEngineNext,
   TControllers extends ControllersMap,

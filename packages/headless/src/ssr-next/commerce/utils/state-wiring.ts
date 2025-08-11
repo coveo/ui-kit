@@ -10,10 +10,6 @@ import type {
   CommerceControllerDefinitionsMap,
   FetchStaticStateParameters,
 } from '../types/engine.js';
-import type {
-  CommonFetchConfig,
-  FetchStaticStateOptions,
-} from '../types/fetch-static-state.js';
 
 export const requiredDefinition = {
   language: contextDefinition.language,
@@ -33,7 +29,7 @@ export const searchDefinition = {
 
 export const recommendationsDefinition = {
   ...requiredDefinition,
-  // recommendation:  // TODO: required array or not
+  // recommendation:  // TODO: KIT-4619: support array of recommendations
 };
 
 export const listingDefinitionSchema = new Schema(listingDefinition);
@@ -42,7 +38,6 @@ export const recommendationsDefinitionSchema = new Schema(
   recommendationsDefinition
 );
 
-// TODO: test this function as it is crucial
 export function wireControllerParams<
   TControllerDefinitions extends CommerceControllerDefinitionsMap,
 >(
@@ -50,35 +45,41 @@ export function wireControllerParams<
   controllerDefinitions: TControllerDefinitions,
   params: FetchStaticStateParameters<TControllerDefinitions>
 ): void {
-  if (!(params.length > 0 && params[0])) {
+  if (
+    !Array.isArray(params) ||
+    params.length === 0 ||
+    typeof params[0] !== 'object'
+  ) {
     return;
   }
 
+  const paramsObject = params[0] as Record<string, unknown>;
+
   switch (solutionType) {
     case SolutionType.listing:
-      listingDefinitionSchema.validate(params[0]);
+      listingDefinitionSchema.validate(paramsObject);
       break;
     case SolutionType.search:
-      searchDefinitionSchema.validate(params[0]);
+      searchDefinitionSchema.validate(paramsObject);
       break;
     case SolutionType.recommendation:
-      recommendationsDefinitionSchema.validate(params[0]);
+      recommendationsDefinitionSchema.validate(paramsObject);
       break;
   }
 
-  // TODO: find a way to wire the typings
-  params[0].controllers = params[0].controllers ?? {};
-
-  const controllers = params[0].controllers as ControllersPropsMap;
+  paramsObject.controllers ??= {};
+  const controllers = paramsObject.controllers as ControllersPropsMap;
 
   const wireParameterManager = (query?: string) => {
-    const {searchParams} = params[0] as CommonFetchConfig;
-    if (controllerDefinitions && 'parameterManager' in controllerDefinitions) {
+    const {searchParams} = paramsObject;
+    if (controllerDefinitions?.parameterManager) {
       controllers.parameterManager = {
         initialState: {
           parameters: {
             ...(query && {q: query}),
-            ...searchParams,
+            ...(searchParams && typeof searchParams === 'object'
+              ? searchParams
+              : {}),
           },
         },
       };
@@ -86,56 +87,58 @@ export function wireControllerParams<
   };
 
   const wireContext = () => {
-    const {language, country, currency, url} = params[0] as CommonFetchConfig;
-    if (controllerDefinitions && 'context' in controllerDefinitions) {
+    const {language, country, currency, url} = paramsObject;
+    if (controllerDefinitions?.context) {
       controllers.context = {
         initialState: {
           view: {url},
-          language: language,
-          country: country,
-          currency: currency,
+          language,
+          country,
+          currency,
         },
       };
     }
   };
 
   const wireCart = () => {
-    const {cart} = params[0] as CommonFetchConfig;
-    if (controllerDefinitions && 'cart' in controllerDefinitions && cart) {
+    const {cart} = paramsObject;
+    if (controllerDefinitions?.cart && cart) {
       controllers.cart = {initialState: cart};
     }
   };
 
   const wireRecommendations = () => {
-    // TODO: to implement
+    // TODO: KIT-4619: wire recommendations
+  };
+
+  // Common wiring for all solution types
+  const wireCommon = () => {
+    wireCart();
+    wireContext();
   };
 
   switch (solutionType) {
     case SolutionType.search: {
-      const {query} = params[0] as FetchStaticStateOptions<SolutionType.search>;
-      wireCart();
-      wireContext();
-      wireParameterManager(query);
+      const {query} = paramsObject;
+      wireCommon();
+      if (typeof query === 'string') wireParameterManager(query);
       break;
     }
 
     case SolutionType.listing: {
-      wireCart();
-      wireContext();
+      wireCommon();
       wireParameterManager();
       break;
     }
 
     case SolutionType.recommendation: {
-      wireCart();
-      wireContext();
+      wireCommon();
       wireRecommendations();
       break;
     }
 
     case SolutionType.standalone:
-      wireCart();
-      wireContext();
+      wireCommon();
       break;
   }
 }

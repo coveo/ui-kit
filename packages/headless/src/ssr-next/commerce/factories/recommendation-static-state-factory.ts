@@ -9,6 +9,7 @@ import type {
 import type {InferControllerStaticStateMapFromDefinitionsWithSolutionType} from '../types/controller-inference.js';
 import type {
   BakedInControllers,
+  BuildParameters,
   BuildResult,
   CommerceControllerDefinitionsMap,
   EngineStaticState,
@@ -59,8 +60,7 @@ export function fetchRecommendationStaticStateFactory<
     )(SolutionType.recommendation);
 
     const {engine, controllers} = (await solutionTypeBuild(
-      // TODO: fix the typing
-      ...params
+      ...(params as BuildParameters<TControllerDefinitions>)
     )) as BuildResult<TControllerDefinitions>;
 
     filterRecommendationControllers(
