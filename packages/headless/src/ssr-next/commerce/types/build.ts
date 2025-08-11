@@ -32,7 +32,7 @@ export interface ListingBuildConfig extends CommonBuildConfig {}
 export interface StandaloneBuildConfig extends CommonBuildConfig {}
 
 export interface CommonBuildConfig {
-  url: string; // TODO: what is the point of having the url for other solution types than search
+  url: string;
   language: string;
   country: string;
   currency: CurrencyCodeISO4217;

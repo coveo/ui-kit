@@ -63,7 +63,7 @@ export interface ControllerDefinitionWithoutProps<
   build(engine: SSRCommerceEngine, solutionType?: SolutionType): TController;
 }
 
-// TODO: deprecate this type since no longer needed
+// TODO: KIT-4742: There is no point for this interface now that the wiring is happening in headless
 export interface ControllerWithKind extends Controller {
   _kind: Kind;
 }
