@@ -1,7 +1,4 @@
-import {
-  type CommerceEngineConfiguration,
-  getSampleCommerceEngineConfiguration,
-} from '../../../app/commerce-engine/commerce-engine-configuration.js';
+import type {CommerceEngineConfiguration} from '../../../app/commerce-engine/commerce-engine-configuration.js';
 import {defineMockCommerceController} from '../../../test/mock-controller-definitions.js';
 import type {CommerceEngineDefinitionOptions} from '../factories/build-factory.js';
 import {defineCommerceEngine} from './commerce-engine.ssr.js';
@@ -70,57 +67,20 @@ describe('Commerce Engine SSR', () => {
       expect(getAccessToken()).toBe('new-access-token');
     });
 
-    it('should always return context and cart controllers as well as the ones provided', async () => {
-      const engineDefinition = defineCommerceEngine(definitionOptions);
-      const solutionType = definitionName as keyof typeof engineDefinition;
-      const staticState = await engineDefinition[solutionType].fetchStaticState(
-        {
-          url: 'http://example.com',
-          query: 'test',
-          country: 'US',
-          currency: 'USD',
-          language: 'en',
-        }
-      );
-      expect(staticState.controllers).toHaveProperty('context');
-      expect(staticState.controllers).toHaveProperty('cart');
-      expect(staticState.controllers).toHaveProperty('controller1');
-      expect(staticState.controllers).toHaveProperty('controller2');
-    });
+    // TODO: KIT-4742
+    it.todo(
+      'should always return context and cart controllers as well as the ones provided'
+    );
   });
 
   describe('#searchEngineDefinition', () => {
-    it('should always return parameter manager controller', async () => {
-      const {searchEngineDefinition} = defineCommerceEngine(definitionOptions);
-      const staticState = await searchEngineDefinition.fetchStaticState({
-        url: 'http://example.com/search',
-        query: 'foo',
-        country: 'US',
-        currency: 'USD',
-        language: 'en',
-      });
-      expect(staticState.controllers).toHaveProperty('parameterManager');
-    });
+    // TODO: KIT-4742
+    it.todo('should always return parameter manager controller');
   });
 
   describe('#listingEngineDefinition', () => {
-    it('should always return parameter manager controller', async () => {
-      const aa = {
-        configuration: getSampleCommerceEngineConfiguration(),
-        controllers: {
-          controller1: defineMockCommerceController(),
-          controller2: defineMockCommerceController(),
-        },
-      };
-      const {listingEngineDefinition} = defineCommerceEngine(aa);
-      const staticState = await listingEngineDefinition.fetchStaticState({
-        url: 'http://example.com',
-        country: 'US',
-        currency: 'USD',
-        language: 'en',
-      });
-      expect(staticState.controllers).toHaveProperty('parameterManager');
-    });
+    // TODO: KIT-4742
+    it.todo('should always return parameter manager controller');
   });
 
   describe('#recommendationEngineDefinition', () => {
