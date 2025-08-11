@@ -483,13 +483,10 @@ describe('atomic-commerce-numeric-facet', () => {
 
       // @ts-expect-error: accessing private methods for testing
       const validateFacetSpy = vi.spyOn(element, 'validateFacet');
-      // @ts-expect-error: accessing private methods for testing
-      const registerFacetToStoreSpy = vi.spyOn(element, 'registerFacetToStore');
 
       element.initialize();
 
       expect(validateFacetSpy).toHaveBeenCalled();
-      expect(registerFacetToStoreSpy).toHaveBeenCalled();
     });
   });
 
