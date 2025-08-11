@@ -1,5 +1,5 @@
 {
-  "name": "@coveo/atomic-next-samples",
+  "name": "@samples/atomic-nextjs-pages-router",
   "version": "0.0.0",
   "private": true,
   "type": "module",
