@@ -139,7 +139,10 @@ jobs:
       - name: Get affected projects
         id: set
         run: |
-          AFFECTED=$(npx turbo build --affected --dry-run 2>/dev/null | awk '/^@coveo/ && !/#/ {print $1}' | sed 's/@coveo\///g' | tr '\n' ' ')
+          AFFECTED=$(npx turbo build --affected --dry-run 2>/dev/null \
+          | awk '/^@(coveo|samples)/ && !/#/ {print $1}' \
+          | sed -E 's/@(coveo|samples)\///g' \
+          | tr '\n' ' ')
           echo "projects=$AFFECTED" >> "$GITHUB_OUTPUT"
       - name: Log affected projects
         run: |
@@ -500,7 +503,7 @@ jobs:
   e2e-atomic-vuejs-test:
     name: "Run e2e tests on Vue.js sample"
     needs: affected
-    if: contains(needs.affected.outputs.projects, 'atomic-vuejs-samples')
+    if: contains(needs.affected.outputs.projects, 'atomic-search-vuejs')
     runs-on: ubuntu-latest
     steps:
       - name: Harden Runner
@@ -649,7 +652,7 @@ jobs:
     if: ${{ !cancelled() && github.event_name == 'pull_request' }}
     needs: build
     name: Pre-release CDN in dev (PR)
-    environment: 'Prerelease (CDN)'
+    environment: "Prerelease (CDN)"
     runs-on: ubuntu-latest
     steps:
       - name: Harden Runner
@@ -820,7 +823,7 @@ jobs:
     if: ${{ !cancelled() && github.event_name ==  'merge_group' }}
     needs: is-valid
     name: Pre-release CDN in dev (Merge group)
-    environment: 'Prerelease (CDN)'
+    environment: "Prerelease (CDN)"
     runs-on: ubuntu-latest
     steps:
       - name: Harden Runner
