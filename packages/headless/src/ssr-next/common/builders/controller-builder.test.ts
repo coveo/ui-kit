@@ -7,9 +7,9 @@ import type {
   BaseControllerDefinitionWithoutProps,
   BaseControllerDefinitionWithProps,
 } from '../types/controllers.js';
-import {HydratedControllerBuilder} from './hydrated-controller-builder.js';
+import {ControllerBuilder} from './controller-builder.js';
 
-describe('HydratedControllerBuilder', () => {
+describe('ControllerBuilder', () => {
   let mockEngine: CoreEngine;
   let mockController: Controller;
 
@@ -26,7 +26,7 @@ describe('HydratedControllerBuilder', () => {
       CoreEngine,
       Controller
     >;
-    let builder: HydratedControllerBuilder<
+    let builder: ControllerBuilder<
       typeof mockDefinition,
       CoreEngine,
       undefined,
@@ -37,7 +37,7 @@ describe('HydratedControllerBuilder', () => {
       mockDefinition = {
         build: vi.fn().mockReturnValue(mockController),
       };
-      builder = new HydratedControllerBuilder(mockDefinition, mockEngine);
+      builder = new ControllerBuilder(mockDefinition, mockEngine);
     });
 
     it('should call #build method when building without props', () => {
@@ -72,7 +72,7 @@ describe('HydratedControllerBuilder', () => {
       Controller,
       MockProps
     >;
-    let builder: HydratedControllerBuilder<
+    let builder: ControllerBuilder<
       typeof mockDefinition,
       CoreEngine,
       MockProps,
@@ -85,11 +85,7 @@ describe('HydratedControllerBuilder', () => {
       mockDefinition = {
         buildWithProps: vi.fn().mockReturnValue(mockController),
       };
-      builder = new HydratedControllerBuilder(
-        mockDefinition,
-        mockEngine,
-        mockProps
-      );
+      builder = new ControllerBuilder(mockDefinition, mockEngine, mockProps);
     });
 
     it('should call #buildWithProps method when building with props', () => {
@@ -145,8 +141,8 @@ describe('HydratedControllerBuilder', () => {
       buildWithProps: vi.fn().mockReturnValue(mockController),
     };
 
-    const builder1 = new HydratedControllerBuilder(buildDefinition, mockEngine);
-    const builder2 = new HydratedControllerBuilder(
+    const builder1 = new ControllerBuilder(buildDefinition, mockEngine);
+    const builder2 = new ControllerBuilder(
       buildWithPropsDefinition,
       mockEngine
     );
