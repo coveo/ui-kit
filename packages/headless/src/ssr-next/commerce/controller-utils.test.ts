@@ -5,6 +5,8 @@ import {buildMockCommerceState} from '../../test/mock-commerce-state.js';
 import {
   buildMockController,
   buildMockControllerWithInitialState,
+  defineMockCommerceController,
+  defineMockCommerceControllerWithProps,
 } from '../../test/mock-controller-definitions.js';
 import {buildMockCommerceEngine} from '../../test/mock-engine-v2.js';
 import * as utils from '../../utils/utils.js';
@@ -23,41 +25,6 @@ import type {ControllerDefinition} from './types/controller-definitions.js';
 vi.mock('../../utils/utils.js', {spy: true});
 vi.mock('../common/builders/static-controller-builder.js', {spy: true});
 vi.mock('../common/builders/controller-builder.js', {spy: true});
-
-type SolutionTypeAvailabilities = {
-  listing?: boolean;
-  search?: boolean;
-  standalone?: boolean;
-  recommendation?: boolean;
-};
-// TODO: move to mock fixture file
-const createMockControllerDefinitionWithoutProps = (
-  options?: SolutionTypeAvailabilities
-) => ({
-  build: vi.fn().mockReturnValue({
-    state: {},
-    subscribe: vi.fn(),
-  }),
-  //   TODO: test with options here below when set to false
-  listing: options?.listing ?? true,
-  search: options?.search ?? true,
-  standalone: options?.standalone ?? true,
-  recommendation: options?.recommendation ?? true,
-});
-
-const createMockControllerDefinitionWithProps = (
-  options?: SolutionTypeAvailabilities
-) => ({
-  buildWithProps: vi.fn().mockReturnValue({
-    state: {prop1: 'value1', prop2: 42},
-    subscribe: vi.fn(),
-  }),
-  //   TODO: test with options here below when set to false
-  listing: options?.listing ?? true,
-  search: options?.search ?? true,
-  standalone: options?.standalone ?? true,
-  recommendation: options?.recommendation ?? true,
-});
 
 describe('commerce controller-utils', () => {
   let mockSearchActions: UnknownAction[];
@@ -85,8 +52,8 @@ describe('commerce controller-utils', () => {
 
     const buildControllersWithDefaultSetup = () => {
       const definitionsMap = {
-        controller1: createMockControllerDefinitionWithoutProps(),
-        controller2: createMockControllerDefinitionWithProps(),
+        controller1: defineMockCommerceController(),
+        controller2: defineMockCommerceControllerWithProps(),
       };
 
       buildControllerDefinitions({
@@ -165,11 +132,11 @@ describe('commerce controller-utils', () => {
       let controller2: ControllerDefinition<Controller>;
 
       beforeEach(() => {
-        controller1 = createMockControllerDefinitionWithoutProps({
+        controller1 = defineMockCommerceController({
           search: true,
           recommendation: false,
         });
-        controller2 = createMockControllerDefinitionWithoutProps({
+        controller2 = defineMockCommerceController({
           search: false,
           recommendation: false,
         });
@@ -204,10 +171,10 @@ describe('commerce controller-utils', () => {
       });
 
       it('should not call #ControllerBuilder if no controller is defined for the solution type', () => {
-        controller1 = createMockControllerDefinitionWithoutProps({
+        controller1 = defineMockCommerceController({
           search: false,
         });
-        controller2 = createMockControllerDefinitionWithoutProps({
+        controller2 = defineMockCommerceController({
           search: false,
         });
 
