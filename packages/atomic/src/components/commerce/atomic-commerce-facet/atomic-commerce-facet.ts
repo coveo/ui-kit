@@ -125,7 +125,7 @@ export class AtomicCommerceFacet
     this.validateFacet();
     this.initFocusTargets();
     this.ensureSubscribed();
-    this.initAriaLive();
+    this.facet && this.initAriaLive();
   }
 
   public disconnectedCallback(): void {
