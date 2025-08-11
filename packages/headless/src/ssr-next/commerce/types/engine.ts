@@ -1,5 +1,4 @@
 import type {UnknownAction} from '@reduxjs/toolkit';
-import type {CommerceEngineOptions} from '../../../app/commerce-engine/commerce-engine.js';
 import type {EngineConfiguration} from '../../../app/engine-configuration.js';
 import type {NavigatorContextProvider} from '../../../app/navigator-context-provider.js';
 import type {Controller} from '../../../controllers/controller/headless-controller.js';
@@ -22,21 +21,13 @@ import type {
   InferControllerStaticStateMapFromDefinitionsWithSolutionType,
   InferControllersMapFromDefinition,
 } from './controller-inference.js';
-import type {
-  FetchStaticState,
-  FetchStaticStateOptions,
-} from './fetch-static-state.js';
+import type {FetchStaticState} from './fetch-static-state.js';
 import type {
   HydrateStaticState,
   HydrateStaticStateOptions,
 } from './hydrate-static-state.js';
 
-export type {
-  HydrateStaticState,
-  HydrateStaticStateOptions,
-  FetchStaticState,
-  FetchStaticStateOptions,
-};
+export type {HydrateStaticState, HydrateStaticStateOptions, FetchStaticState};
 
 export interface EngineStaticState<
   TSearchAction extends UnknownAction,
@@ -146,7 +137,6 @@ export type BuildParameters<
   TControllerDefinitions extends CommerceControllerDefinitionsMap,
 > = Parameters<
   Build<
-    CommerceEngineOptions,
     InferControllersMapFromDefinition<TControllerDefinitions, SolutionType>,
     InferControllerPropsMapFromDefinitions<TControllerDefinitions>,
     TControllerDefinitions,

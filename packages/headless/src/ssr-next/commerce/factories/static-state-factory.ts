@@ -14,7 +14,7 @@ import type {
   FetchStaticStateFunction,
   FetchStaticStateParameters,
 } from '../types/engine.js';
-import {wireControllerParams} from '../utils/state-wiring.js';
+import {wireControllerParams} from '../utils/controller-wiring.js';
 import {
   buildFactory,
   type CommerceEngineDefinitionOptions,
@@ -32,10 +32,10 @@ export function fetchStaticStateFactory<
     async (...params: FetchStaticStateParameters<TControllerDefinitions>) => {
       wireControllerParams(solutionType, controllerDefinitions, params);
 
-      const solutionTypeBuild = await buildFactory(controllerDefinitions, {
-        ...options,
-      })(solutionType);
-
+      const solutionTypeBuild = await buildFactory(
+        controllerDefinitions,
+        options
+      )(solutionType);
       const {engine, controllers} = await solutionTypeBuild(
         ...(params as BuildParameters<TControllerDefinitions>)
       );

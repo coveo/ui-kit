@@ -13,6 +13,7 @@ import {
 } from '../../../utils/utils.js';
 import type {ControllersPropsMap} from '../../common/types/controllers.js';
 import {buildControllerDefinitions} from '../controller-utils.js';
+import type {SSRCommerceEngineOptions} from '../types/build.js';
 import {SolutionType} from '../types/controller-constants.js';
 import type {ControllerDefinitionsMap} from '../types/controller-definitions.js';
 import type {
@@ -25,6 +26,7 @@ import type {
   CommerceControllerDefinitionsMap,
   EngineDefinitionOptions,
 } from '../types/engine.js';
+import {extendEngineOptions} from '../utils/engine-wiring.js';
 
 /**
  * The SSR commerce engine.
@@ -41,7 +43,7 @@ export interface SSRCommerceEngine extends CommerceEngine {
 export type CommerceEngineDefinitionOptions<
   TControllers extends
     ControllerDefinitionsMap<Controller> = ControllerDefinitionsMap<Controller>,
-> = EngineDefinitionOptions<CommerceEngineOptions, TControllers>;
+> = EngineDefinitionOptions<SSRCommerceEngineOptions, TControllers>;
 
 function isListingFetchCompletedAction(action: unknown): action is Action {
   return /^commerce\/productListing\/fetch\/(fulfilled|rejected)$/.test(
@@ -169,9 +171,7 @@ export const buildFactory =
 
     const engine = buildSSRCommerceEngine(
       solutionType,
-      buildOptions && 'extend' in buildOptions && buildOptions?.extend
-        ? await buildOptions.extend(options)
-        : options,
+      extendEngineOptions(options, buildOptions),
       enabledRecommendationControllers
     );
 

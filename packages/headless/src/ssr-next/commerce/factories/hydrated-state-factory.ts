@@ -20,9 +20,10 @@ export function hydratedStaticStateFactory<
     solutionType: SolutionType
   ): HydrateStaticStateFunction<TControllerDefinitions> =>
     async (...params: HydrateStaticStateParameters<TControllerDefinitions>) => {
-      const solutionTypeBuild = await buildFactory(controllerDefinitions, {
-        ...options,
-      })(solutionType);
+      const solutionTypeBuild = await buildFactory(
+        controllerDefinitions,
+        options
+      )(solutionType);
       const {engine, controllers} = await solutionTypeBuild(
         ...(params as BuildParameters<TControllerDefinitions>)
       );

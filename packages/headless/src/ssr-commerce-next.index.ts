@@ -70,8 +70,6 @@
 export type {Relay} from '@coveo/relay';
 
 export type {Middleware, Unsubscribe} from '@reduxjs/toolkit';
-// Main App
-export type {CommerceEngineOptions} from './app/commerce-engine/commerce-engine.js';
 export type {CommerceEngineConfiguration} from './app/commerce-engine/commerce-engine-configuration.js';
 export {getSampleCommerceEngineConfiguration} from './app/commerce-engine/commerce-engine-configuration.js';
 // export type
@@ -269,6 +267,11 @@ export type {
   CommerceEngineDefinitionOptions,
   SSRCommerceEngine as CommerceEngine,
 } from './ssr-next/commerce/factories/build-factory.js';
+// Main App
+export type {
+  BuildConfig,
+  SSRCommerceEngineOptions,
+} from './ssr-next/commerce/types/build.js';
 export {SolutionType} from './ssr-next/commerce/types/controller-constants.js';
 export type {
   CommerceEngineDefinitionBuildResult,
@@ -293,7 +296,6 @@ export type {
   CommerceEngineDefinition,
   EngineStaticState,
   FetchStaticState,
-  FetchStaticStateOptions,
   HydrateStaticState,
   HydrateStaticStateOptions,
 } from './ssr-next/commerce/types/engine.js';

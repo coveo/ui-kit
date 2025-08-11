@@ -9,8 +9,6 @@ import type {
 } from './engine.js';
 import type {OptionsTuple} from './utilities.js';
 
-type FetchStaticStateOptions = {};
-
 /**
  * Executes only the initial search for a given configuration, then returns a resumable snapshot of engine state along with the state of the controllers.
  *
@@ -22,7 +20,6 @@ export type FetchStaticState<
   TControllersProps extends ControllersPropsMap,
 > = (
   ...params: OptionsTuple<
-    FetchStaticStateOptions &
-      EngineDefinitionControllersPropsOption<TControllersProps>
+    EngineDefinitionControllersPropsOption<TControllersProps>
   >
 ) => Promise<EngineStaticState<TSearchAction, TControllersStaticState>>;
