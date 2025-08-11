@@ -2,14 +2,11 @@
  * Utility functions to be used for Commerce Server Side Rendering.
  */
 
-import {getSampleCommerceEngineConfiguration} from '../../../app/commerce-engine/commerce-engine-configuration.js';
 import type {NavigatorContextProvider} from '../../../app/navigator-context-provider.js';
 import type {Controller} from '../../../controllers/controller/headless-controller.js';
 import {defineCart} from '../controllers/cart/headless-cart.ssr.js';
 import {defineContext} from '../controllers/context/headless-context.ssr.js';
-import {definePagination} from '../controllers/pagination/headless-core-commerce-pagination.ssr.js';
 import {defineParameterManager} from '../controllers/parameter-manager/headless-core-parameter-manager.ssr.js';
-import {defineProductList} from '../controllers/product-list/headless-product-list.ssr.js';
 import type {CommerceEngineDefinitionOptions} from '../factories/build-factory.js';
 import {hydratedStaticStateFactory} from '../factories/hydrated-state-factory.js';
 import {hydratedRecommendationStaticStateFactory} from '../factories/recommendation-hydrated-state-factory.js';
@@ -144,40 +141,3 @@ export function defineCommerceEngine<
     >,
   };
 }
-
-async function main() {
-  const {
-    // listingEngineDefinition,
-    searchEngineDefinition,
-    // standaloneEngineDefinition,
-    // recommendationEngineDefinition,
-  } = defineCommerceEngine({
-    controllers: {
-      // param: defineParameterManager(),
-      // context: defineContext(),
-      // cart: defineCart(),
-      // TODO: add warning if the user tries to register parameterManager, context, or cart
-      products: defineProductList(),
-      pagination: definePagination({
-        options: {
-          pageSize: 1,
-        },
-      }),
-    },
-    configuration: getSampleCommerceEngineConfiguration(),
-  });
-
-  const staticState = await searchEngineDefinition.fetchStaticState({
-    cart: {
-      items: [],
-    },
-    country: 'CA',
-    currency: 'CAD',
-    language: 'fr',
-    url: 'https://example.com',
-    query: 'shoes',
-  });
-  staticState.controllers.cart;
-}
-
-main();

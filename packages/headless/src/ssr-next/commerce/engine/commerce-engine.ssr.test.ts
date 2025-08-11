@@ -1,20 +1,15 @@
-import type {CommerceEngineConfiguration} from '../../../app/commerce-engine/commerce-engine-configuration.js';
-import type {Controller} from '../../../controllers/controller/headless-controller.js';
 import {
-  defineMockCommerceController,
-  defineMockCommerceControllerWithProps,
-} from '../../../test/mock-controller-definitions.js';
+  type CommerceEngineConfiguration,
+  getSampleCommerceEngineConfiguration,
+} from '../../../app/commerce-engine/commerce-engine-configuration.js';
+import {defineMockCommerceController} from '../../../test/mock-controller-definitions.js';
 import type {CommerceEngineDefinitionOptions} from '../factories/build-factory.js';
-import type {ControllerDefinition} from '../types/controller-definitions.js';
 import {defineCommerceEngine} from './commerce-engine.ssr.js';
 
 describe('Commerce Engine SSR', () => {
-  let controller1: ControllerDefinition<Controller>;
-  let controller2: ControllerDefinition<Controller>;
-
   let definitionOptions: CommerceEngineDefinitionOptions<{
-    controller1: typeof controller1;
-    controller2: typeof controller2;
+    controller1: ReturnType<typeof defineMockCommerceController>;
+    controller2: ReturnType<typeof defineMockCommerceController>;
   }>;
 
   beforeEach(() => {
@@ -37,7 +32,7 @@ describe('Commerce Engine SSR', () => {
       configuration: mockConfiguration,
       controllers: {
         controller1: defineMockCommerceController(),
-        controller2: defineMockCommerceControllerWithProps(),
+        controller2: defineMockCommerceController(),
       },
     };
   });
@@ -79,7 +74,6 @@ describe('Commerce Engine SSR', () => {
       const engineDefinition = defineCommerceEngine(definitionOptions);
       const solutionType = definitionName as keyof typeof engineDefinition;
       const staticState = await engineDefinition[solutionType].fetchStaticState(
-        // @ts-expect-error: TODO: should not require to ignore error here
         {
           url: 'http://example.com',
           query: 'test',
@@ -98,32 +92,33 @@ describe('Commerce Engine SSR', () => {
   describe('#searchEngineDefinition', () => {
     it('should always return parameter manager controller', async () => {
       const {searchEngineDefinition} = defineCommerceEngine(definitionOptions);
-      const staticState = await searchEngineDefinition.fetchStaticState(
-        // @ts-expect-error: TODO: should not require to ignore error here
-        {
-          url: 'http://example.com/search',
-          query: 'foo',
-          country: 'US',
-          currency: 'USD',
-          language: 'en',
-        }
-      );
+      const staticState = await searchEngineDefinition.fetchStaticState({
+        url: 'http://example.com/search',
+        query: 'foo',
+        country: 'US',
+        currency: 'USD',
+        language: 'en',
+      });
       expect(staticState.controllers).toHaveProperty('parameterManager');
     });
   });
 
   describe('#listingEngineDefinition', () => {
     it('should always return parameter manager controller', async () => {
-      const {listingEngineDefinition} = defineCommerceEngine(definitionOptions);
-      const staticState = await listingEngineDefinition.fetchStaticState(
-        // @ts-expect-error: TODO: should not require to ignore error here
-        {
-          url: 'http://example.com',
-          country: 'US',
-          currency: 'USD',
-          language: 'en',
-        }
-      );
+      const aa = {
+        configuration: getSampleCommerceEngineConfiguration(),
+        controllers: {
+          controller1: defineMockCommerceController(),
+          controller2: defineMockCommerceController(),
+        },
+      };
+      const {listingEngineDefinition} = defineCommerceEngine(aa);
+      const staticState = await listingEngineDefinition.fetchStaticState({
+        url: 'http://example.com',
+        country: 'US',
+        currency: 'USD',
+        language: 'en',
+      });
       expect(staticState.controllers).toHaveProperty('parameterManager');
     });
   });

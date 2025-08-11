@@ -5,7 +5,10 @@ import {buildMockSSRCommerceEngine} from '../../../test/mock-engine-v2.js';
 import {defineRecommendations} from '../controllers/recommendations/headless-recommendations.ssr.js';
 import type {SolutionType} from '../types/controller-constants.js';
 import type {InferControllersMapFromDefinition} from '../types/controller-inference.js';
-import type {CommerceControllerDefinitionsMap} from '../types/engine.js';
+import type {
+  BakedInControllers,
+  CommerceControllerDefinitionsMap,
+} from '../types/engine.js';
 import * as buildFactory from './build-factory.js';
 import {fetchRecommendationStaticStateFactory} from './recommendation-static-state-factory.js';
 
@@ -40,7 +43,8 @@ describe('fetchRecommendationStaticStateFactory', () => {
             controllers: {} as InferControllersMapFromDefinition<
               CommerceControllerDefinitionsMap,
               T
-            >,
+            > &
+              BakedInControllers,
           })
     );
 
@@ -56,11 +60,18 @@ describe('fetchRecommendationStaticStateFactory', () => {
     const options = createEngineOptions();
 
     const factory = fetchRecommendationStaticStateFactory(
+      // @ts-expect-error: do not care about baked-in controller initial state
       controllerDefinitions,
       options
     );
 
-    await factory({controllers: {}});
+    // @ts-expect-error: TODO: KIT-4619: Provide recommendation array
+    await factory({
+      country: 'CA',
+      currency: 'USD',
+      language: 'en',
+      url: 'https://example.com',
+    });
 
     expect(engineSpy).toHaveBeenCalledWith(controllerDefinitions, options);
   });

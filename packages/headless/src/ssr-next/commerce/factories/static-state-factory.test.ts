@@ -13,9 +13,6 @@ import {buildMockCommerceState} from '../../../test/mock-commerce-state.js';
 import {defineMockCommerceController} from '../../../test/mock-controller-definitions.js';
 import {buildMockSSRCommerceEngine} from '../../../test/mock-engine-v2.js';
 import * as augmentModule from '../../common/augment-preprocess-request.js';
-import {defineCart} from '../controllers/cart/headless-cart.ssr.js';
-import {defineContext} from '../controllers/context/headless-context.ssr.js';
-import {defineParameterManager} from '../controllers/parameter-manager/headless-core-parameter-manager.ssr.js';
 import {SolutionType} from '../types/controller-constants.js';
 import type {InferControllersMapFromDefinition} from '../types/controller-inference.js';
 import type {
@@ -45,12 +42,6 @@ describe('fetchStaticStateFactory', () => {
   };
 
   const definition = {
-    // baked-in controllers
-    cart: defineCart(),
-    context: defineContext(),
-    parameterManager: defineParameterManager(),
-
-    // user defined controllers
     controller1: defineMockCommerceController(),
     controller2: defineMockCommerceController(),
   };
@@ -93,8 +84,8 @@ describe('fetchStaticStateFactory', () => {
   });
 
   it('should call buildFactory with the correct parameters', async () => {
+    // @ts-expect-error: do not care about baked-in controller initial state
     const factory = fetchStaticStateFactory(definition, mockEngineOptions);
-    // @ts-expect-error: TODO: should not require controller object
     await factory(SolutionType.listing)({
       country: 'CA',
       currency: 'USD',
@@ -105,8 +96,8 @@ describe('fetchStaticStateFactory', () => {
   });
 
   it('should call #wireControllerParams with the correct params', async () => {
+    // @ts-expect-error: do not care about baked-in controller initial state
     const factory = fetchStaticStateFactory(definition, mockEngineOptions);
-    // @ts-expect-error: TODO: should not require controller object
     await factory(SolutionType.listing)({
       country: 'CA',
       currency: 'USD',
@@ -117,9 +108,6 @@ describe('fetchStaticStateFactory', () => {
     expect(mockWireControllerParams.mock.calls[0][0]).toStrictEqual('listing');
     expect(mockWireControllerParams.mock.calls[0][1]).toStrictEqual(
       expect.objectContaining({
-        cart: expect.any(Object),
-        context: expect.any(Object),
-        parameterManager: expect.any(Object),
         controller1: expect.any(Object),
         controller2: expect.any(Object),
       })
@@ -151,8 +139,8 @@ describe('fetchStaticStateFactory', () => {
       loggerOptions: {level: 'warn'} as LoggerOptions,
     };
 
+    // @ts-expect-error: do not care about baked-in controller initial state
     const factory = fetchStaticStateFactory(definition, options);
-    // @ts-expect-error: TODO: should not require controller object
     await factory(SolutionType.listing)({
       country: 'CA',
       currency: 'USD',
@@ -170,8 +158,8 @@ describe('fetchStaticStateFactory', () => {
 
   describe('when solution type is listing', () => {
     beforeEach(async () => {
+      // @ts-expect-error: do not care about baked-in controller initial state
       const factory = fetchStaticStateFactory(definition, mockEngineOptions);
-      // @ts-expect-error: TODO: should not require controller object
       await factory(SolutionType.listing)({
         country: 'CA',
         currency: 'USD',
@@ -195,8 +183,8 @@ describe('fetchStaticStateFactory', () => {
 
   describe('when solution type is search', () => {
     beforeEach(async () => {
+      // @ts-expect-error: do not care about baked-in controller initial state
       const factory = fetchStaticStateFactory(definition, mockEngineOptions);
-      // @ts-expect-error: TODO: should not require controller object
       await factory(SolutionType.search)({
         country: 'CA',
         currency: 'USD',
@@ -221,8 +209,8 @@ describe('fetchStaticStateFactory', () => {
 
   describe('when solution type is standalone', () => {
     beforeEach(async () => {
+      // @ts-expect-error: do not care about baked-in controller initial state
       const factory = fetchStaticStateFactory(definition, mockEngineOptions);
-      // @ts-expect-error: TODO: should not require controller object
       await factory(SolutionType.standalone)({
         country: 'CA',
         currency: 'USD',
