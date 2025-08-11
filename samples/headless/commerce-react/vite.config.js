@@ -1,9 +1,9 @@
 import react from '@vitejs/plugin-react';
 import {defineConfig} from 'vite';
 import {viteStaticCopy} from 'vite-plugin-static-copy';
-import {generateExternalPackageMappings} from '../../atomic/scripts/externalPackageMappings.mjs';
-import buenoJson from '../../bueno/package.json';
-import headlessJson from '../../headless/package.json';
+import {generateExternalPackageMappings} from '../../../packages/atomic/scripts/externalPackageMappings.mjs';
+import buenoJson from '../../../packages/bueno/package.json';
+import headlessJson from '../../../packages/headless/package.json';
 
 const isCDN = process.env.DEPLOYMENT_ENVIRONMENT === 'CDN';
 const packageMappings = generateExternalPackageMappings(__dirname);
