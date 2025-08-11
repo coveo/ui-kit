@@ -117,4 +117,13 @@ describe('renderFacetValueLink', () => {
       expect.stringContaining('extra-part')
     );
   });
+
+  it('renders the aria-label attribute', async () => {
+    await setupElement();
+    const {button} = locators;
+    await expect(button).toHaveAttribute(
+      'aria-label',
+      'Inclusion filter on Test Value; 42 results'
+    );
+  });
 });

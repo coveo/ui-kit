@@ -21,7 +21,7 @@ const {decorator: productTemplateDecorator} =
   wrapInProductTemplateForSections();
 const meta: Meta = {
   component: 'atomic-product-section-bottom-metadata',
-  title: 'Commerce/Sections',
+  title: 'Commerce/Product Sections',
   id: 'atomic-product-section-bottom-metadata',
   render: renderComponent,
   parameters,
