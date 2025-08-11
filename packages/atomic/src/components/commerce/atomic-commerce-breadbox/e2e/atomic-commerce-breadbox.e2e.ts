@@ -28,8 +28,8 @@ test.describe('Default', () => {
       },
       {
         facetType: 'date range',
-        filter: '&df-date=2024/05/27@14:32:01..2025/05/27@14:32:01',
-        breadcrumbLabel: 'Date: 2024-05-27 to 2025-05-27',
+        filter: '&df-cat_date_added=2021/01/01@12:00:00..2021/12/31@12:00:00',
+        breadcrumbLabel: 'Date: 2021-01-01 to 2021-12-31',
       },
       {
         facetType: 'category',
@@ -131,7 +131,10 @@ test.describe('Default', () => {
         .locator('span')
         .first()
         .textContent()) as string;
-      await breadbox.getFacetValue('category', firstValueText).click();
+      await breadbox
+        .getFacetValue('category', firstValueText)
+        .locator('button')
+        .click();
       await breadbox
         .getBreadcrumbButtons(firstValueText)
         .waitFor({state: 'visible'});
@@ -186,7 +189,11 @@ test.describe('Default', () => {
             .locator('span')
             .first()
             .textContent());
-        await breadbox.getFacetValue('nestedCategory').first().click();
+        await breadbox
+          .getFacetValue('nestedCategory')
+          .first()
+          .locator('button')
+          .click();
         await breadbox
           .getBreadcrumbButtons()
           .first()
@@ -320,8 +327,7 @@ test.describe('Default', () => {
   test.describe('when a date range facet value is selected', () => {
     let firstValueText: string | RegExp;
 
-    test.beforeEach(async ({breadbox, page}) => {
-      await page.getByRole('button', {name: 'Expand the Date facet'}).click();
+    test.beforeEach(async ({breadbox}) => {
       await breadbox.getFacetValue('dateRange').first().click();
       firstValueText = (await breadbox
         .getFacetValue('dateRange')
@@ -480,7 +486,7 @@ test.describe('Default', () => {
 
     for (let i = 0; i < 4; i++) {
       await breadbox.getFacetValue('regular').nth(i).click();
-      if (i < 3) {
+      if (i < 2) {
         await breadbox
           .getBreadcrumbButtons()
           .nth(i)
@@ -489,6 +495,6 @@ test.describe('Default', () => {
     }
 
     await expect(breadbox.getShowMorebutton()).toBeVisible();
-    await expect(breadbox.getShowMorebutton()).toHaveText('+ 1');
+    await expect(breadbox.getShowMorebutton()).toHaveText('+ 2');
   });
 });
