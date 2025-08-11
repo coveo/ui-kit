@@ -26,10 +26,10 @@ import {renderFacetValuesGroup} from '@/src/components/common/facets/facet-value
 import {booleanConverter} from '@/src/converters/boolean-converter';
 import {bindStateToController} from '@/src/decorators/bind-state';
 import {bindingGuard} from '@/src/decorators/binding-guard';
+import {bindings} from '@/src/decorators/bindings';
 import {errorGuard} from '@/src/decorators/error-guard';
 import type {InitializableComponent} from '@/src/decorators/types';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles.js';
-import {InitializeBindingsMixin} from '@/src/mixins/bindings-mixin';
 import {
   AriaLiveRegionController,
   FocusTargetController,
@@ -87,9 +87,10 @@ import styles from './atomic-commerce-category-facet.tw.css';
  *
  */
 @customElement('atomic-commerce-category-facet')
+@bindings()
 @withTailwindStyles
 export class AtomicCommerceCategoryFacet
-  extends InitializeBindingsMixin(LitElement)
+  extends LitElement
   implements InitializableComponent<CommerceBindings>
 {
   static styles: CSSResultGroup = [unsafeCSS(styles)];
