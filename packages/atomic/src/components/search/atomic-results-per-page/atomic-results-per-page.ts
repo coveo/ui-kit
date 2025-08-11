@@ -113,6 +113,10 @@ export class AtomicResultsPerPage
   @bindingGuard()
   @errorGuard()
   render() {
+    if (!this.searchStatusState) {
+      return html``;
+    }
+
     return html`
       ${renderPagerGuard({
         props: {
