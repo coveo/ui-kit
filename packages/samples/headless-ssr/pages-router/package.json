@@ -13,8 +13,6 @@
   },
   "dependencies": {
     "@coveo/headless-ssr-samples-common": "0.0.0",
-    "@coveo/headless-react": "2.5.2",
-    "@coveo/headless": "3.28.2",
     "next": "15.2.4",
     "react": "19.1.1",
     "react-dom": "19.1.0"

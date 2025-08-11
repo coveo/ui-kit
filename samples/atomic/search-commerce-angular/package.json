@@ -7,7 +7,7 @@
     "build:angular": "ng build",
     "dev": "npm run build:assets && npm run dev:angular",
     "dev:angular": "ng serve --host=0.0.0.0 --prebundle=false",
-    "build:assets": "ncp ../../atomic-angular/projects/atomic-angular/dist/assets src/assets && ncp ../../atomic-angular/projects/atomic-angular/dist/lang src/lang"
+    "build:assets": "ncp ../../../packages/atomic-angular/projects/atomic-angular/dist/assets src/assets && ncp ../../../packages/atomic-angular/projects/atomic-angular/dist/lang src/lang"
   },
   "private": true,
   "dependencies": {

@@ -25,7 +25,7 @@
             "tsConfig": "tsconfig.app.json",
             "assets": ["src/favicon.ico", "src/assets", "src/lang"],
             "styles": [
-              "../../atomic/dist/atomic/themes/coveo.css",
+              "../../../packages/atomic/dist/atomic/themes/coveo.css",
               "src/styles.css"
             ],
             "scripts": [],
