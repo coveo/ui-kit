@@ -543,9 +543,9 @@ export namespace Components {
         "collapsible"?: boolean;
         /**
           * Option to disable citation anchoring.
-          * @default false
+          * @default 'false'
          */
-        "disableCitationAnchoring"?: boolean;
+        "disableCitationAnchoring"?: string;
         /**
           * A list of fields to include with the citations used to generate the answer.
          */
@@ -692,9 +692,9 @@ export namespace Components {
         "collapsible"?: boolean;
         /**
           * Option to disable citation anchoring.
-          * @default false
+          * @default 'false'
          */
-        "disableCitationAnchoring"?: boolean;
+        "disableCitationAnchoring"?: string;
         /**
           * A list of fields to include with the citations used to generate the answer.
          */
@@ -5220,9 +5220,9 @@ declare namespace LocalJSX {
         "collapsible"?: boolean;
         /**
           * Option to disable citation anchoring.
-          * @default false
+          * @default 'false'
          */
-        "disableCitationAnchoring"?: boolean;
+        "disableCitationAnchoring"?: string;
         /**
           * A list of fields to include with the citations used to generate the answer.
          */
@@ -5366,9 +5366,9 @@ declare namespace LocalJSX {
         "collapsible"?: boolean;
         /**
           * Option to disable citation anchoring.
-          * @default false
+          * @default 'false'
          */
-        "disableCitationAnchoring"?: boolean;
+        "disableCitationAnchoring"?: string;
         /**
           * A list of fields to include with the citations used to generate the answer.
          */
