@@ -49,7 +49,7 @@ describe('renderFacetValueCheckbox', () => {
       label: page.getByText('Some Value Label'),
       valueCount: page.getByText('42'),
       exclusionButton: page.getByLabelText(
-        'Exclusion filter on Test Value; {{formattedCount}} results'
+        'Exclusion filter on Test Value; 42 results'
       ),
     };
   };
@@ -102,8 +102,7 @@ describe('renderFacetValueCheckbox', () => {
 
       expect(renderTriStateCheckboxSpy).toHaveBeenCalledWith({
         props: expect.objectContaining({
-          ariaLabel:
-            'Inclusion filter on Test Value; {{formattedCount}} results',
+          ariaLabel: 'Inclusion filter on Test Value; 42 results',
           class: 'value-checkbox',
           iconPart: 'value-checkbox-icon',
           part: 'value-checkbox',
@@ -123,8 +122,7 @@ describe('renderFacetValueCheckbox', () => {
 
       expect(renderFacetValueExcludeSpy).toHaveBeenCalledWith({
         props: expect.objectContaining({
-          ariaLabel:
-            'Exclusion filter on Test Value; {{formattedCount}} results',
+          ariaLabel: 'Exclusion filter on Test Value; 42 results',
           onClick: expect.any(Function),
         }),
       });
@@ -165,8 +163,7 @@ describe('renderFacetValueCheckbox', () => {
 
       expect(renderCheckboxSpy).toHaveBeenCalledWith({
         props: expect.objectContaining({
-          ariaLabel:
-            'Inclusion filter on Test Value; {{formattedCount}} results',
+          ariaLabel: 'Inclusion filter on Test Value; 42 results',
           checked: false,
           class: 'value-checkbox',
           iconPart: 'value-checkbox-icon',
