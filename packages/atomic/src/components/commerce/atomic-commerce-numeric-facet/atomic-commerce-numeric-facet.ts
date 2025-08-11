@@ -18,7 +18,6 @@ import {bindingGuard} from '@/src/decorators/binding-guard';
 import {errorGuard} from '@/src/decorators/error-guard';
 import type {InitializableComponent} from '@/src/decorators/types';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
-import {InitializeBindingsMixin} from '@/src/mixins/bindings-mixin';
 import {FocusTargetController} from '@/src/utils/accessibility-utils';
 import {shouldDisplayInputForFacetRange} from '../../common/facets/facet-common';
 import {renderFacetContainer} from '../../common/facets/facet-container/facet-container';
@@ -30,6 +29,7 @@ import {
 } from '../../common/formats/format-common';
 import type {Range} from '../atomic-commerce-facet-number-input/atomic-commerce-facet-number-input';
 import '../atomic-commerce-facet-number-input/atomic-commerce-facet-number-input';
+import {bindings} from '@/src/decorators/bindings';
 import type {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface';
 import styles from './atomic-commerce-numeric-facet.tw.css';
 
@@ -57,9 +57,10 @@ import styles from './atomic-commerce-numeric-facet.tw.css';
  *
  */
 @customElement('atomic-commerce-numeric-facet')
+@bindings()
 @withTailwindStyles
 export class AtomicCommerceNumericFacet
-  extends InitializeBindingsMixin(LitElement)
+  extends LitElement
   implements InitializableComponent<CommerceBindings>
 {
   /**

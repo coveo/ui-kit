@@ -22,10 +22,10 @@ import {bindingGuard} from '@/src/decorators/binding-guard';
 import {errorGuard} from '@/src/decorators/error-guard';
 import type {InitializableComponent} from '@/src/decorators/types';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles.js';
-import {InitializeBindingsMixin} from '@/src/mixins/bindings-mixin';
 import {FocusTargetController} from '@/src/utils/accessibility-utils';
 import {parseDate} from '@/src/utils/date-utils';
 import '../../common/atomic-facet-date-input/atomic-facet-date-input';
+import {bindings} from '@/src/decorators/bindings';
 import type {FacetDateInputEventDetails} from '../../common/atomic-facet-date-input/atomic-facet-date-input';
 import {shouldDisplayInputForFacetRange} from '../../common/facets/facet-common';
 import type {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface';
@@ -53,9 +53,10 @@ import styles from './atomic-commerce-timeframe-facet.tw.css';
  * @internal
  */
 @customElement('atomic-commerce-timeframe-facet')
+@bindings()
 @withTailwindStyles
 export class AtomicCommerceTimeframeFacet
-  extends InitializeBindingsMixin(LitElement)
+  extends LitElement
   implements InitializableComponent<CommerceBindings>
 {
   static styles: CSSResultGroup = [unsafeCSS(styles)];
