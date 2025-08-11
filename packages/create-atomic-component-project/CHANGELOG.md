@@ -1,3 +1,9 @@
+## <small>1.4.1 (2025-08-11)</small>
+
+* [Version Bump][skip ci]: ui-kit publish ([74f5974](https://github.com/coveo/ui-kit/commits/74f5974))
+
+
+
 ## 1.4.0 (2025-08-07)
 
 * chore: add missing repository metadata for atomic cmp project (#5836) ([b761286](https://github.com/coveo/ui-kit/commits/b761286)), closes [#5836](https://github.com/coveo/ui-kit/issues/5836)

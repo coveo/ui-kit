@@ -1,3 +1,9 @@
+## <small>3.32.2 (2025-08-11)</small>
+
+* fix(atomic): use commerce headless version instead of search version (#5827) ([eb91994](https://github.com/coveo/ui-kit/commits/eb91994)), closes [#5827](https://github.com/coveo/ui-kit/issues/5827)
+
+
+
 ## <small>3.32.1 (2025-08-11)</small>
 
 * fix: observer stencil more and always (#5853) ([aae3cee](https://github.com/coveo/ui-kit/commits/aae3cee)), closes [#5853](https://github.com/coveo/ui-kit/issues/5853)
