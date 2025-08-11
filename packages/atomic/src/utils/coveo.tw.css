@@ -78,10 +78,7 @@
   );
   --color-rating-icon-active: var(--atomic-rating-icon-active-color, #f6ce3c);
 
-  --color-rating-icon-outline: var(
-    --atomic-rating-icon-outline-color,
-    none
-  );
+  --color-rating-icon-outline: var(--atomic-rating-icon-outline-color, none);
 
   --color-more-results-progress-bar-color-from: var(
     --atomic-more-results-progress-bar-color-from,
