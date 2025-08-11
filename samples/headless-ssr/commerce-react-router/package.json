@@ -1,5 +1,5 @@
 {
-  "name": "@coveo/headless-commerce-ssr-react-router-samples",
+  "name": "@samples/headless-ssr-commerce-react-router",
   "private": true,
   "sideEffects": false,
   "type": "module",

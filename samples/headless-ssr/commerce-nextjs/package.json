@@ -1,5 +1,5 @@
 {
-  "name": "@coveo/headless-ssr-commerce-samples",
+  "name": "@samples/headless-ssr-commerce-nextjs",
   "description": "Examples of @coveo/headless-react/ssr-commerce utils using Next.js app router",
   "version": "0.0.0",
   "private": true,

@@ -1,5 +1,5 @@
 {
-  "name": "@coveo/headless-react-samples",
+  "name": "@samples/headless-search-react",
   "description": "Samples with @coveo/headless & React",
   "version": "0.0.0",
   "private": true,
