@@ -2,9 +2,8 @@ import {expect, test} from './fixture';
 
 test.describe('atomic-generated-answer citation', () => {
   test.describe('with citation anchoring enabled', () => {
-    test.beforeEach(async ({generatedAnswer, searchBox}) => {
-      await generatedAnswer.load({story: 'in-page'});
-      await generatedAnswer.performSearch(searchBox);
+    test.beforeEach(async ({generatedAnswer}) => {
+      await generatedAnswer.load({story: 'default'});
       await generatedAnswer.waitForCitations();
     });
 
@@ -23,6 +22,8 @@ test.describe('atomic-generated-answer citation', () => {
         const filetype = await generatedAnswer.getCitationFiletype(i);
         const href = await generatedAnswer.getCitationHref(i);
 
+        expect(href).toBeTruthy();
+
         if (filetype === 'html') {
           expect(href).toMatch(/#:~:text=/);
         } else {
@@ -39,9 +40,7 @@ test.describe('atomic-generated-answer citation', () => {
 
     test('should not have text fragment when citation anchoring is disabled', async ({
       generatedAnswer,
-      searchBox,
     }) => {
-      await generatedAnswer.performSearch(searchBox);
       await generatedAnswer.waitForCitations();
       const href = await generatedAnswer.getCitationHref(0);
 
