@@ -24,7 +24,7 @@ async function generateFiles(name, outputDir) {
       template: 'component.new.stories.tsx.hbs',
       output: `${name}.new.stories.tsx`,
     },
-    {template: 'component.tw.css.hbs', output: `${name}.tw.css`},
+    {template: 'component.tw.css.ts.hbs', output: `${name}.tw.css.ts`},
     {template: 'component.spec.ts.hbs', output: `${name}.spec.ts`},
     {template: 'e2e/component.e2e.ts.hbs', output: `e2e/${name}.e2e.ts`},
     {template: 'e2e/fixture.ts.hbs', output: `e2e/fixture.ts`},
