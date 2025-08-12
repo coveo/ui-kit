@@ -39,7 +39,9 @@ export class InsightInterfacePageObject extends BasePageObject<'atomic-insight-i
   }
 
   get insightResults() {
-    return this.page.locator('atomic-insight-result');
+    return this.page.locator(
+      'atomic-insight-result:not(atomic-insight-result atomic-insight-result)'
+    );
   }
 
   get atomicQuickviewModal() {
@@ -80,30 +82,33 @@ export class InsightInterfacePageObject extends BasePageObject<'atomic-insight-i
     return this.insightResults.nth(index);
   }
 
-  async hoverResultByIndex(index: number) {
-    await this.getResultByIndex(index).hover();
+  async hoverResultTitleByIndex(index: number) {
+    await this.getResultByIndex(index)
+      .locator('atomic-result-link')
+      .first()
+      .hover();
   }
 
   getActionBarByIndex(index: number) {
-    return this.getResultByIndex(index).locator(
-      'atomic-insight-result-action-bar'
-    );
+    return this.getResultByIndex(index)
+      .locator('atomic-insight-result-action-bar')
+      .first();
   }
 
   getResultAttachToCaseByIndex(index: number) {
-    return this.getResultByIndex(index).locator(
+    return this.getActionBarByIndex(index).locator(
       'atomic-insight-result-attach-to-case-action'
     );
   }
 
   getResultCopyToClipboardByIndex(index: number) {
-    return this.getResultByIndex(index).locator(
+    return this.getActionBarByIndex(index).locator(
       'atomic-insight-result-action[action="copyToClipboard"]'
     );
   }
 
   getResultQuickviewByIndex(index: number) {
-    return this.getResultByIndex(index).locator(
+    return this.getActionBarByIndex(index).locator(
       'atomic-insight-result-quickview-action'
     );
   }

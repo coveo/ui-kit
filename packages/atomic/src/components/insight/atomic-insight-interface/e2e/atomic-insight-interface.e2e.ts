@@ -38,7 +38,7 @@ test.describe('Atomic Insight Panel', () => {
     });
   });
 
-  test.describe.skip('result actions interactions', () => {
+  test.describe('result actions interactions', () => {
     test.beforeEach(async ({insightInterface}) => {
       // Video results have better actions to test
       await insightInterface.getTabByName('Videos').click();
@@ -49,7 +49,7 @@ test.describe('Atomic Insight Panel', () => {
       await expect(insightInterface.getTabByName('Videos')).toHaveAttribute(
         'active'
       );
-      await insightInterface.hoverResultByIndex(0);
+      await insightInterface.hoverResultTitleByIndex(0);
       await expect(insightInterface.getActionBarByIndex(0)).toBeVisible();
       await expect(
         insightInterface.getResultAttachToCaseByIndex(0)
@@ -61,7 +61,7 @@ test.describe('Atomic Insight Panel', () => {
       await expect(insightInterface.getTabByName('Videos')).toHaveAttribute(
         'active'
       );
-      await insightInterface.hoverResultByIndex(0);
+      await insightInterface.hoverResultTitleByIndex(0);
       await expect(insightInterface.getActionBarByIndex(0)).toBeVisible();
       await expect(
         insightInterface.getResultCopyToClipboardByIndex(0)
@@ -73,7 +73,7 @@ test.describe('Atomic Insight Panel', () => {
       await expect(insightInterface.getTabByName('Videos')).toHaveAttribute(
         'active'
       );
-      await insightInterface.hoverResultByIndex(0);
+      await insightInterface.hoverResultTitleByIndex(0);
       await expect(insightInterface.getActionBarByIndex(0)).toBeVisible();
       await expect(insightInterface.getResultQuickviewByIndex(0)).toBeVisible();
 
