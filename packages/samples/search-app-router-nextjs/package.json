@@ -13,9 +13,9 @@
     "next": "15.2.4",
     "react": "19.1.1",
     "react-dom": "19.1.1",
-    "@coveo/atomic-react": "3.2.54",
-    "@coveo/atomic": "3.31.1",
-    "@coveo/headless": "3.27.7"
+    "@coveo/atomic-react": "3.3.2",
+    "@coveo/atomic": "3.32.2",
+    "@coveo/headless": "3.28.2"
   },
   "devDependencies": {
     "typescript": "5.8.3",
