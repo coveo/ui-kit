@@ -10,9 +10,9 @@ import {
   recommendationsDefinitionSchema,
   searchDefinitionSchema,
   wireControllerParams,
-} from './state-wiring.js';
+} from './controller-wiring.js';
 
-describe('state-wiring', () => {
+describe('controller-wiring', () => {
   let mockControllerDefinitions: CommerceControllerDefinitionsMap;
 
   beforeEach(() => {

@@ -1,5 +1,4 @@
 import {describe, expect, it, type Mock, vi} from 'vitest';
-import type {CommerceEngineOptions} from '../../../app/commerce-engine/commerce-engine.js';
 import * as commerceEngine from '../../../app/commerce-engine/commerce-engine.js';
 import {getSampleCommerceEngineConfiguration} from '../../../app/commerce-engine/commerce-engine-configuration.js';
 import {buildLogger} from '../../../app/logger.js';
@@ -8,18 +7,34 @@ import {defineCart} from '../controllers/cart/headless-cart.ssr.js';
 import {defineProductList} from '../controllers/product-list/headless-product-list.ssr.js';
 import {defineRecommendations} from '../controllers/recommendations/headless-recommendations.ssr.js';
 import {defineSearchBox} from '../controllers/search-box/headless-search-box.ssr.js';
+import type {
+  CommonBuildConfig,
+  ListingBuildConfig,
+  RecommendationBuildConfig,
+  SearchBuildConfig,
+  SSRCommerceEngineOptions,
+  StandaloneBuildConfig,
+} from '../types/build.js';
 import {SolutionType} from '../types/controller-constants.js';
 import {buildFactory} from './build-factory.js';
 
 vi.mock('../../../app/logger.js');
 
 describe('buildFactory', () => {
+  const mockBuildOptions = {
+    country: 'US',
+    currency: 'USD',
+    language: 'en-US',
+    query: 'query',
+    url: 'http://example.com',
+  };
+
   const mockLogger = {
     warn: vi.fn(),
     debug: vi.fn(),
   };
 
-  const mockEngineOptions: CommerceEngineOptions = {
+  const mockEngineOptions: SSRCommerceEngineOptions = {
     configuration: getSampleCommerceEngineConfiguration(),
     navigatorContextProvider: buildMockNavigatorContextProvider(),
   };
@@ -39,7 +54,7 @@ describe('buildFactory', () => {
     const factory = buildFactory(mockEmptyDefinition, mockEngineOptions);
     const build = factory(SolutionType.listing);
 
-    await build();
+    await build(mockBuildOptions as ListingBuildConfig);
 
     expect(mockLogger.warn).not.toHaveBeenCalled();
   });
@@ -50,7 +65,7 @@ describe('buildFactory', () => {
     });
     const build = factory(SolutionType.listing);
 
-    await build();
+    await build(mockBuildOptions as ListingBuildConfig);
 
     expect(mockLogger.warn).toHaveBeenCalledWith(
       expect.stringContaining('Missing navigator context in server-side code')
@@ -61,7 +76,9 @@ describe('buildFactory', () => {
     const factory = buildFactory(mockEmptyDefinition, mockEngineOptions);
     const build = factory('unsupported' as SolutionType);
 
-    await expect(build()).rejects.toThrow('Unsupported solution type');
+    await expect(build(mockBuildOptions as CommonBuildConfig)).rejects.toThrow(
+      'Unsupported solution type'
+    );
   });
 
   describe('when building for standalone', () => {
@@ -71,14 +88,14 @@ describe('buildFactory', () => {
     it('should build SSRCommerceEngine with standalone solution type', async () => {
       const factory = buildFactory(mockEmptyDefinition, mockEngineOptions);
       const build = factory(SolutionType.standalone);
-      const result = await build();
+      const result = await build(mockBuildOptions as StandaloneBuildConfig);
 
       expect(result.engine).toBeDefined();
       expect(result.controllers).toBeDefined();
     });
 
     it('should never add middlewares', async () => {
-      await build();
+      await build(mockBuildOptions as StandaloneBuildConfig);
       expect(
         (commerceEngine.buildCommerceEngine as Mock).mock.calls[0][0]
           .middlewares
@@ -93,14 +110,14 @@ describe('buildFactory', () => {
     it('should build SSRCommerceEngine with search solution type', async () => {
       const factory = buildFactory(mockEmptyDefinition, mockEngineOptions);
       const build = factory(SolutionType.search);
-      const result = await build();
+      const result = await build(mockBuildOptions as SearchBuildConfig);
 
       expect(result.engine).toBeDefined();
       expect(result.controllers).toBeDefined();
     });
 
     it('should always add a single middleware', async () => {
-      await build();
+      await build(mockBuildOptions as SearchBuildConfig);
       expect(
         (commerceEngine.buildCommerceEngine as Mock).mock.calls[0][0]
           .middlewares
@@ -112,7 +129,7 @@ describe('buildFactory', () => {
     it('should build SSRCommerceEngine with listing solution type', async () => {
       const factory = buildFactory(mockEmptyDefinition, mockEngineOptions);
       const build = factory(SolutionType.listing);
-      const result = await build();
+      const result = await build(mockBuildOptions as ListingBuildConfig);
 
       expect(result.engine).toBeDefined();
       expect(result.controllers).toBeDefined();
@@ -128,10 +145,12 @@ describe('buildFactory', () => {
         mockEngineOptions
       );
       await factory(SolutionType.listing)({
+        ...(mockBuildOptions as ListingBuildConfig),
         controllers: {cart: {initialState: {items: []}}},
       });
 
       const {controllers} = await factory(SolutionType.listing)({
+        ...(mockBuildOptions as ListingBuildConfig),
         controllers: {cart: {initialState: {items: []}}},
       });
 
@@ -152,10 +171,12 @@ describe('buildFactory', () => {
         mockEngineOptions
       );
       await factory(SolutionType.listing)({
+        ...(mockBuildOptions as ListingBuildConfig),
         controllers: {cart: {initialState: {items: []}}},
       });
 
       const {controllers} = await factory(SolutionType.listing)({
+        ...(mockBuildOptions as ListingBuildConfig),
         controllers: {cart: {initialState: {items: []}}},
       });
 
@@ -175,7 +196,9 @@ describe('buildFactory', () => {
         },
         mockEngineOptions
       );
-      await factory(SolutionType.listing)();
+      await factory(SolutionType.listing)(
+        mockBuildOptions as ListingBuildConfig
+      );
 
       expect(
         (commerceEngine.buildCommerceEngine as Mock).mock.calls[0][0]
@@ -204,14 +227,17 @@ describe('buildFactory', () => {
     it('should build SSRCommerceEngine with recommendation solution type', async () => {
       const factory = buildFactory(mockEmptyDefinition, mockEngineOptions);
       const build = factory(SolutionType.recommendation);
-      const result = await build();
+      const result = await build(mockBuildOptions as RecommendationBuildConfig);
 
       expect(result.engine).toBeDefined();
       expect(result.controllers).toBeDefined();
     });
 
     it('should not add middleware if not specified otherwise', async () => {
-      await build({controllers: {}});
+      await build({
+        ...(mockBuildOptions as RecommendationBuildConfig),
+        controllers: {},
+      });
       expect(
         (commerceEngine.buildCommerceEngine as Mock).mock.calls[0][0]
           .middlewares
@@ -220,6 +246,7 @@ describe('buildFactory', () => {
 
     it('should add a middleware for each enabled recommendation', async () => {
       await build({
+        ...(mockBuildOptions as RecommendationBuildConfig),
         controllers: {
           popularBought: {enabled: true},
           popularViewed: {enabled: true},
@@ -233,6 +260,7 @@ describe('buildFactory', () => {
 
     it('should not add middlewares if user disabled them', async () => {
       await build({
+        ...(mockBuildOptions as RecommendationBuildConfig),
         controllers: {
           popularBought: {enabled: false},
           popularViewed: {enabled: false},

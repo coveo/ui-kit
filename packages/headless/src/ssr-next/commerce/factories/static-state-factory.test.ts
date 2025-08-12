@@ -19,11 +19,11 @@ import type {
   BakedInControllers,
   CommerceControllerDefinitionsMap,
 } from '../types/engine.js';
-import {wireControllerParams} from '../utils/state-wiring.js';
+import {wireControllerParams} from '../utils/controller-wiring.js';
 import * as buildFactory from './build-factory.js';
 import {fetchStaticStateFactory} from './static-state-factory.js';
 
-vi.mock('../utils/state-wiring.js');
+vi.mock('../utils/controller-wiring.js');
 vi.mock(
   '../../../controllers/commerce/product-listing/headless-product-listing.js'
 );

@@ -82,7 +82,6 @@ export function defineCommerceEngine<
   const augmentedControllerDefinition = {
     ...controllerDefinitions,
     parameterManager: defineParameterManager(),
-    // TODO: no longer ask for context and cart at engine definition level as it is also asked at fetch static state level
     context: defineContext(),
     cart: defineCart(),
   } as AugmentedControllerDefinition<TControllerDefinitions>;

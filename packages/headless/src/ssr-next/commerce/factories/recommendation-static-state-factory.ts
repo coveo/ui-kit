@@ -16,8 +16,8 @@ import type {
   FetchStaticStateFunction,
   FetchStaticStateParameters,
 } from '../types/engine.js';
+import {wireControllerParams} from '../utils/controller-wiring.js';
 import {filterRecommendationControllers} from '../utils/recommendation-filter.js';
-import {wireControllerParams} from '../utils/state-wiring.js';
 import {
   buildFactory,
   type CommerceEngineDefinitionOptions,

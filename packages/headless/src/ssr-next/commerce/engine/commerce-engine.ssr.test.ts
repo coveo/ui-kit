@@ -16,15 +16,8 @@ describe('Commerce Engine SSR', () => {
     const mockConfiguration = {
       organizationId: 'some-org-id',
       accessToken: 'some-token',
-      // TODO: KIT-4727: stop asking for context in the engine definition
       analytics: {
         trackingId: 'xxx',
-      },
-      context: {
-        country: 'US',
-        currency: 'USD',
-        language: 'en',
-        view: {url: 'https://example.com'},
       },
     } as CommerceEngineConfiguration;
 

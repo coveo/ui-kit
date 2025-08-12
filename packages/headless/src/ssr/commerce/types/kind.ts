@@ -5,6 +5,7 @@ export enum Kind {
   Recommendations = 'RECOMMENDATIONS',
 }
 
+// TODO: KIT-4742: There is no point for this now that the wiring is happening in headless
 export function createControllerWithKind<TController, TKind extends Kind>(
   controller: TController,
   kind: TKind
