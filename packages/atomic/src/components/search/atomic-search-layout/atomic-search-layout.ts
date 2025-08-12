@@ -4,11 +4,11 @@ import {errorGuard} from '@/src/decorators/error-guard';
 import {injectStylesForNoShadowDOM} from '@/src/decorators/inject-styles-for-no-shadow-dom';
 import {randomID} from '@/src/utils/utils';
 import {DEFAULT_MOBILE_BREAKPOINT} from '../../../utils/replace-breakpoint';
-import styles from './atomic-commerce-layout.tw.css';
-import {buildCommerceLayout} from './commerce-layout';
+import styles from './atomic-search-layout.tw.css';
+import {buildSearchLayout} from './search-layout';
 
 /**
- * The `atomic-commerce-layout` helps organize elements in the commerce page.
+ * The `atomic-search-layout` helps organize elements in the page.
  *
  * @slot default - The default slot where you can add child components to the layout.
  *
@@ -16,15 +16,15 @@ import {buildCommerceLayout} from './commerce-layout';
  * @cssprop --atomic-layout-max-search-box-double-suggestions-width: The maximum width that the search box suggestions will take when displaying a double list.
  * @cssprop --atomic-layout-search-box-left-suggestions-width: When displaying a double list, the width of the left list.
  */
-@customElement('atomic-commerce-layout')
+@customElement('atomic-search-layout')
 @injectStylesForNoShadowDOM
-export class AtomicCommerceLayout extends LitElement {
+export class AtomicSearchLayout extends LitElement {
   static styles = [unsafeCSS(styles)];
   @state() error!: Error;
 
   constructor() {
     super();
-    this.id = randomID('atomic-commerce-layout-');
+    this.id = randomID('atomic-search-layout-');
   }
 
   /**
@@ -36,8 +36,8 @@ export class AtomicCommerceLayout extends LitElement {
 
   connectedCallback() {
     super.connectedCallback();
-    const layout = unsafeCSS(buildCommerceLayout(this, this.mobileBreakpoint));
-    AtomicCommerceLayout.styles.unshift(layout);
+    const layout = unsafeCSS(buildSearchLayout(this, this.mobileBreakpoint));
+    AtomicSearchLayout.styles.unshift(layout);
   }
 
   @errorGuard()
@@ -48,6 +48,6 @@ export class AtomicCommerceLayout extends LitElement {
 
 declare global {
   interface HTMLElementTagNameMap {
-    'atomic-commerce-layout': AtomicCommerceLayout;
+    'atomic-search-layout': AtomicSearchLayout;
   }
 }
