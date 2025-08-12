@@ -1,16 +1,12 @@
 import type {Controller} from '../../../controllers/controller/headless-controller.js';
 import type {HasKey, HasKeys} from '../../common/types/utilities.js';
-import type {
-  recommendationInternalOptionKey,
-  SolutionType,
-} from './controller-constants.js';
+import type {SolutionType} from './controller-constants.js';
 import type {
   ControllerDefinition,
   ControllerDefinitionsMap,
   ControllerDefinitionWithoutProps,
   ControllerDefinitionWithProps,
   InferControllerStaticStateFromController,
-  RecommendationControllerSettings,
 } from './controller-definitions.js';
 
 export type InferStaticState<
@@ -28,13 +24,9 @@ export type InferHydratedState<
 type InferControllerPropsFromDefinition<
   TController extends ControllerDefinition<Controller>,
 > = TController extends ControllerDefinitionWithProps<Controller, infer Props>
-  ? HasKey<TController, typeof recommendationInternalOptionKey> extends never
-    ? Props
-    : Props & RecommendationControllerSettings
+  ? Props
   : TController extends ControllerDefinitionWithoutProps<Controller>
-    ? HasKey<TController, typeof recommendationInternalOptionKey> extends never
-      ? {}
-      : RecommendationControllerSettings
+    ? {}
     : unknown;
 
 export type InferControllerPropsMapFromDefinitions<

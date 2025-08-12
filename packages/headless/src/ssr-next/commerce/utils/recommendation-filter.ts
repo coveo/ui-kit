@@ -11,6 +11,7 @@ import type {
   ControllerDefinitionsMap,
 } from '../types/controller-definitions.js';
 
+// TODO: add validatino in case the user enters a wrong recommendation name
 export function filterRecommendationControllers<
   TControllerDefinitions extends ControllerDefinitionsMap<Controller>,
 >(

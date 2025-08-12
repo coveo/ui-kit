@@ -32,7 +32,7 @@ export type HydrateStaticState<
 > = (
   ...params: OptionsTuple<
     HydrateStaticStateOptions<TSearchAction> &
-      BuildConfig<TSolutionType> &
+      BuildConfig<TControllersDefinitionsMap, TSolutionType> &
       EngineDefinitionControllersPropsOption<
         TControllersDefinitionsMap,
         TControllersProps,

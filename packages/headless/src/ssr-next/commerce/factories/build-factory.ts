@@ -26,7 +26,7 @@ import type {
   CommerceControllerDefinitionsMap,
   EngineDefinitionOptions,
 } from '../types/engine.js';
-import {assembleEngineConfiguration} from '../utils/engine-wiring.js';
+import {extendEngineConfiguration} from '../utils/engine-wiring.js';
 
 /**
  * The SSR commerce engine.
@@ -169,9 +169,16 @@ export const buildFactory =
     const enabledRecommendationControllers =
       fetchActiveRecommendationControllers(controllerProps, solutionType);
 
+    const engineOptions = {
+      ...options,
+      configuration: extendEngineConfiguration(
+        options.configuration,
+        buildOptions!
+      ), // TODO: KIT-4754: remove non-null assertion operator
+    };
     const engine = buildSSRCommerceEngine(
       solutionType,
-      assembleEngineConfiguration(options, buildOptions),
+      engineOptions,
       enabledRecommendationControllers
     );
 
