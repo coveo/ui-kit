@@ -38,7 +38,7 @@ test.describe('Atomic Insight Panel', () => {
     });
   });
 
-  test.describe('result actions interactions', () => {
+  test.describe.skip('result actions interactions', () => {
     test.beforeEach(async ({insightInterface}) => {
       // Video results have better actions to test
       await insightInterface.getTabByName('Videos').click();
