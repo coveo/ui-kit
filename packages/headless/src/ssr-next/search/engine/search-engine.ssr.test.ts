@@ -7,7 +7,7 @@ import {
   type Controller,
 } from '../../../controllers/controller/headless-controller.js';
 import type {executeSearch} from '../../../features/search/search-actions.js';
-import {buildMockNavigatorContextProvider} from '../../../test/mock-navigator-context-provider.js';
+
 import {buildMockResult} from '../../../test/mock-result.js';
 import * as augmentModule from '../../common/augment-preprocess-request.js';
 import type {ControllerDefinitionWithoutProps} from '../../common/types/controllers.js';
@@ -96,7 +96,6 @@ function createMockResultsMiddleware(options: {
 }
 
 describe('SSR', () => {
-  const mockNavigatorContextProvider = buildMockNavigatorContextProvider();
   const mockPreprocessRequest = vi.fn(async (req) => req);
 
   describe('define search engine', () => {
@@ -128,7 +127,6 @@ describe('SSR', () => {
           engineStateReader: defineCustomEngineStateReader(),
           resultList: defineResultList(),
         },
-        navigatorContextProvider: mockNavigatorContextProvider,
         loggerOptions: {level: 'warn'} as LoggerOptions,
         middlewares: [createMockResultsMiddleware({defaultNumberOfResults})],
       });
@@ -147,17 +145,25 @@ describe('SSR', () => {
       expect(getResultsPerPage(staticState)).toBe(defaultNumberOfResults);
     });
 
-    it('should call augmentPreprocessRequestWithForwardedFor when fetchStaticState is invoked', async () => {
+    it('should call augmentPreprocessRequestWithForwardedFor when fetchStaticState is invoked with navigatorContext', async () => {
       const spy = vi.spyOn(
         augmentModule,
         'augmentPreprocessRequestWithForwardedFor'
       );
 
+      const mockNavigatorContext = {
+        forwardedFor: '192.168.1.1',
+        referrer: 'https://example.com',
+        userAgent: 'test-agent',
+        location: '/test',
+        clientId: 'test-client',
+      };
+
       const fetchStaticState = engineDefinition.fetchStaticState;
-      await fetchStaticState();
+      await fetchStaticState({navigatorContext: mockNavigatorContext});
       expect(spy).toHaveBeenCalledWith({
         loggerOptions: {level: 'warn'},
-        navigatorContextProvider: mockNavigatorContextProvider,
+        navigatorContextProvider: expect.any(Function),
         preprocessRequest: mockPreprocessRequest,
       });
 
