@@ -15,7 +15,7 @@ import type {
 } from '../../types/controller-definitions.js';
 import {createControllerWithKind, Kind} from '../../types/kind.js';
 
-export interface DeprecatedContextOption extends ContextOptions {
+interface DeprecatedContextOption extends ContextOptions {
   /**
    * @deprecated This property will be removed in the next major release.
    * Use `initialState.language` instead for consistency with other controllers.
@@ -88,7 +88,7 @@ export interface DeprecatedContextOption extends ContextOptions {
   location?: never;
 }
 
-export interface ContextDefinitionProps {
+interface ContextDefinitionProps {
   /**
    * The initial state for the context controller.
    * This is the recommended way to pass context options.
@@ -96,7 +96,7 @@ export interface ContextDefinitionProps {
   initialState: ContextOptions;
 }
 
-export type ContextDefinitionOptions =
+type ContextDefinitionOptions =
   | DeprecatedContextOption
   | ContextDefinitionProps;
 

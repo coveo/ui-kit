@@ -9,14 +9,14 @@ import type {
   ControllerDefinitionWithProps,
 } from '../ssr-next/common/types/controllers.js';
 
-export interface MockController {
+interface MockController {
   initialState?: Record<string, unknown>;
 }
 
-export interface MockControllerDefinitionWithoutProps
+interface MockControllerDefinitionWithoutProps
   extends ControllerDefinitionWithoutProps<SearchEngine, Controller> {}
 
-export interface MockControllerDefinitionWithProps
+interface MockControllerDefinitionWithProps
   extends ControllerDefinitionWithProps<
     SearchEngine,
     Controller,
