@@ -14,7 +14,7 @@
   },
   "types": "./dist/definitions/index.d.ts",
   "license": "Apache-2.0",
-  "version": "2.80.6",
+  "version": "2.80.7",
   "files": [
     "dist/",
     "recommendation/",

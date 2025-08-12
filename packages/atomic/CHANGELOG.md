@@ -1,3 +1,9 @@
+## 2.79.3 (2025-08-12)
+
+### Bug Fixes
+
+- **headless:** prevent selected facet search values from replacing idle values ([#5833](https://github.com/coveo/ui-kit/issues/5833)) ([58445f0](https://github.com/coveo/ui-kit/commits/58445f0d4fae732b4be0efd7022c76692f922e40))
+
 ## 2.79.2 (2025-07-03)
 
 # 2.79.0 (2024-11-07)

@@ -11,7 +11,7 @@
     "build:next": "next build"
   },
   "dependencies": {
-    "@coveo/headless": "2.80.6",
+    "@coveo/headless": "2.80.7",
     "next": "14.2.5",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
