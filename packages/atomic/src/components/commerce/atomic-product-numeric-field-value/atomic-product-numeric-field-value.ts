@@ -18,7 +18,6 @@ import {parseValue} from '../product-template-component-utils/product-utils.js';
  * The `atomic-product-numeric-field-value` component renders the value of a number product field.
  *
  * The number can be formatted by adding a `atomic-format-number`, `atomic-format-currency` or `atomic-format-unit` component into this component.
- * @alpha
  */
 @customElement('atomic-product-numeric-field-value')
 @bindings()

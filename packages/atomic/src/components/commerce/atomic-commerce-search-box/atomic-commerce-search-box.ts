@@ -95,8 +95,6 @@ import '../atomic-commerce-search-box-recent-queries/atomic-commerce-search-box-
  * @part instant-results-show-all-button - The button inside the clickable suggestion from the `atomic-commerce-search-box-instant-products` component.
  *
  * @event redirect - Event that is emitted when a standalone search box redirection is triggered. By default, the search box will directly change the URL and redirect accordingly, so if you want to handle the redirection differently, use this event.
- *
- * @alpha
  */
 @customElement('atomic-commerce-search-box')
 @bindings()
