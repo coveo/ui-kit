@@ -2,7 +2,6 @@
  * Utility functions to be used for Commerce Server Side Rendering.
  */
 
-import type {NavigatorContextProvider} from '../../../app/navigator-context-provider.js';
 import type {Controller} from '../../../controllers/controller/headless-controller.js';
 import type {CommerceEngineDefinitionOptions} from '../factories/build-factory.js';
 import {hydratedStaticStateFactory} from '../factories/hydrated-state-factory.js';
@@ -16,8 +15,7 @@ import type {CommerceEngineDefinition} from '../types/engine.js';
 /**
  * Initializes a Commerce engine definition in SSR with given controllers definitions and commerce engine config.
  * @param options - The commerce engine definition
- * @returns Three utility functions to fetch the initial state of the engine in SSR, hydrate the state in CSR,
- *  and a build function that can be used for edge cases requiring more control.
+ * @returns Engine definitions for different solution types that support per-call navigator context.
  *
  * @remarks
  * You can use the {@link InferStaticState} and {@link InferHydratedState} utility types with the returned engine definitions
@@ -25,9 +23,36 @@ import type {CommerceEngineDefinition} from '../types/engine.js';
  *
  * @example
  * ```ts
- * const engineDefinition = defineCommerceEngine(engineConfig);
- * type SearchStaticState = InferStaticState<typeof engineDefinition>;
- * type SearchHydratedState = InferHydratedState<typeof engineDefinition>;
+ * const { listingEngineDefinition } = defineCommerceEngine(engineConfig);
+ * 
+ * // Pass navigator context directly to fetchStaticState
+ * const staticState = await listingEngineDefinition.fetchStaticState({
+ *   navigatorContext: {
+ *     forwardedFor: req.ip,
+ *     referrer: req.headers.referer,
+ *     userAgent: req.headers['user-agent'],
+ *     location: req.url,
+ *     clientId: 'unique-session-id'
+ *   }
+ * });
+ * 
+ * // Framework examples:
+ * // Express.js
+ * app.get('/api/listing', async (req, res) => {
+ *   const state = await listingEngineDefinition.fetchStaticState({
+ *     navigatorContext: {
+ *       forwardedFor: req.ip,
+ *       referrer: req.get('Referer'),
+ *       userAgent: req.get('User-Agent'),
+ *       location: req.originalUrl,
+ *       clientId: req.sessionID
+ *     }
+ *   });
+ *   res.json(state);
+ * });
+ * 
+ * type SearchStaticState = InferStaticState<typeof listingEngineDefinition>;
+ * type SearchHydratedState = InferHydratedState<typeof listingEngineDefinition>;
  * ```
  *
  * @group Engine
@@ -56,14 +81,6 @@ export function defineCommerceEngine<
 } {
   const {controllers: controllerDefinitions, ...engineOptions} = options;
 
-  const getOptions = () => engineOptions;
-
-  const setNavigatorContextProvider = (
-    navigatorContextProvider: NavigatorContextProvider
-  ) => {
-    engineOptions.navigatorContextProvider = navigatorContextProvider;
-  };
-
   const getAccessToken = () => engineOptions.configuration.accessToken;
 
   const setAccessToken = (accessToken: string) => {
@@ -72,24 +89,24 @@ export function defineCommerceEngine<
 
   const fetchStaticState = fetchStaticStateFactory<TControllerDefinitions>(
     controllerDefinitions,
-    getOptions()
+    engineOptions
   );
   const hydrateStaticState = hydratedStaticStateFactory<TControllerDefinitions>(
     controllerDefinitions,
-    getOptions()
+    engineOptions
   );
   const fetchRecommendationStaticState =
     fetchRecommendationStaticStateFactory<TControllerDefinitions>(
       controllerDefinitions,
-      getOptions()
+      engineOptions
     );
   const hydrateRecommendationStaticState =
     hydratedRecommendationStaticStateFactory<TControllerDefinitions>(
       controllerDefinitions,
-      getOptions()
+      engineOptions
     );
+
   const commonMethods = {
-    setNavigatorContextProvider,
     getAccessToken,
     setAccessToken,
   };
