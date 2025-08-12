@@ -13,6 +13,9 @@ const meta: Meta = {
   decorators: [decorator],
   parameters,
   play,
+  args: {
+    'slots-default': `<span>Layout content</span>`,
+  },
 };
 
 export default meta;
