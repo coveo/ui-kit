@@ -1,23 +1,23 @@
-name: Create release
+name: Create release (v2)
 on:
   schedule:
     # At 13:00 (UTC) every Wednesday.
-    - cron: '0 13 * * 3'
+    - cron: "0 13 * * 3"
   workflow_dispatch:
     inputs:
       version:
-        description: '⚠ be sure of yourself ⚠'
+        description: "⚠ be sure of yourself ⚠"
         required: false
-        default: ''
+        default: ""
       debug:
-        description: 'Add DEBUG=* to the env if true'
+        description: "Add DEBUG=* to the env if true"
         type: boolean
         default: false
         required: false
 
 jobs:
   release:
-    environment: 'Release'
+    environment: "Release"
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -46,8 +46,8 @@ jobs:
           GH_TOKEN: ${{ secrets.UI_KIT_CD_DISPATCHER }}
   npm-prod:
     needs: release
-    environment: 'NPM Production'
-    runs-on: 'ubuntu-latest'
+    environment: "NPM Production"
+    runs-on: "ubuntu-latest"
     permissions:
       contents: read
       discussions: write
@@ -56,18 +56,18 @@ jobs:
     steps:
       - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4
         with:
-          ref: 'release/v2'
+          ref: "release/v2"
       - uses: ./.github/actions/setup
       - name: Promote NPM package to production
         run: npm run promote:npm:latest
   docs-prod:
     needs: release
     runs-on: ubuntu-latest
-    environment: 'Docs Production'
+    environment: "Docs Production"
     steps:
       - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4
         with:
-          ref: 'release/v2'
+          ref: "release/v2"
       - uses: ./.github/actions/setup
       - name: Notify Docs
         run: npm run notify:docs
