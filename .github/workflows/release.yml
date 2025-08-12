@@ -1,4 +1,4 @@
-name: Create release
+name: Create release (v2)
 on:
   schedule:
     # At 13:00 (UTC) every Wednesday.
