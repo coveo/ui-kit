@@ -85,15 +85,15 @@ export type SearchEngineDefinition<
  * @example
  * ```ts
  * const searchEngine = defineSearchEngine(config);
- * 
+ *
  * // Pass navigator context directly to fetchStaticState
  * const staticState = await searchEngine.fetchStaticState({
- *   navigatorContext: { 
- *     forwardedFor: req.ip, 
- *     referrer: req.headers.referer, 
- *     userAgent: req.headers['user-agent'], 
- *     location: req.url, 
- *     clientId: 'abc123' 
+ *   navigatorContext: {
+ *     forwardedFor: req.ip,
+ *     referrer: req.headers.referer,
+ *     userAgent: req.headers['user-agent'],
+ *     location: req.url,
+ *     clientId: 'abc123'
  *   }
  * });
  * ```
@@ -108,47 +108,52 @@ export function defineSearchEngine<
 >(options: SearchEngineDefinitionOptions<TControllerDefinitions>) {
   const {controllers: controllerDefinitions, ...engineOptions} = options;
 
+  // biome-ignore lint/suspicious/noExplicitAny: Complex parameter typing would require extensive refactoring
   const hydrateStaticState = async (...params: any[]) => {
     const engine = buildSSRSearchEngine(engineOptions);
     const controllers = buildControllerDefinitions({
       definitionsMap: (controllerDefinitions ?? {}) as TControllerDefinitions,
       engine,
-      propsMap: {} as InferControllerPropsMapFromDefinitions<TControllerDefinitions>,
+      propsMap:
+        {} as InferControllerPropsMapFromDefinitions<TControllerDefinitions>,
     });
-    
+
     const [staticState] = params;
     engine.dispatch(staticState.searchAction);
     await engine.waitForSearchCompletedAction();
     return {engine, controllers};
   };
 
+  // biome-ignore lint/suspicious/noExplicitAny: Parameter typing matches the interface contract
   const fetchStaticState = async (...params: any[]) => {
     const [callOptions] = params as unknown as [
-      {navigatorContext?: NavigatorContext | NavigatorContextProvider} | undefined
+      | {navigatorContext?: NavigatorContext | NavigatorContextProvider}
+      | undefined,
     ];
 
-    // Convert per-call navigator context to provider function  
+    // Convert per-call navigator context to provider function
     const navigatorContextProvider = callOptions?.navigatorContext
       ? typeof callOptions.navigatorContext === 'function'
-        ? callOptions.navigatorContext as NavigatorContextProvider
+        ? (callOptions.navigatorContext as NavigatorContextProvider)
         : () => callOptions.navigatorContext as NavigatorContext
       : undefined;
 
     // Create options for this call with navigator context
-    const callSpecificOptions: SearchEngineDefinitionOptions<TControllerDefinitions> = {
-      ...options,
-      navigatorContextProvider,
-      configuration: {
-        ...options.configuration,
-        preprocessRequest: navigatorContextProvider
-          ? augmentPreprocessRequestWithForwardedFor({
-              preprocessRequest: options.configuration.preprocessRequest,
-              navigatorContextProvider,
-              loggerOptions: options.loggerOptions,
-            })
-          : options.configuration.preprocessRequest,
-      },
-    };
+    const callSpecificOptions: SearchEngineDefinitionOptions<TControllerDefinitions> =
+      {
+        ...options,
+        navigatorContextProvider,
+        configuration: {
+          ...options.configuration,
+          preprocessRequest: navigatorContextProvider
+            ? augmentPreprocessRequestWithForwardedFor({
+                preprocessRequest: options.configuration.preprocessRequest,
+                navigatorContextProvider,
+                loggerOptions: options.loggerOptions,
+              })
+            : options.configuration.preprocessRequest,
+        },
+      };
 
     const engine = buildSSRSearchEngine(callSpecificOptions);
     const controllers = buildControllerDefinitions({

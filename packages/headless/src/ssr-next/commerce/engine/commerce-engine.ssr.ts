@@ -24,7 +24,7 @@ import type {CommerceEngineDefinition} from '../types/engine.js';
  * @example
  * ```ts
  * const { listingEngineDefinition } = defineCommerceEngine(engineConfig);
- * 
+ *
  * // Pass navigator context directly to fetchStaticState
  * const staticState = await listingEngineDefinition.fetchStaticState({
  *   navigatorContext: {
@@ -35,7 +35,7 @@ import type {CommerceEngineDefinition} from '../types/engine.js';
  *     clientId: 'unique-session-id'
  *   }
  * });
- * 
+ *
  * // Framework examples:
  * // Express.js
  * app.get('/api/listing', async (req, res) => {
@@ -50,7 +50,7 @@ import type {CommerceEngineDefinition} from '../types/engine.js';
  *   });
  *   res.json(state);
  * });
- * 
+ *
  * type SearchStaticState = InferStaticState<typeof listingEngineDefinition>;
  * type SearchHydratedState = InferHydratedState<typeof listingEngineDefinition>;
  * ```

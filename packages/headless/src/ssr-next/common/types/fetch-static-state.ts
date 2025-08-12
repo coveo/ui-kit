@@ -1,5 +1,9 @@
 import type {UnknownAction} from '@reduxjs/toolkit';
 import type {
+  NavigatorContext,
+  NavigatorContextProvider,
+} from '../../../app/navigator-context-provider.js';
+import type {
   ControllerStaticStateMap,
   ControllersPropsMap,
 } from './controllers.js';
@@ -8,10 +12,6 @@ import type {
   EngineStaticState,
 } from './engine.js';
 import type {OptionsTuple} from './utilities.js';
-import type {
-  NavigatorContext,
-  NavigatorContextProvider,
-} from '../../../app/navigator-context-provider.js';
 
 type FetchStaticStateOptions = {
   navigatorContext?: NavigatorContext | NavigatorContextProvider;
@@ -21,7 +21,7 @@ type FetchStaticStateOptions = {
  * Executes only the initial search for a given configuration, then returns a resumable snapshot of engine state along with the state of the controllers.
  *
  * Useful for static generation and server-side rendering.
- * 
+ *
  * @example
  * ```ts
  * // Pass navigator context directly in the options

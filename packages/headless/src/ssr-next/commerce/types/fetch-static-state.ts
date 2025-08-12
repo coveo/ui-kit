@@ -1,4 +1,8 @@
 import type {UnknownAction} from '@reduxjs/toolkit';
+import type {
+  NavigatorContext,
+  NavigatorContextProvider,
+} from '../../../app/navigator-context-provider.js';
 import type {Controller} from '../../../controllers/controller/headless-controller.js';
 import type {
   ControllerStaticStateMap,
@@ -11,15 +15,11 @@ import type {
   OptionsTuple,
 } from './controller-definitions.js';
 import type {EngineStaticState} from './engine.js';
-import type {
-  NavigatorContext,
-  NavigatorContextProvider,
-} from '../../../app/navigator-context-provider.js';
 
 export interface FetchStaticStateOptions {
   /**
    * Navigator context for this request. Used to set headers like x-forwarded-for during SSR.
-   * 
+   *
    * @example
    * ```ts
    * // In your server route handler
@@ -41,7 +41,7 @@ export interface FetchStaticStateOptions {
  * Executes only the initial search for a given configuration, then returns a resumable snapshot of engine state along with the state of the controllers.
  *
  * Useful for static generation and server-side rendering.
- * 
+ *
  * @example
  * ```ts
  * // Pass navigator context directly in the options
