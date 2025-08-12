@@ -5,7 +5,7 @@ import type {
   ControllersMap,
   ControllersPropsMap,
 } from '../../common/types/controllers.js';
-import type {OptionsTuple} from '../../common/types/utilities.js';
+import type {HasKey, OptionsTuple} from '../../common/types/utilities.js';
 import type {CartInitialState} from '../controllers/cart/headless-cart.ssr.js';
 import type {UserLocation} from '../controllers/context/headless-context.ssr.js';
 import type {
@@ -17,15 +17,60 @@ import type {
   CommerceEngineDefinitionBuildResult,
   ControllerDefinitionsMap,
   EngineDefinitionControllersPropsOption,
+  IsRecommendationController,
 } from './controller-definitions.js';
 
 export interface SearchBuildConfig extends CommonBuildConfig {
   query: string;
 }
 
-export interface RecommendationBuildConfig extends CommonBuildConfig {
-  recommendations?: []; // TODO: KIT-4619
-}
+/**
+ * RecommendationBuildConfig defines the shape of the config object required when fetching static state for recommendations.
+ *
+ * The `recommendations` property is a string array containing the names of the recommendation controllers
+ * that were defined in your engine definition. This allows you to specify which recommendation controllers
+ * should be included in the SSR request.
+ *
+ * For example, given the following engine definition:
+ *
+ * ```ts
+ * const {recommendationEngineDefinition} = defineCommerceEngine({
+ *   controllers: {
+ *     popularViewed: defineRecommendations({options: {slotId: '...'}}),
+ *     popularBought: defineRecommendations({options: {slotId: '...'}}),
+ *     viewedTogether: defineRecommendations({options: {slotId: '...'}}),
+ *     // ...other controllers
+ *   },
+ * });
+ *
+ * // When fetching static state for recommendations:
+ * const staticState = await recommendationEngineDefinition.fetchStaticState({
+ *   recommendations: ['popularBought', 'viewedTogether'],
+ *   // ...other config
+ * });
+ * ```
+ *
+ * In this example, only the `popularBought` and `viewedTogether` recommendation controllers will be included in the SSR request.
+ */
+export type RecommendationBuildConfig<
+  TControllers extends ControllerDefinitionsMap<Controller>,
+> = CommonBuildConfig & {
+  recommendations: Array<
+    Extract<
+      keyof TControllers,
+      {
+        [K in keyof TControllers]: HasKey<
+          TControllers[K],
+          SolutionType.recommendation
+        > extends never
+          ? never
+          : IsRecommendationController<TControllers[K]> extends never
+            ? never
+            : K;
+      }[keyof TControllers]
+    >
+  >;
+};
 
 export interface ListingBuildConfig extends CommonBuildConfig {}
 
@@ -41,16 +86,18 @@ export interface CommonBuildConfig {
   searchParams?: Omit<ParameterManagerState<Parameters>['parameters'], 'q'>;
 }
 
-export type BuildConfig<TSolutionType extends SolutionType> =
-  TSolutionType extends SolutionType.search
-    ? SearchBuildConfig
-    : TSolutionType extends SolutionType.listing
-      ? ListingBuildConfig
-      : TSolutionType extends SolutionType.recommendation
-        ? RecommendationBuildConfig
-        : TSolutionType extends SolutionType.standalone
-          ? CommonBuildConfig
-          : never;
+export type BuildConfig<
+  TControllers extends ControllerDefinitionsMap<Controller>,
+  TSolutionType extends SolutionType,
+> = TSolutionType extends SolutionType.search
+  ? SearchBuildConfig
+  : TSolutionType extends SolutionType.listing
+    ? ListingBuildConfig
+    : TSolutionType extends SolutionType.recommendation
+      ? RecommendationBuildConfig<TControllers>
+      : TSolutionType extends SolutionType.standalone
+        ? CommonBuildConfig
+        : never;
 
 /**
  * Commerce engine options for SSR scenarios where context is defined when fetching static state.
@@ -72,7 +119,7 @@ export type Build<
   TSolutionType extends SolutionType,
 > = (
   ...params: OptionsTuple<
-    BuildConfig<TSolutionType> &
+    BuildConfig<TControllersDefinitionsMap, TSolutionType> &
       EngineDefinitionControllersPropsOption<
         TControllersDefinitionsMap,
         TControllersProps,

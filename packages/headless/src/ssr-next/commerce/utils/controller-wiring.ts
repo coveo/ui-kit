@@ -108,7 +108,8 @@ export function wireControllerParams<
   };
 
   const wireRecommendations = () => {
-    // TODO: KIT-4619: wire recommendations
+    const {recommendations} = paramsObject;
+    controllers.recommendations = recommendations || [];
   };
 
   // Common wiring for all solution types
