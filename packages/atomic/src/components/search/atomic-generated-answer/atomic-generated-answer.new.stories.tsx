@@ -55,6 +55,6 @@ export const Default: Story = {
 export const DisableCitationAnchoring: Story = {
   name: 'Citation anchoring disabled',
   render: () => html`
-    <atomic-generated-answer disable-citation-anchoring></atomic-generated-answer>
+    <atomic-generated-answer disable-citation-anchoring="true"></atomic-generated-answer>
   `,
 };
