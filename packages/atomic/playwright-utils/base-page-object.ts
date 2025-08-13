@@ -1,5 +1,5 @@
 import type {Page} from '@playwright/test';
-import {buildArgsParam} from '@storybook/router';
+import {buildArgsParam} from 'storybook/internal/router';
 import type {JSX} from '../dist/types/components';
 
 export class BasePageObject<
