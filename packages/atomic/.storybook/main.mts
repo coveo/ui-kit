@@ -55,10 +55,7 @@ const config: StorybookConfig = {
     {from: '../dist/atomic/lang', to: './lang'},
     {from: './public', to: '/'},
   ],
-  addons: [
-    '@storybook/addon-a11y',
-    '@storybook/addon-docs'
-  ],
+  addons: ['@storybook/addon-a11y', '@storybook/addon-docs'],
   framework: {
     name: '@storybook/web-components-vite',
     options: {},
