@@ -55,12 +55,12 @@ export const Default: Story = {
               label="All"
               expression=""
               active="true"
-            ></atomic-insight-tab
-            ><atomic-insight-tab
+            ></atomic-insight-tab>
+            <atomic-insight-tab
               label="Videos"
               expression="@ytchanneltitle"
-            ></atomic-insight-tab
-            ><atomic-insight-tab
+            ></atomic-insight-tab>
+            <atomic-insight-tab
               label="Documentation"
               expression='@documenttype==("WebPage")'
             ></atomic-insight-tab>
