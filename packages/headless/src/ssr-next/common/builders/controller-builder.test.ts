@@ -133,6 +133,16 @@ describe('ControllerBuilder', () => {
     });
   });
 
+  it('should throw if the definition contains a controller without a build method', () => {
+    const invalidDefinition = {
+      // Missing build method
+    };
+    const builder = new ControllerBuilder(invalidDefinition, mockEngine);
+    expect(() => builder.build()).toThrowError(
+      'Controller definition must have a build or buildWithProps method.'
+    );
+  });
+
   it('should correctly detect build vs buildWithProps based on definition', () => {
     const buildDefinition = {
       build: vi.fn().mockReturnValue(mockController),

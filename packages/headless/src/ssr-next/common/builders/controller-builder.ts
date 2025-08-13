@@ -35,11 +35,21 @@ export class ControllerBuilder<
   }
 
   public build(): TController {
-    if ('build' in this._definition) {
+    if (
+      'build' in this._definition &&
+      typeof this._definition.build === 'function'
+    ) {
       return this.buildWithoutProps();
-    } else {
+    }
+    if (
+      'buildWithProps' in this._definition &&
+      typeof this._definition.buildWithProps === 'function'
+    ) {
       return this.buildWithProps();
     }
+    throw new Error(
+      'Controller definition must have a build or buildWithProps method.'
+    );
   }
 
   private buildWithoutProps(): TController {
