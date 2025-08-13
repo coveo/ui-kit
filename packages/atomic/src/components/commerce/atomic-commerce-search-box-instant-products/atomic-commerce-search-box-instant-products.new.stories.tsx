@@ -1,7 +1,7 @@
-import {userEvent} from '@storybook/test';
-import type {Meta, StoryObj as Story} from '@storybook/web-components';
+import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
 import {html} from 'lit';
 import {within} from 'shadow-dom-testing-library';
+import {userEvent} from 'storybook/test';
 import {wrapInCommerceInterface} from '@/storybook-utils/commerce/commerce-interface-wrapper';
 import {wrapInCommerceSearchBox} from '@/storybook-utils/commerce/commerce-search-box-wrapper';
 import {renderComponentWithoutCodeRoot} from '@/storybook-utils/common/render-component';
