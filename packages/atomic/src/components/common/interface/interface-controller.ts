@@ -33,11 +33,12 @@ export class InterfaceController<EngineType extends AnyEngineType>
 
   constructor(
     host: LitElement & BaseAtomicInterface<EngineType>,
-    globalVariableName: string
+    globalVariableName: string,
+    headlessVersion: string
   ) {
     this.host = host;
     this.host.addController(this);
-    setCoveoGlobal(globalVariableName);
+    setCoveoGlobal(globalVariableName, headlessVersion);
   }
 
   hostConnected() {

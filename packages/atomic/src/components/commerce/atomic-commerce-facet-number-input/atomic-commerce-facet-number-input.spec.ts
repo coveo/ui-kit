@@ -133,8 +133,10 @@ describe('atomic-commerce-facet-number-input', () => {
         range: {start: 10, end: 100},
       });
 
-      expect(element['startRef']).toBe(startInput.element());
-      expect(element['endRef']).toBe(endInput.element());
+      //@ts-expect-error: accessing private properties for testing
+      expect(element.startRef).toBe(startInput.element());
+      //@ts-expect-error: accessing private properties for testing
+      expect(element.endRef).toBe(endInput.element());
     });
 
     it('should maintain valid refs when input values change', async () => {
@@ -145,8 +147,10 @@ describe('atomic-commerce-facet-number-input', () => {
       await startInput.fill('50');
       await endInput.fill('200');
 
-      expect(element['startRef']).toBe(startInput.element());
-      expect(element['endRef']).toBe(endInput.element());
+      //@ts-expect-error: accessing private properties for testing
+      expect(element.startRef).toBe(startInput.element());
+      //@ts-expect-error: accessing private properties for testing
+      expect(element.endRef).toBe(endInput.element());
     });
 
     it('should update ref values when input values change', async () => {
@@ -157,8 +161,10 @@ describe('atomic-commerce-facet-number-input', () => {
       await startInput.fill('50');
       await endInput.fill('200');
 
-      expect(element['startRef']?.value).toBe('50');
-      expect(element['endRef']?.value).toBe('200');
+      //@ts-expect-error: accessing private properties for testing
+      expect(element.startRef?.value).toBe('50');
+      //@ts-expect-error: accessing private properties for testing
+      expect(element.endRef?.value).toBe('200');
     });
   });
 });

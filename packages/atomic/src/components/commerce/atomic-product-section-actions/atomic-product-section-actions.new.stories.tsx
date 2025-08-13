@@ -23,7 +23,7 @@ const {decorator: productTemplateDecorator} =
 
 const meta: Meta = {
   component: 'atomic-product-section-actions',
-  title: 'Commerce/Sections',
+  title: 'Commerce/Product Sections',
   id: 'atomic-product-section-actions',
   render: renderComponent,
   parameters,
