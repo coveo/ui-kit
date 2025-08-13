@@ -1,6 +1,5 @@
 import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
 import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
-import {within} from 'storybook/test';
 import {wrapInCommerceInterface} from '@/storybook-utils/commerce/commerce-interface-wrapper';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import type {AtomicCommerceInterface} from '../atomic-commerce-interface/atomic-commerce-interface';
@@ -40,17 +39,18 @@ export const Default: Story = {
 export const WithTranslations: Story = {
   name: 'With translations',
   play: async (context) => {
-    const canvas = within(context.canvasElement);
     const commerceInterface =
-      await canvas.findByTestId<AtomicCommerceInterface>('root-interface');
+      context.canvasElement.querySelector<AtomicCommerceInterface>(
+        'atomic-commerce-interface'
+      )!;
 
     await context.step('Load translations', async () => {
       await customElements.whenDefined('atomic-commerce-interface');
       commerceInterface.i18n.addResourceBundle('en', 'translation', {
         // "translation-key": "A single product"
-        [context.args['value']]: context.args.translationValue,
+        [context.args.value]: context.args.translationValue,
         // "translation-key_other": "{{count}} products"
-        [`${context.args['value']}_other`]: context.args.translationValueOther,
+        [`${context.args.value}_other`]: context.args.translationValueOther,
       });
     });
     await play(context);

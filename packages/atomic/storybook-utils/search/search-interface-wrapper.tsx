@@ -15,16 +15,15 @@ export const wrapInSearchInterface = (
   play: (context: StoryContext) => Promise<void>;
 } => ({
   decorator: (story) => html`
-    <atomic-search-interface data-testid="root-interface">
+    <atomic-search-interface>
       ${story()}
     </atomic-search-interface>
   `,
   play: async ({canvasElement, step}) => {
     await customElements.whenDefined('atomic-search-interface');
-    const canvas = within(canvasElement);
     const searchInterface =
-      await canvas.findByTestId<HTMLAtomicSearchInterfaceElement>(
-        'root-interface'
+      canvasElement.querySelector<HTMLAtomicSearchInterfaceElement>(
+        'atomic-search-interface'
       );
     await step('Render the Search Interface', async () => {
       await searchInterface!.initialize({
@@ -44,11 +43,9 @@ export const wrapInSearchInterface = (
 export const playExecuteFirstSearch: (
   context: StoryContext
 ) => Promise<void> = async ({canvasElement, step}) => {
-  const canvas = within(canvasElement);
-
   const searchInterface =
-    await canvas.findByTestId<HTMLAtomicSearchInterfaceElement>(
-      'root-interface'
+    canvasElement.querySelector<HTMLAtomicSearchInterfaceElement>(
+      'atomic-search-interface'
     );
   await step('Execute the first search', async () => {
     await searchInterface!.executeFirstSearch();

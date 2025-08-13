@@ -57,7 +57,7 @@ export const WithAtomicExternals: Story = {
   name: 'With multiple atomic-external',
   decorators: [
     (story) => html`
-      <atomic-search-interface id="foo" data-testid="root-interface">
+      <atomic-search-interface id="foo">
         <h1>Search Interface</h1>
         <atomic-layout-section section="horizontal-facets">
           <atomic-facet field="author" label="facet2"></atomic-facet>
