@@ -54,7 +54,7 @@ function getDeploymentPipelineAssets() {
    */
   function getDeploymentConfig() {
     const deploymentConfig = JSON.parse(
-      readFileSync(resolvePath(workspacesRoot, '.deployment.config.json'))
+      readFileSync(resolvePath(workspacesRoot, '.deployment.config', 'prd.json'))
         .toString()
         .replace(': $[ENVIRONMENTS]', ': []')
         .replaceAll(': $[IS_NIGHTLY]', ' : false')
