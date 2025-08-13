@@ -3,8 +3,13 @@ import {
   getSampleCommerceEngineConfiguration,
 } from '@coveo/headless/commerce';
 import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
+import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
-import {renderComponent} from '@/storybook-utils/common/render-component';
+
+const {events, args, argTypes, template} = getStorybookHelpers(
+  'atomic-commerce-recommendation-interface',
+  {excludeCategories: ['methods']}
+);
 
 async function initializeCommerceRecommendationInterface(
   canvasElement: HTMLElement
@@ -21,16 +26,18 @@ const meta: Meta = {
   component: 'atomic-commerce-recommendation-interface',
   title: 'Commerce/Interface (Recommendation)',
   id: 'atomic-commerce-recommendation-interface',
-  render: renderComponent,
-  parameters,
+  render: (args) => template(args),
+  parameters: {
+    ...parameters,
+    actions: {
+      handles: events,
+    },
+  },
+  args,
+  argTypes,
+
   play: async (context) => {
     await initializeCommerceRecommendationInterface(context.canvasElement);
-  },
-  argTypes: {
-    'attributes-language': {
-      name: 'language',
-      type: 'string',
-    },
   },
 };
 
@@ -38,7 +45,7 @@ export default meta;
 
 export const Default: Story = {
   args: {
-    'slots-default': `<span>Interface content</span>`,
+    'default-slot': `<span>Interface content</span>`,
   },
 };
 
@@ -92,7 +99,7 @@ const recommendationList = `<style>
 export const WithRecommendationList: Story = {
   name: 'With a recommendation list',
   args: {
-    'slots-default': recommendationList,
+    'default-slot': recommendationList,
   },
   play: async ({canvasElement}) => {
     const recsInterface = canvasElement.querySelector(

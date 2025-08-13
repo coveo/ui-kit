@@ -1,11 +1,16 @@
 import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
+import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {html} from 'lit';
 import {
   playExecuteFirstRequest,
   wrapInCommerceInterface,
 } from '@/storybook-utils/commerce/commerce-interface-wrapper';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
-import {renderComponent} from '@/storybook-utils/common/render-component';
+
+const {events, args, argTypes, template} = getStorybookHelpers(
+  'atomic-commerce-no-products',
+  {excludeCategories: ['methods']}
+);
 
 const {decorator, play: preprocessedPlayed} = wrapInCommerceInterface({
   skipFirstRequest: true,
@@ -23,9 +28,17 @@ const meta: Meta = {
   component: 'atomic-commerce-no-products',
   title: 'Commerce/No Products',
   id: 'atomic-commerce-no-products',
-  render: renderComponent,
+  render: (args) => template(args),
   decorators: [decorator],
-  parameters,
+  parameters: {
+    ...parameters,
+    actions: {
+      handles: events,
+    },
+  },
+  args,
+  argTypes,
+
   play: preprocessedPlayed,
 };
 

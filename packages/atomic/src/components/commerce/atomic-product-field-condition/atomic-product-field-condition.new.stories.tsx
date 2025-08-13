@@ -1,9 +1,9 @@
 import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
+import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {wrapInCommerceInterface} from '@/storybook-utils/commerce/commerce-interface-wrapper';
 import {wrapInCommerceProductList} from '@/storybook-utils/commerce/commerce-product-list-wrapper';
 import {wrapInProductTemplate} from '@/storybook-utils/commerce/commerce-product-template-wrapper';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
-import {renderComponent} from '@/storybook-utils/common/render-component';
 
 const {decorator: commerceInterfaceDecorator, play} = wrapInCommerceInterface({
   engineConfig: {
@@ -17,22 +17,34 @@ const {decorator: commerceInterfaceDecorator, play} = wrapInCommerceInterface({
 });
 const {decorator: commerceProductListDecorator} = wrapInCommerceProductList();
 const {decorator: productTemplateDecorator} = wrapInProductTemplate();
+const {events, args, argTypes, template} = getStorybookHelpers(
+  'atomic-product-field-condition',
+  {excludeCategories: ['methods']}
+);
 
 const meta: Meta = {
   component: 'atomic-product-field-condition',
   title: 'Commerce/Product Field Condition',
   id: 'atomic-product-field-condition',
-  render: renderComponent,
+  render: (args) => template(args),
   decorators: [
     productTemplateDecorator,
     commerceProductListDecorator,
     commerceInterfaceDecorator,
   ],
-  parameters,
+  parameters: {
+    ...parameters,
+    actions: {
+      handles: events,
+    },
+  },
+  argTypes,
+
   play,
   args: {
-    'slots-default': `<span>Render me if <strong>ec_name</strong> is defined.</span>`,
-    'attributes-if-defined': 'ec_name',
+    ...args,
+    'default-slot': `<span>Render me if <strong>ec_name</strong> is defined.</span>`,
+    ifDefined: 'ec_name',
   },
 };
 

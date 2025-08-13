@@ -1,45 +1,38 @@
 import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
+import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {wrapInCommerceRecommendationInterface} from '@/storybook-utils/commerce/commerce-recommendation-interface-wrapper';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
-import {renderComponent} from '@/storybook-utils/common/render-component';
 
 const {decorator, play} = wrapInCommerceRecommendationInterface({});
+const {events, args, argTypes, template} = getStorybookHelpers(
+  'atomic-commerce-recommendation-list',
+  {excludeCategories: ['methods']}
+);
 
 const meta: Meta = {
   component: 'atomic-commerce-recommendation-list',
   title: 'Commerce/Recommendation List',
   id: 'atomic-commerce-recommendation-list',
-  render: renderComponent,
+  render: (args) => template(args),
   decorators: [decorator],
-  parameters,
-  play,
-  argTypes: {
-    'attributes-display': {
-      options: ['grid', 'list'],
-      control: {type: 'radio'},
-    },
-    'attributes-density': {
-      options: ['compact', 'comfortable', 'normal'],
-      control: {type: 'radio'},
-    },
-    'attributes-image-size': {
-      options: ['small', 'large', 'icon', 'none'],
-      control: {type: 'radio'},
-    },
-    'attributes-products-per-page': {
-      control: {type: 'text'},
-      description: 'The number of products to display per page.',
+  parameters: {
+    ...parameters,
+    actions: {
+      handles: events,
     },
   },
+  argTypes,
+
+  play,
 
   args: {
-    'attributes-display': 'list',
-    'attributes-density': 'normal',
-    'attributes-image-size': 'small',
-    'attributes-products-per-page': 3,
-    'attributes-slot-id': 'af4fb7ba-6641-4b67-9cf9-be67e9f30174',
-
-    'slots-default': `<atomic-product-template>
+    ...args,
+    display: 'list',
+    density: 'normal',
+    imageSize: 'small',
+    productsPerPage: 3,
+    slotId: 'af4fb7ba-6641-4b67-9cf9-be67e9f30174',
+    'default-slot': `<atomic-product-template>
                    <template>
                     <atomic-product-section-name>
                       <atomic-product-link class="font-bold"></atomic-product-link>
@@ -73,7 +66,7 @@ export const Default: Story = {};
 export const WithFullTemplate: Story = {
   name: 'With a full template',
   args: {
-    'slots-default': ` <atomic-product-template>
+    'default-slot': ` <atomic-product-template>
                   <template>
  <atomic-product-section-visual>
                 <span>Visual Section</span>
@@ -107,6 +100,6 @@ export const WithFullTemplate: Story = {
 export const AsCarousel: Story = {
   name: 'As a carousel',
   args: {
-    'attributes-products-per-page': 3,
+    productsPerPage: 3,
   },
 };

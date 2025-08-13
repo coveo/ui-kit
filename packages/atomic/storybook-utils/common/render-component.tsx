@@ -28,7 +28,7 @@ const renderComponentInternal =
           slotsControls.push(argKey);
           break;
         default:
-          if (argKey.startsWith('attributes-depends-on-')) {
+          if (argKey.startsWith('dependsOn')) {
             attributeControls.push(argKey);
           }
       }

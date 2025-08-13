@@ -1,9 +1,14 @@
 import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
+import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {wrapInCommerceInterface} from '@/storybook-utils/commerce/commerce-interface-wrapper';
 import {wrapInCommerceProductList} from '@/storybook-utils/commerce/commerce-product-list-wrapper';
 import {wrapInProductTemplateForSections} from '@/storybook-utils/commerce/product-template-section-wrapper';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
-import {renderComponent} from '@/storybook-utils/common/render-component';
+
+const {events, args, argTypes, template} = getStorybookHelpers(
+  'atomic-product-section-metadata',
+  {excludeCategories: ['methods']}
+);
 
 const {decorator: commerceInterfaceDecorator, play} = wrapInCommerceInterface({
   engineConfig: {
@@ -23,8 +28,15 @@ const meta: Meta = {
   component: 'atomic-product-section-metadata',
   title: 'Commerce/Product Sections',
   id: 'atomic-product-section-metadata',
-  render: renderComponent,
-  parameters,
+  render: (args) => template(args),
+  parameters: {
+    ...parameters,
+    actions: {
+      handles: events,
+    },
+  },
+  args,
+  argTypes,
 };
 
 export default meta;
@@ -38,6 +50,6 @@ export const Default: Story = {
   ],
   play,
   args: {
-    'slots-default': `<span class="text-sm text-gray-500">SKU: WH-1000XM4</span>`,
+    'default-slot': `<span class="text-sm text-gray-500">SKU: WH-1000XM4</span>`,
   },
 };

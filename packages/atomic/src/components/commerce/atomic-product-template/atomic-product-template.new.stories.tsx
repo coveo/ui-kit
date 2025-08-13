@@ -1,4 +1,5 @@
 import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
+import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {within} from 'shadow-dom-testing-library';
 import {wrapInCommerceInterface} from '@/storybook-utils/commerce/commerce-interface-wrapper';
 import {wrapInCommerceProductList} from '@/storybook-utils/commerce/commerce-product-list-wrapper';
@@ -6,7 +7,6 @@ import {wrapInCommerceRecommendationInterface} from '@/storybook-utils/commerce/
 import {wrapInCommerceRecommendationList} from '@/storybook-utils/commerce/commerce-recommendation-list-wrapper';
 import {wrapInCommerceSearchBoxInstantProducts} from '@/storybook-utils/commerce/commerce-searchbox-instant-products-wrapper';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
-import {renderComponentWithoutCodeRoot} from '@/storybook-utils/common/render-component';
 import {parameters as searchBoxParameters} from '@/storybook-utils/common/search-box-suggestions-parameters';
 
 const TEMPLATE_EXAMPLE = `<template>
@@ -43,15 +43,27 @@ const TEMPLATE_EXAMPLE = `<template>
   </atomic-product-section-children>
 </template>`;
 
+const {events, args, argTypes, template} = getStorybookHelpers(
+  'atomic-product-template',
+  {excludeCategories: ['methods']}
+);
+
 const meta: Meta = {
   component: 'atomic-product-template',
   title: 'Commerce/Product Template',
   id: 'atomic-product-template',
-  render: renderComponentWithoutCodeRoot,
-  parameters,
-  args: {
-    'slots-default': TEMPLATE_EXAMPLE,
+  render: (args) => template(args),
+  parameters: {
+    ...parameters,
+    actions: {
+      handles: events,
+    },
   },
+  args: {
+    ...args,
+    'default-slot': TEMPLATE_EXAMPLE,
+  },
+  argTypes,
 };
 
 export default meta;

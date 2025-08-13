@@ -1,8 +1,13 @@
 import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
+import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {html} from 'lit';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
-import {renderComponent} from '@/storybook-utils/common/render-component';
 import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
+
+const {events, args, argTypes, template} = getStorybookHelpers(
+  'atomic-tab-manager',
+  {excludeCategories: ['methods']}
+);
 
 const {decorator, play} = wrapInSearchInterface({
   search: {
@@ -44,12 +49,20 @@ const meta: Meta = {
   title: 'Search/Tabs',
   id: 'atomic-tab-manager',
 
-  render: renderComponent,
+  render: (args) => template(args),
   decorators: [decorator],
-  parameters,
+  parameters: {
+    ...parameters,
+    actions: {
+      handles: events,
+    },
+  },
+  argTypes,
+
   play,
   args: {
-    'slots-default': `
+    ...args,
+    'default-slot': `
       <atomic-tab name="all" label="All" tab></atomic-tab>
       <atomic-tab name="documentation" label="Documentation"></atomic-tab>
       <atomic-tab name="article" label="Articles"></atomic-tab>

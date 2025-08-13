@@ -1,26 +1,32 @@
 import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
+import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
-import {renderComponent} from '@/storybook-utils/common/render-component';
 import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
 
 const {decorator, play} = wrapInSearchInterface();
+const {events, args, argTypes, template} = getStorybookHelpers(
+  'atomic-automatic-facet-generator',
+  {excludeCategories: ['methods']}
+);
 
 const meta: Meta = {
   component: 'atomic-automatic-facet-generator',
   title: 'Search/AutomaticFacetGenerator',
   id: 'atomic-automatic-facet-generator',
-  render: renderComponent,
+  render: (args) => template(args),
   decorators: [decorator],
-  parameters,
-  play,
-  argTypes: {
-    'attributes-number-of-values': {
-      name: 'number-of-values',
-      control: {type: 'number', min: 1},
+  parameters: {
+    ...parameters,
+    actions: {
+      handles: events,
     },
   },
+  argTypes,
+
+  play,
   args: {
-    'attributes-number-of-values': 8,
+    ...args,
+    numberOfValues: 8,
   },
 };
 

@@ -1,10 +1,10 @@
 import bgIcons from '@salesforce-ux/design-system/design-tokens/dist/bg-standard.common';
 import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
+import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {html} from 'lit';
 import {within} from 'shadow-dom-testing-library';
 import {expect, userEvent, waitFor} from 'storybook/test';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
-import {renderComponent} from '@/storybook-utils/common/render-component';
 import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
 import AssetsList from '../../../../docs/assets.json';
 
@@ -15,37 +15,34 @@ function snakeToCamel(value: string) {
 }
 
 const {decorator, play} = wrapInSearchInterface();
+const {events, args, argTypes, template} = getStorybookHelpers('atomic-icon', {
+  excludeCategories: ['methods'],
+});
 
 const meta: Meta = {
   component: 'atomic-icon',
   title: 'Common/Icon',
   id: 'atomic-icon',
 
-  render: renderComponent,
+  render: (args) => template(args),
   decorators: [decorator],
-  parameters,
-  play,
-  argTypes: {
-    'attributes-icon': {
-      name: 'icon',
-      options: AssetsList.assets,
-      mapping: AssetsList.assets.reduce<Record<string, string>>(
-        (acc, asset) => {
-          acc[asset] = `assets://${asset}`;
-          return acc;
-        },
-        {}
-      ),
-      control: {type: 'select'},
+  parameters: {
+    ...parameters,
+    actions: {
+      handles: events,
     },
   },
+  args,
+  argTypes,
+
+  play,
 };
 
 export default meta;
 //TODO here
 export const Default: Story = {
   args: {
-    'attributes-icon': 'assets://account.svg',
+    icon: 'assets://account.svg',
   },
   decorators: [
     (story) =>
@@ -87,7 +84,7 @@ export const Default: Story = {
 export const AllIcons: Story = {
   name: 'All available icons',
   argTypes: {
-    'attributes-icon': {
+    icon: {
       name: 'icon',
       control: {
         disable: true,

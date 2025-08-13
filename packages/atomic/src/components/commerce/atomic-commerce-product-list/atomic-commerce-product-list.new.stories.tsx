@@ -1,10 +1,15 @@
 import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
+import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {
   playExecuteFirstRequest,
   wrapInCommerceInterface,
 } from '@/storybook-utils/commerce/commerce-interface-wrapper';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
-import {renderComponent} from '@/storybook-utils/common/render-component';
+
+const {events, args, argTypes, template} = getStorybookHelpers(
+  'atomic-commerce-product-list',
+  {excludeCategories: ['methods']}
+);
 
 const {decorator, play} = wrapInCommerceInterface({
   skipFirstRequest: false,
@@ -35,35 +40,26 @@ const {play: playNoProducts} = wrapInCommerceInterface({
 });
 
 const meta: Meta = {
-  argTypes: {
-    'attributes-display': {
-      options: ['grid', 'list', 'table'],
-      control: {type: 'radio'},
-      name: 'display',
-    },
-    'attributes-density': {
-      options: ['compact', 'comfortable', 'normal'],
-      control: {type: 'radio'},
-      name: 'density',
-    },
-    'attributes-image-size': {
-      options: ['small', 'large', 'icon', 'none'],
-      control: {type: 'radio'},
-      name: 'image-size',
-    },
-  },
   args: {
-    'attributes-number-of-placeholders': 4,
-    'attributes-display': 'grid',
-    'attributes-density': 'normal',
-    'attributes-image-size': 'small',
+    ...args,
+    numberOfPlaceholders: 4,
+    display: 'grid',
+    density: 'normal',
+    imageSize: 'small',
   },
   component: 'atomic-commerce-product-list',
   title: 'Commerce/Product List',
   id: 'atomic-commerce-product-list',
-  render: renderComponent,
+  render: (args) => template(args),
   decorators: [decorator],
-  parameters,
+  parameters: {
+    ...parameters,
+    actions: {
+      handles: events,
+    },
+  },
+  argTypes,
+
   play,
 };
 
@@ -76,7 +72,7 @@ export const Default: Story = {
 export const GridDisplayWithTemplate: Story = {
   name: 'Using grid display with template',
   args: {
-    'slots-default': `<atomic-product-template>
+    'default-slot': `<atomic-product-template>
   <template>
     <atomic-product-section-name id="product-name-section">
       <atomic-product-link class="font-bold"></atomic-product-link>
@@ -126,15 +122,15 @@ export const GridDisplayBeforeQuery: Story = {
 export const ListDisplay: Story = {
   name: 'Using list display',
   args: {
-    'attributes-display': 'list',
+    display: 'list',
   },
 };
 
 export const ListDisplayWithTemplate: Story = {
   name: 'Using list display with template',
   args: {
-    'attributes-display': 'list',
-    'slots-default': `<atomic-product-template>
+    display: 'list',
+    'default-slot': `<atomic-product-template>
   <template>
     <atomic-product-section-name id="product-name-section">
       <atomic-product-link class="font-bold"></atomic-product-link>
@@ -177,7 +173,7 @@ export const ListDisplayWithTemplate: Story = {
 export const ListDisplayBeforeQuery: Story = {
   name: 'Using list display before query',
   args: {
-    'attributes-display': 'list',
+    display: 'list',
   },
   play: async (context) => {
     await playNoFirstQuery(context);
@@ -187,8 +183,8 @@ export const ListDisplayBeforeQuery: Story = {
 export const TableDisplay: Story = {
   name: 'Using table display',
   args: {
-    'attributes-display': 'table',
-    'slots-default': `<atomic-product-template>
+    display: 'table',
+    'default-slot': `<atomic-product-template>
   <template>
     <atomic-table-element label="Product">
       <atomic-product-link></atomic-product-link>
@@ -211,7 +207,7 @@ export const TableDisplay: Story = {
 export const TableDisplayBeforeQuery: Story = {
   name: 'Using table display before query',
   args: {
-    'attributes-display': 'table',
+    display: 'table',
   },
   play: async (context) => {
     await playNoFirstQuery(context);

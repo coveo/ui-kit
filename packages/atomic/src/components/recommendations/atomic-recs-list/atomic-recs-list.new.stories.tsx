@@ -1,18 +1,30 @@
 import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
+import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {html} from 'lit';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
-import {renderComponent} from '@/storybook-utils/common/render-component';
 import {wrapInRecommendationInterface} from '@/storybook-utils/search/recs-interface-wrapper';
 
 const {decorator, play} = wrapInRecommendationInterface();
+const {events, args, argTypes, template} = getStorybookHelpers(
+  'atomic-recs-list',
+  {excludeCategories: ['methods']}
+);
 
 const meta: Meta = {
   component: 'atomic-recs-list',
   title: 'Recommendations/RecsList',
   id: 'atomic-recs-list',
-  render: renderComponent,
+  render: (args) => template(args),
   decorators: [decorator],
-  parameters,
+  parameters: {
+    ...parameters,
+    actions: {
+      handles: events,
+    },
+  },
+  args,
+  argTypes,
+
   play,
 };
 
@@ -43,7 +55,7 @@ export const RecsBeforeQuery: Story = {
 export const RecsWithFullTemplate: Story = {
   tags: ['test'],
   args: {
-    'slots-default': `<atomic-recs-result-template>
+    'default-slot': `<atomic-recs-result-template>
             <template>
               <atomic-result-section-visual>
                 <span>Visual Section</span>
@@ -77,7 +89,7 @@ export const RecsWithFullTemplate: Story = {
 export const RecsOpeningInNewTab: Story = {
   tags: ['test'],
   args: {
-    'slots-default': `<atomic-recs-result-template>
+    'default-slot': `<atomic-recs-result-template>
             <template slot="link">
               <atomic-result-link>
                 <a slot="attributes" target="_blank"></a>
@@ -94,6 +106,6 @@ export const RecsOpeningInNewTab: Story = {
 
 export const RecsAsCarousel: Story = {
   args: {
-    'attributes-number-of-recommendations-per-page': 4,
+    numberOfRecommendationsPerPage: 4,
   },
 };

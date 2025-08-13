@@ -1,13 +1,19 @@
 import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
+import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
-import {renderComponent} from '@/storybook-utils/common/render-component';
 import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
+
+const {events, args, argTypes, template} = getStorybookHelpers(
+  'atomic-smart-snippet-suggestions',
+  {excludeCategories: ['methods']}
+);
 
 const {decorator, play} = wrapInSearchInterface({
   search: {
     preprocessSearchResponseMiddleware: (r) => {
       r.body.results = [
         {
+          searchUid: 'myawesomeSearchUid',
           title: 'Nurse Sharks',
           uri: 'https://www.inaturalist.org/taxa/49968',
           printableUri: 'https://www.inaturalist.org/taxa/49968',
@@ -35,6 +41,7 @@ const {decorator, play} = wrapInSearchInterface({
           isUserActionView: false,
         },
         {
+          searchUid: 'myawesomeSearchUid',
           title: 'Brine Shrimp',
           uri: 'https://www.inaturalist.org/taxa/86651',
           printableUri: 'https://www.inaturalist.org/taxa/86651',
@@ -62,6 +69,7 @@ const {decorator, play} = wrapInSearchInterface({
           isUserActionView: false,
         },
         {
+          searchUid: 'myawesomeSearchUid',
           title: 'Dove Snails',
           uri: 'https://www.inaturalist.org/taxa/50704',
           printableUri: 'https://www.inaturalist.org/taxa/50704',
@@ -154,9 +162,17 @@ const meta: Meta = {
   component: 'atomic-smart-snippet-suggestions',
   title: 'Search/SmartSnippet/SmartSnippetSuggestions',
   id: 'atomic-smart-snippet-suggestions',
-  render: renderComponent,
+  render: (args) => template(args),
   decorators: [decorator],
-  parameters,
+  parameters: {
+    ...parameters,
+    actions: {
+      handles: events,
+    },
+  },
+  args,
+  argTypes,
+
   play,
 };
 

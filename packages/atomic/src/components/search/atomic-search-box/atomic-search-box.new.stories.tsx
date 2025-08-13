@@ -1,7 +1,7 @@
 import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
+import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {html} from 'lit/static-html.js';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
-import {renderComponent} from '@/storybook-utils/common/render-component';
 import {
   playExecuteFirstSearch,
   wrapInSearchInterface,
@@ -17,14 +17,26 @@ const {decorator, play} = wrapInSearchInterface(
   },
   true
 );
+const {events, args, argTypes, template} = getStorybookHelpers(
+  'atomic-search-box',
+  {excludeCategories: ['methods']}
+);
 
 const meta: Meta = {
   component: 'atomic-search-box',
   title: 'Search/Searchbox/atomic-search-box',
   id: 'atomic-search-box',
-  render: renderComponent,
+  render: (args) => template(args),
   decorators: [decorator],
-  parameters,
+  parameters: {
+    ...parameters,
+    actions: {
+      handles: events,
+    },
+  },
+  args,
+  argTypes,
+
   play,
 };
 
@@ -37,7 +49,7 @@ export const Default: Story = {
 export const RichSearchBox: Story = {
   name: 'With recent queries and instant results',
   args: {
-    'slots-default': ` <atomic-search-box-recent-queries></atomic-search-box-recent-queries>
+    'default-slot': ` <atomic-search-box-recent-queries></atomic-search-box-recent-queries>
       <atomic-search-box-query-suggestions></atomic-search-box-query-suggestions>
       <atomic-search-box-instant-results
         image-size="small"

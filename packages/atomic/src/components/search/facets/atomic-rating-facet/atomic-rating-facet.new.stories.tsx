@@ -1,27 +1,33 @@
 import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
+import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {facetDecorator} from '@/storybook-utils/common/facets-decorator';
-import {renderComponent} from '@/storybook-utils/common/render-component';
 import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
 
 const {decorator, play} = wrapInSearchInterface();
+const {events, args, argTypes, template} = getStorybookHelpers(
+  'atomic-rating-facet',
+  {excludeCategories: ['methods']}
+);
 
 const meta: Meta = {
   component: 'atomic-rating-facet',
   title: 'Search/RatingFacet',
   id: 'atomic-rating-facet',
-  render: renderComponent,
+  render: (args) => template(args),
   decorators: [decorator],
-  parameters,
-  play,
-  argTypes: {
-    'attributes-number-of-values': {
-      name: 'number-of-values',
-      control: {type: 'number', min: 1},
+  parameters: {
+    ...parameters,
+    actions: {
+      handles: events,
     },
   },
+  argTypes,
+
+  play,
   args: {
-    'attributes-number-of-values': 8,
+    ...args,
+    numberOfValues: 8,
   },
 };
 
@@ -30,7 +36,7 @@ export default meta;
 export const Default: Story = {
   name: 'atomic-rating-facet',
   args: {
-    'attributes-field': 'snrating',
+    field: 'snrating',
   },
   decorators: [facetDecorator],
 };
@@ -39,8 +45,8 @@ export const DisplayAsLink: Story = {
   name: 'atomic-rating-facet',
   tags: ['test'],
   args: {
-    'attributes-display-values-as': 'link',
-    'attributes-field': 'snrating',
+    displayValuesAs: 'link',
+    field: 'snrating',
   },
   decorators: [facetDecorator],
 };

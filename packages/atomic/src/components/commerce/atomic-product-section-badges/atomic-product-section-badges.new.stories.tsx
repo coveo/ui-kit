@@ -1,9 +1,14 @@
 import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
+import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {wrapInCommerceInterface} from '@/storybook-utils/commerce/commerce-interface-wrapper';
 import {wrapInCommerceProductList} from '@/storybook-utils/commerce/commerce-product-list-wrapper';
 import {wrapInProductTemplateForSections} from '@/storybook-utils/commerce/product-template-section-wrapper';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
-import {renderComponent} from '@/storybook-utils/common/render-component';
+
+const {events, args, argTypes, template} = getStorybookHelpers(
+  'atomic-product-section-badges',
+  {excludeCategories: ['methods']}
+);
 
 const {decorator: commerceInterfaceDecorator, play} = wrapInCommerceInterface({
   engineConfig: {
@@ -24,8 +29,15 @@ const meta: Meta = {
   component: 'atomic-product-section-badges',
   title: 'Commerce/Product Sections',
   id: 'atomic-product-section-badges',
-  render: renderComponent,
-  parameters,
+  render: (args) => template(args),
+  parameters: {
+    ...parameters,
+    actions: {
+      handles: events,
+    },
+  },
+  args,
+  argTypes,
 };
 
 export default meta;
@@ -39,7 +51,7 @@ export const Default: Story = {
   ],
   play,
   args: {
-    'slots-default': `
+    'default-slot': `
       <div style="display: flex; gap: 8px; flex-wrap: wrap;">
         <span class="badge badge-primary" style="background: #ef4444; color: white; padding: 4px 8px; border-radius: 4px; font-size: 12px; font-weight: bold;">NEW</span>
         <span class="badge badge-secondary" style="background: #f59e0b; color: white; padding: 4px 8px; border-radius: 4px; font-size: 12px; font-weight: bold;">SALE</span>
