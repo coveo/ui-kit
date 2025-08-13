@@ -52,13 +52,14 @@ export const Default: Story = {
           <atomic-insight-user-actions-toggle></atomic-insight-user-actions-toggle>
           <atomic-insight-tabs>
             <atomic-insight-tab
-              label="All"
-              expression=""
-              active="true"
-            ></atomic-insight-tab
-            ><atomic-insight-tab
               label="Videos"
               expression="@ytchanneltitle"
+              active="true"
+            ></atomic-insight-tab
+            >
+            <atomic-insight-tab
+              label="All"
+              expression=""
             ></atomic-insight-tab
             ><atomic-insight-tab
               label="Documentation"

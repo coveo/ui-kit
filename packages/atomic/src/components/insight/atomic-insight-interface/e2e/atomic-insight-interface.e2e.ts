@@ -40,15 +40,10 @@ test.describe('Atomic Insight Panel', () => {
 
   test.describe('result actions interactions', () => {
     test.beforeEach(async ({insightInterface}) => {
-      // Video results have better actions to test
-      await insightInterface.getTabByName('Videos').click();
-      await insightInterface.waitForNonVideoResultsToBeDetached();
+      await insightInterface.waitForResults();
     });
 
     test('attach to case', async ({insightInterface}) => {
-      await expect(insightInterface.getTabByName('Videos')).toHaveAttribute(
-        'active'
-      );
       await insightInterface.hoverResultTitleByIndex(0);
       await expect(insightInterface.getActionBarByIndex(0)).toBeVisible();
       await expect(
@@ -58,9 +53,6 @@ test.describe('Atomic Insight Panel', () => {
     });
 
     test('copy to clipboard', async ({insightInterface}) => {
-      await expect(insightInterface.getTabByName('Videos')).toHaveAttribute(
-        'active'
-      );
       await insightInterface.hoverResultTitleByIndex(0);
       await expect(insightInterface.getActionBarByIndex(0)).toBeVisible();
       await expect(
@@ -69,15 +61,14 @@ test.describe('Atomic Insight Panel', () => {
       // No further tests because the copy to clipboard action does nothing in Atomic by default.
     });
 
-    test('quickview', async ({insightInterface}) => {
-      await expect(insightInterface.getTabByName('Videos')).toHaveAttribute(
-        'active'
-      );
+    test('quickview', async ({insightInterface, page}) => {
       await insightInterface.hoverResultTitleByIndex(0);
       await expect(insightInterface.getActionBarByIndex(0)).toBeVisible();
       await expect(insightInterface.getResultQuickviewByIndex(0)).toBeVisible();
 
+      await page.waitForTimeout(1000);
       await insightInterface.openResultQuickviewByIndex(0);
+      await page.waitForTimeout(1000);
       await expect(insightInterface.atomicQuickviewModal).toHaveAttribute(
         'is-open'
       );

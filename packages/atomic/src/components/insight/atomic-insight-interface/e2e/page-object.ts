@@ -74,10 +74,6 @@ export class InsightInterfacePageObject extends BasePageObject<'atomic-insight-i
     return this.insightResults.getByRole('link', {name: 'Connect'});
   }
 
-  async waitForNonVideoResultsToBeDetached() {
-    await this.connectResultLink.waitFor({state: 'detached'});
-  }
-
   getResultByIndex(index: number) {
     return this.insightResults.nth(index);
   }
