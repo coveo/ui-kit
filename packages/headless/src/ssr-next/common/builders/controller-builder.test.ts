@@ -49,7 +49,7 @@ describe('ControllerBuilder', () => {
 
     it('should pass additional args to build method', () => {
       const additionalArgs = ['arg1', 'arg2'];
-      builder.setAdditionalArgs(additionalArgs);
+      builder.withAdditionalArgs(additionalArgs);
 
       builder.build();
 
@@ -103,7 +103,7 @@ describe('ControllerBuilder', () => {
 
     it('should pass additional args to buildWithProps method', () => {
       const additionalArgs = ['arg1', 'arg2'];
-      builder.setAdditionalArgs(additionalArgs);
+      builder.withAdditionalArgs(additionalArgs);
 
       builder.build();
 

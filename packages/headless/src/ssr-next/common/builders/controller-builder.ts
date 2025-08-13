@@ -18,24 +18,24 @@ export class ControllerBuilder<
   TProps,
   TController extends Controller = Controller,
 > {
-  private definition: TDefinition;
-  private engine: TEngine;
-  private props?: TProps;
-  private additionalArgs: unknown[] = [];
+  private _definition: TDefinition;
+  private _engine: TEngine;
+  private _props?: TProps;
+  private _additionalArgs: unknown[] = [];
 
   constructor(definition: TDefinition, engine: TEngine, props?: TProps) {
-    this.definition = definition;
-    this.engine = engine;
-    this.props = props;
+    this._definition = definition;
+    this._engine = engine;
+    this._props = props;
   }
 
-  public setAdditionalArgs(additionalArgs: unknown[] = []): this {
-    this.additionalArgs = additionalArgs;
+  public withAdditionalArgs(additionalArgs: unknown[] = []): this {
+    this._additionalArgs = additionalArgs;
     return this;
   }
 
   public build(): TController {
-    if ('build' in this.definition) {
+    if ('build' in this._definition) {
       return this.buildWithoutProps();
     } else {
       return this.buildWithProps();
@@ -43,16 +43,16 @@ export class ControllerBuilder<
   }
 
   private buildWithoutProps(): TController {
-    const buildFn = this.definition.build!;
-    return buildFn(this.engine, ...this.additionalArgs);
+    const buildFn = this._definition.build!;
+    return buildFn(this._engine, ...this._additionalArgs);
   }
 
   private buildWithProps(): TController {
-    const buildWithPropsFn = this.definition.buildWithProps!;
+    const buildWithPropsFn = this._definition.buildWithProps!;
     const controller = buildWithPropsFn(
-      this.engine,
-      this.props,
-      ...this.additionalArgs
+      this._engine,
+      this._props,
+      ...this._additionalArgs
     );
 
     return {...controller, initialState: controller.state} as TController;
