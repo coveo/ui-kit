@@ -90,9 +90,8 @@ export type SearchEngineDefinition<
  * const staticState = await searchEngine.fetchStaticState({
  *   navigatorContext: {
  *     forwardedFor: req.ip,
- *     referrer: req.headers.referer,
- *     userAgent: req.headers['user-agent'],
- *     location: req.url,
+ *     referrer: req.headers.referer || null,
+ *     userAgent: req.headers['user-agent'] || null,
  *     clientId: 'abc123'
  *   }
  * });

@@ -28,9 +28,8 @@ type FetchStaticStateOptions = {
  * const staticState = await engineDefinition.fetchStaticState({
  *   navigatorContext: {
  *     forwardedFor: request.ip,
- *     referrer: request.headers.referer,
- *     userAgent: request.headers['user-agent'],
- *     location: request.url,
+ *     referrer: request.headers.referer || null,
+ *     userAgent: request.headers['user-agent'] || null,
  *     clientId: 'session-123'
  *   }
  * });

@@ -29,9 +29,8 @@ import type {CommerceEngineDefinition} from '../types/engine.js';
  * const staticState = await listingEngineDefinition.fetchStaticState({
  *   navigatorContext: {
  *     forwardedFor: req.ip,
- *     referrer: req.headers.referer,
- *     userAgent: req.headers['user-agent'],
- *     location: req.url,
+ *     referrer: req.headers.referer || null,
+ *     userAgent: req.headers['user-agent'] || null,
  *     clientId: 'unique-session-id'
  *   }
  * });
@@ -42,9 +41,8 @@ import type {CommerceEngineDefinition} from '../types/engine.js';
  *   const state = await listingEngineDefinition.fetchStaticState({
  *     navigatorContext: {
  *       forwardedFor: req.ip,
- *       referrer: req.get('Referer'),
- *       userAgent: req.get('User-Agent'),
- *       location: req.originalUrl,
+ *       referrer: req.headers.referer || null,
+ *       userAgent: req.headers['user-agent'] || null,
  *       clientId: req.sessionID
  *     }
  *   });

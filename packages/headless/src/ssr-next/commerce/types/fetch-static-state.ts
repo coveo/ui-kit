@@ -28,7 +28,6 @@ export interface FetchStaticStateOptions {
    *     forwardedFor: req.ip,
    *     referrer: req.headers.referer || null,
    *     userAgent: req.headers['user-agent'] || null,
-   *     location: req.url,
    *     clientId: req.sessionID || 'anonymous'
    *   }
    * });
