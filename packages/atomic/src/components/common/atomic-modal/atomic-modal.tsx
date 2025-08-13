@@ -145,16 +145,16 @@ export class AtomicModal implements InitializableComponent<AnyBindings> {
         <header part="header-wrapper" class="flex flex-col items-center">
           <div
             part="header"
-            class="flex w-full max-w-lg justify-between text-xl"
+            class="flex justify-between w-full max-w-lg text-xl"
             id={this.headerId}
           >
             <slot name="header"></slot>
           </div>
         </header>
-        <hr part="header-ruler" class="border-neutral border-t"></hr>
+        <hr part="header-ruler" class="border-t border-neutral"></hr>
         <div
           part="body-wrapper"
-          class="flex w-full grow flex-col items-center overflow-auto"
+          class="flex w-full grow flex-col items-center overflow-auto [scrollbar-gutter:stable_both-edges]"
         >
           <div
             part="body"
@@ -172,7 +172,7 @@ export class AtomicModal implements InitializableComponent<AnyBindings> {
         </div>
         <footer
           part="footer-wrapper"
-          class="border-neutral bg-background z-10 flex w-full flex-col items-center border-t"
+          class="z-10 flex flex-col items-center w-full border-t border-neutral bg-background"
         >
           <div part="footer" class="w-full max-w-lg">
             <slot name="footer"></slot>
