@@ -10,6 +10,7 @@
           slot="actions"
           disabled={notConfigured}
           engine-id={engineId}
+          with-input
         ></c-action-perform-search>
       </c-configurator>
     </div>
@@ -74,6 +75,7 @@
             collapsible={config.collapsible}
             max-collapsed-height={config.maxCollapsedHeight}
             with-toggle={config.withToggle}
+            answer-configuration-id={config.answerConfigurationId}
           >
           </c-quantic-generated-answer>
         </div>

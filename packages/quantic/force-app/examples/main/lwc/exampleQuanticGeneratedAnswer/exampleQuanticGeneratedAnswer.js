@@ -44,6 +44,13 @@ export default class ExampleQuanticGeneratedAnswer extends LightningElement {
       defaultValue: 'search',
     },
     {
+      attribute: 'answerConfigurationId',
+      label: 'Answer Configuration Id',
+      description:
+        'The unique identifier of the answer configuration to use to generate the answer.',
+      defaultValue: '',
+    },
+    {
       attribute: 'withFacets',
       label: 'With Facets',
       description:
