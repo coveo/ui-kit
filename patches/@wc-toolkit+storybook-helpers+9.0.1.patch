@@ -1,0 +1,15 @@
+diff --git a/node_modules/@wc-toolkit/storybook-helpers/dist/index.js b/node_modules/@wc-toolkit/storybook-helpers/dist/index.js
+index 1c0f4ce..600a495 100644
+--- a/node_modules/@wc-toolkit/storybook-helpers/dist/index.js
++++ b/node_modules/@wc-toolkit/storybook-helpers/dist/index.js
+@@ -726,8 +726,9 @@ function setArgObserver(component) {
+       if (mutation.attributeName === "class" && isUpdating) {
+         return;
+       }
+-      isUpdating = true;
+       const attribute = attributes[`${mutation.attributeName}`];
++      if (!attribute) { return; }
++      isUpdating = true;
+       if (attribute?.control === "boolean" || attribute?.control?.type === "boolean") {
+         updateArgs({
+           [`${mutation.attributeName}`]: mutation.target?.hasAttribute(mutation.attributeName || "")
