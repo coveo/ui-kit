@@ -1,397 +1,240 @@
-import type {Locator, Page, Request} from '@playwright/test';
-import {
-  AnalyticsMode,
-  AnalyticsModeEnum,
-} from '../../../../../../playwright/utils/analyticsMode';
-import {AnalyticsObject} from '../../../../../../playwright/page-object/analytics';
-import {isRgaEvaluationRequest} from '../../../../../../playwright/utils/requests';
+import {testSearch, testInsight, expect} from './fixture';
+import {useCaseTestCases} from '../../../../../../playwright/utils/useCase';
+import genQaData from './data';
+import {analyticsModeTest} from '../../../../../../playwright/utils/analyticsMode';
 
-const minimumCitationTooltipDisplayDurationMs = 1500;
-const removeUnknownFields = (object: Record<string, unknown>) => {
-  return Object.fromEntries(
-    Object.entries(object).filter(([, value]) => value !== 'unknown')
-  );
+const fixtures = {
+  search: testSearch,
+  insight: testInsight,
 };
 
-export class GeneratedAnswerObject {
-  private analyticsMode: AnalyticsMode;
+const exampleAnswerConfigurationId = '3bb64276-0d26-4afc-be08-b0a8f2295de4';
 
-  constructor(
-    private page: Page,
-    private streamId: string,
-    private analytics: AnalyticsObject,
-    private answerApiEnabled: boolean
-  ) {
-    this.page = page;
-    this.streamId = streamId;
-    this.analytics = analytics;
-    this.analyticsMode = this.analytics.analyticsMode;
-    this.answerApiEnabled = answerApiEnabled;
-  }
+useCaseTestCases.forEach((useCase) => {
+  let test = fixtures[useCase.value];
 
-  get likeButton(): Locator {
-    return this.page.getByRole('button', {name: 'This answer was helpful'});
-  }
-
-  get dislikeButton(): Locator {
-    return this.page.getByRole('button', {name: 'This answer was not helpful'});
-  }
-
-  get copyToClipboardButton(): Locator {
-    return this.page.getByRole('button', {name: 'Copy'});
-  }
-
-  get toggleButton(): Locator {
-    return this.page.getByTestId('generated-answer__toggle-button');
-  }
-
-  questionContainer(questionId: string): Locator {
-    return this.page.getByTestId(questionId);
-  }
-
-  answerOption(questionId: string, answerValue: string): Locator {
-    return this.questionContainer(questionId).locator('.slds-radio_button', {
-      hasText: new RegExp(`^${answerValue}$`),
+  test.describe(`quantic generated answer ${useCase.label}`, () => {
+    test.use({
+      genQaData,
     });
-  }
 
-  get feedbackDocumentUrlInput(): Locator {
-    return this.page.locator(
-      '.feedback-modal-qna__body input[name="documentUrl"]'
-    );
-  }
+    analyticsModeTest.forEach((analytics) => {
+      test.describe(analytics.label, () => {
+        test.use({
+          analyticsMode: analytics.mode,
+        });
 
-  get feedbackDetailsInput(): Locator {
-    return this.page
-      .locator('.feedback-modal-qna__body [data-name="details"]')
-      .getByRole('textbox');
-  }
-
-  get submitFeedbackButton(): Locator {
-    return this.page.getByRole('button', {name: /Send feedback/i});
-  }
-
-  get citationLink(): Locator {
-    return this.page
-      .getByTestId('generated-answer__citations')
-      .locator('.citation__link');
-  }
-
-  get showMoreButton(): Locator {
-    return this.page.getByTestId('generated-answer__answer-toggle');
-  }
-
-  async hoverOverCitation(index: number): Promise<void> {
-    // waiting 500ms to allow the component to render completely, cause any re-rendering abort the hover action.
-    await this.page.waitForTimeout(500);
-    await this.citationLink.nth(index).hover();
-    await this.page.waitForTimeout(minimumCitationTooltipDisplayDurationMs);
-    await this.page.mouse.move(0, 0);
-  }
-
-  async clickOnCitation(index: number): Promise<void> {
-    await this.citationLink.nth(index).click();
-  }
-
-  async typeInFeedbackDocumentUrlInput(text: string): Promise<void> {
-    await this.feedbackDocumentUrlInput.fill(text);
-  }
-
-  async typeInFeedbackDetailsInput(text: string): Promise<void> {
-    await this.feedbackDetailsInput.fill(text);
-  }
-
-  async clickSubmitFeedbackButton(): Promise<void> {
-    await this.submitFeedbackButton.click();
-  }
-
-  async fillFeedbackForm(answers: Record<string, string>): Promise<void> {
-    for (const [questionId, answerValue] of Object.entries(answers)) {
-      const option = this.answerOption(questionId, answerValue);
-      // eslint-disable-next-line no-await-in-loop
-      await option.click();
-    }
-  }
-
-  async clickLikeButton(): Promise<void> {
-    await this.likeButton.click();
-  }
-
-  async clickDislikeButton(): Promise<void> {
-    await this.dislikeButton.click();
-  }
-
-  async clickCopyToClipboardButton(): Promise<void> {
-    await this.copyToClipboardButton.click();
-  }
-
-  async clickToggleButton(): Promise<void> {
-    await this.toggleButton.click();
-  }
-
-  async waitForStreamEndAnalytics(): Promise<Request | boolean> {
-    if (this.analyticsMode === AnalyticsModeEnum.legacy) {
-      return this.analytics.waitForCustomUaAnalytics(
-        {
-          eventType: 'generatedAnswer',
-          eventValue: 'generatedAnswerStreamEnd',
-        },
-        (event) =>
-          event?.customData?.generativeQuestionAnsweringId === this.streamId
-      );
-    }
-    return this.analytics.waitForEventProtocolAnalytics(
-      'Rga.AnswerReceived',
-      (event) => event.answerGenerated === true
-    );
-  }
-
-  async waitForLikeGeneratedAnswerAnalytics(): Promise<Request> {
-    if (this.analyticsMode === AnalyticsModeEnum.legacy) {
-      return this.analytics.waitForCustomUaAnalytics(
-        {
-          eventType: 'generatedAnswer',
-          eventValue: 'likeGeneratedAnswer',
-        },
-        (event) =>
-          event?.customData?.generativeQuestionAnsweringId === this.streamId
-      );
-    }
-    return this.analytics.waitForEventProtocolAnalytics(
-      'Rga.AnswerAction',
-      (event) => event.action === 'like'
-    );
-  }
-
-  async waitForDislikeGeneratedAnswerAnalytics(): Promise<Request> {
-    if (this.analyticsMode === AnalyticsModeEnum.legacy) {
-      return this.analytics.waitForCustomUaAnalytics(
-        {
-          eventType: 'generatedAnswer',
-          eventValue: 'dislikeGeneratedAnswer',
-        },
-        (event) =>
-          event?.customData?.generativeQuestionAnsweringId === this.streamId
-      );
-    }
-    return this.analytics.waitForEventProtocolAnalytics(
-      'Rga.AnswerAction',
-      (event) => event.action === 'dislike'
-    );
-  }
-
-  async waitForCopyToClipboardAnalytics(): Promise<Request> {
-    if (this.analyticsMode === AnalyticsModeEnum.legacy) {
-      return this.analytics.waitForCustomUaAnalytics(
-        {
-          eventType: 'generatedAnswer',
-          eventValue: 'generatedAnswerCopyToClipboard',
-        },
-        (event) =>
-          event?.customData?.generativeQuestionAnsweringId === this.streamId
-      );
-    }
-    return this.analytics.waitForEventProtocolAnalytics(
-      'Rga.AnswerAction',
-      (event) => event.action === 'copyToClipboard'
-    );
-  }
-
-  async waitForShowAnswersAnalytics(): Promise<Request> {
-    if (this.analyticsMode === AnalyticsModeEnum.legacy) {
-      return this.analytics.waitForCustomUaAnalytics(
-        {
-          eventType: 'generatedAnswer',
-          eventValue: 'generatedAnswerShowAnswers',
-        },
-        (event) =>
-          event?.customData?.generativeQuestionAnsweringId === this.streamId
-      );
-    }
-    return this.analytics.waitForEventProtocolAnalytics(
-      'Rga.AnswerAction',
-      (event) => event.action === 'show'
-    );
-  }
-
-  async waitForHideAnswersAnalytics(): Promise<Request> {
-    if (this.analyticsMode === AnalyticsModeEnum.legacy) {
-      return this.analytics.waitForCustomUaAnalytics(
-        {
-          eventType: 'generatedAnswer',
-          eventValue: 'generatedAnswerHideAnswers',
-        },
-        (event) =>
-          event?.customData?.generativeQuestionAnsweringId === this.streamId
-      );
-    }
-    return this.analytics.waitForEventProtocolAnalytics(
-      'Rga.AnswerAction',
-      (event) => event.action === 'hide'
-    );
-  }
-
-  async waitForSourceHoverAnalytics(
-    expectedPayload: Record<string, any>
-  ): Promise<Request> {
-    if (this.analyticsMode === AnalyticsModeEnum.legacy) {
-      return this.analytics.waitForCustomUaAnalytics(
-        {
-          eventType: 'generatedAnswer',
-          eventValue: 'generatedAnswerSourceHover',
-        },
-        (event) =>
-          event?.customData?.generativeQuestionAnsweringId === this.streamId &&
-          Object.keys(expectedPayload).every(
-            (key) => event?.customData?.[key] === expectedPayload[key]
-          )
-      );
-    }
-    return this.analytics.waitForEventProtocolAnalytics(
-      'Rga.CitationHover',
-      (event) =>
-        event.citationId === expectedPayload.citationId &&
-        event.itemMetadata?.uniqueFieldName === 'permanentid' &&
-        event.itemMetadata?.uniqueFieldValue === expectedPayload.permanentId
-    );
-  }
-
-  async waitForEvaluationsRequest(
-    expectedPayload: Record<string, any>
-  ): Promise<Request> {
-    const payloadToMatch = removeUnknownFields(expectedPayload);
-
-    const evaluationRequest = this.page.waitForRequest((request) => {
-      const event = request.postDataJSON?.();
-      if (isRgaEvaluationRequest(request)) {
-        return AnalyticsObject.isMatchingPayload(
+        const configurations = [
           {
-            correctTopic: event.details?.correctTopic ? 'yes' : 'no',
-            readable: event.details?.readable ? 'yes' : 'no',
-            hallucinationFree: event.details?.hallucinationFree ? 'yes' : 'no',
-            documented: event.details?.documented ? 'yes' : 'no',
-            helpful: event.helpful,
-            details: event.additionalNotes,
-            documentUrl: event.correctAnswerUrl,
-          },
-          payloadToMatch
-        );
-      }
-      return false;
-    });
-    return evaluationRequest;
-  }
-
-  async waitForFeedbackSubmitRequest(
-    expectedPayload: Record<string, any>
-  ): Promise<Request> {
-    if (this.answerApiEnabled) {
-      return this.waitForEvaluationsRequest(expectedPayload);
-    }
-    if (this.analyticsMode === AnalyticsModeEnum.legacy) {
-      return this.analytics.waitForCustomUaAnalytics(
-        {
-          eventType: 'generatedAnswer',
-          eventValue: 'generatedAnswerFeedbackSubmitV2',
-        },
-        (event) =>
-          event?.customData?.generativeQuestionAnsweringId === this.streamId &&
-          Object.keys(expectedPayload).every(
-            (key) => event?.customData?.[key] === expectedPayload[key]
-          )
-      );
-    }
-
-    const payloadToMatch = removeUnknownFields(expectedPayload);
-
-    return this.analytics.waitForEventProtocolAnalytics(
-      'Rga.SubmitFeedback',
-      (event) =>
-        AnalyticsObject.isMatchingPayload(
-          {
-            correctTopic: event.details?.correctTopic ? 'yes' : 'no',
-            readable: event.details?.readable ? 'yes' : 'no',
-            hallucinationFree: event.details?.hallucinationFree ? 'yes' : 'no',
-            documented: event.details?.documented ? 'yes' : 'no',
-            helpful: event.helpful,
-            details: event.additionalNotes,
-            documentUrl: event.correctAnswerUrl,
-          },
-          payloadToMatch
-        )
-    );
-  }
-
-  async waitForCitationClickAnalytics(
-    expectedPayload: Record<string, any>
-  ): Promise<Request> {
-    if (this.analyticsMode === AnalyticsModeEnum.legacy) {
-      return this.analytics.waitForClickUaAnalytics(
-        'generatedAnswerCitationClick',
-        (event) =>
-          event?.customData?.generativeQuestionAnsweringId === this.streamId &&
-          AnalyticsObject.isMatchingPayload(
-            {
-              documentTitle: event.documentTitle,
-              sourceName: event.sourceName,
-              documentPosition: event.documentPosition,
-              documentUri: event.documentUri,
-              documentUrl: event.documentUrl,
-              citationId: event.customData?.citationId,
-              contentIDKey: event.customData?.documentId?.contentIdKey,
-              contentIDValue: event.customData?.documentId?.contentIdValue,
+            name: 'with answerConfigurationId',
+            options: {
+              answerConfigurationId: exampleAnswerConfigurationId,
             },
-            expectedPayload
-          )
-      );
-    }
-    const payloadToMatch = {
-      citationId: expectedPayload.citationId,
-      uniqueFieldName: expectedPayload.contentIDKey,
-      uniqueFieldValue: expectedPayload.contentIDValue,
-      title: expectedPayload.documentTitle,
-      url: expectedPayload.documentUrl,
-    };
-    return this.analytics.waitForEventProtocolAnalytics(
-      'Rga.CitationClick',
-      (event) =>
-        AnalyticsObject.isMatchingPayload(
-          {
-            citationId: event.citationId,
-            uniqueFieldName: event.itemMetadata?.uniqueFieldName,
-            uniqueFieldValue: event.itemMetadata?.uniqueFieldValue,
-            title: event.itemMetadata?.title,
-            url: event.itemMetadata?.url,
           },
-          payloadToMatch
-        )
-    );
-  }
+          {
+            name: 'without answerConfigurationId',
+            options: {},
+          },
+        ];
 
-  async mockStreamResponse(
-    url: string,
-    body: Array<{payloadType: string; payload: string; finishReason?: string}>,
-    answerId?: string
-  ) {
-    await this.page.route(url, (route) => {
-      let bodyText = '';
-      body.forEach((data) => {
-        bodyText += `data: ${JSON.stringify(data)} \n\n`;
-      });
+        for (const config of configurations) {
+          test.describe(config.name, () => {
+            test.use({analyticsMode: analytics.mode, options: config.options});
 
-      route.fulfill({
-        status: 200,
-        body: bodyText,
-        headers: {
-          'content-type': 'text/event-stream',
-          ...(answerId && {
-            'access-control-expose-headers': 'X-Answer-Id',
-            'x-answer-id': answerId,
-          }),
-        },
+            test.describe('when the answer has been generated', () => {
+              test('should send a stream end analytics event', async ({
+                generatedAnswer,
+              }) => {
+                await generatedAnswer.streamEndAnalyticRequestPromise;
+              });
+            });
+
+            test.describe('when providing positive feedback', () => {
+              test('should send positive feedback analytics containing all details', async ({
+                generatedAnswer,
+              }) => {
+                await generatedAnswer.streamEndAnalyticRequestPromise;
+                const likeAnalyticRequestPromise =
+                  generatedAnswer.waitForLikeGeneratedAnswerAnalytics();
+                await generatedAnswer.clickLikeButton();
+                await likeAnalyticRequestPromise;
+
+                const exampleDocumentUrl = 'https://www.coveo.com/';
+                const exampleDetails = 'example details...';
+                await generatedAnswer.fillFeedbackForm({
+                  correctTopic: 'Yes',
+                  hallucinationFree: 'Yes',
+                  documented: 'Not sure',
+                  readable: 'Yes',
+                });
+                await generatedAnswer.typeInFeedbackDocumentUrlInput(
+                  exampleDocumentUrl
+                );
+                await generatedAnswer.typeInFeedbackDetailsInput(
+                  exampleDetails
+                );
+
+                const feedbackRequestPromise =
+                  generatedAnswer.waitForFeedbackSubmitRequest({
+                    correctTopic: 'yes',
+                    hallucinationFree: 'yes',
+                    documented: 'unknown',
+                    readable: 'yes',
+                    documentUrl: exampleDocumentUrl,
+                    details: exampleDetails,
+                    helpful: true,
+                  });
+
+                await generatedAnswer.clickSubmitFeedbackButton();
+                await feedbackRequestPromise;
+              });
+            });
+
+            test.describe('when providing negative feedback', () => {
+              test('should send negative feedback analytics containing all details', async ({
+                generatedAnswer,
+              }) => {
+                await generatedAnswer.streamEndAnalyticRequestPromise;
+                const dislikeAnalyticRequestPromise =
+                  generatedAnswer.waitForDislikeGeneratedAnswerAnalytics();
+                await generatedAnswer.clickDislikeButton();
+                await dislikeAnalyticRequestPromise;
+
+                const exampleDocumentUrl = 'https://www.coveo.com/';
+                const exampleDetails = 'example details...';
+                await generatedAnswer.fillFeedbackForm({
+                  correctTopic: 'No',
+                  hallucinationFree: 'Not sure',
+                  documented: 'No',
+                  readable: 'No',
+                });
+                await generatedAnswer.typeInFeedbackDocumentUrlInput(
+                  exampleDocumentUrl
+                );
+                await generatedAnswer.typeInFeedbackDetailsInput(
+                  exampleDetails
+                );
+
+                const feedbackRequestPromise =
+                  generatedAnswer.waitForFeedbackSubmitRequest({
+                    correctTopic: 'no',
+                    hallucinationFree: 'unknown',
+                    documented: 'no',
+                    readable: 'no',
+                    documentUrl: exampleDocumentUrl,
+                    details: exampleDetails,
+                    helpful: false,
+                  });
+                await generatedAnswer.clickSubmitFeedbackButton();
+                await feedbackRequestPromise;
+              });
+            });
+
+            test.describe('when copying the generated answer to clipboard', () => {
+              test('should send a copy to clipboard analytics event', async ({
+                generatedAnswer,
+              }) => {
+                await generatedAnswer.streamEndAnalyticRequestPromise;
+                const analyticRequestPromise =
+                  generatedAnswer.waitForCopyToClipboardAnalytics();
+                await generatedAnswer.clickCopyToClipboardButton();
+                await analyticRequestPromise;
+              });
+            });
+
+            test.describe('when the property withToggle is set to true', () => {
+              test.use({
+                options: {
+                  ...config.options,
+                  withToggle: true,
+                },
+              });
+
+              test('should allow toggling the generated OFF and ON and log analytics', async ({
+                generatedAnswer,
+              }) => {
+                await generatedAnswer.streamEndAnalyticRequestPromise;
+                const hideAnswerAnalyticRequestPromise =
+                  generatedAnswer.waitForHideAnswersAnalytics();
+                await generatedAnswer.clickToggleButton();
+                await hideAnswerAnalyticRequestPromise;
+
+                const showAnswerAnalyticRequestPromise =
+                  generatedAnswer.waitForShowAnswersAnalytics();
+                await generatedAnswer.clickToggleButton();
+                await showAnswerAnalyticRequestPromise;
+              });
+            });
+
+            test.describe('when interacting with citations', () => {
+              test.describe('when hovering over a citation', () => {
+                test('should log citation hover analytics', async ({
+                  generatedAnswer,
+                }) => {
+                  await generatedAnswer.streamEndAnalyticRequestPromise;
+                  const citationIndex = 0;
+                  const {id, permanentid} = genQaData.citations[citationIndex];
+                  const citationHoverAnalyticRequestPromise =
+                    generatedAnswer.waitForSourceHoverAnalytics({
+                      citationId: id,
+                      permanentId: permanentid,
+                    });
+
+                  await generatedAnswer.hoverOverCitation(citationIndex);
+                  await citationHoverAnalyticRequestPromise;
+                });
+              });
+
+              test.describe('when clicking on a citation', () => {
+                test('should log citation click analytics', async ({
+                  generatedAnswer,
+                }) => {
+                  await generatedAnswer.streamEndAnalyticRequestPromise;
+                  const citationIndex = 0;
+                  const {id, title, source, uri, clickUri, permanentid} =
+                    genQaData.citations[citationIndex];
+                  const citationClickAnalyticRequestPromise =
+                    generatedAnswer.waitForCitationClickAnalytics({
+                      documentTitle: title,
+                      sourceName: source,
+                      documentPosition: citationIndex + 1,
+                      documentUri: uri,
+                      documentUrl: clickUri,
+                      citationId: id,
+                      contentIDKey: 'permanentid',
+                      contentIDValue: permanentid,
+                    });
+                  await generatedAnswer.clickOnCitation(citationIndex);
+                  await citationClickAnalyticRequestPromise;
+                });
+              });
+            });
+
+            test.describe('when the answer is generated in a single shot and the answer exceeds the maximum height', () => {
+              test.use({
+                options: {
+                  ...config.options,
+                  collapsible: true,
+                },
+              });
+              test('should display the answer as collapsed', async ({
+                generatedAnswer,
+              }) => {
+                await generatedAnswer.streamEndAnalyticRequestPromise;
+                const expectedShowMoreLabel = 'Show more';
+                await generatedAnswer.streamEndAnalyticRequestPromise;
+
+                const showMoreButton = generatedAnswer.showMoreButton;
+                expect(showMoreButton).not.toBeNull();
+
+                const showMoreButtonLabel = await showMoreButton.textContent();
+                expect(showMoreButtonLabel).not.toBeNull();
+                expect(showMoreButtonLabel).toEqual(expectedShowMoreLabel);
+              });
+            });
+          });
+        }
       });
     });
-  }
-
-  streamEndAnalyticRequestPromise!: Promise<boolean | Request>;
-}
+  });
+});
