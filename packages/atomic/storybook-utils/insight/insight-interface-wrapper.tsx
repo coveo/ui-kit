@@ -25,16 +25,15 @@ export const wrapInInsightInterface = (
         box-shadow: 0px 3px 24px 0px #0000001a;
       }
     </style>
-    <atomic-insight-interface data-testid="root-interface">
+    <atomic-insight-interface>
       ${story()}
     </atomic-insight-interface>
   `,
   play: async ({canvasElement, step}) => {
     await customElements.whenDefined('atomic-insight-interface');
-    const canvas = within(canvasElement);
     const insightInterface =
-      await canvas.findByTestId<HTMLAtomicInsightInterfaceElement>(
-        'root-interface'
+      canvasElement.querySelector<HTMLAtomicInsightInterfaceElement>(
+        'atomic-insight-interface'
       );
     await step('Render the Insight Interface', async () => {
       await insightInterface!.initialize({

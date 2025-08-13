@@ -21,15 +21,13 @@ export const wrapInCommerceInterface = ({
   play: (context: StoryContext) => Promise<void>;
 } => ({
   decorator: (story) => html`
-    <atomic-commerce-interface type="${type}" data-testid="root-interface">
+    <atomic-commerce-interface type="${type}">
       ${story()}
     </atomic-commerce-interface>
   `,
   play: async ({canvasElement, step}) => {
     await customElements.whenDefined('atomic-commerce-interface');
-    const canvas = within(canvasElement);
-    const commerceInterface =
-      await canvas.findByTestId<AtomicCommerceInterface>('root-interface');
+    const commerceInterface = canvasElement.querySelector<AtomicCommerceInterface>('atomic-commerce-interface')!;
     await step('Render the Commerce Interface', async () => {
       await commerceInterface!.initialize({
         ...getSampleCommerceEngineConfiguration(),
@@ -48,10 +46,7 @@ export const wrapInCommerceInterface = ({
 export const playExecuteFirstRequest: (
   context: StoryContext
 ) => Promise<void> = async ({canvasElement, step}) => {
-  const canvas = within(canvasElement);
-
-  const commerceInterface =
-    await canvas.findByTestId<AtomicCommerceInterface>('root-interface');
+  const commerceInterface = canvasElement.querySelector<AtomicCommerceInterface>('atomic-commerce-interface')!;
   await step('Execute the first request', async () => {
     await commerceInterface!.executeFirstRequest();
   });

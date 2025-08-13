@@ -18,17 +18,14 @@ export const wrapInRecommendationInterface = ({
   play: (context: StoryContext) => Promise<void>;
 } => ({
   decorator: (story) => html`
-    <atomic-recs-interface data-testid="root-interface">
+    <atomic-recs-interface>
       ${story()}
     </atomic-recs-interface>
   `,
   play: async ({canvasElement, step}) => {
     await customElements.whenDefined('atomic-recs-interface');
-    const canvas = within(canvasElement);
     const recsInterface =
-      await canvas.findByTestId<HTMLAtomicRecsInterfaceElement>(
-        'root-interface'
-      );
+      canvasElement.querySelector<HTMLAtomicRecsInterfaceElement>('atomic-recs-interface')!;
     await step('Render the Recs Interface', async () => {
       await recsInterface!.initialize({
         ...getSampleRecommendationEngineConfiguration(),
