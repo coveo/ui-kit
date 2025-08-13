@@ -1,10 +1,10 @@
 import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
+import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {html} from 'lit';
 import {wrapInCommerceInterface} from '@/storybook-utils/commerce/commerce-interface-wrapper';
 import {wrapInCommerceProductList} from '@/storybook-utils/commerce/commerce-product-list-wrapper';
 import {wrapInProductTemplate} from '@/storybook-utils/commerce/commerce-product-template-wrapper';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
-import {renderComponent} from '@/storybook-utils/common/render-component';
 
 const {decorator: commerceInterfaceDecorator, play} = wrapInCommerceInterface({
   type: 'product-listing',
@@ -27,12 +27,16 @@ const {decorator: commerceInterfaceDecorator, play} = wrapInCommerceInterface({
 });
 const {decorator: commerceProductListDecorator} = wrapInCommerceProductList();
 const {decorator: productTemplateDecorator} = wrapInProductTemplate();
+const {events, args, argTypes, template} = getStorybookHelpers(
+  'atomic-product-image',
+  {excludeCategories: ['methods']}
+);
 
 const meta: Meta = {
   component: 'atomic-product-image',
   title: 'Commerce/Product Image',
   id: 'atomic-product-image',
-  render: renderComponent,
+  render: (args) => template(args),
   decorators: [
     (story) => html`
     <atomic-product-section-visual>
@@ -43,7 +47,15 @@ const meta: Meta = {
     commerceProductListDecorator,
     commerceInterfaceDecorator,
   ],
-  parameters,
+  parameters: {
+    ...parameters,
+    actions: {
+      handles: events,
+    },
+  },
+  args,
+  argTypes,
+
   play,
 };
 
@@ -54,7 +66,7 @@ export const Default: Story = {};
 export const withAFallbackImage: Story = {
   name: 'With a fallback image',
   args: {
-    'attributes-field': 'invalid',
-    'attributes-fallback': 'https://sports.barca.group/logos/barca.svg',
+    field: 'invalid',
+    fallback: 'https://sports.barca.group/logos/barca.svg',
   },
 };

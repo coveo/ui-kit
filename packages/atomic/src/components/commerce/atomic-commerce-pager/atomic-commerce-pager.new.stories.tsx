@@ -1,17 +1,29 @@
 import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
+import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {wrapInCommerceInterface} from '@/storybook-utils/commerce/commerce-interface-wrapper';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
-import {renderComponent} from '@/storybook-utils/common/render-component';
 
 const {decorator, play} = wrapInCommerceInterface();
+const {events, args, argTypes, template} = getStorybookHelpers(
+  'atomic-commerce-pager',
+  {excludeCategories: ['methods']}
+);
 
 const meta: Meta = {
   component: 'atomic-commerce-pager',
   title: 'Commerce/Pager',
   id: 'atomic-commerce-pager',
-  render: renderComponent,
+  render: (args) => template(args),
   decorators: [decorator],
-  parameters,
+  parameters: {
+    ...parameters,
+    actions: {
+      handles: events,
+    },
+  },
+  args,
+  argTypes,
+
   play,
 };
 
@@ -22,9 +34,9 @@ export const Default: Story = {};
 export const CustomIcon: Story = {
   name: 'With custom icons',
   args: {
-    'attributes-previous-button-icon':
+    previousButtonIcon:
       'https://raw.githubusercontent.com/coveo/ui-kit/main/packages/atomic/src/images/arrow-top-rounded.svg',
-    'attributes-next-button-icon':
+    nextButtonIcon:
       'https://raw.githubusercontent.com/coveo/ui-kit/main/packages/atomic/src/images/arrow-top-rounded.svg',
   },
 };
@@ -32,6 +44,6 @@ export const CustomIcon: Story = {
 export const WithACustomNumberOfPages: Story = {
   name: 'With a custom number of pages',
   args: {
-    'attributes-number-of-pages': '10',
+    numberOfPages: '10',
   },
 };

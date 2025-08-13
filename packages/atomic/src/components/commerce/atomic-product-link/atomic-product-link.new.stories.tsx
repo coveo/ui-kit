@@ -1,10 +1,10 @@
 import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
+import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {html} from 'lit';
 import {wrapInCommerceInterface} from '@/storybook-utils/commerce/commerce-interface-wrapper';
 import {wrapInCommerceProductList} from '@/storybook-utils/commerce/commerce-product-list-wrapper';
 import {wrapInProductTemplate} from '@/storybook-utils/commerce/commerce-product-template-wrapper';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
-import {renderComponent} from '@/storybook-utils/common/render-component';
 
 const {decorator: commerceInterfaceDecorator, play} = wrapInCommerceInterface({
   type: 'product-listing',
@@ -27,18 +27,30 @@ const {decorator: commerceInterfaceDecorator, play} = wrapInCommerceInterface({
 });
 const {decorator: commerceProductListDecorator} = wrapInCommerceProductList();
 const {decorator: productTemplateDecorator} = wrapInProductTemplate();
+const {events, args, argTypes, template} = getStorybookHelpers(
+  'atomic-product-link',
+  {excludeCategories: ['methods']}
+);
 
 const meta: Meta = {
   component: 'atomic-product-link',
   title: 'Commerce/Product Link',
   id: 'atomic-product-link',
-  render: renderComponent,
+  render: (args) => template(args),
   decorators: [
     productTemplateDecorator,
     commerceProductListDecorator,
     commerceInterfaceDecorator,
   ],
-  parameters,
+  parameters: {
+    ...parameters,
+    actions: {
+      handles: events,
+    },
+  },
+  args,
+  argTypes,
+
   play,
 };
 

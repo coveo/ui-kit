@@ -1,21 +1,33 @@
 /* eslint-disable @cspell/spellchecker */
 
 import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
+import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {html} from 'lit';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
-import {renderComponent} from '@/storybook-utils/common/render-component';
 import {wrapInInsightInterface} from '@/storybook-utils/insight/insight-interface-wrapper';
 
 const {decorator, play} = wrapInInsightInterface();
+const {events, args, argTypes, template} = getStorybookHelpers(
+  'atomic-insight-interface',
+  {excludeCategories: ['methods']}
+);
 
 const meta: Meta = {
   component: 'atomic-insight-interface',
   title: 'Atomic/Insight/InsightInterface',
   id: 'atomic-insight-interface',
 
-  render: renderComponent,
+  render: (args) => template(args),
   decorators: [decorator],
-  parameters,
+  parameters: {
+    ...parameters,
+    actions: {
+      handles: events,
+    },
+  },
+  args,
+  argTypes,
+
   play,
 };
 

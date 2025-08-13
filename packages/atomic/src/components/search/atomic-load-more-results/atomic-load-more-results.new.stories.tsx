@@ -1,22 +1,34 @@
 import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
+import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {html} from 'lit/static-html.js';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
-import {renderComponent} from '@/storybook-utils/common/render-component';
 import {
   playExecuteFirstSearch,
   wrapInSearchInterface,
 } from '@/storybook-utils/search/search-interface-wrapper';
 
 const {decorator, play} = wrapInSearchInterface();
+const {events, args, argTypes, template} = getStorybookHelpers(
+  'atomic-load-more-results',
+  {excludeCategories: ['methods']}
+);
 
 const meta: Meta = {
   component: 'atomic-load-more-results',
   title: 'Atomic/LoadMoreResults',
   id: 'atomic-load-more-results',
 
-  render: renderComponent,
+  render: (args) => template(args),
   decorators: [decorator],
-  parameters,
+  parameters: {
+    ...parameters,
+    actions: {
+      handles: events,
+    },
+  },
+  args,
+  argTypes,
+
   play,
 };
 

@@ -4,29 +4,35 @@ import type {
   Meta,
   StoryObj as Story,
 } from '@storybook/web-components-vite';
+import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {facetDecorator} from '@/storybook-utils/common/facets-decorator';
-import {renderComponent} from '@/storybook-utils/common/render-component';
 import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
 
 const {decorator, play} = wrapInSearchInterface();
+const {events, args, argTypes, template} = getStorybookHelpers(
+  'atomic-color-facet',
+  {excludeCategories: ['methods']}
+);
 
 const meta: Meta = {
   component: 'atomic-color-facet',
   title: 'Atomic/ColorFacet',
   id: 'atomic-color-facet',
-  render: renderComponent,
+  render: (args) => template(args),
   decorators: [decorator],
-  parameters,
-  play,
-  argTypes: {
-    'attributes-number-of-values': {
-      name: 'number-of-values',
-      control: {type: 'number', min: 1},
+  parameters: {
+    ...parameters,
+    actions: {
+      handles: events,
     },
   },
+  argTypes,
+
+  play,
   args: {
-    'attributes-number-of-values': 8,
+    ...args,
+    numberOfValues: 8,
   },
 };
 
@@ -67,7 +73,7 @@ const facetValueToCss = {
   },
 };
 
-const argTypes = Object.keys(facetValueToCss).reduce<ArgTypes>(
+const valueFacetArgTypes = Object.keys(facetValueToCss).reduce<ArgTypes>(
   (acc, facetValue) =>
     // biome-ignore lint/performance/noAccumulatingSpread: <>
     Object.assign(acc, {
@@ -100,11 +106,11 @@ const baseFacetValueCss = {
   'background-repeat': 'no-repeat',
 };
 
-const args = Object.entries(facetValueToCss).reduce<Args>(
+const facetValueArgs = Object.entries(facetValueToCss).reduce<Args>(
   (acc, [facetValue, css]) =>
     // biome-ignore lint/performance/noAccumulatingSpread: <>
     Object.assign(acc, {
-      [`cssParts-value-${facetValue}`]: {
+      [`value-${facetValue}-part`]: {
         ...baseFacetValueCss,
         ...css,
       },
@@ -116,15 +122,17 @@ export const Default: Story = {
   name: 'atomic-color-facet',
   argTypes: {
     ...argTypes,
-    'cssParts-value-*': {
+    ...valueFacetArgTypes,
+    'value-*-part': {
       name: 'value-*',
       control: false,
     },
   },
   args: {
     ...args,
-    'attributes-field': 'filetype',
-    'attributes-number-of-values': 9,
+    ...facetValueArgs,
+    field: 'filetype',
+    numberOfValues: 9,
   },
   decorators: [facetDecorator],
 };
@@ -132,8 +140,8 @@ export const Default: Story = {
 export const LowFacetValues: Story = {
   tags: ['test'],
   args: {
-    'attributes-field': 'objecttype',
-    'attributes-number-of-values': 2,
+    field: 'objecttype',
+    numberOfValues: 2,
   },
   decorators: [facetDecorator],
 };

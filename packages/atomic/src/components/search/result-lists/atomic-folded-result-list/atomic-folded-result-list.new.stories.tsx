@@ -1,8 +1,8 @@
 /** biome-ignore-all lint/suspicious/noExplicitAny: <> */
 
 import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
+import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
-import {renderComponent} from '@/storybook-utils/common/render-component';
 import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
 
 const SLOTS_DEFAULT = `
@@ -129,14 +129,26 @@ const preprocessRequest = (response: any) => {
 const {decorator, play} = wrapInSearchInterface({
   preprocessRequest,
 });
+const {events, args, argTypes, template} = getStorybookHelpers(
+  'atomic-folded-result-list',
+  {excludeCategories: ['methods']}
+);
 
 const meta: Meta = {
   component: 'atomic-folded-result-list',
   title: 'Atomic/FoldedResultList',
   id: 'atomic-folded-result-list',
-  render: renderComponent,
+  render: (args) => template(args),
   decorators: [decorator],
-  parameters,
+  parameters: {
+    ...parameters,
+    actions: {
+      handles: events,
+    },
+  },
+  args,
+  argTypes,
+
   play,
 };
 
@@ -145,7 +157,7 @@ export default meta;
 export const Default: Story = {
   name: 'atomic-folded-result-list',
   args: {
-    'slots-default': SLOTS_DEFAULT,
+    'default-slot': SLOTS_DEFAULT,
   },
 };
 
@@ -163,7 +175,7 @@ const {play: noResultChildrenPlay} = wrapInSearchInterface({
 export const WithNoResultChildren: Story = {
   name: 'With no result children',
   args: {
-    'slots-default': SLOTS_DEFAULT,
+    'default-slot': SLOTS_DEFAULT,
   },
   play: noResultChildrenPlay,
 };
