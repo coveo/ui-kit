@@ -2,8 +2,8 @@ import {
   SearchEngineConfiguration,
   getSampleSearchEngineConfiguration,
 } from '@coveo/headless';
-import {within} from '@storybook/test';
-import {Decorator, StoryContext} from '@storybook/web-components';
+import {within} from 'storybook/test';
+import {Decorator, StoryContext} from '@storybook/web-components-vite';
 import {html} from 'lit';
 import type * as _ from '../../src/components.js';
 

@@ -1,4 +1,4 @@
-import type {Parameters} from '@storybook/web-components';
+import type {Parameters} from '@storybook/web-components-vite';
 
 export const parameters: Parameters = {
   layout: 'centered',

@@ -3,10 +3,10 @@ import {
   getSampleCommerceEngineConfiguration,
 } from '@coveo/headless/commerce';
 import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
+import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {html} from 'lit';
 import {wrapInCommerceInterface} from '@/storybook-utils/commerce/commerce-interface-wrapper';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
-import {renderComponent} from '@/storybook-utils/common/render-component';
 
 const {context, ...restOfConfiguration} =
   getSampleCommerceEngineConfiguration();
@@ -30,16 +30,27 @@ const {decorator, play} = wrapInCommerceInterface({
   type: 'product-listing',
 });
 
+const {events, args, argTypes, template} = getStorybookHelpers(
+  'atomic-commerce-breadbox',
+  {excludeCategories: ['methods']}
+);
+
 const meta: Meta = {
   component: 'atomic-commerce-breadbox',
   title: 'Commerce/Breadbox',
   id: 'atomic-commerce-breadbox',
-  render: renderComponent,
+  render: (args) => template(args),
   decorators: [decorator],
   parameters: {
     ...parameters,
     layout: 'fullscreen',
+    actions: {
+      handles: events,
+    },
   },
+  args,
+  argTypes,
+
   play,
 };
 
