@@ -1,6 +1,8 @@
 import type {Page} from '@playwright/test';
 import {BasePageObject} from '@/playwright-utils/base-page-object';
 
+const INSIGHT_SEARCH_REGEX = /\/insight\/v1\/configs\/.*\/search/;
+
 export class InsightInterfacePageObject extends BasePageObject<'atomic-insight-interface'> {
   constructor(page: Page) {
     super(page, 'atomic-insight-interface');
@@ -70,12 +72,16 @@ export class InsightInterfacePageObject extends BasePageObject<'atomic-insight-i
     });
   }
 
-  get connectResultLink() {
-    return this.insightResults.getByRole('link', {name: 'Connect'});
+  get videoResultLink() {
+    return this.page.getByTestId('video-insight-result-link');
   }
 
-  async waitForNonVideoResultsToBeDetached() {
-    await this.connectResultLink.waitFor({state: 'detached'});
+  async waitForVideoResultLinksToBeVisible() {
+    await this.videoResultLink.first().waitFor({state: 'visible'});
+  }
+
+  async waitForInsightSearchResponse() {
+    await this.page.waitForResponse(INSIGHT_SEARCH_REGEX);
   }
 
   getResultByIndex(index: number) {

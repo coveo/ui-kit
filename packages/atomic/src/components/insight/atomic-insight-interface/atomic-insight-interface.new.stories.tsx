@@ -231,7 +231,7 @@ export const Default: Story = {
                   </atomic-field-condition>
                 </atomic-result-section-badges>
                 <atomic-result-section-title>
-                  <atomic-result-link>
+                  <atomic-result-link data-testid="video-insight-result-link">
                     <a slot="attributes" target="_self"></a>
                   </atomic-result-link>
                 </atomic-result-section-title>

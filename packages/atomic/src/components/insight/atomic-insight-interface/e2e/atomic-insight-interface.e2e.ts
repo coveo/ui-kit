@@ -41,8 +41,11 @@ test.describe('Atomic Insight Panel', () => {
   test.describe('result actions interactions', () => {
     test.beforeEach(async ({insightInterface}) => {
       // Video results have better actions to test
+      const insightSearchPromise =
+        insightInterface.waitForInsightSearchResponse();
       await insightInterface.getTabByName('Videos').click();
-      await insightInterface.waitForNonVideoResultsToBeDetached();
+      await insightSearchPromise;
+      await insightInterface.waitForVideoResultLinksToBeVisible();
     });
 
     test('attach to case', async ({insightInterface}) => {
