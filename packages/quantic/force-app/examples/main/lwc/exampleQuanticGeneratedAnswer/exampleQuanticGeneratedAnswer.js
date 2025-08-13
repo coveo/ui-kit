@@ -43,6 +43,13 @@ export default class ExampleQuanticGeneratedAnswer extends LightningElement {
         'Define which use case to test. Possible values are: search, insight',
       defaultValue: 'search',
     },
+    {
+      attribute: 'withFacets',
+      label: 'With Facets',
+      description:
+        'Indicates whether the generated answer should include facets.',
+      defaultValue: false,
+    },
   ];
 
   handleTryItNow(evt) {
