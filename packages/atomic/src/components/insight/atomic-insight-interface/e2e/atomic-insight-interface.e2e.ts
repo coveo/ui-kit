@@ -61,14 +61,12 @@ test.describe('Atomic Insight Panel', () => {
       // No further tests because the copy to clipboard action does nothing in Atomic by default.
     });
 
-    test('quickview', async ({insightInterface, page}) => {
+    test('quickview', async ({insightInterface}) => {
       await insightInterface.hoverResultTitleByIndex(0);
       await expect(insightInterface.getActionBarByIndex(0)).toBeVisible();
       await expect(insightInterface.getResultQuickviewByIndex(0)).toBeVisible();
 
-      await page.waitForTimeout(1000);
       await insightInterface.openResultQuickviewByIndex(0);
-      await page.waitForTimeout(1000);
       await expect(insightInterface.atomicQuickviewModal).toHaveAttribute(
         'is-open'
       );
