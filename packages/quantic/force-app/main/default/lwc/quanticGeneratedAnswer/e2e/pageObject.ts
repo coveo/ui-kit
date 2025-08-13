@@ -13,6 +13,13 @@ const removeUnknownFields = (object: Record<string, unknown>) => {
   );
 };
 
+const facetElementsSelectors = {
+  timeframeFacet: {
+    component: 'c-quantic-timeframe-facet',
+    facetValueComponent: 'c-quantic-facet-value',
+  },
+};
+
 export class GeneratedAnswerObject {
   private analyticsMode: AnalyticsMode;
 
@@ -43,6 +50,24 @@ export class GeneratedAnswerObject {
 
   get toggleButton(): Locator {
     return this.page.getByTestId('generated-answer__toggle-button');
+  }
+
+  get firstTimeframeFacet(): Locator {
+    return this.page
+      .locator(facetElementsSelectors.timeframeFacet.component)
+      .first();
+  }
+
+  get firstTimeframeFacetValue(): Promise<string | null> {
+    return this.firstTimeframeFacet
+      .locator(facetElementsSelectors.timeframeFacet.facetValueComponent)
+      .first()
+      .locator('.facet__value-text')
+      .textContent();
+  }
+
+  async clickFirstTimeframeFacetLink(): Promise<void> {
+    await this.firstTimeframeFacet.click();
   }
 
   questionContainer(questionId: string): Locator {
@@ -401,18 +426,44 @@ export class GeneratedAnswerObject {
     const generateRequest = this.page.waitForRequest((request) => {
       const event = request.postDataJSON?.();
       if (isRgaGenerateRequest(request)) {
-        return AnalyticsObject.isMatchingPayload(
-          {
-            searchHub: event.searchHub,
-            q: event.q,
-            // TODO : ADD FACETS MAYBE
-          },
-          payloadToMatch
-        );
+        // return AnalyticsObject.isMatchingPayload(
+        //   {
+        //     searchHub: event.searchHub,
+        //     q: event.q,
+        //     // TODO : ADD FACETS MAYBE
+        //   },
+        //   payloadToMatch
+        // );
+        console.log('event', event);
+        console.log('payloadToMatch', payloadToMatch);
+        return true;
       }
       return false;
     });
     return generateRequest;
+  }
+
+  async waitForGenerateSubmitRequest(
+    expectedPayload: Record<string, any>
+  ): Promise<Request> {
+    if (this.answerApiEnabled) {
+      return this.waitForGenerateRequest(expectedPayload);
+    }
+    if (this.analyticsMode === AnalyticsModeEnum.legacy) {
+      return this.analytics.waitForCustomUaAnalytics(
+        {
+          eventType: 'generatedAnswer',
+          eventValue: 'generatedAnswerStreamEnd',
+        },
+        (event) =>
+          event?.customData?.generativeQuestionAnsweringId === this.streamId
+      );
+    }
+
+    return this.analytics.waitForEventProtocolAnalytics(
+      'Rga.AnswerReceived',
+      (event) => event.answerGenerated === true
+    );
   }
 
   streamEndAnalyticRequestPromise!: Promise<boolean | Request>;

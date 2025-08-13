@@ -23,6 +23,7 @@ interface GeneratedAnswerOptions {
   withToggle: boolean;
   useCase: string;
   answerConfigurationId: string;
+  withFacets: boolean;
 }
 
 type QuanticGeneratedAnswerE2ESearchFixtures = {

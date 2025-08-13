@@ -232,6 +232,25 @@ useCaseTestCases.forEach((useCase) => {
                 expect(showMoreButtonLabel).toEqual(expectedShowMoreLabel);
               });
             });
+
+            test.describe('when selecting a facet after the answer is generated', () => {
+              test.use({
+                options: {
+                  ...config.options,
+                  withFacets: true,
+                },
+              });
+              test('should trigger a new generate call to the answer API', async ({generatedAnswer}) => {
+                await generatedAnswer.streamEndAnalyticRequestPromise;
+
+              const generateRequestPromise =
+                generatedAnswer.waitForGenerateSubmitRequest({
+                  searchHub: 'default',
+                });
+                await generatedAnswer.clickFirstTimeframeFacetLink();
+                await generateRequestPromise;
+              });
+            });
           });
         }
       });
