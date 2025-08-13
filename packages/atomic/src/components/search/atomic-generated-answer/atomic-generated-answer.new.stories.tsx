@@ -61,13 +61,11 @@ const meta: Meta = {
 
 export default meta;
 
-export const Default: Story = {
-  render: () => html`<atomic-generated-answer></atomic-generated-answer>`,
-};
+export const Default: Story = {};
 
 export const DisableCitationAnchoring: Story = {
   name: 'Citation anchoring disabled',
-  render: () => html`
-    <atomic-generated-answer disable-citation-anchoring></atomic-generated-answer>
-  `,
+  args: {
+    disableCitationAnchoring: true,
+  },
 };
