@@ -1,5 +1,5 @@
 import type {Page} from '@playwright/test';
-import {buildArgsParam} from '@storybook/router';
+import {buildArgsParam} from 'storybook/internal/router';
 
 type Component = Record<string, unknown>;
 
