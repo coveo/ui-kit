@@ -1,4 +1,4 @@
-import type {Meta, StoryObj as Story} from '@storybook/web-components';
+import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
 import {
   playExecuteFirstRequest,
   wrapInCommerceInterface,

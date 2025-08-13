@@ -2,7 +2,7 @@ import {
   type Meta,
   type StoryObj as Story,
   setCustomElementsManifest,
-} from '@storybook/web-components';
+} from '@storybook/web-components-vite';
 import customElements from '@/custom-elements.json';
 import {defineCustomElements} from '@/dist/atomic/loader/index.js';
 import {wrapInCommerceInterface} from '@/storybook-utils/commerce/commerce-interface-wrapper';

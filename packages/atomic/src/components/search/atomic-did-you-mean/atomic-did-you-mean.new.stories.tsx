@@ -1,14 +1,14 @@
 /* eslint-disable @cspell/spellchecker */
 
-import {userEvent} from '@storybook/test';
 import type {
   Decorator,
   Meta,
   StoryObj as Story,
   StoryContext,
-} from '@storybook/web-components';
+} from '@storybook/web-components-vite';
 import {html} from 'lit/static-html.js';
 import {within} from 'shadow-dom-testing-library';
+import {userEvent} from 'storybook/test';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {renderComponent} from '@/storybook-utils/common/render-component';
 import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
