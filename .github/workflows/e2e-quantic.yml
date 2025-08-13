@@ -22,6 +22,12 @@ jobs:
         with:
           clientid: ${{ secrets.SFDX_AUTH_CLIENT_ID }}
           jwtkey: ${{ secrets.SFDX_AUTH_JWT_KEY }}
+  post-cratch-rg-links-to-pr:
+    name: 'Post Scratch Org Links to PR'
+    needs: e2e-quantic-setup
+    runs-on: ubuntu-latest
+    steps:
+      - uses: ./.github/actions/post-scratch-org-links
   e2e-quantic-playwright-test:
     name: 'Run Playwright e2e tests on Quantic'
     needs: e2e-quantic-setup
