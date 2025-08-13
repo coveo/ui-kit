@@ -1,5 +1,8 @@
 import '@coveo/atomic/themes/coveo.css';
-import {setCustomElementsManifest} from '@storybook/web-components-vite';
+import {
+  type Parameters,
+  setCustomElementsManifest,
+} from '@storybook/web-components-vite';
 import {setStorybookHelpersConfig} from '@wc-toolkit/storybook-helpers';
 import {render} from 'lit';
 import customElements from '../custom-elements.json';
@@ -21,7 +24,7 @@ setStorybookHelpersConfig({
   ],
 });
 
-export const parameters = {
+export const parameters: Parameters = {
   options: {
     storySort: {
       order: ['Introduction'],
@@ -32,6 +35,8 @@ export const parameters = {
   controls: {
     expanded: true,
   },
+  backgrounds: {disable: true},
+  viewport: {disable: true},
 };
 
 export const decorators = [
