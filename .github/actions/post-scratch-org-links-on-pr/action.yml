@@ -4,9 +4,7 @@ description: Publish Scratch Org Links as comments in a given PR
 runs:
   using: composite
   steps:
-    - uses: actions/checkout@v4
-
-    - uses: actions/cache@v4
+    - uses: actions/cache@5a3ec84eff668545956fd18022155c47e93e2684 # v4
       with:
         path: packages/quantic/.env
         key: quantic-playwright-env-${{ github.sha }}
