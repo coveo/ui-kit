@@ -1,4 +1,4 @@
-import type {Args, StoryContext} from '@storybook/web-components';
+import type {Args, StoryContext} from '@storybook/web-components-vite';
 import {html, unsafeStatic} from 'lit/static-html.js';
 
 export const unfurlArg = (arg: string) => arg.slice(arg.indexOf('-') + 1);
