@@ -52,9 +52,6 @@ import styles from './atomic-commerce-numeric-facet.tw.css';
  * @part label-end - The label for the maximum value input field.
  * @part input-end - The input field to enter the maximum numeric value.
  * @part input-apply-button - The button to apply custom numeric range values.
- *
- * @internal
- *
  */
 @customElement('atomic-commerce-numeric-facet')
 @withTailwindStyles

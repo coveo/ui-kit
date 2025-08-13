@@ -27,8 +27,6 @@ import type {CommerceBindings} from '../atomic-commerce-interface/atomic-commerc
  * @part highlight - The summary highlights.
  * @part query - The summary highlighted query.
  * @part placeholder - The query summary placeholder used while the search interface is initializing.
- *
- * @alpha
  */
 @customElement('atomic-commerce-query-summary')
 @bindings()

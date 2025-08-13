@@ -1,18 +1,17 @@
-import { Canvas, ArgTypes, Meta, Title, Description, Stories, Subtitle } from '@storybook/blocks';
+import { Meta } from '@storybook/blocks';
 import * as AtomicProductTemplateStories from './atomic-product-template.new.stories';
-import { CanvasWithGithub } from '../../../../storybook-utils/documentation/canvas-with-github';
+import { AtomicDocTemplate } from '../../../../storybook-utils/documentation/atomic-doc-template';
+
 
 <Meta of={AtomicProductTemplateStories} />
 
-<Title />
-<Subtitle><Description/></Subtitle>
-
-<CanvasWithGithub
-  of={AtomicProductTemplateStories.InAProductList}
+<AtomicDocTemplate
+  stories={AtomicProductTemplateStories}
   githubPath="commerce/atomic-product-template/atomic-product-template.ts"
-/>
+  tagName="atomic-product-template"
+  className="AtomicProductTemplate"
+>
 
-## Usage
 This component defines the UI display of your products. 
 It can be used inside `atomic-commerce-product-list`, `atomic-commerce-recommendation-list`, or `atomic-search-box-instant-products`, and it must have a `<template>` as its child.
 
@@ -53,10 +52,5 @@ Example using the `atomic-commerce-product-list`:
 </atomic-commerce-product-list>
 ```
 
-
-## Examples
-<Stories title={""}/>
-
-## Reference
-<ArgTypes />
+</AtomicDocTemplate>
 

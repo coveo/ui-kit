@@ -17,8 +17,6 @@ import type {CommerceBindings} from '../atomic-commerce-interface/atomic-commerc
  * The condition properties can be based on any top-level product property of the `product` object, not restricted to fields (e.g., `ec_name`).
  *
  * @slot default - The content to render if the conditions are met.
- *
- * @alpha
  */
 @customElement('atomic-product-field-condition')
 @bindings()

@@ -20,7 +20,10 @@ const meta: Meta = {
 
   render: renderComponent,
   decorators: [decorator],
-  parameters,
+  parameters: {
+    ...parameters,
+    layout: 'fullscreen',
+  },
   play,
 };
 

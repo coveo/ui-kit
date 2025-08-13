@@ -1,18 +1,16 @@
-import { Canvas, ArgTypes, Meta, Title, Description, Stories, Subtitle } from '@storybook/blocks';
+import { Meta } from '@storybook/blocks';
 import * as AtomicProductRatingStories from './atomic-product-rating.new.stories';
-import { CanvasWithGithub } from '../../../../storybook-utils/documentation/canvas-with-github';
+import { AtomicDocTemplate } from '../../../../storybook-utils/documentation/atomic-doc-template';
 
-<Meta of={ AtomicProductRatingStories } />
 
-<Title />
-<Subtitle><Description/></Subtitle>
+<Meta of={AtomicProductRatingStories} />
 
-<CanvasWithGithub
-  of={ AtomicProductRatingStories.Default }
+<AtomicDocTemplate
+  stories={AtomicProductRatingStories}
   githubPath="commerce/atomic-product-rating/atomic-product-rating.ts"
-/>
-
-## Usage
+  tagName="atomic-product-rating"
+  className="AtomicProductRating"
+>
 
 The `atomic-product-rating` component displays the rating of a product as a set of icons (stars by default).
 
@@ -32,8 +30,4 @@ This component is used within `atomic-product-template` components inside the pr
 </atomic-commerce-interface>
 ```
 
-<Stories title={""} />
-
-## Reference
-
-<ArgTypes />
+</AtomicDocTemplate>

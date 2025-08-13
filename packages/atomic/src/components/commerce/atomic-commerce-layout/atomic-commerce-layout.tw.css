@@ -136,7 +136,7 @@ atomic-commerce-layout {
   }
 
   atomic-layout-section[section="status"] > * {
-    margin-top: var(--atomic-layout-spacing-y);
+    margin-bottom: var(--atomic-layout-spacing-y);
   }
 
   atomic-layout-section[section="pagination"] {

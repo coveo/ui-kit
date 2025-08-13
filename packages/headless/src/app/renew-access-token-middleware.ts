@@ -8,7 +8,12 @@ import type {Logger} from 'pino';
 import {debounce} from 'ts-debounce';
 import {updateBasicConfiguration} from '../features/configuration/configuration-actions.js';
 import {setError} from '../features/error/error-actions.js';
+import type {
+  CommerceConfigurationSection,
+  ConfigurationSection,
+} from '../state/state-sections.js';
 import {UnauthorizedTokenError} from '../utils/errors.js';
+import {shouldRenewJWT as shouldRenewAccessToken} from '../utils/jwt-utils.js';
 
 export function createRenewAccessTokenMiddleware(
   logger: Logger,
@@ -26,13 +31,55 @@ export function createRenewAccessTokenMiddleware(
       return next(action);
     }
 
+    const hasRenewFunction = typeof renewToken === 'function';
+
+    // Proactive JWT expiration check before action execution
+    if (hasRenewFunction) {
+      const state = store.getState();
+      const accessToken = getAccessTokenFromState(state);
+
+      if (accessToken && shouldRenewAccessToken(accessToken)) {
+        logger.debug(
+          'Access token is expired or about to expire, attempting renewal.'
+        );
+        try {
+          const newAccessToken = await renewToken();
+          if (newAccessToken) {
+            store.dispatch(
+              updateBasicConfiguration({accessToken: newAccessToken})
+            );
+            logger.debug('Access token was renewed.');
+          } else {
+            logger.warn(
+              'Access token renewal returned an empty token. Please check the #renewAccessToken function.'
+            );
+          }
+        } catch (error) {
+          logger.warn(
+            error,
+            'Access token renewal failed. A retry will occur if necessary.'
+          );
+        }
+      }
+    }
+
+    // Notes:
+    //
+    // - No race condition with the preceding `updateBasicConfiguration` dispatch because:
+    //   1. `store.dispatch()` with synchronous actions completes immediately and updates the state.
+    //   2. The state is guaranteed to contain the fresh token before this point is reached.
+    //
+    // - Execution is not short-circuited after successful proactive renewal because:
+    //   1. The API is the authoritative source for token validity (401/419 responses).
+    //   2. Reactive error handling provides defense-in-depth for rare edge cases.
+    //   3. This ensures consistent error handling across all action types
     const payload = await next(action);
 
     if (!isExpiredTokenError(payload)) {
       return payload;
     }
 
-    if (typeof renewToken !== 'function') {
+    if (!hasRenewFunction) {
       logger.warn(
         'Unable to renew the expired token because a renew function was not provided. Please specify the #renewAccessToken option when initializing the engine.'
       );
@@ -91,4 +138,14 @@ async function attempt(fn: () => Promise<string>) {
   } catch (_) {
     return '';
   }
+}
+
+type EngineStateWithAccessToken =
+  | (ConfigurationSection & Record<string, unknown>)
+  | (CommerceConfigurationSection & Record<string, unknown>);
+
+function getAccessTokenFromState(
+  state: EngineStateWithAccessToken
+): string | undefined {
+  return state.configuration.accessToken;
 }

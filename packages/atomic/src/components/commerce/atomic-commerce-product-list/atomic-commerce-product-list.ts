@@ -66,8 +66,6 @@ import styles from './atomic-commerce-product-list.tw.css';
  * @part result-table-cell - The td elements nested under each tbody > tr when the display prop is set to "table".
  *
  * @slot default - The default slot where the product templates are defined.
- *
- * @alpha
  */
 @customElement('atomic-commerce-product-list')
 @bindings()

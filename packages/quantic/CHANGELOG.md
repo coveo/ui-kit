@@ -1,3 +1,9 @@
+## <small>3.29.3 (2025-08-13)</small>
+
+* fix(quantic): updated misleading comment around access tokens and platform tokens (#5832) ([f242db4](https://github.com/coveo/ui-kit/commits/f242db4)), closes [#5832](https://github.com/coveo/ui-kit/issues/5832)
+
+
+
 ## 3.29.0 (2025-08-07)
 
 * feat: Migrate monorepo build system from NX to Turborepo (#5733) ([e7e1237](https://github.com/coveo/ui-kit/commits/e7e1237)), closes [#5733](https://github.com/coveo/ui-kit/issues/5733)

@@ -12,7 +12,7 @@ const {decorator: commerceSearchBoxDecorator} = wrapInCommerceSearchBox();
 
 const meta: Meta = {
   component: 'atomic-commerce-search-box-recent-queries',
-  title: 'Commerce/atomic-commerce-search-box-recent-queries',
+  title: 'Commerce/Search Box Recent Queries',
   id: 'atomic-commerce-search-box-recent-queries',
   render: renderComponentWithoutCodeRoot,
   decorators: [commerceSearchBoxDecorator, commerceInterfaceDecorator],

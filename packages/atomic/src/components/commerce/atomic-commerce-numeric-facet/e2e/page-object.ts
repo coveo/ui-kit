@@ -10,8 +10,12 @@ export class NumericFacetPageObject extends AnyFacetPageObject<'atomic-commerce-
     return this.page.getByText('Price');
   }
 
+  get hydrated() {
+    return this.page.locator('atomic-commerce-numeric-facet[field="ec_price"]');
+  }
+
   getFacetValueByPosition(position: number) {
-    return this.page.getByRole('listitem').nth(position);
+    return this.hydrated.getByRole('listitem').nth(position);
   }
 
   getFacetValueButtonByPosition(position: number) {
@@ -23,24 +27,24 @@ export class NumericFacetPageObject extends AnyFacetPageObject<'atomic-commerce-
   }
 
   getFacetValueByRange(start: string, end: string) {
-    return this.page
+    return this.hydrated
       .getByRole('listitem')
       .filter({hasText: `${start} to ${end}`});
   }
 
   get clearFilter() {
-    return this.page.getByRole('button').filter({hasText: /Clear.*filter/});
+    return this.hydrated.getByRole('button').filter({hasText: /Clear.*filter/});
   }
 
   get inputMinimum() {
-    return this.page.getByLabel('Enter a minimum numerical');
+    return this.hydrated.getByLabel('Enter a minimum numerical');
   }
 
   get inputMaximum() {
-    return this.page.getByLabel('Enter a maximum numerical');
+    return this.hydrated.getByLabel('Enter a maximum numerical');
   }
 
   get inputApply() {
-    return this.page.getByLabel('Apply custom numerical values');
+    return this.hydrated.getByLabel('Apply custom numerical values');
   }
 }

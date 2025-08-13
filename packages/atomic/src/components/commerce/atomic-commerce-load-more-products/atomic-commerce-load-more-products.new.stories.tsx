@@ -3,11 +3,11 @@ import {wrapInCommerceInterface} from '@/storybook-utils/commerce/commerce-inter
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {renderComponent} from '@/storybook-utils/common/render-component';
 
-const {decorator, play} = wrapInCommerceInterface({skipFirstRequest: false});
+const {decorator, play} = wrapInCommerceInterface();
 
 const meta: Meta = {
   component: 'atomic-commerce-load-more-products',
-  title: 'Commerce/atomic-commerce-load-more-products',
+  title: 'Commerce/Load More Products',
   id: 'atomic-commerce-load-more-products',
   render: renderComponent,
   decorators: [decorator],

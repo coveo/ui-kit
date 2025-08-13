@@ -7,7 +7,7 @@ const {decorator, play} = wrapInSearchInterface();
 
 const meta: Meta = {
   component: 'atomic-layout-section',
-  title: 'Common/atomic-layout-section',
+  title: 'Common/Layout Section',
   id: 'atomic-layout-section',
   render: renderComponent,
   decorators: [decorator],

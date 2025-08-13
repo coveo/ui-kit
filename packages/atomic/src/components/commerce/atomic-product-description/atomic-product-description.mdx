@@ -1,18 +1,16 @@
-import { Canvas, ArgTypes, Meta, Title, Description, Stories, Subtitle } from '@storybook/blocks';
+import { Meta } from '@storybook/blocks';
 import * as AtomicProductDescriptionStories from './atomic-product-description.new.stories';
-import { CanvasWithGithub } from '../../../../storybook-utils/documentation/canvas-with-github';
+import { AtomicDocTemplate } from '../../../../storybook-utils/documentation/atomic-doc-template';
 
-<Meta of={ AtomicProductDescriptionStories } />
 
-<Title />
-<Subtitle><Description/></Subtitle>
+<Meta of={AtomicProductDescriptionStories} />
 
-<CanvasWithGithub
-  of={ AtomicProductDescriptionStories.Default }
+<AtomicDocTemplate
+  stories={AtomicProductDescriptionStories}
   githubPath="commerce/atomic-product-description/atomic-product-description.ts"
-/>
-
-## Usage
+  tagName="atomic-product-description"
+  className="AtomicProductDescription"
+>
 The `atomic-product-description` component is used to display a detailed description of a product.
 It uses the `ec_shortdesc` property by default but you can change it to `ec_description` with the field attribute.
 
@@ -34,9 +32,4 @@ It is typically used within `atomic-product-template` components to display prod
   </atomic-commerce-product-list>
 </atomic-commerce-interface>
 ```
-
-## Examples
-<Stories title={""}/>
-
-## Reference
-<ArgTypes />
+</AtomicDocTemplate>
