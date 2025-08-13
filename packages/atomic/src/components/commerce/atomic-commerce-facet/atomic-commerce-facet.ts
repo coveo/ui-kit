@@ -19,10 +19,10 @@ import {renderFacetValuesGroup} from '@/src/components/common/facets/facet-value
 import {booleanConverter} from '@/src/converters/boolean-converter';
 import {bindStateToController} from '@/src/decorators/bind-state';
 import {bindingGuard} from '@/src/decorators/binding-guard';
+import {bindings} from '@/src/decorators/bindings';
 import {errorGuard} from '@/src/decorators/error-guard';
 import type {InitializableComponent} from '@/src/decorators/types';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
-import {InitializeBindingsMixin} from '@/src/mixins/bindings-mixin';
 import {
   AriaLiveRegionController,
   FocusTargetController,
@@ -70,9 +70,10 @@ import styles from './atomic-commerce-facet.tw.css';
  * @part show-more-less-icon - The icons of the show more & show less buttons.
  */
 @customElement('atomic-commerce-facet')
+@bindings()
 @withTailwindStyles
 export class AtomicCommerceFacet
-  extends InitializeBindingsMixin(LitElement)
+  extends LitElement
   implements InitializableComponent<CommerceBindings>
 {
   /**
@@ -124,7 +125,7 @@ export class AtomicCommerceFacet
     this.validateFacet();
     this.initFocusTargets();
     this.ensureSubscribed();
-    this.initAriaLive();
+    this.facet && this.initAriaLive();
   }
 
   public disconnectedCallback(): void {
