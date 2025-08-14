@@ -1942,7 +1942,7 @@ export declare interface AtomicCommerceBreadbox extends LitAtomicCommerceBreadbo
 
 @ProxyCmp({
   inputs: ['isCollapsed', 'field'],
-  methods: ['bindings', 'isCollapsed', 'field', 'error', 'resultIndexToFocusOnShowMore', 'showLessFocus', 'showMoreFocus', 'headerFocus', 'activeValueFocus', 'facetSearchAriaMessage', 'initialize', 'displayName', 'focusTargets', 'hasParents', 'renderHeader', 'renderValuesTree', 'renderChild', 'renderChildren', 'renderSearchResults', 'renderShowMoreLess', 'validateFacet', 'initBindings'],
+  methods: ['bindings', 'isCollapsed', 'field', 'error', 'resultIndexToFocusOnShowMore', 'showLessFocus', 'showMoreFocus', 'headerFocus', 'activeValueFocus', 'facetSearchAriaMessage', 'initialize', 'displayName', 'focusTargets', 'hasParents', 'renderHeader', 'renderValuesTree', 'renderChild', 'renderChildren', 'renderSearchResults', 'renderShowMoreLess', 'validateFacet'],
   defineCustomElementFn: () => {customElements.get('atomic-commerce-category-facet') || customElements.define('atomic-commerce-category-facet', LitAtomicCommerceCategoryFacet);}
 })
 @Component({
@@ -1994,7 +1994,7 @@ export declare interface AtomicCommerceDidYouMean extends LitAtomicCommerceDidYo
 
 @ProxyCmp({
   inputs: ['summary', 'facet', 'isCollapsed', 'field'],
-  methods: ['summary', 'facet', 'isCollapsed', 'field', 'bindings', 'summaryState', 'facetState', 'error', 'showLessFocus', 'showMoreFocus', 'headerFocus', 'unsubscribeFacetController', 'ariaLiveRegion', 'initialize', 'renderHeader', 'renderBody', 'renderValuesContainer', 'renderSearchResults', 'renderValues', 'renderShowMoreLess', 'renderMatches', 'activeValues', 'displayName', 'facetValueProps', 'initFocusTargets', 'initAriaLive', 'focusTargets', 'isFacetState', 'ensureSubscribed', 'validateFacet', 'initBindings'],
+  methods: ['summary', 'facet', 'isCollapsed', 'field', 'bindings', 'summaryState', 'facetState', 'error', 'showLessFocus', 'showMoreFocus', 'headerFocus', 'unsubscribeFacetController', 'ariaLiveRegion', 'initialize', 'renderHeader', 'renderBody', 'renderValuesContainer', 'renderSearchResults', 'renderValues', 'renderShowMoreLess', 'renderMatches', 'activeValues', 'displayName', 'facetValueProps', 'initFocusTargets', 'initAriaLive', 'focusTargets', 'isFacetState', 'ensureSubscribed', 'validateFacet'],
   defineCustomElementFn: () => {customElements.get('atomic-commerce-facet') || customElements.define('atomic-commerce-facet', LitAtomicCommerceFacet);}
 })
 @Component({
@@ -2150,7 +2150,7 @@ export declare interface AtomicCommerceNoProducts extends LitAtomicCommerceNoPro
 
 @ProxyCmp({
   inputs: ['summary', 'facet', 'isCollapsed', 'field'],
-  methods: ['summary', 'facet', 'isCollapsed', 'field', 'context', 'bindings', 'facetState', 'summaryState', 'contextState', 'error', 'headerFocus', 'unsubscribeFacetController', 'initialize', 'formatter', 'focusTarget', 'displayName', 'numberOfSelectedValues', 'hasInputRange', 'shouldRenderValues', 'valuesToRender', 'shouldRenderInput', 'shouldRenderFacet', 'ensureSubscribed', 'renderValues', 'onNumberInputApply', 'validateFacet', 'initBindings'],
+  methods: ['summary', 'facet', 'isCollapsed', 'field', 'context', 'bindings', 'facetState', 'summaryState', 'contextState', 'error', 'headerFocus', 'unsubscribeFacetController', 'initialize', 'formatter', 'focusTarget', 'displayName', 'numberOfSelectedValues', 'hasInputRange', 'shouldRenderValues', 'valuesToRender', 'shouldRenderInput', 'shouldRenderFacet', 'ensureSubscribed', 'renderValues', 'onNumberInputApply', 'validateFacet'],
   defineCustomElementFn: () => {customElements.get('atomic-commerce-numeric-facet') || customElements.define('atomic-commerce-numeric-facet', LitAtomicCommerceNumericFacet);}
 })
 @Component({
@@ -2566,7 +2566,7 @@ export declare interface AtomicCommerceText extends LitAtomicCommerceText {
 
 @ProxyCmp({
   inputs: ['summary', 'facet', 'isCollapsed', 'field'],
-  methods: ['summary', 'facet', 'isCollapsed', 'field', 'bindings', 'error', 'summaryState', 'facetState', 'inputRange', 'headerFocus', 'displayName', 'focusTarget', 'initialize', 'applyDateInput', 'valuesToRender', 'shouldRenderValues', 'shouldRenderFacet', 'shouldRenderInput', 'numberOfSelectedValues', 'hasInputRange', 'resetRange', 'formatFacetValue', 'renderValues', 'renderValue', 'renderValuesContainer', 'renderHeader', 'renderDateInput', 'validateFacet', 'initBindings'],
+  methods: ['summary', 'facet', 'isCollapsed', 'field', 'bindings', 'error', 'summaryState', 'facetState', 'inputRange', 'headerFocus', 'displayName', 'focusTarget', 'initialize', 'applyDateInput', 'valuesToRender', 'shouldRenderValues', 'shouldRenderFacet', 'shouldRenderInput', 'numberOfSelectedValues', 'hasInputRange', 'resetRange', 'formatFacetValue', 'renderValues', 'renderValue', 'renderValuesContainer', 'renderHeader', 'renderDateInput', 'validateFacet'],
   defineCustomElementFn: () => {customElements.get('atomic-commerce-timeframe-facet') || customElements.define('atomic-commerce-timeframe-facet', LitAtomicCommerceTimeframeFacet);}
 })
 @Component({
@@ -2722,7 +2722,7 @@ export declare interface AtomicProductImage extends LitAtomicProductImage {
 
 @ProxyCmp({
   inputs: ['hrefTemplate'],
-  methods: ['hrefTemplate', 'product', 'interactiveProduct', 'productController', 'interactiveProductController', 'bindings', 'error', 'linkAttributes', 'stopPropagation', 'removeLinkEventHandlers', 'logWarningIfNeeded', 'extractAttributesFromSlot', 'initialize', 'adoptChildren', 'renderDefaultSlotContent', 'getSlotNameForChild', 'isTextNodeEmpty', 'isSlotEmpty', '_initializeSlotState', '_ensureSlotsInitialized', '_hasDefaultSlotContent', '_mapChildrenToSlots', '_addChildToSlot', '_createSlotPlaceholder', '_relocateSingleSlot', '_moveNodeIfNeeded'],
+  methods: ['hrefTemplate', 'product', 'interactiveProduct', 'productController', 'interactiveProductController', 'bindings', 'error', 'linkAttributes', 'stopPropagation', 'removeLinkEventHandlers', 'logWarningIfNeeded', 'initialize', 'adoptChildren', 'isTextNodeEmpty', 'isSlotEmpty', 'renderDefaultSlotContent', 'createSlotPlaceholder'],
   defineCustomElementFn: () => {customElements.get('atomic-product-link') || customElements.define('atomic-product-link', LitAtomicProductLink);}
 })
 @Component({
