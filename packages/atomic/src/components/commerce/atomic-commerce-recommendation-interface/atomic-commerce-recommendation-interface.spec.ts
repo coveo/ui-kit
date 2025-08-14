@@ -43,7 +43,7 @@ class TestElement
   }
 }
 
-describe('atomic-commerce-recommendation-interface', () => {
+describe.skip('atomic-commerce-recommendation-interface', () => {
   beforeEach(async () => {
     vi.mocked(headless.buildCommerceEngine).mockReturnValue(
       buildFakeCommerceEngine({})

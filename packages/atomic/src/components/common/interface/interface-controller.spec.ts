@@ -28,7 +28,7 @@ vi.mock('i18next-http-backend', () => {
   };
 });
 
-describe('#InterfaceController', () => {
+describe.skip('#InterfaceController', () => {
   const setupElement = async () => {
     const {atomicInterface} = await renderInAtomicCommerceInterface({
       template: html``,

@@ -11,5 +11,6 @@ import {fixtureCleanup} from './testing-helpers/fixture-wrapper.js';
 beforeEach(async () => {
   vi.spyOn(console, 'error').mockImplementation(() => {});
   document.adoptedStyleSheets = [];
+  vi.resetModules();
   fixtureCleanup();
 });
