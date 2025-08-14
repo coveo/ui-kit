@@ -1,6 +1,5 @@
 import type {CoreEngine, CoreEngineNext} from '../../../app/engine.js';
 import type {Controller} from '../../../controllers/controller/headless-controller.js';
-import type {SSRCommerceEngine} from '../../commerce/factories/build-factory.js';
 import type {
   BaseControllerDefinitionWithoutProps,
   BaseControllerDefinitionWithProps,
@@ -14,7 +13,7 @@ export class ControllerBuilder<
     BaseControllerDefinitionWithoutProps<TEngine, TController>
   > &
     Partial<BaseControllerDefinitionWithProps<TEngine, TController, TProps>>,
-  TEngine extends CoreEngine | CoreEngineNext | SSRCommerceEngine,
+  TEngine extends CoreEngine | CoreEngineNext,
   TProps,
   TController extends Controller = Controller,
 > {
