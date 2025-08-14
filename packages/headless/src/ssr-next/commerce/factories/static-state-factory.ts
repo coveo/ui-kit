@@ -4,10 +4,12 @@ import {buildSearch} from '../../../controllers/commerce/search/headless-search.
 import {augmentPreprocessRequestWithForwardedFor} from '../../common/augment-preprocess-request.js';
 import {createStaticState} from '../controller-utils.js';
 import {SolutionType} from '../types/controller-constants.js';
-import type {AugmentedControllerDefinition} from '../types/controller-definitions.js';
+import type {
+  AugmentedControllerDefinition,
+  FilteredBakedInControllers,
+} from '../types/controller-definitions.js';
 import type {InferControllerStaticStateMapFromDefinitionsWithSolutionType} from '../types/controller-inference.js';
 import type {
-  BakedInControllers,
   BuildParameters,
   CommerceControllerDefinitionsMap,
   EngineStaticState,
@@ -68,7 +70,7 @@ export function fetchStaticStateFactory<
           TControllerDefinitions,
           SolutionType
         > &
-          BakedInControllers
+          FilteredBakedInControllers<typeof solutionType>
       >;
       return staticState;
     };

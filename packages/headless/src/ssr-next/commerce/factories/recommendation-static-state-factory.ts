@@ -4,11 +4,11 @@ import {createStaticState} from '../controller-utils.js';
 import {SolutionType} from '../types/controller-constants.js';
 import type {
   AugmentedControllerDefinition,
+  FilteredBakedInControllers,
   RecommendationControllerSettings,
 } from '../types/controller-definitions.js';
 import type {InferControllerStaticStateMapFromDefinitionsWithSolutionType} from '../types/controller-inference.js';
 import type {
-  BakedInControllers,
   BuildParameters,
   BuildResult,
   CommerceControllerDefinitionsMap,
@@ -81,7 +81,7 @@ export function fetchRecommendationStaticStateFactory<
         TControllerDefinitions,
         SolutionType
       > &
-        BakedInControllers
+        FilteredBakedInControllers<SolutionType.recommendation>
     >;
   };
 }

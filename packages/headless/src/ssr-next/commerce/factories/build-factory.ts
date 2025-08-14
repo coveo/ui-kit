@@ -15,13 +15,15 @@ import type {ControllersPropsMap} from '../../common/types/controllers.js';
 import {buildControllerDefinitions} from '../controller-utils.js';
 import type {SSRCommerceEngineOptions} from '../types/build.js';
 import {SolutionType} from '../types/controller-constants.js';
-import type {ControllerDefinitionsMap} from '../types/controller-definitions.js';
+import type {
+  ControllerDefinitionsMap,
+  FilteredBakedInControllers,
+} from '../types/controller-definitions.js';
 import type {
   InferControllerPropsMapFromDefinitions,
   InferControllersMapFromDefinition,
 } from '../types/controller-inference.js';
 import type {
-  BakedInControllers,
   BuildParameters,
   CommerceControllerDefinitionsMap,
   EngineDefinitionOptions,
@@ -183,7 +185,7 @@ export const buildFactory =
         ? buildOptions.controllers
         : {}) as InferControllerPropsMapFromDefinitions<TControllerDefinitions>,
     }) as InferControllersMapFromDefinition<TControllerDefinitions, T> &
-      BakedInControllers;
+      FilteredBakedInControllers<typeof solutionType>;
 
     return {
       engine,
