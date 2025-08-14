@@ -1908,3 +1908,437 @@ export class AtomicTimeframeFacet {
     this.el = r.nativeElement;
   }
 }
+
+export declare interface AtomicTimeframeFacet extends Components.AtomicTimeframeFacet {}
+
+//#region Lit Declarations
+
+@ProxyCmp({
+  inputs: ['pathLimit'],
+  methods: ['resizeObserver', 'lastRemovedBreadcrumbIndex', 'numberOfBreadcrumbs', 'numberOfCollapsedBreadcrumbs', 'firstExpandedBreadcrumbIndex', 'breadcrumbRemovedFocus', 'breadcrumbShowMoreFocus', 'breadcrumbShowLessFocus', 'bindings', 'breadcrumbManager', 'context', 'contextState', 'searchOrListing', 'breadcrumbManagerState', 'error', 'isCollapsed', 'showMoreText', 'pathLimit', 'initialize', 'validateProps', 'breadcrumbs', 'showMoreButton', 'showLessButton', 'hide', 'show', 'showAllBreadcrumbs', 'adaptBreadcrumbs', 'updateShowLessDisplay', 'hideOverflowingBreadcrumbs', 'isOverflowing', 'updateShowMoreValue', 'getNumberFormatter', 'valueForFacetType', 'buildBreadcrumb', 'renderBreadcrumbs'],
+  defineCustomElementFn: () => {customElements.get('atomic-commerce-breadbox') || customElements.define('atomic-commerce-breadbox', LitAtomicCommerceBreadbox);}
+})
+@Component({
+  selector: 'atomic-commerce-breadbox',
+  standalone: false,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
+  inputs: ['pathLimit']
+})
+export class AtomicCommerceBreadbox {
+  protected readonly el: HTMLElement;
+  constructor(c: ChangeDetectorRef, el: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = el.nativeElement;
+    
+  }
+}
+
+export declare interface AtomicCommerceBreadbox extends LitAtomicCommerceBreadbox {
+
+}
+
+@ProxyCmp({
+  inputs: ['isCollapsed', 'field'],
+  methods: ['bindings', 'isCollapsed', 'field', 'error', 'resultIndexToFocusOnShowMore', 'showLessFocus', 'showMoreFocus', 'headerFocus', 'activeValueFocus', 'facetSearchAriaMessage', 'initialize', 'displayName', 'focusTargets', 'hasParents', 'renderHeader', 'renderValuesTree', 'renderChild', 'renderChildren', 'renderSearchResults', 'renderShowMoreLess', 'validateFacet'],
+  defineCustomElementFn: () => {customElements.get('atomic-commerce-category-facet') || customElements.define('atomic-commerce-category-facet', LitAtomicCommerceCategoryFacet);}
+})
+@Component({
+  selector: 'atomic-commerce-category-facet',
+  standalone: false,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
+  inputs: ['isCollapsed', 'field']
+})
+export class AtomicCommerceCategoryFacet {
+  protected readonly el: HTMLElement;
+  constructor(c: ChangeDetectorRef, el: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = el.nativeElement;
+    
+  }
+}
+
+export declare interface AtomicCommerceCategoryFacet extends LitAtomicCommerceCategoryFacet {
+
+}
+
+@ProxyCmp({
+  inputs: [],
+  methods: ['bindings', 'didYouMean', 'queryTrigger', 'didYouMeanState', 'queryTriggerState', 'error', 'initialize', 'content'],
+  defineCustomElementFn: () => {customElements.get('atomic-commerce-did-you-mean') || customElements.define('atomic-commerce-did-you-mean', LitAtomicCommerceDidYouMean);}
+})
+@Component({
+  selector: 'atomic-commerce-did-you-mean',
+  standalone: false,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
+  inputs: []
+})
+export class AtomicCommerceDidYouMean {
+  protected readonly el: HTMLElement;
+  constructor(c: ChangeDetectorRef, el: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = el.nativeElement;
+    
+  }
+}
+
+export declare interface AtomicCommerceDidYouMean extends LitAtomicCommerceDidYouMean {
+
+}
+
+@ProxyCmp({
+  inputs: ['summary', 'facet', 'isCollapsed', 'field'],
+  methods: ['summary', 'facet', 'isCollapsed', 'field', 'bindings', 'summaryState', 'facetState', 'error', 'showLessFocus', 'showMoreFocus', 'headerFocus', 'unsubscribeFacetController', 'ariaLiveRegion', 'initialize', 'renderHeader', 'renderBody', 'renderValuesContainer', 'renderSearchResults', 'renderValues', 'renderShowMoreLess', 'renderMatches', 'activeValues', 'displayName', 'facetValueProps', 'initFocusTargets', 'initAriaLive', 'focusTargets', 'isFacetState', 'ensureSubscribed', 'validateFacet'],
+  defineCustomElementFn: () => {customElements.get('atomic-commerce-facet') || customElements.define('atomic-commerce-facet', LitAtomicCommerceFacet);}
+})
+@Component({
+  selector: 'atomic-commerce-facet',
+  standalone: false,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
+  inputs: ['summary', 'facet', 'isCollapsed', 'field']
+})
+export class AtomicCommerceFacet {
+  protected readonly el: HTMLElement;
+  constructor(c: ChangeDetectorRef, el: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = el.nativeElement;
+    
+  }
+}
+
+export declare interface AtomicCommerceFacet extends LitAtomicCommerceFacet {
+
+}
+
+@ProxyCmp({
+  inputs: ['collapseFacetsAfter'],
+  methods: ['bindings', 'error', 'facetGenerator', 'summary', 'collapseFacetsAfter', 'isAppLoaded', 'initialize', 'isProductListing', 'controllerBuilder', 'validateProps', 'shouldCollapseFacet', 'renderFacetPlaceholders', 'renderFacets'],
+  defineCustomElementFn: () => {customElements.get('atomic-commerce-facets') || customElements.define('atomic-commerce-facets', LitAtomicCommerceFacets);}
+})
+@Component({
+  selector: 'atomic-commerce-facets',
+  standalone: false,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
+  inputs: ['collapseFacetsAfter']
+})
+export class AtomicCommerceFacets {
+  protected readonly el: HTMLElement;
+  constructor(c: ChangeDetectorRef, el: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = el.nativeElement;
+    
+  }
+}
+
+export declare interface AtomicCommerceFacets extends LitAtomicCommerceFacets {
+
+}
+
+@ProxyCmp({
+  inputs: ['type', 'analytics', 'logLevel', 'i18n', 'language', 'engine', 'reflectStateInUrl', 'disableStateReflectionInUrl', 'scrollContainer', 'languageAssetsPath', 'iconAssetsPath'],
+  methods: ['urlManager', 'searchOrListing', 'summary', 'context', 'unsubscribeUrlManager', 'unsubscribeSummary', 'initialized', 'store', 'interfaceController', 'error', 'type', 'analytics', 'logLevel', 'i18n', 'language', 'engine', 'reflectStateInUrl', 'disableStateReflectionInUrl', 'scrollContainer', 'languageAssetsPath', 'iconAssetsPath', 'i18Initialized', 'toggleAnalytics', 'updateLanguage', 'updateIconAssetsPath', 'updateMobileBreakpoint', 'handleInitialization', 'scrollToTop', 'initialize', 'initializeWithEngine', 'executeFirstRequest', 'bindings', 'internalInitialization', 'getBindings', 'initEngine', 'fragment', 'initUrlManager', 'initRequestStatus', 'initSummary', 'initContext', 'initLanguage', 'updateHash', 'onHashChange', 'getUpdateComplete'],
+  defineCustomElementFn: () => {customElements.get('atomic-commerce-interface') || customElements.define('atomic-commerce-interface', LitAtomicCommerceInterface);}
+})
+@Component({
+  selector: 'atomic-commerce-interface',
+  standalone: false,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
+  inputs: ['type', 'analytics', 'logLevel', 'i18n', 'language', 'engine', 'reflectStateInUrl', 'disableStateReflectionInUrl', 'scrollContainer', 'languageAssetsPath', 'iconAssetsPath']
+})
+export class AtomicCommerceInterface {
+  protected readonly el: HTMLElement;
+  constructor(c: ChangeDetectorRef, el: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = el.nativeElement;
+    
+  }
+}
+
+export declare interface AtomicCommerceInterface extends LitAtomicCommerceInterface {
+
+}
+
+@ProxyCmp({
+  inputs: ['mobileBreakpoint'],
+  methods: ['error', 'mobileBreakpoint', 'styles'],
+  defineCustomElementFn: () => {customElements.get('atomic-commerce-layout') || customElements.define('atomic-commerce-layout', LitAtomicCommerceLayout);}
+})
+@Component({
+  selector: 'atomic-commerce-layout',
+  standalone: false,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
+  inputs: ['mobileBreakpoint']
+})
+export class AtomicCommerceLayout {
+  protected readonly el: HTMLElement;
+  constructor(c: ChangeDetectorRef, el: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = el.nativeElement;
+    
+  }
+}
+
+export declare interface AtomicCommerceLayout extends LitAtomicCommerceLayout {
+
+}
+
+@ProxyCmp({
+  inputs: [],
+  methods: ['bindings', 'error', 'pagination', 'listingOrSearch', 'isAppLoaded', 'paginationState', 'productListingOrSearchState', 'initialize', 'lastProduct', 'onClick', 'shouldRender'],
+  defineCustomElementFn: () => {customElements.get('atomic-commerce-load-more-products') || customElements.define('atomic-commerce-load-more-products', LitAtomicCommerceLoadMoreProducts);}
+})
+@Component({
+  selector: 'atomic-commerce-load-more-products',
+  standalone: false,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
+  inputs: []
+})
+export class AtomicCommerceLoadMoreProducts {
+  protected readonly el: HTMLElement;
+  constructor(c: ChangeDetectorRef, el: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = el.nativeElement;
+    
+  }
+}
+
+export declare interface AtomicCommerceLoadMoreProducts extends LitAtomicCommerceLoadMoreProducts {
+
+}
+
+@ProxyCmp({
+  inputs: [],
+  methods: ['bindings', 'summary', 'summaryState', 'error', 'ariaMessage', 'initialize', 'renderNoItems', 'renderSearchTips'],
+  defineCustomElementFn: () => {customElements.get('atomic-commerce-no-products') || customElements.define('atomic-commerce-no-products', LitAtomicCommerceNoProducts);}
+})
+@Component({
+  selector: 'atomic-commerce-no-products',
+  standalone: false,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
+  inputs: []
+})
+export class AtomicCommerceNoProducts {
+  protected readonly el: HTMLElement;
+  constructor(c: ChangeDetectorRef, el: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = el.nativeElement;
+    
+  }
+}
+
+export declare interface AtomicCommerceNoProducts extends LitAtomicCommerceNoProducts {
+
+}
+
+@ProxyCmp({
+  inputs: ['summary', 'facet', 'isCollapsed', 'field'],
+  methods: ['summary', 'facet', 'isCollapsed', 'field', 'context', 'bindings', 'facetState', 'summaryState', 'contextState', 'error', 'headerFocus', 'unsubscribeFacetController', 'initialize', 'formatter', 'focusTarget', 'displayName', 'numberOfSelectedValues', 'hasInputRange', 'shouldRenderValues', 'valuesToRender', 'shouldRenderInput', 'shouldRenderFacet', 'ensureSubscribed', 'renderValues', 'onNumberInputApply', 'validateFacet'],
+  defineCustomElementFn: () => {customElements.get('atomic-commerce-numeric-facet') || customElements.define('atomic-commerce-numeric-facet', LitAtomicCommerceNumericFacet);}
+})
+@Component({
+  selector: 'atomic-commerce-numeric-facet',
+  standalone: false,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
+  inputs: ['summary', 'facet', 'isCollapsed', 'field']
+})
+export class AtomicCommerceNumericFacet {
+  protected readonly el: HTMLElement;
+  constructor(c: ChangeDetectorRef, el: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = el.nativeElement;
+    
+  }
+}
+
+export declare interface AtomicCommerceNumericFacet extends LitAtomicCommerceNumericFacet {
+
+}
+
+@ProxyCmp({
+  inputs: ['numberOfPages', 'previousButtonIcon', 'nextButtonIcon'],
+  methods: ['bindings', 'error', 'isAppLoaded', 'pagerState', 'numberOfPages', 'previousButtonIcon', 'nextButtonIcon', 'pager', 'listingOrSearch', 'initialize', 'validateProps', 'radioGroupName', 'focusOnFirstResultAndScrollToTop'],
+  defineCustomElementFn: () => {customElements.get('atomic-commerce-pager') || customElements.define('atomic-commerce-pager', LitAtomicCommercePager);}
+})
+@Component({
+  selector: 'atomic-commerce-pager',
+  standalone: false,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
+  inputs: ['numberOfPages', 'previousButtonIcon', 'nextButtonIcon']
+})
+export class AtomicCommercePager {
+  protected readonly el: HTMLElement;
+  constructor(c: ChangeDetectorRef, el: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = el.nativeElement;
+    proxyOutputs(this, this.el, ['atomic/scrollToTop']);
+  }
+}
+
+export declare interface AtomicCommercePager extends LitAtomicCommercePager {
+  'atomic/scrollToTop': EventEmitter<CustomEvent<any>>;
+}
+
+@ProxyCmp({
+  inputs: ['density', 'display', 'imageSize', 'numberOfPlaceholders'],
+  methods: ['searchOrListing', 'summary', 'itemRenderingFunction', 'loadingFlag', 'nextNewResultTarget', 'productListCommon', 'productTemplateProvider', 'unsubscribeSummary', 'bindings', 'error', 'isAppLoaded', 'isEveryProductsReady', 'resultTemplateRegistered', 'templateHasError', 'searchOrListingState', 'summaryState', 'density', 'display', 'imageSize', 'numberOfPlaceholders', 'setRenderFunction', 'initialize', 'updateProductsReadyState', 'validateProps', 'initSearchOrListing', 'initSummary', 'initProductTemplateProvider', 'initProductListCommon', 'createSelectChildProductListener', 'selectChildProductCallback', 'computeListDisplayClasses', 'renderGrid', 'renderList', 'renderTable', 'focusTarget', 'shouldRender', 'getUpdateComplete'],
+  defineCustomElementFn: () => {customElements.get('atomic-commerce-product-list') || customElements.define('atomic-commerce-product-list', LitAtomicCommerceProductList);}
+})
+@Component({
+  selector: 'atomic-commerce-product-list',
+  standalone: false,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
+  inputs: ['density', 'display', 'imageSize', 'numberOfPlaceholders']
+})
+export class AtomicCommerceProductList {
+  protected readonly el: HTMLElement;
+  constructor(c: ChangeDetectorRef, el: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = el.nativeElement;
+    
+  }
+}
+
+export declare interface AtomicCommerceProductList extends LitAtomicCommerceProductList {
+
+}
+
+@ProxyCmp({
+  inputs: ['choicesDisplayed', 'initialChoice'],
+  methods: ['bindings', 'pagination', 'paginationState', 'summary', 'summaryState', 'error', 'isAppLoaded', 'choices', 'radioGroupName', 'choicesDisplayed', 'initialChoice', 'initialize', 'scrollToTopEvent', 'label'],
+  defineCustomElementFn: () => {customElements.get('atomic-commerce-products-per-page') || customElements.define('atomic-commerce-products-per-page', LitAtomicCommerceProductsPerPage);}
+})
+@Component({
+  selector: 'atomic-commerce-products-per-page',
+  standalone: false,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
+  inputs: ['choicesDisplayed', 'initialChoice']
+})
+export class AtomicCommerceProductsPerPage {
+  protected readonly el: HTMLElement;
+  constructor(c: ChangeDetectorRef, el: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = el.nativeElement;
+    proxyOutputs(this, this.el, ['atomic/scrollToTop']);
+  }
+}
+
+export declare interface AtomicCommerceProductsPerPage extends LitAtomicCommerceProductsPerPage {
+  'atomic/scrollToTop': EventEmitter<CustomEvent<any>>;
+}
+
+@ProxyCmp({
+  inputs: [],
+  methods: ['bindings', 'searchOrListing', 'searchOrListingState', 'error', 'showMoreInfo', 'ariaMessage', 'initialize'],
+  defineCustomElementFn: () => {customElements.get('atomic-commerce-query-error') || customElements.define('atomic-commerce-query-error', LitAtomicCommerceQueryError);}
+})
+@Component({
+  selector: 'atomic-commerce-query-error',
+  standalone: false,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
+  inputs: []
+})
+export class AtomicCommerceQueryError {
+  protected readonly el: HTMLElement;
+  constructor(c: ChangeDetectorRef, el: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = el.nativeElement;
+    
+  }
+}
+
+export declare interface AtomicCommerceQueryError extends LitAtomicCommerceQueryError {
+
+}
+
+@ProxyCmp({
+  inputs: [],
+  methods: ['bindings', 'error', 'listingOrSearchSummaryState', 'listingOrSearchSummary', 'ariaMessage', 'initialize', 'isSearch'],
+  defineCustomElementFn: () => {customElements.get('atomic-commerce-query-summary') || customElements.define('atomic-commerce-query-summary', LitAtomicCommerceQuerySummary);}
+})
+@Component({
+  selector: 'atomic-commerce-query-summary',
+  standalone: false,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
+  inputs: []
+})
+export class AtomicCommerceQuerySummary {
+  protected readonly el: HTMLElement;
+  constructor(c: ChangeDetectorRef, el: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = el.nativeElement;
+    
+  }
+}
+
+export declare interface AtomicCommerceQuerySummary extends LitAtomicCommerceQuerySummary {
+
+}
+
+@ProxyCmp({
+  inputs: ['i18n', 'engine', 'scrollContainer', 'languageAssetsPath', 'iconAssetsPath', 'language', 'analytics'],
+  methods: ['bindings', 'error', 'context', 'store', 'interfaceController', 'i18n', 'engine', 'scrollContainer', 'languageAssetsPath', 'iconAssetsPath', 'language', 'analytics', 'i18Initialized', 'initializeWithEngine', 'updateLocale', 'toggleAnalytics', 'updateIconAssetsPath', 'updateLanguage', 'handleInitialization', 'scrollToTop', 'internalInitialization', 'initContext', 'getBindings', 'initLanguage', 'getUpdateComplete'],
+  defineCustomElementFn: () => {customElements.get('atomic-commerce-recommendation-interface') || customElements.define('atomic-commerce-recommendation-interface', LitAtomicCommerceRecommendationInterface);}
+})
+@Component({
+  selector: 'atomic-commerce-recommendation-interface',
+  standalone: false,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
+  inputs: ['i18n', 'engine', 'scrollContainer', 'languageAssetsPath', 'iconAssetsPath', 'language', 'analytics']
+})
+export class AtomicCommerceRecommendationInterface {
+  protected readonly el: HTMLElement;
+  constructor(c: ChangeDetectorRef, el: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = el.nativeElement;
+    
+  }
+}
+
+export declare interface AtomicCommerceRecommendationInterface extends LitAtomicCommerceRecommendationInterface {
+
+}
+
+@ProxyCmp({
+  inputs: ['slotId', 'productId', 'display', 'density', 'imageSize', 'productsPerPage', 'headingLevel'],
+  methods: ['itemRenderingFunction', 'loadingFlag', 'nextNewProductTarget', 'productListCommon', 'productTemplateProvider', 'unsubscribeSummary', 'bindings', 'error', 'isAppLoaded', 'productTemplateRegistered', 'templateHasError', 'isEveryProductReady', 'currentPage', 'slotId', 'productId', 'display', 'density', 'imageSize', 'productsPerPage', 'headingLevel', 'watchNumberOfRecommendationsPerPage', 'setRenderFunction', 'previousPage', 'nextPage', 'initialize', 'updateProductsReadyState', 'focusTarget', 'augmentedRecommendationListState', 'validateProps', 'validateSlotID', 'renderListHeading', 'subsetRecommendations', 'numberOfPages', 'currentIndex', 'hasNoProducts', 'initRecommendations', 'initSummary', 'getAtomicProductProps', 'initProductTemplateProvider', 'initProductListCommon', 'createSelectChildProductListener', 'selectChildProductCallback', 'computeListDisplayClasses', 'renderAsGrid', 'renderRecommendationList', 'shouldRender', 'getUpdateComplete'],
+  defineCustomElementFn: () => {customElements.get('atomic-commerce-recommendation-list') || customElements.define('atomic-commerce-recommendation-list', LitAtomicCommerceRecommendationList);}
+})
+@Component({
+  selector: 'atomic-commerce-recommendation-list',
+  standalone: false,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
+  inputs: ['slotId', 'productId', 'display', 'density', 'imageSize', 'productsPerPage', 'headingLevel']
+})
