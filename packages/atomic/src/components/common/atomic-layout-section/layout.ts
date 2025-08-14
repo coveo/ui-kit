@@ -1,12 +1,9 @@
-import {
-  findSection,
-  sectionSelector,
-} from '../../common/atomic-layout-section/sections';
+import {findSection, sectionSelector} from './sections';
 
 export function makeDesktopQuery(mobileBreakpoint: string) {
   return `only screen and (min-width: ${mobileBreakpoint})`;
 }
-export function buildSearchLayoutCommon(
+export function buildCommonLayout(
   element: HTMLElement,
   mobileBreakpoint: string,
   layoutWebComponentTagName: string,
