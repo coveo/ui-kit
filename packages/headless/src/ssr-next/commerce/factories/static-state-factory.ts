@@ -3,6 +3,7 @@ import {buildProductListing} from '../../../controllers/commerce/product-listing
 import {buildSearch} from '../../../controllers/commerce/search/headless-search.js';
 import {augmentPreprocessRequestWithForwardedFor} from '../../common/augment-preprocess-request.js';
 import {createStaticState} from '../controller-utils.js';
+import type {BuildConfig} from '../types/build.js';
 import {SolutionType} from '../types/controller-constants.js';
 import type {AugmentedControllerDefinition} from '../types/controller-definitions.js';
 import type {InferControllerStaticStateMapFromDefinitionsWithSolutionType} from '../types/controller-inference.js';
@@ -14,7 +15,6 @@ import type {
   FetchStaticStateFunction,
   FetchStaticStateParameters,
 } from '../types/engine.js';
-import {wireControllerParams} from '../utils/controller-wiring.js';
 import {
   buildFactory,
   type CommerceEngineDefinitionOptions,
@@ -30,8 +30,6 @@ export function fetchStaticStateFactory<
     solutionType: SolutionType
   ): FetchStaticStateFunction<TControllerDefinitions> =>
     async (...params: FetchStaticStateParameters<TControllerDefinitions>) => {
-      wireControllerParams(solutionType, controllerDefinitions, params);
-
       const solutionTypeBuild = await buildFactory(
         controllerDefinitions,
         options
@@ -69,7 +67,12 @@ export function fetchStaticStateFactory<
           SolutionType
         > &
           BakedInControllers
-      >;
-      return staticState;
+      > &
+        BuildConfig<TControllerDefinitions, SolutionType>;
+
+      return {
+        ...params[0], // TODO: KIT-4754: remove index access after no longer relying on OptionTuple type
+        ...staticState,
+      };
     };
 }

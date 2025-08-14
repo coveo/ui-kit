@@ -34,5 +34,9 @@ export type FetchStaticState<
       >
   >
 ) => Promise<
-  EngineStaticState<TSearchAction, TControllersStaticState & BakedInControllers>
+  EngineStaticState<
+    TSearchAction,
+    TControllersStaticState & BakedInControllers
+  > &
+    BuildConfig<TControllersDefinitionsMap, TSolutionType>
 >;

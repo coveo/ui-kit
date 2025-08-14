@@ -5,11 +5,14 @@ import {
   requiredNonEmptyString,
 } from '../../../utils/validate-payload.js';
 import type {ControllersPropsMap} from '../../common/types/controllers.js';
-import {SolutionType} from '../types/controller-constants.js';
 import type {
-  CommerceControllerDefinitionsMap,
-  FetchStaticStateParameters,
-} from '../types/engine.js';
+  BuildConfig,
+  RecommendationBuildConfig,
+  SearchBuildConfig,
+} from '../types/build.js';
+import {SolutionType} from '../types/controller-constants.js';
+import type {InferControllerPropsMapFromDefinitions} from '../types/controller-inference.js';
+import type {CommerceControllerDefinitionsMap} from '../types/engine.js';
 
 export const requiredDefinition = {
   language: contextDefinition.language,
@@ -43,18 +46,10 @@ export function wireControllerParams<
 >(
   solutionType: SolutionType,
   controllerDefinitions: TControllerDefinitions,
-  params: FetchStaticStateParameters<TControllerDefinitions>
-): void {
-  if (
-    !Array.isArray(params) ||
-    params.length === 0 ||
-    typeof params[0] !== 'object'
-  ) {
-    return;
+  paramsObject: BuildConfig<TControllerDefinitions, SolutionType> & {
+    controllers?: ControllersPropsMap;
   }
-
-  const paramsObject = params[0] as Record<string, unknown>;
-
+): InferControllerPropsMapFromDefinitions<TControllerDefinitions> {
   switch (solutionType) {
     case SolutionType.listing:
       listingDefinitionSchema.validate(paramsObject);
@@ -67,13 +62,12 @@ export function wireControllerParams<
       break;
   }
 
-  paramsObject.controllers ??= {};
-  const controllers = paramsObject.controllers as ControllersPropsMap;
+  const controllerProps: ControllersPropsMap = paramsObject.controllers ?? {};
 
   const wireParameterManager = (query?: string) => {
     const {searchParams} = paramsObject;
     if (controllerDefinitions?.parameterManager) {
-      controllers.parameterManager = {
+      controllerProps.parameterManager = {
         initialState: {
           parameters: {
             ...(query && {q: query}),
@@ -89,7 +83,7 @@ export function wireControllerParams<
   const wireContext = () => {
     const {language, country, currency, url} = paramsObject;
     if (controllerDefinitions?.context) {
-      controllers.context = {
+      controllerProps.context = {
         initialState: {
           view: {url},
           language,
@@ -103,13 +97,14 @@ export function wireControllerParams<
   const wireCart = () => {
     const {cart} = paramsObject;
     if (controllerDefinitions?.cart && cart) {
-      controllers.cart = {initialState: cart};
+      controllerProps.cart = {initialState: cart};
     }
   };
 
   const wireRecommendations = () => {
-    const {recommendations} = paramsObject;
-    controllers.recommendations = recommendations || [];
+    const {recommendations} =
+      paramsObject as RecommendationBuildConfig<TControllerDefinitions>;
+    controllerProps.recommendations = recommendations || [];
   };
 
   // Common wiring for all solution types
@@ -120,7 +115,7 @@ export function wireControllerParams<
 
   switch (solutionType) {
     case SolutionType.search: {
-      const {query} = paramsObject;
+      const {query} = paramsObject as SearchBuildConfig;
       wireCommon();
       if (typeof query === 'string') wireParameterManager(query);
       break;
@@ -142,4 +137,6 @@ export function wireControllerParams<
       wireCommon();
       break;
   }
+
+  return controllerProps as InferControllerPropsMapFromDefinitions<TControllerDefinitions>;
 }

@@ -1,6 +1,6 @@
 import type {UnknownAction} from '@reduxjs/toolkit';
 import {createStaticState} from '../controller-utils.js';
-import type {RecommendationBuildConfig} from '../types/build.js';
+import type {BuildConfig, RecommendationBuildConfig} from '../types/build.js';
 import {SolutionType} from '../types/controller-constants.js';
 import type {AugmentedControllerDefinition} from '../types/controller-definitions.js';
 import type {InferControllerStaticStateMapFromDefinitionsWithSolutionType} from '../types/controller-inference.js';
@@ -13,7 +13,6 @@ import type {
   FetchStaticStateFunction,
   FetchStaticStateParameters,
 } from '../types/engine.js';
-import {wireControllerParams} from '../utils/controller-wiring.js';
 import {filterRecommendationControllers} from '../utils/recommendation-filter.js';
 import {
   buildFactory,
@@ -33,12 +32,6 @@ export function fetchRecommendationStaticStateFactory<
     const allowedRecommendationKeys = (
       props as RecommendationBuildConfig<TControllerDefinitions>
     ).recommendations;
-
-    wireControllerParams(
-      SolutionType.recommendation,
-      controllerDefinitions,
-      params
-    );
 
     const solutionTypeBuild = await buildFactory(
       controllerDefinitions,
@@ -68,6 +61,7 @@ export function fetchRecommendationStaticStateFactory<
         SolutionType
       > &
         BakedInControllers
-    >;
+    > &
+      BuildConfig<TControllerDefinitions, SolutionType.recommendation>;
   };
 }

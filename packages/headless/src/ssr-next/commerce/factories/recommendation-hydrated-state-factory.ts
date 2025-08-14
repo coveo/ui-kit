@@ -1,5 +1,8 @@
 import {SolutionType} from '../types/controller-constants.js';
+import type {HydratedState} from '../types/controller-definitions.js';
+import type {InferControllersMapFromDefinition} from '../types/controller-inference.js';
 import type {
+  BakedInControllers,
   BuildParameters,
   BuildResult,
   CommerceControllerDefinitionsMap,
@@ -9,12 +12,13 @@ import type {
 import {
   buildFactory,
   type CommerceEngineDefinitionOptions,
+  type SSRCommerceEngine,
 } from './build-factory.js';
 
 export function hydratedRecommendationStaticStateFactory<
   TControllerDefinitions extends CommerceControllerDefinitionsMap,
 >(
-  controllerDefinitions: TControllerDefinitions | undefined,
+  controllerDefinitions: TControllerDefinitions,
   options: CommerceEngineDefinitionOptions<TControllerDefinitions>
 ): HydrateStaticStateFunction<TControllerDefinitions> {
   return async (
@@ -35,6 +39,10 @@ export function hydratedRecommendationStaticStateFactory<
 
     await engine.waitForRequestCompletedAction();
 
-    return {engine, controllers};
+    return {engine, controllers} as HydratedState<
+      SSRCommerceEngine,
+      InferControllersMapFromDefinition<TControllerDefinitions, SolutionType> &
+        BakedInControllers
+    >;
   };
 }
