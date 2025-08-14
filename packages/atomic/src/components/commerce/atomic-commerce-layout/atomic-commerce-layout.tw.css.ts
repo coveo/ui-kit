@@ -1,3 +1,6 @@
+import {css} from 'lit';
+
+const styles = css`
 .atomic-modal-opened {
   overflow-y: hidden;
 }
@@ -162,3 +165,6 @@ atomic-commerce-layout {
     margin-top: var(--atomic-layout-spacing-y);
   }
 }
+`;
+
+export default styles;

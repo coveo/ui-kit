@@ -8,7 +8,7 @@ const {decorator, play} = wrapInSearchInterface();
 
 const meta: Meta = {
   component: 'atomic-sort-expression',
-  title: 'Atomic/SortExpression',
+  title: 'Search/SortExpression',
   id: 'atomic-sort-expression',
 
   render: renderComponent,

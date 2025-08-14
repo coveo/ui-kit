@@ -8,7 +8,7 @@ import {
   type SearchSummaryState,
   type Summary,
 } from '@coveo/headless/commerce';
-import {type CSSResultGroup, html, LitElement, unsafeCSS} from 'lit';
+import {type CSSResultGroup, css, html, LitElement} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {when} from 'lit/directives/when.js';
 import {renderNumericFacetValuesGroup} from '@/src/components/common/facets/numeric-facet/values-container';
@@ -31,7 +31,6 @@ import type {Range} from '../atomic-commerce-facet-number-input/atomic-commerce-
 import '../atomic-commerce-facet-number-input/atomic-commerce-facet-number-input';
 import {bindings} from '@/src/decorators/bindings';
 import type {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface';
-import styles from './atomic-commerce-numeric-facet.tw.css';
 
 /**
  * The `atomic-commerce-numeric-facet` component renders a commerce facet that allows the user to filter products using numeric ranges.
@@ -107,7 +106,8 @@ export class AtomicCommerceNumericFacet
   private headerFocus!: FocusTargetController;
   private unsubscribeFacetController?: () => void;
 
-  static styles: CSSResultGroup = [unsafeCSS(styles)];
+  static styles: CSSResultGroup =
+    css`@import "../../common/facets/numeric-facet-common.tw.css";`;
 
   public initialize() {
     this.validateFacet();

@@ -5,7 +5,7 @@ import type {
   SearchSummaryState,
   Summary,
 } from '@coveo/headless/commerce';
-import {type CSSResultGroup, html, LitElement, nothing, unsafeCSS} from 'lit';
+import {type CSSResultGroup, css, html, LitElement, nothing} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {when} from 'lit/directives/when.js';
 import {renderFacetContainer} from '@/src/components/common/facets/facet-container/facet-container';
@@ -34,7 +34,6 @@ import {
 } from '../../common/facets/facet-search/facet-search-utils';
 import type {FacetValueProps} from '../../common/facets/facet-value/facet-value';
 import type {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface';
-import styles from './atomic-commerce-facet.tw.css';
 
 /**
  * The `atomic-commerce-facet` component renders a commerce facet that the end user can interact with to filter products.
@@ -113,7 +112,13 @@ export class AtomicCommerceFacet
 
   @state() public error!: Error;
 
-  static styles: CSSResultGroup = [unsafeCSS(styles)];
+  static styles: CSSResultGroup = css`
+  @import "../../common/facets/facet-value-checkbox/facet-value-checkbox.tw.css";
+  @import "../../common/facets/facet-search/facet-search.tw.css";
+  @import "../../common/facets/facet-common.tw.css";
+  @import "../../common/facets/facet-value-exclude/facet-value-exclude.tw.css";
+  @import "../../common/facets/facet-value-box/facet-value-box.tw.css";
+  `;
 
   private showLessFocus!: FocusTargetController;
   private showMoreFocus!: FocusTargetController;
