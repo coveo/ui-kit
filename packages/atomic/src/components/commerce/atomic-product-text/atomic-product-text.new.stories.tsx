@@ -1,5 +1,6 @@
 import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
 import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
+import {html} from 'lit-html';
 import {wrapInCommerceInterface} from '@/storybook-utils/commerce/commerce-interface-wrapper';
 import {wrapInCommerceProductList} from '@/storybook-utils/commerce/commerce-product-list-wrapper';
 import {wrapInProductTemplate} from '@/storybook-utils/commerce/commerce-product-template-wrapper';
@@ -25,14 +26,26 @@ const {decorator: commerceProductListDecorator} = wrapInCommerceProductList();
 const {decorator: productTemplateDecorator} = wrapInProductTemplate();
 const {events, args, argTypes, template} = getStorybookHelpers(
   'atomic-product-text',
-  {excludeCategories: ['methods']}
+  {
+    excludeCategories: ['methods'],
+    containerSelector: 'atomic-product-template template',
+  }
 );
 
 const meta: Meta = {
   component: 'atomic-product-text',
   title: 'Commerce/Product Text',
   id: 'atomic-product-text',
-  render: (args) => template(args),
+  render: (args, context) => html`
+    ${commerceInterfaceDecorator(
+      () =>
+        commerceProductListDecorator(
+          () => productTemplateDecorator(() => template(args), context),
+          context
+        ),
+      context
+    )}
+  `,
   parameters: {
     ...parameters,
     actions: {
@@ -47,11 +60,6 @@ export default meta;
 
 export const Default: Story = {
   name: 'atomic-product-text',
-  decorators: [
-    productTemplateDecorator,
-    commerceProductListDecorator,
-    commerceInterfaceDecorator,
-  ],
   afterEach: async (context) => {
     await initializeCommerceInterface(context);
 

@@ -34,7 +34,14 @@ const meta: Meta = {
     },
   },
   args,
-  argTypes,
+  argTypes: {
+    ...argTypes,
+    state: {
+      table: {
+        disable: true,
+      },
+    },
+  },
 
   afterEach: async (context) => {
     await initializeCommerceRecommendationInterface(context.canvasElement);

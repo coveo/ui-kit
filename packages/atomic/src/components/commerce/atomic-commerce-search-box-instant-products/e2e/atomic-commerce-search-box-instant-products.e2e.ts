@@ -60,13 +60,13 @@ test.describe('default', () => {
   test.describe('when clicking on "See All Results"', () => {
     test.beforeEach(async ({instantProduct, searchBox}) => {
       await instantProduct.load();
+      await searchBox.hydrated.waitFor();
       await searchBox.component.evaluate((node) =>
         node.setAttribute(
           'redirection-url',
           './iframe.html?id=atomic-commerce-interface--with-product-list&viewMode=story'
         )
       );
-      await searchBox.hydrated.waitFor();
       await searchBox.searchInput.click();
     });
     test('should redirect to the specified url after selecting a suggestion', async ({
