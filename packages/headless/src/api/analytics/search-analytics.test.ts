@@ -484,13 +484,22 @@ describe('#configureLegacyAnalytics', () => {
             ...getGeneratedAnswerInitialState(),
             answerConfigurationId: 'test-config-id',
           },
+          answer: {
+            queries: {
+              ['test-query']: {
+                data: {
+                  answerId: 'answerId1234',
+                },
+              },
+            },
+          },
         };
 
         const provider = new SearchAnalyticsProvider(() => mockState);
         const metadata = provider.getBaseMetadata();
 
         expect(metadata).toBeDefined();
-        expect(metadata).toHaveProperty('coveoHeadlessVersion');
+        expect(metadata).toHaveProperty('generativeQuestionAnsweringId');
       });
 
       it('should include generativeQuestionAnsweringId from search response when the answerId is unavailable', () => {
@@ -515,7 +524,7 @@ describe('#configureLegacyAnalytics', () => {
         const metadata = provider.getBaseMetadata();
 
         expect(metadata).toBeDefined();
-        expect(metadata).toHaveProperty('coveoHeadlessVersion');
+        expect(metadata).toHaveProperty('generativeQuestionAnsweringId');
       });
 
       it('should not include generativeQuestionAnsweringId when not available', () => {
@@ -544,7 +553,7 @@ describe('#configureLegacyAnalytics', () => {
         expect(metadata).not.toHaveProperty('generativeQuestionAnsweringId');
       });
 
-      it('should handle partial search states correctly', () => {
+      it('should handle partial search states and still expose metadata properties', () => {
         const partialState = {
           ...getBaseState(),
           search: undefined,
@@ -566,12 +575,22 @@ describe('#configureLegacyAnalytics', () => {
               multiValue: ['value1', 'value2'],
             },
           },
+          search: {
+            ...buildMockSearchState({}),
+            response: {
+              ...buildMockSearchState({}).response,
+              extendedResults: {
+                generativeQuestionAnsweringId: 'search-response-id-456',
+              },
+            },
+          },
         };
 
         const provider = new SearchAnalyticsProvider(() => stateWithContext);
         const metadata = provider.getBaseMetadata();
 
         expect(metadata).toHaveProperty('coveoHeadlessVersion');
+        expect(metadata).toHaveProperty('generativeQuestionAnsweringId');
 
         expect(metadata).toHaveProperty('context_customKey', 'customValue');
         expect(metadata).toHaveProperty('context_multiValue', [

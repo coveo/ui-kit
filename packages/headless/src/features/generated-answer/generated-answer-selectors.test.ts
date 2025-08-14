@@ -74,8 +74,25 @@ describe('generated-answer-selectors', () => {
     });
 
     it('should prioritize answerId over generativeQuestionAnsweringId when both exist', () => {
+      const mockWithExplicitAnswerId = {
+        ...streamAnswerAPIStateMock,
+        answer: {
+          ...streamAnswerAPIStateMock.answer,
+          queries: {
+            ...streamAnswerAPIStateMock.answer.queries,
+            // Explicitly setting the answerId
+            [Object.keys(streamAnswerAPIStateMock.answer.queries)[0]]: {
+              ...Object.values(streamAnswerAPIStateMock.answer.queries)[0],
+              data: {
+                answerId: 'answerId1234',
+              },
+            },
+          },
+        },
+      };
+
       const state = {
-        ...(streamAnswerAPIStateMock as Partial<SearchAppState>),
+        ...(mockWithExplicitAnswerId as Partial<SearchAppState>),
         generatedAnswer: {
           answerConfigurationId: 'config123',
         },
