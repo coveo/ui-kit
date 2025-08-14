@@ -7,7 +7,7 @@ import type {
   Summary,
 } from '@coveo/headless/commerce';
 import type {CSSResultGroup, TemplateResult} from 'lit';
-import {html, LitElement, nothing, unsafeCSS} from 'lit';
+import {html, LitElement, nothing} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {map} from 'lit/directives/map.js';
 import {when} from 'lit/directives/when.js';
@@ -93,7 +93,7 @@ export class AtomicCommerceCategoryFacet
   extends LitElement
   implements InitializableComponent<CommerceBindings>
 {
-  static styles: CSSResultGroup = [unsafeCSS(styles)];
+  static styles: CSSResultGroup = styles;
 
   @state()
   bindings!: CommerceBindings;

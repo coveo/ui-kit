@@ -1,4 +1,4 @@
-import {html, LitElement, unsafeCSS} from 'lit';
+import {html, LitElement} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {errorGuard} from '@/src/decorators/error-guard';
 import {CommerceLayoutMixin} from '@/src/mixins/commerce-layout-mixin';
@@ -13,7 +13,7 @@ import styles from './atomic-commerce-layout.tw.css';
 @customElement('atomic-commerce-layout')
 export class AtomicCommerceLayout extends CommerceLayoutMixin(
   LitElement,
-  unsafeCSS(styles)
+  styles
 ) {
   @state() error!: Error;
 
