@@ -1,18 +1,16 @@
-import {Canvas, ArgTypes, Meta, Title, Description, Subtitle, Stories} from '@storybook/blocks';
+import { Meta } from '@storybook/blocks';
 import * as AtomicCommerceSearchBoxStories from './atomic-commerce-search-box.new.stories';
-import {CanvasWithGithub} from '../../../../storybook-utils/documentation/canvas-with-github';
+import { AtomicDocTemplate } from '../../../../storybook-utils/documentation/atomic-doc-template';
+
 
 <Meta of={AtomicCommerceSearchBoxStories} />
 
-<Title />
-<Subtitle><Description/></Subtitle>
-
-<CanvasWithGithub
-  of={AtomicCommerceSearchBoxStories.Default}
+<AtomicDocTemplate
+  stories={AtomicCommerceSearchBoxStories}
   githubPath="commerce/atomic-commerce-search-box/atomic-commerce-search-box.ts"
-/>
-
-## Usage
+  tagName="atomic-commerce-search-box"
+  className="AtomicCommerceSearchBox"
+>
 This component is typically placed within the "search" section of the layout.
 ```html
 <atomic-commerce-interface>
@@ -45,9 +43,4 @@ To enable instant product results, you must explicitly include the [atomic-comme
   </atomic-commerce-search-box-instant-products>
 </atomic-commerce-search-box>
 ```
-
-## Examples
-<Stories title={""}/>
-
-## Reference
-<ArgTypes />
+</AtomicDocTemplate>

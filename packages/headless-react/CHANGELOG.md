@@ -1,3 +1,9 @@
+## <small>2.5.1 (2025-08-11)</small>
+
+* test(headless-ssr): fix window is not defined flakiness (#5849) ([894a8a1](https://github.com/coveo/ui-kit/commits/894a8a1)), closes [#5849](https://github.com/coveo/ui-kit/issues/5849)
+
+
+
 ## 2.5.0 (2025-08-07)
 
 * chore: migrate from master to main (#5822) ([5372fa4](https://github.com/coveo/ui-kit/commits/5372fa4)), closes [#5822](https://github.com/coveo/ui-kit/issues/5822)

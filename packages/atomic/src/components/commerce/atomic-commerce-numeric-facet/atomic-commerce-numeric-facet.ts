@@ -21,11 +21,9 @@ import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
 import {InitializeBindingsMixin} from '@/src/mixins/bindings-mixin';
 import {FocusTargetController} from '@/src/utils/accessibility-utils';
 import {shouldDisplayInputForFacetRange} from '../../common/facets/facet-common';
-import type {FacetInfo} from '../../common/facets/facet-common-store';
 import {renderFacetContainer} from '../../common/facets/facet-container/facet-container';
 import {renderFacetHeader} from '../../common/facets/facet-header/facet-header';
 import {renderNumericFacetValue} from '../../common/facets/numeric-facet/value-link';
-import {initializePopover} from '../../common/facets/popover/popover-type';
 import {
   defaultCurrencyFormatter,
   defaultNumberFormatter,
@@ -54,9 +52,6 @@ import styles from './atomic-commerce-numeric-facet.tw.css';
  * @part label-end - The label for the maximum value input field.
  * @part input-end - The input field to enter the maximum numeric value.
  * @part input-apply-button - The button to apply custom numeric range values.
- *
- * @internal
- *
  */
 @customElement('atomic-commerce-numeric-facet')
 @withTailwindStyles
@@ -117,7 +112,6 @@ export class AtomicCommerceNumericFacet
     this.validateFacet();
     this.context = buildContext(this.bindings.engine);
     this.ensureSubscribed();
-    this.registerFacetToStore();
   }
 
   public disconnectedCallback(): void {
@@ -138,21 +132,6 @@ export class AtomicCommerceNumericFacet
       return defaultCurrencyFormatter(this.contextState.currency);
     }
     return defaultNumberFormatter;
-  }
-
-  private registerFacetToStore() {
-    const {facetId} = this.facetState;
-    const facetInfo: FacetInfo = {
-      label: () => this.bindings.i18n.t(this.displayName),
-      facetId: facetId,
-      element: this,
-      isHidden: () => this.isHidden,
-    };
-    initializePopover(this, {
-      ...facetInfo,
-      hasValues: () => this.hasValues,
-      numberOfActiveValues: () => this.numberOfSelectedValues,
-    });
   }
 
   private get focusTarget(): FocusTargetController {
@@ -209,19 +188,8 @@ export class AtomicCommerceNumericFacet
     });
   }
 
-  private get isHidden() {
-    return !this.shouldRenderFacet;
-  }
-
   private get shouldRenderFacet() {
     return this.shouldRenderInput || this.shouldRenderValues;
-  }
-
-  private get hasValues() {
-    if (this.facetState.values.length) {
-      return true;
-    }
-    return !!this.valuesToRender.length;
   }
 
   private ensureSubscribed() {

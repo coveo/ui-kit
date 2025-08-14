@@ -1,6 +1,5 @@
 import type {CoreEngine, CoreEngineNext} from '../../../app/engine.js';
 import type {Controller} from '../../../controllers/controller/headless-controller.js';
-import type {SSRCommerceEngine} from '../../commerce/factories/build-factory.js';
 import type {
   BaseControllerDefinitionWithoutProps,
   BaseControllerDefinitionWithProps,
@@ -14,45 +13,55 @@ export class ControllerBuilder<
     BaseControllerDefinitionWithoutProps<TEngine, TController>
   > &
     Partial<BaseControllerDefinitionWithProps<TEngine, TController, TProps>>,
-  TEngine extends CoreEngine | CoreEngineNext | SSRCommerceEngine,
+  TEngine extends CoreEngine | CoreEngineNext,
   TProps,
   TController extends Controller = Controller,
 > {
-  private definition: TDefinition;
-  private engine: TEngine;
-  private props?: TProps;
-  private additionalArgs: unknown[] = [];
+  private _definition: TDefinition;
+  private _engine: TEngine;
+  private _props?: TProps;
+  private _additionalArgs: unknown[] = [];
 
   constructor(definition: TDefinition, engine: TEngine, props?: TProps) {
-    this.definition = definition;
-    this.engine = engine;
-    this.props = props;
+    this._definition = definition;
+    this._engine = engine;
+    this._props = props;
   }
 
   public withAdditionalArgs(additionalArgs: unknown[] = []): this {
-    this.additionalArgs = additionalArgs;
+    this._additionalArgs = additionalArgs;
     return this;
   }
 
   public build(): TController {
-    if ('build' in this.definition) {
+    if (
+      'build' in this._definition &&
+      typeof this._definition.build === 'function'
+    ) {
       return this.buildWithoutProps();
-    } else {
+    }
+    if (
+      'buildWithProps' in this._definition &&
+      typeof this._definition.buildWithProps === 'function'
+    ) {
       return this.buildWithProps();
     }
+    throw new Error(
+      'Controller definition must have a build or buildWithProps method.'
+    );
   }
 
   private buildWithoutProps(): TController {
-    const buildFn = this.definition.build!;
-    return buildFn(this.engine, ...this.additionalArgs);
+    const buildFn = this._definition.build!;
+    return buildFn(this._engine, ...this._additionalArgs);
   }
 
   private buildWithProps(): TController {
-    const buildWithPropsFn = this.definition.buildWithProps!;
+    const buildWithPropsFn = this._definition.buildWithProps!;
     const controller = buildWithPropsFn(
-      this.engine,
-      this.props,
-      ...this.additionalArgs
+      this._engine,
+      this._props,
+      ...this._additionalArgs
     );
 
     return {...controller, initialState: controller.state} as TController;

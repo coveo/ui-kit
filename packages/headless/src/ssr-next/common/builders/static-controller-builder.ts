@@ -36,7 +36,7 @@ class StaticControllerBuilder {
   /**
    * Builds and returns the static controller state object
    */
-  build(): StaticControllerState {
+  public build(): StaticControllerState {
     const result: StaticControllerState = {
       state: this._state!,
     };

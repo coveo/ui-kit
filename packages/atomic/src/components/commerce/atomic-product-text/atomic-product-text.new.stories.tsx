@@ -11,6 +11,14 @@ const {
   play: initializeCommerceInterface,
 } = wrapInCommerceInterface({
   skipFirstRequest: true,
+  engineConfig: {
+    preprocessRequest: (request) => {
+      const parsed = JSON.parse(request.body as string);
+      parsed.perPage = 1;
+      request.body = JSON.stringify(parsed);
+      return request;
+    },
+  },
 });
 
 const {decorator: commerceProductListDecorator} = wrapInCommerceProductList();
@@ -18,7 +26,7 @@ const {decorator: productTemplateDecorator} = wrapInProductTemplate();
 
 const meta: Meta = {
   component: 'atomic-product-text',
-  title: 'Atomic-Commerce/Product Template Components/ProductText',
+  title: 'Commerce/Product Text',
   id: 'atomic-product-text',
   render: renderComponent,
   parameters,

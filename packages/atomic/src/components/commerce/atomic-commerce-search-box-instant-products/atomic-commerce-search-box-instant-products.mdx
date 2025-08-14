@@ -1,18 +1,17 @@
-import {Canvas, ArgTypes, Meta, Title, Description, Stories, Subtitle} from '@storybook/blocks';
+import { Meta } from '@storybook/blocks';
 import * as AtomicCommerceSearchBoxInstantProductsStories from './atomic-commerce-search-box-instant-products.new.stories';
-import {CanvasWithGithub} from '../../../../storybook-utils/documentation/canvas-with-github';
+import { AtomicDocTemplate } from '../../../../storybook-utils/documentation/atomic-doc-template';
+
 
 <Meta of={AtomicCommerceSearchBoxInstantProductsStories} />
 
-<Title />
-<Subtitle><Description/></Subtitle>
-
-<CanvasWithGithub
-  of={AtomicCommerceSearchBoxInstantProductsStories.Default}
+<AtomicDocTemplate
+  stories={AtomicCommerceSearchBoxInstantProductsStories}
   githubPath="commerce/atomic-commerce-search-box-instant-products/atomic-commerce-search-box-instant-products.ts"
-/>
+  tagName="atomic-commerce-search-box-instant-products"
+  className="AtomicCommerceSearchBoxInstantProducts"
+>
 
-## Usage
 This component is placed inside the [atomic-commerce-search-box](/docs/atomic-commerce-search-box--docs) to display instant products as the user types.
 
 By default, `atomic-commerce-search-box-instant-products` is not included in the default `atomic-commerce-search-box`.
@@ -25,8 +24,4 @@ This component needs the `atomic-commerce-search-box-query-suggestions` componen
 </atomic-commerce-search-box>
 ```
 
-## Examples
-<Stories title={""}/>
-
-## Reference
-<ArgTypes />
+</AtomicDocTemplate>
