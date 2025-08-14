@@ -53,7 +53,7 @@ test.describe('when using a field that supports highlights', async () => {
       productText,
     }) => {
       await productText.load({
-        args: {field: 'excerpt', shouldHighlight: false},
+        args: {field: 'excerpt', 'no-highlight': true},
       });
       await productText.hydrated.first().waitFor();
 

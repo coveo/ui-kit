@@ -40,7 +40,7 @@ const meta: Meta = {
     commerceProductListDecorator,
     commerceInterfaceDecorator,
   ],
-  play,
+  afterEach: play,
   args: {
     ...args,
     field: 'cat_available_sizes',

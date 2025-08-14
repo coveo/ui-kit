@@ -52,7 +52,7 @@ export const Default: Story = {
     commerceProductListDecorator,
     commerceInterfaceDecorator,
   ],
-  play: async (context) => {
+  afterEach: async (context) => {
     await initializeCommerceInterface(context);
 
     const searchInterface = context.canvasElement.querySelector(

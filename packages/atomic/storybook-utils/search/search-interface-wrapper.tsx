@@ -7,17 +7,21 @@ import {html} from 'lit';
 import type * as _ from '../../src/components.js';
 
 export const wrapInSearchInterface = (
-  config?: Partial<SearchEngineConfiguration>,
-  skipFirstSearch = false
+  config: Partial<SearchEngineConfiguration> = {},
+  skipFirstSearch = false,
+  includeCodeRoot = true
 ): {
   decorator: Decorator;
   play: (context: StoryContext) => Promise<void>;
 } => ({
-  decorator: (story) => html`
-    <atomic-search-interface>
+  decorator: (story) => includeCodeRoot ? html`
+    <atomic-search-interface id="code-root">
       ${story()}
     </atomic-search-interface>
-  `,
+  ` : html`
+      <atomic-search-interface>
+      ${story()}
+    </atomic-search-interface>`,
   play: async ({canvasElement, step}) => {
     await customElements.whenDefined('atomic-search-interface');
     const searchInterface =

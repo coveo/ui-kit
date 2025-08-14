@@ -61,7 +61,7 @@ export const Default: Story = {
         </atomic-layout-section>
       </atomic-commerce-layout>`,
   ],
-  play: async (context) => {
+  afterEach: async (context) => {
     await preprocessedPlayed(context);
     await playExecuteFirstRequest(context);
   },

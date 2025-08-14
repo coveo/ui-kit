@@ -25,7 +25,7 @@ const meta: Meta = {
   args,
   argTypes,
 
-  play,
+  afterEach: play,
 };
 
 export default meta;
@@ -106,6 +106,6 @@ export const RecsOpeningInNewTab: Story = {
 
 export const RecsAsCarousel: Story = {
   args: {
-    numberOfRecommendationsPerPage: 4,
+    'number-of-recommendations-per-page': 4,
   },
 };

@@ -63,14 +63,14 @@ export const Default: Story = {};
 export const WithARatingDetailsField: Story = {
   name: 'With a rating details field',
   args: {
-    ratingDetailsField: 'ec_rating',
+    'rating-details-field': 'ec_rating',
   },
 };
 
 export const WithAMaxValueInIndex: Story = {
   name: 'With a custom max value',
   args: {
-    maxValueInIndex: 10,
+    'max-value-in-index': 10,
   },
 };
 

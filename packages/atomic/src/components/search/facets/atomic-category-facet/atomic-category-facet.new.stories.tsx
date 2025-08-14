@@ -37,9 +37,9 @@ export const Default: Story = {
   args: {
     field: 'geographicalhierarchy',
     label: 'Geographical Hierarchy',
-    withSearch: true,
-    numberOfValues: 5,
-    sortCriteria: 'occurrences',
+    'with-search': true,
+    'number-of-values': 5,
+    'sort-criteria': 'occurrences',
   },
 };
 
@@ -47,7 +47,7 @@ export const LowFacetValues: Story = {
   tags: ['test'],
   args: {
     field: 'geographicalhierarchy',
-    numberOfValues: 2,
-    withSearch: true,
+    'number-of-values': 2,
+    'with-search': true,
   },
 };

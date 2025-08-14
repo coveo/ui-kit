@@ -50,7 +50,7 @@ export const Default: Story = {
     commerceProductListDecorator,
     commerceInterfaceDecorator,
   ],
-  play,
+  afterEach: play,
   args: {
     'default-slot': `<button class="btn btn-primary">Add to Cart</button>`,
   },

@@ -37,7 +37,7 @@ const meta: Meta = {
   args,
   argTypes,
 
-  play,
+  afterEach: play,
 };
 
 export default meta;
@@ -433,7 +433,7 @@ export const InPage: Story = {
         </atomic-layout-section>
       </atomic-search-layout>`,
   ],
-  play: async (context) => {
+  afterEach: async (context) => {
     await play(context);
     await playExecuteFirstSearch(context);
   },

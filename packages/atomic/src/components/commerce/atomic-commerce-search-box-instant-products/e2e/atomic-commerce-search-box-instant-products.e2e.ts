@@ -63,7 +63,7 @@ test.describe('default', () => {
       await searchBox.component.evaluate((node) =>
         node.setAttribute(
           'redirection-url',
-          './iframe.html?id=atomic-commerce-search-box--in-page&viewMode=story'
+          './iframe.html?id=atomic-commerce-interface--with-product-list&viewMode=story'
         )
       );
       await searchBox.hydrated.waitFor();
@@ -75,7 +75,7 @@ test.describe('default', () => {
     }) => {
       await instantProduct.showAllButton.click();
       await page.waitForURL(
-        '**/iframe.html?id=atomic-commerce-search-box--in-page*'
+        '**/iframe.html?id=atomic-commerce-interface--with-product-list*'
       );
     });
   });

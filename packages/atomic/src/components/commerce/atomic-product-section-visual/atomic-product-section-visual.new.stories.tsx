@@ -48,7 +48,7 @@ export const Default: Story = {
     commerceProductListDecorator,
     commerceInterfaceDecorator,
   ],
-  play,
+  afterEach: play,
   args: {
     'default-slot': `<img src="https://images.barca.group/Sports/mj/Clothing/Pants/67_Men_Gray_Elastane/cb1a7d3c9ac3_bottom_left.webp" alt="Product Image" class="w-full h-auto rounded-lg">`,
   },

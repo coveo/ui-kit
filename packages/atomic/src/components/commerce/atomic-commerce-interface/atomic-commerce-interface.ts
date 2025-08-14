@@ -81,7 +81,7 @@ export class AtomicCommerceInterface
   private unsubscribeUrlManager?: Unsubscribe;
   private unsubscribeSummary?: Unsubscribe;
   private initialized = false;
-  public store: CommerceStore;
+  private store: CommerceStore;
   private interfaceController = new InterfaceController<CommerceEngine>(
     this,
     'CoveoAtomic',
@@ -147,6 +147,7 @@ export class AtomicCommerceInterface
 
   /**
    * Whether the state should be reflected in the URL parameters.
+   * @deprecated - replaced by `disable-state-reflection-in-url`
    */
   @property({
     type: Boolean,
@@ -155,6 +156,16 @@ export class AtomicCommerceInterface
     converter: booleanConverter,
   })
   reflectStateInUrl = true;
+
+  /**
+   * Disable state reflection in the URL parameters.
+   */
+  @property({
+    type: Boolean,
+    attribute: 'disable-state-reflection-in-url',
+    reflect: true,
+  })
+  disableStateReflectionInUrl = false;
 
   /**
    * The CSS selector for the container where the interface will scroll back to.
@@ -396,6 +407,9 @@ export class AtomicCommerceInterface
   }
 
   private initUrlManager() {
+    if (this.disableStateReflectionInUrl) {
+      return;
+    }
     if (!this.reflectStateInUrl) {
       return;
     }

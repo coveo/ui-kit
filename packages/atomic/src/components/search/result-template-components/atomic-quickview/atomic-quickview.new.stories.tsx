@@ -53,7 +53,7 @@ export const OutsideResultTemplate: Story = {
   args,
   argTypes,
 
-  play,
+  afterEach: play,
 };
 
 const meta: Meta = {
@@ -71,7 +71,7 @@ const meta: Meta = {
   args,
   argTypes,
 
-  play,
+  afterEach: play,
 };
 
 export default meta;

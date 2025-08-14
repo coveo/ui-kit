@@ -25,7 +25,7 @@ const meta: Meta = {
   args,
   argTypes,
 
-  play,
+  afterEach: play,
 };
 
 export default meta;
@@ -38,7 +38,7 @@ export const Default: Story = {
 
 export const WithTranslations: Story = {
   name: 'With translations',
-  play: async (context) => {
+  afterEach: async (context) => {
     const commerceInterface =
       context.canvasElement.querySelector<AtomicCommerceInterface>(
         'atomic-commerce-interface'

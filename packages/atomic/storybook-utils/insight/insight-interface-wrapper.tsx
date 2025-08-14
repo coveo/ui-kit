@@ -2,7 +2,6 @@ import {
   getSampleInsightEngineConfiguration,
   InsightEngineConfiguration,
 } from '@coveo/headless/insight';
-import {within} from 'storybook/test';
 import {Decorator, StoryContext} from '@storybook/web-components-vite';
 import {html} from 'lit';
 import type * as _ from '../../src/components.js';
@@ -25,7 +24,7 @@ export const wrapInInsightInterface = (
         box-shadow: 0px 3px 24px 0px #0000001a;
       }
     </style>
-    <atomic-insight-interface>
+    <atomic-insight-interface id="code-root">
       ${story()}
     </atomic-insight-interface>
   `,

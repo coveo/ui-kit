@@ -56,7 +56,7 @@ const meta: Meta = {
   args,
   argTypes,
 
-  play,
+  afterEach: play,
 };
 
 export default meta;
@@ -66,6 +66,6 @@ export const Default: Story = {};
 export const DisableCitationAnchoring: Story = {
   name: 'Citation anchoring disabled',
   args: {
-    disableCitationAnchoring: true,
+    'disable-citation-anchoring': true,
   },
 };

@@ -3,6 +3,12 @@ const moduleLinkPhase = ({moduleDoc}) => {
     if (declaration.kind !== 'class') {
       continue;
     }
+
+    // Skip processing if superClass is LitElement
+    if (declaration.superclass?.name === 'LitElement') {
+      continue;
+    }
+
     const keptAttributes = [];
     for (const attribute of declaration.attributes || []) {
       const memberLike = findMember(declaration, attribute);
@@ -111,6 +117,148 @@ export function mapPropertyPlugin() {
             name: attributeName,
             fieldName: propName,
           });
+        }
+      }
+    },
+  };
+}
+
+/**
+ * CEM plugin to remove "| undefined" from all attribute types.
+ * Transforms types like "X | Y | undefined" to "X | Y".
+ */
+export function removeUndefinedTypePlugin() {
+  return {
+    name: 'remove-undefined-type',
+    // Run in moduleLinkPhase to process after all analysis is complete
+    moduleLinkPhase({moduleDoc}) {
+      for (const declaration of moduleDoc.declarations) {
+        if (declaration.kind !== 'class') {
+          continue;
+        }
+
+        // Process attributes
+        if (declaration.attributes) {
+          for (const attribute of declaration.attributes) {
+            if (attribute.type?.text) {
+              attribute.type.text = removeUndefinedFromType(
+                attribute.type.text
+              );
+            }
+          }
+        }
+      }
+    },
+  };
+}
+
+/**
+ * Removes "| undefined" from a type string.
+ * Handles various formats:
+ * - "X | undefined" -> "X"
+ * - "undefined | X" -> "X"
+ * - "X | Y | undefined" -> "X | Y"
+ * - "X | undefined | Y" -> "X | Y"
+ */
+function removeUndefinedFromType(typeText) {
+  if (!typeText || typeof typeText !== 'string') {
+    return typeText;
+  }
+
+  // Split by | and filter out undefined, then rejoin
+  const parts = typeText
+    .split('|')
+    .map((part) => part.trim())
+    .filter((part) => part !== 'undefined');
+
+  // If all parts were undefined, return the original (shouldn't happen in practice)
+  if (parts.length === 0) {
+    return typeText;
+  }
+
+  // If only one part remains, return it without |
+  if (parts.length === 1) {
+    return parts[0];
+  }
+
+  // Join remaining parts with proper spacing
+  return parts.join(' | ');
+}
+
+/**
+ * CEM plugin to mark BaseInitializableComponent fields as private
+ * for custom elements that extend LitElement and implement BaseInitializableComponent.
+ */
+export function hideBaseInitializableComponentFieldsPlugin() {
+  return {
+    name: 'hide-base-initializable-component-fields',
+    // Run in moduleLinkPhase to process after all analysis is complete
+    moduleLinkPhase({moduleDoc}) {
+      // List of BaseInitializableComponent field names that should be marked as private
+      const baseInitializableComponentFields = [
+        'bindings',
+        'initialized',
+        'unsubscribeLanguage',
+        'initialize',
+        'error',
+      ];
+
+      for (const declaration of moduleDoc.declarations) {
+        if (declaration.kind !== 'class') {
+          continue;
+        }
+
+        // Check if this class extends LitElement
+        const extendsLitElement = declaration.superclass?.name === 'LitElement';
+
+        // Check if this class implements BaseInitializableComponent
+        // The CEM analyzer might not capture TypeScript implements directly,
+        // so we'll check for the presence of the BaseInitializableComponent fields instead
+        const implementsBaseInitializable = declaration.implements?.some(
+          (impl) =>
+            impl.name === 'BaseInitializableComponent' ||
+            impl.name === 'InitializableComponent' ||
+            impl.name === 'SearchBoxSuggestionsComponent'
+        );
+
+        // Alternative: check if the class has the BaseInitializableComponent fields
+        const hasBaseInitializableFields = declaration.members?.some((member) =>
+          baseInitializableComponentFields.includes(member.name)
+        );
+
+        // Use either explicit implements or presence of the fields
+        const shouldProcess =
+          extendsLitElement &&
+          (implementsBaseInitializable || hasBaseInitializableFields);
+
+        // If both conditions are met, mark the BaseInitializableComponent fields as private
+        if (shouldProcess && declaration.members) {
+          for (const member of declaration.members) {
+            if (baseInitializableComponentFields.includes(member.name)) {
+              member.privacy = 'private';
+            }
+          }
+
+          // Also handle attributes that might correspond to these fields
+          if (declaration.attributes) {
+            const attributesToRemove = [];
+            for (let i = 0; i < declaration.attributes.length; i++) {
+              const attribute = declaration.attributes[i];
+              if (
+                baseInitializableComponentFields.includes(attribute.fieldName)
+              ) {
+                attributesToRemove.push(i);
+              }
+            }
+            // Remove attributes in reverse order to maintain indices
+            for (let i = attributesToRemove.length - 1; i >= 0; i--) {
+              declaration.attributes.splice(attributesToRemove[i], 1);
+            }
+            // Clean up empty attributes array
+            if (declaration.attributes.length === 0) {
+              declaration.attributes = undefined;
+            }
+          }
         }
       }
     },

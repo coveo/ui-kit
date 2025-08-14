@@ -26,7 +26,7 @@ const meta: Meta = {
   args,
   argTypes,
 
-  play,
+  afterEach: play,
   globals: {
     default: {
       control: false,

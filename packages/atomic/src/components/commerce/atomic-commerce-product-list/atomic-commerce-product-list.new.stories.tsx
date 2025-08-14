@@ -42,10 +42,10 @@ const {play: playNoProducts} = wrapInCommerceInterface({
 const meta: Meta = {
   args: {
     ...args,
-    numberOfPlaceholders: 4,
+    'number-of-placeholders': 4,
     display: 'grid',
     density: 'normal',
-    imageSize: 'small',
+    'image-size': 'small',
   },
   component: 'atomic-commerce-product-list',
   title: 'Commerce/Product List',
@@ -60,7 +60,7 @@ const meta: Meta = {
   },
   argTypes,
 
-  play,
+  afterEach: play,
 };
 
 export default meta;
@@ -114,7 +114,7 @@ export const GridDisplayWithTemplate: Story = {
 
 export const GridDisplayBeforeQuery: Story = {
   name: 'Using grid display before query',
-  play: async (context) => {
+  afterEach: async (context) => {
     await playNoFirstQuery(context);
   },
 };
@@ -175,7 +175,7 @@ export const ListDisplayBeforeQuery: Story = {
   args: {
     display: 'list',
   },
-  play: async (context) => {
+  afterEach: async (context) => {
     await playNoFirstQuery(context);
   },
 };
@@ -209,7 +209,7 @@ export const TableDisplayBeforeQuery: Story = {
   args: {
     display: 'table',
   },
-  play: async (context) => {
+  afterEach: async (context) => {
     await playNoFirstQuery(context);
   },
 };
@@ -218,7 +218,7 @@ export const NoProducts: Story = {
   tags: ['!dev'],
   name: 'No products',
   decorators: [(story) => story()],
-  play: async (context) => {
+  afterEach: async (context) => {
     await playNoProducts(context);
     await playExecuteFirstRequest(context);
   },

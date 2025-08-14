@@ -30,7 +30,7 @@ const meta: Meta = {
   args,
   argTypes,
 
-  play: async (context) => {
+  afterEach: async (context) => {
     await initializeRecsInterface(context.canvasElement);
     const recsInterface = context.canvasElement.querySelector(
       'atomic-recs-interface'
@@ -93,7 +93,7 @@ export const WithRecsList: Story = {
 
 export const RecsBeforeInit: Story = {
   tags: ['test'],
-  play: async (context) => {
+  afterEach: async (context) => {
     const recsInterface = context.canvasElement.querySelector(
       'atomic-recs-interface'
     );

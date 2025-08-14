@@ -49,7 +49,7 @@ export const Default: Story = {
     commerceProductListDecorator,
     commerceInterfaceDecorator,
   ],
-  play,
+  afterEach: play,
   args: {
     'default-slot': `<h3 class="text-lg font-semibold text-gray-900">Sony WH-1000XM4 Wireless Headphones</h3>`,
   },

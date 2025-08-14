@@ -8,7 +8,7 @@ import {
 } from '@/storybook-utils/commerce/commerce-interface-wrapper';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 
-const {play, decorator} = wrapInCommerceInterface();
+const {play, decorator} = wrapInCommerceInterface({includeCodeRoot: false});
 const {events, args, argTypes, template} = getStorybookHelpers(
   'atomic-commerce-category-facet',
   {excludeCategories: ['methods']}
@@ -28,21 +28,15 @@ const meta: Meta = {
   },
   args,
   argTypes,
-
-  play,
 };
 
 export default meta;
 
 export const Default: Story = {
-  decorators: [
-    (_) => {
-      return html`<div id="code-root">
+  render: () => html`<div id="code-root">
         <atomic-commerce-facets></atomic-commerce-facets>
-      </div>`;
-    },
-  ],
-  play: async (context) => {
+      </div>`,
+  afterEach: async (context) => {
     await play(context);
     await playHideFacetTypes('atomic-commerce-category-facet', context);
   },

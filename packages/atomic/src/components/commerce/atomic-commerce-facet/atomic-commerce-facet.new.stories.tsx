@@ -28,8 +28,6 @@ const meta: Meta = {
   },
   args,
   argTypes,
-
-  play,
 };
 
 export default meta;
@@ -42,7 +40,7 @@ export const Default: Story = {
       </div>`;
     },
   ],
-  play: async (context) => {
+  afterEach: async (context) => {
     await play(context);
     await playHideFacetTypes('atomic-commerce-facet', context);
   },
