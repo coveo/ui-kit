@@ -76,8 +76,7 @@ export interface CommerceEngineDefinition<
    * Fetches the hydrated state on the client side using your engine definition and the static state.
    */
   hydrateStaticState: HydrateStaticState<
-    InferControllersMapFromDefinition<TControllers, TSolutionType> &
-      BakedInControllers,
+    InferControllersMapFromDefinition<TControllers, TSolutionType>,
     UnknownAction,
     InferControllerPropsMapFromDefinitions<TControllers>,
     TControllers,
