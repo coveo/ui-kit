@@ -1,4 +1,6 @@
-@import "../../common/item-list/styles/placeholders.pcss";
+import {css} from 'lit';
+
+const styles = css`@import "../../common/item-list/styles/placeholders.pcss";
 @import "../../common/item-list/styles/table-display.pcss";
 @import "../../common/item-list/styles/list-display.pcss";
 @import "../../common/item-list/styles/grid-display.pcss";
@@ -47,3 +49,6 @@
     flex-direction: column;
   }
 }
+`;
+
+export default styles;

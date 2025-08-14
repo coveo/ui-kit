@@ -1,7 +1,7 @@
-@import "../../common/item-list/styles/mixins.pcss";
+import {css} from 'lit';
+
+const styles = css`@import "../../common/item-list/styles/mixins.pcss";
 @import "../../common/item-list/styles/placeholders.pcss";
-@reference '../../../utils/tailwind.global.tw.css';
-@reference '../../../utils/coveo.tw.css';
 
 :host {
   @apply atomic-grid-clickable-elements;
@@ -22,3 +22,6 @@
     @apply font-sans text-2xl font-bold;
   }
 }
+`;
+
+export default styles;
