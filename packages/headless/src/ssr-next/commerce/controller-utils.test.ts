@@ -5,10 +5,12 @@ import {buildMockCommerceState} from '../../test/mock-commerce-state.js';
 import {
   buildMockController,
   buildMockControllerWithInitialState,
+} from '../../test/mock-controller.js';
+import {buildMockCommerceEngine} from '../../test/mock-engine-v2.js';
+import {
   defineMockCommerceController,
   defineMockCommerceControllerWithProps,
-} from '../../test/mock-controller-definitions.js';
-import {buildMockCommerceEngine} from '../../test/mock-engine-v2.js';
+} from '../../test/mock-ssr-controller-definitions.js';
 import * as utils from '../../utils/utils.js';
 import {ControllerBuilder} from '../common/builders/controller-builder.js';
 import {createStaticControllerBuilder} from '../common/builders/static-controller-builder.js';

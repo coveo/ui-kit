@@ -4,10 +4,12 @@ import type {CoreEngine} from '../../app/engine.js';
 import {
   buildMockController,
   buildMockControllerWithInitialState,
+} from '../../test/mock-controller.js';
+import {buildMockSearchEngine} from '../../test/mock-engine-v2.js';
+import {
   defineMockController,
   defineMockControllerWithProps,
-} from '../../test/mock-controller-definitions.js';
-import {buildMockSearchEngine} from '../../test/mock-engine-v2.js';
+} from '../../test/mock-ssr-controller-definitions.js';
 import {createMockState} from '../../test/mock-state.js';
 import * as utils from '../../utils/utils.js';
 import {ControllerBuilder} from './builders/controller-builder.js';
