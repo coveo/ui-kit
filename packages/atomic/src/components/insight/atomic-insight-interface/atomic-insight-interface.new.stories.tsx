@@ -1,31 +1,76 @@
-/* eslint-disable @cspell/spellchecker */
-
+import {getSampleInsightEngineConfiguration} from '@coveo/headless/insight';
 import type {Meta, StoryObj as Story} from '@storybook/web-components';
-import {html} from 'lit';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {renderComponent} from '@/storybook-utils/common/render-component';
-import {wrapInInsightInterface} from '@/storybook-utils/insight/insight-interface-wrapper';
+import '@/src/components/common/atomic-icon/atomic-icon'; // Import atomic-icon for pager buttons
+import './atomic-insight-interface.ts'; // Direct import for Lit component
+import type {AtomicInsightInterface} from './atomic-insight-interface';
 
-const {decorator, play} = wrapInInsightInterface();
+async function initializeInsightInterface(canvasElement: HTMLElement) {
+  await customElements.whenDefined('atomic-insight-interface');
+  const insightInterface = canvasElement.querySelector(
+    'atomic-insight-interface'
+  ) as AtomicInsightInterface;
+
+  await insightInterface.initialize(getSampleInsightEngineConfiguration());
+}
 
 const meta: Meta = {
   component: 'atomic-insight-interface',
-  title: 'Atomic/Insight/InsightInterface',
+  title: 'Insight/Interface',
   id: 'atomic-insight-interface',
-
   render: renderComponent,
-  decorators: [decorator],
   parameters,
-  play,
+  play: async (context) => {
+    await initializeInsightInterface(context.canvasElement);
+    const insightInterface = context.canvasElement.querySelector(
+      'atomic-insight-interface'
+    );
+    await insightInterface!.executeFirstSearch();
+  },
+  argTypes: {
+    'attributes-language': {
+      name: 'language',
+      type: 'string',
+      table: {
+        category: 'attributes',
+      },
+    },
+    'slots-default': {
+      name: 'default',
+      control: {
+        type: 'text',
+      },
+      table: {
+        category: 'slots',
+      },
+    },
+    'slots-full-search': {
+      name: 'full-search',
+      control: {
+        type: 'text',
+      },
+      table: {
+        category: 'slots',
+      },
+    },
+  },
+  args: {
+    'slots-default': `<span>Interface content</span>`,
+  },
 };
 
 export default meta;
 
 export const Default: Story = {
-  name: 'atomic-insight-panel',
-  decorators: [
-    () =>
-      html`<atomic-insight-layout>
+  tags: ['!dev'],
+};
+
+export const WithSearch: Story = {
+  tags: ['!dev'],
+  args: {
+    'slots-default': `
+    <atomic-insight-layout>
         <style>
           atomic-insight-search-box {
             position: relative;
@@ -816,9 +861,7 @@ export const Default: Story = {
         <atomic-layout-section section="pagination">
           <atomic-insight-pager></atomic-insight-pager>
         </atomic-layout-section>
-      </atomic-insight-layout>`,
-  ],
-  play: async (context) => {
-    await play(context);
+      </atomic-insight-layout>
+    `,
   },
 };

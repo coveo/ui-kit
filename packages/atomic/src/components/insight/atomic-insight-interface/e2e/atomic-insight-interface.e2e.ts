@@ -4,16 +4,18 @@ const defaultInsightQuerySummaryText = 'Insights related to this case';
 
 test.describe('Atomic Insight Panel', () => {
   test.beforeEach(async ({insightInterface}) => {
-    await insightInterface.load();
-    await insightInterface.hydrated.waitFor();
+    await insightInterface.load({
+      story: 'with-search',
+    });
   });
 
   test('should load correctly', async ({insightInterface}) => {
-    await expect(insightInterface.insightInterface).toHaveClass('hydrated');
+    await expect(insightInterface.insightInterface).toBeDefined();
   });
 
   test.describe('components basics', () => {
     test('parts should load correctly', async ({insightInterface}) => {
+      await expect(insightInterface.insightTabs.first()).toBeVisible();
       expect(await insightInterface.insightTabs.count()).toBeGreaterThan(0);
 
       await expect(insightInterface.insightQuerySummary).toBeVisible();
@@ -31,7 +33,6 @@ test.describe('Atomic Insight Panel', () => {
       await expect(insightInterface.insightUserActionsToggle).toBeVisible();
 
       await expect(insightInterface.insightPager).toBeVisible();
-      await expect(insightInterface.insightPager).toHaveClass('hydrated');
       await expect(insightInterface.insightPagerButtons.first()).toBeVisible();
 
       await expect(insightInterface.insightResults.first()).toBeVisible();
@@ -98,7 +99,6 @@ test.describe('Atomic Insight Panel', () => {
       await expect(insightInterface.insightRefineModal).toHaveAttribute(
         'is-open'
       );
-      await expect(insightInterface.insightRefineModal).toHaveClass('hydrated');
 
       await expect(
         insightInterface.insightRefineModalCloseButton
