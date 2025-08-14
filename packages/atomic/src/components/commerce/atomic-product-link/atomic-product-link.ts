@@ -48,7 +48,7 @@ export class AtomicProductLink
    *
    * For example, the following markup generates an `href` value such as `http://uri.com?id=itemTitle`, using the product's `clickUri` and `itemtitle` fields.
    * ```html
-   * <atomic-product-link href-template='${clickUri}?id=${permanentId}'></atomic-product-link>
+   * <atomic-product-link href-template='${clickUri}?id=${permanentid}'></atomic-product-link>
    * ```
    */
   @property({type: String, attribute: 'href-template', reflect: true})
@@ -72,28 +72,6 @@ export class AtomicProductLink
     if (warning) {
       this.bindings.engine.logger.warn(warning);
     }
-  }
-
-  private extractAttributesFromSlot() {
-    const slotName = 'attributes';
-    const attributes = getAttributesFromLinkSlot(this, slotName);
-
-    if (!attributes) {
-      this.linkAttributes = undefined;
-      return;
-    }
-
-    const attributesSlot = this.slots.attributes?.[0];
-    if (
-      attributesSlot instanceof Element &&
-      !attributesSlot.hasAttribute('hidden')
-    ) {
-      attributesSlot.setAttribute('hidden', '');
-    }
-
-    this.linkAttributes = attributes.filter(
-      (attr: Attr) => attr.nodeName !== 'hidden'
-    );
   }
 
   initialize() {
@@ -142,7 +120,7 @@ export class AtomicProductLink
           );
 
       const {warningMessage} = interactiveProduct;
-      this.extractAttributesFromSlot();
+      this.linkAttributes = getAttributesFromLinkSlot(this, 'attributes');
 
       return renderLinkWithItemAnalytics({
         props: {

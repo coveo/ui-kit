@@ -7,9 +7,8 @@ const {decorator, play} = wrapInSearchInterface();
 
 const meta: Meta = {
   component: 'atomic-results-per-page',
-  title: 'Search/ResultsPerPage',
+  title: 'Search/Results Per Page',
   id: 'atomic-results-per-page',
-
   render: renderComponent,
   decorators: [decorator],
   parameters,
@@ -18,6 +17,4 @@ const meta: Meta = {
 
 export default meta;
 
-export const Default: Story = {
-  name: 'atomic-results-per-page',
-};
+export const Default: Story = {};
