@@ -65,20 +65,33 @@
               ></c-quantic-category-facet>
             </c-quantic-facet-manager>
           </div>
-        </template>
-        <div
-          class="slds-col slds-order_1 slds-large-order_2 slds-size_1-of-1 slds-large-size_6-of-12"
-        >
-          <c-quantic-generated-answer
-            engine-id={engineId}
-            fields-to-include-in-citations={config.fieldsToIncludeInCitations}
-            collapsible={config.collapsible}
-            max-collapsed-height={config.maxCollapsedHeight}
-            with-toggle={config.withToggle}
-            answer-configuration-id={config.answerConfigurationId}
+          <div
+            class="slds-col slds-order_1 slds-large-order_2 slds-size_1-of-1 slds-large-size_6-of-12"
           >
-          </c-quantic-generated-answer>
-        </div>
+            <c-quantic-generated-answer
+              engine-id={engineId}
+              fields-to-include-in-citations={config.fieldsToIncludeInCitations}
+              collapsible={config.collapsible}
+              max-collapsed-height={config.maxCollapsedHeight}
+              with-toggle={config.withToggle}
+              answer-configuration-id={config.answerConfigurationId}
+            >
+            </c-quantic-generated-answer>
+          </div>
+        </template>
+        <template lwc:else>
+          <div class="slds-col slds-size_1-of-1 slds-large-size_12-of-12">
+            <c-quantic-generated-answer
+              engine-id={engineId}
+              fields-to-include-in-citations={config.fieldsToIncludeInCitations}
+              collapsible={config.collapsible}
+              max-collapsed-height={config.maxCollapsedHeight}
+              with-toggle={config.withToggle}
+              answer-configuration-id={config.answerConfigurationId}
+            >
+            </c-quantic-generated-answer>
+          </div>
+        </template>
       </div>
     </c-example-use-case>
   </c-example-layout>
