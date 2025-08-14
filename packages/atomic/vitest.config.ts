@@ -94,6 +94,8 @@ export default defineConfig({
       'src/**/search-layout.spec.ts',
     ],
     restoreMocks: true,
+    clearMocks: true,
+    mockReset: true,
     setupFiles: ['./vitest-utils/setup.ts'],
     deps: {
       moduleDirectories: ['node_modules', path.resolve('../../packages')],
