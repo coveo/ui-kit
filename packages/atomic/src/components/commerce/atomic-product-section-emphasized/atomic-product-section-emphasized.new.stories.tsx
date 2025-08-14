@@ -48,7 +48,7 @@ export const Default: Story = {
     commerceProductListDecorator,
     commerceInterfaceDecorator,
   ],
-  play,
+  afterEach: play,
   args: {
     'default-slot': `<span class="text-2xl font-bold text-green-600">$299.99</span>`,
   },

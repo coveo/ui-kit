@@ -35,7 +35,7 @@ const meta: Meta = {
       },
     },
   },
-  play: async (context) => {
+  afterEach: async (context) => {
     await play(context);
     const canvas = within(context.canvasElement);
     const refineToggle = await canvas.findByShadowText('Sort & Filter');

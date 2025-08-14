@@ -40,7 +40,7 @@ const meta: Meta = {
   },
   argTypes,
 
-  play,
+  afterEach: play,
   args: {
     ...args,
     field: 'ec_rating',

@@ -48,7 +48,7 @@ export const Default: Story = {
     commerceProductListDecorator,
     commerceInterfaceDecorator,
   ],
-  play,
+  afterEach: play,
   args: {
     'default-slot': `
       <div class="border border-gray-200 rounded-lg p-3 bg-gray-50 mt-2 ml-4">

@@ -2,7 +2,6 @@ import {
   getSampleRecommendationEngineConfiguration,
   RecommendationEngineConfiguration,
 } from '@coveo/headless/recommendation';
-import {within} from 'storybook/test';
 import {Decorator, StoryContext} from '@storybook/web-components-vite';
 import {html} from 'lit';
 import type * as _ from '../../src/components.js';
@@ -18,7 +17,7 @@ export const wrapInRecommendationInterface = ({
   play: (context: StoryContext) => Promise<void>;
 } => ({
   decorator: (story) => html`
-    <atomic-recs-interface>
+    <atomic-recs-interface id="code-root">
       ${story()}
     </atomic-recs-interface>
   `,

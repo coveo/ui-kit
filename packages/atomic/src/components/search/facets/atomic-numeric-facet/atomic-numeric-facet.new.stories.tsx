@@ -34,10 +34,10 @@ const meta: Meta = {
   },
   argTypes,
 
-  play,
+  afterEach: play,
   args: {
     ...args,
-    numberOfValues: 8,
+    'number-of-values': 8,
   },
 };
 
@@ -74,10 +74,10 @@ export const WithDependsOn: Story = {
   args: {
     label: 'YouTube View Count (Dependent facet)',
     field: 'ytviewcount',
-    withInput: 'integer',
-    dependsOnFiletype: 'YouTubeVideo',
+    'with-input': 'integer',
+    'depends-on-filetype': 'YouTubeVideo',
   },
-  play: async (context) => {
+  afterEach: async (context) => {
     const {canvasElement, step} = context;
     const canvas = within(canvasElement);
     await play(context);

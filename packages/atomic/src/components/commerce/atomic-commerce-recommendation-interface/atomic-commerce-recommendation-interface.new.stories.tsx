@@ -36,7 +36,7 @@ const meta: Meta = {
   args,
   argTypes,
 
-  play: async (context) => {
+  afterEach: async (context) => {
     await initializeCommerceRecommendationInterface(context.canvasElement);
   },
 };

@@ -40,7 +40,7 @@ const meta: Meta = {
   },
   argTypes,
 
-  play,
+  afterEach: play,
   args: {
     ...args,
     'default-slot': `<span>Render me if <strong>ec_name</strong> is defined.</span>`,

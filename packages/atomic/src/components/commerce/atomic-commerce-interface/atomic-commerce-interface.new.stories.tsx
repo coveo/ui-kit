@@ -28,14 +28,21 @@ const meta: Meta = {
     },
   },
 
-  play: async (context) => {
+  afterEach: async (context) => {
     await initializeCommerceInterface(context.canvasElement);
     const searchInterface = context.canvasElement.querySelector(
       'atomic-commerce-interface'
     );
     await searchInterface!.executeFirstRequest();
   },
-  argTypes,
+  argTypes: {
+    ...argTypes,
+    state: {
+      table: {
+        disable: true,
+      },
+    },
+  },
   args: {
     ...args,
     'default-slot': `<span>Interface content</span>`,
@@ -48,7 +55,7 @@ export const Default: Story = {};
 
 export const SearchBeforeInit: Story = {
   tags: ['!dev'],
-  play: async (context) => {
+  afterEach: async (context) => {
     const commerceInterface = context.canvasElement.querySelector(
       'atomic-commerce-interface'
     );

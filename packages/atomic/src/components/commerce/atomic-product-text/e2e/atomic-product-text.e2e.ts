@@ -80,6 +80,13 @@ test.describe('atomic-product-text', () => {
     test('should not highlight the keywords in the excerpt', async ({
       productText,
     }) => {
+      await productText.load({
+        args: {field: 'excerpt', 'no-highlight': true},
+      });
+      await productText.hydrated.first().waitFor();
+
+      await expect(productText.textContent.first()).toContainText(/kayak/i);
+
       const highlightedText =
         await productText.highlightedText.allTextContents();
       await expect(productText.textContent.first()).toContainText(/kayak/i);

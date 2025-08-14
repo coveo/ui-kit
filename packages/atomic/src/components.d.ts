@@ -1139,6 +1139,10 @@ export namespace Components {
         "userActions": Array<IUserAction>;
     }
     /**
+     * Internal component used by the `atomic-insight-user-actions-modal`. Do not use directly.
+     * This component displays all the actions performed by a user around the time they created a case.
+     * The actions are grouped into multiple sessions, including the session during which the case was created,
+     * the sessions preceding the case creation and the sessions following the case creation.
      * @component 
      * @example <AtomicInsightUserActionsTimeline userId={'123'} caseCreationDate={'2024-08-15T10:00:00Z'} />
      */
@@ -3467,6 +3471,10 @@ declare global {
         new (): HTMLAtomicInsightUserActionsSessionElement;
     };
     /**
+     * Internal component used by the `atomic-insight-user-actions-modal`. Do not use directly.
+     * This component displays all the actions performed by a user around the time they created a case.
+     * The actions are grouped into multiple sessions, including the session during which the case was created,
+     * the sessions preceding the case creation and the sessions following the case creation.
      * @component 
      * @example <AtomicInsightUserActionsTimeline userId={'123'} caseCreationDate={'2024-08-15T10:00:00Z'} />
      */
@@ -5750,6 +5758,10 @@ declare namespace LocalJSX {
         "userActions": Array<IUserAction>;
     }
     /**
+     * Internal component used by the `atomic-insight-user-actions-modal`. Do not use directly.
+     * This component displays all the actions performed by a user around the time they created a case.
+     * The actions are grouped into multiple sessions, including the session during which the case was created,
+     * the sessions preceding the case creation and the sessions following the case creation.
      * @component 
      * @example <AtomicInsightUserActionsTimeline userId={'123'} caseCreationDate={'2024-08-15T10:00:00Z'} />
      */
@@ -7762,6 +7774,10 @@ declare module "@stencil/core" {
              */
             "atomic-insight-user-actions-session": LocalJSX.AtomicInsightUserActionsSession & JSXBase.HTMLAttributes<HTMLAtomicInsightUserActionsSessionElement>;
             /**
+             * Internal component used by the `atomic-insight-user-actions-modal`. Do not use directly.
+             * This component displays all the actions performed by a user around the time they created a case.
+             * The actions are grouped into multiple sessions, including the session during which the case was created,
+             * the sessions preceding the case creation and the sessions following the case creation.
              * @component 
              * @example <AtomicInsightUserActionsTimeline userId={'123'} caseCreationDate={'2024-08-15T10:00:00Z'} />
              */

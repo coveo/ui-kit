@@ -39,7 +39,7 @@ const meta: Meta = {
   },
   argTypes,
 
-  play,
+  afterEach: play,
   args: {...args, unit: 'byte'},
 };
 

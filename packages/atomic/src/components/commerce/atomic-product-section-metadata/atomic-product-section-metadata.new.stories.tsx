@@ -48,7 +48,7 @@ export const Default: Story = {
     commerceProductListDecorator,
     commerceInterfaceDecorator,
   ],
-  play,
+  afterEach: play,
   args: {
     'default-slot': `<span class="text-sm text-gray-500">SKU: WH-1000XM4</span>`,
   },

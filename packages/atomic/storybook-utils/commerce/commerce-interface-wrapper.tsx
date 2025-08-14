@@ -1,55 +1,53 @@
-import {AtomicCommerceInterface} from '@/src/components/commerce/atomic-commerce-interface/atomic-commerce-interface';
+import { AtomicCommerceInterface } from '@/src/components/commerce/atomic-commerce-interface/atomic-commerce-interface';
 import {
   CommerceEngineConfiguration,
   getSampleCommerceEngineConfiguration,
 } from '@coveo/headless/commerce';
-import {within} from 'storybook/test';
-import {Decorator, StoryContext} from '@storybook/web-components-vite';
-import {html} from 'lit';
+import { Decorator, StoryContext } from '@storybook/web-components-vite';
+import { html } from 'lit';
 import type * as _ from '../../src/components.js';
 
 export const wrapInCommerceInterface = ({
   engineConfig,
   skipFirstRequest,
   type = 'search',
+  includeCodeRoot = true,
 }: {
   engineConfig?: Partial<CommerceEngineConfiguration>;
   skipFirstRequest?: boolean;
   type?: 'search' | 'product-listing';
+  includeCodeRoot?: boolean;
 } = {}): {
   decorator: Decorator;
   play: (context: StoryContext) => Promise<void>;
 } => ({
-  decorator: (story) => html`
-    <atomic-commerce-interface type="${type}">
+  decorator: (story) => includeCodeRoot ? html`
+    <atomic-commerce-interface id="code-root" type="${type}">
       ${story()}
     </atomic-commerce-interface>
-  `,
-  play: async ({canvasElement, step}) => {
+  ` : html`
+      <atomic-commerce-interface type="${type}">
+      ${story()}
+    </atomic-commerce-interface>`,
+  play: async ({ canvasElement }) => {
     await customElements.whenDefined('atomic-commerce-interface');
     const commerceInterface = canvasElement.querySelector<AtomicCommerceInterface>('atomic-commerce-interface')!;
-    await step('Render the Commerce Interface', async () => {
-      await commerceInterface!.initialize({
-        ...getSampleCommerceEngineConfiguration(),
-        ...engineConfig,
-      });
+    await commerceInterface!.initialize({
+      ...getSampleCommerceEngineConfiguration(),
+      ...engineConfig,
     });
     if (skipFirstRequest) {
       return;
     }
-    await step('Execute the first request', async () => {
-      await commerceInterface!.executeFirstRequest();
-    });
+    await commerceInterface!.executeFirstRequest();
   },
 });
 
 export const playExecuteFirstRequest: (
   context: StoryContext
-) => Promise<void> = async ({canvasElement, step}) => {
+) => Promise<void> = async ({ canvasElement }) => {
   const commerceInterface = canvasElement.querySelector<AtomicCommerceInterface>('atomic-commerce-interface')!;
-  await step('Execute the first request', async () => {
-    await commerceInterface!.executeFirstRequest();
-  });
+  await commerceInterface!.executeFirstRequest();
 };
 
 export const playHideFacetTypes = async (

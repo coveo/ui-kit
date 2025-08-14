@@ -35,7 +35,7 @@ const meta: Meta = {
   args,
   argTypes,
 
-  play,
+  afterEach: play,
 };
 
 export default meta;
@@ -55,7 +55,7 @@ export const Default: Story = {
         </style>
         ${story()}`,
   ],
-  play: async (context) => {
+  afterEach: async (context) => {
     await play(context);
     const {canvasElement, step} = context;
     const canvas = within(canvasElement);

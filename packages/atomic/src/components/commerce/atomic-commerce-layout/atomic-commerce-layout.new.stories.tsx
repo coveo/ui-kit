@@ -23,7 +23,7 @@ const meta: Meta = {
   },
   argTypes,
 
-  play,
+  afterEach: play,
   args: {
     ...args,
     'default-slot': `<span>Layout content</span>`,

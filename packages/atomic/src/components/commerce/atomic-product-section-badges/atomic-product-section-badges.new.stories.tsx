@@ -49,7 +49,7 @@ export const Default: Story = {
     commerceProductListDecorator,
     commerceInterfaceDecorator,
   ],
-  play,
+  afterEach: play,
   args: {
     'default-slot': `
       <div style="display: flex; gap: 8px; flex-wrap: wrap;">

@@ -27,13 +27,13 @@ const meta: Meta = {
   args,
   argTypes,
 
-  play,
+  afterEach: play,
 };
 
 export default meta;
 
 export const Default: Story = {
-  play: async (context) => {
+  afterEach: async (context) => {
     await play(context);
     await playExecuteFirstRequest(context);
   },
@@ -41,7 +41,7 @@ export const Default: Story = {
 
 export const LoadingState: Story = {
   name: 'During loading',
-  play: async (context) => {
+  afterEach: async (context) => {
     await play(context);
   },
 };

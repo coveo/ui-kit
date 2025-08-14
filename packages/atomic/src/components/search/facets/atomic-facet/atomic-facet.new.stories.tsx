@@ -1,3 +1,4 @@
+import type {FacetSortCriterion} from '@coveo/headless';
 import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
 import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {html} from 'lit';
@@ -9,6 +10,16 @@ const {decorator, play} = wrapInSearchInterface();
 const {events, args, argTypes, template} = getStorybookHelpers('atomic-facet', {
   excludeCategories: ['methods'],
 });
+
+const sortCriteriaOptions: FacetSortCriterion[] = [
+  'alphanumeric',
+  'alphanumericDescending',
+  'alphanumericNatural',
+  'alphanumericNaturalDescending',
+  'automatic',
+  'occurrences',
+  'score',
+];
 
 const meta: Meta = {
   component: 'atomic-facet',
@@ -23,12 +34,19 @@ const meta: Meta = {
       handles: events,
     },
   },
-  argTypes,
+  argTypes: {
+    ...argTypes,
+    'sort-criteria': {
+      control: 'select',
+      options: sortCriteriaOptions,
+      type: 'string',
+    },
+  },
 
-  play,
+  afterEach: play,
   args: {
     ...args,
-    numberOfValues: 8,
+    'number-of-values': 8,
   },
 };
 
@@ -46,7 +64,7 @@ export const LowFacetValues: Story = {
   tags: ['test'],
   args: {
     field: 'objecttype',
-    numberOfValues: 2,
+    'number-of-values': 2,
   },
   decorators: [facetDecorator],
 };
@@ -56,7 +74,7 @@ export const monthFacet: Story = {
   args: {
     field: 'month',
     label: 'Month',
-    numberOfValues: 2,
+    'number-of-values': 2,
   },
   decorators: [facetDecorator],
 };
@@ -65,18 +83,18 @@ export const CustomSort: Story = {
   tags: ['test'],
   args: {
     field: 'cat_available_sizes',
-    customSort: '["XL", "L", "M", "S"]',
-    sortCriteria: 'alphanumeric',
-    numberOfValues: 4,
+    'custom-sort': '["XL", "L", "M", "S"]',
+    'sort-criteria': 'alphanumeric',
+    'number-of-values': 4,
   },
   decorators: [
     facetDecorator,
     (_Story, context) => {
       return html`<atomic-facet
         field=${context.args['field']}
-        custom-sort=${context.args['customSort']}
-        sort-criteria=${context.args['sortCriteria']}
-        number-of-values=${context.args['numberOfValues']}
+        custom-sort=${context.args['custom-sort']}
+        sort-criteria=${context.args['sort-criteria']}
+        number-of-values=${context.args['number-of-values']}
       ></atomic-facet>`;
     },
   ],

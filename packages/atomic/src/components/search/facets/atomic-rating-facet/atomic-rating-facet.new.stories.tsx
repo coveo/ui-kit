@@ -24,7 +24,7 @@ const meta: Meta = {
   },
   argTypes,
 
-  play,
+  afterEach: play,
   args: {
     ...args,
     numberOfValues: 8,
@@ -45,7 +45,7 @@ export const DisplayAsLink: Story = {
   name: 'atomic-rating-facet',
   tags: ['test'],
   args: {
-    displayValuesAs: 'link',
+    'display-values-as': 'link',
     field: 'snrating',
   },
   decorators: [facetDecorator],

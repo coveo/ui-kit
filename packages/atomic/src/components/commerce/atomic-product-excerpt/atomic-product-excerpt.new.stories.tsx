@@ -54,7 +54,7 @@ const meta: Meta = {
     commerceProductListDecorator,
     commerceInterfaceDecorator,
   ],
-  play,
+  afterEach: play,
 };
 
 export default meta;

@@ -52,7 +52,7 @@ const meta: Meta = {
   },
   argTypes,
 
-  play,
+  afterEach: play,
 };
 
 export default meta;
@@ -83,17 +83,17 @@ export const WithDependsOn: Story = {
         ></atomic-facet>`,
   ],
   argTypes: {
-    dependsOnFileType: {
+    'depends-on-filetype': {
       name: 'depends-on-filetype',
       control: {type: 'text'},
     },
   },
   args: {
     label: 'Timeframe (Dependent facet)',
-    withDatePicker: true,
-    dependsOnFileType: 'YouTubeVideo',
+    'with-date-picker': true,
+    'depends-on-filetype': 'YouTubeVideo',
   },
-  play: async (context) => {
+  afterEach: async (context) => {
     const {canvasElement, step} = context;
     const canvas = within(canvasElement);
     await play(context);

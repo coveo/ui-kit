@@ -32,7 +32,7 @@ const meta: Meta = {
   args,
   argTypes,
 
-  play: async (context) => {
+  afterEach: async (context) => {
     await commerceInterfacePlay(context);
     const canvas = within(context.canvasElement);
     const searchBox = await canvas.findAllByShadowPlaceholderText('Search');
@@ -54,6 +54,6 @@ export const WithComfortableDensity: Story = {
 export const WithNoImage: Story = {
   name: 'With no image',
   args: {
-    imageSize: 'none',
+    'image-size': 'none',
   },
 };
