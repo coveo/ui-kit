@@ -22,7 +22,7 @@ export const renderRefineModalSortSection: FunctionalComponentWithChildren<
       </h2>
       <div part="select-wrapper" class="relative">
         <select
-          class="btn-outline-neutral w-full grow cursor-pointer appearance-none rounded-lg px-6 py-5 text-lg font-bold"
+          class="btn-outline-neutral peer w-full grow cursor-pointer appearance-none rounded-lg px-6 py-5 text-lg font-bold"
           part="select"
           aria-label=${props.i18n.t('sort-by')}
           @change=${props.onSelect}
@@ -31,7 +31,7 @@ export const renderRefineModalSortSection: FunctionalComponentWithChildren<
         </select>
         <div
           part="select-icon-wrapper"
-          class="pointer-events-none absolute top-0 right-0 bottom-0 flex items-center justify-center pr-6"
+          class="peer-hover:text-primary-light peer-focus-within:text-primary-light pointer-events-none absolute top-0 right-0 bottom-0 flex items-center justify-center pr-6"
         >
           <atomic-icon
             part="select-icon"
