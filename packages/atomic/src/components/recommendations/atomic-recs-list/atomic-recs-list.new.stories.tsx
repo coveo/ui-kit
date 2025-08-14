@@ -24,8 +24,6 @@ const meta: Meta = {
   },
   args,
   argTypes,
-
-  afterEach: play,
 };
 
 export default meta;
@@ -41,6 +39,7 @@ export const Default: Story = {
         </style>
         ${story()}`,
   ],
+  afterEach: play,
 };
 
 const {play: playNoFirstQuery} = wrapInRecommendationInterface({
@@ -84,6 +83,7 @@ export const RecsWithFullTemplate: Story = {
             </template>
           </atomic-recs-result-template>`,
   },
+  afterEach: play,
 };
 
 export const RecsOpeningInNewTab: Story = {
@@ -102,10 +102,12 @@ export const RecsOpeningInNewTab: Story = {
             </template>
           </atomic-recs-result-template>`,
   },
+  afterEach: play,
 };
 
 export const RecsAsCarousel: Story = {
   args: {
     'number-of-recommendations-per-page': 4,
   },
+  afterEach: play,
 };
