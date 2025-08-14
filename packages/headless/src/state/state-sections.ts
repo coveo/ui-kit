@@ -513,6 +513,9 @@ export interface ManualRangeSection {
 }
 
 export interface GetAnswerQuerySection {
+  // CombinedState is an internal type from RTK Query that is used directly to break dependency on actual
+  // use of RTK Query for the Stream Answer API. This exposes the internal state of RTKQ but allows us to
+  // type this object over using an `unknown` type.
   answer: CombinedState<
     {
       getAnswer: QueryDefinition<
