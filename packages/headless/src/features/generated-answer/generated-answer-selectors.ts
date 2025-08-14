@@ -10,7 +10,7 @@ import type {
 
 export const generativeQuestionAnsweringIdSelector = (
   state: Partial<SearchAppState>
-): {generativeQuestionAnsweringId: string | undefined} => {
+): string | undefined => {
   // If using the AnswerApi, we return the answerId first.
   if (isGeneratedAnswerSection(state)) {
     // Read the answerId directly from the state instead of RTK Query to prevent circular dependency chain
@@ -21,21 +21,16 @@ export const generativeQuestionAnsweringIdSelector = (
       'answerId' in getAnswerData
         ? (getAnswerData as {answerId?: string}).answerId
         : undefined;
-    return {
-      generativeQuestionAnsweringId,
-    };
+    return generativeQuestionAnsweringId;
   }
 
   // Used for type narrowing.
   if (isSearchSection(state)) {
-    const generativeQuestionAnsweringId =
-      state.search?.response?.extendedResults?.generativeQuestionAnsweringId;
-    return {
-      generativeQuestionAnsweringId,
-    };
+    return state.search?.response?.extendedResults
+      ?.generativeQuestionAnsweringId;
   }
 
-  return {generativeQuestionAnsweringId: undefined};
+  return undefined;
 };
 
 const isGeneratedAnswerSection = (
