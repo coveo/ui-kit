@@ -1,3 +1,9 @@
+## <small>3.28.3 (2025-08-13)</small>
+
+* fix(headless): renew expired access token before emitting event through Relay (#5828) ([c4fc3e9](https://github.com/coveo/ui-kit/commits/c4fc3e9)), closes [#5828](https://github.com/coveo/ui-kit/issues/5828)
+
+
+
 ## <small>3.28.2 (2025-08-11)</small>
 
 * fix(atomic): use commerce headless version instead of search version (#5827) ([eb91994](https://github.com/coveo/ui-kit/commits/eb91994)), closes [#5827](https://github.com/coveo/ui-kit/issues/5827)
