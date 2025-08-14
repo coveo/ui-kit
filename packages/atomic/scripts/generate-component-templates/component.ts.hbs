@@ -1,14 +1,36 @@
+import {StringValue, Schema} from '@coveo/bueno';
+// import {bindStateToController} from '@/src/decorators/bind-state';
+import {bindingGuard} from '@/src/decorators/binding-guard.js';
+import {bindings} from '@/src/decorators/bindings.js';
+import {errorGuard} from '@/src/decorators/error-guard';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles.js';
-import {type CSSResultGroup, css, html} from 'lit';
+import {type CSSResultGroup, css, html, LitElement} from 'lit';
 import {customElement, property} from 'lit/decorators.js';
 
 /**
 * The `{{name}}` component displays a simple greeting message.
+*
+* @part heading - The element that displays the component name.
+* @part greeting - The element that displays the greeting message.
 */
 @customElement('{{name}}')
 @withTailwindStyles
-export class {{namePascalCase}} extends LitElement {
-  static style = css`
+@bindings()
+export class {{namePascalCase}}
+  extends LitElement
+  implements InitializableComponent<TODO_Bindings>
+{
+  @state() bindings!: TODO_Bindings // E.g., Bindings, CommerceBindings, InsightBindings
+  @state() error!: Error;
+
+  /* This is how you would bind the state of a Headless controller instance to a
+  reactive state property: */
+
+  // @bindStateToController('someHeadlessController')
+  // @state()
+  // public someHeadlessControllerState!: someHeadlessControllerState;
+
+  static styles: CSSResultGroup = css`
     h1 {
       color: #3490dc;
   }`
@@ -18,11 +40,35 @@ export class {{namePascalCase}} extends LitElement {
    */
   @property() name = 'World';
 
+  /* If your component relies on a headless controller, it must be defined as 
+  public member: */
+
+  // public someHeadlessController: SomeHeadlessController;
+
+  public initialize() {
+    this.validateProps();
+
+    /* If your component relies on a headless controller, this is typically
+    where you would initialize it: */
+
+    // this.someHeadlessController = buildSomeHeadlessController();
+  }
+
+  @errorGuard()
+  @bindingGuard()
   render() {
     return html`<div>
-      <h1>{{name}}</h1>
-      <p>Hello ${this.name}</p>
+      <h2 part="heading">{{name}}</h2>
+      <p part="greeting">Hello ${this.name}</p>
     </div>`;
+  }
+
+  private validateProps() {
+    new Schema({
+      name: new StringValue({emptyAllowed: false}),
+    }).validate({
+      name: this.name,
+    });
   }
 }
 
