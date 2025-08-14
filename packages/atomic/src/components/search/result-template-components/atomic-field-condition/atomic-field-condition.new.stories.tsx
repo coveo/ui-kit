@@ -11,7 +11,7 @@ const {decorator: searchInterfaceDecorator, play} =
 
 const meta: Meta = {
   component: 'atomic-field-condition',
-  title: 'Atomic/ResultList/FieldCondition',
+  title: 'Search/ResultList/FieldCondition',
   id: 'atomic-field-condition',
 
   render: renderComponent,

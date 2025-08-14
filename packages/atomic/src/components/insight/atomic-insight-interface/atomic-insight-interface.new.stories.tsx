@@ -10,7 +10,7 @@ const {decorator, play} = wrapInInsightInterface();
 
 const meta: Meta = {
   component: 'atomic-insight-interface',
-  title: 'Atomic/Insight/InsightInterface',
+  title: 'Insight/InsightInterface',
   id: 'atomic-insight-interface',
 
   render: renderComponent,

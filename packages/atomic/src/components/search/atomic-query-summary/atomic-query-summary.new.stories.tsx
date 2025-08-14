@@ -7,7 +7,7 @@ const {decorator, play} = wrapInSearchInterface();
 
 const meta: Meta = {
   component: 'atomic-query-summary',
-  title: 'Atomic/QuerySummary',
+  title: 'Search/QuerySummary',
   id: 'atomic-query-summary',
 
   render: renderComponent,
