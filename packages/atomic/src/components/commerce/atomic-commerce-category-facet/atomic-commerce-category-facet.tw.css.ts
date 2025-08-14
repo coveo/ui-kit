@@ -1,7 +1,7 @@
-@import "../../common/facets/facet-search/facet-search.tw.css";
+import {css} from 'lit';
+
+const styles = css`@import "../../common/facets/facet-search/facet-search.tw.css";
 @import "../../common/facets/facet-common.tw.css";
-@reference '../../../utils/tailwind.global.tw.css';
-@reference '../../../utils/coveo.tw.css';
 
 [part~="active-parent"] {
   @apply pl-9;
@@ -19,3 +19,6 @@
 [part~="back-arrow"] {
   @apply absolute left-1 h-5 w-5;
 }
+`;
+
+export default styles;

@@ -1897,7 +1897,7 @@ export declare interface AtomicCommerceBreadbox extends LitAtomicCommerceBreadbo
 
 @ProxyCmp({
   inputs: ['summary', 'facet', 'isCollapsed', 'field'],
-  methods: ['initialize', 'initBindings'],
+  methods: ['initialize'],
   defineCustomElementFn: () => {customElements.get('atomic-commerce-category-facet') || customElements.define('atomic-commerce-category-facet', LitAtomicCommerceCategoryFacet);}
 })
 @Component({
@@ -1949,7 +1949,7 @@ export declare interface AtomicCommerceDidYouMean extends LitAtomicCommerceDidYo
 
 @ProxyCmp({
   inputs: ['summary', 'facet', 'isCollapsed', 'field'],
-  methods: ['initialize', 'initBindings'],
+  methods: ['initialize'],
   defineCustomElementFn: () => {customElements.get('atomic-commerce-facet') || customElements.define('atomic-commerce-facet', LitAtomicCommerceFacet);}
 })
 @Component({
@@ -2105,7 +2105,7 @@ export declare interface AtomicCommerceNoProducts extends LitAtomicCommerceNoPro
 
 @ProxyCmp({
   inputs: ['summary', 'facet', 'isCollapsed', 'field'],
-  methods: ['initialize', 'initBindings'],
+  methods: ['initialize'],
   defineCustomElementFn: () => {customElements.get('atomic-commerce-numeric-facet') || customElements.define('atomic-commerce-numeric-facet', LitAtomicCommerceNumericFacet);}
 })
 @Component({
@@ -2521,7 +2521,7 @@ export declare interface AtomicCommerceText extends LitAtomicCommerceText {
 
 @ProxyCmp({
   inputs: ['summary', 'facet', 'isCollapsed', 'field'],
-  methods: ['initialize', 'initBindings'],
+  methods: ['initialize'],
   defineCustomElementFn: () => {customElements.get('atomic-commerce-timeframe-facet') || customElements.define('atomic-commerce-timeframe-facet', LitAtomicCommerceTimeframeFacet);}
 })
 @Component({
@@ -2677,7 +2677,7 @@ export declare interface AtomicProductImage extends LitAtomicProductImage {
 
 @ProxyCmp({
   inputs: ['hrefTemplate'],
-  methods: ['initialize', 'adoptChildren', 'renderDefaultSlotContent', 'getSlotNameForChild', 'isTextNodeEmpty', 'isSlotEmpty', '_initializeSlotState', '_ensureSlotsInitialized', '_hasDefaultSlotContent', '_mapChildrenToSlots', '_addChildToSlot', '_createSlotPlaceholder', '_relocateSingleSlot', '_moveNodeIfNeeded'],
+  methods: ['initialize', 'adoptChildren', 'isTextNodeEmpty', 'isSlotEmpty', 'renderDefaultSlotContent', 'createSlotPlaceholder'],
   defineCustomElementFn: () => {customElements.get('atomic-product-link') || customElements.define('atomic-product-link', LitAtomicProductLink);}
 })
 @Component({
