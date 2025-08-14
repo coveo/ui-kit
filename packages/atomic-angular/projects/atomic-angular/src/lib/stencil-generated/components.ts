@@ -359,6 +359,51 @@ export class AtomicHtml {
 export declare interface AtomicHtml extends Components.AtomicHtml {}
 
 
+@ProxyCmp({
+  inputs: ['CspNonce', 'analytics', 'engine', 'fieldsToInclude', 'i18n', 'iconAssetsPath', 'language', 'languageAssetsPath', 'logLevel', 'resultsPerPage'],
+  methods: ['initialize', 'initializeWithInsightEngine', 'executeFirstSearch']
+, defineCustomElementFn: defineCustomElementAtomicInsightInterface})
+@Component({standalone:false,
+  selector: 'atomic-insight-interface',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
+  inputs: ['CspNonce', 'analytics', 'engine', 'fieldsToInclude', 'i18n', 'iconAssetsPath', 'language', 'languageAssetsPath', 'logLevel', 'resultsPerPage'],
+})
+export class AtomicInsightInterface {
+  protected el: HTMLElement;
+  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = r.nativeElement;
+  }
+}
+
+
+export declare interface AtomicInsightInterface extends Components.AtomicInsightInterface {}
+
+
+@ProxyCmp({
+  inputs: ['excludedCustomActions', 'ticketCreationDateTime', 'userId']
+, defineCustomElementFn: defineCustomElementAtomicInsightUserActionsTimeline})
+@Component({standalone:false,
+  selector: 'atomic-insight-user-actions-timeline',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
+  inputs: ['excludedCustomActions', 'ticketCreationDateTime', 'userId'],
+})
+export class AtomicInsightUserActionsTimeline {
+  protected el: HTMLElement;
+  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = r.nativeElement;
+  }
+}
+
+
+export declare interface AtomicInsightUserActionsTimeline extends Components.AtomicInsightUserActionsTimeline {}
+
+
 @ProxyCmp({defineCustomElementFn: defineCustomElementAtomicLoadMoreResults})
 @Component({standalone:false,
   selector: 'atomic-load-more-results',
@@ -1863,4 +1908,3 @@ export class AtomicTimeframeFacet {
     this.el = r.nativeElement;
   }
 }
-

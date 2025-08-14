@@ -21,9 +21,11 @@ const meta: Meta = {
       handles: events,
     },
   },
-  args,
+  args: {
+    ...args,
+    'number-of-pages': '5',
+  },
   argTypes,
-
   afterEach: play,
 };
 
@@ -34,9 +36,13 @@ export const Default: Story = {};
 export const CustomIcon: Story = {
   name: 'With custom icons',
   args: {
+    'previous-button-icon':
+      'https://raw.githubusercontent.com/coveo/ui-kit/main/packages/atomic/src/images/arrow-top-rounded.svg',
     previousButtonIcon:
       'https://raw.githubusercontent.com/coveo/ui-kit/main/packages/atomic/src/images/arrow-top-rounded.svg',
     nextButtonIcon:
+      'https://raw.githubusercontent.com/coveo/ui-kit/main/packages/atomic/src/images/arrow-top-rounded.svg',
+    'next-button-icon':
       'https://raw.githubusercontent.com/coveo/ui-kit/main/packages/atomic/src/images/arrow-top-rounded.svg',
   },
 };
