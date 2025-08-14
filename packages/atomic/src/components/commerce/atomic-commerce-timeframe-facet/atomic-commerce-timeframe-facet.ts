@@ -49,8 +49,6 @@ import styles from './atomic-commerce-timeframe-facet.tw.css';
  * @part input-start - The start date input field.
  * @part input-end - The end date input field.
  * @part input-apply-button - The button to apply date range selection.
- *
- * @internal
  */
 @customElement('atomic-commerce-timeframe-facet')
 @withTailwindStyles
