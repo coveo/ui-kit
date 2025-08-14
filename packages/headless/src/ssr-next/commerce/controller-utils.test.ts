@@ -48,7 +48,7 @@ describe('commerce controller-utils', () => {
 
   describe('#buildControllerDefinitions', () => {
     let mockControllerBuilder: {
-      setAdditionalArgs: ReturnType<typeof vi.fn>;
+      withAdditionalArgs: ReturnType<typeof vi.fn>;
       build: ReturnType<typeof vi.fn>;
     };
 
@@ -70,7 +70,7 @@ describe('commerce controller-utils', () => {
 
     beforeEach(() => {
       mockControllerBuilder = {
-        setAdditionalArgs: vi.fn().mockReturnThis(),
+        withAdditionalArgs: vi.fn().mockReturnThis(),
         build: vi.fn().mockReturnValue(buildMockController()),
       };
 
@@ -84,10 +84,10 @@ describe('commerce controller-utils', () => {
       expect(mockControllerBuilder.build).toHaveBeenCalledTimes(2);
     });
 
-    it('should call #setAdditionalArgs with solutionType for each controller', () => {
+    it('should call #withAdditionalArgs with solutionType for each controller', () => {
       buildControllersWithDefaultSetup();
-      expect(mockControllerBuilder.setAdditionalArgs).toHaveBeenCalledTimes(2);
-      expect(mockControllerBuilder.setAdditionalArgs).toHaveBeenCalledWith([
+      expect(mockControllerBuilder.withAdditionalArgs).toHaveBeenCalledTimes(2);
+      expect(mockControllerBuilder.withAdditionalArgs).toHaveBeenCalledWith([
         SolutionType.search,
       ]);
     });

@@ -37,13 +37,13 @@ describe('controller-utils', () => {
 
   describe('#buildControllerDefinitions', () => {
     let mockControllerBuilder: {
-      setAdditionalArgs: ReturnType<typeof vi.fn>;
+      withAdditionalArgs: ReturnType<typeof vi.fn>;
       build: ReturnType<typeof vi.fn>;
     };
 
     beforeEach(() => {
       mockControllerBuilder = {
-        setAdditionalArgs: vi.fn().mockReturnThis(),
+        withAdditionalArgs: vi.fn().mockReturnThis(),
         build: vi.fn().mockReturnValue(buildMockController()),
       };
 

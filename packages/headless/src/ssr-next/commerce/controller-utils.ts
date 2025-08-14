@@ -77,7 +77,7 @@ export function buildControllerDefinitions<
     }
 
     return new ControllerBuilder(definition, engine, props)
-      .setAdditionalArgs([solutionType])
+      .withAdditionalArgs([solutionType])
       .build();
   });
 

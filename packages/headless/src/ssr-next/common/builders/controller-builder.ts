@@ -29,7 +29,7 @@ export class ControllerBuilder<
     this.props = props;
   }
 
-  public setAdditionalArgs(additionalArgs: unknown[] = []): this {
+  public withAdditionalArgs(additionalArgs: unknown[] = []): this {
     this.additionalArgs = additionalArgs;
     return this;
   }
