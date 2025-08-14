@@ -20,7 +20,7 @@ const {events, args, argTypes, template} = getStorybookHelpers(
 );
 
 const meta: Meta = {
-  title: 'Atomic/DidYouMean',
+  title: 'Search/DidYouMean',
   id: 'atomic-did-you-mean',
   component: 'atomic-did-you-mean',
   render: (args) => template(args),

@@ -24,7 +24,7 @@ const {decorator: searchInterfaceDecorator, play} =
 
 const meta: Meta = {
   component: 'atomic-result-rating',
-  title: 'Atomic/ResultList/ResultRating',
+  title: 'Search/ResultList/ResultRating',
   id: 'atomic-result-rating',
   render: (args) => template(args),
   decorators: [resultDecorator, searchInterfaceDecorator],

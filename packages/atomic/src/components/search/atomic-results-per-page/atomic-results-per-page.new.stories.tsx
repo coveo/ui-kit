@@ -11,9 +11,8 @@ const {events, args, argTypes, template} = getStorybookHelpers(
 
 const meta: Meta = {
   component: 'atomic-results-per-page',
-  title: 'Atomic/ResultsPerPage',
+  title: 'Search/Results Per Page',
   id: 'atomic-results-per-page',
-
   render: (args) => template(args),
   decorators: [decorator],
   parameters: {
@@ -30,6 +29,4 @@ const meta: Meta = {
 
 export default meta;
 
-export const Default: Story = {
-  name: 'atomic-results-per-page',
-};
+export const Default: Story = {};

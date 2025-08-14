@@ -46,7 +46,7 @@ const {decorator, play} = wrapInSearchInterface({
 
 const meta: Meta = {
   component: 'atomic-tab-manager',
-  title: 'Atomic/Tabs',
+  title: 'Search/Tabs',
   id: 'atomic-tab-manager',
 
   render: (args) => template(args),

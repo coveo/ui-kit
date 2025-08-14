@@ -23,7 +23,7 @@ const {decorator: searchInterfaceDecorator, play} =
 
 const meta: Meta = {
   component: 'atomic-result-multi-value-text',
-  title: 'Atomic/ResultList/ResultMultiValueText',
+  title: 'Search/ResultList/ResultMultiValueText',
   id: 'atomic-result-multi-value-text',
   render: (args) => template(args),
   decorators: [resultDecorator, searchInterfaceDecorator],

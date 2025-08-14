@@ -10,7 +10,7 @@ const {events, args, argTypes, template} = getStorybookHelpers('atomic-pager', {
 
 const meta: Meta = {
   component: 'atomic-pager',
-  title: 'Atomic/Pager',
+  title: 'Search/Pager',
   id: 'atomic-pager',
 
   render: (args) => template(args),

@@ -1,5 +1,7 @@
+import {css} from 'lit';
+
+const styles = css`
 @import "../../common/template-system/template-system.pcss";
-@reference '../../../utils/coveo.tw.css';
 
 :host {
   @apply atomic-template-system;
@@ -131,3 +133,6 @@
     }
   }
 }
+`;
+
+export default styles;

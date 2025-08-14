@@ -11,13 +11,13 @@ const {events, args, argTypes} = getStorybookHelpers('atomic-component-error', {
 
 const meta: Meta = {
   component: 'atomic-component-error',
-  title: 'Atomic/Common',
+  title: 'Common/Component Error',
   id: 'atomic-component-error',
 
   render: (args) => {
     const element = document.createElement('atomic-component-error');
-    element.error = args['error'];
-    element.element = args['element'];
+    element.error = args.error;
+    element.element = args.element;
     return element;
   },
   decorators: [decorator],

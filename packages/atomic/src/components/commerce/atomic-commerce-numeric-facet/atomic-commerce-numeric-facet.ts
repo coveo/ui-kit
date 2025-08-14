@@ -8,7 +8,7 @@ import {
   type SearchSummaryState,
   type Summary,
 } from '@coveo/headless/commerce';
-import {type CSSResultGroup, html, LitElement, unsafeCSS} from 'lit';
+import {type CSSResultGroup, css, html, LitElement} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {when} from 'lit/directives/when.js';
 import {renderNumericFacetValuesGroup} from '@/src/components/common/facets/numeric-facet/values-container';
@@ -18,7 +18,6 @@ import {bindingGuard} from '@/src/decorators/binding-guard';
 import {errorGuard} from '@/src/decorators/error-guard';
 import type {InitializableComponent} from '@/src/decorators/types';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
-import {InitializeBindingsMixin} from '@/src/mixins/bindings-mixin';
 import {FocusTargetController} from '@/src/utils/accessibility-utils';
 import {shouldDisplayInputForFacetRange} from '../../common/facets/facet-common';
 import {renderFacetContainer} from '../../common/facets/facet-container/facet-container';
@@ -30,8 +29,8 @@ import {
 } from '../../common/formats/format-common';
 import type {Range} from '../atomic-commerce-facet-number-input/atomic-commerce-facet-number-input';
 import '../atomic-commerce-facet-number-input/atomic-commerce-facet-number-input';
+import {bindings} from '@/src/decorators/bindings';
 import type {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface';
-import styles from './atomic-commerce-numeric-facet.tw.css';
 
 /**
  * The `atomic-commerce-numeric-facet` component renders a commerce facet that allows the user to filter products using numeric ranges.
@@ -54,9 +53,10 @@ import styles from './atomic-commerce-numeric-facet.tw.css';
  * @part input-apply-button - The button to apply custom numeric range values.
  */
 @customElement('atomic-commerce-numeric-facet')
+@bindings()
 @withTailwindStyles
 export class AtomicCommerceNumericFacet
-  extends InitializeBindingsMixin(LitElement)
+  extends LitElement
   implements InitializableComponent<CommerceBindings>
 {
   /**
@@ -106,7 +106,8 @@ export class AtomicCommerceNumericFacet
   private headerFocus!: FocusTargetController;
   private unsubscribeFacetController?: () => void;
 
-  static styles: CSSResultGroup = [unsafeCSS(styles)];
+  static styles: CSSResultGroup =
+    css`@import "../../common/facets/numeric-facet-common.tw.css";`;
 
   public initialize() {
     this.validateFacet();

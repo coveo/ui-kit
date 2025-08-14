@@ -23,7 +23,7 @@ const sortCriteriaOptions: FacetSortCriterion[] = [
 
 const meta: Meta = {
   component: 'atomic-facet',
-  title: 'Atomic/Facet',
+  title: 'Search/Facet',
   id: 'atomic-facet',
 
   render: (args) => template(args),
@@ -91,7 +91,7 @@ export const CustomSort: Story = {
     facetDecorator,
     (_Story, context) => {
       return html`<atomic-facet
-        field=${context.args['field']}
+        field=${context.args.field}
         custom-sort=${context.args['custom-sort']}
         sort-criteria=${context.args['sort-criteria']}
         number-of-values=${context.args['number-of-values']}

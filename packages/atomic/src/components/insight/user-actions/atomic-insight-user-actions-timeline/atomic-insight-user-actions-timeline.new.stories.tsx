@@ -11,7 +11,7 @@ const {events, args, argTypes, template} = getStorybookHelpers(
 
 const meta: Meta = {
   component: 'atomic-insight-user-actions-timeline',
-  title: 'Atomic/Insight/UserActionsTimeline',
+  title: 'Insight/UserActionsTimeline',
   id: 'atomic-insight-user-actions-timeline',
 
   render: (args) => template(args),

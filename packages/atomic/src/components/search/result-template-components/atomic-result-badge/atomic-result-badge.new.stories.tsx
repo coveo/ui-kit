@@ -15,7 +15,7 @@ const {decorator: searchInterfaceDecorator, play} =
 
 const meta: Meta = {
   component: 'atomic-result-badge',
-  title: 'Atomic/ResultList/ResultBadge',
+  title: 'Search/ResultList/ResultBadge',
   id: 'atomic-result-badge',
   render: (args) => template(args),
   decorators: [resultDecorator, searchInterfaceDecorator],

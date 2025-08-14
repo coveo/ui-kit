@@ -29,7 +29,7 @@ const commerceFacetWidthDecorator: Decorator = (story) =>
 
 const meta: Meta = {
   component: 'atomic-timeframe-facet',
-  title: 'Atomic/TimeframeFacet',
+  title: 'Search/TimeframeFacet',
   id: 'atomic-timeframe-facet',
   args: {
     ...args,

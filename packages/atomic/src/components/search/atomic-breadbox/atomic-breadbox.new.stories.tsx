@@ -14,7 +14,7 @@ const {events, args, argTypes, template} = getStorybookHelpers(
 
 const meta: Meta = {
   component: 'atomic-breadbox',
-  title: 'Atomic/Breadbox',
+  title: 'Search/Breadbox',
   id: 'atomic-breadbox',
 
   render: (args) => template(args),

@@ -24,7 +24,7 @@ const {decorator: searchInterfaceDecorator, play} =
 
 const meta: Meta = {
   component: 'atomic-result-timespan',
-  title: 'Atomic/ResultList/ResultTimespan',
+  title: 'Search/ResultList/ResultTimespan',
   id: 'atomic-result-timespan',
   render: (args) => template(args),
   decorators: [resultDecorator, searchInterfaceDecorator],

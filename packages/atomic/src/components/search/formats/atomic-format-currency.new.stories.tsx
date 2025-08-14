@@ -26,7 +26,7 @@ const {decorator: searchInterfaceDecorator, play} =
 
 const meta: Meta = {
   component: 'atomic-format-currency',
-  title: 'Atomic/Format/atomic-format-currency',
+  title: 'Search/Format/atomic-format-currency',
   id: 'atomic-format-currency',
 
   render: (args) => template(args),

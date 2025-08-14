@@ -12,7 +12,7 @@ const {events, args, argTypes, template} = getStorybookHelpers(
 
 const meta: Meta = {
   component: 'atomic-refine-toggle',
-  title: 'Atomic/RefineToggle',
+  title: 'Search/RefineToggle',
   id: 'atomic-refine-toggle',
   render: (args) => template(args),
   parameters: {

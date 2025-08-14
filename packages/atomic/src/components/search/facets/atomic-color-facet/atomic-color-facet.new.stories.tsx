@@ -17,7 +17,7 @@ const {events, args, argTypes, template} = getStorybookHelpers(
 
 const meta: Meta = {
   component: 'atomic-color-facet',
-  title: 'Atomic/ColorFacet',
+  title: 'Search/ColorFacet',
   id: 'atomic-color-facet',
   render: (args) => template(args),
   decorators: [decorator],

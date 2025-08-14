@@ -12,7 +12,7 @@ const {events, args, argTypes, template} = getStorybookHelpers(
 
 const meta: Meta = {
   component: 'atomic-rating-range-facet',
-  title: 'Atomic/RatingRangeFacet',
+  title: 'Search/RatingRangeFacet',
   id: 'atomic-rating-range-facet',
   render: (args) => template(args),
   decorators: [decorator],

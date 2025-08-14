@@ -11,7 +11,7 @@ const {events, args, argTypes, template} = getStorybookHelpers(
 
 const meta: Meta = {
   component: 'atomic-automatic-facet-generator',
-  title: 'Atomic/AutomaticFacetGenerator',
+  title: 'Search/AutomaticFacetGenerator',
   id: 'atomic-automatic-facet-generator',
   render: (args) => template(args),
   decorators: [decorator],

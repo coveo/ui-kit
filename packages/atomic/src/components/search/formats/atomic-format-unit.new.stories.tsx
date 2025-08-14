@@ -26,7 +26,7 @@ const {decorator: searchInterfaceDecorator, play} =
 
 const meta: Meta = {
   component: 'atomic-format-unit',
-  title: 'Atomic/Format/atomic-format-unit',
+  title: 'Search/Format/atomic-format-unit',
   id: 'atomic-format-unit',
 
   render: (args) => template(args),

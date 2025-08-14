@@ -20,7 +20,6 @@ import {
 } from 'vitest';
 import {bindings} from '@/src/decorators/bindings';
 import type {InitializableComponent} from '@/src/decorators/types';
-import {InitializeBindingsMixin} from '@/src/mixins/bindings-mixin';
 import {StorageItems} from '@/src/utils/local-storage-utils';
 import {DEFAULT_MOBILE_BREAKPOINT} from '@/src/utils/replace-breakpoint';
 import {fixture} from '@/vitest-utils/testing-helpers/fixture';
@@ -109,7 +108,7 @@ vi.mock('@coveo/headless/commerce', async () => {
 @customElement('test-element')
 @bindings()
 class TestElement
-  extends InitializeBindingsMixin(LitElement)
+  extends LitElement
   implements InitializableComponent<CommerceBindings>
 {
   @state()

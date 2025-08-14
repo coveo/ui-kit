@@ -18,7 +18,7 @@ const {decorator, play} = wrapInSearchInterface({
 });
 
 const meta: Meta = {
-  title: 'Atomic/NoResults',
+  title: 'Search/NoResults',
   id: 'atomic-no-results',
   component: 'atomic-no-results',
   render: (args) => template(args),
