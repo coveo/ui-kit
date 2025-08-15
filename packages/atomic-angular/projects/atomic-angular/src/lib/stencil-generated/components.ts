@@ -1963,7 +1963,7 @@ export declare interface AtomicCommerceBreadbox extends LitAtomicCommerceBreadbo
 }
 
 @ProxyCmp({
-  inputs: ['isCollapsed', 'field'],
+  inputs: ['summary', 'facet', 'isCollapsed', 'field'],
   methods: ['isCollapsed'],
   defineCustomElementFn: () => {customElements.get('atomic-commerce-category-facet') || customElements.define('atomic-commerce-category-facet', LitAtomicCommerceCategoryFacet);}
 })
@@ -1973,7 +1973,7 @@ export declare interface AtomicCommerceBreadbox extends LitAtomicCommerceBreadbo
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
   // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: ['isCollapsed', 'field']
+  inputs: ['summary', 'facet', 'isCollapsed', 'field']
 })
 export class AtomicCommerceCategoryFacet {
   protected readonly el: HTMLElement;
