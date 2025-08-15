@@ -7,9 +7,9 @@
   "dependencies": {
     "@coveo/semantic-monorepo-tools": "2.6.11",
     "@npmcli/arborist": "9.1.2",
-    "conventional-changelog-conventionalcommits": "8.0.0",
+    "conventional-changelog-conventionalcommits": "9.1.0",
     "dependency-graph": "1.0.0",
-    "octokit": "4.1.4",
+    "octokit": "5.0.3",
     "semver": "7.7.2",
     "ts-dedent": "2.2.0"
   },
