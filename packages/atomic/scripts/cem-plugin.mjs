@@ -199,7 +199,6 @@ export function hideBaseInitializableComponentFieldsPlugin() {
         'bindings',
         'initialized',
         'unsubscribeLanguage',
-        'initialize',
         'error',
       ];
 
