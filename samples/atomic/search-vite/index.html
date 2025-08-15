@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Search</title>
+
+  </head>
+  <body>
+    <div id="nav-bar"></div>
+    <div id="spa-content"></div>
+    <script type="module">
+      import { setupSpaNav } from './src/spa.js';
+      import '@coveo/atomic/themes/coveo.css';
+      import { defineCustomElements } from '@coveo/atomic/loader';
+      defineCustomElements();
+      setupSpaNav();
+    </script>
+  </body>
+</html>
