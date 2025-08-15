@@ -36,11 +36,13 @@ export default async function ProductDescriptionPage({
     controllers: {
       cart: {initialState: {items}},
       context: {
-        language: defaultContext.language,
-        country: defaultContext.country,
-        currency: defaultContext.currency,
-        view: {
-          url: `https://sports.barca.group/products/${productId}`,
+        initialState: {
+          language: defaultContext.language,
+          country: defaultContext.country,
+          currency: defaultContext.currency,
+          view: {
+            url: `https://sports.barca.group/products/${productId}`,
+          },
         },
       },
     },
@@ -52,11 +54,13 @@ export default async function ProductDescriptionPage({
         viewedTogether: {enabled: true, productId},
         cart: {initialState: {items}},
         context: {
-          language: defaultContext.language,
-          country: defaultContext.country,
-          currency: defaultContext.currency,
-          view: {
-            url: `https://sports.barca.group/products/${productId}`,
+          initialState: {
+            language: defaultContext.language,
+            country: defaultContext.country,
+            currency: defaultContext.currency,
+            view: {
+              url: `https://sports.barca.group/products/${productId}`,
+            },
           },
         },
       },

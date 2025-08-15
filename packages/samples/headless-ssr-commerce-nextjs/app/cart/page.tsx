@@ -30,11 +30,13 @@ export default async function Search() {
     controllers: {
       cart: {initialState: {items}},
       context: {
-        language: defaultContext.language,
-        country: defaultContext.country,
-        currency: defaultContext.currency,
-        view: {
-          url: 'https://sports.barca.group/cart',
+        initialState: {
+          language: defaultContext.language,
+          country: defaultContext.country,
+          currency: defaultContext.currency,
+          view: {
+            url: 'https://sports.barca.group/cart',
+          },
         },
       },
     },
@@ -47,11 +49,13 @@ export default async function Search() {
         popularViewed: {enabled: true},
         cart: {initialState: {items}},
         context: {
-          language: defaultContext.language,
-          country: defaultContext.country,
-          currency: defaultContext.currency,
-          view: {
-            url: 'https://sports.barca.group/cart',
+          initialState: {
+            language: defaultContext.language,
+            country: defaultContext.country,
+            currency: defaultContext.currency,
+            view: {
+              url: 'https://sports.barca.group/cart',
+            },
           },
         },
       },

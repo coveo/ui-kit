@@ -4,6 +4,10 @@ import {buildSearch} from '../../../controllers/commerce/search/headless-search.
 import {augmentPreprocessRequestWithForwardedFor} from '../../common/augment-preprocess-request.js';
 import {createStaticState} from '../controller-utils.js';
 import {SolutionType} from '../types/controller-constants.js';
+import type {
+  AugmentedControllerDefinition,
+  FilteredBakedInControllers,
+} from '../types/controller-definitions.js';
 import type {InferControllerStaticStateMapFromDefinitionsWithSolutionType} from '../types/controller-inference.js';
 import type {
   CommerceControllerDefinitionsMap,
@@ -19,16 +23,17 @@ import {
 export function fetchStaticStateFactory<
   TControllerDefinitions extends CommerceControllerDefinitionsMap,
 >(
-  controllerDefinitions: TControllerDefinitions | undefined,
+  controllerDefinitions: AugmentedControllerDefinition<TControllerDefinitions>,
   options: CommerceEngineDefinitionOptions<TControllerDefinitions>
 ) {
   return (
     solutionType: SolutionType
   ): FetchStaticStateFunction<TControllerDefinitions> =>
     async (...params: FetchStaticStateParameters<TControllerDefinitions>) => {
-      const solutionTypeBuild = await buildFactory(controllerDefinitions, {
-        ...options,
-      })(solutionType);
+      const solutionTypeBuild = await buildFactory(
+        controllerDefinitions,
+        options
+      )(solutionType);
       const {engine, controllers} = await solutionTypeBuild(...params);
 
       options.configuration.preprocessRequest =
@@ -59,7 +64,8 @@ export function fetchStaticStateFactory<
         InferControllerStaticStateMapFromDefinitionsWithSolutionType<
           TControllerDefinitions,
           SolutionType
-        >
+        > &
+          FilteredBakedInControllers<typeof solutionType>
       >;
       return staticState;
     };

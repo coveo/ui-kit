@@ -37,11 +37,13 @@ export default async function Search({
     controllers: {
       cart: {initialState: {items}},
       context: {
-        language: defaultContext.language,
-        country: defaultContext.country,
-        currency: defaultContext.currency,
-        view: {
-          url: 'https://sports.barca.group/search',
+        initialState: {
+          language: defaultContext.language,
+          country: defaultContext.country,
+          currency: defaultContext.currency,
+          view: {
+            url: 'https://sports.barca.group/search',
+          },
         },
       },
       parameterManager: {initialState: {parameters}},
