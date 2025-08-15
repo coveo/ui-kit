@@ -7,54 +7,48 @@ import type {
 import {augmentPreprocessRequestWithForwardedFor} from './augment-preprocess-request.js';
 
 /**
- * Extracts navigator context from fetchStaticState parameters and creates the necessary configuration.
- * This is the single entry point for all navigator context processing.
+ * Processes fetchStaticState parameters and returns enhanced engine options with navigator context.
+ * This is the single function that handles all navigator context logic for both commerce and search engines.
  */
-export function extractNavigatorContextConfig(params: unknown[]): {
-  navigatorContextProvider?: NavigatorContextProvider;
+export function processNavigatorContext<
+  TOptions extends {
+    configuration: object;
+    loggerOptions?: LoggerOptions;
+  },
+>(
+  params: unknown[],
+  baseOptions: TOptions
+): {
+  engineOptions: TOptions;
   callOptions?: {navigatorContext?: NavigatorContext; controllers?: unknown};
 } {
   const [callOptions] = params as unknown as [
     {navigatorContext?: NavigatorContext; controllers?: unknown} | undefined,
   ];
 
+  // If no navigator context, return original options
   if (!callOptions?.navigatorContext) {
-    return {callOptions};
+    return {engineOptions: baseOptions, callOptions};
   }
 
-  return {
-    callOptions,
-    navigatorContextProvider: () => callOptions.navigatorContext!,
-  };
-}
+  // Create provider function and enhance options
+  const navigatorContextProvider: NavigatorContextProvider = () =>
+    callOptions.navigatorContext!;
 
-/**
- * Creates engine options with navigator context configuration applied.
- * This eliminates duplication between commerce and search engines.
- */
-export function createEngineOptionsWithNavigatorContext<
-  TOptions extends {
-    configuration: {preprocessRequest?: PreprocessRequest};
-    loggerOptions?: LoggerOptions;
-  },
->(
-  baseOptions: TOptions,
-  navigatorContextProvider?: NavigatorContextProvider
-): TOptions {
-  if (!navigatorContextProvider) {
-    return baseOptions;
-  }
-
-  return {
+  const engineOptions = {
     ...baseOptions,
     navigatorContextProvider,
     configuration: {
       ...baseOptions.configuration,
       preprocessRequest: augmentPreprocessRequestWithForwardedFor({
-        preprocessRequest: baseOptions.configuration.preprocessRequest,
+        preprocessRequest: (
+          baseOptions.configuration as {preprocessRequest?: PreprocessRequest}
+        )?.preprocessRequest,
         navigatorContextProvider,
         loggerOptions: baseOptions.loggerOptions,
       }),
     },
   };
+
+  return {engineOptions, callOptions};
 }

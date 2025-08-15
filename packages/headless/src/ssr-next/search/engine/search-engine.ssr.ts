@@ -14,10 +14,7 @@ import {
   buildControllerDefinitions,
   createStaticState,
 } from '../../common/controller-utils.js';
-import {
-  createEngineOptionsWithNavigatorContext,
-  extractNavigatorContextConfig,
-} from '../../common/navigator-context-utils.js';
+import {processNavigatorContext} from '../../common/navigator-context-utils.js';
 import type {ControllerDefinitionsMap} from '../../common/types/controllers.js';
 import type {
   EngineDefinition,
@@ -122,16 +119,12 @@ export function defineSearchEngine<
   };
 
   const fetchStaticState = async (...params: unknown[]) => {
-    const {callOptions, navigatorContextProvider} =
-      extractNavigatorContextConfig(params);
-
-    // Create options for this call with navigator context
-    const callSpecificOptions = createEngineOptionsWithNavigatorContext(
-      options,
-      navigatorContextProvider
+    const {engineOptions, callOptions} = processNavigatorContext(
+      params,
+      options
     );
 
-    const engine = buildSSRSearchEngine(callSpecificOptions);
+    const engine = buildSSRSearchEngine(engineOptions);
     const controllers = buildControllerDefinitions({
       definitionsMap: (controllerDefinitions ?? {}) as TControllerDefinitions,
       engine,
