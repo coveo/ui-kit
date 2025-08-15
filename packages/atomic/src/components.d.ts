@@ -2360,20 +2360,6 @@ export namespace Components {
         "unit": string;
     }
     /**
-     * The `atomic-results-per-page` component determines how many results to display per page.
-     */
-    interface AtomicResultsPerPage {
-        /**
-          * A list of choices for the number of results to display per page, separated by commas.
-         */
-        "choicesDisplayed": string;
-        /**
-          * The initial selection for the number of result per page. This should be part of the `choicesDisplayed` option. By default, this is set to the first value in `choicesDisplayed`.
-          * @type {number}
-         */
-        "initialChoice"?: number;
-    }
-    /**
      * The `atomic-search-box` component creates a search box with built-in support for suggestions.
      */
     interface AtomicSearchBox {
@@ -2514,7 +2500,7 @@ export namespace Components {
          */
         "initialize": (options: InitializationOptions) => Promise<void>;
         /**
-          * Initializes the connection with an already preconfigured [headless search engine](https://docs.coveo.com/en/headless/latest/reference/search/), as opposed to the `initialize` method, which will internally create a new search engine instance. This bypasses the properties set on the component, such as analytics, searchHub, pipeline, language, timezone & logLevel.
+          * Initializes the connection with an already preconfigured [headless search engine](https://docs.coveo.com/en/headless/latest/reference/modules/Search.html, as opposed to the `initialize` method, which will internally create a new search engine instance. This bypasses the properties set on the component, such as analytics, searchHub, pipeline, language, timezone & logLevel.
          */
         "initializeWithSearchEngine": (engine: SearchEngine) => Promise<void>;
         /**
@@ -2986,10 +2972,6 @@ export interface AtomicQuickviewModalCustomEvent<T> extends CustomEvent<T> {
 export interface AtomicRelevanceInspectorCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLAtomicRelevanceInspectorElement;
-}
-export interface AtomicResultsPerPageCustomEvent<T> extends CustomEvent<T> {
-    detail: T;
-    target: HTMLAtomicResultsPerPageElement;
 }
 export interface AtomicSearchBoxCustomEvent<T> extends CustomEvent<T> {
     detail: T;
@@ -4218,26 +4200,6 @@ declare global {
         prototype: HTMLAtomicResultTimespanElement;
         new (): HTMLAtomicResultTimespanElement;
     };
-    interface HTMLAtomicResultsPerPageElementEventMap {
-        "atomic/scrollToTop": any;
-    }
-    /**
-     * The `atomic-results-per-page` component determines how many results to display per page.
-     */
-    interface HTMLAtomicResultsPerPageElement extends Components.AtomicResultsPerPage, HTMLStencilElement {
-        addEventListener<K extends keyof HTMLAtomicResultsPerPageElementEventMap>(type: K, listener: (this: HTMLAtomicResultsPerPageElement, ev: AtomicResultsPerPageCustomEvent<HTMLAtomicResultsPerPageElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
-        removeEventListener<K extends keyof HTMLAtomicResultsPerPageElementEventMap>(type: K, listener: (this: HTMLAtomicResultsPerPageElement, ev: AtomicResultsPerPageCustomEvent<HTMLAtomicResultsPerPageElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
-    }
-    var HTMLAtomicResultsPerPageElement: {
-        prototype: HTMLAtomicResultsPerPageElement;
-        new (): HTMLAtomicResultsPerPageElement;
-    };
     interface HTMLAtomicSearchBoxElementEventMap {
         "redirect": RedirectionPayload;
     }
@@ -4699,7 +4661,6 @@ declare global {
         "atomic-result-template": HTMLAtomicResultTemplateElement;
         "atomic-result-text": HTMLAtomicResultTextElement;
         "atomic-result-timespan": HTMLAtomicResultTimespanElement;
-        "atomic-results-per-page": HTMLAtomicResultsPerPageElement;
         "atomic-search-box": HTMLAtomicSearchBoxElement;
         "atomic-search-box-instant-results": HTMLAtomicSearchBoxInstantResultsElement;
         "atomic-search-box-query-suggestions": HTMLAtomicSearchBoxQuerySuggestionsElement;
@@ -6958,21 +6919,6 @@ declare namespace LocalJSX {
         "unit"?: string;
     }
     /**
-     * The `atomic-results-per-page` component determines how many results to display per page.
-     */
-    interface AtomicResultsPerPage {
-        /**
-          * A list of choices for the number of results to display per page, separated by commas.
-         */
-        "choicesDisplayed"?: string;
-        /**
-          * The initial selection for the number of result per page. This should be part of the `choicesDisplayed` option. By default, this is set to the first value in `choicesDisplayed`.
-          * @type {number}
-         */
-        "initialChoice"?: number;
-        "onAtomic/scrollToTop"?: (event: AtomicResultsPerPageCustomEvent<any>) => void;
-    }
-    /**
      * The `atomic-search-box` component creates a search box with built-in support for suggestions.
      */
     interface AtomicSearchBox {
@@ -7650,7 +7596,6 @@ declare namespace LocalJSX {
         "atomic-result-template": AtomicResultTemplate;
         "atomic-result-text": AtomicResultText;
         "atomic-result-timespan": AtomicResultTimespan;
-        "atomic-results-per-page": AtomicResultsPerPage;
         "atomic-search-box": AtomicSearchBox;
         "atomic-search-box-instant-results": AtomicSearchBoxInstantResults;
         "atomic-search-box-query-suggestions": AtomicSearchBoxQuerySuggestions;
@@ -8152,10 +8097,6 @@ declare module "@stencil/core" {
              * The `atomic-result-timespan` component renders a target result number field value as a duration.
              */
             "atomic-result-timespan": LocalJSX.AtomicResultTimespan & JSXBase.HTMLAttributes<HTMLAtomicResultTimespanElement>;
-            /**
-             * The `atomic-results-per-page` component determines how many results to display per page.
-             */
-            "atomic-results-per-page": LocalJSX.AtomicResultsPerPage & JSXBase.HTMLAttributes<HTMLAtomicResultsPerPageElement>;
             /**
              * The `atomic-search-box` component creates a search box with built-in support for suggestions.
              */

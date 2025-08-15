@@ -4,10 +4,12 @@ import type {CoreEngine} from '../../app/engine.js';
 import {
   buildMockController,
   buildMockControllerWithInitialState,
+} from '../../test/mock-controller.js';
+import {buildMockSearchEngine} from '../../test/mock-engine-v2.js';
+import {
   defineMockController,
   defineMockControllerWithProps,
-} from '../../test/mock-controller-definitions.js';
-import {buildMockSearchEngine} from '../../test/mock-engine-v2.js';
+} from '../../test/mock-ssr-controller-definitions.js';
 import {createMockState} from '../../test/mock-state.js';
 import * as utils from '../../utils/utils.js';
 import {ControllerBuilder} from './builders/controller-builder.js';
@@ -35,13 +37,13 @@ describe('controller-utils', () => {
 
   describe('#buildControllerDefinitions', () => {
     let mockControllerBuilder: {
-      setAdditionalArgs: ReturnType<typeof vi.fn>;
+      withAdditionalArgs: ReturnType<typeof vi.fn>;
       build: ReturnType<typeof vi.fn>;
     };
 
     beforeEach(() => {
       mockControllerBuilder = {
-        setAdditionalArgs: vi.fn().mockReturnThis(),
+        withAdditionalArgs: vi.fn().mockReturnThis(),
         build: vi.fn().mockReturnValue(buildMockController()),
       };
 

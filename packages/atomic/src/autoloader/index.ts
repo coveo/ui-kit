@@ -22,11 +22,18 @@ export function registerAutoloader(
    */
   const observeStencilElementHydration = (atomicElement: Element) => {
     const attributeObserver = new MutationObserver(async () => {
-      if (atomicElement.classList.contains('hydrated')) {
+      if (
+        atomicElement.classList.contains('hydrated') &&
+        'shadowRoot' in atomicElement &&
+        atomicElement.shadowRoot &&
+        !visitedNodes.has(atomicElement.shadowRoot)
+      ) {
         attributeObserver.disconnect();
-        if ('shadowRoot' in atomicElement && atomicElement.shadowRoot) {
-          await discover(atomicElement.shadowRoot);
-        }
+        await discover(atomicElement.shadowRoot);
+        observer.observe(atomicElement.shadowRoot, {
+          subtree: true,
+          childList: true,
+        });
       }
     });
 

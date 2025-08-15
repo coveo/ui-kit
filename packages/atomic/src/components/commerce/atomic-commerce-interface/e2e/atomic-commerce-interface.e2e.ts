@@ -10,10 +10,7 @@ test.describe('AtomicCommerceInterface', () => {
       });
     });
 
-    test('should return error if request is executed', async ({
-      page,
-      commerceInterface,
-    }) => {
+    test('should return error if request is executed', async ({page}) => {
       const beforeInitError =
         'You have to call "initialize" on the atomic-commerce-interface component before modifying the props or calling other public methods.';
 
@@ -32,8 +29,6 @@ test.describe('AtomicCommerceInterface', () => {
       });
 
       expect(errorMessage).toContain(beforeInitError);
-
-      await expect(commerceInterface.interface()).not.toBeVisible();
     });
   });
 

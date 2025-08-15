@@ -3,7 +3,6 @@ import type {Meta, StoryObj as Story} from '@storybook/web-components';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {renderComponent} from '@/storybook-utils/common/render-component';
 
-//TODO here
 async function initializeCommerceInterface(canvasElement: HTMLElement) {
   await customElements.whenDefined('atomic-commerce-interface');
   const commerceInterface = canvasElement.querySelector(
@@ -13,7 +12,7 @@ async function initializeCommerceInterface(canvasElement: HTMLElement) {
 }
 const meta: Meta = {
   component: 'atomic-commerce-interface',
-  title: 'Commerce/atomic-commerce-interface',
+  title: 'Commerce/Interface',
   id: 'atomic-commerce-interface',
   render: renderComponent,
   parameters,
@@ -30,6 +29,9 @@ const meta: Meta = {
       type: 'string',
     },
   },
+  args: {
+    'slots-default': `<span>Interface content</span>`,
+  },
 };
 
 export default meta;
@@ -37,7 +39,7 @@ export default meta;
 export const Default: Story = {};
 
 export const SearchBeforeInit: Story = {
-  tags: ['commerce', 'test'],
+  tags: ['!dev'],
   play: async (context) => {
     const commerceInterface = context.canvasElement.querySelector(
       'atomic-commerce-interface'
@@ -48,7 +50,6 @@ export const SearchBeforeInit: Story = {
 };
 
 export const WithProductList: Story = {
-  tags: ['commerce', 'test'],
   args: {
     'slots-default': `
       <atomic-commerce-layout>

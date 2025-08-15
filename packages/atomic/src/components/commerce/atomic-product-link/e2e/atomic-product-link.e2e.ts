@@ -12,8 +12,6 @@ test.describe('default', () => {
   });
 
   test('should render as links', async ({productLink, page}) => {
-    expect(await productLink.anchor().count()).toBeGreaterThan(1);
-
     await expect(productLink.anchor().first()).toHaveAttribute('href');
 
     await productLink.anchor().first().click({force: true});

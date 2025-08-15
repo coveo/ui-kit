@@ -1,4 +1,4 @@
-import {html, LitElement, unsafeCSS} from 'lit';
+import {html, LitElement} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {errorGuard} from '@/src/decorators/error-guard';
 import {CommerceLayoutMixin} from '@/src/mixins/commerce-layout-mixin';
@@ -7,12 +7,13 @@ import styles from './atomic-commerce-layout.tw.css';
 
 /**
  * The `atomic-commerce-layout` helps organize elements in the commerce page.
- * @alpha
+ *
+ * @slot default - The default slot where you can add child components to the layout.
  */
 @customElement('atomic-commerce-layout')
 export class AtomicCommerceLayout extends CommerceLayoutMixin(
   LitElement,
-  unsafeCSS(styles)
+  styles
 ) {
   @state() error!: Error;
 

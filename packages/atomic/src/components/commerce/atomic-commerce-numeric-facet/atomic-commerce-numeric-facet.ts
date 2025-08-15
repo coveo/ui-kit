@@ -8,7 +8,7 @@ import {
   type SearchSummaryState,
   type Summary,
 } from '@coveo/headless/commerce';
-import {type CSSResultGroup, html, LitElement, unsafeCSS} from 'lit';
+import {type CSSResultGroup, css, html, LitElement} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {when} from 'lit/directives/when.js';
 import {renderNumericFacetValuesGroup} from '@/src/components/common/facets/numeric-facet/values-container';
@@ -18,22 +18,19 @@ import {bindingGuard} from '@/src/decorators/binding-guard';
 import {errorGuard} from '@/src/decorators/error-guard';
 import type {InitializableComponent} from '@/src/decorators/types';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
-import {InitializeBindingsMixin} from '@/src/mixins/bindings-mixin';
 import {FocusTargetController} from '@/src/utils/accessibility-utils';
 import {shouldDisplayInputForFacetRange} from '../../common/facets/facet-common';
-import type {FacetInfo} from '../../common/facets/facet-common-store';
 import {renderFacetContainer} from '../../common/facets/facet-container/facet-container';
 import {renderFacetHeader} from '../../common/facets/facet-header/facet-header';
 import {renderNumericFacetValue} from '../../common/facets/numeric-facet/value-link';
-import {initializePopover} from '../../common/facets/popover/popover-type';
 import {
   defaultCurrencyFormatter,
   defaultNumberFormatter,
 } from '../../common/formats/format-common';
 import type {Range} from '../atomic-commerce-facet-number-input/atomic-commerce-facet-number-input';
 import '../atomic-commerce-facet-number-input/atomic-commerce-facet-number-input';
+import {bindings} from '@/src/decorators/bindings';
 import type {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface';
-import styles from './atomic-commerce-numeric-facet.tw.css';
 
 /**
  * The `atomic-commerce-numeric-facet` component renders a commerce facet that allows the user to filter products using numeric ranges.
@@ -54,14 +51,12 @@ import styles from './atomic-commerce-numeric-facet.tw.css';
  * @part label-end - The label for the maximum value input field.
  * @part input-end - The input field to enter the maximum numeric value.
  * @part input-apply-button - The button to apply custom numeric range values.
- *
- * @internal
- *
  */
 @customElement('atomic-commerce-numeric-facet')
+@bindings()
 @withTailwindStyles
 export class AtomicCommerceNumericFacet
-  extends InitializeBindingsMixin(LitElement)
+  extends LitElement
   implements InitializableComponent<CommerceBindings>
 {
   /**
@@ -111,13 +106,13 @@ export class AtomicCommerceNumericFacet
   private headerFocus!: FocusTargetController;
   private unsubscribeFacetController?: () => void;
 
-  static styles: CSSResultGroup = [unsafeCSS(styles)];
+  static styles: CSSResultGroup =
+    css`@import "../../common/facets/numeric-facet-common.tw.css";`;
 
   public initialize() {
     this.validateFacet();
     this.context = buildContext(this.bindings.engine);
     this.ensureSubscribed();
-    this.registerFacetToStore();
   }
 
   public disconnectedCallback(): void {
@@ -138,21 +133,6 @@ export class AtomicCommerceNumericFacet
       return defaultCurrencyFormatter(this.contextState.currency);
     }
     return defaultNumberFormatter;
-  }
-
-  private registerFacetToStore() {
-    const {facetId} = this.facetState;
-    const facetInfo: FacetInfo = {
-      label: () => this.bindings.i18n.t(this.displayName),
-      facetId: facetId,
-      element: this,
-      isHidden: () => this.isHidden,
-    };
-    initializePopover(this, {
-      ...facetInfo,
-      hasValues: () => this.hasValues,
-      numberOfActiveValues: () => this.numberOfSelectedValues,
-    });
   }
 
   private get focusTarget(): FocusTargetController {
@@ -209,19 +189,8 @@ export class AtomicCommerceNumericFacet
     });
   }
 
-  private get isHidden() {
-    return !this.shouldRenderFacet;
-  }
-
   private get shouldRenderFacet() {
     return this.shouldRenderInput || this.shouldRenderValues;
-  }
-
-  private get hasValues() {
-    if (this.facetState.values.length) {
-      return true;
-    }
-    return !!this.valuesToRender.length;
   }
 
   private ensureSubscribed() {
