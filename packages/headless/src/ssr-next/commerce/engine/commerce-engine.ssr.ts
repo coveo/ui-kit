@@ -15,7 +15,8 @@ import type {CommerceEngineDefinition} from '../types/engine.js';
 /**
  * Initializes a Commerce engine definition in SSR with given controllers definitions and commerce engine config.
  * @param options - The commerce engine definition
- * @returns Engine definitions for different solution types that support per-call navigator context.
+ * @returns Three utility functions to fetch the initial state of the engine in SSR, hydrate the state in CSR,
+ *  and a build function that can be used for edge cases requiring more control.
  *
  * @remarks
  * You can use the {@link InferStaticState} and {@link InferHydratedState} utility types with the returned engine definitions
