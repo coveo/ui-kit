@@ -29,15 +29,10 @@ import type {
   SearchOnlyController,
   UniversalController,
 } from './controller-scopes.js';
-import type {
-  BakedInControllers,
-  CommerceEngineDefinitionBuildResult,
-} from './engine.js';
 import type {Kind} from './kind.js';
 import type {HasSolutionType} from './utilities.js';
 
 export type {
-  CommerceEngineDefinitionBuildResult,
   HydratedState,
   OptionsTuple,
   InferControllerStaticStateFromController,
@@ -116,6 +111,10 @@ export type BakedInControllerDefinitions = {
   parameterManager: ParameterManagerDefinition<{listing: true; search: true}>;
   context: ContextDefinition;
   cart: CartDefinition;
+};
+
+export type BakedInControllers = {
+  [K in keyof BakedInControllerDefinitions]: BakedInControllerDefinitions[K]['buildWithProps'];
 };
 
 /**
