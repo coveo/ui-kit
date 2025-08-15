@@ -35,6 +35,14 @@ export type {
   CommerceSearchParameters,
 };
 
+export type ParameterManagerDefinition<
+  TOptions extends ControllerDefinitionOption | undefined,
+> = SubControllerDefinitionWithProps<
+  ParameterManager<MappedParameterTypes<TOptions>>,
+  TOptions,
+  SSRParameterManagerProps<MappedParameterTypes<TOptions>>
+>;
+
 /**
  * Defines a `ParameterManager` controller instance.
  * @group Definers
@@ -43,7 +51,7 @@ export type {
  */
 export function defineParameterManager<
   TOptions extends ControllerDefinitionOption | undefined,
->(options?: TOptions) {
+>(options?: TOptions): ParameterManagerDefinition<TOptions> {
   ensureAtLeastOneSolutionType(options);
   return {
     listing: true,

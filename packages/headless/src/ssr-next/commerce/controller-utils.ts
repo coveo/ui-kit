@@ -1,68 +1,50 @@
 import type {UnknownAction} from '@reduxjs/toolkit';
 import type {Controller} from '../../controllers/controller/headless-controller.js';
 import {clone, filterObject, mapObject} from '../../utils/utils.js';
+import {ControllerBuilder} from '../common/builders/controller-builder.js';
+import {createStaticControllerBuilder} from '../common/builders/static-controller-builder.js';
 import {InvalidControllerDefinition} from '../common/errors.js';
-import type {ControllersMap} from '../common/types/controllers.js';
 import type {SSRCommerceEngine} from './factories/build-factory.js';
 import type {SolutionType} from './types/controller-constants.js';
 import type {
-  ControllerDefinition,
   ControllerDefinitionOption,
   ControllerDefinitionsMap,
-  ControllerWithKind,
-  InferControllerStaticStateMapFromControllers,
 } from './types/controller-definitions.js';
 import type {
-  InferControllerFromDefinition,
-  InferControllerPropsFromDefinition,
   InferControllerPropsMapFromDefinitions,
+  InferControllerStaticStateMapFromDefinitionsWithSolutionType,
   InferControllersMapFromDefinition,
 } from './types/controller-inference.js';
 import type {EngineStaticState} from './types/engine.js';
 
-function hasKindProperty(
-  controller: Controller | ControllerWithKind
-): controller is ControllerWithKind {
-  return '_kind' in controller;
-}
-
-export function createStaticState<TSearchAction extends UnknownAction>({
+export function createStaticState<
+  TSearchAction extends UnknownAction,
+  TControllerDefinitions extends ControllerDefinitionsMap<Controller>,
+>({
   searchActions,
   controllers,
 }: {
   searchActions: TSearchAction[];
-  controllers: ControllersMap;
+  controllers: InferControllersMapFromDefinition<
+    TControllerDefinitions,
+    SolutionType
+  >;
 }): EngineStaticState<
   TSearchAction,
-  InferControllerStaticStateMapFromControllers<ControllersMap>
+  InferControllerStaticStateMapFromDefinitionsWithSolutionType<
+    TControllerDefinitions,
+    SolutionType
+  >
 > {
   return {
-    controllers: mapObject(controllers, (controller) => ({
-      state: clone(controller.state),
-      ...(hasKindProperty(controller) && {_kind: controller._kind}),
-    })) as InferControllerStaticStateMapFromControllers<ControllersMap>,
+    controllers: mapObject(controllers, (controller) =>
+      createStaticControllerBuilder(controller).build()
+    ) as InferControllerStaticStateMapFromDefinitionsWithSolutionType<
+      TControllerDefinitions,
+      SolutionType
+    >,
     searchActions: searchActions.map((action) => clone(action)),
   };
-}
-
-function buildControllerFromDefinition<
-  TControllerDefinition extends ControllerDefinition<Controller>,
->({
-  definition,
-  engine,
-  solutionType,
-  props,
-}: {
-  definition: TControllerDefinition;
-  engine: SSRCommerceEngine;
-  solutionType: SolutionType;
-  props?: InferControllerPropsFromDefinition<TControllerDefinition>;
-}): InferControllerFromDefinition<TControllerDefinition> {
-  return (
-    'build' in definition
-      ? definition.build(engine, solutionType)
-      : definition.buildWithProps(engine, props, solutionType)
-  ) as InferControllerFromDefinition<TControllerDefinition>;
 }
 
 export function buildControllerDefinitions<
@@ -77,7 +59,7 @@ export function buildControllerDefinitions<
   definitionsMap: TControllerDefinitionsMap;
   engine: SSRCommerceEngine;
   solutionType: TSolutionType;
-  propsMap: InferControllerPropsMapFromDefinitions<TControllerDefinitionsMap>;
+  propsMap?: InferControllerPropsMapFromDefinitions<TControllerDefinitionsMap>;
 }): InferControllersMapFromDefinition<
   TControllerDefinitionsMap,
   TSolutionType
@@ -94,12 +76,9 @@ export function buildControllerDefinitions<
       return null;
     }
 
-    return buildControllerFromDefinition({
-      definition,
-      engine,
-      solutionType,
-      props,
-    });
+    return new ControllerBuilder(definition, engine, props)
+      .withAdditionalArgs([solutionType])
+      .build();
   });
 
   return filterObject(
