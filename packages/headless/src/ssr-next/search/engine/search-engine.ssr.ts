@@ -2,10 +2,6 @@
  * Utility functions to be used for Server Side Rendering.
  */
 import type {UnknownAction} from '@reduxjs/toolkit';
-import type {
-  NavigatorContext,
-  NavigatorContextProvider,
-} from '../../../app/navigator-context-provider.js';
 import {
   buildSearchEngine,
   type SearchEngine,
@@ -19,6 +15,7 @@ import {
   buildControllerDefinitions,
   createStaticState,
 } from '../../common/controller-utils.js';
+import {extractCallOptionsAndNavigatorContextProvider} from '../../common/navigator-context-utils.js';
 import type {ControllerDefinitionsMap} from '../../common/types/controllers.js';
 import type {
   EngineDefinition,
@@ -107,8 +104,7 @@ export function defineSearchEngine<
 >(options: SearchEngineDefinitionOptions<TControllerDefinitions>) {
   const {controllers: controllerDefinitions, ...engineOptions} = options;
 
-  // biome-ignore lint/suspicious/noExplicitAny: Complex parameter typing would require extensive refactoring
-  const hydrateStaticState = async (...params: any[]) => {
+  const hydrateStaticState = async (...params: unknown[]) => {
     const engine = buildSSRSearchEngine(engineOptions);
     const controllers = buildControllerDefinitions({
       definitionsMap: (controllerDefinitions ?? {}) as TControllerDefinitions,
@@ -117,25 +113,15 @@ export function defineSearchEngine<
         {} as InferControllerPropsMapFromDefinitions<TControllerDefinitions>,
     });
 
-    const [staticState] = params;
+    const [staticState] = params as [{searchAction: UnknownAction}];
     engine.dispatch(staticState.searchAction);
     await engine.waitForSearchCompletedAction();
     return {engine, controllers};
   };
 
-  // biome-ignore lint/suspicious/noExplicitAny: Parameter typing matches the interface contract
-  const fetchStaticState = async (...params: any[]) => {
-    const [callOptions] = params as unknown as [
-      | {navigatorContext?: NavigatorContext | NavigatorContextProvider}
-      | undefined,
-    ];
-
-    // Convert per-call navigator context to provider function
-    const navigatorContextProvider = callOptions?.navigatorContext
-      ? typeof callOptions.navigatorContext === 'function'
-        ? (callOptions.navigatorContext as NavigatorContextProvider)
-        : () => callOptions.navigatorContext as NavigatorContext
-      : undefined;
+  const fetchStaticState = async (...params: unknown[]) => {
+    const {callOptions, navigatorContextProvider} =
+      extractCallOptionsAndNavigatorContextProvider(params);
 
     // Create options for this call with navigator context
     const callSpecificOptions: SearchEngineDefinitionOptions<TControllerDefinitions> =

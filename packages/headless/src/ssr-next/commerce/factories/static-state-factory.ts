@@ -1,11 +1,8 @@
 import type {UnknownAction} from '@reduxjs/toolkit';
-import type {
-  NavigatorContext,
-  NavigatorContextProvider,
-} from '../../../app/navigator-context-provider.js';
 import {buildProductListing} from '../../../controllers/commerce/product-listing/headless-product-listing.js';
 import {buildSearch} from '../../../controllers/commerce/search/headless-search.js';
 import {augmentPreprocessRequestWithForwardedFor} from '../../common/augment-preprocess-request.js';
+import {extractNavigatorContextProvider} from '../../common/navigator-context-utils.js';
 import {createStaticState} from '../controller-utils.js';
 import {SolutionType} from '../types/controller-constants.js';
 import type {InferControllerStaticStateMapFromDefinitionsWithSolutionType} from '../types/controller-inference.js';
@@ -30,17 +27,7 @@ export function fetchStaticStateFactory<
     solutionType: SolutionType
   ): FetchStaticStateFunction<TControllerDefinitions> =>
     async (...params: FetchStaticStateParameters<TControllerDefinitions>) => {
-      const [callOptions] = params as unknown as [
-        | {navigatorContext?: NavigatorContext | NavigatorContextProvider}
-        | undefined,
-      ];
-
-      // Convert per-call navigator context to provider function
-      const navigatorContextProvider = callOptions?.navigatorContext
-        ? typeof callOptions.navigatorContext === 'function'
-          ? (callOptions.navigatorContext as NavigatorContextProvider)
-          : () => callOptions.navigatorContext as NavigatorContext
-        : undefined;
+      const navigatorContextProvider = extractNavigatorContextProvider(params);
 
       // Create options for this call with navigator context
       const callSpecificOptions: CommerceEngineDefinitionOptions<TControllerDefinitions> =
