@@ -58,7 +58,7 @@ export const instantProductsReducer = createReducer(
           state,
           {
             products: products.map((product, index) =>
-              preprocessProduct(product, index + 1)
+              preprocessProduct(product, index + 1, responseId)
             ),
           }
         );
@@ -85,6 +85,7 @@ export const instantProductsReducer = createReducer(
           return;
         }
 
+        const responseId = products[currentParentIndex].responseId;
         const position = products[currentParentIndex].position;
         const {children, totalNumberOfChildren} = products[currentParentIndex];
 
@@ -93,6 +94,7 @@ export const instantProductsReducer = createReducer(
           children,
           totalNumberOfChildren,
           position,
+          responseId,
         };
 
         const newProducts = [...products];
@@ -103,12 +105,16 @@ export const instantProductsReducer = createReducer(
   }
 );
 
-function preprocessProduct(product: BaseProduct, position: number): Product {
+function preprocessProduct(
+  product: BaseProduct,
+  position: number,
+  responseId?: string
+): Product {
   const isParentAlreadyInChildren = product.children.some(
     (child) => child.permanentid === product.permanentid
   );
   if (product.children.length === 0 || isParentAlreadyInChildren) {
-    return {...product, position};
+    return {...product, position, responseId};
   }
 
   const {
@@ -121,5 +127,6 @@ function preprocessProduct(product: BaseProduct, position: number): Product {
     ...product,
     children: [restOfProduct, ...children],
     position,
+    responseId,
   };
 }
