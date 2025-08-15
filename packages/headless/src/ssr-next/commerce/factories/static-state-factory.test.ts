@@ -83,28 +83,36 @@ describe('fetchStaticStateFactory', () => {
     expect(engineSpy.mock.calls[0][0]).toStrictEqual(definition);
   });
 
-  it('should call augmentPreprocessRequestWithForwardedFor when fetchStaticState is invoked', async () => {
+  it('should call augmentPreprocessRequestWithForwardedFor when fetchStaticState is invoked with navigatorContext', async () => {
     const spy = vi.spyOn(
       augmentModule,
       'augmentPreprocessRequestWithForwardedFor'
     );
 
-    const mockNavigatorContextProvider = vi.fn();
+    const mockNavigatorContext = {
+      forwardedFor: '192.168.1.1',
+      referrer: 'https://example.com',
+      userAgent: 'test-agent',
+      location: '/test',
+      clientId: 'test-client',
+    };
     const mockPreprocessRequest = vi.fn(async (req) => req);
     const options = {
       configuration: {
         ...getSampleCommerceEngineConfiguration(),
         preprocessRequest: mockPreprocessRequest,
       },
-      navigatorContextProvider: mockNavigatorContextProvider,
       loggerOptions: {level: 'warn'} as LoggerOptions,
     };
 
     const factory = fetchStaticStateFactory(definition, options);
-    await factory(SolutionType.listing)();
+    await factory(SolutionType.listing)({
+      navigatorContext: mockNavigatorContext,
+    });
+
     expect(spy).toHaveBeenCalledWith({
       loggerOptions: {level: 'warn'},
-      navigatorContextProvider: mockNavigatorContextProvider,
+      navigatorContextProvider: expect.any(Function),
       preprocessRequest: mockPreprocessRequest,
     });
 
