@@ -404,6 +404,28 @@ export class AtomicInsightUserActionsTimeline {
 export declare interface AtomicInsightUserActionsTimeline extends Components.AtomicInsightUserActionsTimeline {}
 
 
+@ProxyCmp({
+  inputs: ['excludedCustomActions', 'ticketCreationDateTime', 'userId']
+, defineCustomElementFn: defineCustomElementAtomicInsightUserActionsToggle})
+@Component({standalone:false,
+  selector: 'atomic-insight-user-actions-toggle',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
+  inputs: ['excludedCustomActions', 'ticketCreationDateTime', 'userId'],
+})
+export class AtomicInsightUserActionsToggle {
+  protected el: HTMLElement;
+  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = r.nativeElement;
+  }
+}
+
+
+export declare interface AtomicInsightUserActionsToggle extends Components.AtomicInsightUserActionsToggle {}
+
+
 @ProxyCmp({defineCustomElementFn: defineCustomElementAtomicLoadMoreResults})
 @Component({standalone:false,
   selector: 'atomic-load-more-results',
@@ -1915,7 +1937,7 @@ export declare interface AtomicTimeframeFacet extends Components.AtomicTimeframe
 
 @ProxyCmp({
   inputs: ['pathLimit'],
-  methods: ['resizeObserver', 'lastRemovedBreadcrumbIndex', 'numberOfBreadcrumbs', 'numberOfCollapsedBreadcrumbs', 'firstExpandedBreadcrumbIndex', 'breadcrumbRemovedFocus', 'breadcrumbShowMoreFocus', 'breadcrumbShowLessFocus', 'bindings', 'breadcrumbManager', 'context', 'contextState', 'searchOrListing', 'breadcrumbManagerState', 'error', 'isCollapsed', 'showMoreText', 'pathLimit', 'initialize', 'validateProps', 'breadcrumbs', 'showMoreButton', 'showLessButton', 'hide', 'show', 'showAllBreadcrumbs', 'adaptBreadcrumbs', 'updateShowLessDisplay', 'hideOverflowingBreadcrumbs', 'isOverflowing', 'updateShowMoreValue', 'getNumberFormatter', 'valueForFacetType', 'buildBreadcrumb', 'renderBreadcrumbs'],
+  methods: ['breadcrumbManager', 'context', 'contextState', 'searchOrListing', 'breadcrumbManagerState'],
   defineCustomElementFn: () => {customElements.get('atomic-commerce-breadbox') || customElements.define('atomic-commerce-breadbox', LitAtomicCommerceBreadbox);}
 })
 @Component({
@@ -1941,7 +1963,7 @@ export declare interface AtomicCommerceBreadbox extends LitAtomicCommerceBreadbo
 
 @ProxyCmp({
   inputs: ['isCollapsed', 'field'],
-  methods: ['bindings', 'isCollapsed', 'field', 'error', 'resultIndexToFocusOnShowMore', 'showLessFocus', 'showMoreFocus', 'headerFocus', 'activeValueFocus', 'facetSearchAriaMessage', 'initialize', 'displayName', 'focusTargets', 'hasParents', 'renderHeader', 'renderValuesTree', 'renderChild', 'renderChildren', 'renderSearchResults', 'renderShowMoreLess', 'validateFacet'],
+  methods: ['isCollapsed'],
   defineCustomElementFn: () => {customElements.get('atomic-commerce-category-facet') || customElements.define('atomic-commerce-category-facet', LitAtomicCommerceCategoryFacet);}
 })
 @Component({
@@ -1967,7 +1989,7 @@ export declare interface AtomicCommerceCategoryFacet extends LitAtomicCommerceCa
 
 @ProxyCmp({
   inputs: [],
-  methods: ['bindings', 'didYouMean', 'queryTrigger', 'didYouMeanState', 'queryTriggerState', 'error', 'initialize', 'content'],
+  methods: [],
   defineCustomElementFn: () => {customElements.get('atomic-commerce-did-you-mean') || customElements.define('atomic-commerce-did-you-mean', LitAtomicCommerceDidYouMean);}
 })
 @Component({
@@ -1993,7 +2015,7 @@ export declare interface AtomicCommerceDidYouMean extends LitAtomicCommerceDidYo
 
 @ProxyCmp({
   inputs: ['summary', 'facet', 'isCollapsed', 'field'],
-  methods: ['summary', 'facet', 'isCollapsed', 'field', 'bindings', 'summaryState', 'facetState', 'error', 'showLessFocus', 'showMoreFocus', 'headerFocus', 'unsubscribeFacetController', 'ariaLiveRegion', 'initialize', 'renderHeader', 'renderBody', 'renderValuesContainer', 'renderSearchResults', 'renderValues', 'renderShowMoreLess', 'renderMatches', 'activeValues', 'displayName', 'facetValueProps', 'initFocusTargets', 'initAriaLive', 'focusTargets', 'isFacetState', 'ensureSubscribed', 'validateFacet'],
+  methods: ['facet', 'isCollapsed', 'summaryState', 'facetState'],
   defineCustomElementFn: () => {customElements.get('atomic-commerce-facet') || customElements.define('atomic-commerce-facet', LitAtomicCommerceFacet);}
 })
 @Component({
@@ -2019,7 +2041,7 @@ export declare interface AtomicCommerceFacet extends LitAtomicCommerceFacet {
 
 @ProxyCmp({
   inputs: ['collapseFacetsAfter'],
-  methods: ['bindings', 'error', 'facetGenerator', 'summary', 'collapseFacetsAfter', 'isAppLoaded', 'initialize', 'isProductListing', 'controllerBuilder', 'validateProps', 'shouldCollapseFacet', 'renderFacetPlaceholders', 'renderFacets'],
+  methods: ['collapseFacetsAfter'],
   defineCustomElementFn: () => {customElements.get('atomic-commerce-facets') || customElements.define('atomic-commerce-facets', LitAtomicCommerceFacets);}
 })
 @Component({
@@ -2045,7 +2067,7 @@ export declare interface AtomicCommerceFacets extends LitAtomicCommerceFacets {
 
 @ProxyCmp({
   inputs: ['type', 'analytics', 'logLevel', 'i18n', 'language', 'engine', 'reflectStateInUrl', 'disableStateReflectionInUrl', 'scrollContainer', 'languageAssetsPath', 'iconAssetsPath'],
-  methods: ['urlManager', 'searchOrListing', 'summary', 'context', 'unsubscribeUrlManager', 'unsubscribeSummary', 'initialized', 'store', 'interfaceController', 'error', 'type', 'analytics', 'logLevel', 'i18n', 'language', 'engine', 'reflectStateInUrl', 'disableStateReflectionInUrl', 'scrollContainer', 'languageAssetsPath', 'iconAssetsPath', 'i18Initialized', 'toggleAnalytics', 'updateLanguage', 'updateIconAssetsPath', 'updateMobileBreakpoint', 'handleInitialization', 'scrollToTop', 'initialize', 'initializeWithEngine', 'executeFirstRequest', 'bindings', 'internalInitialization', 'getBindings', 'initEngine', 'fragment', 'initUrlManager', 'initRequestStatus', 'initSummary', 'initContext', 'initLanguage', 'updateHash', 'onHashChange', 'getUpdateComplete'],
+  methods: ['urlManager', 'searchOrListing', 'summary', 'context', 'toggleAnalytics', 'updateLanguage', 'updateIconAssetsPath', 'scrollToTop', 'initializeWithEngine', 'executeFirstRequest'],
   defineCustomElementFn: () => {customElements.get('atomic-commerce-interface') || customElements.define('atomic-commerce-interface', LitAtomicCommerceInterface);}
 })
 @Component({
@@ -2071,7 +2093,7 @@ export declare interface AtomicCommerceInterface extends LitAtomicCommerceInterf
 
 @ProxyCmp({
   inputs: ['mobileBreakpoint'],
-  methods: ['error', 'mobileBreakpoint', 'styles'],
+  methods: [],
   defineCustomElementFn: () => {customElements.get('atomic-commerce-layout') || customElements.define('atomic-commerce-layout', LitAtomicCommerceLayout);}
 })
 @Component({
@@ -2097,7 +2119,7 @@ export declare interface AtomicCommerceLayout extends LitAtomicCommerceLayout {
 
 @ProxyCmp({
   inputs: [],
-  methods: ['bindings', 'error', 'pagination', 'listingOrSearch', 'isAppLoaded', 'paginationState', 'productListingOrSearchState', 'initialize', 'lastProduct', 'onClick', 'shouldRender'],
+  methods: ['pagination', 'listingOrSearch'],
   defineCustomElementFn: () => {customElements.get('atomic-commerce-load-more-products') || customElements.define('atomic-commerce-load-more-products', LitAtomicCommerceLoadMoreProducts);}
 })
 @Component({
@@ -2123,7 +2145,7 @@ export declare interface AtomicCommerceLoadMoreProducts extends LitAtomicCommerc
 
 @ProxyCmp({
   inputs: [],
-  methods: ['bindings', 'summary', 'summaryState', 'error', 'ariaMessage', 'initialize', 'renderNoItems', 'renderSearchTips'],
+  methods: ['summary', 'summaryState'],
   defineCustomElementFn: () => {customElements.get('atomic-commerce-no-products') || customElements.define('atomic-commerce-no-products', LitAtomicCommerceNoProducts);}
 })
 @Component({
@@ -2149,7 +2171,7 @@ export declare interface AtomicCommerceNoProducts extends LitAtomicCommerceNoPro
 
 @ProxyCmp({
   inputs: ['summary', 'facet', 'isCollapsed', 'field'],
-  methods: ['summary', 'facet', 'isCollapsed', 'field', 'context', 'bindings', 'facetState', 'summaryState', 'contextState', 'error', 'headerFocus', 'unsubscribeFacetController', 'initialize', 'formatter', 'focusTarget', 'displayName', 'numberOfSelectedValues', 'hasInputRange', 'shouldRenderValues', 'valuesToRender', 'shouldRenderInput', 'shouldRenderFacet', 'ensureSubscribed', 'renderValues', 'onNumberInputApply', 'validateFacet'],
+  methods: ['context', 'facetState', 'summaryState', 'contextState'],
   defineCustomElementFn: () => {customElements.get('atomic-commerce-numeric-facet') || customElements.define('atomic-commerce-numeric-facet', LitAtomicCommerceNumericFacet);}
 })
 @Component({
@@ -2175,7 +2197,7 @@ export declare interface AtomicCommerceNumericFacet extends LitAtomicCommerceNum
 
 @ProxyCmp({
   inputs: ['numberOfPages', 'previousButtonIcon', 'nextButtonIcon'],
-  methods: ['bindings', 'error', 'isAppLoaded', 'pagerState', 'numberOfPages', 'previousButtonIcon', 'nextButtonIcon', 'pager', 'listingOrSearch', 'initialize', 'validateProps', 'radioGroupName', 'focusOnFirstResultAndScrollToTop'],
+  methods: ['pagerState', 'pager', 'listingOrSearch'],
   defineCustomElementFn: () => {customElements.get('atomic-commerce-pager') || customElements.define('atomic-commerce-pager', LitAtomicCommercePager);}
 })
 @Component({
@@ -2201,7 +2223,7 @@ export declare interface AtomicCommercePager extends LitAtomicCommercePager {
 
 @ProxyCmp({
   inputs: ['density', 'display', 'imageSize', 'numberOfPlaceholders'],
-  methods: ['searchOrListing', 'summary', 'itemRenderingFunction', 'loadingFlag', 'nextNewResultTarget', 'productListCommon', 'productTemplateProvider', 'unsubscribeSummary', 'bindings', 'error', 'isAppLoaded', 'isEveryProductsReady', 'resultTemplateRegistered', 'templateHasError', 'searchOrListingState', 'summaryState', 'density', 'display', 'imageSize', 'numberOfPlaceholders', 'setRenderFunction', 'initialize', 'updateProductsReadyState', 'validateProps', 'initSearchOrListing', 'initSummary', 'initProductTemplateProvider', 'initProductListCommon', 'createSelectChildProductListener', 'selectChildProductCallback', 'computeListDisplayClasses', 'renderGrid', 'renderList', 'renderTable', 'focusTarget', 'shouldRender', 'getUpdateComplete'],
+  methods: ['searchOrListing', 'summary', 'searchOrListingState', 'summaryState', 'setRenderFunction'],
   defineCustomElementFn: () => {customElements.get('atomic-commerce-product-list') || customElements.define('atomic-commerce-product-list', LitAtomicCommerceProductList);}
 })
 @Component({
@@ -2227,7 +2249,7 @@ export declare interface AtomicCommerceProductList extends LitAtomicCommerceProd
 
 @ProxyCmp({
   inputs: ['choicesDisplayed', 'initialChoice'],
-  methods: ['bindings', 'pagination', 'paginationState', 'summary', 'summaryState', 'error', 'isAppLoaded', 'choices', 'radioGroupName', 'choicesDisplayed', 'initialChoice', 'initialize', 'scrollToTopEvent', 'label'],
+  methods: ['pagination', 'summary'],
   defineCustomElementFn: () => {customElements.get('atomic-commerce-products-per-page') || customElements.define('atomic-commerce-products-per-page', LitAtomicCommerceProductsPerPage);}
 })
 @Component({
@@ -2253,7 +2275,7 @@ export declare interface AtomicCommerceProductsPerPage extends LitAtomicCommerce
 
 @ProxyCmp({
   inputs: [],
-  methods: ['bindings', 'searchOrListing', 'searchOrListingState', 'error', 'showMoreInfo', 'ariaMessage', 'initialize'],
+  methods: ['searchOrListing'],
   defineCustomElementFn: () => {customElements.get('atomic-commerce-query-error') || customElements.define('atomic-commerce-query-error', LitAtomicCommerceQueryError);}
 })
 @Component({
@@ -2279,7 +2301,7 @@ export declare interface AtomicCommerceQueryError extends LitAtomicCommerceQuery
 
 @ProxyCmp({
   inputs: [],
-  methods: ['bindings', 'error', 'listingOrSearchSummaryState', 'listingOrSearchSummary', 'ariaMessage', 'initialize', 'isSearch'],
+  methods: ['listingOrSearchSummary'],
   defineCustomElementFn: () => {customElements.get('atomic-commerce-query-summary') || customElements.define('atomic-commerce-query-summary', LitAtomicCommerceQuerySummary);}
 })
 @Component({
@@ -2305,7 +2327,7 @@ export declare interface AtomicCommerceQuerySummary extends LitAtomicCommerceQue
 
 @ProxyCmp({
   inputs: ['i18n', 'engine', 'scrollContainer', 'languageAssetsPath', 'iconAssetsPath', 'language', 'analytics'],
-  methods: ['bindings', 'error', 'context', 'store', 'interfaceController', 'i18n', 'engine', 'scrollContainer', 'languageAssetsPath', 'iconAssetsPath', 'language', 'analytics', 'i18Initialized', 'initializeWithEngine', 'updateLocale', 'toggleAnalytics', 'updateIconAssetsPath', 'updateLanguage', 'handleInitialization', 'scrollToTop', 'internalInitialization', 'initContext', 'getBindings', 'initLanguage', 'getUpdateComplete'],
+  methods: ['context', 'initializeWithEngine', 'updateLocale', 'toggleAnalytics', 'updateIconAssetsPath', 'updateLanguage'],
   defineCustomElementFn: () => {customElements.get('atomic-commerce-recommendation-interface') || customElements.define('atomic-commerce-recommendation-interface', LitAtomicCommerceRecommendationInterface);}
 })
 @Component({
@@ -2328,17 +2350,3 @@ export class AtomicCommerceRecommendationInterface {
 export declare interface AtomicCommerceRecommendationInterface extends LitAtomicCommerceRecommendationInterface {
 
 }
-
-@ProxyCmp({
-  inputs: ['slotId', 'productId', 'display', 'density', 'imageSize', 'productsPerPage', 'headingLevel'],
-  methods: ['itemRenderingFunction', 'loadingFlag', 'nextNewProductTarget', 'productListCommon', 'productTemplateProvider', 'unsubscribeSummary', 'bindings', 'error', 'isAppLoaded', 'productTemplateRegistered', 'templateHasError', 'isEveryProductReady', 'currentPage', 'slotId', 'productId', 'display', 'density', 'imageSize', 'productsPerPage', 'headingLevel', 'watchNumberOfRecommendationsPerPage', 'setRenderFunction', 'previousPage', 'nextPage', 'initialize', 'updateProductsReadyState', 'focusTarget', 'augmentedRecommendationListState', 'validateProps', 'validateSlotID', 'renderListHeading', 'subsetRecommendations', 'numberOfPages', 'currentIndex', 'hasNoProducts', 'initRecommendations', 'initSummary', 'getAtomicProductProps', 'initProductTemplateProvider', 'initProductListCommon', 'createSelectChildProductListener', 'selectChildProductCallback', 'computeListDisplayClasses', 'renderAsGrid', 'renderRecommendationList', 'shouldRender', 'getUpdateComplete'],
-  defineCustomElementFn: () => {customElements.get('atomic-commerce-recommendation-list') || customElements.define('atomic-commerce-recommendation-list', LitAtomicCommerceRecommendationList);}
-})
-@Component({
-  selector: 'atomic-commerce-recommendation-list',
-  standalone: false,
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  template: '<ng-content></ng-content>',
-  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: ['slotId', 'productId', 'display', 'density', 'imageSize', 'productsPerPage', 'headingLevel']
-})

@@ -25,6 +25,7 @@ export const AtomicGeneratedAnswer = /*@__PURE__*/createReactComponent<JSX.Atomi
 export const AtomicHtml = /*@__PURE__*/createReactComponent<JSX.AtomicHtml, HTMLAtomicHtmlElement>('atomic-html');
 export const AtomicInsightInterface = /*@__PURE__*/createReactComponent<JSX.AtomicInsightInterface, HTMLAtomicInsightInterfaceElement>('atomic-insight-interface');
 export const AtomicInsightUserActionsTimeline = /*@__PURE__*/createReactComponent<JSX.AtomicInsightUserActionsTimeline, HTMLAtomicInsightUserActionsTimelineElement>('atomic-insight-user-actions-timeline');
+export const AtomicInsightUserActionsToggle = /*@__PURE__*/createReactComponent<JSX.AtomicInsightUserActionsToggle, HTMLAtomicInsightUserActionsToggleElement>('atomic-insight-user-actions-toggle');
 export const AtomicLoadMoreResults = /*@__PURE__*/createReactComponent<JSX.AtomicLoadMoreResults, HTMLAtomicLoadMoreResultsElement>('atomic-load-more-results');
 export const AtomicNoResults = /*@__PURE__*/createReactComponent<JSX.AtomicNoResults, HTMLAtomicNoResultsElement>('atomic-no-results');
 export const AtomicNotifications = /*@__PURE__*/createReactComponent<JSX.AtomicNotifications, HTMLAtomicNotificationsElement>('atomic-notifications');

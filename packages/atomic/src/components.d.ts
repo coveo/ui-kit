@@ -1160,6 +1160,10 @@ export namespace Components {
          */
         "userId": string;
     }
+    /**
+     * Internal component of the atomic-insight-interface
+     * The `atomic-insight-user-actions-toggle` component displays a button that opens a modal containing the user actions timeline component.
+     */
     interface AtomicInsightUserActionsToggle {
         /**
           * The names of custom events to exclude.
@@ -3484,6 +3488,10 @@ declare global {
         prototype: HTMLAtomicInsightUserActionsTimelineElement;
         new (): HTMLAtomicInsightUserActionsTimelineElement;
     };
+    /**
+     * Internal component of the atomic-insight-interface
+     * The `atomic-insight-user-actions-toggle` component displays a button that opens a modal containing the user actions timeline component.
+     */
     interface HTMLAtomicInsightUserActionsToggleElement extends Components.AtomicInsightUserActionsToggle, HTMLStencilElement {
     }
     var HTMLAtomicInsightUserActionsToggleElement: {
@@ -5779,6 +5787,10 @@ declare namespace LocalJSX {
          */
         "userId": string;
     }
+    /**
+     * Internal component of the atomic-insight-interface
+     * The `atomic-insight-user-actions-toggle` component displays a button that opens a modal containing the user actions timeline component.
+     */
     interface AtomicInsightUserActionsToggle {
         /**
           * The names of custom events to exclude.
@@ -7782,6 +7794,10 @@ declare module "@stencil/core" {
              * @example <AtomicInsightUserActionsTimeline userId={'123'} caseCreationDate={'2024-08-15T10:00:00Z'} />
              */
             "atomic-insight-user-actions-timeline": LocalJSX.AtomicInsightUserActionsTimeline & JSXBase.HTMLAttributes<HTMLAtomicInsightUserActionsTimelineElement>;
+            /**
+             * Internal component of the atomic-insight-interface
+             * The `atomic-insight-user-actions-toggle` component displays a button that opens a modal containing the user actions timeline component.
+             */
             "atomic-insight-user-actions-toggle": LocalJSX.AtomicInsightUserActionsToggle & JSXBase.HTMLAttributes<HTMLAtomicInsightUserActionsToggleElement>;
             "atomic-ipx-body": LocalJSX.AtomicIpxBody & JSXBase.HTMLAttributes<HTMLAtomicIpxBodyElement>;
             "atomic-ipx-button": LocalJSX.AtomicIpxButton & JSXBase.HTMLAttributes<HTMLAtomicIpxButtonElement>;
