@@ -5,7 +5,7 @@ exports[`generated answer analytics actions > when analyticsMode is \`next\` > s
   "Rga.AnswerAction",
   {
     "action": "copyToClipboard",
-    "answerId": "456",
+    "answerId": "94b77748-2479-4e4b-a4e8-010fa62b04a0",
   },
 ]
 `;
@@ -15,7 +15,7 @@ exports[`generated answer analytics actions > when analyticsMode is \`next\` > s
   "Rga.AnswerAction",
   {
     "action": "dislike",
-    "answerId": "456",
+    "answerId": "94b77748-2479-4e4b-a4e8-010fa62b04a0",
   },
 ]
 `;
@@ -25,7 +25,7 @@ exports[`generated answer analytics actions > when analyticsMode is \`next\` > s
   "Rga.AnswerAction",
   {
     "action": "collapse",
-    "answerId": "456",
+    "answerId": "94b77748-2479-4e4b-a4e8-010fa62b04a0",
   },
 ]
 `;
@@ -35,7 +35,7 @@ exports[`generated answer analytics actions > when analyticsMode is \`next\` > s
   "Rga.AnswerAction",
   {
     "action": "expand",
-    "answerId": "456",
+    "answerId": "94b77748-2479-4e4b-a4e8-010fa62b04a0",
   },
 ]
 `;
@@ -45,7 +45,7 @@ exports[`generated answer analytics actions > when analyticsMode is \`next\` > s
   "Rga.SubmitFeedback",
   {
     "additionalNotes": undefined,
-    "answerId": "456",
+    "answerId": "94b77748-2479-4e4b-a4e8-010fa62b04a0",
     "correctAnswerUrl": undefined,
     "details": {
       "correctTopic": false,
@@ -63,7 +63,7 @@ exports[`generated answer analytics actions > when analyticsMode is \`next\` > s
   "Rga.AnswerAction",
   {
     "action": "hide",
-    "answerId": "456",
+    "answerId": "94b77748-2479-4e4b-a4e8-010fa62b04a0",
   },
 ]
 `;
@@ -73,7 +73,7 @@ exports[`generated answer analytics actions > when analyticsMode is \`next\` > s
   "Rga.AnswerAction",
   {
     "action": "show",
-    "answerId": "456",
+    "answerId": "94b77748-2479-4e4b-a4e8-010fa62b04a0",
   },
 ]
 `;
@@ -83,7 +83,7 @@ exports[`generated answer analytics actions > when analyticsMode is \`next\` > s
   "Rga.AnswerReceived",
   {
     "answerGenerated": true,
-    "answerId": "456",
+    "answerId": "94b77748-2479-4e4b-a4e8-010fa62b04a0",
   },
 ]
 `;
@@ -93,7 +93,7 @@ exports[`generated answer analytics actions > when analyticsMode is \`next\` > s
   "Rga.AnswerReceived",
   {
     "answerGenerated": false,
-    "answerId": "456",
+    "answerId": "94b77748-2479-4e4b-a4e8-010fa62b04a0",
   },
 ]
 `;
@@ -102,7 +102,7 @@ exports[`generated answer analytics actions > when analyticsMode is \`next\` > s
 [
   "Rga.CitationHover",
   {
-    "answerId": "456",
+    "answerId": "94b77748-2479-4e4b-a4e8-010fa62b04a0",
     "citationHoverTimeInMs": 1234,
     "citationId": "some-citation-id",
     "itemMetadata": {
@@ -120,7 +120,7 @@ exports[`generated answer analytics actions > when analyticsMode is \`next\` > s
   "Rga.AnswerAction",
   {
     "action": "like",
-    "answerId": "456",
+    "answerId": "94b77748-2479-4e4b-a4e8-010fa62b04a0",
   },
 ]
 `;
@@ -129,7 +129,7 @@ exports[`generated answer analytics actions > when analyticsMode is \`next\` > s
 [
   "Rga.CitationClick",
   {
-    "answerId": "456",
+    "answerId": "94b77748-2479-4e4b-a4e8-010fa62b04a0",
     "citationId": "some-citation-id",
     "itemMetadata": {
       "title": "Sample citation",
