@@ -51,7 +51,12 @@ export class AtomicProductText
    * Disable highlighting of the string field value.
    * Only works if the `field` property is set to `excerpt` or `ec_name`.
    */
-  @property({type: Boolean, reflect: true, useDefault: true})
+  @property({
+    type: Boolean,
+    reflect: true,
+    useDefault: true,
+    attribute: 'no-highlight',
+  })
   public noHighlight: boolean = false;
   /**
    * The locale key to use for displaying default text when the specified field has no value for the product.
