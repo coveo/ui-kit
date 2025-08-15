@@ -5,11 +5,12 @@ import {augmentPreprocessRequestWithForwardedFor} from '../../common/augment-pre
 import {createStaticState} from '../controller-utils.js';
 import type {BuildConfig} from '../types/build.js';
 import {SolutionType} from '../types/controller-constants.js';
-import type {AugmentedControllerDefinition} from '../types/controller-definitions.js';
+import type {
+  AugmentedControllerDefinition,
+  FilteredBakedInControllers,
+} from '../types/controller-definitions.js';
 import type {InferControllerStaticStateMapFromDefinitionsWithSolutionType} from '../types/controller-inference.js';
 import type {
-  BakedInControllers,
-  BuildParameters,
   CommerceControllerDefinitionsMap,
   EngineStaticState,
   FetchStaticStateFunction,
@@ -34,9 +35,7 @@ export function fetchStaticStateFactory<
         controllerDefinitions,
         options
       )(solutionType);
-      const {engine, controllers} = await solutionTypeBuild(
-        ...(params as BuildParameters<TControllerDefinitions>)
-      );
+      const {engine, controllers} = await solutionTypeBuild(...params);
 
       options.configuration.preprocessRequest =
         augmentPreprocessRequestWithForwardedFor({
@@ -57,6 +56,7 @@ export function fetchStaticStateFactory<
       const searchActions = await Promise.all(
         engine.waitForRequestCompletedAction()
       );
+
       const staticState = createStaticState({
         searchActions,
         controllers,
@@ -66,7 +66,7 @@ export function fetchStaticStateFactory<
           TControllerDefinitions,
           SolutionType
         > &
-          BakedInControllers
+          FilteredBakedInControllers<SolutionType>
       > &
         BuildConfig<SolutionType>;
 

@@ -21,7 +21,7 @@ export default class QuanticColoredResultBadge extends LightningElement {
    */
   @api label;
   /**
-   * The [result item](https://docs.coveo.com/en/headless/latest/reference/search/controllers/result-list/#result) to use. Will be ignored if label is provided.
+   * The [result item](https://docs.coveo.com/en/headless/latest/reference/interfaces/Search.Result.html) to use. Will be ignored if label is provided.
    * @api
    * @type {Result}
    */

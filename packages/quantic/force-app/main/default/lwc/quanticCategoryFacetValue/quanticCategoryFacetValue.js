@@ -18,7 +18,7 @@ import {api, LightningElement} from 'lwc';
  */
 export default class QuanticCategoryFacetValue extends LightningElement {
   /**
-   * The [facet value](https://docs.coveo.com/en/headless/latest/reference/search/controllers/category-facet/#categoryfacetvalue) to display.
+   * The [facet value](https://docs.coveo.com/en/headless/latest/reference/interfaces/Search.CategoryFacetValue.html) to display.
    * @api
    * @type {CategoryFacetValue} */
   @api item;

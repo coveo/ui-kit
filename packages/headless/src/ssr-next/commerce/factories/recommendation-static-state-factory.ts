@@ -5,12 +5,11 @@ import type {BuildConfig} from '../types/build.js';
 import {SolutionType} from '../types/controller-constants.js';
 import type {
   AugmentedControllerDefinition,
+  FilteredBakedInControllers,
   RecommendationControllerSettings,
 } from '../types/controller-definitions.js';
 import type {InferControllerStaticStateMapFromDefinitionsWithSolutionType} from '../types/controller-inference.js';
 import type {
-  BakedInControllers,
-  BuildParameters,
   BuildResult,
   CommerceControllerDefinitionsMap,
   EngineStaticState,
@@ -55,7 +54,7 @@ export function fetchRecommendationStaticStateFactory<
     )(SolutionType.recommendation);
 
     const {engine, controllers} = (await solutionTypeBuild(
-      ...(params as BuildParameters<TControllerDefinitions>)
+      ...params
     )) as BuildResult<TControllerDefinitions>;
 
     filterRecommendationControllers(
@@ -76,7 +75,7 @@ export function fetchRecommendationStaticStateFactory<
         TControllerDefinitions,
         SolutionType
       > &
-        BakedInControllers
+        FilteredBakedInControllers<SolutionType.recommendation>
     > &
       BuildConfig<SolutionType.recommendation>;
   };

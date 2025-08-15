@@ -22,8 +22,7 @@ import SearchIcon from '../../../images/search.svg';
 import type {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface';
 
 /**
- * The `atomic-commerce-search-box-query-suggestions` component can be added as a child of an `atomic-search-box` component, allowing for the configuration of query suggestion behavior.
- * @alpha
+ * The `atomic-commerce-search-box-query-suggestions` component can be added as a child of an `atomic-commerce-search-box` component, allowing for the configuration of query suggestion behavior.
  */
 @customElement('atomic-commerce-search-box-query-suggestions')
 export class AtomicCommerceSearchBoxQuerySuggestions

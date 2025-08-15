@@ -17,15 +17,11 @@ import type {SSRCommerceEngineOptions} from '../types/build.js';
 import {SolutionType} from '../types/controller-constants.js';
 import type {ControllerDefinitionsMap} from '../types/controller-definitions.js';
 import type {
-  InferControllerPropsMapFromDefinitions,
-  InferControllersMapFromDefinition,
-} from '../types/controller-inference.js';
-import type {
-  BakedInControllers,
   BuildParameters,
   CommerceControllerDefinitionsMap,
   EngineDefinitionOptions,
 } from '../types/engine.js';
+import {wireControllerParams} from '../utils/controller-wiring.js';
 import {extendEngineConfiguration} from '../utils/engine-wiring.js';
 
 /**
@@ -149,22 +145,23 @@ function fetchActiveRecommendationControllers(
 
 export const buildFactory =
   <TControllerDefinitions extends CommerceControllerDefinitionsMap>(
-    controllerDefinitions: TControllerDefinitions | undefined,
+    controllerDefinitions: TControllerDefinitions,
     options: CommerceEngineDefinitionOptions<TControllerDefinitions>
   ) =>
   <T extends SolutionType>(solutionType: T) =>
   async (...[buildOptions]: BuildParameters<TControllerDefinitions>) => {
+    const controllerProps = wireControllerParams(
+      solutionType,
+      controllerDefinitions,
+      buildOptions!
+    ); // TODO: KIT-4754: remove non-null assertion operator
+
     const logger = buildLogger(options.loggerOptions);
     if (!options.navigatorContextProvider) {
       logger.warn(
         '[WARNING] Missing navigator context in server-side code. Make sure to set it with `setNavigatorContextProvider` before calling fetchStaticState()'
       );
     }
-
-    const controllerProps =
-      buildOptions && 'controllers' in buildOptions
-        ? (buildOptions.controllers as ControllersPropsMap)
-        : {};
 
     const enabledRecommendationControllers =
       fetchActiveRecommendationControllers(controllerProps, solutionType);
@@ -186,11 +183,8 @@ export const buildFactory =
       definitionsMap: (controllerDefinitions ?? {}) as TControllerDefinitions,
       engine,
       solutionType,
-      propsMap: (buildOptions && 'controllers' in buildOptions
-        ? buildOptions.controllers
-        : {}) as InferControllerPropsMapFromDefinitions<TControllerDefinitions>,
-    }) as InferControllersMapFromDefinition<TControllerDefinitions, T> &
-      BakedInControllers;
+      propsMap: controllerProps,
+    });
 
     return {
       engine,

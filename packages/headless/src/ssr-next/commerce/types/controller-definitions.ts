@@ -29,11 +29,10 @@ import type {
   SearchOnlyController,
   UniversalController,
 } from './controller-scopes.js';
-import type {CommerceEngineDefinitionBuildResult} from './engine.js';
 import type {Kind} from './kind.js';
+import type {HasSolutionType} from './utilities.js';
 
 export type {
-  CommerceEngineDefinitionBuildResult,
   HydratedState,
   OptionsTuple,
   InferControllerStaticStateFromController,
@@ -105,13 +104,48 @@ export interface ControllerDefinitionsMap<TController extends Controller> {
   [customName: string]: ControllerDefinition<TController>;
 }
 
-export type AugmentedControllerDefinition<
-  TControllerDefinitions extends ControllerDefinitionsMap<Controller>,
-> = TControllerDefinitions & {
-  parameterManager: ParameterManagerDefinition<{listing: true; search: true}>; // TODO: KIT-4611: stop exposing this TOption param
+/**
+ * Map of baked-in controller definitions
+ */
+export type BakedInControllerDefinitions = {
+  parameterManager: ParameterManagerDefinition<{listing: true; search: true}>;
   context: ContextDefinition;
   cart: CartDefinition;
 };
+
+export type BakedInControllers = {
+  [K in keyof BakedInControllerDefinitions]: BakedInControllerDefinitions[K]['buildWithProps'];
+};
+
+/**
+ * A dynamically filtered map of baked-in controller definitions based on solution type compatibility.
+ *
+ * This type automatically includes only the baked-in controllers that are available for the specified
+ * solution type by checking each controller's `SolutionTypeAvailability` configuration. Controllers
+ * that don't support the given solution type are excluded from the resulting type.
+ *
+ * @template TSolutionType - The target solution type to filter controllers for
+ */
+export type FilteredBakedInControllers<TSolutionType extends SolutionType> = {
+  [K in keyof BakedInControllers as HasSolutionType<
+    BakedInControllerDefinitions[K],
+    TSolutionType
+  > extends true
+    ? K
+    : never]: BakedInControllers[K];
+};
+
+/**
+ * Map of controller definitions available to the commerce engine definition.
+ *
+ * This type combines user-defined controllers with the system's baked-in controllers
+ * (parameterManager, context, and cart).
+ *
+ * @template TControllerDefinitions - The controller definitions map
+ */
+export type AugmentedControllerDefinition<
+  TControllerDefinitions extends ControllerDefinitionsMap<Controller>,
+> = TControllerDefinitions & BakedInControllerDefinitions;
 
 /**
  * This type defines the required and optional controller props for the engine definition.

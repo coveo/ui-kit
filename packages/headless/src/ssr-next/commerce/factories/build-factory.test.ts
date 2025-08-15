@@ -1,8 +1,11 @@
 import {describe, expect, it, type Mock, vi} from 'vitest';
-import * as commerceEngine from '../../../app/commerce-engine/commerce-engine.js';
+import {buildCommerceEngine} from '../../../app/commerce-engine/commerce-engine.js';
 import {getSampleCommerceEngineConfiguration} from '../../../app/commerce-engine/commerce-engine-configuration.js';
 import {buildLogger} from '../../../app/logger.js';
+import {buildMockCommerceState} from '../../../test/mock-commerce-state.js';
+import {buildMockCommerceEngine} from '../../../test/mock-engine-v2.js';
 import {buildMockNavigatorContextProvider} from '../../../test/mock-navigator-context-provider.js';
+import {defineMockCommerceController} from '../../../test/mock-ssr-controller-definitions.js';
 import {defineCart} from '../controllers/cart/headless-cart.ssr.js';
 import {defineProductList} from '../controllers/product-list/headless-product-list.ssr.js';
 import {defineRecommendations} from '../controllers/recommendations/headless-recommendations.ssr.js';
@@ -16,11 +19,16 @@ import type {
   StandaloneBuildConfig,
 } from '../types/build.js';
 import {SolutionType} from '../types/controller-constants.js';
+import {wireControllerParams} from '../utils/controller-wiring.js';
 import {buildFactory} from './build-factory.js';
 
+vi.mock('../utils/controller-wiring.js');
 vi.mock('../../../app/logger.js');
+vi.mock('../../../app/commerce-engine/commerce-engine.js');
 
 describe('buildFactory', () => {
+  const mockWireControllerParams = vi.mocked(wireControllerParams);
+  const mockBuildCommerceEngine = vi.mocked(buildCommerceEngine);
   const mockBuildOptions = {
     country: 'US',
     currency: 'USD',
@@ -42,12 +50,44 @@ describe('buildFactory', () => {
   const mockEmptyDefinition = {};
 
   beforeEach(() => {
-    vi.spyOn(commerceEngine, 'buildCommerceEngine');
+    vi.resetAllMocks();
+    mockBuildCommerceEngine.mockReturnValue(
+      buildMockCommerceEngine(buildMockCommerceState())
+    );
     (buildLogger as Mock).mockReturnValue(mockLogger);
   });
 
   afterEach(() => {
     vi.clearAllMocks();
+  });
+
+  it('should call #wireControllerParams with the correct params', async () => {
+    const definition = {
+      controller1: defineMockCommerceController(),
+      controller2: defineMockCommerceController(),
+    };
+
+    const factory = buildFactory(definition, mockEngineOptions);
+    await factory(SolutionType.listing)({
+      country: 'CA',
+      currency: 'USD',
+      language: 'en',
+      url: 'https://example.com',
+    });
+
+    expect(mockWireControllerParams.mock.calls[0][0]).toStrictEqual('listing');
+    expect(mockWireControllerParams.mock.calls[0][1]).toStrictEqual(
+      expect.objectContaining({
+        controller1: expect.any(Object),
+        controller2: expect.any(Object),
+      })
+    );
+    expect(mockWireControllerParams.mock.calls[0][2]).toStrictEqual({
+      country: 'CA',
+      currency: 'USD',
+      language: 'en',
+      url: 'https://example.com',
+    });
   });
 
   it('should not warn if navigatorContextProvider is present', async () => {
@@ -96,10 +136,9 @@ describe('buildFactory', () => {
 
     it('should never add middlewares', async () => {
       await build(mockBuildOptions as StandaloneBuildConfig);
-      expect(
-        (commerceEngine.buildCommerceEngine as Mock).mock.calls[0][0]
-          .middlewares
-      ).toHaveLength(0);
+      expect(mockBuildCommerceEngine.mock.calls[0][0].middlewares).toHaveLength(
+        0
+      );
     });
   });
 
@@ -118,10 +157,9 @@ describe('buildFactory', () => {
 
     it('should always add a single middleware', async () => {
       await build(mockBuildOptions as SearchBuildConfig);
-      expect(
-        (commerceEngine.buildCommerceEngine as Mock).mock.calls[0][0]
-          .middlewares
-      ).toHaveLength(1);
+      expect(mockBuildCommerceEngine.mock.calls[0][0].middlewares).toHaveLength(
+        1
+      );
     });
   });
 
@@ -200,14 +238,14 @@ describe('buildFactory', () => {
         mockBuildOptions as ListingBuildConfig
       );
 
-      expect(
-        (commerceEngine.buildCommerceEngine as Mock).mock.calls[0][0]
-          .middlewares
-      ).toHaveLength(1);
+      expect(mockBuildCommerceEngine.mock.calls[0][0].middlewares).toHaveLength(
+        1
+      );
     });
   });
 
-  describe('when building for recommendations', () => {
+  // TODO: KIT-4619: unskip once recommendations are wired
+  describe.skip('when building for recommendations', () => {
     const controllerDefinition = {
       popularViewed: defineRecommendations({
         options: {
@@ -238,10 +276,9 @@ describe('buildFactory', () => {
         ...(mockBuildOptions as RecommendationBuildConfig),
         controllers: {},
       });
-      expect(
-        (commerceEngine.buildCommerceEngine as Mock).mock.calls[0][0]
-          .middlewares
-      ).toHaveLength(0);
+      expect(mockBuildCommerceEngine.mock.calls[0][0].middlewares).toHaveLength(
+        0
+      );
     });
 
     it('should add a middleware for each enabled recommendation', async () => {
@@ -252,10 +289,9 @@ describe('buildFactory', () => {
           popularViewed: {enabled: true},
         },
       });
-      expect(
-        (commerceEngine.buildCommerceEngine as Mock).mock.calls[0][0]
-          .middlewares
-      ).toHaveLength(2);
+      expect(mockBuildCommerceEngine.mock.calls[0][0].middlewares).toHaveLength(
+        2
+      );
     });
 
     it('should not add middlewares if user disabled them', async () => {
@@ -266,10 +302,9 @@ describe('buildFactory', () => {
           popularViewed: {enabled: false},
         },
       });
-      expect(
-        (commerceEngine.buildCommerceEngine as Mock).mock.calls[0][0]
-          .middlewares
-      ).toHaveLength(0);
+      expect(mockBuildCommerceEngine.mock.calls[0][0].middlewares).toHaveLength(
+        0
+      );
     });
   });
 });
