@@ -1,8 +1,10 @@
 import type {UnknownAction} from '@reduxjs/toolkit';
 import {buildProductListing} from '../../../controllers/commerce/product-listing/headless-product-listing.js';
 import {buildSearch} from '../../../controllers/commerce/search/headless-search.js';
-import {augmentPreprocessRequestWithForwardedFor} from '../../common/augment-preprocess-request.js';
-import {extractNavigatorContextProvider} from '../../common/navigator-context-utils.js';
+import {
+  createEngineOptionsWithNavigatorContext,
+  extractNavigatorContextConfig,
+} from '../../common/navigator-context-utils.js';
 import {createStaticState} from '../controller-utils.js';
 import {SolutionType} from '../types/controller-constants.js';
 import type {InferControllerStaticStateMapFromDefinitionsWithSolutionType} from '../types/controller-inference.js';
@@ -27,24 +29,13 @@ export function fetchStaticStateFactory<
     solutionType: SolutionType
   ): FetchStaticStateFunction<TControllerDefinitions> =>
     async (...params: FetchStaticStateParameters<TControllerDefinitions>) => {
-      const navigatorContextProvider = extractNavigatorContextProvider(params);
+      const {navigatorContextProvider} = extractNavigatorContextConfig(params);
 
       // Create options for this call with navigator context
-      const callSpecificOptions: CommerceEngineDefinitionOptions<TControllerDefinitions> =
-        {
-          ...options,
-          navigatorContextProvider,
-          configuration: {
-            ...options.configuration,
-            preprocessRequest: navigatorContextProvider
-              ? augmentPreprocessRequestWithForwardedFor({
-                  preprocessRequest: options.configuration.preprocessRequest,
-                  navigatorContextProvider,
-                  loggerOptions: options.loggerOptions,
-                })
-              : options.configuration.preprocessRequest,
-          },
-        };
+      const callSpecificOptions = createEngineOptionsWithNavigatorContext(
+        options,
+        navigatorContextProvider
+      );
 
       const solutionTypeBuild = await buildFactory(
         controllerDefinitions,

@@ -1,53 +1,60 @@
+import type {PreprocessRequest} from '../../api/preprocess-request.js';
+import type {LoggerOptions} from '../../app/logger.js';
 import type {
   NavigatorContext,
   NavigatorContextProvider,
 } from '../../app/navigator-context-provider.js';
+import {augmentPreprocessRequestWithForwardedFor} from './augment-preprocess-request.js';
 
 /**
- * Converts a navigator context object to a provider function.
- * Wraps the context object in a function that returns the object.
+ * Extracts navigator context from fetchStaticState parameters and creates the necessary configuration.
+ * This is the single entry point for all navigator context processing.
  */
-export function convertNavigatorContextToProvider(
-  navigatorContext: NavigatorContext
-): NavigatorContextProvider {
-  return () => navigatorContext;
-}
-
-/**
- * Extracts navigator context from fetchStaticState parameters and converts it to a provider function.
- * This handles the common pattern of extracting the first parameter and converting the navigator context.
- */
-export function extractNavigatorContextProvider(
-  params: unknown[]
-): NavigatorContextProvider | undefined {
-  const [callOptions] = params as unknown as [
-    {navigatorContext?: NavigatorContext} | undefined,
-  ];
-
-  return callOptions?.navigatorContext
-    ? convertNavigatorContextToProvider(callOptions.navigatorContext)
-    : undefined;
-}
-
-/**
- * Extracts call options and navigator context provider from fetchStaticState parameters.
- * Returns both the original call options and the converted navigator context provider.
- */
-export function extractCallOptionsAndNavigatorContextProvider(
-  params: unknown[]
-): {
-  callOptions:
-    | {navigatorContext?: NavigatorContext; controllers?: unknown}
-    | undefined;
-  navigatorContextProvider: NavigatorContextProvider | undefined;
+export function extractNavigatorContextConfig(params: unknown[]): {
+  navigatorContextProvider?: NavigatorContextProvider;
+  callOptions?: {navigatorContext?: NavigatorContext; controllers?: unknown};
 } {
   const [callOptions] = params as unknown as [
     {navigatorContext?: NavigatorContext; controllers?: unknown} | undefined,
   ];
 
-  const navigatorContextProvider = callOptions?.navigatorContext
-    ? convertNavigatorContextToProvider(callOptions.navigatorContext)
-    : undefined;
+  if (!callOptions?.navigatorContext) {
+    return {callOptions};
+  }
 
-  return {callOptions, navigatorContextProvider};
+  return {
+    callOptions,
+    navigatorContextProvider: () => callOptions.navigatorContext!,
+  };
+}
+
+/**
+ * Creates engine options with navigator context configuration applied.
+ * This eliminates duplication between commerce and search engines.
+ */
+export function createEngineOptionsWithNavigatorContext<
+  TOptions extends {
+    configuration: {preprocessRequest?: PreprocessRequest};
+    loggerOptions?: LoggerOptions;
+  },
+>(
+  baseOptions: TOptions,
+  navigatorContextProvider?: NavigatorContextProvider
+): TOptions {
+  if (!navigatorContextProvider) {
+    return baseOptions;
+  }
+
+  return {
+    ...baseOptions,
+    navigatorContextProvider,
+    configuration: {
+      ...baseOptions.configuration,
+      preprocessRequest: augmentPreprocessRequestWithForwardedFor({
+        preprocessRequest: baseOptions.configuration.preprocessRequest,
+        navigatorContextProvider,
+        loggerOptions: baseOptions.loggerOptions,
+      }),
+    },
+  };
 }

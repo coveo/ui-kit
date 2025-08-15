@@ -10,12 +10,14 @@ import {
 import type {Controller} from '../../../controllers/controller/headless-controller.js';
 import type {LegacySearchAction} from '../../../features/analytics/analytics-utils.js';
 import {createWaitForActionMiddleware} from '../../../utils/utils.js';
-import {augmentPreprocessRequestWithForwardedFor} from '../../common/augment-preprocess-request.js';
 import {
   buildControllerDefinitions,
   createStaticState,
 } from '../../common/controller-utils.js';
-import {extractCallOptionsAndNavigatorContextProvider} from '../../common/navigator-context-utils.js';
+import {
+  createEngineOptionsWithNavigatorContext,
+  extractNavigatorContextConfig,
+} from '../../common/navigator-context-utils.js';
 import type {ControllerDefinitionsMap} from '../../common/types/controllers.js';
 import type {
   EngineDefinition,
@@ -121,24 +123,13 @@ export function defineSearchEngine<
 
   const fetchStaticState = async (...params: unknown[]) => {
     const {callOptions, navigatorContextProvider} =
-      extractCallOptionsAndNavigatorContextProvider(params);
+      extractNavigatorContextConfig(params);
 
     // Create options for this call with navigator context
-    const callSpecificOptions: SearchEngineDefinitionOptions<TControllerDefinitions> =
-      {
-        ...options,
-        navigatorContextProvider,
-        configuration: {
-          ...options.configuration,
-          preprocessRequest: navigatorContextProvider
-            ? augmentPreprocessRequestWithForwardedFor({
-                preprocessRequest: options.configuration.preprocessRequest,
-                navigatorContextProvider,
-                loggerOptions: options.loggerOptions,
-              })
-            : options.configuration.preprocessRequest,
-        },
-      };
+    const callSpecificOptions = createEngineOptionsWithNavigatorContext(
+      options,
+      navigatorContextProvider
+    );
 
     const engine = buildSSRSearchEngine(callSpecificOptions);
     const controllers = buildControllerDefinitions({

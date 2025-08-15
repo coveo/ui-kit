@@ -1,9 +1,8 @@
 import {describe, expect, it} from 'vitest';
 import type {NavigatorContext} from '../../app/navigator-context-provider.js';
 import {
-  convertNavigatorContextToProvider,
-  extractCallOptionsAndNavigatorContextProvider,
-  extractNavigatorContextProvider,
+  createEngineOptionsWithNavigatorContext,
+  extractNavigatorContextConfig,
 } from './navigator-context-utils.js';
 
 describe('navigator-context-utils', () => {
@@ -15,108 +14,97 @@ describe('navigator-context-utils', () => {
     location: 'https://example.com/page',
   };
 
-  describe('convertNavigatorContextToProvider', () => {
-    it('should convert NavigatorContext to NavigatorContextProvider', () => {
-      const provider = convertNavigatorContextToProvider(mockNavigatorContext);
-
-      expect(typeof provider).toBe('function');
-      expect(provider()).toEqual(mockNavigatorContext);
-    });
-
-    it('should return the same context object on multiple calls', () => {
-      const provider = convertNavigatorContextToProvider(mockNavigatorContext);
-
-      expect(provider()).toBe(mockNavigatorContext);
-      expect(provider()).toBe(mockNavigatorContext);
-    });
-  });
-
-  describe('extractNavigatorContextProvider', () => {
+  describe('extractNavigatorContextConfig', () => {
     it('should extract and convert navigatorContext from params', () => {
       const params = [{navigatorContext: mockNavigatorContext}];
-      const provider = extractNavigatorContextProvider(params);
+      const result = extractNavigatorContextConfig(params);
 
-      expect(typeof provider).toBe('function');
-      expect(provider!()).toEqual(mockNavigatorContext);
+      expect(typeof result.navigatorContextProvider).toBe('function');
+      expect(result.navigatorContextProvider!()).toEqual(mockNavigatorContext);
+      expect(result.callOptions).toEqual({
+        navigatorContext: mockNavigatorContext,
+      });
     });
 
-    it('should return undefined when navigatorContext is not provided', () => {
+    it('should return only callOptions when navigatorContext is not provided', () => {
       const params = [{}];
-      const provider = extractNavigatorContextProvider(params);
+      const result = extractNavigatorContextConfig(params);
 
-      expect(provider).toBeUndefined();
+      expect(result.navigatorContextProvider).toBeUndefined();
+      expect(result.callOptions).toEqual({});
     });
 
-    it('should return undefined when params is empty', () => {
+    it('should return callOptions undefined when params is empty', () => {
       const params: unknown[] = [];
-      const provider = extractNavigatorContextProvider(params);
+      const result = extractNavigatorContextConfig(params);
 
-      expect(provider).toBeUndefined();
+      expect(result.navigatorContextProvider).toBeUndefined();
+      expect(result.callOptions).toBeUndefined();
     });
 
-    it('should return undefined when first param is undefined', () => {
-      const params = [undefined];
-      const provider = extractNavigatorContextProvider(params);
-
-      expect(provider).toBeUndefined();
-    });
-  });
-
-  describe('extractCallOptionsAndNavigatorContextProvider', () => {
-    it('should extract both callOptions and navigatorContextProvider', () => {
+    it('should handle callOptions with controllers', () => {
       const callOptions = {
         navigatorContext: mockNavigatorContext,
         controllers: {someController: {}},
       };
       const params = [callOptions];
 
-      const result = extractCallOptionsAndNavigatorContextProvider(params);
+      const result = extractNavigatorContextConfig(params);
 
       expect(result.callOptions).toBe(callOptions);
       expect(typeof result.navigatorContextProvider).toBe('function');
       expect(result.navigatorContextProvider!()).toEqual(mockNavigatorContext);
     });
+  });
 
-    it('should handle callOptions without navigatorContext', () => {
-      const callOptions = {controllers: {someController: {}}};
-      const params = [callOptions];
+  describe('createEngineOptionsWithNavigatorContext', () => {
+    const mockBaseOptions = {
+      configuration: {
+        preprocessRequest: undefined,
+      },
+      loggerOptions: {},
+    };
 
-      const result = extractCallOptionsAndNavigatorContextProvider(params);
+    it('should return base options when no navigatorContextProvider', () => {
+      const result = createEngineOptionsWithNavigatorContext(mockBaseOptions);
 
-      expect(result.callOptions).toBe(callOptions);
-      expect(result.navigatorContextProvider).toBeUndefined();
+      expect(result).toBe(mockBaseOptions);
     });
 
-    it('should handle empty params', () => {
-      const params: unknown[] = [];
+    it('should enhance options with navigatorContextProvider', () => {
+      const navigatorContextProvider = () => mockNavigatorContext;
+      const result = createEngineOptionsWithNavigatorContext(
+        mockBaseOptions,
+        navigatorContextProvider
+      );
 
-      const result = extractCallOptionsAndNavigatorContextProvider(params);
-
-      expect(result.callOptions).toBeUndefined();
-      expect(result.navigatorContextProvider).toBeUndefined();
+      expect(
+        (result as typeof result & {navigatorContextProvider: unknown})
+          .navigatorContextProvider
+      ).toBe(navigatorContextProvider);
+      expect(result.configuration.preprocessRequest).toBeDefined();
     });
 
-    it('should handle undefined callOptions', () => {
-      const params = [undefined];
-
-      const result = extractCallOptionsAndNavigatorContextProvider(params);
-
-      expect(result.callOptions).toBeUndefined();
-      expect(result.navigatorContextProvider).toBeUndefined();
-    });
-
-    it('should preserve other properties in callOptions', () => {
-      const callOptions = {
-        navigatorContext: mockNavigatorContext,
-        controllers: {someController: {}},
-        someOtherProperty: 'test',
+    it('should preserve existing configuration', () => {
+      const existingPreprocessRequest = () => {};
+      const optionsWithConfig = {
+        ...mockBaseOptions,
+        configuration: {
+          preprocessRequest: existingPreprocessRequest,
+          someOtherConfig: 'test',
+        },
       };
-      const params = [callOptions];
 
-      const result = extractCallOptionsAndNavigatorContextProvider(params);
+      const navigatorContextProvider = () => mockNavigatorContext;
+      const result = createEngineOptionsWithNavigatorContext(
+        optionsWithConfig,
+        navigatorContextProvider
+      );
 
-      expect(result.callOptions).toBe(callOptions);
-      expect(result.callOptions).toHaveProperty('someOtherProperty', 'test');
+      expect(result.configuration.someOtherConfig).toBe('test');
+      expect(result.configuration.preprocessRequest).not.toBe(
+        existingPreprocessRequest
+      );
     });
   });
 });
