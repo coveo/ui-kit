@@ -8,6 +8,7 @@ import {LightningElement, api, track} from 'lwc';
 /** @typedef {import("coveo").SearchEngine} SearchEngine */
 /** @typedef {import("coveo").Tab} Tab */
 
+// temp
 /**
  * The `QuanticTab` component allows the end user to view a subset of results.
  * @category Search
