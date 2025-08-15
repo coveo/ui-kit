@@ -56,7 +56,7 @@ module.exports = {
         return false;
 
       // Exclude tailwind css files
-      if (file.endsWith('.tw.css')) return false;
+      if (file.endsWith('.css')) return false;
 
       return true;
     });

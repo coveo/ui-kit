@@ -127,7 +127,7 @@ export async function processCssFiles(srcDir, distDir) {
     const srcPath = join(srcDir, entry.name);
     if (entry.isDirectory()) {
       await processCssFiles(srcPath, join(distDir, entry.name));
-    } else if (entry.isFile() && entry.name.endsWith('.css')) {
+    } else if (entry.isFile() && entry.name.endsWith('.tw.css')) {
       const relPath = relative(srcDir, srcPath);
       const distPath = join(distDir, relPath);
       const targetDir = dirname(distPath);

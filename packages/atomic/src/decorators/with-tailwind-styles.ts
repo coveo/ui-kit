@@ -1,7 +1,6 @@
 import {type CSSResult, type CSSResultGroup, unsafeCSS} from 'lit';
 import theme from '@/src/utils/coveo.tw.css';
 import styles from '@/src/utils/tailwind.global.tw.css';
-import utilities from '@/src/utils/tailwind-utilities/utilities.tw.css';
 
 const tailwindPropertiesSheet: CSSStyleSheet | null =
   typeof window !== 'undefined'
@@ -59,7 +58,6 @@ export const withTailwindStyles = <
       const baseStyles: Array<CSSStyleSheet | CSSResult> = [
         unsafeCSS(theme),
         unsafeCSS(styles),
-        unsafeCSS(utilities),
       ];
 
       const customStyles = Base.styles;
