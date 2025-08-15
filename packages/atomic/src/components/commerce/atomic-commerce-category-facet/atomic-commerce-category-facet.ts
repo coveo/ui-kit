@@ -100,14 +100,14 @@ export class AtomicCommerceCategoryFacet
 
   /**
    * The summary controller instance.
-   * @internal
+   * @private
    */
   @property({type: Object})
   summary!: Summary<SearchSummaryState | ProductListingSummaryState>;
 
   /**
    * The category facet controller instance.
-   * @internal
+   * @private
    */
   @property({type: Object}) public facet!: CategoryFacet;
 
@@ -128,14 +128,14 @@ export class AtomicCommerceCategoryFacet
   @property({reflect: true}) field?: string;
 
   /**
-   * @internal
+   * @private
    */
   @state()
   @bindStateToController('facet')
   public facetState!: CategoryFacetState;
 
   /**
-   * @internal
+   * @private
    */
   @bindStateToController('summary')
   @state()
