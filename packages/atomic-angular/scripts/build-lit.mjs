@@ -35,7 +35,7 @@ const declarationToProxyCmp = (declaration, defineCustomElementFn) =>
 @ProxyCmp({
   inputs: [${(declaration.attributes || []).map((attr) => `'${attr.fieldName}'`).join(', ')}],
   methods: [${(declaration.members || [])
-    .filter((member) => member.privacy === 'public')
+    .filter((member) => member.privacy === 'public' && member.kind === 'method')
     .map((method) => `'${method.name}'`)
     .join(', ')}],
   defineCustomElementFn: ${defineCustomElementFn}
