@@ -1,6 +1,7 @@
 import type {UnknownAction} from '@reduxjs/toolkit';
 import {filterObject} from '../../../utils/utils.js';
 import {createStaticState} from '../controller-utils.js';
+import type {BuildConfig} from '../types/build.js';
 import {SolutionType} from '../types/controller-constants.js';
 import type {
   AugmentedControllerDefinition,
@@ -16,7 +17,6 @@ import type {
   FetchStaticStateFunction,
   FetchStaticStateParameters,
 } from '../types/engine.js';
-import {wireControllerParams} from '../utils/controller-wiring.js';
 import {filterRecommendationControllers} from '../utils/recommendation-filter.js';
 import {
   buildFactory,
@@ -29,6 +29,7 @@ export function fetchRecommendationStaticStateFactory<
   controllerDefinitions: AugmentedControllerDefinition<TControllerDefinitions>,
   options: CommerceEngineDefinitionOptions<TControllerDefinitions>
 ): FetchStaticStateFunction<TControllerDefinitions> {
+  // TODO: KIT-4619: no longer the right way to get the allowed recommendation keys
   const getAllowedRecommendationKeys = (
     props: FetchStaticStateParameters<TControllerDefinitions>[0]
   ): string[] => {
@@ -47,12 +48,6 @@ export function fetchRecommendationStaticStateFactory<
   ) => {
     const [props] = params;
     const allowedRecommendationKeys = getAllowedRecommendationKeys(props);
-
-    wireControllerParams(
-      SolutionType.recommendation,
-      controllerDefinitions,
-      params
-    );
 
     const solutionTypeBuild = await buildFactory(
       controllerDefinitions,
@@ -82,6 +77,7 @@ export function fetchRecommendationStaticStateFactory<
         SolutionType
       > &
         BakedInControllers
-    >;
+    > &
+      BuildConfig<SolutionType.recommendation>;
   };
 }

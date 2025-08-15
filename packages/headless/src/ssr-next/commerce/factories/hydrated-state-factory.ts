@@ -1,5 +1,11 @@
 import type {SolutionType} from '../types/controller-constants.js';
 import type {
+  AugmentedControllerDefinition,
+  HydratedState,
+} from '../types/controller-definitions.js';
+import type {InferControllersMapFromDefinition} from '../types/controller-inference.js';
+import type {
+  BakedInControllers,
   BuildParameters,
   CommerceControllerDefinitionsMap,
   HydrateStaticStateFunction,
@@ -8,12 +14,13 @@ import type {
 import {
   buildFactory,
   type CommerceEngineDefinitionOptions,
+  type SSRCommerceEngine,
 } from './build-factory.js';
 
 export function hydratedStaticStateFactory<
   TControllerDefinitions extends CommerceControllerDefinitionsMap,
 >(
-  controllerDefinitions: TControllerDefinitions | undefined,
+  controllerDefinitions: AugmentedControllerDefinition<TControllerDefinitions>,
   options: CommerceEngineDefinitionOptions<TControllerDefinitions>
 ) {
   return (
@@ -34,6 +41,13 @@ export function hydratedStaticStateFactory<
 
       await engine.waitForRequestCompletedAction();
 
-      return {engine, controllers};
+      return {engine, controllers} as HydratedState<
+        SSRCommerceEngine,
+        InferControllersMapFromDefinition<
+          TControllerDefinitions,
+          SolutionType
+        > &
+          BakedInControllers
+      >;
     };
 }
