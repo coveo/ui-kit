@@ -25,7 +25,7 @@ export type InferHydratedState<
   },
 > = Awaited<ReturnType<T['hydrateStaticState']>>;
 
-export type InferControllerPropsFromDefinition<
+type InferControllerPropsFromDefinition<
   TController extends ControllerDefinition<Controller>,
 > = TController extends ControllerDefinitionWithProps<Controller, infer Props>
   ? HasKey<TController, typeof recommendationInternalOptionKey> extends never
@@ -76,5 +76,6 @@ export type InferControllerStaticStateMapFromDefinitionsWithSolutionType<
     ? never
     : K]: InferControllerStaticStateFromController<
     InferControllerFromDefinition<TControllers[K]>
-  >;
+  > &
+    InferControllerPropsFromDefinition<TControllers[K]>;
 };
