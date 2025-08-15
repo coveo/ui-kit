@@ -1,5 +1,8 @@
 import {test as base} from '@playwright/test';
-import {type AxeFixture, makeAxeBuilder} from '@/playwright-utils/base-fixture';
+import {
+  type AxeFixture,
+  makeCustomAxeBuilder,
+} from '@/playwright-utils/base-fixture';
 import {SearchBoxPageObject} from '../../../atomic-search-box/e2e/page-object';
 import {AtomicFacetPageObject as FacetPageObject} from '../../../facets/atomic-facet/e2e/page-object';
 import {TabManagerPageObject} from './page-object';
@@ -11,7 +14,7 @@ interface TestFixture {
 }
 
 export const test = base.extend<TestFixture & AxeFixture>({
-  makeAxeBuilder,
+  makeAxeBuilder: makeCustomAxeBuilder('#code-root atomic-tab-manager'),
   tabManager: async ({page}, use) => {
     await use(new TabManagerPageObject(page));
   },
