@@ -19,7 +19,6 @@ export const makeCustomAxeBuilder =
       new AxeBuilder({page})
         .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa'])
         .include(selector);
-
     await use(makeAxeBuilder);
   };
 
