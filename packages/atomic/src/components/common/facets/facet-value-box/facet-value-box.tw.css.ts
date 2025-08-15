@@ -1,3 +1,6 @@
+import {css} from 'lit';
+
+const styles = css`
 @reference '../../../../utils/tailwind.global.tw.css';
 /**
  * @prop --atomic-facet-boxes-per-row: Number of facet values to display per row, when the display is 'box'
@@ -19,4 +22,6 @@
 
 .value-box.selected {
   box-shadow: 0 0 0 1px var(--atomic-primary);
-}
+}`;
+
+export default styles;

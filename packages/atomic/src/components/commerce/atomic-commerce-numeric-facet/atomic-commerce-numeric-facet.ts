@@ -8,7 +8,7 @@ import {
   type SearchSummaryState,
   type Summary,
 } from '@coveo/headless/commerce';
-import {type CSSResultGroup, css, html, LitElement} from 'lit';
+import {type CSSResultGroup, html, LitElement} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {when} from 'lit/directives/when.js';
 import {renderNumericFacetValuesGroup} from '@/src/components/common/facets/numeric-facet/values-container';
@@ -30,6 +30,7 @@ import {
 import type {Range} from '../atomic-commerce-facet-number-input/atomic-commerce-facet-number-input';
 import '../atomic-commerce-facet-number-input/atomic-commerce-facet-number-input';
 import {bindings} from '@/src/decorators/bindings';
+import numericFacetCommonStyles from '../../common/facets/numeric-facet-common.tw.css';
 import type {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface';
 
 /**
@@ -106,8 +107,7 @@ export class AtomicCommerceNumericFacet
   private headerFocus!: FocusTargetController;
   private unsubscribeFacetController?: () => void;
 
-  static styles: CSSResultGroup =
-    css`@import "../../common/facets/numeric-facet-common.tw.css";`;
+  static styles: CSSResultGroup = numericFacetCommonStyles;
 
   public initialize() {
     this.validateFacet();
