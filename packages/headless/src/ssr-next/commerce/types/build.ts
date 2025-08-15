@@ -14,10 +14,10 @@ import type {
 } from '../controllers/parameter-manager/headless-core-parameter-manager.ssr.js';
 import type {SolutionType} from './controller-constants.js';
 import type {
-  CommerceEngineDefinitionBuildResult,
   ControllerDefinitionsMap,
   EngineDefinitionControllersPropsOption,
 } from './controller-definitions.js';
+import type {CommerceEngineDefinitionBuildResult} from './engine.js';
 
 export interface SearchBuildConfig extends CommonBuildConfig {
   query: string;

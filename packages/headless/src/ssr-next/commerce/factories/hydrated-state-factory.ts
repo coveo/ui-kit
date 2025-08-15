@@ -13,7 +13,7 @@ import {
 export function hydratedStaticStateFactory<
   TControllerDefinitions extends CommerceControllerDefinitionsMap,
 >(
-  controllerDefinitions: TControllerDefinitions | undefined,
+  controllerDefinitions: TControllerDefinitions,
   options: CommerceEngineDefinitionOptions<TControllerDefinitions>
 ) {
   return (
