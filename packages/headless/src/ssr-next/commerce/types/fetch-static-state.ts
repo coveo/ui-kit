@@ -18,7 +18,9 @@ import type {EngineStaticState} from './engine.js';
 
 export interface FetchStaticStateOptions {
   /**
-   * Navigator context for this request. Used to set headers like x-forwarded-for during SSR.
+   * The navigator context for this request.
+   * 
+   * Used to pass required client information when making server-side requests.
    *
    * @example
    * ```ts
