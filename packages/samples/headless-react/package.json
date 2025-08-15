@@ -15,14 +15,14 @@
     "@types/escape-html": "1.0.4",
     "@types/express": "5.0.3",
     "@types/node": "22.16.5",
-    "@types/react": "19.1.1",
-    "@types/react-dom": "19.1.2",
+    "@types/react": "19.1.9",
+    "@types/react-dom": "19.1.7",
     "dayjs": "1.11.13",
     "escape-html": "1.0.3",
     "express": "5.1.0",
     "react": "19.1.1",
     "react-dom": "19.1.0",
-    "react-router-dom": "6.26.0",
+    "react-router-dom": "7.7.1",
     "typescript": "5.8.3"
   },
   "scripts": {
