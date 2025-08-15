@@ -10,13 +10,11 @@ import type {
 } from '../types/controller-definitions.js';
 import type {InferControllerStaticStateMapFromDefinitionsWithSolutionType} from '../types/controller-inference.js';
 import type {
-  BuildParameters,
   CommerceControllerDefinitionsMap,
   EngineStaticState,
   FetchStaticStateFunction,
   FetchStaticStateParameters,
 } from '../types/engine.js';
-import {wireControllerParams} from '../utils/controller-wiring.js';
 import {
   buildFactory,
   type CommerceEngineDefinitionOptions,
@@ -32,15 +30,11 @@ export function fetchStaticStateFactory<
     solutionType: SolutionType
   ): FetchStaticStateFunction<TControllerDefinitions> =>
     async (...params: FetchStaticStateParameters<TControllerDefinitions>) => {
-      wireControllerParams(solutionType, controllerDefinitions, params);
-
       const solutionTypeBuild = await buildFactory(
         controllerDefinitions,
         options
       )(solutionType);
-      const {engine, controllers} = await solutionTypeBuild(
-        ...(params as BuildParameters<TControllerDefinitions>)
-      );
+      const {engine, controllers} = await solutionTypeBuild(...params);
 
       options.configuration.preprocessRequest =
         augmentPreprocessRequestWithForwardedFor({
@@ -61,6 +55,7 @@ export function fetchStaticStateFactory<
       const searchActions = await Promise.all(
         engine.waitForRequestCompletedAction()
       );
+
       const staticState = createStaticState({
         searchActions,
         controllers,

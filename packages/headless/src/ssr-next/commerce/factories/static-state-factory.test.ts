@@ -10,15 +10,13 @@ import {
   type Search,
 } from '../../../controllers/commerce/search/headless-search.js';
 import {buildMockCommerceState} from '../../../test/mock-commerce-state.js';
-import {defineMockCommerceController} from '../../../test/mock-controller-definitions.js';
 import {buildMockSSRCommerceEngine} from '../../../test/mock-engine-v2.js';
+import {defineMockCommerceController} from '../../../test/mock-ssr-controller-definitions.js';
 import * as augmentModule from '../../common/augment-preprocess-request.js';
 import {SolutionType} from '../types/controller-constants.js';
+import type {FilteredBakedInControllers} from '../types/controller-definitions.js';
 import type {InferControllersMapFromDefinition} from '../types/controller-inference.js';
-import type {
-  BakedInControllers,
-  CommerceControllerDefinitionsMap,
-} from '../types/engine.js';
+import type {CommerceControllerDefinitionsMap} from '../types/engine.js';
 import {wireControllerParams} from '../utils/controller-wiring.js';
 import * as buildFactory from './build-factory.js';
 import {fetchStaticStateFactory} from './static-state-factory.js';
@@ -62,15 +60,15 @@ describe('fetchStaticStateFactory', () => {
     );
 
     engineSpy = vi.spyOn(buildFactory, 'buildFactory').mockReturnValue(
-      () =>
-        <T extends SolutionType>() =>
+      <T extends SolutionType>(_: T) =>
+        async () =>
           Promise.resolve({
             engine: mockEngine,
             controllers: {} as InferControllersMapFromDefinition<
               CommerceControllerDefinitionsMap,
               T
             > &
-              BakedInControllers,
+              FilteredBakedInControllers<T>,
           })
     );
 

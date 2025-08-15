@@ -9,14 +9,12 @@ import type {
 } from '../types/controller-definitions.js';
 import type {InferControllerStaticStateMapFromDefinitionsWithSolutionType} from '../types/controller-inference.js';
 import type {
-  BuildParameters,
   BuildResult,
   CommerceControllerDefinitionsMap,
   EngineStaticState,
   FetchStaticStateFunction,
   FetchStaticStateParameters,
 } from '../types/engine.js';
-import {wireControllerParams} from '../utils/controller-wiring.js';
 import {filterRecommendationControllers} from '../utils/recommendation-filter.js';
 import {
   buildFactory,
@@ -48,19 +46,13 @@ export function fetchRecommendationStaticStateFactory<
     const [props] = params;
     const allowedRecommendationKeys = getAllowedRecommendationKeys(props);
 
-    wireControllerParams(
-      SolutionType.recommendation,
-      controllerDefinitions,
-      params
-    );
-
     const solutionTypeBuild = await buildFactory(
       controllerDefinitions,
       options
     )(SolutionType.recommendation);
 
     const {engine, controllers} = (await solutionTypeBuild(
-      ...(params as BuildParameters<TControllerDefinitions>)
+      ...params
     )) as BuildResult<TControllerDefinitions>;
 
     filterRecommendationControllers(
