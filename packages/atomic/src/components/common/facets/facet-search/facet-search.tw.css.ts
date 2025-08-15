@@ -1,5 +1,7 @@
-@reference '../../../../utils/coveo.tw.css';
+import {css} from 'lit';
 
+const styles = css`
+@reference '../../../../utils/tailwind.global.tw.css';
 input[type="text"]:focus-visible ~ .search-icon {
   @apply text-primary;
 }
@@ -22,4 +24,6 @@ input[type="text"]:hover ~ .search-icon {
 .search-clear-button atomic-icon {
   width: var(--atomic-facet-search-clear-icon-size, 0.625rem);
   height: var(--atomic-facet-search-clear-icon-size, 0.625rem);
-}
+}`;
+
+export default styles;
