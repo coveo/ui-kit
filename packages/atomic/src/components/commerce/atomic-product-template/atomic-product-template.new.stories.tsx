@@ -63,7 +63,21 @@ const meta: Meta = {
     ...args,
     'default-slot': TEMPLATE_EXAMPLE,
   },
-  argTypes,
+  argTypes: {
+    ...argTypes,
+    'must-match': {
+      ...argTypes['must-match'],
+      control: false,
+    },
+    'must-not-match': {
+      ...argTypes['must-not-match'],
+      control: false,
+    },
+    conditions: {
+      ...argTypes.conditions,
+      control: false,
+    },
+  },
 };
 
 export default meta;
@@ -89,7 +103,7 @@ const {decorator: commerceProductListDecorator} =
 export const InAProductList: Story = {
   name: 'In a product list',
   decorators: [commerceProductListDecorator, commerceInterfaceDecorator],
-  play: initializeCommerceInterface,
+  afterEach: initializeCommerceInterface,
 };
 
 const {

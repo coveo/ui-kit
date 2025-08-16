@@ -47,6 +47,7 @@ const meta: Meta = {
   },
   args: {
     ...args,
+    language: 'en',
     'default-slot': `<span>Interface content</span>`,
   },
 };
