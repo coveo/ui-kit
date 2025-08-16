@@ -1963,7 +1963,7 @@ export declare interface AtomicCommerceBreadbox extends LitAtomicCommerceBreadbo
 }
 
 @ProxyCmp({
-  inputs: ['summary', 'facet', 'isCollapsed', 'field'],
+  inputs: ['isCollapsed', 'field'],
   methods: ['initialize'],
   defineCustomElementFn: () => {customElements.get('atomic-commerce-category-facet') || customElements.define('atomic-commerce-category-facet', LitAtomicCommerceCategoryFacet);}
 })
@@ -1973,7 +1973,7 @@ export declare interface AtomicCommerceBreadbox extends LitAtomicCommerceBreadbo
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
   // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: ['summary', 'facet', 'isCollapsed', 'field']
+  inputs: ['isCollapsed', 'field']
 })
 export class AtomicCommerceCategoryFacet {
   protected readonly el: HTMLElement;
@@ -2015,7 +2015,7 @@ export declare interface AtomicCommerceDidYouMean extends LitAtomicCommerceDidYo
 }
 
 @ProxyCmp({
-  inputs: ['summary', 'facet', 'isCollapsed', 'field'],
+  inputs: ['isCollapsed', 'field'],
   methods: ['initialize'],
   defineCustomElementFn: () => {customElements.get('atomic-commerce-facet') || customElements.define('atomic-commerce-facet', LitAtomicCommerceFacet);}
 })
@@ -2025,7 +2025,7 @@ export declare interface AtomicCommerceDidYouMean extends LitAtomicCommerceDidYo
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
   // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: ['summary', 'facet', 'isCollapsed', 'field']
+  inputs: ['isCollapsed', 'field']
 })
 export class AtomicCommerceFacet {
   protected readonly el: HTMLElement;
@@ -2171,7 +2171,7 @@ export declare interface AtomicCommerceNoProducts extends LitAtomicCommerceNoPro
 }
 
 @ProxyCmp({
-  inputs: ['summary', 'facet', 'isCollapsed', 'field'],
+  inputs: ['isCollapsed', 'field'],
   methods: ['initialize'],
   defineCustomElementFn: () => {customElements.get('atomic-commerce-numeric-facet') || customElements.define('atomic-commerce-numeric-facet', LitAtomicCommerceNumericFacet);}
 })
@@ -2181,7 +2181,7 @@ export declare interface AtomicCommerceNoProducts extends LitAtomicCommerceNoPro
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
   // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: ['summary', 'facet', 'isCollapsed', 'field']
+  inputs: ['isCollapsed', 'field']
 })
 export class AtomicCommerceNumericFacet {
   protected readonly el: HTMLElement;
@@ -2587,7 +2587,7 @@ export declare interface AtomicCommerceText extends LitAtomicCommerceText {
 }
 
 @ProxyCmp({
-  inputs: ['summary', 'facet', 'isCollapsed', 'field'],
+  inputs: ['isCollapsed', 'field'],
   methods: ['initialize'],
   defineCustomElementFn: () => {customElements.get('atomic-commerce-timeframe-facet') || customElements.define('atomic-commerce-timeframe-facet', LitAtomicCommerceTimeframeFacet);}
 })
@@ -2597,7 +2597,7 @@ export declare interface AtomicCommerceText extends LitAtomicCommerceText {
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
   // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: ['summary', 'facet', 'isCollapsed', 'field']
+  inputs: ['isCollapsed', 'field']
 })
 export class AtomicCommerceTimeframeFacet {
   protected readonly el: HTMLElement;
