@@ -35,8 +35,6 @@ export const parameters: Parameters = {
   controls: {
     expanded: true,
   },
-  backgrounds: {disable: true},
-  viewport: {disable: true},
 };
 
 export const decorators = [
