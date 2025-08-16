@@ -184,6 +184,7 @@ export {definePagination} from './ssr-next/commerce/controllers/pagination/headl
 export type {
   CommerceSearchParameters,
   ParameterManager,
+  ParameterManagerDefinition,
   ParameterManagerProps,
   ParameterManagerState,
   Parameters,
