@@ -106,7 +106,7 @@ export const InARecommendationList: Story = {
     commerceRecommendationInterfaceDecorator,
   ],
 
-  play: initializeCommerceRecommendationInterface,
+  afterEach: initializeCommerceRecommendationInterface,
 };
 
 const {decorator: commerceSearchBoxInstantsProductsDecorator} =

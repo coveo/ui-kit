@@ -110,7 +110,7 @@ export const WithRecommendationList: Story = {
   args: {
     'default-slot': recommendationList,
   },
-  play: async ({canvasElement}) => {
+  afterEach: async ({canvasElement}) => {
     const recsInterface = canvasElement.querySelector(
       'atomic-commerce-recommendation-interface'
     );
