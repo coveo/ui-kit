@@ -28,6 +28,7 @@ const productListingEngineConfiguration: Partial<CommerceEngineConfiguration> =
 const {decorator, play} = wrapInCommerceInterface({
   engineConfig: productListingEngineConfiguration,
   type: 'product-listing',
+  includeCodeRoot: false,
 });
 
 const {events, args, argTypes, template} = getStorybookHelpers(
@@ -59,7 +60,9 @@ export default meta;
 export const Default: Story = {
   decorators: [
     (story) => html`
-      ${story()}
+      <div id="code-root">
+        ${story()}
+      </div>
       <div style="margin:20px 0">
         Select facet value(s) to see the Breadbox component.
       </div>

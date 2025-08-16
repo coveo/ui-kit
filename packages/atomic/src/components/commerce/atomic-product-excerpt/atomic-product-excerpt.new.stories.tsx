@@ -19,16 +19,20 @@ const {decorator: commerceInterfaceDecorator, play} = wrapInCommerceInterface({
       return request;
     },
   },
+  includeCodeRoot: false,
 });
-const {decorator: commerceProductListDecorator} = wrapInCommerceProductList();
-const {decorator: productTemplateDecorator} = wrapInProductTemplate();
+const {decorator: commerceProductListDecorator} = wrapInCommerceProductList(
+  'list',
+  false
+);
+const {decorator: productTemplateDecorator} = wrapInProductTemplate(false);
 const {events, args, argTypes, template} = getStorybookHelpers(
   'atomic-product-excerpt',
   {excludeCategories: ['methods']}
 );
 const wrapperDecorator: Decorator = (story) => {
   return html`
-    <div style="width: 200px; height: 60px;">
+    <div style="width: 200px; height: 60px;" id="code-root">
       ${story()}
     </div>
   `;

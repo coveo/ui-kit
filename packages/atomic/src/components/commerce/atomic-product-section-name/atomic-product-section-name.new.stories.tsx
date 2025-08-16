@@ -19,9 +19,12 @@ const {decorator: commerceInterfaceDecorator, play} = wrapInCommerceInterface({
       return request;
     },
   },
+  includeCodeRoot: false,
 });
-const {decorator: commerceProductListDecorator} =
-  wrapInCommerceProductList('grid');
+const {decorator: commerceProductListDecorator} = wrapInCommerceProductList(
+  'grid',
+  false
+);
 const {decorator: productTemplateDecorator} =
   wrapInProductTemplateForSections();
 

@@ -6,7 +6,10 @@ import {wrapInProductTemplate} from '@/storybook-utils/commerce/commerce-product
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 
 const {decorator: productDecorator} = wrapInProductTemplate();
-const {decorator: commerceProductListDecorator} = wrapInCommerceProductList();
+const {decorator: commerceProductListDecorator} = wrapInCommerceProductList(
+  'list',
+  false
+);
 const {events, args, argTypes, template} = getStorybookHelpers(
   'atomic-product-multi-value-text',
   {excludeCategories: ['methods']}
@@ -20,6 +23,7 @@ const {decorator: commerceInterfaceDecorator, play} = wrapInCommerceInterface({
       return request;
     },
   },
+  includeCodeRoot: false,
 });
 
 const meta: Meta = {

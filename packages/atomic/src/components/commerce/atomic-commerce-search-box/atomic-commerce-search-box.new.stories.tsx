@@ -12,10 +12,13 @@ const {events, args, argTypes, template} = getStorybookHelpers(
   'atomic-commerce-search-box',
   {excludeCategories: ['methods']}
 );
-const {decorator, play} = wrapInCommerceInterface({skipFirstRequest: true});
+const {decorator, play} = wrapInCommerceInterface({
+  skipFirstRequest: true,
+  includeCodeRoot: false,
+});
 
 const normalWidthDecorator: Decorator = (story) =>
-  html` <div style="min-width: 600px;">${story()}</div> `;
+  html` <div style="min-width: 600px;" id="code-root">${story()}</div> `;
 
 const meta: Meta = {
   component: 'atomic-commerce-search-box',

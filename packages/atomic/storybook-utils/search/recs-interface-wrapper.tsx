@@ -5,19 +5,22 @@ import {
 import {Decorator, StoryContext} from '@storybook/web-components-vite';
 import {html} from 'lit';
 import type * as _ from '../../src/components.js';
+import { spreadProps } from '@open-wc/lit-helpers';
 
 export const wrapInRecommendationInterface = ({
   config,
   skipFirstQuery = false,
+  includeCodeRoot = true
 }: {
   config?: Partial<RecommendationEngineConfiguration>;
   skipFirstQuery?: boolean;
+  includeCodeRoot?: boolean;
 } = {}): {
   decorator: Decorator;
   play: (context: StoryContext) => Promise<void>;
 } => ({
   decorator: (story) => html`
-    <atomic-recs-interface id="code-root">
+    <atomic-recs-interface ${spreadProps(includeCodeRoot ? { id: "code-root" } : {})}>
       ${story()}
     </atomic-recs-interface>
   `,

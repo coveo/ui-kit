@@ -46,7 +46,7 @@ export const wrapInProductTemplateForSections = (): {
     allSections.forEach(section => {
       if (section.tag === storySectionTag) {
         // Use the story content for the matching section with purple border.
-        templateContent += `<div style="border: 3px solid #8b5cf6; border-radius: 4px; padding: 8px; margin: 4px 0; background-color: rgba(139, 92, 246, 0.05);">${storyContent}</div>`;
+        templateContent += `<div style="border: 3px solid #8b5cf6; border-radius: 4px; padding: 8px; margin: 4px 0; background-color: rgba(139, 92, 246, 0.05);"><div id="code-root">${storyContent}</div></div>`;
       } else {
         // Use placeholder content for other sections.
         templateContent += `<${section.tag}>${section.content}</${section.tag}>`;
@@ -54,7 +54,6 @@ export const wrapInProductTemplateForSections = (): {
     });
 
     templateTag.innerHTML = templateContent;
-    templateTag.id = 'code-root';
     
     return html`
       <atomic-product-template>${templateTag}</atomic-product-template>

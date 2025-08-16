@@ -81,8 +81,10 @@ const {
       return request;
     },
   },
+  includeCodeRoot: false,
 });
-const {decorator: commerceProductListDecorator} = wrapInCommerceProductList();
+const {decorator: commerceProductListDecorator} =
+  wrapInCommerceProductList('list');
 
 export const InAProductList: Story = {
   name: 'In a product list',

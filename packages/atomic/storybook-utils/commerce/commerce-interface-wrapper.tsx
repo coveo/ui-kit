@@ -6,6 +6,7 @@ import {
 import { Decorator, StoryContext } from '@storybook/web-components-vite';
 import { html } from 'lit';
 import type * as _ from '../../src/components.js';
+import { spreadProps } from '@open-wc/lit-helpers';
 
 export const wrapInCommerceInterface = ({
   engineConfig,
@@ -21,14 +22,11 @@ export const wrapInCommerceInterface = ({
   decorator: Decorator;
   play: (context: StoryContext) => Promise<void>;
 } => ({
-  decorator: (story) => includeCodeRoot ? html`
-    <atomic-commerce-interface id="code-root" type="${type}">
+  decorator: (story) => html`
+    <atomic-commerce-interface ${spreadProps(includeCodeRoot?{id:"code-root"}:{})} type="${type}">
       ${story()}
     </atomic-commerce-interface>
-  ` : html`
-      <atomic-commerce-interface type="${type}">
-      ${story()}
-    </atomic-commerce-interface>`,
+  `,
   play: async ({ canvasElement }) => {
     await customElements.whenDefined('atomic-commerce-interface');
     const commerceInterface = canvasElement.querySelector<AtomicCommerceInterface>('atomic-commerce-interface')!;

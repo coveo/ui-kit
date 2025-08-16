@@ -15,9 +15,13 @@ const {decorator: commerceInterfaceDecorator, play} = wrapInCommerceInterface({
       return request;
     },
   },
+  includeCodeRoot: false,
 });
-const {decorator: commerceProductListDecorator} = wrapInCommerceProductList();
-const {decorator: productTemplateDecorator} = wrapInProductTemplate();
+const {decorator: commerceProductListDecorator} = wrapInCommerceProductList(
+  'list',
+  false
+);
+const {decorator: productTemplateDecorator} = wrapInProductTemplate(false);
 const {events, args, argTypes, template} = getStorybookHelpers(
   'atomic-product-children',
   {excludeCategories: ['methods']}
@@ -30,7 +34,7 @@ const meta: Meta = {
   render: (args) => template(args),
   decorators: [
     (story) => html`
-    <atomic-product-section-children>
+    <atomic-product-section-children id="code-root">
       ${story()}
     </atomic-product-section-children>    
   `,
