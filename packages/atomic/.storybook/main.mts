@@ -60,10 +60,6 @@ const config: StorybookConfig = {
     name: '@storybook/web-components-vite',
     options: {},
   },
-  features: {
-    outline: false,
-    measure: false,
-  },
 
   async viteFinal(config, {configType}) {
     const {default: tailwindcss} = await import('@tailwindcss/vite');
