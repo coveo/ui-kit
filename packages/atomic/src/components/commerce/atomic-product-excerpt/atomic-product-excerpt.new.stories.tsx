@@ -49,7 +49,10 @@ const meta: Meta = {
       handles: events,
     },
   },
-  args,
+  args: {
+    ...args,
+    'truncate-after': '2',
+  },
   argTypes,
 
   decorators: [

@@ -21,7 +21,10 @@ const meta: Meta = {
       handles: events,
     },
   },
-  args,
+  args: {
+    ...args,
+    'initial-choice': '10',
+  },
   argTypes,
 
   afterEach: play,

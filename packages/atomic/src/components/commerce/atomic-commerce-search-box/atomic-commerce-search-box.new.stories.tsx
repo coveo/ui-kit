@@ -32,7 +32,10 @@ const meta: Meta = {
       handles: events,
     },
   },
-  args,
+  args: {
+    ...args,
+    'minimum-query-length': '0',
+  },
   argTypes,
 
   afterEach: play,

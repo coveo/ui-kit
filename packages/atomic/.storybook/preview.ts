@@ -22,6 +22,7 @@ setStorybookHelpersConfig({
     'properties',
     'slots',
   ],
+  hideArgRef: true,
 });
 
 export const parameters: Parameters = {
