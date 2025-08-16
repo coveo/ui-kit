@@ -35,7 +35,10 @@ const {decorator: commerceProductListDecorator} = wrapInCommerceProductList(
 const {decorator: productTemplateDecorator} = wrapInProductTemplate();
 const {events, args, argTypes, template} = getStorybookHelpers(
   'atomic-product-rating',
-  {excludeCategories: ['methods']}
+  {
+    excludeCategories: ['methods'],
+    containerSelector: 'atomic-product-template template',
+  }
 );
 
 const meta: Meta = {
@@ -57,7 +60,7 @@ const meta: Meta = {
   args,
   argTypes,
 
-  play: initializeCommerceInterface,
+  afterEach: initializeCommerceInterface,
 };
 
 export default meta;

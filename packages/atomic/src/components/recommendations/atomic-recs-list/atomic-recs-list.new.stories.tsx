@@ -48,7 +48,7 @@ const {play: playNoFirstQuery} = wrapInRecommendationInterface({
 
 export const RecsBeforeQuery: Story = {
   tags: ['test'],
-  play: playNoFirstQuery,
+  afterEach: playNoFirstQuery,
 };
 
 export const RecsWithFullTemplate: Story = {

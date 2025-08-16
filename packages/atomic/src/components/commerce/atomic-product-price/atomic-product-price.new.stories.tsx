@@ -76,7 +76,7 @@ export const Default: Story = {
     commerceProductListDecorator,
     commerceInterfaceDecorator,
   ],
-  play: initializeCommerceInterface,
+  afterEach: initializeCommerceInterface,
 };
 
 export const WithEURCurrency: Story = {
@@ -86,5 +86,5 @@ export const WithEURCurrency: Story = {
     commerceProductListDecorator,
     commerceInterfaceDecoratorEUR,
   ],
-  play: initializeCommerceInterfaceEUR,
+  afterEach: initializeCommerceInterfaceEUR,
 };

@@ -75,10 +75,10 @@ const searchPlay: (context: StoryContext, query: string) => Promise<void> =
 export const Default: Story = {
   name: 'atomic-did-you-mean',
   decorators: [searchBoxDecorator],
-  play: (context) => searchPlay(context, 'coveoo'),
+  afterEach: (context) => searchPlay(context, 'coveoo'),
 };
 
 export const QueryTrigger: Story = {
   decorators: [searchBoxDecorator],
-  play: (context) => searchPlay(context, 'Japan'),
+  afterEach: (context) => searchPlay(context, 'Japan'),
 };

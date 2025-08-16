@@ -177,5 +177,5 @@ export const WithNoResultChildren: Story = {
   args: {
     'default-slot': SLOTS_DEFAULT,
   },
-  play: noResultChildrenPlay,
+  afterEach: noResultChildrenPlay,
 };

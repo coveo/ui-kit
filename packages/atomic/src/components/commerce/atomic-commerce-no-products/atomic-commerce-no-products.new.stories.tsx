@@ -39,7 +39,7 @@ const meta: Meta = {
   args,
   argTypes,
 
-  play: preprocessedPlayed,
+  afterEach: preprocessedPlayed,
 };
 
 export default meta;
