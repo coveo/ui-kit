@@ -1,4 +1,4 @@
-import {Canvas} from '@storybook/blocks';
+import {Canvas} from '@storybook/addon-docs/blocks';
 // biome-ignore lint/correctness/noUnusedImports: Storybook needs this import
 import React from 'react';
 

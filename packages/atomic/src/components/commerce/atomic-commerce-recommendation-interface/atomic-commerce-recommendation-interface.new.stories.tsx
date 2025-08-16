@@ -2,9 +2,15 @@ import {
   buildCommerceEngine,
   getSampleCommerceEngineConfiguration,
 } from '@coveo/headless/commerce';
-import type {Meta, StoryObj as Story} from '@storybook/web-components';
+import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
+import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
+import {html} from 'lit';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
-import {renderComponent} from '@/storybook-utils/common/render-component';
+
+const {events, args, argTypes, template} = getStorybookHelpers(
+  'atomic-commerce-recommendation-interface',
+  {excludeCategories: ['methods']}
+);
 
 async function initializeCommerceRecommendationInterface(
   canvasElement: HTMLElement
@@ -21,16 +27,26 @@ const meta: Meta = {
   component: 'atomic-commerce-recommendation-interface',
   title: 'Commerce/Interface (Recommendation)',
   id: 'atomic-commerce-recommendation-interface',
-  render: renderComponent,
-  parameters,
-  play: async (context) => {
-    await initializeCommerceRecommendationInterface(context.canvasElement);
-  },
-  argTypes: {
-    'attributes-language': {
-      name: 'language',
-      type: 'string',
+  render: (args) => template(args),
+  decorators: [(story) => html`<div id="code-root">${story()}</div>`],
+  parameters: {
+    ...parameters,
+    actions: {
+      handles: events,
     },
+  },
+  args,
+  argTypes: {
+    ...argTypes,
+    state: {
+      table: {
+        disable: true,
+      },
+    },
+  },
+
+  afterEach: async (context) => {
+    await initializeCommerceRecommendationInterface(context.canvasElement);
   },
 };
 
@@ -38,7 +54,7 @@ export default meta;
 
 export const Default: Story = {
   args: {
-    'slots-default': `<span>Interface content</span>`,
+    'default-slot': `<span>Interface content</span>`,
   },
 };
 
@@ -92,9 +108,9 @@ const recommendationList = `<style>
 export const WithRecommendationList: Story = {
   name: 'With a recommendation list',
   args: {
-    'slots-default': recommendationList,
+    'default-slot': recommendationList,
   },
-  play: async ({canvasElement}) => {
+  afterEach: async ({canvasElement}) => {
     const recsInterface = canvasElement.querySelector(
       'atomic-commerce-recommendation-interface'
     );

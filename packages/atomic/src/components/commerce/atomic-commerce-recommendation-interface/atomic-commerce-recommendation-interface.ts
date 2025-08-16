@@ -57,7 +57,7 @@ export class AtomicCommerceRecommendationInterface
   @state() public error!: Error;
 
   public context!: Context;
-  public store: CommerceRecommendationStore;
+  private store: CommerceRecommendationStore;
 
   private interfaceController = new InterfaceController<CommerceEngine>(
     this,
@@ -92,7 +92,7 @@ export class AtomicCommerceRecommendationInterface
    * The CSS selector for the container the interface will scroll back to.
    */
   @property({type: String, attribute: 'scroll-container', reflect: true})
-  scrollContainer = 'atomic-commerce-recommendation-interface';
+  scrollContainer: string = 'atomic-commerce-recommendation-interface';
 
   /**
    * The language assets path. By default, this will be a relative URL pointing to `./lang`.
@@ -101,7 +101,7 @@ export class AtomicCommerceRecommendationInterface
    *
    */
   @property({type: String, attribute: 'language-assets-path', reflect: true})
-  languageAssetsPath = './lang';
+  languageAssetsPath: string = './lang';
 
   /**
    * The icon assets path. By default, this will be a relative URL pointing to `./assets`.
@@ -110,7 +110,7 @@ export class AtomicCommerceRecommendationInterface
    *
    */
   @property({type: String, attribute: 'icon-assets-path', reflect: true})
-  iconAssetsPath = './assets';
+  iconAssetsPath: string = './assets';
 
   /**
    * The commerce interface language.
@@ -133,7 +133,7 @@ export class AtomicCommerceRecommendationInterface
     converter: booleanConverter,
     reflect: true,
   })
-  analytics = true;
+  analytics: boolean = true;
 
   private i18Initialized: Promise<void>;
 

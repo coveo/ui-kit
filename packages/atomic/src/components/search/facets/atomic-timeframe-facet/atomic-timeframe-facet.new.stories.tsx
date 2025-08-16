@@ -2,13 +2,18 @@ import type {
   Decorator,
   Meta,
   StoryObj as Story,
-} from '@storybook/web-components';
+} from '@storybook/web-components-vite';
+import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {html} from 'lit';
 import {within} from 'shadow-dom-testing-library';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {facetDecorator} from '@/storybook-utils/common/facets-decorator';
-import {renderComponent} from '@/storybook-utils/common/render-component';
 import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
+
+const {events, args, argTypes, template} = getStorybookHelpers(
+  'atomic-timeframe-facet',
+  {excludeCategories: ['methods']}
+);
 
 const {decorator, play} = wrapInSearchInterface({
   preprocessRequest: (r) => {
@@ -26,18 +31,9 @@ const meta: Meta = {
   component: 'atomic-timeframe-facet',
   title: 'Search/TimeframeFacet',
   id: 'atomic-timeframe-facet',
-  argTypes: {
-    'attributes-min': {
-      name: 'min',
-      type: 'string',
-    },
-    'attributes-max': {
-      name: 'max',
-      type: 'string',
-    },
-  },
   args: {
-    'slots-default': `
+    ...args,
+    'default-slot': `
     <atomic-timeframe unit="hour"></atomic-timeframe>
     <atomic-timeframe unit="day"></atomic-timeframe>
     <atomic-timeframe unit="week"></atomic-timeframe>
@@ -46,10 +42,17 @@ const meta: Meta = {
     <atomic-timeframe unit="year"></atomic-timeframe>
   `,
   },
-  render: renderComponent,
+  render: (args) => template(args),
   decorators: [commerceFacetWidthDecorator, decorator],
-  parameters,
-  play,
+  parameters: {
+    ...parameters,
+    actions: {
+      handles: events,
+    },
+  },
+  argTypes,
+
+  afterEach: play,
 };
 
 export default meta;
@@ -80,17 +83,17 @@ export const WithDependsOn: Story = {
         ></atomic-facet>`,
   ],
   argTypes: {
-    'attributes-depends-on-filetype': {
+    'depends-on-filetype': {
       name: 'depends-on-filetype',
       control: {type: 'text'},
     },
   },
   args: {
-    'attributes-label': 'Timeframe (Dependent facet)',
-    'attributes-with-date-picker': true,
-    'attributes-depends-on-filetype': 'YouTubeVideo',
+    label: 'Timeframe (Dependent facet)',
+    'with-date-picker': true,
+    'depends-on-filetype': 'YouTubeVideo',
   },
-  play: async (context) => {
+  afterEach: async (context) => {
     const {canvasElement, step} = context;
     const canvas = within(canvasElement);
     await play(context);

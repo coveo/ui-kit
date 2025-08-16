@@ -1,5 +1,5 @@
-import {within} from '@storybook/test';
 import {html, render} from 'lit';
+import {within} from 'storybook/test';
 import {afterEach, beforeEach, describe, expect, it} from 'vitest';
 import {type HeadingProps, renderHeading as heading} from './heading';
 

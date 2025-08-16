@@ -1,10 +1,15 @@
-import type {Meta, StoryObj as Story} from '@storybook/web-components';
+import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
+import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {html} from 'lit';
 import {within} from 'shadow-dom-testing-library';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {facetDecorator} from '@/storybook-utils/common/facets-decorator';
-import {renderComponent} from '@/storybook-utils/common/render-component';
 import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
+
+const {events, args, argTypes, template} = getStorybookHelpers(
+  'atomic-numeric-facet',
+  {excludeCategories: ['methods']}
+);
 
 const {decorator, play} = wrapInSearchInterface({
   preprocessRequest: (r) => {
@@ -19,18 +24,20 @@ const meta: Meta = {
   component: 'atomic-numeric-facet',
   title: 'Search/NumericFacet',
   id: 'atomic-numeric-facet',
-  render: renderComponent,
+  render: (args) => template(args),
   decorators: [decorator],
-  parameters,
-  play,
-  argTypes: {
-    'attributes-number-of-values': {
-      name: 'number-of-values',
-      control: {type: 'number', min: 1},
+  parameters: {
+    ...parameters,
+    actions: {
+      handles: events,
     },
   },
+  argTypes,
+
+  afterEach: play,
   args: {
-    'attributes-number-of-values': 8,
+    ...args,
+    'number-of-values': 8,
   },
 };
 
@@ -40,7 +47,7 @@ export const Default: Story = {
   name: 'atomic-numeric-facet',
   decorators: [facetDecorator],
   args: {
-    'attributes-field': 'ytviewcount',
+    field: 'ytviewcount',
   },
 };
 
@@ -64,19 +71,13 @@ export const WithDependsOn: Story = {
           label="File Type (Parent facet)"
         ></atomic-facet>`,
   ],
-  argTypes: {
-    'attributes-depends-on-filetype': {
-      name: 'depends-on-filetype',
-      control: {type: 'text'},
-    },
-  },
   args: {
-    'attributes-label': 'YouTube View Count (Dependent facet)',
-    'attributes-field': 'ytviewcount',
-    'attributes-with-input': 'integer',
-    'attributes-depends-on-filetype': 'YouTubeVideo',
+    label: 'YouTube View Count (Dependent facet)',
+    field: 'ytviewcount',
+    'with-input': 'integer',
+    'depends-on-filetype': 'YouTubeVideo',
   },
-  play: async (context) => {
+  afterEach: async (context) => {
     const {canvasElement, step} = context;
     const canvas = within(canvasElement);
     await play(context);

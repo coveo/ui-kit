@@ -1,7 +1,8 @@
-import {Decorator} from '@storybook/web-components';
+import { spreadProps } from '@open-wc/lit-helpers';
+import {Decorator} from '@storybook/web-components-vite';
 import {html} from 'lit';
 
-export const wrapInCommerceSearchBoxInstantProducts = (): {
+export const wrapInCommerceSearchBoxInstantProducts = (includeCodeRoot: boolean = true): {
   decorator: Decorator;
 } => ({
   decorator: (story) => html`
@@ -12,7 +13,7 @@ export const wrapInCommerceSearchBoxInstantProducts = (): {
     >
       <atomic-commerce-search-box-query-suggestions></atomic-commerce-search-box-query-suggestions>
       <atomic-commerce-search-box-instant-products
-        id="code-root"
+        ${spreadProps(includeCodeRoot?{id:"code-root"}:{})}
         image-size="small"
       >
         ${story()}

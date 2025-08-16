@@ -7,9 +7,9 @@ import {
   type SearchSummaryState,
   type Summary,
 } from '@coveo/headless/commerce';
-import {userEvent} from '@storybook/test';
 import {html} from 'lit';
 import {ifDefined} from 'lit/directives/if-defined.js';
+import {userEvent} from 'storybook/test';
 import {beforeEach, describe, expect, it, vi} from 'vitest';
 import {renderInAtomicCommerceInterface} from '@/vitest-utils/testing-helpers/fixtures/atomic/commerce/atomic-commerce-interface-fixture';
 import {buildFakeCommerceEngine} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/engine';

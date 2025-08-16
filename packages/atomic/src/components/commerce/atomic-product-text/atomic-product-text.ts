@@ -33,9 +33,10 @@ export class AtomicProductText
    * The component will look for the specified field in the product's properties first, and then in the product's `additionalFields` property.
    */
   @property({type: String, reflect: true}) public field!: string;
+
   /**
    * Whether to highlight the string field value.
-   *
+   * @deprecated - replaced by `no-highlight`
    * Only works if the `field` property is set to `excerpt` or `ec_name`.
    */
   @property({
@@ -45,6 +46,18 @@ export class AtomicProductText
     converter: booleanConverter,
   })
   public shouldHighlight = true;
+
+  /**
+   * Disable highlighting of the string field value.
+   * Only works if the `field` property is set to `excerpt` or `ec_name`.
+   */
+  @property({
+    type: Boolean,
+    reflect: true,
+    useDefault: true,
+    attribute: 'no-highlight',
+  })
+  public noHighlight: boolean = false;
   /**
    * The locale key to use for displaying default text when the specified field has no value for the product.
    */
@@ -69,7 +82,11 @@ export class AtomicProductText
   }
 
   private get shouldRenderHighlights(): boolean {
-    return this.shouldHighlight && this.isFieldSupportedForHighlighting();
+    if (this.noHighlight) {
+      return false;
+    } else {
+      return this.shouldHighlight && this.isFieldSupportedForHighlighting();
+    }
   }
 
   private isFieldSupportedForHighlighting(): boolean {
