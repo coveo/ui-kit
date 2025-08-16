@@ -22,4 +22,4 @@ export const makeCustomAxeBuilder =
     await use(makeAxeBuilder);
   };
 
-export const makeAxeBuilder = makeCustomAxeBuilder('#code-root');
+export const makeAxeBuilder = makeCustomAxeBuilder('#storybook-root');
