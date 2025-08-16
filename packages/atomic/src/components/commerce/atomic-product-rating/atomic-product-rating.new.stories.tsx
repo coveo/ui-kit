@@ -26,8 +26,12 @@ const {
       return request;
     },
   },
+  includeCodeRoot: false,
 });
-const {decorator: commerceProductListDecorator} = wrapInCommerceProductList();
+const {decorator: commerceProductListDecorator} = wrapInCommerceProductList(
+  'list',
+  false
+);
 const {decorator: productTemplateDecorator} = wrapInProductTemplate();
 const {events, args, argTypes, template} = getStorybookHelpers(
   'atomic-product-rating',

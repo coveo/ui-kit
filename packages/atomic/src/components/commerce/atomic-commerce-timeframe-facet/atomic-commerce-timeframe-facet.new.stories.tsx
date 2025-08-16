@@ -20,6 +20,7 @@ const {play, decorator} = wrapInCommerceInterface({
     },
   },
   type: 'product-listing',
+  includeCodeRoot: false,
 });
 const {events, args, argTypes, template} = getStorybookHelpers(
   'atomic-commerce-timeframe-facet',

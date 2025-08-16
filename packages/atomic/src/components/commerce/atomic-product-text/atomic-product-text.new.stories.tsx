@@ -20,9 +20,13 @@ const {
       return request;
     },
   },
+  includeCodeRoot: false,
 });
 
-const {decorator: commerceProductListDecorator} = wrapInCommerceProductList();
+const {decorator: commerceProductListDecorator} = wrapInCommerceProductList(
+  undefined,
+  false
+);
 const {decorator: productTemplateDecorator} = wrapInProductTemplate();
 const {events, args, argTypes, template} = getStorybookHelpers(
   'atomic-product-text',

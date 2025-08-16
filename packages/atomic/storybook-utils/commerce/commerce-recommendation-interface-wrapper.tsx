@@ -6,15 +6,17 @@ import {
 import { Decorator, StoryContext } from '@storybook/web-components-vite';
 import { html } from 'lit';
 import type * as _ from '../../src/components.js';
+import { spreadProps } from '@open-wc/lit-helpers';
 
 export const wrapInCommerceRecommendationInterface = (
-  engineConfig?: Partial<CommerceEngineConfiguration>
+  engineConfig?: Partial<CommerceEngineConfiguration>,
+  includeCodeRoot: boolean = true
 ): {
   decorator: Decorator;
   play: (context: StoryContext) => Promise<void>;
 } => ({
   decorator: (story) => html`
-    <atomic-commerce-recommendation-interface id="code-root">
+    <atomic-commerce-recommendation-interface ${spreadProps(includeCodeRoot?{id:"code-root"}:{})}>
       ${story()}
     </atomic-commerce-recommendation-interface>
   `,

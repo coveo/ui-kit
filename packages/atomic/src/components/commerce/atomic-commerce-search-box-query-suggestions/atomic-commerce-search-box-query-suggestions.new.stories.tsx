@@ -12,7 +12,7 @@ const {events, args, argTypes, template} = getStorybookHelpers(
 );
 
 const {decorator: commerceInterfaceDecorator, play: commerceInterfacePlay} =
-  wrapInCommerceInterface();
+  wrapInCommerceInterface({includeCodeRoot: false});
 const {decorator: commerceSearchBoxDecorator} = wrapInCommerceSearchBox();
 const meta: Meta = {
   component: 'atomic-commerce-search-box-query-suggestions',

@@ -1,6 +1,7 @@
 import {getSampleCommerceEngineConfiguration} from '@coveo/headless/commerce';
 import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
 import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
+import {html} from 'lit';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 
 async function initializeCommerceInterface(canvasElement: HTMLElement) {
@@ -27,6 +28,7 @@ const meta: Meta = {
       handles: events,
     },
   },
+  decorators: [(story) => html`<div id="code-root">${story()}</div>`],
 
   afterEach: async (context) => {
     await initializeCommerceInterface(context.canvasElement);

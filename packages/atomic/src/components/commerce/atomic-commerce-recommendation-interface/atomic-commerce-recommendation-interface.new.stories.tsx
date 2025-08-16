@@ -4,6 +4,7 @@ import {
 } from '@coveo/headless/commerce';
 import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
 import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
+import {html} from 'lit';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 
 const {events, args, argTypes, template} = getStorybookHelpers(
@@ -27,6 +28,7 @@ const meta: Meta = {
   title: 'Commerce/Interface (Recommendation)',
   id: 'atomic-commerce-recommendation-interface',
   render: (args) => template(args),
+  decorators: [(story) => html`<div id="code-root">${story()}</div>`],
   parameters: {
     ...parameters,
     actions: {

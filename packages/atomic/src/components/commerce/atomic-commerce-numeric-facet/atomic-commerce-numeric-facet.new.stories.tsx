@@ -8,7 +8,7 @@ import {
 } from '@/storybook-utils/commerce/commerce-interface-wrapper';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 
-const {play, decorator} = wrapInCommerceInterface();
+const {play, decorator} = wrapInCommerceInterface({includeCodeRoot: false});
 const {events, args, argTypes, template} = getStorybookHelpers(
   'atomic-commerce-numeric-facet',
   {excludeCategories: ['methods']}

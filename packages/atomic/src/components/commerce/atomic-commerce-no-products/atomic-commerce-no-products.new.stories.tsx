@@ -55,7 +55,7 @@ export const Default: Story = {
         </atomic-layout-section>
 
         <atomic-layout-section section="main">
-          <atomic-layout-section section="products">
+          <atomic-layout-section section="products" id="code-root">
             ${story()}
           </atomic-layout-section>
         </atomic-layout-section>
