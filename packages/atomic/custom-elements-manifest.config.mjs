@@ -1,6 +1,7 @@
 import {
   cemPlugin,
   hideBaseInitializableComponentFieldsPlugin,
+  hideBindStateToControllerFieldsPlugin,
   mapPropertyPlugin,
   removeUndefinedTypePlugin,
 } from './scripts/cem-plugin.mjs';
@@ -22,5 +23,6 @@ export default {
     mapPropertyPlugin(),
     removeUndefinedTypePlugin(),
     hideBaseInitializableComponentFieldsPlugin(),
+    hideBindStateToControllerFieldsPlugin(),
   ],
 };

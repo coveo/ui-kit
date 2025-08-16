@@ -75,7 +75,7 @@ export class AtomicCommerceInterface
   implements BaseAtomicInterface<CommerceEngine>
 {
   public urlManager!: UrlManager;
-  public searchOrListing!: Search | ProductListing;
+  private searchOrListing!: Search | ProductListing;
   public summary!: Summary<SearchSummaryState | ProductListingSummaryState>;
   public context!: Context;
   private unsubscribeUrlManager?: Unsubscribe;
