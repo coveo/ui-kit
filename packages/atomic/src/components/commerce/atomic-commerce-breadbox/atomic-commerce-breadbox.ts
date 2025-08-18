@@ -89,7 +89,7 @@ export class AtomicCommerceBreadbox
   @bindStateToController('context')
   @state()
   public contextState!: ContextState;
-  public searchOrListing!: Search | ProductListing;
+  private searchOrListing!: Search | ProductListing;
 
   @bindStateToController('breadcrumbManager')
   @state()

@@ -43,7 +43,7 @@ export function bindStateToController<Element extends ReactiveElement>(
       const component = instance as Instance;
       const {disconnectedCallback, initialize} = component;
 
-      component.initialize = function () {
+      component.initialize = function (this: Instance) {
         initialize?.call(this);
 
         if (!initialize) {
@@ -70,9 +70,9 @@ export function bindStateToController<Element extends ReactiveElement>(
           );
         }
 
-        const controller = component[controllerProperty];
+        const controller = this[controllerProperty];
         const updateCallback = options?.onUpdateCallbackMethod
-          ? component[options.onUpdateCallbackMethod]
+          ? this[options.onUpdateCallbackMethod]
           : undefined;
 
         const unsubscribeController = controller.subscribe(() => {
@@ -80,11 +80,11 @@ export function bindStateToController<Element extends ReactiveElement>(
           typeof updateCallback === 'function' && updateCallback();
         });
 
-        component.disconnectedCallback = () => {
-          !component.isConnected && unsubscribeController?.();
-          disconnectedCallback?.call(component);
+        this.disconnectedCallback = () => {
+          !this.isConnected && unsubscribeController?.();
+          disconnectedCallback?.call(this);
         };
-      };
+      }.bind(component);
     });
   };
 }
