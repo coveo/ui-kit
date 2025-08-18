@@ -1,3 +1,30 @@
+## <small>3.32.3 (2025-08-13)</small>
+
+* chore(atomic): add Playwright tests for generated answer citations (#5772) ([53d5075](https://github.com/coveo/ui-kit/commits/53d5075)), closes [#5772](https://github.com/coveo/ui-kit/issues/5772)
+* chore(atomic): migrate atomic-results-per-page (#5807) ([8f46a79](https://github.com/coveo/ui-kit/commits/8f46a79)), closes [#5807](https://github.com/coveo/ui-kit/issues/5807)
+* fix(atomic): badly formatted aria-label on facet values (#5863) ([51b8e34](https://github.com/coveo/ui-kit/commits/51b8e34)), closes [#5863](https://github.com/coveo/ui-kit/issues/5863)
+* fix(atomic): commerce-layout margin (#5862) ([ba48ee5](https://github.com/coveo/ui-kit/commits/ba48ee5)), closes [#5862](https://github.com/coveo/ui-kit/issues/5862)
+* docs(atomic): standardize storybook (#5854) ([54b9400](https://github.com/coveo/ui-kit/commits/54b9400)), closes [#5854](https://github.com/coveo/ui-kit/issues/5854)
+
+
+
+## <small>3.32.2 (2025-08-11)</small>
+
+* fix(atomic): use commerce headless version instead of search version (#5827) ([eb91994](https://github.com/coveo/ui-kit/commits/eb91994)), closes [#5827](https://github.com/coveo/ui-kit/issues/5827)
+
+
+
+## <small>3.32.1 (2025-08-11)</small>
+
+* fix: observer stencil more and always (#5853) ([aae3cee](https://github.com/coveo/ui-kit/commits/aae3cee)), closes [#5853](https://github.com/coveo/ui-kit/issues/5853)
+* fix(atomic): improve product children layout for any child count (#5826) ([029b11d](https://github.com/coveo/ui-kit/commits/029b11d)), closes [#5826](https://github.com/coveo/ui-kit/issues/5826)
+* chore(atomic): add postcss/tailwindcss support for CSSStylesheets (#5808) ([c1cda14](https://github.com/coveo/ui-kit/commits/c1cda14)), closes [#5808](https://github.com/coveo/ui-kit/issues/5808)
+* chore(atomic): atomic-product-multi-value-text font size override not applied correctly (#5806) ([e613f7f](https://github.com/coveo/ui-kit/commits/e613f7f)), closes [#5806](https://github.com/coveo/ui-kit/issues/5806) [/github.com/coveo/ui-kit/pull/5802/files#diff-913ab5c20cb2c3af53f6e5de776c7b0cd155ecfbae2b4fdf6e241cefee4c0a91](https://github.com//github.com/coveo/ui-kit/pull/5802/files/issues/diff-913ab5c20cb2c3af53f6e5de776c7b0cd155ecfbae2b4fdf6e241cefee4c0a91)
+* perf: remove initializePopover unused code from commerce facets (#5847) ([c45ce38](https://github.com/coveo/ui-kit/commits/c45ce38)), closes [#5847](https://github.com/coveo/ui-kit/issues/5847)
+* style: lint forgotten files (#5848) ([8b77db5](https://github.com/coveo/ui-kit/commits/8b77db5)), closes [#5848](https://github.com/coveo/ui-kit/issues/5848)
+
+
+
 ## 3.32.0 (2025-08-07)
 
 * chore: fix atomic dev command (#5813) ([ff5a3b5](https://github.com/coveo/ui-kit/commits/ff5a3b5)), closes [#5813](https://github.com/coveo/ui-kit/issues/5813)

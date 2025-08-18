@@ -1,27 +1,15 @@
-import {Canvas, Markdown, ArgTypes, Meta, Title, Description, Controls, Primary, Stories, Subtitle} from '@storybook/blocks';
+import { Meta } from '@storybook/blocks';
 import * as AtomicCommerceTextStories from './atomic-commerce-text.new.stories';
+import { AtomicDocTemplate } from '../../../../storybook-utils/documentation/atomic-doc-template';
 
 <Meta of={AtomicCommerceTextStories} />
 
-<Title />
-<Subtitle><Description/></Subtitle>
-
-<Canvas
-  additionalActions={[
-    {
-      title: 'Open in GitHub',
-      onClick: () => {
-        window.open(
-          'https://github.com/coveo/ui-kit/blob/main/packages/atomic/src/components/commerce/atomic-commerce-text/atomic-commerce-text.ts',
-          '_blank'
-        );
-      },
-    },
-  ]}
-  of={AtomicCommerceTextStories.Default}
-/>
-
-## Usage
+<AtomicDocTemplate
+  stories={AtomicCommerceTextStories}
+  githubPath="commerce/atomic-commerce-text/atomic-commerce-text.ts"
+  tagName="atomic-commerce-text"
+  className="AtomicCommerceText"
+>
 
 The `atomic-commerce-text` component leverages the I18n translation module through the atomic-commerce-interface. It is used to display internationalized text content within your commerce interface.
 
@@ -58,13 +46,4 @@ Make sure your translation resources include both singular and plural forms:
   "items-count_other": "{{count}} items"
 }
 ```
-
-## Examples
-
-### With Translations
-
-<Canvas of={AtomicCommerceTextStories.WithTranslations} />
-
-## Reference
-
-<ArgTypes />
+</AtomicDocTemplate>

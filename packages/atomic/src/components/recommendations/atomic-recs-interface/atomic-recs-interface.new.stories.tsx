@@ -13,7 +13,7 @@ async function initializeRecsInterface(canvasElement: HTMLElement) {
 
 const meta: Meta = {
   component: 'atomic-recs-interface',
-  title: 'Atomic/Recommendations/atomic-recs-interface',
+  title: 'Recommendations/atomic-recs-interface',
   id: 'atomic-recs-interface',
   render: renderComponent,
   parameters,

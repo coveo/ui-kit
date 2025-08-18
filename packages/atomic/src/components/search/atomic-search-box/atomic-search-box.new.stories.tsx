@@ -20,7 +20,7 @@ const {decorator, play} = wrapInSearchInterface(
 
 const meta: Meta = {
   component: 'atomic-search-box',
-  title: 'Atomic/Searchbox/atomic-search-box',
+  title: 'Search/Searchbox/atomic-search-box',
   id: 'atomic-search-box',
   render: renderComponent,
   decorators: [decorator],

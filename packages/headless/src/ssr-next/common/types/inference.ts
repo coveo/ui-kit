@@ -10,7 +10,7 @@ import type {
 } from './controllers.js';
 import type {HasKeys} from './utilities.js';
 
-export type InferControllerPropsFromDefinition<
+type InferControllerPropsFromDefinition<
   TController extends ControllerDefinition<
     CoreEngine | CoreEngineNext,
     Controller
@@ -69,7 +69,8 @@ export type InferControllerStaticStateMapFromDefinitions<
 > = {
   [K in keyof TControllers]: InferControllerStaticStateFromController<
     InferControllerFromDefinition<TControllers[K]>
-  >;
+  > &
+    InferControllerPropsFromDefinition<TControllers[K]>;
 };
 
 export type InferControllerStaticStateMapFromControllers<

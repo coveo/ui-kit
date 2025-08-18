@@ -7,7 +7,7 @@ const {decorator, play} = wrapInSearchInterface();
 
 const meta: Meta = {
   component: 'atomic-aria-live',
-  title: 'Common/atomic-aria-live',
+  title: 'Common/Aria Live',
   id: 'atomic-aria-live',
   render: renderComponent,
   decorators: [decorator],

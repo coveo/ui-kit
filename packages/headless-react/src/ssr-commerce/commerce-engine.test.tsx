@@ -22,6 +22,16 @@ import {
 import {MissingEngineProviderError} from '../errors.js';
 import {defineCommerceEngine} from './commerce-engine.js';
 
+/**
+ * Utility function to flush asynchronous updates in React components.
+ * This ensures all async operations and state updates are completed before proceeding.
+ */
+async function flushAsyncUpdates(): Promise<void> {
+  await act(async () => {
+    await new Promise((resolve) => setTimeout(resolve, 0));
+  });
+}
+
 describe('Headless react SSR utils', () => {
   let errorSpy: MockInstance;
   const mockedNavigatorContextProvider: NavigatorContextProvider = () => {
@@ -37,8 +47,13 @@ describe('Headless react SSR utils', () => {
     errorSpy = vi.spyOn(console, 'error');
   });
 
-  afterEach(() => {
+  afterEach(async () => {
     errorSpy.mockClear();
+
+    await flushAsyncUpdates();
+
+    vi.clearAllTimers();
+    vi.clearAllMocks();
   });
 
   test('defines react commerce engine', () => {
@@ -130,6 +145,17 @@ describe('Headless react SSR utils', () => {
       useEngine,
     } = engineDefinition;
 
+    let renderResult: ReturnType<typeof render> | null = null;
+
+    afterEach(async () => {
+      if (renderResult) {
+        renderResult.unmount();
+        renderResult = null;
+      }
+
+      await flushAsyncUpdates();
+    });
+
     function TestProductList() {
       const generateMockProduct: () => Product = () => {
         return {
@@ -185,12 +211,11 @@ describe('Headless react SSR utils', () => {
       expectedErrMsg: string
     ) {
       let err: Error | undefined;
-      // Prevent expected error from being thrown in console when running tests
       const consoleErrorStub = vi
         .spyOn(console, 'error')
         .mockImplementation(() => {});
       try {
-        renderFunction();
+        renderResult = renderFunction();
       } catch (e) {
         err = e! as Error;
       } finally {
@@ -210,7 +235,7 @@ describe('Headless react SSR utils', () => {
     test('should render with StaticStateProvider', async () => {
       setNavigatorContextProvider(mockedNavigatorContextProvider);
       const staticState = await fetchStaticState();
-      render(
+      renderResult = render(
         <StaticStateProvider controllers={staticState.controllers}>
           <TestProductList />
         </StaticStateProvider>
@@ -224,7 +249,7 @@ describe('Headless react SSR utils', () => {
       const staticState = await fetchStaticState();
       const {engine, controllers} = await hydrateStaticState(staticState);
 
-      render(
+      renderResult = render(
         <HydratedStateProvider engine={engine} controllers={controllers}>
           <TestProductList />
         </HydratedStateProvider>
@@ -236,7 +261,7 @@ describe('Headless react SSR utils', () => {
     test('should render with StateProvider using static state', async () => {
       setNavigatorContextProvider(mockedNavigatorContextProvider);
       const staticState = await fetchStaticState();
-      render(
+      renderResult = render(
         <StateProvider controllers={staticState.controllers}>
           <TestProductList />
         </StateProvider>
@@ -250,7 +275,7 @@ describe('Headless react SSR utils', () => {
       const staticState = await fetchStaticState();
       const {engine, controllers} = await hydrateStaticState(staticState);
 
-      render(
+      renderResult = render(
         <StateProvider engine={engine} controllers={controllers}>
           <TestProductList />
         </StateProvider>
@@ -263,11 +288,19 @@ describe('Headless react SSR utils', () => {
       const {listingEngineDefinition} = engineDefinition;
       let staticState: InferStaticState<typeof listingEngineDefinition>;
       let hydratedState: InferHydratedState<typeof listingEngineDefinition>;
+      let hookRenderResult: ReturnType<typeof renderHook> | null = null;
 
       beforeEach(async () => {
         setNavigatorContextProvider(mockedNavigatorContextProvider);
         staticState = await fetchStaticState();
         hydratedState = await hydrateStaticState(staticState);
+      });
+
+      afterEach(() => {
+        if (hookRenderResult) {
+          hookRenderResult.unmount();
+          hookRenderResult = null;
+        }
       });
 
       function staticStateProviderWrapper({children}: PropsWithChildren) {
@@ -321,31 +354,35 @@ describe('Headless react SSR utils', () => {
         });
 
         test('should not return engine with static state provider', async () => {
-          const {result} = renderHook(() => useEngine(), {
+          hookRenderResult = renderHook(() => useEngine(), {
             wrapper: staticStateProviderWrapper,
           });
-          expect(result.current).toBeUndefined();
+          expect(hookRenderResult.result.current).toBeUndefined();
         });
 
         test('should return engine with hydrated state provider', async () => {
-          const {result} = renderHook(() => useEngine(), {
+          hookRenderResult = renderHook(() => useEngine(), {
             wrapper: hydratedStateProviderWrapper,
           });
-          expect(result.current).toStrictEqual(hydratedState.engine);
+          expect(hookRenderResult.result.current).toStrictEqual(
+            hydratedState.engine
+          );
         });
 
         test('should not return engine with StateProvider using static state', async () => {
-          const {result} = renderHook(() => useEngine(), {
+          hookRenderResult = renderHook(() => useEngine(), {
             wrapper: stateProviderWrapperWithStaticState,
           });
-          expect(result.current).toBeUndefined();
+          expect(hookRenderResult.result.current).toBeUndefined();
         });
 
         test('should return engine with StateProvider using hydrated state', async () => {
-          const {result} = renderHook(() => useEngine(), {
+          hookRenderResult = renderHook(() => useEngine(), {
             wrapper: stateProviderWrapperWithHydratedState,
           });
-          expect(result.current).toStrictEqual(hydratedState.engine);
+          expect(hookRenderResult.result.current).toStrictEqual(
+            hydratedState.engine
+          );
         });
       });
 

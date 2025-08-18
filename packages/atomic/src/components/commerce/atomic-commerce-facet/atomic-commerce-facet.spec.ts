@@ -632,15 +632,6 @@ describe('AtomicCommerceFacet', () => {
       const ensureSubscribedSpy = vi.spyOn(element, 'ensureSubscribed');
       // @ts-expect-error: accessing private methods for testing
       const initAriaLiveSpy = vi.spyOn(element, 'initAriaLive');
-      // @ts-expect-error: accessing private methods for testing
-      const initPopoverSpy = vi.spyOn(element, 'initPopover');
-
-      // Reset the spies to clear any calls from setupElement
-      validateFacetSpy.mockClear();
-      initFocusTargetsSpy.mockClear();
-      ensureSubscribedSpy.mockClear();
-      initAriaLiveSpy.mockClear();
-      initPopoverSpy.mockClear();
 
       // Call initialize
       element.initialize();
@@ -650,7 +641,6 @@ describe('AtomicCommerceFacet', () => {
       expect(initFocusTargetsSpy).toHaveBeenCalledOnce();
       expect(ensureSubscribedSpy).toHaveBeenCalledOnce();
       expect(initAriaLiveSpy).toHaveBeenCalledOnce();
-      expect(initPopoverSpy).toHaveBeenCalledOnce();
     });
 
     it('should subscribe to facet controller', async () => {
