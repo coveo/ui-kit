@@ -64,13 +64,11 @@ export default async function Listing({
     controllers: {
       cart: {initialState: {items}},
       context: {
-        initialState: {
-          language: defaultContext.language,
-          country: defaultContext.country,
-          currency: defaultContext.currency,
-          view: {
-            url: `https://sports.barca.group/browse/promotions/${category}`,
-          },
+        language: defaultContext.language,
+        country: defaultContext.country,
+        currency: defaultContext.currency,
+        view: {
+          url: `https://sports.barca.group/browse/promotions/${category}`,
         },
       },
       parameterManager: {initialState: {parameters}},
@@ -84,13 +82,11 @@ export default async function Listing({
         popularViewed: {enabled: true},
         cart: {initialState: {items}},
         context: {
-          initialState: {
-            language: defaultContext.language,
-            country: defaultContext.country,
-            currency: defaultContext.currency,
-            view: {
-              url: `https://sports.barca.group/browse/promotions/${category}`,
-            },
+          language: defaultContext.language,
+          country: defaultContext.country,
+          currency: defaultContext.currency,
+          view: {
+            url: `https://sports.barca.group/browse/promotions/${category}`,
           },
         },
       },
