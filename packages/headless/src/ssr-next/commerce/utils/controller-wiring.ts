@@ -42,26 +42,26 @@ export function wireControllerParams<
 >(
   solutionType: SolutionType,
   controllerDefinitions: TControllerDefinitions,
-  paramsObject: BuildConfig<SolutionType> & {
+  buildConfig: BuildConfig<SolutionType> & {
     controllers?: ControllersPropsMap;
   }
 ): InferControllerPropsMapFromDefinitions<TControllerDefinitions> {
   switch (solutionType) {
     case SolutionType.listing:
-      listingDefinitionSchema.validate(paramsObject);
+      listingDefinitionSchema.validate(buildConfig);
       break;
     case SolutionType.search:
-      searchDefinitionSchema.validate(paramsObject);
+      searchDefinitionSchema.validate(buildConfig);
       break;
     case SolutionType.recommendation:
-      recommendationsDefinitionSchema.validate(paramsObject);
+      recommendationsDefinitionSchema.validate(buildConfig);
       break;
   }
 
-  const controllerProps: ControllersPropsMap = paramsObject.controllers ?? {};
+  const controllerProps: ControllersPropsMap = buildConfig.controllers ?? {};
 
   const wireParameterManager = (query?: string) => {
-    const {searchParams} = paramsObject;
+    const {searchParams} = buildConfig;
     if (controllerDefinitions?.parameterManager) {
       controllerProps.parameterManager = {
         initialState: {
@@ -77,7 +77,7 @@ export function wireControllerParams<
   };
 
   const wireContext = () => {
-    const {language, country, currency, url} = paramsObject;
+    const {language, country, currency, url} = buildConfig;
     if (controllerDefinitions?.context) {
       controllerProps.context = {
         initialState: {
@@ -91,7 +91,7 @@ export function wireControllerParams<
   };
 
   const wireCart = () => {
-    const {cart} = paramsObject;
+    const {cart} = buildConfig;
     if (controllerDefinitions?.cart && cart) {
       controllerProps.cart = {initialState: cart};
     }
@@ -109,9 +109,15 @@ export function wireControllerParams<
 
   switch (solutionType) {
     case SolutionType.search: {
-      const {query} = paramsObject as SearchBuildConfig;
+      const {query} = buildConfig as SearchBuildConfig;
       wireCommon();
-      if (typeof query === 'string') wireParameterManager(query);
+      if (typeof query === 'string') {
+        wireParameterManager(query);
+      }
+      console.log('*********************');
+      console.log(controllerProps);
+      console.log('*********************');
+
       break;
     }
 

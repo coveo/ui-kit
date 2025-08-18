@@ -32,7 +32,6 @@ export function hydratedStaticStateFactory<
         options
       )(solutionType);
       const {engine, controllers} = await solutionTypeBuild(
-        // @ts-expect-error: TODO: KIT-4742: the wiring will fix also the type inconsistencies
         ...(params as BuildParameters<TControllerDefinitions>)
       );
 

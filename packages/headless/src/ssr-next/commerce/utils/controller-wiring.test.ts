@@ -1,10 +1,8 @@
 import {beforeEach, describe, expect, it} from 'vitest';
-import {defineMockCommerceControllerWithProps} from '../../../test/mock-controller-definitions.js';
+import {defineMockCommerceControllerWithProps} from '../../../test/mock-ssr-controller-definitions.js';
 import {SolutionType} from '../types/controller-constants.js';
-import type {
-  CommerceControllerDefinitionsMap,
-  FetchStaticStateParameters,
-} from '../types/engine.js';
+import type {InferControllerPropsMapFromDefinitions} from '../types/controller-inference.js';
+import type {CommerceControllerDefinitionsMap} from '../types/engine.js';
 import {
   listingDefinitionSchema,
   recommendationsDefinitionSchema,
@@ -71,9 +69,6 @@ describe('controller-wiring', () => {
   });
 
   describe('#wireControllerParams', () => {
-    type MockParams =
-      FetchStaticStateParameters<CommerceControllerDefinitionsMap>;
-
     describe.each([
       {solutionType: SolutionType.listing},
       {solutionType: SolutionType.search},
@@ -86,8 +81,10 @@ describe('controller-wiring', () => {
         productId: '1',
         quantity: 1,
       };
-      const params = [
-        {
+      let props: InferControllerPropsMapFromDefinitions<CommerceControllerDefinitionsMap>;
+
+      beforeAll(() => {
+        const params = {
           query: 'test',
           language: 'en',
           country: 'US',
@@ -96,15 +93,17 @@ describe('controller-wiring', () => {
             items: [mockCartItem],
           },
           url: 'https://example.com',
-        },
-      ] as MockParams;
+        };
 
-      beforeAll(() => {
-        wireControllerParams(solutionType, mockControllerDefinitions, params);
+        props = wireControllerParams(
+          solutionType,
+          mockControllerDefinitions,
+          params
+        );
       });
 
       it('should wire context for all solution types', () => {
-        expect(params[0].controllers!.context).toEqual({
+        expect(props.context).toEqual({
           initialState: {
             view: {url: 'https://example.com'},
             language: 'en',
@@ -115,7 +114,7 @@ describe('controller-wiring', () => {
       });
 
       it('should wire cart for all solution types', () => {
-        expect(params[0].controllers!.cart).toEqual({
+        expect(props.cart).toEqual({
           initialState: {
             items: [mockCartItem],
           },
@@ -124,23 +123,21 @@ describe('controller-wiring', () => {
     });
 
     it('should wire parameter manager for search with query', () => {
-      const params = [
-        {
-          language: 'en',
-          country: 'US',
-          currency: 'USD' as const,
-          url: 'https://example.com',
-          query: 'test query',
-        },
-      ] as MockParams;
+      const params = {
+        language: 'en',
+        country: 'US',
+        currency: 'USD' as const,
+        url: 'https://example.com',
+        query: 'test query',
+      };
 
-      wireControllerParams(
+      const {parameterManager} = wireControllerParams(
         SolutionType.search,
         mockControllerDefinitions,
         params
       );
 
-      expect(params[0].controllers?.parameterManager).toEqual({
+      expect(parameterManager).toEqual({
         initialState: {
           parameters: {
             q: 'test query',
@@ -149,24 +146,49 @@ describe('controller-wiring', () => {
       });
     });
 
-    it('should handle search params for parameter manager', () => {
-      const params = [
-        {
-          language: 'en',
-          country: 'US',
-          currency: 'USD' as const,
-          url: 'https://example.com',
-          searchParams: {perPage: 12, page: 3},
+    it('should contain props from custom controllers if provided', () => {
+      const params = {
+        language: 'en',
+        country: 'US',
+        currency: 'USD' as const,
+        url: 'https://example.com',
+        query: 'test query',
+        controllers: {
+          customController: {
+            initialState: {foo: 'bar'},
+          },
         },
-      ] as MockParams;
+      };
 
-      wireControllerParams(
+      const props = wireControllerParams(
+        SolutionType.search,
+        mockControllerDefinitions,
+        params
+      );
+
+      expect(props.customController).toEqual({
+        initialState: {
+          foo: 'bar',
+        },
+      });
+    });
+
+    it('should handle search params for parameter manager', () => {
+      const params = {
+        language: 'en',
+        country: 'US',
+        currency: 'USD' as const,
+        url: 'https://example.com',
+        searchParams: {perPage: 12, page: 3},
+      };
+
+      const {parameterManager} = wireControllerParams(
         SolutionType.listing,
         mockControllerDefinitions,
         params
       );
 
-      expect(params[0].controllers?.parameterManager).toEqual({
+      expect(parameterManager).toEqual({
         initialState: {
           parameters: {
             perPage: 12,
@@ -181,25 +203,23 @@ describe('controller-wiring', () => {
         context: defineMockCommerceControllerWithProps(),
       } as CommerceControllerDefinitionsMap;
 
-      const params = [
-        {
-          language: 'en',
-          country: 'US',
-          currency: 'USD' as const,
-          url: 'https://example.com',
-          cart: {items: []},
-        },
-      ] as MockParams;
+      const params = {
+        language: 'en',
+        country: 'US',
+        currency: 'USD' as const,
+        url: 'https://example.com',
+        cart: {items: []},
+      };
 
-      wireControllerParams(
+      const props = wireControllerParams(
         SolutionType.listing,
         definitionsWithoutCart,
         params
       );
 
-      expect(params[0].controllers?.cart).toBeUndefined();
-      expect(params[0].controllers?.parameterManager).toBeUndefined();
-      expect(params[0].controllers?.context).toBeDefined();
+      expect(props.cart).toBeUndefined();
+      expect(props.parameterManager).toBeUndefined();
+      expect(props.context).toBeDefined();
     });
   });
 });

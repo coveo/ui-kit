@@ -38,5 +38,6 @@ export type FetchStaticState<
   EngineStaticState<
     TSearchAction,
     TControllersStaticState & FilteredBakedInControllers<TSolutionType>
-  >
+  > &
+    BuildConfig<TSolutionType>
 >;
