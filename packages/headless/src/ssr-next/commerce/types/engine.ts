@@ -6,16 +6,13 @@ import type {
   ControllerStaticStateMap,
   ControllersMap,
 } from '../../common/types/controllers.js';
-import type {Cart} from '../controllers/cart/headless-cart.ssr.js';
-import type {Context} from '../controllers/context/headless-context.ssr.js';
-import type {
-  ParameterManager,
-  Parameters as ParameterManagerParameters,
-} from '../controllers/parameter-manager/headless-core-parameter-manager.ssr.js';
 import type {SSRCommerceEngine} from '../factories/build-factory.js';
 import type {Build} from './build.js';
 import type {SolutionType} from './controller-constants.js';
-import type {ControllerDefinitionsMap} from './controller-definitions.js';
+import type {
+  BakedInControllers,
+  ControllerDefinitionsMap,
+} from './controller-definitions.js';
 import type {
   InferControllerPropsMapFromDefinitions,
   InferControllerStaticStateMapFromDefinitionsWithSolutionType,
@@ -76,8 +73,7 @@ export interface CommerceEngineDefinition<
    * Fetches the hydrated state on the client side using your engine definition and the static state.
    */
   hydrateStaticState: HydrateStaticState<
-    InferControllersMapFromDefinition<TControllers, TSolutionType> &
-      BakedInControllers,
+    InferControllersMapFromDefinition<TControllers, TSolutionType>,
     UnknownAction,
     InferControllerPropsMapFromDefinitions<TControllers>,
     TControllers,
@@ -103,12 +99,6 @@ export interface CommerceEngineDefinition<
    * @param accessToken - The access token to update.
    */
   setAccessToken: (accessToken: string) => void;
-}
-
-export interface BakedInControllers {
-  parameterManager: ParameterManager<ParameterManagerParameters>;
-  context: Context;
-  cart: Cart;
 }
 
 export interface CommerceEngineDefinitionBuildResult<

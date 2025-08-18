@@ -20,7 +20,7 @@ const {decorator: productTemplateDecorator} = wrapInProductTemplate();
 
 const meta: Meta = {
   component: 'atomic-product-field-condition',
-  title: 'Commerce/atomic-product-field-condition',
+  title: 'Commerce/Product Field Condition',
   id: 'atomic-product-field-condition',
   render: renderComponent,
   decorators: [

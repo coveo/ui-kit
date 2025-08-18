@@ -8,7 +8,7 @@ import {
   type StandaloneSearchBox,
   type StandaloneSearchBoxState,
 } from '@coveo/headless/commerce';
-import {type CSSResultGroup, html, LitElement, unsafeCSS} from 'lit';
+import {type CSSResultGroup, css, html, LitElement} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {classMap} from 'lit/directives/class-map.js';
 import {createRef, type RefOrCallback, ref} from 'lit/directives/ref.js';
@@ -47,7 +47,6 @@ import {
 } from '../../common/suggestions/suggestions-common';
 import type {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface';
 import type {SelectChildProductEventArgs} from '../atomic-product-children/select-child-product-event';
-import styles from './atomic-commerce-search-box.tw.css';
 import '../atomic-commerce-search-box-instant-products/atomic-commerce-search-box-instant-products';
 import '../atomic-commerce-search-box-query-suggestions/atomic-commerce-search-box-query-suggestions';
 import '../atomic-commerce-search-box-recent-queries/atomic-commerce-search-box-recent-queries';
@@ -95,8 +94,6 @@ import '../atomic-commerce-search-box-recent-queries/atomic-commerce-search-box-
  * @part instant-results-show-all-button - The button inside the clickable suggestion from the `atomic-commerce-search-box-instant-products` component.
  *
  * @event redirect - Event that is emitted when a standalone search box redirection is triggered. By default, the search box will directly change the URL and redirect accordingly, so if you want to handle the redirection differently, use this event.
- *
- * @alpha
  */
 @customElement('atomic-commerce-search-box')
 @bindings()
@@ -105,7 +102,8 @@ export class AtomicCommerceSearchBox
   extends LitElement
   implements InitializableComponent<CommerceBindings>
 {
-  static styles: CSSResultGroup = [unsafeCSS(styles)];
+  static styles: CSSResultGroup =
+    css`@import "../../search/atomic-search-box/atomic-search-box.pcss";`;
 
   @state() bindings!: CommerceBindings;
   @state() error!: Error;

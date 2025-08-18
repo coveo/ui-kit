@@ -10,16 +10,13 @@ import {
   type Search,
 } from '../../../controllers/commerce/search/headless-search.js';
 import {buildMockCommerceState} from '../../../test/mock-commerce-state.js';
-import {defineMockCommerceController} from '../../../test/mock-controller-definitions.js';
 import {buildMockSSRCommerceEngine} from '../../../test/mock-engine-v2.js';
+import {defineMockCommerceController} from '../../../test/mock-ssr-controller-definitions.js';
 import * as augmentModule from '../../common/augment-preprocess-request.js';
 import {SolutionType} from '../types/controller-constants.js';
+import type {FilteredBakedInControllers} from '../types/controller-definitions.js';
 import type {InferControllersMapFromDefinition} from '../types/controller-inference.js';
-import type {
-  BakedInControllers,
-  CommerceControllerDefinitionsMap,
-} from '../types/engine.js';
-import {wireControllerParams} from '../utils/controller-wiring.js';
+import type {CommerceControllerDefinitionsMap} from '../types/engine.js';
 import * as buildFactory from './build-factory.js';
 import {fetchStaticStateFactory} from './static-state-factory.js';
 
@@ -31,7 +28,6 @@ vi.mock('../../../controllers/commerce/search/headless-search.js');
 
 describe('fetchStaticStateFactory', () => {
   let engineSpy: MockInstance;
-  const mockWireControllerParams = vi.mocked(wireControllerParams);
   const mockBuildProductListing = vi.mocked(buildProductListing);
   const mockBuildSearch = vi.mocked(buildSearch);
   const mockExecuteFirstRequest = vi.fn();
@@ -62,15 +58,15 @@ describe('fetchStaticStateFactory', () => {
     );
 
     engineSpy = vi.spyOn(buildFactory, 'buildFactory').mockReturnValue(
-      () =>
-        <T extends SolutionType>() =>
+      <T extends SolutionType>(_: T) =>
+        async () =>
           Promise.resolve({
             engine: mockEngine,
             controllers: {} as InferControllersMapFromDefinition<
               CommerceControllerDefinitionsMap,
               T
             > &
-              BakedInControllers,
+              FilteredBakedInControllers<T>,
           })
     );
 
@@ -93,33 +89,6 @@ describe('fetchStaticStateFactory', () => {
       url: 'https://example.com',
     });
     expect(engineSpy.mock.calls[0][0]).toStrictEqual(definition);
-  });
-
-  it('should call #wireControllerParams with the correct params', async () => {
-    // @ts-expect-error: do not care about baked-in controller initial state
-    const factory = fetchStaticStateFactory(definition, mockEngineOptions);
-    await factory(SolutionType.listing)({
-      country: 'CA',
-      currency: 'USD',
-      language: 'en',
-      url: 'https://example.com',
-    });
-
-    expect(mockWireControllerParams.mock.calls[0][0]).toStrictEqual('listing');
-    expect(mockWireControllerParams.mock.calls[0][1]).toStrictEqual(
-      expect.objectContaining({
-        controller1: expect.any(Object),
-        controller2: expect.any(Object),
-      })
-    );
-    expect(mockWireControllerParams.mock.calls[0][2]).toStrictEqual([
-      {
-        country: 'CA',
-        currency: 'USD',
-        language: 'en',
-        url: 'https://example.com',
-      },
-    ]);
   });
 
   it('should call augmentPreprocessRequestWithForwardedFor when fetchStaticState is invoked', async () => {

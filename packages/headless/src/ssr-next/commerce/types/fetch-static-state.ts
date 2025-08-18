@@ -9,9 +9,10 @@ import type {SolutionType} from './controller-constants.js';
 import type {
   ControllerDefinitionsMap,
   EngineDefinitionControllersPropsOption,
+  FilteredBakedInControllers,
   OptionsTuple,
 } from './controller-definitions.js';
-import type {BakedInControllers, EngineStaticState} from './engine.js';
+import type {EngineStaticState} from './engine.js';
 
 /**
  * Executes only the initial search for a given configuration, then returns a resumable snapshot of engine state along with the state of the controllers.
@@ -34,5 +35,9 @@ export type FetchStaticState<
       >
   >
 ) => Promise<
-  EngineStaticState<TSearchAction, TControllersStaticState & BakedInControllers>
+  EngineStaticState<
+    TSearchAction,
+    TControllersStaticState & FilteredBakedInControllers<TSolutionType>
+  > &
+    BuildConfig<TSolutionType>
 >;

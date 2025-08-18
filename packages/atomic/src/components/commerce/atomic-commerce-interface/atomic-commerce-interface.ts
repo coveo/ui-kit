@@ -6,6 +6,7 @@ import {
   type CommerceEngine,
   type CommerceEngineConfiguration,
   type Context,
+  VERSION as HEADLESS_VERSION,
   type LogLevel,
   loadConfigurationActions,
   loadQueryActions,
@@ -60,13 +61,12 @@ export type CommerceBindings = CommonBindings<
 const FirstRequestExecutedFlag = 'firstRequestExecuted';
 
 /**
- * @alpha
  * The `atomic-commerce-interface` component is the parent to all other atomic commerce components in a commerce page
  * (except for `atomic-commerce-recommendation-list`, which must have
  * `atomic-commerce-recommendation-interface` as a parent). It handles the headless commerce engine and localization
  * configurations.
  *
- * @slot default - The default slot where you can add child components to the search box.
+ * @slot default - The default slot where you can add child components to the interface.
  */
 @customElement('atomic-commerce-interface')
 @withTailwindStyles
@@ -84,7 +84,8 @@ export class AtomicCommerceInterface
   public store: CommerceStore;
   private interfaceController = new InterfaceController<CommerceEngine>(
     this,
-    'CoveoAtomic'
+    'CoveoAtomic',
+    HEADLESS_VERSION
   );
 
   @state() public error!: Error;

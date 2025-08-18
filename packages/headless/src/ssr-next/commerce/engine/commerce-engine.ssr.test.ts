@@ -2,7 +2,7 @@ import {
   type CommerceEngineConfiguration,
   getSampleCommerceEngineConfiguration,
 } from '../../../app/commerce-engine/commerce-engine-configuration.js';
-import {defineMockCommerceController} from '../../../test/mock-controller-definitions.js';
+import {defineMockCommerceController} from '../../../test/mock-ssr-controller-definitions.js';
 import type {CommerceEngineDefinitionOptions} from '../factories/build-factory.js';
 import {defineCommerceEngine} from './commerce-engine.ssr.js';
 
@@ -98,14 +98,14 @@ describe('Commerce Engine SSR', () => {
 
   describe('#listingEngineDefinition', () => {
     it('should always return parameter manager controller', async () => {
-      const aa = {
+      const definitionOption = {
         configuration: getSampleCommerceEngineConfiguration(),
         controllers: {
           controller1: defineMockCommerceController(),
           controller2: defineMockCommerceController(),
         },
       };
-      const {listingEngineDefinition} = defineCommerceEngine(aa);
+      const {listingEngineDefinition} = defineCommerceEngine(definitionOption);
       const staticState = await listingEngineDefinition.fetchStaticState({
         url: 'http://example.com',
         country: 'US',

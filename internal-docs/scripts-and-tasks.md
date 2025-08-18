@@ -71,9 +71,9 @@ When adding new packages, they will automatically inherit the caching behavior f
    ```
 
 4. **Running builds**: Use Turborepo commands to run builds:
-   - `turbo build` - Build all packages
-   - `turbo build --filter=package-name` - Build a specific package
-   - `turbo build --filter=...package-name` - Build a package and its dependencies
+   - `npx turbo build` - Build all packages
+   - `npx turbo build --filter=package-name` - Build a specific package
+   - `npx turbo build --filter=...package-name` - Build a package and its dependencies
 
 ## `dev` script
 

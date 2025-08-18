@@ -275,7 +275,6 @@ export type {
 } from './ssr-next/commerce/types/build.js';
 export {SolutionType} from './ssr-next/commerce/types/controller-constants.js';
 export type {
-  CommerceEngineDefinitionBuildResult,
   ControllerDefinition,
   ControllerDefinitionsMap,
   ControllerWithKind,
@@ -295,6 +294,7 @@ export type {
 } from './ssr-next/commerce/types/controller-inference.js';
 export type {
   CommerceEngineDefinition,
+  CommerceEngineDefinitionBuildResult,
   EngineStaticState,
   FetchStaticState,
   HydrateStaticState,

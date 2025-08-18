@@ -7,7 +7,7 @@ const {decorator, play} = wrapInSearchInterface();
 
 const meta: Meta = {
   component: 'atomic-popover',
-  title: 'Atomic/Popover',
+  title: 'Search/Popover',
   id: 'atomic-popover',
 
   render: renderComponent,

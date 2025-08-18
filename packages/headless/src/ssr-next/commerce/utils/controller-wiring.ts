@@ -1,3 +1,9 @@
+/**
+ * Controller Wiring Utilities
+ *
+ * Transforms simple user configuration into complex internal controller structures.
+ */
+
 import {Schema} from '@coveo/bueno';
 import {contextDefinition} from '../../../features/commerce/context/context-validation.js';
 import {
@@ -5,29 +11,28 @@ import {
   requiredNonEmptyString,
 } from '../../../utils/validate-payload.js';
 import type {ControllersPropsMap} from '../../common/types/controllers.js';
+import type {BuildConfig, SearchBuildConfig} from '../types/build.js';
 import {SolutionType} from '../types/controller-constants.js';
-import type {
-  CommerceControllerDefinitionsMap,
-  FetchStaticStateParameters,
-} from '../types/engine.js';
+import type {InferControllerPropsMapFromDefinitions} from '../types/controller-inference.js';
+import type {CommerceControllerDefinitionsMap} from '../types/engine.js';
 
-export const requiredDefinition = {
+const requiredDefinition = {
   language: contextDefinition.language,
   country: contextDefinition.country,
   currency: contextDefinition.currency,
   url: requiredNonEmptyString,
 };
 
-export const listingDefinition = {
+const listingDefinition = {
   ...requiredDefinition,
 };
 
-export const searchDefinition = {
+const searchDefinition = {
   ...requiredDefinition,
   query: requiredEmptyAllowedString,
 };
 
-export const recommendationsDefinition = {
+const recommendationsDefinition = {
   ...requiredDefinition,
   // recommendation:  // TODO: KIT-4619: support array of recommendations
 };
@@ -38,58 +43,54 @@ export const recommendationsDefinitionSchema = new Schema(
   recommendationsDefinition
 );
 
-export function wireControllerParams<
+/**
+ * Validates the build configuration based on the solution type.
+ */
+function validateBuildConfig<
   TControllerDefinitions extends CommerceControllerDefinitionsMap,
 >(
   solutionType: SolutionType,
-  controllerDefinitions: TControllerDefinitions,
-  params: FetchStaticStateParameters<TControllerDefinitions>
+  buildConfig: BuildConfig<TControllerDefinitions, SolutionType>
 ): void {
-  if (
-    !Array.isArray(params) ||
-    params.length === 0 ||
-    typeof params[0] !== 'object'
-  ) {
-    return;
-  }
+  const validationMap = {
+    [SolutionType.listing]: listingDefinitionSchema,
+    [SolutionType.search]: searchDefinitionSchema,
+    [SolutionType.recommendation]: recommendationsDefinitionSchema,
+  } as const;
 
-  const paramsObject = params[0] as Record<string, unknown>;
+  const schema = validationMap[solutionType as keyof typeof validationMap];
+  schema?.validate(buildConfig);
+}
 
-  switch (solutionType) {
-    case SolutionType.listing:
-      listingDefinitionSchema.validate(paramsObject);
-      break;
-    case SolutionType.search:
-      searchDefinitionSchema.validate(paramsObject);
-      break;
-    case SolutionType.recommendation:
-      recommendationsDefinitionSchema.validate(paramsObject);
-      break;
-  }
+function createControllerWirer<
+  TControllerDefinitions extends CommerceControllerDefinitionsMap,
+>(
+  buildConfig: BuildConfig<TControllerDefinitions, SolutionType>,
+  controllerDefinitions: CommerceControllerDefinitionsMap,
+  controllerProps: ControllersPropsMap
+) {
+  return {
+    wireParameterManager: (query?: string) => {
+      if (!controllerDefinitions?.parameterManager) return;
 
-  paramsObject.controllers ??= {};
-  const controllers = paramsObject.controllers as ControllersPropsMap;
-
-  const wireParameterManager = (query?: string) => {
-    const {searchParams} = paramsObject;
-    if (controllerDefinitions?.parameterManager) {
-      controllers.parameterManager = {
-        initialState: {
-          parameters: {
-            ...(query && {q: query}),
-            ...(searchParams && typeof searchParams === 'object'
-              ? searchParams
-              : {}),
-          },
-        },
+      const {searchParams} = buildConfig;
+      const parameters = {
+        ...(query && {q: query}),
+        ...(searchParams && typeof searchParams === 'object'
+          ? searchParams
+          : {}),
       };
-    }
-  };
 
-  const wireContext = () => {
-    const {language, country, currency, url} = paramsObject;
-    if (controllerDefinitions?.context) {
-      controllers.context = {
+      controllerProps.parameterManager = {
+        initialState: {parameters},
+      };
+    },
+
+    wireContext: () => {
+      if (!controllerDefinitions?.context) return;
+
+      const {language, country, currency, url} = buildConfig;
+      controllerProps.context = {
         initialState: {
           view: {url},
           language,
@@ -97,49 +98,97 @@ export function wireControllerParams<
           currency,
         },
       };
-    }
-  };
+    },
 
-  const wireCart = () => {
-    const {cart} = paramsObject;
-    if (controllerDefinitions?.cart && cart) {
-      controllers.cart = {initialState: cart};
-    }
-  };
+    wireCart: () => {
+      if (!controllerDefinitions?.cart || !buildConfig.cart) return;
 
-  const wireRecommendations = () => {
-    const {recommendations} = paramsObject;
-    controllers.recommendations = recommendations || [];
-  };
+      controllerProps.cart = {
+        initialState: buildConfig.cart,
+      };
+    },
 
-  // Common wiring for all solution types
-  const wireCommon = () => {
-    wireCart();
-    wireContext();
+    wireRecommendations: () => {
+      // TODO: KIT-4619: wire recommendations
+    },
   };
+}
 
+function wireCommonControllers(
+  wirer: ReturnType<typeof createControllerWirer>
+): void {
+  wirer.wireCart();
+  wirer.wireContext();
+}
+
+function wireSolutionSpecificControllers<
+  TControllerDefinitions extends CommerceControllerDefinitionsMap,
+>(
+  solutionType: SolutionType,
+  buildConfig: BuildConfig<TControllerDefinitions, SolutionType>,
+  wirer: ReturnType<typeof createControllerWirer>
+): void {
   switch (solutionType) {
     case SolutionType.search: {
-      const {query} = paramsObject;
-      wireCommon();
-      if (typeof query === 'string') wireParameterManager(query);
+      const {query} = buildConfig as SearchBuildConfig;
+      if (typeof query === 'string') {
+        wirer.wireParameterManager(query);
+      }
       break;
     }
 
     case SolutionType.listing: {
-      wireCommon();
-      wireParameterManager();
+      wirer.wireParameterManager();
       break;
     }
 
     case SolutionType.recommendation: {
-      wireCommon();
-      wireRecommendations();
+      wirer.wireRecommendations();
       break;
     }
 
     case SolutionType.standalone:
-      wireCommon();
+      // No additional wiring needed for standalone
       break;
+
+    default: {
+      // Exhaustive check - TypeScript will error if we miss a case
+      const _exhaustiveCheck: never = solutionType;
+      throw new Error(`Unsupported solution type: ${_exhaustiveCheck}`);
+    }
   }
+}
+
+/**
+ * Converts simple user configuration (URL, language, currency, query) into the
+ * nested structure required by the internal {@link Build} method. Automatically generates
+ * appropriate controllers (context, cart, parameterManager) transparently.
+ *
+ * @param solutionType - The type of solution (search, listing, recommendation, standalone)
+ * @param controllerDefinitions - Map of controller definitions to be initialized
+ * @param buildConfig - Simple configuration object with simplified controller properties
+ * @returns Formatted and validated controller properties map defined for the controller in the definition
+ */
+export function wireControllerParams<
+  TControllerDefinitions extends CommerceControllerDefinitionsMap,
+>(
+  solutionType: SolutionType,
+  controllerDefinitions: TControllerDefinitions,
+  buildConfig: BuildConfig<TControllerDefinitions, SolutionType> & {
+    controllers?: ControllersPropsMap;
+  }
+): InferControllerPropsMapFromDefinitions<TControllerDefinitions> {
+  validateBuildConfig(solutionType, buildConfig);
+
+  const controllerProps: ControllersPropsMap = buildConfig.controllers ?? {};
+  const wirer = createControllerWirer(
+    buildConfig,
+    controllerDefinitions,
+    controllerProps
+  );
+
+  wireCommonControllers(wirer);
+  wireSolutionSpecificControllers(solutionType, buildConfig, wirer);
+
+  return controllerProps as InferControllerPropsMapFromDefinitions<TControllerDefinitions>;
 }

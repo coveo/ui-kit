@@ -49,7 +49,7 @@ describe('ControllerBuilder', () => {
 
     it('should pass additional args to build method', () => {
       const additionalArgs = ['arg1', 'arg2'];
-      builder.setAdditionalArgs(additionalArgs);
+      builder.withAdditionalArgs(additionalArgs);
 
       builder.build();
 
@@ -103,7 +103,7 @@ describe('ControllerBuilder', () => {
 
     it('should pass additional args to buildWithProps method', () => {
       const additionalArgs = ['arg1', 'arg2'];
-      builder.setAdditionalArgs(additionalArgs);
+      builder.withAdditionalArgs(additionalArgs);
 
       builder.build();
 
@@ -131,6 +131,16 @@ describe('ControllerBuilder', () => {
         initialState: {customProperty: 'value'},
       });
     });
+  });
+
+  it('should throw if the definition contains a controller without a build method', () => {
+    const invalidDefinition = {
+      // Missing build method
+    };
+    const builder = new ControllerBuilder(invalidDefinition, mockEngine);
+    expect(() => builder.build()).toThrowError(
+      'Controller definition must have a build or buildWithProps method.'
+    );
   });
 
   it('should correctly detect build vs buildWithProps based on definition', () => {

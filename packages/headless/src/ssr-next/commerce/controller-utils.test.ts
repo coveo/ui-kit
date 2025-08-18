@@ -5,10 +5,12 @@ import {buildMockCommerceState} from '../../test/mock-commerce-state.js';
 import {
   buildMockController,
   buildMockControllerWithInitialState,
+} from '../../test/mock-controller.js';
+import {buildMockCommerceEngine} from '../../test/mock-engine-v2.js';
+import {
   defineMockCommerceController,
   defineMockCommerceControllerWithProps,
-} from '../../test/mock-controller-definitions.js';
-import {buildMockCommerceEngine} from '../../test/mock-engine-v2.js';
+} from '../../test/mock-ssr-controller-definitions.js';
 import * as utils from '../../utils/utils.js';
 import {ControllerBuilder} from '../common/builders/controller-builder.js';
 import {createStaticControllerBuilder} from '../common/builders/static-controller-builder.js';
@@ -46,7 +48,7 @@ describe('commerce controller-utils', () => {
 
   describe('#buildControllerDefinitions', () => {
     let mockControllerBuilder: {
-      setAdditionalArgs: ReturnType<typeof vi.fn>;
+      withAdditionalArgs: ReturnType<typeof vi.fn>;
       build: ReturnType<typeof vi.fn>;
     };
 
@@ -68,7 +70,7 @@ describe('commerce controller-utils', () => {
 
     beforeEach(() => {
       mockControllerBuilder = {
-        setAdditionalArgs: vi.fn().mockReturnThis(),
+        withAdditionalArgs: vi.fn().mockReturnThis(),
         build: vi.fn().mockReturnValue(buildMockController()),
       };
 
@@ -82,10 +84,10 @@ describe('commerce controller-utils', () => {
       expect(mockControllerBuilder.build).toHaveBeenCalledTimes(2);
     });
 
-    it('should call #setAdditionalArgs with solutionType for each controller', () => {
+    it('should call #withAdditionalArgs with solutionType for each controller', () => {
       buildControllersWithDefaultSetup();
-      expect(mockControllerBuilder.setAdditionalArgs).toHaveBeenCalledTimes(2);
-      expect(mockControllerBuilder.setAdditionalArgs).toHaveBeenCalledWith([
+      expect(mockControllerBuilder.withAdditionalArgs).toHaveBeenCalledTimes(2);
+      expect(mockControllerBuilder.withAdditionalArgs).toHaveBeenCalledWith([
         SolutionType.search,
       ]);
     });

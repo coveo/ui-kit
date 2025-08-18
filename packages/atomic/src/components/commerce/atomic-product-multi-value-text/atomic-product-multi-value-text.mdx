@@ -1,18 +1,17 @@
-import { Canvas, ArgTypes, Meta, Title, Description, Stories, Subtitle } from '@storybook/blocks';
+import { Meta } from '@storybook/blocks';
 import * as AtomicProductMultiValueTextStories from './atomic-product-multi-value-text.new.stories';
-import { CanvasWithGithub } from '../../../../storybook-utils/documentation/canvas-with-github';
+import { AtomicDocTemplate } from '../../../../storybook-utils/documentation/atomic-doc-template';
 
-<Meta of={ AtomicProductMultiValueTextStories } />
 
-<Title />
-<Subtitle><Description/></Subtitle>
+<Meta of={AtomicProductMultiValueTextStories} />
 
-<CanvasWithGithub
-  of={ AtomicProductMultiValueTextStories.Default }
+<AtomicDocTemplate
+  stories={AtomicProductMultiValueTextStories}
   githubPath="commerce/atomic-product-multi-value-text/atomic-product-multi-value-text.ts"
-/>
+  tagName="atomic-product-multi-value-text"
+  className="AtomicProductMultiValueText"
+>
 
-## Usage
 The `atomic-product-multi-value-text` component displays multiple values for a specific field of a product, such as sizes or colors. It is typically used within `atomic-product-template` components to show product attributes that can have multiple values.
 
 It is typically used within `atomic-product-template` components to display product attributes that can have multiple values, such as sizes or colors.
@@ -32,9 +31,4 @@ It is typically used within `atomic-product-template` components to display prod
 </atomic-commerce-interface>
 ```
 
-
-## Examples
-<Stories title={""}/>
-
-## Reference
-<ArgTypes />
+</AtomicDocTemplate>
