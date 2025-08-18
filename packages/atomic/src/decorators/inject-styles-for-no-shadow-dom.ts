@@ -1,4 +1,4 @@
-import type {CSSResult} from 'lit';
+import type {CSSResultArray, CSSResultGroup, CSSResultOrNative} from 'lit';
 
 /**
  * Decorator to inject styles into components that do not use Shadow DOM.
@@ -18,7 +18,7 @@ import type {CSSResult} from 'lit';
  */
 export const injectStylesForNoShadowDOM = <
   T extends {
-    styles: CSSResult | CSSResult[];
+    styles?: CSSResultGroup;
     // biome-ignore lint/suspicious/noExplicitAny: <>
     new (...args: any[]): any;
   },
@@ -43,7 +43,7 @@ export const injectStylesForNoShadowDOM = <
 
       if (isDocumentOrShadowRoot) {
         for (const style of styles) {
-          const styleSheet = style?.styleSheet;
+          const styleSheet = getStyleSheet(style);
           if (styleSheet && !parent.adoptedStyleSheets.includes(styleSheet)) {
             parent.adoptedStyleSheets.push(styleSheet);
           }
@@ -52,3 +52,17 @@ export const injectStylesForNoShadowDOM = <
     }
   };
 };
+
+function getStyleSheet(
+  style: CSSResultOrNative | CSSResultArray | null | undefined
+): CSSStyleSheet | null {
+  if (style instanceof CSSStyleSheet) {
+    return style;
+  }
+
+  if (style && typeof style === 'object' && 'styleSheet' in style) {
+    return (style as {styleSheet: CSSStyleSheet}).styleSheet;
+  }
+
+  return null;
+}
