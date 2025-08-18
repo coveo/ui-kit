@@ -93,7 +93,9 @@ function setActivePage(page) {
     customElements.whenDefined('atomic-search-interface').then(() => {
       const searchInterface = document.querySelector('atomic-search-interface');
       searchInterface?.initializeWithSearchEngine?.(searchEngine).then(() => {
-        searchInterface?.executeFirstSearch?.();
+        if (page === 'search') {
+          searchInterface?.executeFirstSearch?.();
+        }
       });
     });
   });
