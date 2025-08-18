@@ -1,15 +1,5 @@
-import {
-  createSelector,
-  type ThunkDispatch,
-  type UnknownAction,
-} from '@reduxjs/toolkit';
-import {
-  defaultNodeJSNavigatorContextProvider,
-  type NavigatorContext,
-} from '../../app/navigator-context-provider.js';
-import {selectAdvancedSearchQueries} from '../../features/advanced-search-queries/advanced-search-query-selectors.js';
-import {fromAnalyticsStateToAnalyticsParams} from '../../features/configuration/analytics-params.js';
-import {selectContext} from '../../features/context/context-selector.js';
+import type {ThunkDispatch, UnknownAction} from '@reduxjs/toolkit';
+import {skipToken} from '@reduxjs/toolkit/query';
 import {
   setAnswerContentFormat,
   setCannotAnswer,
@@ -17,22 +7,7 @@ import {
   updateMessage,
 } from '../../features/generated-answer/generated-answer-actions.js';
 import {logGeneratedAnswerStreamEnd} from '../../features/generated-answer/generated-answer-analytics-actions.js';
-import {selectFieldsToIncludeInCitation} from '../../features/generated-answer/generated-answer-selectors.js';
 import type {GeneratedContentFormat} from '../../features/generated-answer/generated-response-format.js';
-import {maximumNumberOfResultsFromIndex} from '../../features/pagination/pagination-constants.js';
-import {selectPipeline} from '../../features/pipeline/select-pipeline.js';
-import {selectQuery} from '../../features/query/query-selectors.js';
-import {
-  initialSearchMappings,
-  mapFacetRequest,
-} from '../../features/search/search-mappings.js';
-import {selectSearchActionCause} from '../../features/search/search-selectors.js';
-import {selectSearchHub} from '../../features/search-hub/search-hub-selectors.js';
-import {selectStaticFilterExpressions} from '../../features/static-filter-set/static-filter-set-selectors.js';
-import {
-  selectActiveTab,
-  selectActiveTabExpression,
-} from '../../features/tab-set/tab-set-selectors.js';
 import type {SearchAppState} from '../../state/search-app-state.js';
 import type {
   ConfigurationSection,
@@ -40,7 +15,6 @@ import type {
   InsightConfigurationSection,
   TabSection,
 } from '../../state/state-sections.js';
-import {getFacets} from '../../utils/facet-utils.js';
 import {fetchEventSource} from '../../utils/fetch-event-source/fetch.js';
 import type {EventSourceMessage} from '../../utils/fetch-event-source/parse.js';
 import type {GeneratedAnswerCitation} from '../generated-answer/generated-answer-event-payload.js';
@@ -265,159 +239,15 @@ export const answerApi = answerSlice.injectEndpoints({
   }),
 });
 
-export const selectAnswerTriggerParams = createSelector(
-  (state) => selectQuery(state)?.q,
-  (state) => state.search.requestId,
-  (state) => state.generatedAnswer.cannotAnswer,
-  (state) => state.configuration.analytics.analyticsMode,
-  (state) => state.search.searchAction?.actionCause,
-  (q, requestId, cannotAnswer, analyticsMode, actionCause) => ({
-    q,
-    requestId,
-    cannotAnswer,
-    analyticsMode,
-    actionCause,
-  })
-);
-
-let generateFacetParams: Record<string, ReturnType<typeof getFacets>> = {};
-
-const getGeneratedFacetParams = (q: string, state: StateNeededByAnswerAPI) => ({
-  ...generateFacetParams,
-  [q]: getFacets(state)
-    ?.map((facetRequest) =>
-      mapFacetRequest(facetRequest, initialSearchMappings())
-    )
-    .sort((a, b) =>
-      a.facetId > b.facetId ? 1 : b.facetId > a.facetId ? -1 : 0
-    ),
-});
-
-const getNumberOfResultsWithinIndexLimit = (state: StateNeededByAnswerAPI) => {
-  if (!state.pagination) {
-    return undefined;
-  }
-
-  const isOverIndexLimit =
-    state.pagination.firstResult + state.pagination.numberOfResults >
-    maximumNumberOfResultsFromIndex;
-
-  if (isOverIndexLimit) {
-    return maximumNumberOfResultsFromIndex - state.pagination.firstResult;
-  }
-  return state.pagination.numberOfResults;
+export const fetchAnswer = (fetchAnswerParams: Partial<SearchRequest>) => {
+  return answerApi.endpoints.getAnswer.initiate(fetchAnswerParams);
 };
 
-const buildAdvancedSearchQueryParams = (state: StateNeededByAnswerAPI) => {
-  const advancedSearchQueryParams = selectAdvancedSearchQueries(state);
-  const mergedCq = mergeAdvancedCQParams(state);
-
-  return {
-    ...advancedSearchQueryParams,
-    ...(mergedCq && {cq: mergedCq}),
-  };
+export const selectAnswer = (state: StateNeededByAnswerAPI) => {
+  // Gets the cached answerApiQueryParams that we set in the triggerSearchRequest.
+  // skipToken is a special value provided by Redux Toolkit Query (RTK Query) that tells RTK Query to "skip" running a query or selector if the parameters are not available or not ready.
+  // https://redux-toolkit.js.org/rtk-query/usage-with-typescript#skipping-queries-with-typescript-using-skiptoken
+  const selectAnswerParams =
+    state.generatedAnswer.answerApiQueryParams ?? skipToken;
+  return answerApi.endpoints.getAnswer.select(selectAnswerParams)(state);
 };
-
-const mergeAdvancedCQParams = (state: StateNeededByAnswerAPI) => {
-  const activeTabExpression = selectActiveTabExpression(state.tabSet);
-  const filterExpressions = selectStaticFilterExpressions(state);
-  const {cq} = selectAdvancedSearchQueries(state);
-
-  return [activeTabExpression, ...filterExpressions, cq]
-    .filter((expression) => !!expression)
-    .join(' AND ');
-};
-
-export const constructAnswerQueryParams = (
-  state: StateNeededByAnswerAPI,
-  usage: 'fetch' | 'select',
-  navigatorContext: NavigatorContext
-) => {
-  const q = selectQuery(state)?.q;
-
-  const {aq, cq, dq, lq} = buildAdvancedSearchQueryParams(state);
-
-  const context = selectContext(state);
-
-  // For 'select' usage, exclude volatile analytics fields to match serializeQueryArgs behavior
-  const analyticsParams =
-    usage === 'select'
-      ? {}
-      : fromAnalyticsStateToAnalyticsParams(
-          state.configuration.analytics,
-          navigatorContext,
-          {actionCause: selectSearchActionCause(state)}
-        );
-
-  const searchHub = selectSearchHub(state);
-  const pipeline = selectPipeline(state);
-  const citationsFieldToInclude = selectFieldsToIncludeInCitation(state) ?? [];
-
-  if (q && usage === 'fetch') {
-    generateFacetParams = getGeneratedFacetParams(q, state);
-  }
-
-  return {
-    q,
-    ...(aq && {aq}),
-    ...(cq && {cq}),
-    ...(dq && {dq}),
-    ...(lq && {lq}),
-    ...(context?.contextValues && {
-      context: context.contextValues,
-    }),
-    pipelineRuleParameters: {
-      mlGenerativeQuestionAnswering: {
-        responseFormat: state.generatedAnswer.responseFormat,
-        citationsFieldToInclude,
-      },
-    },
-    ...(searchHub?.length && {searchHub}),
-    ...(pipeline?.length && {pipeline}),
-    ...(generateFacetParams[q!]?.length && {
-      facets: generateFacetParams[q!],
-    }),
-    ...(state.fields && {fieldsToInclude: state.fields.fieldsToInclude}),
-    ...(state.didYouMean && {
-      queryCorrection: {
-        enabled:
-          state.didYouMean.enableDidYouMean &&
-          state.didYouMean.queryCorrectionMode === 'next',
-        options: {
-          automaticallyCorrect: state.didYouMean.automaticallyCorrectQuery
-            ? ('whenNoResults' as const)
-            : ('never' as const),
-        },
-      },
-      enableDidYouMean:
-        state.didYouMean.enableDidYouMean &&
-        state.didYouMean.queryCorrectionMode === 'legacy',
-    }),
-    ...(state.pagination && {
-      numberOfResults: getNumberOfResultsWithinIndexLimit(state),
-      firstResult: state.pagination.firstResult,
-    }),
-    tab: selectActiveTab(state.tabSet),
-    ...analyticsParams,
-  };
-};
-
-export const fetchAnswer = (
-  state: StateNeededByAnswerAPI,
-  navigatorContext: NavigatorContext
-) =>
-  answerApi.endpoints.getAnswer.initiate(
-    constructAnswerQueryParams(state, 'fetch', navigatorContext)
-  );
-
-export const selectAnswer = (
-  state: StateNeededByAnswerAPI,
-  navigatorContext?: NavigatorContext
-) =>
-  answerApi.endpoints.getAnswer.select(
-    constructAnswerQueryParams(
-      state,
-      'select',
-      navigatorContext || defaultNodeJSNavigatorContextProvider()
-    )
-  )(state);

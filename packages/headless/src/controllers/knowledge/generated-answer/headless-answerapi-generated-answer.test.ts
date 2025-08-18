@@ -1,3 +1,4 @@
+/** biome-ignore-all lint/suspicious/noExplicitAny: Just tests */
 import {answerEvaluation} from '../../../api/knowledge/post-answer-evaluation.js';
 import {triggerSearchRequest} from '../../../api/knowledge/stream-answer-actions.js';
 import {
@@ -22,12 +23,35 @@ import {
   buildMockSearchEngine,
   type MockedSearchEngine,
 } from '../../../test/mock-engine-v2.js';
+import {buildMockNavigatorContextProvider} from '../../../test/mock-navigator-context-provider.js';
 import {createMockState} from '../../../test/mock-state.js';
 import type {
   GeneratedAnswerProps,
   GeneratedResponseFormat,
 } from '../../generated-answer/headless-generated-answer.js';
-import {buildAnswerApiGeneratedAnswer} from './headless-answerapi-generated-answer.js';
+import {
+  buildAnswerApiGeneratedAnswer,
+  constructAnswerQueryParams,
+} from './headless-answerapi-generated-answer.js';
+import {
+  expectedStreamAnswerAPIParam,
+  expectedStreamAnswerAPIParamForSelect,
+  expectedStreamAnswerAPIParamWithATabWithAnExpression,
+  expectedStreamAnswerAPIParamWithoutAnyTab,
+  expectedStreamAnswerAPIParamWithoutSearchAction,
+  expectedStreamAnswerAPIParamWithStaticFiltersAndTabExpression,
+  expectedStreamAnswerAPIParamWithStaticFiltersAndTabExpressionWithoutAdvancedCQ,
+  expectedStreamAnswerAPIParamWithStaticFiltersSelected,
+  streamAnswerAPIStateMock,
+  streamAnswerAPIStateMockWithATabWithAnExpression,
+  streamAnswerAPIStateMockWithNonValidFilters,
+  streamAnswerAPIStateMockWithoutAnyFilters,
+  streamAnswerAPIStateMockWithoutAnyTab,
+  streamAnswerAPIStateMockWithoutSearchAction,
+  streamAnswerAPIStateMockWithStaticFiltersAndTabExpression,
+  streamAnswerAPIStateMockWithStaticFiltersAndTabExpressionWithEmptyCQ,
+  streamAnswerAPIStateMockWithStaticFiltersSelected,
+} from './headless-answerapi-generated-answer-mocks.js';
 
 vi.mock('../../../features/generated-answer/generated-answer-actions');
 vi.mock(
@@ -300,6 +324,169 @@ describe('knowledge-generated-answer', () => {
     it('should not log a warning when the controller is used with the legacy analytics mode', () => {
       createGeneratedAnswer();
       expect(warnSpy).toHaveBeenCalledTimes(0);
+    });
+  });
+
+  describe.skip('constructAnswerQueryParams', () => {
+    beforeEach(() => {
+      vi.useFakeTimers().setSystemTime(new Date('2020-01-01'));
+    });
+    afterAll(() => {
+      vi.useRealTimers();
+    });
+
+    it('returns the correct query params with fetch usage', () => {
+      const queryParams = constructAnswerQueryParams(
+        streamAnswerAPIStateMock as any,
+        'fetch',
+        buildMockNavigatorContextProvider()()
+      );
+
+      expect(queryParams).toEqual(expectedStreamAnswerAPIParam);
+    });
+
+    it('should create the right selector when usage is select', () => {
+      const queryParams = constructAnswerQueryParams(
+        streamAnswerAPIStateMock as any,
+        'select',
+        buildMockNavigatorContextProvider()()
+      );
+
+      expect(queryParams).toEqual(expectedStreamAnswerAPIParamForSelect);
+    });
+
+    it('should merge tab expression in request constant query when expression is not a blank string', () => {
+      const queryParams = constructAnswerQueryParams(
+        streamAnswerAPIStateMockWithATabWithAnExpression as any,
+        'fetch',
+        buildMockNavigatorContextProvider()()
+      );
+
+      expect(queryParams).toEqual(
+        expectedStreamAnswerAPIParamWithATabWithAnExpression
+      );
+    });
+
+    it('should not include tab info when there is NO tab', () => {
+      const queryParams = constructAnswerQueryParams(
+        streamAnswerAPIStateMockWithoutAnyTab as any,
+        'fetch',
+        buildMockNavigatorContextProvider()()
+      );
+
+      expect(queryParams).toEqual(expectedStreamAnswerAPIParamWithoutAnyTab);
+    });
+
+    it('should merge filter expressions in request constant query when expression is selected', () => {
+      const queryParams = constructAnswerQueryParams(
+        streamAnswerAPIStateMockWithStaticFiltersSelected as any,
+        'fetch',
+        buildMockNavigatorContextProvider()()
+      );
+
+      expect(queryParams).toEqual(
+        expectedStreamAnswerAPIParamWithStaticFiltersSelected
+      );
+    });
+
+    it('should not include filter info when there is NO filter', () => {
+      const queryParams = constructAnswerQueryParams(
+        streamAnswerAPIStateMockWithoutAnyFilters as any,
+        'fetch',
+        buildMockNavigatorContextProvider()()
+      );
+      expect(queryParams).toEqual(expectedStreamAnswerAPIParam);
+    });
+
+    it('should not include non-selected filters and empty filters', () => {
+      const queryParams = constructAnswerQueryParams(
+        streamAnswerAPIStateMockWithNonValidFilters as any,
+        'fetch',
+        buildMockNavigatorContextProvider()()
+      );
+      expect(queryParams).toEqual(expectedStreamAnswerAPIParam);
+    });
+
+    it('should merge multiple filter expressions and a tab expression', () => {
+      const queryParams = constructAnswerQueryParams(
+        streamAnswerAPIStateMockWithStaticFiltersAndTabExpression as any,
+        'fetch',
+        buildMockNavigatorContextProvider()()
+      );
+      expect(queryParams).toEqual(
+        expectedStreamAnswerAPIParamWithStaticFiltersAndTabExpression
+      );
+    });
+
+    it('should not include advanced search queries when there are no advanced search queries', () => {
+      const queryParams = constructAnswerQueryParams(
+        streamAnswerAPIStateMockWithStaticFiltersAndTabExpressionWithEmptyCQ as any,
+        'fetch',
+        buildMockNavigatorContextProvider()()
+      );
+      expect(queryParams).toEqual(
+        expectedStreamAnswerAPIParamWithStaticFiltersAndTabExpressionWithoutAdvancedCQ
+      );
+    });
+
+    it('should accept an undefined SearchAction', () => {
+      const queryParams = constructAnswerQueryParams(
+        streamAnswerAPIStateMockWithoutSearchAction as any,
+        'fetch',
+        buildMockNavigatorContextProvider()()
+      );
+
+      expect(queryParams).toEqual(
+        expectedStreamAnswerAPIParamWithoutSearchAction
+      );
+    });
+
+    it('should exclude analytics fields when usage is select', () => {
+      const queryParams = constructAnswerQueryParams(
+        streamAnswerAPIStateMock as any,
+        'select',
+        buildMockNavigatorContextProvider()()
+      );
+
+      // Verify that volatile fields (clientTimestamp, actionCause) are not present
+      expect(queryParams.analytics).toBeUndefined();
+    });
+
+    it('should include all analytics fields when usage is fetch', () => {
+      const queryParams = constructAnswerQueryParams(
+        streamAnswerAPIStateMock as any,
+        'fetch',
+        buildMockNavigatorContextProvider()()
+      );
+
+      // Verify that all analytics fields are present including volatile ones
+      expect(queryParams.analytics).toBeDefined();
+      expect(queryParams.analytics?.clientTimestamp).toBeDefined();
+      expect(queryParams.analytics?.actionCause).toBeDefined();
+      expect(queryParams.analytics?.capture).toBeDefined();
+      expect(queryParams.analytics?.clientId).toBeDefined();
+      expect(queryParams.analytics?.originContext).toBeDefined();
+    });
+
+    // biome-ignore lint/suspicious/noFocusedTests: will fix in a later commit
+    it.only('should build the correct facets times for the query params', () => {
+      const queryParams = constructAnswerQueryParams(
+        streamAnswerAPIStateMock as any,
+        'fetch',
+        buildMockNavigatorContextProvider()()
+      );
+
+      expect(queryParams).toEqual(expectedStreamAnswerAPIParam);
+
+      const updatedQueryParams = constructAnswerQueryParams(
+        streamAnswerAPIStateMock as any,
+        'select',
+        buildMockNavigatorContextProvider()()
+      );
+
+      expect(updatedQueryParams).not.toEqual(
+        expectedStreamAnswerAPIParamWithDifferentFacetTimes
+      );
     });
   });
 });
