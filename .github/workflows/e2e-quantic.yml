@@ -26,6 +26,7 @@ jobs:
     name: 'Post Scratch Org Links to PR'
     needs: e2e-quantic-setup
     if: ${{ github.event_name == 'pull_request' }}
+    continue-on-error: true
     runs-on: ubuntu-latest
     steps:
       - name: Harden Runner
