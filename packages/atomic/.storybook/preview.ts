@@ -27,20 +27,18 @@ export const parameters = {
 };
 
 export const decorators = [
-  (Story) => {
+  (Story, context) => {
     const story = Story();
 
     if (story?._$litType$) {
-      const container = document.createElement('div');
-
-      render(story, container);
+      render(story, context.canvasElement);
 
       const isTestMode =
         typeof window !== 'undefined' &&
         window.location.href.includes('localhost');
 
       if (!isTestMode) {
-        disableAnalytics(container, [
+        disableAnalytics(context.canvasElement, [
           'atomic-recs-interface',
           'atomic-insight-interface',
           'atomic-search-interface',
@@ -49,7 +47,7 @@ export const decorators = [
         ]);
       }
 
-      return container;
+      return context.canvasElement.children[0];
     }
   },
 ];
