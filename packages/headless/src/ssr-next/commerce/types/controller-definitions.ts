@@ -104,15 +104,15 @@ export interface ControllerDefinitionsMap<TController extends Controller> {
   [customName: string]: ControllerDefinition<TController>;
 }
 
-/**
- * Map of baked-in controller definitions
- */
-export type BakedInControllerDefinitions = {
+type BakedInControllerDefinitions = {
   parameterManager: ParameterManagerDefinition<{listing: true; search: true}>;
   context: ContextDefinition;
   cart: CartDefinition;
 };
 
+/**
+ * Map of baked-in controllers
+ */
 export type BakedInControllers = {
   [K in keyof BakedInControllerDefinitions]: BakedInControllerDefinitions[K]['buildWithProps'];
 };
