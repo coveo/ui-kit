@@ -36,11 +36,17 @@
  * export type SearchStaticState = InferStaticState<typeof engineDefinition>;
  * export type SearchHydratedState = InferHydratedState<typeof engineDefinition>;
  *
- * export const {
- *   fetchStaticState,
- *   hydrateStaticState,
- *   setNavigatorContextProvider,
- * } = engineDefinition;
+ * export const {fetchStaticState, hydrateStaticState} = engineDefinition;
+
+ * // Pass navigator context directly per call (server-side)
+ * await fetchStaticState({
+ *   navigatorContext: {
+ *     forwardedFor: req.ip,
+ *     referrer: req.headers.referer || null,
+ *     userAgent: req.headers['user-agent'] || null,
+ *     clientId: req.sessionID || 'anonymous',
+ *   },
+ * });
 
  * ```
  * @module SSR Search

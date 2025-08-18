@@ -151,7 +151,7 @@ export const buildFactory =
     const logger = buildLogger(options.loggerOptions);
     if (!options.navigatorContextProvider) {
       logger.warn(
-        '[WARNING] Missing navigator context in server-side code. Make sure to set it with `setNavigatorContextProvider` before calling fetchStaticState()'
+        '[WARNING] Missing navigator context in server-side code. Pass it directly to fetchStaticState({ navigatorContext }) to forward headers such as X-Forwarded-For.'
       );
     }
 
