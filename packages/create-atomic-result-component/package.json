@@ -1,0 +1,47 @@
+{
+  "name": "@coveo/create-atomic-result-component",
+  "version": "1.2.20",
+  "description": "Initialize a Coveo Atomic Result Component",
+  "type": "module",
+  "main": "index.js",
+  "bin": "index.js",
+  "files": [
+    "index.js",
+    "template/**/*",
+    "!template/**/project.json",
+    "template/.gitignore"
+  ],
+  "scripts": {
+    "release:phase1": "npx -p=@coveord/release npm-publish",
+    "test": "node --experimental-vm-modules --no-warnings ../../../../node_modules/jest/bin/jest.js",
+    "test:ci:snap": "node --experimental-vm-modules --no-warnings ../../../../node_modules/jest/bin/jest.js -u"
+  },
+  "keywords": [
+    "coveo",
+    "cli",
+    "atomic"
+  ],
+  "author": "Coveo",
+  "license": "Apache-2.0",
+  "publishConfig": {
+    "access": "public"
+  },
+  "dependencies": {
+    "@coveo/create-atomic-component-project": "1.2.16"
+  },
+  "devDependencies": {
+    "@coveo/do-npm": "1.0.0",
+    "@coveo/process-helpers": "1.0.0",
+    "@coveo/verdaccio-starter": "1.0.0",
+    "@types/folder-hash": "^4.0.2",
+    "@types/jest": "^29.4.0",
+    "@types/tmp": "^0.2.3",
+    "folder-hash": "^4.0.4",
+    "jest": "^29.4.1",
+    "tmp": "^0.2.1",
+    "ts-jest": "^29.0.5",
+    "ts-node": "^10.9.1",
+    "typescript": "^4.9.5",
+    "tree-kill-promise": "3.0.14"
+  }
+}

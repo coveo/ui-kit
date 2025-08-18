@@ -15,6 +15,7 @@
       "!**/packages/create-atomic-template/**/*",
       "!**/packages/create-atomic-component/template/**/*",
       "!**/packages/create-atomic-component-project/template/**/*",
+      "!**/packages/create-atomic-result-component/template/**/*",
 
       // Root excluded files.
       "!**/.deployment.config/**/*",
