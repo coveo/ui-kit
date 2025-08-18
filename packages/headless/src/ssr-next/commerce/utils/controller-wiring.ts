@@ -16,23 +16,23 @@ import {SolutionType} from '../types/controller-constants.js';
 import type {InferControllerPropsMapFromDefinitions} from '../types/controller-inference.js';
 import type {CommerceControllerDefinitionsMap} from '../types/engine.js';
 
-export const requiredDefinition = {
+const requiredDefinition = {
   language: contextDefinition.language,
   country: contextDefinition.country,
   currency: contextDefinition.currency,
   url: requiredNonEmptyString,
 };
 
-export const listingDefinition = {
+const listingDefinition = {
   ...requiredDefinition,
 };
 
-export const searchDefinition = {
+const searchDefinition = {
   ...requiredDefinition,
   query: requiredEmptyAllowedString,
 };
 
-export const recommendationsDefinition = {
+const recommendationsDefinition = {
   ...requiredDefinition,
   // recommendation:  // TODO: KIT-4619: support array of recommendations
 };
@@ -60,13 +60,6 @@ function validateBuildConfig(
   schema?.validate(buildConfig);
 }
 
-/**
- * Creates a controller property wirer with access to build config and controller props.
- *
- * The wirer contains methods that transform simple configuration values into the specific
- * property structures each controller expects. For example, it converts basic URL/language
- * values into the nested context controller state format.
- */
 function createControllerWirer(
   buildConfig: BuildConfig<SolutionType>,
   controllerDefinitions: CommerceControllerDefinitionsMap,
@@ -117,9 +110,6 @@ function createControllerWirer(
   };
 }
 
-/**
- * Applies common controller wiring for all solution types.
- */
 function wireCommonControllers(
   wirer: ReturnType<typeof createControllerWirer>
 ): void {
@@ -127,9 +117,6 @@ function wireCommonControllers(
   wirer.wireContext();
 }
 
-/**
- * Applies solution-specific controller wiring based on the solution type.
- */
 function wireSolutionSpecificControllers(
   solutionType: SolutionType,
   buildConfig: BuildConfig<SolutionType>,
