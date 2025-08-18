@@ -1,46 +1,107 @@
-import {execSync} from 'node:child_process';
-import {parse} from 'semver';
+import { execSync } from 'node:child_process';
+import { writeFileSync } from 'node:fs';
+import { parse } from 'semver';
 import atomicHostedPageJson from '../../packages/atomic-hosted-page/package.json' with {type: 'json'};
 import atomicReactJson from '../../packages/atomic-react/package.json' with {type: 'json'};
 import atomicJson from '../../packages/atomic/package.json' with {type: 'json'};
 import headlessJson from '../../packages/headless/package.json' with {type: 'json'};
 import rootJson from '../../package.json' with {type: 'json'};
 
-const releaseCommit = execSync('git rev-parse HEAD').toString().trim();
+const packagesAndVersions = [
+  { packageName: 'HEADLESS', version: headlessJson.version, s3Dir: 'headless' },
+  { packageName: 'ATOMIC', version: atomicJson.version, s3Dir: 'atomic' },
+  {
+    packageName: 'ATOMIC_REACT',
+    version: atomicReactJson.version,
+    s3Dir: 'atomic-react',
+  },
+  {
+    packageName: 'ATOMIC_HOSTED_PAGE',
+    version: atomicHostedPageJson.version,
+    s3Dir: 'atomic-hosted-page',
+  },
+];
 
-function getVersionComposants(version) {
+function getVersionComponents(version) {
   const parsedVersion = parse(version);
-  return {
-    major: parsedVersion?.major,
-    minor: parsedVersion?.minor,
-    patch: parsedVersion?.patch,
-    build: parsedVersion.prerelease[0]
-  };
+  return [
+    parsedVersion?.major,
+    parsedVersion?.minor,
+    parsedVersion?.patch,
+    ...(parsedVersion?.prerelease[0] ? [parsedVersion.prerelease[0]] : []),
+  ];
 }
 
-const root = getVersionComposants(rootJson.version);
-const headless = getVersionComposants(headlessJson.version);
-const atomic = getVersionComposants(atomicJson.version);
-const atomicReact = getVersionComposants(atomicReactJson.version);
-const atomicHostedPage = getVersionComposants(atomicHostedPageJson.version);
-const IS_NIGHTLY = !!root.build;
+function getVersionSubpaths(version) {
+  const prNumber = process.env.PR_NUMBER;
+  const versionComposantsOrdered = getVersionComponents(version);
 
-console.log(execSync(`
+  // Use PR number as build if available
+  return prNumber
+    ? {
+      patch: versionComposantsOrdered.slice(0, 3).concat(prNumber).join('.'),
+    }
+    : {
+      major: versionComposantsOrdered.slice(0, 1),
+      minor: versionComposantsOrdered.slice(0, 2).join('.'),
+      patch: versionComposantsOrdered.slice(0, 3).join('.'),
+    };
+}
+
+function getResolveVariableString(version, packageName) {
+  const { major, minor, patch } = {
+    major: '0',
+    minor: '0.0',
+    ...getVersionSubpaths(version),
+  };
+  if (!patch) {
+    throw new Error(`Invalid version for ${packageName}: ${version}`);
+  }
+  return `
+    --resolve ${packageName}_MAJOR_VERSION=${major} \
+    --resolve ${packageName}_MINOR_VERSION=${minor} \
+    --resolve ${packageName}_PATCH_VERSION=${patch} \
+  `.trim();
+}
+
+function generateCloudFrontInvalidationPaths() {
+  const invalidationVariablePath =
+    './infrastructure/terraform/ui-kit/default.tfvars';
+  const s3basePath = '/proda/StaticCDN';
+  const pathsToInvalidate = [];
+  for (const { s3Dir, version } of packagesAndVersions) {
+    const versions = Object.values(getVersionSubpaths(version));
+    for (const version of versions) {
+      pathsToInvalidate.push(`'${s3basePath}/${s3Dir}/v${version}/*'`);
+    }
+  }
+  const invalidationFileContent = `cloudfront_invalidation_paths = "${pathsToInvalidate.join(' ')}"`;
+  console.log(
+    `Generating CloudFront invalidation file located at ${invalidationVariablePath} with content: ${invalidationFileContent}`
+  );
+  writeFileSync(invalidationVariablePath, invalidationFileContent, {
+    encoding: 'utf8',
+  });
+}
+
+function generateResolveFlags() {
+  return packagesAndVersions.map(({ packageName, version }) => getResolveVariableString(version, packageName)).join(' ');
+}
+
+const root = getVersionComponents(rootJson.version);
+const IS_NIGHTLY = root.length > 3;
+
+generateCloudFrontInvalidationPaths();
+console.log(
+  execSync(
+    `
   deployment-package package create --with-deploy \
-    --version ${root.major}.${root.minor}.${root.patch}${root.build ? `.${root.build}` : ''} \
+    --version ${root.join('.')} \
     --resolve IS_NIGHTLY=${IS_NIGHTLY} \
     --resolve IS_NOT_NIGHTLY=${!IS_NIGHTLY} \
-    --resolve HEADLESS_MAJOR_VERSION=${headless.major} \
-    --resolve HEADLESS_MINOR_VERSION=${headless.major}.${headless.minor} \
-    --resolve HEADLESS_PATCH_VERSION=${headless.major}.${headless.minor}.${headless.patch} \
-    --resolve ATOMIC_MAJOR_VERSION=${atomic.major} \
-    --resolve ATOMIC_MINOR_VERSION=${atomic.major}.${atomic.minor} \
-    --resolve ATOMIC_PATCH_VERSION=${atomic.major}.${atomic.minor}.${atomic.patch} \
-    --resolve ATOMIC_REACT_MAJOR_VERSION=${atomicReact.major} \
-    --resolve ATOMIC_REACT_MINOR_VERSION=${atomicReact.major}.${atomicReact.minor} \
-    --resolve ATOMIC_REACT_PATCH_VERSION=${atomicReact.major}.${atomicReact.minor}.${atomicReact.patch} \
-    --resolve ATOMIC_HOSTED_PAGE_MAJOR_VERSION=${atomicHostedPage.major} \
-    --resolve ATOMIC_HOSTED_PAGE_MINOR_VERSION=${atomicHostedPage.major}.${atomicHostedPage.minor} \
-    --resolve ATOMIC_HOSTED_PAGE_PATCH_VERSION=${atomicHostedPage.major}.${atomicHostedPage.minor}.${atomicHostedPage.patch} \
-    --resolve GITHUB_RUN_ID=${process.env.RUN_ID} \
-    --changeset ${releaseCommit}`.replaceAll(/\s+/g, ' ').trim()).toString());
+    ${generateResolveFlags()} \
+    --resolve GITHUB_RUN_ID=${process.env.RUN_ID}`
+      .replaceAll(/\s+/g, ' ')
+      .trim()
+  ).toString()
+);
