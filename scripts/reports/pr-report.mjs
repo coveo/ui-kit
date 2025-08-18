@@ -1,3 +1,4 @@
+import {buildAtomicBundleSizeReport} from './atomic-bundle-size/atomic-bundle-size.mjs';
 import {buildBundleSizeReport} from './bundle-size/bundle-size.mjs';
 import {
   createPullRequestComment,
@@ -20,12 +21,14 @@ async function buildReport() {
   const titleFormatReport = await buildTitleReport();
   const liveExamplesReport = await buildLiveExampleReport();
   const bundleSizeReport = await buildBundleSizeReport();
+  const atomicBundleSizeReport = await buildAtomicBundleSizeReport();
 
   return [
     reportTitle,
     titleFormatReport,
     liveExamplesReport,
     bundleSizeReport,
+    atomicBundleSizeReport,
     reportCommentIdentifier,
   ].join('\n\n');
 }
