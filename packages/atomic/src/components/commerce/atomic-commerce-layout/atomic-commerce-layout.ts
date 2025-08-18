@@ -1,6 +1,7 @@
 import {html, LitElement, unsafeCSS} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {errorGuard} from '@/src/decorators/error-guard';
+import {injectStylesForNoShadowDOM} from '@/src/decorators/inject-styles-for-no-shadow-dom';
 import {randomID} from '@/src/utils/utils';
 import {DEFAULT_MOBILE_BREAKPOINT} from '../../../utils/replace-breakpoint';
 import styles from './atomic-commerce-layout.tw.css';
@@ -12,8 +13,9 @@ import {buildCommerceLayout} from './commerce-layout';
  * @slot default - The default slot where you can add child components to the layout.
  */
 @customElement('atomic-commerce-layout')
+@injectStylesForNoShadowDOM
 export class AtomicCommerceLayout extends LitElement {
-  static styles = [unsafeCSS(styles)];
+  static styles = [styles];
   @state() error!: Error;
 
   constructor() {
