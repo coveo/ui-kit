@@ -1896,7 +1896,7 @@ export declare interface AtomicCommerceBreadbox extends LitAtomicCommerceBreadbo
 }
 
 @ProxyCmp({
-  inputs: ['summary', 'facet', 'isCollapsed', 'field'],
+  inputs: ['isCollapsed', 'field'],
   methods: ['initialize'],
   defineCustomElementFn: () => {customElements.get('atomic-commerce-category-facet') || customElements.define('atomic-commerce-category-facet', LitAtomicCommerceCategoryFacet);}
 })
@@ -1906,7 +1906,7 @@ export declare interface AtomicCommerceBreadbox extends LitAtomicCommerceBreadbo
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
   // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: ['summary', 'facet', 'isCollapsed', 'field']
+  inputs: ['isCollapsed', 'field']
 })
 export class AtomicCommerceCategoryFacet {
   protected readonly el: HTMLElement;
@@ -2000,7 +2000,7 @@ export declare interface AtomicCommerceFacets extends LitAtomicCommerceFacets {
 }
 
 @ProxyCmp({
-  inputs: ['type', 'analytics', 'logLevel', 'i18n', 'language', 'engine', 'reflectStateInUrl', 'scrollContainer', 'languageAssetsPath', 'iconAssetsPath'],
+  inputs: ['type', 'analytics', 'logLevel', 'i18n', 'language', 'engine', 'reflectStateInUrl', 'disableStateReflectionInUrl', 'scrollContainer', 'languageAssetsPath', 'iconAssetsPath'],
   methods: ['toggleAnalytics', 'updateLanguage', 'updateIconAssetsPath', 'scrollToTop', 'initialize', 'initializeWithEngine', 'executeFirstRequest', 'getUpdateComplete'],
   defineCustomElementFn: () => {customElements.get('atomic-commerce-interface') || customElements.define('atomic-commerce-interface', LitAtomicCommerceInterface);}
 })
@@ -2010,7 +2010,7 @@ export declare interface AtomicCommerceFacets extends LitAtomicCommerceFacets {
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
   // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: ['type', 'analytics', 'logLevel', 'i18n', 'language', 'engine', 'reflectStateInUrl', 'scrollContainer', 'languageAssetsPath', 'iconAssetsPath']
+  inputs: ['type', 'analytics', 'logLevel', 'i18n', 'language', 'engine', 'reflectStateInUrl', 'disableStateReflectionInUrl', 'scrollContainer', 'languageAssetsPath', 'iconAssetsPath']
 })
 export class AtomicCommerceInterface {
   protected readonly el: HTMLElement;
@@ -3040,7 +3040,7 @@ export declare interface AtomicProductSectionVisual extends LitAtomicProductSect
 }
 
 @ProxyCmp({
-  inputs: ['conditions', 'mustMatch', 'mustNotMatch'],
+  inputs: ['mustMatch', 'mustNotMatch'],
   methods: ['getTemplate'],
   defineCustomElementFn: () => {customElements.get('atomic-product-template') || customElements.define('atomic-product-template', LitAtomicProductTemplate);}
 })
@@ -3050,7 +3050,7 @@ export declare interface AtomicProductSectionVisual extends LitAtomicProductSect
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
   // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: ['conditions', 'mustMatch', 'mustNotMatch']
+  inputs: ['mustMatch', 'mustNotMatch']
 })
 export class AtomicProductTemplate {
   protected readonly el: HTMLElement;
@@ -3066,7 +3066,7 @@ export declare interface AtomicProductTemplate extends LitAtomicProductTemplate 
 }
 
 @ProxyCmp({
-  inputs: ['field', 'shouldHighlight', 'default'],
+  inputs: ['field', 'shouldHighlight', 'noHighlight', 'default'],
   methods: ['initialize'],
   defineCustomElementFn: () => {customElements.get('atomic-product-text') || customElements.define('atomic-product-text', LitAtomicProductText);}
 })
@@ -3076,7 +3076,7 @@ export declare interface AtomicProductTemplate extends LitAtomicProductTemplate 
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
   // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: ['field', 'shouldHighlight', 'default']
+  inputs: ['field', 'shouldHighlight', 'noHighlight', 'default']
 })
 export class AtomicProductText {
   protected readonly el: HTMLElement;
