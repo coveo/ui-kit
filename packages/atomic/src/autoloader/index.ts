@@ -51,21 +51,22 @@ export function registerAutoloader(
 
     const rootTagName =
       root instanceof Element ? root.tagName.toLowerCase() : '';
-    const rootIsCustomElement = rootTagName?.includes('-');
+    const rootIsCustomElementOrDocumentRoot =
+      rootTagName?.includes('-') || rootTagName === 'html';
     const allCustomElements = [...root.querySelectorAll('*')].filter((el) =>
       el.tagName.toLowerCase().includes('-')
     );
 
     // If the root element is an undefined Atomic component, add it to the list
     if (
-      rootIsCustomElement &&
+      rootIsCustomElementOrDocumentRoot &&
       root instanceof Element &&
       !customElements.get(rootTagName) &&
       !allCustomElements.includes(root)
     ) {
       allCustomElements.push(root);
     }
-    if (rootIsCustomElement) {
+    if (rootIsCustomElementOrDocumentRoot) {
       const childTemplates = root.querySelectorAll('template');
       //This is necessary to load the components that are inside the templates
       for (const template of childTemplates) {
