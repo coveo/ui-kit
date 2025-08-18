@@ -1,6 +1,6 @@
-import { execSync } from 'node:child_process';
-import { writeFileSync } from 'node:fs';
-import { parse } from 'semver';
+import {execSync} from 'node:child_process';
+import {writeFileSync} from 'node:fs';
+import {parse} from 'semver';
 import rootJson from '../../package.json' with {type: 'json'};
 import atomicJson from '../../packages/atomic/package.json' with {type: 'json'};
 import atomicHostedPageJson from '../../packages/atomic-hosted-page/package.json' with {
@@ -18,9 +18,9 @@ import shopifyJson from '../../packages/shopify/package.json' with {
 };
 
 const packagesAndVersions = [
-  { packageName: 'BUENO', version: buenoJson.version, s3Dir: 'bueno' },
-  { packageName: 'HEADLESS', version: headlessJson.version, s3Dir: 'headless' },
-  { packageName: 'ATOMIC', version: atomicJson.version, s3Dir: 'atomic' },
+  {packageName: 'BUENO', version: buenoJson.version, s3Dir: 'bueno'},
+  {packageName: 'HEADLESS', version: headlessJson.version, s3Dir: 'headless'},
+  {packageName: 'ATOMIC', version: atomicJson.version, s3Dir: 'atomic'},
   {
     packageName: 'ATOMIC_REACT',
     version: atomicReactJson.version,
@@ -31,7 +31,7 @@ const packagesAndVersions = [
     version: atomicHostedPageJson.version,
     s3Dir: 'atomic-hosted-page',
   },
-  { packageName: 'SHOPIFY', version: shopifyJson.version, s3Dir: 'shopify' },
+  {packageName: 'SHOPIFY', version: shopifyJson.version, s3Dir: 'shopify'},
 ];
 
 function getVersionComponents(version) {
@@ -51,17 +51,17 @@ function getVersionSubpaths(version) {
   // Use PR number as build if available
   return prNumber
     ? {
-      patch: versionComposantsOrdered.slice(0, 3).concat(prNumber).join('.'),
-    }
+        patch: versionComposantsOrdered.slice(0, 3).concat(prNumber).join('.'),
+      }
     : {
-      major: versionComposantsOrdered.slice(0, 1),
-      minor: versionComposantsOrdered.slice(0, 2).join('.'),
-      patch: versionComposantsOrdered.slice(0, 3).join('.'),
-    };
+        major: versionComposantsOrdered.slice(0, 1),
+        minor: versionComposantsOrdered.slice(0, 2).join('.'),
+        patch: versionComposantsOrdered.slice(0, 3).join('.'),
+      };
 }
 
 function getResolveVariableString(version, packageName) {
-  const { major, minor, patch } = {
+  const {major, minor, patch} = {
     major: '0',
     minor: '0.0',
     ...getVersionSubpaths(version),
@@ -81,7 +81,7 @@ function generateCloudFrontInvalidationPaths() {
     './infrastructure/terraform/ui-kit/default.tfvars';
   const s3basePath = '/proda/StaticCDN';
   const pathsToInvalidate = [];
-  for (const { s3Dir, version } of packagesAndVersions) {
+  for (const {s3Dir, version} of packagesAndVersions) {
     const versions = Object.values(getVersionSubpaths(version));
     for (const version of versions) {
       pathsToInvalidate.push(`'${s3basePath}/${s3Dir}/v${version}/*'`);
@@ -97,7 +97,11 @@ function generateCloudFrontInvalidationPaths() {
 }
 
 function generateResolveFlags() {
-  return packagesAndVersions.map(({ packageName, version }) => getResolveVariableString(version, packageName)).join(' ');
+  return packagesAndVersions
+    .map(({packageName, version}) =>
+      getResolveVariableString(version, packageName)
+    )
+    .join(' ');
 }
 
 const root = getVersionComponents(rootJson.version);
