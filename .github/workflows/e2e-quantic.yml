@@ -22,9 +22,10 @@ jobs:
         with:
           clientid: ${{ secrets.SFDX_AUTH_CLIENT_ID }}
           jwtkey: ${{ secrets.SFDX_AUTH_JWT_KEY }}
-  post-cratch-rg-links-to-pr:
+  post-scratch-org-links-to-pr:
     name: 'Post Scratch Org Links to PR'
     needs: e2e-quantic-setup
+    if: ${{ github.event_name == 'pull_request' }}
     runs-on: ubuntu-latest
     steps:
       - name: Harden Runner
