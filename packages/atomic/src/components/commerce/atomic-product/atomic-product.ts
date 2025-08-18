@@ -1,5 +1,5 @@
 import type {InteractiveProduct, Product} from '@coveo/headless/commerce';
-import {type CSSResultGroup, html, LitElement, unsafeCSS} from 'lit';
+import {type CSSResultGroup, html, LitElement} from 'lit';
 import {customElement, property} from 'lit/decorators.js';
 import {ref} from 'lit/directives/ref.js';
 import type {DisplayConfig} from '@/src/components/common/item-list/context/item-display-config-context-controller';
@@ -36,7 +36,7 @@ export class AtomicProduct extends ChildrenUpdateCompleteMixin(LitElement) {
   private linkContainerRef?: HTMLElement;
   private executedRenderingFunctionOnce = false;
 
-  static styles: CSSResultGroup = [unsafeCSS(styles)];
+  static styles: CSSResultGroup = styles;
 
   /**
    * Whether `atomic-product-link` components nested in the `atomic-product` should stop click event propagation.

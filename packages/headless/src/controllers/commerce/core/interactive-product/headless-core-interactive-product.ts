@@ -117,7 +117,9 @@ permanentid '${props.options.product.permanentid}':\n\n${warnings.join('\n')}\n\
             props.options.product.permanentid,
         },
         position: props.options.product.position,
-        responseId: props.responseIdSelector(engine[stateKey]),
+        responseId:
+          props.options.product.responseId ??
+          props.responseIdSelector(engine[stateKey]),
       })
     );
   };

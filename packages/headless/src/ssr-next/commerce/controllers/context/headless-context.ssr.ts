@@ -21,7 +21,10 @@ export type {
 };
 
 export interface ContextDefinition
-  extends UniversalControllerDefinitionWithProps<Context, ContextOptions> {}
+  extends UniversalControllerDefinitionWithProps<
+    Context,
+    {initialState: ContextOptions}
+  > {}
 
 /**
  * Defines a `Context` controller instance.
@@ -35,11 +38,11 @@ export function defineContext(): ContextDefinition {
     search: true,
     standalone: true,
     recommendation: true,
-    buildWithProps: (engine, props) => {
+    buildWithProps: (engine, props: {initialState: ContextOptions}) => {
       if (props === undefined) {
         throw new MissingControllerProps(Kind.Context);
       }
-      const controller = buildContext(engine, {options: props});
+      const controller = buildContext(engine, {options: props.initialState});
       return createControllerWithKind(controller, Kind.Context);
     },
   };

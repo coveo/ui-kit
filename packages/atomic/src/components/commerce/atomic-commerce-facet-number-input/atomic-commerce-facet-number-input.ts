@@ -1,6 +1,6 @@
 import {isUndefined} from '@coveo/bueno';
 import type {NumericFacet} from '@coveo/headless/commerce';
-import {html, LitElement, unsafeCSS} from 'lit';
+import {html, LitElement} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {ref} from 'lit/directives/ref.js';
 import {bindingGuard} from '@/src/decorators/binding-guard';
@@ -54,7 +54,7 @@ export class AtomicCommerceFacetNumberInput
   private startRef?: HTMLInputElement;
   private endRef?: HTMLInputElement;
 
-  static styles = unsafeCSS(styles);
+  static styles = styles;
 
   initialize() {
     this.start = this.range?.start;

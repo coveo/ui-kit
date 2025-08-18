@@ -8,7 +8,7 @@ const {decorator, play} = wrapInSearchInterface();
 
 const meta: Meta = {
   component: 'atomic-refine-toggle',
-  title: 'Atomic/RefineToggle',
+  title: 'Search/RefineToggle',
   id: 'atomic-refine-toggle',
   render: renderComponent,
   parameters,

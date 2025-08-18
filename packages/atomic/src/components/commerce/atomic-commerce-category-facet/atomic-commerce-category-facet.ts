@@ -7,7 +7,7 @@ import type {
   Summary,
 } from '@coveo/headless/commerce';
 import type {CSSResultGroup, TemplateResult} from 'lit';
-import {html, LitElement, nothing, unsafeCSS} from 'lit';
+import {html, LitElement, nothing} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {map} from 'lit/directives/map.js';
 import {when} from 'lit/directives/when.js';
@@ -26,10 +26,10 @@ import {renderFacetValuesGroup} from '@/src/components/common/facets/facet-value
 import {booleanConverter} from '@/src/converters/boolean-converter';
 import {bindStateToController} from '@/src/decorators/bind-state';
 import {bindingGuard} from '@/src/decorators/binding-guard';
+import {bindings} from '@/src/decorators/bindings';
 import {errorGuard} from '@/src/decorators/error-guard';
 import type {InitializableComponent} from '@/src/decorators/types';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles.js';
-import {InitializeBindingsMixin} from '@/src/mixins/bindings-mixin';
 import {
   AriaLiveRegionController,
   FocusTargetController,
@@ -87,12 +87,13 @@ import styles from './atomic-commerce-category-facet.tw.css';
  *
  */
 @customElement('atomic-commerce-category-facet')
+@bindings()
 @withTailwindStyles
 export class AtomicCommerceCategoryFacet
-  extends InitializeBindingsMixin(LitElement)
+  extends LitElement
   implements InitializableComponent<CommerceBindings>
 {
-  static styles: CSSResultGroup = [unsafeCSS(styles)];
+  static styles: CSSResultGroup = styles;
 
   @state()
   bindings!: CommerceBindings;
