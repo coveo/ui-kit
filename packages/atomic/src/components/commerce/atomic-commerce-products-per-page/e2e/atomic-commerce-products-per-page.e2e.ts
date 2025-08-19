@@ -8,7 +8,7 @@ test.describe('AtomicCommerceProductsPerPage', () => {
 
   test('should be A11Y compliant', async ({makeAxeBuilder}) => {
     const accessibilityResults = await makeAxeBuilder().analyze();
-    expect(accessibilityResults.violations.length).toEqual(0);
+    expect(accessibilityResults.violations).toEqual([]);
   });
 
   test('should display the correct number of choices', async ({

@@ -133,11 +133,9 @@ export function registerAutoloader(
     }
   });
 
-  const initializeDiscovery = async () => {
+  const initializeDiscovery = () => {
     for (const root of roots) {
-      // Initial discovery
-      await discover(root);
-      // Listen for new undefined elements
+      discover(root);
       observer.observe(root, {
         subtree: true,
         childList: true,
