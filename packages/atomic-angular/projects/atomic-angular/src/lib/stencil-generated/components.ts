@@ -3066,7 +3066,7 @@ export declare interface AtomicProductTemplate extends LitAtomicProductTemplate 
 }
 
 @ProxyCmp({
-  inputs: ['field', 'shouldHighlight', 'noHighlight', 'default'],
+  inputs: ['field', 'shouldHighlight', 'disableHighlight', 'default'],
   methods: ['initialize'],
   defineCustomElementFn: () => {customElements.get('atomic-product-text') || customElements.define('atomic-product-text', LitAtomicProductText);}
 })
@@ -3076,7 +3076,7 @@ export declare interface AtomicProductTemplate extends LitAtomicProductTemplate 
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
   // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: ['field', 'shouldHighlight', 'noHighlight', 'default']
+  inputs: ['field', 'shouldHighlight', 'disableHighlight', 'default']
 })
 export class AtomicProductText {
   protected readonly el: HTMLElement;

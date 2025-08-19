@@ -56,7 +56,7 @@ export class AtomicProductText
     useDefault: true,
     attribute: 'no-highlight',
   })
-  public noHighlight: boolean = false;
+  public disableHighlight: boolean = false;
   /**
    * The locale key to use for displaying default text when the specified field has no value for the product.
    */
@@ -81,7 +81,7 @@ export class AtomicProductText
   }
 
   private get shouldRenderHighlights(): boolean {
-    if (this.noHighlight) {
+    if (this.disableHighlight) {
       return false;
     } else {
       return this.shouldHighlight && this.isFieldSupportedForHighlighting();
