@@ -9,17 +9,13 @@ export type AxeFixture = {
 //
 // This new "test" can be used in multiple test files, and each of them will get
 // a consistently configured AxeBuilder instance.
+export const makeAxeBuilder: Parameters<
+  typeof base.extend<AxeFixture>
+>[0]['makeAxeBuilder'] = async ({page}, use) => {
+  const makeAxeBuilder = () =>
+    new AxeBuilder({page})
+      .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa'])
+      .include('#storybook-root');
 
-export const makeCustomAxeBuilder =
-  (
-    selector: string
-  ): Parameters<typeof base.extend<AxeFixture>>[0]['makeAxeBuilder'] =>
-  async ({page}, use) => {
-    const makeAxeBuilder = () =>
-      new AxeBuilder({page})
-        .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa'])
-        .include(selector);
-    await use(makeAxeBuilder);
-  };
-
-export const makeAxeBuilder = makeCustomAxeBuilder('#storybook-root');
+  await use(makeAxeBuilder);
+};

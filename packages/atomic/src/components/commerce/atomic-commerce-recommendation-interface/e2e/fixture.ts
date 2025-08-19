@@ -1,8 +1,5 @@
 import {test as base} from '@playwright/test';
-import {
-  type AxeFixture,
-  makeCustomAxeBuilder,
-} from '@/playwright-utils/base-fixture';
+import {type AxeFixture, makeAxeBuilder} from '@/playwright-utils/base-fixture';
 import {AtomicCommerceRecommendationInterfacePageObject} from './page-object';
 
 type Fixtures = {
@@ -10,9 +7,7 @@ type Fixtures = {
 };
 
 export const test = base.extend<Fixtures & AxeFixture>({
-  makeAxeBuilder: makeCustomAxeBuilder(
-    'atomic-commerce-recommendation-interface'
-  ),
+  makeAxeBuilder,
   commerceRecommendationInterface: async ({page}, use) => {
     await use(new AtomicCommerceRecommendationInterfacePageObject(page));
   },

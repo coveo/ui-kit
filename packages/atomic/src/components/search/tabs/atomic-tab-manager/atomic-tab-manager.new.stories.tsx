@@ -85,32 +85,27 @@ export const Default: Story = {
           <atomic-facets>
             <atomic-facet field="objecttype" label="Object type"></atomic-facet>
             <atomic-facet
-              aria-label="included-facet"
               tabs-included='["article"]'
               field="filetype"
               label="File type (included facet)"
             ></atomic-facet>
             <atomic-facet
-              aria-label="excluded-facet"
               tabs-excluded='["article"]'
               field="source"
               label="Source (excluded facet)"
             ></atomic-facet>
             <atomic-category-facet
-              aria-label="included-facet"
               tabs-included='["article"]'
               field="geographicalhierarchy"
               label="World Atlas"
               with-search
             ></atomic-category-facet>
             <atomic-category-facet
-              aria-label="excluded-facet"
               tabs-excluded='["article"]'
               field="geographicalhierarchy"
               label="World Atlas"
             ></atomic-category-facet>
             <atomic-color-facet
-              aria-label="included-facet"
               tabs-included='["article"]'
               field="filetype"
               label="Files"
@@ -118,7 +113,6 @@ export const Default: Story = {
               sort-criteria="occurrences"
             ></atomic-color-facet>
             <atomic-color-facet
-              aria-label="excluded-facet"
               tabs-excluded='["article"]'
               field="filetype"
               label="Files"
@@ -126,21 +120,18 @@ export const Default: Story = {
               sort-criteria="occurrences"
             ></atomic-color-facet>
             <atomic-rating-facet
-              aria-label="included-facet"
               tabs-included='["article"]'
               field="snrating"
               label="Rating"
               number-of-intervals="5"
             ></atomic-rating-facet>
             <atomic-rating-facet
-              aria-label="excluded-facet"
               tabs-excluded='["article"]'
               field="snrating"
               label="Rating"
               number-of-intervals="5"
             ></atomic-rating-facet>
             <atomic-rating-range-facet
-              aria-label="included-facet"
               tabs-included='["article"]'
               facet-id="snrating_range"
               field="snrating"
@@ -148,7 +139,6 @@ export const Default: Story = {
               number-of-intervals="5"
             ></atomic-rating-range-facet>
             <atomic-rating-range-facet
-              aria-label="excluded-facet"
               tabs-excluded='["article"]'
               facet-id="snrating_range_2"
               field="snrating"
@@ -156,7 +146,6 @@ export const Default: Story = {
               number-of-intervals="5"
             ></atomic-rating-range-facet>
             <atomic-timeframe-facet
-              aria-label="included-facet"
               tabs-included='["article"]'
               label="Timeframe"
               with-date-picker
@@ -174,7 +163,6 @@ export const Default: Story = {
               ></atomic-timeframe
             ></atomic-timeframe-facet>
             <atomic-timeframe-facet
-              aria-label="excluded-facet"
               tabs-excluded='["article"]'
               label="Timeframe"
               with-date-picker
@@ -198,7 +186,6 @@ export const Default: Story = {
           <atomic-layout-section section="horizontal-facets">
             <atomic-segmented-facet-scrollable>
               <atomic-segmented-facet
-                aria-label="included-facet"
                 tabs-included='["article"]'
                 field="inat_kingdom"
                 label="Kingdom"
@@ -206,7 +193,6 @@ export const Default: Story = {
             </atomic-segmented-facet-scrollable>
             <atomic-segmented-facet-scrollable>
               <atomic-segmented-facet
-                aria-label="excluded-facet"
                 tabs-excluded='["article"]'
                 field="inat_kingdom"
                 label="Kingdom"
@@ -289,7 +275,7 @@ export const Default: Story = {
                     ><atomic-quickview></atomic-quickview
                   ></atomic-result-section-actions>
                    <atomic-result-section-visual>
-                    <img src="https://picsum.photos/400" class="thumbnail" />
+                    <img src="https://picsum.photos/400" alt="SomeResultPicture" class="thumbnail" />
                   </atomic-result-section-visual>
                   <atomic-result-section-title
                     ><atomic-result-link></atomic-result-link
