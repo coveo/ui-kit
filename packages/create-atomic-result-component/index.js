@@ -148,8 +148,25 @@ if (componentName) {
     {
       srcPath: `src/components/${componentName}/package.json`,
       destPath: `src/components/${componentName}/package.json`,
-      transform: (text) =>
-        text.replaceAll(/(@coveo\/)?sample-result-component/g, componentName),
+      transform: (text) => {
+        const transformedText = text.replaceAll(
+          /(@coveo\/)?sample-result-component/g,
+          componentName
+        );
+
+        const packageJson = JSON.parse(transformedText);
+
+        if (packageJson.scripts) {
+          const newScripts = {};
+          for (const [key, value] of Object.entries(packageJson.scripts)) {
+            const newKey = key.startsWith('!') ? key.substring(1) : key;
+            newScripts[newKey] = value;
+          }
+          packageJson.scripts = newScripts;
+        }
+
+        return JSON.stringify(packageJson, null, 2);
+      },
     },
   ];
 
