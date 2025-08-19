@@ -2067,7 +2067,7 @@ export declare interface AtomicCommerceFacets extends LitAtomicCommerceFacets {
 }
 
 @ProxyCmp({
-  inputs: ['type', 'analytics', 'logLevel', 'i18n', 'language', 'engine', 'reflectStateInUrl', 'disableStateReflectionInUrl', 'scrollContainer', 'languageAssetsPath', 'iconAssetsPath'],
+  inputs: ['type', 'analytics', 'logLevel', 'language', 'reflectStateInUrl', 'disableStateReflectionInUrl', 'scrollContainer', 'languageAssetsPath', 'iconAssetsPath'],
   methods: ['toggleAnalytics', 'updateLanguage', 'updateIconAssetsPath', 'scrollToTop', 'initialize', 'initializeWithEngine', 'executeFirstRequest'],
   defineCustomElementFn: () => {customElements.get('atomic-commerce-interface') || customElements.define('atomic-commerce-interface', LitAtomicCommerceInterface);}
 })
@@ -2077,7 +2077,7 @@ export declare interface AtomicCommerceFacets extends LitAtomicCommerceFacets {
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
   // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: ['type', 'analytics', 'logLevel', 'i18n', 'language', 'engine', 'reflectStateInUrl', 'disableStateReflectionInUrl', 'scrollContainer', 'languageAssetsPath', 'iconAssetsPath']
+  inputs: ['type', 'analytics', 'logLevel', 'language', 'reflectStateInUrl', 'disableStateReflectionInUrl', 'scrollContainer', 'languageAssetsPath', 'iconAssetsPath']
 })
 export class AtomicCommerceInterface {
   protected readonly el: HTMLElement;
@@ -2327,7 +2327,7 @@ export declare interface AtomicCommerceQuerySummary extends LitAtomicCommerceQue
 }
 
 @ProxyCmp({
-  inputs: ['i18n', 'engine', 'scrollContainer', 'languageAssetsPath', 'iconAssetsPath', 'language', 'analytics'],
+  inputs: ['scrollContainer', 'languageAssetsPath', 'iconAssetsPath', 'language', 'analytics'],
   methods: ['initializeWithEngine', 'updateLocale', 'toggleAnalytics', 'updateIconAssetsPath', 'updateLanguage'],
   defineCustomElementFn: () => {customElements.get('atomic-commerce-recommendation-interface') || customElements.define('atomic-commerce-recommendation-interface', LitAtomicCommerceRecommendationInterface);}
 })
@@ -2337,7 +2337,7 @@ export declare interface AtomicCommerceQuerySummary extends LitAtomicCommerceQue
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
   // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: ['i18n', 'engine', 'scrollContainer', 'languageAssetsPath', 'iconAssetsPath', 'language', 'analytics']
+  inputs: ['scrollContainer', 'languageAssetsPath', 'iconAssetsPath', 'language', 'analytics']
 })
 export class AtomicCommerceRecommendationInterface {
   protected readonly el: HTMLElement;
