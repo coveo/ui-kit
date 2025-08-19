@@ -7,7 +7,6 @@ import {
   type Controller,
 } from '../../../controllers/controller/headless-controller.js';
 import type {executeSearch} from '../../../features/search/search-actions.js';
-
 import {buildMockResult} from '../../../test/mock-result.js';
 import * as augmentModule from '../../common/augment-preprocess-request.js';
 import type {ControllerDefinitionWithoutProps} from '../../common/types/controllers.js';
