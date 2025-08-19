@@ -51,31 +51,21 @@ export function registerAutoloader(
 
     const rootTagName =
       root instanceof Element ? root.tagName.toLowerCase() : '';
-    const rootIsCustomElementOrDocumentRoot =
-      rootTagName?.includes('-') || rootTagName === 'html';
+    const rootIsCustomElement = rootTagName?.includes('-');
     const allCustomElements = [...root.querySelectorAll('*')].filter((el) =>
       el.tagName.toLowerCase().includes('-')
     );
 
     // If the root element is an undefined Atomic component, add it to the list
     if (
-      rootIsCustomElementOrDocumentRoot &&
+      rootIsCustomElement &&
       root instanceof Element &&
       !customElements.get(rootTagName) &&
       !allCustomElements.includes(root)
     ) {
       allCustomElements.push(root);
     }
-    if (rootIsCustomElementOrDocumentRoot) {
-      const childTemplates = root.querySelectorAll('template');
-      //This is necessary to load the components that are inside the templates
-      for (const template of childTemplates) {
-        if (visitedNodes.has(template.content)) {
-          continue;
-        }
-        await discover(template.content);
-        observer.observe(template.content, {subtree: true, childList: true});
-      }
+    if (rootIsCustomElement) {
       //TODO: This part should not be necessary: instead, if component-a uses component-b, component-a should be responsible for loading component-b
       if (
         'shadowRoot' in root &&
@@ -86,8 +76,18 @@ export function registerAutoloader(
         observer.observe(root.shadowRoot, {subtree: true, childList: true});
       }
     }
+
     const litRegistrationPromises = [];
     for (const atomicElement of allCustomElements) {
+      const childTemplates = root.querySelectorAll('template');
+      //This is necessary to load the components that are inside the templates
+      for (const template of childTemplates) {
+        if (visitedNodes.has(template.content)) {
+          continue;
+        }
+        await discover(template.content);
+        observer.observe(template.content, {subtree: true, childList: true});
+      }
       const tagName = atomicElement.tagName.toLowerCase();
       if (tagName in elementMap && !customElements.get(tagName)) {
         // The element uses Lit already, we don't need to jam the lazy loader in the Shadow DOM.

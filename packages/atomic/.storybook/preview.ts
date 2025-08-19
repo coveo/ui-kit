@@ -1,6 +1,6 @@
 import '@coveo/atomic/themes/coveo.css';
 import {setCustomElementsManifest} from '@storybook/web-components';
-import {render} from 'lit';
+import {html, render} from 'lit';
 import customElements from '../custom-elements.json';
 import {defineCustomElements} from '../dist/atomic/loader/index.js';
 
@@ -27,18 +27,20 @@ export const parameters = {
 };
 
 export const decorators = [
-  (Story, context) => {
+  (Story) => {
     const story = Story();
 
     if (story?._$litType$) {
-      render(story, context.canvasElement);
+      const container = document.createElement('div');
+
+      render(story, container);
 
       const isTestMode =
         typeof window !== 'undefined' &&
         window.location.href.includes('localhost');
 
       if (!isTestMode) {
-        disableAnalytics(context.canvasElement, [
+        disableAnalytics(container, [
           'atomic-recs-interface',
           'atomic-insight-interface',
           'atomic-search-interface',
@@ -47,7 +49,7 @@ export const decorators = [
         ]);
       }
 
-      return context.canvasElement.children[0];
+      return html`${container}`;
     }
   },
 ];
