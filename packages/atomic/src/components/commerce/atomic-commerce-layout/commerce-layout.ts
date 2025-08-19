@@ -1,4 +1,4 @@
-import {buildSearchLayoutCommon} from '../../common/atomic-layout-section/search-layout';
+import {buildCommonLayout} from '../../common/atomic-layout-section/layout';
 
 export const layoutWebComponentTagName = 'atomic-commerce-layout';
 export const containerWebComponentTagName = 'atomic-commerce-interface';
@@ -13,7 +13,7 @@ export function buildCommerceLayout(
   element: HTMLElement,
   mobileBreakpoint: string
 ) {
-  return buildSearchLayoutCommon(
+  return buildCommonLayout(
     element,
     mobileBreakpoint,
     layoutWebComponentTagName,
