@@ -25,7 +25,7 @@ const {decorator, play} = wrapInSearchInterface({
 
 const meta: Meta = {
   component: 'atomic-notifications',
-  title: 'Atomic/Notification',
+  title: 'Search/Notification',
   id: 'atomic-notifications',
 
   render: renderComponent,

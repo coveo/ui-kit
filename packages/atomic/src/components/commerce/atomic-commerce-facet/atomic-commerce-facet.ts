@@ -5,7 +5,7 @@ import type {
   SearchSummaryState,
   Summary,
 } from '@coveo/headless/commerce';
-import {type CSSResultGroup, html, LitElement, nothing, unsafeCSS} from 'lit';
+import {type CSSResultGroup, css, html, LitElement, nothing} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {when} from 'lit/directives/when.js';
 import {renderFacetContainer} from '@/src/components/common/facets/facet-container/facet-container';
@@ -19,10 +19,10 @@ import {renderFacetValuesGroup} from '@/src/components/common/facets/facet-value
 import {booleanConverter} from '@/src/converters/boolean-converter';
 import {bindStateToController} from '@/src/decorators/bind-state';
 import {bindingGuard} from '@/src/decorators/binding-guard';
+import {bindings} from '@/src/decorators/bindings';
 import {errorGuard} from '@/src/decorators/error-guard';
 import type {InitializableComponent} from '@/src/decorators/types';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
-import {InitializeBindingsMixin} from '@/src/mixins/bindings-mixin';
 import {
   AriaLiveRegionController,
   FocusTargetController,
@@ -34,7 +34,6 @@ import {
 } from '../../common/facets/facet-search/facet-search-utils';
 import type {FacetValueProps} from '../../common/facets/facet-value/facet-value';
 import type {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface';
-import styles from './atomic-commerce-facet.tw.css';
 
 /**
  * The `atomic-commerce-facet` component renders a commerce facet that the end user can interact with to filter products.
@@ -68,13 +67,12 @@ import styles from './atomic-commerce-facet.tw.css';
  * @part show-more - The show more results button.
  * @part show-less - The show less results button.
  * @part show-more-less-icon - The icons of the show more & show less buttons.
- *
- * @alpha
  */
 @customElement('atomic-commerce-facet')
+@bindings()
 @withTailwindStyles
 export class AtomicCommerceFacet
-  extends InitializeBindingsMixin(LitElement)
+  extends LitElement
   implements InitializableComponent<CommerceBindings>
 {
   /**
@@ -114,7 +112,13 @@ export class AtomicCommerceFacet
 
   @state() public error!: Error;
 
-  static styles: CSSResultGroup = [unsafeCSS(styles)];
+  static styles: CSSResultGroup = css`
+  @import "../../common/facets/facet-value-checkbox/facet-value-checkbox.tw.css";
+  @import "../../common/facets/facet-search/facet-search.tw.css";
+  @import "../../common/facets/facet-common.tw.css";
+  @import "../../common/facets/facet-value-exclude/facet-value-exclude.tw.css";
+  @import "../../common/facets/facet-value-box/facet-value-box.tw.css";
+  `;
 
   private showLessFocus!: FocusTargetController;
   private showMoreFocus!: FocusTargetController;
@@ -126,7 +130,7 @@ export class AtomicCommerceFacet
     this.validateFacet();
     this.initFocusTargets();
     this.ensureSubscribed();
-    this.initAriaLive();
+    this.facet && this.initAriaLive();
   }
 
   public disconnectedCallback(): void {

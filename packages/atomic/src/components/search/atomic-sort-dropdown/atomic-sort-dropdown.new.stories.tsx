@@ -7,7 +7,7 @@ const {decorator, play} = wrapInSearchInterface();
 
 const meta: Meta = {
   component: 'atomic-sort-dropdown',
-  title: 'Atomic/SortDropdown',
+  title: 'Search/SortDropdown',
   id: 'atomic-sort-dropdown',
   render: renderComponent,
   decorators: [decorator],

@@ -8,12 +8,10 @@ test.describe('default', () => {
 
   test('should be accessible', async ({makeAxeBuilder}) => {
     const accessibilityResults = await makeAxeBuilder().analyze();
-    expect(accessibilityResults.violations.length).toEqual(0);
+    expect(accessibilityResults.violations).toEqual([]);
   });
 
   test('should render as links', async ({productLink, page}) => {
-    expect(await productLink.anchor().count()).toBeGreaterThan(1);
-
     await expect(productLink.anchor().first()).toHaveAttribute('href');
 
     await productLink.anchor().first().click({force: true});

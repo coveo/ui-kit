@@ -76,7 +76,7 @@ Migrate files according to this mapping:
 **From Stencil format:**
 
 - `atomic-{name}.tsx` → `atomic-{name}.ts` (main component)
-- `atomic-{name}.pcss` → `atomic-{name}.tw.css` (styles)
+- `atomic-{name}.pcss` → if there's a small number of styles, put them directly as Lit `css` in the static `style` property of the main component file; otherwise create a separate `atomic-{name}.tw.css.ts` file.
 - Keep existing: `.spec.ts`, `.new.stories.tsx`, `.mdx`, `e2e/` files (do not modify tests)
 
 ### 4. Component Code Migration
@@ -262,9 +262,6 @@ import styles from './atomic-component.tw.css?inline';
 ```typescript
 // DO: Remove styles import if CSS file only contains global utils references, since these are already included through the withTailwindStyles decorator
 // No styles import needed
-
-// Remove or comment out the styles property in the component
-// static styles = css`${unsafeCSS(styles)}`;
 ```
 
 **❌ Wrong bindStateToController import:**

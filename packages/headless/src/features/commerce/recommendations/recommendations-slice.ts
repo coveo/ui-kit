@@ -60,7 +60,11 @@ export const recommendationsReducer = createReducer(
         const paginationOffset = getPaginationOffset(action.payload);
 
         recommendations.products = response.products.map((product, index) =>
-          preprocessProduct(product, paginationOffset + index + 1)
+          preprocessProduct(
+            product,
+            paginationOffset + index + 1,
+            response.responseId
+          )
         );
       })
       .addCase(fetchMoreRecommendations.fulfilled, (state, action) => {
@@ -81,7 +85,11 @@ export const recommendationsReducer = createReducer(
 
         recommendations.products = recommendations.products.concat(
           response.products.map((product, index) =>
-            preprocessProduct(product, paginationOffset + index + 1)
+            preprocessProduct(
+              product,
+              paginationOffset + index + 1,
+              response.responseId
+            )
           )
         );
       })
@@ -111,6 +119,7 @@ export const recommendationsReducer = createReducer(
           return;
         }
 
+        const responseId = products[currentParentIndex].responseId;
         const position = products[currentParentIndex].position;
         const {children, totalNumberOfChildren} = products[currentParentIndex];
 
@@ -119,6 +128,7 @@ export const recommendationsReducer = createReducer(
           children,
           totalNumberOfChildren,
           position,
+          responseId,
         };
 
         products.splice(currentParentIndex, 1, newParent);
@@ -189,12 +199,16 @@ function getPaginationOffset(
   return pagination.page * pagination.perPage;
 }
 
-function preprocessProduct(product: BaseProduct, position: number): Product {
+function preprocessProduct(
+  product: BaseProduct,
+  position: number,
+  responseId?: string
+): Product {
   const isParentAlreadyInChildren = product.children.some(
     (child) => child.permanentid === product.permanentid
   );
   if (product.children.length === 0 || isParentAlreadyInChildren) {
-    return {...product, position};
+    return {...product, position, responseId};
   }
 
   const {
@@ -207,5 +221,6 @@ function preprocessProduct(product: BaseProduct, position: number): Product {
     ...product,
     children: [restOfProduct, ...children],
     position,
+    responseId,
   };
 }
