@@ -44,6 +44,7 @@ export class AtomicProductDescription
 
   /**
    * The number of lines after which the product description should be truncated. A value of "none" will disable truncation.
+   * @default '2'
    */
   @property({
     type: String,
