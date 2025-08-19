@@ -68,13 +68,7 @@ export class AtomicCommerceRecommendationList
 {
   static styles: CSSResultGroup = styles;
 
-  /**
-   * @internal
-   */
   public recommendations!: Recommendations;
-  /**
-   * @internal
-   */
   public summary!: Summary<RecommendationsSummaryState>;
 
   private itemRenderingFunction: ItemRenderingFunction;
@@ -97,15 +91,9 @@ export class AtomicCommerceRecommendationList
   @state()
   private isEveryProductReady = false;
 
-  /**
-   * @internal
-   */
   @bindStateToController('recommendations')
   @state()
   public recommendationsState!: RecommendationsState;
-  /**
-   * @internal
-   */
   @state()
   public summaryState!: RecommendationsSummaryState;
 
@@ -156,7 +144,7 @@ export class AtomicCommerceRecommendationList
    * When set to 0, a `div` will be used instead of an Heading Element.
    */
   @property({reflect: true, attribute: 'heading-level', type: Number})
-  public headingLevel: number = 0;
+  public headingLevel = 0;
 
   @watch('productsPerPage')
   public async watchNumberOfRecommendationsPerPage() {
