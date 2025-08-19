@@ -9,7 +9,7 @@ test.describe('default', async () => {
 
   test('should be accessible', async ({makeAxeBuilder}) => {
     const accessibilityResults = await makeAxeBuilder().analyze();
-    expect(accessibilityResults.violations.length).toEqual(0);
+    expect(accessibilityResults.violations).toEqual([]);
   });
 
   test('should render the image', async ({productImage}) => {
@@ -32,7 +32,7 @@ test.describe('as a carousel', async () => {
 
   test('should be accessible', async ({makeAxeBuilder}) => {
     const accessibilityResults = await makeAxeBuilder().analyze();
-    expect(accessibilityResults.violations.length).toEqual(0);
+    expect(accessibilityResults.violations).toEqual([]);
   });
 
   test('should render the first image by default', async ({productImage}) => {
