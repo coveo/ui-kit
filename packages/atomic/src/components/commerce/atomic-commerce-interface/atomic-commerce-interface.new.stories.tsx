@@ -39,9 +39,31 @@ const meta: Meta = {
   },
   argTypes: {
     ...argTypes,
-    state: {
-      table: {
+    engine: {
+      ...argTypes,
+      control: {
         disable: true,
+      },
+      table: {
+        defaultValue: {summary: undefined},
+      },
+    },
+    urlManager: {
+      ...argTypes.urlManager,
+      control: {
+        disable: true,
+      },
+      table: {
+        defaultValue: {summary: undefined},
+      },
+    },
+    i18n: {
+      ...argTypes.i18n,
+      control: {
+        disable: true,
+      },
+      table: {
+        defaultValue: {summary: undefined},
       },
     },
   },

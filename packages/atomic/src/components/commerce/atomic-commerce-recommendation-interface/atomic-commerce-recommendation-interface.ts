@@ -81,12 +81,12 @@ export class AtomicCommerceRecommendationInterface
   /**
    * The commerce interface i18next instance.
    */
-  @property({type: Object}) i18n: i18n;
+  @property({type: Object, attribute: false}) i18n: i18n;
 
   /**
    * The commerce interface headless engine.
    */
-  @property({type: Object}) engine?: CommerceEngine;
+  @property({type: Object, attribute: false}) engine?: CommerceEngine;
 
   /**
    * The CSS selector for the container the interface will scroll back to.
