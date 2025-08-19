@@ -1,6 +1,5 @@
 import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
 import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
-import {html} from 'lit-html';
 import {wrapInCommerceInterface} from '@/storybook-utils/commerce/commerce-interface-wrapper';
 import {wrapInCommerceProductList} from '@/storybook-utils/commerce/commerce-product-list-wrapper';
 import {wrapInProductTemplate} from '@/storybook-utils/commerce/commerce-product-template-wrapper';
@@ -40,16 +39,12 @@ const meta: Meta = {
   component: 'atomic-product-text',
   title: 'Commerce/Product Text',
   id: 'atomic-product-text',
-  render: (args, context) => html`
-    ${commerceInterfaceDecorator(
-      () =>
-        commerceProductListDecorator(
-          () => productTemplateDecorator(() => template(args), context),
-          context
-        ),
-      context
-    )}
-  `,
+  render: (args) => template(args),
+  decorators: [
+    productTemplateDecorator,
+    commerceProductListDecorator,
+    commerceInterfaceDecorator,
+  ],
   parameters: {
     ...parameters,
     actions: {
