@@ -57,7 +57,7 @@ export class AtomicCommerceRecommendationInterface
   @state() public error!: Error;
 
   public context!: Context;
-  public store: CommerceRecommendationStore;
+  private store: CommerceRecommendationStore;
 
   private interfaceController = new InterfaceController<CommerceEngine>(
     this,
