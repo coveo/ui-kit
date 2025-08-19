@@ -207,16 +207,11 @@ export function buildAnswerApiGeneratedAnswer(
         isAnswerGenerated: answerApiState?.generated ?? false,
       };
     },
-    // TODO: TO FIX SVCC-5178
     retry() {
-      engine.dispatch(
-        fetchAnswer(
-          constructAnswerQueryParams(
-            engine.state,
-            engine.navigatorContext || defaultNodeJSNavigatorContextProvider
-          )
-        )
-      );
+      const params = getState().generatedAnswer.answerApiQueryParams;
+      if (params) {
+        engine.dispatch(fetchAnswer(params));
+      }
     },
     reset() {
       engine.dispatch(resetAnswer());
