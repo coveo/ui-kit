@@ -60,6 +60,6 @@ export const StandaloneSearchBox: Story = {
   name: 'As a standalone search box',
   args: {
     redirectionUrl:
-      './iframe.html?id=atomic-commerce-search-box--in-page&viewMode=story&args=enable-query-syntax:!true;suggestion-timeout:5000',
+      './iframe.html?id=atomic-commerce-interface--with-product-list&viewMode=story',
   },
 };

@@ -53,7 +53,6 @@ const meta: Meta = {
     });
 
     await userEvent.click(refineToggle);
-    // await within(context.canvasElement.querySelector('atomic-commerce-refine-modal')!).findByShadowLabelText('Close');
   },
 };
 
