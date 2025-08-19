@@ -25,6 +25,8 @@ export const config: Config = {
       html({
         include: './**/*.html',
       }),
+      // Replace by `coveoNpmResolve()` to bundle Atomic & Headless directly, instead of using the CDN.
+      coveoCdnResolve(),
     ],
   },
 };
