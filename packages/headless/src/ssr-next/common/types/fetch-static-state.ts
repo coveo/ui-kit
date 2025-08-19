@@ -11,7 +11,10 @@ import type {
 import type {OptionsTuple} from './utilities.js';
 
 type FetchStaticStateOptions = {
-  navigatorContext?: NavigatorContext;
+  /**
+   * The navigator context for this request. Used to pass required client information when making server-side requests.
+   */
+  navigatorContext: NavigatorContext;
 };
 
 /**

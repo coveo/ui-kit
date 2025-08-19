@@ -15,24 +15,9 @@ import type {EngineStaticState} from './engine.js';
 
 export interface FetchStaticStateOptions {
   /**
-   * The navigator context for this request.
-   *
-   * Used to pass required client information when making server-side requests.
-   *
-   * @example
-   * ```ts
-   * // In your server route handler
-   * const staticState = await listingEngineDefinition.fetchStaticState({
-   *   navigatorContext: {
-   *     forwardedFor: req.ip,
-   *     referrer: req.headers.referer || null,
-   *     userAgent: req.headers['user-agent'] || null,
-   *     clientId: req.sessionID || 'anonymous'
-   *   }
-   * });
-   * ```
+   * The navigator context for this request. Used to pass required client information when making server-side requests.
    */
-  navigatorContext?: NavigatorContext;
+  navigatorContext: NavigatorContext;
 }
 
 /**

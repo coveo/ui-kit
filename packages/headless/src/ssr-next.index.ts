@@ -37,15 +37,19 @@
  * export type SearchHydratedState = InferHydratedState<typeof engineDefinition>;
  *
  * export const {fetchStaticState, hydrateStaticState} = engineDefinition;
-
- * // Pass navigator context directly per call (server-side)
+ * 
+ * // Usage with per-call navigator context (recommended)
  * await fetchStaticState({
  *   navigatorContext: {
- *     forwardedFor: req.ip,
+ *     clientId: await getClientId(req), // Generate stable UUID, store in cookie
+ *     forwardedFor: req.headers['x-forwarded-for'] || req.ip,
  *     referrer: req.headers.referer || null,
  *     userAgent: req.headers['user-agent'] || null,
- *     clientId: req.sessionID || 'anonymous',
+ *     location: req.url
  *   },
+ *   controllers: {
+ *     // Your controller initial state here
+ *   }
  * });
 
  * ```

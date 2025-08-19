@@ -66,25 +66,22 @@ function createMockResultsMiddleware(options: {
   const numberOfResultsPerRequestId: {[requestId: string]: number | undefined} =
     {};
   return (api) => (next) => (action) => {
-    const possibleSearchActionWithPayload =
-      action as UnknownActionWithPossibleSearchResponsePayload;
-    if (isSearchPendingAction(possibleSearchActionWithPayload)) {
+    const unknownAction = action as UnknownAction;
+    if (isSearchPendingAction(unknownAction)) {
       const state = api.getState() as SSRSearchEngine['state'];
-      numberOfResultsPerRequestId[
-        possibleSearchActionWithPayload.meta.requestId
-      ] = state.pagination?.numberOfResults ?? options.defaultNumberOfResults;
+      numberOfResultsPerRequestId[unknownAction.meta.requestId] =
+        state.pagination?.numberOfResults ?? options.defaultNumberOfResults;
       return next(action);
     }
-    if (isSearchFulfilledAction(action as UnknownAction)) {
+    if (isSearchFulfilledAction(unknownAction)) {
+      const searchAction =
+        unknownAction as UnknownActionWithPossibleSearchResponsePayload;
       const newAction = JSON.parse(
-        JSON.stringify(possibleSearchActionWithPayload)
+        JSON.stringify(searchAction)
       ) as UnknownActionWithPossibleSearchResponsePayload;
       newAction.payload.response.results = Array.from(
         {
-          length:
-            numberOfResultsPerRequestId[
-              possibleSearchActionWithPayload.meta.requestId
-            ]!,
+          length: numberOfResultsPerRequestId[searchAction.meta.requestId]!,
         },
         (_, index) => buildMockResult({title: `Result #${index}`})
       );
@@ -96,6 +93,13 @@ function createMockResultsMiddleware(options: {
 
 describe('SSR', () => {
   const mockPreprocessRequest = vi.fn(async (req) => req);
+  const mockNavigatorContext = {
+    forwardedFor: '192.168.1.1',
+    referrer: 'https://example.com',
+    userAgent: 'test-agent',
+    location: '/test',
+    clientId: 'test-client',
+  };
 
   describe('define search engine', () => {
     type StaticState = InferStaticState<typeof engineDefinition>;
@@ -139,7 +143,9 @@ describe('SSR', () => {
 
     it('fetches initial state of engine', async () => {
       const fetchStaticState = vi.mocked(engineDefinition.fetchStaticState);
-      const staticState = await fetchStaticState();
+      const staticState = await fetchStaticState({
+        navigatorContext: mockNavigatorContext,
+      });
       expect(staticState).toBeTruthy();
       expect(getResultsPerPage(staticState)).toBe(defaultNumberOfResults);
     });
@@ -149,14 +155,6 @@ describe('SSR', () => {
         augmentModule,
         'augmentPreprocessRequestWithForwardedFor'
       );
-
-      const mockNavigatorContext = {
-        forwardedFor: '192.168.1.1',
-        referrer: 'https://example.com',
-        userAgent: 'test-agent',
-        location: '/test',
-        clientId: 'test-client',
-      };
 
       const fetchStaticState = engineDefinition.fetchStaticState;
       await fetchStaticState({navigatorContext: mockNavigatorContext});
@@ -173,7 +171,9 @@ describe('SSR', () => {
       let staticState: StaticState;
       beforeEach(async () => {
         const fetchStaticState = vi.mocked(engineDefinition.fetchStaticState);
-        staticState = await fetchStaticState();
+        staticState = await fetchStaticState({
+          navigatorContext: mockNavigatorContext,
+        });
       });
 
       it('hydrates engine', async () => {

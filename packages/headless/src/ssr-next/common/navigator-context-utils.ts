@@ -20,20 +20,15 @@ export function processNavigatorContext<
   baseOptions: TOptions
 ): {
   engineOptions: TOptions;
-  callOptions?: {navigatorContext?: NavigatorContext; controllers?: unknown};
+  callOptions?: {navigatorContext: NavigatorContext; controllers?: unknown};
 } {
   const [callOptions] = params as unknown as [
-    {navigatorContext?: NavigatorContext; controllers?: unknown} | undefined,
+    {navigatorContext: NavigatorContext; controllers?: unknown},
   ];
 
-  // If no navigator context, return original options
-  if (!callOptions?.navigatorContext) {
-    return {engineOptions: baseOptions, callOptions};
-  }
-
-  // Create provider function and enhance options
+  // Navigator context is now required
   const navigatorContextProvider: NavigatorContextProvider = () =>
-    callOptions.navigatorContext!;
+    callOptions.navigatorContext;
 
   const engineOptions = {
     ...baseOptions,

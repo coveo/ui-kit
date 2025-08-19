@@ -2,6 +2,7 @@
  * Utility functions to be used for Server Side Rendering.
  */
 import type {UnknownAction} from '@reduxjs/toolkit';
+import type {NavigatorContext} from '../../../app/navigator-context-provider.js';
 import {
   buildSearchEngine,
   type SearchEngine,
@@ -82,13 +83,24 @@ export type SearchEngineDefinition<
  * ```ts
  * const searchEngine = defineSearchEngine(config);
  *
+ * // Generate stable clientId (server-side best practice)
+ * const getClientId = async (req) => {
+ *   const existing = req.cookies.coveoClientId;
+ *   if (existing) return existing;
+ *
+ *   const newId = crypto.randomUUID();
+ *   res.cookie('coveoClientId', newId, { maxAge: 365 * 24 * 60 * 60 * 1000 }); // 1 year
+ *   return newId;
+ * };
+ *
  * // Pass navigator context directly to fetchStaticState
  * const staticState = await searchEngine.fetchStaticState({
  *   navigatorContext: {
- *     forwardedFor: req.ip,
+ *     clientId: await getClientId(req),
+ *     forwardedFor: req.headers['x-forwarded-for'] || req.ip,
  *     referrer: req.headers.referer || null,
  *     userAgent: req.headers['user-agent'] || null,
- *     clientId: 'abc123'
+ *     location: req.url
  *   }
  * });
  * ```
@@ -103,7 +115,9 @@ export function defineSearchEngine<
 >(options: SearchEngineDefinitionOptions<TControllerDefinitions>) {
   const {controllers: controllerDefinitions, ...engineOptions} = options;
 
-  const hydrateStaticState = async (...params: unknown[]) => {
+  const hydrateStaticState = async (staticState: {
+    searchAction: UnknownAction;
+  }) => {
     const engine = buildSSRSearchEngine(engineOptions);
     const controllers = buildControllerDefinitions({
       definitionsMap: (controllerDefinitions ?? {}) as TControllerDefinitions,
@@ -112,19 +126,19 @@ export function defineSearchEngine<
         {} as InferControllerPropsMapFromDefinitions<TControllerDefinitions>,
     });
 
-    const [staticState] = params as [{searchAction: UnknownAction}];
     engine.dispatch(staticState.searchAction);
     await engine.waitForSearchCompletedAction();
     return {engine, controllers};
   };
 
-  const fetchStaticState = async (...params: unknown[]) => {
-    const {engineOptions, callOptions} = processNavigatorContext(
-      params,
-      options
-    );
+  const fetchStaticState = async (options: {
+    navigatorContext: NavigatorContext;
+    controllers?: InferControllerPropsMapFromDefinitions<TControllerDefinitions>;
+  }) => {
+    const {engineOptions: enhancedEngineOptions, callOptions} =
+      processNavigatorContext([options], engineOptions);
 
-    const engine = buildSSRSearchEngine(engineOptions);
+    const engine = buildSSRSearchEngine(enhancedEngineOptions);
     const controllers = buildControllerDefinitions({
       definitionsMap: (controllerDefinitions ?? {}) as TControllerDefinitions,
       engine,

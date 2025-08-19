@@ -26,28 +26,25 @@ import type {CommerceEngineDefinition} from '../types/engine.js';
  * ```ts
  * const { listingEngineDefinition } = defineCommerceEngine(engineConfig);
  *
+ * // Generate stable clientId (server-side best practice)
+ * const getClientId = async (req, res) => {
+ *   const existing = req.cookies.coveoClientId;
+ *   if (existing) return existing;
+ *
+ *   const newId = crypto.randomUUID();
+ *   res.cookie('coveoClientId', newId, { maxAge: 365 * 24 * 60 * 60 * 1000 }); // 1 year
+ *   return newId;
+ * };
+ *
  * // Pass navigator context directly to fetchStaticState
  * const staticState = await listingEngineDefinition.fetchStaticState({
  *   navigatorContext: {
- *     forwardedFor: req.ip,
+ *     clientId: await getClientId(req, res),
+ *     forwardedFor: req.headers['x-forwarded-for'] || req.ip,
  *     referrer: req.headers.referer || null,
  *     userAgent: req.headers['user-agent'] || null,
- *     clientId: 'unique-session-id'
+ *     location: req.url
  *   }
- * });
- *
- * // Framework examples:
- * // Express.js
- * app.get('/api/listing', async (req, res) => {
- *   const state = await listingEngineDefinition.fetchStaticState({
- *     navigatorContext: {
- *       forwardedFor: req.ip,
- *       referrer: req.headers.referer || null,
- *       userAgent: req.headers['user-agent'] || null,
- *       clientId: req.sessionID
- *     }
- *   });
- *   res.json(state);
  * });
  *
  * type SearchStaticState = InferStaticState<typeof listingEngineDefinition>;
