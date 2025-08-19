@@ -2807,7 +2807,7 @@ export declare interface AtomicProductRating extends LitAtomicProductRating {
 
 @ProxyCmp({
   inputs: [],
-  methods: [],
+  methods: ['styles'],
   defineCustomElementFn: () => {customElements.get('atomic-product-section-actions') || customElements.define('atomic-product-section-actions', LitAtomicProductSectionActions);}
 })
 @Component({
@@ -2833,7 +2833,7 @@ export declare interface AtomicProductSectionActions extends LitAtomicProductSec
 
 @ProxyCmp({
   inputs: [],
-  methods: [],
+  methods: ['styles'],
   defineCustomElementFn: () => {customElements.get('atomic-product-section-badges') || customElements.define('atomic-product-section-badges', LitAtomicProductSectionBadges);}
 })
 @Component({
@@ -2859,7 +2859,7 @@ export declare interface AtomicProductSectionBadges extends LitAtomicProductSect
 
 @ProxyCmp({
   inputs: [],
-  methods: [],
+  methods: ['styles'],
   defineCustomElementFn: () => {customElements.get('atomic-product-section-bottom-metadata') || customElements.define('atomic-product-section-bottom-metadata', LitAtomicProductSectionBottomMetadata);}
 })
 @Component({
@@ -2885,7 +2885,7 @@ export declare interface AtomicProductSectionBottomMetadata extends LitAtomicPro
 
 @ProxyCmp({
   inputs: [],
-  methods: [],
+  methods: ['styles'],
   defineCustomElementFn: () => {customElements.get('atomic-product-section-children') || customElements.define('atomic-product-section-children', LitAtomicProductSectionChildren);}
 })
 @Component({
@@ -2911,7 +2911,7 @@ export declare interface AtomicProductSectionChildren extends LitAtomicProductSe
 
 @ProxyCmp({
   inputs: [],
-  methods: [],
+  methods: ['styles'],
   defineCustomElementFn: () => {customElements.get('atomic-product-section-description') || customElements.define('atomic-product-section-description', LitAtomicProductSectionDescription);}
 })
 @Component({
@@ -2937,7 +2937,7 @@ export declare interface AtomicProductSectionDescription extends LitAtomicProduc
 
 @ProxyCmp({
   inputs: [],
-  methods: [],
+  methods: ['styles'],
   defineCustomElementFn: () => {customElements.get('atomic-product-section-emphasized') || customElements.define('atomic-product-section-emphasized', LitAtomicProductSectionEmphasized);}
 })
 @Component({
@@ -2963,7 +2963,7 @@ export declare interface AtomicProductSectionEmphasized extends LitAtomicProduct
 
 @ProxyCmp({
   inputs: [],
-  methods: [],
+  methods: ['styles'],
   defineCustomElementFn: () => {customElements.get('atomic-product-section-metadata') || customElements.define('atomic-product-section-metadata', LitAtomicProductSectionMetadata);}
 })
 @Component({
@@ -2989,7 +2989,7 @@ export declare interface AtomicProductSectionMetadata extends LitAtomicProductSe
 
 @ProxyCmp({
   inputs: [],
-  methods: [],
+  methods: ['styles'],
   defineCustomElementFn: () => {customElements.get('atomic-product-section-name') || customElements.define('atomic-product-section-name', LitAtomicProductSectionName);}
 })
 @Component({
@@ -3015,7 +3015,7 @@ export declare interface AtomicProductSectionName extends LitAtomicProductSectio
 
 @ProxyCmp({
   inputs: ['imageSize'],
-  methods: [],
+  methods: ['styles'],
   defineCustomElementFn: () => {customElements.get('atomic-product-section-visual') || customElements.define('atomic-product-section-visual', LitAtomicProductSectionVisual);}
 })
 @Component({
