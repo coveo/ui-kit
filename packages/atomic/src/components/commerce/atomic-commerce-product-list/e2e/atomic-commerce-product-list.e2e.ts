@@ -22,7 +22,7 @@ test.describe('atomic-commerce-product-list', () => {
         await productList.load({story: 'default'});
         await expect(commerceInterface.hydrated).toBeVisible();
         const accessibilityResults = await makeAxeBuilder().analyze();
-        expect(accessibilityResults.violations.length).toEqual(0);
+        expect(accessibilityResults.violations).toEqual([]);
       });
 
       test('should render the products when there is no custom template', async ({
@@ -74,7 +74,7 @@ test.describe('atomic-commerce-product-list', () => {
         await productList.load({story: 'default'});
         await expect(commerceInterface.hydrated).toBeVisible();
         const accessibilityResults = await makeAxeBuilder().analyze();
-        expect(accessibilityResults.violations.length).toEqual(0);
+        expect(accessibilityResults.violations).toEqual([]);
       });
 
       test('should render the products when there is no custom template', async ({
@@ -128,7 +128,7 @@ test.describe('atomic-commerce-product-list', () => {
       }) => {
         await expect(commerceInterface.hydrated).toBeVisible();
         const accessibilityResults = await makeAxeBuilder().analyze();
-        expect(accessibilityResults.violations.length).toEqual(0);
+        expect(accessibilityResults.violations).toEqual([]);
       });
 
       test('should render the products', async ({productList}) => {

@@ -16,7 +16,7 @@ test.describe('AtomicCommerceRefineModal', () => {
   }) => {
     await commerceRefineModal.closeButton.waitFor({state: 'visible'});
     const accessibilityResults = await makeAxeBuilder().analyze();
-    expect(accessibilityResults.violations.length).toEqual(0);
+    expect(accessibilityResults.violations).toEqual([]);
   });
 
   test('should be able to close the modal', async ({commerceRefineModal}) => {
