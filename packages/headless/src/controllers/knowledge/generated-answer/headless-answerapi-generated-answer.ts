@@ -13,14 +13,8 @@ import {
 } from '../../../api/knowledge/stream-answer-api.js';
 import {warnIfUsingNextAnalyticsModeForServiceFeature} from '../../../app/engine.js';
 import type {InsightEngine} from '../../../app/insight-engine/insight-engine.js';
-import {
-  defaultNodeJSNavigatorContextProvider,
-  type NavigatorContext,
-} from '../../../app/navigator-context-provider.js';
+import {defaultNodeJSNavigatorContextProvider} from '../../../app/navigator-context-provider.js';
 import type {SearchEngine} from '../../../app/search-engine/search-engine.js';
-import {selectAdvancedSearchQueries} from '../../../features/advanced-search-queries/advanced-search-query-selectors.js';
-import {fromAnalyticsStateToAnalyticsParams} from '../../../features/configuration/analytics-params.js';
-import {selectContext} from '../../../features/context/context-selector.js';
 import {
   resetAnswer,
   sendGeneratedAnswerFeedback,
@@ -28,29 +22,14 @@ import {
   updateAnswerConfigurationId,
 } from '../../../features/generated-answer/generated-answer-actions.js';
 import type {GeneratedAnswerFeedback} from '../../../features/generated-answer/generated-answer-analytics-actions.js';
-import {selectFieldsToIncludeInCitation} from '../../../features/generated-answer/generated-answer-selectors.js';
 import {filterOutDuplicatedCitations} from '../../../features/generated-answer/utils/generated-answer-citation-utils.js';
-import {maximumNumberOfResultsFromIndex} from '../../../features/pagination/pagination-constants.js';
-import {selectPipeline} from '../../../features/pipeline/select-pipeline.js';
 import {selectQuery} from '../../../features/query/query-selectors.js';
 import {queryReducer as query} from '../../../features/query/query-slice.js';
-import {
-  initialSearchMappings,
-  mapFacetRequest,
-} from '../../../features/search/search-mappings.js';
-import {selectSearchActionCause} from '../../../features/search/search-selectors.js';
-import {selectSearchHub} from '../../../features/search-hub/search-hub-selectors.js';
-import {selectStaticFilterExpressions} from '../../../features/static-filter-set/static-filter-set-selectors.js';
-import {
-  selectActiveTab,
-  selectActiveTabExpression,
-} from '../../../features/tab-set/tab-set-selectors.js';
 import type {
   GeneratedAnswerSection,
   QuerySection,
 } from '../../../state/state-sections.js';
 import {loadReducerError} from '../../../utils/errors.js';
-import {getFacets} from '../../../utils/facet-utils.js';
 import {
   buildCoreGeneratedAnswer,
   type GeneratedAnswer,
@@ -142,13 +121,12 @@ const subscribeToSearchRequest = (
     }
 
     lastTriggerParams = triggerParams;
-    // Every time a new search request is triggered, we re-calculate the answer query params
-    const cachedAnswerParams = constructAnswerQueryParams(
-      state,
-      engine.navigatorContext || defaultNodeJSNavigatorContextProvider
-    );
     engine.dispatch(
-      triggerSearchRequest({fetchAnswerParams: cachedAnswerParams})
+      triggerSearchRequest({
+        state: state,
+        navigatorContext:
+          engine.navigatorContext || defaultNodeJSNavigatorContextProvider,
+      })
     );
   };
 
@@ -208,10 +186,9 @@ export function buildAnswerApiGeneratedAnswer(
       };
     },
     retry() {
-      const params = getState().generatedAnswer.answerApiQueryParams;
-      if (params) {
-        engine.dispatch(fetchAnswer(params));
-      }
+      engine.dispatch(
+        fetchAnswer(getState().generatedAnswer.answerApiQueryParams || {})
+      );
     },
     reset() {
       engine.dispatch(resetAnswer());
@@ -237,116 +214,6 @@ function loadAnswerApiReducers(
   engine.addReducers({[answerApi.reducerPath]: answerApi.reducer, query});
   return true;
 }
-
-const buildAdvancedSearchQueryParams = (state: StateNeededByAnswerAPI) => {
-  const advancedSearchQueryParams = selectAdvancedSearchQueries(state);
-  const mergedCq = mergeAdvancedCQParams(state);
-
-  return {
-    ...advancedSearchQueryParams,
-    ...(mergedCq && {cq: mergedCq}),
-  };
-};
-
-const mergeAdvancedCQParams = (state: StateNeededByAnswerAPI) => {
-  const activeTabExpression = selectActiveTabExpression(state.tabSet);
-  const filterExpressions = selectStaticFilterExpressions(state);
-  const {cq} = selectAdvancedSearchQueries(state);
-
-  return [activeTabExpression, ...filterExpressions, cq]
-    .filter((expression) => !!expression)
-    .join(' AND ');
-};
-
-const getNumberOfResultsWithinIndexLimit = (state: StateNeededByAnswerAPI) => {
-  if (!state.pagination) {
-    return undefined;
-  }
-
-  const isOverIndexLimit =
-    state.pagination.firstResult + state.pagination.numberOfResults >
-    maximumNumberOfResultsFromIndex;
-
-  if (isOverIndexLimit) {
-    return maximumNumberOfResultsFromIndex - state.pagination.firstResult;
-  }
-  return state.pagination.numberOfResults;
-};
-
-export const constructAnswerQueryParams = (
-  state: StateNeededByAnswerAPI,
-  navigatorContext: NavigatorContext
-) => {
-  const q = selectQuery(state)?.q;
-
-  const {aq, cq, dq, lq} = buildAdvancedSearchQueryParams(state);
-
-  const context = selectContext(state);
-
-  const analyticsParams = fromAnalyticsStateToAnalyticsParams(
-    state.configuration.analytics,
-    navigatorContext,
-    {actionCause: selectSearchActionCause(state)}
-  );
-
-  const searchHub = selectSearchHub(state);
-  const pipeline = selectPipeline(state);
-  const citationsFieldToInclude = selectFieldsToIncludeInCitation(state) ?? [];
-  const facetParams = getGeneratedFacetParams(state);
-
-  return {
-    q,
-    ...(aq && {aq}),
-    ...(cq && {cq}),
-    ...(dq && {dq}),
-    ...(lq && {lq}),
-    ...(context?.contextValues && {
-      context: context.contextValues,
-    }),
-    pipelineRuleParameters: {
-      mlGenerativeQuestionAnswering: {
-        responseFormat: state.generatedAnswer.responseFormat,
-        citationsFieldToInclude,
-      },
-    },
-    ...(searchHub?.length && {searchHub}),
-    ...(pipeline?.length && {pipeline}),
-    // Passing facets
-    ...(Object.keys(facetParams).length && {facets: facetParams}),
-    ...(state.fields && {fieldsToInclude: state.fields.fieldsToInclude}),
-    ...(state.didYouMean && {
-      queryCorrection: {
-        enabled:
-          state.didYouMean.enableDidYouMean &&
-          state.didYouMean.queryCorrectionMode === 'next',
-        options: {
-          automaticallyCorrect: state.didYouMean.automaticallyCorrectQuery
-            ? ('whenNoResults' as const)
-            : ('never' as const),
-        },
-      },
-      enableDidYouMean:
-        state.didYouMean.enableDidYouMean &&
-        state.didYouMean.queryCorrectionMode === 'legacy',
-    }),
-    ...(state.pagination && {
-      numberOfResults: getNumberOfResultsWithinIndexLimit(state),
-      firstResult: state.pagination.firstResult,
-    }),
-    tab: selectActiveTab(state.tabSet),
-    ...analyticsParams,
-  };
-};
-
-const getGeneratedFacetParams = (state: StateNeededByAnswerAPI) => ({
-  ...getFacets(state)
-    ?.map((facetRequest) =>
-      mapFacetRequest(facetRequest, initialSearchMappings())
-    )
-    .sort((a, b) =>
-      a.facetId > b.facetId ? 1 : b.facetId > a.facetId ? -1 : 0
-    ),
-});
 
 const selectAnswerTriggerParams = createSelector(
   (state) => selectQuery(state)?.q,

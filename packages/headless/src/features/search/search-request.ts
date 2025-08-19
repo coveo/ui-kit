@@ -1,4 +1,5 @@
 import type {EventDescription} from 'coveo.analytics';
+import type {StateNeededByAnswerAPI} from '../../api/knowledge/stream-answer-api.js';
 import type {NavigatorContext} from '../../app/navigator-context-provider.js';
 import type {SearchAppState} from '../../state/search-app-state.js';
 import type {ConfigurationSection} from '../../state/state-sections.js';
@@ -40,24 +41,6 @@ export const buildSearchRequest = async (
           eventDescription
         );
 
-  // Corner case:
-  // If the number of results requested would go over the index limit (maximumNumberOfResultsFromIndex)
-  // we need to request fewer results in order to ensure we do not receive an exception from the index
-  const getNumberOfResultsWithinIndexLimit = () => {
-    if (!state.pagination) {
-      return undefined;
-    }
-
-    const isOverIndexLimit =
-      state.pagination.firstResult + state.pagination.numberOfResults >
-      maximumNumberOfResultsFromIndex;
-
-    if (isOverIndexLimit) {
-      return maximumNumberOfResultsFromIndex - state.pagination.firstResult;
-    }
-    return state.pagination.numberOfResults;
-  };
-
   return mapSearchRequest({
     ...sharedWithFoldingRequest,
     ...(state.didYouMean && {
@@ -78,7 +61,7 @@ export const buildSearchRequest = async (
     ...(cq && {cq}),
     ...(facets.length && {facets}),
     ...(state.pagination && {
-      numberOfResults: getNumberOfResultsWithinIndexLimit(),
+      numberOfResults: getNumberOfResultsWithinIndexLimit(state),
       firstResult: state.pagination.firstResult,
     }),
     ...(state.facetOptions && {
@@ -108,6 +91,26 @@ export const buildSearchRequest = async (
     }),
   });
 };
+
+// Corner case:
+// If the number of results requested would go over the index limit (maximumNumberOfResultsFromIndex)
+// we need to request fewer results in order to ensure we do not receive an exception from the index
+export function getNumberOfResultsWithinIndexLimit(
+  state: StateNeededBySearchRequest | StateNeededByAnswerAPI
+) {
+  if (!state.pagination) {
+    return undefined;
+  }
+
+  const isOverIndexLimit =
+    state.pagination.firstResult + state.pagination.numberOfResults >
+    maximumNumberOfResultsFromIndex;
+
+  if (isOverIndexLimit) {
+    return maximumNumberOfResultsFromIndex - state.pagination.firstResult;
+  }
+  return state.pagination.numberOfResults;
+}
 
 function getFacets(state: StateNeededBySearchRequest) {
   return sortFacets(getAllEnabledFacets(state), state.facetOrder ?? []);
@@ -187,7 +190,7 @@ function getRangeFacetRequests<T extends RangeFacetSetState>(state: T) {
   });
 }
 
-function buildConstantQuery(state: StateNeededBySearchRequest) {
+export function buildConstantQuery(state: StateNeededBySearchRequest) {
   const cq = state.advancedSearchQueries?.cq.trim() || '';
   const activeTab = Object.values(state.tabSet || {}).find(
     (tab) => tab.isActive

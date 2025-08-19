@@ -116,6 +116,6 @@ export function getGeneratedAnswerInitialState(): GeneratedAnswerState {
     isAnswerGenerated: false,
     expanded: false,
     cannotAnswer: false,
-    answerApiQueryParams: {},
+    answerApiQueryParams: undefined,
   };
 }
