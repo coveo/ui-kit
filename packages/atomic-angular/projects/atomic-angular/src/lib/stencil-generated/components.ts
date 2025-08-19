@@ -3040,7 +3040,7 @@ export declare interface AtomicProductSectionVisual extends LitAtomicProductSect
 }
 
 @ProxyCmp({
-  inputs: ['conditions', 'mustMatch', 'mustNotMatch'],
+  inputs: ['mustMatch', 'mustNotMatch'],
   methods: ['getTemplate'],
   defineCustomElementFn: () => {customElements.get('atomic-product-template') || customElements.define('atomic-product-template', LitAtomicProductTemplate);}
 })
@@ -3050,7 +3050,7 @@ export declare interface AtomicProductSectionVisual extends LitAtomicProductSect
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
   // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: ['conditions', 'mustMatch', 'mustNotMatch']
+  inputs: ['mustMatch', 'mustNotMatch']
 })
 export class AtomicProductTemplate {
   protected readonly el: HTMLElement;
