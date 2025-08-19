@@ -1,6 +1,6 @@
 import '@coveo/atomic/themes/coveo.css';
 import {setCustomElementsManifest} from '@storybook/web-components';
-import {html, render} from 'lit';
+import {render} from 'lit';
 import customElements from '../custom-elements.json';
 import {defineCustomElements} from '../dist/atomic/loader/index.js';
 
@@ -49,7 +49,7 @@ export const decorators = [
         ]);
       }
 
-      return html`${container}`;
+      return story;
     }
   },
 ];
