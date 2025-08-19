@@ -55,6 +55,15 @@ export interface SearchBuildConfig extends CommonBuildConfig {
 export type RecommendationBuildConfig<
   TControllers extends ControllerDefinitionsMap<Controller>,
 > = CommonBuildConfig & {
+  /**
+   * The unique identifier of the product to use for seeded recommendations.
+   */
+  productId?: string;
+  /**
+   * An array of recommendation controller names from your engine definition to include in the SSR request.
+   * Each name corresponds to the key used when defining recommendation controllers in your engine definition.
+   * If not specified, no recommendation requests will be executed.
+   */
   recommendations: Array<
     Extract<
       keyof TControllers,

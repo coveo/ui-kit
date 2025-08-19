@@ -70,6 +70,7 @@ describe('Commerce Engine SSR', () => {
         {
           url: 'http://example.com',
           query: 'test',
+          recommendations: [],
           country: 'US',
           currency: 'USD',
           language: 'en',
@@ -114,10 +115,5 @@ describe('Commerce Engine SSR', () => {
       });
       expect(staticState.controllers).toHaveProperty('parameterManager');
     });
-  });
-
-  describe('#recommendationEngineDefinition', () => {
-    // TODO: KIT-4619: validate recommendation array
-    it.todo('should throw if the recommendations are missing');
   });
 });

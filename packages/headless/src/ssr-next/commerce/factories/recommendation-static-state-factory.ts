@@ -14,7 +14,11 @@ import type {
   FetchStaticStateFunction,
   FetchStaticStateParameters,
 } from '../types/engine.js';
-import {filterRecommendationControllers} from '../utils/recommendation-filter.js';
+import {
+  getRecommendationDefinitions,
+  refreshRecommendationControllers,
+} from '../utils/recommendations/recommendation-helpers.js';
+import {validateUniqueRecommendationSlotIds} from '../validation/controller-validation.js';
 import {
   buildFactory,
   type CommerceEngineDefinitionOptions,
@@ -43,16 +47,23 @@ export function fetchRecommendationStaticStateFactory<
       ...params
     )) as BuildResult<TControllerDefinitions>;
 
-    filterRecommendationControllers(
+    const recommendationDefinitions = getRecommendationDefinitions(
+      controllerDefinitions
+    );
+
+    validateUniqueRecommendationSlotIds(recommendationDefinitions);
+
+    refreshRecommendationControllers(
       controllers,
-      controllerDefinitions ?? {}
-    ).refresh(allowedRecommendationKeys as string[]);
+      recommendationDefinitions,
+      allowedRecommendationKeys as string[]
+    );
 
     const searchActions = await Promise.all(
       engine.waitForRequestCompletedAction()
     );
 
-    return createStaticState({
+    const staticState = createStaticState({
       searchActions,
       controllers,
     }) as EngineStaticState<
@@ -64,5 +75,10 @@ export function fetchRecommendationStaticStateFactory<
         FilteredBakedInControllers<SolutionType.recommendation>
     > &
       BuildConfig<TControllerDefinitions, SolutionType.recommendation>;
+
+    return {
+      ...params[0], // TODO: KIT-4754: remove index access after no longer relying on OptionTuple type
+      ...staticState,
+    };
   };
 }
