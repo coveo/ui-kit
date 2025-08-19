@@ -36,7 +36,7 @@
     "jest-cli": "29.5.0",
     "rollup-plugin-html": "0.2.1",
     "rimraf": "4.4.1",
-    "@coveo/create-atomic-rollup-plugin": "1.1.1"
+    "@coveo/create-atomic-rollup-plugin": "1.2.0"
   },
   "keywords": [
     "coveo-atomic-component"

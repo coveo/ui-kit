@@ -28,6 +28,6 @@
     "access": "public"
   },
   "dependencies": {
-    "@coveo/create-atomic-component-project": "1.2.16"
+    "@coveo/create-atomic-component-project": "1.4.1"
   }
 }
