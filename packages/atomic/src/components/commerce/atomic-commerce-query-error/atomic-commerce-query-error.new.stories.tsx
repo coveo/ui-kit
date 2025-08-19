@@ -9,7 +9,7 @@ const {decorator, play} = wrapInCommerceInterface({
 
 const meta: Meta = {
   component: 'atomic-commerce-query-error',
-  title: 'Commerce/atomic-commerce-query-error',
+  title: 'Commerce/Query Error',
   id: 'atomic-commerce-query-error',
   render: renderComponent,
   decorators: [decorator],

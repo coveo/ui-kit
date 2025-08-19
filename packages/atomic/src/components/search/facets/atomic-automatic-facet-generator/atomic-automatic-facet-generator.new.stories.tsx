@@ -7,7 +7,7 @@ const {decorator, play} = wrapInSearchInterface();
 
 const meta: Meta = {
   component: 'atomic-automatic-facet-generator',
-  title: 'Atomic/AutomaticFacetGenerator',
+  title: 'Search/AutomaticFacetGenerator',
   id: 'atomic-automatic-facet-generator',
   render: renderComponent,
   decorators: [decorator],

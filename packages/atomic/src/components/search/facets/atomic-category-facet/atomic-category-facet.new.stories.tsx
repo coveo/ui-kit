@@ -7,7 +7,7 @@ const {decorator, play} = wrapInSearchInterface();
 
 const meta: Meta = {
   component: 'atomic-category-facet',
-  title: 'Atomic/CategoryFacet',
+  title: 'Search/CategoryFacet',
   id: 'atomic-category-facet',
   render: renderComponent,
   decorators: [decorator],

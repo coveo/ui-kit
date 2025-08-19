@@ -45,7 +45,7 @@ export const OutsideResultTemplate: Story = {
 
 const meta: Meta = {
   component: 'atomic-quickview',
-  title: 'Atomic/ResultList/Quickview',
+  title: 'Search/ResultList/Quickview',
   id: 'atomic-quickview',
   render: renderComponent,
   decorators: [resultDecorator, searchInterfaceDecorator],
