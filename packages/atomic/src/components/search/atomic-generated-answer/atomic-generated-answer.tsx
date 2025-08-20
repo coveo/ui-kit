@@ -28,10 +28,10 @@ import {
   insertGeneratedAnswerFeedbackModal,
   getGeneratedAnswerStatus,
   copyToClipboard,
-  GeneratedAnswerWrapper,
-  GeneratedAnswerNoAnswerMessage,
-  GeneratedAnswerCommon,
 } from '../../common/generated-answer/generated-answer-common';
+import {
+  GeneratedAnswerRenderer
+} from '../../common/generated-answer/generated-answer-renderer';
 import { Hidden } from '../../common/stencil-hidden';
 import { Bindings } from '../atomic-search-interface/atomic-search-interface';
 
@@ -385,67 +385,6 @@ export class AtomicGeneratedAnswer implements InitializableComponent {
     }
   }
 
-  public render() {
-    if (
-      !shouldDisplayOnCurrentTab(
-        [...this.tabsIncluded],
-        [...this.tabsExcluded],
-        this.tabManagerState?.activeTab
-      )
-    ) {
-      return <Hidden />;
-    }
-
-    const hasRetryableError = Boolean(
-      !this.searchStatusState?.hasError &&
-      this.generatedAnswerState?.error?.isRetryable
-    );
-
-    const hasNoAnswerGenerated =
-      this.generatedAnswerState?.answer === undefined &&
-      !this.generatedAnswerState?.citations?.length &&
-      !hasRetryableError;
-
-    const isAnswerVisible = this.generatedAnswerState?.isVisible;
-    const hasCustomNoAnswerMessage = !!getNamedSlotFromHost(this.host, 'no-answer-message');
-    const hasClipboard = !!navigator?.clipboard?.writeText;
-
-    if (hasNoAnswerGenerated) {
-      return this.generatedAnswerState?.cannotAnswer && hasCustomNoAnswerMessage ? (
-        <GeneratedAnswerWrapper>
-          <GeneratedAnswerNoAnswerMessage i18n={this.bindings.i18n}>
-            <slot name="no-answer-message"></slot>
-          </GeneratedAnswerNoAnswerMessage>
-        </GeneratedAnswerWrapper>
-      ) : null;
-    }
-
-    const buildInteractiveCitationForCitation = (citation: GeneratedAnswerCitation) =>
-      buildInteractiveCitation(this.bindings.engine, {
-        options: { citation },
-      });
-
-    return <GeneratedAnswerCommon
-      collapsible={this.collapsible}
-      onShowButtonClick={this.clickOnShowButton.bind(this)}
-      onClickDislike={this.clickDislike.bind(this)}
-      onClickLike={this.clickLike.bind(this)}
-      onCopyToClipboard={this.copyToClipboard.bind(this)}
-      disableCitationAnchoring={this.disableCitationAnchoring}
-      copied={this.copied}
-      i18n={this.bindings.i18n}
-      copyError={this.copyError}
-      generatedAnswer={this.generatedAnswer}
-      generatedAnswerState={this.generatedAnswerState}
-      withToggle={this.withToggle}
-      isAnswerVisible={isAnswerVisible}
-      hasRetryableError={hasRetryableError}
-      hasClipboard={hasClipboard}
-      buildInteractiveCitationForCitation={buildInteractiveCitationForCitation}
-    />;
-
-  }
-
   private clickDislike() {
     this.setIsAnswerHelpful(false);
     this.generatedAnswer?.dislike();
@@ -491,5 +430,57 @@ export class AtomicGeneratedAnswer implements InitializableComponent {
     ) {
       this.modalRef.isOpen = true;
     }
+  }
+
+  public render() {
+    if (
+      !shouldDisplayOnCurrentTab(
+        [...this.tabsIncluded],
+        [...this.tabsExcluded],
+        this.tabManagerState?.activeTab
+      )
+    ) {
+      return <Hidden />;
+    }
+
+    const hasRetryableError = Boolean(
+      !this.searchStatusState?.hasError &&
+      this.generatedAnswerState?.error?.isRetryable
+    );
+
+    const hasNoAnswerGenerated =
+      this.generatedAnswerState?.answer === undefined &&
+      !this.generatedAnswerState?.citations?.length &&
+      !hasRetryableError;
+
+    const isAnswerVisible = this.generatedAnswerState?.isVisible;
+    const hasCustomNoAnswerMessage = !!getNamedSlotFromHost(this.host, 'no-answer-message');
+    const hasClipboard = !!navigator?.clipboard?.writeText;
+
+    const buildInteractiveCitationForCitation = (citation: GeneratedAnswerCitation) =>
+      buildInteractiveCitation(this.bindings.engine, {
+        options: { citation },
+      });
+
+    return <GeneratedAnswerRenderer
+      hasNoAnswerGenerated={hasNoAnswerGenerated}
+      hasCustomNoAnswerMessage={hasCustomNoAnswerMessage}
+      collapsible={this.collapsible}
+      onShowButtonClick={this.clickOnShowButton.bind(this)}
+      onClickDislike={this.clickDislike.bind(this)}
+      onClickLike={this.clickLike.bind(this)}
+      onCopyToClipboard={this.copyToClipboard.bind(this)}
+      disableCitationAnchoring={this.disableCitationAnchoring}
+      copied={this.copied}
+      i18n={this.bindings.i18n}
+      copyError={this.copyError}
+      generatedAnswer={this.generatedAnswer}
+      generatedAnswerState={this.generatedAnswerState}
+      withToggle={this.withToggle}
+      isAnswerVisible={isAnswerVisible}
+      hasRetryableError={hasRetryableError}
+      hasClipboard={hasClipboard}
+      buildInteractiveCitationForCitation={buildInteractiveCitationForCitation}
+    />;
   }
 }

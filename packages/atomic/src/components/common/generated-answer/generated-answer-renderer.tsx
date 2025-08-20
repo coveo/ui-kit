@@ -6,11 +6,6 @@ import type {
 } from '@coveo/headless';
 import { FunctionalComponent, h } from '@stencil/core';
 import type { i18n } from 'i18next';
-import {
-  GeneratedAnswerData,
-  SafeStorage,
-  StorageItems,
-} from '../../../utils/local-storage-utils';
 import { Heading } from '../stencil-heading';
 import { Switch } from '../switch';
 import { CopyButton } from './copy-button';
@@ -20,93 +15,116 @@ import { RetryPrompt } from './retry-prompt';
 import { ShowButton } from './show-button';
 import { SourceCitations } from './source-citations';
 
-export const readGeneratedAnswerStoredData = (withToggle?: boolean): GeneratedAnswerData => {
-  const storage = new SafeStorage();
-  const storedData = storage.getParsedJSON<GeneratedAnswerData>(
-    StorageItems.GENERATED_ANSWER_DATA,
-    { isVisible: true }
-  );
+interface GeneratedAnswerRendererProps {
+  collapsible?: boolean;
+  hasNoAnswerGenerated: boolean;
+  hasCustomNoAnswerMessage: boolean;
+  onShowButtonClick: () => void;
+  onClickDislike: () => void;
+  onClickLike: () => void;
+  onCopyToClipboard: () => Promise<void>;
+  disableCitationAnchoring?: boolean;
+  copied: boolean;
+  i18n: i18n;
+  copyError: boolean;
+  generatedAnswer: GeneratedAnswer;
+  generatedAnswerState: GeneratedAnswerState;
+  withToggle?: boolean;
+  isAnswerVisible: boolean;
+  hasRetryableError: boolean;
+  hasClipboard: boolean;
+  buildInteractiveCitationForCitation: (citation: GeneratedAnswerCitation) => InteractiveCitation;
+}
 
-  // This check ensures that the answer is visible when the toggle is hidden and visible is set to false in the local storage.
-  return { isVisible: (withToggle && storedData.isVisible) || !withToggle };
-};
-
-export const writeGeneratedAnswerStoredData = (data: GeneratedAnswerData) => {
-  const storage = new SafeStorage();
-  storage.setJSON(StorageItems.GENERATED_ANSWER_DATA, data);
-};
-
-export const insertGeneratedAnswerFeedbackModal = (
-  host: HTMLElement,
-  generatedAnswer?: () => any
-) => {
-  const modalRef = document.createElement(
-    'atomic-generated-answer-feedback-modal'
-  );
-  if (generatedAnswer) {
-    modalRef.generatedAnswer = generatedAnswer();
+export const GeneratedAnswerRenderer: FunctionalComponent<GeneratedAnswerRendererProps> = ({
+  onShowButtonClick,
+  onClickDislike,
+  onClickLike,
+  onCopyToClipboard,
+  collapsible,
+  disableCitationAnchoring,
+  copied,
+  i18n,
+  copyError,
+  generatedAnswer,
+  generatedAnswerState,
+  withToggle,
+  isAnswerVisible,
+  hasRetryableError,
+  hasClipboard,
+  hasNoAnswerGenerated,
+  hasCustomNoAnswerMessage,
+  buildInteractiveCitationForCitation
+}) => {
+  if (hasNoAnswerGenerated) {
+    return generatedAnswerState?.cannotAnswer && hasCustomNoAnswerMessage ? (
+      <GeneratedAnswerWrapper>
+        <GeneratedAnswerNoAnswerMessage i18n={i18n}>
+          <slot name="no-answer-message"></slot>
+        </GeneratedAnswerNoAnswerMessage>
+      </GeneratedAnswerWrapper>
+    ) : null;
   }
-  host.insertAdjacentElement('beforebegin', modalRef);
-  return modalRef;
-};
+  return <GeneratedAnswerWrapper>
+    <div part="generated-content">
+      <GeneratedAnswerHeader
+        i18n={i18n}
+        isAnswerVisible={!!isAnswerVisible}
+        withToggle={withToggle}
+        onToggle={(checked) => {
+          checked ? generatedAnswer?.show() : generatedAnswer?.hide();
+        }} />
 
-export const getGeneratedAnswerStatus = (
-  generatedAnswerState?: GeneratedAnswerState,
-  i18n?: i18n
-) => {
-  if (!generatedAnswerState || !i18n) {
-    return '';
-  }
+      {hasRetryableError && isAnswerVisible ? (
+        <GeneratedAnswerRetryPrompt
+          i18n={i18n}
+          onRetry={() => generatedAnswer?.retry()} />
+      ) : null}
 
-  const isHidden = !generatedAnswerState.isVisible;
-  const isGenerating = !!generatedAnswerState.isStreaming;
-  const hasAnswer = !!generatedAnswerState.answer;
-  const hasError = !!generatedAnswerState.error;
+      {!hasRetryableError && isAnswerVisible ? (
+        <GeneratedAnswerContent
+          answer={generatedAnswerState?.answer}
+          answerContentFormat={generatedAnswerState?.answerContentFormat}
+          citations={generatedAnswerState?.citations}
+          i18n={i18n}
+          isStreaming={generatedAnswerState?.isStreaming}
+          copied={copied}
+          copyError={copyError}
+          generatedAnswerState={generatedAnswerState}
+          withToggle={withToggle}
+          onClickDislike={onClickDislike}
+          onClickLike={onClickLike}
+          onCopyToClipboard={onCopyToClipboard}
+          hasClipboard={hasClipboard}
+          disableCitationAnchoring={disableCitationAnchoring}
+          buildInteractiveCitationForCitation={buildInteractiveCitationForCitation}
+          generatedAnswer={generatedAnswer}
+        />
+      ) : null}
 
-  if (isHidden) {
-    return i18n.t('generated-answer-hidden');
-  }
+      {!hasRetryableError && isAnswerVisible && (
+        <GeneratedAnswerFooter
+          collapsible={collapsible}
+          expanded={generatedAnswerState?.expanded}
+          i18n={i18n}
+          isStreaming={generatedAnswerState?.isStreaming}
+          onShowButtonClick={onShowButtonClick}
+        >
+          <GeneratedAnswerDisclaimer
+            isStreaming={generatedAnswerState?.isStreaming}
+            i18n={i18n}
+          >
+            <slot name="disclaimer" slot="disclaimer">
+              {i18n.t('generated-answer-disclaimer')}
+            </slot>
+          </GeneratedAnswerDisclaimer>
+        </GeneratedAnswerFooter>
+      )}
+    </div>
+  </GeneratedAnswerWrapper>;
+}
 
-  if (isGenerating) {
-    return i18n.t('generating-answer');
-  }
-
-  if (hasError) {
-    return i18n.t('answer-could-not-be-generated');
-  }
-
-  if (hasAnswer) {
-    return i18n.t('answer-generated', {
-      answer: generatedAnswerState.answer,
-    });
-  }
-
-  return '';
-};
-
-export const copyToClipboard = async (
-  answer: string,
-  setCopied: (copied: boolean) => void,
-  setCopyError: (error: boolean) => void,
-  onLogCopyToClipboard?: () => void,
-  logger?: any
-) => {
-  try {
-    await navigator.clipboard.writeText(answer);
-    setCopied(true);
-    onLogCopyToClipboard?.();
-  } catch (error) {
-    setCopyError(true);
-    logger?.error(`Failed to copy to clipboard: ${error}`);
-  }
-
-  setTimeout(() => {
-    setCopied(false);
-    setCopyError(false);
-  }, 2000);
-};
-
-export const GeneratedAnswerWrapper: FunctionalComponent<{
+const GeneratedAnswerWrapper: FunctionalComponent<{
   contentClasses?: string;
 }> = ({ contentClasses }, children) => {
   const classes = contentClasses ||
@@ -381,103 +399,7 @@ const GeneratedAnswerContent: FunctionalComponent<{
   );
 };
 
-interface GeneratedAnswerCommonProps {
-  collapsible?: boolean;
-  onShowButtonClick: () => void;
-  onClickDislike: () => void;
-  onClickLike: () => void;
-  onCopyToClipboard: () => Promise<void>;
-  disableCitationAnchoring?: boolean;
-  copied: boolean;
-  i18n: i18n;
-  copyError: boolean;
-  generatedAnswer: GeneratedAnswer;
-  generatedAnswerState: GeneratedAnswerState;
-  withToggle?: boolean;
-  isAnswerVisible: boolean;
-  hasRetryableError: boolean;
-  hasClipboard: boolean;
-  buildInteractiveCitationForCitation: (citation: GeneratedAnswerCitation) => InteractiveCitation;
-}
-
-export const GeneratedAnswerCommon: FunctionalComponent<GeneratedAnswerCommonProps> = ({
-  onShowButtonClick,
-  onClickDislike,
-  onClickLike,
-  onCopyToClipboard,
-  collapsible,
-  disableCitationAnchoring,
-  copied,
-  i18n,
-  copyError,
-  generatedAnswer,
-  generatedAnswerState,
-  withToggle,
-  isAnswerVisible,
-  hasRetryableError,
-  hasClipboard,
-  buildInteractiveCitationForCitation
-}) => {
-  return <GeneratedAnswerWrapper>
-    <div part="generated-content">
-      <GeneratedAnswerHeader
-        i18n={i18n}
-        isAnswerVisible={!!isAnswerVisible}
-        withToggle={withToggle}
-        onToggle={(checked) => {
-          checked ? generatedAnswer?.show() : generatedAnswer?.hide();
-        }} />
-
-      {hasRetryableError && isAnswerVisible ? (
-        <GeneratedAnswerRetryPrompt
-          i18n={i18n}
-          onRetry={() => generatedAnswer?.retry()} />
-      ) : null}
-
-      {!hasRetryableError && isAnswerVisible ? (
-        <GeneratedAnswerContent
-          answer={generatedAnswerState?.answer}
-          answerContentFormat={generatedAnswerState?.answerContentFormat}
-          citations={generatedAnswerState?.citations}
-          i18n={i18n}
-          isStreaming={generatedAnswerState?.isStreaming}
-          copied={copied}
-          copyError={copyError}
-          generatedAnswerState={generatedAnswerState}
-          withToggle={withToggle}
-          onClickDislike={onClickDislike}
-          onClickLike={onClickLike}
-          onCopyToClipboard={onCopyToClipboard}
-          hasClipboard={hasClipboard}
-          disableCitationAnchoring={disableCitationAnchoring}
-          buildInteractiveCitationForCitation={buildInteractiveCitationForCitation}
-          generatedAnswer={generatedAnswer}
-        />
-      ) : null}
-
-      {!hasRetryableError && isAnswerVisible && (
-        <GeneratedAnswerFooter
-          collapsible={collapsible}
-          expanded={generatedAnswerState?.expanded}
-          i18n={i18n}
-          isStreaming={generatedAnswerState?.isStreaming}
-          onShowButtonClick={onShowButtonClick}
-        >
-          <GeneratedAnswerDisclaimer
-            isStreaming={generatedAnswerState?.isStreaming}
-            i18n={i18n}
-          >
-            <slot name="disclaimer" slot="disclaimer">
-              {i18n.t('generated-answer-disclaimer')}
-            </slot>
-          </GeneratedAnswerDisclaimer>
-        </GeneratedAnswerFooter>
-      )}
-    </div>
-  </GeneratedAnswerWrapper>;
-} 
-
-export const GeneratedAnswerNoAnswerMessage: FunctionalComponent<{
+const GeneratedAnswerNoAnswerMessage: FunctionalComponent<{
   i18n: i18n;
 }> = ({ i18n }, children) => {
   return (
