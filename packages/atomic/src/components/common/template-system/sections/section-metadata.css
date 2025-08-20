@@ -1,0 +1,9 @@
+@reference './sections-utilities.css';
+
+@utility section-metadata {
+  @apply set-font-size-sm section-base-overflow;
+  &.with-sections {
+    grid-area: title-metadata;
+    margin-top: 0.475rem;
+  }
+}
