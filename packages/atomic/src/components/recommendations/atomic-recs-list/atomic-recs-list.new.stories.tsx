@@ -42,13 +42,13 @@ export const Default: Story = {
   afterEach,
 };
 
-const {afterEachNoFirstQuery} = wrapInRecommendationInterface({
+const {afterEach: afterEachNoFirstQuery} = wrapInRecommendationInterface({
   skipFirstQuery: true,
 });
 
 export const RecsBeforeQuery: Story = {
   tags: ['test'],
-  afterEachNoFirstQuery,
+  afterEach: afterEachNoFirstQuery,
 };
 
 export const RecsWithFullTemplate: Story = {
