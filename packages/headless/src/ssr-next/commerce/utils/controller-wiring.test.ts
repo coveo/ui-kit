@@ -7,6 +7,7 @@ import {
   listingDefinitionSchema,
   recommendationsDefinitionSchema,
   searchDefinitionSchema,
+  standaloneDefinitionSchema,
   wireControllerParams,
 } from './controller-wiring.js';
 
@@ -32,6 +33,7 @@ describe('controller-wiring', () => {
     it.each([
       {schema: listingDefinitionSchema},
       {schema: searchDefinitionSchema},
+      {schema: standaloneDefinitionSchema},
       {schema: recommendationsDefinitionSchema},
     ])('it should throw for missing required parameters', ({schema}) => {
       expect(() => {
