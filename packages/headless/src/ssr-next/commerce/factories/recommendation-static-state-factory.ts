@@ -14,11 +14,7 @@ import type {
   FetchStaticStateFunction,
   FetchStaticStateParameters,
 } from '../types/engine.js';
-import {
-  getRecommendationDefinitions,
-  refreshRecommendationControllers,
-} from '../utils/recommendations/recommendation-helpers.js';
-import {validateUniqueRecommendationSlotIds} from '../validation/controller-validation.js';
+import {filterRecommendationControllers} from '../utils/recommendation-filter.js';
 import {
   buildFactory,
   type CommerceEngineDefinitionOptions,
@@ -36,7 +32,7 @@ export function fetchRecommendationStaticStateFactory<
     const [props] = params;
     const allowedRecommendationKeys = (
       props as RecommendationBuildConfig<TControllerDefinitions>
-    ).recommendations;
+    ).recommendations as string[];
 
     const solutionTypeBuild = await buildFactory(
       controllerDefinitions,
@@ -47,17 +43,10 @@ export function fetchRecommendationStaticStateFactory<
       ...params
     )) as BuildResult<TControllerDefinitions>;
 
-    const recommendationDefinitions = getRecommendationDefinitions(
-      controllerDefinitions
-    );
-
-    validateUniqueRecommendationSlotIds(recommendationDefinitions);
-
-    refreshRecommendationControllers(
+    filterRecommendationControllers(
       controllers,
-      recommendationDefinitions,
-      allowedRecommendationKeys as string[]
-    );
+      controllerDefinitions ?? {}
+    ).refresh(allowedRecommendationKeys);
 
     const searchActions = await Promise.all(
       engine.waitForRequestCompletedAction()

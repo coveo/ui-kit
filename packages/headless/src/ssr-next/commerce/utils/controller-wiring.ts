@@ -16,8 +16,10 @@ import type {BuildConfig, SearchBuildConfig} from '../types/build.js';
 import {SolutionType} from '../types/controller-constants.js';
 import type {InferControllerPropsMapFromDefinitions} from '../types/controller-inference.js';
 import type {CommerceControllerDefinitionsMap} from '../types/engine.js';
-import {isRecommendationDefinition} from './recommendations/guards.js';
-import {getRecommendationDefinitions} from './recommendations/recommendation-helpers.js';
+import {
+  getRecommendationDefinitions,
+  isRecommendationDefinition,
+} from './recommendation-filter.js';
 
 const requiredDefinition = {
   language: contextDefinition.language,
