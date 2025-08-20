@@ -69,6 +69,9 @@ const meta: Meta = {
   },
   args: {
     ...args,
+    engine: undefined,
+    i18n: undefined,
+    urlManager: undefined,
     language: 'en',
     'default-slot': `<span>Interface content</span>`,
   },

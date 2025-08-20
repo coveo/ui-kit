@@ -35,7 +35,12 @@ const meta: Meta = {
       handles: events,
     },
   },
-  args,
+  args: {
+    ...args,
+    engine: undefined,
+    i18n: undefined,
+    urlManager: undefined,
+  },
   argTypes: {
     ...argTypes,
     engine: {
@@ -66,7 +71,6 @@ const meta: Meta = {
       },
     },
   },
-
   afterEach: async (context) => {
     await initializeCommerceRecommendationInterface(context.canvasElement);
   },
