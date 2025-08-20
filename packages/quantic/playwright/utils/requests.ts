@@ -47,7 +47,7 @@ export function isUaCustomEvent(request: Request): boolean {
 }
 
 /**
- * Indicates whether the specified request corresponds to a Custom Usage Analytics request.
+ * Indicates whether the specified request corresponds to an RGA evaluation request.
  * @param request The request to check.
  */
 export function isRgaEvaluationRequest(request: Request): boolean {
