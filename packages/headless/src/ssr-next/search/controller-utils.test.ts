@@ -12,8 +12,8 @@ import {
 } from '../../test/mock-ssr-controller-definitions.js';
 import {createMockState} from '../../test/mock-state.js';
 import * as utils from '../../utils/utils.js';
-import {ControllerBuilder} from './builders/controller-builder.js';
-import {createStaticControllerBuilder} from './builders/static-controller-builder.js';
+import {ControllerBuilder} from '../common/builders/controller-builder.js';
+import {createStaticControllerBuilder} from '../common/builders/static-controller-builder.js';
 import {
   buildControllerDefinitions,
   createStaticState,

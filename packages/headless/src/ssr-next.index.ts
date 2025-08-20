@@ -78,23 +78,6 @@ export type {
 } from './controllers/controller/headless-controller.js';
 export type {InlineLink} from './controllers/smart-snippet/headless-smart-snippet-interactive-inline-links.js';
 export type {
-  ControllerDefinitionsMap,
-  ControllerDefinitionWithoutProps,
-  ControllerDefinitionWithProps,
-} from './ssr-next/common/types/controllers.js';
-export type {
-  EngineDefinition,
-  InferHydratedState,
-  InferStaticState,
-} from './ssr-next/common/types/engine.js';
-export type {
-  InferControllerFromDefinition,
-  InferControllerStaticStateFromController,
-  InferControllerStaticStateMapFromControllers,
-  InferControllerStaticStateMapFromDefinitions,
-  InferControllersMapFromDefinition,
-} from './ssr-next/common/types/inference.js';
-export type {
   AutomaticFacetBreadcrumb,
   Breadcrumb,
   BreadcrumbManager,
@@ -480,11 +463,25 @@ export type {
 export {defineUrlManager} from './ssr-next/search/controllers/url-manager/headless-url-manager.ssr.js';
 export type {
   SearchCompletedAction,
-  SearchEngineDefinition,
-  SearchEngineDefinitionOptions,
   SSRSearchEngine as SearchEngine,
 } from './ssr-next/search/engine/search-engine.ssr.js';
 export {defineSearchEngine} from './ssr-next/search/engine/search-engine.ssr.js';
+export type {
+  ControllerDefinitionsMap,
+  InferControllerStaticStateFromController,
+  InferControllerStaticStateMapFromControllers,
+  InferHydratedState,
+  InferStaticState,
+} from './ssr-next/search/types/controller-definition.js';
+export type {
+  InferControllerFromDefinition,
+  InferControllerStaticStateMapFromDefinitions,
+  InferControllersMapFromDefinition,
+} from './ssr-next/search/types/controller-inference.js';
+export type {
+  SearchEngineDefinition,
+  SearchEngineDefinitionOptions,
+} from './ssr-next/search/types/engine.js';
 // State
 export type {
   SearchAppState,
