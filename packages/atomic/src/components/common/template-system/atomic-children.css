@@ -1,0 +1,39 @@
+@utility atomic-children-mobile-* {
+  atomic-result-children,
+  atomic-insight-result-children {
+    &::part(children-root) {
+      padding-top: --value([\*]);
+      @apply mt-4 -mx-4 px-4;
+    }
+    &::part(show-hide-button) {
+      margin-top: --modifier([\*]);
+      margin-bottom: --modifier([\*]);
+    }
+  }
+
+  &.child-result:not(.last-child),
+  .placeholder {
+    margin-bottom: --value([\*]);
+  }
+}
+
+@utility atomic-children-desktop-* {
+  atomic-result-children,
+  atomic-insight-result-children {
+    &::part(children-root) {
+      @apply border-neutral border;
+      border-radius: 16px;
+      margin-top: --modifier([\*]);
+      padding: --value([\*]);
+    }
+    &::part(show-hide-button) {
+      margin-top: --modifier([\*]);
+      margin-bottom: --modifier([\*]);
+    }
+  }
+
+  &.child-result:not(.last-child),
+  .placeholder {
+    margin-bottom: --value([\*]);
+  }
+}
