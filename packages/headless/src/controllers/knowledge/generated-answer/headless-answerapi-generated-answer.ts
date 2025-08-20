@@ -1,4 +1,3 @@
-import {createSelector} from '@reduxjs/toolkit';
 import type {GeneratedAnswerStream} from '../../../api/knowledge/generated-answer-stream.js';
 import {
   type AnswerEvaluationPOSTParams,
@@ -9,6 +8,7 @@ import {
   answerApi,
   fetchAnswer,
   selectAnswer,
+  selectAnswerTriggerParams,
 } from '../../../api/knowledge/stream-answer-api.js';
 import type {StreamAnswerAPIState} from '../../../api/knowledge/stream-answer-api-state.js';
 import {warnIfUsingNextAnalyticsModeForServiceFeature} from '../../../app/engine.js';
@@ -23,7 +23,6 @@ import {
 } from '../../../features/generated-answer/generated-answer-actions.js';
 import type {GeneratedAnswerFeedback} from '../../../features/generated-answer/generated-answer-analytics-actions.js';
 import {filterOutDuplicatedCitations} from '../../../features/generated-answer/utils/generated-answer-citation-utils.js';
-import {selectQuery} from '../../../features/query/query-selectors.js';
 import {queryReducer as query} from '../../../features/query/query-slice.js';
 import type {
   GeneratedAnswerSection,
@@ -101,6 +100,7 @@ const subscribeToSearchRequest = (
   let lastTriggerParams: ReturnType<typeof selectAnswerTriggerParams>;
   const strictListener = () => {
     const state = engine.state;
+    // console.log('state: ' + JSON.stringify(state));
     const triggerParams = selectAnswerTriggerParams(state);
 
     if (!lastTriggerParams || triggerParams.q.length === 0) {
@@ -214,18 +214,3 @@ function loadAnswerApiReducers(
   engine.addReducers({[answerApi.reducerPath]: answerApi.reducer, query});
   return true;
 }
-
-const selectAnswerTriggerParams = createSelector(
-  (state) => selectQuery(state)?.q,
-  (state) => state.search.requestId,
-  (state) => state.generatedAnswer.cannotAnswer,
-  (state) => state.configuration.analytics.analyticsMode,
-  (state) => state.search.searchAction?.actionCause,
-  (q, requestId, cannotAnswer, analyticsMode, actionCause) => ({
-    q,
-    requestId,
-    cannotAnswer,
-    analyticsMode,
-    actionCause,
-  })
-);
