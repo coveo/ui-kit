@@ -12,7 +12,7 @@ import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 setCustomElementsManifest(customElements);
 defineCustomElements();
 
-const {decorator, play} = wrapInCommerceInterface();
+const {decorator, afterEach} = wrapInCommerceInterface();
 const {events, args, argTypes, template} = getStorybookHelpers(
   'atomic-commerce-sort-dropdown',
   {excludeCategories: ['methods']}
@@ -33,7 +33,7 @@ const meta: Meta = {
   args,
   argTypes,
 
-  afterEach: play,
+  afterEach,
 };
 
 export default meta;

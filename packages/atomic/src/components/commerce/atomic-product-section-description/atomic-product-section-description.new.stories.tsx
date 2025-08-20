@@ -5,17 +5,18 @@ import {wrapInCommerceProductList} from '@/storybook-utils/commerce/commerce-pro
 import {wrapInProductTemplateForSections} from '@/storybook-utils/commerce/product-template-section-wrapper';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 
-const {decorator: commerceInterfaceDecorator, play} = wrapInCommerceInterface({
-  engineConfig: {
-    preprocessRequest: (request) => {
-      const parsed = JSON.parse(request.body as string);
-      parsed.perPage = 1;
-      request.body = JSON.stringify(parsed);
-      return request;
+const {decorator: commerceInterfaceDecorator, afterEach} =
+  wrapInCommerceInterface({
+    engineConfig: {
+      preprocessRequest: (request) => {
+        const parsed = JSON.parse(request.body as string);
+        parsed.perPage = 1;
+        request.body = JSON.stringify(parsed);
+        return request;
+      },
     },
-  },
-  includeCodeRoot: false,
-});
+    includeCodeRoot: false,
+  });
 const {decorator: commerceProductListDecorator} = wrapInCommerceProductList(
   'grid',
   false
@@ -52,7 +53,7 @@ export const Default: Story = {
     commerceProductListDecorator,
     commerceInterfaceDecorator,
   ],
-  afterEach: play,
+  afterEach,
   args: {
     'default-slot': `<p class="text-sm text-gray-600">Premium wireless headphones with industry-leading noise cancellation and superior sound quality.</p>`,
   },

@@ -27,7 +27,7 @@ const layoutDecorator: Decorator = (story) => html`
   </atomic-search-layout>
 `;
 
-const {decorator, play} = wrapInSearchInterface({
+const {decorator, afterEach} = wrapInSearchInterface({
   accessToken: 'xx564559b1-0045-48e1-953c-3addd1ee4457',
   organizationId: 'searchuisamples',
   search: {
@@ -56,7 +56,7 @@ const meta: Meta = {
   args,
   argTypes,
 
-  afterEach: play,
+  afterEach,
 };
 
 export default meta;

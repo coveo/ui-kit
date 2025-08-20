@@ -3,7 +3,7 @@ import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {wrapInCommerceInterface} from '@/storybook-utils/commerce/commerce-interface-wrapper';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 
-const {decorator, play} = wrapInCommerceInterface();
+const {decorator, afterEach} = wrapInCommerceInterface();
 const {events, args, argTypes, template} = getStorybookHelpers(
   'atomic-commerce-layout',
   {excludeCategories: ['methods']}
@@ -23,7 +23,7 @@ const meta: Meta = {
   },
   argTypes,
 
-  afterEach: play,
+  afterEach,
   args: {
     ...args,
     'default-slot': `<span>Layout content</span>`,

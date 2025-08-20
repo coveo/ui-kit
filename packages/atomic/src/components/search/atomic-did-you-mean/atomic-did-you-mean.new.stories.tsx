@@ -13,7 +13,7 @@ import {userEvent} from 'storybook/test';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
 
-const {decorator, play} = wrapInSearchInterface();
+const {decorator, afterEach} = wrapInSearchInterface();
 const {events, args, argTypes, template} = getStorybookHelpers(
   'atomic-did-you-mean',
   {excludeCategories: ['methods']}
@@ -34,7 +34,7 @@ const meta: Meta = {
   args,
   argTypes,
 
-  afterEach: play,
+  afterEach,
 };
 
 export default meta;
@@ -48,7 +48,7 @@ const searchBoxDecorator: Decorator = (story) => html`
 
 const searchPlay: (context: StoryContext, query: string) => Promise<void> =
   async (context, query) => {
-    await play(context);
+    await afterEach(context);
     const {canvasElement, step} = context;
     const canvas = within(canvasElement);
 

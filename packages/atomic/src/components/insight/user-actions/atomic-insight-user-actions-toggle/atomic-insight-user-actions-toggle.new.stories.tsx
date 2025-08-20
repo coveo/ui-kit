@@ -3,7 +3,7 @@ import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {wrapInInsightInterface} from '@/storybook-utils/insight/insight-interface-wrapper';
 
-const {decorator, play} = wrapInInsightInterface();
+const {decorator, afterEach} = wrapInInsightInterface();
 const {events, args, argTypes, template} = getStorybookHelpers(
   'atomic-insight-user-actions-toggle',
   {excludeCategories: ['methods']}
@@ -24,7 +24,7 @@ const meta: Meta = {
   },
   args,
   argTypes,
-  afterEach: play,
+  afterEach,
 };
 
 export default meta;

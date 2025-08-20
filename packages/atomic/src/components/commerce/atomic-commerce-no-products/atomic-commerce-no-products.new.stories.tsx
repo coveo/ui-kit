@@ -2,7 +2,7 @@ import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
 import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {html} from 'lit';
 import {
-  playExecuteFirstRequest,
+  executeFirstRequestHook,
   wrapInCommerceInterface,
 } from '@/storybook-utils/commerce/commerce-interface-wrapper';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
@@ -12,7 +12,7 @@ const {events, args, argTypes, template} = getStorybookHelpers(
   {excludeCategories: ['methods']}
 );
 
-const {decorator, play: preprocessedPlayed} = wrapInCommerceInterface({
+const {decorator, afterEach: preprocessedPlayed} = wrapInCommerceInterface({
   skipFirstRequest: true,
   engineConfig: {
     preprocessRequest: (r) => {
@@ -62,6 +62,6 @@ export const Default: Story = {
   ],
   afterEach: async (context) => {
     await preprocessedPlayed(context);
-    await playExecuteFirstRequest(context);
+    await executeFirstRequestHook(context);
   },
 };

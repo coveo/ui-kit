@@ -20,14 +20,14 @@ export const wrapInCommerceInterface = ({
   includeCodeRoot?: boolean;
 } = {}): {
   decorator: Decorator;
-  play: (context: StoryContext) => Promise<void>;
+  afterEach: (context: StoryContext) => Promise<void>;
 } => ({
   decorator: (story) => html`
     <atomic-commerce-interface ${spreadProps(includeCodeRoot?{id:"code-root"}:{})} type="${type}">
       ${story()}
     </atomic-commerce-interface>
   `,
-  play: async ({ canvasElement }) => {
+  afterEach: async ({ canvasElement }) => {
     await customElements.whenDefined('atomic-commerce-interface');
     const commerceInterface = canvasElement.querySelector<AtomicCommerceInterface>('atomic-commerce-interface')!;
     await commerceInterface!.initialize({
@@ -41,14 +41,14 @@ export const wrapInCommerceInterface = ({
   },
 });
 
-export const playExecuteFirstRequest: (
+export const executeFirstRequestHook: (
   context: StoryContext
 ) => Promise<void> = async ({ canvasElement }) => {
   const commerceInterface = canvasElement.querySelector<AtomicCommerceInterface>('atomic-commerce-interface')!;
   await commerceInterface!.executeFirstRequest();
 };
 
-export const playHideFacetTypes = async (
+export const hideFacetTypesHook = async (
   facetTypeToKeep: string,
   context: StoryContext
 ): Promise<void> => {

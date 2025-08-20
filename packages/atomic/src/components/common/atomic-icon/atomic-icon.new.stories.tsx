@@ -14,7 +14,7 @@ function snakeToCamel(value: string) {
     .replace(/([_][a-z])/g, (group) => group.toUpperCase().replace('_', ''));
 }
 
-const {decorator, play} = wrapInSearchInterface();
+const {decorator, afterEach} = wrapInSearchInterface();
 const {events, args, argTypes, template} = getStorybookHelpers('atomic-icon', {
   excludeCategories: ['methods'],
 });
@@ -35,7 +35,7 @@ const meta: Meta = {
   args,
   argTypes,
 
-  afterEach: play,
+  afterEach,
 };
 
 export default meta;
@@ -56,7 +56,7 @@ export const Default: Story = {
         ${story()}`,
   ],
   afterEach: async (context) => {
-    await play(context);
+    await afterEach(context);
     const {canvasElement, step} = context;
     const canvas = within(canvasElement);
     await step('Wait for the facet values to render', async () => {

@@ -5,8 +5,8 @@ import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-w
 import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
 
 // Wrap it in whatever interface/component you need
-const {decorator, play} = wrapInSearchInterface();
-// const {decorator, play} = wrapInCommerceInterface();
+const {decorator, afterEach} = wrapInSearchInterface();
+// const {decorator, afterEach} = wrapInCommerceInterface();
 
 const meta: Meta = {
   component: '{{name}}',
@@ -15,7 +15,7 @@ const meta: Meta = {
   render: renderComponent,
   decorators: [decorator],
   parameters,
-  afterEach: play,
+  afterEach,
 };
 
 export default meta;

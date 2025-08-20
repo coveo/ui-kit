@@ -6,7 +6,7 @@ import {expect, userEvent, waitFor} from 'storybook/test';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
 
-const {decorator, play} = wrapInSearchInterface();
+const {decorator, afterEach} = wrapInSearchInterface();
 const {events, args, argTypes, template} = getStorybookHelpers(
   'atomic-breadbox',
   {excludeCategories: ['methods']}
@@ -28,7 +28,7 @@ const meta: Meta = {
   args,
   argTypes,
 
-  afterEach: play,
+  afterEach,
 };
 
 export default meta;
@@ -61,7 +61,7 @@ export const Default: Story = {
     `,
   ],
   afterEach: async (context) => {
-    await play(context);
+    await afterEach(context);
     const {canvasElement, step} = context;
     const canvas = within(canvasElement);
     await step('Wait for the facet values to render', async () => {

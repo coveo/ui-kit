@@ -25,7 +25,7 @@ const productListingEngineConfiguration: Partial<CommerceEngineConfiguration> =
     ...restOfConfiguration,
   };
 
-const {decorator, play} = wrapInCommerceInterface({
+const {decorator, afterEach} = wrapInCommerceInterface({
   engineConfig: productListingEngineConfiguration,
   type: 'product-listing',
   includeCodeRoot: false,
@@ -52,7 +52,7 @@ const meta: Meta = {
   args,
   argTypes,
 
-  afterEach: play,
+  afterEach,
 };
 
 export default meta;

@@ -4,7 +4,9 @@ import {wrapInCommerceInterface} from '@/storybook-utils/commerce/commerce-inter
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import type {AtomicCommerceInterface} from '../atomic-commerce-interface/atomic-commerce-interface';
 
-const {decorator, play} = wrapInCommerceInterface({skipFirstRequest: true});
+const {decorator, afterEach} = wrapInCommerceInterface({
+  skipFirstRequest: true,
+});
 const {events, args, argTypes, template} = getStorybookHelpers(
   'atomic-commerce-text',
   {excludeCategories: ['methods']}
@@ -25,7 +27,7 @@ const meta: Meta = {
   args,
   argTypes,
 
-  afterEach: play,
+  afterEach,
 };
 
 export default meta;
@@ -53,7 +55,7 @@ export const WithTranslations: Story = {
         [`${context.args.value}_other`]: context.args.translationValueOther,
       });
     });
-    await play(context);
+    await afterEach(context);
   },
   args: {
     value: 'translation-key',

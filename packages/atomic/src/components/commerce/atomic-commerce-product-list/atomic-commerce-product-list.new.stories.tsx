@@ -1,7 +1,7 @@
 import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
 import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {
-  playExecuteFirstRequest,
+  executeFirstRequestHook,
   wrapInCommerceInterface,
 } from '@/storybook-utils/commerce/commerce-interface-wrapper';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
@@ -11,7 +11,7 @@ const {events, args, argTypes, template} = getStorybookHelpers(
   {excludeCategories: ['methods']}
 );
 
-const {decorator, play} = wrapInCommerceInterface({
+const {decorator, afterEach} = wrapInCommerceInterface({
   skipFirstRequest: false,
   engineConfig: {
     preprocessRequest: (request) => {
@@ -23,11 +23,11 @@ const {decorator, play} = wrapInCommerceInterface({
   },
 });
 
-const {play: playNoFirstQuery} = wrapInCommerceInterface({
+const {afterEach: afterEachNoFirstQuery} = wrapInCommerceInterface({
   skipFirstRequest: true,
 });
 
-const {play: playNoProducts} = wrapInCommerceInterface({
+const {afterEach: afterEachNoProducts} = wrapInCommerceInterface({
   skipFirstRequest: false,
   engineConfig: {
     preprocessRequest: (request) => {
@@ -60,7 +60,7 @@ const meta: Meta = {
   },
   argTypes,
 
-  afterEach: play,
+  afterEach,
 };
 
 export default meta;
@@ -115,7 +115,7 @@ export const GridDisplayWithTemplate: Story = {
 export const GridDisplayBeforeQuery: Story = {
   name: 'Using grid display before query',
   afterEach: async (context) => {
-    await playNoFirstQuery(context);
+    await afterEachNoFirstQuery(context);
   },
 };
 
@@ -176,7 +176,7 @@ export const ListDisplayBeforeQuery: Story = {
     display: 'list',
   },
   afterEach: async (context) => {
-    await playNoFirstQuery(context);
+    await afterEachNoFirstQuery(context);
   },
 };
 
@@ -210,7 +210,7 @@ export const TableDisplayBeforeQuery: Story = {
     display: 'table',
   },
   afterEach: async (context) => {
-    await playNoFirstQuery(context);
+    await afterEachNoFirstQuery(context);
   },
 };
 
@@ -219,7 +219,7 @@ export const NoProducts: Story = {
   name: 'No products',
   decorators: [(story) => story()],
   afterEach: async (context) => {
-    await playNoProducts(context);
-    await playExecuteFirstRequest(context);
+    await afterEachNoProducts(context);
+    await executeFirstRequestHook(context);
   },
 };

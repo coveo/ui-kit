@@ -13,7 +13,7 @@ export const wrapInInsightInterface = (
   includeCodeRoot: boolean = true
 ): {
   decorator: Decorator;
-  play: (context: StoryContext) => Promise<void>;
+  afterEach: (context: StoryContext) => Promise<void>;
 } => ({
   decorator: (story) => html`
     <style data-styles>
@@ -30,7 +30,7 @@ export const wrapInInsightInterface = (
       ${story()}
     </atomic-insight-interface>
   `,
-  play: async ({canvasElement, step}) => {
+  afterEach: async ({canvasElement, step}) => {
     await customElements.whenDefined('atomic-insight-interface');
     const insightInterface =
       canvasElement.querySelector<HTMLAtomicInsightInterfaceElement>(

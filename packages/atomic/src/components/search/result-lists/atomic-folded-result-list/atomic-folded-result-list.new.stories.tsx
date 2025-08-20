@@ -126,7 +126,7 @@ const preprocessRequest = (response: any) => {
   return response;
 };
 
-const {decorator, play} = wrapInSearchInterface({
+const {decorator, afterEach} = wrapInSearchInterface({
   preprocessRequest,
 });
 const {events, args, argTypes, template} = getStorybookHelpers(
@@ -149,7 +149,7 @@ const meta: Meta = {
   args,
   argTypes,
 
-  afterEach: play,
+  afterEach,
 };
 
 export default meta;
@@ -168,7 +168,7 @@ const preprocessRequestNoChildrenResult = (response: any) => {
   return response;
 };
 
-const {play: noResultChildrenPlay} = wrapInSearchInterface({
+const {afterEach: noResultChildrenPlay} = wrapInSearchInterface({
   preprocessRequest: preprocessRequestNoChildrenResult,
 });
 

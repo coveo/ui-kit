@@ -4,7 +4,7 @@ import {html} from 'lit';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {wrapInRecommendationInterface} from '@/storybook-utils/search/recs-interface-wrapper';
 
-const {decorator, play} = wrapInRecommendationInterface();
+const {decorator, afterEach} = wrapInRecommendationInterface();
 const {events, args, argTypes, template} = getStorybookHelpers(
   'atomic-recs-list',
   {excludeCategories: ['methods']}
@@ -39,16 +39,16 @@ export const Default: Story = {
         </style>
         ${story()}`,
   ],
-  afterEach: play,
+  afterEach,
 };
 
-const {play: playNoFirstQuery} = wrapInRecommendationInterface({
+const {afterEachNoFirstQuery} = wrapInRecommendationInterface({
   skipFirstQuery: true,
 });
 
 export const RecsBeforeQuery: Story = {
   tags: ['test'],
-  afterEach: playNoFirstQuery,
+  afterEachNoFirstQuery,
 };
 
 export const RecsWithFullTemplate: Story = {
@@ -83,7 +83,7 @@ export const RecsWithFullTemplate: Story = {
             </template>
           </atomic-recs-result-template>`,
   },
-  afterEach: play,
+  afterEach,
 };
 
 export const RecsOpeningInNewTab: Story = {
@@ -102,12 +102,12 @@ export const RecsOpeningInNewTab: Story = {
             </template>
           </atomic-recs-result-template>`,
   },
-  afterEach: play,
+  afterEach,
 };
 
 export const RecsAsCarousel: Story = {
   args: {
     'number-of-recommendations-per-page': 4,
   },
-  afterEach: play,
+  afterEach,
 };

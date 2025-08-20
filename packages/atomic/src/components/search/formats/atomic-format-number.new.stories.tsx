@@ -21,7 +21,7 @@ const {decorator: resultDecorator, engineConfig} = wrapInResult({
   },
 });
 
-const {decorator: searchInterfaceDecorator, play} =
+const {decorator: searchInterfaceDecorator, afterEach} =
   wrapInSearchInterface(engineConfig);
 
 const meta: Meta = {
@@ -40,7 +40,7 @@ const meta: Meta = {
   args,
   argTypes,
 
-  afterEach: play,
+  afterEach,
 };
 
 export default meta;

@@ -6,7 +6,7 @@ import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {facetDecorator} from '@/storybook-utils/common/facets-decorator';
 import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
 
-const {decorator, play} = wrapInSearchInterface();
+const {decorator, afterEach} = wrapInSearchInterface();
 const {events, args, argTypes, template} = getStorybookHelpers('atomic-facet', {
   excludeCategories: ['methods'],
 });
@@ -43,7 +43,7 @@ const meta: Meta = {
     },
   },
 
-  afterEach: play,
+  afterEach,
   args: {
     ...args,
     'number-of-values': 8,
@@ -91,7 +91,7 @@ export const CustomSort: Story = {
     facetDecorator,
     (_Story, context) => {
       return html`<atomic-facet
-        field=${context.args['field']}
+        field=${context.args.field}
         custom-sort=${context.args['custom-sort']}
         sort-criteria=${context.args['sort-criteria']}
         number-of-values=${context.args['number-of-values']}

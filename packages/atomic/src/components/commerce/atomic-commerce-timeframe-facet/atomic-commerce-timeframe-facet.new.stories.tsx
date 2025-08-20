@@ -3,12 +3,12 @@ import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {html} from 'lit';
 import {commerceFacetWidthDecorator} from '@/storybook-utils/commerce/commerce-facet-width-decorator';
 import {
-  playHideFacetTypes,
+  hideFacetTypesHook,
   wrapInCommerceInterface,
 } from '@/storybook-utils/commerce/commerce-interface-wrapper';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 
-const {play, decorator} = wrapInCommerceInterface({
+const {afterEach, decorator} = wrapInCommerceInterface({
   engineConfig: {
     context: {
       country: 'US',
@@ -54,7 +54,7 @@ export const Default: Story = {
     },
   ],
   afterEach: async (context) => {
-    await play(context);
-    await playHideFacetTypes('atomic-commerce-timeframe-facet', context);
+    await afterEach(context);
+    await hideFacetTypesHook('atomic-commerce-timeframe-facet', context);
   },
 };

@@ -6,8 +6,10 @@ import {wrapInCommerceInterface} from '@/storybook-utils/commerce/commerce-inter
 import {wrapInCommerceSearchBox} from '@/storybook-utils/commerce/commerce-search-box-wrapper';
 import {parameters} from '@/storybook-utils/common/search-box-suggestions-parameters';
 
-const {decorator: commerceInterfaceDecorator, play: commerceInterfacePlay} =
-  wrapInCommerceInterface({includeCodeRoot: false});
+const {
+  decorator: commerceInterfaceDecorator,
+  afterEach: commerceInterfacePlay,
+} = wrapInCommerceInterface({includeCodeRoot: false});
 const {decorator: commerceSearchBoxDecorator} = wrapInCommerceSearchBox();
 const {events, args, argTypes, template} = getStorybookHelpers(
   'atomic-commerce-search-box-recent-queries',

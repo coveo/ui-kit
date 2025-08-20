@@ -8,7 +8,7 @@ const {events, args, argTypes, template} = getStorybookHelpers(
   {excludeCategories: ['methods']}
 );
 
-const {decorator, play} = wrapInSearchInterface({
+const {decorator, afterEach} = wrapInSearchInterface({
   search: {
     preprocessSearchResponseMiddleware: (res) => {
       res.body.results = [];
@@ -32,7 +32,7 @@ const meta: Meta = {
   args,
   argTypes,
 
-  afterEach: play,
+  afterEach,
 };
 
 export default meta;

@@ -7,7 +7,7 @@ import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 
 const {
   decorator: commerceInterfaceDecorator,
-  play: initializeCommerceInterface,
+  afterEach: initializeCommerceInterface,
 } = wrapInCommerceInterface({
   skipFirstRequest: false,
   type: 'product-listing',
@@ -26,7 +26,7 @@ const {
 
 const {
   decorator: commerceInterfaceDecoratorEUR,
-  play: initializeCommerceInterfaceEUR,
+  afterEach: initializeCommerceInterfaceEUR,
 } = wrapInCommerceInterface({
   skipFirstRequest: false,
   type: 'product-listing',

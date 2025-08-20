@@ -3,7 +3,7 @@ import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
 
-const {decorator, play} = wrapInSearchInterface();
+const {decorator, afterEach} = wrapInSearchInterface();
 const {events, args, argTypes, template} = getStorybookHelpers(
   'atomic-category-facet',
   {excludeCategories: ['methods']}
@@ -23,7 +23,7 @@ const meta: Meta = {
   },
   argTypes,
 
-  play,
+  afterEach,
   args: {
     ...args,
     numberOfValues: 8,

@@ -10,17 +10,18 @@ const {events, args, argTypes, template} = getStorybookHelpers(
   {excludeCategories: ['methods']}
 );
 
-const {decorator: commerceInterfaceDecorator, play} = wrapInCommerceInterface({
-  engineConfig: {
-    preprocessRequest: (request) => {
-      const parsed = JSON.parse(request.body as string);
-      parsed.perPage = 1;
-      request.body = JSON.stringify(parsed);
-      return request;
+const {decorator: commerceInterfaceDecorator, afterEach} =
+  wrapInCommerceInterface({
+    engineConfig: {
+      preprocessRequest: (request) => {
+        const parsed = JSON.parse(request.body as string);
+        parsed.perPage = 1;
+        request.body = JSON.stringify(parsed);
+        return request;
+      },
     },
-  },
-  includeCodeRoot: false,
-});
+    includeCodeRoot: false,
+  });
 const {decorator: commerceProductListDecorator} = wrapInCommerceProductList(
   'grid',
   false
@@ -51,7 +52,7 @@ export const Default: Story = {
     commerceProductListDecorator,
     commerceInterfaceDecorator,
   ],
-  afterEach: play,
+  afterEach,
   args: {
     'default-slot': `
       <div class="border border-gray-200 rounded-lg p-3 bg-gray-50 mt-2 ml-4">

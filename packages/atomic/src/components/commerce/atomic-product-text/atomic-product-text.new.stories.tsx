@@ -8,7 +8,7 @@ import {updateQuery} from '../../../../../headless/src/features/commerce/query/q
 
 const {
   decorator: commerceInterfaceDecorator,
-  play: initializeCommerceInterface,
+  afterEach: initializeCommerceInterface,
 } = wrapInCommerceInterface({
   skipFirstRequest: true,
   engineConfig: {

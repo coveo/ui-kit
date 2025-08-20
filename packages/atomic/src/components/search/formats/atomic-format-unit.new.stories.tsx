@@ -21,7 +21,7 @@ const {decorator: resultDecorator, engineConfig} = wrapInResult({
   },
 });
 
-const {decorator: searchInterfaceDecorator, play} =
+const {decorator: searchInterfaceDecorator, afterEach} =
   wrapInSearchInterface(engineConfig);
 
 const meta: Meta = {
@@ -39,7 +39,7 @@ const meta: Meta = {
   },
   argTypes,
 
-  afterEach: play,
+  afterEach,
   args: {...args, unit: 'byte'},
 };
 

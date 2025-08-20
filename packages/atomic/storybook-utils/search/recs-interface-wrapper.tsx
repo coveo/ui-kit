@@ -17,14 +17,14 @@ export const wrapInRecommendationInterface = ({
   includeCodeRoot?: boolean;
 } = {}): {
   decorator: Decorator;
-  play: (context: StoryContext) => Promise<void>;
+  afterEach: (context: StoryContext) => Promise<void>;
 } => ({
   decorator: (story) => html`
     <atomic-recs-interface ${spreadProps(includeCodeRoot ? { id: "code-root" } : {})}>
       ${story()}
     </atomic-recs-interface>
   `,
-  play: async ({canvasElement, step}) => {
+  afterEach: async ({canvasElement, step}) => {
     await customElements.whenDefined('atomic-recs-interface');
     const recsInterface =
       canvasElement.querySelector<HTMLAtomicRecsInterfaceElement>('atomic-recs-interface')!;

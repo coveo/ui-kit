@@ -12,7 +12,7 @@ const {events, args, argTypes, template} = getStorybookHelpers(
   'atomic-commerce-search-box',
   {excludeCategories: ['methods']}
 );
-const {decorator, play} = wrapInCommerceInterface({
+const {decorator, afterEach} = wrapInCommerceInterface({
   skipFirstRequest: true,
   includeCodeRoot: false,
 });
@@ -38,7 +38,7 @@ const meta: Meta = {
   },
   argTypes,
 
-  afterEach: play,
+  afterEach,
 };
 
 export default meta;

@@ -13,14 +13,14 @@ export const wrapInSearchInterface = (
   includeCodeRoot = true
 ): {
   decorator: Decorator;
-  play: (context: StoryContext) => Promise<void>;
+  afterEach: (context: StoryContext) => Promise<void>;
 } => ({
   decorator: (story) => html`
     <atomic-search-interface ${spreadProps(includeCodeRoot ? { id: "code-root" } : {})}>
       ${story()}
     </atomic-search-interface>
   `,
-  play: async ({ canvasElement, step }) => {
+  afterEach: async ({ canvasElement, step }) => {
     await customElements.whenDefined('atomic-search-interface');
     const searchInterface =
       canvasElement.querySelector<HTMLAtomicSearchInterfaceElement>(

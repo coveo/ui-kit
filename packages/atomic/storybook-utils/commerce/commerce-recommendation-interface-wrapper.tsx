@@ -13,14 +13,14 @@ export const wrapInCommerceRecommendationInterface = (
   includeCodeRoot: boolean = true
 ): {
   decorator: Decorator;
-  play: (context: StoryContext) => Promise<void>;
+  afterEach: (context: StoryContext) => Promise<void>;
 } => ({
   decorator: (story) => html`
     <atomic-commerce-recommendation-interface ${spreadProps(includeCodeRoot?{id:"code-root"}:{})}>
       ${story()}
     </atomic-commerce-recommendation-interface>
   `,
-  play: async ({ canvasElement }) => {
+  afterEach: async ({ canvasElement }) => {
     await customElements.whenDefined(
       'atomic-commerce-recommendation-interface'
     );

@@ -4,7 +4,7 @@ import {html} from 'lit';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
 
-const {decorator, play} = wrapInSearchInterface();
+const {decorator, afterEach} = wrapInSearchInterface();
 const {events, args, argTypes} = getStorybookHelpers('atomic-component-error', {
   excludeCategories: ['methods'],
 });
@@ -16,8 +16,8 @@ const meta: Meta = {
 
   render: (args) => {
     const element = document.createElement('atomic-component-error');
-    element.error = args['error'];
-    element.element = args['element'];
+    element.error = args.error;
+    element.element = args.element;
     return element;
   },
   decorators: [decorator],
@@ -30,7 +30,7 @@ const meta: Meta = {
   args,
   argTypes,
 
-  afterEach: play,
+  afterEach,
 };
 
 export default meta;
@@ -43,6 +43,6 @@ export const Default: Story = {
   },
   decorators: [(story) => html` ${story()}`],
   afterEach: async (context) => {
-    await play(context);
+    await afterEach(context);
   },
 };

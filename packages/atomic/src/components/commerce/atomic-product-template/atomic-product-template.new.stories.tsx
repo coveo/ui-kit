@@ -84,7 +84,7 @@ export default meta;
 
 const {
   decorator: commerceInterfaceDecorator,
-  play: initializeCommerceInterface,
+  afterEach: initializeCommerceInterface,
 } = wrapInCommerceInterface({
   skipFirstRequest: false,
   engineConfig: {
@@ -108,7 +108,7 @@ export const InAProductList: Story = {
 
 const {
   decorator: commerceRecommendationInterfaceDecorator,
-  play: initializeCommerceRecommendationInterface,
+  afterEach: initializeCommerceRecommendationInterface,
 } = wrapInCommerceRecommendationInterface();
 const {decorator: commerceRecommendationListDecorator} =
   wrapInCommerceRecommendationList();

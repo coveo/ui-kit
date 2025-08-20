@@ -6,17 +6,18 @@ import {wrapInCommerceProductList} from '@/storybook-utils/commerce/commerce-pro
 import {wrapInProductTemplate} from '@/storybook-utils/commerce/commerce-product-template-wrapper';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 
-const {decorator: commerceInterfaceDecorator, play} = wrapInCommerceInterface({
-  engineConfig: {
-    preprocessRequest: (request) => {
-      const parsed = JSON.parse(request.body as string);
-      parsed.perPage = 1;
-      request.body = JSON.stringify(parsed);
-      return request;
+const {decorator: commerceInterfaceDecorator, afterEach} =
+  wrapInCommerceInterface({
+    engineConfig: {
+      preprocessRequest: (request) => {
+        const parsed = JSON.parse(request.body as string);
+        parsed.perPage = 1;
+        request.body = JSON.stringify(parsed);
+        return request;
+      },
     },
-  },
-  includeCodeRoot: false,
-});
+    includeCodeRoot: false,
+  });
 const {decorator: commerceProductListDecorator} = wrapInCommerceProductList(
   'list',
   false
@@ -51,7 +52,7 @@ const meta: Meta = {
   args,
   argTypes,
 
-  afterEach: play,
+  afterEach,
 };
 
 export default meta;

@@ -7,7 +7,7 @@ import {
   wrapInSearchInterface,
 } from '@/storybook-utils/search/search-interface-wrapper';
 
-const {decorator, play} = wrapInSearchInterface();
+const {decorator, afterEach} = wrapInSearchInterface();
 const {events, args, argTypes, template} = getStorybookHelpers(
   'atomic-load-more-results',
   {excludeCategories: ['methods']}
@@ -29,7 +29,7 @@ const meta: Meta = {
   args,
   argTypes,
 
-  afterEach: play,
+  afterEach,
 };
 
 export default meta;
@@ -199,7 +199,7 @@ export const InPage: Story = {
       </atomic-search-layout>`,
   ],
   afterEach: async (context) => {
-    await play(context);
+    await afterEach(context);
     await playExecuteFirstSearch(context);
   },
 };

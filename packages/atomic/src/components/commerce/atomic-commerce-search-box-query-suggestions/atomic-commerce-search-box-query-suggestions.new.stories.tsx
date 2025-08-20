@@ -11,8 +11,10 @@ const {events, args, argTypes, template} = getStorybookHelpers(
   {excludeCategories: ['methods']}
 );
 
-const {decorator: commerceInterfaceDecorator, play: commerceInterfacePlay} =
-  wrapInCommerceInterface({includeCodeRoot: false});
+const {
+  decorator: commerceInterfaceDecorator,
+  afterEach: commerceInterfacePlay,
+} = wrapInCommerceInterface({includeCodeRoot: false});
 const {decorator: commerceSearchBoxDecorator} = wrapInCommerceSearchBox();
 const meta: Meta = {
   component: 'atomic-commerce-search-box-query-suggestions',

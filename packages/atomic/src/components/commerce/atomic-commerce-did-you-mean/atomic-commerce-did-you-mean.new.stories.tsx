@@ -3,7 +3,7 @@ import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {wrapInCommerceInterface} from '@/storybook-utils/commerce/commerce-interface-wrapper';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 
-const {decorator, play} = wrapInCommerceInterface({
+const {decorator, afterEach} = wrapInCommerceInterface({
   engineConfig: {
     preprocessRequest: (request) => {
       const parsed = JSON.parse(request.body as string);
@@ -34,7 +34,7 @@ const meta: Meta = {
   args,
   argTypes,
 
-  afterEach: play,
+  afterEach,
 };
 
 export default meta;
