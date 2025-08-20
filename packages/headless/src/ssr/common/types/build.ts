@@ -6,6 +6,9 @@ import type {
 } from './engine.js';
 import type {OptionsExtender, OptionsTuple} from './utilities.js';
 
+/**
+ * @deprecated This type should not be used directly. This interface will be removed in the next major release
+ */
 interface BuildOptions<TEngineOptions> {
   /**
    * @deprecated This option will be removed in the next major version.
@@ -13,7 +16,10 @@ interface BuildOptions<TEngineOptions> {
   extend?: OptionsExtender<TEngineOptions>;
 }
 
-// TODO: KIT-4610: Remove this type
+/**
+ * This type should not be used directly.
+ * @internal
+ */
 export type Build<
   TEngine extends CoreEngine | CoreEngineNext,
   TEngineOptions,
