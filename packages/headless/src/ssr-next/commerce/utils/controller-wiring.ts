@@ -27,6 +27,10 @@ const listingDefinition = {
   ...requiredDefinition,
 };
 
+const standaloneDefinition = {
+  ...requiredDefinition,
+};
+
 const searchDefinition = {
   ...requiredDefinition,
   query: requiredEmptyAllowedString,
@@ -39,6 +43,7 @@ const recommendationsDefinition = {
 
 export const listingDefinitionSchema = new Schema(listingDefinition);
 export const searchDefinitionSchema = new Schema(searchDefinition);
+export const standaloneDefinitionSchema = new Schema(standaloneDefinition);
 export const recommendationsDefinitionSchema = new Schema(
   recommendationsDefinition
 );
@@ -50,14 +55,15 @@ function validateBuildConfig(
   solutionType: SolutionType,
   buildConfig: BuildConfig<SolutionType>
 ): void {
-  const validationMap = {
+  const validationMap: Record<SolutionType, Schema<object>> = {
     [SolutionType.listing]: listingDefinitionSchema,
     [SolutionType.search]: searchDefinitionSchema,
+    [SolutionType.standalone]: standaloneDefinitionSchema,
     [SolutionType.recommendation]: recommendationsDefinitionSchema,
-  } as const;
+  };
 
-  const schema = validationMap[solutionType as keyof typeof validationMap];
-  schema?.validate(buildConfig);
+  const schema = validationMap[solutionType as SolutionType];
+  schema.validate(buildConfig);
 }
 
 function createControllerWirer(
