@@ -5,6 +5,7 @@ import {
   buildGeneratedAnswer,
   GeneratedAnswer,
   GeneratedAnswerState,
+  GeneratedAnswerCitation,
   buildInteractiveCitation,
   buildTabManager,
   TabManagerState,
@@ -419,7 +420,7 @@ export class AtomicGeneratedAnswer implements InitializableComponent {
       ) : null;
     }
 
-    const buildInteractiveCitationForCitation = (citation: any) =>
+    const buildInteractiveCitationForCitation = (citation: GeneratedAnswerCitation) =>
       buildInteractiveCitation(this.bindings.engine, {
         options: { citation },
       });

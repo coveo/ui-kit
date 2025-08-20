@@ -6,6 +6,7 @@ import {
   buildSearchStatus as buildInsightSearchStatus,
   GeneratedAnswer as InsightGeneratedAnswer,
   GeneratedAnswerState as InsightGeneratedAnswerState,
+  GeneratedAnswerCitation as InsightGeneratedAnswerCitation
 } from '@coveo/headless/insight';
 import { Component, Element, State, Prop, Watch, h } from '@stencil/core';
 import { debounce } from '../../../utils/debounce-utils';
@@ -342,7 +343,7 @@ export class AtomicInsightGeneratedAnswer
       ) : null;
     }
 
-    const buildInteractiveCitationForCitation = (citation: any) =>
+    const buildInteractiveCitationForCitation = (citation: InsightGeneratedAnswerCitation) =>
       buildInsightInteractiveCitation(this.bindings.engine, {
         options: { citation },
       });

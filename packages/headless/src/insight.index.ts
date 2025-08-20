@@ -178,6 +178,7 @@ export type {
 } from './controllers/insight/generated-answer/headless-insight-generated-answer.js';
 export {buildGeneratedAnswer} from './controllers/insight/generated-answer/headless-insight-generated-answer.js';
 export type {
+  GeneratedAnswerCitation,
   InteractiveCitation,
   InteractiveCitationOptions,
   InteractiveCitationProps,

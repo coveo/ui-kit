@@ -381,8 +381,43 @@ const GeneratedAnswerContent: FunctionalComponent<{
   );
 };
 
-export const GeneratedAnswerCommon: FunctionalComponent<{ collapsible?: boolean, onShowButtonClick: () => void, onClickDislike: () => void, onClickLike: () => void, onCopyToClipboard: () => Promise<void>, disableCitationAnchoring?: boolean, copied: boolean, i18n: i18n, copyError: boolean, generatedAnswer: GeneratedAnswer, generatedAnswerState: GeneratedAnswerState, withToggle?: boolean, isAnswerVisible: boolean, hasRetryableError: boolean, hasClipboard: boolean, buildInteractiveCitationForCitation: (citation: any) => InteractiveCitation }> = (
-  { onShowButtonClick, onClickDislike, onClickLike, onCopyToClipboard, collapsible, disableCitationAnchoring, copied, i18n, copyError, generatedAnswer, generatedAnswerState, withToggle, isAnswerVisible, hasRetryableError, hasClipboard, buildInteractiveCitationForCitation }) => {
+interface GeneratedAnswerCommonProps {
+  collapsible?: boolean;
+  onShowButtonClick: () => void;
+  onClickDislike: () => void;
+  onClickLike: () => void;
+  onCopyToClipboard: () => Promise<void>;
+  disableCitationAnchoring?: boolean;
+  copied: boolean;
+  i18n: i18n;
+  copyError: boolean;
+  generatedAnswer: GeneratedAnswer;
+  generatedAnswerState: GeneratedAnswerState;
+  withToggle?: boolean;
+  isAnswerVisible: boolean;
+  hasRetryableError: boolean;
+  hasClipboard: boolean;
+  buildInteractiveCitationForCitation: (citation: GeneratedAnswerCitation) => InteractiveCitation;
+}
+
+export const GeneratedAnswerCommon: FunctionalComponent<GeneratedAnswerCommonProps> = ({
+  onShowButtonClick,
+  onClickDislike,
+  onClickLike,
+  onCopyToClipboard,
+  collapsible,
+  disableCitationAnchoring,
+  copied,
+  i18n,
+  copyError,
+  generatedAnswer,
+  generatedAnswerState,
+  withToggle,
+  isAnswerVisible,
+  hasRetryableError,
+  hasClipboard,
+  buildInteractiveCitationForCitation
+}) => {
   return <GeneratedAnswerWrapper>
     <div part="generated-content">
       <GeneratedAnswerHeader
