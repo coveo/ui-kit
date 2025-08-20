@@ -49,7 +49,7 @@ jobs:
       - uses: ./.github/actions/setup
       - name: Generate a token
         id: generate-token
-        uses: actions/create-github-app-token@d72941d797fd3113feb6b93fd0dec494b13a2547 # v1
+        uses: actions/create-github-app-token@df432ceedc7162793a195dd1713ff69aefc7379e # v2
         with:
           app-id: ${{ secrets.RELEASER_APP_ID }}
           private-key: ${{ secrets.RELEASER_PRIVATE_KEY }}
@@ -68,7 +68,7 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.UI_KIT_CD_DISPATCHER }}
   npm-prod:
-    if: ${{ !cancelled() }}
+    if: ${{ !cancelled() && needs.release.result == 'success' }}
     needs: release
     environment: 'NPM Production'
     runs-on: 'ubuntu-latest'
@@ -90,7 +90,7 @@ jobs:
       - name: Promote NPM package to production
         run: npm run promote:npm:latest
   quantic-prod:
-    if: ${{ !cancelled() }}
+    if: ${{ !cancelled() && needs.release.result == 'success' }}
     needs: release
     runs-on: ubuntu-latest
     environment: 'Quantic Production'
@@ -122,7 +122,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         working-directory: ./packages/quantic
   typedoc-headless:
-    if: ${{ !cancelled() }}
+    if: ${{ !cancelled() && needs.release.result == 'success' }}
     needs: release
     runs-on: ubuntu-latest
     steps:
@@ -163,7 +163,7 @@ jobs:
           name: headless-docs-${{ env.version }}
           path: typedoc-headless-site/
   typedoc-headless-react:
-    if: ${{ !cancelled() }}
+    if: ${{ !cancelled() && needs.release.result == 'success' }}
     needs: release
     runs-on: ubuntu-latest
     steps:
@@ -204,7 +204,7 @@ jobs:
           name: headless-react-docs-${{ env.version }}
           path: typedoc-headless-react-site/
   docs-prod:
-    if: ${{ !cancelled() }}
+    if: ${{ !cancelled() && needs.release.result == 'success' }}
     needs: release
     runs-on: ubuntu-latest
     environment: 'Docs Production'

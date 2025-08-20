@@ -1,6 +1,6 @@
 {
   "name": "@coveo/atomic-angular",
-  "version": "3.5.1",
+  "version": "3.7.0",
   "license": "Apache-2.0",
   "repository": {
     "url": "https://github.com/coveo/ui-kit"
@@ -8,10 +8,10 @@
   "peerDependencies": {
     "@angular/common": "14 - 19",
     "@angular/core": "14 - 19",
-    "@coveo/headless": "3.27.7"
+    "@coveo/headless": "3.28.4"
   },
   "dependencies": {
-    "@coveo/atomic": "3.31.1"
+    "@coveo/atomic": "3.33.0"
   },
   "engines": {
     "node": "^20.9.0 || ^22.11.0"

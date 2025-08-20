@@ -13,8 +13,9 @@ import {getPipelineInitialState} from '../../features/pipeline/pipeline-state.js
 import {setSearchHub} from '../../features/search-hub/search-hub-actions.js';
 import {getSearchHubInitialState} from '../../features/search-hub/search-hub-state.js';
 import type {SearchAppState} from '../../state/search-app-state.js';
+import {type JWTPayload, parseJWT} from '../../utils/jwt-utils.js';
 
-interface CoveoJSONWebToken {
+interface CoveoJSONWebToken extends JWTPayload {
   searchHub?: string;
   pipeline?: string;
   userDisplayName?: string;
@@ -69,26 +70,8 @@ const shouldReconcileValues = (
 };
 
 const decodeJSONWebToken = (token: string): CoveoJSONWebToken | false => {
-  try {
-    const base64Url = token.split('.')[1];
-    const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-    const base64decoded = atob(base64);
-    if (!base64decoded) {
-      return false;
-    }
-    const jsonPayload = decodeURIComponent(
-      base64decoded
-        .split('')
-        .map((character) => {
-          return `%${(`00${character.charCodeAt(0).toString(16)}`).slice(-2)}`;
-        })
-        .join('')
-    );
-
-    return JSON.parse(jsonPayload) as CoveoJSONWebToken;
-  } catch (_) {
-    return false;
-  }
+  const parsed = parseJWT(token);
+  return parsed ? (parsed as CoveoJSONWebToken) : false;
 };
 
 const updateSearchHub = (

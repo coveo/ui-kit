@@ -1,7 +1,7 @@
 {
   "name": "@coveo/atomic",
   "type": "module",
-  "version": "3.31.1",
+  "version": "3.33.0",
   "description": "A web-component library for building modern UIs interfacing with the Coveo platform",
   "homepage": "https://docs.coveo.com/en/atomic/latest/",
   "repository": {
@@ -56,8 +56,7 @@
     "build:react": "npx turbo gen:lit --filter=@coveo/atomic-react",
     "build:locales": "node ./scripts/create-generated-folder.mjs && node ./scripts/split-locales.mjs && node ./scripts/copy-dayjs-locales.mjs",
     "build:list-assets": "node ./scripts/list-assets.mjs",
-    "start": "concurrently \"node --max_old_space_size=6144 ../../node_modules/@stencil/core/bin/stencil build --dev --watch --tsConfig tsconfig.stencil.json\" \"node ./scripts/dev.mjs\"",
-    "dev": "npm run start",
+    "dev": "node ./scripts/dev.mjs",
     "web:dev": "npx vite serve dev",
     "web:cdn": "node ./scripts/start-cdn.mjs",
     "prod": "npx serve www -l 3333 --no-request-logging",
@@ -82,8 +81,8 @@
     "validate:definitions": "tsc --noEmit --esModuleInterop --skipLibCheck ./dist/types/components.d.ts"
   },
   "dependencies": {
-    "@coveo/bueno": "1.0.24",
-    "@coveo/headless": "3.27.7",
+    "@coveo/bueno": "1.1.0",
+    "@coveo/headless": "3.28.4",
     "@lit/context": "1.1.6",
     "@popperjs/core": "2.11.8",
     "@salesforce-ux/design-system": "2.27.2",
@@ -154,8 +153,8 @@
     "postcss-load-config": "6.0.1",
     "postcss-nested": "7.0.2",
     "puppeteer": "24.15.0",
-    "react": "19.1.0",
-    "rollup": "4.45.0",
+    "react": "19.1.1",
+    "rollup": "4.46.2",
     "rollup-plugin-copy": "3.5.0",
     "rollup-plugin-html": "0.2.1",
     "shadow-dom-testing-library": "1.12.0",
@@ -169,8 +168,8 @@
     "wait-on": "8.0.4"
   },
   "peerDependencies": {
-    "@coveo/bueno": "1.0.24",
-    "@coveo/headless": "3.27.7",
+    "@coveo/bueno": "1.1.0",
+    "@coveo/headless": "3.28.4",
     "typescript": ">=5.0.0"
   },
   "peerDependenciesMeta": {

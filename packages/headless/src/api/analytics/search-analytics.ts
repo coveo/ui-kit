@@ -92,7 +92,7 @@ export class SearchAnalyticsProvider
     const state = this.getState();
     const baseObject = super.getBaseMetadata();
 
-    const {generativeQuestionAnsweringId} =
+    const generativeQuestionAnsweringId =
       generativeQuestionAnsweringIdSelector(state);
 
     if (generativeQuestionAnsweringId) {

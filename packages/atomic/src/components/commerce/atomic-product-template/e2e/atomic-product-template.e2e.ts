@@ -24,12 +24,4 @@ test.describe('default', async () => {
 
     await expect(productTemplate.product).toBeVisible();
   });
-
-  test('should display an error when not a child of a valid parent component', async ({
-    productTemplate,
-  }) => {
-    await productTemplate.load({story: 'without-valid-parent'});
-
-    await expect(productTemplate.error).toBeVisible();
-  });
 });

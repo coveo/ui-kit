@@ -68,7 +68,7 @@
   },
   "types": "./dist/definitions/index.d.ts",
   "license": "Apache-2.0",
-  "version": "3.27.7",
+  "version": "3.28.4",
   "files": [
     "dist/"
   ],
@@ -109,7 +109,7 @@
     }
   },
   "dependencies": {
-    "@coveo/bueno": "1.0.24",
+    "@coveo/bueno": "1.1.0",
     "@coveo/relay": "1.2.6",
     "@coveo/relay-event-types": "15.1.0",
     "@reduxjs/toolkit": "2.6.0",

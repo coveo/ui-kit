@@ -10,7 +10,7 @@ const {decorator: searchInterfaceDecorator, play} =
 
 const meta: Meta = {
   component: 'atomic-result-icon',
-  title: 'Atomic/ResultList/ResultLink',
+  title: 'Search/ResultList/ResultLink',
   id: 'atomic-result-link',
   render: renderComponent,
   decorators: [resultDecorator, searchInterfaceDecorator],

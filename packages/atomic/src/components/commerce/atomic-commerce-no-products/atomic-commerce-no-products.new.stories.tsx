@@ -7,7 +7,6 @@ import {
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {renderComponent} from '@/storybook-utils/common/render-component';
 
-const {play} = wrapInCommerceInterface({skipFirstRequest: true});
 const {decorator, play: preprocessedPlayed} = wrapInCommerceInterface({
   skipFirstRequest: true,
   engineConfig: {
@@ -22,7 +21,7 @@ const {decorator, play: preprocessedPlayed} = wrapInCommerceInterface({
 
 const meta: Meta = {
   component: 'atomic-commerce-no-products',
-  title: 'Commerce/atomic-commerce-no-products',
+  title: 'Commerce/No Products',
   id: 'atomic-commerce-no-products',
   render: renderComponent,
   decorators: [decorator],
@@ -52,29 +51,5 @@ export const Default: Story = {
   play: async (context) => {
     await preprocessedPlayed(context);
     await playExecuteFirstRequest(context);
-  },
-};
-
-export const WithResults: Story = {
-  name: 'With Results',
-  tags: ['test'],
-  decorators: [
-    (story) =>
-      html` <atomic-commerce-layout>
-        <atomic-layout-section section="search">
-          <atomic-commerce-search-box
-            role="searchbox"
-          ></atomic-commerce-search-box>
-        </atomic-layout-section>
-
-        <atomic-layout-section section="main">
-          <atomic-layout-section section="products">
-            ${story()}
-          </atomic-layout-section>
-        </atomic-layout-section>
-      </atomic-commerce-layout>`,
-  ],
-  play: async (context) => {
-    await play(context);
   },
 };

@@ -1,19 +1,19 @@
-import { Canvas, ArgTypes, Meta, Title, Description, Stories, Subtitle } from '@storybook/blocks';
+
+import { Meta } from '@storybook/blocks';
 import * as AtomicCommerceRefineModalStories from './atomic-commerce-refine-modal.new.stories';
-import { CanvasWithGithub } from '../../../../storybook-utils/documentation/canvas-with-github';
+import { AtomicDocTemplate } from '../../../../storybook-utils/documentation/atomic-doc-template';
 
 
 <Meta of={AtomicCommerceRefineModalStories} />
-<Title />
-<Subtitle ><Description/></Subtitle>
 
-<CanvasWithGithub
-  of={AtomicCommerceRefineModalStories.DefaultModal}
+<AtomicDocTemplate
+  stories={AtomicCommerceRefineModalStories}
   githubPath="commerce/atomic-commerce-refine-modal/atomic-commerce-refine-modal.ts"
-/>
+  tagName="atomic-commerce-refine-modal"
+  className="AtomicCommerceRefineModal"
+  defaultStory="DefaultModal"
+>
 
-
-## Usage
 This component should not be used directly. It is internally used by the `atomic-commerce-refine-toggle` component to display the refine modal.
 To use the refine modal, you should use the `atomic-commerce-refine-toggle` component instead. It usually is placed within the "status" section of the layout.
 ```html
@@ -32,9 +32,4 @@ To use the refine modal, you should use the `atomic-commerce-refine-toggle` comp
   </atomic-commerce-layout>
 </atomic-commerce-interface>
 ```
-
-## Examples
-<Stories title={""}/>
-
-## Reference
-<ArgTypes />
+</AtomicDocTemplate>

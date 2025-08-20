@@ -4,12 +4,12 @@
   "private": true,
   "type": "module",
   "dependencies": {
-    "@coveo/atomic": "3.31.1",
-    "@coveo/atomic-react": "3.2.54",
-    "@coveo/headless": "3.27.7",
+    "@coveo/atomic": "3.33.0",
+    "@coveo/atomic-react": "3.3.4",
+    "@coveo/headless": "3.28.4",
     "next": "15.2.4",
-    "react": "19.1.0",
-    "react-dom": "19.1.0"
+    "react": "19.1.1",
+    "react-dom": "19.1.1"
   },
   "devDependencies": {
     "@types/node": "22.16.5",
