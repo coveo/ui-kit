@@ -66,7 +66,7 @@ export function fetchRecommendationStaticStateFactory<
       engine.waitForRequestCompletedAction()
     );
 
-    return createStaticState({
+    const staticState = createStaticState({
       searchActions,
       controllers,
     }) as EngineStaticState<
@@ -78,5 +78,10 @@ export function fetchRecommendationStaticStateFactory<
         FilteredBakedInControllers<SolutionType.recommendation>
     > &
       BuildConfig<SolutionType.recommendation>;
+
+    return {
+      ...params[0], // TODO: KIT-4754: remove index access after no longer relying on OptionTuple type
+      ...staticState,
+    };
   };
 }
