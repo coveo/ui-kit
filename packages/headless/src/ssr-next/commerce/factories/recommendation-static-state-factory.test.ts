@@ -72,7 +72,7 @@ describe('fetchRecommendationStaticStateFactory', () => {
     await factory({
       country: 'CA',
       currency: 'USD',
-      language: 'fr',
+      language: 'en',
       url: 'https://example.com',
     });
 
