@@ -4,7 +4,6 @@ import {
   type CommerceEngine,
   type CommerceEngineOptions,
 } from '../../../app/commerce-engine/commerce-engine.js';
-import {buildLogger} from '../../../app/logger.js';
 import {stateKey} from '../../../app/state-key.js';
 import type {Controller} from '../../../controllers/controller/headless-controller.js';
 import {
@@ -148,13 +147,6 @@ export const buildFactory =
   ) =>
   <T extends SolutionType>(solutionType: T) =>
   async (...[buildOptions]: BuildParameters<TControllerDefinitions>) => {
-    const logger = buildLogger(options.loggerOptions);
-    if (!options.navigatorContextProvider) {
-      logger.warn(
-        '[WARNING] Missing navigator context in server-side code. Pass it directly to fetchStaticState({ navigatorContext }) to forward headers such as X-Forwarded-For.'
-      );
-    }
-
     const controllerProps =
       buildOptions && 'controllers' in buildOptions
         ? (buildOptions.controllers as ControllersPropsMap)
