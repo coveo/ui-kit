@@ -7,7 +7,7 @@ import {
   type RecommendationsSummaryState,
   type Summary,
 } from '@coveo/headless/commerce';
-import {type CSSResultGroup, html, LitElement, nothing, unsafeCSS} from 'lit';
+import {type CSSResultGroup, html, LitElement, nothing} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {keyed} from 'lit/directives/keyed.js';
 import {map} from 'lit/directives/map.js';
@@ -45,7 +45,6 @@ import styles from './atomic-commerce-recommendation-list.tw.css';
 
 /**
  * The `atomic-commerce-recommendation-list` component displays a list of product recommendations by applying one or more product templates.
- * @alpha
  *
  * @part result-list - The element containing the list of product recommendations.
  * @part result-list-grid-clickable-container - The parent of a recommended product and the clickable link encompassing it.
@@ -67,7 +66,7 @@ export class AtomicCommerceRecommendationList
   extends ChildrenUpdateCompleteMixin(LitElement)
   implements InitializableComponent<CommerceBindings>
 {
-  static styles: CSSResultGroup = [unsafeCSS(styles)];
+  static styles: CSSResultGroup = styles;
 
   public recommendations!: Recommendations;
   public summary!: Summary<RecommendationsSummaryState>;
@@ -106,7 +105,7 @@ export class AtomicCommerceRecommendationList
    * You can include multiple `atomic-commerce-recommendation-list` components with different slot IDs in the same page to display several recommendation lists.
    */
   @property({reflect: true, attribute: 'slot-id', type: String})
-  public slotId = 'Recommendation';
+  public slotId?: string;
 
   /**
    * The unique identifier of the product to use for seeded recommendations.
@@ -256,11 +255,13 @@ export class AtomicCommerceRecommendationList
         constrainTo: ['small', 'large', 'icon', 'none'],
       }),
       productsPerPage: new NumberValue({min: 0}),
+      slotId: new StringValue({emptyAllowed: false}),
     }).validate({
       density: this.density,
       display: this.display,
       imageSize: this.imageSize,
       productsPerPage: this.productsPerPage,
+      slotId: this.slotId,
     });
   }
 
@@ -336,7 +337,7 @@ export class AtomicCommerceRecommendationList
   private initRecommendations() {
     this.recommendations = buildRecommendations(this.bindings.engine, {
       options: {
-        slotId: this.slotId,
+        slotId: this.slotId!,
         productId: this.productId,
       },
     });

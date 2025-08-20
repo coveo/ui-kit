@@ -162,6 +162,7 @@ export const commerceFacetSetReducer = createReducer(
           return;
         }
         updateExistingFacetValueState(existingValue, 'select');
+        facetRequest.numberOfValues = facetRequest.initialNumberOfValues;
 
         if (
           facetRequest.interval === 'continuous' &&
@@ -261,6 +262,7 @@ export const commerceFacetSetReducer = createReducer(
         }
 
         updateExistingFacetValueState(existingValue, 'exclude');
+        facetRequest.numberOfValues = facetRequest.initialNumberOfValues;
 
         if (
           facetRequest.interval === 'continuous' &&
@@ -290,6 +292,7 @@ export const commerceFacetSetReducer = createReducer(
         }
 
         updateExistingFacetValueState(existingValue, 'exclude');
+        facetRequest.numberOfValues = facetRequest.initialNumberOfValues;
       })
       .addCase(updateCategoryFacetNumberOfValues, (state, action) => {
         const {facetId, numberOfValues} = action.payload;
@@ -510,15 +513,28 @@ function handleFieldSuggestionsFulfilled(
 }
 
 function handleDeselectAllFacetValues(request: AnyFacetRequest) {
-  if (request.type === 'hierarchical') {
-    request.initialNumberOfValues = undefined;
-    request.numberOfValues = undefined;
-    request.values = [];
-    request.preventAutoSelect = true;
-  } else {
+  const resetValues = () => {
     request.values.forEach((value) => {
       value.state = 'idle';
     });
+  };
+
+  switch (request.type) {
+    case 'hierarchical':
+      request.initialNumberOfValues = undefined;
+      request.numberOfValues = undefined;
+      request.values = [];
+      request.preventAutoSelect = true;
+      break;
+
+    case 'numericalRange':
+      request.numberOfValues = request.initialNumberOfValues;
+      resetValues();
+      break;
+
+    default:
+      resetValues();
+      break;
   }
 }
 

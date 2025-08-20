@@ -1,3 +1,37 @@
+## <small>3.3.3 (2025-08-13)</small>
+
+* chore(atomic): migrate atomic-results-per-page (#5807) ([8f46a79](https://github.com/coveo/ui-kit/commits/8f46a79)), closes [#5807](https://github.com/coveo/ui-kit/issues/5807)
+* docs(atomic): standardize storybook (#5854) ([54b9400](https://github.com/coveo/ui-kit/commits/54b9400)), closes [#5854](https://github.com/coveo/ui-kit/issues/5854)
+
+
+
+## 3.3.0 (2025-08-07)
+
+* chore: migrate atomic-product-section-* from Stencil to Lit (#5707) ([b7fe622](https://github.com/coveo/ui-kit/commits/b7fe622)), closes [#5707](https://github.com/coveo/ui-kit/issues/5707) [#5697](https://github.com/coveo/ui-kit/issues/5697)
+* chore(atomic): migrate all commerce facets (#5750) ([93f09ad](https://github.com/coveo/ui-kit/commits/93f09ad)), closes [#5750](https://github.com/coveo/ui-kit/issues/5750)
+* chore(atomic): migrate atomic-aria-live (#5753) ([1707e4b](https://github.com/coveo/ui-kit/commits/1707e4b)), closes [#5753](https://github.com/coveo/ui-kit/issues/5753)
+* chore(atomic): migrate atomic-product-description (#5747) ([8974972](https://github.com/coveo/ui-kit/commits/8974972)), closes [#5747](https://github.com/coveo/ui-kit/issues/5747)
+* chore(atomic): migrate atomic-product-field-condition (#5722) ([5a0e0a9](https://github.com/coveo/ui-kit/commits/5a0e0a9)), closes [#5722](https://github.com/coveo/ui-kit/issues/5722)
+* chore(atomic): migrate atomic-product-image (#5731) ([be03980](https://github.com/coveo/ui-kit/commits/be03980)), closes [#5731](https://github.com/coveo/ui-kit/issues/5731)
+* chore(atomic): migrate atomic-product-rating from Stencil to Lit (#5716) ([9d27353](https://github.com/coveo/ui-kit/commits/9d27353)), closes [#5716](https://github.com/coveo/ui-kit/issues/5716) [#5696](https://github.com/coveo/ui-kit/issues/5696)
+* chore(deps): lock file maintenance j:kit-282 (#5810) ([c408fd2](https://github.com/coveo/ui-kit/commits/c408fd2)), closes [#5810](https://github.com/coveo/ui-kit/issues/5810)
+* feat: Migrate monorepo build system from NX to Turborepo (#5733) ([e7e1237](https://github.com/coveo/ui-kit/commits/e7e1237)), closes [#5733](https://github.com/coveo/ui-kit/issues/5733)
+* fix(deps): update all dependencies j:kit-282 (#5770) ([214bb00](https://github.com/coveo/ui-kit/commits/214bb00)), closes [#5770](https://github.com/coveo/ui-kit/issues/5770)
+
+
+
+## <small>3.2.54 (2025-07-30)</small>
+
+* chore: enable noUnusedVariables rule (#5670) ([6809d57](https://github.com/coveo/ui-kit/commits/6809d57)), closes [#5670](https://github.com/coveo/ui-kit/issues/5670)
+* chore(atomic): migrate atomic-product-excerpt (#5735) ([7d5a246](https://github.com/coveo/ui-kit/commits/7d5a246)), closes [#5735](https://github.com/coveo/ui-kit/issues/5735)
+* chore(atomic): migrate atomic-product-link (#5618) ([20e0245](https://github.com/coveo/ui-kit/commits/20e0245)), closes [#5618](https://github.com/coveo/ui-kit/issues/5618)
+* chore(atomic): migrate atomic-product-multi-value-text (#5739) ([99f9284](https://github.com/coveo/ui-kit/commits/99f9284)), closes [#5739](https://github.com/coveo/ui-kit/issues/5739)
+* chore(atomic): migrate atomic-product-numeric-field-value (#5745) ([487f65a](https://github.com/coveo/ui-kit/commits/487f65a)), closes [#5745](https://github.com/coveo/ui-kit/issues/5745)
+* chore(atomic): migrate atomic-product-price (#5744) ([a09bdf6](https://github.com/coveo/ui-kit/commits/a09bdf6)), closes [#5744](https://github.com/coveo/ui-kit/issues/5744)
+* chore(atomic-angular, atomic-react, auth, bueno, headless-react): remove unused exports, code and de ([6f8efc1](https://github.com/coveo/ui-kit/commits/6f8efc1)), closes [#5690](https://github.com/coveo/ui-kit/issues/5690)
+
+
+
 ## <small>3.2.52 (2025-07-23)</small>
 
 * fix(deps): update all dependencies j:kit-282 (#5723) ([6c032c9](https://github.com/coveo/ui-kit/commits/6c032c9)), closes [#5723](https://github.com/coveo/ui-kit/issues/5723)

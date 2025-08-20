@@ -1,5 +1,11 @@
-import {mkdirSync, readdirSync, readFileSync, writeFileSync} from 'node:fs';
-import {dirname, join, relative} from 'node:path';
+import {
+  mkdirSync,
+  readdirSync,
+  readFileSync,
+  statSync,
+  writeFileSync,
+} from 'node:fs';
+import {basename, dirname, join, relative} from 'node:path';
 import chalk from 'chalk';
 import * as lightningcss from 'lightningcss';
 import postcss from 'postcss';
@@ -42,7 +48,7 @@ function generateFileContent(imports, result) {
   if (imports.length === 0) {
     return dedent`
     ${cssJs}
-    export default [css];
+    export default css;
     `;
   }
 
@@ -58,7 +64,7 @@ function generateFileContent(imports, result) {
       .map((_, index) => `...dep${index}`)
       .concat('css')
       .join(', ')}];
-    export default allCss;
+    export default allCss.join('');
     `;
 
   return dedent`
@@ -85,11 +91,6 @@ async function convertCssToJs(srcPath, distPath, file) {
     const data = readFileSync(srcPath, 'utf8');
     const files = [file];
 
-    console.log(
-      chalk.blue('Processing:'),
-      chalk.green(`${srcPath} -> ${distPath}`)
-    );
-
     const imports = Array.from(data.matchAll(importMatcher)).flat();
     pushImports(srcPath, imports, files);
     const cleanedData = data.replace(importWholeLineMatcher, '');
@@ -98,9 +99,16 @@ async function convertCssToJs(srcPath, distPath, file) {
     const fileContent = generateFileContent(imports, result);
     const jsPath = `${distPath}.js`;
     writeFileSync(jsPath, fileContent);
-    console.log(chalk.blue('Successfully processed:'), chalk.green(jsPath));
+    console.log(
+      chalk.bgGreen('Successfully processed CSS file:'),
+      chalk.green(basename(srcPath))
+    );
   } catch (err) {
-    console.error(chalk.red(`Error processing file: ${srcPath}`), err);
+    console.error(
+      chalk.bgRed('Error processing file:'),
+      chalk.green(basename(srcPath)),
+      err
+    );
     throw err;
   }
 }
@@ -112,8 +120,8 @@ export async function processCssFiles(srcDir, distDir) {
       a.name.localeCompare(b.name)
     );
   } catch (err) {
-    console.error(chalk.red(`Error reading directory: ${srcDir}`), err);
-    return;
+    console.error(chalk.bgRed(`Error reading directory: ${srcDir}`), err);
+    throw err;
   }
   for (const entry of entries) {
     const srcPath = join(srcDir, entry.name);
@@ -127,4 +135,81 @@ export async function processCssFiles(srcDir, distDir) {
       await convertCssToJs(srcPath, distPath, entry);
     }
   }
+}
+
+function getAllJsFiles(dir) {
+  let results = [];
+  for (const name of readdirSync(dir)) {
+    const filePath = join(dir, name);
+    const stat = statSync(filePath);
+    if (stat.isDirectory()) {
+      results = results.concat(getAllJsFiles(filePath));
+    } else if (stat.isFile() && filePath.endsWith('.js')) {
+      results.push(filePath);
+    }
+  }
+  return results;
+}
+
+/**
+ * Process all inline css`...` tagged template blocks in JS files through PostCSS/Tailwind
+ */
+async function processInlineCss(distDir, srcDir) {
+  console.log(chalk.bold.blue('Post-processing inline CSS'));
+  const {plugins, options} = await postcssLoadConfig();
+  const files = getAllJsFiles(distDir);
+
+  for (const file of files) {
+    try {
+      let content = readFileSync(file, 'utf8');
+      const matches = [...content.matchAll(/css `([\s\S]*?)`/g)];
+      if (matches.length === 0) continue;
+
+      // Derive the original source file path for PostCSS resolution
+      const relativeFromDist = relative(distDir, file);
+      const originalSrcFile = join(
+        srcDir,
+        relativeFromDist.replace(/\.js$/, '.ts')
+      );
+
+      for (const match of matches) {
+        const fullMatch = match[0];
+        const rawCss = match[1];
+        const result = await postcss(plugins).process(rawCss, {
+          ...options,
+          from: originalSrcFile,
+        });
+
+        const minified = minifyCss(result, originalSrcFile);
+        const escaped = escapeBackslashes(minified);
+
+        content = content.split(fullMatch).join(`css\`${escaped}\``);
+      }
+
+      writeFileSync(file, content, 'utf8');
+      // Color only the file name green, keep directory uncolored
+      console.log(
+        chalk.bgGreen('Successfully processed inline CSS'),
+        chalk.green(basename(file))
+      );
+    } catch (err) {
+      // Color only the file name green in error path
+      console.error(
+        chalk.bgRed('Error processing inline CSS in file:'),
+        chalk.green(basename(file)),
+        err
+      );
+      throw err;
+    }
+  }
+}
+
+export async function processAllCss(srcDir, distDir) {
+  console.log(chalk.bold.blue('Starting CSS processing'));
+
+  await processCssFiles(srcDir, distDir);
+
+  await processInlineCss(distDir, srcDir);
+
+  console.log(chalk.bold.blue('CSS processing complete'));
 }

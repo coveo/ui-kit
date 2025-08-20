@@ -73,7 +73,11 @@
       "matchPackageNames": ["/^@lwc/compiler$/"]
     },
     {
-      "matchFileNames": ["packages/atomic/package.json"],
+      "matchFileNames": [
+        "packages/atomic/package.json",
+        "packages/create-atomic-component/template/src/components/sample-component/package.json",
+        "packages/create-atomic-component-project/template/package.json"
+      ],
       "groupSlug": "atomic-jest",
       "rangeStrategy": "replace",
       "allowedVersions": "27.x",
@@ -156,7 +160,7 @@
     "cypress-real-events",
     "cypress-web-vitals",
     "cypress-axe",
-    // Ignore marked to not have a floating PR
+    // Ignore marked to not have a floating PR.
     "marked",
     // Ignore stencil since it is getting removed.
     "@stencil/core",
@@ -176,6 +180,7 @@
     "@storybook/test",
     "@storybook/web-components",
     "@storybook/web-components-vite",
+    "@whitespace/storybook-addon-html",
     "storybook"
   ]
 }

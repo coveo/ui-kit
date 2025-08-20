@@ -2,8 +2,13 @@ import type {Middleware, MiddlewareAPI} from '@reduxjs/toolkit';
 import {type Logger, pino} from 'pino';
 import type {Mock} from 'vitest';
 import {updateBasicConfiguration} from '../features/configuration/configuration-actions.js';
-import {ExpiredTokenError} from '../utils/errors.js';
+import {setError} from '../features/error/error-actions.js';
+import {UnauthorizedTokenError} from '../utils/errors.js';
 import {createRenewAccessTokenMiddleware} from './renew-access-token-middleware.js';
+
+vi.mock('../utils/jwt-utils.js', () => ({
+  shouldRenewJWT: vi.fn(),
+}));
 
 describe('createRenewAccessTokenMiddleware', () => {
   let logger: Logger;
@@ -15,7 +20,10 @@ describe('createRenewAccessTokenMiddleware', () => {
 
   function buildExpiredTokenPayload() {
     return {
-      error: {name: new ExpiredTokenError().name},
+      error: {
+        name: new UnauthorizedTokenError().name,
+        message: new UnauthorizedTokenError().message,
+      },
     };
   }
 
@@ -33,11 +41,16 @@ describe('createRenewAccessTokenMiddleware', () => {
     logger = pino({level: 'silent'});
     store = {
       dispatch: buildDispatch(),
-      getState: vi.fn(),
+      getState: vi.fn().mockReturnValue({
+        configuration: {
+          accessToken: 'test-jwt-token',
+        },
+      }),
     };
+    vi.clearAllMocks();
   });
 
-  it('when the action is not a function, the middleware returns the payload', async () => {
+  it('should return the payload when the action is not a function', async () => {
     const middleware = createRenewAccessTokenMiddleware(logger);
     const action = {a: 'a'};
 
@@ -45,7 +58,73 @@ describe('createRenewAccessTokenMiddleware', () => {
     expect(result).toBe(action);
   });
 
-  it('when the action is a function that does not return an expired token error, the middleware returns the payload', async () => {
+  it('should proactively renew token when JWT is expired', async () => {
+    const {shouldRenewJWT} = await import('../utils/jwt-utils.js');
+    (shouldRenewJWT as Mock).mockReturnValue(true);
+    logger.debug = vi.fn();
+
+    const renewFn = vi.fn().mockResolvedValue('new-token');
+    const middleware = createRenewAccessTokenMiddleware(logger, renewFn);
+    const action = vi.fn().mockResolvedValue('result');
+
+    await callMiddleware(middleware, action);
+
+    expect(shouldRenewJWT).toHaveBeenCalledWith('test-jwt-token');
+    expect(renewFn).toHaveBeenCalled();
+    expect(store.dispatch).toHaveBeenCalledWith(
+      updateBasicConfiguration({accessToken: 'new-token'})
+    );
+    expect(logger.debug).toHaveBeenCalledWith('Access token was renewed.');
+  });
+
+  it('should not attempt renewal when JWT is not expired', async () => {
+    const {shouldRenewJWT} = await import('../utils/jwt-utils.js');
+    (shouldRenewJWT as Mock).mockReturnValue(false);
+
+    const renewFn = vi.fn();
+    const middleware = createRenewAccessTokenMiddleware(logger, renewFn);
+    const action = vi.fn().mockResolvedValue('result');
+
+    await callMiddleware(middleware, action);
+
+    expect(shouldRenewJWT).toHaveBeenCalledWith('test-jwt-token');
+    expect(renewFn).not.toHaveBeenCalled();
+  });
+
+  it('should handle proactive renewal failure gracefully', async () => {
+    const {shouldRenewJWT} = await import('../utils/jwt-utils.js');
+    (shouldRenewJWT as Mock).mockReturnValue(true);
+    logger.warn = vi.fn();
+
+    const renewFn = vi.fn().mockRejectedValue(new Error('Renewal failed'));
+    const middleware = createRenewAccessTokenMiddleware(logger, renewFn);
+    const action = vi.fn().mockResolvedValue('result');
+
+    await callMiddleware(middleware, action);
+
+    expect(logger.warn).toHaveBeenCalledWith(
+      expect.any(Error),
+      'Access token renewal failed. A retry will occur if necessary.'
+    );
+  });
+
+  it('should handle empty renewal result', async () => {
+    const {shouldRenewJWT} = await import('../utils/jwt-utils.js');
+    (shouldRenewJWT as Mock).mockReturnValue(true);
+    logger.warn = vi.fn();
+
+    const renewFn = vi.fn().mockResolvedValue('');
+    const middleware = createRenewAccessTokenMiddleware(logger, renewFn);
+    const action = vi.fn().mockResolvedValue('result');
+
+    await callMiddleware(middleware, action);
+
+    expect(logger.warn).toHaveBeenCalledWith(
+      'Access token renewal returned an empty token. Please check the #renewAccessToken function.'
+    );
+  });
+
+  it('should return the payload when the action is a function that does not return an expired token error', async () => {
     const middleware = createRenewAccessTokenMiddleware(logger);
     const action = () => Promise.resolve('a');
 
@@ -53,9 +132,7 @@ describe('createRenewAccessTokenMiddleware', () => {
     expect(result).toBe('a');
   });
 
-  it(`when the action is a function that returns an expired token payload,
-  when a renew function is not configured,
-  it logs a warning and returns the payload`, async () => {
+  it('should log a warning and return the payload when the action returns an expired token payload and no renew function is configured', async () => {
     const payload = buildExpiredTokenPayload();
     const action = () => Promise.resolve(payload);
     const middleware = createRenewAccessTokenMiddleware(logger);
@@ -69,8 +146,7 @@ describe('createRenewAccessTokenMiddleware', () => {
     expect(result).toBe(payload);
   });
 
-  describe(`when the action is a function that returns an expired token payload,
-  when a renew function is configured`, () => {
+  describe('when the action returns an expired token payload and a renew function is configured', () => {
     const payload = buildExpiredTokenPayload();
     const action = () => Promise.resolve(payload);
 
@@ -81,20 +157,18 @@ describe('createRenewAccessTokenMiddleware', () => {
       await callMiddleware(middleware, action);
     });
 
-    it('dispatches an action to update the access token with the value returned by the renew function', () => {
+    it('should dispatch an action to update the access token with the value returned by the renew function', () => {
       expect(store.dispatch).toHaveBeenCalledWith(
         updateBasicConfiguration({accessToken: 'newToken'})
       );
     });
 
-    it('dispatches the original action', () => {
+    it('should dispatch the original action', () => {
       expect(store.dispatch).toHaveBeenCalledWith(action);
     });
   });
 
-  describe(`when the action is a function that returns an expired token payload,
-  when a renew function is configured,
-  after the second call`, () => {
+  describe('when the action returns an expired token payload, a renew function is configured, and after the second call', () => {
     beforeEach(async () => {
       const payload = buildExpiredTokenPayload();
       const action = () => Promise.resolve(payload);
@@ -112,20 +186,26 @@ describe('createRenewAccessTokenMiddleware', () => {
       await callMiddleware(middleware, action);
     });
 
-    it('the middleware stops dispatching actions on the store to prevent an infinite loop', () => {
-      expect(store.dispatch).not.toHaveBeenCalled();
+    it('should dispatch the setError action to the store', () => {
+      const error = new UnauthorizedTokenError();
+      expect(store.dispatch).toHaveBeenCalledWith(
+        setError({
+          status: 401,
+          statusCode: 401,
+          message: error.message,
+          type: error.name,
+        })
+      );
     });
 
-    it('the middleware logs a warning to check the configured function', () => {
+    it('should log a warning to check the configured function', () => {
       expect(logger.warn).toHaveBeenCalledWith(
         expect.stringContaining('Please check the #renewAccessToken function.')
       );
     });
   });
 
-  it(`when the action is a function that returns an expired token payload,
-  when a renew function is configured,
-  if 500ms pass after the second call with no invocations, the middleware dispatches actions on the store on the third call`, async () => {
+  it('should dispatch actions on the store on the third call when 500ms pass after the second call with no invocations', async () => {
     const payload = buildExpiredTokenPayload();
     const action = () => Promise.resolve(payload);
     const renewFn = () => Promise.resolve('newToken');

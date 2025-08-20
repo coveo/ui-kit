@@ -1,3 +1,35 @@
+## <small>3.29.3 (2025-08-13)</small>
+
+* fix(quantic): updated misleading comment around access tokens and platform tokens (#5832) ([f242db4](https://github.com/coveo/ui-kit/commits/f242db4)), closes [#5832](https://github.com/coveo/ui-kit/issues/5832)
+
+
+
+## 3.29.0 (2025-08-07)
+
+* feat: Migrate monorepo build system from NX to Turborepo (#5733) ([e7e1237](https://github.com/coveo/ui-kit/commits/e7e1237)), closes [#5733](https://github.com/coveo/ui-kit/issues/5733)
+* feat(quantic): added citation anchoring logic to the quantic citations (#5718) ([cf4a881](https://github.com/coveo/ui-kit/commits/cf4a881)), closes [#5718](https://github.com/coveo/ui-kit/issues/5718)
+* chore: migrate from master to main (#5822) ([5372fa4](https://github.com/coveo/ui-kit/commits/5372fa4)), closes [#5822](https://github.com/coveo/ui-kit/issues/5822)
+* chore: update dependencies (major) (#5793) ([8cbf5bc](https://github.com/coveo/ui-kit/commits/8cbf5bc)), closes [#5793](https://github.com/coveo/ui-kit/issues/5793)
+* fix: Revert "fix(analytics): generativeQuestionAnsweringId (#5787)" (#5811) ([b3a9f93](https://github.com/coveo/ui-kit/commits/b3a9f93)), closes [#5787](https://github.com/coveo/ui-kit/issues/5787) [#5811](https://github.com/coveo/ui-kit/issues/5811)
+* fix(analytics): generativeQuestionAnsweringId (#5787) ([d50bade](https://github.com/coveo/ui-kit/commits/d50bade)), closes [#5787](https://github.com/coveo/ui-kit/issues/5787)
+* fix(deps): update all dependencies j:kit-282 (#5770) ([214bb00](https://github.com/coveo/ui-kit/commits/214bb00)), closes [#5770](https://github.com/coveo/ui-kit/issues/5770)
+* fix(quantic): made sure that clearFiltersOnTabChange value is properly parsed as boolean (#5774) ([cf7009e](https://github.com/coveo/ui-kit/commits/cf7009e)), closes [#5774](https://github.com/coveo/ui-kit/issues/5774)
+
+
+
+## <small>3.28.1 (2025-07-30)</small>
+
+* fix(quantic): fixed the console error test that was skipped  (#5759) ([21695c0](https://github.com/coveo/ui-kit/commits/21695c0)), closes [#5759](https://github.com/coveo/ui-kit/issues/5759)
+* fix(quantic): remove/replace unsupported styling hooks for slds2 (#5743) ([ca99131](https://github.com/coveo/ui-kit/commits/ca99131)), closes [#5743](https://github.com/coveo/ui-kit/issues/5743)
+* fix(quantic): wrong event name used in resultSendAsEmail (#5767) ([3768ab6](https://github.com/coveo/ui-kit/commits/3768ab6)), closes [#5767](https://github.com/coveo/ui-kit/issues/5767)
+* chore(quantic): fix issues with class overrides for slds2 migration (#5749) ([6a5d453](https://github.com/coveo/ui-kit/commits/6a5d453)), closes [#5749](https://github.com/coveo/ui-kit/issues/5749)
+* chore(quantic): removed unnecessary usage of data-cy selectors following cypress removal (#5742) ([6e5dfd7](https://github.com/coveo/ui-kit/commits/6e5dfd7)), closes [#5742](https://github.com/coveo/ui-kit/issues/5742)
+* test(quantic): add unit tests for QuanticPager (#5761) ([dee27ba](https://github.com/coveo/ui-kit/commits/dee27ba)), closes [#5761](https://github.com/coveo/ui-kit/issues/5761)
+* feat(quantic): user actions feature integrated in the example insight panel (#5721) ([a37c371](https://github.com/coveo/ui-kit/commits/a37c371)), closes [#5721](https://github.com/coveo/ui-kit/issues/5721)
+* chore(atomic-angular, atomic-react, auth, bueno, headless-react): remove unused exports, code and de ([6f8efc1](https://github.com/coveo/ui-kit/commits/6f8efc1)), closes [#5690](https://github.com/coveo/ui-kit/issues/5690)
+
+
+
 ## 3.27.0 (2025-07-23)
 
 * fix(deps): update all dependencies j:kit-282 (#5723) ([6c032c9](https://github.com/coveo/ui-kit/commits/6c032c9)), closes [#5723](https://github.com/coveo/ui-kit/issues/5723)
@@ -348,7 +380,7 @@
 
 ## <small>3.2.5 (2024-10-23)</small>
 
-- fix(atomic): broken HTML because of formatting in CRGA markdown heading (#4522) ([9e15c6c](https://github.com/coveo/ui-kit/commits/9e15c6c)), closes [#4522](https://github.com/coveo/ui-kit/issues/4522) [/github.com/coveo/ui-kit/blob/master/packages/atomic/src/components/common/generated-answer/generated-content/markdown-utils.ts#L50](https://github.com//github.com/coveo/ui-kit/blob/master/packages/atomic/src/components/common/generated-answer/generated-content/markdown-utils.ts/issues/L50)
+- fix(atomic): broken HTML because of formatting in CRGA markdown heading (#4522) ([9e15c6c](https://github.com/coveo/ui-kit/commits/9e15c6c)), closes [#4522](https://github.com/coveo/ui-kit/issues/4522) [/github.com/coveo/ui-kit/blob/main/packages/atomic/src/components/common/generated-answer/generated-content/markdown-utils.ts#L50](https://github.com//github.com/coveo/ui-kit/blob/main/packages/atomic/src/components/common/generated-answer/generated-content/markdown-utils.ts/issues/L50)
 
 ## <small>3.2.1 (2024-10-16)</small>
 

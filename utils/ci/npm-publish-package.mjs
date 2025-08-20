@@ -26,9 +26,7 @@ async function isPublished(name, version, tag = version) {
 }
 
 const isPrerelease = process.env.IS_PRERELEASE === 'true';
-const shouldProvideProvenance =
-  !isPrerelease &&
-  process.env.npm_config_registry !== 'https://npm.pkg.github.com';
+const tagSuffix = process.env.TAG_SUFFIX || '';
 /** @type {import('@npmcli/package-json').PackageJson} */
 const {name, version} = JSON.parse(
   readFileSync('package.json', {encoding: 'utf-8'})
@@ -37,10 +35,12 @@ if (!name || !version) {
   throw 'Expected name and version to exist in package.json.';
 }
 if (!(await isPublished(name, version))) {
-  const tagToPublish = isPrerelease ? 'alpha' : 'beta';
+  const tagToPublish = isPrerelease
+    ? ['alpha', ...(tagSuffix ? [tagSuffix] : [])].join('-')
+    : 'beta';
   await npmPublish('.', {
     tag: tagToPublish,
-    provenance: shouldProvideProvenance,
+    provenance: true,
   });
 } else {
   console.log(`Version ${version} is already published.`);

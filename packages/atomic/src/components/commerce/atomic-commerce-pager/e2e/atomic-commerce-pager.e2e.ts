@@ -209,7 +209,7 @@ test.describe('with numberOfPages=-5', () => {
 
 test.describe('should allow custom icons', () => {
   const customIcon =
-    'https://raw.githubusercontent.com/coveo/ui-kit/master/packages/atomic/src/images/arrow-top-rounded.svg';
+    'https://raw.githubusercontent.com/coveo/ui-kit/main/packages/atomic/src/images/arrow-top-rounded.svg';
 
   test.beforeEach(async ({pager}) => {
     await pager.load({story: 'custom-icon'});

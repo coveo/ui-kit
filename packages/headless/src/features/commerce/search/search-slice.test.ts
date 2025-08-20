@@ -6,6 +6,7 @@ import {
   buildMockChildProduct,
   buildMockProduct,
 } from '../../../test/mock-product.js';
+import {setError} from '../../error/error-actions.js';
 import {setContext, setView} from '../context/context-actions.js';
 import {
   executeSearch,
@@ -46,7 +47,7 @@ describe('search-slice', () => {
       const finalState = commerceSearchReducer(state, action);
 
       expect(finalState.products).toEqual(
-        products.map((p) => buildMockProduct({ec_name: p.ec_name}))
+        products.map((p) => buildMockProduct({ec_name: p.ec_name, responseId}))
       );
       expect(finalState.facets).toEqual(facets);
       expect(finalState.responseId).toEqual(responseId);
@@ -74,6 +75,24 @@ describe('search-slice', () => {
       expect(finalState.products[1].position).toBe(22);
     });
 
+    it('sets the responseId on each product', () => {
+      const products = [
+        buildMockBaseProduct({ec_name: 'product1'}),
+        buildMockBaseProduct({ec_name: 'product2'}),
+      ];
+      const responseId = 'some-response-id';
+      const response = buildSearchResponse({
+        products,
+        responseId,
+      });
+
+      const action = executeSearch.fulfilled(response, '');
+      const finalState = commerceSearchReducer(state, action);
+
+      expect(finalState.products[0].responseId).toBe(responseId);
+      expect(finalState.products[1].responseId).toBe(responseId);
+    });
+
     it('sets #error to null', () => {
       state.error = {message: 'message', statusCode: 500, type: 'type'};
 
@@ -88,8 +107,8 @@ describe('search-slice', () => {
   describe('on #fetchMoreProducts.fulfilled', () => {
     it('updates the state with the received payload', () => {
       state.products = [
-        buildMockProduct({ec_name: 'product1'}),
-        buildMockProduct({ec_name: 'product2'}),
+        buildMockProduct({ec_name: 'product1', responseId: 'old-response-id'}),
+        buildMockProduct({ec_name: 'product2', responseId: 'old-response-id'}),
       ];
       const newProducts = [
         buildMockBaseProduct({ec_name: 'product3'}),
@@ -145,6 +164,42 @@ describe('search-slice', () => {
       expect(finalState.products[0].position).toBe(1);
       expect(finalState.products[1].position).toBe(2);
       expect(finalState.products[2].position).toBe(3);
+    });
+
+    it('sets the responseId on new products while preserving existing products responseId', () => {
+      state.products = [
+        buildMockProduct({
+          ec_name: 'product1',
+          position: 1,
+          responseId: 'old-response-id',
+        }),
+        buildMockProduct({
+          ec_name: 'product2',
+          position: 2,
+          responseId: 'old-response-id',
+        }),
+      ];
+      const newProducts = [buildMockBaseProduct({ec_name: 'product3'})];
+      const responseId = 'new-response-id';
+      const response = buildSearchResponse({
+        products: newProducts,
+        responseId,
+        pagination: {
+          page: 1,
+          perPage: 2,
+          totalEntries: 22,
+          totalPages: 3,
+        },
+      });
+
+      const action = fetchMoreProducts.fulfilled(response, '');
+      const finalState = commerceSearchReducer(state, action);
+
+      // Original products keep their responseId
+      expect(finalState.products[0].responseId).toBe('old-response-id');
+      expect(finalState.products[1].responseId).toBe('old-response-id');
+      // New products get the new responseId
+      expect(finalState.products[2].responseId).toBe(responseId);
     });
 
     it('sets #error to null', () => {
@@ -303,6 +358,7 @@ describe('search-slice', () => {
         children: [childProduct],
         totalNumberOfChildren: 1,
         position: 5,
+        responseId: 'test-response-id',
       });
 
       state.products = [parentProduct];
@@ -315,6 +371,7 @@ describe('search-slice', () => {
           children: parentProduct.children,
           totalNumberOfChildren: parentProduct.totalNumberOfChildren,
           position: parentProduct.position,
+          responseId: parentProduct.responseId,
         }),
       ]);
     });
@@ -362,5 +419,22 @@ describe('search-slice', () => {
     );
 
     expect(finalState).toEqual(getCommerceSearchInitialState());
+  });
+
+  describe('on #setError', () => {
+    it('should set the error state and set isLoading to false', () => {
+      const error = {
+        message: 'Something went wrong',
+        statusCode: 401,
+        status: 401,
+        type: 'BadRequest',
+      };
+      state.isLoading = true;
+
+      const finalState = commerceSearchReducer(state, setError(error));
+
+      expect(finalState.error).toEqual(error);
+      expect(finalState.isLoading).toBe(false);
+    });
   });
 });

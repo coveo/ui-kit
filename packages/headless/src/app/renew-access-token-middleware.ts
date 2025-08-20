@@ -1,8 +1,19 @@
-import type {Middleware, UnknownAction} from '@reduxjs/toolkit';
+import type {
+  Dispatch,
+  Middleware,
+  MiddlewareAPI,
+  UnknownAction,
+} from '@reduxjs/toolkit';
 import type {Logger} from 'pino';
 import {debounce} from 'ts-debounce';
 import {updateBasicConfiguration} from '../features/configuration/configuration-actions.js';
-import {ExpiredTokenError} from '../utils/errors.js';
+import {setError} from '../features/error/error-actions.js';
+import type {
+  CommerceConfigurationSection,
+  ConfigurationSection,
+} from '../state/state-sections.js';
+import {UnauthorizedTokenError} from '../utils/errors.js';
+import {shouldRenewJWT as shouldRenewAccessToken} from '../utils/jwt-utils.js';
 
 export function createRenewAccessTokenMiddleware(
   logger: Logger,
@@ -20,16 +31,59 @@ export function createRenewAccessTokenMiddleware(
       return next(action);
     }
 
+    const hasRenewFunction = typeof renewToken === 'function';
+
+    // Proactive JWT expiration check before action execution
+    if (hasRenewFunction) {
+      const state = store.getState();
+      const accessToken = getAccessTokenFromState(state);
+
+      if (accessToken && shouldRenewAccessToken(accessToken)) {
+        logger.debug(
+          'Access token is expired or about to expire, attempting renewal.'
+        );
+        try {
+          const newAccessToken = await renewToken();
+          if (newAccessToken) {
+            store.dispatch(
+              updateBasicConfiguration({accessToken: newAccessToken})
+            );
+            logger.debug('Access token was renewed.');
+          } else {
+            logger.warn(
+              'Access token renewal returned an empty token. Please check the #renewAccessToken function.'
+            );
+          }
+        } catch (error) {
+          logger.warn(
+            error,
+            'Access token renewal failed. A retry will occur if necessary.'
+          );
+        }
+      }
+    }
+
+    // Notes:
+    //
+    // - No race condition with the preceding `updateBasicConfiguration` dispatch because:
+    //   1. `store.dispatch()` with synchronous actions completes immediately and updates the state.
+    //   2. The state is guaranteed to contain the fresh token before this point is reached.
+    //
+    // - Execution is not short-circuited after successful proactive renewal because:
+    //   1. The API is the authoritative source for token validity (401/419 responses).
+    //   2. Reactive error handling provides defense-in-depth for rare edge cases.
+    //   3. This ensures consistent error handling across all action types
     const payload = await next(action);
 
     if (!isExpiredTokenError(payload)) {
       return payload;
     }
 
-    if (typeof renewToken !== 'function') {
+    if (!hasRenewFunction) {
       logger.warn(
         'Unable to renew the expired token because a renew function was not provided. Please specify the #renewAccessToken option when initializing the engine.'
       );
+      dispatchError(store, payload.error);
       return payload;
     }
 
@@ -37,6 +91,7 @@ export function createRenewAccessTokenMiddleware(
       logger.warn(
         'Attempted to renew the token but was not successful. Please check the #renewAccessToken function.'
       );
+      dispatchError(store, payload.error);
       return payload;
     }
 
@@ -50,9 +105,31 @@ export function createRenewAccessTokenMiddleware(
   };
 }
 
-// biome-ignore lint/suspicious/noExplicitAny: legacy API requires 'any'
-function isExpiredTokenError(action: any) {
-  return action?.error?.name === new ExpiredTokenError().name;
+function isExpiredTokenError(
+  action: unknown
+): action is {error: UnauthorizedTokenError} {
+  return (
+    typeof action === 'object' &&
+    action !== null &&
+    'error' in action &&
+    // biome-ignore lint/suspicious/noExplicitAny: any action is possible here.
+    (action as any).error?.name === new UnauthorizedTokenError().name
+  );
+}
+
+function dispatchError(
+  // biome-ignore lint/suspicious/noExplicitAny: any action is possible here.
+  store: MiddlewareAPI<Dispatch<UnknownAction>, any>,
+  error: UnauthorizedTokenError
+) {
+  store.dispatch(
+    setError({
+      status: 401,
+      statusCode: 401,
+      message: error.message,
+      type: error.name,
+    })
+  );
 }
 
 async function attempt(fn: () => Promise<string>) {
@@ -61,4 +138,14 @@ async function attempt(fn: () => Promise<string>) {
   } catch (_) {
     return '';
   }
+}
+
+type EngineStateWithAccessToken =
+  | (ConfigurationSection & Record<string, unknown>)
+  | (CommerceConfigurationSection & Record<string, unknown>);
+
+function getAccessTokenFromState(
+  state: EngineStateWithAccessToken
+): string | undefined {
+  return state.configuration.accessToken;
 }

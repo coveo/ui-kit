@@ -73,7 +73,7 @@ export const arrayEqualStrictlyDifferentOrder = <
 };
 
 export const deepEqualAnyOrder: <T>(a: T, b: T) => boolean = createCustomEqual({
-  createCustomConfig: (config) => {
+  createCustomConfig: (config: {}) => {
     return {
       ...config,
       areArraysEqual: arrayEqualAnyOrder,

@@ -1,4 +1,5 @@
 import {createSelector} from '@reduxjs/toolkit';
+import type {GeneratedAnswerStream} from '../../../api/knowledge/generated-answer-stream.js';
 import {
   type AnswerEvaluationPOSTParams,
   answerEvaluation,
@@ -7,10 +8,9 @@ import {triggerSearchRequest} from '../../../api/knowledge/stream-answer-actions
 import {
   answerApi,
   fetchAnswer,
-  type GeneratedAnswerStream,
-  type StateNeededByAnswerAPI,
   selectAnswer,
 } from '../../../api/knowledge/stream-answer-api.js';
+import type {StreamAnswerAPIState} from '../../../api/knowledge/stream-answer-api-state.js';
 import {warnIfUsingNextAnalyticsModeForServiceFeature} from '../../../app/engine.js';
 import type {InsightEngine} from '../../../app/insight-engine/insight-engine.js';
 import {defaultNodeJSNavigatorContextProvider} from '../../../app/navigator-context-provider.js';
@@ -96,7 +96,7 @@ const parseEvaluationArguments = ({
 });
 
 const subscribeToSearchRequest = (
-  engine: SearchEngine<StateNeededByAnswerAPI>
+  engine: SearchEngine<StreamAnswerAPIState>
 ) => {
   let lastTriggerParams: ReturnType<typeof selectAnswerTriggerParams>;
   const strictListener = () => {
@@ -163,7 +163,7 @@ export function buildAnswerApiGeneratedAnswer(
   const getState = () => engine.state;
   engine.dispatch(updateAnswerConfigurationId(props.answerConfigurationId!));
 
-  subscribeToSearchRequest(engine as SearchEngine<StateNeededByAnswerAPI>);
+  subscribeToSearchRequest(engine as SearchEngine<StreamAnswerAPIState>);
 
   return {
     ...controller,

@@ -1,5 +1,5 @@
 import DOMPurify from 'dompurify';
-import {LitElement, svg, unsafeCSS} from 'lit';
+import {css, LitElement, svg} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {guard} from 'lit/directives/guard.js';
 import {unsafeSVG} from 'lit/directives/unsafe-svg.js';
@@ -11,7 +11,6 @@ import {watch} from '@/src/decorators/watch';
 import {InitializeBindingsMixin} from '@/src/mixins/bindings-mixin';
 import {parseAssetURL} from '@/src/utils/asset-path-utils';
 import type {AnyBindings} from '../interface/bindings';
-import styles from './atomic-icon.tw.css';
 
 class IconFetchError extends Error {
   static fromStatusCode(url: string, statusCode: number, statusText: string) {
@@ -42,7 +41,27 @@ export class AtomicIcon
   extends InitializeBindingsMixin(LitElement)
   implements InitializableComponent<AnyBindings>
 {
-  static styles = unsafeCSS(styles);
+  static styles = css`
+    @layer components {
+      atomic-icon {
+        display: inline-block;
+        fill: currentColor;
+        aspect-ratio: 1 / 1;
+        height: auto;
+
+        @supports not (aspect-ratio: 1 / 1) {
+          height: auto;
+        }
+
+        > svg {
+          width: 100%;
+          max-height: 100%;
+          aspect-ratio: 1 / 1;
+          height: auto;
+        }
+      }
+    }
+  `;
   /**
    * The SVG icon to display.
    *

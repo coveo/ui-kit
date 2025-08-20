@@ -1698,7 +1698,7 @@
     "tr": "{{query}} için {{total}} / {{first}} sonuç",
     "zh": "结果数 {{first}}，总数 {{total}}, 搜索 {{query}}",
     "zh-CN": "结果数 {{first}}，总数 {{total}}, 搜索 {{query}}",
-    "zh-TW": "結果數 {{first}}，總數 {{total}}, 搜索 {{query}}"
+    "zh-TW": "結果數 {{first}}，總數 {{total}}, 搜尋 {{query}}"
   },
   "showing-products-of-with-query_other": {
     "en": "Products {{first}}-{{last}} of {{total}} for {{query}}",
@@ -1752,7 +1752,7 @@
     "tr": "{{query}} için {{total}} / {{first}}-{{last}} sonuç",
     "zh": "结果数 {{first}}-{{last}}，总数 {{total}}, 搜索 {{query}}",
     "zh-CN": "结果数 {{first}}-{{last}}，总数 {{total}}, 搜索 {{query}}",
-    "zh-TW": "結果數 {{first}}-{{last}}，總數 {{total}}, 搜索 {{query}}"
+    "zh-TW": "結果數 {{first}}-{{last}}，總數 {{total}}, 搜尋 {{query}}"
   },
   "showing-products-of-load-more": {
     "en": "Showing {{last}} of {{total}} products",
@@ -4265,6 +4265,33 @@
     "zh": "预览结果",
     "zh-CN": "预览结果",
     "zh-TW": "預覽結果"
+  },
+  "preview-modal-title": {
+    "en": "Preview of the result",
+    "fr": "Aperçu du résultat",
+    "cs": "Náhled výsledku",
+    "da": "Forhåndsvisning af resultatet",
+    "de": "Vorschau des Ergebnisses",
+    "el": "Προεπισκόπηση του αποτελέσματος",
+    "es": "Vista previa del resultado",
+    "fi": "Tuloksen esikatselu",
+    "hu": "A találat előnézete",
+    "id": "Pratinjau hasil",
+    "it": "Anteprima del risultato",
+    "ja": "結果のプレビュー",
+    "ko": "결과 미리보기",
+    "nl": "Voorbeeld van het resultaat",
+    "no": "Forhåndsvisning av resultatet",
+    "pl": "Podgląd wyniku",
+    "pt": "Pré-visualização do resultado",
+    "pt-BR": "Visualizar prévia do resultado",
+    "ru": "Предварительный просмотр результата",
+    "sv": "Förhandsgranskning av resultatet",
+    "th": "ดูตัวอย่างผลลัพธ์",
+    "tr": "Sonucun önizlemesi",
+    "zh": "结果预览",
+    "zh-CN": "结果预览",
+    "zh-TW": "結果預覽"
   },
   "sort-and-filter": {
     "en": "Sort & Filter",

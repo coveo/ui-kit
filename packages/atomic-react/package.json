@@ -2,7 +2,7 @@
   "name": "@coveo/atomic-react",
   "sideEffects": false,
   "type": "module",
-  "version": "3.2.52",
+  "version": "3.3.3",
   "description": "React specific wrapper for the Atomic component library",
   "repository": {
     "type": "git",
@@ -10,14 +10,15 @@
     "directory": "packages/atomic-react"
   },
   "scripts": {
-    "build": "nx build",
+    "gen:lit": "node ./scripts/build-lit.mjs && npm run build:fixLoaderImportPaths && npm run build:fixGeneratedImportPaths",
+    "build": "npm run build:bundles && npm run build:types && npm run build:assets",
     "clean": "rimraf -rf dist",
     "build:fixLoaderImportPaths": "node ./scripts/fix-loader-import-paths.js",
     "build:fixGeneratedImportPaths": "fix-esm-import-path src/components/stencil-generated",
     "build:bundles": "rollup --config rollup.config.js",
     "build:types": "tsc --project tsconfig.types.json",
-    "publish:npm": "npm run-script -w=@coveo/ci npm-publish",
-    "publish:bump": "npm run-script -w=@coveo/ci bump",
+    "release:phase3": "npm run-script -w=@coveo/ci npm-publish",
+    "release:phase1": "npm run-script -w=@coveo/ci bump",
     "promote:npm:latest": "npm run-script -w=@coveo/ci promote-npm-prod",
     "build:assets": "ncp ../atomic/dist/atomic/assets dist/assets && ncp ../atomic/dist/atomic/lang dist/lang "
   },
@@ -30,7 +31,7 @@
     "commerce/"
   ],
   "dependencies": {
-    "@coveo/atomic": "3.30.0",
+    "@coveo/atomic": "3.32.3",
     "@lit/react": "1.0.6"
   },
   "devDependencies": {
@@ -38,18 +39,18 @@
     "@rollup/plugin-json": "6.1.0",
     "@rollup/plugin-node-resolve": "16.0.1",
     "@rollup/plugin-typescript": "12.1.4",
-    "@types/node": "22.16.4",
+    "@types/node": "22.16.5",
     "@types/react": "18.3.3",
     "@types/react-dom": "18.3.0",
     "fix-esm-import-path": "1.10.1",
-    "react": "19.1.0",
-    "react-dom": "19.1.0",
-    "rollup": "4.45.0",
+    "react": "19.1.1",
+    "react-dom": "19.1.1",
+    "rollup": "4.46.2",
     "rollup-plugin-polyfill-node": "^0.13.0",
     "ncp": "2.0.0"
   },
   "peerDependencies": {
-    "@coveo/headless": "3.27.5",
+    "@coveo/headless": "3.28.3",
     "react": ">=18.0.0",
     "react-dom": ">=18.0.0"
   },

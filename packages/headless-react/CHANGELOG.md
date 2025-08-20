@@ -1,3 +1,24 @@
+## <small>2.5.1 (2025-08-11)</small>
+
+* test(headless-ssr): fix window is not defined flakiness (#5849) ([894a8a1](https://github.com/coveo/ui-kit/commits/894a8a1)), closes [#5849](https://github.com/coveo/ui-kit/issues/5849)
+
+
+
+## 2.5.0 (2025-08-07)
+
+* chore: migrate from master to main (#5822) ([5372fa4](https://github.com/coveo/ui-kit/commits/5372fa4)), closes [#5822](https://github.com/coveo/ui-kit/issues/5822)
+* chore(headless-ssr): create ssr-next endpoints (#5779) ([4dd12f4](https://github.com/coveo/ui-kit/commits/4dd12f4)), closes [#5779](https://github.com/coveo/ui-kit/issues/5779)
+* feat: Migrate monorepo build system from NX to Turborepo (#5733) ([e7e1237](https://github.com/coveo/ui-kit/commits/e7e1237)), closes [#5733](https://github.com/coveo/ui-kit/issues/5733)
+
+
+
+## <small>2.4.39 (2025-07-30)</small>
+
+* chore(atomic-angular, atomic-react, auth, bueno, headless-react): remove unused exports, code and de ([6f8efc1](https://github.com/coveo/ui-kit/commits/6f8efc1)), closes [#5690](https://github.com/coveo/ui-kit/issues/5690)
+* chore: enable noUnusedVariables rule (#5670) ([6809d57](https://github.com/coveo/ui-kit/commits/6809d57)), closes [#5670](https://github.com/coveo/ui-kit/issues/5670)
+
+
+
 ## <small>2.4.37 (2025-07-23)</small>
 
 * fix(deps): update all dependencies j:kit-282 (#5723) ([6c032c9](https://github.com/coveo/ui-kit/commits/6c032c9)), closes [#5723](https://github.com/coveo/ui-kit/issues/5723)

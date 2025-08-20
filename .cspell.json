@@ -299,6 +299,12 @@
     "tolocalestring",
     "γίγγλυμος",
     "στόμα",
-    "myapp"
+    "myapp",
+    "Turborepo",
+    "react",
+    "angular",
+    "vuejs",
+    "nextjs",
+    "stencil"
   ]
 }

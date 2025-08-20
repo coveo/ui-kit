@@ -6,6 +6,7 @@ import {
   buildMockProduct,
 } from '../../../test/mock-product.js';
 import {buildFetchProductListingResponse} from '../../../test/mock-product-listing.js';
+import {setError} from '../../error/error-actions.js';
 import {setContext, setView} from '../context/context-actions.js';
 import {
   fetchMoreProducts,
@@ -45,7 +46,7 @@ describe('product-listing-slice', () => {
 
       expect(finalState.products).toEqual(
         response.response.products.map((p) =>
-          buildMockProduct({ec_name: p.ec_name})
+          buildMockProduct({ec_name: p.ec_name, responseId})
         )
       );
       expect(finalState.facets[0]).toEqual(facet);
@@ -74,6 +75,24 @@ describe('product-listing-slice', () => {
       expect(finalState.products[1].position).toBe(22);
     });
 
+    it('sets the responseId on each product', () => {
+      const products = [
+        buildMockBaseProduct({ec_name: 'product1'}),
+        buildMockBaseProduct({ec_name: 'product2'}),
+      ];
+      const responseId = 'some-response-id';
+      const response = buildFetchProductListingResponse({
+        products,
+        responseId,
+      });
+
+      const action = fetchProductListing.fulfilled(response, '');
+      const finalState = productListingReducer(state, action);
+
+      expect(finalState.products[0].responseId).toBe(responseId);
+      expect(finalState.products[1].responseId).toBe(responseId);
+    });
+
     it('set #error to null ', () => {
       const err = {message: 'message', statusCode: 500, type: 'type'};
       state.error = err;
@@ -89,8 +108,8 @@ describe('product-listing-slice', () => {
   describe('on #fetchMoreProducts.fulfilled', () => {
     it('appends the received products to the product listing state', () => {
       state.products = [
-        buildMockProduct({ec_name: 'product1'}),
-        buildMockProduct({ec_name: 'product2'}),
+        buildMockProduct({ec_name: 'product1', responseId: 'old-response-id'}),
+        buildMockProduct({ec_name: 'product2', responseId: 'old-response-id'}),
       ];
       const result = buildMockBaseProduct({ec_name: 'product3'});
       const facet = buildMockCommerceRegularFacetResponse();
@@ -141,6 +160,42 @@ describe('product-listing-slice', () => {
       expect(finalState.products[0].position).toBe(1);
       expect(finalState.products[1].position).toBe(2);
       expect(finalState.products[2].position).toBe(3);
+    });
+
+    it('sets the responseId on new products while preserving existing products responseId', () => {
+      state.products = [
+        buildMockProduct({
+          ec_name: 'product1',
+          position: 1,
+          responseId: 'old-response-id',
+        }),
+        buildMockProduct({
+          ec_name: 'product2',
+          position: 2,
+          responseId: 'old-response-id',
+        }),
+      ];
+      const newProduct = buildMockBaseProduct({ec_name: 'product3'});
+      const responseId = 'new-response-id';
+      const response = buildFetchProductListingResponse({
+        products: [newProduct],
+        responseId,
+        pagination: {
+          page: 1,
+          perPage: 2,
+          totalEntries: 22,
+          totalPages: 3,
+        },
+      });
+
+      const action = fetchMoreProducts.fulfilled(response, '');
+      const finalState = productListingReducer(state, action);
+
+      // Original products keep their responseId
+      expect(finalState.products[0].responseId).toBe('old-response-id');
+      expect(finalState.products[1].responseId).toBe('old-response-id');
+      // New products get the new responseId
+      expect(finalState.products[2].responseId).toBe(responseId);
     });
 
     it('set #error to null', () => {
@@ -299,6 +354,7 @@ describe('product-listing-slice', () => {
         children: [childProduct],
         totalNumberOfChildren: 1,
         position: 5,
+        responseId: 'test-response-id',
       });
 
       state.products = [parentProduct];
@@ -311,6 +367,7 @@ describe('product-listing-slice', () => {
           children: parentProduct.children,
           totalNumberOfChildren: parentProduct.totalNumberOfChildren,
           position: parentProduct.position,
+          responseId: parentProduct.responseId,
         }),
       ]);
     });
@@ -351,5 +408,22 @@ describe('product-listing-slice', () => {
     );
 
     expect(finalState).toEqual(getProductListingInitialState());
+  });
+
+  describe('on #setError', () => {
+    it('should set the error state and set isLoading to false', () => {
+      const error = {
+        message: 'Something went wrong',
+        statusCode: 401,
+        status: 401,
+        type: 'BadRequest',
+      };
+      state.isLoading = true;
+
+      const finalState = productListingReducer(state, setError(error));
+
+      expect(finalState.error).toEqual(error);
+      expect(finalState.isLoading).toBe(false);
+    });
   });
 });

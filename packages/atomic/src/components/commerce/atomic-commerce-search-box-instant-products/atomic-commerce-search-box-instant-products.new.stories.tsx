@@ -15,7 +15,7 @@ const {decorator: commerceSearchBoxDecorator} = wrapInCommerceSearchBox(html`
 
 const meta: Meta = {
   component: 'atomic-commerce-search-box-instant-products',
-  title: 'Commerce/atomic-commerce-search-box-instant-products',
+  title: 'Commerce/Search Box Instant Products',
   id: 'atomic-commerce-search-box-instant-products',
   render: renderComponentWithoutCodeRoot,
   decorators: [commerceSearchBoxDecorator, commerceInterfaceDecorator],
@@ -43,7 +43,6 @@ export default meta;
 export const Default: Story = {};
 
 export const WithComfortableDensity: Story = {
-  tags: ['test'],
   name: 'With comfortable density',
   args: {
     'attributes-density': 'comfortable',
@@ -51,7 +50,6 @@ export const WithComfortableDensity: Story = {
 };
 
 export const WithNoImage: Story = {
-  tags: ['test'],
   name: 'With no image',
   args: {
     'attributes-image-size': 'none',

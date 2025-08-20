@@ -8,7 +8,6 @@ import type { JSX } from '@coveo/atomic';
 import { defineCustomElements } from '@coveo/atomic/loader';
 
 defineCustomElements();
-export const AtomicAriaLive = /*@__PURE__*/createReactComponent<JSX.AtomicAriaLive, HTMLAtomicAriaLiveElement>('atomic-aria-live');
 export const AtomicAutomaticFacet = /*@__PURE__*/createReactComponent<JSX.AtomicAutomaticFacet, HTMLAtomicAutomaticFacetElement>('atomic-automatic-facet');
 export const AtomicAutomaticFacetGenerator = /*@__PURE__*/createReactComponent<JSX.AtomicAutomaticFacetGenerator, HTMLAtomicAutomaticFacetGeneratorElement>('atomic-automatic-facet-generator');
 export const AtomicBreadbox = /*@__PURE__*/createReactComponent<JSX.AtomicBreadbox, HTMLAtomicBreadboxElement>('atomic-breadbox');
@@ -69,7 +68,6 @@ export const AtomicResultSectionTitleMetadata = /*@__PURE__*/createReactComponen
 export const AtomicResultSectionVisual = /*@__PURE__*/createReactComponent<JSX.AtomicResultSectionVisual, HTMLAtomicResultSectionVisualElement>('atomic-result-section-visual');
 export const AtomicResultText = /*@__PURE__*/createReactComponent<JSX.AtomicResultText, HTMLAtomicResultTextElement>('atomic-result-text');
 export const AtomicResultTimespan = /*@__PURE__*/createReactComponent<JSX.AtomicResultTimespan, HTMLAtomicResultTimespanElement>('atomic-result-timespan');
-export const AtomicResultsPerPage = /*@__PURE__*/createReactComponent<JSX.AtomicResultsPerPage, HTMLAtomicResultsPerPageElement>('atomic-results-per-page');
 export const AtomicSearchBox = /*@__PURE__*/createReactComponent<JSX.AtomicSearchBox, HTMLAtomicSearchBoxElement>('atomic-search-box');
 export const AtomicSearchBoxInstantResults = /*@__PURE__*/createReactComponent<JSX.AtomicSearchBoxInstantResults, HTMLAtomicSearchBoxInstantResultsElement>('atomic-search-box-instant-results');
 export const AtomicSearchBoxQuerySuggestions = /*@__PURE__*/createReactComponent<JSX.AtomicSearchBoxQuerySuggestions, HTMLAtomicSearchBoxQuerySuggestionsElement>('atomic-search-box-query-suggestions');

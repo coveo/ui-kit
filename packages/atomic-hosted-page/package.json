@@ -1,7 +1,7 @@
 {
   "name": "@coveo/atomic-hosted-page",
   "description": "Web Component used to inject a Coveo Hosted Search Page in the DOM.",
-  "version": "1.1.31",
+  "version": "1.2.3",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/coveo/ui-kit.git",
@@ -22,23 +22,23 @@
   ],
   "scripts": {
     "clean": "rimraf -rf dist/*",
-    "build": "nx build",
+    "build": "rimraf -rf dist cdn && tsc --outdir dist && tsc --outdir cdn --project tsconfig.cdn.json && node ./scripts/esbuild.js",
     "start": "node ./scripts/start.js",
     "e2e": "playwright test",
-    "publish:npm": "npm run-script -w=@coveo/ci npm-publish",
-    "publish:bump": "npm run-script -w=@coveo/ci bump",
+    "release:phase3": "npm run-script -w=@coveo/ci npm-publish",
+    "release:phase1": "npm run-script -w=@coveo/ci bump",
     "promote:npm:latest": "npm run-script -w=@coveo/ci promote-npm-prod"
   },
   "dependencies": {
-    "@coveo/bueno": "1.0.22",
-    "@coveo/headless": "3.27.5",
+    "@coveo/bueno": "1.1.0",
+    "@coveo/headless": "3.28.3",
     "lit": "3.3.1"
   },
   "devDependencies": {
     "@playwright/test": "1.54.1",
-    "@types/node": "22.16.4",
+    "@types/node": "22.16.5",
     "rimraf": "3.0.2",
-    "vite": "6.3.5"
+    "vite": "7.0.6"
   },
   "engines": {
     "node": "^20.9.0 || ^22.11.0"

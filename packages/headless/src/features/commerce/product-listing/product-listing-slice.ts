@@ -6,6 +6,7 @@ import type {
   Product,
 } from '../../../api/commerce/common/product.js';
 import type {CommerceSuccessResponse} from '../../../api/commerce/common/response.js';
+import {setError} from '../../error/error-actions.js';
 import {setContext, setView} from '../context/context-actions.js';
 import {
   fetchMoreProducts,
@@ -34,7 +35,11 @@ export const productListingReducer = createReducer(
         handleFullfilled(state, action.payload.response);
         state.products = action.payload.response.products.map(
           (product, index) =>
-            preprocessProduct(product, paginationOffset + index + 1)
+            preprocessProduct(
+              product,
+              paginationOffset + index + 1,
+              action.payload.response.responseId
+            )
         );
       })
       .addCase(fetchMoreProducts.fulfilled, (state, action) => {
@@ -45,7 +50,11 @@ export const productListingReducer = createReducer(
         handleFullfilled(state, action.payload.response);
         state.products = state.products.concat(
           action.payload.response.products.map((product, index) =>
-            preprocessProduct(product, paginationOffset + index + 1)
+            preprocessProduct(
+              product,
+              paginationOffset + index + 1,
+              action.payload?.response.responseId
+            )
           )
         );
       })
@@ -69,6 +78,7 @@ export const productListingReducer = createReducer(
           return;
         }
 
+        const responseId = products[currentParentIndex].responseId;
         const position = products[currentParentIndex].position;
         const {children, totalNumberOfChildren} = products[currentParentIndex];
 
@@ -77,12 +87,16 @@ export const productListingReducer = createReducer(
           children,
           totalNumberOfChildren,
           position,
+          responseId,
         };
 
         products.splice(currentParentIndex, 1, newParent);
       })
       .addCase(setView, () => getProductListingInitialState())
-      .addCase(setContext, () => getProductListingInitialState());
+      .addCase(setContext, () => getProductListingInitialState())
+      .addCase(setError, (state, action) => {
+        handleError(state, action.payload);
+      });
   }
 );
 
@@ -114,12 +128,16 @@ function getPaginationOffset(payload: QueryCommerceAPIThunkReturn): number {
   return pagination.page * pagination.perPage;
 }
 
-function preprocessProduct(product: BaseProduct, position: number): Product {
+function preprocessProduct(
+  product: BaseProduct,
+  position: number,
+  responseId?: string
+): Product {
   const isParentAlreadyInChildren = product.children.some(
     (child) => child.permanentid === product.permanentid
   );
   if (product.children.length === 0 || isParentAlreadyInChildren) {
-    return {...product, position};
+    return {...product, position, responseId};
   }
 
   const {
@@ -132,5 +150,6 @@ function preprocessProduct(product: BaseProduct, position: number): Product {
     ...product,
     children: [restOfProduct, ...children],
     position,
+    responseId,
   };
 }

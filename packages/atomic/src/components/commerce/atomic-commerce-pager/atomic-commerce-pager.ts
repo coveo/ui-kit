@@ -43,7 +43,6 @@ import {getCurrentPagesRange} from './commerce-pager-utils';
  * @part next-button-icon - The "next page" button icon.
  *
  * @event atomic/scrollToTop - Emitted when the user clicks the next or previous button, or a page button.
- * @alpha
  */
 @customElement('atomic-commerce-pager')
 @bindings()
@@ -65,7 +64,7 @@ export class AtomicCommercePager
    * The maximum number of page buttons to display.
    */
   @property({reflect: true, attribute: 'number-of-pages', type: Number})
-  numberOfPages = 5;
+  numberOfPages: number = 5;
 
   /**
    * The SVG icon to use to display the Previous button.

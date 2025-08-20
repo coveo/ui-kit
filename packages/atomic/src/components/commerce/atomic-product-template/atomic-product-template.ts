@@ -15,9 +15,13 @@ import '../atomic-product-link/atomic-product-link';
 import '../atomic-product/atomic-product';
 import '../atomic-product-excerpt/atomic-product-excerpt';
 import '../atomic-product-children/atomic-product-children';
+import '../atomic-product-field-condition/atomic-product-field-condition';
 import '../atomic-product-multi-value-text/atomic-product-multi-value-text';
 import '../atomic-product-price/atomic-product-price';
 import '../atomic-product-numeric-field-value/atomic-product-numeric-field-value';
+import '../atomic-product-description/atomic-product-description';
+import '../atomic-product-image/atomic-product-image';
+import '../atomic-product-rating/atomic-product-rating';
 
 /**
  * * A product template determines the format of the query results, depending on the conditions that are defined for each template.
@@ -29,8 +33,6 @@ import '../atomic-product-numeric-field-value/atomic-product-numeric-field-value
  * @MapProp name: mustNotMatch;attr: must-not-match;docs: The field and values that must not be matched by a product item for the template to apply. For example, a template with the following attribute only applies to product items whose `filetype` is not `lithiummessage`: `must-not-match-filetype="lithiummessage";type: Record<string, string[]> ;default: {}
  * @slot default - The default slot where to insert the template element.
  * @slot link - A `template` element that contains a single `atomic-product-link` component.
- *
- * @alpha
  */
 @customElement('atomic-product-template')
 export class AtomicProductTemplate
@@ -48,7 +50,7 @@ export class AtomicProductTemplate
    * For example, the following targets a template and sets a condition to make it apply only to products whose `ec_name` contains `singapore`:
    * `document.querySelector('#target-template').conditions = [(product) => /singapore/i.test(product.ec_name)];`
    */
-  @property({type: Array})
+  @property({attribute: false, type: Array})
   conditions: ProductTemplateCondition[] = [];
 
   /**

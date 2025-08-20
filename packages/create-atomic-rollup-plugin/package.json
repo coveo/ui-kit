@@ -1,19 +1,20 @@
 {
   "name": "@coveo/create-atomic-rollup-plugin",
-  "version": "1.0.0",
+  "version": "1.2.0",
   "description": "Rollup plugin for resolving Coveo Atomic dependencies from CDN or npm",
   "type": "module",
-  "main": "lib/index.js",
-  "types": "lib/index.d.ts",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "files": [
-    "/lib"
+    "/dist"
   ],
   "scripts": {
-    "build": "nx build",
+    "build": "npm run clean && npm run build:ts",
+    "clean": "rimraf dist",
     "build:ts": "tsc -p tsconfig.json",
     "lint": "npx @biomejs/biome check .",
-    "publish:npm": "npm run-script -w=@coveo/ci npm-publish",
-    "publish:bump": "npm run-script -w=@coveo/ci bump",
+    "release:phase3": "npm run-script -w=@coveo/ci npm-publish",
+    "release:phase1": "npm run-script -w=@coveo/ci bump",
     "promote:npm:latest": "npm run-script -w=@coveo/ci promote-npm-prod"
   },
   "keywords": [

@@ -18,7 +18,7 @@ const {decorator, play} = wrapInSearchInterface();
 
 const meta: Meta = {
   component: 'atomic-icon',
-  title: 'Common/atomic-icon',
+  title: 'Common/Icon',
   id: 'atomic-icon',
 
   render: renderComponent,

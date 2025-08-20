@@ -1,10 +1,10 @@
 /** biome-ignore-all lint/suspicious/noExplicitAny: <mock> */
 /* eslint-disable @cspell/spellchecker */
-import type {StateNeededByAnswerAPI} from '../../../api/knowledge/stream-answer-api.js';
+import type {StreamAnswerAPIState} from '../../../api/knowledge/stream-answer-api-state.js';
 
 const atomicVersion = '2.77.0';
 
-export const streamAnswerAPIStateMock: StateNeededByAnswerAPI = {
+export const streamAnswerAPIStateMock: StreamAnswerAPIState = {
   configuration: {
     organizationId: 'lbergeronsfdevt1z2624x',
     environment: 'dev',
@@ -706,6 +706,9 @@ export const streamAnswerAPIStateMock: StateNeededByAnswerAPI = {
           status: 'pending' as any,
           endpointName: 'getAnswer',
           requestId: 'ePS46iWmVlz23hfyR8TVQ',
+          data: {
+            answerId: 'answerId1234',
+          },
           //@ts-expect-error - This is a mock
           originalArgs: {
             q: 'what is the hardest wood',
@@ -1085,7 +1088,7 @@ export const streamAnswerAPIStateMock: StateNeededByAnswerAPI = {
   },
 };
 
-export const streamAnswerAPIStateMockWithATabWithAnExpression: StateNeededByAnswerAPI =
+export const streamAnswerAPIStateMockWithATabWithAnExpression: StreamAnswerAPIState =
   {
     ...streamAnswerAPIStateMock,
     tabSet: {
@@ -1098,7 +1101,7 @@ export const streamAnswerAPIStateMockWithATabWithAnExpression: StateNeededByAnsw
     },
   };
 
-export const streamAnswerAPIStateMockWithoutAnyTab: StateNeededByAnswerAPI = {
+export const streamAnswerAPIStateMockWithoutAnyTab: StreamAnswerAPIState = {
   ...streamAnswerAPIStateMock,
   tabSet: {},
   configuration: {
@@ -1110,7 +1113,7 @@ export const streamAnswerAPIStateMockWithoutAnyTab: StateNeededByAnswerAPI = {
   },
 };
 
-export const streamAnswerAPIStateMockWithStaticFiltersSelected: StateNeededByAnswerAPI =
+export const streamAnswerAPIStateMockWithStaticFiltersSelected: StreamAnswerAPIState =
   {
     ...streamAnswerAPIStateMock,
     staticFilterSet: {
@@ -1127,7 +1130,7 @@ export const streamAnswerAPIStateMockWithStaticFiltersSelected: StateNeededByAns
     },
   };
 
-export const streamAnswerAPIStateMockWithNonValidFilters: StateNeededByAnswerAPI =
+export const streamAnswerAPIStateMockWithNonValidFilters: StreamAnswerAPIState =
   {
     ...streamAnswerAPIStateMock,
     staticFilterSet: {
@@ -1164,13 +1167,12 @@ export const streamAnswerAPIStateMockWithNonValidFilters: StateNeededByAnswerAPI
     },
   };
 
-export const streamAnswerAPIStateMockWithoutAnyFilters: StateNeededByAnswerAPI =
-  {
-    ...streamAnswerAPIStateMock,
-    staticFilterSet: {},
-  };
+export const streamAnswerAPIStateMockWithoutAnyFilters: StreamAnswerAPIState = {
+  ...streamAnswerAPIStateMock,
+  staticFilterSet: {},
+};
 
-export const streamAnswerAPIStateMockWithStaticFiltersAndTabExpression: StateNeededByAnswerAPI =
+export const streamAnswerAPIStateMockWithStaticFiltersAndTabExpression: StreamAnswerAPIState =
   {
     ...streamAnswerAPIStateMockWithATabWithAnExpression,
     staticFilterSet: {
@@ -1211,7 +1213,7 @@ export const streamAnswerAPIStateMockWithStaticFiltersAndTabExpressionWithEmptyC
     },
   };
 
-export const streamAnswerAPIStateMockWithoutSearchAction: StateNeededByAnswerAPI =
+export const streamAnswerAPIStateMockWithoutSearchAction: StreamAnswerAPIState =
   {
     ...streamAnswerAPIStateMock,
     search: {
@@ -1226,6 +1228,7 @@ export const expectedStreamAnswerAPIParam = {
   cq: 'cq-test-query',
   dq: 'dq-test-query',
   lq: 'lq-test-query',
+  enableQuerySyntax: false,
   context: {
     testKey: 'testValue',
   },

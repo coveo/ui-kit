@@ -1,0 +1,33 @@
+import { Meta } from '@storybook/blocks';
+import * as AtomicProductRatingStories from './atomic-product-rating.new.stories';
+import { AtomicDocTemplate } from '../../../../storybook-utils/documentation/atomic-doc-template';
+
+
+<Meta of={AtomicProductRatingStories} />
+
+<AtomicDocTemplate
+  stories={AtomicProductRatingStories}
+  githubPath="commerce/atomic-product-rating/atomic-product-rating.ts"
+  tagName="atomic-product-rating"
+  className="AtomicProductRating"
+>
+
+The `atomic-product-rating` component displays the rating of a product as a set of icons (stars by default).
+
+This component is used within `atomic-product-template` components inside the product list:
+
+```html
+<atomic-commerce-interface>
+  ...
+  <atomic-commerce-product-list>
+    <atomic-product-template>
+      <template>
+        <atomic-product-rating></atomic-product-rating>
+      </template>
+    </atomic-product-template>
+  </atomic-commerce-product-list>
+  ...
+</atomic-commerce-interface>
+```
+
+</AtomicDocTemplate>

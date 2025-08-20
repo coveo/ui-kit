@@ -1,3 +1,47 @@
+## <small>3.28.3 (2025-08-13)</small>
+
+* fix(headless): renew expired access token before emitting event through Relay (#5828) ([c4fc3e9](https://github.com/coveo/ui-kit/commits/c4fc3e9)), closes [#5828](https://github.com/coveo/ui-kit/issues/5828)
+
+
+
+## <small>3.28.2 (2025-08-11)</small>
+
+* fix(atomic): use commerce headless version instead of search version (#5827) ([eb91994](https://github.com/coveo/ui-kit/commits/eb91994)), closes [#5827](https://github.com/coveo/ui-kit/issues/5827)
+
+
+
+## <small>3.28.1 (2025-08-11)</small>
+
+* fix(headless): reset numberOfValue when deselecting a manual numeric facet range (#5845) ([450bb60](https://github.com/coveo/ui-kit/commits/450bb60)), closes [#5845](https://github.com/coveo/ui-kit/issues/5845)
+
+
+
+## 3.28.0 (2025-08-07)
+
+* refactor(headless-ssr): remove build() method (#5785) ([a56afa5](https://github.com/coveo/ui-kit/commits/a56afa5)), closes [#5785](https://github.com/coveo/ui-kit/issues/5785)
+* chore: migrate from master to main (#5822) ([5372fa4](https://github.com/coveo/ui-kit/commits/5372fa4)), closes [#5822](https://github.com/coveo/ui-kit/issues/5822)
+* chore: update dependencies (major) (#5793) ([8cbf5bc](https://github.com/coveo/ui-kit/commits/8cbf5bc)), closes [#5793](https://github.com/coveo/ui-kit/issues/5793)
+* chore(headless-ssr): create ssr-next endpoints (#5779) ([4dd12f4](https://github.com/coveo/ui-kit/commits/4dd12f4)), closes [#5779](https://github.com/coveo/ui-kit/issues/5779)
+* chore(headless): centralize SSR code under `src/ssr` (#5771) ([6f24bae](https://github.com/coveo/ui-kit/commits/6f24bae)), closes [#5771](https://github.com/coveo/ui-kit/issues/5771)
+* docs(headless): enhance documentation for SSR state inference utilities (#5764) ([d3f009c](https://github.com/coveo/ui-kit/commits/d3f009c)), closes [#5764](https://github.com/coveo/ui-kit/issues/5764)
+* fix: include enableQuerySyntax in stream-api (#5780) ([84548b8](https://github.com/coveo/ui-kit/commits/84548b8)), closes [#5780](https://github.com/coveo/ui-kit/issues/5780)
+* fix: Revert "fix(analytics): generativeQuestionAnsweringId (#5787)" (#5811) ([b3a9f93](https://github.com/coveo/ui-kit/commits/b3a9f93)), closes [#5787](https://github.com/coveo/ui-kit/issues/5787) [#5811](https://github.com/coveo/ui-kit/issues/5811)
+* fix(analytics): generativeQuestionAnsweringId (#5787) ([d50bade](https://github.com/coveo/ui-kit/commits/d50bade)), closes [#5787](https://github.com/coveo/ui-kit/issues/5787)
+* fix(atomic): ensure CoveoAtomic.version is defined (#5777) ([c512b81](https://github.com/coveo/ui-kit/commits/c512b81)), closes [#5777](https://github.com/coveo/ui-kit/issues/5777)
+* fix(headless): bubble api error to the state after renew access token fails (#5589) ([8348a39](https://github.com/coveo/ui-kit/commits/8348a39)), closes [#5589](https://github.com/coveo/ui-kit/issues/5589)
+* feat: Migrate monorepo build system from NX to Turborepo (#5733) ([e7e1237](https://github.com/coveo/ui-kit/commits/e7e1237)), closes [#5733](https://github.com/coveo/ui-kit/issues/5733)
+
+
+
+## <small>3.27.7 (2025-07-30)</small>
+
+* chore: allow prerelease on CI (#5756) ([de2c411](https://github.com/coveo/ui-kit/commits/de2c411)), closes [#5756](https://github.com/coveo/ui-kit/issues/5756)
+* chore: enable noUnusedVariables rule (#5670) ([6809d57](https://github.com/coveo/ui-kit/commits/6809d57)), closes [#5670](https://github.com/coveo/ui-kit/issues/5670)
+* fix(headless): align logic for setting category facet previousState with expectations from RFC (#573 ([227ba19](https://github.com/coveo/ui-kit/commits/227ba19)), closes [#5738](https://github.com/coveo/ui-kit/issues/5738)
+* fix(headless): populate browser navigator context using relay  (#5680) ([76e8d6f](https://github.com/coveo/ui-kit/commits/76e8d6f)), closes [#5680](https://github.com/coveo/ui-kit/issues/5680)
+
+
+
 ## <small>3.27.5 (2025-07-23)</small>
 
 * fix: do not inject forwardedFor header in when in browser (#5640) ([5626f3a](https://github.com/coveo/ui-kit/commits/5626f3a)), closes [#5640](https://github.com/coveo/ui-kit/issues/5640)

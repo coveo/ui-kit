@@ -6,7 +6,7 @@ runs:
     - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
     - uses: ./.github/actions/setup
       with:
-        cache-suffix: "cdn"
+        cache-prefix: "cdn"
       env:
         DEPLOYMENT_ENVIRONMENT: CDN
     - run: npm run build

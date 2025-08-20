@@ -17,7 +17,7 @@ import {
   type RegularFacetValue,
   type Search,
 } from '@coveo/headless/commerce';
-import {type CSSResultGroup, html, LitElement, nothing, unsafeCSS} from 'lit';
+import {type CSSResultGroup, html, LitElement, nothing} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {bindStateToController} from '@/src/decorators/bind-state';
 import {bindingGuard} from '@/src/decorators/binding-guard';
@@ -64,8 +64,6 @@ type AnyFacetValue =
  * @part show-less - The button to display less breadcrumbs.
  * @part label - The "Filters" label.
  * @part clear - The button to clear all filters.
- *
- * @alpha
  */
 @customElement('atomic-commerce-breadbox')
 @bindings()
@@ -74,7 +72,7 @@ export class AtomicCommerceBreadbox
   extends LitElement
   implements InitializableComponent<CommerceBindings>
 {
-  static styles: CSSResultGroup = [unsafeCSS(styles)];
+  static styles: CSSResultGroup = styles;
 
   private resizeObserver?: ResizeObserver;
   private lastRemovedBreadcrumbIndex = 0;
@@ -91,7 +89,7 @@ export class AtomicCommerceBreadbox
   @bindStateToController('context')
   @state()
   public contextState!: ContextState;
-  public searchOrListing!: Search | ProductListing;
+  private searchOrListing!: Search | ProductListing;
 
   @bindStateToController('breadcrumbManager')
   @state()
