@@ -2,4 +2,5 @@
 @import "./section-emphasized.css";
 @import "./section-badges.css";
 @import "./section-children.css";
+@import "./section-excerpt.css";
 @reference '../../../../utils/tailwind.global.tw.css';
