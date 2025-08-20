@@ -2,38 +2,15 @@ import type {UnknownAction} from '@reduxjs/toolkit';
 import type {CoreEngine, CoreEngineNext} from '../../app/engine.js';
 import type {Controller} from '../../controllers/controller/headless-controller.js';
 import {clone, mapObject} from '../../utils/utils.js';
-import type {
-  ControllerDefinition,
-  ControllerDefinitionsMap,
-  ControllersMap,
-} from './types/controllers.js';
+import {ControllerBuilder} from './builders/controller-builder.js';
+import {createStaticControllerBuilder} from './builders/static-controller-builder.js';
+import type {ControllerDefinitionsMap} from './types/controllers.js';
 import type {EngineStaticState} from './types/engine.js';
 import type {
-  InferControllerFromDefinition,
-  InferControllerPropsFromDefinition,
   InferControllerPropsMapFromDefinitions,
-  InferControllerStaticStateMapFromControllers,
+  InferControllerStaticStateMapFromDefinitions,
   InferControllersMapFromDefinition,
 } from './types/inference.js';
-
-function buildControllerFromDefinition<
-  TControllerDefinition extends ControllerDefinition<TEngine, Controller>,
-  TEngine extends CoreEngine | CoreEngineNext,
->({
-  definition,
-  engine,
-  props,
-}: {
-  definition: TControllerDefinition;
-  engine: TEngine;
-  props?: InferControllerPropsFromDefinition<TControllerDefinition>;
-}): InferControllerFromDefinition<TControllerDefinition> {
-  return (
-    'build' in definition
-      ? definition.build(engine)
-      : definition.buildWithProps(engine, props)
-  ) as InferControllerFromDefinition<TControllerDefinition>;
-}
 
 export function buildControllerDefinitions<
   TControllerDefinitionsMap extends ControllerDefinitionsMap<
@@ -48,49 +25,34 @@ export function buildControllerDefinitions<
 }: {
   definitionsMap: TControllerDefinitionsMap;
   engine: TEngine;
-  propsMap: InferControllerPropsMapFromDefinitions<TControllerDefinitionsMap>;
+  propsMap?: InferControllerPropsMapFromDefinitions<TControllerDefinitionsMap>;
 }): InferControllersMapFromDefinition<TControllerDefinitionsMap> {
-  return mapObject(definitionsMap, (definition, key) =>
-    buildControllerFromDefinition({
-      definition,
-      engine,
-      props: propsMap?.[key as keyof typeof propsMap],
-    })
-  ) as InferControllersMapFromDefinition<TControllerDefinitionsMap>;
+  return mapObject(definitionsMap, (definition, key) => {
+    const props = propsMap?.[key as keyof typeof propsMap];
+    return new ControllerBuilder(definition, engine, props).build();
+  }) as InferControllersMapFromDefinition<TControllerDefinitionsMap>;
 }
 
-export function createStaticState<TSearchAction extends UnknownAction>({
+export function createStaticState<
+  TSearchAction extends UnknownAction,
+  TControllerDefinitions extends ControllerDefinitionsMap<
+    CoreEngine | CoreEngineNext,
+    Controller
+  >,
+>({
   searchAction,
   controllers,
 }: {
   searchAction: TSearchAction;
-  controllers: ControllersMap;
+  controllers: InferControllersMapFromDefinition<TControllerDefinitions>;
 }): EngineStaticState<
   TSearchAction,
-  InferControllerStaticStateMapFromControllers<ControllersMap>
+  InferControllerStaticStateMapFromDefinitions<TControllerDefinitions>
 > {
   return {
-    controllers: mapObject(controllers, (controller) => ({
-      state: clone(controller.state),
-    })) as InferControllerStaticStateMapFromControllers<ControllersMap>,
+    controllers: mapObject(controllers, (controller) =>
+      createStaticControllerBuilder(controller).build()
+    ) as InferControllerStaticStateMapFromDefinitions<TControllerDefinitions>,
     searchAction: clone(searchAction),
   };
-}
-
-// TODO: KIT-4610: no longer needed along with build()
-export function composeFunction<
-  TParameters extends Array<unknown>,
-  TReturn,
-  TChildren extends {},
->(
-  parentFunction: (...params: TParameters) => TReturn,
-  children: TChildren
-): TChildren & ((...params: TParameters) => TReturn) {
-  const newFunction = ((...params: TParameters) =>
-    parentFunction(...params)) as ((...params: TParameters) => TReturn) &
-    TChildren;
-  for (const [key, value] of Object.entries(children)) {
-    (newFunction as unknown as Record<typeof key, typeof value>)[key] = value;
-  }
-  return newFunction;
 }

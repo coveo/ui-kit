@@ -1,10 +1,10 @@
 {
   "name": "ui-kit",
   "private": true,
-  "version": "3.0.48",
+  "version": "3.0.53",
   "scripts": {
     "postinstall": "husky install && patch-package && npx playwright install",
-    "reset:install": "git checkout origin/master package-lock.json && npm i",
+    "reset:install": "git checkout origin/main package-lock.json && npm i",
     "clean:install": "git clean -xfd && npm run reset:install",
     "dev:atomic": "concurrently \"npm run -w @coveo/headless dev\" \"npm run -w @coveo/atomic start\"",
     "build": "turbo build",
@@ -32,7 +32,7 @@
   "devDependencies": {
     "@actions/core": "1.11.1",
     "@actions/github": "6.0.1",
-    "@biomejs/biome": "2.0.6",
+    "@biomejs/biome": "2.1.4",
     "@commitlint/config-conventional": "19.8.1",
     "@commitlint/lint": "19.8.1",
     "@commitlint/load": "19.8.1",

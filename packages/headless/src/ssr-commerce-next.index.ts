@@ -184,6 +184,7 @@ export {definePagination} from './ssr-next/commerce/controllers/pagination/headl
 export type {
   CommerceSearchParameters,
   ParameterManager,
+  ParameterManagerDefinition,
   ParameterManagerProps,
   ParameterManagerState,
   Parameters,
@@ -264,7 +265,6 @@ export type {
   RedirectionTriggerState,
 } from './ssr-next/commerce/controllers/triggers/headless-redirection-trigger.ssr.js';
 export {defineRedirectionTrigger} from './ssr-next/commerce/controllers/triggers/headless-redirection-trigger.ssr.js';
-export type {CommerceEngineDefinition} from './ssr-next/commerce/engine/commerce-engine.ssr.js';
 export {defineCommerceEngine} from './ssr-next/commerce/engine/commerce-engine.ssr.js';
 export type {
   CommerceEngineDefinitionOptions,
@@ -283,7 +283,6 @@ export type {
   OptionsTuple,
 } from './ssr-next/commerce/types/controller-definitions.js';
 export type {
-  InferBuildResult,
   InferControllerFromDefinition,
   InferControllerPropsMapFromDefinitions,
   InferControllerStaticStateMapFromDefinitionsWithSolutionType,
@@ -292,14 +291,10 @@ export type {
   InferStaticState,
 } from './ssr-next/commerce/types/controller-inference.js';
 export type {
-  Build,
-  BuildOptions,
-  EngineDefinition,
+  CommerceEngineDefinition,
   EngineStaticState,
   FetchStaticState,
   FetchStaticStateOptions,
-  FromBuildResult,
-  FromBuildResultOptions,
   HydrateStaticState,
   HydrateStaticStateOptions,
 } from './ssr-next/commerce/types/engine.js';

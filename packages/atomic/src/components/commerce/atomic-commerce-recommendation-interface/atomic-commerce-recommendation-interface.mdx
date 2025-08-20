@@ -1,28 +1,24 @@
-import {Canvas, ArgTypes, Meta, Title, Description, Subtitle} from '@storybook/blocks';
+import { Meta } from '@storybook/blocks';
 import * as AtomicCommerceRecommendationInterfaceStories from './atomic-commerce-recommendation-interface.new.stories';
+import { AtomicDocTemplate } from '../../../../storybook-utils/documentation/atomic-doc-template';
+
 
 <Meta of={AtomicCommerceRecommendationInterfaceStories} />
 
-<Title />
-<Subtitle>
-  <Description />
-</Subtitle>
+<AtomicDocTemplate
+  stories={AtomicCommerceRecommendationInterfaceStories}
+  githubPath="commerce/atomic-commerce-recommendation-interface/atomic-commerce-recommendation-interface.ts"
+  tagName="atomic-commerce-recommendation-interface"
+  className="AtomicCommerceRecommendationInterface"
+>
 
-<Canvas
-  additionalActions={[
-    {
-      title: 'Open in GitHub',
-      onClick: () => {
-        window.open(
-          'https://github.com/coveo/ui-kit/blob/master/packages/atomic/src/components/commerce/atomic-commerce-recommendation-interface/atomic-commerce-recommendation-interface.ts',
-          '_blank'
-        );
-      },
-    },
-  ]}
-  of={AtomicCommerceRecommendationInterfaceStories.Default}
-/>
+This component must be used to wrap every recommendation list. It is necessary for the correct functioning recommendations. A multiple amount of recommendations can be placed within it.
 
-## Reference
+```html
+<atomic-commerce-recommendation-interface>
 
-<ArgTypes />
+  ...
+
+</atomic-commerce-recommendation-interface>
+```
+</AtomicDocTemplate>

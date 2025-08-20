@@ -300,6 +300,11 @@
     "γίγγλυμος",
     "στόμα",
     "myapp",
-    "Turborepo"
+    "Turborepo",
+    "react",
+    "angular",
+    "vuejs",
+    "nextjs",
+    "stencil"
   ]
 }

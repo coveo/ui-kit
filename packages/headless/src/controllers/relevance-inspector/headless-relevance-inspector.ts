@@ -71,7 +71,7 @@ export interface RelevanceInspectorInitialState {
 /**
  * The `RelevanceInspector` controller is in charge of allowing displaying various debug information.
  *
- * Example: [relevance-inspector.fn.tsx](https://github.com/coveo/ui-kit/blob/master/packages/samples/headless-react/src/components/relevance-inspector/relevance-inspector.fn.tsx)
+ * Example: [relevance-inspector.fn.tsx](https://github.com/coveo/ui-kit/blob/main/packages/samples/headless-react/src/components/relevance-inspector/relevance-inspector.fn.tsx)
  *
  * @group Controllers
  * @category RelevanceInspector
@@ -285,8 +285,8 @@ export function buildRelevanceInspector(
       engine.logger.warn(
         `For production environment, please specify the necessary fields either when instantiating a ResultList controller, or by dispatching a registerFieldsToInclude action.
         
-        https://docs.coveo.com/en/headless/latest/reference/search/controllers/result-list/#resultlistoptions
-        https://docs.coveo.com/en/headless/latest/reference/search/actions/field/#registerfieldstoinclude`
+        hhttps://docs.coveo.com/en/headless/latest/reference/interfaces/Search.ResultListOptions.html
+        https://docs.coveo.com/en/headless/latest/reference/interfaces/Search.FieldActionCreators.html#registerfieldstoinclude`
       );
     },
   };
