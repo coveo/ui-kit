@@ -8,13 +8,13 @@ import {
   answerApi,
   fetchAnswer,
   selectAnswer,
-  selectAnswerTriggerParams,
 } from '../../../api/knowledge/stream-answer-api.js';
 import type {StreamAnswerAPIState} from '../../../api/knowledge/stream-answer-api-state.js';
 import {warnIfUsingNextAnalyticsModeForServiceFeature} from '../../../app/engine.js';
 import type {InsightEngine} from '../../../app/insight-engine/insight-engine.js';
 import {defaultNodeJSNavigatorContextProvider} from '../../../app/navigator-context-provider.js';
 import type {SearchEngine} from '../../../app/search-engine/search-engine.js';
+import {selectAnswerTriggerParams} from '../../../features/generated-answer/answer-api-selectors.js';
 import {
   resetAnswer,
   sendGeneratedAnswerFeedback,
@@ -100,7 +100,6 @@ const subscribeToSearchRequest = (
   let lastTriggerParams: ReturnType<typeof selectAnswerTriggerParams>;
   const strictListener = () => {
     const state = engine.state;
-    // console.log('state: ' + JSON.stringify(state));
     const triggerParams = selectAnswerTriggerParams(state);
 
     if (!lastTriggerParams || triggerParams.q.length === 0) {

@@ -1,8 +1,4 @@
-import {
-  createSelector,
-  type ThunkDispatch,
-  type UnknownAction,
-} from '@reduxjs/toolkit';
+import type {ThunkDispatch, UnknownAction} from '@reduxjs/toolkit';
 import {skipToken} from '@reduxjs/toolkit/query';
 import {
   setAnswerContentFormat,
@@ -11,7 +7,6 @@ import {
   updateMessage,
 } from '../../features/generated-answer/generated-answer-actions.js';
 import {logGeneratedAnswerStreamEnd} from '../../features/generated-answer/generated-answer-analytics-actions.js';
-import {selectQuery} from '../../features/query/query-selectors.js';
 import {fetchEventSource} from '../../utils/fetch-event-source/fetch.js';
 import type {EventSourceMessage} from '../../utils/fetch-event-source/parse.js';
 import {getOrganizationEndpoint} from '../platform-client.js';
@@ -215,21 +210,6 @@ export const answerApi = answerSlice.injectEndpoints({
     }),
   }),
 });
-
-export const selectAnswerTriggerParams = createSelector(
-  (state) => selectQuery(state)?.q,
-  (state) => state.search.requestId,
-  (state) => state.generatedAnswer.cannotAnswer,
-  (state) => state.configuration.analytics.analyticsMode,
-  (state) => state.search.searchAction?.actionCause,
-  (q, requestId, cannotAnswer, analyticsMode, actionCause) => ({
-    q,
-    requestId,
-    cannotAnswer,
-    analyticsMode,
-    actionCause,
-  })
-);
 
 export const fetchAnswer = (fetchAnswerParams: Partial<SearchRequest>) => {
   return answerApi.endpoints.getAnswer.initiate(fetchAnswerParams);
