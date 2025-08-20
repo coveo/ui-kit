@@ -1,9 +1,7 @@
 /** biome-ignore-all lint/suspicious/noExplicitAny: Just tests */
 import type {EventSourceMessage} from '../../../utils/fetch-event-source/parse.js';
-import {
-  type GeneratedAnswerStream,
-  updateCacheWithEvent,
-} from '../stream-answer-api.js';
+import type {GeneratedAnswerStream} from '../generated-answer-stream.js';
+import {updateCacheWithEvent} from '../stream-answer-api.js';
 
 describe('#streamAnswerApi', () => {
   describe('updateCacheWithEvent', () => {

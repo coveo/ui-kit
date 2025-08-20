@@ -1,5 +1,5 @@
 import type {GeneratedAnswerStreamRequest} from '../../api/generated-answer/generated-answer-request.js';
-import type {StateNeededByAnswerAPI} from '../../api/knowledge/stream-answer-api.js';
+import type {StreamAnswerAPIState} from '../../api/knowledge/stream-answer-api-state.js';
 import {getOrganizationEndpoint} from '../../api/platform-client.js';
 import type {NavigatorContext} from '../../app/navigator-context-provider.js';
 import {selectAdvancedSearchQueries} from '../../features/advanced-search-queries/advanced-search-query-selectors.js';
@@ -43,7 +43,7 @@ export const buildStreamingRequest = async (
 });
 
 export const constructAnswerQueryParams = (
-  state: StateNeededByAnswerAPI,
+  state: StreamAnswerAPIState,
   navigatorContext: NavigatorContext
 ) => {
   const q = selectQuery(state)?.q;
@@ -107,7 +107,7 @@ export const constructAnswerQueryParams = (
   };
 };
 
-const getGeneratedFacetParams = (state: StateNeededByAnswerAPI) => ({
+const getGeneratedFacetParams = (state: StreamAnswerAPIState) => ({
   ...getFacets(state)
     ?.map((facetRequest) =>
       mapFacetRequest(facetRequest, initialSearchMappings())
@@ -117,7 +117,7 @@ const getGeneratedFacetParams = (state: StateNeededByAnswerAPI) => ({
     ),
 });
 
-const buildAdvancedSearchQueryParams = (state: StateNeededByAnswerAPI) => {
+const buildAdvancedSearchQueryParams = (state: StreamAnswerAPIState) => {
   const advancedSearchQueryParams = selectAdvancedSearchQueries(state);
   const mergedCq = buildConstantQuery(state);
 

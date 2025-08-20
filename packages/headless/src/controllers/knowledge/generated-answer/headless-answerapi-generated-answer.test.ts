@@ -3,8 +3,8 @@ import {triggerSearchRequest} from '../../../api/knowledge/stream-answer-actions
 import {
   answerApi,
   fetchAnswer,
-  type StateNeededByAnswerAPI,
 } from '../../../api/knowledge/stream-answer-api.js';
+import type {StreamAnswerAPIState} from '../../../api/knowledge/stream-answer-api-state.js';
 import {getConfigurationInitialState} from '../../../features/configuration/configuration-state.js';
 import {
   resetAnswer,
@@ -99,7 +99,7 @@ describe('knowledge-generated-answer', () => {
     );
 
   const buildEngineWithGeneratedAnswer = (
-    initialState: Partial<StateNeededByAnswerAPI> = {}
+    initialState: Partial<StreamAnswerAPIState> = {}
   ) => {
     const state = createMockState({
       ...initialState,
