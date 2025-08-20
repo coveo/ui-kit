@@ -42,13 +42,17 @@ atomic-product-section-children {
 
     &.display-list {
       @media (width >= theme(--breakpoint-desktop)) {
-        &.image-large.density-comfortable .product-child,
-        &.image-large.density-normal .product-child {
-          @apply size-27;
+        &.image-large.density-comfortable,
+        &.image-large.density-normal {
+          .product-child {
+            @apply size-27;
+          }
         }
-        &.image-small .product-child,
-        &.image-large.density-compact .product-child {
-          @apply size-8;
+        &.image-small,
+        &.image-large.density-compact {
+          .product-child {
+            @apply size-8;
+          }
         }
       }
       @media not all and (width >= theme(--breakpoint-desktop)) {
@@ -61,7 +65,8 @@ atomic-product-section-children {
       }
     }
   }
-}`
+}
+`
 ) {}
 
 declare global {
