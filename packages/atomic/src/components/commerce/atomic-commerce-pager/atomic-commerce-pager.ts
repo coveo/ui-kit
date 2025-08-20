@@ -64,7 +64,7 @@ export class AtomicCommercePager
    * The maximum number of page buttons to display.
    */
   @property({reflect: true, attribute: 'number-of-pages', type: Number})
-  numberOfPages = 5;
+  numberOfPages: number = 5;
 
   /**
    * The SVG icon to use to display the Previous button.

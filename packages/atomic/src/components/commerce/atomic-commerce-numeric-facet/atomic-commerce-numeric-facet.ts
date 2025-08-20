@@ -154,7 +154,7 @@ export class AtomicCommerceNumericFacet
   }
 
   private get hasInputRange() {
-    return !!this.facetState.manualRange || this.summaryState.isLoading;
+    return !!this.facetState.manualRange;
   }
 
   private get shouldRenderValues() {
