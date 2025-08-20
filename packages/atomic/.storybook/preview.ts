@@ -46,14 +46,14 @@ export const parameters = {
         const aParts = a.title.split('/').slice(1); // skip top-level
         const bParts = b.title.split('/').slice(1);
 
-        // Define subfolder priority: Docs -> Example Pages -> others
-        const subPriority = ['Docs', 'Example Pages'];
+        // Define subfolder priority: Introduction -> Example Pages -> others
+        const subPriority = ['Introduction', 'Example Pages'];
 
         const aPriority = subPriority.indexOf(aParts[0]);
         const bPriority = subPriority.indexOf(bParts[0]);
 
         if (aPriority !== bPriority) {
-          // Docs/Example Pages first, then others
+          // Introduction/Example Pages first, then others
           return (
             (aPriority === -1 ? subPriority.length : aPriority) -
             (bPriority === -1 ? subPriority.length : bPriority)
