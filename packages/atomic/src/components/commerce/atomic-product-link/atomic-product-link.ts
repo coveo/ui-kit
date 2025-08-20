@@ -1,10 +1,17 @@
 import {isUndefined} from '@coveo/bueno';
-import type {InteractiveProduct, Product} from '@coveo/headless/commerce';
+import {
+  buildContext,
+  type Context,
+  type ContextState,
+  type InteractiveProduct,
+  type Product,
+} from '@coveo/headless/commerce';
 import {html, LitElement} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {when} from 'lit/directives/when.js';
 import {getAttributesFromLinkSlot} from '@/src/components/common/item-link/attributes-slot';
 import {renderLinkWithItemAnalytics} from '@/src/components/common/item-link/item-link';
+import {bindStateToController} from '@/src/decorators/bind-state.js';
 import {bindingGuard} from '@/src/decorators/binding-guard';
 import {bindings} from '@/src/decorators/bindings';
 import {
@@ -16,8 +23,12 @@ import {injectStylesForNoShadowDOM} from '@/src/decorators/inject-styles-for-no-
 import type {InitializableComponent} from '@/src/decorators/types';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles.js';
 import {buildCustomEvent} from '@/src/utils/event-utils';
+import {defaultCurrencyFormatter} from '../../common/formats/format-common.js';
 import type {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface';
-import {buildStringTemplateFromProduct} from '../product-template-component-utils/product-utils';
+import {
+  buildStringTemplateFromProduct,
+  parseValue,
+} from '../product-template-component-utils/product-utils';
 import '../atomic-product-text/atomic-product-text';
 import {
   type LightDOMWithSlots,
@@ -61,6 +72,12 @@ export class AtomicProductLink
   public interactiveProductController =
     createInteractiveProductContextController(this);
 
+  context!: Context;
+
+  @bindStateToController('context')
+  @state()
+  contextState!: ContextState;
+
   @state() public bindings!: CommerceBindings;
   @state() public error!: Error;
 
@@ -74,7 +91,63 @@ export class AtomicProductLink
     }
   }
 
+  private formatValue(value: number) {
+    try {
+      const {currency} = this.contextState;
+      const formatter = defaultCurrencyFormatter(currency);
+      return formatter(value, this.bindings.i18n.languages as string[]);
+    } catch (error) {
+      this.error = error as Error;
+      return value.toString();
+    }
+  }
+
+  private getFormattedValue(field: string) {
+    if (!this.product) {
+      return null;
+    }
+    const value = parseValue(this.product, field);
+    if (value !== null) {
+      return this.formatValue(value);
+    }
+    return null;
+  }
+
+  private get hasPromotionalPrice() {
+    return (
+      this.product &&
+      this.product.ec_promo_price !== null &&
+      this.product.ec_price !== null &&
+      this.product.ec_promo_price < this.product.ec_price
+    );
+  }
+
+  private getFormattedPrice() {
+    if (!this.product) {
+      return null;
+    }
+    const hasPromo = this.hasPromotionalPrice;
+    return this.getFormattedValue(hasPromo ? 'ec_promo_price' : 'ec_price');
+  }
+
+  private generateAriaLabel() {
+    if (!this.product) {
+      return undefined;
+    }
+
+    const productName = this.product.ec_name || 'no-title';
+    const formattedPrice = this.getFormattedPrice();
+
+    if (formattedPrice) {
+      return `${productName}, ${formattedPrice}`;
+    }
+
+    return productName;
+  }
+
   initialize() {
+    this.context = buildContext(this.bindings.engine);
+
     if (!this.product && this.productController.item) {
       this.product = this.productController.item;
     }
@@ -120,7 +193,18 @@ export class AtomicProductLink
           );
 
       const {warningMessage} = interactiveProduct;
-      this.linkAttributes = getAttributesFromLinkSlot(this, 'attributes');
+      const slotAttributes = getAttributesFromLinkSlot(this, 'attributes');
+
+      // Generate aria-label with product name and price
+      const ariaLabel = this.generateAriaLabel();
+
+      // Create aria-label attribute if we have one
+      const ariaLabelAttr = ariaLabel
+        ? [{nodeName: 'aria-label', nodeValue: ariaLabel} as Attr]
+        : [];
+
+      // Combine slot attributes with aria-label
+      this.linkAttributes = [...(slotAttributes || []), ...ariaLabelAttr];
 
       return renderLinkWithItemAnalytics({
         props: {

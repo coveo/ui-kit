@@ -1,9 +1,12 @@
 import type {InteractiveProduct, Product} from '@coveo/headless/commerce';
+import {buildContext} from '@coveo/headless/commerce';
 import {type Locator, page} from '@vitest/browser/context';
 import {html, nothing} from 'lit';
 import {ifDefined} from 'lit/directives/if-defined.js';
 import {beforeEach, describe, expect, it, vi} from 'vitest';
 import {renderInAtomicProduct} from '@/vitest-utils/testing-helpers/fixtures/atomic/commerce/atomic-product-fixture';
+import {buildFakeContext} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/context-controller';
+import {buildFakeCommerceEngine} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/engine';
 import {buildFakeInteractiveProduct} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/interactive-product';
 import {buildFakeProduct} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/product';
 
@@ -17,6 +20,8 @@ vi.mock('@coveo/headless/commerce', {spy: true});
 describe('atomic-product-link', () => {
   let mockProduct: Product;
   let mockInteractiveProduct: InteractiveProduct;
+  const mockedEngine = buildFakeCommerceEngine();
+  const mockedContext = buildFakeContext({currency: 'USD'});
 
   beforeEach(async () => {
     console.error = vi.fn();
@@ -26,11 +31,15 @@ describe('atomic-product-link', () => {
       clickUri: 'https://example.com/product/123',
       permanentid: 'product-123',
       ec_brand: 'Test Brand',
+      ec_price: 100,
+      ec_promo_price: null,
       additionalFields: {
         custom_url_param: 'custom-value',
       },
     });
     mockInteractiveProduct = buildFakeInteractiveProduct();
+
+    vi.mocked(buildContext).mockReturnValue(mockedContext);
   });
 
   const renderProductLink = async (
@@ -66,6 +75,7 @@ describe('atomic-product-link', () => {
         bindings: (bindings) => {
           bindings.store.onChange = vi.fn();
           bindings.engine.logger = {warn: vi.fn()} as never;
+          bindings.engine = mockedEngine;
           return bindings;
         },
       });
@@ -290,5 +300,103 @@ describe('atomic-product-link', () => {
     await element?.updateComplete;
     const errorComponent = element?.querySelector('atomic-component-error');
     expect(errorComponent).toBeTruthy();
+  });
+
+  describe('aria-label accessibility', () => {
+    it('should include product name and regular price in aria-label when no promotional price', async () => {
+      const productWithPrice = buildFakeProduct({
+        ec_name: 'Nike Air Zoom',
+        clickUri: 'https://example.com/nike',
+        ec_price: 89.99,
+        ec_promo_price: null,
+      });
+
+      const {link} = await renderProductLink({
+        product: productWithPrice,
+      });
+
+      await expect
+        .element(link)
+        .toHaveAttribute('aria-label', 'Nike Air Zoom, $89.99');
+    });
+
+    it('should include product name and promotional price in aria-label when promotional price exists', async () => {
+      const productWithPromoPrice = buildFakeProduct({
+        ec_name: 'Nike Air Zoom',
+        clickUri: 'https://example.com/nike',
+        ec_price: 100,
+        ec_promo_price: 79.99,
+      });
+
+      const {link} = await renderProductLink({
+        product: productWithPromoPrice,
+      });
+
+      await expect
+        .element(link)
+        .toHaveAttribute('aria-label', 'Nike Air Zoom, $79.99');
+    });
+
+    it('should include only product name in aria-label when no price available', async () => {
+      const productWithoutPrice = buildFakeProduct({
+        ec_name: 'Product Without Price',
+        clickUri: 'https://example.com/product',
+        ec_price: null,
+        ec_promo_price: null,
+      });
+
+      const {link} = await renderProductLink({
+        product: productWithoutPrice,
+      });
+
+      await expect
+        .element(link)
+        .toHaveAttribute('aria-label', 'Product Without Price');
+    });
+
+    it('should use "no-title" as fallback when product name is missing', async () => {
+      const productWithoutName = buildFakeProduct({
+        ec_name: '',
+        clickUri: 'https://example.com/product',
+        ec_price: 50,
+        ec_promo_price: null,
+      });
+
+      const {link} = await renderProductLink({
+        product: productWithoutName,
+      });
+
+      await expect
+        .element(link)
+        .toHaveAttribute('aria-label', 'no-title, $50.00');
+    });
+
+    it('should preserve existing attributes slot while adding aria-label', async () => {
+      const productWithPrice = buildFakeProduct({
+        ec_name: 'Test Product',
+        clickUri: 'https://example.com/test',
+        ec_price: 25.5,
+        ec_promo_price: null,
+      });
+
+      const {link} = await renderProductLink({
+        product: productWithPrice,
+        attributes: 'target="_blank" download',
+      });
+
+      await expect.element(link).toHaveAttribute('target', '_blank');
+      await expect.element(link).toHaveAttribute('download');
+      await expect
+        .element(link)
+        .toHaveAttribute('aria-label', 'Test Product, $25.50');
+    });
+  });
+
+  describe('#buildContext', () => {
+    it('should call buildContext with engine during initialization', async () => {
+      const {element} = await renderProductLink();
+      expect(buildContext).toHaveBeenCalledWith(mockedEngine);
+      expect(element.context).toBe(mockedContext);
+    });
   });
 });
