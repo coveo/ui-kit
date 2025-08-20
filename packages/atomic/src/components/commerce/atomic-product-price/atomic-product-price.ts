@@ -105,7 +105,7 @@ export class AtomicProductPrice
           ${this.getFormattedValue(hasPromo ? 'ec_promo_price' : 'ec_price')}
         </div>
         <div class=${multiClassMap(promoClasses)}>
-          ${this.getFormattedValue('ec_price')}
+          ${hasPromo ? this.getFormattedValue('ec_price') : ''}
         </div>
       </div>
     `;
