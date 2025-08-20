@@ -29,6 +29,7 @@ import '../atomic-commerce-facet/atomic-commerce-facet';
 import type {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface';
 import '../atomic-commerce-numeric-facet/atomic-commerce-numeric-facet';
 import '../atomic-commerce-timeframe-facet/atomic-commerce-timeframe-facet';
+import {bindStateToController} from '@/src/decorators/bind-state';
 
 /**
  * The `atomic-commerce-facets` component automatically renders commerce facets based on the Commerce API response.
@@ -46,8 +47,12 @@ export class AtomicCommerceFacets
 
   @state() error!: Error;
 
-  private facetGenerator!: FacetGenerator;
-  private summary!: Summary<SearchSummaryState | ProductListingSummaryState>;
+  @bindStateToController('facetGenerator')
+  @state()
+  public facetGeneratorState!: string[];
+
+  public facetGenerator!: FacetGenerator;
+  public summary!: Summary<SearchSummaryState | ProductListingSummaryState>;
 
   /**
    * The maximum number of facets to expand.
