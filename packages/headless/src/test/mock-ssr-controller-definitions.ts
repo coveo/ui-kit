@@ -1,7 +1,6 @@
 import {vi} from 'vitest';
 import type {SearchEngine} from '../app/search-engine/search-engine.js';
 import type {Controller} from '../controllers/controller/headless-controller.js';
-import type {Kind} from '../ssr/commerce/types/kind.js';
 import type {
   ControllerDefinitionWithoutProps,
   ControllerDefinitionWithProps,
@@ -69,7 +68,6 @@ export function defineMockCommerceControllerWithProps(
 ) {
   return {
     buildWithProps: vi.fn((engine, props) => ({
-      _kind: 'some-kind' as Kind,
       ...buildMockControllerWithInitialState(engine, {
         initialState: props?.initialState,
       }),

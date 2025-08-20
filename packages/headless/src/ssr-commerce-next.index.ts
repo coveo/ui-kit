@@ -300,7 +300,6 @@ export type {
   HydrateStaticState,
   HydrateStaticStateOptions,
 } from './ssr-next/commerce/types/engine.js';
-export {Kind} from './ssr-next/commerce/types/kind.js';
 // State
 export type {
   CommerceAppState,
