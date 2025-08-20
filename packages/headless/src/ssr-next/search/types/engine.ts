@@ -44,10 +44,6 @@ export type SearchEngineDefinitionOptions<
   controllers?: TControllers;
 };
 
-//  * @deprecated use either CommerceEngineDefinition or SearchEngineDefinition
-/**
- * TODO: add deprecation on ssr/ package
- */
 export interface SearchEngineDefinition<
   TEngine extends CoreEngine | CoreEngineNext,
   TControllers extends ControllerDefinitionsMap<TEngine, Controller>,
