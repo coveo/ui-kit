@@ -7,16 +7,26 @@ import {
   GeneratedAnswer as InsightGeneratedAnswer,
   GeneratedAnswerState as InsightGeneratedAnswerState,
 } from '@coveo/headless/insight';
-import {Component, Element, State, Prop, Watch} from '@stencil/core';
-import {debounce} from '../../../utils/debounce-utils';
+import { Component, Element, State, Prop, Watch, h } from '@stencil/core';
+import { debounce } from '../../../utils/debounce-utils';
 import {
   BindStateToController,
   InitializableComponent,
   InitializeBindings,
 } from '../../../utils/initialization-utils';
-import {AriaLiveRegion} from '../../../utils/stencil-accessibility-utils';
-import {GeneratedAnswerCommon} from '../../common/generated-answer/generated-answer-common';
-import {InsightBindings} from '../atomic-insight-interface/atomic-insight-interface';
+import { AriaLiveRegion } from '../../../utils/stencil-accessibility-utils';
+import {
+  readGeneratedAnswerStoredData,
+  writeGeneratedAnswerStoredData,
+  insertGeneratedAnswerFeedbackModal,
+  getGeneratedAnswerStatus,
+  copyToClipboard,
+  GeneratedAnswerWrapper,
+  GeneratedAnswerNoAnswerMessage,
+  GeneratedAnswerCommon,
+} from '../../common/generated-answer/generated-answer-common';
+import { getNamedSlotFromHost } from '../../../utils/slot-utils';
+import { InsightBindings } from '../atomic-insight-interface/atomic-insight-interface';
 
 /**
  * @internal
@@ -63,8 +73,7 @@ import {InsightBindings} from '../atomic-insight-interface/atomic-insight-interf
   shadow: true,
 })
 export class AtomicInsightGeneratedAnswer
-  implements InitializableComponent<InsightBindings>
-{
+  implements InitializableComponent<InsightBindings> {
   @InitializeBindings() public bindings!: InsightBindings;
   public generatedAnswer!: InsightGeneratedAnswer;
   public searchStatus!: InsightSearchStatus;
@@ -134,30 +143,21 @@ export class AtomicInsightGeneratedAnswer
   @AriaLiveRegion('generated-answer')
   protected ariaMessage!: string;
 
-  private generatedAnswerCommon!: GeneratedAnswerCommon;
   private fullAnswerHeight?: number;
+  private modalRef?: HTMLAtomicGeneratedAnswerFeedbackModalElement;
+  private setCopied = debounce(() => {
+    this.copied = false;
+  }, 3000);
+  private setCopyError = debounce(() => {
+    this.copyError = false;
+  }, 1000);
+  private _data: any = null;
 
   public initialize() {
-    this.generatedAnswerCommon = new GeneratedAnswerCommon({
-      host: this.host,
-      withToggle: this.withToggle,
-      collapsible: this.collapsible,
-      disableCitationAnchoring: this.disableCitationAnchoring,
-      getGeneratedAnswer: () => this.generatedAnswer,
-      getGeneratedAnswerState: () => this.generatedAnswerState,
-      getSearchStatusState: () => this.searchStatusState,
-      getBindings: () => this.bindings,
-      getCopied: () => this.copied,
-      setCopied: this.setCopied,
-      getCopyError: () => this.copyError,
-      setCopyError: this.setCopyError,
-      setAriaMessage: this.setAriaMessage,
-      buildInteractiveCitation: (props) =>
-        buildInsightInteractiveCitation(this.bindings.engine, props),
-    });
+    this._data = readGeneratedAnswerStoredData(this.withToggle);
     this.generatedAnswer = buildInsightGeneratedAnswer(this.bindings.engine, {
       initialState: {
-        isVisible: this.generatedAnswerCommon.data.isVisible,
+        isVisible: this._data?.isVisible || false,
         responseFormat: {
           contentFormat: ['text/markdown', 'text/plain'],
         },
@@ -168,7 +168,6 @@ export class AtomicInsightGeneratedAnswer
       fieldsToIncludeInCitations: this.getCitationFields(),
     });
     this.searchStatus = buildInsightSearchStatus(this.bindings.engine);
-    this.generatedAnswerCommon.insertFeedbackModal();
 
     if (window.ResizeObserver && this.collapsible) {
       const debouncedAdaptAnswerHeight = debounce(
@@ -178,6 +177,10 @@ export class AtomicInsightGeneratedAnswer
       this.resizeObserver = new ResizeObserver(debouncedAdaptAnswerHeight);
       this.resizeObserver.observe(this.host);
     }
+  }
+
+  public componentDidLoad() {
+    this.modalRef = insertGeneratedAnswerFeedbackModal(this.host, () => this.generatedAnswer);
   }
 
   @Watch('generatedAnswerState')
@@ -207,26 +210,19 @@ export class AtomicInsightGeneratedAnswer
   private onGeneratedAnswerStateUpdate = () => {
     if (
       this.generatedAnswerState.isVisible !==
-      this.generatedAnswerCommon?.data?.isVisible
+      this._data?.isVisible
     ) {
-      this.generatedAnswerCommon.data = {
-        ...this.generatedAnswerCommon.data,
+      this._data = {
+        ...this._data,
         isVisible: this.generatedAnswerState.isVisible,
       };
-      this.generatedAnswerCommon.writeStoredData(
-        this.generatedAnswerCommon.data
-      );
+      writeGeneratedAnswerStoredData(this._data);
     }
 
-    this.setAriaMessage(this.generatedAnswerCommon.getGeneratedAnswerStatus());
-  };
-
-  private setCopied = (isCopied: boolean) => {
-    this.copied = isCopied;
-  };
-
-  private setCopyError = (copyError: boolean) => {
-    this.copyError = copyError;
+    this.setAriaMessage(getGeneratedAnswerStatus(
+      this.generatedAnswerState,
+      this.bindings.i18n as any
+    ));
   };
 
   private setAriaMessage = (message: string) => {
@@ -322,6 +318,99 @@ export class AtomicInsightGeneratedAnswer
   }
 
   public render() {
-    return this.generatedAnswerCommon.render();
+    const hasRetryableError = Boolean(
+      !this.searchStatusState?.hasError &&
+      this.generatedAnswerState?.error?.isRetryable
+    );
+
+    const hasNoAnswerGenerated =
+      this.generatedAnswerState?.answer === undefined &&
+      !this.generatedAnswerState?.citations?.length &&
+      !hasRetryableError;
+
+    const isAnswerVisible = this.generatedAnswerState?.isVisible;
+    const hasCustomNoAnswerMessage = !!getNamedSlotFromHost(this.host, 'no-answer-message');
+    const hasClipboard = !!navigator?.clipboard?.writeText;
+
+    if (hasNoAnswerGenerated) {
+      return this.generatedAnswerState?.cannotAnswer && hasCustomNoAnswerMessage ? (
+        <GeneratedAnswerWrapper>
+          <GeneratedAnswerNoAnswerMessage i18n={this.bindings.i18n}>
+            <slot name="no-answer-message"></slot>
+          </GeneratedAnswerNoAnswerMessage>
+        </GeneratedAnswerWrapper>
+      ) : null;
+    }
+
+    const buildInteractiveCitationForCitation = (citation: any) =>
+      buildInsightInteractiveCitation(this.bindings.engine, {
+        options: { citation },
+      });
+
+    return <GeneratedAnswerCommon
+      collapsible={this.collapsible}
+      onShowButtonClick={this.clickOnShowButton.bind(this)}
+      onClickDislike={this.clickDislike.bind(this)}
+      onClickLike={this.clickLike.bind(this)}
+      onCopyToClipboard={this.copyToClipboard.bind(this)}
+      disableCitationAnchoring={this.disableCitationAnchoring}
+      copied={this.copied}
+      i18n={this.bindings.i18n}
+      copyError={this.copyError}
+      generatedAnswer={this.generatedAnswer}
+      generatedAnswerState={this.generatedAnswerState}
+      withToggle={this.withToggle}
+      isAnswerVisible={isAnswerVisible}
+      hasRetryableError={hasRetryableError}
+      hasClipboard={hasClipboard}
+      buildInteractiveCitationForCitation={buildInteractiveCitationForCitation}
+    />;
+  }
+
+  private clickDislike() {
+    this.setIsAnswerHelpful(false);
+    this.generatedAnswer?.dislike();
+    this.openFeedbackModal();
+  }
+
+  private clickLike() {
+    this.setIsAnswerHelpful(true);
+    this.generatedAnswer?.like();
+    this.openFeedbackModal();
+  }
+
+  private async copyToClipboard() {
+    if (this.generatedAnswerState?.answer) {
+      await copyToClipboard(
+        this.generatedAnswerState.answer,
+        this.setCopied,
+        this.setCopyError,
+        () => this.generatedAnswer?.logCopyToClipboard(),
+        this.bindings.engine.logger
+      );
+    }
+  }
+
+  private clickOnShowButton() {
+    if (this.generatedAnswerState?.expanded) {
+      this.generatedAnswer?.collapse();
+    } else {
+      this.generatedAnswer?.expand();
+    }
+  }
+
+  private setIsAnswerHelpful(isAnswerHelpful: boolean) {
+    if (this.modalRef) {
+      this.modalRef.helpful = isAnswerHelpful;
+    }
+  }
+
+  private openFeedbackModal() {
+    if (
+      this.modalRef &&
+      !this.generatedAnswerState?.feedbackSubmitted
+    ) {
+      this.modalRef.isOpen = true;
+    }
   }
 }

@@ -10,19 +10,29 @@ import {
   TabManagerState,
   TabManager,
 } from '@coveo/headless';
-import {Component, Element, State, Prop, Watch, h} from '@stencil/core';
-import {debounce} from '../../../utils/debounce-utils';
+import { Component, Element, State, Prop, Watch, h } from '@stencil/core';
+import { debounce } from '../../../utils/debounce-utils';
 import {
   BindStateToController,
   InitializableComponent,
   InitializeBindings,
 } from '../../../utils/initialization-utils';
-import {ArrayProp} from '../../../utils/props-utils';
-import {AriaLiveRegion} from '../../../utils/stencil-accessibility-utils';
-import {shouldDisplayOnCurrentTab} from '../../../utils/tab-utils';
-import {GeneratedAnswerCommon} from '../../common/generated-answer/generated-answer-common';
-import {Hidden} from '../../common/stencil-hidden';
-import {Bindings} from '../atomic-search-interface/atomic-search-interface';
+import { ArrayProp } from '../../../utils/props-utils';
+import { AriaLiveRegion } from '../../../utils/stencil-accessibility-utils';
+import { shouldDisplayOnCurrentTab } from '../../../utils/tab-utils';
+import { getNamedSlotFromHost } from '../../../utils/slot-utils';
+import {
+  readGeneratedAnswerStoredData,
+  writeGeneratedAnswerStoredData,
+  insertGeneratedAnswerFeedbackModal,
+  getGeneratedAnswerStatus,
+  copyToClipboard,
+  GeneratedAnswerWrapper,
+  GeneratedAnswerNoAnswerMessage,
+  GeneratedAnswerCommon,
+} from '../../common/generated-answer/generated-answer-common';
+import { Hidden } from '../../common/stencil-hidden';
+import { Bindings } from '../atomic-search-interface/atomic-search-interface';
 
 /**
  * The `atomic-generated-answer` component uses Coveo Machine Learning (Coveo ML) models to automatically generate an answer to a query executed by the user.
@@ -149,7 +159,7 @@ export class AtomicGeneratedAnswer implements InitializableComponent {
    * If you don't set this property, the generated answer can be displayed on any tab. Otherwise, the generated answer can only be displayed on the specified tabs.
    */
   @ArrayProp()
-  @Prop({reflect: true, mutable: true})
+  @Prop({ reflect: true, mutable: true })
   public tabsIncluded: string[] | string = '[]';
 
   /**
@@ -162,14 +172,15 @@ export class AtomicGeneratedAnswer implements InitializableComponent {
    * If you don't set this property, the generated answer can be displayed on any tab. Otherwise, the generated answer won't be displayed on any of the specified tabs.
    */
   @ArrayProp()
-  @Prop({reflect: true, mutable: true})
+  @Prop({ reflect: true, mutable: true })
   public tabsExcluded: string[] | string = '[]';
 
   @AriaLiveRegion('generated-answer')
   protected ariaMessage!: string;
 
-  private generatedAnswerCommon!: GeneratedAnswerCommon;
+  private modalRef?: HTMLAtomicGeneratedAnswerFeedbackModalElement;
   private fullAnswerHeight?: number;
+  private _data = readGeneratedAnswerStoredData(this.withToggle);
 
   public initialize() {
     if (
@@ -180,26 +191,9 @@ export class AtomicGeneratedAnswer implements InitializableComponent {
         'Values for both "tabs-included" and "tabs-excluded" have been provided. This could lead to unexpected behaviors.'
       );
     }
-    this.generatedAnswerCommon = new GeneratedAnswerCommon({
-      host: this.host,
-      withToggle: this.withToggle,
-      collapsible: this.collapsible,
-      disableCitationAnchoring: this.disableCitationAnchoring,
-      getGeneratedAnswer: () => this.generatedAnswer,
-      getGeneratedAnswerState: () => this.generatedAnswerState,
-      getSearchStatusState: () => this.searchStatusState,
-      getBindings: () => this.bindings,
-      getCopied: () => this.copied,
-      setCopied: this.setCopied,
-      getCopyError: () => this.copyError,
-      setCopyError: this.setCopyError,
-      setAriaMessage: this.setAriaMessage,
-      buildInteractiveCitation: (props) =>
-        buildInteractiveCitation(this.bindings.engine, props),
-    });
     this.generatedAnswer = buildGeneratedAnswer(this.bindings.engine, {
       initialState: {
-        isVisible: this.generatedAnswerCommon.data.isVisible,
+        isVisible: this._data.isVisible,
         responseFormat: {
           contentFormat: ['text/markdown', 'text/plain'],
         },
@@ -210,7 +204,7 @@ export class AtomicGeneratedAnswer implements InitializableComponent {
       fieldsToIncludeInCitations: this.getCitationFields(),
     });
     this.searchStatus = buildSearchStatus(this.bindings.engine);
-    this.generatedAnswerCommon.insertFeedbackModal();
+    this.insertFeedbackModal();
 
     if (window.ResizeObserver && this.collapsible) {
       const debouncedAdaptAnswerHeight = debounce(
@@ -221,6 +215,13 @@ export class AtomicGeneratedAnswer implements InitializableComponent {
       this.resizeObserver.observe(this.host);
     }
     this.tabManager = buildTabManager(this.bindings.engine);
+  }
+
+  private insertFeedbackModal() {
+    this.modalRef = insertGeneratedAnswerFeedbackModal(
+      this.host,
+      () => this.generatedAnswer
+    ) as HTMLAtomicGeneratedAnswerFeedbackModalElement;
   }
 
   @Watch('generatedAnswerState')
@@ -249,19 +250,18 @@ export class AtomicGeneratedAnswer implements InitializableComponent {
   // @ts-expect-error: This function is used by BindStateToController.
   private onGeneratedAnswerStateUpdate = () => {
     if (
-      this.generatedAnswerState.isVisible !==
-      this.generatedAnswerCommon?.data?.isVisible
+      this.generatedAnswerState.isVisible !== this._data?.isVisible
     ) {
-      this.generatedAnswerCommon.data = {
-        ...this.generatedAnswerCommon.data,
+      this._data = {
+        ...this._data,
         isVisible: this.generatedAnswerState.isVisible,
       };
-      this.generatedAnswerCommon.writeStoredData(
-        this.generatedAnswerCommon.data
-      );
+      writeGeneratedAnswerStoredData(this._data);
     }
 
-    this.setAriaMessage(this.generatedAnswerCommon.getGeneratedAnswerStatus());
+    this.setAriaMessage(
+      getGeneratedAnswerStatus(this.generatedAnswerState, this.bindings.i18n)
+    );
   };
 
   private setCopied = (isCopied: boolean) => {
@@ -366,8 +366,8 @@ export class AtomicGeneratedAnswer implements InitializableComponent {
 
   @Watch('tabManagerState')
   watchTabManagerState(
-    newValue: {activeTab: string},
-    oldValue: {activeTab: string}
+    newValue: { activeTab: string },
+    oldValue: { activeTab: string }
   ) {
     if (newValue?.activeTab !== oldValue?.activeTab) {
       if (
@@ -394,6 +394,101 @@ export class AtomicGeneratedAnswer implements InitializableComponent {
     ) {
       return <Hidden />;
     }
-    return this.generatedAnswerCommon.render();
+
+    const hasRetryableError = Boolean(
+      !this.searchStatusState?.hasError &&
+      this.generatedAnswerState?.error?.isRetryable
+    );
+
+    const hasNoAnswerGenerated =
+      this.generatedAnswerState?.answer === undefined &&
+      !this.generatedAnswerState?.citations?.length &&
+      !hasRetryableError;
+
+    const isAnswerVisible = this.generatedAnswerState?.isVisible;
+    const hasCustomNoAnswerMessage = !!getNamedSlotFromHost(this.host, 'no-answer-message');
+    const hasClipboard = !!navigator?.clipboard?.writeText;
+
+    if (hasNoAnswerGenerated) {
+      return this.generatedAnswerState?.cannotAnswer && hasCustomNoAnswerMessage ? (
+        <GeneratedAnswerWrapper>
+          <GeneratedAnswerNoAnswerMessage i18n={this.bindings.i18n}>
+            <slot name="no-answer-message"></slot>
+          </GeneratedAnswerNoAnswerMessage>
+        </GeneratedAnswerWrapper>
+      ) : null;
+    }
+
+    const buildInteractiveCitationForCitation = (citation: any) =>
+      buildInteractiveCitation(this.bindings.engine, {
+        options: { citation },
+      });
+
+    return <GeneratedAnswerCommon
+      collapsible={this.collapsible}
+      onShowButtonClick={this.clickOnShowButton.bind(this)}
+      onClickDislike={this.clickDislike.bind(this)}
+      onClickLike={this.clickLike.bind(this)}
+      onCopyToClipboard={this.copyToClipboard.bind(this)}
+      disableCitationAnchoring={this.disableCitationAnchoring}
+      copied={this.copied}
+      i18n={this.bindings.i18n}
+      copyError={this.copyError}
+      generatedAnswer={this.generatedAnswer}
+      generatedAnswerState={this.generatedAnswerState}
+      withToggle={this.withToggle}
+      isAnswerVisible={isAnswerVisible}
+      hasRetryableError={hasRetryableError}
+      hasClipboard={hasClipboard}
+      buildInteractiveCitationForCitation={buildInteractiveCitationForCitation}
+    />;
+
+  }
+
+  private clickDislike() {
+    this.setIsAnswerHelpful(false);
+    this.generatedAnswer?.dislike();
+    this.openFeedbackModal();
+  }
+
+  private clickLike() {
+    this.setIsAnswerHelpful(true);
+    this.generatedAnswer?.like();
+    this.openFeedbackModal();
+  }
+
+  private async copyToClipboard() {
+    if (this.generatedAnswerState?.answer) {
+      await copyToClipboard(
+        this.generatedAnswerState.answer,
+        this.setCopied,
+        this.setCopyError,
+        () => this.generatedAnswer?.logCopyToClipboard(),
+        this.bindings.engine.logger
+      );
+    }
+  }
+
+  private clickOnShowButton() {
+    if (this.generatedAnswerState?.expanded) {
+      this.generatedAnswer?.collapse();
+    } else {
+      this.generatedAnswer?.expand();
+    }
+  }
+
+  private setIsAnswerHelpful(isAnswerHelpful: boolean) {
+    if (this.modalRef) {
+      this.modalRef.helpful = isAnswerHelpful;
+    }
+  }
+
+  private openFeedbackModal() {
+    if (
+      this.modalRef &&
+      !this.generatedAnswerState?.feedbackSubmitted
+    ) {
+      this.modalRef.isOpen = true;
+    }
   }
 }
