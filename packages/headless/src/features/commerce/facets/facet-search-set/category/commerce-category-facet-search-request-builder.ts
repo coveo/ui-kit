@@ -28,6 +28,9 @@ export const buildCategoryFacetSearchRequest = (
   const query = isFieldSuggestionsRequest
     ? baseFacetQuery
     : state.commerceQuery?.query;
+  const numberOfValues =
+    state.categoryFacetSearchSet[facetId]!.options.numberOfValues ||
+    state.categoryFacetSearchSet[facetId]!.initialNumberOfValues;
 
   const {
     url,
@@ -48,6 +51,7 @@ export const buildCategoryFacetSearchRequest = (
     organizationId,
     facetId: getFacetIdWithoutCommerceFieldSuggestionNamespace(facetId),
     facetQuery: isFieldSuggestionsRequest ? '*' : facetQuery,
+    numberOfValues,
     ignorePaths,
     trackingId,
     language,

@@ -11,6 +11,9 @@ export const buildFacetSearchRequest = (
   navigatorContext: NavigatorContext
 ): CommerceFacetSearchRequest => {
   const baseFacetQuery = state.facetSearchSet[facetId]!.options.query;
+  const numberOfValues =
+    state.facetSearchSet[facetId]!.options.numberOfValues ||
+    state.facetSearchSet[facetId]!.initialNumberOfValues;
   const facetQuery = `*${baseFacetQuery}*`;
   const query = !isFieldSuggestionsRequest
     ? state.commerceQuery?.query
@@ -35,6 +38,7 @@ export const buildFacetSearchRequest = (
     organizationId,
     facetId: getFacetIdWithoutCommerceFieldSuggestionNamespace(facetId),
     facetQuery: isFieldSuggestionsRequest ? '*' : facetQuery,
+    numberOfValues,
     trackingId,
     language,
     country,
