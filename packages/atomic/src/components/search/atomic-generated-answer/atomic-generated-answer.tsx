@@ -181,7 +181,7 @@ export class AtomicGeneratedAnswer implements InitializableComponent {
 
   private modalRef?: HTMLAtomicGeneratedAnswerFeedbackModalElement;
   private fullAnswerHeight?: number;
-  private _data = readGeneratedAnswerStoredData(this.withToggle);
+  private _data = readGeneratedAnswerStoredData(!!this.withToggle);
 
   public initialize() {
     if (
@@ -399,13 +399,13 @@ export class AtomicGeneratedAnswer implements InitializableComponent {
 
   private async copyToClipboard() {
     if (this.generatedAnswerState?.answer) {
-      await copyToClipboard(
-        this.generatedAnswerState.answer,
-        this.setCopied,
-        this.setCopyError,
-        () => this.generatedAnswer?.logCopyToClipboard(),
-        this.bindings.engine.logger
-      );
+      await copyToClipboard({
+        answer: this.generatedAnswerState.answer,
+        setCopied: this.setCopied,
+        setCopyError: this.setCopyError,
+        onLogCopyToClipboard: () => this.generatedAnswer.logCopyToClipboard(),
+        logger: this.bindings.engine.logger
+      });
     }
   }
 

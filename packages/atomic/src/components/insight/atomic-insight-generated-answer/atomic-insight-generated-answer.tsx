@@ -155,7 +155,7 @@ export class AtomicInsightGeneratedAnswer
   private _data: any = null;
 
   public initialize() {
-    this._data = readGeneratedAnswerStoredData(this.withToggle);
+    this._data = readGeneratedAnswerStoredData(!!this.withToggle);
     this.generatedAnswer = buildInsightGeneratedAnswer(this.bindings.engine, {
       initialState: {
         isVisible: this._data?.isVisible || false,
@@ -332,13 +332,13 @@ export class AtomicInsightGeneratedAnswer
 
   private async copyToClipboard() {
     if (this.generatedAnswerState?.answer) {
-      await copyToClipboard(
-        this.generatedAnswerState.answer,
-        this.setCopied,
-        this.setCopyError,
-        () => this.generatedAnswer?.logCopyToClipboard(),
-        this.bindings.engine.logger
-      );
+      await copyToClipboard({
+        answer: this.generatedAnswerState.answer,
+        setCopied: this.setCopied,
+        setCopyError: this.setCopyError,
+        onLogCopyToClipboard: () => this.generatedAnswer?.logCopyToClipboard(),
+        logger: this.bindings.engine.logger
+      });
     }
   }
 

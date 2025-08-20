@@ -7,7 +7,7 @@ import {
 } from '../../../utils/local-storage-utils.js';
 
 export const readGeneratedAnswerStoredData = (
-  withToggle?: boolean
+  withToggle: boolean
 ): GeneratedAnswerData => {
   const storage = new SafeStorage();
   const storedData = storage.getParsedJSON<GeneratedAnswerData>(
@@ -26,21 +26,19 @@ export const writeGeneratedAnswerStoredData = (data: GeneratedAnswerData) => {
 
 export const insertGeneratedAnswerFeedbackModal = (
   host: HTMLElement,
-  generatedAnswer?: () => GeneratedAnswer
+  generatedAnswer: () => GeneratedAnswer
 ) => {
   const modalRef = document.createElement(
     'atomic-generated-answer-feedback-modal'
   );
-  if (generatedAnswer) {
-    modalRef.generatedAnswer = generatedAnswer();
-  }
+  modalRef.generatedAnswer = generatedAnswer();
   host.insertAdjacentElement('beforebegin', modalRef);
   return modalRef;
 };
 
 export const getGeneratedAnswerStatus = (
-  generatedAnswerState?: GeneratedAnswerState,
-  i18n?: i18n
+  generatedAnswerState: GeneratedAnswerState,
+  i18n: i18n
 ) => {
   if (!generatedAnswerState || !i18n) {
     return '';
@@ -72,17 +70,25 @@ export const getGeneratedAnswerStatus = (
   return '';
 };
 
-export const copyToClipboard = async (
-  answer: string,
-  setCopied: (copied: boolean) => void,
-  setCopyError: (error: boolean) => void,
-  onLogCopyToClipboard?: () => void,
-  logger?: Pick<Console, 'error'>
-) => {
+type CopyToClipboardParams = {
+  answer: string;
+  setCopied: (copied: boolean) => void;
+  setCopyError: (error: boolean) => void;
+  onLogCopyToClipboard: () => void;
+  logger: Pick<Console, 'error'>;
+};
+
+export const copyToClipboard = async ({
+  answer,
+  setCopied,
+  setCopyError,
+  onLogCopyToClipboard,
+  logger,
+}: CopyToClipboardParams) => {
   try {
     await navigator.clipboard.writeText(answer);
     setCopied(true);
-    onLogCopyToClipboard?.();
+    onLogCopyToClipboard();
   } catch (error) {
     setCopyError(true);
     logger?.error(`Failed to copy to clipboard: ${error}`);
