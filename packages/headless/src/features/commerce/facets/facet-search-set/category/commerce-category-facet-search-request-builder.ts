@@ -29,8 +29,7 @@ export const buildCategoryFacetSearchRequest = (
     ? baseFacetQuery
     : state.commerceQuery?.query;
   const numberOfValues =
-    state.categoryFacetSearchSet[facetId]!.options.numberOfValues ||
-    state.categoryFacetSearchSet[facetId]!.initialNumberOfValues;
+    state.categoryFacetSearchSet[facetId]!.options.numberOfValues;
 
   const {
     url,
