@@ -35,6 +35,7 @@ describe('atomic-commerce-category-facet', () => {
           updateText: vi.fn(),
           search: vi.fn(),
           select: vi.fn(),
+          showMoreResults: vi.fn(),
         },
       },
     });

@@ -99,6 +99,7 @@ describe('AtomicCommerceFacet', () => {
           exclude: vi.fn(),
           singleExclude: vi.fn(),
           singleSelect: vi.fn(),
+          showMoreResults: vi.fn(),
         },
       },
     });
