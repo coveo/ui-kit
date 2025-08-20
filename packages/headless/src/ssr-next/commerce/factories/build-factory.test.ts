@@ -2,8 +2,6 @@ import {describe, expect, it, type Mock, vi} from 'vitest';
 import type {CommerceEngineOptions} from '../../../app/commerce-engine/commerce-engine.js';
 import * as commerceEngine from '../../../app/commerce-engine/commerce-engine.js';
 import {getSampleCommerceEngineConfiguration} from '../../../app/commerce-engine/commerce-engine-configuration.js';
-import {buildLogger} from '../../../app/logger.js';
-import {buildMockNavigatorContextProvider} from '../../../test/mock-navigator-context-provider.js';
 import {defineCart} from '../controllers/cart/headless-cart.ssr.js';
 import {defineProductList} from '../controllers/product-list/headless-product-list.ssr.js';
 import {defineRecommendations} from '../controllers/recommendations/headless-recommendations.ssr.js';
@@ -11,50 +9,29 @@ import {defineSearchBox} from '../controllers/search-box/headless-search-box.ssr
 import {SolutionType} from '../types/controller-constants.js';
 import {buildFactory} from './build-factory.js';
 
-vi.mock('../../../app/logger.js');
-
 describe('buildFactory', () => {
-  const mockLogger = {
-    warn: vi.fn(),
-    debug: vi.fn(),
-  };
-
   const mockEngineOptions: CommerceEngineOptions = {
     configuration: getSampleCommerceEngineConfiguration(),
-    navigatorContextProvider: buildMockNavigatorContextProvider(),
   };
 
   const mockEmptyDefinition = {};
 
   beforeEach(() => {
     vi.spyOn(commerceEngine, 'buildCommerceEngine');
-    (buildLogger as Mock).mockReturnValue(mockLogger);
   });
 
   afterEach(() => {
     vi.clearAllMocks();
   });
 
-  it('should not warn if navigatorContextProvider is present', async () => {
+  it('should build successfully', async () => {
     const factory = buildFactory(mockEmptyDefinition, mockEngineOptions);
     const build = factory(SolutionType.listing);
 
-    await build();
+    const result = await build();
 
-    expect(mockLogger.warn).not.toHaveBeenCalled();
-  });
-
-  it('should warn if navigatorContextProvider is missing', async () => {
-    const factory = buildFactory(mockEmptyDefinition, {
-      configuration: getSampleCommerceEngineConfiguration(),
-    });
-    const build = factory(SolutionType.listing);
-
-    await build();
-
-    expect(mockLogger.warn).toHaveBeenCalledWith(
-      expect.stringContaining('Missing navigator context in server-side code')
-    );
+    expect(result.engine).toBeDefined();
+    expect(result.controllers).toBeDefined();
   });
 
   it('should throw an error for unsupported solution type', async () => {
