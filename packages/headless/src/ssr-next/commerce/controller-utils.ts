@@ -3,13 +3,9 @@ import type {Controller} from '../../controllers/controller/headless-controller.
 import {clone, filterObject, mapObject} from '../../utils/utils.js';
 import {ControllerBuilder} from '../common/builders/controller-builder.js';
 import {createStaticControllerBuilder} from '../common/builders/static-controller-builder.js';
-import {InvalidControllerDefinition} from '../common/errors.js';
 import type {SSRCommerceEngine} from './factories/build-factory.js';
 import type {SolutionType} from './types/controller-constants.js';
-import type {
-  ControllerDefinitionOption,
-  ControllerDefinitionsMap,
-} from './types/controller-definitions.js';
+import type {ControllerDefinitionsMap} from './types/controller-definitions.js';
 import type {
   InferControllerPropsMapFromDefinitions,
   InferControllerStaticStateMapFromDefinitionsWithSolutionType,
@@ -88,12 +84,4 @@ export function buildControllerDefinitions<
     TControllerDefinitionsMap,
     TSolutionType
   >;
-}
-
-export function ensureAtLeastOneSolutionType(
-  options?: ControllerDefinitionOption
-) {
-  if (options?.listing === false && options?.search === false) {
-    throw new InvalidControllerDefinition();
-  }
 }
