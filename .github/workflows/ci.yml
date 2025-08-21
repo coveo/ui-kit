@@ -638,6 +638,7 @@ jobs:
         shell: bash
       - name: Release
         run: |
+          npm run clean-npm-prerelease
           npm run nx:graph
           npm run release:phase1
           npm run release:phase3
@@ -809,6 +810,7 @@ jobs:
         shell: bash
       - name: Release
         run: |
+          npm run clean-npm-prerelease
           npm run nx:graph
           npm run release:phase1
           npm run release:phase3

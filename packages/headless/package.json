@@ -84,6 +84,7 @@
     "integration-test": "vitest run --poolOptions.threads.singleThread src/integration-tests/**",
     "integration-test:watch": "vitest --poolOptions.threads.singleThread src/integration-tests/**",
     "release:phase3": "npm run-script -w=@coveo/ci npm-publish",
+    "clean-npm-prerelease": "npm run-script -w=@coveo/ci npm-deprecate-alpha",
     "release:phase1": "npm run-script -w=@coveo/ci bump",
     "build:typedoc": "npm run build:typedoc:docs && npm run build:typedoc:merge",
     "build:typedoc:docs": "concurrently \"npm run build:typedoc:search\" \"npm run build:typedoc:commerce\" \"npm run build:typedoc:case-assist\" \"npm run build:typedoc:insight\" \"npm run build:typedoc:recommendation\" \"npm run build:typedoc:ssr\" \"npm run build:typedoc:ssr-commerce\"",

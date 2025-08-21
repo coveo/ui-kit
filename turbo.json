@@ -86,6 +86,10 @@
         "ACTIONS_ID_TOKEN_REQUEST_TOKEN"
       ],
       "cache": false
+    },
+    "clean-npm-prerelease": {
+      "env": ["NODE_AUTH_TOKEN", "NPM_CONFIG_USERCONFIG"],
+      "cache": false
     }
   },
   "globalDependencies": [

@@ -20,6 +20,7 @@
     "build:definitions": "tsc -p src/tsconfig.build.json -d --emitDeclarationOnly --declarationDir dist/definitions",
     "clean": "rimraf -rf dist/*",
     "release:phase3": "npm run-script -w=@coveo/ci npm-publish",
+    "clean-npm-prerelease": "npm run-script -w=@coveo/ci npm-deprecate-alpha",
     "release:phase1": "npm run-script -w=@coveo/ci bump",
     "promote:npm:latest": "npm run-script -w=@coveo/ci promote-npm-prod",
     "e2e": "npm run e2e:saml",
