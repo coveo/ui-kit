@@ -74,9 +74,8 @@ export const testSearch =
       await configuration.configure(options);
       await search.waitForSearchResponse();
 
-      // WAITING ON FIX IN HEADLESS TO RESUME CHECKING ANALYTICS
-      // generatedAnswerObject.streamEndAnalyticRequestPromise =
-      //   generatedAnswerObject.waitForStreamEndAnalytics();
+      generatedAnswerObject.streamEndAnalyticRequestPromise =
+        generatedAnswerObject.waitForStreamEndAnalytics();
 
       await search.fillSearchInput(exampleQuery);
       await search.mockSearchWithGenerativeQuestionAnsweringId(data.streamId);

@@ -1617,14 +1617,6 @@ export const expectedStreamAnswerAPIParamWithoutSearchAction = {
   },
 };
 
-export const expectedStreamAnswerAPIParamForSelect = (() => {
-  const {
-    analytics: _analytics,
-    ...expectedStreamAnswerAPIParamWithoutAnalytics
-  } = expectedStreamAnswerAPIParam;
-  return expectedStreamAnswerAPIParamWithoutAnalytics;
-})();
-
 export const expectedStreamAnswerAPIParamWithDifferentFacetTimes = {
   ...expectedStreamAnswerAPIParam,
   facets: {
