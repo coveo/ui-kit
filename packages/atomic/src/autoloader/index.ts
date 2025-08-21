@@ -77,17 +77,18 @@ export function registerAutoloader(
       }
     }
 
+    const childTemplates = root.querySelectorAll('template');
+    //This is necessary to load the components that are inside the templates
+    for (const template of childTemplates) {
+      if (visitedNodes.has(template.content)) {
+        continue;
+      }
+      await discover(template.content);
+      observer.observe(template.content, {subtree: true, childList: true});
+    }
+
     const litRegistrationPromises = [];
     for (const atomicElement of allCustomElements) {
-      const childTemplates = root.querySelectorAll('template');
-      //This is necessary to load the components that are inside the templates
-      for (const template of childTemplates) {
-        if (visitedNodes.has(template.content)) {
-          continue;
-        }
-        await discover(template.content);
-        observer.observe(template.content, {subtree: true, childList: true});
-      }
       const tagName = atomicElement.tagName.toLowerCase();
       if (tagName in elementMap && !customElements.get(tagName)) {
         // The element uses Lit already, we don't need to jam the lazy loader in the Shadow DOM.
