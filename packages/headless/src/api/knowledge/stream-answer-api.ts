@@ -1,5 +1,5 @@
 import type {ThunkDispatch, UnknownAction} from '@reduxjs/toolkit';
-import {skipToken} from '@reduxjs/toolkit/query';
+import {selectAnswerApiQueryParams} from '../../features/generated-answer/answer-api-selectors.js';
 import {
   setAnswerContentFormat,
   setCannotAnswer,
@@ -215,18 +215,7 @@ export const fetchAnswer = (fetchAnswerParams: Partial<SearchRequest>) => {
   return answerApi.endpoints.getAnswer.initiate(fetchAnswerParams);
 };
 
-/**
- * Selects the answer query parameters used to call the answer API.
- * These parameters are set when `triggerSearchRequest` runs.
- * If answer params are not available, returns `skipToken`, a special value from RTK Query
- * that tells RTK Query to "skip" running a query or selector until the params are ready.
- *
- * @see https://redux-toolkit.js.org/rtk-query/usage-with-typescript#skipping-queries-with-typescript-using-skiptoken
- */
-export const selectAnswerParams = (state: StreamAnswerAPIState) =>
-  state.generatedAnswer.answerApiQueryParams ?? skipToken;
-
 export const selectAnswer = (state: StreamAnswerAPIState) => {
-  const params = selectAnswerParams(state);
+  const params = selectAnswerApiQueryParams(state);
   return answerApi.endpoints.getAnswer.select(params)(state);
 };
