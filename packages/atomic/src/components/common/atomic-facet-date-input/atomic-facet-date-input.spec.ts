@@ -149,12 +149,12 @@ describe('AtomicFacetDateInput', () => {
     });
 
     const {start, end} = {
-      start: '20230101',
-      end: '20231231',
+      start: '2023-01-01',
+      end: '2023-12-31',
     };
 
-    await userEvent.type(startInput, start);
-    await userEvent.type(endInput, end);
+    await userEvent.fill(startInput, start);
+    await userEvent.fill(endInput, end);
     await userEvent.click(applyButton);
 
     expect(dateInputCallback).toHaveBeenCalled();
