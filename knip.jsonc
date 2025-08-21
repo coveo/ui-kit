@@ -86,6 +86,6 @@
     },
     "packages/create-atomic-result-component": {
       "ignore": ["template/**/*"]
-    },
+    }
   }
 }
