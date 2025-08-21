@@ -146,12 +146,12 @@ export class AtomicInsightGeneratedAnswer
 
   private fullAnswerHeight?: number;
   private modalRef?: HTMLAtomicGeneratedAnswerFeedbackModalElement;
-  private setCopied = debounce(() => {
+  private setCopied = () => {
     this.copied = false;
-  }, 3000);
-  private setCopyError = debounce(() => {
+  };
+  private setCopyError = () => {
     this.copyError = false;
-  }, 1000);
+  };
   private _data: any = null;
 
   public initialize() {
@@ -178,9 +178,6 @@ export class AtomicInsightGeneratedAnswer
       this.resizeObserver = new ResizeObserver(debouncedAdaptAnswerHeight);
       this.resizeObserver.observe(this.host);
     }
-  }
-
-  public componentDidLoad() {
     this.modalRef = insertGeneratedAnswerFeedbackModal(this.host, () => this.generatedAnswer);
   }
 
@@ -222,7 +219,7 @@ export class AtomicInsightGeneratedAnswer
 
     this.setAriaMessage(getGeneratedAnswerStatus(
       this.generatedAnswerState,
-      this.bindings.i18n as any
+      this.bindings.i18n
     ));
   };
 
@@ -320,33 +317,33 @@ export class AtomicInsightGeneratedAnswer
 
   private clickDislike() {
     this.setIsAnswerHelpful(false);
-    this.generatedAnswer?.dislike();
+    this.generatedAnswer.dislike();
     this.openFeedbackModal();
   }
 
   private clickLike() {
     this.setIsAnswerHelpful(true);
-    this.generatedAnswer?.like();
+    this.generatedAnswer.like();
     this.openFeedbackModal();
   }
 
   private async copyToClipboard() {
-    if (this.generatedAnswerState?.answer) {
+    if (this.generatedAnswerState.answer) {
       await copyToClipboard({
         answer: this.generatedAnswerState.answer,
         setCopied: this.setCopied,
         setCopyError: this.setCopyError,
-        onLogCopyToClipboard: () => this.generatedAnswer?.logCopyToClipboard(),
+        onLogCopyToClipboard: () => this.generatedAnswer.logCopyToClipboard(),
         logger: this.bindings.engine.logger
       });
     }
   }
 
   private clickOnShowButton() {
-    if (this.generatedAnswerState?.expanded) {
-      this.generatedAnswer?.collapse();
+    if (this.generatedAnswerState.expanded) {
+      this.generatedAnswer.collapse();
     } else {
-      this.generatedAnswer?.expand();
+      this.generatedAnswer.expand();
     }
   }
 
@@ -359,7 +356,7 @@ export class AtomicInsightGeneratedAnswer
   private openFeedbackModal() {
     if (
       this.modalRef &&
-      !this.generatedAnswerState?.feedbackSubmitted
+      !this.generatedAnswerState.feedbackSubmitted
     ) {
       this.modalRef.isOpen = true;
     }
@@ -367,16 +364,18 @@ export class AtomicInsightGeneratedAnswer
 
   public render() {
     const hasRetryableError = Boolean(
-      !this.searchStatusState?.hasError &&
-      this.generatedAnswerState?.error?.isRetryable
+      !this.searchStatusState.hasError &&
+      this.generatedAnswerState.error?.isRetryable
     );
-
+    
     const hasNoAnswerGenerated =
-      this.generatedAnswerState?.answer === undefined &&
-      !this.generatedAnswerState?.citations?.length &&
+      !this.searchStatusState.hasError &&
+      !!this.generatedAnswerState.error?.isRetryable &&
+      this.generatedAnswerState.answer === undefined &&
+      !this.generatedAnswerState.citations?.length &&
       !hasRetryableError;
 
-    const isAnswerVisible = this.generatedAnswerState?.isVisible;
+    const isAnswerVisible = this.generatedAnswerState.isVisible;
     const hasCustomNoAnswerMessage = !!getNamedSlotFromHost(this.host, 'no-answer-message');
     const hasClipboard = !!navigator?.clipboard?.writeText;
 

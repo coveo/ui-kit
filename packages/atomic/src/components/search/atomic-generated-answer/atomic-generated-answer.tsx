@@ -205,7 +205,10 @@ export class AtomicGeneratedAnswer implements InitializableComponent {
       fieldsToIncludeInCitations: this.getCitationFields(),
     });
     this.searchStatus = buildSearchStatus(this.bindings.engine);
-    this.insertFeedbackModal();
+    this.modalRef = insertGeneratedAnswerFeedbackModal(
+      this.host,
+      () => this.generatedAnswer
+    );
 
     if (window.ResizeObserver && this.collapsible) {
       const debouncedAdaptAnswerHeight = debounce(
@@ -216,13 +219,6 @@ export class AtomicGeneratedAnswer implements InitializableComponent {
       this.resizeObserver.observe(this.host);
     }
     this.tabManager = buildTabManager(this.bindings.engine);
-  }
-
-  private insertFeedbackModal() {
-    this.modalRef = insertGeneratedAnswerFeedbackModal(
-      this.host,
-      () => this.generatedAnswer
-    ) as HTMLAtomicGeneratedAnswerFeedbackModalElement;
   }
 
   @Watch('generatedAnswerState')
@@ -387,18 +383,18 @@ export class AtomicGeneratedAnswer implements InitializableComponent {
 
   private clickDislike() {
     this.setIsAnswerHelpful(false);
-    this.generatedAnswer?.dislike();
+    this.generatedAnswer.dislike();
     this.openFeedbackModal();
   }
 
   private clickLike() {
     this.setIsAnswerHelpful(true);
-    this.generatedAnswer?.like();
+    this.generatedAnswer.like();
     this.openFeedbackModal();
   }
 
   private async copyToClipboard() {
-    if (this.generatedAnswerState?.answer) {
+    if (this.generatedAnswerState.answer) {
       await copyToClipboard({
         answer: this.generatedAnswerState.answer,
         setCopied: this.setCopied,
@@ -410,10 +406,10 @@ export class AtomicGeneratedAnswer implements InitializableComponent {
   }
 
   private clickOnShowButton() {
-    if (this.generatedAnswerState?.expanded) {
-      this.generatedAnswer?.collapse();
+    if (this.generatedAnswerState.expanded) {
+      this.generatedAnswer.collapse();
     } else {
-      this.generatedAnswer?.expand();
+      this.generatedAnswer.expand();
     }
   }
 
