@@ -800,12 +800,14 @@ const setupElement = async ({
   imageSize = 'small',
   productsPerPage = 3,
   isAppLoaded = true,
+  slotId = 'Recommendation',
 }: {
   display?: ItemDisplayBasicLayout;
   density?: ItemDisplayDensity;
   imageSize?: ItemDisplayImageSize;
   productsPerPage?: number;
   isAppLoaded?: boolean;
+  slotId?: string;
 } = {}) => {
   const {element} =
     await renderInAtomicCommerceRecommendationInterface<AtomicCommerceRecommendationList>(
@@ -815,6 +817,7 @@ const setupElement = async ({
             .density=${density}
             .imageSize=${imageSize}
             .productsPerPage=${productsPerPage}
+            .slotId=${slotId}
           ></atomic-commerce-recommendation-list>`,
         selector: 'atomic-commerce-recommendation-list',
         bindings: (bindings) => {
