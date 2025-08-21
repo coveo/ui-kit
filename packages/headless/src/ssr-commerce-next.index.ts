@@ -277,7 +277,6 @@ export {SolutionType} from './ssr-next/commerce/types/controller-constants.js';
 export type {
   ControllerDefinition,
   ControllerDefinitionsMap,
-  ControllerWithKind,
   EngineDefinitionControllersPropsOption,
   HydratedState,
   InferControllerStaticStateFromController,
