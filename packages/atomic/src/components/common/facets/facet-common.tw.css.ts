@@ -1,3 +1,6 @@
+import {css} from 'lit';
+
+const styles = css`
 @reference '../../../utils/tailwind.global.tw.css';
 
 .value-count {
@@ -26,4 +29,6 @@
   &::part(search-wrapper) {
     @apply mb-2;
   }
-}
+}`;
+
+export default styles;
