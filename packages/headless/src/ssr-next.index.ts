@@ -51,7 +51,6 @@ export type {Relay} from '@coveo/relay';
 export type {Middleware, Unsubscribe} from '@reduxjs/toolkit';
 export type {AnalyticsClientSendEventHook} from 'coveo.analytics';
 export type {ExecuteTriggerParams} from './api/common/trigger.js';
-// export type
 export type {CoreEngine, ExternalEngineOptions} from './app/engine.js';
 export type {
   AnalyticsConfiguration,
@@ -482,6 +481,12 @@ export type {
   SearchEngineDefinition,
   SearchEngineDefinitionOptions,
 } from './ssr-next/search/types/engine.js';
+export type {FetchStaticState} from './ssr-next/search/types/fetch-static-state.js';
+// export type
+export type {
+  HydratedState,
+  HydrateStaticState,
+} from './ssr-next/search/types/hydrate-static-state.js';
 // State
 export type {
   SearchAppState,
