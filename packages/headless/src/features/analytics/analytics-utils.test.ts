@@ -11,6 +11,7 @@ import {buildMockResult} from '../../test/mock-result.js';
 import {buildMockResultWithFolding} from '../../test/mock-result-with-folding.js';
 import {createMockState} from '../../test/mock-state.js';
 import {getConfigurationInitialState} from '../configuration/configuration-state.js';
+import {getRecommendationInitialState} from '../recommendation/recommendation-state.js';
 import {
   documentIdentifier,
   makeAnalyticsAction,
@@ -289,6 +290,207 @@ describe('analytics-utils', () => {
 
         expect(fakeCAJSLog).toHaveBeenCalled();
         expect(relayEmitSpy).not.toHaveBeenCalled();
+      });
+    });
+  });
+
+  describe('Analytics Factory Integration', () => {
+    describe('makeAnalyticsAction', () => {
+      it('should create analytics actions with search configurator for search states', async () => {
+        const mockBuilder = vi.fn().mockResolvedValue({
+          description: {actionCause: 'searchEvent'},
+          log: vi.fn().mockResolvedValue({searchUID: 'test-uid'}),
+        });
+
+        const action = makeAnalyticsAction(
+          'test/search',
+          mockBuilder,
+          undefined
+        );
+
+        const engine = buildMockSearchEngine(createMockState());
+
+        expect(() =>
+          action.prepare({
+            getState: () => engine.state,
+            analyticsClientMiddleware: (_, p) => p,
+            preprocessRequest: undefined,
+            logger: engine.logger,
+          })
+        ).not.toThrow();
+      });
+
+      it('should fail gracefully when configurator setup fails', async () => {
+        const mockBuilder = vi
+          .fn()
+          .mockRejectedValue(new Error('Configurator failed'));
+
+        const action = makeAnalyticsAction(
+          'test/failing',
+          mockBuilder,
+          undefined
+        );
+
+        const engine = buildMockSearchEngine(createMockState());
+
+        await expect(
+          action.prepare({
+            getState: () => engine.state,
+            analyticsClientMiddleware: (_, p) => p,
+            preprocessRequest: undefined,
+            logger: engine.logger,
+          })
+        ).rejects.toThrow('Configurator failed');
+      });
+    });
+
+    describe('State Type Safety', () => {
+      it('should handle search states with missing sections gracefully', () => {
+        const mockState = createMockState();
+        mockState.search.results = [buildMockResult()];
+
+        const result = partialDocumentInformation(buildMockResult(), mockState);
+
+        expect(result).toBeDefined();
+        expect(result.documentPosition).toBeGreaterThan(0);
+      });
+
+      it('should handle recommendation states correctly', () => {
+        const result = buildMockResult({
+          uniqueId: 'test-result-id',
+        });
+
+        const recommendationState = createMockRecommendationState({
+          recommendation: {
+            ...getRecommendationInitialState(),
+            recommendations: [result],
+          },
+        });
+
+        const partialInfo = partialRecommendationInformation(
+          result,
+          recommendationState
+        );
+
+        expect(partialInfo).toBeDefined();
+        expect(partialInfo.documentTitle).toBe(result.title);
+        expect(partialInfo.documentPosition).toBeGreaterThan(0);
+      });
+    });
+
+    describe('Error Handling', () => {
+      it('should handle malformed result data gracefully', () => {
+        const malformedResult = {
+          ...buildMockResult(),
+          raw: {
+            ...buildMockResult().raw,
+            permanentid: undefined, // required
+          },
+        };
+
+        // Should warn but not throw
+        const identifier = documentIdentifier(malformedResult);
+        expect(identifier.contentIDKey).toBe('permanentid');
+        expect(identifier.contentIDValue).toBe('');
+      });
+
+      it('should handle analytics client failures gracefully', async () => {
+        const mockBuilder = vi.fn().mockResolvedValue({
+          description: {actionCause: 'testEvent'},
+          log: vi.fn().mockRejectedValue(new Error('Analytics client failed')),
+        });
+
+        const action = makeAnalyticsAction(
+          'test/client-failure',
+          mockBuilder,
+          undefined
+        );
+
+        const engine = buildMockSearchEngine(createMockState());
+
+        const prepared = await action.prepare({
+          getState: () => engine.state,
+          analyticsClientMiddleware: (_, p) => p,
+          preprocessRequest: undefined,
+          logger: engine.logger,
+        });
+
+        // Should not throw during execution, even if analytics fails
+        await expect(
+          prepared.action()(
+            engine.dispatch,
+            () => engine.state,
+            {} as ThunkExtraArguments
+          )
+        ).resolves.not.toThrow();
+      });
+    });
+
+    describe('Configuration Modes', () => {
+      it('should handle legacy analytics mode', async () => {
+        const state = {
+          ...createMockState(),
+          configuration: {
+            ...getConfigurationInitialState(),
+            analytics: {
+              ...buildMockAnalyticsState(),
+              analyticsMode: 'legacy' as const,
+            },
+          },
+        };
+
+        const mockBuilder = vi.fn().mockResolvedValue({
+          description: {actionCause: 'legacyEvent'},
+          log: vi.fn().mockResolvedValue({searchUID: 'legacy-uid'}),
+        });
+
+        const action = makeAnalyticsAction(
+          'test/legacy',
+          mockBuilder,
+          undefined
+        );
+
+        const engine = buildMockSearchEngine(state);
+
+        const prepared = await action.prepare({
+          getState: () => engine.state,
+          analyticsClientMiddleware: (_, p) => p,
+          preprocessRequest: undefined,
+          logger: engine.logger,
+        });
+
+        expect(prepared.description?.actionCause).toBe('legacyEvent');
+      });
+
+      it('should handle next analytics mode', async () => {
+        const state = {
+          ...createMockState(),
+          configuration: {
+            ...getConfigurationInitialState(),
+            analytics: {
+              ...buildMockAnalyticsState(),
+              analyticsMode: 'next' as const,
+            },
+          },
+        };
+
+        const mockBuilder = vi.fn().mockResolvedValue({
+          description: {actionCause: 'nextEvent'},
+          log: vi.fn().mockResolvedValue(undefined),
+        });
+
+        const action = makeAnalyticsAction('test/next', mockBuilder, undefined);
+
+        const engine = buildMockSearchEngine(state);
+
+        const prepared = await action.prepare({
+          getState: () => engine.state,
+          analyticsClientMiddleware: (_, p) => p,
+          preprocessRequest: undefined,
+          logger: engine.logger,
+        });
+
+        expect(prepared.description?.actionCause).toBe('nextEvent');
       });
     });
   });

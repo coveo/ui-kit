@@ -35,7 +35,7 @@ export class AtomicProductText
   @property({type: String, reflect: true}) public field!: string;
   /**
    * Whether to highlight the string field value.
-   * @deprecated - replaced by `no-highlight`
+   * @deprecated - replaced by `no-highlight` (this defaults to `true`, while the replacement is the inverse and defaults to `false`).
    * Only works if the `field` property is set to `excerpt` or `ec_name`.
    */
   @property({
@@ -81,11 +81,11 @@ export class AtomicProductText
   }
 
   private get shouldRenderHighlights(): boolean {
-    if (this.disableHighlight) {
-      return false;
-    } else {
-      return this.shouldHighlight && this.isFieldSupportedForHighlighting();
-    }
+    return (
+      !this.disableHighlight &&
+      this.shouldHighlight &&
+      this.isFieldSupportedForHighlighting()
+    );
   }
 
   private isFieldSupportedForHighlighting(): boolean {
