@@ -4,6 +4,7 @@ import {clone, filterObject, mapObject} from '../../utils/utils.js';
 import {ControllerBuilder} from '../common/builders/controller-builder.js';
 import {createStaticControllerBuilder} from '../common/builders/static-controller-builder.js';
 import {InvalidControllerDefinition} from '../common/errors.js';
+import type {EngineStaticState} from '../common/types/engine.js';
 import type {SSRCommerceEngine} from './factories/build-factory.js';
 import type {SolutionType} from './types/controller-constants.js';
 import type {
@@ -15,7 +16,6 @@ import type {
   InferControllerStaticStateMapFromDefinitionsWithSolutionType,
   InferControllersMapFromDefinition,
 } from './types/controller-inference.js';
-import type {EngineStaticState} from './types/engine.js';
 
 export function createStaticState<
   TSearchAction extends UnknownAction,
