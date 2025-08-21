@@ -3,6 +3,7 @@
 import {
   expectedStreamAnswerAPIParam,
   expectedStreamAnswerAPIParamWithATabWithAnExpression,
+  expectedStreamAnswerAPIParamWithDifferentFacetTimes,
   expectedStreamAnswerAPIParamWithoutAnyTab,
   expectedStreamAnswerAPIParamWithoutSearchAction,
   expectedStreamAnswerAPIParamWithStaticFiltersAndTabExpression,
@@ -129,5 +130,23 @@ describe('constructAnswerQueryParams', () => {
     expect(queryParams.analytics?.capture).toBeDefined();
     expect(queryParams.analytics?.clientId).toBeDefined();
     expect(queryParams.analytics?.originContext).toBeDefined();
+  });
+
+  it('should build the correct facets times for the query params', () => {
+    const queryParams = constructAnswerQueryParams(
+      streamAnswerAPIStateMock as any,
+      buildMockNavigatorContextProvider()()
+    );
+
+    expect(queryParams).toEqual(expectedStreamAnswerAPIParam);
+
+    const updatedQueryParams = constructAnswerQueryParams(
+      streamAnswerAPIStateMock as any,
+      buildMockNavigatorContextProvider()()
+    );
+
+    expect(updatedQueryParams).not.toEqual(
+      expectedStreamAnswerAPIParamWithDifferentFacetTimes
+    );
   });
 });

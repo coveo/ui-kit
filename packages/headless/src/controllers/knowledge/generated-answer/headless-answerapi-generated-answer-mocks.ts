@@ -1,6 +1,7 @@
 /** biome-ignore-all lint/suspicious/noExplicitAny: <mock> */
 /* eslint-disable @cspell/spellchecker */
 import type {StreamAnswerAPIState} from '../../../api/knowledge/stream-answer-api-state.js';
+import {addSecondsToFacetsTimestamps} from './utils/testingUtils.js';
 
 const atomicVersion = '2.77.0';
 
@@ -1088,6 +1089,51 @@ export const streamAnswerAPIStateMock: StreamAnswerAPIState = {
   },
 };
 
+const dateRangeCurrentValues = [
+  {
+    start: '2020/01/01@07:45:00',
+    end: '2020/01/01@08:45:00',
+    endInclusive: false,
+    state: 'idle',
+  },
+  {
+    start: '2019/12/31@08:45:00',
+    end: '2020/01/01@08:45:00',
+    endInclusive: false,
+    state: 'idle',
+  },
+  {
+    start: '2019/12/25@08:45:00',
+    end: '2020/01/01@08:45:00',
+    endInclusive: false,
+    state: 'idle',
+  },
+  {
+    start: '2019/12/01@08:45:00',
+    end: '2020/01/01@08:45:00',
+    endInclusive: false,
+    state: 'idle',
+  },
+  {
+    start: '2019/10/01@08:45:00',
+    end: '2020/01/01@08:45:00',
+    endInclusive: false,
+    state: 'idle',
+  },
+  {
+    start: '2019/01/01@08:45:00',
+    end: '2020/01/01@08:45:00',
+    endInclusive: false,
+    state: 'idle',
+  },
+  {
+    start: '2020/01/01@08:45:00',
+    end: '2030/01/01@08:45:00',
+    endInclusive: false,
+    state: 'idle',
+  },
+];
+
 export const streamAnswerAPIStateMockWithATabWithAnExpression: StreamAnswerAPIState =
   {
     ...streamAnswerAPIStateMock,
@@ -1262,50 +1308,7 @@ export const expectedStreamAnswerAPIParam = {
       sortCriteria: 'descending',
       rangeAlgorithm: 'even',
       resultsMustMatch: 'atLeastOneValue',
-      currentValues: [
-        {
-          start: '2020/01/01@07:45:00',
-          end: '2020/01/01@08:45:00',
-          endInclusive: false,
-          state: 'idle',
-        },
-        {
-          start: '2019/12/31@08:45:00',
-          end: '2020/01/01@08:45:00',
-          endInclusive: false,
-          state: 'idle',
-        },
-        {
-          start: '2019/12/25@08:45:00',
-          end: '2020/01/01@08:45:00',
-          endInclusive: false,
-          state: 'idle',
-        },
-        {
-          start: '2019/12/01@08:45:00',
-          end: '2020/01/01@08:45:00',
-          endInclusive: false,
-          state: 'idle',
-        },
-        {
-          start: '2019/10/01@08:45:00',
-          end: '2020/01/01@08:45:00',
-          endInclusive: false,
-          state: 'idle',
-        },
-        {
-          start: '2019/01/01@08:45:00',
-          end: '2020/01/01@08:45:00',
-          endInclusive: false,
-          state: 'idle',
-        },
-        {
-          start: '2020/01/01@08:45:00',
-          end: '2030/01/01@08:45:00',
-          endInclusive: false,
-          state: 'idle',
-        },
-      ],
+      currentValues: dateRangeCurrentValues,
       preventAutoSelect: false,
       type: 'dateRange',
       facetId: 'date',
@@ -1621,3 +1624,14 @@ export const expectedStreamAnswerAPIParamForSelect = (() => {
   } = expectedStreamAnswerAPIParam;
   return expectedStreamAnswerAPIParamWithoutAnalytics;
 })();
+
+export const expectedStreamAnswerAPIParamWithDifferentFacetTimes = {
+  ...expectedStreamAnswerAPIParam,
+  facets: {
+    ...expectedStreamAnswerAPIParam.facets,
+    [1]: {
+      ...expectedStreamAnswerAPIParam.facets[1],
+      currentValues: addSecondsToFacetsTimestamps(dateRangeCurrentValues, 5),
+    },
+  },
+};
