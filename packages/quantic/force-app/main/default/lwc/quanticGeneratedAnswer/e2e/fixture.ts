@@ -82,6 +82,15 @@ export const testSearch =
       await search.performSearch();
       await search.waitForSearchResponse();
 
+
+      generatedAnswerObject.streamEndAnalyticRequestPromise =
+        generatedAnswerObject.waitForStreamEndAnalytics();
+
+      await search.fillSearchInput(exampleQuery);
+      await search.mockSearchWithGenerativeQuestionAnsweringId(data.streamId);
+      await search.performSearch();
+      await search.waitForSearchResponse();
+
       await use(generatedAnswerObject);
     },
   });
@@ -132,6 +141,15 @@ export const testInsight =
       await insightSetup.waitForInsightInterfaceInitialization();
       await search.performSearch();
       await search.waitForSearchResponse();
+
+      await search.mockSearchWithGenerativeQuestionAnsweringId(data.streamId);
+      generatedAnswerObject.streamEndAnalyticRequestPromise =
+        generatedAnswerObject.waitForStreamEndAnalytics();
+
+      await search.fillSearchInput(exampleQuery);
+      await search.performSearch();
+      await search.waitForSearchResponse();
+
 
       await search.mockSearchWithGenerativeQuestionAnsweringId(data.streamId);
       generatedAnswerObject.streamEndAnalyticRequestPromise =
