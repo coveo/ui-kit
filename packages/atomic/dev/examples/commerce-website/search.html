@@ -1,5 +1,6 @@
 <!doctype html>
 <html dir="ltr" lang="en">
+
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0" />
@@ -7,7 +8,7 @@
 
     <script type="module">
       if (import.meta.env) {
-        const {defineCustomElements} = await import('@coveo/atomic/loader');
+        const { defineCustomElements } = await import('@coveo/atomic/loader');
         import('@coveo/atomic/themes/coveo.css');
         defineCustomElements();
       } else {
@@ -20,7 +21,7 @@
     </script>
 
     <script type="module">
-      import {commerceEngine} from './engine.mjs';
+      import { commerceEngine } from './engine.mjs';
 
       (async () => {
         await customElements.whenDefined('atomic-commerce-interface');
@@ -61,8 +62,7 @@
                         </atomic-product-field-condition>
                         <atomic-product-field-condition if-defined="cat_available_sizes">
                           <atomic-product-multi-value-text
-                            field="cat_available_sizes"
-                          ></atomic-product-multi-value-text>
+                            field="cat_available_sizes"></atomic-product-multi-value-text>
                         </atomic-product-field-condition>
                         <atomic-product-field-condition if-defined="ec_rating">
                           <atomic-product-rating field="ec_rating"></atomic-product-rating>
@@ -79,9 +79,8 @@
                 </atomic-commerce-search-box-instant-products>
               </atomic-commerce-search-box>
             </atomic-layout-section>
-            <atomic-layout-section section="facets"
-              ><atomic-commerce-facets></atomic-commerce-facets
-            ></atomic-layout-section>
+            <atomic-layout-section
+              section="facets"><atomic-commerce-facets></atomic-commerce-facets></atomic-layout-section>
             <atomic-layout-section section="main">
               <atomic-layout-section section="status">
                 <atomic-commerce-breadbox></atomic-commerce-breadbox>
@@ -121,8 +120,7 @@
                         </atomic-product-field-condition>
                         <atomic-product-field-condition if-defined="cat_available_sizes">
                           <atomic-product-multi-value-text
-                            field="cat_available_sizes"
-                          ></atomic-product-multi-value-text>
+                            field="cat_available_sizes"></atomic-product-multi-value-text>
                         </atomic-product-field-condition>
                         <atomic-product-field-condition if-defined="ec_rating">
                           <atomic-product-rating field="ec_rating"></atomic-product-rating>
@@ -140,6 +138,15 @@
                       <atomic-product-section-children>
                         <atomic-product-children></atomic-product-children>
                       </atomic-product-section-children>
+                      <atomic-product-section-badges>
+                        <atomic-product-field-condition must-match-ec_in_stock="true">
+                          <span class="rounded-xl border border-primary text-primary px-2">In Stock</span>
+                        </atomic-product-field-condition>
+
+                      </atomic-product-section-badges>
+                      <atomic-product-section-actions>
+                        <button class="btn-primary p-2">Add to Cart</button>
+                      </atomic-product-section-actions>
                     </template>
                   </atomic-product-template>
                 </atomic-commerce-product-list>
@@ -161,4 +168,5 @@
     <script src="../../header.js" type="text/javascript"></script>
     <script src="commerce-nav.mjs" type="module"></script>
   </body>
+
 </html>
