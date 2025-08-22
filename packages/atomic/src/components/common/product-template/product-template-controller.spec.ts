@@ -167,6 +167,7 @@ describe('ProductTemplateController', () => {
         html`<test-element>
           <template data-testId="product-template">
             <atomic-result-section-visual>section</atomic-result-section-visual>
+            <atomic-product-link><a href="https://www.example.com/123"></a></atomic-product-link>
           </template>
         </test-element>`
       );
@@ -192,9 +193,13 @@ describe('ProductTemplateController', () => {
 
     it('getTemplate returns the correct linkContent', () => {
       const linkTemplate = buildTemplateHtml(
-        '<atomic-product-link></atomic-product-link>'
+        '<atomic-product-link><a href="https://www.example.com/123"></a></atomic-product-link>'
       );
+
       expect(result).toHaveProperty('linkContent', linkTemplate.content);
+      expect(fragmentToHTML(result!.linkContent as DocumentFragment)).toBe(
+        fragmentToHTML(linkTemplate.content)
+      );
     });
 
     it('getTemplate returns the correct priority', () => {

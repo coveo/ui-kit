@@ -111,7 +111,7 @@ export class ProductTemplateController implements ReactiveController {
     return {
       conditions: conditions.concat(this.matchConditions),
       content: getTemplateElement(this.host).content!,
-      linkContent: this.getLinkTemplateElement(this.host).content!,
+      linkContent: this.getLinkTemplateContent(this.host),
       priority: 1,
     };
   }
@@ -122,11 +122,19 @@ export class ProductTemplateController implements ReactiveController {
     return linkTemplate;
   }
 
-  getLinkTemplateElement(host: HTMLElement) {
-    return (
-      host.querySelector<HTMLTemplateElement>('template[slot="link"]') ??
-      this.getDefaultLinkTemplateElement()
+  getLinkTemplateContent(host: HTMLElement): DocumentFragment {
+    const template = host.querySelector<HTMLTemplateElement>('template');
+    const productLinkElement = template?.content.querySelector(
+      'atomic-product-link'
     );
+
+    if (productLinkElement) {
+      const fragment = document.createDocumentFragment();
+      fragment.appendChild(productLinkElement.cloneNode(true));
+      return fragment;
+    } else {
+      return this.getDefaultLinkTemplateElement().content;
+    }
   }
 
   private get parentElement() {
