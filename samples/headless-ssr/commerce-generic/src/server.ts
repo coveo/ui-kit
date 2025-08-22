@@ -1,19 +1,14 @@
-import type {InferStaticState} from '@coveo/headless/ssr-commerce-next';
 import express from 'express';
-import {engineDefinition} from './engine.js';
-import {renderApp} from './renderApp.js';
-import {renderHtml} from './renderHtml.js';
-
-export type SearchStaticState = InferStaticState<
-  typeof engineDefinition.searchEngineDefinition
->;
+import {engineDefinition} from './common/engine.js';
+import {renderApp} from './common/renderApp.js';
+import {renderHtml} from './common/renderHtml.js';
 
 const app = express();
 const port = process.env.PORT || 3000;
 
 app.use(express.static('dist'));
 
-app.get('/', async (req, res) => {
+app.get('/', async (_req, res) => {
   try {
     const staticState =
       await engineDefinition.searchEngineDefinition.fetchStaticState({

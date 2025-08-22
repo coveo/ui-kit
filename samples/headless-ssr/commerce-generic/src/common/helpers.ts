@@ -1,19 +1,4 @@
-export interface Product {
-  ec_thumbnails?: string;
-  ec_images?: string;
-  ec_name?: string;
-  title?: string;
-  ec_brand?: string;
-  brand?: string;
-  ec_price?: number | string;
-  price?: number | string;
-  ec_rating?: number | string;
-  rating?: number | string;
-}
-
-export interface Summary {
-  totalNumberOfProducts?: number;
-}
+import type {Product, SearchStaticState, Summary} from './types.js';
 
 export function renderProductCard(product: Product): string {
   const imageUrl = product.ec_thumbnails || product.ec_images || '';
@@ -46,15 +31,21 @@ export function formatQuerySummary(
   return `${total} products found${searchValue ? ` for "${searchValue}"` : ''}`;
 }
 
-export function getProductsFromController(productList: any): Product[] {
+export function getProductsFromController(
+  productList: SearchStaticState['controllers']['productList']
+): Product[] {
   return productList?.state?.products || [];
 }
 
-export function getSummaryFromController(summary: any): Summary | undefined {
+export function getSummaryFromController(
+  summary: SearchStaticState['controllers']['summary']
+): Summary | undefined {
   return summary?.state;
 }
 
-export function getSearchValueFromController(searchBox: any): string {
+export function getSearchValueFromController(
+  searchBox: SearchStaticState['controllers']['searchBox']
+): string {
   return searchBox?.state?.value || '';
 }
 

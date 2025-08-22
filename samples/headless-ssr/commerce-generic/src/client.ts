@@ -1,4 +1,4 @@
-import {engineDefinition} from './engine.js';
+import {engineDefinition} from './common/engine.js';
 import {
   formatQuerySummary,
   getElement,
@@ -6,7 +6,7 @@ import {
   getSearchValueFromController,
   getSummaryFromController,
   renderProductsList,
-} from './shared.js';
+} from './common/helpers.js';
 
 async function initApp() {
   try {
@@ -67,7 +67,6 @@ function ProductsComponent(productList: any) {
   const render = () => {
     const products = getProductsFromController(productList);
 
-    // Hide placeholders
     if (noProducts) noProducts.style.display = 'none';
     grid.innerHTML = '';
 

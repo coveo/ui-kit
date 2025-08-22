@@ -4,11 +4,11 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "dev": "npm run build:client -- --watch & npx tsx watch server.ts",
+    "dev": "npm run build:client -- --watch=forever & npx tsx watch ./src/server.ts",
     "build": "npm run build:server && npm run build:client",
     "build:server": "tsc",
-    "build:client": "esbuild client.ts --bundle --outfile=dist/client.js --format=esm --target=es2022",
-    "start": "npm run build && npx tsx server.ts",
+    "build:client": "esbuild ./src/client.ts --bundle --outfile=dist/client.js --format=esm --target=es2022",
+    "start": "npm run build && npx tsx ./src/server.ts",
     "test": "npx playwright test",
     "test:headed": "npx playwright test --headed",
     "type-check": "tsc --noEmit"

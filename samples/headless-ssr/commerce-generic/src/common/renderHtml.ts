@@ -1,5 +1,5 @@
-import type {SearchStaticState} from './server.js';
 import {getSharedStyles} from './styles.js';
+import type {SearchStaticState} from './types.js';
 
 export const renderHtml = (
   content: string,

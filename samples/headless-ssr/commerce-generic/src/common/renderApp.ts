@@ -1,11 +1,11 @@
-import type {SearchStaticState} from './server.js';
 import {
   formatQuerySummary,
   getProductsFromController,
   getSearchValueFromController,
   getSummaryFromController,
   renderProductsList,
-} from './shared.js';
+} from './helpers.js';
+import type {SearchStaticState} from './types.js';
 
 export const renderApp = (staticState: SearchStaticState) => {
   const {controllers} = staticState;

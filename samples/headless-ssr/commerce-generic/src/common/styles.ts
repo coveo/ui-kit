@@ -1,4 +1,3 @@
-// Shared CSS styles that can be used across components
 export function getSharedStyles(): string {
   return `<style>
       * {
