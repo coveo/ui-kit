@@ -51,3 +51,21 @@ npm run dev
 ```
 
 This will start the client bundler in watch mode and run the server with hot reload using tsx.
+
+
+## Testing
+
+```bash
+npm run test
+```
+
+Runs the Playwright end-to-end tests.
+
+
+```bash
+npm run test:headed
+```
+
+Runs the Playwright tests in headed mode (with a visible browser).
+
+
