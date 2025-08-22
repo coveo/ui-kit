@@ -20,7 +20,9 @@ import type {
 import type {CommerceEngineDefinitionBuildResult} from './engine.js';
 
 export interface SearchBuildConfig extends CommonBuildConfig {
-  query: string;
+  searchParams: ParameterManagerState<
+    Parameters & {query: string}
+  >['parameters'];
 }
 
 export interface RecommendationBuildConfig extends CommonBuildConfig {
@@ -32,13 +34,15 @@ export interface ListingBuildConfig extends CommonBuildConfig {}
 export interface StandaloneBuildConfig extends CommonBuildConfig {}
 
 export interface CommonBuildConfig {
-  url: string;
-  language: string;
-  country: string;
-  currency: CurrencyCodeISO4217;
-  location?: UserLocation;
+  context: {
+    url: string;
+    language: string;
+    country: string;
+    currency: CurrencyCodeISO4217;
+    location?: UserLocation;
+  };
+  searchParams?: ParameterManagerState<Parameters>['parameters'];
   cart?: CartInitialState;
-  searchParams?: Omit<ParameterManagerState<Parameters>['parameters'], 'q'>;
 }
 
 export type BuildConfig<TSolutionType extends SolutionType> =
