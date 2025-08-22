@@ -85,6 +85,10 @@ export interface FacetQueryParam {
   facetQuery: string;
 }
 
+export interface NumberOfValuesParam {
+  numberOfValues: number;
+}
+
 export interface FacetIdParam {
   facetId: string;
 }

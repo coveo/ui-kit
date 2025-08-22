@@ -249,6 +249,7 @@ describe('commerce api client', () => {
       facetId: 'some-facet-id',
       facetQuery: 'some facet query',
       query: 'some query',
+      numberOfValues: 5,
       ...searchContext,
     };
 
