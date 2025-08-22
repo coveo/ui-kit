@@ -313,7 +313,7 @@ export class AtomicCommerceBreadbox
     return breadcrumb.values.map((value: BreadcrumbValue<AnyFacetValue>) => {
       return {
         facetId: breadcrumb.facetId,
-        label: breadcrumb.facetDisplayName,
+        label: breadcrumb.facetDisplayName ?? this.bindings.i18n.t('no-label'),
         deselect: value.deselect,
         formattedValue: this.valueForFacetType(
           breadcrumb.type,
