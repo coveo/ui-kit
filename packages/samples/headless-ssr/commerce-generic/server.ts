@@ -1,5 +1,5 @@
-import express from 'express';
 import type {InferStaticState} from '@coveo/headless/ssr-commerce-next';
+import express from 'express';
 import {engineDefinition} from './engine.js';
 import {renderApp} from './renderApp.js';
 import {renderHtml} from './renderHtml.js';
@@ -13,7 +13,7 @@ const port = process.env.PORT || 3000;
 
 app.use(express.static('dist'));
 
-app.get('*', async (req, res) => {
+app.get('/', async (req, res) => {
   try {
     const staticState =
       await engineDefinition.searchEngineDefinition.fetchStaticState({
