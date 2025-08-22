@@ -8,21 +8,21 @@ import {
   getSampleCommerceEngineConfiguration,
 } from '@coveo/headless/ssr-commerce-next';
 
-const config: CommerceEngineDefinitionOptions = {
-  configuration: getSampleCommerceEngineConfiguration(),
-  navigatorContextProvider: () => ({
+function createNavigatorContext() {
+  const isBrowser = typeof window !== 'undefined';
+
+  return {
     clientId: '',
     capture: false, // Disabled for demo
-    location:
-      typeof window !== 'undefined'
-        ? window.location.href
-        : 'http://localhost:3000',
+    location: isBrowser ? window.location.href : 'http://localhost:3000',
     referrer: '',
-    userAgent:
-      typeof window !== 'undefined'
-        ? window.navigator.userAgent
-        : 'minimal-sample',
-  }),
+    userAgent: isBrowser ? window.navigator.userAgent : 'minimal-sample',
+  };
+}
+
+const config: CommerceEngineDefinitionOptions = {
+  configuration: getSampleCommerceEngineConfiguration(),
+  navigatorContextProvider: createNavigatorContext,
   controllers: {
     productList: defineProductList(),
     summary: defineSummary(),
