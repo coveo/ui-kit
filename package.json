@@ -94,6 +94,7 @@
     "packages/create-atomic-template",
     "packages/create-atomic",
     "packages/create-atomic-component",
+    "packages/create-atomic-component/template/src/components/sample-component",
     "packages/create-atomic-component-project",
     "packages/create-atomic-component-project/template",
     "packages/create-atomic-rollup-plugin",
