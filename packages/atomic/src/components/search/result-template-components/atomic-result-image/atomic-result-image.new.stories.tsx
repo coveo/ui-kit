@@ -55,6 +55,6 @@ export const withAnAltTextField: Story = {
   args: {
     field: 'invalid',
     fallback: 'invalid',
-    imageAltField: 'someAltField',
+    'image-alt-field': 'someAltField',
   },
 };

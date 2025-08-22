@@ -27,7 +27,7 @@ const meta: Meta = {
   afterEach,
   args: {
     ...args,
-    numberOfValues: 8,
+    'number-of-values': 8,
   },
 };
 

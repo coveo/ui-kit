@@ -21,12 +21,8 @@ const meta: Meta = {
       handles: events,
     },
   },
-  args: {
-    ...args,
-    'initial-choice': '10',
-  },
+  args,
   argTypes,
-
   afterEach,
 };
 
@@ -37,7 +33,7 @@ export const Default: Story = {};
 export const WithCustomChoicesDisplayed: Story = {
   name: 'With custom choices displayed',
   args: {
-    choiceDisplayed: '2,5,10,25',
-    initialChoice: '2',
+    'choices-displayed': '2,5,10,25',
+    'initial-choice': '2',
   },
 };

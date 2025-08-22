@@ -72,7 +72,7 @@ export const Default: Story = {};
 export const Collapsible: Story = {
   name: 'Collapsible',
   args: {
-    isCollapsible: true,
+    'is-collapsible': false,
   },
 };
 

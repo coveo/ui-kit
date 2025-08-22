@@ -24,10 +24,7 @@ const meta: Meta = {
   argTypes,
 
   afterEach,
-  args: {
-    ...args,
-    numberOfValues: 8,
-  },
+  args,
 };
 
 export default meta;

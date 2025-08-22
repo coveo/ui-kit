@@ -59,13 +59,13 @@ export const Default: Story = {};
 export const WithMaxValuesToDisplaySetToMinimum: Story = {
   name: 'With max-values-set-to-display set to minimum',
   args: {
-    maxValuesToDisplay: 1,
+    'max-values-to-display': 1,
   },
 };
 
 export const WithMaxValuesToDisplaySetToTotalNumberOfValues: Story = {
   name: 'With max-values-set-to-display set to total number of values',
   args: {
-    maxValuesToDisplay: 6,
+    'max-values-to-display': 6,
   },
 };

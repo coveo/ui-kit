@@ -49,7 +49,7 @@ const meta: Meta = {
   args: {
     ...args,
     'default-slot': `<span>Render me if <strong>ec_name</strong> is defined.</span>`,
-    ifDefined: 'ec_name',
+    'if-defined': 'ec_name',
   },
 };
 

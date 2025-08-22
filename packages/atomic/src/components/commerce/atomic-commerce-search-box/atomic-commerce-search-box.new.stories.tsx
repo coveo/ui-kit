@@ -59,7 +59,7 @@ export const RichSearchBox: Story = {
 export const StandaloneSearchBox: Story = {
   name: 'As a standalone search box',
   args: {
-    redirectionUrl:
-      './iframe.html?id=atomic-commerce-interface--with-product-list&viewMode=story',
+    'redirection-url':
+      './iframe.html?id=atomic-commerce-interface--with-product-list',
   },
 };
