@@ -166,8 +166,7 @@ describe('ProductTemplateController', () => {
       const {controller} = await setupElement(
         html`<test-element>
           <template data-testId="product-template">
-            <atomic-result-section-visual>section</atomic-result-section-visual>
-            <atomic-product-link><a href="https://www.example.com/123"></a></atomic-product-link>
+            <atomic-result-section-visual>section</atomic-result-section-visual><atomic-product-link><a href="https://www.example.com/123"></a></atomic-product-link>
           </template>
         </test-element>`
       );
@@ -184,7 +183,7 @@ describe('ProductTemplateController', () => {
 
     it('getTemplate returns the correct content', () => {
       const contentTemplate = buildTemplateHtml(
-        '<atomic-result-section-visual>section</atomic-result-section-visual>'
+        '<atomic-result-section-visual>section</atomic-result-section-visual><atomic-product-link><a href="https://www.example.com/123"></a></atomic-product-link>'
       );
       expect(result && fragmentToHTML(result.content!)).toBe(
         fragmentToHTML(contentTemplate.content)
