@@ -1,5 +1,5 @@
+import type {Product} from '@coveo/headless/ssr-commerce-next';
 import type {
-  Product,
   ProductListController,
   SearchBoxController,
   Summary,
@@ -7,11 +7,11 @@ import type {
 } from './types.js';
 
 export function renderProductCard(product: Product): string {
-  const imageUrl = product.ec_thumbnails || product.ec_images || '';
-  const name = product.ec_name || product.title || 'Unknown Product';
-  const brand = product.ec_brand || product.brand || '';
-  const price = product.ec_price || product.price || '';
-  const rating = product.ec_rating || product.rating || '';
+  const imageUrl = product.ec_thumbnails?.[0] ?? product.ec_images?.[0] ?? '';
+  const name = product.ec_name ?? 'Unknown Product';
+  const brand = product.ec_brand ?? '';
+  const price = product.ec_price ?? product.ec_promo_price ?? '';
+  const rating = product.ec_rating ?? 0;
 
   return `
     <div class="product-card">
