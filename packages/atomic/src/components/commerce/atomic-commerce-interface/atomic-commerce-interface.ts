@@ -147,7 +147,7 @@ export class AtomicCommerceInterface
 
   /**
    * Whether the state should be reflected in the URL parameters.
-   * @deprecated - replaced by `disable-state-reflection-in-url`
+   * @deprecated - replaced by `disable-state-reflection-in-url` (this defaults to `true`, while the replacement defaults to `false`).
    */
   @property({
     type: Boolean,
