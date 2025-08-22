@@ -7,6 +7,19 @@ const styles = css`
   @apply atomic-template-system;
   @apply relative;
 
+  .result-root.display-grid {
+    grid-template-areas:
+      "badges"
+      "visual"
+      "title"
+      "title-metadata"
+      "emphasized"
+      "excerpt"
+      "bottom-metadata"
+      "actions"
+      "children";
+  }
+
   .with-sections {
     &.display-grid {
       &.image-large,
