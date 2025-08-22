@@ -7,6 +7,11 @@ import {
   getSummaryFromController,
   renderProductsList,
 } from './common/helpers.js';
+import type {
+  ProductListController,
+  SearchBoxController,
+  SummaryController,
+} from './common/types.js';
 
 async function initApp() {
   try {
@@ -32,7 +37,7 @@ async function initApp() {
   }
 }
 
-function SearchBoxComponent(searchBox: any) {
+function SearchBoxComponent(searchBox: SearchBoxController) {
   if (!searchBox) return;
 
   const input = getElement<HTMLInputElement>('search-input');
@@ -57,7 +62,7 @@ function SearchBoxComponent(searchBox: any) {
   });
 }
 
-function ProductsComponent(productList: any) {
+function ProductsComponent(productList: ProductListController) {
   if (!productList) return;
 
   const grid = getElement<HTMLDivElement>('products-grid');
@@ -82,7 +87,10 @@ function ProductsComponent(productList: any) {
   render();
 }
 
-function QuerySummaryComponent(summary: any, searchBox: any) {
+function QuerySummaryComponent(
+  summary: SummaryController,
+  searchBox: SearchBoxController
+) {
   if (!summary || !searchBox) return;
 
   const container = getElement<HTMLDivElement>('query-summary');

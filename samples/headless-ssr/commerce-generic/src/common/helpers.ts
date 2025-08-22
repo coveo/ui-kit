@@ -1,4 +1,10 @@
-import type {Product, SearchStaticState, Summary} from './types.js';
+import type {
+  Product,
+  ProductListController,
+  SearchBoxController,
+  Summary,
+  SummaryController,
+} from './types.js';
 
 export function renderProductCard(product: Product): string {
   const imageUrl = product.ec_thumbnails || product.ec_images || '';
@@ -32,19 +38,19 @@ export function formatQuerySummary(
 }
 
 export function getProductsFromController(
-  productList: SearchStaticState['controllers']['productList']
+  productList: ProductListController
 ): Product[] {
   return productList?.state?.products || [];
 }
 
 export function getSummaryFromController(
-  summary: SearchStaticState['controllers']['summary']
+  summary: SummaryController
 ): Summary | undefined {
   return summary?.state;
 }
 
 export function getSearchValueFromController(
-  searchBox: SearchStaticState['controllers']['searchBox']
+  searchBox: SearchBoxController
 ): string {
   return searchBox?.state?.value || '';
 }
