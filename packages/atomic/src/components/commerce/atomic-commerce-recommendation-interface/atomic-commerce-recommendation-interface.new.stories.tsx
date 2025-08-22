@@ -49,6 +49,7 @@ const recommendationList = `<style>
   @media only screen and (max-width: 1024px) {
     atomic-commerce-recommendation-list {
       --atomic-recs-number-of-columns: 1;
+      --atomic-recs-number-of-rows: 3;
     }
   }
 </style>
