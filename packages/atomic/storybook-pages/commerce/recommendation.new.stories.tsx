@@ -57,9 +57,6 @@ const meta: Meta = {
                 <atomic-product-rating
                   field="ec_rating"
                 ></atomic-product-rating>
-                <atomic-product-multi-value-text
-                  field="cat_available_sizes"
-                ></atomic-product-multi-value-text>
               </atomic-product-field-condition>
             </atomic-product-section-metadata>
             <atomic-product-section-emphasized>
