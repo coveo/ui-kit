@@ -1,3 +1,8 @@
+import type {
+  ProductList,
+  SearchBox,
+  Summary,
+} from '@coveo/headless/ssr-commerce-next';
 import {engineDefinition} from './common/engine.js';
 import {
   formatQuerySummary,
@@ -7,11 +12,6 @@ import {
   getSummaryFromController,
   renderProductsList,
 } from './common/helpers.js';
-import type {
-  ProductListController,
-  SearchBoxController,
-  SummaryController,
-} from './common/types.js';
 
 async function initApp() {
   try {
@@ -26,9 +26,12 @@ async function initApp() {
     console.log('✅ Controllers:', Object.keys(controllers || {}));
 
     // Initialize components
-    SearchBoxComponent(controllers.searchBox);
-    ProductsComponent(controllers.productList);
-    QuerySummaryComponent(controllers.summary, controllers.searchBox);
+    SearchBoxComponent(controllers.searchBox as SearchBox);
+    ProductsComponent(controllers.productList as ProductList);
+    QuerySummaryComponent(
+      controllers.summary as Summary,
+      controllers.searchBox as SearchBox
+    );
 
     console.log('✨ Commerce interface initialized');
   } catch (error) {
@@ -37,7 +40,7 @@ async function initApp() {
   }
 }
 
-function SearchBoxComponent(searchBox: SearchBoxController) {
+function SearchBoxComponent(searchBox: SearchBox) {
   if (!searchBox) return;
 
   const input = getElement<HTMLInputElement>('search-input');
@@ -62,7 +65,7 @@ function SearchBoxComponent(searchBox: SearchBoxController) {
   });
 }
 
-function ProductsComponent(productList: ProductListController) {
+function ProductsComponent(productList: ProductList) {
   if (!productList) return;
 
   const grid = getElement<HTMLDivElement>('products-grid');
@@ -87,10 +90,7 @@ function ProductsComponent(productList: ProductListController) {
   render();
 }
 
-function QuerySummaryComponent(
-  summary: SummaryController,
-  searchBox: SearchBoxController
-) {
+function QuerySummaryComponent(summary: Summary, searchBox: SearchBox) {
   if (!summary || !searchBox) return;
 
   const container = getElement<HTMLDivElement>('query-summary');
@@ -102,7 +102,7 @@ function QuerySummaryComponent(
     container.textContent = formatQuerySummary(sum, searchValue);
   };
 
-  summary.subscribe(render);
+  searchBox.subscribe(render);
   render();
 }
 

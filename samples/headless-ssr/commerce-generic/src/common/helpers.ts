@@ -1,10 +1,9 @@
-import type {Product} from '@coveo/headless/ssr-commerce-next';
 import type {
-  ProductListController,
-  SearchBoxController,
+  Product,
+  ProductList,
+  SearchBox,
   Summary,
-  SummaryController,
-} from './types.js';
+} from '@coveo/headless/ssr-commerce-next';
 
 export function renderProductCard(product: Product): string {
   const imageUrl = product.ec_thumbnails?.[0] ?? product.ec_images?.[0] ?? '';
@@ -29,7 +28,7 @@ export function renderProductsList(products: Product[]): string {
 }
 
 export function formatQuerySummary(
-  summary: Summary | undefined,
+  summary: Summary['state'] | undefined,
   searchValue: string
 ): string {
   if (!summary) return 'Loading...';
@@ -37,21 +36,17 @@ export function formatQuerySummary(
   return `${total} products found${searchValue ? ` for "${searchValue}"` : ''}`;
 }
 
-export function getProductsFromController(
-  productList: ProductListController
-): Product[] {
+export function getProductsFromController(productList: ProductList): Product[] {
   return productList?.state?.products || [];
 }
 
 export function getSummaryFromController(
-  summary: SummaryController
-): Summary | undefined {
+  summary: Summary
+): Summary['state'] | undefined {
   return summary?.state;
 }
 
-export function getSearchValueFromController(
-  searchBox: SearchBoxController
-): string {
+export function getSearchValueFromController(searchBox: SearchBox): string {
   return searchBox?.state?.value || '';
 }
 

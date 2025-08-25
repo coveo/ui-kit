@@ -32,3 +32,5 @@ const config: CommerceEngineDefinitionOptions = {
 };
 
 export const engineDefinition = defineCommerceEngine(config);
+
+export type EngineDefinition = typeof engineDefinition.searchEngineDefinition;

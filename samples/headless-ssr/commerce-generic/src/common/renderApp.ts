@@ -1,3 +1,8 @@
+import type {
+  ProductList,
+  SearchBox,
+  Summary,
+} from '@coveo/headless/ssr-commerce-next';
 import {
   formatQuerySummary,
   getProductsFromController,
@@ -9,9 +14,14 @@ import type {SearchStaticState} from './types.js';
 
 export const renderApp = (staticState: SearchStaticState) => {
   const {controllers} = staticState;
-  const products = getProductsFromController(controllers.productList);
-  const summary = getSummaryFromController(controllers.summary);
-  const searchValue = getSearchValueFromController(controllers.searchBox);
+  const products = getProductsFromController(
+    controllers.productList as ProductList
+  );
+
+  const summary = getSummaryFromController(controllers.summary as Summary);
+  const searchValue = getSearchValueFromController(
+    controllers.searchBox as SearchBox
+  );
 
   return `
     <div class="app-container">

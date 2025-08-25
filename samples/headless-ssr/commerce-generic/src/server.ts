@@ -11,13 +11,7 @@ app.use(express.static('dist'));
 app.get('/', async (_req, res) => {
   try {
     const staticState =
-      await engineDefinition.searchEngineDefinition.fetchStaticState({
-        url: 'https://sports.barca.group/search',
-        language: 'en',
-        country: 'US',
-        currency: 'USD',
-        query: '',
-      });
+      await engineDefinition.searchEngineDefinition.fetchStaticState();
 
     const app = renderApp(staticState);
     const html = renderHtml(app, staticState);
