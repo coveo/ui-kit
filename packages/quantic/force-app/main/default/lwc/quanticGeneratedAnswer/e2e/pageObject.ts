@@ -13,6 +13,10 @@ const removeUnknownFields = (object: Record<string, unknown>) => {
   );
 };
 
+const selectors = {
+  addFacetsButton: 'c-action-add-facets button',
+};
+
 const facetElementsSelectors = {
   timeframeFacet: {
     component: 'c-quantic-timeframe-facet',
@@ -27,13 +31,15 @@ export class GeneratedAnswerObject {
     private page: Page,
     private streamId: string,
     private analytics: AnalyticsObject,
-    private answerApiEnabled: boolean
+    private answerApiEnabled: boolean,
+    private withFacets: boolean
   ) {
     this.page = page;
     this.streamId = streamId;
     this.analytics = analytics;
     this.analyticsMode = this.analytics.analyticsMode;
     this.answerApiEnabled = answerApiEnabled;
+    this.withFacets = withFacets;
   }
 
   get likeButton(): Locator {
@@ -64,6 +70,14 @@ export class GeneratedAnswerObject {
       .first()
       .locator('.facet__value-text')
       .textContent();
+  }
+
+  get addFacetsButton(): Locator {
+    return this.page.locator(selectors.addFacetsButton);
+  }
+
+  async clickAddFacetsButton(): Promise<void> {
+    await this.addFacetsButton.click();
   }
 
   async clickFirstTimeframeFacetLink(): Promise<void> {
@@ -420,33 +434,28 @@ export class GeneratedAnswerObject {
 
   async waitForGenerateRequest(
     expectedPayload: Record<string, any>
-  ): Promise<Request> {
+  ): Promise<Request | boolean> {
     const payloadToMatch = removeUnknownFields(expectedPayload);
-    const generateRequest = this.page.waitForRequest((request) => {
-      const event = request.postDataJSON?.();
-      if (
-        isRgaGenerateRequest(request) ||
-        isInsightRgaGenerateRequest(request)
-      ) {
-        return AnalyticsObject.isMatchingPayload(
-          {
-            searchHub: event.searchHub,
-            q: event.q,
-          },
-          payloadToMatch
-        );
-      }
-      return false;
-    });
-    return generateRequest;
-  }
 
-  async waitForGenerateSubmitRequest(
-    expectedPayload: Record<string, any>
-  ): Promise<Request> {
     if (this.answerApiEnabled) {
-      return this.waitForGenerateRequest(expectedPayload);
+      return this.page.waitForRequest((request) => {
+        const event = request.postDataJSON?.();
+        if (
+          isRgaGenerateRequest(request) ||
+          isInsightRgaGenerateRequest(request)
+        ) {
+          return AnalyticsObject.isMatchingPayload(
+            {
+              searchHub: event.searchHub,
+              q: event.q,
+            },
+            payloadToMatch
+          );
+        }
+        return false;
+      });
     }
+
     if (this.analyticsMode === AnalyticsModeEnum.legacy) {
       return this.analytics.waitForCustomUaAnalytics(
         {

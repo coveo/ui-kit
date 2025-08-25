@@ -20,13 +20,13 @@ export const triggerSearchRequest = createAsyncThunk<
     // TODO: SVCC-5178 Refactor multiple sequential dispatches into single action
     dispatch(resetAnswer());
     // Every time a new search request is triggered, we re-calculate the answer query params
-    const cachedAnswerParams = constructAnswerQueryParams(
+    const answerQueryParams = constructAnswerQueryParams(
       state,
       navigatorContext
     );
     // Dispatch the action to set the query parameters for the answer API. This is used in the selectAnswer function to make sure the cache key is the same.
-    dispatch(setAnswerApiQueryParams(cachedAnswerParams));
-    await dispatch(fetchAnswer(cachedAnswerParams));
+    dispatch(setAnswerApiQueryParams(answerQueryParams));
+    await dispatch(fetchAnswer(answerQueryParams));
     dispatch(updateSearchAction(undefined));
   }
 );

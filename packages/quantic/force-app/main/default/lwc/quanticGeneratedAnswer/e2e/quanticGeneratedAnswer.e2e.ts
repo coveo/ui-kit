@@ -2,13 +2,13 @@ import {testSearch, testInsight, expect} from './fixture';
 import {useCaseTestCases} from '../../../../../../playwright/utils/useCase';
 import genQaData from './data';
 import {analyticsModeTest} from '../../../../../../playwright/utils/analyticsMode';
+import {exampleQuery} from './fixture';
 
 const fixtures = {
   search: testSearch,
   insight: testInsight,
 };
 
-// Lucille Test configuration
 const exampleAnswerConfigurationId = 'fc581be0-6e61-4039-ab26-a3f2f52f308f';
 
 useCaseTestCases.forEach((useCase) => {
@@ -234,14 +234,13 @@ useCaseTestCases.forEach((useCase) => {
               });
             });
 
-            // This test is to make sure that a generate call is made when selecting a facet with the answer api enabled
             if (config.options.answerConfigurationId) {
-              test.describe('when selecting a facet after the answer is generated', () => {
+              test.describe('when selecting a timeframe facet after the answer is generated', () => {
                 test.use({
                   options: {
                     ...config.options,
-                    withFacets: true,
                   },
+                  withFacets: true,
                 });
                 test('should trigger a new generate call to the answer API', async ({
                   generatedAnswer,
@@ -249,11 +248,8 @@ useCaseTestCases.forEach((useCase) => {
                   await generatedAnswer.streamEndAnalyticRequestPromise;
 
                   const generateRequestPromise =
-                    generatedAnswer.waitForGenerateSubmitRequest({
-                      searchHub:
-                        useCase.value === 'insight'
-                          ? 'UI-KIT Insight Panel'
-                          : 'default',
+                    generatedAnswer.waitForGenerateRequest({
+                      q: exampleQuery,
                     });
                   await generatedAnswer.clickFirstTimeframeFacetLink();
                   await generateRequestPromise;

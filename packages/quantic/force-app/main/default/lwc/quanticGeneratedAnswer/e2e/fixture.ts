@@ -23,7 +23,6 @@ interface GeneratedAnswerOptions {
   withToggle: boolean;
   useCase: string;
   answerConfigurationId: string;
-  withFacets: boolean;
 }
 
 type QuanticGeneratedAnswerE2ESearchFixtures = {
@@ -31,6 +30,7 @@ type QuanticGeneratedAnswerE2ESearchFixtures = {
   generatedAnswer: GeneratedAnswerObject;
   search: SearchObject;
   options: Partial<GeneratedAnswerOptions>;
+  withFacets: boolean;
 };
 
 type QuanticGeneratedAnswerE2EInsightFixtures =
@@ -38,52 +38,64 @@ type QuanticGeneratedAnswerE2EInsightFixtures =
     insightSetup: InsightSetupObject;
   };
 
-const exampleQuery = 'test';
+export const exampleQuery = 'test';
 
-export const testSearch =
-  quanticBase.extend<QuanticGeneratedAnswerE2ESearchFixtures>({
-    pageUrl,
-    genQaData,
-    options: {},
-    analyticsMode: AnalyticsModeEnum.legacy,
-    search: async ({page}, use) => {
-      await use(new SearchObject(page, searchRequestRegex));
+export const testSearch = quanticBase.extend<QuanticGeneratedAnswerE2ESearchFixtures>({
+  pageUrl,
+  genQaData,
+  options: {},
+  analyticsMode: AnalyticsModeEnum.legacy,
+  withFacets: false,
+  search: async ({page}, use) => {
+    await use(new SearchObject(page, searchRequestRegex));
+  },
+  generatedAnswer: async (
+    {
+      page,
+      options,
+      configuration,
+      search,
+      genQaData: data,
+      analytics,
+      withFacets
     },
-    generatedAnswer: async (
-      {page, options, configuration, search, genQaData: data, analytics},
-      use
-    ) => {
-      const generatedAnswerObject = new GeneratedAnswerObject(
-        page,
-        data.streamId,
-        analytics,
-        !!options.answerConfigurationId
-      );
+    use
+  ) => {
+    const generatedAnswerObject = new GeneratedAnswerObject(
+      page,
+      data.streamId,
+      analytics,
+      !!options.answerConfigurationId,
+      withFacets
+    );
 
-      const streamingUrl = options.answerConfigurationId
-        ? ANSWER_API_URL
-        : `${MACHINE_LEARNING_API_URL}/${data.streamId}`;
-      await generatedAnswerObject.mockStreamResponse(
-        streamingUrl,
-        data.streams,
-        data.streamId
-      );
+    const streamingUrl = options.answerConfigurationId
+      ? ANSWER_API_URL
+      : `${MACHINE_LEARNING_API_URL}/${data.streamId}`;
+    await generatedAnswerObject.mockStreamResponse(
+      streamingUrl,
+      data.streams,
+      data.streamId
+    );
 
-      await page.goto(pageUrl);
-      await configuration.configure(options);
-      await search.waitForSearchResponse();
+    await page.goto(pageUrl);
+    if (withFacets) {
+      await generatedAnswerObject.clickAddFacetsButton();
+    }
+    await configuration.configure(options);
+    await search.waitForSearchResponse();
 
-      generatedAnswerObject.streamEndAnalyticRequestPromise =
-        generatedAnswerObject.waitForStreamEndAnalytics();
+    generatedAnswerObject.streamEndAnalyticRequestPromise =
+      generatedAnswerObject.waitForStreamEndAnalytics();
 
-      await search.fillSearchInput(exampleQuery);
-      await search.mockSearchWithGenerativeQuestionAnsweringId(data.streamId);
-      await search.performSearch();
-      await search.waitForSearchResponse();
+    await search.fillSearchInput(exampleQuery);
+    await search.mockSearchWithGenerativeQuestionAnsweringId(data.streamId);
+    await search.performSearch();
+    await search.waitForSearchResponse();
 
-      await use(generatedAnswerObject);
-    },
-  });
+    await use(generatedAnswerObject);
+  },
+});
 
 export const testInsight =
   quanticBase.extend<QuanticGeneratedAnswerE2EInsightFixtures>({
@@ -91,6 +103,7 @@ export const testInsight =
     genQaData,
     options: {},
     analyticsMode: AnalyticsModeEnum.legacy,
+    withFacets: false,
     search: async ({page}, use) => {
       await use(new SearchObject(page, insightSearchRequestRegex));
     },
@@ -106,6 +119,7 @@ export const testInsight =
         insightSetup,
         genQaData: data,
         analytics,
+        withFacets
       },
       use
     ) => {
@@ -113,7 +127,8 @@ export const testInsight =
         page,
         data.streamId,
         analytics,
-        !!options.answerConfigurationId
+        !!options.answerConfigurationId,
+        !!withFacets,
       );
 
       const streamingUrl = options.answerConfigurationId
@@ -126,6 +141,9 @@ export const testInsight =
       );
 
       await page.goto(pageUrl);
+      if (withFacets) {
+        await generatedAnswerObject.clickAddFacetsButton();
+      }
       configuration.configure({...options, useCase: useCaseEnum.insight});
 
       await insightSetup.waitForInsightInterfaceInitialization();
