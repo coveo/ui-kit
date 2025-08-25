@@ -14,6 +14,8 @@ import type {SelectChildProductEventArgs} from './select-child-product-event';
 import '../atomic-commerce-text/atomic-commerce-text';
 import {bindingGuard} from '@/src/decorators/binding-guard';
 import {multiClassMap, tw} from '@/src/directives/multi-class-map';
+import {closest} from '@/src/utils/dom-utils';
+import type {AtomicProduct} from '../atomic-product/atomic-product';
 
 /**
  * Maximum number of child products to display before showing a "+N" button.
@@ -101,6 +103,15 @@ export class AtomicProductChildren
     return filterProtocol(this.fallback);
   }
 
+  private handleClick = (event: MouseEvent) => {
+    if (this.parentElement?.tagName !== 'A') {
+      console.log('here', closest);
+      closest<AtomicProduct>(this, 'atomic-product')!.clickLinkContainer();
+    } else {
+      event.stopPropagation();
+    }
+  };
+
   private renderChild(child: ChildProduct) {
     const childName = child.ec_name ?? '';
 
@@ -122,6 +133,7 @@ export class AtomicProductChildren
           event.preventDefault();
           this.onSelectChild(child);
         }}
+        @click=${this.handleClick}
       >
         <img
           class="aspect-square p-1"
@@ -188,6 +200,7 @@ export class AtomicProductChildren
                 props: {
                   style: 'text-primary',
                   class: 'product-child',
+                  onClick: this.handleClick,
                 },
               })(html`+${this.count}`)
             : nothing
