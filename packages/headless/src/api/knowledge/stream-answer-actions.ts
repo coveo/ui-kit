@@ -15,7 +15,8 @@ export const triggerSearchRequest = createAsyncThunk<
   {state: StreamAnswerAPIState; navigatorContext: NavigatorContext}
 >(
   'streamAnswer/triggerSearchRequest',
-  async ({state, navigatorContext}, {dispatch}) => {
+  async ({navigatorContext}, {dispatch, getState}) => {
+    const state = getState() as StreamAnswerAPIState;
     // TODO: SVCC-5178 Refactor multiple sequential dispatches into single action
     dispatch(resetAnswer());
     // Every time a new search request is triggered, we re-calculate the answer query params

@@ -6,6 +6,7 @@ import {
 } from '../../../api/knowledge/stream-answer-api.js';
 import type {StreamAnswerAPIState} from '../../../api/knowledge/stream-answer-api-state.js';
 import {getConfigurationInitialState} from '../../../features/configuration/configuration-state.js';
+import * as answerApiSelectors from '../../../features/generated-answer/answer-api-selectors.js';
 import {
   resetAnswer,
   updateAnswerConfigurationId,
@@ -62,13 +63,23 @@ const queries = [
   },
 ];
 
-vi.mock('../../../features/generated-answer/answer-api-selectors.ts', () => ({
-  selectAnswerTriggerParams: vi.fn(() => {
-    const query = {...queries[queryCounter.count]};
-    queryCounter.count++;
-    return query;
-  }),
-}));
+vi.mock(
+  '../../../features/generated-answer/answer-api-selectors.js',
+  async () => {
+    const original = await vi.importActual<
+      typeof import('../../../features/generated-answer/answer-api-selectors.js')
+    >('../../../features/generated-answer/answer-api-selectors.js');
+
+    return {
+      ...original,
+      selectAnswerTriggerParams: vi.fn(() => {
+        const query = {...queries[queryCounter.count]};
+        queryCounter.count++;
+        return query;
+      }),
+    };
+  }
+);
 
 vi.mock('../../../api/knowledge/stream-answer-api', async () => {
   const originalStreamAnswerApi = await vi.importActual(
@@ -169,10 +180,28 @@ describe('knowledge-generated-answer', () => {
     expect(updateResponseFormat).toHaveBeenCalledWith(responseFormat);
   });
 
-  it('dispatches a retry action', () => {
+  it('dispatches a retry action when there are answer api query params in the state', () => {
+    vi.spyOn(
+      answerApiSelectors,
+      'selectAnswerApiQueryParams'
+    ).mockReturnValueOnce({
+      q: 'this est une question',
+    });
+
     const generatedAnswer = createGeneratedAnswer();
     generatedAnswer.retry();
     expect(fetchAnswer).toHaveBeenCalledTimes(1);
+  });
+
+  it('does not dispatch a retry action when there are no answer api query params in the state', () => {
+    vi.spyOn(
+      answerApiSelectors,
+      'selectAnswerApiQueryParams'
+    ).mockReturnValueOnce(undefined);
+
+    const generatedAnswer = createGeneratedAnswer();
+    generatedAnswer.retry();
+    expect(fetchAnswer).toHaveBeenCalledTimes(0);
   });
 
   it('dispatches a reset action', () => {

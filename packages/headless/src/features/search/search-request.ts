@@ -1,5 +1,4 @@
 import type {EventDescription} from 'coveo.analytics';
-import type {StreamAnswerAPIState} from '../../api/knowledge/stream-answer-api-state.js';
 import type {NavigatorContext} from '../../app/navigator-context-provider.js';
 import type {SearchAppState} from '../../state/search-app-state.js';
 import type {ConfigurationSection} from '../../state/state-sections.js';
@@ -96,7 +95,7 @@ export const buildSearchRequest = async (
 // If the number of results requested would go over the index limit (maximumNumberOfResultsFromIndex)
 // we need to request fewer results in order to ensure we do not receive an exception from the index
 export function getNumberOfResultsWithinIndexLimit(
-  state: StateNeededBySearchRequest | StreamAnswerAPIState
+  state: StateNeededBySearchRequest
 ) {
   if (!state.pagination) {
     return undefined;

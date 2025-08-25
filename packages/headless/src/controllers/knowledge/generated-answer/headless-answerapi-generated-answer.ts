@@ -1,3 +1,4 @@
+import {skipToken} from '@reduxjs/toolkit/query';
 import type {GeneratedAnswerStream} from '../../../api/knowledge/generated-answer-stream.js';
 import {
   type AnswerEvaluationPOSTParams,
@@ -14,7 +15,10 @@ import {warnIfUsingNextAnalyticsModeForServiceFeature} from '../../../app/engine
 import type {InsightEngine} from '../../../app/insight-engine/insight-engine.js';
 import {defaultNodeJSNavigatorContextProvider} from '../../../app/navigator-context-provider.js';
 import type {SearchEngine} from '../../../app/search-engine/search-engine.js';
-import {selectAnswerTriggerParams} from '../../../features/generated-answer/answer-api-selectors.js';
+import {
+  selectAnswerApiQueryParams,
+  selectAnswerTriggerParams,
+} from '../../../features/generated-answer/answer-api-selectors.js';
 import {
   resetAnswer,
   sendGeneratedAnswerFeedback,
@@ -185,9 +189,10 @@ export function buildAnswerApiGeneratedAnswer(
       };
     },
     retry() {
-      engine.dispatch(
-        fetchAnswer(getState().generatedAnswer.answerApiQueryParams || {})
-      );
+      const answerApiQueryParams = selectAnswerApiQueryParams(getState());
+      if (answerApiQueryParams && answerApiQueryParams !== skipToken) {
+        engine.dispatch(fetchAnswer(answerApiQueryParams));
+      }
     },
     reset() {
       engine.dispatch(resetAnswer());

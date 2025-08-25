@@ -26,6 +26,6 @@ export const selectAnswerTriggerParams = createSelector(
  * @see https://redux-toolkit.js.org/rtk-query/usage-with-typescript#skipping-queries-with-typescript-using-skiptoken
  */
 export const selectAnswerApiQueryParams = createSelector(
-  (state) => state.generatedAnswer.answerApiQueryParams,
+  (state) => state.generatedAnswer?.answerApiQueryParams,
   (answerApiQueryParams) => answerApiQueryParams ?? skipToken
 );
