@@ -15,7 +15,6 @@ export const readGeneratedAnswerStoredData = (
     {isVisible: true}
   );
 
-  // This check ensures that the answer is visible when the toggle is hidden and visible is set to false in the local storage.
   return {isVisible: (withToggle && storedData.isVisible) || !withToggle};
 };
 
