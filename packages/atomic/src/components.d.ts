@@ -166,6 +166,9 @@ export namespace Components {
          */
         "withSearch": boolean;
     }
+    /**
+     * Internal component, only to use through `atomic-generated-answer` or `atomic-insight-generated-answer`
+     */
     interface AtomicCitation {
         /**
           * The citation item information.
@@ -568,6 +571,9 @@ export namespace Components {
          */
         "withToggle"?: boolean;
     }
+    /**
+     * Internal component, only to use through `atomic-generated-answer` or `atomic-insight-generated-answer`
+     */
     interface AtomicGeneratedAnswerFeedbackModal {
         /**
           * A `GeneratedAnswer` controller instance. It is used when the user interacts with the modal.
@@ -3045,6 +3051,9 @@ declare global {
         prototype: HTMLAtomicCategoryFacetElement;
         new (): HTMLAtomicCategoryFacetElement;
     };
+    /**
+     * Internal component, only to use through `atomic-generated-answer` or `atomic-insight-generated-answer`
+     */
     interface HTMLAtomicCitationElement extends Components.AtomicCitation, HTMLStencilElement {
     }
     var HTMLAtomicCitationElement: {
@@ -3188,6 +3197,9 @@ declare global {
     interface HTMLAtomicGeneratedAnswerFeedbackModalElementEventMap {
         "feedbackSent": any;
     }
+    /**
+     * Internal component, only to use through `atomic-generated-answer` or `atomic-insight-generated-answer`
+     */
     interface HTMLAtomicGeneratedAnswerFeedbackModalElement extends Components.AtomicGeneratedAnswerFeedbackModal, HTMLStencilElement {
         addEventListener<K extends keyof HTMLAtomicGeneratedAnswerFeedbackModalElementEventMap>(type: K, listener: (this: HTMLAtomicGeneratedAnswerFeedbackModalElement, ev: AtomicGeneratedAnswerFeedbackModalCustomEvent<HTMLAtomicGeneratedAnswerFeedbackModalElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
         addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
@@ -4807,6 +4819,9 @@ declare namespace LocalJSX {
          */
         "withSearch"?: boolean;
     }
+    /**
+     * Internal component, only to use through `atomic-generated-answer` or `atomic-insight-generated-answer`
+     */
     interface AtomicCitation {
         /**
           * The citation item information.
@@ -5206,6 +5221,9 @@ declare namespace LocalJSX {
          */
         "withToggle"?: boolean;
     }
+    /**
+     * Internal component, only to use through `atomic-generated-answer` or `atomic-insight-generated-answer`
+     */
     interface AtomicGeneratedAnswerFeedbackModal {
         /**
           * A `GeneratedAnswer` controller instance. It is used when the user interacts with the modal.
@@ -7657,6 +7675,9 @@ declare module "@stencil/core" {
              * An `atomic-category-facet` displays a facet of values in a browsable, hierarchical fashion.
              */
             "atomic-category-facet": LocalJSX.AtomicCategoryFacet & JSXBase.HTMLAttributes<HTMLAtomicCategoryFacetElement>;
+            /**
+             * Internal component, only to use through `atomic-generated-answer` or `atomic-insight-generated-answer`
+             */
             "atomic-citation": LocalJSX.AtomicCitation & JSXBase.HTMLAttributes<HTMLAtomicCitationElement>;
             /**
              * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (e.g., number of occurrences).
@@ -7716,6 +7737,9 @@ declare module "@stencil/core" {
              * For more information, see [About Relevance Generative Answering (RGA)](https://docs.coveo.com/en/n9de0370/)
              */
             "atomic-generated-answer": LocalJSX.AtomicGeneratedAnswer & JSXBase.HTMLAttributes<HTMLAtomicGeneratedAnswerElement>;
+            /**
+             * Internal component, only to use through `atomic-generated-answer` or `atomic-insight-generated-answer`
+             */
             "atomic-generated-answer-feedback-modal": LocalJSX.AtomicGeneratedAnswerFeedbackModal & JSXBase.HTMLAttributes<HTMLAtomicGeneratedAnswerFeedbackModalElement>;
             /**
              * The `atomic-html` component renders the HTML value of a string.
