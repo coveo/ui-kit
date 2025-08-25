@@ -8,8 +8,6 @@ import {
   type InteractiveResultCoreProps,
 } from '../../core/interactive-result/headless-core-interactive-result.js';
 
-export type {GeneratedAnswerCitation};
-
 export interface InteractiveCitationOptions
   extends InteractiveResultCoreOptions {
   /**

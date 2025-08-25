@@ -2,7 +2,6 @@ import type {InsightEngine} from '../../../app/insight-engine/insight-engine.js'
 import {logOpenGeneratedAnswerSource} from '../../../features/generated-answer/generated-answer-insight-analytics-actions.js';
 import {
   buildInteractiveCitationCore,
-  type GeneratedAnswerCitation,
   type InteractiveCitation,
   type InteractiveCitationOptions,
   type InteractiveCitationProps,
@@ -12,7 +11,6 @@ export type {
   InteractiveCitation,
   InteractiveCitationProps,
   InteractiveCitationOptions,
-  GeneratedAnswerCitation,
 };
 
 /**

@@ -173,12 +173,12 @@ export type {
 export {buildFoldedResultList} from './controllers/insight/folded-result-list/headless-insight-folded-result-list.js';
 export type {
   GeneratedAnswer,
+  GeneratedAnswerCitation,
   GeneratedAnswerProps,
   GeneratedAnswerState,
 } from './controllers/insight/generated-answer/headless-insight-generated-answer.js';
 export {buildGeneratedAnswer} from './controllers/insight/generated-answer/headless-insight-generated-answer.js';
 export type {
-  GeneratedAnswerCitation,
   InteractiveCitation,
   InteractiveCitationOptions,
   InteractiveCitationProps,

@@ -1,3 +1,4 @@
+import type {GeneratedAnswerCitation} from '../../../api/generated-answer/generated-answer-event-payload.js';
 import type {InsightEngine} from '../../../app/insight-engine/insight-engine.js';
 import {retryGeneratedAnswer} from '../../../features/generated-answer/generated-answer-analytics-actions.js';
 import {generatedAnswerInsightAnalyticsClient} from '../../../features/generated-answer/generated-answer-insight-analytics-actions.js';
@@ -10,7 +11,12 @@ import type {
 import {buildSearchAPIGeneratedAnswer} from '../../core/generated-answer/headless-searchapi-generated-answer.js';
 import {buildAnswerApiGeneratedAnswer} from '../../knowledge/generated-answer/headless-answerapi-generated-answer.js';
 
-export type {GeneratedAnswerState, GeneratedAnswer, GeneratedAnswerProps};
+export type {
+  GeneratedAnswerState,
+  GeneratedAnswer,
+  GeneratedAnswerProps,
+  GeneratedAnswerCitation,
+};
 
 /**
  * Creates an insight `GeneratedAnswer` controller instance.
