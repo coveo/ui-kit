@@ -243,15 +243,20 @@ useCaseTestCases.forEach((useCase) => {
                     withFacets: true,
                   },
                 });
-                test('should trigger a new generate call to the answer API', async ({generatedAnswer}) => {
+                test('should trigger a new generate call to the answer API', async ({
+                  generatedAnswer,
+                }) => {
                   await generatedAnswer.streamEndAnalyticRequestPromise;
 
                   const generateRequestPromise =
                     generatedAnswer.waitForGenerateSubmitRequest({
-                      searchHub: 'default',
+                      searchHub:
+                        useCase.value === 'insight'
+                          ? 'UI-KIT Insight Panel'
+                          : 'default',
                     });
-                    await generatedAnswer.clickFirstTimeframeFacetLink();
-                    await generateRequestPromise;
+                  await generatedAnswer.clickFirstTimeframeFacetLink();
+                  await generateRequestPromise;
                 });
               });
             }

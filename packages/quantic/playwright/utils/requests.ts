@@ -26,6 +26,8 @@ export const rgaEvaluationsRequestRegex =
   /\/rest\/organizations\/.*\/answer\/v1\/configs\/.*\/evaluations/;
 export const rgaGenerateRequestRegex =
   /\/rest\/organizations\/.*\/answer\/v1\/configs\/.*\/generate/;
+export const insightRgaGenerateRequestRegex =
+  /\/rest\/organizations\/.*\/insight\/v1\/configs\/.*\/generate/;
 
 /**
  * Indicates whether the specified request corresponds to a Search Usage Analytics request.
@@ -103,5 +105,16 @@ export function isSearchRequest(request: Request): boolean {
 export function isRgaGenerateRequest(request: Request): boolean {
   return (
     request.method() === 'POST' && rgaGenerateRequestRegex.test(request.url())
+  );
+}
+
+/**
+ * Indicates whether the specified request corresponds to an Insight RGA Generate request.
+ * @param request The request to check.
+ * @returns True if the request is an Insight RGA Generate request, false otherwise.
+ */
+export function isInsightRgaGenerateRequest(request: Request): boolean {
+  return (
+    request.method() === 'POST' && insightRgaGenerateRequestRegex.test(request.url())
   );
 }

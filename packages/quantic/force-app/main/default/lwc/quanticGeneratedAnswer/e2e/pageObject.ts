@@ -4,7 +4,7 @@ import {
   AnalyticsModeEnum,
 } from '../../../../../../playwright/utils/analyticsMode';
 import {AnalyticsObject} from '../../../../../../playwright/page-object/analytics';
-import {isRgaEvaluationRequest, isRgaGenerateRequest} from '../../../../../../playwright/utils/requests';
+import {isRgaEvaluationRequest, isRgaGenerateRequest, isInsightRgaGenerateRequest} from '../../../../../../playwright/utils/requests';
 
 const minimumCitationTooltipDisplayDurationMs = 1500;
 const removeUnknownFields = (object: Record<string, unknown>) => {
@@ -424,7 +424,10 @@ export class GeneratedAnswerObject {
     const payloadToMatch = removeUnknownFields(expectedPayload);
     const generateRequest = this.page.waitForRequest((request) => {
       const event = request.postDataJSON?.();
-      if (isRgaGenerateRequest(request)) {
+      if (
+        isRgaGenerateRequest(request) ||
+        isInsightRgaGenerateRequest(request)
+      ) {
         return AnalyticsObject.isMatchingPayload(
           {
             searchHub: event.searchHub,
