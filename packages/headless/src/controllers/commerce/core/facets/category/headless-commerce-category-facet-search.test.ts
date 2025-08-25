@@ -3,7 +3,10 @@ import {
   executeCommerceFacetSearch,
   executeCommerceFieldSuggest,
 } from '../../../../../features/commerce/facets/facet-search-set/commerce-facet-search-actions.js';
+
 import {categoryFacetSearchSetReducer as categoryFacetSearchSet} from '../../../../../features/facets/facet-search-set/category/category-facet-search-set-slice.js';
+import type {CategoryFacetSearchState} from '../../../../../features/facets/facet-search-set/category/category-facet-search-set-state.js';
+import {updateFacetSearch} from '../../../../../features/facets/facet-search-set/specific/specific-facet-search-actions.js';
 import {buildMockCategoryFacetSearch} from '../../../../../test/mock-category-facet-search.js';
 import {buildMockCommerceState} from '../../../../../test/mock-commerce-state.js';
 import {
@@ -20,6 +23,10 @@ vi.mock(
   '../../../../../features/commerce/facets/facet-search-set/commerce-facet-search-actions'
 );
 
+vi.mock(
+  '../../../../../features/facets/facet-search-set/specific/specific-facet-search-actions'
+);
+
 describe('CategoryFacetSearch', () => {
   const facetId: string = 'category_facet_id';
   let engine: MockedCommerceEngine;
@@ -34,9 +41,11 @@ describe('CategoryFacetSearch', () => {
     facetSearch = buildCategoryFacetSearch(engine, props);
   }
 
-  function setFacetSearchState() {
+  function setFacetSearchState(
+    updates: Partial<CategoryFacetSearchState> = {}
+  ) {
     engine[stateKey].categoryFacetSearchSet[facetId] =
-      buildMockCategoryFacetSearch();
+      buildMockCategoryFacetSearch(updates);
   }
 
   beforeEach(() => {
@@ -78,5 +87,39 @@ describe('CategoryFacetSearch', () => {
     initFacetSearch();
     facetSearch.search();
     expect(executeCommerceFieldSuggest).toHaveBeenCalled();
+  });
+
+  describe('#showMoreResults', () => {
+    it('should be available in facet search', () => {
+      expect(facetSearch.showMoreResults).toBeTruthy();
+    });
+
+    it('dispatches #executeCommerceFacetSearch function', () => {
+      facetSearch.showMoreResults();
+      expect(executeCommerceFacetSearch).toHaveBeenCalledTimes(1);
+    });
+
+    it('increases the number of values on the category facet search request by the configured amount', () => {
+      const initialNumberOfValues = 5;
+      const configuredNumberOfValues = 10;
+
+      setFacetSearchState({
+        initialNumberOfValues,
+        options: {
+          ...engine[stateKey].categoryFacetSearchSet[facetId].options,
+          numberOfValues: configuredNumberOfValues,
+        },
+      });
+      initFacetSearch();
+
+      facetSearch.showMoreResults();
+
+      const expectedNumber = initialNumberOfValues + configuredNumberOfValues;
+
+      expect(updateFacetSearch).toHaveBeenCalledWith({
+        facetId,
+        numberOfValues: expectedNumber,
+      });
+    });
   });
 });

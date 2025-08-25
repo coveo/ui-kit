@@ -48,11 +48,11 @@ const successMessage = () => {
   $ npm run build
     Builds your project in production mode.
 
-  Happy coding!
+    Happy coding!
 
-  Further reading:
-    https://docs.coveo.com/en/atomic/latest/cc-search/create-custom-components
-  `);
+    Further reading:
+      https://docs.coveo.com/en/atomic/latest/cc-search/create-custom-components
+    `);
 };
 
 const camelize = (str) =>
@@ -130,19 +130,19 @@ if (componentName) {
   ensureComponentValidity(componentName);
   const transformers = [
     {
-      srcPath: 'src/components/sample-component',
+      srcPath: 'src/components/sample-result-component',
       destPath: `src/components/${componentName}`,
     },
     {
-      srcPath: `src/components/${componentName}/src/sample-component.tsx`,
+      srcPath: `src/components/${componentName}/src/sample-result-component.tsx`,
       destPath: `src/components/${componentName}/src/${componentName}.tsx`,
       transform: (text) =>
         text
-          .replaceAll(/sample-component/g, componentName)
-          .replaceAll(/SampleComponent/g, camelize(componentName)),
+          .replaceAll(/sample-result-component/g, componentName)
+          .replaceAll(/SampleResultComponent/g, camelize(componentName)),
     },
     {
-      srcPath: `src/components/${componentName}/src/sample-component.css`,
+      srcPath: `src/components/${componentName}/src/sample-result-component.css`,
       destPath: `src/components/${componentName}/src/${componentName}.css`,
     },
     {
@@ -150,7 +150,7 @@ if (componentName) {
       destPath: `src/components/${componentName}/package.json`,
       transform: (text) => {
         const transformedText = text.replaceAll(
-          /(@coveo\/)?sample-component/g,
+          /(@coveo\/)?sample-result-component/g,
           componentName
         );
 
