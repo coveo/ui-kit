@@ -51,7 +51,7 @@ describe('AtomicSearchLayout', () => {
     expect(AtomicSearchLayout.styles.length).toBeGreaterThan(0);
   });
 
-  //KIT-3909 - During the merging of the interface, we will be able to use the real interface here for its style and make this work.
+  //TODO: KIT-3909 - During the merging of the interface, we will be able to use the real interface here for its style and make this work.
   describe.skip('when the viewport is larger than the mobile breakpoint', () => {
     beforeAll(async () => {
       await page.viewport(1200, 800);

@@ -1,6 +1,5 @@
-import {html, LitElement, unsafeCSS} from 'lit';
+import {LitElement, unsafeCSS} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
-import {errorGuard} from '@/src/decorators/error-guard';
 import {injectStylesForNoShadowDOM} from '@/src/decorators/inject-styles-for-no-shadow-dom';
 import {randomID} from '@/src/utils/utils';
 import {DEFAULT_MOBILE_BREAKPOINT} from '../../../utils/replace-breakpoint';
@@ -9,8 +8,6 @@ import {buildSearchLayout} from './search-layout';
 
 /**
  * The `atomic-search-layout` helps organize elements in the page.
- *
- * @slot default - The default slot where you can add child components to the layout.
  *
  * @cssprop --atomic-layout-max-search-box-input-width: The maximum width that the search box input will take.
  * @cssprop --atomic-layout-max-search-box-double-suggestions-width: The maximum width that the search box suggestions will take when displaying a double list.
@@ -34,11 +31,6 @@ export class AtomicSearchLayout extends LitElement {
     this.id = randomID('atomic-search-layout-');
     const layout = unsafeCSS(buildSearchLayout(this, this.mobileBreakpoint));
     AtomicSearchLayout.styles.unshift(layout);
-  }
-
-  @errorGuard()
-  render() {
-    return html`<slot></slot>`;
   }
 }
 
