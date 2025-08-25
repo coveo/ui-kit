@@ -8,6 +8,7 @@ import {
 } from '@coveo/headless';
 import {html, LitElement} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
+import {when} from 'lit/directives/when.js';
 import {renderFieldsetGroup} from '@/src/components/common/fieldset-group.js';
 import {createAppLoadedListener} from '@/src/components/common/interface/store.js';
 import {renderChoices} from '@/src/components/common/items-per-page/choices.js';
@@ -20,7 +21,6 @@ import {
   convertChoicesToNumbers,
   validateInitialChoice,
 } from '@/src/components/common/items-per-page/validate.js';
-import {renderPagerGuard} from '@/src/components/common/pager/pager-guard.js';
 import type {Bindings} from '@/src/components/search/atomic-search-interface/interfaces.js';
 import {bindStateToController} from '@/src/decorators/bind-state.js';
 import {bindingGuard} from '@/src/decorators/binding-guard.js';
@@ -118,38 +118,37 @@ export class AtomicResultsPerPage
     }
 
     return html`
-      ${renderPagerGuard({
-        props: {
-          hasError: this.searchStatusState.hasError,
-          hasItems: this.searchStatusState.hasResults,
-          isAppLoaded: this.isAppLoaded,
-        },
-      })(html`
-        <div class="flex items-center" role="toolbar" aria-label=${this.label}>
-          ${renderLabel()(html`${this.label}`)}
-          ${renderFieldsetGroup({
-            props: {
-              label: this.label,
-            },
-          })(
-            renderChoices({
+      ${when(
+        !this.searchStatusState.hasError &&
+          this.isAppLoaded &&
+          this.searchStatusState.hasResults,
+        () => html`
+          <div class="flex items-center" role="toolbar" aria-label=${this.label}>
+            ${renderLabel()(html`${this.label}`)}
+            ${renderFieldsetGroup({
               props: {
                 label: this.label,
-                groupName: this.radioGroupName,
-                pageSize: this.resultPerPageState.numberOfResults,
-                choices: this.choices,
-                lang: this.bindings.i18n.language,
-                scrollToTopEvent: () => this.scrollToTopEvent(),
-                setItemSize: (size: number) => this.resultPerPage.set(size),
-                focusOnFirstResultAfterNextSearch: () =>
-                  this.bindings.store.state.resultList?.focusOnFirstResultAfterNextSearch(),
-                focusOnNextNewResult: () =>
-                  this.bindings.store.state.resultList?.focusOnNextNewResult(),
               },
-            })
-          )}
-        </div>
-      `)}
+            })(
+              renderChoices({
+                props: {
+                  label: this.label,
+                  groupName: this.radioGroupName,
+                  pageSize: this.resultPerPageState.numberOfResults,
+                  choices: this.choices,
+                  lang: this.bindings.i18n.language,
+                  scrollToTopEvent: () => this.scrollToTopEvent(),
+                  setItemSize: (size: number) => this.resultPerPage.set(size),
+                  focusOnFirstResultAfterNextSearch: () =>
+                    this.bindings.store.state.resultList?.focusOnFirstResultAfterNextSearch(),
+                  focusOnNextNewResult: () =>
+                    this.bindings.store.state.resultList?.focusOnNextNewResult(),
+                },
+              })
+            )}
+          </div>
+        `
+      )}
     `;
   }
 }
