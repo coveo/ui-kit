@@ -22,11 +22,6 @@ export class AtomicSearchLayout extends LitElement {
   static styles = [unsafeCSS(styles)];
   @state() error!: Error;
 
-  constructor() {
-    super();
-    this.id = randomID('atomic-search-layout-');
-  }
-
   /**
    * CSS value that defines where the layout goes from mobile to desktop.
    * e.g., 800px, 65rem.
@@ -36,6 +31,7 @@ export class AtomicSearchLayout extends LitElement {
 
   connectedCallback() {
     super.connectedCallback();
+    this.id = randomID('atomic-search-layout-');
     const layout = unsafeCSS(buildSearchLayout(this, this.mobileBreakpoint));
     AtomicSearchLayout.styles.unshift(layout);
   }
