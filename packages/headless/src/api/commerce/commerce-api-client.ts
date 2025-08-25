@@ -146,6 +146,7 @@ export class CommerceAPIClient implements CommerceFacetSearchAPIClient {
         facetId: req?.facetId,
         facetQuery: req?.facetQuery,
         query: req?.query,
+        numberOfValues: req?.numberOfValues,
       },
       ...this.options,
     });

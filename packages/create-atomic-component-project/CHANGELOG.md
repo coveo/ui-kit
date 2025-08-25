@@ -1,3 +1,9 @@
+## <small>1.4.2 (2025-08-20)</small>
+
+* [Version Bump][skip ci]: ui-kit publish ([f967729](https://github.com/coveo/ui-kit/commits/f967729))
+
+
+
 ## <small>1.4.1 (2025-08-11)</small>
 
 * [Version Bump][skip ci]: ui-kit publish ([74f5974](https://github.com/coveo/ui-kit/commits/74f5974))
