@@ -35,20 +35,20 @@ const meta: Meta = {
     ...parameters,
     layout: 'fullscreen',
   },
-  //   type=product-listing causes issues because the endpoint https://searchuisamples.org.coveo.com/rest/organizations/searchuisamples/commerce/v2/listing doesn't exist
   render: () => html`
     <atomic-commerce-interface type="product-listing" language-assets-path="./lang" icon-assets-path="./assets">
-          <atomic-commerce-layout>\
-            <atomic-layout-section section="facets"
-              ><atomic-commerce-facets></atomic-commerce-facets
-            ></atomic-layout-section>
-            <atomic-layout-section section="main">
-              <atomic-layout-section section="status">
-                <atomic-commerce-breadbox></atomic-commerce-breadbox>
-                <atomic-commerce-query-summary></atomic-commerce-query-summary>
-                <atomic-commerce-sort-dropdown></atomic-commerce-sort-dropdown>
-                <atomic-commerce-refine-toggle></atomic-commerce-refine-toggle>
-              </atomic-layout-section>
+          <atomic-commerce-layout>
+          
+          <atomic-layout-section section="facets"
+          ><atomic-commerce-facets></atomic-commerce-facets
+          ></atomic-layout-section>
+          <atomic-layout-section section="main">
+          <atomic-layout-section section="status">
+          <atomic-commerce-breadbox></atomic-commerce-breadbox>
+          <atomic-commerce-query-summary></atomic-commerce-query-summary>
+          <atomic-commerce-sort-dropdown></atomic-commerce-sort-dropdown>
+          <atomic-commerce-refine-toggle></atomic-commerce-refine-toggle>
+          </atomic-layout-section>
               <atomic-layout-section section="products">
                 <atomic-commerce-product-list display="grid" density="compact" image-size="small">
                   <atomic-product-template>

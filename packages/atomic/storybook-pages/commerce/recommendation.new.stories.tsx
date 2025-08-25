@@ -22,11 +22,10 @@ async function initializeCommerceRecommendationInterface(
 
 const meta: Meta = {
   component: 'recommendations',
-  title: 'Commerce/Example Pages/Recs',
+  title: 'Commerce/Example Pages/Recommendations',
   id: 'recommendations',
   parameters: {
     ...parameters,
-    layout: 'fullscreen',
   },
   render: () => html`
     <atomic-commerce-recommendation-interface>
@@ -82,5 +81,5 @@ const meta: Meta = {
 export default meta;
 
 export const Default: Story = {
-  name: 'Page',
+  name: 'Carousel',
 };
