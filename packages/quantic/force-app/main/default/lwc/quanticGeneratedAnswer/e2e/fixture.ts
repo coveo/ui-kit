@@ -38,7 +38,6 @@ type QuanticGeneratedAnswerE2EInsightFixtures =
     insightSetup: InsightSetupObject;
   };
 
-// This query works with the stated answerConfigurationId
 const exampleQuery = 'test';
 
 export const testSearch =
@@ -73,15 +72,6 @@ export const testSearch =
       await page.goto(pageUrl);
       await configuration.configure(options);
       await search.waitForSearchResponse();
-
-      generatedAnswerObject.streamEndAnalyticRequestPromise =
-        generatedAnswerObject.waitForStreamEndAnalytics();
-
-      await search.fillSearchInput(exampleQuery);
-      await search.mockSearchWithGenerativeQuestionAnsweringId(data.streamId);
-      await search.performSearch();
-      await search.waitForSearchResponse();
-
 
       generatedAnswerObject.streamEndAnalyticRequestPromise =
         generatedAnswerObject.waitForStreamEndAnalytics();
@@ -141,15 +131,6 @@ export const testInsight =
       await insightSetup.waitForInsightInterfaceInitialization();
       await search.performSearch();
       await search.waitForSearchResponse();
-
-      await search.mockSearchWithGenerativeQuestionAnsweringId(data.streamId);
-      generatedAnswerObject.streamEndAnalyticRequestPromise =
-        generatedAnswerObject.waitForStreamEndAnalytics();
-
-      await search.fillSearchInput(exampleQuery);
-      await search.performSearch();
-      await search.waitForSearchResponse();
-
 
       await search.mockSearchWithGenerativeQuestionAnsweringId(data.streamId);
       generatedAnswerObject.streamEndAnalyticRequestPromise =

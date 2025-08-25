@@ -234,6 +234,7 @@ useCaseTestCases.forEach((useCase) => {
               });
             });
 
+            // This test is to make sure that a generate call is made when selecting a facet with the answer api enabled
             if (config.options.answerConfigurationId) {
               test.describe('when selecting a facet after the answer is generated', () => {
                 test.use({

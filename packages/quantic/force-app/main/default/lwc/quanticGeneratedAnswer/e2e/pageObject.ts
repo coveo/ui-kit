@@ -422,21 +422,16 @@ export class GeneratedAnswerObject {
     expectedPayload: Record<string, any>
   ): Promise<Request> {
     const payloadToMatch = removeUnknownFields(expectedPayload);
-
     const generateRequest = this.page.waitForRequest((request) => {
       const event = request.postDataJSON?.();
       if (isRgaGenerateRequest(request)) {
-        // return AnalyticsObject.isMatchingPayload(
-        //   {
-        //     searchHub: event.searchHub,
-        //     q: event.q,
-        //     // TODO : ADD FACETS MAYBE
-        //   },
-        //   payloadToMatch
-        // );
-        console.log('event', event);
-        console.log('payloadToMatch', payloadToMatch);
-        return true;
+        return AnalyticsObject.isMatchingPayload(
+          {
+            searchHub: event.searchHub,
+            q: event.q,
+          },
+          payloadToMatch
+        );
       }
       return false;
     });
