@@ -1,14 +1,30 @@
-import {getSampleCommerceEngineConfiguration} from '@coveo/headless/commerce';
+import {
+  type CommerceEngineConfiguration,
+  getSampleCommerceEngineConfiguration,
+} from '@coveo/headless/commerce';
 import type {Meta, StoryObj as Story} from '@storybook/web-components';
 import {html} from 'lit';
 import {parameters} from '../../storybook-utils/common/common-meta-parameters.js';
+
+const {context, ...restOfConfiguration} =
+  getSampleCommerceEngineConfiguration();
+
+const productListingEngineConfiguration: CommerceEngineConfiguration = {
+  context: {
+    ...context,
+    view: {
+      url: `${context.view.url}/browse/promotions/ui-kit-testing`,
+    },
+  },
+  ...restOfConfiguration,
+};
 
 async function initializeCommerceInterface(canvasElement: HTMLElement) {
   await customElements.whenDefined('atomic-commerce-interface');
   const commerceInterface = canvasElement.querySelector(
     'atomic-commerce-interface'
   );
-  await commerceInterface!.initialize(getSampleCommerceEngineConfiguration());
+  await commerceInterface!.initialize(productListingEngineConfiguration);
 }
 
 const meta: Meta = {
