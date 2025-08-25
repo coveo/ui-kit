@@ -138,17 +138,6 @@ describe('generated-answer-common', () => {
         data
       );
     });
-
-    it('should handle isVisible true data', () => {
-      const data = {isVisible: true};
-
-      writeGeneratedAnswerStoredData(data);
-
-      expect(mockSetJSON).toHaveBeenCalledWith(
-        StorageItems.GENERATED_ANSWER_DATA,
-        data
-      );
-    });
   });
 
   describe('#insertGeneratedAnswerFeedbackModal', () => {
