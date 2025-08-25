@@ -11,14 +11,16 @@ describe('#assembleEngineConfiguration', () => {
 
   beforeEach(() => {
     engineOptions = extendEngineConfiguration(sampleCommerceConfig, {
-      country: 'some-country',
-      currency: 'some-currency' as CurrencyCodeISO4217,
-      language: 'some-language',
-      url: 'https://example.com',
+      context: {
+        country: 'some-country',
+        currency: 'some-currency' as CurrencyCodeISO4217,
+        language: 'some-language',
+        location: {latitude: 37.7749, longitude: -122.4194},
+        view: {url: 'https://example.com'},
+      },
       cart: {
         items: [{name: 'foo', price: 10, productId: 'foo_id', quantity: 1}],
       },
-      location: {latitude: 37.7749, longitude: -122.4194},
     });
   });
 

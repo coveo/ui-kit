@@ -1,4 +1,3 @@
-import type {CurrencyCodeISO4217} from '@coveo/relay-event-types';
 import type {CommerceEngineOptions} from '../../../app/commerce-engine/commerce-engine.js';
 import type {Controller} from '../../../controllers/controller/headless-controller.js';
 import type {
@@ -7,7 +6,7 @@ import type {
 } from '../../common/types/controllers.js';
 import type {OptionsTuple} from '../../common/types/utilities.js';
 import type {CartInitialState} from '../controllers/cart/headless-cart.ssr.js';
-import type {UserLocation} from '../controllers/context/headless-context.ssr.js';
+import type {ContextOptions} from '../controllers/context/headless-context.ssr.js';
 import type {
   ParameterManagerState,
   Parameters,
@@ -34,13 +33,7 @@ export interface ListingBuildConfig extends CommonBuildConfig {}
 export interface StandaloneBuildConfig extends CommonBuildConfig {}
 
 export interface CommonBuildConfig {
-  context: {
-    url: string;
-    language: string;
-    country: string;
-    currency: CurrencyCodeISO4217;
-    location?: UserLocation;
-  };
+  context: ContextOptions;
   searchParams?: ParameterManagerState<Parameters>['parameters'];
   cart?: CartInitialState;
 }

@@ -68,11 +68,13 @@ describe('Commerce Engine SSR', () => {
       const solutionType = definitionName as keyof typeof engineDefinition;
       const staticState = await engineDefinition[solutionType].fetchStaticState(
         {
-          url: 'http://example.com',
-          query: 'test',
-          country: 'US',
-          currency: 'USD',
-          language: 'en',
+          searchParams: {query: 'test'},
+          context: {
+            view: {url: 'http://example.com'},
+            country: 'US',
+            currency: 'USD',
+            language: 'en',
+          },
         }
       );
       expect(staticState.controllers).toHaveProperty('context');
@@ -86,11 +88,13 @@ describe('Commerce Engine SSR', () => {
     it('should always return parameter manager controller', async () => {
       const {searchEngineDefinition} = defineCommerceEngine(definitionOptions);
       const staticState = await searchEngineDefinition.fetchStaticState({
-        url: 'http://example.com/search',
-        query: 'foo',
-        country: 'US',
-        currency: 'USD',
-        language: 'en',
+        searchParams: {query: 'foo'},
+        context: {
+          view: {url: 'http://example.com/search'},
+          country: 'US',
+          currency: 'USD',
+          language: 'en',
+        },
       });
       expect(staticState.controllers).toHaveProperty('parameterManager');
     });
@@ -107,10 +111,12 @@ describe('Commerce Engine SSR', () => {
       };
       const {listingEngineDefinition} = defineCommerceEngine(definitionOption);
       const staticState = await listingEngineDefinition.fetchStaticState({
-        url: 'http://example.com',
-        country: 'US',
-        currency: 'USD',
-        language: 'en',
+        context: {
+          view: {url: 'http://example.com'},
+          country: 'US',
+          currency: 'USD',
+          language: 'en',
+        },
       });
       expect(staticState.controllers).toHaveProperty('parameterManager');
     });
