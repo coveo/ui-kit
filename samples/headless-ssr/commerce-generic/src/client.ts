@@ -12,10 +12,11 @@ import {
   getSummaryFromController,
   renderProductsList,
 } from './common/helpers.js';
+import type {SearchStaticState} from './common/types.js';
 
 async function initApp() {
   try {
-    const staticState = (window as any).__STATIC_STATE__;
+    const staticState: SearchStaticState = window.__STATIC_STATE__!;
     console.log('🔄 Hydrating SSR state...', staticState);
 
     const {controllers} =
