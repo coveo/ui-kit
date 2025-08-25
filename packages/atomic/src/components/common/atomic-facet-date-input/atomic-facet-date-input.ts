@@ -9,10 +9,10 @@ import {ifDefined} from 'lit/directives/if-defined.js';
 import {createRef, type Ref, ref} from 'lit/directives/ref.js';
 import {renderButton} from '@/src/components/common/button';
 import {bindingGuard} from '@/src/decorators/binding-guard';
+import {bindings} from '@/src/decorators/bindings';
 import {errorGuard} from '@/src/decorators/error-guard';
 import type {LitElementWithError} from '@/src/decorators/types';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles.js';
-import {InitializeBindingsMixin} from '@/src/mixins/bindings-mixin';
 import {parseDate} from '@/src/utils/date-utils';
 import type {AnyBindings} from '../interface/bindings';
 
@@ -27,9 +27,10 @@ export type FacetDateInputEventDetails = Omit<DateRangeRequest, 'state'>;
  * @internal
  */
 @customElement('atomic-facet-date-input')
+@bindings()
 @withTailwindStyles
 export class AtomicFacetDateInput
-  extends InitializeBindingsMixin(LitElement)
+  extends LitElement
   implements LitElementWithError
 {
   @state() private start?: Date;
@@ -37,11 +38,13 @@ export class AtomicFacetDateInput
   private startRef: Ref<HTMLInputElement> = createRef();
   private endRef: Ref<HTMLInputElement> = createRef();
 
+  initialize() {}
+
   @property({type: Object}) public inputRange: DateFilterRange | undefined;
   @property() public facetId!: string;
   @property() public label!: string;
   @property() public min?: string;
-  @property() public max?: string;
+  @property() public max?: string = '9999-12-31';
 
   @state() error!: Error;
 

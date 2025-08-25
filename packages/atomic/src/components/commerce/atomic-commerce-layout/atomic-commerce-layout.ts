@@ -19,7 +19,7 @@ import {buildCommerceLayout} from './commerce-layout';
 @customElement('atomic-commerce-layout')
 @injectStylesForNoShadowDOM
 export class AtomicCommerceLayout extends LitElement {
-  static styles = [unsafeCSS(styles)];
+  static styles = [styles];
   @state() error!: Error;
 
   constructor() {

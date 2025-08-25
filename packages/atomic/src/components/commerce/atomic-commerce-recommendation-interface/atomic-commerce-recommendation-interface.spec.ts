@@ -12,7 +12,6 @@ import {
 import {createCommerceRecommendationStore} from '@/src/components/commerce/atomic-commerce-recommendation-interface/store';
 import {bindings} from '@/src/decorators/bindings';
 import type {InitializableComponent} from '@/src/decorators/types';
-import {InitializeBindingsMixin} from '@/src/mixins/bindings-mixin';
 import {markParentAsReady} from '@/src/utils/init-queue';
 import {fixture} from '@/vitest-utils/testing-helpers/fixture';
 import {buildFakeContext} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/context-controller';
@@ -30,7 +29,7 @@ vi.mock('@/src/utils/init-queue', {spy: true});
 @customElement('test-element')
 @bindings()
 class TestElement
-  extends InitializeBindingsMixin(LitElement)
+  extends LitElement
   implements InitializableComponent<CommerceBindings>
 {
   @state()
