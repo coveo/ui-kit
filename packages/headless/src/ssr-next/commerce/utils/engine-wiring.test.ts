@@ -5,7 +5,7 @@ import {
 } from '../../../app/commerce-engine/commerce-engine-configuration.js';
 import {extendEngineConfiguration} from './engine-wiring.js';
 
-describe('#assembleEngineConfiguration', () => {
+describe('#extendEngineConfiguration', () => {
   let engineOptions: CommerceEngineConfiguration;
   const sampleCommerceConfig = getSampleCommerceEngineConfiguration();
 
