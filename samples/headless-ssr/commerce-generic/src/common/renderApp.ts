@@ -3,6 +3,7 @@ import type {
   SearchBox,
   Summary,
 } from '@coveo/headless/ssr-commerce-next';
+import {ErrorMessage} from '../components/ErrorMessage.js';
 import {renderProductGrid, selectProducts} from '../components/ProductGrid.js';
 import {formatQuerySummary, selectSummary} from '../components/QuerySummary.js';
 import {selectSearchValue} from '../components/Search.js';
@@ -41,10 +42,8 @@ export const renderApp = (staticState: SearchStaticState) => {
           <div id="product-grid" class="product-grid">
             ${renderProductGrid(products)}
           </div>
-
-          <div id="query-error" class="query-error" style="display: none;">
-            <p>Something went wrong. Please try again.</p>
-          </div>
+      
+          ${ErrorMessage()}
 
           <div id="no-products" class="no-products" style="${products.length === 0 ? 'display: block;' : 'display: none;'}">
             <p>No products found. Try adjusting your search.</p>

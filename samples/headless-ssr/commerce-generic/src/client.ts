@@ -5,10 +5,10 @@ import type {
 } from '@coveo/headless/ssr-commerce-next';
 import {engineDefinition} from './common/engine.js';
 import type {SearchStaticState} from './common/types.js';
+import {ErrorMessage} from './components/ErrorMessage.js';
 import {ProductGrid} from './components/ProductGrid.js';
 import {QuerySummary} from './components/QuerySummary.js';
 import {Search} from './components/Search.js';
-import {ShowError} from './components/ShowError.js';
 
 async function initApp() {
   try {
@@ -28,7 +28,9 @@ async function initApp() {
     const err = document.getElementById('query-error');
     if (!err) {
       const container = document.createElement('div');
-      container.innerHTML = ShowError();
+      container.innerHTML = ErrorMessage(
+        'Something went wrong. Please try again.'
+      );
       document.body.appendChild(container.firstElementChild!);
     }
   }
