@@ -159,7 +159,7 @@ export class AtomicCommerceRecommendationInterface
   }
 
   /**
-   * Initializes the connection with an already preconfigured [headless commerce engine](https://docs.coveo.com/en/headless/latest/reference/commerce/).
+   * Initializes the connection with an already preconfigured [headless commerce engine](https://docs.coveo.com/en/headless/latest/reference/interfaces/Commerce.CommerceEngine.html).
    */
   public initializeWithEngine(engine: CommerceEngine) {
     engine.dispatch(
