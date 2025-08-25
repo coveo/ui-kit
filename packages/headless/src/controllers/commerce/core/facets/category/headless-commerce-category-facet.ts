@@ -110,6 +110,15 @@ export function buildCategoryFacet(
   const getRequest = () =>
     facetRequestSelector(engine[stateKey], facetId)! as CategoryFacetRequest;
 
+  const findDeepestSelectedChildren = (values: CategoryFacetValueRequest[]) => {
+    const selectedValue = values.find((value) => value.state === 'selected');
+    if (selectedValue) {
+      return findDeepestSelectedChildren(selectedValue.children);
+    }
+
+    return values;
+  };
+
   return {
     deselectAll,
     isValueSelected,
@@ -118,13 +127,14 @@ export function buildCategoryFacet(
 
     showMoreValues() {
       const {initialNumberOfValues, values, numberOfValues} = getRequest();
+      const currentLevelValues = findDeepestSelectedChildren(values);
 
       if (!initialNumberOfValues && !numberOfValues) {
         return;
       }
 
       const newNumberOfValues =
-        values.length + (initialNumberOfValues ?? numberOfValues)!;
+        currentLevelValues.length + (initialNumberOfValues ?? numberOfValues)!;
 
       dispatch(
         updateCategoryFacetNumberOfValues({
