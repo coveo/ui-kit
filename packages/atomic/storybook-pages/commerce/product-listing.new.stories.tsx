@@ -29,7 +29,7 @@ async function initializeCommerceInterface(canvasElement: HTMLElement) {
 
 const meta: Meta = {
   component: 'product-listing-page',
-  title: 'Commerce/Example Pages/Product Listing',
+  title: 'Commerce/Example Pages',
   id: 'product-listing-page',
   parameters: {
     ...parameters,
@@ -113,5 +113,5 @@ const meta: Meta = {
 export default meta;
 
 export const Default: Story = {
-  name: 'Page',
+  name: 'Product Listing Page',
 };

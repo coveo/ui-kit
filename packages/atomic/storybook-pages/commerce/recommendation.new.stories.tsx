@@ -22,7 +22,7 @@ async function initializeCommerceRecommendationInterface(
 
 const meta: Meta = {
   component: 'recommendations',
-  title: 'Commerce/Example Pages/Recommendations',
+  title: 'Commerce/Example Pages',
   id: 'recommendations',
   parameters: {
     ...parameters,
@@ -78,5 +78,5 @@ const meta: Meta = {
 export default meta;
 
 export const Default: Story = {
-  name: 'Carousel',
+  name: 'Recommendation Carousel',
 };
