@@ -11,7 +11,13 @@ app.use(express.static('dist'));
 app.get('/', async (_req, res) => {
   try {
     const staticState =
-      await engineDefinition.searchEngineDefinition.fetchStaticState();
+      await engineDefinition.searchEngineDefinition.fetchStaticState({
+        query: '',
+        url: '',
+        language: '',
+        country: '',
+        currency: 'USD',
+      });
 
     const app = renderApp(staticState);
     const html = renderHtml(app, staticState);

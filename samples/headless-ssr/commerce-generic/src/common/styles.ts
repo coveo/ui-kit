@@ -109,7 +109,7 @@ export function getSharedStyles(): string {
         text-align: center;
       }
 
-      .products-grid {
+      .product-grid {
         display: grid;
         grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
         gap: 24px;
@@ -219,7 +219,7 @@ export function getSharedStyles(): string {
       }
 
       @media (max-width: 768px) {
-        .products-grid {
+        .product-grid {
           grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
           gap: 16px;
           padding: 16px;

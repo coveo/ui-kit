@@ -3,25 +3,16 @@ import type {
   SearchBox,
   Summary,
 } from '@coveo/headless/ssr-commerce-next';
-import {
-  formatQuerySummary,
-  getProductsFromController,
-  getSearchValueFromController,
-  getSummaryFromController,
-  renderProductsList,
-} from './helpers.js';
+import {renderProductGrid, selectProducts} from '../components/ProductGrid.js';
+import {formatQuerySummary, selectSummary} from '../components/QuerySummary.js';
+import {selectSearchValue} from '../components/Search.js';
 import type {SearchStaticState} from './types.js';
 
 export const renderApp = (staticState: SearchStaticState) => {
   const {controllers} = staticState;
-  const products = getProductsFromController(
-    controllers.productList as ProductList
-  );
-
-  const summary = getSummaryFromController(controllers.summary as Summary);
-  const searchValue = getSearchValueFromController(
-    controllers.searchBox as SearchBox
-  );
+  const products = selectProducts(controllers.productList as ProductList);
+  const summary = selectSummary(controllers.summary as Summary);
+  const searchValue = selectSearchValue(controllers.searchBox as SearchBox);
 
   return `
     <div class="app-container">
@@ -47,8 +38,8 @@ export const renderApp = (staticState: SearchStaticState) => {
             </div>
           </div>
 
-          <div id="products-grid" class="products-grid">
-            ${renderProductsList(products)}
+          <div id="product-grid" class="product-grid">
+            ${renderProductGrid(products)}
           </div>
 
           <div id="query-error" class="query-error" style="display: none;">

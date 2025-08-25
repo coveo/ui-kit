@@ -1,9 +1,26 @@
-import type {
-  Product,
-  ProductList,
-  SearchBox,
-  Summary,
-} from '@coveo/headless/ssr-commerce-next';
+import type {Product, ProductList} from '@coveo/headless/ssr-commerce-next';
+import {getElement} from '../common/utils.js';
+
+export function ProductGrid(productList: ProductList) {
+  if (!productList) return;
+
+  const grid = getElement<HTMLDivElement>('product-grid');
+  const noProducts = getElement<HTMLDivElement>('no-products');
+  if (!grid) return;
+
+  const render = () => {
+    const products = selectProducts(productList);
+    const hasProducts = products.length > 0;
+
+    if (noProducts) {
+      noProducts.style.display = hasProducts ? 'none' : 'block';
+    }
+    grid.innerHTML = hasProducts ? renderProductGrid(products) : '';
+  };
+
+  productList.subscribe(render);
+  render();
+}
 
 export function renderProductCard(product: Product): string {
   const imageUrl = product.ec_thumbnails?.[0] ?? product.ec_images?.[0] ?? '';
@@ -23,33 +40,10 @@ export function renderProductCard(product: Product): string {
   `;
 }
 
-export function renderProductsList(products: Product[]): string {
+export function renderProductGrid(products: Product[]): string {
   return products.map(renderProductCard).join('');
 }
 
-export function formatQuerySummary(
-  summary: Summary['state'] | undefined,
-  searchValue: string
-): string {
-  if (!summary) return 'Loading...';
-  const total = summary.totalNumberOfProducts || 0;
-  return `${total} products found${searchValue ? ` for "${searchValue}"` : ''}`;
-}
-
-export function getProductsFromController(productList: ProductList): Product[] {
+export function selectProducts(productList: ProductList): Product[] {
   return productList?.state?.products || [];
-}
-
-export function getSummaryFromController(
-  summary: Summary
-): Summary['state'] | undefined {
-  return summary?.state;
-}
-
-export function getSearchValueFromController(searchBox: SearchBox): string {
-  return searchBox?.state?.value || '';
-}
-
-export function getElement<T extends HTMLElement>(id: string): T | null {
-  return document.getElementById(id) as T | null;
 }

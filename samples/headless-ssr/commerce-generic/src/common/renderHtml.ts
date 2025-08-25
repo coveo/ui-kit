@@ -10,7 +10,7 @@ export const renderHtml = (
       <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>SSR Commerce Search with Atomic Components</title>    
+        <title>🛍️ SSR Commerce Search Demo</title>    
         ${getSharedStyles()}
       </head>
       <body>
