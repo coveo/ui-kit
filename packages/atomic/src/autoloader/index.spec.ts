@@ -1,4 +1,12 @@
-import {beforeEach, describe, expect, it, vi} from 'vitest';
+import {
+  afterAll,
+  beforeAll,
+  beforeEach,
+  describe,
+  expect,
+  it,
+  vi,
+} from 'vitest';
 import {registerAutoloader} from './index';
 
 const mockCustomElementsRegistry = new Map<string, CustomElementConstructor>();
@@ -17,24 +25,31 @@ const mockCustomElements = {
   upgrade: vi.fn(),
 };
 
-vi.stubGlobal('customElements', mockCustomElements);
-
-vi.mock('../components/components/lazy-index.js', () => ({
-  __esModule: true,
-  default: {
-    'x-test-component': async () => {
-      customElements.define('x-test-component', HTMLElement);
-    },
-    'x-test-component-inside': async () => {
-      customElements.define('x-test-component-inside', HTMLElement);
-    },
-  },
-}));
-
 describe('autoloader', () => {
+  beforeAll(() => {
+    vi.stubGlobal('customElements', mockCustomElements);
+    vi.useFakeTimers();
+
+    vi.mock('../components/components/lazy-index.js', () => ({
+      __esModule: true,
+      default: {
+        'x-test-component': async () => {
+          customElements.define('x-test-component', HTMLElement);
+        },
+        'x-test-component-inside': async () => {
+          customElements.define('x-test-component-inside', HTMLElement);
+        },
+      },
+    }));
+  });
+
+  afterAll(() => {
+    vi.useRealTimers();
+    vi.unstubAllGlobals();
+  });
+
   describe('#registerAutoloader', () => {
-    const waitForNextTick = () =>
-      new Promise((resolve) => setTimeout(resolve, 0));
+    const waitForNextTick = () => vi.runAllTimersAsync();
 
     const setupComponent = async (elementFactory: () => HTMLElement) => {
       const element = elementFactory();
@@ -128,7 +143,6 @@ describe('autoloader', () => {
 
       await setupComponent(() => document.createElement('div'));
       expect(upgradeSpy).toHaveBeenCalled();
-      upgradeSpy.mockRestore();
     });
   });
 });
