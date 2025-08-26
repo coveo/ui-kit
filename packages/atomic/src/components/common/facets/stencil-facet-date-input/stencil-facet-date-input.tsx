@@ -30,7 +30,7 @@ export class FacetDateInput {
   @Prop() public facetId!: string;
   @Prop() public label!: string;
   @Prop() public min?: string;
-  @Prop() public max?: string;
+  @Prop() public max?: string = '9999-12-31';
 
   @Event({
     eventName: 'atomic/dateInputApply',

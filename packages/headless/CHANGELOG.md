@@ -1,3 +1,14 @@
+## <small>3.28.4 (2025-08-20)</small>
+
+* fix(headless commerce): keep reference to original response ID in product & send correct response ID ([a80458f](https://github.com/coveo/ui-kit/commits/a80458f)), closes [#5879](https://github.com/coveo/ui-kit/issues/5879)
+* fix(headless): analytics with crga (#5857) ([4d1d43d](https://github.com/coveo/ui-kit/commits/4d1d43d)), closes [#5857](https://github.com/coveo/ui-kit/issues/5857) [#5811](https://github.com/coveo/ui-kit/issues/5811)
+* docs: broken links (#5825) ([6976ef9](https://github.com/coveo/ui-kit/commits/6976ef9)), closes [#5825](https://github.com/coveo/ui-kit/issues/5825)
+* docs(headless): sortCriteria combination for Headless (#5841) ([78f8888](https://github.com/coveo/ui-kit/commits/78f8888)), closes [#5841](https://github.com/coveo/ui-kit/issues/5841)
+* chore(headless-ssr): add builder classes for SSR controller management (#5818) ([9ebd799](https://github.com/coveo/ui-kit/commits/9ebd799)), closes [#5818](https://github.com/coveo/ui-kit/issues/5818) [#5804](https://github.com/coveo/ui-kit/issues/5804)
+* chore(headless-ssr): ensure `fetchStaticState` works seamlessly with `hydrateStaticState` without ma ([1d430e8](https://github.com/coveo/ui-kit/commits/1d430e8)), closes [#5804](https://github.com/coveo/ui-kit/issues/5804)
+
+
+
 ## <small>3.28.3 (2025-08-13)</small>
 
 * fix(headless): renew expired access token before emitting event through Relay (#5828) ([c4fc3e9](https://github.com/coveo/ui-kit/commits/c4fc3e9)), closes [#5828](https://github.com/coveo/ui-kit/issues/5828)
