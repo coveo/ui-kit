@@ -125,7 +125,7 @@
     "@testing-library/jest-dom": "6.6.3",
     "@types/core-js": "2.5.8",
     "@types/escape-html": "1.0.4",
-    "@types/jest": "29.5.12",
+    "@types/jest": "29.5.14",
     "@types/lodash": "4.17.20",
     "@types/node": "22.16.5",
     "@types/postcss-import": "14.0.3",
