@@ -26,7 +26,7 @@ export interface SearchBuildConfig extends CommonBuildConfig {
 }
 
 /**
- * RecommendationBuildConfig defines the shape of the config object required when fetching static state for recommendations.
+ * The `RecommendationBuildConfig` type defines the shape of the configuration object required when fetching static state for recommendations.
  *
  * The `recommendations` property is a string array containing the names of the recommendation controllers
  * that were defined in your engine definition. This allows you to specify which recommendation controllers
@@ -65,7 +65,7 @@ export type RecommendationBuildConfig<
   productId?: string;
   /**
    * An array of recommendation controller names from your engine definition to include in the SSR request.
-   * Each name corresponds to the key used when defining recommendation controllers in your engine definition.
+   * Each name corresponds to a key used when defining recommendation controllers in your engine definition.
    * If not specified, no recommendation requests will be executed.
    */
   recommendations: Array<
