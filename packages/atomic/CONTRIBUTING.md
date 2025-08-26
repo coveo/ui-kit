@@ -2,7 +2,7 @@
 
 Atomic is a component library for building Coveo interfaces. It provides pre-built web components that can be used across different frameworks and platforms.
 
-The atomic package is built on [Lit](https://lit.dev/), a modern web components framework that provides fast, lightweight, and reactive components with excellent developer experience and performance.
+The @coveo/atomic package is built on [Lit](https://lit.dev/), a modern web components framework that provides fast, lightweight, and reactive components with excellent developer experience and performance.
 
 ## Table of Contents
 
@@ -18,7 +18,7 @@ The atomic package is built on [Lit](https://lit.dev/), a modern web components 
 
 ## Creating a Component
 
-To create a new atomic component, use the component generation script:
+To create a new Atomic component, use the component generation script:
 
 ```bash
 node scripts/generate-component.mjs atomic-test-component src/components/search
@@ -28,13 +28,13 @@ node scripts/generate-component.mjs atomic-test-component src/components/search
 
 This command will:
 1. Create a new component directory with all required files
-2. Generate the component scaffold based on the Lit template
+2. Generate the component scaffolding based on the Lit template
 3. Set up the proper file structure and naming conventions
 
 
 ## Component Files Overview
 
-Each atomic component follows a standardized file structure. Here's what each file type contains:
+Each Atomic component follows a standardized file structure. Here's what each file type contains:
 
 ### Main Component File (.ts)
 
@@ -44,9 +44,9 @@ The primary component implementation using Lit web components.
 - Uses `@customElement('atomic-component-name')` decorator
 - Implements reactive properties with `@property()` decorator and state with `@state()` decorator
 - Multi-word properties use kebab-case attributes: `@property({attribute: 'my-attribute'})`
-- Uses `@bindings()` decorator (without parameters) for components requiring headless controller bindings
+- Uses `@bindings()` decorator (without parameters) for components requiring Headless controller bindings
 - Uses `@withTailwindStyles` decorator for styling integration
-- Uses `@bindStateToController()` decorator to bind headless controller state to component state
+- Uses `@bindStateToController()` decorator to bind Headless controller state to component state
 - Implements `InitializableComponent<T>` interface for components that need initialization
 - Uses `@bindingGuard()` and `@errorGuard()` decorators in the render method for robust error handling
 
@@ -192,7 +192,7 @@ This component provides [component description and purpose].
 - Component description and purpose
 - Basic usage examples with proper HTML structure
 - Any important notes or constraints
-- Integration context within the atomic interface
+- Integration context within the Atomic interface
 
 ### Unit Tests (.spec.ts)
 
@@ -225,7 +225,7 @@ Integration testing that validates component behavior in real browser environmen
 **Purpose:**
 - Follow the [Atomic test conventions](https://coveord.atlassian.net/wiki/spaces/JSUI/pages/5221122259/Atomic+test+conventions)
 - **Test the golden path** - Focus on the most common, successful user journey through the component
-- **Test accessibility compliance** - Validate ARIA attributes, keyboard navigation, and screen reader compatibility
+- **Test accessibility compliance** - Validate accessibility using the `makeAxeBuilder` function from the base page object
 - **Keep it simple** - Usually should only include the default story and test a very simple golden path
 
 **Example:** See [`atomic-product-children.e2e.ts`](src/components/commerce/atomic-product-children/e2e/atomic-product-children.e2e.ts) for a reference implementation.
@@ -243,7 +243,7 @@ Component styling using Tailwind CSS utility classes.
 ### Project Structure
 
 - **`src/components/commerce/`** - Commerce components
-- **`src/components/common/`** - Shared functional components, utilities and css used across different interfaces
+- **`src/components/common/`** - Shared functional components, utilities and CSS used across different interfaces
 - **`src/components/search/`** - Search components
 - **`src/components/insight/`** - Insight components 
 - **`src/components/ipx/`** - IPX components
