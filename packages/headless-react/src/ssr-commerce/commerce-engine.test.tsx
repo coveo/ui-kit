@@ -30,6 +30,8 @@ async function flushAsyncUpdates(): Promise<void> {
   await act(async () => {
     await new Promise((resolve) => setTimeout(resolve, 0));
   });
+  // Additional flush for any remaining promise microtasks
+  await new Promise<void>((resolve) => queueMicrotask(() => resolve()));
 }
 
 describe('Headless react SSR utils', () => {
