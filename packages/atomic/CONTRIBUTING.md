@@ -13,7 +13,6 @@ The @coveo/atomic package is built on [Lit](https://lit.dev/), a modern web comp
   - [Documentation (.mdx)](#documentation-mdx)
   - [Unit Tests (.spec.ts)](#unit-tests-spects)
   - [End-to-End Tests (e2e/)](#end-to-end-tests-e2e)
-  - [Styles (.tw.css.tss)](#styles-twcss)
 - [Project Structure](#project-structure)
 
 ## Creating a Component
