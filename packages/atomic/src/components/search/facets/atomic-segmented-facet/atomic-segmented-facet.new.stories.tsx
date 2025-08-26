@@ -7,7 +7,7 @@ const {decorator, play} = wrapInSearchInterface();
 
 const meta: Meta = {
   component: 'atomic-segmented-facet',
-  title: 'Atomic/SegmentedFacet',
+  title: 'Search/SegmentedFacet',
   id: 'atomic-segmented-facet',
   render: renderComponent,
   decorators: [decorator],

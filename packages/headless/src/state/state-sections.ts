@@ -1,3 +1,13 @@
+import type {
+  BaseQueryFn,
+  CombinedState,
+  FetchArgs,
+  FetchBaseQueryError,
+  QueryDefinition,
+  RetryOptions,
+} from '@reduxjs/toolkit/query';
+import type {GeneratedAnswerStream} from '../api/knowledge/generated-answer-stream.js';
+import type {SearchRequest} from '../api/search/search/search-request.js';
 import type {StateWithHistory} from '../app/undoable.js';
 import type {AdvancedSearchQueriesState} from '../features/advanced-search-queries/advanced-search-queries-state.js';
 import type {AttachedResultsState} from '../features/attached-results/attached-results-state.js';
@@ -54,7 +64,6 @@ import type {RecentResultsState} from '../features/recent-results/recent-results
 import type {RecommendationState} from '../features/recommendation/recommendation-state.js';
 import type {ResultPreviewState} from '../features/result-preview/result-preview-state.js';
 import type {SearchState} from '../features/search/search-state.js';
-import type {SortState} from '../features/sort/sort-state.js';
 import type {SortCriteriaState} from '../features/sort-criteria/sort-criteria-state.js';
 import type {StandaloneSearchBoxSetState} from '../features/standalone-search-box-set/standalone-search-box-set-state.js';
 import type {StaticFilterSetState} from '../features/static-filter-set/static-filter-set-state.js';
@@ -387,13 +396,6 @@ export interface FieldSuggestionsOrderSection {
   fieldSuggestionsOrder: FieldSuggestionsOrderState;
 }
 
-export interface StructuredSortSection {
-  /**
-   * The information related to sort when using a structured sort format.
-   */
-  sort: SortState;
-}
-
 export interface TriggerSection {
   /**
    * The information related to the triggers.
@@ -508,4 +510,29 @@ export interface InsightUserActionsSection {
 
 export interface ManualRangeSection {
   manualNumericFacetSet: ManualNumericFacetSetState;
+}
+
+export interface GetAnswerQuerySection {
+  // CombinedState is an internal type from RTK Query that is used directly to break dependency on actual
+  // use of RTK Query for the Stream Answer API. This exposes the internal state of RTKQ but allows us to
+  // type this object over using an `unknown` type.
+  answer: CombinedState<
+    {
+      getAnswer: QueryDefinition<
+        Partial<SearchRequest>,
+        BaseQueryFn<
+          string | FetchArgs,
+          unknown,
+          FetchBaseQueryError,
+          {} & RetryOptions,
+          {}
+        >,
+        never,
+        GeneratedAnswerStream,
+        'answer'
+      >;
+    },
+    never,
+    'answer'
+  >;
 }

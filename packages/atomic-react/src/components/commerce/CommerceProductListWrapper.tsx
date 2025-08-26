@@ -9,8 +9,10 @@ import type {Product} from '@coveo/headless/commerce';
 import React, {useEffect, useRef} from 'react';
 import {createRoot} from 'react-dom/client';
 import {renderToString} from 'react-dom/server';
-import {AtomicProductLink} from '../stencil-generated/commerce/index.js';
-import {AtomicCommerceProductList as LitAtomicCommerceProductList} from './components.js';
+import {
+  AtomicProductLink,
+  AtomicCommerceProductList as LitAtomicCommerceProductList,
+} from './components.js';
 
 interface Template {
   contentTemplate: JSX.Element;
@@ -39,6 +41,8 @@ interface AtomicCommerceProductListProps {
 interface HTMLAtomicCommerceProductListElement
   extends AtomicCommerceProductList,
     HTMLElement {}
+
+// biome-ignore lint/correctness/noUnusedVariables: <>
 var HTMLAtomicCommerceProductListElement: {
   prototype: HTMLAtomicCommerceProductListElement;
   new (): HTMLAtomicCommerceProductListElement;

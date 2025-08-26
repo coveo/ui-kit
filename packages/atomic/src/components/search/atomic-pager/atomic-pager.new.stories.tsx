@@ -7,7 +7,7 @@ const {decorator, play} = wrapInSearchInterface();
 
 const meta: Meta = {
   component: 'atomic-pager',
-  title: 'Atomic/Pager',
+  title: 'Search/Pager',
   id: 'atomic-pager',
 
   render: renderComponent,

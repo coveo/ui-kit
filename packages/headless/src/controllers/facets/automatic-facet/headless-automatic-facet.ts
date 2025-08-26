@@ -20,7 +20,7 @@ import type {AutomaticFacet} from '../automatic-facet-generator/headless-automat
  * @internal
  * This prop is used internally by the `AutomaticFacetGenerator` controller.
  */
-export interface AutomaticFacetProps {
+interface AutomaticFacetProps {
   /**
    * The field from which to display values in the facet.
    */

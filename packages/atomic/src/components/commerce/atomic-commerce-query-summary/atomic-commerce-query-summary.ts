@@ -5,7 +5,7 @@ import {
   type SearchSummaryState,
   type Summary,
 } from '@coveo/headless/commerce';
-import {type CSSResultGroup, html, LitElement, unsafeCSS} from 'lit';
+import {type CSSResultGroup, css, html, LitElement} from 'lit';
 import {customElement, state} from 'lit/decorators.js';
 import {bindStateToController} from '@/src/decorators/bind-state';
 import {bindingGuard} from '@/src/decorators/binding-guard';
@@ -19,7 +19,6 @@ import {renderQuerySummaryContainer} from '../../common/query-summary/container'
 import {renderQuerySummaryGuard} from '../../common/query-summary/guard';
 import {getProductQuerySummaryI18nParameters} from '../../common/query-summary/utils';
 import type {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface';
-import styles from './atomic-commerce-query-summary.tw.css';
 
 /**
  * The `atomic-commerce-query-summary` component displays information about the current range of products and the request duration (e.g., "Products 1-10 of 123").
@@ -28,8 +27,6 @@ import styles from './atomic-commerce-query-summary.tw.css';
  * @part highlight - The summary highlights.
  * @part query - The summary highlighted query.
  * @part placeholder - The query summary placeholder used while the search interface is initializing.
- *
- * @alpha
  */
 @customElement('atomic-commerce-query-summary')
 @bindings()
@@ -40,7 +37,13 @@ export class AtomicCommerceQuerySummary
 {
   public bindings!: CommerceBindings;
   @state() error!: Error;
-  static styles: CSSResultGroup = [unsafeCSS(styles)];
+  static styles: CSSResultGroup = [
+    css`
+      :host {
+        overflow: hidden;
+      }
+    `,
+  ];
 
   @bindStateToController('listingOrSearchSummary')
   @state()

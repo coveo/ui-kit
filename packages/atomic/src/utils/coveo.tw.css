@@ -24,9 +24,6 @@
   --atomic-error-background: #fcbdc0;
   --atomic-primary-background: #edf6ff;
   --atomic-inline-code: #cd2113;
-
-  --atomic-rating-icon-outline: none;
-
   /* Border radius */
   --atomic-border-radius: 0.25rem;
   --atomic-border-radius-md: 0.5rem;
@@ -80,6 +77,8 @@
     var(--atomic-neutral)
   );
   --color-rating-icon-active: var(--atomic-rating-icon-active-color, #f6ce3c);
+
+  --color-rating-icon-outline: var(--atomic-rating-icon-outline-color, none);
 
   --color-more-results-progress-bar-color-from: var(
     --atomic-more-results-progress-bar-color-from,

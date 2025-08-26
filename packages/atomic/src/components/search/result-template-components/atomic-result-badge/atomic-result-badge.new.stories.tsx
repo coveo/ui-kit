@@ -10,7 +10,7 @@ const {decorator: searchInterfaceDecorator, play} =
 
 const meta: Meta = {
   component: 'atomic-result-badge',
-  title: 'Atomic/ResultList/ResultBadge',
+  title: 'Search/ResultList/ResultBadge',
   id: 'atomic-result-badge',
   render: renderComponent,
   decorators: [resultDecorator, searchInterfaceDecorator],

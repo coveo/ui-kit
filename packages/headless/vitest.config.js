@@ -7,5 +7,6 @@ export default defineConfig({
   test: {
     // ...
     globals: true,
+    include: ['**/*.test.?(c|m)[jt]s?(x)'],
   },
 });

@@ -35,6 +35,11 @@ export const updateCoreFacetIsFieldExpanded = createAction(
     })
 );
 
+/**
+ * Action to clear all core facet values.
+ *
+ * This is primarily used by the breadcrumb manager to reset all selected facets.
+ */
 export const clearAllCoreFacets = createAction('commerce/facets/core/clearAll');
 
 export const deleteAllCoreFacets = createAction(
@@ -48,6 +53,13 @@ export type DeselectAllValuesInCoreFacetPayload = {
   facetId: string;
 };
 
+/**
+ * Action to deselect all values for a given facet.
+ *
+ * This is primarily used in facets to clear all selected values at the same time.
+ *
+ * @param payload - The payload of type {@link DeselectAllValuesInCoreFacetPayload} containing the facet ID to clear.
+ */
 export const deselectAllValuesInCoreFacet = createAction(
   'commerce/facets/core/deselectAllValues',
   (payload: DeselectAllValuesInCoreFacetPayload) =>

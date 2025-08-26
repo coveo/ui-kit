@@ -3,7 +3,9 @@ import {
   executeCommerceFacetSearch,
   executeCommerceFieldSuggest,
 } from '../../../../../features/commerce/facets/facet-search-set/commerce-facet-search-actions.js';
+import {updateFacetSearch} from '../../../../../features/facets/facet-search-set/specific/specific-facet-search-actions.js';
 import {specificFacetSearchSetReducer as facetSearchSet} from '../../../../../features/facets/facet-search-set/specific/specific-facet-search-set-slice.js';
+import type {SpecificFacetSearchState} from '../../../../../features/facets/facet-search-set/specific/specific-facet-search-set-state.js';
 import {buildMockCommerceState} from '../../../../../test/mock-commerce-state.js';
 import {
   buildMockCommerceEngine,
@@ -18,6 +20,9 @@ import {
 
 vi.mock(
   '../../../../../features/commerce/facets/facet-search-set/commerce-facet-search-actions'
+);
+vi.mock(
+  '../../../../../features/facets/facet-search-set/specific/specific-facet-search-actions'
 );
 
 describe('RegularFacetSearch', () => {
@@ -34,8 +39,10 @@ describe('RegularFacetSearch', () => {
     facetSearch = buildRegularFacetSearch(engine, props);
   }
 
-  function setFacetSearchState() {
-    engine[stateKey].facetSearchSet[facetId] = buildMockFacetSearch();
+  function setFacetSearchState(
+    updates: Partial<SpecificFacetSearchState> = {}
+  ) {
+    engine[stateKey].facetSearchSet[facetId] = buildMockFacetSearch(updates);
   }
 
   beforeEach(() => {
@@ -79,5 +86,39 @@ describe('RegularFacetSearch', () => {
     initFacetSearch();
     facetSearch.search();
     expect(executeCommerceFieldSuggest).toHaveBeenCalled();
+  });
+
+  describe('#showMoreResults', () => {
+    it('should be available in facet search', () => {
+      expect(facetSearch.showMoreResults).toBeTruthy();
+    });
+
+    it('dispatches #executeCommerceFacetSearch function', () => {
+      facetSearch.showMoreResults();
+      expect(executeCommerceFacetSearch).toHaveBeenCalledTimes(1);
+    });
+
+    it('increases the number of values on the regular facet search request by the configured amount', () => {
+      const initialNumberOfValues = 5;
+      const configuredNumberOfValues = 10;
+
+      setFacetSearchState({
+        initialNumberOfValues,
+        options: {
+          ...engine[stateKey].facetSearchSet[facetId].options,
+          numberOfValues: configuredNumberOfValues,
+        },
+      });
+      initFacetSearch();
+
+      facetSearch.showMoreResults();
+
+      const expectedNumber = initialNumberOfValues + configuredNumberOfValues;
+
+      expect(updateFacetSearch).toHaveBeenCalledWith({
+        facetId,
+        numberOfValues: expectedNumber,
+      });
+    });
   });
 });

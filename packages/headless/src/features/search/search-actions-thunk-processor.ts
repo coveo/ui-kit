@@ -52,7 +52,7 @@ import {
 } from './search-mappings.js';
 import {buildSearchRequest} from './search-request.js';
 
-export interface AnalyticsAction {
+interface AnalyticsAction {
   actionCause?: string;
 }
 
@@ -91,7 +91,7 @@ type ValidReturnTypeFromProcessingStep<RejectionType> =
   | ExecuteSearchThunkReturn
   | RejectionType;
 
-export interface AsyncThunkConfig {
+interface AsyncThunkConfig {
   getState: () => StateNeededByExecuteSearch;
   dispatch: ThunkDispatch<
     StateNeededByExecuteSearch,
@@ -108,7 +108,7 @@ export interface AsyncThunkConfig {
 
 type QueryCorrectionCallback = (modification: string) => void;
 
-export interface FetchFromAPIOptions {
+interface FetchFromAPIOptions {
   origin: SearchOrigin;
   disableAbortWarning?: boolean;
 }

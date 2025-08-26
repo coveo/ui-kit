@@ -60,7 +60,7 @@ export type CommerceAPIResponse<T> =
   | CommerceAPISuccessResponse<T>
   | CommerceAPIErrorResponse;
 
-export interface CommerceAPISuccessResponse<T> {
+interface CommerceAPISuccessResponse<T> {
   success: T;
 }
 
@@ -146,6 +146,7 @@ export class CommerceAPIClient implements CommerceFacetSearchAPIClient {
         facetId: req?.facetId,
         facetQuery: req?.facetQuery,
         query: req?.query,
+        numberOfValues: req?.numberOfValues,
       },
       ...this.options,
     });

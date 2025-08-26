@@ -47,6 +47,23 @@ vi.mock('../../../api/knowledge/stream-answer-api', async () => {
     {q: 'this est une another question', requestId: '12'},
     {q: '', requestId: '34'},
     {q: 'this est une yet another question', requestId: '56'},
+    {
+      q: 'this est une question in legacy mode without action cause',
+      requestId: '78',
+      analyticsMode: 'legacy',
+    },
+    {
+      q: 'this est une question in next mode without action cause',
+      requestId: '7822',
+      analyticsMode: 'next',
+      actionCause: '',
+    },
+    {
+      q: 'this est une question in next mode with an action cause',
+      requestId: '781',
+      analyticsMode: 'next',
+      actionCause: 'searchboxSubmit',
+    },
   ];
   return {
     ...originalStreamAnswerApi,
@@ -221,6 +238,18 @@ describe('knowledge-generated-answer', () => {
       // new request id, call
       listener();
       expect(triggerSearchRequest).toHaveBeenCalledTimes(2);
+
+      // new query, new request id, legacy mode, no action cause, call
+      listener();
+      expect(triggerSearchRequest).toHaveBeenCalledTimes(3);
+
+      // new query, new request id, next mode, no action cause, no call
+      listener();
+      expect(triggerSearchRequest).toHaveBeenCalledTimes(3);
+
+      // new query, new request id, next mode, with action cause, call
+      listener();
+      expect(triggerSearchRequest).toHaveBeenCalledTimes(4);
     });
   });
 

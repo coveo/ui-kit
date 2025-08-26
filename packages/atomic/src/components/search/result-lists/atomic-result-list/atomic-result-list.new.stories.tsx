@@ -15,12 +15,15 @@ const {decorator, play} = wrapInSearchInterface({
 });
 const meta: Meta = {
   component: 'atomic-result-list',
-  title: 'Atomic/ResultList',
+  title: 'Search/ResultList',
   id: 'atomic-result-list',
 
   render: renderComponent,
   decorators: [decorator],
-  parameters,
+  parameters: {
+    ...parameters,
+    layout: 'fullscreen',
+  },
   play,
 };
 

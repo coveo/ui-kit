@@ -62,7 +62,10 @@ test.describe('default', () => {
             '1401-01-01'
           );
           await facet.facetInputEnd.click();
-          await expect(facet.facetInputEnd).toHaveAttribute('max', '');
+          await expect(facet.facetInputEnd).toHaveAttribute(
+            'max',
+            '9999-12-31'
+          );
         });
 
         test('should hide the clear filter button', async ({facet}) => {
@@ -79,9 +82,9 @@ test.describe('default', () => {
     await expect(facet.facetInputStart).toHaveAttribute('min', '1401-01-01');
   });
 
-  test('should not limit the end date', async ({facet}) => {
+  test('should limit the end date to max', async ({facet}) => {
     await facet.facetInputEnd.click();
-    await expect(facet.facetInputEnd).not.toHaveAttribute('max');
+    await expect(facet.facetInputEnd).toHaveAttribute('max', '9999-12-31');
   });
 });
 

@@ -9,11 +9,11 @@ import {
 } from 'vitest';
 import {
   type HistoryElement,
-  HistoryStore,
   MAX_NUMBER_OF_HISTORY_ELEMENTS,
   MAX_VALUE_SIZE,
   STORE_KEY,
 } from './history-store.js';
+import HistoryStore from './history-store.js';
 import type {WebStorage} from './storage.js';
 
 describe('HistoryStore', () => {

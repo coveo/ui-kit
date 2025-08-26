@@ -1,0 +1,66 @@
+import type {UnknownAction} from '@reduxjs/toolkit';
+import {buildProductListing} from '../../../controllers/commerce/product-listing/headless-product-listing.js';
+import {buildSearch} from '../../../controllers/commerce/search/headless-search.js';
+import {augmentPreprocessRequestWithForwardedFor} from '../../common/augment-preprocess-request.js';
+import {createStaticState} from '../controller-utils.js';
+import {SolutionType} from '../types/controller-constants.js';
+import type {InferControllerStaticStateMapFromDefinitionsWithSolutionType} from '../types/controller-inference.js';
+import type {
+  CommerceControllerDefinitionsMap,
+  EngineStaticState,
+  FetchStaticStateFunction,
+  FetchStaticStateParameters,
+} from '../types/engine.js';
+import {
+  buildFactory,
+  type CommerceEngineDefinitionOptions,
+} from './build-factory.js';
+
+export function fetchStaticStateFactory<
+  TControllerDefinitions extends CommerceControllerDefinitionsMap,
+>(
+  controllerDefinitions: TControllerDefinitions | undefined,
+  options: CommerceEngineDefinitionOptions<TControllerDefinitions>
+) {
+  return (
+    solutionType: SolutionType
+  ): FetchStaticStateFunction<TControllerDefinitions> =>
+    async (...params: FetchStaticStateParameters<TControllerDefinitions>) => {
+      const solutionTypeBuild = await buildFactory(controllerDefinitions, {
+        ...options,
+      })(solutionType);
+      const {engine, controllers} = await solutionTypeBuild(...params);
+
+      options.configuration.preprocessRequest =
+        augmentPreprocessRequestWithForwardedFor({
+          preprocessRequest: options.configuration.preprocessRequest,
+          navigatorContextProvider: options.navigatorContextProvider,
+          loggerOptions: options.loggerOptions,
+        });
+
+      switch (solutionType) {
+        case SolutionType.listing:
+          buildProductListing(engine).executeFirstRequest();
+          break;
+        case SolutionType.search:
+          buildSearch(engine).executeFirstSearch();
+          break;
+      }
+
+      const searchActions = await Promise.all(
+        engine.waitForRequestCompletedAction()
+      );
+
+      const staticState = createStaticState({
+        searchActions,
+        controllers,
+      }) as EngineStaticState<
+        UnknownAction,
+        InferControllerStaticStateMapFromDefinitionsWithSolutionType<
+          TControllerDefinitions,
+          SolutionType
+        >
+      >;
+      return staticState;
+    };
+}

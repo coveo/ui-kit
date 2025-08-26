@@ -6,7 +6,7 @@ import {
   validatePayload,
 } from '../../../utils/validate-payload.js';
 
-export const slotIdDefinition = {
+const slotIdDefinition = {
   slotId: nonRequiredEmptyAllowedString,
 };
 

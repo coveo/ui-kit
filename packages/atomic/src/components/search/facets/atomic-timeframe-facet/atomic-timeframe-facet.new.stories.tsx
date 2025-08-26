@@ -1,4 +1,8 @@
-import type {Meta, StoryObj as Story} from '@storybook/web-components';
+import type {
+  Decorator,
+  Meta,
+  StoryObj as Story,
+} from '@storybook/web-components';
 import {html} from 'lit';
 import {within} from 'shadow-dom-testing-library';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
@@ -15,9 +19,12 @@ const {decorator, play} = wrapInSearchInterface({
   },
 });
 
+const commerceFacetWidthDecorator: Decorator = (story) =>
+  html`<div style="min-width: 470px;">${story()}</div> `;
+
 const meta: Meta = {
   component: 'atomic-timeframe-facet',
-  title: 'Atomic/TimeframeFacet',
+  title: 'Search/TimeframeFacet',
   id: 'atomic-timeframe-facet',
   argTypes: {
     'attributes-min': {
@@ -40,7 +47,7 @@ const meta: Meta = {
   `,
   },
   render: renderComponent,
-  decorators: [decorator],
+  decorators: [commerceFacetWidthDecorator, decorator],
   parameters,
   play,
 };

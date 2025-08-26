@@ -442,6 +442,7 @@ describe('category facet slice', () => {
           {
             value: selection.value,
             state: 'selected',
+            previousState: 'idle',
             children: [],
             retrieveChildren: true,
             retrieveCount,
@@ -465,6 +466,7 @@ describe('category facet slice', () => {
         const child = buildMockCategoryFacetValueRequest({
           value: 'B',
           state: 'selected',
+          previousState: 'idle',
           retrieveChildren: true,
           retrieveCount,
         });
@@ -529,6 +531,7 @@ describe('category facet slice', () => {
             retrieveChildren: true,
             retrieveCount,
             state: 'selected',
+            previousState: 'idle',
           });
 
           const children =
@@ -550,11 +553,11 @@ describe('category facet slice', () => {
           ).toBe(false);
         });
 
-        it('sets the parent previousState to the previous state value', () => {
+        it('sets the parent previousState to undefined', () => {
           const finalState = categoryFacetSetReducer(state, action);
           expect(
             finalState[facetId]?.request.currentValues[0].previousState
-          ).toBe('selected');
+          ).toBeUndefined();
         });
       });
 
@@ -577,6 +580,7 @@ describe('category facet slice', () => {
           const child = buildMockCategoryFacetValueRequest({
             value: 'B',
             state: 'selected',
+            previousState: 'idle',
             retrieveChildren: true,
             retrieveCount,
           });
@@ -626,6 +630,7 @@ describe('category facet slice', () => {
           retrieveChildren: true,
           retrieveCount,
           state: 'selected',
+          previousState: 'idle',
         });
 
         expect(

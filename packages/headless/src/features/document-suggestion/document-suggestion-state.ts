@@ -11,7 +11,7 @@ export const getDocumentSuggestionInitialState =
     documents: [],
   });
 
-export interface DocumentSuggestionStatus {
+interface DocumentSuggestionStatus {
   /**
    * `true` if a request is in progress and `false` otherwise.
    */

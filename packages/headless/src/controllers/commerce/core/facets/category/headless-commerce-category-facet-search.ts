@@ -27,7 +27,7 @@ export type CategoryFacetSearchState =
 
 export type CategoryFacetSearch = Omit<
   ReturnType<typeof buildCoreCategoryFacetSearch>,
-  'showMoreResults' | 'updateCaptions' | 'state'
+  'updateCaptions' | 'state'
 >;
 
 export function buildCategoryFacetSearch(
@@ -38,20 +38,23 @@ export function buildCategoryFacetSearch(
     throw loadReducerError;
   }
 
-  const {showMoreResults, state, updateCaptions, ...restOfFacetSearch} =
-    buildCoreCategoryFacetSearch(engine, {
-      ...props,
-      executeFacetSearchActionCreator: (facetId: string) =>
-        executeCommerceFacetSearch({
-          facetId,
-          facetSearchType: props.options.type,
-        }),
-      executeFieldSuggestActionCreator: (facetId: string) =>
-        executeCommerceFieldSuggest({
-          facetId,
-          facetSearchType: props.options.type,
-        }),
-    });
+  const {
+    state: _state,
+    updateCaptions: _updateCaptions,
+    ...restOfFacetSearch
+  } = buildCoreCategoryFacetSearch(engine, {
+    ...props,
+    executeFacetSearchActionCreator: (facetId: string) =>
+      executeCommerceFacetSearch({
+        facetId,
+        facetSearchType: props.options.type,
+      }),
+    executeFieldSuggestActionCreator: (facetId: string) =>
+      executeCommerceFieldSuggest({
+        facetId,
+        facetSearchType: props.options.type,
+      }),
+  });
 
   return restOfFacetSearch;
 }

@@ -7,6 +7,7 @@ import {
 } from '../../../test/mock-product.js';
 import {buildMockRecommendationsResponse} from '../../../test/mock-recommendations.js';
 import {buildMockRecommendationsSlice} from '../../../test/mock-recommendations-slice.js';
+import {setError} from '../../error/error-actions.js';
 import {
   fetchMoreRecommendations,
   fetchRecommendations,
@@ -95,7 +96,7 @@ describe('recommendation-slice', () => {
 
       expect(slot.products).toEqual(
         response.response.products.map((p) =>
-          buildMockProduct({ec_name: p.ec_name})
+          buildMockProduct({ec_name: p.ec_name, responseId})
         )
       );
       expect(slot.responseId).toEqual(responseId);
@@ -125,6 +126,27 @@ describe('recommendation-slice', () => {
       expect(slot.products[0].position).toBe(21);
       expect(slot.products[1].position).toBe(22);
     });
+
+    it('when slot exists, sets the responseId on each product', () => {
+      const products = [
+        buildMockBaseProduct({ec_name: 'product-1'}),
+        buildMockBaseProduct({ec_name: 'product-2'}),
+      ];
+      const responseId = 'some-response-id';
+      const response = buildMockRecommendationsResponse({
+        products,
+        responseId,
+      });
+
+      state[slotId] = buildMockRecommendationsSlice();
+
+      const action = fetchRecommendations.fulfilled(response, '', {slotId});
+      const finalState = recommendationsReducer(state, action);
+
+      const slot = finalState[slotId]!;
+      expect(slot.products[0].responseId).toBe(responseId);
+      expect(slot.products[1].responseId).toBe(responseId);
+    });
   });
 
   describe('on #fetchMoreRecommendations.fulfilled', () => {
@@ -146,8 +168,14 @@ describe('recommendation-slice', () => {
     it('when slot exists, appends the received payload to the state', () => {
       state[slotId] = buildMockRecommendationsSlice({
         products: [
-          buildMockProduct({ec_name: 'product-1'}),
-          buildMockProduct({ec_name: 'product-2'}),
+          buildMockProduct({
+            ec_name: 'product-1',
+            responseId: 'old-response-id',
+          }),
+          buildMockProduct({
+            ec_name: 'product-2',
+            responseId: 'old-response-id',
+          }),
         ],
       });
 
@@ -194,6 +222,49 @@ describe('recommendation-slice', () => {
       expect(finalState[slotId]!.products[0].position).toBe(1);
       expect(finalState[slotId]!.products[1].position).toBe(2);
       expect(finalState[slotId]!.products[2].position).toBe(3);
+    });
+
+    it('when slot exists, sets the responseId on new products while preserving existing products responseId', () => {
+      const newProducts = [buildMockBaseProduct({ec_name: 'product-3'})];
+      const responseId = 'new-response-id';
+      const response = buildMockRecommendationsResponse({
+        products: newProducts,
+        responseId,
+        pagination: {
+          page: 1,
+          perPage: 2,
+          totalEntries: 22,
+          totalPages: 3,
+        },
+      });
+
+      state[slotId] = buildMockRecommendationsSlice({
+        products: [
+          buildMockProduct({
+            ec_name: 'product-1',
+            position: 1,
+            responseId: 'old-response-id',
+          }),
+          buildMockProduct({
+            ec_name: 'product-2',
+            position: 2,
+            responseId: 'old-response-id',
+          }),
+        ],
+      });
+
+      const action = fetchMoreRecommendations.fulfilled(response, '', {slotId});
+      const finalState = recommendationsReducer(state, action);
+
+      // Original products keep their responseId
+      expect(finalState[slotId]!.products[0].responseId).toBe(
+        'old-response-id'
+      );
+      expect(finalState[slotId]!.products[1].responseId).toBe(
+        'old-response-id'
+      );
+      // New products get the new responseId
+      expect(finalState[slotId]!.products[2].responseId).toBe(responseId);
     });
   });
 
@@ -371,6 +442,7 @@ describe('recommendation-slice', () => {
         children: [childProduct],
         totalNumberOfChildren: 1,
         position: 5,
+        responseId: 'test-response-id',
       });
 
       state[slotId]!.products = [parentProduct];
@@ -383,8 +455,30 @@ describe('recommendation-slice', () => {
           children: parentProduct.children,
           totalNumberOfChildren: parentProduct.totalNumberOfChildren,
           position: parentProduct.position,
+          responseId: parentProduct.responseId,
         }),
       ]);
+    });
+  });
+
+  describe('on #setError', () => {
+    it('should set the error state and set isLoading to false for every slotId', () => {
+      const error = {
+        message: 'Something went wrong',
+        statusCode: 401,
+        status: 401,
+        type: 'BadRequest',
+      };
+      Object.keys(state).forEach((slotId) => {
+        state[slotId] = buildMockRecommendationsSlice({isLoading: true});
+      });
+
+      const finalState = recommendationsReducer(state, setError(error));
+
+      Object.keys(finalState).forEach((slotId) => {
+        expect(finalState[slotId]!.error).toEqual(error);
+        expect(finalState[slotId]!.isLoading).toBe(false);
+      });
     });
   });
 

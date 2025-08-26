@@ -10,7 +10,7 @@ Building a new controller typically involves the following steps:
 
 2. Implement the controller under the `src/controllers/` directory.
 
-3. Split the implementation process in multiple smaller code review instead of just one big diff. It's okay to have partial/incomplete implementation merged in master, as long as nothing is exported or documented publicly.
+3. Split the implementation process in multiple smaller code review instead of just one big diff. It's okay to have partial/incomplete implementation merged in main, as long as nothing is exported or documented publicly.
 
 4. JSDoc is mandatory for all public symbols that will be interacted with by users of the library: This means new actions, options, interface, controller, functions, etc. Private symbols that are not exported do not require any documentation. Please include someone from the documentation team to help the review process.
 

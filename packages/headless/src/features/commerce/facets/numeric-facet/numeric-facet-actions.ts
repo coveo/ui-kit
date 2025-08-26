@@ -25,7 +25,13 @@ export interface ToggleSelectNumericFacetValuePayload {
    */
   selection: NumericRangeRequest;
 }
-
+/**
+ * Action to toggle a facet value of a NumericFacet.
+ *
+ * This is primarily used in facets and in breadcrumbs to select or deselect a facet value.
+ *
+ * @param payload - The payload of type {@link ToggleSelectNumericFacetValuePayload} containing the facet ID and the selection to toggle.
+ */
 export const toggleSelectNumericFacetValue = createAction(
   'commerce/facets/numericFacet/toggleSelectValue',
   (payload: ToggleSelectNumericFacetValuePayload) =>

@@ -6,13 +6,7 @@
   height: 3.5rem;
 }
 
-.row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.slds-card {
+.card-border {
   border: 1px solid #dddbda;
 }
 

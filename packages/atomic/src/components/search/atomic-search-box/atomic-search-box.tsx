@@ -476,6 +476,11 @@ export class AtomicSearchBox implements InitializableComponent<Bindings> {
       case 'Tab':
         this.suggestionManager.clearSuggestions();
         break;
+      default:
+        if (this.suggestionManager.keyboardActiveDescendant) {
+          this.suggestionManager.updateKeyboardActiveDescendant();
+        }
+        break;
     }
   }
 

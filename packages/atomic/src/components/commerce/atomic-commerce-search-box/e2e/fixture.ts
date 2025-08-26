@@ -1,7 +1,7 @@
 import {test as base, type Page} from '@playwright/test';
 import {type AxeFixture, makeAxeBuilder} from '@/playwright-utils/base-fixture';
+import {FacetsPageObject} from '../../atomic-commerce-facets/e2e/page-object';
 import {LoadMoreProductsPageObject} from '../../atomic-commerce-load-more-products/e2e/page-object';
-import {FacetsPageObject} from '../../facets/atomic-commerce-facets/e2e/page-object';
 import {SearchBoxPageObject} from './page-object';
 
 type MyFixtures = {

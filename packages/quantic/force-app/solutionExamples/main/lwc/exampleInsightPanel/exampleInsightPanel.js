@@ -36,6 +36,15 @@ export default class ExampleInsightPanel extends LightningElement {
     'Case.Subject',
     'Case.Description',
   ];
+  defaultExcludedCustomActions = [
+    'ticket_field_update',
+    'ticket_next_stage',
+    'ticket_classification_click',
+    'generatedAnswerStreamEnd',
+  ];
+  ticketCreationDateTime;
+  ticketCreationUserId;
+  userActionsReady = false;
 
   @wire(getRecord, {recordId: '$caseId', fields: '$caseFields'})
   wiredRecord({data, error}) {
@@ -239,6 +248,15 @@ export default class ExampleInsightPanel extends LightningElement {
    * @returns {void}
    */
   executeFirstSearch = () => {
+    this.ticketCreationDateTime = this.getFieldValueFromRecord(
+      this.caseRecord,
+      'Case.CreatedDate'
+    );
+    this.ticketCreationUserId = this.getFieldValueFromRecord(
+      this.caseRecord,
+      'Case.CreatedBy.Email'
+    );
+    this.userActionsReady = true;
     this.setupContext();
     this.engine.executeFirstSearch();
   };

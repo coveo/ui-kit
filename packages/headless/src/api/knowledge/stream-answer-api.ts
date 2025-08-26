@@ -18,7 +18,6 @@ import {
 } from '../../features/generated-answer/generated-answer-actions.js';
 import {logGeneratedAnswerStreamEnd} from '../../features/generated-answer/generated-answer-analytics-actions.js';
 import {selectFieldsToIncludeInCitation} from '../../features/generated-answer/generated-answer-selectors.js';
-import type {GeneratedContentFormat} from '../../features/generated-answer/generated-response-format.js';
 import {maximumNumberOfResultsFromIndex} from '../../features/pagination/pagination-constants.js';
 import {selectPipeline} from '../../features/pipeline/select-pipeline.js';
 import {selectQuery} from '../../features/query/query-selectors.js';
@@ -33,41 +32,14 @@ import {
   selectActiveTab,
   selectActiveTabExpression,
 } from '../../features/tab-set/tab-set-selectors.js';
-import type {SearchAppState} from '../../state/search-app-state.js';
-import type {
-  ConfigurationSection,
-  GeneratedAnswerSection,
-  InsightConfigurationSection,
-  TabSection,
-} from '../../state/state-sections.js';
 import {getFacets} from '../../utils/facet-utils.js';
 import {fetchEventSource} from '../../utils/fetch-event-source/fetch.js';
 import type {EventSourceMessage} from '../../utils/fetch-event-source/parse.js';
-import type {GeneratedAnswerCitation} from '../generated-answer/generated-answer-event-payload.js';
 import {getOrganizationEndpoint} from '../platform-client.js';
 import type {SearchRequest} from '../search/search/search-request.js';
 import {answerSlice} from './answer-slice.js';
-
-export type StateNeededByAnswerAPI = {
-  searchHub: string;
-  pipeline: string;
-  answer: ReturnType<typeof answerApi.reducer>;
-} & ConfigurationSection &
-  Partial<SearchAppState> &
-  Partial<InsightConfigurationSection> &
-  GeneratedAnswerSection &
-  Partial<TabSection>;
-
-export interface GeneratedAnswerStream {
-  answerId?: string;
-  contentFormat?: GeneratedContentFormat;
-  answer?: string;
-  citations?: GeneratedAnswerCitation[];
-  generated?: boolean;
-  isStreaming: boolean;
-  isLoading: boolean;
-  error?: {message: string; code: number};
-}
+import type {GeneratedAnswerStream} from './generated-answer-stream.js';
+import type {StreamAnswerAPIState} from './stream-answer-api-state.js';
 
 interface StreamPayload
   extends Pick<GeneratedAnswerStream, 'contentFormat' | 'citations'> {
@@ -143,7 +115,7 @@ const handleError = (
 export const updateCacheWithEvent = (
   event: EventSourceMessage,
   draft: GeneratedAnswerStream,
-  dispatch: ThunkDispatch<StateNeededByAnswerAPI, unknown, UnknownAction>
+  dispatch: ThunkDispatch<StreamAnswerAPIState, unknown, UnknownAction>
 ) => {
   const message: Required<MessageType> = JSON.parse(event.data);
   if (message.finishReason === 'ERROR' && message.errorMessage) {
@@ -200,16 +172,11 @@ export const answerApi = answerSlice.injectEndpoints({
       serializeQueryArgs: ({endpointName, queryArgs}) => {
         // RTK Query serialize our endpoints and they're serialized state arguments as the key in the store.
         // Keys must match, because if anything in the query changes, it's not the same query anymore.
-        // Some fields need to be excluded in the projection though, in this case some analytics fields,
-        // as they will change during the streaming.
-        const clone = JSON.parse(JSON.stringify(queryArgs));
-        if (clone.analytics) {
-          delete clone.analytics.clientTimestamp;
-          delete clone.analytics.actionCause;
-        }
+        // Analytics data is excluded entirely as it contains volatile fields that change during streaming.
+        const {analytics: _analytics, ...queryArgsWithoutAnalytics} = queryArgs;
 
-        // Standard RTK key, with some fields removed
-        return `${endpointName}(${JSON.stringify(clone)})`;
+        // Standard RTK key, with analytics excluded
+        return `${endpointName}(${JSON.stringify(queryArgsWithoutAnalytics)})`;
       },
       async onCacheEntryAdded(
         args,
@@ -222,7 +189,7 @@ export const answerApi = answerSlice.injectEndpoints({
          * https://redux-toolkit.js.org/rtk-query/usage-with-typescript#typing-dispatch-and-getstate
          */
         const {configuration, generatedAnswer, insightConfiguration} =
-          getState() as unknown as StateNeededByAnswerAPI;
+          getState() as unknown as StreamAnswerAPIState;
         const {organizationId, environment, accessToken} = configuration;
         const platformEndpoint = getOrganizationEndpoint(
           organizationId,
@@ -274,16 +241,20 @@ export const selectAnswerTriggerParams = createSelector(
   (state) => selectQuery(state)?.q,
   (state) => state.search.requestId,
   (state) => state.generatedAnswer.cannotAnswer,
-  (q, requestId, cannotAnswer) => ({
+  (state) => state.configuration.analytics.analyticsMode,
+  (state) => state.search.searchAction?.actionCause,
+  (q, requestId, cannotAnswer, analyticsMode, actionCause) => ({
     q,
     requestId,
     cannotAnswer,
+    analyticsMode,
+    actionCause,
   })
 );
 
 let generateFacetParams: Record<string, ReturnType<typeof getFacets>> = {};
 
-const getGeneratedFacetParams = (q: string, state: StateNeededByAnswerAPI) => ({
+const getGeneratedFacetParams = (q: string, state: StreamAnswerAPIState) => ({
   ...generateFacetParams,
   [q]: getFacets(state)
     ?.map((facetRequest) =>
@@ -294,7 +265,7 @@ const getGeneratedFacetParams = (q: string, state: StateNeededByAnswerAPI) => ({
     ),
 });
 
-const getNumberOfResultsWithinIndexLimit = (state: StateNeededByAnswerAPI) => {
+const getNumberOfResultsWithinIndexLimit = (state: StreamAnswerAPIState) => {
   if (!state.pagination) {
     return undefined;
   }
@@ -309,7 +280,7 @@ const getNumberOfResultsWithinIndexLimit = (state: StateNeededByAnswerAPI) => {
   return state.pagination.numberOfResults;
 };
 
-const buildAdvancedSearchQueryParams = (state: StateNeededByAnswerAPI) => {
+const buildAdvancedSearchQueryParams = (state: StreamAnswerAPIState) => {
   const advancedSearchQueryParams = selectAdvancedSearchQueries(state);
   const mergedCq = mergeAdvancedCQParams(state);
 
@@ -319,7 +290,7 @@ const buildAdvancedSearchQueryParams = (state: StateNeededByAnswerAPI) => {
   };
 };
 
-const mergeAdvancedCQParams = (state: StateNeededByAnswerAPI) => {
+const mergeAdvancedCQParams = (state: StreamAnswerAPIState) => {
   const activeTabExpression = selectActiveTabExpression(state.tabSet);
   const filterExpressions = selectStaticFilterExpressions(state);
   const {cq} = selectAdvancedSearchQueries(state);
@@ -330,7 +301,7 @@ const mergeAdvancedCQParams = (state: StateNeededByAnswerAPI) => {
 };
 
 export const constructAnswerQueryParams = (
-  state: StateNeededByAnswerAPI,
+  state: StreamAnswerAPIState,
   usage: 'fetch' | 'select',
   navigatorContext: NavigatorContext
 ) => {
@@ -339,6 +310,16 @@ export const constructAnswerQueryParams = (
   const {aq, cq, dq, lq} = buildAdvancedSearchQueryParams(state);
 
   const context = selectContext(state);
+
+  // For 'select' usage, exclude volatile analytics fields to match serializeQueryArgs behavior
+  const analyticsParams =
+    usage === 'select'
+      ? {}
+      : fromAnalyticsStateToAnalyticsParams(
+          state.configuration.analytics,
+          navigatorContext,
+          {actionCause: selectSearchActionCause(state)}
+        );
 
   const searchHub = selectSearchHub(state);
   const pipeline = selectPipeline(state);
@@ -354,6 +335,7 @@ export const constructAnswerQueryParams = (
     ...(cq && {cq}),
     ...(dq && {dq}),
     ...(lq && {lq}),
+    ...(state.query && {enableQuerySyntax: state.query.enableQuerySyntax}),
     ...(context?.contextValues && {
       context: context.contextValues,
     }),
@@ -389,18 +371,12 @@ export const constructAnswerQueryParams = (
       firstResult: state.pagination.firstResult,
     }),
     tab: selectActiveTab(state.tabSet),
-    ...fromAnalyticsStateToAnalyticsParams(
-      state.configuration.analytics,
-      navigatorContext,
-      {
-        actionCause: selectSearchActionCause(state),
-      }
-    ),
+    ...analyticsParams,
   };
 };
 
 export const fetchAnswer = (
-  state: StateNeededByAnswerAPI,
+  state: StreamAnswerAPIState,
   navigatorContext: NavigatorContext
 ) =>
   answerApi.endpoints.getAnswer.initiate(
@@ -408,7 +384,7 @@ export const fetchAnswer = (
   );
 
 export const selectAnswer = (
-  state: StateNeededByAnswerAPI,
+  state: StreamAnswerAPIState,
   navigatorContext?: NavigatorContext
 ) =>
   answerApi.endpoints.getAnswer.select(

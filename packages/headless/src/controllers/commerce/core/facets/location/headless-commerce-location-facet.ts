@@ -61,9 +61,9 @@ export function buildCommerceLocationFacet(
   options: LocationFacetOptions
 ): LocationFacet {
   const {
-    toggleSingleExclude,
-    toggleExclude,
-    isValueExcluded,
+    toggleSingleExclude: _toggleSingleExclude,
+    toggleExclude: _toggleExclude,
+    isValueExcluded: _isValueExcluded,
     ...coreController
   } = buildCoreCommerceFacet<FacetValueRequest, LocationFacetValue>(engine, {
     options: {

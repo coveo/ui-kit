@@ -286,30 +286,6 @@ test.describe('AtomicCommerceSearchBox', () => {
           await expect(searchBox.searchInput).toHaveValue('surf');
         });
       });
-
-      test.describe('after updating the redirect-url attribute', () => {
-        test.beforeEach(async ({searchBox}) => {
-          await searchBox.component.evaluate((node) =>
-            node.setAttribute(
-              'redirection-url',
-              './iframe.html?id=atomic-commerce-search-box--in-page&viewMode=story&args=enable-query-syntax:!true;suggestion-timeout:5000'
-            )
-          );
-        });
-
-        test('should redirect to the specified url after selecting a suggestion', async ({
-          page,
-          searchBox,
-        }) => {
-          await searchBox.searchInput.fill('surf');
-
-          await searchBox.searchSuggestions().first().click();
-          await page.waitForURL(
-            '**/iframe.html?id=atomic-commerce-search-box--in-page*'
-          );
-          await expect(searchBox.searchInput).toHaveValue('surfboard');
-        });
-      });
     });
 
     test.describe('when hovering a instant result and pressing Enter', () => {
@@ -447,92 +423,6 @@ test.describe('AtomicCommerceSearchBox', () => {
       test('should perform requests against the query suggest endpoint', async () => {
         await expect.poll(() => querySuggestionRequestPerformed).toBe(true);
       });
-    });
-  });
-
-  test.describe('with a facet & clear-filters set to true', () => {
-    test.beforeEach(async ({searchBox}) => {
-      await searchBox.load({
-        args: {clearFilters: true, suggestionTimeout: 5000},
-        story: 'in-page',
-      });
-    });
-
-    test('clicking the submit button should clear the facet value', async ({
-      facets,
-      searchBox,
-    }) => {
-      await facets.inclusionFilters.first().click();
-      await facets.clearFilters().waitFor({state: 'visible'});
-      await searchBox.submitButton.click();
-      await expect(facets.clearFilters()).not.toBeVisible();
-    });
-  });
-
-  test.describe('with a facet & clear-filters set to false', () => {
-    test.beforeEach(async ({searchBox}) => {
-      await searchBox.load({
-        args: {clearFilters: false, suggestionTimeout: 5000},
-        story: 'in-page',
-      });
-    });
-
-    test('clicking the submit button should not clear the facet value', async ({
-      facets,
-      searchBox,
-    }) => {
-      await facets.inclusionFilters.first().click();
-      await facets.clearFilters().waitFor({state: 'visible'});
-      await searchBox.submitButton.click();
-      await expect(facets.clearFilters()).toBeVisible();
-    });
-  });
-
-  test.describe('standalone searchbox', () => {
-    test.beforeEach(async ({page}) => {
-      await page.goto(
-        './iframe.html?id=atomic-commerce-search-box--standalone-search-box&viewMode=story&args=attributes-suggestion-timeout:5000'
-      );
-    });
-
-    test('should redirect to the specified url after submitting a query', async ({
-      page,
-      searchBox,
-    }) => {
-      await searchBox.searchInput.fill('kayak');
-      await searchBox.submitButton.click();
-      await page.waitForURL(
-        '**/iframe.html?id=atomic-commerce-search-box--in-page*'
-      );
-      await expect(searchBox.searchInput).toHaveValue('kayak');
-    });
-
-    test('should redirect to the specified url after selecting a suggestion', async ({
-      page,
-      searchBox,
-    }) => {
-      await searchBox.searchInput.click();
-
-      const suggestionText = await searchBox
-        .searchSuggestions()
-        .first()
-        .textContent();
-
-      expect(suggestionText).not.toBeNull();
-
-      await searchBox.searchSuggestions().first().click();
-      await page.waitForURL(
-        '**/iframe.html?id=atomic-commerce-search-box--in-page*'
-      );
-      await expect(searchBox.searchInput).toHaveValue(
-        suggestionText?.trim() ?? ''
-      );
-    });
-
-    test('should be A11y compliant', async ({searchBox, makeAxeBuilder}) => {
-      await searchBox.hydrated.waitFor();
-      const accessibilityResults = await makeAxeBuilder().analyze();
-      expect(accessibilityResults.violations).toEqual([]);
     });
   });
 });

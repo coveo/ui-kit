@@ -12,7 +12,7 @@ test.describe('AtomicCommerceRefineModal', () => {
 
   test('should be accessible', async ({makeAxeBuilder}) => {
     const accessibilityResults = await makeAxeBuilder().analyze();
-    expect(accessibilityResults.violations.length).toEqual(0);
+    expect(accessibilityResults.violations).toEqual([]);
   });
 
   test('should be able to close the modal', async ({page}) => {

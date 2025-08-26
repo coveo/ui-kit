@@ -1,5 +1,6 @@
 import {buildMockRecommendation} from '../../test/mock-recommendation.js';
 import {buildMockResult} from '../../test/mock-result.js';
+import {setError} from '../error/error-actions.js';
 import {
   getRecommendations,
   setRecommendationId,
@@ -73,5 +74,17 @@ describe('recommendation slice', () => {
     const pendingAction = getRecommendations.pending('');
     const finalState = recommendationReducer(state, pendingAction);
     expect(finalState.isLoading).toBe(true);
+  });
+
+  it('should set the error state and set isLoading to false on setError', () => {
+    const error = {
+      message: 'Something went wrong',
+      statusCode: 401,
+      status: 401,
+      type: 'BadRequest',
+    };
+    const finalState = recommendationReducer(state, setError(error));
+    expect(finalState.error).toEqual(error);
+    expect(finalState.isLoading).toBe(false);
   });
 });

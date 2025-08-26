@@ -173,6 +173,7 @@ export class AtomicQuickviewModal implements InitializableComponent {
         </div>
         <div class="relative overflow-auto">
           <QuickviewIframe
+            title={this.result?.title ?? this.bindings.i18n.t('preview-modal-title')} 
             logger={this.logger}
             src={this.quickviewSrc}
             sandbox={this.sandbox}

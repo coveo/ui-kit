@@ -5,6 +5,7 @@ import {beforeAll, beforeEach, describe, expect, it} from 'vitest';
 import {fixture} from '@/vitest-utils/testing-helpers/fixture';
 import '../atomic-commerce-interface/atomic-commerce-interface';
 import './atomic-commerce-layout';
+import {AtomicCommerceLayout} from './atomic-commerce-layout';
 
 describe('atomic-commerce-layout', () => {
   const locators = {
@@ -41,15 +42,17 @@ describe('atomic-commerce-layout', () => {
 
   it('should reflects mobileBreakpoint property to attribute', async () => {
     await setupElement({mobileBreakpoint: '900px'});
-    await expect(locators.layout).toHaveAttribute('mobile-breakpoint', '900px');
+    expect(locators.layout).toHaveAttribute('mobile-breakpoint', '900px');
   });
 
   it('uses default mobileBreakpoint if not set', async () => {
     await setupElement();
-    await expect(locators.layout).toHaveAttribute(
-      'mobile-breakpoint',
-      '1024px'
-    );
+    expect(locators.layout).toHaveAttribute('mobile-breakpoint', '1024px');
+  });
+
+  it('should add layout css on connectedCallback', async () => {
+    await setupElement();
+    expect(AtomicCommerceLayout.styles.length).toBeGreaterThan(0);
   });
 
   describe('when the viewport is larger than the mobile breakpoint', () => {
@@ -62,11 +65,11 @@ describe('atomic-commerce-layout', () => {
     });
 
     it('should render facets section', async () => {
-      await expect(locators.facets).toBeVisible();
+      expect(locators.facets).toBeVisible();
     });
 
     it('should always render main section', async () => {
-      await expect(locators.main).toBeVisible();
+      expect(locators.main).toBeVisible();
     });
   });
 
@@ -80,11 +83,11 @@ describe('atomic-commerce-layout', () => {
     });
 
     it('should not render facets section', async () => {
-      await expect(locators.facets).not.toBeVisible();
+      expect(locators.facets).not.toBeVisible();
     });
 
     it('should always render main section', async () => {
-      await expect(locators.main).toBeVisible();
+      expect(locators.main).toBeVisible();
     });
   });
 });

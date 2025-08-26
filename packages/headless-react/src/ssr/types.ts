@@ -9,7 +9,7 @@ import type {
 } from '@coveo/headless/ssr';
 import type {FunctionComponent, PropsWithChildren} from 'react';
 
-export type ContextStaticState<
+type ContextStaticState<
   TEngine extends CoreEngine,
   TControllers extends ControllerDefinitionsMap<TEngine, Controller>,
 > = {controllers: InferControllerStaticStateMapFromDefinitions<TControllers>};

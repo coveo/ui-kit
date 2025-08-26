@@ -149,7 +149,7 @@ export function buildFacet(engine: SearchEngine, props: FacetProps): Facet {
   };
 
   const facetSearch = createFacetSearch();
-  const {state, ...restOfFacetSearch} = facetSearch;
+  const {state: _state, ...restOfFacetSearch} = facetSearch;
 
   return {
     ...coreController,

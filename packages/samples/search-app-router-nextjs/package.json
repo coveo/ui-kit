@@ -1,0 +1,27 @@
+{
+  "name": "@coveo/search-app-router-nextjs",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "npm run build:assets && next dev",
+    "build": "npm run-script -w=@coveo/ci if-not-cdn -- \"npm run build:assets && next build\"",
+    "build:assets": "ncp ../../atomic-react/dist/assets public/assets && ncp ../../atomic-react/dist/lang public/lang public/assets",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "next": "15.2.4",
+    "react": "19.1.1",
+    "react-dom": "19.1.1",
+    "@coveo/atomic-react": "3.3.4",
+    "@coveo/atomic": "3.33.0",
+    "@coveo/headless": "3.28.4"
+  },
+  "devDependencies": {
+    "typescript": "5.8.3",
+    "@types/node": "22.16.5",
+    "@types/react": "19.1.1",
+    "@types/react-dom": "19.1.2",
+    "ncp": "2.0.0"
+  }
+}

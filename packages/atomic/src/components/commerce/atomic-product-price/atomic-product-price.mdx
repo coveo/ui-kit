@@ -1,0 +1,34 @@
+import { Meta } from '@storybook/blocks';
+import * as AtomicProductPriceStories from './atomic-product-price.new.stories';
+import { AtomicDocTemplate } from '../../../../storybook-utils/documentation/atomic-doc-template';
+
+
+<Meta of={AtomicProductPriceStories} />
+
+<AtomicDocTemplate
+  stories={AtomicProductPriceStories}
+  githubPath="commerce/atomic-product-price/atomic-product-price.ts"
+  tagName="atomic-product-price"
+  className="AtomicProductPrice"
+>
+
+The `atomic-product-price` component displays the price of a product. It uses the current currency set in the engine configuration.
+It is typically used within `atomic-product-template` components to show the price of a product in a product list.
+
+```html
+<atomic-commerce-interface>
+  ...
+  <atomic-commerce-product-list>
+    <atomic-product-template>
+      <template>
+        ...
+        <atomic-product-section-emphasized>
+          <atomic-product-price></atomic-product-price>
+        </atomic-product-section-emphasized>
+
+      </template>
+    </atomic-product-template>
+  </atomic-commerce-product-list>
+</atomic-commerce-interface>
+```
+</AtomicDocTemplate>

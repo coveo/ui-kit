@@ -90,6 +90,7 @@ describe('AtomicCommerceBreadbox', () => {
     return {
       element,
       label: () => page.getByText('Filters:'),
+      noTitle: () => page.getByTitle('No label'),
       regular: () => page.getByTitle('Regular'),
       hierarchical: () => page.getByTitle('Hierarchical'),
       numericalRange: () => page.getByTitle('Numerical Range'),
@@ -202,6 +203,33 @@ describe('AtomicCommerceBreadbox', () => {
     await userEvent.click(regular()!);
 
     expect(mockedDeselect).toHaveBeenCalled();
+  });
+
+  it('should use "no-label" as the label when facetDisplayName is undefined', async () => {
+    await renderBreadbox({
+      state: {
+        facetBreadcrumbs: [
+          {
+            facetId: 'brand',
+            facetDisplayName: undefined as unknown as string,
+            field: 'brand',
+            type: 'regular',
+            values: [
+              {
+                value: {
+                  value: 'Gucci',
+                  numberOfResults: 1,
+                  state: 'selected',
+                },
+                deselect: vi.fn(),
+              },
+            ],
+          },
+        ],
+      },
+    });
+
+    await expect.element(page.getByText('No label')).toBeVisible();
   });
 
   it('should have the correct value as the text on the  regular breadcrumb', async () => {

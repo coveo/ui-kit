@@ -153,7 +153,7 @@ describe('Pager Test Suites', () => {
   describe('Should allow customization of', () => {
     const iconTypes = ['previous', 'next'];
     const testCustomIcon =
-      'https://raw.githubusercontent.com/coveo/ui-kit/master/packages/atomic/src/images/arrow-top-rounded.svg';
+      'https://raw.githubusercontent.com/coveo/ui-kit/main/packages/atomic/src/images/arrow-top-rounded.svg';
 
     beforeEach(() => {
       cy.intercept({

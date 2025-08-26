@@ -24,7 +24,7 @@ The entry point from which you will import Coveo Headless resources depends on t
 
 ### Getting started
 
-Once you have cloned the repo, follow the instructions in the top-level [README.md](https://github.com/coveo/ui-kit/src/master/README.md) to install dependencies and link packages.
+Once you have cloned the repo, follow the instructions in the top-level [README.md](https://github.com/coveo/ui-kit/src/main/README.md) to install dependencies and link packages.
 
 To start the project in development mode, run:
 
@@ -63,6 +63,8 @@ The headless project intensively uses ["Redux"](https://redux.js.org) along with
 ### Source folder structure
 
 The base of the `/src` folder should only contain exports.
+
+`/ssr` contains all logic and types related to server-side rendering (SSR) engines and controllers
 
 `/app` contains app-wide setup: Redux store, root reducer, middlewares.
 

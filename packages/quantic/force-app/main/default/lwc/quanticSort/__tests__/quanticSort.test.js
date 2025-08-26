@@ -22,7 +22,7 @@ const sortVariants = {
   wide: {
     name: 'wide',
     labelContainerSelector: '.sort__container',
-    labelSelector: '[data-cy="filters-title"]',
+    labelSelector: '[data-testid="filters-title"]',
     dropdownContainerSelector: 'lightning-layout-item',
   },
 };

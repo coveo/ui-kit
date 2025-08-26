@@ -8,6 +8,7 @@ import {
   fetchQuerySuggestions as fetchCommerceQuerySuggestions,
   registerQuerySuggest as registerCommerceQuerySuggest,
 } from '../commerce/query-suggest/query-suggest-actions.js';
+import {setError} from '../error/error-actions.js';
 import {
   type ClearQuerySuggestActionCreatorPayload,
   clearQuerySuggest,
@@ -93,6 +94,15 @@ export const querySuggestReducer = createReducer(
       })
       .addCase(clearCommerceQuerySuggest, (state, action) => {
         handleClearQuerySuggest(state, action.payload);
+      })
+      .addCase(setError, (state, action) => {
+        Object.keys(state).forEach((slotId) => {
+          const slot = state[slotId];
+          if (slot) {
+            slot.error = action.payload;
+            slot.isLoading = false;
+          }
+        });
       })
 );
 

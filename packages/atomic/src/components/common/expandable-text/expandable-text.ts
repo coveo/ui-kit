@@ -1,9 +1,11 @@
 import {html} from 'lit';
+import {multiClassMap, tw} from '@/src/directives/multi-class-map';
 import type {FunctionalComponentWithChildren} from '@/src/utils/functional-component-utils';
 import MinusIcon from '../../../images/minus.svg';
 import PlusIcon from '../../../images/plus.svg';
 import {renderButton} from '../button';
 import '../atomic-icon/atomic-icon';
+import {type Ref, ref} from 'lit/directives/ref.js';
 
 export type TruncateAfter = 'none' | '1' | '2' | '3' | '4';
 
@@ -26,6 +28,7 @@ export interface ExpandableTextProps {
   onToggleExpand: (e: MouseEvent | undefined) => void;
   showMoreLabel: string;
   showLessLabel: string;
+  textRef: Ref<HTMLDivElement>;
 }
 
 export const renderExpandableText: FunctionalComponentWithChildren<
@@ -40,32 +43,42 @@ export const renderExpandableText: FunctionalComponentWithChildren<
       onToggleExpand,
       showMoreLabel,
       showLessLabel,
+      textRef,
     },
   }) =>
   (children) => {
-    const expandableTextClass = `expandable-text ${!isExpanded ? getLineClampClass(truncateAfter) : ''} min-lines-${truncateAfter}`;
+    const expandableTextClasses = tw({
+      'expandable-text leading-[var(--line-height)]': true,
+      [getLineClampClass(truncateAfter)]: !isExpanded,
+      [`min-lines-${truncateAfter}`]: true,
+    });
 
-    let buttonClass =
-      'expandable-text-button p-1 text-xs leading-[calc(1/.75)]';
-    if (!isTruncated && !isExpanded) {
-      buttonClass += ' invisible';
-    } else if (!isCollapsible && !isTruncated && isExpanded) {
-      buttonClass += ' hidden';
-    }
+    const buttonClasses = tw({
+      'expandable-text-button p-1 text-xs leading-[calc(1/.75)]': true,
+      invisible: !isTruncated && !isExpanded,
+      hidden: !isCollapsible && !isTruncated && isExpanded,
+    });
+
+    const buttonClassString = Object.entries(buttonClasses)
+      .filter(([, value]) => value)
+      .map(([key]) => key)
+      .join(' ');
 
     const buttonLabel = isExpanded ? showLessLabel : showMoreLabel;
     const icon = isExpanded ? MinusIcon : PlusIcon;
 
     return html`<div class="flex flex-col items-start">
         <div part="expandable-text"
-        class="${expandableTextClass}">
+        class="${multiClassMap(expandableTextClasses)}"
+        ${ref(textRef)}
+        >
         ${children}
         </div>
 
         ${renderButton({
           props: {
             style: 'text-primary',
-            class: buttonClass,
+            class: buttonClassString,
             title: buttonLabel,
             onClick: onToggleExpand,
           },

@@ -49,6 +49,7 @@ const MAX_VALID_COLLAPSED_HEIGHT = 500;
 const MIN_VALID_COLLAPSED_HEIGHT = 150;
 
 const GENERATED_ANSWER_DATA_KEY = 'coveo-generated-answer-data';
+const DEFAULT_CITATION_FIELDS = ['sfid', 'sfkbid', 'sfkavid', 'filetype'];
 
 /**
  * The `QuanticGeneratedAnswer` component automatically generates an answer using Coveo machine learning models to answer the query executed by the user.
@@ -71,9 +72,9 @@ export default class QuanticGeneratedAnswer extends LightningElement {
    * A list of fields to fetch with the citations used to generate the answer.
    * @api
    * @type {string}
-   * @defaultValue `'sfid,sfkbid,sfkavid'`
+   * @defaultValue `'sfid,sfkbid,sfkavid,filetype'`
    */
-  @api fieldsToIncludeInCitations = 'sfid,sfkbid,sfkavid';
+  @api fieldsToIncludeInCitations = 'sfid,sfkbid,sfkavid,filetype';
   /**
    * Whether the generated answer should be collapsible when it exceeds the maximum height of 250px.
    * @api
@@ -118,6 +119,13 @@ export default class QuanticGeneratedAnswer extends LightningElement {
       this._maxCollapsedHeight = DEFAULT_COLLAPSED_HEIGHT;
     }
   }
+  /**
+   * Whether to disable citation anchoring.
+   * @api
+   * @type {boolean}
+   * @default false
+   */
+  @api disableCitationAnchoring = false;
 
   labels = {
     generatedAnswerForYou,
@@ -530,10 +538,17 @@ export default class QuanticGeneratedAnswer extends LightningElement {
   }
 
   get citationFields() {
-    return this.fieldsToIncludeInCitations
-      ?.split(',')
-      .map((field) => field.trim())
-      .filter((field) => field.length > 0);
+    const userCitationFields =
+      this.fieldsToIncludeInCitations
+        ?.split(',')
+        .map((field) => field.trim())
+        .filter((field) => field.length > 0) || [];
+
+    const combinedCitationFields = [
+      ...DEFAULT_CITATION_FIELDS,
+      ...userCitationFields,
+    ];
+    return [...new Set(combinedCitationFields)];
   }
 
   get shouldShowDisclaimer() {

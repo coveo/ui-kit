@@ -10,16 +10,12 @@ import {
   type SearchSummaryState,
   type Summary,
 } from '@coveo/headless/commerce';
-import {type CSSResultGroup, html, LitElement, nothing, unsafeCSS} from 'lit';
+import {type CSSResultGroup, html, LitElement, nothing} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {keyed} from 'lit/directives/keyed.js';
 import {map} from 'lit/directives/map.js';
 import {ref} from 'lit/directives/ref.js';
 import {when} from 'lit/directives/when.js';
-import type {
-  ItemRenderingFunction,
-  SelectChildProductEventArgs,
-} from '@/src/components.js';
 import {bindStateToController} from '@/src/decorators/bind-state.js';
 import {bindingGuard} from '@/src/decorators/binding-guard.js';
 import {bindings} from '@/src/decorators/bindings.js';
@@ -33,7 +29,10 @@ import {renderItemPlaceholders} from '../../common/atomic-result-placeholder/ite
 import {createAppLoadedListener} from '../../common/interface/store.js';
 import {renderDisplayWrapper} from '../../common/item-list/display-wrapper.js';
 import {renderGridLayout} from '../../common/item-list/grid-layout.js';
-import {ItemListCommon} from '../../common/item-list/item-list-common.js';
+import {
+  ItemListCommon,
+  type ItemRenderingFunction,
+} from '../../common/item-list/item-list-common.js';
 import {
   renderTableData,
   renderTableLayout,
@@ -46,6 +45,7 @@ import {
   type ItemDisplayLayout,
 } from '../../common/layout/display-options.js';
 import type {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface.js';
+import type {SelectChildProductEventArgs} from '../atomic-product-children/select-child-product-event.js';
 import {ProductTemplateProvider} from '../product-list/product-template-provider.js';
 import styles from './atomic-commerce-product-list.tw.css';
 
@@ -66,8 +66,6 @@ import styles from './atomic-commerce-product-list.tw.css';
  * @part result-table-cell - The td elements nested under each tbody > tr when the display prop is set to "table".
  *
  * @slot default - The default slot where the product templates are defined.
- *
- * @alpha
  */
 @customElement('atomic-commerce-product-list')
 @bindings()
@@ -76,7 +74,7 @@ export class AtomicCommerceProductList
   extends ChildrenUpdateCompleteMixin(LitElement)
   implements InitializableComponent<CommerceBindings>
 {
-  static styles: CSSResultGroup = [unsafeCSS(styles)];
+  static styles: CSSResultGroup = styles;
 
   public searchOrListing!: Search | ProductListing;
   public summary!: Summary<ProductListingSummaryState | SearchSummaryState>;

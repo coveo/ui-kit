@@ -12,7 +12,7 @@ import {
   type SortState,
   type Summary,
 } from '@coveo/headless/commerce';
-import {type CSSResultGroup, html, LitElement, nothing, unsafeCSS} from 'lit';
+import {type CSSResultGroup, css, html, LitElement, nothing} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {booleanConverter} from '@/src/converters/boolean-converter';
 import {bindStateToController} from '@/src/decorators/bind-state';
@@ -31,7 +31,6 @@ import {renderRefineModal} from '../../common/refine-modal/modal';
 import {renderRefineModalSortSection} from '../../common/refine-modal/sort';
 import type {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface';
 import {getSortByLabel, renderCommerceSortOption} from '../sort/option';
-import styles from './atomic-commerce-refine-modal.tw.css';
 
 /**
  * The `atomic-commerce-refine-modal` is automatically created as a child of the `atomic-commerce-search-interface` when the `atomic-commerce-refine-toggle` is initialized.
@@ -63,7 +62,13 @@ export class AtomicCommerceRefineModal
   extends LitElement
   implements InitializableComponent<CommerceBindings>
 {
-  static styles: CSSResultGroup = [unsafeCSS(styles)];
+  static styles: CSSResultGroup = [
+    css`
+      :host {
+        position: absolute;
+      }
+    `,
+  ];
 
   @state()
   bindings!: CommerceBindings;

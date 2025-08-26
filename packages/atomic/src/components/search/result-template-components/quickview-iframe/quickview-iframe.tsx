@@ -45,13 +45,14 @@ const warnAboutLimitedUsageQuickview = (logger?: SearchEngine['logger']) => {
 };
 
 export const QuickviewIframe: FunctionalComponent<{
+  title: string;
   content?: string;
   onSetIframeRef: (ref: HTMLIFrameElement) => void;
   uniqueIdentifier?: string;
   sandbox?: string;
   src?: string;
   logger?: SearchEngine['logger'];
-}> = ({onSetIframeRef, uniqueIdentifier, content, sandbox, src, logger}) => {
+}> = ({title, onSetIframeRef, uniqueIdentifier, content, sandbox, src, logger}) => {
   // When a document is written with document.open/document.write/document.close
   // it is not synchronous and the content of the iframe is only available to be queried at the end of the current call stack.
   // This add a "wait" (setTimeout 0) before calling the `onSetIframeRef` from the parent modal quickview
@@ -61,6 +62,7 @@ export const QuickviewIframe: FunctionalComponent<{
 
   return (
     <iframe
+      title={title}
       src="about:blank"
       class="h-full w-full"
       sandbox={sandbox}

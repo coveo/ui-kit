@@ -1,22 +1,19 @@
-import {Canvas, ArgTypes, Meta, Title, Description, Stories, Subtitle} from '@storybook/blocks';
+import { Meta } from '@storybook/blocks';
 import * as {{namePascalCase}}Stories from './{{name}}.new.stories';
-import {CanvasWithGithub} from '../../../../storybook-utils/documentation/canvas-with-github';
+import { AtomicDocTemplate } from '../../../../storybook-utils/documentation/atomic-doc-template';
 
 <Meta of={ {{namePascalCase}}Stories } />
 
-<Title />
-<Subtitle><Description/></Subtitle>
+<AtomicDocTemplate
+  stories={ {{namePascalCase}}Stories }
+  githubPath="{{githubPath}}"
+  tagName="{{name}}"
+  className="{{namePascalCase}}"
+>
 
-<CanvasWithGithub
-  of={ {{namePascalCase}}Stories.Default }
-  githubPath="TODO/{{name}}/{{name}}.ts"
-/>
+// TODO: Add usage instructions here.
 
-## Usage
-TODO: Add usage instructions here.
+// * See atomic-product-link.mdx for typical template component.
+// * See atomic-commerce-pager.mdx for typical non-template component.
 
-## Examples
-<Stories title={""}/>
-
-## Reference
-<ArgTypes />
+</AtomicDocTemplate>

@@ -238,13 +238,18 @@ describe('commerce api client', () => {
   });
 
   it('#facetSearch should call the platform endpoint with the correct arguments', async () => {
-    const {accessToken, organizationId, url, ...searchContext} =
-      await buildCommerceAPIRequest();
+    const {
+      accessToken: _accessToken,
+      organizationId,
+      url: _url,
+      ...searchContext
+    } = await buildCommerceAPIRequest();
     const request = {
       ...(await buildCommerceAPIRequest()),
       facetId: 'some-facet-id',
       facetQuery: 'some facet query',
       query: 'some query',
+      numberOfValues: 5,
       ...searchContext,
     };
 

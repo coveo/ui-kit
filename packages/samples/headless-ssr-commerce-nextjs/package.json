@@ -5,23 +5,21 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "nx build",
+    "build": "next build",
     "prod": "next start",
-    "lint": "next lint",
-    "build:next": "next build"
+    "lint": "next lint"
   },
   "dependencies": {
-    "@coveo/headless-react": "2.4.36",
+    "@coveo/headless-react": "2.5.4",
     "next": "15.2.4",
-    "react": "19.1.0",
+    "react": "19.1.1",
     "react-dom": "19.1.0"
   },
   "devDependencies": {
-    "@types/node": "22.16.0",
+    "@types/node": "22.16.5",
     "@types/react": "19.1.1",
     "@types/react-dom": "19.1.2",
-    "@playwright/test": "1.53.2",
-    "eslint": "8.57",
+    "@playwright/test": "1.54.1",
     "typescript": "5.8.3"
   }
 }

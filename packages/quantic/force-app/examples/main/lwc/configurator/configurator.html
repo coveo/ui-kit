@@ -10,7 +10,7 @@
                         onchange={handleFieldChange}
                         readonly={configured}
                         data-option={option.attribute}
-                        data-cy={option.cyId}
+                        data-testid={option.testId}
                     ></lightning-input>
                 </div>
                 <div class="slds-col slds-var-m-top_small">
@@ -26,14 +26,14 @@
                 title="Try it now"
                 onclick={handleTry}
                 disabled={configured}
-                data-cy="cfg-try"
+                data-testid="cfg-try"
             ></lightning-button>
 
             <lightning-button
                 label="Reset"
                 title="Reset"
                 onclick={handleReset}
-                data-cy="cfg-reset"
+                data-testid="cfg-reset"
                 class="slds-var-m-left_medium"
             ></lightning-button>
         </div>

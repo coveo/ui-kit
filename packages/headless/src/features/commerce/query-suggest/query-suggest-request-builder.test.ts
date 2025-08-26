@@ -50,7 +50,7 @@ describe('#buildQuerySuggestRequest', () => {
   });
 
   it('sets base properties to the value returned by #buildBaseCommerceAPIRequest(#state, #navigatorContext)', () => {
-    const {query, ...restOfRequest} = buildQuerySuggestRequest(
+    const {query: _query, ...restOfRequest} = buildQuerySuggestRequest(
       querySetId,
       state,
       navigatorContext

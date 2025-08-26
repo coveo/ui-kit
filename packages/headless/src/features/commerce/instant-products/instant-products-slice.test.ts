@@ -230,7 +230,7 @@ describe('instant products slice', () => {
         const expectedState = makeState({
           isLoading: false,
           error: null,
-          products: [buildMockProduct()],
+          products: [buildMockProduct({responseId: 'someid'})],
           expiresAt: 0,
           isActive: true,
           searchUid: 'someid',
@@ -271,7 +271,7 @@ describe('instant products slice', () => {
         const expectedState = makeState({
           isLoading: false,
           error: null,
-          products: [buildMockProduct()],
+          products: [buildMockProduct({responseId: 'someid'})],
           expiresAt: Date.now() + 10000,
           isActive: true,
           searchUid: 'someid',
@@ -320,10 +320,12 @@ describe('instant products slice', () => {
             buildMockProduct({
               ec_name: 'product1',
               position: 1,
+              responseId: 'someid',
             }),
             buildMockProduct({
               ec_name: 'product2',
               position: 2,
+              responseId: 'someid',
             }),
           ],
           expiresAt: Date.now() + 10000,
@@ -335,6 +337,43 @@ describe('instant products slice', () => {
 
         expect(instantProductsReducer(initialState, action)).toEqual(
           expectedState
+        );
+      });
+
+      it('assigns responseId from response to all products during preprocessing', () => {
+        const query = 'some_query';
+        const apiProducts = [
+          buildMockBaseProduct({ec_name: 'product1'}),
+          buildMockBaseProduct({ec_name: 'product2'}),
+        ];
+        const responseId = 'response-from-api';
+
+        const action = fetchInstantProducts.fulfilled(
+          {
+            response: {
+              products: apiProducts,
+              pagination: {totalEntries: 2},
+              responseId,
+            } as unknown as SearchCommerceSuccessResponse,
+          } as QuerySearchCommerceAPIThunkReturn,
+          'req_id',
+          {
+            id: id1,
+            q: query,
+          }
+        );
+
+        const initialState = getSearchBoxInstantProductsState(id1, query, {
+          [query]: initialEmptyCache(),
+        });
+
+        const finalState = instantProductsReducer(initialState, action);
+
+        expect(finalState[id1].cache[query].products[0].responseId).toBe(
+          responseId
+        );
+        expect(finalState[id1].cache[query].products[1].responseId).toBe(
+          responseId
         );
       });
     });
@@ -419,6 +458,7 @@ describe('instant products slice', () => {
         children: [childProduct],
         totalNumberOfChildren: 1,
         position: 5,
+        responseId: 'test-response-id',
       });
 
       state[id]!.cache[query].products = [parentProduct];
@@ -431,6 +471,7 @@ describe('instant products slice', () => {
           children: parentProduct.children,
           totalNumberOfChildren: parentProduct.totalNumberOfChildren,
           position: parentProduct.position,
+          responseId: parentProduct.responseId,
         }),
       ]);
     });

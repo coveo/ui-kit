@@ -21,21 +21,21 @@ import {
 /**
  * @internal
  */
-export interface SmartSnippetInteractiveQuestionsOptions {
+interface SmartSnippetInteractiveQuestionsOptions {
   selectionDelay?: number;
 }
 
 /**
  * @internal
  */
-export interface SmartSnippetInteractiveQuestionsProps {
+interface SmartSnippetInteractiveQuestionsProps {
   options?: SmartSnippetInteractiveQuestionsOptions;
 }
 
 /**
  * @internal
  */
-export interface SmartSnippetInteractiveQuestions {
+interface SmartSnippetInteractiveQuestions {
   selectSource(questionAnswerId: string): void;
   beginDelayedSelectSource(questionAnswerId: string): void;
   cancelPendingSelectSource(questionAnswerId: string): void;

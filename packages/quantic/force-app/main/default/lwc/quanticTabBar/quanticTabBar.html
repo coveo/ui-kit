@@ -1,7 +1,7 @@
 <template>
   <div class={tabBarContainerClasses}>
     <div
-      class="tab-bar_list-container slds-tabs_default slds-tabs_default__nav slds-is-relative"
+      class="tab-bar_list-container slds-grid slds-tabs_default slds-tabs_default__nav slds-is-relative"
     >
       <slot></slot>
       <div
@@ -13,7 +13,7 @@
         <div class={dropdownClasses} data-testid="tab-bar_dropdown-container">
           <button
             data-testid="tab-bar_more-button"
-            class="slds-button slds-var-p-horizontal_small"
+            class="slds-button slds-var-p-horizontal_small tab-bar__more-button"
             aria-haspopup="true"
             onclick={toggleDropdown}
             name={labels.more}

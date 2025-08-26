@@ -1,20 +1,20 @@
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles.js';
-import {CSSResultGroup, html, unsafeCSS} from 'lit';
+import {type CSSResultGroup, css, html} from 'lit';
 import {customElement, property} from 'lit/decorators.js';
-import styles from './{{name}}.tw.css';
 
 /**
-* The {{name}} is a component that does something.
+* The `{{name}}` component displays a simple greeting message.
 */
 @customElement('{{name}}')
 @withTailwindStyles
 export class {{namePascalCase}} extends LitElement {
-  static styles: CSSResultGroup = [
-    unsafeCSS(styles),
-  ];
+  static style = css`
+    h1 {
+      color: #3490dc;
+  }`
 
   /**
-   * The name of the {{name}}
+   * The name of the entity to greet.
    */
   @property() name = 'World';
 

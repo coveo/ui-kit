@@ -6,7 +6,7 @@ import {
   getMessages,
 } from './parse.js';
 
-export const EventStreamContentType = 'text/event-stream';
+const EventStreamContentType = 'text/event-stream';
 
 const DefaultRetryInterval = 1000;
 const LastEventId = 'last-event-id';
@@ -15,7 +15,7 @@ function isBrowser() {
   return typeof window !== 'undefined';
 }
 
-export interface FetchEventSourceInit extends RequestInit {
+interface FetchEventSourceInit extends RequestInit {
   /**
    * The request headers. FetchEventSource only supports the Record<string,string> format.
    */

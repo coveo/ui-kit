@@ -78,7 +78,7 @@ describe('url manager', () => {
       engine.state.query!.q = 'test';
       manager.synchronize('');
 
-      const {tab, ...initialParametersWithoutTab} =
+      const {tab: _tab, ...initialParametersWithoutTab} =
         initialSearchParameterSelector(engine.state);
 
       expect(restoreSearchParameters).toHaveBeenCalledWith(

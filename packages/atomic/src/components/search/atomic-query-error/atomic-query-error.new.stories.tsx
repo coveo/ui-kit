@@ -9,7 +9,7 @@ const {decorator, play} = wrapInSearchInterface({
 
 const meta: Meta = {
   component: 'atomic-query-error',
-  title: 'Atomic/QueryError',
+  title: 'Search/QueryError',
   id: 'atomic-query-error',
 
   render: renderComponent,

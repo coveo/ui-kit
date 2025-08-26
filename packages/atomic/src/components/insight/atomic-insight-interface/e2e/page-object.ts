@@ -1,6 +1,8 @@
 import type {Page} from '@playwright/test';
 import {BasePageObject} from '@/playwright-utils/base-page-object';
 
+const INSIGHT_SEARCH_REGEX = /\/insight\/v1\/configs\/.*\/search/;
+
 export class InsightInterfacePageObject extends BasePageObject<'atomic-insight-interface'> {
   constructor(page: Page) {
     super(page, 'atomic-insight-interface');
@@ -39,7 +41,9 @@ export class InsightInterfacePageObject extends BasePageObject<'atomic-insight-i
   }
 
   get insightResults() {
-    return this.page.locator('atomic-insight-result');
+    return this.page.locator(
+      'atomic-insight-result:not(atomic-insight-result atomic-insight-result)'
+    );
   }
 
   get atomicQuickviewModal() {
@@ -68,42 +72,49 @@ export class InsightInterfacePageObject extends BasePageObject<'atomic-insight-i
     });
   }
 
-  get connectResultLink() {
-    return this.insightResults.getByRole('link', {name: 'Connect'});
+  get videoResultLink() {
+    return this.page.getByTestId('video-insight-result-link');
   }
 
-  async waitForNonVideoResultsToBeDetached() {
-    await this.connectResultLink.waitFor({state: 'detached'});
+  async waitForVideoResultLinksToBeVisible() {
+    await this.videoResultLink.first().waitFor({state: 'visible'});
+  }
+
+  async waitForInsightSearchResponse() {
+    await this.page.waitForResponse(INSIGHT_SEARCH_REGEX);
   }
 
   getResultByIndex(index: number) {
     return this.insightResults.nth(index);
   }
 
-  async hoverResultByIndex(index: number) {
-    await this.getResultByIndex(index).hover();
+  async hoverResultTitleByIndex(index: number) {
+    await this.getResultByIndex(index)
+      .locator('atomic-result-link')
+      .first()
+      .hover();
   }
 
   getActionBarByIndex(index: number) {
-    return this.getResultByIndex(index).locator(
-      'atomic-insight-result-action-bar'
-    );
+    return this.getResultByIndex(index)
+      .locator('atomic-insight-result-action-bar')
+      .first();
   }
 
   getResultAttachToCaseByIndex(index: number) {
-    return this.getResultByIndex(index).locator(
+    return this.getActionBarByIndex(index).locator(
       'atomic-insight-result-attach-to-case-action'
     );
   }
 
   getResultCopyToClipboardByIndex(index: number) {
-    return this.getResultByIndex(index).locator(
+    return this.getActionBarByIndex(index).locator(
       'atomic-insight-result-action[action="copyToClipboard"]'
     );
   }
 
   getResultQuickviewByIndex(index: number) {
-    return this.getResultByIndex(index).locator(
+    return this.getActionBarByIndex(index).locator(
       'atomic-insight-result-quickview-action'
     );
   }

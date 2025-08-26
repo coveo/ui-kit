@@ -1,6 +1,6 @@
 import {backOff} from 'exponential-backoff';
 import type {Logger} from 'pino';
-import {DisconnectedError, ExpiredTokenError} from '../utils/errors.js';
+import {DisconnectedError, UnauthorizedTokenError} from '../utils/errors.js';
 import type {PlatformEnvironment} from '../utils/url-utils.js';
 import {clone} from '../utils/utils.js';
 import {canBeFormUrlEncoded, encodeAsFormUrl} from './form-url-encoder.js';
@@ -41,7 +41,7 @@ export interface PlatformResponse<T> {
 }
 
 export type PlatformClientCallError =
-  | ExpiredTokenError
+  | UnauthorizedTokenError
   | DisconnectedError
   | Error;
 
@@ -81,7 +81,7 @@ export class PlatformClient {
         case 419:
         case 401:
           logger.info('Platform renewing token');
-          throw new ExpiredTokenError();
+          throw new UnauthorizedTokenError();
         case 404:
           throw new DisconnectedError(url, response.status);
         default:
@@ -102,7 +102,7 @@ export class PlatformClient {
     options: PlatformClientCallOptions
   ) {
     const {origin, preprocessRequest, logger, requestMetadata} = options;
-    const {signal, ...withoutSignal} = defaultRequestOptions;
+    const {signal: _signal, ...withoutSignal} = defaultRequestOptions;
     const untaintedOutput: PlatformRequestOptions = clone(withoutSignal);
 
     try {
@@ -143,13 +143,6 @@ export function getOrganizationEndpoint(
     endpointType === 'platform' ? '' : `.${endpointType}`;
 
   return `https://${organizationId}${endpointTypePart}.org${environmentSuffix}.coveo.com`;
-}
-
-export function getAdministrationOrganizationEndpoint(
-  organizationId: string,
-  environment: PlatformEnvironment = 'prod'
-) {
-  return getOrganizationEndpoint(organizationId, environment, 'admin');
 }
 
 export function getSearchApiBaseUrl(

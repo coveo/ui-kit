@@ -4,8 +4,9 @@ import type {i18n} from 'i18next';
 import {html, LitElement, nothing, type TemplateResult} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {vi} from 'vitest';
+import type {CommerceStore} from '@/src/components/commerce/atomic-commerce-interface/store.js';
+import type {BaseAtomicInterface} from '@/src/components/common/interface/interface-controller.js';
 import {bindingsContext} from '@/src/components/context/bindings-context.js';
-import type {CommerceStore} from '@/src/components.js';
 import {
   type InitializeEvent,
   markParentAsReady,
@@ -15,7 +16,6 @@ import type {
   AtomicCommerceInterface,
   CommerceBindings,
 } from '../../../../../src/components/commerce/atomic-commerce-interface/atomic-commerce-interface.js';
-import type {BaseAtomicInterface} from '../../../../../src/components/common/interface/interface-common.js';
 import {fixture} from '../../../fixture.js';
 import {createTestI18n} from '../../../i18n-utils.js';
 import {genericSubscribe} from '../../headless/common.js';
@@ -34,7 +34,7 @@ export class FixtureAtomicCommerceInterface
   template!: TemplateResult;
   @provide({context: bindingsContext})
   bindings: CommerceBindings = {} as CommerceBindings;
-  error?: Error | undefined;
+  error!: Error;
   updateIconAssetsPath = () => {};
   registerFieldsToInclude?: (() => void) | undefined;
 

@@ -12,7 +12,7 @@ test.describe('with an alt text field', async () => {
 
     test('should be accessible', async ({makeAxeBuilder}) => {
       const accessibilityResults = await makeAxeBuilder().analyze();
-      expect(accessibilityResults.violations.length).toEqual(0);
+      expect(accessibilityResults.violations).toEqual([]);
     });
 
     test('should use the alt text', async ({resultImage}) => {

@@ -83,7 +83,7 @@ export default defineConfig({
       stderr: 'pipe',
     },
     isCDN && {
-      command: 'npx nx run cdn:serve',
+      command: 'npx turbo serve --filter=@coveo/cdn',
       timeout: 10 * 60e3,
       port: 3000,
       reuseExistingServer: !process.env.CI,

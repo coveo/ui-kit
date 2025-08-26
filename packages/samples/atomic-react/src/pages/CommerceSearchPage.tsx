@@ -2,6 +2,7 @@ import {
   AtomicCommerceFacets,
   AtomicCommerceInterface,
   AtomicCommerceLayout,
+  AtomicCommerceLoadMoreProducts,
   AtomicCommerceProductList,
   AtomicCommerceQuerySummary,
   AtomicCommerceSearchBox,
@@ -62,6 +63,9 @@ export const CommerceSearchPage = () => {
               image-size="small"
               template={MyTemplate}
             />
+          </AtomicLayoutSection>
+          <AtomicLayoutSection section="pagination">
+            <AtomicCommerceLoadMoreProducts />
           </AtomicLayoutSection>
         </AtomicLayoutSection>
       </AtomicCommerceLayout>

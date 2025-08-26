@@ -25,11 +25,11 @@ export interface ContextParam {
   context: ContextParams;
 }
 
-export interface ProductParam {
+type ProductParam = {
   productId: string;
-}
+};
 
-export interface ContextParams {
+type ContextParams = {
   view: ViewParams;
   user?: UserParams;
   product?: ProductParam;
@@ -37,7 +37,7 @@ export interface ContextParams {
   purchased?: CartItemParam[];
   capture: boolean;
   source: string[];
-}
+};
 
 export interface ViewParams {
   url: string;
@@ -83,6 +83,10 @@ export interface QueryParam {
 
 export interface FacetQueryParam {
   facetQuery: string;
+}
+
+export interface NumberOfValuesParam {
+  numberOfValues: number;
 }
 
 export interface FacetIdParam {

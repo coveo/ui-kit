@@ -73,8 +73,7 @@ export const arrayEqualStrictlyDifferentOrder = <
 };
 
 export const deepEqualAnyOrder: <T>(a: T, b: T) => boolean = createCustomEqual({
-  //@ts-expect-error any
-  createCustomConfig: (config) => {
+  createCustomConfig: (config: {}) => {
     return {
       ...config,
       areArraysEqual: arrayEqualAnyOrder,

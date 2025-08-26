@@ -9,7 +9,7 @@ import {
   REPO_RELEASE_BRANCH,
 } from './common/constants.mjs';
 import {commitChanges, setupGit} from './common/git.mjs';
-import {removeWriteAccessRestrictions} from './lock-master.mjs';
+import {removeWriteAccessRestrictions} from './lock-main.mjs';
 
 if (!process.env.INIT_CWD) {
   throw new Error('Should be called using npm run-script');

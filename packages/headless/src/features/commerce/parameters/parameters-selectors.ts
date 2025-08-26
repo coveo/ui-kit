@@ -24,32 +24,6 @@ import {
 import {getCommerceSortInitialState} from '../sort/sort-state.js';
 import type {Parameters as ManagedParameters} from './parameters-actions.js';
 
-export function initialParametersSelector(
-  state: CommerceEngine[typeof stateKey]
-): Required<ManagedParameters> {
-  return {
-    page:
-      state.commercePagination.principal.page ??
-      getCommercePaginationInitialSlice().page,
-    perPage:
-      state.commercePagination.principal.perPage ??
-      getCommercePaginationInitialSlice().perPage,
-    sortCriteria:
-      state.commerceSort.appliedSort ??
-      getCommerceSortInitialState().appliedSort,
-    cf: {},
-    nf: {},
-    nfExcluded: {},
-    mnf: {},
-    mnfExcluded: {},
-    df: {},
-    dfExcluded: {},
-    f: {},
-    fExcluded: {},
-    lf: {},
-  };
-}
-
 export function activeParametersSelector(
   state: CommerceEngine[typeof stateKey]
 ): ManagedParameters {

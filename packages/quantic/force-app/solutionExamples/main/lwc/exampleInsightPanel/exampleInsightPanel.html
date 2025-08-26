@@ -1,6 +1,6 @@
 <template>
   <div onquantic__registerresulttemplates={handleResultTemplateRegistration}>
-    <c-quantic-insight-interface engine-id={engineId} insight-id={insightId}>
+    <c-quantic-insight-interface engine-id={engineId} insight-id={insightId} record-id={caseId}>
       <c-quantic-aria-live></c-quantic-aria-live>
       <div
         class="insight-panel_layout slds-is-relative slds-grid_align-center slds-box"
@@ -46,6 +46,16 @@
                 </div>
               </c-quantic-refine-toggle>
             </div>
+            <template if:true={userActionsReady}>
+              <div class="slds-var-p-left_x-small">
+                <c-quantic-user-actions-toggle
+                  engine-id={engineId}
+                  user-id={ticketCreationUserId}
+                  ticket-creation-date-time={ticketCreationDateTime}
+                  excluded-custom-actions={defaultExcludedCustomActions}
+                ></c-quantic-user-actions-toggle>
+              </div>
+            </template>
           </div>
         </div>
 
@@ -54,7 +64,6 @@
             field="objecttype"
             label="Type"
             engine-id={engineId}
-            data-cy="type"
           ></c-quantic-facet>
           <c-quantic-facet
             display-values-as="link"

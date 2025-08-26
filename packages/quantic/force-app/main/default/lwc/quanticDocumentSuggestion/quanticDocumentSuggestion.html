@@ -11,7 +11,7 @@
     </template>
     <template if:false={loading}>
       <template if:true={hasSuggestions}>
-        <div class="slds-card">
+        <div class="slds-card card-border">
           <lightning-accordion active-section-name={openedDocuments} allow-multiple-sections-open
             class="slds-p-vertical_xx-small">
             <template iterator:it={suggestions}>
@@ -26,7 +26,7 @@
                       slds-var-p-vertical_x-small
                     ">
                     <p class="excerpt">{it.value.excerpt}</p>
-                    <div class="row slds-var-p-top_medium">
+                    <div class="slds-grid slds-grid_align-spread slds-grid_vertical-align-center slds-var-p-top_medium">
                       <template lwc:if={quickviewIsVisible}>
                         <c-quantic-result-quickview engine-id={engineId}
                           preview-button-icon="utility:new_window" preview-button-label={labels.readMore}

@@ -1,7 +1,7 @@
 <template>
-  <div data-cy="quick-view-button__container" data-testid="quick-view-button__container" class={buttonContainerClass} onmouseenter={showTooltip}
+  <div data-testid="quick-view-button__container" class={buttonContainerClass} onmouseenter={showTooltip}
     onmouseleave={hideTooltip}>
-    <button data-cy="quick-view-button" data-testid="quick-view-button" aria-hidden={isQuickviewOpen} class={buttonClass} onclick={openQuickview}
+    <button data-testid="quick-view-button" aria-hidden={isQuickviewOpen} class={buttonClass} onclick={openQuickview}
       title={buttonTitle} disabled={hasNoPreview} aria-label={buttonAriaLabelValue}>
       <template if:true={hasButtonLabel}> {previewButtonLabel} </template>
       <template if:true={hasIcon}>
@@ -21,7 +21,7 @@
       aria-modal="true" aria-describedby="quickview__content-container"
       class="slds-modal slds-modal_medium slds-fade-in-open">
       <div class="slds-modal__container">
-        <button data-cy="quickview-modal__close-button" data-testid="quickview-modal__close-button" class="slds-button slds-button_icon slds-modal__close" onclick={closeQuickview}
+        <button data-testid="quickview-modal__close-button" class="slds-button slds-button_icon slds-modal__close" onclick={closeQuickview}
           onkeydown={onCloseKeyDown}>
           <lightning-icon class="slds-current-color" icon-name="utility:close" size="small"
             alternative-text={labels.close}></lightning-icon>
@@ -47,7 +47,7 @@
           result={result} content-url={contentURL}
           onquantic__loadingstatechange={handleLoadingStateChange}></c-quantic-quickview-content>
         <template if:false={isLoading}>
-          <footer onclick={stopPropagation} class="slds-modal__footer slds-p-top_none slds-p-bottom_none">
+          <footer onclick={stopPropagation} class="slds-modal__footer quickview-modal__footer slds-p-top_none slds-p-bottom_none">
             <slot name="footer"></slot>
           </footer>
         </template>

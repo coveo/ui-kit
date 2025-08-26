@@ -1442,6 +1442,35 @@ describe('commerceFacetSetReducer', () => {
             expect(finalState[facetId]?.request.preventAutoSelect).toBe(true);
           });
 
+          it('sets #numberOfValues to the #initialNumberOfValues', () => {
+            const initialNumberOfValues = 10;
+            const facetValue = buildMockCommerceNumericFacetValue({
+              start: 0,
+              end: 5,
+              endInclusive: true,
+            });
+            const facetValueRequests = convertToNumericRangeRequests([
+              facetValue,
+            ]);
+
+            state[facetId] = buildMockCommerceFacetSlice({
+              request: buildMockCommerceFacetRequest({
+                type: 'numericalRange',
+                values: facetValueRequests,
+                numberOfValues: 1,
+                initialNumberOfValues,
+              }),
+            });
+
+            const action = toggleAction({
+              facetId,
+              selection: facetValue,
+            });
+            const finalState = commerceFacetSetReducer(state, action);
+
+            expect(finalState[facetId]?.request.numberOfValues).toBe(10);
+          });
+
           it('clears the facet values if value is continuous range and new value state is "idle"', () => {
             const facetValue = buildMockCommerceNumericFacetValue({
               start: 0,
@@ -2748,7 +2777,55 @@ describe('commerceFacetSetReducer', () => {
       });
     });
 
-    it('when called on a non-hierarchical facet, sets all values to "idle"', () => {
+    describe('when called on a numericalRange facet', () => {
+      it('should set all values to "idle"', () => {
+        const facetId = '1';
+        state[facetId] = buildMockCommerceFacetSlice({
+          request: buildMockCommerceFacetRequest({
+            type: 'numericalRange',
+            values: [
+              buildMockCommerceNumericFacetValue({state: 'selected'}),
+              buildMockCommerceNumericFacetValue({state: 'excluded'}),
+            ],
+          }),
+        });
+
+        const finalState = commerceFacetSetReducer(
+          state,
+          deselectAllValuesInCoreFacet({facetId})
+        );
+
+        expect(
+          finalState[facetId]?.request.values.every(
+            (value) => value.state === 'idle'
+          )
+        ).toBe(true);
+      });
+
+      it('should set the #numberOfValues to the #initialNumberOfValues', () => {
+        const facetId = '1';
+        state[facetId] = buildMockCommerceFacetSlice({
+          request: buildMockCommerceFacetRequest({
+            type: 'numericalRange',
+            values: [
+              buildMockCommerceNumericFacetValue({state: 'selected'}),
+              buildMockCommerceNumericFacetValue({state: 'excluded'}),
+            ],
+            numberOfValues: 5,
+            initialNumberOfValues: 10,
+          }),
+        });
+
+        const finalState = commerceFacetSetReducer(
+          state,
+          deselectAllValuesInCoreFacet({facetId})
+        );
+
+        expect(finalState[facetId]?.request.numberOfValues).toBe(10);
+      });
+    });
+
+    it('when called on a non-hierarchical and non-numericalRange facet, sets all values to "idle"', () => {
       const facetId = '1';
       state[facetId] = buildMockCommerceFacetSlice({
         request: buildMockCommerceFacetRequest({

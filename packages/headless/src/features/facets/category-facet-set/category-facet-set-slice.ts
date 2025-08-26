@@ -104,8 +104,8 @@ export const categoryFacetSetReducer = createReducer(
           const lastSelectedParent = children[0];
 
           lastSelectedParent.retrieveChildren = true;
-          lastSelectedParent.previousState = lastSelectedParent.state;
           lastSelectedParent.state = 'selected';
+          lastSelectedParent.previousState = 'idle';
           lastSelectedParent.children = [];
           return;
         }
@@ -115,6 +115,7 @@ export const categoryFacetSetReducer = createReducer(
           retrieveCount
         );
         newParent.state = 'selected';
+        newParent.previousState = 'idle';
         children.push(newParent);
         request.numberOfValues = 1;
       })
@@ -204,7 +205,7 @@ function ensurePathAndReturnChildren(
     }
 
     parent.retrieveChildren = false;
-    parent.previousState = parent.state !== 'idle' ? parent.state : undefined;
+    parent.previousState = undefined;
     parent.state = 'idle';
     children = parent.children;
   }

@@ -7,7 +7,7 @@ const {decorator, play} = wrapInInsightInterface();
 
 const meta: Meta = {
   component: 'atomic-insight-user-actions-toggle',
-  title: 'Atomic/Insight/UserActionsToggle',
+  title: 'Insight/UserActionsToggle',
   id: 'atomic-insight-user-actions-toggle',
 
   render: renderComponent,

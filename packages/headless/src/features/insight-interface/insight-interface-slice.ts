@@ -18,7 +18,7 @@ export const insightInterfaceReducer = createReducer(
         state.loading = false;
         state.error = undefined;
 
-        const {searchHub, ...config} = action.payload.response;
+        const {searchHub: _searchHub, ...config} = action.payload.response;
         state.config = config;
       });
   }

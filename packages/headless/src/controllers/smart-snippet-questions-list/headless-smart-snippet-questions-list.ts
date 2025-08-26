@@ -13,7 +13,6 @@ import {
 } from '../smart-snippet/headless-smart-snippet-interactive-inline-links.js';
 import {buildSmartSnippetInteractiveQuestions} from './headless-smart-snippet-interactive-questions.js';
 
-export type {QuestionAnswerDocumentIdentifier} from '../../api/search/search/question-answering.js';
 export type {
   CoreSmartSnippetQuestionsList,
   CoreSmartSnippetQuestionsListState,
@@ -34,7 +33,7 @@ export interface SmartSnippetQuestionsListState
 /**
  * The `SmartSnippetQuestionsList` controller allows to manage additional queries for which a SmartSnippet model can provide relevant excerpts.
  *
- * Example: [smart-snippet-questions-list.fn.tsx](https://github.com/coveo/ui-kit/blob/master/packages/samples/headless-react/src/components/smart-snippet-questions-list/smart-snippet-questions-list.fn.tsx)
+ * Example: [smart-snippet-questions-list.fn.tsx](https://github.com/coveo/ui-kit/blob/main/packages/samples/headless-react/src/components/smart-snippet-questions-list/smart-snippet-questions-list.fn.tsx)
  *
  * @group Controllers
  * @category SmartSnippetQuestionsList

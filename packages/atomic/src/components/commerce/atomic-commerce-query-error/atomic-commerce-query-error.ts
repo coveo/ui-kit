@@ -37,8 +37,6 @@ import type {CommerceBindings} from '../atomic-commerce-interface/atomic-commerc
  * @part doc-link - A link to the relevant documentation.
  * @part more-info-btn - A button to request additional error information.
  * @part error-info - Additional error information.
- *
- * @alpha
  */
 @customElement('atomic-commerce-query-error')
 @bindings()

@@ -4,9 +4,15 @@ module.exports = {
       // Exclude quantic and create-atomic-template packages
       if (file.includes('/packages/quantic/')) return false;
       if (file.includes('/packages/create-atomic-template/')) return false;
+      if (file.includes('/packages/create-atomic-component/template/'))
+        return false;
+      if (file.includes('/packages/create-atomic-component-project/template/'))
+        return false;
 
       // Exclude root deployment config
-      if (file.endsWith('.deployment.config.json')) return false;
+      if (file.includes('/.deployment.config/')) return false;
+
+      if (file.endsWith('package-lock.json')) return false;
 
       // Exclude atomic package cypress, tsx (except stories), and d.ts files
       if (
@@ -50,7 +56,7 @@ module.exports = {
         return false;
 
       // Exclude tailwind css files
-      if (file.endsWith('.tw.css')) return false;
+      if (file.endsWith('.css')) return false;
 
       return true;
     });

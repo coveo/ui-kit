@@ -26,8 +26,6 @@ import {
   ReservedContextKeyError,
 } from './headless-context-reserved-keys.js';
 
-export type {ContextPayload, ContextValue};
-
 export interface ContextProps {
   /**
    * Represents the initial state of the context.
@@ -53,7 +51,7 @@ const initialStateSchema = new Schema<ContextInitialState>({
  * The `Context` controller injects [custom contextual information](https://docs.coveo.com/en/3389/)
  * into the search requests and usage analytics search events sent from a search interface.
  *
- * Example: [context.ts](https://github.com/coveo/ui-kit/blob/master/packages/samples/headless-react/src/components/context/context.ts)
+ * Example: [context.ts](https://github.com/coveo/ui-kit/blob/main/packages/samples/headless-react/src/components/context/context.ts)
  *
  * @group Controllers
  * @category Context

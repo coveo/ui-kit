@@ -3,7 +3,6 @@
   <fieldset class="slds-form-element">
     <legend
       class="slds-form-element__legend slds-form-element__label radio-buttons-group__legend"
-      data-cy="radio-buttons-group__legend"
     >
       {legend}
     </legend>
@@ -13,7 +12,6 @@
           <div
             key={option.value}
             class={option.buttonCSSClass}
-            data-cy={option.value}
             onmouseenter={option.mouseEnterHandler}
             onmouseleave={option.mouseLeaveHandler}
             onclick={option.clickHandler}

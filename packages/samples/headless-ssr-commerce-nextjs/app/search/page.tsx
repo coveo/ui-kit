@@ -3,6 +3,7 @@ import {headers} from 'next/headers';
 import * as externalCartAPI from '@/actions/external-cart-api';
 import BreadcrumbManager from '@/components/breadcrumb-manager';
 import ContextDropdown from '@/components/context-dropdown';
+import DidYouMean from '@/components/did-you-mean';
 import FacetGenerator from '@/components/facets/facet-generator';
 import ParameterManager from '@/components/parameter-manager';
 import ProductList from '@/components/product-list';
@@ -56,6 +57,7 @@ export default async function Search({
         navigatorContext={navigatorContext.marshal}
       >
         <ParameterManager url={navigatorContext.location} />
+        <DidYouMean />
         <NotifyTrigger />
         <QueryTrigger />
         <ContextDropdown useCase="search" />

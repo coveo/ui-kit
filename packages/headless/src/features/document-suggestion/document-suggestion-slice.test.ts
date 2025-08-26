@@ -3,6 +3,7 @@ import type {
   GetDocumentSuggestionsResponse,
 } from '../../api/service/case-assist/get-document-suggestions/get-document-suggestions-response.js';
 import {buildMockDocumentSuggestion} from '../../test/mock-case-assist-document-suggestion.js';
+import {setError} from '../error/error-actions.js';
 import {fetchDocumentSuggestions} from './document-suggestion-actions.js';
 import {documentSuggestionReducer} from './document-suggestion-slice.js';
 import {
@@ -66,6 +67,23 @@ describe('document suggestion slice', () => {
       const pendingAction = fetchDocumentSuggestions.pending('');
       const finalState = documentSuggestionReducer(state, pendingAction);
       expect(finalState.status.loading).toBe(true);
+    });
+  });
+
+  describe('#setError', () => {
+    it('should set the error state and set loading to false', () => {
+      const error = {
+        message: 'Something went wrong',
+        statusCode: 401,
+        status: 401,
+        type: 'BadRequest',
+      };
+      state.status.loading = true;
+
+      const finalState = documentSuggestionReducer(state, setError(error));
+
+      expect(finalState.status.error).toEqual(error);
+      expect(finalState.status.loading).toBe(false);
     });
   });
 });

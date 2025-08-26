@@ -1,7 +1,7 @@
+import {execSync} from 'node:child_process';
 import path from 'node:path';
 import fs from 'fs-extra';
 import handlebars from 'handlebars';
-import {formatWithBiome} from './format-with-biome.mjs';
 
 const capitalize = (str) => str.charAt(0).toUpperCase() + str.slice(1);
 const kebabToPascal = (str) => str.split('-').map(capitalize).join('');
@@ -12,6 +12,7 @@ async function generateFiles(name, outputDir) {
     'generate-component-templates'
   );
   const resolvedOutputDir = path.resolve(outputDir);
+  const githubPath = `${outputDir.split('components/')[1]}/${name}.ts`;
   const namePascalCase = kebabToPascal(name);
   const shorterName = namePascalCase
     .replace(/^Atomic/, '')
@@ -24,12 +25,14 @@ async function generateFiles(name, outputDir) {
       template: 'component.new.stories.tsx.hbs',
       output: `${name}.new.stories.tsx`,
     },
-    {template: 'component.tw.css.hbs', output: `${name}.tw.css`},
+    {template: 'component.tw.css.ts.hbs', output: `${name}.tw.css.ts`},
     {template: 'component.spec.ts.hbs', output: `${name}.spec.ts`},
     {template: 'e2e/component.e2e.ts.hbs', output: `e2e/${name}.e2e.ts`},
     {template: 'e2e/fixture.ts.hbs', output: `e2e/fixture.ts`},
     {template: 'e2e/page-object.ts.hbs', output: `e2e/page-object.ts`},
   ];
+
+  const outputPaths = [];
 
   for (const file of files) {
     const templatePath = path.join(templatesDir, file.template);
@@ -38,6 +41,7 @@ async function generateFiles(name, outputDir) {
       resolvedOutputDir,
       file.output.replace('noop', name)
     );
+    outputPaths.push(outputPath);
 
     // Does not overwrite existing files
     if (await fs.pathExists(outputPath)) {
@@ -47,15 +51,13 @@ async function generateFiles(name, outputDir) {
 
     const templateContent = await fs.readFile(templatePath, 'utf8');
     const compiled = handlebars.compile(templateContent);
-    let content = compiled({name, namePascalCase, shorterName});
-
-    // Format each file with Prettier
-    content = await formatWithBiome(content, outputPath);
+    const content = compiled({name, namePascalCase, shorterName, githubPath});
 
     await fs.ensureDir(path.dirname(outputPath));
     await fs.writeFile(outputPath, content, 'utf8');
     console.log(`Created: ${outputPath}`);
   }
+  execSync(`npx @biomejs/biome check --write ${outputPaths.join(' ')}`);
 }
 
 const [componentName, outputDir] = process.argv.slice(2);
@@ -82,13 +84,9 @@ if (outputDir) {
 
 if (!componentName) {
   console.error(
-    'Usage: npx nx run atomic:generate-component --name=<component-name> --output=<output-dir>'
+    'Usage: npm run generate-component -w=@coveo/atomic -- --name=<component-name> --output=<output-dir>'
   );
   process.exit(1);
 }
 
 generateFiles(normalizedComponentName, resolvedOutputDir).catch(console.error);
-
-// add the import to the lazy index file
-// add the import to the index file
-// change the output arg to always start with search/commerce/insight/ipx/recommendations

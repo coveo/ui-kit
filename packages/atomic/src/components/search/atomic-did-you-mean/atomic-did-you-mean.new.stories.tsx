@@ -16,7 +16,7 @@ import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-w
 const {decorator, play} = wrapInSearchInterface();
 
 const meta: Meta = {
-  title: 'Atomic/DidYouMean',
+  title: 'Search/DidYouMean',
   id: 'atomic-did-you-mean',
   component: 'atomic-did-you-mean',
   render: renderComponent,

@@ -1,0 +1,846 @@
+name: CI
+on:
+  pull_request:
+  merge_group:
+env:
+  CYPRESS_VERIFY_TIMEOUT: 60000
+jobs:
+  pr-report:
+    if: github.event_name == 'pull_request'
+    name: "PR Report"
+    runs-on: ubuntu-latest
+    environment: PR Artifacts
+    env:
+      NODE_OPTIONS: --max_old_space_size=4096
+    steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@ec9f2d5744a09debf3a187a3f4f675c53b671911 # v2.13.0
+        with:
+          egress-policy: audit
+      - name: Generate a token
+        if: ${{ always() && github.event_name == 'pull_request'}}
+        id: generate-token
+        uses: actions/create-github-app-token@df432ceedc7162793a195dd1713ff69aefc7379e # v2
+        with:
+          app-id: ${{ secrets.GH_APP_ID }}
+          private-key: ${{ secrets.GH_APP_PRIVATE_KEY }}
+          owner: coveo
+          repositories: "ui-kit"
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+        with:
+          fetch-depth: 0
+      - run: git branch main origin/main
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version-file: ".nvmrc"
+      - run: npm ci
+      - run: npm run pr:report
+        env:
+          GITHUB_CREDENTIALS: ${{ steps.generate-token.outputs.token }}
+  # TODO: KIT-4396 - https://coveord.atlassian.net/browse/KIT-4396 This action takes currently over 50 minutes to run, which is too long for a PR workflow.
+  # What is slow is the "npm ci" step, which takes about 30 minutes and is out of our control. We will skip this job for now.
+  build-windows:
+    name: "Build Windows"
+    runs-on: windows-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@ec9f2d5744a09debf3a187a3f4f675c53b671911 # v2.13.0
+        with:
+          egress-policy: audit
+
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+        with:
+          ref: ${{ github.head_ref }}
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          registry-url: "https://registry.npmjs.org"
+          node-version-file: ".nvmrc"
+      - name: Install npm
+        run: npm i -g npm@11.4.2
+        shell: bash
+      - name: Install dependencies
+        run: npm ci
+        shell: bash
+      - name: Build packages
+        run: npm run build
+        shell: bash
+  build:
+    name: "Build"
+    runs-on: ubuntu-latest
+    environment: PR Artifacts
+    steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@ec9f2d5744a09debf3a187a3f4f675c53b671911 # v2.13.0
+        with:
+          egress-policy: audit
+
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+        with:
+          ref: ${{ github.head_ref }}
+      - uses: ./.github/actions/build
+      - name: Check for uncommitted changes
+        id: check-changes
+        run: |
+          if [[ -n "$(git status --porcelain)" ]]; then
+            echo "has_changes=true" >> $GITHUB_OUTPUT
+          else
+            echo "has_changes=false" >> $GITHUB_OUTPUT
+          fi
+      - name: Generate a token
+        if: ${{ steps.check-changes.outputs.has_changes == 'true' && github.event_name == 'pull_request' }}
+        id: generate-token
+        uses: actions/create-github-app-token@df432ceedc7162793a195dd1713ff69aefc7379e # v2
+        with:
+          app-id: ${{ secrets.GH_APP_ID }}
+          private-key: ${{ secrets.GH_APP_PRIVATE_KEY }}
+          owner: coveo
+          repositories: "ui-kit"
+      - name: Commit files
+        if: ${{ steps.check-changes.outputs.has_changes == 'true' && github.event_name == 'pull_request' }}
+        run: npm run-script -w=@coveo/ci add-generated-files
+        env:
+          GITHUB_INSTALLATION_TOKEN: ${{ steps.generate-token.outputs.token }}
+          DEBUG: "*"
+  build-cdn:
+    name: "Build CDN"
+    runs-on: ubuntu-latest
+    env:
+      DEPLOYMENT_ENVIRONMENT: CDN
+    steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@ec9f2d5744a09debf3a187a3f4f675c53b671911 # v2.13.0
+        with:
+          egress-policy: audit
+
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+      - uses: ./.github/actions/build
+        with:
+          cache-prefix: "cdn"
+  affected:
+    name: "Determine affected projects"
+    runs-on: ubuntu-latest
+    needs: build
+    outputs:
+      projects: ${{ steps.set.outputs.projects }}
+    steps:
+      - name: Harden the runner (Audit all outbound calls)
+        uses: step-security/harden-runner@ec9f2d5744a09debf3a187a3f4f675c53b671911 # v2.13.0
+        with:
+          egress-policy: audit
+
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+        with:
+          fetch-depth: 0
+          filter: blob:none
+      - run: git branch main origin/main
+      - uses: ./.github/actions/setup
+      - name: Get affected projects
+        id: set
+        run: |
+          AFFECTED=$(npx turbo build --affected --dry-run 2>/dev/null | awk '/^@coveo/ && !/#/ {print $1}' | sed 's/@coveo\///g' | tr '\n' ' ')
+          echo "projects=$AFFECTED" >> "$GITHUB_OUTPUT"
+      - name: Log affected projects
+        run: |
+          echo "Affected projects: ${{ steps.set.outputs.projects }}"
+  knip:
+    name: "Look for unused code or dependencies"
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Harden the runner (Audit all outbound calls)
+        uses: step-security/harden-runner@ec9f2d5744a09debf3a187a3f4f675c53b671911 # v2.13.0
+        with:
+          egress-policy: audit
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+      - uses: ./.github/actions/setup
+      - name: Run knip
+        run: npm run knip
+  cdn-checks:
+    name: "CDN Checks"
+    needs: [affected, build-cdn]
+    if: contains(needs.affected.outputs.projects, 'atomic') || contains(needs.affected.outputs.projects, 'headless-commerce-react-samples') || contains(needs.affected.outputs.projects, 'atomic-hosted-page')
+    env:
+      DEPLOYMENT_ENVIRONMENT: CDN
+    runs-on: ubuntu-latest
+    steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@ec9f2d5744a09debf3a187a3f4f675c53b671911 # v2.13.0
+        with:
+          egress-policy: audit
+
+      - name: Setup for CDN checks
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+      - uses: ./.github/actions/setup
+        with:
+          cache-prefix: "cdn"
+        env:
+          DEPLOYMENT_ENVIRONMENT: CDN
+      - name: "Run CDN checks"
+        uses: ./.github/actions/cdn-checks
+  lint-check:
+    name: "Check with linter"
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@ec9f2d5744a09debf3a187a3f4f675c53b671911 # v2.13.0
+        with:
+          egress-policy: audit
+
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+      - uses: ./.github/actions/setup
+      - run: npm run lint:check
+  unit-test:
+    name: "Run unit tests"
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@ec9f2d5744a09debf3a187a3f4f675c53b671911 # v2.13.0
+        with:
+          egress-policy: audit
+
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+        with:
+          fetch-depth: 0
+          filter: blob:none
+      - run: git branch main origin/main
+      - uses: ./.github/actions/setup
+      - name: Install Playwright Browsers
+        run: npx playwright install --with-deps
+      - run: npx turbo test --affected
+  package-compatibility:
+    name: "Verify compatibility of packages"
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@ec9f2d5744a09debf3a187a3f4f675c53b671911 # v2.13.0
+        with:
+          egress-policy: audit
+
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+      - uses: ./.github/actions/setup
+      - run: npm run package-compatibility
+  typedoc:
+    name: "Build typedoc"
+    needs: affected
+    if: contains(needs.affected.outputs.projects, 'headless') || contains(needs.affected.outputs.projects, 'headless-react')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@ec9f2d5744a09debf3a187a3f4f675c53b671911 # v2.13.0
+        with:
+          egress-policy: audit
+
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+      - uses: ./.github/actions/setup
+      - name: "Build headless typedoc"
+        run: npm run build:typedoc
+        working-directory: packages/headless
+      - name: "Build headless-react typedoc"
+        run: npm run build:typedoc
+        working-directory: packages/headless-react
+  e2e-atomic-csp-test:
+    name: "Run e2e tests on Atomic CSP"
+    needs: affected
+    if: contains(needs.affected.outputs.projects, 'atomic')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@ec9f2d5744a09debf3a187a3f4f675c53b671911 # v2.13.0
+        with:
+          egress-policy: audit
+
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+      - uses: ./.github/actions/setup
+      - uses: ./.github/actions/e2e-atomic-csp
+  prepare-playwright-atomic:
+    name: "Determine Playwright E2E tests to run"
+    needs: affected
+    if: contains(needs.affected.outputs.projects, 'atomic')
+    runs-on: ubuntu-latest
+    env:
+      maximumShards: 12
+    outputs:
+      testsToRun: ${{ steps.determine-tests.outputs.testsToRun }}
+      shardIndex: ${{ steps.determine-tests.outputs.shardIndex }}
+      shardTotal: ${{ steps.determine-tests.outputs.shardTotal }}
+    steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@ec9f2d5744a09debf3a187a3f4f675c53b671911 # v2.13.0
+        with:
+          egress-policy: audit
+
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+        with:
+          fetch-depth: 0
+      - run: git branch main origin/main
+      - uses: ./.github/actions/setup
+      - run: npm run build
+      - name: Identify E2E Test Files to run
+        id: determine-tests
+        run: |
+          runAllTests=$([ "${{ github.event_name }}" == "merge_group" ] && echo true || echo false)
+          node ./scripts/ci/determine-tests.mjs testsToRun shardIndex shardTotal $runAllTests
+
+        env:
+          projectRoot: ${{ github.workspace }}
+          maximumShards: ${{ env.maximumShards }}
+        shell: bash
+      - name: Log Shard Values for Debugging
+        run: |
+          echo "Shard Index: ${{ steps.determine-tests.outputs.shardIndex }}"
+          echo "Shard Total: ${{ steps.determine-tests.outputs.shardTotal }}"
+        shell: bash
+  playwright-atomic:
+    name: "Run Playwright tests for Atomic"
+    needs: prepare-playwright-atomic
+    if: ${{ needs.prepare-playwright-atomic.outputs.shardIndex != '[0]' && needs.prepare-playwright-atomic.outputs.shardTotal != '[0]' }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        shardIndex: ${{ fromJson(needs.prepare-playwright-atomic.outputs.shardIndex) }}
+        shardTotal: ${{ fromJson(needs.prepare-playwright-atomic.outputs.shardTotal) }}
+    steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@ec9f2d5744a09debf3a187a3f4f675c53b671911 # v2.13.0
+        with:
+          egress-policy: audit
+
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+      - uses: ./.github/actions/setup
+      - run: npm run build
+      - uses: ./.github/actions/playwright-atomic
+        with:
+          shardIndex: ${{ matrix.shardIndex }}
+          shardTotal: ${{ matrix.shardTotal }}
+          testsToRun: ${{ needs.prepare-playwright-atomic.outputs.testsToRun }}
+  merge-atomic-playwright-reports:
+    name: "Merge Playwright reports"
+    environment: PR Artifacts
+    if: ${{ !cancelled() && !contains(needs.*.result, 'skipped') }}
+    needs:
+      - "playwright-atomic"
+    runs-on: ubuntu-latest
+    steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@ec9f2d5744a09debf3a187a3f4f675c53b671911 # v2.13.0
+        with:
+          egress-policy: audit
+
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+      - uses: ./.github/actions/setup
+      - run: npm run build
+      - name: Merge Playwright reports
+        uses: ./.github/actions/merge-playwright-reports
+        with:
+          working-directory: packages/atomic
+          artifact-pattern: atomic-blob-report-*
+          upload-artifact-name: atomic-playwright-report
+
+      - name: Generate a token
+        if: ${{ always() && github.event_name == 'pull_request'}}
+        id: generate-token
+        uses: actions/create-github-app-token@df432ceedc7162793a195dd1713ff69aefc7379e # v2
+        with:
+          app-id: ${{ secrets.GH_APP_ID }}
+          private-key: ${{ secrets.GH_APP_PRIVATE_KEY }}
+          owner: coveo
+          repositories: "ui-kit-prs"
+      - uses: ./.github/actions/publish-pr-review-site
+        if: ${{ always() && github.event_name == 'pull_request'}}
+        with:
+          token: ${{ steps.generate-token.outputs.token }}
+          copy: true
+  playwright-atomic-theming:
+    name: "Run theming smoke tests for Atomic"
+    needs: affected
+    if: contains(needs.affected.outputs.projects, 'atomic')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@ec9f2d5744a09debf3a187a3f4f675c53b671911 # v2.13.0
+        with:
+          egress-policy: audit
+
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+      - uses: ./.github/actions/setup
+      - run: npm run build
+      - uses: ./.github/actions/playwright-atomic-theming
+  e2e-atomic-test:
+    name: "Run e2e tests on Atomic"
+    needs: affected
+    if: contains(needs.affected.outputs.projects, 'atomic')
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        containers:
+          [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            16,
+            17,
+            18,
+            19,
+            20,
+            21,
+            22,
+            23,
+            24,
+            25,
+            26,
+            27,
+            28,
+            29,
+            30,
+          ]
+    steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@ec9f2d5744a09debf3a187a3f4f675c53b671911 # v2.13.0
+        with:
+          egress-policy: audit
+
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+      - uses: ./.github/actions/setup
+      - uses: ./.github/actions/e2e-atomic
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          SPLIT: ${{ strategy.job-total }}
+          SPLIT_INDEX: ${{ strategy.job-index }}
+  e2e-atomic-screenshots:
+    name: "Run e2e screenshots tests on Atomic"
+    needs: affected
+    if: contains(needs.affected.outputs.projects, 'atomic')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@ec9f2d5744a09debf3a187a3f4f675c53b671911 # v2.13.0
+        with:
+          egress-policy: audit
+
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+      - uses: ./.github/actions/setup
+      - uses: ./.github/actions/e2e-atomic-screenshots
+  e2e-atomic-react-test:
+    name: "Run e2e tests on Atomic React"
+    needs: affected
+    if: contains(needs.affected.outputs.projects, 'atomic-react-samples')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@ec9f2d5744a09debf3a187a3f4f675c53b671911 # v2.13.0
+        with:
+          egress-policy: audit
+
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+      - uses: ./.github/actions/setup
+      - uses: ./.github/actions/e2e-atomic-react
+  e2e-atomic-react-nextjs-test:
+    name: "Run e2e tests on Atomic React NextJS"
+    needs: affected
+    if: contains(needs.affected.outputs.projects, 'atomic-next-samples')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@ec9f2d5744a09debf3a187a3f4f675c53b671911 # v2.13.0
+        with:
+          egress-policy: audit
+
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+      - uses: ./.github/actions/setup
+      - uses: ./.github/actions/e2e-atomic-next
+  e2e-iife-test:
+    name: "Run e2e tests for IIFE"
+    needs: affected
+    if: contains(needs.affected.outputs.projects, 'iife-samples')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@ec9f2d5744a09debf3a187a3f4f675c53b671911 # v2.13.0
+        with:
+          egress-policy: audit
+
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+      # TODO: KIT-3537 - https://coveord.atlassian.net/browse/KIT-3538
+      # - uses: ./.github/actions/setup
+      # - uses: ./.github/actions/e2e-iife
+  e2e-atomic-angular-test:
+    name: "Run e2e tests on Atomic Angular"
+    needs: affected
+    if: contains(needs.affected.outputs.projects, 'atomic-angular-samples')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@ec9f2d5744a09debf3a187a3f4f675c53b671911 # v2.13.0
+        with:
+          egress-policy: audit
+
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+      - uses: ./.github/actions/setup
+      - uses: ./.github/actions/e2e-atomic-angular
+  e2e-atomic-vuejs-test:
+    name: "Run e2e tests on Vue.js sample"
+    needs: affected
+    if: contains(needs.affected.outputs.projects, 'atomic-vuejs-samples')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@ec9f2d5744a09debf3a187a3f4f675c53b671911 # v2.13.0
+        with:
+          egress-policy: audit
+
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+      - uses: ./.github/actions/setup
+      - uses: ./.github/actions/e2e-vuejs
+  e2e-atomic-stencil-test:
+    name: "Run e2e tests on Stencil.js sample"
+    needs: affected
+    if: contains(needs.affected.outputs.projects, 'atomic-stencil-samples')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@ec9f2d5744a09debf3a187a3f4f675c53b671911 # v2.13.0
+        with:
+          egress-policy: audit
+
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+      - uses: ./.github/actions/setup
+      - uses: ./.github/actions/e2e-stencil
+  playwright-atomic-hosted-page-test:
+    name: "Run e2e tests for Atomic Hosted Page"
+    needs: affected
+    if: contains(needs.affected.outputs.projects, 'atomic-hosted-page')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@ec9f2d5744a09debf3a187a3f4f675c53b671911 # v2.13.0
+        with:
+          egress-policy: audit
+
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+      - uses: ./.github/actions/setup
+      - run: npm run build
+      - uses: ./.github/actions/playwright-atomic-hosted-pages
+  playwright-headless-ssr-commerce:
+    name: "Run e2e tests for Headless Commerce SSR"
+    needs: affected
+    if: contains(needs.affected.outputs.projects, 'headless-ssr-commerce-samples')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@ec9f2d5744a09debf3a187a3f4f675c53b671911 # v2.13.0
+        with:
+          egress-policy: audit
+
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+      - uses: ./.github/actions/setup
+      - run: npm run build
+      - uses: ./.github/actions/playwright-headless-ssr-commerce-nextjs
+  e2e-atomic-insight-panel-test:
+    name: "Run e2e tests on Atomic insight panel"
+    needs: affected
+    if: contains(needs.affected.outputs.projects, 'atomic')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@ec9f2d5744a09debf3a187a3f4f675c53b671911 # v2.13.0
+        with:
+          egress-policy: audit
+
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+      - uses: ./.github/actions/setup
+      - uses: ./.github/actions/e2e-atomic-insight-panel
+  e2e-headless-ssr-test-app:
+    name: "Run e2e tests on Headless SSR App router sample"
+    needs: affected
+    if: contains(needs.affected.outputs.projects, 'headless-ssr-samples-app-router')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@ec9f2d5744a09debf3a187a3f4f675c53b671911 # v2.13.0
+        with:
+          egress-policy: audit
+
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+      - uses: ./.github/actions/setup
+      - uses: ./.github/actions/e2e-headless-ssr-app
+  e2e-headless-ssr-test-pages:
+    name: "Run e2e tests on Headless SSR Pages router sample"
+    needs: affected
+    if: contains(needs.affected.outputs.projects, 'headless-ssr-samples-pages-router')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@ec9f2d5744a09debf3a187a3f4f675c53b671911 # v2.13.0
+        with:
+          egress-policy: audit
+
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+      - uses: ./.github/actions/setup
+      - uses: ./.github/actions/e2e-headless-ssr-pages
+  e2e-quantic:
+    name: "Run Quantic E2E tests"
+    needs: affected
+    if: contains(needs.affected.outputs.projects, 'quantic')
+    uses: ./.github/workflows/e2e-quantic.yml
+    secrets:
+      SFDX_AUTH_CLIENT_ID: ${{ secrets.SFDX_AUTH_CLIENT_ID }}
+      SFDX_AUTH_JWT_KEY: ${{ secrets.SFDX_AUTH_JWT_KEY }}
+  prerelease-npm-pr:
+    if: ${{ !cancelled() && github.event_name == 'pull_request' }}
+    needs: build
+    timeout-minutes: 40
+    name: Pre-release NPM at alpha (PR)
+    permissions:
+      contents: read
+      id-token: write
+    env:
+      NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+    runs-on: ubuntu-latest
+    environment: "Prerelease"
+    steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@ec9f2d5744a09debf3a187a3f4f675c53b671911 # v2.13.0
+        with:
+          egress-policy: audit
+
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+        with:
+          fetch-depth: 0
+      - run: git branch main origin/main
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          registry-url: "https://registry.npmjs.org"
+          node-version-file: ".nvmrc"
+      - name: Install npm
+        run: npm i -g npm@11.4.2
+        shell: bash
+      - run: npm ci
+        shell: bash
+      - name: Release
+        run: |
+          npm run nx:graph
+          npm run release:phase1
+          npm run release:phase3
+          npm run release:phase4
+        env:
+          IS_PRERELEASE: "true"
+          TAG_SUFFIX: ${{ github.event.number }}
+  prerelease-cdn-pr:
+    if: ${{ !cancelled() && github.event_name == 'pull_request' }}
+    needs: build
+    name: Pre-release CDN in dev (PR)
+    environment: "Prerelease (CDN)"
+    runs-on: ubuntu-latest
+    steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@ec9f2d5744a09debf3a187a3f4f675c53b671911 # v2.13.0
+        with:
+          egress-policy: audit
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+        with:
+          fetch-depth: 0
+      - run: git branch main origin/main
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          registry-url: "https://registry.npmjs.org"
+          node-version-file: ".nvmrc"
+      - name: Install npm
+        run: npm i -g npm@11.4.2
+        shell: bash
+      - run: npm ci
+        shell: bash
+      - name: Call ui-kit-cd for dev
+        run: node ./scripts/deploy/trigger-ui-kit-cd-pr.mjs
+        env:
+          GH_TOKEN: ${{ secrets.UI_KIT_CD_DISPATCHER }}
+  is-valid-pr:
+    name: "Confirm build is valid (PR)"
+    if: ${{ always() && github.event_name == 'pull_request'}}
+    needs:
+      - "build"
+      - "lint-check"
+      - "unit-test"
+      - "playwright-atomic"
+      - "playwright-atomic-theming"
+      - "playwright-atomic-hosted-page-test"
+      - "playwright-headless-ssr-commerce"
+      - "e2e-atomic-test"
+      - "e2e-atomic-csp-test"
+      - "e2e-quantic"
+      - "e2e-atomic-screenshots"
+      - "e2e-atomic-react-test"
+      - "e2e-atomic-react-nextjs-test"
+      - "e2e-iife-test"
+      - "e2e-atomic-angular-test"
+      - "e2e-atomic-vuejs-test"
+      - "e2e-atomic-stencil-test"
+      - "e2e-atomic-insight-panel-test"
+      - "e2e-headless-ssr-test-app"
+      - "e2e-headless-ssr-test-pages"
+      - "prerelease-npm-pr"
+      - "prerelease-cdn-pr"
+    runs-on: ubuntu-latest
+    steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@ec9f2d5744a09debf3a187a3f4f675c53b671911 # v2.13.0
+        with:
+          egress-policy: audit
+
+      - run: |
+          success="${{ !contains(needs.*.result, 'cancelled') && !contains(needs.*.result, 'failure')}}"
+          if [[ $success == "true" ]]; then
+            echo "Build is valid"
+            exit 0
+          else
+            echo "Build is invalid"
+            exit 1
+          fi
+  is-valid-merge-queue:
+    name: "Confirm build is valid (merge group)"
+    if: ${{ always() && github.event_name == 'merge_group'}}
+    needs:
+      - "build"
+      - "lint-check"
+      - "unit-test"
+      - "playwright-atomic"
+      - "playwright-atomic-theming"
+      - "playwright-atomic-hosted-page-test"
+      - "playwright-headless-ssr-commerce"
+      - "e2e-atomic-test"
+      - "e2e-quantic"
+      - "e2e-atomic-screenshots"
+      - "e2e-atomic-react-test"
+      - "e2e-atomic-react-nextjs-test"
+      - "e2e-iife-test"
+      - "e2e-atomic-angular-test"
+      - "e2e-atomic-vuejs-test"
+      - "e2e-atomic-stencil-test"
+      - "e2e-atomic-insight-panel-test"
+      - "e2e-headless-ssr-test-app"
+      - "e2e-headless-ssr-test-pages"
+    runs-on: ubuntu-latest
+    steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@ec9f2d5744a09debf3a187a3f4f675c53b671911 # v2.13.0
+        with:
+          egress-policy: audit
+
+      - run: |
+          success="${{ !contains(needs.*.result, 'cancelled') && !contains(needs.*.result, 'failure')}}"
+          if [[ $success == "true" ]]; then
+            echo "Build is valid"
+            exit 0
+          else
+            echo "Build is invalid"
+            exit 1
+          fi
+  is-valid:
+    name: "Confirm build is valid"
+    if: ${{ always() }}
+    needs:
+      - "is-valid-pr"
+      - "is-valid-merge-queue"
+    runs-on: ubuntu-latest
+    steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@ec9f2d5744a09debf3a187a3f4f675c53b671911 # v2.13.0
+        with:
+          egress-policy: audit
+
+      - run: |
+          success="${{ contains(needs.*.result, 'success')}}"
+          if [[ $success == "true" ]]; then
+            echo "Build is valid"
+            exit 0
+          else
+            echo "Build is invalid"
+            exit 1
+          fi
+  prerelease-npm-merge:
+    if: ${{ !cancelled() && github.event_name == 'merge_group' }}
+    needs: is-valid
+    timeout-minutes: 40
+    name: Pre-release NPM at alpha (Merge group)
+    env:
+      NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+    runs-on: ubuntu-latest
+    environment: "Prerelease"
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@ec9f2d5744a09debf3a187a3f4f675c53b671911 # v2.13.0
+        with:
+          egress-policy: audit
+
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+        with:
+          fetch-depth: 0
+      - run: git branch main origin/main
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          registry-url: "https://registry.npmjs.org"
+          node-version-file: ".nvmrc"
+      - name: Install npm
+        run: npm i -g npm@11.4.2
+        shell: bash
+      - run: npm ci
+        shell: bash
+      - name: Release
+        run: |
+          npm run nx:graph
+          npm run release:phase1
+          npm run release:phase3
+          npm run release:phase4
+        env:
+          IS_PRERELEASE: "true"
+          TAG_SUFFIX: ${{ github.event.number }}
+  prerelease-cdn-merge:
+    if: ${{ !cancelled() && github.event_name ==  'merge_group' }}
+    needs: is-valid
+    name: Pre-release CDN in dev (Merge group)
+    environment: "Prerelease (CDN)"
+    runs-on: ubuntu-latest
+    steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@ec9f2d5744a09debf3a187a3f4f675c53b671911 # v2.13.0
+        with:
+          egress-policy: audit
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+        with:
+          fetch-depth: 0
+      - run: git branch main origin/main
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          registry-url: "https://registry.npmjs.org"
+          node-version-file: ".nvmrc"
+      - name: Install npm
+        run: npm i -g npm@11.4.2
+        shell: bash
+      - run: npm ci
+        shell: bash
+      - name: Call ui-kit-cd for dev
+        run: node ./scripts/deploy/trigger-ui-kit-cd-dev.mjs
+        env:
+          GH_TOKEN: ${{ secrets.UI_KIT_CD_DISPATCHER }}

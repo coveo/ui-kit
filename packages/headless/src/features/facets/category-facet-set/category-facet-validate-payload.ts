@@ -12,7 +12,7 @@ import {
 import type {FacetValueState} from '../facet-api/value.js';
 import type {CategoryFacetValue} from './interfaces/response.js';
 
-export const categoryFacetValueDefinition = {
+const categoryFacetValueDefinition = {
   state: new Value<FacetValueState>({required: true}),
   numberOfResults: new NumberValue({required: true, min: 0}),
   value: new StringValue({required: true, emptyAllowed: true}),

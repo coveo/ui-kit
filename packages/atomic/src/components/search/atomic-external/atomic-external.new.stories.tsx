@@ -3,7 +3,7 @@ import {html} from 'lit';
 
 const meta: Meta = {
   component: 'atomic-external',
-  title: 'Atomic/Atomic External',
+  title: 'Search/External',
   id: 'atomic-external',
   render: () => html`
     <style>

@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { AtomicAriaLive } from '../components/common/atomic-aria-live/atomic-aria-live';
 import {AnyBindings} from '../components/common/interface/bindings';
 import {buildCustomEvent} from './event-utils';
 import {InitializableComponent} from './initialization-utils';
@@ -10,7 +11,7 @@ const findAriaLiveEventName = 'atomic/accessibility/findAriaLive';
  * @deprecated use Lit equivalent
  */
 export interface FindAriaLiveEventArgs {
-  element?: HTMLAtomicAriaLiveElement;
+  element?: AtomicAriaLive;
 }
 
 /**

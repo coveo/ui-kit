@@ -22,7 +22,6 @@
     <template if:true={shouldDisplayChildResultsToggle}>
       <div class="slds-grid slds-grid_align-end result-children__toggle-button">
         <lightning-button
-          data-cy="result-children__toggle-button"
           variant="base"
           icon-name={toggleChildResultsIcon}
           icon-position="right"
@@ -34,7 +33,6 @@
 
     <template if:true={shouldDisplayNoChildrenMessage}>
       <div
-        data-cy="result-children__no-more-children-message"
         class="result-children__no-more-children-message slds-grid slds-grid_align-end slds-var-p-vertical_x-small slds-text-color_weak"
       >
         {labels.noRelatedItems}

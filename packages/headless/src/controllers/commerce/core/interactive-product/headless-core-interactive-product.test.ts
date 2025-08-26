@@ -23,6 +23,7 @@ describe('core interactive result', () => {
     ec_product_id: 'product1-id',
     permanentid: 'product-1-permanentid',
     position: 1,
+    responseId: 'product-response-id',
   });
 
   function initializeInteractiveResult() {
@@ -30,7 +31,7 @@ describe('core interactive result', () => {
       options: {
         product,
       },
-      responseIdSelector: () => 'responseId',
+      responseIdSelector: () => 'state-response-id',
     });
   }
 
@@ -61,7 +62,54 @@ describe('core interactive result', () => {
           productId: product.ec_product_id,
         },
         position: product.position,
-        responseId: 'responseId',
+        responseId: 'product-response-id',
+      });
+    });
+
+    it('when product has responseId, uses product responseId instead of responseIdSelector', () => {
+      const controller = buildCoreInteractiveProduct(engine, {
+        options: {
+          product,
+        },
+        responseIdSelector: () => 'state-response-id',
+      });
+
+      controller.select();
+
+      expect(productClick).toHaveBeenCalledWith({
+        product: {
+          name: product.ec_name,
+          price: product.ec_promo_price,
+          productId: product.ec_product_id,
+        },
+        position: product.position,
+        responseId: 'product-response-id',
+      });
+    });
+
+    it('when product has no responseId, falls back to responseIdSelector', () => {
+      const productWithoutResponseId = buildMockProduct({
+        ...product,
+        responseId: undefined,
+      });
+
+      const controller = buildCoreInteractiveProduct(engine, {
+        options: {
+          product: productWithoutResponseId,
+        },
+        responseIdSelector: () => 'state-response-id',
+      });
+
+      controller.select();
+
+      expect(productClick).toHaveBeenCalledWith({
+        product: {
+          name: product.ec_name,
+          price: product.ec_promo_price,
+          productId: product.ec_product_id,
+        },
+        position: product.position,
+        responseId: 'state-response-id',
       });
     });
 
@@ -85,7 +133,7 @@ describe('core interactive result', () => {
           productId: product.ec_product_id,
         },
         position: product.position,
-        responseId: 'responseId',
+        responseId: 'product-response-id',
       });
     });
 
@@ -109,7 +157,7 @@ describe('core interactive result', () => {
           productId: product.permanentid,
         },
         position: product.position,
-        responseId: 'responseId',
+        responseId: 'product-response-id',
       });
     });
 
@@ -134,7 +182,7 @@ describe('core interactive result', () => {
           productId: product.ec_product_id,
         },
         position: product.position,
-        responseId: 'responseId',
+        responseId: 'product-response-id',
       });
     });
   });
@@ -144,7 +192,7 @@ describe('core interactive result', () => {
       options: {
         product,
       },
-      responseIdSelector: () => 'responseId',
+      responseIdSelector: () => 'state-response-id',
     });
 
     expect((controller as InteractiveProduct).warningMessage).toBeUndefined();
@@ -158,7 +206,7 @@ describe('core interactive result', () => {
           ec_name: null,
         },
       },
-      responseIdSelector: () => 'responseId',
+      responseIdSelector: () => 'state-response-id',
     });
 
     expect((controller as InteractiveProduct).warningMessage).toBeDefined();
@@ -172,7 +220,7 @@ describe('core interactive result', () => {
           ec_product_id: null,
         },
       },
-      responseIdSelector: () => 'responseId',
+      responseIdSelector: () => 'state-response-id',
     });
 
     expect((controller as InteractiveProduct).warningMessage).toBeDefined();
@@ -187,7 +235,7 @@ describe('core interactive result', () => {
           ec_price: null,
         },
       },
-      responseIdSelector: () => 'responseId',
+      responseIdSelector: () => 'state-response-id',
     });
 
     expect((controller as InteractiveProduct).warningMessage).toBeDefined();

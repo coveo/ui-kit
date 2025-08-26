@@ -10,7 +10,7 @@ const {decorator, play} = wrapInSearchInterface();
 
 const meta: Meta = {
   component: 'atomic-breadbox',
-  title: 'Atomic/Breadbox',
+  title: 'Search/Breadbox',
   id: 'atomic-breadbox',
 
   render: renderComponent,

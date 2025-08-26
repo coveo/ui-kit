@@ -19,7 +19,7 @@ const {decorator: searchInterfaceDecorator, play} =
 
 const meta: Meta = {
   component: 'atomic-result-text',
-  title: 'Atomic/ResultList/ResultText',
+  title: 'Search/ResultList/ResultText',
   id: 'atomic-result-text',
   render: renderComponent,
   decorators: [resultDecorator, searchInterfaceDecorator],

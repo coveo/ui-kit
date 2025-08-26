@@ -111,7 +111,8 @@ const exampleFeedback: GeneratedAnswerFeedback = {
   hallucinationFree: 'unknown',
   readable: 'yes',
 };
-const exampleGenerativeQuestionAnsweringId = '123';
+const exampleGenerativeQuestionAnsweringId =
+  '94b77748-2479-4e4b-a4e8-010fa62b04a0';
 const exampleSearchUid = '456';
 
 const exampleCitation: GeneratedAnswerCitation = {

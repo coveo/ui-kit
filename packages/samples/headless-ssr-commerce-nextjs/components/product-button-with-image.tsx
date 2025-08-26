@@ -6,7 +6,7 @@ import type {
 import Image from 'next/image';
 import {useRouter} from 'next/navigation';
 
-export interface ProductButtonWithImageProps {
+interface ProductButtonWithImageProps {
   methods:
     | Omit<Recommendations, 'state' | 'subscribe'>
     | Omit<ProductList, 'state' | 'subscribe'>

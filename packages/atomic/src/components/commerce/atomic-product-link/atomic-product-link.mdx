@@ -1,0 +1,29 @@
+import { Meta } from '@storybook/blocks';
+import * as AtomicProductLinkStories from './atomic-product-link.new.stories';
+import { AtomicDocTemplate } from '../../../../storybook-utils/documentation/atomic-doc-template';
+
+
+<Meta of={AtomicProductLinkStories} />
+
+<AtomicDocTemplate
+  stories={AtomicProductLinkStories}
+  githubPath="commerce/atomic-product-link/atomic-product-link.ts"
+  tagName="atomic-product-link"
+  className="AtomicProductLink"
+>
+
+
+The `atomic-product-link` component renders a product **ec_name**  a clickable link. This component is used within `atomic-product-template` components inside the product list:
+
+```html
+<atomic-commerce-interface>
+  ...
+  <atomic-commerce-product-list>
+    <atomic-product-template>
+      <atomic-product-link></atomic-product-link>
+    </atomic-product-template>
+  </atomic-commerce-product-list>
+</atomic-commerce-interface>
+```
+
+</AtomicDocTemplate>

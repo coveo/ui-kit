@@ -1,0 +1,37 @@
+import { Meta } from '@storybook/blocks';
+import * as AtomicProductChildrenStories from './atomic-product-children.new.stories';
+import { AtomicDocTemplate } from '../../../../storybook-utils/documentation/atomic-doc-template';
+
+
+<Meta of={AtomicProductChildrenStories} />
+
+<AtomicDocTemplate
+  stories={AtomicProductChildrenStories}
+  githubPath="commerce/atomic-product-children/atomic-product-children.ts"
+  tagName="atomic-product-children"
+  className="AtomicProductChildren"
+>
+
+The `atomic-product-children` component renders a list of child products associated with a parent product. 
+It is typically used within `atomic-product-template` components to display related products in a product list.
+It is also typically wrapped in `atomic-product-section-children` to provide a section for child products.
+
+This component leverages the [product grouping](https://docs.coveo.com/en/l78i2152/coveo-for-commerce/product-grouping) feature. 
+
+```html
+<atomic-commerce-interface>
+  ...
+  <atomic-commerce-product-list>
+    <atomic-product-template>
+      <template>
+        ...
+        <atomic-product-section-children>
+          <atomic-product-children></atomic-product-children>
+        </atomic-product-section-children>
+
+      </template>
+    </atomic-product-template>
+  </atomic-commerce-product-list>
+</atomic-commerce-interface>
+```
+</AtomicDocTemplate>

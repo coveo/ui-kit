@@ -13,7 +13,7 @@ const {decorator, play} = wrapInSearchInterface();
 
 const meta: Meta = {
   component: 'atomic-color-facet',
-  title: 'Atomic/ColorFacet',
+  title: 'Search/ColorFacet',
   id: 'atomic-color-facet',
   render: renderComponent,
   decorators: [decorator],

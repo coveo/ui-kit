@@ -51,7 +51,6 @@ import type {
 import {buildCategoryFacetSearch} from './headless-category-facet-search.js';
 
 export type {
-  CategoryFacetValue,
   CategoryFacetOptions,
   CategoryFacetSearchOptions,
   CategoryFacetProps,
@@ -107,7 +106,7 @@ export function buildCategoryFacet(
     isForFieldSuggestions: false,
   });
 
-  const {state, ...restOfFacetSearch} = facetSearch;
+  const {state: _state, ...restOfFacetSearch} = facetSearch;
 
   return {
     ...coreController,

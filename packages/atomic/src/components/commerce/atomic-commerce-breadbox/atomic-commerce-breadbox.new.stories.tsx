@@ -4,10 +4,7 @@ import {
 } from '@coveo/headless/commerce';
 import type {Meta, StoryObj as Story} from '@storybook/web-components';
 import {html} from 'lit';
-import {
-  playExecuteFirstRequest,
-  wrapInCommerceInterface,
-} from '@/storybook-utils/commerce/commerce-interface-wrapper';
+import {wrapInCommerceInterface} from '@/storybook-utils/commerce/commerce-interface-wrapper';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {renderComponent} from '@/storybook-utils/common/render-component';
 
@@ -30,17 +27,19 @@ const productListingEngineConfiguration: Partial<CommerceEngineConfiguration> =
 
 const {decorator, play} = wrapInCommerceInterface({
   engineConfig: productListingEngineConfiguration,
-  skipFirstRequest: true,
   type: 'product-listing',
 });
 
 const meta: Meta = {
   component: 'atomic-commerce-breadbox',
-  title: 'Commerce/atomic-commerce-breadbox',
+  title: 'Commerce/Breadbox',
   id: 'atomic-commerce-breadbox',
   render: renderComponent,
   decorators: [decorator],
-  parameters,
+  parameters: {
+    ...parameters,
+    layout: 'fullscreen',
+  },
   play,
 };
 
@@ -58,8 +57,4 @@ export const Default: Story = {
       </div>
     `,
   ],
-  play: async (context) => {
-    await play(context);
-    await playExecuteFirstRequest(context);
-  },
 };

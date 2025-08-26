@@ -213,4 +213,40 @@ describe('ChildrenUpdateCompleteMixin', () => {
     expect(child1UpdateCompleteSpy).toHaveBeenCalled();
     expect(child2UpdateCompleteSpy).toHaveBeenCalled();
   });
+
+  it('should not wait for updateComplete when child has an error', async () => {
+    const childWithError = document.createElement(
+      'child-lit-element'
+    ) as ChildLitElement & {error: Error};
+    const childWithoutError = document.createElement(
+      'child-lit-element'
+    ) as ChildLitElement;
+
+    // Set an error on the first child
+    childWithError.error = new Error('Test error');
+
+    const childWithErrorUpdateCompleteSpy = vi.spyOn(
+      childWithError,
+      'updateComplete',
+      'get'
+    );
+    const childWithoutErrorUpdateCompleteSpy = vi.spyOn(
+      childWithoutError,
+      'updateComplete',
+      'get'
+    );
+
+    childWithErrorUpdateCompleteSpy.mockReturnValue(Promise.resolve(true));
+    childWithoutErrorUpdateCompleteSpy.mockReturnValue(Promise.resolve(true));
+
+    element.appendChild(childWithError);
+    element.appendChild(childWithoutError);
+
+    await element.getPublicUpdateComplete();
+
+    // Should not wait for the child with error
+    expect(childWithErrorUpdateCompleteSpy).not.toHaveBeenCalled();
+    // Should still wait for the child without error
+    expect(childWithoutErrorUpdateCompleteSpy).toHaveBeenCalled();
+  });
 });

@@ -39,7 +39,7 @@ test.describe('when the "Show more" button has not been selected', () => {
 
   test('should be accessible', async ({makeAxeBuilder}) => {
     const accessibilityResults = await makeAxeBuilder().analyze();
-    expect(accessibilityResults.violations.length).toEqual(0);
+    expect(accessibilityResults.violations).toEqual([]);
   });
 
   test('should not display the "Show less" button', async ({facet}) => {
@@ -87,7 +87,7 @@ test.describe('when the "Show more" button has been selected', () => {
 
   test('should be accessible', async ({makeAxeBuilder}) => {
     const accessibilityResults = await makeAxeBuilder().analyze();
-    expect(accessibilityResults.violations.length).toEqual(0);
+    expect(accessibilityResults.violations).toEqual([]);
   });
 
   test('should have facet values sorted alphabetically', async ({facet}) => {
