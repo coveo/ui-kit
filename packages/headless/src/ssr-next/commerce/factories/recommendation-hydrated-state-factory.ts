@@ -1,7 +1,6 @@
 import {SolutionType} from '../types/controller-constants.js';
 import type {AugmentedControllerDefinition} from '../types/controller-definitions.js';
 import type {
-  BuildParameters,
   CommerceControllerDefinitionsMap,
   HydrateStaticStateFunction,
   HydrateStaticStateParameters,
@@ -31,16 +30,7 @@ export function hydratedRecommendationStaticStateFactory<
       options
     )(SolutionType.recommendation);
 
-    const {engine, controllers} = await solutionTypeBuild(
-      ...(params as BuildParameters<
-        TControllerDefinitions,
-        SolutionType.recommendation
-      >)
-    );
-
-    params[0]!.searchActions.forEach((action) => {
-      engine.dispatch(action);
-    });
+    const {engine, controllers} = await solutionTypeBuild(...params);
 
     await engine.waitForRequestCompletedAction();
 

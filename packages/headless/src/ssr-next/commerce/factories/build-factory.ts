@@ -24,9 +24,10 @@ import type {
 } from '../types/controller-definitions.js';
 import type {InferControllersMapFromDefinition} from '../types/controller-inference.js';
 import type {
-  BuildParameters,
   CommerceControllerDefinitionsMap,
   EngineDefinitionOptions,
+  FetchStaticStateParameters,
+  HydrateStaticStateParameters,
 } from '../types/engine.js';
 import {wireControllerParams} from '../utils/controller-wiring.js';
 import {extendEngineConfiguration} from '../utils/engine-wiring.js';
@@ -142,7 +143,9 @@ export const buildFactory =
   ) =>
   <TSolutionType extends SolutionType>(solutionType: TSolutionType) =>
   async (
-    ...[buildOptions]: BuildParameters<TControllerDefinitions, TSolutionType>
+    ...[buildOptions]:
+      | FetchStaticStateParameters<TControllerDefinitions, TSolutionType>
+      | HydrateStaticStateParameters<TControllerDefinitions, TSolutionType>
   ) => {
     const controllerProps = wireControllerParams(
       solutionType,
@@ -182,6 +185,13 @@ export const buildFactory =
       solutionType,
       propsMap: controllerProps,
     });
+
+    // If searchActions are provided (hydrate scenario), dispatch them
+    if (buildOptions && 'searchActions' in buildOptions) {
+      buildOptions.searchActions.forEach((action) => {
+        engine.dispatch(action);
+      });
+    }
 
     return {
       engine,

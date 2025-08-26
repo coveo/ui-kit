@@ -7,7 +7,6 @@ import type {
   ControllersMap,
 } from '../../common/types/controllers.js';
 import type {SSRCommerceEngine} from '../factories/build-factory.js';
-import type {Build} from './build.js';
 import type {SolutionType} from './controller-constants.js';
 import type {
   BakedInControllers,
@@ -125,18 +124,6 @@ export type HydrateStaticStateFunction<
   TControllerDefinitions extends CommerceControllerDefinitionsMap,
   TSolutionType extends SolutionType,
 > = Definition<TControllerDefinitions, TSolutionType>['hydrateStaticState'];
-
-export type BuildParameters<
-  TControllerDefinitions extends CommerceControllerDefinitionsMap,
-  TSolutionType extends SolutionType,
-> = Parameters<
-  Build<
-    InferControllersMapFromDefinition<TControllerDefinitions, TSolutionType>,
-    InferControllerPropsMapFromDefinitions<TControllerDefinitions>,
-    TControllerDefinitions,
-    TSolutionType
-  >
->;
 
 export type FetchStaticStateParameters<
   TControllerDefinitions extends CommerceControllerDefinitionsMap,
