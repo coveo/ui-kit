@@ -1621,9 +1621,6 @@ export const expectedStreamAnswerAPIParamWithDifferentFacetTimes = {
   ...expectedStreamAnswerAPIParam,
   facets: {
     ...expectedStreamAnswerAPIParam.facets,
-    [1]: {
-      ...expectedStreamAnswerAPIParam.facets[1],
-      currentValues: addSecondsToFacetsTimestamps(dateRangeCurrentValues, 5),
-    },
+    currentValues: addSecondsToFacetsTimestamps(dateRangeCurrentValues, 5),
   },
 };

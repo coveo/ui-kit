@@ -434,7 +434,7 @@ export class GeneratedAnswerObject {
 
   async waitForGenerateRequest(
     expectedPayload: Record<string, any>
-  ): Promise<Request | boolean> {
+  ): Promise<Request | boolean | null> {
     const payloadToMatch = removeUnknownFields(expectedPayload);
 
     if (this.answerApiEnabled) {
@@ -455,22 +455,7 @@ export class GeneratedAnswerObject {
         return false;
       });
     }
-
-    if (this.analyticsMode === AnalyticsModeEnum.legacy) {
-      return this.analytics.waitForCustomUaAnalytics(
-        {
-          eventType: 'generatedAnswer',
-          eventValue: 'generatedAnswerStreamEnd',
-        },
-        (event) =>
-          event?.customData?.generativeQuestionAnsweringId === this.streamId
-      );
-    }
-
-    return this.analytics.waitForEventProtocolAnalytics(
-      'Rga.AnswerReceived',
-      (event) => event.answerGenerated === true
-    );
+    return null;
   }
 
   streamEndAnalyticRequestPromise!: Promise<boolean | Request>;
