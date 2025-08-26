@@ -19,6 +19,7 @@ coverage
 deploy
 Dockerfile
 *.sh
+*.yaml
 
 # Deploy files
 terraform

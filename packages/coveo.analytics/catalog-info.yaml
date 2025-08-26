@@ -68,7 +68,7 @@ spec:
   # the team. See:
   # - Field reference: https://backstage.io/docs/features/software-catalog/descriptor-format/#specowner-required
   # - List of valid teams: https://devportal.dep.cloud.coveo.com/catalog?filters%5Bkind%5D=group&filters%5Btype%5D=team&filters%5Buser%5D=all
-  owner: group:default/data-platform
+  owner: group:default/dataplatformfoundation
 
   # System that this component is part of. The system will need to be defined
   # somewhere in the catalog. In practice this means that it'll need to be
