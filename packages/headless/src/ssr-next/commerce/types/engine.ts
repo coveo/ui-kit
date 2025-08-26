@@ -115,7 +115,7 @@ type Definition<
   TSolutionType extends SolutionType,
 > = CommerceEngineDefinition<TControllerDefinitions, TSolutionType>;
 
-export type FetchStaticStateFunction<
+type FetchStaticStateFunction<
   TControllerDefinitions extends CommerceControllerDefinitionsMap,
   TSolutionType extends SolutionType,
 > = Definition<TControllerDefinitions, TSolutionType>['fetchStaticState'];
@@ -136,17 +136,3 @@ export type HydrateStaticStateParameters<
 > = Parameters<
   HydrateStaticStateFunction<TControllerDefinitions, TSolutionType>
 >;
-
-type Controllers<
-  TControllerDefinitions extends CommerceControllerDefinitionsMap,
-  TSolutionType extends SolutionType,
-> = InferControllersMapFromDefinition<TControllerDefinitions, TSolutionType>;
-
-export type BuildResult<
-  TControllerDefinitions extends CommerceControllerDefinitionsMap,
-  TSolutionType extends SolutionType,
-> = {
-  engine: SSRCommerceEngine;
-  controllers: Controllers<TControllerDefinitions, TSolutionType> &
-    BakedInControllers;
-};
