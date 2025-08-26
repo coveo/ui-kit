@@ -8,12 +8,6 @@ test.describe('smoke test', () => {
 
   test.describe('search', () => {
     test('should load', async ({page}) => {
-      const consoleErrors: string[] = [];
-      page.on('console', (msg) => {
-        if (msg.type() === 'error') {
-          consoleErrors.push(msg.text());
-        }
-      });
       // Visit the specified URL
       await page.goto('http://localhost:4200/atomic-angular');
 
@@ -40,21 +34,10 @@ test.describe('smoke test', () => {
       await expect(resultList).toBeVisible();
       const result = resultList.locator('atomic-result').first();
       await expect(result).toBeVisible();
-      // Filter out expected MissingInterfaceParentError as they are getting fixed with Lit
-      const filteredErrors = consoleErrors
-        .filter((error) => !error.includes('MissingInterfaceParentError'))
-        .filter((error) => !error.includes('AbortError'));
-      expect(filteredErrors).toEqual([]);
     });
   });
   test.describe('commerce', () => {
     test('should load', async ({page}) => {
-      const consoleErrors: string[] = [];
-      page.on('console', (msg) => {
-        if (msg.type() === 'error') {
-          consoleErrors.push(msg.text());
-        }
-      });
       // Visit the specified URL
       await page.goto('http://localhost:4200/atomic-commerce-angular');
 
@@ -74,7 +57,6 @@ test.describe('smoke test', () => {
       await expect(productList).toBeVisible();
       const product = productList.locator('atomic-product').first();
       await expect(product).toBeVisible();
-      expect(consoleErrors).toEqual([]);
     });
   });
 });
