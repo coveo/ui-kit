@@ -1,3 +1,4 @@
 @utility min-lines-* {
-  min-height: calc(var(--line-height) * --value([\*]));
+  min-height: calc(var(--line-height) * --value(integer));
 }
+
