@@ -1,6 +1,7 @@
 import {LitElement, unsafeCSS} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {injectStylesForNoShadowDOM} from '@/src/decorators/inject-styles-for-no-shadow-dom';
+import {ChildrenUpdateCompleteMixin} from '@/src/mixins/children-update-complete-mixin';
 import {randomID} from '@/src/utils/utils';
 import {DEFAULT_MOBILE_BREAKPOINT} from '../../../utils/replace-breakpoint';
 import styles from './atomic-commerce-layout.tw.css';
@@ -15,8 +16,15 @@ import {buildCommerceLayout} from './commerce-layout';
  */
 @customElement('atomic-commerce-layout')
 @injectStylesForNoShadowDOM
-export class AtomicCommerceLayout extends LitElement {
+export class AtomicCommerceLayout extends ChildrenUpdateCompleteMixin(
+  LitElement
+) {
   static styles = [styles];
+  static async dynamicStyles(instance: AtomicCommerceLayout) {
+    await instance.getUpdateComplete();
+    return unsafeCSS(buildCommerceLayout(instance, instance.mobileBreakpoint));
+  }
+
   @state() error!: Error;
 
   /**
@@ -29,8 +37,6 @@ export class AtomicCommerceLayout extends LitElement {
   connectedCallback() {
     super.connectedCallback();
     this.id = randomID('atomic-commerce-layout-');
-    const layout = unsafeCSS(buildCommerceLayout(this, this.mobileBreakpoint));
-    AtomicCommerceLayout.styles.unshift(layout);
   }
 }
 
