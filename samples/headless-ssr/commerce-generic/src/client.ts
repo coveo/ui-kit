@@ -20,10 +20,7 @@ async function initApp() {
 
     Search(controllers.searchBox as SearchBox);
     ProductGrid(controllers.productList as ProductList);
-    QuerySummary(
-      controllers.summary as Summary,
-      controllers.searchBox as SearchBox
-    );
+    QuerySummary(controllers.summary as Summary);
   } catch (_error) {
     const err = document.getElementById('query-error');
     if (!err) {

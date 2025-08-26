@@ -34,7 +34,7 @@ export const renderApp = (staticState: SearchStaticState) => {
           <div class="results-header">
             <div class="results-controls">
               <div id="query-summary" class="query-summary">
-                ${formatQuerySummary(summary, searchValue)}
+                ${formatQuerySummary(summary)}
               </div>
             </div>
           </div>
