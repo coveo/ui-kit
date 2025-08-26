@@ -11,15 +11,11 @@ export function extendEngineConfiguration<
   configuration: CommerceEngineDefinitionOptions<TControllerDefinitions>['configuration'],
   commonBuildOptions: CommonBuildConfig
 ): CommerceEngineConfiguration {
-  const {country, currency, language, url, cart, location} = commonBuildOptions;
+  const {cart, context} = commonBuildOptions;
   return {
     ...configuration,
     context: {
-      view: {url},
-      language,
-      country,
-      location,
-      currency,
+      ...context,
     },
     cart,
   };

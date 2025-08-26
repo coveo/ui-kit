@@ -27,38 +27,78 @@ describe('controller-wiring', () => {
 
   describe('schema validation', () => {
     const validCommonConfig = {
-      language: 'en',
-      country: 'US',
-      currency: 'USD' as const,
-      url: 'https://example.com',
+      context: {
+        language: 'en',
+        country: 'US',
+        currency: 'USD' as const,
+        view: {url: 'https://example.com'},
+      },
     };
 
-    it.each([
-      {schema: listingDefinitionSchema},
-      {schema: searchDefinitionSchema},
-      {schema: standaloneDefinitionSchema},
-      {schema: recommendationsDefinitionSchema([])},
-    ])('it should throw for missing required parameters', ({schema}) => {
-      expect(() => {
-        schema.validate();
-      }).toThrowError(
-        /language: value is required.|country: value is required.|currency: value is required.|url: value is required./
-      );
+    describe('when validating a listingDefinitionSchema', () => {
+      it('should throw for missing required context only', () => {
+        const validate = () => {
+          listingDefinitionSchema.validate({});
+        };
+        expect(validate).toThrowError(
+          /context: value is required and is currently undefined/
+        );
+      });
     });
 
-    it('should throw for missing query parameter', () => {
-      const searchConfig = {
-        ...validCommonConfig,
-      };
-      expect(() => {
-        searchDefinitionSchema.validate(searchConfig);
-      }).toThrowError(/query: value is required./);
+    describe('when validating a searchDefinitionSchema', () => {
+      it('should throw for missing required search params and context', () => {
+        const validate = () => {
+          searchDefinitionSchema.validate({});
+        };
+        expect(validate).toThrowError(
+          /context: value is required and is currently undefined/
+        );
+        expect(validate).toThrowError(
+          /searchParams: value is required and is currently undefined/
+        );
+      });
     });
 
-    it('should throw for missing query', () => {
+    describe('when validating a standaloneDefinitionSchema', () => {
+      it('should throw for missing required parameters and context', () => {
+        const validate = () => {
+          standaloneDefinitionSchema.validate({});
+        };
+        expect(validate).toThrowError(
+          /context: value is required and is currently undefined/
+        );
+      });
+    });
+
+    describe('when validating a recommendationsDefinitionSchema', () => {
+      it('should throw for missing required parameters and context', () => {
+        const validate = () => {
+          recommendationsDefinitionSchema([]).validate({});
+        };
+        expect(validate).toThrowError(
+          /context: value is required and is currently undefined/
+        );
+      });
+    });
+
+    it('should throw for missing search parameters', () => {
+      expect(() => {
+        searchDefinitionSchema.validate(validCommonConfig);
+      }).toThrowError(/searchParams: value is require/);
+
+      expect(() => {
+        searchDefinitionSchema.validate({
+          ...validCommonConfig,
+          searchParams: {},
+        });
+      }).toThrowError(/searchParams: value does not contain query/);
+    });
+
+    it('should not throw for missing query', () => {
       const searchConfig = {
         ...validCommonConfig,
-        query: 'test query',
+        searchParams: {query: 'test query'},
       };
       expect(() => {
         searchDefinitionSchema.validate(searchConfig);
@@ -107,6 +147,19 @@ describe('controller-wiring', () => {
         );
       }).not.toThrow();
     });
+
+    it('should not validate recommendations config with empty productId', () => {
+      const recommendationsConfig = {
+        ...validCommonConfig,
+        recommendations: ['rec1'],
+        productId: '',
+      };
+      expect(() => {
+        recommendationsDefinitionSchema(['rec1']).validate(
+          recommendationsConfig
+        );
+      }).toThrow();
+    });
   });
 
   describe('#wireControllerParams', () => {
@@ -126,15 +179,19 @@ describe('controller-wiring', () => {
 
       beforeAll(() => {
         const params = {
+          searchParams: {
+            query: 'test',
+          },
           recommendations: [],
-          query: 'test',
-          language: 'en',
-          country: 'US',
-          currency: 'USD' as const,
+          context: {
+            language: 'en',
+            country: 'US',
+            currency: 'USD' as const,
+            view: {url: 'https://example.com'},
+          },
           cart: {
             items: [mockCartItem],
           },
-          url: 'https://example.com',
         };
 
         props = wireControllerParams(
@@ -166,11 +223,15 @@ describe('controller-wiring', () => {
 
     it('should wire parameter manager for search with query', () => {
       const params = {
-        language: 'en',
-        country: 'US',
-        currency: 'USD' as const,
-        url: 'https://example.com',
-        query: 'test query',
+        context: {
+          language: 'en',
+          country: 'US',
+          currency: 'USD' as const,
+          view: {url: 'https://example.com'},
+        },
+        searchParams: {
+          query: 'test query',
+        },
       };
 
       const {parameterManager} = wireControllerParams(
@@ -190,11 +251,15 @@ describe('controller-wiring', () => {
 
     it('should contain props from custom controllers if provided', () => {
       const params = {
-        language: 'en',
-        country: 'US',
-        currency: 'USD' as const,
-        url: 'https://example.com',
-        query: 'test query',
+        context: {
+          language: 'en',
+          country: 'US',
+          currency: 'USD' as const,
+          view: {url: 'https://example.com'},
+        },
+        searchParams: {
+          query: 'test query',
+        },
         controllers: {
           customController: {
             initialState: {foo: 'bar'},
@@ -217,10 +282,12 @@ describe('controller-wiring', () => {
 
     it('should handle search params for parameter manager', () => {
       const params = {
-        language: 'en',
-        country: 'US',
-        currency: 'USD' as const,
-        url: 'https://example.com',
+        context: {
+          language: 'en',
+          country: 'US',
+          currency: 'USD' as const,
+          view: {url: 'https://example.com'},
+        },
         searchParams: {perPage: 12, page: 3},
       };
 
@@ -246,10 +313,12 @@ describe('controller-wiring', () => {
       } as CommerceControllerDefinitionsMap;
 
       const params = {
-        language: 'en',
-        country: 'US',
-        currency: 'USD' as const,
-        url: 'https://example.com',
+        context: {
+          language: 'en',
+          country: 'US',
+          currency: 'USD' as const,
+          view: {url: 'https://example.com'},
+        },
         cart: {items: []},
       };
 
@@ -273,10 +342,14 @@ describe('controller-wiring', () => {
         } as CommerceControllerDefinitionsMap;
 
         const params = {
-          language: 'en',
-          country: 'US',
-          currency: 'USD' as const,
-          url: 'https://example.com',
+          context: {
+            language: 'en',
+            country: 'US',
+            currency: 'USD' as const,
+            view: {
+              url: 'https://example.com',
+            },
+          },
           recommendations: ['rec1', 'rec2'],
           productId: 'product-123',
         };
@@ -306,10 +379,12 @@ describe('controller-wiring', () => {
         } as CommerceControllerDefinitionsMap;
 
         const params = {
-          language: 'en',
-          country: 'US',
-          currency: 'USD' as const,
-          url: 'https://example.com',
+          context: {
+            language: 'en',
+            country: 'US',
+            currency: 'USD' as const,
+            view: {url: 'https://example.com'},
+          },
           recommendations: ['rec1'],
         };
 
@@ -332,10 +407,12 @@ describe('controller-wiring', () => {
         } as CommerceControllerDefinitionsMap;
 
         const params = {
-          language: 'en',
-          country: 'US',
-          currency: 'USD' as const,
-          url: 'https://example.com',
+          context: {
+            language: 'en',
+            country: 'US',
+            currency: 'USD' as const,
+            view: {url: 'https://example.com'},
+          },
           recommendations: ['rec1'],
           productId: 'product-123',
         };
