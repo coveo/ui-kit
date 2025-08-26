@@ -1897,7 +1897,7 @@ export declare interface AtomicCommerceBreadbox extends LitAtomicCommerceBreadbo
 
 @ProxyCmp({
   inputs: ['summary', 'facet', 'isCollapsed', 'field'],
-  methods: ['initialize', 'initBindings'],
+  methods: ['initialize'],
   defineCustomElementFn: () => {customElements.get('atomic-commerce-category-facet') || customElements.define('atomic-commerce-category-facet', LitAtomicCommerceCategoryFacet);}
 })
 @Component({
@@ -1949,7 +1949,7 @@ export declare interface AtomicCommerceDidYouMean extends LitAtomicCommerceDidYo
 
 @ProxyCmp({
   inputs: ['summary', 'facet', 'isCollapsed', 'field'],
-  methods: ['initialize', 'initBindings'],
+  methods: ['initialize'],
   defineCustomElementFn: () => {customElements.get('atomic-commerce-facet') || customElements.define('atomic-commerce-facet', LitAtomicCommerceFacet);}
 })
 @Component({
@@ -2000,7 +2000,7 @@ export declare interface AtomicCommerceFacets extends LitAtomicCommerceFacets {
 }
 
 @ProxyCmp({
-  inputs: ['type', 'analytics', 'logLevel', 'i18n', 'language', 'engine', 'reflectStateInUrl', 'scrollContainer', 'languageAssetsPath', 'iconAssetsPath'],
+  inputs: ['type', 'analytics', 'logLevel', 'i18n', 'language', 'engine', 'reflectStateInUrl', 'disableStateReflectionInUrl', 'scrollContainer', 'languageAssetsPath', 'iconAssetsPath'],
   methods: ['toggleAnalytics', 'updateLanguage', 'updateIconAssetsPath', 'scrollToTop', 'initialize', 'initializeWithEngine', 'executeFirstRequest', 'getUpdateComplete'],
   defineCustomElementFn: () => {customElements.get('atomic-commerce-interface') || customElements.define('atomic-commerce-interface', LitAtomicCommerceInterface);}
 })
@@ -2010,7 +2010,7 @@ export declare interface AtomicCommerceFacets extends LitAtomicCommerceFacets {
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
   // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: ['type', 'analytics', 'logLevel', 'i18n', 'language', 'engine', 'reflectStateInUrl', 'scrollContainer', 'languageAssetsPath', 'iconAssetsPath']
+  inputs: ['type', 'analytics', 'logLevel', 'i18n', 'language', 'engine', 'reflectStateInUrl', 'disableStateReflectionInUrl', 'scrollContainer', 'languageAssetsPath', 'iconAssetsPath']
 })
 export class AtomicCommerceInterface {
   protected readonly el: HTMLElement;
@@ -2027,7 +2027,7 @@ export declare interface AtomicCommerceInterface extends LitAtomicCommerceInterf
 
 @ProxyCmp({
   inputs: ['mobileBreakpoint'],
-  methods: ['styles'],
+  methods: [],
   defineCustomElementFn: () => {customElements.get('atomic-commerce-layout') || customElements.define('atomic-commerce-layout', LitAtomicCommerceLayout);}
 })
 @Component({
@@ -2105,7 +2105,7 @@ export declare interface AtomicCommerceNoProducts extends LitAtomicCommerceNoPro
 
 @ProxyCmp({
   inputs: ['summary', 'facet', 'isCollapsed', 'field'],
-  methods: ['initialize', 'initBindings'],
+  methods: ['initialize'],
   defineCustomElementFn: () => {customElements.get('atomic-commerce-numeric-facet') || customElements.define('atomic-commerce-numeric-facet', LitAtomicCommerceNumericFacet);}
 })
 @Component({
@@ -2521,7 +2521,7 @@ export declare interface AtomicCommerceText extends LitAtomicCommerceText {
 
 @ProxyCmp({
   inputs: ['summary', 'facet', 'isCollapsed', 'field'],
-  methods: ['initialize', 'initBindings'],
+  methods: ['initialize'],
   defineCustomElementFn: () => {customElements.get('atomic-commerce-timeframe-facet') || customElements.define('atomic-commerce-timeframe-facet', LitAtomicCommerceTimeframeFacet);}
 })
 @Component({
@@ -2677,7 +2677,7 @@ export declare interface AtomicProductImage extends LitAtomicProductImage {
 
 @ProxyCmp({
   inputs: ['hrefTemplate'],
-  methods: ['initialize', 'adoptChildren', 'renderDefaultSlotContent', 'getSlotNameForChild', 'isTextNodeEmpty', 'isSlotEmpty', '_initializeSlotState', '_ensureSlotsInitialized', '_hasDefaultSlotContent', '_mapChildrenToSlots', '_addChildToSlot', '_createSlotPlaceholder', '_relocateSingleSlot', '_moveNodeIfNeeded'],
+  methods: ['initialize', 'adoptChildren', 'isTextNodeEmpty', 'isSlotEmpty', 'renderDefaultSlotContent', 'createSlotPlaceholder'],
   defineCustomElementFn: () => {customElements.get('atomic-product-link') || customElements.define('atomic-product-link', LitAtomicProductLink);}
 })
 @Component({
@@ -2807,7 +2807,7 @@ export declare interface AtomicProductRating extends LitAtomicProductRating {
 
 @ProxyCmp({
   inputs: [],
-  methods: [],
+  methods: ['styles'],
   defineCustomElementFn: () => {customElements.get('atomic-product-section-actions') || customElements.define('atomic-product-section-actions', LitAtomicProductSectionActions);}
 })
 @Component({
@@ -2833,7 +2833,7 @@ export declare interface AtomicProductSectionActions extends LitAtomicProductSec
 
 @ProxyCmp({
   inputs: [],
-  methods: [],
+  methods: ['styles'],
   defineCustomElementFn: () => {customElements.get('atomic-product-section-badges') || customElements.define('atomic-product-section-badges', LitAtomicProductSectionBadges);}
 })
 @Component({
@@ -2859,7 +2859,7 @@ export declare interface AtomicProductSectionBadges extends LitAtomicProductSect
 
 @ProxyCmp({
   inputs: [],
-  methods: [],
+  methods: ['styles'],
   defineCustomElementFn: () => {customElements.get('atomic-product-section-bottom-metadata') || customElements.define('atomic-product-section-bottom-metadata', LitAtomicProductSectionBottomMetadata);}
 })
 @Component({
@@ -2885,7 +2885,7 @@ export declare interface AtomicProductSectionBottomMetadata extends LitAtomicPro
 
 @ProxyCmp({
   inputs: [],
-  methods: [],
+  methods: ['styles'],
   defineCustomElementFn: () => {customElements.get('atomic-product-section-children') || customElements.define('atomic-product-section-children', LitAtomicProductSectionChildren);}
 })
 @Component({
@@ -2911,7 +2911,7 @@ export declare interface AtomicProductSectionChildren extends LitAtomicProductSe
 
 @ProxyCmp({
   inputs: [],
-  methods: [],
+  methods: ['styles'],
   defineCustomElementFn: () => {customElements.get('atomic-product-section-description') || customElements.define('atomic-product-section-description', LitAtomicProductSectionDescription);}
 })
 @Component({
@@ -2937,7 +2937,7 @@ export declare interface AtomicProductSectionDescription extends LitAtomicProduc
 
 @ProxyCmp({
   inputs: [],
-  methods: [],
+  methods: ['styles'],
   defineCustomElementFn: () => {customElements.get('atomic-product-section-emphasized') || customElements.define('atomic-product-section-emphasized', LitAtomicProductSectionEmphasized);}
 })
 @Component({
@@ -2963,7 +2963,7 @@ export declare interface AtomicProductSectionEmphasized extends LitAtomicProduct
 
 @ProxyCmp({
   inputs: [],
-  methods: [],
+  methods: ['styles'],
   defineCustomElementFn: () => {customElements.get('atomic-product-section-metadata') || customElements.define('atomic-product-section-metadata', LitAtomicProductSectionMetadata);}
 })
 @Component({
@@ -2989,7 +2989,7 @@ export declare interface AtomicProductSectionMetadata extends LitAtomicProductSe
 
 @ProxyCmp({
   inputs: [],
-  methods: [],
+  methods: ['styles'],
   defineCustomElementFn: () => {customElements.get('atomic-product-section-name') || customElements.define('atomic-product-section-name', LitAtomicProductSectionName);}
 })
 @Component({
@@ -3015,7 +3015,7 @@ export declare interface AtomicProductSectionName extends LitAtomicProductSectio
 
 @ProxyCmp({
   inputs: ['imageSize'],
-  methods: [],
+  methods: ['styles'],
   defineCustomElementFn: () => {customElements.get('atomic-product-section-visual') || customElements.define('atomic-product-section-visual', LitAtomicProductSectionVisual);}
 })
 @Component({
@@ -3040,7 +3040,7 @@ export declare interface AtomicProductSectionVisual extends LitAtomicProductSect
 }
 
 @ProxyCmp({
-  inputs: ['conditions', 'mustMatch', 'mustNotMatch'],
+  inputs: ['mustMatch', 'mustNotMatch'],
   methods: ['getTemplate'],
   defineCustomElementFn: () => {customElements.get('atomic-product-template') || customElements.define('atomic-product-template', LitAtomicProductTemplate);}
 })
@@ -3050,7 +3050,7 @@ export declare interface AtomicProductSectionVisual extends LitAtomicProductSect
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
   // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: ['conditions', 'mustMatch', 'mustNotMatch']
+  inputs: ['mustMatch', 'mustNotMatch']
 })
 export class AtomicProductTemplate {
   protected readonly el: HTMLElement;
@@ -3066,7 +3066,7 @@ export declare interface AtomicProductTemplate extends LitAtomicProductTemplate 
 }
 
 @ProxyCmp({
-  inputs: ['field', 'shouldHighlight', 'default'],
+  inputs: ['field', 'shouldHighlight', 'disableHighlight', 'default'],
   methods: ['initialize'],
   defineCustomElementFn: () => {customElements.get('atomic-product-text') || customElements.define('atomic-product-text', LitAtomicProductText);}
 })
@@ -3076,7 +3076,7 @@ export declare interface AtomicProductTemplate extends LitAtomicProductTemplate 
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
   // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: ['field', 'shouldHighlight', 'default']
+  inputs: ['field', 'shouldHighlight', 'disableHighlight', 'default']
 })
 export class AtomicProductText {
   protected readonly el: HTMLElement;

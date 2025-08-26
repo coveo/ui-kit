@@ -6,7 +6,6 @@ import {
   type CartProps,
   type CartState,
 } from '../../../../controllers/commerce/context/cart/headless-cart.js';
-import {MissingControllerProps} from '../../../common/errors.js';
 import type {UniversalControllerDefinitionWithProps} from '../../types/controller-definitions.js';
 import {createControllerWithKind, Kind} from '../../types/kind.js';
 
@@ -32,10 +31,9 @@ export function defineCart(): CartDefinition {
     standalone: true,
     recommendation: true,
     buildWithProps: (engine, props) => {
-      if (props === undefined) {
-        throw new MissingControllerProps(Kind.Cart);
-      }
-      const controller = buildCart(engine, {initialState: props.initialState});
+      const controller = buildCart(engine, {
+        initialState: props ? props.initialState : {},
+      });
       return createControllerWithKind(controller, Kind.Cart);
     },
   };

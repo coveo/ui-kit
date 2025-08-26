@@ -13,6 +13,26 @@ export interface ControllerStaticStateMap {
   [customName: string]: ControllerStaticState<unknown>;
 }
 
+export interface BaseControllerDefinitionWithoutProps<
+  TEngine,
+  TController extends Controller,
+> {
+  build(engine: TEngine, ...args: unknown[]): TController;
+}
+
+export interface BaseControllerDefinitionWithProps<
+  TEngine,
+  TController extends Controller,
+  TProps,
+> {
+  buildWithProps(
+    engine: TEngine,
+    props?: TProps,
+    ...args: unknown[]
+  ): TController;
+}
+
+// TODO: KIT-4691: this is a type only used by search. Move into the search folder
 export interface ControllerDefinitionWithoutProps<
   TEngine extends CoreEngine | CoreEngineNext,
   TController extends Controller,
@@ -26,6 +46,7 @@ export interface ControllerDefinitionWithoutProps<
   build(engine: TEngine): TController;
 }
 
+// TODO: KIT-4691: this is a type only used by search. Move into the search folder
 export interface ControllerDefinitionWithProps<
   TEngine extends CoreEngine | CoreEngineNext,
   TController extends Controller,

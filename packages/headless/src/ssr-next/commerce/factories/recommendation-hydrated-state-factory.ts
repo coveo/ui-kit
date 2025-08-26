@@ -14,7 +14,7 @@ import {
 export function hydratedRecommendationStaticStateFactory<
   TControllerDefinitions extends CommerceControllerDefinitionsMap,
 >(
-  controllerDefinitions: TControllerDefinitions | undefined,
+  controllerDefinitions: TControllerDefinitions,
   options: CommerceEngineDefinitionOptions<TControllerDefinitions>
 ): HydrateStaticStateFunction<TControllerDefinitions> {
   return async (
@@ -26,6 +26,7 @@ export function hydratedRecommendationStaticStateFactory<
     )(SolutionType.recommendation);
 
     const {engine, controllers} = (await solutionTypeBuild(
+      // @ts-expect-error: TODO: KIT-4742: the wiring will fix also the type inconsistencies
       ...(params as BuildParameters<TControllerDefinitions>)
     )) as BuildResult<TControllerDefinitions>;
 

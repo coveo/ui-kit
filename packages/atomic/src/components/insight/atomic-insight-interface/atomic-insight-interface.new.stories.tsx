@@ -10,7 +10,7 @@ const {decorator, play} = wrapInInsightInterface();
 
 const meta: Meta = {
   component: 'atomic-insight-interface',
-  title: 'Atomic/Insight/InsightInterface',
+  title: 'Insight/InsightInterface',
   id: 'atomic-insight-interface',
 
   render: renderComponent,
@@ -55,12 +55,12 @@ export const Default: Story = {
               label="All"
               expression=""
               active="true"
-            ></atomic-insight-tab
-            ><atomic-insight-tab
+            ></atomic-insight-tab>
+            <atomic-insight-tab
               label="Videos"
               expression="@ytchanneltitle"
-            ></atomic-insight-tab
-            ><atomic-insight-tab
+            ></atomic-insight-tab>
+            <atomic-insight-tab
               label="Documentation"
               expression='@documenttype==("WebPage")'
             ></atomic-insight-tab>
@@ -231,7 +231,7 @@ export const Default: Story = {
                   </atomic-field-condition>
                 </atomic-result-section-badges>
                 <atomic-result-section-title>
-                  <atomic-result-link>
+                  <atomic-result-link data-testid="video-insight-result-link">
                     <a slot="attributes" target="_self"></a>
                   </atomic-result-link>
                 </atomic-result-section-title>
