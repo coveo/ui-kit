@@ -13,7 +13,6 @@ This sample demonstrates server-side rendering (SSR) with Coveo Headless commerc
 
 - Node.js 22+ (LTS v22.18.0)
 - npm 10+
-- A Coveo organization with commerce data configured
 
 ## Key Features
 
