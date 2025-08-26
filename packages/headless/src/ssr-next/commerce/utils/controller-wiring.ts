@@ -1,18 +1,10 @@
-/**
- * Controller Wiring Utilities
- *
- * Transforms simple user configuration into complex internal controller structures.
- */
-
-import {ArrayValue, Schema, StringValue} from '@coveo/bueno';
+import {ArrayValue, RecordValue, Schema, StringValue} from '@coveo/bueno';
 import {contextDefinition} from '../../../features/commerce/context/context-validation.js';
-import {
-  nonEmptyString,
-  requiredEmptyAllowedString,
-  requiredNonEmptyString,
-} from '../../../utils/validate-payload.js';
+import {parametersDefinition} from '../../../features/commerce/parameters/parameters-schema.js';
+import {nonEmptyString, requiredEmptyAllowedString} from '../../../utils/validate-payload.js';
 import type {ControllersPropsMap} from '../../common/types/controllers.js';
-import type {BuildConfig, SearchBuildConfig} from '../types/build.js';
+import type {Parameters} from '../controllers/parameter-manager/headless-core-parameter-manager.ssr.js';
+import type {BuildConfig} from '../types/build.js';
 import {SolutionType} from '../types/controller-constants.js';
 import type {InferControllerPropsMapFromDefinitions} from '../types/controller-inference.js';
 import type {CommerceControllerDefinitionsMap} from '../types/engine.js';
@@ -22,14 +14,17 @@ import {
 } from './recommendation-filter.js';
 
 const requiredDefinition = {
-  language: contextDefinition.language,
-  country: contextDefinition.country,
-  currency: contextDefinition.currency,
-  url: requiredNonEmptyString,
+  context: new RecordValue({
+    options: {required: true},
+    values: contextDefinition,
+  }),
 };
 
 const listingDefinition = {
   ...requiredDefinition,
+  searchParams: new RecordValue({
+    values: parametersDefinition,
+  }),
 };
 
 const standaloneDefinition = {
@@ -38,7 +33,10 @@ const standaloneDefinition = {
 
 const searchDefinition = {
   ...requiredDefinition,
-  query: requiredEmptyAllowedString,
+  searchParams: new RecordValue({
+    options: {required: true},
+    values: {query: requiredEmptyAllowedString, ...parametersDefinition},
+  }),
 };
 
 const recommendationsDefinition = (recommendationName: string[]) => ({
@@ -91,15 +89,18 @@ function createControllerWirer<
   controllerProps: ControllersPropsMap
 ) {
   return {
-    wireParameterManager: (query?: string) => {
+    wireParameterManager: () => {
       if (!controllerDefinitions?.parameterManager) return;
 
       const {searchParams} = buildConfig;
+      const {query, ...rest} =
+        (searchParams as Parameters & {
+          query?: string;
+        }) || {};
+
       const parameters = {
         ...(query && {q: query}),
-        ...(searchParams && typeof searchParams === 'object'
-          ? searchParams
-          : {}),
+        ...(rest && typeof rest === 'object' ? rest : {}),
       };
 
       controllerProps.parameterManager = {
@@ -110,13 +111,10 @@ function createControllerWirer<
     wireContext: () => {
       if (!controllerDefinitions?.context) return;
 
-      const {language, country, currency, url} = buildConfig;
+      const {context} = buildConfig;
       controllerProps.context = {
         initialState: {
-          view: {url},
-          language,
-          country,
-          currency,
+          ...context,
         },
       };
     },
@@ -155,19 +153,13 @@ function wireCommonControllers(
   wirer.wireContext();
 }
 
-function wireSolutionSpecificControllers<
-  TControllerDefinitions extends CommerceControllerDefinitionsMap,
->(
+function wireSolutionSpecificControllers(
   solutionType: SolutionType,
-  buildConfig: BuildConfig<TControllerDefinitions, SolutionType>,
   wirer: ReturnType<typeof createControllerWirer>
 ): void {
   switch (solutionType) {
     case SolutionType.search: {
-      const {query} = buildConfig as SearchBuildConfig;
-      if (typeof query === 'string') {
-        wirer.wireParameterManager(query);
-      }
+      wirer.wireParameterManager();
       break;
     }
 
@@ -222,7 +214,7 @@ export function wireControllerParams<
   );
 
   wireCommonControllers(wirer);
-  wireSolutionSpecificControllers(solutionType, buildConfig, wirer);
+  wireSolutionSpecificControllers(solutionType, wirer);
 
   return controllerProps as InferControllerPropsMapFromDefinitions<TControllerDefinitions>;
 }

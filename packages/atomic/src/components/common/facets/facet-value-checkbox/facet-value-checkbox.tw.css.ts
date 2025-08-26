@@ -1,5 +1,7 @@
-@reference '../../../../utils/tailwind.global.tw.css';
+import {css} from 'lit';
 
+const styles = css`
+@reference '../../../../utils/tailwind.global.tw.css';
 /**
  * @prop --atomic-facet-checkbox-size: Size of the checkbox.
  */
@@ -22,4 +24,6 @@
 .value-checkbox.excluded:focus-visible + label .value-label,
 .value-checkbox.excluded:hover + label .value-label {
   @apply text-error;
-}
+}`;
+
+export default styles;

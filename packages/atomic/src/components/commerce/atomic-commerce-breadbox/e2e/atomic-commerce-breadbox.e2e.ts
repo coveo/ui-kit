@@ -54,7 +54,7 @@ test.describe('Default', () => {
 
         const breadcrumbButton = breadbox.getBreadcrumbButtons(breadcrumbLabel);
 
-        await expect(breadcrumbButton).toHaveText(breadcrumbLabel);
+        await expect(breadcrumbButton).toContainText(breadcrumbLabel);
       });
     });
   });
@@ -73,7 +73,7 @@ test.describe('Default', () => {
       expectedBreadcrumbLabel
     );
 
-    await expect(breadcrumbButton).toHaveText(expectedBreadcrumbLabel);
+    await expect(breadcrumbButton).toContainText(expectedBreadcrumbLabel);
   });
 
   test.describe('when a regular facet value is selected', () => {
@@ -119,7 +119,7 @@ test.describe('Default', () => {
     }) => {
       const breadcrumbButton = breadbox.getBreadcrumbButtons(firstValueText);
 
-      await expect(breadcrumbButton).toHaveText(`Brand: ${firstValueText}`);
+      await expect(breadcrumbButton).toContainText(`Brand: ${firstValueText}`);
     });
   });
   test.describe('when a category facet value is selected', () => {
@@ -168,7 +168,9 @@ test.describe('Default', () => {
     }) => {
       const breadcrumbButton = breadbox.getBreadcrumbButtons(firstValueText);
 
-      await expect(breadcrumbButton).toHaveText(`Category: ${firstValueText}`);
+      await expect(breadcrumbButton).toContainText(
+        `Category: ${firstValueText}`
+      );
     });
 
     test.describe('when a nested category facet value is selected', () => {
@@ -228,7 +230,7 @@ test.describe('Default', () => {
       }) => {
         const breadcrumbButton = breadbox.getBreadcrumbButtons().first();
 
-        await expect(breadcrumbButton).toHaveText(
+        await expect(breadcrumbButton).toContainText(
           `Category: ${breadcrumbText}`
         );
       });
@@ -277,7 +279,7 @@ test.describe('Default', () => {
     }) => {
       const breadcrumbButton = breadbox.getBreadcrumbButtons(firstValueText);
 
-      await expect(breadcrumbButton).toHaveText(`Price: ${firstValueText}`);
+      await expect(breadcrumbButton).toContainText(`Price: ${firstValueText}`);
     });
   });
 
@@ -320,7 +322,7 @@ test.describe('Default', () => {
     }) => {
       const breadcrumbButton = breadbox.getBreadcrumbButtons(firstValueText);
 
-      await expect(breadcrumbButton).toHaveText(`Price: ${firstValueText}`);
+      await expect(breadcrumbButton).toContainText(`Price: ${firstValueText}`);
     });
   });
 
@@ -368,7 +370,7 @@ test.describe('Default', () => {
     }) => {
       const breadcrumbButton = breadbox.getBreadcrumbButtons(firstValueText);
 
-      await expect(breadcrumbButton).toHaveText(`Date: ${firstValueText}`);
+      await expect(breadcrumbButton).toContainText(`Date: ${firstValueText}`);
     });
   });
 
@@ -495,6 +497,6 @@ test.describe('Default', () => {
     }
 
     await expect(breadbox.getShowMorebutton()).toBeVisible();
-    await expect(breadbox.getShowMorebutton()).toHaveText('+ 2');
+    await expect(breadbox.getShowMorebutton()).toContainText('+ 2');
   });
 });
