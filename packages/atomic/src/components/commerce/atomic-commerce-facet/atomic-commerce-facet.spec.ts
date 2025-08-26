@@ -45,6 +45,9 @@ describe('AtomicCommerceFacet', () => {
         'Look at the developer console for more information'
       );
     },
+    moreMatches(element: Element) {
+      return element.shadowRoot!.querySelector('[part=more-matches]')!;
+    },
     parts: (element: Element) => {
       const qs = (part: string) =>
         element.shadowRoot?.querySelector(`[part~="${part}"]`);
@@ -489,6 +492,42 @@ describe('AtomicCommerceFacet', () => {
       'test query'
     );
     expect(mockedFacet.facetSearch.search).toHaveBeenCalled();
+  });
+
+  it('should call facetSearch.showMoreResults when there are more results available and the "more matches for x" button is clicked', async () => {
+    mockedFacet = buildFakeRegularFacet({
+      state: {
+        facetSearch: {
+          moreValuesAvailable: true,
+          isLoading: false,
+          query: 'ele',
+          values: [
+            {
+              displayValue: 'sd',
+              rawValue: 'sd',
+              count: 1,
+            },
+          ],
+        },
+      },
+      implementation: {
+        facetSearch: {
+          clear: vi.fn(),
+          updateText: vi.fn(),
+          search: vi.fn(),
+          select: vi.fn(),
+          exclude: vi.fn(),
+          singleExclude: vi.fn(),
+          singleSelect: vi.fn(),
+          showMoreResults: vi.fn(),
+        },
+      },
+    });
+    const element = await setupElement();
+
+    await userEvent.click(locators.moreMatches(element));
+
+    expect(mockedFacet.facetSearch.showMoreResults).toHaveBeenCalled();
   });
 
   it('should render facet search parts when there are search results', async () => {
