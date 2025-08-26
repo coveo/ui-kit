@@ -113,42 +113,53 @@ export type CommerceControllerDefinitionsMap =
 
 type Definition<
   TControllerDefinitions extends CommerceControllerDefinitionsMap,
-> = CommerceEngineDefinition<TControllerDefinitions, SolutionType>;
+  TSolutionType extends SolutionType,
+> = CommerceEngineDefinition<TControllerDefinitions, TSolutionType>;
 
 export type FetchStaticStateFunction<
   TControllerDefinitions extends CommerceControllerDefinitionsMap,
-> = Definition<TControllerDefinitions>['fetchStaticState'];
+  TSolutionType extends SolutionType,
+> = Definition<TControllerDefinitions, TSolutionType>['fetchStaticState'];
 
 export type HydrateStaticStateFunction<
   TControllerDefinitions extends CommerceControllerDefinitionsMap,
-> = Definition<TControllerDefinitions>['hydrateStaticState'];
+  TSolutionType extends SolutionType,
+> = Definition<TControllerDefinitions, TSolutionType>['hydrateStaticState'];
 
 export type BuildParameters<
   TControllerDefinitions extends CommerceControllerDefinitionsMap,
+  TSolutionType extends SolutionType,
 > = Parameters<
   Build<
-    InferControllersMapFromDefinition<TControllerDefinitions, SolutionType>,
+    InferControllersMapFromDefinition<TControllerDefinitions, TSolutionType>,
     InferControllerPropsMapFromDefinitions<TControllerDefinitions>,
     TControllerDefinitions,
-    SolutionType
+    TSolutionType
   >
 >;
 
 export type FetchStaticStateParameters<
   TControllerDefinitions extends CommerceControllerDefinitionsMap,
-> = Parameters<FetchStaticStateFunction<TControllerDefinitions>>;
+  TSolutionType extends SolutionType,
+> = Parameters<FetchStaticStateFunction<TControllerDefinitions, TSolutionType>>;
 
 export type HydrateStaticStateParameters<
   TControllerDefinitions extends CommerceControllerDefinitionsMap,
-> = Parameters<HydrateStaticStateFunction<TControllerDefinitions>>;
+  TSolutionType extends SolutionType,
+> = Parameters<
+  HydrateStaticStateFunction<TControllerDefinitions, TSolutionType>
+>;
 
 type Controllers<
   TControllerDefinitions extends CommerceControllerDefinitionsMap,
-> = InferControllersMapFromDefinition<TControllerDefinitions, SolutionType>;
+  TSolutionType extends SolutionType,
+> = InferControllersMapFromDefinition<TControllerDefinitions, TSolutionType>;
 
 export type BuildResult<
   TControllerDefinitions extends CommerceControllerDefinitionsMap,
+  TSolutionType extends SolutionType,
 > = {
   engine: SSRCommerceEngine;
-  controllers: Controllers<TControllerDefinitions> & BakedInControllers;
+  controllers: Controllers<TControllerDefinitions, TSolutionType> &
+    BakedInControllers;
 };

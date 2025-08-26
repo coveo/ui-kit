@@ -115,28 +115,22 @@ export function defineCommerceEngine<
       fetchStaticState: fetchStaticState(SolutionType.listing),
       hydrateStaticState: hydrateStaticState(SolutionType.listing),
       ...commonMethods,
-    } as CommerceEngineDefinition<TControllerDefinitions, SolutionType.listing>,
+    },
     searchEngineDefinition: {
       fetchStaticState: fetchStaticState(SolutionType.search),
       hydrateStaticState: hydrateStaticState(SolutionType.search),
       ...commonMethods,
-    } as CommerceEngineDefinition<TControllerDefinitions, SolutionType.search>,
+    },
     recommendationEngineDefinition: {
       fetchStaticState: fetchRecommendationStaticState,
       hydrateStaticState: hydrateRecommendationStaticState,
       ...commonMethods,
-    } as CommerceEngineDefinition<
-      TControllerDefinitions,
-      SolutionType.recommendation
-    >,
+    },
     // TODO KIT-3738 :  The standaloneEngineDefinition should not be async since no request is sent to the API
     standaloneEngineDefinition: {
       fetchStaticState: fetchStaticState(SolutionType.standalone),
       hydrateStaticState: hydrateStaticState(SolutionType.standalone),
       ...commonMethods,
-    } as CommerceEngineDefinition<
-      TControllerDefinitions,
-      SolutionType.standalone
-    >,
+    },
   };
 }
