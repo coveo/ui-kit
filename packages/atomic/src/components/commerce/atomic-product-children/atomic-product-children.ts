@@ -105,7 +105,6 @@ export class AtomicProductChildren
 
   private handleClick = (event: MouseEvent) => {
     if (this.parentElement?.tagName !== 'A') {
-      console.log('here', closest);
       closest<AtomicProduct>(this, 'atomic-product')!.clickLinkContainer();
     } else {
       event.stopPropagation();
