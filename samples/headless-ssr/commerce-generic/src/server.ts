@@ -1,5 +1,6 @@
 import express from 'express';
 import {engineDefinition} from './common/engine.js';
+import {getNavigatorContext} from './common/navigatorContext.js';
 import {renderApp} from './common/renderApp.js';
 import {renderHtml} from './common/renderHtml.js';
 
@@ -8,19 +9,17 @@ const port = process.env.PORT || 3000;
 
 app.use(express.static('dist'));
 
-app.get('/', async (_req, res) => {
+app.get('/', async (req, res) => {
   try {
-    const staticState =
-      await engineDefinition.searchEngineDefinition.fetchStaticState({
-        query: '',
-        url: '',
-        language: '',
-        country: '',
-        currency: 'USD',
-      });
+    engineDefinition.searchEngineDefinition.setNavigatorContextProvider(() =>
+      getNavigatorContext(req)
+    );
 
-    const app = renderApp(staticState);
-    const html = renderHtml(app, staticState);
+    const staticState =
+      await engineDefinition.searchEngineDefinition.fetchStaticState({});
+
+    const appHtml = renderApp(staticState);
+    const html = renderHtml(appHtml, staticState);
 
     res.send(html);
   } catch (error) {
