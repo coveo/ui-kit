@@ -24,10 +24,10 @@ export const renderApp = (staticState: SearchStaticState) => {
 
       <main class="main-content">
         <section class="search-section">
-          <div class="search-box">
-            <input type="text" id="search-input" placeholder="Search for products..." value="${searchValue}" />
-            <button id="search-button">Search</button>
-          </div>
+          <form class="search-box" method="GET">
+            <input type="text" id="search-input" name="q" placeholder="Search for products..." value="${searchValue}" />
+            <button id="search-button" type="submit">Search</button>
+          </form>
         </section>
 
         <section class="main-results">

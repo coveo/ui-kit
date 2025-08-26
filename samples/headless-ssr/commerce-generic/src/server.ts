@@ -16,7 +16,15 @@ app.get('/', async (req, res) => {
     );
 
     const staticState =
-      await engineDefinition.searchEngineDefinition.fetchStaticState({});
+      await engineDefinition.searchEngineDefinition.fetchStaticState({
+        controllers: {
+          searchBox: {initialState: {value: req.query.q || ''}},
+          parameterManager: {
+            initialState: {parameters: {q: req.query.q || ''}},
+          },
+          productList: {initialState: {parameters: {q: req.query.q || ''}}},
+        },
+      });
 
     const appHtml = renderApp(staticState);
     const html = renderHtml(appHtml, staticState);

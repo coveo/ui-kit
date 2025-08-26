@@ -11,18 +11,6 @@ export function Search(searchBox: SearchBox) {
   // Initial value
   input.value = selectSearchValue(searchBox);
 
-  const performSearch = () => {
-    searchBox.updateText(input.value);
-    searchBox.submit();
-  };
-
-  button.addEventListener('click', performSearch);
-  input.addEventListener('keypress', (e: KeyboardEvent) => {
-    if (e.key === 'Enter') {
-      performSearch();
-    }
-  });
-
   searchBox.subscribe(() => {
     input.value = selectSearchValue(searchBox);
   });
