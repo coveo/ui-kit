@@ -1,5 +1,6 @@
 import type {CommerceEngine} from '../../../../../app/commerce-engine/commerce-engine.js';
 import {stateKey} from '../../../../../app/state-key.js';
+import type {NumericFacetInterval} from '../../../../../features/commerce/facets/facet-set/interfaces/common.js';
 import type {NumericFacetResponse} from '../../../../../features/commerce/facets/facet-set/interfaces/response.js';
 import {manualNumericFacetSelector} from '../../../../../features/commerce/facets/numeric-facet/manual-numeric-facet-selectors.js';
 import {manualNumericFacetReducer as manualNumericFacetSet} from '../../../../../features/commerce/facets/numeric-facet/manual-numeric-facet-slice.js';
@@ -41,6 +42,10 @@ export type NumericFacetState = Omit<
    * The domain of the numeric facet.
    */
   domain?: NumericFacetDomain;
+  /**
+   * The interval of the numeric facet.
+   */
+  interval?: NumericFacetInterval;
   manualRange?: NumericRangeRequest;
   type: 'numericalRange';
 };
@@ -165,6 +170,9 @@ export const getNumericFacetState = (
         min: response.domain.min,
         max: response.domain.max,
       },
+    }),
+    ...(response?.interval && {
+      interval: response.interval,
     }),
     ...(manualFacetRangeSelector && {manualRange: manualFacetRangeSelector}),
     type: 'numericalRange',

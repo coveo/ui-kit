@@ -9,7 +9,11 @@ type NumericFacetDomain = {
   increment: number;
 };
 
-type NumericFacetInterval = 'continuous' | 'discrete' | 'even' | 'equiprobable';
+export type NumericFacetInterval =
+  | 'continuous'
+  | 'discrete'
+  | 'even'
+  | 'equiprobable';
 
 export type CategoryFacetDelimitingCharacter = {
   delimitingCharacter: string;

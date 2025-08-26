@@ -131,6 +131,17 @@ describe('NumericFacet', () => {
       expect(facet.state.domain).toEqual({min: domain.min, max: domain.max});
     });
 
+    it('includes #intervals if present in the response state', () => {
+      const interval = 'continuous';
+      facetResponseSelector.mockReturnValue(
+        buildMockCommerceNumericFacetResponse({facetId, interval})
+      );
+
+      initFacet();
+
+      expect(facet.state.interval).toEqual('continuous');
+    });
+
     it('does not include #domain if not present in the response state', () => {
       expect(facet.state.domain).toBeUndefined();
     });
