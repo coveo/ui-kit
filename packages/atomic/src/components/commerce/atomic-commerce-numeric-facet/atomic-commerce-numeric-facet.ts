@@ -176,6 +176,7 @@ export class AtomicCommerceNumericFacet
       isLoading,
       hasProducts: hasResults,
     } = this.summaryState;
+
     return shouldDisplayInputForFacetRange({
       hasInputRange: this.hasInputRange,
       searchStatusState: {
@@ -185,6 +186,7 @@ export class AtomicCommerceNumericFacet
         isLoading,
       },
       facetValues: this.facetState.values,
+      isDiscrete: this.facetState.interval === 'discrete',
       hasInput: true,
     });
   }

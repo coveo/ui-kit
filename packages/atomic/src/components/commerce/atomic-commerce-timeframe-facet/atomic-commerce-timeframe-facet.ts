@@ -150,6 +150,7 @@ export class AtomicCommerceTimeframeFacet
         isLoading,
       },
       facetValues: this.facetState.values || [],
+      isDiscrete: false,
       hasInput: true,
     });
   }

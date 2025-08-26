@@ -28,6 +28,7 @@ describe('facet-common', () => {
       expect(
         shouldDisplayInputForFacetRange({
           hasInput: false,
+          isDiscrete: false,
           hasInputRange: false,
           searchStatusState: {hasResults: true} as SearchStatusState,
           facetValues: [{}, {}] as NumericFacetValue[],
@@ -39,6 +40,7 @@ describe('facet-common', () => {
       expect(
         shouldDisplayInputForFacetRange({
           hasInput: true,
+          isDiscrete: false,
           hasInputRange: true,
           searchStatusState: {hasResults: false} as SearchStatusState,
           facetValues: [] as NumericFacetValue[],
@@ -50,6 +52,19 @@ describe('facet-common', () => {
       expect(
         shouldDisplayInputForFacetRange({
           hasInput: true,
+          isDiscrete: false,
+          hasInputRange: false,
+          searchStatusState: {hasResults: false} as SearchStatusState,
+          facetValues: [] as NumericFacetValue[],
+        })
+      ).toBe(false);
+    });
+
+    it('should return false when there the intervals are discrete', () => {
+      expect(
+        shouldDisplayInputForFacetRange({
+          hasInput: true,
+          isDiscrete: true,
           hasInputRange: false,
           searchStatusState: {hasResults: false} as SearchStatusState,
           facetValues: [] as NumericFacetValue[],
@@ -61,6 +76,7 @@ describe('facet-common', () => {
       expect(
         shouldDisplayInputForFacetRange({
           hasInput: true,
+          isDiscrete: false,
           hasInputRange: false,
           searchStatusState: {hasResults: true} as SearchStatusState,
           facetValues: [] as NumericFacetValue[],
@@ -72,6 +88,7 @@ describe('facet-common', () => {
       expect(
         shouldDisplayInputForFacetRange({
           hasInput: true,
+          isDiscrete: false,
           hasInputRange: false,
           searchStatusState: {hasResults: true} as SearchStatusState,
           facetValues: [{}, {}] as NumericFacetValue[],

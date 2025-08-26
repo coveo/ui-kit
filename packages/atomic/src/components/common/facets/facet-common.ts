@@ -18,16 +18,22 @@ export interface FacetValuePropsBase {
 export function shouldDisplayInputForFacetRange(facetRange: {
   hasInput: boolean;
   hasInputRange: boolean;
+  isDiscrete: boolean;
   searchStatusState: SearchStatusState;
   facetValues: Pick<FacetValue, 'numberOfResults' | 'state'>[];
 }) {
-  const {hasInput, hasInputRange, searchStatusState, facetValues} = facetRange;
+  const {hasInput, hasInputRange, searchStatusState, facetValues, isDiscrete} =
+    facetRange;
   if (!hasInput) {
     return false;
   }
 
   if (hasInputRange) {
     return true;
+  }
+
+  if (isDiscrete) {
+    return false;
   }
 
   if (!searchStatusState.hasResults) {
