@@ -15,6 +15,7 @@ import {
   type TruncateAfter,
 } from '../../common/expandable-text/expandable-text';
 import type {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface';
+import '../atomic-product-text/atomic-product-text.js';
 
 /**
  * The `atomic-product-excerpt` component renders the excerpt of a product.
