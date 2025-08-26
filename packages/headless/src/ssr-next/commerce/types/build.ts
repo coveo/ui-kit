@@ -32,26 +32,29 @@ export interface SearchBuildConfig extends CommonBuildConfig {
  * that were defined in your engine definition. This allows you to specify which recommendation controllers
  * should be included in the SSR request.
  *
- * For example, given the following engine definition:
+ * For example, on a storefront homepage, it might make sense to display a carousel of popular products.
+ * However, showing recommendations based on items frequently bought together may not be relevant in that context and should not be retrieved unnecessarily.
+ *
+ * @example
+ * Given the following engine definition:
  *
  * ```ts
  * const {recommendationEngineDefinition} = defineCommerceEngine({
  *   controllers: {
- *     popularViewed: defineRecommendations({options: {slotId: '...'}}),
- *     popularBought: defineRecommendations({options: {slotId: '...'}}),
- *     viewedTogether: defineRecommendations({options: {slotId: '...'}}),
+ *     popularProducts: defineRecommendations({options: {slotId: '...'}}),
+ *     frequentlyBought: defineRecommendations({options: {slotId: '...'}}),
  *     // ...other controllers
  *   },
  * });
  *
  * // When fetching static state for recommendations:
  * const staticState = await recommendationEngineDefinition.fetchStaticState({
- *   recommendations: ['popularBought', 'viewedTogether'],
+ *   recommendations: ['popularProducts'],
  *   // ...other config
  * });
  * ```
  *
- * In this example, only the `popularBought` and `viewedTogether` recommendation controllers will be included in the SSR request.
+ * In this example, only the `popularProducts` recommendation controller will be included in the SSR request.
  */
 export type RecommendationBuildConfig<
   TControllers extends ControllerDefinitionsMap<Controller>,
