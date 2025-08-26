@@ -1,4 +1,3 @@
-import type {CurrencyCodeISO4217} from '@coveo/relay-event-types';
 import type {CommerceEngineOptions} from '../../../app/commerce-engine/commerce-engine.js';
 import type {Controller} from '../../../controllers/controller/headless-controller.js';
 import type {
@@ -7,7 +6,7 @@ import type {
 } from '../../common/types/controllers.js';
 import type {HasKey, OptionsTuple} from '../../common/types/utilities.js';
 import type {CartInitialState} from '../controllers/cart/headless-cart.ssr.js';
-import type {UserLocation} from '../controllers/context/headless-context.ssr.js';
+import type {ContextOptions} from '../controllers/context/headless-context.ssr.js';
 import type {
   ParameterManagerState,
   Parameters,
@@ -21,7 +20,9 @@ import type {
 import type {CommerceEngineDefinitionBuildResult} from './engine.js';
 
 export interface SearchBuildConfig extends CommonBuildConfig {
-  query: string;
+  searchParams: ParameterManagerState<
+    Parameters & {query: string}
+  >['parameters'];
 }
 
 /**
@@ -55,6 +56,15 @@ export interface SearchBuildConfig extends CommonBuildConfig {
 export type RecommendationBuildConfig<
   TControllers extends ControllerDefinitionsMap<Controller>,
 > = CommonBuildConfig & {
+  /**
+   * The unique identifier of the product to use for seeded recommendations.
+   */
+  productId?: string;
+  /**
+   * An array of recommendation controller names from your engine definition to include in the SSR request.
+   * Each name corresponds to the key used when defining recommendation controllers in your engine definition.
+   * If not specified, no recommendation requests will be executed.
+   */
   recommendations: Array<
     Extract<
       keyof TControllers,
@@ -77,13 +87,9 @@ export interface ListingBuildConfig extends CommonBuildConfig {}
 export interface StandaloneBuildConfig extends CommonBuildConfig {}
 
 export interface CommonBuildConfig {
-  url: string;
-  language: string;
-  country: string;
-  currency: CurrencyCodeISO4217;
-  location?: UserLocation;
+  context: ContextOptions;
+  searchParams?: ParameterManagerState<Parameters>['parameters'];
   cart?: CartInitialState;
-  searchParams?: Omit<ParameterManagerState<Parameters>['parameters'], 'q'>;
 }
 
 export type BuildConfig<

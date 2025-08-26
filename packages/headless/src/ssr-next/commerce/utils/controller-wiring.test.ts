@@ -1,5 +1,8 @@
 import {beforeEach, describe, expect, it} from 'vitest';
-import {defineMockCommerceControllerWithProps} from '../../../test/mock-ssr-controller-definitions.js';
+import {
+  defineMockCommerceControllerWithProps,
+  defineMockRecommendationDefinition,
+} from '../../../test/mock-ssr-controller-definitions.js';
 import {SolutionType} from '../types/controller-constants.js';
 import type {InferControllerPropsMapFromDefinitions} from '../types/controller-inference.js';
 import type {CommerceControllerDefinitionsMap} from '../types/engine.js';
@@ -7,6 +10,7 @@ import {
   listingDefinitionSchema,
   recommendationsDefinitionSchema,
   searchDefinitionSchema,
+  standaloneDefinitionSchema,
   wireControllerParams,
 } from './controller-wiring.js';
 
@@ -23,48 +27,125 @@ describe('controller-wiring', () => {
 
   describe('schema validation', () => {
     const validCommonConfig = {
-      language: 'en',
-      country: 'US',
-      currency: 'USD' as const,
-      url: 'https://example.com',
+      context: {
+        language: 'en',
+        country: 'US',
+        currency: 'USD' as const,
+        view: {url: 'https://example.com'},
+      },
     };
 
-    it.each([
-      {schema: listingDefinitionSchema},
-      {schema: searchDefinitionSchema},
-      {schema: recommendationsDefinitionSchema},
-    ])('it should throw for missing required parameters', ({schema}) => {
-      expect(() => {
-        schema.validate();
-      }).toThrowError(
-        /language: value is required.|country: value is required.|currency: value is required.|url: value is required./
-      );
+    describe('when validating a listingDefinitionSchema', () => {
+      it('should throw for missing required context only', () => {
+        const validate = () => {
+          listingDefinitionSchema.validate({});
+        };
+        expect(validate).toThrowError(
+          /context: value is required and is currently undefined/
+        );
+      });
     });
 
-    it('should throw for missing query parameter', () => {
-      const searchConfig = {
-        ...validCommonConfig,
-      };
-      expect(() => {
-        searchDefinitionSchema.validate(searchConfig);
-      }).toThrowError(/query: value is required./);
+    describe('when validating a searchDefinitionSchema', () => {
+      it('should throw for missing required search params and context', () => {
+        const validate = () => {
+          searchDefinitionSchema.validate({});
+        };
+        expect(validate).toThrowError(
+          /context: value is required and is currently undefined/
+        );
+        expect(validate).toThrowError(
+          /searchParams: value is required and is currently undefined/
+        );
+      });
     });
 
-    it('should throw for missing query', () => {
+    describe('when validating a standaloneDefinitionSchema', () => {
+      it('should throw for missing required parameters and context', () => {
+        const validate = () => {
+          standaloneDefinitionSchema.validate({});
+        };
+        expect(validate).toThrowError(
+          /context: value is required and is currently undefined/
+        );
+      });
+    });
+
+    describe('when validating a recommendationsDefinitionSchema', () => {
+      it('should throw for missing required parameters and context', () => {
+        const validate = () => {
+          recommendationsDefinitionSchema([]).validate({});
+        };
+        expect(validate).toThrowError(
+          /context: value is required and is currently undefined/
+        );
+      });
+    });
+
+    it('should throw for missing search parameters', () => {
+      expect(() => {
+        searchDefinitionSchema.validate(validCommonConfig);
+      }).toThrowError(/searchParams: value is require/);
+
+      expect(() => {
+        searchDefinitionSchema.validate({
+          ...validCommonConfig,
+          searchParams: {},
+        });
+      }).toThrowError(/searchParams: value does not contain query/);
+    });
+
+    it('should not throw for missing query', () => {
       const searchConfig = {
         ...validCommonConfig,
-        query: 'test query',
+        searchParams: {query: 'test query'},
       };
       expect(() => {
         searchDefinitionSchema.validate(searchConfig);
       }).not.toThrow();
     });
 
-    // TODO: KIT-4619: test recommendation array
-    it.todo('should throw for missing recommendations', () => {
+    it('should throw for missing recommendations', () => {
       expect(() => {
-        recommendationsDefinitionSchema.validate(validCommonConfig);
+        recommendationsDefinitionSchema([]).validate(validCommonConfig);
       }).toThrowError(/recommendations: value is required./);
+    });
+
+    it('should throw if the user refers to recommendation controller that was not defined in the definition', () => {
+      const recommendationsConfig = {
+        ...validCommonConfig,
+        recommendations: ['invalid-rec'],
+      };
+      expect(() => {
+        recommendationsDefinitionSchema(['rec1', 'rec2']).validate(
+          recommendationsConfig
+        );
+      }).toThrowError(/value should be one of: rec1, rec2./);
+    });
+
+    it('should validate recommendations config with productId', () => {
+      const recommendationsConfig = {
+        ...validCommonConfig,
+        recommendations: ['rec1'],
+        productId: 'product-123',
+      };
+      expect(() => {
+        recommendationsDefinitionSchema(['rec1']).validate(
+          recommendationsConfig
+        );
+      }).not.toThrow();
+    });
+
+    it('should validate recommendations config without productId', () => {
+      const recommendationsConfig = {
+        ...validCommonConfig,
+        recommendations: ['rec1'],
+      };
+      expect(() => {
+        recommendationsDefinitionSchema(['rec1']).validate(
+          recommendationsConfig
+        );
+      }).not.toThrow();
     });
   });
 
@@ -85,14 +166,19 @@ describe('controller-wiring', () => {
 
       beforeAll(() => {
         const params = {
-          query: 'test',
-          language: 'en',
-          country: 'US',
-          currency: 'USD' as const,
+          searchParams: {
+            query: 'test',
+          },
+          recommendations: [],
+          context: {
+            language: 'en',
+            country: 'US',
+            currency: 'USD' as const,
+            view: {url: 'https://example.com'},
+          },
           cart: {
             items: [mockCartItem],
           },
-          url: 'https://example.com',
         };
 
         props = wireControllerParams(
@@ -124,11 +210,15 @@ describe('controller-wiring', () => {
 
     it('should wire parameter manager for search with query', () => {
       const params = {
-        language: 'en',
-        country: 'US',
-        currency: 'USD' as const,
-        url: 'https://example.com',
-        query: 'test query',
+        context: {
+          language: 'en',
+          country: 'US',
+          currency: 'USD' as const,
+          view: {url: 'https://example.com'},
+        },
+        searchParams: {
+          query: 'test query',
+        },
       };
 
       const {parameterManager} = wireControllerParams(
@@ -148,11 +238,15 @@ describe('controller-wiring', () => {
 
     it('should contain props from custom controllers if provided', () => {
       const params = {
-        language: 'en',
-        country: 'US',
-        currency: 'USD' as const,
-        url: 'https://example.com',
-        query: 'test query',
+        context: {
+          language: 'en',
+          country: 'US',
+          currency: 'USD' as const,
+          view: {url: 'https://example.com'},
+        },
+        searchParams: {
+          query: 'test query',
+        },
         controllers: {
           customController: {
             initialState: {foo: 'bar'},
@@ -175,10 +269,12 @@ describe('controller-wiring', () => {
 
     it('should handle search params for parameter manager', () => {
       const params = {
-        language: 'en',
-        country: 'US',
-        currency: 'USD' as const,
-        url: 'https://example.com',
+        context: {
+          language: 'en',
+          country: 'US',
+          currency: 'USD' as const,
+          view: {url: 'https://example.com'},
+        },
         searchParams: {perPage: 12, page: 3},
       };
 
@@ -204,10 +300,12 @@ describe('controller-wiring', () => {
       } as CommerceControllerDefinitionsMap;
 
       const params = {
-        language: 'en',
-        country: 'US',
-        currency: 'USD' as const,
-        url: 'https://example.com',
+        context: {
+          language: 'en',
+          country: 'US',
+          currency: 'USD' as const,
+          view: {url: 'https://example.com'},
+        },
         cart: {items: []},
       };
 
@@ -220,6 +318,105 @@ describe('controller-wiring', () => {
       expect(props.cart).toBeUndefined();
       expect(props.parameterManager).toBeUndefined();
       expect(props.context).toBeDefined();
+    });
+
+    describe('recommendation wiring', () => {
+      it('should wire each recommendation controller with the provided productId', () => {
+        const definitionsWithRecommendation = {
+          ...mockControllerDefinitions,
+          rec1: defineMockRecommendationDefinition('rec1-slot'),
+          rec2: defineMockRecommendationDefinition('rec2-slot'),
+        } as CommerceControllerDefinitionsMap;
+
+        const params = {
+          context: {
+            language: 'en',
+            country: 'US',
+            currency: 'USD' as const,
+            view: {
+              url: 'https://example.com',
+            },
+          },
+          recommendations: ['rec1', 'rec2'],
+          productId: 'product-123',
+        };
+
+        const props = wireControllerParams(
+          SolutionType.recommendation,
+          definitionsWithRecommendation,
+          params
+        );
+
+        expect(props.rec1).toEqual({
+          initialState: {
+            productId: 'product-123',
+          },
+        });
+        expect(props.rec2).toEqual({
+          initialState: {
+            productId: 'product-123',
+          },
+        });
+      });
+
+      it('should wire recommendation controllers without productId when not provided', () => {
+        const definitionsWithRecommendation = {
+          ...mockControllerDefinitions,
+          rec1: defineMockRecommendationDefinition('rec1-slot'),
+        } as CommerceControllerDefinitionsMap;
+
+        const params = {
+          context: {
+            language: 'en',
+            country: 'US',
+            currency: 'USD' as const,
+            view: {url: 'https://example.com'},
+          },
+          recommendations: ['rec1'],
+        };
+
+        const props = wireControllerParams(
+          SolutionType.recommendation,
+          definitionsWithRecommendation,
+          params
+        );
+
+        expect(props.rec1).toEqual({
+          initialState: {},
+        });
+      });
+
+      it('should not wire non-recommendation controllers in recommendation solution type', () => {
+        const definitionsWithMixed = {
+          ...mockControllerDefinitions,
+          rec1: defineMockRecommendationDefinition('rec1-slot'),
+          nonRec: defineMockCommerceControllerWithProps(),
+        } as CommerceControllerDefinitionsMap;
+
+        const params = {
+          context: {
+            language: 'en',
+            country: 'US',
+            currency: 'USD' as const,
+            view: {url: 'https://example.com'},
+          },
+          recommendations: ['rec1'],
+          productId: 'product-123',
+        };
+
+        const props = wireControllerParams(
+          SolutionType.recommendation,
+          definitionsWithMixed,
+          params
+        );
+
+        expect(props.rec1).toEqual({
+          initialState: {
+            productId: 'product-123',
+          },
+        });
+        expect(props.nonRec).toBeUndefined();
+      });
     });
   });
 });

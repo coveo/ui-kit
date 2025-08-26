@@ -32,7 +32,7 @@ export function fetchRecommendationStaticStateFactory<
     const [props] = params;
     const allowedRecommendationKeys = (
       props as RecommendationBuildConfig<TControllerDefinitions>
-    ).recommendations;
+    ).recommendations as string[];
 
     const solutionTypeBuild = await buildFactory(
       controllerDefinitions,
@@ -46,13 +46,13 @@ export function fetchRecommendationStaticStateFactory<
     filterRecommendationControllers(
       controllers,
       controllerDefinitions ?? {}
-    ).refresh(allowedRecommendationKeys as string[]);
+    ).refresh(allowedRecommendationKeys);
 
     const searchActions = await Promise.all(
       engine.waitForRequestCompletedAction()
     );
 
-    return createStaticState({
+    const staticState = createStaticState({
       searchActions,
       controllers,
     }) as EngineStaticState<
@@ -64,5 +64,10 @@ export function fetchRecommendationStaticStateFactory<
         FilteredBakedInControllers<SolutionType.recommendation>
     > &
       BuildConfig<TControllerDefinitions, SolutionType.recommendation>;
+
+    return {
+      ...params[0], // TODO: KIT-4754: remove index access after no longer relying on OptionTuple type
+      ...staticState,
+    };
   };
 }

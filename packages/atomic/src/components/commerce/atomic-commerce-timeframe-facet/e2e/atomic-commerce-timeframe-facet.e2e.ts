@@ -11,7 +11,7 @@ test.describe.skip('AtomicCommerceTimeframeFacet', () => {
     });
 
     const accessibilityResults = await makeAxeBuilder().analyze();
-    expect(accessibilityResults.violations.length).toEqual(0);
+    expect(accessibilityResults.violations).toEqual([]);
   });
 
   test('should complete the full date picker workflow', async ({

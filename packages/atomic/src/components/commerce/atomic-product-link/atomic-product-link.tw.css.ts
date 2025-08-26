@@ -1,6 +1,6 @@
 import {css} from 'lit';
 
-const styles = css`@reference '../../../utils/tailwind-utilities/link-style.tw.css';
+const styles = css`@reference '../../../utils/tailwind.global.tw.css';
 
 atomic-product-link {
   a {
