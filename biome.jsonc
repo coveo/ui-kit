@@ -52,6 +52,10 @@
     "enabled": true,
     "rules": {
       "recommended": true,
+      "suspicious": {
+        // https://developer.mozilla.org/en-US/docs/Web/API/CookieStore Reevaluate in June '26 after 1y of availability.
+        "noDocumentCookie": "off"
+      },
       "style": {"noNonNullAssertion": "off"},
       "complexity": {"noBannedTypes": "off"},
       "correctness": {"noUnknownFunction": "off"}
