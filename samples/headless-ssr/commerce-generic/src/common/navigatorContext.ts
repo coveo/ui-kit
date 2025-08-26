@@ -2,16 +2,28 @@ import type express from 'express';
 
 const uuid = () => crypto?.randomUUID?.() ?? '';
 
-export function getNavigatorContext({headers, url}: express.Request) {
-  const h = (k: string) =>
-    (Array.isArray(headers[k]) ? headers[k][0] : headers[k])?.toString();
+const getHeaderValue = (
+  headerName: string,
+  headers: express.Request['headers']
+) => {
+  const value = headers[headerName];
 
+  return (Array.isArray(value) ? value[0] : value)?.toString();
+};
+
+export function getNavigatorContext({headers, url}: express.Request) {
   return {
-    clientId: h('x-coveo-client-id') ?? uuid(),
-    location: url ?? h('x-href') ?? null,
-    referrer: h('referer') ?? h('referrer') ?? null,
-    userAgent: h('user-agent') ?? null,
-    forwardedFor: h('x-forwarded-for') ?? h('x-forwarded-host') ?? undefined,
+    clientId: getHeaderValue('x-coveo-client-id', headers) ?? uuid(),
+    location: url ?? getHeaderValue('x-href', headers) ?? null,
+    referrer:
+      getHeaderValue('referer', headers) ??
+      getHeaderValue('referrer', headers) ??
+      null,
+    userAgent: getHeaderValue('user-agent', headers) ?? null,
+    forwardedFor:
+      getHeaderValue('x-forwarded-for', headers) ??
+      getHeaderValue('x-forwarded-host', headers) ??
+      undefined,
     capture: false,
   };
 }
