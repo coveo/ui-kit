@@ -44,6 +44,20 @@
  *   standaloneEngineDefinition,
  * } = engineDefinition;
  *
+ * // Usage with per-call navigator context (recommended)
+ * await listingEngineDefinition.fetchStaticState({
+ *   navigatorContext: {
+ *     clientId: await getClientId(req), // Generate stable UUID, store in cookie
+ *     forwardedFor: req.headers['x-forwarded-for'] || req.ip,
+ *     referrer: req.headers.referer || null,
+ *     userAgent: req.headers['user-agent'] || null,
+ *     location: req.url
+ *   },
+ *   controllers: {
+ *     // Your controller initial state here
+ *   }
+ * });
+ *
  * export type ListingStaticState = InferStaticState<
  *   typeof listingEngineDefinition
  * >;

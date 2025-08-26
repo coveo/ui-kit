@@ -1,7 +1,7 @@
 import type {UnknownAction} from '@reduxjs/toolkit';
 import {buildProductListing} from '../../../controllers/commerce/product-listing/headless-product-listing.js';
 import {buildSearch} from '../../../controllers/commerce/search/headless-search.js';
-import {augmentPreprocessRequestWithForwardedFor} from '../../common/augment-preprocess-request.js';
+import {processNavigatorContext} from '../../common/navigator-context-utils.js';
 import {createStaticState} from '../controller-utils.js';
 import {SolutionType} from '../types/controller-constants.js';
 import type {InferControllerStaticStateMapFromDefinitionsWithSolutionType} from '../types/controller-inference.js';
@@ -26,17 +26,13 @@ export function fetchStaticStateFactory<
     solutionType: SolutionType
   ): FetchStaticStateFunction<TControllerDefinitions> =>
     async (...params: FetchStaticStateParameters<TControllerDefinitions>) => {
-      const solutionTypeBuild = await buildFactory(controllerDefinitions, {
-        ...options,
-      })(solutionType);
-      const {engine, controllers} = await solutionTypeBuild(...params);
+      const {engineOptions} = processNavigatorContext(params, options);
 
-      options.configuration.preprocessRequest =
-        augmentPreprocessRequestWithForwardedFor({
-          preprocessRequest: options.configuration.preprocessRequest,
-          navigatorContextProvider: options.navigatorContextProvider,
-          loggerOptions: options.loggerOptions,
-        });
+      const solutionTypeBuild = await buildFactory(
+        controllerDefinitions,
+        engineOptions
+      )(solutionType);
+      const {engine, controllers} = await solutionTypeBuild(...params);
 
       switch (solutionType) {
         case SolutionType.listing:

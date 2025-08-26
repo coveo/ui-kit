@@ -13,9 +13,16 @@ describe('fetchRecommendationStaticStateFactory', () => {
   let engineSpy: MockInstance;
   const mockEngine = buildMockSSRCommerceEngine(buildMockCommerceState());
 
+  const mockNavigatorContext = {
+    clientId: 'test-client-id',
+    location: 'http://test.com',
+    referrer: 'http://referrer.com',
+    userAgent: 'test-user-agent',
+    forwardedFor: '192.168.1.1',
+  };
+
   const createEngineOptions = () => ({
     configuration: getSampleCommerceEngineConfiguration(),
-    navigatorContextProvider: vi.fn(),
   });
 
   const createControllerDefinitions = () => ({
@@ -60,7 +67,10 @@ describe('fetchRecommendationStaticStateFactory', () => {
       options
     );
 
-    await factory({controllers: {}});
+    await factory({
+      navigatorContext: mockNavigatorContext,
+      controllers: {},
+    });
 
     expect(engineSpy).toHaveBeenCalledWith(controllerDefinitions, options);
   });

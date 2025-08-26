@@ -21,6 +21,14 @@ describe('Commerce Engine SSR', () => {
   let searchEngineDefinition: (typeof engineDefinition)['searchEngineDefinition'];
   let standaloneEngineDefinition: (typeof engineDefinition)['standaloneEngineDefinition'];
 
+  const mockNavigatorContext = {
+    forwardedFor: '192.168.1.1',
+    referrer: 'https://example.com',
+    userAgent: 'test-agent',
+    location: '/test',
+    clientId: 'test-client',
+  };
+
   beforeEach(() => {
     definitionOptions = {
       configuration: {
@@ -51,6 +59,7 @@ describe('Commerce Engine SSR', () => {
     it('should only require cart options', () => {
       expect(() =>
         standaloneEngineDefinition.fetchStaticState({
+          navigatorContext: mockNavigatorContext,
           controllers: {
             cart: {initialState: {items: []}},
           },
@@ -77,6 +86,7 @@ describe('Commerce Engine SSR', () => {
     it('should only require cart options', () => {
       expect(() =>
         listingEngineDefinition.fetchStaticState({
+          navigatorContext: mockNavigatorContext,
           controllers: {
             cart: {initialState: {items: []}},
           },
@@ -101,6 +111,7 @@ describe('Commerce Engine SSR', () => {
     it('should only require cart and paramManager options', () => {
       expect(() =>
         searchEngineDefinition.fetchStaticState({
+          navigatorContext: mockNavigatorContext,
           controllers: {
             cart: {initialState: {items: []}},
             paramManager: {initialState: {parameters: {}}},
@@ -126,6 +137,7 @@ describe('Commerce Engine SSR', () => {
     it('should only require cart options', () => {
       expect(() =>
         recommendationEngineDefinition.fetchStaticState({
+          navigatorContext: mockNavigatorContext,
           controllers: {
             cart: {initialState: {items: []}},
           },
@@ -136,6 +148,7 @@ describe('Commerce Engine SSR', () => {
     it('should allow optional recommendation controller options', () => {
       expect(() =>
         recommendationEngineDefinition.fetchStaticState({
+          navigatorContext: mockNavigatorContext,
           controllers: {
             cart: {initialState: {items: []}},
             popularViewed: {enabled: true, productId: 'some-product-id'},

@@ -1,7 +1,6 @@
 import type {UnknownAction} from '@reduxjs/toolkit';
 import type {CommerceEngineOptions} from '../../../app/commerce-engine/commerce-engine.js';
 import type {EngineConfiguration} from '../../../app/engine-configuration.js';
-import type {NavigatorContextProvider} from '../../../app/navigator-context-provider.js';
 import type {Controller} from '../../../controllers/controller/headless-controller.js';
 import type {ControllerStaticStateMap} from '../../common/types/controllers.js';
 import type {SSRCommerceEngine} from '../factories/build-factory.js';
@@ -74,16 +73,6 @@ export interface CommerceEngineDefinition<
     TControllers,
     TSolutionType
   >;
-  /**
-   * Sets the navigator context provider.
-   * This provider is essential for retrieving navigation-related data such as referrer, userAgent, location, and clientId, which are crucial for handling both server-side and client-side API requests effectively.
-   *
-   * Note: The implementation specifics of the navigator context provider depend on the Node.js framework being utilized. It is the developer's responsibility to appropriately define and implement the navigator context provider to ensure accurate navigation context is available throughout the application. If the user fails to provide a navigator context provider, a warning will be logged either on the server or the browser console.
-   */
-  setNavigatorContextProvider: (
-    navigatorContextProvider: NavigatorContextProvider
-  ) => void;
-
   /**
    * Returns the access token.
    */
