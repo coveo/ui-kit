@@ -13,7 +13,7 @@ The @coveo/atomic package is built on [Lit](https://lit.dev/), a modern web comp
   - [Documentation (.mdx)](#documentation-mdx)
   - [Unit Tests (.spec.ts)](#unit-tests-spects)
   - [End-to-End Tests (e2e/)](#end-to-end-tests-e2e)
-  - [Styles (.tw.css)](#styles-twcss)
+  - [Styles (.tw.css.tss)](#styles-twcss)
 - [Project Structure](#project-structure)
 
 ## Creating a Component
@@ -62,6 +62,7 @@ import {bindings} from '@/src/decorators/bindings';
 import {errorGuard} from '@/src/decorators/error-guard';
 import type {InitializableComponent} from '@/src/decorators/types';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
+import commonStyles from '../../common/component/common.tw.css';
 
 @customElement('atomic-my-component')
 @bindings()
@@ -69,6 +70,15 @@ import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
 export class AtomicMyComponent 
   extends LitElement 
   implements InitializableComponent<CommerceBindings> {
+  
+  static styles: CssResultGroup = [
+    commonStyles,
+    css`
+    @reference '../../../utils/tailwind.global.tw.css';
+    [part~="active-parent"] {
+      @apply pl-9;
+    }`,
+  ]
   
   @state() bindings!: CommerceBindings;
   @state() error!: Error;
@@ -212,6 +222,7 @@ Comprehensive unit testing for component logic and behavior.
 - **Test user interactions** - Cover all click handlers, keyboard navigation, and event listeners
 - **Test property/attribute binding** - Ensure all component properties correctly affect the rendered output
 
+**Development tip:** You can use the `/generate-vitest-tests-atomic-lit-components ` prompt in GitHub Copilot Chat to help generate the tests for a new Lit component.
 
 ### End-to-End Tests (e2e/)
 
@@ -230,16 +241,6 @@ Integration testing that validates component behavior in real browser environmen
 
 **Example:** See [`atomic-product-children.e2e.ts`](src/components/commerce/atomic-product-children/e2e/atomic-product-children.e2e.ts) for a reference implementation.
 
-### Styles (.tw.css)
-
-Component styling using Tailwind CSS utility classes.
-
-> To use Tailwind CSS utility classes in your component, you must add the `@withTailwindStyles` decorator to your component class
-
-**When to use:**
-- **Styling is usually contained in the component's `styles` property** - Most components can define all their styles directly within the component using Lit's static styles
-- **Use .tw.css files only when importing external styles** - Create a separate .tw.css file only when you need to import styles from another file or when styles are too complex to maintain inline
-
 ### Project Structure
 
 - **`src/components/commerce/`** - Commerce components
@@ -249,6 +250,7 @@ Component styling using Tailwind CSS utility classes.
 - **`src/components/ipx/`** - IPX components
 - **`src/components/recommendations/`** - Recommendation components
 - **`storybook-utils/`** - Utilities and helpers for Storybook stories
+- **`storybook-pages/`** - Utilities and helpers for Storybook stories
 - **`playwright-utils/`** - Utilities and helpers for Playwright end-to-end tests
 - **`vitest-utils/`** - Utilities and helpers for Vitest unit tests
 
