@@ -13,7 +13,7 @@ test.describe('Commerce SSR Sample', () => {
     await expect(searchInput).toBeVisible();
 
     // Check that products are rendered on the initial load
-    const productGrid = page.locator('#products-grid');
+    const productGrid = page.locator('#product-grid');
     await expect(productGrid).toBeVisible();
 
     // Check that at least one product is displayed

@@ -1,7 +1,7 @@
 import {defineConfig, devices} from '@playwright/test';
 
 export default defineConfig({
-  testDir: './tests',
+  testDir: './e2e',
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 0,
@@ -11,17 +11,19 @@ export default defineConfig({
     baseURL: 'http://localhost:3000',
     trace: 'on-first-retry',
   },
-
   projects: [
     {
       name: 'chromium',
       use: {...devices['Desktop Chrome']},
     },
   ],
-
+  expect: {
+    timeout: 7 * 1000,
+  },
   webServer: {
     command: 'npm run start',
-    url: 'http://localhost:3000',
+    port: 3000,
+    timeout: 120 * 1000,
     reuseExistingServer: !process.env.CI,
   },
 });

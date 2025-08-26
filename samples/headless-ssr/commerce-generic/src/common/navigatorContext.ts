@@ -1,15 +1,10 @@
 import type express from 'express';
 
-const uuid = () =>
-  typeof crypto !== 'undefined' && crypto.randomUUID ? crypto.randomUUID() : '';
+const uuid = () => crypto?.randomUUID?.() ?? '';
 
-export function getNavigatorContext(req: express.Request) {
-  const {headers, url} = req;
-
-  const h = (k: string) => {
-    const v = headers[k];
-    return Array.isArray(v) ? v[0] : v?.toString();
-  };
+export function getNavigatorContext({headers, url}: express.Request) {
+  const h = (k: string) =>
+    (Array.isArray(headers[k]) ? headers[k][0] : headers[k])?.toString();
 
   return {
     clientId: h('x-coveo-client-id') ?? uuid(),

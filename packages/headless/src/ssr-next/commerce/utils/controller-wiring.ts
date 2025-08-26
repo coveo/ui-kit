@@ -1,7 +1,10 @@
 import {ArrayValue, RecordValue, Schema, StringValue} from '@coveo/bueno';
 import {contextDefinition} from '../../../features/commerce/context/context-validation.js';
 import {parametersDefinition} from '../../../features/commerce/parameters/parameters-schema.js';
-import {nonEmptyString, requiredEmptyAllowedString} from '../../../utils/validate-payload.js';
+import {
+  nonEmptyString,
+  requiredEmptyAllowedString,
+} from '../../../utils/validate-payload.js';
 import type {ControllersPropsMap} from '../../common/types/controllers.js';
 import type {Parameters} from '../controllers/parameter-manager/headless-core-parameter-manager.ssr.js';
 import type {BuildConfig} from '../types/build.js';
