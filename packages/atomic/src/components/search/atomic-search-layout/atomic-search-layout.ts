@@ -1,6 +1,7 @@
 import {LitElement, unsafeCSS} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {injectStylesForNoShadowDOM} from '@/src/decorators/inject-styles-for-no-shadow-dom';
+import {ChildrenUpdateCompleteMixin} from '@/src/mixins/children-update-complete-mixin';
 import {randomID} from '@/src/utils/utils';
 import {DEFAULT_MOBILE_BREAKPOINT} from '../../../utils/replace-breakpoint';
 import styles from './atomic-search-layout.tw.css';
@@ -15,8 +16,14 @@ import {buildSearchLayout} from './search-layout';
  */
 @customElement('atomic-search-layout')
 @injectStylesForNoShadowDOM
-export class AtomicSearchLayout extends LitElement {
+export class AtomicSearchLayout extends ChildrenUpdateCompleteMixin(
+  LitElement
+) {
   static styles = [unsafeCSS(styles)];
+  static async dynamicStyles(instance: AtomicSearchLayout) {
+    await instance.getUpdateComplete();
+    return unsafeCSS(buildSearchLayout(instance, instance.mobileBreakpoint));
+  }
   @state() error!: Error;
 
   /**
@@ -29,8 +36,6 @@ export class AtomicSearchLayout extends LitElement {
   connectedCallback() {
     super.connectedCallback();
     this.id = randomID('atomic-search-layout-');
-    const layout = unsafeCSS(buildSearchLayout(this, this.mobileBreakpoint));
-    AtomicSearchLayout.styles.unshift(layout);
   }
 }
 
