@@ -3227,7 +3227,7 @@ export declare interface AtomicResultsPerPage extends LitAtomicResultsPerPage {
 
 @ProxyCmp({
   inputs: ['mobileBreakpoint'],
-  methods: [],
+  methods: ['dynamicStyles', 'getUpdateComplete'],
   defineCustomElementFn: () => {customElements.get('atomic-search-layout') || customElements.define('atomic-search-layout', LitAtomicSearchLayout);}
 })
 @Component({
