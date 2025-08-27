@@ -1,4 +1,4 @@
-import {VERSION as HEADLESS_VERSION} from '@coveo/headless';
+import {VERSION as HEADLESS_VERSION} from '@coveo/headless'; // TODO - KIT-4886 import from @coveo/headless/insight
 import {
   buildInsightEngine,
   buildResultsPerPage as buildInsightResultsPerPage,
@@ -11,23 +11,23 @@ import {provide} from '@lit/context';
 import i18next, {type i18n} from 'i18next';
 import {type CSSResultGroup, css, html, LitElement} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
+import type {
+  CommonBindings,
+  NonceBindings,
+} from '@/src/components/common/interface/bindings';
+import {
+  type BaseAtomicInterface,
+  InterfaceController,
+} from '@/src/components/common/interface/interface-controller';
+import {bindingsContext} from '@/src/components/context/bindings-context';
 import {booleanConverter} from '@/src/converters/boolean-converter';
 import {errorGuard} from '@/src/decorators/error-guard';
 import {watch} from '@/src/decorators/watch';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles.js';
+import {ChildrenUpdateCompleteMixin} from '@/src/mixins/children-update-complete-mixin';
 import {type InitializeEvent, markParentAsReady} from '@/src/utils/init-queue';
-import {ChildrenUpdateCompleteMixin} from '../../../mixins/children-update-complete-mixin';
-import type {
-  CommonBindings,
-  NonceBindings,
-} from '../../common/interface/bindings';
-import {
-  type BaseAtomicInterface,
-  InterfaceController,
-} from '../../common/interface/interface-controller';
-import {bindingsContext} from '../../context/bindings-context';
-import {getAnalyticsConfig} from './analytics-config';
-import {createInsightStore, type InsightStore} from './store';
+import {getAnalyticsConfig} from './analytics-config.js';
+import {createInsightStore, type InsightStore} from './store.js';
 
 const FirstInsightRequestExecutedFlag = 'firstInsightRequestExecuted';
 export type InsightInitializationOptions = InsightEngineConfiguration;
@@ -36,7 +36,7 @@ export type InsightBindings = CommonBindings<
   InsightStore,
   AtomicInsightInterface
 > &
-  NonceBindings;
+  NonceBindings; // TODO - KIT-4839: Remove once atomic-insight-layout migration is complete.
 
 /**
  * The `atomic-insight-interface` component is the parent to all other atomic insight components in an insight page.
@@ -65,7 +65,6 @@ export class AtomicInsightInterface
   static styles: CSSResultGroup = css`
     :host {
       position: relative;
-      display: block;
     }
 
     slot[name='full-search'] {
@@ -257,6 +256,7 @@ export class AtomicInsightInterface
     this.initResultsPerPage();
     this.registerFieldsToInclude();
     this.store.unsetLoadingFlag(FirstInsightRequestExecutedFlag);
+    await this.getUpdateComplete();
     this.initialized = true;
   }
 
@@ -266,10 +266,12 @@ export class AtomicInsightInterface
       i18n: this.i18n,
       store: this.store,
       interfaceElement: this as AtomicInsightInterface,
+      // TODO - KIT-4839: Remove once atomic-insight-layout migration is complete.
       createStyleElement: () => {
         const styleTag = document.createElement('style');
         return styleTag;
       },
+      // TODO - KIT-4839: Remove once atomic-insight-layout migration is complete.
       createScriptElement: () => {
         const scriptTag = document.createElement('script');
         return scriptTag;
@@ -297,10 +299,6 @@ export class AtomicInsightInterface
 
   @errorGuard()
   render() {
-    if (!this.engine) {
-      return html``;
-    }
-
     return html`
       <slot name="full-search"></slot>
       <slot></slot>

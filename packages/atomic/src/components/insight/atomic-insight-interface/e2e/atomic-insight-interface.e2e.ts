@@ -2,15 +2,17 @@ import {expect, test} from './fixture';
 
 const defaultInsightQuerySummaryText = 'Insights related to this case';
 
+// TODO - KIT-4885: Simplify once other atomic-insight components have unit test / E2E coverage
 test.describe('Atomic Insight Panel', () => {
   test.beforeEach(async ({insightInterface}) => {
     await insightInterface.load({
       story: 'with-search',
     });
+    await insightInterface.hydrated.waitFor();
   });
 
   test('should load correctly', async ({insightInterface}) => {
-    await expect(insightInterface.insightInterface).toBeDefined();
+    expect(insightInterface.insightInterface).toBeDefined();
   });
 
   test.describe('components basics', () => {

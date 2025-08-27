@@ -65,7 +65,7 @@ export default meta;
 export const Default: Story = {
   tags: ['!dev'],
 };
-
+// TODO - KIT-4885: Simplify once other atomic-insight components have unit test / E2E coverage
 export const WithSearch: Story = {
   tags: ['!dev'],
   args: {
