@@ -2551,15 +2551,6 @@ export namespace Components {
         "timezone"?: string;
     }
     /**
-     * The `atomic-search-layout` helps organize elements in the page.
-     */
-    interface AtomicSearchLayout {
-        /**
-          * CSS value that defines where the layout goes from mobile to desktop. e.g., 800px, 65rem.
-         */
-        "mobileBreakpoint": string;
-    }
-    /**
      * The `atomic-segmented-facet` displays a horizontal facet of the results for the current query.
      */
     interface AtomicSegmentedFacet {
@@ -4287,15 +4278,6 @@ declare global {
         new (): HTMLAtomicSearchInterfaceElement;
     };
     /**
-     * The `atomic-search-layout` helps organize elements in the page.
-     */
-    interface HTMLAtomicSearchLayoutElement extends Components.AtomicSearchLayout, HTMLStencilElement {
-    }
-    var HTMLAtomicSearchLayoutElement: {
-        prototype: HTMLAtomicSearchLayoutElement;
-        new (): HTMLAtomicSearchLayoutElement;
-    };
-    /**
      * The `atomic-segmented-facet` displays a horizontal facet of the results for the current query.
      */
     interface HTMLAtomicSegmentedFacetElement extends Components.AtomicSegmentedFacet, HTMLStencilElement {
@@ -4694,7 +4676,6 @@ declare global {
         "atomic-search-box-query-suggestions": HTMLAtomicSearchBoxQuerySuggestionsElement;
         "atomic-search-box-recent-queries": HTMLAtomicSearchBoxRecentQueriesElement;
         "atomic-search-interface": HTMLAtomicSearchInterfaceElement;
-        "atomic-search-layout": HTMLAtomicSearchLayoutElement;
         "atomic-segmented-facet": HTMLAtomicSegmentedFacetElement;
         "atomic-segmented-facet-scrollable": HTMLAtomicSegmentedFacetScrollableElement;
         "atomic-smart-snippet": HTMLAtomicSmartSnippetElement;
@@ -7125,15 +7106,6 @@ declare namespace LocalJSX {
         "timezone"?: string;
     }
     /**
-     * The `atomic-search-layout` helps organize elements in the page.
-     */
-    interface AtomicSearchLayout {
-        /**
-          * CSS value that defines where the layout goes from mobile to desktop. e.g., 800px, 65rem.
-         */
-        "mobileBreakpoint"?: string;
-    }
-    /**
      * The `atomic-segmented-facet` displays a horizontal facet of the results for the current query.
      */
     interface AtomicSegmentedFacet {
@@ -7643,7 +7615,6 @@ declare namespace LocalJSX {
         "atomic-search-box-query-suggestions": AtomicSearchBoxQuerySuggestions;
         "atomic-search-box-recent-queries": AtomicSearchBoxRecentQueries;
         "atomic-search-interface": AtomicSearchInterface;
-        "atomic-search-layout": AtomicSearchLayout;
         "atomic-segmented-facet": AtomicSegmentedFacet;
         "atomic-segmented-facet-scrollable": AtomicSegmentedFacetScrollable;
         "atomic-smart-snippet": AtomicSmartSnippet;
@@ -8175,10 +8146,6 @@ declare module "@stencil/core" {
              * The `atomic-search-interface` component is the parent to all other atomic components in a search page. It handles the headless search engine and localization configurations.
              */
             "atomic-search-interface": LocalJSX.AtomicSearchInterface & JSXBase.HTMLAttributes<HTMLAtomicSearchInterfaceElement>;
-            /**
-             * The `atomic-search-layout` helps organize elements in the page.
-             */
-            "atomic-search-layout": LocalJSX.AtomicSearchLayout & JSXBase.HTMLAttributes<HTMLAtomicSearchLayoutElement>;
             /**
              * The `atomic-segmented-facet` displays a horizontal facet of the results for the current query.
              */

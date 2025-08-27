@@ -43,7 +43,7 @@ const {decorator, afterEach} = wrapInSearchInterface({
 
 const meta: Meta = {
   component: 'atomic-generated-answer',
-  title: 'Atomic/GeneratedAnswer',
+  title: 'Search/Generated Answer',
   id: 'atomic-generated-answer',
   render: (args) => template(args),
   decorators: [layoutDecorator, decorator],

@@ -27,10 +27,54 @@ setStorybookHelpersConfig({
 
 export const parameters: Parameters = {
   options: {
-    storySort: {
-      order: ['Introduction'],
-      method: 'alphabetical',
-      locales: 'en-US',
+    storySort: (a, b) => {
+      const topOrder = [
+        'Introduction',
+        'Commerce',
+        'Search',
+        'Recommendations',
+        'Insight',
+        'Common',
+      ];
+
+      const getTopLevel = (story) => story.title.split('/')[0];
+
+      const aTop = getTopLevel(a);
+      const bTop = getTopLevel(b);
+
+      const aIndex = topOrder.indexOf(aTop);
+      const bIndex = topOrder.indexOf(bTop);
+
+      // Top-level order
+      if (aIndex !== bIndex) {
+        return aIndex - bIndex;
+      }
+
+      // Commerce subfolder custom ordering
+      if (aTop === 'Commerce' && bTop === 'Commerce') {
+        const aParts = a.title.split('/').slice(1); // skip top-level
+        const bParts = b.title.split('/').slice(1);
+
+        // Define subfolder priority: Introduction -> Example Pages -> others
+        const subPriority = ['Introduction', 'Example Pages'];
+
+        const aPriority = subPriority.indexOf(aParts[0]);
+        const bPriority = subPriority.indexOf(bParts[0]);
+
+        if (aPriority !== bPriority) {
+          // Introduction/Example Pages first, then others
+          return (
+            (aPriority === -1 ? subPriority.length : aPriority) -
+            (bPriority === -1 ? subPriority.length : bPriority)
+          );
+        }
+
+        // If same priority or both other folders, sort alphabetically
+        return aParts.join('/').localeCompare(bParts.join('/'), 'en-US');
+      }
+
+      // Fallback alphabetical for all other stories
+      return a.title.localeCompare(b.title, 'en-US');
     },
   },
   controls: {
