@@ -5,7 +5,7 @@ import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-w
 
 const {decorator, afterEach} = wrapInSearchInterface();
 const {events, args, argTypes, template} = getStorybookHelpers(
-  'atomic-commerce-layout',
+  'atomic-search-layout',
   {excludeCategories: ['methods']}
 );
 const meta: Meta = {
