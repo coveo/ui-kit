@@ -60,8 +60,8 @@
     "vitest": "3.2.4"
   },
   "dependencies": {
-    "@coveo/relay": "1.2.6",
     "@coveo/headless": "3.28.4",
+    "@coveo/relay": "1.2.7",
     "uuid": "^11.0.0"
   },
   "engines": {
