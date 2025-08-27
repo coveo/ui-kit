@@ -166,6 +166,9 @@ export namespace Components {
          */
         "withSearch": boolean;
     }
+    /**
+     * Internal component, only to use through `atomic-generated-answer` or `atomic-insight-generated-answer`
+     */
     interface AtomicCitation {
         /**
           * The citation item information.
@@ -568,6 +571,9 @@ export namespace Components {
          */
         "withToggle"?: boolean;
     }
+    /**
+     * Internal component, only to use through `atomic-generated-answer` or `atomic-insight-generated-answer`
+     */
     interface AtomicGeneratedAnswerFeedbackModal {
         /**
           * A `GeneratedAnswer` controller instance. It is used when the user interacts with the modal.
@@ -2537,15 +2543,6 @@ export namespace Components {
         "timezone"?: string;
     }
     /**
-     * The `atomic-search-layout` helps organize elements in the page.
-     */
-    interface AtomicSearchLayout {
-        /**
-          * CSS value that defines where the layout goes from mobile to desktop. e.g., 800px, 65rem.
-         */
-        "mobileBreakpoint": string;
-    }
-    /**
      * The `atomic-segmented-facet` displays a horizontal facet of the results for the current query.
      */
     interface AtomicSegmentedFacet {
@@ -3045,6 +3042,9 @@ declare global {
         prototype: HTMLAtomicCategoryFacetElement;
         new (): HTMLAtomicCategoryFacetElement;
     };
+    /**
+     * Internal component, only to use through `atomic-generated-answer` or `atomic-insight-generated-answer`
+     */
     interface HTMLAtomicCitationElement extends Components.AtomicCitation, HTMLStencilElement {
     }
     var HTMLAtomicCitationElement: {
@@ -3188,6 +3188,9 @@ declare global {
     interface HTMLAtomicGeneratedAnswerFeedbackModalElementEventMap {
         "feedbackSent": any;
     }
+    /**
+     * Internal component, only to use through `atomic-generated-answer` or `atomic-insight-generated-answer`
+     */
     interface HTMLAtomicGeneratedAnswerFeedbackModalElement extends Components.AtomicGeneratedAnswerFeedbackModal, HTMLStencilElement {
         addEventListener<K extends keyof HTMLAtomicGeneratedAnswerFeedbackModalElementEventMap>(type: K, listener: (this: HTMLAtomicGeneratedAnswerFeedbackModalElement, ev: AtomicGeneratedAnswerFeedbackModalCustomEvent<HTMLAtomicGeneratedAnswerFeedbackModalElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
         addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
@@ -4259,15 +4262,6 @@ declare global {
         new (): HTMLAtomicSearchInterfaceElement;
     };
     /**
-     * The `atomic-search-layout` helps organize elements in the page.
-     */
-    interface HTMLAtomicSearchLayoutElement extends Components.AtomicSearchLayout, HTMLStencilElement {
-    }
-    var HTMLAtomicSearchLayoutElement: {
-        prototype: HTMLAtomicSearchLayoutElement;
-        new (): HTMLAtomicSearchLayoutElement;
-    };
-    /**
      * The `atomic-segmented-facet` displays a horizontal facet of the results for the current query.
      */
     interface HTMLAtomicSegmentedFacetElement extends Components.AtomicSegmentedFacet, HTMLStencilElement {
@@ -4666,7 +4660,6 @@ declare global {
         "atomic-search-box-query-suggestions": HTMLAtomicSearchBoxQuerySuggestionsElement;
         "atomic-search-box-recent-queries": HTMLAtomicSearchBoxRecentQueriesElement;
         "atomic-search-interface": HTMLAtomicSearchInterfaceElement;
-        "atomic-search-layout": HTMLAtomicSearchLayoutElement;
         "atomic-segmented-facet": HTMLAtomicSegmentedFacetElement;
         "atomic-segmented-facet-scrollable": HTMLAtomicSegmentedFacetScrollableElement;
         "atomic-smart-snippet": HTMLAtomicSmartSnippetElement;
@@ -4807,6 +4800,9 @@ declare namespace LocalJSX {
          */
         "withSearch"?: boolean;
     }
+    /**
+     * Internal component, only to use through `atomic-generated-answer` or `atomic-insight-generated-answer`
+     */
     interface AtomicCitation {
         /**
           * The citation item information.
@@ -5206,6 +5202,9 @@ declare namespace LocalJSX {
          */
         "withToggle"?: boolean;
     }
+    /**
+     * Internal component, only to use through `atomic-generated-answer` or `atomic-insight-generated-answer`
+     */
     interface AtomicGeneratedAnswerFeedbackModal {
         /**
           * A `GeneratedAnswer` controller instance. It is used when the user interacts with the modal.
@@ -7083,15 +7082,6 @@ declare namespace LocalJSX {
         "timezone"?: string;
     }
     /**
-     * The `atomic-search-layout` helps organize elements in the page.
-     */
-    interface AtomicSearchLayout {
-        /**
-          * CSS value that defines where the layout goes from mobile to desktop. e.g., 800px, 65rem.
-         */
-        "mobileBreakpoint"?: string;
-    }
-    /**
      * The `atomic-segmented-facet` displays a horizontal facet of the results for the current query.
      */
     interface AtomicSegmentedFacet {
@@ -7601,7 +7591,6 @@ declare namespace LocalJSX {
         "atomic-search-box-query-suggestions": AtomicSearchBoxQuerySuggestions;
         "atomic-search-box-recent-queries": AtomicSearchBoxRecentQueries;
         "atomic-search-interface": AtomicSearchInterface;
-        "atomic-search-layout": AtomicSearchLayout;
         "atomic-segmented-facet": AtomicSegmentedFacet;
         "atomic-segmented-facet-scrollable": AtomicSegmentedFacetScrollable;
         "atomic-smart-snippet": AtomicSmartSnippet;
@@ -7657,6 +7646,9 @@ declare module "@stencil/core" {
              * An `atomic-category-facet` displays a facet of values in a browsable, hierarchical fashion.
              */
             "atomic-category-facet": LocalJSX.AtomicCategoryFacet & JSXBase.HTMLAttributes<HTMLAtomicCategoryFacetElement>;
+            /**
+             * Internal component, only to use through `atomic-generated-answer` or `atomic-insight-generated-answer`
+             */
             "atomic-citation": LocalJSX.AtomicCitation & JSXBase.HTMLAttributes<HTMLAtomicCitationElement>;
             /**
              * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (e.g., number of occurrences).
@@ -7716,6 +7708,9 @@ declare module "@stencil/core" {
              * For more information, see [About Relevance Generative Answering (RGA)](https://docs.coveo.com/en/n9de0370/)
              */
             "atomic-generated-answer": LocalJSX.AtomicGeneratedAnswer & JSXBase.HTMLAttributes<HTMLAtomicGeneratedAnswerElement>;
+            /**
+             * Internal component, only to use through `atomic-generated-answer` or `atomic-insight-generated-answer`
+             */
             "atomic-generated-answer-feedback-modal": LocalJSX.AtomicGeneratedAnswerFeedbackModal & JSXBase.HTMLAttributes<HTMLAtomicGeneratedAnswerFeedbackModalElement>;
             /**
              * The `atomic-html` component renders the HTML value of a string.
@@ -8119,10 +8114,6 @@ declare module "@stencil/core" {
              * The `atomic-search-interface` component is the parent to all other atomic components in a search page. It handles the headless search engine and localization configurations.
              */
             "atomic-search-interface": LocalJSX.AtomicSearchInterface & JSXBase.HTMLAttributes<HTMLAtomicSearchInterfaceElement>;
-            /**
-             * The `atomic-search-layout` helps organize elements in the page.
-             */
-            "atomic-search-layout": LocalJSX.AtomicSearchLayout & JSXBase.HTMLAttributes<HTMLAtomicSearchLayoutElement>;
             /**
              * The `atomic-segmented-facet` displays a horizontal facet of the results for the current query.
              */

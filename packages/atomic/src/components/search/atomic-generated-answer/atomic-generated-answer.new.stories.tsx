@@ -38,7 +38,7 @@ const {decorator, play} = wrapInSearchInterface({
 
 const meta: Meta = {
   component: 'atomic-generated-answer',
-  title: 'Atomic/GeneratedAnswer',
+  title: 'Search/Generated Answer',
   id: 'atomic-generated-answer',
   render: renderComponent,
   decorators: [layoutDecorator, decorator],

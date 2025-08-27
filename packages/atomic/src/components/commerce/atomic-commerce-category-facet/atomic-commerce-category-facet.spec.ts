@@ -1,5 +1,3 @@
-/** biome-ignore-all lint/style/noNonNullAssertion: test file uses non-null assertions */
-
 import type {CategoryFacet, Summary} from '@coveo/headless/commerce';
 import {page, userEvent} from '@vitest/browser/context';
 import {renderInAtomicCommerceInterface} from '@/vitest-utils/testing-helpers/fixtures/atomic/commerce/atomic-commerce-interface-fixture';
@@ -35,6 +33,7 @@ describe('atomic-commerce-category-facet', () => {
           updateText: vi.fn(),
           search: vi.fn(),
           select: vi.fn(),
+          showMoreResults: vi.fn(),
         },
       },
     });
@@ -418,6 +417,40 @@ describe('atomic-commerce-category-facet', () => {
       'test search'
     );
     expect(mockedFacet.facetSearch.search).toHaveBeenCalled();
+  });
+
+  it('should call facetSearch.showMoreResults when there are more results available and the "more matches for x" button is clicked', async () => {
+    mockedFacet = buildFakeCategoryFacet({
+      state: {
+        facetSearch: {
+          moreValuesAvailable: true,
+          isLoading: false,
+          query: 'ele',
+          values: [
+            {
+              displayValue: 'sd',
+              rawValue: 'sd',
+              path: ['sd'],
+              count: 1,
+            },
+          ],
+        },
+      },
+      implementation: {
+        facetSearch: {
+          clear: vi.fn(),
+          updateText: vi.fn(),
+          search: vi.fn(),
+          select: vi.fn(),
+          showMoreResults: vi.fn(),
+        },
+      },
+    });
+
+    const {moreMatches} = await setupElement();
+
+    await userEvent.click(moreMatches);
+    expect(mockedFacet.facetSearch.showMoreResults).toHaveBeenCalled();
   });
 
   it('should #facetSearch.clear when search is cleared', async () => {

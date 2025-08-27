@@ -1,6 +1,6 @@
 {
   "name": "@coveo/create-atomic-component",
-  "version": "1.4.2",
+  "version": "1.5.0",
   "description": "Initialize a Coveo Atomic Component",
   "type": "module",
   "main": "index.js",
@@ -28,7 +28,7 @@
     "access": "public"
   },
   "dependencies": {
-    "@coveo/create-atomic-component-project": "1.4.2"
+    "@coveo/create-atomic-component-project": "1.5.0"
   },
   "repository": {
     "type": "git",

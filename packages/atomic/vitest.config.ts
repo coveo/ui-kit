@@ -50,6 +50,13 @@ export default defineConfig({
           '../headless/cdn/headless.esm.js'
         ),
       },
+      {
+        find: '../components/components/lazy-index.js',
+        replacement: path.resolve(
+          import.meta.dirname,
+          'src/components/lazy-index.js'
+        ),
+      },
     ],
   },
   plugins: [

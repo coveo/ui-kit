@@ -7,6 +7,9 @@ import type {
 import type {OptionsExtender, OptionsTuple} from './utilities.js';
 
 interface BuildOptions<TEngineOptions> {
+  /**
+   * @deprecated This option will be removed in the next major version.
+   */
   extend?: OptionsExtender<TEngineOptions>;
 }
 

@@ -1,24 +1,27 @@
+import {css} from 'lit';
+
+const styles = css`
 .atomic-modal-opened {
   overflow-y: hidden;
 }
 
-atomic-layout-section[section='search'] {
+atomic-layout-section[section="search"] {
   grid-area: atomic-section-search;
 }
 
-atomic-layout-section[section='facets'] {
+atomic-layout-section[section="facets"] {
   grid-area: atomic-section-facets;
 }
 
-atomic-layout-section[section='main'] {
+atomic-layout-section[section="main"] {
   grid-area: atomic-section-main;
 }
 
-atomic-layout-section[section='status'] {
+atomic-layout-section[section="status"] {
   grid-area: atomic-section-status;
 }
 
-atomic-layout-section[section='pagination'] {
+atomic-layout-section[section="pagination"] {
   grid-area: atomic-section-pagination;
 }
 
@@ -32,11 +35,13 @@ atomic-search-layout {
   height: 100%;
   display: none;
   grid-template-areas:
-    '. atomic-section-search .'
-    '. atomic-section-main .';
-  grid-template-columns: var(--atomic-layout-spacing-x) minmax(0, 1fr) var(--atomic-layout-spacing-x);
+    ". atomic-section-search ."
+    ". atomic-section-main .";
+  grid-template-columns: var(--atomic-layout-spacing-x) minmax(0, 1fr) var(
+      --atomic-layout-spacing-x
+    );
 
-  atomic-layout-section[section='search'] {
+  atomic-layout-section[section="search"] {
     margin: var(--atomic-layout-spacing-y) 0;
     max-width: var(--atomic-layout-max-search-box-input-width, 678px);
     width: 100%;
@@ -46,7 +51,10 @@ atomic-search-layout {
     atomic-search-box {
       &::part(suggestions-double-list) {
         width: 125%;
-        max-width: var(--atomic-layout-max-search-box-double-suggestions-width, 800px);
+        max-width: var(
+          --atomic-layout-max-search-box-double-suggestions-width,
+          800px
+        );
       }
 
       &::part(suggestions-left) {
@@ -54,12 +62,15 @@ atomic-search-layout {
       }
 
       &::part(suggestions-right) {
-        flex-basis: calc(100% - var(--atomic-layout-search-box-left-suggestions-width, 30%));
+        flex-basis: calc(
+          100% -
+          var(--atomic-layout-search-box-left-suggestions-width, 30%)
+        );
       }
     }
   }
 
-  atomic-layout-section[section='facets'] {
+  atomic-layout-section[section="facets"] {
     display: none;
 
     & * {
@@ -67,11 +78,11 @@ atomic-search-layout {
     }
   }
 
-  atomic-layout-section[section='main'] {
+  atomic-layout-section[section="main"] {
     margin-bottom: var(--atomic-layout-spacing-y);
   }
 
-  atomic-layout-section[section='horizontal-facets'] {
+  atomic-layout-section[section="horizontal-facets"] {
     display: flex;
     flex-wrap: wrap;
     margin-bottom: var(--atomic-layout-spacing-y);
@@ -91,14 +102,14 @@ atomic-search-layout {
     }
   }
 
-  atomic-layout-section[section='status'] {
+  atomic-layout-section[section="status"] {
     display: grid;
     justify-content: space-between;
     grid-template-areas:
-      'atomic-breadbox       atomic-breadbox'
-      'atomic-query-summary  atomic-sort'
-      'atomic-did-you-mean   atomic-did-you-mean'
-      'atomic-notifications  atomic-notifications';
+      "atomic-breadbox       atomic-breadbox"
+      "atomic-query-summary  atomic-sort"
+      "atomic-did-you-mean   atomic-did-you-mean"
+      "atomic-notifications  atomic-notifications";
 
     & > * {
       margin-bottom: var(--atomic-layout-spacing-y);
@@ -132,7 +143,7 @@ atomic-search-layout {
     }
   }
 
-  atomic-layout-section[section='results'] {
+  atomic-layout-section[section="results"] {
     atomic-smart-snippet {
       margin-bottom: 1.5rem;
     }
@@ -142,7 +153,7 @@ atomic-search-layout {
     }
   }
 
-  atomic-layout-section[section='pagination'] {
+  atomic-layout-section[section="pagination"] {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -165,4 +176,6 @@ atomic-search-layout {
       flex-direction: row;
     }
   }
-}
+}`;
+
+export default styles;

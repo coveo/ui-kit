@@ -4,6 +4,13 @@ test.describe('smoke test', () => {
   test.use({viewport: {width: 2000, height: 2000}});
 
   test('Search Page', async ({page}) => {
+    const consoleErrors: string[] = [];
+    page.on('console', (msg) => {
+      if (msg.type() === 'error') {
+        consoleErrors.push(msg.text());
+      }
+    });
+
     // Visit the application
     await page.goto('http://localhost:5173');
 
@@ -44,9 +51,22 @@ test.describe('smoke test', () => {
 
     const firstResult = resultList.locator('atomic-result').first();
     await expect(firstResult).toBeVisible();
+
+    // Filter out expected MissingInterfaceParentError as they are getting fixed with Lit
+    const filteredErrors = consoleErrors.filter(
+      (error) => !error.includes('MissingInterfaceParentError')
+    );
+    expect(filteredErrors).toEqual([]);
   });
 
   test('Commerce Search Page', async ({page}) => {
+    const consoleErrors: string[] = [];
+    page.on('console', (msg) => {
+      if (msg.type() === 'error') {
+        consoleErrors.push(msg.text());
+      }
+    });
+
     await page.goto('http://localhost:5173/?page=Commerce%20Search%20Page');
 
     // Verify search box is visible
@@ -88,9 +108,24 @@ test.describe('smoke test', () => {
     // Verify at least one product is displayed
     const firstProduct = productList.locator('atomic-product').first();
     await expect(firstProduct).toBeVisible();
+
+    // Filter out expected MissingInterfaceParentError for atomic-result-link
+    const filteredErrors = consoleErrors.filter(
+      (error) =>
+        !error.includes('MissingInterfaceParentError') ||
+        !error.includes('atomic-result-link')
+    );
+    expect(filteredErrors).toEqual([]);
   });
 
   test('Commerce Recommendation Page', async ({page}) => {
+    const consoleErrors: string[] = [];
+    page.on('console', (msg) => {
+      if (msg.type() === 'error') {
+        consoleErrors.push(msg.text());
+      }
+    });
+
     await page.goto(
       'http://localhost:5173/?page=Commerce%20Recommendations%20Page'
     );
@@ -106,5 +141,7 @@ test.describe('smoke test', () => {
       .locator('atomic-product')
       .first();
     await expect(firstRecommendation).toBeVisible();
+
+    expect(consoleErrors).toEqual([]);
   });
 });

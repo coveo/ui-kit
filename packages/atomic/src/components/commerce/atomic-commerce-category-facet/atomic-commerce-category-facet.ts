@@ -487,6 +487,8 @@ export class AtomicCommerceCategoryFacet
                   numberOfMatches: this.facetState.facetSearch.values.length,
                   hasMoreMatches:
                     this.facetState.facetSearch.moreValuesAvailable,
+                  showMoreMatches: () =>
+                    this.facet.facetSearch.showMoreResults(),
                 },
               })}
             `,

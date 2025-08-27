@@ -1,4 +1,9 @@
-import type {CSSResultArray, CSSResultGroup, CSSResultOrNative} from 'lit';
+import type {
+  CSSResult,
+  CSSResultArray,
+  CSSResultGroup,
+  CSSResultOrNative,
+} from 'lit';
 
 /**
  * Decorator to inject styles into components that do not use Shadow DOM.
@@ -19,6 +24,10 @@ import type {CSSResultArray, CSSResultGroup, CSSResultOrNative} from 'lit';
 export const injectStylesForNoShadowDOM = <
   T extends {
     styles?: CSSResultGroup;
+    dynamicStyles?: (
+      // biome-ignore lint/suspicious/noExplicitAny: <>
+      instance: any
+    ) => Promise<CSSResult>;
     // biome-ignore lint/suspicious/noExplicitAny: <>
     new (...args: any[]): any;
   },
@@ -35,9 +44,18 @@ export const injectStylesForNoShadowDOM = <
       this.injectStyles();
     }
 
-    injectStyles() {
+    async injectStyles() {
       const parent = this.getRootNode();
-      const styles = Array.isArray(Base.styles) ? Base.styles : [Base.styles];
+      const dynamicStyles =
+        typeof Base.dynamicStyles === 'function'
+          ? [await Base.dynamicStyles(this)]
+          : [];
+
+      const staticStyles = Array.isArray(Base.styles)
+        ? Base.styles
+        : [Base.styles];
+
+      const styles = [...staticStyles, ...dynamicStyles];
       const isDocumentOrShadowRoot =
         parent instanceof Document || parent instanceof ShadowRoot;
 

@@ -3,11 +3,14 @@ import './atomic-product-children';
 import type {ChildProduct} from '@coveo/headless/commerce';
 import {html} from 'lit';
 import {ifDefined} from 'lit/directives/if-defined.js';
+import {closest} from '@/src/utils/dom-utils';
 import {renderInAtomicProduct} from '@/vitest-utils/testing-helpers/fixtures/atomic/commerce/atomic-product-fixture';
 import {buildFakeProduct} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/product';
+import type {AtomicProduct} from '../atomic-product/atomic-product';
 import {AtomicProductChildren} from './atomic-product-children';
 
 vi.mock('@coveo/headless/commerce', {spy: true});
+vi.mock('@/src/utils/dom-utils', {spy: true});
 
 describe('atomic-product-children', () => {
   const renderProductChildren = async (
@@ -202,6 +205,42 @@ describe('atomic-product-children', () => {
       );
       await touchChild();
       expect(dispatchSpy).toHaveBeenCalled();
+    });
+  });
+
+  describe('when a child product is clicked', () => {
+    it('should stop propagation if the parent element is an <a> tag', async () => {
+      const {childProducts, element} = await renderProductChildren();
+      Object.defineProperty(element, 'parentElement', {
+        value: {tagName: 'A'},
+        configurable: true,
+      });
+      const clickEvent = new MouseEvent('click', {bubbles: true});
+      const stopPropagationSpy = vi.spyOn(clickEvent, 'stopPropagation');
+
+      childProducts[0].dispatchEvent(clickEvent);
+
+      expect(stopPropagationSpy).toHaveBeenCalled();
+    });
+
+    it('should query the <atomic-product> and call #clickLinkContainer if the parent element is not an <a> tag', async () => {
+      const {childProducts, element} = await renderProductChildren();
+      Object.defineProperty(element, 'parentElement', {
+        value: {tagName: 'DIV'},
+        configurable: true,
+      });
+      const mockAtomicProduct = {
+        clickLinkContainer: vi.fn(),
+      } as unknown as AtomicProduct;
+      vi.mocked(closest).mockReturnValue(mockAtomicProduct);
+      const clickEvent = new MouseEvent('click', {bubbles: true});
+      const stopPropagationSpy = vi.spyOn(clickEvent, 'stopPropagation');
+
+      childProducts[0].dispatchEvent(clickEvent);
+
+      expect(stopPropagationSpy).not.toHaveBeenCalled();
+      expect(closest).toHaveBeenCalledWith(element, 'atomic-product');
+      expect(mockAtomicProduct.clickLinkContainer).toHaveBeenCalled();
     });
   });
 

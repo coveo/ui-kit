@@ -6,8 +6,10 @@ export class AtomicProductChildrenPageObject extends BasePageObject {
     super(page, 'atomic-product-children');
   }
 
-  get label() {
-    return this.page.locator('atomic-commerce-text');
+  get availableInLabel() {
+    return this.page
+      .locator('atomic-commerce-text')
+      .filter({hasText: 'Available in:'});
   }
 
   get childProducts() {

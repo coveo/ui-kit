@@ -59,7 +59,6 @@ test.describe('atomic-product-text', () => {
         await productText.hydrated.first().waitFor();
 
         await expect(productText.textContent.first()).toContainText(/kayak/i);
-
         const highlightedText =
           await productText.highlightedText.allTextContents();
         expect(highlightedText.length).toEqual(0);
