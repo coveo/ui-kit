@@ -1,4 +1,5 @@
 import type {CommerceEngine} from '@coveo/headless/ssr-commerce';
+import {vi} from 'vitest';
 
 export const createMockCommerceEngine = () =>
   ({
