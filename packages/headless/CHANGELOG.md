@@ -1,3 +1,10 @@
+## 3.29.0 (2025-08-27)
+
+* chore(headless-ssr): auto-include Essential OOTB Controllers in Commerce Engine Definition (#5865) ([846210d](https://github.com/coveo/ui-kit/commits/846210d)), closes [#5865](https://github.com/coveo/ui-kit/issues/5865)
+* feat(headless-commerce): Add *showMoreResults* function to Facet Search controller Headless Commerce ([0af1506](https://github.com/coveo/ui-kit/commits/0af1506)), closes [#5931](https://github.com/coveo/ui-kit/issues/5931) [/docs.coveo.com/en/headless/latest/reference/interfaces/Search.FacetSearch.html#showmoreresults-1](https://github.com//docs.coveo.com/en/headless/latest/reference/interfaces/Search.FacetSearch.html/issues/showmoreresults-1)
+
+
+
 ## <small>3.28.4 (2025-08-20)</small>
 
 * fix(headless commerce): keep reference to original response ID in product & send correct response ID ([a80458f](https://github.com/coveo/ui-kit/commits/a80458f)), closes [#5879](https://github.com/coveo/ui-kit/issues/5879)
