@@ -107,7 +107,7 @@ describe('CategoryFacet', () => {
   });
 
   describe('#showMoreValues', () => {
-    it('should dispatch #updateCategoryFacetNumberOfValues with initialNumberOfValues + the number of values of the selected value from the request', () => {
+    it('should dispatch #updateCategoryFacetNumberOfValues with initialNumberOfValues + the number of root values from the request', () => {
       setFacetState({}, false, {
         initialNumberOfValues: 3,
         values: [buildMockCategoryFacetValue(), buildMockCategoryFacetValue()],
