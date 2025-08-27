@@ -164,7 +164,7 @@ Comprehensive component documentation with examples and usage instructions.
 
 **Example structure:**
 ```typescript
-import { Meta } from '@storybook/blocks';
+import { Meta } from '@storybook/addons-docs/blocks';
 import * as AtomicMyComponentStories from './atomic-my-component.new.stories';
 import { AtomicDocTemplate } from '../../../../storybook-utils/documentation/atomic-doc-template';
 
