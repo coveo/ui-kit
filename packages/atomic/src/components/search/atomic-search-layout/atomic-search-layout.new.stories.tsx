@@ -1,18 +1,31 @@
 import type {Meta, StoryObj as Story} from '@storybook/web-components';
+import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
-import {renderComponent} from '@/storybook-utils/common/render-component';
 import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
 
-const {decorator, play} = wrapInSearchInterface();
-
+const {decorator, afterEach} = wrapInSearchInterface();
+const {events, args, argTypes, template} = getStorybookHelpers(
+  'atomic-commerce-layout',
+  {excludeCategories: ['methods']}
+);
 const meta: Meta = {
   component: 'atomic-search-layout',
   title: 'Search/Search Layout',
   id: 'atomic-search-layout',
-  render: renderComponent,
+  render: (args) => template(args),
   decorators: [decorator],
-  parameters,
-  play,
+  parameters: {
+    ...parameters,
+    actions: {
+      handles: events,
+    },
+  },
+  afterEach,
+  argTypes,
+  args: {
+    ...args,
+    'default-slot': `<span>Layout content</span>`,
+  },
 };
 
 export default meta;
