@@ -81,18 +81,18 @@ export class AtomicCommerceRecommendationInterface
   /**
    * The commerce interface i18next instance.
    */
-  @property({type: Object}) i18n: i18n;
+  @property({type: Object, attribute: false}) i18n: i18n;
 
   /**
    * The commerce interface headless engine.
    */
-  @property({type: Object}) engine?: CommerceEngine;
+  @property({type: Object, attribute: false}) engine?: CommerceEngine;
 
   /**
    * The CSS selector for the container the interface will scroll back to.
    */
   @property({type: String, attribute: 'scroll-container', reflect: true})
-  scrollContainer = 'atomic-commerce-recommendation-interface';
+  scrollContainer: string = 'atomic-commerce-recommendation-interface';
 
   /**
    * The language assets path. By default, this will be a relative URL pointing to `./lang`.
@@ -101,7 +101,7 @@ export class AtomicCommerceRecommendationInterface
    *
    */
   @property({type: String, attribute: 'language-assets-path', reflect: true})
-  languageAssetsPath = './lang';
+  languageAssetsPath: string = './lang';
 
   /**
    * The icon assets path. By default, this will be a relative URL pointing to `./assets`.
@@ -110,7 +110,7 @@ export class AtomicCommerceRecommendationInterface
    *
    */
   @property({type: String, attribute: 'icon-assets-path', reflect: true})
-  iconAssetsPath = './assets';
+  iconAssetsPath: string = './assets';
 
   /**
    * The commerce interface language.
@@ -133,7 +133,7 @@ export class AtomicCommerceRecommendationInterface
     converter: booleanConverter,
     reflect: true,
   })
-  analytics = true;
+  analytics: boolean = true;
 
   private i18Initialized: Promise<void>;
 
@@ -159,7 +159,7 @@ export class AtomicCommerceRecommendationInterface
   }
 
   /**
-   * Initializes the connection with an already preconfigured [headless commerce engine](https://docs.coveo.com/en/headless/latest/reference/commerce/).
+   * Initializes the connection with an already preconfigured [headless commerce engine](https://docs.coveo.com/en/headless/latest/reference/interfaces/Commerce.CommerceEngine.html).
    */
   public initializeWithEngine(engine: CommerceEngine) {
     engine.dispatch(

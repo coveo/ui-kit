@@ -5,6 +5,7 @@ import {basename, dirname, join, relative} from 'node:path';
 import {setOutput} from '@actions/core';
 import {getBaseHeadSHAs, getChangedFiles} from './git-utils.mjs';
 import {ensureFileExists, listImports} from './list-imports.mjs';
+import {getAllHeadlessAffectedEndpoints} from './headless-dependency-tracker.mjs';
 
 class NoRelevantChangesError extends Error {
   constructor() {
@@ -162,7 +163,7 @@ function ensureIsNotPackageJsonOrPackageLockJson(file) {
  * @returns {boolean} - Returns true if the file path includes any of the external package paths, otherwise false.
  */
 function dependsOnCoveoPackage(file) {
-  const externalPackages = ['packages/headless/', 'packages/bueno/'];
+  const externalPackages = ['packages/bueno/'];
   for (const pkg of externalPackages) {
     if (file.includes(pkg)) {
       return true;
@@ -186,8 +187,12 @@ function allocateShards(testCount, maximumShards) {
   return [shardIndex, [shardTotal]];
 }
 
+function hasHeadlessChanges(changedFiles) {
+  return changedFiles.some((file) => file.startsWith('packages/headless/'));
+}
+
 const {base, head} = getBaseHeadSHAs();
-const changedFiles = getChangedFiles(base, head).split(EOL);
+let changedFiles = getChangedFiles(base, head).split(EOL);
 const outputNameTestsToRun = process.argv[2];
 const outputNameShardIndex = process.argv[3];
 const outputNameShardTotal = process.argv[4];
@@ -201,6 +206,24 @@ try {
   }
 
   const testFiles = findAllTestFiles(atomicSourceComponents);
+
+  if (hasHeadlessChanges(changedFiles)) {
+    console.log(
+      'Headless files changes detected, computing headless affected endpoints...'
+    );
+
+    const affectedHeadlessEnpoints = getAllHeadlessAffectedEndpoints(
+      changedFiles,
+      projectRoot
+    );
+
+    console.log('Affected headless endpoints', affectedHeadlessEnpoints);
+
+    changedFiles = changedFiles
+      .filter((filePath) => !filePath.includes(join('packages', 'headless')))
+      .concat(affectedHeadlessEnpoints);
+  }
+
   const testDependencies = createTestFileMappings(testFiles, projectRoot);
   const testsToRun = determineTestFilesToRun(changedFiles, testDependencies);
 

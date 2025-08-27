@@ -10,11 +10,11 @@ import {
   InitializableComponent,
   InitializeBindings,
 } from '../../../../utils/initialization-utils';
-import {IconButton} from '../../../common/iconButton';
+import {IconButton} from '../../../common/stencil-iconButton';
 import {InsightBindings} from '../../atomic-insight-interface/atomic-insight-interface';
 
 /**
- * @internal
+ * Internal component of the atomic-insight-interface
  * The `atomic-insight-user-actions-toggle` component displays a button that opens a modal containing the user actions timeline component.
  */
 @Component({
