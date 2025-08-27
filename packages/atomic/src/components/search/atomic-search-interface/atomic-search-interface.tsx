@@ -58,7 +58,6 @@ export type Bindings = _Bindings;
   tag: 'atomic-search-interface',
   styleUrl: 'atomic-search-interface.pcss',
   shadow: true,
-  assetsDirs: ['lang'],
 })
 export class AtomicSearchInterface
   implements StencilBaseAtomicInterface<SearchEngine>
