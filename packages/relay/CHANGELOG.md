@@ -1,3 +1,9 @@
+## 1.2.8 (2025-08-27)
+
+### Bug Fixes
+
+- **deps:** update all non-major dependencies ([#196](https://github.com/coveo/relay/issues/196)) ([4fde800](https://github.com/coveo/relay/commits/))
+
 ## 1.2.7 (2025-07-29)
 
 ### Bug Fixes
