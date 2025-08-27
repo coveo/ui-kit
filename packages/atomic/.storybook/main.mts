@@ -51,6 +51,8 @@ const config: StorybookConfig = {
     './Introduction.stories.tsx',
     '../src/**/*.new.stories.tsx',
     '../src/**/*.mdx',
+    '../storybook-pages/**/*.new.stories.tsx',
+    '../storybook-pages/**/*.mdx',
   ],
   staticDirs: [
     {from: '../dist/atomic/assets', to: '/assets'},

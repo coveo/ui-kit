@@ -7,7 +7,6 @@ import type {InitializableComponent} from '@/src/decorators/types';
 import type {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface';
 
 /**
- * @alpha
  * The `atomic-commerce-text` component leverages the I18n translation module through the atomic-commerce-interface.
  */
 @customElement('atomic-commerce-text')
