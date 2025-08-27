@@ -2,7 +2,7 @@ import { spreadProps } from '@open-wc/lit-helpers';
 import {Decorator} from '@storybook/web-components-vite';
 import {html} from 'lit';
 
-export const wrapInCommerceProductList = (display: string='list', includeCodeRoot: boolean = true): {
+export const wrapInCommerceProductList = (display: string = 'list', includeCodeRoot: boolean = true): {
   decorator: Decorator;
 } => ({
   decorator: (story) => html`
