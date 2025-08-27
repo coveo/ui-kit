@@ -1,3 +1,6 @@
+import {css} from 'lit';
+
+const styles = css`
 .atomic-modal-opened {
   overflow-y: hidden;
 }
@@ -173,4 +176,6 @@ atomic-search-layout {
       flex-direction: row;
     }
   }
-}
+}`;
+
+export default styles;

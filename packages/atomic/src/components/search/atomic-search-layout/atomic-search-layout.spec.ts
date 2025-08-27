@@ -36,12 +36,12 @@ describe('AtomicSearchLayout', () => {
     expect(element).toBeTruthy();
   });
 
-  it('should reflects mobileBreakpoint property to attribute', async () => {
+  it('should reflect mobileBreakpoint property to attribute', async () => {
     const {element} = await renderSearchLayout('900px');
     expect(element).toHaveAttribute('mobile-breakpoint', '900px');
   });
 
-  it('uses default mobileBreakpoint if not set', async () => {
+  it('should use default mobileBreakpoint if not set', async () => {
     const {element} = await renderSearchLayout();
     expect(element).toHaveAttribute('mobile-breakpoint', '1024px');
   });
@@ -62,7 +62,7 @@ describe('AtomicSearchLayout', () => {
       expect(facets).toBeVisible();
     });
 
-    it('should always render main section', async () => {
+    it('should render main section', async () => {
       const {main} = await renderSearchLayout('900px');
       expect(main).toBeVisible();
     });
@@ -78,7 +78,7 @@ describe('AtomicSearchLayout', () => {
       expect(facets).not.toBeVisible();
     });
 
-    it('should always render main section', async () => {
+    it('should render main section', async () => {
       const {main} = await renderSearchLayout('900px');
       expect(main).toBeVisible();
     });
