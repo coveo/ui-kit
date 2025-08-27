@@ -1,7 +1,6 @@
 import type {
   SearchSummaryState,
   Summary,
-  SummaryState,
 } from '@coveo/headless/ssr-commerce-next';
 import {getElement} from '../common/utils.js';
 
