@@ -2005,7 +2005,7 @@ export declare interface AtomicCommerceInterface extends LitAtomicCommerceInterf
 
 @ProxyCmp({
   inputs: ['mobileBreakpoint'],
-  methods: [],
+  methods: ['dynamicStyles', 'getUpdateComplete'],
   defineCustomElementFn: () => {customElements.get('atomic-commerce-layout') || customElements.define('atomic-commerce-layout', LitAtomicCommerceLayout);}
 })
 @Component({

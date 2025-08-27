@@ -1,7 +1,7 @@
-import {html, LitElement, unsafeCSS} from 'lit';
+import {LitElement, unsafeCSS} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
-import {errorGuard} from '@/src/decorators/error-guard';
 import {injectStylesForNoShadowDOM} from '@/src/decorators/inject-styles-for-no-shadow-dom';
+import {ChildrenUpdateCompleteMixin} from '@/src/mixins/children-update-complete-mixin';
 import {randomID} from '@/src/utils/utils';
 import {DEFAULT_MOBILE_BREAKPOINT} from '../../../utils/replace-breakpoint';
 import styles from './atomic-commerce-layout.tw.css';
@@ -10,22 +10,22 @@ import {buildCommerceLayout} from './commerce-layout';
 /**
  * The `atomic-commerce-layout` helps organize elements in the commerce page.
  *
- * @slot default - The default slot where you can add child components to the layout.
- *
  * @cssprop --atomic-layout-max-search-box-input-width: The maximum width that the search box input will take.
  * @cssprop --atomic-layout-max-search-box-double-suggestions-width: The maximum width that the search box suggestions will take when displaying a double list.
  * @cssprop --atomic-layout-search-box-left-suggestions-width: When displaying a double list, the width of the left list.
  */
 @customElement('atomic-commerce-layout')
 @injectStylesForNoShadowDOM
-export class AtomicCommerceLayout extends LitElement {
+export class AtomicCommerceLayout extends ChildrenUpdateCompleteMixin(
+  LitElement
+) {
   static styles = [styles];
-  @state() error!: Error;
-
-  constructor() {
-    super();
-    this.id = randomID('atomic-commerce-layout-');
+  static async dynamicStyles(instance: AtomicCommerceLayout) {
+    await instance.getUpdateComplete();
+    return unsafeCSS(buildCommerceLayout(instance, instance.mobileBreakpoint));
   }
+
+  @state() error!: Error;
 
   /**
    * CSS value that defines where the layout goes from mobile to desktop.
@@ -36,13 +36,7 @@ export class AtomicCommerceLayout extends LitElement {
 
   connectedCallback() {
     super.connectedCallback();
-    const layout = unsafeCSS(buildCommerceLayout(this, this.mobileBreakpoint));
-    AtomicCommerceLayout.styles.unshift(layout);
-  }
-
-  @errorGuard()
-  render() {
-    return html`<slot></slot>`;
+    this.id = randomID('atomic-commerce-layout-');
   }
 }
 
