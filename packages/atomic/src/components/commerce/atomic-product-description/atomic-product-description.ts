@@ -66,7 +66,7 @@ export class AtomicProductDescription
     converter: booleanConverter,
     attribute: 'is-collapsible',
   })
-  public isCollapsible = true;
+  public isCollapsible = false;
 
   initialize() {
     this.validateProps();

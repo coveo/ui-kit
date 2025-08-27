@@ -61,7 +61,7 @@ export const decorators = [
         ]);
       }
 
-      return container;
+      return story;
     }
   },
 ];
