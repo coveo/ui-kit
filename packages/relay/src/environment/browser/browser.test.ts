@@ -1,5 +1,6 @@
 /**
  * @jest-environment jsdom
+ * @jest-environment-options {"url": "https://www.patate.com/"}
  */
 
 import { buildBrowserEnvironment } from "./browser.js";
@@ -19,10 +20,6 @@ describe("buildBrowserEnvironment", () => {
   });
 
   Object.defineProperty(navigator, "sendBeacon", {
-    writable: true,
-  });
-
-  Object.defineProperty(window, "location", {
     writable: true,
   });
 
@@ -67,11 +64,8 @@ describe("buildBrowserEnvironment", () => {
   });
 
   it("retrieves the location", () => {
-    Object.defineProperty(window, "location", {
-      value: {
-        href: "https://www.patate.com/recettes",
-      },
-    });
+    window.history.replaceState({}, "", "recettes");
+
     expect(buildBrowserEnvironment().getLocation()).toBe(
       "https://www.patate.com/recettes",
     );
@@ -80,13 +74,10 @@ describe("buildBrowserEnvironment", () => {
   it("does not truncate the location to the 1024 character limit", () => {
     const limit = 1024;
     const location = "a".repeat(limit * 2);
-
-    Object.defineProperty(window, "location", {
-      value: { href: location },
-    });
+    window.history.replaceState({}, "", location);
 
     expect(buildBrowserEnvironment().getLocation()).toHaveLength(
-      location.length,
+      location.length + 23,
     );
   });
 

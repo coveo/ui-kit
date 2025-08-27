@@ -43,7 +43,7 @@ describe("emit", () => {
   it("does not call listeners when in disabled mode", () => {
     params.config.mode = "disabled";
     emit(params);
-    expect(params.listenerManager.call).not.toBeCalled();
+    expect(params.listenerManager.call).not.toHaveBeenCalled();
   });
 
   it("does not call the environment send function when in disabled mode", () => {

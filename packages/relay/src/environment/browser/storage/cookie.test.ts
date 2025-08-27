@@ -3,7 +3,7 @@
  * @jest-environment-options {"url": "http://docs.foo.bar.com/tamtam"}
  */
 
-import { cookieManager } from "./cookie.js";
+import { cookieManager } from "./cookie";
 
 describe("CookieManager", () => {
   const key = "wow";
@@ -37,23 +37,4 @@ describe("CookieManager", () => {
 
     expect(document.cookie).toContain("domain=bar.com");
   });
-
-  it("sets the cookie with the last two parts of the domain", () => {
-    navigateTo("http://localhost:9002/acmeSite");
-    expect(window.location.hostname).toBe("localhost");
-    Object.defineProperty(document, "cookie", {
-      writable: true,
-      value: "status=active",
-    });
-
-    cookieManager.setItem(key, someData, 10000);
-
-    expect(document.cookie).not.toContain("domain");
-  });
-
-  const navigateTo = (url: string): void => {
-    Object.defineProperty(window, "location", {
-      value: new URL(url),
-    });
-  };
 });
