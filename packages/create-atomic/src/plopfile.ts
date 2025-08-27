@@ -123,8 +123,7 @@ export default function (plop: NodePlopAPI) {
         message: 'The search hub to use',
       },
       {
-        // Custom type necessary to allow bypassing async choices
-        type: 'customList',
+        type: 'list',
         name: 'page-id',
         default: undefined,
         loop: false,

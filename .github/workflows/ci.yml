@@ -647,7 +647,7 @@ jobs:
           npm run release:phase4
         env:
           IS_PRERELEASE: "true"
-          TAG_SUFFIX: ${{ github.event.number }}
+          PR_NUMBER: ${{ github.event.number }}
   prerelease-cdn-pr:
     if: ${{ !cancelled() && github.event_name == 'pull_request' }}
     needs: build
@@ -780,7 +780,7 @@ jobs:
             exit 1
           fi
   prerelease-npm-merge:
-    if: ${{ !cancelled() && github.event_name == 'merge_group' }}
+    if: ${{ github.event_name == 'merge_group' }}
     needs: is-valid
     timeout-minutes: 40
     name: Pre-release NPM at alpha (Merge group)
@@ -818,9 +818,8 @@ jobs:
           npm run release:phase4
         env:
           IS_PRERELEASE: "true"
-          TAG_SUFFIX: ${{ github.event.number }}
   prerelease-cdn-merge:
-    if: ${{ !cancelled() && github.event_name ==  'merge_group' }}
+    if: ${{ github.event_name ==  'merge_group' }}
     needs: is-valid
     name: Pre-release CDN in dev (Merge group)
     environment: "Prerelease (CDN)"
