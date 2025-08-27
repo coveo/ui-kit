@@ -1,5 +1,5 @@
 {
-  "name": "@samples/headless-ssr-commerce-generic",
+  "name": "@samples/headless-ssr-commerce-express",
   "description": "Headless Commerce SSR Generic Sample using the new simplified ssr-next API",
   "version": "0.0.0",
   "private": true,
