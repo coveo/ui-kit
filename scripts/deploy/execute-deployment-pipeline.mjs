@@ -40,7 +40,7 @@ function getVersionComponents(version) {
     parsedVersion?.major,
     parsedVersion?.minor,
     parsedVersion?.patch,
-    ...(parsedVersion?.prerelease[0] ? [parsedVersion.prerelease[0]] : []),
+    ...(parsedVersion?.prerelease.length > 0 ? parsedVersion.prerelease : []),
   ];
 }
 
