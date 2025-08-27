@@ -1,5 +1,5 @@
 {
-  "name": "@coveo/search-app-router-nextjs",
+  "name": "@samples/atomic-search-nextjs-app-router",
   "version": "0.0.0",
   "private": true,
   "scripts": {
