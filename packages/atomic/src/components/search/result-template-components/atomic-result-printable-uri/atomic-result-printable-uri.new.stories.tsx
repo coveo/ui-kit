@@ -10,7 +10,7 @@ const {decorator: searchInterfaceDecorator, play} =
 
 const meta: Meta = {
   component: 'atomic-result-printable-uri',
-  title: 'Atomic/ResultList/ResultPrintableUri',
+  title: 'Search/ResultList/ResultPrintableUri',
   id: 'atomic-result-printable-uri',
   render: renderComponent,
   decorators: [resultDecorator, searchInterfaceDecorator],

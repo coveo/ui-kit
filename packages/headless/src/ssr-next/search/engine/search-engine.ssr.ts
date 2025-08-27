@@ -151,7 +151,7 @@ export function defineSearchEngine<
   const fetchStaticState: FetchStaticStateFunction = async (
     ...params: FetchStaticStateParameters
   ) => {
-    const {engine, controllers} = await build(...params);
+    const {engine, controllers} = await build(...(params as BuildParameters));
 
     options.configuration.preprocessRequest =
       augmentPreprocessRequestWithForwardedFor({

@@ -5,7 +5,7 @@ import type {
   SearchSummaryState,
   Summary,
 } from '@coveo/headless/commerce';
-import {type CSSResultGroup, css, html, LitElement, nothing} from 'lit';
+import {type CSSResultGroup, html, LitElement, nothing} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {when} from 'lit/directives/when.js';
 import {renderFacetContainer} from '@/src/components/common/facets/facet-container/facet-container';
@@ -27,12 +27,17 @@ import {
   AriaLiveRegionController,
   FocusTargetController,
 } from '@/src/utils/accessibility-utils';
+import facetCommonStyles from '../../common/facets/facet-common.tw.css';
+import facetSearchStyles from '../../common/facets/facet-search/facet-search.tw.css';
 import {announceFacetSearchResultsWithAriaLive} from '../../common/facets/facet-search/facet-search-aria-live';
 import {
   shouldDisplaySearchResults,
   shouldUpdateFacetSearchComponent,
 } from '../../common/facets/facet-search/facet-search-utils';
 import type {FacetValueProps} from '../../common/facets/facet-value/facet-value';
+import facetValueBoxStyles from '../../common/facets/facet-value-box/facet-value-box.tw.css';
+import facetValueCheckboxStyles from '../../common/facets/facet-value-checkbox/facet-value-checkbox.tw.css';
+import facetValueExcludeStyles from '../../common/facets/facet-value-exclude/facet-value-exclude.tw.css';
 import type {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface';
 
 /**
@@ -112,13 +117,13 @@ export class AtomicCommerceFacet
 
   @state() public error!: Error;
 
-  static styles: CSSResultGroup = css`
-  @import "../../common/facets/facet-value-checkbox/facet-value-checkbox.tw.css";
-  @import "../../common/facets/facet-search/facet-search.tw.css";
-  @import "../../common/facets/facet-common.tw.css";
-  @import "../../common/facets/facet-value-exclude/facet-value-exclude.tw.css";
-  @import "../../common/facets/facet-value-box/facet-value-box.tw.css";
-  `;
+  static styles: CSSResultGroup = [
+    facetValueCheckboxStyles,
+    facetSearchStyles,
+    facetCommonStyles,
+    facetValueExcludeStyles,
+    facetValueBoxStyles,
+  ];
 
   private showLessFocus!: FocusTargetController;
   private showMoreFocus!: FocusTargetController;
@@ -301,6 +306,7 @@ export class AtomicCommerceFacet
         query: this.facetState.facetSearch.query,
         numberOfMatches: this.facetState.facetSearch.values.length,
         hasMoreMatches: this.facetState.facetSearch.moreValuesAvailable,
+        showMoreMatches: () => this.facet.facetSearch.showMoreResults(),
       },
     });
   }

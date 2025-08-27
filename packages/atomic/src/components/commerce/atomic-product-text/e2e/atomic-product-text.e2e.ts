@@ -9,7 +9,7 @@ test.describe('atomic-product-text', () => {
 
     test('should be accessible', async ({makeAxeBuilder}) => {
       const accessibilityResults = await makeAxeBuilder().analyze();
-      expect(accessibilityResults.violations.length).toEqual(0);
+      expect(accessibilityResults.violations).toEqual([]);
     });
 
     test.describe('when field has no value and default is set', async () => {
@@ -59,7 +59,6 @@ test.describe('atomic-product-text', () => {
         await productText.hydrated.first().waitFor();
 
         await expect(productText.textContent.first()).toContainText(/kayak/i);
-
         const highlightedText =
           await productText.highlightedText.allTextContents();
         expect(highlightedText.length).toEqual(0);

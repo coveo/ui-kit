@@ -89,7 +89,7 @@ export class AtomicCommerceBreadbox
   @bindStateToController('context')
   @state()
   public contextState!: ContextState;
-  public searchOrListing!: Search | ProductListing;
+  private searchOrListing!: Search | ProductListing;
 
   @bindStateToController('breadcrumbManager')
   @state()
@@ -313,7 +313,7 @@ export class AtomicCommerceBreadbox
     return breadcrumb.values.map((value: BreadcrumbValue<AnyFacetValue>) => {
       return {
         facetId: breadcrumb.facetId,
-        label: breadcrumb.facetDisplayName,
+        label: breadcrumb.facetDisplayName ?? this.bindings.i18n.t('no-label'),
         deselect: value.deselect,
         formattedValue: this.valueForFacetType(
           breadcrumb.type,
