@@ -126,7 +126,7 @@
     "@types/puppeteer": "7.0.4",
     "@vitest/browser": "3.2.4",
     "@wc-toolkit/storybook-helpers": "9.0.1",
-    "@whitespace/storybook-addon-html": "6.1.1",
+    "@whitespace/storybook-addon-html": "7.0.0",
     "axe-core": "4.10.3",
     "chalk": "5.4.1",
     "cypress": "13.7.3",
