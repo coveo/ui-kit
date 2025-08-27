@@ -1,6 +1,6 @@
 import {Component, h, Prop} from '@stencil/core';
 import Clockicon from '../../../images/clock.svg';
-import {IconButton} from '../../common/iconButton';
+import {IconButton} from '../../common/stencil-iconButton';
 
 /**
  * @internal
