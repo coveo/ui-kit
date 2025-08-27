@@ -141,6 +141,7 @@ export class AtomicCommerceRecommendationList
 
   /**
    * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the heading label, from 1 to 6.
+   * When set to 0, a `div` will be used instead of an Heading Element.
    */
   @property({reflect: true, attribute: 'heading-level', type: Number})
   public headingLevel = 0;

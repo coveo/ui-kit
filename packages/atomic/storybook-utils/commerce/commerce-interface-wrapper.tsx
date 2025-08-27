@@ -1,63 +1,54 @@
-import {AtomicCommerceInterface} from '@/src/components/commerce/atomic-commerce-interface/atomic-commerce-interface';
+import { AtomicCommerceInterface } from '@/src/components/commerce/atomic-commerce-interface/atomic-commerce-interface';
 import {
   CommerceEngineConfiguration,
   getSampleCommerceEngineConfiguration,
 } from '@coveo/headless/commerce';
-import {within} from '@storybook/test';
-import {Decorator, StoryContext} from '@storybook/web-components';
-import {html} from 'lit';
+import { Decorator, StoryContext } from '@storybook/web-components-vite';
+import { html } from 'lit';
 import type * as _ from '../../src/components.js';
+import { spreadProps } from '@open-wc/lit-helpers';
 
 export const wrapInCommerceInterface = ({
   engineConfig,
   skipFirstRequest,
   type = 'search',
+  includeCodeRoot = true,
 }: {
   engineConfig?: Partial<CommerceEngineConfiguration>;
   skipFirstRequest?: boolean;
   type?: 'search' | 'product-listing';
+  includeCodeRoot?: boolean;
 } = {}): {
   decorator: Decorator;
-  play: (context: StoryContext) => Promise<void>;
+  afterEach: (context: StoryContext) => Promise<void>;
 } => ({
   decorator: (story) => html`
-    <atomic-commerce-interface type="${type}" data-testid="root-interface">
+    <atomic-commerce-interface ${spreadProps(includeCodeRoot?{id:"code-root"}:{})} type="${type}">
       ${story()}
     </atomic-commerce-interface>
   `,
-  play: async ({canvasElement, step}) => {
+  afterEach: async ({ canvasElement }) => {
     await customElements.whenDefined('atomic-commerce-interface');
-    const canvas = within(canvasElement);
-    const commerceInterface =
-      await canvas.findByTestId<AtomicCommerceInterface>('root-interface');
-    await step('Render the Commerce Interface', async () => {
-      await commerceInterface!.initialize({
-        ...getSampleCommerceEngineConfiguration(),
-        ...engineConfig,
-      });
+    const commerceInterface = canvasElement.querySelector<AtomicCommerceInterface>('atomic-commerce-interface')!;
+    await commerceInterface!.initialize({
+      ...getSampleCommerceEngineConfiguration(),
+      ...engineConfig,
     });
     if (skipFirstRequest) {
       return;
     }
-    await step('Execute the first request', async () => {
-      await commerceInterface!.executeFirstRequest();
-    });
+    await commerceInterface!.executeFirstRequest();
   },
 });
 
-export const playExecuteFirstRequest: (
+export const executeFirstRequestHook: (
   context: StoryContext
-) => Promise<void> = async ({canvasElement, step}) => {
-  const canvas = within(canvasElement);
-
-  const commerceInterface =
-    await canvas.findByTestId<AtomicCommerceInterface>('root-interface');
-  await step('Execute the first request', async () => {
-    await commerceInterface!.executeFirstRequest();
-  });
+) => Promise<void> = async ({ canvasElement }) => {
+  const commerceInterface = canvasElement.querySelector<AtomicCommerceInterface>('atomic-commerce-interface')!;
+  await commerceInterface!.executeFirstRequest();
 };
 
-export const playHideFacetTypes = async (
+export const hideFacetTypesHook = async (
   facetTypeToKeep: string,
   context: StoryContext
 ): Promise<void> => {
