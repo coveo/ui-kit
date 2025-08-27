@@ -107,7 +107,7 @@ describe('CategoryFacet', () => {
   });
 
   describe('#showMoreValues', () => {
-    it('should dispatch #updateCategoryFacetNumberOfValues with initialNumberOfValues + the number of values of the deepest selected value from the request', () => {
+    it('should dispatch #updateCategoryFacetNumberOfValues with initialNumberOfValues + the number of values of the selected value from the request', () => {
       setFacetState({}, false, {
         initialNumberOfValues: 3,
         values: [buildMockCategoryFacetValue(), buildMockCategoryFacetValue()],
@@ -121,7 +121,7 @@ describe('CategoryFacet', () => {
       });
     });
 
-    it('should dispatch #updateCategoryFacetNumberOfValues with initialNumberOfValues + the number of values of the deepest selected value from the request when there is a selected value', () => {
+    it('should dispatch #updateCategoryFacetNumberOfValues with initialNumberOfValues + the number of values of the selected value from the request when there is a selected value', () => {
       setFacetState({}, false, {
         initialNumberOfValues: 3,
         values: [
@@ -145,7 +145,7 @@ describe('CategoryFacet', () => {
       });
     });
 
-    it('should dispatch #updateCategoryFacetNumberOfValues with initialNumberOfValues + the number of values of the deepest selected value from the request when there is a selected value deeper than 2 levels', async () => {
+    it('should dispatch #updateCategoryFacetNumberOfValues with initialNumberOfValues + the number of values of the selected value from the request when there is a selected value deeper than 2 levels', async () => {
       setFacetState({}, false, {
         initialNumberOfValues: 3,
         values: [
@@ -182,7 +182,7 @@ describe('CategoryFacet', () => {
       });
     });
 
-    it('should dispatch #updateCategoryFacetNumberOfValues with numberOfValues + the number of values of the deepest selected value from the request when initialNumberOfValues is undefined', () => {
+    it('should dispatch #updateCategoryFacetNumberOfValues with numberOfValues + the number of values of the selected value from the request when initialNumberOfValues is undefined', () => {
       setFacetState({}, false, {
         initialNumberOfValues: undefined,
         numberOfValues: 2,
@@ -201,7 +201,7 @@ describe('CategoryFacet', () => {
       });
     });
 
-    it('should dispatch #updateCategoryFacetNumberOfValues with numberOfValues + the number of values of the deepest selected value from the request when initialNumberOfValues is undefined', () => {
+    it('should dispatch #updateCategoryFacetNumberOfValues with numberOfValues + the number of values of the selected value from the request when initialNumberOfValues is undefined', () => {
       setFacetState({}, false, {
         initialNumberOfValues: undefined,
         numberOfValues: 2,
