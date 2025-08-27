@@ -8,7 +8,7 @@ import {
   type SearchSummaryState,
   type Summary,
 } from '@coveo/headless/commerce';
-import {type CSSResultGroup, html, LitElement, unsafeCSS} from 'lit';
+import {type CSSResultGroup, html, LitElement} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {when} from 'lit/directives/when.js';
 import {renderFacetContainer} from '@/src/components/common/facets/facet-container/facet-container';
@@ -22,14 +22,14 @@ import {bindingGuard} from '@/src/decorators/binding-guard';
 import {errorGuard} from '@/src/decorators/error-guard';
 import type {InitializableComponent} from '@/src/decorators/types';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles.js';
-import {InitializeBindingsMixin} from '@/src/mixins/bindings-mixin';
 import {FocusTargetController} from '@/src/utils/accessibility-utils';
 import {parseDate} from '@/src/utils/date-utils';
 import '../../common/atomic-facet-date-input/atomic-facet-date-input';
+import {bindings} from '@/src/decorators/bindings';
 import type {FacetDateInputEventDetails} from '../../common/atomic-facet-date-input/atomic-facet-date-input';
 import {shouldDisplayInputForFacetRange} from '../../common/facets/facet-common';
+import facetCommonStyles from '../../common/facets/facet-common.tw.css';
 import type {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface';
-import styles from './atomic-commerce-timeframe-facet.tw.css';
 
 /**
  * A facet is a list of values for a certain field occurring in the results.
@@ -51,12 +51,13 @@ import styles from './atomic-commerce-timeframe-facet.tw.css';
  * @part input-apply-button - The button to apply date range selection.
  */
 @customElement('atomic-commerce-timeframe-facet')
+@bindings()
 @withTailwindStyles
 export class AtomicCommerceTimeframeFacet
-  extends InitializeBindingsMixin(LitElement)
+  extends LitElement
   implements InitializableComponent<CommerceBindings>
 {
-  static styles: CSSResultGroup = [unsafeCSS(styles)];
+  static styles: CSSResultGroup = facetCommonStyles;
 
   /**
    * The Summary controller instance.

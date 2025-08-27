@@ -7,7 +7,7 @@ import type {
   Summary,
 } from '@coveo/headless/commerce';
 import type {CSSResultGroup, TemplateResult} from 'lit';
-import {html, LitElement, nothing, unsafeCSS} from 'lit';
+import {css, html, LitElement, nothing} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {map} from 'lit/directives/map.js';
 import {when} from 'lit/directives/when.js';
@@ -26,10 +26,10 @@ import {renderFacetValuesGroup} from '@/src/components/common/facets/facet-value
 import {booleanConverter} from '@/src/converters/boolean-converter';
 import {bindStateToController} from '@/src/decorators/bind-state';
 import {bindingGuard} from '@/src/decorators/binding-guard';
+import {bindings} from '@/src/decorators/bindings';
 import {errorGuard} from '@/src/decorators/error-guard';
 import type {InitializableComponent} from '@/src/decorators/types';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles.js';
-import {InitializeBindingsMixin} from '@/src/mixins/bindings-mixin';
 import {
   AriaLiveRegionController,
   FocusTargetController,
@@ -44,7 +44,8 @@ import {renderCategoryFacetSearchResultsContainer} from '../../common/facets/cat
 import {renderCategoryFacetSearchValue} from '../../common/facets/category-facet/search-value';
 import {renderCategoryFacetTreeValueContainer} from '../../common/facets/category-facet/value-as-tree-container';
 import {renderCategoryFacetValueLink} from '../../common/facets/category-facet/value-link';
-import styles from './atomic-commerce-category-facet.tw.css';
+import facetCommonStyles from '../../common/facets/facet-common.tw.css';
+import facetSearchStyles from '../../common/facets/facet-search/facet-search.tw.css';
 
 /**
  * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (e.g., number of occurrences).
@@ -87,12 +88,34 @@ import styles from './atomic-commerce-category-facet.tw.css';
  *
  */
 @customElement('atomic-commerce-category-facet')
+@bindings()
 @withTailwindStyles
 export class AtomicCommerceCategoryFacet
-  extends InitializeBindingsMixin(LitElement)
+  extends LitElement
   implements InitializableComponent<CommerceBindings>
 {
-  static styles: CSSResultGroup = [unsafeCSS(styles)];
+  static styles: CSSResultGroup = [
+    facetCommonStyles,
+    facetSearchStyles,
+    css`
+    @reference '../../../utils/tailwind.global.tw.css';
+    [part~="active-parent"] {
+      @apply pl-9;
+    }
+    
+    [part~="parents"] [part~="values"] {
+      @apply pl-9;
+    }
+    
+    [part~="all-categories-button"],
+    [part~="parent-button"] {
+      @apply relative flex w-full items-center py-2.5 pr-2 pl-7 text-left;
+    }
+    
+    [part~="back-arrow"] {
+      @apply absolute left-1 h-5 w-5;
+    }`,
+  ];
 
   @state()
   bindings!: CommerceBindings;
@@ -464,6 +487,8 @@ export class AtomicCommerceCategoryFacet
                   numberOfMatches: this.facetState.facetSearch.values.length,
                   hasMoreMatches:
                     this.facetState.facetSearch.moreValuesAvailable,
+                  showMoreMatches: () =>
+                    this.facet.facetSearch.showMoreResults(),
                 },
               })}
             `,

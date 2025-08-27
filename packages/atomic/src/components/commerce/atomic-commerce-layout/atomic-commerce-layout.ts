@@ -1,20 +1,30 @@
-import {html, LitElement, unsafeCSS} from 'lit';
+import {LitElement, unsafeCSS} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
-import {errorGuard} from '@/src/decorators/error-guard';
-import {CommerceLayoutMixin} from '@/src/mixins/commerce-layout-mixin';
+import {injectStylesForNoShadowDOM} from '@/src/decorators/inject-styles-for-no-shadow-dom';
+import {ChildrenUpdateCompleteMixin} from '@/src/mixins/children-update-complete-mixin';
+import {randomID} from '@/src/utils/utils';
 import {DEFAULT_MOBILE_BREAKPOINT} from '../../../utils/replace-breakpoint';
 import styles from './atomic-commerce-layout.tw.css';
+import {buildCommerceLayout} from './commerce-layout';
 
 /**
  * The `atomic-commerce-layout` helps organize elements in the commerce page.
  *
- * @slot default - The default slot where you can add child components to the layout.
+ * @cssprop --atomic-layout-max-search-box-input-width: The maximum width that the search box input will take.
+ * @cssprop --atomic-layout-max-search-box-double-suggestions-width: The maximum width that the search box suggestions will take when displaying a double list.
+ * @cssprop --atomic-layout-search-box-left-suggestions-width: When displaying a double list, the width of the left list.
  */
 @customElement('atomic-commerce-layout')
-export class AtomicCommerceLayout extends CommerceLayoutMixin(
-  LitElement,
-  unsafeCSS(styles)
+@injectStylesForNoShadowDOM
+export class AtomicCommerceLayout extends ChildrenUpdateCompleteMixin(
+  LitElement
 ) {
+  static styles = [styles];
+  static async dynamicStyles(instance: AtomicCommerceLayout) {
+    await instance.getUpdateComplete();
+    return unsafeCSS(buildCommerceLayout(instance, instance.mobileBreakpoint));
+  }
+
   @state() error!: Error;
 
   /**
@@ -24,13 +34,9 @@ export class AtomicCommerceLayout extends CommerceLayoutMixin(
   @property({type: String, reflect: true, attribute: 'mobile-breakpoint'})
   mobileBreakpoint: string = DEFAULT_MOBILE_BREAKPOINT;
 
-  createRenderRoot() {
-    return this;
-  }
-
-  @errorGuard()
-  render() {
-    return html`<slot></slot>`;
+  connectedCallback() {
+    super.connectedCallback();
+    this.id = randomID('atomic-commerce-layout-');
   }
 }
 

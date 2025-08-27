@@ -63,9 +63,16 @@ const main = () => {
       destPath: 'package.json',
       transform: (content) => {
         const packageJson = JSON.parse(content);
-        for (const script of packageJson.scripts) {
-          script.name = script.name.substring(1);
+
+        if (packageJson.scripts) {
+          const newScripts = {};
+          for (const [key, value] of Object.entries(packageJson.scripts)) {
+            const newKey = key.startsWith('!') ? key.substring(1) : key;
+            newScripts[newKey] = value;
+          }
+          packageJson.scripts = newScripts;
         }
+
         return JSON.stringify(packageJson, null, 2);
       },
     },

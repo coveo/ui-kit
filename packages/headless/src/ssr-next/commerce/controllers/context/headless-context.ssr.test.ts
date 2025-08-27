@@ -48,7 +48,7 @@ describe('define commerce context', () => {
       commerceContext: {...options},
     });
 
-    contextDefinition.buildWithProps(engine, options);
+    contextDefinition.buildWithProps(engine, {initialState: options});
 
     expect(buildContextMock).toBeCalledWith(engine, {options});
   });
@@ -58,7 +58,7 @@ describe('define commerce context', () => {
       ...buildMockCommerceState(),
       commerceContext: {...options},
     });
-    const props = undefined as unknown as ContextOptions;
+    const props = undefined;
 
     expect(() => {
       contextDefinition.buildWithProps(engine, props);

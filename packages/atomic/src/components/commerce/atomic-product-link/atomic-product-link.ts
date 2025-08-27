@@ -1,6 +1,6 @@
 import {isUndefined} from '@coveo/bueno';
 import type {InteractiveProduct, Product} from '@coveo/headless/commerce';
-import {html, LitElement, unsafeCSS} from 'lit';
+import {html, LitElement} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {when} from 'lit/directives/when.js';
 import {getAttributesFromLinkSlot} from '@/src/components/common/item-link/attributes-slot';
@@ -39,7 +39,7 @@ export class AtomicProductLink
   extends SlotsForNoShadowDOMMixin(LitElement)
   implements InitializableComponent<CommerceBindings>
 {
-  static styles = unsafeCSS(styles);
+  static styles = styles;
 
   /**
    * The [template literal](https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Template_literals) from which to generate the `href` attribute value
@@ -48,7 +48,7 @@ export class AtomicProductLink
    *
    * For example, the following markup generates an `href` value such as `http://uri.com?id=itemTitle`, using the product's `clickUri` and `itemtitle` fields.
    * ```html
-   * <atomic-product-link href-template='${clickUri}?id=${permanentId}'></atomic-product-link>
+   * <atomic-product-link href-template='${clickUri}?id=${permanentid}'></atomic-product-link>
    * ```
    */
   @property({type: String, attribute: 'href-template', reflect: true})
@@ -72,28 +72,6 @@ export class AtomicProductLink
     if (warning) {
       this.bindings.engine.logger.warn(warning);
     }
-  }
-
-  private extractAttributesFromSlot() {
-    const slotName = 'attributes';
-    const attributes = getAttributesFromLinkSlot(this, slotName);
-
-    if (!attributes) {
-      this.linkAttributes = undefined;
-      return;
-    }
-
-    const attributesSlot = this.slots.attributes?.[0];
-    if (
-      attributesSlot instanceof Element &&
-      !attributesSlot.hasAttribute('hidden')
-    ) {
-      attributesSlot.setAttribute('hidden', '');
-    }
-
-    this.linkAttributes = attributes.filter(
-      (attr: Attr) => attr.nodeName !== 'hidden'
-    );
   }
 
   initialize() {
@@ -142,7 +120,7 @@ export class AtomicProductLink
           );
 
       const {warningMessage} = interactiveProduct;
-      this.extractAttributesFromSlot();
+      this.linkAttributes = getAttributesFromLinkSlot(this, 'attributes');
 
       return renderLinkWithItemAnalytics({
         props: {

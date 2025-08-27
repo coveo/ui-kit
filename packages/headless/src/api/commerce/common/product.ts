@@ -139,6 +139,10 @@ export interface BaseProduct {
    * The length and offset of each word to highlight in the product excerpt string.
    */
   excerptsHighlights?: HighlightKeyword[];
+  /**
+   * The ID of the response that returned the product.
+   */
+  responseId?: string;
 }
 
 export interface Product extends BaseProduct {

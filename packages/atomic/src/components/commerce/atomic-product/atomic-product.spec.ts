@@ -97,6 +97,45 @@ describe('atomic-product', () => {
     expect(stopPropagationSpy).toHaveBeenCalled();
   });
 
+  it('should click the link container when the display is "grid"', async () => {
+    const clickLinkContainerSpy = vi.fn();
+    const element = await renderProduct({
+      display: 'grid',
+    });
+
+    element.clickLinkContainer = clickLinkContainerSpy;
+
+    const clickEvent = new MouseEvent('click');
+    element.dispatchEvent(clickEvent);
+    expect(clickLinkContainerSpy).toHaveBeenCalled();
+  });
+
+  it('should not click the link container when the display is "list"', async () => {
+    const clickLinkContainerSpy = vi.fn();
+    const element = await renderProduct({
+      display: 'list',
+    });
+
+    element.clickLinkContainer = clickLinkContainerSpy;
+
+    const clickEvent = new MouseEvent('click');
+    element.dispatchEvent(clickEvent);
+    expect(clickLinkContainerSpy).not.toHaveBeenCalled();
+  });
+
+  it('should not click the link container when the display is "table"', async () => {
+    const clickLinkContainerSpy = vi.fn();
+    const element = await renderProduct({
+      display: 'table',
+    });
+
+    element.clickLinkContainer = clickLinkContainerSpy;
+
+    const clickEvent = new MouseEvent('click');
+    element.dispatchEvent(clickEvent);
+    expect(clickLinkContainerSpy).not.toHaveBeenCalled();
+  });
+
   it('should render default template content', async () => {
     const element = await renderProduct();
     const resultRoot = element.shadowRoot!.querySelector('.result-root');
@@ -124,6 +163,44 @@ describe('atomic-product', () => {
     ).firstUpdated(new Map());
 
     expect(mockUnsetLoadingFlag).toHaveBeenCalledWith(loadingFlag);
+  });
+
+  describe('#clickLinkContainer', () => {
+    it('should click the anchor element when found', async () => {
+      const element = await renderProduct();
+      const mockClick = vi.fn();
+      const mockAnchor = {click: mockClick};
+      const mockQuerySelector = vi.fn().mockReturnValue(mockAnchor);
+      vi.spyOn(element.shadowRoot!, 'querySelector').mockImplementation(
+        mockQuerySelector
+      );
+
+      element.clickLinkContainer();
+
+      expect(mockQuerySelector).toHaveBeenCalledWith(
+        '.link-container > atomic-product-link a:not([slot])'
+      );
+      expect(mockClick).toHaveBeenCalled();
+    });
+
+    it('should not throw when anchor element is not found', async () => {
+      const element = await renderProduct();
+
+      vi.spyOn(element.shadowRoot!, 'querySelector').mockReturnValue(null);
+
+      expect(() => element.clickLinkContainer()).not.toThrow();
+    });
+
+    it('should not throw when shadowRoot is null', async () => {
+      const element = await renderProduct();
+
+      Object.defineProperty(element, 'shadowRoot', {
+        get: () => null,
+        configurable: true,
+      });
+
+      expect(() => element.clickLinkContainer()).not.toThrow();
+    });
   });
 
   describe('when using the default rendering function', () => {

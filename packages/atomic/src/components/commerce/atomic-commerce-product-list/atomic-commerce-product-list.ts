@@ -10,7 +10,7 @@ import {
   type SearchSummaryState,
   type Summary,
 } from '@coveo/headless/commerce';
-import {type CSSResultGroup, html, LitElement, nothing, unsafeCSS} from 'lit';
+import {type CSSResultGroup, html, LitElement, nothing} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {keyed} from 'lit/directives/keyed.js';
 import {map} from 'lit/directives/map.js';
@@ -74,7 +74,7 @@ export class AtomicCommerceProductList
   extends ChildrenUpdateCompleteMixin(LitElement)
   implements InitializableComponent<CommerceBindings>
 {
-  static styles: CSSResultGroup = [unsafeCSS(styles)];
+  static styles: CSSResultGroup = styles;
 
   public searchOrListing!: Search | ProductListing;
   public summary!: Summary<ProductListingSummaryState | SearchSummaryState>;
@@ -405,7 +405,7 @@ export class AtomicCommerceProductList
           .interactiveProduct=${this.searchOrListing.interactiveProduct({
             options: {product},
           })}
-          .linkContent=${this.productTemplateProvider.getEmptyLinkTemplateContent()}
+          .linkContent=${this.productTemplateProvider.getLinkTemplateContent(product)}
           .loadingFlag=${this.loadingFlag}
           .product=${product}
           .renderingFunction=${this.itemRenderingFunction}
@@ -465,7 +465,7 @@ export class AtomicCommerceProductList
                         .interactiveProduct=${this.searchOrListing.interactiveProduct(
                           {options: {product}}
                         )}
-                        .linkContent=${this.productTemplateProvider.getEmptyLinkTemplateContent()}
+                        .linkContent=${this.productTemplateProvider.getLinkTemplateContent(product)}
                         .loadingFlag=${this.loadingFlag}
                         .product=${product}
                         .renderingFunction=${this.itemRenderingFunction}
