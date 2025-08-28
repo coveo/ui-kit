@@ -1,40 +1,9 @@
-@utility atomic-children-mobile-* {
-  &.child-result:not(.last-child) {
-    margin-bottom: --value([ *]);
-  }
-
-  & atomic-result-section-children,
-  & atomic-product-section-children {
-    atomic-result-children::part(children-root),
-    atomic-insight-result-children::part(children-root),
-    atomic-product-children::part(children-root) {
-      padding-top: --value([ *]);
-      margin-top: 1rem;
-      margin-left: -1rem;
-      margin-right: -1rem;
-      padding-left: 1rem;
-      padding-right: 1rem;
-    }
-
-    atomic-result-children::part(show-hide-button),
-    atomic-insigh-result-children::part(show-hide-button),
-    atomic-product-children::part(show-hide-button) {
-      margin-top: --modifier([ *]);
-      margin-bottom: --modifier([ *]);
-    }
-  }
-
-  .placeholder {
-    margin-bottom: --value([ *]);
-  }
-}
+@reference './atomic-children.css';
 
 @utility row-result-mobile {
-  atomic-result-section-children,
-  atomic-product-section-children {
+  atomic-result-section-children {
     atomic-result-children::part(children-root),
-    atomic-insight-result-children::part(children-root),
-    atomic-product-children::part(children-root) {
+    atomic-insight-result-children::part(children-root) {
       @apply border-t-neutral border-t;
     }
   }
