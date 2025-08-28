@@ -58,6 +58,9 @@ import styles from './atomic-commerce-recommendation-list.tw.css';
  * @part active-indicator - The active indicator.
  *
  * @slot default - The default slot where the product templates are defined.
+ *
+ * @cssprop --atomic-recs-number-of-columns - The number of columns in the grid.
+ * @cssprop --atomic-recs-number-of-rows - The number of rows in the grid.
  */
 @customElement('atomic-commerce-recommendation-list')
 @bindings()
@@ -115,7 +118,7 @@ export class AtomicCommerceRecommendationList
 
   /**
    * The layout to apply when displaying the products. This does not affect the display of the surrounding list itself.
-   * To modify the number of products per column, modify the `--atomic-recs-number-of-columns` CSS variable.
+   * To modify the number of products per column and row, modify the `--atomic-recs-number-of-columns` and `--atomic-recs-number-of-rows` CSS variables.
    */
   @property({reflect: true, type: String})
   public display: ItemDisplayBasicLayout = 'list';
