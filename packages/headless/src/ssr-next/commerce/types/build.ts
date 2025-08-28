@@ -25,6 +25,26 @@ export interface SearchBuildConfig extends CommonBuildConfig {
   >['parameters'];
 }
 
+export interface ListingBuildConfig extends CommonBuildConfig {}
+
+export interface StandaloneBuildConfig extends CommonBuildConfig {}
+
+export interface CommonBuildConfig {
+  context: ContextOptions;
+  searchParams?: ParameterManagerState<Parameters>['parameters'];
+  cart?: CartInitialState;
+}
+
+/**
+ * Commerce engine options for SSR scenarios where context is defined when fetching static state.
+ */
+export type SSRCommerceEngineOptions = Omit<
+  CommerceEngineOptions,
+  'configuration'
+> & {
+  configuration: Omit<CommerceEngineOptions['configuration'], 'context'>;
+};
+
 /**
  * The `RecommendationBuildConfig` type defines the shape of the configuration object required when fetching static state for recommendations.
  *
@@ -107,16 +127,6 @@ export type BuildConfig<
       : TSolutionType extends SolutionType.standalone
         ? CommonBuildConfig
         : never;
-
-/**
- * Commerce engine options for SSR scenarios where context is defined when fetching static state.
- */
-export type SSRCommerceEngineOptions = Omit<
-  CommerceEngineOptions,
-  'configuration'
-> & {
-  configuration: Omit<CommerceEngineOptions['configuration'], 'context'>;
-};
 
 /**
  * @internal

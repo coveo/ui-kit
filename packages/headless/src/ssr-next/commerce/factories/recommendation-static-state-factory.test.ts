@@ -70,10 +70,12 @@ describe('fetchRecommendationStaticStateFactory', () => {
     );
 
     await factory({
-      country: 'CA',
-      currency: 'USD',
-      language: 'en',
-      url: 'https://example.com',
+      context: {
+        country: 'CA',
+        currency: 'USD',
+        language: 'en',
+        view: {url: 'https://example.com'},
+      },
     });
 
     expect(engineSpy).toHaveBeenCalledWith(controllerDefinitions, options);
