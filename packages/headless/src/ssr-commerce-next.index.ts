@@ -54,7 +54,7 @@
  *     location: req.url
  *   },
  *   controllers: {
- *     // Your controller initial state here
+ *     // Your controllers with an initial state here
  *   }
  * });
  *
