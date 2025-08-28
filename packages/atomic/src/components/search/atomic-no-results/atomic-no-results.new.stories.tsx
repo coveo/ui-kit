@@ -1,9 +1,14 @@
-import type {Meta, StoryObj as Story} from '@storybook/web-components';
+import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
+import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
-import {renderComponent} from '@/storybook-utils/common/render-component';
 import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
 
-const {decorator, play} = wrapInSearchInterface({
+const {events, args, argTypes, template} = getStorybookHelpers(
+  'atomic-no-results',
+  {excludeCategories: ['methods']}
+);
+
+const {decorator, afterEach} = wrapInSearchInterface({
   search: {
     preprocessSearchResponseMiddleware: (res) => {
       res.body.results = [];
@@ -16,10 +21,18 @@ const meta: Meta = {
   title: 'Search/NoResults',
   id: 'atomic-no-results',
   component: 'atomic-no-results',
-  render: renderComponent,
+  render: (args) => template(args),
   decorators: [decorator],
-  parameters,
-  play,
+  parameters: {
+    ...parameters,
+    actions: {
+      handles: events,
+    },
+  },
+  args,
+  argTypes,
+
+  afterEach,
 };
 
 export default meta;
