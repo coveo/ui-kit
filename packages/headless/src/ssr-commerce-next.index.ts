@@ -44,7 +44,6 @@
  *   standaloneEngineDefinition,
  * } = engineDefinition;
  *
- * // Usage with per-call navigator context (recommended)
  * await listingEngineDefinition.fetchStaticState({
  *   navigatorContext: {
  *     clientId: await getClientId(req), // Generate stable UUID, store in cookie

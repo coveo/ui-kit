@@ -38,7 +38,6 @@
  *
  * export const {fetchStaticState, hydrateStaticState} = engineDefinition;
  * 
- * // Usage with per-call navigator context (recommended)
  * await fetchStaticState({
  *   navigatorContext: {
  *     clientId: await getClientId(req), // Generate stable UUID, store in cookie

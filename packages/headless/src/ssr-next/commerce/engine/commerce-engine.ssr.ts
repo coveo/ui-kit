@@ -36,7 +36,6 @@ import type {CommerceEngineDefinition} from '../types/engine.js';
  *   return newId;
  * };
  *
- * // Pass navigator context directly to fetchStaticState
  * const staticState = await listingEngineDefinition.fetchStaticState({
  *   navigatorContext: {
  *     clientId: await getClientId(req, res),

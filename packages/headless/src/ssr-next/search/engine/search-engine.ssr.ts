@@ -103,7 +103,6 @@ export type SearchEngineDefinition<
  *   return newId;
  * };
  *
- * // Pass navigator context directly to fetchStaticState
  * const staticState = await searchEngine.fetchStaticState({
  *   navigatorContext: {
  *     clientId: await getClientId(req),
