@@ -21,7 +21,7 @@ describe('createStaticControllerBuilder', () => {
     vi.clearAllMocks(); // Clear calls from creating the builder
   });
 
-  it('should create builder from controller with initial state, state and kind', () => {
+  it('should create builder from controller with initial state', () => {
     const mockController = buildMockController({
       state: {property: 'value'},
       initialState: {initial: 'state'},
