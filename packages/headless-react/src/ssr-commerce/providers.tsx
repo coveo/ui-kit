@@ -73,6 +73,7 @@ export function buildProviderWithDefinition<
       for (const [key, controller] of Object.entries(controllers)) {
         const typedController = controller as ControllerWithKind;
 
+        // TODO: KIT-4742: remove state wiring as it is already done in headless
         switch (typedController._kind) {
           case Kind.Cart: {
             const cart = getController<Cart>(controllers, key);

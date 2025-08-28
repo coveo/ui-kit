@@ -18,7 +18,8 @@ import {Button} from '../../../common/stencil-button';
 import {InsightBindings} from '../../atomic-insight-interface/atomic-insight-interface';
 
 /**
- * @internal
+ * Internal component used by the `atomic-insight-user-actions-modal`. Do not use directly.
+ * 
  * This component displays all the actions performed by a user around the time they created a case.
  * The actions are grouped into multiple sessions, including the session during which the case was created,
  * the sessions preceding the case creation and the sessions following the case creation.

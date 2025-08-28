@@ -405,7 +405,7 @@ export class AtomicCommerceProductList
           .interactiveProduct=${this.searchOrListing.interactiveProduct({
             options: {product},
           })}
-          .linkContent=${this.productTemplateProvider.getEmptyLinkTemplateContent()}
+          .linkContent=${this.productTemplateProvider.getLinkTemplateContent(product)}
           .loadingFlag=${this.loadingFlag}
           .product=${product}
           .renderingFunction=${this.itemRenderingFunction}
@@ -465,7 +465,7 @@ export class AtomicCommerceProductList
                         .interactiveProduct=${this.searchOrListing.interactiveProduct(
                           {options: {product}}
                         )}
-                        .linkContent=${this.productTemplateProvider.getEmptyLinkTemplateContent()}
+                        .linkContent=${this.productTemplateProvider.getLinkTemplateContent(product)}
                         .loadingFlag=${this.loadingFlag}
                         .product=${product}
                         .renderingFunction=${this.itemRenderingFunction}

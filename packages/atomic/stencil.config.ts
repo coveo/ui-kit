@@ -126,6 +126,7 @@ export const config: Config = {
       collectionDir: null,
       copy: [
         {src: 'themes'},
+        {src: 'assets/lang', dest: 'lang'},
         {
           src: '../../../node_modules/@salesforce-ux/design-system/assets/icons/{doctype,standard}/*.svg',
           dest: 'assets',
