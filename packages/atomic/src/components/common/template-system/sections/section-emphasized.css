@@ -1,0 +1,12 @@
+@reference './sections-utilities.css';
+
+@utility section-emphasized {
+  @apply section-base-overflow;
+  font-weight: 500;
+  @apply set-font-size-2xl;
+  margin-top: 0.5rem;
+
+  &.with-sections {
+    grid-area: emphasized;
+  }
+}

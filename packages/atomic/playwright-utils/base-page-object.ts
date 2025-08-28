@@ -1,5 +1,5 @@
 import type {Page} from '@playwright/test';
-import {buildArgsParam} from '@storybook/router';
+import {buildArgsParam} from 'storybook/internal/router';
 import type {JSX} from '../dist/types/components';
 
 export class BasePageObject<
@@ -78,7 +78,7 @@ export class BasePageObject<
     const toKebab: Record<string, unknown> = {};
     Object.entries(args as Record<string, unknown>).forEach(([key, value]) => {
       toKebab[
-        `attributes-${key.replace(/([a-z0-9]|(?=[A-Z]))([A-Z])/g, '$1-$2').toLowerCase()}`
+        `${key.replace(/([a-z0-9]|(?=[A-Z]))([A-Z])/g, '$1-$2').toLowerCase()}`
       ] = value;
     });
 

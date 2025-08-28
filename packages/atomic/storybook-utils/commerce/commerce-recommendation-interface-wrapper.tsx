@@ -3,39 +3,34 @@ import {
   CommerceEngineConfiguration,
   getSampleCommerceEngineConfiguration,
 } from '@coveo/headless/commerce';
-import {within} from '@storybook/test';
-import {Decorator, StoryContext} from '@storybook/web-components';
-import {html} from 'lit';
+import { Decorator, StoryContext } from '@storybook/web-components-vite';
+import { html } from 'lit';
 import type * as _ from '../../src/components.js';
+import { spreadProps } from '@open-wc/lit-helpers';
 
 export const wrapInCommerceRecommendationInterface = (
-  engineConfig?: Partial<CommerceEngineConfiguration>
+  engineConfig?: Partial<CommerceEngineConfiguration>,
+  includeCodeRoot: boolean = true
 ): {
   decorator: Decorator;
-  play: (context: StoryContext) => Promise<void>;
+  afterEach: (context: StoryContext) => Promise<void>;
 } => ({
   decorator: (story) => html`
-    <atomic-commerce-recommendation-interface data-testid="root-recs-interface">
+    <atomic-commerce-recommendation-interface ${spreadProps(includeCodeRoot?{id:"code-root"}:{})}>
       ${story()}
     </atomic-commerce-recommendation-interface>
   `,
-  play: async ({canvasElement, step}) => {
+  afterEach: async ({ canvasElement }) => {
     await customElements.whenDefined(
       'atomic-commerce-recommendation-interface'
     );
-    const canvas = within(canvasElement);
-    const recommendationInterface =
-      await canvas.findByTestId<HTMLAtomicCommerceRecommendationInterfaceElement>(
-        'root-recs-interface'
-      );
-    await step('Render the Recommendation Interface', async () => {
-      const engine = buildCommerceEngine({
-        configuration: {
-          ...getSampleCommerceEngineConfiguration(),
-          ...engineConfig,
-        },
-      });
-      await recommendationInterface!.initializeWithEngine(engine);
+    const recommendationInterface = canvasElement.querySelector('atomic-commerce-recommendation-interface');
+    const engine = buildCommerceEngine({
+      configuration: {
+        ...getSampleCommerceEngineConfiguration(),
+        ...engineConfig,
+      },
     });
+    await recommendationInterface!.initializeWithEngine(engine);
   },
 });
