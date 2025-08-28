@@ -1,3 +1,19 @@
+## <small>3.33.2 (2025-08-28)</small>
+
+* fix: expose rga internals for angular availability (#5958) ([d452d4f](https://github.com/coveo/ui-kit/commits/d452d4f)), closes [#5958](https://github.com/coveo/ui-kit/issues/5958)
+* fix(atomic commerce): fix loader not detecting components in template elements (#5900) ([d375af8](https://github.com/coveo/ui-kit/commits/d375af8)), closes [#5900](https://github.com/coveo/ui-kit/issues/5900)
+* fix(atomic-react): make `atomic-commerce-layout` work in atomic-react (#5956) ([c14b812](https://github.com/coveo/ui-kit/commits/c14b812)), closes [#5956](https://github.com/coveo/ui-kit/issues/5956)
+* fix(atomic): add variable to control number of rows in atomic-commerce-recommendation-list (#5952) ([0c3aaea](https://github.com/coveo/ui-kit/commits/0c3aaea)), closes [#5952](https://github.com/coveo/ui-kit/issues/5952)
+* fix(atomic): atomic-commerce-facets not rerendering when the controller changes (#5932) ([3f2634b](https://github.com/coveo/ui-kit/commits/3f2634b)), closes [#5932](https://github.com/coveo/ui-kit/issues/5932)
+* fix(atomic): fully hide modal on close (#5954) ([01f96a0](https://github.com/coveo/ui-kit/commits/01f96a0)), closes [#5954](https://github.com/coveo/ui-kit/issues/5954)
+* chore: migrate to storybook9 (#5916) ([b26bff1](https://github.com/coveo/ui-kit/commits/b26bff1)), closes [#5916](https://github.com/coveo/ui-kit/issues/5916)
+* chore(atomic): migrate atomic-*-section-bottom-metadata styles (#5940) ([dc575f4](https://github.com/coveo/ui-kit/commits/dc575f4)), closes [#5940](https://github.com/coveo/ui-kit/issues/5940)
+* chore(atomic): migrate atomic-search-layout (#5877) ([b2172dd](https://github.com/coveo/ui-kit/commits/b2172dd)), closes [#5877](https://github.com/coveo/ui-kit/issues/5877)
+* refactor(atomic): decouple the lang folder generation from the atomic-search-interface (#5971) ([ffab1e6](https://github.com/coveo/ui-kit/commits/ffab1e6)), closes [#5971](https://github.com/coveo/ui-kit/issues/5971)
+* docs(atomic): intro and example pages for commerce (#5929) ([ef096f9](https://github.com/coveo/ui-kit/commits/ef096f9)), closes [#5929](https://github.com/coveo/ui-kit/issues/5929)
+
+
+
 ## <small>3.33.1 (2025-08-27)</small>
 
 * chore: address forgotten PR comments (#5923) ([079ffaa](https://github.com/coveo/ui-kit/commits/079ffaa)), closes [#5923](https://github.com/coveo/ui-kit/issues/5923) [#5911](https://github.com/coveo/ui-kit/issues/5911)
