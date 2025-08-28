@@ -114,7 +114,7 @@ describe('buildFactory', () => {
 
     // Mock wireControllerParams to return searchActions
     mockWireControllerParams.mockReturnValueOnce({
-      searchActions: ['mockSearchActions[0]'],
+      searchActions: ['search-action'],
     });
 
     const factory = buildFactory(definition, mockEngineOptions);
@@ -126,13 +126,10 @@ describe('buildFactory', () => {
         language: 'en',
         view: {url: 'https://example.com'},
       },
-      searchActions: ['mockSearchActions[0]'],
+      searchActions: ['search-action'],
     });
 
-    expect(mockDispatch).toHaveBeenCalledWith('mockSearchActions[0]');
-    // expect(
-    //   mockBuildCommerceEngine.waitForRequestCompletedAction
-    // ).toHaveBeenCalledOnce();
+    expect(mockDispatch).toHaveBeenCalledWith('search-action');
   });
 
   it('should not warn if navigatorContextProvider is present', async () => {
