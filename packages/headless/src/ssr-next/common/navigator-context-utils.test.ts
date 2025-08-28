@@ -1,21 +1,10 @@
-import {beforeEach, describe, expect, it, vi} from 'vitest';
-import type {LoggerOptions} from '../../app/logger.js';
-import type {
-  NavigatorContext,
-  NavigatorContextProvider,
-} from '../../app/navigator-context-provider.js';
-
 vi.mock('./augment-preprocess-request.js');
 
+import {beforeEach, describe, expect, it, vi} from 'vitest';
+import type {LoggerOptions} from '../../app/logger.js';
+import type {NavigatorContext} from '../../app/navigator-context-provider.js';
 import {augmentPreprocessRequestWithForwardedFor} from './augment-preprocess-request.js';
 import {processNavigatorContext} from './navigator-context-utils.js';
-
-// Type for enhanced engine options with navigator context
-type EnhancedOptions = {
-  configuration: Record<string, unknown>;
-  loggerOptions?: LoggerOptions;
-  navigatorContextProvider?: NavigatorContextProvider;
-};
 
 const mockAugmentPreprocessRequestWithForwardedFor = vi.mocked(
   augmentPreprocessRequestWithForwardedFor
@@ -49,15 +38,13 @@ describe('processNavigatorContext', () => {
   describe('when navigator context is provided', () => {
     it('should process and enhance options with navigatorContext from params', () => {
       const callOptions = {navigatorContext: mockNavigatorContext};
-      const params = [callOptions];
+      const params: [typeof callOptions] = [callOptions];
       const result = processNavigatorContext(params, baseOptions);
 
       expect(result.engineOptions).not.toBe(baseOptions);
       expect(result.engineOptions).toHaveProperty('navigatorContextProvider');
       expect(result.callOptions).toEqual(callOptions);
-
-      const enhancedOptions = result.engineOptions as EnhancedOptions;
-      expect(enhancedOptions.navigatorContextProvider?.()).toBe(
+      expect(result.engineOptions.navigatorContextProvider?.()).toBe(
         mockNavigatorContext
       );
     });
@@ -68,8 +55,7 @@ describe('processNavigatorContext', () => {
         navigatorContext: mockNavigatorContext,
         controllers: mockControllers,
       };
-      const params = [callOptions];
-
+      const params: [typeof callOptions] = [callOptions];
       const result = processNavigatorContext(params, baseOptions);
 
       expect(result.callOptions).toBe(callOptions);
@@ -79,15 +65,14 @@ describe('processNavigatorContext', () => {
 
     it('enhances preprocessRequest with navigator context', () => {
       const callOptions = {navigatorContext: mockNavigatorContext};
-      const params = [callOptions];
-
+      const params: [typeof callOptions] = [callOptions];
       const result = processNavigatorContext(params, baseOptions);
 
-      const enhancedOptions = result.engineOptions as EnhancedOptions;
       expect(mockAugmentPreprocessRequestWithForwardedFor).toHaveBeenCalledWith(
         {
           preprocessRequest: undefined,
-          navigatorContextProvider: enhancedOptions.navigatorContextProvider,
+          navigatorContextProvider:
+            result.engineOptions.navigatorContextProvider,
           loggerOptions: mockLoggerOptions,
         }
       );
@@ -95,13 +80,9 @@ describe('processNavigatorContext', () => {
 
     it('creates navigatorContextProvider that returns the provided context', () => {
       const callOptions = {navigatorContext: mockNavigatorContext};
-      const params = [callOptions];
-
+      const params: [typeof callOptions] = [callOptions];
       const result = processNavigatorContext(params, baseOptions);
-
-      const enhancedOptions = result.engineOptions as EnhancedOptions;
-      const provider = enhancedOptions.navigatorContextProvider;
-
+      const provider = result.engineOptions.navigatorContextProvider;
       expect(provider).toBeDefined();
       expect(provider?.()).toEqual(mockNavigatorContext);
     });
@@ -115,12 +96,9 @@ describe('processNavigatorContext', () => {
           preprocessRequest: existingPreprocessRequest,
         },
       };
-
       const callOptions = {navigatorContext: mockNavigatorContext};
-      const params = [callOptions];
-
+      const params: [typeof callOptions] = [callOptions];
       processNavigatorContext(params, baseOptionsWithPreprocess);
-
       expect(mockAugmentPreprocessRequestWithForwardedFor).toHaveBeenCalledWith(
         expect.objectContaining({
           preprocessRequest: existingPreprocessRequest,
