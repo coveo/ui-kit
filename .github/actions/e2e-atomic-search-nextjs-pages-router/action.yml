@@ -1,23 +1,23 @@
-name: 'Atomic React NextJS E2E tests'
-description: 'Runs Cypress tests for Atomic React in NextJS'
+name: "Atomic React NextJS E2E tests"
+description: "Runs Cypress tests for Atomic React in NextJS"
 inputs:
   github-token:
     description: The GitHub token for accurately detecting a build vs a re-run build
     required: false
-    default: ''
+    default: ""
 runs:
   using: composite
   steps:
     - run: npx cypress install
       shell: bash
-      working-directory: packages/samples/atomic-next
+      working-directory: samples/atomic/search-nextjs-pages-router
     - uses: cypress-io/github-action@v5
       name: Run Cypress
       with:
         browser: chrome
-        command-prefix: 'npx -w @coveo/atomic-next-samples cypress-repeat run -n 3 --until-passes --rerun-failed-only --'
+        command-prefix: "npx -w @coveo/atomic-next-samples cypress-repeat run -n 3 --until-passes --rerun-failed-only --"
         start: npx turbo dev --filter=@coveo/atomic-next-samples
-        wait-on: 'http://localhost:3000'
+        wait-on: "http://localhost:3000"
         wait-on-timeout: 600000
         install: false
         record: false
@@ -26,4 +26,4 @@ runs:
       if: failure()
       with:
         name: next-screenshots
-        path: packages/samples/atomic-next/cypress/screenshots
+        path: samples/atomic/search-nextjs-pages-router/cypress/screenshots

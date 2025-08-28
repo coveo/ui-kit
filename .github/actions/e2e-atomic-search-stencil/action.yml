@@ -1,23 +1,23 @@
-name: 'Stencil.js sample E2E tests'
-description: 'Runs Cypress tests for Stencil.js sample'
+name: "Stencil.js sample E2E tests"
+description: "Runs Cypress tests for Stencil.js sample"
 inputs:
   github-token:
     description: The GitHub token for accurately detecting a build vs a re-run build
     required: false
-    default: ''
+    default: ""
 runs:
   using: composite
   steps:
     - run: npx cypress install
       shell: bash
-      working-directory: packages/samples/stencil
+      working-directory: samples/atomic/search-stencil
     - uses: cypress-io/github-action@v5
       name: Run Cypress
       with:
         browser: chrome
-        command-prefix: 'npx -w @coveo/atomic-stencil-samples cypress-repeat run -n 3 --until-passes --rerun-failed-only --'
-        start: npx turbo dev --filter=@coveo/atomic-stencil-samples
-        wait-on: 'http://localhost:3666'
+        command-prefix: "npx -w @samples/atomic-search-stencil cypress-repeat run -n 3 --until-passes --rerun-failed-only --"
+        start: npx turbo dev --filter=@samples/atomic-search-stencil
+        wait-on: "http://localhost:3666"
         wait-on-timeout: 600000
         install: false
         record: false
@@ -25,4 +25,4 @@ runs:
       if: failure()
       with:
         name: stencil-sample-screenshots
-        path: packages/samples/stencil/cypress/screenshots
+        path: samples/atomic/search-stencil/cypress/screenshots

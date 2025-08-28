@@ -455,7 +455,7 @@ jobs:
 
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
       - uses: ./.github/actions/setup
-      - uses: ./.github/actions/e2e-atomic-react
+      - uses: ./.github/actions/e2e-atomic-search-commerce-react
   e2e-atomic-react-nextjs-test:
     name: "Run e2e tests on Atomic React NextJS"
     needs: affected
