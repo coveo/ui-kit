@@ -1,7 +1,7 @@
 {
   "name": "ui-kit",
   "private": true,
-  "version": "3.0.52",
+  "version": "3.0.57",
   "scripts": {
     "postinstall": "husky install && patch-package && npx playwright install",
     "reset:install": "git checkout origin/main package-lock.json && npm i",
@@ -32,7 +32,7 @@
   "devDependencies": {
     "@actions/core": "1.11.1",
     "@actions/github": "6.0.1",
-    "@biomejs/biome": "2.1.3",
+    "@biomejs/biome": "2.1.4",
     "@commitlint/config-conventional": "19.8.1",
     "@commitlint/lint": "19.8.1",
     "@commitlint/load": "19.8.1",
@@ -94,9 +94,12 @@
     "packages/create-atomic-template",
     "packages/create-atomic",
     "packages/create-atomic-component",
+    "packages/create-atomic-component/template/src/components/sample-component",
     "packages/create-atomic-component-project",
     "packages/create-atomic-component-project/template",
-    "packages/create-atomic-rollup-plugin"
+    "packages/create-atomic-rollup-plugin",
+    "packages/create-atomic-result-component",
+    "packages/create-atomic-result-component/template/src/components/sample-result-component"
   ],
   "config": {
     "commitizen": {
