@@ -1,4 +1,10 @@
-import {cemPlugin, mapPropertyPlugin} from './scripts/cem-plugin.mjs';
+import {
+  cemPlugin,
+  hideBaseInitializableComponentFieldsPlugin,
+  hideBindStateToControllerFieldsPlugin,
+  mapPropertyPlugin,
+  removeUndefinedTypePlugin,
+} from './scripts/cem-plugin.mjs';
 
 export default {
   /** Globs to analyze */
@@ -12,5 +18,11 @@ export default {
   ],
   stencil: true,
   litelement: true,
-  plugins: [cemPlugin(), mapPropertyPlugin()],
+  plugins: [
+    cemPlugin(),
+    mapPropertyPlugin(),
+    removeUndefinedTypePlugin(),
+    hideBaseInitializableComponentFieldsPlugin(),
+    hideBindStateToControllerFieldsPlugin(),
+  ],
 };

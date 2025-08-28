@@ -1,3 +1,18 @@
+## 1.5.0 (2025-08-27)
+
+* feat(cli): port over atomic-result-component from cli  (#5919) ([2899a2c](https://github.com/coveo/ui-kit/commits/2899a2c)), closes [#5919](https://github.com/coveo/ui-kit/issues/5919)
+* chore: add missing workspace link (#5897) ([60ff41f](https://github.com/coveo/ui-kit/commits/60ff41f)), closes [#5897](https://github.com/coveo/ui-kit/issues/5897)
+
+
+
+## 1.4.0 (2025-08-07)
+
+* feat: Migrate monorepo build system from NX to Turborepo (#5733) ([e7e1237](https://github.com/coveo/ui-kit/commits/e7e1237)), closes [#5733](https://github.com/coveo/ui-kit/issues/5733)
+* chore: update dependencies (major) (#5793) ([8cbf5bc](https://github.com/coveo/ui-kit/commits/8cbf5bc)), closes [#5793](https://github.com/coveo/ui-kit/issues/5793)
+* fix(deps): update all dependencies j:kit-282 (#5770) ([214bb00](https://github.com/coveo/ui-kit/commits/214bb00)), closes [#5770](https://github.com/coveo/ui-kit/issues/5770)
+
+
+
 ## 1.3.0 (2025-07-30)
 
 * ci(create-atomic): fix release phase 1 for new create-atomic packages (#5751) ([ca79c40](https://github.com/coveo/ui-kit/commits/ca79c40)), closes [#5751](https://github.com/coveo/ui-kit/issues/5751)

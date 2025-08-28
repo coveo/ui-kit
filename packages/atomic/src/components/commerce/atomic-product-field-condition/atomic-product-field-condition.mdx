@@ -1,18 +1,16 @@
-import { Canvas, ArgTypes, Meta, Title, Description, Stories, Subtitle } from '@storybook/blocks';
+import { Meta } from '@storybook/addon-docs/blocks';
 import * as AtomicProductFieldConditionStories from './atomic-product-field-condition.new.stories';
-import { CanvasWithGithub } from '../../../../storybook-utils/documentation/canvas-with-github';
+import { AtomicDocTemplate } from '../../../../storybook-utils/documentation/atomic-doc-template';
 
-<Meta of={ AtomicProductFieldConditionStories } />
 
-<Title />
-<Subtitle><Description/></Subtitle>
+<Meta of={AtomicProductFieldConditionStories} />
 
-<CanvasWithGithub
-  of={ AtomicProductFieldConditionStories.Default }
+<AtomicDocTemplate
+  stories={AtomicProductFieldConditionStories}
   githubPath="commerce/atomic-product-field-condition/atomic-product-field-condition.ts"
-/>
-
-## Usage
+  tagName="atomic-product-field-condition"
+  className="AtomicProductFieldCondition"
+>
 
 `atomic-product-field-condition` conditionally renders its content based on product attributes.
 This component can verify whether specified fields are defined, not defined, match specific values, or do not match specific values.
@@ -24,7 +22,7 @@ It is typically used within `atomic-product-template`.
   ... 
 
   <atomic-product-field-condition
-    attributes-if-defined="ec_name"
+    if-defined="ec_name"
  
   >
   <span>Render me if <strong>ec_name</strong> is defined.</span>
@@ -32,8 +30,4 @@ It is typically used within `atomic-product-template`.
   
 </atomic-product-template>
 ```
-## Examples
-<Stories title={""}/>
-
-## Reference
-<ArgTypes />
+</AtomicDocTemplate>

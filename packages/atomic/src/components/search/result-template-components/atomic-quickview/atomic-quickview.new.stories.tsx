@@ -1,8 +1,13 @@
-import type {Meta, StoryObj as Story} from '@storybook/web-components';
+import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
+import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
-import {renderComponent} from '@/storybook-utils/common/render-component';
 import {wrapInResult} from '@/storybook-utils/search/result-wrapper';
 import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
+
+const {events, args, argTypes, template} = getStorybookHelpers(
+  'atomic-quickview',
+  {excludeCategories: ['methods']}
+);
 
 const {decorator: resultDecorator, engineConfig} = wrapInResult({
   preprocessRequest: (request) => {
@@ -31,26 +36,42 @@ const {decorator: resultDecorator, engineConfig} = wrapInResult({
     return request;
   },
 });
-const {decorator: searchInterfaceDecorator, play} =
+const {decorator: searchInterfaceDecorator, afterEach} =
   wrapInSearchInterface(engineConfig);
 
 export const OutsideResultTemplate: Story = {
   name: 'Not inside a result template',
   tags: ['test'],
-  render: renderComponent,
+  render: (args) => template(args),
   decorators: [searchInterfaceDecorator],
-  parameters,
-  play,
+  parameters: {
+    ...parameters,
+    actions: {
+      handles: events,
+    },
+  },
+  args,
+  argTypes,
+
+  afterEach,
 };
 
 const meta: Meta = {
   component: 'atomic-quickview',
-  title: 'Atomic/ResultList/Quickview',
+  title: 'Search/ResultList/Quickview',
   id: 'atomic-quickview',
-  render: renderComponent,
+  render: (args) => template(args),
   decorators: [resultDecorator, searchInterfaceDecorator],
-  parameters,
-  play,
+  parameters: {
+    ...parameters,
+    actions: {
+      handles: events,
+    },
+  },
+  args,
+  argTypes,
+
+  afterEach,
 };
 
 export default meta;

@@ -7,6 +7,7 @@ import {userEvent} from '@vitest/browser/context';
 import {ifDefined} from 'lit/directives/if-defined.js';
 import type {TruncateAfter} from '../../common/expandable-text/expandable-text';
 import './atomic-product-description';
+import type {AtomicProductDescription} from './atomic-product-description';
 
 describe('atomic-product-description', () => {
   const renderProductDescription = async (
@@ -27,11 +28,11 @@ describe('atomic-product-description', () => {
         `This is a short description for child product. It is meant to be concise and informative. It should give a brief overview of the product features and benefits.`,
     });
 
-    const {element} = await renderInAtomicProduct({
+    const {element} = await renderInAtomicProduct<AtomicProductDescription>({
       template: html`
       <atomic-product-description
         truncate-after=${ifDefined(props.truncateAfter)}
-        ?is-collapsible=${props.isCollapsible ?? false}
+        ?is-collapsible=${props.isCollapsible}
         field=${ifDefined(props.field)}
       ></atomic-product-description>
       `,
@@ -58,6 +59,11 @@ describe('atomic-product-description', () => {
   it('should render nothing when there are no description', async () => {
     const {element} = await renderProductDescription({ec_shortdesc: ''});
     expect(element).toBeEmptyDOMElement();
+  });
+
+  it('should have isCollapsible as `false` by default', async () => {
+    const {element} = await renderProductDescription();
+    expect(element.isCollapsible).toBe(false);
   });
 
   it('should render the description text', async () => {

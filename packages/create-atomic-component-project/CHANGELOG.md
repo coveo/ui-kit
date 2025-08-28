@@ -1,3 +1,35 @@
+## <small>1.5.1 (2025-08-28)</small>
+
+* [Version Bump][skip ci]: ui-kit publish ([c4f6ced](https://github.com/coveo/ui-kit/commits/c4f6ced))
+
+
+
+## 1.5.0 (2025-08-27)
+
+* feat(cli): port over atomic-result-component from cli  (#5919) ([2899a2c](https://github.com/coveo/ui-kit/commits/2899a2c)), closes [#5919](https://github.com/coveo/ui-kit/issues/5919)
+
+
+
+## <small>1.4.2 (2025-08-20)</small>
+
+* [Version Bump][skip ci]: ui-kit publish ([f967729](https://github.com/coveo/ui-kit/commits/f967729))
+
+
+
+## <small>1.4.1 (2025-08-11)</small>
+
+* [Version Bump][skip ci]: ui-kit publish ([74f5974](https://github.com/coveo/ui-kit/commits/74f5974))
+
+
+
+## 1.4.0 (2025-08-07)
+
+* chore: add missing repository metadata for atomic cmp project (#5836) ([b761286](https://github.com/coveo/ui-kit/commits/b761286)), closes [#5836](https://github.com/coveo/ui-kit/issues/5836)
+* feat: Migrate monorepo build system from NX to Turborepo (#5733) ([e7e1237](https://github.com/coveo/ui-kit/commits/e7e1237)), closes [#5733](https://github.com/coveo/ui-kit/issues/5733)
+* fix(deps): update all dependencies j:kit-282 (#5770) ([214bb00](https://github.com/coveo/ui-kit/commits/214bb00)), closes [#5770](https://github.com/coveo/ui-kit/issues/5770)
+
+
+
 ## 1.3.0 (2025-07-30)
 
 * chore: missing metadata (#5782) ([816fb77](https://github.com/coveo/ui-kit/commits/816fb77)), closes [#5782](https://github.com/coveo/ui-kit/issues/5782)

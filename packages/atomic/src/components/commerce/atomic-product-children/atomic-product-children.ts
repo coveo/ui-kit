@@ -1,6 +1,6 @@
 import type {ChildProduct} from '@coveo/headless/commerce';
 import {ProductTemplatesHelpers} from '@coveo/headless/commerce';
-import {html, LitElement, nothing, unsafeCSS} from 'lit';
+import {html, LitElement, nothing} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {bindings} from '@/src/decorators/bindings';
 import {createProductContextController} from '@/src/decorators/commerce/product-template-decorators';
@@ -10,28 +10,37 @@ import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles.js';
 import {filterProtocol} from '../../../utils/xss-utils';
 import {renderButton} from '../../common/button';
 import type {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface';
-import styles from './atomic-product-children.tw.css';
 import type {SelectChildProductEventArgs} from './select-child-product-event';
 import '../atomic-commerce-text/atomic-commerce-text';
-import {injectStylesForNoShadowDOM} from '@/src/decorators/inject-styles-for-no-shadow-dom';
+import {bindingGuard} from '@/src/decorators/binding-guard';
 import {multiClassMap, tw} from '@/src/directives/multi-class-map';
+import {closest} from '@/src/utils/dom-utils';
+import type {AtomicProduct} from '../atomic-product/atomic-product';
+
+/**
+ * Maximum number of child products to display before showing a "+N" button.
+ * This limit ensures a consistent UI and prevents layout issues with large product variants.
+ */
+const AMOUNT_OF_VISIBLE_CHILDREN = 5;
 
 /**
  * The `atomic-product-children` component renders a section that allows the user to select a nested product (e.g., a color variant of a given product).
  *
  * This component leverages the [product grouping](https://docs.coveo.com/en/l78i2152/) feature.
- * @alpha
+ *
+ * The component displays up to 5 child products before showing a "+N" button for additional variants.
+ * This limit ensures consistent UI layout while preventing performance issues with large product variant collections.
  */
 @customElement('atomic-product-children')
 @bindings()
-@injectStylesForNoShadowDOM
 @withTailwindStyles
 export class AtomicProductChildren
   extends LitElement
   implements InitializableComponent<CommerceBindings>
 {
-  static styles = unsafeCSS(styles);
-
+  createRenderRoot() {
+    return this;
+  }
   @state() bindings!: CommerceBindings;
 
   private productController = createProductContextController(this);
@@ -94,6 +103,14 @@ export class AtomicProductChildren
     return filterProtocol(this.fallback);
   }
 
+  private handleClick = (event: MouseEvent) => {
+    if (this.parentElement?.tagName !== 'A') {
+      closest<AtomicProduct>(this, 'atomic-product')!.clickLinkContainer();
+    } else {
+      event.stopPropagation();
+    }
+  };
+
   private renderChild(child: ChildProduct) {
     const childName = child.ec_name ?? '';
 
@@ -115,6 +132,7 @@ export class AtomicProductChildren
           event.preventDefault();
           this.onSelectChild(child);
         }}
+        @click=${this.handleClick}
       >
         <img
           class="aspect-square p-1"
@@ -147,29 +165,45 @@ export class AtomicProductChildren
    * @returns The total count of items, including the parent.
    */
   get count() {
+    const hiddenChildrenCount = Math.max(
+      0,
+      this.childProducts.length - AMOUNT_OF_VISIBLE_CHILDREN
+    );
+
     return (
       this.productController.item?.totalNumberOfChildren! -
       this.productController.item?.children.length! +
-      1
+      hiddenChildrenCount
     );
   }
 
+  @bindingGuard()
   @errorGuard()
   render() {
     if (this.childProducts.length === 0) {
       return html`${nothing}`;
     }
 
+    const visibleChildren = this.childProducts.slice(
+      0,
+      AMOUNT_OF_VISIBLE_CHILDREN
+    );
+
     return html`
       ${this.label.trim() !== '' ? this.renderLabel() : nothing}
-      <div class="children-container">
-        ${this.childProducts.map((child) => this.renderChild(child))}
-        ${renderButton({
-          props: {
-            style: 'text-primary',
-            class: 'product-child plus-button',
-          },
-        })(html`+${this.count}`)}
+      <div class="flex flex-wrap">
+        ${visibleChildren.map((child) => this.renderChild(child))}
+        ${
+          this.count > 0
+            ? renderButton({
+                props: {
+                  style: 'text-primary',
+                  class: 'product-child',
+                  onClick: this.handleClick,
+                },
+              })(html`+${this.count}`)
+            : nothing
+        }
       </div>
     `;
   }

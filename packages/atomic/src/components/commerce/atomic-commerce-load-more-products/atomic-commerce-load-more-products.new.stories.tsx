@@ -1,18 +1,30 @@
-import type {Meta, StoryObj as Story} from '@storybook/web-components';
+import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
+import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {wrapInCommerceInterface} from '@/storybook-utils/commerce/commerce-interface-wrapper';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
-import {renderComponent} from '@/storybook-utils/common/render-component';
 
-const {decorator, play} = wrapInCommerceInterface({skipFirstRequest: false});
+const {decorator, afterEach} = wrapInCommerceInterface();
+const {events, args, argTypes, template} = getStorybookHelpers(
+  'atomic-commerce-load-more-products',
+  {excludeCategories: ['methods']}
+);
 
 const meta: Meta = {
   component: 'atomic-commerce-load-more-products',
-  title: 'Commerce/atomic-commerce-load-more-products',
+  title: 'Commerce/Load More Products',
   id: 'atomic-commerce-load-more-products',
-  render: renderComponent,
+  render: (args) => template(args),
   decorators: [decorator],
-  parameters,
-  play,
+  parameters: {
+    ...parameters,
+    actions: {
+      handles: events,
+    },
+  },
+  args,
+  argTypes,
+
+  afterEach,
 };
 
 export default meta;

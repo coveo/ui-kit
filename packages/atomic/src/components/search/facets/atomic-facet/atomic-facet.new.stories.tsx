@@ -1,33 +1,52 @@
-import type {Meta, StoryObj as Story} from '@storybook/web-components';
+import type {FacetSortCriterion} from '@coveo/headless';
+import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
+import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {html} from 'lit';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {facetDecorator} from '@/storybook-utils/common/facets-decorator';
-import {renderComponent} from '@/storybook-utils/common/render-component';
 import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
 
-const {decorator, play} = wrapInSearchInterface();
+const {decorator, afterEach} = wrapInSearchInterface();
+const {events, args, argTypes, template} = getStorybookHelpers('atomic-facet', {
+  excludeCategories: ['methods'],
+});
+
+const sortCriteriaOptions: FacetSortCriterion[] = [
+  'alphanumeric',
+  'alphanumericDescending',
+  'alphanumericNatural',
+  'alphanumericNaturalDescending',
+  'automatic',
+  'occurrences',
+  'score',
+];
 
 const meta: Meta = {
   component: 'atomic-facet',
-  title: 'Atomic/Facet',
+  title: 'Search/Facet',
   id: 'atomic-facet',
 
-  render: renderComponent,
+  render: (args) => template(args),
   decorators: [decorator],
-  parameters,
-  play,
-  argTypes: {
-    'attributes-number-of-values': {
-      name: 'number-of-values',
-      control: {type: 'number', min: 1},
+  parameters: {
+    ...parameters,
+    actions: {
+      handles: events,
     },
-    'attributes-sort-criteria': {
-      name: 'sort-criteria',
+  },
+  argTypes: {
+    ...argTypes,
+    'sort-criteria': {
+      control: 'select',
+      options: sortCriteriaOptions,
       type: 'string',
     },
   },
+
+  afterEach,
   args: {
-    'attributes-number-of-values': 8,
+    ...args,
+    'number-of-values': 8,
   },
 };
 
@@ -36,7 +55,7 @@ export default meta;
 export const Default: Story = {
   name: 'atomic-facet',
   args: {
-    'attributes-field': 'objecttype',
+    field: 'objecttype',
   },
   decorators: [facetDecorator],
 };
@@ -44,8 +63,8 @@ export const Default: Story = {
 export const LowFacetValues: Story = {
   tags: ['test'],
   args: {
-    'attributes-field': 'objecttype',
-    'attributes-number-of-values': 2,
+    field: 'objecttype',
+    'number-of-values': 2,
   },
   decorators: [facetDecorator],
 };
@@ -53,9 +72,9 @@ export const LowFacetValues: Story = {
 export const monthFacet: Story = {
   tags: ['test'],
   args: {
-    'attributes-field': 'month',
-    'attributes-label': 'Month',
-    'attributes-number-of-values': 2,
+    field: 'month',
+    label: 'Month',
+    'number-of-values': 2,
   },
   decorators: [facetDecorator],
 };
@@ -63,19 +82,19 @@ export const monthFacet: Story = {
 export const CustomSort: Story = {
   tags: ['test'],
   args: {
-    'attributes-field': 'cat_available_sizes',
-    'attributes-custom-sort': '["XL", "L", "M", "S"]',
-    'attributes-sort-criteria': 'alphanumeric',
-    'attributes-number-of-values': 4,
+    field: 'cat_available_sizes',
+    'custom-sort': '["XL", "L", "M", "S"]',
+    'sort-criteria': 'alphanumeric',
+    'number-of-values': 4,
   },
   decorators: [
     facetDecorator,
     (_Story, context) => {
       return html`<atomic-facet
-        field=${context.args['attributes-field']}
-        custom-sort=${context.args['attributes-custom-sort']}
-        sort-criteria=${context.args['attributes-sort-criteria']}
-        number-of-values=${context.args['attributes-number-of-values']}
+        field=${context.args.field}
+        custom-sort=${context.args['custom-sort']}
+        sort-criteria=${context.args['sort-criteria']}
+        number-of-values=${context.args['number-of-values']}
       ></atomic-facet>`;
     },
   ],

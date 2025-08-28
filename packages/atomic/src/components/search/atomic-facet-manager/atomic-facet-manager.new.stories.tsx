@@ -1,21 +1,33 @@
-import type {Meta, StoryObj as Story} from '@storybook/web-components';
+import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
+import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {html} from 'lit/static-html.js';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
-import {renderComponent} from '@/storybook-utils/common/render-component';
 import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
 
-const {decorator, play} = wrapInSearchInterface();
+const {decorator, afterEach} = wrapInSearchInterface();
+const {events, args, argTypes, template} = getStorybookHelpers(
+  'atomic-facet-manager',
+  {excludeCategories: ['methods']}
+);
 
 const meta: Meta = {
   component: 'atomic-facet-manager',
-  title: 'Atomic/FacetManager',
+  title: 'Search/FacetManager',
   id: 'atomic-facet-manager',
 
-  render: renderComponent,
+  render: (args) => template(args),
   decorators: [decorator],
-  parameters,
-  play,
-  argTypes: {
+  parameters: {
+    ...parameters,
+    actions: {
+      handles: events,
+    },
+  },
+  args,
+  argTypes,
+
+  afterEach,
+  globals: {
     default: {
       control: false,
     },
@@ -39,7 +51,7 @@ export const Default: Story = {
     `,
   ],
   args: {
-    'slots-default': `
+    'default-slot': `
       <atomic-facet field="author" label="Authors"></atomic-facet>
       <atomic-facet field="language" label="Language"></atomic-facet>
       <atomic-facet

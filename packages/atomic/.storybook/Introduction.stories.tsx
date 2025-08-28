@@ -1,4 +1,5 @@
-import type {Meta, StoryObj} from '@storybook/web-components';
+import type {Meta, StoryObj} from '@storybook/web-components-vite';
+import {html} from 'lit';
 
 const meta: Meta = {
   component: 'Introduction',
@@ -9,7 +10,7 @@ export default meta;
 
 export const Default: StoryObj = {
   name: 'Default',
-  render: () => `
+  render: () => html`
     <div style="font-family: 'Nunito Sans', sans-serif;">
       <h1>Welcome to the Coveo Atomic Storybook</h1>
       <p>

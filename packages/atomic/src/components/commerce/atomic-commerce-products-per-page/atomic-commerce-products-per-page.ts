@@ -9,6 +9,7 @@ import {
 } from '@coveo/headless/commerce';
 import {html, LitElement} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
+import {when} from 'lit/directives/when.js';
 import type {CommerceBindings} from '@/src/components/commerce/atomic-commerce-interface/atomic-commerce-interface.js';
 import {renderFieldsetGroup} from '@/src/components/common/fieldset-group.js';
 import {createAppLoadedListener} from '@/src/components/common/interface/store.js';
@@ -18,7 +19,6 @@ import {
   convertChoicesToNumbers,
   validateInitialChoice,
 } from '@/src/components/common/items-per-page/validate.js';
-import {renderPagerGuard} from '@/src/components/common/pager/pager-guard.js';
 import {bindStateToController} from '@/src/decorators/bind-state.js';
 import {bindingGuard} from '@/src/decorators/binding-guard';
 import {bindings} from '@/src/decorators/bindings.js';
@@ -34,8 +34,6 @@ import {randomID} from '@/src/utils/utils.js';
  * @part buttons - The list of buttons.
  * @part button - The individual products per page buttons.
  * @part active-button - The active products per page button.
- *
- * @alpha
  */
 @customElement('atomic-commerce-products-per-page')
 @bindings()
@@ -112,39 +110,38 @@ export class AtomicCommerceProductsPerPage
   @errorGuard()
   render() {
     return html`
-      ${renderPagerGuard({
-        props: {
-          hasError: this.summaryState.hasError,
-          hasItems: this.summaryState.hasProducts,
-          isAppLoaded: this.isAppLoaded,
-        },
-      })(html`
-        <div class="flex items-center">
-          ${renderLabel()(html`${this.label}`)}
-          ${renderFieldsetGroup({
-            props: {
-              label: this.label,
-            },
-          })(
-            renderChoices({
+      ${when(
+        !this.summaryState.hasError &&
+          this.summaryState.hasProducts &&
+          this.isAppLoaded,
+        () => html`
+          <div class="flex items-center">
+            ${renderLabel()(html`${this.label}`)}
+            ${renderFieldsetGroup({
               props: {
                 label: this.label,
-                groupName: this.radioGroupName,
-                pageSize: this.paginationState.pageSize,
-                choices: this.choices,
-                lang: this.bindings.i18n.language,
-                scrollToTopEvent: () => this.scrollToTopEvent(),
-                setItemSize: (size: number) =>
-                  this.pagination.setPageSize(size),
-                focusOnFirstResultAfterNextSearch: () =>
-                  this.bindings.store.state.resultList?.focusOnFirstResultAfterNextSearch(),
-                focusOnNextNewResult: () =>
-                  this.bindings.store.state.resultList?.focusOnNextNewResult(),
               },
-            })
-          )}
-        </div>
-      `)}
+            })(
+              renderChoices({
+                props: {
+                  label: this.label,
+                  groupName: this.radioGroupName,
+                  pageSize: this.paginationState.pageSize,
+                  choices: this.choices,
+                  lang: this.bindings.i18n.language,
+                  scrollToTopEvent: () => this.scrollToTopEvent(),
+                  setItemSize: (size: number) =>
+                    this.pagination.setPageSize(size),
+                  focusOnFirstResultAfterNextSearch: () =>
+                    this.bindings.store.state.resultList?.focusOnFirstResultAfterNextSearch(),
+                  focusOnNextNewResult: () =>
+                    this.bindings.store.state.resultList?.focusOnNextNewResult(),
+                },
+              })
+            )}
+          </div>
+        `
+      )}
     `;
   }
 }

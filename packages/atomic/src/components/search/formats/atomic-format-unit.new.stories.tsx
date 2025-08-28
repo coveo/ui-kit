@@ -1,9 +1,14 @@
-import type {Meta, StoryObj as Story} from '@storybook/web-components';
+import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
+import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {html} from 'lit';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
-import {renderComponent} from '@/storybook-utils/common/render-component';
 import {wrapInResult} from '@/storybook-utils/search/result-wrapper';
 import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
+
+const {events, args, argTypes, template} = getStorybookHelpers(
+  'atomic-format-unit',
+  {excludeCategories: ['methods']}
+);
 
 const {decorator: resultDecorator, engineConfig} = wrapInResult({
   preprocessRequest: (r) => {
@@ -16,19 +21,26 @@ const {decorator: resultDecorator, engineConfig} = wrapInResult({
   },
 });
 
-const {decorator: searchInterfaceDecorator, play} =
+const {decorator: searchInterfaceDecorator, afterEach} =
   wrapInSearchInterface(engineConfig);
 
 const meta: Meta = {
   component: 'atomic-format-unit',
-  title: 'Atomic/Format/atomic-format-unit',
+  title: 'Search/Format/atomic-format-unit',
   id: 'atomic-format-unit',
 
-  render: renderComponent,
+  render: (args) => template(args),
   decorators: [searchInterfaceDecorator],
-  parameters,
-  play,
-  args: {unit: 'byte'},
+  parameters: {
+    ...parameters,
+    actions: {
+      handles: events,
+    },
+  },
+  argTypes,
+
+  afterEach,
+  args: {...args, unit: 'byte'},
 };
 
 export default meta;

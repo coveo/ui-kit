@@ -1,4 +1,5 @@
-import type {Meta, StoryObj as Story} from '@storybook/web-components';
+import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
+import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {within} from 'shadow-dom-testing-library';
 import {wrapInCommerceInterface} from '@/storybook-utils/commerce/commerce-interface-wrapper';
 import {wrapInCommerceProductList} from '@/storybook-utils/commerce/commerce-product-list-wrapper';
@@ -6,7 +7,6 @@ import {wrapInCommerceRecommendationInterface} from '@/storybook-utils/commerce/
 import {wrapInCommerceRecommendationList} from '@/storybook-utils/commerce/commerce-recommendation-list-wrapper';
 import {wrapInCommerceSearchBoxInstantProducts} from '@/storybook-utils/commerce/commerce-searchbox-instant-products-wrapper';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
-import {renderComponentWithoutCodeRoot} from '@/storybook-utils/common/render-component';
 import {parameters as searchBoxParameters} from '@/storybook-utils/common/search-box-suggestions-parameters';
 
 const TEMPLATE_EXAMPLE = `<template>
@@ -43,14 +43,40 @@ const TEMPLATE_EXAMPLE = `<template>
   </atomic-product-section-children>
 </template>`;
 
+const {events, args, argTypes, template} = getStorybookHelpers(
+  'atomic-product-template',
+  {excludeCategories: ['methods']}
+);
+
 const meta: Meta = {
   component: 'atomic-product-template',
-  title: 'Commerce/atomic-product-template',
+  title: 'Commerce/Product Template',
   id: 'atomic-product-template',
-  render: renderComponentWithoutCodeRoot,
-  parameters,
+  render: (args) => template(args),
+  parameters: {
+    ...parameters,
+    actions: {
+      handles: events,
+    },
+  },
   args: {
-    'slots-default': TEMPLATE_EXAMPLE,
+    ...args,
+    'default-slot': TEMPLATE_EXAMPLE,
+  },
+  argTypes: {
+    ...argTypes,
+    'must-match': {
+      ...argTypes['must-match'],
+      control: false,
+    },
+    'must-not-match': {
+      ...argTypes['must-not-match'],
+      control: false,
+    },
+    conditions: {
+      ...argTypes.conditions,
+      control: false,
+    },
   },
 };
 
@@ -58,7 +84,7 @@ export default meta;
 
 const {
   decorator: commerceInterfaceDecorator,
-  play: initializeCommerceInterface,
+  afterEach: initializeCommerceInterface,
 } = wrapInCommerceInterface({
   skipFirstRequest: false,
   engineConfig: {
@@ -69,18 +95,20 @@ const {
       return request;
     },
   },
+  includeCodeRoot: false,
 });
-const {decorator: commerceProductListDecorator} = wrapInCommerceProductList();
+const {decorator: commerceProductListDecorator} =
+  wrapInCommerceProductList('list');
 
 export const InAProductList: Story = {
   name: 'In a product list',
   decorators: [commerceProductListDecorator, commerceInterfaceDecorator],
-  play: initializeCommerceInterface,
+  afterEach: initializeCommerceInterface,
 };
 
 const {
   decorator: commerceRecommendationInterfaceDecorator,
-  play: initializeCommerceRecommendationInterface,
+  afterEach: initializeCommerceRecommendationInterface,
 } = wrapInCommerceRecommendationInterface();
 const {decorator: commerceRecommendationListDecorator} =
   wrapInCommerceRecommendationList();
@@ -92,7 +120,7 @@ export const InARecommendationList: Story = {
     commerceRecommendationInterfaceDecorator,
   ],
 
-  play: initializeCommerceRecommendationInterface,
+  afterEach: initializeCommerceRecommendationInterface,
 };
 
 const {decorator: commerceSearchBoxInstantsProductsDecorator} =
@@ -105,7 +133,7 @@ export const InASearchBoxInstantProducts: Story = {
     commerceInterfaceDecorator,
   ],
   parameters: searchBoxParameters,
-  play: async (context) => {
+  afterEach: async (context) => {
     await initializeCommerceInterface(context);
     const {canvasElement, step} = context;
     const canvas = within(canvasElement);
@@ -119,10 +147,4 @@ export const InASearchBoxInstantProducts: Story = {
         ?.focus();
     });
   },
-};
-
-export const WithoutValidParent: Story = {
-  name: 'Without a valid parent',
-  tags: ['test'],
-  play: initializeCommerceInterface,
 };

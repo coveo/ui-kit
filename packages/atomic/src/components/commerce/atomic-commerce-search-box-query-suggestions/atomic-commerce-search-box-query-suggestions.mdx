@@ -1,18 +1,17 @@
-import {Canvas, ArgTypes, Meta, Title, Description, Stories, Subtitle} from '@storybook/blocks';
+import { Meta } from '@storybook/addon-docs/blocks';
 import * as AtomicCommerceSearchBoxQuerySuggestionsStories from './atomic-commerce-search-box-query-suggestions.new.stories';
-import {CanvasWithGithub} from '../../../../storybook-utils/documentation/canvas-with-github';
+import { AtomicDocTemplate } from '../../../../storybook-utils/documentation/atomic-doc-template';
+
 
 <Meta of={AtomicCommerceSearchBoxQuerySuggestionsStories} />
 
-<Title />
-<Subtitle><Description/></Subtitle>
-
-<CanvasWithGithub
-  of={AtomicCommerceSearchBoxQuerySuggestionsStories.Default}
+<AtomicDocTemplate
+  stories={AtomicCommerceSearchBoxQuerySuggestionsStories}
   githubPath="commerce/atomic-commerce-search-box-query-suggestions/atomic-commerce-search-box-query-suggestions.ts"
-/>
+  tagName="atomic-commerce-search-box-query-suggestions"
+  className="AtomicCommerceSearchBoxQuerySuggestions"
+>
 
-## Usage
 This component is placed inside the [atomic-commerce-search-box](/docs/atomic-commerce-search-box--docs) to display query suggestions as the user types.
 
 By default, atomic-commerce-search-box-query-suggestions is already included.
@@ -22,9 +21,4 @@ You can add it manually to customize its properties.
   <atomic-commerce-search-box-query-suggestions></atomic-commerce-search-box-query-suggestions>
 </atomic-commerce-search-box>
 ```
-
-## Examples
-<Stories title={""}/>
-
-## Reference
-<ArgTypes />
+</AtomicDocTemplate>

@@ -1,21 +1,16 @@
-import {Canvas, Markdown, ArgTypes, Meta, Title, Description, Controls, Primary, Stories, Subtitle} from '@storybook/blocks';
+import { Meta } from '@storybook/addon-docs/blocks';
 import * as AtomicCommerceQuerySummaryStories from './atomic-commerce-query-summary.new.stories';
-import {CanvasWithGithub} from '../../../../storybook-utils/documentation/canvas-with-github';
+import { AtomicDocTemplate } from '../../../../storybook-utils/documentation/atomic-doc-template';
+
 
 <Meta of={AtomicCommerceQuerySummaryStories} />
 
-<Title />
-<Subtitle ><Description/></Subtitle>
-
-
-<CanvasWithGithub
-  of={AtomicCommerceQuerySummaryStories.Default}
+<AtomicDocTemplate
+  stories={AtomicCommerceQuerySummaryStories}
   githubPath="commerce/atomic-commerce-query-summary/atomic-commerce-query-summary.ts"
-/>
-
-## Properties
-
-## Usage
+  tagName="atomic-commerce-query-summary"
+  className="AtomicCommerceQuerySummary"
+>
 This component is typically placed within the "status" section of the layout.
 ```html
 <atomic-commerce-interface>
@@ -33,10 +28,4 @@ This component is typically placed within the "status" section of the layout.
   </atomic-commerce-layout>
 </atomic-commerce-interface>
 ```
-
-## Examples
-<Stories title={""}/>
-
-## Reference
-<ArgTypes />
-
+</AtomicDocTemplate>

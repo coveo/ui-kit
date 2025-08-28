@@ -1,4 +1,5 @@
 import {execSync} from 'node:child_process';
+import {writeFileSync} from 'node:fs';
 import {parse} from 'semver';
 import rootJson from '../../package.json' with {type: 'json'};
 import atomicJson from '../../packages/atomic/package.json' with {type: 'json'};
@@ -16,37 +17,58 @@ import shopifyJson from '../../packages/shopify/package.json' with {
   type: 'json',
 };
 
-function getVersionComposants(version) {
+const packagesAndVersions = [
+  {packageName: 'BUENO', version: buenoJson.version, s3Dir: 'bueno'},
+  {packageName: 'HEADLESS', version: headlessJson.version, s3Dir: 'headless'},
+  {packageName: 'ATOMIC', version: atomicJson.version, s3Dir: 'atomic'},
+  {
+    packageName: 'ATOMIC_REACT',
+    version: atomicReactJson.version,
+    s3Dir: 'atomic-react',
+  },
+  {
+    packageName: 'ATOMIC_HOSTED_PAGE',
+    version: atomicHostedPageJson.version,
+    s3Dir: 'atomic-hosted-page',
+  },
+  {packageName: 'SHOPIFY', version: shopifyJson.version, s3Dir: 'shopify'},
+];
+
+function getVersionComponents(version) {
   const parsedVersion = parse(version);
   return [
     parsedVersion?.major,
     parsedVersion?.minor,
     parsedVersion?.patch,
-    ...(parsedVersion?.prerelease[0] ? [parsedVersion.prerelease[0]] : []),
+    ...(parsedVersion?.prerelease.length > 0 ? parsedVersion.prerelease : []),
   ];
 }
 
-function getResolveVariableString(version, packageName) {
+function getVersionSubpaths(version) {
   const prNumber = process.env.PR_NUMBER;
-  const versionComposantsOrdered = getVersionComposants(version);
+  const versionComposantsOrdered = getVersionComponents(version);
 
-  // Use PR number as build if available and PATCH_ONLY is set
-  const {major, minor, patch} =
-    process.env.PATCH_ONLY && prNumber
-      ? {
-          major: '0',
-          minor: '0.0',
-          patch: versionComposantsOrdered
-            .slice(0, 3)
-            .concat(prNumber)
-            .join('.'),
-        }
-      : {
-          major: versionComposantsOrdered.slice(0, 1),
-          minor: versionComposantsOrdered.slice(0, 2).join('.'),
-          patch: versionComposantsOrdered.slice(0, 3).join('.'),
-        };
+  // Use PR number as build if available
+  return prNumber
+    ? {
+        patch: versionComposantsOrdered.slice(0, 3).concat(prNumber).join('.'),
+      }
+    : {
+        major: versionComposantsOrdered.slice(0, 1),
+        minor: versionComposantsOrdered.slice(0, 2).join('.'),
+        patch: versionComposantsOrdered.join('.'),
+      };
+}
 
+function getResolveVariableString(version, packageName) {
+  const {major, minor, patch} = {
+    major: '0',
+    minor: '0.0',
+    ...getVersionSubpaths(version),
+  };
+  if (!patch) {
+    throw new Error(`Invalid version for ${packageName}: ${version}`);
+  }
   return `
     --resolve ${packageName}_MAJOR_VERSION=${major} \
     --resolve ${packageName}_MINOR_VERSION=${minor} \
@@ -54,9 +76,38 @@ function getResolveVariableString(version, packageName) {
   `.trim();
 }
 
-const root = getVersionComposants(rootJson.version);
+function generateCloudFrontInvalidationPaths() {
+  const invalidationVariablePath =
+    './infrastructure/terraform/ui-kit/default.tfvars';
+  const s3basePath = '/proda/StaticCDN';
+  const pathsToInvalidate = [];
+  for (const {s3Dir, version} of packagesAndVersions) {
+    const versions = Object.values(getVersionSubpaths(version));
+    for (const version of versions) {
+      pathsToInvalidate.push(`'${s3basePath}/${s3Dir}/v${version}/*'`);
+    }
+  }
+  const invalidationFileContent = `cloudfront_invalidation_paths = "${pathsToInvalidate.join(' ')}"`;
+  console.log(
+    `Generating CloudFront invalidation file located at ${invalidationVariablePath} with content: ${invalidationFileContent}`
+  );
+  writeFileSync(invalidationVariablePath, invalidationFileContent, {
+    encoding: 'utf8',
+  });
+}
+
+function generateResolveFlags() {
+  return packagesAndVersions
+    .map(({packageName, version}) =>
+      getResolveVariableString(version, packageName)
+    )
+    .join(' ');
+}
+
+const root = getVersionComponents(rootJson.version);
 const IS_NIGHTLY = root.length > 3;
 
+generateCloudFrontInvalidationPaths();
 console.log(
   execSync(
     `
@@ -64,12 +115,7 @@ console.log(
     --version ${root.join('.')} \
     --resolve IS_NIGHTLY=${IS_NIGHTLY} \
     --resolve IS_NOT_NIGHTLY=${!IS_NIGHTLY} \
-    ${getResolveVariableString(buenoJson.version, 'BUENO')} \
-    ${getResolveVariableString(headlessJson.version, 'HEADLESS')}
-    ${getResolveVariableString(atomicJson.version, 'ATOMIC')}
-    ${getResolveVariableString(atomicReactJson.version, 'ATOMIC_REACT')}
-    ${getResolveVariableString(atomicHostedPageJson.version, 'ATOMIC_HOSTED_PAGE')}
-    ${getResolveVariableString(shopifyJson.version, 'SHOPIFY')}
+    ${generateResolveFlags()} \
     --resolve GITHUB_RUN_ID=${process.env.RUN_ID}`
       .replaceAll(/\s+/g, ' ')
       .trim()

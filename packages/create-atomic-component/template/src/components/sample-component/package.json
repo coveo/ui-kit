@@ -23,8 +23,8 @@
     "!generate": "stencil generate"
   },
   "dependencies": {
-    "@coveo/atomic": "3.31.1",
-    "@coveo/headless": "3.27.7",
+    "@coveo/atomic": "3.32.3",
+    "@coveo/headless": "3.28.3",
     "@stencil/core": "4.20.0"
   },
   "devDependencies": {
@@ -36,7 +36,7 @@
     "puppeteer": "24.15.0",
     "rollup-plugin-html": "0.2.1",
     "rimraf": "4.4.1",
-    "@coveo/create-atomic-rollup-plugin": "1.1.1"
+    "@coveo/create-atomic-rollup-plugin": "1.2.0"
   },
   "keywords": [
     "coveo-atomic-component"

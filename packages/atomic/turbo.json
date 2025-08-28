@@ -26,15 +26,13 @@
         "docs/**",
         "!docs/assets.json",
         "src/components.d.ts",
-        ".stencil/**"
+        ".stencil/**",
+        "projects/atomic-angular/src/lib/stencil-generated/**/*"
       ]
     },
     "build:locales": {
       "dependsOn": ["^build"],
-      "outputs": [
-        "src/generated/**",
-        "src/components/search/atomic-search-interface/lang/**"
-      ]
+      "outputs": ["src/generated/**", "src/assets/lang/**"]
     },
     "build:list-assets": {
       "dependsOn": ["build:stencil-lit"],

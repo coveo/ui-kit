@@ -2,14 +2,11 @@ import {
   type CommerceEngineConfiguration,
   getSampleCommerceEngineConfiguration,
 } from '@coveo/headless/commerce';
-import type {Meta, StoryObj as Story} from '@storybook/web-components';
+import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
+import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {html} from 'lit';
-import {
-  playExecuteFirstRequest,
-  wrapInCommerceInterface,
-} from '@/storybook-utils/commerce/commerce-interface-wrapper';
+import {wrapInCommerceInterface} from '@/storybook-utils/commerce/commerce-interface-wrapper';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
-import {renderComponent} from '@/storybook-utils/common/render-component';
 
 const {context, ...restOfConfiguration} =
   getSampleCommerceEngineConfiguration();
@@ -28,20 +25,34 @@ const productListingEngineConfiguration: Partial<CommerceEngineConfiguration> =
     ...restOfConfiguration,
   };
 
-const {decorator, play} = wrapInCommerceInterface({
+const {decorator, afterEach} = wrapInCommerceInterface({
   engineConfig: productListingEngineConfiguration,
-  skipFirstRequest: true,
   type: 'product-listing',
+  includeCodeRoot: false,
 });
+
+const {events, args, argTypes, template} = getStorybookHelpers(
+  'atomic-commerce-breadbox',
+  {excludeCategories: ['methods']}
+);
 
 const meta: Meta = {
   component: 'atomic-commerce-breadbox',
-  title: 'Commerce/atomic-commerce-breadbox',
+  title: 'Commerce/Breadbox',
   id: 'atomic-commerce-breadbox',
-  render: renderComponent,
+  render: (args) => template(args),
   decorators: [decorator],
-  parameters,
-  play,
+  parameters: {
+    ...parameters,
+    layout: 'fullscreen',
+    actions: {
+      handles: events,
+    },
+  },
+  args,
+  argTypes,
+
+  afterEach,
 };
 
 export default meta;
@@ -49,7 +60,9 @@ export default meta;
 export const Default: Story = {
   decorators: [
     (story) => html`
-      ${story()}
+      <div id="code-root">
+        ${story()}
+      </div>
       <div style="margin:20px 0">
         Select facet value(s) to see the Breadbox component.
       </div>
@@ -58,8 +71,4 @@ export const Default: Story = {
       </div>
     `,
   ],
-  play: async (context) => {
-    await play(context);
-    await playExecuteFirstRequest(context);
-  },
 };

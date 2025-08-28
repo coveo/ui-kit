@@ -11,19 +11,19 @@
     "!test.watch": "stencil test --spec --e2e --watchAll"
   },
   "dependencies": {
-    "@coveo/atomic": "3.31.1",
-    "@coveo/headless": "3.27.7"
+    "@coveo/atomic": "3.33.2",
+    "@coveo/headless": "3.29.1"
   },
   "devDependencies": {
     "@rollup/plugin-url": "8.0.2",
-    "@coveo/headless": "3.27.7",
+    "@coveo/headless": "3.29.1",
     "@types/jest": "29.5.1",
     "jest": "29.5.0",
     "jest-cli": "29.5.0",
     "puppeteer": "24.15.0",
     "rollup-plugin-html": "0.2.1",
     "rimraf": "4.4.1",
-    "@coveo/create-atomic-rollup-plugin": "1.1.1"
+    "@coveo/create-atomic-rollup-plugin": "1.2.0"
   },
   "license": "Apache-2.0",
   "workspaces": [

@@ -1,13 +1,13 @@
-import type {Meta, StoryObj as Story} from '@storybook/web-components';
+import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
+import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {html} from 'lit/static-html.js';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
-import {renderComponent} from '@/storybook-utils/common/render-component';
 import {
   playExecuteFirstSearch,
   wrapInSearchInterface,
 } from '@/storybook-utils/search/search-interface-wrapper';
 
-const {decorator, play} = wrapInSearchInterface(
+const {decorator, afterEach} = wrapInSearchInterface(
   {
     accessToken: 'xx149e3ec9-786f-4c6c-b64f-49a403b930de',
     organizationId: 'fashioncoveodemocomgzh7iep8',
@@ -17,15 +17,27 @@ const {decorator, play} = wrapInSearchInterface(
   },
   true
 );
+const {events, args, argTypes, template} = getStorybookHelpers(
+  'atomic-search-box',
+  {excludeCategories: ['methods']}
+);
 
 const meta: Meta = {
   component: 'atomic-search-box',
-  title: 'Atomic/Searchbox/atomic-search-box',
+  title: 'Search/Searchbox/atomic-search-box',
   id: 'atomic-search-box',
-  render: renderComponent,
+  render: (args) => template(args),
   decorators: [decorator],
-  parameters,
-  play,
+  parameters: {
+    ...parameters,
+    actions: {
+      handles: events,
+    },
+  },
+  args,
+  argTypes,
+
+  afterEach,
 };
 
 export default meta;
@@ -37,7 +49,7 @@ export const Default: Story = {
 export const RichSearchBox: Story = {
   name: 'With recent queries and instant results',
   args: {
-    'slots-default': ` <atomic-search-box-recent-queries></atomic-search-box-recent-queries>
+    'default-slot': ` <atomic-search-box-recent-queries></atomic-search-box-recent-queries>
       <atomic-search-box-query-suggestions></atomic-search-box-query-suggestions>
       <atomic-search-box-instant-results
         image-size="small"
@@ -421,8 +433,8 @@ export const InPage: Story = {
         </atomic-layout-section>
       </atomic-search-layout>`,
   ],
-  play: async (context) => {
-    await play(context);
+  afterEach: async (context) => {
+    await afterEach(context);
     await playExecuteFirstSearch(context);
   },
 };

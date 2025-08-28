@@ -6,6 +6,7 @@ import {
   type CommerceEngine,
   type CommerceEngineConfiguration,
   type Context,
+  VERSION as HEADLESS_VERSION,
   type LogLevel,
   loadConfigurationActions,
   loadQueryActions,
@@ -60,13 +61,12 @@ export type CommerceBindings = CommonBindings<
 const FirstRequestExecutedFlag = 'firstRequestExecuted';
 
 /**
- * @alpha
  * The `atomic-commerce-interface` component is the parent to all other atomic commerce components in a commerce page
  * (except for `atomic-commerce-recommendation-list`, which must have
  * `atomic-commerce-recommendation-interface` as a parent). It handles the headless commerce engine and localization
  * configurations.
  *
- * @slot default - The default slot where you can add child components to the search box.
+ * @slot default - The default slot where you can add child components to the interface.
  */
 @customElement('atomic-commerce-interface')
 @withTailwindStyles
@@ -75,16 +75,17 @@ export class AtomicCommerceInterface
   implements BaseAtomicInterface<CommerceEngine>
 {
   public urlManager!: UrlManager;
-  public searchOrListing!: Search | ProductListing;
+  private searchOrListing!: Search | ProductListing;
   public summary!: Summary<SearchSummaryState | ProductListingSummaryState>;
   public context!: Context;
   private unsubscribeUrlManager?: Unsubscribe;
   private unsubscribeSummary?: Unsubscribe;
   private initialized = false;
-  public store: CommerceStore;
+  private store: CommerceStore;
   private interfaceController = new InterfaceController<CommerceEngine>(
     this,
-    'CoveoAtomic'
+    'CoveoAtomic',
+    HEADLESS_VERSION
   );
 
   @state() public error!: Error;
@@ -129,7 +130,7 @@ export class AtomicCommerceInterface
   /**
    * The commerce interface i18next instance.
    */
-  @property({type: Object}) i18n: i18n;
+  @property({type: Object, attribute: false}) i18n: i18n;
 
   /**
    * The commerce interface language.
@@ -142,10 +143,11 @@ export class AtomicCommerceInterface
   /**
    * The commerce interface headless engine.
    */
-  @property({type: Object}) engine?: CommerceEngine;
+  @property({type: Object, attribute: false}) engine?: CommerceEngine;
 
   /**
    * Whether the state should be reflected in the URL parameters.
+   * @deprecated - replaced by `disable-state-reflection-in-url` (this defaults to `true`, while the replacement defaults to `false`).
    */
   @property({
     type: Boolean,
@@ -154,6 +156,16 @@ export class AtomicCommerceInterface
     converter: booleanConverter,
   })
   reflectStateInUrl = true;
+
+  /**
+   * Disable state reflection in the URL parameters.
+   */
+  @property({
+    type: Boolean,
+    attribute: 'disable-state-reflection-in-url',
+    reflect: true,
+  })
+  disableStateReflectionInUrl = false;
 
   /**
    * The CSS selector for the container where the interface will scroll back to.
@@ -395,6 +407,9 @@ export class AtomicCommerceInterface
   }
 
   private initUrlManager() {
+    if (this.disableStateReflectionInUrl) {
+      return;
+    }
     if (!this.reflectStateInUrl) {
       return;
     }

@@ -1,18 +1,17 @@
-import { Canvas, ArgTypes, Meta, Title, Description, Stories, Subtitle } from '@storybook/blocks';
+import { Meta } from '@storybook/addon-docs/blocks';
 import * as AtomicProductPriceStories from './atomic-product-price.new.stories';
-import { CanvasWithGithub } from '../../../../storybook-utils/documentation/canvas-with-github';
+import { AtomicDocTemplate } from '../../../../storybook-utils/documentation/atomic-doc-template';
 
-<Meta of={ AtomicProductPriceStories } />
 
-<Title />
-<Subtitle><Description/></Subtitle>
+<Meta of={AtomicProductPriceStories} />
 
-<CanvasWithGithub
-  of={ AtomicProductPriceStories.Default }
+<AtomicDocTemplate
+  stories={AtomicProductPriceStories}
   githubPath="commerce/atomic-product-price/atomic-product-price.ts"
-/>
+  tagName="atomic-product-price"
+  className="AtomicProductPrice"
+>
 
-## Usage
 The `atomic-product-price` component displays the price of a product. It uses the current currency set in the engine configuration.
 It is typically used within `atomic-product-template` components to show the price of a product in a product list.
 
@@ -32,6 +31,4 @@ It is typically used within `atomic-product-template` components to show the pri
   </atomic-commerce-product-list>
 </atomic-commerce-interface>
 ```
-
-## Examples
-<Stories title={""}/>
+</AtomicDocTemplate>

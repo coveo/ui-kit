@@ -19,8 +19,6 @@ import '../atomic-product-text/atomic-product-text.js';
 
 /**
  * The `atomic-product-description` component renders the description of a product.
- *
- * @part expandable-text - The part that contains the product description text.
  */
 @customElement('atomic-product-description')
 @withTailwindStyles
@@ -46,6 +44,7 @@ export class AtomicProductDescription
 
   /**
    * The number of lines after which the product description should be truncated. A value of "none" will disable truncation.
+   * @default '2'
    */
   @property({
     type: String,
@@ -67,9 +66,11 @@ export class AtomicProductDescription
     converter: booleanConverter,
     attribute: 'is-collapsible',
   })
-  public isCollapsible = true;
+  public isCollapsible = false;
 
-  initialize() {}
+  initialize() {
+    this.validateProps();
+  }
 
   createRenderRoot() {
     return this;

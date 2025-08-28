@@ -1,23 +1,35 @@
-import type {Meta, StoryObj as Story} from '@storybook/web-components';
+import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
+import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {html} from 'lit/static-html.js';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
-import {renderComponent} from '@/storybook-utils/common/render-component';
 import {
   playExecuteFirstSearch,
   wrapInSearchInterface,
 } from '@/storybook-utils/search/search-interface-wrapper';
 
-const {decorator, play} = wrapInSearchInterface();
+const {decorator, afterEach} = wrapInSearchInterface();
+const {events, args, argTypes, template} = getStorybookHelpers(
+  'atomic-load-more-results',
+  {excludeCategories: ['methods']}
+);
 
 const meta: Meta = {
   component: 'atomic-load-more-results',
-  title: 'Atomic/LoadMoreResults',
+  title: 'Search/LoadMoreResults',
   id: 'atomic-load-more-results',
 
-  render: renderComponent,
+  render: (args) => template(args),
   decorators: [decorator],
-  parameters,
-  play,
+  parameters: {
+    ...parameters,
+    actions: {
+      handles: events,
+    },
+  },
+  args,
+  argTypes,
+
+  afterEach,
 };
 
 export default meta;
@@ -186,8 +198,8 @@ export const InPage: Story = {
         </atomic-layout-section>
       </atomic-search-layout>`,
   ],
-  play: async (context) => {
-    await play(context);
+  afterEach: async (context) => {
+    await afterEach(context);
     await playExecuteFirstSearch(context);
   },
 };

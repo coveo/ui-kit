@@ -3,6 +3,7 @@ import {
   type CommerceEngine,
   type CommerceEngineConfiguration,
   type Context,
+  VERSION as HEADLESS_VERSION,
   loadConfigurationActions,
   loadContextActions,
 } from '@coveo/headless/commerce';
@@ -39,8 +40,10 @@ export type CommerceBindings = CommonBindings<
 /**
  * The `atomic-commerce-recommendation-interface` component is meant to be used
  * as the parent of one or more `atomic-commerce-recommendation-list`
- * components. It handles the headless search engine and localization
+ * components. It handles the headless engine and localization
  * configurations.
+ *
+ * @slot default - The default slot where you can add child components to the interface.
  */
 @customElement('atomic-commerce-recommendation-interface')
 @withTailwindStyles
@@ -54,11 +57,12 @@ export class AtomicCommerceRecommendationInterface
   @state() public error!: Error;
 
   public context!: Context;
-  public store: CommerceRecommendationStore;
+  private store: CommerceRecommendationStore;
 
   private interfaceController = new InterfaceController<CommerceEngine>(
     this,
-    'CoveoAtomic'
+    'CoveoAtomic',
+    HEADLESS_VERSION
   );
 
   static styles: CSSResultGroup = [
@@ -77,18 +81,18 @@ export class AtomicCommerceRecommendationInterface
   /**
    * The commerce interface i18next instance.
    */
-  @property({type: Object}) i18n: i18n;
+  @property({type: Object, attribute: false}) i18n: i18n;
 
   /**
    * The commerce interface headless engine.
    */
-  @property({type: Object}) engine?: CommerceEngine;
+  @property({type: Object, attribute: false}) engine?: CommerceEngine;
 
   /**
    * The CSS selector for the container the interface will scroll back to.
    */
   @property({type: String, attribute: 'scroll-container', reflect: true})
-  scrollContainer = 'atomic-commerce-recommendation-interface';
+  scrollContainer: string = 'atomic-commerce-recommendation-interface';
 
   /**
    * The language assets path. By default, this will be a relative URL pointing to `./lang`.
@@ -97,7 +101,7 @@ export class AtomicCommerceRecommendationInterface
    *
    */
   @property({type: String, attribute: 'language-assets-path', reflect: true})
-  languageAssetsPath = './lang';
+  languageAssetsPath: string = './lang';
 
   /**
    * The icon assets path. By default, this will be a relative URL pointing to `./assets`.
@@ -106,7 +110,7 @@ export class AtomicCommerceRecommendationInterface
    *
    */
   @property({type: String, attribute: 'icon-assets-path', reflect: true})
-  iconAssetsPath = './assets';
+  iconAssetsPath: string = './assets';
 
   /**
    * The commerce interface language.
@@ -129,7 +133,7 @@ export class AtomicCommerceRecommendationInterface
     converter: booleanConverter,
     reflect: true,
   })
-  analytics = true;
+  analytics: boolean = true;
 
   private i18Initialized: Promise<void>;
 

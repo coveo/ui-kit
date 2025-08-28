@@ -1,19 +1,33 @@
-import {Canvas, ArgTypes, Meta, Title, Description} from '@storybook/blocks';
+import { Meta } from '@storybook/addon-docs/blocks';
 import * as AtomicCommerceSortDropdownStories from './atomic-commerce-sort-dropdown.new.stories';
-import {CanvasWithGithub} from '../../../../storybook-utils/documentation/canvas-with-github';
+import { AtomicDocTemplate } from '../../../../storybook-utils/documentation/atomic-doc-template';
+
 
 <Meta of={AtomicCommerceSortDropdownStories} />
 
-<Title />
-<Subtitle><Description/></Subtitle>
-
-<CanvasWithGithub
-  of={AtomicCommerceSortDropdownStories.Default}
+<AtomicDocTemplate
+  stories={AtomicCommerceSortDropdownStories}
   githubPath="commerce/atomic-commerce-sort-dropdown/atomic-commerce-sort-dropdown.ts"
-/>
+  tagName="atomic-commerce-sort-dropdown"
+  className="AtomicCommerceSortDropdown"
+>
 
-## Examples
-<Stories title={""}/>
+This component is typically placed within the "status" section of the layout.
 
-## Reference
-<ArgTypes />
+```html
+<atomic-commerce-interface>
+  ...
+  <atomic-commerce-layout>
+    ...
+    <atomic-layout-section section="main">
+      ...
+      <atomic-layout-section section="status">
+
+        <atomic-commerce-sort-dropdown></atomic-commerce-sort-dropdown>
+
+      </atomic-layout-section>
+    </atomic-layout-section>
+  </atomic-commerce-layout>
+</atomic-commerce-interface>
+```
+</AtomicDocTemplate>

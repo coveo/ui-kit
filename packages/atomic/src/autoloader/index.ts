@@ -22,11 +22,18 @@ export function registerAutoloader(
    */
   const observeStencilElementHydration = (atomicElement: Element) => {
     const attributeObserver = new MutationObserver(async () => {
-      if (atomicElement.classList.contains('hydrated')) {
+      if (
+        atomicElement.classList.contains('hydrated') &&
+        'shadowRoot' in atomicElement &&
+        atomicElement.shadowRoot &&
+        !visitedNodes.has(atomicElement.shadowRoot)
+      ) {
         attributeObserver.disconnect();
-        if ('shadowRoot' in atomicElement && atomicElement.shadowRoot) {
-          await discover(atomicElement.shadowRoot);
-        }
+        await discover(atomicElement.shadowRoot);
+        observer.observe(atomicElement.shadowRoot, {
+          subtree: true,
+          childList: true,
+        });
       }
     });
 
@@ -59,15 +66,6 @@ export function registerAutoloader(
       allCustomElements.push(root);
     }
     if (rootIsCustomElement) {
-      const childTemplates = root.querySelectorAll('template');
-      //This is necessary to load the components that are inside the templates
-      for (const template of childTemplates) {
-        if (visitedNodes.has(template.content)) {
-          continue;
-        }
-        await discover(template.content);
-        observer.observe(template.content, {subtree: true, childList: true});
-      }
       //TODO: This part should not be necessary: instead, if component-a uses component-b, component-a should be responsible for loading component-b
       if (
         'shadowRoot' in root &&
@@ -78,6 +76,17 @@ export function registerAutoloader(
         observer.observe(root.shadowRoot, {subtree: true, childList: true});
       }
     }
+
+    const childTemplates = root.querySelectorAll('template');
+    //This is necessary to load the components that are inside the templates
+    for (const template of childTemplates) {
+      if (visitedNodes.has(template.content)) {
+        continue;
+      }
+      await discover(template.content);
+      observer.observe(template.content, {subtree: true, childList: true});
+    }
+
     const litRegistrationPromises = [];
     for (const atomicElement of allCustomElements) {
       const tagName = atomicElement.tagName.toLowerCase();
@@ -126,11 +135,9 @@ export function registerAutoloader(
     }
   });
 
-  const initializeDiscovery = async () => {
+  const initializeDiscovery = () => {
     for (const root of roots) {
-      // Initial discovery
-      await discover(root);
-      // Listen for new undefined elements
+      discover(root);
       observer.observe(root, {
         subtree: true,
         childList: true,

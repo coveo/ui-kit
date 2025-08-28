@@ -1,19 +1,16 @@
-import { Canvas, ArgTypes, Meta, Title, Description, Stories, Subtitle } from '@storybook/blocks';
+import { Meta } from '@storybook/addon-docs/blocks';
 import * as AtomicCommerceInterfaceStories from './atomic-commerce-interface.new.stories';
-import { CanvasWithGithub } from '../../../../storybook-utils/documentation/canvas-with-github';
+import { AtomicDocTemplate } from '../../../../storybook-utils/documentation/atomic-doc-template';
+
 
 <Meta of={AtomicCommerceInterfaceStories} />
 
-<Title />
-<Subtitle><Description/></Subtitle>
-
-<CanvasWithGithub
-  of={AtomicCommerceInterfaceStories.Default}
+<AtomicDocTemplate
+  stories={AtomicCommerceInterfaceStories}
   githubPath="commerce/atomic-commerce-interface/atomic-commerce-interface.ts"
-/>
-
-
-## Usage
+  tagName="atomic-commerce-interface"
+  className="AtomicCommerceInterface"
+>
 
 This component must wrap the entire commerce layout and be placed at the root of the application. It is required as a parent for all other components.
 
@@ -25,8 +22,4 @@ This component must wrap the entire commerce layout and be placed at the root of
 </atomic-commerce-interface>
 ```
 
-## Examples
-<Stories title={""}/>
-
-## Reference
-<ArgTypes />
+</AtomicDocTemplate>

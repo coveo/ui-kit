@@ -1,5 +1,5 @@
-import {Canvas} from '@storybook/blocks';
-// biome-ignore lint/correctness/noUnusedImports: <>
+import {Canvas} from '@storybook/addon-docs/blocks';
+// biome-ignore lint/correctness/noUnusedImports: Storybook needs this import
 import React from 'react';
 
 export const CanvasWithGithub = ({of, githubPath}) => {

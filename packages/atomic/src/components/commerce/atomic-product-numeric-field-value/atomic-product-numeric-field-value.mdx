@@ -1,18 +1,17 @@
-import { Canvas, ArgTypes, Meta, Title, Description, Stories, Subtitle } from '@storybook/blocks';
+import { Meta } from '@storybook/addon-docs/blocks';
 import * as AtomicProductNumericFieldValueStories from './atomic-product-numeric-field-value.new.stories';
-import { CanvasWithGithub } from '../../../../storybook-utils/documentation/canvas-with-github';
+import { AtomicDocTemplate } from '../../../../storybook-utils/documentation/atomic-doc-template';
 
-<Meta of={ AtomicProductNumericFieldValueStories } />
 
-<Title />
-<Subtitle><Description/></Subtitle>
+<Meta of={AtomicProductNumericFieldValueStories} />
 
-<CanvasWithGithub
-  of={ AtomicProductNumericFieldValueStories.Default }
+<AtomicDocTemplate
+  stories={AtomicProductNumericFieldValueStories}
   githubPath="commerce/atomic-product-numeric-field-value/atomic-product-numeric-field-value.ts"
-/>
+  tagName="atomic-product-numeric-field-value"
+  className="AtomicProductNumericFieldValue"
+>
 
-## Usage
 The `atomic-product-numeric-field-value` component displays a numeric field value for a product, such as ratings or reviews.
 
 It is typically used within `atomic-product-template` components to show numeric attributes of a product in a product list.
@@ -31,9 +30,4 @@ It is typically used within `atomic-product-template` components to show numeric
   </atomic-commerce-product-list>
 </atomic-commerce-interface>
 ```
-
-## Examples
-<Stories title={""}/>
-
-## Reference
-<ArgTypes />
+</AtomicDocTemplate>

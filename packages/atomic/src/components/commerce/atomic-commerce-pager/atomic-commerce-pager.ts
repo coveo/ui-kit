@@ -9,6 +9,7 @@ import {
 } from '@coveo/headless/commerce';
 import {html, LitElement} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
+import {when} from 'lit/directives/when.js';
 import {bindStateToController} from '@/src/decorators/bind-state';
 import {bindingGuard} from '@/src/decorators/binding-guard';
 import {bindings} from '@/src/decorators/bindings';
@@ -25,7 +26,6 @@ import {
   renderPagerPageButton,
   renderPagerPreviousButton,
 } from '../../common/pager/pager-buttons';
-import {renderPagerGuard} from '../../common/pager/pager-guard';
 import {renderPagerNavigation} from '../../common/pager/pager-navigation';
 import type {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface';
 import {getCurrentPagesRange} from './commerce-pager-utils';
@@ -43,7 +43,6 @@ import {getCurrentPagesRange} from './commerce-pager-utils';
  * @part next-button-icon - The "next page" button icon.
  *
  * @event atomic/scrollToTop - Emitted when the user clicks the next or previous button, or a page button.
- * @alpha
  */
 @customElement('atomic-commerce-pager')
 @bindings()
@@ -65,7 +64,7 @@ export class AtomicCommercePager
    * The maximum number of page buttons to display.
    */
   @property({reflect: true, attribute: 'number-of-pages', type: Number})
-  numberOfPages = 5;
+  numberOfPages: number = 5;
 
   /**
    * The SVG icon to use to display the Previous button.
@@ -121,17 +120,14 @@ export class AtomicCommercePager
       this.numberOfPages,
       this.pagerState.totalPages - 1
     );
-    return html`${renderPagerGuard({
-      props: {
-        hasItems: this.pagerState.totalPages > 1,
-        isAppLoaded: this.isAppLoaded,
-      },
-    })(
-      html`${renderPagerNavigation({
-        props: {
-          i18n: this.bindings.i18n,
-        },
-      })(html`
+    return html`${when(
+      this.pagerState.totalPages > 1 && this.isAppLoaded,
+      () =>
+        html`${renderPagerNavigation({
+          props: {
+            i18n: this.bindings.i18n,
+          },
+        })(html`
         ${renderPagerPreviousButton({
           props: {
             icon: this.previousButtonIcon,

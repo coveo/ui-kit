@@ -1,3 +1,132 @@
+## <small>3.33.2 (2025-08-28)</small>
+
+* fix: expose rga internals for angular availability (#5958) ([d452d4f](https://github.com/coveo/ui-kit/commits/d452d4f)), closes [#5958](https://github.com/coveo/ui-kit/issues/5958)
+* fix(atomic commerce): fix loader not detecting components in template elements (#5900) ([d375af8](https://github.com/coveo/ui-kit/commits/d375af8)), closes [#5900](https://github.com/coveo/ui-kit/issues/5900)
+* fix(atomic-react): make `atomic-commerce-layout` work in atomic-react (#5956) ([c14b812](https://github.com/coveo/ui-kit/commits/c14b812)), closes [#5956](https://github.com/coveo/ui-kit/issues/5956)
+* fix(atomic): add variable to control number of rows in atomic-commerce-recommendation-list (#5952) ([0c3aaea](https://github.com/coveo/ui-kit/commits/0c3aaea)), closes [#5952](https://github.com/coveo/ui-kit/issues/5952)
+* fix(atomic): atomic-commerce-facets not rerendering when the controller changes (#5932) ([3f2634b](https://github.com/coveo/ui-kit/commits/3f2634b)), closes [#5932](https://github.com/coveo/ui-kit/issues/5932)
+* fix(atomic): fully hide modal on close (#5954) ([01f96a0](https://github.com/coveo/ui-kit/commits/01f96a0)), closes [#5954](https://github.com/coveo/ui-kit/issues/5954)
+* chore: migrate to storybook9 (#5916) ([b26bff1](https://github.com/coveo/ui-kit/commits/b26bff1)), closes [#5916](https://github.com/coveo/ui-kit/issues/5916)
+* chore(atomic): migrate atomic-*-section-bottom-metadata styles (#5940) ([dc575f4](https://github.com/coveo/ui-kit/commits/dc575f4)), closes [#5940](https://github.com/coveo/ui-kit/issues/5940)
+* chore(atomic): migrate atomic-search-layout (#5877) ([b2172dd](https://github.com/coveo/ui-kit/commits/b2172dd)), closes [#5877](https://github.com/coveo/ui-kit/issues/5877)
+* refactor(atomic): decouple the lang folder generation from the atomic-search-interface (#5971) ([ffab1e6](https://github.com/coveo/ui-kit/commits/ffab1e6)), closes [#5971](https://github.com/coveo/ui-kit/issues/5971)
+* docs(atomic): intro and example pages for commerce (#5929) ([ef096f9](https://github.com/coveo/ui-kit/commits/ef096f9)), closes [#5929](https://github.com/coveo/ui-kit/issues/5929)
+
+
+
+## <small>3.33.1 (2025-08-27)</small>
+
+* chore: address forgotten PR comments (#5923) ([079ffaa](https://github.com/coveo/ui-kit/commits/079ffaa)), closes [#5923](https://github.com/coveo/ui-kit/issues/5923) [#5911](https://github.com/coveo/ui-kit/issues/5911)
+* chore(atomic): add common utilities for sections (#5904) ([24961c6](https://github.com/coveo/ui-kit/commits/24961c6)), closes [#5904](https://github.com/coveo/ui-kit/issues/5904)
+* chore(atomic): avoid running tailwind styles processing build step on custom utilities (#5894) ([15921eb](https://github.com/coveo/ui-kit/commits/15921eb)), closes [#5894](https://github.com/coveo/ui-kit/issues/5894)
+* chore(atomic): make isCollapsible false by default in `atomic-product-description` (#5963) ([6b5b4fb](https://github.com/coveo/ui-kit/commits/6b5b4fb)), closes [#5963](https://github.com/coveo/ui-kit/issues/5963)
+* chore(atomic): migrate common facet stylesheets to CSSStylesheet objects (#5895) ([376aa43](https://github.com/coveo/ui-kit/commits/376aa43)), closes [#5895](https://github.com/coveo/ui-kit/issues/5895)
+* docs(atomic): internal contributing documentation (#5873) ([9e3f116](https://github.com/coveo/ui-kit/commits/9e3f116)), closes [#5873](https://github.com/coveo/ui-kit/issues/5873)
+* fix: limit date input max to `9999-12-31` by default (#5926) ([816ff15](https://github.com/coveo/ui-kit/commits/816ff15)), closes [#5926](https://github.com/coveo/ui-kit/issues/5926)
+* fix(atomic): make 'more results for' clickable in commerce facet search - regular and category facet ([854da58](https://github.com/coveo/ui-kit/commits/854da58)), closes [#5943](https://github.com/coveo/ui-kit/issues/5943)
+* fix(atomic): make product children click open the product page (#5953) ([91e6d02](https://github.com/coveo/ui-kit/commits/91e6d02)), closes [#5953](https://github.com/coveo/ui-kit/issues/5953)
+* fix(atomic): show No label on breadcrumbs when no facet name (#5934) ([c0a48ac](https://github.com/coveo/ui-kit/commits/c0a48ac)), closes [#5934](https://github.com/coveo/ui-kit/issues/5934)
+* fix(atomic): timeframe facet e2e test (#5950) ([beb9256](https://github.com/coveo/ui-kit/commits/beb9256)), closes [#5950](https://github.com/coveo/ui-kit/issues/5950)
+* refactor(atomic): remove displayIf directive; render nothing instead (#5920) ([8a7cc3c](https://github.com/coveo/ui-kit/commits/8a7cc3c)), closes [#5920](https://github.com/coveo/ui-kit/issues/5920)
+
+
+
+## 3.33.0 (2025-08-20)
+
+* chore: misc type annot & jsdoc (#5914) ([5c80e12](https://github.com/coveo/ui-kit/commits/5c80e12)), closes [#5914](https://github.com/coveo/ui-kit/issues/5914)
+* chore(atomic commerce): remove InitializeBindingsMixin on atomic commerce components (#5861) ([ffa37af](https://github.com/coveo/ui-kit/commits/ffa37af)), closes [#5861](https://github.com/coveo/ui-kit/issues/5861)
+* chore(atomic): add styles support to ItemSectionMixin (#5901) ([4dbee2e](https://github.com/coveo/ui-kit/commits/4dbee2e)), closes [#5901](https://github.com/coveo/ui-kit/issues/5901)
+* chore(atomic): adjust generate-component and templates for css-in-js (#5874) ([f565c74](https://github.com/coveo/ui-kit/commits/f565c74)), closes [#5874](https://github.com/coveo/ui-kit/issues/5874)
+* chore(atomic): convert .css.tw component stylesheets to css-in-js (#5868) ([240cf04](https://github.com/coveo/ui-kit/commits/240cf04)), closes [#5868](https://github.com/coveo/ui-kit/issues/5868)
+* chore(atomic): remove deprecation mark on initializeBindings (#5886) ([b4dc9fa](https://github.com/coveo/ui-kit/commits/b4dc9fa)), closes [#5886](https://github.com/coveo/ui-kit/issues/5886)
+* chore(atomic): remove extra stylesheet for refine modals (#5791) ([e52b612](https://github.com/coveo/ui-kit/commits/e52b612)), closes [#5791](https://github.com/coveo/ui-kit/issues/5791)
+* chore(atomic): rework mdx template (#5870) ([ee123c0](https://github.com/coveo/ui-kit/commits/ee123c0)), closes [#5870](https://github.com/coveo/ui-kit/issues/5870)
+* chore(test): accessibility violations (#5917) ([4146434](https://github.com/coveo/ui-kit/commits/4146434)), closes [#5917](https://github.com/coveo/ui-kit/issues/5917)
+* fix: do not wait for 1st discover to avoid race conditions (#5899) ([6d5da1f](https://github.com/coveo/ui-kit/commits/6d5da1f)), closes [#5899](https://github.com/coveo/ui-kit/issues/5899)
+* fix: move store & searchOrListing to private (#5912) ([a7f6dca](https://github.com/coveo/ui-kit/commits/a7f6dca)), closes [#5912](https://github.com/coveo/ui-kit/issues/5912)
+* fix: require slotId for recommendation-list (#5913) ([cca67eb](https://github.com/coveo/ui-kit/commits/cca67eb)), closes [#5913](https://github.com/coveo/ui-kit/issues/5913)
+* fix(atomic commerce): keep atomic-commerce-facet-numeric values visible while loading new values (#5 ([9c85c3e](https://github.com/coveo/ui-kit/commits/9c85c3e)), closes [#5860](https://github.com/coveo/ui-kit/issues/5860)
+* fix(atomic): fix error with atomic-product-link when selecting instant product (#5843) ([8f536a8](https://github.com/coveo/ui-kit/commits/8f536a8)), closes [#5843](https://github.com/coveo/ui-kit/issues/5843)
+* fix(headless commerce): keep reference to original response ID in product & send correct response ID ([a80458f](https://github.com/coveo/ui-kit/commits/a80458f)), closes [#5879](https://github.com/coveo/ui-kit/issues/5879)
+* feat: deprecate `AtomicProductText.enableHighlight` and `AtomicCommerceInterface.reflectStateInUrl`  ([6d04e1b](https://github.com/coveo/ui-kit/commits/6d04e1b)), closes [#5911](https://github.com/coveo/ui-kit/issues/5911)
+* feat: remove conditions attribute to fit with jsdoc (#5910) ([353d5c2](https://github.com/coveo/ui-kit/commits/353d5c2)), closes [#5910](https://github.com/coveo/ui-kit/issues/5910)
+* feat(quickview): provide title to iframe (#5908) ([9671931](https://github.com/coveo/ui-kit/commits/9671931)), closes [#5908](https://github.com/coveo/ui-kit/issues/5908)
+* docs: broken links (#5825) ([6976ef9](https://github.com/coveo/ui-kit/commits/6976ef9)), closes [#5825](https://github.com/coveo/ui-kit/issues/5825)
+* docs(atomic): adjust atomic-results-per-page documentation (#5875) ([228c927](https://github.com/coveo/ui-kit/commits/228c927)), closes [#5875](https://github.com/coveo/ui-kit/issues/5875)
+* docs(atomic): change storybook titles to proper use cases (#5856) ([5a4b25e](https://github.com/coveo/ui-kit/commits/5a4b25e)), closes [#5856](https://github.com/coveo/ui-kit/issues/5856)
+* docs(atomic): permanentid in lower case (#5864) ([8b35655](https://github.com/coveo/ui-kit/commits/8b35655)), closes [#5864](https://github.com/coveo/ui-kit/issues/5864)
+* docs(atomic): sortCriteria combination for Atomic  (#5855) ([aaa8773](https://github.com/coveo/ui-kit/commits/aaa8773)), closes [#5855](https://github.com/coveo/ui-kit/issues/5855)
+* refactor(atomic): simplify atomic-commerce-layout (#5876) ([90b8a27](https://github.com/coveo/ui-kit/commits/90b8a27)), closes [#5876](https://github.com/coveo/ui-kit/issues/5876)
+* test(atomic): fix broken e2e tests (#5881) ([648ded2](https://github.com/coveo/ui-kit/commits/648ded2)), closes [#5881](https://github.com/coveo/ui-kit/issues/5881)
+
+
+
+## <small>3.32.3 (2025-08-13)</small>
+
+* chore(atomic): add Playwright tests for generated answer citations (#5772) ([53d5075](https://github.com/coveo/ui-kit/commits/53d5075)), closes [#5772](https://github.com/coveo/ui-kit/issues/5772)
+* chore(atomic): migrate atomic-results-per-page (#5807) ([8f46a79](https://github.com/coveo/ui-kit/commits/8f46a79)), closes [#5807](https://github.com/coveo/ui-kit/issues/5807)
+* fix(atomic): badly formatted aria-label on facet values (#5863) ([51b8e34](https://github.com/coveo/ui-kit/commits/51b8e34)), closes [#5863](https://github.com/coveo/ui-kit/issues/5863)
+* fix(atomic): commerce-layout margin (#5862) ([ba48ee5](https://github.com/coveo/ui-kit/commits/ba48ee5)), closes [#5862](https://github.com/coveo/ui-kit/issues/5862)
+* docs(atomic): standardize storybook (#5854) ([54b9400](https://github.com/coveo/ui-kit/commits/54b9400)), closes [#5854](https://github.com/coveo/ui-kit/issues/5854)
+
+
+
+## <small>3.32.2 (2025-08-11)</small>
+
+* fix(atomic): use commerce headless version instead of search version (#5827) ([eb91994](https://github.com/coveo/ui-kit/commits/eb91994)), closes [#5827](https://github.com/coveo/ui-kit/issues/5827)
+
+
+
+## <small>3.32.1 (2025-08-11)</small>
+
+* fix: observer stencil more and always (#5853) ([aae3cee](https://github.com/coveo/ui-kit/commits/aae3cee)), closes [#5853](https://github.com/coveo/ui-kit/issues/5853)
+* fix(atomic): improve product children layout for any child count (#5826) ([029b11d](https://github.com/coveo/ui-kit/commits/029b11d)), closes [#5826](https://github.com/coveo/ui-kit/issues/5826)
+* chore(atomic): add postcss/tailwindcss support for CSSStylesheets (#5808) ([c1cda14](https://github.com/coveo/ui-kit/commits/c1cda14)), closes [#5808](https://github.com/coveo/ui-kit/issues/5808)
+* chore(atomic): atomic-product-multi-value-text font size override not applied correctly (#5806) ([e613f7f](https://github.com/coveo/ui-kit/commits/e613f7f)), closes [#5806](https://github.com/coveo/ui-kit/issues/5806) [/github.com/coveo/ui-kit/pull/5802/files#diff-913ab5c20cb2c3af53f6e5de776c7b0cd155ecfbae2b4fdf6e241cefee4c0a91](https://github.com//github.com/coveo/ui-kit/pull/5802/files/issues/diff-913ab5c20cb2c3af53f6e5de776c7b0cd155ecfbae2b4fdf6e241cefee4c0a91)
+* perf: remove initializePopover unused code from commerce facets (#5847) ([c45ce38](https://github.com/coveo/ui-kit/commits/c45ce38)), closes [#5847](https://github.com/coveo/ui-kit/issues/5847)
+* style: lint forgotten files (#5848) ([8b77db5](https://github.com/coveo/ui-kit/commits/8b77db5)), closes [#5848](https://github.com/coveo/ui-kit/issues/5848)
+
+
+
+## 3.32.0 (2025-08-07)
+
+* chore: fix atomic dev command (#5813) ([ff5a3b5](https://github.com/coveo/ui-kit/commits/ff5a3b5)), closes [#5813](https://github.com/coveo/ui-kit/issues/5813)
+* chore: migrate atomic-product-section-* from Stencil to Lit (#5707) ([b7fe622](https://github.com/coveo/ui-kit/commits/b7fe622)), closes [#5707](https://github.com/coveo/ui-kit/issues/5707) [#5697](https://github.com/coveo/ui-kit/issues/5697)
+* chore: migrate from master to main (#5822) ([5372fa4](https://github.com/coveo/ui-kit/commits/5372fa4)), closes [#5822](https://github.com/coveo/ui-kit/issues/5822)
+* chore: update dependencies (major) (#5793) ([8cbf5bc](https://github.com/coveo/ui-kit/commits/8cbf5bc)), closes [#5793](https://github.com/coveo/ui-kit/issues/5793)
+* chore(atomic): fix failing atomic-commerce-breadbox e2e tests (#5839) ([9a98005](https://github.com/coveo/ui-kit/commits/9a98005)), closes [#5839](https://github.com/coveo/ui-kit/issues/5839)
+* chore(atomic): migrate all commerce facets (#5750) ([93f09ad](https://github.com/coveo/ui-kit/commits/93f09ad)), closes [#5750](https://github.com/coveo/ui-kit/issues/5750)
+* chore(atomic): migrate atomic-aria-live (#5753) ([1707e4b](https://github.com/coveo/ui-kit/commits/1707e4b)), closes [#5753](https://github.com/coveo/ui-kit/issues/5753)
+* chore(atomic): migrate atomic-product-description (#5747) ([8974972](https://github.com/coveo/ui-kit/commits/8974972)), closes [#5747](https://github.com/coveo/ui-kit/issues/5747)
+* chore(atomic): migrate atomic-product-field-condition (#5722) ([5a0e0a9](https://github.com/coveo/ui-kit/commits/5a0e0a9)), closes [#5722](https://github.com/coveo/ui-kit/issues/5722)
+* chore(atomic): migrate atomic-product-image (#5731) ([be03980](https://github.com/coveo/ui-kit/commits/be03980)), closes [#5731](https://github.com/coveo/ui-kit/issues/5731)
+* chore(atomic): migrate atomic-product-rating from Stencil to Lit (#5716) ([9d27353](https://github.com/coveo/ui-kit/commits/9d27353)), closes [#5716](https://github.com/coveo/ui-kit/issues/5716) [#5696](https://github.com/coveo/ui-kit/issues/5696)
+* chore(atomic): mock console error (#5792) ([dc5c5ca](https://github.com/coveo/ui-kit/commits/dc5c5ca)), closes [#5792](https://github.com/coveo/ui-kit/issues/5792)
+* chore(atomic): remove atomic-commerce-load-more-products unnecessary stylesheets (#5799) ([56bf0dc](https://github.com/coveo/ui-kit/commits/56bf0dc)), closes [#5799](https://github.com/coveo/ui-kit/issues/5799)
+* chore(atomic): remove atomic-commerce-query-summary unnecessary stylesheets (#5797) ([effb9aa](https://github.com/coveo/ui-kit/commits/effb9aa)), closes [#5797](https://github.com/coveo/ui-kit/issues/5797)
+* chore(atomic): remove atomic-commerce-sort-dropdown unnecessary stylesheets (#5800) ([83cae07](https://github.com/coveo/ui-kit/commits/83cae07)), closes [#5800](https://github.com/coveo/ui-kit/issues/5800)
+* chore(atomic): remove atomic-icon unnecessary stylesheets (#5795) ([a4101f1](https://github.com/coveo/ui-kit/commits/a4101f1)), closes [#5795](https://github.com/coveo/ui-kit/issues/5795)
+* chore(atomic): remove atomic-product-description/excerpt unnecessary stylesheets (#5796) ([8f16e45](https://github.com/coveo/ui-kit/commits/8f16e45)), closes [#5796](https://github.com/coveo/ui-kit/issues/5796)
+* chore(atomic): remove atomic-product-multi-value-text unnecessary stylesheets (#5801) ([1f2258b](https://github.com/coveo/ui-kit/commits/1f2258b)), closes [#5801](https://github.com/coveo/ui-kit/issues/5801)
+* chore(atomic): remove atomic-product-price unnecessary stylesheets (#5802) ([50321ec](https://github.com/coveo/ui-kit/commits/50321ec)), closes [#5802](https://github.com/coveo/ui-kit/issues/5802)
+* chore(atomic): remove commerce interfaces unnecessary stylesheets (#5794) ([5bcab92](https://github.com/coveo/ui-kit/commits/5bcab92)), closes [#5794](https://github.com/coveo/ui-kit/issues/5794)
+* chore(deps): lock file maintenance j:kit-282 (#5810) ([c408fd2](https://github.com/coveo/ui-kit/commits/c408fd2)), closes [#5810](https://github.com/coveo/ui-kit/issues/5810)
+* test(atomic): add search interface fixture (#5786) ([2508f3c](https://github.com/coveo/ui-kit/commits/2508f3c)), closes [#5786](https://github.com/coveo/ui-kit/issues/5786)
+* test(atomic): hopefully reduce flakiness in this file (#5838) ([c364ede](https://github.com/coveo/ui-kit/commits/c364ede)), closes [#5838](https://github.com/coveo/ui-kit/issues/5838)
+* fix(atomic): correct Traditional Chinese translation for "search" (#5814) ([aeda47b](https://github.com/coveo/ui-kit/commits/aeda47b)), closes [#5814](https://github.com/coveo/ui-kit/issues/5814)
+* fix(atomic): ensure component styles dont break when using @import rules (#5790) ([dbdab38](https://github.com/coveo/ui-kit/commits/dbdab38)), closes [#5790](https://github.com/coveo/ui-kit/issues/5790)
+* fix(atomic): ensure CoveoAtomic.version is defined (#5777) ([c512b81](https://github.com/coveo/ui-kit/commits/c512b81)), closes [#5777](https://github.com/coveo/ui-kit/issues/5777)
+* fix(atomic): inject tailwind properties in withTailwindStyles decorator instead of default theme (#5 ([b96a0aa](https://github.com/coveo/ui-kit/commits/b96a0aa)), closes [#5760](https://github.com/coveo/ui-kit/issues/5760)
+* fix(atomic): prevent infinite loading in ChildrenUpdateCompleteMixin when child components have erro ([c8c66d8](https://github.com/coveo/ui-kit/commits/c8c66d8)), closes [#5829](https://github.com/coveo/ui-kit/issues/5829)
+* fix(atomic): remove not working expandable-text part (#5824) ([bf3a34c](https://github.com/coveo/ui-kit/commits/bf3a34c)), closes [#5824](https://github.com/coveo/ui-kit/issues/5824)
+* fix(deps): update all dependencies j:kit-282 (#5770) ([214bb00](https://github.com/coveo/ui-kit/commits/214bb00)), closes [#5770](https://github.com/coveo/ui-kit/issues/5770)
+* fix(headless): bubble api error to the state after renew access token fails (#5589) ([8348a39](https://github.com/coveo/ui-kit/commits/8348a39)), closes [#5589](https://github.com/coveo/ui-kit/issues/5589)
+* feat: Migrate monorepo build system from NX to Turborepo (#5733) ([e7e1237](https://github.com/coveo/ui-kit/commits/e7e1237)), closes [#5733](https://github.com/coveo/ui-kit/issues/5733)
+* feat(atomic): add logic for pdf citation anchoring with page number (#5788) ([56d3242](https://github.com/coveo/ui-kit/commits/56d3242)), closes [#5788](https://github.com/coveo/ui-kit/issues/5788)
+* refactor(atomic): change interface-common into a reactiveController (#5773) ([220482c](https://github.com/coveo/ui-kit/commits/220482c)), closes [#5773](https://github.com/coveo/ui-kit/issues/5773)
+
+
+
 ## <small>3.31.1 (2025-07-30)</small>
 
 * chore: allow prerelease on CI (#5756) ([de2c411](https://github.com/coveo/ui-kit/commits/de2c411)), closes [#5756](https://github.com/coveo/ui-kit/issues/5756)

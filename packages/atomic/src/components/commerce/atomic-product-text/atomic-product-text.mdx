@@ -1,29 +1,16 @@
-import {Canvas, ArgTypes, Meta, Title, Description, Subtitle} from '@storybook/blocks';
+import { Meta } from '@storybook/addon-docs/blocks';
 import * as AtomicProductTextStories from './atomic-product-text.new.stories';
+import { AtomicDocTemplate } from '../../../../storybook-utils/documentation/atomic-doc-template';
+
 
 <Meta of={AtomicProductTextStories} />
 
-<Title />
-<Subtitle>
-  <Description />
-</Subtitle>
-
-<Canvas
-  additionalActions={[
-    {
-      title: 'Open in GitHub',
-      onClick: () => {
-        window.open(
-          'https://github.com/coveo/ui-kit/blob/main/packages/atomic/src/components/commerce/product-template-components/atomic-product-text/atomic-product-text.ts',
-          '_blank'
-        );
-      },
-    },
-  ]}
-  of={AtomicProductTextStories.Default}
-/>
-
-## Usage
+<AtomicDocTemplate
+  stories={AtomicProductTextStories}
+  githubPath="commerce/atomic-product-text/atomic-product-text.ts"
+  tagName="atomic-product-text"
+  className="AtomicProductText"
+>
 
 The `atomic-product-text` component renders the value of a string product field.
 
@@ -75,6 +62,4 @@ The component looks for fields in this order:
 1. First in the Product object properties
 2. Then in the `product.additionalFields` object
 
-## Reference
-
-<ArgTypes />
+</AtomicDocTemplate>
