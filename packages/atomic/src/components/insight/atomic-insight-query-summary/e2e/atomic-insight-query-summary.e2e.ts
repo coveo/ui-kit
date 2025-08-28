@@ -9,4 +9,12 @@ test.describe('AtomicInsightQuerySummary', () => {
     const accessibilityResults = await makeAxeBuilder().analyze();
     expect(accessibilityResults.violations.length).toEqual(0);
   });
+
+  test('should display message', async ({insightQuerySummary}) => {
+    await expect(insightQuerySummary.text).toBeVisible();
+  });
+
+  test('screen readers should read out', async ({insightQuerySummary}) => {
+    await expect(insightQuerySummary.ariaLive).toBeVisible();
+  });
 });

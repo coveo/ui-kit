@@ -20,6 +20,13 @@ import type {InsightBindings} from '../atomic-insight-interface/atomic-insight-i
 
 /**
  * @internal
+ *
+ * The `atomic-insight-query-summary` component displays information about the current range of results and the request duration (e.g., "Results 1-10 of 123").
+ *
+ * @part container - The container for the whole summary.
+ * @part highlight - The summary highlights.
+ * @part query - The summary highlighted query.
+ * @part placeholder - The query summary placeholder used while the search interface is initializing.
  */
 @customElement('atomic-insight-query-summary')
 @bindings()

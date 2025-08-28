@@ -5,4 +5,12 @@ export class AtomicInsightQuerySummaryPageObject extends BasePageObject {
   constructor(page: Page) {
     super(page, 'atomic-insight-query-summary');
   }
+
+  get text() {
+    return this.page.locator('div[part="container"]');
+  }
+
+  get ariaLive() {
+    return this.page.getByRole('status');
+  }
 }
