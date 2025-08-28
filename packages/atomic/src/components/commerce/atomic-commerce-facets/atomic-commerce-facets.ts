@@ -21,7 +21,6 @@ import {bindingGuard} from '@/src/decorators/binding-guard';
 import {bindings} from '@/src/decorators/bindings';
 import {errorGuard} from '@/src/decorators/error-guard';
 import type {InitializableComponent} from '@/src/decorators/types';
-import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles.js';
 import '../../common/atomic-facet-placeholder/atomic-facet-placeholder';
 import {createAppLoadedListener} from '../../common/interface/store';
 import '../atomic-commerce-category-facet/atomic-commerce-category-facet';
@@ -31,6 +30,7 @@ import '../atomic-commerce-numeric-facet/atomic-commerce-numeric-facet';
 import '../atomic-commerce-timeframe-facet/atomic-commerce-timeframe-facet';
 import {keyed} from 'lit/directives/keyed.js';
 import {bindStateToController} from '@/src/decorators/bind-state';
+import {LightDomMixin} from '@/src/mixins/light-dom';
 
 /**
  * The `atomic-commerce-facets` component automatically renders commerce facets based on the Commerce API response.
@@ -38,9 +38,8 @@ import {bindStateToController} from '@/src/decorators/bind-state';
  */
 @customElement('atomic-commerce-facets')
 @bindings()
-@withTailwindStyles
 export class AtomicCommerceFacets
-  extends LitElement
+  extends LightDomMixin(LitElement)
   implements InitializableComponent<CommerceBindings>
 {
   @state()
@@ -75,10 +74,6 @@ export class AtomicCommerceFacets
     createAppLoadedListener(this.bindings.store, (isAppLoaded) => {
       this.isAppLoaded = isAppLoaded;
     });
-  }
-
-  createRenderRoot() {
-    return this;
   }
 
   private isProductListing() {
