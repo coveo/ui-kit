@@ -7,6 +7,7 @@ import '../atomic-product-text/atomic-product-text';
 import {userEvent} from '@vitest/browser/context';
 import {ifDefined} from 'lit/directives/if-defined.js';
 import type {TruncateAfter} from '../../common/expandable-text/expandable-text';
+import type {AtomicProductExcerpt} from './atomic-product-excerpt';
 
 describe('atomic-product-excerpt', () => {
   const renderProductExcerpt = async (
@@ -25,7 +26,7 @@ describe('atomic-product-excerpt', () => {
       This is a test to see how the excerpt behaves with long content.`,
     });
 
-    const {element} = await renderInAtomicProduct({
+    const {element} = await renderInAtomicProduct<AtomicProductExcerpt>({
       template: html`
       <atomic-product-excerpt
         truncate-after=${ifDefined(props.truncateAfter)}
@@ -55,6 +56,11 @@ describe('atomic-product-excerpt', () => {
   it('should render nothing when there are no excerpt', async () => {
     const {element} = await renderProductExcerpt({excerpt: ''});
     expect(element).toBeEmptyDOMElement();
+  });
+
+  it('should have isCollapsible as `false` by default', async () => {
+    const {element} = await renderProductExcerpt();
+    expect(element.isCollapsible).toBe(false);
   });
 
   it('should render the excerpt text', async () => {

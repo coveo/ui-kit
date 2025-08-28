@@ -56,7 +56,7 @@ export const renderExpandableText: FunctionalComponentWithChildren<
     const buttonClasses = tw({
       'expandable-text-button p-1 text-xs leading-[calc(1/.75)]': true,
       invisible: !isTruncated && !isExpanded,
-      hidden: !isCollapsible && !isTruncated && isExpanded,
+      hidden: isExpanded && (!isTruncated || !isCollapsible),
     });
 
     const buttonClassString = Object.entries(buttonClasses)

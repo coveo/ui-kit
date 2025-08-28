@@ -36,6 +36,7 @@ div.result-root.with-sections.display-list.image-small
 
   .tiles {
     --atomic-recs-number-of-columns: 2;
+    --atomic-recs-number-of-rows: 2;
   }
 }
 

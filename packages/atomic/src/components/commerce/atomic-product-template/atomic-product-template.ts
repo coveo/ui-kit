@@ -9,19 +9,7 @@ import type {LitElementWithError} from '@/src/decorators/types';
 import {mapProperty} from '@/src/utils/props-utils';
 import {makeMatchConditions} from '../../common/product-template/product-template-common';
 import {ProductTemplateController} from '../../common/product-template/product-template-controller';
-import '../atomic-commerce-text/atomic-commerce-text';
-import '../atomic-product-text/atomic-product-text';
-import '../atomic-product-link/atomic-product-link';
 import '../atomic-product/atomic-product';
-import '../atomic-product-excerpt/atomic-product-excerpt';
-import '../atomic-product-children/atomic-product-children';
-import '../atomic-product-field-condition/atomic-product-field-condition';
-import '../atomic-product-multi-value-text/atomic-product-multi-value-text';
-import '../atomic-product-price/atomic-product-price';
-import '../atomic-product-numeric-field-value/atomic-product-numeric-field-value';
-import '../atomic-product-description/atomic-product-description';
-import '../atomic-product-image/atomic-product-image';
-import '../atomic-product-rating/atomic-product-rating';
 
 /**
  * * A product template determines the format of the query results, depending on the conditions that are defined for each template.
@@ -50,7 +38,7 @@ export class AtomicProductTemplate
    * For example, the following targets a template and sets a condition to make it apply only to products whose `ec_name` contains `singapore`:
    * `document.querySelector('#target-template').conditions = [(product) => /singapore/i.test(product.ec_name)];`
    */
-  @property({type: Array})
+  @property({attribute: false, type: Array})
   conditions: ProductTemplateCondition[] = [];
 
   /**

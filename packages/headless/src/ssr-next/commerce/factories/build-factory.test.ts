@@ -32,12 +32,16 @@ describe('buildFactory', () => {
   const mockWireControllerParams = vi.mocked(wireControllerParams);
   const mockBuildCommerceEngine = vi.mocked(buildCommerceEngine);
   const mockBuildOptions = {
-    country: 'US',
-    currency: 'USD' as CurrencyCodeISO4217,
-    recommendations: [],
-    language: 'en-US',
-    query: 'query',
-    url: 'http://example.com',
+    context: {
+      country: 'US',
+      currency: 'USD' as CurrencyCodeISO4217,
+      recommendations: [],
+      language: 'en-US',
+      view: {url: 'http://example.com'},
+    },
+    searchParams: {
+      query: 'query',
+    },
   };
 
   const mockLogger = {
@@ -72,10 +76,12 @@ describe('buildFactory', () => {
 
     const factory = buildFactory(definition, mockEngineOptions);
     await factory(SolutionType.listing)({
-      country: 'CA',
-      currency: 'USD',
-      language: 'en',
-      url: 'https://example.com',
+      context: {
+        country: 'CA',
+        currency: 'USD',
+        language: 'en',
+        view: {url: 'https://example.com'},
+      },
     });
 
     expect(mockWireControllerParams.mock.calls[0][0]).toStrictEqual('listing');
@@ -86,10 +92,12 @@ describe('buildFactory', () => {
       })
     );
     expect(mockWireControllerParams.mock.calls[0][2]).toStrictEqual({
-      country: 'CA',
-      currency: 'USD',
-      language: 'en',
-      url: 'https://example.com',
+      context: {
+        country: 'CA',
+        currency: 'USD',
+        language: 'en',
+        view: {url: 'https://example.com'},
+      },
     });
   });
 

@@ -1,18 +1,13 @@
-/**
- * Controller Wiring Utilities
- *
- * Transforms simple user configuration into complex internal controller structures.
- */
-
-import {ArrayValue, Schema, StringValue} from '@coveo/bueno';
+import {ArrayValue, RecordValue, Schema, StringValue} from '@coveo/bueno';
 import {contextDefinition} from '../../../features/commerce/context/context-validation.js';
+import {parametersDefinition} from '../../../features/commerce/parameters/parameters-schema.js';
 import {
   nonEmptyString,
   requiredEmptyAllowedString,
-  requiredNonEmptyString,
 } from '../../../utils/validate-payload.js';
 import type {ControllersPropsMap} from '../../common/types/controllers.js';
-import type {BuildConfig, SearchBuildConfig} from '../types/build.js';
+import type {Parameters} from '../controllers/parameter-manager/headless-core-parameter-manager.ssr.js';
+import type {BuildConfig} from '../types/build.js';
 import {SolutionType} from '../types/controller-constants.js';
 import type {InferControllerPropsMapFromDefinitions} from '../types/controller-inference.js';
 import type {CommerceControllerDefinitionsMap} from '../types/engine.js';
@@ -22,14 +17,17 @@ import {
 } from './recommendation-filter.js';
 
 const requiredDefinition = {
-  language: contextDefinition.language,
-  country: contextDefinition.country,
-  currency: contextDefinition.currency,
-  url: requiredNonEmptyString,
+  context: new RecordValue({
+    options: {required: true},
+    values: contextDefinition,
+  }),
 };
 
 const listingDefinition = {
   ...requiredDefinition,
+  searchParams: new RecordValue({
+    values: parametersDefinition,
+  }),
 };
 
 const standaloneDefinition = {
@@ -38,7 +36,10 @@ const standaloneDefinition = {
 
 const searchDefinition = {
   ...requiredDefinition,
-  query: requiredEmptyAllowedString,
+  searchParams: new RecordValue({
+    options: {required: true},
+    values: {query: requiredEmptyAllowedString, ...parametersDefinition},
+  }),
 };
 
 const recommendationsDefinition = (recommendationName: string[]) => ({
@@ -83,112 +84,108 @@ function validateBuildConfig<
   schema.validate(buildConfig);
 }
 
-function createControllerWirer<
+/**
+ * Controller wiring class that handles the complete wiring process.
+ * Transforms simple user configuration into complex internal controller structures.
+ */
+class ControllerWirer<
   TControllerDefinitions extends CommerceControllerDefinitionsMap,
->(
-  buildConfig: BuildConfig<TControllerDefinitions, SolutionType>,
-  controllerDefinitions: CommerceControllerDefinitionsMap,
-  controllerProps: ControllersPropsMap
-) {
-  return {
-    wireParameterManager: (query?: string) => {
-      if (!controllerDefinitions?.parameterManager) return;
+  TSolutionType extends SolutionType,
+> {
+  constructor(
+    private buildConfig: BuildConfig<TControllerDefinitions, TSolutionType>,
+    private controllerDefinitions: CommerceControllerDefinitionsMap,
+    private controllerProps: ControllersPropsMap
+  ) {}
 
-      const {searchParams} = buildConfig;
-      const parameters = {
-        ...(query && {q: query}),
-        ...(searchParams && typeof searchParams === 'object'
-          ? searchParams
-          : {}),
-      };
+  private wireParameterManager(): void {
+    if (!this.controllerDefinitions?.parameterManager) return;
 
-      controllerProps.parameterManager = {
-        initialState: {parameters},
-      };
-    },
+    const {searchParams} = this.buildConfig;
+    const {query, ...rest} =
+      (searchParams as Parameters & {
+        query?: string;
+      }) || {};
 
-    wireContext: () => {
-      if (!controllerDefinitions?.context) return;
+    const parameters = {
+      ...(query && {q: query}),
+      ...(rest && typeof rest === 'object' ? rest : {}),
+    };
 
-      const {language, country, currency, url} = buildConfig;
-      controllerProps.context = {
-        initialState: {
-          view: {url},
-          language,
-          country,
-          currency,
-        },
-      };
-    },
+    this.controllerProps.parameterManager = {
+      initialState: {parameters},
+    };
+  }
 
-    wireCart: () => {
-      if (!controllerDefinitions?.cart || !buildConfig.cart) return;
+  private wireContext(): void {
+    if (!this.controllerDefinitions?.context) return;
 
-      controllerProps.cart = {
-        initialState: buildConfig.cart,
-      };
-    },
+    const {context} = this.buildConfig;
+    this.controllerProps.context = {
+      initialState: {
+        ...context,
+      },
+    };
+  }
 
-    wireRecommendations: () => {
-      if (!('recommendations' in buildConfig)) {
-        return;
-      }
-      for (const recController in controllerDefinitions) {
-        if (isRecommendationDefinition(controllerDefinitions[recController])) {
-          controllerProps[recController] = {
-            initialState: {
-              ...('productId' in buildConfig && {
-                productId: buildConfig.productId,
-              }),
-            },
-          };
-        }
-      }
-    },
-  };
-}
+  private wireCart(): void {
+    if (!this.controllerDefinitions?.cart || !this.buildConfig.cart) return;
 
-function wireCommonControllers(
-  wirer: ReturnType<typeof createControllerWirer>
-): void {
-  wirer.wireCart();
-  wirer.wireContext();
-}
+    this.controllerProps.cart = {
+      initialState: this.buildConfig.cart,
+    };
+  }
 
-function wireSolutionSpecificControllers<
-  TControllerDefinitions extends CommerceControllerDefinitionsMap,
->(
-  solutionType: SolutionType,
-  buildConfig: BuildConfig<TControllerDefinitions, SolutionType>,
-  wirer: ReturnType<typeof createControllerWirer>
-): void {
-  switch (solutionType) {
-    case SolutionType.search: {
-      const {query} = buildConfig as SearchBuildConfig;
-      if (typeof query === 'string') {
-        wirer.wireParameterManager(query);
-      }
-      break;
+  private wireRecommendations(): void {
+    if (!('recommendations' in this.buildConfig)) {
+      return;
     }
-
-    case SolutionType.listing: {
-      wirer.wireParameterManager();
-      break;
+    for (const recController in this.controllerDefinitions) {
+      if (
+        isRecommendationDefinition(this.controllerDefinitions[recController])
+      ) {
+        this.controllerProps[recController] = {
+          initialState: {
+            ...('productId' in this.buildConfig && {
+              productId: this.buildConfig.productId,
+            }),
+          },
+        };
+      }
     }
+  }
 
-    case SolutionType.recommendation: {
-      wirer.wireRecommendations();
-      break;
-    }
+  /**
+   * Wires all controllers based on solution type and controller definitions.
+   * Handles the complete wiring process in a sequential manner.
+   */
+  public wire(solutionType: SolutionType): void {
+    // Wire common controllers that apply to all solution types
+    this.wireCart();
+    this.wireContext();
 
-    case SolutionType.standalone:
-      // No additional wiring needed for standalone
-      break;
+    // Wire solution-specific controllers
+    switch (solutionType) {
+      case SolutionType.search:
+      case SolutionType.listing: {
+        this.wireParameterManager();
+        break;
+      }
 
-    default: {
-      // Exhaustive check - TypeScript will error if we miss a case
-      const _exhaustiveCheck: never = solutionType;
-      throw new Error(`Unsupported solution type: ${_exhaustiveCheck}`);
+      case SolutionType.recommendation: {
+        this.wireRecommendations();
+        break;
+      }
+
+      case SolutionType.standalone:
+        // No additional wiring needed for standalone
+        break;
+
+      default: {
+        // Exhaustive check - TypeScript will error if we miss a case
+        const _exhaustiveCheck: never = solutionType;
+        throw new Error(`Unsupported solution type: ${_exhaustiveCheck}`);
+      }
     }
   }
 }
@@ -215,14 +212,10 @@ export function wireControllerParams<
   validateBuildConfig(solutionType, controllerDefinitions, buildConfig);
 
   const controllerProps: ControllersPropsMap = buildConfig.controllers ?? {};
-  const wirer = createControllerWirer(
-    buildConfig,
-    controllerDefinitions,
-    controllerProps
-  );
 
-  wireCommonControllers(wirer);
-  wireSolutionSpecificControllers(solutionType, buildConfig, wirer);
+  new ControllerWirer(buildConfig, controllerDefinitions, controllerProps).wire(
+    solutionType
+  );
 
   return controllerProps as InferControllerPropsMapFromDefinitions<TControllerDefinitions>;
 }
