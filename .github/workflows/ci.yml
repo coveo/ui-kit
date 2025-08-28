@@ -442,8 +442,8 @@ jobs:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
       - uses: ./.github/actions/setup
       - uses: ./.github/actions/e2e-atomic-screenshots
-  e2e-atomic-react-test:
-    name: "Run e2e tests on Atomic React"
+  e2e-atomic-search-commerce-react-test:
+    name: "Run e2e tests on Atomic Search Commerce React"
     needs: affected
     if: contains(needs.affected.outputs.projects, '@samples/atomic-search-commerce-react')
     runs-on: ubuntu-latest
@@ -456,8 +456,8 @@ jobs:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
       - uses: ./.github/actions/setup
       - uses: ./.github/actions/e2e-atomic-search-commerce-react
-  e2e-atomic-react-nextjs-test:
-    name: "Run e2e tests on Atomic React NextJS"
+  e2e-atomic-search-nextjs-pages-router-test:
+    name: "Run e2e tests on Atomic Search NextJS Pages Router"
     needs: affected
     if: contains(needs.affected.outputs.projects, '@samples/atomic-search-nextjs-pages-router')
     runs-on: ubuntu-latest
@@ -470,8 +470,8 @@ jobs:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
       - uses: ./.github/actions/setup
       - uses: ./.github/actions/e2e-atomic-search-nextjs-pages-router
-  e2e-atomic-angular-test:
-    name: "Run e2e tests on Atomic Angular"
+  e2e-atomic-search-commerce-angular-test:
+    name: "Run e2e tests on Atomic Search Commerce Angular"
     needs: affected
     if: contains(needs.affected.outputs.projects, '@samples/atomic-search-commerce-angular')
     runs-on: ubuntu-latest
@@ -484,8 +484,8 @@ jobs:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
       - uses: ./.github/actions/setup
       - uses: ./.github/actions/e2e-atomic-search-commerce-angular
-  e2e-atomic-vuejs-test:
-    name: "Run e2e tests on Vue.js sample"
+  e2e-atomic-search-vuejs-test:
+    name: "Run e2e tests on Atomic Search Vue.js"
     needs: affected
     if: contains(needs.affected.outputs.projects, '@samples/atomic-search-vuejs')
     runs-on: ubuntu-latest
@@ -498,8 +498,8 @@ jobs:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
       - uses: ./.github/actions/setup
       - uses: ./.github/actions/e2e-atomic-search-vuejs
-  e2e-atomic-stencil-test:
-    name: "Run e2e tests on Stencil.js sample"
+  e2e-atomic-search-stencil-test:
+    name: "Run e2e tests on Atomic Search Stencil.js"
     needs: affected
     if: contains(needs.affected.outputs.projects, '@samples/atomic-search-stencil')
     runs-on: ubuntu-latest
@@ -527,8 +527,8 @@ jobs:
       - uses: ./.github/actions/setup
       - run: npm run build
       - uses: ./.github/actions/playwright-atomic-hosted-pages
-  playwright-headless-ssr-commerce:
-    name: "Run e2e tests for Headless Commerce SSR"
+  e2e-headless-ssr-commerce-nextjs-test:
+    name: "Run e2e tests on Headless SSR Commerce NextJS"
     needs: affected
     if: contains(needs.affected.outputs.projects, '@samples/headless-ssr-commerce-nextjs')
     runs-on: ubuntu-latest
@@ -556,8 +556,8 @@ jobs:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
       - uses: ./.github/actions/setup
       - uses: ./.github/actions/e2e-atomic-insight-panel
-  e2e-headless-ssr-test-app:
-    name: "Run e2e tests on Headless SSR App router sample"
+  e2e-headless-ssr-search-nextjs-app-router-test:
+    name: "Run e2e tests on Headless SSR Search NextJS App Router"
     needs: affected
     if: contains(needs.affected.outputs.projects, '@samples/headless-ssr-search-nextjs-app-router')
     runs-on: ubuntu-latest
@@ -570,8 +570,8 @@ jobs:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
       - uses: ./.github/actions/setup
       - uses: ./.github/actions/e2e-headless-ssr-search-nextjs-app-router
-  e2e-headless-ssr-test-pages:
-    name: "Run e2e tests on Headless SSR Pages router sample"
+  e2e-headless-ssr-search-nextjs-pages-router-test:
+    name: "Run e2e tests on Headless SSR Search NextJS Pages Router"
     needs: affected
     if: contains(needs.affected.outputs.projects, '@samples/headless-ssr-search-nextjs-pages-router')
     runs-on: ubuntu-latest
@@ -670,19 +670,19 @@ jobs:
       - "playwright-atomic"
       - "playwright-atomic-theming"
       - "playwright-atomic-hosted-page-test"
-      - "playwright-headless-ssr-commerce"
+      - "e2e-headless-ssr-commerce-nextjs-test"
       - "e2e-atomic-test"
       - "e2e-atomic-csp-test"
       - "e2e-quantic"
       - "e2e-atomic-screenshots"
-      - "e2e-atomic-react-test"
-      - "e2e-atomic-react-nextjs-test"
-      - "e2e-atomic-angular-test"
-      - "e2e-atomic-vuejs-test"
-      - "e2e-atomic-stencil-test"
+      - "e2e-atomic-search-commerce-react-test"
+      - "e2e-atomic-search-nextjs-pages-router-test"
+      - "e2e-atomic-search-commerce-angular-test"
+      - "e2e-atomic-search-vuejs-test"
+      - "e2e-atomic-search-stencil-test"
       - "e2e-atomic-insight-panel-test"
-      - "e2e-headless-ssr-test-app"
-      - "e2e-headless-ssr-test-pages"
+      - "e2e-headless-ssr-search-nextjs-app-router-test"
+      - "e2e-headless-ssr-search-nextjs-pages-router-test"
       - "prerelease-npm-pr"
       - "prerelease-cdn-pr"
     runs-on: ubuntu-latest
@@ -711,18 +711,18 @@ jobs:
       - "playwright-atomic"
       - "playwright-atomic-theming"
       - "playwright-atomic-hosted-page-test"
-      - "playwright-headless-ssr-commerce"
+      - "e2e-headless-ssr-commerce-nextjs-test"
       - "e2e-atomic-test"
       - "e2e-quantic"
       - "e2e-atomic-screenshots"
-      - "e2e-atomic-react-test"
-      - "e2e-atomic-react-nextjs-test"
-      - "e2e-atomic-angular-test"
-      - "e2e-atomic-vuejs-test"
-      - "e2e-atomic-stencil-test"
+      - "e2e-atomic-search-commerce-react-test"
+      - "e2e-atomic-search-nextjs-pages-router-test"
+      - "e2e-atomic-search-commerce-angular-test"
+      - "e2e-atomic-search-vuejs-test"
+      - "e2e-atomic-search-stencil-test"
       - "e2e-atomic-insight-panel-test"
-      - "e2e-headless-ssr-test-app"
-      - "e2e-headless-ssr-test-pages"
+      - "e2e-headless-ssr-search-nextjs-app-router-test"
+      - "e2e-headless-ssr-search-nextjs-pages-router-test"
     runs-on: ubuntu-latest
     steps:
       - name: Harden Runner
