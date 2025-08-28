@@ -33,19 +33,17 @@ export const logOpenGeneratedAnswerSource = (
     {
       prefix: 'analytics/generatedAnswer/openAnswerSource',
       __legacy__getBuilder: (client, state) => {
-        const {id: rgaID, answerAPIEnabled} =
+        const generativeQuestionAnsweringId =
           generativeQuestionAnsweringIdSelector(state);
         const citation = citationSourceSelector(state, citationId);
 
-        if (!rgaID || !citation) {
+        if (!generativeQuestionAnsweringId || !citation) {
           return null;
         }
         return client.logGeneratedAnswerCitationClick(
           partialCitationInformation(citation, state),
           {
-            ...(answerAPIEnabled
-              ? {answerAPIStreamId: rgaID}
-              : {generativeQuestionAnsweringId: rgaID}),
+            generativeQuestionAnsweringId,
             citationId: citation.id,
             documentId: citationDocumentIdentifier(citation),
           },
@@ -55,8 +53,10 @@ export const logOpenGeneratedAnswerSource = (
       analyticsType: 'Rga.CitationClick',
       analyticsPayloadBuilder: (state): Rga.CitationClick | undefined => {
         const citation = citationSourceSelector(state, citationId);
+        const generativeQuestionAnsweringId =
+          generativeQuestionAnsweringIdSelector(state);
         return {
-          answerId: state.search?.response.searchUid || '',
+          answerId: generativeQuestionAnsweringId ?? '',
           citationId,
           itemMetadata: {
             uniqueFieldName: 'permanentid',
@@ -78,18 +78,16 @@ export const logHoverCitation = (
   )({
     prefix: 'analytics/generatedAnswer/hoverCitation',
     __legacy__getBuilder: (client, state) => {
-      const {id: rgaID, answerAPIEnabled} =
+      const generativeQuestionAnsweringId =
         generativeQuestionAnsweringIdSelector(state);
       const citation = citationSourceSelector(state, citationId);
 
-      if (!rgaID || !citation) {
+      if (!generativeQuestionAnsweringId || !citation) {
         return null;
       }
       return client.logGeneratedAnswerSourceHover(
         {
-          ...(answerAPIEnabled
-            ? {answerAPIStreamId: rgaID}
-            : {generativeQuestionAnsweringId: rgaID}),
+          generativeQuestionAnsweringId,
           permanentId: citation.permanentid,
           citationId: citation.id,
           citationHoverTimeMs: citationHoverTimeInMs,
@@ -100,8 +98,10 @@ export const logHoverCitation = (
     analyticsType: 'Rga.CitationHover',
     analyticsPayloadBuilder: (state): Rga.CitationHover | undefined => {
       const citation = citationSourceSelector(state, citationId);
+      const generativeQuestionAnsweringId =
+        generativeQuestionAnsweringIdSelector(state);
       return {
-        answerId: state.search?.response.searchUid || '',
+        answerId: generativeQuestionAnsweringId ?? '',
         citationId,
         itemMetadata: {
           uniqueFieldName: 'permanentid',
@@ -118,24 +118,24 @@ export const logLikeGeneratedAnswer = (): InsightAction =>
   makeInsightAnalyticsActionFactory(SearchPageEvents.likeGeneratedAnswer)({
     prefix: 'analytics/generatedAnswer/like',
     __legacy__getBuilder: (client, state) => {
-      const {id: rgaID, answerAPIEnabled} =
+      const generativeQuestionAnsweringId =
         generativeQuestionAnsweringIdSelector(state);
-      if (!rgaID) {
+      if (!generativeQuestionAnsweringId) {
         return null;
       }
       return client.logLikeGeneratedAnswer(
         {
-          ...(answerAPIEnabled
-            ? {answerAPIStreamId: rgaID}
-            : {generativeQuestionAnsweringId: rgaID}),
+          generativeQuestionAnsweringId,
         },
         getCaseContextAnalyticsMetadata(state.insightCaseContext)
       );
     },
     analyticsType: 'Rga.AnswerAction',
     analyticsPayloadBuilder: (state): Rga.AnswerAction | undefined => {
+      const generativeQuestionAnsweringId =
+        generativeQuestionAnsweringIdSelector(state);
       return {
-        answerId: state.search?.response.searchUid || '',
+        answerId: generativeQuestionAnsweringId ?? '',
         action: 'like',
       };
     },
@@ -145,24 +145,24 @@ export const logDislikeGeneratedAnswer = (): InsightAction =>
   makeInsightAnalyticsActionFactory(SearchPageEvents.dislikeGeneratedAnswer)({
     prefix: 'analytics/generatedAnswer/dislike',
     __legacy__getBuilder: (client, state) => {
-      const {id: rgaID, answerAPIEnabled} =
+      const generativeQuestionAnsweringId =
         generativeQuestionAnsweringIdSelector(state);
-      if (!rgaID) {
+      if (!generativeQuestionAnsweringId) {
         return null;
       }
       return client.logDislikeGeneratedAnswer(
         {
-          ...(answerAPIEnabled
-            ? {answerAPIStreamId: rgaID}
-            : {generativeQuestionAnsweringId: rgaID}),
+          generativeQuestionAnsweringId,
         },
         getCaseContextAnalyticsMetadata(state.insightCaseContext)
       );
     },
     analyticsType: 'Rga.AnswerAction',
     analyticsPayloadBuilder: (state): Rga.AnswerAction | undefined => {
+      const generativeQuestionAnsweringId =
+        generativeQuestionAnsweringIdSelector(state);
       return {
-        answerId: state.search?.response.searchUid || '',
+        answerId: generativeQuestionAnsweringId ?? '',
         action: 'dislike',
       };
     },
@@ -176,16 +176,14 @@ export const logGeneratedAnswerFeedback = (
   )({
     prefix: 'analytics/generatedAnswer/sendFeedback',
     __legacy__getBuilder: (client, state) => {
-      const {id: rgaID, answerAPIEnabled} =
+      const generativeQuestionAnsweringId =
         generativeQuestionAnsweringIdSelector(state);
-      if (!rgaID) {
+      if (!generativeQuestionAnsweringId) {
         return null;
       }
       return client.logGeneratedAnswerFeedbackSubmitV2(
         {
-          ...(answerAPIEnabled
-            ? {answerAPIStreamId: rgaID}
-            : {generativeQuestionAnsweringId: rgaID}),
+          generativeQuestionAnsweringId,
           ...feedback,
         },
         getCaseContextAnalyticsMetadata(state.insightCaseContext)
@@ -193,6 +191,8 @@ export const logGeneratedAnswerFeedback = (
     },
     analyticsType: 'Rga.SubmitFeedback',
     analyticsPayloadBuilder: (state): Rga.SubmitFeedback | undefined => {
+      const generativeQuestionAnsweringId =
+        generativeQuestionAnsweringIdSelector(state);
       const {
         helpful,
         readable,
@@ -203,7 +203,7 @@ export const logGeneratedAnswerFeedback = (
         details,
       } = feedback;
       return {
-        answerId: state.search?.response.searchUid || '',
+        answerId: generativeQuestionAnsweringId ?? '',
         helpful,
         details: {
           readable: parseEvaluationDetails(readable),
@@ -224,20 +224,18 @@ export const logGeneratedAnswerStreamEnd = (
   makeInsightAnalyticsActionFactory(SearchPageEvents.generatedAnswerStreamEnd)({
     prefix: 'analytics/generatedAnswer/streamEnd',
     __legacy__getBuilder: (client, state) => {
-      const {id: rgaID, answerAPIEnabled} =
+      const generativeQuestionAnsweringId =
         generativeQuestionAnsweringIdSelector(state);
       const answerTextIsEmpty = answerGenerated
         ? !state.generatedAnswer?.answer ||
           !state.generatedAnswer?.answer.length
         : undefined;
-      if (!rgaID) {
+      if (!generativeQuestionAnsweringId) {
         return null;
       }
       return client.logGeneratedAnswerStreamEnd(
         {
-          ...(answerAPIEnabled
-            ? {answerAPIStreamId: rgaID}
-            : {generativeQuestionAnsweringId: rgaID}),
+          generativeQuestionAnsweringId,
           answerGenerated,
           answerTextIsEmpty,
         },
@@ -246,8 +244,10 @@ export const logGeneratedAnswerStreamEnd = (
     },
     analyticsType: 'Rga.AnswerReceived',
     analyticsPayloadBuilder: (state): Rga.AnswerReceived | undefined => {
+      const generativeQuestionAnsweringId =
+        generativeQuestionAnsweringIdSelector(state);
       return {
-        answerId: state.search?.response.searchUid || '',
+        answerId: generativeQuestionAnsweringId ?? '',
         answerGenerated,
       };
     },
@@ -259,24 +259,24 @@ export const logGeneratedAnswerShowAnswers = (): InsightAction =>
   )({
     prefix: 'analytics/generatedAnswer/show',
     __legacy__getBuilder: (client, state) => {
-      const {id: rgaID, answerAPIEnabled} =
+      const generativeQuestionAnsweringId =
         generativeQuestionAnsweringIdSelector(state);
-      if (!rgaID) {
+      if (!generativeQuestionAnsweringId) {
         return null;
       }
       return client.logGeneratedAnswerShowAnswers(
         {
-          ...(answerAPIEnabled
-            ? {answerAPIStreamId: rgaID}
-            : {generativeQuestionAnsweringId: rgaID}),
+          generativeQuestionAnsweringId,
         },
         getCaseContextAnalyticsMetadata(state.insightCaseContext)
       );
     },
     analyticsType: 'Rga.AnswerAction',
     analyticsPayloadBuilder: (state): Rga.AnswerAction | undefined => {
+      const generativeQuestionAnsweringId =
+        generativeQuestionAnsweringIdSelector(state);
       return {
-        answerId: state.search?.response.searchUid || '',
+        answerId: generativeQuestionAnsweringId ?? '',
         action: 'show',
       };
     },
@@ -288,24 +288,24 @@ export const logGeneratedAnswerHideAnswers = (): InsightAction =>
   )({
     prefix: 'analytics/generatedAnswer/hide',
     __legacy__getBuilder: (client, state) => {
-      const {id: rgaID, answerAPIEnabled} =
+      const generativeQuestionAnsweringId =
         generativeQuestionAnsweringIdSelector(state);
-      if (!rgaID) {
+      if (!generativeQuestionAnsweringId) {
         return null;
       }
       return client.logGeneratedAnswerHideAnswers(
         {
-          ...(answerAPIEnabled
-            ? {answerAPIStreamId: rgaID}
-            : {generativeQuestionAnsweringId: rgaID}),
+          generativeQuestionAnsweringId,
         },
         getCaseContextAnalyticsMetadata(state.insightCaseContext)
       );
     },
     analyticsType: 'Rga.AnswerAction',
     analyticsPayloadBuilder: (state): Rga.AnswerAction | undefined => {
+      const generativeQuestionAnsweringId =
+        generativeQuestionAnsweringIdSelector(state);
       return {
-        answerId: state.search?.response.searchUid || '',
+        answerId: generativeQuestionAnsweringId ?? '',
         action: 'hide',
       };
     },
@@ -315,24 +315,24 @@ export const logGeneratedAnswerExpand = (): InsightAction =>
   makeInsightAnalyticsActionFactory(SearchPageEvents.generatedAnswerExpand)({
     prefix: 'analytics/generatedAnswer/expand',
     __legacy__getBuilder: (client, state) => {
-      const {id: rgaID, answerAPIEnabled} =
+      const generativeQuestionAnsweringId =
         generativeQuestionAnsweringIdSelector(state);
-      if (!rgaID) {
+      if (!generativeQuestionAnsweringId) {
         return null;
       }
       return client.logGeneratedAnswerExpand(
         {
-          ...(answerAPIEnabled
-            ? {answerAPIStreamId: rgaID}
-            : {generativeQuestionAnsweringId: rgaID}),
+          generativeQuestionAnsweringId,
         },
         getCaseContextAnalyticsMetadata(state.insightCaseContext)
       );
     },
     analyticsType: 'Rga.AnswerAction',
     analyticsPayloadBuilder: (state): Rga.AnswerAction | undefined => {
+      const generativeQuestionAnsweringId =
+        generativeQuestionAnsweringIdSelector(state);
       return {
-        answerId: state.search?.response.searchUid || '',
+        answerId: generativeQuestionAnsweringId ?? '',
         action: 'expand',
       };
     },
@@ -342,24 +342,24 @@ export const logGeneratedAnswerCollapse = (): InsightAction =>
   makeInsightAnalyticsActionFactory(SearchPageEvents.generatedAnswerCollapse)({
     prefix: 'analytics/generatedAnswer/collapse',
     __legacy__getBuilder: (client, state) => {
-      const {id: rgaID, answerAPIEnabled} =
+      const generativeQuestionAnsweringId =
         generativeQuestionAnsweringIdSelector(state);
-      if (!rgaID) {
+      if (!generativeQuestionAnsweringId) {
         return null;
       }
       return client.logGeneratedAnswerCollapse(
         {
-          ...(answerAPIEnabled
-            ? {answerAPIStreamId: rgaID}
-            : {generativeQuestionAnsweringId: rgaID}),
+          generativeQuestionAnsweringId,
         },
         getCaseContextAnalyticsMetadata(state.insightCaseContext)
       );
     },
     analyticsType: 'Rga.AnswerAction',
     analyticsPayloadBuilder: (state): Rga.AnswerAction | undefined => {
+      const generativeQuestionAnsweringId =
+        generativeQuestionAnsweringIdSelector(state);
       return {
-        answerId: state.search?.response.searchUid || '',
+        answerId: generativeQuestionAnsweringId ?? '',
         action: 'collapse',
       };
     },
@@ -371,24 +371,24 @@ export const logCopyGeneratedAnswer = (): InsightAction =>
   )({
     prefix: 'analytics/generatedAnswer/copy',
     __legacy__getBuilder: (client, state) => {
-      const {id: rgaID, answerAPIEnabled} =
+      const generativeQuestionAnsweringId =
         generativeQuestionAnsweringIdSelector(state);
-      if (!rgaID) {
+      if (!generativeQuestionAnsweringId) {
         return null;
       }
       return client.logGeneratedAnswerCopyToClipboard(
         {
-          ...(answerAPIEnabled
-            ? {answerAPIStreamId: rgaID}
-            : {generativeQuestionAnsweringId: rgaID}),
+          generativeQuestionAnsweringId,
         },
         getCaseContextAnalyticsMetadata(state.insightCaseContext)
       );
     },
     analyticsType: 'Rga.AnswerAction',
     analyticsPayloadBuilder: (state): Rga.AnswerAction | undefined => {
+      const generativeQuestionAnsweringId =
+        generativeQuestionAnsweringIdSelector(state);
       return {
-        answerId: state.search?.response.searchUid || '',
+        answerId: generativeQuestionAnsweringId ?? '',
         action: 'copyToClipboard',
       };
     },

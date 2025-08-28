@@ -9,7 +9,7 @@ test.describe('atomic-product-text', () => {
 
     test('should be accessible', async ({makeAxeBuilder}) => {
       const accessibilityResults = await makeAxeBuilder().analyze();
-      expect(accessibilityResults.violations.length).toEqual(0);
+      expect(accessibilityResults.violations).toEqual([]);
     });
 
     test.describe('when field has no value and default is set', async () => {
@@ -50,16 +50,15 @@ test.describe('atomic-product-text', () => {
         });
       });
 
-      test(`should not highlight the keywords in the ${field} when shouldHighlight is false`, async ({
+      test(`should not highlight the keywords in the ${field} when noHighlight is true`, async ({
         productText,
       }) => {
         await productText.load({
-          args: {field: 'excerpt', shouldHighlight: false},
+          args: {field: 'excerpt', noHighlight: true},
         });
         await productText.hydrated.first().waitFor();
 
         await expect(productText.textContent.first()).toContainText(/kayak/i);
-
         const highlightedText =
           await productText.highlightedText.allTextContents();
         expect(highlightedText.length).toEqual(0);
@@ -80,6 +79,13 @@ test.describe('atomic-product-text', () => {
     test('should not highlight the keywords in the excerpt', async ({
       productText,
     }) => {
+      await productText.load({
+        args: {field: 'excerpt', 'no-highlight': true},
+      });
+      await productText.hydrated.first().waitFor();
+
+      await expect(productText.textContent.first()).toContainText(/kayak/i);
+
       const highlightedText =
         await productText.highlightedText.allTextContents();
       await expect(productText.textContent.first()).toContainText(/kayak/i);
