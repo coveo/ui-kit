@@ -1,5 +1,11 @@
 import type {SolutionType} from '../types/controller-constants.js';
 import type {
+  AugmentedControllerDefinition,
+  FilteredBakedInControllers,
+  HydratedState,
+} from '../types/controller-definitions.js';
+import type {InferControllersMapFromDefinition} from '../types/controller-inference.js';
+import type {
   BuildParameters,
   CommerceControllerDefinitionsMap,
   HydrateStaticStateFunction,
@@ -8,12 +14,13 @@ import type {
 import {
   buildFactory,
   type CommerceEngineDefinitionOptions,
+  type SSRCommerceEngine,
 } from './build-factory.js';
 
 export function hydratedStaticStateFactory<
   TControllerDefinitions extends CommerceControllerDefinitionsMap,
 >(
-  controllerDefinitions: TControllerDefinitions,
+  controllerDefinitions: AugmentedControllerDefinition<TControllerDefinitions>,
   options: CommerceEngineDefinitionOptions<TControllerDefinitions>
 ) {
   return (
@@ -25,7 +32,6 @@ export function hydratedStaticStateFactory<
         options
       )(solutionType);
       const {engine, controllers} = await solutionTypeBuild(
-        // @ts-expect-error: TODO: KIT-4742: the wiring will fix also the type inconsistencies
         ...(params as BuildParameters<TControllerDefinitions>)
       );
 
@@ -35,6 +41,13 @@ export function hydratedStaticStateFactory<
 
       await engine.waitForRequestCompletedAction();
 
-      return {engine, controllers};
+      return {engine, controllers} as HydratedState<
+        SSRCommerceEngine,
+        InferControllersMapFromDefinition<
+          TControllerDefinitions,
+          SolutionType
+        > &
+          FilteredBakedInControllers<SolutionType>
+      >;
     };
 }

@@ -6,9 +6,15 @@ import type {CommerceControllerDefinitionsMap} from '../types/engine.js';
 export function extendEngineConfiguration<
   TControllerDefinitions extends CommerceControllerDefinitionsMap,
 >(
-  _configuration: CommerceEngineDefinitionOptions<TControllerDefinitions>['configuration'],
-  _commonBuildOptions: CommonBuildConfig
+  configuration: CommerceEngineDefinitionOptions<TControllerDefinitions>['configuration'],
+  commonBuildOptions: CommonBuildConfig
 ): CommerceEngineConfiguration {
-  // TODO: KIT-4742: Implement: wire engine configuration with validation
-  return {} as CommerceEngineConfiguration;
+  const {cart, context} = commonBuildOptions;
+  return {
+    ...configuration,
+    context: {
+      ...context,
+    },
+    cart,
+  };
 }

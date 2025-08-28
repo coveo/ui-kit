@@ -1,6 +1,7 @@
 import type {UnknownAction} from '@reduxjs/toolkit';
 import {filterObject} from '../../../utils/utils.js';
 import {createStaticState} from '../controller-utils.js';
+import type {BuildConfig} from '../types/build.js';
 import {SolutionType} from '../types/controller-constants.js';
 import type {
   AugmentedControllerDefinition,
@@ -27,6 +28,7 @@ export function fetchRecommendationStaticStateFactory<
   controllerDefinitions: AugmentedControllerDefinition<TControllerDefinitions>,
   options: CommerceEngineDefinitionOptions<TControllerDefinitions>
 ): FetchStaticStateFunction<TControllerDefinitions> {
+  // TODO: KIT-4619: no longer the right way to get the allowed recommendation keys
   const getAllowedRecommendationKeys = (
     props: FetchStaticStateParameters<TControllerDefinitions>[0]
   ): string[] => {
@@ -64,7 +66,7 @@ export function fetchRecommendationStaticStateFactory<
       engine.waitForRequestCompletedAction()
     );
 
-    return createStaticState({
+    const staticState = createStaticState({
       searchActions,
       controllers,
     }) as EngineStaticState<
@@ -74,6 +76,12 @@ export function fetchRecommendationStaticStateFactory<
         SolutionType
       > &
         FilteredBakedInControllers<SolutionType.recommendation>
-    >;
+    > &
+      BuildConfig<SolutionType.recommendation>;
+
+    return {
+      ...params[0], // TODO: KIT-4754: remove index access after no longer relying on OptionTuple type
+      ...staticState,
+    };
   };
 }

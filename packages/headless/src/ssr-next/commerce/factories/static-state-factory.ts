@@ -3,6 +3,7 @@ import {buildProductListing} from '../../../controllers/commerce/product-listing
 import {buildSearch} from '../../../controllers/commerce/search/headless-search.js';
 import {augmentPreprocessRequestWithForwardedFor} from '../../common/augment-preprocess-request.js';
 import {createStaticState} from '../controller-utils.js';
+import type {BuildConfig} from '../types/build.js';
 import {SolutionType} from '../types/controller-constants.js';
 import type {
   AugmentedControllerDefinition,
@@ -65,8 +66,13 @@ export function fetchStaticStateFactory<
           TControllerDefinitions,
           SolutionType
         > &
-          FilteredBakedInControllers<typeof solutionType>
-      >;
-      return staticState;
+          FilteredBakedInControllers<SolutionType>
+      > &
+        BuildConfig<SolutionType>;
+
+      return {
+        ...params[0], // TODO: KIT-4754: remove index access after no longer relying on OptionTuple type
+        ...staticState,
+      };
     };
 }
