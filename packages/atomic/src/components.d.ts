@@ -995,24 +995,6 @@ export namespace Components {
          */
         "snippetStyle"?: string;
     }
-    interface AtomicInsightTab {
-        /**
-          * Whether this tab is active upon rendering. If multiple tabs are set to active on render, the last one to be rendered will override the others.
-         */
-        "active": boolean;
-        /**
-          * The expression that will be passed to the search as a `cq` paramenter upon being selected.
-         */
-        "expression": string;
-        /**
-          * The label that will be shown to the user.
-         */
-        "label": string;
-        /**
-          * Activates the tab.
-         */
-        "select": () => Promise<void>;
-    }
     interface AtomicInsightTabs {
     }
     interface AtomicInsightTimeframeFacet {
@@ -3380,12 +3362,6 @@ declare global {
         prototype: HTMLAtomicInsightSmartSnippetSuggestionsElement;
         new (): HTMLAtomicInsightSmartSnippetSuggestionsElement;
     };
-    interface HTMLAtomicInsightTabElement extends Components.AtomicInsightTab, HTMLStencilElement {
-    }
-    var HTMLAtomicInsightTabElement: {
-        prototype: HTMLAtomicInsightTabElement;
-        new (): HTMLAtomicInsightTabElement;
-    };
     interface HTMLAtomicInsightTabsElement extends Components.AtomicInsightTabs, HTMLStencilElement {
     }
     var HTMLAtomicInsightTabsElement: {
@@ -4538,7 +4514,6 @@ declare global {
         "atomic-insight-smart-snippet": HTMLAtomicInsightSmartSnippetElement;
         "atomic-insight-smart-snippet-feedback-modal": HTMLAtomicInsightSmartSnippetFeedbackModalElement;
         "atomic-insight-smart-snippet-suggestions": HTMLAtomicInsightSmartSnippetSuggestionsElement;
-        "atomic-insight-tab": HTMLAtomicInsightTabElement;
         "atomic-insight-tabs": HTMLAtomicInsightTabsElement;
         "atomic-insight-timeframe-facet": HTMLAtomicInsightTimeframeFacetElement;
         "atomic-insight-user-actions-modal": HTMLAtomicInsightUserActionsModalElement;
@@ -5568,20 +5543,6 @@ declare namespace LocalJSX {
           * Sets the style of the snippets.  Example: ```ts smartSnippet.snippetStyle = `   b {     color: blue;   } `; ```
          */
         "snippetStyle"?: string;
-    }
-    interface AtomicInsightTab {
-        /**
-          * Whether this tab is active upon rendering. If multiple tabs are set to active on render, the last one to be rendered will override the others.
-         */
-        "active"?: boolean;
-        /**
-          * The expression that will be passed to the search as a `cq` paramenter upon being selected.
-         */
-        "expression": string;
-        /**
-          * The label that will be shown to the user.
-         */
-        "label"?: string;
     }
     interface AtomicInsightTabs {
     }
@@ -7433,7 +7394,6 @@ declare namespace LocalJSX {
         "atomic-insight-smart-snippet": AtomicInsightSmartSnippet;
         "atomic-insight-smart-snippet-feedback-modal": AtomicInsightSmartSnippetFeedbackModal;
         "atomic-insight-smart-snippet-suggestions": AtomicInsightSmartSnippetSuggestions;
-        "atomic-insight-tab": AtomicInsightTab;
         "atomic-insight-tabs": AtomicInsightTabs;
         "atomic-insight-timeframe-facet": AtomicInsightTimeframeFacet;
         "atomic-insight-user-actions-modal": AtomicInsightUserActionsModal;
@@ -7662,7 +7622,6 @@ declare module "@stencil/core" {
             "atomic-insight-smart-snippet": LocalJSX.AtomicInsightSmartSnippet & JSXBase.HTMLAttributes<HTMLAtomicInsightSmartSnippetElement>;
             "atomic-insight-smart-snippet-feedback-modal": LocalJSX.AtomicInsightSmartSnippetFeedbackModal & JSXBase.HTMLAttributes<HTMLAtomicInsightSmartSnippetFeedbackModalElement>;
             "atomic-insight-smart-snippet-suggestions": LocalJSX.AtomicInsightSmartSnippetSuggestions & JSXBase.HTMLAttributes<HTMLAtomicInsightSmartSnippetSuggestionsElement>;
-            "atomic-insight-tab": LocalJSX.AtomicInsightTab & JSXBase.HTMLAttributes<HTMLAtomicInsightTabElement>;
             "atomic-insight-tabs": LocalJSX.AtomicInsightTabs & JSXBase.HTMLAttributes<HTMLAtomicInsightTabsElement>;
             "atomic-insight-timeframe-facet": LocalJSX.AtomicInsightTimeframeFacet & JSXBase.HTMLAttributes<HTMLAtomicInsightTimeframeFacetElement>;
             "atomic-insight-user-actions-modal": LocalJSX.AtomicInsightUserActionsModal & JSXBase.HTMLAttributes<HTMLAtomicInsightUserActionsModalElement>;
