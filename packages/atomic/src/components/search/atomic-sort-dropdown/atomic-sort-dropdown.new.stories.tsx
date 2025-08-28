@@ -1,18 +1,30 @@
-import type {Meta, StoryObj as Story} from '@storybook/web-components';
+import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
+import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
-import {renderComponent} from '@/storybook-utils/common/render-component';
 import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
 
-const {decorator, play} = wrapInSearchInterface();
+const {decorator, afterEach} = wrapInSearchInterface();
+const {events, args, argTypes, template} = getStorybookHelpers(
+  'atomic-sort-dropdown',
+  {excludeCategories: ['methods']}
+);
 
 const meta: Meta = {
   component: 'atomic-sort-dropdown',
   title: 'Search/SortDropdown',
   id: 'atomic-sort-dropdown',
-  render: renderComponent,
+  render: (args) => template(args),
   decorators: [decorator],
-  parameters,
-  play,
+  parameters: {
+    ...parameters,
+    actions: {
+      handles: events,
+    },
+  },
+  args,
+  argTypes,
+
+  afterEach,
 };
 
 export default meta;
@@ -20,7 +32,7 @@ export default meta;
 export const Default: Story = {
   name: 'atomic-sort-dropdown',
   args: {
-    'slots-default': `
+    'default-slot': `
       <atomic-sort-expression
         label="relevance"
         expression="relevancy"

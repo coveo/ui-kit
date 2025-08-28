@@ -9,20 +9,20 @@ import {bindings} from '@/src/decorators/bindings.js';
 import {createProductContextController} from '@/src/decorators/commerce/product-template-decorators.js';
 import {errorGuard} from '@/src/decorators/error-guard.js';
 import type {InitializableComponent} from '@/src/decorators/types.js';
-import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles.js';
 import {
   renderExpandableText,
   type TruncateAfter,
 } from '../../common/expandable-text/expandable-text.js';
 import type {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface.js';
 import '../atomic-product-text/atomic-product-text.js';
+import {injectStylesForNoShadowDOM} from '@/src/decorators/inject-styles-for-no-shadow-dom.js';
 
 /**
  * The `atomic-product-description` component renders the description of a product.
  */
 @customElement('atomic-product-description')
-@withTailwindStyles
 @bindings()
+@injectStylesForNoShadowDOM
 export class AtomicProductDescription
   extends LitElement
   implements InitializableComponent<CommerceBindings>
@@ -66,14 +66,10 @@ export class AtomicProductDescription
     converter: booleanConverter,
     attribute: 'is-collapsible',
   })
-  public isCollapsible = true;
+  public isCollapsible = false;
 
   initialize() {
     this.validateProps();
-  }
-
-  createRenderRoot() {
-    return this;
   }
 
   constructor() {

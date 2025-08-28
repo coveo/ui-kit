@@ -1,4 +1,4 @@
-import {LitElement} from 'lit';
+import {css, LitElement} from 'lit';
 import {customElement} from 'lit/decorators.js';
 import {ItemSectionMixin} from '@/src/mixins/item-section-mixin';
 
@@ -14,7 +14,15 @@ import {ItemSectionMixin} from '@/src/mixins/item-section-mixin';
  * @slot default - The badges to display.
  */
 @customElement('atomic-product-section-badges')
-export class AtomicProductSectionBadges extends ItemSectionMixin(LitElement) {}
+export class AtomicProductSectionBadges extends ItemSectionMixin(
+  LitElement,
+  css`
+      @reference '../../common/template-system/sections/sections.css';
+      atomic-product-section-badges {
+        @apply section-badges;
+      }
+      `
+) {}
 
 declare global {
   interface HTMLElementTagNameMap {

@@ -21,7 +21,7 @@ import {
   unsetLoadingFlag,
   waitUntilAppLoaded,
 } from '../../common/interface/store';
-import {makeDesktopQuery} from '../atomic-layout/search-layout';
+import {makeDesktopQuery} from '../atomic-search-layout/search-layout';
 
 export interface SortDropdownOption {
   tabs: {included: string[] | string; excluded: string[] | string};

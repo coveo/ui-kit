@@ -1,3 +1,36 @@
+## <small>3.33.2 (2025-08-28)</small>
+
+* fix: expose rga internals for angular availability (#5958) ([d452d4f](https://github.com/coveo/ui-kit/commits/d452d4f)), closes [#5958](https://github.com/coveo/ui-kit/issues/5958)
+* fix(atomic commerce): fix loader not detecting components in template elements (#5900) ([d375af8](https://github.com/coveo/ui-kit/commits/d375af8)), closes [#5900](https://github.com/coveo/ui-kit/issues/5900)
+* fix(atomic-react): make `atomic-commerce-layout` work in atomic-react (#5956) ([c14b812](https://github.com/coveo/ui-kit/commits/c14b812)), closes [#5956](https://github.com/coveo/ui-kit/issues/5956)
+* fix(atomic): add variable to control number of rows in atomic-commerce-recommendation-list (#5952) ([0c3aaea](https://github.com/coveo/ui-kit/commits/0c3aaea)), closes [#5952](https://github.com/coveo/ui-kit/issues/5952)
+* fix(atomic): atomic-commerce-facets not rerendering when the controller changes (#5932) ([3f2634b](https://github.com/coveo/ui-kit/commits/3f2634b)), closes [#5932](https://github.com/coveo/ui-kit/issues/5932)
+* fix(atomic): fully hide modal on close (#5954) ([01f96a0](https://github.com/coveo/ui-kit/commits/01f96a0)), closes [#5954](https://github.com/coveo/ui-kit/issues/5954)
+* chore: migrate to storybook9 (#5916) ([b26bff1](https://github.com/coveo/ui-kit/commits/b26bff1)), closes [#5916](https://github.com/coveo/ui-kit/issues/5916)
+* chore(atomic): migrate atomic-*-section-bottom-metadata styles (#5940) ([dc575f4](https://github.com/coveo/ui-kit/commits/dc575f4)), closes [#5940](https://github.com/coveo/ui-kit/issues/5940)
+* chore(atomic): migrate atomic-search-layout (#5877) ([b2172dd](https://github.com/coveo/ui-kit/commits/b2172dd)), closes [#5877](https://github.com/coveo/ui-kit/issues/5877)
+* refactor(atomic): decouple the lang folder generation from the atomic-search-interface (#5971) ([ffab1e6](https://github.com/coveo/ui-kit/commits/ffab1e6)), closes [#5971](https://github.com/coveo/ui-kit/issues/5971)
+* docs(atomic): intro and example pages for commerce (#5929) ([ef096f9](https://github.com/coveo/ui-kit/commits/ef096f9)), closes [#5929](https://github.com/coveo/ui-kit/issues/5929)
+
+
+
+## <small>3.33.1 (2025-08-27)</small>
+
+* chore: address forgotten PR comments (#5923) ([079ffaa](https://github.com/coveo/ui-kit/commits/079ffaa)), closes [#5923](https://github.com/coveo/ui-kit/issues/5923) [#5911](https://github.com/coveo/ui-kit/issues/5911)
+* chore(atomic): add common utilities for sections (#5904) ([24961c6](https://github.com/coveo/ui-kit/commits/24961c6)), closes [#5904](https://github.com/coveo/ui-kit/issues/5904)
+* chore(atomic): avoid running tailwind styles processing build step on custom utilities (#5894) ([15921eb](https://github.com/coveo/ui-kit/commits/15921eb)), closes [#5894](https://github.com/coveo/ui-kit/issues/5894)
+* chore(atomic): make isCollapsible false by default in `atomic-product-description` (#5963) ([6b5b4fb](https://github.com/coveo/ui-kit/commits/6b5b4fb)), closes [#5963](https://github.com/coveo/ui-kit/issues/5963)
+* chore(atomic): migrate common facet stylesheets to CSSStylesheet objects (#5895) ([376aa43](https://github.com/coveo/ui-kit/commits/376aa43)), closes [#5895](https://github.com/coveo/ui-kit/issues/5895)
+* docs(atomic): internal contributing documentation (#5873) ([9e3f116](https://github.com/coveo/ui-kit/commits/9e3f116)), closes [#5873](https://github.com/coveo/ui-kit/issues/5873)
+* fix: limit date input max to `9999-12-31` by default (#5926) ([816ff15](https://github.com/coveo/ui-kit/commits/816ff15)), closes [#5926](https://github.com/coveo/ui-kit/issues/5926)
+* fix(atomic): make 'more results for' clickable in commerce facet search - regular and category facet ([854da58](https://github.com/coveo/ui-kit/commits/854da58)), closes [#5943](https://github.com/coveo/ui-kit/issues/5943)
+* fix(atomic): make product children click open the product page (#5953) ([91e6d02](https://github.com/coveo/ui-kit/commits/91e6d02)), closes [#5953](https://github.com/coveo/ui-kit/issues/5953)
+* fix(atomic): show No label on breadcrumbs when no facet name (#5934) ([c0a48ac](https://github.com/coveo/ui-kit/commits/c0a48ac)), closes [#5934](https://github.com/coveo/ui-kit/issues/5934)
+* fix(atomic): timeframe facet e2e test (#5950) ([beb9256](https://github.com/coveo/ui-kit/commits/beb9256)), closes [#5950](https://github.com/coveo/ui-kit/issues/5950)
+* refactor(atomic): remove displayIf directive; render nothing instead (#5920) ([8a7cc3c](https://github.com/coveo/ui-kit/commits/8a7cc3c)), closes [#5920](https://github.com/coveo/ui-kit/issues/5920)
+
+
+
 ## 3.33.0 (2025-08-20)
 
 * chore: misc type annot & jsdoc (#5914) ([5c80e12](https://github.com/coveo/ui-kit/commits/5c80e12)), closes [#5914](https://github.com/coveo/ui-kit/issues/5914)
