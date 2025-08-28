@@ -45,11 +45,13 @@ function getVersionComponents(version) {
 }
 
 function getFullyQualifiedVersion(versionComponentsOrdered) {
-  let fullVersion = versionComponentsOrdered.slice(0, 3).join('.');
+  const main = versionComponentsOrdered.slice(0, 3).join('.');
   if (versionComponentsOrdered.length > 3) {
-    fullVersion += `-${versionComponentsOrdered.slice(3).join('.')}`;
+    const suffix = versionComponentsOrdered.slice(3).join('.');
+    return `${main}-${suffix}`;
   }
-  return fullVersion;
+
+  return main;
 }
 
 function getVersionSubpaths(version) {
