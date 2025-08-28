@@ -4,15 +4,7 @@ import type {
 } from '@coveo/headless/ssr-commerce';
 import {render, renderHook, screen} from '@testing-library/react';
 import type {PropsWithChildren} from 'react';
-import {
-  afterEach,
-  beforeEach,
-  describe,
-  expect,
-  type MockInstance,
-  test,
-  vi,
-} from 'vitest';
+import {afterEach, beforeEach, describe, expect, test, vi} from 'vitest';
 import {
   createProductListComponent,
   createTestComponent,
@@ -40,7 +32,6 @@ type MockController = {
 };
 
 describe('Commerce Engine', () => {
-  let consoleErrorSpy: MockInstance;
   let mockControllers: MockController;
   let mockNavigatorContextProvider: ReturnType<
     typeof createMockCommerceNavigatorContextProvider
@@ -51,7 +42,7 @@ describe('Commerce Engine', () => {
   let StateProvider: typeof engineDefinition.listingEngineDefinition.StateProvider;
 
   beforeEach(() => {
-    consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+    vi.spyOn(console, 'error').mockImplementation(() => {});
     mockNavigatorContextProvider = createMockCommerceNavigatorContextProvider();
     mockControllers = {
       controller1: buildMockController(),
@@ -83,7 +74,6 @@ describe('Commerce Engine', () => {
   });
 
   afterEach(async () => {
-    consoleErrorSpy.mockRestore();
     await waitForAsyncUpdates();
   });
 
