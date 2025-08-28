@@ -13,10 +13,6 @@ declare class LightDomMixinInterface {
 /**
  * Mixin that provides dynamic styles injection functionality for components that do not use Shadow DOM.
  *
- * This mixin replaces the deprecated `@injectStylesForNoShadowDOM` decorator and is intended for LitElement-based
- * components that render in the light DOM (i.e., without a shadow root). It ensures that the component's styles
- * are injected into the document or shadow root using `adoptedStyleSheets`.
- *
  * Usage:
  *   class MyComponent extends LightDomMixin(LitElement) {
  *     static styles = css`div { color: blue; }`;
