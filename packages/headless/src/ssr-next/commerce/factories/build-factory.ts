@@ -11,9 +11,11 @@ import {
   createWaitForActionMiddleware,
   createWaitForActionMiddlewareForRecommendation,
 } from '../../../utils/utils.js';
-import type {ControllersPropsMap} from '../../common/types/controllers.js';
 import {buildControllerDefinitions} from '../controller-utils.js';
-import type {SSRCommerceEngineOptions} from '../types/build.js';
+import type {
+  RecommendationBuildConfig,
+  SSRCommerceEngineOptions,
+} from '../types/build.js';
 import {SolutionType} from '../types/controller-constants.js';
 import type {ControllerDefinitionsMap} from '../types/controller-definitions.js';
 import type {
@@ -128,21 +130,6 @@ function buildSSRCommerceEngine(
   };
 }
 
-function fetchActiveRecommendationControllers(
-  controllerProps: ControllersPropsMap,
-  solutionType: SolutionType
-): number {
-  return solutionType === SolutionType.recommendation
-    ? Object.values(controllerProps).filter(
-        (controller) =>
-          controller &&
-          typeof controller === 'object' &&
-          'enabled' in controller &&
-          controller.enabled
-      ).length
-    : 0;
-}
-
 export const buildFactory =
   <TControllerDefinitions extends CommerceControllerDefinitionsMap>(
     controllerDefinitions: TControllerDefinitions,
@@ -164,7 +151,10 @@ export const buildFactory =
     }
 
     const enabledRecommendationControllers =
-      fetchActiveRecommendationControllers(controllerProps, solutionType);
+      buildOptions && 'recommendations' in buildOptions // TODO: KIT-4754: remove non-null assertion
+        ? (buildOptions as RecommendationBuildConfig<TControllerDefinitions>)
+            ?.recommendations.length
+        : 0;
 
     const engineOptions = {
       ...options,

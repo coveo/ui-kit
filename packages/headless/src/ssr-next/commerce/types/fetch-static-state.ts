@@ -27,7 +27,7 @@ export type FetchStaticState<
   TSolutionType extends SolutionType,
 > = (
   ...params: OptionsTuple<
-    BuildConfig<TSolutionType> &
+    BuildConfig<TControllersDefinitionsMap, TSolutionType> &
       EngineDefinitionControllersPropsOption<
         TControllersDefinitionsMap,
         TControllersProps,
@@ -39,5 +39,5 @@ export type FetchStaticState<
     TSearchAction,
     TControllersStaticState & FilteredBakedInControllers<TSolutionType>
   > &
-    BuildConfig<TSolutionType>
+    BuildConfig<TControllersDefinitionsMap, TSolutionType>
 >;

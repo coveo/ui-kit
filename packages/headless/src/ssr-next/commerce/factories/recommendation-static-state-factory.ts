@@ -1,12 +1,10 @@
 import type {UnknownAction} from '@reduxjs/toolkit';
-import {filterObject} from '../../../utils/utils.js';
 import {createStaticState} from '../controller-utils.js';
-import type {BuildConfig} from '../types/build.js';
+import type {BuildConfig, RecommendationBuildConfig} from '../types/build.js';
 import {SolutionType} from '../types/controller-constants.js';
 import type {
   AugmentedControllerDefinition,
   FilteredBakedInControllers,
-  RecommendationControllerSettings,
 } from '../types/controller-definitions.js';
 import type {InferControllerStaticStateMapFromDefinitionsWithSolutionType} from '../types/controller-inference.js';
 import type {
@@ -28,25 +26,13 @@ export function fetchRecommendationStaticStateFactory<
   controllerDefinitions: AugmentedControllerDefinition<TControllerDefinitions>,
   options: CommerceEngineDefinitionOptions<TControllerDefinitions>
 ): FetchStaticStateFunction<TControllerDefinitions> {
-  // TODO: KIT-4619: no longer the right way to get the allowed recommendation keys
-  const getAllowedRecommendationKeys = (
-    props: FetchStaticStateParameters<TControllerDefinitions>[0]
-  ): string[] => {
-    if (props && 'controllers' in props) {
-      const enabledRecommendationControllers = filterObject(
-        props.controllers as Record<string, RecommendationControllerSettings>,
-        (value) => Boolean(value.enabled)
-      );
-      return Object.keys(enabledRecommendationControllers);
-    }
-    return [];
-  };
-
   return async (
     ...params: FetchStaticStateParameters<TControllerDefinitions>
   ) => {
     const [props] = params;
-    const allowedRecommendationKeys = getAllowedRecommendationKeys(props);
+    const allowedRecommendationKeys = (
+      props as RecommendationBuildConfig<TControllerDefinitions>
+    ).recommendations as string[];
 
     const solutionTypeBuild = await buildFactory(
       controllerDefinitions,
@@ -77,7 +63,7 @@ export function fetchRecommendationStaticStateFactory<
       > &
         FilteredBakedInControllers<SolutionType.recommendation>
     > &
-      BuildConfig<SolutionType.recommendation>;
+      BuildConfig<TControllerDefinitions, SolutionType.recommendation>;
 
     return {
       ...params[0], // TODO: KIT-4754: remove index access after no longer relying on OptionTuple type
