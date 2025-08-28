@@ -9,11 +9,16 @@ const styles = css`@import "../../common/item-list/styles/mixins.pcss";
 
   /**
    * @prop --atomic-recs-number-of-columns: Number of columns for the recommendation list.
+   * @prop --atomic-recs-number-of-rows: Number of rows for the recommendation list.
    */
   .list-root {
     @apply atomic-grid-with-cards;
     grid-template-columns: repeat(
         var(--atomic-recs-number-of-columns, 1),
+        minmax(0, 1fr)
+      );
+    grid-template-rows: repeat(
+        var(--atomic-recs-number-of-rows, 1),
         minmax(0, 1fr)
       );
   }

@@ -147,6 +147,19 @@ describe('controller-wiring', () => {
         );
       }).not.toThrow();
     });
+
+    it('should not validate recommendations config with empty productId', () => {
+      const recommendationsConfig = {
+        ...validCommonConfig,
+        recommendations: ['rec1'],
+        productId: '',
+      };
+      expect(() => {
+        recommendationsDefinitionSchema(['rec1']).validate(
+          recommendationsConfig
+        );
+      }).toThrow();
+    });
   });
 
   describe('#wireControllerParams', () => {
@@ -188,7 +201,7 @@ describe('controller-wiring', () => {
         );
       });
 
-      it('should wire context for all solution types', () => {
+      it(`should wire context for ${solutionType} solution type`, () => {
         expect(props.context).toEqual({
           initialState: {
             view: {url: 'https://example.com'},
@@ -199,7 +212,7 @@ describe('controller-wiring', () => {
         });
       });
 
-      it('should wire cart for all solution types', () => {
+      it(`should wire cart for ${solutionType} solution type`, () => {
         expect(props.cart).toEqual({
           initialState: {
             items: [mockCartItem],

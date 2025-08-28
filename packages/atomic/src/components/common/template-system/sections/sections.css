@@ -1,1 +1,5 @@
+@import "./section-bottom-metadata.css";
+@import "./section-emphasized.css";
+@import "./section-badges.css";
+@import "./section-children.css";
 @reference '../../../../utils/tailwind.global.tw.css';

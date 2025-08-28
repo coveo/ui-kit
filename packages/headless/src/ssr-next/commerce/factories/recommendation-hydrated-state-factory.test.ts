@@ -74,30 +74,6 @@ describe('hydratedRecommendationStaticStateFactory', () => {
     );
   });
 
-  it('should dispatch search actions and wait for request completion', async () => {
-    const mockSolutionTypeBuild = vi.fn().mockResolvedValue(mockBuildResult);
-    vi.mocked(buildFactory).mockReturnValue(() => mockSolutionTypeBuild);
-
-    const factory = hydratedRecommendationStaticStateFactory(
-      createControllerDefinitions(),
-      createEngineOptions()
-    );
-
-    const staticState = await factory({
-      searchActions: mockSearchActions,
-      controllers: {},
-      ...mockBaseConfiguration,
-    });
-
-    expect(mockBuildResult.engine.dispatch).toHaveBeenCalledWith(
-      mockSearchActions[0]
-    );
-    expect(
-      mockBuildResult.engine.waitForRequestCompletedAction
-    ).toHaveBeenCalledOnce();
-    expect(staticState).toEqual(mockBuildResult);
-  });
-
   it('should call fromBuildResult with correct parameters', async () => {
     const mockSolutionTypeBuild = vi.fn().mockResolvedValue(mockBuildResult);
     vi.mocked(buildFactory).mockReturnValue(() => mockSolutionTypeBuild);

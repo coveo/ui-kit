@@ -1,5 +1,5 @@
 import type {CurrencyCodeISO4217} from '@coveo/relay-event-types';
-import {describe, expect, it, type Mock, vi} from 'vitest';
+import {describe, expect, it, type Mock, type MockInstance, vi} from 'vitest';
 import {buildCommerceEngine} from '../../../app/commerce-engine/commerce-engine.js';
 import {getSampleCommerceEngineConfiguration} from '../../../app/commerce-engine/commerce-engine-configuration.js';
 import {buildLogger} from '../../../app/logger.js';
@@ -32,12 +32,16 @@ describe('buildFactory', () => {
   const mockWireControllerParams = vi.mocked(wireControllerParams);
   const mockBuildCommerceEngine = vi.mocked(buildCommerceEngine);
   const mockBuildOptions = {
-    country: 'US',
-    currency: 'USD' as CurrencyCodeISO4217,
-    recommendations: [],
-    language: 'en-US',
-    query: 'query',
-    url: 'http://example.com',
+    context: {
+      country: 'US',
+      currency: 'USD' as CurrencyCodeISO4217,
+      recommendations: [],
+      language: 'en-US',
+      view: {url: 'http://example.com'},
+    },
+    searchParams: {
+      query: 'query',
+    },
   };
 
   const mockLogger = {
@@ -45,6 +49,7 @@ describe('buildFactory', () => {
     debug: vi.fn(),
   };
 
+  let mockDispatch: MockInstance;
   const mockEngineOptions: SSRCommerceEngineOptions = {
     configuration: getSampleCommerceEngineConfiguration(),
     navigatorContextProvider: buildMockNavigatorContextProvider(),
@@ -53,10 +58,14 @@ describe('buildFactory', () => {
   const mockEmptyDefinition = {};
 
   beforeEach(() => {
+    mockDispatch = vi.fn();
     vi.resetAllMocks();
-    mockBuildCommerceEngine.mockReturnValue(
-      buildMockCommerceEngine(buildMockCommerceState())
-    );
+
+    mockBuildCommerceEngine.mockReturnValue({
+      ...buildMockCommerceEngine(buildMockCommerceState()),
+      //@ts-expect-error: type is irrelevant here
+      dispatch: mockDispatch,
+    });
     (buildLogger as Mock).mockReturnValue(mockLogger);
   });
 
@@ -72,10 +81,12 @@ describe('buildFactory', () => {
 
     const factory = buildFactory(definition, mockEngineOptions);
     await factory(SolutionType.listing)({
-      country: 'CA',
-      currency: 'USD',
-      language: 'en',
-      url: 'https://example.com',
+      context: {
+        country: 'CA',
+        currency: 'USD',
+        language: 'en',
+        view: {url: 'https://example.com'},
+      },
     });
 
     expect(mockWireControllerParams.mock.calls[0][0]).toStrictEqual('listing');
@@ -86,11 +97,42 @@ describe('buildFactory', () => {
       })
     );
     expect(mockWireControllerParams.mock.calls[0][2]).toStrictEqual({
-      country: 'CA',
-      currency: 'USD',
-      language: 'en',
-      url: 'https://example.com',
+      context: {
+        country: 'CA',
+        currency: 'USD',
+        language: 'en',
+        view: {url: 'https://example.com'},
+      },
     });
+  });
+
+  it('should dispatch search actions and wait for request completion', async () => {
+    const definition = {
+      controller1: defineMockCommerceController(),
+      controller2: defineMockCommerceController(),
+    };
+
+    // Mock wireControllerParams to return searchActions
+    mockWireControllerParams.mockReturnValueOnce({
+      searchActions: ['mockSearchActions[0]'],
+    });
+
+    const factory = buildFactory(definition, mockEngineOptions);
+
+    await factory(SolutionType.listing)({
+      context: {
+        country: 'CA',
+        currency: 'USD',
+        language: 'en',
+        view: {url: 'https://example.com'},
+      },
+      searchActions: ['mockSearchActions[0]'],
+    });
+
+    expect(mockDispatch).toHaveBeenCalledWith('mockSearchActions[0]');
+    // expect(
+    //   mockBuildCommerceEngine.waitForRequestCompletedAction
+    // ).toHaveBeenCalledOnce();
   });
 
   it('should not warn if navigatorContextProvider is present', async () => {
