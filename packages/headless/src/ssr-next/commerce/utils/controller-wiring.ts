@@ -71,91 +71,90 @@ function validateBuildConfig(
   schema.validate(buildConfig);
 }
 
-function createControllerWirer(
-  buildConfig: BuildConfig<SolutionType>,
-  controllerDefinitions: CommerceControllerDefinitionsMap,
-  controllerProps: ControllersPropsMap
-) {
-  return {
-    wireParameterManager: () => {
-      if (!controllerDefinitions?.parameterManager) return;
+/**
+ * Controller wiring class that handles the complete wiring process.
+ * Transforms simple user configuration into complex internal controller structures.
+ */
+class ControllerWirer {
+  constructor(
+    private buildConfig: BuildConfig<SolutionType>,
+    private controllerDefinitions: CommerceControllerDefinitionsMap,
+    private controllerProps: ControllersPropsMap
+  ) {}
 
-      const {searchParams} = buildConfig;
-      const {query, ...rest} =
-        (searchParams as Parameters & {
-          query?: string;
-        }) || {};
+  private wireParameterManager(): void {
+    if (!this.controllerDefinitions?.parameterManager) return;
 
-      const parameters = {
-        ...(query && {q: query}),
-        ...(rest && typeof rest === 'object' ? rest : {}),
-      };
+    const {searchParams} = this.buildConfig;
+    const {query, ...rest} =
+      (searchParams as Parameters & {
+        query?: string;
+      }) || {};
 
-      controllerProps.parameterManager = {
-        initialState: {parameters},
-      };
-    },
+    const parameters = {
+      ...(query && {q: query}),
+      ...(rest && typeof rest === 'object' ? rest : {}),
+    };
 
-    wireContext: () => {
-      if (!controllerDefinitions?.context) return;
+    this.controllerProps.parameterManager = {
+      initialState: {parameters},
+    };
+  }
 
-      const {context} = buildConfig;
-      controllerProps.context = {
-        initialState: {
-          ...context,
-        },
-      };
-    },
+  private wireContext(): void {
+    if (!this.controllerDefinitions?.context) return;
 
-    wireCart: () => {
-      if (!controllerDefinitions?.cart || !buildConfig.cart) return;
+    const {context} = this.buildConfig;
+    this.controllerProps.context = {
+      initialState: {
+        ...context,
+      },
+    };
+  }
 
-      controllerProps.cart = {
-        initialState: buildConfig.cart,
-      };
-    },
+  private wireCart(): void {
+    if (!this.controllerDefinitions?.cart || !this.buildConfig.cart) return;
 
-    wireRecommendations: () => {
-      // TODO: KIT-4619: wire recommendations
-    },
-  };
-}
+    this.controllerProps.cart = {
+      initialState: this.buildConfig.cart,
+    };
+  }
 
-function wireCommonControllers(
-  wirer: ReturnType<typeof createControllerWirer>
-): void {
-  wirer.wireCart();
-  wirer.wireContext();
-}
+  private wireRecommendations(): void {
+    // TODO: KIT-4619: wire recommendations
+  }
 
-function wireSolutionSpecificControllers(
-  solutionType: SolutionType,
-  wirer: ReturnType<typeof createControllerWirer>
-): void {
-  switch (solutionType) {
-    case SolutionType.search: {
-      wirer.wireParameterManager();
-      break;
-    }
+  /**
+   * Wires all controllers based on solution type and controller definitions.
+   * Handles the complete wiring process in a sequential manner.
+   */
+  public wire(solutionType: SolutionType): void {
+    // Wire common controllers that apply to all solution types
+    this.wireCart();
+    this.wireContext();
 
-    case SolutionType.listing: {
-      wirer.wireParameterManager();
-      break;
-    }
+    // Wire solution-specific controllers
+    switch (solutionType) {
+      case SolutionType.search:
+      case SolutionType.listing: {
+        this.wireParameterManager();
+        break;
+      }
 
-    case SolutionType.recommendation: {
-      wirer.wireRecommendations();
-      break;
-    }
+      case SolutionType.recommendation: {
+        this.wireRecommendations();
+        break;
+      }
 
-    case SolutionType.standalone:
-      // No additional wiring needed for standalone
-      break;
+      case SolutionType.standalone:
+        // No additional wiring needed for standalone
+        break;
 
-    default: {
-      // Exhaustive check - TypeScript will error if we miss a case
-      const _exhaustiveCheck: never = solutionType;
-      throw new Error(`Unsupported solution type: ${_exhaustiveCheck}`);
+      default: {
+        // Exhaustive check - TypeScript will error if we miss a case
+        const _exhaustiveCheck: never = solutionType;
+        throw new Error(`Unsupported solution type: ${_exhaustiveCheck}`);
+      }
     }
   }
 }
@@ -182,14 +181,10 @@ export function wireControllerParams<
   validateBuildConfig(solutionType, buildConfig);
 
   const controllerProps: ControllersPropsMap = buildConfig.controllers ?? {};
-  const wirer = createControllerWirer(
-    buildConfig,
-    controllerDefinitions,
-    controllerProps
-  );
 
-  wireCommonControllers(wirer);
-  wireSolutionSpecificControllers(solutionType, wirer);
+  new ControllerWirer(buildConfig, controllerDefinitions, controllerProps).wire(
+    solutionType
+  );
 
   return controllerProps as InferControllerPropsMapFromDefinitions<TControllerDefinitions>;
 }
