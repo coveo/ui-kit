@@ -49,7 +49,7 @@ export default defineConfig({
             dest: `./bueno/${buenoVersion}`,
           },
           {
-            src: '../../headless/cdn/*',
+            src: '../../../packages/headless/cdn/*',
             dest: `./headless/${headlessVersion}`,
           },
         ],
