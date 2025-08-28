@@ -6,9 +6,8 @@ import {ref} from 'lit/directives/ref.js';
 import {bindingGuard} from '@/src/decorators/binding-guard';
 import {bindings} from '@/src/decorators/bindings';
 import {errorGuard} from '@/src/decorators/error-guard';
-import {injectStylesForNoShadowDOM} from '@/src/decorators/inject-styles-for-no-shadow-dom';
 import type {InitializableComponent} from '@/src/decorators/types';
-import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
+import {LightDomMixin} from '@/src/mixins/light-dom';
 import type {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface';
 
 export type Range = {start: number; end: number};
@@ -18,11 +17,9 @@ export type Range = {start: number; end: number};
  * @internal
  */
 @customElement('atomic-commerce-facet-number-input')
-@withTailwindStyles
-@injectStylesForNoShadowDOM
 @bindings()
 export class AtomicCommerceFacetNumberInput
-  extends LitElement
+  extends LightDomMixin(LitElement)
   implements InitializableComponent<CommerceBindings>
 {
   /**
