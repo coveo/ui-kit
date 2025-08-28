@@ -202,11 +202,10 @@ class ControllerWirer<
  */
 export function wireControllerParams<
   TControllerDefinitions extends CommerceControllerDefinitionsMap,
-  TSolutionType extends SolutionType,
 >(
-  solutionType: TSolutionType,
+  solutionType: SolutionType,
   controllerDefinitions: TControllerDefinitions,
-  buildConfig: BuildConfig<TControllerDefinitions, TSolutionType> & {
+  buildConfig: BuildConfig<TControllerDefinitions, SolutionType> & {
     controllers?: ControllersPropsMap;
   }
 ): InferControllerPropsMapFromDefinitions<TControllerDefinitions> {
