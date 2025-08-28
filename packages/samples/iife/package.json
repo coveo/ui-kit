@@ -18,7 +18,7 @@
     "@coveo/atomic-react": "3.3.6",
     "@coveo/headless": "3.29.1",
     "react": "19.1.1",
-    "react-dom": "19.1.0"
+    "react-dom": "19.1.1"
   },
   "devDependencies": {
     "cypress": "13.7.3",
