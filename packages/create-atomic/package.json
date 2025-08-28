@@ -38,7 +38,7 @@
   },
   "dependencies": {
     "@coveo/platform-client": "60.4.0",
-    "abortcontroller-polyfill": "1.7.5",
+    "abortcontroller-polyfill": "1.7.8",
     "detect-indent": "7.0.1",
     "https-proxy-agent": "7.0.6",
     "isomorphic-fetch": "3.0.0",
@@ -47,7 +47,7 @@
     "plop": "4.0.1"
   },
   "devDependencies": {
-    "fs-extra": "11.3.0",
-    "typescript": "5.8.3"
+    "fs-extra": "11.3.1",
+    "typescript": "5.9.2"
   }
 }

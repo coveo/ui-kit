@@ -18,13 +18,13 @@
     "react-dom": "19.1.1"
   },
   "devDependencies": {
-    "@playwright/test": "1.54.1",
-    "@types/node": "22.16.5",
+    "@playwright/test": "1.55.0",
+    "@types/node": "22.17.2",
     "@types/react": "18.3.3",
     "@types/react-dom": "18.3.0",
     "@vitejs/plugin-react": "4.7.0",
     "ncp": "2.0.0",
-    "typescript": "5.8.3",
-    "vite": "7.0.6"
+    "typescript": "5.9.2",
+    "vite": "7.1.3"
   }
 }

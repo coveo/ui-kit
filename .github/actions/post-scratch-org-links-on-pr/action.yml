@@ -4,7 +4,7 @@ description: Publish Scratch Org Links as comments in a given PR
 runs:
   using: composite
   steps:
-    - uses: actions/cache@5a3ec84eff668545956fd18022155c47e93e2684 # v4
+    - uses: actions/cache@0400d5f644dc74513175e3cd8d07132dd4860809 # v4
       with:
         path: packages/quantic/.env
         key: quantic-playwright-env-${{ github.sha }}
@@ -19,7 +19,7 @@ runs:
         echo "lws_disabled_url=$LWS_DISABLED_URL" >> $GITHUB_OUTPUT
 
     - name: Post or update PR comment with Scratch Org links
-      uses: actions/github-script@v6
+      uses: actions/github-script@d7906e4ad0b1822421a7e6a35d5ca353c962f410 # v6
       with:
         script: |
           const lwsEnabledUrl = '${{ steps.read-env.outputs.lws_enabled_url }}';

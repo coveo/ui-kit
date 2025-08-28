@@ -12,12 +12,12 @@
     "react-dom": "19.1.1"
   },
   "devDependencies": {
-    "@types/node": "22.16.5",
+    "@types/node": "22.17.2",
     "@types/react": "19.1.1",
     "@types/react-dom": "19.1.2",
     "cypress": "13.7.3",
     "ncp": "2.0.0",
-    "typescript": "5.8.3"
+    "typescript": "5.9.2"
   },
   "scripts": {
     "build": "npm run build:next && npm run build:ts-esm && npm run build:ts-cjs",
