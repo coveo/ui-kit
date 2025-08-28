@@ -4,19 +4,23 @@ import {vi} from 'vitest';
 export function buildFakeInsightEngine(
   config: Partial<InsightEngine> = {}
 ): InsightEngine {
-  const fakeEngine: InsightEngine = {
+  const fakeEngine = {
     configuration: {
       organizationId: 'test-org',
       accessToken: 'test-token',
       analytics: {
         trackingId: 'test-tracking-id',
       },
-      ...config.configuration,
     },
     executeFirstSearch: vi.fn(),
     dispatch: vi.fn(),
     subscribe: vi.fn(),
-    state: {},
+    state: {
+      configuration: {
+        organizationId: 'test-org',
+        environment: 'prod',
+      },
+    },
     logger: {
       info: vi.fn(),
       warn: vi.fn(),
@@ -26,5 +30,6 @@ export function buildFakeInsightEngine(
     ...config,
   };
 
-  return fakeEngine;
+  // biome-ignore lint/suspicious/noExplicitAny: test fixture needs flexible typing
+  return fakeEngine as any;
 }
