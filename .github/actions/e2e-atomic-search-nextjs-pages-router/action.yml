@@ -15,8 +15,8 @@ runs:
       name: Run Cypress
       with:
         browser: chrome
-        command-prefix: "npx -w @coveo/atomic-next-samples cypress-repeat run -n 3 --until-passes --rerun-failed-only --"
-        start: npx turbo dev --filter=@coveo/atomic-next-samples
+        command-prefix: "npx -w @samples/atomic-search-nextjs-pages-router cypress-repeat run -n 3 --until-passes --rerun-failed-only --"
+        start: npx turbo dev --filter=@samples/atomic-search-nextjs-pages-router
         wait-on: "http://localhost:3000"
         wait-on-timeout: 600000
         install: false
