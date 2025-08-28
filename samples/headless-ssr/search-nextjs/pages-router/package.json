@@ -1,5 +1,5 @@
 {
-  "name": "@coveo/headless-ssr-search-nextjs-pages-router",
+  "name": "@samples/headless-ssr-search-nextjs-pages-router",
   "description": "Examples of framework agnostic @coveo/headless/ssr utils and @coveo/headless-react/ssr using Next.js pages router",
   "version": "0.0.0",
   "private": true,
