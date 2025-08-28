@@ -1,3 +1,9 @@
+## <small>3.29.1 (2025-08-28)</small>
+
+* fix(headless): use deepest selected children when increasing `numberOfValues` in category facet `sho ([10f9dec](https://github.com/coveo/ui-kit/commits/10f9dec)), closes [#5955](https://github.com/coveo/ui-kit/issues/5955)
+
+
+
 ## 3.29.0 (2025-08-27)
 
 * chore(headless-ssr): auto-include Essential OOTB Controllers in Commerce Engine Definition (#5865) ([846210d](https://github.com/coveo/ui-kit/commits/846210d)), closes [#5865](https://github.com/coveo/ui-kit/issues/5865)

@@ -1,22 +1,31 @@
 import '@coveo/atomic/themes/coveo.css';
-import {setCustomElementsManifest} from '@storybook/web-components';
+import {
+  type Parameters,
+  setCustomElementsManifest,
+} from '@storybook/web-components-vite';
+import {setStorybookHelpersConfig} from '@wc-toolkit/storybook-helpers';
 import {render} from 'lit';
 import customElements from '../custom-elements.json';
 import {defineCustomElements} from '../dist/atomic/loader/index.js';
 
 setCustomElementsManifest(customElements);
-defineCustomElements();
 
-export const parameters = {
-  html: {
-    root: '#code-root',
-    removeComments: true,
-    prettier: {
-      tabWidth: 4,
-      useTabs: false,
-      htmlWhitespaceSensitivity: 'ignore',
-    },
-  },
+defineCustomElements();
+setStorybookHelpersConfig({
+  categoryOrder: [
+    'attributes',
+    'cssParts',
+    'cssProps',
+    'cssStates',
+    'events',
+    'methods',
+    'properties',
+    'slots',
+  ],
+  hideArgRef: true,
+});
+
+export const parameters: Parameters = {
   options: {
     storySort: (a, b) => {
       const topOrder = [
@@ -67,6 +76,9 @@ export const parameters = {
       // Fallback alphabetical for all other stories
       return a.title.localeCompare(b.title, 'en-US');
     },
+  },
+  controls: {
+    expanded: true,
   },
 };
 

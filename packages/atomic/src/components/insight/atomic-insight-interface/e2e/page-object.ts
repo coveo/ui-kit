@@ -9,7 +9,7 @@ export class InsightInterfacePageObject extends BasePageObject {
   }
 
   get insightInterface() {
-    return this.page.getByTestId('root-interface');
+    return this.page.locator('atomic-insight-interface');
   }
 
   get insightTabs() {
