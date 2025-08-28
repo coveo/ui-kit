@@ -35,6 +35,8 @@ export class AtomicInsightLayout
   }
 
   private makeStyleTag() {
+    if (!this.bindings) return;
+
     this.styleTag = this.bindings.createStyleElement();
     this.styleTag.innerHTML = buildInsightLayout(this.host, this.widget);
     this.host.appendChild(this.styleTag);
