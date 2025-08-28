@@ -2,6 +2,7 @@
 
 import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
 import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
+import {html} from 'lit';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {wrapInInsightInterface} from '@/storybook-utils/insight/insight-interface-wrapper';
 
@@ -32,14 +33,9 @@ const meta: Meta = {
 export default meta;
 
 export const Default: Story = {
-  tags: ['!dev'],
-};
-// TODO - KIT-4885: Simplify once other atomic-insight components have unit test / E2E coverage
-export const WithSearch: Story = {
-  tags: ['!dev'],
-  args: {
-    'slots-default': `
-    <atomic-insight-layout>
+  decorators: [
+    () =>
+      html`<atomic-insight-layout>
         <style>
           atomic-insight-search-box {
             position: relative;
@@ -831,7 +827,7 @@ export const WithSearch: Story = {
           <atomic-insight-pager></atomic-insight-pager>
         </atomic-layout-section>
       </atomic-insight-layout>`,
-  },
+  ],
   afterEach: async (context) => {
     await afterEach(context);
   },

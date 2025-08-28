@@ -44,7 +44,6 @@ export type InsightBindings = CommonBindings<
  *
  * @slot default - The default slot where you can add child components to the interface.
  * @slot full-search - A slot for components that should be positioned absolutely in the top-right corner.
- * @internal
  */
 @customElement('atomic-insight-interface')
 @withTailwindStyles

@@ -6,7 +6,7 @@ const defaultInsightQuerySummaryText = 'Insights related to this case';
 test.describe('Atomic Insight Panel', () => {
   test.beforeEach(async ({insightInterface}) => {
     await insightInterface.load({
-      story: 'with-search',
+      story: 'default',
     });
     await insightInterface.hydrated.waitFor();
   });
