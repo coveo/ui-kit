@@ -1,10 +1,7 @@
 import {randomUUID} from 'node:crypto';
 import type {Product} from '@coveo/headless/ssr-commerce';
 
-// Product factory for commerce tests
-export const createMockProduct = (
-  overrides: Partial<Product> = {}
-): Product => ({
+const createMockProduct = (overrides: Partial<Product> = {}): Product => ({
   additionalFields: {},
   children: [],
   clickUri: '',
@@ -30,7 +27,6 @@ export const createMockProduct = (
   ...overrides,
 });
 
-// Test data generators
 export const generateMockProducts = (count: number): Product[] =>
   Array.from({length: count}, (_, index) =>
     createMockProduct({
