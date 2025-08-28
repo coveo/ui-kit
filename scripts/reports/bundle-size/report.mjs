@@ -36,7 +36,7 @@ function buildVisualReport(rows) {
 | ---- |:--------:|:--------:|:------:`;
 
   const table = [tableHead, presentableRows].join('\n');
-  return ['## Bundle Size', table].join('\n\n');
+  return ['## Headless Bundle Size', table].join('\n\n');
 }
 
 export function buildReport(oldSizes, newSizes) {
