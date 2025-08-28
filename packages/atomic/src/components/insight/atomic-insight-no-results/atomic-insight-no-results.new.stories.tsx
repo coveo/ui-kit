@@ -29,4 +29,38 @@ const meta: Meta = {
 
 export default meta;
 
-export const Default: Story = {};
+export const Default: Story = {
+  name: 'Using the No Results component',
+};
+
+export const NoResults: Story = {
+  name: 'No Results State',
+  args: {
+    searchStatusState: {
+      firstSearchExecuted: true,
+      isLoading: false,
+      hasResults: false,
+    },
+    querySummaryState: {
+      query: 'test query',
+      hasQuery: true,
+      hasResults: false,
+    },
+  },
+};
+
+export const HasResults: Story = {
+  name: 'Has Results State',
+  args: {
+    searchStatusState: {
+      firstSearchExecuted: true,
+      isLoading: false,
+      hasResults: true,
+    },
+    querySummaryState: {
+      query: 'test query',
+      hasQuery: true,
+      hasResults: true,
+    },
+  },
+};
