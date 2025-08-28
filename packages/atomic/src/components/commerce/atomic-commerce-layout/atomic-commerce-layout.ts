@@ -13,6 +13,8 @@ import {buildCommerceLayout} from './commerce-layout';
  * @cssprop --atomic-layout-max-search-box-input-width: The maximum width that the search box input will take.
  * @cssprop --atomic-layout-max-search-box-double-suggestions-width: The maximum width that the search box suggestions will take when displaying a double list.
  * @cssprop --atomic-layout-search-box-left-suggestions-width: The width of the left list when displaying a double list.
+ *
+ * @slot default - The default slot for the layout content.
  */
 @customElement('atomic-commerce-layout')
 @injectStylesForNoShadowDOM
