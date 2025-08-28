@@ -44,7 +44,7 @@ export class AtomicFacetDateInput
   @property() public facetId!: string;
   @property() public label!: string;
   @property() public min?: string;
-  @property() public max?: string;
+  @property() public max?: string = '9999-12-31';
 
   @state() error!: Error;
 

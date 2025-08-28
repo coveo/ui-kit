@@ -2,11 +2,16 @@ import type {
   Decorator,
   Meta,
   StoryObj as Story,
-} from '@storybook/web-components';
+} from '@storybook/web-components-vite';
+import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {html} from 'lit/static-html.js';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
-import {renderComponent} from '@/storybook-utils/common/render-component';
 import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
+
+const {events, args, argTypes, template} = getStorybookHelpers(
+  'atomic-generated-answer',
+  {excludeCategories: ['methods']}
+);
 
 const layoutDecorator: Decorator = (story) => html`
   <atomic-search-layout>
@@ -22,7 +27,7 @@ const layoutDecorator: Decorator = (story) => html`
   </atomic-search-layout>
 `;
 
-const {decorator, play} = wrapInSearchInterface({
+const {decorator, afterEach} = wrapInSearchInterface({
   accessToken: 'xx564559b1-0045-48e1-953c-3addd1ee4457',
   organizationId: 'searchuisamples',
   search: {
@@ -38,23 +43,29 @@ const {decorator, play} = wrapInSearchInterface({
 
 const meta: Meta = {
   component: 'atomic-generated-answer',
-  title: 'Atomic/GeneratedAnswer',
+  title: 'Search/Generated Answer',
   id: 'atomic-generated-answer',
-  render: renderComponent,
+  render: (args) => template(args),
   decorators: [layoutDecorator, decorator],
-  parameters,
-  play,
+  parameters: {
+    ...parameters,
+    actions: {
+      handles: events,
+    },
+  },
+  args,
+  argTypes,
+
+  afterEach,
 };
 
 export default meta;
 
-export const Default: Story = {
-  render: () => html`<atomic-generated-answer></atomic-generated-answer>`,
-};
+export const Default: Story = {};
 
 export const DisableCitationAnchoring: Story = {
   name: 'Citation anchoring disabled',
-  render: () => html`
-    <atomic-generated-answer disable-citation-anchoring></atomic-generated-answer>
-  `,
+  args: {
+    'disable-citation-anchoring': true,
+  },
 };

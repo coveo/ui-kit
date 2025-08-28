@@ -1,28 +1,40 @@
 /* eslint-disable @cspell/spellchecker */
 
-import {userEvent} from '@storybook/test';
 import type {
   Decorator,
   Meta,
   StoryObj as Story,
   StoryContext,
-} from '@storybook/web-components';
+} from '@storybook/web-components-vite';
+import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {html} from 'lit/static-html.js';
 import {within} from 'shadow-dom-testing-library';
+import {userEvent} from 'storybook/test';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
-import {renderComponent} from '@/storybook-utils/common/render-component';
 import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
 
-const {decorator, play} = wrapInSearchInterface();
+const {decorator, afterEach} = wrapInSearchInterface();
+const {events, args, argTypes, template} = getStorybookHelpers(
+  'atomic-did-you-mean',
+  {excludeCategories: ['methods']}
+);
 
 const meta: Meta = {
   title: 'Search/DidYouMean',
   id: 'atomic-did-you-mean',
   component: 'atomic-did-you-mean',
-  render: renderComponent,
+  render: (args) => template(args),
   decorators: [decorator],
-  parameters,
-  play,
+  parameters: {
+    ...parameters,
+    actions: {
+      handles: events,
+    },
+  },
+  args,
+  argTypes,
+
+  afterEach,
 };
 
 export default meta;
@@ -36,7 +48,7 @@ const searchBoxDecorator: Decorator = (story) => html`
 
 const searchPlay: (context: StoryContext, query: string) => Promise<void> =
   async (context, query) => {
-    await play(context);
+    await afterEach(context);
     const {canvasElement, step} = context;
     const canvas = within(canvasElement);
 
@@ -63,10 +75,10 @@ const searchPlay: (context: StoryContext, query: string) => Promise<void> =
 export const Default: Story = {
   name: 'atomic-did-you-mean',
   decorators: [searchBoxDecorator],
-  play: (context) => searchPlay(context, 'coveoo'),
+  afterEach: (context) => searchPlay(context, 'coveoo'),
 };
 
 export const QueryTrigger: Story = {
   decorators: [searchBoxDecorator],
-  play: (context) => searchPlay(context, 'Japan'),
+  afterEach: (context) => searchPlay(context, 'Japan'),
 };

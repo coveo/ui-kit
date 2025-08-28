@@ -2,7 +2,11 @@ import type {UnknownAction} from '@reduxjs/toolkit';
 import {filterObject} from '../../../utils/utils.js';
 import {createStaticState} from '../controller-utils.js';
 import {SolutionType} from '../types/controller-constants.js';
-import type {RecommendationControllerSettings} from '../types/controller-definitions.js';
+import type {
+  AugmentedControllerDefinition,
+  FilteredBakedInControllers,
+  RecommendationControllerSettings,
+} from '../types/controller-definitions.js';
 import type {InferControllerStaticStateMapFromDefinitionsWithSolutionType} from '../types/controller-inference.js';
 import type {
   BuildResult,
@@ -20,7 +24,7 @@ import {
 export function fetchRecommendationStaticStateFactory<
   TControllerDefinitions extends CommerceControllerDefinitionsMap,
 >(
-  controllerDefinitions: TControllerDefinitions | undefined,
+  controllerDefinitions: AugmentedControllerDefinition<TControllerDefinitions>,
   options: CommerceEngineDefinitionOptions<TControllerDefinitions>
 ): FetchStaticStateFunction<TControllerDefinitions> {
   const getAllowedRecommendationKeys = (
@@ -68,7 +72,8 @@ export function fetchRecommendationStaticStateFactory<
       InferControllerStaticStateMapFromDefinitionsWithSolutionType<
         TControllerDefinitions,
         SolutionType
-      >
+      > &
+        FilteredBakedInControllers<SolutionType.recommendation>
     >;
   };
 }

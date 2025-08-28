@@ -644,12 +644,12 @@ jobs:
           npm run release:phase4
         env:
           IS_PRERELEASE: "true"
-          TAG_SUFFIX: ${{ github.event.number }}
+          PR_NUMBER: ${{ github.event.number }}
   prerelease-cdn-pr:
     if: ${{ !cancelled() && github.event_name == 'pull_request' }}
     needs: build
     name: Pre-release CDN in dev (PR)
-    environment: 'Prerelease (CDN)'
+    environment: "Prerelease (CDN)"
     runs-on: ubuntu-latest
     steps:
       - name: Harden Runner
@@ -777,7 +777,7 @@ jobs:
             exit 1
           fi
   prerelease-npm-merge:
-    if: ${{ !cancelled() && github.event_name == 'merge_group' }}
+    if: ${{ !cancelled() && needs.is-valid.result == 'success' && github.event_name == 'merge_group' }}
     needs: is-valid
     timeout-minutes: 40
     name: Pre-release NPM at alpha (Merge group)
@@ -815,12 +815,11 @@ jobs:
           npm run release:phase4
         env:
           IS_PRERELEASE: "true"
-          TAG_SUFFIX: ${{ github.event.number }}
   prerelease-cdn-merge:
-    if: ${{ !cancelled() && github.event_name ==  'merge_group' }}
+    if: ${{ !cancelled() && needs.is-valid.result == 'success' && github.event_name == 'merge_group' }}
     needs: is-valid
     name: Pre-release CDN in dev (Merge group)
-    environment: 'Prerelease (CDN)'
+    environment: "Prerelease (CDN)"
     runs-on: ubuntu-latest
     steps:
       - name: Harden Runner
@@ -841,6 +840,6 @@ jobs:
       - run: npm ci
         shell: bash
       - name: Call ui-kit-cd for dev
-        run: node ./scripts/deploy/trigger-ui-kit-cd-pr.mjs
+        run: node ./scripts/deploy/trigger-ui-kit-cd-dev.mjs
         env:
           GH_TOKEN: ${{ secrets.UI_KIT_CD_DISPATCHER }}
