@@ -1081,7 +1081,7 @@ describe('AtomicCommerceProductList', () => {
           vi.spyOn(
             // @ts-expect-error - spying on private property: mocking the template provider would be complex.
             element.productTemplateProvider,
-            'getEmptyLinkTemplateContent'
+            'getLinkTemplateContent'
           ).mockReturnValue(mockEmptyLinkTemplate);
 
           if (display === 'table') {
