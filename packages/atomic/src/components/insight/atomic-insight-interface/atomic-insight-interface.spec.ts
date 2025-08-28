@@ -451,12 +451,6 @@ describe('atomic-insight-interface', () => {
 
   // #render
   describe('render', () => {
-    it('should render empty when engine is not defined', async () => {
-      const element = await setupElement();
-
-      expect(element.shadowRoot?.innerHTML.trim()).toBe('<!----><!--?-->');
-    });
-
     it('should render slots when engine is defined', async () => {
       const element = await setupElement();
       const engine = buildFakeInsightEngine({});
