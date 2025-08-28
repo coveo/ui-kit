@@ -7,7 +7,7 @@
     "paths": {
       "@angular/*": ["../../../node_modules/@angular/*"],
       "@coveo/atomic-angular": [
-        "../../atomic-angular/projects/atomic-angular/dist/"
+        "../../../packages/atomic-angular/projects/atomic-angular/dist/"
       ]
     },
     "preserveSymlinks": true
