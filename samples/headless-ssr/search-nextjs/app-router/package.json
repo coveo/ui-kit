@@ -1,5 +1,5 @@
 {
-  "name": "@coveo/headless-ssr-samples-app-router",
+  "name": "@coveo/headless-ssr-search-nextjs-app-router",
   "description": "Examples of framework agnostic @coveo/headless/ssr utils and @coveo/headless-react/ssr using Next.js app router",
   "version": "0.0.0",
   "private": true,
@@ -12,7 +12,7 @@
     "e2e:watch": "cypress open --browser chrome --e2e --project ../"
   },
   "dependencies": {
-    "@coveo/headless-ssr-samples-common": "0.0.0",
+    "@samples/headless-ssr-search-nextjs-common": "0.0.0",
     "next": "15.2.4",
     "react": "19.1.1",
     "react-dom": "19.1.0"
