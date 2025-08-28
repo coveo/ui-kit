@@ -23,7 +23,7 @@ export function processNavigatorContext<
   params: FetchStaticStateParams,
   baseOptions: TOptions
 ): {
-  engineOptions: TOptions;
+  engineOptions: TOptions & {navigatorContextProvider: NavigatorContextProvider};
   callOptions?: {navigatorContext: NavigatorContext; controllers?: unknown};
 } {
   const [callOptions] = params;
