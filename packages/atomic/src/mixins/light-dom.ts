@@ -61,15 +61,11 @@ export const LightDomMixin = <T extends Constructor<LitElement>>(
       const constructorStyles = (this.constructor as typeof LitElement).styles;
       const staticStyles = Array.isArray(constructorStyles)
         ? constructorStyles
-        : constructorStyles
-          ? [constructorStyles]
-          : [];
+        : [constructorStyles];
 
-      const dynamicStylesArray = dynamicStyles
-        ? Array.isArray(dynamicStyles)
-          ? dynamicStyles
-          : [dynamicStyles]
-        : [];
+      const dynamicStylesArray = Array.isArray(dynamicStyles)
+        ? dynamicStyles
+        : [dynamicStyles];
 
       const allStyles = [...staticStyles, ...dynamicStylesArray];
 
