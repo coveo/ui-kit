@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "npm run build:assets && npm run dev:vite",
-    "build:assets": "ncp ../../atomic-react/dist/assets public/assets && ncp ../../atomic-react/dist/lang public/lang public/assets && ncp ../../atomic/dist/atomic/themes public/themes",
+    "build:assets": "ncp ../../../packages/atomic-react/dist/assets public/assets && ncp ../../atomic-react/dist/lang public/lang public/assets && ncp ../../atomic/dist/atomic/themes public/themes",
     "dev:vite": "vite",
     "build": "npm run build:ts && npm run build:vite",
     "build:ts": "npm run-script -w=@coveo/ci if-not-cdn -- \"tsc -b\"",

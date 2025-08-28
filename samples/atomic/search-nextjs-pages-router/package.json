@@ -26,7 +26,7 @@
     "build:ts-cjs": "npm run-script -w=@coveo/ci if-not-cdn -- \"tsc --module commonjs --noEmit\"",
     "dev": "npm run build:assets && npm run dev:nextjs",
     "dev:nextjs": "next dev",
-    "build:assets": "ncp ../../atomic-react/dist/assets public/assets && ncp ../../atomic-react/dist/lang public/lang public/assets",
+    "build:assets": "ncp ../../../packages/atomic-react/dist/assets public/assets && ncp ../../atomic-react/dist/lang public/lang public/assets",
     "e2e:watch": "cypress open --browser chrome --e2e",
     "e2e": "cypress run --browser chrome"
   }
