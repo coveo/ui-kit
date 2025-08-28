@@ -470,6 +470,21 @@ jobs:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
       - uses: ./.github/actions/setup
       - uses: ./.github/actions/e2e-atomic-search-nextjs-pages-router
+  e2e-iife-test:
+    name: "Run e2e tests for IIFE"
+    needs: affected
+    if: contains(needs.affected.outputs.projects, 'iife-samples')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@ec9f2d5744a09debf3a187a3f4f675c53b671911 # v2.13.0
+        with:
+          egress-policy: audit
+
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+      # TODO: KIT-3537 - https://coveord.atlassian.net/browse/KIT-3538
+      # - uses: ./.github/actions/setup
+      # - uses: ./.github/actions/e2e-iife
   e2e-atomic-angular-test:
     name: "Run e2e tests on Atomic Angular"
     needs: affected
