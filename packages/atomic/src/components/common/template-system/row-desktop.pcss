@@ -1,31 +1,4 @@
-@utility atomic-children-desktop-* {
-  &.child-result:not(.last-child) {
-    margin-bottom: --value([ *]);
-  }
-
-  & {
-    atomic-result-section-children,
-    atomic-product-section-children {
-      atomic-result-children::part(children-root),
-      atomic-insight-result-children::part(children-root),
-      atomic-product-children::part(children-root) {
-        margin-top: --modifier([ *]);
-        padding: --value([ *]);
-      }
-
-      atomic-result-children::part(show-hide-button),
-      atomic-insigh-result-children::part(show-hide-button),
-      atomic-product-children::part(show-hide-button) {
-        margin-top: --modifier([ *]);
-        margin-bottom: --modifier([ *]);
-      }
-    }
-  }
-
-  .placeholder {
-    margin-bottom: --value([ *]);
-  }
-}
+@reference './atomic-children.css';
 
 @utility row-result-desktop {
   &.image-large.density-compact {
@@ -36,11 +9,9 @@
     }
   }
 
-  atomic-result-section-children,
-  atomic-product-section-children {
+  atomic-result-section-children {
     atomic-result-children::part(children-root),
-    atomic-insight-result-children::part(children-root),
-    atomic-product-children::part(children-root) {
+    atomic-insight-result-children::part(children-root) {
       @apply border-neutral border;
       border-radius: 16px;
     }
