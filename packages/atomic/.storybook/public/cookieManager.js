@@ -3,7 +3,7 @@ const FUNCTIONAL_COOKIE_CATEGORY = 'C0003%3A1';
 const functionalKeys = {
   enabled: false,
   localStorageKeys: [
-    '@storybook/manager/store',
+    'storybook/internal/manager/store',
     'lastViewedStoryIds',
     '__storage_test__',
     '__store2_test',

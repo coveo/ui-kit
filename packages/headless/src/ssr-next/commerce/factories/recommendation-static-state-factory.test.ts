@@ -4,6 +4,7 @@ import {buildMockCommerceState} from '../../../test/mock-commerce-state.js';
 import {buildMockSSRCommerceEngine} from '../../../test/mock-engine-v2.js';
 import {defineRecommendations} from '../controllers/recommendations/headless-recommendations.ssr.js';
 import type {SolutionType} from '../types/controller-constants.js';
+import type {FilteredBakedInControllers} from '../types/controller-definitions.js';
 import type {InferControllersMapFromDefinition} from '../types/controller-inference.js';
 import type {CommerceControllerDefinitionsMap} from '../types/engine.js';
 import * as buildFactory from './build-factory.js';
@@ -33,14 +34,15 @@ describe('fetchRecommendationStaticStateFactory', () => {
 
   beforeEach(() => {
     engineSpy = vi.spyOn(buildFactory, 'buildFactory').mockReturnValue(
-      () =>
-        <T extends SolutionType>() =>
+      <T extends SolutionType>(_: T) =>
+        async () =>
           Promise.resolve({
             engine: mockEngine,
             controllers: {} as InferControllersMapFromDefinition<
               CommerceControllerDefinitionsMap,
               T
-            >,
+            > &
+              FilteredBakedInControllers<T>,
           })
     );
 
@@ -56,11 +58,18 @@ describe('fetchRecommendationStaticStateFactory', () => {
     const options = createEngineOptions();
 
     const factory = fetchRecommendationStaticStateFactory(
+      // @ts-expect-error: do not care about baked-in controller initial state
       controllerDefinitions,
       options
     );
 
-    await factory({controllers: {}});
+    // @ts-expect-error: TODO: KIT-4619: Provide recommendation array
+    await factory({
+      country: 'CA',
+      currency: 'USD',
+      language: 'en',
+      url: 'https://example.com',
+    });
 
     expect(engineSpy).toHaveBeenCalledWith(controllerDefinitions, options);
   });

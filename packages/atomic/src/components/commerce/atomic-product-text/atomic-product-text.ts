@@ -33,6 +33,7 @@ export class AtomicProductText
    * The component will look for the specified field in the product's properties first, and then in the product's `additionalFields` property.
    */
   @property({type: String, reflect: true}) public field!: string;
+
   /**
    * Whether to highlight the string field value.
    * @deprecated - replaced by `no-highlight` (this defaults to `true`, while the replacement is the inverse and defaults to `false`).

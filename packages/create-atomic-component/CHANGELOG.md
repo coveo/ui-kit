@@ -1,3 +1,10 @@
+## 1.5.0 (2025-08-27)
+
+* feat(cli): port over atomic-result-component from cli  (#5919) ([2899a2c](https://github.com/coveo/ui-kit/commits/2899a2c)), closes [#5919](https://github.com/coveo/ui-kit/issues/5919)
+* chore: add missing workspace link (#5897) ([60ff41f](https://github.com/coveo/ui-kit/commits/60ff41f)), closes [#5897](https://github.com/coveo/ui-kit/issues/5897)
+
+
+
 ## 1.4.0 (2025-08-07)
 
 * feat: Migrate monorepo build system from NX to Turborepo (#5733) ([e7e1237](https://github.com/coveo/ui-kit/commits/e7e1237)), closes [#5733](https://github.com/coveo/ui-kit/issues/5733)

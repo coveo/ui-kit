@@ -40,7 +40,7 @@ function getVersionComponents(version) {
     parsedVersion?.major,
     parsedVersion?.minor,
     parsedVersion?.patch,
-    ...(parsedVersion?.prerelease[0] ? [parsedVersion.prerelease[0]] : []),
+    ...(parsedVersion?.prerelease.length > 0 ? parsedVersion.prerelease : []),
   ];
 }
 
@@ -56,7 +56,7 @@ function getVersionSubpaths(version) {
     : {
         major: versionComposantsOrdered.slice(0, 1),
         minor: versionComposantsOrdered.slice(0, 2).join('.'),
-        patch: versionComposantsOrdered.slice(0, 3).join('.'),
+        patch: versionComposantsOrdered.join('.'),
       };
 }
 

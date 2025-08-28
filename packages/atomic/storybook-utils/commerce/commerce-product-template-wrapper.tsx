@@ -1,7 +1,7 @@
-import {Decorator} from '@storybook/web-components';
-import {html, TemplateResult, render} from 'lit';
+import { Decorator } from '@storybook/web-components-vite';
+import { html, TemplateResult, render } from 'lit';
 
-export const wrapInProductTemplate = (): {
+export const wrapInProductTemplate = (includeCodeRoot: boolean = true): {
   decorator: Decorator;
 } => {
   const decorator: Decorator = (story) => {
@@ -21,7 +21,7 @@ export const wrapInProductTemplate = (): {
       templateTag.innerHTML = String(storyResult);
     }
 
-    templateTag.id = 'code-root';
+    if (includeCodeRoot) { templateTag.id = 'code-root'; }
     return html`
       <atomic-product-template>${templateTag}</atomic-product-template>
     `;

@@ -29,7 +29,7 @@ import {FieldsetGroup} from '../../stencil-fieldset-group';
 import {RadioButton} from '../../stencil-radio-button';
 
 /**
- * @internal
+ * Internal component, only to use through `atomic-generated-answer` or `atomic-insight-generated-answer`
  */
 @Component({
   tag: 'atomic-generated-answer-feedback-modal',

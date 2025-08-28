@@ -1,3 +1,9 @@
+## <small>2.5.5 (2025-08-27)</small>
+
+* chore(headless-ssr): auto-include Essential OOTB Controllers in Commerce Engine Definition (#5865) ([846210d](https://github.com/coveo/ui-kit/commits/846210d)), closes [#5865](https://github.com/coveo/ui-kit/issues/5865)
+
+
+
 ## <small>2.5.1 (2025-08-11)</small>
 
 * test(headless-ssr): fix window is not defined flakiness (#5849) ([894a8a1](https://github.com/coveo/ui-kit/commits/894a8a1)), closes [#5849](https://github.com/coveo/ui-kit/issues/5849)

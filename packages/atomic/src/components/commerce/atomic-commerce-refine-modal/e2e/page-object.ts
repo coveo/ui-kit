@@ -5,4 +5,8 @@ export class AtomicCommerceRefineModalPageObject extends BasePageObject {
   constructor(page: Page) {
     super(page, 'atomic-commerce-refine-modal');
   }
+
+  get closeButton() {
+    return this.hydrated.getByRole('button', {name: 'Close'});
+  }
 }

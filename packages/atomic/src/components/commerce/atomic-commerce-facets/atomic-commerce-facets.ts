@@ -29,6 +29,8 @@ import '../atomic-commerce-facet/atomic-commerce-facet';
 import type {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface';
 import '../atomic-commerce-numeric-facet/atomic-commerce-numeric-facet';
 import '../atomic-commerce-timeframe-facet/atomic-commerce-timeframe-facet';
+import {keyed} from 'lit/directives/keyed.js';
+import {bindStateToController} from '@/src/decorators/bind-state';
 
 /**
  * The `atomic-commerce-facets` component automatically renders commerce facets based on the Commerce API response.
@@ -46,8 +48,12 @@ export class AtomicCommerceFacets
 
   @state() error!: Error;
 
-  private facetGenerator!: FacetGenerator;
-  private summary!: Summary<SearchSummaryState | ProductListingSummaryState>;
+  @bindStateToController('facetGenerator')
+  @state()
+  public facetGeneratorState!: string[];
+
+  public facetGenerator!: FacetGenerator;
+  public summary!: Summary<SearchSummaryState | ProductListingSummaryState>;
 
   /**
    * The maximum number of facets to expand.
@@ -120,33 +126,47 @@ export class AtomicCommerceFacets
 
       switch (facet.state.type) {
         case 'regular':
-          return html`<atomic-commerce-facet
+          return html`${keyed(
+            facet.state.facetId,
+            html`
+          <atomic-commerce-facet
             .isCollapsed=${isCollapsed}
             .summary=${this.summary}
             .facet=${facet as RegularFacet}
             .field=${facet.state.field}
-          ></atomic-commerce-facet>`;
+          ></atomic-commerce-facet>
+          `
+          )} `;
         case 'numericalRange':
-          return html`<atomic-commerce-numeric-facet
-            .isCollapsed=${isCollapsed}
-            .summary=${this.summary}
-            .facet=${facet as NumericFacet}
-            .field=${facet.state.field}
-          ></atomic-commerce-numeric-facet>`;
+          return html`${keyed(
+            facet.state.facetId,
+            html`<atomic-commerce-numeric-facet
+              .isCollapsed=${isCollapsed}
+              .summary=${this.summary}
+              .facet=${facet as NumericFacet}
+              .field=${facet.state.field}
+            ></atomic-commerce-numeric-facet>`
+          )}`;
         case 'dateRange':
-          return html`<atomic-commerce-timeframe-facet
-            .isCollapsed=${isCollapsed}
-            .summary=${this.summary}
-            .facet=${facet as DateFacet}
-            .field=${facet.state.field}
-          ></atomic-commerce-timeframe-facet>`;
+          return html`${keyed(
+            facet.state.facetId,
+            html`<atomic-commerce-timeframe-facet
+              .isCollapsed=${isCollapsed}
+              .summary=${this.summary}
+              .facet=${facet as DateFacet}
+              .field=${facet.state.field}
+            ></atomic-commerce-timeframe-facet>`
+          )}`;
         case 'hierarchical':
-          return html`<atomic-commerce-category-facet
-            .isCollapsed=${isCollapsed}
-            .summary=${this.summary}
-            .facet=${facet as CategoryFacet}
-            .field=${facet.state.field}
-          ></atomic-commerce-category-facet>`;
+          return html`${keyed(
+            facet.state.facetId,
+            html`<atomic-commerce-category-facet
+              .isCollapsed=${isCollapsed}
+              .summary=${this.summary}
+              .facet=${facet as CategoryFacet}
+              .field=${facet.state.field}
+            ></atomic-commerce-category-facet>`
+          )}`;
         default: {
           // TODO COMHUB-291 support location facet
           this.bindings.engine.logger.warn('Unexpected facet type.');

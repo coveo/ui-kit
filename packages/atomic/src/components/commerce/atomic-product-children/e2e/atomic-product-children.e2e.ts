@@ -12,7 +12,7 @@ test.describe('AtomicProductChildren', () => {
   });
 
   test('should render a label', async ({productChildren}) => {
-    await expect(productChildren.label).toHaveText('Available in:');
+    await expect(productChildren.availableInLabel).toBeVisible();
   });
 
   test('should render child products', async ({productChildren}) => {

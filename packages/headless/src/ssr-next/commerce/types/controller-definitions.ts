@@ -1,7 +1,6 @@
 import type {Controller} from '../../../controllers/controller/headless-controller.js';
 import type {InvalidControllerDefinition} from '../../common/errors.js';
 import type {ControllersPropsMap} from '../../common/types/controllers.js';
-import type {EngineDefinitionBuildResult} from '../../common/types/engine.js';
 import type {HydratedState} from '../../common/types/hydrate-static-state.js';
 import type {
   InferControllerStaticStateFromController,
@@ -13,6 +12,9 @@ import type {
   HasRequiredKeys,
   OptionsTuple,
 } from '../../common/types/utilities.js';
+import type {CartDefinition} from '../controllers/cart/headless-cart.ssr.js';
+import type {ContextDefinition} from '../controllers/context/headless-context.ssr.js';
+import type {ParameterManagerDefinition} from '../controllers/parameter-manager/headless-core-parameter-manager.ssr.js';
 import type {SSRCommerceEngine} from '../factories/build-factory.js';
 import {
   type recommendationInternalOptionKey,
@@ -28,9 +30,9 @@ import type {
   UniversalController,
 } from './controller-scopes.js';
 import type {Kind} from './kind.js';
+import type {HasSolutionType} from './utilities.js';
 
 export type {
-  EngineDefinitionBuildResult,
   HydratedState,
   OptionsTuple,
   InferControllerStaticStateFromController,
@@ -60,6 +62,7 @@ export interface ControllerDefinitionWithoutProps<
   build(engine: SSRCommerceEngine, solutionType?: SolutionType): TController;
 }
 
+// TODO: KIT-4742: There is no point for this interface now that the wiring is happening in headless
 export interface ControllerWithKind extends Controller {
   _kind: Kind;
 }
@@ -100,6 +103,49 @@ export type ControllerDefinition<TController extends Controller> =
 export interface ControllerDefinitionsMap<TController extends Controller> {
   [customName: string]: ControllerDefinition<TController>;
 }
+
+type BakedInControllerDefinitions = {
+  parameterManager: ParameterManagerDefinition<{listing: true; search: true}>;
+  context: ContextDefinition;
+  cart: CartDefinition;
+};
+
+/**
+ * Map of baked-in controllers
+ */
+export type BakedInControllers = {
+  [K in keyof BakedInControllerDefinitions]: BakedInControllerDefinitions[K]['buildWithProps'];
+};
+
+/**
+ * A dynamically filtered map of baked-in controller definitions based on solution type compatibility.
+ *
+ * This type automatically includes only the baked-in controllers that are available for the specified
+ * solution type by checking each controller's `SolutionTypeAvailability` configuration. Controllers
+ * that don't support the given solution type are excluded from the resulting type.
+ *
+ * @template TSolutionType - The target solution type to filter controllers for
+ */
+export type FilteredBakedInControllers<TSolutionType extends SolutionType> = {
+  [K in keyof BakedInControllers as HasSolutionType<
+    BakedInControllerDefinitions[K],
+    TSolutionType
+  > extends true
+    ? K
+    : never]: BakedInControllers[K];
+};
+
+/**
+ * Map of controller definitions available to the commerce engine definition.
+ *
+ * This type combines user-defined controllers with the system's baked-in controllers
+ * (parameterManager, context, and cart).
+ *
+ * @template TControllerDefinitions - The controller definitions map
+ */
+export type AugmentedControllerDefinition<
+  TControllerDefinitions extends ControllerDefinitionsMap<Controller>,
+> = TControllerDefinitions & BakedInControllerDefinitions;
 
 /**
  * This type defines the required and optional controller props for the engine definition.
