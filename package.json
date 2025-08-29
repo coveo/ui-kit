@@ -101,7 +101,8 @@
     "packages/create-atomic-component-project/template",
     "packages/create-atomic-rollup-plugin",
     "packages/create-atomic-result-component",
-    "packages/create-atomic-result-component/template/src/components/sample-result-component"
+    "packages/create-atomic-result-component/template/src/components/sample-result-component",
+    "samples/headless-ssr/*"
   ],
   "config": {
     "commitizen": {
