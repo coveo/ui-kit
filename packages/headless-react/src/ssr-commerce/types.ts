@@ -1,7 +1,7 @@
 import type {
-  CommerceEngineDefinition,
   Controller,
   ControllerDefinitionsMap,
+  EngineDefinition,
   InferControllerFromDefinition,
   InferControllerStaticStateMapFromDefinitionsWithSolutionType,
   InferControllersMapFromDefinition,
@@ -50,7 +50,7 @@ export type ReactEngineDefinition<
   TControllers extends ControllerDefinitionsMap<Controller>,
   TEngineOptions,
   TSolutionType extends SolutionType,
-> = CommerceEngineDefinition<TControllers, TEngineOptions, TSolutionType> & {
+> = EngineDefinition<TControllers, TEngineOptions, TSolutionType> & {
   /**
    * @deprecated Use `StateProvider` instead.
    */
