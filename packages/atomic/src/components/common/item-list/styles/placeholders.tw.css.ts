@@ -1,4 +1,6 @@
-/* Deprecated, use placeholders.tw.css.ts for Lit components */
+import {css} from 'lit';
+
+const styles = css`
 .list-wrapper.placeholder {
   .result-component {
     display: none;
@@ -32,3 +34,6 @@
     opacity: 0.2;
   }
 }
+`;
+
+export default styles;
