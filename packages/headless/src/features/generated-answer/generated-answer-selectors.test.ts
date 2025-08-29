@@ -1,4 +1,4 @@
-import {streamAnswerAPIStateMock} from '../../api/knowledge/tests/stream-answer-api-state-mock.js';
+import {streamAnswerAPIStateMock} from '../../controllers/knowledge/generated-answer/headless-answerapi-generated-answer-mocks.js';
 import type {SearchAppState} from '../../state/search-app-state.js';
 import {generativeQuestionAnsweringIdSelector} from './generated-answer-selectors.js';
 

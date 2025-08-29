@@ -3,9 +3,10 @@ import {triggerSearchRequest} from '../../../api/knowledge/stream-answer-actions
 import {
   answerApi,
   fetchAnswer,
-  type StateNeededByAnswerAPI,
 } from '../../../api/knowledge/stream-answer-api.js';
+import type {StreamAnswerAPIState} from '../../../api/knowledge/stream-answer-api-state.js';
 import {getConfigurationInitialState} from '../../../features/configuration/configuration-state.js';
+import * as answerApiSelectors from '../../../features/generated-answer/answer-api-selectors.js';
 import {
   resetAnswer,
   updateAnswerConfigurationId,
@@ -36,46 +37,61 @@ vi.mock(
 vi.mock('../../../features/search/search-actions');
 vi.mock('../../../api/knowledge/stream-answer-actions.js');
 
+const queryCounter = {count: 0};
+const queries = [
+  {q: '', requestId: ''},
+  {q: 'this est une question', requestId: '12'},
+  {q: 'this est une another question', requestId: '12'},
+  {q: '', requestId: '34'},
+  {q: 'this est une yet another question', requestId: '56'},
+  {
+    q: 'this est une question in legacy mode without action cause',
+    requestId: '78',
+    analyticsMode: 'legacy',
+  },
+  {
+    q: 'this est une question in next mode without action cause',
+    requestId: '7822',
+    analyticsMode: 'next',
+    actionCause: '',
+  },
+  {
+    q: 'this est une question in next mode with an action cause',
+    requestId: '781',
+    analyticsMode: 'next',
+    actionCause: 'searchboxSubmit',
+  },
+];
+
+vi.mock(
+  '../../../features/generated-answer/answer-api-selectors.js',
+  async () => {
+    const original = await vi.importActual<
+      typeof import('../../../features/generated-answer/answer-api-selectors.js')
+    >('../../../features/generated-answer/answer-api-selectors.js');
+
+    return {
+      ...original,
+      selectAnswerTriggerParams: vi.fn(() => {
+        const query = {...queries[queryCounter.count]};
+        queryCounter.count++;
+        return query;
+      }),
+    };
+  }
+);
+
 vi.mock('../../../api/knowledge/stream-answer-api', async () => {
   const originalStreamAnswerApi = await vi.importActual(
     '../../../api/knowledge/stream-answer-api'
   );
-  const queryCounter = {count: 0};
-  const queries = [
-    {q: '', requestId: ''},
-    {q: 'this est une question', requestId: '12'},
-    {q: 'this est une another question', requestId: '12'},
-    {q: '', requestId: '34'},
-    {q: 'this est une yet another question', requestId: '56'},
-    {
-      q: 'this est une question in legacy mode without action cause',
-      requestId: '78',
-      analyticsMode: 'legacy',
-    },
-    {
-      q: 'this est une question in next mode without action cause',
-      requestId: '7822',
-      analyticsMode: 'next',
-      actionCause: '',
-    },
-    {
-      q: 'this est une question in next mode with an action cause',
-      requestId: '781',
-      analyticsMode: 'next',
-      actionCause: 'searchboxSubmit',
-    },
-  ];
+
   return {
     ...originalStreamAnswerApi,
     fetchAnswer: vi.fn(),
     selectAnswer: () => ({
       data: {answer: 'This est une answer', answerId: '12345_6'},
     }),
-    selectAnswerTriggerParams: () => {
-      const query = {...queries[queryCounter.count]};
-      queryCounter.count++;
-      return query;
-    },
   };
 });
 vi.mock('../../../api/knowledge/post-answer-evaluation', () => ({
@@ -99,7 +115,7 @@ describe('knowledge-generated-answer', () => {
     );
 
   const buildEngineWithGeneratedAnswer = (
-    initialState: Partial<StateNeededByAnswerAPI> = {}
+    initialState: Partial<StreamAnswerAPIState> = {}
   ) => {
     const state = createMockState({
       ...initialState,
@@ -164,10 +180,28 @@ describe('knowledge-generated-answer', () => {
     expect(updateResponseFormat).toHaveBeenCalledWith(responseFormat);
   });
 
-  it('dispatches a retry action', () => {
+  it('dispatches a retry action when there are answer api query params in the state', () => {
+    vi.spyOn(
+      answerApiSelectors,
+      'selectAnswerApiQueryParams'
+    ).mockReturnValueOnce({
+      q: 'this est une question',
+    });
+
     const generatedAnswer = createGeneratedAnswer();
     generatedAnswer.retry();
     expect(fetchAnswer).toHaveBeenCalledTimes(1);
+  });
+
+  it('does not dispatch a retry action when there are no answer api query params in the state', () => {
+    vi.spyOn(
+      answerApiSelectors,
+      'selectAnswerApiQueryParams'
+    ).mockReturnValueOnce(undefined);
+
+    const generatedAnswer = createGeneratedAnswer();
+    generatedAnswer.retry();
+    expect(fetchAnswer).toHaveBeenCalledTimes(0);
   });
 
   it('dispatches a reset action', () => {

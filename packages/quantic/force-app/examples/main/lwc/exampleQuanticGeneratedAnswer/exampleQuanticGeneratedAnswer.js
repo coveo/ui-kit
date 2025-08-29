@@ -1,9 +1,26 @@
+// @ts-nocheck
 import {LightningElement, api, track} from 'lwc';
+import templateGeneratedAnswerWithFacets from './templates/templateGeneratedAnswerWithFacets.html';
+import templateGeneratedAnswerWithoutFacets from './templates/templateGeneratedAnswerWithoutFacets.html';
 
 export default class ExampleQuanticGeneratedAnswer extends LightningElement {
   @api engineId = 'quantic-generated-answer-engine';
   @track config = {};
   isConfigured = false;
+
+  withFacets = false;
+
+  connectedCallback() {
+    this.addEventListener('addFacets', this.handleAddFacets);
+  }
+
+  disconnectedCallback() {
+    this.removeEventListener('addFacets', this.handleAddFacets);
+  }
+
+  handleAddFacets = () => {
+    this.withFacets = true;
+  };
 
   pageTitle = 'Quantic Generated Answer';
   pageDescription =
@@ -55,5 +72,12 @@ export default class ExampleQuanticGeneratedAnswer extends LightningElement {
   handleTryItNow(evt) {
     this.config = evt.detail;
     this.isConfigured = true;
+  }
+
+  render() {
+    if (this.withFacets) {
+      return templateGeneratedAnswerWithFacets;
+    }
+    return templateGeneratedAnswerWithoutFacets;
   }
 }

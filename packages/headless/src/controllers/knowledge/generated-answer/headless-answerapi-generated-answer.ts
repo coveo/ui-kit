@@ -1,3 +1,4 @@
+import {skipToken} from '@reduxjs/toolkit/query';
 import type {GeneratedAnswerStream} from '../../../api/knowledge/generated-answer-stream.js';
 import {
   type AnswerEvaluationPOSTParams,
@@ -8,12 +9,16 @@ import {
   answerApi,
   fetchAnswer,
   selectAnswer,
-  selectAnswerTriggerParams,
 } from '../../../api/knowledge/stream-answer-api.js';
 import type {StreamAnswerAPIState} from '../../../api/knowledge/stream-answer-api-state.js';
 import {warnIfUsingNextAnalyticsModeForServiceFeature} from '../../../app/engine.js';
 import type {InsightEngine} from '../../../app/insight-engine/insight-engine.js';
+import {defaultNodeJSNavigatorContextProvider} from '../../../app/navigator-context-provider.js';
 import type {SearchEngine} from '../../../app/search-engine/search-engine.js';
+import {
+  selectAnswerApiQueryParams,
+  selectAnswerTriggerParams,
+} from '../../../features/generated-answer/answer-api-selectors.js';
 import {
   resetAnswer,
   sendGeneratedAnswerFeedback,
@@ -120,7 +125,11 @@ const subscribeToSearchRequest = (
 
     lastTriggerParams = triggerParams;
     engine.dispatch(
-      triggerSearchRequest({state, navigatorContext: engine.navigatorContext})
+      triggerSearchRequest({
+        state: state,
+        navigatorContext:
+          engine.navigatorContext || defaultNodeJSNavigatorContextProvider,
+      })
     );
   };
 
@@ -155,7 +164,6 @@ export function buildAnswerApiGeneratedAnswer(
     props
   );
   const getState = () => engine.state;
-
   engine.dispatch(updateAnswerConfigurationId(props.answerConfigurationId!));
 
   subscribeToSearchRequest(engine as SearchEngine<StreamAnswerAPIState>);
@@ -163,10 +171,7 @@ export function buildAnswerApiGeneratedAnswer(
   return {
     ...controller,
     get state() {
-      const answerApiState = selectAnswer(
-        engine.state,
-        engine.navigatorContext
-      ).data;
+      const answerApiState = selectAnswer(engine.state).data;
       return {
         ...getState().generatedAnswer,
         answer: answerApiState?.answer,
@@ -184,7 +189,10 @@ export function buildAnswerApiGeneratedAnswer(
       };
     },
     retry() {
-      engine.dispatch(fetchAnswer(getState(), engine.navigatorContext));
+      const answerApiQueryParams = selectAnswerApiQueryParams(getState());
+      if (answerApiQueryParams && answerApiQueryParams !== skipToken) {
+        engine.dispatch(fetchAnswer(answerApiQueryParams));
+      }
     },
     reset() {
       engine.dispatch(resetAnswer());
@@ -193,8 +201,7 @@ export function buildAnswerApiGeneratedAnswer(
       const args = parseEvaluationArguments({
         query: getState().query.q,
         feedback,
-        answerApiState: selectAnswer(engine.state, engine.navigatorContext)
-          .data!,
+        answerApiState: selectAnswer(engine.state).data!,
       });
       engine.dispatch(answerEvaluation.endpoints.post.initiate(args));
       engine.dispatch(sendGeneratedAnswerFeedback());
