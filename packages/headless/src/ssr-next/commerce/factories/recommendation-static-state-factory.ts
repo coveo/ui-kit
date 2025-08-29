@@ -1,4 +1,5 @@
 import type {UnknownAction} from '@reduxjs/toolkit';
+import type {EngineStaticState} from '../../common/types/engine.js';
 import {createStaticState} from '../controller-utils.js';
 import type {BuildConfig, RecommendationBuildConfig} from '../types/build.js';
 import {SolutionType} from '../types/controller-constants.js';
@@ -11,7 +12,6 @@ import type {
   BuildResult,
   CommerceControllerDefinitionsMap,
   CommerceEngineDefinitionOptions,
-  EngineStaticState,
   FetchStaticStateFunction,
   FetchStaticStateParameters,
 } from '../types/engine.js';

@@ -1,10 +1,8 @@
 import type {UnknownAction} from '@reduxjs/toolkit';
 import type {NavigatorContextProvider} from '../../../app/navigator-context-provider.js';
 import type {Controller} from '../../../controllers/controller/headless-controller.js';
-import type {
-  ControllerStaticStateMap,
-  ControllersMap,
-} from '../../common/types/controllers.js';
+import type {ControllersMap} from '../../common/types/controllers.js';
+import type {EngineStaticState} from '../../common/types/engine.js';
 import type {SSRCommerceEngine} from '../factories/build-factory.js';
 import type {Build, SSRCommerceEngineOptions} from './build.js';
 import type {SolutionType} from './controller-constants.js';
@@ -23,15 +21,12 @@ import type {
   HydrateStaticStateOptions,
 } from './hydrate-static-state.js';
 
-export type {HydrateStaticState, HydrateStaticStateOptions, FetchStaticState};
-
-export interface EngineStaticState<
-  TSearchAction extends UnknownAction,
-  TControllers extends ControllerStaticStateMap,
-> {
-  searchActions: TSearchAction[];
-  controllers: TControllers;
-}
+export type {
+  HydrateStaticState,
+  HydrateStaticStateOptions,
+  FetchStaticState,
+  EngineStaticState,
+};
 
 type ReservedControllerNames = 'context' | 'parameterManager' | 'cart';
 
