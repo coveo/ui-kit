@@ -223,11 +223,14 @@ export class AtomicCommerceProductList
   }
   public async updated(changedProperties: Map<string, unknown>) {
     super.updated(changedProperties);
-    if (
-      changedProperties.has('searchOrListingState') &&
-      this.isEveryProductsReady
-    ) {
-      this.isEveryProductsReady = false;
+    if (changedProperties.has('searchOrListingState')) {
+      const oldState = changedProperties.get('searchOrListingState') as
+        | ProductListingState
+        | SearchState;
+
+      if (!oldState?.isLoading && this.searchOrListingState.isLoading) {
+        this.isEveryProductsReady = false;
+      }
     }
     await this.updateProductsReadyState();
   }
