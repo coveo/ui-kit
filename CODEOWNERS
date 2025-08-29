@@ -1,5 +1,5 @@
 # Default owners for everything in the repo. Later matches take precedence.
-* @coveo/search
+* @coveo/dxui
 
 # Owners of the Quantic package
 /packages/quantic/ @coveo/salesforce-integration
