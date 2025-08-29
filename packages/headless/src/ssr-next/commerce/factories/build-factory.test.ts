@@ -126,10 +126,10 @@ describe('buildFactory', () => {
         language: 'en',
         view: {url: 'https://example.com'},
       },
-      searchActions: ['search-action'],
+      searchActions: [{type: 'search-action'}],
     });
 
-    expect(mockDispatch).toHaveBeenCalledWith('search-action');
+    expect(mockDispatch).toHaveBeenCalledWith({type: 'search-action'});
   });
 
   it('should not warn if navigatorContextProvider is present', async () => {
