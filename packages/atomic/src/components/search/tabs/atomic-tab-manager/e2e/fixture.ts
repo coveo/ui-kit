@@ -1,7 +1,7 @@
 import {test as base} from '@playwright/test';
 import {type AxeFixture, makeAxeBuilder} from '@/playwright-utils/base-fixture';
+import {AtomicFacetPageObject as FacetPageObject} from '../../../atomic-facet/e2e/page-object';
 import {SearchBoxPageObject} from '../../../atomic-search-box/e2e/page-object';
-import {AtomicFacetPageObject as FacetPageObject} from '../../../facets/atomic-facet/e2e/page-object';
 import {TabManagerPageObject} from './page-object';
 
 interface TestFixture {

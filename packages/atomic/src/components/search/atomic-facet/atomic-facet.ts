@@ -1,64 +1,63 @@
 import {
-  Facet,
   buildFacet,
-  FacetState,
-  FacetOptions,
-  FacetSortCriterion,
-  SearchStatus,
-  SearchStatusState,
-  buildSearchStatus,
   buildFacetConditionsManager,
-  FacetResultsMustMatch,
-  FacetConditionsManager,
-  FacetValueRequest,
-  CategoryFacetValueRequest,
-  TabManagerState,
-  TabManager,
+  buildSearchStatus,
   buildTabManager,
+  type CategoryFacetValueRequest,
+  type Facet,
+  type FacetConditionsManager,
+  type FacetOptions,
+  type FacetResultsMustMatch,
+  type FacetSortCriterion,
+  type FacetState,
+  type FacetValueRequest,
+  type SearchStatus,
+  type SearchStatusState,
+  type TabManager,
+  type TabManagerState,
 } from '@coveo/headless';
+import {html, LitElement, nothing} from 'lit';
+import {customElement, property, state} from 'lit/decorators.js';
+import {when} from 'lit/directives/when.js';
 import {
-  Component,
-  h,
-  State,
-  Prop,
-  Element,
-  VNode,
-  Fragment,
-} from '@stencil/core';
-import {getFieldCaptions} from '../../../../utils/field-utils';
-import {
-  BindStateToController,
-  InitializableComponent,
-  InitializeBindings,
-} from '../../../../utils/initialization-utils';
-import {ArrayProp, MapProp} from '../../../../utils/props-utils';
-import {
-  AriaLiveRegion,
+  AriaLiveRegionController,
   FocusTargetController,
-} from '../../../../utils/stencil-accessibility-utils';
-import {parseDependsOn} from '../../../common/facets/depends-on';
-import {FacetInfo} from '../../../common/facets/facet-common-store';
-import {FacetContainer} from '../../../common/facets/facet-container/stencil-facet-container';
-import {FacetGuard} from '../../../common/facets/facet-guard';
-import {FacetHeader} from '../../../common/facets/facet-header/stencil-facet-header';
-import {FacetPlaceholder} from '../../../common/facets/facet-placeholder/facet-placeholder';
-import {announceFacetSearchResultsWithAriaLive} from '../../../common/facets/facet-search/facet-search-aria-live';
+} from '../../../utils/accessibility-utils';
+import {getFieldCaptions} from '../../../utils/field-utils';
+import {parseDependsOn} from '../../common/facets/depends-on';
+import type {FacetInfo} from '../../common/facets/facet-common-store';
+import {renderFacetContainer} from '../../common/facets/facet-container/facet-container';
+import {renderFacetHeader} from '../../common/facets/facet-header/facet-header';
+import '../../common/atomic-facet-placeholder/atomic-facet-placeholder';
+import {bindStateToController} from '@/src/decorators/bind-state';
+import {bindingGuard} from '@/src/decorators/binding-guard';
+import {bindings} from '@/src/decorators/bindings';
+import {errorGuard} from '@/src/decorators/error-guard';
+import type {InitializableComponent} from '@/src/decorators/types';
+import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
+import {mapProperty} from '@/src/utils/props-utils';
+import {announceFacetSearchResultsWithAriaLive} from '../../common/facets/facet-search/facet-search-aria-live';
+import {renderFacetSearchInput} from '../../common/facets/facet-search/facet-search-input';
+import {facetSearchInputGuard} from '../../common/facets/facet-search/facet-search-input-guard';
+import {renderFacetSearchMatches} from '../../common/facets/facet-search/facet-search-matches';
 import {
   shouldDisplaySearchResults,
   shouldUpdateFacetSearchComponent,
-} from '../../../common/facets/facet-search/facet-search-utils';
-import {FacetSearchInput} from '../../../common/facets/facet-search/stencil-facet-search-input';
-import {FacetSearchInputGuard} from '../../../common/facets/facet-search/stencil-facet-search-input-guard';
-import {FacetSearchMatches} from '../../../common/facets/facet-search/stencil-facet-search-matches';
-import {FacetSearchValue} from '../../../common/facets/facet-search/stencil-facet-search-value';
-import {FacetShowMoreLess} from '../../../common/facets/facet-show-more-less/stencil-facet-show-more-less';
+} from '../../common/facets/facet-search/facet-search-utils';
+import {renderFacetShowMoreLess} from '../../common/facets/facet-show-more-less/facet-show-more-less';
 import {
-  FacetValueProps,
-  FacetValue,
-} from '../../../common/facets/facet-value/stencil-facet-value';
-import {FacetValuesGroup} from '../../../common/facets/facet-values-group/stencil-facet-values-group';
-import {initializePopover} from '../../../common/facets/popover/popover-type';
-import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
+  type FacetValueProps,
+  renderFacetValue,
+} from '../../common/facets/facet-value/facet-value';
+import {renderFacetValuesGroup} from '../../common/facets/facet-values-group/facet-values-group';
+import {initializePopover} from '../../common/facets/popover/popover-type';
+import type {Bindings} from '../atomic-search-interface/atomic-search-interface';
+import '../../common/atomic-facet-placeholder/atomic-facet-placeholder';
+import facetCommonStyles from '../../common/facets/facet-common.tw.css';
+import facetSearchStyles from '../../common/facets/facet-search/facet-search.tw.css';
+import facetValueBoxStyles from '../../common/facets/facet-value-box/facet-value-box.tw.css';
+import facetValueCheckboxStyles from '../../common/facets/facet-value-checkbox/facet-value-checkbox.tw.css';
+import facetValueExcludeStyles from '../../common/facets/facet-value-exclude/facet-value-exclude.tw.css';
 
 /**
  * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (e.g., number of occurrences).
@@ -99,42 +98,51 @@ import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
  * @part show-less - The show less results button.
  * @part show-more-less-icon - The icons of the show more & show less buttons.
  */
-@Component({
-  tag: 'atomic-facet',
-  styleUrl: 'atomic-facet.pcss',
-  shadow: true,
-})
-export class AtomicFacet implements InitializableComponent {
-  @InitializeBindings() public bindings!: Bindings;
+@customElement('atomic-facet')
+@bindings()
+@withTailwindStyles
+export class AtomicFacet
+  extends LitElement
+  implements InitializableComponent<Bindings>
+{
+  static styles = [
+    facetCommonStyles,
+    facetSearchStyles,
+    facetValueCheckboxStyles,
+    facetValueExcludeStyles,
+    facetValueBoxStyles,
+  ];
+
+  @state() bindings!: Bindings;
   public facet!: Facet;
   public searchStatus!: SearchStatus;
   public tabManager!: TabManager;
-  @Element() private host!: HTMLElement;
 
-  @BindStateToController('facet')
-  @State()
+  @bindStateToController('facet')
+  @state()
   public facetState!: FacetState;
-  @BindStateToController('searchStatus')
-  @State()
+  @bindStateToController('searchStatus')
+  @state()
   public searchStatusState!: SearchStatusState;
-  @BindStateToController('tabManager')
-  @State()
+  @bindStateToController('tabManager')
+  @state()
   public tabManagerState!: TabManagerState;
-  @State() public error!: Error;
+  @state() public error!: Error;
 
   /**
    * Specifies a unique identifier for the facet.
    */
-  @Prop({mutable: true, reflect: true}) public facetId?: string;
+  @property({type: String, attribute: 'facet-id', reflect: true})
+  public facetId?: string;
   /**
    * The non-localized label for the facet.
    * Used in the `atomic-breadbox` component through the bindings store.
    */
-  @Prop({reflect: true}) public label = 'no-label';
+  @property({type: String, reflect: true}) public label = 'no-label';
   /**
    * The field whose values you want to display in the facet.
    */
-  @Prop({reflect: true}) public field!: string;
+  @property({type: String, reflect: true}) public field!: string;
   /**
    * The tabs on which the facet can be displayed. This property should not be used at the same time as `tabs-excluded`.
    *
@@ -144,8 +152,7 @@ export class AtomicFacet implements InitializableComponent {
    * ```
    * If you don't set this property, the facet can be displayed on any tab. Otherwise, the facet can only be displayed on the specified tabs.
    */
-  @ArrayProp()
-  @Prop({reflect: true, mutable: true})
+  @property({type: String, attribute: 'tabs-included', reflect: true})
   public tabsIncluded: string[] | string = '[]';
 
   /**
@@ -157,66 +164,73 @@ export class AtomicFacet implements InitializableComponent {
    * ```
    * If you don't set this property, the facet can be displayed on any tab. Otherwise, the facet won't be displayed on any of the specified tabs.
    */
-  @ArrayProp()
-  @Prop({reflect: true, mutable: true})
-  public tabsExcluded: string[] | string = '[]';
+  @property({type: Array, attribute: 'tabs-excluded', reflect: true})
+  public tabsExcluded: string[] | string = [];
 
   /**
    * The number of values to request for this facet.
    * Also determines the number of additional values to request each time more values are shown.
    */
-  @Prop({reflect: true}) public numberOfValues = 8;
+  @property({type: Number, attribute: 'number-of-values', reflect: true})
+  public numberOfValues = 8;
 
   /**
    * Whether this facet should contain a search box.
    *
    */
-  @Prop({reflect: true}) public withSearch = true;
+  @property({type: Boolean, attribute: 'with-search', reflect: true})
+  public withSearch = true;
   /**
    * The sort criterion to apply to the returned facet values.
    * Possible values are 'score', 'alphanumeric', 'alphanumericDescending', 'occurrences', alphanumericNatural', 'alphanumericNaturalDescending' and 'automatic'.
    */
-  @Prop({reflect: true}) public sortCriteria: FacetSortCriterion = 'automatic';
+  @property({type: String, attribute: 'sort-criteria', reflect: true})
+  public sortCriteria: FacetSortCriterion = 'automatic';
   /**
    * Specifies how a result must match the selected facet values.
    * Allowed values:
    * - `atLeastOneValue`: A result will match if at least one of the corresponding facet values is selected.
    * - `allValues`: A result will match if all corresponding facet values are selected.
    */
-  @Prop({reflect: true}) public resultsMustMatch: FacetResultsMustMatch =
-    'atLeastOneValue';
+  @property({type: String, attribute: 'results-must-match', reflect: true})
+  public resultsMustMatch: FacetResultsMustMatch = 'atLeastOneValue';
   /**
    * Whether to display the facet values as checkboxes (multiple selection), links (single selection) or boxes (multiple selection).
    * Possible values are 'checkbox', 'link', and 'box'.
    */
-  @Prop({reflect: true}) public displayValuesAs: 'checkbox' | 'link' | 'box' =
-    'checkbox';
+  @property({type: String, attribute: 'display-values-as', reflect: true})
+  public displayValuesAs: 'checkbox' | 'link' | 'box' = 'checkbox';
   /**
    * Specifies whether the facet is collapsed. When the facet is the child of an `atomic-facet-manager` component, the facet manager controls this property.
    */
-  @Prop({reflect: true, mutable: true}) public isCollapsed = false;
+  @property({type: Boolean, attribute: 'is-collapsed', reflect: true})
+  public isCollapsed = false;
   /**
    * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the heading over the facet, from 1 to 6.
    */
-  @Prop({reflect: true}) public headingLevel = 0;
+  @property({type: Number, attribute: 'heading-level', reflect: true})
+  public headingLevel = 0;
   /**
    * Whether to exclude the parents of folded results when estimating the result count for each facet value.
    *
    *
    * Note: Resulting count is only an estimation, in some cases this value could be incorrect.
    */
-  @Prop({reflect: true}) public filterFacetCount = true;
+  @property({type: Boolean, attribute: 'filter-facet-count', reflect: true})
+  public filterFacetCount = true;
   /**
    * Whether to allow excluding values from the facet.
    */
-  @Prop({reflect: true}) public enableExclusion = false;
+  @property({type: Boolean, attribute: 'enable-exclusion', reflect: true})
+  public enableExclusion = false;
   /**
    * The maximum number of results to scan in the index to ensure that the facet lists all potential facet values.
    * Note: A high injectionDepth may negatively impact the facet request performance.
    * Minimum: `0`
    * Default: `1000`
    */
-  @Prop() public injectionDepth = 1000;
+  @property({type: Number, attribute: 'injection-depth'})
+  public injectionDepth = 1000;
 
   /**
    * The required facets and values for this facet to be displayed.
@@ -237,7 +251,8 @@ export class AtomicFacet implements InitializableComponent {
    * ></atomic-facet>
    * ```
    */
-  @MapProp() @Prop() public dependsOn: Record<string, string> = {};
+  @mapProperty({attributePrefix: 'depends-on'})
+  public dependsOn: Record<string, string> = {};
   /**
    * Specifies an explicit list of `allowedValues` in the Search API request, as a JSON string representation.
    *
@@ -258,9 +273,8 @@ export class AtomicFacet implements InitializableComponent {
    *
    * Default value is `undefined`, and the facet uses all available values for its `field` in the current result set.
    */
-  @ArrayProp()
-  @Prop({mutable: true})
-  public allowedValues: string[] | string = '[]';
+  @property({type: Array, attribute: 'allowed-values'})
+  public allowedValues: string[] | string = [];
 
   /**
    * Identifies the facet values that must appear at the top, in this order.
@@ -281,17 +295,14 @@ export class AtomicFacet implements InitializableComponent {
    *
    * The default value is `undefined`, and the facet values will be sorted using only the `sortCriteria`.
    */
-  @ArrayProp()
-  @Prop({mutable: true})
-  public customSort: string[] | string = '[]';
+  @property({type: Array, attribute: 'custom-sort'})
+  public customSort: string[] | string = [];
 
   private showLessFocus?: FocusTargetController;
   private showMoreFocus?: FocusTargetController;
   private headerFocus?: FocusTargetController;
   private facetConditionsManager?: FacetConditionsManager;
-
-  @AriaLiveRegion('facet-search')
-  protected facetSearchAriaMessage!: string;
+  private facetSearchAriaLive?: AriaLiveRegionController;
 
   public initialize() {
     if (
@@ -320,132 +331,140 @@ export class AtomicFacet implements InitializableComponent {
   }
 
   public disconnectedCallback() {
-    if (this.host.isConnected) {
-      return;
-    }
+    super.disconnectedCallback();
     this.facetConditionsManager?.stopWatching();
   }
 
-  public componentShouldUpdate(
-    next: FacetState,
-    prev: FacetState,
-    propName: keyof AtomicFacet
-  ) {
-    if (
-      this.isFacetState(prev, propName) &&
-      this.isFacetState(next, propName)
-    ) {
-      return shouldUpdateFacetSearchComponent(
-        next.facetSearch,
-        prev.facetSearch
-      );
+  public shouldUpdate(changedProperties: Map<string, unknown>) {
+    if (changedProperties.has('facetState')) {
+      const currentFacetState = this.facetState;
+      const previousFacetState = changedProperties.get(
+        'facetState'
+      ) as FacetState;
+
+      if (previousFacetState && currentFacetState) {
+        return shouldUpdateFacetSearchComponent(
+          currentFacetState.facetSearch,
+          previousFacetState.facetSearch
+        );
+      }
     }
-    return true;
+    return super.shouldUpdate(changedProperties);
   }
 
-  public render() {
-    return (
-      <FacetGuard
-        enabled={this.facetState.enabled}
-        hasError={this.searchStatusState.hasError}
-        firstSearchExecuted={this.searchStatusState.firstSearchExecuted}
-        hasResults={this.facetState.values.length > 0}
-      >
-        {this.searchStatusState.firstSearchExecuted ? (
-          <FacetContainer>
-            <FacetHeader
-              i18n={this.bindings.i18n}
-              label={this.definedLabel}
-              onClearFilters={() => {
-                this.focusTargets.header.focusAfterSearch();
-                this.facet.deselectAll();
-              }}
-              numberOfActiveValues={this.activeValues.length}
-              isCollapsed={this.isCollapsed}
-              headingLevel={this.headingLevel}
-              onToggleCollapse={() => (this.isCollapsed = !this.isCollapsed)}
-              headerRef={(el) => this.focusTargets.header.setTarget(el)}
-            ></FacetHeader>
-            {this.renderBody()}
-          </FacetContainer>
-        ) : (
-          <FacetPlaceholder
-            numberOfValues={this.numberOfValues}
-            isCollapsed={this.isCollapsed}
-          />
-        )}
-      </FacetGuard>
-    );
+  @bindingGuard()
+  @errorGuard()
+  render() {
+    return html`${when(
+      !this.searchStatusState.hasError &&
+        this.facetState.enabled &&
+        (!this.searchStatusState.firstSearchExecuted ||
+          this.facetState.values.length > 0),
+      () =>
+        this.searchStatusState.firstSearchExecuted
+          ? renderFacetContainer()(
+              html`
+            ${renderFacetHeader({
+              props: {
+                i18n: this.bindings.i18n,
+                label: this.definedLabel,
+                onClearFilters: () => {
+                  this.focusTargets.header.focusAfterSearch();
+                  this.facet.deselectAll();
+                },
+                numberOfActiveValues: this.activeValues.length,
+                isCollapsed: this.isCollapsed,
+                headingLevel: this.headingLevel,
+                onToggleCollapse: () => {
+                  this.isCollapsed = !this.isCollapsed;
+                },
+                headerRef: (el) => this.focusTargets.header.setTarget(el),
+              },
+            })}
+            ${this.renderBody()}
+          `
+            )
+          : html`<atomic-facet-placeholder
+          number-of-values="${this.numberOfValues}"
+          ?is-collapsed="${this.isCollapsed}"
+        ></atomic-facet-placeholder>`
+    )}`;
   }
 
   private renderBody() {
     if (this.isCollapsed) {
-      return;
+      return nothing;
     }
-    return (
-      <Fragment>
-        <FacetSearchInputGuard
-          canShowMoreValues={this.facetState.canShowMoreValues}
-          numberOfDisplayedValues={this.facetState.values.length}
-          withSearch={this.withSearch}
-        >
-          <FacetSearchInput
-            i18n={this.bindings.i18n}
-            label={this.definedLabel}
-            onChange={(value) => {
-              if (value === '') {
-                this.facet.facetSearch.clear();
-                return;
-              }
-              this.facet.facetSearch.updateCaptions(
-                getFieldCaptions(this.field, this.bindings.i18n)
-              );
-              this.facet.facetSearch.updateText(value);
-              this.facet.facetSearch.search();
-            }}
-            onClear={() => this.facet.facetSearch.clear()}
-            query={this.facetState.facetSearch.query}
-          />
-        </FacetSearchInputGuard>
-        {shouldDisplaySearchResults(this.facetState.facetSearch)
-          ? [this.renderSearchResults(), this.renderMatches()]
-          : [this.renderValues(), this.renderShowMoreLess()]}
-      </Fragment>
-    );
+    return html`
+      ${facetSearchInputGuard(
+        {
+          canShowMoreValues: this.facetState.canShowMoreValues,
+          numberOfDisplayedValues: this.facetState.values.length,
+          withSearch: this.withSearch,
+        },
+        () =>
+          renderFacetSearchInput({
+            props: {
+              i18n: this.bindings.i18n,
+              label: this.definedLabel,
+              onChange: (value) => {
+                if (value === '') {
+                  this.facet.facetSearch.clear();
+                  return;
+                }
+                this.facet.facetSearch.updateCaptions(
+                  getFieldCaptions(this.field, this.bindings.i18n)
+                );
+                this.facet.facetSearch.updateText(value);
+                this.facet.facetSearch.search();
+              },
+              onClear: () => this.facet.facetSearch.clear(),
+              query: this.facetState.facetSearch.query,
+            },
+          })
+      )}
+      ${
+        shouldDisplaySearchResults(this.facetState.facetSearch)
+          ? html`${this.renderSearchResults()}${this.renderMatches()}`
+          : html`${this.renderValues()}${this.renderShowMoreLess()}`
+      }
+    `;
   }
 
-  private renderValuesContainer(children: VNode[], query?: string) {
+  private renderValuesContainer(children: unknown[], query?: string) {
     const classes = `mt-3 ${
       this.displayValuesAs === 'box' ? 'box-container' : ''
     }`;
-    return (
-      <FacetValuesGroup
-        i18n={this.bindings.i18n}
-        label={this.label}
-        query={query}
-      >
-        <ul class={classes} part="values">
-          {children}
-        </ul>
-      </FacetValuesGroup>
+    return renderFacetValuesGroup({
+      props: {
+        i18n: this.bindings.i18n,
+        label: this.label,
+        query,
+      },
+    })(
+      html`<ul class="${classes}" part="values">
+        ${children}
+      </ul>`
     );
   }
 
   private renderSearchResults() {
     return this.renderValuesContainer(
-      this.facet.state.facetSearch.values.map((value) => (
-        <FacetSearchValue
-          {...this.facetValueProps}
-          facetCount={value.count}
-          onExclude={() => this.facet.facetSearch.exclude(value)}
-          onSelect={() =>
-            this.displayValuesAs === 'link'
-              ? this.facet.facetSearch.singleSelect(value)
-              : this.facet.facetSearch.select(value)
-          }
-          facetValue={value.rawValue}
-        />
-      ))
+      this.facet.state.facetSearch.values.map((value) =>
+        renderFacetValue({
+          props: {
+            ...this.facetValueProps,
+            facetState: 'idle',
+            facetCount: value.count,
+            onExclude: () => this.facet.facetSearch.exclude(value),
+            onSelect: () =>
+              this.displayValuesAs === 'link'
+                ? this.facet.facetSearch.singleSelect(value)
+                : this.facet.facetSearch.select(value),
+            facetValue: value.rawValue,
+          },
+        })
+      )
     );
   }
 
@@ -459,61 +478,60 @@ export class AtomicFacet implements InitializableComponent {
             ? 0
             : this.facet.state.values.length - this.numberOfValues);
 
-        return (
-          <FacetValue
-            {...this.facetValueProps}
-            facetCount={value.numberOfResults}
-            onExclude={() => this.facet.toggleExclude(value)}
-            onSelect={() =>
+        return renderFacetValue({
+          props: {
+            ...this.facetValueProps,
+            facetCount: value.numberOfResults,
+            onExclude: () => this.facet.toggleExclude(value),
+            onSelect: () =>
               this.displayValuesAs === 'link'
                 ? this.facet.toggleSingleSelect(value)
-                : this.facet.toggleSelect(value)
-            }
-            facetValue={value.value}
-            facetState={value.state}
-            setRef={(btn) => {
+                : this.facet.toggleSelect(value),
+            facetValue: value.value,
+            facetState: value.state,
+            setRef: (btn) => {
               if (shouldFocusOnShowLessAfterInteraction) {
-                this.showLessFocus?.setTarget(btn);
+                this.showLessFocus?.setTarget(btn as HTMLElement);
               }
               if (shouldFocusOnShowMoreAfterInteraction) {
-                this.showMoreFocus?.setTarget(btn);
+                this.showMoreFocus?.setTarget(btn as HTMLElement);
               }
-            }}
-          />
-        );
+            },
+          },
+        });
       })
     );
   }
 
   private renderShowMoreLess() {
-    return (
-      <FacetShowMoreLess
-        label={this.label}
-        i18n={this.bindings.i18n}
-        onShowMore={() => {
+    return renderFacetShowMoreLess({
+      props: {
+        label: this.label,
+        i18n: this.bindings.i18n,
+        onShowMore: () => {
           this.focusTargets.showMore.focusAfterSearch();
           this.facet.showMoreValues();
-        }}
-        onShowLess={() => {
+        },
+        onShowLess: () => {
           this.focusTargets.showLess.focusAfterSearch();
           this.facet.showLessValues();
-        }}
-        canShowMoreValues={this.facet.state.canShowMoreValues}
-        canShowLessValues={this.facet.state.canShowLessValues}
-      ></FacetShowMoreLess>
-    );
+        },
+        canShowMoreValues: this.facet.state.canShowMoreValues,
+        canShowLessValues: this.facet.state.canShowLessValues,
+      },
+    });
   }
 
   private renderMatches() {
-    return (
-      <FacetSearchMatches
-        i18n={this.bindings.i18n}
-        query={this.facet.state.facetSearch.query}
-        numberOfMatches={this.facet.state.facetSearch.values.length}
-        hasMoreMatches={this.facet.state.facetSearch.moreValuesAvailable}
-        showMoreMatches={() => this.facet.facetSearch.showMoreResults()}
-      ></FacetSearchMatches>
-    );
+    return renderFacetSearchMatches({
+      props: {
+        i18n: this.bindings.i18n,
+        query: this.facet.state.facetSearch.query,
+        numberOfMatches: this.facet.state.facetSearch.values.length,
+        hasMoreMatches: this.facet.state.facetSearch.moreValuesAvailable,
+        showMoreMatches: () => this.facet.facetSearch.showMoreResults(),
+      },
+    });
   }
 
   private get activeValues() {
@@ -562,6 +580,10 @@ export class AtomicFacet implements InitializableComponent {
     return !this.facet.state.enabled || !this.facet.state.values.length;
   }
 
+  private get host() {
+    return this;
+  }
+
   private initConditionManager() {
     this.facetConditionsManager = buildFacetConditionsManager(
       this.bindings.engine,
@@ -587,10 +609,16 @@ export class AtomicFacet implements InitializableComponent {
   }
 
   private initAriaLive() {
+    this.facetSearchAriaLive = new AriaLiveRegionController(
+      this,
+      'facet-search'
+    );
     announceFacetSearchResultsWithAriaLive(
       this.facet,
       this.label,
-      (msg) => (this.facetSearchAriaMessage = msg),
+      (msg) => {
+        this.facetSearchAriaLive!.message = msg;
+      },
       this.bindings.i18n
     );
   }
@@ -616,13 +644,13 @@ export class AtomicFacet implements InitializableComponent {
     header: FocusTargetController;
   } {
     if (!this.showLessFocus) {
-      this.showLessFocus = new FocusTargetController(this);
+      this.showLessFocus = new FocusTargetController(this, this.bindings);
     }
     if (!this.showMoreFocus) {
-      this.showMoreFocus = new FocusTargetController(this);
+      this.showMoreFocus = new FocusTargetController(this, this.bindings);
     }
     if (!this.headerFocus) {
-      this.headerFocus = new FocusTargetController(this);
+      this.headerFocus = new FocusTargetController(this, this.bindings);
     }
 
     return {
@@ -630,12 +658,5 @@ export class AtomicFacet implements InitializableComponent {
       showMore: this.showMoreFocus,
       header: this.headerFocus,
     };
-  }
-
-  private isFacetState(state: unknown, propName: string): state is FacetState {
-    return (
-      propName === 'facetState' &&
-      typeof (state as FacetState)?.facetId === 'string'
-    );
   }
 }
