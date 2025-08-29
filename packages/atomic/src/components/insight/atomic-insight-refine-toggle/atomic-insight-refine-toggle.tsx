@@ -14,6 +14,7 @@ import {
 } from '../../../utils/initialization-utils';
 import {IconButton} from '../../common/iconButton';
 import {InsightBindings} from '../atomic-insight-interface/atomic-insight-interface';
+import { AtomicInsightRefineModal } from '../atomic-insight-refine-modal/atomic-insight-refine-modal';
 
 /**
  * @internal
@@ -39,7 +40,7 @@ export class AtomicInsightRefineToggle {
 
   public breadcrumbManager!: InsightBreadcrumbManager;
   public searchStatus!: InsightSearchStatus;
-  private modalRef?: HTMLAtomicInsightRefineModalElement;
+  private modalRef?: AtomicInsightRefineModal;
   private buttonRef?: HTMLButtonElement;
 
   private get numberOfBreadcrumbs(): number {
