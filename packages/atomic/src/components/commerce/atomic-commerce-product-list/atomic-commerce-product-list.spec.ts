@@ -196,7 +196,56 @@ describe('AtomicCommerceProductList', () => {
     );
   });
 
-  // #disconnectedCallback =============================================================================================
+  describe('#updated', () => {
+    // biome-ignore lint/suspicious/noExplicitAny: <accessing private properties in tests>
+    let element: any;
+
+    beforeEach(async () => {
+      element = await setupElement();
+      element.isEveryProductReady = true;
+    });
+
+    it.each([
+      {
+        description:
+          'should set #isEveryProductReady to false when transitioning from not loading to loading',
+        oldState: false,
+        newState: true,
+        expectedResult: false,
+      },
+      {
+        description:
+          'should not change #isEveryProductReady when transitioning from loading to not loading',
+        oldState: true,
+        newState: false,
+        expectedResult: true,
+      },
+      {
+        description:
+          'should not change #isEveryProductReady when staying in loading state',
+        oldState: true,
+        newState: true,
+        expectedResult: true,
+      },
+      {
+        description:
+          'should not change #isEveryProductReady when staying in not loading state',
+        oldState: false,
+        newState: false,
+        expectedResult: true,
+      },
+    ])('$description', ({oldState, newState, expectedResult}) => {
+      element.searchOrListingState = {
+        isLoading: newState,
+        products: [buildFakeProduct()],
+      };
+      element.updated(
+        new Map([['searchOrListingState', {isLoading: oldState}]])
+      );
+
+      expect(element.isEveryProductReady).toBe(expectedResult);
+    });
+  });
 
   describe('when removed from the DOM', () => {
     it('should unsubscribe from summary controller state changes', async () => {
@@ -226,8 +275,6 @@ describe('AtomicCommerceProductList', () => {
       );
     });
   });
-
-  // #render ===========================================================================================================
 
   it('should not render when bindings are undefined', async () => {
     const element = await setupElement();
@@ -1193,8 +1240,6 @@ describe('AtomicCommerceProductList', () => {
       await element.updateComplete;
     };
   };
-
-  // Fixture utils for this test suite
 
   const setupElement = async ({
     display = 'grid',
