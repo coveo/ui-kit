@@ -4,7 +4,7 @@
   "private": true,
   "type": "module",
   "dependencies": {
-    "@coveo/headless": "3.29.0",
+    "@coveo/headless": "3.29.1",
     "react": "19.1.1",
     "react-dom": "19.1.0"
   },

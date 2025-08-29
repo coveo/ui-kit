@@ -11,6 +11,55 @@ import type {
   ControllerDefinitionsMap,
 } from '../types/controller-definitions.js';
 
+/**
+ * Type guard to check if a controller definition is a recommendation controller.
+ * A recommendation controller must have both the recommendation flag and a slotId.
+ */
+export function isRecommendationDefinition<
+  C extends ControllerDefinition<Controller>,
+>(
+  controllerDefinition: C
+): controllerDefinition is C & RecommendationsDefinitionMeta {
+  const hasRecommendationFlag =
+    'recommendation' in controllerDefinition &&
+    controllerDefinition.recommendation === true;
+
+  const hasValidSlotId =
+    recommendationInternalOptionKey in controllerDefinition &&
+    'slotId' in
+      (controllerDefinition[
+        recommendationInternalOptionKey
+      ] as RecommendationsOptions);
+
+  return hasRecommendationFlag && hasValidSlotId;
+}
+
+/**
+ * Extracts recommendation controller definitions from a controller definitions map.
+ *
+ * @param controllerDefinitions - Map of controller definitions
+ * @returns Object containing only the recommendation controller definitions
+ */
+export function getRecommendationDefinitions(
+  controllerDefinitions: ControllerDefinitionsMap<Controller>
+): Record<
+  string,
+  ControllerDefinition<Controller> & RecommendationsDefinitionMeta
+> {
+  const recommendationMap: Record<
+    string,
+    ControllerDefinition<Controller> & RecommendationsDefinitionMeta
+  > = {};
+
+  for (const [name, definition] of Object.entries(controllerDefinitions)) {
+    if (isRecommendationDefinition(definition)) {
+      recommendationMap[name] = definition;
+    }
+  }
+
+  return recommendationMap;
+}
+
 export function filterRecommendationControllers<
   TControllerDefinitions extends ControllerDefinitionsMap<Controller>,
 >(
@@ -18,25 +67,6 @@ export function filterRecommendationControllers<
   controllerDefinitions: TControllerDefinitions
 ) {
   const slotIdSet = new Set<string>();
-
-  const isRecommendationDefinition = <
-    C extends ControllerDefinition<Controller>,
-  >(
-    controllerDefinition: C
-  ): controllerDefinition is C & RecommendationsDefinitionMeta => {
-    const isControllerRecommendation =
-      'recommendation' in controllerDefinition &&
-      controllerDefinition.recommendation === true;
-
-    const hasSlotId =
-      recommendationInternalOptionKey in controllerDefinition &&
-      'slotId' in
-        (controllerDefinition[
-          recommendationInternalOptionKey
-        ] as RecommendationsOptions);
-
-    return isControllerRecommendation && hasSlotId;
-  };
 
   const ensureSingleRecommendationPerSlot = (slotId: string) => {
     throw new MultipleRecommendationError(slotId);
