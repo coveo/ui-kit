@@ -1,3 +1,16 @@
+/**
+ * Express server for Coveo Headless Commerce SSR sample.
+ *
+ * Server-side SSR lifecycle:
+ * 1. Receives a request for the root route (e.g., / or /?q=...)
+ * 2. Sets up navigation context (user agent, referrer, etc.) for analytics/personalization
+ * 3. Extracts the search query from the request
+ * 4. Fetches static state from the Coveo engine using the query and context fields
+ * 5. Renders the app HTML with the static state and injects it into the template
+ * 6. Sends the fully rendered HTML to the client for fast, SEO-friendly delivery
+ *
+ * See client.ts for client-side hydration details.
+ */
 import express from 'express';
 import {renderApp} from './common/renderApp.js';
 import {renderHtml} from './common/renderHtml.js';

@@ -1,3 +1,14 @@
+/**
+ * Client-side hydration for Coveo Headless Commerce SSR sample.
+ *
+ * Client-side lifecycle:
+ * 1. On page load, reads the SSR static state injected by the server (see server.ts)
+ * 2. Hydrates the Coveo engine and controllers with this state
+ * 3. Initializes UI components (search box, product grid, summary) with hydrated controllers
+ * 4. Handles errors gracefully if hydration fails
+ *
+ * See server.ts for the server-side SSR lifecycle.
+ */
 import type {
   ProductList,
   SearchBox,
