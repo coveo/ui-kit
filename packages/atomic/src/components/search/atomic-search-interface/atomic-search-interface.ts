@@ -245,7 +245,6 @@ export class AtomicSearchInterface
   public willUpdate(changedProperties: Map<string, unknown>) {
     super.willUpdate(changedProperties);
 
-    this.initAriaLive();
     this.initFieldsToInclude();
   }
 
@@ -517,18 +516,6 @@ export class AtomicSearchInterface
     );
 
     window.addEventListener('hashchange', this.onHashChange);
-  }
-
-  private initAriaLive() {
-    if (
-      Array.from(this.children).some(
-        (element) => element.tagName === 'ATOMIC-ARIA-LIVE'
-      )
-    ) {
-      return;
-    }
-    const ariaLive = document.createElement('atomic-aria-live');
-    this.prepend(ariaLive);
   }
 
   private initRelevanceInspector() {
