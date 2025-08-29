@@ -211,7 +211,9 @@ export class TestFixture {
     });
 
     cy.document().then((doc) => {
+      this.style = doc.importNode(this.style, true);
       doc.head.appendChild(this.style);
+      this.searchInterface = doc.importNode(this.searchInterface, true);
       doc.body.appendChild(this.searchInterface);
       cy.get('atomic-search-interface').as(this.elementAliases.SearchInterface);
     });
@@ -268,6 +270,7 @@ export class TestFixture {
           if (!(this.disabledAnalytics || this.doNotTrack)) {
             cy.wait(TestFixture.interceptAliases.UA);
           }
+        }
         }
     });
 
