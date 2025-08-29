@@ -103,7 +103,6 @@ describe('controller-utils', () => {
       mockSearchAction = {type: 'search', payload: {q: 'test'}};
       const mockStaticBuilder = {
         withState: vi.fn().mockReturnThis(),
-        withKind: vi.fn().mockReturnThis(),
         withInitialState: vi.fn().mockReturnThis(),
         build: vi.fn().mockReturnValue({
           state: {},

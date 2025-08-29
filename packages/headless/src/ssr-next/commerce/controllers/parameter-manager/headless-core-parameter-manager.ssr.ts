@@ -24,7 +24,6 @@ import type {
   ControllerDefinitionOption,
   SubControllerDefinitionWithProps,
 } from '../../types/controller-definitions.js';
-import {createControllerWithKind, Kind} from '../../types/kind.js';
 
 export type {
   ParameterManager,
@@ -62,23 +61,19 @@ export function defineParameterManager<
         if (!loadCommerceProductListingParameterReducers(engine)) {
           throw loadReducerError;
         }
-        const controller = buildProductListing(engine).parameterManager({
+        return buildProductListing(engine).parameterManager({
           ...props,
           excludeDefaultParameters: true,
         });
-
-        return createControllerWithKind(controller, Kind.ParameterManager);
       } else {
         if (!loadCommerceSearchParameterReducers(engine)) {
           throw loadReducerError;
         }
 
-        const controller = buildSearch(engine).parameterManager({
+        return buildSearch(engine).parameterManager({
           ...props,
           excludeDefaultParameters: true,
         });
-
-        return createControllerWithKind(controller, Kind.ParameterManager);
       }
     },
   } as SubControllerDefinitionWithProps<

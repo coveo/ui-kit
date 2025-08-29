@@ -1,8 +1,6 @@
 import {vi} from 'vitest';
 import type {SearchEngine} from '../app/search-engine/search-engine.js';
 import type {Controller} from '../controllers/controller/headless-controller.js';
-import type {Kind} from '../ssr/commerce/types/kind.js';
-import {recommendationInternalOptionKey} from '../ssr-next/commerce/types/controller-constants.js';
 import type {
   ControllerDefinitionWithoutProps,
   ControllerDefinitionWithProps,
@@ -70,7 +68,6 @@ export function defineMockCommerceControllerWithProps(
 ) {
   return {
     buildWithProps: vi.fn((engine, props) => ({
-      _kind: 'some-kind' as Kind,
       ...buildMockControllerWithInitialState(engine, {
         initialState: props?.initialState,
       }),
@@ -79,20 +76,5 @@ export function defineMockCommerceControllerWithProps(
     search: options?.search ?? true,
     standalone: options?.standalone ?? true,
     recommendation: options?.recommendation ?? true,
-  };
-}
-
-export function defineMockRecommendationDefinition(slotId: string) {
-  return {
-    recommendation: true,
-    [recommendationInternalOptionKey]: {
-      slotId,
-    },
-    buildWithProps: vi.fn((engine, props) => ({
-      _kind: 'some-kind' as Kind,
-      ...buildMockControllerWithInitialState(engine, {
-        initialState: props?.initialState,
-      }),
-    })),
   };
 }
