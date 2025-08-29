@@ -8,14 +8,6 @@ const styles = css`
   @apply relative;
 
   .with-sections {
-    &.image-icon {
-      atomic-product-image::part(previous-button),
-      atomic-product-image::part(next-button),
-      atomic-product-image::part(indicator) {
-        display: none;
-      }
-    }
-
     &.display-grid {
       &.image-large,
       &.image-small,
