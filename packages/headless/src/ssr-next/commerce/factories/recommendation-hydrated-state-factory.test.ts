@@ -1,3 +1,4 @@
+import type {CurrencyCodeISO4217} from '@coveo/relay-event-types';
 import {describe, expect, it, vi} from 'vitest';
 import {getSampleCommerceEngineConfiguration} from '../../../app/commerce-engine/commerce-engine-configuration.js';
 import {defineRecommendations} from '../controllers/recommendations/headless-recommendations.ssr.js';
@@ -35,6 +36,13 @@ describe('hydratedRecommendationStaticStateFactory', () => {
     controllers: {},
   };
   const mockSearchActions = [{type: 'some-search-action'}];
+  const mockBaseConfiguration = {
+    country: 'US',
+    currency: 'USD' as CurrencyCodeISO4217,
+    language: 'en',
+    query: 'some query',
+    url: 'https://example.com',
+  };
 
   beforeEach(() => {
     vi.clearAllMocks();
@@ -54,7 +62,11 @@ describe('hydratedRecommendationStaticStateFactory', () => {
       options
     );
 
-    await factory({searchActions: mockSearchActions, controllers: {}});
+    await factory({
+      searchActions: mockSearchActions,
+      controllers: {},
+      ...mockBaseConfiguration,
+    });
 
     expect(buildFactory).toHaveBeenCalledWith(controllerDefinitions, options);
     expect(mockRecommendationState).toHaveBeenCalledWith(
@@ -74,6 +86,7 @@ describe('hydratedRecommendationStaticStateFactory', () => {
     const staticState = await factory({
       searchActions: mockSearchActions,
       controllers: {},
+      ...mockBaseConfiguration,
     });
 
     expect(mockBuildResult.engine.dispatch).toHaveBeenCalledWith(
@@ -97,6 +110,7 @@ describe('hydratedRecommendationStaticStateFactory', () => {
     const staticState = await factory({
       searchActions: mockSearchActions,
       controllers: {},
+      ...mockBaseConfiguration,
     });
 
     expect(staticState).toEqual(mockBuildResult);

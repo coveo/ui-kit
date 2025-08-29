@@ -1,35 +1,60 @@
-import {userEvent} from '@storybook/test';
-import type {Meta, StoryObj as Story} from '@storybook/web-components';
+import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
+import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
+import {html} from 'lit';
 import {within} from 'shadow-dom-testing-library';
+import {userEvent} from 'storybook/test';
 import {wrapInCommerceInterface} from '@/storybook-utils/commerce/commerce-interface-wrapper';
-import {parameters} from '@/storybook-utils/common/common-meta-parameters';
-import {renderComponent} from '@/storybook-utils/common/render-component';
+import {parameters as commonParameters} from '@/storybook-utils/common/common-meta-parameters';
 
-const {decorator, play} = wrapInCommerceInterface();
+const {decorator, afterEach} = wrapInCommerceInterface({
+  includeCodeRoot: false,
+});
+const {events, args, argTypes, template} = getStorybookHelpers(
+  'atomic-commerce-refine-modal',
+  {excludeCategories: ['methods']}
+);
 
 const meta: Meta = {
   component: 'atomic-commerce-refine-modal',
   title: 'Commerce/Refine Modal',
   id: 'atomic-commerce-refine-toggle',
-  render: renderComponent,
-  decorators: [decorator],
+  render: (args) => html`${template(args)}`,
+  decorators: [
+    (story) =>
+      html`<atomic-commerce-refine-toggle></atomic-commerce-refine-toggle><div id="code-root">${story()}</div>`,
+    decorator,
+  ],
   parameters: {
-    ...parameters,
+    ...commonParameters,
+    actions: {
+      handles: events,
+    },
+  },
+  args: {
+    ...args,
+    'collapse-facets-after': '0',
+  },
+  argTypes,
+  globals: {
     layout: 'fullscreen',
     docs: {
-      ...parameters.docs,
+      ...commonParameters.docs,
       story: {
-        ...parameters.docs?.story,
+        ...commonParameters.docs?.story,
         height: '1000px',
       },
     },
   },
-  play: async (context) => {
-    await play(context);
-    const canvas = within(context.canvasElement);
-    const refineToggle = await canvas.findByShadowText('Sort & Filter');
+  afterEach: async (context) => {
+    await afterEach(context);
+    const canvas = within(
+      context.canvasElement.querySelector('atomic-commerce-refine-toggle')!
+    );
+    const refineToggle = await canvas.findByShadowRole('button', {
+      name: 'Sort & Filter',
+    });
 
-    await userEvent.click(refineToggle, {delay: 500});
+    await userEvent.click(refineToggle);
   },
 };
 

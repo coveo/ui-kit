@@ -1,5 +1,6 @@
 import {LitElement} from 'lit';
 import {customElement, property} from 'lit/decorators.js';
+import {LightDomMixin} from '@/src/mixins/light-dom';
 import type {Section} from './sections';
 
 /**
@@ -8,7 +9,7 @@ import type {Section} from './sections';
  * @slot default - The default slot where you can add child components to the section.
  */
 @customElement('atomic-layout-section')
-export class AtomicLayoutSection extends LitElement {
+export class AtomicLayoutSection extends LightDomMixin(LitElement) {
   /**
    * The name of the layout section.
    */
@@ -27,10 +28,6 @@ export class AtomicLayoutSection extends LitElement {
    */
   @property({type: String, reflect: true, attribute: 'max-width'})
   maxWidth?: string;
-
-  createRenderRoot() {
-    return this;
-  }
 }
 
 declare global {

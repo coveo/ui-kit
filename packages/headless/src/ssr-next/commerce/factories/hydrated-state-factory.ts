@@ -1,5 +1,11 @@
 import type {SolutionType} from '../types/controller-constants.js';
 import type {
+  AugmentedControllerDefinition,
+  FilteredBakedInControllers,
+  HydratedState,
+} from '../types/controller-definitions.js';
+import type {InferControllersMapFromDefinition} from '../types/controller-inference.js';
+import type {
   BuildParameters,
   CommerceControllerDefinitionsMap,
   HydrateStaticStateFunction,
@@ -8,21 +14,23 @@ import type {
 import {
   buildFactory,
   type CommerceEngineDefinitionOptions,
+  type SSRCommerceEngine,
 } from './build-factory.js';
 
 export function hydratedStaticStateFactory<
   TControllerDefinitions extends CommerceControllerDefinitionsMap,
 >(
-  controllerDefinitions: TControllerDefinitions | undefined,
+  controllerDefinitions: AugmentedControllerDefinition<TControllerDefinitions>,
   options: CommerceEngineDefinitionOptions<TControllerDefinitions>
 ) {
   return (
     solutionType: SolutionType
   ): HydrateStaticStateFunction<TControllerDefinitions> =>
     async (...params: HydrateStaticStateParameters<TControllerDefinitions>) => {
-      const solutionTypeBuild = await buildFactory(controllerDefinitions, {
-        ...options,
-      })(solutionType);
+      const solutionTypeBuild = await buildFactory(
+        controllerDefinitions,
+        options
+      )(solutionType);
       const {engine, controllers} = await solutionTypeBuild(
         ...(params as BuildParameters<TControllerDefinitions>)
       );
@@ -33,6 +41,13 @@ export function hydratedStaticStateFactory<
 
       await engine.waitForRequestCompletedAction();
 
-      return {engine, controllers};
+      return {engine, controllers} as HydratedState<
+        SSRCommerceEngine,
+        InferControllersMapFromDefinition<
+          TControllerDefinitions,
+          SolutionType
+        > &
+          FilteredBakedInControllers<SolutionType>
+      >;
     };
 }

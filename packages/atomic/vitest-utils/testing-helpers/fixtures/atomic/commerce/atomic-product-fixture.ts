@@ -1,6 +1,7 @@
 import type {InteractiveProduct, Product} from '@coveo/headless/commerce';
 import {html, LitElement, nothing, type TemplateResult} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
+import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles.js';
 import type {CommerceBindings} from '../../../../../src/components/commerce/atomic-commerce-interface/atomic-commerce-interface.js';
 import {fixture} from '../../../fixture.js';
 import {
@@ -10,6 +11,7 @@ import {
 } from './atomic-commerce-interface-fixture.js';
 
 @customElement('atomic-product')
+@withTailwindStyles
 export class FixtureAtomicProduct extends LitElement {
   @state() template!: TemplateResult;
   @property({type: Object}) product?: Product;

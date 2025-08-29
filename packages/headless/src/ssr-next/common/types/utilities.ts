@@ -20,14 +20,6 @@ export type HasRequiredKeys<TObject> = TObject extends {}
     : true
   : boolean;
 
-export type HasOptionalKeys<TObject> = TObject extends {}
-  ? {
-      [K in keyof TObject]-?: {} extends Pick<TObject, K> ? K : never;
-    }[keyof TObject] extends never
-    ? false
-    : true
-  : boolean;
-
 type ExtractRequiredOptions<TOptions> = {
   [TKey in keyof TOptions as Pick<TOptions, TKey> extends Required<
     Pick<TOptions, TKey>

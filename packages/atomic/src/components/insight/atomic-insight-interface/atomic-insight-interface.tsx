@@ -39,9 +39,6 @@ export type InsightBindings = CommonBindings<
 > &
   NonceBindings;
 
-/**
- * @internal
- */
 @Component({
   tag: 'atomic-insight-interface',
   styleUrl: 'atomic-insight-interface.pcss',

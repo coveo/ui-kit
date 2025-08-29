@@ -1,4 +1,4 @@
-import {LitElement} from 'lit';
+import {css, LitElement} from 'lit';
 import {customElement} from 'lit/decorators.js';
 import {ItemSectionMixin} from '@/src/mixins/item-section-mixin';
 
@@ -15,7 +15,15 @@ import {ItemSectionMixin} from '@/src/mixins/item-section-mixin';
  * @slot default - The actions to display.
  */
 @customElement('atomic-product-section-actions')
-export class AtomicProductSectionActions extends ItemSectionMixin(LitElement) {}
+export class AtomicProductSectionActions extends ItemSectionMixin(
+  LitElement,
+  css`
+        @reference '../../common/template-system/sections/sections.css';
+        atomic-product-section-actions {
+          @apply section-actions;
+        }
+        `
+) {}
 
 declare global {
   interface HTMLElementTagNameMap {

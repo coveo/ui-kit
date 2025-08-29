@@ -1,5 +1,5 @@
 import {SearchEngineConfiguration} from '@coveo/headless';
-import {Decorator} from '@storybook/web-components';
+import {Decorator} from '@storybook/web-components-vite';
 import {html, render} from 'lit';
 import {unsafeHTML} from 'lit/directives/unsafe-html.js';
 import type * as _ from '../../src/components.js';

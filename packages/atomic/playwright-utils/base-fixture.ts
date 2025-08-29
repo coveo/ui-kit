@@ -15,7 +15,7 @@ export const makeAxeBuilder: Parameters<
   const makeAxeBuilder = () =>
     new AxeBuilder({page})
       .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa'])
-      .include('#code-root');
+      .include('#storybook-root');
 
   await use(makeAxeBuilder);
 };

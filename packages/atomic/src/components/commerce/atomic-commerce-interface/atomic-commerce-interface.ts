@@ -130,7 +130,7 @@ export class AtomicCommerceInterface
   /**
    * The commerce interface i18next instance.
    */
-  @property({type: Object}) i18n: i18n;
+  @property({type: Object, attribute: false}) i18n: i18n;
 
   /**
    * The commerce interface language.
@@ -143,7 +143,7 @@ export class AtomicCommerceInterface
   /**
    * The commerce interface headless engine.
    */
-  @property({type: Object}) engine?: CommerceEngine;
+  @property({type: Object, attribute: false}) engine?: CommerceEngine;
 
   /**
    * Whether the state should be reflected in the URL parameters.

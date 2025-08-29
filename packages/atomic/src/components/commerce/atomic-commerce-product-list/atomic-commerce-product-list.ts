@@ -10,7 +10,7 @@ import {
   type SearchSummaryState,
   type Summary,
 } from '@coveo/headless/commerce';
-import {type CSSResultGroup, html, LitElement, nothing} from 'lit';
+import {type CSSResultGroup, css, html, LitElement, nothing} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {keyed} from 'lit/directives/keyed.js';
 import {map} from 'lit/directives/map.js';
@@ -33,6 +33,10 @@ import {
   ItemListCommon,
   type ItemRenderingFunction,
 } from '../../common/item-list/item-list-common.js';
+import gridDisplayStyles from '../../common/item-list/styles/grid-display.tw.css';
+import listDisplayStyles from '../../common/item-list/styles/list-display.tw.css';
+import placeholderStyles from '../../common/item-list/styles/placeholders.tw.css';
+import tableDisplayStyles from '../../common/item-list/styles/table-display.tw.css';
 import {
   renderTableData,
   renderTableLayout,
@@ -47,7 +51,6 @@ import {
 import type {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface.js';
 import type {SelectChildProductEventArgs} from '../atomic-product-children/select-child-product-event.js';
 import {ProductTemplateProvider} from '../product-list/product-template-provider.js';
-import styles from './atomic-commerce-product-list.tw.css';
 
 /**
  * The `atomic-commerce-product-list` component is responsible for displaying products.
@@ -74,7 +77,57 @@ export class AtomicCommerceProductList
   extends ChildrenUpdateCompleteMixin(LitElement)
   implements InitializableComponent<CommerceBindings>
 {
-  static styles: CSSResultGroup = styles;
+  static styles: CSSResultGroup = [
+    placeholderStyles,
+    tableDisplayStyles,
+    listDisplayStyles,
+    gridDisplayStyles,
+    css`@reference '../../../utils/tailwind.global.tw.css';
+    :host {
+    .result-link {
+      @apply link-style;
+    }
+  
+    .result-grid {
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      justify-items: center;
+  
+      & a {
+        justify-content: center;
+      }
+    }
+  
+    .result-list {
+      display: flex;
+      flex-direction: column;
+  
+      & .result-item {
+        width: 100%;
+        max-width: 600px;
+        display: flex;
+        flex-wrap: wrap;
+  
+        & .result-details {
+          align-content: center;
+        }
+      }
+    }
+  }
+  
+  @media (width >= theme(--breakpoint-desktop)) {
+    :host .result-grid {
+      display: grid;
+    }
+  }
+  
+  @media not all and (width >= theme(--breakpoint-desktop)) {
+    :host .result-grid {
+      display: flex;
+      flex-direction: column;
+    }
+  }
+  `,
+  ];
 
   public searchOrListing!: Search | ProductListing;
   public summary!: Summary<ProductListingSummaryState | SearchSummaryState>;
@@ -405,7 +458,7 @@ export class AtomicCommerceProductList
           .interactiveProduct=${this.searchOrListing.interactiveProduct({
             options: {product},
           })}
-          .linkContent=${this.productTemplateProvider.getEmptyLinkTemplateContent()}
+          .linkContent=${this.productTemplateProvider.getLinkTemplateContent(product)}
           .loadingFlag=${this.loadingFlag}
           .product=${product}
           .renderingFunction=${this.itemRenderingFunction}
@@ -465,7 +518,7 @@ export class AtomicCommerceProductList
                         .interactiveProduct=${this.searchOrListing.interactiveProduct(
                           {options: {product}}
                         )}
-                        .linkContent=${this.productTemplateProvider.getEmptyLinkTemplateContent()}
+                        .linkContent=${this.productTemplateProvider.getLinkTemplateContent(product)}
                         .loadingFlag=${this.loadingFlag}
                         .product=${product}
                         .renderingFunction=${this.itemRenderingFunction}

@@ -5,6 +5,7 @@ import {bindings} from '@/src/decorators/bindings';
 import {createProductContextController} from '@/src/decorators/commerce/product-template-decorators';
 import {errorGuard} from '@/src/decorators/error-guard';
 import type {InitializableComponent} from '@/src/decorators/types';
+import {LightDomMixin} from '@/src/mixins/light-dom';
 import {mapProperty} from '@/src/utils/props-utils';
 import {
   makeDefinedConditions,
@@ -21,13 +22,9 @@ import type {CommerceBindings} from '../atomic-commerce-interface/atomic-commerc
 @customElement('atomic-product-field-condition')
 @bindings()
 export class AtomicProductFieldCondition
-  extends LitElement
+  extends LightDomMixin(LitElement)
   implements InitializableComponent<CommerceBindings>
 {
-  createRenderRoot() {
-    return this;
-  }
-
   @state() bindings!: CommerceBindings;
   @state() error!: Error;
 

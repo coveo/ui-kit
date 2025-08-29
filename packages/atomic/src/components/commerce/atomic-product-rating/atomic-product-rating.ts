@@ -6,8 +6,8 @@ import {bindingGuard} from '@/src/decorators/binding-guard';
 import {bindings} from '@/src/decorators/bindings.js';
 import {createProductContextController} from '@/src/decorators/commerce/product-template-decorators.js';
 import {errorGuard} from '@/src/decorators/error-guard';
-import {injectStylesForNoShadowDOM} from '@/src/decorators/inject-styles-for-no-shadow-dom';
 import type {InitializableComponent} from '@/src/decorators/types.js';
+import {LightDomMixin} from '@/src/mixins/light-dom';
 import Star from '../../../images/star.svg';
 import {
   computeNumberOfStars,
@@ -27,9 +27,8 @@ import type {CommerceBindings} from '../atomic-commerce-interface/atomic-commerc
  */
 @customElement('atomic-product-rating')
 @bindings()
-@injectStylesForNoShadowDOM
 export class AtomicProductRating
-  extends LitElement
+  extends LightDomMixin(LitElement)
   implements InitializableComponent<CommerceBindings>
 {
   @state() public bindings!: CommerceBindings;

@@ -10,7 +10,7 @@ import {Heading} from '../../stencil-heading';
 import {generateTextFragmentUrl, generatePdfPageUrl} from './citation-anchoring-utils';
 
 /**
- * @internal
+ * Internal component, only to use through `atomic-generated-answer` or `atomic-insight-generated-answer`
  */
 @Component({
   tag: 'atomic-citation',

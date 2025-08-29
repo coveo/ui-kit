@@ -1,4 +1,4 @@
-import {LitElement} from 'lit';
+import {css, LitElement} from 'lit';
 import {customElement} from 'lit/decorators.js';
 import {ItemSectionMixin} from '@/src/mixins/item-section-mixin';
 
@@ -15,7 +15,13 @@ import {ItemSectionMixin} from '@/src/mixins/item-section-mixin';
  */
 @customElement('atomic-product-section-metadata')
 export class AtomicProductSectionMetadata extends ItemSectionMixin(
-  LitElement
+  LitElement,
+  css`
+  @reference '../../common/template-system/sections/sections.css';
+  atomic-product-section-metadata {
+    @apply section-metadata;
+  }
+  `
 ) {}
 
 declare global {

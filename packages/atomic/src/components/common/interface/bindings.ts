@@ -52,7 +52,7 @@ export interface NonceBindings {
 
 /**
  * @deprecated
- * If used to inject style on a component with no shadow DOM, use `@injectStylesForNoShadowDOM` decorator on Lit component.
+ * If used to inject style on a component with no shadow DOM, use the `LightDomMixin` mixin on Lit component.
  * If used to inject a styled layout, consider using `CommerceLayoutMixin` instead.
  */
 export interface AdoptedStylesBindings {
