@@ -34,8 +34,7 @@ function createProviderWrapper(options?: ProviderWrapperOptions) {
         {children}
       </options.provider>
     ) : (
-      // biome-ignore lint/complexity/noUselessFragments: Fragment Required
-      <>{children}</>
+      <> {children} </>
     );
   };
 }

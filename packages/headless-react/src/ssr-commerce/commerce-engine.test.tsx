@@ -4,7 +4,7 @@ import type {
 } from '@coveo/headless/ssr-commerce';
 import {render, renderHook, screen} from '@testing-library/react';
 import type {PropsWithChildren} from 'react';
-import {afterEach, beforeEach, describe, expect, test, vi} from 'vitest';
+import {afterEach, beforeEach, describe, expect, it, vi} from 'vitest';
 import {
   createProductListComponent,
   createTestComponent,
@@ -22,22 +22,24 @@ import {
 import {MissingEngineProviderError} from '../errors.js';
 import {defineCommerceEngine} from './commerce-engine.js';
 
-type MockControllerDefinition = {
+type MockControllerDefinitions = {
   controller1: ReturnType<typeof defineMockCommerceController>;
   controller2: ReturnType<typeof defineMockCommerceController>;
 };
 
-type MockController = {
-  [K in keyof MockControllerDefinition]: ReturnType<typeof buildMockController>;
+type MockControllers = {
+  [K in keyof MockControllerDefinitions]: ReturnType<
+    typeof buildMockController
+  >;
 };
 
 describe('Commerce Engine', () => {
-  let mockControllers: MockController;
+  let mockControllers: MockControllers;
   let mockNavigatorContextProvider: ReturnType<
     typeof createMockCommerceNavigatorContextProvider
   >;
   let engineDefinition: ReturnType<
-    typeof defineCommerceEngine<MockControllerDefinition>
+    typeof defineCommerceEngine<MockControllerDefinitions>
   >;
   let StateProvider: typeof engineDefinition.listingEngineDefinition.StateProvider;
 
@@ -78,7 +80,7 @@ describe('Commerce Engine', () => {
   });
 
   describe('Engine Definition', () => {
-    test('should create engine definition with all required properties', () => {
+    it('should create engine definition with all required properties', () => {
       expect(engineDefinition).toHaveProperty('useEngine');
       expect(engineDefinition).toHaveProperty('controllers');
       expect(engineDefinition).toHaveProperty('listingEngineDefinition');
@@ -87,7 +89,7 @@ describe('Commerce Engine', () => {
       expect(engineDefinition).toHaveProperty('recommendationEngineDefinition');
     });
 
-    test('should create controller hooks for each controller in definition', () => {
+    it('should create controller hooks for each controller in definition', () => {
       const {
         controllers: {useController1, useController2, ...rest},
       } = engineDefinition;
@@ -97,7 +99,7 @@ describe('Commerce Engine', () => {
       expect(rest).toEqual({});
     });
 
-    test('should provide different providers for each solution type', () => {
+    it('should provide different providers for each solution type', () => {
       const definitions = [
         'listingEngineDefinition',
         'searchEngineDefinition',
@@ -133,13 +135,13 @@ describe('Commerce Engine', () => {
     });
 
     describe('Error Handling', () => {
-      test('should throw error when useEngine is called outside provider', () => {
+      it('should throw error when useEngine is called outside provider', () => {
         expect(() => {
           renderHook(() => useEngine());
         }).toThrow(MissingEngineProviderError);
       });
 
-      test('should throw error when controller hooks are called outside provider', () => {
+      it('should throw error when controller hooks are called outside provider', () => {
         expect(() => {
           renderHook(() => controllers.useController1());
         }).toThrow(MissingEngineProviderError);
@@ -147,7 +149,7 @@ describe('Commerce Engine', () => {
     });
 
     describe('Static State Behavior', () => {
-      test('useEngine should return undefined in static state', async () => {
+      it('useEngine should return undefined in static state', async () => {
         const hookResult = renderHook(() => useEngine(), {
           wrapper: staticProviderWrapper,
         });
@@ -155,7 +157,7 @@ describe('Commerce Engine', () => {
         expect(hookResult.result.current).toBeUndefined();
       });
 
-      test('controller hooks should have state but no methods in static state', async () => {
+      it('controller hooks should have state but no methods in static state', async () => {
         const hookResult = renderHook(() => controllers.useController1(), {
           wrapper: staticProviderWrapper,
         });
@@ -166,15 +168,16 @@ describe('Commerce Engine', () => {
     });
 
     describe('Hydrated State Behavior', () => {
-      test('useEngine should return engine instance in hydrated state', async () => {
+      it('useEngine should return engine instance in hydrated state', async () => {
         const hookResult = renderHook(() => useEngine(), {
           wrapper: hydratedProviderWrapper(createMockCommerceEngine()),
         });
 
         expect(hookResult.result.current).toBeDefined();
+        expect(hookResult.result.current).toBeDefined();
       });
 
-      test('controller hooks should have state and methods in hydrated state', async () => {
+      it('controller hooks should have state and methods in hydrated state', async () => {
         const hookResult = renderHook(() => controllers.useController1(), {
           wrapper: hydratedProviderWrapper(createMockCommerceEngine()),
         });
@@ -186,7 +189,7 @@ describe('Commerce Engine', () => {
   });
 
   describe('Component Rendering', () => {
-    test('should throw error when component uses hooks without provider context', () => {
+    it('should throw error when component uses hooks without provider context', () => {
       const TestComponent = createTestComponent('test-component');
       expect(
         () => render(<TestComponent />),
@@ -194,7 +197,7 @@ describe('Commerce Engine', () => {
       );
     });
 
-    test('should render components with static state', async () => {
+    it('should render components with static state', async () => {
       const {ProductListComponent} = createProductListComponent(5);
 
       renderWithProvider(<ProductListComponent />, {provider: StateProvider});
@@ -203,7 +206,7 @@ describe('Commerce Engine', () => {
       expect(screen.getAllByTestId('product-item')).toHaveLength(5);
     });
 
-    test('should render components with hydrated state', async () => {
+    it('should render components with hydrated state', async () => {
       const {ProductListComponent} = createProductListComponent(5);
 
       renderWithProvider(<ProductListComponent />, {
