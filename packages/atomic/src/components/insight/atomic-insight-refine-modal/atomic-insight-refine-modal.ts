@@ -127,6 +127,7 @@ export class AtomicInsightRefineModal
   }
 
   private renderBody() {
+    console.log(this.bindings.store.getFacetElements().length);
     if (!this.bindings.store.getFacetElements().length) {
       return nothing;
     }
