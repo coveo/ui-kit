@@ -156,6 +156,12 @@ export class AtomicProduct extends ChildrenUpdateCompleteMixin(LitElement) {
     if (this.stopPropagation) {
       event.stopPropagation();
     }
+    if (this.display === 'grid') {
+      this.clickLinkContainer();
+    }
+  };
+
+  public clickLinkContainer = () => {
     this.shadowRoot
       ?.querySelector<HTMLAnchorElement>(
         '.link-container > atomic-product-link a:not([slot])'
