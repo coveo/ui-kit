@@ -74,10 +74,10 @@ export default class ExampleQuanticGeneratedAnswer extends LightningElement {
     this.isConfigured = true;
   }
 
-    render() {
-      if (this.withFacets) {
-        return templateGeneratedAnswerWithFacets;
-      }
-      return templateGeneratedAnswerWithoutFacets;
+  render() {
+    if (this.withFacets) {
+      return templateGeneratedAnswerWithFacets;
     }
+    return templateGeneratedAnswerWithoutFacets;
+  }
 }
