@@ -1,3 +1,4 @@
+import type {AtomicSearchInterface} from '@coveo/atomic/components';
 import {getSampleSearchEngineConfiguration} from '@coveo/headless';
 // biome-ignore lint/correctness/noUnusedImports: <>
 import {Component, h, Prop} from '@stencil/core';
@@ -10,8 +11,9 @@ import type {Router} from 'stencil-router-v2';
 export class StandaloneSearchBox {
   @Prop() router!: Router;
   componentDidLoad() {
-    const searchInterface: HTMLAtomicSearchInterfaceElement =
-      document.querySelector('atomic-search-interface#searchbox')!;
+    const searchInterface: AtomicSearchInterface = document.querySelector(
+      'atomic-search-interface#searchbox'
+    )!;
 
     searchInterface.initialize(getSampleSearchEngineConfiguration());
   }
