@@ -1,6 +1,5 @@
 import {
   type CommerceEngineDefinitionOptions,
-  defineParameterManager,
   defineProductList,
   defineSearchBox,
   defineSummary,
@@ -10,9 +9,8 @@ import {
 export const engineConfig: CommerceEngineDefinitionOptions = {
   configuration: getSampleCommerceEngineConfiguration(),
   controllers: {
-    productList: defineProductList(),
-    summary: defineSummary(),
     searchBox: defineSearchBox(),
-    parameterManager: defineParameterManager(),
+    summary: defineSummary(),
+    productList: defineProductList(),
   },
 };

@@ -16,14 +16,15 @@ app.get('/', async (req, res) => {
       getNavigatorContext(req)
     );
 
-    const queryFromRequest = req.query.q ?? '';
+    const queryFromRequest = req.query.q?.toString?.() ?? '';
+
     const staticState = await searchEngineDefinition.fetchStaticState({
-      controllers: {
-        searchBox: {initialState: {value: queryFromRequest}},
-        parameterManager: {
-          initialState: {parameters: {q: queryFromRequest }},
-        },
-        productList: {initialState: {parameters: {q: queryFromRequest }}},
+      searchParams: {query: queryFromRequest},
+      context: {
+        language: 'en',
+        country: 'US',
+        currency: 'USD',
+        view: {url: req.url},
       },
     });
 
