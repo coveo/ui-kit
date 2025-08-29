@@ -1,7 +1,7 @@
 import {css} from 'lit';
 
 const styles = css`
-@import "../../common/template-system/template-system.pcss";
+@import "../../common/template-system/template-system.css";
 
 :host {
   @apply atomic-template-system;
