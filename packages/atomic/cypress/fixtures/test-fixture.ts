@@ -251,6 +251,7 @@ export class TestFixture {
       if (!this.initializeInterface) {
         return;
       }
+      if (!searchInterfaceComponent.classList.contains('hydrated')) {
         searchInterfaceComponent.initialize(sampleConfig).then(() => {
           configureI18n(
             searchInterfaceComponent.i18n,
