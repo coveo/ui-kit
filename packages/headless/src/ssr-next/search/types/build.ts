@@ -1,10 +1,16 @@
 import type {CoreEngine, CoreEngineNext} from '../../../app/engine.js';
-import type {ControllersMap, ControllersPropsMap} from './controllers.js';
 import type {
-  EngineDefinitionBuildResult,
-  EngineDefinitionControllersPropsOption,
+  ControllersMap,
+  ControllersPropsMap,
+} from '../../common/types/controllers.js';
+import type {
+  OptionsExtender,
+  OptionsTuple,
+} from '../../common/types/utilities.js';
+import type {
+  SearchEngineDefinitionBuildResult,
+  SearchEngineDefinitionControllersPropsOption,
 } from './engine.js';
-import type {OptionsExtender, OptionsTuple} from './utilities.js';
 
 interface BuildOptions<TEngineOptions> {
   extend?: OptionsExtender<TEngineOptions>;
@@ -21,6 +27,6 @@ export type Build<
 > = (
   ...params: OptionsTuple<
     BuildOptions<TEngineOptions> &
-      EngineDefinitionControllersPropsOption<TControllersProps>
+      SearchEngineDefinitionControllersPropsOption<TControllersProps>
   >
-) => Promise<EngineDefinitionBuildResult<TEngine, TControllersMap>>;
+) => Promise<SearchEngineDefinitionBuildResult<TEngine, TControllersMap>>;

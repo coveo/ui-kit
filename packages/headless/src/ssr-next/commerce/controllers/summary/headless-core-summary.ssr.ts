@@ -7,7 +7,7 @@ import type {ProductListingSummaryState} from '../../../../controllers/commerce/
 import type {RecommendationsSummaryState} from '../../../../controllers/commerce/recommendations/summary/headless-recommendations-summary.js';
 import {buildSearch} from '../../../../controllers/commerce/search/headless-search.js';
 import type {SearchSummaryState} from '../../../../controllers/commerce/search/summary/headless-search-summary.js';
-import {ensureAtLeastOneSolutionType} from '../../../../ssr/commerce/controller-utils.js';
+import {ensureAtLeastOneSolutionType} from '../../controller-utils.js';
 import {SolutionType} from '../../types/controller-constants.js';
 import type {
   ControllerDefinitionOption,

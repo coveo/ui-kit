@@ -3,13 +3,11 @@ import type {
   BuildParameters,
   BuildResult,
   CommerceControllerDefinitionsMap,
+  CommerceEngineDefinitionOptions,
   HydrateStaticStateFunction,
   HydrateStaticStateParameters,
 } from '../types/engine.js';
-import {
-  buildFactory,
-  type CommerceEngineDefinitionOptions,
-} from './build-factory.js';
+import {buildFactory} from './build-factory.js';
 
 export function hydratedRecommendationStaticStateFactory<
   TControllerDefinitions extends CommerceControllerDefinitionsMap,

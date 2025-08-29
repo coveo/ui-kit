@@ -264,10 +264,7 @@ export type {
 } from './ssr-next/commerce/controllers/triggers/headless-redirection-trigger.ssr.js';
 export {defineRedirectionTrigger} from './ssr-next/commerce/controllers/triggers/headless-redirection-trigger.ssr.js';
 export {defineCommerceEngine} from './ssr-next/commerce/engine/commerce-engine.ssr.js';
-export type {
-  CommerceEngineDefinitionOptions,
-  SSRCommerceEngine as CommerceEngine,
-} from './ssr-next/commerce/factories/build-factory.js';
+export type {SSRCommerceEngine as CommerceEngine} from './ssr-next/commerce/factories/build-factory.js';
 // Main App
 export type {
   BuildConfig,
@@ -275,10 +272,10 @@ export type {
 } from './ssr-next/commerce/types/build.js';
 export {SolutionType} from './ssr-next/commerce/types/controller-constants.js';
 export type {
+  CommerceEngineDefinitionControllersPropsOption as EngineDefinitionControllersPropsOption,
   ControllerDefinition,
   ControllerDefinitionsMap,
   ControllerWithKind,
-  EngineDefinitionControllersPropsOption,
   HydratedState,
   InferControllerStaticStateFromController,
   InferControllerStaticStateMapFromControllers,
@@ -295,6 +292,7 @@ export type {
 export type {
   CommerceEngineDefinition,
   CommerceEngineDefinitionBuildResult,
+  CommerceEngineDefinitionOptions,
   EngineStaticState,
   FetchStaticState,
   HydrateStaticState,

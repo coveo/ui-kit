@@ -1,4 +1,8 @@
 import type {Controller} from '../../../controllers/controller/headless-controller.js';
+import type {
+  InferHydratedState,
+  InferStaticState,
+} from '../../common/types/engine.js';
 import type {HasKey, HasKeys} from '../../common/types/utilities.js';
 import type {SolutionType} from './controller-constants.js';
 import type {
@@ -9,17 +13,7 @@ import type {
   InferControllerStaticStateFromController,
 } from './controller-definitions.js';
 
-export type InferStaticState<
-  T extends {
-    fetchStaticState(...args: unknown[]): Promise<unknown>;
-  },
-> = Awaited<ReturnType<T['fetchStaticState']>>;
-
-export type InferHydratedState<
-  T extends {
-    hydrateStaticState(...args: unknown[]): Promise<unknown>;
-  },
-> = Awaited<ReturnType<T['hydrateStaticState']>>;
+export type {InferStaticState, InferHydratedState};
 
 type InferControllerPropsFromDefinition<
   TController extends ControllerDefinition<Controller>,

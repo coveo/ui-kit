@@ -2,12 +2,10 @@ import type {UnknownAction} from '@reduxjs/toolkit';
 import type {
   ControllerStaticStateMap,
   ControllersPropsMap,
-} from './controllers.js';
-import type {
-  EngineDefinitionControllersPropsOption,
-  EngineStaticState,
-} from './engine.js';
-import type {OptionsTuple} from './utilities.js';
+} from '../../common/types/controllers.js';
+import type {EngineStaticState} from '../../common/types/engine.js';
+import type {OptionsTuple} from '../../common/types/utilities.js';
+import type {SearchEngineDefinitionControllersPropsOption} from './engine.js';
 
 /**
  * Executes only the initial search for a given configuration, then returns a resumable snapshot of engine state along with the state of the controllers.
@@ -20,6 +18,6 @@ export type FetchStaticState<
   TControllersProps extends ControllersPropsMap,
 > = (
   ...params: OptionsTuple<
-    EngineDefinitionControllersPropsOption<TControllersProps>
+    SearchEngineDefinitionControllersPropsOption<TControllersProps>
   >
 ) => Promise<EngineStaticState<TSearchAction, TControllersStaticState>>;

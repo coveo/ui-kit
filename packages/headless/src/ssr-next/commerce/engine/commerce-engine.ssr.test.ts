@@ -1,6 +1,6 @@
 import type {CommerceEngineConfiguration} from '../../../app/commerce-engine/commerce-engine-configuration.js';
 import {defineMockCommerceController} from '../../../test/mock-ssr-controller-definitions.js';
-import type {CommerceEngineDefinitionOptions} from '../factories/build-factory.js';
+import type {CommerceEngineDefinitionOptions} from '../types/engine.js';
 import {defineCommerceEngine} from './commerce-engine.ssr.js';
 
 describe('Commerce Engine SSR', () => {

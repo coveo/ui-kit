@@ -7,7 +7,7 @@ import type {
 } from '../../../../controllers/commerce/core/pagination/headless-core-commerce-pagination.js';
 import {buildProductListing} from '../../../../controllers/commerce/product-listing/headless-product-listing.js';
 import {buildSearch} from '../../../../controllers/commerce/search/headless-search.js';
-import {ensureAtLeastOneSolutionType} from '../../../../ssr/commerce/controller-utils.js';
+import {ensureAtLeastOneSolutionType} from '../../controller-utils.js';
 import {SolutionType} from '../../types/controller-constants.js';
 import type {
   ControllerDefinitionOption,

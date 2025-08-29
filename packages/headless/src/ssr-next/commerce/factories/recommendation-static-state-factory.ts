@@ -10,15 +10,13 @@ import type {InferControllerStaticStateMapFromDefinitionsWithSolutionType} from 
 import type {
   BuildResult,
   CommerceControllerDefinitionsMap,
+  CommerceEngineDefinitionOptions,
   EngineStaticState,
   FetchStaticStateFunction,
   FetchStaticStateParameters,
 } from '../types/engine.js';
 import {filterRecommendationControllers} from '../utils/recommendation-filter.js';
-import {
-  buildFactory,
-  type CommerceEngineDefinitionOptions,
-} from './build-factory.js';
+import {buildFactory} from './build-factory.js';
 
 export function fetchRecommendationStaticStateFactory<
   TControllerDefinitions extends CommerceControllerDefinitionsMap,

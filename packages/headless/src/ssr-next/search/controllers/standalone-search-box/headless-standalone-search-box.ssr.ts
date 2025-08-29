@@ -4,7 +4,7 @@ import {
   type StandaloneSearchBox,
   type StandaloneSearchBoxProps,
 } from '../../../../controllers/standalone-search-box/headless-standalone-search-box.js';
-import type {ControllerDefinitionWithoutProps} from '../../../common/types/controllers.js';
+import type {ControllerDefinitionWithoutProps} from '../../types/controller-definition.js';
 
 export * from '../../../../controllers/standalone-search-box/headless-standalone-search-box.js';
 
