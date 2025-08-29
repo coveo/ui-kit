@@ -139,7 +139,9 @@ jobs:
       - name: Get affected projects
         id: set
         run: |
-          AFFECTED=$(npx turbo build --affected --dry-run 2>/dev/null | awk '/^@coveo/ && !/#/ {print $1}' | sed 's/@coveo\///g' | tr '\n' ' ')
+          AFFECTED=$(npx turbo build --affected --dry-run 2>/dev/null \
+          | awk '/^@(coveo|samples)/ && !/#/ {print $1}' \
+          | tr '\n' ' ')
           echo "projects=$AFFECTED" >> "$GITHUB_OUTPUT"
       - name: Log affected projects
         run: |
@@ -160,7 +162,7 @@ jobs:
   cdn-checks:
     name: "CDN Checks"
     needs: [affected, build-cdn]
-    if: contains(needs.affected.outputs.projects, 'atomic') || contains(needs.affected.outputs.projects, 'headless-commerce-react-samples') || contains(needs.affected.outputs.projects, 'atomic-hosted-page')
+    if: contains(needs.affected.outputs.projects, '@coveo/atomic') || contains(needs.affected.outputs.projects, '@samples/headless-commerce-react') || contains(needs.affected.outputs.projects, '@coveo/atomic-hosted-page')
     env:
       DEPLOYMENT_ENVIRONMENT: CDN
     runs-on: ubuntu-latest
@@ -228,7 +230,7 @@ jobs:
   typedoc:
     name: "Build typedoc"
     needs: affected
-    if: contains(needs.affected.outputs.projects, 'headless') || contains(needs.affected.outputs.projects, 'headless-react')
+    if: contains(needs.affected.outputs.projects, '@coveo/headless') || contains(needs.affected.outputs.projects, '@coveo/headless-react')
     runs-on: ubuntu-latest
     steps:
       - name: Harden Runner
@@ -247,7 +249,7 @@ jobs:
   e2e-atomic-csp-test:
     name: "Run e2e tests on Atomic CSP"
     needs: affected
-    if: contains(needs.affected.outputs.projects, 'atomic')
+    if: contains(needs.affected.outputs.projects, '@coveo/atomic')
     runs-on: ubuntu-latest
     steps:
       - name: Harden Runner
@@ -261,7 +263,7 @@ jobs:
   prepare-playwright-atomic:
     name: "Determine Playwright E2E tests to run"
     needs: affected
-    if: contains(needs.affected.outputs.projects, 'atomic')
+    if: contains(needs.affected.outputs.projects, '@coveo/atomic')
     runs-on: ubuntu-latest
     env:
       maximumShards: 12
@@ -360,7 +362,7 @@ jobs:
   playwright-atomic-theming:
     name: "Run theming smoke tests for Atomic"
     needs: affected
-    if: contains(needs.affected.outputs.projects, 'atomic')
+    if: contains(needs.affected.outputs.projects, '@coveo/atomic')
     runs-on: ubuntu-latest
     steps:
       - name: Harden Runner
@@ -375,7 +377,7 @@ jobs:
   e2e-atomic-test:
     name: "Run e2e tests on Atomic"
     needs: affected
-    if: contains(needs.affected.outputs.projects, 'atomic')
+    if: contains(needs.affected.outputs.projects, '@coveo/atomic')
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -429,7 +431,7 @@ jobs:
   e2e-atomic-screenshots:
     name: "Run e2e screenshots tests on Atomic"
     needs: affected
-    if: contains(needs.affected.outputs.projects, 'atomic')
+    if: contains(needs.affected.outputs.projects, '@coveo/atomic')
     runs-on: ubuntu-latest
     steps:
       - name: Harden Runner
@@ -440,10 +442,10 @@ jobs:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
       - uses: ./.github/actions/setup
       - uses: ./.github/actions/e2e-atomic-screenshots
-  e2e-atomic-react-test:
-    name: "Run e2e tests on Atomic React"
+  e2e-atomic-search-commerce-react-test:
+    name: "Run e2e tests on Atomic Search Commerce React"
     needs: affected
-    if: contains(needs.affected.outputs.projects, 'atomic-react-samples')
+    if: contains(needs.affected.outputs.projects, '@samples/atomic-search-commerce-react')
     runs-on: ubuntu-latest
     steps:
       - name: Harden Runner
@@ -453,11 +455,11 @@ jobs:
 
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
       - uses: ./.github/actions/setup
-      - uses: ./.github/actions/e2e-atomic-react
-  e2e-atomic-react-nextjs-test:
-    name: "Run e2e tests on Atomic React NextJS"
+      - uses: ./.github/actions/e2e-atomic-search-commerce-react
+  e2e-atomic-search-nextjs-pages-router-test:
+    name: "Run e2e tests on Atomic Search NextJS Pages Router"
     needs: affected
-    if: contains(needs.affected.outputs.projects, 'atomic-next-samples')
+    if: contains(needs.affected.outputs.projects, '@samples/atomic-search-nextjs-pages-router')
     runs-on: ubuntu-latest
     steps:
       - name: Harden Runner
@@ -467,26 +469,11 @@ jobs:
 
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
       - uses: ./.github/actions/setup
-      - uses: ./.github/actions/e2e-atomic-next
-  e2e-iife-test:
-    name: "Run e2e tests for IIFE"
+      - uses: ./.github/actions/e2e-atomic-search-nextjs-pages-router
+  e2e-atomic-search-commerce-angular-test:
+    name: "Run e2e tests on Atomic Search Commerce Angular"
     needs: affected
-    if: contains(needs.affected.outputs.projects, 'iife-samples')
-    runs-on: ubuntu-latest
-    steps:
-      - name: Harden Runner
-        uses: step-security/harden-runner@ec9f2d5744a09debf3a187a3f4f675c53b671911 # v2.13.0
-        with:
-          egress-policy: audit
-
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
-      # TODO: KIT-3537 - https://coveord.atlassian.net/browse/KIT-3538
-      # - uses: ./.github/actions/setup
-      # - uses: ./.github/actions/e2e-iife
-  e2e-atomic-angular-test:
-    name: "Run e2e tests on Atomic Angular"
-    needs: affected
-    if: contains(needs.affected.outputs.projects, 'atomic-angular-samples')
+    if: contains(needs.affected.outputs.projects, '@samples/atomic-search-commerce-angular')
     runs-on: ubuntu-latest
     steps:
       - name: Harden Runner
@@ -496,11 +483,11 @@ jobs:
 
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
       - uses: ./.github/actions/setup
-      - uses: ./.github/actions/e2e-atomic-angular
-  e2e-atomic-vuejs-test:
-    name: "Run e2e tests on Vue.js sample"
+      - uses: ./.github/actions/e2e-atomic-search-commerce-angular
+  e2e-atomic-search-vuejs-test:
+    name: "Run e2e tests on Atomic Search Vue.js"
     needs: affected
-    if: contains(needs.affected.outputs.projects, 'atomic-vuejs-samples')
+    if: contains(needs.affected.outputs.projects, '@samples/atomic-search-vuejs')
     runs-on: ubuntu-latest
     steps:
       - name: Harden Runner
@@ -510,11 +497,11 @@ jobs:
 
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
       - uses: ./.github/actions/setup
-      - uses: ./.github/actions/e2e-vuejs
-  e2e-atomic-stencil-test:
-    name: "Run e2e tests on Stencil.js sample"
+      - uses: ./.github/actions/e2e-atomic-search-vuejs
+  e2e-atomic-search-stencil-test:
+    name: "Run e2e tests on Atomic Search Stencil.js"
     needs: affected
-    if: contains(needs.affected.outputs.projects, 'atomic-stencil-samples')
+    if: contains(needs.affected.outputs.projects, '@samples/atomic-search-stencil')
     runs-on: ubuntu-latest
     steps:
       - name: Harden Runner
@@ -524,11 +511,11 @@ jobs:
 
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
       - uses: ./.github/actions/setup
-      - uses: ./.github/actions/e2e-stencil
+      - uses: ./.github/actions/e2e-atomic-search-stencil
   playwright-atomic-hosted-page-test:
     name: "Run e2e tests for Atomic Hosted Page"
     needs: affected
-    if: contains(needs.affected.outputs.projects, 'atomic-hosted-page')
+    if: contains(needs.affected.outputs.projects, '@coveo/atomic-hosted-page')
     runs-on: ubuntu-latest
     steps:
       - name: Harden Runner
@@ -540,10 +527,10 @@ jobs:
       - uses: ./.github/actions/setup
       - run: npm run build
       - uses: ./.github/actions/playwright-atomic-hosted-pages
-  playwright-headless-ssr-commerce:
-    name: "Run e2e tests for Headless Commerce SSR"
+  e2e-headless-ssr-commerce-nextjs-test:
+    name: "Run e2e tests on Headless SSR Commerce NextJS"
     needs: affected
-    if: contains(needs.affected.outputs.projects, 'headless-ssr-commerce-samples')
+    if: contains(needs.affected.outputs.projects, '@samples/headless-ssr-commerce-nextjs')
     runs-on: ubuntu-latest
     steps:
       - name: Harden Runner
@@ -558,7 +545,7 @@ jobs:
   e2e-atomic-insight-panel-test:
     name: "Run e2e tests on Atomic insight panel"
     needs: affected
-    if: contains(needs.affected.outputs.projects, 'atomic')
+    if: contains(needs.affected.outputs.projects, '@coveo/atomic')
     runs-on: ubuntu-latest
     steps:
       - name: Harden Runner
@@ -569,10 +556,10 @@ jobs:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
       - uses: ./.github/actions/setup
       - uses: ./.github/actions/e2e-atomic-insight-panel
-  e2e-headless-ssr-test-app:
-    name: "Run e2e tests on Headless SSR App router sample"
+  e2e-headless-ssr-search-nextjs-app-router-test:
+    name: "Run e2e tests on Headless SSR Search NextJS App Router"
     needs: affected
-    if: contains(needs.affected.outputs.projects, 'headless-ssr-samples-app-router')
+    if: contains(needs.affected.outputs.projects, '@samples/headless-ssr-search-nextjs-app-router')
     runs-on: ubuntu-latest
     steps:
       - name: Harden Runner
@@ -582,11 +569,11 @@ jobs:
 
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
       - uses: ./.github/actions/setup
-      - uses: ./.github/actions/e2e-headless-ssr-app
-  e2e-headless-ssr-test-pages:
-    name: "Run e2e tests on Headless SSR Pages router sample"
+      - uses: ./.github/actions/e2e-headless-ssr-search-nextjs-app-router
+  e2e-headless-ssr-search-nextjs-pages-router-test:
+    name: "Run e2e tests on Headless SSR Search NextJS Pages Router"
     needs: affected
-    if: contains(needs.affected.outputs.projects, 'headless-ssr-samples-pages-router')
+    if: contains(needs.affected.outputs.projects, '@samples/headless-ssr-search-nextjs-pages-router')
     runs-on: ubuntu-latest
     steps:
       - name: Harden Runner
@@ -596,11 +583,11 @@ jobs:
 
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
       - uses: ./.github/actions/setup
-      - uses: ./.github/actions/e2e-headless-ssr-pages
+      - uses: ./.github/actions/e2e-headless-ssr-search-nextjs-pages-router
   e2e-quantic:
     name: "Run Quantic E2E tests"
     needs: affected
-    if: contains(needs.affected.outputs.projects, 'quantic')
+    if: contains(needs.affected.outputs.projects, '@coveo/quantic')
     uses: ./.github/workflows/e2e-quantic.yml
     secrets:
       SFDX_AUTH_CLIENT_ID: ${{ secrets.SFDX_AUTH_CLIENT_ID }}
@@ -683,20 +670,19 @@ jobs:
       - "playwright-atomic"
       - "playwright-atomic-theming"
       - "playwright-atomic-hosted-page-test"
-      - "playwright-headless-ssr-commerce"
+      - "e2e-headless-ssr-commerce-nextjs-test"
       - "e2e-atomic-test"
       - "e2e-atomic-csp-test"
       - "e2e-quantic"
       - "e2e-atomic-screenshots"
-      - "e2e-atomic-react-test"
-      - "e2e-atomic-react-nextjs-test"
-      - "e2e-iife-test"
-      - "e2e-atomic-angular-test"
-      - "e2e-atomic-vuejs-test"
-      - "e2e-atomic-stencil-test"
+      - "e2e-atomic-search-commerce-react-test"
+      - "e2e-atomic-search-nextjs-pages-router-test"
+      - "e2e-atomic-search-commerce-angular-test"
+      - "e2e-atomic-search-vuejs-test"
+      - "e2e-atomic-search-stencil-test"
       - "e2e-atomic-insight-panel-test"
-      - "e2e-headless-ssr-test-app"
-      - "e2e-headless-ssr-test-pages"
+      - "e2e-headless-ssr-search-nextjs-app-router-test"
+      - "e2e-headless-ssr-search-nextjs-pages-router-test"
       - "prerelease-npm-pr"
       - "prerelease-cdn-pr"
     runs-on: ubuntu-latest
@@ -725,19 +711,18 @@ jobs:
       - "playwright-atomic"
       - "playwright-atomic-theming"
       - "playwright-atomic-hosted-page-test"
-      - "playwright-headless-ssr-commerce"
+      - "e2e-headless-ssr-commerce-nextjs-test"
       - "e2e-atomic-test"
       - "e2e-quantic"
       - "e2e-atomic-screenshots"
-      - "e2e-atomic-react-test"
-      - "e2e-atomic-react-nextjs-test"
-      - "e2e-iife-test"
-      - "e2e-atomic-angular-test"
-      - "e2e-atomic-vuejs-test"
-      - "e2e-atomic-stencil-test"
+      - "e2e-atomic-search-commerce-react-test"
+      - "e2e-atomic-search-nextjs-pages-router-test"
+      - "e2e-atomic-search-commerce-angular-test"
+      - "e2e-atomic-search-vuejs-test"
+      - "e2e-atomic-search-stencil-test"
       - "e2e-atomic-insight-panel-test"
-      - "e2e-headless-ssr-test-app"
-      - "e2e-headless-ssr-test-pages"
+      - "e2e-headless-ssr-search-nextjs-app-router-test"
+      - "e2e-headless-ssr-search-nextjs-pages-router-test"
     runs-on: ubuntu-latest
     steps:
       - name: Harden Runner
