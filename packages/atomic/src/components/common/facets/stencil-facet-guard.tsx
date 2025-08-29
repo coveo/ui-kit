@@ -7,6 +7,8 @@ interface FacetGuardProps {
   firstSearchExecuted: boolean;
   hasResults: boolean;
 }
+
+// @deprecated - use the `when` directive instead for Lit
 export const FacetGuard: FunctionalComponent<FacetGuardProps> = (
   {hasError, enabled, firstSearchExecuted, hasResults},
   children
