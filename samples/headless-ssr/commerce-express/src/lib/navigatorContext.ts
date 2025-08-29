@@ -1,19 +1,18 @@
+import {randomUUID} from 'crypto';
 import type express from 'express';
-
-const uuid = () => crypto?.randomUUID?.() ?? '';
 
 const getHeaderValue = (
   headerName: string,
   headers: express.Request['headers']
 ) => {
   const value = headers[headerName];
-
-  return (Array.isArray(value) ? value[0] : value)?.toString();
+  const str = (Array.isArray(value) ? value[0] : value)?.toString();
+  return str ? str.trim() : undefined;
 };
 
-export function getNavigatorContext({headers, url}: express.Request) {
+export function getNavigatorContext({headers, url, ip}: express.Request) {
   return {
-    clientId: getHeaderValue('x-coveo-client-id', headers) ?? uuid(),
+    clientId: getHeaderValue('x-coveo-client-id', headers) ?? randomUUID(),
     location: url ?? getHeaderValue('x-href', headers) ?? null,
     referrer:
       getHeaderValue('referer', headers) ??
@@ -21,8 +20,9 @@ export function getNavigatorContext({headers, url}: express.Request) {
       null,
     userAgent: getHeaderValue('user-agent', headers) ?? null,
     forwardedFor:
-      getHeaderValue('x-forwarded-for', headers) ??
-      getHeaderValue('x-forwarded-host', headers) ??
+      getHeaderValue('x-forwarded-for', headers) ||
+      getHeaderValue('x-forwarded-host', headers) ||
+      ip ||
       undefined,
     capture: false,
   };

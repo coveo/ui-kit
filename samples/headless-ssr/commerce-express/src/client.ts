@@ -3,20 +3,18 @@ import type {
   SearchBox,
   Summary,
 } from '@coveo/headless/ssr-commerce-next';
-import {engineDefinition} from './common/engine.js';
 import type {SearchStaticState} from './common/types.js';
 import {ErrorMessage} from './components/ErrorMessage.js';
 import {ProductGrid} from './components/ProductGrid.js';
 import {QuerySummary} from './components/QuerySummary.js';
 import {Search} from './components/Search.js';
+import {searchEngineDefinition} from './lib/engine-definition.js';
 
 async function initApp() {
   try {
     const staticState: SearchStaticState = window.__STATIC_STATE__!;
     const {controllers} =
-      await engineDefinition.searchEngineDefinition.hydrateStaticState(
-        staticState
-      );
+      await searchEngineDefinition.hydrateStaticState(staticState);
 
     Search(controllers.searchBox as SearchBox);
     ProductGrid(controllers.productList as ProductList);

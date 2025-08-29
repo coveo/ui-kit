@@ -1,6 +1,5 @@
 import {
   type CommerceEngineDefinitionOptions,
-  defineCommerceEngine,
   defineParameterManager,
   defineProductList,
   defineSearchBox,
@@ -8,7 +7,7 @@ import {
   getSampleCommerceEngineConfiguration,
 } from '@coveo/headless/ssr-commerce-next';
 
-const config: CommerceEngineDefinitionOptions = {
+export const engineConfig: CommerceEngineDefinitionOptions = {
   configuration: getSampleCommerceEngineConfiguration(),
   controllers: {
     productList: defineProductList(),
@@ -17,7 +16,3 @@ const config: CommerceEngineDefinitionOptions = {
     parameterManager: defineParameterManager(),
   },
 };
-
-export const engineDefinition = defineCommerceEngine(config);
-
-export type EngineDefinition = typeof engineDefinition.searchEngineDefinition;

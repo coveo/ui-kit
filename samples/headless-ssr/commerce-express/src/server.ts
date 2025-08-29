@@ -1,30 +1,30 @@
 import express from 'express';
-import {engineDefinition} from './common/engine.js';
-import {getNavigatorContext} from './common/navigatorContext.js';
 import {renderApp} from './common/renderApp.js';
 import {renderHtml} from './common/renderHtml.js';
+import {searchEngineDefinition} from './lib/engine-definition.js';
+import {getNavigatorContext} from './lib/navigatorContext.js';
+import {middleware} from './middleware.js';
 
 const app = express();
 const port = process.env.PORT || 3000;
-
+app.use(middleware);
 app.use(express.static('dist'));
 
 app.get('/', async (req, res) => {
   try {
-    engineDefinition.searchEngineDefinition.setNavigatorContextProvider(() =>
+    searchEngineDefinition.setNavigatorContextProvider(() =>
       getNavigatorContext(req)
     );
 
-    const staticState =
-      await engineDefinition.searchEngineDefinition.fetchStaticState({
-        controllers: {
-          searchBox: {initialState: {value: req.query.q || ''}},
-          parameterManager: {
-            initialState: {parameters: {q: req.query.q || ''}},
-          },
-          productList: {initialState: {parameters: {q: req.query.q || ''}}},
+    const staticState = await searchEngineDefinition.fetchStaticState({
+      controllers: {
+        searchBox: {initialState: {value: req.query.q || ''}},
+        parameterManager: {
+          initialState: {parameters: {q: req.query.q || ''}},
         },
-      });
+        productList: {initialState: {parameters: {q: req.query.q || ''}}},
+      },
+    });
 
     const appHtml = renderApp(staticState);
     const html = renderHtml(appHtml, staticState);
