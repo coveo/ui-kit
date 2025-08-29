@@ -271,13 +271,15 @@ export type {
 // Main App
 export type {
   BuildConfig,
-  SSRCommerceEngineOptions,
+  SSRCommerceEngineOptions as CommerceEngineOptions,
 } from './ssr-next/commerce/types/build.js';
 export {SolutionType} from './ssr-next/commerce/types/controller-constants.js';
 export type {
+  AugmentedControllerDefinition,
   ControllerDefinition,
   ControllerDefinitionsMap,
   EngineDefinitionControllersPropsOption,
+  FilteredBakedInControllers,
   HydratedState,
   InferControllerStaticStateFromController,
   InferControllerStaticStateMapFromControllers,
@@ -298,6 +300,7 @@ export type {
   FetchStaticState,
   HydrateStaticState,
   HydrateStaticStateOptions,
+  ValidateControllerNames,
 } from './ssr-next/commerce/types/engine.js';
 // State
 export type {

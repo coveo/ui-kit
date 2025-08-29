@@ -7,7 +7,7 @@ import type {
   InferControllersMapFromDefinition,
   SolutionType,
   CommerceEngine as SSRCommerceEngine,
-} from '@coveo/headless/ssr-commerce';
+} from '@coveo/headless/ssr-commerce-next';
 import type {FunctionComponent, PropsWithChildren} from 'react';
 
 export type ContextHydratedState<
@@ -48,32 +48,8 @@ export type InferControllerHooksMapFromDefinition<
 
 export type ReactEngineDefinition<
   TControllers extends ControllerDefinitionsMap<Controller>,
-  TEngineOptions,
   TSolutionType extends SolutionType,
-> = CommerceEngineDefinition<TControllers, TEngineOptions, TSolutionType> & {
-  /**
-   * @deprecated Use `StateProvider` instead.
-   */
-  StaticStateProvider: FunctionComponent<
-    PropsWithChildren<{
-      controllers: InferControllerStaticStateMapFromDefinitionsWithSolutionType<
-        TControllers,
-        TSolutionType
-      >;
-    }>
-  >;
-  /**
-   * @deprecated Use `StateProvider` instead.
-   */
-  HydratedStateProvider: FunctionComponent<
-    PropsWithChildren<{
-      engine: SSRCommerceEngine;
-      controllers: InferControllersMapFromDefinition<
-        TControllers,
-        TSolutionType
-      >;
-    }>
-  >;
+> = CommerceEngineDefinition<TControllers, TSolutionType> & {
   StateProvider: FunctionComponent<
     PropsWithChildren<{
       engine?: SSRCommerceEngine;

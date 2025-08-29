@@ -36,7 +36,9 @@ export interface EngineStaticState<
 
 type ReservedControllerNames = 'context' | 'parameterManager' | 'cart';
 
-type ValidateControllerNames<T extends ControllerDefinitionsMap<Controller>> = {
+export type ValidateControllerNames<
+  T extends ControllerDefinitionsMap<Controller>,
+> = {
   [K in keyof T]: K extends ReservedControllerNames
     ? `ERROR: Controller name "${K & string}" is reserved and cannot be used. Reserved names are: context, parameterManager, cart. Please choose a different controller name.`
     : T[K];
