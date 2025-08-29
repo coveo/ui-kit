@@ -28,3 +28,11 @@ export function defineMockCommerceController(
     recommendation: options?.recommendation ?? true,
   };
 }
+
+export function defineMockSearchController() {
+  return {
+    build: vi.fn((_engine) => {
+      return buildMockController();
+    }),
+  };
+}
