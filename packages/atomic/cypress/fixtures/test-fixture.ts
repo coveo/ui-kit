@@ -251,7 +251,6 @@ export class TestFixture {
       if (!this.initializeInterface) {
         return;
       }
-
       if (!searchInterfaceComponent.classList.contains('hydrated')) {
         searchInterfaceComponent.initialize(sampleConfig).then(() => {
           configureI18n(
@@ -270,7 +269,7 @@ export class TestFixture {
             cy.wait(TestFixture.interceptAliases.UA);
           }
         }
-      }
+        }
     });
 
     this.aliases.forEach((alias) => alias(this));
