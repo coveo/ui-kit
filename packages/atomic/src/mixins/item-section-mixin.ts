@@ -1,6 +1,6 @@
 import type {CSSResultGroup, LitElement} from 'lit';
-import {hideEmptySection} from '@/src/utils/item-section-utils';
-import {injectStylesForNoShadowDOM} from '../decorators/inject-styles-for-no-shadow-dom.js';
+import {hideEmptySection} from '../utils/item-section-utils.js';
+import {LightDomMixin} from './light-dom.js';
 import type {Constructor} from './mixin-common.js';
 
 /**
@@ -16,8 +16,7 @@ export function ItemSectionMixin<T extends Constructor<LitElement>>(
   superClass: T,
   styles?: CSSResultGroup
 ) {
-  @injectStylesForNoShadowDOM
-  class ProductSectionMixinClass extends superClass {
+  class ProductSectionMixinClass extends LightDomMixin(superClass) {
     static styles = styles;
 
     protected updated() {
