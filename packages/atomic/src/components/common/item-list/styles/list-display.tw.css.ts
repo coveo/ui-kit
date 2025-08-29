@@ -1,5 +1,7 @@
-/* Deprecated, use list-display.tw.css.ts for Lit components */
-@import './mixins.pcss';
+import {css} from 'lit';
+
+const styles = css`
+@reference './mixins.pcss';
 
 [part~='divider'] {
   &:not(:last-child) {
@@ -39,3 +41,6 @@
     }
   }
 }
+`;
+
+export default styles;

@@ -1,0 +1,41 @@
+@reference './sections-utilities.css';
+
+@utility section-title {
+  @apply section-base-overflow;
+  &.with-sections {
+    grid-area: title;
+    @apply text-on-background;
+    @apply set-font-size-xl;
+
+    &.density-comfortable {
+      @apply set-font-size-2xl;
+    }
+
+    @media (width >= theme(--breakpoint-desktop)) {
+      &.display-grid {
+        word-break: break-word;
+        @apply line-clamp-2;
+      }
+    }
+
+    @media not all and (width >= theme(--breakpoint-desktop)) {
+      &.display-list {
+        @apply set-font-size-xl;
+      }
+      &.display-grid {
+        &.image-large {
+          @apply set-font-size-xl;
+        }
+
+        &.image-small,
+        &.image-icon,
+        &.image-none {
+          @apply set-font-size-lg;
+
+          max-height: 3rem;
+          @apply line-clamp-2;
+        }
+      }
+    }
+  }
+}

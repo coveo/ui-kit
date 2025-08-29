@@ -6,7 +6,7 @@ import {bindings} from '@/src/decorators/bindings.js';
 import {createProductContextController} from '@/src/decorators/commerce/product-template-decorators.js';
 import {errorGuard} from '@/src/decorators/error-guard.js';
 import type {InitializableComponent} from '@/src/decorators/types.js';
-import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles.js';
+import {LightDomMixin} from '@/src/mixins/light-dom.js';
 import {
   defaultNumberFormatter,
   type NumberFormatter,
@@ -21,14 +21,10 @@ import {parseValue} from '../product-template-component-utils/product-utils.js';
  */
 @customElement('atomic-product-numeric-field-value')
 @bindings()
-@withTailwindStyles
 export class AtomicProductNumericFieldValue
-  extends LitElement
+  extends LightDomMixin(LitElement)
   implements InitializableComponent<CommerceBindings>
 {
-  createRenderRoot() {
-    return this;
-  }
   @state()
   bindings!: CommerceBindings;
 
