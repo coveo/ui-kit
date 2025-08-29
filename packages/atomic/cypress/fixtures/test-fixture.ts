@@ -251,7 +251,7 @@ export class TestFixture {
       if (!this.initializeInterface) {
         return;
       }
-
+      if (!searchInterfaceComponent.classList.contains('hydrated')) {
         searchInterfaceComponent.initialize(sampleConfig).then(() => {
           configureI18n(
             searchInterfaceComponent.i18n,
@@ -268,6 +268,7 @@ export class TestFixture {
           if (!(this.disabledAnalytics || this.doNotTrack)) {
             cy.wait(TestFixture.interceptAliases.UA);
           }
+        }
         }
     });
 
