@@ -79,3 +79,44 @@ const meta: Meta = {
 export default meta;
 
 export const Default: Story = {};
+
+export const SearchBeforeInit: Story = {
+  tags: ['!dev'],
+  afterEach: async (context) => {
+    const searchInterface = context.canvasElement.querySelector(
+      'atomic-search-interface'
+    );
+    await customElements.whenDefined('atomic-search-interface');
+    await searchInterface!.executeFirstSearch();
+  },
+};
+
+export const WithAResultList: Story = {
+  name: 'With a Result List',
+  args: {
+    'default-slot': `
+      <atomic-search-layout>
+        <atomic-layout-section section="search">
+          <atomic-search-box></atomic-search-box>
+        </atomic-layout-section>
+        <atomic-layout-section section="facets">
+             <atomic-facet field="author" label="Authors"></atomic-facet>
+        </atomic-layout-section>
+        <atomic-layout-section section="main">
+          <atomic-layout-section section="status">
+            <atomic-breadbox></atomic-breadbox>
+            <atomic-query-summary></atomic-query-summary>
+            <atomic-sort-dropdown></atomic-sort-dropdown>
+          </atomic-layout-section>
+          <atomic-layout-section section="results">
+            <atomic-result-list
+              display="grid"
+              density="compact"
+              image-size="small"
+            ></atomic-result-list>
+          </atomic-layout-section>
+        </atomic-layout-section>
+      </atomic-commerce-layout>
+    `,
+  },
+};
