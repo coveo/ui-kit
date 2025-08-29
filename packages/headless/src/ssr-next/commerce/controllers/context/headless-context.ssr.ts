@@ -20,11 +20,10 @@ export type {
   ContextOptions,
 };
 
-export interface ContextDefinition
-  extends UniversalControllerDefinitionWithProps<
-    Context,
-    {initialState: ContextOptions}
-  > {}
+export type ContextDefinition = UniversalControllerDefinitionWithProps<
+  Context,
+  {initialState: ContextOptions}
+>;
 
 /**
  * Defines a `Context` controller instance.
