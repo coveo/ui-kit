@@ -251,7 +251,6 @@ export class TestFixture {
       if (!this.initializeInterface) {
         return;
       }
-
         searchInterfaceComponent.initialize(sampleConfig).then(() => {
           configureI18n(
             searchInterfaceComponent.i18n,
