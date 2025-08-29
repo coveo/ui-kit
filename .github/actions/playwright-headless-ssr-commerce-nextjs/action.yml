@@ -1,13 +1,13 @@
-name: 'Playwright Headless SSR Commerce'
-description: 'Run Playwright tests for Headless SSR Commerce'
+name: "Playwright Headless SSR Commerce"
+description: "Run Playwright tests for Headless SSR Commerce"
 runs:
   using: composite
   steps:
     - name: Install Playwright Browsers
       run: npx playwright install --with-deps
-      working-directory: packages/samples/headless-ssr-commerce-nextjs
+      working-directory: samples/headless-ssr/commerce-nextjs
       shell: bash
     - name: Run Playwright tests
       run: npx playwright test
-      working-directory: packages/samples/headless-ssr-commerce-nextjs
+      working-directory: samples/headless-ssr/commerce-nextjs
       shell: bash
