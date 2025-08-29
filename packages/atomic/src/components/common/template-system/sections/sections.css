@@ -6,4 +6,5 @@
 @import "./section-metadata.css";
 @import "./section-actions.css";
 @import "./section-title.css";
+@import "./section-visual.css";
 @reference '../../../../utils/tailwind.global.tw.css';
