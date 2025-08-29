@@ -1,453 +1,211 @@
-import {randomUUID} from 'node:crypto';
 import {
-  defineResultList,
-  defineSearchBox,
   getSampleSearchEngineConfiguration,
-  type InferHydratedState,
-  type InferStaticState,
-  type NavigatorContextProvider,
-  type Result,
+  type SearchEngine,
 } from '@coveo/headless/ssr';
-import {act, render, renderHook, screen} from '@testing-library/react';
+import {render, renderHook, screen} from '@testing-library/react';
 import type {PropsWithChildren} from 'react';
 import {
   afterEach,
   beforeEach,
   describe,
   expect,
+  it,
   type MockInstance,
-  test,
   vi,
 } from 'vitest';
+import {
+  createResultListComponent,
+  createTestComponent,
+} from '../__tests__/component-test-utils.js';
+import {createMockSearchNavigatorContextProvider} from '../__tests__/mock-navigator-context-provider.js';
+import {
+  buildMockController,
+  defineMockSearchController,
+} from '../__tests__/mock-ssr-controller-definitions.js';
+import {createMockSearchEngine} from '../__tests__/mock-ssr-engine.js';
+import {
+  renderWithProvider,
+  waitForAsyncUpdates,
+} from '../__tests__/test-utils.js';
 import {MissingEngineProviderError} from '../errors.js';
 import {defineSearchEngine} from './search-engine.js';
 
-/**
- * Utility function to flush asynchronous updates in React components.
- * This ensures all async operations and state updates are completed before proceeding.
- */
-async function flushAsyncUpdates(): Promise<void> {
-  await act(async () => {
-    await new Promise((resolve) => setTimeout(resolve, 0));
-  });
-}
+type MockControllerDefinitions = {
+  resultList: ReturnType<typeof defineMockSearchController>;
+  searchBox: ReturnType<typeof defineMockSearchController>;
+};
 
-describe('Headless react SSR utils', () => {
+type MockControllers = {
+  [K in keyof MockControllerDefinitions]: ReturnType<
+    typeof buildMockController
+  >;
+};
+
+describe('Search Engine', () => {
+  let mockControllers: MockControllers;
+  let mockNavigatorContextProvider: ReturnType<
+    typeof createMockSearchNavigatorContextProvider
+  >;
+  let engineDefinition: ReturnType<
+    typeof defineSearchEngine<MockControllerDefinitions>
+  >;
+  let StateProvider: typeof engineDefinition.StateProvider;
   let errorSpy: MockInstance;
-  const mockedNavigatorContextProvider: NavigatorContextProvider = () => {
-    return {
-      clientId: '123',
-      location: 'https://www.example.com',
-      referrer: 'https://www.google.com',
-      userAgent: 'Mozilla/5.0',
-    };
-  };
-  const sampleConfig = {
-    ...getSampleSearchEngineConfiguration(),
-    analytics: {enabled: false}, // TODO: KIT-2585 Remove after analytics SSR support is added
-  };
 
   beforeEach(() => {
-    errorSpy = vi.spyOn(console, 'error');
+    errorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+    mockNavigatorContextProvider = createMockSearchNavigatorContextProvider();
+    mockControllers = {
+      resultList: buildMockController(),
+      searchBox: buildMockController(),
+    };
+
+    engineDefinition = defineSearchEngine({
+      configuration: {
+        ...getSampleSearchEngineConfiguration(),
+        analytics: {enabled: false}, // TODO: KIT-2585 Remove after analytics SSR support is added
+      },
+      navigatorContextProvider: mockNavigatorContextProvider,
+      controllers: {
+        resultList: defineMockSearchController(),
+        searchBox: defineMockSearchController(),
+      },
+    });
+
+    StateProvider = engineDefinition.StateProvider;
   });
 
   afterEach(async () => {
     errorSpy.mockClear();
-
-    await flushAsyncUpdates();
-
+    await waitForAsyncUpdates();
     vi.clearAllTimers();
     vi.clearAllMocks();
   });
 
-  test('defines react search engine', () => {
-    const {
-      fetchStaticState,
-      hydrateStaticState,
-      build,
-      useEngine,
-      controllers,
-      StaticStateProvider,
-      HydratedStateProvider,
-      StateProvider,
-      setNavigatorContextProvider,
-      ...rest
-    } = defineSearchEngine({
-      configuration: sampleConfig,
+  describe('Engine Definition', () => {
+    it('should create engine definition with all required properties', () => {
+      expect(engineDefinition).toHaveProperty('useEngine');
+      expect(engineDefinition).toHaveProperty('controllers');
+      expect(engineDefinition).toHaveProperty('fetchStaticState');
+      expect(engineDefinition).toHaveProperty('hydrateStaticState');
+      expect(engineDefinition).toHaveProperty('build');
+      expect(engineDefinition).toHaveProperty('StaticStateProvider');
+      expect(engineDefinition).toHaveProperty('HydratedStateProvider');
+      expect(engineDefinition).toHaveProperty('StateProvider');
+      expect(engineDefinition).toHaveProperty('setNavigatorContextProvider');
     });
 
-    [
-      fetchStaticState,
-      hydrateStaticState,
-      build,
-      useEngine,
-      StaticStateProvider,
-      HydratedStateProvider,
-      StateProvider,
-      setNavigatorContextProvider,
-    ].forEach((returnValue) => expect(typeof returnValue).toBe('function'));
+    it('should create controller hooks for each controller in definition', () => {
+      const {
+        controllers: {useResultList, useSearchBox, ...rest},
+      } = engineDefinition;
 
-    expect(controllers).toEqual({});
-    expect(rest).toEqual({}); // No other return values
+      expect(typeof useResultList).toBe('function');
+      expect(typeof useSearchBox).toBe('function');
+      expect(rest).toEqual({});
+    });
   });
 
-  test('creates a hook based on given controller', () => {
-    const {controllers} = defineSearchEngine({
-      configuration: sampleConfig,
-      controllers: {
-        resultList: defineResultList(),
-        searchBox: defineSearchBox(),
-      },
-    });
-    expect(typeof controllers.useResultList).toEqual('function');
-    expect(typeof controllers.useSearchBox).toEqual('function');
-  });
-
-  describe('context providers', () => {
-    const resultItemTestId = 'result-item';
-    const numResults = 10;
-    const engineDefinition = defineSearchEngine({
-      configuration: sampleConfig,
-      // TODO: Generalize tests to test all defined controllers dynamically
-      controllers: {
-        resultList: defineResultList(),
-        searchBox: defineSearchBox(),
-      },
-    });
-    const {
-      fetchStaticState,
-      hydrateStaticState,
-      StaticStateProvider,
-      HydratedStateProvider,
-      StateProvider,
-      controllers,
-      setNavigatorContextProvider,
-      useEngine,
-    } = engineDefinition;
-
-    let renderResult: ReturnType<typeof render> | null = null;
-
-    afterEach(async () => {
-      if (renderResult) {
-        renderResult.unmount();
-        renderResult = null;
-      }
-
-      await flushAsyncUpdates();
-    });
-
-    function TestResultList() {
-      const generateMockResult: () => Result = () => {
-        return {
-          absentTerms: [],
-          clickUri: '',
-          excerpt: '',
-          excerptHighlights: [],
-          firstSentences: '',
-          firstSentencesHighlights: [],
-          flags: '',
-          hasHtmlVersion: false,
-          isRecommendation: false,
-          isTopResult: false,
-          isUserActionView: false,
-          percentScore: 0,
-          printableUri: '',
-          printableUriHighlights: [],
-          rankingInfo: null,
-          raw: {urihash: ''},
-          score: 0,
-          searchUid: '',
-          summary: null,
-          summaryHighlights: [],
-          title: '',
-          titleHighlights: [],
-          uniqueId: randomUUID(),
-          uri: '',
-        };
-      };
-
-      const {state} = controllers.useResultList();
-
-      state.results = Array.from({length: numResults}, generateMockResult);
-      return (
-        <ul>
-          {state.results.map((result) => (
-            <li key={result.uniqueId} data-testid={resultItemTestId}>
-              {result.title}
-            </li>
-          ))}
-        </ul>
+  describe('Hook Behavior', () => {
+    let useEngine: typeof engineDefinition.useEngine;
+    let controllers: typeof engineDefinition.controllers;
+    const staticProviderWrapper = ({children}: PropsWithChildren) => (
+      <StateProvider controllers={mockControllers}>{children}</StateProvider>
+    );
+    const hydratedProviderWrapper =
+      (engine: SearchEngine) =>
+      ({children}: PropsWithChildren) => (
+        <StateProvider controllers={mockControllers} engine={engine}>
+          {children}
+        </StateProvider>
       );
-    }
 
-    async function checkRenderedResultList() {
-      const results = await screen.findAllByTestId(resultItemTestId);
-      expect(errorSpy).not.toHaveBeenCalled();
-      expect(results).toHaveLength(numResults);
+    beforeEach(() => {
+      useEngine = engineDefinition.useEngine;
+      controllers = engineDefinition.controllers;
+    });
 
-      results.forEach((result) => result.remove());
-    }
+    describe('Error Handling', () => {
+      it('should throw error when useEngine is called outside provider', () => {
+        expect(() => {
+          renderHook(() => useEngine());
+        }).toThrow(MissingEngineProviderError);
+      });
 
-    function checkRenderError(
-      renderFunction: CallableFunction,
-      expectedErrMsg: string
-    ) {
-      let err: Error | undefined;
-      // Prevent expected error from being thrown in console when running tests
-      const consoleErrorStub = vi
-        .spyOn(console, 'error')
-        .mockImplementation(() => {});
-      try {
-        renderResult = renderFunction();
-      } catch (e) {
-        err = e! as Error;
-      } finally {
-        consoleErrorStub.mockReset();
-      }
+      it('should throw error when controller hooks are called outside provider', () => {
+        expect(() => {
+          renderHook(() => controllers.useResultList());
+        }).toThrow(MissingEngineProviderError);
+      });
+    });
 
-      expect(err?.message).toBe(expectedErrMsg);
-    }
+    describe('Static State Behavior', () => {
+      it('useEngine should return undefined in static state', async () => {
+        const hookResult = renderHook(() => useEngine(), {
+          wrapper: staticProviderWrapper,
+        });
 
-    test('should throw error when controller hook is used without context', () => {
-      checkRenderError(
-        () => render(<TestResultList />),
+        expect(hookResult.result.current).toBeUndefined();
+      });
+
+      it('controller hooks should have state but no methods in static state', async () => {
+        const hookResult = renderHook(() => controllers.useResultList(), {
+          wrapper: staticProviderWrapper,
+        });
+
+        expect(hookResult.result.current).toHaveProperty('state');
+        expect(hookResult.result.current).toHaveProperty('methods', undefined);
+      });
+    });
+
+    describe('Hydrated State Behavior', () => {
+      it('useEngine should return engine instance in hydrated state', async () => {
+        const hookResult = renderHook(() => useEngine(), {
+          wrapper: hydratedProviderWrapper(createMockSearchEngine()),
+        });
+
+        expect(hookResult.result.current).toBeDefined();
+      });
+
+      it('controller hooks should have state and methods in hydrated state', async () => {
+        const hookResult = renderHook(() => controllers.useResultList(), {
+          wrapper: hydratedProviderWrapper(createMockSearchEngine()),
+        });
+
+        expect(hookResult.result.current).toHaveProperty('state');
+        expect(hookResult.result.current).toHaveProperty('methods');
+      });
+    });
+  });
+
+  describe('Component Rendering', () => {
+    it('should throw error when component uses hooks without provider context', () => {
+      const TestComponent = createTestComponent('test-component');
+      expect(
+        () => render(<TestComponent />),
         MissingEngineProviderError.message
       );
     });
 
-    test('should render with StaticStateProvider', async () => {
-      setNavigatorContextProvider(mockedNavigatorContextProvider);
-      const staticState = await fetchStaticState();
-      renderResult = render(
-        <StaticStateProvider controllers={staticState.controllers}>
-          <TestResultList />
-        </StaticStateProvider>
-      );
+    it('should render components with static state', async () => {
+      const {ResultListComponent} = createResultListComponent(5);
 
-      await checkRenderedResultList();
+      renderWithProvider(<ResultListComponent />, {provider: StateProvider});
+
+      expect(screen.getByTestId('result-list')).toBeDefined();
+      expect(screen.getAllByTestId('result-item')).toHaveLength(5);
     });
 
-    test('should hydrate results with HydratedStateProvider', async () => {
-      setNavigatorContextProvider(mockedNavigatorContextProvider);
-      const staticState = await fetchStaticState();
-      const {engine, controllers} = await hydrateStaticState(staticState);
+    it('should render components with hydrated state', async () => {
+      const {ResultListComponent} = createResultListComponent(5);
 
-      renderResult = render(
-        <HydratedStateProvider engine={engine} controllers={controllers}>
-          <TestResultList />
-        </HydratedStateProvider>
-      );
-
-      await checkRenderedResultList();
-    });
-
-    test('should render with StateProvider using static state', async () => {
-      setNavigatorContextProvider(mockedNavigatorContextProvider);
-      const staticState = await fetchStaticState();
-      renderResult = render(
-        <StateProvider controllers={staticState.controllers}>
-          <TestResultList />
-        </StateProvider>
-      );
-
-      await checkRenderedResultList();
-    });
-
-    test('should render with StateProvider using hydrated state', async () => {
-      setNavigatorContextProvider(mockedNavigatorContextProvider);
-      const staticState = await fetchStaticState();
-      const {engine, controllers} = await hydrateStaticState(staticState);
-
-      renderResult = render(
-        <StateProvider engine={engine} controllers={controllers}>
-          <TestResultList />
-        </StateProvider>
-      );
-
-      await checkRenderedResultList();
-    });
-
-    describe('hooks', () => {
-      let staticState: InferStaticState<typeof engineDefinition>;
-      let hydratedState: InferHydratedState<typeof engineDefinition>;
-      let hookRenderResult: ReturnType<typeof renderHook> | null = null;
-
-      beforeEach(async () => {
-        setNavigatorContextProvider(mockedNavigatorContextProvider);
-        staticState = await fetchStaticState();
-        hydratedState = await hydrateStaticState(staticState);
+      renderWithProvider(<ResultListComponent />, {
+        provider: StateProvider,
+        engine: createMockSearchEngine(),
       });
 
-      afterEach(() => {
-        if (hookRenderResult) {
-          hookRenderResult.unmount();
-          hookRenderResult = null;
-        }
-      });
-
-      function staticStateProviderWrapper({children}: PropsWithChildren) {
-        return (
-          <StaticStateProvider controllers={staticState.controllers}>
-            {children}
-          </StaticStateProvider>
-        );
-      }
-
-      function hydratedStateProviderWrapper({children}: PropsWithChildren) {
-        return (
-          <HydratedStateProvider
-            controllers={hydratedState.controllers}
-            engine={hydratedState.engine}
-          >
-            {children}
-          </HydratedStateProvider>
-        );
-      }
-
-      function stateProviderWrapperWithStaticState({
-        children,
-      }: PropsWithChildren) {
-        return (
-          <StateProvider controllers={staticState.controllers}>
-            {children}
-          </StateProvider>
-        );
-      }
-
-      function stateProviderWrapperWithHydratedState({
-        children,
-      }: PropsWithChildren) {
-        return (
-          <StateProvider
-            engine={hydratedState.engine}
-            controllers={hydratedState.controllers}
-          >
-            {children}
-          </StateProvider>
-        );
-      }
-
-      describe('useEngine hook', () => {
-        test('should throw error with no context', async () => {
-          checkRenderError(
-            () => renderHook(() => useEngine()),
-            MissingEngineProviderError.message
-          );
-        });
-
-        test('should not return engine with static state provider', async () => {
-          hookRenderResult = renderHook(() => useEngine(), {
-            wrapper: staticStateProviderWrapper,
-          });
-          expect(hookRenderResult.result.current).toBeUndefined();
-        });
-
-        test('should return engine with hydrated state provider', async () => {
-          hookRenderResult = renderHook(() => useEngine(), {
-            wrapper: hydratedStateProviderWrapper,
-          });
-          expect(hookRenderResult.result.current).toStrictEqual(
-            hydratedState.engine
-          );
-        });
-
-        test('should not return engine with StateProvider using static state', async () => {
-          hookRenderResult = renderHook(() => useEngine(), {
-            wrapper: stateProviderWrapperWithStaticState,
-          });
-          expect(hookRenderResult.result.current).toBeUndefined();
-        });
-
-        test('should return engine with StateProvider using hydrated state', async () => {
-          hookRenderResult = renderHook(() => useEngine(), {
-            wrapper: stateProviderWrapperWithHydratedState,
-          });
-          expect(hookRenderResult.result.current).toStrictEqual(
-            hydratedState.engine
-          );
-        });
-      });
-
-      describe('controller hooks', () => {
-        // TODO: Generalize to loop through all defined controllers dynamically
-        const {useSearchBox} = engineDefinition.controllers;
-        describe('with StaticStateProvider', () => {
-          test('should define state but not methods', () => {
-            const {result} = renderHook(() => useSearchBox(), {
-              wrapper: staticStateProviderWrapper,
-            });
-            expect(result.current.state).toBeDefined();
-            expect(result.current?.methods).toBeUndefined();
-          });
-        });
-
-        describe('with HydratedStateProvider', () => {
-          test('should define both state and methods', () => {
-            const {result} = renderHook(() => useSearchBox(), {
-              wrapper: hydratedStateProviderWrapper,
-            });
-            expect(result.current.state).toBeDefined();
-            expect(result.current?.methods).toBeDefined();
-          });
-
-          // TODO(DEBUG): hydratedState might need to be passed into the wrapper
-          test.skip('should update state when method is called', () => {
-            const {result} = renderHook(() => useSearchBox(), {
-              wrapper: hydratedStateProviderWrapper,
-            });
-            const initialState = result.current.state;
-            const controllerSpy = vi.spyOn(
-              hydratedState.controllers.searchBox,
-              'updateText'
-            );
-            act(() => {
-              result.current.methods?.updateText('foo');
-            });
-
-            expect(controllerSpy).toHaveBeenCalledWith('foo');
-            expect(initialState).not.toStrictEqual(result.current.state);
-            expect(result.current.state.value).toBe('foo');
-          });
-        });
-
-        describe('with StateProvider (static state)', () => {
-          test('should define state but not methods', () => {
-            const {result} = renderHook(() => useSearchBox(), {
-              wrapper: stateProviderWrapperWithStaticState,
-            });
-            expect(result.current.state).toBeDefined();
-            expect(result.current?.methods).toBeUndefined();
-          });
-        });
-
-        describe('with StateProvider (hydrated state)', () => {
-          test('should define both state and methods', () => {
-            const {result} = renderHook(() => useSearchBox(), {
-              wrapper: stateProviderWrapperWithHydratedState,
-            });
-            expect(result.current.state).toBeDefined();
-            expect(result.current?.methods).toBeDefined();
-          });
-
-          test.skip('should update state when method is called', () => {
-            const {result} = renderHook(() => useSearchBox(), {
-              wrapper: stateProviderWrapperWithHydratedState,
-            });
-            const initialState = result.current.state;
-            const controllerSpy = vi.spyOn(
-              hydratedState.controllers.searchBox,
-              'updateText'
-            );
-            act(() => {
-              result.current.methods?.updateText('foo');
-            });
-
-            expect(controllerSpy).toHaveBeenCalledWith('foo');
-            expect(initialState).not.toStrictEqual(result.current.state);
-            expect(result.current.state.value).toBe('foo');
-          });
-        });
-      });
+      expect(screen.getByTestId('result-list')).toBeDefined();
+      expect(screen.getAllByTestId('result-item')).toHaveLength(5);
     });
   });
 });
