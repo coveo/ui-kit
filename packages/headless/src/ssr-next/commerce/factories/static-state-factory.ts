@@ -68,7 +68,7 @@ export function fetchStaticStateFactory<
         > &
           FilteredBakedInControllers<SolutionType>
       > &
-        BuildConfig<SolutionType>;
+        BuildConfig<TControllerDefinitions, SolutionType>;
 
       return {
         ...params[0], // TODO: KIT-4754: remove index access after no longer relying on OptionTuple type

@@ -8,14 +8,6 @@ const styles = css`
   @apply relative;
 
   .with-sections {
-    &.image-icon {
-      atomic-product-image::part(previous-button),
-      atomic-product-image::part(next-button),
-      atomic-product-image::part(indicator) {
-        display: none;
-      }
-    }
-
     &.display-grid {
       &.image-large,
       &.image-small,
@@ -24,6 +16,43 @@ const styles = css`
         atomic-product-section-name {
           min-height: calc(var(--line-height) * 2);
           @apply line-clamp-2;
+        }
+      }
+      
+      @media (width >= theme(--breakpoint-desktop)) {
+        &.image-large atomic-product-section-children .product-child {
+          @apply aspect-square-[auto];
+          width: 16.65%;
+        }
+
+        &.image-small atomic-product-section-children .product-child {
+          @apply aspect-square-[auto];
+          width: 16.65%;
+        }
+
+        &.image-icon atomic-product-section-children .product-child,
+        &.image-none atomic-product-section-children .product-child {
+          width: 2rem;
+          height: 2rem;
+        }
+      }
+
+      @media not all and (width >= theme(--breakpoint-desktop)) {
+        &.image-large atomic-product-section-children .product-child {
+          @apply aspect-square-[auto];
+          width: 16.65%;
+        }
+
+        &.image-small atomic-product-section-children .product-child {
+          @apply aspect-square-[auto];
+          width: 16.65%;
+          max-width: 4.75rem;
+        }
+
+        &.image-icon atomic-product-section-children .product-child,
+        &.image-none atomic-product-section-children .product-child {
+          width: 2rem;
+          height: 2rem;
         }
       }
 
@@ -56,6 +85,42 @@ const styles = css`
         &.image-large {
           & atomic-product-section-description {
             margin-top: 0.25rem;
+          }
+        }
+        @media (width >= theme(--breakpoint-desktop)) {
+          &.image-large atomic-product-section-children .product-child {
+            @apply aspect-square-[auto];
+            width: 16.65%;
+          }
+
+          &.image-small atomic-product-section-children .product-child {
+            @apply aspect-square-[auto];
+            width: 16.65%;
+          }
+
+          &.image-icon atomic-product-section-children .product-child,
+          &.image-none atomic-product-section-children .product-child {
+            width: 2rem;
+            height: 2rem;
+          }
+        }
+
+        @media not all and (width >= theme(--breakpoint-desktop)) {
+          &.image-large atomic-product-section-children .product-child {
+            @apply aspect-square-[auto];
+            width: 16.65%;
+          }
+
+          &.image-small atomic-product-section-children .product-child {
+            @apply aspect-square-[auto];
+            width: 16.65%;
+            max-width: 4.75rem;
+          }
+
+          &.image-icon atomic-product-section-children .product-child,
+          &.image-none atomic-product-section-children .product-child {
+            width: 2rem;
+            height: 2rem;
           }
         }
       }

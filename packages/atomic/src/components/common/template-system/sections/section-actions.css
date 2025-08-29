@@ -1,0 +1,94 @@
+@reference './sections-utilities.css';
+
+@utility section-actions-row-result-desktop {
+  &.density-comfortable {
+    margin-bottom: 1.5rem;
+  }
+  &.density-normal,
+  &.density-compact {
+    margin-bottom: 1rem;
+  }
+}
+@utility section-actions-row-result-mobile {
+  &.density-comfortable {
+    margin-top: 1rem;
+  }
+  &.density-normal {
+    margin-top: 0.75rem;
+  }
+  &.density-compact {
+    margin-top: 0.5em;
+  }
+}
+@utility section-actions-cell-result-desktop {
+  &.density-comfortable {
+    margin-top: 2.25rem;
+    --row-height: 2.5rem;
+  }
+  &.density-normal {
+    @apply set-font-size-sm;
+    margin-top: 1.75rem;
+  }
+  &.density-compact {
+    @apply set-font-size-sm;
+    margin-top: 1.25rem;
+  }
+}
+@utility section-actions-cell-result-mobile {
+  &.density-comfortable {
+    margin-top: 1.25rem;
+  }
+  &.density-normal {
+    margin-top: 1rem;
+  }
+  &.density-compact {
+    margin-top: 0.75rem;
+  }
+}
+
+@utility section-actions {
+  @apply section-base-overflow text-left;
+  &.with-sections {
+    grid-area: actions;
+    atomic-result-quickview {
+      display: inline-block;
+    }
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    max-height: calc(2 * var(--row-height, 2rem) + 0.5rem);
+    --row-height: 2rem;
+
+    @media (width >= theme(--breakpoint-desktop)) {
+      &.display-list {
+        @apply section-actions-row-result-desktop;
+      }
+
+      &.display-grid {
+        @apply section-actions-cell-result-desktop;
+      }
+    }
+
+    @media not all and (width >= theme(--breakpoint-desktop)) {
+      &.display-list {
+        @apply section-actions-row-result-mobile;
+        --row-height: 2.5rem;
+      }
+      &.display-grid {
+        &.image-large {
+          @apply section-actions-row-result-mobile;
+          --row-height: 2.5rem;
+        }
+
+        &.image-small,
+        &.image-icon,
+        &.image-none {
+          @apply section-actions-cell-result-mobile;
+        }
+      }
+    }
+    &.display-table {
+      @apply section-actions-row-result-desktop;
+    }
+  }
+}

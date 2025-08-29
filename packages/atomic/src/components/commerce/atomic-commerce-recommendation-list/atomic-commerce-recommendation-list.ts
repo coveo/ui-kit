@@ -7,7 +7,7 @@ import {
   type RecommendationsSummaryState,
   type Summary,
 } from '@coveo/headless/commerce';
-import {type CSSResultGroup, html, LitElement, nothing} from 'lit';
+import {type CSSResultGroup, css, html, LitElement, nothing} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {keyed} from 'lit/directives/keyed.js';
 import {map} from 'lit/directives/map.js';
@@ -39,9 +39,9 @@ import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
 import {ChildrenUpdateCompleteMixin} from '@/src/mixins/children-update-complete-mixin';
 import {FocusTargetController} from '@/src/utils/accessibility-utils';
 import {randomID} from '@/src/utils/utils';
+import placeholderStyles from '../../common/item-list/styles/placeholders.tw.css';
 import type {CommerceBindings} from '../atomic-commerce-recommendation-interface/atomic-commerce-recommendation-interface';
 import type {SelectChildProductEventArgs} from '../atomic-product-children/select-child-product-event';
-import styles from './atomic-commerce-recommendation-list.tw.css';
 
 /**
  * The `atomic-commerce-recommendation-list` component displays a list of product recommendations by applying one or more product templates.
@@ -69,7 +69,36 @@ export class AtomicCommerceRecommendationList
   extends ChildrenUpdateCompleteMixin(LitElement)
   implements InitializableComponent<CommerceBindings>
 {
-  static styles: CSSResultGroup = styles;
+  static styles: CSSResultGroup = [
+    placeholderStyles,
+    css`@reference "../../common/item-list/styles/mixins.pcss";
+  
+  :host {
+    @apply atomic-grid-clickable-elements;
+    @apply atomic-grid-display-common;
+  
+    /**
+     * @prop --atomic-recs-number-of-columns: Number of columns for the recommendation list.
+     * @prop --atomic-recs-number-of-rows: Number of rows for the recommendation list.
+     */
+    .list-root {
+      @apply atomic-grid-with-cards;
+      grid-template-columns: repeat(
+          var(--atomic-recs-number-of-columns, 1),
+          minmax(0, 1fr)
+        );
+      grid-template-rows: repeat(
+        var(--atomic-recs-number-of-rows, 1),
+        minmax(0, 1fr)
+      );
+    }
+  
+    [part="label"] {
+      @apply font-sans text-2xl font-bold;
+    }
+  }
+  `,
+  ];
 
   public recommendations!: Recommendations;
   public summary!: Summary<RecommendationsSummaryState>;

@@ -15,16 +15,15 @@ import {
 } from '../../common/expandable-text/expandable-text.js';
 import type {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface.js';
 import '../atomic-product-text/atomic-product-text.js';
-import {injectStylesForNoShadowDOM} from '@/src/decorators/inject-styles-for-no-shadow-dom.js';
+import {LightDomMixin} from '@/src/mixins/light-dom.js';
 
 /**
  * The `atomic-product-description` component renders the description of a product.
  */
 @customElement('atomic-product-description')
 @bindings()
-@injectStylesForNoShadowDOM
 export class AtomicProductDescription
-  extends LitElement
+  extends LightDomMixin(LitElement)
   implements InitializableComponent<CommerceBindings>
 {
   @state()
