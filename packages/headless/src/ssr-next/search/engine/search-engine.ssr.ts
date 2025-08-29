@@ -90,8 +90,7 @@ export function defineSearchEngine<
   const {controllers: controllerDefinitions, ...engineOptions} = options;
   type BuildFunction = EngineBuildResult<
     SSRSearchEngine,
-    TControllerDefinitions,
-    SearchEngineOptions
+    TControllerDefinitions
   >;
   type Definition = SearchEngineDefinition<
     SSRSearchEngine,
@@ -120,11 +119,7 @@ export function defineSearchEngine<
         '[WARNING] Missing navigator context in server-side code. Make sure to set it with `setNavigatorContextProvider` before calling fetchStaticState()'
       );
     }
-    const engine = buildSSRSearchEngine(
-      buildOptions?.extend
-        ? await buildOptions.extend(getOptions())
-        : getOptions()
-    );
+    const engine = buildSSRSearchEngine(getOptions());
     const controllers = buildControllerDefinitions({
       definitionsMap: (controllerDefinitions ?? {}) as TControllerDefinitions,
       engine,

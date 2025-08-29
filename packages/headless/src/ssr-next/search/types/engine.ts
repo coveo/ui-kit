@@ -22,10 +22,8 @@ import type {HydrateStaticState} from './hydrate-static-state.js';
 export type EngineBuildResult<
   TEngine extends CoreEngine | CoreEngineNext,
   TControllers extends ControllerDefinitionsMap<TEngine, Controller>,
-  TEngineOptions,
 > = Build<
   TEngine,
-  TEngineOptions,
   InferControllersMapFromDefinition<TControllers>,
   InferControllerPropsMapFromDefinitions<TControllers>
 >;
