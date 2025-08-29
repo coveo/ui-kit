@@ -58,10 +58,47 @@ const styles = css`
             margin-top: 0.25rem;
           }
         }
+        @media (width >= theme(--breakpoint-desktop)) {
+          &.image-large atomic-product-section-children .product-child {
+            @apply aspect-square-[auto];
+            width: 16.65%;
+          }
+
+          &.image-small atomic-product-section-children .product-child {
+            @apply aspect-square-[auto];
+            width: 16.65%;
+          }
+
+          &.image-icon atomic-product-section-children .product-child,
+          &.image-none atomic-product-section-children .product-child {
+            width: 2rem;
+            height: 2rem;
+          }
+        }
+
+        @media not all and (width >= theme(--breakpoint-desktop)) {
+          &.image-large atomic-product-section-children .product-child {
+            @apply aspect-square-[auto];
+            width: 16.65%;
+          }
+
+          &.image-small atomic-product-section-children .product-child {
+            @apply aspect-square-[auto];
+            width: 16.65%;
+            max-width: 4.75rem;
+          }
+
+          &.image-icon atomic-product-section-children .product-child,
+          &.image-none atomic-product-section-children .product-child {
+            width: 2rem;
+            height: 2rem;
+          }
+        }
       }
     }
   }
 }
+
 `;
 
 export default styles;
