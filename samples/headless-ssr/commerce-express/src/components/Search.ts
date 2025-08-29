@@ -9,11 +9,13 @@ export function Search(searchBox: SearchBox) {
   const form = input.form;
   if (!form) return;
 
-  // Initial value
-  input.value = selectSearchValue(searchBox);
-  searchBox.subscribe(() => {
+  function render() {
+    if (!input) return;
     input.value = selectSearchValue(searchBox);
-  });
+  }
+
+  searchBox.subscribe(render);
+  render();
 
   form.addEventListener('submit', (e) => {
     e.preventDefault();
