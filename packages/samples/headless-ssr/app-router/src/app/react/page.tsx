@@ -16,9 +16,9 @@ import {NextJsAppRouterNavigatorContext} from '../../navigatorContextProvider';
  * This file defines a Search component that uses the Coveo Headless library to manage its state.
  *
  * The Search function is the entry point for server-side rendering (SSR). It uses the `buildSearchParameterSerializer` util from the Coveo Headless
- * library to serialize the url search parameters into a string, which is then used by the [SearchParameterManager](https://docs.coveo.com/en/headless/latest/reference/search/controllers/search-parameter-manager) controller.
+ * library to serialize the url search parameters into a string, which is then used by the [SearchParameterManager](https://docs.coveo.com/en/headless/latest/reference/interfaces/Search.SearchParameterManager.html) controller.
  *
- * To synchronize search parameters with the URL with more control on the serialization, you can use the [SearchParameterManager](https://docs.coveo.com/en/headless/latest/reference/search/controllers/search-parameter-manager/) controller. For sake of brevity, this sample uses the SearchParameterManager controller.
+ * To synchronize search parameters with the URL with more control on the serialization, you can use the [SearchParameterManager](https://docs.coveo.com/en/headless/latest/reference/interfaces/Search.SearchParameterManager.html) controller. For sake of brevity, this sample uses the SearchParameterManager controller.
  *
  * The context values are hard-coded to represent a specific user segment (age group 30-45 with a main interest in sports) as the initial context.
  * These values will be added to the payload of the search request when the search page is rendered.
