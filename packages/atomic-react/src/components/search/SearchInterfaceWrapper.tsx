@@ -57,7 +57,8 @@ export const SearchInterfaceWrapper = (
     });
   }
   const {engine, localization, onReady, ...allOtherProps} = mergedProps;
-  const searchInterfaceRef = useRef<typeof AtomicSearchInterface>(null);
+  const searchInterfaceRef =
+    useRef<React.ElementRef<typeof AtomicSearchInterface>>(null);
   let initialization: Promise<void> | null = null;
 
   useEffect(() => {
