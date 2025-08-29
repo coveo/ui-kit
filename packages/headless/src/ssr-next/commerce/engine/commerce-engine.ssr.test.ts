@@ -66,6 +66,7 @@ describe('Commerce Engine SSR', () => {
       const staticState = await engineDefinition[solutionType].fetchStaticState(
         {
           searchParams: {query: 'test'},
+          recommendations: [],
           context: {
             view: {url: 'http://example.com'},
             country: 'US',
@@ -110,10 +111,5 @@ describe('Commerce Engine SSR', () => {
       });
       expect(staticState.controllers).toHaveProperty('parameterManager');
     });
-  });
-
-  describe('#recommendationEngineDefinition', () => {
-    // TODO: KIT-4619: validate recommendation array
-    it.todo('should throw if the recommendations are missing');
   });
 });
