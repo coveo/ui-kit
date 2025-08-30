@@ -22,7 +22,7 @@ import {
   InitializeBindings,
 } from '../../../../utils/initialization-utils';
 import {ATOMIC_MODAL_EXPORT_PARTS} from '../../../common/atomic-modal/export-parts';
-import {IconButton} from '../../../common/iconButton';
+import {IconButton} from '../../../common/stencil-iconButton';
 import {LinkWithItemAnalytics} from '../../../common/item-link/stencil-item-link';
 import {Button} from '../../../common/stencil-button';
 import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
