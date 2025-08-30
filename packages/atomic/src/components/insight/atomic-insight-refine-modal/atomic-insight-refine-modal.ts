@@ -108,6 +108,7 @@ export class AtomicInsightRefineModal
   }
 
   private renderHeader() {
+    console.log('render header : ', this.breadcrumbManagerState.hasBreadcrumbs);
     return html`
       <div class="flex justify-between w-full mb-3">
         ${
@@ -118,6 +119,7 @@ export class AtomicInsightRefineModal
                   style: 'text-primary',
                   text: this.bindings.i18n.t('clear-all-filters'),
                   class: 'px-2 py-1',
+                  part: 'filter-clear-all',
                 },
               })(nothing)
             : nothing
@@ -127,7 +129,6 @@ export class AtomicInsightRefineModal
   }
 
   private renderBody() {
-    console.log(this.bindings.store.getFacetElements().length);
     if (!this.bindings.store.getFacetElements().length) {
       return nothing;
     }

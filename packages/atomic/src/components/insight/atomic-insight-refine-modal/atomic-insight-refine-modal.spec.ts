@@ -14,6 +14,23 @@ import type {AtomicInsightRefineModal} from './atomic-insight-refine-modal';
 // Mock headless at the top level
 vi.mock('@coveo/headless/insight', {spy: true});
 
+// Helper functions to create mock facet elements
+const createMockInsightFacetWithValues = (
+  facetId: string,
+  field: string,
+  values: string[]
+): HTMLElement => {
+  const facet = document.createElement('atomic-insight-facet');
+  facet.setAttribute('facet-id', facetId);
+  facet.setAttribute('field', field);
+  values.forEach((value) => {
+    const facetValue = document.createElement('div');
+    facetValue.textContent = value;
+    facet.appendChild(facetValue);
+  });
+  return facet;
+};
+
 describe('atomic-insight-refine-modal', () => {
   beforeEach(() => {
     // Mock requestAnimationFrame to prevent infinite loops in tests
@@ -29,6 +46,7 @@ describe('atomic-insight-refine-modal', () => {
       openButton?: HTMLElement;
       breadcrumbState?: {hasBreadcrumbs?: boolean};
       querySummaryState?: {total?: number; hasResults?: boolean};
+      facetElements?: HTMLElement[];
     } = {}
   ) => {
     const {
@@ -36,6 +54,7 @@ describe('atomic-insight-refine-modal', () => {
       openButton,
       breadcrumbState = {},
       querySummaryState = {},
+      facetElements = [],
     } = options;
 
     const mockedBreadcrumbManager = buildFakeInsightBreadcrumbManager({
@@ -81,7 +100,9 @@ describe('atomic-insight-refine-modal', () => {
         selector: 'atomic-insight-refine-modal',
         bindings: (bindings) => {
           bindings.store.onChange = vi.fn();
-          bindings.store.getFacetElements = vi.fn().mockReturnValue([]);
+          bindings.store.getFacetElements = vi
+            .fn()
+            .mockReturnValue(facetElements);
           // Mock getBoundingClientRect to prevent errors
           bindings.interfaceElement.getBoundingClientRect = vi
             .fn()
@@ -96,6 +117,10 @@ describe('atomic-insight-refine-modal', () => {
               y: 0,
               toJSON: () => ({}),
             } as DOMRect);
+          // Mock querySelectorAll to return the provided facet elements
+          bindings.interfaceElement.querySelectorAll = vi
+            .fn()
+            .mockReturnValue(facetElements);
           return bindings;
         },
       });
@@ -164,20 +189,33 @@ describe('atomic-insight-refine-modal', () => {
   });
 
   describe('when modal is opened', () => {
+    const defaultFacets = [
+      createMockInsightFacetWithValues('author-facet', 'author', ['John Doe']),
+    ];
+
     it('should have isOpen property set to true when opened', async () => {
-      const {element} = await renderRefineModal({isOpen: true});
+      const {element} = await renderRefineModal({
+        isOpen: true,
+        facetElements: defaultFacets,
+      });
       expect(element.isOpen).toBe(true);
     });
 
     it('should render the facet slot when opened', async () => {
-      const {element} = await renderRefineModal({isOpen: true});
+      const {element} = await renderRefineModal({
+        isOpen: true,
+        facetElements: defaultFacets,
+      });
 
       const facetSlot = element.querySelector('div[slot="facets"]');
       expect(facetSlot).toBeDefined();
     });
 
     it('should not append duplicate facet slot when opened multiple times', async () => {
-      const {element} = await renderRefineModal({isOpen: true});
+      const {element} = await renderRefineModal({
+        isOpen: true,
+        facetElements: defaultFacets,
+      });
 
       // Close
       element.isOpen = false;
@@ -189,31 +227,46 @@ describe('atomic-insight-refine-modal', () => {
     });
 
     it('should render the title with the correct text', async () => {
-      const {title} = await renderRefineModal({isOpen: true});
+      const {title} = await renderRefineModal({
+        isOpen: true,
+        facetElements: defaultFacets,
+      });
 
       expect(title).toHaveTextContent('Filters');
     });
 
     it('should render the title with the correct part attribute', async () => {
-      const {title} = await renderRefineModal({isOpen: true});
+      const {title} = await renderRefineModal({
+        isOpen: true,
+        facetElements: defaultFacets,
+      });
 
       expect(title).toHaveAttribute('part', 'title');
     });
 
     it('should render the close button with the correct part attribute', async () => {
-      const {closeButton} = await renderRefineModal({isOpen: true});
+      const {closeButton} = await renderRefineModal({
+        isOpen: true,
+        facetElements: defaultFacets,
+      });
 
       expect(closeButton).toHaveAttribute('part', 'close-button');
     });
 
     it('should render the close button with the correct aria-label', async () => {
-      const {closeButton} = await renderRefineModal({isOpen: true});
+      const {closeButton} = await renderRefineModal({
+        isOpen: true,
+        facetElements: defaultFacets,
+      });
 
       expect(closeButton).toHaveAttribute('aria-label', 'Close');
     });
 
     it('should make isOpen false when the close button is clicked', async () => {
-      const {element, closeButton} = await renderRefineModal({isOpen: true});
+      const {element, closeButton} = await renderRefineModal({
+        isOpen: true,
+        facetElements: defaultFacets,
+      });
 
       // Ensure the element is rendered
       await element.updateComplete;
@@ -228,49 +281,73 @@ describe('atomic-insight-refine-modal', () => {
     });
 
     it('should render the close icon with the correct part attribute', async () => {
-      const {closeIcon} = await renderRefineModal({isOpen: true});
+      const {closeIcon} = await renderRefineModal({
+        isOpen: true,
+        facetElements: defaultFacets,
+      });
 
       expect(closeIcon).toHaveAttribute('part', 'close-icon');
     });
 
     it('should render the footer content with the correct part attribute', async () => {
-      const {footerContent} = await renderRefineModal({isOpen: true});
+      const {footerContent} = await renderRefineModal({
+        isOpen: true,
+        facetElements: defaultFacets,
+      });
 
       expect(footerContent).toHaveAttribute('part', 'footer-content');
     });
 
     it('should render the footer content with the correct slot attribute', async () => {
-      const {footerContent} = await renderRefineModal({isOpen: true});
+      const {footerContent} = await renderRefineModal({
+        isOpen: true,
+        facetElements: defaultFacets,
+      });
 
       expect(footerContent).toHaveAttribute('slot', 'footer');
     });
 
     it('should render the footer button with the correct part attribute', async () => {
-      const {footerButton} = await renderRefineModal({isOpen: true});
+      const {footerButton} = await renderRefineModal({
+        isOpen: true,
+        facetElements: defaultFacets,
+      });
 
       expect(footerButton).toHaveAttribute('part', 'footer-button');
     });
 
     it('should render the footer button with the correct text', async () => {
-      const {footerButton} = await renderRefineModal({isOpen: true});
+      const {footerButton} = await renderRefineModal({
+        isOpen: true,
+        facetElements: defaultFacets,
+      });
 
       expect(footerButton).toHaveTextContent('View results (100)');
     });
 
     it('should render the footer button text with the correct part attribute', async () => {
-      const {footerButtonText} = await renderRefineModal({isOpen: true});
+      const {footerButtonText} = await renderRefineModal({
+        isOpen: true,
+        facetElements: defaultFacets,
+      });
 
       expect(footerButtonText).toHaveAttribute('part', 'footer-button-text');
     });
 
     it('should render the footer button text with the correct text', async () => {
-      const {footerButtonText} = await renderRefineModal({isOpen: true});
+      const {footerButtonText} = await renderRefineModal({
+        isOpen: true,
+        facetElements: defaultFacets,
+      });
 
       expect(footerButtonText).toHaveTextContent('View results');
     });
 
     it('should make isOpen false when the footer button is clicked', async () => {
-      const {element, footerButton} = await renderRefineModal({isOpen: true});
+      const {element, footerButton} = await renderRefineModal({
+        isOpen: true,
+        facetElements: defaultFacets,
+      });
 
       // Ensure the element is rendered
       await element.updateComplete;
@@ -285,19 +362,28 @@ describe('atomic-insight-refine-modal', () => {
     });
 
     it('should render the footer button count with the correct part attribute', async () => {
-      const {footerButtonCount} = await renderRefineModal({isOpen: true});
+      const {footerButtonCount} = await renderRefineModal({
+        isOpen: true,
+        facetElements: defaultFacets,
+      });
 
       expect(footerButtonCount).toHaveAttribute('part', 'footer-button-count');
     });
 
     it('should render the footer button count with the correct text', async () => {
-      const {footerButtonCount} = await renderRefineModal({isOpen: true});
+      const {footerButtonCount} = await renderRefineModal({
+        isOpen: true,
+        facetElements: defaultFacets,
+      });
 
       expect(footerButtonCount).toHaveTextContent('(100)');
     });
 
     it('should render the atomic-modal element with the correct properties and attributes', async () => {
-      const {atomicModal} = await renderRefineModal({isOpen: true});
+      const {atomicModal} = await renderRefineModal({
+        isOpen: true,
+        facetElements: defaultFacets,
+      });
 
       expect(atomicModal).toHaveProperty('fullscreen', true);
       expect(atomicModal).toHaveProperty('isOpen', true);
@@ -337,11 +423,16 @@ describe('atomic-insight-refine-modal', () => {
   });
 
   describe('when breadcrumbs are available', () => {
+    const facetsWithBreadcrumbs = [
+      createMockInsightFacetWithValues('author-facet', 'author', ['John Doe']),
+    ];
+
     it('should render clear all filters button when breadcrumbs exist', async () => {
       const {element, filterClearAllButton, mockedBreadcrumbManager} =
         await renderRefineModal({
           breadcrumbState: {hasBreadcrumbs: true},
           isOpen: true,
+          facetElements: facetsWithBreadcrumbs,
         });
 
       // Ensure the element is rendered
@@ -357,6 +448,7 @@ describe('atomic-insight-refine-modal', () => {
         await renderRefineModal({
           breadcrumbState: {hasBreadcrumbs: true},
           isOpen: true,
+          facetElements: facetsWithBreadcrumbs,
         });
 
       // Ensure the element is rendered
