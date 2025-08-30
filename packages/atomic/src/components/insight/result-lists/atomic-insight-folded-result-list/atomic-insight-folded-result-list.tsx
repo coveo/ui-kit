@@ -222,7 +222,7 @@ export class AtomicInsightFoldedResultList
                 <atomic-insight-result
                   {...atomicInsightResultProps}
                   part="outline"
-                  ref={(element) =>
+                  ref={(element: HTMLElement) =>
                     element && this.itemListCommon.setNewResultRef(element, i)
                   }
                 ></atomic-insight-result>
