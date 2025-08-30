@@ -128,7 +128,7 @@
     "@coveo/documentation": "1.0.0",
     "chalk": "5.4.1",
     "live-server": "1.2.2",
-    "typedoc": "0.28.7",
+    "typedoc": "0.28.8",
     "vitest": "3.2.4"
   },
   "engines": {
