@@ -1,20 +1,23 @@
 import type {UnknownAction} from '@reduxjs/toolkit';
 import type {CoreEngine, CoreEngineNext} from '../../../app/engine.js';
-import type {ControllersMap, ControllersPropsMap} from './controllers.js';
 import type {
-  EngineDefinitionBuildResult,
-  EngineDefinitionControllersPropsOption,
+  ControllersMap,
+  ControllersPropsMap,
+} from '../../common/types/controllers.js';
+import type {OptionsTuple} from '../../common/types/utilities.js';
+import type {
+  SearchEngineDefinitionBuildResult,
+  SearchEngineDefinitionControllersPropsOption,
 } from './engine.js';
-import type {OptionsTuple} from './utilities.js';
+
+export type HydratedState<
+  TEngine extends CoreEngine | CoreEngineNext,
+  TControllers extends ControllersMap,
+> = SearchEngineDefinitionBuildResult<TEngine, TControllers>;
 
 interface HydrateStaticStateOptions<TSearchAction> {
   searchAction: TSearchAction;
 }
-
-export interface HydratedState<
-  TEngine extends CoreEngine | CoreEngineNext,
-  TControllers extends ControllersMap,
-> extends EngineDefinitionBuildResult<TEngine, TControllers> {}
 
 /**
  * Creates a new engine from the snapshot of the engine created in SSR with fetchStaticState.
@@ -29,6 +32,6 @@ export type HydrateStaticState<
 > = (
   ...params: OptionsTuple<
     HydrateStaticStateOptions<TSearchAction> &
-      EngineDefinitionControllersPropsOption<TControllersProps>
+      SearchEngineDefinitionControllersPropsOption<TControllersProps>
   >
 ) => Promise<HydratedState<TEngine, TControllers>>;

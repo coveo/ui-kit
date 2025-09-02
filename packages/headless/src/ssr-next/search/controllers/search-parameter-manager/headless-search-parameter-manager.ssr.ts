@@ -21,7 +21,7 @@ import {staticFilterSetReducer as staticFilterSet} from '../../../../features/st
 import {tabSetReducer as tabSet} from '../../../../features/tab-set/tab-set-slice.js';
 import {loadReducerError} from '../../../../utils/errors.js';
 import {MissingControllerProps} from '../../../common/errors.js';
-import type {ControllerDefinitionWithProps} from '../../../common/types/controllers.js';
+import type {ControllerDefinitionWithProps} from '../../types/controller-definition.js';
 
 export * from '../../../../controllers/search-parameter-manager/headless-search-parameter-manager.js';
 

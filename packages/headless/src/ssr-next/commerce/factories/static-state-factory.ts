@@ -12,14 +12,12 @@ import type {
 import type {InferControllerStaticStateMapFromDefinitionsWithSolutionType} from '../types/controller-inference.js';
 import type {
   CommerceControllerDefinitionsMap,
+  CommerceEngineDefinitionOptions,
   EngineStaticState,
   FetchStaticStateFunction,
   FetchStaticStateParameters,
 } from '../types/engine.js';
-import {
-  buildFactory,
-  type CommerceEngineDefinitionOptions,
-} from './build-factory.js';
+import {buildFactory} from './build-factory.js';
 
 export function fetchStaticStateFactory<
   TControllerDefinitions extends CommerceControllerDefinitionsMap,

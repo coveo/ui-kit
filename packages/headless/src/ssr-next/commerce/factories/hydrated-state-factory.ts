@@ -8,14 +8,11 @@ import type {InferControllersMapFromDefinition} from '../types/controller-infere
 import type {
   BuildParameters,
   CommerceControllerDefinitionsMap,
+  CommerceEngineDefinitionOptions,
   HydrateStaticStateFunction,
   HydrateStaticStateParameters,
 } from '../types/engine.js';
-import {
-  buildFactory,
-  type CommerceEngineDefinitionOptions,
-  type SSRCommerceEngine,
-} from './build-factory.js';
+import {buildFactory} from './build-factory.js';
 
 export function hydratedStaticStateFactory<
   TControllerDefinitions extends CommerceControllerDefinitionsMap,
@@ -42,7 +39,6 @@ export function hydratedStaticStateFactory<
       await engine.waitForRequestCompletedAction();
 
       return {engine, controllers} as HydratedState<
-        SSRCommerceEngine,
         InferControllersMapFromDefinition<
           TControllerDefinitions,
           SolutionType

@@ -275,7 +275,6 @@ export type {
   ControllerDefinition,
   ControllerDefinitionsMap,
   ControllerWithKind,
-  EngineDefinitionBuildResult,
   EngineDefinitionControllersPropsOption,
   HydratedState,
   InferControllerStaticStateFromController,
