@@ -1,3 +1,4 @@
+/* eslint-disable dot-notation */
 import {LightningElement} from 'lwc';
 import {CurrentPageReference} from 'lightning/navigation';
 import {wire} from 'lwc';
@@ -6,6 +7,7 @@ import {loadScript} from 'lightning/platformResourceLoader';
 import COVEO_UA from '@salesforce/resourceUrl/coveoua';
 // @ts-ignore
 import getHeadlessConfiguration from '@salesforce/apex/HeadlessController.getHeadlessConfiguration';
+// @ts-ignore
 import getArticleId from '@salesforce/apex/PageViewTrackerHelper.getArticleId';
 
 export default class ExamplePageViewTracker extends LightningElement {
@@ -57,7 +59,7 @@ export default class ExamplePageViewTracker extends LightningElement {
 
   initCoveoUA(endpointData) {
     const {organizationId, accessToken} = JSON.parse(endpointData);
-    window.coveoua(
+    window['coveoua'](
       'init',
       accessToken,
       `https://${organizationId}.analytics.org.coveo.com/rest/ua`
@@ -109,7 +111,7 @@ export default class ExamplePageViewTracker extends LightningElement {
     additionalContext = {},
   }) {
     if (this.coveoUAInitialized) {
-      window.coveoua('send', 'view', {
+      window['coveoua']('send', 'view', {
         contentIdKey: contentIdKey,
         contentIdValue: contentIdValue,
         ...(contentType && {contentType: contentType}),

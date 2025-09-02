@@ -6,7 +6,9 @@ import {createElement} from '@lwc/engine-dom';
 import {loadScript} from 'lightning/platformResourceLoader';
 import ExamplePageViewTracker from 'c/examplePageViewTracker';
 import {CurrentPageReference} from 'lightning/navigation';
+// @ts-ignore
 import getHeadlessConfiguration from '@salesforce/apex/HeadlessController.getHeadlessConfiguration';
+// @ts-ignore
 import getArticleId from '@salesforce/apex/PageViewTrackerHelper.getArticleId';
 
 jest.mock(
