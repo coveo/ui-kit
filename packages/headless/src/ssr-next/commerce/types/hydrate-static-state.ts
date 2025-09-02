@@ -4,15 +4,17 @@ import type {
   ControllersMap,
   ControllersPropsMap,
 } from '../../common/types/controllers.js';
-import type {HydratedState} from '../../common/types/hydrate-static-state.js';
-import type {SSRCommerceEngine} from '../factories/build-factory.js';
 import type {BuildConfig} from './build.js';
 import type {SolutionType} from './controller-constants.js';
 import type {
+  CommerceEngineDefinitionControllersPropsOption,
   ControllerDefinitionsMap,
-  EngineDefinitionControllersPropsOption,
   OptionsTuple,
 } from './controller-definitions.js';
+import type {CommerceEngineDefinitionBuildResult} from './engine.js';
+
+export type HydratedState<TControllers extends ControllersMap> =
+  CommerceEngineDefinitionBuildResult<TControllers>;
 
 export interface HydrateStaticStateOptions<TSearchAction> {
   searchActions: TSearchAction[];
@@ -33,10 +35,10 @@ export type HydrateStaticState<
   ...params: OptionsTuple<
     HydrateStaticStateOptions<TSearchAction> &
       BuildConfig<TControllersDefinitionsMap, TSolutionType> &
-      EngineDefinitionControllersPropsOption<
+      CommerceEngineDefinitionControllersPropsOption<
         TControllersDefinitionsMap,
         TControllersProps,
         TSolutionType
       >
   >
-) => Promise<HydratedState<SSRCommerceEngine, TControllers>>;
+) => Promise<HydratedState<TControllers>>;
