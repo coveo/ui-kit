@@ -17,7 +17,7 @@ import {
   createResultListComponent,
   createTestComponent,
 } from '../__tests__/component-test-utils.js';
-import {createMockSearchNavigatorContextProvider} from '../__tests__/mock-navigator-context-provider.js';
+import {createMockNavigatorContextProvider} from '../__tests__/mock-navigator-context-provider.js';
 import {
   buildMockController,
   defineMockSearchController,
@@ -44,7 +44,7 @@ type MockControllers = {
 describe('Search Engine', () => {
   let mockControllers: MockControllers;
   let mockNavigatorContextProvider: ReturnType<
-    typeof createMockSearchNavigatorContextProvider
+    typeof createMockNavigatorContextProvider
   >;
   let engineDefinition: ReturnType<
     typeof defineSearchEngine<MockControllerDefinitions>
@@ -54,7 +54,7 @@ describe('Search Engine', () => {
 
   beforeEach(() => {
     errorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
-    mockNavigatorContextProvider = createMockSearchNavigatorContextProvider();
+    mockNavigatorContextProvider = createMockNavigatorContextProvider();
     mockControllers = {
       resultList: buildMockController(),
       searchBox: buildMockController(),
