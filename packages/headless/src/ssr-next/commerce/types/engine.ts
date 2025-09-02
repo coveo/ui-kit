@@ -1,5 +1,4 @@
 import type {UnknownAction} from '@reduxjs/toolkit';
-import type {EngineConfiguration} from '../../../app/engine-configuration.js';
 import type {NavigatorContextProvider} from '../../../app/navigator-context-provider.js';
 import type {Controller} from '../../../controllers/controller/headless-controller.js';
 import type {
@@ -7,7 +6,7 @@ import type {
   ControllersMap,
 } from '../../common/types/controllers.js';
 import type {SSRCommerceEngine} from '../factories/build-factory.js';
-import type {Build} from './build.js';
+import type {Build, SSRCommerceEngineOptions} from './build.js';
 import type {SolutionType} from './controller-constants.js';
 import type {
   BakedInControllers,
@@ -42,10 +41,15 @@ type ValidateControllerNames<T extends ControllerDefinitionsMap<Controller>> = {
     : T[K];
 };
 
-export type EngineDefinitionOptions<
-  TOptions extends {configuration: EngineConfiguration},
-  TControllers extends ControllerDefinitionsMap<Controller>,
-> = TOptions & {
+/**
+ * The options to create a Commerce engine definition in SSR.
+ *
+ * @group Engine
+ */
+export type CommerceEngineDefinitionOptions<
+  TControllers extends
+    ControllerDefinitionsMap<Controller> = ControllerDefinitionsMap<Controller>,
+> = SSRCommerceEngineOptions & {
   /**
    * The controllers to initialize with the commerce engine.
    */
