@@ -12,19 +12,21 @@ export default class ExamplePageViewTracker extends LightningElement {
   coveoUAInitialized = false;
   _initializationPromises;
 
-  // Listen to navigation changes in an Experience Cloud site.
-  // Reference: https://developer.salesforce.com/docs/platform/lwc/guide/use-navigate-basic.html#pagereference-properties
-  // Example of PageReference data:
-  // {
-  //     "type": "standard__recordPage",
-  //     "attributes": {
-  //         "recordId": "01t530000004iXsAAI",
-  //         "actionName": "view"
-  //     },
-  //     "state": {
-  //         "recordName": "test"
-  //     }
-  // }
+  /*
+   * Listen to navigation changes in an Experience Cloud site.
+   * Reference: https://developer.salesforce.com/docs/platform/lwc/guide/use-navigate-basic.html#pagereference-properties
+   * Example of PageReference data:
+   * {
+   *     "type": "standard__recordPage",
+   *     "attributes": {
+   *         "recordId": "01t530000004iXsAAI",
+   *         "actionName": "view"
+   *     },
+   *     "state": {
+   *         "recordName": "test"
+   *     }
+   * }
+   */
   @wire(CurrentPageReference)
   // eslint-disable-next-line no-unused-vars
   trackPageChange({attributes, state, type, ...rest}) {
