@@ -40,12 +40,12 @@ describe('atomic-commerce-layout', () => {
     );
   };
 
-  it('should reflects mobileBreakpoint property to attribute', async () => {
+  it('should reflect mobileBreakpoint property to attribute', async () => {
     await setupElement({mobileBreakpoint: '900px'});
     expect(locators.layout).toHaveAttribute('mobile-breakpoint', '900px');
   });
 
-  it('uses default mobileBreakpoint if not set', async () => {
+  it('should use default mobileBreakpoint if not set', async () => {
     await setupElement();
     expect(locators.layout).toHaveAttribute('mobile-breakpoint', '1024px');
   });
@@ -68,7 +68,7 @@ describe('atomic-commerce-layout', () => {
       expect(locators.facets).toBeVisible();
     });
 
-    it('should always render main section', async () => {
+    it('should render main section', async () => {
       expect(locators.main).toBeVisible();
     });
   });
@@ -86,7 +86,7 @@ describe('atomic-commerce-layout', () => {
       expect(locators.facets).not.toBeVisible();
     });
 
-    it('should always render main section', async () => {
+    it('should render main section', async () => {
       expect(locators.main).toBeVisible();
     });
   });

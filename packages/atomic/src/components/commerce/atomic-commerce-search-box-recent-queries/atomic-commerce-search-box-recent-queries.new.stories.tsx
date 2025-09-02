@@ -1,23 +1,37 @@
-import {userEvent} from '@storybook/test';
-import type {Meta, StoryObj as Story} from '@storybook/web-components';
+import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
+import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {within} from 'shadow-dom-testing-library';
+import {userEvent} from 'storybook/test';
 import {wrapInCommerceInterface} from '@/storybook-utils/commerce/commerce-interface-wrapper';
 import {wrapInCommerceSearchBox} from '@/storybook-utils/commerce/commerce-search-box-wrapper';
-import {renderComponentWithoutCodeRoot} from '@/storybook-utils/common/render-component';
 import {parameters} from '@/storybook-utils/common/search-box-suggestions-parameters';
 
-const {decorator: commerceInterfaceDecorator, play: commerceInterfacePlay} =
-  wrapInCommerceInterface();
+const {
+  decorator: commerceInterfaceDecorator,
+  afterEach: commerceInterfacePlay,
+} = wrapInCommerceInterface({includeCodeRoot: false});
 const {decorator: commerceSearchBoxDecorator} = wrapInCommerceSearchBox();
+const {events, args, argTypes, template} = getStorybookHelpers(
+  'atomic-commerce-search-box-recent-queries',
+  {excludeCategories: ['methods']}
+);
 
 const meta: Meta = {
   component: 'atomic-commerce-search-box-recent-queries',
   title: 'Commerce/Search Box Recent Queries',
   id: 'atomic-commerce-search-box-recent-queries',
-  render: renderComponentWithoutCodeRoot,
+  render: (args) => template(args),
   decorators: [commerceSearchBoxDecorator, commerceInterfaceDecorator],
-  parameters,
-  play: async (context) => {
+  parameters: {
+    ...parameters,
+    actions: {
+      handles: events,
+    },
+  },
+  args,
+  argTypes,
+
+  afterEach: async (context) => {
     await commerceInterfacePlay(context);
     const canvas = within(context.canvasElement);
     const searchBox = await canvas.findAllByShadowPlaceholderText('Search');
