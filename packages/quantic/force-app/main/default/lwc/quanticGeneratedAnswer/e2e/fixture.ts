@@ -46,6 +46,10 @@ export const testSearch = quanticBase.extend<QuanticGeneratedAnswerE2ESearchFixt
   options: {},
   analyticsMode: AnalyticsModeEnum.legacy,
   withFacets: false,
+  afterEach: async ({page}, use) => {
+    await use();
+    await page.unrouteAll({behavior: 'ignoreErrors'});
+  },
   search: async ({page}, use) => {
     await use(new SearchObject(page, searchRequestRegex));
   },
@@ -57,7 +61,7 @@ export const testSearch = quanticBase.extend<QuanticGeneratedAnswerE2ESearchFixt
       search,
       genQaData: data,
       analytics,
-      withFacets
+      withFacets,
     },
     use
   ) => {
@@ -104,6 +108,10 @@ export const testInsight =
     options: {},
     analyticsMode: AnalyticsModeEnum.legacy,
     withFacets: false,
+    afterEach: async ({page}, use) => {
+      await use();
+      await page.unrouteAll({behavior: 'ignoreErrors'});
+    },
     search: async ({page}, use) => {
       await use(new SearchObject(page, insightSearchRequestRegex));
     },
@@ -119,7 +127,7 @@ export const testInsight =
         insightSetup,
         genQaData: data,
         analytics,
-        withFacets
+        withFacets,
       },
       use
     ) => {
@@ -128,7 +136,7 @@ export const testInsight =
         data.streamId,
         analytics,
         !!options.answerConfigurationId,
-        !!withFacets,
+        !!withFacets
       );
 
       const streamingUrl = options.answerConfigurationId

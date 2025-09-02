@@ -253,6 +253,10 @@ useCaseTestCases.forEach((useCase) => {
                     });
                   await generatedAnswer.clickFirstTimeframeFacetLink();
                   await generateRequestPromise;
+
+                  if (generatedAnswer.streamEndAnalyticRequestPromise) {
+                    await generatedAnswer.streamEndAnalyticRequestPromise;
+                  }
                 });
               });
             }
