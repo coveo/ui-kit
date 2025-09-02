@@ -165,6 +165,7 @@ async function fixCoveoUA() {
   }
 }
 
+// IF YOU NEED TO ADD A NEW LIBRARY BE SURE TO ADD IT TO THE TURBO OUTPUTS : packages/quantic/turbo.json
 async function main() {
   console.info('Begin building static resources');
 

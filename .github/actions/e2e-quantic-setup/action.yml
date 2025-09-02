@@ -10,19 +10,6 @@ inputs:
 runs:
   using: composite
   steps:
-    - name: Upload pre-deploy workspace (packages/quantic)
-      uses: actions/upload-artifact@v4
-      with:
-        name: quantic-pre-deploy-${{ github.run_id }}
-        path: |
-          packages/quantic/**
-          !packages/quantic/node_modules/**
-          !**/.git/**
-          !**/.cache/**
-          !**/.sfdx/**
-        if-no-files-found: error
-        retention-days: 2
-        compression-level: 6
     - run: |
         echo "${{ inputs.jwtkey }}" > server.key
         npx --no-install ts-node scripts/build/deploy-community.ts --ci --scratch-org-def-path=./config/lws-disabled-scratch-def.json
