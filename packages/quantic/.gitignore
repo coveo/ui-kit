@@ -40,7 +40,7 @@ force-app/main/default/staticresources/coveoheadless
 force-app/main/default/staticresources/coveobueno
 force-app/main/default/staticresources/marked
 force-app/main/default/staticresources/dompurify
-force-app/main/default/staticresources/coveoua
+force-app/solutionExamples/main/staticresources/coveoua
 
 # Test Coverage & Report
 coverage
