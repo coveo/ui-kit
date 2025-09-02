@@ -1,11 +1,24 @@
 import {css} from 'lit';
 
 const styles = css`
-@import "../../common/template-system/template-system.pcss";
+@import "../../common/template-system/template-system.css";
 
 :host {
   @apply atomic-template-system;
   @apply relative;
+
+  .result-root.display-grid {
+    grid-template-areas:
+      "badges"
+      "visual"
+      "title"
+      "title-metadata"
+      "emphasized"
+      "excerpt"
+      "bottom-metadata"
+      "actions"
+      "children";
+  }
 
   .with-sections {
     &.display-grid {

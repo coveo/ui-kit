@@ -77,7 +77,7 @@ export interface SearchEngineDefinition<
 }
 
 /**
- * This type defines the required and optional controller props for the commerce engine definition.
+ * This type defines the required and optional controller props for the search engine definition.
  */
 export type SearchEngineDefinitionControllersPropsOption<
   TControllersPropsMap extends ControllersPropsMap,
