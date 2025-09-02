@@ -22,7 +22,7 @@ export function ProductGrid(productList: ProductList) {
   render();
 }
 
-export function renderProductCard(product: Product): string {
+function renderProductCard(product: Product): string {
   const imageUrl = product.ec_thumbnails?.[0] ?? product.ec_images?.[0] ?? '';
   const name = product.ec_name ?? 'Unknown Product';
   const brand = product.ec_brand ?? '';
