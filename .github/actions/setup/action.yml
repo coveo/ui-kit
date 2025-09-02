@@ -42,3 +42,16 @@ runs:
     - run: npm run build
       if: inputs.skip-build != 'true'
       shell: bash
+    - name: Upload post-build quantic (packages/quantic)
+      uses: actions/upload-artifact@v4
+      with:
+        name: quantic-post-build-${{ github.run_id }}
+        path: |
+          packages/quantic/**
+          !packages/quantic/node_modules/**
+          !**/.git/**
+          !**/.cache/**
+          !**/.sfdx/**
+        if-no-files-found: error
+        retention-days: 2
+        compression-level: 6
