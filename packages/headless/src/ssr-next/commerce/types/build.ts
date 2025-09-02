@@ -13,8 +13,8 @@ import type {
 } from '../controllers/parameter-manager/headless-core-parameter-manager.ssr.js';
 import type {SolutionType} from './controller-constants.js';
 import type {
+  CommerceEngineDefinitionControllersPropsOption,
   ControllerDefinitionsMap,
-  EngineDefinitionControllersPropsOption,
   IsRecommendationController,
 } from './controller-definitions.js';
 import type {CommerceEngineDefinitionBuildResult} from './engine.js';
@@ -139,7 +139,7 @@ export type Build<
 > = (
   ...params: OptionsTuple<
     BuildConfig<TControllersDefinitionsMap, TSolutionType> &
-      EngineDefinitionControllersPropsOption<
+      CommerceEngineDefinitionControllersPropsOption<
         TControllersDefinitionsMap,
         TControllersProps,
         TSolutionType

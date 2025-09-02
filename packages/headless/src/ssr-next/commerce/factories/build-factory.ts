@@ -6,22 +6,17 @@ import {
 } from '../../../app/commerce-engine/commerce-engine.js';
 import {buildLogger} from '../../../app/logger.js';
 import {stateKey} from '../../../app/state-key.js';
-import type {Controller} from '../../../controllers/controller/headless-controller.js';
 import {
   createWaitForActionMiddleware,
   createWaitForActionMiddlewareForRecommendation,
 } from '../../../utils/utils.js';
 import {buildControllerDefinitions} from '../controller-utils.js';
-import type {
-  RecommendationBuildConfig,
-  SSRCommerceEngineOptions,
-} from '../types/build.js';
+import type {RecommendationBuildConfig} from '../types/build.js';
 import {SolutionType} from '../types/controller-constants.js';
-import type {ControllerDefinitionsMap} from '../types/controller-definitions.js';
 import type {
   BuildParameters,
   CommerceControllerDefinitionsMap,
-  EngineDefinitionOptions,
+  CommerceEngineDefinitionOptions,
 } from '../types/engine.js';
 import {wireControllerParams} from '../utils/controller-wiring.js';
 import {extendEngineConfiguration} from '../utils/engine-wiring.js';
@@ -37,11 +32,6 @@ export interface SSRCommerceEngine extends CommerceEngine {
    */
   waitForRequestCompletedAction(): Promise<Action>[];
 }
-
-export type CommerceEngineDefinitionOptions<
-  TControllers extends
-    ControllerDefinitionsMap<Controller> = ControllerDefinitionsMap<Controller>,
-> = EngineDefinitionOptions<SSRCommerceEngineOptions, TControllers>;
 
 function isListingFetchCompletedAction(action: unknown): action is Action {
   return /^commerce\/productListing\/fetch\/(fulfilled|rejected)$/.test(

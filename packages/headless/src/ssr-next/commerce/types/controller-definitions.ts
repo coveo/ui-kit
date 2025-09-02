@@ -1,11 +1,10 @@
 import type {Controller} from '../../../controllers/controller/headless-controller.js';
 import type {InvalidControllerDefinition} from '../../common/errors.js';
-import type {ControllersPropsMap} from '../../common/types/controllers.js';
-import type {HydratedState} from '../../common/types/hydrate-static-state.js';
 import type {
   InferControllerStaticStateFromController,
   InferControllerStaticStateMapFromControllers,
-} from '../../common/types/inference.js';
+} from '../../common/types/controller-inference.js';
+import type {ControllersPropsMap} from '../../common/types/controllers.js';
 import type {
   HasKey,
   HasRequiredKeys,
@@ -28,6 +27,7 @@ import type {
   SearchOnlyController,
   UniversalController,
 } from './controller-scopes.js';
+import type {HydratedState} from './hydrate-static-state.js';
 import type {Kind} from './kind.js';
 import type {HasSolutionType} from './utilities.js';
 
@@ -137,9 +137,9 @@ export type AugmentedControllerDefinition<
 > = TControllerDefinitions & BakedInControllerDefinitions;
 
 /**
- * This type defines the required and optional controller props for the engine definition.
+ * This type defines the required and optional controller props for the commerce engine definition.
  */
-export type EngineDefinitionControllersPropsOption<
+export type CommerceEngineDefinitionControllersPropsOption<
   TControllers extends ControllerDefinitionsMap<Controller>,
   TControllersPropsMap extends ControllersPropsMap,
   TSolutionType extends SolutionType,
