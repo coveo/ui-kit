@@ -186,7 +186,6 @@ export const buildFactory =
       propsMap: controllerProps,
     });
 
-    // If searchActions are provided (hydrate scenario), dispatch them
     if (buildOptions && 'searchActions' in buildOptions) {
       buildOptions.searchActions.forEach((action) => {
         engine.dispatch(action);
