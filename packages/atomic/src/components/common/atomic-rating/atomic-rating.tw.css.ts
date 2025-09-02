@@ -1,7 +1,9 @@
+import {css} from 'lit';
+
+const styles = css`
 @reference '../../../utils/tailwind.global.tw.css';
-@reference '../../../utils/coveo.tw.css';
 /**
- * @prop --atomic-rating-icon-outline: currentColor;line: Color of the icon's outline.
+ * @prop --atomic-rating-icon-outline: Color of the icon's outline.
  */
 @layer components {
   atomic-product-rating {
@@ -13,3 +15,6 @@
     }
   }
 }
+`;
+
+export default styles;
