@@ -112,7 +112,6 @@ describe('buildFactory', () => {
       controller2: defineMockCommerceController(),
     };
 
-    // Mock wireControllerParams to return searchActions
     mockWireControllerParams.mockReturnValueOnce({
       searchActions: ['search-action'],
     });
