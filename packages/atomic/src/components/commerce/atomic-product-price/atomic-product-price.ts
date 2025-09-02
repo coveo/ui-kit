@@ -12,7 +12,6 @@ import {bindings} from '@/src/decorators/bindings.js';
 import {createProductContextController} from '@/src/decorators/commerce/product-template-decorators.js';
 import {errorGuard} from '@/src/decorators/error-guard.js';
 import type {InitializableComponent} from '@/src/decorators/types.js';
-import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles.js';
 import {multiClassMap, tw} from '@/src/directives/multi-class-map.js';
 import {LightDomMixin} from '@/src/mixins/light-dom.js';
 import {defaultCurrencyFormatter} from '../../common/formats/format-common.js';
@@ -24,7 +23,6 @@ import {parseValue} from '../product-template-component-utils/product-utils.js';
  */
 @customElement('atomic-product-price')
 @bindings()
-@withTailwindStyles
 export class AtomicProductPrice
   extends LightDomMixin(LitElement)
   implements InitializableComponent<CommerceBindings>
@@ -104,7 +102,7 @@ export class AtomicProductPrice
           ${this.getFormattedValue(hasPromo ? 'ec_promo_price' : 'ec_price')}
         </div>
         <div class=${multiClassMap(promoClasses)}>
-          ${hasPromo ? this.getFormattedValue('ec_price') : ''}
+          ${hasPromo ? this.getFormattedValue('ec_price') : '\u200B'}
         </div>
       </div>
     `;
