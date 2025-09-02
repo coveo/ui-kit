@@ -1,70 +1,34 @@
-@utility atomic-children-mobile-* {
-  &.child-result:not(.last-child) {
-    margin-bottom: --value([ *]);
-  }
-
-  & atomic-result-section-children,
-  & atomic-product-section-children {
-    atomic-result-children::part(children-root),
-    atomic-insight-result-children::part(children-root),
-    atomic-product-children::part(children-root) {
-      padding-top: --value([ *]);
-      margin-top: 1rem;
-      margin-left: -1rem;
-      margin-right: -1rem;
-      padding-left: 1rem;
-      padding-right: 1rem;
-    }
-
-    atomic-result-children::part(show-hide-button),
-    atomic-insigh-result-children::part(show-hide-button),
-    atomic-product-children::part(show-hide-button) {
-      margin-top: --modifier([ *]);
-      margin-bottom: --modifier([ *]);
-    }
-  }
-
-  .placeholder {
-    margin-bottom: --value([ *]);
-  }
-}
+@reference './atomic-children.css';
 
 @utility row-result-mobile {
-  atomic-result-section-children,
-  atomic-product-section-children {
+  atomic-result-section-children {
     atomic-result-children::part(children-root),
-    atomic-insight-result-children::part(children-root),
-    atomic-product-children::part(children-root) {
+    atomic-insight-result-children::part(children-root) {
       @apply border-t-neutral border-t;
     }
   }
 
   /* == Density styles == */
   &.density-comfortable {
-    atomic-result-section-visual,
-    atomic-product-section-visual {
+    atomic-result-section-visual {
       margin-right: 1rem;
     }
 
-    atomic-result-section-badges,
-    atomic-product-section-badges {
+    atomic-result-section-badges {
       margin-bottom: 1rem;
       --row-height: 2rem;
     }
 
-    atomic-result-section-actions,
-    atomic-product-section-actions {
+    atomic-result-section-actions {
       margin-top: 1rem;
       --row-height: 2.5rem;
     }
 
-    atomic-result-section-title,
-    atomic-product-section-name {
+    atomic-result-section-title {
       @apply set-font-size-xl;
     }
 
-    atomic-result-section-excerpt,
-    atomic-product-section-description {
+    atomic-result-section-excerpt {
       margin-top: 1.25rem;
       @apply set-font-size-base;
 
@@ -72,16 +36,14 @@
       @apply line-clamp-2;
     }
 
-    atomic-result-section-bottom-metadata,
-    atomic-product-section-bottom-metadata {
+    atomic-result-section-bottom-metadata {
       margin-top: 0.75rem;
       @apply set-font-size-sm;
 
       max-height: 4rem;
     }
 
-    atomic-result-section-title-metadata,
-    atomic-product-section-metadata {
+    atomic-result-section-title-metadata {
       margin-top: 0.475rem;
     }
 
@@ -89,30 +51,25 @@
   }
 
   &.density-normal {
-    atomic-result-section-visual,
-    atomic-product-section-visual {
+    atomic-result-section-visual {
       margin-right: 1rem;
     }
 
-    atomic-result-section-badges,
-    atomic-product-section-badges {
+    atomic-result-section-badges {
       margin-bottom: 1rem;
       --row-height: 2rem;
     }
 
-    atomic-result-section-actions,
-    atomic-product-section-actions {
+    atomic-result-section-actions {
       margin-top: 0.75rem;
       --row-height: 2.5rem;
     }
 
-    atomic-result-section-title,
-    atomic-product-section-name {
+    atomic-result-section-title {
       @apply set-font-size-xl;
     }
 
-    atomic-result-section-excerpt,
-    atomic-product-section-description {
+    atomic-result-section-excerpt {
       margin-top: 1rem;
       @apply set-font-size-base;
 
@@ -120,16 +77,14 @@
       @apply line-clamp-2;
     }
 
-    atomic-result-section-bottom-metadata,
-    atomic-product-section-bottom-metadata {
+    atomic-result-section-bottom-metadata {
       margin-top: 0.625rem;
       @apply set-font-size-sm;
 
       max-height: 3.5rem;
     }
 
-    atomic-result-section-title-metadata,
-    atomic-product-section-metadata {
+    atomic-result-section-title-metadata {
       margin-top: 0.475rem;
     }
 
@@ -137,25 +92,21 @@
   }
 
   &.density-compact {
-    atomic-result-section-visual,
-    atomic-product-section-visual {
+    atomic-result-section-visual {
       margin-right: 1rem;
     }
 
-    atomic-result-section-badges,
-    atomic-product-section-badges {
+    atomic-result-section-badges {
       margin-bottom: 1rem;
       --row-height: 2rem;
     }
 
-    atomic-result-section-actions,
-    atomic-product-section-actions {
+    atomic-result-section-actions {
       margin-top: 0.5em;
       --row-height: 2.5rem;
     }
 
-    atomic-result-section-title,
-    atomic-product-section-name {
+    atomic-result-section-title {
       @apply set-font-size-xl;
     }
 
@@ -167,16 +118,14 @@
       @apply line-clamp-1;
     }
 
-    atomic-result-section-bottom-metadata,
-    atomic-product-section-bottom-metadata {
+    atomic-result-section-bottom-metadata {
       margin-top: 0.4375rem;
       @apply set-font-size-sm;
 
       max-height: 3.25rem;
     }
 
-    atomic-result-section-title-metadata,
-    atomic-product-section-metadata {
+    atomic-result-section-title-metadata {
       margin-top: 0.475rem;
     }
 
@@ -198,8 +147,7 @@
     grid-template-columns: 100%;
     grid-template-rows: repeat(8, auto);
 
-    atomic-result-section-visual,
-    atomic-product-section-visual {
+    atomic-result-section-visual {
       @apply aspect-square-[7.25rem];
       width: 100%;
       margin-right: 0;
@@ -221,8 +169,7 @@
     grid-template-columns: auto minmax(0, 1fr);
     grid-template-rows: repeat(4, auto) minmax(0, 1fr) repeat(3, auto);
 
-    atomic-result-section-visual,
-    atomic-product-section-visual {
+    atomic-result-section-visual {
       width: 24vw;
       height: 24vw;
       margin-bottom: 1rem;
@@ -242,8 +189,7 @@
     grid-template-columns: auto minmax(0, 1fr);
     grid-template-rows: repeat(7, auto) 1fr;
 
-    atomic-result-section-visual,
-    atomic-product-section-visual {
+    atomic-result-section-visual {
       width: 2rem;
       height: 2rem;
       margin-bottom: 0;
@@ -263,8 +209,7 @@
     grid-template-columns: 100%;
     grid-template-rows: repeat(7, auto);
 
-    atomic-result-section-visual,
-    atomic-product-section-visual {
+    atomic-result-section-visual {
       display: none;
     }
   }

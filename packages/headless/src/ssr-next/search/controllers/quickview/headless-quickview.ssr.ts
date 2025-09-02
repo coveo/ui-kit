@@ -4,7 +4,7 @@ import {
   type Quickview,
   type QuickviewProps,
 } from '../../../../controllers/quickview/headless-quickview.js';
-import type {ControllerDefinitionWithoutProps} from '../../../common/types/controllers.js';
+import type {ControllerDefinitionWithoutProps} from '../../types/controller-definition.js';
 
 export * from '../../../../controllers/quickview/headless-quickview.js';
 

@@ -11,15 +11,16 @@ import {
 } from '../../../controllers/commerce/search/headless-search.js';
 import {buildMockCommerceState} from '../../../test/mock-commerce-state.js';
 import {buildMockSSRCommerceEngine} from '../../../test/mock-engine-v2.js';
+import {defineMockCommerceController} from '../../../test/mock-ssr-controller-definitions.js';
 import * as augmentModule from '../../common/augment-preprocess-request.js';
-import {defineProductList} from '../controllers/product-list/headless-product-list.ssr.js';
-import {defineSearchBox} from '../controllers/search-box/headless-search-box.ssr.js';
 import {SolutionType} from '../types/controller-constants.js';
+import type {FilteredBakedInControllers} from '../types/controller-definitions.js';
 import type {InferControllersMapFromDefinition} from '../types/controller-inference.js';
 import type {CommerceControllerDefinitionsMap} from '../types/engine.js';
 import * as buildFactory from './build-factory.js';
 import {fetchStaticStateFactory} from './static-state-factory.js';
 
+vi.mock('../utils/controller-wiring.js');
 vi.mock(
   '../../../controllers/commerce/product-listing/headless-product-listing.js'
 );
@@ -37,8 +38,8 @@ describe('fetchStaticStateFactory', () => {
   };
 
   const definition = {
-    products: defineProductList(),
-    searchBox: defineSearchBox(),
+    controller1: defineMockCommerceController(),
+    controller2: defineMockCommerceController(),
   };
 
   beforeEach(() => {
@@ -57,14 +58,15 @@ describe('fetchStaticStateFactory', () => {
     );
 
     engineSpy = vi.spyOn(buildFactory, 'buildFactory').mockReturnValue(
-      () =>
-        <T extends SolutionType>() =>
+      <T extends SolutionType>(_: T) =>
+        async () =>
           Promise.resolve({
             engine: mockEngine,
             controllers: {} as InferControllersMapFromDefinition<
               CommerceControllerDefinitionsMap,
               T
-            >,
+            > &
+              FilteredBakedInControllers<T>,
           })
     );
 
@@ -78,8 +80,14 @@ describe('fetchStaticStateFactory', () => {
   });
 
   it('should call buildFactory with the correct parameters', async () => {
+    // @ts-expect-error: do not care about baked-in controller initial state
     const factory = fetchStaticStateFactory(definition, mockEngineOptions);
-    await factory(SolutionType.listing)();
+    await factory(SolutionType.listing)({
+      country: 'CA',
+      currency: 'USD',
+      language: 'en',
+      url: 'https://example.com',
+    });
     expect(engineSpy.mock.calls[0][0]).toStrictEqual(definition);
   });
 
@@ -100,8 +108,14 @@ describe('fetchStaticStateFactory', () => {
       loggerOptions: {level: 'warn'} as LoggerOptions,
     };
 
+    // @ts-expect-error: do not care about baked-in controller initial state
     const factory = fetchStaticStateFactory(definition, options);
-    await factory(SolutionType.listing)();
+    await factory(SolutionType.listing)({
+      country: 'CA',
+      currency: 'USD',
+      language: 'en',
+      url: 'https://example.com',
+    });
     expect(spy).toHaveBeenCalledWith({
       loggerOptions: {level: 'warn'},
       navigatorContextProvider: mockNavigatorContextProvider,
@@ -113,8 +127,14 @@ describe('fetchStaticStateFactory', () => {
 
   describe('when solution type is listing', () => {
     beforeEach(async () => {
+      // @ts-expect-error: do not care about baked-in controller initial state
       const factory = fetchStaticStateFactory(definition, mockEngineOptions);
-      await factory(SolutionType.listing)();
+      await factory(SolutionType.listing)({
+        country: 'CA',
+        currency: 'USD',
+        language: 'en',
+        url: 'https://example.com',
+      });
     });
 
     it('should build a product listing controller', async () => {
@@ -132,8 +152,15 @@ describe('fetchStaticStateFactory', () => {
 
   describe('when solution type is search', () => {
     beforeEach(async () => {
+      // @ts-expect-error: do not care about baked-in controller initial state
       const factory = fetchStaticStateFactory(definition, mockEngineOptions);
-      await factory(SolutionType.search)();
+      await factory(SolutionType.search)({
+        country: 'CA',
+        currency: 'USD',
+        language: 'en',
+        query: 'test',
+        url: 'https://example.com',
+      });
     });
 
     it('should build a search controller', async () => {
@@ -151,8 +178,14 @@ describe('fetchStaticStateFactory', () => {
 
   describe('when solution type is standalone', () => {
     beforeEach(async () => {
+      // @ts-expect-error: do not care about baked-in controller initial state
       const factory = fetchStaticStateFactory(definition, mockEngineOptions);
-      await factory(SolutionType.standalone)();
+      await factory(SolutionType.standalone)({
+        country: 'CA',
+        currency: 'USD',
+        language: 'en',
+        url: 'https://example.com',
+      });
     });
 
     it('should not build search or listing controllers', async () => {

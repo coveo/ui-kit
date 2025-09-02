@@ -4,14 +4,23 @@
 
 import type {NavigatorContextProvider} from '../../../app/navigator-context-provider.js';
 import type {Controller} from '../../../controllers/controller/headless-controller.js';
-import type {CommerceEngineDefinitionOptions} from '../factories/build-factory.js';
+import {defineCart} from '../controllers/cart/headless-cart.ssr.js';
+import {defineContext} from '../controllers/context/headless-context.ssr.js';
+import {defineParameterManager} from '../controllers/parameter-manager/headless-core-parameter-manager.ssr.js';
 import {hydratedStaticStateFactory} from '../factories/hydrated-state-factory.js';
 import {hydratedRecommendationStaticStateFactory} from '../factories/recommendation-hydrated-state-factory.js';
 import {fetchRecommendationStaticStateFactory} from '../factories/recommendation-static-state-factory.js';
 import {fetchStaticStateFactory} from '../factories/static-state-factory.js';
 import {SolutionType} from '../types/controller-constants.js';
-import type {ControllerDefinitionsMap} from '../types/controller-definitions.js';
-import type {CommerceEngineDefinition} from '../types/engine.js';
+import type {
+  AugmentedControllerDefinition,
+  ControllerDefinitionsMap,
+} from '../types/controller-definitions.js';
+import type {
+  CommerceEngineDefinition,
+  CommerceEngineDefinitionOptions,
+} from '../types/engine.js';
+import {validateControllerNames} from '../validation/controller-validation.js';
 
 /**
  * Initializes a Commerce engine definition in SSR with given controllers definitions and commerce engine config.
@@ -70,22 +79,31 @@ export function defineCommerceEngine<
     engineOptions.configuration.accessToken = accessToken;
   };
 
+  controllerDefinitions && validateControllerNames(controllerDefinitions);
+
+  const augmentedControllerDefinition = {
+    ...controllerDefinitions,
+    parameterManager: defineParameterManager(),
+    context: defineContext(),
+    cart: defineCart(),
+  } as AugmentedControllerDefinition<TControllerDefinitions>;
+
   const fetchStaticState = fetchStaticStateFactory<TControllerDefinitions>(
-    controllerDefinitions,
+    augmentedControllerDefinition,
     getOptions()
   );
   const hydrateStaticState = hydratedStaticStateFactory<TControllerDefinitions>(
-    controllerDefinitions,
+    augmentedControllerDefinition,
     getOptions()
   );
   const fetchRecommendationStaticState =
     fetchRecommendationStaticStateFactory<TControllerDefinitions>(
-      controllerDefinitions,
+      augmentedControllerDefinition,
       getOptions()
     );
   const hydrateRecommendationStaticState =
     hydratedRecommendationStaticStateFactory<TControllerDefinitions>(
-      controllerDefinitions,
+      augmentedControllerDefinition,
       getOptions()
     );
   const commonMethods = {

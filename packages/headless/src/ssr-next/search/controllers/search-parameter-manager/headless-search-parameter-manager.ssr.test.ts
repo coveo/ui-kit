@@ -18,8 +18,8 @@ import {staticFilterSetReducer} from '../../../../features/static-filter-set/sta
 import {tabSetReducer} from '../../../../features/tab-set/tab-set-slice.js';
 import {buildMockSSRSearchEngine} from '../../../../test/mock-engine-v2.js';
 import {createMockState} from '../../../../test/mock-state.js';
-import type {ControllerDefinitionWithProps} from '../../../common/types/controllers.js';
 import type {SSRSearchEngine} from '../../engine/search-engine.ssr.js';
+import type {ControllerDefinitionWithProps} from '../../types/controller-definition.js';
 import {
   defineSearchParameterManager,
   type SearchParameterManagerBuildProps,

@@ -6,7 +6,6 @@ import {bindings} from '@/src/decorators/bindings';
 import {createProductContextController} from '@/src/decorators/commerce/product-template-decorators';
 import {errorGuard} from '@/src/decorators/error-guard';
 import type {InitializableComponent} from '@/src/decorators/types';
-import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles.js';
 import {filterProtocol} from '../../../utils/xss-utils';
 import {renderButton} from '../../common/button';
 import type {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface';
@@ -14,6 +13,9 @@ import type {SelectChildProductEventArgs} from './select-child-product-event';
 import '../atomic-commerce-text/atomic-commerce-text';
 import {bindingGuard} from '@/src/decorators/binding-guard';
 import {multiClassMap, tw} from '@/src/directives/multi-class-map';
+import {LightDomMixin} from '@/src/mixins/light-dom';
+import {closest} from '@/src/utils/dom-utils';
+import type {AtomicProduct} from '../atomic-product/atomic-product';
 
 /**
  * Maximum number of child products to display before showing a "+N" button.
@@ -31,14 +33,10 @@ const AMOUNT_OF_VISIBLE_CHILDREN = 5;
  */
 @customElement('atomic-product-children')
 @bindings()
-@withTailwindStyles
 export class AtomicProductChildren
-  extends LitElement
+  extends LightDomMixin(LitElement)
   implements InitializableComponent<CommerceBindings>
 {
-  createRenderRoot() {
-    return this;
-  }
   @state() bindings!: CommerceBindings;
 
   private productController = createProductContextController(this);
@@ -101,6 +99,14 @@ export class AtomicProductChildren
     return filterProtocol(this.fallback);
   }
 
+  private handleClick = (event: MouseEvent) => {
+    if (this.parentElement?.tagName !== 'A') {
+      closest<AtomicProduct>(this, 'atomic-product')!.clickLinkContainer();
+    } else {
+      event.stopPropagation();
+    }
+  };
+
   private renderChild(child: ChildProduct) {
     const childName = child.ec_name ?? '';
 
@@ -122,6 +128,7 @@ export class AtomicProductChildren
           event.preventDefault();
           this.onSelectChild(child);
         }}
+        @click=${this.handleClick}
       >
         <img
           class="aspect-square p-1"
@@ -188,6 +195,7 @@ export class AtomicProductChildren
                 props: {
                   style: 'text-primary',
                   class: 'product-child',
+                  onClick: this.handleClick,
                 },
               })(html`+${this.count}`)
             : nothing
