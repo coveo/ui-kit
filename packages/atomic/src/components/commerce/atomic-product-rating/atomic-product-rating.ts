@@ -1,7 +1,12 @@
 import {type Product, ProductTemplatesHelpers} from '@coveo/headless/commerce';
-import {css, html, LitElement} from 'lit';
+import {html, LitElement} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {when} from 'lit/directives/when.js';
+import ratingStyles from '@/src/components/common/atomic-rating/atomic-rating.tw.css.js';
+import {
+  computeNumberOfStars,
+  renderRating,
+} from '@/src/components/common/atomic-rating/rating.js';
 import {bindingGuard} from '@/src/decorators/binding-guard';
 import {bindings} from '@/src/decorators/bindings.js';
 import {createProductContextController} from '@/src/decorators/commerce/product-template-decorators.js';
@@ -9,10 +14,6 @@ import {errorGuard} from '@/src/decorators/error-guard';
 import type {InitializableComponent} from '@/src/decorators/types.js';
 import {LightDomMixin} from '@/src/mixins/light-dom';
 import Star from '../../../images/star.svg';
-import {
-  computeNumberOfStars,
-  renderRating,
-} from '../../common/atomic-rating/rating.js';
 import type {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface.js';
 
 /**
@@ -38,8 +39,7 @@ export class AtomicProductRating
 
   @state() private product!: Product;
 
-  static styles =
-    css`@import "../../common/atomic-rating/atomic-rating.tw.css";`;
+  static styles = ratingStyles;
 
   /**
    * The numerical field whose values you want to display as a rating.
