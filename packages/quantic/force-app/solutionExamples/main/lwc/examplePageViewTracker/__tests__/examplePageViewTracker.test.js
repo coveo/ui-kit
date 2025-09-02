@@ -1,6 +1,8 @@
 /* eslint-disable @lwc/lwc/no-unexpected-wire-adapter-usages */
 /* eslint-disable @lwc/lwc/no-async-operation */
+// @ts-ignore
 import {createElement} from '@lwc/engine-dom';
+// @ts-ignore
 import {loadScript} from 'lightning/platformResourceLoader';
 import ExamplePageViewTracker from 'c/examplePageViewTracker';
 import {CurrentPageReference} from 'lightning/navigation';

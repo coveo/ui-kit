@@ -19,8 +19,5 @@
   "exclude": ["**/e2e/**"],
   "typeAcquisition": {
     "include": ["jest"]
-  },
-  "paths": {
-    "c/*": ["*"]
   }
 }
