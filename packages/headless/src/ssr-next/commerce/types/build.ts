@@ -9,7 +9,6 @@ import type {
 } from '../controllers/parameter-manager/headless-core-parameter-manager.ssr.js';
 import type {SolutionType} from './controller-constants.js';
 import type {
-  CommerceEngineDefinitionControllersPropsOption,
   ControllerDefinitionsMap,
   IsRecommendationController,
 } from './controller-definitions.js';
