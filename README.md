@@ -92,10 +92,12 @@ To ensure a consistent development experience, add the following to your `.vscod
 
 ```jsonc
 {
-  "source.organizeImports.biome": "explicit",
+  "editor.defaultFormatter": "biomejs.biome",
+  "editor.codeActionsOnSave": {
+    "source.organizeImports.biome": "explicit",
     "source.fixAll.biome": "explicit"
   },
- "editor.formatOnSave": true
+  "editor.formatOnSave": true
 }
 ```
 
