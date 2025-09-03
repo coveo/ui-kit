@@ -20,9 +20,40 @@ export function createRenewAccessTokenMiddleware(
   renewToken?: () => Promise<string>
 ): Middleware {
   let accessTokenRenewalsAttempts = 0;
+  let pendingTokenRenewal: Promise<string> | null = null;
   const resetRenewalTriesAfterDelay = debounce(() => {
     accessTokenRenewalsAttempts = 0;
   }, 500);
+
+  const renewAccessToken = async (
+    store: MiddlewareAPI,
+    handleErrors = false
+  ): Promise<string | null> => {
+    const isTokenRenewalPending = !pendingTokenRenewal;
+
+    if (isTokenRenewalPending && renewToken) {
+      pendingTokenRenewal = (async () => {
+        if (handleErrors) {
+          try {
+            return await renewToken();
+          } catch (_) {
+            return '';
+          }
+        }
+        return await renewToken();
+      })().finally(() => {
+        pendingTokenRenewal = null;
+      });
+    }
+
+    const accessToken = await pendingTokenRenewal;
+
+    if (isTokenRenewalPending && accessToken) {
+      store.dispatch(updateBasicConfiguration({accessToken}));
+    }
+
+    return accessToken;
+  };
 
   return (store) => (next) => async (action) => {
     const isThunk = typeof action === 'function';
@@ -43,11 +74,8 @@ export function createRenewAccessTokenMiddleware(
           'Access token is expired or about to expire, attempting renewal.'
         );
         try {
-          const newAccessToken = await renewToken();
+          const newAccessToken = await renewAccessToken(store);
           if (newAccessToken) {
-            store.dispatch(
-              updateBasicConfiguration({accessToken: newAccessToken})
-            );
             logger.debug('Access token was renewed.');
           } else {
             logger.warn(
@@ -68,6 +96,7 @@ export function createRenewAccessTokenMiddleware(
     // - No race condition with the preceding `updateBasicConfiguration` dispatch because:
     //   1. `store.dispatch()` with synchronous actions completes immediately and updates the state.
     //   2. The state is guaranteed to contain the fresh token before this point is reached.
+    //   3. Only the first renewal attempt (`isTokenRenewalPending`) updates the configuration.
     //
     // - Execution is not short-circuited after successful proactive renewal because:
     //   1. The API is the authoritative source for token validity (401/419 responses).
@@ -98,8 +127,7 @@ export function createRenewAccessTokenMiddleware(
     accessTokenRenewalsAttempts++;
     resetRenewalTriesAfterDelay();
 
-    const accessToken = await attempt(renewToken);
-    store.dispatch(updateBasicConfiguration({accessToken}));
+    await renewAccessToken(store, true);
     store.dispatch(action as unknown as UnknownAction);
     return;
   };
@@ -130,14 +158,6 @@ function dispatchError(
       type: error.name,
     })
   );
-}
-
-async function attempt(fn: () => Promise<string>) {
-  try {
-    return await fn();
-  } catch (_) {
-    return '';
-  }
 }
 
 type EngineStateWithAccessToken =
