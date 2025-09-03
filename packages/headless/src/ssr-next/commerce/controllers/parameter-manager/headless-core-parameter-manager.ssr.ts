@@ -17,8 +17,8 @@ import type {CommerceSearchParameters} from '../../../../features/commerce/searc
 import {sortReducer as commerceSort} from '../../../../features/commerce/sort/sort-slice.js';
 import {facetOrderReducer as facetOrder} from '../../../../features/facets/facet-order/facet-order-slice.js';
 import {querySetReducer as querySet} from '../../../../features/query-set/query-set-slice.js';
-import {ensureAtLeastOneSolutionType} from '../../../../ssr/commerce/controller-utils.js';
 import {loadReducerError} from '../../../../utils/errors.js';
+import {ensureAtLeastOneSolutionType} from '../../controller-utils.js';
 import {SolutionType} from '../../types/controller-constants.js';
 import type {
   ControllerDefinitionOption,

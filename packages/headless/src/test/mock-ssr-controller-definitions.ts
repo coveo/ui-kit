@@ -1,11 +1,11 @@
 import {vi} from 'vitest';
 import type {SearchEngine} from '../app/search-engine/search-engine.js';
 import type {Controller} from '../controllers/controller/headless-controller.js';
-import {recommendationInternalOptionKey} from '../ssr-next/commerce/types/controller-constants.js';
 import type {
   ControllerDefinitionWithoutProps,
   ControllerDefinitionWithProps,
-} from '../ssr-next/common/types/controllers.js';
+} from '../ssr/common/types/controllers.js';
+import {recommendationInternalOptionKey} from '../ssr-next/commerce/types/controller-constants.js';
 import {
   buildMockController,
   buildMockControllerWithInitialState,
