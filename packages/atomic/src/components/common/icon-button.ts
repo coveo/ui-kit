@@ -1,7 +1,8 @@
-import {html, nothing, type TemplateResult} from 'lit';
+import {html, type nothing, type TemplateResult} from 'lit';
 import type {RefOrCallback} from 'lit/directives/ref.js';
 import type {FunctionalComponent} from '../../utils/functional-component-utils';
 import './atomic-icon/atomic-icon';
+import {when} from 'lit/directives/when.js';
 import {type ButtonProps, renderButton} from './button';
 
 export interface IconButtonProps extends ButtonProps {
@@ -32,9 +33,10 @@ export const renderIconButton: FunctionalComponent<IconButtonProps> = ({
           part="${props.partPrefix}-icon"
         ></atomic-icon>
       `)}
-      ${
-        props.badge
-          ? html`
+      ${when(
+        props.badge,
+        () =>
+          html`
             <span
               part="${props.partPrefix}-badge"
               class="bg-primary text-on-primary absolute -top-2 -right-2 block h-4 w-4 rounded-full text-center text-xs leading-4"
@@ -42,8 +44,7 @@ export const renderIconButton: FunctionalComponent<IconButtonProps> = ({
               ${props.badge}
             </span>
           `
-          : nothing
-      }
+      )}
     </div>
   `;
 };
