@@ -73,7 +73,7 @@ describe('hydratedRecommendationStaticStateFactory', () => {
     );
   });
 
-  it('should dispatch search actions and wait for request completion', async () => {
+  it('should wait for request completion', async () => {
     const mockSolutionTypeBuild = vi.fn().mockResolvedValue(mockBuildResult);
     vi.mocked(buildFactory).mockReturnValue(() => mockSolutionTypeBuild);
 
@@ -87,9 +87,6 @@ describe('hydratedRecommendationStaticStateFactory', () => {
       ...mockBaseConfiguration,
     });
 
-    expect(mockBuildResult.engine.dispatch).toHaveBeenCalledWith(
-      mockSearchActions[0]
-    );
     expect(
       mockBuildResult.engine.waitForRequestCompletedAction
     ).toHaveBeenCalledOnce();

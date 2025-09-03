@@ -2,22 +2,22 @@ import {
   buildRecommendations,
   type Recommendations,
   type RecommendationsOptions,
+  type RecommendationsProps,
   type RecommendationsState,
 } from '../../../../controllers/commerce/recommendations/headless-recommendations.js';
 import {recommendationInternalOptionKey} from '../../types/controller-constants.js';
 import type {RecommendationOnlyControllerDefinitionWithProps} from '../../types/controller-definitions.js';
-import {createControllerWithKind, Kind} from '../../types/kind.js';
 
 export type {Recommendations, RecommendationsState};
 
 export type RecommendationsDefinitionMeta = {
-  [recommendationInternalOptionKey]: {} & RecommendationsOptions;
+  [recommendationInternalOptionKey]: {} & RecommendationsProps['options'];
 };
 
 export interface RecommendationsDefinition
   extends RecommendationOnlyControllerDefinitionWithProps<
     Recommendations,
-    {initialState: Partial<RecommendationsOptions>}
+    Partial<RecommendationsOptions>
   > {}
 
 /**
@@ -27,9 +27,9 @@ export interface RecommendationsDefinition
  * @param props - The configurable `Recommendations` properties.
  * @returns The `Recommendations` controller definition.
  * */
-export function defineRecommendations(props: {
-  options: Omit<RecommendationsOptions, 'productId'>;
-}): RecommendationsDefinition & RecommendationsDefinitionMeta {
+export function defineRecommendations(
+  props: RecommendationsProps
+): RecommendationsDefinition & RecommendationsDefinitionMeta {
   return {
     recommendation: true,
     [recommendationInternalOptionKey]: {
@@ -37,13 +37,12 @@ export function defineRecommendations(props: {
     },
     buildWithProps: (
       engine,
-      options: {initialState: Omit<RecommendationsOptions, 'slotId'>}
+      options: Omit<RecommendationsOptions, 'slotId'>
     ) => {
       const staticOptions = props.options;
-      const controller = buildRecommendations(engine, {
-        options: {...staticOptions, ...options.initialState},
+      return buildRecommendations(engine, {
+        options: {...staticOptions, ...options},
       });
-      return createControllerWithKind(controller, Kind.Recommendations);
     },
   };
 }
