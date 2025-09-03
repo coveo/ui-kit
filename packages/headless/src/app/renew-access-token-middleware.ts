@@ -34,11 +34,7 @@ export function createRenewAccessTokenMiddleware(
     if (isTokenRenewalPending && renewToken) {
       pendingTokenRenewal = (async () => {
         if (handleErrors) {
-          try {
-            return await renewToken();
-          } catch (_) {
-            return '';
-          }
+          attempt(renewToken);
         }
         return await renewToken();
       })().finally(() => {
@@ -158,6 +154,14 @@ function dispatchError(
       type: error.name,
     })
   );
+}
+
+async function attempt(fn: () => Promise<string>) {
+  try {
+    return await fn();
+  } catch (_) {
+    return '';
+  }
 }
 
 type EngineStateWithAccessToken =
