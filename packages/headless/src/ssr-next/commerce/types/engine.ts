@@ -6,6 +6,7 @@ import type {
   ControllersMap,
 } from '../../common/types/controllers.js';
 import type {SSRCommerceEngine} from '../factories/build-factory.js';
+import type {SSRCommerceEngineOptions} from './build.js';
 import type {SolutionType} from './controller-constants.js';
 import type {
   BakedInControllers,
@@ -21,7 +22,6 @@ import type {
   HydrateStaticState,
   HydrateStaticStateOptions,
 } from './hydrate-static-state.js';
-import type {SSRCommerceEngineOptions} from './build.js';
 
 export type {HydrateStaticState, HydrateStaticStateOptions, FetchStaticState};
 

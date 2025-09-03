@@ -20,9 +20,9 @@ import type {
 import type {InferControllersMapFromDefinition} from '../types/controller-inference.js';
 import type {
   CommerceControllerDefinitionsMap,
+  CommerceEngineDefinitionOptions,
   FetchStaticStateParameters,
   HydrateStaticStateParameters,
-  CommerceEngineDefinitionOptions,
 } from '../types/engine.js';
 import {wireControllerParams} from '../utils/controller-wiring.js';
 import {extendEngineConfiguration} from '../utils/engine-wiring.js';
