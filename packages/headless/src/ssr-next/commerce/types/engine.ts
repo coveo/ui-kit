@@ -21,7 +21,7 @@ import type {
   HydrateStaticState,
   HydrateStaticStateOptions,
 } from './hydrate-static-state.js';
-import { SSRCommerceEngineOptions } from './build.js';
+import type {SSRCommerceEngineOptions} from './build.js';
 
 export type {HydrateStaticState, HydrateStaticStateOptions, FetchStaticState};
 

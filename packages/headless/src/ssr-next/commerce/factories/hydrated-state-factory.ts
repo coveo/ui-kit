@@ -5,9 +5,7 @@ import type {
   CommerceEngineDefinitionOptions,
   HydrateStaticStateParameters,
 } from '../types/engine.js';
-import {
-  buildFactory,
-} from './build-factory.js';
+import {buildFactory} from './build-factory.js';
 
 export function hydratedStaticStateFactory<
   TControllerDefinitions extends CommerceControllerDefinitionsMap,
