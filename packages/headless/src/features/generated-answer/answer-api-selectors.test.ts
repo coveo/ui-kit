@@ -1,5 +1,3 @@
-/** biome-ignore-all lint/suspicious/noExplicitAny: Just tests */
-
 import {skipToken} from '@reduxjs/toolkit/query';
 import {describe, expect, it} from 'vitest';
 import type {SearchAppState} from '../../state/search-app-state.js';
@@ -47,7 +45,7 @@ describe('answer-api-selectors', () => {
         generatedAnswer: {
           cannotAnswer: false,
           answerApiQueryParams,
-        } as any,
+        },
       });
       const result = selectAnswerApiQueryParams(state as SearchAppState);
       expect(result).toBe(answerApiQueryParams);

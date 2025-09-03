@@ -1254,7 +1254,7 @@ export const streamAnswerAPIStateMockWithStaticFiltersAndTabExpressionWithEmptyC
   {
     ...streamAnswerAPIStateMockWithStaticFiltersAndTabExpression,
     advancedSearchQueries: {
-      ...streamAnswerAPIStateMockWithStaticFiltersAndTabExpression.advancedSearchQueries,
+      ...streamAnswerAPIStateMockWithStaticFiltersAndTabExpression.advancedSearchQueries!,
       cq: '',
     },
   };

@@ -1,5 +1,3 @@
-/** biome-ignore-all lint/suspicious/noExplicitAny: Just tests */
-
 import {
   expectedStreamAnswerAPIParam,
   expectedStreamAnswerAPIParamWithATabWithAnExpression,
@@ -32,7 +30,7 @@ describe('constructAnswerQueryParams', () => {
 
   it('returns the correct query params with fetch usage', () => {
     const queryParams = constructAnswerQueryParams(
-      streamAnswerAPIStateMock as any,
+      streamAnswerAPIStateMock,
       buildMockNavigatorContextProvider()()
     );
 
@@ -41,7 +39,7 @@ describe('constructAnswerQueryParams', () => {
 
   it('should merge tab expression in request constant query when expression is not a blank string', () => {
     const queryParams = constructAnswerQueryParams(
-      streamAnswerAPIStateMockWithATabWithAnExpression as any,
+      streamAnswerAPIStateMockWithATabWithAnExpression,
       buildMockNavigatorContextProvider()()
     );
 
@@ -52,7 +50,7 @@ describe('constructAnswerQueryParams', () => {
 
   it('should not include tab info when there is NO tab', () => {
     const queryParams = constructAnswerQueryParams(
-      streamAnswerAPIStateMockWithoutAnyTab as any,
+      streamAnswerAPIStateMockWithoutAnyTab,
       buildMockNavigatorContextProvider()()
     );
 
@@ -61,7 +59,7 @@ describe('constructAnswerQueryParams', () => {
 
   it('should merge filter expressions in request constant query when expression is selected', () => {
     const queryParams = constructAnswerQueryParams(
-      streamAnswerAPIStateMockWithStaticFiltersSelected as any,
+      streamAnswerAPIStateMockWithStaticFiltersSelected,
       buildMockNavigatorContextProvider()()
     );
 
@@ -72,7 +70,7 @@ describe('constructAnswerQueryParams', () => {
 
   it('should not include filter info when there is NO filter', () => {
     const queryParams = constructAnswerQueryParams(
-      streamAnswerAPIStateMockWithoutAnyFilters as any,
+      streamAnswerAPIStateMockWithoutAnyFilters,
       buildMockNavigatorContextProvider()()
     );
     expect(queryParams).toEqual(expectedStreamAnswerAPIParam);
@@ -80,7 +78,7 @@ describe('constructAnswerQueryParams', () => {
 
   it('should not include non-selected filters and empty filters', () => {
     const queryParams = constructAnswerQueryParams(
-      streamAnswerAPIStateMockWithNonValidFilters as any,
+      streamAnswerAPIStateMockWithNonValidFilters,
       buildMockNavigatorContextProvider()()
     );
     expect(queryParams).toEqual(expectedStreamAnswerAPIParam);
@@ -88,7 +86,7 @@ describe('constructAnswerQueryParams', () => {
 
   it('should merge multiple filter expressions and a tab expression', () => {
     const queryParams = constructAnswerQueryParams(
-      streamAnswerAPIStateMockWithStaticFiltersAndTabExpression as any,
+      streamAnswerAPIStateMockWithStaticFiltersAndTabExpression,
       buildMockNavigatorContextProvider()()
     );
     expect(queryParams).toEqual(
@@ -98,7 +96,7 @@ describe('constructAnswerQueryParams', () => {
 
   it('should not include advanced search queries when there are no advanced search queries', () => {
     const queryParams = constructAnswerQueryParams(
-      streamAnswerAPIStateMockWithStaticFiltersAndTabExpressionWithEmptyCQ as any,
+      streamAnswerAPIStateMockWithStaticFiltersAndTabExpressionWithEmptyCQ,
       buildMockNavigatorContextProvider()()
     );
     expect(queryParams).toEqual(
@@ -108,7 +106,7 @@ describe('constructAnswerQueryParams', () => {
 
   it('should accept an undefined SearchAction', () => {
     const queryParams = constructAnswerQueryParams(
-      streamAnswerAPIStateMockWithoutSearchAction as any,
+      streamAnswerAPIStateMockWithoutSearchAction,
       buildMockNavigatorContextProvider()()
     );
 
@@ -119,7 +117,7 @@ describe('constructAnswerQueryParams', () => {
 
   it('should include all analytics fields when usage is fetch', () => {
     const queryParams = constructAnswerQueryParams(
-      streamAnswerAPIStateMock as any,
+      streamAnswerAPIStateMock,
       buildMockNavigatorContextProvider()()
     );
 
@@ -134,14 +132,14 @@ describe('constructAnswerQueryParams', () => {
 
   it('should build the correct facets times for the query params', () => {
     const queryParams = constructAnswerQueryParams(
-      streamAnswerAPIStateMock as any,
+      streamAnswerAPIStateMock,
       buildMockNavigatorContextProvider()()
     );
 
     expect(queryParams).toEqual(expectedStreamAnswerAPIParam);
 
     const updatedQueryParams = constructAnswerQueryParams(
-      streamAnswerAPIStateMock as any,
+      streamAnswerAPIStateMock,
       buildMockNavigatorContextProvider()()
     );
 
