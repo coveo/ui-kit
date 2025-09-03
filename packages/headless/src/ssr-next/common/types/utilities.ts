@@ -33,7 +33,3 @@ export type OptionsTuple<TOptions> = HasKeys<TOptions> extends false
   : HasKeys<ExtractRequiredOptions<TOptions>> extends false
     ? [options?: TOptions]
     : [options: TOptions];
-
-export type OptionsExtender<TOptions> = (
-  options: TOptions
-) => TOptions | Promise<TOptions>;

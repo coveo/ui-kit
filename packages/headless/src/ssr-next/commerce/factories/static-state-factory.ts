@@ -5,16 +5,10 @@ import {augmentPreprocessRequestWithForwardedFor} from '../../common/augment-pre
 import {createStaticState} from '../controller-utils.js';
 import type {BuildConfig} from '../types/build.js';
 import {SolutionType} from '../types/controller-constants.js';
-import type {
-  AugmentedControllerDefinition,
-  FilteredBakedInControllers,
-} from '../types/controller-definitions.js';
-import type {InferControllerStaticStateMapFromDefinitionsWithSolutionType} from '../types/controller-inference.js';
+import type {AugmentedControllerDefinition} from '../types/controller-definitions.js';
 import type {
   CommerceControllerDefinitionsMap,
   CommerceEngineDefinitionOptions,
-  EngineStaticState,
-  FetchStaticStateFunction,
   FetchStaticStateParameters,
 } from '../types/engine.js';
 import {buildFactory} from './build-factory.js';
@@ -25,10 +19,13 @@ export function fetchStaticStateFactory<
   controllerDefinitions: AugmentedControllerDefinition<TControllerDefinitions>,
   options: CommerceEngineDefinitionOptions<TControllerDefinitions>
 ) {
-  return (
-    solutionType: SolutionType
-  ): FetchStaticStateFunction<TControllerDefinitions> =>
-    async (...params: FetchStaticStateParameters<TControllerDefinitions>) => {
+  return <TSolutionType extends SolutionType>(solutionType: TSolutionType) =>
+    async (
+      ...params: FetchStaticStateParameters<
+        TControllerDefinitions,
+        TSolutionType
+      >
+    ) => {
       const solutionTypeBuild = await buildFactory(
         controllerDefinitions,
         options
@@ -55,21 +52,17 @@ export function fetchStaticStateFactory<
         engine.waitForRequestCompletedAction()
       );
 
-      const staticState = createStaticState({
+      const staticState = createStaticState<
+        UnknownAction,
+        TControllerDefinitions,
+        TSolutionType
+      >({
         searchActions,
         controllers,
-      }) as EngineStaticState<
-        UnknownAction,
-        InferControllerStaticStateMapFromDefinitionsWithSolutionType<
-          TControllerDefinitions,
-          SolutionType
-        > &
-          FilteredBakedInControllers<SolutionType>
-      > &
-        BuildConfig<TControllerDefinitions, SolutionType>;
+      });
 
       return {
-        ...params[0], // TODO: KIT-4754: remove index access after no longer relying on OptionTuple type
+        ...(params[0] as BuildConfig<TControllerDefinitions, TSolutionType>), // TODO: KIT-4754: remove index access after no longer relying on OptionTuple type
         ...staticState,
       };
     };
