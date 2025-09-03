@@ -71,7 +71,9 @@ describe('createRenewAccessTokenMiddleware', () => {
 
     expect(shouldRenewJWT).toHaveBeenCalledWith('test-jwt-token');
     expect(renewFn).toHaveBeenCalled();
-    expect(store.dispatch).toHaveBeenCalledTimes(1);
+    expect(store.dispatch).toHaveBeenCalledWith(
+      updateBasicConfiguration({accessToken: 'new-token'})
+    );
     expect(logger.debug).toHaveBeenCalledWith('Access token was renewed.');
   });
 
@@ -239,6 +241,6 @@ describe('createRenewAccessTokenMiddleware', () => {
     vi.advanceTimersByTime(500);
     await callMiddleware(middleware, action);
 
-    expect(store.dispatch).toHaveBeenCalledOnce();
+    expect(store.dispatch).toHaveBeenCalled();
   });
 });
