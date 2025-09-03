@@ -7,8 +7,8 @@ import type {
 import type {BuildConfig} from './build.js';
 import type {SolutionType} from './controller-constants.js';
 import type {
+  CommerceEngineDefinitionControllersPropsOption,
   ControllerDefinitionsMap,
-  EngineDefinitionControllersPropsOption,
   FilteredBakedInControllers,
   OptionsTuple,
 } from './controller-definitions.js';
@@ -27,8 +27,8 @@ export type FetchStaticState<
   TSolutionType extends SolutionType,
 > = (
   ...params: OptionsTuple<
-    BuildConfig<TSolutionType> &
-      EngineDefinitionControllersPropsOption<
+    BuildConfig<TControllersDefinitionsMap, TSolutionType> &
+      CommerceEngineDefinitionControllersPropsOption<
         TControllersDefinitionsMap,
         TControllersProps,
         TSolutionType
@@ -38,5 +38,6 @@ export type FetchStaticState<
   EngineStaticState<
     TSearchAction,
     TControllersStaticState & FilteredBakedInControllers<TSolutionType>
-  >
+  > &
+    BuildConfig<TControllersDefinitionsMap, TSolutionType>
 >;

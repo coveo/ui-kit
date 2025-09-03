@@ -1,3 +1,18 @@
+## <small>3.29.2 (2025-09-03)</small>
+
+* chore(headless-ssr): organize commerce and search code (#5924) ([5654e8d](https://github.com/coveo/ui-kit/commits/5654e8d)), closes [#5924](https://github.com/coveo/ui-kit/issues/5924)
+* chore(headless-ssr): remove unnecessary `Kind` type (#5930) ([7126d9e](https://github.com/coveo/ui-kit/commits/7126d9e)), closes [#5930](https://github.com/coveo/ui-kit/issues/5930) [#5866](https://github.com/coveo/ui-kit/issues/5866)
+* chore(headless-ssr): simplify recommendation interface (#5880) ([d237324](https://github.com/coveo/ui-kit/commits/d237324)), closes [#5880](https://github.com/coveo/ui-kit/issues/5880)
+* chore(headless-ssr): wire controller states (#5866) ([b82d3ad](https://github.com/coveo/ui-kit/commits/b82d3ad)), closes [#5866](https://github.com/coveo/ui-kit/issues/5866)
+
+
+
+## <small>3.29.1 (2025-08-28)</small>
+
+* fix(headless): use deepest selected children when increasing `numberOfValues` in category facet `sho ([10f9dec](https://github.com/coveo/ui-kit/commits/10f9dec)), closes [#5955](https://github.com/coveo/ui-kit/issues/5955)
+
+
+
 ## 3.29.0 (2025-08-27)
 
 * chore(headless-ssr): auto-include Essential OOTB Controllers in Commerce Engine Definition (#5865) ([846210d](https://github.com/coveo/ui-kit/commits/846210d)), closes [#5865](https://github.com/coveo/ui-kit/issues/5865)

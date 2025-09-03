@@ -1,6 +1,6 @@
 import type {CommerceEngineConfiguration} from '../../../app/commerce-engine/commerce-engine-configuration.js';
 import {defineMockCommerceController} from '../../../test/mock-ssr-controller-definitions.js';
-import type {CommerceEngineDefinitionOptions} from '../factories/build-factory.js';
+import type {CommerceEngineDefinitionOptions} from '../types/engine.js';
 import {defineCommerceEngine} from './commerce-engine.ssr.js';
 
 describe('Commerce Engine SSR', () => {
@@ -60,24 +60,56 @@ describe('Commerce Engine SSR', () => {
       expect(getAccessToken()).toBe('new-access-token');
     });
 
-    // TODO: KIT-4742
-    it.todo(
-      'should always return context and cart controllers as well as the ones provided'
-    );
+    it('should always return context and cart controllers as well as the ones provided', async () => {
+      const engineDefinition = defineCommerceEngine(definitionOptions);
+      const solutionType = definitionName as keyof typeof engineDefinition;
+      const staticState = await engineDefinition[solutionType].fetchStaticState(
+        {
+          searchParams: {query: 'test'},
+          recommendations: [],
+          context: {
+            view: {url: 'http://example.com'},
+            country: 'US',
+            currency: 'USD',
+            language: 'en',
+          },
+        }
+      );
+      expect(staticState.controllers).toHaveProperty('context');
+      expect(staticState.controllers).toHaveProperty('cart');
+      expect(staticState.controllers).toHaveProperty('controller1');
+      expect(staticState.controllers).toHaveProperty('controller2');
+    });
   });
 
   describe('#searchEngineDefinition', () => {
-    // TODO: KIT-4742
-    it.todo('should always return parameter manager controller');
+    it('should always return parameter manager controller', async () => {
+      const {searchEngineDefinition} = defineCommerceEngine(definitionOptions);
+      const staticState = await searchEngineDefinition.fetchStaticState({
+        searchParams: {query: 'foo'},
+        context: {
+          view: {url: 'http://example.com/search'},
+          country: 'US',
+          currency: 'USD',
+          language: 'en',
+        },
+      });
+      expect(staticState.controllers).toHaveProperty('parameterManager');
+    });
   });
 
   describe('#listingEngineDefinition', () => {
-    // TODO: KIT-4742
-    it.todo('should always return parameter manager controller');
-  });
-
-  describe('#recommendationEngineDefinition', () => {
-    // TODO: KIT-4619: validate recommendation array
-    it.todo('should throw if the recommendations are missing');
+    it('should always return parameter manager controller', async () => {
+      const {listingEngineDefinition} = defineCommerceEngine(definitionOptions);
+      const staticState = await listingEngineDefinition.fetchStaticState({
+        context: {
+          view: {url: 'http://example.com'},
+          country: 'US',
+          currency: 'USD',
+          language: 'en',
+        },
+      });
+      expect(staticState.controllers).toHaveProperty('parameterManager');
+    });
   });
 });

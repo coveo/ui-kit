@@ -50,11 +50,11 @@ test.describe('atomic-product-text', () => {
         });
       });
 
-      test(`should not highlight the keywords in the ${field} when shouldHighlight is false`, async ({
+      test(`should not highlight the keywords in the ${field} when noHighlight is true`, async ({
         productText,
       }) => {
         await productText.load({
-          args: {field: 'excerpt', shouldHighlight: false},
+          args: {field: 'excerpt', noHighlight: true},
         });
         await productText.hydrated.first().waitFor();
 
@@ -79,6 +79,13 @@ test.describe('atomic-product-text', () => {
     test('should not highlight the keywords in the excerpt', async ({
       productText,
     }) => {
+      await productText.load({
+        args: {field: 'excerpt', 'no-highlight': true},
+      });
+      await productText.hydrated.first().waitFor();
+
+      await expect(productText.textContent.first()).toContainText(/kayak/i);
+
       const highlightedText =
         await productText.highlightedText.allTextContents();
       await expect(productText.textContent.first()).toContainText(/kayak/i);

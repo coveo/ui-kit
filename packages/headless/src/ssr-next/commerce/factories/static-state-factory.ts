@@ -3,6 +3,7 @@ import {buildProductListing} from '../../../controllers/commerce/product-listing
 import {buildSearch} from '../../../controllers/commerce/search/headless-search.js';
 import {augmentPreprocessRequestWithForwardedFor} from '../../common/augment-preprocess-request.js';
 import {createStaticState} from '../controller-utils.js';
+import type {BuildConfig} from '../types/build.js';
 import {SolutionType} from '../types/controller-constants.js';
 import type {
   AugmentedControllerDefinition,
@@ -11,14 +12,12 @@ import type {
 import type {InferControllerStaticStateMapFromDefinitionsWithSolutionType} from '../types/controller-inference.js';
 import type {
   CommerceControllerDefinitionsMap,
+  CommerceEngineDefinitionOptions,
   EngineStaticState,
   FetchStaticStateFunction,
   FetchStaticStateParameters,
 } from '../types/engine.js';
-import {
-  buildFactory,
-  type CommerceEngineDefinitionOptions,
-} from './build-factory.js';
+import {buildFactory} from './build-factory.js';
 
 export function fetchStaticStateFactory<
   TControllerDefinitions extends CommerceControllerDefinitionsMap,
@@ -65,8 +64,13 @@ export function fetchStaticStateFactory<
           TControllerDefinitions,
           SolutionType
         > &
-          FilteredBakedInControllers<typeof solutionType>
-      >;
-      return staticState;
+          FilteredBakedInControllers<SolutionType>
+      > &
+        BuildConfig<TControllerDefinitions, SolutionType>;
+
+      return {
+        ...params[0], // TODO: KIT-4754: remove index access after no longer relying on OptionTuple type
+        ...staticState,
+      };
     };
 }

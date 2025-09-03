@@ -3,13 +3,11 @@ import type {
   BuildParameters,
   BuildResult,
   CommerceControllerDefinitionsMap,
+  CommerceEngineDefinitionOptions,
   HydrateStaticStateFunction,
   HydrateStaticStateParameters,
 } from '../types/engine.js';
-import {
-  buildFactory,
-  type CommerceEngineDefinitionOptions,
-} from './build-factory.js';
+import {buildFactory} from './build-factory.js';
 
 export function hydratedRecommendationStaticStateFactory<
   TControllerDefinitions extends CommerceControllerDefinitionsMap,
@@ -26,7 +24,6 @@ export function hydratedRecommendationStaticStateFactory<
     )(SolutionType.recommendation);
 
     const {engine, controllers} = (await solutionTypeBuild(
-      // @ts-expect-error: TODO: KIT-4742: the wiring will fix also the type inconsistencies
       ...(params as BuildParameters<TControllerDefinitions>)
     )) as BuildResult<TControllerDefinitions>;
 
