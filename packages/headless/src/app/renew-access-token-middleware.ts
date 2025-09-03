@@ -25,7 +25,7 @@ export function createRenewAccessTokenMiddleware(
     accessTokenRenewalsAttempts = 0;
   }, 500);
 
-  const renewAccessToken = async (
+  const handleTokenRenewal = async (
     store: MiddlewareAPI,
     handleErrors = false
   ): Promise<string | null> => {
@@ -70,7 +70,7 @@ export function createRenewAccessTokenMiddleware(
           'Access token is expired or about to expire, attempting renewal.'
         );
         try {
-          const newAccessToken = await renewAccessToken(store);
+          const newAccessToken = await handleTokenRenewal(store);
           if (newAccessToken) {
             logger.debug('Access token was renewed.');
           } else {
@@ -123,7 +123,7 @@ export function createRenewAccessTokenMiddleware(
     accessTokenRenewalsAttempts++;
     resetRenewalTriesAfterDelay();
 
-    await renewAccessToken(store, true);
+    await handleTokenRenewal(store, true);
     store.dispatch(action as unknown as UnknownAction);
     return;
   };
