@@ -5,13 +5,11 @@ import {SolutionType} from '../types/controller-constants.js';
 import type {AugmentedControllerDefinition} from '../types/controller-definitions.js';
 import type {
   CommerceControllerDefinitionsMap,
+  CommerceEngineDefinitionOptions,
   FetchStaticStateParameters,
 } from '../types/engine.js';
 import {filterRecommendationControllers} from '../utils/recommendation-filter.js';
-import {
-  buildFactory,
-  type CommerceEngineDefinitionOptions,
-} from './build-factory.js';
+import {buildFactory} from './build-factory.js';
 
 export function fetchRecommendationStaticStateFactory<
   TControllerDefinitions extends CommerceControllerDefinitionsMap,

@@ -64,7 +64,6 @@ describe('hydratedRecommendationStaticStateFactory', () => {
 
     await factory({
       searchActions: mockSearchActions,
-      controllers: {},
       ...mockBaseConfiguration,
     });
 
@@ -85,7 +84,6 @@ describe('hydratedRecommendationStaticStateFactory', () => {
 
     const staticState = await factory({
       searchActions: mockSearchActions,
-      controllers: {},
       ...mockBaseConfiguration,
     });
 
@@ -106,7 +104,6 @@ describe('hydratedRecommendationStaticStateFactory', () => {
 
     const staticState = await factory({
       searchActions: mockSearchActions,
-      controllers: {},
       ...mockBaseConfiguration,
     });
 

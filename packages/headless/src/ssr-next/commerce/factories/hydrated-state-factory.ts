@@ -2,11 +2,11 @@ import type {SolutionType} from '../types/controller-constants.js';
 import type {AugmentedControllerDefinition} from '../types/controller-definitions.js';
 import type {
   CommerceControllerDefinitionsMap,
+  CommerceEngineDefinitionOptions,
   HydrateStaticStateParameters,
 } from '../types/engine.js';
 import {
   buildFactory,
-  type CommerceEngineDefinitionOptions,
 } from './build-factory.js';
 
 export function hydratedStaticStateFactory<
