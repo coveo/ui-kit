@@ -51,50 +51,77 @@ export function createRenewAccessTokenMiddleware(
     return accessToken;
   };
 
+  const handleProactiveTokenRenewal = async (store: MiddlewareAPI) => {
+    const state = store.getState();
+    const accessToken = getAccessTokenFromState(state);
+
+    if (!accessToken || !shouldRenewAccessToken(accessToken)) {
+      return;
+    }
+
+    logger.debug(
+      'Access token is expired or about to expire, attempting renewal.'
+    );
+
+    try {
+      const newAccessToken = await handleTokenRenewal(store);
+      if (newAccessToken) {
+        logger.debug('Access token was renewed.');
+      } else {
+        logger.warn(
+          'Access token renewal returned an empty token. Please check the #renewAccessToken function.'
+        );
+      }
+    } catch (error) {
+      logger.warn(
+        error,
+        'Access token renewal failed. A retry will occur if necessary.'
+      );
+    }
+  };
+
+  const handleExpiredToken = async (
+    store: MiddlewareAPI,
+    payload: {error: UnauthorizedTokenError},
+    action: unknown
+  ) => {
+    if (accessTokenRenewalsAttempts >= 5) {
+      logger.warn(
+        'Attempted to renew the token but was not successful. Please check the #renewAccessToken function.'
+      );
+      dispatchError(store, payload.error);
+      return payload;
+    }
+
+    accessTokenRenewalsAttempts++;
+    resetRenewalTriesAfterDelay();
+
+    await handleTokenRenewal(store, true);
+    store.dispatch(action as unknown as UnknownAction);
+    return;
+  };
+
   return (store) => (next) => async (action) => {
     const isThunk = typeof action === 'function';
+    const hasRenewFunction = typeof renewToken === 'function';
 
     if (!isThunk) {
       return next(action);
     }
 
-    const hasRenewFunction = typeof renewToken === 'function';
-
     // Proactive JWT expiration check before action execution
     if (hasRenewFunction) {
-      const state = store.getState();
-      const accessToken = getAccessTokenFromState(state);
-
-      if (accessToken && shouldRenewAccessToken(accessToken)) {
-        logger.debug(
-          'Access token is expired or about to expire, attempting renewal.'
-        );
-        try {
-          const newAccessToken = await handleTokenRenewal(store);
-          if (newAccessToken) {
-            logger.debug('Access token was renewed.');
-          } else {
-            logger.warn(
-              'Access token renewal returned an empty token. Please check the #renewAccessToken function.'
-            );
-          }
-        } catch (error) {
-          logger.warn(
-            error,
-            'Access token renewal failed. A retry will occur if necessary.'
-          );
-        }
-      }
+      await handleProactiveTokenRenewal(store);
     }
 
     // Notes:
     //
-    // - No race condition with the preceding `updateBasicConfiguration` dispatch because:
-    //   1. `store.dispatch()` with synchronous actions completes immediately and updates the state.
-    //   2. The state is guaranteed to contain the fresh token before this point is reached.
-    //   3. Only the first renewal attempt (`isTokenRenewalPending`) updates the configuration.
+    // - No race condition with the preceding `handleProactiveTokenRenewal` call because:
+    //   1. Token renewal is de-duped: concurrent calls await the same in-flight promise; only the first successful renewal updates the configuration.
+    //   2. Dispatch of the new token is synchronous; state is updated before the thunk continues.
+    //   3. The state is guaranteed to contain the fresh token before this point is reached.
     //
-    // - Execution is not short-circuited after successful proactive renewal because:
+    // - Execution continues after successful proactive renewal because:
     //   1. The API is the authoritative source for token validity (401/419 responses).
     //   2. Reactive error handling provides defense-in-depth for rare edge cases.
     //   3. This ensures consistent error handling across all action types
@@ -112,20 +139,7 @@ export function createRenewAccessTokenMiddleware(
       return payload;
     }
 
-    if (accessTokenRenewalsAttempts >= 5) {
-      logger.warn(
-        'Attempted to renew the token but was not successful. Please check the #renewAccessToken function.'
-      );
-      dispatchError(store, payload.error);
-      return payload;
-    }
-
-    accessTokenRenewalsAttempts++;
-    resetRenewalTriesAfterDelay();
-
-    await handleTokenRenewal(store, true);
-    store.dispatch(action as unknown as UnknownAction);
-    return;
+    return await handleExpiredToken(store, payload, action);
   };
 }
 
