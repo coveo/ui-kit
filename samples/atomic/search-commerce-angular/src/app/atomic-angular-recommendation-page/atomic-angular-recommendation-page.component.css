@@ -1,0 +1,47 @@
+div.result-root.with-sections.display-list.image-small
+  atomic-result-section-visual {
+  height: 120px;
+}
+.rating-wrapper {
+  display: flex;
+  align-items: center;
+}
+.rating-wrapper span {
+  margin-left: 5px;
+  color: #8e959d;
+}
+
+.layout {
+  padding: 20px;
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 30px;
+}
+
+.carousel {
+  grid-column: 1 / span 2;
+  --atomic-recs-number-of-columns: 3;
+}
+
+@media only screen and (max-width: 1600px) {
+  .tiles {
+    --atomic-recs-number-of-columns: 3;
+  }
+}
+
+@media only screen and (max-width: 1280px) {
+  .layout {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .tiles {
+    --atomic-recs-number-of-columns: 2;
+    --atomic-recs-number-of-rows: 2;
+  }
+}
+
+@media only screen and (max-width: 720px) {
+  .layout {
+    grid-template-columns: 1fr;
+  }
+}

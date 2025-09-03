@@ -1,7 +1,7 @@
-import {IconButton} from '@storybook/components';
-import {STORY_MISSING, STORY_RENDERED} from '@storybook/core-events';
+import {IconButton} from 'storybook/internal/components';
+import {STORY_MISSING, STORY_RENDERED} from 'storybook/internal/core-events';
 import {CogIcon} from '@storybook/icons';
-import {addons, types} from '@storybook/manager-api';
+import {addons, types} from 'storybook/manager-api';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import React from 'react';
 

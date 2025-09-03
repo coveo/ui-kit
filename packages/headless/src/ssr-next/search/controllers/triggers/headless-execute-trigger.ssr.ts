@@ -3,7 +3,7 @@ import {
   buildExecuteTrigger,
   type ExecuteTrigger,
 } from '../../../../controllers/triggers/headless-execute-trigger.js';
-import type {ControllerDefinitionWithoutProps} from '../../../common/types/controllers.js';
+import type {ControllerDefinitionWithoutProps} from '../../types/controller-definition.js';
 
 export * from '../../../../controllers/triggers/headless-execute-trigger.js';
 

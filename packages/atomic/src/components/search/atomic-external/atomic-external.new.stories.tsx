@@ -1,4 +1,4 @@
-import type {Meta, StoryObj} from '@storybook/web-components';
+import type {Meta, StoryObj} from '@storybook/web-components-vite';
 import {html} from 'lit';
 
 const meta: Meta = {
@@ -61,7 +61,7 @@ const meta: Meta = {
       </div>
     </div>
   `,
-  play: async () => {
+  afterEach: async () => {
     await customElements.whenDefined('atomic-search-interface');
 
     const searchInterface1 = document.querySelector(
