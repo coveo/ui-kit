@@ -16,7 +16,6 @@ import {SolutionType} from '../types/controller-constants.js';
 import type {
   AugmentedControllerDefinition,
   BakedInControllers,
-  ControllerDefinitionsMap,
 } from '../types/controller-definitions.js';
 import type {InferControllersMapFromDefinition} from '../types/controller-inference.js';
 import type {
