@@ -1,3 +1,10 @@
+## <small>2.5.7 (2025-09-03)</small>
+
+* test(headless-ssr): fix flaky SSR commerce tests (#5967) ([45c114a](https://github.com/coveo/ui-kit/commits/45c114a)), closes [#5967](https://github.com/coveo/ui-kit/issues/5967)
+* test(headless-ssr): fix flaky SSR search tests (#5996) ([53cab85](https://github.com/coveo/ui-kit/commits/53cab85)), closes [#5996](https://github.com/coveo/ui-kit/issues/5996) [#5967](https://github.com/coveo/ui-kit/issues/5967)
+
+
+
 ## <small>2.5.5 (2025-08-27)</small>
 
 * chore(headless-ssr): auto-include Essential OOTB Controllers in Commerce Engine Definition (#5865) ([846210d](https://github.com/coveo/ui-kit/commits/846210d)), closes [#5865](https://github.com/coveo/ui-kit/issues/5865)
