@@ -458,5 +458,9 @@ export class GeneratedAnswerObject {
     return null;
   }
 
+  async cleanup() {
+    await this.page.unrouteAll({ behavior: 'ignoreErrors' });
+  }
+
   streamEndAnalyticRequestPromise!: Promise<boolean | Request>;
 }

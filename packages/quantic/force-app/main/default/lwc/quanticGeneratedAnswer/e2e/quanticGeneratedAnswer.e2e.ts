@@ -254,6 +254,8 @@ useCaseTestCases.forEach((useCase) => {
                   await generatedAnswer.clickFirstTimeframeFacetLink();
                   await generateRequestPromise;
 
+                  await generatedAnswer.cleanup();
+
                   if (generatedAnswer.streamEndAnalyticRequestPromise) {
                     await generatedAnswer.streamEndAnalyticRequestPromise;
                   }
