@@ -193,7 +193,6 @@ describe('commerce controller-utils', () => {
     beforeEach(() => {
       const mockStaticBuilder = {
         withState: vi.fn().mockReturnThis(),
-        withKind: vi.fn().mockReturnThis(),
         withInitialState: vi.fn().mockReturnThis(),
         build: vi.fn().mockReturnValue({
           state: {},

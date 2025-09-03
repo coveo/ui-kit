@@ -9,7 +9,6 @@ import {
 } from '../../../../controllers/commerce/context/headless-context.js';
 import {MissingControllerProps} from '../../../common/errors.js';
 import type {UniversalControllerDefinitionWithProps} from '../../types/controller-definitions.js';
-import {createControllerWithKind, Kind} from '../../types/kind.js';
 
 export type {
   Context,
@@ -39,10 +38,9 @@ export function defineContext(): ContextDefinition {
     recommendation: true,
     buildWithProps: (engine, props: {initialState: ContextOptions}) => {
       if (props === undefined) {
-        throw new MissingControllerProps(Kind.Context);
+        throw new MissingControllerProps('Context');
       }
-      const controller = buildContext(engine, {options: props.initialState});
-      return createControllerWithKind(controller, Kind.Context);
+      return buildContext(engine, {options: props.initialState});
     },
   };
 }

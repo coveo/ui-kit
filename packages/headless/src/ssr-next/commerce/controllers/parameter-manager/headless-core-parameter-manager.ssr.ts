@@ -20,7 +20,6 @@ import {querySetReducer as querySet} from '../../../../features/query-set/query-
 import {loadReducerError} from '../../../../utils/errors.js';
 import {SolutionType} from '../../types/controller-constants.js';
 import type {SearchAndListingControllerDefinitionWithProps} from '../../types/controller-definitions.js';
-import {createControllerWithKind, Kind} from '../../types/kind.js';
 
 export type {
   ParameterManager,
@@ -54,23 +53,19 @@ export function defineParameterManager(): ParameterManagerDefinition {
         if (!loadCommerceProductListingParameterReducers(engine)) {
           throw loadReducerError;
         }
-        const controller = buildProductListing(engine).parameterManager({
+        return buildProductListing(engine).parameterManager({
           ...props,
           excludeDefaultParameters: true,
         });
-
-        return createControllerWithKind(controller, Kind.ParameterManager);
       } else {
         if (!loadCommerceSearchParameterReducers(engine)) {
           throw loadReducerError;
         }
 
-        const controller = buildSearch(engine).parameterManager({
+        return buildSearch(engine).parameterManager({
           ...props,
           excludeDefaultParameters: true,
         });
-
-        return createControllerWithKind(controller, Kind.ParameterManager);
       }
     },
   };
