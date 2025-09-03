@@ -90,7 +90,7 @@ The project uses git hooks with [Husky](https://www.npmjs.com/package/husky). Yo
 
 To ensure a consistent development experience, add the following to your `.vscode/settings.json` in the project root:
 
-```json
+```jsonc
 {
  "editor.defaultFormatter": "biomejs.biome",
  "editor.codeActionsOnSave": {
