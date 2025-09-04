@@ -14,10 +14,4 @@ export default defineConfig({
     target: 'esnext',
     outDir: 'dist',
   },
-  resolve: {
-    alias: {
-      // Force this sample to use the correct react-router version
-      'react-router-dom': 'react-router/dom',
-    },
-  },
 });
