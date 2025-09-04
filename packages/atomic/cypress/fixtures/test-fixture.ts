@@ -211,7 +211,9 @@ export class TestFixture {
     });
 
     cy.document().then((doc) => {
+      this.style = doc.importNode(this.style, true);
       doc.head.appendChild(this.style);
+      this.searchInterface = doc.importNode(this.searchInterface, true);
       doc.body.appendChild(this.searchInterface);
       cy.get('atomic-search-interface').as(this.elementAliases.SearchInterface);
     });
@@ -251,7 +253,6 @@ export class TestFixture {
       if (!this.initializeInterface) {
         return;
       }
-
       if (!searchInterfaceComponent.classList.contains('hydrated')) {
         searchInterfaceComponent.initialize(sampleConfig).then(() => {
           configureI18n(
@@ -270,7 +271,7 @@ export class TestFixture {
             cy.wait(TestFixture.interceptAliases.UA);
           }
         }
-      }
+        }
     });
 
     this.aliases.forEach((alias) => alias(this));
