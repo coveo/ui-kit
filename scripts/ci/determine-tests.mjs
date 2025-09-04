@@ -4,8 +4,8 @@ import {EOL} from 'node:os';
 import {basename, dirname, join, relative} from 'node:path';
 import {setOutput} from '@actions/core';
 import {getBaseHeadSHAs, getChangedFiles} from './git-utils.mjs';
-import {ensureFileExists, listImports} from './list-imports.mjs';
 import {getAllHeadlessAffectedEndpoints} from './headless-dependency-tracker.mjs';
+import {ensureFileExists, listImports} from './list-imports.mjs';
 
 class NoRelevantChangesError extends Error {
   constructor() {

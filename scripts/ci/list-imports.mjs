@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-import {existsSync, readFileSync, lstatSync} from 'node:fs';
+import {existsSync, lstatSync, readFileSync} from 'node:fs';
 import {join, relative, resolve} from 'node:path';
 import ts from 'typescript';
 

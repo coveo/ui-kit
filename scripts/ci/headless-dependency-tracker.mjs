@@ -1,9 +1,9 @@
 #!/usr/bin/env node
+import {join} from 'node:path';
 import buildConfig from '../../packages/headless/build.config.json' with {
   type: 'json',
 };
 import {listExportsFromIndex} from './list-imports.mjs';
-import {join} from 'node:path';
 
 function getHeadlessPackageName(useCase) {
   const prefix = '@coveo/headless';
