@@ -4,6 +4,7 @@ const fs = require('fs').promises;
 const path = require('path');
 
 const STATIC_RESOURCES_PATH = './force-app/main/default/staticresources';
+const SOLUTION_EXAMPLES_STATIC_RESOURCES_PATH = './force-app/solutionExamples/main/staticresources';
 const TEMP_DIR = '.tmp/quantic-compiled';
 
 function resolveLibraryPath(packageName, relativePath) {
@@ -26,6 +27,15 @@ const LIBRARY_CONFIG = {
       {
         src: resolveLibraryPath('marked', '../marked.min.js'),
         dest: `${STATIC_RESOURCES_PATH}/marked/marked.min.js`,
+      },
+    ],
+  },
+  coveoua: {
+    directories: [`${SOLUTION_EXAMPLES_STATIC_RESOURCES_PATH}/coveoua`],
+    files: [
+      {
+        src: path.resolve(path.dirname(require.resolve('coveo.analytics')), '../dist/coveoua.js'),
+        dest: `${SOLUTION_EXAMPLES_STATIC_RESOURCES_PATH}/coveoua/coveoua.js`,
       },
     ],
   },
@@ -131,6 +141,31 @@ async function copyLibrary(config) {
   }
 }
 
+async function fixCoveoUA() {
+  // Fix the Coveo UA script, `globalThis` is not supported in Locker Service
+  // https://developer.salesforce.com/docs/component-library/tools/locker-service-viewer
+  const problemText = 'globalThis';
+  const solutionText = 'window';
+  const coveoUAFilePath = path.join(SOLUTION_EXAMPLES_STATIC_RESOURCES_PATH, 'coveoua', 'coveoua.js');
+  
+  try {
+    const coveoUAContent = await fs.readFile(coveoUAFilePath, 'utf8');
+    const fixedCoveoUAContent = coveoUAContent.replace(new RegExp(problemText, 'g'), solutionText);
+    
+    // Only write if changes were made
+    if (coveoUAContent !== fixedCoveoUAContent) {
+      await fs.writeFile(coveoUAFilePath, fixedCoveoUAContent, 'utf8');
+      console.info(`Fixed Coveo UA: replaced "${problemText}" with "${solutionText}"`);
+    } else {
+      console.info('Coveo UA: no fixes needed');
+    }
+  } catch (error) {
+    console.error(`Failed to fix Coveo UA script: ${coveoUAFilePath}\nError: ${error.message}`);
+    process.exit(1);
+  }
+}
+
+// IF YOU NEED TO ADD A NEW LIBRARY BE SURE TO ADD IT TO THE TURBO OUTPUTS : packages/quantic/turbo.json
 async function main() {
   console.info('Begin building static resources');
 
@@ -145,6 +180,10 @@ async function main() {
 
   await copyLibrary(LIBRARY_CONFIG.headless);
   console.info('Headless copied.');
+
+  await copyLibrary(LIBRARY_CONFIG.coveoua);
+  await fixCoveoUA();
+  console.info('Coveo.analytics copied to solutionsExamples.');
 
   LIBRARY_CONFIG.headless.files.forEach(async ({dest}) => {
     if (dest.includes('headless.js')) {

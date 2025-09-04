@@ -10,17 +10,14 @@ import type {executeSearch} from '../../../features/search/search-actions.js';
 import {buildMockNavigatorContextProvider} from '../../../test/mock-navigator-context-provider.js';
 import {buildMockResult} from '../../../test/mock-result.js';
 import * as augmentModule from '../../common/augment-preprocess-request.js';
-import type {ControllerDefinitionWithoutProps} from '../../common/types/controllers.js';
 import type {
   InferHydratedState,
   InferStaticState,
 } from '../../common/types/engine.js';
 import {defineResultList} from '../controllers/result-list/headless-result-list.ssr.js';
-import {
-  defineSearchEngine,
-  type SearchEngineDefinition,
-  type SSRSearchEngine,
-} from './search-engine.ssr.js';
+import type {ControllerDefinitionWithoutProps} from '../types/controller-definition.js';
+import type {SearchEngineDefinition} from '../types/engine.js';
+import {defineSearchEngine, type SSRSearchEngine} from './search-engine.ssr.js';
 
 interface CustomEngineStateReader<TState extends {}> extends Controller {
   state: TState;
@@ -105,10 +102,13 @@ describe('SSR', () => {
     type AnyState = StaticState | HydratedState;
 
     const defaultNumberOfResults = 12;
-    let engineDefinition: SearchEngineDefinition<{
-      engineStateReader: ReturnType<typeof defineCustomEngineStateReader>;
-      resultList: ReturnType<typeof defineResultList>;
-    }>;
+    let engineDefinition: SearchEngineDefinition<
+      SSRSearchEngine,
+      {
+        engineStateReader: ReturnType<typeof defineCustomEngineStateReader>;
+        resultList: ReturnType<typeof defineResultList>;
+      }
+    >;
 
     function getResultsPerPage(state: AnyState) {
       return (

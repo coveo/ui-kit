@@ -22,7 +22,7 @@ import {
 import {updateBreakpoints} from '../../../../utils/replace-breakpoint';
 import {once, randomID} from '../../../../utils/utils';
 import {ATOMIC_MODAL_EXPORT_PARTS} from '../../atomic-modal/export-parts';
-import {IconButton} from '../../iconButton';
+import {IconButton} from '../../stencil-iconButton';
 import {AnyBindings} from '../../interface/bindings';
 import {Button} from '../../stencil-button';
 import {FieldsetGroup} from '../../stencil-fieldset-group';

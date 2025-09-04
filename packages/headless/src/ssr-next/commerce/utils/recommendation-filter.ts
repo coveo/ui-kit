@@ -97,7 +97,7 @@ export function filterRecommendationControllers<
      * @param controllers - A record of all controllers where the key is the controller name and the value is the controller instance.
      * @param controllerNames - A list of all recommendation controllers to refresh
      */
-    refresh(whitelist?: string[]) {
+    refresh(whitelist?: Array<keyof TControllerDefinitions>) {
       if (whitelist === undefined) {
         return;
       }

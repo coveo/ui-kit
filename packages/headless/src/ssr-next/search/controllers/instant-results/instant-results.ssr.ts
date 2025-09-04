@@ -4,7 +4,7 @@ import {
   type InstantResultProps,
   type InstantResults,
 } from '../../../../controllers/instant-results/instant-results.js';
-import type {ControllerDefinitionWithoutProps} from '../../../common/types/controllers.js';
+import type {ControllerDefinitionWithoutProps} from '../../types/controller-definition.js';
 
 export * from '../../../../controllers/instant-results/instant-results.js';
 

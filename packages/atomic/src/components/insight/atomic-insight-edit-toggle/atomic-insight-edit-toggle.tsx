@@ -1,6 +1,6 @@
 import {Component, h, Prop} from '@stencil/core';
 import EditIcon from '../../../images/edit.svg';
-import {IconButton} from '../../common/iconButton';
+import {IconButton} from '../../common/stencil-iconButton';
 
 /**
  * @internal

@@ -1,5 +1,5 @@
 import type {CurrencyCodeISO4217} from '@coveo/relay-event-types';
-import {describe, expect, it, type Mock, vi} from 'vitest';
+import {describe, expect, it, type Mock, type MockInstance, vi} from 'vitest';
 import {buildCommerceEngine} from '../../../app/commerce-engine/commerce-engine.js';
 import {getSampleCommerceEngineConfiguration} from '../../../app/commerce-engine/commerce-engine-configuration.js';
 import {buildLogger} from '../../../app/logger.js';
@@ -49,6 +49,7 @@ describe('buildFactory', () => {
     debug: vi.fn(),
   };
 
+  let mockDispatch: MockInstance;
   const mockEngineOptions: SSRCommerceEngineOptions = {
     configuration: getSampleCommerceEngineConfiguration(),
     navigatorContextProvider: buildMockNavigatorContextProvider(),
@@ -57,10 +58,14 @@ describe('buildFactory', () => {
   const mockEmptyDefinition = {};
 
   beforeEach(() => {
+    mockDispatch = vi.fn();
     vi.resetAllMocks();
-    mockBuildCommerceEngine.mockReturnValue(
-      buildMockCommerceEngine(buildMockCommerceState())
-    );
+
+    mockBuildCommerceEngine.mockReturnValue({
+      ...buildMockCommerceEngine(buildMockCommerceState()),
+      //@ts-expect-error: type is irrelevant here
+      dispatch: mockDispatch,
+    });
     (buildLogger as Mock).mockReturnValue(mockLogger);
   });
 
@@ -99,6 +104,31 @@ describe('buildFactory', () => {
         view: {url: 'https://example.com'},
       },
     });
+  });
+
+  it('should dispatch search actions and wait for request completion', async () => {
+    const definition = {
+      controller1: defineMockCommerceController(),
+      controller2: defineMockCommerceController(),
+    };
+
+    mockWireControllerParams.mockReturnValueOnce({
+      searchActions: ['search-action'],
+    });
+
+    const factory = buildFactory(definition, mockEngineOptions);
+
+    await factory(SolutionType.listing)({
+      context: {
+        country: 'CA',
+        currency: 'USD',
+        language: 'en',
+        view: {url: 'https://example.com'},
+      },
+      searchActions: [{type: 'search-action'}],
+    });
+
+    expect(mockDispatch).toHaveBeenCalledWith({type: 'search-action'});
   });
 
   it('should not warn if navigatorContextProvider is present', async () => {
@@ -206,33 +236,6 @@ describe('buildFactory', () => {
       expect(Object.keys(controllers)).toHaveLength(2);
       expect(controllers.cart).not.toBeUndefined();
       expect(controllers.products).not.toBeUndefined();
-      // @ts-expect-error SearchBox is not a listing controller
-      expect(controllers.searchBox).toBeUndefined();
-    });
-
-    it('should return static state from build result without the listing controller', async () => {
-      const factory = buildFactory(
-        {
-          products: defineProductList({listing: false}),
-          searchBox: defineSearchBox(),
-          cart: defineCart(),
-        },
-        mockEngineOptions
-      );
-      await factory(SolutionType.listing)({
-        ...(mockBuildOptions as ListingBuildConfig),
-        controllers: {cart: {initialState: {items: []}}},
-      });
-
-      const {controllers} = await factory(SolutionType.listing)({
-        ...(mockBuildOptions as ListingBuildConfig),
-        controllers: {cart: {initialState: {items: []}}},
-      });
-
-      expect(Object.keys(controllers)).toHaveLength(1);
-      expect(controllers.cart).not.toBeUndefined();
-      // @ts-expect-error Products is disabled for listing
-      expect(controllers.products).toBeUndefined();
       // @ts-expect-error SearchBox is not a listing controller
       expect(controllers.searchBox).toBeUndefined();
     });

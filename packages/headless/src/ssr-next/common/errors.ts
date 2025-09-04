@@ -1,17 +1,3 @@
-import {SolutionType} from '../commerce/types/controller-constants.js';
-
-export class InvalidControllerDefinition extends Error {
-  constructor() {
-    super();
-    this.name = 'InvalidControllerDefinition';
-    this.message = `A controller must be defined for at least one solution type: ${Object.keys(
-      SolutionType
-    )
-      .map((s) => s.toLowerCase())
-      .join(', ')}`;
-  }
-}
-
 export class MissingControllerProps extends Error {
   constructor(controller: string) {
     super();

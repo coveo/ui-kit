@@ -12,8 +12,8 @@ export type {
   StandaloneSearchBoxProps,
 };
 
-export interface StandaloneSearchBoxDefinition
-  extends ListingAndStandaloneControllerWithoutProps<StandaloneSearchBox> {}
+export type StandaloneSearchBoxDefinition =
+  ListingAndStandaloneControllerWithoutProps<StandaloneSearchBox>;
 
 /**
  * Defines the `StandaloneSearchBox` controller for the purpose of server-side rendering.

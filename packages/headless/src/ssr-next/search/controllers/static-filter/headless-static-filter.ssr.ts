@@ -4,7 +4,7 @@ import {
   type StaticFilter,
   type StaticFilterProps,
 } from '../../../../controllers/static-filter/headless-static-filter.js';
-import type {ControllerDefinitionWithoutProps} from '../../../common/types/controllers.js';
+import type {ControllerDefinitionWithoutProps} from '../../types/controller-definition.js';
 
 export * from '../../../../controllers/static-filter/headless-static-filter.js';
 
