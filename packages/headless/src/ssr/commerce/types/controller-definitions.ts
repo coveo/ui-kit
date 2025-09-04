@@ -311,6 +311,9 @@ type ConditionalControllerProps<
   ? RecommendationControllerProps<TControllers, TControllersPropsMap, K>
   : DefaultControllerProps<TControllers, TControllersPropsMap, K>;
 
+/**
+ * @deprecated This interface is no longer used and will be removed in next major version.
+ */
 export interface ControllerDefinitionOption {
   /**
    * Whether the controller will be used in a product listing context.

@@ -146,7 +146,7 @@ export class AtomicCommerceProductList
   @state()
   private isAppLoaded = false;
   @state()
-  private isEveryProductsReady = false;
+  private isEveryProductReady = false;
   @state()
   private resultTemplateRegistered = false;
   @state()
@@ -223,11 +223,14 @@ export class AtomicCommerceProductList
   }
   public async updated(changedProperties: Map<string, unknown>) {
     super.updated(changedProperties);
-    if (
-      changedProperties.has('searchOrListingState') &&
-      this.isEveryProductsReady
-    ) {
-      this.isEveryProductsReady = false;
+    if (changedProperties.has('searchOrListingState')) {
+      const oldState = changedProperties.get('searchOrListingState') as
+        | ProductListingState
+        | SearchState;
+
+      if (!oldState?.isLoading && this.searchOrListingState.isLoading) {
+        this.isEveryProductReady = false;
+      }
     }
     await this.updateProductsReadyState();
   }
@@ -235,12 +238,12 @@ export class AtomicCommerceProductList
   private async updateProductsReadyState() {
     if (
       this.isAppLoaded &&
-      !this.isEveryProductsReady &&
+      !this.isEveryProductReady &&
       this.summaryState?.firstRequestExecuted &&
       this.searchOrListingState?.products?.length > 0
     ) {
       await this.getUpdateComplete();
-      this.isEveryProductsReady = true;
+      this.isEveryProductReady = true;
     }
   }
 
@@ -255,7 +258,7 @@ export class AtomicCommerceProductList
           () => html`<slot></slot>`,
           () => {
             const listClasses = this.computeListDisplayClasses();
-            const productClasses = `${listClasses} ${!this.isEveryProductsReady && 'hidden'}`;
+            const productClasses = `${listClasses} ${!this.isEveryProductReady && 'hidden'}`;
 
             // Products must be rendered immediately (though hidden) to start their initialization and loading processes.
             // If we wait to render products until placeholders are removed, the components won't begin loading until then,
@@ -278,7 +281,7 @@ export class AtomicCommerceProductList
                   )}`
                 )
               )}
-              ${when(!this.isEveryProductsReady, () =>
+              ${when(!this.isEveryProductReady, () =>
                 renderDisplayWrapper({
                   props: {listClasses, display: this.display},
                 })(
@@ -379,9 +382,7 @@ export class AtomicCommerceProductList
   }
 
   private computeListDisplayClasses() {
-    const displayPlaceholders = !(
-      this.isAppLoaded && this.isEveryProductsReady
-    );
+    const displayPlaceholders = !(this.isAppLoaded && this.isEveryProductReady);
 
     return getItemListDisplayClasses(
       this.display,
