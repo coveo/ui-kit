@@ -320,7 +320,7 @@ export class AtomicSearchInterface
   }
 
   /**
-   * Initializes the connection with an already preconfigured [headless search engine](https://docs.coveo.com/en/headless/latest/reference/modules/Search.html, as opposed to the `initialize` method, which will internally create a new search engine instance.
+   * Initializes the connection with an already preconfigured [headless search engine](https://docs.coveo.com/en/headless/latest/reference/interfaces/Search.SearchEngine.html), as opposed to the `initialize` method, which will internally create a new search engine instance.
    * This bypasses the properties set on the component, such as analytics, searchHub, pipeline, language, timezone & logLevel.
    */
   @Method() public initializeWithSearchEngine(engine: SearchEngine) {
