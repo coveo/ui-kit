@@ -161,12 +161,12 @@ function handlePaginationReset(state: PaginationState) {
   state.firstResult = getPaginationInitialState().firstResult;
 }
 
-function determineCurrentPage(state: PaginationState) {
+export function determineCurrentPage(state: {firstResult: number; numberOfResults: number}) {
   const {firstResult, numberOfResults} = state;
   return calculatePage(firstResult, numberOfResults);
 }
 
-function determineMaxPage(state: PaginationState) {
+export function determineMaxPage(state: {totalCountFiltered: number; numberOfResults: number}) {
   const {totalCountFiltered, numberOfResults} = state;
   return calculateMaxPage(totalCountFiltered, numberOfResults);
 }

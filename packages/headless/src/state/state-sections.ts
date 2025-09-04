@@ -482,7 +482,7 @@ export interface InsightCaseContextSection {
 
 export interface AttachedResultsSection {
   /**
-   * The properties related to pagination.
+   * The properties related to attached results.
    */
   attachedResults: AttachedResultsState;
 }
@@ -534,5 +534,24 @@ export interface GetAnswerQuerySection {
     },
     never,
     'answer'
+  >;
+}
+
+export interface GetAttachedResultsSection {
+  // CombinedState is an internal type from RTK Query that is used directly to break dependency on actual
+  // use of RTK Query for the Stream Answer API. This exposes the internal state of RTKQ but allows us to
+  // type this object over using an `unknown` type.
+  attachedResultsApi: CombinedState<
+    {
+      getAttachedResults: QueryDefinition<
+        any,
+        BaseQueryFn<string | FetchArgs, unknown, FetchBaseQueryError>,
+        never,
+        any,
+        'attachedResultsApi'
+      >;
+    },
+    never,
+    'attachedResultsApi'
   >;
 }

@@ -157,6 +157,20 @@ export function getSearchApiBaseUrl(
   return `${organizationEndpoint}/rest/search/v2`;
 }
 
+export function getInsightSearchApiBaseUrl(
+  organizationId: string,
+  insightId: string,
+  environment: PlatformEnvironment = 'prod'
+) {
+  const organizationEndpoint = getOrganizationEndpoint(
+    organizationId,
+    environment
+  );
+
+  // return `${organizationEndpoint}/rest/search/v2`;
+  return `${organizationEndpoint}/rest/organizations/${organizationId}/insight/v1/configs/${insightId}/search`;
+}
+
 export function getAnalyticsNextApiBaseUrl(
   organizationId: string,
   environment: PlatformEnvironment = 'prod'

@@ -3,12 +3,23 @@ import {createReducer} from '@reduxjs/toolkit';
 import {
   attachResult,
   detachResult,
+  goToPage,
+  nextPage,
+  previousPage,
   setAttachedResults,
 } from './attached-results-actions.js';
 import {
   type AttachedResult,
   getAttachedResultsInitialState,
 } from './attached-results-state.js';
+import {attachedResultsApi} from '../../api/attachedResults/attached-results-api.js';
+import {
+  calculateFirstResult,
+  determineCurrentPage,
+  determineMaxPage,
+} from '../pagination/pagination-slice.js';
+
+const minimumPage = 1;
 
 export const attachedResultsReducer = createReducer(
   getAttachedResultsInitialState(),
@@ -38,7 +49,39 @@ export const attachedResultsReducer = createReducer(
         state.results = state.results.filter((result) =>
           attachedResultsMatchIds(result, action.payload.result)
         );
-      });
+      })
+      // From here, all the cases are new:
+      .addCase(goToPage, (state, action) => {
+        const page = action.payload;
+        state.firstResult = calculateFirstResult(page, state.numberOfResults);
+      })
+      .addCase(previousPage, (state) => {
+        const page = determineCurrentPage(state);
+        const previousPage = Math.max(page - 1, minimumPage);
+        state.firstResult = calculateFirstResult(
+          previousPage,
+          state.numberOfResults
+        );
+      })
+      .addCase(nextPage, (state) => {
+        const page = determineCurrentPage(state);
+        const maxPage = determineMaxPage(state);
+        const nextPage = Math.min(page + 1, maxPage);
+        console.log('attachedResultsReducer - nextPage');
+        console.log(nextPage);
+        console.log(calculateFirstResult(nextPage, state.numberOfResults));
+        state.firstResult = calculateFirstResult(
+          nextPage,
+          state.numberOfResults
+        );
+      })
+
+      .addMatcher(
+        attachedResultsApi.endpoints.getAttachedResults.matchFulfilled,
+        (state, action) => {
+          state.totalCountFiltered = action.payload.data.totalCountFiltered;
+        }
+      );
   }
 );
 

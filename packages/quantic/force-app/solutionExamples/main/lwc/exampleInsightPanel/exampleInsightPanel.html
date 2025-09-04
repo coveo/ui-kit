@@ -1,6 +1,6 @@
 <template>
   <div onquantic__registerresulttemplates={handleResultTemplateRegistration}>
-    <c-quantic-insight-interface engine-id={engineId} insight-id={insightId} record-id={caseId}>
+    <c-quantic-insight-interface engine-id={engineId} insight-id="0a840f90-f3f6-41f0-98a6-47915f1cda6a" record-id={caseId}>
       <c-quantic-aria-live></c-quantic-aria-live>
       <div
         class="insight-panel_layout slds-is-relative slds-grid_align-center slds-box"
@@ -46,7 +46,7 @@
                 </div>
               </c-quantic-refine-toggle>
             </div>
-            <template if:true={userActionsReady}>
+            <!-- <template if:true={userActionsReady}>
               <div class="slds-var-p-left_x-small">
                 <c-quantic-user-actions-toggle
                   engine-id={engineId}
@@ -55,7 +55,7 @@
                   excluded-custom-actions={defaultExcludedCustomActions}
                 ></c-quantic-user-actions-toggle>
               </div>
-            </template>
+            </template> -->
           </div>
         </div>
 
@@ -145,6 +145,11 @@
           <c-quantic-generated-answer
             engine-id={engineId}
           ></c-quantic-generated-answer>
+        </div>
+        <div class="slds-var-p-vertical_medium slds-var-p-horizontal_medium">
+          <c-quantic-attached-results
+            engine-id={engineId}
+          ></c-quantic-attached-results>
         </div>
 
         <div class="slds-var-p-bottom_medium insight-panel_body">

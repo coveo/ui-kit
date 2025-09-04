@@ -50,11 +50,18 @@ export interface AttachedResultsState {
    * A loading state, used to sync loading the attached results between multiple components.
    */
   loading: boolean;
+  firstResult: number;
+  numberOfResults: number;
+  totalCountFiltered: number;
 }
 
 export function getAttachedResultsInitialState(): AttachedResultsState {
   return {
     results: [],
     loading: false,
+    // Pagination states
+    firstResult: 0,
+    numberOfResults: 1,
+    totalCountFiltered: 0
   };
 }

@@ -79,6 +79,10 @@ export const detachResult = createAction(
     validatePayloadAndPermanentIdOrUriHash(payload)
 );
 
+export const nextPage = createAction('attachedResults/nextPage');
+export const previousPage = createAction('attachedResults/previousPage');
+export const goToPage = createAction<number>('attachedResults/goToPage');
+
 const validatePayloadAndPermanentIdOrUriHash = (
   payload:
     | SetAttachToCaseAttachActionCreatorPayload
