@@ -7,7 +7,7 @@ import {
   InitializableComponent,
   InitializeBindings,
 } from '../../../utils/initialization-utils';
-import {IconButton} from '../../common/iconButton';
+import {IconButton} from '../../common/stencil-iconButton';
 import {ResultContext} from '../../search/result-template-components/result-template-decorators';
 import {InsightBindings} from '../atomic-insight-interface/atomic-insight-interface';
 
