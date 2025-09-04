@@ -1,37 +1,34 @@
 import {SolutionType} from '../types/controller-constants.js';
+import type {AugmentedControllerDefinition} from '../types/controller-definitions.js';
 import type {
-  BuildParameters,
-  BuildResult,
   CommerceControllerDefinitionsMap,
+  CommerceEngineDefinitionOptions,
   HydrateStaticStateFunction,
   HydrateStaticStateParameters,
 } from '../types/engine.js';
-import {
-  buildFactory,
-  type CommerceEngineDefinitionOptions,
-} from './build-factory.js';
+import {buildFactory} from './build-factory.js';
 
 export function hydratedRecommendationStaticStateFactory<
   TControllerDefinitions extends CommerceControllerDefinitionsMap,
 >(
-  controllerDefinitions: TControllerDefinitions,
+  controllerDefinitions: AugmentedControllerDefinition<TControllerDefinitions>,
   options: CommerceEngineDefinitionOptions<TControllerDefinitions>
-): HydrateStaticStateFunction<TControllerDefinitions> {
+): HydrateStaticStateFunction<
+  TControllerDefinitions,
+  SolutionType.recommendation
+> {
   return async (
-    ...params: HydrateStaticStateParameters<TControllerDefinitions>
+    ...params: HydrateStaticStateParameters<
+      TControllerDefinitions,
+      SolutionType.recommendation
+    >
   ) => {
     const solutionTypeBuild = await buildFactory(
       controllerDefinitions,
       options
     )(SolutionType.recommendation);
 
-    const {engine, controllers} = (await solutionTypeBuild(
-      ...(params as BuildParameters<TControllerDefinitions>)
-    )) as BuildResult<TControllerDefinitions>;
-
-    params[0]!.searchActions.forEach((action) => {
-      engine.dispatch(action);
-    });
+    const {engine, controllers} = await solutionTypeBuild(...params);
 
     await engine.waitForRequestCompletedAction();
 

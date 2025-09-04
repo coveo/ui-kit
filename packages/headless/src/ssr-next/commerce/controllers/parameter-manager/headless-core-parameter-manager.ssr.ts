@@ -17,14 +17,13 @@ import type {CommerceSearchParameters} from '../../../../features/commerce/searc
 import {sortReducer as commerceSort} from '../../../../features/commerce/sort/sort-slice.js';
 import {facetOrderReducer as facetOrder} from '../../../../features/facets/facet-order/facet-order-slice.js';
 import {querySetReducer as querySet} from '../../../../features/query-set/query-set-slice.js';
-import {ensureAtLeastOneSolutionType} from '../../../../ssr/commerce/controller-utils.js';
 import {loadReducerError} from '../../../../utils/errors.js';
+import {ensureAtLeastOneSolutionType} from '../../controller-utils.js';
 import {SolutionType} from '../../types/controller-constants.js';
 import type {
   ControllerDefinitionOption,
   SubControllerDefinitionWithProps,
 } from '../../types/controller-definitions.js';
-import {createControllerWithKind, Kind} from '../../types/kind.js';
 
 export type {
   ParameterManager,
@@ -62,23 +61,19 @@ export function defineParameterManager<
         if (!loadCommerceProductListingParameterReducers(engine)) {
           throw loadReducerError;
         }
-        const controller = buildProductListing(engine).parameterManager({
+        return buildProductListing(engine).parameterManager({
           ...props,
           excludeDefaultParameters: true,
         });
-
-        return createControllerWithKind(controller, Kind.ParameterManager);
       } else {
         if (!loadCommerceSearchParameterReducers(engine)) {
           throw loadReducerError;
         }
 
-        const controller = buildSearch(engine).parameterManager({
+        return buildSearch(engine).parameterManager({
           ...props,
           excludeDefaultParameters: true,
         });
-
-        return createControllerWithKind(controller, Kind.ParameterManager);
       }
     },
   } as SubControllerDefinitionWithProps<
