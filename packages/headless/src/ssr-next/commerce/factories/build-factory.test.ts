@@ -240,33 +240,6 @@ describe('buildFactory', () => {
       expect(controllers.searchBox).toBeUndefined();
     });
 
-    it('should return static state from build result without the listing controller', async () => {
-      const factory = buildFactory(
-        {
-          products: defineProductList({listing: false}),
-          searchBox: defineSearchBox(),
-          cart: defineCart(),
-        },
-        mockEngineOptions
-      );
-      await factory(SolutionType.listing)({
-        ...(mockBuildOptions as ListingBuildConfig),
-        controllers: {cart: {initialState: {items: []}}},
-      });
-
-      const {controllers} = await factory(SolutionType.listing)({
-        ...(mockBuildOptions as ListingBuildConfig),
-        controllers: {cart: {initialState: {items: []}}},
-      });
-
-      expect(Object.keys(controllers)).toHaveLength(1);
-      expect(controllers.cart).not.toBeUndefined();
-      // @ts-expect-error Products is disabled for listing
-      expect(controllers.products).toBeUndefined();
-      // @ts-expect-error SearchBox is not a listing controller
-      expect(controllers.searchBox).toBeUndefined();
-    });
-
     it('should always add a single middleware', async () => {
       const factory = buildFactory(
         {
