@@ -1,10 +1,6 @@
 import type {CommerceEngineOptions} from '../../../app/commerce-engine/commerce-engine.js';
 import type {Controller} from '../../../controllers/controller/headless-controller.js';
-import type {
-  ControllersMap,
-  ControllersPropsMap,
-} from '../../common/types/controllers.js';
-import type {HasKey, OptionsTuple} from '../../common/types/utilities.js';
+import type {HasKey} from '../../common/types/utilities.js';
 import type {CartInitialState} from '../controllers/cart/headless-cart.ssr.js';
 import type {ContextOptions} from '../controllers/context/headless-context.ssr.js';
 import type {
@@ -13,11 +9,9 @@ import type {
 } from '../controllers/parameter-manager/headless-core-parameter-manager.ssr.js';
 import type {SolutionType} from './controller-constants.js';
 import type {
-  CommerceEngineDefinitionControllersPropsOption,
   ControllerDefinitionsMap,
   IsRecommendationController,
 } from './controller-definitions.js';
-import type {CommerceEngineDefinitionBuildResult} from './engine.js';
 
 export interface SearchBuildConfig extends CommonBuildConfig {
   searchParams: ParameterManagerState<
@@ -127,22 +121,3 @@ export type BuildConfig<
       : TSolutionType extends SolutionType.standalone
         ? CommonBuildConfig
         : never;
-
-/**
- * @internal
- */
-export type Build<
-  TControllersMap extends ControllersMap,
-  TControllersProps extends ControllersPropsMap,
-  TControllersDefinitionsMap extends ControllerDefinitionsMap<Controller>,
-  TSolutionType extends SolutionType,
-> = (
-  ...params: OptionsTuple<
-    BuildConfig<TControllersDefinitionsMap, TSolutionType> &
-      CommerceEngineDefinitionControllersPropsOption<
-        TControllersDefinitionsMap,
-        TControllersProps,
-        TSolutionType
-      >
-  >
-) => Promise<CommerceEngineDefinitionBuildResult<TControllersMap>>;

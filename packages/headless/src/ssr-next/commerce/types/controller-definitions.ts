@@ -28,7 +28,6 @@ import type {
   UniversalController,
 } from './controller-scopes.js';
 import type {HydratedState} from './hydrate-static-state.js';
-import type {Kind} from './kind.js';
 import type {HasSolutionType} from './utilities.js';
 
 export type {
@@ -51,11 +50,6 @@ export interface ControllerDefinitionWithoutProps<
   build(engine: SSRCommerceEngine, solutionType?: SolutionType): TController;
 }
 
-// TODO: KIT-4781: There is no point for this interface now that the wiring is happening in headless
-export interface ControllerWithKind extends Controller {
-  _kind: Kind;
-}
-
 export interface ControllerDefinitionWithProps<
   TController extends Controller,
   TProps,
@@ -72,7 +66,7 @@ export interface ControllerDefinitionWithProps<
     engine: SSRCommerceEngine,
     props?: TProps,
     solutionType?: SolutionType
-  ): TController & ControllerWithKind;
+  ): TController;
 }
 
 interface SolutionTypeAvailability {

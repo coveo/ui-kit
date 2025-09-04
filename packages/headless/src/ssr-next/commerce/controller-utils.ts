@@ -10,6 +10,7 @@ import type {SolutionType} from './types/controller-constants.js';
 import type {
   ControllerDefinitionOption,
   ControllerDefinitionsMap,
+  FilteredBakedInControllers,
 } from './types/controller-definitions.js';
 import type {
   InferControllerPropsMapFromDefinitions,
@@ -20,29 +21,22 @@ import type {
 export function createStaticState<
   TSearchAction extends UnknownAction,
   TControllerDefinitions extends ControllerDefinitionsMap<Controller>,
+  TSolutionType extends SolutionType,
 >({
   searchActions,
   controllers,
 }: {
   searchActions: TSearchAction[];
-  controllers: InferControllersMapFromDefinition<
-    TControllerDefinitions,
-    SolutionType
-  >;
-}): EngineStaticState<
-  TSearchAction,
-  InferControllerStaticStateMapFromDefinitionsWithSolutionType<
-    TControllerDefinitions,
-    SolutionType
-  >
-> {
+  controllers: Record<string, Controller>;
+}) {
   return {
     controllers: mapObject(controllers, (controller) =>
       createStaticControllerBuilder(controller).build()
     ) as InferControllerStaticStateMapFromDefinitionsWithSolutionType<
       TControllerDefinitions,
-      SolutionType
-    >,
+      TSolutionType
+    > &
+      FilteredBakedInControllers<TSolutionType>,
     searchActions: searchActions.map((action) => clone(action)),
   };
 }

@@ -14,9 +14,15 @@ import {buildControllerDefinitions} from '../controller-utils.js';
 import type {RecommendationBuildConfig} from '../types/build.js';
 import {SolutionType} from '../types/controller-constants.js';
 import type {
-  BuildParameters,
+  AugmentedControllerDefinition,
+  BakedInControllers,
+} from '../types/controller-definitions.js';
+import type {InferControllersMapFromDefinition} from '../types/controller-inference.js';
+import type {
   CommerceControllerDefinitionsMap,
   CommerceEngineDefinitionOptions,
+  FetchStaticStateParameters,
+  HydrateStaticStateParameters,
 } from '../types/engine.js';
 import {wireControllerParams} from '../utils/controller-wiring.js';
 import {extendEngineConfiguration} from '../utils/engine-wiring.js';
@@ -122,11 +128,15 @@ function buildSSRCommerceEngine(
 
 export const buildFactory =
   <TControllerDefinitions extends CommerceControllerDefinitionsMap>(
-    controllerDefinitions: TControllerDefinitions,
+    controllerDefinitions: AugmentedControllerDefinition<TControllerDefinitions>,
     options: CommerceEngineDefinitionOptions<TControllerDefinitions>
   ) =>
-  <T extends SolutionType>(solutionType: T) =>
-  async (...[buildOptions]: BuildParameters<TControllerDefinitions>) => {
+  <TSolutionType extends SolutionType>(solutionType: TSolutionType) =>
+  async (
+    ...[buildOptions]:
+      | FetchStaticStateParameters<TControllerDefinitions, TSolutionType>
+      | HydrateStaticStateParameters<TControllerDefinitions, TSolutionType>
+  ) => {
     const controllerProps = wireControllerParams(
       solutionType,
       controllerDefinitions,
@@ -160,14 +170,24 @@ export const buildFactory =
     );
 
     const controllers = buildControllerDefinitions({
-      definitionsMap: (controllerDefinitions ?? {}) as TControllerDefinitions,
+      definitionsMap: controllerDefinitions ?? {},
       engine,
       solutionType,
       propsMap: controllerProps,
     });
 
+    if (buildOptions && 'searchActions' in buildOptions) {
+      buildOptions.searchActions.forEach((action) => {
+        engine.dispatch(action);
+      });
+    }
+
     return {
       engine,
-      controllers,
+      controllers: controllers as InferControllersMapFromDefinition<
+        TControllerDefinitions,
+        TSolutionType
+      > &
+        BakedInControllers,
     };
   };
