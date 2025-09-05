@@ -2,7 +2,6 @@ import {readFileSync} from 'node:fs';
 import path, {dirname, resolve} from 'node:path';
 import tailwindcss from '@tailwindcss/vite';
 import {defineConfig} from 'vitest/config';
-//@ts-expect-error - normal json import
 import packageJson from './package.json' with {type: 'json'};
 
 const port = 63315;
