@@ -62,12 +62,8 @@ import {categoryFacetSearchStateSelector} from '../../../../features/facets/face
 import {specificFacetSearchStateSelector} from '../../../../features/facets/facet-search-set/specific/specific-facet-search-state-selector.js';
 import type {ManualRangeSection} from '../../../../state/state-sections.js';
 import {loadReducerError} from '../../../../utils/errors.js';
-import {ensureAtLeastOneSolutionType} from '../../controller-utils.js';
 import {SolutionType} from '../../types/controller-constants.js';
-import type {
-  ControllerDefinitionOption,
-  SubControllerDefinitionWithoutProps,
-} from '../../types/controller-definitions.js';
+import type {SearchAndListingControllerDefinitionWithoutProps} from '../../types/controller-definitions.js';
 
 export type {
   BaseFacetSearchResult,
@@ -111,20 +107,19 @@ export type MappedFacetState = {
             : never;
 };
 
+export type FacetGeneratorDefinition =
+  SearchAndListingControllerDefinitionWithoutProps<FacetGenerator>;
+
 /**
  * @group Definers
  */
-export function defineFacetGenerator<
-  TOptions extends ControllerDefinitionOption | undefined,
->(options?: TOptions) {
-  ensureAtLeastOneSolutionType(options);
+export function defineFacetGenerator(): FacetGeneratorDefinition {
   return {
     listing: true,
     search: true,
-    ...options,
     build: (engine, solutionType) =>
       buildFacetGenerator(engine, {props: {solutionType: solutionType!}}),
-  } as SubControllerDefinitionWithoutProps<FacetGenerator, TOptions>;
+  };
 }
 
 /**
