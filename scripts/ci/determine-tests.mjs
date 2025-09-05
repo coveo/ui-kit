@@ -200,7 +200,7 @@ try {
 
   if (hasHeadlessChanges(changedFiles)) {
     console.log(
-      'Headless files changes detected, computing headless affected endpoints...'
+      'Headless file changes detected, computing affected Headless endpoints...'
     );
 
     const affectedHeadlessEnpoints = getAllHeadlessAffectedEndpoints(
