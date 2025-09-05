@@ -1,7 +1,7 @@
 import {LightningElement, api, track} from 'lwc';
-// @ts-nocheck
+// @ts-ignore
 import templateGeneratedAnswerWithFacets from './templates/templateGeneratedAnswerWithFacets.html';
-// @ts-nocheck
+// @ts-ignore
 import templateGeneratedAnswerWithoutFacets from './templates/templateGeneratedAnswerWithoutFacets.html';
 
 export default class ExampleQuanticGeneratedAnswer extends LightningElement {
