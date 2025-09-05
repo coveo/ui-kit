@@ -12,11 +12,12 @@ import {errorGuard} from '@/src/decorators/error-guard';
 import type {InitializableComponent} from '@/src/decorators/types';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles.js';
 import {localizedString} from '@/src/directives/localized-string';
+import {InitializeBindingsMixin} from '@/src/mixins/bindings-mixin';
 import {AriaLiveRegionController} from '@/src/utils/accessibility-utils';
 import {renderQuerySummaryContainer} from '../../common/query-summary/container';
 import {renderQuerySummaryGuard} from '../../common/query-summary/guard';
 import {getQuerySummaryI18nParameters} from '../../common/query-summary/utils';
-import type {Bindings} from '../atomic-search-interface/atomic-search-interface';
+import type {Bindings} from '../atomic-search-interface/interfaces';
 
 /**
  * The `atomic-query-summary` component displays information about the current range of results and the request duration (e.g., "Results 1-10 of 123 in 0.47 seconds").
@@ -31,10 +32,10 @@ import type {Bindings} from '../atomic-search-interface/atomic-search-interface'
 @bindings()
 @withTailwindStyles
 export class AtomicQuerySummary
-  extends LitElement
+  extends InitializeBindingsMixin(LitElement)
   implements InitializableComponent<Bindings>
 {
-  public bindings!: Bindings;
+  @state() public bindings!: Bindings;
   @state() error!: Error;
   static styles: CSSResultGroup = [
     css`
