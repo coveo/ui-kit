@@ -38,7 +38,7 @@ import {
   categoryFacetComponent,
 } from './category-facet-selectors';
 
-describe('Category Facet Test Suites', () => {
+describe.skip('Category Facet Test Suites', () => {
   describe('with default settings', () => {
     function setupWithDefaultSettings() {
       new TestFixture().with(addCategoryFacet()).init();

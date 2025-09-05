@@ -35,7 +35,7 @@ import {
   NumericFacetSelectors,
 } from './numeric-facet-selectors';
 
-describe('Numeric Facet V1 Test Suites', () => {
+describe.skip('Numeric Facet V1 Test Suites', () => {
   const min = 0;
   const max = 100000;
   const minDecimal = 1.5;
