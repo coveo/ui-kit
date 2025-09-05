@@ -5,8 +5,10 @@ import type {
 } from '@storybook/web-components-vite';
 import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {html} from 'lit/static-html.js';
+import {within} from 'shadow-dom-testing-library';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
+import {handlers} from './e2e/mock-answering-api';
 
 const {events, args, argTypes, template} = getStorybookHelpers(
   'atomic-generated-answer',
@@ -33,12 +35,6 @@ const {decorator, afterEach} = wrapInSearchInterface({
   search: {
     pipeline: 'genqatest',
   },
-  preprocessRequest: (request) => {
-    const parsed = JSON.parse(request.body as string);
-    parsed.q = 'how to resolve netflix connection with tivo';
-    request.body = JSON.stringify(parsed);
-    return request;
-  },
 });
 
 const meta: Meta = {
@@ -52,11 +48,25 @@ const meta: Meta = {
     actions: {
       handles: events,
     },
+    msw: {
+      handlers,
+    },
   },
-  args,
+  args: {
+    ...args,
+    'answer-configuration-id': 'fc581be0-6e61-4039-ab26-a3f2f52f308f',
+  },
   argTypes,
 
-  afterEach,
+  afterEach: async (storyContext) => {
+    await afterEach(storyContext);
+    const canvas = within(storyContext.canvasElement);
+    const searchBox = await canvas.findAllByShadowPlaceholderText('Search');
+    await storyContext.userEvent.type(
+      searchBox[0],
+      'how to resolve netflix connection with tivo{enter}'
+    );
+  },
 };
 
 export default meta;
