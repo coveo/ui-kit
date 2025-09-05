@@ -1,4 +1,5 @@
 import {RETRYABLE_STREAM_ERROR_CODE} from '../../api/generated-answer/generated-answer-client.js';
+import type {SearchRequest} from '../../api/search/search/search-request.js';
 import {buildMockCitation} from '../../test/mock-citation.js';
 import {
   closeGeneratedAnswerFeedbackModal,
@@ -10,6 +11,7 @@ import {
   registerFieldsToIncludeInCitations,
   resetAnswer,
   sendGeneratedAnswerFeedback,
+  setAnswerApiQueryParams,
   setAnswerContentFormat,
   setCannotAnswer,
   setIsAnswerGenerated,
@@ -533,5 +535,24 @@ describe('generated answer slice', () => {
 
       expect(finalState.cannotAnswer).toEqual(false);
     });
+  });
+
+  it('#setAnswerApiQueryParams should set the answerApiQueryParams to the new value in the state', () => {
+    const newAnswerApiQueryParams: Partial<SearchRequest> = {
+      q: 'example query',
+      fieldsToInclude: ['foo', 'bar'],
+    };
+    const finalState = generatedAnswerReducer(
+      {
+        ...getGeneratedAnswerInitialState(),
+        answerApiQueryParams: {
+          q: 'example query',
+          fieldsToInclude: ['foo', 'bar'],
+        },
+      },
+      setAnswerApiQueryParams(newAnswerApiQueryParams)
+    );
+
+    expect(finalState.answerApiQueryParams).toEqual(newAnswerApiQueryParams);
   });
 });

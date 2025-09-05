@@ -16,6 +16,7 @@ import type {
   GeneratedAnswerStreamEventData,
 } from '../../api/generated-answer/generated-answer-event-payload.js';
 import type {GeneratedAnswerStreamRequest} from '../../api/generated-answer/generated-answer-request.js';
+import type {SearchRequest} from '../../api/search/search/search-request.js';
 import type {
   ConfigurationSection,
   DebugSection,
@@ -177,6 +178,12 @@ export const setIsAnswerGenerated = createAction(
 export const setCannotAnswer = createAction(
   'generatedAnswer/setCannotAnswer',
   (payload: boolean) => validatePayload(payload, booleanValue)
+);
+
+export const setAnswerApiQueryParams = createAction(
+  'generatedAnswer/setAnswerApiQueryParams',
+  (payload: Partial<SearchRequest>) =>
+    validatePayload(payload, new RecordValue({}))
 );
 
 interface StreamAnswerArgs {
