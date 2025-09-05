@@ -205,23 +205,6 @@ export function listExports(projectRoot, filePath) {
 }
 
 /**
- * Function to extract both imports and exports from a TypeScript file.
- * @param projectRoot Root directory of the project.
- * @param filePath Path to the TypeScript file.
- * @returns An object containing arrays of imported and exported files.
- */
-export function listImportsAndExports(projectRoot, filePath) {
-  const imports = listImports(projectRoot, filePath);
-  const exports = listExports(projectRoot, filePath);
-
-  return {
-    imports,
-    exports,
-    resolvedExports: exports, // Alias for backward compatibility
-  };
-}
-
-/**
  * Function to deeply extract all export dependencies from a TypeScript file.
  * This follows the chain of re-exports to find all ultimate dependencies.
  * @param projectRoot Root directory of the project.
