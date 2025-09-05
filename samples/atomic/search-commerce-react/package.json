@@ -22,7 +22,7 @@
     "@types/node": "22.16.5",
     "@types/react": "18.3.3",
     "@types/react-dom": "18.3.0",
-    "@vitejs/plugin-react": "4.7.0",
+    "@vitejs/plugin-react": "5.0.2",
     "ncp": "2.0.0",
     "typescript": "5.8.3",
     "vite": "7.0.6"
