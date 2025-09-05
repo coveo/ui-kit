@@ -8,7 +8,7 @@ import {html} from 'lit/static-html.js';
 import {within} from 'shadow-dom-testing-library';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
-import {handlers} from './msw/mock-answering-api';
+import {handlers} from './e2e/mock-answering-api';
 
 const {events, args, argTypes, template} = getStorybookHelpers(
   'atomic-generated-answer',
