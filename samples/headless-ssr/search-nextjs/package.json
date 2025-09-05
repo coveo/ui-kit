@@ -15,11 +15,11 @@
     "react-dom": "19.1.1"
   },
   "devDependencies": {
-    "@types/node": "22.16.5",
+    "@types/node": "22.18.0",
     "@types/react": "19.1.1",
     "@types/react-dom": "19.1.2",
     "cypress": "13.7.3",
     "cypress-web-vitals": "4.2.0",
-    "typescript": "5.8.3"
+    "typescript": "5.9.2"
   }
 }
