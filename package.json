@@ -36,7 +36,6 @@
     "@commitlint/config-conventional": "19.8.1",
     "@commitlint/lint": "19.8.1",
     "@commitlint/load": "19.8.1",
-    "@coveo/atomic": "3.33.2",
     "@coveo/ci": "1.0.0",
     "@cspell/dict-fr-fr": "2.3.2",
     "@npmcli/package-json": "6.2.0",
