@@ -1,5 +1,6 @@
 import {buildMockCitation} from '../../test/mock-citation.js';
 import {
+  generateAnswer,
   registerFieldsToIncludeInCitations,
   setAnswerContentFormat,
   setIsEnabled,
@@ -106,5 +107,17 @@ describe('generated answer', () => {
         expect(() => setAnswerContentFormat(format)).not.toThrow();
       }
     );
+  });
+
+  describe('#generateAnswer', () => {
+    it('should have correct action type', () => {
+      expect(generateAnswer.typePrefix).toBe('generatedAnswer/generateAnswer');
+    });
+
+    it('should be defined and callable', () => {
+      const action = generateAnswer();
+      expect(action).toBeDefined();
+      expect(typeof generateAnswer).toBe('function');
+    });
   });
 });
