@@ -13,21 +13,21 @@ import type {Controller} from '../../../controllers/controller/headless-controll
 import type {LegacySearchAction} from '../../../features/analytics/analytics-utils.js';
 import {createWaitForActionMiddleware} from '../../../utils/utils.js';
 import {augmentPreprocessRequestWithForwardedFor} from '../../common/augment-preprocess-request.js';
+import type {EngineStaticState} from '../../common/types/engine.js';
 import {
   buildControllerDefinitions,
   createStaticState,
-} from '../../common/controller-utils.js';
-import type {ControllerDefinitionsMap} from '../../common/types/controllers.js';
-import type {
-  EngineBuildResult,
-  EngineDefinition,
-  EngineDefinitionOptions,
-  EngineStaticState,
-} from '../../common/types/engine.js';
+} from '../controller-utils.js';
+import type {ControllerDefinitionsMap} from '../types/controller-definition.js';
 import type {
   InferControllerPropsMapFromDefinitions,
   InferControllerStaticStateMapFromDefinitions,
-} from '../../common/types/inference.js';
+} from '../types/controller-inference.js';
+import type {
+  EngineBuildResult,
+  SearchEngineDefinition,
+  SearchEngineDefinitionOptions,
+} from '../types/engine.js';
 
 /**
  * The SSR search engine.
@@ -40,15 +40,6 @@ export interface SSRSearchEngine extends SearchEngine {
    */
   waitForSearchCompletedAction(): Promise<SearchCompletedAction>;
 }
-
-/**
- * The options to create a search engine definition in SSR.
- *
- * @group Engine
- */
-export type SearchEngineDefinitionOptions<
-  TControllers extends ControllerDefinitionsMap<SSRSearchEngine, Controller>,
-> = EngineDefinitionOptions<SearchEngineOptions, TControllers>;
 
 export type SearchCompletedAction = ReturnType<
   LegacySearchAction['fulfilled' | 'rejected']
@@ -81,10 +72,6 @@ function buildSSRSearchEngine(options: SearchEngineOptions): SSRSearchEngine {
   };
 }
 
-export type SearchEngineDefinition<
-  TControllers extends ControllerDefinitionsMap<SSRSearchEngine, Controller>,
-> = EngineDefinition<SSRSearchEngine, TControllers>;
-
 /**
  * Initializes a Search engine definition in SSR with given controllers definitions and search engine config.
  *
@@ -103,10 +90,12 @@ export function defineSearchEngine<
   const {controllers: controllerDefinitions, ...engineOptions} = options;
   type BuildFunction = EngineBuildResult<
     SSRSearchEngine,
-    TControllerDefinitions,
-    SearchEngineOptions
+    TControllerDefinitions
   >;
-  type Definition = SearchEngineDefinition<TControllerDefinitions>;
+  type Definition = SearchEngineDefinition<
+    SSRSearchEngine,
+    TControllerDefinitions
+  >;
   type FetchStaticStateFunction = Definition['fetchStaticState'];
   type HydrateStaticStateFunction = Definition['hydrateStaticState'];
   type BuildParameters = Parameters<BuildFunction>;
@@ -130,11 +119,7 @@ export function defineSearchEngine<
         '[WARNING] Missing navigator context in server-side code. Make sure to set it with `setNavigatorContextProvider` before calling fetchStaticState()'
       );
     }
-    const engine = buildSSRSearchEngine(
-      buildOptions?.extend
-        ? await buildOptions.extend(getOptions())
-        : getOptions()
-    );
+    const engine = buildSSRSearchEngine(getOptions());
     const controllers = buildControllerDefinitions({
       definitionsMap: (controllerDefinitions ?? {}) as TControllerDefinitions,
       engine,
@@ -162,7 +147,7 @@ export function defineSearchEngine<
 
     engine.executeFirstSearch();
     const staticState = createStaticState({
-      searchAction: await engine.waitForSearchCompletedAction(),
+      searchActions: [await engine.waitForSearchCompletedAction()],
       controllers: controllers,
     }) as EngineStaticState<
       UnknownAction,
@@ -176,7 +161,9 @@ export function defineSearchEngine<
     ...params: HydrateStaticStateParameters
   ) => {
     const {engine, controllers} = await build(...(params as BuildParameters));
-    engine.dispatch(params[0]!.searchAction);
+    params[0]!.searchActions.forEach((action) => {
+      engine.dispatch(action);
+    });
     await engine.waitForSearchCompletedAction();
     return {engine, controllers};
   };

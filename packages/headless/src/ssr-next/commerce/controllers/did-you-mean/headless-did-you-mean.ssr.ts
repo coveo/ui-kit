@@ -7,13 +7,16 @@ import type {SearchOnlyControllerDefinitionWithoutProps} from '../../types/contr
 
 export type {DidYouMean, DidYouMeanState};
 
+export type DidYouMeanDefinition =
+  SearchOnlyControllerDefinitionWithoutProps<DidYouMean>;
+
 /**
  * Defines a `DidYouMean` controller instance.
  * @group Definers
  *
  * @returns The `DidYouMean` controller definition.
  */
-export function defineDidYouMean(): SearchOnlyControllerDefinitionWithoutProps<DidYouMean> {
+export function defineDidYouMean(): DidYouMeanDefinition {
   return {
     search: true,
     build: (engine) => buildSearch(engine).didYouMean(),
