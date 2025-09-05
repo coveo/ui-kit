@@ -107,6 +107,25 @@ describe('createRenewAccessTokenMiddleware', () => {
       'Access token renewal failed. A retry will occur if necessary.'
     );
   });
+  it('should only call updateBasicConfiguration once when calling the middleware multiple times in a row', async () => {
+    const {shouldRenewJWT} = await import('../utils/jwt-utils.js');
+    (shouldRenewJWT as Mock).mockReturnValue(true);
+    logger.debug = vi.fn();
+
+    const renewFn = vi.fn().mockResolvedValue('new-token');
+    const middleware = createRenewAccessTokenMiddleware(logger, renewFn);
+    const action = vi.fn().mockResolvedValue('result');
+
+    const array = buildArrayWithLengthEqualToNumberOfRetries();
+    const promises = array.map(() => callMiddleware(middleware, action));
+    await Promise.all(promises);
+
+    expect(store.dispatch).toHaveBeenCalledExactlyOnceWith(
+      updateBasicConfiguration({accessToken: 'new-token'})
+    );
+
+    expect(logger.debug).toHaveBeenCalledWith('Access token was renewed.');
+  });
 
   it('should handle empty renewal result', async () => {
     const {shouldRenewJWT} = await import('../utils/jwt-utils.js');
