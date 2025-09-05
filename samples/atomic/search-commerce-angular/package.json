@@ -28,8 +28,8 @@
     "@angular/build": "19.2.3",
     "@angular/cli": "19.2.3",
     "@angular/compiler-cli": "19.2.2",
-    "@playwright/test": "1.54.1",
-    "@types/node": "22.16.5",
-    "typescript": "5.8.3"
+    "@playwright/test": "1.55.0",
+    "@types/node": "22.18.0",
+    "typescript": "5.9.2"
   }
 }
