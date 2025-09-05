@@ -1,6 +1,6 @@
-import type {NavigatorContextProvider} from '@coveo/headless/ssr-commerce';
+import type {NavigatorContextProvider} from '@coveo/headless/ssr';
 
-export const createMockCommerceNavigatorContextProvider =
+export const createMockNavigatorContextProvider =
   (): NavigatorContextProvider => () => ({
     clientId: 'test-commerce-client',
     location: 'https://commerce.test.com',

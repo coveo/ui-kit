@@ -12,16 +12,16 @@ import {
 } from '../../test/mock-ssr-controller-definitions.js';
 import {createMockState} from '../../test/mock-state.js';
 import * as utils from '../../utils/utils.js';
-import {ControllerBuilder} from './builders/controller-builder.js';
-import {createStaticControllerBuilder} from './builders/static-controller-builder.js';
+import {ControllerBuilder} from '../common/builders/controller-builder.js';
+import {createStaticControllerBuilder} from '../common/builders/static-controller-builder.js';
 import {
   buildControllerDefinitions,
   createStaticState,
 } from './controller-utils.js';
 
 vi.mock('../../utils/utils.js', {spy: true});
-vi.mock('./builders/static-controller-builder.js', {spy: true});
-vi.mock('./builders/controller-builder.js', {spy: true});
+vi.mock('../common/builders/static-controller-builder.js', {spy: true});
+vi.mock('../common/builders/controller-builder.js', {spy: true});
 
 describe('controller-utils', () => {
   let mockSearchAction: UnknownAction;
@@ -37,13 +37,11 @@ describe('controller-utils', () => {
 
   describe('#buildControllerDefinitions', () => {
     let mockControllerBuilder: {
-      withAdditionalArgs: ReturnType<typeof vi.fn>;
       build: ReturnType<typeof vi.fn>;
     };
 
     beforeEach(() => {
       mockControllerBuilder = {
-        withAdditionalArgs: vi.fn().mockReturnThis(),
         build: vi.fn().mockReturnValue(buildMockController()),
       };
 
@@ -69,7 +67,7 @@ describe('controller-utils', () => {
       expect(mockControllerBuilder.build).toHaveBeenCalledTimes(2);
     });
 
-    it('should call a #ControllerBuilder for the controller without props with the correct arguments', () => {
+    it('should call #ControllerBuilder for the controller without props with the correct arguments', () => {
       const noProps = undefined;
       expect(ControllerBuilder).toHaveBeenNthCalledWith(
         1,
@@ -81,7 +79,7 @@ describe('controller-utils', () => {
       );
     });
 
-    it('should call a #ControllerBuilder for the controller with props with the correct arguments', () => {
+    it('should call #ControllerBuilder for the controller with props with the correct arguments', () => {
       expect(ControllerBuilder).toHaveBeenNthCalledWith(
         2,
         {

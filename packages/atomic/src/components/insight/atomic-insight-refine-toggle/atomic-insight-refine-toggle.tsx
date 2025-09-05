@@ -12,7 +12,7 @@ import {
   InitializeBindings,
   BindStateToController,
 } from '../../../utils/initialization-utils';
-import {IconButton} from '../../common/iconButton';
+import {IconButton} from '../../common/stencil-iconButton';
 import {InsightBindings} from '../atomic-insight-interface/atomic-insight-interface';
 
 /**
