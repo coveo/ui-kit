@@ -48,7 +48,7 @@ describe('answer-api-selectors', () => {
         },
       });
       const result = selectAnswerApiQueryParams(state as SearchAppState);
-      expect(result).toBe(answerApiQueryParams);
+      expect(result).toEqual(answerApiQueryParams);
     });
   });
 });

@@ -42,7 +42,7 @@ export const buildStreamingRequest = async (
   streamId: state.search.extendedResults?.generativeQuestionAnsweringId,
 });
 
-export const constructAnswerQueryParams = (
+export const constructAnswerAPIQueryParams = (
   state: StreamAnswerAPIState,
   navigatorContext: NavigatorContext
 ) => {

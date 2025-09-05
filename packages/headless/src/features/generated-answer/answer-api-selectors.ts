@@ -18,8 +18,6 @@ export const selectAnswerTriggerParams = createSelector(
 );
 
 /**
- * Selects the answer query parameters used to call the answer API.
- * These parameters are set when `triggerSearchRequest` runs.
  * If answer params are not available, returns `skipToken`, a special value from RTK Query
  * that tells RTK Query to "skip" running a query or selector until the params are ready.
  *

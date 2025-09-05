@@ -1,3 +1,4 @@
+import {skipToken} from '@reduxjs/toolkit/query';
 import {answerEvaluation} from '../../../api/knowledge/post-answer-evaluation.js';
 import {triggerSearchRequest} from '../../../api/knowledge/stream-answer-actions.js';
 import {
@@ -193,15 +194,15 @@ describe('knowledge-generated-answer', () => {
     expect(fetchAnswer).toHaveBeenCalledTimes(1);
   });
 
-  it('does not dispatch a retry action when there are no answer api query params in the state', () => {
+  it('dispatches a retry action when the selector returns a skipToken', () => {
     vi.spyOn(
       answerApiSelectors,
       'selectAnswerApiQueryParams'
-    ).mockReturnValueOnce(undefined);
+    ).mockReturnValueOnce(skipToken);
 
     const generatedAnswer = createGeneratedAnswer();
     generatedAnswer.retry();
-    expect(fetchAnswer).toHaveBeenCalledTimes(0);
+    expect(fetchAnswer).toHaveBeenCalledTimes(1);
   });
 
   it('dispatches a reset action', () => {

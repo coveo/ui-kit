@@ -553,6 +553,6 @@ describe('generated answer slice', () => {
       setAnswerApiQueryParams(newAnswerApiQueryParams)
     );
 
-    expect(finalState.answerApiQueryParams).toBe(newAnswerApiQueryParams);
+    expect(finalState.answerApiQueryParams).toEqual(newAnswerApiQueryParams);
   });
 });

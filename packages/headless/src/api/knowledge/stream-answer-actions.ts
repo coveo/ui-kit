@@ -4,7 +4,7 @@ import {
   resetAnswer,
   setAnswerApiQueryParams,
 } from '../../features/generated-answer/generated-answer-actions.js';
-import {constructAnswerQueryParams} from '../../features/generated-answer/generated-answer-request.js';
+import {constructAnswerAPIQueryParams} from '../../features/generated-answer/generated-answer-request.js';
 import {updateSearchAction} from '../../features/search/search-actions.js';
 import {fetchAnswer} from './stream-answer-api.js';
 import type {StreamAnswerAPIState} from './stream-answer-api-state.js';
@@ -20,7 +20,7 @@ export const triggerSearchRequest = createAsyncThunk<
     // TODO: SVCC-5178 Refactor multiple sequential dispatches into single action
     dispatch(resetAnswer());
     // Every time a new search request is triggered, we re-calculate the answer query params
-    const answerQueryParams = constructAnswerQueryParams(
+    const answerQueryParams = constructAnswerAPIQueryParams(
       state,
       navigatorContext
     );
