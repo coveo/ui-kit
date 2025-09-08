@@ -577,7 +577,7 @@ export class AtomicSearchInterface
       this.interfaceController.onInitialization(initEngine),
       this.i18Initialized,
     ]);
-    await this.updateLanguage();
+    this.updateLanguage();
     this.bindings = this.getBindings();
     markParentAsReady(this);
     this.pipeline = this.engine!.state.pipeline;
