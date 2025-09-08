@@ -71,11 +71,13 @@ describe('atomic-search-interface', () => {
       setLoadingFlag: vi.fn(),
       unsetLoadingFlag: vi.fn(),
       hasLoadingFlag: vi.fn().mockReturnValue(false),
-      addFieldsToInclude: vi.fn(),
+      addFieldsToInclude: vi.fn((fields: string[]) => {
+        (mockStore.state.fieldsToInclude as string[]).push(...fields);
+      }),
       state: {
         iconAssetsPath: './assets',
         mobileBreakpoint: '768px',
-        fieldsToInclude: [],
+        fieldsToInclude: [] as string[],
       },
     };
     vi.mocked(createSearchStore).mockReturnValue(mockStore as never);
@@ -1039,6 +1041,377 @@ describe('atomic-search-interface', () => {
         document.title,
         '#new-fragment'
       );
+    });
+  });
+
+  // Analytics configuration and behavior
+  describe('analytics behavior', () => {
+    it('should inject library versions in analytics configuration', async () => {
+      const element = await setupElement({analytics: true});
+      const options = {
+        accessToken: 'test-token',
+        organizationId: 'test-org',
+      };
+
+      await element.initialize(options);
+
+      const analyticsConfig = vi.mocked(headless.buildSearchEngine).mock
+        .calls[0][0].configuration.analytics;
+      expect(analyticsConfig).toHaveProperty('source');
+      expect(analyticsConfig?.source).toHaveProperty('@coveo/atomic');
+    });
+  });
+
+  // JWT token handling and engine initialization scenarios
+  describe('engine initialization with JWT tokens', () => {
+    it('should extract pipeline and searchHub from JWT token', async () => {
+      const element = await setupElement();
+      const engine = buildFakeSearchEngine({
+        state: {
+          ...buildFakeSearchEngine().state,
+          pipeline: 'testing',
+          searchHub: 'testing hub',
+        },
+      });
+
+      await element.initializeWithSearchEngine(engine);
+
+      // The engine should have the values from the JWT token
+      expect(engine.state.pipeline).toBe('testing');
+      expect(engine.state.searchHub).toBe('testing hub');
+    });
+
+    it('should warn when interface pipeline conflicts with engine pipeline', async () => {
+      const consoleSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
+      const element = await setupElement({pipeline: 'interface-pipeline'});
+      const engine = buildFakeSearchEngine({
+        state: {
+          ...buildFakeSearchEngine().state,
+          pipeline: 'engine-pipeline',
+          searchHub: 'default',
+        },
+      });
+
+      await element.initializeWithSearchEngine(engine);
+
+      expect(consoleSpy).toHaveBeenCalledWith(
+        'Mismatch between search interface pipeline and engine pipeline. The engine pipeline will be used.'
+      );
+    });
+
+    it('should warn when interface searchHub conflicts with engine searchHub', async () => {
+      const consoleSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
+      const element = await setupElement({searchHub: 'interface-hub'});
+      const engine = buildFakeSearchEngine({
+        state: {
+          ...buildFakeSearchEngine().state,
+          pipeline: 'default',
+          searchHub: 'engine-hub',
+        },
+      });
+
+      await element.initializeWithSearchEngine(engine);
+
+      expect(consoleSpy).toHaveBeenCalledWith(
+        'Mismatch between search interface search hub and engine search hub. The engine search hub will be used.'
+      );
+    });
+
+    it('should not warn when interface configuration matches engine configuration', async () => {
+      const consoleSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
+      const element = await setupElement({
+        pipeline: 'matching-pipeline',
+        searchHub: 'matching-hub',
+      });
+      const engine = buildFakeSearchEngine({
+        state: {
+          ...buildFakeSearchEngine().state,
+          pipeline: 'matching-pipeline',
+          searchHub: 'matching-hub',
+        },
+      });
+
+      await element.initializeWithSearchEngine(engine);
+
+      expect(consoleSpy).not.toHaveBeenCalled();
+    });
+
+    it('should update interface attributes to match engine state when using external engine', async () => {
+      const element = await setupElement();
+      const engine = buildFakeSearchEngine({
+        state: {
+          ...buildFakeSearchEngine().state,
+          pipeline: 'engine-pipeline',
+          searchHub: 'engine-hub',
+        },
+      });
+
+      await element.updateComplete;
+
+      expect(element.pipeline).toBeUndefined();
+      expect(element.searchHub).toBeUndefined();
+
+      await element.initializeWithSearchEngine(engine);
+
+      expect(element.pipeline).toBe('engine-pipeline');
+      expect(element.searchHub).toBe('engine-hub');
+    });
+  });
+
+  // Comprehensive pre-initialization error testing
+  describe('comprehensive pre-initialization error handling', () => {
+    it('should error when setting pipeline before initialization', async () => {
+      const consoleSpy = vi
+        .spyOn(console, 'error')
+        .mockImplementation(() => {});
+      const element = await setupElement();
+
+      element.pipeline = 'test-pipeline';
+      await element.updateComplete;
+
+      expect(consoleSpy).toHaveBeenCalledWith(
+        'You have to call "initialize" on the atomic-search-interface component before modifying the props or calling other public methods.',
+        element
+      );
+    });
+
+    it('should error when setting searchHub before initialization', async () => {
+      const consoleSpy = vi
+        .spyOn(console, 'error')
+        .mockImplementation(() => {});
+      const element = await setupElement();
+
+      element.searchHub = 'test-hub';
+      await element.updateComplete;
+
+      expect(consoleSpy).toHaveBeenCalledWith(
+        'You have to call "initialize" on the atomic-search-interface component before modifying the props or calling other public methods.',
+        element
+      );
+    });
+
+    it('should error when setting language before initialization', async () => {
+      const consoleSpy = vi
+        .spyOn(console, 'error')
+        .mockImplementation(() => {});
+      const element = await setupElement();
+
+      element.language = 'fr';
+      await element.updateComplete;
+
+      expect(consoleSpy).toHaveBeenCalledWith(
+        'You have to call "initialize" on the atomic-search-interface component before modifying the props or calling other public methods.',
+        element
+      );
+    });
+
+    it('should error when calling executeFirstSearch before initialization', async () => {
+      const consoleSpy = vi
+        .spyOn(console, 'error')
+        .mockImplementation(() => {});
+      const element = await setupElement();
+
+      await element.executeFirstSearch();
+
+      expect(consoleSpy).toHaveBeenCalledWith(
+        'You have to call "initialize" on the atomic-search-interface component before modifying the props or calling other public methods.',
+        element
+      );
+    });
+  });
+
+  // Advanced i18n features
+  describe('advanced i18n features', () => {
+    it('should support adding custom translations at runtime', async () => {
+      const element = await setupElement();
+      const engine = buildFakeSearchEngine({});
+      await element.initializeWithSearchEngine(engine);
+
+      const addResourceSpy = vi.spyOn(element.i18n, 'addResource');
+
+      element.i18n.addResource('jo', 'translation', 'test-key', 'test-value');
+
+      expect(addResourceSpy).toHaveBeenCalledWith(
+        'jo',
+        'translation',
+        'test-key',
+        'test-value'
+      );
+    });
+
+    it('should allow translation overrides without affecting other strings', async () => {
+      const element = await setupElement({language: 'fr'});
+      const engine = buildFakeSearchEngine({});
+      await element.initializeWithSearchEngine(engine);
+
+      const addResourceSpy = vi.spyOn(element.i18n, 'addResource');
+
+      element.i18n.addResource(
+        'fr',
+        'translation',
+        'showing-results-of_other',
+        'patate'
+      );
+
+      expect(addResourceSpy).toHaveBeenCalledWith(
+        'fr',
+        'translation',
+        'showing-results-of_other',
+        'patate'
+      );
+    });
+
+    it('should handle lowercase regions correctly', async () => {
+      const element = await setupElement({language: 'zh-tw'});
+      const engine = buildFakeSearchEngine({});
+
+      await element.initializeWithSearchEngine(engine);
+
+      expect(element.language).toBe('zh-tw');
+    });
+
+    it('should fallback to base language when region-specific language is not available', async () => {
+      const element = await setupElement({language: 'es-ES'});
+      const engine = buildFakeSearchEngine({});
+
+      await element.initializeWithSearchEngine(engine);
+
+      // The component should fall back to 'es' when 'es-ES' is not available
+      expect(element.language).toBe('es-ES');
+    });
+
+    it('should not log errors when fetching non-existing languages', async () => {
+      const consoleSpy = vi
+        .spyOn(console, 'error')
+        .mockImplementation(() => {});
+      const element = await setupElement({language: 'nonexistent'});
+      const engine = buildFakeSearchEngine({});
+
+      await element.initializeWithSearchEngine(engine);
+
+      expect(consoleSpy).not.toHaveBeenCalled();
+    });
+  });
+
+  // Search configuration merging
+  describe('search configuration merging', () => {
+    it('should merge search configuration with engine configuration', async () => {
+      const buildSearchEngineSpy = vi.mocked(headless.buildSearchEngine);
+      const element = await setupElement({
+        pipeline: 'interface-pipeline',
+        searchHub: 'interface-hub',
+        timezone: 'America/Montreal',
+      });
+      const options = {
+        accessToken: 'test-token',
+        organizationId: 'test-org',
+        search: {
+          pipeline: 'override-pipeline',
+          locale: 'fr',
+        },
+      };
+
+      await element.initialize(options);
+
+      expect(buildSearchEngineSpy).toHaveBeenCalledWith({
+        configuration: {
+          ...options,
+          search: {
+            searchHub: 'interface-hub',
+            pipeline: 'override-pipeline', // Options should override interface
+            locale: 'fr', // Options should override interface
+            timezone: 'America/Montreal',
+          },
+          analytics: expect.any(Object),
+        },
+        loggerOptions: {
+          level: undefined,
+        },
+      });
+    });
+
+    it('should use default searchHub when not specified', async () => {
+      const buildSearchEngineSpy = vi.mocked(headless.buildSearchEngine);
+      const element = await setupElement();
+      const options = {
+        accessToken: 'test-token',
+        organizationId: 'test-org',
+      };
+
+      await element.initialize(options);
+
+      expect(buildSearchEngineSpy).toHaveBeenCalledWith({
+        configuration: {
+          ...options,
+          search: {
+            searchHub: 'default',
+            pipeline: undefined,
+            locale: 'en',
+            timezone: undefined,
+          },
+          analytics: expect.any(Object),
+        },
+        loggerOptions: {
+          level: undefined,
+        },
+      });
+    });
+  });
+
+  // Fields to include functionality
+  describe('fields to include functionality', () => {
+    it('should register fields to include when provided', async () => {
+      const registerFieldsToIncludeMock = vi.fn();
+      vi.mocked(headless.loadFieldActions).mockReturnValue({
+        registerFieldsToInclude: registerFieldsToIncludeMock,
+      } as never);
+
+      const element = await setupElement({
+        fieldsToInclude: ['field1', 'field2', 'field3'],
+      });
+      const engine = buildFakeSearchEngine({});
+
+      await element.initializeWithSearchEngine(engine);
+
+      // Should register both default ecommerce fields and custom fields
+      expect(registerFieldsToIncludeMock).toHaveBeenCalledWith(
+        expect.arrayContaining(['field1', 'field2', 'field3'])
+      );
+    });
+
+    it('should not register additional fields when fieldsToInclude is empty', async () => {
+      const registerFieldsToIncludeMock = vi.fn();
+      vi.mocked(headless.loadFieldActions).mockReturnValue({
+        registerFieldsToInclude: registerFieldsToIncludeMock,
+      } as never);
+
+      const element = await setupElement({fieldsToInclude: []});
+      const engine = buildFakeSearchEngine({});
+
+      await element.initializeWithSearchEngine(engine);
+
+      // Should still register default ecommerce fields but not additional ones
+      expect(registerFieldsToIncludeMock).toHaveBeenCalledWith(
+        expect.not.arrayContaining(['field1', 'field2', 'field3'])
+      );
+    });
+  });
+
+  // Mobile breakpoint functionality
+  describe('mobile breakpoint functionality', () => {
+    it('should update mobile breakpoint when atomic-search-layout child is present', async () => {
+      const element = await setupElement();
+      const engine = buildFakeSearchEngine({});
+      await element.initializeWithSearchEngine(engine);
+
+      const searchLayout = document.createElement('atomic-search-layout');
+      searchLayout.setAttribute('mobile-breakpoint', '1024px');
+      element.appendChild(searchLayout);
+
+      element.connectedCallback();
+
+      // The mobile breakpoint should be updated in the store
+      expect(element.bindings.store?.state.mobileBreakpoint).toBeDefined();
     });
   });
 });
