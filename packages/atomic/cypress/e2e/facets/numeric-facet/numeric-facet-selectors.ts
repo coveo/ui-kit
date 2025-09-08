@@ -8,7 +8,7 @@ export const NumericFacetSelectors = {
       },
     };
   },
-  shadow: () => cy.get(numericFacetComponent).shadow(),
+  shadow () { return cy.get(numericFacetComponent).shadow()},
   wrapper() {
     return this.shadow().find('[part="facet"]');
   },
@@ -87,7 +87,7 @@ export const NumericFacetSelectors = {
     return this.valueLabel().eq(index);
   },
   rangeInput() {
-    return this.shadow().find('atomic-facet-number-input form');
+    return this.shadow().find('atomic-stencil-facet-number-input form');
   },
   minInput() {
     return this.shadow().find('[part="input-start"]');
