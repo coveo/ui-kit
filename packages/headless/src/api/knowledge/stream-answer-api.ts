@@ -371,6 +371,7 @@ export const constructAnswerQueryParams = (
       firstResult: state.pagination.firstResult,
     }),
     tab: selectActiveTab(state.tabSet),
+    locale: state.configuration.search.locale,
     ...analyticsParams,
   };
 };

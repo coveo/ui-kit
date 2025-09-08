@@ -1,9 +1,9 @@
 /** biome-ignore-all lint/suspicious/noExplicitAny: Just tests */
 import {buildMockNavigatorContextProvider} from '../../../test/mock-navigator-context-provider.js';
 import type {EventSourceMessage} from '../../../utils/fetch-event-source/parse.js';
+import type {GeneratedAnswerStream} from '../generated-answer-stream.js';
 import {
   constructAnswerQueryParams,
-  type GeneratedAnswerStream,
   updateCacheWithEvent,
 } from '../stream-answer-api.js';
 import {

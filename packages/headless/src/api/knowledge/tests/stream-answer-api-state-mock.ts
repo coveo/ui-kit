@@ -1567,6 +1567,7 @@ export const expectedStreamAnswerAPIParam = {
   numberOfResults: 10,
   firstResult: 0,
   tab: 'default',
+  locale: 'en',
   analytics: {
     actionCause: 'searchboxSubmit',
     capture: false,
