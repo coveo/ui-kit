@@ -69,19 +69,37 @@ export class SearchObject {
 
   async mockSearchWithGenerativeQuestionAnsweringId(streamId: string) {
     await this.page.route(this.searchRequestRegex, async (route) => {
-      const apiResponse = await this.page.request.fetch(route.request());
-      const originalBody = await apiResponse.json();
-      originalBody.extendedResults = {
-        generativeQuestionAnsweringId: streamId,
-      };
+      try {
+        if (this.page.isClosed()) {
+          await route.abort();
+          return;
+        }
 
-      await route.fulfill({
-        body: JSON.stringify(originalBody),
-        status: 200,
-        headers: {
-          'content-type': 'application/json',
-        },
-      });
+        const apiResponse = await this.page.request.fetch(route.request());
+        const originalBody = await apiResponse.json();
+        originalBody.extendedResults = {
+          generativeQuestionAnsweringId: streamId,
+        };
+
+        await route.fulfill({
+          body: JSON.stringify(originalBody),
+          status: 200,
+          headers: {
+            'content-type': 'application/json',
+          },
+        });
+      } catch (error) {
+        // Handle context closure gracefully
+        if (
+          error.message.includes(
+            'Target page, context or browser has been closed'
+          )
+        ) {
+          await route.abort();
+          return;
+        }
+        throw error;
+      }
     });
   }
 
