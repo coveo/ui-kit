@@ -38,7 +38,7 @@ export const streamAnswerAPIStateMock: StreamAnswerAPIState = {
     insightId: 'insight-id',
   },
   version: atomicVersion,
-  debug: false,
+  debug: true,
   pipeline: '',
   searchHub: 'jstpierre2 test - Woods test',
   search: {
@@ -1570,6 +1570,7 @@ export const expectedStreamAnswerAPIParam = {
   locale: 'en',
   timezone: 'America/New_York',
   referrer: 'some-test-referrer',
+  debug: true,
   analytics: {
     actionCause: 'searchboxSubmit',
     capture: false,
