@@ -11,7 +11,7 @@ import {addSearchBox} from './search-box-actions';
 import {assertHasText, assertLogOmniboxFromLink} from './search-box-assertions';
 import {SearchBoxSelectors} from './search-box-selectors';
 
-describe.skip('Standalone Search Box Test Suites', () => {
+describe('Standalone Search Box Test Suites', () => {
   function setupStandaloneSearchBox(options?: {
     url?: string;
     enableQuerySyntax?: boolean;
