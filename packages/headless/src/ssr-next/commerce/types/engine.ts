@@ -133,11 +133,13 @@ export type HydrateStaticStateFunction<
 export type FetchStaticStateParameters<
   TControllerDefinitions extends CommerceControllerDefinitionsMap,
   TSolutionType extends SolutionType,
-> = Parameters<FetchStaticStateFunction<TControllerDefinitions, TSolutionType>>;
+> = Parameters<
+  FetchStaticStateFunction<TControllerDefinitions, TSolutionType>
+>[0];
 
 export type HydrateStaticStateParameters<
   TControllerDefinitions extends CommerceControllerDefinitionsMap,
   TSolutionType extends SolutionType,
 > = Parameters<
   HydrateStaticStateFunction<TControllerDefinitions, TSolutionType>
->;
+>[0];

@@ -133,15 +133,15 @@ export const buildFactory =
   ) =>
   <TSolutionType extends SolutionType>(solutionType: TSolutionType) =>
   async (
-    ...[buildOptions]:
+    buildOptions:
       | FetchStaticStateParameters<TControllerDefinitions, TSolutionType>
       | HydrateStaticStateParameters<TControllerDefinitions, TSolutionType>
   ) => {
     const controllerProps = wireControllerParams(
       solutionType,
       controllerDefinitions,
-      buildOptions!
-    ); // TODO: KIT-4754: remove non-null assertion operator
+      buildOptions
+    );
 
     const logger = buildLogger(options.loggerOptions);
     if (!options.navigatorContextProvider) {
@@ -151,7 +151,7 @@ export const buildFactory =
     }
 
     const enabledRecommendationControllers =
-      buildOptions && 'recommendations' in buildOptions // TODO: KIT-4754: remove non-null assertion
+      buildOptions && 'recommendations' in buildOptions
         ? (buildOptions as RecommendationBuildConfig<TControllerDefinitions>)
             ?.recommendations.length
         : 0;
@@ -160,9 +160,10 @@ export const buildFactory =
       ...options,
       configuration: extendEngineConfiguration(
         options.configuration,
-        buildOptions!
-      ), // TODO: KIT-4754: remove non-null assertion operator
+        buildOptions
+      ),
     };
+
     const engine = buildSSRCommerceEngine(
       solutionType,
       engineOptions,

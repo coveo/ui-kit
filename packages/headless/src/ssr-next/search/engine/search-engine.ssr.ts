@@ -98,9 +98,9 @@ export function defineSearchEngine<
   >;
   type FetchStaticStateFunction = Definition['fetchStaticState'];
   type HydrateStaticStateFunction = Definition['hydrateStaticState'];
-  type BuildParameters = Parameters<BuildFunction>;
-  type FetchStaticStateParameters = Parameters<FetchStaticStateFunction>;
-  type HydrateStaticStateParameters = Parameters<HydrateStaticStateFunction>;
+  type BuildParameters = Parameters<BuildFunction>[0];
+  type FetchStaticStateParameters = Parameters<FetchStaticStateFunction>[0];
+  type HydrateStaticStateParameters = Parameters<HydrateStaticStateFunction>[0];
 
   const getOptions = () => {
     return engineOptions;
@@ -112,7 +112,7 @@ export function defineSearchEngine<
     engineOptions.navigatorContextProvider = navigatorContextProvider;
   };
 
-  const build: BuildFunction = async (...[buildOptions]: BuildParameters) => {
+  const build: BuildFunction = async (buildOptions: BuildParameters) => {
     const logger = buildLogger(options.loggerOptions);
     if (!getOptions().navigatorContextProvider) {
       logger.warn(
@@ -134,9 +134,9 @@ export function defineSearchEngine<
   };
 
   const fetchStaticState: FetchStaticStateFunction = async (
-    ...params: FetchStaticStateParameters
+    params: FetchStaticStateParameters
   ) => {
-    const {engine, controllers} = await build(...(params as BuildParameters));
+    const {engine, controllers} = await build(params as BuildParameters);
 
     options.configuration.preprocessRequest =
       augmentPreprocessRequestWithForwardedFor({
@@ -158,10 +158,12 @@ export function defineSearchEngine<
   };
 
   const hydrateStaticState: HydrateStaticStateFunction = async (
-    ...params: HydrateStaticStateParameters
+    params: HydrateStaticStateParameters
   ) => {
-    const {engine, controllers} = await build(...(params as BuildParameters));
-    engine.dispatch(params[0]!.searchAction);
+    const {engine, controllers} = await build(params as BuildParameters);
+    params.searchActions.forEach((action) => {
+      engine.dispatch(action);
+    });
     await engine.waitForSearchCompletedAction();
     return {engine, controllers};
   };
