@@ -286,6 +286,46 @@ describe('knowledge-generated-answer', () => {
       listener();
       expect(triggerSearchRequest).toHaveBeenCalledTimes(4);
     });
+
+    it('re-triggers a triggerSearchRequest after making the same query two times in a row', async () => {
+      const originalQueries = [...queries];
+
+      queries.length = 0;
+      queries.push(
+        {q: '', requestId: ''}, // Initial call
+        {q: 'same question', requestId: '100'}, // Second call - first trigger
+        {q: 'same question', requestId: '200'} // Third call - same query, different requestId - should trigger
+      );
+
+      // Reset counter for this test
+      queryCounter.count = 0;
+
+      try {
+        createGeneratedAnswer();
+        const listener = engine.subscribe.mock.calls[0][0];
+
+        // Initial call
+        listener();
+        expect(triggerSearchRequest).toHaveBeenCalledTimes(0);
+
+        listener();
+        expect(triggerSearchRequest).toHaveBeenCalledTimes(1);
+
+        listener();
+        expect(triggerSearchRequest).toHaveBeenCalledTimes(2);
+
+        expect(triggerSearchRequest).toHaveBeenCalledWith(
+          expect.objectContaining({
+            state: expect.any(Object),
+            navigatorContext: expect.any(Object),
+          })
+        );
+      } finally {
+        // Restore original queries array
+        queries.length = 0;
+        queries.push(...originalQueries);
+      }
+    });
   });
 
   describe('building the controller with the next analytics mode', () => {
