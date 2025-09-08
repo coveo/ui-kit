@@ -136,63 +136,6 @@ export function buildEngineHook<
   };
 }
 
-/**
- * @deprecated use `buildStateProvider` instead.
- * It is isomorphic and can be used for both static and hydrated state.
- */
-export function buildStaticStateProvider<
-  TControllers extends ControllerDefinitionsMap<Controller>,
-  TSolutionType extends SolutionType,
->(
-  singletonContext: SingletonGetter<
-    Context<ContextState<TControllers, TSolutionType> | null>
-  >,
-  solutionType: TSolutionType
-) {
-  return ({
-    controllers,
-    children,
-  }: PropsWithChildren<{
-    controllers: InferControllerStaticStateMapFromDefinitionsWithSolutionType<
-      TControllers,
-      TSolutionType
-    >;
-  }>) => {
-    const {Provider} = singletonContext.get();
-    return <Provider value={{controllers, solutionType}}>{children}</Provider>;
-  };
-}
-
-/**
- * @deprecated use `buildStateProvider` instead.
- * It is isomorphic and can be used for both static and hydrated state.
- */
-export function buildHydratedStateProvider<
-  TControllers extends ControllerDefinitionsMap<Controller>,
-  TSolutionType extends SolutionType,
->(
-  singletonContext: SingletonGetter<
-    Context<ContextState<TControllers, TSolutionType> | null>
-  >,
-  solutionType: TSolutionType
-) {
-  return ({
-    engine,
-    controllers,
-    children,
-  }: PropsWithChildren<{
-    engine: SSRCommerceEngine;
-    controllers: InferControllersMapFromDefinition<TControllers, TSolutionType>;
-  }>) => {
-    const {Provider} = singletonContext.get();
-    return (
-      <Provider value={{engine, controllers, solutionType}}>
-        {children}
-      </Provider>
-    );
-  };
-}
-
 export function buildStateProvider<
   TControllers extends ControllerDefinitionsMap<Controller>,
   TSolutionType extends SolutionType,

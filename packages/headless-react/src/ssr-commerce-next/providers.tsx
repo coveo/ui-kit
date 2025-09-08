@@ -1,13 +1,10 @@
 'use client';
 
 import type {
-  BuildConfig,
   Controller,
   ControllerDefinitionsMap,
   EngineStaticState,
-  FilteredBakedInControllers,
   InferControllerStaticStateMapFromDefinitionsWithSolutionType,
-  InferControllersMapFromDefinition,
   InferHydratedState,
   NavigatorContext,
   SolutionType,
@@ -40,10 +37,8 @@ export function buildProviderWithDefinition<
       InferControllerStaticStateMapFromDefinitionsWithSolutionType<
         TControllers,
         TSolutionType
-      > &
-        FilteredBakedInControllers<TSolutionType>
-    > &
-      BuildConfig<TSolutionType>;
+      >
+    >;
 
     navigatorContext: NavigatorContext;
   }>) {
@@ -59,10 +54,7 @@ export function buildProviderWithDefinition<
         .then(({engine, controllers}) => {
           setHydratedState({
             engine,
-            controllers: controllers as InferControllersMapFromDefinition<
-              TControllers,
-              TSolutionType
-            >,
+            controllers,
           });
         });
     }, [staticState, definition]);
