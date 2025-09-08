@@ -3,6 +3,7 @@ import {
   type ThunkDispatch,
   type UnknownAction,
 } from '@reduxjs/toolkit';
+import HistoryStore from '../../api/analytics/coveo.analytics/history-store.js';
 import {
   defaultNodeJSNavigatorContextProvider,
   type NavigatorContext,
@@ -377,6 +378,9 @@ export const constructAnswerQueryParams = (
     ...(navigatorContext.referrer?.length && {
       referrer: navigatorContext.referrer,
     }),
+    actionsHistory: state.configuration.analytics.enabled
+      ? HistoryStore.getInstance().getHistory()
+      : [],
     ...analyticsParams,
   };
 };

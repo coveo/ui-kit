@@ -1222,6 +1222,18 @@ export const streamAnswerAPIStateMockWithoutSearchAction: StreamAnswerAPIState =
     },
   };
 
+export const streamAnswerAPIStateMockWithAnalyticsEnabled: StreamAnswerAPIState =
+  {
+    ...streamAnswerAPIStateMock,
+    configuration: {
+      ...streamAnswerAPIStateMock.configuration,
+      analytics: {
+        ...streamAnswerAPIStateMock.configuration.analytics,
+        enabled: true,
+      },
+    },
+  };
+
 export const expectedStreamAnswerAPIParam = {
   q: 'what is the hardest wood',
   aq: 'aq-test-query',
@@ -1571,6 +1583,7 @@ export const expectedStreamAnswerAPIParam = {
   timezone: 'America/New_York',
   referrer: 'some-test-referrer',
   debug: true,
+  actionsHistory: [],
   analytics: {
     actionCause: 'searchboxSubmit',
     capture: false,

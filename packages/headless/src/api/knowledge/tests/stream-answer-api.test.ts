@@ -1,4 +1,6 @@
 /** biome-ignore-all lint/suspicious/noExplicitAny: Just tests */
+
+import HistoryStore from '../../../api/analytics/coveo.analytics/history-store.js';
 import {buildMockNavigatorContextProvider} from '../../../test/mock-navigator-context-provider.js';
 import type {EventSourceMessage} from '../../../utils/fetch-event-source/parse.js';
 import type {GeneratedAnswerStream} from '../generated-answer-stream.js';
@@ -17,6 +19,7 @@ import {
   expectedStreamAnswerAPIParamWithStaticFiltersAndTabExpressionWithoutAdvancedCQ,
   expectedStreamAnswerAPIParamWithStaticFiltersSelected,
   streamAnswerAPIStateMock,
+  streamAnswerAPIStateMockWithAnalyticsEnabled,
   streamAnswerAPIStateMockWithATabWithAnExpression,
   streamAnswerAPIStateMockWithNonValidFilters,
   streamAnswerAPIStateMockWithoutAnyFilters,
@@ -165,6 +168,28 @@ describe('#streamAnswerApi', () => {
 
       // Verify that volatile fields (clientTimestamp, actionCause) are not present
       expect(queryParams.analytics).toBeUndefined();
+    });
+
+    it('should include actionsHistory when analytics is enabled and history is present', () => {
+      const history = [
+        {name: 'search', value: 'some query', time: new Date().toISOString()},
+        {name: 'click', value: 'some uri', time: new Date().toISOString()},
+      ];
+      const mockHistoryStore: Pick<HistoryStore, 'getHistory'> = {
+        getHistory: vi.fn(() => history),
+      };
+      vi.spyOn(HistoryStore, 'getInstance').mockReturnValue(
+        mockHistoryStore as HistoryStore
+      );
+
+      const queryParams = constructAnswerQueryParams(
+        streamAnswerAPIStateMockWithAnalyticsEnabled as any,
+        'fetch',
+        buildMockNavigatorContextProvider()()
+      );
+
+      expect(queryParams.actionsHistory).toEqual(history);
+      expect(queryParams.actionsHistory?.length).toBe(2);
     });
 
     it('should include all analytics fields when usage is fetch', () => {
