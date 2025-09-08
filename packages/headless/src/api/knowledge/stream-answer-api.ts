@@ -381,6 +381,12 @@ export const constructAnswerQueryParams = (
     actionsHistory: state.configuration.analytics.enabled
       ? HistoryStore.getInstance().getHistory()
       : [],
+    ...(state.folding && {
+      filterField: state.folding.fields.collection,
+      childField: state.folding.fields.parent,
+      parentField: state.folding.fields.child,
+      filterFieldRange: state.folding.filterFieldRange,
+    }),
     ...analyticsParams,
   };
 };

@@ -12,6 +12,8 @@ import {
   expectedStreamAnswerAPIParam,
   expectedStreamAnswerAPIParamForSelect,
   expectedStreamAnswerAPIParamWithATabWithAnExpression,
+  expectedStreamAnswerAPIParamWithFoldingDisabled,
+  expectedStreamAnswerAPIParamWithFoldingEnabled,
   expectedStreamAnswerAPIParamWithoutAnyTab,
   expectedStreamAnswerAPIParamWithoutReferrer,
   expectedStreamAnswerAPIParamWithoutSearchAction,
@@ -21,6 +23,8 @@ import {
   streamAnswerAPIStateMock,
   streamAnswerAPIStateMockWithAnalyticsEnabled,
   streamAnswerAPIStateMockWithATabWithAnExpression,
+  streamAnswerAPIStateMockWithFoldingDisabled,
+  streamAnswerAPIStateMockWithFoldingEnabled,
   streamAnswerAPIStateMockWithNonValidFilters,
   streamAnswerAPIStateMockWithoutAnyFilters,
   streamAnswerAPIStateMockWithoutAnyTab,
@@ -190,6 +194,30 @@ describe('#streamAnswerApi', () => {
 
       expect(queryParams.actionsHistory).toEqual(history);
       expect(queryParams.actionsHistory?.length).toBe(2);
+    });
+
+    it('should include folding params when folding is disabled', () => {
+      const queryParams = constructAnswerQueryParams(
+        streamAnswerAPIStateMockWithFoldingDisabled as any,
+        'fetch',
+        buildMockNavigatorContextProvider()()
+      );
+
+      expect(queryParams).toEqual(
+        expectedStreamAnswerAPIParamWithFoldingDisabled
+      );
+    });
+
+    it('should include folding params when folding is enabled', () => {
+      const queryParams = constructAnswerQueryParams(
+        streamAnswerAPIStateMockWithFoldingEnabled as any,
+        'fetch',
+        buildMockNavigatorContextProvider()()
+      );
+
+      expect(queryParams).toEqual(
+        expectedStreamAnswerAPIParamWithFoldingEnabled
+      );
     });
 
     it('should include all analytics fields when usage is fetch', () => {

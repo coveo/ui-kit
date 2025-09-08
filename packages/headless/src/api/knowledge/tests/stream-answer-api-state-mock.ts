@@ -1234,6 +1234,38 @@ export const streamAnswerAPIStateMockWithAnalyticsEnabled: StreamAnswerAPIState 
     },
   };
 
+export const streamAnswerAPIStateMockWithFoldingDisabled: StreamAnswerAPIState =
+  {
+    ...streamAnswerAPIStateMock,
+    folding: {
+      ...streamAnswerAPIStateMock.folding,
+      enabled: false,
+      fields: {
+        collection: '',
+        parent: '',
+        child: '',
+      },
+      filterFieldRange: 0,
+      collections: {},
+    },
+  };
+
+export const streamAnswerAPIStateMockWithFoldingEnabled: StreamAnswerAPIState =
+  {
+    ...streamAnswerAPIStateMock,
+    folding: {
+      ...streamAnswerAPIStateMock.folding,
+      enabled: true,
+      fields: {
+        collection: 'testCollection',
+        parent: 'testParent',
+        child: 'testChild',
+      },
+      filterFieldRange: 1,
+      collections: {},
+    },
+  };
+
 export const expectedStreamAnswerAPIParam = {
   q: 'what is the hardest wood',
   aq: 'aq-test-query',
@@ -1653,3 +1685,19 @@ export const expectedStreamAnswerAPIParamWithoutReferrer = (() => {
     },
   };
 })();
+
+export const expectedStreamAnswerAPIParamWithFoldingDisabled = {
+  ...expectedStreamAnswerAPIParam,
+  filterField: '',
+  childField: '',
+  parentField: '',
+  filterFieldRange: 0,
+};
+
+export const expectedStreamAnswerAPIParamWithFoldingEnabled = {
+  ...expectedStreamAnswerAPIParam,
+  filterField: 'testCollection',
+  childField: 'testParent',
+  parentField: 'testChild',
+  filterFieldRange: 1,
+};
