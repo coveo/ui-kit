@@ -11,6 +11,7 @@ import {
   expectedStreamAnswerAPIParamForSelect,
   expectedStreamAnswerAPIParamWithATabWithAnExpression,
   expectedStreamAnswerAPIParamWithoutAnyTab,
+  expectedStreamAnswerAPIParamWithoutReferrer,
   expectedStreamAnswerAPIParamWithoutSearchAction,
   expectedStreamAnswerAPIParamWithStaticFiltersAndTabExpression,
   expectedStreamAnswerAPIParamWithStaticFiltersAndTabExpressionWithoutAdvancedCQ,
@@ -139,6 +140,20 @@ describe('#streamAnswerApi', () => {
       expect(queryParams).toEqual(
         expectedStreamAnswerAPIParamWithoutSearchAction
       );
+    });
+
+    it('should not include referrer info when there is NO referrer', () => {
+      const navigatorContext = buildMockNavigatorContextProvider();
+      const context = navigatorContext();
+      context.referrer = null;
+
+      const queryParams = constructAnswerQueryParams(
+        streamAnswerAPIStateMock as any,
+        'fetch',
+        context
+      );
+
+      expect(queryParams).toEqual(expectedStreamAnswerAPIParamWithoutReferrer);
     });
 
     it('should exclude analytics fields when usage is select', () => {

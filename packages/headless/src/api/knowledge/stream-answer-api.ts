@@ -373,6 +373,9 @@ export const constructAnswerQueryParams = (
     tab: selectActiveTab(state.tabSet),
     locale: state.configuration.search.locale,
     timezone: state.configuration.search.timezone,
+    ...(navigatorContext.referrer?.length && {
+      referrer: navigatorContext.referrer,
+    }),
     ...analyticsParams,
   };
 };

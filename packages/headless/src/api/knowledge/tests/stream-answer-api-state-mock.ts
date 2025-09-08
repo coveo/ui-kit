@@ -1569,13 +1569,14 @@ export const expectedStreamAnswerAPIParam = {
   tab: 'default',
   locale: 'en',
   timezone: 'America/New_York',
+  referrer: 'some-test-referrer',
   analytics: {
     actionCause: 'searchboxSubmit',
     capture: false,
     clientId: '',
     clientTimestamp: '2020-01-01T00:00:00.000Z',
     documentLocation: '',
-    documentReferrer: '',
+    documentReferrer: 'some-test-referrer',
     originContext: 'Search',
     source: [`@coveo/atomic@${atomicVersion}`, '@coveo/headless@Test version'],
   },
@@ -1622,4 +1623,19 @@ export const expectedStreamAnswerAPIParamForSelect = (() => {
     ...expectedStreamAnswerAPIParamWithoutAnalytics
   } = expectedStreamAnswerAPIParam;
   return expectedStreamAnswerAPIParamWithoutAnalytics;
+})();
+
+export const expectedStreamAnswerAPIParamWithoutReferrer = (() => {
+  const {
+    referrer: _referrer,
+    analytics,
+    ...expectedStreamAnswerAPIParamWithoutReferrer
+  } = expectedStreamAnswerAPIParam;
+  return {
+    ...expectedStreamAnswerAPIParamWithoutReferrer,
+    analytics: {
+      ...analytics,
+      documentReferrer: null,
+    },
+  };
 })();
