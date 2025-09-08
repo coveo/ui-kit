@@ -12,6 +12,8 @@ export const buildFakeSearchEngine = ({
   const defaultState = {};
   const defaultImplementation = {
     dispatch: vi.fn(),
+    disableAnalytics: vi.fn(),
+    enableAnalytics: vi.fn(),
     logger: {
       info: vi.fn(),
       warn: vi.fn(),
