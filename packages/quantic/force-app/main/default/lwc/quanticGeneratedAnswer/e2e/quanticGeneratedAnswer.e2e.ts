@@ -221,7 +221,6 @@ useCaseTestCases.forEach((useCase) => {
               test('should display the answer as collapsed', async ({
                 generatedAnswer,
               }) => {
-                await generatedAnswer.streamEndAnalyticRequestPromise;
                 const expectedShowMoreLabel = 'Show more';
                 await generatedAnswer.streamEndAnalyticRequestPromise;
 
@@ -251,14 +250,13 @@ useCaseTestCases.forEach((useCase) => {
                     generatedAnswer.waitForGenerateRequest({
                       q: exampleQuery,
                     });
+                  const newStreamEndPromise =
+                    generatedAnswer.waitForStreamEndAnalytics();
+
                   await generatedAnswer.clickFirstTimeframeFacetLink();
                   await generateRequestPromise;
 
-                  await generatedAnswer.cleanup();
-
-                  if (generatedAnswer.streamEndAnalyticRequestPromise) {
-                    await generatedAnswer.streamEndAnalyticRequestPromise;
-                  }
+                  await newStreamEndPromise;
                 });
               });
             }
