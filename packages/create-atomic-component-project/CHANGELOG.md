@@ -1,3 +1,21 @@
+## <small>1.5.2 (2025-09-03)</small>
+
+* [Version Bump][skip ci]: ui-kit publish ([1793fed](https://github.com/coveo/ui-kit/commits/1793fed))
+
+
+
+## <small>1.5.1 (2025-08-28)</small>
+
+* [Version Bump][skip ci]: ui-kit publish ([c4f6ced](https://github.com/coveo/ui-kit/commits/c4f6ced))
+
+
+
+## 1.5.0 (2025-08-27)
+
+* feat(cli): port over atomic-result-component from cli  (#5919) ([2899a2c](https://github.com/coveo/ui-kit/commits/2899a2c)), closes [#5919](https://github.com/coveo/ui-kit/issues/5919)
+
+
+
 ## <small>1.4.2 (2025-08-20)</small>
 
 * [Version Bump][skip ci]: ui-kit publish ([f967729](https://github.com/coveo/ui-kit/commits/f967729))

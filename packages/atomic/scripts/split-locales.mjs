@@ -27,7 +27,7 @@ async function splitLocales() {
     }
   }
 
-  const langFolderPath = 'src/components/search/atomic-search-interface/lang/';
+  const langFolderPath = 'src/assets/lang/';
 
   await rm(langFolderPath, {recursive: true, force: true});
   await mkdir(langFolderPath, {recursive: true});

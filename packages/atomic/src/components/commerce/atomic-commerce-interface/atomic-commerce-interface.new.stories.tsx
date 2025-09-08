@@ -1,7 +1,8 @@
 import {getSampleCommerceEngineConfiguration} from '@coveo/headless/commerce';
-import type {Meta, StoryObj as Story} from '@storybook/web-components';
+import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
+import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
+import {html} from 'lit';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
-import {renderComponent} from '@/storybook-utils/common/render-component';
 
 async function initializeCommerceInterface(canvasElement: HTMLElement) {
   await customElements.whenDefined('atomic-commerce-interface');
@@ -10,13 +11,26 @@ async function initializeCommerceInterface(canvasElement: HTMLElement) {
   );
   await commerceInterface!.initialize(getSampleCommerceEngineConfiguration());
 }
+
+const {events, args, argTypes, template} = getStorybookHelpers(
+  'atomic-commerce-interface',
+  {excludeCategories: ['methods']}
+);
+
 const meta: Meta = {
   component: 'atomic-commerce-interface',
   title: 'Commerce/Interface',
   id: 'atomic-commerce-interface',
-  render: renderComponent,
-  parameters,
-  play: async (context) => {
+  render: (args) => template(args),
+  parameters: {
+    ...parameters,
+    actions: {
+      handles: events,
+    },
+  },
+  decorators: [(story) => html`<div id="code-root">${story()}</div>`],
+
+  afterEach: async (context) => {
     await initializeCommerceInterface(context.canvasElement);
     const searchInterface = context.canvasElement.querySelector(
       'atomic-commerce-interface'
@@ -24,13 +38,42 @@ const meta: Meta = {
     await searchInterface!.executeFirstRequest();
   },
   argTypes: {
-    'attributes-language': {
-      name: 'language',
-      type: 'string',
+    ...argTypes,
+    engine: {
+      ...argTypes,
+      control: {
+        disable: true,
+      },
+      table: {
+        defaultValue: {summary: undefined},
+      },
+    },
+    urlManager: {
+      ...argTypes.urlManager,
+      control: {
+        disable: true,
+      },
+      table: {
+        defaultValue: {summary: undefined},
+      },
+    },
+    i18n: {
+      ...argTypes.i18n,
+      control: {
+        disable: true,
+      },
+      table: {
+        defaultValue: {summary: undefined},
+      },
     },
   },
   args: {
-    'slots-default': `<span>Interface content</span>`,
+    ...args,
+    engine: undefined,
+    i18n: undefined,
+    urlManager: undefined,
+    language: 'en',
+    'default-slot': `<span>Interface content</span>`,
   },
 };
 
@@ -40,7 +83,7 @@ export const Default: Story = {};
 
 export const SearchBeforeInit: Story = {
   tags: ['!dev'],
-  play: async (context) => {
+  afterEach: async (context) => {
     const commerceInterface = context.canvasElement.querySelector(
       'atomic-commerce-interface'
     );
@@ -51,7 +94,7 @@ export const SearchBeforeInit: Story = {
 
 export const WithProductList: Story = {
   args: {
-    'slots-default': `
+    'default-slot': `
       <atomic-commerce-layout>
         <atomic-layout-section section="search">
           <atomic-commerce-search-box></atomic-commerce-search-box>

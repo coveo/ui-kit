@@ -7,8 +7,8 @@ import type {SearchAndListingControllerDefinitionWithoutProps} from '../../types
 
 export type {NotifyTrigger, NotifyTriggerState};
 
-export interface NotifyTriggerDefinition
-  extends SearchAndListingControllerDefinitionWithoutProps<NotifyTrigger> {}
+export type NotifyTriggerDefinition =
+  SearchAndListingControllerDefinitionWithoutProps<NotifyTrigger>;
 
 /**
  * Defines the `NotifyTrigger` controller for the purpose of server-side rendering.

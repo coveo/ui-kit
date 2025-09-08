@@ -1,3 +1,12 @@
+## <small>3.7.2 (2025-08-28)</small>
+
+* chore: migrate to storybook9 (#5916) ([b26bff1](https://github.com/coveo/ui-kit/commits/b26bff1)), closes [#5916](https://github.com/coveo/ui-kit/issues/5916)
+* chore(atomic): migrate atomic-search-layout (#5877) ([b2172dd](https://github.com/coveo/ui-kit/commits/b2172dd)), closes [#5877](https://github.com/coveo/ui-kit/issues/5877)
+* fix: expose rga internals for angular availability (#5958) ([d452d4f](https://github.com/coveo/ui-kit/commits/d452d4f)), closes [#5958](https://github.com/coveo/ui-kit/issues/5958)
+* fix(atomic-react): make `atomic-commerce-layout` work in atomic-react (#5956) ([c14b812](https://github.com/coveo/ui-kit/commits/c14b812)), closes [#5956](https://github.com/coveo/ui-kit/issues/5956)
+
+
+
 ## 3.7.0 (2025-08-20)
 
 * feat: deprecate `AtomicProductText.enableHighlight` and `AtomicCommerceInterface.reflectStateInUrl`  ([6d04e1b](https://github.com/coveo/ui-kit/commits/6d04e1b)), closes [#5911](https://github.com/coveo/ui-kit/issues/5911)

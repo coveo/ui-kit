@@ -1,5 +1,9 @@
 import {describe, expect, it, vi} from 'vitest';
 import type {Controller} from '../../../controllers/controller/headless-controller.js';
+import {
+  defineMockCommerceController,
+  defineMockRecommendationDefinition,
+} from '../../../test/mock-ssr-controller-definitions.js';
 import {MultipleRecommendationError} from '../../common/errors.js';
 import {defineCart} from '../controllers/cart/headless-cart.ssr.js';
 import {defineProductList} from '../controllers/product-list/headless-product-list.ssr.js';
@@ -10,7 +14,10 @@ import {
 import {defineSearchBox} from '../controllers/search-box/headless-search-box.ssr.js';
 import {defineSummary} from '../controllers/summary/headless-core-summary.ssr.js';
 import type {ControllerDefinitionsMap} from '../types/controller-definitions.js';
-import {filterRecommendationControllers} from './recommendation-filter.js';
+import {
+  filterRecommendationControllers,
+  isRecommendationDefinition,
+} from './recommendation-filter.js';
 
 describe('filterRecommendationControllers', () => {
   const mockRefresh = vi.fn();
@@ -91,5 +98,17 @@ describe('filterRecommendationControllers', () => {
         duplicateSlotIdDefinitions
       )
     ).toThrowError(MultipleRecommendationError);
+  });
+
+  describe('#isRecommendationDefinition', () => {
+    it('should return true for valid recommendation definition', () => {
+      const definition = defineMockRecommendationDefinition('slot_1');
+      expect(isRecommendationDefinition(definition)).toBe(true);
+    });
+
+    it('should return false for non recommendation definition', () => {
+      const definition = defineMockCommerceController();
+      expect(isRecommendationDefinition(definition)).toBe(false);
+    });
   });
 });

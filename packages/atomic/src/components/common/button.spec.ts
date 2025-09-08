@@ -1,5 +1,5 @@
-import {fireEvent, within} from '@storybook/test';
 import {html, nothing, render} from 'lit';
+import {fireEvent, within} from 'storybook/test';
 import {afterEach, beforeEach, describe, expect, it, vi} from 'vitest';
 import {createRipple} from '@/src/utils/ripple';
 import {type ButtonProps, renderButton as button} from './button';

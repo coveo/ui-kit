@@ -1,3 +1,6 @@
+/**
+ * @deprecated This type will be removed in the next major version.
+ */
 export enum Kind {
   Cart = 'CART',
   Context = 'CONTEXT',

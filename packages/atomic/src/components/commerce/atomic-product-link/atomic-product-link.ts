@@ -12,13 +12,12 @@ import {
   createProductContextController,
 } from '@/src/decorators/commerce/product-template-decorators.js';
 import {errorGuard} from '@/src/decorators/error-guard';
-import {injectStylesForNoShadowDOM} from '@/src/decorators/inject-styles-for-no-shadow-dom';
 import type {InitializableComponent} from '@/src/decorators/types';
-import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles.js';
 import {buildCustomEvent} from '@/src/utils/event-utils';
 import type {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface';
 import {buildStringTemplateFromProduct} from '../product-template-component-utils/product-utils';
 import '../atomic-product-text/atomic-product-text';
+import {LightDomMixin} from '@/src/mixins/light-dom';
 import {
   type LightDOMWithSlots,
   SlotsForNoShadowDOMMixin,
@@ -33,10 +32,8 @@ import styles from './atomic-product-link.tw.css';
  */
 @customElement('atomic-product-link')
 @bindings()
-@injectStylesForNoShadowDOM
-@withTailwindStyles
 export class AtomicProductLink
-  extends SlotsForNoShadowDOMMixin(LitElement)
+  extends LightDomMixin(SlotsForNoShadowDOMMixin(LitElement))
   implements InitializableComponent<CommerceBindings>
 {
   static styles = styles;

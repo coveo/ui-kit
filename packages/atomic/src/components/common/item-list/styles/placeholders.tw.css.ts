@@ -1,0 +1,39 @@
+import {css} from 'lit';
+
+const styles = css`
+.list-wrapper.placeholder {
+  .result-component {
+    display: none;
+  }
+
+  table.list-root {
+    display: none;
+  }
+}
+
+.list-wrapper:not(.placeholder) {
+  atomic-result-placeholder {
+    display: none;
+  }
+
+  atomic-result-table-placeholder {
+    display: none;
+  }
+}
+
+.list-root.loading {
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 0.6;
+  }
+  50% {
+    opacity: 0.2;
+  }
+}
+`;
+
+export default styles;

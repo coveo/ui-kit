@@ -166,6 +166,9 @@ export namespace Components {
          */
         "withSearch": boolean;
     }
+    /**
+     * Internal component, only to use through `atomic-generated-answer` or `atomic-insight-generated-answer`
+     */
     interface AtomicCitation {
         /**
           * The citation item information.
@@ -568,6 +571,9 @@ export namespace Components {
          */
         "withToggle"?: boolean;
     }
+    /**
+     * Internal component, only to use through `atomic-generated-answer` or `atomic-insight-generated-answer`
+     */
     interface AtomicGeneratedAnswerFeedbackModal {
         /**
           * A `GeneratedAnswer` controller instance. It is used when the user interacts with the modal.
@@ -1139,6 +1145,10 @@ export namespace Components {
         "userActions": Array<IUserAction>;
     }
     /**
+     * Internal component used by the `atomic-insight-user-actions-modal`. Do not use directly.
+     * This component displays all the actions performed by a user around the time they created a case.
+     * The actions are grouped into multiple sessions, including the session during which the case was created,
+     * the sessions preceding the case creation and the sessions following the case creation.
      * @component 
      * @example <AtomicInsightUserActionsTimeline userId={'123'} caseCreationDate={'2024-08-15T10:00:00Z'} />
      */
@@ -1156,6 +1166,10 @@ export namespace Components {
          */
         "userId": string;
     }
+    /**
+     * Internal component of the atomic-insight-interface
+     * The `atomic-insight-user-actions-toggle` component displays a button that opens a modal containing the user actions timeline component.
+     */
     interface AtomicInsightUserActionsToggle {
         /**
           * The names of custom events to exclude.
@@ -2500,7 +2514,7 @@ export namespace Components {
          */
         "initialize": (options: InitializationOptions) => Promise<void>;
         /**
-          * Initializes the connection with an already preconfigured [headless search engine](https://docs.coveo.com/en/headless/latest/reference/modules/Search.html, as opposed to the `initialize` method, which will internally create a new search engine instance. This bypasses the properties set on the component, such as analytics, searchHub, pipeline, language, timezone & logLevel.
+          * Initializes the connection with an already preconfigured [headless search engine](https://docs.coveo.com/en/headless/latest/reference/interfaces/Search.SearchEngine.html), as opposed to the `initialize` method, which will internally create a new search engine instance. This bypasses the properties set on the component, such as analytics, searchHub, pipeline, language, timezone & logLevel.
          */
         "initializeWithSearchEngine": (engine: SearchEngine) => Promise<void>;
         /**
@@ -2535,15 +2549,6 @@ export namespace Components {
           * The [tz database](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones) identifier of the time zone to use to correctly interpret dates in the query expression, facets, and result items. By default, the timezone will be [guessed](https://day.js.org/docs/en/timezone/guessing-user-timezone).  Example: "America/Montreal"
          */
         "timezone"?: string;
-    }
-    /**
-     * The `atomic-search-layout` helps organize elements in the page.
-     */
-    interface AtomicSearchLayout {
-        /**
-          * CSS value that defines where the layout goes from mobile to desktop. e.g., 800px, 65rem.
-         */
-        "mobileBreakpoint": string;
     }
     /**
      * The `atomic-segmented-facet` displays a horizontal facet of the results for the current query.
@@ -3045,6 +3050,9 @@ declare global {
         prototype: HTMLAtomicCategoryFacetElement;
         new (): HTMLAtomicCategoryFacetElement;
     };
+    /**
+     * Internal component, only to use through `atomic-generated-answer` or `atomic-insight-generated-answer`
+     */
     interface HTMLAtomicCitationElement extends Components.AtomicCitation, HTMLStencilElement {
     }
     var HTMLAtomicCitationElement: {
@@ -3188,6 +3196,9 @@ declare global {
     interface HTMLAtomicGeneratedAnswerFeedbackModalElementEventMap {
         "feedbackSent": any;
     }
+    /**
+     * Internal component, only to use through `atomic-generated-answer` or `atomic-insight-generated-answer`
+     */
     interface HTMLAtomicGeneratedAnswerFeedbackModalElement extends Components.AtomicGeneratedAnswerFeedbackModal, HTMLStencilElement {
         addEventListener<K extends keyof HTMLAtomicGeneratedAnswerFeedbackModalElementEventMap>(type: K, listener: (this: HTMLAtomicGeneratedAnswerFeedbackModalElement, ev: AtomicGeneratedAnswerFeedbackModalCustomEvent<HTMLAtomicGeneratedAnswerFeedbackModalElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
         addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
@@ -3467,6 +3478,10 @@ declare global {
         new (): HTMLAtomicInsightUserActionsSessionElement;
     };
     /**
+     * Internal component used by the `atomic-insight-user-actions-modal`. Do not use directly.
+     * This component displays all the actions performed by a user around the time they created a case.
+     * The actions are grouped into multiple sessions, including the session during which the case was created,
+     * the sessions preceding the case creation and the sessions following the case creation.
      * @component 
      * @example <AtomicInsightUserActionsTimeline userId={'123'} caseCreationDate={'2024-08-15T10:00:00Z'} />
      */
@@ -3476,6 +3491,10 @@ declare global {
         prototype: HTMLAtomicInsightUserActionsTimelineElement;
         new (): HTMLAtomicInsightUserActionsTimelineElement;
     };
+    /**
+     * Internal component of the atomic-insight-interface
+     * The `atomic-insight-user-actions-toggle` component displays a button that opens a modal containing the user actions timeline component.
+     */
     interface HTMLAtomicInsightUserActionsToggleElement extends Components.AtomicInsightUserActionsToggle, HTMLStencilElement {
     }
     var HTMLAtomicInsightUserActionsToggleElement: {
@@ -4259,15 +4278,6 @@ declare global {
         new (): HTMLAtomicSearchInterfaceElement;
     };
     /**
-     * The `atomic-search-layout` helps organize elements in the page.
-     */
-    interface HTMLAtomicSearchLayoutElement extends Components.AtomicSearchLayout, HTMLStencilElement {
-    }
-    var HTMLAtomicSearchLayoutElement: {
-        prototype: HTMLAtomicSearchLayoutElement;
-        new (): HTMLAtomicSearchLayoutElement;
-    };
-    /**
      * The `atomic-segmented-facet` displays a horizontal facet of the results for the current query.
      */
     interface HTMLAtomicSegmentedFacetElement extends Components.AtomicSegmentedFacet, HTMLStencilElement {
@@ -4666,7 +4676,6 @@ declare global {
         "atomic-search-box-query-suggestions": HTMLAtomicSearchBoxQuerySuggestionsElement;
         "atomic-search-box-recent-queries": HTMLAtomicSearchBoxRecentQueriesElement;
         "atomic-search-interface": HTMLAtomicSearchInterfaceElement;
-        "atomic-search-layout": HTMLAtomicSearchLayoutElement;
         "atomic-segmented-facet": HTMLAtomicSegmentedFacetElement;
         "atomic-segmented-facet-scrollable": HTMLAtomicSegmentedFacetScrollableElement;
         "atomic-smart-snippet": HTMLAtomicSmartSnippetElement;
@@ -4807,6 +4816,9 @@ declare namespace LocalJSX {
          */
         "withSearch"?: boolean;
     }
+    /**
+     * Internal component, only to use through `atomic-generated-answer` or `atomic-insight-generated-answer`
+     */
     interface AtomicCitation {
         /**
           * The citation item information.
@@ -5206,6 +5218,9 @@ declare namespace LocalJSX {
          */
         "withToggle"?: boolean;
     }
+    /**
+     * Internal component, only to use through `atomic-generated-answer` or `atomic-insight-generated-answer`
+     */
     interface AtomicGeneratedAnswerFeedbackModal {
         /**
           * A `GeneratedAnswer` controller instance. It is used when the user interacts with the modal.
@@ -5750,6 +5765,10 @@ declare namespace LocalJSX {
         "userActions": Array<IUserAction>;
     }
     /**
+     * Internal component used by the `atomic-insight-user-actions-modal`. Do not use directly.
+     * This component displays all the actions performed by a user around the time they created a case.
+     * The actions are grouped into multiple sessions, including the session during which the case was created,
+     * the sessions preceding the case creation and the sessions following the case creation.
      * @component 
      * @example <AtomicInsightUserActionsTimeline userId={'123'} caseCreationDate={'2024-08-15T10:00:00Z'} />
      */
@@ -5767,6 +5786,10 @@ declare namespace LocalJSX {
          */
         "userId": string;
     }
+    /**
+     * Internal component of the atomic-insight-interface
+     * The `atomic-insight-user-actions-toggle` component displays a button that opens a modal containing the user actions timeline component.
+     */
     interface AtomicInsightUserActionsToggle {
         /**
           * The names of custom events to exclude.
@@ -7083,15 +7106,6 @@ declare namespace LocalJSX {
         "timezone"?: string;
     }
     /**
-     * The `atomic-search-layout` helps organize elements in the page.
-     */
-    interface AtomicSearchLayout {
-        /**
-          * CSS value that defines where the layout goes from mobile to desktop. e.g., 800px, 65rem.
-         */
-        "mobileBreakpoint"?: string;
-    }
-    /**
      * The `atomic-segmented-facet` displays a horizontal facet of the results for the current query.
      */
     interface AtomicSegmentedFacet {
@@ -7601,7 +7615,6 @@ declare namespace LocalJSX {
         "atomic-search-box-query-suggestions": AtomicSearchBoxQuerySuggestions;
         "atomic-search-box-recent-queries": AtomicSearchBoxRecentQueries;
         "atomic-search-interface": AtomicSearchInterface;
-        "atomic-search-layout": AtomicSearchLayout;
         "atomic-segmented-facet": AtomicSegmentedFacet;
         "atomic-segmented-facet-scrollable": AtomicSegmentedFacetScrollable;
         "atomic-smart-snippet": AtomicSmartSnippet;
@@ -7657,6 +7670,9 @@ declare module "@stencil/core" {
              * An `atomic-category-facet` displays a facet of values in a browsable, hierarchical fashion.
              */
             "atomic-category-facet": LocalJSX.AtomicCategoryFacet & JSXBase.HTMLAttributes<HTMLAtomicCategoryFacetElement>;
+            /**
+             * Internal component, only to use through `atomic-generated-answer` or `atomic-insight-generated-answer`
+             */
             "atomic-citation": LocalJSX.AtomicCitation & JSXBase.HTMLAttributes<HTMLAtomicCitationElement>;
             /**
              * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (e.g., number of occurrences).
@@ -7716,6 +7732,9 @@ declare module "@stencil/core" {
              * For more information, see [About Relevance Generative Answering (RGA)](https://docs.coveo.com/en/n9de0370/)
              */
             "atomic-generated-answer": LocalJSX.AtomicGeneratedAnswer & JSXBase.HTMLAttributes<HTMLAtomicGeneratedAnswerElement>;
+            /**
+             * Internal component, only to use through `atomic-generated-answer` or `atomic-insight-generated-answer`
+             */
             "atomic-generated-answer-feedback-modal": LocalJSX.AtomicGeneratedAnswerFeedbackModal & JSXBase.HTMLAttributes<HTMLAtomicGeneratedAnswerFeedbackModalElement>;
             /**
              * The `atomic-html` component renders the HTML value of a string.
@@ -7762,10 +7781,18 @@ declare module "@stencil/core" {
              */
             "atomic-insight-user-actions-session": LocalJSX.AtomicInsightUserActionsSession & JSXBase.HTMLAttributes<HTMLAtomicInsightUserActionsSessionElement>;
             /**
+             * Internal component used by the `atomic-insight-user-actions-modal`. Do not use directly.
+             * This component displays all the actions performed by a user around the time they created a case.
+             * The actions are grouped into multiple sessions, including the session during which the case was created,
+             * the sessions preceding the case creation and the sessions following the case creation.
              * @component 
              * @example <AtomicInsightUserActionsTimeline userId={'123'} caseCreationDate={'2024-08-15T10:00:00Z'} />
              */
             "atomic-insight-user-actions-timeline": LocalJSX.AtomicInsightUserActionsTimeline & JSXBase.HTMLAttributes<HTMLAtomicInsightUserActionsTimelineElement>;
+            /**
+             * Internal component of the atomic-insight-interface
+             * The `atomic-insight-user-actions-toggle` component displays a button that opens a modal containing the user actions timeline component.
+             */
             "atomic-insight-user-actions-toggle": LocalJSX.AtomicInsightUserActionsToggle & JSXBase.HTMLAttributes<HTMLAtomicInsightUserActionsToggleElement>;
             "atomic-ipx-body": LocalJSX.AtomicIpxBody & JSXBase.HTMLAttributes<HTMLAtomicIpxBodyElement>;
             "atomic-ipx-button": LocalJSX.AtomicIpxButton & JSXBase.HTMLAttributes<HTMLAtomicIpxButtonElement>;
@@ -8119,10 +8146,6 @@ declare module "@stencil/core" {
              * The `atomic-search-interface` component is the parent to all other atomic components in a search page. It handles the headless search engine and localization configurations.
              */
             "atomic-search-interface": LocalJSX.AtomicSearchInterface & JSXBase.HTMLAttributes<HTMLAtomicSearchInterfaceElement>;
-            /**
-             * The `atomic-search-layout` helps organize elements in the page.
-             */
-            "atomic-search-layout": LocalJSX.AtomicSearchLayout & JSXBase.HTMLAttributes<HTMLAtomicSearchLayoutElement>;
             /**
              * The `atomic-segmented-facet` displays a horizontal facet of the results for the current query.
              */

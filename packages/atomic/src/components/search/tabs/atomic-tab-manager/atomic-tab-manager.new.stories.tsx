@@ -1,10 +1,15 @@
-import type {Meta, StoryObj as Story} from '@storybook/web-components';
+import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
+import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {html} from 'lit';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
-import {renderComponent} from '@/storybook-utils/common/render-component';
 import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
 
-const {decorator, play} = wrapInSearchInterface({
+const {events, args, argTypes, template} = getStorybookHelpers(
+  'atomic-tab-manager',
+  {excludeCategories: ['methods']}
+);
+
+const {decorator, afterEach} = wrapInSearchInterface({
   search: {
     // eslint-disable-next-line @cspell/spellchecker
     pipeline: 'genqatest',
@@ -44,12 +49,20 @@ const meta: Meta = {
   title: 'Search/Tabs',
   id: 'atomic-tab-manager',
 
-  render: renderComponent,
+  render: (args) => template(args),
   decorators: [decorator],
-  parameters,
-  play,
+  parameters: {
+    ...parameters,
+    actions: {
+      handles: events,
+    },
+  },
+  argTypes,
+
+  afterEach,
   args: {
-    'slots-default': `
+    ...args,
+    'default-slot': `
       <atomic-tab name="all" label="All" tab></atomic-tab>
       <atomic-tab name="documentation" label="Documentation"></atomic-tab>
       <atomic-tab name="article" label="Articles"></atomic-tab>
@@ -72,32 +85,27 @@ export const Default: Story = {
           <atomic-facets>
             <atomic-facet field="objecttype" label="Object type"></atomic-facet>
             <atomic-facet
-              aria-label="included-facet"
               tabs-included='["article"]'
               field="filetype"
               label="File type (included facet)"
             ></atomic-facet>
             <atomic-facet
-              aria-label="excluded-facet"
               tabs-excluded='["article"]'
               field="source"
               label="Source (excluded facet)"
             ></atomic-facet>
             <atomic-category-facet
-              aria-label="included-facet"
               tabs-included='["article"]'
               field="geographicalhierarchy"
               label="World Atlas"
               with-search
             ></atomic-category-facet>
             <atomic-category-facet
-              aria-label="excluded-facet"
               tabs-excluded='["article"]'
               field="geographicalhierarchy"
               label="World Atlas"
             ></atomic-category-facet>
             <atomic-color-facet
-              aria-label="included-facet"
               tabs-included='["article"]'
               field="filetype"
               label="Files"
@@ -105,7 +113,6 @@ export const Default: Story = {
               sort-criteria="occurrences"
             ></atomic-color-facet>
             <atomic-color-facet
-              aria-label="excluded-facet"
               tabs-excluded='["article"]'
               field="filetype"
               label="Files"
@@ -113,21 +120,18 @@ export const Default: Story = {
               sort-criteria="occurrences"
             ></atomic-color-facet>
             <atomic-rating-facet
-              aria-label="included-facet"
               tabs-included='["article"]'
               field="snrating"
               label="Rating"
               number-of-intervals="5"
             ></atomic-rating-facet>
             <atomic-rating-facet
-              aria-label="excluded-facet"
               tabs-excluded='["article"]'
               field="snrating"
               label="Rating"
               number-of-intervals="5"
             ></atomic-rating-facet>
             <atomic-rating-range-facet
-              aria-label="included-facet"
               tabs-included='["article"]'
               facet-id="snrating_range"
               field="snrating"
@@ -135,7 +139,6 @@ export const Default: Story = {
               number-of-intervals="5"
             ></atomic-rating-range-facet>
             <atomic-rating-range-facet
-              aria-label="excluded-facet"
               tabs-excluded='["article"]'
               facet-id="snrating_range_2"
               field="snrating"
@@ -143,7 +146,6 @@ export const Default: Story = {
               number-of-intervals="5"
             ></atomic-rating-range-facet>
             <atomic-timeframe-facet
-              aria-label="included-facet"
               tabs-included='["article"]'
               label="Timeframe"
               with-date-picker
@@ -161,7 +163,6 @@ export const Default: Story = {
               ></atomic-timeframe
             ></atomic-timeframe-facet>
             <atomic-timeframe-facet
-              aria-label="excluded-facet"
               tabs-excluded='["article"]'
               label="Timeframe"
               with-date-picker
@@ -185,7 +186,6 @@ export const Default: Story = {
           <atomic-layout-section section="horizontal-facets">
             <atomic-segmented-facet-scrollable>
               <atomic-segmented-facet
-                aria-label="included-facet"
                 tabs-included='["article"]'
                 field="inat_kingdom"
                 label="Kingdom"
@@ -193,7 +193,6 @@ export const Default: Story = {
             </atomic-segmented-facet-scrollable>
             <atomic-segmented-facet-scrollable>
               <atomic-segmented-facet
-                aria-label="excluded-facet"
                 tabs-excluded='["article"]'
                 field="inat_kingdom"
                 label="Kingdom"
@@ -276,7 +275,7 @@ export const Default: Story = {
                     ><atomic-quickview></atomic-quickview
                   ></atomic-result-section-actions>
                    <atomic-result-section-visual>
-                    <img src="https://picsum.photos/400" class="thumbnail" />
+                    <img src="https://picsum.photos/400" alt="SomeResultPicture" class="thumbnail" />
                   </atomic-result-section-visual>
                   <atomic-result-section-title
                     ><atomic-result-link></atomic-result-link

@@ -1,7 +1,6 @@
 import {describe, expect, it, vi} from 'vitest';
 import type {Controller} from '../../../controllers/controller/headless-controller.js';
 import {clone} from '../../../utils/utils.js';
-import {Kind} from '../../commerce/types/kind.js';
 import {
   createStaticControllerBuilder,
   type StaticControllerState,
@@ -22,10 +21,9 @@ describe('createStaticControllerBuilder', () => {
     vi.clearAllMocks(); // Clear calls from creating the builder
   });
 
-  it('should create builder from controller with initial state, state and kind', () => {
+  it('should create builder from controller with initial state', () => {
     const mockController = buildMockController({
       state: {property: 'value'},
-      _kind: Kind.ParameterManager,
       initialState: {initial: 'state'},
     });
 
@@ -33,7 +31,6 @@ describe('createStaticControllerBuilder', () => {
 
     expect(result).toEqual({
       state: {property: 'value'},
-      _kind: Kind.ParameterManager,
       initialState: {initial: 'state'},
     });
   });
@@ -44,13 +41,11 @@ describe('createStaticControllerBuilder', () => {
     const builder = createStaticControllerBuilder(mockController);
     const result = builder
       .withState({property: 'overridden'})
-      .withKind(Kind.ParameterManager)
       .withInitialState({initial: 'new'})
       .build();
 
     expect(result).toEqual({
       state: {property: 'overridden'},
-      _kind: Kind.ParameterManager,
       initialState: {initial: 'new'},
     });
   });

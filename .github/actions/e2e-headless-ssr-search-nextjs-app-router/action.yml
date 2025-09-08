@@ -1,0 +1,29 @@
+name: "Headless SSR E2E App router tests"
+description: "Runs Cypress tests for Headless SSR App router"
+inputs:
+  github-token:
+    description: The GitHub token for accurately detecting a build vs a re-run build
+    required: false
+    default: ""
+runs:
+  using: composite
+  steps:
+    - run: npx cypress install
+      shell: bash
+      working-directory: samples/headless-ssr/search-nextjs
+    - uses: cypress-io/github-action@v5
+      name: Run Cypress
+      with:
+        browser: chrome
+        command-prefix: "npm run -w @samples/headless-ssr-search-nextjs-app-router e2e"
+        start: npx turbo prod --filter=@samples/headless-ssr-search-nextjs-app-router
+        wait-on: "http://localhost:3000"
+        wait-on-timeout: 600000
+        install: false
+        record: false
+
+    - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+      if: failure()
+      with:
+        name: ssr-app-screenshots
+        path: samples/headless-ssr/cypress/screenshots

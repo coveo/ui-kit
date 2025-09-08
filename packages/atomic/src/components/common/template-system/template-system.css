@@ -1,0 +1,178 @@
+@reference '../../../utils/tailwind.global.tw.css';
+
+@utility atomic-template-system-base-sections {
+  display: grid;
+  justify-items: stretch;
+}
+
+@utility atomic-template-system-cell-result {
+  grid-template-areas:
+    "badges"
+    "visual"
+    "title"
+    "title-metadata"
+    "emphasized"
+    "excerpt"
+    "children"
+    "bottom-metadata"
+    "actions";
+  grid-template-columns: 100%;
+  grid-template-rows: repeat(9, auto);
+}
+
+@utility atomic-template-system-row-result-desktop-template {
+  grid-template-areas:
+    "badges badges          .               actions"
+    "visual title           title           title"
+    "visual title-metadata  title-metadata  title-metadata"
+    "visual emphasized      emphasized      emphasized"
+    "visual excerpt         excerpt         excerpt"
+    "visual bottom-metadata bottom-metadata bottom-metadata"
+    "visual children        children        children";
+  grid-template-columns: minmax(0, min-content) auto 1fr auto;
+}
+
+@utility atomic-template-system-row-result-desktop {
+  /* == Image styles == */
+  &.image-large,
+  &.image-small {
+    @apply atomic-template-system-row-result-desktop-template;
+    grid-template-rows: repeat(6, auto) minmax(0, 1fr);
+  }
+
+  &.image-icon {
+    @apply atomic-template-system-row-result-desktop-template;
+    grid-template-rows: repeat(7, minmax(0, min-content));
+  }
+
+  &.image-none {
+    grid-template-areas:
+      "badges          .               actions"
+      "title           title           title"
+      "title-metadata  title-metadata  title-metadata"
+      "emphasized      emphasized      emphasized"
+      "excerpt         excerpt         excerpt"
+      "bottom-metadata bottom-metadata bottom-metadata"
+      "children        children        children";
+    grid-template-columns: auto 1fr auto;
+    grid-template-rows: repeat(6, auto);
+  }
+}
+@utility atomic-template-system-row-result-mobile {
+  /* == Image styles == */
+  &.image-large {
+    grid-template-areas:
+      "visual"
+      "badges"
+      "title"
+      "title-metadata"
+      "emphasized"
+      "excerpt"
+      "bottom-metadata"
+      "actions"
+      "children";
+    grid-template-columns: 100%;
+    grid-template-rows: repeat(8, auto);
+  }
+
+  &.image-small {
+    grid-template-areas:
+      "badges          badges"
+      "visual          title"
+      "visual          title-metadata"
+      "visual          emphasized"
+      "visual          ."
+      "excerpt         excerpt"
+      "bottom-metadata bottom-metadata"
+      "actions         actions"
+      "children        children";
+    grid-template-columns: auto minmax(0, 1fr);
+    grid-template-rows: repeat(4, auto) minmax(0, 1fr) repeat(3, auto);
+  }
+
+  &.image-icon {
+    grid-template-areas:
+      "badges          badges"
+      "visual          title"
+      "visual          title-metadata"
+      "visual          emphasized"
+      "visual          excerpt"
+      "visual          bottom-metadata"
+      "visual          actions"
+      "visual          children";
+    grid-template-columns: auto minmax(0, 1fr);
+    grid-template-rows: repeat(7, auto) 1fr;
+  }
+
+  &.image-none {
+    grid-template-areas:
+      "badges"
+      "title"
+      "title-metadata"
+      "emphasized"
+      "excerpt"
+      "bottom-metadata"
+      "actions"
+      "children";
+    grid-template-columns: 100%;
+    grid-template-rows: repeat(7, auto);
+  }
+}
+
+@utility atomic-template-system {
+  @layer components {
+    /* == Common styles == */
+    :host {
+      @apply font-sans font-normal;
+    }
+
+    .result-root {
+      &.with-sections {
+        @apply atomic-template-system-base-sections;
+
+        /* Desktop layouts */
+        &.display-list {
+          @media (width >= theme(--breakpoint-desktop)) {
+            @apply atomic-template-system-row-result-desktop;
+          }
+        }
+
+        &.display-table {
+          @apply atomic-template-system-row-result-desktop;
+        }
+
+        /* Mobile layout for list display */
+        &.display-list {
+          @media not all and (width >= theme(--breakpoint-desktop)) {
+            @apply atomic-template-system-row-result-mobile;
+          }
+        }
+
+        /* Grid display */
+        &.display-grid {
+          @apply atomic-template-system-cell-result;
+
+          a,
+          button {
+            position: relative;
+          }
+
+          /* Large images in grid use mobile layout on mobile */
+          @media not all and (width >= theme(--breakpoint-desktop)) {
+            &.image-large {
+              @apply atomic-template-system-row-result-mobile;
+            }
+          }
+        }
+      }
+
+      atomic-table-element {
+        display: none;
+      }
+    }
+
+    .link-container {
+      display: none;
+    }
+  }
+}

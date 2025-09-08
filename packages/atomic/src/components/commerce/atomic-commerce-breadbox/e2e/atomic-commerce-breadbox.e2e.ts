@@ -488,7 +488,7 @@ test.describe('Default', () => {
 
     for (let i = 0; i < 4; i++) {
       await breadbox.getFacetValue('regular').nth(i).click();
-      if (i < 2) {
+      if (i < 3) {
         await breadbox
           .getBreadcrumbButtons()
           .nth(i)
@@ -497,6 +497,6 @@ test.describe('Default', () => {
     }
 
     await expect(breadbox.getShowMorebutton()).toBeVisible();
-    await expect(breadbox.getShowMorebutton()).toContainText('+ 2');
+    await expect(breadbox.getShowMorebutton()).toContainText('+ 1');
   });
 });

@@ -27,7 +27,13 @@ test.describe('Quickview', () => {
 
   test.describe('when the quickview button is clicked', () => {
     test.beforeEach(async ({quickview}) => {
-      await quickview.load();
+      await quickview.load({
+        args: {
+          sandbox:
+            'allow-scripts allow-popups allow-top-navigation allow-same-origin',
+        },
+      });
+      await quickview.hydrated.waitFor();
       await quickview.resultButton.click();
       await quickview.modal.waitFor({state: 'visible'});
     });

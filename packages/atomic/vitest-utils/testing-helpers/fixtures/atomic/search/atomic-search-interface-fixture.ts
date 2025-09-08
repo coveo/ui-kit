@@ -3,6 +3,7 @@ import {provide} from '@lit/context';
 import type {i18n} from 'i18next';
 import {html, LitElement, nothing, type TemplateResult} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
+import type {BaseAtomicInterface} from '@/src/components/common/interface/interface-controller.js';
 import {bindingsContext} from '@/src/components/context/bindings-context.js';
 import type {Bindings} from '@/src/components/search/atomic-search-interface/interfaces.js';
 import type {SearchStore} from '@/src/components/search/atomic-search-interface/store.js';
@@ -11,7 +12,6 @@ import {
   markParentAsReady,
 } from '@/src/utils/init-queue.js';
 import {initializeEventName} from '@/src/utils/initialization-lit-stencil-common-utils.js';
-import type {BaseAtomicInterface} from '../../../../../src/components/common/interface/interface-common.js';
 import {fixture} from '../../../fixture.js';
 import {createTestI18n} from '../../../i18n-utils.js';
 import {genericSubscribe} from '../../headless/common.js';
@@ -30,7 +30,7 @@ export class FixtureAtomicSearchInterface
   template!: TemplateResult;
   @provide({context: bindingsContext})
   bindings: Bindings = {} as Bindings;
-  error?: Error | undefined;
+  error!: Error;
   updateIconAssetsPath = () => {};
   registerFieldsToInclude?: (() => void) | undefined;
 

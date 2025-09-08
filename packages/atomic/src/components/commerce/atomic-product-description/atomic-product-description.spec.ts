@@ -1,5 +1,5 @@
 import {html} from 'lit';
-import {describe, expect, it} from 'vitest';
+import {beforeEach, describe, expect, it} from 'vitest';
 import {renderInAtomicProduct} from '@/vitest-utils/testing-helpers/fixtures/atomic/commerce/atomic-product-fixture';
 import {buildFakeProduct} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/product';
 import '../atomic-product-text/atomic-product-text';
@@ -7,8 +7,17 @@ import {userEvent} from '@vitest/browser/context';
 import {ifDefined} from 'lit/directives/if-defined.js';
 import type {TruncateAfter} from '../../common/expandable-text/expandable-text';
 import './atomic-product-description';
+import type {AtomicProductDescription} from './atomic-product-description';
+
+const LINE_HEIGHT = 16;
 
 describe('atomic-product-description', () => {
+  beforeEach(() => {
+    document.documentElement.style.setProperty(
+      '--line-height',
+      `${LINE_HEIGHT}px`
+    );
+  });
   const renderProductDescription = async (
     props: {
       truncateAfter?: TruncateAfter;
@@ -27,11 +36,11 @@ describe('atomic-product-description', () => {
         `This is a short description for child product. It is meant to be concise and informative. It should give a brief overview of the product features and benefits.`,
     });
 
-    const {element} = await renderInAtomicProduct({
+    const {element} = await renderInAtomicProduct<AtomicProductDescription>({
       template: html`
       <atomic-product-description
         truncate-after=${ifDefined(props.truncateAfter)}
-        ?is-collapsible=${props.isCollapsible ?? false}
+        ?is-collapsible=${props.isCollapsible}
         field=${ifDefined(props.field)}
       ></atomic-product-description>
       `,
@@ -60,6 +69,11 @@ describe('atomic-product-description', () => {
     expect(element).toBeEmptyDOMElement();
   });
 
+  it('should have isCollapsible as `false` by default', async () => {
+    const {element} = await renderProductDescription();
+    expect(element.isCollapsible).toBe(false);
+  });
+
   it('should render the description text', async () => {
     const {locators} = await renderProductDescription({
       ec_shortdesc: 'This is a short description for child product.',
@@ -84,42 +98,67 @@ describe('atomic-product-description', () => {
   });
 
   it('should expand when clicking on the show more button', async () => {
-    const {locators} = await renderProductDescription();
-
+    const {element, locators} = await renderProductDescription({
+      truncateAfter: '2',
+    });
+    // biome-ignore lint/suspicious/noExplicitAny: <>
+    (element as any).isTruncated = true;
     await userEvent.click(locators.button!);
 
-    expect(locators.expandableDiv).toHaveClass('min-lines-2');
+    expect(locators.expandableDiv).not.toHaveClass(`line-clamp-2`);
   });
 
-  it('should collapse when isCollapsible is true and clicking on the show less button', async () => {
-    const {locators} = await renderProductDescription({isCollapsible: true});
-
-    await userEvent.click(locators.button!);
-
+  it('should set the correct min-height based on the truncateAfter value', async () => {
+    const {element, locators} = await renderProductDescription({
+      truncateAfter: '2',
+    });
+    // biome-ignore lint/suspicious/noExplicitAny: <>
+    (element as any).isTruncated = true;
     expect(locators.expandableDiv).toHaveClass('min-lines-2');
+    expect(locators.expandableDiv).toHaveStyle({
+      'min-height': `${LINE_HEIGHT * 2}px`,
+    });
+  });
 
-    await userEvent.click(locators.button!);
+  describe('when isCollapsible is true', () => {
+    let locators: Awaited<
+      ReturnType<typeof renderProductDescription>
+    >['locators'];
+    let element: AtomicProductDescription;
 
-    expect(locators.expandableDiv).toHaveClass('line-clamp-2');
+    beforeEach(async () => {
+      ({element, locators} = await renderProductDescription({
+        isCollapsible: true,
+        truncateAfter: '2',
+      }));
+      // biome-ignore lint/suspicious/noExplicitAny: <>
+      (element as any).isTruncated = true;
+    });
+
+    it('should collapse when clicking on the show less button', async () => {
+      await userEvent.click(locators.button!);
+
+      expect(locators.expandableDiv).not.toHaveClass('line-clamp-2');
+
+      await userEvent.click(locators.button!);
+
+      expect(locators.expandableDiv).toHaveClass('line-clamp-2');
+    });
+
+    it('should have the correct text on the show more button', async () => {
+      expect(locators.button).toHaveTextContent('Show more');
+    });
+
+    it('should have the correct text on the show less button when expanded', async () => {
+      await userEvent.click(locators.button!);
+
+      expect(locators.button).toHaveTextContent('Show less');
+    });
   });
 
   it('should have the correct part attribute on the expandable text', async () => {
     const {locators} = await renderProductDescription();
     expect(locators.expandableDiv).toHaveAttribute('part', 'expandable-text');
-  });
-
-  it('should have the correct text on the show more button', async () => {
-    const {locators} = await renderProductDescription();
-
-    expect(locators.button).toHaveTextContent('Show more');
-  });
-
-  it('should have the correct text on the show less button when expanded', async () => {
-    const {locators} = await renderProductDescription({isCollapsible: true});
-
-    await userEvent.click(locators.button!);
-
-    expect(locators.button).toHaveTextContent('Show less');
   });
 
   it('should use the ec_description when setting it as the field', async () => {
