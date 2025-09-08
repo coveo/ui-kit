@@ -34,7 +34,7 @@ import {
   ColorFacetSelectors,
 } from './color-facet-selectors';
 
-describe.skip('Color Facet Test Suites', () => {
+describe('Color Facet Test Suites', () => {
   describe('with default setting', () => {
     function setupColorFacet() {
       new TestFixture()

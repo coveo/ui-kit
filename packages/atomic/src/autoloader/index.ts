@@ -50,7 +50,9 @@ export function registerAutoloader(
     visitedNodes.add(root);
 
     const rootTagName =
-      root instanceof Element ? root.tagName.toLowerCase() : '';
+      root instanceof root.ownerDocument.defaultView!.Element
+        ? root.tagName.toLowerCase()
+        : '';
     const rootIsCustomElement = rootTagName?.includes('-');
     const allCustomElements = [...root.querySelectorAll('*')].filter((el) =>
       el.tagName.toLowerCase().includes('-')
@@ -59,7 +61,7 @@ export function registerAutoloader(
     // If the root element is an undefined Atomic component, add it to the list
     if (
       rootIsCustomElement &&
-      root instanceof Element &&
+      root instanceof root.ownerDocument.defaultView!.Element &&
       !customElements.get(rootTagName) &&
       !allCustomElements.includes(root)
     ) {
