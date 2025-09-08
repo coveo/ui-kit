@@ -307,7 +307,6 @@ export type {
   FetchStaticState,
   HydrateStaticState,
   HydrateStaticStateOptions,
-  ValidateControllerNames,
 } from './ssr-next/commerce/types/engine.js';
 // State
 export type {
