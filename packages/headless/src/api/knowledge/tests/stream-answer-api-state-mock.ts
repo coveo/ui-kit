@@ -1568,6 +1568,7 @@ export const expectedStreamAnswerAPIParam = {
   firstResult: 0,
   tab: 'default',
   locale: 'en',
+  timezone: 'America/New_York',
   analytics: {
     actionCause: 'searchboxSubmit',
     capture: false,
