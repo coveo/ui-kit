@@ -140,6 +140,7 @@ jobs:
         with:
           path: ".turbo"
           name: "turborepo-cdn-cache"
+          include-hidden-files: true
   affected:
     name: "Determine affected projects"
     runs-on: ubuntu-latest
