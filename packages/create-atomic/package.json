@@ -38,7 +38,7 @@
   },
   "dependencies": {
     "@coveo/platform-client": "60.4.0",
-    "abortcontroller-polyfill": "1.7.5",
+    "abortcontroller-polyfill": "1.7.8",
     "detect-indent": "7.0.1",
     "https-proxy-agent": "7.0.6",
     "isomorphic-fetch": "3.0.0",
