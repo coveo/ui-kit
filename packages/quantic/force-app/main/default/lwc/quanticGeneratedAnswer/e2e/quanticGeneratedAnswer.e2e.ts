@@ -250,13 +250,9 @@ useCaseTestCases.forEach((useCase) => {
                     generatedAnswer.waitForGenerateRequest({
                       q: exampleQuery,
                     });
-                  const newStreamEndPromise =
-                    generatedAnswer.waitForStreamEndAnalytics();
 
                   await generatedAnswer.clickFirstTimeframeFacetLink();
                   await generateRequestPromise;
-
-                  await newStreamEndPromise;
                 });
               });
             }

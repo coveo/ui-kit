@@ -104,10 +104,6 @@ export const testInsight =
     options: {},
     analyticsMode: AnalyticsModeEnum.legacy,
     withFacets: false,
-    afterEach: async ({page}, use) => {
-      await use();
-      await page.unrouteAll({behavior: 'ignoreErrors'});
-    },
     search: async ({page}, use) => {
       await use(new SearchObject(page, insightSearchRequestRegex));
     },
