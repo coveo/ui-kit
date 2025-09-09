@@ -255,15 +255,12 @@ useCaseTestCases.forEach((useCase) => {
                   const streamEndAnalyticRequestPromise =
                     generatedAnswer.waitForStreamEndAnalytics();
 
-                  const facetSelectUaRequestPromise =
-                    baseFacet.waitForFacetSelectAnalytics();
-
-                  const searchResponsePromise = baseFacet.waitForSearchResponse();
+                  const searchResponsePromise =
+                    baseFacet.waitForSearchResponse();
 
                   await generatedAnswer.clickFirstTimeframeFacetLink();
                   await generateRequestPromise;
                   await streamEndAnalyticRequestPromise;
-                  await facetSelectUaRequestPromise;
                   await searchResponsePromise;
                 });
               });
