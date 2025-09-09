@@ -20,9 +20,11 @@ import {
   expectedStreamAnswerAPIParamWithStaticFiltersAndTabExpression,
   expectedStreamAnswerAPIParamWithStaticFiltersAndTabExpressionWithoutAdvancedCQ,
   expectedStreamAnswerAPIParamWithStaticFiltersSelected,
+  expectedStreamAnswerAPIWithExcerptLength,
   streamAnswerAPIStateMock,
   streamAnswerAPIStateMockWithAnalyticsEnabled,
   streamAnswerAPIStateMockWithATabWithAnExpression,
+  streamAnswerAPIStateMockWithExcerptLength,
   streamAnswerAPIStateMockWithFoldingDisabled,
   streamAnswerAPIStateMockWithFoldingEnabled,
   streamAnswerAPIStateMockWithNonValidFilters,
@@ -218,6 +220,16 @@ describe('#streamAnswerApi', () => {
       expect(queryParams).toEqual(
         expectedStreamAnswerAPIParamWithFoldingEnabled
       );
+    });
+
+    it('should include excerptLength when it is set in state', () => {
+      const queryParams = constructAnswerQueryParams(
+        streamAnswerAPIStateMockWithExcerptLength as any,
+        'fetch',
+        buildMockNavigatorContextProvider()()
+      );
+
+      expect(queryParams).toEqual(expectedStreamAnswerAPIWithExcerptLength);
     });
 
     it('should include all analytics fields when usage is fetch', () => {

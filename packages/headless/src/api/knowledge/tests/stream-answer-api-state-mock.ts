@@ -1266,6 +1266,13 @@ export const streamAnswerAPIStateMockWithFoldingEnabled: StreamAnswerAPIState =
     },
   };
 
+export const streamAnswerAPIStateMockWithExcerptLength: StreamAnswerAPIState = {
+  ...streamAnswerAPIStateMock,
+  excerptLength: {
+    length: 300,
+  },
+};
+
 export const expectedStreamAnswerAPIParam = {
   q: 'what is the hardest wood',
   aq: 'aq-test-query',
@@ -1700,4 +1707,9 @@ export const expectedStreamAnswerAPIParamWithFoldingEnabled = {
   childField: 'testParent',
   parentField: 'testChild',
   filterFieldRange: 1,
+};
+
+export const expectedStreamAnswerAPIWithExcerptLength = {
+  ...expectedStreamAnswerAPIParam,
+  excerptLength: 300,
 };

@@ -387,6 +387,9 @@ export const constructAnswerQueryParams = (
       parentField: state.folding.fields.child,
       filterFieldRange: state.folding.filterFieldRange,
     }),
+    ...(state?.excerptLength?.length && {
+      excerptLength: state.excerptLength.length,
+    }),
     ...analyticsParams,
   };
 };
