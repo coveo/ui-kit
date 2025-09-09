@@ -50,9 +50,7 @@ export function registerAutoloader(
     visitedNodes.add(root);
 
     const rootTagName =
-      root instanceof root.ownerDocument.defaultView!.Element
-        ? root.tagName.toLowerCase()
-        : '';
+      root instanceof Element ? root.tagName.toLowerCase() : '';
     const rootIsCustomElement = rootTagName?.includes('-');
     const allCustomElements = [...root.querySelectorAll('*')].filter((el) =>
       el.tagName.toLowerCase().includes('-')
