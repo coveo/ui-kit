@@ -25,6 +25,8 @@ describe('engine', () => {
       },
       reducers: {},
     };
+    document.cookie = '';
+    localStorage.clear();
   });
 
   describe('navigatorContext', () => {
