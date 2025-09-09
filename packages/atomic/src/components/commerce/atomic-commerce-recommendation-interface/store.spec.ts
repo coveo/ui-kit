@@ -10,6 +10,7 @@ import {
 } from './store';
 
 vi.mock('../../common/interface/store', {spy: true});
+const createBaseStoreSpy = vi.mocked(createBaseStore);
 
 describe('#createCommerceRecommendationStore', () => {
   let store: CommerceRecommendationStore;
@@ -20,7 +21,7 @@ describe('#createCommerceRecommendationStore', () => {
 
   it('should call #createBaseStore with the correct arguments', () => {
     expect(store).toBeDefined();
-    expect(createBaseStore).toHaveBeenCalledExactlyOnceWith({
+    expect(createBaseStoreSpy).toHaveBeenCalledExactlyOnceWith({
       loadingFlags: [],
       iconAssetsPath: '',
       resultList: undefined,
@@ -28,7 +29,6 @@ describe('#createCommerceRecommendationStore', () => {
   });
 
   it('should return an object that includes all properties and methods from the base store', () => {
-    const createBaseStoreSpy = vi.mocked(createBaseStore);
     const baseStore = createBaseStoreSpy.mock.results[0].value;
 
     expect(store).toEqual({
@@ -39,7 +39,6 @@ describe('#createCommerceRecommendationStore', () => {
   });
 
   it('should delegate its #setLoadingFlag to the core #setLoadingFlag with the correct arguments', () => {
-    const createBaseStoreSpy = vi.mocked(createBaseStore);
     const baseStore = createBaseStoreSpy.mock.results[0].value;
 
     store.setLoadingFlag('testFlag');
@@ -51,7 +50,6 @@ describe('#createCommerceRecommendationStore', () => {
   });
 
   it('should delegate its #unsetLoadingFlag to the core #unsetLoadingFlag with the correct arguments', () => {
-    const createBaseStoreSpy = vi.mocked(createBaseStore);
     const baseStore = createBaseStoreSpy.mock.results[0].value;
 
     store.unsetLoadingFlag('testFlag');
