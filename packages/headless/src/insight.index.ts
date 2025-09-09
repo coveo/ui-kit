@@ -329,6 +329,7 @@ export type {NumericFacetValue} from './features/facets/range-facets/numeric-fac
 export * from './features/facets/range-facets/numeric-facet-set/numeric-facet-actions-loader.js';
 export * from './features/fields/fields-actions-loader.js';
 export * from './features/folding/insight-folding-actions-loader.js';
+export * from './features/generated-answer/generated-answer-actions-loader.js';
 // Action loaders
 export * from './features/insight-interface/insight-interface-actions-loader.js';
 export type {InsightInterfaceState} from './features/insight-interface/insight-interface-state.js';
