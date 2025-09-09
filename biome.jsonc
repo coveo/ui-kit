@@ -54,6 +54,7 @@
       "recommended": true,
       "suspicious": {
         // https://developer.mozilla.org/en-US/docs/Web/API/CookieStore Reevaluate in June '26 after 1y of availability.
+        // https://coveord.atlassian.net/browse/KIT-4913
         "noDocumentCookie": "off"
       },
       "style": {"noNonNullAssertion": "off"},
