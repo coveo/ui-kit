@@ -1,7 +1,7 @@
 import {
   buildBrowserEnvironment,
+  type CustomEnvironment,
   createRelay,
-  type Environment,
 } from '@coveo/relay';
 import {createSelector} from '@reduxjs/toolkit';
 import type {NavigatorContextProvider} from '../../app/navigator-context-provider.js';
@@ -48,12 +48,11 @@ export const getRelayInstanceFromState = createSelector(
   }
 );
 
-const noopRelayEnvironment: Environment = {
+const noopRelayEnvironment: CustomEnvironment = {
   generateUUID: () => '',
   getLocation: () => null,
   getReferrer: () => null,
   getUserAgent: () => null,
-  runtime: 'custom',
   send: () => {},
   storage: {
     getItem: () => null,
@@ -64,7 +63,7 @@ const noopRelayEnvironment: Environment = {
 
 const getEnvironment = (
   customProvider?: NavigatorContextProvider
-): Environment | undefined => {
+): CustomEnvironment | undefined => {
   if (!customProvider) {
     return undefined;
   }
