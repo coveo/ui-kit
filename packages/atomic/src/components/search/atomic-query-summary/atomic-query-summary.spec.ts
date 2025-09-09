@@ -1,6 +1,7 @@
 import {buildQuerySummary, type QuerySummaryState} from '@coveo/headless';
 import {html} from 'lit';
 import {describe, expect, it, vi} from 'vitest';
+import {AriaLiveRegionController} from '@/src/utils/accessibility-utils';
 import {renderInAtomicSearchInterface} from '@/vitest-utils/testing-helpers/fixtures/atomic/search/atomic-search-interface-fixture';
 import {buildFakeSearchEngine} from '@/vitest-utils/testing-helpers/fixtures/headless/search/engine';
 import './atomic-query-summary';
@@ -308,5 +309,174 @@ describe('atomic-query-summary', () => {
     });
 
     expect(container).toHaveTextContent('Results 9,991-10,000 of 1,000,000');
+  });
+
+  describe('when testing aria live region functionality', () => {
+    it('should announce results count in aria live region', async () => {
+      const setMessageSpy = vi.spyOn(
+        AriaLiveRegionController.prototype,
+        'message',
+        'set'
+      );
+
+      await renderQuerySummary({
+        querySummaryState: {
+          firstResult: 1,
+          lastResult: 27,
+          total: 27,
+          firstSearchExecuted: true,
+          hasResults: true,
+        },
+      });
+
+      expect(setMessageSpy).toHaveBeenCalledWith(expect.stringContaining('27'));
+    });
+
+    it('should announce loading state in aria live region when loading', async () => {
+      const setMessageSpy = vi.spyOn(
+        AriaLiveRegionController.prototype,
+        'message',
+        'set'
+      );
+
+      await renderQuerySummary({
+        querySummaryState: {
+          isLoading: true,
+          firstSearchExecuted: true,
+          hasResults: true,
+        },
+      });
+
+      expect(setMessageSpy).toHaveBeenCalledWith(
+        expect.stringContaining('Loading')
+      );
+    });
+  });
+
+  describe('when testing exact text format patterns', () => {
+    it('should match exact format for multiple results with query and duration', async () => {
+      const {container} = await renderQuerySummary({
+        querySummaryState: {
+          firstResult: 1,
+          lastResult: 10,
+          total: 1234,
+          query: 'test',
+          durationInSeconds: 0.47,
+          firstSearchExecuted: true,
+          hasResults: true,
+          hasQuery: true,
+          hasDuration: true,
+        },
+      });
+
+      const textContent = (container?.textContent || '').trim();
+      const pattern = /^Results 1-10 of [\d,]+ for test/;
+      expect(textContent).toMatch(pattern);
+    });
+
+    it('should match exact format for single result with query and duration', async () => {
+      const {container} = await renderQuerySummary({
+        querySummaryState: {
+          firstResult: 1,
+          lastResult: 1,
+          total: 1,
+          query: "Queen's Gambit sparks world of online chess celebrities",
+          durationInSeconds: 0.23,
+          firstSearchExecuted: true,
+          hasResults: true,
+          hasQuery: true,
+          hasDuration: true,
+        },
+      });
+
+      const textContent = (container?.textContent || '').trim();
+      const pattern =
+        /^Result 1 of [\d,]+ for Queen's Gambit sparks world of online chess celebrities/;
+      expect(textContent).toMatch(pattern);
+    });
+  });
+
+  describe('when testing duration visibility', () => {
+    it('should hide duration part by default', async () => {
+      const {element, parts} = await renderQuerySummary({
+        querySummaryState: {
+          firstResult: 1,
+          lastResult: 10,
+          total: 100,
+          query: 'test',
+          durationInSeconds: 0.5,
+          firstSearchExecuted: true,
+          hasResults: true,
+          hasDuration: true,
+        },
+      });
+
+      const duration = parts(element).duration;
+      expect(duration).toHaveClass('hidden');
+    });
+
+    it('should show query part as visible by default', async () => {
+      const {element, parts} = await renderQuerySummary({
+        querySummaryState: {
+          firstResult: 1,
+          lastResult: 10,
+          total: 100,
+          query: 'test',
+          firstSearchExecuted: true,
+          hasResults: true,
+          hasQuery: true,
+        },
+      });
+
+      const query = parts(element).query;
+      expect(query).toBeInTheDocument();
+      expect(query).not.toHaveClass('hidden');
+    });
+
+    it('should contain duration text even when hidden', async () => {
+      const {element, parts} = await renderQuerySummary({
+        querySummaryState: {
+          firstResult: 1,
+          lastResult: 10,
+          total: 100,
+          durationInSeconds: 0.47,
+          firstSearchExecuted: true,
+          hasResults: true,
+          hasDuration: true,
+        },
+      });
+
+      const duration = parts(element).duration;
+      expect(duration).toHaveTextContent('0.47');
+      expect(duration).toHaveClass('hidden');
+    });
+  });
+
+  describe('when testing placeholder behavior', () => {
+    it('should show placeholder when search has not been executed', async () => {
+      const {placeholder} = await renderQuerySummary({
+        querySummaryState: {
+          firstSearchExecuted: false,
+          hasResults: false,
+          hasError: false,
+        },
+      });
+
+      expect(placeholder).toBeInTheDocument();
+      expect(placeholder).toHaveAttribute('part', 'placeholder');
+      expect(placeholder).toHaveAttribute('aria-hidden', 'true');
+    });
+
+    it('should not show placeholder when search has been executed', async () => {
+      const {placeholder} = await renderQuerySummary({
+        querySummaryState: {
+          firstSearchExecuted: true,
+          hasResults: true,
+          hasError: false,
+        },
+      });
+
+      expect(placeholder).toBeFalsy();
+    });
   });
 });
