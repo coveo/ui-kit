@@ -243,6 +243,7 @@ useCaseTestCases.forEach((useCase) => {
                 });
                 test('should trigger a new generate call to the answer API', async ({
                   generatedAnswer,
+                  baseFacet,
                 }) => {
                   await generatedAnswer.streamEndAnalyticRequestPromise;
 
@@ -251,8 +252,19 @@ useCaseTestCases.forEach((useCase) => {
                       q: exampleQuery,
                     });
 
+                  const streamEndAnalyticRequestPromise =
+                    generatedAnswer.waitForStreamEndAnalytics();
+
+                  const facetSelectUaRequestPromise =
+                    baseFacet.waitForFacetSelectAnalytics();
+
+                  const searchResponsePromise = baseFacet.waitForSearchResponse();
+
                   await generatedAnswer.clickFirstTimeframeFacetLink();
                   await generateRequestPromise;
+                  await streamEndAnalyticRequestPromise;
+                  await facetSelectUaRequestPromise;
+                  await searchResponsePromise;
                 });
               });
             }

@@ -10,6 +10,7 @@ import {GeneratedAnswerObject} from './pageObject';
 import genQaData from './data';
 import type {GenQaData} from './data';
 import {AnalyticsModeEnum} from '../../../../../../playwright/utils/analyticsMode';
+import {BaseFacetObject} from '../../../../../../playwright/page-object/baseFacetObject';
 
 const MACHINE_LEARNING_API_URL = '**/machinelearning/streaming';
 const ANSWER_API_URL = '**/answer/v1/configs/**/generate';
@@ -48,6 +49,9 @@ export const testSearch = quanticBase.extend<QuanticGeneratedAnswerE2ESearchFixt
   withFacets: false,
   search: async ({page}, use) => {
     await use(new SearchObject(page, searchRequestRegex));
+  },
+  baseFacet: async ({page}, use) => {
+    await use(new BaseFacetObject(page, searchRequestRegex));
   },
   generatedAnswer: async (
     {
@@ -106,6 +110,9 @@ export const testInsight =
     withFacets: false,
     search: async ({page}, use) => {
       await use(new SearchObject(page, insightSearchRequestRegex));
+    },
+    baseFacet: async ({page}, use) => {
+      await use(new BaseFacetObject(page, insightSearchRequestRegex));
     },
     insightSetup: async ({page}, use) => {
       await use(new InsightSetupObject(page));
