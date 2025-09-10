@@ -19,7 +19,7 @@ runs:
         echo "lws_disabled_url=$LWS_DISABLED_URL" >> $GITHUB_OUTPUT
 
     - name: Post or update PR comment with Scratch Org links
-      uses: actions/github-script@v6
+      uses: actions/github-script@f28e40c7f34bde8b3046d885e986cb6290c5673b # v7
       with:
         script: |
           const lwsEnabledUrl = '${{ steps.read-env.outputs.lws_enabled_url }}';
