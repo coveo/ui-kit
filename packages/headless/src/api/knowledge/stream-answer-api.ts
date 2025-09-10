@@ -330,7 +330,6 @@ export const constructAnswerQueryParams = (
     generateFacetParams = getGeneratedFacetParams(q, state);
   }
 
-  // state.sortCriteria
   // state.facetOptions
 
   return {
@@ -397,6 +396,7 @@ export const constructAnswerQueryParams = (
       !!Object.keys(state.dictionaryFieldContext.contextValues).length && {
         dictionaryFieldContext: state.dictionaryFieldContext.contextValues,
       }),
+    ...(state.sortCriteria?.length && {sortCriteria: state.sortCriteria}),
     ...analyticsParams,
   };
 };

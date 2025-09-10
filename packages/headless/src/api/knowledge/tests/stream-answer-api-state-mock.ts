@@ -1634,6 +1634,7 @@ export const expectedStreamAnswerAPIParam = {
   referrer: 'some-test-referrer',
   debug: true,
   actionsHistory: [],
+  sortCriteria: 'relevancy',
   analytics: {
     actionCause: 'searchboxSubmit',
     capture: false,
