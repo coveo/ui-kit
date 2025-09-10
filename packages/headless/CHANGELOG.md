@@ -1,3 +1,39 @@
+## 4.0.0 (2025-09-10)
+
+* feat(headless): exposed generateAnswer action to be able to programmatically generate an answer (#60 ([815ccaf](https://github.com/coveo/ui-kit/commits/815ccaf)), closes [#6013](https://github.com/coveo/ui-kit/issues/6013)
+* ci(tests): run tests only for affected headless endpoints in the CI (#6014) ([44a0c69](https://github.com/coveo/ui-kit/commits/44a0c69)), closes [#6014](https://github.com/coveo/ui-kit/issues/6014)
+* chore(headless-ssr): deprecate `BuildOption` (#5927) ([8c7822d](https://github.com/coveo/ui-kit/commits/8c7822d)), closes [#5927](https://github.com/coveo/ui-kit/issues/5927)
+* chore(headless-ssr): deprecate `ControllerDefinitionOption` and export missing controller definition ([fa7d95d](https://github.com/coveo/ui-kit/commits/fa7d95d)), closes [#5933](https://github.com/coveo/ui-kit/issues/5933)
+* chore(headless-ssr): remove unnecessary casts (#5965) ([1274d03](https://github.com/coveo/ui-kit/commits/1274d03)), closes [#5965](https://github.com/coveo/ui-kit/issues/5965)
+* chore(headless-ssr): replace single search action to search action array (#5947) ([c6ea281](https://github.com/coveo/ui-kit/commits/c6ea281)), closes [#5947](https://github.com/coveo/ui-kit/issues/5947)
+* docs: Fixed broken links (#5957) ([6c63261](https://github.com/coveo/ui-kit/commits/6c63261)), closes [#5957](https://github.com/coveo/ui-kit/issues/5957)
+
+
+### breaking change
+
+* later
+
+## Changes Made
+- **Updated `HydrateStaticStateOptions`**: Changed `searchAction:
+TSearchAction` to `searchActions: TSearchAction[]`
+- **Interface Alignment**: Ensured search SSR follows the same patterns
+as commerce SSR
+
+## Migration Impact
+This is a breaking change for existing search SSR implementations. Users
+will need to:
+- Change `searchAction: action` to `searchActions: [action]`
+- Update any code that expects a single action to handle an array of
+actions
+
+## Future Considerations
+When recommendation support is added to search SSR, the existing
+`searchActions` array will seamlessly support both search and
+recommendation actions without requiring additional interface changes.
+
+https://coveord.atlassian.net/browse/KIT-4684
+
+
 ## <small>3.29.2 (2025-09-03)</small>
 
 * chore(headless-ssr): organize commerce and search code (#5924) ([5654e8d](https://github.com/coveo/ui-kit/commits/5654e8d)), closes [#5924](https://github.com/coveo/ui-kit/issues/5924)

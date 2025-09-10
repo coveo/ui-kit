@@ -1,3 +1,12 @@
+## <small>3.33.4 (2025-09-10)</small>
+
+* chore: deduplicate dependencies in create-atomic-* (#5959) ([7fcf462](https://github.com/coveo/ui-kit/commits/7fcf462)), closes [#5959](https://github.com/coveo/ui-kit/issues/5959)
+* chore(atomic insight): migrate IconButton functional component (#5976) ([8b47cb0](https://github.com/coveo/ui-kit/commits/8b47cb0)), closes [#5976](https://github.com/coveo/ui-kit/issues/5976)
+* docs: Fixed broken links (#5957) ([6c63261](https://github.com/coveo/ui-kit/commits/6c63261)), closes [#5957](https://github.com/coveo/ui-kit/issues/5957)
+* (docs): Remove request duration info on the  atomic-commerce-query-summary component (#6007) ([009880b](https://github.com/coveo/ui-kit/commits/009880b)), closes [#6007](https://github.com/coveo/ui-kit/issues/6007)
+
+
+
 ## <small>3.33.3 (2025-09-03)</small>
 
 * fix(atomic commerce): missing min-height for atomic-product-excerpt/description (#5969) ([d2100f1](https://github.com/coveo/ui-kit/commits/d2100f1)), closes [#5969](https://github.com/coveo/ui-kit/issues/5969)

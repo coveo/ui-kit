@@ -1,6 +1,5 @@
 import {skipToken} from '@reduxjs/toolkit/query';
 import {answerEvaluation} from '../../../api/knowledge/post-answer-evaluation.js';
-import {triggerSearchRequest} from '../../../api/knowledge/stream-answer-actions.js';
 import {
   answerApi,
   fetchAnswer,
@@ -10,6 +9,7 @@ import {getConfigurationInitialState} from '../../../features/configuration/conf
 import * as answerApiSelectors from '../../../features/generated-answer/answer-api-selectors.js';
 import {selectAnswerTriggerParams} from '../../../features/generated-answer/answer-api-selectors.js';
 import {
+  generateAnswer,
   resetAnswer,
   updateAnswerConfigurationId,
   updateResponseFormat,
@@ -37,9 +37,6 @@ vi.mock(
   '../../../features/generated-answer/generated-answer-analytics-actions'
 );
 vi.mock('../../../features/search/search-actions');
-vi.mock('../../../api/knowledge/stream-answer-actions.js', () => ({
-  triggerSearchRequest: vi.fn(),
-}));
 
 const queryCounter = {count: 0};
 const queries = [
@@ -254,7 +251,7 @@ describe('knowledge-generated-answer', () => {
 
   describe('subscribeToSearchRequest', () => {
     const mockSelectAnswerTriggerParams = vi.mocked(selectAnswerTriggerParams);
-    const mockTriggerSearchRequest = vi.mocked(triggerSearchRequest);
+    const mockGeneratedAnswer = vi.mocked(generateAnswer);
     let listener: () => void;
 
     beforeEach(() => {
@@ -274,7 +271,7 @@ describe('knowledge-generated-answer', () => {
 
       listener();
 
-      expect(mockTriggerSearchRequest).not.toHaveBeenCalled();
+      expect(mockGeneratedAnswer).not.toHaveBeenCalled();
     });
 
     describe('when there is a request id and query', () => {
@@ -298,7 +295,7 @@ describe('knowledge-generated-answer', () => {
         listener(); // First call - initializes lastTriggerParams with empty values
         listener(); // Second call - triggers generateAnswer with valid request
 
-        expect(mockTriggerSearchRequest).toHaveBeenCalledTimes(1);
+        expect(mockGeneratedAnswer).toHaveBeenCalledTimes(1);
       });
 
       it('should not trigger generateAnswer for the same request id', () => {
@@ -329,7 +326,7 @@ describe('knowledge-generated-answer', () => {
         listener(); // Second call - first valid request with id '12'
         listener(); // Third call - same request id '12', should not trigger
 
-        expect(mockTriggerSearchRequest).toHaveBeenCalledTimes(1);
+        expect(mockGeneratedAnswer).toHaveBeenCalledTimes(1);
       });
 
       it('should trigger generateAnswer for new request id', () => {
@@ -360,7 +357,7 @@ describe('knowledge-generated-answer', () => {
         listener(); // Second call - first valid request with id '12'
         listener(); // Third call - new request id '56'
 
-        expect(mockTriggerSearchRequest).toHaveBeenCalledTimes(2);
+        expect(mockGeneratedAnswer).toHaveBeenCalledTimes(2);
       });
     });
 
@@ -392,7 +389,7 @@ describe('knowledge-generated-answer', () => {
       listener(); // Second call with valid query
       listener(); // Third call with empty query but new request id
 
-      expect(mockTriggerSearchRequest).toHaveBeenCalledTimes(1);
+      expect(mockGeneratedAnswer).toHaveBeenCalledTimes(1);
     });
 
     it('should trigger generateAnswer when in legacy mode without action cause', () => {
@@ -415,7 +412,7 @@ describe('knowledge-generated-answer', () => {
       listener(); // First call - initialization
       listener(); // Second call - legacy mode without action cause
 
-      expect(mockTriggerSearchRequest).toHaveBeenCalledTimes(1);
+      expect(mockGeneratedAnswer).toHaveBeenCalledTimes(1);
     });
 
     it('should not trigger generateAnswer when in next mode without action cause', () => {
@@ -429,7 +426,7 @@ describe('knowledge-generated-answer', () => {
 
       listener(); // This should not trigger due to next mode without action cause
 
-      expect(mockTriggerSearchRequest).not.toHaveBeenCalled();
+      expect(mockGeneratedAnswer).not.toHaveBeenCalled();
     });
 
     it('should trigger generateAnswer when in next mode with action cause', () => {
@@ -452,7 +449,7 @@ describe('knowledge-generated-answer', () => {
       listener(); // First call - initialization
       listener(); // Second call - next mode with action cause
 
-      expect(mockTriggerSearchRequest).toHaveBeenCalledTimes(1);
+      expect(mockGeneratedAnswer).toHaveBeenCalledTimes(1);
     });
 
     it('should trigger generateAnswer for same query with different request id', () => {
@@ -483,7 +480,7 @@ describe('knowledge-generated-answer', () => {
       listener(); // Second call - first occurrence of query with id '100'
       listener(); // Third call - same query but different id '200', should trigger again
 
-      expect(mockTriggerSearchRequest).toHaveBeenCalledTimes(2);
+      expect(mockGeneratedAnswer).toHaveBeenCalledTimes(2);
     });
   });
 
