@@ -47,7 +47,7 @@
     "plop": "4.0.1"
   },
   "devDependencies": {
-    "fs-extra": "11.3.0",
-    "typescript": "5.8.3"
+    "fs-extra": "11.3.1",
+    "typescript": "5.9.2"
   }
 }

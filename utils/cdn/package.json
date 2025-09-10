@@ -13,6 +13,6 @@
   },
   "devDependencies": {
     "ncp": "2.0.0",
-    "chalk": "5.4.1"
+    "chalk": "5.6.0"
   }
 }

@@ -111,22 +111,22 @@
   "dependencies": {
     "@coveo/bueno": "1.1.0",
     "@coveo/relay": "1.2.6",
-    "@coveo/relay-event-types": "15.1.0",
+    "@coveo/relay-event-types": "15.2.1",
     "@reduxjs/toolkit": "2.6.0",
     "abortcontroller-polyfill": "1.7.8",
     "coveo.analytics": "2.30.45",
-    "dayjs": "1.11.13",
+    "dayjs": "1.11.18",
     "exponential-backoff": "3.1.2",
     "fast-equals": "5.2.2",
     "headers-polyfill": "4.0.3",
     "navigator.sendbeacon": "0.0.20",
-    "pino": "9.7.0",
+    "pino": "9.9.1",
     "redux-thunk": "3.1.0",
     "ts-debounce": "4.0.0"
   },
   "devDependencies": {
     "@coveo/documentation": "1.0.0",
-    "chalk": "5.4.1",
+    "chalk": "5.6.0",
     "live-server": "1.2.2",
     "typedoc": "0.28.7",
     "vitest": "3.2.4"
