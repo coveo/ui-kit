@@ -1,3 +1,9 @@
+## <small>1.5.3 (2025-09-10)</small>
+
+* chore: deduplicate dependencies in create-atomic-* (#5959) ([7fcf462](https://github.com/coveo/ui-kit/commits/7fcf462)), closes [#5959](https://github.com/coveo/ui-kit/issues/5959)
+
+
+
 ## 1.5.0 (2025-08-27)
 
 * feat(cli): port over atomic-result-component from cli  (#5919) ([2899a2c](https://github.com/coveo/ui-kit/commits/2899a2c)), closes [#5919](https://github.com/coveo/ui-kit/issues/5919)
