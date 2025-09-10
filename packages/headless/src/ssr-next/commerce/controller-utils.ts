@@ -5,15 +5,12 @@ import {ControllerBuilder} from '../common/builders/controller-builder.js';
 import {createStaticControllerBuilder} from '../common/builders/static-controller-builder.js';
 import type {SSRCommerceEngine} from './factories/build-factory.js';
 import type {SolutionType} from './types/controller-constants.js';
-import type {
-  ControllerDefinitionsMap,
-  FilteredBakedInControllers,
-} from './types/controller-definitions.js';
+import type {ControllerDefinitionsMap} from './types/controller-definitions.js';
 import type {
   InferControllerPropsMapFromDefinitions,
-  InferControllerStaticStateMapFromDefinitionsWithSolutionType,
   InferControllersMapFromDefinition,
 } from './types/controller-inference.js';
+import type {InferredStaticState} from './types/fetch-static-state.js';
 
 export function createStaticState<
   TSearchAction extends UnknownAction,
@@ -29,11 +26,7 @@ export function createStaticState<
   return {
     controllers: mapObject(controllers, (controller) =>
       createStaticControllerBuilder(controller).build()
-    ) as InferControllerStaticStateMapFromDefinitionsWithSolutionType<
-      TControllerDefinitions,
-      TSolutionType
-    > &
-      FilteredBakedInControllers<TSolutionType>,
+    ) as InferredStaticState<TControllerDefinitions, TSolutionType>,
     searchActions: searchActions.map((action) => clone(action)),
   };
 }

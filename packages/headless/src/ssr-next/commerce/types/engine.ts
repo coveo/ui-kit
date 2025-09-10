@@ -1,4 +1,3 @@
-import type {UnknownAction} from '@reduxjs/toolkit';
 import type {NavigatorContextProvider} from '../../../app/navigator-context-provider.js';
 import type {Controller} from '../../../controllers/controller/headless-controller.js';
 import type {
@@ -12,10 +11,6 @@ import type {
   BakedInControllers,
   ControllerDefinitionsMap,
 } from './controller-definitions.js';
-import type {
-  InferControllerStaticStateMapFromDefinitionsWithSolutionType,
-  InferControllersMapFromDefinition,
-} from './controller-inference.js';
 import type {FetchStaticState} from './fetch-static-state.js';
 import type {
   HydrateStaticState,
@@ -62,24 +57,11 @@ export interface CommerceEngineDefinition<
   /**
    * Fetches the static state on the server side using your engine definition.
    */
-  fetchStaticState: FetchStaticState<
-    UnknownAction,
-    InferControllerStaticStateMapFromDefinitionsWithSolutionType<
-      TControllers,
-      TSolutionType
-    >,
-    TControllers,
-    TSolutionType
-  >;
+  fetchStaticState: FetchStaticState<TControllers, TSolutionType>;
   /**
    * Fetches the hydrated state on the client side using your engine definition and the static state.
    */
-  hydrateStaticState: HydrateStaticState<
-    InferControllersMapFromDefinition<TControllers, TSolutionType>,
-    UnknownAction,
-    TControllers,
-    TSolutionType
-  >;
+  hydrateStaticState: HydrateStaticState<TControllers, TSolutionType>;
   /**
    * Sets the navigator context provider.
    * This provider is essential for retrieving navigation-related data such as referrer, userAgent, location, and clientId, which are crucial for handling both server-side and client-side API requests effectively.

@@ -7,6 +7,7 @@ import type {
   CommerceEngineDefinitionControllersPropsOption,
   ControllerDefinitionsMap,
 } from './controller-definitions.js';
+import type {InferControllersMapFromDefinition} from './controller-inference.js';
 import type {CommerceEngineDefinitionBuildResult} from './engine.js';
 
 export type HydratedState<TControllers extends ControllersMap> =
@@ -33,14 +34,17 @@ export type HydrateStaticStateParameters<
  * Useful when hydrating a server-side-rendered engine.
  */
 export type HydrateStaticState<
-  TControllers extends ControllersMap,
-  TSearchAction extends UnknownAction,
   TControllersDefinitionsMap extends ControllerDefinitionsMap<Controller>,
   TSolutionType extends SolutionType,
+  TSearchAction extends UnknownAction = UnknownAction,
 > = (
   params: HydrateStaticStateParameters<
     TControllersDefinitionsMap,
     TSolutionType,
     TSearchAction
   >
-) => Promise<HydratedState<TControllers>>;
+) => Promise<
+  HydratedState<
+    InferControllersMapFromDefinition<TControllersDefinitionsMap, TSolutionType>
+  >
+>;
