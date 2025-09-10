@@ -1,9 +1,7 @@
 import type {UnknownAction} from '@reduxjs/toolkit';
 import type {Controller} from '../../../controllers/controller/headless-controller.js';
-import type {
-  ControllerStaticStateMap,
-  ControllersPropsMap,
-} from '../../common/types/controllers.js';
+import type {ControllerStaticStateMap} from '../../common/types/controllers.js';
+import type {EngineStaticState} from '../../common/types/engine.js';
 import type {BuildConfig} from './build.js';
 import type {SolutionType} from './controller-constants.js';
 import type {
@@ -11,7 +9,17 @@ import type {
   ControllerDefinitionsMap,
   FilteredBakedInControllers,
 } from './controller-definitions.js';
-import type {EngineStaticState} from './engine.js';
+import type {InferControllerPropsMapFromDefinitions} from './controller-inference.js';
+
+export type FetchStaticStateParameters<
+  TControllerDefinitions extends ControllerDefinitionsMap<Controller>,
+  TSolutionType extends SolutionType,
+> = BuildConfig<TControllerDefinitions, TSolutionType> &
+  CommerceEngineDefinitionControllersPropsOption<
+    TControllerDefinitions,
+    InferControllerPropsMapFromDefinitions<TControllerDefinitions>,
+    TSolutionType
+  >;
 
 /**
  * Executes only the initial search for a given configuration, then returns a resumable snapshot of engine state along with the state of the controllers.
@@ -21,16 +29,10 @@ import type {EngineStaticState} from './engine.js';
 export type FetchStaticState<
   TSearchAction extends UnknownAction,
   TControllersStaticState extends ControllerStaticStateMap,
-  TControllersProps extends ControllersPropsMap,
   TControllersDefinitionsMap extends ControllerDefinitionsMap<Controller>,
   TSolutionType extends SolutionType,
 > = (
-  params: BuildConfig<TControllersDefinitionsMap, TSolutionType> &
-    CommerceEngineDefinitionControllersPropsOption<
-      TControllersDefinitionsMap,
-      TControllersProps,
-      TSolutionType
-    >
+  params: FetchStaticStateParameters<TControllersDefinitionsMap, TSolutionType>
 ) => Promise<
   EngineStaticState<
     TSearchAction,

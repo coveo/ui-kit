@@ -21,9 +21,9 @@ import type {InferControllersMapFromDefinition} from '../types/controller-infere
 import type {
   CommerceControllerDefinitionsMap,
   CommerceEngineDefinitionOptions,
-  FetchStaticStateParameters,
-  HydrateStaticStateParameters,
 } from '../types/engine.js';
+import type {FetchStaticStateParameters} from '../types/fetch-static-state.js';
+import type {HydrateStaticStateParameters} from '../types/hydrate-static-state.js';
 import {wireControllerParams} from '../utils/controller-wiring.js';
 import {extendEngineConfiguration} from '../utils/engine-wiring.js';
 

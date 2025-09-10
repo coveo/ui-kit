@@ -13,7 +13,6 @@ import type {
   ControllerDefinitionsMap,
 } from './controller-definitions.js';
 import type {
-  InferControllerPropsMapFromDefinitions,
   InferControllerStaticStateMapFromDefinitionsWithSolutionType,
   InferControllersMapFromDefinition,
 } from './controller-inference.js';
@@ -69,7 +68,6 @@ export interface CommerceEngineDefinition<
       TControllers,
       TSolutionType
     >,
-    InferControllerPropsMapFromDefinitions<TControllers>,
     TControllers,
     TSolutionType
   >;
@@ -79,7 +77,6 @@ export interface CommerceEngineDefinition<
   hydrateStaticState: HydrateStaticState<
     InferControllersMapFromDefinition<TControllers, TSolutionType>,
     UnknownAction,
-    InferControllerPropsMapFromDefinitions<TControllers>,
     TControllers,
     TSolutionType
   >;
@@ -114,32 +111,3 @@ export interface CommerceEngineDefinitionBuildResult<
 
 export type CommerceControllerDefinitionsMap =
   ControllerDefinitionsMap<Controller>;
-
-type Definition<
-  TControllerDefinitions extends CommerceControllerDefinitionsMap,
-  TSolutionType extends SolutionType,
-> = CommerceEngineDefinition<TControllerDefinitions, TSolutionType>;
-
-type FetchStaticStateFunction<
-  TControllerDefinitions extends CommerceControllerDefinitionsMap,
-  TSolutionType extends SolutionType,
-> = Definition<TControllerDefinitions, TSolutionType>['fetchStaticState'];
-
-export type HydrateStaticStateFunction<
-  TControllerDefinitions extends CommerceControllerDefinitionsMap,
-  TSolutionType extends SolutionType,
-> = Definition<TControllerDefinitions, TSolutionType>['hydrateStaticState'];
-
-export type FetchStaticStateParameters<
-  TControllerDefinitions extends CommerceControllerDefinitionsMap,
-  TSolutionType extends SolutionType,
-> = Parameters<
-  FetchStaticStateFunction<TControllerDefinitions, TSolutionType>
->[0];
-
-export type HydrateStaticStateParameters<
-  TControllerDefinitions extends CommerceControllerDefinitionsMap,
-  TSolutionType extends SolutionType,
-> = Parameters<
-  HydrateStaticStateFunction<TControllerDefinitions, TSolutionType>
->[0];

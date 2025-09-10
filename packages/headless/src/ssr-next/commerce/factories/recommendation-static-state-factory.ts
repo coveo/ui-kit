@@ -5,8 +5,8 @@ import type {AugmentedControllerDefinition} from '../types/controller-definition
 import type {
   CommerceControllerDefinitionsMap,
   CommerceEngineDefinitionOptions,
-  FetchStaticStateParameters,
 } from '../types/engine.js';
+import type {FetchStaticStateParameters} from '../types/fetch-static-state.js';
 import {filterRecommendationControllers} from '../utils/recommendation-filter.js';
 import {buildFactory} from './build-factory.js';
 

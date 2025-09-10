@@ -3,9 +3,8 @@ import type {AugmentedControllerDefinition} from '../types/controller-definition
 import type {
   CommerceControllerDefinitionsMap,
   CommerceEngineDefinitionOptions,
-  HydrateStaticStateFunction,
-  HydrateStaticStateParameters,
 } from '../types/engine.js';
+import type {HydrateStaticStateParameters} from '../types/hydrate-static-state.js';
 import {buildFactory} from './build-factory.js';
 
 export function hydratedRecommendationStaticStateFactory<
@@ -13,10 +12,7 @@ export function hydratedRecommendationStaticStateFactory<
 >(
   controllerDefinitions: AugmentedControllerDefinition<TControllerDefinitions>,
   options: CommerceEngineDefinitionOptions<TControllerDefinitions>
-): HydrateStaticStateFunction<
-  TControllerDefinitions,
-  SolutionType.recommendation
-> {
+) {
   return async (
     params: HydrateStaticStateParameters<
       TControllerDefinitions,

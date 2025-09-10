@@ -3,8 +3,8 @@ import type {AugmentedControllerDefinition} from '../types/controller-definition
 import type {
   CommerceControllerDefinitionsMap,
   CommerceEngineDefinitionOptions,
-  HydrateStaticStateParameters,
 } from '../types/engine.js';
+import type {HydrateStaticStateParameters} from '../types/hydrate-static-state.js';
 import {buildFactory} from './build-factory.js';
 
 export function hydratedStaticStateFactory<

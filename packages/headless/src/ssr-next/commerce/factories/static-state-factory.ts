@@ -8,8 +8,8 @@ import type {AugmentedControllerDefinition} from '../types/controller-definition
 import type {
   CommerceControllerDefinitionsMap,
   CommerceEngineDefinitionOptions,
-  FetchStaticStateParameters,
 } from '../types/engine.js';
+import type {FetchStaticStateParameters} from '../types/fetch-static-state.js';
 import {buildFactory} from './build-factory.js';
 
 export function fetchStaticStateFactory<
