@@ -1266,6 +1266,17 @@ export const streamAnswerAPIStateMockWithFoldingEnabled: StreamAnswerAPIState =
     },
   };
 
+export const streamAnswerAPIStateMockWithDictionaryFieldContext: StreamAnswerAPIState =
+  {
+    ...streamAnswerAPIStateMock,
+    dictionaryFieldContext: {
+      contextValues: {
+        key1: 'value1',
+        key2: 'value2',
+      },
+    },
+  };
+
 export const streamAnswerAPIStateMockWithExcerptLength: StreamAnswerAPIState = {
   ...streamAnswerAPIStateMock,
   excerptLength: {
@@ -1712,4 +1723,12 @@ export const expectedStreamAnswerAPIParamWithFoldingEnabled = {
 export const expectedStreamAnswerAPIWithExcerptLength = {
   ...expectedStreamAnswerAPIParam,
   excerptLength: 300,
+};
+
+export const expectedStreamAnswerAPIParamWithDictionaryFieldContext = {
+  ...expectedStreamAnswerAPIParam,
+  dictionaryFieldContext: {
+    key1: 'value1',
+    key2: 'value2',
+  },
 };

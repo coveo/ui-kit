@@ -12,6 +12,7 @@ import {
   expectedStreamAnswerAPIParam,
   expectedStreamAnswerAPIParamForSelect,
   expectedStreamAnswerAPIParamWithATabWithAnExpression,
+  expectedStreamAnswerAPIParamWithDictionaryFieldContext,
   expectedStreamAnswerAPIParamWithFoldingDisabled,
   expectedStreamAnswerAPIParamWithFoldingEnabled,
   expectedStreamAnswerAPIParamWithoutAnyTab,
@@ -24,6 +25,7 @@ import {
   streamAnswerAPIStateMock,
   streamAnswerAPIStateMockWithAnalyticsEnabled,
   streamAnswerAPIStateMockWithATabWithAnExpression,
+  streamAnswerAPIStateMockWithDictionaryFieldContext,
   streamAnswerAPIStateMockWithExcerptLength,
   streamAnswerAPIStateMockWithFoldingDisabled,
   streamAnswerAPIStateMockWithFoldingEnabled,
@@ -230,6 +232,18 @@ describe('#streamAnswerApi', () => {
       );
 
       expect(queryParams).toEqual(expectedStreamAnswerAPIWithExcerptLength);
+    });
+
+    it('should include dictionaryFieldContext when it has context values', () => {
+      const queryParams = constructAnswerQueryParams(
+        streamAnswerAPIStateMockWithDictionaryFieldContext as any,
+        'fetch',
+        buildMockNavigatorContextProvider()()
+      );
+
+      expect(queryParams).toEqual(
+        expectedStreamAnswerAPIParamWithDictionaryFieldContext
+      );
     });
 
     it('should include all analytics fields when usage is fetch', () => {
