@@ -13,6 +13,7 @@ import {
   type recommendationInternalOptionKey,
   SolutionType,
 } from './controller-constants.js';
+import type {InferControllerPropsMapFromDefinitions} from './controller-inference.js';
 import type {
   ListingAndStandaloneController,
   NonRecommendationController,
@@ -128,11 +129,10 @@ export type AugmentedControllerDefinition<
  */
 export type CommerceEngineDefinitionControllersPropsOption<
   TControllers extends ControllerDefinitionsMap<Controller>,
-  TControllersPropsMap extends ControllersPropsMap,
   TSolutionType extends SolutionType,
 > = RequiredEngineDefinitionControllersPropsOption<
   TControllers,
-  TControllersPropsMap,
+  InferControllerPropsMapFromDefinitions<TControllers>,
   TSolutionType
 >;
 

@@ -7,7 +7,6 @@ import type {
   CommerceEngineDefinitionControllersPropsOption,
   ControllerDefinitionsMap,
 } from './controller-definitions.js';
-import type {InferControllerPropsMapFromDefinitions} from './controller-inference.js';
 import type {CommerceEngineDefinitionBuildResult} from './engine.js';
 
 export type HydratedState<TControllers extends ControllersMap> =
@@ -20,11 +19,11 @@ export interface HydrateStaticStateOptions<TSearchAction> {
 export type HydrateStaticStateParameters<
   TControllerDefinitions extends ControllerDefinitionsMap<Controller>,
   TSolutionType extends SolutionType,
-> = HydrateStaticStateOptions<UnknownAction> &
+  TSearchAction extends UnknownAction = UnknownAction,
+> = HydrateStaticStateOptions<TSearchAction> &
   BuildConfig<TControllerDefinitions, TSolutionType> &
   CommerceEngineDefinitionControllersPropsOption<
     TControllerDefinitions,
-    InferControllerPropsMapFromDefinitions<TControllerDefinitions>,
     TSolutionType
   >;
 
@@ -39,11 +38,9 @@ export type HydrateStaticState<
   TControllersDefinitionsMap extends ControllerDefinitionsMap<Controller>,
   TSolutionType extends SolutionType,
 > = (
-  params: HydrateStaticStateOptions<TSearchAction> &
-    BuildConfig<TControllersDefinitionsMap, TSolutionType> &
-    CommerceEngineDefinitionControllersPropsOption<
-      TControllersDefinitionsMap,
-      InferControllerPropsMapFromDefinitions<TControllersDefinitionsMap>,
-      TSolutionType
-    >
+  params: HydrateStaticStateParameters<
+    TControllersDefinitionsMap,
+    TSolutionType,
+    TSearchAction
+  >
 ) => Promise<HydratedState<TControllers>>;

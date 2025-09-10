@@ -9,7 +9,6 @@ import type {
   ControllerDefinitionsMap,
   FilteredBakedInControllers,
 } from './controller-definitions.js';
-import type {InferControllerPropsMapFromDefinitions} from './controller-inference.js';
 
 export type FetchStaticStateParameters<
   TControllerDefinitions extends ControllerDefinitionsMap<Controller>,
@@ -17,7 +16,6 @@ export type FetchStaticStateParameters<
 > = BuildConfig<TControllerDefinitions, TSolutionType> &
   CommerceEngineDefinitionControllersPropsOption<
     TControllerDefinitions,
-    InferControllerPropsMapFromDefinitions<TControllerDefinitions>,
     TSolutionType
   >;
 
