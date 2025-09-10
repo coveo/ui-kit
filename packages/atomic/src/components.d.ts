@@ -1473,11 +1473,6 @@ export namespace Components {
     interface AtomicQueryError {
     }
     /**
-     * The `atomic-query-summary` component displays information about the current range of results and the request duration (e.g., "Results 1-10 of 123 in 0.47 seconds").
-     */
-    interface AtomicQuerySummary {
-    }
-    /**
      * The `atomic-quickview` component renders a button which the end user can click to open a modal box containing a preview
      * about a result.
      * The `atomic-quickview` is not meant to replace the `atomic-result-link` to access an item in a result template; it has certain limitations (e.g., custom styles and embedded
@@ -3705,15 +3700,6 @@ declare global {
         new (): HTMLAtomicQueryErrorElement;
     };
     /**
-     * The `atomic-query-summary` component displays information about the current range of results and the request duration (e.g., "Results 1-10 of 123 in 0.47 seconds").
-     */
-    interface HTMLAtomicQuerySummaryElement extends Components.AtomicQuerySummary, HTMLStencilElement {
-    }
-    var HTMLAtomicQuerySummaryElement: {
-        prototype: HTMLAtomicQuerySummaryElement;
-        new (): HTMLAtomicQuerySummaryElement;
-    };
-    /**
      * The `atomic-quickview` component renders a button which the end user can click to open a modal box containing a preview
      * about a result.
      * The `atomic-quickview` is not meant to replace the `atomic-result-link` to access an item in a result template; it has certain limitations (e.g., custom styles and embedded
@@ -4628,7 +4614,6 @@ declare global {
         "atomic-pager": HTMLAtomicPagerElement;
         "atomic-popover": HTMLAtomicPopoverElement;
         "atomic-query-error": HTMLAtomicQueryErrorElement;
-        "atomic-query-summary": HTMLAtomicQuerySummaryElement;
         "atomic-quickview": HTMLAtomicQuickviewElement;
         "atomic-quickview-modal": HTMLAtomicQuickviewModalElement;
         "atomic-rating-facet": HTMLAtomicRatingFacetElement;
@@ -6079,11 +6064,6 @@ declare namespace LocalJSX {
      * The `atomic-query-error` component handles fatal errors when performing a query on the index or Search API. When the error is known, it displays a link to relevant documentation link for debugging purposes. When the error is unknown, it displays a small text area with the JSON content of the error.
      */
     interface AtomicQueryError {
-    }
-    /**
-     * The `atomic-query-summary` component displays information about the current range of results and the request duration (e.g., "Results 1-10 of 123 in 0.47 seconds").
-     */
-    interface AtomicQuerySummary {
     }
     /**
      * The `atomic-quickview` component renders a button which the end user can click to open a modal box containing a preview
@@ -7567,7 +7547,6 @@ declare namespace LocalJSX {
         "atomic-pager": AtomicPager;
         "atomic-popover": AtomicPopover;
         "atomic-query-error": AtomicQueryError;
-        "atomic-query-summary": AtomicQuerySummary;
         "atomic-quickview": AtomicQuickview;
         "atomic-quickview-modal": AtomicQuickviewModal;
         "atomic-rating-facet": AtomicRatingFacet;
@@ -7847,10 +7826,6 @@ declare module "@stencil/core" {
              * The `atomic-query-error` component handles fatal errors when performing a query on the index or Search API. When the error is known, it displays a link to relevant documentation link for debugging purposes. When the error is unknown, it displays a small text area with the JSON content of the error.
              */
             "atomic-query-error": LocalJSX.AtomicQueryError & JSXBase.HTMLAttributes<HTMLAtomicQueryErrorElement>;
-            /**
-             * The `atomic-query-summary` component displays information about the current range of results and the request duration (e.g., "Results 1-10 of 123 in 0.47 seconds").
-             */
-            "atomic-query-summary": LocalJSX.AtomicQuerySummary & JSXBase.HTMLAttributes<HTMLAtomicQuerySummaryElement>;
             /**
              * The `atomic-quickview` component renders a button which the end user can click to open a modal box containing a preview
              * about a result.
