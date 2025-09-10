@@ -27,6 +27,17 @@ type PayloadType =
   | 'genqa.citationsType'
   | 'genqa.endOfStreamType';
 
+const PAYLOAD_TYPES = {
+  HEADER: 'genqa.headerMessageType',
+  MESSAGE: 'genqa.messageType',
+  CITATIONS: 'genqa.citationsType',
+  END_OF_STREAM: 'genqa.endOfStreamType',
+} as const;
+
+const FINISH_REASONS = {
+  ERROR: 'ERROR',
+} as const;
+
 const handleHeaderMessage = (
   draft: GeneratedAnswerStream,
   payload: Pick<GeneratedAnswerStream, 'contentFormat'>
@@ -71,18 +82,18 @@ interface MessageType {
   code?: number;
 }
 
-const handleError = (
-  draft: GeneratedAnswerStream,
-  message: Required<MessageType>
-) => {
+const handleError = (draft: GeneratedAnswerStream, message: MessageType) => {
+  const errorMessage = message.errorMessage || 'Unknown error occurred';
+  const errorCode = message.code || 500;
+
   draft.error = {
-    message: message.errorMessage,
-    code: message.code!,
+    message: errorMessage,
+    code: errorCode,
   };
   draft.isStreaming = false;
   draft.isLoading = false;
   // Throwing an error here breaks the client and prevents the error from reaching the state.
-  console.error(`${message.errorMessage} - code ${message.code}`);
+  console.error(`Generated answer error: ${errorMessage} (code: ${errorCode})`);
 };
 
 export const updateCacheWithEvent = (
@@ -91,7 +102,7 @@ export const updateCacheWithEvent = (
   dispatch: ThunkDispatch<StreamAnswerAPIState, unknown, UnknownAction>
 ) => {
   const message: Required<MessageType> = JSON.parse(event.data);
-  if (message.finishReason === 'ERROR' && message.errorMessage) {
+  if (message.finishReason === FINISH_REASONS.ERROR && message.errorMessage) {
     handleError(draft, message);
   }
 
@@ -100,31 +111,50 @@ export const updateCacheWithEvent = (
     : {};
 
   switch (message.payloadType) {
-    case 'genqa.headerMessageType':
+    case PAYLOAD_TYPES.HEADER:
       if (parsedPayload.contentFormat) {
         handleHeaderMessage(draft, parsedPayload);
         dispatch(setAnswerContentFormat(parsedPayload.contentFormat));
       }
       break;
-    case 'genqa.messageType':
+    case PAYLOAD_TYPES.MESSAGE:
       if (parsedPayload.textDelta) {
         handleMessage(draft, parsedPayload);
         dispatch(updateMessage({textDelta: parsedPayload.textDelta}));
       }
       break;
-    case 'genqa.citationsType':
+    case PAYLOAD_TYPES.CITATIONS:
       if (parsedPayload.citations) {
         handleCitations(draft, parsedPayload);
         dispatch(updateCitations({citations: parsedPayload.citations}));
       }
       break;
-    case 'genqa.endOfStreamType':
+    case PAYLOAD_TYPES.END_OF_STREAM:
       handleEndOfStream(draft, parsedPayload);
       dispatch(
         logGeneratedAnswerStreamEnd(parsedPayload.answerGenerated ?? false)
       );
       break;
   }
+};
+
+const buildAnswerEndpoint = (
+  platformEndpoint: string,
+  organizationId: string,
+  answerConfigurationId: string,
+  insightId?: string
+): string => {
+  if (!platformEndpoint || !organizationId || !answerConfigurationId) {
+    throw new Error('Missing required parameters for answer endpoint');
+  }
+
+  const basePath = `/rest/organizations/${organizationId}`;
+
+  if (insightId) {
+    return `${platformEndpoint}${basePath}/insight/v1/configs/${insightId}/answer/${answerConfigurationId}/generate`;
+  }
+
+  return `${platformEndpoint}${basePath}/answer/v1/configs/${answerConfigurationId}/generate`;
 };
 
 export const answerApi = answerSlice.injectEndpoints({
@@ -168,43 +198,51 @@ export const answerApi = answerSlice.injectEndpoints({
           organizationId,
           environment
         );
-        const insightGenerateEndpoint = `${platformEndpoint}/rest/organizations/${organizationId}/insight/v1/configs/${insightConfiguration?.insightId}/answer/${generatedAnswer.answerConfigurationId}/generate`;
-        const generateEndpoint = `${platformEndpoint}/rest/organizations/${organizationId}/answer/v1/configs/${generatedAnswer.answerConfigurationId}/generate`;
-        await fetchEventSource(
-          insightConfiguration ? insightGenerateEndpoint : generateEndpoint,
-          {
-            method: 'POST',
-            body: JSON.stringify(args),
-            headers: {
-              Authorization: `Bearer ${accessToken}`,
-              Accept: 'application/json',
-              'Content-Type': 'application/json',
-              'Accept-Encoding': '*',
-            },
-            fetch,
-            onopen: async (res) => {
-              const answerId = res.headers.get('x-answer-id');
-              if (answerId) {
-                updateCachedData((draft) => {
-                  draft.answerId = answerId;
-                });
-              }
-            },
-            onmessage: (event) => {
+        const answerEndpoint = insightConfiguration
+          ? buildAnswerEndpoint(
+              platformEndpoint,
+              organizationId,
+              generatedAnswer.answerConfigurationId,
+              insightConfiguration.insightId
+            )
+          : buildAnswerEndpoint(
+              platformEndpoint,
+              organizationId,
+              generatedAnswer.answerConfigurationId
+            );
+
+        await fetchEventSource(answerEndpoint, {
+          method: 'POST',
+          body: JSON.stringify(args),
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+            'Accept-Encoding': '*',
+          },
+          fetch,
+          onopen: async (res) => {
+            const answerId = res.headers.get('x-answer-id');
+            if (answerId) {
               updateCachedData((draft) => {
-                updateCacheWithEvent(event, draft, dispatch);
+                draft.answerId = answerId;
               });
-            },
-            onerror: (error) => {
-              throw error;
-            },
-            onclose: () => {
-              updateCachedData((draft) => {
-                dispatch(setCannotAnswer(!draft.generated));
-              });
-            },
-          }
-        );
+            }
+          },
+          onmessage: (event) => {
+            updateCachedData((draft) => {
+              updateCacheWithEvent(event, draft, dispatch);
+            });
+          },
+          onerror: (error) => {
+            throw error;
+          },
+          onclose: () => {
+            updateCachedData((draft) => {
+              dispatch(setCannotAnswer(!draft.generated));
+            });
+          },
+        });
       },
     }),
   }),
