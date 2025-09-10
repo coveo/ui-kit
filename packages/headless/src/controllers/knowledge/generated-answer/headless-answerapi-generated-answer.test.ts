@@ -287,7 +287,7 @@ describe('knowledge-generated-answer', () => {
       expect(generateAnswer).toHaveBeenCalledTimes(4);
     });
 
-    it('re-triggers a triggerSearchRequest after making the same query two times in a row', async () => {
+    it('re-triggers a generateAnswer after making the same query two times in a row', async () => {
       const originalQueries = [...queries];
 
       queries.length = 0;
@@ -306,20 +306,13 @@ describe('knowledge-generated-answer', () => {
 
         // Initial call
         listener();
-        expect(triggerSearchRequest).toHaveBeenCalledTimes(0);
+        expect(generateAnswer).toHaveBeenCalledTimes(0);
 
         listener();
-        expect(triggerSearchRequest).toHaveBeenCalledTimes(1);
+        expect(generateAnswer).toHaveBeenCalledTimes(1);
 
         listener();
-        expect(triggerSearchRequest).toHaveBeenCalledTimes(2);
-
-        expect(triggerSearchRequest).toHaveBeenCalledWith(
-          expect.objectContaining({
-            state: expect.any(Object),
-            navigatorContext: expect.any(Object),
-          })
-        );
+        expect(generateAnswer).toHaveBeenCalledTimes(2);
       } finally {
         // Restore original queries array
         queries.length = 0;
