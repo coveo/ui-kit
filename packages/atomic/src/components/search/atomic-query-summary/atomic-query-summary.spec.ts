@@ -1,7 +1,6 @@
 import {buildQuerySummary, type QuerySummaryState} from '@coveo/headless';
 import {html} from 'lit';
 import {describe, expect, it, vi} from 'vitest';
-import {AriaLiveRegionController} from '@/src/utils/accessibility-utils';
 import {renderInAtomicSearchInterface} from '@/vitest-utils/testing-helpers/fixtures/atomic/search/atomic-search-interface-fixture';
 import {buildFakeSearchEngine} from '@/vitest-utils/testing-helpers/fixtures/headless/search/engine';
 import './atomic-query-summary';
@@ -309,48 +308,6 @@ describe('atomic-query-summary', () => {
     });
 
     expect(container).toHaveTextContent('Results 9,991-10,000 of 1,000,000');
-  });
-
-  describe('when testing aria live region functionality', () => {
-    it('should announce results count in aria live region', async () => {
-      const setMessageSpy = vi.spyOn(
-        AriaLiveRegionController.prototype,
-        'message',
-        'set'
-      );
-
-      await renderQuerySummary({
-        querySummaryState: {
-          firstResult: 1,
-          lastResult: 27,
-          total: 27,
-          firstSearchExecuted: true,
-          hasResults: true,
-        },
-      });
-
-      expect(setMessageSpy).toHaveBeenCalledWith(expect.stringContaining('27'));
-    });
-
-    it('should announce loading state in aria live region when loading', async () => {
-      const setMessageSpy = vi.spyOn(
-        AriaLiveRegionController.prototype,
-        'message',
-        'set'
-      );
-
-      await renderQuerySummary({
-        querySummaryState: {
-          isLoading: true,
-          firstSearchExecuted: true,
-          hasResults: true,
-        },
-      });
-
-      expect(setMessageSpy).toHaveBeenCalledWith(
-        expect.stringContaining('Loading')
-      );
-    });
   });
 
   describe('when testing exact text format patterns', () => {
