@@ -1,3 +1,9 @@
+## <small>1.3.3 (2025-09-10)</small>
+
+* chore: deduplicate dependencies in create-atomic-* (#5959) ([7fcf462](https://github.com/coveo/ui-kit/commits/7fcf462)), closes [#5959](https://github.com/coveo/ui-kit/issues/5959)
+
+
+
 ## <small>1.3.2 (2025-09-03)</small>
 
 * [Version Bump][skip ci]: ui-kit publish ([1793fed](https://github.com/coveo/ui-kit/commits/1793fed))

@@ -1,3 +1,10 @@
+## 3.30.0 (2025-09-10)
+
+* fix(quantic): fixed issue in turbo config that was preventing doc inclusion in npm package (#6020) ([da0d82c](https://github.com/coveo/ui-kit/commits/da0d82c)), closes [#6020](https://github.com/coveo/ui-kit/issues/6020)
+* feat(quantic): Add an examplePageViewTracker with unit tests (#5973) ([dacf921](https://github.com/coveo/ui-kit/commits/dacf921)), closes [#5973](https://github.com/coveo/ui-kit/issues/5973)
+
+
+
 ## <small>3.29.5 (2025-08-27)</small>
 
 * test(quantic): added tests for generated answer component with the answer API (#5803) ([b99fbdf](https://github.com/coveo/ui-kit/commits/b99fbdf)), closes [#5803](https://github.com/coveo/ui-kit/issues/5803)

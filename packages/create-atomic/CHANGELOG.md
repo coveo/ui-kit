@@ -1,3 +1,9 @@
+## <small>1.41.2 (2025-09-10)</small>
+
+* chore: deduplicate dependencies in create-atomic-* (#5959) ([7fcf462](https://github.com/coveo/ui-kit/commits/7fcf462)), closes [#5959](https://github.com/coveo/ui-kit/issues/5959)
+
+
+
 ## <small>1.41.1 (2025-08-27)</small>
 
 * fix(cli): fix plop choice type to simple list (#5968) ([b0a1ace](https://github.com/coveo/ui-kit/commits/b0a1ace)), closes [#5968](https://github.com/coveo/ui-kit/issues/5968)
