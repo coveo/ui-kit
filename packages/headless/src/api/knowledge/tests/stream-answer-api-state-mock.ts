@@ -1635,6 +1635,9 @@ export const expectedStreamAnswerAPIParam = {
   debug: true,
   actionsHistory: [],
   sortCriteria: 'relevancy',
+  facetOptions: {
+    freezeFacetOrder: false,
+  },
   analytics: {
     actionCause: 'searchboxSubmit',
     capture: false,

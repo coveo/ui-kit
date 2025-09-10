@@ -330,8 +330,6 @@ export const constructAnswerQueryParams = (
     generateFacetParams = getGeneratedFacetParams(q, state);
   }
 
-  // state.facetOptions
-
   return {
     q,
     ...(aq && {aq}),
@@ -376,7 +374,7 @@ export const constructAnswerQueryParams = (
     tab: selectActiveTab(state.tabSet),
     locale: state.configuration.search.locale,
     timezone: state.configuration.search.timezone,
-    ...(state.debug && {debug: state.debug}),
+    ...(state.debug && {debug: state.debug}), // TODO: undefined vs false
     ...(navigatorContext.referrer?.length && {
       referrer: navigatorContext.referrer,
     }),
@@ -397,6 +395,9 @@ export const constructAnswerQueryParams = (
         dictionaryFieldContext: state.dictionaryFieldContext.contextValues,
       }),
     ...(state.sortCriteria?.length && {sortCriteria: state.sortCriteria}),
+    ...(state.facetOptions?.freezeFacetOrder !== undefined && {
+      facetOptions: {freezeFacetOrder: state.facetOptions?.freezeFacetOrder},
+    }),
     ...analyticsParams,
   };
 };
