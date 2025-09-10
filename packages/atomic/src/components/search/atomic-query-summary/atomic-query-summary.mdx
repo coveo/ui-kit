@@ -11,9 +11,24 @@ import { AtomicDocTemplate } from '../../../../storybook-utils/documentation/ato
   className="AtomicQuerySummary"
 >
 
-// TODO: Add usage instructions here.
+This component is typically placed within the "status" section of the layout.
 
-// * See atomic-product-link.mdx for typical template component.
-// * See atomic-commerce-pager.mdx for typical non-template component.
+```html
+<atomic-search-interface>
+  ...
+  <atomic-search-layout>
+    ...
+    <atomic-layout-section section="main">
+      ...
+      <atomic-layout-section section="status">
+
+        <atomic-query-summary></atomic-query-summary>
+        
+      </atomic-layout-section>
+      ...
+    </atomic-layout-section>
+  </atomic-search-layout>
+</atomic-search-interface>
+```
 
 </AtomicDocTemplate>
