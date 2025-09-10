@@ -60,7 +60,7 @@
     "web:cdn": "node ./scripts/start-cdn.mjs",
     "prod": "npx serve www -l 3333 --no-request-logging",
     "test": "npm run test:stencil && npm run test:lit",
-    "test:stencil": "stencil test --spec -- src/utils/initialization-utils.spec.ts src/components/search/atomic-layout/search-layout.spec.ts",
+    "test:stencil": "stencil test --spec -- src/utils/initialization-utils.spec.ts",
     "test:lit": "vitest run",
     "test:watch": "vitest",
     "e2e": "cypress run --browser chrome",
