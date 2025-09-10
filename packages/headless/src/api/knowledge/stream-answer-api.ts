@@ -374,7 +374,7 @@ export const constructAnswerQueryParams = (
     tab: selectActiveTab(state.tabSet),
     locale: state.configuration.search.locale,
     timezone: state.configuration.search.timezone,
-    ...(state.debug && {debug: state.debug}), // TODO: undefined vs false
+    ...(state.debug !== undefined && {debug: state.debug}),
     ...(navigatorContext.referrer?.length && {
       referrer: navigatorContext.referrer,
     }),
