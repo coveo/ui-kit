@@ -8,6 +8,9 @@ import type {
   SearchEngineDefinitionControllersPropsOption,
 } from './engine.js';
 
+export type BuildParameters<TControllersProps extends ControllersPropsMap> =
+  SearchEngineDefinitionControllersPropsOption<TControllersProps>;
+
 /**
  * @internal
  */
@@ -16,5 +19,5 @@ export type Build<
   TControllersMap extends ControllersMap,
   TControllersProps extends ControllersPropsMap,
 > = (
-  props: SearchEngineDefinitionControllersPropsOption<TControllersProps>
+  props: BuildParameters<TControllersProps>
 ) => Promise<SearchEngineDefinitionBuildResult<TEngine, TControllersMap>>;

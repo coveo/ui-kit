@@ -18,6 +18,7 @@ import {
   buildControllerDefinitions,
   createStaticState,
 } from '../controller-utils.js';
+import type {BuildParameters} from '../types/build.js';
 import type {ControllerDefinitionsMap} from '../types/controller-definition.js';
 import type {
   InferControllerPropsMapFromDefinitions,
@@ -28,6 +29,8 @@ import type {
   SearchEngineDefinition,
   SearchEngineDefinitionOptions,
 } from '../types/engine.js';
+import type {FetchStaticStateParameters} from '../types/fetch-static-state.js';
+import type {HydrateStaticStateParameters} from '../types/hydrate-static-state.js';
 
 /**
  * The SSR search engine.
@@ -98,9 +101,17 @@ export function defineSearchEngine<
   >;
   type FetchStaticStateFunction = Definition['fetchStaticState'];
   type HydrateStaticStateFunction = Definition['hydrateStaticState'];
-  type BuildParameters = Parameters<BuildFunction>[0];
-  type FetchStaticStateParameters = Parameters<FetchStaticStateFunction>[0];
-  type HydrateStaticStateParameters = Parameters<HydrateStaticStateFunction>[0];
+
+  type FetchParams = FetchStaticStateParameters<
+    InferControllerPropsMapFromDefinitions<TControllerDefinitions>
+  >;
+  type BuildParams = BuildParameters<
+    InferControllerPropsMapFromDefinitions<TControllerDefinitions>
+  >;
+  type HydrateParams = HydrateStaticStateParameters<
+    UnknownAction,
+    InferControllerPropsMapFromDefinitions<TControllerDefinitions>
+  >;
 
   const getOptions = () => {
     return engineOptions;
@@ -112,7 +123,11 @@ export function defineSearchEngine<
     engineOptions.navigatorContextProvider = navigatorContextProvider;
   };
 
-  const build: BuildFunction = async (buildOptions: BuildParameters) => {
+  const build: BuildFunction = async (
+    buildOptions: BuildParameters<
+      InferControllerPropsMapFromDefinitions<TControllerDefinitions>
+    >
+  ) => {
     const logger = buildLogger(options.loggerOptions);
     if (!getOptions().navigatorContextProvider) {
       logger.warn(
@@ -134,9 +149,9 @@ export function defineSearchEngine<
   };
 
   const fetchStaticState: FetchStaticStateFunction = async (
-    params: FetchStaticStateParameters
+    params: FetchParams
   ) => {
-    const {engine, controllers} = await build(params as BuildParameters);
+    const {engine, controllers} = await build(params as BuildParams);
 
     options.configuration.preprocessRequest =
       augmentPreprocessRequestWithForwardedFor({
@@ -158,9 +173,9 @@ export function defineSearchEngine<
   };
 
   const hydrateStaticState: HydrateStaticStateFunction = async (
-    params: HydrateStaticStateParameters
+    params: HydrateParams
   ) => {
-    const {engine, controllers} = await build(params as BuildParameters);
+    const {engine, controllers} = await build(params as BuildParams);
     params.searchActions.forEach((action) => {
       engine.dispatch(action);
     });

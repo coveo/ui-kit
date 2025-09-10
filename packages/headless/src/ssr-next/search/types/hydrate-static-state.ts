@@ -18,6 +18,12 @@ interface HydrateStaticStateOptions<TSearchAction> {
   searchAction: TSearchAction;
 }
 
+export type HydrateStaticStateParameters<
+  TSearchAction extends UnknownAction,
+  TControllersProps extends ControllersPropsMap,
+> = HydrateStaticStateOptions<TSearchAction> &
+  SearchEngineDefinitionControllersPropsOption<TControllersProps>;
+
 /**
  * Creates a new engine from the snapshot of the engine created in SSR with fetchStaticState.
  *
@@ -29,6 +35,5 @@ export type HydrateStaticState<
   TSearchAction extends UnknownAction,
   TControllersProps extends ControllersPropsMap,
 > = (
-  params: HydrateStaticStateOptions<TSearchAction> &
-    SearchEngineDefinitionControllersPropsOption<TControllersProps>
+  params: HydrateStaticStateParameters<TSearchAction, TControllersProps>
 ) => Promise<HydratedState<TEngine, TControllers>>;
