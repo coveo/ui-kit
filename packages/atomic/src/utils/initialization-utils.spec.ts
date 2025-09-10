@@ -2,15 +2,18 @@ import {
   buildSearchBox,
   buildSearchEngine,
   type Controller,
+  type SearchEngine,
 } from '@coveo/headless';
+import {Component, h} from '@stencil/core';
 import {newSpecPage, type SpecPage} from '@stencil/core/testing';
-import i18next from 'i18next';
+import i18next, {type i18n} from 'i18next';
 import {AtomicSearchBox} from '../components/search/atomic-search-box/atomic-search-box';
+import type {Bindings} from '../components/search/atomic-search-interface/atomic-search-interface';
 import {
-  AtomicSearchInterface,
-  type Bindings,
-} from '../components/search/atomic-search-interface/atomic-search-interface';
-import {createSearchStore} from '../components/search/atomic-search-interface/store';
+  createSearchStore,
+  type SearchStore,
+} from '../components/search/atomic-search-interface/store';
+import {markParentAsReady} from './init-queue';
 import {
   BindStateToController,
   type InitializableComponent,
@@ -19,10 +22,67 @@ import {
   MissingInterfaceParentError,
 } from './initialization-utils';
 
-jest.mock('./replace-breakpoint-utils.ts', () => ({
+@Component({
+  tag: 'atomic-search-interface',
+})
+class AtomicSearchInterface {
+  // biome-ignore lint/suspicious/noExplicitAny: <>
+  host!: any;
+
+  engine?: SearchEngine<{}>;
+  i18n?: i18n;
+  store?: SearchStore;
+  bindings?: Bindings;
+
+  async initialize(options: {accessToken: string; organizationId: string}) {
+    this.engine = buildSearchEngine({
+      configuration: options,
+    });
+    this.i18n = i18next;
+    this.store = createSearchStore();
+    this.bindings = {
+      engine: this.engine,
+      i18n: this.i18n,
+      store: this.store,
+      interfaceElement: this.host,
+      createScriptElement: jest.fn(),
+      createStyleElement: jest.fn(),
+    };
+
+    this.host.addEventListener(
+      'atomic/initializeComponent',
+      (event: CustomEvent) => {
+        if (this.bindings) {
+          event.detail(this.bindings);
+        }
+      }
+    );
+
+    markParentAsReady(this.host);
+  }
+
+  componentOnReady() {
+    return Promise.resolve(this);
+  }
+
+  render() {
+    return h('slot');
+  }
+}
+
+jest.mock('./replace-breakpoint.ts', () => ({
   ...jest.requireActual('./replace-breakpoint.ts'),
   updateBreakpoints: () => {},
 }));
+
+const originalWarn = console.warn;
+beforeAll(() => {
+  console.warn = jest.fn();
+});
+
+afterAll(() => {
+  console.warn = originalWarn;
+});
 
 // https://github.com/ionic-team/stencil/issues/3260
 // biome-ignore lint/suspicious/noExplicitAny: <>
@@ -71,7 +131,10 @@ describe('InitializeBindings decorator', () => {
         const searchInterface = page.body.querySelector(
           'atomic-search-interface'
         )!;
-        await searchInterface.initialize({
+        const searchInterfaceInstance =
+          page.rootInstance as AtomicSearchInterface;
+        searchInterfaceInstance.host = searchInterface;
+        await searchInterfaceInstance.initialize({
           accessToken: '123456789',
           organizationId: 'myorg',
         });
@@ -92,7 +155,7 @@ describe('InitializeBindings decorator', () => {
     });
 
     describe('when the parent is not ready', () => {
-      let searchInterface: HTMLAtomicSearchInterfaceElement;
+      let searchInterface: HTMLElement;
       beforeEach(async () => {
         page = await newSpecPage({
           components: [AtomicSearchBox, AtomicSearchInterface],
@@ -117,7 +180,10 @@ describe('InitializeBindings decorator', () => {
         searchInterface.addEventListener('atomic/initializeComponent', spy);
         await page.waitForChanges();
 
-        await searchInterface.initialize({
+        const searchInterfaceInstance =
+          page.rootInstance as AtomicSearchInterface;
+        searchInterfaceInstance.host = searchInterface;
+        await searchInterfaceInstance.initialize({
           accessToken: '123456789',
           organizationId: 'myorg',
         });
@@ -280,7 +346,9 @@ describe('initializeBindings method', () => {
       html: '<atomic-search-interface></atomic-search-interface>',
     });
     const searchInterface = page.body.querySelector('atomic-search-interface')!;
-    await searchInterface.initialize({
+    const searchInterfaceInstance = page.rootInstance as AtomicSearchInterface;
+    searchInterfaceInstance.host = searchInterface;
+    await searchInterfaceInstance.initialize({
       accessToken: '123456789',
       organizationId: 'myorg',
     });
@@ -290,9 +358,9 @@ describe('initializeBindings method', () => {
     const bindings = await initializeBindings(element);
     expect(bindings).toMatchObject({
       interfaceElement: searchInterface,
-      i18n: searchInterface.i18n,
+      i18n: searchInterfaceInstance.i18n,
       store: expect.anything(),
-      engine: searchInterface.engine,
+      engine: searchInterfaceInstance.engine,
     });
   });
 });
