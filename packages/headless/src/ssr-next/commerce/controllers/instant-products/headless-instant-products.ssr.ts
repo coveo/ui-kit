@@ -14,8 +14,8 @@ export type {
   InstantProductsProps,
 };
 
-export interface InstantProductsDefinition
-  extends NonRecommendationControllerDefinitionWithoutProps<InstantProducts> {}
+export type InstantProductsDefinition =
+  NonRecommendationControllerDefinitionWithoutProps<InstantProducts>;
 
 /**
  * Defines the `InstantProducts` controller for the purpose of server-side rendering.
