@@ -165,10 +165,18 @@ export function buildAnswerApiGeneratedAnswer(
 
   subscribeToSearchRequest(engine as SearchEngine<StreamAnswerAPIState>);
 
+  // Helper to get the current answer state
+  const getCurrentAnswerState = () => {
+    const currentState = getState();
+    const params = selectAnswerApiQueryParams(currentState);
+    return selectAnswer(params)(currentState).data;
+  };
+
   return {
     ...controller,
     get state() {
-      const answerApiState = selectAnswer(engine.state).data;
+      const answerApiState = getCurrentAnswerState();
+
       return {
         ...getState().generatedAnswer,
         answer: answerApiState?.answer,
@@ -193,10 +201,12 @@ export function buildAnswerApiGeneratedAnswer(
       engine.dispatch(resetAnswer());
     },
     async sendFeedback(feedback) {
+      const answerApiState = getCurrentAnswerState();
+
       const args = parseEvaluationArguments({
         query: getState().query.q,
         feedback,
-        answerApiState: selectAnswer(engine.state).data!,
+        answerApiState: answerApiState!,
       });
       engine.dispatch(answerEvaluation.endpoints.post.initiate(args));
       engine.dispatch(sendGeneratedAnswerFeedback());
