@@ -4,13 +4,24 @@ import {
   AnalyticsModeEnum,
 } from '../../../../../../playwright/utils/analyticsMode';
 import {AnalyticsObject} from '../../../../../../playwright/page-object/analytics';
-import {isRgaEvaluationRequest} from '../../../../../../playwright/utils/requests';
+import {isRgaEvaluationRequest, isRgaGenerateRequest, isInsightRgaGenerateRequest} from '../../../../../../playwright/utils/requests';
 
 const minimumCitationTooltipDisplayDurationMs = 1500;
 const removeUnknownFields = (object: Record<string, unknown>) => {
   return Object.fromEntries(
     Object.entries(object).filter(([, value]) => value !== 'unknown')
   );
+};
+
+const selectors = {
+  addFacetsButton: 'c-action-add-facets button',
+};
+
+const facetElementsSelectors = {
+  timeframeFacet: {
+    component: 'c-quantic-timeframe-facet',
+    facetValueComponent: 'c-quantic-facet-value',
+  },
 };
 
 export class GeneratedAnswerObject {
@@ -20,13 +31,15 @@ export class GeneratedAnswerObject {
     private page: Page,
     private streamId: string,
     private analytics: AnalyticsObject,
-    private answerApiEnabled: boolean
+    private answerApiEnabled: boolean,
+    private withFacets: boolean
   ) {
     this.page = page;
     this.streamId = streamId;
     this.analytics = analytics;
     this.analyticsMode = this.analytics.analyticsMode;
     this.answerApiEnabled = answerApiEnabled;
+    this.withFacets = withFacets;
   }
 
   get likeButton(): Locator {
@@ -43,6 +56,32 @@ export class GeneratedAnswerObject {
 
   get toggleButton(): Locator {
     return this.page.getByTestId('generated-answer__toggle-button');
+  }
+
+  get firstTimeframeFacet(): Locator {
+    return this.page
+      .locator(facetElementsSelectors.timeframeFacet.component)
+      .first();
+  }
+
+  get firstTimeframeFacetValue(): Promise<string | null> {
+    return this.firstTimeframeFacet
+      .locator(facetElementsSelectors.timeframeFacet.facetValueComponent)
+      .first()
+      .locator('.facet__value-text')
+      .textContent();
+  }
+
+  get addFacetsButton(): Locator {
+    return this.page.locator(selectors.addFacetsButton);
+  }
+
+  async clickAddFacetsButton(): Promise<void> {
+    await this.addFacetsButton.click();
+  }
+
+  async clickFirstTimeframeFacetLink(): Promise<void> {
+    await this.firstTimeframeFacet.click();
   }
 
   questionContainer(questionId: string): Locator {
@@ -391,6 +430,32 @@ export class GeneratedAnswerObject {
         },
       });
     });
+  }
+
+  async waitForGenerateRequest(
+    expectedPayload: Record<string, any>
+  ): Promise<Request | boolean | null> {
+    const payloadToMatch = removeUnknownFields(expectedPayload);
+
+    if (this.answerApiEnabled) {
+      return this.page.waitForRequest((request) => {
+        const event = request.postDataJSON?.();
+        if (
+          isRgaGenerateRequest(request) ||
+          isInsightRgaGenerateRequest(request)
+        ) {
+          return AnalyticsObject.isMatchingPayload(
+            {
+              searchHub: event.searchHub,
+              q: event.q,
+            },
+            payloadToMatch
+          );
+        }
+        return false;
+      });
+    }
+    return null;
   }
 
   streamEndAnalyticRequestPromise!: Promise<boolean | Request>;

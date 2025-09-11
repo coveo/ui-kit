@@ -5,8 +5,7 @@ export interface EngineStaticState<
   TSearchAction extends UnknownAction,
   TControllers extends ControllerStaticStateMap,
 > {
-  // TODO: KIT-4684: make searchAction an array an avoid use the same EngineStaticState for both search and commerce
-  searchAction: TSearchAction;
+  searchActions: TSearchAction[];
   controllers: TControllers;
 }
 

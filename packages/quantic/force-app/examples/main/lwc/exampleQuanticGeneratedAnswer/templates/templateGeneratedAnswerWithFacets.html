@@ -1,0 +1,74 @@
+<template>
+  <c-example-layout
+    title={pageTitle}
+    description={pageDescription}
+    show-preview={isConfigured}
+  >
+    <div slot="configuration">
+      <c-configurator options={options} ontryitnow={handleTryItNow}>
+        <c-action-perform-search
+          slot="actions"
+          disabled={notConfigured}
+          engine-id={engineId}
+          with-input
+        ></c-action-perform-search>
+        <c-action-add-facets
+          label="Add Facets"
+          data-id="add-facets"
+          slot="actions"
+          disabled={notConfigured}
+          engine-id={engineId}
+        >
+        </c-action-add-facets>
+      </c-configurator>
+    </div>
+
+    <c-example-use-case
+      slot="preview"
+      use-case={config.useCase}
+      engine-id={engineId}
+    >
+      <div
+        class="slds-grid slds-gutters_direct slds-wrap main slds-grid_align-center"
+      >
+        <div
+          class="slds-col slds-order_2 slds-large-order_1 slds-size_1-of-1 slds-large-size_6-of-12"
+        >
+          <c-quantic-facet-manager engine-id={engineId}>
+            <c-quantic-timeframe-facet
+              engine-id={engineId}
+              field="date"
+              label="Date"
+            >
+              <c-quantic-timeframe unit="week"></c-quantic-timeframe>
+              <c-quantic-timeframe unit="month"></c-quantic-timeframe>
+              <c-quantic-timeframe
+                amount="6"
+                unit="month"
+              ></c-quantic-timeframe>
+              <c-quantic-timeframe unit="year"></c-quantic-timeframe>
+              <c-quantic-timeframe
+                amount="10"
+                unit="year"
+                label="Past decade"
+              ></c-quantic-timeframe>
+            </c-quantic-timeframe-facet>
+          </c-quantic-facet-manager>
+        </div>
+        <div
+          class="slds-col slds-order_1 slds-large-order_2 slds-size_1-of-1 slds-large-size_6-of-12"
+        >
+          <c-quantic-generated-answer
+            engine-id={engineId}
+            fields-to-include-in-citations={config.fieldsToIncludeInCitations}
+            collapsible={config.collapsible}
+            max-collapsed-height={config.maxCollapsedHeight}
+            with-toggle={config.withToggle}
+            answer-configuration-id={config.answerConfigurationId}
+          >
+          </c-quantic-generated-answer>
+        </div>
+      </div>
+    </c-example-use-case>
+  </c-example-layout>
+</template>
