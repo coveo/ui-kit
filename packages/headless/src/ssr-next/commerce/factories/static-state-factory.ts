@@ -3,7 +3,6 @@ import {buildProductListing} from '../../../controllers/commerce/product-listing
 import {buildSearch} from '../../../controllers/commerce/search/headless-search.js';
 import {augmentPreprocessRequestWithForwardedFor} from '../../common/augment-preprocess-request.js';
 import {createStaticState} from '../controller-utils.js';
-import type {BuildConfig} from '../types/build.js';
 import {SolutionType} from '../types/controller-constants.js';
 import type {AugmentedControllerDefinition} from '../types/controller-definitions.js';
 import type {
@@ -21,16 +20,13 @@ export function fetchStaticStateFactory<
 ) {
   return <TSolutionType extends SolutionType>(solutionType: TSolutionType) =>
     async (
-      ...params: FetchStaticStateParameters<
-        TControllerDefinitions,
-        TSolutionType
-      >
+      params: FetchStaticStateParameters<TControllerDefinitions, TSolutionType>
     ) => {
       const solutionTypeBuild = await buildFactory(
         controllerDefinitions,
         options
       )(solutionType);
-      const {engine, controllers} = await solutionTypeBuild(...params);
+      const {engine, controllers} = await solutionTypeBuild(params);
 
       options.configuration.preprocessRequest =
         augmentPreprocessRequestWithForwardedFor({
@@ -62,7 +58,7 @@ export function fetchStaticStateFactory<
       });
 
       return {
-        ...(params[0] as BuildConfig<TControllerDefinitions, TSolutionType>), // TODO: KIT-4754: remove index access after no longer relying on OptionTuple type
+        ...params,
         ...staticState,
       };
     };
