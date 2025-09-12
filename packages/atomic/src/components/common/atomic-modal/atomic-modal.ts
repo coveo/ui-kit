@@ -171,6 +171,8 @@ export class AtomicModal
   @property({type: Object, attribute: false}) close: () => void = () =>
     // biome-ignore lint/suspicious/noAssignInExpressions: <>
     (this.isOpen = false);
+  @property({type: Object, attribute: false}) onAnimationEnded: () => void =
+    () => {};
   @property({type: Object, attribute: false}) scope?: HTMLElement;
   /**
    * Whether to display the open and close animations over the entire page or the atomic-modal only.
@@ -263,6 +265,7 @@ export class AtomicModal
     this.setFocusTrapActive(false);
 
     await this.waitForAnimationEnded();
+    this.onAnimationEnded();
     if (!this.isExecutionValid(executionId)) {
       return;
     }
