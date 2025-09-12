@@ -4,7 +4,9 @@ import {localizedString} from '@/src/directives/localized-string';
 import type {FunctionalComponentWithChildren} from '@/src/utils/functional-component-utils';
 import CloseIcon from '../../../images/close.svg';
 import {ATOMIC_MODAL_EXPORT_PARTS} from '../atomic-modal/export-parts';
+import '../atomic-modal/atomic-modal';
 import {renderButton} from '../button';
+import '../atomic-icon/atomic-icon';
 
 interface RefineModalProps {
   host: HTMLElement;
@@ -91,7 +93,7 @@ export const renderRefineModal: FunctionalComponentWithChildren<
           }
         }}
         exportparts=${ATOMIC_MODAL_EXPORT_PARTS}
-        .boundary=${props.boundary}
+        .boundary=${props.boundary ?? 'page'}
         .scope=${props.scope}
       >
         ${renderHeader()} ${children} ${renderFooter()}
