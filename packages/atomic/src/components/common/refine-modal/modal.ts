@@ -4,8 +4,9 @@ import {localizedString} from '@/src/directives/localized-string';
 import type {FunctionalComponentWithChildren} from '@/src/utils/functional-component-utils';
 import CloseIcon from '../../../images/close.svg';
 import {ATOMIC_MODAL_EXPORT_PARTS} from '../atomic-modal/export-parts';
-import '../../common/atomic-modal/atomic-modal';
+import '../atomic-modal/atomic-modal';
 import {renderButton} from '../button';
+import '../atomic-icon/atomic-icon';
 
 interface RefineModalProps {
   host: HTMLElement;
@@ -85,8 +86,8 @@ export const renderRefineModal: FunctionalComponentWithChildren<
         .isOpen=${props.isOpen}
         .source=${props.openButton}
         .container=${props.host}
-        @close=${props.onClose}
-        @animationEnded=${() => {
+        .close=${props.onClose}
+        .onAnimationEnded=${() => {
           if (!props.isOpen) {
             flushFacetElements();
           }
