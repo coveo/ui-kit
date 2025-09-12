@@ -42,21 +42,20 @@ export class AtomicFocusTrap {
     // aria-hidden -> already hidden
     // aria-live or atomic-aria-live -> must not be hidden otherwise it won't announce dynamic changes in the live region
     if (
-      element.hasAttribute('inert') ||
       element.hasAttribute('aria-hidden') ||
       element.hasAttribute('aria-live') ||
       element.tagName.toLowerCase() === 'atomic-aria-live'
     ) {
       return;
     }
-    element.setAttribute('inert', '');
+    element.setAttribute('aria-hidden', 'true');
     this.hiddenElements.push(element);
   }
 
   showAll() {
     let el: Element | undefined;
     while ((el = this.hiddenElements.pop())) {
-      el.removeAttribute('inert');
+      el.removeAttribute('aria-hidden');
     }
   }
 
@@ -83,12 +82,14 @@ export class AtomicFocusTrap {
   }
 
   showSelf() {
-    this.parentToHide.removeAttribute('inert');
+    this.parentToHide.removeAttribute('aria-hidden');
+    this.parentToHide.removeAttribute('tabindex');
   }
 
   hideSelf() {
     if (this.shouldHideSelf) {
-      this.parentToHide.setAttribute('inert', '');
+      this.parentToHide.setAttribute('aria-hidden', 'true');
+      this.parentToHide.setAttribute('tabindex', '-1');
     }
   }
 
