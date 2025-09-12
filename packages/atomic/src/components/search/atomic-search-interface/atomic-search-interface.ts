@@ -16,9 +16,11 @@ import {
 } from '@coveo/headless';
 import {provide} from '@lit/context';
 import i18next, {type i18n} from 'i18next';
-import {type CSSResultGroup, css, html, LitElement, nothing} from 'lit';
+import {type CSSResultGroup, css, html, LitElement} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
+import {when} from 'lit/directives/when.js';
 import {booleanConverter} from '@/src/converters/boolean-converter';
+import {bindingGuard} from '@/src/decorators/binding-guard';
 import {errorGuard} from '@/src/decorators/error-guard';
 import {watch} from '@/src/decorators/watch';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles.js';
@@ -45,6 +47,7 @@ import {
 } from '../atomic-search-layout/search-layout';
 import {getAnalyticsConfig} from './analytics-config';
 import {createSearchStore, type SearchStore} from './store';
+import '../../common/atomic-modal/atomic-modal';
 
 const FirstSearchExecutedFlag = 'firstSearchExecuted';
 export type InitializationOptions = SearchEngineConfiguration;
@@ -583,22 +586,22 @@ export class AtomicSearchInterface
     this.pipeline = this.engine!.state.pipeline;
     this.searchHub = this.engine!.state.searchHub;
     this.initSearchStatus();
-    await this.getUpdateComplete();
     this.initUrlManager();
+    await this.getUpdateComplete();
     this.initialized = true;
   }
 
   @errorGuard()
+  @bindingGuard()
   render() {
     return html`
-      ${
-        this.engine && this.enableRelevanceInspector
-          ? html`<atomic-relevance-inspector
-            ?open=${this.relevanceInspectorIsOpen}
-            .bindings=${this.bindings}
-          ></atomic-relevance-inspector>`
-          : nothing
-      }
+      ${when(
+        this.bindings?.engine && this.enableRelevanceInspector,
+        () => html`<atomic-relevance-inspector
+          ?open=${this.relevanceInspectorIsOpen}
+          .bindings=${this.bindings}
+        ></atomic-relevance-inspector>`
+      )}
       <slot></slot>
     `;
   }
