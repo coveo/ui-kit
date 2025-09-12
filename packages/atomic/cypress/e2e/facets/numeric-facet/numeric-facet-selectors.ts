@@ -8,7 +8,7 @@ export const NumericFacetSelectors = {
       },
     };
   },
-  shadow: () => cy.get(numericFacetComponent).shadow(),
+  shadow () { return cy.get(numericFacetComponent).shadow()},
   wrapper() {
     return this.shadow().find('[part="facet"]');
   },
