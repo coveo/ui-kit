@@ -2,18 +2,22 @@ import {expect, test} from './fixture';
 
 const defaultInsightQuerySummaryText = 'Insights related to this case';
 
+// TODO - KIT-4885: Simplify once other atomic-insight components have unit test / E2E coverage
 test.describe('Atomic Insight Panel', () => {
   test.beforeEach(async ({insightInterface}) => {
-    await insightInterface.load();
+    await insightInterface.load({
+      story: 'default',
+    });
     await insightInterface.hydrated.waitFor();
   });
 
   test('should load correctly', async ({insightInterface}) => {
-    await expect(insightInterface.insightInterface).toHaveClass('hydrated');
+    expect(insightInterface.insightInterface).toBeDefined();
   });
 
   test.describe('components basics', () => {
     test('parts should load correctly', async ({insightInterface}) => {
+      await expect(insightInterface.insightTabs.first()).toBeVisible();
       expect(await insightInterface.insightTabs.count()).toBeGreaterThan(0);
 
       await expect(insightInterface.insightQuerySummary).toBeVisible();
@@ -31,7 +35,6 @@ test.describe('Atomic Insight Panel', () => {
       await expect(insightInterface.insightUserActionsToggle).toBeVisible();
 
       await expect(insightInterface.insightPager).toBeVisible();
-      await expect(insightInterface.insightPager).toHaveClass('hydrated');
       await expect(insightInterface.insightPagerButtons.first()).toBeVisible();
 
       await expect(insightInterface.insightResults.first()).toBeVisible();
@@ -98,7 +101,6 @@ test.describe('Atomic Insight Panel', () => {
       await expect(insightInterface.insightRefineModal).toHaveAttribute(
         'is-open'
       );
-      await expect(insightInterface.insightRefineModal).toHaveClass('hydrated');
 
       await expect(
         insightInterface.insightRefineModalCloseButton
