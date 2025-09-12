@@ -3,6 +3,7 @@ import {
   type ThunkDispatch,
   type UnknownAction,
 } from '@reduxjs/toolkit';
+import HistoryStore from '../../api/analytics/coveo.analytics/history-store.js';
 import {
   defaultNodeJSNavigatorContextProvider,
   type NavigatorContext,
@@ -371,6 +372,32 @@ export const constructAnswerQueryParams = (
       firstResult: state.pagination.firstResult,
     }),
     tab: selectActiveTab(state.tabSet),
+    locale: state.configuration.search.locale,
+    timezone: state.configuration.search.timezone,
+    ...(state.debug !== undefined && {debug: state.debug}),
+    ...(navigatorContext.referrer?.length && {
+      referrer: navigatorContext.referrer,
+    }),
+    actionsHistory: state.configuration.analytics.enabled
+      ? HistoryStore.getInstance().getHistory()
+      : [],
+    ...(state.folding && {
+      filterField: state.folding.fields.collection,
+      childField: state.folding.fields.parent,
+      parentField: state.folding.fields.child,
+      filterFieldRange: state.folding.filterFieldRange,
+    }),
+    ...(state?.excerptLength?.length && {
+      excerptLength: state.excerptLength.length,
+    }),
+    ...(state.dictionaryFieldContext &&
+      !!Object.keys(state.dictionaryFieldContext.contextValues).length && {
+        dictionaryFieldContext: state.dictionaryFieldContext.contextValues,
+      }),
+    ...(state.sortCriteria?.length && {sortCriteria: state.sortCriteria}),
+    ...(state.facetOptions?.freezeFacetOrder !== undefined && {
+      facetOptions: {freezeFacetOrder: state.facetOptions?.freezeFacetOrder},
+    }),
     ...analyticsParams,
   };
 };

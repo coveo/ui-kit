@@ -1,22 +1,34 @@
 /** biome-ignore-all lint/suspicious/noExplicitAny: Just tests */
+
+import HistoryStore from '../../../api/analytics/coveo.analytics/history-store.js';
 import {buildMockNavigatorContextProvider} from '../../../test/mock-navigator-context-provider.js';
 import type {EventSourceMessage} from '../../../utils/fetch-event-source/parse.js';
+import type {GeneratedAnswerStream} from '../generated-answer-stream.js';
 import {
   constructAnswerQueryParams,
-  type GeneratedAnswerStream,
   updateCacheWithEvent,
 } from '../stream-answer-api.js';
 import {
   expectedStreamAnswerAPIParam,
   expectedStreamAnswerAPIParamForSelect,
   expectedStreamAnswerAPIParamWithATabWithAnExpression,
+  expectedStreamAnswerAPIParamWithDictionaryFieldContext,
+  expectedStreamAnswerAPIParamWithFoldingDisabled,
+  expectedStreamAnswerAPIParamWithFoldingEnabled,
   expectedStreamAnswerAPIParamWithoutAnyTab,
+  expectedStreamAnswerAPIParamWithoutReferrer,
   expectedStreamAnswerAPIParamWithoutSearchAction,
   expectedStreamAnswerAPIParamWithStaticFiltersAndTabExpression,
   expectedStreamAnswerAPIParamWithStaticFiltersAndTabExpressionWithoutAdvancedCQ,
   expectedStreamAnswerAPIParamWithStaticFiltersSelected,
+  expectedStreamAnswerAPIWithExcerptLength,
   streamAnswerAPIStateMock,
+  streamAnswerAPIStateMockWithAnalyticsEnabled,
   streamAnswerAPIStateMockWithATabWithAnExpression,
+  streamAnswerAPIStateMockWithDictionaryFieldContext,
+  streamAnswerAPIStateMockWithExcerptLength,
+  streamAnswerAPIStateMockWithFoldingDisabled,
+  streamAnswerAPIStateMockWithFoldingEnabled,
   streamAnswerAPIStateMockWithNonValidFilters,
   streamAnswerAPIStateMockWithoutAnyFilters,
   streamAnswerAPIStateMockWithoutAnyTab,
@@ -37,7 +49,7 @@ describe('#streamAnswerApi', () => {
 
     it('returns the correct query params with fetch usage', () => {
       const queryParams = constructAnswerQueryParams(
-        streamAnswerAPIStateMock as any,
+        streamAnswerAPIStateMock,
         'fetch',
         buildMockNavigatorContextProvider()()
       );
@@ -47,7 +59,7 @@ describe('#streamAnswerApi', () => {
 
     it('should create the right selector when usage is select', () => {
       const queryParams = constructAnswerQueryParams(
-        streamAnswerAPIStateMock as any,
+        streamAnswerAPIStateMock,
         'select',
         buildMockNavigatorContextProvider()()
       );
@@ -57,7 +69,7 @@ describe('#streamAnswerApi', () => {
 
     it('should merge tab expression in request constant query when expression is not a blank string', () => {
       const queryParams = constructAnswerQueryParams(
-        streamAnswerAPIStateMockWithATabWithAnExpression as any,
+        streamAnswerAPIStateMockWithATabWithAnExpression,
         'fetch',
         buildMockNavigatorContextProvider()()
       );
@@ -69,7 +81,7 @@ describe('#streamAnswerApi', () => {
 
     it('should not include tab info when there is NO tab', () => {
       const queryParams = constructAnswerQueryParams(
-        streamAnswerAPIStateMockWithoutAnyTab as any,
+        streamAnswerAPIStateMockWithoutAnyTab,
         'fetch',
         buildMockNavigatorContextProvider()()
       );
@@ -79,7 +91,7 @@ describe('#streamAnswerApi', () => {
 
     it('should merge filter expressions in request constant query when expression is selected', () => {
       const queryParams = constructAnswerQueryParams(
-        streamAnswerAPIStateMockWithStaticFiltersSelected as any,
+        streamAnswerAPIStateMockWithStaticFiltersSelected,
         'fetch',
         buildMockNavigatorContextProvider()()
       );
@@ -91,7 +103,7 @@ describe('#streamAnswerApi', () => {
 
     it('should not include filter info when there is NO filter', () => {
       const queryParams = constructAnswerQueryParams(
-        streamAnswerAPIStateMockWithoutAnyFilters as any,
+        streamAnswerAPIStateMockWithoutAnyFilters,
         'fetch',
         buildMockNavigatorContextProvider()()
       );
@@ -100,7 +112,7 @@ describe('#streamAnswerApi', () => {
 
     it('should not include non-selected filters and empty filters', () => {
       const queryParams = constructAnswerQueryParams(
-        streamAnswerAPIStateMockWithNonValidFilters as any,
+        streamAnswerAPIStateMockWithNonValidFilters,
         'fetch',
         buildMockNavigatorContextProvider()()
       );
@@ -109,7 +121,7 @@ describe('#streamAnswerApi', () => {
 
     it('should merge multiple filter expressions and a tab expression', () => {
       const queryParams = constructAnswerQueryParams(
-        streamAnswerAPIStateMockWithStaticFiltersAndTabExpression as any,
+        streamAnswerAPIStateMockWithStaticFiltersAndTabExpression,
         'fetch',
         buildMockNavigatorContextProvider()()
       );
@@ -120,7 +132,7 @@ describe('#streamAnswerApi', () => {
 
     it('should not include advanced search queries when there are no advanced search queries', () => {
       const queryParams = constructAnswerQueryParams(
-        streamAnswerAPIStateMockWithStaticFiltersAndTabExpressionWithEmptyCQ as any,
+        streamAnswerAPIStateMockWithStaticFiltersAndTabExpressionWithEmptyCQ,
         'fetch',
         buildMockNavigatorContextProvider()()
       );
@@ -131,7 +143,7 @@ describe('#streamAnswerApi', () => {
 
     it('should accept an undefined SearchAction', () => {
       const queryParams = constructAnswerQueryParams(
-        streamAnswerAPIStateMockWithoutSearchAction as any,
+        streamAnswerAPIStateMockWithoutSearchAction,
         'fetch',
         buildMockNavigatorContextProvider()()
       );
@@ -141,9 +153,23 @@ describe('#streamAnswerApi', () => {
       );
     });
 
+    it('should not include referrer info when there is NO referrer', () => {
+      const navigatorContext = buildMockNavigatorContextProvider();
+      const context = navigatorContext();
+      context.referrer = null;
+
+      const queryParams = constructAnswerQueryParams(
+        streamAnswerAPIStateMock,
+        'fetch',
+        context
+      );
+
+      expect(queryParams).toEqual(expectedStreamAnswerAPIParamWithoutReferrer);
+    });
+
     it('should exclude analytics fields when usage is select', () => {
       const queryParams = constructAnswerQueryParams(
-        streamAnswerAPIStateMock as any,
+        streamAnswerAPIStateMock,
         'select',
         buildMockNavigatorContextProvider()()
       );
@@ -152,9 +178,77 @@ describe('#streamAnswerApi', () => {
       expect(queryParams.analytics).toBeUndefined();
     });
 
+    it('should include actionsHistory when analytics is enabled and history is present', () => {
+      const history = [
+        {name: 'search', value: 'some query', time: new Date().toISOString()},
+        {name: 'click', value: 'some uri', time: new Date().toISOString()},
+      ];
+      const mockHistoryStore: Pick<HistoryStore, 'getHistory'> = {
+        getHistory: vi.fn(() => history),
+      };
+      vi.spyOn(HistoryStore, 'getInstance').mockReturnValue(
+        mockHistoryStore as HistoryStore
+      );
+
+      const queryParams = constructAnswerQueryParams(
+        streamAnswerAPIStateMockWithAnalyticsEnabled,
+        'fetch',
+        buildMockNavigatorContextProvider()()
+      );
+
+      expect(queryParams.actionsHistory).toEqual(history);
+      expect(queryParams.actionsHistory?.length).toBe(2);
+    });
+
+    it('should include folding params when folding is disabled', () => {
+      const queryParams = constructAnswerQueryParams(
+        streamAnswerAPIStateMockWithFoldingDisabled,
+        'fetch',
+        buildMockNavigatorContextProvider()()
+      );
+
+      expect(queryParams).toEqual(
+        expectedStreamAnswerAPIParamWithFoldingDisabled
+      );
+    });
+
+    it('should include folding params when folding is enabled', () => {
+      const queryParams = constructAnswerQueryParams(
+        streamAnswerAPIStateMockWithFoldingEnabled,
+        'fetch',
+        buildMockNavigatorContextProvider()()
+      );
+
+      expect(queryParams).toEqual(
+        expectedStreamAnswerAPIParamWithFoldingEnabled
+      );
+    });
+
+    it('should include excerptLength when it is set in state', () => {
+      const queryParams = constructAnswerQueryParams(
+        streamAnswerAPIStateMockWithExcerptLength,
+        'fetch',
+        buildMockNavigatorContextProvider()()
+      );
+
+      expect(queryParams).toEqual(expectedStreamAnswerAPIWithExcerptLength);
+    });
+
+    it('should include dictionaryFieldContext when it has context values', () => {
+      const queryParams = constructAnswerQueryParams(
+        streamAnswerAPIStateMockWithDictionaryFieldContext,
+        'fetch',
+        buildMockNavigatorContextProvider()()
+      );
+
+      expect(queryParams).toEqual(
+        expectedStreamAnswerAPIParamWithDictionaryFieldContext
+      );
+    });
+
     it('should include all analytics fields when usage is fetch', () => {
       const queryParams = constructAnswerQueryParams(
-        streamAnswerAPIStateMock as any,
+        streamAnswerAPIStateMock,
         'fetch',
         buildMockNavigatorContextProvider()()
       );
