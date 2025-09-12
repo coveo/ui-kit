@@ -1,4 +1,4 @@
-import {page} from '@vitest/browser/context';
+import {page, userEvent} from '@vitest/browser/context';
 import {html} from 'lit';
 import {beforeEach, describe, expect, it, vi} from 'vitest';
 import {AtomicModal} from './atomic-modal';
@@ -6,7 +6,6 @@ import './atomic-modal';
 import '../atomic-component-error/atomic-component-error';
 import {renderInAtomicSearchInterface} from '@/vitest-utils/testing-helpers/fixtures/atomic/search/atomic-search-interface-fixture';
 
-// Mock atomic-focus-trap as a simple custom element
 class MockAtomicFocusTrap extends HTMLElement {
   active = false;
 
@@ -68,9 +67,6 @@ describe('atomic-modal', () => {
 
     return {
       element,
-      backdrop(element: HTMLElement) {
-        return element.shadowRoot;
-      },
       parts: (element: AtomicModal) => {
         const qs = (part: string) =>
           element?.shadowRoot?.querySelector(`[part="${part}"]`);
@@ -137,14 +133,6 @@ describe('atomic-modal', () => {
   });
 
   describe('#initialize', () => {
-    it('should handle modal opening during initialization', async () => {
-      const {element} = await renderModal({isOpen: true});
-
-      element.initialize();
-
-      expect(element.className).toContain('open');
-    });
-
     it('should update host classes correctly', async () => {
       const {element} = await renderModal({isOpen: true, fullscreen: true});
 
@@ -155,54 +143,68 @@ describe('atomic-modal', () => {
     });
   });
 
-  describe('when #fullscreen is true', () => {
-    it('should apply fullscreen class', async () => {
-      const {element} = await renderModal({isOpen: true, fullscreen: true});
+  describe('#disconnectedCallback', () => {
+    it('should remove event listeners when component is disconnected', async () => {
+      const {element} = await renderModal({isOpen: true});
 
-      expect(element.className).toContain('fullscreen');
-      expect(element.className).not.toContain('dialog');
+      const removeEventListenerSpy = vi.spyOn(
+        document.body,
+        'removeEventListener'
+      );
+
+      element.disconnectedCallback();
+
+      expect(removeEventListenerSpy).toHaveBeenCalledWith(
+        'keyup',
+        expect.any(Function)
+      );
+      expect(removeEventListenerSpy).toHaveBeenCalledWith(
+        'touchmove',
+        expect.any(Function)
+      );
     });
   });
 
-  describe('when #fullscreen is false', () => {
-    it('should apply dialog class', async () => {
-      const {element} = await renderModal({isOpen: true, fullscreen: false});
+  it('should apply fullscreen class when #fullscreen is true', async () => {
+    const {element} = await renderModal({isOpen: true, fullscreen: true});
 
-      expect(element.className).toContain('dialog');
-      expect(element.className).not.toContain('fullscreen');
-    });
+    expect(element.className).toContain('fullscreen');
+    expect(element.className).not.toContain('dialog');
   });
 
-  describe('when #boundary is page', () => {
-    it('should apply fixed positioning to backdrop', async () => {
-      const {element, parts} = await renderModal({
-        isOpen: true,
-        boundary: 'page',
-      });
+  it('should apply dialog class when #fullscreen is false', async () => {
+    const {element} = await renderModal({isOpen: true, fullscreen: false});
 
-      element.initialize();
-      await element.updateComplete;
-
-      const backdrop = parts(element).backdrop;
-      expect(backdrop?.classList.contains('fixed')).toBe(true);
-    });
+    expect(element.className).toContain('dialog');
+    expect(element.className).not.toContain('fullscreen');
   });
 
-  describe('when #boundary is element', () => {
-    it('should apply absolute positioning to backdrop', async () => {
-      const {element, parts} = await renderModal({
-        isOpen: true,
-        boundary: 'element',
-      });
-
-      element.initialize();
-      await element.updateComplete;
-      await new Promise((resolve) => setTimeout(resolve, 0));
-      await element.updateComplete;
-
-      const backdrop = parts(element).backdrop;
-      expect(backdrop?.classList.contains('absolute')).toBe(true);
+  it('should apply fixed positioning to backdrop when #boundary is page', async () => {
+    const {element, parts} = await renderModal({
+      isOpen: true,
+      boundary: 'page',
     });
+
+    element.initialize();
+    await element.updateComplete;
+
+    const backdrop = parts(element).backdrop;
+    expect(backdrop?.classList.contains('fixed')).toBe(true);
+  });
+
+  it('should apply absolute positioning to backdrop when #boundary is element', async () => {
+    const {element, parts} = await renderModal({
+      isOpen: true,
+      boundary: 'element',
+    });
+
+    element.initialize();
+    await element.updateComplete;
+    await new Promise((resolve) => setTimeout(resolve, 0));
+    await element.updateComplete;
+
+    const backdrop = parts(element).backdrop;
+    expect(backdrop?.classList.contains('absolute')).toBe(true);
   });
 
   it('should close modal when escape key is pressed', async () => {
@@ -210,9 +212,7 @@ describe('atomic-modal', () => {
 
     expect(element.isOpen).toBe(true);
 
-    // Simulate escape key press
-    const event = new KeyboardEvent('keyup', {key: 'Escape'});
-    document.body.dispatchEvent(event);
+    await userEvent.keyboard('{Escape}');
 
     expect(element.isOpen).toBe(false);
   });
@@ -222,9 +222,7 @@ describe('atomic-modal', () => {
     const closeEventSpy = vi.fn();
     element.addEventListener('close', closeEventSpy);
 
-    // Simulate escape key press
-    const event = new KeyboardEvent('keyup', {key: 'Escape'});
-    document.body.dispatchEvent(event);
+    await userEvent.keyboard('{Escape}');
 
     expect(closeEventSpy).toHaveBeenCalled();
   });
@@ -234,9 +232,7 @@ describe('atomic-modal', () => {
     const {element} = await renderModal({isOpen: true});
     element.close = closeFn;
 
-    // Simulate escape key press
-    const event = new KeyboardEvent('keyup', {key: 'Escape'});
-    document.body.dispatchEvent(event);
+    await userEvent.keyboard('{Escape}');
 
     expect(closeFn).toHaveBeenCalled();
   });
@@ -245,7 +241,6 @@ describe('atomic-modal', () => {
     const mockInterfaceElement = document.createElement('div');
     const {element} = await renderModal({isOpen: false});
 
-    // Mock bindings
     element.bindings = {
       interfaceElement: mockInterfaceElement,
     } as unknown as typeof element.bindings;
@@ -260,7 +255,6 @@ describe('atomic-modal', () => {
       true
     );
 
-    // Close modal
     element.isOpen = false;
     await element.updateComplete;
 
@@ -318,27 +312,5 @@ describe('atomic-modal', () => {
       'atomic-component-error'
     );
     expect(errorComponent).toBeTruthy();
-  });
-
-  describe('#disconnectedCallback', () => {
-    it('should remove event listeners when component is disconnected', async () => {
-      const {element} = await renderModal({isOpen: true});
-
-      const removeEventListenerSpy = vi.spyOn(
-        document.body,
-        'removeEventListener'
-      );
-
-      element.disconnectedCallback();
-
-      expect(removeEventListenerSpy).toHaveBeenCalledWith(
-        'keyup',
-        expect.any(Function)
-      );
-      expect(removeEventListenerSpy).toHaveBeenCalledWith(
-        'touchmove',
-        expect.any(Function)
-      );
-    });
   });
 });

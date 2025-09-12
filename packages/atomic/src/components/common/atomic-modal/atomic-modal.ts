@@ -195,8 +195,6 @@ export class AtomicModal
     }
   }
 
-  protected firstUpdated() {}
-
   protected updated(changedProperties: Map<string, unknown>) {
     super.updated?.(changedProperties);
 
@@ -233,38 +231,68 @@ export class AtomicModal
   }
 
   private async handleToggleOpen(isOpen: boolean) {
-    const watchToggleOpenExecution = ++this.currentWatchToggleOpenExecution;
-    const modalOpenedClass = 'atomic-modal-opened';
-
     if (isOpen) {
-      if (!this.shouldRender) {
-        this.shouldRender = true;
-        await this.updateComplete;
-      }
-
-      document.body.classList.add(modalOpenedClass);
-      this.bindings?.interfaceElement.classList.add(modalOpenedClass);
-      await this.waitForAnimationEnded();
-      if (watchToggleOpenExecution !== this.currentWatchToggleOpenExecution) {
-        return;
-      }
-      if (this.focusTrap.value) {
-        this.focusTrap.value.active = true;
-      }
+      await this.handleModalOpen();
     } else {
-      document.body.classList.remove(modalOpenedClass);
-      this.bindings?.interfaceElement.classList.remove(modalOpenedClass);
+      await this.handleModalClose();
+    }
+  }
 
-      if (this.focusTrap.value) {
-        this.focusTrap.value.active = false;
-      }
+  private async handleModalOpen() {
+    const executionId = this.createExecutionTracker();
 
-      await this.waitForAnimationEnded();
-      if (watchToggleOpenExecution !== this.currentWatchToggleOpenExecution) {
-        return;
-      }
+    if (!this.shouldRender) {
+      this.shouldRender = true;
+      await this.updateComplete;
+    }
 
-      this.shouldRender = false;
+    this.addModalOpenedClasses();
+
+    await this.waitForAnimationEnded();
+    if (!this.isExecutionValid(executionId)) {
+      return;
+    }
+
+    this.setFocusTrapActive(true);
+  }
+
+  private async handleModalClose() {
+    const executionId = this.createExecutionTracker();
+
+    this.removeModalOpenedClasses();
+    this.setFocusTrapActive(false);
+
+    await this.waitForAnimationEnded();
+    if (!this.isExecutionValid(executionId)) {
+      return;
+    }
+
+    this.shouldRender = false;
+  }
+
+  private createExecutionTracker(): number {
+    return ++this.currentWatchToggleOpenExecution;
+  }
+
+  private isExecutionValid(executionId: number): boolean {
+    return executionId === this.currentWatchToggleOpenExecution;
+  }
+
+  private addModalOpenedClasses() {
+    const modalOpenedClass = 'atomic-modal-opened';
+    document.body.classList.add(modalOpenedClass);
+    this.bindings?.interfaceElement.classList.add(modalOpenedClass);
+  }
+
+  private removeModalOpenedClasses() {
+    const modalOpenedClass = 'atomic-modal-opened';
+    document.body.classList.remove(modalOpenedClass);
+    this.bindings?.interfaceElement.classList.remove(modalOpenedClass);
+  }
+
+  private setFocusTrapActive(active: boolean) {
+    if (this.focusTrap.value) {
+      this.focusTrap.value.active = active;
     }
   }
 
