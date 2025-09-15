@@ -105,6 +105,8 @@ export class AtomicCommerceInterface
     `,
   ];
 
+  // TODO - KIT-4994: Add disableAnalytics property that defaults to false.
+
   /**
    * The type of the interface.
    * - 'search': Indicates that the interface is used for Search.
@@ -113,8 +115,8 @@ export class AtomicCommerceInterface
   @property({type: String, reflect: true}) type: 'search' | 'product-listing' =
     'search';
 
-  // TODO - Deprecate in favor of a `disableAnalytics` property that defaults to false.
-  // TODO - (v4) Remove altogether.
+  // TODO - KIT-4994: Deprecate in favor of disableAnalytics property.
+  // TODO - (v4) KIT-4990: Remove.
   /**
    * Whether analytics should be enabled.
    */
@@ -136,8 +138,8 @@ export class AtomicCommerceInterface
    */
   @property({type: Object, attribute: false}) i18n: i18n;
 
-  // TODO - Mark as deprecated in favor of updateLocale.
-  // TODO - (v4) Remove altogether.
+  // TODO - KIT-4993: Mark as deprecated in favor of updateLocale method.
+  // TODO - (v4) KIT-4365: Remove.
   /**
    * The commerce interface language.
    *
@@ -151,6 +153,7 @@ export class AtomicCommerceInterface
    */
   @property({type: Object, attribute: false}) engine?: CommerceEngine;
 
+  // TODO - (v4) KIT-4823: Remove.
   /**
    * Whether the state should be reflected in the URL parameters.
    * @deprecated - replaced by `disable-state-reflection-in-url` (this defaults to `true`, while the replacement defaults to `false`).
@@ -299,6 +302,7 @@ export class AtomicCommerceInterface
     this.store.state.iconAssetsPath = this.iconAssetsPath;
   }
 
+  // TODO - (v4) KIT-4365: Remove.
   @watch('language')
   public updateLanguage() {
     if (
@@ -309,11 +313,13 @@ export class AtomicCommerceInterface
       return;
     }
 
+    // TODO - KIT-4993: Add temporary deprecation warning.
+
     this.context.setLanguage(this.language);
     return this.interfaceController.onLanguageChange();
   }
 
-  // TODO - Add updateLocale public method.
+  // TODO - KIT-4993: Add updateLocale public method.
 
   public disconnectedCallback() {
     super.disconnectedCallback();
@@ -381,6 +387,7 @@ export class AtomicCommerceInterface
     }
   }
 
+  // TODO - KIT-4993: Adjust.
   private initLanguage() {
     if (!this.language) {
       this.language = this.context.state.language;
@@ -453,7 +460,7 @@ export class AtomicCommerceInterface
     this.urlManager.synchronize(this.fragment);
   };
 
-  // TODO - (v4) Make private.
+  // TODO - (v4) KIT-4991: Make private.
   public scrollToTop() {
     const scrollContainerElement = document.querySelector(this.scrollContainer);
     if (!scrollContainerElement) {

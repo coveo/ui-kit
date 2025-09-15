@@ -76,20 +76,19 @@ describe('atomic-commerce-interface', () => {
 
   const setupElement = async (
     props: {
-      analytics?: boolean;
+      analytics?: boolean; // TODO - (v4) KIT-4990: remove.
       type?: 'search' | 'product-listing';
       disableStateReflectionInUrl?: boolean;
       iconAssetsPath?: string;
-      language?: string;
+      language?: string; // TODO - (v4) KIT-4365: Remove.
       languageAssetsPath?: string;
       logLevel?: LogLevel;
       mobileBreakpoint?: string;
-      reflectStateInUrl?: boolean;
+      reflectStateInUrl?: boolean; // TODO - (v4) KIT-4823: Remove.
       scrollContainer?: string;
     } = {}
   ) => {
     const element = (await fixture<AtomicCommerceInterface>(
-      // TODO - (v4) Remove analytics, language, and reflect-state-in-url props.
       html`<atomic-commerce-interface
         analytics=${props.analytics}
         ?disable-state-reflection-in-url=${props.disableStateReflectionInUrl}
@@ -1104,7 +1103,7 @@ describe('atomic-commerce-interface', () => {
   });
 
   // #updateLanguage
-  // TODO - (v4) Remove these tests.
+  // TODO - (v4) KIT-4365: Remove these tests.
   describe('when the language attribute changes', () => {
     it('should do nothing when the engine has not been created', async () => {
       const onLanguageChangeSpy = vi.spyOn(
@@ -1136,7 +1135,7 @@ describe('atomic-commerce-interface', () => {
 
     describe('when the engine has been created & the language attribute is defined & the context is defined', () => {
       it('should log a deprecation warning', async () => {
-        // TODO - Add this test temporarily.
+        // TODO - KIT-4993: Add this test temporarily.
       });
 
       it('should call InterfaceController.onLanguageChange with no argument', async () => {
@@ -1156,7 +1155,7 @@ describe('atomic-commerce-interface', () => {
   });
 
   // #updateLocale
-  // TODO - Add these tests.
+  // TODO - KIT-4993: Add these tests.
 
   describe('#disconnectedCallback (when removed from the DOM)', () => {
     // Done through the InterfaceController
