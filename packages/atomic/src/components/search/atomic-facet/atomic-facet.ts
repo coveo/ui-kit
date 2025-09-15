@@ -385,8 +385,7 @@ export class AtomicFacet
           `
             )
           : html`<atomic-facet-placeholder
-          number-of-values="${this.numberOfValues}"
-          ?is-collapsed="${this.isCollapsed}"
+          value-count="${this.numberOfValues}"
         ></atomic-facet-placeholder>`
     )}`;
   }
