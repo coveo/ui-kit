@@ -33,7 +33,10 @@ import {
 } from '../../utils/validate-payload.js';
 import {updateSearchAction} from '../search/search-actions.js';
 import {logGeneratedAnswerStreamEnd} from './generated-answer-analytics-actions.js';
-import {buildStreamingRequest} from './generated-answer-request.js';
+import {
+  buildStreamingRequest,
+  constructAnswerAPIQueryParams,
+} from './generated-answer-request.js';
 import {
   type GeneratedContentFormat,
   type GeneratedResponseFormat,
@@ -319,9 +322,13 @@ export const generateAnswer = createAsyncThunk<
   async (_, {getState, dispatch, extra: {navigatorContext, logger}}) => {
     const state = getState() as StreamAnswerAPIState;
     if (state.generatedAnswer.answerConfigurationId) {
+      const answerApiQueryParams = constructAnswerAPIQueryParams(
+        state,
+        navigatorContext
+      );
       // TODO: SVCC-5178 Refactor multiple sequential dispatches into single action
       dispatch(resetAnswer());
-      await dispatch(fetchAnswer(state, navigatorContext));
+      await dispatch(fetchAnswer(answerApiQueryParams));
       dispatch(updateSearchAction(undefined));
     } else {
       logger.warn(
