@@ -80,7 +80,7 @@ describe('atomic-commerce-interface', () => {
       type?: 'search' | 'product-listing';
       disableStateReflectionInUrl?: boolean;
       iconAssetsPath?: string;
-      language?: string; // TODO (KIT-4365): remove this in v4
+      language?: string;
       languageAssetsPath?: string;
       logLevel?: LogLevel;
       mobileBreakpoint?: string;
@@ -89,6 +89,7 @@ describe('atomic-commerce-interface', () => {
     } = {}
   ) => {
     const element = (await fixture<AtomicCommerceInterface>(
+      // TODO - (v4) Remove analytics, language, and reflect-state-in-url props.
       html`<atomic-commerce-interface
         analytics=${props.analytics}
         ?disable-state-reflection-in-url=${props.disableStateReflectionInUrl}
@@ -190,10 +191,18 @@ describe('atomic-commerce-interface', () => {
 
       expect(element.i18n).toBeDefined();
     });
+
+    // Done through the InterfaceController
+    it('should prepend an aria-live element', async () => {
+      const element = await setupElement();
+
+      const ariaLive = element.firstElementChild;
+      expect(ariaLive?.tagName).toBe('ATOMIC-ARIA-LIVE');
+    });
   });
 
   describe('#connectedCallback (when added to the DOM)', () => {
-    it("should add an 'atomic/initializeComponent' event listener", async () => {
+    it("should add an 'atomic/initializeComponent' event listener on the element", async () => {
       const addEventListenerSpy = vi.spyOn(
         AtomicCommerceInterface.prototype,
         'addEventListener'
@@ -222,7 +231,7 @@ describe('atomic-commerce-interface', () => {
       );
     });
 
-    it('should add an "atomic/scrollToTop" event listener', async () => {
+    it('should add an "atomic/scrollToTop" event listener on the element', async () => {
       const addEventListenerSpy = vi.spyOn(
         AtomicCommerceInterface.prototype,
         'addEventListener'
@@ -283,7 +292,7 @@ describe('atomic-commerce-interface', () => {
       }
     };
 
-    it('should call #interfaceController.onInitialization', async () => {
+    it('should call InterfaceController.onInitialization', async () => {
       const element = await setupElement();
       const onInitializationSpy = vi.spyOn(
         InterfaceController.prototype,
@@ -392,7 +401,7 @@ describe('atomic-commerce-interface', () => {
       expect(markParentAsReady).toHaveBeenCalledExactlyOnceWith(element);
     });
 
-    describe('when the specified type is "product-listing"', () => {
+    describe('when interface type is "product-listing"', () => {
       let element: Awaited<ReturnType<typeof setupElement>>;
 
       beforeEach(async () => {
@@ -421,7 +430,7 @@ describe('atomic-commerce-interface', () => {
       });
     });
 
-    describe('when the specified type is "search"', () => {
+    describe('when interface type is "search"', () => {
       let element: Awaited<ReturnType<typeof setupElement>>;
 
       beforeEach(async () => {
@@ -784,14 +793,6 @@ describe('atomic-commerce-interface', () => {
       });
     });
 
-    it('should allow #executeFirstRequest to be called without error after initialization', async () => {
-      const element = await setupElement();
-
-      await callTestedInitMethod(element);
-
-      expect(() => element.executeFirstRequest()).not.toThrow();
-    });
-
     describe.skipIf(testedInitMethodName !== 'initialize')(
       '#initialize only',
       () => {
@@ -861,7 +862,6 @@ describe('atomic-commerce-interface', () => {
 
           await element.initializeWithEngine(engine);
 
-          // TODO: add unit tests for analytics-config.ts utils (augmentAnalyticsConfigWithAtomicVersion)
           expect(updateAnalyticsConfigurationMock).toHaveBeenCalledWith({
             trackingId: 'test-tracking-id',
             source: {'@coveo/atomic': '0.0.0'},
@@ -900,7 +900,6 @@ describe('atomic-commerce-interface', () => {
     });
   });
 
-  // #executeFirstRequest
   describe('#executeFirstRequest', () => {
     it('should log an error when called before initialization', async () => {
       const element = await setupElement();
@@ -932,8 +931,13 @@ describe('atomic-commerce-interface', () => {
     });
 
     describe('when interface type is "search"', () => {
+      let element: AtomicCommerceInterface;
+
+      beforeEach(async () => {
+        element = await setupElement({type: 'search'});
+      });
+
       it('should call executeFirstSearch', async () => {
-        const element = await setupElement({type: 'search'});
         const mockSearch = buildFakeSearch({
           implementation: {
             summary: () => mockSearchSummary,
@@ -950,61 +954,65 @@ describe('atomic-commerce-interface', () => {
 
         await element.executeFirstRequest();
 
-        expect(mockSearch.executeFirstSearch).toHaveBeenCalled();
+        expect(mockSearch.executeFirstSearch).toHaveBeenCalledOnce();
       });
 
-      it('should update the query and execute search when standalone search box data exists', async () => {
-        const element = await setupElement({type: 'search'});
-        const mockEngine = buildFakeCommerceEngine({});
-        const mockUpdateQuery = vi.fn().mockReturnValue({
-          type: 'updateQuery',
-          payload: {query: 'test query'},
-        });
-        vi.mocked(buildCommerceEngine).mockReturnValue(mockEngine);
+      it('should not dispatch an updateQuery action when standalone search box data does not exist', async () => {
+        const updateQueryMock = vi.fn();
         vi.mocked(loadQueryActions).mockReturnValue({
-          updateQuery: mockUpdateQuery,
-        } as never);
-        vi.spyOn(SafeStorage.prototype, 'getParsedJSON').mockReturnValue({
-          value: 'test query',
+          updateQuery: updateQueryMock,
         });
-        const removeItemSpy = vi
-          .spyOn(SafeStorage.prototype, 'removeItem')
-          .mockImplementation(() => {});
         await element.initialize(commerceEngineConfig);
 
         await element.executeFirstRequest();
 
-        expect(mockUpdateQuery).toHaveBeenCalledWith({query: 'test query'});
-        expect(removeItemSpy).toHaveBeenCalledWith(
-          StorageItems.STANDALONE_SEARCH_BOX_DATA
-        );
+        expect(updateQueryMock).not.toHaveBeenCalled();
       });
 
-      it('should dispatch an updateQuery action on the engine with the new query', async () => {
-        const element = await setupElement({type: 'search'});
-        const mockEngine = buildFakeCommerceEngine();
-        const mockUpdateQuery = vi.fn().mockReturnValue({
-          type: 'updateQuery',
-          payload: {query: 'test query'},
-        });
-        vi.mocked(loadQueryActions).mockReturnValue({
-          updateQuery: mockUpdateQuery,
+      describe('when standalone search box data exists', () => {
+        beforeEach(() => {
+          vi.spyOn(SafeStorage.prototype, 'getParsedJSON').mockReturnValue({
+            value: 'test query',
+          });
         });
 
-        await element.initializeWithEngine(mockEngine);
+        it('should remove the standalone search box data from local storage', async () => {
+          const removeItemSpy = vi
+            .spyOn(SafeStorage.prototype, 'removeItem')
+            .mockImplementation(() => {});
+          await element.initialize(commerceEngineConfig);
 
-        await element.executeFirstRequest();
+          await element.executeFirstRequest();
 
-        expect(mockEngine.dispatch).toHaveBeenCalledExactlyOnceWith(
-          loadQueryActions(mockEngine).updateQuery
-        );
-        //expect(mockUpdateQuery).toHaveBeenCalledWith({query: 'test query'});
+          expect(removeItemSpy).toHaveBeenCalledExactlyOnceWith(
+            StorageItems.STANDALONE_SEARCH_BOX_DATA
+          );
+        });
+
+        it('should dispatch an updateQuery action with the new query', async () => {
+          const updateQueryMock = vi.fn();
+          vi.mocked(loadQueryActions).mockReturnValue({
+            updateQuery: updateQueryMock,
+          });
+          await element.initialize(commerceEngineConfig);
+
+          await element.executeFirstRequest();
+
+          expect(updateQueryMock).toHaveBeenCalledExactlyOnceWith({
+            query: 'test query',
+          });
+        });
       });
     });
 
-    describe('when initialized with product-listing interface', () => {
+    describe('when interface type is "product-listing"', () => {
+      let element: AtomicCommerceInterface;
+
+      beforeEach(async () => {
+        element = await setupElement({type: 'product-listing'});
+      });
+
       it('should call executeFirstRequest', async () => {
-        const element = await setupElement({type: 'product-listing'});
         const mockProductListing = buildFakeProductListing({
           implementation: {
             summary: () => mockProductListingSummary,
@@ -1017,16 +1025,45 @@ describe('atomic-commerce-interface', () => {
           },
         });
         vi.mocked(buildProductListing).mockReturnValue(mockProductListing);
-
         await element.initialize(commerceEngineConfig);
+
         await element.executeFirstRequest();
 
-        expect(mockProductListing.executeFirstRequest).toHaveBeenCalled();
+        expect(mockProductListing.executeFirstRequest).toHaveBeenCalledOnce();
+      });
+
+      describe('when standalone search box data exists', () => {
+        beforeEach(() => {
+          vi.spyOn(SafeStorage.prototype, 'getParsedJSON').mockReturnValue({
+            value: 'test query',
+          });
+        });
+
+        it('should not remove the standalone search box data from local storage', async () => {
+          const removeItemSpy = vi
+            .spyOn(SafeStorage.prototype, 'removeItem')
+            .mockImplementation(() => {});
+          await element.initialize(commerceEngineConfig);
+
+          await element.executeFirstRequest();
+
+          expect(removeItemSpy).not.toHaveBeenCalled();
+        });
+
+        it('should not dispatch an updateQuery action', async () => {
+          const updateQueryMock = vi.fn();
+          vi.mocked(loadQueryActions).mockReturnValue({
+            updateQuery: updateQueryMock,
+          });
+          await element.initialize(commerceEngineConfig);
+
+          await element.executeFirstRequest();
+
+          expect(updateQueryMock).not.toHaveBeenCalled();
+        });
       });
     });
   });
-
-  // #updateLocale
 
   // #toggleAnalytics
   it('should call InterfaceController.onAnalyticsChange when the analytics attribute changes', async () => {
@@ -1054,6 +1091,10 @@ describe('atomic-commerce-interface', () => {
     const element = await setupElement();
     await element.initialize(commerceEngineConfig);
 
+    expect(element.bindings.store.state.iconAssetsPath).not.toBe(
+      '/new/icon/assets/path'
+    );
+
     element.iconAssetsPath = '/new/icon/assets/path';
     await element.updateComplete;
 
@@ -1063,7 +1104,7 @@ describe('atomic-commerce-interface', () => {
   });
 
   // #updateLanguage
-  // TODO (KIT-4365): remove these tests in v4
+  // TODO - (v4) Remove these tests.
   describe('when the language attribute changes', () => {
     it('should do nothing when the engine has not been created', async () => {
       const onLanguageChangeSpy = vi.spyOn(
@@ -1095,7 +1136,7 @@ describe('atomic-commerce-interface', () => {
 
     describe('when the engine has been created & the language attribute is defined & the context is defined', () => {
       it('should log a deprecation warning', async () => {
-        // TODO
+        // TODO - Add this test temporarily.
       });
 
       it('should call InterfaceController.onLanguageChange with no argument', async () => {
@@ -1114,7 +1155,11 @@ describe('atomic-commerce-interface', () => {
     });
   });
 
+  // #updateLocale
+  // TODO - Add these tests.
+
   describe('#disconnectedCallback (when removed from the DOM)', () => {
+    // Done through the InterfaceController
     it('should remove aria-live element', async () => {
       const element = await setupElement();
       await element.initialize(commerceEngineConfig);
@@ -1194,42 +1239,18 @@ describe('atomic-commerce-interface', () => {
     });
   });
 
-  // #render
-  it('should render a slot', async () => {
-    const element = await setupElement();
-
-    expect(element.shadowRoot?.querySelector('slot')).toBeTruthy();
-  });
-
-  it('should render its children', async () => {
-    const element = await setupElement();
-    await addChildElement(element);
-
-    expect(within(element).queryByShadowText('test-element')).toBeTruthy();
-  });
-
-  // Aria live management
-  describe('Aria live management', () => {
-    it('should add atomic-aria-live element when none exists', async () => {
+  describe('when rendering (#render)', () => {
+    it('should render a slot', async () => {
       const element = await setupElement();
-      await element.initialize(commerceEngineConfig);
 
-      const ariaLiveElement = element.querySelector('atomic-aria-live');
-      expect(ariaLiveElement).toBeTruthy();
+      expect(element.shadowRoot?.querySelector('slot')).toBeTruthy();
     });
 
-    it('should not add duplicate atomic-aria-live elements', async () => {
+    it('should render its children', async () => {
       const element = await setupElement();
+      await addChildElement(element);
 
-      // Verify that after initialization, there's only one aria-live element
-      await element.initialize(commerceEngineConfig);
-
-      // Initialize again to test that it doesn't add duplicates
-      element.connectedCallback();
-      await element.initialize(commerceEngineConfig);
-
-      const ariaLiveElements = element.querySelectorAll('atomic-aria-live');
-      expect(ariaLiveElements.length).toBe(1);
+      expect(within(element).queryByShadowText('test-element')).toBeTruthy();
     });
   });
 });
