@@ -1,4 +1,11 @@
-import * as headless from '@coveo/headless';
+import {
+  buildSearchEngine,
+  buildSearchStatus,
+  buildUrlManager,
+  loadFieldActions,
+  loadQueryActions,
+  loadSearchConfigurationActions,
+} from '@coveo/headless';
 import i18next from 'i18next';
 import {html, LitElement} from 'lit';
 import {customElement, state} from 'lit/decorators.js';
@@ -20,11 +27,11 @@ import {buildFakeSearchStatus} from '@/vitest-utils/testing-helpers/fixtures/hea
 import {buildFakeUrlManager} from '@/vitest-utils/testing-helpers/fixtures/headless/search/url-manager-controller';
 import {InterfaceController} from '../../common/interface/interface-controller';
 
-vi.mock('i18next', {spy: true});
 vi.mock('@coveo/headless', {spy: true});
 vi.mock('@/src/components/search/atomic-search-interface/store', {spy: true});
 vi.mock('@/src/utils/init-queue', {spy: true});
 vi.mock('@/src/utils/local-storage-utils', {spy: true});
+vi.mock('i18next', {spy: true});
 
 @customElement('test-element')
 @bindings()
@@ -45,27 +52,23 @@ class TestElement
 
 describe('atomic-search-interface', () => {
   beforeEach(async () => {
-    vi.mocked(headless.buildSearchEngine).mockReturnValue(
-      buildFakeSearchEngine()
-    );
+    vi.mocked(buildSearchEngine).mockReturnValue(buildFakeSearchEngine());
 
-    vi.mocked(headless.buildSearchStatus).mockReturnValue(
-      buildFakeSearchStatus()
-    );
+    vi.mocked(buildSearchStatus).mockReturnValue(buildFakeSearchStatus());
 
-    vi.mocked(headless.buildUrlManager).mockReturnValue(buildFakeUrlManager());
+    vi.mocked(buildUrlManager).mockReturnValue(buildFakeUrlManager());
 
-    vi.mocked(headless.loadFieldActions).mockReturnValue({
+    vi.mocked(loadFieldActions).mockReturnValue({
       registerFieldsToInclude: vi.fn(),
-    } as unknown as ReturnType<typeof headless.loadFieldActions>);
+    } as unknown as ReturnType<typeof loadFieldActions>);
 
-    vi.mocked(headless.loadQueryActions).mockReturnValue({
+    vi.mocked(loadQueryActions).mockReturnValue({
       updateQuery: vi.fn(),
-    } as unknown as ReturnType<typeof headless.loadQueryActions>);
+    } as unknown as ReturnType<typeof loadQueryActions>);
 
-    vi.mocked(headless.loadSearchConfigurationActions).mockReturnValue({
+    vi.mocked(loadSearchConfigurationActions).mockReturnValue({
       updateSearchConfiguration: vi.fn(),
-    } as unknown as ReturnType<typeof headless.loadSearchConfigurationActions>);
+    } as unknown as ReturnType<typeof loadSearchConfigurationActions>);
 
     const mockStore = {
       setLoadingFlag: vi.fn(),
@@ -109,7 +112,14 @@ describe('atomic-search-interface', () => {
     iconAssetsPath?: string;
     language?: string;
     languageAssetsPath?: string;
-    logLevel?: string;
+    logLevel?:
+      | 'debug'
+      | 'fatal'
+      | 'error'
+      | 'warn'
+      | 'info'
+      | 'trace'
+      | 'silent';
     fieldsToInclude?: string[];
     pipeline?: string;
     searchHub?: string;
@@ -118,9 +128,6 @@ describe('atomic-search-interface', () => {
     scrollContainer?: string;
     enableRelevanceInspector?: boolean;
   } = {}) => {
-    const fieldsToIncludeJson = fieldsToInclude
-      ? JSON.stringify(fieldsToInclude)
-      : undefined;
     const element = (await fixture<AtomicSearchInterface>(
       html`<atomic-search-interface
         ?analytics=${analytics}
@@ -128,7 +135,7 @@ describe('atomic-search-interface', () => {
         language=${ifDefined(language)}
         language-assets-path=${ifDefined(languageAssetsPath)}
         log-level=${ifDefined(logLevel)}
-        fields-to-include=${ifDefined(fieldsToIncludeJson)}
+        .fieldsToInclude=${fieldsToInclude || []}
         pipeline=${ifDefined(pipeline)}
         search-hub=${ifDefined(searchHub)}
         timezone=${ifDefined(timezone)}
@@ -256,7 +263,7 @@ describe('atomic-search-interface', () => {
   // #initialize
   describe('#initialize', () => {
     it('should call buildSearchEngine with the provided options', async () => {
-      const buildSearchEngineSpy = vi.mocked(headless.buildSearchEngine);
+      const buildSearchEngineSpy = vi.mocked(buildSearchEngine);
       const element = await setupElement();
       const options = {
         accessToken: 'test-token',
@@ -315,7 +322,7 @@ describe('atomic-search-interface', () => {
     });
 
     it('should initialize URL manager when reflectStateInUrl is true', async () => {
-      const buildUrlManagerSpy = vi.mocked(headless.buildUrlManager);
+      const buildUrlManagerSpy = vi.mocked(buildUrlManager);
       const element = await setupElement({reflectStateInUrl: true});
       const options = {
         accessToken: 'test-token',
@@ -378,7 +385,7 @@ describe('atomic-search-interface', () => {
     });
 
     it('should merge search configuration with provided options', async () => {
-      const buildSearchEngineSpy = vi.mocked(headless.buildSearchEngine);
+      const buildSearchEngineSpy = vi.mocked(buildSearchEngine);
       const element = await setupElement({
         pipeline: 'my-pipeline',
         searchHub: 'my-hub',
@@ -529,7 +536,7 @@ describe('atomic-search-interface', () => {
       const element = await setupElement();
       const engine = buildFakeSearchEngine({});
       const updateQueryMock = vi.fn();
-      vi.mocked(headless.loadQueryActions).mockReturnValue({
+      vi.mocked(loadQueryActions).mockReturnValue({
         updateQuery: updateQueryMock,
       } as never);
 
@@ -597,7 +604,7 @@ describe('atomic-search-interface', () => {
 
       it('should update search configuration when language changes', async () => {
         const updateSearchConfigurationMock = vi.fn();
-        vi.mocked(headless.loadSearchConfigurationActions).mockReturnValue({
+        vi.mocked(loadSearchConfigurationActions).mockReturnValue({
           updateSearchConfiguration: updateSearchConfigurationMock,
         } as never);
 
@@ -643,7 +650,7 @@ describe('atomic-search-interface', () => {
     describe('when searchHub prop changes', () => {
       it('should update search configuration when engine exists', async () => {
         const updateSearchConfigurationMock = vi.fn();
-        vi.mocked(headless.loadSearchConfigurationActions).mockReturnValue({
+        vi.mocked(loadSearchConfigurationActions).mockReturnValue({
           updateSearchConfiguration: updateSearchConfigurationMock,
         } as never);
 
@@ -675,7 +682,7 @@ describe('atomic-search-interface', () => {
     describe('when pipeline prop changes', () => {
       it('should update search configuration when engine exists', async () => {
         const updateSearchConfigurationMock = vi.fn();
-        vi.mocked(headless.loadSearchConfigurationActions).mockReturnValue({
+        vi.mocked(loadSearchConfigurationActions).mockReturnValue({
           updateSearchConfiguration: updateSearchConfigurationMock,
         } as never);
 
@@ -767,7 +774,7 @@ describe('atomic-search-interface', () => {
 
     it('should unsubscribe from URL manager', async () => {
       const unsubscribeSpy = vi.fn();
-      vi.mocked(headless.buildUrlManager).mockReturnValue({
+      vi.mocked(buildUrlManager).mockReturnValue({
         ...buildFakeUrlManager({}),
         subscribe: vi.fn().mockReturnValue(unsubscribeSpy),
       });
@@ -785,7 +792,7 @@ describe('atomic-search-interface', () => {
 
     it('should unsubscribe from search status', async () => {
       const unsubscribeSpy = vi.fn();
-      vi.mocked(headless.buildSearchStatus).mockReturnValue({
+      vi.mocked(buildSearchStatus).mockReturnValue({
         ...buildFakeSearchStatus({}),
         subscribe: vi.fn().mockReturnValue(unsubscribeSpy),
       });
@@ -854,7 +861,7 @@ describe('atomic-search-interface', () => {
   // Error handling
   describe('error handling', () => {
     it('should set error property when engine initialization fails', async () => {
-      vi.mocked(headless.buildSearchEngine).mockImplementation(() => {
+      vi.mocked(buildSearchEngine).mockImplementation(() => {
         throw new Error('Engine initialization failed');
       });
 
@@ -978,12 +985,12 @@ describe('atomic-search-interface', () => {
     it('should replace state for first search when URL manager is active', async () => {
       const replaceStateSpy = vi.spyOn(history, 'replaceState');
       const urlManagerSubscribe = vi.fn().mockReturnValue(vi.fn());
-      vi.mocked(headless.buildUrlManager).mockReturnValue({
+      vi.mocked(buildUrlManager).mockReturnValue({
         state: {fragment: 'new-fragment'},
         subscribe: urlManagerSubscribe,
         synchronize: vi.fn(),
       });
-      vi.mocked(headless.buildSearchStatus).mockReturnValue({
+      vi.mocked(buildSearchStatus).mockReturnValue({
         state: {
           hasResults: true,
           firstSearchExecuted: false,
@@ -1012,12 +1019,12 @@ describe('atomic-search-interface', () => {
     it('should push state for subsequent searches when URL manager is active', async () => {
       const pushStateSpy = vi.spyOn(history, 'pushState');
       const urlManagerSubscribe = vi.fn().mockReturnValue(vi.fn());
-      vi.mocked(headless.buildUrlManager).mockReturnValue({
+      vi.mocked(buildUrlManager).mockReturnValue({
         state: {fragment: 'new-fragment'},
         subscribe: urlManagerSubscribe,
         synchronize: vi.fn(),
       });
-      vi.mocked(headless.buildSearchStatus).mockReturnValue({
+      vi.mocked(buildSearchStatus).mockReturnValue({
         state: {
           hasResults: true,
           firstSearchExecuted: true,
@@ -1055,8 +1062,8 @@ describe('atomic-search-interface', () => {
 
       await element.initialize(options);
 
-      const analyticsConfig = vi.mocked(headless.buildSearchEngine).mock
-        .calls[0][0].configuration.analytics;
+      const analyticsConfig =
+        vi.mocked(buildSearchEngine).mock.calls[0][0].configuration.analytics;
       expect(analyticsConfig).toHaveProperty('source');
       expect(analyticsConfig?.source).toHaveProperty('@coveo/atomic');
     });
@@ -1296,7 +1303,7 @@ describe('atomic-search-interface', () => {
   // Search configuration merging
   describe('search configuration merging', () => {
     it('should merge search configuration with engine configuration', async () => {
-      const buildSearchEngineSpy = vi.mocked(headless.buildSearchEngine);
+      const buildSearchEngineSpy = vi.mocked(buildSearchEngine);
       const element = await setupElement({
         pipeline: 'interface-pipeline',
         searchHub: 'interface-hub',
@@ -1331,7 +1338,7 @@ describe('atomic-search-interface', () => {
     });
 
     it('should use default searchHub when not specified', async () => {
-      const buildSearchEngineSpy = vi.mocked(headless.buildSearchEngine);
+      const buildSearchEngineSpy = vi.mocked(buildSearchEngine);
       const element = await setupElement();
       const options = {
         accessToken: 'test-token',
@@ -1362,7 +1369,7 @@ describe('atomic-search-interface', () => {
   describe('fields to include functionality', () => {
     it('should register fields to include when provided', async () => {
       const registerFieldsToIncludeMock = vi.fn();
-      vi.mocked(headless.loadFieldActions).mockReturnValue({
+      vi.mocked(loadFieldActions).mockReturnValue({
         registerFieldsToInclude: registerFieldsToIncludeMock,
       } as never);
 
@@ -1381,7 +1388,7 @@ describe('atomic-search-interface', () => {
 
     it('should not register additional fields when fieldsToInclude is empty', async () => {
       const registerFieldsToIncludeMock = vi.fn();
-      vi.mocked(headless.loadFieldActions).mockReturnValue({
+      vi.mocked(loadFieldActions).mockReturnValue({
         registerFieldsToInclude: registerFieldsToIncludeMock,
       } as never);
 
