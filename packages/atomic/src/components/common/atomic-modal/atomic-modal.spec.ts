@@ -4,7 +4,9 @@ import {beforeEach, describe, expect, it, vi} from 'vitest';
 import {AtomicModal} from './atomic-modal';
 import './atomic-modal';
 import '../atomic-component-error/atomic-component-error';
+import type {i18n} from 'i18next';
 import {renderInAtomicSearchInterface} from '@/vitest-utils/testing-helpers/fixtures/atomic/search/atomic-search-interface-fixture';
+import {createTestI18n} from '@/vitest-utils/testing-helpers/i18n-utils';
 
 class MockAtomicFocusTrap extends HTMLElement {
   active = false;
@@ -31,8 +33,11 @@ if (!customElements.get('atomic-focus-trap')) {
 }
 
 describe('atomic-modal', () => {
+  let i18n: i18n;
+
   beforeEach(async () => {
     console.error = vi.fn();
+    i18n = await createTestI18n();
   });
 
   const renderModal = async (
@@ -61,6 +66,7 @@ describe('atomic-modal', () => {
       </atomic-modal>`,
       selector: 'atomic-modal',
       bindings: (bindings) => {
+        bindings.i18n = i18n;
         return bindings;
       },
     });
