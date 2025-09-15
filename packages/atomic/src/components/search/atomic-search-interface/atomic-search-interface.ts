@@ -71,6 +71,12 @@ export class AtomicSearchInterface
   extends ChildrenUpdateCompleteMixin(LitElement)
   implements BaseAtomicInterface<SearchEngine>
 {
+  @state()
+  @provide({context: bindingsContext})
+  public bindings: Bindings = {} as Bindings;
+  @state() public error!: Error;
+  @state() relevanceInspectorIsOpen = false;
+
   private urlManager!: UrlManager;
   private searchStatus!: SearchStatus;
   private unsubscribeUrlManager: Unsubscribe = () => {};
@@ -82,9 +88,6 @@ export class AtomicSearchInterface
     'CoveoAtomic',
     HEADLESS_VERSION
   );
-
-  @state() public error!: Error;
-  @state() relevanceInspectorIsOpen = false;
 
   static styles: CSSResultGroup = [
     css`
@@ -251,46 +254,6 @@ export class AtomicSearchInterface
     this.initFieldsToInclude();
   }
 
-  @watch('searchHub')
-  public updateSearchHub() {
-    this.updateSearchConfiguration('searchHub', this.searchHub ?? 'default');
-  }
-
-  @watch('pipeline')
-  public updatePipeline() {
-    this.updateSearchConfiguration('pipeline', this.pipeline);
-  }
-
-  @watch('analytics')
-  public toggleAnalytics() {
-    this.interfaceController.onAnalyticsChange();
-  }
-
-  @watch('language')
-  public updateLanguage() {
-    if (
-      !this.interfaceController.engineIsCreated(this.engine) ||
-      !this.language
-    ) {
-      return;
-    }
-
-    const {updateSearchConfiguration} = loadSearchConfigurationActions(
-      this.engine
-    );
-    this.engine.dispatch(
-      updateSearchConfiguration({
-        locale: this.language,
-      })
-    );
-    return this.interfaceController.onLanguageChange();
-  }
-
-  @watch('iconAssetsPath')
-  public updateIconAssetsPath(): void {
-    this.store.state.iconAssetsPath = this.iconAssetsPath;
-  }
-
   public disconnectedCallback() {
     super.disconnectedCallback();
     if (typeof this.unsubscribeUrlManager === 'function') {
@@ -397,10 +360,6 @@ export class AtomicSearchInterface
     this.engine.executeFirstSearchAfterStandaloneSearchBoxRedirect(analytics);
   }
 
-  @state()
-  @provide({context: bindingsContext})
-  public bindings: Bindings = {} as Bindings;
-
   public updateSearchConfiguration(
     updatedProp: 'searchHub' | 'pipeline',
     newValue: string | undefined
@@ -421,6 +380,46 @@ export class AtomicSearchInterface
         [updatedProp]: newValue,
       })
     );
+  }
+
+  @watch('searchHub')
+  public updateSearchHub() {
+    this.updateSearchConfiguration('searchHub', this.searchHub ?? 'default');
+  }
+
+  @watch('pipeline')
+  public updatePipeline() {
+    this.updateSearchConfiguration('pipeline', this.pipeline);
+  }
+
+  @watch('analytics')
+  public toggleAnalytics() {
+    this.interfaceController.onAnalyticsChange();
+  }
+
+  @watch('language')
+  public updateLanguage() {
+    if (
+      !this.interfaceController.engineIsCreated(this.engine) ||
+      !this.language
+    ) {
+      return;
+    }
+
+    const {updateSearchConfiguration} = loadSearchConfigurationActions(
+      this.engine
+    );
+    this.engine.dispatch(
+      updateSearchConfiguration({
+        locale: this.language,
+      })
+    );
+    return this.interfaceController.onLanguageChange();
+  }
+
+  @watch('iconAssetsPath')
+  public updateIconAssetsPath(): void {
+    this.store.state.iconAssetsPath = this.iconAssetsPath;
   }
 
   private getBindings(): Bindings {
