@@ -328,6 +328,7 @@ export const generateAnswer = createAsyncThunk<
       );
       // TODO: SVCC-5178 Refactor multiple sequential dispatches into single action
       dispatch(resetAnswer());
+      dispatch(setAnswerApiQueryParams(answerApiQueryParams));
       await dispatch(fetchAnswer(answerApiQueryParams));
       dispatch(updateSearchAction(undefined));
     } else {
