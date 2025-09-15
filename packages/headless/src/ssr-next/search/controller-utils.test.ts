@@ -118,7 +118,7 @@ describe('controller-utils', () => {
         }),
       };
       createStaticState({
-        searchAction: mockSearchAction,
+        searchActions: [mockSearchAction],
         controllers,
       });
     });
@@ -145,7 +145,7 @@ describe('controller-utils', () => {
 
     it('should call #clone once with the proper arguments', () => {
       expect(utils.clone).toHaveBeenCalledTimes(1);
-      expect(utils.clone).toHaveBeenCalledWith(mockSearchAction);
+      expect(utils.clone).toHaveBeenCalledWith([mockSearchAction]);
     });
   });
 });

@@ -40,10 +40,10 @@ export function createStaticState<
     Controller
   >,
 >({
-  searchAction,
+  searchActions,
   controllers,
 }: {
-  searchAction: TSearchAction;
+  searchActions: TSearchAction[];
   controllers: InferControllersMapFromDefinition<TControllerDefinitions>;
 }): EngineStaticState<
   TSearchAction,
@@ -53,6 +53,6 @@ export function createStaticState<
     controllers: mapObject(controllers, (controller) =>
       createStaticControllerBuilder(controller).build()
     ) as InferControllerStaticStateMapFromDefinitions<TControllerDefinitions>,
-    searchAction: clone(searchAction),
+    searchActions: clone(searchActions),
   };
 }
