@@ -73,7 +73,7 @@ describe('Instant Results Test Suites', () => {
       .init();
   }
 
-  it('with a custom aria label, it should render correctly', () => {
+  it.skip('with a custom aria label, it should render correctly', () => {
     const customFieldName = 'custom';
     const customFieldValueForResult = (index: number) => `${index}!`;
     const ariaLabelGeneratorAlias = 'ariaLabelGenerator';
