@@ -382,9 +382,9 @@ export const constructAnswerQueryParams = (
       ? HistoryStore.getInstance().getHistory()
       : [],
     ...(state.folding && {
-      filterField: state.folding.fields.collection,
-      childField: state.folding.fields.parent,
-      parentField: state.folding.fields.child,
+      filterField: state.folding.fields?.collection,
+      childField: state.folding.fields?.parent,
+      parentField: state.folding.fields?.child,
       filterFieldRange: state.folding.filterFieldRange,
     }),
     ...(state?.excerptLength?.length && {
