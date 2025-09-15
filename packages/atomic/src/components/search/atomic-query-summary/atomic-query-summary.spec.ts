@@ -3,7 +3,7 @@ import {html} from 'lit';
 import {describe, expect, it, vi} from 'vitest';
 import {renderInAtomicSearchInterface} from '@/vitest-utils/testing-helpers/fixtures/atomic/search/atomic-search-interface-fixture';
 import {buildFakeSearchEngine} from '@/vitest-utils/testing-helpers/fixtures/headless/search/engine';
-import {buildFakeSummary} from '@/vitest-utils/testing-helpers/fixtures/headless/search/summary-subcontroller';
+import {buildFakeSummary} from '@/vitest-utils/testing-helpers/fixtures/headless/search/summary-controller';
 import './atomic-query-summary';
 import {AriaLiveRegionController} from '@/src/utils/accessibility-utils';
 import type {AtomicQuerySummary} from './atomic-query-summary';
@@ -219,8 +219,6 @@ describe('atomic-query-summary', () => {
 
       const [[calledMessage]] = messageSetterSpy.mock.calls;
       expect(calledMessage).toMatch(/loading/i);
-
-      messageSetterSpy.mockRestore();
     });
 
     it('should render container part', async () => {
