@@ -50,7 +50,6 @@ describe('atomic-query-summary', () => {
     };
   };
 
-  // Guard condition tests (outside the rendering context)
   it('should render nothing when hasError is true', async () => {
     const {element} = await renderQuerySummary({
       querySummaryState: {
@@ -92,9 +91,10 @@ describe('atomic-query-summary', () => {
     });
 
     it('should bind to the query summary controller', async () => {
+      const buildQuerySummaryMock = vi.mocked(buildQuerySummary);
       const {element} = await renderQuerySummary();
       expect(element.querySummary).toBe(
-        vi.mocked(buildQuerySummary).mock.results[0].value
+        buildQuerySummaryMock.mock.results[0].value
       );
     });
 
