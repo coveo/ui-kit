@@ -20,7 +20,6 @@ import {type CSSResultGroup, css, html, LitElement} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {when} from 'lit/directives/when.js';
 import {booleanConverter} from '@/src/converters/boolean-converter';
-import {bindingGuard} from '@/src/decorators/binding-guard';
 import {errorGuard} from '@/src/decorators/error-guard';
 import {watch} from '@/src/decorators/watch';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles.js';
@@ -589,13 +588,12 @@ export class AtomicSearchInterface
     this.pipeline = this.engine!.state.pipeline;
     this.searchHub = this.engine!.state.searchHub;
     this.initSearchStatus();
-    this.initUrlManager();
     await this.getUpdateComplete();
+    this.initUrlManager();
     this.initialized = true;
   }
 
   @errorGuard()
-  @bindingGuard()
   render() {
     return html`
       ${when(
