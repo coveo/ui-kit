@@ -113,6 +113,8 @@ export class AtomicCommerceInterface
   @property({type: String, reflect: true}) type: 'search' | 'product-listing' =
     'search';
 
+  // TODO - Deprecate in favor of a `disableAnalytics` property that defaults to false.
+  // TODO - (v4) Remove altogether.
   /**
    * Whether analytics should be enabled.
    */
@@ -134,6 +136,8 @@ export class AtomicCommerceInterface
    */
   @property({type: Object, attribute: false}) i18n: i18n;
 
+  // TODO - Mark as deprecated in favor of updateLocale.
+  // TODO - (v4) Remove altogether.
   /**
    * The commerce interface language.
    *
@@ -309,6 +313,8 @@ export class AtomicCommerceInterface
     return this.interfaceController.onLanguageChange();
   }
 
+  // TODO - Add updateLocale public method.
+
   public disconnectedCallback() {
     super.disconnectedCallback();
     if (typeof this.unsubscribeUrlManager === 'function') {
@@ -447,7 +453,7 @@ export class AtomicCommerceInterface
     this.urlManager.synchronize(this.fragment);
   };
 
-  // TODO v4?: Make private
+  // TODO - (v4) Make private.
   public scrollToTop() {
     const scrollContainerElement = document.querySelector(this.scrollContainer);
     if (!scrollContainerElement) {
