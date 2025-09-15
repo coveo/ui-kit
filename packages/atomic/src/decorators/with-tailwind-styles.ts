@@ -33,10 +33,10 @@ function injectTailwindProperties(element: any) {
 
   if (isParentDocumentOrShadowRoot) {
     if (!parent.adoptedStyleSheets.includes(tailwindPropertiesSheet)) {
-      parent.adoptedStyleSheets.push(tailwindPropertiesSheet);
+      parent.adoptedStyleSheets?.push(tailwindPropertiesSheet);
     }
   } else {
-    element.adoptedStyleSheets.push(tailwindPropertiesSheet);
+    element.adoptedStyleSheets?.push(tailwindPropertiesSheet);
   }
 }
 

@@ -399,7 +399,7 @@ export class AtomicModal
           <div
             part="backdrop"
             class=" ${this.boundary === 'page' ? 'fixed' : 'absolute'} top-0 right-0 bottom-0 left-0 z-9999"
-            
+            @click="${(e: MouseEvent) => e.target === e.currentTarget && this.close()}"
             data-nosnippet
           >
             <atomic-focus-trap
