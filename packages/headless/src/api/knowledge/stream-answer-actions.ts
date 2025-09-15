@@ -1,7 +1,6 @@
 import {createAsyncThunk} from '@reduxjs/toolkit';
 import type {NavigatorContext} from '../../app/navigator-context-provider.js';
 import {resetAnswer} from '../../features/generated-answer/generated-answer-actions.js';
-import {updateSearchAction} from '../../features/search/search-actions.js';
 import {fetchAnswer} from './stream-answer-api.js';
 import type {StreamAnswerAPIState} from './stream-answer-api-state.js';
 
@@ -15,6 +14,5 @@ export const triggerSearchRequest = createAsyncThunk<
     // TODO: SVCC-5178 Refactor multiple sequential dispatches into single action
     dispatch(resetAnswer());
     await dispatch(fetchAnswer(state, navigatorContext));
-    dispatch(updateSearchAction(undefined));
   }
 );

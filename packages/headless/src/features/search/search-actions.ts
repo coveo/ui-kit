@@ -104,6 +104,8 @@ export const updateSearchAction = createAction<SearchAction | undefined>(
   'search/updateSearchAction'
 );
 
+export const resetSearchAction = createAction('search/resetSearchAction');
+
 export const executeSearch = createAsyncThunk<
   ExecuteSearchThunkReturn,
   TransitiveSearchAction,
@@ -111,6 +113,11 @@ export const executeSearch = createAsyncThunk<
 >(
   'search/executeSearch',
   async (searchAction: TransitiveSearchAction, config) => {
+    // Set the search action cause in the state before executing the request.
+    // This makes it available for subscribers (e.g., Generated Answer controller)
+    // so they can know *why* this search is being triggered
+    config.dispatch(updateSearchAction(searchAction.next));
+
     const state = config.getState();
     if (state.configuration.analytics.analyticsMode === 'legacy') {
       return legacyExecuteSearch(state, config, searchAction.legacy);
@@ -119,8 +126,6 @@ export const executeSearch = createAsyncThunk<
     const analyticsAction = searchAction.next
       ? buildSearchReduxAction(searchAction.next)
       : undefined;
-
-    config.dispatch(updateSearchAction(searchAction.next));
 
     const request = await buildSearchRequest(
       state,
@@ -136,6 +141,11 @@ export const executeSearch = createAsyncThunk<
       origin: 'mainSearch',
     });
 
+    // Reset the action cause after the request finishes.
+    // This ensures the next search starts from a clean state,
+    // and allows listeners to detect when a *new* cause is set.
+    config.dispatch(resetSearchAction());
+
     return await processor.process(fetched);
   }
 );
@@ -145,6 +155,11 @@ export const fetchPage = createAsyncThunk<
   TransitiveSearchAction,
   AsyncThunkSearchOptions<StateNeededByExecuteSearch>
 >('search/fetchPage', async (searchAction: TransitiveSearchAction, config) => {
+  // Set the search action cause in the state before executing the request.
+  // This makes it available for subscribers (e.g., Generated Answer controller)
+  // so they can know *why* this search is being triggered
+  config.dispatch(updateSearchAction(searchAction.next));
+
   const state = config.getState();
   addEntryInActionsHistory(state);
 
@@ -169,6 +184,11 @@ export const fetchPage = createAsyncThunk<
   );
   const fetched = await processor.fetchFromAPI(request, {origin: 'mainSearch'});
 
+  // Reset the action cause after the request finishes.
+  // This ensures the next search starts from a clean state,
+  // and allows listeners to detect when a *new* cause is set.
+  config.dispatch(resetSearchAction());
+
   return await processor.process(fetched);
 });
 
@@ -177,15 +197,20 @@ export const fetchMoreResults = createAsyncThunk<
   void,
   AsyncThunkSearchOptions<StateNeededByExecuteSearch>
 >('search/fetchMoreResults', async (_, config) => {
-  const state = config.getState();
-  if (state.configuration.analytics.analyticsMode === 'legacy') {
-    return legacyFetchMoreResults(config, state);
-  }
-
   const analyticsAction = makeBasicNewSearchAnalyticsAction(
     SearchPageEvents.browseResults,
     config.getState
   );
+
+  // Set the search action cause in the state before executing the request.
+  // This makes it available for subscribers (e.g., Generated Answer controller)
+  // so they can know *why* this search is being triggered
+  config.dispatch(updateSearchAction(analyticsAction));
+
+  const state = config.getState();
+  if (state.configuration.analytics.analyticsMode === 'legacy') {
+    return legacyFetchMoreResults(config, state);
+  }
 
   const processor = new AsyncSearchThunkProcessor<
     ReturnType<typeof config.rejectWithValue>

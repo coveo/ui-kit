@@ -6,7 +6,7 @@ import {
   fetchMoreResults,
   fetchPage,
 } from './legacy/search-actions.js';
-import {updateSearchAction} from './search-actions.js';
+import {resetSearchAction, updateSearchAction} from './search-actions.js';
 import {
   emptyQuestionAnswer,
   getSearchInitialState,
@@ -112,6 +112,9 @@ export const searchReducer = createReducer(
     builder.addCase(fetchPage.pending, handlePendingSearch);
     builder.addCase(updateSearchAction, (state, action) => {
       state.searchAction = action.payload;
+    });
+    builder.addCase(resetSearchAction, (state) => {
+      state.searchAction = undefined;
     });
     builder.addCase(setError, (state, action) => {
       state.error = action.payload;
