@@ -3,7 +3,9 @@ import {html} from 'lit';
 import {describe, expect, it, vi} from 'vitest';
 import {renderInAtomicSearchInterface} from '@/vitest-utils/testing-helpers/fixtures/atomic/search/atomic-search-interface-fixture';
 import {buildFakeSearchEngine} from '@/vitest-utils/testing-helpers/fixtures/headless/search/engine';
+import {buildFakeSummary} from '@/vitest-utils/testing-helpers/fixtures/headless/search/summary-subcontroller';
 import './atomic-query-summary';
+import {AriaLiveRegionController} from '@/src/utils/accessibility-utils';
 import type {AtomicQuerySummary} from './atomic-query-summary';
 
 vi.mock('@coveo/headless', {spy: true});
@@ -17,31 +19,7 @@ describe('atomic-query-summary', () => {
   }: {
     querySummaryState?: Partial<QuerySummaryState>;
   } = {}) => {
-    const defaultState: QuerySummaryState = {
-      firstSearchExecuted: true,
-      hasResults: true,
-      hasError: false,
-      isLoading: false,
-      total: 100,
-      firstResult: 1,
-      lastResult: 10,
-      query: '',
-      durationInSeconds: 0.5,
-      durationInMilliseconds: 500,
-      hasDuration: true,
-      hasQuery: false,
-    };
-
-    mockedQuerySummary = {
-      state: {
-        ...defaultState,
-        ...querySummaryState,
-      },
-      subscribe: vi.fn((callback: () => void) => {
-        callback();
-        return vi.fn();
-      }),
-    };
+    mockedQuerySummary = buildFakeSummary({state: querySummaryState});
 
     vi.mocked(buildQuerySummary).mockReturnValue(mockedQuerySummary);
 
@@ -72,21 +50,7 @@ describe('atomic-query-summary', () => {
     };
   };
 
-  it('should render correctly', async () => {
-    const {element} = await renderQuerySummary();
-    expect(element).toBeDefined();
-  });
-
-  it('should call buildQuerySummary with the engine', async () => {
-    await renderQuerySummary();
-    expect(buildQuerySummary).toHaveBeenCalledWith(mockedEngine);
-  });
-
-  it('should bind to the query summary controller', async () => {
-    const {element} = await renderQuerySummary();
-    expect(element.querySummary).toBe(mockedQuerySummary);
-  });
-
+  // Guard condition tests (outside the rendering context)
   it('should render nothing when hasError is true', async () => {
     const {element} = await renderQuerySummary({
       querySummaryState: {
@@ -113,318 +77,288 @@ describe('atomic-query-summary', () => {
       },
     });
 
-    expect(placeholder).toBeTruthy();
     expect(placeholder).toBeInTheDocument();
   });
 
-  it('should render the query summary container', async () => {
-    const {container} = await renderQuerySummary();
-
-    expect(container).toBeTruthy();
-    expect(container).toBeInTheDocument();
-  });
-
-  it('should render the text correctly when there is a singular result', async () => {
-    const {container} = await renderQuerySummary({
-      querySummaryState: {
-        firstResult: 1,
-        lastResult: 1,
-        total: 1,
-        firstSearchExecuted: true,
-        hasResults: true,
-      },
+  describe('when hasError is false & hasResults is true & firstSearchExecuted is true', () => {
+    it('should render correctly', async () => {
+      const {element} = await renderQuerySummary();
+      expect(element).toBeDefined();
     });
 
-    expect(container).toHaveTextContent('Result 1 of 1');
-  });
-
-  it('should render the text correctly when there are multiple results', async () => {
-    const {container} = await renderQuerySummary({
-      querySummaryState: {
-        firstResult: 1,
-        lastResult: 10,
-        total: 100,
-        firstSearchExecuted: true,
-        hasResults: true,
-      },
+    it('should call buildQuerySummary with the engine', async () => {
+      await renderQuerySummary();
+      expect(buildQuerySummary).toHaveBeenCalledExactlyOnceWith(mockedEngine);
     });
 
-    expect(container).toHaveTextContent('Results 1-10 of 100');
-  });
-
-  it('should render the text correctly when there are results and a query', async () => {
-    const {container} = await renderQuerySummary({
-      querySummaryState: {
-        firstResult: 1,
-        lastResult: 10,
-        total: 100,
-        query: 'test query',
-        firstSearchExecuted: true,
-        hasResults: true,
-      },
+    it('should bind to the query summary controller', async () => {
+      const {element} = await renderQuerySummary();
+      expect(element.querySummary).toBe(
+        vi.mocked(buildQuerySummary).mock.results[0].value
+      );
     });
 
-    expect(container).toHaveTextContent('Results 1-10 of 100 for test query');
-  });
+    it('should render the query summary container', async () => {
+      const {container} = await renderQuerySummary();
 
-  it('should highlight the first, last, total, and query in the text', async () => {
-    const {container} = await renderQuerySummary({
-      querySummaryState: {
-        firstResult: 1,
-        lastResult: 10,
-        total: 100,
-        query: 'test query',
-        firstSearchExecuted: true,
-        hasResults: true,
-      },
+      expect(container).toBeInTheDocument();
     });
 
-    expect(container).toHaveTextContent('Results ');
-    expect(container).toHaveTextContent('1');
-    expect(container).toHaveTextContent('10');
-    expect(container).toHaveTextContent('100');
-    expect(container).toHaveTextContent('test query');
-
-    const highlightedElements = container!.querySelectorAll(
-      '[part*="highlight"]'
-    );
-    expect(highlightedElements.length).toBeGreaterThan(0);
-  });
-
-  it('should render the duration part (though hidden by default)', async () => {
-    const {element, parts} = await renderQuerySummary({
-      querySummaryState: {
-        durationInSeconds: 1.23,
-        firstSearchExecuted: true,
-        hasResults: true,
-      },
-    });
-
-    const duration = parts(element).duration;
-    expect(duration).toBeTruthy();
-    expect(duration).toBeInTheDocument();
-    expect(duration).toHaveClass('hidden');
-  });
-
-  it('should format duration correctly with localized numbers', async () => {
-    const {element, parts} = await renderQuerySummary({
-      querySummaryState: {
-        durationInSeconds: 1.234,
-        firstSearchExecuted: true,
-        hasResults: true,
-      },
-    });
-
-    const duration = parts(element).duration;
-    expect(duration).toHaveTextContent('1.234');
-  });
-
-  it('should handle loading state properly', async () => {
-    const {element} = await renderQuerySummary({
-      querySummaryState: {
-        isLoading: true,
-        firstSearchExecuted: true,
-        hasResults: true,
-      },
-    });
-
-    expect(element).toBeDefined();
-  });
-
-  it('should create the component with accessibility features', async () => {
-    const {element} = await renderQuerySummary({
-      querySummaryState: {
-        firstResult: 1,
-        lastResult: 10,
-        total: 100,
-        query: 'test',
-        firstSearchExecuted: true,
-        hasResults: true,
-      },
-    });
-
-    expect(element).toBeDefined();
-    expect(element.shadowRoot).toBeTruthy();
-  });
-
-  it('should render every part', async () => {
-    const {element, parts} = await renderQuerySummary({
-      querySummaryState: {
-        firstResult: 1,
-        lastResult: 10,
-        total: 100,
-        query: 'test query',
-        firstSearchExecuted: true,
-        hasResults: true,
-      },
-    });
-
-    const partsElements = parts(element);
-
-    await expect.element(partsElements.container!).toBeInTheDocument();
-    await expect.element(partsElements.highlight!).toBeInTheDocument();
-    await expect.element(partsElements.query!).toBeInTheDocument();
-  });
-
-  it('should handle zero results gracefully', async () => {
-    const {element} = await renderQuerySummary({
-      querySummaryState: {
-        firstResult: 0,
-        lastResult: 0,
-        total: 0,
-        hasResults: false,
-        firstSearchExecuted: true,
-      },
-    });
-
-    expect(element).toBeEmptyDOMElement();
-  });
-
-  it('should handle empty query', async () => {
-    const {container} = await renderQuerySummary({
-      querySummaryState: {
-        firstResult: 1,
-        lastResult: 10,
-        total: 100,
-        query: '',
-        firstSearchExecuted: true,
-        hasResults: true,
-      },
-    });
-
-    expect(container).toHaveTextContent('Results 1-10 of 100');
-    expect(container).not.toHaveTextContent('for');
-  });
-
-  it('should handle very large numbers', async () => {
-    const {container} = await renderQuerySummary({
-      querySummaryState: {
-        firstResult: 9991,
-        lastResult: 10000,
-        total: 1000000,
-        firstSearchExecuted: true,
-        hasResults: true,
-      },
-    });
-
-    expect(container).toHaveTextContent('Results 9,991-10,000 of 1,000,000');
-  });
-
-  describe('when testing exact text format patterns', () => {
-    it('should match exact format for multiple results with query and duration', async () => {
-      const {container} = await renderQuerySummary({
-        querySummaryState: {
-          firstResult: 1,
-          lastResult: 10,
-          total: 1234,
-          query: 'test',
-          durationInSeconds: 0.47,
-          firstSearchExecuted: true,
-          hasResults: true,
-          hasQuery: true,
-          hasDuration: true,
-        },
-      });
-
-      const textContent = (container?.textContent || '').trim();
-      const pattern = /^Results 1-10 of [\d,]+ for test/;
-      expect(textContent).toMatch(pattern);
-    });
-
-    it('should match exact format for single result with query and duration', async () => {
+    it('should render the text correctly when there is a single result', async () => {
       const {container} = await renderQuerySummary({
         querySummaryState: {
           firstResult: 1,
           lastResult: 1,
           total: 1,
-          query: "Queen's Gambit sparks world of online chess celebrities",
-          durationInSeconds: 0.23,
           firstSearchExecuted: true,
           hasResults: true,
-          hasQuery: true,
-          hasDuration: true,
         },
       });
 
-      const textContent = (container?.textContent || '').trim();
-      const pattern =
-        /^Result 1 of [\d,]+ for Queen's Gambit sparks world of online chess celebrities/;
-      expect(textContent).toMatch(pattern);
+      expect(container).toHaveTextContent('Result 1 of 1');
     });
-  });
 
-  describe('when testing duration visibility', () => {
-    it('should hide duration part by default', async () => {
-      const {element, parts} = await renderQuerySummary({
+    it('should render the text correctly when there are multiple results', async () => {
+      const {container} = await renderQuerySummary({
         querySummaryState: {
           firstResult: 1,
           lastResult: 10,
           total: 100,
-          query: 'test',
-          durationInSeconds: 0.5,
           firstSearchExecuted: true,
           hasResults: true,
-          hasDuration: true,
+        },
+      });
+
+      expect(container).toHaveTextContent('Results 1-10 of 100');
+    });
+
+    it('should render the text correctly when there are results and a query', async () => {
+      const {container} = await renderQuerySummary({
+        querySummaryState: {
+          firstResult: 1,
+          lastResult: 10,
+          total: 100,
+          query: 'test query',
+          firstSearchExecuted: true,
+          hasResults: true,
+        },
+      });
+
+      expect(container).toHaveTextContent('Results 1-10 of 100 for test query');
+    });
+
+    it('should highlight the first, last, total, and query in the text', async () => {
+      const {container} = await renderQuerySummary({
+        querySummaryState: {
+          firstResult: 1,
+          lastResult: 10,
+          total: 100,
+          query: 'test query',
+          firstSearchExecuted: true,
+          hasResults: true,
+        },
+      });
+
+      expect(container).toHaveTextContent('Results ');
+      expect(container).toHaveTextContent('1');
+      expect(container).toHaveTextContent('10');
+      expect(container).toHaveTextContent('100');
+      expect(container).toHaveTextContent('test query');
+
+      const highlightedElements = container!.querySelectorAll(
+        '[part*="highlight"]'
+      );
+      expect(highlightedElements.length).toBe(4);
+    });
+
+    it('should render the duration part with the hidden class', async () => {
+      const {element, parts} = await renderQuerySummary({
+        querySummaryState: {
+          durationInSeconds: 1.23,
+          firstSearchExecuted: true,
+          hasResults: true,
         },
       });
 
       const duration = parts(element).duration;
+      expect(duration).toBeInTheDocument();
+      expect(duration).toHaveTextContent('1.23');
       expect(duration).toHaveClass('hidden');
     });
 
-    it('should show query part as visible by default', async () => {
+    it('should format duration correctly with localized numbers', async () => {
       const {element, parts} = await renderQuerySummary({
         querySummaryState: {
-          firstResult: 1,
-          lastResult: 10,
-          total: 100,
-          query: 'test',
+          durationInSeconds: 1234567.89,
           firstSearchExecuted: true,
           hasResults: true,
-          hasQuery: true,
-        },
-      });
-
-      const query = parts(element).query;
-      expect(query).toBeInTheDocument();
-      expect(query).not.toHaveClass('hidden');
-    });
-
-    it('should contain duration text even when hidden', async () => {
-      const {element, parts} = await renderQuerySummary({
-        querySummaryState: {
-          firstResult: 1,
-          lastResult: 10,
-          total: 100,
-          durationInSeconds: 0.47,
-          firstSearchExecuted: true,
-          hasResults: true,
-          hasDuration: true,
         },
       });
 
       const duration = parts(element).duration;
-      expect(duration).toHaveTextContent('0.47');
-      expect(duration).toHaveClass('hidden');
+      expect(duration).toHaveTextContent('1,234,567.89');
     });
-  });
 
-  describe('when testing placeholder behavior', () => {
-    it('should show placeholder when search has not been executed', async () => {
-      const {placeholder} = await renderQuerySummary({
+    it('should handle loading state properly', async () => {
+      const messageSetterSpy = vi.spyOn(
+        AriaLiveRegionController.prototype,
+        'message',
+        'set'
+      );
+
+      const {element} = await renderQuerySummary({
         querySummaryState: {
-          firstSearchExecuted: false,
+          isLoading: true,
+          firstSearchExecuted: true,
+          hasResults: true,
+        },
+      });
+
+      expect(element).toBeDefined();
+      expect(messageSetterSpy).toHaveBeenCalledOnce();
+
+      const [[calledMessage]] = messageSetterSpy.mock.calls;
+      expect(calledMessage).toMatch(/loading/i);
+
+      messageSetterSpy.mockRestore();
+    });
+
+    it('should render container part', async () => {
+      const {element, parts} = await renderQuerySummary({
+        querySummaryState: {
+          firstResult: 1,
+          lastResult: 10,
+          total: 100,
+          query: 'test query',
+          firstSearchExecuted: true,
+          hasResults: true,
+        },
+      });
+
+      const partsElements = parts(element);
+      await expect.element(partsElements.container!).toBeInTheDocument();
+    });
+
+    it('should render highlight part', async () => {
+      const {element, parts} = await renderQuerySummary({
+        querySummaryState: {
+          firstResult: 1,
+          lastResult: 10,
+          total: 100,
+          query: 'test query',
+          firstSearchExecuted: true,
+          hasResults: true,
+        },
+      });
+
+      const partsElements = parts(element);
+      await expect.element(partsElements.highlight!).toBeInTheDocument();
+    });
+
+    it('should render query part', async () => {
+      const {element, parts} = await renderQuerySummary({
+        querySummaryState: {
+          firstResult: 1,
+          lastResult: 10,
+          total: 100,
+          query: 'test query',
+          firstSearchExecuted: true,
+          hasResults: true,
+        },
+      });
+
+      const partsElements = parts(element);
+      await expect.element(partsElements.query!).toBeInTheDocument();
+    });
+
+    it('should handle zero results gracefully', async () => {
+      const {element} = await renderQuerySummary({
+        querySummaryState: {
+          firstResult: 0,
+          lastResult: 0,
+          total: 0,
           hasResults: false,
-          hasError: false,
+          firstSearchExecuted: true,
         },
       });
 
-      expect(placeholder).toBeInTheDocument();
-      expect(placeholder).toHaveAttribute('part', 'placeholder');
-      expect(placeholder).toHaveAttribute('aria-hidden', 'true');
+      expect(element).toBeEmptyDOMElement();
     });
 
-    it('should not show placeholder when search has been executed', async () => {
+    it('should handle empty query', async () => {
+      const {container} = await renderQuerySummary({
+        querySummaryState: {
+          firstResult: 1,
+          lastResult: 10,
+          total: 100,
+          query: '',
+          firstSearchExecuted: true,
+          hasResults: true,
+        },
+      });
+
+      expect(container).toHaveTextContent('Results 1-10 of 100');
+      expect(container).not.toHaveTextContent('for');
+    });
+
+    it('should localize numbers', async () => {
+      const {container} = await renderQuerySummary({
+        querySummaryState: {
+          firstResult: 9991,
+          lastResult: 10000,
+          total: 1000000,
+          firstSearchExecuted: true,
+          hasResults: true,
+        },
+      });
+
+      expect(container).toHaveTextContent('Results 9,991-10,000 of 1,000,000');
+    });
+
+    describe('when testing exact text format patterns', () => {
+      it('should match exact format for multiple results with query and duration', async () => {
+        const {container} = await renderQuerySummary({
+          querySummaryState: {
+            firstResult: 1,
+            lastResult: 10,
+            total: 1234,
+            query: 'test',
+            durationInSeconds: 0.47,
+            firstSearchExecuted: true,
+            hasResults: true,
+            hasQuery: true,
+            hasDuration: true,
+          },
+        });
+
+        const textContent = (container?.textContent || '').trim();
+        const pattern = /^Results 1-10 of [\d,]+ for test/;
+        expect(textContent).toMatch(pattern);
+      });
+
+      it('should match exact format for single result with query and duration', async () => {
+        const {container} = await renderQuerySummary({
+          querySummaryState: {
+            firstResult: 1,
+            lastResult: 1,
+            total: 1,
+            query: "Queen's Gambit sparks world of online chess celebrities",
+            durationInSeconds: 0.23,
+            firstSearchExecuted: true,
+            hasResults: true,
+            hasQuery: true,
+            hasDuration: true,
+          },
+        });
+
+        const textContent = (container?.textContent || '').trim();
+        const pattern =
+          /^Result 1 of [\d,]+ for Queen's Gambit sparks world of online chess celebrities/;
+        expect(textContent).toMatch(pattern);
+      });
+    });
+
+    it('should not show a placeholder', async () => {
       const {placeholder} = await renderQuerySummary({
         querySummaryState: {
           firstSearchExecuted: true,

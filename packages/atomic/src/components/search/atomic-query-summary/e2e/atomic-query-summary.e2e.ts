@@ -1,26 +1,23 @@
 import {expect, test} from './fixture';
 
-test.describe('AtomicQuerySummary', () => {
+test.describe('atomic-query-summary', () => {
   test.beforeEach(async ({querySummary}) => {
     await querySummary.load();
     await querySummary.hydrated.waitFor();
   });
 
-  test('should be accessible', async ({makeAxeBuilder}) => {
+  test('should be accessible', async ({makeAxeBuilder, querySummary}) => {
     const accessibilityResults = await makeAxeBuilder().analyze();
     expect(accessibilityResults.violations).toEqual([]);
-  });
 
-  test('should display message', async ({querySummary}) => {
-    await expect(querySummary.text).toBeVisible();
-  });
-
-  test('screen readers should read out', async ({querySummary}) => {
     await expect(querySummary.ariaLive).toBeVisible();
   });
 
-  test('should have duration element in DOM', async ({querySummary}) => {
+  test('should display message with hidden duration count', async ({
+    querySummary,
+  }) => {
     const durationCount = await querySummary.duration.count();
     expect(durationCount).toBeGreaterThanOrEqual(0);
+    await expect(querySummary.text).toBeVisible();
   });
 });
