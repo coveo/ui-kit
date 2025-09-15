@@ -1,12 +1,12 @@
 import {answerEvaluation} from '../../../api/knowledge/post-answer-evaluation.js';
-import {triggerSearchRequest} from '../../../api/knowledge/stream-answer-actions.js';
 import {
   answerApi,
   fetchAnswer,
-  type StateNeededByAnswerAPI,
 } from '../../../api/knowledge/stream-answer-api.js';
+import type {StreamAnswerAPIState} from '../../../api/knowledge/stream-answer-api-state.js';
 import {getConfigurationInitialState} from '../../../features/configuration/configuration-state.js';
 import {
+  generateAnswer,
   resetAnswer,
   updateAnswerConfigurationId,
   updateResponseFormat,
@@ -99,7 +99,7 @@ describe('knowledge-generated-answer', () => {
     );
 
   const buildEngineWithGeneratedAnswer = (
-    initialState: Partial<StateNeededByAnswerAPI> = {}
+    initialState: Partial<StreamAnswerAPIState> = {}
   ) => {
     const state = createMockState({
       ...initialState,
@@ -214,42 +214,42 @@ describe('knowledge-generated-answer', () => {
   });
 
   describe('subscribeToSearchRequest', () => {
-    it('triggers a triggerSearchRequest only when there is a request id, a query, an action cause, and the request is made with another request than the last one', () => {
+    it('triggers a generateAnswer only when there is a request id, a query, an action cause, and the request is made with another request than the last one', () => {
       createGeneratedAnswer();
 
       const listener = engine.subscribe.mock.calls[0][0];
 
       // no request id, no call
       listener();
-      expect(triggerSearchRequest).not.toHaveBeenCalled();
+      expect(generateAnswer).not.toHaveBeenCalled();
 
       // first request id, call
       listener();
-      expect(triggerSearchRequest).toHaveBeenCalledTimes(1);
+      expect(generateAnswer).toHaveBeenCalledTimes(1);
 
       // same request id, no call
       listener();
-      expect(triggerSearchRequest).toHaveBeenCalledTimes(1);
+      expect(generateAnswer).toHaveBeenCalledTimes(1);
 
       // empty query, no call
       listener();
-      expect(triggerSearchRequest).toHaveBeenCalledTimes(1);
+      expect(generateAnswer).toHaveBeenCalledTimes(1);
 
       // new request id, call
       listener();
-      expect(triggerSearchRequest).toHaveBeenCalledTimes(2);
+      expect(generateAnswer).toHaveBeenCalledTimes(2);
 
       // new query, new request id, legacy mode, no action cause, call
       listener();
-      expect(triggerSearchRequest).toHaveBeenCalledTimes(3);
+      expect(generateAnswer).toHaveBeenCalledTimes(3);
 
       // new query, new request id, next mode, no action cause, no call
       listener();
-      expect(triggerSearchRequest).toHaveBeenCalledTimes(3);
+      expect(generateAnswer).toHaveBeenCalledTimes(3);
 
       // new query, new request id, next mode, with action cause, call
       listener();
-      expect(triggerSearchRequest).toHaveBeenCalledTimes(4);
+      expect(generateAnswer).toHaveBeenCalledTimes(4);
     });
   });
 
