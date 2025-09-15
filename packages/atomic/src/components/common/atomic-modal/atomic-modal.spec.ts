@@ -1,4 +1,4 @@
-import {page, userEvent} from '@vitest/browser/context';
+import {userEvent} from '@vitest/browser/context';
 import {html} from 'lit';
 import {beforeEach, describe, expect, it, vi} from 'vitest';
 import {AtomicModal} from './atomic-modal';
@@ -81,10 +81,6 @@ describe('atomic-modal', () => {
           footerWrapper: qs('footer-wrapper'),
           footer: qs('footer'),
         };
-      },
-      locators: {
-        backdrop: () => page.getByRole('dialog'),
-        dialog: () => page.getByRole('dialog'),
       },
     };
   };
