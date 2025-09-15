@@ -293,8 +293,12 @@ export class AtomicSearchInterface
 
   public disconnectedCallback() {
     super.disconnectedCallback();
-    this.unsubscribeUrlManager();
-    this.unsubscribeSearchStatus();
+    if (typeof this.unsubscribeUrlManager === 'function') {
+      this.unsubscribeUrlManager();
+    }
+    if (typeof this.unsubscribeSearchStatus === 'function') {
+      this.unsubscribeSearchStatus();
+    }
     window.removeEventListener('hashchange', this.onHashChange);
     this.removeEventListener(
       'atomic/initializeComponent',

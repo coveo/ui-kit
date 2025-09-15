@@ -977,7 +977,7 @@ describe('atomic-search-interface', () => {
   describe('URL management', () => {
     it('should replace state for first search when URL manager is active', async () => {
       const replaceStateSpy = vi.spyOn(history, 'replaceState');
-      const urlManagerSubscribe = vi.fn();
+      const urlManagerSubscribe = vi.fn().mockReturnValue(vi.fn());
       vi.mocked(headless.buildUrlManager).mockReturnValue({
         state: {fragment: 'new-fragment'},
         subscribe: urlManagerSubscribe,
@@ -990,7 +990,7 @@ describe('atomic-search-interface', () => {
           hasError: false,
           isLoading: false,
         },
-        subscribe: vi.fn(),
+        subscribe: vi.fn().mockReturnValue(vi.fn()),
       });
 
       const element = await setupElement({reflectStateInUrl: true});
@@ -1011,7 +1011,7 @@ describe('atomic-search-interface', () => {
 
     it('should push state for subsequent searches when URL manager is active', async () => {
       const pushStateSpy = vi.spyOn(history, 'pushState');
-      const urlManagerSubscribe = vi.fn();
+      const urlManagerSubscribe = vi.fn().mockReturnValue(vi.fn());
       vi.mocked(headless.buildUrlManager).mockReturnValue({
         state: {fragment: 'new-fragment'},
         subscribe: urlManagerSubscribe,
@@ -1024,7 +1024,7 @@ describe('atomic-search-interface', () => {
           hasError: false,
           isLoading: false,
         },
-        subscribe: vi.fn(),
+        subscribe: vi.fn().mockReturnValue(vi.fn()),
       });
 
       const element = await setupElement({reflectStateInUrl: true});
