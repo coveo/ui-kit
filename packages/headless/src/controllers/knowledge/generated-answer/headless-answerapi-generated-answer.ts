@@ -3,7 +3,6 @@ import {
   type AnswerEvaluationPOSTParams,
   answerEvaluation,
 } from '../../../api/knowledge/post-answer-evaluation.js';
-import {triggerSearchRequest} from '../../../api/knowledge/stream-answer-actions.js';
 import {
   answerApi,
   fetchAnswer,
@@ -15,6 +14,7 @@ import {warnIfUsingNextAnalyticsModeForServiceFeature} from '../../../app/engine
 import type {InsightEngine} from '../../../app/insight-engine/insight-engine.js';
 import type {SearchEngine} from '../../../app/search-engine/search-engine.js';
 import {
+  generateAnswer,
   resetAnswer,
   sendGeneratedAnswerFeedback,
   setCannotAnswer,
@@ -119,9 +119,7 @@ const subscribeToSearchRequest = (
     }
 
     lastTriggerParams = triggerParams;
-    engine.dispatch(
-      triggerSearchRequest({state, navigatorContext: engine.navigatorContext})
-    );
+    engine.dispatch(generateAnswer());
   };
 
   engine.subscribe(strictListener);
