@@ -7,6 +7,7 @@ import {errorGuard} from '@/src/decorators/error-guard';
 import type {InitializableComponent} from '@/src/decorators/types.js';
 import {watch} from '@/src/decorators/watch.js';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles.js';
+import {InitializeBindingsMixin} from '../../../mixins/bindings-mixin';
 import {listenOnce} from '../../../utils/event-utils.js';
 import {updateBreakpoints} from '../../../utils/replace-breakpoint.js';
 import {once, randomID} from '../../../utils/utils.js';
@@ -29,7 +30,7 @@ import type {AnyBindings} from '../interface/bindings.js';
 @customElement('atomic-modal')
 @withTailwindStyles
 export class AtomicModal
-  extends LitElement
+  extends InitializeBindingsMixin(LitElement)
   implements InitializableComponent<AnyBindings>
 {
   static styles = css`
