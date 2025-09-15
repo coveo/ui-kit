@@ -3319,7 +3319,7 @@ export declare interface AtomicResultsPerPage extends LitAtomicResultsPerPage {
 
 @ProxyCmp({
   inputs: ['fieldsToInclude', 'pipeline', 'searchHub', 'analytics', 'timezone', 'logLevel', 'language', 'reflectStateInUrl', 'scrollContainer', 'languageAssetsPath', 'iconAssetsPath', 'enableRelevanceInspector'],
-  methods: ['updateSearchHub', 'updatePipeline', 'toggleAnalytics', 'updateLanguage', 'updateIconAssetsPath', 'scrollToTop', 'closeRelevanceInspector', 'initialize', 'initializeWithSearchEngine', 'executeFirstSearch', 'updateSearchConfiguration', 'registerFieldsToInclude'],
+  methods: ['scrollToTop', 'closeRelevanceInspector', 'initialize', 'initializeWithSearchEngine', 'executeFirstSearch', 'updateSearchConfiguration', 'updateSearchHub', 'updatePipeline', 'toggleAnalytics', 'updateLanguage', 'updateIconAssetsPath', 'registerFieldsToInclude'],
   defineCustomElementFn: () => {customElements.get('atomic-search-interface') || customElements.define('atomic-search-interface', LitAtomicSearchInterface);}
 })
 @Component({
