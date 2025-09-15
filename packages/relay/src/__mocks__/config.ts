@@ -1,4 +1,5 @@
-import { ConfigManager, RelayConfig } from "../config/config";
+import { vi } from "vitest";
+import type { ConfigManager, RelayConfig } from "../config/config.js";
 
 export function createMockConfig(config?: Partial<RelayConfig>): RelayConfig {
   return {
@@ -14,7 +15,7 @@ export function createMockConfigManager(
 ): ConfigManager {
   return {
     get: () => createMockConfig(),
-    update: () => jest.fn(),
+    update: () => vi.fn(),
     ...manager,
   };
 }

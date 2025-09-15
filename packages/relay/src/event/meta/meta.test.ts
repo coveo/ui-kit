@@ -1,3 +1,4 @@
+import { vi } from "vitest";
 import { createMockClientIdManager } from "../../__mocks__/client-id.js";
 import { createMockEnvironment } from "../../__mocks__/environment.js";
 import { createMockConfig } from "../../__mocks__/config.js";
@@ -68,7 +69,8 @@ describe("createMeta", () => {
   });
 
   it("returns meta with the ts field, being the current timestamp", () => {
-    jest.useFakeTimers().setSystemTime(new Date("2023-08-15T00:00:00.000Z"));
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date("2023-08-15T00:00:00.000Z"));
 
     const specfiedtimeMeta = createMeta(
       "itemView",

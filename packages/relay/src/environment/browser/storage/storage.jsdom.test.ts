@@ -1,7 +1,3 @@
-/**
- * @jest-environment jsdom
- */
-
 import type { Storage } from "../../storage.js";
 import { cookieManager } from "./cookie.js";
 import { createBrowserStorage } from "./storage.js";

@@ -1,6 +1,5 @@
 /**
- * @jest-environment jsdom
- * @jest-environment-options {"url": "http://docs.foo.bar.com/tamtam"}
+ * @vitest-environment-options {"url": "http://docs.foo.bar.com/tamtam"}
  */
 
 import { cookieManager } from "./cookie";
@@ -26,6 +25,16 @@ describe("CookieManager", () => {
     expect(cookieManager.getItem(key)).toBe(null);
   });
 
+  it("cookie contains expected name-value pair", () => {
+    cookieManager.setItem(key, someData, 1000);
+
+    // Check that the cookie was set with the correct name-value pair
+    expect(document.cookie).toContain(`coveo_${key}=${someData}`);
+
+    // Verify our manager can retrieve it
+    expect(cookieManager.getItem(key)).toBe(someData);
+  });
+
   it("sets the cookie with the last two parts of the domain", () => {
     expect(window.location.hostname).toBe("docs.foo.bar.com");
     Object.defineProperty(document, "cookie", {
@@ -36,5 +45,17 @@ describe("CookieManager", () => {
     cookieManager.setItem(key, someData, 10000);
 
     expect(document.cookie).toContain("domain=bar.com");
+  });
+
+  it("sets a correct domain if there is only a single domain", () => {
+    Object.defineProperty(window, "location", {
+      value: {
+        hostname: "localhost",
+      },
+    });
+
+    cookieManager.setItem("key", "value", 10000);
+
+    expect(document.cookie).not.toContain("domain");
   });
 });

@@ -2,10 +2,11 @@
   "extends": "tsconfig/base.json",
   "compilerOptions": {
     "lib": ["ES2022", "DOM"],
-    "target": "ES2022"
+    "target": "ES2022",
+    "rootDir": "src",
+    "types": ["vitest/globals"]
   },
-  "include": ["**/*.ts"],
-  "exclude": ["node_modules", "lib"],
+  "include": ["src/**/*.ts"],
   "typedocOptions": {
     "entryPointStrategy": "expand",
     "json": "lib/docs/relay-docs.json",

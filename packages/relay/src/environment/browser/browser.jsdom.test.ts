@@ -1,16 +1,16 @@
 /**
- * @jest-environment jsdom
- * @jest-environment-options {"url": "https://www.patate.com/"}
+ * @vitest-environment-options {"url": "https://www.patate.com/recettes"}
  */
 
+import { vi } from "vitest";
 import { buildBrowserEnvironment } from "./browser.js";
 import { createMockEvent } from "../../__mocks__/event.js";
 
-jest.mock("uuid", () => ({
+vi.mock("uuid", () => ({
   v4: () => "2136b353-74be-42d7-904f-ea33a8f4a43c",
 }));
-const sendMessageSpy = jest.fn();
-jest.mock("@coveo/explorer-messenger", () => ({
+const sendMessageSpy = vi.fn();
+vi.mock("@coveo/explorer-messenger", () => ({
   createExplorerMessenger: () => ({ sendMessage: sendMessageSpy }),
 }));
 
@@ -25,7 +25,7 @@ describe("buildBrowserEnvironment", () => {
 
   beforeEach(() => {
     Object.defineProperty(navigator, "sendBeacon", {
-      value: jest.fn(() => true),
+      value: vi.fn(() => true),
     });
     sendMessageSpy.mockReset();
   });
@@ -64,8 +64,6 @@ describe("buildBrowserEnvironment", () => {
   });
 
   it("retrieves the location", () => {
-    window.history.replaceState({}, "", "recettes");
-
     expect(buildBrowserEnvironment().getLocation()).toBe(
       "https://www.patate.com/recettes",
     );
@@ -74,10 +72,14 @@ describe("buildBrowserEnvironment", () => {
   it("does not truncate the location to the 1024 character limit", () => {
     const limit = 1024;
     const location = "a".repeat(limit * 2);
-    window.history.replaceState({}, "", location);
+    Object.defineProperty(window, "location", {
+      value: {
+        href: location,
+      },
+    });
 
     expect(buildBrowserEnvironment().getLocation()).toHaveLength(
-      location.length + 23,
+      location.length,
     );
   });
 
@@ -95,7 +97,7 @@ describe("buildBrowserEnvironment", () => {
   });
 
   it("calls the Beacon API when using send", () => {
-    const beaconSpy = jest.fn(() => true);
+    const beaconSpy = vi.fn(() => true);
     Object.defineProperty(navigator, "sendBeacon", {
       value: beaconSpy,
     });
@@ -117,7 +119,7 @@ describe("buildBrowserEnvironment", () => {
 
   it("throws an error if the sendBeacon's response is false", () => {
     Object.defineProperty(navigator, "sendBeacon", {
-      value: jest.fn(() => false),
+      value: vi.fn(() => false),
     });
     expect(() =>
       buildBrowserEnvironment().send("", "", createMockEvent()),

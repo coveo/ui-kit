@@ -1,5 +1,7 @@
+import { vi } from "vitest";
+
 const createExplorerMessenger = () => {
-  const sendMessage = () => jest.fn();
+  const sendMessage = () => vi.fn();
   return { sendMessage };
 };
 

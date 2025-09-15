@@ -5,30 +5,33 @@
       "type": "node",
       "runtimeVersion": "20",
       "request": "launch",
-      "name": "Jest All",
-      "program": "${workspaceFolder}/packages/relay/node_modules/jest/bin/jest.js",
-      "args": ["--runInBand", "--config", "packages/relay/jest.config.js"],
+      "name": "Vitest All",
+      "program": "${workspaceFolder}/packages/relay/node_modules/vitest/vitest.mjs",
+      "args": ["run", "--config", "vitest.config.js"],
+      "cwd": "${workspaceFolder}/packages/relay",
       "console": "integratedTerminal",
       "internalConsoleOptions": "neverOpen",
       "windows": {
-        "program": "${workspaceFolder}/packages/relay/node_modules/jest/bin/jest.js"
+        "program": "${workspaceFolder}/packages/relay/node_modules/vitest/vitest.mjs"
       }
     },
     {
       "type": "node",
       "runtimeVersion": "20",
       "request": "launch",
-      "name": "Jest Current File",
-      "program": "${workspaceFolder}/packages/relay/node_modules/jest/bin/jest.js",
+      "name": "Vitest Current File",
+      "program": "${workspaceFolder}/packages/relay/node_modules/vitest/vitest.mjs",
       "args": [
+        "run",
         "${fileBasenameNoExtension}",
         "--config",
-        "packages/relay/jest.config.js"
+        "vitest.config.js"
       ],
+      "cwd": "${workspaceFolder}/packages/relay",
       "console": "integratedTerminal",
       "internalConsoleOptions": "neverOpen",
       "windows": {
-        "program": "${workspaceFolder}/packages/relay/node_modules/jest/bin/jest.js"
+        "program": "${workspaceFolder}/packages/relay/node_modules/vitest/vitest.mjs"
       }
     }
   ]

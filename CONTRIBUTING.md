@@ -8,7 +8,7 @@ Relay uses [pnpm](https://pnpm.io) as a package manager, see its [installation i
 
 ## Tests
 
-Tests are implemented using [jest](https://jestjs.io). Run `pnpm test` to run unit tests.
+Unit tests are implemented using [vitest](https://vitest.dev/) in the node environment. Run `pnpm test` to run unit tests. Please stick to the node environment for default unit tests, unless you need browser environment specific unit tests. Use the `.jsdom.test.ts` extension for those tests.
 
 ## Javascript coding guidelines
 

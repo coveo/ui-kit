@@ -1,11 +1,8 @@
-/**
- * @jest-environment jsdom
- */
-
+import { vi } from "vitest";
 import { createMockConfig } from "./__mocks__/config.js";
 import { createRelay } from "./relay.js";
 
-jest.mock("uuid", () => ({
+vi.mock("uuid", () => ({
   v4: () => "da3248bd-48f3-4dbf-b898-6fee32069b53",
 }));
 

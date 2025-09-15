@@ -1,4 +1,4 @@
-import { ClientIdManager } from "../client-id/client-id";
+import type { ClientIdManager } from "../client-id/client-id.js";
 
 export function createMockClientIdManager(
   clientIdManager?: Partial<ClientIdManager>,

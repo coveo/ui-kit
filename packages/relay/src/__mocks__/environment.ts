@@ -1,31 +1,29 @@
-import { Environment } from "../environment/environment.js";
-import { EnvironmentManager } from "../environment/manager/manager.js";
+import { vi } from "vitest";
+import type { Environment } from "../environment/environment.js";
+import type { EnvironmentManager } from "../environment/manager/manager.js";
 import { createMockStorage } from "./storage.js";
 
-const defaultEnvironment: Environment = {
+const mockEnvironment: Environment = {
   runtime: "null",
-  send: jest.fn(),
-  getReferrer: jest.fn(),
-  getLocation: jest.fn(),
-  getUserAgent: jest.fn(),
-  generateUUID: jest.fn(),
+  send: vi.fn(),
+  getReferrer: vi.fn(),
+  getLocation: vi.fn(),
+  getUserAgent: vi.fn(),
+  generateUUID: vi.fn(),
   storage: createMockStorage(),
 };
 
 export function createMockEnvironment(
-  environment?: Partial<Environment>,
+  environment: Partial<Environment> = {},
 ): Environment {
-  return {
-    ...defaultEnvironment,
-    ...environment,
-  };
+  return { ...mockEnvironment, ...environment };
 }
 
 export function createMockEnvironmentManager(
-  environmentManager?: Partial<EnvironmentManager>,
+  manager: Partial<EnvironmentManager> = {},
 ): EnvironmentManager {
   return {
     get: () => createMockEnvironment(),
-    ...environmentManager,
+    ...manager,
   };
 }

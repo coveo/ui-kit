@@ -1,3 +1,4 @@
+import { vi } from "vitest";
 import { createMockEnvironment } from "../__mocks__/environment.js";
 import { createMockEvent } from "../__mocks__/event.js";
 import { createMockConfig } from "../__mocks__/config.js";
@@ -47,7 +48,7 @@ describe("emit", () => {
   });
 
   it("does not call the environment send function when in disabled mode", () => {
-    const sendSpy = jest.fn();
+    const sendSpy = vi.fn();
     const environment = createMockEnvironment({ send: sendSpy });
     params.config.mode = "disabled";
     params.environment = environment;
