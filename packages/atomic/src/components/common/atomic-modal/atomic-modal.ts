@@ -285,13 +285,13 @@ export class AtomicModal
   private addModalOpenedClasses() {
     const modalOpenedClass = 'atomic-modal-opened';
     document.body.classList.add(modalOpenedClass);
-    this.bindings?.interfaceElement.classList.add(modalOpenedClass);
+    this.bindings?.interfaceElement?.classList?.add(modalOpenedClass);
   }
 
   private removeModalOpenedClasses() {
     const modalOpenedClass = 'atomic-modal-opened';
     document.body.classList.remove(modalOpenedClass);
-    this.bindings?.interfaceElement.classList.remove(modalOpenedClass);
+    this.bindings?.interfaceElement?.classList?.remove(modalOpenedClass);
   }
 
   private setFocusTrapActive(active: boolean) {
