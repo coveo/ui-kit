@@ -141,6 +141,10 @@ export class AtomicSearchInterface
   @property({type: String, attribute: 'search-hub', reflect: true})
   public searchHub?: string;
 
+  // TODO - KIT-4994: Add disableAnalytics property that defaults to false.
+
+  // TODO - KIT-4994: Deprecate in favor of disableAnalytics property.
+  // TODO - (v4) KIT-4990: Remove.
   /**
    * Whether analytics should be enabled.
    */
@@ -180,8 +184,10 @@ export class AtomicSearchInterface
    */
   @property({type: Object, attribute: false}) public engine?: SearchEngine;
 
+  // TODO - (v4) KIT-4823: Remove.
   /**
    * Whether the state should be reflected in the URL parameters.
+   * @deprecated - replaced by `disable-state-reflection-in-url` (this defaults to `true`, while the replacement defaults to `false`).
    */
   @property({
     type: Boolean,
@@ -190,6 +196,16 @@ export class AtomicSearchInterface
     converter: booleanConverter,
   })
   reflectStateInUrl = true;
+
+  /**
+   * Disable state reflection in the URL parameters.
+   */
+  @property({
+    type: Boolean,
+    attribute: 'disable-state-reflection-in-url',
+    reflect: true,
+  })
+  disableStateReflectionInUrl = false;
 
   /**
    * The CSS selector for the container where the interface will scroll back to.
@@ -295,6 +311,7 @@ export class AtomicSearchInterface
     this.interfaceController.onComponentInitializing(event);
   };
 
+  // TODO - (v4) KIT-4991: Make private.
   public scrollToTop() {
     const scrollContainerElement = document.querySelector(this.scrollContainer);
     if (!scrollContainerElement) {
@@ -455,17 +472,6 @@ export class AtomicSearchInterface
   }
 
   private initFieldsToInclude() {
-    console.log('fieldsToInclude type:', typeof this.fieldsToInclude);
-    console.log('fieldsToInclude value:', this.fieldsToInclude);
-    console.log(
-      'fieldsToInclude isArray:',
-      Array.isArray(this.fieldsToInclude)
-    );
-    console.log(
-      'EcommerceDefaultFieldsToInclude:',
-      EcommerceDefaultFieldsToInclude
-    );
-
     // Handle case where fieldsToInclude might still be a string
     let fieldsArray: string[];
     if (typeof this.fieldsToInclude === 'string') {
