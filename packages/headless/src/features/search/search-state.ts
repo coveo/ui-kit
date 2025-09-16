@@ -53,6 +53,15 @@ export interface SearchState {
    * The action that triggered the search request.
    */
   searchAction: SearchAction | undefined;
+  /**
+   * Signals that a generated answer can be triggered for the current search.
+   *
+   * - Set to `true` at the start of `executeSearch`, after the action cause is set,
+   *   and reset to `false` when the search completes.
+   * - Allows subscribers (e.g., generated answer controller) to know when
+   *   it’s appropriate to dispatch a `triggerSearchRequest`.
+   */
+  readyToGenerateAnswer: boolean;
 }
 
 export function emptyQuestionAnswer() {
@@ -96,5 +105,6 @@ export function getSearchInitialState(): SearchState {
     questionAnswer: emptyQuestionAnswer(),
     extendedResults: {},
     searchAction: undefined,
+    readyToGenerateAnswer: false,
   };
 }

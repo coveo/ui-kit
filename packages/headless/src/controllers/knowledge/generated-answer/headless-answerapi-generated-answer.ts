@@ -113,7 +113,7 @@ const subscribeToSearchRequest = (
       triggerParams.q.length === 0 ||
       triggerParams.requestId.length === 0 ||
       triggerParams.requestId === lastTriggerParams.requestId ||
-      !triggerParams.actionCause // We need to wait for the action cause to be set
+      !triggerParams.readyToGenerateAnswer
     ) {
       return;
     }

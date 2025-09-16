@@ -3,6 +3,8 @@ import {SearchObject} from '../../../../../../playwright/page-object/searchObjec
 import {
   searchRequestRegex,
   insightSearchRequestRegex,
+  rgaGenerateRequestRegex,
+  insightRgaGenerateRequestRegex,
 } from '../../../../../../playwright/utils/requests';
 import {InsightSetupObject} from '../../../../../../playwright/page-object/insightSetupObject';
 import {useCaseEnum} from '../../../../../../playwright/utils/useCase';
@@ -56,7 +58,8 @@ export const testSearch =
         page,
         data.streamId,
         analytics,
-        !!options.answerConfigurationId
+        !!options.answerConfigurationId,
+        rgaGenerateRequestRegex
       );
 
       const streamingUrl = options.answerConfigurationId
@@ -74,6 +77,10 @@ export const testSearch =
 
       generatedAnswerObject.streamEndAnalyticRequestPromise =
         generatedAnswerObject.waitForStreamEndAnalytics();
+      if (!!options.answerConfigurationId) {
+        generatedAnswerObject.generateRequestPromise =
+          generatedAnswerObject.waitForGenerateRequest();
+      }
 
       await search.fillSearchInput(exampleQuery);
       await search.mockSearchWithGenerativeQuestionAnsweringId(data.streamId);
@@ -112,7 +119,8 @@ export const testInsight =
         page,
         data.streamId,
         analytics,
-        !!options.answerConfigurationId
+        !!options.answerConfigurationId,
+        insightRgaGenerateRequestRegex
       );
 
       const streamingUrl = options.answerConfigurationId
@@ -134,6 +142,10 @@ export const testInsight =
       await search.mockSearchWithGenerativeQuestionAnsweringId(data.streamId);
       generatedAnswerObject.streamEndAnalyticRequestPromise =
         generatedAnswerObject.waitForStreamEndAnalytics();
+      if (!!options.answerConfigurationId) {
+        generatedAnswerObject.generateRequestPromise =
+          generatedAnswerObject.waitForGenerateRequest();
+      }
 
       await search.fillSearchInput(exampleQuery);
       await search.performSearch();

@@ -2,6 +2,7 @@ import {answerEvaluation} from '../../../api/knowledge/post-answer-evaluation.js
 import {
   answerApi,
   fetchAnswer,
+  selectAnswerTriggerParams,
 } from '../../../api/knowledge/stream-answer-api.js';
 import type {StreamAnswerAPIState} from '../../../api/knowledge/stream-answer-api-state.js';
 import {getConfigurationInitialState} from '../../../features/configuration/configuration-state.js';
@@ -36,48 +37,62 @@ vi.mock(
 vi.mock('../../../features/search/search-actions');
 vi.mock('../../../api/knowledge/stream-answer-actions.js');
 
+// vi.mock('../../../api/knowledge/stream-answer-api', async () => {
+//   const originalStreamAnswerApi = await vi.importActual(
+//     '../../../api/knowledge/stream-answer-api'
+//   );
+//   const queryCounter = {count: 0};
+//   const queries = [
+//     {q: '', requestId: ''},
+//     {q: 'this est une question', requestId: '12'},
+//     {q: 'this est une another question', requestId: '12'},
+//     {q: '', requestId: '34'},
+//     {q: 'this est une yet another question', requestId: '56'},
+//     {
+//       q: 'this est une question in legacy mode without action cause',
+//       requestId: '78',
+//       analyticsMode: 'legacy',
+//     },
+//     {
+//       q: 'this est une question in next mode without action cause',
+//       requestId: '7822',
+//       analyticsMode: 'next',
+//       actionCause: '',
+//     },
+//     {
+//       q: 'this est une question in next mode with an action cause',
+//       requestId: '781',
+//       analyticsMode: 'next',
+//       actionCause: 'searchboxSubmit',
+//     },
+//   ];
+//   return {
+//     ...originalStreamAnswerApi,
+//     fetchAnswer: vi.fn(),
+//     selectAnswer: () => ({
+//       data: {answer: 'This est une answer', answerId: '12345_6'},
+//     }),
+//     selectAnswerTriggerParams: () => {
+//       const query = {...queries[queryCounter.count]};
+//       queryCounter.count++;
+//       return query;
+//     },
+//   };
+// });
 vi.mock('../../../api/knowledge/stream-answer-api', async () => {
   const originalStreamAnswerApi = await vi.importActual(
     '../../../api/knowledge/stream-answer-api'
   );
-  const queryCounter = {count: 0};
-  const queries = [
-    {q: '', requestId: ''},
-    {q: 'this est une question', requestId: '12'},
-    {q: 'this est une another question', requestId: '12'},
-    {q: '', requestId: '34'},
-    {q: 'this est une yet another question', requestId: '56'},
-    {
-      q: 'this est une question in legacy mode without action cause',
-      requestId: '78',
-      analyticsMode: 'legacy',
-    },
-    {
-      q: 'this est une question in next mode without action cause',
-      requestId: '7822',
-      analyticsMode: 'next',
-      actionCause: '',
-    },
-    {
-      q: 'this est une question in next mode with an action cause',
-      requestId: '781',
-      analyticsMode: 'next',
-      actionCause: 'searchboxSubmit',
-    },
-  ];
   return {
     ...originalStreamAnswerApi,
     fetchAnswer: vi.fn(),
     selectAnswer: () => ({
       data: {answer: 'This est une answer', answerId: '12345_6'},
     }),
-    selectAnswerTriggerParams: () => {
-      const query = {...queries[queryCounter.count]};
-      queryCounter.count++;
-      return query;
-    },
+    selectAnswerTriggerParams: vi.fn(),
   };
 });
+
 vi.mock('../../../api/knowledge/post-answer-evaluation', () => ({
   answerEvaluation: {
     endpoints: {
@@ -214,42 +229,192 @@ describe('knowledge-generated-answer', () => {
   });
 
   describe('subscribeToSearchRequest', () => {
-    it('triggers a generateAnswer only when there is a request id, a query, an action cause, and the request is made with another request than the last one', () => {
+    const mockSelectAnswerTriggerParams = vi.mocked(selectAnswerTriggerParams);
+    const mockGenerateAnswer = vi.mocked(generateAnswer);
+    let listener: () => void;
+
+    beforeEach(() => {
+      vi.clearAllMocks();
       createGeneratedAnswer();
+      listener = engine.subscribe.mock.calls[0][0];
+    });
 
-      const listener = engine.subscribe.mock.calls[0][0];
+    it('should not trigger generatedAnswer when there is no request id', () => {
+      mockSelectAnswerTriggerParams.mockReturnValue({
+        q: '',
+        requestId: '',
+        cannotAnswer: false,
+        analyticsMode: 'legacy',
+        actionCause: 'searchboxSubmit',
+        readyToGenerateAnswer: false,
+      });
 
-      // no request id, no call
       listener();
-      expect(generateAnswer).not.toHaveBeenCalled();
 
-      // first request id, call
-      listener();
-      expect(generateAnswer).toHaveBeenCalledTimes(1);
+      expect(mockGenerateAnswer).not.toHaveBeenCalled();
+    });
 
-      // same request id, no call
-      listener();
-      expect(generateAnswer).toHaveBeenCalledTimes(1);
+    describe('when there is a request id and query', () => {
+      it('should trigger generateAnswer on first valid request', () => {
+        mockSelectAnswerTriggerParams
+          .mockReturnValueOnce({
+            q: '',
+            requestId: '',
+            cannotAnswer: false,
+            analyticsMode: 'legacy',
+            actionCause: 'searchboxSubmit',
+            readyToGenerateAnswer: false,
+          })
+          .mockReturnValueOnce({
+            q: 'this est une question',
+            requestId: '12',
+            cannotAnswer: false,
+            analyticsMode: 'legacy',
+            actionCause: 'searchboxSubmit',
+            readyToGenerateAnswer: true,
+          });
 
-      // empty query, no call
-      listener();
-      expect(generateAnswer).toHaveBeenCalledTimes(1);
+        listener(); // First call - initializes lastTriggerParams with empty values
+        listener(); // Second call - triggers generateAnswer with valid request
 
-      // new request id, call
-      listener();
-      expect(generateAnswer).toHaveBeenCalledTimes(2);
+        expect(mockGenerateAnswer).toHaveBeenCalledTimes(1);
+      });
 
-      // new query, new request id, legacy mode, no action cause, call
-      listener();
-      expect(generateAnswer).toHaveBeenCalledTimes(3);
+      it('should not trigger generateAnswer for the same request id', () => {
+        mockSelectAnswerTriggerParams
+          .mockReturnValueOnce({
+            q: '',
+            requestId: '',
+            cannotAnswer: false,
+            analyticsMode: 'legacy',
+            actionCause: 'searchboxSubmit',
+            readyToGenerateAnswer: true,
+          })
+          .mockReturnValueOnce({
+            q: 'this est une question',
+            requestId: '12',
+            cannotAnswer: false,
+            analyticsMode: 'legacy',
+            actionCause: 'searchboxSubmit',
+            readyToGenerateAnswer: true,
+          })
+          .mockReturnValueOnce({
+            q: 'this est une another question',
+            requestId: '12',
+            cannotAnswer: false,
+            analyticsMode: 'legacy',
+            actionCause: 'searchboxSubmit',
+            readyToGenerateAnswer: true,
+          });
 
-      // new query, new request id, next mode, no action cause, no call
-      listener();
-      expect(generateAnswer).toHaveBeenCalledTimes(3);
+        listener(); // First call - initialization
+        listener(); // Second call - first valid request with id '12'
+        listener(); // Third call - same request id '12', should not trigger
 
-      // new query, new request id, next mode, with action cause, call
-      listener();
-      expect(generateAnswer).toHaveBeenCalledTimes(4);
+        expect(mockGenerateAnswer).toHaveBeenCalledTimes(1);
+      });
+
+      it('should trigger generateAnswer for new request id', () => {
+        mockSelectAnswerTriggerParams
+          .mockReturnValueOnce({
+            q: '',
+            requestId: '',
+            cannotAnswer: false,
+            analyticsMode: 'legacy',
+            actionCause: 'searchboxSubmit',
+            readyToGenerateAnswer: true,
+          })
+          .mockReturnValueOnce({
+            q: 'this est une question',
+            requestId: '12',
+            cannotAnswer: false,
+            analyticsMode: 'legacy',
+            actionCause: 'searchboxSubmit',
+            readyToGenerateAnswer: true,
+          })
+          .mockReturnValueOnce({
+            q: 'this est une yet another question',
+            requestId: '56',
+            cannotAnswer: false,
+            analyticsMode: 'legacy',
+            actionCause: 'searchboxSubmit',
+            readyToGenerateAnswer: true,
+          });
+
+        listener(); // First call - initialization
+        listener(); // Second call - first valid request with id '12'
+        listener(); // Third call - new request id '56'
+
+        expect(mockGenerateAnswer).toHaveBeenCalledTimes(2);
+      });
+    });
+
+    it('should not trigger generateAnswer even with new request id when query is empty', () => {
+      mockSelectAnswerTriggerParams
+        .mockReturnValueOnce({
+          q: '',
+          requestId: '',
+          cannotAnswer: false,
+          analyticsMode: 'legacy',
+          actionCause: 'searchboxSubmit',
+          readyToGenerateAnswer: true,
+        })
+        .mockReturnValueOnce({
+          q: 'this est une question',
+          requestId: '12',
+          cannotAnswer: false,
+          analyticsMode: 'legacy',
+          actionCause: 'searchboxSubmit',
+          readyToGenerateAnswer: true,
+        })
+        .mockReturnValueOnce({
+          q: '',
+          requestId: '34',
+          cannotAnswer: false,
+          analyticsMode: 'legacy',
+          actionCause: 'searchboxSubmit',
+          readyToGenerateAnswer: true,
+        });
+
+      listener(); // First call - initialization
+      listener(); // Second call with valid query
+      listener(); // Third call with empty query but new request id
+
+      expect(mockGenerateAnswer).toHaveBeenCalledTimes(1);
+    });
+
+    it('should only trigger generateAnswer when readyToGenerateAnswer is true', () => {
+      mockSelectAnswerTriggerParams
+        .mockReturnValueOnce({
+          q: '',
+          requestId: '',
+          cannotAnswer: false,
+          analyticsMode: 'legacy',
+          actionCause: 'searchboxSubmit',
+          readyToGenerateAnswer: false,
+        })
+        .mockReturnValueOnce({
+          q: 'this est une question',
+          requestId: '12',
+          cannotAnswer: false,
+          analyticsMode: 'legacy',
+          actionCause: 'searchboxSubmit',
+          readyToGenerateAnswer: true,
+        })
+        .mockReturnValueOnce({
+          q: 'foo',
+          requestId: '34',
+          cannotAnswer: false,
+          analyticsMode: 'legacy',
+          actionCause: 'searchboxSubmit',
+          readyToGenerateAnswer: false,
+        });
+
+      listener(); // First call - initialization
+      listener(); // Second call with valid query and readyToGenerateAnswer true
+      listener(); // Third call with valid query but readyToGenerateAnswer false
+
+      expect(mockGenerateAnswer).toHaveBeenCalledTimes(1);
     });
   });
 

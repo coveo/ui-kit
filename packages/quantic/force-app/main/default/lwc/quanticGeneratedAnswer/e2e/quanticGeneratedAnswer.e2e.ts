@@ -47,8 +47,21 @@ useCaseTestCases.forEach((useCase) => {
               }) => {
                 await generatedAnswer.streamEndAnalyticRequestPromise;
               });
-            });
 
+              if (config.options.answerConfigurationId) {
+                test('should send searchboxSubmit as the action cause in the analytics payload of the generate request', async ({
+                  generatedAnswer,
+                }) => {
+                  await generatedAnswer.streamEndAnalyticRequestPromise;
+                  const generateRequest =
+                    await generatedAnswer.generateRequestPromise;
+                  const generateRequestBody = generateRequest.postDataJSON();
+                  expect(generateRequestBody.analytics.actionCause).toBe(
+                    'searchboxSubmit'
+                  );
+                });
+              }
+            });
             test.describe('when providing positive feedback', () => {
               test('should send positive feedback analytics containing all details', async ({
                 generatedAnswer,

@@ -1,9 +1,10 @@
 /** biome-ignore-all lint/suspicious/noExplicitAny: Just tests */
 import {buildMockNavigatorContextProvider} from '../../../test/mock-navigator-context-provider.js';
 import type {EventSourceMessage} from '../../../utils/fetch-event-source/parse.js';
+import type {GeneratedAnswerStream} from '../generated-answer-stream.js';
 import {
   constructAnswerQueryParams,
-  type GeneratedAnswerStream,
+  selectAnswerTriggerParams,
   updateCacheWithEvent,
 } from '../stream-answer-api.js';
 import {
@@ -355,6 +356,21 @@ describe('#streamAnswerApi', () => {
       expect(draft).toHaveProperty('generated', false);
       expect(draft).toHaveProperty('isStreaming', false);
       expect(dispatch).toHaveBeenCalled();
+    });
+  });
+
+  describe('selectAnswerTriggerParams', () => {
+    it('should return the correct trigger parameters', () => {
+      const result = selectAnswerTriggerParams(streamAnswerAPIStateMock);
+
+      expect(result).toEqual({
+        q: 'what is the hardest wood',
+        requestId: 'uyb6Ti2pkk5whKHzOiX58',
+        cannotAnswer: false,
+        analyticsMode: 'next',
+        actionCause: 'searchboxSubmit',
+        readyToGenerateAnswer: true,
+      });
     });
   });
 });

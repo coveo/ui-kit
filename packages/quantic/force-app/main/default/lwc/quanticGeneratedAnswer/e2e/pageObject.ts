@@ -20,13 +20,15 @@ export class GeneratedAnswerObject {
     private page: Page,
     private streamId: string,
     private analytics: AnalyticsObject,
-    private answerApiEnabled: boolean
+    private answerApiEnabled: boolean,
+    private generateRequestRegex: RegExp,
   ) {
     this.page = page;
     this.streamId = streamId;
     this.analytics = analytics;
     this.analyticsMode = this.analytics.analyticsMode;
     this.answerApiEnabled = answerApiEnabled;
+    this.generateRequestRegex = generateRequestRegex;
   }
 
   get likeButton(): Locator {
@@ -127,6 +129,10 @@ export class GeneratedAnswerObject {
 
   async clickToggleButton(): Promise<void> {
     await this.toggleButton.click();
+  }
+
+  async waitForGenerateRequest(): Promise<Request> {
+    return this.page.waitForRequest(this.generateRequestRegex);
   }
 
   async waitForStreamEndAnalytics(): Promise<Request | boolean> {
@@ -394,4 +400,5 @@ export class GeneratedAnswerObject {
   }
 
   streamEndAnalyticRequestPromise!: Promise<boolean | Request>;
+  generateRequestPromise!: Promise<Request> ;
 }

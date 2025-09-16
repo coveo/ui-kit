@@ -104,7 +104,9 @@ export const updateSearchAction = createAction<SearchAction | undefined>(
   'search/updateSearchAction'
 );
 
-export const resetSearchAction = createAction('search/resetSearchAction');
+export const setReadyToGenerateAnswerAction = createAction<boolean>(
+  'search/setReadyToGenerateAnswerAction'
+);
 
 export const executeSearch = createAsyncThunk<
   ExecuteSearchThunkReturn,
@@ -115,8 +117,10 @@ export const executeSearch = createAsyncThunk<
   async (searchAction: TransitiveSearchAction, config) => {
     // Set the search action cause in the state before executing the request.
     // This makes it available for subscribers (e.g., Generated Answer controller)
-    // so they can know *why* this search is being triggered
+    // After setting the cause, mark the state as ready to generate an answer.
+    // This guarantees that answer generation only happens once the cause is set.
     config.dispatch(updateSearchAction(searchAction.next));
+    config.dispatch(setReadyToGenerateAnswerAction(true));
 
     const state = config.getState();
     if (state.configuration.analytics.analyticsMode === 'legacy') {
@@ -141,10 +145,10 @@ export const executeSearch = createAsyncThunk<
       origin: 'mainSearch',
     });
 
-    // Reset the action cause after the request finishes.
-    // This ensures the next search starts from a clean state,
-    // and allows listeners to detect when a *new* cause is set.
-    config.dispatch(resetSearchAction());
+    // Clear the generate-answer readiness flag once the request completes.
+    // This prevents accidental reuse of the previous cause and ensures that
+    // the next search will explicitly set a new cause before answers can generate.
+    config.dispatch(setReadyToGenerateAnswerAction(false));
 
     return await processor.process(fetched);
   }
@@ -157,8 +161,10 @@ export const fetchPage = createAsyncThunk<
 >('search/fetchPage', async (searchAction: TransitiveSearchAction, config) => {
   // Set the search action cause in the state before executing the request.
   // This makes it available for subscribers (e.g., Generated Answer controller)
-  // so they can know *why* this search is being triggered
+  // After setting the cause, mark the state as ready to generate an answer.
+  // This guarantees that answer generation only happens once the cause is set.
   config.dispatch(updateSearchAction(searchAction.next));
+  config.dispatch(setReadyToGenerateAnswerAction(true));
 
   const state = config.getState();
   addEntryInActionsHistory(state);
@@ -184,10 +190,10 @@ export const fetchPage = createAsyncThunk<
   );
   const fetched = await processor.fetchFromAPI(request, {origin: 'mainSearch'});
 
-  // Reset the action cause after the request finishes.
-  // This ensures the next search starts from a clean state,
-  // and allows listeners to detect when a *new* cause is set.
-  config.dispatch(resetSearchAction());
+  // Clear the generate-answer readiness flag once the request completes.
+  // This prevents accidental reuse of the previous cause and ensures that
+  // the next search will explicitly set a new cause before answers can generate.
+  config.dispatch(setReadyToGenerateAnswerAction(false));
 
   return await processor.process(fetched);
 });
@@ -204,8 +210,10 @@ export const fetchMoreResults = createAsyncThunk<
 
   // Set the search action cause in the state before executing the request.
   // This makes it available for subscribers (e.g., Generated Answer controller)
-  // so they can know *why* this search is being triggered
+  // After setting the cause, mark the state as ready to generate an answer.
+  // This guarantees that answer generation only happens once the cause is set.
   config.dispatch(updateSearchAction(analyticsAction));
+  config.dispatch(setReadyToGenerateAnswerAction(true));
 
   const state = config.getState();
   if (state.configuration.analytics.analyticsMode === 'legacy') {
@@ -225,6 +233,11 @@ export const fetchMoreResults = createAsyncThunk<
     analyticsAction
   );
   const fetched = await processor.fetchFromAPI(request, {origin: 'mainSearch'});
+
+  // Clear the generate-answer readiness flag once the request completes.
+  // This prevents accidental reuse of the previous cause and ensures that
+  // the next search will explicitly set a new cause before answers can generate.
+  config.dispatch(setReadyToGenerateAnswerAction(false));
 
   return await processor.process(fetched);
 });

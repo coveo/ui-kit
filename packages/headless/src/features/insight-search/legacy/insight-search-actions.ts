@@ -2,6 +2,7 @@ import {createAsyncThunk} from '@reduxjs/toolkit';
 import type {AsyncThunkInsightOptions} from '../../../api/service/insight/insight-api-client.js';
 import type {InsightAction} from '../../analytics/analytics-utils.js';
 import type {ExecuteSearchThunkReturn} from '../../search/legacy/search-actions.js';
+import {setReadyToGenerateAnswerAction} from '../../search/search-actions.js';
 import {
   addEntryInActionsHistory,
   type StateNeededByExecuteSearch,
@@ -43,6 +44,11 @@ export async function legacyExecuteSearch(
   );
   const fetched = await processor.fetchFromAPI(mappedRequest);
 
+  // Clear the generate-answer readiness flag once the request completes.
+  // This prevents accidental reuse of the previous cause and ensures that
+  // the next search will explicitly set a new cause before answers can generate.
+  config.dispatch(setReadyToGenerateAnswerAction(false));
+
   return await processor.process(fetched, mappedRequest);
 }
 
@@ -75,6 +81,11 @@ export async function legacyFetchPage(
   );
   const fetched = await processor.fetchFromAPI(mappedRequest);
 
+  // Clear the generate-answer readiness flag once the request completes.
+  // This prevents accidental reuse of the previous cause and ensures that
+  // the next search will explicitly set a new cause before answers can generate.
+  config.dispatch(setReadyToGenerateAnswerAction(false));
+
   return await processor.process(fetched, mappedRequest);
 }
 
@@ -103,6 +114,11 @@ export async function legacyFetchMoreResults(
     eventDescription
   );
   const fetched = await processor.fetchFromAPI(mappedRequest);
+
+  // Clear the generate-answer readiness flag once the request completes.
+  // This prevents accidental reuse of the previous cause and ensures that
+  // the next search will explicitly set a new cause before answers can generate.
+  config.dispatch(setReadyToGenerateAnswerAction(false));
 
   return await processor.process(fetched, mappedRequest);
 }
