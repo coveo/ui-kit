@@ -44,7 +44,7 @@ describe('Category Facet Test Suites', () => {
       new TestFixture().with(addCategoryFacet()).init();
     }
 
-    describe.skip('verify rendering', () => {
+    describe('verify rendering', () => {
       beforeEach(setupWithDefaultSettings);
 
       CommonAssertions.assertAccessibility(categoryFacetComponent);
@@ -84,7 +84,7 @@ describe('Category Facet Test Suites', () => {
       });
     });
 
-    describe.skip('when selecting a value to go deeper one level (2nd level of the dataset)', () => {
+    describe('when selecting a value to go deeper one level (2nd level of the dataset)', () => {
       function setupGoDeeperOneLevel() {
         setupWithDefaultSettings();
         selectChildValueAt(canadaHierarchyIndex[0]);
@@ -92,7 +92,7 @@ describe('Category Facet Test Suites', () => {
 
       const selectedPath = canadaHierarchy.slice(0, 1);
 
-      describe.skip('verify rendering', () => {
+      describe('verify rendering', () => {
         beforeEach(setupGoDeeperOneLevel);
 
         CommonAssertions.assertAccessibility(categoryFacetComponent);
@@ -115,7 +115,7 @@ describe('Category Facet Test Suites', () => {
         );
         CategoryFacetAssertions.assertPathInUrl(selectedPath);
 
-        describe.skip('when collapsing the facet', () => {
+        describe('when collapsing the facet', () => {
           beforeEach(() => {
             CategoryFacetSelectors.labelButton().click();
           });
@@ -130,18 +130,18 @@ describe('Category Facet Test Suites', () => {
         });
       });
 
-      describe.skip('verify analytics', () => {
+      describe('verify analytics', () => {
         beforeEach(setupGoDeeperOneLevel);
         CategoryFacetAssertions.assertLogFacetSelect(selectedPath);
       });
 
-      describe.skip('when selecting the "Show more" button', () => {
+      describe('when selecting the "Show more" button', () => {
         beforeEach(() => {
           setupGoDeeperOneLevel();
           pressShowMore(CategoryFacetSelectors);
         });
 
-        describe.skip('verify rendering', () => {
+        describe('verify rendering', () => {
           CategoryFacetAssertions.assertNumberOfChildValues(
             defaultNumberOfValues * 2
           );
@@ -151,16 +151,16 @@ describe('Category Facet Test Suites', () => {
           );
         });
 
-        describe.skip('verify analytics', () => {
+        describe('verify analytics', () => {
           CategoryFacetAssertions.assertLogFacetShowMore();
         });
 
-        describe.skip('when selecting the "Show less" button', () => {
+        describe('when selecting the "Show less" button', () => {
           beforeEach(() => {
             pressShowLess(CategoryFacetSelectors);
           });
 
-          describe.skip('verify rendering', () => {
+          describe('verify rendering', () => {
             CategoryFacetAssertions.assertNumberOfChildValues(
               defaultNumberOfValues
             );
@@ -170,48 +170,48 @@ describe('Category Facet Test Suites', () => {
             );
           });
 
-          describe.skip('verify analytics', () => {
+          describe('verify analytics', () => {
             CategoryFacetAssertions.assertLogFacetShowLess();
           });
         });
       });
 
-      describe.skip('when selecting the "All Categories" button', () => {
+      describe('when selecting the "All Categories" button', () => {
         function setupClear() {
           setupGoDeeperOneLevel();
           pressAllCategoriesButton();
         }
         beforeEach(setupClear);
-        describe.skip('verify rendering', () => {
+        describe('verify rendering', () => {
           CategoryFacetAssertions.assertDisplayAllCategoriesButton(false);
           CategoryFacetAssertions.assertNumberOfParentValues(0);
           CategoryFacetAssertions.assertNoPathInUrl();
         });
 
-        describe.skip('verify analytics', () => {
+        describe('verify analytics', () => {
           CategoryFacetAssertions.assertLogClearFacetValues();
         });
       });
 
-      describe.skip('when clicking the active value', () => {
+      describe('when clicking the active value', () => {
         function setupClear() {
           setupGoDeeperOneLevel();
           pressActiveParent();
         }
         beforeEach(setupClear);
-        describe.skip('verify rendering', () => {
+        describe('verify rendering', () => {
           CategoryFacetAssertions.assertDisplayAllCategoriesButton(false);
           CategoryFacetAssertions.assertNumberOfParentValues(0);
           CategoryFacetAssertions.assertNoPathInUrl();
         });
 
-        describe.skip('verify analytics', () => {
+        describe('verify analytics', () => {
           CategoryFacetAssertions.assertLogClearFacetValues();
         });
       });
     });
 
-    describe.skip('when selecting values subsequently to go deepeer three level', () => {
+    describe('when selecting values subsequently to go deepeer three level', () => {
       beforeEach(() => {
         setupWithDefaultSettings();
         selectChildValueAt(canadaHierarchyIndex[0]);
@@ -241,7 +241,7 @@ describe('Category Facet Test Suites', () => {
       });
     });
 
-    describe.skip('when selecting values subsequently to go deeper four level (last level of the dataset)', () => {
+    describe('when selecting values subsequently to go deeper four level (last level of the dataset)', () => {
       function setupGoDeeperLastLevel() {
         setupWithDefaultSettings();
         selectChildValueAt(canadaHierarchyIndex[0]);
@@ -250,7 +250,7 @@ describe('Category Facet Test Suites', () => {
         selectChildValueAt(canadaHierarchyIndex[3]);
       }
       beforeEach(setupGoDeeperLastLevel);
-      describe.skip('verify rendering', () => {
+      describe('verify rendering', () => {
         CategoryFacetAssertions.assertDisplayAllCategoriesButton(true);
         CategoryFacetAssertions.assertNumberOfParentValues(4);
         CategoryFacetAssertions.assertNumberOfChildValues(0);
@@ -267,18 +267,18 @@ describe('Category Facet Test Suites', () => {
         CategoryFacetAssertions.assertPathInUrl(canadaHierarchy);
       });
 
-      describe.skip('verify analytics', () => {
+      describe('verify analytics', () => {
         CategoryFacetAssertions.assertLogFacetSelect(canadaHierarchy);
       });
 
-      describe.skip('when selecting the first parent button', () => {
+      describe('when selecting the first parent button', () => {
         const selectedPath = canadaHierarchy.slice(0, 1);
         function setupSelectFirstParent() {
           pressParentButton(0);
         }
         beforeEach(setupSelectFirstParent);
 
-        describe.skip('verify rendering', () => {
+        describe('verify rendering', () => {
           CategoryFacetAssertions.assertDisplayAllCategoriesButton(true);
           CategoryFacetAssertions.assertNumberOfParentValues(1);
           CategoryFacetAssertions.assertNumberOfChildValues(
@@ -295,16 +295,16 @@ describe('Category Facet Test Suites', () => {
           CategoryFacetAssertions.assertPathInUrl(selectedPath);
         });
 
-        describe.skip('verify analytics', () => {
+        describe('verify analytics', () => {
           CategoryFacetAssertions.assertLogFacetSelect(selectedPath);
         });
 
-        describe.skip('when selecting the label button to collapse', () => {
+        describe('when selecting the label button to collapse', () => {
           function setupSelectLabelCollapse() {
             pressLabelButton(CategoryFacetSelectors, true);
           }
           beforeEach(setupSelectLabelCollapse);
-          describe.skip('verify rendering', () => {
+          describe('verify rendering', () => {
             CommonFacetAssertions.assertDisplayFacet(
               CategoryFacetSelectors,
               true
@@ -328,7 +328,7 @@ describe('Category Facet Test Suites', () => {
             );
           });
 
-          describe.skip('when selecting the label button to expand', () => {
+          describe('when selecting the label button to expand', () => {
             function setupSelectLabelExpand() {
               CategoryFacetSelectors.labelButton().click();
             }
@@ -349,19 +349,19 @@ describe('Category Facet Test Suites', () => {
             );
           });
 
-          describe.skip('when selecting the "Clear" button', () => {
+          describe('when selecting the "Clear" button', () => {
             function setupClearBoxValues() {
               pressClearButton(CategoryFacetSelectors);
             }
             beforeEach(setupClearBoxValues);
-            describe.skip('verify rendering', () => {
+            describe('verify rendering', () => {
               CommonFacetAssertions.assertDisplayClearButton(
                 CategoryFacetSelectors,
                 false
               );
             });
 
-            describe.skip('verify analytics', () => {
+            describe('verify analytics', () => {
               CategoryFacetAssertions.assertLogClearFacetValues();
             });
           });
@@ -369,7 +369,7 @@ describe('Category Facet Test Suites', () => {
       });
     });
 
-    describe.skip('when selecting the "Show more" button', () => {
+    describe('when selecting the "Show more" button', () => {
       const numberOfValues = 3;
       function setupShowMore() {
         new TestFixture()
@@ -382,7 +382,7 @@ describe('Category Facet Test Suites', () => {
         pressShowMore(CategoryFacetSelectors);
       }
 
-      describe.skip('verify rendering', () => {
+      describe('verify rendering', () => {
         beforeEach(setupShowMore);
         CategoryFacetAssertions.assertNumberOfChildValues(numberOfValues * 2);
         CommonFacetAssertions.assertDisplayShowMoreButton(
@@ -395,12 +395,12 @@ describe('Category Facet Test Suites', () => {
         );
       });
 
-      describe.skip('verify analytics', () => {
+      describe('verify analytics', () => {
         beforeEach(setupShowMore);
         CategoryFacetAssertions.assertLogFacetShowMore();
       });
 
-      describe.skip('when there\'s no more "Show more" button', () => {
+      describe('when there\'s no more "Show more" button', () => {
         function setupRepeatShowMore() {
           new TestFixture()
             .with(
@@ -416,7 +416,7 @@ describe('Category Facet Test Suites', () => {
           pressShowMore(CategoryFacetSelectors);
         }
 
-        describe.skip('verify rendering', () => {
+        describe('verify rendering', () => {
           beforeEach(setupRepeatShowMore);
 
           CommonFacetAssertions.assertDisplayShowMoreButton(
@@ -430,13 +430,13 @@ describe('Category Facet Test Suites', () => {
         });
       });
 
-      describe.skip('when selecting the "Show less" button', () => {
+      describe('when selecting the "Show less" button', () => {
         function setupShowLess() {
           setupShowMore();
           pressShowLess(CategoryFacetSelectors);
         }
         beforeEach(setupShowLess);
-        describe.skip('verify rendering', () => {
+        describe('verify rendering', () => {
           CategoryFacetAssertions.assertNumberOfChildValues(numberOfValues);
           CommonFacetAssertions.assertDisplayShowMoreButton(
             CategoryFacetSelectors,
@@ -448,14 +448,14 @@ describe('Category Facet Test Suites', () => {
           );
         });
 
-        describe.skip('verify analytics', () => {
+        describe('verify analytics', () => {
           CategoryFacetAssertions.assertLogFacetShowLess();
         });
       });
     });
   });
 
-  describe.skip('with custom #numberOfValues', () => {
+  describe('with custom #numberOfValues', () => {
     const numberOfValues = 2;
     function setupCustomNumberOfValues() {
       new TestFixture()
@@ -467,7 +467,7 @@ describe('Category Facet Test Suites', () => {
 
     CategoryFacetAssertions.assertNumberOfChildValues(numberOfValues);
 
-    describe.skip('when selecting a value to go deeper one level (2nd level of the dataset)', () => {
+    describe('when selecting a value to go deeper one level (2nd level of the dataset)', () => {
       beforeEach(() => {
         selectChildValueAt(0);
       });
@@ -476,7 +476,7 @@ describe('Category Facet Test Suites', () => {
     });
   });
 
-  describe.skip('with custom #sortCriteria, alphanumeric', () => {
+  describe('with custom #sortCriteria, alphanumeric', () => {
     beforeEach(() => {
       new TestFixture()
         .with(addCategoryFacet({'sort-criteria': 'alphanumeric'}))
@@ -485,7 +485,7 @@ describe('Category Facet Test Suites', () => {
     CategoryFacetAssertions.assertValuesSortedAlphanumerically();
   });
 
-  describe.skip('with a selected path in the URL', () => {
+  describe('with a selected path in the URL', () => {
     beforeEach(() => {
       new TestFixture()
         .with(addCategoryFacet({}, true))
@@ -499,7 +499,7 @@ describe('Category Facet Test Suites', () => {
     CategoryFacetAssertions.assertFirstChildContains(togoHierarchy[2]);
   });
 
-  describe.skip('with #basePath & #filterByBasePath set to true (default)', () => {
+  describe('with #basePath & #filterByBasePath set to true (default)', () => {
     beforeEach(() => {
       new TestFixture()
         .with(
@@ -517,7 +517,7 @@ describe('Category Facet Test Suites', () => {
     CategoryFacetAssertions.assertNumberOfParentValues(0);
   });
 
-  describe.skip('with #basePath using incorrect JSON array', () => {
+  describe('with #basePath using incorrect JSON array', () => {
     beforeEach(() => {
       new TestFixture()
         .with(
