@@ -3324,7 +3324,7 @@ export declare interface AtomicResultsPerPage extends LitAtomicResultsPerPage {
 }
 
 @ProxyCmp({
-  inputs: ['fieldsToInclude', 'pipeline', 'searchHub', 'analytics', 'timezone', 'logLevel', 'language', 'reflectStateInUrl', 'scrollContainer', 'languageAssetsPath', 'iconAssetsPath', 'enableRelevanceInspector'],
+  inputs: ['fieldsToInclude', 'pipeline', 'searchHub', 'analytics', 'timezone', 'logLevel', 'language', 'reflectStateInUrl', 'disableStateReflectionInUrl', 'scrollContainer', 'languageAssetsPath', 'iconAssetsPath', 'enableRelevanceInspector', 'disableRelevanceInspector'],
   methods: ['scrollToTop', 'closeRelevanceInspector', 'initialize', 'initializeWithSearchEngine', 'executeFirstSearch', 'updateSearchConfiguration', 'updateSearchHub', 'updatePipeline', 'toggleAnalytics', 'updateLanguage', 'updateIconAssetsPath', 'registerFieldsToInclude'],
   defineCustomElementFn: () => {customElements.get('atomic-search-interface') || customElements.define('atomic-search-interface', LitAtomicSearchInterface);}
 })
@@ -3334,7 +3334,7 @@ export declare interface AtomicResultsPerPage extends LitAtomicResultsPerPage {
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
   // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: ['fieldsToInclude', 'pipeline', 'searchHub', 'analytics', 'timezone', 'logLevel', 'language', 'reflectStateInUrl', 'scrollContainer', 'languageAssetsPath', 'iconAssetsPath', 'enableRelevanceInspector']
+  inputs: ['fieldsToInclude', 'pipeline', 'searchHub', 'analytics', 'timezone', 'logLevel', 'language', 'reflectStateInUrl', 'disableStateReflectionInUrl', 'scrollContainer', 'languageAssetsPath', 'iconAssetsPath', 'enableRelevanceInspector', 'disableRelevanceInspector']
 })
 export class AtomicSearchInterface {
   protected readonly el: HTMLElement;

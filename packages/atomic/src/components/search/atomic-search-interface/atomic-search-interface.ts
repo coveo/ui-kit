@@ -74,10 +74,10 @@ export class AtomicSearchInterface
   @provide({context: bindingsContext})
   public bindings: Bindings = {} as Bindings;
   @state() public error!: Error;
-  @state() relevanceInspectorIsOpen = false;
+  @state() public relevanceInspectorIsOpen = false;
 
-  private urlManager!: UrlManager;
-  private searchStatus!: SearchStatus;
+  public urlManager!: UrlManager;
+  public searchStatus!: SearchStatus;
   private unsubscribeUrlManager: Unsubscribe = () => {};
   private unsubscribeSearchStatus: Unsubscribe = () => {};
   private initialized = false;
@@ -231,12 +231,14 @@ export class AtomicSearchInterface
   @property({type: String, attribute: 'icon-assets-path', reflect: true})
   iconAssetsPath = './assets';
 
+  // TODO - (v4) KIT-5004: Remove.
   /**
    * Whether the relevance inspector shortcut should be enabled for this interface.
    *
    * The relevance inspector can be opened by holding the Alt key (Option on Mac) while over the interface, and performing a double click.
    *
    * The relevance inspector allows to troubleshoot and debug queries.
+   * @deprecated - replaced by `disable-relevance-inspector` (this defaults to `true`, while the replacement defaults to `false`).
    */
   @property({
     type: Boolean,
@@ -245,6 +247,16 @@ export class AtomicSearchInterface
     converter: booleanConverter,
   })
   enableRelevanceInspector = true;
+
+  /**
+   * Disable the relevance inspector shortcut for this interface.
+   */
+  @property({
+    type: Boolean,
+    attribute: 'disable-relevance-inspector',
+    reflect: true,
+  })
+  disableRelevanceInspector = false;
 
   private i18Initialized: Promise<void>;
 
@@ -316,7 +328,7 @@ export class AtomicSearchInterface
     const scrollContainerElement = document.querySelector(this.scrollContainer);
     if (!scrollContainerElement) {
       this.bindings.engine.logger.warn(
-        `Could not find the scroll container with the selector "${this.scrollContainer}". This will prevent UX interactions that require a scroll from working correctly. Please check the CSS selector in the scrollContainer option`
+        `Could not find the scroll container with the selector "${this.scrollContainer}". This will prevent UX interactions that require a scroll from working correctly. Please review the CSS selector in the scrollContainer option`
       );
       return;
     }
@@ -552,6 +564,9 @@ export class AtomicSearchInterface
   }
 
   private initUrlManager() {
+    if (this.disableStateReflectionInUrl) {
+      return;
+    }
     if (!this.reflectStateInUrl) {
       return;
     }
@@ -568,7 +583,7 @@ export class AtomicSearchInterface
   }
 
   private initRelevanceInspector() {
-    if (this.enableRelevanceInspector) {
+    if (this.enableRelevanceInspector && !this.disableRelevanceInspector) {
       this.addEventListener('dblclick', (e) => {
         if (e.altKey) {
           this.relevanceInspectorIsOpen = !this.relevanceInspectorIsOpen;
@@ -641,7 +656,9 @@ export class AtomicSearchInterface
   render() {
     return html`
       ${when(
-        this.bindings?.engine && this.enableRelevanceInspector,
+        this.bindings?.engine &&
+          this.enableRelevanceInspector &&
+          !this.disableRelevanceInspector,
         () => html`<atomic-relevance-inspector
           ?open=${this.relevanceInspectorIsOpen}
           .bindings=${this.bindings}
