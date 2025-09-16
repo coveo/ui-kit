@@ -2,16 +2,20 @@ import {
   buildSearchEngine,
   buildSearchStatus,
   buildUrlManager,
+  getSampleSearchEngineConfiguration,
   loadFieldActions,
   loadQueryActions,
   loadSearchConfigurationActions,
+  type SearchEngineConfiguration,
+  type UrlManager,
 } from '@coveo/headless';
-import i18next from 'i18next';
 import {html, LitElement} from 'lit';
 import {customElement, state} from 'lit/decorators.js';
 import {ifDefined} from 'lit/directives/if-defined.js';
+import {when} from 'lit/directives/when.js';
 import {within} from 'shadow-dom-testing-library';
-import {beforeEach, describe, expect, it, vi} from 'vitest';
+import {beforeEach, describe, expect, it, type MockInstance, vi} from 'vitest';
+import {InterfaceController} from '@/src/components/common/interface/interface-controller';
 import {
   AtomicSearchInterface,
   type Bindings,
@@ -25,13 +29,14 @@ import {fixture} from '@/vitest-utils/testing-helpers/fixture';
 import {buildFakeSearchEngine} from '@/vitest-utils/testing-helpers/fixtures/headless/search/engine';
 import {buildFakeSearchStatus} from '@/vitest-utils/testing-helpers/fixtures/headless/search/search-status-controller';
 import {buildFakeUrlManager} from '@/vitest-utils/testing-helpers/fixtures/headless/search/url-manager-controller';
-import {InterfaceController} from '../../common/interface/interface-controller';
+import {getAnalyticsConfig} from './analytics-config';
+import '@/src/components/search/atomic-search-layout/atomic-search-layout';
+import {DEFAULT_MOBILE_BREAKPOINT} from '@/src/utils/replace-breakpoint';
 
 vi.mock('@coveo/headless', {spy: true});
 vi.mock('@/src/components/search/atomic-search-interface/store', {spy: true});
 vi.mock('@/src/utils/init-queue', {spy: true});
-vi.mock('@/src/utils/local-storage-utils', {spy: true});
-vi.mock('i18next', {spy: true});
+vi.mock('./analytics-config', {spy: true});
 
 @customElement('test-element')
 @bindings()
@@ -43,7 +48,7 @@ class TestElement
   public bindings: Bindings = {} as Bindings;
   @state() public error!: Error;
 
-  public initialize() {}
+  public initialize = vi.fn();
 
   public render() {
     return html`test-element`;
@@ -51,10 +56,90 @@ class TestElement
 }
 
 describe('atomic-search-interface', () => {
-  beforeEach(async () => {
-    vi.mocked(buildSearchEngine).mockReturnValue(buildFakeSearchEngine());
+  const searchEngineConfig: SearchEngineConfiguration =
+    getSampleSearchEngineConfiguration();
+  let mockUrlManager: UrlManager;
+
+  const setupElement = async (
+    props: {
+      analytics?: boolean;
+      disableStateReflectionInUrl?: boolean;
+      iconAssetsPath?: string;
+      language?: string;
+      languageAssetsPath?: string;
+      logLevel?:
+        | 'debug'
+        | 'fatal'
+        | 'error'
+        | 'warn'
+        | 'info'
+        | 'trace'
+        | 'silent';
+      mobileBreakpoint?: string;
+      fieldsToInclude?: string[];
+      pipeline?: string;
+      searchHub?: string;
+      timezone?: string;
+      reflectStateInUrl?: boolean; // TODO - (v4) KIT-4823: Remove.
+      scrollContainer?: string;
+      enableRelevanceInspector?: boolean; // TODO - (v4) KIT-5004: Remove.
+      disableRelevanceInspector?: boolean;
+    } = {}
+  ) => {
+    const element = (await fixture<AtomicSearchInterface>(
+      html`<atomic-search-interface
+        ?analytics=${props.analytics}
+        ?disable-state-reflection-in-url=${props.disableStateReflectionInUrl}
+        icon-assets-path=${ifDefined(props.iconAssetsPath)}
+        language=${ifDefined(props.language)}
+        language-assets-path=${ifDefined(props.languageAssetsPath)}
+        log-level=${ifDefined(props.logLevel)}
+        .fieldsToInclude=${props.fieldsToInclude || []}
+        pipeline=${ifDefined(props.pipeline)}
+        search-hub=${ifDefined(props.searchHub)}
+        timezone=${ifDefined(props.timezone)}
+        reflect-state-in-url=${props.reflectStateInUrl}
+        scroll-container=${ifDefined(props.scrollContainer)}
+        enable-relevance-inspector=${props.enableRelevanceInspector}
+        ?disable-relevance-inspector=${props.disableRelevanceInspector}
+      >${when(props.mobileBreakpoint, () => html`<atomic-search-layout mobile-breakpoint=${ifDefined(props.mobileBreakpoint)}></atomic-search-layout>`)}<div>Interface content</div></atomic-search-layout>
+      </atomic-search-interface>`
+    )) as AtomicSearchInterface;
+
+    expect(element).toBeInstanceOf(AtomicSearchInterface);
+    return element;
+  };
+
+  const addChildElement = async (element: Element, tag = 'test-element') => {
+    const childElement = document.createElement(
+      tag
+    ) as InitializableComponent<Bindings> & TestElement;
+    element.appendChild(childElement);
+
+    await childElement.updateComplete;
+    expect(childElement).toBeInstanceOf(TestElement);
+
+    return childElement;
+  };
+
+  beforeEach(() => {
+    mockUrlManager = {
+      state: {fragment: ''},
+      subscribe: vi.fn(() => vi.fn()),
+      synchronize: vi.fn(),
+    };
+
+    vi.mocked(buildSearchEngine).mockReturnValue(
+      buildFakeSearchEngine({
+        implementation: {
+          executeFirstSearch: vi.fn(),
+        },
+      })
+    );
 
     vi.mocked(buildSearchStatus).mockReturnValue(buildFakeSearchStatus());
+
+    vi.mocked(buildUrlManager).mockReturnValue(mockUrlManager);
 
     vi.mocked(buildUrlManager).mockReturnValue(buildFakeUrlManager());
 
@@ -69,165 +154,41 @@ describe('atomic-search-interface', () => {
     vi.mocked(loadSearchConfigurationActions).mockReturnValue({
       updateSearchConfiguration: vi.fn(),
     } as unknown as ReturnType<typeof loadSearchConfigurationActions>);
-
-    const mockStore = {
-      setLoadingFlag: vi.fn(),
-      unsetLoadingFlag: vi.fn(),
-      hasLoadingFlag: vi.fn().mockReturnValue(false),
-      addFieldsToInclude: vi.fn((fields: string[]) => {
-        (mockStore.state.fieldsToInclude as string[]).push(...fields);
-      }),
-      state: {
-        iconAssetsPath: './assets',
-        mobileBreakpoint: '768px',
-        fieldsToInclude: [] as string[],
-      },
-    };
-    vi.mocked(createSearchStore).mockReturnValue(mockStore as never);
-
-    vi.mocked(SafeStorage).mockImplementation(
-      () =>
-        ({
-          getParsedJSON: vi.fn().mockReturnValue(null),
-          removeItem: vi.fn(),
-        }) as unknown as SafeStorage
-    );
   });
 
-  const setupElement = async ({
-    analytics,
-    iconAssetsPath,
-    language,
-    languageAssetsPath,
-    logLevel,
-    fieldsToInclude,
-    pipeline,
-    searchHub,
-    timezone,
-    reflectStateInUrl,
-    scrollContainer,
-    enableRelevanceInspector,
-  }: {
-    analytics?: boolean;
-    iconAssetsPath?: string;
-    language?: string;
-    languageAssetsPath?: string;
-    logLevel?:
-      | 'debug'
-      | 'fatal'
-      | 'error'
-      | 'warn'
-      | 'info'
-      | 'trace'
-      | 'silent';
-    fieldsToInclude?: string[];
-    pipeline?: string;
-    searchHub?: string;
-    timezone?: string;
-    reflectStateInUrl?: boolean;
-    scrollContainer?: string;
-    enableRelevanceInspector?: boolean;
-  } = {}) => {
-    const element = (await fixture<AtomicSearchInterface>(
-      html`<atomic-search-interface
-        ?analytics=${analytics}
-        icon-assets-path=${ifDefined(iconAssetsPath)}
-        language=${ifDefined(language)}
-        language-assets-path=${ifDefined(languageAssetsPath)}
-        log-level=${ifDefined(logLevel)}
-        .fieldsToInclude=${fieldsToInclude || []}
-        pipeline=${ifDefined(pipeline)}
-        search-hub=${ifDefined(searchHub)}
-        timezone=${ifDefined(timezone)}
-        ?reflect-state-in-url=${reflectStateInUrl}
-        scroll-container=${ifDefined(scrollContainer)}
-        ?enable-relevance-inspector=${enableRelevanceInspector}
-      >
-      </atomic-search-interface>`
-    )) as AtomicSearchInterface;
-
-    expect(element).toBeInstanceOf(AtomicSearchInterface);
-    return element;
-  };
-
-  const addChildElement = async <T extends TestElement>(
-    element: AtomicSearchInterface,
-    tag = 'test-element'
-  ) => {
-    const childElement = document.createElement(
-      tag
-    ) as InitializableComponent<Bindings> & T;
-    element.appendChild(childElement);
-
-    await childElement.updateComplete;
-    expect(childElement).toBeInstanceOf(TestElement);
-
-    return childElement;
-  };
-
-  // #constructor
-  describe('when created', () => {
-    it('should create an instance of InterfaceController', async () => {
+  describe('#constructor (when created)', () => {
+    it('should create an i18n instance', async () => {
       const element = await setupElement();
 
-      expect(
-        (
-          element as unknown as {
-            interfaceController: InterfaceController<never>;
-          }
-        ).interfaceController
-      ).toBeInstanceOf(InterfaceController);
+      expect(element.i18n).toBeDefined();
     });
 
-    it('should set #store to the value returned by createSearchStore', async () => {
-      const createSearchStoreSpy = vi.mocked(createSearchStore);
+    it('should prepend an aria-live element', async () => {
       const element = await setupElement();
-      const engine = buildFakeSearchEngine();
 
-      await element.initializeWithSearchEngine(engine);
+      const ariaLive = element.firstElementChild;
+      expect(ariaLive?.tagName).toBe('ATOMIC-ARIA-LIVE');
+    });
+  });
 
-      expect(createSearchStoreSpy).toHaveBeenCalledOnce();
-      expect(element.bindings.store).toBeDefined();
-      expect(element.bindings.store).toBe(
-        createSearchStoreSpy.mock.results[0].value
+  describe('#connectedCallback (when added to the DOM)', () => {
+    it("should add an 'atomic/initializeComponent' event listener on the element", async () => {
+      const addEventListenerSpy = vi.spyOn(
+        AtomicSearchInterface.prototype,
+        'addEventListener'
+      );
+
+      await setupElement();
+
+      expect(addEventListenerSpy).toHaveBeenCalledWith(
+        'atomic/initializeComponent',
+        expect.any(Function)
       );
     });
 
-    it('should set i18n to the value returned by i18next.createInstance', async () => {
-      const i18nextCreateInstanceSpy = vi.mocked(i18next.createInstance);
-
+    it("should call InterfaceController.onComponentInitializing when an 'atomic/initializeComponent' event is dispatched", async () => {
       const element = await setupElement();
-
-      expect(i18nextCreateInstanceSpy).toHaveBeenCalledOnce();
-      expect(element.i18n).toBeDefined();
-      expect(element.i18n).toBe(i18nextCreateInstanceSpy.mock.results[0].value);
-    });
-
-    it('should set default property values', async () => {
-      const element = await setupElement();
-
-      expect(element.analytics).toBe(true);
-      expect(element.language).toBe('en');
-      expect(element.languageAssetsPath).toBe('./lang');
-      expect(element.iconAssetsPath).toBe('./assets');
-      expect(element.reflectStateInUrl).toBe(true);
-      expect(element.scrollContainer).toBe('atomic-search-interface');
-      expect(element.enableRelevanceInspector).toBe(true);
-      expect(element.fieldsToInclude).toEqual([]);
-    });
-  });
-
-  // #connectedCallback
-  describe('when added to the DOM', () => {
-    it('should set the loading flag for first search executed', async () => {
-      const element = await setupElement();
-
-      expect(element).toBeInstanceOf(AtomicSearchInterface);
-    });
-
-    it("should cause InterfaceController.onComponentInitializing to be called when an 'atomic/initializeComponent' event is dispatched", async () => {
-      const element = await setupElement();
-      const onComponentInitializingSpy = vi.spyOn(
+      const onComponentInitializationSpy = vi.spyOn(
         InterfaceController.prototype,
         'onComponentInitializing'
       );
@@ -235,524 +196,949 @@ describe('atomic-search-interface', () => {
 
       element.dispatchEvent(event);
 
-      expect(onComponentInitializingSpy).toHaveBeenCalledExactlyOnceWith(event);
+      expect(onComponentInitializationSpy).toHaveBeenCalledExactlyOnceWith(
+        event
+      );
     });
 
-    it('should update mobile breakpoint from atomic-search-layout child', async () => {
-      const element = await setupElement();
-      const searchLayout = document.createElement('atomic-search-layout');
-      searchLayout.mobileBreakpoint = '768px';
-      element.appendChild(searchLayout);
+    it('should add an "atomic/scrollToTop" event listener on the element', async () => {
+      const addEventListenerSpy = vi.spyOn(
+        AtomicSearchInterface.prototype,
+        'addEventListener'
+      );
 
-      expect(element).toBeInstanceOf(AtomicSearchInterface);
-    });
-
-    it('should initialize relevance inspector when enableRelevanceInspector is true', async () => {
-      const element = await setupElement({enableRelevanceInspector: true});
-      const addEventListenerSpy = vi.spyOn(element, 'addEventListener');
-
-      element.connectedCallback();
+      await setupElement();
 
       expect(addEventListenerSpy).toHaveBeenCalledWith(
-        'dblclick',
+        'atomic/scrollToTop',
         expect.any(Function)
       );
     });
-  });
 
-  // #initialize
-  describe('#initialize', () => {
-    it('should call buildSearchEngine with the provided options', async () => {
-      const buildSearchEngineSpy = vi.mocked(buildSearchEngine);
-      const element = await setupElement();
-      const options = {
-        accessToken: 'test-token',
-        organizationId: 'test-org',
-      };
+    it('should add an "atomic/relevanceInspector/close" event listener on the element', async () => {
+      const addEventListenerSpy = vi.spyOn(
+        AtomicSearchInterface.prototype,
+        'addEventListener'
+      );
 
-      await element.initialize(options);
+      await setupElement();
 
-      expect(buildSearchEngineSpy).toHaveBeenCalledExactlyOnceWith({
-        configuration: {
-          ...options,
-          search: {
-            searchHub: 'default',
-            pipeline: undefined,
-            locale: 'en',
-            timezone: undefined,
-          },
-          analytics: expect.any(Object),
-        },
-        loggerOptions: {
-          level: undefined,
-        },
-      });
-    });
-
-    it('should set bindings after initialization', async () => {
-      const element = await setupElement();
-      const options = {
-        accessToken: 'test-token',
-        organizationId: 'test-org',
-      };
-
-      expect(element.bindings.engine).toBeUndefined();
-
-      await element.initialize(options);
-
-      expect(element.bindings.engine).toBeDefined();
-      expect(element.bindings.i18n).toBe(element.i18n);
-      expect(element.bindings.store).toBeDefined();
-      expect(element.bindings.interfaceElement).toBe(element);
-    });
-
-    it('should call markParentAsReady with this', async () => {
-      const markParentAsReadySpy = vi.mocked(markParentAsReady);
-      const element = await setupElement();
-      const options = {
-        accessToken: 'test-token',
-        organizationId: 'test-org',
-      };
-
-      expect(markParentAsReadySpy).not.toHaveBeenCalled();
-
-      await element.initialize(options);
-
-      expect(markParentAsReadySpy).toHaveBeenCalledExactlyOnceWith(element);
-    });
-
-    it('should initialize URL manager when reflectStateInUrl is true', async () => {
-      const buildUrlManagerSpy = vi.mocked(buildUrlManager);
-      const element = await setupElement({reflectStateInUrl: true});
-      const options = {
-        accessToken: 'test-token',
-        organizationId: 'test-org',
-      };
-
-      await element.initialize(options);
-
-      expect(buildUrlManagerSpy).toHaveBeenCalledExactlyOnceWith(
-        element.engine,
-        {
-          initialState: {fragment: ''},
-        }
+      expect(addEventListenerSpy).toHaveBeenCalledWith(
+        'atomic/relevanceInspector/close',
+        expect.any(Function)
       );
     });
 
-    it('should register fields to include when fieldsToInclude is not empty', async () => {
+    describe("when an 'atomic/scrollToTop' event is dispatched", () => {
+      it('should log a warning when no element in the DOM matches the scrollContainer selector', async () => {
+        const element = await setupElement({scrollContainer: 'i-do-not-exist'});
+        await element.initialize(searchEngineConfig);
+
+        const loggerWarnSpy = vi.spyOn(element.bindings.engine.logger, 'warn');
+
+        const event = new CustomEvent('atomic/scrollToTop', {});
+
+        element.dispatchEvent(event);
+
+        expect(loggerWarnSpy).toHaveBeenCalledExactlyOnceWith(
+          'Could not find the scroll container with the selector "i-do-not-exist". This will prevent UX interactions that require a scroll from working correctly. Please review the CSS selector in the scrollContainer option'
+        );
+      });
+
+      it('should cause the element matching the scrollContainer selector to be smoothly scrolled into view when possible', async () => {
+        const element = await setupElement();
+        await element.initialize(searchEngineConfig);
+
+        const scrollIntoViewSpy = vi.spyOn(element, 'scrollIntoView');
+        const event = new CustomEvent('atomic/scrollToTop');
+
+        element.dispatchEvent(event);
+
+        expect(scrollIntoViewSpy).toHaveBeenCalledExactlyOnceWith({
+          behavior: 'smooth',
+        });
+      });
+    });
+
+    describe("when an 'atomic/relevanceInspector/close' event is dispatched", () => {
+      it('should close the relevance inspector', async () => {
+        const element = await setupElement();
+        element.relevanceInspectorIsOpen = true;
+
+        const event = new CustomEvent('atomic/relevanceInspector/close');
+        element.dispatchEvent(event);
+
+        expect(element.relevanceInspectorIsOpen).toBe(false);
+      });
+    });
+  });
+
+  describe.for<{testedInitMethodName: 'initialize' | 'initializeWithEngine'}>([
+    {
+      testedInitMethodName: 'initialize',
+    },
+    {
+      testedInitMethodName: 'initializeWithEngine',
+    },
+  ])('#$testedInitMethodName', ({testedInitMethodName}) => {
+    const callTestedInitMethod = async (
+      element: Awaited<ReturnType<typeof setupElement>>
+    ) => {
+      if (testedInitMethodName === 'initialize') {
+        await element.initialize(searchEngineConfig);
+      } else {
+        await element.initializeWithSearchEngine(buildFakeSearchEngine());
+      }
+    };
+
+    it('should call InterfaceController.onInitialization', async () => {
+      const element = await setupElement();
+      const onInitializationSpy = vi.spyOn(
+        InterfaceController.prototype,
+        'onInitialization'
+      );
+
+      await callTestedInitMethod(element);
+
+      expect(onInitializationSpy).toHaveBeenCalledExactlyOnceWith(
+        expect.any(Function)
+      );
+    });
+
+    it('should call #updateLanguage once when the language prop is specified', async () => {
+      const element = await setupElement({language: 'en'});
+      const updateLanguageSpy = vi.spyOn(element, 'updateLanguage');
+
+      await callTestedInitMethod(element);
+
+      expect(updateLanguageSpy).toHaveBeenCalledOnce();
+    });
+
+    describe('when the language prop is not specified', () => {
+      it('should keep the default language value', async () => {
+        const element = await setupElement();
+
+        expect(element.language).toBe('en');
+
+        await callTestedInitMethod(element);
+
+        expect(element.language).toBe('en');
+      });
+
+      it('should call #updateLanguage once', async () => {
+        const element = await setupElement();
+        const updateLanguageSpy = vi.spyOn(element, 'updateLanguage');
+
+        await callTestedInitMethod(element);
+
+        expect(updateLanguageSpy).toHaveBeenCalledOnce();
+      });
+    });
+
+    it('should set the bindings', async () => {
+      const mockedCreateStore = vi.mocked(createSearchStore);
+      const element = await setupElement();
+
+      await callTestedInitMethod(element);
+
+      expect(mockedCreateStore).toHaveBeenCalledExactlyOnceWith();
+
+      expect(element.bindings).toEqual({
+        engine: element.engine,
+        i18n: element.i18n,
+        store: mockedCreateStore.mock.results[0].value,
+        interfaceElement: element,
+        createStyleElement: expect.any(Function),
+        createScriptElement: expect.any(Function),
+      });
+    });
+
+    it('should provide bindings to its descendant components', async () => {
+      const element = await setupElement();
+      const childElement = await addChildElement(element);
+      const descendantElement = await addChildElement(childElement);
+
+      await callTestedInitMethod(element);
+
+      expect(childElement.bindings).toEqual(element.bindings);
+      expect(descendantElement.bindings).toEqual(element.bindings);
+    });
+
+    it('should trigger the initialize method of its descendant components', async () => {
+      const element = await setupElement();
+      const childElement = await addChildElement(element);
+      const descendantElement = await addChildElement(childElement);
+
+      await callTestedInitMethod(element);
+
+      expect(childElement.initialize).toHaveBeenCalledOnce();
+      expect(descendantElement.initialize).toHaveBeenCalledOnce();
+    });
+
+    it('should call the #markParentAsReady util function with the element as an argument', async () => {
+      const element = await setupElement();
+
+      await callTestedInitMethod(element);
+
+      expect(markParentAsReady).toHaveBeenCalledExactlyOnceWith(element);
+    });
+
+    it('should not initialize the url manager when disableStateReflectionInUrl is true', async () => {
+      const element = await setupElement({disableStateReflectionInUrl: true});
+
+      await callTestedInitMethod(element);
+
+      expect(element.urlManager).toBeUndefined();
+    });
+
+    it('should not initialize the url manager when reflectStateInUrl is false', async () => {
+      vi.spyOn(console, 'warn').mockImplementation(() => {}); // TODO: remove in v4 - This suppresses a deprecation warning for explicitly setting a boolean to false
+      const element = await setupElement({reflectStateInUrl: false});
+
+      await callTestedInitMethod(element);
+
+      expect(element.urlManager).toBeUndefined();
+    });
+
+    describe('when disableStateReflectionInUrl is false and reflectStateInUrl is true', () => {
+      let element: Awaited<ReturnType<typeof setupElement>>;
+      let urlManagerSubscribeSpy: MockInstance;
+      let addEventListenerSpy: MockInstance;
+
+      beforeEach(async () => {
+        element = await setupElement({
+          disableStateReflectionInUrl: false,
+        });
+        vi.mocked(buildUrlManager).mockReturnValue(mockUrlManager);
+
+        urlManagerSubscribeSpy = vi.spyOn(mockUrlManager, 'subscribe');
+        addEventListenerSpy = vi.spyOn(window, 'addEventListener');
+      });
+
+      it('should initialize the urlManager with no hash when there is none', async () => {
+        window.location.hash = '';
+
+        await callTestedInitMethod(element);
+
+        expect(buildUrlManager).toHaveBeenCalledExactlyOnceWith(
+          element.engine,
+          {
+            initialState: {fragment: ''},
+          }
+        );
+        expect(element.urlManager).toBeDefined();
+        expect(element.urlManager).toBe(mockUrlManager);
+      });
+
+      it('should initialize the urlManager with the current hash when there is one', async () => {
+        window.location.hash = '#initial-fragment';
+
+        vi.mocked(buildUrlManager).mockReturnValue(mockUrlManager);
+
+        await callTestedInitMethod(element);
+
+        expect(buildUrlManager).toHaveBeenCalledExactlyOnceWith(
+          element.engine,
+          {
+            initialState: {fragment: 'initial-fragment'},
+          }
+        );
+        expect(element.urlManager).toBeDefined();
+        expect(element.urlManager).toBe(mockUrlManager);
+      });
+
+      it('should subscribe to the urlManager state updates', async () => {
+        await callTestedInitMethod(element);
+
+        expect(mockUrlManager.subscribe).toHaveBeenCalledExactlyOnceWith(
+          expect.any(Function)
+        );
+      });
+
+      describe('when the urlManager state changes', () => {
+        let replaceStateSpy: MockInstance;
+        let pushStateSpy: MockInstance;
+
+        beforeEach(() => {
+          replaceStateSpy = vi.spyOn(history, 'replaceState');
+          pushStateSpy = vi.spyOn(history, 'pushState');
+        });
+
+        describe('when the first search has not been executed', () => {
+          let urlManagerSubscribeCallback: () => void;
+          let loggerSpy: MockInstance;
+
+          beforeEach(async () => {
+            await callTestedInitMethod(element);
+
+            element.searchStatus.state.firstSearchExecuted = false;
+            element.urlManager!.state.fragment = 'test-fragment';
+            urlManagerSubscribeCallback =
+              urlManagerSubscribeSpy.mock.calls[0][0];
+
+            loggerSpy = vi.spyOn(element.bindings.engine.logger, 'info');
+          });
+
+          it('should replace the history state with the #-prefixed new fragment', async () => {
+            urlManagerSubscribeCallback();
+
+            expect(replaceStateSpy).toHaveBeenCalledWith(
+              null,
+              document.title,
+              '#test-fragment'
+            );
+          });
+
+          it('should not call history.pushState', async () => {
+            urlManagerSubscribeCallback();
+
+            expect(pushStateSpy).not.toHaveBeenCalled();
+          });
+
+          it('should log the correct info message', async () => {
+            urlManagerSubscribeCallback();
+
+            expect(loggerSpy).toHaveBeenCalledExactlyOnceWith(
+              `History replaceState #test-fragment`
+            );
+          });
+        });
+
+        describe('when the first search has been executed', () => {
+          let urlManagerSubscribeCallback: () => void;
+          let loggerSpy: MockInstance;
+
+          beforeEach(async () => {
+            await callTestedInitMethod(element);
+
+            element.searchStatus.state.firstSearchExecuted = true;
+            element.urlManager!.state.fragment = 'test-fragment';
+            urlManagerSubscribeCallback =
+              urlManagerSubscribeSpy.mock.calls[0][0];
+
+            loggerSpy = vi.spyOn(element.bindings.engine.logger, 'info');
+          });
+
+          it('should push the new fragment to the history state', async () => {
+            urlManagerSubscribeCallback();
+
+            expect(pushStateSpy).toHaveBeenCalledWith(
+              null,
+              document.title,
+              '#test-fragment'
+            );
+          });
+
+          it('should not call history.replaceState', async () => {
+            urlManagerSubscribeCallback();
+
+            expect(replaceStateSpy).not.toHaveBeenCalled();
+          });
+
+          it('should log the correct info message', async () => {
+            urlManagerSubscribeCallback();
+
+            expect(loggerSpy).toHaveBeenCalledWith(
+              'History pushState #test-fragment'
+            );
+          });
+        });
+      });
+
+      it('should add a hashchange event listener on the window object', async () => {
+        await callTestedInitMethod(element);
+
+        expect(addEventListenerSpy).toHaveBeenCalledWith(
+          'hashchange',
+          expect.any(Function)
+        );
+      });
+
+      describe('when the hashchange event is dispatched on the window object', () => {
+        it('should call urlManager.synchronize', async () => {
+          await callTestedInitMethod(element);
+
+          window.location.hash = '#new-fragment';
+          window.dispatchEvent(new HashChangeEvent('hashchange'));
+
+          expect(mockUrlManager.synchronize).toHaveBeenCalledExactlyOnceWith(
+            'new-fragment'
+          );
+        });
+      });
+    });
+
+    describe.skipIf(testedInitMethodName !== 'initialize')(
+      '#initialize only',
+      () => {
+        it('should set the engine with #buildSearchEngine', async () => {
+          const element = await setupElement();
+
+          await element.initialize(searchEngineConfig);
+
+          expect(element.engine).toBe(
+            vi.mocked(buildSearchEngine).mock.results[0].value
+          );
+        });
+
+        it('should pass the specified configuration and log level, along with an analytics configuration augmented with #getAnalyticsConfig to #buildSearchEngine when setting the engine', async () => {
+          const mockedGetAnalyticsConfig = vi.mocked(getAnalyticsConfig);
+          const element = await setupElement();
+
+          await element.initialize(searchEngineConfig);
+
+          expect(getAnalyticsConfig).toHaveBeenCalledExactlyOnceWith(
+            searchEngineConfig,
+            element.analytics,
+            element.bindings.store
+          );
+          expect(buildSearchEngine).toHaveBeenCalledExactlyOnceWith({
+            configuration: {
+              ...searchEngineConfig,
+              search: {
+                searchHub: 'default',
+                pipeline: undefined,
+                locale: 'en',
+                timezone: undefined,
+              },
+              analytics: mockedGetAnalyticsConfig.mock.results[0].value,
+            },
+            loggerOptions: {level: element.logLevel},
+          });
+        });
+
+        it('should set the error when #buildSearchEngine throws', async () => {
+          vi.spyOn(console, 'error').mockImplementation(() => {});
+          const element = await setupElement();
+          const buildEngineError = new Error('Oh no!', {
+            cause: 'A noble cause',
+          });
+
+          vi.mocked(buildSearchEngine).mockImplementation(() => {
+            throw buildEngineError;
+          });
+
+          await element.initialize(searchEngineConfig).catch(() => {});
+
+          expect(element.engine).toBeUndefined();
+          expect(element.error).toBe(buildEngineError);
+        });
+      }
+    );
+
+    describe.skipIf(testedInitMethodName !== 'initializeWithEngine')(
+      '#initializeWithEngine only',
+      () => {
+        it('should initialize with a preconfigured engine', async () => {
+          const element = await setupElement();
+          const engine = buildFakeSearchEngine({
+            state: {
+              configuration: {
+                organizationId: 'oh-la-la',
+              },
+            },
+          });
+
+          await element.initializeWithSearchEngine(engine);
+
+          expect(element.engine).toBe(engine);
+          expect(element.engine!.state.configuration.organizationId).toBe(
+            'oh-la-la'
+          );
+        });
+
+        it('should warn when there is a pipeline mismatch', async () => {
+          const consoleWarnSpy = vi
+            .spyOn(console, 'warn')
+            .mockImplementation(() => {});
+          const element = await setupElement({pipeline: 'test-pipeline'});
+          const engine = buildFakeSearchEngine({
+            state: {
+              pipeline: 'different-pipeline',
+            },
+          });
+
+          await element.initializeWithSearchEngine(engine);
+
+          expect(consoleWarnSpy).toHaveBeenCalledWith(
+            'Mismatch between search interface pipeline and engine pipeline. The engine pipeline will be used.'
+          );
+        });
+
+        it('should warn when there is a searchHub mismatch', async () => {
+          const consoleWarnSpy = vi
+            .spyOn(console, 'warn')
+            .mockImplementation(() => {});
+          const element = await setupElement({searchHub: 'test-hub'});
+          const engine = buildFakeSearchEngine({
+            state: {
+              searchHub: 'different-hub',
+            },
+          });
+
+          await element.initializeWithSearchEngine(engine);
+
+          expect(consoleWarnSpy).toHaveBeenCalledWith(
+            'Mismatch between search interface search hub and engine search hub. The engine search hub will be used.'
+          );
+        });
+      }
+    );
+
+    it('should update the mobile breakpoint from atomic-search-layout when available', async () => {
+      const element = await setupElement({mobileBreakpoint: '768px'});
+
+      await callTestedInitMethod(element);
+
+      expect(element.bindings.store.state.mobileBreakpoint).toBe('768px');
+    });
+
+    it('should keep the default mobile breakpoint when no atomic-search-layout exists', async () => {
+      const element = await setupElement();
+
+      await callTestedInitMethod(element);
+
+      expect(element.bindings.store.state.mobileBreakpoint).toBe(
+        DEFAULT_MOBILE_BREAKPOINT
+      );
+    });
+
+    it('should initialize search status with #buildSearchStatus', async () => {
+      const element = await setupElement();
+
+      await callTestedInitMethod(element);
+
+      expect(buildSearchStatus).toHaveBeenCalledExactlyOnceWith(
+        element.engine!
+      );
+      expect(element.searchStatus).toBe(
+        vi.mocked(buildSearchStatus).mock.results[0].value
+      );
+    });
+
+    it('should subscribe to the search status state updates', async () => {
+      const element = await setupElement();
+      const mockSearchStatus = buildFakeSearchStatus();
+      const subscribeSpy = vi.spyOn(mockSearchStatus, 'subscribe');
+      vi.mocked(buildSearchStatus).mockReturnValue(mockSearchStatus);
+
+      await callTestedInitMethod(element);
+
+      expect(subscribeSpy).toHaveBeenCalledExactlyOnceWith(
+        expect.any(Function)
+      );
+    });
+
+    describe('when the search status state changes', () => {
+      it('should unset the loading flag when the first search was executed', async () => {
+        const element = await setupElement();
+        const mockSearchStatus = buildFakeSearchStatus({
+          firstSearchExecuted: false,
+        });
+        const subscribeSpy = vi.spyOn(mockSearchStatus, 'subscribe');
+        vi.mocked(buildSearchStatus).mockReturnValue(mockSearchStatus);
+
+        await callTestedInitMethod(element);
+
+        mockSearchStatus.state.firstSearchExecuted = true;
+        const searchStatusSubscribeCallback = subscribeSpy.mock.calls[0][0];
+        const mockedUnsetLoadingFlag = vi.spyOn(
+          element.bindings.store,
+          'unsetLoadingFlag'
+        );
+
+        searchStatusSubscribeCallback();
+
+        expect(mockedUnsetLoadingFlag).toHaveBeenCalled();
+      });
+    });
+  });
+
+  describe('#fieldsToInclude', () => {
+    it('should register fieldsToInclude when the engine is created', async () => {
+      const registerFieldsToIncludeMock = vi.fn();
+      vi.mocked(loadFieldActions).mockReturnValue({
+        registerFieldsToInclude: registerFieldsToIncludeMock,
+      } as unknown as ReturnType<typeof loadFieldActions>);
+
       const element = await setupElement({
         fieldsToInclude: ['field1', 'field2'],
       });
-      const options = {
-        accessToken: 'test-token',
-        organizationId: 'test-org',
-      };
 
-      await element.initialize(options);
+      await element.initialize(searchEngineConfig);
+
+      expect(registerFieldsToIncludeMock).toHaveBeenCalledWith(
+        expect.arrayContaining(['field1', 'field2'])
+      );
+    });
+
+    it('should handle string fieldsToInclude attribute by parsing JSON', async () => {
+      const element = await setupElement();
+      element.setAttribute('fields-to-include', '["field1", "field2"]');
+      await element.updateComplete;
 
       expect(element.fieldsToInclude).toEqual(['field1', 'field2']);
     });
 
-    it('should add aria-live element if not present', async () => {
+    it('should handle invalid JSON in fieldsToInclude attribute gracefully', async () => {
       const element = await setupElement();
-      const options = {
-        accessToken: 'test-token',
-        organizationId: 'test-org',
-      };
+      element.setAttribute('fields-to-include', 'invalid-json');
+      await element.updateComplete;
 
-      await element.initialize(options);
-
-      expect(element.querySelector('atomic-aria-live')).toBeTruthy();
-    });
-
-    it('should not add aria-live element if already present', async () => {
-      const element = await setupElement();
-      const existingAriaLive = document.createElement('atomic-aria-live');
-      element.appendChild(existingAriaLive);
-
-      const initialCount = element.querySelectorAll('atomic-aria-live').length;
-
-      const options = {
-        accessToken: 'test-token',
-        organizationId: 'test-org',
-      };
-
-      await element.initialize(options);
-
-      expect(
-        element.querySelectorAll('atomic-aria-live').length
-      ).toBeGreaterThanOrEqual(initialCount);
-    });
-
-    it('should merge search configuration with provided options', async () => {
-      const buildSearchEngineSpy = vi.mocked(buildSearchEngine);
-      const element = await setupElement({
-        pipeline: 'my-pipeline',
-        searchHub: 'my-hub',
-        timezone: 'America/Montreal',
-      });
-      const options = {
-        accessToken: 'test-token',
-        organizationId: 'test-org',
-        search: {
-          pipeline: 'override-pipeline',
-        },
-      };
-
-      await element.initialize(options);
-
-      expect(buildSearchEngineSpy).toHaveBeenCalledWith({
-        configuration: {
-          ...options,
-          search: {
-            searchHub: 'my-hub',
-            pipeline: 'override-pipeline',
-            locale: 'en',
-            timezone: 'America/Montreal',
-          },
-          analytics: expect.any(Object),
-        },
-        loggerOptions: {
-          level: undefined,
-        },
-      });
+      expect(element.fieldsToInclude).toEqual([]);
     });
   });
 
-  // #initializeWithSearchEngine
-  describe('#initializeWithSearchEngine', () => {
-    it('should set the engine directly without building a new one', async () => {
-      const element = await setupElement();
-      const engine = buildFakeSearchEngine({});
+  describe('#executeFirstRequest', () => {
+    let element: AtomicSearchInterface;
 
-      expect(element.engine).toBeUndefined();
-
-      await element.initializeWithSearchEngine(engine);
-
-      expect(element.engine).toBe(engine);
+    beforeEach(async () => {
+      element = await setupElement();
     });
 
-    it('should set bindings after initialization with provided engine', async () => {
-      const element = await setupElement();
-      const engine = buildFakeSearchEngine({});
-
-      expect(element.bindings.engine).toBeUndefined();
-
-      await element.initializeWithSearchEngine(engine);
-
-      expect(element.bindings.engine).toBe(engine);
-      expect(element.bindings.i18n).toBe(element.i18n);
-      expect(element.bindings.store).toBeDefined();
-      expect(element.bindings.interfaceElement).toBe(element);
-    });
-
-    it('should warn when pipeline mismatch occurs', async () => {
-      const consoleSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
-      const element = await setupElement({pipeline: 'my-pipeline'});
-      const engine = buildFakeSearchEngine({
-        state: {
-          ...buildFakeSearchEngine().state,
-          pipeline: 'different-pipeline',
-          searchHub: 'default',
-        },
-      });
-
-      await element.initializeWithSearchEngine(engine);
-
-      expect(consoleSpy).toHaveBeenCalledWith(
-        'Mismatch between search interface pipeline and engine pipeline. The engine pipeline will be used.'
-      );
-    });
-
-    it('should warn when searchHub mismatch occurs', async () => {
-      const consoleSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
-      const element = await setupElement({searchHub: 'my-hub'});
-      const engine = buildFakeSearchEngine({
-        state: {
-          ...buildFakeSearchEngine().state,
-          pipeline: 'default',
-          searchHub: 'different-hub',
-        },
-      });
-
-      await element.initializeWithSearchEngine(engine);
-
-      expect(consoleSpy).toHaveBeenCalledWith(
-        'Mismatch between search interface search hub and engine search hub. The engine search hub will be used.'
-      );
-    });
-  });
-
-  // #executeFirstSearch
-  describe('#executeFirstSearch', () => {
-    it('should do nothing when engine is not created', async () => {
-      const element = await setupElement();
-
-      await element.executeFirstSearch();
-
-      // Should not throw or cause any issues
-    });
-
-    it('should log error when not initialized', async () => {
-      const consoleSpy = vi
+    it('should log an error when called before initialization', async () => {
+      const consoleErrorSpy = vi
         .spyOn(console, 'error')
         .mockImplementation(() => {});
-      const element = await setupElement();
-      const engine = buildFakeSearchEngine({});
-      element.engine = engine;
 
       await element.executeFirstSearch();
 
-      expect(consoleSpy).toHaveBeenCalledExactlyOnceWith(
+      expect(consoleErrorSpy).toHaveBeenCalledWith(
+        'You have to call "initialize" on the atomic-search-interface component before modifying the props or calling other public methods.',
+        element
+      );
+    });
+
+    it('should log an error when called before initialization finishes', async () => {
+      const consoleErrorSpy = vi
+        .spyOn(console, 'error')
+        .mockImplementation(() => {});
+      element.engine = buildFakeSearchEngine({});
+
+      await element.executeFirstSearch();
+
+      expect(consoleErrorSpy).toHaveBeenCalledWith(
         'You have to wait until the "initialize" promise is fulfilled before executing a search.',
         element
       );
     });
 
-    it('should call engine.executeFirstSearch when properly initialized', async () => {
-      const element = await setupElement();
-      const engine = buildFakeSearchEngine({});
-      const executeFirstSearchSpy = vi.spyOn(engine, 'executeFirstSearch');
+    it('should call executeFirstSearch', async () => {
+      const mockSearch = buildFakeSearchEngine({
+        implementation: {
+          executeFirstSearch: vi.fn(),
+        },
+      });
+      vi.mocked(buildSearchEngine).mockReturnValue(mockSearch);
+      await element.initialize(searchEngineConfig);
 
-      await element.initializeWithSearchEngine(engine);
       await element.executeFirstSearch();
 
-      expect(executeFirstSearchSpy).toHaveBeenCalledOnce();
+      expect(mockSearch.executeFirstSearch).toHaveBeenCalledOnce();
     });
 
-    it('should handle standalone search box data when present', async () => {
-      const standaloneData = {
-        value: 'test query',
-        enableQuerySyntax: true,
-        analytics: {origin: {level1: 'searchbox'}},
-      };
-
-      const mockStorage = {
-        getParsedJSON: vi.fn().mockReturnValue(standaloneData),
-        removeItem: vi.fn(),
-      };
-      vi.mocked(SafeStorage).mockImplementation(() => mockStorage as never);
-
+    it('should not dispatch an updateQuery action when standalone search box data does not exist', async () => {
       const element = await setupElement();
-      const engine = buildFakeSearchEngine({});
       const updateQueryMock = vi.fn();
       vi.mocked(loadQueryActions).mockReturnValue({
         updateQuery: updateQueryMock,
-      } as never);
+      });
 
-      await element.initializeWithSearchEngine(engine);
+      await element.initialize(searchEngineConfig);
+
       await element.executeFirstSearch();
 
-      expect(mockStorage.getParsedJSON).toHaveBeenCalledWith(
-        StorageItems.STANDALONE_SEARCH_BOX_DATA,
-        null
-      );
-      expect(mockStorage.removeItem).toHaveBeenCalledWith(
-        StorageItems.STANDALONE_SEARCH_BOX_DATA
-      );
-      expect(updateQueryMock).toHaveBeenCalledWith({
-        q: 'test query',
-        enableQuerySyntax: true,
+      expect(updateQueryMock).not.toHaveBeenCalled();
+    });
+
+    describe('when standalone search box data exists', () => {
+      beforeEach(() => {
+        vi.spyOn(SafeStorage.prototype, 'getParsedJSON').mockReturnValue({
+          value: 'test query',
+        });
+      });
+
+      it('should remove the standalone search box data from local storage', async () => {
+        const removeItemSpy = vi
+          .spyOn(SafeStorage.prototype, 'removeItem')
+          .mockImplementation(() => {});
+        await element.initialize(searchEngineConfig);
+
+        await element.executeFirstSearch();
+
+        expect(removeItemSpy).toHaveBeenCalledExactlyOnceWith(
+          StorageItems.STANDALONE_SEARCH_BOX_DATA
+        );
+      });
+
+      it('should dispatch an updateQuery action with the new query', async () => {
+        const updateQueryMock = vi.fn();
+        vi.mocked(loadQueryActions).mockReturnValue({
+          updateQuery: updateQueryMock,
+        });
+        await element.initialize(searchEngineConfig);
+
+        await element.executeFirstSearch();
+
+        expect(updateQueryMock).toHaveBeenCalledExactlyOnceWith({
+          enableQuerySyntax: undefined,
+          q: 'test query',
+        });
       });
     });
   });
 
-  // Property watchers
-  describe('property watchers', () => {
-    // #toggleAnalytics
-    describe('when analytics prop changes', () => {
-      it('should call InterfaceController.onAnalyticsChange', async () => {
-        const element = await setupElement();
-        const onAnalyticsChangeSpy = vi.spyOn(
-          InterfaceController.prototype,
-          'onAnalyticsChange'
-        );
+  // #toggleAnalytics
+  it('should call InterfaceController.onAnalyticsChange when the analytics attribute changes', async () => {
+    const element = await setupElement();
+    const onAnalyticsChangeSpy = vi.spyOn(
+      InterfaceController.prototype,
+      'onAnalyticsChange'
+    );
 
-        expect(onAnalyticsChangeSpy).not.toHaveBeenCalled();
+    expect(onAnalyticsChangeSpy).not.toHaveBeenCalled();
 
-        element.analytics = false;
-        await element.updateComplete;
+    element.analytics = false;
+    await element.updateComplete;
 
-        expect(onAnalyticsChangeSpy).toHaveBeenCalledOnce();
+    expect(onAnalyticsChangeSpy).toHaveBeenCalledOnce();
 
-        element.analytics = true;
-        await element.updateComplete;
+    element.analytics = true;
+    await element.updateComplete;
 
-        expect(onAnalyticsChangeSpy).toHaveBeenCalledTimes(2);
+    expect(onAnalyticsChangeSpy).toHaveBeenCalledTimes(2);
+  });
+
+  // #updateIconAssetsPath
+  it('should update the icon assets path in the bindings when the iconAssetsPath attribute changes', async () => {
+    const element = await setupElement();
+    await element.initialize(searchEngineConfig);
+
+    expect(element.bindings.store.state.iconAssetsPath).not.toBe(
+      '/new/icon/assets/path'
+    );
+
+    element.iconAssetsPath = '/new/icon/assets/path';
+    await element.updateComplete;
+
+    expect(element.bindings.store.state.iconAssetsPath).toBe(
+      '/new/icon/assets/path'
+    );
+  });
+
+  // #updateSearchHub
+  describe('when the searchHub attribute changes', () => {
+    it('should do nothing when the engine has not been created', async () => {
+      const element = await setupElement({searchHub: 'test-hub'});
+      const updateSearchConfigurationMock = vi.fn();
+      vi.mocked(loadSearchConfigurationActions).mockReturnValue({
+        updateSearchConfiguration: updateSearchConfigurationMock,
+      });
+
+      element.searchHub = 'new-hub';
+      await element.updateComplete;
+
+      expect(updateSearchConfigurationMock).not.toHaveBeenCalled();
+    });
+
+    it('should dispatch updateSearchConfiguration when the engine has been created', async () => {
+      const element = await setupElement({searchHub: 'test-hub'});
+      const updateSearchConfigurationMock = vi.fn();
+      vi.mocked(loadSearchConfigurationActions).mockReturnValue({
+        updateSearchConfiguration: updateSearchConfigurationMock,
+      });
+      await element.initialize(searchEngineConfig);
+
+      updateSearchConfigurationMock.mockClear();
+
+      element.searchHub = 'new-hub';
+      await element.updateComplete;
+
+      expect(updateSearchConfigurationMock).toHaveBeenCalledWith({
+        searchHub: 'new-hub',
       });
     });
 
-    // #updateLanguage
-    describe('when language prop changes', () => {
-      it('should call InterfaceController.onLanguageChange when engine is created', async () => {
-        const element = await setupElement();
-        const engine = buildFakeSearchEngine({});
-        await element.initializeWithSearchEngine(engine);
+    it('should do nothing when the new searchHub value is the same as the current engine state', async () => {
+      const element = await setupElement({searchHub: 'test-hub'});
+      const fakeEngine = buildFakeSearchEngine({
+        state: {searchHub: 'test-hub'},
+      });
+      vi.mocked(buildSearchEngine).mockReturnValue(fakeEngine);
+      const updateSearchConfigurationMock = vi.fn();
+      vi.mocked(loadSearchConfigurationActions).mockReturnValue({
+        updateSearchConfiguration: updateSearchConfigurationMock,
+      });
+      await element.initialize(searchEngineConfig);
 
+      updateSearchConfigurationMock.mockClear();
+
+      element.searchHub = 'test-hub';
+      await element.updateComplete;
+
+      expect(updateSearchConfigurationMock).not.toHaveBeenCalled();
+    });
+  });
+
+  // #updatePipeline
+  describe('when the pipeline attribute changes', () => {
+    it('should do nothing when the engine has not been created', async () => {
+      const element = await setupElement({pipeline: 'test-pipeline'});
+      const updateSearchConfigurationMock = vi.fn();
+      vi.mocked(loadSearchConfigurationActions).mockReturnValue({
+        updateSearchConfiguration: updateSearchConfigurationMock,
+      });
+
+      element.pipeline = 'new-pipeline';
+      await element.updateComplete;
+
+      expect(updateSearchConfigurationMock).not.toHaveBeenCalled();
+    });
+
+    it('should dispatch updateSearchConfiguration when the engine has been created', async () => {
+      const element = await setupElement({pipeline: 'test-pipeline'});
+      const updateSearchConfigurationMock = vi.fn();
+      vi.mocked(loadSearchConfigurationActions).mockReturnValue({
+        updateSearchConfiguration: updateSearchConfigurationMock,
+      });
+      await element.initialize(searchEngineConfig);
+
+      updateSearchConfigurationMock.mockClear();
+
+      element.pipeline = 'new-pipeline';
+      await element.updateComplete;
+
+      expect(updateSearchConfigurationMock).toHaveBeenCalledWith({
+        pipeline: 'new-pipeline',
+      });
+    });
+
+    it('should do nothing when the new pipeline value is the same as the current engine state', async () => {
+      const element = await setupElement({pipeline: 'test-pipeline'});
+      const fakeEngine = buildFakeSearchEngine({
+        state: {pipeline: 'test-pipeline'},
+      });
+      vi.mocked(buildSearchEngine).mockReturnValue(fakeEngine);
+      const updateSearchConfigurationMock = vi.fn();
+      vi.mocked(loadSearchConfigurationActions).mockReturnValue({
+        updateSearchConfiguration: updateSearchConfigurationMock,
+      });
+      await element.initialize(searchEngineConfig);
+
+      updateSearchConfigurationMock.mockClear();
+
+      element.pipeline = 'test-pipeline';
+      await element.updateComplete;
+
+      expect(updateSearchConfigurationMock).not.toHaveBeenCalled();
+    });
+  });
+
+  // #updateLanguage
+  describe('when the language attribute changes', () => {
+    it('should do nothing when the engine has not been created', async () => {
+      const onLanguageChangeSpy = vi.spyOn(
+        InterfaceController.prototype,
+        'onLanguageChange'
+      );
+      const element = await setupElement({language: 'en'});
+
+      element.language = 'fr';
+      await element.updateComplete;
+
+      expect(onLanguageChangeSpy).not.toHaveBeenCalled();
+    });
+
+    it('should do nothing when the new language attribute is undefined', async () => {
+      const onLanguageChangeSpy = vi.spyOn(
+        InterfaceController.prototype,
+        'onLanguageChange'
+      );
+      const element = await setupElement({language: 'en'});
+
+      element.language = undefined;
+      await element.updateComplete;
+
+      expect(onLanguageChangeSpy).not.toHaveBeenCalled();
+    });
+    describe('when the engine has been created & the language attribute is defined & the context is defined', () => {
+      it('should call InterfaceController.onLanguageChange with no argument', async () => {
+        const element = await setupElement({language: 'en'});
+        await element.initialize(searchEngineConfig);
         const onLanguageChangeSpy = vi.spyOn(
           InterfaceController.prototype,
           'onLanguageChange'
         );
 
-        expect(onLanguageChangeSpy).not.toHaveBeenCalled();
-
         element.language = 'fr';
         await element.updateComplete;
 
-        expect(onLanguageChangeSpy).toHaveBeenCalledOnce();
-      });
-
-      it('should update search configuration when language changes', async () => {
-        const updateSearchConfigurationMock = vi.fn();
-        vi.mocked(loadSearchConfigurationActions).mockReturnValue({
-          updateSearchConfiguration: updateSearchConfigurationMock,
-        } as never);
-
-        const element = await setupElement();
-        const engine = buildFakeSearchEngine({});
-        await element.initializeWithSearchEngine(engine);
-
-        element.language = 'fr';
-        await element.updateComplete;
-
-        expect(updateSearchConfigurationMock).toHaveBeenCalledWith({
-          locale: 'fr',
-        });
-      });
-
-      it('should not update when engine is not created', async () => {
-        const element = await setupElement();
-        const onLanguageChangeSpy = vi.spyOn(
-          InterfaceController.prototype,
-          'onLanguageChange'
-        );
-
-        element.language = 'fr';
-        await element.updateComplete;
-
-        expect(onLanguageChangeSpy).not.toHaveBeenCalled();
-      });
-    });
-
-    // #updateIconAssetsPath
-    describe('when iconAssetsPath prop changes', () => {
-      it('should update the iconAssetsPath property', async () => {
-        const element = await setupElement();
-
-        element.iconAssetsPath = '/new/icon/assets/path';
-        await element.updateComplete;
-
-        expect(element.iconAssetsPath).toBe('/new/icon/assets/path');
-      });
-    });
-
-    // #updateSearchHub
-    describe('when searchHub prop changes', () => {
-      it('should update search configuration when engine exists', async () => {
-        const updateSearchConfigurationMock = vi.fn();
-        vi.mocked(loadSearchConfigurationActions).mockReturnValue({
-          updateSearchConfiguration: updateSearchConfigurationMock,
-        } as never);
-
-        const element = await setupElement();
-        const engine = buildFakeSearchEngine({});
-        await element.initializeWithSearchEngine(engine);
-
-        element.searchHub = 'new-hub';
-        await element.updateComplete;
-
-        expect(updateSearchConfigurationMock).toHaveBeenCalledWith({
-          searchHub: 'new-hub',
-        });
-      });
-
-      it('should use default when searchHub is undefined', async () => {
-        const element = await setupElement();
-        const engine = buildFakeSearchEngine({});
-        await element.initializeWithSearchEngine(engine);
-
-        element.searchHub = undefined;
-        await element.updateComplete;
-
-        expect(element.searchHub).toBeUndefined();
-      });
-    });
-
-    // #updatePipeline
-    describe('when pipeline prop changes', () => {
-      it('should update search configuration when engine exists', async () => {
-        const updateSearchConfigurationMock = vi.fn();
-        vi.mocked(loadSearchConfigurationActions).mockReturnValue({
-          updateSearchConfiguration: updateSearchConfigurationMock,
-        } as never);
-
-        const element = await setupElement();
-        const engine = buildFakeSearchEngine({});
-        await element.initializeWithSearchEngine(engine);
-
-        element.pipeline = 'new-pipeline';
-        await element.updateComplete;
-
-        expect(updateSearchConfigurationMock).toHaveBeenCalledWith({
-          pipeline: 'new-pipeline',
-        });
+        expect(onLanguageChangeSpy).toHaveBeenCalledExactlyOnceWith();
       });
     });
   });
 
-  // #scrollToTop
-  describe('#scrollToTop', () => {
-    it('should scroll container into view when found', async () => {
+  describe('#disconnectedCallback (when removed from the DOM)', () => {
+    it('should remove aria-live element', async () => {
       const element = await setupElement();
-      const mockContainer = document.createElement('div');
-      mockContainer.scrollIntoView = vi.fn();
-      vi.spyOn(document, 'querySelector').mockReturnValue(mockContainer);
+      await element.initialize(searchEngineConfig);
 
-      element.scrollToTop();
+      expect(element.querySelector('atomic-aria-live')).toBeTruthy();
 
-      expect(document.querySelector).toHaveBeenCalledWith(
-        'atomic-search-interface'
-      );
-      expect(mockContainer.scrollIntoView).toHaveBeenCalledWith({
-        behavior: 'smooth',
-      });
+      element.remove();
+
+      expect(element.querySelector('atomic-aria-live')).toBeFalsy();
     });
 
-    it('should warn when container not found', async () => {
-      const element = await setupElement({scrollContainer: 'non-existent'});
-      const engine = buildFakeSearchEngine({});
-      await element.initializeWithSearchEngine(engine);
+    it('should unsubscribe from urlManager state updates when subscribed', async () => {
+      const element = await setupElement({
+        reflectStateInUrl: true,
+        disableStateReflectionInUrl: false,
+      });
+      const unsubscribeMock = vi.fn();
+      vi.mocked(buildUrlManager).mockReturnValue({
+        ...mockUrlManager,
+        subscribe: vi.fn(() => unsubscribeMock),
+      });
 
-      vi.spyOn(document, 'querySelector').mockReturnValue(null);
+      await element.initialize(searchEngineConfig);
 
-      element.scrollToTop();
+      element.remove();
 
-      expect(engine.logger.warn).toHaveBeenCalledWith(
-        'Could not find the scroll container with the selector "non-existent". This will prevent UX interactions that require a scroll from working correctly. Please check the CSS selector in the scrollContainer option'
+      expect(unsubscribeMock).toHaveBeenCalled();
+    });
+
+    it('should unsubscribe from search status state updates when subscribed', async () => {
+      const element = await setupElement();
+      const unsubscribeMock = vi.fn();
+      const mockSearchStatus = buildFakeSearchStatus();
+      mockSearchStatus.subscribe = vi.fn(() => unsubscribeMock);
+      vi.mocked(buildSearchStatus).mockReturnValue(mockSearchStatus);
+
+      await element.initialize(searchEngineConfig);
+
+      element.remove();
+
+      expect(unsubscribeMock).toHaveBeenCalled();
+    });
+
+    it('should remove the hashchange event listener on the window object', async () => {
+      const element = await setupElement({
+        reflectStateInUrl: true,
+        disableStateReflectionInUrl: false,
+      });
+      const removeEventListenerSpy = vi.spyOn(window, 'removeEventListener');
+      await element.initialize(searchEngineConfig);
+
+      element.remove();
+
+      expect(removeEventListenerSpy).toHaveBeenCalledWith(
+        'hashchange',
+        expect.any(Function)
       );
     });
-  });
 
-  // #closeRelevanceInspector
-  describe('#closeRelevanceInspector', () => {
-    it('should set relevanceInspectorIsOpen to false', async () => {
-      const element = await setupElement();
-      (
-        element as unknown as {relevanceInspectorIsOpen: boolean}
-      ).relevanceInspectorIsOpen = true;
-
-      element.closeRelevanceInspector();
-
-      expect(
-        (element as unknown as {relevanceInspectorIsOpen: boolean})
-          .relevanceInspectorIsOpen
-      ).toBe(false);
-    });
-  });
-
-  // #disconnectedCallback
-  describe('when removed from the DOM', () => {
-    it('should remove event listeners', async () => {
+    it('should remove the atomic/initializeComponent event listener', async () => {
       const element = await setupElement();
       const removeEventListenerSpy = vi.spyOn(element, 'removeEventListener');
 
@@ -762,663 +1148,83 @@ describe('atomic-search-interface', () => {
         'atomic/initializeComponent',
         expect.any(Function)
       );
+    });
+
+    it('should remove the atomic/scrollToTop event listener', async () => {
+      const element = await setupElement();
+      const removeEventListenerSpy = vi.spyOn(element, 'removeEventListener');
+
+      element.remove();
+
       expect(removeEventListenerSpy).toHaveBeenCalledWith(
         'atomic/scrollToTop',
         expect.any(Function)
       );
+    });
+
+    it('should remove the atomic/relevanceInspector/close event listener', async () => {
+      const element = await setupElement();
+      const removeEventListenerSpy = vi.spyOn(element, 'removeEventListener');
+
+      element.remove();
+
       expect(removeEventListenerSpy).toHaveBeenCalledWith(
         'atomic/relevanceInspector/close',
         expect.any(Function)
       );
     });
-
-    it('should unsubscribe from URL manager', async () => {
-      const unsubscribeSpy = vi.fn();
-      vi.mocked(buildUrlManager).mockReturnValue({
-        ...buildFakeUrlManager({}),
-        subscribe: vi.fn().mockReturnValue(unsubscribeSpy),
-      });
-
-      const element = await setupElement();
-      await element.initialize({
-        accessToken: 'test-token',
-        organizationId: 'test-org',
-      });
-
-      element.remove();
-
-      expect(unsubscribeSpy).toHaveBeenCalled();
-    });
-
-    it('should unsubscribe from search status', async () => {
-      const unsubscribeSpy = vi.fn();
-      vi.mocked(buildSearchStatus).mockReturnValue({
-        ...buildFakeSearchStatus({}),
-        subscribe: vi.fn().mockReturnValue(unsubscribeSpy),
-      });
-
-      const element = await setupElement();
-      await element.initialize({
-        accessToken: 'test-token',
-        organizationId: 'test-org',
-      });
-
-      element.remove();
-
-      expect(unsubscribeSpy).toHaveBeenCalled();
-    });
   });
 
-  // #render
-  describe('render', () => {
-    it('should render slot for children', async () => {
+  describe('when rendering (#render)', () => {
+    it('should render a slot', async () => {
       const element = await setupElement();
-      const engine = buildFakeSearchEngine({});
-
-      await element.initializeWithSearchEngine(engine);
-      await element.updateComplete;
 
       expect(element.shadowRoot?.querySelector('slot')).toBeTruthy();
     });
 
-    it('should render relevance inspector when engine exists and enableRelevanceInspector is true', async () => {
-      const element = await setupElement({enableRelevanceInspector: true});
-      const engine = buildFakeSearchEngine({});
-
-      await element.initializeWithSearchEngine(engine);
-      await element.updateComplete;
-
-      expect(
-        element.shadowRoot?.querySelector('atomic-relevance-inspector')
-      ).toBeTruthy();
-    });
-
-    it('should not render relevance inspector when enableRelevanceInspector is false', async () => {
-      const element = await setupElement({enableRelevanceInspector: false});
-      const engine = buildFakeSearchEngine({});
-
-      await element.initializeWithSearchEngine(engine);
-      await element.updateComplete;
-
-      const inspector = element.shadowRoot?.querySelector(
-        'atomic-relevance-inspector'
-      );
-      expect(inspector?.getAttribute('open')).toBeFalsy();
-    });
-
     it('should render its children', async () => {
       const element = await setupElement();
-      const engine = buildFakeSearchEngine({});
-
-      await element.initializeWithSearchEngine(engine);
       await addChildElement(element);
-      await element.updateComplete;
 
       expect(within(element).queryByShadowText('test-element')).toBeTruthy();
     });
-  });
 
-  // Error handling
-  describe('error handling', () => {
-    it('should set error property when engine initialization fails', async () => {
-      vi.mocked(buildSearchEngine).mockImplementation(() => {
-        throw new Error('Engine initialization failed');
+    describe('when relevance inspector is enabled', () => {
+      it('should render the relevance inspector when engine is available and enableRelevanceInspector is true', async () => {
+        const element = await setupElement({enableRelevanceInspector: true});
+        await element.initialize(searchEngineConfig);
+
+        expect(
+          element.shadowRoot?.querySelector('atomic-relevance-inspector')
+        ).toBeTruthy();
       });
 
-      const element = await setupElement();
-      const options = {
-        accessToken: 'test-token',
-        organizationId: 'test-org',
-      };
+      it('should not render the relevance inspector when disableRelevanceInspector is true', async () => {
+        const element = await setupElement({disableRelevanceInspector: true});
+        await element.initialize(searchEngineConfig);
 
-      await expect(element.initialize(options)).rejects.toThrow(
-        'Engine initialization failed'
-      );
-      expect(element.error).toBeInstanceOf(Error);
-      expect(element.error.message).toBe('Engine initialization failed');
-    });
-  });
-
-  // Bindings integration
-  describe('bindings integration', () => {
-    it('should provide bindings to its children', async () => {
-      const element = await setupElement();
-      const childElement = await addChildElement(element);
-      const engine = buildFakeSearchEngine({});
-
-      await element.initializeWithSearchEngine(engine);
-
-      expect(childElement.bindings).toBe(element.bindings);
-    });
-
-    it('should provide createStyleElement function in bindings', async () => {
-      const element = await setupElement();
-      const engine = buildFakeSearchEngine({});
-
-      await element.initializeWithSearchEngine(engine);
-
-      const styleElement = element.bindings.createStyleElement();
-      expect(styleElement).toBeInstanceOf(HTMLStyleElement);
-      expect(styleElement.tagName).toBe('STYLE');
-    });
-
-    it('should provide createScriptElement function in bindings', async () => {
-      const element = await setupElement();
-      const engine = buildFakeSearchEngine({});
-
-      await element.initializeWithSearchEngine(engine);
-
-      const scriptElement = element.bindings.createScriptElement();
-      expect(scriptElement).toBeInstanceOf(HTMLScriptElement);
-      expect(scriptElement.tagName).toBe('SCRIPT');
-    });
-  });
-
-  // Property validation
-  describe('property validation', () => {
-    it('should handle string array for fieldsToInclude', async () => {
-      const element = await setupElement({
-        fieldsToInclude: ['field1', 'field2', 'field3'],
+        expect(
+          element.shadowRoot?.querySelector('atomic-relevance-inspector')
+        ).toBeFalsy();
       });
 
-      expect(element.fieldsToInclude).toEqual(['field1', 'field2', 'field3']);
-    });
+      it('should not render the relevance inspector when enableRelevanceInspector is false', async () => {
+        vi.spyOn(console, 'warn').mockImplementation(() => {});
+        const element = await setupElement({enableRelevanceInspector: false});
+        await element.initialize(searchEngineConfig);
 
-    it('should handle different log levels', async () => {
-      const element = await setupElement({logLevel: 'warn'});
-
-      expect(element.logLevel).toBe('warn');
-    });
-
-    it('should handle custom timezone', async () => {
-      const element = await setupElement({timezone: 'America/Montreal'});
-
-      expect(element.timezone).toBe('America/Montreal');
-    });
-
-    it('should handle custom scroll container', async () => {
-      const element = await setupElement({scrollContainer: '#my-container'});
-
-      expect(element.scrollContainer).toBe('#my-container');
-    });
-  });
-
-  // Relevance inspector functionality
-  describe('relevance inspector functionality', () => {
-    it('should toggle relevance inspector on alt+double-click when enabled', async () => {
-      const element = await setupElement({enableRelevanceInspector: true});
-      const engine = buildFakeSearchEngine({});
-      await element.initializeWithSearchEngine(engine);
-
-      element.connectedCallback();
-
-      // Access the private property for testing
-      const elementWithInspector = element as unknown as {
-        relevanceInspectorIsOpen: boolean;
-      };
-
-      expect(elementWithInspector.relevanceInspectorIsOpen).toBe(false);
-
-      elementWithInspector.relevanceInspectorIsOpen = true;
-      expect(elementWithInspector.relevanceInspectorIsOpen).toBe(true);
-
-      elementWithInspector.relevanceInspectorIsOpen = false;
-      expect(elementWithInspector.relevanceInspectorIsOpen).toBe(false);
-    });
-
-    it('should not toggle relevance inspector on double-click without alt key', async () => {
-      const element = await setupElement({enableRelevanceInspector: true});
-      element.connectedCallback();
-
-      const dblClickEvent = new MouseEvent('dblclick', {altKey: false});
-      element.dispatchEvent(dblClickEvent);
-
-      expect(
-        (element as unknown as {relevanceInspectorIsOpen: boolean})
-          .relevanceInspectorIsOpen
-      ).toBe(false);
-    });
-  });
-
-  // URL management
-  describe('URL management', () => {
-    it('should replace state for first search when URL manager is active', async () => {
-      const replaceStateSpy = vi.spyOn(history, 'replaceState');
-      const urlManagerSubscribe = vi.fn().mockReturnValue(vi.fn());
-      vi.mocked(buildUrlManager).mockReturnValue({
-        state: {fragment: 'new-fragment'},
-        subscribe: urlManagerSubscribe,
-        synchronize: vi.fn(),
-      });
-      vi.mocked(buildSearchStatus).mockReturnValue({
-        state: {
-          hasResults: true,
-          firstSearchExecuted: false,
-          hasError: false,
-          isLoading: false,
-        },
-        subscribe: vi.fn().mockReturnValue(vi.fn()),
+        expect(
+          element.shadowRoot?.querySelector('atomic-relevance-inspector')
+        ).toBeFalsy();
       });
 
-      const element = await setupElement({reflectStateInUrl: true});
-      await element.initialize({
-        accessToken: 'test-token',
-        organizationId: 'test-org',
+      it('should not render the relevance inspector when engine is not available', async () => {
+        const element = await setupElement({enableRelevanceInspector: true});
+
+        expect(
+          element.shadowRoot?.querySelector('atomic-relevance-inspector')
+        ).toBeFalsy();
       });
-
-      const urlSubscriberCallback = urlManagerSubscribe.mock.calls[0][0];
-      urlSubscriberCallback();
-
-      expect(replaceStateSpy).toHaveBeenCalledWith(
-        null,
-        document.title,
-        '#new-fragment'
-      );
-    });
-
-    it('should push state for subsequent searches when URL manager is active', async () => {
-      const pushStateSpy = vi.spyOn(history, 'pushState');
-      const urlManagerSubscribe = vi.fn().mockReturnValue(vi.fn());
-      vi.mocked(buildUrlManager).mockReturnValue({
-        state: {fragment: 'new-fragment'},
-        subscribe: urlManagerSubscribe,
-        synchronize: vi.fn(),
-      });
-      vi.mocked(buildSearchStatus).mockReturnValue({
-        state: {
-          hasResults: true,
-          firstSearchExecuted: true,
-          hasError: false,
-          isLoading: false,
-        },
-        subscribe: vi.fn().mockReturnValue(vi.fn()),
-      });
-
-      const element = await setupElement({reflectStateInUrl: true});
-      await element.initialize({
-        accessToken: 'test-token',
-        organizationId: 'test-org',
-      });
-
-      const urlSubscriberCallback = urlManagerSubscribe.mock.calls[0][0];
-      urlSubscriberCallback();
-
-      expect(pushStateSpy).toHaveBeenCalledWith(
-        null,
-        document.title,
-        '#new-fragment'
-      );
-    });
-  });
-
-  // Analytics configuration and behavior
-  describe('analytics behavior', () => {
-    it('should inject library versions in analytics configuration', async () => {
-      const element = await setupElement({analytics: true});
-      const options = {
-        accessToken: 'test-token',
-        organizationId: 'test-org',
-      };
-
-      await element.initialize(options);
-
-      const analyticsConfig =
-        vi.mocked(buildSearchEngine).mock.calls[0][0].configuration.analytics;
-      expect(analyticsConfig).toHaveProperty('source');
-      expect(analyticsConfig?.source).toHaveProperty('@coveo/atomic');
-    });
-  });
-
-  // JWT token handling and engine initialization scenarios
-  describe('engine initialization with JWT tokens', () => {
-    it('should extract pipeline and searchHub from JWT token', async () => {
-      const element = await setupElement();
-      const engine = buildFakeSearchEngine({
-        state: {
-          ...buildFakeSearchEngine().state,
-          pipeline: 'testing',
-          searchHub: 'testing hub',
-        },
-      });
-
-      await element.initializeWithSearchEngine(engine);
-
-      // The engine should have the values from the JWT token
-      expect(engine.state.pipeline).toBe('testing');
-      expect(engine.state.searchHub).toBe('testing hub');
-    });
-
-    it('should warn when interface pipeline conflicts with engine pipeline', async () => {
-      const consoleSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
-      const element = await setupElement({pipeline: 'interface-pipeline'});
-      const engine = buildFakeSearchEngine({
-        state: {
-          ...buildFakeSearchEngine().state,
-          pipeline: 'engine-pipeline',
-          searchHub: 'default',
-        },
-      });
-
-      await element.initializeWithSearchEngine(engine);
-
-      expect(consoleSpy).toHaveBeenCalledWith(
-        'Mismatch between search interface pipeline and engine pipeline. The engine pipeline will be used.'
-      );
-    });
-
-    it('should warn when interface searchHub conflicts with engine searchHub', async () => {
-      const consoleSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
-      const element = await setupElement({searchHub: 'interface-hub'});
-      const engine = buildFakeSearchEngine({
-        state: {
-          ...buildFakeSearchEngine().state,
-          pipeline: 'default',
-          searchHub: 'engine-hub',
-        },
-      });
-
-      await element.initializeWithSearchEngine(engine);
-
-      expect(consoleSpy).toHaveBeenCalledWith(
-        'Mismatch between search interface search hub and engine search hub. The engine search hub will be used.'
-      );
-    });
-
-    it('should not warn when interface configuration matches engine configuration', async () => {
-      const consoleSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
-      const element = await setupElement({
-        pipeline: 'matching-pipeline',
-        searchHub: 'matching-hub',
-      });
-      const engine = buildFakeSearchEngine({
-        state: {
-          ...buildFakeSearchEngine().state,
-          pipeline: 'matching-pipeline',
-          searchHub: 'matching-hub',
-        },
-      });
-
-      await element.initializeWithSearchEngine(engine);
-
-      expect(consoleSpy).not.toHaveBeenCalled();
-    });
-
-    it('should update interface attributes to match engine state when using external engine', async () => {
-      const element = await setupElement();
-      const engine = buildFakeSearchEngine({
-        state: {
-          ...buildFakeSearchEngine().state,
-          pipeline: 'engine-pipeline',
-          searchHub: 'engine-hub',
-        },
-      });
-
-      await element.updateComplete;
-
-      expect(element.pipeline).toBeUndefined();
-      expect(element.searchHub).toBeUndefined();
-
-      await element.initializeWithSearchEngine(engine);
-
-      expect(element.pipeline).toBe('engine-pipeline');
-      expect(element.searchHub).toBe('engine-hub');
-    });
-  });
-
-  // Comprehensive pre-initialization error testing
-  describe('comprehensive pre-initialization error handling', () => {
-    it('should error when setting pipeline before initialization', async () => {
-      const consoleSpy = vi
-        .spyOn(console, 'error')
-        .mockImplementation(() => {});
-      const element = await setupElement();
-
-      element.pipeline = 'test-pipeline';
-      await element.updateComplete;
-
-      expect(consoleSpy).toHaveBeenCalledWith(
-        'You have to call "initialize" on the atomic-search-interface component before modifying the props or calling other public methods.',
-        element
-      );
-    });
-
-    it('should error when setting searchHub before initialization', async () => {
-      const consoleSpy = vi
-        .spyOn(console, 'error')
-        .mockImplementation(() => {});
-      const element = await setupElement();
-
-      element.searchHub = 'test-hub';
-      await element.updateComplete;
-
-      expect(consoleSpy).toHaveBeenCalledWith(
-        'You have to call "initialize" on the atomic-search-interface component before modifying the props or calling other public methods.',
-        element
-      );
-    });
-
-    it('should error when setting language before initialization', async () => {
-      const consoleSpy = vi
-        .spyOn(console, 'error')
-        .mockImplementation(() => {});
-      const element = await setupElement();
-
-      element.language = 'fr';
-      await element.updateComplete;
-
-      expect(consoleSpy).toHaveBeenCalledWith(
-        'You have to call "initialize" on the atomic-search-interface component before modifying the props or calling other public methods.',
-        element
-      );
-    });
-
-    it('should error when calling executeFirstSearch before initialization', async () => {
-      const consoleSpy = vi
-        .spyOn(console, 'error')
-        .mockImplementation(() => {});
-      const element = await setupElement();
-
-      await element.executeFirstSearch();
-
-      expect(consoleSpy).toHaveBeenCalledWith(
-        'You have to call "initialize" on the atomic-search-interface component before modifying the props or calling other public methods.',
-        element
-      );
-    });
-  });
-
-  // Advanced i18n features
-  describe('advanced i18n features', () => {
-    it('should support adding custom translations at runtime', async () => {
-      const element = await setupElement();
-      const engine = buildFakeSearchEngine({});
-      await element.initializeWithSearchEngine(engine);
-
-      const addResourceSpy = vi.spyOn(element.i18n, 'addResource');
-
-      element.i18n.addResource('jo', 'translation', 'test-key', 'test-value');
-
-      expect(addResourceSpy).toHaveBeenCalledWith(
-        'jo',
-        'translation',
-        'test-key',
-        'test-value'
-      );
-    });
-
-    it('should allow translation overrides without affecting other strings', async () => {
-      const element = await setupElement({language: 'fr'});
-      const engine = buildFakeSearchEngine({});
-      await element.initializeWithSearchEngine(engine);
-
-      const addResourceSpy = vi.spyOn(element.i18n, 'addResource');
-
-      element.i18n.addResource(
-        'fr',
-        'translation',
-        'showing-results-of_other',
-        'patate'
-      );
-
-      expect(addResourceSpy).toHaveBeenCalledWith(
-        'fr',
-        'translation',
-        'showing-results-of_other',
-        'patate'
-      );
-    });
-
-    it('should handle lowercase regions correctly', async () => {
-      const element = await setupElement({language: 'zh-tw'});
-      const engine = buildFakeSearchEngine({});
-
-      await element.initializeWithSearchEngine(engine);
-
-      expect(element.language).toBe('zh-tw');
-    });
-
-    it('should fallback to base language when region-specific language is not available', async () => {
-      const element = await setupElement({language: 'es-ES'});
-      const engine = buildFakeSearchEngine({});
-
-      await element.initializeWithSearchEngine(engine);
-
-      // The component should fall back to 'es' when 'es-ES' is not available
-      expect(element.language).toBe('es-ES');
-    });
-
-    it('should not log errors when fetching non-existing languages', async () => {
-      const consoleSpy = vi
-        .spyOn(console, 'error')
-        .mockImplementation(() => {});
-      const element = await setupElement({language: 'nonexistent'});
-      const engine = buildFakeSearchEngine({});
-
-      await element.initializeWithSearchEngine(engine);
-
-      expect(consoleSpy).not.toHaveBeenCalled();
-    });
-  });
-
-  // Search configuration merging
-  describe('search configuration merging', () => {
-    it('should merge search configuration with engine configuration', async () => {
-      const buildSearchEngineSpy = vi.mocked(buildSearchEngine);
-      const element = await setupElement({
-        pipeline: 'interface-pipeline',
-        searchHub: 'interface-hub',
-        timezone: 'America/Montreal',
-      });
-      const options = {
-        accessToken: 'test-token',
-        organizationId: 'test-org',
-        search: {
-          pipeline: 'override-pipeline',
-          locale: 'fr',
-        },
-      };
-
-      await element.initialize(options);
-
-      expect(buildSearchEngineSpy).toHaveBeenCalledWith({
-        configuration: {
-          ...options,
-          search: {
-            searchHub: 'interface-hub',
-            pipeline: 'override-pipeline', // Options should override interface
-            locale: 'fr', // Options should override interface
-            timezone: 'America/Montreal',
-          },
-          analytics: expect.any(Object),
-        },
-        loggerOptions: {
-          level: undefined,
-        },
-      });
-    });
-
-    it('should use default searchHub when not specified', async () => {
-      const buildSearchEngineSpy = vi.mocked(buildSearchEngine);
-      const element = await setupElement();
-      const options = {
-        accessToken: 'test-token',
-        organizationId: 'test-org',
-      };
-
-      await element.initialize(options);
-
-      expect(buildSearchEngineSpy).toHaveBeenCalledWith({
-        configuration: {
-          ...options,
-          search: {
-            searchHub: 'default',
-            pipeline: undefined,
-            locale: 'en',
-            timezone: undefined,
-          },
-          analytics: expect.any(Object),
-        },
-        loggerOptions: {
-          level: undefined,
-        },
-      });
-    });
-  });
-
-  // Fields to include functionality
-  describe('fields to include functionality', () => {
-    it('should register fields to include when provided', async () => {
-      const registerFieldsToIncludeMock = vi.fn();
-      vi.mocked(loadFieldActions).mockReturnValue({
-        registerFieldsToInclude: registerFieldsToIncludeMock,
-      } as never);
-
-      const element = await setupElement({
-        fieldsToInclude: ['field1', 'field2', 'field3'],
-      });
-      const engine = buildFakeSearchEngine({});
-
-      await element.initializeWithSearchEngine(engine);
-
-      // Should register both default ecommerce fields and custom fields
-      expect(registerFieldsToIncludeMock).toHaveBeenCalledWith(
-        expect.arrayContaining(['field1', 'field2', 'field3'])
-      );
-    });
-
-    it('should not register additional fields when fieldsToInclude is empty', async () => {
-      const registerFieldsToIncludeMock = vi.fn();
-      vi.mocked(loadFieldActions).mockReturnValue({
-        registerFieldsToInclude: registerFieldsToIncludeMock,
-      } as never);
-
-      const element = await setupElement({fieldsToInclude: []});
-      const engine = buildFakeSearchEngine({});
-
-      await element.initializeWithSearchEngine(engine);
-
-      // Should still register default ecommerce fields but not additional ones
-      expect(registerFieldsToIncludeMock).toHaveBeenCalledWith(
-        expect.not.arrayContaining(['field1', 'field2', 'field3'])
-      );
-    });
-  });
-
-  // Mobile breakpoint functionality
-  describe('mobile breakpoint functionality', () => {
-    it('should update mobile breakpoint when atomic-search-layout child is present', async () => {
-      const element = await setupElement();
-      const engine = buildFakeSearchEngine({});
-      await element.initializeWithSearchEngine(engine);
-
-      const searchLayout = document.createElement('atomic-search-layout');
-      searchLayout.setAttribute('mobile-breakpoint', '1024px');
-      element.appendChild(searchLayout);
-
-      element.connectedCallback();
-
-      // The mobile breakpoint should be updated in the store
-      expect(element.bindings.store?.state.mobileBreakpoint).toBeDefined();
     });
   });
 });
