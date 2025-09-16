@@ -116,7 +116,7 @@ export const WithAResultList: Story = {
             ></atomic-result-list>
           </atomic-layout-section>
         </atomic-layout-section>
-      </atomic-commerce-layout>
+      </atomic-search-layout>
     `,
   },
 };
