@@ -484,19 +484,7 @@ export class AtomicSearchInterface
   }
 
   private initFieldsToInclude() {
-    // Handle case where fieldsToInclude might still be a string
-    let fieldsArray: string[];
-    if (typeof this.fieldsToInclude === 'string') {
-      try {
-        fieldsArray = JSON.parse(this.fieldsToInclude);
-      } catch {
-        fieldsArray = [];
-      }
-    } else {
-      fieldsArray = this.fieldsToInclude || [];
-    }
-
-    const fields = EcommerceDefaultFieldsToInclude.concat(fieldsArray);
+    const fields = EcommerceDefaultFieldsToInclude.concat(this.fieldsToInclude);
     this.store.addFieldsToInclude(fields);
   }
 
