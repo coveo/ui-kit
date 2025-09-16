@@ -108,7 +108,22 @@ export class AtomicSearchInterface
    * <atomic-search-interface fields-to-include='["fieldA", "fieldB"]'></atomic-search-interface>
    * ```
    */
-  @property({type: Array, attribute: 'fields-to-include'})
+  @property({
+    type: Array,
+    attribute: 'fields-to-include',
+    converter: {
+      fromAttribute: (value: string | null) => {
+        if (!value) return [];
+        try {
+          const parsed = JSON.parse(value);
+          return Array.isArray(parsed) ? parsed : [];
+        } catch {
+          return [];
+        }
+      },
+      toAttribute: (value: string[]) => JSON.stringify(value),
+    },
+  })
   public fieldsToInclude: string[] = [];
 
   /**
@@ -126,6 +141,10 @@ export class AtomicSearchInterface
   @property({type: String, attribute: 'search-hub', reflect: true})
   public searchHub?: string;
 
+  // TODO - KIT-4994: Add disableAnalytics property that defaults to false.
+
+  // TODO - KIT-4994: Deprecate in favor of disableAnalytics property.
+  // TODO - (v4) KIT-4990: Remove.
   /**
    * Whether analytics should be enabled.
    */
@@ -165,8 +184,10 @@ export class AtomicSearchInterface
    */
   @property({type: Object, attribute: false}) public engine?: SearchEngine;
 
+  // TODO - (v4) KIT-4823: Remove.
   /**
    * Whether the state should be reflected in the URL parameters.
+   * @deprecated - replaced by `disable-state-reflection-in-url` (this defaults to `true`, while the replacement defaults to `false`).
    */
   @property({
     type: Boolean,
@@ -175,6 +196,16 @@ export class AtomicSearchInterface
     converter: booleanConverter,
   })
   reflectStateInUrl = true;
+
+  /**
+   * Disable state reflection in the URL parameters.
+   */
+  @property({
+    type: Boolean,
+    attribute: 'disable-state-reflection-in-url',
+    reflect: true,
+  })
+  disableStateReflectionInUrl = false;
 
   /**
    * The CSS selector for the container where the interface will scroll back to.
@@ -280,6 +311,7 @@ export class AtomicSearchInterface
     this.interfaceController.onComponentInitializing(event);
   };
 
+  // TODO - (v4) KIT-4991: Make private.
   public scrollToTop() {
     const scrollContainerElement = document.querySelector(this.scrollContainer);
     if (!scrollContainerElement) {
@@ -440,7 +472,19 @@ export class AtomicSearchInterface
   }
 
   private initFieldsToInclude() {
-    const fields = EcommerceDefaultFieldsToInclude.concat(this.fieldsToInclude);
+    // Handle case where fieldsToInclude might still be a string
+    let fieldsArray: string[];
+    if (typeof this.fieldsToInclude === 'string') {
+      try {
+        fieldsArray = JSON.parse(this.fieldsToInclude);
+      } catch {
+        fieldsArray = [];
+      }
+    } else {
+      fieldsArray = this.fieldsToInclude || [];
+    }
+
+    const fields = EcommerceDefaultFieldsToInclude.concat(fieldsArray);
     this.store.addFieldsToInclude(fields);
   }
 
