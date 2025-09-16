@@ -17,6 +17,7 @@ import {renderItemTextFallback} from '../../common/item-text/item-text-fallback.
 import {renderItemTextHighlighted} from '../../common/item-text/item-text-highlighted.js';
 import type {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface';
 import '../atomic-commerce-text/atomic-commerce-text';
+import {LightDomMixin} from '@/src/mixins/light-dom';
 import {getStringValueFromProductOrNull} from '../product-template-component-utils/product-utils.js';
 
 /**
@@ -25,7 +26,7 @@ import {getStringValueFromProductOrNull} from '../product-template-component-uti
 @customElement('atomic-product-text')
 @bindings()
 export class AtomicProductText
-  extends LitElement
+  extends LightDomMixin(LitElement)
   implements InitializableComponent<CommerceBindings>
 {
   /**
@@ -33,6 +34,7 @@ export class AtomicProductText
    * The component will look for the specified field in the product's properties first, and then in the product's `additionalFields` property.
    */
   @property({type: String, reflect: true}) public field!: string;
+
   /**
    * Whether to highlight the string field value.
    * @deprecated - replaced by `no-highlight` (this defaults to `true`, while the replacement is the inverse and defaults to `false`).
@@ -69,10 +71,6 @@ export class AtomicProductText
   @state() public bindings!: CommerceBindings;
 
   @state() public error!: Error;
-
-  protected createRenderRoot() {
-    return this;
-  }
 
   initialize() {
     if (!this.product && this.productController.item) {

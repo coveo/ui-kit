@@ -1,0 +1,23 @@
+{
+  "compilerOptions": {
+    "experimentalDecorators": true,
+    "baseUrl": ".",
+    "checkJs": true,
+    "target": "es2016",
+    "module": "esnext",
+    "paths": {
+      "c/examplePageViewTracker": ["examplePageViewTracker/examplePageViewTracker.js"],
+      "c/*": ["*"]
+    }
+  },
+  "include": [
+    "**/*",
+    "../../../../.sfdx/typings/lwc/**/*.d.ts",
+    "../../../../typings/lwc/**/*.d.ts",
+    "../../../../coveo.d.ts"
+  ],
+  "exclude": ["**/e2e/**"],
+  "typeAcquisition": {
+    "include": ["jest"]
+  }
+}

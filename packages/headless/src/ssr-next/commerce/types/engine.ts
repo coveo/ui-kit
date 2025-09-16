@@ -1,22 +1,21 @@
 import type {UnknownAction} from '@reduxjs/toolkit';
-import type {CommerceEngineOptions} from '../../../app/commerce-engine/commerce-engine.js';
-import type {EngineConfiguration} from '../../../app/engine-configuration.js';
 import type {NavigatorContextProvider} from '../../../app/navigator-context-provider.js';
 import type {Controller} from '../../../controllers/controller/headless-controller.js';
-import type {ControllerStaticStateMap} from '../../common/types/controllers.js';
+import type {ControllersMap} from '../../common/types/controllers.js';
+import type {EngineStaticState} from '../../common/types/engine.js';
 import type {SSRCommerceEngine} from '../factories/build-factory.js';
-import type {Build} from './build.js';
+import type {SSRCommerceEngineOptions} from './build.js';
 import type {SolutionType} from './controller-constants.js';
-import type {ControllerDefinitionsMap} from './controller-definitions.js';
+import type {
+  BakedInControllers,
+  ControllerDefinitionsMap,
+} from './controller-definitions.js';
 import type {
   InferControllerPropsMapFromDefinitions,
   InferControllerStaticStateMapFromDefinitionsWithSolutionType,
   InferControllersMapFromDefinition,
 } from './controller-inference.js';
-import type {
-  FetchStaticState,
-  FetchStaticStateOptions,
-} from './fetch-static-state.js';
+import type {FetchStaticState} from './fetch-static-state.js';
 import type {
   HydrateStaticState,
   HydrateStaticStateOptions,
@@ -26,25 +25,30 @@ export type {
   HydrateStaticState,
   HydrateStaticStateOptions,
   FetchStaticState,
-  FetchStaticStateOptions,
+  EngineStaticState,
 };
 
-export interface EngineStaticState<
-  TSearchAction extends UnknownAction,
-  TControllers extends ControllerStaticStateMap,
-> {
-  searchActions: TSearchAction[];
-  controllers: TControllers;
-}
+type ReservedControllerNames = 'context' | 'parameterManager' | 'cart';
 
-export type EngineDefinitionOptions<
-  TOptions extends {configuration: EngineConfiguration},
-  TControllers extends ControllerDefinitionsMap<Controller>,
-> = TOptions & {
+type ValidateControllerNames<T extends ControllerDefinitionsMap<Controller>> = {
+  [K in keyof T]: K extends ReservedControllerNames
+    ? `ERROR: Controller name "${K & string}" is reserved and cannot be used. Reserved names are: context, parameterManager, cart. Please choose a different controller name.`
+    : T[K];
+};
+
+/**
+ * The options to create a Commerce engine definition in SSR.
+ *
+ * @group Engine
+ */
+export type CommerceEngineDefinitionOptions<
+  TControllers extends
+    ControllerDefinitionsMap<Controller> = ControllerDefinitionsMap<Controller>,
+> = SSRCommerceEngineOptions & {
   /**
    * The controllers to initialize with the commerce engine.
    */
-  controllers?: TControllers;
+  controllers?: ValidateControllerNames<TControllers>;
 };
 
 export interface CommerceEngineDefinition<
@@ -96,48 +100,39 @@ export interface CommerceEngineDefinition<
   setAccessToken: (accessToken: string) => void;
 }
 
+export interface CommerceEngineDefinitionBuildResult<
+  TControllers extends ControllersMap,
+> {
+  engine: SSRCommerceEngine;
+  controllers: TControllers & BakedInControllers;
+}
+
 export type CommerceControllerDefinitionsMap =
   ControllerDefinitionsMap<Controller>;
 
 type Definition<
   TControllerDefinitions extends CommerceControllerDefinitionsMap,
-> = CommerceEngineDefinition<TControllerDefinitions, SolutionType>;
+  TSolutionType extends SolutionType,
+> = CommerceEngineDefinition<TControllerDefinitions, TSolutionType>;
 
-export type FetchStaticStateFunction<
+type FetchStaticStateFunction<
   TControllerDefinitions extends CommerceControllerDefinitionsMap,
-> = Definition<TControllerDefinitions>['fetchStaticState'];
+  TSolutionType extends SolutionType,
+> = Definition<TControllerDefinitions, TSolutionType>['fetchStaticState'];
 
 export type HydrateStaticStateFunction<
   TControllerDefinitions extends CommerceControllerDefinitionsMap,
-> = Definition<TControllerDefinitions>['hydrateStaticState'];
-
-export type BuildParameters<
-  TControllerDefinitions extends CommerceControllerDefinitionsMap,
-> = Parameters<
-  Build<
-    CommerceEngineOptions,
-    InferControllersMapFromDefinition<TControllerDefinitions, SolutionType>,
-    InferControllerPropsMapFromDefinitions<TControllerDefinitions>,
-    TControllerDefinitions,
-    SolutionType
-  >
->;
+  TSolutionType extends SolutionType,
+> = Definition<TControllerDefinitions, TSolutionType>['hydrateStaticState'];
 
 export type FetchStaticStateParameters<
   TControllerDefinitions extends CommerceControllerDefinitionsMap,
-> = Parameters<FetchStaticStateFunction<TControllerDefinitions>>;
+  TSolutionType extends SolutionType,
+> = Parameters<FetchStaticStateFunction<TControllerDefinitions, TSolutionType>>;
 
 export type HydrateStaticStateParameters<
   TControllerDefinitions extends CommerceControllerDefinitionsMap,
-> = Parameters<HydrateStaticStateFunction<TControllerDefinitions>>;
-
-type Controllers<
-  TControllerDefinitions extends CommerceControllerDefinitionsMap,
-> = InferControllersMapFromDefinition<TControllerDefinitions, SolutionType>;
-
-export type BuildResult<
-  TControllerDefinitions extends CommerceControllerDefinitionsMap,
-> = {
-  engine: SSRCommerceEngine;
-  controllers: Controllers<TControllerDefinitions>;
-};
+  TSolutionType extends SolutionType,
+> = Parameters<
+  HydrateStaticStateFunction<TControllerDefinitions, TSolutionType>
+>;

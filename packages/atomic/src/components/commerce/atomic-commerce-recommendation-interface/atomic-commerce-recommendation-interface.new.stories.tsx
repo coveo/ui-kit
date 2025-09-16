@@ -2,9 +2,15 @@ import {
   buildCommerceEngine,
   getSampleCommerceEngineConfiguration,
 } from '@coveo/headless/commerce';
-import type {Meta, StoryObj as Story} from '@storybook/web-components';
+import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
+import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
+import {html} from 'lit';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
-import {renderComponent} from '@/storybook-utils/common/render-component';
+
+const {events, args, argTypes, template} = getStorybookHelpers(
+  'atomic-commerce-recommendation-interface',
+  {excludeCategories: ['methods']}
+);
 
 async function initializeCommerceRecommendationInterface(
   canvasElement: HTMLElement
@@ -21,16 +27,52 @@ const meta: Meta = {
   component: 'atomic-commerce-recommendation-interface',
   title: 'Commerce/Interface (Recommendation)',
   id: 'atomic-commerce-recommendation-interface',
-  render: renderComponent,
-  parameters,
-  play: async (context) => {
-    await initializeCommerceRecommendationInterface(context.canvasElement);
+  render: (args) => template(args),
+  decorators: [(story) => html`<div id="code-root">${story()}</div>`],
+  parameters: {
+    ...parameters,
+    actions: {
+      handles: events,
+    },
+  },
+  args: {
+    ...args,
+    engine: undefined,
+    i18n: undefined,
+    urlManager: undefined,
   },
   argTypes: {
-    'attributes-language': {
-      name: 'language',
-      type: 'string',
+    ...argTypes,
+    engine: {
+      ...argTypes,
+      control: {
+        disable: true,
+      },
+      table: {
+        defaultValue: {summary: undefined},
+      },
     },
+    urlManager: {
+      ...argTypes.urlManager,
+      control: {
+        disable: true,
+      },
+      table: {
+        defaultValue: {summary: undefined},
+      },
+    },
+    i18n: {
+      ...argTypes.i18n,
+      control: {
+        disable: true,
+      },
+      table: {
+        defaultValue: {summary: undefined},
+      },
+    },
+  },
+  afterEach: async (context) => {
+    await initializeCommerceRecommendationInterface(context.canvasElement);
   },
 };
 
@@ -38,7 +80,7 @@ export default meta;
 
 export const Default: Story = {
   args: {
-    'slots-default': `<span>Interface content</span>`,
+    'default-slot': `<span>Interface content</span>`,
   },
 };
 
@@ -49,6 +91,7 @@ const recommendationList = `<style>
   @media only screen and (max-width: 1024px) {
     atomic-commerce-recommendation-list {
       --atomic-recs-number-of-columns: 1;
+      --atomic-recs-number-of-rows: 3;
     }
   }
 </style>
@@ -92,9 +135,9 @@ const recommendationList = `<style>
 export const WithRecommendationList: Story = {
   name: 'With a recommendation list',
   args: {
-    'slots-default': recommendationList,
+    'default-slot': recommendationList,
   },
-  play: async ({canvasElement}) => {
+  afterEach: async ({canvasElement}) => {
     const recsInterface = canvasElement.querySelector(
       'atomic-commerce-recommendation-interface'
     );
