@@ -106,7 +106,10 @@ export const WithAResultList: Story = {
           <atomic-layout-section section="status">
             <atomic-breadbox></atomic-breadbox>
             <atomic-query-summary></atomic-query-summary>
-            <atomic-sort-dropdown></atomic-sort-dropdown>
+            <atomic-sort-dropdown>
+              <atomic-sort-expression label="relevance" expression="relevancy"></atomic-sort-expression>
+              <atomic-sort-expression label="most-recent" expression="date descending"></atomic-sort-expression>
+            </atomic-sort-dropdown>
           </atomic-layout-section>
           <atomic-layout-section section="results">
             <atomic-result-list
