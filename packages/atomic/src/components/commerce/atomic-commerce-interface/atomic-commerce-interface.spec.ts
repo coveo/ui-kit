@@ -126,7 +126,7 @@ class TestElement
 
 const commerceEngineConfig: CommerceEngineConfiguration =
   getSampleCommerceEngineConfiguration();
-describe('AtomicCommerceInterface', () => {
+describe('atomic-commerce-interface', () => {
   let element: AtomicCommerceInterface;
   let childElement: InitializableComponent<CommerceBindings> & TestElement;
   let consoleErrorSpy: ReturnType<typeof vi.spyOn>;

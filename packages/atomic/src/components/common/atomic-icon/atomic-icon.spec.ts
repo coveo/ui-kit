@@ -29,7 +29,7 @@ vi.mock('@/src/mixins/bindings-mixin', () => ({
   }),
 }));
 
-describe('AtomicIcon', () => {
+describe('atomic-icon', () => {
   let fetchMock: MockInstance;
   let parseAssetURLMock: MockInstance;
   let sanitizeMock: MockInstance;

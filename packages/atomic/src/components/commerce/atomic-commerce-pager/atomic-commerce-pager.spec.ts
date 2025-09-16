@@ -23,7 +23,7 @@ import './atomic-commerce-pager';
 
 vi.mock('@coveo/headless/commerce', {spy: true});
 
-describe('AtomicCommercePager', () => {
+describe('atomic-commerce-pager', () => {
   const locators = {
     page1: page.getByLabelText('Page 1'),
     page2: page.getByLabelText('Page 2'),

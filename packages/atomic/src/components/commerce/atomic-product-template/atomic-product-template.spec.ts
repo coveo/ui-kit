@@ -9,7 +9,7 @@ import {AtomicProductTemplate} from './atomic-product-template';
 
 vi.mock('../../common/product-template/product-template-common', {spy: true});
 
-describe('AtomicProductTemplate', () => {
+describe('atomic-product-template', () => {
   type AtomicProductTemplateProps = Pick<
     AtomicProductTemplate,
     'conditions' | 'mustMatch' | 'mustNotMatch'
