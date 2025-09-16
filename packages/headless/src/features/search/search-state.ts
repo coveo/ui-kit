@@ -59,7 +59,7 @@ export interface SearchState {
    * - Set to `true` at the start of `executeSearch`, after the action cause is set,
    *   and reset to `false` when the search completes.
    * - Allows subscribers (e.g., generated answer controller) to know when
-   *   it’s appropriate to dispatch a `triggerSearchRequest`.
+   *   it’s appropriate to dispatch a `generateAnswer`.
    */
   readyToGenerateAnswer: boolean;
 }
