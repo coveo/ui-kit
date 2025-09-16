@@ -108,7 +108,22 @@ export class AtomicSearchInterface
    * <atomic-search-interface fields-to-include='["fieldA", "fieldB"]'></atomic-search-interface>
    * ```
    */
-  @property({type: Array, attribute: 'fields-to-include'})
+  @property({
+    type: Array,
+    attribute: 'fields-to-include',
+    converter: {
+      fromAttribute: (value: string | null) => {
+        if (!value) return [];
+        try {
+          const parsed = JSON.parse(value);
+          return Array.isArray(parsed) ? parsed : [];
+        } catch {
+          return [];
+        }
+      },
+      toAttribute: (value: string[]) => JSON.stringify(value),
+    },
+  })
   public fieldsToInclude: string[] = [];
 
   /**
@@ -440,7 +455,30 @@ export class AtomicSearchInterface
   }
 
   private initFieldsToInclude() {
-    const fields = EcommerceDefaultFieldsToInclude.concat(this.fieldsToInclude);
+    console.log('fieldsToInclude type:', typeof this.fieldsToInclude);
+    console.log('fieldsToInclude value:', this.fieldsToInclude);
+    console.log(
+      'fieldsToInclude isArray:',
+      Array.isArray(this.fieldsToInclude)
+    );
+    console.log(
+      'EcommerceDefaultFieldsToInclude:',
+      EcommerceDefaultFieldsToInclude
+    );
+
+    // Handle case where fieldsToInclude might still be a string
+    let fieldsArray: string[];
+    if (typeof this.fieldsToInclude === 'string') {
+      try {
+        fieldsArray = JSON.parse(this.fieldsToInclude);
+      } catch {
+        fieldsArray = [];
+      }
+    } else {
+      fieldsArray = this.fieldsToInclude || [];
+    }
+
+    const fields = EcommerceDefaultFieldsToInclude.concat(fieldsArray);
     this.store.addFieldsToInclude(fields);
   }
 
