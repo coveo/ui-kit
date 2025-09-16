@@ -77,7 +77,7 @@ export const testSearch =
 
       generatedAnswerObject.streamEndAnalyticRequestPromise =
         generatedAnswerObject.waitForStreamEndAnalytics();
-      if (!!options.answerConfigurationId) {
+      if (options.answerConfigurationId) {
         generatedAnswerObject.generateRequestPromise =
           generatedAnswerObject.waitForGenerateRequest();
       }
@@ -142,7 +142,7 @@ export const testInsight =
       await search.mockSearchWithGenerativeQuestionAnsweringId(data.streamId);
       generatedAnswerObject.streamEndAnalyticRequestPromise =
         generatedAnswerObject.waitForStreamEndAnalytics();
-      if (!!options.answerConfigurationId) {
+      if (options.answerConfigurationId) {
         generatedAnswerObject.generateRequestPromise =
           generatedAnswerObject.waitForGenerateRequest();
       }
