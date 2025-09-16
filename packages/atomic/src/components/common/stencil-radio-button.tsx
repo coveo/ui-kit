@@ -1,6 +1,6 @@
 import {FunctionalComponent, h} from '@stencil/core';
 import {JSXBase} from '@stencil/core/internal';
-import {createRipple} from '../../utils/ripple';
+import {createRipple} from '../../utils/ripple-utils';
 import {RadioButtonProps} from './radio-button';
 import {
   getClassNameForButtonStyle,
