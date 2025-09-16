@@ -37,48 +37,6 @@ vi.mock(
 vi.mock('../../../features/search/search-actions');
 vi.mock('../../../api/knowledge/stream-answer-actions.js');
 
-// vi.mock('../../../api/knowledge/stream-answer-api', async () => {
-//   const originalStreamAnswerApi = await vi.importActual(
-//     '../../../api/knowledge/stream-answer-api'
-//   );
-//   const queryCounter = {count: 0};
-//   const queries = [
-//     {q: '', requestId: ''},
-//     {q: 'this est une question', requestId: '12'},
-//     {q: 'this est une another question', requestId: '12'},
-//     {q: '', requestId: '34'},
-//     {q: 'this est une yet another question', requestId: '56'},
-//     {
-//       q: 'this est une question in legacy mode without action cause',
-//       requestId: '78',
-//       analyticsMode: 'legacy',
-//     },
-//     {
-//       q: 'this est une question in next mode without action cause',
-//       requestId: '7822',
-//       analyticsMode: 'next',
-//       actionCause: '',
-//     },
-//     {
-//       q: 'this est une question in next mode with an action cause',
-//       requestId: '781',
-//       analyticsMode: 'next',
-//       actionCause: 'searchboxSubmit',
-//     },
-//   ];
-//   return {
-//     ...originalStreamAnswerApi,
-//     fetchAnswer: vi.fn(),
-//     selectAnswer: () => ({
-//       data: {answer: 'This est une answer', answerId: '12345_6'},
-//     }),
-//     selectAnswerTriggerParams: () => {
-//       const query = {...queries[queryCounter.count]};
-//       queryCounter.count++;
-//       return query;
-//     },
-//   };
-// });
 vi.mock('../../../api/knowledge/stream-answer-api', async () => {
   const originalStreamAnswerApi = await vi.importActual(
     '../../../api/knowledge/stream-answer-api'
