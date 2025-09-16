@@ -5,6 +5,7 @@ test.describe('AtomicSearchInterface', () => {
     searchInterface,
     makeAxeBuilder,
   }) => {
+    await searchInterface.load();
     await searchInterface.hydrated.waitFor();
     const accessibilityResults = await makeAxeBuilder().analyze();
     expect(accessibilityResults.violations).toEqual([]);
