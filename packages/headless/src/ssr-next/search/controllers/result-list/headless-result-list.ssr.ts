@@ -4,7 +4,7 @@ import {
   type ResultList,
   type ResultListProps,
 } from '../../../../controllers/result-list/headless-result-list.js';
-import type {ControllerDefinitionWithoutProps} from '../../../common/types/controllers.js';
+import type {ControllerDefinitionWithoutProps} from '../../types/controller-definition.js';
 
 export * from '../../../../controllers/result-list/headless-result-list.js';
 

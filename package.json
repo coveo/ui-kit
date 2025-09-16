@@ -1,7 +1,7 @@
 {
   "name": "ui-kit",
   "private": true,
-  "version": "3.0.57",
+  "version": "3.0.59",
   "scripts": {
     "postinstall": "husky install && patch-package && npx playwright install",
     "reset:install": "git checkout origin/main package-lock.json && npm i",
@@ -86,8 +86,10 @@
     "packages/atomic-angular",
     "packages/documentation",
     "packages/atomic-angular/projects/*",
-    "packages/samples/*",
-    "packages/samples/headless-ssr/*",
+    "samples/atomic/*",
+    "samples/headless/*",
+    "samples/headless-ssr/*",
+    "samples/headless-ssr/search-nextjs/*",
     "packages/shopify",
     "utils/cdn",
     "utils/ci",
@@ -99,7 +101,8 @@
     "packages/create-atomic-component-project/template",
     "packages/create-atomic-rollup-plugin",
     "packages/create-atomic-result-component",
-    "packages/create-atomic-result-component/template/src/components/sample-result-component"
+    "packages/create-atomic-result-component/template/src/components/sample-result-component",
+    "samples/headless-ssr/*"
   ],
   "config": {
     "commitizen": {

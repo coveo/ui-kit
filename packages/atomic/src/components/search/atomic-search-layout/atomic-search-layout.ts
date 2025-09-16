@@ -1,7 +1,7 @@
 import {LitElement, unsafeCSS} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
-import {injectStylesForNoShadowDOM} from '@/src/decorators/inject-styles-for-no-shadow-dom';
 import {ChildrenUpdateCompleteMixin} from '@/src/mixins/children-update-complete-mixin';
+import {LightDomMixin} from '@/src/mixins/light-dom';
 import {randomID} from '@/src/utils/utils';
 import {DEFAULT_MOBILE_BREAKPOINT} from '../../../utils/replace-breakpoint';
 import styles from './atomic-search-layout.tw.css';
@@ -15,14 +15,15 @@ import {buildSearchLayout} from './search-layout';
  * @cssprop --atomic-layout-search-box-left-suggestions-width: The width of the left list when displaying a double list.
  */
 @customElement('atomic-search-layout')
-@injectStylesForNoShadowDOM
-export class AtomicSearchLayout extends ChildrenUpdateCompleteMixin(
-  LitElement
+export class AtomicSearchLayout extends LightDomMixin(
+  ChildrenUpdateCompleteMixin(LitElement)
 ) {
   static styles = [styles];
-  static async dynamicStyles(instance: AtomicSearchLayout) {
-    await instance.getUpdateComplete();
-    return unsafeCSS(buildSearchLayout(instance, instance.mobileBreakpoint));
+  private async addStyles() {
+    await this.getUpdateComplete();
+    this.injectStyles(
+      unsafeCSS(buildSearchLayout(this, this.mobileBreakpoint))
+    );
   }
   @state() error!: Error;
 
@@ -36,6 +37,7 @@ export class AtomicSearchLayout extends ChildrenUpdateCompleteMixin(
   connectedCallback() {
     super.connectedCallback();
     this.id = randomID('atomic-search-layout-');
+    this.addStyles();
   }
 }
 

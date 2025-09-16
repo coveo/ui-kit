@@ -1,7 +1,7 @@
 {
   "name": "@coveo/atomic",
   "type": "module",
-  "version": "3.33.2",
+  "version": "3.33.3",
   "description": "A web-component library for building modern UIs interfacing with the Coveo platform",
   "homepage": "https://docs.coveo.com/en/atomic/latest/",
   "repository": {
@@ -48,7 +48,6 @@
   ],
   "scripts": {
     "clean": "rimraf -rf dist/* dist-storybook/* www/* docs/* playwright-report/*",
-    "build": "npm run build:storybook",
     "build:storybook": "storybook build -o dist-storybook",
     "build:cem": "cem analyze",
     "build:stencil-lit": "node --max_old_space_size=6144 ../../node_modules/@stencil/core/bin/stencil build --tsConfig tsconfig.stencil.json && node ./scripts/stencil-proxy.mjs && node ./scripts/build.mjs --config=tsconfig.lit.json && esbuild src/autoloader/index.ts --format=esm --outfile=dist/atomic/autoloader/index.esm.js && esbuild src/autoloader/index.ts --format=cjs --outfile=dist/atomic/autoloader/index.cjs.js && rollup -c rollup.config.js && rimraf ./dist/atomic/loader/package.json && tsc --noEmit --esModuleInterop --skipLibCheck ./dist/types/components.d.ts",
@@ -82,7 +81,7 @@
   },
   "dependencies": {
     "@coveo/bueno": "1.1.0",
-    "@coveo/headless": "3.29.1",
+    "@coveo/headless": "3.29.2",
     "@lit/context": "1.1.6",
     "@open-wc/lit-helpers": "0.7.0",
     "@popperjs/core": "2.11.8",
@@ -114,12 +113,12 @@
     "@storybook/addon-docs": "9.1.2",
     "@storybook/icons": "1.4.0",
     "@storybook/web-components-vite": "9.1.2",
-    "@tailwindcss/postcss": "4.1.11",
-    "@tailwindcss/vite": "4.1.11",
+    "@tailwindcss/postcss": "4.1.12",
+    "@tailwindcss/vite": "4.1.12",
     "@testing-library/jest-dom": "6.6.3",
     "@types/core-js": "2.5.8",
     "@types/escape-html": "1.0.4",
-    "@types/jest": "29.5.12",
+    "@types/jest": "29.5.14",
     "@types/lodash": "4.17.20",
     "@types/node": "22.16.5",
     "@types/postcss-import": "14.0.3",
@@ -155,7 +154,7 @@
     "rollup-plugin-html": "0.2.1",
     "shadow-dom-testing-library": "1.12.0",
     "storybook": "9.1.2",
-    "tailwindcss": "4.1.11",
+    "tailwindcss": "4.1.12",
     "ts-dedent": "2.2.0",
     "ts-lit-plugin": "2.0.2",
     "typescript": "5.8.3",
@@ -165,7 +164,7 @@
   },
   "peerDependencies": {
     "@coveo/bueno": "1.1.0",
-    "@coveo/headless": "3.29.1",
+    "@coveo/headless": "3.29.2",
     "typescript": ">=5.0.0"
   },
   "peerDependenciesMeta": {

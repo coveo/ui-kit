@@ -1,14 +1,11 @@
 import type {Controller} from '../../../controllers/controller/headless-controller.js';
-import type {InvalidControllerDefinition} from '../../common/errors.js';
-import type {ControllersPropsMap} from '../../common/types/controllers.js';
-import type {HydratedState} from '../../common/types/hydrate-static-state.js';
 import type {
   InferControllerStaticStateFromController,
   InferControllerStaticStateMapFromControllers,
-} from '../../common/types/inference.js';
+} from '../../common/types/controller-inference.js';
+import type {ControllersPropsMap} from '../../common/types/controllers.js';
 import type {
   HasKey,
-  HasOptionalKeys,
   HasRequiredKeys,
   OptionsTuple,
 } from '../../common/types/utilities.js';
@@ -22,14 +19,13 @@ import {
 } from './controller-constants.js';
 import type {
   ListingAndStandaloneController,
-  ListingOnlyController,
   NonRecommendationController,
   RecommendationOnlyController,
   SearchAndListingController,
   SearchOnlyController,
   UniversalController,
 } from './controller-scopes.js';
-import type {Kind} from './kind.js';
+import type {HydratedState} from './hydrate-static-state.js';
 import type {HasSolutionType} from './utilities.js';
 
 export type {
@@ -37,16 +33,6 @@ export type {
   OptionsTuple,
   InferControllerStaticStateFromController,
   InferControllerStaticStateMapFromControllers,
-};
-
-export type RecommendationControllerSettings = {
-  /**
-   * Toggle to enable or disable the recommendation controller.
-   * When set to `true`, the controller will perform a recommendation request server-side.
-   *
-   * @default false
-   */
-  enabled?: boolean;
 };
 
 export interface ControllerDefinitionWithoutProps<
@@ -60,11 +46,6 @@ export interface ControllerDefinitionWithoutProps<
    * @returns The created controller instance.
    */
   build(engine: SSRCommerceEngine, solutionType?: SolutionType): TController;
-}
-
-// TODO: KIT-4742: There is no point for this interface now that the wiring is happening in headless
-export interface ControllerWithKind extends Controller {
-  _kind: Kind;
 }
 
 export interface ControllerDefinitionWithProps<
@@ -83,7 +64,7 @@ export interface ControllerDefinitionWithProps<
     engine: SSRCommerceEngine,
     props?: TProps,
     solutionType?: SolutionType
-  ): TController & ControllerWithKind;
+  ): TController;
 }
 
 interface SolutionTypeAvailability {
@@ -105,7 +86,7 @@ export interface ControllerDefinitionsMap<TController extends Controller> {
 }
 
 type BakedInControllerDefinitions = {
-  parameterManager: ParameterManagerDefinition<{listing: true; search: true}>;
+  parameterManager: ParameterManagerDefinition;
   context: ContextDefinition;
   cart: CartDefinition;
 };
@@ -148,121 +129,18 @@ export type AugmentedControllerDefinition<
 > = TControllerDefinitions & BakedInControllerDefinitions;
 
 /**
- * This type defines the required and optional controller props for the engine definition.
+ * This type defines the required and optional controller props for the commerce engine definition.
  */
-export type EngineDefinitionControllersPropsOption<
+export type CommerceEngineDefinitionControllersPropsOption<
   TControllers extends ControllerDefinitionsMap<Controller>,
   TControllersPropsMap extends ControllersPropsMap,
   TSolutionType extends SolutionType,
-> = OptionalEngineDefinitionControllersPropsOption<
+> = RequiredEngineDefinitionControllersPropsOption<
   TControllers,
   TControllersPropsMap,
   TSolutionType
-> &
-  RequiredEngineDefinitionControllersPropsOption<
-    TControllers,
-    TControllersPropsMap,
-    TSolutionType
-  >;
+>;
 
-/**
- * Represents an optional engine definition for controller properties.
- *
- * This type is used to define a map of optional controller properties based on the provided
- * controller definitions, controller properties map, and solution type.
- *
- * @template TControllers - A map of controller definitions.
- * @template TControllersPropsMap - A map of controller properties.
- * @template TSolutionType - The type of solution.
- *
- * The type iterates over the controller keys (defined in the engine definition) and includes only those keys where:
- * 1. The controller can be used for a specific solution type (HasKey<TControllers[K], TSolutionType> is not 'never').
- * 2. The controller properties have optional options (HasOptionalKeys<ConditionalControllerProps<...>> is true).
- *
- * @example
- * Given the following controller definitions:
- * ```
- * const {recommendationEngineDefinition} = defineCommerceEngine({
- *  controllers: {
- *    popularViewed: defineRecommendations({
- *      options: {slotId: 'slot-id'}
- *    })
- *  }
- * });
- * ```
- *
- * The following code will not throw an error since the 'popularViewed' controller props are optional
- * ```
- * recommendationEngineDefinition.fetchStaticState({
- *  controllers: {
- *    popularViewed: {enabled: true, productId: 'some-product-id'} // This is optional
- *  }
- * })
- * ```
- *
- * The following code (with no arguments) is also valid because the 'popularViewed' controller props are optional, and there are no other required controller props in the engine definition.
- * ```
- * recommendationEngineDefinition.fetchStaticState()
- * ```
- */
-type OptionalEngineDefinitionControllersPropsOption<
-  TControllers extends ControllerDefinitionsMap<Controller>,
-  TControllersPropsMap extends ControllersPropsMap,
-  TSolutionType extends SolutionType,
-> = {
-  [K in keyof TControllers as HasKey<
-    TControllers[K],
-    TSolutionType
-  > extends never
-    ? never
-    : HasOptionalKeys<
-          ConditionalControllerProps<
-            TControllers,
-            TControllersPropsMap,
-            TSolutionType,
-            K
-          >
-        > extends false
-      ? never
-      : 'controllers']?: ConditionalControllerProps<
-    TControllers,
-    TControllersPropsMap,
-    TSolutionType,
-    K
-  >;
-};
-
-/**
- * Represents a type that defines the required controller properties for engine definition controllers.
- *
- * @template TControllers - A map of controller definitions.
- * @template TControllersPropsMap - A map of controller properties.
- * @template TSolutionType - The type of solution being used.
- *
- * The type iterates over the controller keys (defined in the engine definition) and includes only those keys where:
- * 1. The controller can be used for a specific solution type (HasKey<TControllers[K], TSolutionType> is not 'never').
- * 2. The controller properties have required options (HasRequiredKeys<ConditionalControllerProps<...>> is true).
- *
- * The resulting type maps the valid keys to their corresponding conditional controller properties.
- *
- * @example
- * Given the following controller definitions:
- * ```
- * const {standaloneEngineDefinition} = defineCommerceEngine({
- *  controllers: {cart: defineCart()},
- * });
- * ```
- *
- * The following code will not throw an error since the 'cart' controller props are required for the standalone engine definition:
- * ```
- * standaloneEngineDefinition.fetchStaticState({
- *   controllers: {
- *     cart: {initialState: {items: []}},
- *   },
- * })
- * ```
- *
- */
 type RequiredEngineDefinitionControllersPropsOption<
   TControllers extends ControllerDefinitionsMap<Controller>,
   TControllersPropsMap extends ControllersPropsMap,
@@ -273,70 +151,18 @@ type RequiredEngineDefinitionControllersPropsOption<
     TSolutionType
   > extends never
     ? never
-    : HasRequiredKeys<
-          ConditionalControllerProps<
-            TControllers,
-            TControllersPropsMap,
-            TSolutionType,
-            K
-          >
+    : IsRecommendationController<TControllers[K]> extends never
+      ? HasRequiredKeys<
+          DefaultControllerProps<TControllers, TControllersPropsMap, K>
         > extends false
-      ? never
-      : 'controllers']: ConditionalControllerProps<
-    TControllers,
-    TControllersPropsMap,
-    TSolutionType,
-    K
-  >;
+        ? never
+        : 'controllers'
+      : never]: DefaultControllerProps<TControllers, TControllersPropsMap, K>;
 };
 
-type IsRecommendationController<
+export type IsRecommendationController<
   TController extends ControllerDefinition<Controller>,
 > = HasKey<TController, typeof recommendationInternalOptionKey>;
-
-/**
- * This type ensures that recommendation controller props are optional, while other controller props remain required.
- *
- * It works by checking if the controller definition includes the `recommendationInternalOptionKey`.
- *
- * - If the key is present, the controller props are made optional.
- * - If the key is absent, the controller props are required.
- *
- * Example:
- *
- * ```typescript
- * type ControllerProps = InferControllerPropsFromDefinition<{
- *   recommendation: defineRecommendation({}),
- *   cart: defineCart(),
- * }>;
- *
- * // In this example:
- * // - The `recommendation` controller props are optional.
- * // - The `cart` controller props are required.
- *
- * const props: ControllerProps = {
- *   cart: {initialState: {items: []}},
- *   // recommendation props can be omitted
- * };
- * ```
- */
-type RecommendationControllerProps<
-  TControllers extends ControllerDefinitionsMap<Controller>,
-  TControllersPropsMap extends ControllersPropsMap,
-  K extends keyof TControllers,
-> = {
-  [I in keyof TControllersPropsMap as I extends K
-    ? IsRecommendationController<TControllers[I]> extends never
-      ? never
-      : I
-    : never]?: TControllersPropsMap[I];
-} & {
-  [I in keyof TControllersPropsMap as I extends K
-    ? IsRecommendationController<TControllers[I]> extends never
-      ? I
-      : never
-    : never]: TControllersPropsMap[I];
-};
 
 type DefaultControllerProps<
   TControllers extends ControllerDefinitionsMap<Controller>,
@@ -348,50 +174,14 @@ type DefaultControllerProps<
     : never]: TControllersPropsMap[I];
 };
 
-type ConditionalControllerProps<
-  TControllers extends ControllerDefinitionsMap<Controller>,
-  TControllersPropsMap extends ControllersPropsMap,
-  TSolutionType extends SolutionType,
-  K extends keyof TControllers,
-> = TSolutionType extends SolutionType.recommendation
-  ? RecommendationControllerProps<TControllers, TControllersPropsMap, K>
-  : DefaultControllerProps<TControllers, TControllersPropsMap, K>;
-
-export interface ControllerDefinitionOption {
-  /**
-   * Whether the controller will be used in a product listing context.
-   * @defaultValue true
-   */
-  listing?: boolean;
-  /**
-   * Whether the controller will be used in a search page context.
-   * @defaultValue true
-   */
-  search?: boolean;
-}
-
 export type SearchOnlyControllerDefinitionWithoutProps<
   TController extends Controller,
 > = ControllerDefinitionWithoutProps<TController> & SearchOnlyController;
-
-type SearchOnlyControllerDefinitionWithProps<
-  TController extends Controller,
-  TProps,
-> = ControllerDefinitionWithProps<TController, TProps> & SearchOnlyController;
 
 export type ListingAndStandaloneControllerWithoutProps<
   TController extends Controller,
 > = ControllerDefinitionWithoutProps<TController> &
   ListingAndStandaloneController;
-
-type ListingOnlyControllerDefinitionWithoutProps<
-  TController extends Controller,
-> = ControllerDefinitionWithoutProps<TController> & ListingOnlyController;
-
-type ListingOnlyControllerDefinitionWithProps<
-  TController extends Controller,
-  TProps,
-> = ControllerDefinitionWithProps<TController, TProps> & ListingOnlyController;
 
 export type RecommendationOnlyControllerDefinitionWithProps<
   TController extends Controller,
@@ -412,35 +202,8 @@ export type SearchAndListingControllerDefinitionWithoutProps<
   TController extends Controller,
 > = ControllerDefinitionWithoutProps<TController> & SearchAndListingController;
 
-type SearchAndListingControllerDefinitionWithProps<
+export type SearchAndListingControllerDefinitionWithProps<
   TController extends Controller,
   TProps,
 > = ControllerDefinitionWithProps<TController, TProps> &
   SearchAndListingController;
-
-export type SubControllerDefinitionWithoutProps<
-  TController extends Controller,
-  TDefinition extends ControllerDefinitionOption | undefined,
-> = TDefinition extends {listing?: true; search?: true} | undefined
-  ? SearchAndListingControllerDefinitionWithoutProps<TController>
-  : TDefinition extends {listing?: true; search?: false}
-    ? ListingOnlyControllerDefinitionWithoutProps<TController>
-    : TDefinition extends {listing?: false; search?: true}
-      ? SearchOnlyControllerDefinitionWithoutProps<TController>
-      : TDefinition extends {listing: false; search: false}
-        ? InvalidControllerDefinition
-        : never;
-
-export type SubControllerDefinitionWithProps<
-  TController extends Controller,
-  TDefinition extends ControllerDefinitionOption | undefined,
-  TProps,
-> = TDefinition extends {listing?: true; search?: true} | undefined
-  ? SearchAndListingControllerDefinitionWithProps<TController, TProps>
-  : TDefinition extends {listing?: true; search?: false}
-    ? ListingOnlyControllerDefinitionWithProps<TController, TProps>
-    : TDefinition extends {listing?: false; search?: true}
-      ? SearchOnlyControllerDefinitionWithProps<TController, TProps>
-      : TDefinition extends {listing: false; search: false}
-        ? InvalidControllerDefinition
-        : never;
