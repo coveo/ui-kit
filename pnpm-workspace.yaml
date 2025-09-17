@@ -42,3 +42,4 @@ patchedDependencies:
 catalogMode: strict
 catalog:
     "coveo.analytics": "2.30.45"
+    "@coveo/relay-event-types": "15.1.0"

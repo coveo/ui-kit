@@ -102,6 +102,7 @@
   "devDependencies": {
     "@axe-core/playwright": "4.10.2",
     "@custom-elements-manifest/analyzer": "0.10.4",
+    "@coveo/relay-event-types": "15.1.0",
     "@playwright/test": "1.54.1",
     "@rollup/plugin-commonjs": "28.0.6",
     "@rollup/plugin-json": "6.1.0",
