@@ -1286,8 +1286,8 @@ export const expectedStreamAnswerAPIParam = {
     },
   },
   searchHub: 'jstpierre2 test - Woods test',
-  facets: {
-    '0': {
+  facets: [
+    {
       filterFacetCount: true,
       injectionDepth: 1000,
       numberOfValues: 8,
@@ -1301,21 +1301,21 @@ export const expectedStreamAnswerAPIParam = {
       facetId: 'author',
       field: 'author',
     },
-    '1': {
+    {
       filterFacetCount: true,
       injectionDepth: 1000,
       numberOfValues: 7,
       sortCriteria: 'descending',
       rangeAlgorithm: 'even',
       resultsMustMatch: 'atLeastOneValue',
-      currentValues: dateRangeCurrentValues,
+      currentValues: [],
       preventAutoSelect: false,
       type: 'dateRange',
       facetId: 'date',
       field: 'date',
       generateAutomaticRanges: false,
     },
-    '2': {
+    {
       filterFacetCount: true,
       injectionDepth: 1000,
       numberOfValues: 0,
@@ -1329,7 +1329,7 @@ export const expectedStreamAnswerAPIParam = {
       field: 'date',
       generateAutomaticRanges: false,
     },
-    '3': {
+    {
       filterFacetCount: true,
       injectionDepth: 1000,
       numberOfValues: 1,
@@ -1343,7 +1343,7 @@ export const expectedStreamAnswerAPIParam = {
       generateAutomaticRanges: true,
       field: 'date',
     },
-    '4': {
+    {
       filterFacetCount: true,
       injectionDepth: 1000,
       numberOfValues: 6,
@@ -1357,7 +1357,7 @@ export const expectedStreamAnswerAPIParam = {
       facetId: 'filetype',
       field: 'filetype',
     },
-    '5': {
+    {
       delimitingCharacter: ';',
       filterFacetCount: true,
       injectionDepth: 1000,
@@ -1372,7 +1372,7 @@ export const expectedStreamAnswerAPIParam = {
       facetId: 'geographicalhierarchy',
       field: 'geographicalhierarchy',
     },
-    '6': {
+    {
       filterFacetCount: true,
       injectionDepth: 1000,
       numberOfValues: 8,
@@ -1386,97 +1386,35 @@ export const expectedStreamAnswerAPIParam = {
       field: 'sncost',
       generateAutomaticRanges: true,
     },
-    '7': {
+    {
       filterFacetCount: true,
       injectionDepth: 1000,
       numberOfValues: 5,
       sortCriteria: 'descending',
       rangeAlgorithm: 'even',
       resultsMustMatch: 'atLeastOneValue',
-      currentValues: [
-        {
-          endInclusive: false,
-          state: 'idle',
-          start: 1,
-          end: 2,
-        },
-        {
-          endInclusive: false,
-          state: 'idle',
-          start: 2,
-          end: 3,
-        },
-        {
-          endInclusive: false,
-          state: 'idle',
-          start: 3,
-          end: 4,
-        },
-        {
-          endInclusive: false,
-          state: 'idle',
-          start: 4,
-          end: 5,
-        },
-        {
-          endInclusive: false,
-          state: 'idle',
-          start: 5,
-          end: 6,
-        },
-      ],
+      currentValues: [],
       preventAutoSelect: false,
       type: 'numericalRange',
       facetId: 'snrating',
       field: 'snrating',
       generateAutomaticRanges: false,
     },
-    '8': {
+    {
       filterFacetCount: true,
       injectionDepth: 1000,
       numberOfValues: 5,
       sortCriteria: 'descending',
       rangeAlgorithm: 'even',
       resultsMustMatch: 'atLeastOneValue',
-      currentValues: [
-        {
-          endInclusive: true,
-          state: 'idle',
-          start: 1,
-          end: 5,
-        },
-        {
-          endInclusive: true,
-          state: 'idle',
-          start: 2,
-          end: 5,
-        },
-        {
-          endInclusive: true,
-          state: 'idle',
-          start: 3,
-          end: 5,
-        },
-        {
-          endInclusive: true,
-          state: 'idle',
-          start: 4,
-          end: 5,
-        },
-        {
-          endInclusive: true,
-          state: 'idle',
-          start: 5,
-          end: 5,
-        },
-      ],
+      currentValues: [],
       preventAutoSelect: false,
       type: 'numericalRange',
       facetId: 'snrating_range',
       field: 'snrating',
       generateAutomaticRanges: false,
     },
-    '9': {
+    {
       filterFacetCount: true,
       injectionDepth: 1000,
       numberOfValues: 8,
@@ -1490,7 +1428,7 @@ export const expectedStreamAnswerAPIParam = {
       facetId: 'source',
       field: 'source',
     },
-    '10': {
+    {
       filterFacetCount: true,
       injectionDepth: 1000,
       numberOfValues: 8,
@@ -1504,7 +1442,7 @@ export const expectedStreamAnswerAPIParam = {
       facetId: 'year',
       field: 'year',
     },
-    '11': {
+    {
       filterFacetCount: true,
       injectionDepth: 1000,
       numberOfValues: 0,
@@ -1518,7 +1456,7 @@ export const expectedStreamAnswerAPIParam = {
       field: 'ytviewcount',
       generateAutomaticRanges: false,
     },
-    '12': {
+    {
       filterFacetCount: true,
       injectionDepth: 1000,
       numberOfValues: 1,
@@ -1532,7 +1470,7 @@ export const expectedStreamAnswerAPIParam = {
       facetId: 'ytviewcount_input_range',
       field: 'ytviewcount',
     },
-  },
+  ],
   fieldsToInclude: [
     'author',
     'language',

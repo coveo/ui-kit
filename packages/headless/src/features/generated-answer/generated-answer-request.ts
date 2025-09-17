@@ -1,6 +1,10 @@
 import type {GeneratedAnswerStreamRequest} from '../../api/generated-answer/generated-answer-request.js';
 import type {StreamAnswerAPIState} from '../../api/knowledge/stream-answer-api-state.js';
 import {getOrganizationEndpoint} from '../../api/platform-client.js';
+import type {
+  AnalyticsParam,
+  ResponseFormatParameters,
+} from '../../api/search/search-api-params.js';
 import type {NavigatorContext} from '../../app/navigator-context-provider.js';
 import {selectAdvancedSearchQueries} from '../../features/advanced-search-queries/advanced-search-query-selectors.js';
 import {fromAnalyticsStateToAnalyticsParams} from '../../features/configuration/analytics-params.js';
@@ -25,10 +29,42 @@ import type {
   SearchSection,
 } from '../../state/state-sections.js';
 import {getFacets} from '../../utils/facet-utils.js';
+import type {ContextPayload} from '../context/context-state.js';
+import type {AnyFacetRequest} from '../facets/generic/interfaces/generic-facet-request.js';
 
 type StateNeededByGeneratedAnswerStream = ConfigurationSection &
   SearchSection &
   GeneratedAnswerSection;
+
+export interface AnswerApiQueryParams {
+  q?: string;
+  aq?: string;
+  cq?: string;
+  dq?: string;
+  lq?: string;
+  context?: ContextPayload;
+  pipelineRuleParameters?: {
+    mlGenerativeQuestionAnswering: {
+      responseFormat: ResponseFormatParameters;
+      citationsFieldToInclude: string[];
+    };
+  };
+  searchHub?: string;
+  pipeline?: string;
+  facets?: AnyFacetRequest[];
+  fieldsToInclude?: string[];
+  queryCorrection?: {
+    enabled: boolean;
+    options: {
+      automaticallyCorrect: 'whenNoResults' | 'never';
+    };
+  };
+  enableDidYouMean?: boolean;
+  numberOfResults?: number;
+  firstResult?: number;
+  tab?: string;
+  analytics?: AnalyticsParam['analytics'];
+}
 
 export const buildStreamingRequest = async (
   state: StateNeededByGeneratedAnswerStream
@@ -45,7 +81,7 @@ export const buildStreamingRequest = async (
 export const constructAnswerAPIQueryParams = (
   state: StreamAnswerAPIState,
   navigatorContext: NavigatorContext
-) => {
+): AnswerApiQueryParams => {
   const q = selectQuery(state)?.q;
 
   const {aq, cq, dq, lq} = buildAdvancedSearchQueryParams(state);
@@ -80,8 +116,7 @@ export const constructAnswerAPIQueryParams = (
     },
     ...(searchHub?.length && {searchHub}),
     ...(pipeline?.length && {pipeline}),
-    // Passing facets
-    ...(Object.keys(facetParams).length && {facets: facetParams}),
+    ...(facetParams.length && {facets: facetParams}),
     ...(state.fields && {fieldsToInclude: state.fields.fieldsToInclude}),
     ...(state.didYouMean && {
       queryCorrection: {
@@ -107,15 +142,36 @@ export const constructAnswerAPIQueryParams = (
   };
 };
 
-const getGeneratedFacetParams = (state: StreamAnswerAPIState) => ({
-  ...getFacets(state)
-    ?.map((facetRequest) =>
-      mapFacetRequest(facetRequest, initialSearchMappings())
-    )
+const getGeneratedFacetParams = (
+  state: StreamAnswerAPIState
+): AnyFacetRequest[] => {
+  const facets = getFacets(state);
+  if (!facets) return [];
+
+  return facets
+    .map((facetRequest) => {
+      const mappedFacet = mapFacetRequest(
+        facetRequest,
+        initialSearchMappings()
+      );
+
+      // For range facets, filter out idle values to avoid sending unnecessary data to RTK API
+      if (
+        mappedFacet.type === 'dateRange' ||
+        mappedFacet.type === 'numericalRange'
+      ) {
+        const activeValues = mappedFacet.currentValues.filter(
+          (value: {state?: string}) => value.state && value.state !== 'idle'
+        );
+        return {...mappedFacet, currentValues: activeValues} as AnyFacetRequest;
+      }
+
+      return mappedFacet;
+    })
     .sort((a, b) =>
       a.facetId > b.facetId ? 1 : b.facetId > a.facetId ? -1 : 0
-    ),
-});
+    );
+};
 
 const buildAdvancedSearchQueryParams = (state: StreamAnswerAPIState) => {
   const advancedSearchQueryParams = selectAdvancedSearchQueries(state);

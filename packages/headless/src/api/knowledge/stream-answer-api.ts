@@ -6,10 +6,10 @@ import {
   updateMessage,
 } from '../../features/generated-answer/generated-answer-actions.js';
 import {logGeneratedAnswerStreamEnd} from '../../features/generated-answer/generated-answer-analytics-actions.js';
+import type {AnswerApiQueryParams} from '../../features/generated-answer/generated-answer-request.js';
 import {fetchEventSource} from '../../utils/fetch-event-source/fetch.js';
 import type {EventSourceMessage} from '../../utils/fetch-event-source/parse.js';
 import {getOrganizationEndpoint} from '../platform-client.js';
-import type {SearchRequest} from '../search/search/search-request.js';
 import {answerSlice} from './answer-slice.js';
 import type {GeneratedAnswerStream} from './generated-answer-stream.js';
 import type {StreamAnswerAPIState} from './stream-answer-api-state.js';
@@ -160,7 +160,7 @@ const buildAnswerEndpoint = (
 export const answerApi = answerSlice.injectEndpoints({
   overrideExisting: true,
   endpoints: (builder) => ({
-    getAnswer: builder.query<GeneratedAnswerStream, Partial<SearchRequest>>({
+    getAnswer: builder.query<GeneratedAnswerStream, AnswerApiQueryParams>({
       queryFn: () => ({
         data: {
           contentFormat: undefined,
@@ -202,13 +202,13 @@ export const answerApi = answerSlice.injectEndpoints({
           ? buildAnswerEndpoint(
               platformEndpoint,
               organizationId,
-              generatedAnswer.answerConfigurationId,
+              generatedAnswer.answerConfigurationId!,
               insightConfiguration.insightId
             )
           : buildAnswerEndpoint(
               platformEndpoint,
               organizationId,
-              generatedAnswer.answerConfigurationId
+              generatedAnswer.answerConfigurationId!
             );
 
         await fetchEventSource(answerEndpoint, {
@@ -248,10 +248,10 @@ export const answerApi = answerSlice.injectEndpoints({
   }),
 });
 
-export const fetchAnswer = (fetchAnswerParams: Partial<SearchRequest>) => {
+export const fetchAnswer = (fetchAnswerParams: AnswerApiQueryParams) => {
   return answerApi.endpoints.getAnswer.initiate(fetchAnswerParams);
 };
 
-export const selectAnswer = (params: Partial<SearchRequest>) => {
-  return answerApi.endpoints.getAnswer.select(params);
+export const selectAnswer = (selectAnswerParams: AnswerApiQueryParams) => {
+  return answerApi.endpoints.getAnswer.select(selectAnswerParams);
 };
