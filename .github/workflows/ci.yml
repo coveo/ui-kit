@@ -641,6 +641,7 @@ jobs:
           node-version-file: ".nvmrc"
       - name: Install package manager
         run: corepack enable
+
         shell: bash
       - run: pnpm i
         shell: bash
