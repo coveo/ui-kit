@@ -1,26 +1,34 @@
-import * as headless from '@coveo/headless/insight';
-import i18next from 'i18next';
 import {html, LitElement} from 'lit';
 import {customElement, state} from 'lit/decorators.js';
 import {ifDefined} from 'lit/directives/if-defined.js';
 import {within} from 'shadow-dom-testing-library';
 import {beforeEach, describe, expect, it, vi} from 'vitest';
+import {bindings} from '@/src/decorators/bindings';
+import type {InitializableComponent} from '@/src/decorators/types';
+import {markParentAsReady} from '@/src/utils/init-queue.js';
+import {fixture} from '@/vitest-utils/testing-helpers/fixture';
+import {InterfaceController} from '../../common/interface/interface-controller.js';
+import {getAnalyticsConfig} from './analytics-config.js';
 import {
   AtomicInsightInterface,
   type InsightBindings,
-} from '@/src/components/insight/atomic-insight-interface/atomic-insight-interface';
-import {createInsightStore} from '@/src/components/insight/atomic-insight-interface/store';
-import {bindings} from '@/src/decorators/bindings';
-import type {InitializableComponent} from '@/src/decorators/types';
-import {markParentAsReady} from '@/src/utils/init-queue';
-import {fixture} from '@/vitest-utils/testing-helpers/fixture';
-import {buildFakeInsightEngine} from '@/vitest-utils/testing-helpers/fixtures/headless/insight/engine';
-import {InterfaceController} from '../../common/interface/interface-controller';
+} from './atomic-insight-interface';
+import {createInsightStore} from './store.js';
+import './atomic-insight-interface.js';
+import {
+  buildInsightEngine,
+  buildResultsPerPage,
+  getSampleInsightEngineConfiguration,
+  type InsightEngineConfiguration,
+  type LogLevel,
+  loadFieldActions,
+} from '@coveo/headless/insight';
+import {buildFakeInsightEngine} from '@/vitest-utils/testing-helpers/fixtures/headless/insight/engine.js';
 
-vi.mock('i18next', {spy: true});
 vi.mock('@coveo/headless/insight', {spy: true});
-vi.mock('@/src/components/insight/atomic-insight-interface/store', {spy: true});
-vi.mock('@/src/utils/init-queue', {spy: true});
+vi.mock('./analytics-config.js', {spy: true});
+vi.mock('./store.js', {spy: true});
+vi.mock('@/src/utils/init-queue.js', {spy: true});
 
 @customElement('test-element')
 @bindings()
@@ -32,7 +40,7 @@ class TestElement
   public bindings: InsightBindings = {} as InsightBindings;
   @state() public error!: Error;
 
-  public initialize() {}
+  public initialize = vi.fn();
 
   public render() {
     return html`test-element`;
@@ -40,62 +48,42 @@ class TestElement
 }
 
 describe('atomic-insight-interface', () => {
-  beforeEach(async () => {
-    vi.mocked(headless.buildInsightEngine).mockReturnValue(
-      buildFakeInsightEngine({})
-    );
+  const insightEngineConfig: InsightEngineConfiguration =
+    getSampleInsightEngineConfiguration();
 
-    vi.mocked(headless.loadFieldActions).mockReturnValue({
-      registerFieldsToInclude: vi.fn(),
-    } as unknown as ReturnType<typeof headless.loadFieldActions>);
-
-    vi.mocked(headless.buildResultsPerPage).mockReturnValue({} as never);
-  });
-
-  const setupElement = async ({
-    analytics,
-    iconAssetsPath,
-    language,
-    languageAssetsPath,
-    logLevel,
-    fieldsToInclude,
-    resultsPerPage,
-  }: {
-    analytics?: boolean;
-    iconAssetsPath?: string;
-    language?: string;
-    languageAssetsPath?: string;
-    logLevel?: string;
-    fieldsToInclude?: string[];
-    resultsPerPage?: number;
-  } = {}) => {
-    const fieldsToIncludeJson = fieldsToInclude
-      ? JSON.stringify(fieldsToInclude)
-      : undefined;
+  const setupElement = async (
+    props: {
+      analytics?: boolean; // TODO - (v4) KIT-4990: remove.
+      fieldsToInclude?: string[];
+      iconAssetsPath?: string;
+      language?: string;
+      languageAssetsPath?: string;
+      logLevel?: LogLevel;
+      resultsPerPage?: number;
+    } = {}
+  ) => {
     const element = (await fixture<AtomicInsightInterface>(
       html`<atomic-insight-interface
-        ?analytics=${analytics}
-        icon-assets-path=${ifDefined(iconAssetsPath)}
-        language=${ifDefined(language)}
-        language-assets-path=${ifDefined(languageAssetsPath)}
-        log-level=${ifDefined(logLevel)}
-        fields-to-include=${ifDefined(fieldsToIncludeJson)}
-        results-per-page=${ifDefined(resultsPerPage)}
-      >
-      </atomic-insight-interface>`
+        analytics=${props.analytics}
+        fields-to-include=${ifDefined(JSON.stringify(props.fieldsToInclude))}
+        icon-assets-path=${ifDefined(props.iconAssetsPath)}
+        language=${ifDefined(props.language)}
+        language-assets-path=${ifDefined(props.languageAssetsPath)}
+        log-level=${ifDefined(props.logLevel)}
+        results-per-page=${ifDefined(props.resultsPerPage)}
+        ><div>Interface content</div></atomic-insight-interface
+      >`
     )) as AtomicInsightInterface;
 
     expect(element).toBeInstanceOf(AtomicInsightInterface);
+
     return element;
   };
 
-  const addChildElement = async <T extends TestElement>(
-    element: AtomicInsightInterface,
-    tag = 'test-element'
-  ) => {
+  const addChildElement = async (element: Element, tag = 'test-element') => {
     const childElement = document.createElement(
       tag
-    ) as InitializableComponent<InsightBindings> & T;
+    ) as InitializableComponent<InsightBindings> & TestElement;
     element.appendChild(childElement);
 
     await childElement.updateComplete;
@@ -104,69 +92,45 @@ describe('atomic-insight-interface', () => {
     return childElement;
   };
 
-  // #constructor
-  describe('when created', () => {
-    it('should create an instance of InterfaceController', async () => {
+  beforeEach(() => {
+    vi.mocked(buildInsightEngine).mockReturnValue(buildFakeInsightEngine());
+    vi.mocked(buildResultsPerPage).mockReturnValue({} as never);
+  });
+
+  describe('#constructor (when created)', () => {
+    it('should create an i18n instance', async () => {
       const element = await setupElement();
 
-      // Mocking the InterfaceController class would be complex.
-      expect(
-        (
-          element as unknown as {
-            interfaceController: InterfaceController<never>;
-          }
-        ).interfaceController
-      ).toBeInstanceOf(InterfaceController);
-    });
-
-    it('should set #store to the value returned by createInsightStore', async () => {
-      const createInsightStoreSpy = vi.mocked(createInsightStore);
-
-      const element = await setupElement();
-
-      expect(createInsightStoreSpy).toHaveBeenCalledOnce();
-      expect(element.store).toBeDefined();
-      expect(element.store).toBe(createInsightStoreSpy.mock.results[0].value);
-    });
-
-    it('should set i18n to the value returned by i18next.createInstance', async () => {
-      const i18nextCreateInstanceSpy = vi.mocked(i18next.createInstance);
-
-      const element = await setupElement();
-
-      expect(i18nextCreateInstanceSpy).toHaveBeenCalledOnce();
       expect(element.i18n).toBeDefined();
-      expect(element.i18n).toBe(i18nextCreateInstanceSpy.mock.results[0].value);
     });
 
-    it('should set default property values', async () => {
+    // Done through the InterfaceController
+    it('should prepend an aria-live element', async () => {
       const element = await setupElement();
 
-      expect(element.analytics).toBe(true);
-      expect(element.language).toBe('en');
-      expect(element.languageAssetsPath).toBe('./lang');
-      expect(element.iconAssetsPath).toBe('./assets');
-      expect(element.resultsPerPage).toBe(5);
-      expect(element.fieldsToInclude).toEqual([]);
+      const ariaLive = element.firstElementChild;
+      expect(ariaLive?.tagName).toBe('ATOMIC-ARIA-LIVE');
     });
   });
 
-  // #connectedCallback
-  describe('when added to the DOM', () => {
-    it('should set the loading flag for first insight request', async () => {
-      const element = await setupElement();
-      const setLoadingFlagSpy = vi.spyOn(element.store, 'setLoadingFlag');
+  describe('#connectedCallback (when added to the DOM)', () => {
+    it("should add an 'atomic/initializeComponent' event listener on the element", async () => {
+      const addEventListenerSpy = vi.spyOn(
+        AtomicInsightInterface.prototype,
+        'addEventListener'
+      );
 
-      element.connectedCallback();
+      await setupElement();
 
-      expect(setLoadingFlagSpy).toHaveBeenCalledExactlyOnceWith(
-        'firstInsightRequestExecuted'
+      expect(addEventListenerSpy).toHaveBeenCalledWith(
+        'atomic/initializeComponent',
+        expect.any(Function)
       );
     });
 
-    it("should cause InterfaceController.onComponentInitializing to be called when an 'atomic/initializeComponent' event is dispatched", async () => {
+    it("should call InterfaceController.onComponentInitializing when an 'atomic/initializeComponent' event is dispatched", async () => {
       const element = await setupElement();
-      const onComponentInitializingSpy = vi.spyOn(
+      const onComponentInitializationSpy = vi.spyOn(
         InterfaceController.prototype,
         'onComponentInitializing'
       );
@@ -174,268 +138,334 @@ describe('atomic-insight-interface', () => {
 
       element.dispatchEvent(event);
 
-      expect(onComponentInitializingSpy).toHaveBeenCalledExactlyOnceWith(event);
+      expect(onComponentInitializationSpy).toHaveBeenCalledExactlyOnceWith(
+        event
+      );
     });
   });
 
-  // #initialize
-  describe('#initialize', () => {
-    it('should call initEngine with the provided options', async () => {
+  describe.for<{
+    testedInitMethodName: 'initialize' | 'initializeWithInsightEngine';
+  }>([
+    {
+      testedInitMethodName: 'initialize',
+    },
+    {
+      testedInitMethodName: 'initializeWithInsightEngine',
+    },
+  ])('#$testedInitMethodName', ({testedInitMethodName}) => {
+    const callTestedInitMethod = async (
+      element: Awaited<ReturnType<typeof setupElement>>
+    ) => {
+      if (testedInitMethodName === 'initialize') {
+        await element.initialize(insightEngineConfig);
+      } else {
+        await element.initializeWithInsightEngine(buildFakeInsightEngine());
+      }
+    };
+
+    it('should call InterfaceController.onInitialization', async () => {
       const element = await setupElement();
-      const initEngineSpy = vi.spyOn(
-        element as unknown as {initEngine: (options: unknown) => void},
-        'initEngine'
+      const onInitializationSpy = vi.spyOn(
+        InterfaceController.prototype,
+        'onInitialization'
       );
-      const options = {
-        accessToken: 'test-token',
-        organizationId: 'test-org',
-      };
 
-      await element.initialize(options);
+      await callTestedInitMethod(element);
 
-      expect(initEngineSpy).toHaveBeenCalledExactlyOnceWith(options);
-    });
-
-    it('should set bindings after initialization', async () => {
-      const element = await setupElement();
-      const options = {
-        accessToken: 'test-token',
-        organizationId: 'test-org',
-      };
-
-      expect(element.bindings.engine).toBeUndefined();
-
-      await element.initialize(options);
-
-      expect(element.bindings.engine).toBeDefined();
-      expect(element.bindings.i18n).toBe(element.i18n);
-      expect(element.bindings.store).toBe(element.store);
-      expect(element.bindings.interfaceElement).toBe(element);
-    });
-
-    it('should call markParentAsReady with this', async () => {
-      const markParentAsReadySpy = vi.mocked(markParentAsReady);
-      const element = await setupElement();
-      const options = {
-        accessToken: 'test-token',
-        organizationId: 'test-org',
-      };
-
-      expect(markParentAsReadySpy).not.toHaveBeenCalled();
-
-      await element.initialize(options);
-
-      expect(markParentAsReadySpy).toHaveBeenCalledExactlyOnceWith(element);
-    });
-
-    it('should unset the loading flag after initialization', async () => {
-      const element = await setupElement();
-      const unsetLoadingFlagSpy = vi.spyOn(element.store, 'unsetLoadingFlag');
-      const options = {
-        accessToken: 'test-token',
-        organizationId: 'test-org',
-      };
-
-      await element.initialize(options);
-
-      expect(unsetLoadingFlagSpy).toHaveBeenCalledExactlyOnceWith(
-        'firstInsightRequestExecuted'
+      expect(onInitializationSpy).toHaveBeenCalledExactlyOnceWith(
+        expect.any(Function)
       );
     });
 
-    it('should initialize results per page controller', async () => {
-      const buildResultsPerPageSpy = vi.mocked(headless.buildResultsPerPage);
-      const element = await setupElement({resultsPerPage: 10});
-      const options = {
-        accessToken: 'test-token',
-        organizationId: 'test-org',
-      };
+    it('should call #updateLanguage', async () => {
+      const element = await setupElement({language: 'en'});
+      const updateLanguageSpy = vi.spyOn(element, 'updateLanguage');
 
-      await element.initialize(options);
+      await callTestedInitMethod(element);
 
-      expect(buildResultsPerPageSpy).toHaveBeenCalledExactlyOnceWith(
-        element.engine,
-        {
-          initialState: {numberOfResults: 10},
-        }
-      );
+      expect(updateLanguageSpy).toHaveBeenCalledOnce();
     });
 
-    it('should register fields to include when fieldsToInclude is not empty', async () => {
-      const registerFieldsToIncludeMock = vi.fn();
-      vi.mocked(headless.loadFieldActions).mockReturnValue({
-        registerFieldsToInclude: registerFieldsToIncludeMock,
-      } as unknown as ReturnType<typeof headless.loadFieldActions>);
+    it('should set the bindings', async () => {
+      const mockedCreateInsightStore = vi.mocked(createInsightStore);
+      const element = await setupElement();
 
-      const element = await setupElement({
-        fieldsToInclude: ['field1', 'field2'],
+      await callTestedInitMethod(element);
+
+      expect(mockedCreateInsightStore).toHaveBeenCalledOnce();
+
+      expect(element.bindings).toEqual({
+        engine: element.engine,
+        i18n: element.i18n,
+        store: mockedCreateInsightStore.mock.results[0].value,
+        interfaceElement: element,
+        createStyleElement: expect.any(Function), // TODO - KIT-4839: Remove once atomic-insight-layout migration is complete.
+        createScriptElement: expect.any(Function), // TODO - KIT-4839: Remove once atomic-insight-layout migration is complete.
       });
-      const options = {
-        accessToken: 'test-token',
-        organizationId: 'test-org',
-      };
+    });
 
-      await element.initialize(options);
+    it('should provide bindings to its descendant components', async () => {
+      const element = await setupElement();
+      const childElement = await addChildElement(element);
+      const descendantElement = await addChildElement(childElement);
 
+      await callTestedInitMethod(element);
+
+      expect(childElement.bindings).toEqual(element.bindings);
+      expect(descendantElement.bindings).toEqual(element.bindings);
+    });
+
+    it('should trigger the initialize method of its descendant components', async () => {
+      const element = await setupElement();
+      const childElement = await addChildElement(element);
+      const descendantElement = await addChildElement(childElement);
+
+      await callTestedInitMethod(element);
+
+      expect(childElement.initialize).toHaveBeenCalledOnce();
+      expect(descendantElement.initialize).toHaveBeenCalledOnce();
+    });
+
+    it('should call the #markParentAsReady util function with the element as an argument', async () => {
+      const element = await setupElement();
+
+      await callTestedInitMethod(element);
+
+      expect(markParentAsReady).toHaveBeenCalledExactlyOnceWith(element);
+    });
+
+    it('should call buildResultsPerPage with the default value (5) when resultsPerPage is unspecified', async () => {
+      const element = await setupElement();
+
+      await callTestedInitMethod(element);
+
+      expect(buildResultsPerPage).toHaveBeenCalledExactlyOnceWith(
+        element.bindings.engine,
+        {initialState: {numberOfResults: 5}}
+      );
+    });
+
+    it('should call buildResultsPerPage with correct value when resultsPerPage is specified', async () => {
+      const element = await setupElement({resultsPerPage: 15});
+
+      await callTestedInitMethod(element);
+
+      expect(buildResultsPerPage).toHaveBeenCalledExactlyOnceWith(
+        element.bindings.engine,
+        {initialState: {numberOfResults: 15}}
+      );
+    });
+
+    it('should not dispatch a registerFieldsToInclude action when fieldsToInclude is unspecified', async () => {
+      const loadFieldActionsSpy = vi.mocked(loadFieldActions);
+      const element = await setupElement();
+
+      await callTestedInitMethod(element);
+
+      expect(loadFieldActionsSpy).not.toHaveBeenCalled();
+    });
+
+    it('should dispatch a registerFieldsToInclude action with the fields to include when specified', async () => {
+      const registerFieldsToIncludeMock = vi.fn();
+      const loadFieldActionsSpy = vi.mocked(loadFieldActions).mockReturnValue({
+        registerFieldsToInclude: registerFieldsToIncludeMock,
+        disableFetchAllFields: vi.fn(),
+        enableFetchAllFields: vi.fn(),
+        fetchFieldsDescription: vi.fn(),
+      });
+      const element = await setupElement({
+        fieldsToInclude: ['fieldA', 'fieldB'],
+      });
+
+      await callTestedInitMethod(element);
+      expect(loadFieldActionsSpy).toHaveBeenCalledWith(element.bindings.engine);
       expect(registerFieldsToIncludeMock).toHaveBeenCalledWith([
-        'field1',
-        'field2',
+        'fieldA',
+        'fieldB',
       ]);
     });
 
-    it('should not register fields to include when fieldsToInclude is empty', async () => {
-      const registerFieldsToIncludeMock = vi.fn();
-      vi.mocked(headless.loadFieldActions).mockReturnValue({
-        registerFieldsToInclude: registerFieldsToIncludeMock,
-      } as unknown as ReturnType<typeof headless.loadFieldActions>);
+    describe.skipIf(testedInitMethodName !== 'initialize')(
+      '#initialize only',
+      () => {
+        it('should set the engine with #buildInsightEngine', async () => {
+          const element = await setupElement();
 
-      const element = await setupElement({fieldsToInclude: []});
-      const options = {
-        accessToken: 'test-token',
-        organizationId: 'test-org',
-      };
+          await element.initialize(insightEngineConfig);
 
-      await element.initialize(options);
+          expect(element.engine).toBe(
+            vi.mocked(buildInsightEngine).mock.results[0].value
+          );
+        });
 
-      expect(registerFieldsToIncludeMock).not.toHaveBeenCalled();
-    });
+        it('should pass the specified configuration and log level, along with an analytics configuration augmented with #getAnalyticsConfig to #buildCommerceEngine when setting the engine', async () => {
+          const mockedGetAnalyticsConfig = vi.mocked(getAnalyticsConfig);
+          const element = await setupElement();
+
+          await element.initialize(insightEngineConfig);
+
+          expect(getAnalyticsConfig).toHaveBeenCalledExactlyOnceWith(
+            insightEngineConfig,
+            element.analytics
+          );
+          expect(buildInsightEngine).toHaveBeenCalledExactlyOnceWith({
+            configuration: {
+              ...insightEngineConfig,
+              analytics: mockedGetAnalyticsConfig.mock.results[0].value,
+            },
+            loggerOptions: {level: element.logLevel},
+          });
+        });
+
+        it('should set the error when #buildCommerceEngine throws', async () => {
+          vi.spyOn(console, 'error').mockImplementation(() => {});
+          const element = await setupElement();
+          const buildEngineError = new Error('Oh no!', {
+            cause: 'A noble cause',
+          });
+
+          vi.mocked(buildInsightEngine).mockImplementation(() => {
+            throw buildEngineError;
+          });
+
+          await element.initialize(insightEngineConfig).catch(() => {});
+
+          expect(element.engine).toBeUndefined();
+          expect(element.error).toBe(buildEngineError);
+        });
+      }
+    );
+
+    describe.skipIf(testedInitMethodName !== 'initializeWithInsightEngine')(
+      '#initializeWithInsightEngine only',
+      () => {
+        it('should initialize with a preconfigured engine', async () => {
+          const element = await setupElement();
+          const engine = buildFakeInsightEngine();
+
+          await element.initializeWithInsightEngine(engine);
+
+          expect(element.engine).toBe(engine);
+        });
+      }
+    );
   });
 
-  // #initializeWithInsightEngine
-  describe('#initializeWithInsightEngine', () => {
-    it('should set the engine directly without building a new one', async () => {
-      const element = await setupElement();
-      const engine = buildFakeInsightEngine({});
-
-      expect(element.engine).toBeUndefined();
-
-      await element.initializeWithInsightEngine(engine);
-
-      expect(element.engine).toBe(engine);
-    });
-
-    it('should set bindings after initialization with provided engine', async () => {
-      const element = await setupElement();
-      const engine = buildFakeInsightEngine({});
-
-      expect(element.bindings.engine).toBeUndefined();
-
-      await element.initializeWithInsightEngine(engine);
-
-      expect(element.bindings.engine).toBe(engine);
-      expect(element.bindings.i18n).toBe(element.i18n);
-      expect(element.bindings.store).toBe(element.store);
-      expect(element.bindings.interfaceElement).toBe(element);
-    });
-  });
-
-  // #executeFirstSearch
   describe('#executeFirstSearch', () => {
-    it('should do nothing when engine is not created', async () => {
+    it('should log an error when called before initialization', async () => {
       const element = await setupElement();
-
-      await element.executeFirstSearch();
-
-      // Should not throw or cause any issues
-    });
-
-    it('should log error when not initialized', async () => {
-      const consoleSpy = vi
+      const consoleErrorSpy = vi
         .spyOn(console, 'error')
         .mockImplementation(() => {});
-      const element = await setupElement();
-      const engine = buildFakeInsightEngine({});
-      element.engine = engine;
 
       await element.executeFirstSearch();
 
-      expect(consoleSpy).toHaveBeenCalledExactlyOnceWith(
+      expect(consoleErrorSpy).toHaveBeenCalledWith(
+        'You have to call "initialize" on the atomic-insight-interface component before modifying the props or calling other public methods.',
+        element
+      );
+    });
+
+    it('should log an error when called before initialization finishes', async () => {
+      const element = await setupElement();
+      const consoleErrorSpy = vi
+        .spyOn(console, 'error')
+        .mockImplementation(() => {});
+      element.engine = buildFakeInsightEngine(); // Simulate that the engine was created but the interface wasn't initialized
+
+      await element.executeFirstSearch();
+
+      expect(consoleErrorSpy).toHaveBeenCalledWith(
         'You have to wait until the "initialize" promise is fulfilled before executing a search.',
         element
       );
     });
 
-    it('should call engine.executeFirstSearch when properly initialized', async () => {
+    it('should call executeFirstSearch on the engine when the engine has been created and initialization has finished', async () => {
       const element = await setupElement();
-      const engine = buildFakeInsightEngine({});
-      const executeFirstSearchSpy = vi.spyOn(engine, 'executeFirstSearch');
+      element.engine = buildFakeInsightEngine();
+      const executeFirstSearchSpy = vi.spyOn(
+        element.engine,
+        'executeFirstSearch'
+      );
+      await element.initializeWithInsightEngine(element.engine);
 
-      await element.initializeWithInsightEngine(engine);
       await element.executeFirstSearch();
 
       expect(executeFirstSearchSpy).toHaveBeenCalledOnce();
     });
   });
 
-  // Property watchers
-  describe('property watchers', () => {
-    // #toggleAnalytics
-    describe('when analytics prop changes', () => {
-      it('should call InterfaceController.onAnalyticsChange', async () => {
-        // We're updating attributes before calling #initialize; this would console.error.
-        vi.spyOn(console, 'error').mockImplementation(() => {});
+  // TODO - KIT-4994 / KIT-4990: adjust
+  // #toggleAnalytics
+  it('should call InterfaceController.onAnalyticsChange when the analytics attribute changes', async () => {
+    const element = await setupElement();
+    const onAnalyticsChangeSpy = vi.spyOn(
+      InterfaceController.prototype,
+      'onAnalyticsChange'
+    );
 
-        const element = await setupElement();
-        const onAnalyticsChangeSpy = vi.spyOn(
-          InterfaceController.prototype,
-          'onAnalyticsChange'
-        );
+    expect(onAnalyticsChangeSpy).not.toHaveBeenCalled();
 
-        expect(onAnalyticsChangeSpy).not.toHaveBeenCalled();
+    element.analytics = false;
+    await element.updateComplete;
 
-        element.analytics = false;
-        await element.updateComplete;
+    expect(onAnalyticsChangeSpy).toHaveBeenCalledOnce();
 
-        expect(onAnalyticsChangeSpy).toHaveBeenCalledOnce();
+    element.analytics = true;
+    await element.updateComplete;
 
-        element.analytics = true;
-        await element.updateComplete;
+    expect(onAnalyticsChangeSpy).toHaveBeenCalledTimes(2);
+  });
 
-        expect(onAnalyticsChangeSpy).toHaveBeenCalledTimes(2);
-      });
-    });
+  // #updateIconAssetsPath
+  it('should update the icon assets path in the bindings when the iconAssetsPath attribute changes', async () => {
+    const element = await setupElement();
+    await element.initialize(insightEngineConfig);
 
-    // #updateLanguage
-    describe('when language prop changes', () => {
-      it('should call InterfaceController.onLanguageChange', async () => {
-        // We're updating attributes before calling #initialize; this would console.error.
-        vi.spyOn(console, 'error').mockImplementation(() => {});
+    expect(element.bindings.store.state.iconAssetsPath).not.toBe(
+      '/new/icon/assets/path'
+    );
 
-        const element = await setupElement();
-        const onLanguageChangeSpy = vi.spyOn(
-          InterfaceController.prototype,
-          'onLanguageChange'
-        );
+    element.iconAssetsPath = '/new/icon/assets/path';
+    await element.updateComplete;
 
-        expect(onLanguageChangeSpy).not.toHaveBeenCalled();
+    expect(element.bindings.store.state.iconAssetsPath).toBe(
+      '/new/icon/assets/path'
+    );
+  });
 
-        element.language = 'fr';
-        await element.updateComplete;
+  // #updateLanguage
+  describe('when the language attribute changes', () => {
+    it('should call InterfaceController.onLanguageChange with no argument', async () => {
+      const element = await setupElement({language: 'en'});
+      await element.initialize(insightEngineConfig);
+      const onLanguageChangeSpy = vi.spyOn(
+        InterfaceController.prototype,
+        'onLanguageChange'
+      );
 
-        expect(onLanguageChangeSpy).toHaveBeenCalledOnce();
-      });
-    });
+      element.language = 'fr';
+      await element.updateComplete;
 
-    // #updateIconAssetsPath
-    describe('when iconAssetsPath prop changes', () => {
-      it('should update store.state.iconAssetsPath', async () => {
-        // We're updating attributes before calling #initialize; this would console.error.
-        vi.spyOn(console, 'error').mockImplementation(() => {});
-
-        const element = await setupElement();
-
-        element.iconAssetsPath = '/new/icon/assets/path';
-        await element.updateComplete;
-
-        expect(element.store.state.iconAssetsPath).toBe(
-          '/new/icon/assets/path'
-        );
-      });
+      expect(onLanguageChangeSpy).toHaveBeenCalledExactlyOnceWith();
     });
   });
 
-  // #disconnectedCallback
-  describe('when removed from the DOM', () => {
+  describe('#disconnectedCallback (when removed from the DOM)', () => {
+    // Done through the InterfaceController
+    it('should remove aria-live element', async () => {
+      const element = await setupElement();
+      await element.initialize(insightEngineConfig);
+
+      expect(element.querySelector('atomic-aria-live')).toBeTruthy();
+
+      element.remove();
+
+      expect(element.querySelector('atomic-aria-live')).toBeFalsy();
+    });
+
     it('should remove the atomic/initializeComponent event listener', async () => {
       const element = await setupElement();
       const removeEventListenerSpy = vi.spyOn(element, 'removeEventListener');
@@ -449,111 +479,30 @@ describe('atomic-insight-interface', () => {
     });
   });
 
-  // #render
-  describe('render', () => {
-    it('should render slots when engine is defined', async () => {
+  describe('when rendering (#render)', () => {
+    it('should render a full-search slot', async () => {
       const element = await setupElement();
-      const engine = buildFakeInsightEngine({});
 
-      await element.initializeWithInsightEngine(engine);
-      await element.updateComplete;
+      const fullSearchSlot = element.shadowRoot?.querySelector(
+        'slot[name="full-search"]'
+      );
+      expect(fullSearchSlot).toBeTruthy();
+    });
 
-      expect(
-        element.shadowRoot?.querySelector('slot[name="full-search"]')
-      ).toBeTruthy();
-      expect(
-        element.shadowRoot?.querySelector('slot:not([name])')
-      ).toBeTruthy();
+    it('should render a default slot', async () => {
+      const element = await setupElement();
+
+      const slots = element.shadowRoot?.querySelectorAll('slot');
+      const namedSlots = element.shadowRoot?.querySelectorAll('slot[name]');
+      expect(slots?.length).toBe(2);
+      expect(namedSlots?.length).toBe(1);
     });
 
     it('should render its children', async () => {
       const element = await setupElement();
-      const engine = buildFakeInsightEngine({});
-
-      await element.initializeWithInsightEngine(engine);
       await addChildElement(element);
-      await element.updateComplete;
 
       expect(within(element).queryByShadowText('test-element')).toBeTruthy();
-    });
-  });
-
-  // Error handling
-  describe('error handling', () => {
-    it('should set error property when engine initialization fails', async () => {
-      vi.mocked(headless.buildInsightEngine).mockImplementation(() => {
-        throw new Error('Engine initialization failed');
-      });
-
-      const element = await setupElement();
-      const options = {
-        accessToken: 'test-token',
-        organizationId: 'test-org',
-      };
-
-      await expect(element.initialize(options)).rejects.toThrow(
-        'Engine initialization failed'
-      );
-      expect(element.error).toBeInstanceOf(Error);
-      expect(element.error.message).toBe('Engine initialization failed');
-    });
-  });
-
-  // Bindings integration
-  describe('bindings integration', () => {
-    it('should provide bindings to its children', async () => {
-      const element = await setupElement();
-      const childElement = await addChildElement(element);
-      const engine = buildFakeInsightEngine({});
-
-      await element.initializeWithInsightEngine(engine);
-
-      expect(childElement.bindings).toBe(element.bindings);
-    });
-
-    it('should provide createStyleElement function in bindings', async () => {
-      const element = await setupElement();
-      const engine = buildFakeInsightEngine({});
-
-      await element.initializeWithInsightEngine(engine);
-
-      const styleElement = element.bindings.createStyleElement();
-      expect(styleElement).toBeInstanceOf(HTMLStyleElement);
-      expect(styleElement.tagName).toBe('STYLE');
-    });
-
-    it('should provide createScriptElement function in bindings', async () => {
-      const element = await setupElement();
-      const engine = buildFakeInsightEngine({});
-
-      await element.initializeWithInsightEngine(engine);
-
-      const scriptElement = element.bindings.createScriptElement();
-      expect(scriptElement).toBeInstanceOf(HTMLScriptElement);
-      expect(scriptElement.tagName).toBe('SCRIPT');
-    });
-  });
-
-  // Property validation
-  describe('property validation', () => {
-    it('should handle string array for fieldsToInclude', async () => {
-      const element = await setupElement({
-        fieldsToInclude: ['field1', 'field2', 'field3'],
-      });
-
-      expect(element.fieldsToInclude).toEqual(['field1', 'field2', 'field3']);
-    });
-
-    it('should handle different log levels', async () => {
-      const element = await setupElement({logLevel: 'warn'});
-
-      expect(element.logLevel).toBe('warn');
-    });
-
-    it('should handle custom results per page', async () => {
-      const element = await setupElement({resultsPerPage: 15});
-
-      expect(element.resultsPerPage).toBe(15);
     });
   });
 });
