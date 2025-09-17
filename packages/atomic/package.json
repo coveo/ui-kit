@@ -127,6 +127,7 @@
     "@wc-toolkit/storybook-helpers": "9.0.1",
     "@whitespace/storybook-addon-html": "6.1.1",
     "axe-core": "4.10.3",
+    "coveo.analytics": "2.30.45",
     "chalk": "5.4.1",
     "cypress": "13.7.3",
     "cypress-axe": "1.6.0",

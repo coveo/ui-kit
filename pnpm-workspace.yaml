@@ -38,3 +38,7 @@ patchedDependencies:
   '@wc-toolkit/storybook-helpers': patches/@wc-toolkit__storybook-helpers.patch
   fix-esm-import-path: patches/fix-esm-import-path.patch
   jest-environment-jsdom: patches/jest-environment-jsdom.patch
+
+catalogMode: strict
+catalog:
+    "coveo.analytics": "2.30.45"

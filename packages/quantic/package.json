@@ -49,6 +49,7 @@
   "dependencies": {
     "@coveo/bueno": "1.1.0",
     "@coveo/headless": "3.30.0",
+    "coveo.analytics": "2.30.45",
     "dompurify": "3.2.6",
     "fs-extra": "11.3.0",
     "marked": "12.0.2"
