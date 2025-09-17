@@ -3293,7 +3293,7 @@ export declare interface AtomicLayoutSection extends LitAtomicLayoutSection {
 
 @ProxyCmp({
   inputs: ['engine', 'analytics', 'i18n', 'logLevel', 'language', 'languageAssetsPath', 'iconAssetsPath', 'fieldsToInclude', 'resultsPerPage'],
-  methods: ['toggleAnalytics', 'updateLanguage', 'updateIconAssetsPath', 'registerFieldsToInclude', 'initialize', 'initializeWithInsightEngine', 'executeFirstSearch'],
+  methods: ['initialize', 'initializeWithInsightEngine', 'executeFirstSearch', 'toggleAnalytics', 'updateIconAssetsPath', 'updateLanguage', 'registerFieldsToInclude'],
   defineCustomElementFn: () => {customElements.get('atomic-insight-interface') || customElements.define('atomic-insight-interface', LitAtomicInsightInterface);}
 })
 @Component({
