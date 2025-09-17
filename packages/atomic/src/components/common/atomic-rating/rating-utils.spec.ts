@@ -1,5 +1,5 @@
 import {describe, expect, it} from 'vitest';
-import {FieldValueIsNaNError} from '../../commerce/product-template-component-utils/error';
+import {FieldValueIsNaNError} from '@/src/components/commerce/product-template-component-utils/error';
 import {computeNumberOfStars} from './rating-utils';
 
 describe('rating-utils', () => {
