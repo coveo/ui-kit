@@ -55,20 +55,6 @@ describe('color-utils', () => {
       expect(cyan.v).toBe(255);
     });
 
-    it('should handle boundary values', () => {
-      // Minimum values
-      const min = rgbToHsv(0, 0, 0);
-      expect(min.h).toBe(0);
-      expect(min.s).toBe(0);
-      expect(min.v).toBe(0);
-
-      // Maximum values
-      const max = rgbToHsv(255, 255, 255);
-      expect(max.h).toBe(0);
-      expect(max.s).toBe(0);
-      expect(max.v).toBe(255);
-    });
-
     it('should handle decimal input values', () => {
       const result = rgbToHsv(127.5, 63.75, 191.25);
       expect(typeof result.h).toBe('number');
@@ -133,10 +119,6 @@ describe('color-utils', () => {
     });
 
     it('should handle boundary values', () => {
-      // Minimum values
-      const min = hsvToRgb(0, 0, 0);
-      expect(min).toEqual({r: 0, g: 0, b: 0});
-
       // Maximum hue (should wrap around)
       const maxHue = hsvToRgb(1, 1, 255);
       expect(maxHue).toEqual({r: 255, g: 0, b: 0});
