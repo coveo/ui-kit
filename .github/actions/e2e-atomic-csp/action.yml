@@ -5,7 +5,7 @@ runs:
   steps:
     - name: Complementary setup
       run: |
-        pnpm ci
+        pnpm i
         npx turbo build --filter=@coveo/atomic
       shell: bash
     - name: Run tests

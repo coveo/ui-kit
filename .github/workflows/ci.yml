@@ -34,12 +34,12 @@ jobs:
         with:
           node-version-file: ".nvmrc"
       - run: corepack install
-      - run: pnpm ci
+      - run: pnpm i
       - run: pnpm run pr:report
         env:
           GITHUB_CREDENTIALS: ${{ steps.generate-token.outputs.token }}
   # TODO: KIT-4396 - https://coveord.atlassian.net/browse/KIT-4396 This action takes currently over 50 minutes to run, which is too long for a PR workflow.
-  # What is slow is the "pnpm ci" step, which takes about 30 minutes and is out of our control. We will skip this job for now.
+  # What is slow is the "pnpm i" step, which takes about 30 minutes and is out of our control. We will skip this job for now.
   build-windows:
     name: "Build Windows"
     runs-on: windows-latest
@@ -62,7 +62,7 @@ jobs:
         run: corepack enable
         shell: bash
       - name: Install dependencies
-        run: pnpm ci
+        run: pnpm i
         shell: bash
       - name: Build packages
         run: pnpm run build
@@ -642,7 +642,7 @@ jobs:
       - name: Install package manager
         run: corepack enable
         shell: bash
-      - run: pnpm ci
+      - run: pnpm i
         shell: bash
       - name: Release
         run: |
@@ -675,7 +675,7 @@ jobs:
       - name: Install package manager
         run: corepack enable
         shell: bash
-      - run: pnpm ci
+      - run: pnpm i
         shell: bash
       - name: Call ui-kit-cd for dev
         run: node ./scripts/deploy/trigger-ui-kit-cd-pr.mjs
@@ -811,7 +811,7 @@ jobs:
       - name: Install package manager
         run: corepack enable
         shell: bash
-      - run: pnpm ci
+      - run: pnpm i
         shell: bash
       - name: Release
         run: |
@@ -843,7 +843,7 @@ jobs:
       - name: Install package manager
         run: corepack enable
         shell: bash
-      - run: pnpm ci
+      - run: pnpm i
         shell: bash
       - name: Call ui-kit-cd for dev
         run: node ./scripts/deploy/trigger-ui-kit-cd-dev.mjs

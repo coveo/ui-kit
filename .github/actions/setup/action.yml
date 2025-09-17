@@ -37,7 +37,7 @@ runs:
         restore-keys: |
           ${{ runner.os }}-${{ inputs.cache-prefix }}-turbo-
     - if: steps.npm-cache.outputs.cache-hit != 'true'
-      run: pnpm ci
+      run: pnpm i
       shell: bash
     - run: pnpm run build
       if: inputs.skip-build != 'true'
