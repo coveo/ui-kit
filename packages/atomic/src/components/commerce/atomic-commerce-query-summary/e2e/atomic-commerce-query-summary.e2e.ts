@@ -1,6 +1,6 @@
 import {expect, test} from './fixture';
 
-test.describe('AtomicCommerceQuerySummary', () => {
+test.describe('atomic-commerce-query-summary', () => {
   test.beforeEach(async ({querySummary}) => {
     await querySummary.load();
     await querySummary.hydrated.waitFor();

@@ -1,11 +1,11 @@
 import {expect, test} from './fixture';
 
-test.describe('AtomicCommerceSortDropdown', () => {
+test.describe('atomic-commerce-sort-dropdown', () => {
   test.beforeEach(async ({commerceSortDropdown}) => {
     await commerceSortDropdown.load();
   });
 
-  test('should be A11y compliant', async ({
+  test('should be accessible', async ({
     commerceSortDropdown,
     makeAxeBuilder,
   }) => {
