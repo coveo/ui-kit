@@ -1,11 +1,12 @@
-import {StringValue, Schema} from '@coveo/bueno';
+import {Schema, StringValue} from '@coveo/bueno';
+import {type CSSResultGroup, css, html, LitElement} from 'lit';
+import {customElement, property, state} from 'lit/decorators.js';
+import type {Bindings} from '@/src/components';
 // import {bindStateToController} from '@/src/decorators/bind-state';
 import {bindingGuard} from '@/src/decorators/binding-guard.js';
 import {bindings} from '@/src/decorators/bindings.js';
 import {errorGuard} from '@/src/decorators/error-guard';
-import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles.js';
-import {type CSSResultGroup, css, html, LitElement} from 'lit';
-import {customElement, property} from 'lit/decorators.js';
+import type {InitializableComponent} from '@/src/decorators/types';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles.js';
 
 /**
@@ -19,9 +20,9 @@ import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles.js';
 @withTailwindStyles
 export class {{namePascalCase}}
   extends LitElement
-  implements InitializableComponent<TODO_Bindings>
+  implements InitializableComponent<Bindings>
 {
-  @state() bindings!: TODO_Bindings // E.g., Bindings, CommerceBindings, InsightBindings
+  @state() bindings!: Bindings; // Use the correct type here, e.g., Bindings, CommerceBindings, InsightBindings
   @state() error!: Error;
 
   /* This is how you would bind the state of a Headless controller instance to a
