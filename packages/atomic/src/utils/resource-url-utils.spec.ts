@@ -29,7 +29,6 @@ describe('resource-url-utils', () => {
   };
 
   beforeEach(async () => {
-    vi.clearAllMocks();
     mockModule = (await import('./resource-url-utils')) as typeof mockModule;
     mockModule.__mockGetCoveoCdnResourceUrl.mockReturnValue(
       './mocked-resource-path/'

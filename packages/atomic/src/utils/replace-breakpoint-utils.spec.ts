@@ -17,7 +17,7 @@ describe('replace-breakpoint-utils', () => {
   let mockStyleTag: HTMLStyleElement;
 
   beforeEach(() => {
-    vi.clearAllMocks();
+    // Setup DOM environment
 
     // Mock CSSStyleSheet
     mockStyleSheet = {

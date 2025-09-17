@@ -14,12 +14,10 @@ describe('item-section-utils', () => {
   beforeEach(() => {
     element = document.createElement('div');
     document.body.appendChild(element);
-    vi.clearAllMocks();
   });
 
   afterEach(() => {
     document.body.removeChild(element);
-    vi.restoreAllMocks();
   });
 
   describe('#hideEmptySection', () => {
