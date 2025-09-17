@@ -22,7 +22,7 @@ runs:
         node-version-file: '.nvmrc'
         cache: 'npm'
     - name: Install package manager
-      run: corepack install
+      run: corepack up
       shell: bash
     - uses: actions/cache@5a3ec84eff668545956fd18022155c47e93e2684 # v4
       with:
