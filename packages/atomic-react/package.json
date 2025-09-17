@@ -73,5 +73,9 @@
       "import": "./dist/esm/recommendation/atomic-react.mjs",
       "require": "./dist/cjs/recommendation/atomic-react.cjs"
     }
+  },
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
   }
 }

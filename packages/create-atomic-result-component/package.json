@@ -25,7 +25,8 @@
   "author": "Coveo",
   "license": "Apache-2.0",
   "publishConfig": {
-    "access": "public"
+    "access": "public",
+    "provenance": true
   },
   "dependencies": {
     "@coveo/create-atomic-component-project": "1.4.2"
