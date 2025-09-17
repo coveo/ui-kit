@@ -12,7 +12,6 @@ describe('ripple-utils', () => {
   let mockEvent: MouseEvent;
 
   beforeEach(() => {
-    // Clear any existing timers
     vi.clearAllTimers();
     vi.useFakeTimers();
 
