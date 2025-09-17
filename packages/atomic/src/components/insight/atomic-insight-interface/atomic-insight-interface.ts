@@ -51,15 +51,17 @@ export class AtomicInsightInterface
   extends ChildrenUpdateCompleteMixin(LitElement)
   implements BaseAtomicInterface<InsightEngine>
 {
+  @state()
+  @provide({context: bindingsContext})
+  public bindings: InsightBindings = {} as InsightBindings;
+  @state() public error!: Error;
   private initialized = false;
-  public store: InsightStore;
   private interfaceController = new InterfaceController<InsightEngine>(
     this,
     'CoveoAtomic',
     HEADLESS_VERSION
   );
-
-  @state() public error!: Error;
+  public store: InsightStore; // TODO (v4) - Make private
 
   static styles: CSSResultGroup = css`
     :host {
@@ -79,6 +81,10 @@ export class AtomicInsightInterface
    */
   @property({type: Object}) public engine?: InsightEngine;
 
+  // TODO - KIT-4994: add disableAnalytics prop
+
+  // TODO - KIT-4994: deprecate in favor of disableAnalytics
+  // TODO - KIT-4990: remove
   /**
    * Whether analytics should be enabled.
    */
@@ -161,52 +167,6 @@ export class AtomicInsightInterface
     );
   }
 
-  public disconnectedCallback() {
-    super.disconnectedCallback();
-    this.removeEventListener(
-      'atomic/initializeComponent',
-      this.handleInitialization as EventListener
-    );
-  }
-
-  @watch('analytics')
-  public toggleAnalytics() {
-    this.interfaceController.onAnalyticsChange();
-  }
-
-  @watch('language')
-  public updateLanguage() {
-    return this.interfaceController.onLanguageChange();
-  }
-
-  @watch('iconAssetsPath')
-  public updateIconAssetsPath(): void {
-    this.store.state.iconAssetsPath = this.iconAssetsPath;
-  }
-
-  private handleInitialization = (event: InitializeEvent) => {
-    this.interfaceController.onComponentInitializing(event);
-  };
-
-  private initResultsPerPage() {
-    if (!this.interfaceController.engineIsCreated(this.engine)) {
-      return;
-    }
-    buildInsightResultsPerPage(this.bindings.engine, {
-      initialState: {numberOfResults: this.resultsPerPage},
-    });
-  }
-
-  public registerFieldsToInclude() {
-    if (this.fieldsToInclude.length) {
-      this.engine!.dispatch(
-        loadFieldActions(this.engine!).registerFieldsToInclude([
-          ...this.fieldsToInclude,
-        ])
-      );
-    }
-  }
-
   /**
    * Initializes the connection with the headless insight engine using options for `accessToken` (required), `organizationId` (required), `environment` (defaults to `prod`), and `renewAccessToken`.
    */
@@ -240,23 +200,36 @@ export class AtomicInsightInterface
     this.engine.executeFirstSearch();
   }
 
-  @state()
-  @provide({context: bindingsContext})
-  public bindings: InsightBindings = {} as InsightBindings;
+  // TODO - KIT-4994 / KIT-4990: adjust
+  @watch('analytics')
+  public toggleAnalytics() {
+    this.interfaceController.onAnalyticsChange();
+  }
 
-  private async internalInitialization(initEngine: () => void) {
-    await Promise.all([
-      this.interfaceController.onInitialization(initEngine),
-      this.i18Initialized,
-    ]);
-    this.updateLanguage();
-    this.bindings = this.getBindings();
-    markParentAsReady(this);
-    this.initResultsPerPage();
-    this.registerFieldsToInclude();
-    this.store.unsetLoadingFlag(FirstInsightRequestExecutedFlag);
-    await this.getUpdateComplete();
-    this.initialized = true;
+  @watch('iconAssetsPath')
+  public updateIconAssetsPath(): void {
+    this.store.state.iconAssetsPath = this.iconAssetsPath;
+  }
+
+  @watch('language')
+  public updateLanguage() {
+    return this.interfaceController.onLanguageChange();
+  }
+
+  public disconnectedCallback() {
+    super.disconnectedCallback();
+    this.removeEventListener(
+      'atomic/initializeComponent',
+      this.handleInitialization as EventListener
+    );
+  }
+
+  @errorGuard()
+  render() {
+    return html`
+      <slot name="full-search"></slot>
+      <slot></slot>
+    `;
   }
 
   private getBindings(): InsightBindings {
@@ -278,6 +251,11 @@ export class AtomicInsightInterface
     };
   }
 
+  private handleInitialization = (event: InitializeEvent) => {
+    this.interfaceController.onComponentInitializing(event);
+  };
+
+  // TODO - KIT-4994 / KIT-4990: adjust
   private initEngine(options: InsightInitializationOptions) {
     const analyticsConfig = getAnalyticsConfig(options, this.analytics);
     try {
@@ -296,12 +274,39 @@ export class AtomicInsightInterface
     }
   }
 
-  @errorGuard()
-  render() {
-    return html`
-      <slot name="full-search"></slot>
-      <slot></slot>
-    `;
+  private initResultsPerPage() {
+    if (!this.interfaceController.engineIsCreated(this.engine)) {
+      return;
+    }
+    buildInsightResultsPerPage(this.bindings.engine, {
+      initialState: {numberOfResults: this.resultsPerPage},
+    });
+  }
+
+  private async internalInitialization(initEngine: () => void) {
+    await Promise.all([
+      this.interfaceController.onInitialization(initEngine),
+      this.i18Initialized,
+    ]);
+    this.updateLanguage();
+    this.bindings = this.getBindings();
+    markParentAsReady(this);
+    this.initResultsPerPage();
+    this.registerFieldsToInclude();
+    this.store.unsetLoadingFlag(FirstInsightRequestExecutedFlag);
+    await this.getUpdateComplete();
+    this.initialized = true;
+  }
+
+  // TODO (v4) - Make private
+  public registerFieldsToInclude() {
+    if (this.fieldsToInclude.length) {
+      this.engine!.dispatch(
+        loadFieldActions(this.engine!).registerFieldsToInclude([
+          ...this.fieldsToInclude,
+        ])
+      );
+    }
   }
 }
 
