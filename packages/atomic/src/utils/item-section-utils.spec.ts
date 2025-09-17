@@ -1,7 +1,6 @@
 import {afterEach, beforeEach, describe, expect, it, vi} from 'vitest';
 import {hideEmptySection} from './item-section-utils';
 
-// Mock the utils module
 vi.mock('./utils', () => ({
   containsVisualElement: vi.fn(),
 }));
@@ -40,7 +39,6 @@ describe('item-section-utils', () => {
     });
 
     it('should reset display style when element has visual elements', () => {
-      // Initially hide the element
       element.style.display = 'none';
       vi.mocked(containsVisualElement).mockReturnValue(true);
 
@@ -51,7 +49,6 @@ describe('item-section-utils', () => {
     });
 
     it('should preserve existing display style when showing element', () => {
-      // Set a specific display style
       element.style.display = 'flex';
       vi.mocked(containsVisualElement).mockReturnValue(false);
 
@@ -115,7 +112,6 @@ describe('item-section-utils', () => {
     });
 
     it('should handle elements with complex content', () => {
-      // Add some content to the element
       element.innerHTML = `
         <div class="content">
           <span>Some text</span>

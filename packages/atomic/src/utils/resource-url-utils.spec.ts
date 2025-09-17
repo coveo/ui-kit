@@ -1,10 +1,8 @@
 import {beforeEach, describe, expect, it, vi} from 'vitest';
 
-// Mock the entire module to avoid import.meta complexities
 vi.mock('./resource-url-utils', async () => {
   const actual = await vi.importActual('./resource-url-utils');
 
-  // Mock the internal functions that depend on import.meta
   const mockIsCoveoCDN = vi.fn();
   const mockGetCoveoCdnResourceUrl = vi.fn();
 
@@ -15,7 +13,6 @@ vi.mock('./resource-url-utils', async () => {
   return {
     ...actual,
     getResourceUrl,
-    // Expose mocks for testing
     __mockIsCoveoCDN: mockIsCoveoCDN,
     __mockGetCoveoCdnResourceUrl: mockGetCoveoCdnResourceUrl,
   };

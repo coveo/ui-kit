@@ -124,7 +124,6 @@ describe('promise-utils', () => {
 
       const result = promiseTimeout(promise, 1000);
 
-      // Advance time to exactly the timeout
       vi.advanceTimersByTime(1000);
 
       // This is a race condition - could go either way depending on implementation
@@ -166,13 +165,11 @@ describe('promise-utils', () => {
       expect(setTimeoutSpy).toHaveBeenCalled();
       expect(clearTimeoutSpy).toHaveBeenCalled();
 
-      // Verify the timeout ID passed to clearTimeout matches the one from setTimeout
       const timeoutId = setTimeoutSpy.mock.results[0].value;
       expect(clearTimeoutSpy).toHaveBeenCalledWith(timeoutId);
     });
 
     it('should handle different promise types', async () => {
-      // Test with different types of values wrapped in promises
       const stringPromise = Promise.resolve('string value');
       const numberPromise = Promise.resolve(42);
       const objectPromise = Promise.resolve({key: 'value'});

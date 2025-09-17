@@ -5,7 +5,6 @@ import {
   updateBreakpoints,
 } from './replace-breakpoint-utils';
 
-// Mock dom-utils
 vi.mock('./dom-utils', () => ({
   closest: vi.fn(),
 }));
@@ -17,9 +16,6 @@ describe('replace-breakpoint-utils', () => {
   let mockStyleTag: HTMLStyleElement;
 
   beforeEach(() => {
-    // Setup DOM environment
-
-    // Mock CSSStyleSheet
     mockStyleSheet = {
       cssRules: [
         {
@@ -30,18 +26,15 @@ describe('replace-breakpoint-utils', () => {
       replaceSync: vi.fn(),
     } as unknown as CSSStyleSheet;
 
-    // Mock style tag
     mockStyleTag = {
       textContent: `@media (min-width: ${DEFAULT_MOBILE_BREAKPOINT}) { .mobile { display: block; } }`,
     } as HTMLStyleElement;
 
-    // Mock shadow root
     mockShadowRoot = {
       adoptedStyleSheets: [mockStyleSheet],
       querySelector: vi.fn().mockReturnValue(mockStyleTag),
     } as unknown as ShadowRoot;
 
-    // Mock element
     mockElement = {
       shadowRoot: mockShadowRoot,
     } as HTMLElement;

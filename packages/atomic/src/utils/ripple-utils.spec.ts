@@ -2,7 +2,6 @@ import {afterEach, beforeEach, describe, expect, it, vi} from 'vitest';
 import * as eventUtils from './event-utils';
 import {createRipple} from './ripple-utils';
 
-// Mock event-utils
 vi.mock('./event-utils', () => ({
   listenOnce: vi.fn(),
 }));
@@ -15,7 +14,6 @@ describe('ripple-utils', () => {
     vi.clearAllTimers();
     vi.useFakeTimers();
 
-    // Mock button element
     mockButton = document.createElement('button');
     Object.defineProperties(mockButton, {
       clientWidth: {value: 100, writable: true, configurable: true},
@@ -33,14 +31,12 @@ describe('ripple-utils', () => {
     });
     document.body.appendChild(mockButton);
 
-    // Mock mouse event
     mockEvent = {
       currentTarget: mockButton,
       clientX: 150,
       clientY: 90,
     } as unknown as MouseEvent;
 
-    // Mock getComputedStyle
     Object.defineProperty(globalThis, 'getComputedStyle', {
       value: vi.fn().mockReturnValue({
         position: 'static',
@@ -74,15 +70,13 @@ describe('ripple-utils', () => {
     it('should remove existing ripple before creating new one', async () => {
       const options = {color: 'primary'};
 
-      // Create first ripple
       const firstRipplePromise = createRipple(mockEvent, options);
       const firstRipple = mockButton.querySelector('.ripple');
       expect(firstRipple).toBeTruthy();
 
-      // Create second ripple
       const secondRipplePromise = createRipple(mockEvent, options);
       const ripples = mockButton.querySelectorAll('.ripple');
-      expect(ripples.length).toBe(1); // Only one ripple should exist
+      expect(ripples.length).toBe(1);
 
       vi.runAllTimers();
       await Promise.all([firstRipplePromise, secondRipplePromise]);
@@ -220,7 +214,6 @@ describe('ripple-utils', () => {
     });
 
     it('should calculate animation duration based on radius', async () => {
-      // Button with different size
       Object.defineProperties(mockButton, {
         clientWidth: {value: 318, writable: true, configurable: true},
         clientHeight: {value: 318, writable: true, configurable: true},
@@ -278,11 +271,9 @@ describe('ripple-utils', () => {
 
       const ripplePromise = createRipple(mockEvent, options);
 
-      // Get the ripple element
       const ripple = mockButton.querySelector('.ripple');
       expect(ripple).toBeTruthy();
 
-      // Fast-forward time to trigger backup cleanup
       vi.runAllTimers();
 
       await ripplePromise;
@@ -346,7 +337,6 @@ describe('ripple-utils', () => {
         vi.runAllTimers();
         await ripplePromise;
 
-        // Clean up for next iteration
         ripple?.remove();
       }
     });
