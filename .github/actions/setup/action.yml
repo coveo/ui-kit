@@ -39,6 +39,6 @@ runs:
     - if: steps.npm-cache.outputs.cache-hit != 'true'
       run: npm ci
       shell: bash
-    - run: npm run build
+    - run: pnpm run build
       if: inputs.skip-build != 'true'
       shell: bash

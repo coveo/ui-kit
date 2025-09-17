@@ -10,7 +10,7 @@ Some scripts may be nested under other scripts using the colon (`:`) symbol. Thi
   - E.g.:
     ```json
     {
-      "build": "npm run build:bundles && npm run build:definitions",
+      "build": "pnpm run build:bundles && pnpm run build:definitions",
       "build:bundles": "...",
       "build:definitions": "..."
     }
@@ -63,7 +63,7 @@ When adding new packages, they will automatically inherit the caching behavior f
    ```json
    {
      "scripts": {
-       "build": "npm run build:bundles && npm run build:definitions",
+       "build": "pnpm run build:bundles && pnpm run build:definitions",
        "build:bundles": "node esbuild.mjs",
        "build:definitions": "tsc -p tsconfig.build.json -d --emitDeclarationOnly --declarationDir dist/definitions"
      }

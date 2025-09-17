@@ -45,7 +45,7 @@ const successMessage = () => {
   $ npm start
     Starts the development server.
 
-  $ npm run build
+  $ pnpm run build
     Builds your project in production mode.
 
   Happy coding!

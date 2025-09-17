@@ -12,7 +12,7 @@
     "setup-cleanup": "node ./scripts/clean-up.js",
     "start": "stencil build --dev --watch --serve",
     "build": "stencil build && node deployment.esbuild.mjs",
-    "deploy": "npm run build && coveo ui:deploy",
-    "postinstall": "npm run setup-cleanup && prettier --write . --loglevel warn"
+    "deploy": "pnpm run build && coveo ui:deploy",
+    "postinstall": "pnpm run setup-cleanup && prettier --write . --loglevel warn"
   }
 }

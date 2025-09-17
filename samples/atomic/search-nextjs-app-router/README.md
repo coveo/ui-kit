@@ -47,7 +47,7 @@ import '@coveo/atomic/themes/coveo.css';
 ## Getting Started
 
 1. Install dependencies: `npm install`
-3. Start dev server: `npm run dev`
+3. Start dev server: `pnpm run dev`
 4. Open [http://localhost:3000](http://localhost:3000)
 
 That's it! You can now use Coveo Atomic React components in your Next.js app.

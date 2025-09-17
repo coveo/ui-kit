@@ -15,7 +15,7 @@
     "loader/"
   ],
   "scripts": {
-    "!prepublishOnly": "npm run build && atomic-meta-check && npm version patch",
+    "!prepublishOnly": "pnpm run build && atomic-meta-check && npm version patch",
     "!prebuild": "rimraf dist",
     "!build": "stencil build --docs",
     "!test": "stencil test --spec --e2e",

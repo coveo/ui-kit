@@ -4,10 +4,10 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "npm run build:assets && npm run dev:vite",
+    "dev": "pnpm run build:assets && pnpm run dev:vite",
     "build:assets": "ncp ../../../packages/atomic-react/dist/assets public/assets && ncp ../../../packages/atomic-react/dist/lang public/lang public/assets && ncp ../../../packages/atomic/dist/atomic/themes public/themes",
     "dev:vite": "vite",
-    "build": "npm run build:ts && npm run build:vite",
+    "build": "pnpm run build:ts && pnpm run build:vite",
     "build:ts": "npm run-script -w=@coveo/ci if-not-cdn -- \"tsc -b\"",
     "build:vite": "npm run-script -w=@coveo/ci if-not-cdn -- \"vite build\""
   },

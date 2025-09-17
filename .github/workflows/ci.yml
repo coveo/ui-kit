@@ -37,7 +37,7 @@ jobs:
         run: npm i -g npm@11.6.0
         shell: bash
       - run: npm ci
-      - run: npm run pr:report
+      - run: pnpm run pr:report
         env:
           GITHUB_CREDENTIALS: ${{ steps.generate-token.outputs.token }}
   # TODO: KIT-4396 - https://coveord.atlassian.net/browse/KIT-4396 This action takes currently over 50 minutes to run, which is too long for a PR workflow.
@@ -67,7 +67,7 @@ jobs:
         run: npm ci
         shell: bash
       - name: Build packages
-        run: npm run build
+        run: pnpm run build
         shell: bash
   build:
     name: "Build"
@@ -124,13 +124,13 @@ jobs:
           skip-build: "true"
       - name: Build CDN
         if: github.event_name == 'merge_group'
-        run: npm run build
+        run: pnpm run build
         env:
           DEPLOYMENT_ENVIRONMENT: CDN
           IS_PRERELEASE: "true"
       - name: Build CDN
         if: github.event_name == 'pull_request'
-        run: npm run build
+        run: pnpm run build
         env:
           DEPLOYMENT_ENVIRONMENT: CDN
           IS_PRERELEASE: "true"
@@ -181,7 +181,7 @@ jobs:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
       - uses: ./.github/actions/setup
       - name: Run knip
-        run: npm run knip
+        run: pnpm run knip
   cdn-checks:
     name: "CDN Checks"
     needs: [affected, build-cdn]
@@ -216,7 +216,7 @@ jobs:
 
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
       - uses: ./.github/actions/setup
-      - run: npm run lint:check
+      - run: pnpm run lint:check
   unit-test:
     name: "Run unit tests"
     needs: build
@@ -249,7 +249,7 @@ jobs:
 
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
       - uses: ./.github/actions/setup
-      - run: npm run package-compatibility
+      - run: pnpm run package-compatibility
   typedoc:
     name: "Build typedoc"
     needs: affected
@@ -264,10 +264,10 @@ jobs:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
       - uses: ./.github/actions/setup
       - name: "Build headless typedoc"
-        run: npm run build:typedoc
+        run: pnpm run build:typedoc
         working-directory: packages/headless
       - name: "Build headless-react typedoc"
-        run: npm run build:typedoc
+        run: pnpm run build:typedoc
         working-directory: packages/headless-react
   e2e-atomic-csp-test:
     name: "Run e2e tests on Atomic CSP"
@@ -305,7 +305,7 @@ jobs:
           fetch-depth: 0
       - run: git branch main origin/main
       - uses: ./.github/actions/setup
-      - run: npm run build
+      - run: pnpm run build
       - name: Identify E2E Test Files to run
         id: determine-tests
         run: |
@@ -339,7 +339,7 @@ jobs:
 
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
       - uses: ./.github/actions/setup
-      - run: npm run build
+      - run: pnpm run build
       - uses: ./.github/actions/playwright-atomic
         with:
           shardIndex: ${{ matrix.shardIndex }}
@@ -360,7 +360,7 @@ jobs:
 
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
       - uses: ./.github/actions/setup
-      - run: npm run build
+      - run: pnpm run build
       - name: Merge Playwright reports
         uses: ./.github/actions/merge-playwright-reports
         with:
@@ -395,7 +395,7 @@ jobs:
 
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
       - uses: ./.github/actions/setup
-      - run: npm run build
+      - run: pnpm run build
       - uses: ./.github/actions/playwright-atomic-theming
   e2e-atomic-test:
     name: "Run e2e tests on Atomic"
@@ -548,7 +548,7 @@ jobs:
 
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
       - uses: ./.github/actions/setup
-      - run: npm run build
+      - run: pnpm run build
       - uses: ./.github/actions/playwright-atomic-hosted-pages
   e2e-headless-ssr-commerce-nextjs-test:
     name: "Run e2e tests on Headless SSR Commerce NextJS"
@@ -563,7 +563,7 @@ jobs:
 
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
       - uses: ./.github/actions/setup
-      - run: npm run build
+      - run: pnpm run build
       - uses: ./.github/actions/playwright-headless-ssr-commerce-nextjs
   e2e-atomic-insight-panel-test:
     name: "Run e2e tests on Atomic insight panel"
@@ -648,10 +648,10 @@ jobs:
         shell: bash
       - name: Release
         run: |
-          npm run nx:graph
-          npm run release:phase1
-          npm run release:phase3
-          npm run release:phase4
+          pnpm run nx:graph
+          pnpm run release:phase1
+          pnpm run release:phase3
+          pnpm run release:phase4
         env:
           IS_PRERELEASE: "true"
           PR_NUMBER: ${{ github.event.number }}
@@ -817,10 +817,10 @@ jobs:
         shell: bash
       - name: Release
         run: |
-          npm run nx:graph
-          npm run release:phase1
-          npm run release:phase3
-          npm run release:phase4
+          pnpm run nx:graph
+          pnpm run release:phase1
+          pnpm run release:phase3
+          pnpm run release:phase4
         env:
           IS_PRERELEASE: "true"
   prerelease-cdn-merge:

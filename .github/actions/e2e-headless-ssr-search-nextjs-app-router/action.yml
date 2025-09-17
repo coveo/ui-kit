@@ -15,7 +15,7 @@ runs:
       name: Run Cypress
       with:
         browser: chrome
-        command-prefix: "npm run -w @samples/headless-ssr-search-nextjs-app-router e2e"
+        command-prefix: "pnpm run -w @samples/headless-ssr-search-nextjs-app-router e2e"
         start: npx turbo prod --filter=@samples/headless-ssr-search-nextjs-app-router
         wait-on: "http://localhost:3000"
         wait-on-timeout: 600000

@@ -67,7 +67,7 @@
 - **Zero conflicts** (single source of truth)
 
 ### Developer Experience
-✅ **Same commands:** `npm run lint:check`, `npm run lint:fix`  
+✅ **Same commands:** `pnpm run lint:check`, `pnpm run lint:fix`  
 ✅ **Same formatting:** Zero visual changes to code  
 ✅ **Same workflows:** Pre-commit hooks, CI unchanged  
 ✅ **Better performance:** Everything faster  
@@ -222,8 +222,8 @@ Total:            ~1,100ms
 
 ### Everyday Commands (Unchanged)
 ```bash
-npm run lint:check  # Check linting and formatting (~1.1s)
-npm run lint:fix    # Fix auto-fixable issues (~1.5s)
+pnpm run lint:check  # Check linting and formatting (~1.1s)
+pnpm run lint:fix    # Fix auto-fixable issues (~1.5s)
 ```
 
 ### Direct Terminal Usage
@@ -277,8 +277,8 @@ npx @biomejs/biome check path/file.js         # Test specific file
 npx @biomejs/biome --help                     # See all options
 
 # Package.json script debugging (no npx)
-npm run lint:check -- --verbose              # Pass flags to biome via npm
-npm run lint:fix -- --reporter=json          # Custom reporter
+pnpm run lint:check -- --verbose              # Pass flags to biome via npm
+pnpm run lint:fix -- --reporter=json          # Custom reporter
 ```
 
 ### Quick Reference

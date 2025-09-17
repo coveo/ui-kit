@@ -7,13 +7,13 @@ Demonstrates usage of the framework `@coveo/headless-react/ssr-commerce` utils f
 - Run dev server
 
 ```bash
-npm run dev
+pnpm run dev
 ```
 
 - Run prod
 
 ```bash
-npm run build && npm run prod
+pnpm run build && pnpm run prod
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.

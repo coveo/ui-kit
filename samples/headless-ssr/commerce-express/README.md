@@ -31,7 +31,7 @@ This sample demonstrates server-side rendering (SSR) with Coveo Headless commerc
 
 2. Build the project:
    ```bash
-   npm run build
+   pnpm run build
    ```
 
 3. Start the server:
@@ -46,7 +46,7 @@ This sample demonstrates server-side rendering (SSR) with Coveo Headless commerc
 For development with automatic rebuilding:
 
 ```bash
-npm run dev
+pnpm run dev
 ```
 
 This will start the client bundler in watch mode and run the server with hot reload using tsx.
@@ -55,14 +55,14 @@ This will start the client bundler in watch mode and run the server with hot rel
 ## Testing
 
 ```bash
-npm run test
+pnpm run test
 ```
 
 Runs the Playwright end-to-end tests.
 
 
 ```bash
-npm run test:headed
+pnpm run test:headed
 ```
 
 Runs the Playwright tests in headed mode (with a visible browser).

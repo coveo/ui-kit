@@ -23,8 +23,8 @@
     }
   },
   "scripts": {
-    "dev": "concurrently \"npm run build:definitions -- -w\" \"npm run build:bundles -- dev\"",
-    "build": "npm run build:bundles && npm run build:definitions",
+    "dev": "concurrently \"pnpm run build:definitions -- -w\" \"pnpm run build:bundles -- dev\"",
+    "build": "pnpm run build:bundles && pnpm run build:definitions",
     "build:bundles": "node esbuild.mjs",
     "build:definitions": "tsc -p tsconfig.build.json -d --emitDeclarationOnly --declarationDir dist/definitions",
     "clean": "rimraf -rf dist/*",

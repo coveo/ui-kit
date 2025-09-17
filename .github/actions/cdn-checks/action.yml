@@ -9,7 +9,7 @@ runs:
         cache-prefix: "cdn"
       env:
         DEPLOYMENT_ENVIRONMENT: CDN
-    - run: npm run build
+    - run: pnpm run build
       env:
         DEPLOYMENT_ENVIRONMENT: CDN
       shell: bash

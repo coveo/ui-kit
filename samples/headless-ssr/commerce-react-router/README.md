@@ -19,7 +19,7 @@ This sample demonstrates how to build a server-side rendered (SSR) e-commerce ap
 Run the development server:
 
 ```shellscript
-npm run dev
+pnpm run dev
 ```
 
 This will start the development server with hot module replacement enabled.
@@ -29,7 +29,7 @@ This will start the development server with hot module replacement enabled.
 First, build your app for production:
 
 ```sh
-npm run build
+pnpm run build
 ```
 
 Then run the app in production mode:

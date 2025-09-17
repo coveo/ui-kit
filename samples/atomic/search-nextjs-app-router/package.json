@@ -3,8 +3,8 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "dev": "npm run build:assets && next dev",
-    "build": "npm run-script -w=@coveo/ci if-not-cdn -- \"npm run build:assets && next build\"",
+    "dev": "pnpm run build:assets && next dev",
+    "build": "npm run-script -w=@coveo/ci if-not-cdn -- \"pnpm run build:assets && next build\"",
     "build:assets": "ncp ../../../packages/atomic-react/dist/assets public/assets && ncp ../../../packages/atomic-react/dist/lang public/lang",
     "start": "next start",
     "lint": "next lint"

@@ -73,8 +73,8 @@
     "dist/"
   ],
   "scripts": {
-    "dev": "concurrently \"npm run build:definitions -- -w\" \"npm run build:bundles -- dev\"",
-    "build": "npm run build:definitions && npm run build:bundles && npm run build:esm",
+    "dev": "concurrently \"pnpm run build:definitions -- -w\" \"pnpm run build:bundles -- dev\"",
+    "build": "pnpm run build:definitions && pnpm run build:bundles && pnpm run build:esm",
     "build:bundles": "node esbuild.mjs",
     "build:esm": "node ./scripts/build.mjs --config=tsconfig.build-esm.json",
     "build:definitions": "tsc -p src/tsconfig.build.json -d --emitDeclarationOnly --declarationDir dist/definitions",
@@ -85,8 +85,8 @@
     "integration-test:watch": "vitest --poolOptions.threads.singleThread src/integration-tests/**",
     "release:phase3": "npm run-script -w=@coveo/ci npm-publish",
     "release:phase1": "npm run-script -w=@coveo/ci bump",
-    "build:typedoc": "npm run build:typedoc:docs && npm run build:typedoc:merge",
-    "build:typedoc:docs": "concurrently \"npm run build:typedoc:search\" \"npm run build:typedoc:commerce\" \"npm run build:typedoc:case-assist\" \"npm run build:typedoc:insight\" \"npm run build:typedoc:recommendation\" \"npm run build:typedoc:ssr\" \"npm run build:typedoc:ssr-commerce\"",
+    "build:typedoc": "pnpm run build:typedoc:docs && pnpm run build:typedoc:merge",
+    "build:typedoc:docs": "concurrently \"pnpm run build:typedoc:search\" \"pnpm run build:typedoc:commerce\" \"pnpm run build:typedoc:case-assist\" \"pnpm run build:typedoc:insight\" \"pnpm run build:typedoc:recommendation\" \"pnpm run build:typedoc:ssr\" \"pnpm run build:typedoc:ssr-commerce\"",
     "build:typedoc:merge": "typedoc --tsconfig tsconfig.typedoc.json",
     "build:typedoc:search": "typedoc --json ./temp/index.json --tsconfig tsconfig.typedoc.json --options typedoc-configs/index.typedoc.json",
     "build:typedoc:commerce": "typedoc --json ./temp/commerce.json --tsconfig tsconfig.typedoc.json --options typedoc-configs/commerce.typedoc.json",

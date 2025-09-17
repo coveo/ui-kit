@@ -14,7 +14,7 @@
   "scripts": {
     "release:phase3": "npm run-script -w=@coveo/ci npm-publish",
     "publish:bump": "npm run-script -w=@coveo/ci bump",
-    "release:phase1": "npm run publish:bump",
+    "release:phase1": "pnpm run publish:bump",
     "promote:npm:latest": "npm run-script -w=@coveo/ci promote-npm-prod"
   },
   "keywords": [
