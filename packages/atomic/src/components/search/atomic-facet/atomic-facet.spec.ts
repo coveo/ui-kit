@@ -198,6 +198,34 @@ describe('AtomicFacet', () => {
       await expect.element(locators.valueExcludeButton[0]).toBeInTheDocument();
     });
 
+    it('should not render the facet when it has no value', async () => {
+      vi.mocked(buildFacet).mockReturnValue(
+        buildFakeFacet({
+          state: {
+            values: [],
+          },
+        })
+      );
+
+      const {locators} = await setupElement();
+
+      expect(locators.facet).not.toBeInTheDocument();
+    });
+
+    it('should not display facet is disabled', async () => {
+      vi.mocked(buildFacet).mockReturnValue(
+        buildFakeFacet({
+          state: {
+            enabled: false,
+          },
+        })
+      );
+
+      const {locators} = await setupElement();
+
+      await expect.element(locators.facet).not.toBeInTheDocument();
+    });
+
     describe('facet value states', () => {
       it('should render 2 idle values', async () => {
         const {locators} = await setupElement();
@@ -248,6 +276,24 @@ describe('AtomicFacet', () => {
           enableExclusion: true,
         });
         await expect(locators.valueCheckboxExcluded.length).toBe(1);
+      });
+
+      it('should render value counts correctly', async () => {
+        vi.mocked(buildFacet).mockReturnValue(
+          buildFakeFacet({
+            state: {
+              values: [
+                {value: 'Value 1', state: 'selected', numberOfResults: 10},
+                {value: 'Value 2', state: 'idle', numberOfResults: 5},
+              ],
+            },
+          })
+        );
+
+        const {locators} = await setupElement();
+
+        await expect.element(locators.valueCount[0]).toHaveTextContent('10');
+        await expect.element(locators.valueCount[1]).toHaveTextContent('5');
       });
     });
 
@@ -612,7 +658,7 @@ describe('AtomicFacet', () => {
       const {locators} = await setupElement();
       await userEvent.click(locators.searchClearButton);
 
-      expect(clear).toHaveBeenCalled();
+      expect(clear).toHaveBeenCalledOnce();
     });
 
     it('should call facet.facetSearch.updateText and search when a search query is entered', async () => {
