@@ -6,6 +6,7 @@ import {errorGuard} from '@/src/decorators/error-guard';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles.js';
 import {type CSSResultGroup, css, html, LitElement} from 'lit';
 import {customElement, property} from 'lit/decorators.js';
+import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles.js';
 
 /**
 * The `{{name}}` component displays a simple greeting message.
@@ -38,7 +39,7 @@ export class {{namePascalCase}}
   /**
    * The name of the entity to greet.
    */
-  @property() name = 'World';
+  @property({type: String}) name: string = 'World';
 
   /* If your component relies on a headless controller, it must be defined as 
   public member: */

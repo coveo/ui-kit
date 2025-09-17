@@ -1,6 +1,6 @@
 import {expect, test} from './fixture';
 
-test.describe('AtomicProductChildren', () => {
+test.describe('atomic-product-children', () => {
   test.beforeEach(async ({productChildren}) => {
     await productChildren.load();
     await productChildren.hydrated.waitFor();
