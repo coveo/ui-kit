@@ -33,7 +33,7 @@ jobs:
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         with:
           node-version-file: ".nvmrc"
-      - uses: pnpm/action-setup@v4
+      - run: corepack install
       - run: pnpm ci
       - run: pnpm run pr:report
         env:
@@ -58,7 +58,9 @@ jobs:
         with:
           registry-url: "https://registry.npmjs.org"
           node-version-file: ".nvmrc"
-      - uses: pnpm/action-setup@v4
+      - name: Install package manager
+        run: corepack enable
+        shell: bash
       - name: Install dependencies
         run: pnpm ci
         shell: bash
@@ -637,7 +639,9 @@ jobs:
         with:
           registry-url: "https://registry.npmjs.org"
           node-version-file: ".nvmrc"
-      - uses: pnpm/action-setup@v4
+      - name: Install package manager
+        run: corepack enable
+        shell: bash
       - run: pnpm ci
         shell: bash
       - name: Release
@@ -668,7 +672,9 @@ jobs:
         with:
           registry-url: "https://registry.npmjs.org"
           node-version-file: ".nvmrc"
-      - uses: pnpm/action-setup@v4
+      - name: Install package manager
+        run: corepack enable
+        shell: bash
       - run: pnpm ci
         shell: bash
       - name: Call ui-kit-cd for dev
@@ -802,7 +808,9 @@ jobs:
         with:
           registry-url: "https://registry.npmjs.org"
           node-version-file: ".nvmrc"
-      - uses: pnpm/action-setup@v4
+      - name: Install package manager
+        run: corepack enable
+        shell: bash
       - run: pnpm ci
         shell: bash
       - name: Release
@@ -832,7 +840,9 @@ jobs:
         with:
           registry-url: "https://registry.npmjs.org"
           node-version-file: ".nvmrc"
-      - uses: pnpm/action-setup@v4
+      - name: Install package manager
+        run: corepack enable
+        shell: bash
       - run: pnpm ci
         shell: bash
       - name: Call ui-kit-cd for dev
