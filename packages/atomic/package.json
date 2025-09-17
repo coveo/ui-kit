@@ -1,7 +1,7 @@
 {
   "name": "@coveo/atomic",
   "type": "module",
-  "version": "3.33.3",
+  "version": "3.33.4",
   "description": "A web-component library for building modern UIs interfacing with the Coveo platform",
   "homepage": "https://docs.coveo.com/en/atomic/latest/",
   "repository": {
@@ -81,7 +81,7 @@
   },
   "dependencies": {
     "@coveo/bueno": "1.1.0",
-    "@coveo/headless": "3.29.2",
+    "@coveo/headless": "3.30.0",
     "@lit/context": "1.1.6",
     "@open-wc/lit-helpers": "0.7.0",
     "@popperjs/core": "2.11.8",
@@ -164,7 +164,7 @@
   },
   "peerDependencies": {
     "@coveo/bueno": "1.1.0",
-    "@coveo/headless": "3.29.2",
+    "@coveo/headless": "3.30.0",
     "typescript": ">=5.0.0"
   },
   "peerDependenciesMeta": {
