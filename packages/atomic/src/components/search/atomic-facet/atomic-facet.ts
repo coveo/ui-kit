@@ -19,6 +19,13 @@ import {
 import {html, LitElement, nothing} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {when} from 'lit/directives/when.js';
+import {bindStateToController} from '@/src/decorators/bind-state';
+import {bindingGuard} from '@/src/decorators/binding-guard';
+import {bindings} from '@/src/decorators/bindings';
+import {errorGuard} from '@/src/decorators/error-guard';
+import type {InitializableComponent} from '@/src/decorators/types';
+import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
+import {mapProperty} from '@/src/utils/props-utils';
 import {
   AriaLiveRegionController,
   FocusTargetController,
@@ -28,14 +35,6 @@ import {parseDependsOn} from '../../common/facets/depends-on';
 import type {FacetInfo} from '../../common/facets/facet-common-store';
 import {renderFacetContainer} from '../../common/facets/facet-container/facet-container';
 import {renderFacetHeader} from '../../common/facets/facet-header/facet-header';
-import '../../common/atomic-facet-placeholder/atomic-facet-placeholder';
-import {bindStateToController} from '@/src/decorators/bind-state';
-import {bindingGuard} from '@/src/decorators/binding-guard';
-import {bindings} from '@/src/decorators/bindings';
-import {errorGuard} from '@/src/decorators/error-guard';
-import type {InitializableComponent} from '@/src/decorators/types';
-import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
-import {mapProperty} from '@/src/utils/props-utils';
 import {announceFacetSearchResultsWithAriaLive} from '../../common/facets/facet-search/facet-search-aria-live';
 import {renderFacetSearchInput} from '../../common/facets/facet-search/facet-search-input';
 import {facetSearchInputGuard} from '../../common/facets/facet-search/facet-search-input-guard';
@@ -53,6 +52,7 @@ import {renderFacetValuesGroup} from '../../common/facets/facet-values-group/fac
 import {initializePopover} from '../../common/facets/popover/popover-type';
 import type {Bindings} from '../atomic-search-interface/atomic-search-interface';
 import '../../common/atomic-facet-placeholder/atomic-facet-placeholder';
+import {booleanConverter} from '@/src/converters/boolean-converter';
 import facetCommonStyles from '../../common/facets/facet-common.tw.css';
 import facetSearchStyles from '../../common/facets/facet-search/facet-search.tw.css';
 import facetValueBoxStyles from '../../common/facets/facet-value-box/facet-value-box.tw.css';
@@ -152,8 +152,12 @@ export class AtomicFacet
    * ```
    * If you don't set this property, the facet can be displayed on any tab. Otherwise, the facet can only be displayed on the specified tabs.
    */
-  @property({type: String, attribute: 'tabs-included', reflect: true})
-  public tabsIncluded: string[] | string = '[]';
+  @property({
+    type: Array,
+    attribute: 'tabs-included',
+    reflect: true,
+  })
+  public tabsIncluded: string[] | string = [];
 
   /**
    * The tabs on which this facet must not be displayed. This property should not be used at the same time as `tabs-included`.
@@ -164,7 +168,11 @@ export class AtomicFacet
    * ```
    * If you don't set this property, the facet can be displayed on any tab. Otherwise, the facet won't be displayed on any of the specified tabs.
    */
-  @property({type: Array, attribute: 'tabs-excluded', reflect: true})
+  @property({
+    type: Array,
+    attribute: 'tabs-excluded',
+    reflect: true,
+  })
   public tabsExcluded: string[] | string = [];
 
   /**
@@ -178,7 +186,12 @@ export class AtomicFacet
    * Whether this facet should contain a search box.
    *
    */
-  @property({type: Boolean, attribute: 'with-search', reflect: true})
+  @property({
+    type: Boolean,
+    converter: booleanConverter,
+    attribute: 'with-search',
+    reflect: true,
+  })
   public withSearch = true;
   /**
    * The sort criterion to apply to the returned facet values.
@@ -203,7 +216,12 @@ export class AtomicFacet
   /**
    * Specifies whether the facet is collapsed. When the facet is the child of an `atomic-facet-manager` component, the facet manager controls this property.
    */
-  @property({type: Boolean, attribute: 'is-collapsed', reflect: true})
+  @property({
+    type: Boolean,
+    converter: booleanConverter,
+    attribute: 'is-collapsed',
+    reflect: true,
+  })
   public isCollapsed = false;
   /**
    * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the heading over the facet, from 1 to 6.
@@ -216,12 +234,22 @@ export class AtomicFacet
    *
    * Note: Resulting count is only an estimation, in some cases this value could be incorrect.
    */
-  @property({type: Boolean, attribute: 'filter-facet-count', reflect: true})
+  @property({
+    type: Boolean,
+    converter: booleanConverter,
+    attribute: 'filter-facet-count',
+    reflect: true,
+  })
   public filterFacetCount = true;
   /**
    * Whether to allow excluding values from the facet.
    */
-  @property({type: Boolean, attribute: 'enable-exclusion', reflect: true})
+  @property({
+    type: Boolean,
+    converter: booleanConverter,
+    attribute: 'enable-exclusion',
+    reflect: true,
+  })
   public enableExclusion = false;
   /**
    * The maximum number of results to scan in the index to ensure that the facet lists all potential facet values.
@@ -273,7 +301,10 @@ export class AtomicFacet
    *
    * Default value is `undefined`, and the facet uses all available values for its `field` in the current result set.
    */
-  @property({type: Array, attribute: 'allowed-values'})
+  @property({
+    type: Array,
+    attribute: 'allowed-values',
+  })
   public allowedValues: string[] | string = [];
 
   /**
@@ -295,7 +326,10 @@ export class AtomicFacet
    *
    * The default value is `undefined`, and the facet values will be sorted using only the `sortCriteria`.
    */
-  @property({type: Array, attribute: 'custom-sort'})
+  @property({
+    type: Array,
+    attribute: 'custom-sort',
+  })
   public customSort: string[] | string = [];
 
   private showLessFocus?: FocusTargetController;
@@ -352,42 +386,50 @@ export class AtomicFacet
     return super.shouldUpdate(changedProperties);
   }
 
+  private shouldRenderFacet() {
+    return (
+      !this.searchStatusState.hasError &&
+      this.facetState.enabled &&
+      (!this.searchStatusState.firstSearchExecuted ||
+        this.facetState.values.length > 0)
+    );
+  }
+
   @bindingGuard()
   @errorGuard()
   render() {
-    return html`${when(
-      !this.searchStatusState.hasError &&
-        this.facetState.enabled &&
-        (!this.searchStatusState.firstSearchExecuted ||
-          this.facetState.values.length > 0),
-      () =>
-        this.searchStatusState.firstSearchExecuted
-          ? renderFacetContainer()(
-              html`
-            ${renderFacetHeader({
-              props: {
-                i18n: this.bindings.i18n,
-                label: this.definedLabel,
-                onClearFilters: () => {
-                  this.focusTargets.header.focusAfterSearch();
-                  this.facet.deselectAll();
-                },
-                numberOfActiveValues: this.activeValues.length,
-                isCollapsed: this.isCollapsed,
-                headingLevel: this.headingLevel,
-                onToggleCollapse: () => {
-                  this.isCollapsed = !this.isCollapsed;
-                },
-                headerRef: (el) => this.focusTargets.header.setTarget(el),
-              },
-            })}
+    return html`${when(this.shouldRenderFacet(), () =>
+      this.searchStatusState.firstSearchExecuted
+        ? renderFacetContainer()(
+            html`
+            ${this.renderFacetHeader()}
             ${this.renderBody()}
           `
-            )
-          : html`<atomic-facet-placeholder
+          )
+        : html`<atomic-facet-placeholder
           value-count="${this.numberOfValues}"
         ></atomic-facet-placeholder>`
     )}`;
+  }
+
+  private renderFacetHeader() {
+    return html`${renderFacetHeader({
+      props: {
+        i18n: this.bindings.i18n,
+        label: this.definedLabel,
+        onClearFilters: () => {
+          this.focusTargets.header.focusAfterSearch();
+          this.facet.deselectAll();
+        },
+        numberOfActiveValues: this.activeValues.length,
+        isCollapsed: this.isCollapsed,
+        headingLevel: this.headingLevel,
+        onToggleCollapse: () => {
+          this.isCollapsed = !this.isCollapsed;
+        },
+        headerRef: (el) => this.focusTargets.header.setTarget(el),
+      },
+    })}`;
   }
 
   private renderBody() {
