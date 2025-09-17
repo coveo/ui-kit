@@ -5,8 +5,8 @@ import type {
   ItemDisplayLayout,
 } from '@coveo/atomic/loader';
 import type {Product} from '@coveo/headless/commerce';
-import type React from 'react';
-import {useEffect, useRef} from 'react';
+// biome-ignore lint/style/useImportType: We do need to import React even if its seems unused.
+import React, {useEffect, useRef} from 'react';
 import {createRoot} from 'react-dom/client';
 import {renderToString} from 'react-dom/server';
 import {
