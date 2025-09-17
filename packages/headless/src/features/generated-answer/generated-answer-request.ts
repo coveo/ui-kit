@@ -107,15 +107,14 @@ export const constructAnswerAPIQueryParams = (
   };
 };
 
-const getGeneratedFacetParams = (state: StreamAnswerAPIState) => ({
-  ...getFacets(state)
+const getGeneratedFacetParams = (state: StreamAnswerAPIState) =>
+  getFacets(state)
     ?.map((facetRequest) =>
       mapFacetRequest(facetRequest, initialSearchMappings())
     )
     .sort((a, b) =>
       a.facetId > b.facetId ? 1 : b.facetId > a.facetId ? -1 : 0
-    ),
-});
+    );
 
 const buildAdvancedSearchQueryParams = (state: StreamAnswerAPIState) => {
   const advancedSearchQueryParams = selectAdvancedSearchQueries(state);
