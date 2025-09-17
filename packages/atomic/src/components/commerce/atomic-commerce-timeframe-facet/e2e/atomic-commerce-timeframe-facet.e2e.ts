@@ -1,7 +1,6 @@
 import {expect, test} from './fixture';
 
-// TODO: KIT-4570: need to return Date Facet in organization
-test.describe.skip('AtomicCommerceTimeframeFacet', () => {
+test.describe('atomic-commerce-timeframe-facet', () => {
   test('should be accessible', async ({
     makeAxeBuilder,
     commerceTimeframeFacet,

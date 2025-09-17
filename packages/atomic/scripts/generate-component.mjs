@@ -17,6 +17,11 @@ async function generateFiles(name, outputDir) {
   const shorterName = namePascalCase
     .replace(/^Atomic/, '')
     .replace(/^./, (c) => c.toLowerCase());
+  const storiesTitleName = name
+    .replace('atomic-', '')
+    .split('-')
+    .map(capitalize)
+    .join(' ');
 
   const files = [
     {template: 'component.ts.hbs', output: `${name}.ts`},
@@ -50,7 +55,13 @@ async function generateFiles(name, outputDir) {
 
     const templateContent = await fs.readFile(templatePath, 'utf8');
     const compiled = handlebars.compile(templateContent);
-    const content = compiled({name, namePascalCase, shorterName, githubPath});
+    const content = compiled({
+      name,
+      namePascalCase,
+      shorterName,
+      storiesTitleName,
+      githubPath,
+    });
 
     await fs.ensureDir(path.dirname(outputPath));
     await fs.writeFile(outputPath, content, 'utf8');

@@ -1,3 +1,9 @@
+## <small>2.5.8 (2025-09-17)</small>
+
+* chore: fix vitest config (#6019) ([bd83d59](https://github.com/coveo/ui-kit/commits/bd83d59)), closes [#6019](https://github.com/coveo/ui-kit/issues/6019)
+
+
+
 ## <small>2.5.7 (2025-09-03)</small>
 
 * test(headless-ssr): fix flaky SSR commerce tests (#5967) ([45c114a](https://github.com/coveo/ui-kit/commits/45c114a)), closes [#5967](https://github.com/coveo/ui-kit/issues/5967)

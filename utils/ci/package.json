@@ -6,7 +6,7 @@
   "type": "module",
   "dependencies": {
     "@coveo/semantic-monorepo-tools": "2.6.11",
-    "@npmcli/arborist": "9.1.2",
+    "@npmcli/arborist": "9.1.4",
     "conventional-changelog-conventionalcommits": "8.0.0",
     "dependency-graph": "1.0.0",
     "octokit": "4.1.4",
@@ -14,8 +14,8 @@
     "ts-dedent": "2.2.0"
   },
   "devDependencies": {
-    "@types/npmcli__arborist": "6.3.1",
     "@types/conventional-changelog-writer": "4.0.10",
+    "@types/npmcli__arborist": "6.3.1",
     "typescript": "5.8.3"
   },
   "scripts": {
