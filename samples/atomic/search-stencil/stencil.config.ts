@@ -1,4 +1,5 @@
 import {spawnSync} from 'node:child_process';
+import {dirname} from 'node:path';
 import type {Config} from '@stencil/core';
 import html from 'rollup-plugin-html';
 import nodePolyfills from 'rollup-plugin-node-polyfills';
@@ -16,17 +17,17 @@ export const config: Config = {
       copy: [
         {src: 'pages', keepDirStructure: false},
         {
-          src: '../../../../node_modules/@coveo/atomic/dist/atomic/assets',
+          src: dirname(require.resolve('@coveo/atomic/assets/account.svg')),
           dest: 'assets',
           keepDirStructure: false,
         },
         {
-          src: '../../../../node_modules/@coveo/atomic/dist/atomic/lang',
+          src: dirname(require.resolve('@coveo/atomic/lang/en.json')),
           dest: 'lang',
           keepDirStructure: false,
         },
         {
-          src: '../../../../node_modules/@coveo/atomic/dist/atomic/themes',
+          src: dirname(require.resolve('@coveo/atomic/themes/coveo.css')),
           dest: 'themes',
           keepDirStructure: false,
         },

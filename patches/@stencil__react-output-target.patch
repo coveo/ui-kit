@@ -11,3 +11,67 @@ index fd6fd4cb7f08dab32453d0f78e0c59e683ebb267..8959f0f228ac104dbc2cc13e78432200
  }
  /**
   * Generate the code that will be responsible for creating the Stencil-React bindings
+diff --git a/react-component-lib/createOverlayComponent.tsx b/react-component-lib/createOverlayComponent.tsx
+deleted file mode 100644
+index 288c38dd54c138fea45127e45acf9d0b96dbf99a..0000000000000000000000000000000000000000
+diff --git a/react-component-lib/index.ts b/react-component-lib/index.ts
+index 85e81ad196c6d8c5dd7076a3b57bc3afbb434b0d..7605bc8014fe3ff4864d46bedcfcca87063ade47 100644
+--- a/react-component-lib/index.ts
++++ b/react-component-lib/index.ts
+@@ -1,2 +1 @@
+ export { createReactComponent } from './createComponent';
+\ No newline at end of file
+-export { createOverlayComponent } from './createOverlayComponent';
+diff --git a/react-component-lib/utils/index.tsx b/react-component-lib/utils/index.tsx
+index a66bd02de766a2eaf05a913d6bc9b1984279265c..ffe3170d4ffb1a84f67b668e538db6827e45bad4 100644
+--- a/react-component-lib/utils/index.tsx
++++ b/react-component-lib/utils/index.tsx
+@@ -1,15 +1,12 @@
+-import React from 'react';
++import React, { ForwardRefRenderFunction, PropsWithoutRef } from 'react';
+ 
+-import type { StyleReactProps } from '../interfaces';
++import type { StyleReactProps } from '../interfaces.js';
+ 
+ export type StencilReactExternalProps<PropType, ElementType> = PropType &
+   Omit<React.HTMLAttributes<ElementType>, 'style'> &
+   StyleReactProps;
+ 
+-// This will be replaced with React.ForwardedRef when react-output-target is upgraded to React v17
+-export type StencilReactForwardedRef<T> = ((instance: T | null) => void) | React.MutableRefObject<T | null> | null;
+-
+-export const setRef = (ref: StencilReactForwardedRef<any> | React.Ref<any> | undefined, value: any) => {
++export const setRef = (ref: React.ForwardedRef<any> | React.Ref<any> | undefined, value: any) => {
+   if (typeof ref === 'function') {
+     ref(value);
+   } else if (ref != null) {
+@@ -19,7 +16,7 @@ export const setRef = (ref: StencilReactForwardedRef<any> | React.Ref<any> | und
+ };
+ 
+ export const mergeRefs = (
+-  ...refs: (StencilReactForwardedRef<any> | React.Ref<any> | undefined)[]
++  ...refs: (React.ForwardedRef<any> | React.Ref<any> | undefined)[]
+ ): React.RefCallback<any> => {
+   return (value: any) => {
+     refs.forEach((ref) => {
+@@ -29,9 +26,9 @@ export const mergeRefs = (
+ };
+ 
+ export const createForwardRef = <PropType, ElementType>(ReactComponent: any, displayName: string) => {
+-  const forwardRef = (
+-    props: StencilReactExternalProps<PropType, ElementType>,
+-    ref: StencilReactForwardedRef<ElementType>
++  const forwardRef: ForwardRefRenderFunction<ElementType, PropsWithoutRef<StencilReactExternalProps<PropType, ElementType>>> = (
++    props,
++    ref
+   ) => {
+     return <ReactComponent {...props} forwardedRef={ref} />;
+   };
+@@ -46,5 +43,5 @@ export const defineCustomElement = (tagName: string, customElement: any) => {
+   }
+ };
+ 
+-export * from './attachProps';
+-export * from './case';
++export * from './attachProps.js';
++export * from './case.js';

@@ -14,7 +14,7 @@ interface WrapperProps extends AtomicJSX.AtomicSearchBoxInstantResults {
    * A template function that takes a result item and outputs its target rendering as a JSX element.
    * It can be used to conditionally render different type of result templates based on the properties of each result.
    */
-  template: <T = Result | FoldedResult>(result: T) => JSX.Element;
+  template: <T = Result | FoldedResult>(result: T) => React.JSX.Element;
 }
 
 /**

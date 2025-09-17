@@ -5,8 +5,8 @@ import type {
   ItemDisplayLayout,
 } from '@coveo/atomic/loader';
 import type {Product} from '@coveo/headless/commerce';
-// biome-ignore lint/style/useImportType: <React is needed>
-import React, {useEffect, useRef} from 'react';
+import type React from 'react';
+import {useEffect, useRef} from 'react';
 import {createRoot} from 'react-dom/client';
 import {renderToString} from 'react-dom/server';
 import {
@@ -15,8 +15,8 @@ import {
 } from './components.js';
 
 interface Template {
-  contentTemplate: JSX.Element;
-  linkTemplate: JSX.Element;
+  contentTemplate: React.JSX.Element;
+  linkTemplate: React.JSX.Element;
 }
 
 interface AtomicCommerceProductListProps {
@@ -56,7 +56,7 @@ interface WrapperProps extends AtomicCommerceProductListProps {
    * A template function that takes a result item and outputs its target rendering as a JSX element.
    * It can be used to conditionally render different type of result templates based on the properties of each result.
    */
-  template: (result: Product) => JSX.Element | Template;
+  template: (result: Product) => React.JSX.Element | Template;
 }
 /**
  * This component serves as a wrapper for the core AtomicCommerceProductList.
@@ -98,7 +98,7 @@ export const ListWrapper: React.FC<WrapperProps> = (props) => {
 };
 
 const hasLinkTemplate = (
-  template: JSX.Element | Template
+  template: React.JSX.Element | Template
 ): template is Template => {
   return (template as Template).linkTemplate !== undefined;
 };
