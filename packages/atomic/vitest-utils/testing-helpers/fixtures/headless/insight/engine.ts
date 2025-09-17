@@ -1,30 +1,40 @@
-import type {InsightEngine} from '@coveo/headless/insight';
+import {
+  getSampleInsightEngineConfiguration,
+  type InsightEngine,
+  type InsightEngineConfiguration,
+} from '@coveo/headless/insight';
 import {vi} from 'vitest';
 
-export function buildFakeInsightEngine(
-  config: Partial<InsightEngine> = {}
-): InsightEngine {
-  const fakeEngine: InsightEngine = {
-    configuration: {
-      organizationId: 'test-org',
-      accessToken: 'test-token',
-      analytics: {
-        trackingId: 'test-tracking-id',
-      },
-      ...config.configuration,
-    },
-    executeFirstSearch: vi.fn(),
+export const buildFakeInsightEngine = ({
+  implementation,
+  state,
+}: Partial<{
+  implementation?: Partial<InsightEngine>;
+  config?: Partial<InsightEngineConfiguration>;
+  state?: Record<string, unknown>;
+}> = {}): InsightEngine => {
+  const defaultState = {};
+  const defaultImplementation = {
+    addReducers: vi.fn(),
+    disableAnalytics: vi.fn(),
     dispatch: vi.fn(),
-    subscribe: vi.fn(),
-    state: {},
+    enableAnalytics: vi.fn(),
+    executeFirstSearch: vi.fn(),
     logger: {
       info: vi.fn(),
       warn: vi.fn(),
       error: vi.fn(),
       debug: vi.fn(),
     },
-    ...config,
+    subscribe: vi.fn(() => ({unsubscribe: vi.fn()})),
+    configuration: {
+      ...getSampleInsightEngineConfiguration(),
+    },
   };
 
-  return fakeEngine;
-}
+  return {
+    ...defaultImplementation,
+    ...implementation,
+    state: {...defaultState, ...state} as never,
+  } as InsightEngine;
+};
