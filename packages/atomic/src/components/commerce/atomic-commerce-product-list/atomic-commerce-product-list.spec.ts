@@ -25,7 +25,7 @@ import {AtomicCommerceProductList} from './atomic-commerce-product-list';
 vi.mock('@/src/components/common/interface/store', {spy: true});
 vi.mock('@coveo/headless/commerce', {spy: true});
 
-describe('AtomicCommerceProductList', () => {
+describe('atomic-commerce-product-list', () => {
   const interactiveProduct = vi.fn();
   const promoteChildToParent = vi.fn();
   const summary = vi.fn();
