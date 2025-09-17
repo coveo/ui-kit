@@ -1,7 +1,7 @@
 {
   "name": "ui-kit",
   "private": true,
-  "version": "3.0.59",
+  "version": "3.0.60",
   "scripts": {
     "postinstall": "husky install && patch-package && npx playwright install",
     "reset:install": "git checkout origin/main package-lock.json && npm i",
@@ -125,5 +125,5 @@
     "node": "^22.14.0",
     "npm": ">=8.6.0"
   },
-  "packageManager": "npm@11.4.2"
+  "packageManager": "npm@11.6.0"
 }
