@@ -61,7 +61,7 @@ export class AtomicInsightInterface
     'CoveoAtomic',
     HEADLESS_VERSION
   );
-  public store: InsightStore; // TODO (v4) - Make private
+  public store: InsightStore; // TODO - (v4) KIT-5008: Make private
 
   static styles: CSSResultGroup = css`
     :host {
@@ -298,7 +298,7 @@ export class AtomicInsightInterface
     this.initialized = true;
   }
 
-  // TODO (v4) - Make private
+  // TODO - (v4) KIT-5008: Make private
   public registerFieldsToInclude() {
     if (this.fieldsToInclude.length) {
       this.engine!.dispatch(
