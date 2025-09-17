@@ -5,14 +5,13 @@ import type {
 } from '../../../../controllers/commerce/core/sort/headless-core-commerce-sort.js';
 import {buildProductListing} from '../../../../controllers/commerce/product-listing/headless-product-listing.js';
 import {buildSearch} from '../../../../controllers/commerce/search/headless-search.js';
-import {ensureAtLeastOneSolutionType} from '../../../../ssr/commerce/controller-utils.js';
 import {SolutionType} from '../../types/controller-constants.js';
-import type {
-  ControllerDefinitionOption,
-  SubControllerDefinitionWithoutProps,
-} from '../../types/controller-definitions.js';
+import type {SearchAndListingControllerDefinitionWithoutProps} from '../../types/controller-definitions.js';
 
 export type {Sort, SortProps, SortState};
+
+export type SortDefinition =
+  SearchAndListingControllerDefinitionWithoutProps<Sort>;
 
 /**
  * Defines a `Sort` controller instance.
@@ -21,10 +20,7 @@ export type {Sort, SortProps, SortState};
  * @param props - The configurable `Sort` properties.
  * @returns The `Sort` controller definition.
  */
-export function defineSort<
-  TOptions extends ControllerDefinitionOption | undefined,
->(props?: SortProps & TOptions) {
-  ensureAtLeastOneSolutionType(props);
+export function defineSort(props?: SortProps): SortDefinition {
   return {
     listing: true,
     search: true,
@@ -33,5 +29,5 @@ export function defineSort<
       solutionType === SolutionType.listing
         ? buildProductListing(engine).sort(props)
         : buildSearch(engine).sort(props),
-  } as SubControllerDefinitionWithoutProps<Sort, TOptions>;
+  };
 }

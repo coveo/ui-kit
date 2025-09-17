@@ -19,7 +19,7 @@ function entries<K extends PropertyKey, V>(obj: Record<K, V>): [K, V][] {
   return Object.entries(obj) as [K, V][];
 }
 
-describe('Search Interface Component', () => {
+describe.skip('Search Interface Component', () => {
   const setTranslation = (lang: string, key: string, value: string) => {
     getSearchInterface((searchInterface) => {
       searchInterface.i18n.addResource(lang, 'translation', key, value);

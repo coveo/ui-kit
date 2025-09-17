@@ -16,8 +16,9 @@ import {
 } from '@coveo/headless';
 import {provide} from '@lit/context';
 import i18next, {type i18n} from 'i18next';
-import {type CSSResultGroup, css, html, LitElement, nothing} from 'lit';
+import {type CSSResultGroup, css, html, LitElement} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
+import {when} from 'lit/directives/when.js';
 import {booleanConverter} from '@/src/converters/boolean-converter';
 import {errorGuard} from '@/src/decorators/error-guard';
 import {watch} from '@/src/decorators/watch';
@@ -45,6 +46,7 @@ import {
 } from '../atomic-search-layout/search-layout';
 import {getAnalyticsConfig} from './analytics-config';
 import {createSearchStore, type SearchStore} from './store';
+import '../../common/atomic-modal/atomic-modal';
 
 const FirstSearchExecutedFlag = 'firstSearchExecuted';
 export type InitializationOptions = SearchEngineConfiguration;
@@ -68,8 +70,14 @@ export class AtomicSearchInterface
   extends ChildrenUpdateCompleteMixin(LitElement)
   implements BaseAtomicInterface<SearchEngine>
 {
-  private urlManager!: UrlManager;
-  private searchStatus!: SearchStatus;
+  @state()
+  @provide({context: bindingsContext})
+  public bindings: Bindings = {} as Bindings;
+  @state() public error!: Error;
+  @state() public relevanceInspectorIsOpen = false;
+
+  public urlManager!: UrlManager;
+  public searchStatus!: SearchStatus;
   private unsubscribeUrlManager: Unsubscribe = () => {};
   private unsubscribeSearchStatus: Unsubscribe = () => {};
   private initialized = false;
@@ -79,9 +87,6 @@ export class AtomicSearchInterface
     'CoveoAtomic',
     HEADLESS_VERSION
   );
-
-  @state() public error!: Error;
-  @state() relevanceInspectorIsOpen = false;
 
   static styles: CSSResultGroup = [
     css`
@@ -103,7 +108,22 @@ export class AtomicSearchInterface
    * <atomic-search-interface fields-to-include='["fieldA", "fieldB"]'></atomic-search-interface>
    * ```
    */
-  @property({type: Array, attribute: 'fields-to-include'})
+  @property({
+    type: Array,
+    attribute: 'fields-to-include',
+    converter: {
+      fromAttribute: (value: string | null) => {
+        if (!value) return [];
+        try {
+          const parsed = JSON.parse(value);
+          return Array.isArray(parsed) ? parsed : [];
+        } catch {
+          return [];
+        }
+      },
+      toAttribute: (value: string[]) => JSON.stringify(value),
+    },
+  })
   public fieldsToInclude: string[] = [];
 
   /**
@@ -121,6 +141,10 @@ export class AtomicSearchInterface
   @property({type: String, attribute: 'search-hub', reflect: true})
   public searchHub?: string;
 
+  // TODO - KIT-4994: Add disableAnalytics property that defaults to false.
+
+  // TODO - KIT-4994: Deprecate in favor of disableAnalytics property.
+  // TODO - (v4) KIT-4990: Remove.
   /**
    * Whether analytics should be enabled.
    */
@@ -160,8 +184,10 @@ export class AtomicSearchInterface
    */
   @property({type: Object, attribute: false}) public engine?: SearchEngine;
 
+  // TODO - (v4) KIT-4823: Remove.
   /**
    * Whether the state should be reflected in the URL parameters.
+   * @deprecated - replaced by `disable-state-reflection-in-url` (this defaults to `true`, while the replacement defaults to `false`).
    */
   @property({
     type: Boolean,
@@ -170,6 +196,16 @@ export class AtomicSearchInterface
     converter: booleanConverter,
   })
   reflectStateInUrl = true;
+
+  /**
+   * Disable state reflection in the URL parameters.
+   */
+  @property({
+    type: Boolean,
+    attribute: 'disable-state-reflection-in-url',
+    reflect: true,
+  })
+  disableStateReflectionInUrl = false;
 
   /**
    * The CSS selector for the container where the interface will scroll back to.
@@ -195,12 +231,14 @@ export class AtomicSearchInterface
   @property({type: String, attribute: 'icon-assets-path', reflect: true})
   iconAssetsPath = './assets';
 
+  // TODO - (v4) KIT-5004: Remove.
   /**
    * Whether the relevance inspector shortcut should be enabled for this interface.
    *
    * The relevance inspector can be opened by holding the Alt key (Option on Mac) while over the interface, and performing a double click.
    *
    * The relevance inspector allows to troubleshoot and debug queries.
+   * @deprecated - replaced by `disable-relevance-inspector` (this defaults to `true`, while the replacement defaults to `false`).
    */
   @property({
     type: Boolean,
@@ -209,6 +247,16 @@ export class AtomicSearchInterface
     converter: booleanConverter,
   })
   enableRelevanceInspector = true;
+
+  /**
+   * Disable the relevance inspector shortcut for this interface.
+   */
+  @property({
+    type: Boolean,
+    attribute: 'disable-relevance-inspector',
+    reflect: true,
+  })
+  disableRelevanceInspector = false;
 
   private i18Initialized: Promise<void>;
 
@@ -248,50 +296,14 @@ export class AtomicSearchInterface
     this.initFieldsToInclude();
   }
 
-  @watch('searchHub')
-  public updateSearchHub() {
-    this.updateSearchConfiguration('searchHub', this.searchHub ?? 'default');
-  }
-
-  @watch('pipeline')
-  public updatePipeline() {
-    this.updateSearchConfiguration('pipeline', this.pipeline);
-  }
-
-  @watch('analytics')
-  public toggleAnalytics() {
-    this.interfaceController.onAnalyticsChange();
-  }
-
-  @watch('language')
-  public updateLanguage() {
-    if (
-      !this.interfaceController.engineIsCreated(this.engine) ||
-      !this.language
-    ) {
-      return;
-    }
-
-    const {updateSearchConfiguration} = loadSearchConfigurationActions(
-      this.engine
-    );
-    this.engine.dispatch(
-      updateSearchConfiguration({
-        locale: this.language,
-      })
-    );
-    return this.interfaceController.onLanguageChange();
-  }
-
-  @watch('iconAssetsPath')
-  public updateIconAssetsPath(): void {
-    this.store.state.iconAssetsPath = this.iconAssetsPath;
-  }
-
   public disconnectedCallback() {
     super.disconnectedCallback();
-    this.unsubscribeUrlManager();
-    this.unsubscribeSearchStatus();
+    if (typeof this.unsubscribeUrlManager === 'function') {
+      this.unsubscribeUrlManager();
+    }
+    if (typeof this.unsubscribeSearchStatus === 'function') {
+      this.unsubscribeSearchStatus();
+    }
     window.removeEventListener('hashchange', this.onHashChange);
     this.removeEventListener(
       'atomic/initializeComponent',
@@ -311,11 +323,12 @@ export class AtomicSearchInterface
     this.interfaceController.onComponentInitializing(event);
   };
 
+  // TODO - (v4) KIT-4991: Make private.
   public scrollToTop() {
     const scrollContainerElement = document.querySelector(this.scrollContainer);
     if (!scrollContainerElement) {
       this.bindings.engine.logger.warn(
-        `Could not find the scroll container with the selector "${this.scrollContainer}". This will prevent UX interactions that require a scroll from working correctly. Please check the CSS selector in the scrollContainer option`
+        `Could not find the scroll container with the selector "${this.scrollContainer}". This will prevent UX interactions that require a scroll from working correctly. Please review the CSS selector in the scrollContainer option`
       );
       return;
     }
@@ -390,10 +403,6 @@ export class AtomicSearchInterface
     this.engine.executeFirstSearchAfterStandaloneSearchBoxRedirect(analytics);
   }
 
-  @state()
-  @provide({context: bindingsContext})
-  public bindings: Bindings = {} as Bindings;
-
   public updateSearchConfiguration(
     updatedProp: 'searchHub' | 'pipeline',
     newValue: string | undefined
@@ -414,6 +423,46 @@ export class AtomicSearchInterface
         [updatedProp]: newValue,
       })
     );
+  }
+
+  @watch('searchHub')
+  public updateSearchHub() {
+    this.updateSearchConfiguration('searchHub', this.searchHub ?? 'default');
+  }
+
+  @watch('pipeline')
+  public updatePipeline() {
+    this.updateSearchConfiguration('pipeline', this.pipeline);
+  }
+
+  @watch('analytics')
+  public toggleAnalytics() {
+    this.interfaceController.onAnalyticsChange();
+  }
+
+  @watch('language')
+  public updateLanguage() {
+    if (
+      !this.interfaceController.engineIsCreated(this.engine) ||
+      !this.language
+    ) {
+      return;
+    }
+
+    const {updateSearchConfiguration} = loadSearchConfigurationActions(
+      this.engine
+    );
+    this.engine.dispatch(
+      updateSearchConfiguration({
+        locale: this.language,
+      })
+    );
+    return this.interfaceController.onLanguageChange();
+  }
+
+  @watch('iconAssetsPath')
+  public updateIconAssetsPath(): void {
+    this.store.state.iconAssetsPath = this.iconAssetsPath;
   }
 
   private getBindings(): Bindings {
@@ -503,6 +552,9 @@ export class AtomicSearchInterface
   }
 
   private initUrlManager() {
+    if (this.disableStateReflectionInUrl) {
+      return;
+    }
     if (!this.reflectStateInUrl) {
       return;
     }
@@ -519,7 +571,7 @@ export class AtomicSearchInterface
   }
 
   private initRelevanceInspector() {
-    if (this.enableRelevanceInspector) {
+    if (this.enableRelevanceInspector && !this.disableRelevanceInspector) {
       this.addEventListener('dblclick', (e) => {
         if (e.altKey) {
           this.relevanceInspectorIsOpen = !this.relevanceInspectorIsOpen;
@@ -577,7 +629,7 @@ export class AtomicSearchInterface
       this.interfaceController.onInitialization(initEngine),
       this.i18Initialized,
     ]);
-    await this.updateLanguage();
+    this.updateLanguage();
     this.bindings = this.getBindings();
     markParentAsReady(this);
     this.pipeline = this.engine!.state.pipeline;
@@ -591,14 +643,15 @@ export class AtomicSearchInterface
   @errorGuard()
   render() {
     return html`
-      ${
-        this.engine && this.enableRelevanceInspector
-          ? html`<atomic-relevance-inspector
-            ?open=${this.relevanceInspectorIsOpen}
-            .bindings=${this.bindings}
-          ></atomic-relevance-inspector>`
-          : nothing
-      }
+      ${when(
+        this.bindings?.engine &&
+          this.enableRelevanceInspector &&
+          !this.disableRelevanceInspector,
+        () => html`<atomic-relevance-inspector
+          ?open=${this.relevanceInspectorIsOpen}
+          .bindings=${this.bindings}
+        ></atomic-relevance-inspector>`
+      )}
       <slot></slot>
     `;
   }
