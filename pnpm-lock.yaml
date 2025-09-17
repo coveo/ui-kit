@@ -131,10 +131,10 @@ importers:
   packages/atomic:
     dependencies:
       '@coveo/bueno':
-        specifier: 1.1.0
+        specifier: 1.1.1
         version: link:../bueno
       '@coveo/headless':
-        specifier: 3.30.0
+        specifier: 3.30.1
         version: link:../headless
       '@lit/context':
         specifier: 1.1.6
@@ -375,7 +375,7 @@ importers:
   packages/atomic-angular:
     dependencies:
       '@coveo/atomic':
-        specifier: 3.33.4
+        specifier: 3.33.5
         version: link:../atomic
       rxjs:
         specifier: 7.8.2
@@ -391,7 +391,7 @@ importers:
         specifier: 19.2.2
         version: 19.2.2(@angular/compiler@19.2.2(@angular/core@19.2.2(rxjs@7.8.2)(zone.js@0.15.1)))(typescript@5.8.3)
       '@coveo/headless':
-        specifier: 3.30.0
+        specifier: 3.30.1
         version: link:../headless
       '@types/node':
         specifier: 22.16.5
@@ -418,19 +418,19 @@ importers:
         specifier: 14 - 19
         version: 19.2.2(rxjs@7.8.2)(zone.js@0.15.1)
       '@coveo/atomic':
-        specifier: 3.33.4
+        specifier: 3.33.5
         version: link:../../../atomic
       '@coveo/headless':
-        specifier: 3.30.0
+        specifier: 3.30.1
         version: link:../../../headless
 
   packages/atomic-hosted-page:
     dependencies:
       '@coveo/bueno':
-        specifier: 1.1.0
+        specifier: 1.1.1
         version: link:../bueno
       '@coveo/headless':
-        specifier: 3.30.0
+        specifier: 3.30.1
         version: link:../headless
       lit:
         specifier: 3.3.1
@@ -452,14 +452,14 @@ importers:
   packages/atomic-react:
     dependencies:
       '@coveo/atomic':
-        specifier: 3.33.4
+        specifier: 3.33.5
         version: link:../atomic
       '@coveo/headless':
-        specifier: 3.30.0
+        specifier: 3.30.1
         version: link:../headless
       '@lit/react':
-        specifier: 1.0.6
-        version: 1.0.6(@types/react@19.1.13)
+        specifier: 1.0.8
+        version: 1.0.8(@types/react@19.1.13)
     devDependencies:
       '@rollup/plugin-commonjs':
         specifier: 28.0.6
@@ -567,10 +567,10 @@ importers:
   packages/create-atomic-component-project/template:
     dependencies:
       '@coveo/atomic':
-        specifier: 3.33.4
+        specifier: 3.33.5
         version: link:../../atomic
       '@coveo/headless':
-        specifier: 3.30.0
+        specifier: 3.30.1
         version: link:../../headless
     devDependencies:
       '@coveo/create-atomic-rollup-plugin':
@@ -647,10 +647,10 @@ importers:
   packages/create-atomic-result-component/template/src/components/sample-result-component:
     dependencies:
       '@coveo/atomic':
-        specifier: 3.33.4
+        specifier: 3.33.5
         version: link:../../../../../atomic
       '@coveo/headless':
-        specifier: 3.30.0
+        specifier: 3.30.1
         version: link:../../../../../headless
       '@stencil/core':
         specifier: 4.20.0
@@ -690,10 +690,10 @@ importers:
   packages/create-atomic-template:
     dependencies:
       '@coveo/atomic':
-        specifier: 3.33.4
+        specifier: 3.33.5
         version: link:../atomic
       '@coveo/headless':
-        specifier: 3.30.0
+        specifier: 3.30.1
         version: link:../headless
       '@stencil/core':
         specifier: 4.20.0
@@ -733,11 +733,11 @@ importers:
   packages/headless:
     dependencies:
       '@coveo/bueno':
-        specifier: 1.1.0
+        specifier: 1.1.1
         version: link:../bueno
       '@coveo/relay':
-        specifier: 1.2.6
-        version: 1.2.6
+        specifier: 1.2.7
+        version: 1.2.7
       '@coveo/relay-event-types':
         specifier: 15.1.0
         version: 15.1.0
@@ -803,7 +803,7 @@ importers:
   packages/headless-react:
     dependencies:
       '@coveo/headless':
-        specifier: 3.30.0
+        specifier: 3.30.1
         version: link:../headless
       '@types/react':
         specifier: ^18 || ^19
@@ -843,10 +843,10 @@ importers:
   packages/quantic:
     dependencies:
       '@coveo/bueno':
-        specifier: 1.1.0
+        specifier: 1.1.1
         version: link:../bueno
       '@coveo/headless':
-        specifier: 3.30.0
+        specifier: 3.30.1
         version: link:../headless
       coveo.analytics:
         specifier: 2.30.45
@@ -955,11 +955,11 @@ importers:
   packages/shopify:
     dependencies:
       '@coveo/headless':
-        specifier: 3.30.0
+        specifier: 3.30.1
         version: link:../headless
       '@coveo/relay':
-        specifier: 1.2.6
-        version: 1.2.6
+        specifier: 1.2.7
+        version: 1.2.7
       uuid:
         specifier: ^11.0.0
         version: 11.1.0
@@ -992,7 +992,7 @@ importers:
         specifier: 19.2.2
         version: 19.2.2(@angular/common@19.2.2(@angular/core@19.2.2(rxjs@7.8.2)(zone.js@0.15.1))(rxjs@7.8.2))(@angular/core@19.2.2(rxjs@7.8.2)(zone.js@0.15.1))(@angular/platform-browser@19.2.2(@angular/animations@19.2.2(@angular/core@19.2.2(rxjs@7.8.2)(zone.js@0.15.1)))(@angular/common@19.2.2(@angular/core@19.2.2(rxjs@7.8.2)(zone.js@0.15.1))(rxjs@7.8.2))(@angular/core@19.2.2(rxjs@7.8.2)(zone.js@0.15.1)))(rxjs@7.8.2)
       '@coveo/atomic-angular':
-        specifier: 3.7.4
+        specifier: 3.7.5
         version: link:../../../packages/atomic-angular/projects/atomic-angular
       ncp:
         specifier: 2.0.0
@@ -1029,10 +1029,10 @@ importers:
   samples/atomic/search-commerce-react:
     dependencies:
       '@coveo/atomic-react':
-        specifier: 3.3.8
+        specifier: 3.3.9
         version: link:../../../packages/atomic-react
       '@coveo/headless':
-        specifier: 3.30.0
+        specifier: 3.30.1
         version: link:../../../packages/headless
       react:
         specifier: 19.1.1
@@ -1069,13 +1069,13 @@ importers:
   samples/atomic/search-nextjs-app-router:
     dependencies:
       '@coveo/atomic':
-        specifier: 3.33.4
+        specifier: 3.33.5
         version: link:../../../packages/atomic
       '@coveo/atomic-react':
-        specifier: 3.3.8
+        specifier: 3.3.9
         version: link:../../../packages/atomic-react
       '@coveo/headless':
-        specifier: 3.30.0
+        specifier: 3.30.1
         version: link:../../../packages/headless
       next:
         specifier: 15.2.4
@@ -1106,13 +1106,13 @@ importers:
   samples/atomic/search-nextjs-pages-router:
     dependencies:
       '@coveo/atomic':
-        specifier: 3.33.4
+        specifier: 3.33.5
         version: link:../../../packages/atomic
       '@coveo/atomic-react':
-        specifier: 3.3.8
+        specifier: 3.3.9
         version: link:../../../packages/atomic-react
       '@coveo/headless':
-        specifier: 3.30.0
+        specifier: 3.30.1
         version: link:../../../packages/headless
       next:
         specifier: 15.2.4
@@ -1146,10 +1146,10 @@ importers:
   samples/atomic/search-stencil:
     dependencies:
       '@coveo/atomic':
-        specifier: 3.33.4
+        specifier: 3.33.5
         version: link:../../../packages/atomic
       '@coveo/headless':
-        specifier: 3.30.0
+        specifier: 3.30.1
         version: link:../../../packages/headless
       '@stencil/core':
         specifier: 4.20.0
@@ -1171,7 +1171,7 @@ importers:
   samples/atomic/search-vuejs:
     dependencies:
       '@coveo/atomic':
-        specifier: 3.33.4
+        specifier: 3.33.5
         version: link:../../../packages/atomic
       vue:
         specifier: 3.5.18
@@ -1196,7 +1196,7 @@ importers:
   samples/headless-ssr/commerce-express:
     dependencies:
       '@coveo/headless':
-        specifier: 3.30.0
+        specifier: 3.30.1
         version: link:../../../packages/headless
       express:
         specifier: ^4.18.2
@@ -1224,7 +1224,7 @@ importers:
   samples/headless-ssr/commerce-nextjs:
     dependencies:
       '@coveo/headless-react':
-        specifier: 2.5.8
+        specifier: 2.5.9
         version: link:../../../packages/headless-react
       next:
         specifier: 15.2.4
@@ -1255,7 +1255,7 @@ importers:
   samples/headless-ssr/commerce-react-router:
     dependencies:
       '@coveo/headless-react':
-        specifier: 2.5.8
+        specifier: 2.5.9
         version: link:../../../packages/headless-react
       '@react-router/fs-routes':
         specifier: 7.8.2
@@ -1304,10 +1304,10 @@ importers:
   samples/headless-ssr/search-nextjs:
     dependencies:
       '@coveo/headless':
-        specifier: 3.30.0
+        specifier: 3.30.1
         version: link:../../../packages/headless
       '@coveo/headless-react':
-        specifier: 2.5.8
+        specifier: 2.5.9
         version: link:../../../packages/headless-react
       next:
         specifier: 15.2.4
@@ -1397,7 +1397,7 @@ importers:
   samples/headless/commerce-react:
     dependencies:
       '@coveo/headless':
-        specifier: 3.30.0
+        specifier: 3.30.1
         version: link:../../../packages/headless
       react:
         specifier: 19.1.1
@@ -1434,7 +1434,7 @@ importers:
         specifier: 2.1.0
         version: link:../../../packages/auth
       '@coveo/headless':
-        specifier: 3.30.0
+        specifier: 3.30.1
         version: link:../../../packages/headless
       '@testing-library/jest-dom':
         specifier: 6.6.3
@@ -2606,6 +2606,10 @@ packages:
       typescript:
         optional: true
 
+  '@coveo/bueno@1.1.0':
+    resolution: {integrity: sha512-etAFe8u+Fz+VxOcJ8wHKc0gsrUY6CWh+3n7F4s9BvdYYOlHaJ4Uxe8QidetlXKHGTkhfqXNiz4ZwzzJ7E5i1MQ==}
+    engines: {node: ^20.9.0 || ^22.11.0}
+
   '@coveo/create-atomic-component-project@1.4.2':
     resolution: {integrity: sha512-CC83e/8uO4fEqgf1pLcIotvEcR9jE5YS31wuSGbWRPA03Wjm1/nPKhGec5lDDcq1jyHp0harKMRkePiUDdb0fQ==}
     hasBin: true
@@ -2632,6 +2636,9 @@ packages:
 
   '@coveo/relay@1.2.6':
     resolution: {integrity: sha512-38WAK4zKUk/o0jp4ay4sdbnDLk3SyixhYlqF1GvuxkwLH26QP8InLqKHGj7Xuz7szTqjynS/QyICgcGWUaMiJA==}
+
+  '@coveo/relay@1.2.7':
+    resolution: {integrity: sha512-lwE9O0eAaCVx9P0VGelOdKpu5xoY/c7aThkilq1B7dK2KqseBcGLtzgvkVloGrcYoaUf6upM6qhl5/3k0Jf8tw==}
 
   '@coveo/semantic-monorepo-tools@2.6.11':
     resolution: {integrity: sha512-v8jVlB6Eg/jDPKWmhraYoGAYcsUNjLtUJV3TQ2O/fYkA/cipyW0Tz7qA1TjfILUg49VVCjkYG4COe0DHE/Skug==}
@@ -3901,10 +3908,10 @@ packages:
   '@lit/context@1.1.6':
     resolution: {integrity: sha512-M26qDE6UkQbZA2mQ3RjJ3Gzd8TxP+/0obMgE5HfkfLhEEyYE3Bui4A5XHiGPjy0MUGAyxB3QgVuw2ciS0kHn6A==}
 
-  '@lit/react@1.0.6':
-    resolution: {integrity: sha512-QIss8MPh6qUoFJmuaF4dSHts3qCsA36S3HcOLiNPShxhgYPr4XJRnCBKPipk85sR9xr6TQrOcDMfexwbNdJHYA==}
+  '@lit/react@1.0.8':
+    resolution: {integrity: sha512-p2+YcF+JE67SRX3mMlJ1TKCSTsgyOVdAwd/nxp3NuV1+Cb6MWALbN6nT7Ld4tpmYofcE5kcaSY1YBB9erY+6fw==}
     peerDependencies:
-      '@types/react': 17 || 18
+      '@types/react': 17 || 18 || 19
 
   '@lit/reactive-element@2.1.1':
     resolution: {integrity: sha512-N+dm5PAYdQ8e6UlywyyrgI2t++wFGXfHx+dSJ1oBrg6FAxUj40jId++EaRm80MKX5JnlH1sBsyZ5h0bcZKemCg==}
@@ -16086,13 +16093,15 @@ snapshots:
       - encoding
       - postcss
 
+  '@coveo/bueno@1.1.0': {}
+
   '@coveo/create-atomic-component-project@1.4.2': {}
 
   '@coveo/explorer-messenger@0.4.1': {}
 
   '@coveo/headless@3.28.4(encoding@0.1.13)(pino-pretty@13.1.1)(react@19.1.1)(redux@5.0.1)(typescript@5.8.3)':
     dependencies:
-      '@coveo/bueno': link:packages/bueno
+      '@coveo/bueno': 1.1.0
       '@coveo/relay': 1.2.6
       '@coveo/relay-event-types': 15.1.0
       '@reduxjs/toolkit': 2.6.0(react@19.1.1)
@@ -16126,6 +16135,11 @@ snapshots:
   '@coveo/relay-event-types@15.1.0': {}
 
   '@coveo/relay@1.2.6':
+    dependencies:
+      '@coveo/explorer-messenger': 0.4.1
+      uuid: 11.1.0
+
+  '@coveo/relay@1.2.7':
     dependencies:
       '@coveo/explorer-messenger': 0.4.1
       uuid: 11.1.0
@@ -17312,7 +17326,7 @@ snapshots:
     dependencies:
       '@lit/reactive-element': 2.1.1
 
-  '@lit/react@1.0.6(@types/react@19.1.13)':
+  '@lit/react@1.0.8(@types/react@19.1.13)':
     dependencies:
       '@types/react': 19.1.13
 
