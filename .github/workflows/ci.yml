@@ -59,7 +59,7 @@ jobs:
           registry-url: "https://registry.npmjs.org"
           node-version-file: ".nvmrc"
       - name: Install package manager
-        run: corepack enable
+        run: corepack install
         shell: bash
       - name: Install dependencies
         run: pnpm i
@@ -640,7 +640,7 @@ jobs:
           registry-url: "https://registry.npmjs.org"
           node-version-file: ".nvmrc"
       - name: Install package manager
-        run: corepack enable
+        run: corepack install
 
         shell: bash
       - run: pnpm i
@@ -674,7 +674,7 @@ jobs:
           registry-url: "https://registry.npmjs.org"
           node-version-file: ".nvmrc"
       - name: Install package manager
-        run: corepack enable
+        run: corepack install
         shell: bash
       - run: pnpm i
         shell: bash
@@ -810,7 +810,7 @@ jobs:
           registry-url: "https://registry.npmjs.org"
           node-version-file: ".nvmrc"
       - name: Install package manager
-        run: corepack enable
+        run: corepack install
         shell: bash
       - run: pnpm i
         shell: bash
@@ -842,7 +842,7 @@ jobs:
           registry-url: "https://registry.npmjs.org"
           node-version-file: ".nvmrc"
       - name: Install package manager
-        run: corepack enable
+        run: corepack install
         shell: bash
       - run: pnpm i
         shell: bash
