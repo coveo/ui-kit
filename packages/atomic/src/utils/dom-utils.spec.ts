@@ -153,6 +153,18 @@ describe('dom-utils', () => {
       expect(closest(div, '.target')).toBe(div);
     });
 
+    it('should return the element itself when both element and parent match selector', () => {
+      const parent = document.createElement('div');
+      parent.className = 'target';
+      const child = document.createElement('div');
+      child.className = 'target';
+      parent.appendChild(child);
+      container.appendChild(parent);
+
+      // Should return the child element (itself), not the parent
+      expect(closest(child, '.target')).toBe(child);
+    });
+
     it('should return null for null element', () => {
       expect(closest(null, '.target')).toBe(null);
     });
