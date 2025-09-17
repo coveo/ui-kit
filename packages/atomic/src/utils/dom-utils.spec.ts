@@ -145,7 +145,7 @@ describe('dom-utils', () => {
   });
 
   describe('#closest', () => {
-    it('should return the element itself if it matches the selector', () => {
+    it('should return the element itself when it matches the selector', () => {
       const div = document.createElement('div');
       div.className = 'target';
       container.appendChild(div);
