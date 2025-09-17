@@ -11,9 +11,20 @@ import { AtomicDocTemplate } from '../../../../storybook-utils/documentation/ato
   className="AtomicFacet"
 >
 
-// TODO: Add usage instructions here.
+This component is typically placed within the "facet" section of the layout.
 
-// * See atomic-product-link.mdx for typical template component.
-// * See atomic-commerce-pager.mdx for typical non-template component.
 
+```html
+<atomic-commerce-interface>
+  ...
+  <atomic-commerce-layout>
+    ...
+    <atomic-layout-section section="facets">
+      ...
+        <atomic-facet field="author" label="Authors"></atomic-facet>
+
+    </atomic-layout-section>
+  </atomic-commerce-layout>
+</atomic-commerce-interface>
+```
 </AtomicDocTemplate>
