@@ -1,3 +1,18 @@
+## 3.30.0 (2025-09-17)
+
+* fix(headless): ensure updateBasicConfiguration is called only once when token is expired (#6010) ([0e2233a](https://github.com/coveo/ui-kit/commits/0e2233a)), closes [#6010](https://github.com/coveo/ui-kit/issues/6010)
+* fix(quantic): issue with answer api caching state in redux RTK (#5887) ([8c9d1c5](https://github.com/coveo/ui-kit/commits/8c9d1c5)), closes [#5887](https://github.com/coveo/ui-kit/issues/5887)
+* feat(headless): exposed generateAnswer action to be able to programmatically generate an answer (#60 ([88d87d6](https://github.com/coveo/ui-kit/commits/88d87d6)), closes [#6031](https://github.com/coveo/ui-kit/issues/6031)
+* feat(headless): exposed new attach to case action creators (#6035) ([97f405e](https://github.com/coveo/ui-kit/commits/97f405e)), closes [#6035](https://github.com/coveo/ui-kit/issues/6035)
+* chore(headless-ssr): deprecate `BuildOption` (#5927) ([8c7822d](https://github.com/coveo/ui-kit/commits/8c7822d)), closes [#5927](https://github.com/coveo/ui-kit/issues/5927)
+* chore(headless-ssr): deprecate `ControllerDefinitionOption` and export missing controller definition ([fa7d95d](https://github.com/coveo/ui-kit/commits/fa7d95d)), closes [#5933](https://github.com/coveo/ui-kit/issues/5933)
+* chore(headless-ssr): remove unnecessary casts (#5965) ([1274d03](https://github.com/coveo/ui-kit/commits/1274d03)), closes [#5965](https://github.com/coveo/ui-kit/issues/5965)
+* chore(headless-ssr): replace single search action to search action array (#6026) ([166ffdf](https://github.com/coveo/ui-kit/commits/166ffdf)), closes [#6026](https://github.com/coveo/ui-kit/issues/6026)
+* ci(tests): run tests only for affected headless endpoints in the CI (#6027) ([ea0fa3a](https://github.com/coveo/ui-kit/commits/ea0fa3a)), closes [#6027](https://github.com/coveo/ui-kit/issues/6027)
+* docs: Fixed broken links (#5957) ([6c63261](https://github.com/coveo/ui-kit/commits/6c63261)), closes [#5957](https://github.com/coveo/ui-kit/issues/5957)
+
+
+
 ## <small>3.29.2 (2025-09-03)</small>
 
 * chore(headless-ssr): organize commerce and search code (#5924) ([5654e8d](https://github.com/coveo/ui-kit/commits/5654e8d)), closes [#5924](https://github.com/coveo/ui-kit/issues/5924)
