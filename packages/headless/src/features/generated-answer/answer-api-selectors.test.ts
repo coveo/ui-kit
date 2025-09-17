@@ -1,4 +1,3 @@
-import {skipToken} from '@reduxjs/toolkit/query';
 import {describe, expect, it} from 'vitest';
 import type {SearchAppState} from '../../state/search-app-state.js';
 import {selectAnswerApiQueryParams} from './answer-api-selectors.js';
@@ -28,7 +27,7 @@ describe('answer-api-selectors', () => {
     it('returns skipToken when answerApiQueryParams is undefined', () => {
       const state = buildState();
       const result = selectAnswerApiQueryParams(state as SearchAppState);
-      expect(result).toBe(skipToken);
+      expect(result).toBe(undefined);
     });
 
     it('returns stored answerApiQueryParams when defined', () => {

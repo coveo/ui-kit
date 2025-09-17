@@ -1,13 +1,14 @@
 import {createSelector} from '@reduxjs/toolkit';
-import {skipToken} from '@reduxjs/toolkit/query';
+import type {StreamAnswerAPIState} from '../../api/knowledge/stream-answer-api-state.js';
+import type {SearchRequest} from '../../api/search/search/search-request.js';
 import {selectQuery} from '../../features/query/query-selectors.js';
 
 export const selectAnswerTriggerParams = createSelector(
-  (state) => selectQuery(state)?.q,
-  (state) => state.search.requestId,
-  (state) => state.generatedAnswer.cannotAnswer,
-  (state) => state.configuration.analytics.analyticsMode,
-  (state) => state.search.searchAction?.actionCause,
+  (state: StreamAnswerAPIState) => selectQuery(state)?.q ?? '',
+  (state: StreamAnswerAPIState) => state.search?.requestId ?? '',
+  (state: StreamAnswerAPIState) => state.generatedAnswer.cannotAnswer,
+  (state: StreamAnswerAPIState) => state.configuration.analytics.analyticsMode,
+  (state: StreamAnswerAPIState) => state.search?.searchAction?.actionCause,
   (q, requestId, cannotAnswer, analyticsMode, actionCause) => ({
     q,
     requestId,
@@ -24,6 +25,9 @@ export const selectAnswerTriggerParams = createSelector(
  * @see https://redux-toolkit.js.org/rtk-query/usage-with-typescript#skipping-queries-with-typescript-using-skiptoken
  */
 export const selectAnswerApiQueryParams = createSelector(
-  (state) => state.generatedAnswer?.answerApiQueryParams,
-  (answerApiQueryParams) => answerApiQueryParams ?? skipToken
+  (state: StreamAnswerAPIState): Partial<SearchRequest> | undefined =>
+    state.generatedAnswer?.answerApiQueryParams,
+  (
+    answerApiQueryParams: Partial<SearchRequest> | undefined
+  ): Partial<SearchRequest> | undefined => answerApiQueryParams
 );
