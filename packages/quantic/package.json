@@ -44,7 +44,7 @@
     "promote:npm:latest": "npm run-script -w=@coveo/ci promote-npm-prod",
     "preinstall": "node scripts/npm/check-sfdx-project.js",
     "postinstall": "node scripts/npm/setup-quantic.js",
-    "babel:headless": "babel ../../node_modules/@coveo/headless/dist/quantic --delete-dir-on-start --out-dir .tmp/quantic-compiled --extensions .js --minified"
+    "babel:headless": "babel ../../packages/headless/dist/quantic --delete-dir-on-start --out-dir .tmp/quantic-compiled --extensions .js --minified"
   },
   "dependencies": {
     "@coveo/bueno": "1.1.0",

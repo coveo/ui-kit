@@ -1,10 +1,15 @@
 import {readFileSync, writeFileSync} from 'node:fs';
 import {createRequire} from 'node:module';
 import {dirname, resolve} from 'node:path';
+import {fileURLToPath} from 'node:url';
 import alias from 'esbuild-plugin-alias';
 import {umdWrapper} from 'esbuild-plugin-umd-wrapper';
 import {build} from '../../scripts/esbuild/build.mjs';
 import {apacheLicense} from '../../scripts/license/apache.mjs';
+
+const navigatorSendBeaconPath = fileURLToPath(
+  import.meta.resolve('navigator.sendbeacon')
+);
 
 const __dirname = dirname(new URL(import.meta.url).pathname).slice(
   process.platform === 'win32' ? 1 : 0
@@ -193,7 +198,7 @@ const quanticUmd = Object.entries(quanticUseCaseEntries).map((entry) => {
         'ponyfills/headers-shim.js',
         'ponyfills/global-this-shim.js',
         'ponyfills/abortable-fetch-shim.js',
-        '../../node_modules/navigator.sendbeacon/dist/navigator.sendbeacon.cjs.js',
+        resolve(navigatorSendBeaconPath),
       ],
       plugins: [
         umdWrapper({libraryName: globalName}),
