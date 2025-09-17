@@ -161,7 +161,6 @@ describe('dom-utils', () => {
       parent.appendChild(child);
       container.appendChild(parent);
 
-      // Should return the child element (itself), not the parent
       expect(closest(child, '.target')).toBe(child);
     });
 
