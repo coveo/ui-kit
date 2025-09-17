@@ -1,4 +1,5 @@
 import type {GeneratedAnswerCitation} from '../../api/generated-answer/generated-answer-event-payload.js';
+import type {SearchRequest} from '../../api/search/search/search-request.js';
 import type {
   GeneratedContentFormat,
   GeneratedResponseFormat,
@@ -90,6 +91,10 @@ export interface GeneratedAnswerState {
    * The answer configuration unique identifier.
    */
   answerConfigurationId?: string;
+  /**
+   * The query parameters used for the answer API request cache key
+   */
+  answerApiQueryParams?: Partial<SearchRequest>;
 }
 
 export function getGeneratedAnswerInitialState(): GeneratedAnswerState {
@@ -111,5 +116,6 @@ export function getGeneratedAnswerInitialState(): GeneratedAnswerState {
     isAnswerGenerated: false,
     expanded: false,
     cannotAnswer: false,
+    answerApiQueryParams: undefined,
   };
 }
