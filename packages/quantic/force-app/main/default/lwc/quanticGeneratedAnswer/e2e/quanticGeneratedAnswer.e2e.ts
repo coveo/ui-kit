@@ -2,13 +2,14 @@ import {testSearch, testInsight, expect} from './fixture';
 import {useCaseTestCases} from '../../../../../../playwright/utils/useCase';
 import genQaData from './data';
 import {analyticsModeTest} from '../../../../../../playwright/utils/analyticsMode';
+import {exampleQuery} from './fixture';
 
 const fixtures = {
   search: testSearch,
   insight: testInsight,
 };
 
-const exampleAnswerConfigurationId = '3bb64276-0d26-4afc-be08-b0a8f2295de4';
+const exampleAnswerConfigurationId = 'fc581be0-6e61-4039-ab26-a3f2f52f308f';
 
 useCaseTestCases.forEach((useCase) => {
   let test = fixtures[useCase.value];
@@ -220,7 +221,6 @@ useCaseTestCases.forEach((useCase) => {
               test('should display the answer as collapsed', async ({
                 generatedAnswer,
               }) => {
-                await generatedAnswer.streamEndAnalyticRequestPromise;
                 const expectedShowMoreLabel = 'Show more';
                 await generatedAnswer.streamEndAnalyticRequestPromise;
 
@@ -232,6 +232,39 @@ useCaseTestCases.forEach((useCase) => {
                 expect(showMoreButtonLabel).toEqual(expectedShowMoreLabel);
               });
             });
+
+            if (config.options.answerConfigurationId) {
+              test.describe('when selecting a timeframe facet after the answer is generated', () => {
+                test.use({
+                  options: {
+                    ...config.options,
+                  },
+                  withFacets: true,
+                });
+                test('should trigger a new generate call to the answer API', async ({
+                  generatedAnswer,
+                  baseFacet,
+                }) => {
+                  await generatedAnswer.streamEndAnalyticRequestPromise;
+
+                  const generateRequestPromise =
+                    generatedAnswer.waitForGenerateRequest({
+                      q: exampleQuery,
+                    });
+
+                  const streamEndAnalyticRequestPromise =
+                    generatedAnswer.waitForStreamEndAnalytics();
+
+                  const searchResponsePromise =
+                    baseFacet.waitForSearchResponse();
+
+                  await generatedAnswer.clickFirstTimeframeFacetLink();
+                  await generateRequestPromise;
+                  await streamEndAnalyticRequestPromise;
+                  await searchResponsePromise;
+                });
+              });
+            }
           });
         }
       });
