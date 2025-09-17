@@ -1,5 +1,4 @@
 import type {ThunkDispatch, UnknownAction} from '@reduxjs/toolkit';
-import {selectAnswerApiQueryParams} from '../../features/generated-answer/answer-api-selectors.js';
 import {
   setAnswerContentFormat,
   setCannotAnswer,
@@ -215,7 +214,6 @@ export const fetchAnswer = (fetchAnswerParams: Partial<SearchRequest>) => {
   return answerApi.endpoints.getAnswer.initiate(fetchAnswerParams);
 };
 
-export const selectAnswer = (state: StreamAnswerAPIState) => {
-  const params = selectAnswerApiQueryParams(state);
-  return answerApi.endpoints.getAnswer.select(params)(state);
+export const selectAnswer = (selectAnswerParams: Partial<SearchRequest>) => {
+  return answerApi.endpoints.getAnswer.select(selectAnswerParams);
 };

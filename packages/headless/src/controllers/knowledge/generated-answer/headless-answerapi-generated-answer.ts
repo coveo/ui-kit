@@ -163,7 +163,10 @@ export function buildAnswerApiGeneratedAnswer(
   return {
     ...controller,
     get state() {
-      const answerApiState = selectAnswer(engine.state).data;
+      const answerApiQueryParams = selectAnswerApiQueryParams(getState());
+      const answerApiState = selectAnswer(answerApiQueryParams)(
+        getState()
+      ).data;
       return {
         ...getState().generatedAnswer,
         answer: answerApiState?.answer,
@@ -191,7 +194,9 @@ export function buildAnswerApiGeneratedAnswer(
       const args = parseEvaluationArguments({
         query: getState().query.q,
         feedback,
-        answerApiState: selectAnswer(engine.state).data!,
+        answerApiState: selectAnswer(selectAnswerApiQueryParams(getState()))(
+          engine.state
+        ).data!,
       });
       engine.dispatch(answerEvaluation.endpoints.post.initiate(args));
       engine.dispatch(sendGeneratedAnswerFeedback());

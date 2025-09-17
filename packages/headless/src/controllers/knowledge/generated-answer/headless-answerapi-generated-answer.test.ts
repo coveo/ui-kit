@@ -49,7 +49,7 @@ vi.mock('../../../api/knowledge/stream-answer-api', async () => {
   return {
     ...originalStreamAnswerApi,
     fetchAnswer: vi.fn(),
-    selectAnswer: () => ({
+    selectAnswer: () => () => ({
       data: {answer: 'This est une answer', answerId: '12345_6'},
     }),
   };
