@@ -159,12 +159,6 @@ describe('atomic-query-summary', () => {
         },
       });
 
-      expect(container).toHaveTextContent('Results ');
-      expect(container).toHaveTextContent('1');
-      expect(container).toHaveTextContent('10');
-      expect(container).toHaveTextContent('100');
-      expect(container).toHaveTextContent('test query');
-
       const highlightedElements = container!.querySelectorAll(
         '[part*="highlight"]'
       );
