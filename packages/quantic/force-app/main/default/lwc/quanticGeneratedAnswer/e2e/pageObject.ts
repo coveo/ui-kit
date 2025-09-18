@@ -4,7 +4,7 @@ import {
   AnalyticsModeEnum,
 } from '../../../../../../playwright/utils/analyticsMode';
 import {AnalyticsObject} from '../../../../../../playwright/page-object/analytics';
-import {isRgaEvaluationRequest, isRgaGenerateRequest, isInsightRgaGenerateRequest} from '../../../../../../playwright/utils/requests';
+import {isRgaEvaluationRequest} from '../../../../../../playwright/utils/requests';
 
 const minimumCitationTooltipDisplayDurationMs = 1500;
 const removeUnknownFields = (object: Record<string, unknown>) => {
