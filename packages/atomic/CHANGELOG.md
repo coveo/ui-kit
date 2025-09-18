@@ -1,3 +1,11 @@
+## <small>3.33.6 (2025-09-18)</small>
+
+* [Version Bump][skip ci]: ui-kit publish ([a3fb13e](https://github.com/coveo/ui-kit/commits/a3fb13e))
+* chore(atomic): harmonize descriptions in component ut / e2e (#6044) ([4c30048](https://github.com/coveo/ui-kit/commits/4c30048)), closes [#6044](https://github.com/coveo/ui-kit/issues/6044)
+* chore(atomic): move computeNumberOfStars into dedicated rating-utils file (#6045) ([0b6ca95](https://github.com/coveo/ui-kit/commits/0b6ca95)), closes [#6045](https://github.com/coveo/ui-kit/issues/6045)
+
+
+
 ## <small>3.33.5 (2025-09-17)</small>
 
 * chore(atomic): harmonize descriptions in component ut / e2e (#6044) ([4c30048](https://github.com/coveo/ui-kit/commits/4c30048)), closes [#6044](https://github.com/coveo/ui-kit/issues/6044)

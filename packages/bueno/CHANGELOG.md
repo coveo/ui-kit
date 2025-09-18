@@ -1,3 +1,10 @@
+## <small>1.1.2 (2025-09-18)</small>
+
+* [Version Bump][skip ci]: ui-kit publish ([a3fb13e](https://github.com/coveo/ui-kit/commits/a3fb13e))
+* chore: sync-up arborist & npm, add missing vitest.config.js, add missing eslint-parser (#6048) ([7e9ce3b](https://github.com/coveo/ui-kit/commits/7e9ce3b)), closes [#6048](https://github.com/coveo/ui-kit/issues/6048)
+
+
+
 ## <small>1.1.1 (2025-09-17)</small>
 
 * chore: sync-up arborist & npm, add missing vitest.config.js, add missing eslint-parser (#6048) ([7e9ce3b](https://github.com/coveo/ui-kit/commits/7e9ce3b)), closes [#6048](https://github.com/coveo/ui-kit/issues/6048)

@@ -12,7 +12,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@coveo/atomic": "3.33.5",
+    "@coveo/atomic": "3.33.6",
     "vue": "3.5.18"
   },
   "devDependencies": {
