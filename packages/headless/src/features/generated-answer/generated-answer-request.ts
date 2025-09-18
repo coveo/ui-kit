@@ -1,3 +1,4 @@
+import HistoryStore from '../../api/analytics/coveo.analytics/history-store.js';
 import type {GeneratedAnswerStreamRequest} from '../../api/generated-answer/generated-answer-request.js';
 import type {StreamAnswerAPIState} from '../../api/knowledge/stream-answer-api-state.js';
 import {getOrganizationEndpoint} from '../../api/platform-client.js';
@@ -7,7 +8,10 @@ import {fromAnalyticsStateToAnalyticsParams} from '../../features/configuration/
 import {selectContext} from '../../features/context/context-selector.js';
 import {selectFieldsToIncludeInCitation} from '../../features/generated-answer/generated-answer-selectors.js';
 import {selectPipeline} from '../../features/pipeline/select-pipeline.js';
-import {selectQuery} from '../../features/query/query-selectors.js';
+import {
+  selectEnableQuerySyntax,
+  selectQuery,
+} from '../../features/query/query-selectors.js';
 import {
   initialSearchMappings,
   mapFacetRequest,
@@ -25,6 +29,15 @@ import type {
   SearchSection,
 } from '../../state/state-sections.js';
 import {getFacets} from '../../utils/facet-utils.js';
+import {
+  selectLocale,
+  selectTimezone,
+} from '../configuration/configuration-selectors.js';
+import {selectDictionaryFieldContext} from '../dictionary-field-context/dictionary-field-context-selectors.js';
+import {selectExcerptLength} from '../excerpt-length/excerpt-length-selectors.js';
+import {selectFacetOptions} from '../facet-options/facet-options-selectors.js';
+import {selectFoldingQueryParams} from '../folding/folding-selectors.js';
+import {selectSortCriteria} from '../sort-criteria/sort-criteria-selectors.js';
 
 type StateNeededByGeneratedAnswerStream = ConfigurationSection &
   SearchSection &
@@ -62,6 +75,11 @@ export const constructAnswerAPIQueryParams = (
   const pipeline = selectPipeline(state);
   const citationsFieldToInclude = selectFieldsToIncludeInCitation(state) ?? [];
   const facetParams = getGeneratedFacetParams(state);
+  const facetOptions = selectFacetOptions(state);
+  const actionsHistory = getActionsHistory(state);
+  const excerptLength = selectExcerptLength(state);
+  const foldingParams = selectFoldingQueryParams(state);
+  const dictionaryFieldContext = selectDictionaryFieldContext(state);
 
   return {
     q,
@@ -69,6 +87,7 @@ export const constructAnswerAPIQueryParams = (
     ...(cq && {cq}),
     ...(dq && {dq}),
     ...(lq && {lq}),
+    ...(q && {enableQuerySyntax: selectEnableQuerySyntax(state)}),
     ...(context?.contextValues && {
       context: context.contextValues,
     }),
@@ -102,7 +121,19 @@ export const constructAnswerAPIQueryParams = (
       numberOfResults: getNumberOfResultsWithinIndexLimit(state),
       firstResult: state.pagination.firstResult,
     }),
-    tab: selectActiveTab(state.tabSet),
+    tab: selectActiveTab(state.tabSet) || 'default',
+    locale: selectLocale(state),
+    timezone: selectTimezone(state),
+    ...(state.debug !== undefined && {debug: state.debug}),
+    referrer: getReferrer(navigatorContext),
+    ...actionsHistory,
+    ...(foldingParams && foldingParams),
+    ...(excerptLength && {excerptLength}),
+    ...(dictionaryFieldContext && {
+      dictionaryFieldContext,
+    }),
+    sortCriteria: selectSortCriteria(state),
+    ...(facetOptions && {facetOptions}),
     ...analyticsParams,
   };
 };
@@ -115,6 +146,16 @@ const getGeneratedFacetParams = (state: StreamAnswerAPIState) =>
     .sort((a, b) =>
       a.facetId > b.facetId ? 1 : b.facetId > a.facetId ? -1 : 0
     );
+
+const getReferrer = (navigatorContext: NavigatorContext) => {
+  return navigatorContext.referrer || '';
+};
+
+const getActionsHistory = (state: StreamAnswerAPIState) => ({
+  actionsHistory: state.configuration.analytics.enabled
+    ? HistoryStore.getInstance().getHistory()
+    : [],
+});
 
 const buildAdvancedSearchQueryParams = (state: StreamAnswerAPIState) => {
   const advancedSearchQueryParams = selectAdvancedSearchQueries(state);

@@ -39,7 +39,7 @@ export const streamAnswerAPIStateMock: StreamAnswerAPIState = {
     insightId: 'insight-id',
   },
   version: atomicVersion,
-  debug: false,
+  debug: true,
   pipeline: '',
   searchHub: 'jstpierre2 test - Woods test',
   search: {
@@ -1268,12 +1268,75 @@ export const streamAnswerAPIStateMockWithoutSearchAction: StreamAnswerAPIState =
     },
   };
 
+export const streamAnswerAPIStateMockWithAnalyticsEnabled: StreamAnswerAPIState =
+  {
+    ...streamAnswerAPIStateMock,
+    configuration: {
+      ...streamAnswerAPIStateMock.configuration,
+      analytics: {
+        ...streamAnswerAPIStateMock.configuration.analytics,
+        enabled: true,
+      },
+    },
+  };
+
+export const streamAnswerAPIStateMockWithFoldingDisabled: StreamAnswerAPIState =
+  {
+    ...streamAnswerAPIStateMock,
+    folding: {
+      ...streamAnswerAPIStateMock.folding,
+      enabled: false,
+      fields: {
+        collection: '',
+        parent: '',
+        child: '',
+      },
+      filterFieldRange: 0,
+      collections: {},
+    },
+  };
+
+export const streamAnswerAPIStateMockWithFoldingEnabled: StreamAnswerAPIState =
+  {
+    ...streamAnswerAPIStateMock,
+    folding: {
+      ...streamAnswerAPIStateMock.folding,
+      enabled: true,
+      fields: {
+        collection: 'testCollection',
+        parent: 'testParent',
+        child: 'testChild',
+      },
+      filterFieldRange: 1,
+      collections: {},
+    },
+  };
+
+export const streamAnswerAPIStateMockWithDictionaryFieldContext: StreamAnswerAPIState =
+  {
+    ...streamAnswerAPIStateMock,
+    dictionaryFieldContext: {
+      contextValues: {
+        key1: 'value1',
+        key2: 'value2',
+      },
+    },
+  };
+
+export const streamAnswerAPIStateMockWithExcerptLength: StreamAnswerAPIState = {
+  ...streamAnswerAPIStateMock,
+  excerptLength: {
+    length: 300,
+  },
+};
+
 export const expectedStreamAnswerAPIParam = {
   q: 'what is the hardest wood',
   aq: 'aq-test-query',
   cq: 'cq-test-query',
   dq: 'dq-test-query',
   lq: 'lq-test-query',
+  enableQuerySyntax: false,
   context: {
     testKey: 'testValue',
   },
@@ -1569,6 +1632,15 @@ export const expectedStreamAnswerAPIParam = {
   numberOfResults: 10,
   firstResult: 0,
   tab: 'default',
+  locale: 'en',
+  timezone: 'America/New_York',
+  referrer: 'some-test-referrer',
+  debug: true,
+  actionsHistory: [],
+  sortCriteria: 'relevancy',
+  facetOptions: {
+    freezeFacetOrder: false,
+  },
   analytics: {
     actionCause: 'searchboxSubmit',
     capture: false,
@@ -1576,7 +1648,7 @@ export const expectedStreamAnswerAPIParam = {
     clientTimestamp: '2020-01-01T00:00:00.000Z',
     customData: undefined,
     documentLocation: '',
-    documentReferrer: '',
+    documentReferrer: 'some-test-referrer',
     originContext: 'Search',
     source: [`@coveo/atomic@${atomicVersion}`, '@coveo/headless@Test version'],
   },
@@ -1588,9 +1660,9 @@ export const expectedStreamAnswerAPIParamWithATabWithAnExpression = {
   tab: 'default',
 };
 
-export const expectedStreamAnswerAPIParamWithoutAnyTab = {
+export const expectedStreamAnswerAPIParamWithDefaultTab = {
   ...expectedStreamAnswerAPIParam,
-  tab: '',
+  tab: 'default',
 };
 
 export const expectedStreamAnswerAPIParamWithStaticFiltersSelected = {
@@ -1622,5 +1694,43 @@ export const expectedStreamAnswerAPIParamWithDifferentFacetTimes = {
   facets: {
     ...expectedStreamAnswerAPIParam.facets,
     currentValues: addSecondsToFacetsTimestamps(dateRangeCurrentValues, 5),
+  },
+};
+
+export const expectedStreamAnswerAPIParamWithoutReferrer = {
+  ...expectedStreamAnswerAPIParam,
+  referrer: '',
+  analytics: {
+    ...expectedStreamAnswerAPIParam.analytics,
+    documentReferrer: null,
+  },
+};
+
+export const expectedStreamAnswerAPIParamWithFoldingDisabled = {
+  ...expectedStreamAnswerAPIParam,
+  filterField: '',
+  childField: '',
+  parentField: '',
+  filterFieldRange: 0,
+};
+
+export const expectedStreamAnswerAPIParamWithFoldingEnabled = {
+  ...expectedStreamAnswerAPIParam,
+  filterField: 'testCollection',
+  childField: 'testParent',
+  parentField: 'testChild',
+  filterFieldRange: 1,
+};
+
+export const expectedStreamAnswerAPIWithExcerptLength = {
+  ...expectedStreamAnswerAPIParam,
+  excerptLength: 300,
+};
+
+export const expectedStreamAnswerAPIParamWithDictionaryFieldContext = {
+  ...expectedStreamAnswerAPIParam,
+  dictionaryFieldContext: {
+    key1: 'value1',
+    key2: 'value2',
   },
 };
