@@ -160,7 +160,6 @@ export function buildAnswerApiGeneratedAnswer(
 
   subscribeToSearchRequest(engine as SearchEngine<StreamAnswerAPIState>);
 
-  // Helper to get the current answer state
   const getCurrentAnswerState = () => {
     const currentState = getState();
     const params = selectAnswerApiQueryParams(currentState);

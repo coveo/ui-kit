@@ -27,17 +27,6 @@ type PayloadType =
   | 'genqa.citationsType'
   | 'genqa.endOfStreamType';
 
-const PAYLOAD_TYPES = {
-  HEADER: 'genqa.headerMessageType',
-  MESSAGE: 'genqa.messageType',
-  CITATIONS: 'genqa.citationsType',
-  END_OF_STREAM: 'genqa.endOfStreamType',
-} as const;
-
-const FINISH_REASONS = {
-  ERROR: 'ERROR',
-} as const;
-
 const handleHeaderMessage = (
   draft: GeneratedAnswerStream,
   payload: Pick<GeneratedAnswerStream, 'contentFormat'>
@@ -102,7 +91,7 @@ export const updateCacheWithEvent = (
   dispatch: ThunkDispatch<StreamAnswerAPIState, unknown, UnknownAction>
 ) => {
   const message: Required<MessageType> = JSON.parse(event.data);
-  if (message.finishReason === FINISH_REASONS.ERROR && message.errorMessage) {
+  if (message.finishReason === 'ERROR' && message.errorMessage) {
     handleError(draft, message);
   }
 
@@ -111,25 +100,25 @@ export const updateCacheWithEvent = (
     : {};
 
   switch (message.payloadType) {
-    case PAYLOAD_TYPES.HEADER:
+    case 'genqa.headerMessageType':
       if (parsedPayload.contentFormat) {
         handleHeaderMessage(draft, parsedPayload);
         dispatch(setAnswerContentFormat(parsedPayload.contentFormat));
       }
       break;
-    case PAYLOAD_TYPES.MESSAGE:
+    case 'genqa.messageType':
       if (parsedPayload.textDelta) {
         handleMessage(draft, parsedPayload);
         dispatch(updateMessage({textDelta: parsedPayload.textDelta}));
       }
       break;
-    case PAYLOAD_TYPES.CITATIONS:
+    case 'genqa.citationsType':
       if (parsedPayload.citations) {
         handleCitations(draft, parsedPayload);
         dispatch(updateCitations({citations: parsedPayload.citations}));
       }
       break;
-    case PAYLOAD_TYPES.END_OF_STREAM:
+    case 'genqa.endOfStreamType':
       handleEndOfStream(draft, parsedPayload);
       dispatch(
         logGeneratedAnswerStreamEnd(parsedPayload.answerGenerated ?? false)
