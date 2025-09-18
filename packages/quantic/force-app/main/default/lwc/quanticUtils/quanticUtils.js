@@ -37,6 +37,9 @@ export * from './markdownUtils';
 export * from './facetDependenciesUtils';
 export * from './citationAnchoringUtils';
 
+/**
+ * Utility class for debouncing function calls.
+ */
 export class Debouncer {
   _timeout;
 
@@ -90,12 +93,16 @@ export class Deferred {
   }
 }
 
+/**
+ * Utility class for working with search results and binding analytics events.
+ */
 export class ResultUtils {
   /**
-   * Binds the logging of document
+   * Binds analytics logging events to result elements.
    * @param {import("coveo").SearchEngine} engine An instance of an Headless Engine
    * @param {import("coveo").Result} result The result object
    * @param {import("lwc").ShadowRootTheGoodPart} resultElement Parent result element
+   * @param {Function} controllerBuilder Function to build the interactive result controller.
    * @param {string} selector Optional. Css selector that selects all links to the document. Default: "a" tags with the clickUri as "href" parameter.
    * @returns An unbind function for the events
    */
@@ -137,6 +144,9 @@ export class ResultUtils {
   }
 }
 
+/**
+ * Utility class for link operations and analytics binding.
+ */
 export class LinkUtils {
   /**
    * Binds the logging of a link
@@ -165,6 +175,9 @@ export class LinkUtils {
   }
 }
 
+/**
+ * Utility class for internationalization and localization.
+ */
 export class I18nUtils {
   static getTextWithDecorator(text, startTag, endTag) {
     return `${startTag}${text}${endTag}`;
@@ -199,6 +212,7 @@ export class I18nUtils {
    * @param {*} stringToFormat
    * @param  {...any} formattingArguments
    * @returns {string} The formatted string.
+   * @throws {Error} If string format is not a string.
    * @example
    * I18nUtils.format('Hello {{0}}, you have {{1}} new messages', 'John', 5);
    * returns 'Hello John, you have 5 new messages'
@@ -257,8 +271,17 @@ export class I18nUtils {
   }
 }
 
+/**
+ * Storage key for standalone search box configuration.
+ * @constant {string}
+ */
 export const STANDALONE_SEARCH_BOX_STORAGE_KEY = 'coveo-standalone-search-box';
 
+/**
+ * Key codes for common keyboard interactions.
+ * @readonly
+ * @enum {string}
+ */
 export const keys = {
   ESC: 'Escape',
   TAB: 'Tab',
@@ -296,6 +319,10 @@ export function parseXML(string) {
   return new window.DOMParser().parseFromString(string, 'text/xml');
 }
 
+/**
+ * Utility class for time-based calculations and formatting.
+ * Provides methods to convert between different time units and format durations.
+ */
 export class TimeSpan {
   constructor(time, isMilliseconds = true) {
     if (isMilliseconds) {
@@ -372,6 +399,10 @@ export class TimeSpan {
   }
 }
 
+/**
+ * Utility class for date operations and formatting.
+ * Handles conversion between different date formats and provides parsing utilities.
+ */
 export class DateUtils {
   /**
    * Converts a date string from the Coveo Search API format to the ISO-8601 format.
@@ -419,6 +450,7 @@ export class DateUtils {
    * @param {number} hours The local hours to set on the date.
    * @param {number} minutes The local minutes to set on the date.
    * @param {number} seconds The local seconds to set on the date.
+   * @throws {Error} If specified time is invalid.
    * @returns {Date} The parsed date.
    */
   static fromLocalIsoDate(dateString, hours, minutes, seconds) {
@@ -529,6 +561,10 @@ export function fromSearchApiDate(dateString) {
   return DateUtils.fromSearchApiDate(dateString);
 }
 
+/**
+ * Formats relative date ranges into human-readable strings.
+ * Supports past and future date ranges with proper pluralization.
+ */
 export class RelativeDateFormatter {
   constructor() {
     this.singularIndex = 0;
@@ -555,6 +591,7 @@ export class RelativeDateFormatter {
    * @param {RelativeDate} begin The beginning of the relative date range.
    * @param {RelativeDate} end The end of the relative date range.
    * @returns {string} The formatted human-readable date range.
+   * @throws {Error} If the provided relative date range is invalid.
    * @example
    * begin = { period: 'past', unit: 'day', amount: 2 };
    * end = { period: 'now', unit: 'day', amount: 1 };
@@ -582,6 +619,10 @@ export class RelativeDateFormatter {
   }
 }
 
+/**
+ * Utility class for managing a simple in-memory store.
+ * Supports registering and retrieving facet and sort option data.
+ */
 export class Store {
   static facetTypes = {
     FACETS: 'facets',
@@ -656,7 +697,7 @@ export class Store {
  * @param {string} regionName
  * @param {Object} elem
  * @param {boolean} assertive
- * @returns {AriaLiveUtils}
+ * @returns {AriaLiveUtils} Object with methods to dispatch messages and register the region.
  */
 export function AriaLiveRegion(regionName, elem, assertive = false) {
   function dispatchMessage(message) {
