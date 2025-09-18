@@ -3,7 +3,7 @@ import {describe, expect, it, vi} from 'vitest';
 import {fixture} from '@/vitest-utils/testing-helpers/fixture';
 import {dispatchNumberFormatEvent} from '../../common/formats/format-common';
 import {AtomicFormatNumber} from './atomic-format-number';
-import './atomic-format-number';
+import '.';
 
 vi.mock('../../common/formats/format-common', () => ({
   dispatchNumberFormatEvent: vi.fn(),

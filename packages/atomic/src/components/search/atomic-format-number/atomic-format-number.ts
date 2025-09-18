@@ -10,6 +10,7 @@ import '../../common/atomic-component-error/atomic-component-error';
  * The `atomic-format-number` component is used for number formatting.
  * The numerical format of compatible parents will be set according to the properties of this component.
  */
+
 @customElement('atomic-format-number')
 export class AtomicFormatNumber extends LitElement {
   @state() public error!: Error;
@@ -46,6 +47,7 @@ export class AtomicFormatNumber extends LitElement {
 
   connectedCallback() {
     super.connectedCallback();
+    // Delay dispatch to ensure parent listeners are established
     try {
       dispatchNumberFormatEvent(
         (value, languages) => this.format(value, languages),
