@@ -146,7 +146,7 @@ watch('src', {recursive: true}, async (_, filename) => {
   if (isStencil) {
     await nextTask(
       'Rebuilding Stencil...',
-      'node --max_old_space_size=6144 ../../node_modules/@stencil/core/bin/stencil build --tsConfig tsconfig.stencil.json'
+      'node --max_old_space_size=6144 node_modules/@stencil/core/bin/stencil build --tsConfig tsconfig.stencil.json'
     );
 
     if (isStopped) {

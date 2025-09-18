@@ -28,7 +28,7 @@ npm i lodash -w @coveo/headless-react-samples
 To build all projects for production, run:
 
 ```sh
-npm run build
+pnpm run build
 ```
 
 To build a single project for production (for instance, the `atomic` package), run:
@@ -78,8 +78,8 @@ npx turbo e2e:watch --filter=@coveo/atomic
 ## Lint
 
 ```sh
-npm run lint:check
-npm run lint:fix
+pnpm run lint:check
+pnpm run lint:fix
 ```
 
 ## Misc

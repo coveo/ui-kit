@@ -10,8 +10,8 @@
     "directory": "packages/atomic-react"
   },
   "scripts": {
-    "gen:lit": "node ./scripts/build-lit.mjs && npm run build:fixLoaderImportPaths && npm run build:fixGeneratedImportPaths",
-    "build": "npm run build:bundles && npm run build:types && npm run build:assets",
+    "gen:lit": "node ./scripts/build-lit.mjs && pnpm run build:fixLoaderImportPaths && pnpm run build:fixGeneratedImportPaths",
+    "build": "pnpm run build:bundles && pnpm run build:types && pnpm run build:assets",
     "clean": "rimraf -rf dist",
     "build:fixLoaderImportPaths": "node ./scripts/fix-loader-import-paths.js",
     "build:fixGeneratedImportPaths": "fix-esm-import-path src/components/stencil-generated",
@@ -32,7 +32,7 @@
   ],
   "dependencies": {
     "@coveo/atomic": "3.33.5",
-    "@lit/react": "1.0.6"
+    "@lit/react": "1.0.8"
   },
   "devDependencies": {
     "@rollup/plugin-commonjs": "28.0.6",
@@ -40,8 +40,8 @@
     "@rollup/plugin-node-resolve": "16.0.1",
     "@rollup/plugin-typescript": "12.1.4",
     "@types/node": "22.16.5",
-    "@types/react": "18.3.3",
-    "@types/react-dom": "18.3.0",
+    "@types/react": "19.1.13",
+    "@types/react-dom": "19.1.9",
     "fix-esm-import-path": "1.10.1",
     "react": "19.1.1",
     "react-dom": "19.1.1",
@@ -73,5 +73,9 @@
       "import": "./dist/esm/recommendation/atomic-react.mjs",
       "require": "./dist/cjs/recommendation/atomic-react.cjs"
     }
+  },
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
   }
 }

@@ -21,11 +21,11 @@ In the project directory, you can run:
 
 Runs the app in the development mode.
 
-### `npm run build`
+### `pnpm run build`
 
 Builds the [Stencil](https://stenciljs.com/docs/cli) project for production.
 
-### `npm run deploy`
+### `pnpm run deploy`
 
 Builds the app for production and manually deploys the search page using the [Coveo CLI deploy command](https://docs.coveo.com/en/cli/#coveo-uideploy).
 

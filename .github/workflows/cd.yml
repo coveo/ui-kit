@@ -56,7 +56,7 @@ jobs:
           owner: coveo
           repositories: 'ui-kit'
       - name: Release
-        run: npm run release
+        run: pnpm run release
         env:
           VERSION: ${{ inputs.version }}
           DEBUG: ${{ inputs.debug && '@coveo/semantic-monorepo-tools:*' || '' }}
@@ -88,7 +88,7 @@ jobs:
           ref: 'release/v3'
       - uses: ./.github/actions/setup
       - name: Promote NPM package to production
-        run: npm run promote:npm:latest
+        run: pnpm run promote:npm:latest
   quantic-prod:
     if: ${{ !cancelled() && needs.release.result == 'success' }}
     needs: release
@@ -140,7 +140,7 @@ jobs:
         uses: ./.github/actions/setup
 
       - name: Build typedoc site
-        run: npm run build:typedoc
+        run: pnpm run build:typedoc
         working-directory: packages/headless
         shell: bash
 
@@ -181,7 +181,7 @@ jobs:
         uses: ./.github/actions/setup
 
       - name: Build typedoc site
-        run: npm run build:typedoc
+        run: pnpm run build:typedoc
         working-directory: packages/headless-react
         shell: bash
 
@@ -219,6 +219,6 @@ jobs:
           ref: 'release/v3'
       - uses: ./.github/actions/setup
       - name: Notify Docs
-        run: npm run notify:docs
+        run: pnpm run notify:docs
         env:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}

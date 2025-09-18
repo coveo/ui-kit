@@ -50,7 +50,7 @@
     "clean": "rimraf -rf dist/* dist-storybook/* www/* docs/* playwright-report/*",
     "build:storybook": "storybook build -o dist-storybook",
     "build:cem": "cem analyze",
-    "build:stencil-lit": "node --max_old_space_size=6144 ../../node_modules/@stencil/core/bin/stencil build --tsConfig tsconfig.stencil.json && node ./scripts/stencil-proxy.mjs && node ./scripts/build.mjs --config=tsconfig.lit.json && esbuild src/autoloader/index.ts --format=esm --outfile=dist/atomic/autoloader/index.esm.js && esbuild src/autoloader/index.ts --format=cjs --outfile=dist/atomic/autoloader/index.cjs.js && rollup -c rollup.config.js && rimraf ./dist/atomic/loader/package.json && tsc --noEmit --esModuleInterop --skipLibCheck ./dist/types/components.d.ts",
+    "build:stencil-lit": "node --max_old_space_size=6144 node_modules/@stencil/core/bin/stencil build --tsConfig tsconfig.stencil.json && node ./scripts/stencil-proxy.mjs && node ./scripts/build.mjs --config=tsconfig.lit.json && esbuild src/autoloader/index.ts --format=esm --outfile=dist/atomic/autoloader/index.esm.js && esbuild src/autoloader/index.ts --format=cjs --outfile=dist/atomic/autoloader/index.cjs.js && rollup -c rollup.config.js && rimraf ./dist/atomic/loader/package.json && tsc --noEmit --esModuleInterop --skipLibCheck ./dist/types/components.d.ts",
     "build:angular": "npx turbo gen:lit --filter=@coveo/atomic-angular-builder",
     "build:react": "npx turbo gen:lit --filter=@coveo/atomic-react",
     "build:locales": "node ./scripts/create-generated-folder.mjs && node ./scripts/split-locales.mjs && node ./scripts/copy-dayjs-locales.mjs",
@@ -59,7 +59,7 @@
     "web:dev": "npx vite serve dev",
     "web:cdn": "node ./scripts/start-cdn.mjs",
     "prod": "npx serve www -l 3333 --no-request-logging",
-    "test": "npm run test:stencil && npm run test:lit",
+    "test": "pnpm run test:stencil && pnpm run test:lit",
     "test:stencil": "stencil test --spec -- src/utils/initialization-utils.spec.ts src/components/search/atomic-layout/search-layout.spec.ts",
     "test:lit": "vitest run",
     "test:watch": "vitest",
@@ -102,6 +102,7 @@
   "devDependencies": {
     "@axe-core/playwright": "4.10.2",
     "@custom-elements-manifest/analyzer": "0.10.4",
+    "@coveo/relay-event-types": "15.1.0",
     "@playwright/test": "1.54.1",
     "@rollup/plugin-commonjs": "28.0.6",
     "@rollup/plugin-json": "6.1.0",
@@ -123,11 +124,11 @@
     "@types/lodash": "4.17.20",
     "@types/node": "22.16.5",
     "@types/postcss-import": "14.0.3",
-    "@types/puppeteer": "7.0.4",
     "@vitest/browser": "3.2.4",
     "@wc-toolkit/storybook-helpers": "9.0.1",
     "@whitespace/storybook-addon-html": "6.1.1",
     "axe-core": "4.10.3",
+    "coveo.analytics": "2.30.45",
     "chalk": "5.4.1",
     "cypress": "13.7.3",
     "cypress-axe": "1.6.0",
@@ -175,5 +176,9 @@
   "license": "Apache-2.0",
   "engines": {
     "node": "^20.9.0 || ^22.11.0"
+  },
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
   }
 }

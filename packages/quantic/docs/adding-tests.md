@@ -101,7 +101,7 @@ Next, execute the following steps:
 1. Deploy the example components to your org.
 
    ```bash
-   npm run deploy:examples --target-org Quantic__LWS_enabled
+   pnpm run deploy:examples --target-org Quantic__LWS_enabled
    ```
 
 2. Open the community builder, then create a `Quantic Greeting` page and drop your `exampleQuanticGreeting` component into it. Don't forget to also update the community home page to add a link to your page.

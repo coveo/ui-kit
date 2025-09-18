@@ -9,7 +9,7 @@
     "/dist"
   ],
   "scripts": {
-    "build": "npm run clean && npm run build:ts",
+    "build": "pnpm run clean && pnpm run build:ts",
     "clean": "rimraf dist",
     "build:ts": "tsc -p tsconfig.json",
     "lint": "npx @biomejs/biome check .",
@@ -27,7 +27,8 @@
   "author": "Coveo",
   "license": "Apache-2.0",
   "publishConfig": {
-    "access": "public"
+    "access": "public",
+    "provenance": true
   },
   "repository": {
     "type": "git",

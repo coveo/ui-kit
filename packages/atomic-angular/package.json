@@ -5,7 +5,7 @@
     "ng": "ng",
     "dev": "ng serve",
     "gen:lit": "node ./scripts/build-lit.mjs",
-    "build": "npm run build:bundles && npm run build:assets",
+    "build": "pnpm run build:bundles && pnpm run build:assets",
     "build:bundles": "ng build",
     "build:assets": "ncp ../atomic/dist/atomic/assets projects/atomic-angular/dist/assets && ncp ../atomic/dist/atomic/lang projects/atomic-angular/dist/lang",
     "release:phase3": "node ./scripts/publish-npm.mjs",

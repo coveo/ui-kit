@@ -94,7 +94,7 @@ if (outputDir) {
 
 if (!componentName) {
   console.error(
-    'Usage: npm run generate-component -w=@coveo/atomic -- --name=<component-name> --output=<output-dir>'
+    'Usage: pnpm run generate-component -w=@coveo/atomic -- --name=<component-name> --output=<output-dir>'
   );
   process.exit(1);
 }

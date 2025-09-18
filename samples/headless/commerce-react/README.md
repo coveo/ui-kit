@@ -5,11 +5,11 @@ This project demonstrates how to use the @coveo/headless/commerce sub-package to
 ## Getting Started
 
 ```bash
-npm run build
+pnpm run build
 ```
 
 ```bash
-npm run dev
+pnpm run dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000)

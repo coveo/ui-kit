@@ -1,4 +1,5 @@
 import type {ThunkDispatch, UnknownAction} from '@reduxjs/toolkit';
+import {skipToken} from '@reduxjs/toolkit/query';
 import {selectAnswerApiQueryParams} from '../../features/generated-answer/answer-api-selectors.js';
 import {
   setAnswerContentFormat,
@@ -211,11 +212,13 @@ export const answerApi = answerSlice.injectEndpoints({
   }),
 });
 
-export const fetchAnswer = (fetchAnswerParams: Partial<SearchRequest>) => {
-  return answerApi.endpoints.getAnswer.initiate(fetchAnswerParams);
+export const fetchAnswer = (
+  fetchAnswerParams: Partial<SearchRequest> | undefined
+) => {
+  return answerApi.endpoints.getAnswer.initiate(fetchAnswerParams ?? {});
 };
 
 export const selectAnswer = (state: StreamAnswerAPIState) => {
-  const params = selectAnswerApiQueryParams(state);
+  const params = selectAnswerApiQueryParams(state) ?? skipToken;
   return answerApi.endpoints.getAnswer.select(params)(state);
 };

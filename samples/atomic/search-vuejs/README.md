@@ -8,7 +8,7 @@ To test it, run it locally by following the steps below:
 
 ```sh
 npm install
-npm run dev
+pnpm run dev
 ```
 
 ## Using Atomic
@@ -90,7 +90,7 @@ To leverage everything that Atomic has to offer, you will need to copy some asse
 ```json
 scripts: {
   ...,
-  "dev": "npm run build:assets && npm run serve",
+  "dev": "pnpm run build:assets && pnpm run serve",
   "build:assets": "ncp node_modules/@coveo/atomic/dist/atomic/assets public/assets && ncp node_modules/@coveo/atomic/dist/atomic/lang public/lang"
 }
 ```

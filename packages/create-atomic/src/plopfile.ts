@@ -262,7 +262,7 @@ export default function (plop: NodePlopAPI) {
           > npm start
   
           To share your site with the world, make sure you are logged in to the Coveo CLI and:
-          > npm run deploy
+          > pnpm run deploy
       
           Happy hacking!
           `;

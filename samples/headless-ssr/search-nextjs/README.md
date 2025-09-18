@@ -14,13 +14,13 @@
 - Run dev server
 
 ```bash
-npm run dev
+pnpm run dev
 ```
 
 - Run prod
 
 ```bash
-npm run build && npm run prod
+pnpm run build && pnpm run prod
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
@@ -28,7 +28,7 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 - Run tests
 
 ```bash
-npm run e2e
+pnpm run e2e
 ```
 
 Note: This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).

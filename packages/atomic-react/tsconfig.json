@@ -5,7 +5,8 @@
     "moduleResolution": "Bundler",
     "module": "ES2022",
     "jsx": "react",
-    "target": "ES2022"
+    "target": "ES2022",
+    "typeRoots": ["./node_modules/@types"]
   },
   "include": ["src/**/*.ts", "src/**/*.tsx"]
 }
