@@ -12,134 +12,82 @@ vi.mock('../../../utils/event-utils', {spy: true});
 vi.mock('../../../utils/dom-utils', {spy: true});
 
 describe('suggestions-common', () => {
+  const createTestElement = (query?: string): SearchBoxSuggestionElement => ({
+    key: 'test-key',
+    content: document.createElement('div'),
+    ...(query !== undefined && {query}),
+  });
+
   describe('#elementHasNoQuery', () => {
     it('should return true when element has undefined query', () => {
-      const element: SearchBoxSuggestionElement = {
-        key: 'test-key',
-        content: document.createElement('div'),
-        query: undefined,
-      };
-
+      const element = createTestElement(undefined);
       expect(elementHasNoQuery(element)).toBe(true);
     });
 
     it('should return true when element has no query property', () => {
-      const element: SearchBoxSuggestionElement = {
-        key: 'test-key',
-        content: document.createElement('div'),
-      };
-
+      const element = createTestElement();
       expect(elementHasNoQuery(element)).toBe(true);
     });
 
     it('should return true when element has empty string query', () => {
-      const element: SearchBoxSuggestionElement = {
-        key: 'test-key',
-        content: document.createElement('div'),
-        query: '',
-      };
-
+      const element = createTestElement('');
       expect(elementHasNoQuery(element)).toBe(true);
     });
 
     it('should return false when element has non-empty query', () => {
-      const element: SearchBoxSuggestionElement = {
-        key: 'test-key',
-        content: document.createElement('div'),
-        query: 'search query',
-      };
-
+      const element = createTestElement('search query');
       expect(elementHasNoQuery(element)).toBe(false);
     });
 
     it('should return true when element has whitespace-only query', () => {
-      const element: SearchBoxSuggestionElement = {
-        key: 'test-key',
-        content: document.createElement('div'),
-        query: '   ',
-      };
-
+      const element = createTestElement('   ');
       expect(elementHasNoQuery(element)).toBe(true);
     });
 
     it('should return true when element has tab and newline characters', () => {
-      const element: SearchBoxSuggestionElement = {
-        key: 'test-key',
-        content: document.createElement('div'),
-        query: '\t\n  \r',
-      };
-
+      const element = createTestElement('\t\n  \r');
       expect(elementHasNoQuery(element)).toBe(true);
     });
   });
 
   describe('#elementHasQuery', () => {
     it('should return false when element has undefined query', () => {
-      const element: SearchBoxSuggestionElement = {
-        key: 'test-key',
-        content: document.createElement('div'),
-        query: undefined,
-      };
-
+      const element = createTestElement(undefined);
       expect(elementHasQuery(element)).toBe(false);
     });
 
     it('should return false when element has no query property', () => {
-      const element: SearchBoxSuggestionElement = {
-        key: 'test-key',
-        content: document.createElement('div'),
-      };
-
+      const element = createTestElement();
       expect(elementHasQuery(element)).toBe(false);
     });
 
     it('should return false when element has empty string query', () => {
-      const element: SearchBoxSuggestionElement = {
-        key: 'test-key',
-        content: document.createElement('div'),
-        query: '',
-      };
-
+      const element = createTestElement('');
       expect(elementHasQuery(element)).toBe(false);
     });
 
     it('should return true when element has non-empty query', () => {
-      const element: SearchBoxSuggestionElement = {
-        key: 'test-key',
-        content: document.createElement('div'),
-        query: 'search query',
-      };
-
+      const element = createTestElement('search query');
       expect(elementHasQuery(element)).toBe(true);
     });
 
     it('should return false when element has whitespace-only query', () => {
-      const element: SearchBoxSuggestionElement = {
-        key: 'test-key',
-        content: document.createElement('div'),
-        query: '   ',
-      };
-
+      const element = createTestElement('   ');
       expect(elementHasQuery(element)).toBe(false);
     });
 
     it('should return false when element has tab and newline characters', () => {
-      const element: SearchBoxSuggestionElement = {
-        key: 'test-key',
-        content: document.createElement('div'),
-        query: '\t\n  \r',
-      };
-
+      const element = createTestElement('\t\n  \r');
       expect(elementHasQuery(element)).toBe(false);
     });
 
     it('should return true when element has query with leading/trailing whitespace', () => {
-      const element: SearchBoxSuggestionElement = {
-        key: 'test-key',
-        content: document.createElement('div'),
-        query: '  search query  ',
-      };
+      const element = createTestElement('  search query  ');
+      expect(elementHasQuery(element)).toBe(true);
+    });
 
+    it('should handle numeric zero as valid query', () => {
+      const element = createTestElement('0');
       expect(elementHasQuery(element)).toBe(true);
     });
   });
