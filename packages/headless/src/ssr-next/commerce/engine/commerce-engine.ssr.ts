@@ -35,24 +35,9 @@ import {validateControllerNames} from '../validation/controller-validation.js';
  * ```ts
  * const { listingEngineDefinition } = defineCommerceEngine(engineConfig);
  *
- * // Generate stable clientId (server-side best practice)
- * const getClientId = async (req, res) => {
- *   const existing = req.cookies.coveoClientId;
- *   if (existing) return existing;
- *
- *   const newId = crypto.randomUUID();
- *   res.cookie('coveoClientId', newId, { maxAge: 365 * 24 * 60 * 60 * 1000 }); // 1 year
- *   return newId;
- * };
- *
  * const staticState = await listingEngineDefinition.fetchStaticState({
- *   navigatorContext: {
- *     clientId: await getClientId(req, res),
- *     forwardedFor: req.headers['x-forwarded-for'] || req.ip,
- *     referrer: req.headers.referer || null,
- *     userAgent: req.headers['user-agent'] || null,
- *     location: req.url
- *   }
+ *   navigatorContextProvider: () => {/*...* /},
+ *   context: {/*...* /},
  * });
  *
  * type SearchStaticState = InferStaticState<typeof listingEngineDefinition>;
@@ -120,7 +105,6 @@ export function defineCommerceEngine<
       augmentedControllerDefinition,
       getOptions()
     );
-
   const commonMethods = {
     getAccessToken,
     setAccessToken,
