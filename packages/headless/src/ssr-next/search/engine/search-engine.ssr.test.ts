@@ -9,17 +9,14 @@ import {
 import type {executeSearch} from '../../../features/search/search-actions.js';
 import {buildMockResult} from '../../../test/mock-result.js';
 import * as augmentModule from '../../common/augment-preprocess-request.js';
-import type {ControllerDefinitionWithoutProps} from '../../common/types/controllers.js';
 import type {
   InferHydratedState,
   InferStaticState,
 } from '../../common/types/engine.js';
 import {defineResultList} from '../controllers/result-list/headless-result-list.ssr.js';
-import {
-  defineSearchEngine,
-  type SearchEngineDefinition,
-  type SSRSearchEngine,
-} from './search-engine.ssr.js';
+import type {ControllerDefinitionWithoutProps} from '../types/controller-definition.js';
+import type {SearchEngineDefinition} from '../types/engine.js';
+import {defineSearchEngine, type SSRSearchEngine} from './search-engine.ssr.js';
 
 interface CustomEngineStateReader<TState extends {}> extends Controller {
   state: TState;
@@ -93,13 +90,13 @@ function createMockResultsMiddleware(options: {
 
 describe('SSR', () => {
   const mockPreprocessRequest = vi.fn(async (req) => req);
-  const mockNavigatorContext = {
+  const mockNavigatorContextProvider = () => ({
     forwardedFor: '192.168.1.1',
     referrer: 'https://example.com',
     userAgent: 'test-agent',
     location: '/test',
     clientId: 'test-client',
-  };
+  });
 
   describe('define search engine', () => {
     type StaticState = InferStaticState<typeof engineDefinition>;
@@ -107,10 +104,13 @@ describe('SSR', () => {
     type AnyState = StaticState | HydratedState;
 
     const defaultNumberOfResults = 12;
-    let engineDefinition: SearchEngineDefinition<{
-      engineStateReader: ReturnType<typeof defineCustomEngineStateReader>;
-      resultList: ReturnType<typeof defineResultList>;
-    }>;
+    let engineDefinition: SearchEngineDefinition<
+      SSRSearchEngine,
+      {
+        engineStateReader: ReturnType<typeof defineCustomEngineStateReader>;
+        resultList: ReturnType<typeof defineResultList>;
+      }
+    >;
 
     function getResultsPerPage(state: AnyState) {
       return (
@@ -144,7 +144,7 @@ describe('SSR', () => {
     it('fetches initial state of engine', async () => {
       const fetchStaticState = vi.mocked(engineDefinition.fetchStaticState);
       const staticState = await fetchStaticState({
-        navigatorContext: mockNavigatorContext,
+        navigatorContextProvider: mockNavigatorContextProvider,
       });
       expect(staticState).toBeTruthy();
       expect(getResultsPerPage(staticState)).toBe(defaultNumberOfResults);
@@ -157,10 +157,12 @@ describe('SSR', () => {
       );
 
       const fetchStaticState = engineDefinition.fetchStaticState;
-      await fetchStaticState({navigatorContext: mockNavigatorContext});
+      await fetchStaticState({
+        navigatorContextProvider: mockNavigatorContextProvider,
+      });
       expect(spy).toHaveBeenCalledWith({
         loggerOptions: {level: 'warn'},
-        navigatorContextProvider: expect.any(Function),
+        navigatorContextProvider: mockNavigatorContextProvider,
         preprocessRequest: mockPreprocessRequest,
       });
 
@@ -172,7 +174,7 @@ describe('SSR', () => {
       beforeEach(async () => {
         const fetchStaticState = vi.mocked(engineDefinition.fetchStaticState);
         staticState = await fetchStaticState({
-          navigatorContext: mockNavigatorContext,
+          navigatorContextProvider: mockNavigatorContextProvider,
         });
       });
 

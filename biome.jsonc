@@ -1,5 +1,5 @@
 {
-  "$schema": "https://biomejs.dev/schemas/2.1.3/schema.json",
+  "$schema": "https://biomejs.dev/schemas/2.1.4/schema.json",
   "vcs": {"enabled": true, "clientKind": "git", "useIgnoreFile": true},
   "root": true,
   "plugins": [
@@ -15,6 +15,7 @@
       "!**/packages/create-atomic-template/**/*",
       "!**/packages/create-atomic-component/template/**/*",
       "!**/packages/create-atomic-component-project/template/**/*",
+      "!**/packages/create-atomic-result-component/template/**/*",
 
       // Root excluded files.
       "!**/.deployment.config/**/*",
@@ -38,7 +39,7 @@
       "!**/packages/headless/**/coveo.analytics/**/*",
 
       // atomic-stencil-samples excluded files.
-      "!**/packages/samples/stencil/**/*.d.ts"
+      "!samples/atomic/search-stencil/**/*.d.ts"
     ]
   },
   "formatter": {
@@ -51,6 +52,11 @@
     "enabled": true,
     "rules": {
       "recommended": true,
+      "suspicious": {
+        // https://developer.mozilla.org/en-US/docs/Web/API/CookieStore Reevaluate in June '26 after 1y of availability.
+        // https://coveord.atlassian.net/browse/KIT-4913
+        "noDocumentCookie": "off"
+      },
       "style": {"noNonNullAssertion": "off"},
       "complexity": {"noBannedTypes": "off"},
       "correctness": {"noUnknownFunction": "off"}

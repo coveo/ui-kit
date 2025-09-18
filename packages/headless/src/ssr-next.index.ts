@@ -37,18 +37,10 @@
  * export type SearchHydratedState = InferHydratedState<typeof engineDefinition>;
  *
  * export const {fetchStaticState, hydrateStaticState} = engineDefinition;
- * 
+ *
  * await fetchStaticState({
- *   navigatorContext: {
- *     clientId: await getClientId(req), // Generate stable UUID, store in cookie
- *     forwardedFor: req.headers['x-forwarded-for'] || req.ip,
- *     referrer: req.headers.referer || null,
- *     userAgent: req.headers['user-agent'] || null,
- *     location: req.url
- *   },
- *   controllers: {
- *     // Your controllers with an initial state here
- *   }
+ *   navigatorContextProvider: () => {/*...* /},
+ *   context: {/*...* /},
  * });
 
  * ```
@@ -60,7 +52,6 @@ export type {Relay} from '@coveo/relay';
 export type {Middleware, Unsubscribe} from '@reduxjs/toolkit';
 export type {AnalyticsClientSendEventHook} from 'coveo.analytics';
 export type {ExecuteTriggerParams} from './api/common/trigger.js';
-// export type
 export type {CoreEngine, ExternalEngineOptions} from './app/engine.js';
 export type {
   AnalyticsConfiguration,
@@ -86,23 +77,6 @@ export type {
   Subscribable,
 } from './controllers/controller/headless-controller.js';
 export type {InlineLink} from './controllers/smart-snippet/headless-smart-snippet-interactive-inline-links.js';
-export type {
-  ControllerDefinitionsMap,
-  ControllerDefinitionWithoutProps,
-  ControllerDefinitionWithProps,
-} from './ssr-next/common/types/controllers.js';
-export type {
-  EngineDefinition,
-  InferHydratedState,
-  InferStaticState,
-} from './ssr-next/common/types/engine.js';
-export type {
-  InferControllerFromDefinition,
-  InferControllerStaticStateFromController,
-  InferControllerStaticStateMapFromControllers,
-  InferControllerStaticStateMapFromDefinitions,
-  InferControllersMapFromDefinition,
-} from './ssr-next/common/types/inference.js';
 export type {
   AutomaticFacetBreadcrumb,
   Breadcrumb,
@@ -489,11 +463,31 @@ export type {
 export {defineUrlManager} from './ssr-next/search/controllers/url-manager/headless-url-manager.ssr.js';
 export type {
   SearchCompletedAction,
-  SearchEngineDefinition,
-  SearchEngineDefinitionOptions,
   SSRSearchEngine as SearchEngine,
 } from './ssr-next/search/engine/search-engine.ssr.js';
 export {defineSearchEngine} from './ssr-next/search/engine/search-engine.ssr.js';
+export type {
+  ControllerDefinitionsMap,
+  InferControllerStaticStateFromController,
+  InferControllerStaticStateMapFromControllers,
+  InferHydratedState,
+  InferStaticState,
+} from './ssr-next/search/types/controller-definition.js';
+export type {
+  InferControllerFromDefinition,
+  InferControllerStaticStateMapFromDefinitions,
+  InferControllersMapFromDefinition,
+} from './ssr-next/search/types/controller-inference.js';
+export type {
+  SearchEngineDefinition,
+  SearchEngineDefinitionOptions,
+} from './ssr-next/search/types/engine.js';
+export type {FetchStaticState} from './ssr-next/search/types/fetch-static-state.js';
+// export type
+export type {
+  HydratedState,
+  HydrateStaticState,
+} from './ssr-next/search/types/hydrate-static-state.js';
 // State
 export type {
   SearchAppState,

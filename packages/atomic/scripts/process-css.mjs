@@ -7,7 +7,7 @@ import {
 } from 'node:fs';
 import {basename, dirname, join, relative} from 'node:path';
 import chalk from 'chalk';
-import * as lightningcss from 'lightningcss';
+import cssnano from 'cssnano';
 import postcss from 'postcss';
 import postcssLoadConfig from 'postcss-load-config';
 import {dedent} from 'ts-dedent';
@@ -23,22 +23,18 @@ async function processAndMinifyCss(content, filename) {
     from: filename,
   });
 
-  let processedCss = minifyCss(result, filename);
+  let processedCss = await minifyCss(result, filename);
 
   processedCss = escapeBackslashes(processedCss);
 
   return processedCss;
 }
 
-function minifyCss(result, filename) {
-  return lightningcss
-    .transform({
-      code: Buffer.from(result.css),
-      minify: true,
-      sourceMap: true,
-      filename: filename,
-    })
-    .code.toString();
+async function minifyCss(result, filename) {
+  const minifyResult = await postcss([cssnano()]).process(result.css, {
+    from: filename,
+  });
+  return minifyResult.css;
 }
 
 const cssToJs = (css) => `const css = \`${css}\`;`;
@@ -127,7 +123,7 @@ export async function processCssFiles(srcDir, distDir) {
     const srcPath = join(srcDir, entry.name);
     if (entry.isDirectory()) {
       await processCssFiles(srcPath, join(distDir, entry.name));
-    } else if (entry.isFile() && entry.name.endsWith('.css')) {
+    } else if (entry.isFile() && entry.name.endsWith('.tw.css')) {
       const relPath = relative(srcDir, srcPath);
       const distPath = join(distDir, relPath);
       const targetDir = dirname(distPath);
@@ -180,7 +176,7 @@ async function processInlineCss(distDir, srcDir) {
           from: originalSrcFile,
         });
 
-        const minified = minifyCss(result, originalSrcFile);
+        const minified = await minifyCss(result, originalSrcFile);
         const escaped = escapeBackslashes(minified);
 
         content = content.split(fullMatch).join(`css\`${escaped}\``);

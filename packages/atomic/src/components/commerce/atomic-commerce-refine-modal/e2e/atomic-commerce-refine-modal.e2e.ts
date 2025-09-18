@@ -1,6 +1,6 @@
 import {expect, test} from './fixture';
 
-test.describe('AtomicCommerceRefineModal', () => {
+test.describe('atomic-commerce-refine-modal', () => {
   test.beforeEach(async ({page}) => {
     await page.goto('/iframe.html?id=atomic-commerce-refine-toggle--default');
     await page.locator('atomic-commerce-refine-toggle').waitFor();
@@ -10,15 +10,18 @@ test.describe('AtomicCommerceRefineModal', () => {
     await page.locator('atomic-commerce-refine-toggle').click();
   });
 
-  test('should be accessible', async ({makeAxeBuilder}) => {
+  test('should be accessible', async ({
+    makeAxeBuilder,
+    commerceRefineModal,
+  }) => {
+    await commerceRefineModal.closeButton.waitFor({state: 'visible'});
     const accessibilityResults = await makeAxeBuilder().analyze();
-    expect(accessibilityResults.violations.length).toEqual(0);
+    expect(accessibilityResults.violations).toEqual([]);
   });
 
-  test('should be able to close the modal', async ({page}) => {
-    const refineModal = page.locator('atomic-commerce-refine-modal');
-    await refineModal.locator('button[part="close-button"]').click();
-    await refineModal.waitFor({state: 'hidden'});
+  test('should be able to close the modal', async ({commerceRefineModal}) => {
+    await commerceRefineModal.closeButton.click();
+    await commerceRefineModal.hydrated.waitFor({state: 'hidden'});
   });
 
   test('should be able to switch sort', async ({page}) => {

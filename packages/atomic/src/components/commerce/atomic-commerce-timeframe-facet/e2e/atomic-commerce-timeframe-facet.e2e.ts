@@ -1,7 +1,6 @@
 import {expect, test} from './fixture';
 
-// TODO: KIT-4570: need to return Date Facet in organization
-test.describe.skip('AtomicCommerceTimeframeFacet', () => {
+test.describe('atomic-commerce-timeframe-facet', () => {
   test('should be accessible', async ({
     makeAxeBuilder,
     commerceTimeframeFacet,
@@ -11,7 +10,7 @@ test.describe.skip('AtomicCommerceTimeframeFacet', () => {
     });
 
     const accessibilityResults = await makeAxeBuilder().analyze();
-    expect(accessibilityResults.violations.length).toEqual(0);
+    expect(accessibilityResults.violations).toEqual([]);
   });
 
   test('should complete the full date picker workflow', async ({

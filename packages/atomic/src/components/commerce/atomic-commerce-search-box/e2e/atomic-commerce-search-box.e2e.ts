@@ -1,6 +1,6 @@
 import {expect, setRecentQueries, setSuggestions, test} from './fixture';
 
-test.describe('AtomicCommerceSearchBox', () => {
+test.describe('atomic-commerce-search-box', () => {
   test.describe('default', () => {
     test.beforeEach(async ({searchBox}) => {
       await searchBox.load({args: {suggestionTimeout: 5000}});
@@ -10,7 +10,7 @@ test.describe('AtomicCommerceSearchBox', () => {
       await expect(searchBox.submitButton).toBeEnabled();
     });
 
-    test('should be A11y compliant', async ({searchBox, makeAxeBuilder}) => {
+    test('should be accessible', async ({searchBox, makeAxeBuilder}) => {
       await searchBox.hydrated.waitFor();
       const accessibilityResults = await makeAxeBuilder().analyze();
       expect(accessibilityResults.violations).toEqual([]);
@@ -184,7 +184,7 @@ test.describe('AtomicCommerceSearchBox', () => {
         });
       });
 
-      test('should be A11y compliant', async ({searchBox, makeAxeBuilder}) => {
+      test('should be accessible', async ({searchBox, makeAxeBuilder}) => {
         await searchBox.hydrated.waitFor();
         const accessibilityResults = await makeAxeBuilder().analyze();
         expect(accessibilityResults.violations).toEqual([]);
@@ -262,7 +262,7 @@ test.describe('AtomicCommerceSearchBox', () => {
         ).toBeVisible();
       });
 
-      test('should be A11y compliant', async ({searchBox, makeAxeBuilder}) => {
+      test('should be accessible', async ({searchBox, makeAxeBuilder}) => {
         await searchBox.hydrated.waitFor();
         const accessibilityResults = await makeAxeBuilder().analyze();
         expect(accessibilityResults.violations).toEqual([]);
@@ -329,7 +329,7 @@ test.describe('AtomicCommerceSearchBox', () => {
         await expect(searchBox.searchSuggestions().first()).not.toBeVisible();
       });
 
-      test('should be A11y compliant', async ({searchBox, makeAxeBuilder}) => {
+      test('should be accessible', async ({searchBox, makeAxeBuilder}) => {
         await searchBox.hydrated.waitFor();
         const accessibilityResults = await makeAxeBuilder().analyze();
         expect(accessibilityResults.violations).toEqual([]);
@@ -382,7 +382,7 @@ test.describe('AtomicCommerceSearchBox', () => {
         await expect(searchBox.searchSuggestions().first()).not.toBeVisible();
       });
 
-      test('should be A11y compliant', async ({searchBox, makeAxeBuilder}) => {
+      test('should be accessible', async ({searchBox, makeAxeBuilder}) => {
         await searchBox.hydrated.waitFor();
         const accessibilityResults = await makeAxeBuilder().analyze();
         expect(accessibilityResults.violations).toEqual([]);

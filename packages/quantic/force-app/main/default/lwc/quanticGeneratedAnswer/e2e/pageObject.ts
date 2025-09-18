@@ -4,8 +4,25 @@ import {
   AnalyticsModeEnum,
 } from '../../../../../../playwright/utils/analyticsMode';
 import {AnalyticsObject} from '../../../../../../playwright/page-object/analytics';
+import {isRgaEvaluationRequest, isRgaGenerateRequest, isInsightRgaGenerateRequest} from '../../../../../../playwright/utils/requests';
 
 const minimumCitationTooltipDisplayDurationMs = 1500;
+const removeUnknownFields = (object: Record<string, unknown>) => {
+  return Object.fromEntries(
+    Object.entries(object).filter(([, value]) => value !== 'unknown')
+  );
+};
+
+const selectors = {
+  addFacetsButton: 'c-action-add-facets button',
+};
+
+const facetElementsSelectors = {
+  timeframeFacet: {
+    component: 'c-quantic-timeframe-facet',
+    facetValueComponent: 'c-quantic-facet-value',
+  },
+};
 
 export class GeneratedAnswerObject {
   private analyticsMode: AnalyticsMode;
@@ -13,12 +30,16 @@ export class GeneratedAnswerObject {
   constructor(
     private page: Page,
     private streamId: string,
-    private analytics: AnalyticsObject
+    private analytics: AnalyticsObject,
+    private answerApiEnabled: boolean,
+    private withFacets: boolean
   ) {
     this.page = page;
     this.streamId = streamId;
     this.analytics = analytics;
     this.analyticsMode = this.analytics.analyticsMode;
+    this.answerApiEnabled = answerApiEnabled;
+    this.withFacets = withFacets;
   }
 
   get likeButton(): Locator {
@@ -35,6 +56,32 @@ export class GeneratedAnswerObject {
 
   get toggleButton(): Locator {
     return this.page.getByTestId('generated-answer__toggle-button');
+  }
+
+  get firstTimeframeFacet(): Locator {
+    return this.page
+      .locator(facetElementsSelectors.timeframeFacet.component)
+      .first();
+  }
+
+  get firstTimeframeFacetValue(): Promise<string | null> {
+    return this.firstTimeframeFacet
+      .locator(facetElementsSelectors.timeframeFacet.facetValueComponent)
+      .first()
+      .locator('.facet__value-text')
+      .textContent();
+  }
+
+  get addFacetsButton(): Locator {
+    return this.page.locator(selectors.addFacetsButton);
+  }
+
+  async clickAddFacetsButton(): Promise<void> {
+    await this.addFacetsButton.click();
+  }
+
+  async clickFirstTimeframeFacetLink(): Promise<void> {
+    await this.firstTimeframeFacet.click();
   }
 
   questionContainer(questionId: string): Locator {
@@ -248,9 +295,38 @@ export class GeneratedAnswerObject {
     );
   }
 
-  async waitForFeedbackSubmitAnalytics(
+  async waitForEvaluationsRequest(
     expectedPayload: Record<string, any>
   ): Promise<Request> {
+    const payloadToMatch = removeUnknownFields(expectedPayload);
+
+    const evaluationRequest = this.page.waitForRequest((request) => {
+      const event = request.postDataJSON?.();
+      if (isRgaEvaluationRequest(request)) {
+        return AnalyticsObject.isMatchingPayload(
+          {
+            correctTopic: event.details?.correctTopic ? 'yes' : 'no',
+            readable: event.details?.readable ? 'yes' : 'no',
+            hallucinationFree: event.details?.hallucinationFree ? 'yes' : 'no',
+            documented: event.details?.documented ? 'yes' : 'no',
+            helpful: event.helpful,
+            details: event.additionalNotes,
+            documentUrl: event.correctAnswerUrl,
+          },
+          payloadToMatch
+        );
+      }
+      return false;
+    });
+    return evaluationRequest;
+  }
+
+  async waitForFeedbackSubmitRequest(
+    expectedPayload: Record<string, any>
+  ): Promise<Request> {
+    if (this.answerApiEnabled) {
+      return this.waitForEvaluationsRequest(expectedPayload);
+    }
     if (this.analyticsMode === AnalyticsModeEnum.legacy) {
       return this.analytics.waitForCustomUaAnalytics(
         {
@@ -265,11 +341,6 @@ export class GeneratedAnswerObject {
       );
     }
 
-    const removeUnknownFields = (object: Record<string, unknown>) => {
-      return Object.fromEntries(
-        Object.entries(object).filter(([, value]) => value !== 'unknown')
-      );
-    };
     const payloadToMatch = removeUnknownFields(expectedPayload);
 
     return this.analytics.waitForEventProtocolAnalytics(
@@ -337,24 +408,55 @@ export class GeneratedAnswerObject {
   }
 
   async mockStreamResponse(
-    body: Array<{payloadType: string; payload: string; finishReason?: string}>
+    url: string,
+    body: Array<{payloadType: string; payload: string; finishReason?: string}>,
+    answerId?: string
   ) {
-    await this.page.route(
-      `**/machinelearning/streaming/${this.streamId}`,
-      (route) => {
-        let bodyText = '';
-        body.forEach((data) => {
-          bodyText += `data: ${JSON.stringify(data)} \n\n`;
-        });
+    await this.page.route(url, (route) => {
+      let bodyText = '';
+      body.forEach((data) => {
+        bodyText += `data: ${JSON.stringify(data)} \n\n`;
+      });
 
-        route.fulfill({
-          status: 200,
-          body: bodyText,
-          headers: {
-            'content-type': 'text/event-stream',
-          },
-        });
-      }
-    );
+      route.fulfill({
+        status: 200,
+        body: bodyText,
+        headers: {
+          'content-type': 'text/event-stream',
+          ...(answerId && {
+            'access-control-expose-headers': 'X-Answer-Id',
+            'x-answer-id': answerId,
+          }),
+        },
+      });
+    });
   }
+
+  async waitForGenerateRequest(
+    expectedPayload: Record<string, any>
+  ): Promise<Request | boolean | null> {
+    const payloadToMatch = removeUnknownFields(expectedPayload);
+
+    if (this.answerApiEnabled) {
+      return this.page.waitForRequest((request) => {
+        const event = request.postDataJSON?.();
+        if (
+          isRgaGenerateRequest(request) ||
+          isInsightRgaGenerateRequest(request)
+        ) {
+          return AnalyticsObject.isMatchingPayload(
+            {
+              searchHub: event.searchHub,
+              q: event.q,
+            },
+            payloadToMatch
+          );
+        }
+        return false;
+      });
+    }
+    return null;
+  }
+
+  streamEndAnalyticRequestPromise!: Promise<boolean | Request>;
 }

@@ -1,20 +1,23 @@
+import type {GeneratedAnswerStream} from '../../../api/knowledge/generated-answer-stream.js';
 import {
   type AnswerEvaluationPOSTParams,
   answerEvaluation,
 } from '../../../api/knowledge/post-answer-evaluation.js';
-import {triggerSearchRequest} from '../../../api/knowledge/stream-answer-actions.js';
 import {
   answerApi,
   fetchAnswer,
-  type GeneratedAnswerStream,
-  type StateNeededByAnswerAPI,
   selectAnswer,
-  selectAnswerTriggerParams,
 } from '../../../api/knowledge/stream-answer-api.js';
+import type {StreamAnswerAPIState} from '../../../api/knowledge/stream-answer-api-state.js';
 import {warnIfUsingNextAnalyticsModeForServiceFeature} from '../../../app/engine.js';
 import type {InsightEngine} from '../../../app/insight-engine/insight-engine.js';
 import type {SearchEngine} from '../../../app/search-engine/search-engine.js';
 import {
+  selectAnswerApiQueryParams,
+  selectAnswerTriggerParams,
+} from '../../../features/generated-answer/answer-api-selectors.js';
+import {
+  generateAnswer,
   resetAnswer,
   sendGeneratedAnswerFeedback,
   setCannotAnswer,
@@ -94,7 +97,7 @@ const parseEvaluationArguments = ({
 });
 
 const subscribeToSearchRequest = (
-  engine: SearchEngine<StateNeededByAnswerAPI>
+  engine: SearchEngine<StreamAnswerAPIState>
 ) => {
   let lastTriggerParams: ReturnType<typeof selectAnswerTriggerParams>;
   const strictListener = () => {
@@ -119,9 +122,7 @@ const subscribeToSearchRequest = (
     }
 
     lastTriggerParams = triggerParams;
-    engine.dispatch(
-      triggerSearchRequest({state, navigatorContext: engine.navigatorContext})
-    );
+    engine.dispatch(generateAnswer());
   };
 
   engine.subscribe(strictListener);
@@ -155,18 +156,14 @@ export function buildAnswerApiGeneratedAnswer(
     props
   );
   const getState = () => engine.state;
-
   engine.dispatch(updateAnswerConfigurationId(props.answerConfigurationId!));
 
-  subscribeToSearchRequest(engine as SearchEngine<StateNeededByAnswerAPI>);
+  subscribeToSearchRequest(engine as SearchEngine<StreamAnswerAPIState>);
 
   return {
     ...controller,
     get state() {
-      const answerApiState = selectAnswer(
-        engine.state,
-        engine.navigatorContext
-      ).data;
+      const answerApiState = selectAnswer(engine.state).data;
       return {
         ...getState().generatedAnswer,
         answer: answerApiState?.answer,
@@ -184,7 +181,8 @@ export function buildAnswerApiGeneratedAnswer(
       };
     },
     retry() {
-      engine.dispatch(fetchAnswer(getState(), engine.navigatorContext));
+      const answerApiQueryParams = selectAnswerApiQueryParams(getState());
+      engine.dispatch(fetchAnswer(answerApiQueryParams));
     },
     reset() {
       engine.dispatch(resetAnswer());
@@ -193,8 +191,7 @@ export function buildAnswerApiGeneratedAnswer(
       const args = parseEvaluationArguments({
         query: getState().query.q,
         feedback,
-        answerApiState: selectAnswer(engine.state, engine.navigatorContext)
-          .data!,
+        answerApiState: selectAnswer(engine.state).data!,
       });
       engine.dispatch(answerEvaluation.endpoints.post.initiate(args));
       engine.dispatch(sendGeneratedAnswerFeedback());

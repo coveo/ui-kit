@@ -1,174 +1,122 @@
-import {getSampleCommerceEngineConfiguration} from '../../../app/commerce-engine/commerce-engine-configuration.js';
-import {defineCart} from '../controllers/cart/headless-cart.ssr.js';
-import {defineDidYouMean} from '../controllers/did-you-mean/headless-did-you-mean.ssr.js';
-import {defineParameterManager} from '../controllers/parameter-manager/headless-core-parameter-manager.ssr.js';
-import {defineRecommendations} from '../controllers/recommendations/headless-recommendations.ssr.js';
-import {defineSummary} from '../controllers/summary/headless-core-summary.ssr.js';
-import type {CommerceEngineDefinitionOptions} from '../factories/build-factory.js';
+import type {CommerceEngineConfiguration} from '../../../app/commerce-engine/commerce-engine-configuration.js';
+import type {NavigatorContextProvider} from '../../../app/navigator-context-provider.js';
+import {buildMockNavigatorContextProvider} from '../../../test/mock-navigator-context-provider.js';
+import {defineMockCommerceController} from '../../../test/mock-ssr-controller-definitions.js';
+import type {CommerceEngineDefinitionOptions} from '../types/engine.js';
 import {defineCommerceEngine} from './commerce-engine.ssr.js';
 
 describe('Commerce Engine SSR', () => {
-  let definitionOptions: NonNullable<CommerceEngineDefinitionOptions>;
-
-  let engineDefinition: ReturnType<
-    typeof defineCommerceEngine<
-      NonNullable<typeof definitionOptions.controllers>
-    >
-  >;
-
-  let listingEngineDefinition: (typeof engineDefinition)['listingEngineDefinition'];
-  let recommendationEngineDefinition: (typeof engineDefinition)['recommendationEngineDefinition'];
-  let searchEngineDefinition: (typeof engineDefinition)['searchEngineDefinition'];
-  let standaloneEngineDefinition: (typeof engineDefinition)['standaloneEngineDefinition'];
-
-  const mockNavigatorContext = {
-    forwardedFor: '192.168.1.1',
-    referrer: 'https://example.com',
-    userAgent: 'test-agent',
-    location: '/test',
-    clientId: 'test-client',
-  };
+  let mockNavigatorContextProvider: NavigatorContextProvider;
+  let definitionOptions: CommerceEngineDefinitionOptions<{
+    controller1: ReturnType<typeof defineMockCommerceController>;
+    controller2: ReturnType<typeof defineMockCommerceController>;
+  }>;
 
   beforeEach(() => {
-    definitionOptions = {
-      configuration: {
-        ...getSampleCommerceEngineConfiguration(),
+    mockNavigatorContextProvider = buildMockNavigatorContextProvider();
+    const mockConfiguration = {
+      organizationId: 'some-org-id',
+      accessToken: 'some-token',
+      analytics: {
+        trackingId: 'xxx',
       },
+    } as CommerceEngineConfiguration;
+
+    definitionOptions = {
+      configuration: mockConfiguration,
       controllers: {
-        summary: defineSummary(),
-        didYouMean: defineDidYouMean(),
-        paramManager: defineParameterManager({listing: false}),
-        cart: defineCart(),
-        popularViewed: defineRecommendations({
-          options: {
-            slotId: 'd73afbd2-8521-4ee6-a9b8-31f064721e73',
-          },
-        }),
+        controller1: defineMockCommerceController(),
+        controller2: defineMockCommerceController(),
       },
     };
-    engineDefinition = defineCommerceEngine(definitionOptions);
-
-    listingEngineDefinition = engineDefinition.listingEngineDefinition;
-    recommendationEngineDefinition =
-      engineDefinition.recommendationEngineDefinition;
-    searchEngineDefinition = engineDefinition.searchEngineDefinition;
-    standaloneEngineDefinition = engineDefinition.standaloneEngineDefinition;
   });
 
-  describe('#standaloneEngineDefinition', () => {
-    it('should only require cart options', () => {
-      expect(() =>
-        standaloneEngineDefinition.fetchStaticState({
-          navigatorContext: mockNavigatorContext,
-          controllers: {
-            cart: {initialState: {items: []}},
-          },
-        })
-      ).not.toThrow();
-    });
+  afterEach(() => {
+    vi.clearAllMocks();
+  });
 
+  it('should return 4 engine definitions', () => {
+    const engineDefinition = defineCommerceEngine(definitionOptions);
+    expect(engineDefinition).toHaveProperty('listingEngineDefinition');
+    expect(engineDefinition).toHaveProperty('recommendationEngineDefinition');
+    expect(engineDefinition).toHaveProperty('searchEngineDefinition');
+    expect(engineDefinition).toHaveProperty('standaloneEngineDefinition');
+  });
+
+  describe.each([
+    ['listingEngineDefinition'],
+    ['searchEngineDefinition'],
+    ['recommendationEngineDefinition'],
+    ['standaloneEngineDefinition'],
+  ])('%s', (definitionName) => {
     it('#getAccessToken should return the access token', () => {
-      expect(standaloneEngineDefinition.getAccessToken()).toBe(
-        getSampleCommerceEngineConfiguration().accessToken
-      );
+      const engineDefinition = defineCommerceEngine(definitionOptions);
+      const solutionType = definitionName as keyof typeof engineDefinition;
+      const {getAccessToken} = engineDefinition[solutionType];
+      expect(getAccessToken()).toBe('some-token');
     });
 
     it('#setAccessToken should update the access token', () => {
-      standaloneEngineDefinition.setAccessToken('new-access-token');
-
-      expect(standaloneEngineDefinition.getAccessToken()).toBe(
-        'new-access-token'
-      );
+      const engineDefinition = defineCommerceEngine(definitionOptions);
+      const solutionType = definitionName as keyof typeof engineDefinition;
+      const {getAccessToken, setAccessToken} = engineDefinition[solutionType];
+      setAccessToken('new-access-token');
+      expect(getAccessToken()).toBe('new-access-token');
     });
-  });
 
-  describe('#listingEngineDefinition', () => {
-    it('should only require cart options', () => {
-      expect(() =>
-        listingEngineDefinition.fetchStaticState({
-          navigatorContext: mockNavigatorContext,
-          controllers: {
-            cart: {initialState: {items: []}},
+    it('should always return context and cart controllers as well as the ones provided', async () => {
+      const engineDefinition = defineCommerceEngine(definitionOptions);
+      const solutionType = definitionName as keyof typeof engineDefinition;
+      const staticState = await engineDefinition[solutionType].fetchStaticState(
+        {
+          navigatorContextProvider: mockNavigatorContextProvider,
+          searchParams: {query: 'test'},
+          recommendations: [],
+          context: {
+            view: {url: 'http://example.com'},
+            country: 'US',
+            currency: 'USD',
+            language: 'en',
           },
-        })
-      ).not.toThrow();
-    });
-
-    it('#getAccessToken should return the access token', () => {
-      expect(listingEngineDefinition.getAccessToken()).toBe(
-        getSampleCommerceEngineConfiguration().accessToken
+        }
       );
-    });
-
-    it('#setAccessToken should update the access token', () => {
-      listingEngineDefinition.setAccessToken('new-access-token');
-
-      expect(listingEngineDefinition.getAccessToken()).toBe('new-access-token');
+      expect(staticState.controllers).toHaveProperty('context');
+      expect(staticState.controllers).toHaveProperty('cart');
+      expect(staticState.controllers).toHaveProperty('controller1');
+      expect(staticState.controllers).toHaveProperty('controller2');
     });
   });
 
   describe('#searchEngineDefinition', () => {
-    it('should only require cart and paramManager options', () => {
-      expect(() =>
-        searchEngineDefinition.fetchStaticState({
-          navigatorContext: mockNavigatorContext,
-          controllers: {
-            cart: {initialState: {items: []}},
-            paramManager: {initialState: {parameters: {}}},
-          },
-        })
-      ).not.toThrow();
-    });
-
-    it('#getAccessToken should return the access token', () => {
-      expect(searchEngineDefinition.getAccessToken()).toBe(
-        getSampleCommerceEngineConfiguration().accessToken
-      );
-    });
-
-    it('#setAccessToken should update the access token', () => {
-      searchEngineDefinition.setAccessToken('new-access-token');
-
-      expect(searchEngineDefinition.getAccessToken()).toBe('new-access-token');
+    it('should always return parameter manager controller', async () => {
+      const {searchEngineDefinition} = defineCommerceEngine(definitionOptions);
+      const staticState = await searchEngineDefinition.fetchStaticState({
+        navigatorContextProvider: mockNavigatorContextProvider,
+        searchParams: {query: 'foo'},
+        context: {
+          view: {url: 'http://example.com/search'},
+          country: 'US',
+          currency: 'USD',
+          language: 'en',
+        },
+      });
+      expect(staticState.controllers).toHaveProperty('parameterManager');
     });
   });
 
-  describe('#recommendationEngineDefinition', () => {
-    it('should only require cart options', () => {
-      expect(() =>
-        recommendationEngineDefinition.fetchStaticState({
-          navigatorContext: mockNavigatorContext,
-          controllers: {
-            cart: {initialState: {items: []}},
-          },
-        })
-      ).not.toThrow();
-    });
-
-    it('should allow optional recommendation controller options', () => {
-      expect(() =>
-        recommendationEngineDefinition.fetchStaticState({
-          navigatorContext: mockNavigatorContext,
-          controllers: {
-            cart: {initialState: {items: []}},
-            popularViewed: {enabled: true, productId: 'some-product-id'},
-          },
-        })
-      ).not.toThrow();
-    });
-
-    it('#getAccessToken should return the access token', () => {
-      expect(recommendationEngineDefinition.getAccessToken()).toBe(
-        getSampleCommerceEngineConfiguration().accessToken
-      );
-    });
-
-    it('#setAccessToken should update the access token', () => {
-      recommendationEngineDefinition.setAccessToken('new-access-token');
-
-      expect(recommendationEngineDefinition.getAccessToken()).toBe(
-        'new-access-token'
-      );
+  describe('#listingEngineDefinition', () => {
+    it('should always return parameter manager controller', async () => {
+      const {listingEngineDefinition} = defineCommerceEngine(definitionOptions);
+      const staticState = await listingEngineDefinition.fetchStaticState({
+        navigatorContextProvider: mockNavigatorContextProvider,
+        context: {
+          view: {url: 'http://example.com'},
+          country: 'US',
+          currency: 'USD',
+          language: 'en',
+        },
+      });
+      expect(staticState.controllers).toHaveProperty('parameterManager');
     });
   });
 });

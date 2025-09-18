@@ -76,7 +76,9 @@ export interface EngineDefinition<
   >;
 }
 
-// TODO: KIT-4610: Remove this type
+/**
+ * @deprecated Use SearchEngineDefinitionBuildResult or CommerceEngineDefinitionBuildResult instead
+ */
 export interface EngineDefinitionBuildResult<
   TEngine extends CoreEngine | CoreEngineNext,
   TControllers extends ControllersMap,

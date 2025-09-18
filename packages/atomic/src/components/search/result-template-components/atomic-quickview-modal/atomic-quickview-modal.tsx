@@ -22,7 +22,7 @@ import {
   InitializeBindings,
 } from '../../../../utils/initialization-utils';
 import {ATOMIC_MODAL_EXPORT_PARTS} from '../../../common/atomic-modal/export-parts';
-import {IconButton} from '../../../common/iconButton';
+import {IconButton} from '../../../common/stencil-iconButton';
 import {LinkWithItemAnalytics} from '../../../common/item-link/stencil-item-link';
 import {Button} from '../../../common/stencil-button';
 import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
@@ -173,6 +173,7 @@ export class AtomicQuickviewModal implements InitializableComponent {
         </div>
         <div class="relative overflow-auto">
           <QuickviewIframe
+            title={this.result?.title ?? this.bindings.i18n.t('preview-modal-title')} 
             logger={this.logger}
             src={this.quickviewSrc}
             sandbox={this.sandbox}

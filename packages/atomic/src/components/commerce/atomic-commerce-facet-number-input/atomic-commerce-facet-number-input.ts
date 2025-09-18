@@ -1,16 +1,14 @@
 import {isUndefined} from '@coveo/bueno';
 import type {NumericFacet} from '@coveo/headless/commerce';
-import {html, LitElement} from 'lit';
+import {css, html, LitElement} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {ref} from 'lit/directives/ref.js';
 import {bindingGuard} from '@/src/decorators/binding-guard';
 import {bindings} from '@/src/decorators/bindings';
 import {errorGuard} from '@/src/decorators/error-guard';
-import {injectStylesForNoShadowDOM} from '@/src/decorators/inject-styles-for-no-shadow-dom';
 import type {InitializableComponent} from '@/src/decorators/types';
-import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
+import {LightDomMixin} from '@/src/mixins/light-dom';
 import type {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface';
-import styles from './atomic-commerce-facet-number-input.tw.css';
 
 export type Range = {start: number; end: number};
 
@@ -19,11 +17,9 @@ export type Range = {start: number; end: number};
  * @internal
  */
 @customElement('atomic-commerce-facet-number-input')
-@withTailwindStyles
-@injectStylesForNoShadowDOM
 @bindings()
 export class AtomicCommerceFacetNumberInput
-  extends LitElement
+  extends LightDomMixin(LitElement)
   implements InitializableComponent<CommerceBindings>
 {
   /**
@@ -54,7 +50,31 @@ export class AtomicCommerceFacetNumberInput
   private startRef?: HTMLInputElement;
   private endRef?: HTMLInputElement;
 
-  static styles = styles;
+  static styles = css`[part="input-form"] {
+    display: grid;
+    grid-template-areas:
+      "label-start label-end ."
+      "input-start input-end apply-button";
+    grid-template-columns: 1fr 1fr auto;
+  }
+  
+  [part="label-start"] {
+    grid-area: label-start;
+  }
+  [part="label-end"] {
+    grid-area: label-end;
+  }
+  [part="input-start"] {
+    grid-area: input-start;
+  }
+  [part="input-end"] {
+    grid-area: input-end;
+  }
+  
+  [part="input-apply-button"] {
+    grid-area: apply-button;
+  }
+  `;
 
   initialize() {
     this.start = this.range?.start;

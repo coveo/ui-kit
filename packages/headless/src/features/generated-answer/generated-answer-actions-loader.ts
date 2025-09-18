@@ -1,6 +1,6 @@
 import type {PayloadAction} from '@reduxjs/toolkit';
 import type {CoreEngine} from '../../app/engine.js';
-import {resetAnswer} from './generated-answer-actions.js';
+import {generateAnswer, resetAnswer} from './generated-answer-actions.js';
 import {generatedAnswerReducer as generatedAnswer} from './generated-answer-slice.js';
 
 /**
@@ -10,6 +10,16 @@ import {generatedAnswerReducer as generatedAnswer} from './generated-answer-slic
  * @category GeneratedAnswer
  */
 export interface GeneratedAnswerActionCreators {
+  /**
+   * Generates a new answer using the Answer API.
+   *
+   * This action requires an answer configuration ID to be set in the engine configuration.
+   * When present, it will use the Answer API service for enhanced answer generation.
+   *
+   * @returns A dispatchable action.
+   */
+  generateAnswer(): void;
+
   /**
    * Resets the generated answer state to a clean slate.
    *
@@ -33,6 +43,7 @@ export function loadGeneratedAnswerActions(
   engine.addReducers({generatedAnswer});
 
   return {
+    generateAnswer,
     resetAnswer,
   };
 }

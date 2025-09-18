@@ -3,14 +3,23 @@
  */
 
 import type {Controller} from '../../../controllers/controller/headless-controller.js';
-import type {CommerceEngineDefinitionOptions} from '../factories/build-factory.js';
+import {defineCart} from '../controllers/cart/headless-cart.ssr.js';
+import {defineContext} from '../controllers/context/headless-context.ssr.js';
+import {defineParameterManager} from '../controllers/parameter-manager/headless-core-parameter-manager.ssr.js';
 import {hydratedStaticStateFactory} from '../factories/hydrated-state-factory.js';
 import {hydratedRecommendationStaticStateFactory} from '../factories/recommendation-hydrated-state-factory.js';
 import {fetchRecommendationStaticStateFactory} from '../factories/recommendation-static-state-factory.js';
 import {fetchStaticStateFactory} from '../factories/static-state-factory.js';
 import {SolutionType} from '../types/controller-constants.js';
-import type {ControllerDefinitionsMap} from '../types/controller-definitions.js';
-import type {CommerceEngineDefinition} from '../types/engine.js';
+import type {
+  AugmentedControllerDefinition,
+  ControllerDefinitionsMap,
+} from '../types/controller-definitions.js';
+import type {
+  CommerceEngineDefinition,
+  CommerceEngineDefinitionOptions,
+} from '../types/engine.js';
+import {validateControllerNames} from '../validation/controller-validation.js';
 
 /**
  * Initializes a Commerce engine definition in SSR with given controllers definitions and commerce engine config.
@@ -76,29 +85,40 @@ export function defineCommerceEngine<
 } {
   const {controllers: controllerDefinitions, ...engineOptions} = options;
 
+  const getOptions = () => engineOptions;
+
   const getAccessToken = () => engineOptions.configuration.accessToken;
 
   const setAccessToken = (accessToken: string) => {
     engineOptions.configuration.accessToken = accessToken;
   };
 
+  controllerDefinitions && validateControllerNames(controllerDefinitions);
+
+  const augmentedControllerDefinition = {
+    ...controllerDefinitions,
+    parameterManager: defineParameterManager(),
+    context: defineContext(),
+    cart: defineCart(),
+  } as AugmentedControllerDefinition<TControllerDefinitions>;
+
   const fetchStaticState = fetchStaticStateFactory<TControllerDefinitions>(
-    controllerDefinitions,
-    engineOptions
+    augmentedControllerDefinition,
+    getOptions()
   );
   const hydrateStaticState = hydratedStaticStateFactory<TControllerDefinitions>(
-    controllerDefinitions,
-    engineOptions
+    augmentedControllerDefinition,
+    getOptions()
   );
   const fetchRecommendationStaticState =
     fetchRecommendationStaticStateFactory<TControllerDefinitions>(
-      controllerDefinitions,
-      engineOptions
+      augmentedControllerDefinition,
+      getOptions()
     );
   const hydrateRecommendationStaticState =
     hydratedRecommendationStaticStateFactory<TControllerDefinitions>(
-      controllerDefinitions,
-      engineOptions
+      augmentedControllerDefinition,
+      getOptions()
     );
 
   const commonMethods = {
@@ -111,28 +131,22 @@ export function defineCommerceEngine<
       fetchStaticState: fetchStaticState(SolutionType.listing),
       hydrateStaticState: hydrateStaticState(SolutionType.listing),
       ...commonMethods,
-    } as CommerceEngineDefinition<TControllerDefinitions, SolutionType.listing>,
+    },
     searchEngineDefinition: {
       fetchStaticState: fetchStaticState(SolutionType.search),
       hydrateStaticState: hydrateStaticState(SolutionType.search),
       ...commonMethods,
-    } as CommerceEngineDefinition<TControllerDefinitions, SolutionType.search>,
+    },
     recommendationEngineDefinition: {
       fetchStaticState: fetchRecommendationStaticState,
       hydrateStaticState: hydrateRecommendationStaticState,
       ...commonMethods,
-    } as CommerceEngineDefinition<
-      TControllerDefinitions,
-      SolutionType.recommendation
-    >,
+    },
     // TODO KIT-3738 :  The standaloneEngineDefinition should not be async since no request is sent to the API
     standaloneEngineDefinition: {
       fetchStaticState: fetchStaticState(SolutionType.standalone),
       hydrateStaticState: hydrateStaticState(SolutionType.standalone),
       ...commonMethods,
-    } as CommerceEngineDefinition<
-      TControllerDefinitions,
-      SolutionType.standalone
-    >,
+    },
   };
 }

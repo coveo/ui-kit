@@ -1,7 +1,7 @@
 import type {Page} from 'playwright/test';
 import {expect, test} from './fixture';
 
-test.describe('AtomicCommerceSearchBoxQuerySuggestions', () => {
+test.describe('atomic-commerce-search-box-query-suggestions', () => {
   test.beforeEach(async ({commerceSearchBoxQuerySuggestions, page}) => {
     await commerceSearchBoxQuerySuggestions.load();
     await page.locator('atomic-commerce-search-box').waitFor();
@@ -9,7 +9,7 @@ test.describe('AtomicCommerceSearchBoxQuerySuggestions', () => {
 
   test('should be accessible', async ({makeAxeBuilder}) => {
     const accessibilityResults = await makeAxeBuilder().analyze();
-    expect(accessibilityResults.violations.length).toEqual(0);
+    expect(accessibilityResults.violations).toEqual([]);
   });
 
   test('when clicking a suggestion, it should hide the suggestions', async ({

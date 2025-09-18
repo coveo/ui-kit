@@ -1,12 +1,12 @@
 import {expect, test, triggerError} from './fixture';
 
-test.describe('AtomicCommerceQueryError', () => {
+test.describe('atomic-commerce-query-error', () => {
   test.beforeEach(async ({queryError}) => {
     await triggerError(queryError.page);
     await queryError.load();
   });
 
-  test('should be A11y compliant', async ({queryError, makeAxeBuilder}) => {
+  test('should be accessible', async ({queryError, makeAxeBuilder}) => {
     await queryError.hydrated.waitFor();
     const accessibilityResults = await makeAxeBuilder().analyze();
     expect(accessibilityResults.violations).toEqual([]);

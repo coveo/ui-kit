@@ -12,7 +12,7 @@ import {bindingGuard} from '@/src/decorators/binding-guard';
 import {bindings} from '@/src/decorators/bindings';
 import {errorGuard} from '@/src/decorators/error-guard';
 import type {LitElementWithError} from '@/src/decorators/types';
-import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles.js';
+import {LightDomMixin} from '@/src/mixins/light-dom';
 import {parseDate} from '@/src/utils/date-utils';
 import type {AnyBindings} from '../interface/bindings';
 
@@ -28,9 +28,8 @@ export type FacetDateInputEventDetails = Omit<DateRangeRequest, 'state'>;
  */
 @customElement('atomic-facet-date-input')
 @bindings()
-@withTailwindStyles
 export class AtomicFacetDateInput
-  extends LitElement
+  extends LightDomMixin(LitElement)
   implements LitElementWithError
 {
   @state() private start?: Date;
@@ -44,7 +43,7 @@ export class AtomicFacetDateInput
   @property() public facetId!: string;
   @property() public label!: string;
   @property() public min?: string;
-  @property() public max?: string;
+  @property() public max?: string = '9999-12-31';
 
   @state() error!: Error;
 
@@ -60,10 +59,6 @@ export class AtomicFacetDateInput
     this.end = this.inputRange
       ? parseDate(this.inputRange.end).toDate()
       : undefined;
-  }
-
-  createRenderRoot() {
-    return this;
   }
 
   /**

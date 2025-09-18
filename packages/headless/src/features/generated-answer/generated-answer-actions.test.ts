@@ -1,5 +1,6 @@
 import {buildMockCitation} from '../../test/mock-citation.js';
 import {
+  generateAnswer,
   registerFieldsToIncludeInCitations,
   setAnswerContentFormat,
   setIsEnabled,
@@ -14,6 +15,26 @@ import {
   type GeneratedContentFormat,
   generatedContentFormat,
 } from './generated-response-format.js';
+
+vi.mock('./generated-answer-request.js', () => ({
+  constructAnswerAPIQueryParams: vi.fn(() => ({
+    q: 'test query',
+    searchHub: 'default',
+    pipeline: 'default',
+    analytics: {
+      actionCause: 'searchboxSubmit',
+      clientId: 'test-client-id',
+    },
+  })),
+}));
+
+vi.mock('../../api/knowledge/stream-answer-api.js', () => ({
+  fetchAnswer: vi.fn(() => ({type: 'mocked/fetchAnswer'})),
+}));
+
+vi.mock('../search/search-actions.js', () => ({
+  updateSearchAction: vi.fn(() => ({type: 'search/updateSearchAction'})),
+}));
 
 describe('generated answer', () => {
   afterEach(() => {
@@ -106,5 +127,61 @@ describe('generated answer', () => {
         expect(() => setAnswerContentFormat(format)).not.toThrow();
       }
     );
+  });
+
+  describe('#generateAnswer', () => {
+    it('should dispatch setAnswerApiQueryParams with constructed parameters when answerConfigurationId is present', async () => {
+      const mockDispatch = vi.fn().mockImplementation((action) => {
+        if (typeof action === 'function') {
+          return Promise.resolve({type: 'mock/resolved'});
+        }
+        return action;
+      });
+
+      const mockGetState = vi.fn(() => ({
+        generatedAnswer: {
+          answerConfigurationId: 'test-config-id',
+        },
+      }));
+
+      const mockNavigatorContext = {};
+      const mockLogger = {warn: vi.fn()};
+      const mockExtra = {
+        navigatorContext: mockNavigatorContext,
+        logger: mockLogger,
+      };
+
+      const thunk = generateAnswer();
+      await thunk(mockDispatch, mockGetState, mockExtra);
+
+      const setAnswerApiQueryParamsCall = mockDispatch.mock.calls.find(
+        (call) => call[0]?.type === 'generatedAnswer/setAnswerApiQueryParams'
+      );
+      expect(setAnswerApiQueryParamsCall).toBeDefined();
+      expect(setAnswerApiQueryParamsCall[0].payload).toHaveProperty(
+        'q',
+        'test query'
+      );
+    });
+
+    it('should log warning when answerConfigurationId is missing', async () => {
+      const mockDispatch = vi.fn();
+      const mockGetState = vi.fn(() => ({
+        generatedAnswer: {
+          answerConfigurationId: undefined,
+        },
+      }));
+      const mockLogger = {warn: vi.fn()};
+      const mockExtra = {navigatorContext: {}, logger: mockLogger};
+
+      const thunk = generateAnswer();
+      await thunk(mockDispatch, mockGetState, mockExtra);
+
+      expect(mockLogger.warn).toHaveBeenCalledWith(
+        expect.stringContaining(
+          'Missing answerConfigurationId in engine configuration'
+        )
+      );
+    });
   });
 });

@@ -9,7 +9,7 @@ import {renderInAtomicCommerceInterface} from '@/vitest-utils/testing-helpers/fi
 import './atomic-facet-date-input';
 import {AtomicFacetDateInput} from './atomic-facet-date-input';
 
-describe('AtomicFacetDateInput', () => {
+describe('atomic-facet-date-input', () => {
   let consoleErrorSpy: MockInstance;
 
   const setupElement = async (
@@ -149,12 +149,12 @@ describe('AtomicFacetDateInput', () => {
     });
 
     const {start, end} = {
-      start: '2023{ArrowRight}01{ArrowRight}01',
-      end: '2023{ArrowRight}12{ArrowRight}31',
+      start: '2023-01-01',
+      end: '2023-12-31',
     };
 
-    await userEvent.type(startInput, start);
-    await userEvent.type(endInput, end);
+    await userEvent.fill(startInput, start);
+    await userEvent.fill(endInput, end);
     await userEvent.click(applyButton);
 
     expect(dateInputCallback).toHaveBeenCalled();

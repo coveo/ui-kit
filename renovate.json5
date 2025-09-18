@@ -128,13 +128,6 @@
       "matchPackageNames": ["/^@​salesforce/sfdx-lwc-jest$/"]
     },
     {
-      "groupName": "lightningcss",
-      "groupSlug": "lightningcss",
-      "rangeStrategy": "replace",
-      "description": "Isolate lightningcss",
-      "matchPackageNames": ["lightningcss"]
-    },
-    {
       "groupName": "biome",
       "groupSlug": "biome",
       "rangeStrategy": "replace",
@@ -171,16 +164,7 @@
     "gts",
     // Ignore storybook since it breaks because of stencil. We will update after migration.
     "@storybook/addon-a11y",
-    "@storybook/addon-essentials",
-    "@storybook/addon-interactions",
-    "@storybook/components",
-    "@storybook/core-events",
-    "@storybook/manager-api",
-    "@storybook/router",
-    "@storybook/test",
-    "@storybook/web-components",
     "@storybook/web-components-vite",
-    "@whitespace/storybook-addon-html",
     "storybook"
   ]
 }

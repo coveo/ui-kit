@@ -2,7 +2,7 @@
 import type {AtomicCommerceInterface} from '../atomic-commerce-interface';
 import {expect, test} from './fixture';
 
-test.describe('AtomicCommerceInterface', () => {
+test.describe('atomic-commerce-interface', () => {
   test.describe('when search has not been initialized', () => {
     test.beforeEach(async ({commerceInterface}) => {
       await commerceInterface.load({
@@ -136,11 +136,11 @@ test.describe('AtomicCommerceInterface', () => {
           expect(currentUrl).toContain('Nike');
         });
       });
-      test.describe('when reflectStateInUrl is false', () => {
+      test.describe('when disable-state-reflection-in-url is true', () => {
         test('should not update the url', async ({page, commerceInterface}) => {
           await commerceInterface.load({
             story: 'with-product-list',
-            args: {reflectStateInUrl: false},
+            args: {'disable-state-reflection-in-url': true},
           });
 
           const facetValueLabel = commerceInterface.getFacetValue('Nike');

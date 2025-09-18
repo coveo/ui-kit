@@ -6,9 +6,9 @@ test.describe('before query is loaded', () => {
     await recsList.hydrated.waitFor();
   });
 
-  test('should be a11y compliant', async ({makeAxeBuilder}) => {
+  test('should be accessible', async ({makeAxeBuilder}) => {
     const accessibilityResults = await makeAxeBuilder().analyze();
-    expect(accessibilityResults.violations.length).toEqual(0);
+    expect(accessibilityResults.violations).toEqual([]);
   });
 
   test('should have placeholders', async ({recsList}) => {
@@ -22,9 +22,9 @@ test.describe('after query is loaded', () => {
     await recsList.hydrated.waitFor();
   });
 
-  test('should be a11y compliant', async ({makeAxeBuilder}) => {
+  test('should be accessible', async ({makeAxeBuilder}) => {
     const accessibilityResults = await makeAxeBuilder().analyze();
-    expect(accessibilityResults.violations.length).toEqual(0);
+    expect(accessibilityResults.violations).toEqual([]);
   });
 
   test('should have recommendations', async ({recsList}) => {
@@ -38,9 +38,9 @@ test.describe('with a full result template', () => {
     await recsList.hydrated.waitFor();
   });
 
-  test('should be a11y compliant', async ({makeAxeBuilder}) => {
+  test('should be accessible', async ({makeAxeBuilder}) => {
     const accessibilityResults = await makeAxeBuilder().analyze();
-    expect(accessibilityResults.violations.length).toEqual(0);
+    expect(accessibilityResults.violations).toEqual([]);
   });
 
   test('should have recommendations', async ({recsList}) => {
@@ -54,9 +54,9 @@ test.describe('with a carousel', () => {
     await recsList.hydrated.waitFor();
   });
 
-  test('should be a11y compliant', async ({makeAxeBuilder}) => {
+  test('should be accessible', async ({makeAxeBuilder}) => {
     const accessibilityResults = await makeAxeBuilder().analyze();
-    expect(accessibilityResults.violations.length).toEqual(0);
+    expect(accessibilityResults.violations).toEqual([]);
   });
 
   test('should have recommendations', async ({recsList}) => {

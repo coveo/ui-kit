@@ -1,6 +1,6 @@
 import {expect, test} from './fixture';
 
-test.describe('default', () => {
+test.describe('atomic-product-link', () => {
   test.beforeEach(async ({productLink}) => {
     await productLink.load();
     await productLink.hydrated.first().waitFor({state: 'visible'});
@@ -8,7 +8,7 @@ test.describe('default', () => {
 
   test('should be accessible', async ({makeAxeBuilder}) => {
     const accessibilityResults = await makeAxeBuilder().analyze();
-    expect(accessibilityResults.violations.length).toEqual(0);
+    expect(accessibilityResults.violations).toEqual([]);
   });
 
   test('should render as links', async ({productLink, page}) => {
