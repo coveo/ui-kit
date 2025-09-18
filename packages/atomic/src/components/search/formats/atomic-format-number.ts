@@ -1,52 +1,66 @@
-import {Component, Element, Prop, State, h} from '@stencil/core';
+import {html, LitElement, nothing} from 'lit';
+import {customElement, property, state} from 'lit/decorators.js';
 import {
   dispatchNumberFormatEvent,
-  NumberFormatter,
+  type NumberFormatter,
 } from '../../common/formats/format-common';
+import '../../common/atomic-component-error/atomic-component-error';
 
 /**
  * The `atomic-format-number` component is used for number formatting.
  * The numerical format of compatible parents will be set according to the properties of this component.
  */
-@Component({
-  tag: 'atomic-format-number',
-  shadow: true,
-})
-export class AtomicFormatNumber {
-  @Element() private host!: HTMLElement;
-
-  @State() public error!: Error;
+@customElement('atomic-format-number')
+export class AtomicFormatNumber extends LitElement {
+  @state() public error!: Error;
 
   /**
    * The minimum number of integer digits to use.
    */
-  @Prop({reflect: true}) public minimumIntegerDigits?: number;
+  @property({type: Number, reflect: true})
+  public minimumIntegerDigits?: number;
+
   /**
    * The minimum number of fraction digits to use.
    */
-  @Prop({reflect: true}) public minimumFractionDigits?: number;
+  @property({type: Number, reflect: true})
+  public minimumFractionDigits?: number;
+
   /**
    * The maximum number of fraction digits to use.
    */
-  @Prop({reflect: true}) public maximumFractionDigits?: number;
+  @property({type: Number, reflect: true})
+  public maximumFractionDigits?: number;
+
   /**
    * The minimum number of significant digits to use.
    */
-  @Prop({reflect: true}) public minimumSignificantDigits?: number;
+  @property({type: Number, reflect: true})
+  public minimumSignificantDigits?: number;
+
   /**
    * The maximum number of significant digits to use.
    */
-  @Prop({reflect: true}) public maximumSignificantDigits?: number;
+  @property({type: Number, reflect: true})
+  public maximumSignificantDigits?: number;
 
-  componentWillLoad() {
+  connectedCallback() {
+    super.connectedCallback();
     try {
       dispatchNumberFormatEvent(
         (value, languages) => this.format(value, languages),
-        this.host
+        this
       );
     } catch (error) {
       this.error = error as Error;
     }
+  }
+
+  render() {
+    if (this.error) {
+      return html`<atomic-component-error .element=${this} .error=${this.error}></atomic-component-error>`;
+    }
+    return nothing;
   }
 
   private format: NumberFormatter = (value, languages) => {
@@ -58,15 +72,10 @@ export class AtomicFormatNumber {
       maximumSignificantDigits: this.maximumSignificantDigits,
     });
   };
+}
 
-  public render() {
-    if (this.error) {
-      return (
-        <atomic-component-error
-          element={this.host}
-          error={this.error}
-        ></atomic-component-error>
-      );
-    }
+declare global {
+  interface HTMLElementTagNameMap {
+    'atomic-format-number': AtomicFormatNumber;
   }
 }

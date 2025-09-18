@@ -45,21 +45,21 @@ const meta: Meta = {
 
 export default meta;
 
-export const Facet: Story = {
-  name: 'Within Numeric Facet',
-  decorators: [
-    (story) => html`
-      <atomic-numeric-facet field="size"> ${story()} </atomic-numeric-facet>
-    `,
-  ],
-};
-
-export const Result: Story = {
+export const Default: Story = {
   name: 'Within Numeric Result',
   decorators: [
     (story) => html`
       <atomic-result-number field="size"> ${story()} </atomic-result-number>
     `,
     resultDecorator,
+  ],
+};
+
+export const Facet: Story = {
+  name: 'Within Numeric Facet',
+  decorators: [
+    (story) => html`
+      <atomic-numeric-facet field="size"> ${story()} </atomic-numeric-facet>
+    `,
   ],
 };
