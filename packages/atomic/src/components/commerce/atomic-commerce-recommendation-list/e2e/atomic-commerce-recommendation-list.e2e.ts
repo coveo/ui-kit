@@ -1,6 +1,6 @@
 import {expect, test} from './fixture';
 
-test.describe('AtomicCommerceRecommendationList', () => {
+test.describe('atomic-commerce-recommendation-list', () => {
   test.beforeEach(async ({recommendationList}) => {
     await recommendationList.load();
     await recommendationList.hydrated.waitFor();

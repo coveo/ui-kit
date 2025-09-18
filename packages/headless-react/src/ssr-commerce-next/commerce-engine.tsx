@@ -1,28 +1,28 @@
 import {
+  type AugmentedControllerDefinition,
   type CommerceEngine,
   type CommerceEngineDefinitionOptions,
-  type CommerceEngineOptions,
   type Controller,
   type ControllerDefinitionsMap,
   defineCommerceEngine as defineBaseCommerceEngine,
+  defineCart,
+  defineContext,
+  defineParameterManager,
   SolutionType,
-} from '@coveo/headless/ssr-commerce';
+} from '@coveo/headless/ssr-commerce-next';
 // Workaround to prevent Next.js erroring about importing CSR only hooks
 import React from 'react';
 import {type SingletonGetter, singleton} from '../utils.js';
 import {
   buildControllerHooks,
   buildEngineHook,
-  buildHydratedStateProvider,
   buildStateProvider,
-  buildStaticStateProvider,
 } from './common.js';
 import type {
   ContextState,
   InferControllerHooksMapFromDefinition,
   ReactEngineDefinition,
 } from './types.js';
-
 /**
  * A React engine definition that includes context providers for static and hydrated states.
  *
@@ -31,7 +31,7 @@ import type {
 export type ReactCommerceEngineDefinition<
   TControllers extends ControllerDefinitionsMap<Controller>,
   TSolutionType extends SolutionType,
-> = ReactEngineDefinition<TControllers, CommerceEngineOptions, TSolutionType>;
+> = ReactEngineDefinition<TControllers, TSolutionType>;
 
 // TODO: remove hack: KIT-5009
 // Wrapper to workaround the limitation that `createContext()` cannot be called directly during SSR in next.js
@@ -57,7 +57,9 @@ export function defineCommerceEngine<
   options: CommerceEngineDefinitionOptions<TControllers>
 ): {
   useEngine: () => CommerceEngine | undefined;
-  controllers: InferControllerHooksMapFromDefinition<TControllers>;
+  controllers: InferControllerHooksMapFromDefinition<
+    AugmentedControllerDefinition<TControllers>
+  >;
   listingEngineDefinition: ReactCommerceEngineDefinition<
     TControllers,
     SolutionType.listing
@@ -91,21 +93,22 @@ export function defineCommerceEngine<
     standaloneEngineDefinition,
     recommendationEngineDefinition,
   } = defineBaseCommerceEngine({...options});
+
+  const augmentedControllerDefinition = {
+    ...options.controllers,
+    parameterManager: defineParameterManager(),
+    context: defineContext(),
+    cart: defineCart(),
+  } as AugmentedControllerDefinition<TControllers>;
+
   return {
     useEngine: buildEngineHook(singletonContext),
-    controllers: buildControllerHooks(singletonContext, options.controllers),
+    controllers: buildControllerHooks(
+      singletonContext,
+      augmentedControllerDefinition
+    ),
     listingEngineDefinition: {
       ...listingEngineDefinition,
-      StaticStateProvider: buildStaticStateProvider(
-        singletonContext as ListingContext,
-        SolutionType.listing
-      ),
-
-      HydratedStateProvider: buildHydratedStateProvider(
-        singletonContext as ListingContext,
-        SolutionType.listing
-      ),
-
       StateProvider: buildStateProvider(
         singletonContext as ListingContext,
         SolutionType.listing
@@ -113,14 +116,6 @@ export function defineCommerceEngine<
     },
     searchEngineDefinition: {
       ...searchEngineDefinition,
-      StaticStateProvider: buildStaticStateProvider(
-        singletonContext as SearchContext,
-        SolutionType.search
-      ),
-      HydratedStateProvider: buildHydratedStateProvider(
-        singletonContext as SearchContext,
-        SolutionType.search
-      ),
       StateProvider: buildStateProvider(
         singletonContext as SearchContext,
         SolutionType.search
@@ -128,14 +123,6 @@ export function defineCommerceEngine<
     },
     standaloneEngineDefinition: {
       ...standaloneEngineDefinition,
-      StaticStateProvider: buildStaticStateProvider(
-        singletonContext as StandaloneContext,
-        SolutionType.standalone
-      ),
-      HydratedStateProvider: buildHydratedStateProvider(
-        singletonContext as StandaloneContext,
-        SolutionType.standalone
-      ),
       StateProvider: buildStateProvider(
         singletonContext as StandaloneContext,
         SolutionType.standalone
@@ -143,14 +130,6 @@ export function defineCommerceEngine<
     },
     recommendationEngineDefinition: {
       ...recommendationEngineDefinition,
-      StaticStateProvider: buildStaticStateProvider(
-        singletonContext as RecommendationContext,
-        SolutionType.recommendation
-      ),
-      HydratedStateProvider: buildHydratedStateProvider(
-        singletonContext as RecommendationContext,
-        SolutionType.recommendation
-      ),
       StateProvider: buildStateProvider(
         singletonContext as RecommendationContext,
         SolutionType.recommendation

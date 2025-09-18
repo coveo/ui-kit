@@ -1,6 +1,6 @@
-import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles.js';
-import {type CSSResultGroup, css, html} from 'lit';
+import {css, html, LitElement} from 'lit';
 import {customElement, property} from 'lit/decorators.js';
+import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles.js';
 
 /**
 * The `{{name}}` component displays a simple greeting message.
@@ -16,7 +16,7 @@ export class {{namePascalCase}} extends LitElement {
   /**
    * The name of the entity to greet.
    */
-  @property() name = 'World';
+  @property({type: String}) name: string = 'World';
 
   render() {
     return html`<div>
