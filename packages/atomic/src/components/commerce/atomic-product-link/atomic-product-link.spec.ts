@@ -223,9 +223,9 @@ describe('atomic-product-link', () => {
 
   it('should call #select when link is clicked', async () => {
     const {link, element} = await renderProductLink();
-
-    await link?.click();
-    expect(element.interactiveProduct?.select).toHaveBeenCalled();
+    const select = vi.spyOn(element.interactiveProduct!, 'select');
+    await link?.click({modifiers: ['ControlOrMeta']});
+    expect(select).toHaveBeenCalled();
   });
 
   it('should call #beginDelayedSelect on touchstart', async () => {
