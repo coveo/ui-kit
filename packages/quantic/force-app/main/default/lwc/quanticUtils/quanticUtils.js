@@ -93,11 +93,11 @@ export class Deferred {
 export class ResultUtils {
   /**
    * Binds the logging of document
-   * @returns An unbind function for the events
    * @param {import("coveo").SearchEngine} engine An instance of an Headless Engine
    * @param {import("coveo").Result} result The result object
    * @param {import("lwc").ShadowRootTheGoodPart} resultElement Parent result element
    * @param {string} selector Optional. Css selector that selects all links to the document. Default: "a" tags with the clickUri as "href" parameter.
+   * @returns An unbind function for the events
    */
   static bindClickEventsOnResult(
     engine,
@@ -140,9 +140,9 @@ export class ResultUtils {
 export class LinkUtils {
   /**
    * Binds the logging of a link
-   * @returns An unbind function for the events
    * @param {HTMLAnchorElement} link the link element
    * @param {{select:function, beginDelayedSelect: function, cancelPendingSelect: function  }} actions
+   * @returns An unbind function for the events
    */
   static bindAnalyticsToLink(link, actions) {
     const eventsMap = {
@@ -178,6 +178,13 @@ export class I18nUtils {
     return new Intl.PluralRules(LOCALE).select(count) === 'one';
   }
 
+  /**
+   * Gets the label name with count.
+   * @param {string} labelName
+   * @param {number} count
+   * @returns {string} The label name with count.
+   * @example `labelName_zero`, `labelName_plural` or `labelName`
+   */
   static getLabelNameWithCount(labelName, count) {
     if (count === 0) {
       return `${labelName}_zero`;
@@ -187,6 +194,15 @@ export class I18nUtils {
     return labelName;
   }
 
+  /**
+   * Formats a string with the given arguments.
+   * @param {*} stringToFormat
+   * @param  {...any} formattingArguments
+   * @returns {string} The formatted string.
+   * @example
+   * I18nUtils.format('Hello {{0}}, you have {{1}} new messages', 'John', 5);
+   * returns 'Hello John, you have 5 new messages'
+   */
   static format(stringToFormat, ...formattingArguments) {
     if (typeof stringToFormat !== 'string')
       throw new Error("'stringToFormat' must be a String");
@@ -197,6 +213,11 @@ export class I18nUtils {
     );
   }
 
+  /**
+   * Gets the short date pattern for the current locale.
+   * @returns {string} The short date pattern.
+   * @example `M/d/yyyy` for `en-US`, `d/M/yyyy` for `fr-FR`, etc.
+   */
   static getShortDatePattern() {
     const date = new Date(2000, 2, 4); // month is zero-based
     const dateAsString = I18nUtils.formatDate(date);
@@ -215,11 +236,13 @@ export class I18nUtils {
   }
 
   /**
+   * Formats the date in the current locale.
    * @param {Date} date
+   * @returns {string} The formatted date.
    */
   static formatDate(date) {
-    const result = new Intl.DateTimeFormat(LOCALE).format(date);
-    return result;
+    const formattedDate = new Intl.DateTimeFormat(LOCALE).format(date);
+    return formattedDate;
   }
 
   /**
@@ -227,7 +250,7 @@ export class I18nUtils {
    * @returns {string}
    */
   static escapeHTML(html) {
-    var escape = document.createElement('textarea');
+    const escape = document.createElement('textarea');
     escape.textContent = html;
     // eslint-disable-next-line @lwc/lwc/no-inner-html
     return escape.innerHTML;
@@ -259,11 +282,16 @@ export function setItemInLocalStorage(key, item) {
 /**
  * Replace char found in pattern with \\$&
  * @param {string} value
+ * @return {string}
  */
 export function regexEncode(value) {
   return value.replace(/[-[\]/{}()*+?.\\^$|]/g, '\\$&');
 }
-
+/**
+ * Parses an XML string into a DOM Document.
+ * @param {string} string
+ * @returns {Document}
+ */
 export function parseXML(string) {
   return new window.DOMParser().parseFromString(string, 'text/xml');
 }
@@ -418,6 +446,11 @@ export class DateUtils {
     return new Date(`${withoutTime}T${time}`);
   }
 
+  /**
+   * Trims the time portion from an ISO 8601 date string.
+   * @param {string} dateString
+   * @returns {string}
+   */
   static trimIsoTime(dateString) {
     const timeIdx = dateString.indexOf('T');
     return timeIdx !== -1 ? dateString.substring(0, timeIdx) : dateString;
@@ -425,6 +458,7 @@ export class DateUtils {
 
   /**
    * @param {number} timestamp
+   * @returns {boolean}
    */
   static isValidTimestamp(timestamp) {
     let isValid = true;
@@ -439,8 +473,6 @@ export class DateUtils {
 
   /**
    * Parses a given timestamp into detailed date components.
-   *
-   * @function
    * @param {number} timestamp - The timestamp in milliseconds since January 1, 1970 (epoch time).
    * @returns {Object} An object containing the following date details:
    *   - {number} year - The four-digit year (e.g., 2024).
@@ -519,10 +551,14 @@ export class RelativeDateFormatter {
   }
 
   /**
-   *
-   * @param {RelativeDate} begin
-   * @param {RelativeDate} end
-   * @returns {string}
+   * Formats a relative date range into a human-readable string.
+   * @param {RelativeDate} begin The beginning of the relative date range.
+   * @param {RelativeDate} end The end of the relative date range.
+   * @returns {string} The formatted human-readable date range.
+   * @example
+   * begin = { period: 'past', unit: 'day', amount: 2 };
+   * end = { period: 'now', unit: 'day', amount: 1 };
+   * Output: "2 days ago - 1 day ago"
    */
   formatRange(begin, end) {
     const isPastRange = begin.period === 'past' && end.period === 'now';
@@ -565,9 +601,11 @@ export class Store {
     };
   }
   /**
+   * Registers a facet to the store if it does not already exist.
    * @param {Record<String, unknown>} store
    * @param {string} facetType
    * @param {{ label?: string; facetId: any; format?: Function;}} data
+   * @return {void}
    */
   static registerFacetToStore(store, facetType, data) {
     if (store?.state[facetType][data.facetId]) {
@@ -577,23 +615,29 @@ export class Store {
   }
 
   /**
+   * Registers sort option data to the store.
    * @param {Record<String, any>} store
    * @param {Array<{label: string; value: string; criterion: SortCriterion;}>} data
+   * @return {void}
    */
   static registerSortOptionDataToStore(store, data) {
     store.state.sort = data;
   }
 
   /**
+   * Gets facet data from the store.
    * @param {Record<String, unknown>} store
    * @param {string} facetType
+   * @return {Object} The facet data.
    */
   static getFromStore(store, facetType) {
     return store.state[facetType];
   }
 
   /**
+   * Gets sort options from the store.
    * @param {Record<String, Object>} store
+   * @return {Array} The sort options.
    */
   static getSortOptionsFromStore(store) {
     return store.state.sort;
@@ -763,6 +807,7 @@ export function isCustomElement(element) {
 /**
  * Returns the last focusable element in an HTML slot.
  * @param {HTMLElement & {assignedElements?: () => Array<HTMLElement> | null}} slotElement
+ * @returns {HTMLElement | null}
  */
 function getLastFocusableElementFromSlot(slotElement) {
   if (!slotElement && slotElement.assignedElements) {
@@ -782,6 +827,7 @@ function getLastFocusableElementFromSlot(slotElement) {
 /**
  * Returns the first focusable element in an HTML slot.
  * @param {HTMLElement & {assignedElements?: () => Array<HTMLElement> | null}} slotElement
+ * @return {HTMLElement | null}
  */
 function getFirstFocusableElementFromSlot(slotElement) {
   if (!slotElement && slotElement.assignedElements) {
@@ -802,6 +848,7 @@ function getFirstFocusableElementFromSlot(slotElement) {
  * Checks whether an element is indeed the targetElement or one of its parents.
  * @param {HTMLElement} element
  * @param {string} targetElement
+ * @returns {boolean}
  */
 export function isParentOf(element, targetElement) {
   if (!element || element.nodeType === Node.TEXT_NODE) {
@@ -827,6 +874,7 @@ export function isParentOf(element, targetElement) {
  * Copies text to clipboard using the Clipboard API.
  * https://developer.mozilla.org/en-US/docs/Web/API/Clipboard
  * @param {string} text
+ * @return {Promise<void>}
  */
 export async function copyToClipboard(text) {
   try {
@@ -839,6 +887,7 @@ export async function copyToClipboard(text) {
 /**
  * Copies text to clipboard using the DOM.
  * @param {string} text
+ * @return {void}
  */
 export function copyToClipboardFallback(text) {
   const el = document.createElement('textarea');
@@ -853,6 +902,7 @@ export function copyToClipboardFallback(text) {
  * Read the value of a given key from an object.
  * @param {object} object
  * @param {string} key
+ * @return {object | undefined} The value of the key.
  */
 export function readFromObject(object, key) {
   const firstPeriodIndex = key.indexOf('.');
@@ -898,9 +948,9 @@ export function getElementPadding(element) {
 }
 
 /**
- * Returns the absolute width of an element.
+ * Returns the absolute height of an element.
  * @param {Element} element
- * @returns {number}
+ * @returns {number} The absolute height of the element including padding.
  */
 export function getAbsoluteHeight(element) {
   if (!element) {
@@ -916,7 +966,7 @@ export function getAbsoluteHeight(element) {
 /**
  * Returns the absolute width of an element.
  * @param {Element} element
- * @returns {number}
+ * @returns {number} The absolute width of the element including padding.
  */
 export function getAbsoluteWidth(element) {
   if (!element) {
