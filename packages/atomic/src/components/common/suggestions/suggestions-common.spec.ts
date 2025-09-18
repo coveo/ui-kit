@@ -52,14 +52,24 @@ describe('suggestions-common', () => {
       expect(elementHasNoQuery(element)).toBe(false);
     });
 
-    it('should return false when element has whitespace-only query', () => {
+    it('should return true when element has whitespace-only query', () => {
       const element: SearchBoxSuggestionElement = {
         key: 'test-key',
         content: document.createElement('div'),
         query: '   ',
       };
 
-      expect(elementHasNoQuery(element)).toBe(false);
+      expect(elementHasNoQuery(element)).toBe(true);
+    });
+
+    it('should return true when element has tab and newline characters', () => {
+      const element: SearchBoxSuggestionElement = {
+        key: 'test-key',
+        content: document.createElement('div'),
+        query: '\t\n  \r',
+      };
+
+      expect(elementHasNoQuery(element)).toBe(true);
     });
   });
 
@@ -103,11 +113,31 @@ describe('suggestions-common', () => {
       expect(elementHasQuery(element)).toBe(true);
     });
 
-    it('should return true when element has whitespace-only query', () => {
+    it('should return false when element has whitespace-only query', () => {
       const element: SearchBoxSuggestionElement = {
         key: 'test-key',
         content: document.createElement('div'),
         query: '   ',
+      };
+
+      expect(elementHasQuery(element)).toBe(false);
+    });
+
+    it('should return false when element has tab and newline characters', () => {
+      const element: SearchBoxSuggestionElement = {
+        key: 'test-key',
+        content: document.createElement('div'),
+        query: '\t\n  \r',
+      };
+
+      expect(elementHasQuery(element)).toBe(false);
+    });
+
+    it('should return true when element has query with leading/trailing whitespace', () => {
+      const element: SearchBoxSuggestionElement = {
+        key: 'test-key',
+        content: document.createElement('div'),
+        query: '  search query  ',
       };
 
       expect(elementHasQuery(element)).toBe(true);
