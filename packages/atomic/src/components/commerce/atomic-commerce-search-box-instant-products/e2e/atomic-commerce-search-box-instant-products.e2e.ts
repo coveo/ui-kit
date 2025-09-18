@@ -1,6 +1,6 @@
 import {expect, test} from './fixture';
 
-test.describe('default', () => {
+test.describe('atomic-commerce-search-box-instant-products', () => {
   test.beforeEach(async ({instantProduct, searchBox}) => {
     await instantProduct.load();
     await searchBox.hydrated.waitFor();

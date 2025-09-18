@@ -34,7 +34,7 @@ jobs:
         with:
           node-version-file: ".nvmrc"
       - name: Install npm
-        run: npm i -g npm@11.4.2
+        run: npm i -g npm@11.6.0
         shell: bash
       - run: npm ci
       - run: npm run pr:report
@@ -61,7 +61,7 @@ jobs:
           registry-url: "https://registry.npmjs.org"
           node-version-file: ".nvmrc"
       - name: Install npm
-        run: npm i -g npm@11.4.2
+        run: npm i -g npm@11.6.0
         shell: bash
       - name: Install dependencies
         run: npm ci
@@ -642,7 +642,7 @@ jobs:
           registry-url: "https://registry.npmjs.org"
           node-version-file: ".nvmrc"
       - name: Install npm
-        run: npm i -g npm@11.4.2
+        run: npm i -g npm@11.6.0
         shell: bash
       - run: npm ci
         shell: bash
@@ -675,7 +675,7 @@ jobs:
           registry-url: "https://registry.npmjs.org"
           node-version-file: ".nvmrc"
       - name: Install npm
-        run: npm i -g npm@11.4.2
+        run: npm i -g npm@11.6.0
         shell: bash
       - run: npm ci
         shell: bash
@@ -811,7 +811,7 @@ jobs:
           registry-url: "https://registry.npmjs.org"
           node-version-file: ".nvmrc"
       - name: Install npm
-        run: npm i -g npm@11.4.2
+        run: npm i -g npm@11.6.0
         shell: bash
       - run: npm ci
         shell: bash
@@ -843,7 +843,7 @@ jobs:
           registry-url: "https://registry.npmjs.org"
           node-version-file: ".nvmrc"
       - name: Install npm
-        run: npm i -g npm@11.4.2
+        run: npm i -g npm@11.6.0
         shell: bash
       - run: npm ci
         shell: bash

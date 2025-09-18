@@ -19,7 +19,7 @@ import {AtomicCommerceSearchBoxQuerySuggestions} from './atomic-commerce-search-
 
 vi.mock('@coveo/headless/commerce', {spy: true});
 
-describe('AtomicCommerceSearchBoxQuerySuggestions', () => {
+describe('atomic-commerce-search-box-query-suggestions', () => {
   beforeEach(() => {
     vi.mocked(loadQuerySuggestActions).mockReturnValue(
       buildFakeLoadQuerySuggestActions()

@@ -23,6 +23,19 @@ describe('booleanConverter', () => {
     }
   }
 
+  @customElement('test-element-with-default-true')
+  class TestElementWithDefaultTrue extends LitElement {
+    @property({
+      converter: booleanConverter,
+      type: Boolean,
+    })
+    value = true;
+
+    render() {
+      return html`<div>${this.value}</div>`;
+    }
+  }
+
   it('should convert "true" to true', async () => {
     await fixture<TestElement>(
       html`<test-element value="true"></test-element>`
@@ -71,5 +84,19 @@ describe('booleanConverter', () => {
     expect(consoleWarnSpy).toHaveBeenCalledWith(
       'Using `value="false"` for a boolean attribute is not compliant with HTML standards (see https://html.spec.whatwg.org/#boolean-attributes). This behavior will not be supported in Atomic v4. To set a boolean attribute to false, omit the attribute instead.'
     );
+  });
+
+  it('an omitted attribute should convert to false when default is false', async () => {
+    await fixture<TestElement>(html`<test-element></test-element>`);
+
+    await expect.element(page.getByText('false')).toBeInTheDocument();
+  });
+
+  it('an omitted attribute should convert to true when default is true', async () => {
+    await fixture<TestElementWithDefaultTrue>(
+      html`<test-element-with-default-true></test-element-with-default-true>`
+    );
+
+    await expect.element(page.getByText('true')).toBeInTheDocument();
   });
 });

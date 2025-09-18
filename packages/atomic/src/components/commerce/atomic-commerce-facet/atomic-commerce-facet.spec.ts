@@ -18,7 +18,7 @@ import './atomic-commerce-facet';
 
 vi.mock('@coveo/headless/commerce', {spy: true});
 
-describe('AtomicCommerceFacet', () => {
+describe('atomic-commerce-facet', () => {
   let mockedSummary: Summary;
   let mockedFacet: RegularFacet;
   let mockedConsoleError: MockInstance;

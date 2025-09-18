@@ -26,31 +26,25 @@ export interface SetAttachedResultsActionCreatorPayload {
   loading?: boolean;
 }
 
-interface SetAttachToCaseAttachActionCreatorPayload {
-  result: AttachedResult;
-}
-
-interface SetAttachToCaseDetachActionCreatorPayload {
-  result: AttachedResult;
-}
+const attachedResultPayloadDefinition = {
+  articleLanguage: nonEmptyString,
+  articlePublishStatus: nonEmptyString,
+  articleVersionNumber: nonEmptyString,
+  caseId: requiredNonEmptyString,
+  knowledgeArticleId: nonEmptyString,
+  name: nonEmptyString,
+  permanentId: nonEmptyString,
+  resultUrl: nonEmptyString,
+  source: nonEmptyString,
+  title: requiredNonEmptyString,
+  uriHash: nonEmptyString,
+};
 
 const RequiredAttachedResultRecord = new RecordValue({
   options: {
     required: true,
   },
-  values: {
-    articleLanguage: nonEmptyString,
-    articlePublishStatus: nonEmptyString,
-    articleVersionNumber: nonEmptyString,
-    caseId: requiredNonEmptyString,
-    knowledgeArticleId: nonEmptyString,
-    name: nonEmptyString,
-    permanentId: nonEmptyString,
-    resultUrl: nonEmptyString,
-    source: nonEmptyString,
-    title: requiredNonEmptyString,
-    uriHash: nonEmptyString,
-  },
+  values: attachedResultPayloadDefinition,
 });
 
 export const setAttachedResults = createAction(
@@ -69,24 +63,18 @@ export const setAttachedResults = createAction(
 
 export const attachResult = createAction(
   'insight/attachToCase/attach',
-  (payload: SetAttachToCaseAttachActionCreatorPayload) =>
-    validatePayloadAndPermanentIdOrUriHash(payload)
+  (payload: AttachedResult) => validatePayloadAndPermanentIdOrUriHash(payload)
 );
 
 export const detachResult = createAction(
   'insight/attachToCase/detach',
-  (payload: SetAttachToCaseDetachActionCreatorPayload) =>
-    validatePayloadAndPermanentIdOrUriHash(payload)
+  (payload: AttachedResult) => validatePayloadAndPermanentIdOrUriHash(payload)
 );
 
-const validatePayloadAndPermanentIdOrUriHash = (
-  payload:
-    | SetAttachToCaseAttachActionCreatorPayload
-    | SetAttachToCaseDetachActionCreatorPayload
-) => {
+const validatePayloadAndPermanentIdOrUriHash = (payload: AttachedResult) => {
   if (
-    isNullOrUndefined(payload.result.permanentId) &&
-    isNullOrUndefined(payload.result.uriHash)
+    isNullOrUndefined(payload.permanentId) &&
+    isNullOrUndefined(payload.uriHash)
   ) {
     return {
       payload,
@@ -97,7 +85,5 @@ const validatePayloadAndPermanentIdOrUriHash = (
       ),
     };
   }
-  return validatePayload(payload, {
-    result: RequiredAttachedResultRecord,
-  });
+  return validatePayload(payload, attachedResultPayloadDefinition);
 };

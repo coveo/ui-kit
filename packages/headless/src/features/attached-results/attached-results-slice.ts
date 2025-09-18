@@ -28,15 +28,15 @@ export const attachedResultsReducer = createReducer(
       })
       .addCase(attachResult, (state, action) => {
         if (
-          !isNullOrUndefined(action.payload.result.permanentId) ||
-          !isNullOrUndefined(action.payload.result.uriHash)
+          !isNullOrUndefined(action.payload.permanentId) ||
+          !isNullOrUndefined(action.payload.uriHash)
         ) {
-          state.results = [...state.results, action.payload.result];
+          state.results = [...state.results, action.payload];
         }
       })
       .addCase(detachResult, (state, action) => {
         state.results = state.results.filter((result) =>
-          attachedResultsMatchIds(result, action.payload.result)
+          attachedResultsMatchIds(result, action.payload)
         );
       });
   }

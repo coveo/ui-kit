@@ -1,3 +1,23 @@
+## <small>3.30.2 (2025-09-18)</small>
+
+* [Version Bump][skip ci]: ui-kit publish ([a3fb13e](https://github.com/coveo/ui-kit/commits/a3fb13e))
+* chore: sync-up arborist & npm, add missing vitest.config.js, add missing eslint-parser (#6048) ([7e9ce3b](https://github.com/coveo/ui-kit/commits/7e9ce3b)), closes [#6048](https://github.com/coveo/ui-kit/issues/6048)
+
+
+
+## <small>3.30.1 (2025-09-17)</small>
+
+* chore: sync-up arborist & npm, add missing vitest.config.js, add missing eslint-parser (#6048) ([7e9ce3b](https://github.com/coveo/ui-kit/commits/7e9ce3b)), closes [#6048](https://github.com/coveo/ui-kit/issues/6048)
+
+
+
+## 3.30.0 (2025-09-17)
+
+* fix(quantic): issue with answer api caching state in redux RTK (#5887) ([8c9d1c5](https://github.com/coveo/ui-kit/commits/8c9d1c5)), closes [#5887](https://github.com/coveo/ui-kit/issues/5887)
+* feat(quantic): Add an examplePageViewTracker with unit tests (#5973) ([dacf921](https://github.com/coveo/ui-kit/commits/dacf921)), closes [#5973](https://github.com/coveo/ui-kit/issues/5973)
+
+
+
 ## <small>3.29.5 (2025-08-27)</small>
 
 * test(quantic): added tests for generated answer component with the answer API (#5803) ([b99fbdf](https://github.com/coveo/ui-kit/commits/b99fbdf)), closes [#5803](https://github.com/coveo/ui-kit/issues/5803)
