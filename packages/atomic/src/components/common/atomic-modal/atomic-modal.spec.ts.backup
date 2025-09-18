@@ -193,9 +193,7 @@ describe('atomic-modal', () => {
         element.initialize();
         await element.updateComplete;
 
-        expect(document.body.classList.contains('atomic-modal-opened')).toBe(
-          true
-        );
+        expect(document.body.classList.contains('atomic-modal-opened')).toBe(true);
       });
 
       it('should add the "atomic-modal-opened" class on the interface element', async () => {
@@ -209,9 +207,7 @@ describe('atomic-modal', () => {
         element.initialize();
         await element.updateComplete;
 
-        expect(
-          mockInterfaceElement.classList.contains('atomic-modal-opened')
-        ).toBe(true);
+        expect(mockInterfaceElement.classList.contains('atomic-modal-opened')).toBe(true);
       });
     });
   });
@@ -220,7 +216,10 @@ describe('atomic-modal', () => {
     it('should add keyup event listener', async () => {
       const {element} = await renderModal();
 
-      const addEventListenerSpy = vi.spyOn(document.body, 'addEventListener');
+      const addEventListenerSpy = vi.spyOn(
+        document.body,
+        'addEventListener'
+      );
 
       element.connectedCallback();
 
@@ -233,7 +232,10 @@ describe('atomic-modal', () => {
     it('should add touchmove event listener', async () => {
       const {element} = await renderModal();
 
-      const addEventListenerSpy = vi.spyOn(document.body, 'addEventListener');
+      const addEventListenerSpy = vi.spyOn(
+        document.body,
+        'addEventListener'
+      );
 
       element.connectedCallback();
 
@@ -279,20 +281,6 @@ describe('atomic-modal', () => {
     });
   });
 
-  it('should apply fullscreen class when #fullscreen is true', async () => {
-    const {element} = await renderModal({isOpen: true, fullscreen: true});
-
-    expect(element.className).toContain('fullscreen');
-    expect(element.className).not.toContain('dialog');
-  });
-
-  it('should apply dialog class when #fullscreen is false', async () => {
-    const {element} = await renderModal({isOpen: true, fullscreen: false});
-
-    expect(element.className).toContain('dialog');
-    expect(element.className).not.toContain('fullscreen');
-  });
-
   describe('#updated', () => {
     it('should update host classes when isOpen changes', async () => {
       const {element} = await renderModal({isOpen: false});
@@ -317,8 +305,6 @@ describe('atomic-modal', () => {
       expect(element.className).toContain('fullscreen');
       expect(element.className).not.toContain('dialog');
     });
-  });
-
   it('should apply fixed positioning to backdrop when #boundary is page', async () => {
     const {element, parts} = await renderModal({
       isOpen: true,
@@ -377,33 +363,6 @@ describe('atomic-modal', () => {
     expect(closeFn).toHaveBeenCalled();
   });
 
-  it('should add and remove modal classes from body and interface element', async () => {
-    const mockInterfaceElement = document.createElement('div');
-    const {element} = await renderModal({isOpen: false});
-
-    element.bindings = {
-      interfaceElement: mockInterfaceElement,
-    } as unknown as typeof element.bindings;
-
-    element.isOpen = true;
-
-    await element.updateComplete;
-    await element.updateComplete;
-
-    expect(document.body.classList.contains('atomic-modal-opened')).toBe(true);
-    expect(mockInterfaceElement.classList.contains('atomic-modal-opened')).toBe(
-      true
-    );
-
-    element.isOpen = false;
-    await element.updateComplete;
-
-    expect(document.body.classList.contains('atomic-modal-opened')).toBe(false);
-    expect(mockInterfaceElement.classList.contains('atomic-modal-opened')).toBe(
-      false
-    );
-  });
-
   it('should handle touchmove events when modal is open', async () => {
     await renderModal({isOpen: true});
 
@@ -427,17 +386,6 @@ describe('atomic-modal', () => {
     const focusTrap = element.shadowRoot?.querySelector('atomic-focus-trap');
     expect(focusTrap?.getAttribute('role')).toBe('dialog');
     expect(focusTrap?.getAttribute('aria-modal')).toBe('true');
-  });
-
-  it('should handle modal property changes', async () => {
-    const {element} = await renderModal({isOpen: false});
-
-    expect(element.className).not.toContain('open');
-
-    element.isOpen = true;
-    await element.updateComplete;
-
-    expect(element.className).toContain('open');
   });
 
   it('should render error component when error occurs', async () => {

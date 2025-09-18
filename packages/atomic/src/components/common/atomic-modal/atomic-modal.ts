@@ -158,6 +158,7 @@ export class AtomicModal
   @property({type: Boolean, reflect: true, converter: booleanConverter})
   fullscreen = false;
   @property({type: Object, attribute: false}) source?: HTMLElement;
+
   /**
    * The container to hide from the tabindex and accessibility DOM when the modal is closed.
    */
@@ -170,11 +171,12 @@ export class AtomicModal
   })
   isOpen = false;
   @property({type: Object, attribute: false}) close: () => void = () =>
-    // biome-ignore lint/suspicious/noAssignInExpressions: <>
+    // biome-ignore lint/suspicious/noAssignInExpressions: Default close implementation uses assignment for property update
     (this.isOpen = false);
   @property({type: Object, attribute: false}) onAnimationEnded: () => void =
     () => {};
   @property({type: Object, attribute: false}) scope?: HTMLElement;
+
   /**
    * Whether to display the open and close animations over the entire page or the atomic-modal only.
    */
@@ -189,6 +191,7 @@ export class AtomicModal
 
   private updateBreakpoints = once(() => updateBreakpoints(this));
 
+  // Lifecycle methods
   public initialize() {
     this.updateHostClasses();
 
@@ -209,6 +212,59 @@ export class AtomicModal
     }
   }
 
+  connectedCallback() {
+    super.connectedCallback();
+
+    document.body.addEventListener('keyup', this.handleCloseOnEscape);
+    document.body.addEventListener('touchmove', this.onWindowTouchMove, {
+      passive: false,
+    });
+  }
+
+  disconnectedCallback() {
+    super.disconnectedCallback();
+    document.body.removeEventListener('keyup', this.handleCloseOnEscape);
+    document.body.removeEventListener('touchmove', this.onWindowTouchMove);
+  }
+
+  @errorGuard()
+  render() {
+    this.updateBreakpoints();
+
+    return html`
+      ${when(
+        this.shouldRender,
+        () => html`
+          <div
+            part="backdrop"
+            class=" ${this.boundary === 'page' ? 'fixed' : 'absolute'} top-0 right-0 bottom-0 left-0 z-9999"
+            @click="${(e: MouseEvent) => e.target === e.currentTarget && this.close()}"
+            data-nosnippet
+          >
+            <atomic-focus-trap
+              role="dialog"
+              aria-modal=${this.isOpen ? 'true' : 'false'}
+              aria-labelledby=${this.headerId}
+              .source=${this.source}
+              .container=${this.container ?? this}
+              ${ref(this.focusTrap)}
+              .scope=${this.scope}
+            >
+              ${this.renderContent()}
+            </atomic-focus-trap>
+          </div>
+        `
+      )}
+    `;
+  }
+
+  // Watch methods
+  @watch('isOpen', {waitUntilFirstUpdate: false})
+  watchToggleOpen(_prev?: boolean, next?: boolean) {
+    this.handleToggleOpen(next ?? this.isOpen);
+  }
+
+  // Private methods
   private updateHostClasses() {
     const currentClasses = this.getAttribute('class') || '';
     const existingClasses = currentClasses
@@ -226,11 +282,6 @@ export class AtomicModal
     }
 
     this.className = [...existingClasses, ...internalClasses].join(' ');
-  }
-
-  @watch('isOpen', {waitUntilFirstUpdate: false})
-  watchToggleOpen(_prev?: boolean, next?: boolean) {
-    this.handleToggleOpen(next ?? this.isOpen);
   }
 
   private async handleToggleOpen(isOpen: boolean) {
@@ -318,21 +369,6 @@ export class AtomicModal
     this.isOpen && e.preventDefault();
   };
 
-  connectedCallback() {
-    super.connectedCallback();
-
-    document.body.addEventListener('keyup', this.handleCloseOnEscape);
-    document.body.addEventListener('touchmove', this.onWindowTouchMove, {
-      passive: false,
-    });
-  }
-
-  disconnectedCallback() {
-    super.disconnectedCallback();
-    document.body.removeEventListener('keyup', this.handleCloseOnEscape);
-    document.body.removeEventListener('touchmove', this.onWindowTouchMove);
-  }
-
   private waitForAnimationEnded() {
     // The focus trap focuses its first child when active. It cannot do that while an animation is ongoing.
     return new Promise<void>((resolve) => {
@@ -351,7 +387,6 @@ export class AtomicModal
       <article
         part="container"
         class="bg-background text-on-background flex flex-col justify-between ${this.isOpen ? 'animate-open' : 'animate-close'}"
-      
         ${ref(this.animatableContainer)}
       >
         <header part="header-wrapper" class="flex flex-col items-center">
@@ -363,7 +398,7 @@ export class AtomicModal
             <slot name="header"></slot>
           </div>
         </header>
-        <hr part="header-ruler" class="border-t border-neutral"/>
+        <hr part="header-ruler" class="border-t border-neutral"></hr>
         <div
           part="body-wrapper"
           class="flex w-full grow flex-col items-center overflow-auto [scrollbar-gutter:stable_both-edges]"
@@ -385,37 +420,6 @@ export class AtomicModal
           </div>
         </footer>
       </article>
-    `;
-  }
-
-  @errorGuard()
-  render() {
-    this.updateBreakpoints();
-
-    return html`
-      ${when(
-        this.shouldRender,
-        () => html`
-          <div
-            part="backdrop"
-            class=" ${this.boundary === 'page' ? 'fixed' : 'absolute'} top-0 right-0 bottom-0 left-0 z-9999"
-            @click="${(e: MouseEvent) => e.target === e.currentTarget && this.close()}"
-            data-nosnippet
-          >
-            <atomic-focus-trap
-              role="dialog"
-              aria-modal=${this.isOpen ? 'true' : 'false'}
-              aria-labelledby=${this.headerId}
-              .source=${this.source}
-              .container=${this.container ?? this}
-              ${ref(this.focusTrap)}
-              .scope=${this.scope}
-            >
-              ${this.renderContent()}
-            </atomic-focus-trap>
-          </div>
-        `
-      )}
     `;
   }
 }
