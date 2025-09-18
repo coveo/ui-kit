@@ -1,15 +1,6 @@
 import type {FoldingState} from './folding-state.js';
 
-export interface FoldingQueryParams {
-  filterField: string;
-  childField: string;
-  parentField: string;
-  filterFieldRange: number;
-}
-
-export const selectFoldingQueryParams = (state: {
-  folding?: FoldingState;
-}): FoldingQueryParams | undefined => {
+export const selectFoldingQueryParams = (state: {folding?: FoldingState}) => {
   if (!state.folding) {
     return undefined;
   }
