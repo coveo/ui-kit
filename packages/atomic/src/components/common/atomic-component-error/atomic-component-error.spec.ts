@@ -4,7 +4,7 @@ import {fixture} from '@/vitest-utils/testing-helpers/fixture';
 import './atomic-component-error';
 import {AtomicComponentError} from './atomic-component-error';
 
-describe('AtomicComponentError', () => {
+describe('atomic-component-error', () => {
   let consoleErrorSpy: ReturnType<typeof vi.spyOn>;
 
   const setupElement = () => {

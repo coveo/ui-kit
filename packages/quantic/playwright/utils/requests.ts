@@ -50,7 +50,7 @@ export function isUaCustomEvent(request: Request): boolean {
 }
 
 /**
- * Indicates whether the specified request corresponds to an RGA evaluation request.
+ * Indicates whether the specified request corresponds to a RGA Evaluation request.
  * @param request The request to check.
  */
 export function isRgaEvaluationRequest(request: Request): boolean {
@@ -96,4 +96,26 @@ export function isEventProtocol(request: Request): boolean {
  */
 export function isSearchRequest(request: Request): boolean {
   return request.method() === 'POST' && searchRequestRegex.test(request.url());
+}
+
+
+/**
+ * Indicates whether the specified request corresponds to an answer API generate request.
+ * @param request The request to check.
+ */
+export function isRgaGenerateRequest(request: Request): boolean {
+  return (
+    request.method() === 'POST' && rgaGenerateRequestRegex.test(request.url())
+  );
+}
+
+/**
+ * Indicates whether the specified request corresponds to an Insight RGA Generate request.
+ * @param request The request to check.
+ * @returns True if the request is an Insight RGA Generate request, false otherwise.
+ */
+export function isInsightRgaGenerateRequest(request: Request): boolean {
+  return (
+    request.method() === 'POST' && insightRgaGenerateRequestRegex.test(request.url())
+  );
 }

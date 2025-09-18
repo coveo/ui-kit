@@ -18,6 +18,7 @@ import type {
 import type {GeneratedAnswerStreamRequest} from '../../api/generated-answer/generated-answer-request.js';
 import {fetchAnswer} from '../../api/knowledge/stream-answer-api.js';
 import type {StreamAnswerAPIState} from '../../api/knowledge/stream-answer-api-state.js';
+import type {SearchRequest} from '../../api/search/search/search-request.js';
 import type {AsyncThunkOptions} from '../../app/async-thunk-options.js';
 import type {SearchThunkExtraArguments} from '../../app/search-thunk-extra-arguments.js';
 import type {
@@ -31,7 +32,10 @@ import {
   validatePayload,
 } from '../../utils/validate-payload.js';
 import {logGeneratedAnswerStreamEnd} from './generated-answer-analytics-actions.js';
-import {buildStreamingRequest} from './generated-answer-request.js';
+import {
+  buildStreamingRequest,
+  constructAnswerAPIQueryParams,
+} from './generated-answer-request.js';
 import {
   type GeneratedContentFormat,
   type GeneratedResponseFormat,
@@ -183,6 +187,12 @@ export const setCannotAnswer = createAction(
   (payload: boolean) => validatePayload(payload, booleanValue)
 );
 
+export const setAnswerApiQueryParams = createAction(
+  'generatedAnswer/setAnswerApiQueryParams',
+  (payload: Partial<SearchRequest>) =>
+    validatePayload(payload, new RecordValue({}))
+);
+
 interface StreamAnswerArgs {
   setAbortControllerRef: (ref: AbortController) => void;
 }
@@ -311,9 +321,14 @@ export const generateAnswer = createAsyncThunk<
   async (_, {getState, dispatch, extra: {navigatorContext, logger}}) => {
     const state = getState() as StreamAnswerAPIState;
     if (state.generatedAnswer.answerConfigurationId) {
+      const answerApiQueryParams = constructAnswerAPIQueryParams(
+        state,
+        navigatorContext
+      );
       // TODO: SVCC-5178 Refactor multiple sequential dispatches into single action
       dispatch(resetAnswer());
-      await dispatch(fetchAnswer(state, navigatorContext));
+      dispatch(setAnswerApiQueryParams(answerApiQueryParams));
+      await dispatch(fetchAnswer(answerApiQueryParams));
     } else {
       logger.warn(
         '[WARNING] Missing answerConfigurationId in engine configuration. ' +

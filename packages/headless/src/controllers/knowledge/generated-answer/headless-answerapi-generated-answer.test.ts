@@ -1,3 +1,4 @@
+import {skipToken} from '@reduxjs/toolkit/query';
 import {answerEvaluation} from '../../../api/knowledge/post-answer-evaluation.js';
 import {
   answerApi,
@@ -6,6 +7,7 @@ import {
 } from '../../../api/knowledge/stream-answer-api.js';
 import type {StreamAnswerAPIState} from '../../../api/knowledge/stream-answer-api-state.js';
 import {getConfigurationInitialState} from '../../../features/configuration/configuration-state.js';
+import * as answerApiSelectors from '../../../features/generated-answer/answer-api-selectors.js';
 import {
   generateAnswer,
   resetAnswer,
@@ -137,7 +139,25 @@ describe('knowledge-generated-answer', () => {
     expect(updateResponseFormat).toHaveBeenCalledWith(responseFormat);
   });
 
-  it('dispatches a retry action', () => {
+  it('dispatches a retry action when there are answer api query params in the state', () => {
+    vi.spyOn(
+      answerApiSelectors,
+      'selectAnswerApiQueryParams'
+    ).mockReturnValueOnce({
+      q: 'this est une question',
+    });
+
+    const generatedAnswer = createGeneratedAnswer();
+    generatedAnswer.retry();
+    expect(fetchAnswer).toHaveBeenCalledTimes(1);
+  });
+
+  it('dispatches a retry action when the selector returns a skipToken', () => {
+    vi.spyOn(
+      answerApiSelectors,
+      'selectAnswerApiQueryParams'
+    ).mockReturnValueOnce(skipToken);
+
     const generatedAnswer = createGeneratedAnswer();
     generatedAnswer.retry();
     expect(fetchAnswer).toHaveBeenCalledTimes(1);

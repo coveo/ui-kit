@@ -308,6 +308,7 @@ export {buildInsightInterface} from './controllers/insight-interface/insight-int
 export * from './features/analytics/generic-analytics-actions-loader.js';
 export * from './features/analytics/insight-analytics-actions-loader.js';
 export * from './features/attached-results/attached-results-actions-loader.js';
+export * from './features/attached-results/attached-results-analytics-actions-loader.js';
 export * from './features/case-context/case-context-actions-loader.js';
 export * from './features/context/context-actions-loader.js';
 export type {
