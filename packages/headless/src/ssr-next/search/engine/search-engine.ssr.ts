@@ -82,17 +82,7 @@ function buildSSRSearchEngine(options: SearchEngineOptions): SSRSearchEngine {
  * ```ts
  * const searchEngine = defineSearchEngine(config);
  *
- * // Generate stable clientId (server-side best practice)
- * const getClientId = async (req) => {
- *   const existing = req.cookies.coveoClientId;
- *   if (existing) return existing;
- *
- *   const newId = crypto.randomUUID();
- *   res.cookie('coveoClientId', newId, { maxAge: 365 * 24 * 60 * 60 * 1000 }); // 1 year
- *   return newId;
- * };
- *
- * const staticState = await searchEngine..fetchStaticState({
+ * const staticState = await searchEngine.fetchStaticState({
  *   navigatorContextProvider: () => {/*...* /},
  * });
  * ```
