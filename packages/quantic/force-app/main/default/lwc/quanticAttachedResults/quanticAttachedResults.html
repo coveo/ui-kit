@@ -1,0 +1,35 @@
+<template>
+  <lightning-card title="Attached Results" icon-name="standard:attach">
+    <template lwc:if={results.length}>
+      <table class="slds-table slds-table_cell-buffer slds-table_bordered slds-table_fixed-layout">
+        <thead>
+          <tr>
+                <th style="width: 75%">Title</th>
+                <th style="width: 15%">Source</th>
+                <th style="width: 10%">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <template for:each={results} for:item="result">
+            <tr key={result.permanentId}>
+              <td class="slds-grid">
+                <a href={result.resultUrl} target="_blank" class="slds-truncate" title={result.title}>
+                  {result.title}
+                </a>
+              </td>
+              <td>{result.source}</td>
+              <td class="slds-text-align_center">
+                <lightning-button-icon onclick={result.handleDetach} icon-name="utility:attach" variant="bare"
+                  alternative-text="Detach Result" title="Detach Result"></lightning-button-icon>
+              </td>
+            </tr>
+          </template>
+        </tbody>
+      </table>
+
+    </template>
+    <template lwc:else>
+      <div class="slds-p-horizontal_medium slds-text-color_weak">No attached results to show.</div>
+    </template>
+  </lightning-card>
+</template>
