@@ -13,7 +13,6 @@ vi.mock('./build-factory.js');
 describe('hydratedRecommendationStaticStateFactory', () => {
   const createEngineOptions = () => ({
     configuration: getSampleCommerceEngineConfiguration(),
-    navigatorContextProvider: vi.fn(),
   });
 
   const bakedInControllers = {

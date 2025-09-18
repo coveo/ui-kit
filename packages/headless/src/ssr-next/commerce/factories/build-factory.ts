@@ -4,7 +4,6 @@ import {
   type CommerceEngine,
   type CommerceEngineOptions,
 } from '../../../app/commerce-engine/commerce-engine.js';
-import {buildLogger} from '../../../app/logger.js';
 import {stateKey} from '../../../app/state-key.js';
 import {
   createWaitForActionMiddleware,
@@ -22,7 +21,7 @@ import type {
   HydrateStaticStateParameters,
 } from '../types/engine.js';
 import {wireControllerParams} from '../utils/controller-wiring.js';
-import {extendEngineConfiguration} from '../utils/engine-wiring.js';
+import {augmentCommerceEngineOptions} from '../utils/engine-wiring.js';
 
 /**
  * The SSR commerce engine.
@@ -140,26 +139,17 @@ export const buildFactory =
       buildOptions!
     ); // TODO: KIT-4754: remove non-null assertion operator
 
-    const logger = buildLogger(options.loggerOptions);
-    if (!options.navigatorContextProvider) {
-      logger.warn(
-        '[WARNING] Missing navigator context in server-side code. Make sure to set it with `setNavigatorContextProvider` before calling fetchStaticState()'
-      );
-    }
-
     const enabledRecommendationControllers =
       buildOptions && 'recommendations' in buildOptions // TODO: KIT-4754: remove non-null assertion
         ? (buildOptions as RecommendationBuildConfig<TControllerDefinitions>)
             ?.recommendations.length
         : 0;
 
-    const engineOptions = {
-      ...options,
-      configuration: extendEngineConfiguration(
-        options.configuration,
-        buildOptions!
-      ), // TODO: KIT-4754: remove non-null assertion operator
-    };
+    const engineOptions: CommerceEngineOptions = augmentCommerceEngineOptions(
+      options,
+      buildOptions!
+    ); // TODO: KIT-4754: remove non-null assertion operator
+
     const engine = buildSSRCommerceEngine(
       solutionType,
       engineOptions,
