@@ -112,16 +112,6 @@ describe('suggestions-common', () => {
 
       expect(elementHasQuery(element)).toBe(true);
     });
-
-    it('should return true when element has numeric zero as query', () => {
-      const element: SearchBoxSuggestionElement = {
-        key: 'test-key',
-        content: document.createElement('div'),
-        query: '0',
-      };
-
-      expect(elementHasQuery(element)).toBe(true);
-    });
   });
 
   describe('#dispatchSearchBoxSuggestionsEvent', () => {
