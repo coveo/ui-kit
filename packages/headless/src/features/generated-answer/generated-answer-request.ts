@@ -87,7 +87,7 @@ export const constructAnswerAPIQueryParams = (
     ...(cq && {cq}),
     ...(dq && {dq}),
     ...(lq && {lq}),
-    ...(q && {enableQuerySyntax: selectEnableQuerySyntax(state)}),
+    ...(state.query && {enableQuerySyntax: selectEnableQuerySyntax(state)}),
     ...(context?.contextValues && {
       context: context.contextValues,
     }),
