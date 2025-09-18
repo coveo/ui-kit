@@ -3,11 +3,11 @@ import {answerEvaluation} from '../../../api/knowledge/post-answer-evaluation.js
 import {
   answerApi,
   fetchAnswer,
-  selectAnswerTriggerParams,
 } from '../../../api/knowledge/stream-answer-api.js';
 import type {StreamAnswerAPIState} from '../../../api/knowledge/stream-answer-api-state.js';
 import {getConfigurationInitialState} from '../../../features/configuration/configuration-state.js';
 import * as answerApiSelectors from '../../../features/generated-answer/answer-api-selectors.js';
+import {selectAnswerTriggerParams} from '../../../features/generated-answer/answer-api-selectors.js';
 import {
   generateAnswer,
   resetAnswer,
@@ -38,6 +38,16 @@ vi.mock(
 );
 vi.mock('../../../features/search/search-actions');
 vi.mock('../../../api/knowledge/stream-answer-actions.js');
+
+vi.mock(
+  '../../../features/generated-answer/answer-api-selectors.js',
+  async () => {
+    return {
+      selectAnswerTriggerParams: vi.fn(),
+      selectAnswerApiQueryParams: vi.fn(),
+    };
+  }
+);
 
 vi.mock('../../../api/knowledge/stream-answer-api', async () => {
   const originalStreamAnswerApi = await vi.importActual(
