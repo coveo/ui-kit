@@ -5,7 +5,7 @@ test.describe('atomic-commerce-load-more-products', () => {
     await loadMore.load({story: 'default'});
   });
 
-  test('should be A11y compliant', async ({loadMore, makeAxeBuilder}) => {
+  test('should be accessible', async ({loadMore, makeAxeBuilder}) => {
     await loadMore.hydrated.waitFor();
     const accessibilityResults = await makeAxeBuilder().analyze();
     expect(accessibilityResults.violations).toEqual([]);

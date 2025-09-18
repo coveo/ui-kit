@@ -308,6 +308,7 @@ export {buildInsightInterface} from './controllers/insight-interface/insight-int
 export * from './features/analytics/generic-analytics-actions-loader.js';
 export * from './features/analytics/insight-analytics-actions-loader.js';
 export * from './features/attached-results/attached-results-actions-loader.js';
+export * from './features/attached-results/attached-results-analytics-actions-loader.js';
 export * from './features/case-context/case-context-actions-loader.js';
 export * from './features/context/context-actions-loader.js';
 export type {
@@ -329,6 +330,7 @@ export type {NumericFacetValue} from './features/facets/range-facets/numeric-fac
 export * from './features/facets/range-facets/numeric-facet-set/numeric-facet-actions-loader.js';
 export * from './features/fields/fields-actions-loader.js';
 export * from './features/folding/insight-folding-actions-loader.js';
+export * from './features/generated-answer/generated-answer-actions-loader.js';
 // Action loaders
 export * from './features/insight-interface/insight-interface-actions-loader.js';
 export type {InsightInterfaceState} from './features/insight-interface/insight-interface-state.js';

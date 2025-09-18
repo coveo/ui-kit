@@ -2074,7 +2074,7 @@ export declare interface AtomicCommerceFacets extends LitAtomicCommerceFacets {
 
 @ProxyCmp({
   inputs: ['type', 'analytics', 'logLevel', 'language', 'reflectStateInUrl', 'disableStateReflectionInUrl', 'scrollContainer', 'languageAssetsPath', 'iconAssetsPath'],
-  methods: ['toggleAnalytics', 'updateLanguage', 'updateIconAssetsPath', 'scrollToTop', 'initialize', 'initializeWithEngine', 'executeFirstRequest'],
+  methods: ['initialize', 'initializeWithEngine', 'executeFirstRequest', 'toggleAnalytics', 'updateIconAssetsPath', 'updateLanguage', 'scrollToTop'],
   defineCustomElementFn: () => {customElements.get('atomic-commerce-interface') || customElements.define('atomic-commerce-interface', LitAtomicCommerceInterface);}
 })
 @Component({

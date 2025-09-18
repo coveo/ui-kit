@@ -4,9 +4,9 @@
   "private": true,
   "type": "module",
   "dependencies": {
-    "@coveo/atomic": "3.33.3",
-    "@coveo/atomic-react": "3.3.7",
-    "@coveo/headless": "3.29.2",
+    "@coveo/atomic": "3.33.6",
+    "@coveo/atomic-react": "3.3.10",
+    "@coveo/headless": "3.30.2",
     "next": "15.2.4",
     "react": "19.1.1",
     "react-dom": "19.1.1"
@@ -26,7 +26,7 @@
     "build:ts-cjs": "npm run-script -w=@coveo/ci if-not-cdn -- \"tsc --module commonjs --noEmit\"",
     "dev": "npm run build:assets && npm run dev:nextjs",
     "dev:nextjs": "next dev",
-    "build:assets": "ncp ../../../packages/atomic-react/dist/assets public/assets && ncp ../../../packages/atomic-react/dist/lang public/lang public/assets",
+    "build:assets": "ncp ../../../packages/atomic-react/dist/assets public/assets && ncp ../../../packages/atomic-react/dist/lang public/lang",
     "e2e:watch": "cypress open --browser chrome --e2e",
     "e2e": "cypress run --browser chrome"
   }

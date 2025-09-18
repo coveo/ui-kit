@@ -28,6 +28,10 @@
 /packages/headless/src/commerce.index.ts @coveo/commerce-routemasters
 /packages/headless/src/test/**commerce** @coveo/commerce-routemasters
 
+# Owners of the SSR sub-packages
+/packages/headless/src/ssr/** @coveo/dxui
+/packages/headless/src/ssr-next/** @coveo/dxui
+
 # Owners of the Shopify headless package
 
 /packages/shopify/ @coveo/shopify
