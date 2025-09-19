@@ -36,10 +36,9 @@ import type {
   FetchQuerySuggestionsActionCreatorPayload,
   FetchQuerySuggestionsThunkReturn,
 } from '../query-suggest/query-suggest-actions.js';
-import {
-  type ExecuteSearchThunkReturn,
-  type SearchAction,
-  updateSearchAction,
+import type {
+  ExecuteSearchThunkReturn,
+  SearchAction,
 } from '../search/search-actions.js';
 import {
   type MappedSearchRequest,
@@ -132,8 +131,6 @@ export const executeSearch = createAsyncThunk<
       ? buildEventDescription(analyticsAction.next)
       : undefined;
 
-    config.dispatch(updateSearchAction(analyticsAction.next));
-
     const request = await buildInsightSearchRequest(state, eventDescription);
     const fetched = await processor.fetchFromAPI(request);
 
@@ -178,6 +175,10 @@ export const fetchMoreResults = createAsyncThunk<
   void,
   AsyncThunkInsightOptions<StateNeededByExecuteSearch>
 >('search/fetchMoreResults', async (_, config: AsyncThunkConfig) => {
+  const eventDescription = buildEventDescription({
+    actionCause: SearchPageEvents.browseResults,
+  });
+
   const state = config.getState();
 
   if (state.configuration.analytics.analyticsMode === 'legacy') {
@@ -186,10 +187,6 @@ export const fetchMoreResults = createAsyncThunk<
 
   const processor = new AsyncInsightSearchThunkProcessor({
     ...config,
-  });
-
-  const eventDescription = buildEventDescription({
-    actionCause: SearchPageEvents.browseResults,
   });
 
   const request = await buildInsightFetchMoreResultsRequest(

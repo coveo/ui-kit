@@ -4,7 +4,7 @@ import {
   AnalyticsModeEnum,
 } from '../../../../../../playwright/utils/analyticsMode';
 import {AnalyticsObject} from '../../../../../../playwright/page-object/analytics';
-import {isRgaEvaluationRequest, isRgaGenerateRequest, isInsightRgaGenerateRequest} from '../../../../../../playwright/utils/requests';
+import {isRgaEvaluationRequest} from '../../../../../../playwright/utils/requests';
 
 const minimumCitationTooltipDisplayDurationMs = 1500;
 const removeUnknownFields = (object: Record<string, unknown>) => {
@@ -32,6 +32,7 @@ export class GeneratedAnswerObject {
     private streamId: string,
     private analytics: AnalyticsObject,
     private answerApiEnabled: boolean,
+    private generateRequestRegex: RegExp,
     private withFacets: boolean
   ) {
     this.page = page;
@@ -39,6 +40,7 @@ export class GeneratedAnswerObject {
     this.analytics = analytics;
     this.analyticsMode = this.analytics.analyticsMode;
     this.answerApiEnabled = answerApiEnabled;
+    this.generateRequestRegex = generateRequestRegex;
     this.withFacets = withFacets;
   }
 
@@ -166,6 +168,10 @@ export class GeneratedAnswerObject {
 
   async clickToggleButton(): Promise<void> {
     await this.toggleButton.click();
+  }
+
+  async waitForGenerateRequest(): Promise<Request> {
+    return this.page.waitForRequest(this.generateRequestRegex);
   }
 
   async waitForStreamEndAnalytics(): Promise<Request | boolean> {
@@ -432,31 +438,6 @@ export class GeneratedAnswerObject {
     });
   }
 
-  async waitForGenerateRequest(
-    expectedPayload: Record<string, any>
-  ): Promise<Request | boolean | null> {
-    const payloadToMatch = removeUnknownFields(expectedPayload);
-
-    if (this.answerApiEnabled) {
-      return this.page.waitForRequest((request) => {
-        const event = request.postDataJSON?.();
-        if (
-          isRgaGenerateRequest(request) ||
-          isInsightRgaGenerateRequest(request)
-        ) {
-          return AnalyticsObject.isMatchingPayload(
-            {
-              searchHub: event.searchHub,
-              q: event.q,
-            },
-            payloadToMatch
-          );
-        }
-        return false;
-      });
-    }
-    return null;
-  }
-
   streamEndAnalyticRequestPromise!: Promise<boolean | Request>;
+  generateRequestPromise!: Promise<Request> ;
 }

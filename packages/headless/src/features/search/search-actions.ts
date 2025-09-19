@@ -120,8 +120,6 @@ export const executeSearch = createAsyncThunk<
       ? buildSearchReduxAction(searchAction.next)
       : undefined;
 
-    config.dispatch(updateSearchAction(searchAction.next));
-
     const request = await buildSearchRequest(
       state,
       config.extra.navigatorContext,
@@ -177,15 +175,15 @@ export const fetchMoreResults = createAsyncThunk<
   void,
   AsyncThunkSearchOptions<StateNeededByExecuteSearch>
 >('search/fetchMoreResults', async (_, config) => {
-  const state = config.getState();
-  if (state.configuration.analytics.analyticsMode === 'legacy') {
-    return legacyFetchMoreResults(config, state);
-  }
-
   const analyticsAction = makeBasicNewSearchAnalyticsAction(
     SearchPageEvents.browseResults,
     config.getState
   );
+
+  const state = config.getState();
+  if (state.configuration.analytics.analyticsMode === 'legacy') {
+    return legacyFetchMoreResults(config, state);
+  }
 
   const processor = new AsyncSearchThunkProcessor<
     ReturnType<typeof config.rejectWithValue>

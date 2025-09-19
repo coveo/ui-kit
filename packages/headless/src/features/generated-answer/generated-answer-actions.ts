@@ -31,7 +31,6 @@ import {
   nonEmptyStringArray,
   validatePayload,
 } from '../../utils/validate-payload.js';
-import {updateSearchAction} from '../search/search-actions.js';
 import {logGeneratedAnswerStreamEnd} from './generated-answer-analytics-actions.js';
 import {
   buildStreamingRequest,
@@ -327,10 +326,8 @@ export const generateAnswer = createAsyncThunk<
         navigatorContext
       );
       // TODO: SVCC-5178 Refactor multiple sequential dispatches into single action
-      dispatch(resetAnswer());
       dispatch(setAnswerApiQueryParams(answerApiQueryParams));
       await dispatch(fetchAnswer(answerApiQueryParams));
-      dispatch(updateSearchAction(undefined));
     } else {
       logger.warn(
         '[WARNING] Missing answerConfigurationId in engine configuration. ' +
