@@ -104,11 +104,11 @@ const subscribeToSearchRequest = (
     const state = engine.state;
     const triggerParams = selectAnswerTriggerParams(state);
 
-    const curruntRequestId = triggerParams.requestId;
-    const newSearchRequestDetected = curruntRequestId !== lastRequestId;
+    const currentRequestId = triggerParams.requestId;
+    const newSearchRequestDetected = currentRequestId !== lastRequestId;
 
     if (newSearchRequestDetected) {
-      lastRequestId = curruntRequestId;
+      lastRequestId = currentRequestId;
       engine.dispatch(resetAnswer());
 
       if (triggerParams.q.length > 0) {
