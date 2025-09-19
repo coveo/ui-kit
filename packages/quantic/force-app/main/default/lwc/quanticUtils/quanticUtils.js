@@ -194,7 +194,7 @@ export class I18nUtils {
   /**
    * Gets the label name with count.
    * @param {string} labelName
-   * @param {number} count
+   * @param {string|number} count
    * @returns {string} The label name with count.
    * @example `labelName_zero`, `labelName_plural` or `labelName`
    */
