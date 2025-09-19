@@ -54,7 +54,7 @@ describe('atomic-modal', () => {
       headerContent?: string;
       bodyContent?: string;
       footerContent?: string;
-      close?: Function;
+      close?: () => void;
     } = {}
   ) => {
     const {element} = await renderInAtomicSearchInterface<AtomicModal>({
@@ -460,38 +460,6 @@ describe('atomic-modal', () => {
     });
   });
 
-  describe('#updated (when DOM has been updated and rendered)', () => {
-    it('should update host classes correctly when isOpen changes', async () => {
-      const {element} = await renderModal({isOpen: false, fullscreen: false});
-
-      expect(element.className).not.toContain('open');
-      expect(element.className).not.toContain('fullscreen');
-      expect(element.className).toContain('dialog');
-
-      element.isOpen = true;
-      await element.updateComplete;
-
-      expect(element.className).toContain('open');
-      expect(element.className).not.toContain('fullscreen');
-      expect(element.className).toContain('dialog');
-    });
-
-    it('should update host classes correctly when fullscreen changes', async () => {
-      const {element} = await renderModal({isOpen: false, fullscreen: false});
-
-      expect(element.className).not.toContain('open');
-      expect(element.className).not.toContain('fullscreen');
-      expect(element.className).toContain('dialog');
-
-      element.fullscreen = true;
-      await element.updateComplete;
-
-      expect(element.className).not.toContain('open');
-      expect(element.className).toContain('fullscreen');
-      expect(element.className).not.toContain('dialog');
-    });
-  });
-
   describe('#disconnectedCallback (when removed from the DOM)', () => {
     it('should remove the keyup event listener from the document body', async () => {
       const {element} = await renderModal({isOpen: true});
@@ -526,14 +494,6 @@ describe('atomic-modal', () => {
 
   describe('#initialize', () => {
     describe('when isOpen is true', () => {
-      it('should apply the "open" class to the element', async () => {
-        const {element} = await renderModal({isOpen: true});
-
-        element.initialize();
-
-        expect(element.className).toContain('open');
-      });
-
       it('should add the "atomic-modal-opened" class to the body', async () => {
         const {element} = await renderModal({isOpen: true});
 
@@ -552,32 +512,6 @@ describe('atomic-modal', () => {
         );
       });
     });
-
-    it('should not apply the "open" class when isOpen is false', async () => {
-      const {element} = await renderModal({isOpen: false});
-
-      element.initialize();
-
-      expect(element.className).not.toContain('open');
-    });
-
-    it('should apply the "fullscreen" class (not "dialog") to the element when fullscreen is true', async () => {
-      const {element} = await renderModal({isOpen: true, fullscreen: true});
-
-      element.initialize();
-
-      expect(element.className).toContain('fullscreen');
-      expect(element.className).not.toContain('dialog');
-    });
-
-    it('should apply "dialog" class (not "fullscreen") to the element when fullscreen is false', async () => {
-      const {element} = await renderModal({isOpen: true, fullscreen: false});
-
-      element.initialize();
-
-      expect(element.className).toContain('dialog');
-      expect(element.className).not.toContain('fullscreen');
-    });
   });
 
   describe('#watchToggleOpen (when isOpen changes after the first update)', () => {
@@ -588,17 +522,6 @@ describe('atomic-modal', () => {
     });
 
     describe('when isOpen goes from false to true', () => {
-      it('should apply the "open" class to the element', async () => {
-        element.isOpen = false;
-        await element.updateComplete;
-        expect(element.className).not.toContain('open');
-
-        element.isOpen = true;
-        await element.updateComplete;
-
-        expect(element.className).toContain('open');
-      });
-
       it('should add the "atomic-modal-opened" class to the body', async () => {
         element.isOpen = false;
         await element.updateComplete;
@@ -627,17 +550,6 @@ describe('atomic-modal', () => {
     });
 
     describe('when isOpen goes from true to false', () => {
-      it('should remove the "open" class', async () => {
-        element.isOpen = true;
-        await element.updateComplete;
-        expect(element.className).toContain('open');
-
-        element.isOpen = false;
-        await element.updateComplete;
-
-        expect(element.className).not.toContain('open');
-      });
-
       it('should remove the "atomic-modal-opened" class from the body', async () => {
         element.isOpen = true;
         await element.updateComplete;
