@@ -1,7 +1,13 @@
 import {fromOpenApi} from '@mswjs/source/open-api';
 import {delay, HttpResponse, http} from 'msw';
 import type {OpenAPIV3} from 'openapi-types';
-import oapiSearch from '@/oapi-specs/search.json' with {type: 'json'};
+
+const oapiSearch = (
+  await import(
+    'https://platform.cloud.coveo.com/api-docs/SearchApi?group=public',
+    {with: {type: 'json'}}
+  )
+).default;
 
 const baseSearchResponse = {
   totalCount: 120,
