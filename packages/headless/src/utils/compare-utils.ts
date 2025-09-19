@@ -91,15 +91,15 @@ export function deepEqualAnyOrder<T>(a: T, b: T): boolean {
     }
 
     if (a.constructor === Object && b.constructor === Object) {
-      const keysA = Object.keys(a);
-      const keysB = Object.keys(b);
+      const objA = a as Record<string, unknown>;
+      const objB = b as Record<string, unknown>;
+      const keysA = Object.keys(objA);
+      const keysB = Object.keys(objB);
 
       if (keysA.length !== keysB.length) return false;
 
       return keysA.every(
-        (key) =>
-          keysB.includes(key) &&
-          deepEqualAnyOrder((a as unknown)[key], (b as unknown)[key])
+        (key) => keysB.includes(key) && deepEqualAnyOrder(objA[key], objB[key])
       );
     }
 
