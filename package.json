@@ -23,7 +23,7 @@
     "release:phase0": "npm run-script -w=@coveo/ci git-lock",
     "release:phase1": "turbo release:phase1 --concurrency=1 && npm run build",
     "release:phase2": "npm run-script -w=@coveo/ci bump:root",
-    "release:phase3": "turbo release:phase3 ->-concurrency=1",
+    "release:phase3": "turbo release:phase3 --concurrency=1",
     "release:phase4": "npm run-script -w=@coveo/ci reify",
     "release:phase5": "npm run-script -w=@coveo/ci git-publish-all",
     "knip": "knip"
