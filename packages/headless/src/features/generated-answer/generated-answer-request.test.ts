@@ -9,6 +9,7 @@ import {
   expectedStreamAnswerAPIParamWithFoldingEnabled,
   expectedStreamAnswerAPIParamWithoutReferrer,
   expectedStreamAnswerAPIParamWithoutSearchAction,
+  expectedStreamAnswerAPIParamWithQuerySyntaxEnabled,
   expectedStreamAnswerAPIParamWithStaticFiltersAndTabExpression,
   expectedStreamAnswerAPIParamWithStaticFiltersAndTabExpressionWithoutAdvancedCQ,
   expectedStreamAnswerAPIParamWithStaticFiltersSelected,
@@ -24,6 +25,7 @@ import {
   streamAnswerAPIStateMockWithoutAnyFilters,
   streamAnswerAPIStateMockWithoutAnyTab,
   streamAnswerAPIStateMockWithoutSearchAction,
+  streamAnswerAPIStateMockWithQuerySyntaxEnabled,
   streamAnswerAPIStateMockWithStaticFiltersAndTabExpression,
   streamAnswerAPIStateMockWithStaticFiltersAndTabExpressionWithEmptyCQ,
   streamAnswerAPIStateMockWithStaticFiltersSelected,
@@ -230,6 +232,17 @@ describe('constructAnswerAPIQueryParams', () => {
 
     expect(queryParams).toEqual(
       expectedStreamAnswerAPIParamWithDictionaryFieldContext
+    );
+  });
+
+  it('should correctly set enableQuerySyntax when set in state', () => {
+    const queryParams = constructAnswerAPIQueryParams(
+      streamAnswerAPIStateMockWithQuerySyntaxEnabled,
+      buildMockNavigatorContextProvider()()
+    );
+
+    expect(queryParams).toEqual(
+      expectedStreamAnswerAPIParamWithQuerySyntaxEnabled
     );
   });
 });

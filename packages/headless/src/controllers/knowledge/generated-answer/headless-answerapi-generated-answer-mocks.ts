@@ -1330,6 +1330,15 @@ export const streamAnswerAPIStateMockWithExcerptLength: StreamAnswerAPIState = {
   },
 };
 
+export const streamAnswerAPIStateMockWithQuerySyntaxEnabled: StreamAnswerAPIState =
+  {
+    ...streamAnswerAPIStateMock,
+    query: {
+      q: 'what is the hardest wood',
+      enableQuerySyntax: true,
+    },
+  };
+
 export const expectedStreamAnswerAPIParam = {
   q: 'what is the hardest wood',
   aq: 'aq-test-query',
@@ -1733,4 +1742,9 @@ export const expectedStreamAnswerAPIParamWithDictionaryFieldContext = {
     key1: 'value1',
     key2: 'value2',
   },
+};
+
+export const expectedStreamAnswerAPIParamWithQuerySyntaxEnabled = {
+  ...expectedStreamAnswerAPIParam,
+  enableQuerySyntax: true,
 };
