@@ -27,7 +27,7 @@ import {
   type StandaloneSearchBoxData,
   StorageItems,
 } from '@/src/utils/local-storage-utils';
-import {updateBreakpoints} from '@/src/utils/replace-breakpoint';
+import {updateBreakpoints} from '@/src/utils/replace-breakpoint-utils';
 import {
   isFocusingOut,
   once,

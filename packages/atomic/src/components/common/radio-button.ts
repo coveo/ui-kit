@@ -3,7 +3,7 @@ import {ifDefined} from 'lit/directives/if-defined.js';
 import {type RefOrCallback, ref} from 'lit/directives/ref.js';
 import {multiClassMap} from '@/src/directives/multi-class-map';
 import type {FunctionalComponent} from '@/src/utils/functional-component-utils';
-import {createRipple} from '../../utils/ripple';
+import {createRipple} from '../../utils/ripple-utils';
 import {
   type ButtonStyle,
   getClassNameForButtonStyle,

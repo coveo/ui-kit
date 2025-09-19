@@ -53,7 +53,7 @@ const hasPackageJsonChanged = (directoryPath) => {
 };
 
 /**
- * @typedef {import('@npmcli/package-json').PackageJson} PackageJson
+ * @typedef {import('./types.mjs').PackageJson} PackageJson
  */
 
 /**

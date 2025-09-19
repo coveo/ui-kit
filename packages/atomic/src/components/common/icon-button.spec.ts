@@ -3,7 +3,7 @@ import {describe, expect, it, vi} from 'vitest';
 import {renderFunctionFixture} from '@/vitest-utils/testing-helpers/fixture';
 import {type IconButtonProps, renderIconButton} from './icon-button';
 
-vi.mock('../../utils/ripple', () => ({
+vi.mock('../../utils/ripple-utils', () => ({
   createRipple: vi.fn(),
 }));
 

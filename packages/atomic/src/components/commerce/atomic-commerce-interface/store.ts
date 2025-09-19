@@ -3,7 +3,7 @@ import {
   type CommerceEngine,
   Selectors,
 } from '@coveo/headless/commerce';
-import {DEFAULT_MOBILE_BREAKPOINT} from '../../../utils/replace-breakpoint';
+import {DEFAULT_MOBILE_BREAKPOINT} from '../../../utils/replace-breakpoint-utils';
 import {
   type BaseStore,
   createBaseStore,

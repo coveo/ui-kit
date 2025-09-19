@@ -27,7 +27,7 @@ async function isPublished(name, version, tag = version) {
 
 const isPrerelease = process.env.IS_PRERELEASE === 'true';
 const tagSuffix = process.env.PR_NUMBER || '';
-/** @type {import('@npmcli/package-json').PackageJson} */
+/**@type {import('./types.mjs').PackageJson} */
 const {name, version} = JSON.parse(
   readFileSync('package.json', {encoding: 'utf-8'})
 );

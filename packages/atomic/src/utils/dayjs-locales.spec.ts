@@ -45,7 +45,6 @@ describe('#loadDayjsLocale', () => {
   beforeEach(() => {
     vi.useFakeTimers();
     Object.values(mockLocales).forEach((fn) => fn.mockReset?.());
-    vi.clearAllMocks();
     console.warn = vi.fn();
   });
 

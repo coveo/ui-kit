@@ -1,17 +1,21 @@
-import lint from '@commitlint/lint';
-import load from '@commitlint/load';
 import {getPullRequestTitle} from '../github-client.mjs';
 
 const specUrl = 'https://www.conventionalcommits.org/en/v1.0.0/#summary';
 
-async function analyze(title) {
-  const {rules, parserPreset} = await getLinterConfiguration();
-  return await lint(title, rules, parserPreset || {});
+function isValidConventionalCommit(title) {
+  if (!title || typeof title !== 'string') {
+    return false;
+  }
+
+  const conventionalCommitRegex =
+    /^(feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert)(\(.+\))?: .+/;
+
+  return conventionalCommitRegex.test(title.trim());
 }
 
-async function getLinterConfiguration() {
-  const conventionalConfig = {extends: ['@commitlint/config-conventional']};
-  return await load(conventionalConfig);
+function analyze(title) {
+  const valid = isValidConventionalCommit(title);
+  return {valid};
 }
 
 function buildReport(isTitleValid) {
@@ -33,7 +37,7 @@ Example: \`feat(headless): add result-list controller\``;
 
 export async function buildTitleReport() {
   const prTitle = (await getPullRequestTitle()) || '';
-  const {valid} = await analyze(prTitle);
+  const {valid} = analyze(prTitle);
   const isTitleValid = prTitle && valid;
 
   return buildReport(isTitleValid);

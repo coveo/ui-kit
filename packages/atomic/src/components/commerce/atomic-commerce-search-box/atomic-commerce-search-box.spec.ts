@@ -1,6 +1,6 @@
 import {AriaLiveRegionController} from '@/src/utils/accessibility-utils';
 import {isMacOS} from '@/src/utils/device-utils';
-import * as replaceBreakpoint from '@/src/utils/replace-breakpoint';
+import * as replaceBreakpoint from '@/src/utils/replace-breakpoint-utils';
 import {renderInAtomicCommerceInterface} from '@/vitest-utils/testing-helpers/fixtures/atomic/commerce/atomic-commerce-interface-fixture';
 import '@/vitest-utils/testing-helpers/fixtures/atomic/commerce/fake-atomic-commerce-search-box-suggestions-fixture';
 import {
@@ -29,7 +29,7 @@ vi.mock(import('../../../utils/utils'), async (importOriginal) => {
     randomID: vi.fn((prefix?: string, _length?: number) => `${prefix}123`),
   };
 });
-vi.mock('@/src/utils/replace-breakpoint', {spy: true});
+vi.mock('@/src/utils/replace-breakpoint-utils', {spy: true});
 
 const commonSearchBoxOptions = {
   id: 'atomic-commerce-search-box-123',

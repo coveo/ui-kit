@@ -4,7 +4,7 @@ import type {
   SearchEngine,
   SortCriterion,
 } from '@coveo/headless';
-import {DEFAULT_MOBILE_BREAKPOINT} from '../../../utils/replace-breakpoint';
+import {DEFAULT_MOBILE_BREAKPOINT} from '../../../utils/replace-breakpoint-utils';
 import type {
   FacetInfo,
   FacetStore,

@@ -1,4 +1,4 @@
-import {updateBreakpoints} from '../../../utils/replace-breakpoint';
+import {updateBreakpoints} from '../../../utils/replace-breakpoint-utils';
 import {
   FocusTargetController,
   getFirstFocusableDescendant,

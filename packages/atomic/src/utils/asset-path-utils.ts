@@ -1,4 +1,4 @@
-import {getResourceUrl} from './resource-url';
+import {getResourceUrl} from './resource-url-utils';
 
 export function getAssetPath(path: string): string {
   const resourceUrl = getResourceUrl();

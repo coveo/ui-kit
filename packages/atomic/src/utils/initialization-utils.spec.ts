@@ -19,7 +19,7 @@ import {
   MissingInterfaceParentError,
 } from './initialization-utils';
 
-jest.mock('./replace-breakpoint.ts', () => ({
+jest.mock('./replace-breakpoint-utils.ts', () => ({
   ...jest.requireActual('./replace-breakpoint.ts'),
   updateBreakpoints: () => {},
 }));

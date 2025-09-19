@@ -19,7 +19,7 @@ import {
   InitializableComponent,
   InitializeBindings,
 } from '../../../../utils/initialization-utils';
-import {updateBreakpoints} from '../../../../utils/replace-breakpoint';
+import {updateBreakpoints} from '../../../../utils/replace-breakpoint-utils';
 import {once, randomID} from '../../../../utils/utils';
 import {ATOMIC_MODAL_EXPORT_PARTS} from '../../atomic-modal/export-parts';
 import {IconButton} from '../../stencil-iconButton';
