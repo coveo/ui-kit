@@ -79,7 +79,6 @@ export function generateFacetDependencyConditions(dependsOn) {
 
 /**
  * Type guard to check if the provided value is a CategoryFacetValue.
- * @param {CategoryFacetValue} value - The value to check.
  * @returns {boolean} True if the value is a CategoryFacetValue.
  */
 function isCategoryFacetValue(value) {
@@ -113,7 +112,6 @@ function getSelectedCategoryFacetValueRequest(value) {
 
 /**
  * Type guard to check if the provided value is a SimpleFacetValue.
- * @param {SimpleFacetValue} facetValue - The value to check.
  * @returns {boolean} True if the value is a SimpleFacetValue.
  */
 function isSimpleFacetValue(facetValue) {
