@@ -209,7 +209,7 @@ export class I18nUtils {
 
   /**
    * Formats a string with the given arguments.
-   * @param {*} stringToFormat
+   * @param {String} stringToFormat
    * @param  {...any} formattingArguments
    * @returns {string} The formatted string.
    * @throws {Error} If string format is not a string.
@@ -646,7 +646,6 @@ export class Store {
    * @param {Record<String, unknown>} store
    * @param {string} facetType
    * @param {{ label?: string; facetId: any; format?: Function;}} data
-   * @return {void}
    */
   static registerFacetToStore(store, facetType, data) {
     if (store?.state[facetType][data.facetId]) {
@@ -659,8 +658,7 @@ export class Store {
    * Registers sort option data to the store.
    * @param {Record<String, any>} store
    * @param {Array<{label: string; value: string; criterion: SortCriterion;}>} data
-   * @return {void}
-   */
+  */
   static registerSortOptionDataToStore(store, data) {
     store.state.sort = data;
   }
@@ -928,7 +926,6 @@ export async function copyToClipboard(text) {
 /**
  * Copies text to clipboard using the DOM.
  * @param {string} text
- * @return {void}
  */
 export function copyToClipboardFallback(text) {
   const el = document.createElement('textarea');

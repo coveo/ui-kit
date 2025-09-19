@@ -24,7 +24,7 @@ const unclosedElement = /(\*{1,3}|`)($|\w[\w\s]*$)/;
 /**
  * Complete unclosed elements such as bold, italic, and code.
  * @param {string} text
- * @returns {string} The corrected text content.
+ * @returns {string} The original content with closed tags.
  */
 const completeUnclosedElement = (text) => {
   const match = unclosedElement.exec(text);
@@ -46,7 +46,7 @@ const completeUnclosedElement = (text) => {
 
 /**
  * Escape HTML special characters in a string.
- * @param {*} text
+ * @param {String} text
  * @returns {string} The escaped HTML string.
  */
 const escapeHtml = (text) => {
@@ -60,9 +60,7 @@ const escapeHtml = (text) => {
 
 /**
  * Custom Marked renderer to override the default rendering of certain elements.
- * @type {object}
- * @property {Function} code
- * @returns {string} The code block element to render.
+ * See: https://marked.js.org/using_pro
  */
 const customRenderer = {
   code(code) {
