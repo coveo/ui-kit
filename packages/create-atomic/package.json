@@ -44,10 +44,10 @@
     "isomorphic-fetch": "3.0.0",
     "minimist": "1.2.8",
     "node-plop": "^0.32.0",
-    "plop": "4.0.1"
+    "plop": "4.0.2"
   },
   "devDependencies": {
-    "fs-extra": "11.3.0",
-    "typescript": "5.8.3"
+    "fs-extra": "11.3.1",
+    "typescript": "5.9.2"
   }
 }
