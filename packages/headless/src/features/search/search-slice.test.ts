@@ -15,6 +15,7 @@ import {
   fetchFacetValues,
   fetchMoreResults,
   fetchPage,
+  setReadyToGenerateAnswerAction,
 } from './search-actions.js';
 import {searchReducer} from './search-slice.js';
 import {
@@ -491,5 +492,23 @@ describe('search-slice', () => {
     const finalState = searchReducer(state, setError(error));
     expect(finalState.error).toEqual(error);
     expect(finalState.isLoading).toBe(false);
+  });
+
+  it('should set readyToGenerateAnswer to true when setReadyToGenerateAnswerAction is dispatched with true', () => {
+    expect(state.readyToGenerateAnswer).toBe(false);
+    const finalState = searchReducer(
+      state,
+      setReadyToGenerateAnswerAction(true)
+    );
+    expect(finalState.readyToGenerateAnswer).toBe(true);
+  });
+
+  it('should set readyToGenerateAnswer to false when setReadyToGenerateAnswerAction is dispatched with false', () => {
+    state.readyToGenerateAnswer = true;
+    const finalState = searchReducer(
+      state,
+      setReadyToGenerateAnswerAction(false)
+    );
+    expect(finalState.readyToGenerateAnswer).toBe(false);
   });
 });

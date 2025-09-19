@@ -20,7 +20,7 @@ import {
   updateInstantResultsQuery,
 } from '../../instant-results/instant-results-actions.js';
 import {buildSearchAndFoldingLoadCollectionRequest} from '../../search-and-folding/legacy/search-and-folding-request.js';
-import {updateSearchAction} from '../search-actions.js';
+import {setReadyToGenerateAnswerAction} from '../search-actions.js';
 import {logFetchMoreResults} from '../search-analytics-actions.js';
 import {
   type MappedSearchRequest,
@@ -228,6 +228,11 @@ export async function legacyFetchPage(
   const request = await buildSearchRequest(state, eventDescription);
   const fetched = await processor.fetchFromAPI(request, {origin: 'mainSearch'});
 
+  // Clear the generate-answer readiness flag once the request completes.
+  // This prevents accidental reuse of the previous cause and ensures that
+  // the next search will explicitly set a new cause before answers can generate.
+  config.dispatch(setReadyToGenerateAnswerAction(false));
+
   return await processor.process(fetched);
 }
 
@@ -253,6 +258,11 @@ export async function legacyFetchMoreResults(
 
   const request = await buildFetchMoreRequest(state, eventDescription);
   const fetched = await processor.fetchFromAPI(request, {origin: 'mainSearch'});
+
+  // Clear the generate-answer readiness flag once the request completes.
+  // This prevents accidental reuse of the previous cause and ensures that
+  // the next search will explicitly set a new cause before answers can generate.
+  config.dispatch(setReadyToGenerateAnswerAction(false));
 
   return await processor.process(fetched);
 }
@@ -299,14 +309,6 @@ export async function legacyExecuteSearch(
     logger,
   });
 
-  if (eventDescription?.actionCause) {
-    config.dispatch(
-      updateSearchAction({
-        actionCause: eventDescription.actionCause,
-      })
-    );
-  }
-
   const request = await buildSearchRequest(state, eventDescription);
 
   const processor = new AsyncSearchThunkProcessor<
@@ -314,6 +316,11 @@ export async function legacyExecuteSearch(
   >({...config, analyticsAction: searchAction});
 
   const fetched = await processor.fetchFromAPI(request, {origin: 'mainSearch'});
+
+  // Clear the generate-answer readiness flag once the request completes.
+  // This prevents accidental reuse of the previous cause and ensures that
+  // the next search will explicitly set a new cause before answers can generate.
+  config.dispatch(setReadyToGenerateAnswerAction(false));
 
   return await processor.process(fetched);
 }

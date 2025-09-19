@@ -116,7 +116,7 @@ const subscribeToSearchRequest = (
       triggerParams.q.length === 0 ||
       triggerParams.requestId.length === 0 ||
       triggerParams.requestId === lastTriggerParams.requestId ||
-      (triggerParams.analyticsMode === 'next' && !triggerParams.actionCause) // If analytics mode is next, we need to wait for the action cause to be set
+      !triggerParams.readyToGenerateAnswer
     ) {
       return;
     }
