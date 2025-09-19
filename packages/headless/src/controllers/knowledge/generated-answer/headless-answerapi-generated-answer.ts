@@ -20,7 +20,6 @@ import {
   generateAnswer,
   resetAnswer,
   sendGeneratedAnswerFeedback,
-  setCannotAnswer,
   updateAnswerConfigurationId,
 } from '../../../features/generated-answer/generated-answer-actions.js';
 import type {GeneratedAnswerFeedback} from '../../../features/generated-answer/generated-answer-analytics-actions.js';
@@ -99,30 +98,23 @@ const parseEvaluationArguments = ({
 const subscribeToSearchRequest = (
   engine: SearchEngine<StreamAnswerAPIState>
 ) => {
-  let lastTriggerParams: ReturnType<typeof selectAnswerTriggerParams>;
+  let lastRequestId = '';
+
   const strictListener = () => {
     const state = engine.state;
     const triggerParams = selectAnswerTriggerParams(state);
 
-    if (!lastTriggerParams || triggerParams.q.length === 0) {
-      lastTriggerParams = triggerParams;
-    }
+    const curruntRequestId = triggerParams.requestId;
+    const newSearchRequestDetected = curruntRequestId !== lastRequestId;
 
-    if (triggerParams.q.length === 0 && !!triggerParams.cannotAnswer) {
-      engine.dispatch(setCannotAnswer(false));
-    }
+    if (newSearchRequestDetected && triggerParams.readyToGenerateAnswer) {
+      lastRequestId = curruntRequestId;
+      engine.dispatch(resetAnswer());
 
-    if (
-      triggerParams.q.length === 0 ||
-      triggerParams.requestId.length === 0 ||
-      triggerParams.requestId === lastTriggerParams.requestId ||
-      !triggerParams.readyToGenerateAnswer
-    ) {
-      return;
+      if (triggerParams.q.length > 0) {
+        engine.dispatch(generateAnswer());
+      }
     }
-
-    lastTriggerParams = triggerParams;
-    engine.dispatch(generateAnswer());
   };
 
   engine.subscribe(strictListener);
@@ -164,8 +156,9 @@ export function buildAnswerApiGeneratedAnswer(
     ...controller,
     get state() {
       const answerApiState = selectAnswer(engine.state).data;
+      const state = getState().generatedAnswer;
       return {
-        ...getState().generatedAnswer,
+        ...state,
         answer: answerApiState?.answer,
         citations: filterOutDuplicatedCitations(
           answerApiState?.citations ?? []
@@ -178,6 +171,11 @@ export function buildAnswerApiGeneratedAnswer(
         isStreaming: answerApiState?.isStreaming ?? false,
         answerContentFormat: answerApiState?.contentFormat ?? 'text/plain',
         isAnswerGenerated: answerApiState?.generated ?? false,
+        cannotAnswer:
+          state.cannotAnswer ||
+          (answerApiState?.generated === false &&
+            !answerApiState?.isLoading &&
+            !answerApiState?.isStreaming),
       };
     },
     retry() {
