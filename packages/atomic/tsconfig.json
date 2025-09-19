@@ -6,7 +6,7 @@
     "experimentalDecorators": true,
     "lib": ["dom", "ES2024"],
     "moduleResolution": "Bundler",
-    "module": "ES2022",
+    "module": "esnext",
     "target": "ES2021",
     "resolveJsonModule": true,
     "useDefineForClassFields": false,
