@@ -107,7 +107,7 @@ const subscribeToSearchRequest = (
     const curruntRequestId = triggerParams.requestId;
     const newSearchRequestDetected = curruntRequestId !== lastRequestId;
 
-    if (newSearchRequestDetected && triggerParams.readyToGenerateAnswer) {
+    if (newSearchRequestDetected) {
       lastRequestId = curruntRequestId;
       engine.dispatch(resetAnswer());
 

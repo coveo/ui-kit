@@ -66,7 +66,6 @@ describe('answer-api-selectors', () => {
         cannotAnswer: false,
         analyticsMode: 'next',
         actionCause: 'searchboxSubmit',
-        readyToGenerateAnswer: true,
       });
     });
   });

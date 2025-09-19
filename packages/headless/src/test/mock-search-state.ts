@@ -20,7 +20,6 @@ export function buildMockSearchState(
     questionAnswer: emptyQuestionAnswer(),
     extendedResults: {},
     searchAction: undefined,
-    readyToGenerateAnswer: false,
     ...config,
   };
 }

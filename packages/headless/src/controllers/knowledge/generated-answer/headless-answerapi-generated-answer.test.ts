@@ -404,7 +404,7 @@ describe('knowledge-generated-answer', () => {
     });
 
     describe('resetAnswer behavior to prepare for a new generated answer', () => {
-      describe('when request ID changes and readyToGenerateAnswer is true', () => {
+      describe('when request ID changes', () => {
         it('should reset the answer to prepare for a new generated answer', () => {
           mockSelectAnswerTriggerParams.mockReturnValue({
             q: 'test query',
@@ -412,7 +412,6 @@ describe('knowledge-generated-answer', () => {
             cannotAnswer: false,
             analyticsMode: 'legacy',
             actionCause: 'searchboxSubmit',
-            readyToGenerateAnswer: true,
           });
 
           listener();
@@ -427,7 +426,6 @@ describe('knowledge-generated-answer', () => {
             cannotAnswer: false,
             analyticsMode: 'legacy',
             actionCause: 'searchboxSubmit',
-            readyToGenerateAnswer: true,
           });
 
           listener();
@@ -443,7 +441,6 @@ describe('knowledge-generated-answer', () => {
               cannotAnswer: false,
               analyticsMode: 'legacy',
               actionCause: 'searchboxSubmit',
-              readyToGenerateAnswer: true,
             })
             .mockReturnValueOnce({
               q: 'second query',
@@ -451,7 +448,6 @@ describe('knowledge-generated-answer', () => {
               cannotAnswer: false,
               analyticsMode: 'legacy',
               actionCause: 'searchboxSubmit',
-              readyToGenerateAnswer: true,
             });
 
           listener(); // First request
@@ -470,7 +466,6 @@ describe('knowledge-generated-answer', () => {
               cannotAnswer: false,
               analyticsMode: 'legacy',
               actionCause: 'searchboxSubmit',
-              readyToGenerateAnswer: true,
             })
             .mockReturnValueOnce({
               q: 'different query',
@@ -478,30 +473,12 @@ describe('knowledge-generated-answer', () => {
               cannotAnswer: false,
               analyticsMode: 'legacy',
               actionCause: 'searchboxSubmit',
-              readyToGenerateAnswer: true,
             });
 
           listener(); // First call with request ID
           listener(); // Same request ID, different query
 
           expect(mockResetAnswer).toHaveBeenCalledTimes(1);
-        });
-      });
-
-      describe('when readyToGenerateAnswer is false', () => {
-        it('should not call resetAnswer for new request ID', () => {
-          mockSelectAnswerTriggerParams.mockReturnValue({
-            q: 'test query',
-            requestId: 'new-request',
-            cannotAnswer: false,
-            analyticsMode: 'legacy',
-            actionCause: 'searchboxSubmit',
-            readyToGenerateAnswer: false,
-          });
-
-          listener();
-
-          expect(mockResetAnswer).not.toHaveBeenCalled();
         });
       });
 
@@ -513,7 +490,6 @@ describe('knowledge-generated-answer', () => {
             cannotAnswer: false,
             analyticsMode: 'legacy',
             actionCause: 'searchboxSubmit',
-            readyToGenerateAnswer: true,
           });
 
           listener();
@@ -524,7 +500,7 @@ describe('knowledge-generated-answer', () => {
     });
 
     describe('generateAnswer behavior', () => {
-      describe('when request is new, state is ready, and has a query', () => {
+      describe('when request is newand state has a query', () => {
         it('should call generateAnswer when request ID is new, state is ready, and has query', () => {
           mockSelectAnswerTriggerParams.mockReturnValue({
             q: 'test query',
@@ -532,7 +508,6 @@ describe('knowledge-generated-answer', () => {
             cannotAnswer: false,
             analyticsMode: 'legacy',
             actionCause: 'searchboxSubmit',
-            readyToGenerateAnswer: true,
           });
 
           listener();
@@ -548,7 +523,6 @@ describe('knowledge-generated-answer', () => {
               cannotAnswer: false,
               analyticsMode: 'legacy',
               actionCause: 'searchboxSubmit',
-              readyToGenerateAnswer: true,
             })
             .mockReturnValueOnce({
               q: 'second query',
@@ -556,7 +530,6 @@ describe('knowledge-generated-answer', () => {
               cannotAnswer: false,
               analyticsMode: 'legacy',
               actionCause: 'searchboxSubmit',
-              readyToGenerateAnswer: true,
             });
 
           listener(); // First request
@@ -574,24 +547,6 @@ describe('knowledge-generated-answer', () => {
             cannotAnswer: false,
             analyticsMode: 'legacy',
             actionCause: 'searchboxSubmit',
-            readyToGenerateAnswer: true,
-          });
-
-          listener();
-
-          expect(mockGenerateAnswer).not.toHaveBeenCalled();
-        });
-      });
-
-      describe('when readyToGenerateAnswer is false', () => {
-        it('should not call generateAnswer even with valid request ID and query', () => {
-          mockSelectAnswerTriggerParams.mockReturnValue({
-            q: 'test query',
-            requestId: 'valid-request',
-            cannotAnswer: false,
-            analyticsMode: 'legacy',
-            actionCause: 'searchboxSubmit',
-            readyToGenerateAnswer: false,
           });
 
           listener();
@@ -608,7 +563,6 @@ describe('knowledge-generated-answer', () => {
             cannotAnswer: false,
             analyticsMode: 'legacy',
             actionCause: 'searchboxSubmit',
-            readyToGenerateAnswer: true,
           });
 
           listener();
@@ -626,7 +580,6 @@ describe('knowledge-generated-answer', () => {
               cannotAnswer: false,
               analyticsMode: 'legacy',
               actionCause: 'searchboxSubmit',
-              readyToGenerateAnswer: true,
             })
             .mockReturnValueOnce({
               q: 'first query',
@@ -634,7 +587,6 @@ describe('knowledge-generated-answer', () => {
               cannotAnswer: false,
               analyticsMode: 'legacy',
               actionCause: 'searchboxSubmit',
-              readyToGenerateAnswer: true,
             });
 
           listener(); // First call with request ID
@@ -646,34 +598,6 @@ describe('knowledge-generated-answer', () => {
     });
 
     describe('user interaction scenarios', () => {
-      describe('when answer generation becomes ready after a short delay', () => {
-        it('should trigger answer generation once readiness is reachede', () => {
-          mockSelectAnswerTriggerParams
-            .mockReturnValueOnce({
-              q: 'test query',
-              requestId: 'delayed-request',
-              cannotAnswer: false,
-              analyticsMode: 'legacy',
-              actionCause: 'searchboxSubmit',
-              readyToGenerateAnswer: false,
-            })
-            .mockReturnValueOnce({
-              q: 'test query',
-              requestId: 'delayed-request',
-              cannotAnswer: false,
-              analyticsMode: 'legacy',
-              actionCause: 'searchboxSubmit',
-              readyToGenerateAnswer: true,
-            });
-
-          listener(); // Request not ready yet
-          listener(); // Same request, now ready
-
-          expect(mockResetAnswer).toHaveBeenCalledTimes(1);
-          expect(mockGenerateAnswer).toHaveBeenCalledTimes(1);
-        });
-      });
-
       describe('when the user clears their query', () => {
         it('should reset the previous answer but not generate a new one', () => {
           mockSelectAnswerTriggerParams
@@ -683,7 +607,6 @@ describe('knowledge-generated-answer', () => {
               cannotAnswer: false,
               analyticsMode: 'legacy',
               actionCause: 'searchboxSubmit',
-              readyToGenerateAnswer: true,
             })
             .mockReturnValueOnce({
               q: '',
@@ -691,7 +614,6 @@ describe('knowledge-generated-answer', () => {
               cannotAnswer: false,
               analyticsMode: 'legacy',
               actionCause: 'searchboxSubmit',
-              readyToGenerateAnswer: true,
             });
 
           listener(); // Valid query - should trigger reset and generate
@@ -711,7 +633,6 @@ describe('knowledge-generated-answer', () => {
               cannotAnswer: false,
               analyticsMode: 'legacy',
               actionCause: 'searchboxSubmit',
-              readyToGenerateAnswer: true,
             })
             .mockReturnValueOnce({
               q: 'dogs',
@@ -719,7 +640,6 @@ describe('knowledge-generated-answer', () => {
               cannotAnswer: false,
               analyticsMode: 'legacy',
               actionCause: 'searchboxSubmit',
-              readyToGenerateAnswer: true,
             })
             .mockReturnValueOnce({
               q: 'birds',
@@ -727,7 +647,6 @@ describe('knowledge-generated-answer', () => {
               cannotAnswer: false,
               analyticsMode: 'legacy',
               actionCause: 'searchboxSubmit',
-              readyToGenerateAnswer: true,
             });
 
           listener(); // Search for cats

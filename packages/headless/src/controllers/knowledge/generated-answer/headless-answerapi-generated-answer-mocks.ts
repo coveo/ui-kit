@@ -89,7 +89,6 @@ export const streamAnswerAPIStateMock: StreamAnswerAPIState = {
     },
     extendedResults: {},
     searchAction: {actionCause: 'searchboxSubmit'},
-    readyToGenerateAnswer: true,
   },
   fields: {
     fieldsToInclude: [

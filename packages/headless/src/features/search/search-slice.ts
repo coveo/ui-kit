@@ -1,13 +1,12 @@
 import {createReducer, type PayloadAction} from '@reduxjs/toolkit';
+import {SearchPageEvents} from '../analytics/search-action-cause.js';
 import {setError} from '../error/error-actions.js';
 import {
   executeSearch,
   fetchFacetValues,
   fetchMoreResults,
   fetchPage,
-} from './legacy/search-actions.js';
-import {
-  setReadyToGenerateAnswerAction,
+  type TransitiveSearchAction,
   updateSearchAction,
 } from './search-actions.js';
 import {
@@ -65,10 +64,27 @@ function handlePendingSearch(
     string,
     {
       requestId: string;
+      arg: TransitiveSearchAction;
     }
   >
 ) {
   state.isLoading = true;
+  state.searchAction = action.meta.arg.next;
+  state.requestId = action.meta.requestId;
+}
+
+function handlePendingfetchMoreResults(
+  state: SearchState,
+  action: PayloadAction<
+    void,
+    string,
+    {
+      requestId: string;
+    }
+  >
+) {
+  state.isLoading = true;
+  state.searchAction = {actionCause: SearchPageEvents.browseResults};
   state.requestId = action.meta.requestId;
 }
 
@@ -111,13 +127,10 @@ export const searchReducer = createReducer(
       state.response.searchUid = action.payload.response.searchUid;
     });
     builder.addCase(executeSearch.pending, handlePendingSearch);
-    builder.addCase(fetchMoreResults.pending, handlePendingSearch);
+    builder.addCase(fetchMoreResults.pending, handlePendingfetchMoreResults);
     builder.addCase(fetchPage.pending, handlePendingSearch);
     builder.addCase(updateSearchAction, (state, action) => {
       state.searchAction = action.payload;
-    });
-    builder.addCase(setReadyToGenerateAnswerAction, (state, action) => {
-      state.readyToGenerateAnswer = action.payload;
     });
     builder.addCase(setError, (state, action) => {
       state.error = action.payload;

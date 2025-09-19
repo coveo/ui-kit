@@ -5,6 +5,7 @@ import {buildMockResult} from '../../test/mock-result.js';
 import {buildMockSearch} from '../../test/mock-search.js';
 import {buildMockSearchResponse} from '../../test/mock-search-response.js';
 import {buildMockSearchState} from '../../test/mock-search-state.js';
+import {SearchPageEvents} from '../analytics/search-action-cause.js';
 import {setError} from '../error/error-actions.js';
 import {logFacetShowMore} from '../facets/facet-set/facet-set-analytics-actions.js';
 import {logPageNext} from '../pagination/pagination-analytics-actions.js';
@@ -15,7 +16,6 @@ import {
   fetchFacetValues,
   fetchMoreResults,
   fetchPage,
-  setReadyToGenerateAnswerAction,
 } from './search-actions.js';
 import {searchReducer} from './search-slice.js';
 import {
@@ -411,6 +411,7 @@ describe('search-slice', () => {
   it('set the isloading state to true during executeSearch.pending', () => {
     const pendingAction = executeSearch.pending('asd', {
       legacy: logSearchboxSubmit(),
+      next: {actionCause: SearchPageEvents.searchboxSubmit},
     });
     const finalState = searchReducer(state, pendingAction);
     expect(finalState.isLoading).toBe(true);
@@ -426,6 +427,36 @@ describe('search-slice', () => {
     const pendingAction = fetchPage.pending('asd', {legacy: logPageNext()});
     const finalState = searchReducer(state, pendingAction);
     expect(finalState.isLoading).toBe(true);
+  });
+
+  it('set the search action cause during executeSearch.pending', () => {
+    const pendingAction = executeSearch.pending('asd', {
+      legacy: logSearchboxSubmit(),
+      next: {actionCause: SearchPageEvents.searchboxSubmit},
+    });
+    const finalState = searchReducer(state, pendingAction);
+    expect(finalState.searchAction?.actionCause).toBe(
+      SearchPageEvents.searchboxSubmit
+    );
+  });
+
+  it('set the search action cause during fetchMoreResults.pending', () => {
+    const pendingAction = fetchMoreResults.pending('asd');
+    const finalState = searchReducer(state, pendingAction);
+    expect(finalState.searchAction?.actionCause).toBe(
+      SearchPageEvents.browseResults
+    );
+  });
+
+  it('set the search action cause during fetchPage.pending', () => {
+    const pendingAction = fetchPage.pending('asd', {
+      legacy: logPageNext(),
+      next: {actionCause: SearchPageEvents.browseResults},
+    });
+    const finalState = searchReducer(state, pendingAction);
+    expect(finalState.searchAction?.actionCause).toBe(
+      SearchPageEvents.browseResults
+    );
   });
 
   it('update the requestId during executeSearch.pending', () => {
@@ -492,23 +523,5 @@ describe('search-slice', () => {
     const finalState = searchReducer(state, setError(error));
     expect(finalState.error).toEqual(error);
     expect(finalState.isLoading).toBe(false);
-  });
-
-  it('should set readyToGenerateAnswer to true when setReadyToGenerateAnswerAction is dispatched with true', () => {
-    expect(state.readyToGenerateAnswer).toBe(false);
-    const finalState = searchReducer(
-      state,
-      setReadyToGenerateAnswerAction(true)
-    );
-    expect(finalState.readyToGenerateAnswer).toBe(true);
-  });
-
-  it('should set readyToGenerateAnswer to false when setReadyToGenerateAnswerAction is dispatched with false', () => {
-    state.readyToGenerateAnswer = true;
-    const finalState = searchReducer(
-      state,
-      setReadyToGenerateAnswerAction(false)
-    );
-    expect(finalState.readyToGenerateAnswer).toBe(false);
   });
 });

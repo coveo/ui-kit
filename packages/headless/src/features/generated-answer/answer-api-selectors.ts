@@ -8,22 +8,12 @@ export const selectAnswerTriggerParams = createSelector(
   (state) => state.generatedAnswer.cannotAnswer,
   (state) => state.configuration.analytics.analyticsMode,
   (state) => state.search.searchAction?.actionCause,
-  (state) => state.search.readyToGenerateAnswer,
-
-  (
+  (q, requestId, cannotAnswer, analyticsMode, actionCause) => ({
     q,
     requestId,
     cannotAnswer,
     analyticsMode,
     actionCause,
-    readyToGenerateAnswer
-  ) => ({
-    q,
-    requestId,
-    cannotAnswer,
-    analyticsMode,
-    actionCause,
-    readyToGenerateAnswer,
   })
 );
 
