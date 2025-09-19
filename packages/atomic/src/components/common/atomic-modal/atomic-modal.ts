@@ -85,15 +85,15 @@ export class AtomicModal
     @apply shadow;
   }
   
-  :host(.open) [part='backdrop'] {
+  :host([is-open]) [part='backdrop'] {
     @apply pointer-events-auto;
   }
   
-  :host(.open.dialog) [part='backdrop'] {
+  :host([is-open]:not([fullscreen])) [part='backdrop'] {
     background-color: rgba(40, 40, 40, 0.8);
   }
   
-  :host(.dialog) [part='backdrop'] {
+  :host(:not([fullscreen])) [part='backdrop'] {
     @apply grid;
     @apply p-6;
     transition: background-color 500ms ease-in-out;
@@ -105,45 +105,45 @@ export class AtomicModal
     grid-template-rows: 1fr auto 3fr;
   }
   
-  :host(.dialog) [part='container'] {
+  :host(:not([fullscreen])) [part='container'] {
     @apply rounded;
     @apply shadow;
   }
   
-  :host(.dialog) [part='header-wrapper'] {
+  :host(:not([fullscreen])) [part='header-wrapper'] {
     @apply px-6;
     @apply py-4;
   }
   
-  :host(.dialog) [part='header'] {
+  :host(:not([fullscreen])) [part='header'] {
     @apply font-bold;
   }
   
-  :host(.dialog) [part='body-wrapper'] {
+  :host(:not([fullscreen])) [part='body-wrapper'] {
     @apply p-6;
   }
   
-  :host(.dialog) [part='footer-wrapper'] {
+  :host(:not([fullscreen])) [part='footer-wrapper'] {
     @apply bg-neutral-light;
     padding: 1rem 1.125rem;
   }
   
-  :host(.fullscreen) [part='container'] {
+  :host([fullscreen]) [part='container'] {
     @apply absolute;
     @apply inset-0;
   }
   
-  :host(.fullscreen) [part='header-wrapper'] {
+  :host([fullscreen]) [part='header-wrapper'] {
     @apply p-6;
   }
   
-  :host(.fullscreen) [part='body-wrapper'] {
+  :host([fullscreen]) [part='body-wrapper'] {
     @apply px-6;
     @apply pt-8;
     @apply pb-5;
   }
   
-  :host(.fullscreen) [part='footer-wrapper'] {
+  :host([fullscreen]) [part='footer-wrapper'] {
     @apply shadow-t-lg;
     @apply px-6;
     @apply py-4;
@@ -239,17 +239,6 @@ export class AtomicModal
     `;
   }
 
-  updated(changedProperties: Map<string, unknown>) {
-    super.updated?.(changedProperties);
-
-    if (
-      changedProperties.has('isOpen') ||
-      changedProperties.has('fullscreen')
-    ) {
-      this.updateHostClasses();
-    }
-  }
-
   disconnectedCallback() {
     super.disconnectedCallback();
     document.body.removeEventListener('keyup', this.handleCloseOnEscape);
@@ -259,8 +248,6 @@ export class AtomicModal
   // Public methods
 
   public initialize() {
-    this.updateHostClasses();
-
     if (this.isOpen) {
       this.shouldRender = true;
       this.handleToggleOpen(this.isOpen);
@@ -399,25 +386,6 @@ export class AtomicModal
     if (this.focusTrap.value) {
       this.focusTrap.value.active = active;
     }
-  }
-
-  private updateHostClasses() {
-    const currentClasses = this.getAttribute('class') || '';
-    const existingClasses = currentClasses
-      .split(' ')
-      .filter((cls) => cls && !['open', 'fullscreen', 'dialog'].includes(cls));
-
-    const internalClasses: string[] = [];
-    if (this.isOpen) {
-      internalClasses.push('open');
-    }
-    if (this.fullscreen) {
-      internalClasses.push('fullscreen');
-    } else {
-      internalClasses.push('dialog');
-    }
-
-    this.className = [...existingClasses, ...internalClasses].join(' ');
   }
 
   private waitForAnimationEnded() {
