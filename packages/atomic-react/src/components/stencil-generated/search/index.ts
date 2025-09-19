@@ -20,7 +20,6 @@ export const AtomicFacet = /*@__PURE__*/createReactComponent<JSX.AtomicFacet, HT
 export const AtomicFacetManager = /*@__PURE__*/createReactComponent<JSX.AtomicFacetManager, HTMLAtomicFacetManagerElement>('atomic-facet-manager');
 export const AtomicFoldedResultList = /*@__PURE__*/createReactComponent<JSX.AtomicFoldedResultList, HTMLAtomicFoldedResultListElement>('atomic-folded-result-list');
 export const AtomicFormatCurrency = /*@__PURE__*/createReactComponent<JSX.AtomicFormatCurrency, HTMLAtomicFormatCurrencyElement>('atomic-format-currency');
-export const AtomicFormatNumber = /*@__PURE__*/createReactComponent<JSX.AtomicFormatNumber, HTMLAtomicFormatNumberElement>('atomic-format-number');
 export const AtomicFormatUnit = /*@__PURE__*/createReactComponent<JSX.AtomicFormatUnit, HTMLAtomicFormatUnitElement>('atomic-format-unit');
 export const AtomicGeneratedAnswer = /*@__PURE__*/createReactComponent<JSX.AtomicGeneratedAnswer, HTMLAtomicGeneratedAnswerElement>('atomic-generated-answer');
 export const AtomicGeneratedAnswerFeedbackModal = /*@__PURE__*/createReactComponent<JSX.AtomicGeneratedAnswerFeedbackModal, HTMLAtomicGeneratedAnswerFeedbackModalElement>('atomic-generated-answer-feedback-modal');
