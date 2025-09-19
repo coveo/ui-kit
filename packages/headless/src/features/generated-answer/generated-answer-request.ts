@@ -75,7 +75,12 @@ export const constructAnswerAPIQueryParams = (
   const pipeline = selectPipeline(state);
   const citationsFieldToInclude = selectFieldsToIncludeInCitation(state) ?? [];
   const facetParams = getGeneratedFacetParams(state);
+  const tab = selectActiveTab(state.tabSet) || 'default';
+  const locale = selectLocale(state);
+  const timezone = selectTimezone(state);
+  const referrer = navigatorContext.referrer || '';
   const facetOptions = selectFacetOptions(state);
+  const sortCriteria = selectSortCriteria(state);
   const actionsHistory = getActionsHistory(state);
   const excerptLength = selectExcerptLength(state);
   const foldingParams = selectFoldingQueryParams(state);
@@ -121,18 +126,18 @@ export const constructAnswerAPIQueryParams = (
       numberOfResults: getNumberOfResultsWithinIndexLimit(state),
       firstResult: state.pagination.firstResult,
     }),
-    tab: selectActiveTab(state.tabSet) || 'default',
-    locale: selectLocale(state),
-    timezone: selectTimezone(state),
+    tab,
+    locale,
+    timezone,
     ...(state.debug !== undefined && {debug: state.debug}),
-    referrer: getReferrer(navigatorContext),
+    referrer,
     ...actionsHistory,
     ...(foldingParams && foldingParams),
     ...(excerptLength && {excerptLength}),
     ...(dictionaryFieldContext && {
       dictionaryFieldContext,
     }),
-    sortCriteria: selectSortCriteria(state),
+    sortCriteria,
     ...(facetOptions && {facetOptions}),
     ...analyticsParams,
   };
@@ -146,10 +151,6 @@ const getGeneratedFacetParams = (state: StreamAnswerAPIState) =>
     .sort((a, b) =>
       a.facetId > b.facetId ? 1 : b.facetId > a.facetId ? -1 : 0
     );
-
-const getReferrer = (navigatorContext: NavigatorContext) => {
-  return navigatorContext.referrer || '';
-};
 
 const getActionsHistory = (state: StreamAnswerAPIState) => ({
   actionsHistory: state.configuration.analytics.enabled
