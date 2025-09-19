@@ -491,32 +491,6 @@ export namespace Components {
         "currency": string;
     }
     /**
-     * The `atomic-format-number` component is used for number formatting.
-     * The numerical format of compatible parents will be set according to the properties of this component.
-     */
-    interface AtomicFormatNumber {
-        /**
-          * The maximum number of fraction digits to use.
-         */
-        "maximumFractionDigits"?: number;
-        /**
-          * The maximum number of significant digits to use.
-         */
-        "maximumSignificantDigits"?: number;
-        /**
-          * The minimum number of fraction digits to use.
-         */
-        "minimumFractionDigits"?: number;
-        /**
-          * The minimum number of integer digits to use.
-         */
-        "minimumIntegerDigits"?: number;
-        /**
-          * The minimum number of significant digits to use.
-         */
-        "minimumSignificantDigits"?: number;
-    }
-    /**
      * The `atomic-format-unit` component is used for formatting numbers with units.
      * The numerical format of compatible parents will be set according to the properties of this component.
      */
@@ -3164,16 +3138,6 @@ declare global {
         new (): HTMLAtomicFormatCurrencyElement;
     };
     /**
-     * The `atomic-format-number` component is used for number formatting.
-     * The numerical format of compatible parents will be set according to the properties of this component.
-     */
-    interface HTMLAtomicFormatNumberElement extends Components.AtomicFormatNumber, HTMLStencilElement {
-    }
-    var HTMLAtomicFormatNumberElement: {
-        prototype: HTMLAtomicFormatNumberElement;
-        new (): HTMLAtomicFormatNumberElement;
-    };
-    /**
      * The `atomic-format-unit` component is used for formatting numbers with units.
      * The numerical format of compatible parents will be set according to the properties of this component.
      */
@@ -4568,7 +4532,6 @@ declare global {
         "atomic-focus-trap": HTMLAtomicFocusTrapElement;
         "atomic-folded-result-list": HTMLAtomicFoldedResultListElement;
         "atomic-format-currency": HTMLAtomicFormatCurrencyElement;
-        "atomic-format-number": HTMLAtomicFormatNumberElement;
         "atomic-format-unit": HTMLAtomicFormatUnitElement;
         "atomic-generated-answer": HTMLAtomicGeneratedAnswerElement;
         "atomic-generated-answer-feedback-modal": HTMLAtomicGeneratedAnswerFeedbackModalElement;
@@ -5136,32 +5099,6 @@ declare namespace LocalJSX {
           * The currency to use in currency formatting. Possible values are the ISO 4217 currency codes, such as "USD" for the US dollar, "EUR" for the euro, or "CNY" for the Chinese RMB. See the current [currency & funds code list](https://www.six-group.com/en/products-services/financial-information/data-standards.html#scrollTo=maintenance-agency).
          */
         "currency": string;
-    }
-    /**
-     * The `atomic-format-number` component is used for number formatting.
-     * The numerical format of compatible parents will be set according to the properties of this component.
-     */
-    interface AtomicFormatNumber {
-        /**
-          * The maximum number of fraction digits to use.
-         */
-        "maximumFractionDigits"?: number;
-        /**
-          * The maximum number of significant digits to use.
-         */
-        "maximumSignificantDigits"?: number;
-        /**
-          * The minimum number of fraction digits to use.
-         */
-        "minimumFractionDigits"?: number;
-        /**
-          * The minimum number of integer digits to use.
-         */
-        "minimumIntegerDigits"?: number;
-        /**
-          * The minimum number of significant digits to use.
-         */
-        "minimumSignificantDigits"?: number;
     }
     /**
      * The `atomic-format-unit` component is used for formatting numbers with units.
@@ -7507,7 +7444,6 @@ declare namespace LocalJSX {
         "atomic-focus-trap": AtomicFocusTrap;
         "atomic-folded-result-list": AtomicFoldedResultList;
         "atomic-format-currency": AtomicFormatCurrency;
-        "atomic-format-number": AtomicFormatNumber;
         "atomic-format-unit": AtomicFormatUnit;
         "atomic-generated-answer": AtomicGeneratedAnswer;
         "atomic-generated-answer-feedback-modal": AtomicGeneratedAnswerFeedbackModal;
@@ -7717,11 +7653,6 @@ declare module "@stencil/core" {
              * The numerical format of compatible parents will be set according to the currency property of this component.
              */
             "atomic-format-currency": LocalJSX.AtomicFormatCurrency & JSXBase.HTMLAttributes<HTMLAtomicFormatCurrencyElement>;
-            /**
-             * The `atomic-format-number` component is used for number formatting.
-             * The numerical format of compatible parents will be set according to the properties of this component.
-             */
-            "atomic-format-number": LocalJSX.AtomicFormatNumber & JSXBase.HTMLAttributes<HTMLAtomicFormatNumberElement>;
             /**
              * The `atomic-format-unit` component is used for formatting numbers with units.
              * The numerical format of compatible parents will be set according to the properties of this component.
