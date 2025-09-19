@@ -147,7 +147,7 @@ export function defineSearchEngine<
 
     engine.executeFirstSearch();
     const staticState = createStaticState({
-      searchAction: await engine.waitForSearchCompletedAction(),
+      searchActions: [await engine.waitForSearchCompletedAction()],
       controllers: controllers,
     }) as EngineStaticState<
       UnknownAction,

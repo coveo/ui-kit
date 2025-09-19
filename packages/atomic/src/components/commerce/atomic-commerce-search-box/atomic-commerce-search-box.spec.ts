@@ -46,7 +46,7 @@ const commonSearchBoxOptions = {
   clearFilters: true,
 };
 
-describe('AtomicCommerceSearchBox', () => {
+describe('atomic-commerce-search-box', () => {
   const mockedEngine = {
     dispatch: vi.fn(),
   } as unknown as CommerceEngine;

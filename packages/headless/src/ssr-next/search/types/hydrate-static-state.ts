@@ -15,7 +15,7 @@ export type HydratedState<
 > = SearchEngineDefinitionBuildResult<TEngine, TControllers>;
 
 interface HydrateStaticStateOptions<TSearchAction> {
-  searchAction: TSearchAction;
+  searchActions: TSearchAction[];
 }
 
 /**

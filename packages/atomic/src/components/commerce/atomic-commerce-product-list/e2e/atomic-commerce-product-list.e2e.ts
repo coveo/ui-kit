@@ -14,7 +14,7 @@ test.describe('atomic-commerce-product-list', () => {
     });
 
     test.describe('when the query returns products', () => {
-      test('should be a11y compliant', async ({
+      test('should be accessible', async ({
         productList,
         commerceInterface,
         makeAxeBuilder,
@@ -66,7 +66,7 @@ test.describe('atomic-commerce-product-list', () => {
     });
 
     test.describe('when the query returns products', () => {
-      test('should be a11y compliant', async ({
+      test('should be accessible', async ({
         productList,
         commerceInterface,
         makeAxeBuilder,
@@ -122,7 +122,7 @@ test.describe('atomic-commerce-product-list', () => {
         await productList.load({story: 'table-display'});
       });
 
-      test('should be a11y compliant', async ({
+      test('should be accessible', async ({
         commerceInterface,
         makeAxeBuilder,
       }) => {

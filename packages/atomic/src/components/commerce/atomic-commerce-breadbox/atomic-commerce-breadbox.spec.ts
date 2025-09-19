@@ -31,7 +31,7 @@ vi.mock('@/src/utils/date-utils', () => {
   return {parseDate};
 });
 
-describe('AtomicCommerceBreadbox', () => {
+describe('atomic-commerce-breadbox', () => {
   const mockedEngine = buildFakeCommerceEngine();
   let mockedBreadcrumbManager: BreadcrumbManager;
   const mockedDeselectAll = vi.fn();
