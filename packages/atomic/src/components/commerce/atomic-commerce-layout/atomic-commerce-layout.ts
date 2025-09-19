@@ -3,7 +3,7 @@ import {customElement, property, state} from 'lit/decorators.js';
 import {ChildrenUpdateCompleteMixin} from '@/src/mixins/children-update-complete-mixin';
 import {LightDomMixin} from '@/src/mixins/light-dom';
 import {randomID} from '@/src/utils/utils';
-import {DEFAULT_MOBILE_BREAKPOINT} from '../../../utils/replace-breakpoint';
+import {DEFAULT_MOBILE_BREAKPOINT} from '../../../utils/replace-breakpoint-utils';
 import styles from './atomic-commerce-layout.tw.css';
 import {buildCommerceLayout} from './commerce-layout';
 
