@@ -1,5 +1,4 @@
 import type {PrimitivesValues} from '@coveo/bueno';
-import {createCustomEqual} from 'fast-equals';
 
 export function arrayEqual<T>(
   firstArray: T[],
@@ -72,11 +71,40 @@ export const arrayEqualStrictlyDifferentOrder = <
   return false;
 };
 
-export const deepEqualAnyOrder: <T>(a: T, b: T) => boolean = createCustomEqual({
-  createCustomConfig: (config: {}) => {
-    return {
-      ...config,
-      areArraysEqual: arrayEqualAnyOrder,
-    };
-  },
-});
+export function deepEqualAnyOrder<T>(a: T, b: T): boolean {
+  if (a === b) return true;
+  if (a == null || b == null) return false;
+
+  if (typeof a !== typeof b) return false;
+
+  if (Array.isArray(a) && Array.isArray(b)) {
+    return arrayEqualAnyOrder(a, b);
+  }
+
+  if (typeof a === 'object' && typeof b === 'object') {
+    if (a instanceof Date && b instanceof Date) {
+      return a.getTime() === b.getTime();
+    }
+
+    if (a instanceof RegExp && b instanceof RegExp) {
+      return a.toString() === b.toString();
+    }
+
+    if (a.constructor === Object && b.constructor === Object) {
+      const keysA = Object.keys(a);
+      const keysB = Object.keys(b);
+
+      if (keysA.length !== keysB.length) return false;
+
+      return keysA.every(
+        (key) =>
+          keysB.includes(key) &&
+          deepEqualAnyOrder((a as unknown)[key], (b as unknown)[key])
+      );
+    }
+
+    return a === b;
+  }
+
+  return a === b;
+}
