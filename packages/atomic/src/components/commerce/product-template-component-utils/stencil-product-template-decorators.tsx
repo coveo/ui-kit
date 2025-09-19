@@ -1,35 +1,5 @@
 import {Product} from '@coveo/headless/commerce';
-import {
-  InteractiveItemContext,
-  InteractiveItemContextEvent,
-  ItemContext,
-  ItemContextEvent,
-  itemContext,
-} from '../../common/item-list/stencil-item-decorators';
-
-/**
- * A [StencilJS property decorator](https://stenciljs.com/) to be used for product template components.
- * This allows the Stencil component to fetch the current product from its rendered parent, the `atomic-product` component.
- *
- * Example:
- * ```
- * @ProductContext() private product!: Product;
- * ```
- *
- * For more information and examples, view the [Utilities section](https://github.com/coveo/ui-kit/tree/master/packages/atomic#utilities) of the Coveo Atomic README.
- *
- * @deprecated should only be used for Stencil components. For Lit components, use `createProductContextController` from \@/src/decorators/commerce/product-template-decorators.ts
- */
-export function ProductContext(opts: {folded: boolean} = {folded: false}) {
-  return ItemContext({parentName: 'atomic-product', folded: opts.folded});
-}
-
-export function InteractiveProductContext() {
-  return InteractiveItemContext();
-}
-
-export type ProductContextEvent<T = Product> = ItemContextEvent<T>;
-export type InteractiveProductContextEvent = InteractiveItemContextEvent;
+import {itemContext} from '../../common/item-list/stencil-item-decorators';
 
 /**
  * Retrieves `Product` on a rendered `atomic-product`.

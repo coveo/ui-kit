@@ -1,13 +1,10 @@
 import type {UnknownAction} from '@reduxjs/toolkit';
-import type {EngineConfiguration} from '../../../app/engine-configuration.js';
 import type {NavigatorContextProvider} from '../../../app/navigator-context-provider.js';
 import type {Controller} from '../../../controllers/controller/headless-controller.js';
-import type {
-  ControllerStaticStateMap,
-  ControllersMap,
-} from '../../common/types/controllers.js';
+import type {ControllersMap} from '../../common/types/controllers.js';
+import type {EngineStaticState} from '../../common/types/engine.js';
 import type {SSRCommerceEngine} from '../factories/build-factory.js';
-import type {Build} from './build.js';
+import type {SSRCommerceEngineOptions} from './build.js';
 import type {SolutionType} from './controller-constants.js';
 import type {
   BakedInControllers,
@@ -24,15 +21,12 @@ import type {
   HydrateStaticStateOptions,
 } from './hydrate-static-state.js';
 
-export type {HydrateStaticState, HydrateStaticStateOptions, FetchStaticState};
-
-export interface EngineStaticState<
-  TSearchAction extends UnknownAction,
-  TControllers extends ControllerStaticStateMap,
-> {
-  searchActions: TSearchAction[];
-  controllers: TControllers;
-}
+export type {
+  HydrateStaticState,
+  HydrateStaticStateOptions,
+  FetchStaticState,
+  EngineStaticState,
+};
 
 type ReservedControllerNames = 'context' | 'parameterManager' | 'cart';
 
@@ -42,10 +36,15 @@ type ValidateControllerNames<T extends ControllerDefinitionsMap<Controller>> = {
     : T[K];
 };
 
-export type EngineDefinitionOptions<
-  TOptions extends {configuration: EngineConfiguration},
-  TControllers extends ControllerDefinitionsMap<Controller>,
-> = TOptions & {
+/**
+ * The options to create a Commerce engine definition in SSR.
+ *
+ * @group Engine
+ */
+export type CommerceEngineDefinitionOptions<
+  TControllers extends
+    ControllerDefinitionsMap<Controller> = ControllerDefinitionsMap<Controller>,
+> = SSRCommerceEngineOptions & {
   /**
    * The controllers to initialize with the commerce engine.
    */
@@ -113,42 +112,27 @@ export type CommerceControllerDefinitionsMap =
 
 type Definition<
   TControllerDefinitions extends CommerceControllerDefinitionsMap,
-> = CommerceEngineDefinition<TControllerDefinitions, SolutionType>;
+  TSolutionType extends SolutionType,
+> = CommerceEngineDefinition<TControllerDefinitions, TSolutionType>;
 
-export type FetchStaticStateFunction<
+type FetchStaticStateFunction<
   TControllerDefinitions extends CommerceControllerDefinitionsMap,
-> = Definition<TControllerDefinitions>['fetchStaticState'];
+  TSolutionType extends SolutionType,
+> = Definition<TControllerDefinitions, TSolutionType>['fetchStaticState'];
 
 export type HydrateStaticStateFunction<
   TControllerDefinitions extends CommerceControllerDefinitionsMap,
-> = Definition<TControllerDefinitions>['hydrateStaticState'];
-
-export type BuildParameters<
-  TControllerDefinitions extends CommerceControllerDefinitionsMap,
-> = Parameters<
-  Build<
-    InferControllersMapFromDefinition<TControllerDefinitions, SolutionType>,
-    InferControllerPropsMapFromDefinitions<TControllerDefinitions>,
-    TControllerDefinitions,
-    SolutionType
-  >
->;
+  TSolutionType extends SolutionType,
+> = Definition<TControllerDefinitions, TSolutionType>['hydrateStaticState'];
 
 export type FetchStaticStateParameters<
   TControllerDefinitions extends CommerceControllerDefinitionsMap,
-> = Parameters<FetchStaticStateFunction<TControllerDefinitions>>;
+  TSolutionType extends SolutionType,
+> = Parameters<FetchStaticStateFunction<TControllerDefinitions, TSolutionType>>;
 
 export type HydrateStaticStateParameters<
   TControllerDefinitions extends CommerceControllerDefinitionsMap,
-> = Parameters<HydrateStaticStateFunction<TControllerDefinitions>>;
-
-type Controllers<
-  TControllerDefinitions extends CommerceControllerDefinitionsMap,
-> = InferControllersMapFromDefinition<TControllerDefinitions, SolutionType>;
-
-export type BuildResult<
-  TControllerDefinitions extends CommerceControllerDefinitionsMap,
-> = {
-  engine: SSRCommerceEngine;
-  controllers: Controllers<TControllerDefinitions> & BakedInControllers;
-};
+  TSolutionType extends SolutionType,
+> = Parameters<
+  HydrateStaticStateFunction<TControllerDefinitions, TSolutionType>
+>;

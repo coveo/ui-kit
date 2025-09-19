@@ -5,7 +5,7 @@ import {fixture} from '@/vitest-utils/testing-helpers/fixture';
 import './atomic-facet-placeholder';
 import type {AtomicFacetPlaceholder} from './atomic-facet-placeholder';
 
-describe('AtomicFacetPlaceholder', () => {
+describe('atomic-facet-placeholder', () => {
   const createElement = async (props?: Partial<AtomicFacetPlaceholder>) => {
     const element = await fixture(
       html`<atomic-facet-placeholder

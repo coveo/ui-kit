@@ -17,7 +17,7 @@ import type {AtomicCommerceQuerySummary} from './atomic-commerce-query-summary';
 
 vi.mock('@coveo/headless/commerce', {spy: true});
 
-describe('AtomicCommerceQuerySummary', () => {
+describe('atomic-commerce-query-summary', () => {
   const mockedEngine = buildFakeCommerceEngine();
   let mockedQuerySummary: Summary<
     SearchSummaryState | ProductListingSummaryState

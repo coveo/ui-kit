@@ -1,6 +1,6 @@
 import {expect, test} from './fixture';
 
-test.describe('AtomicCommerceNoProducts', () => {
+test.describe('atomic-commerce-no-products', () => {
   test.beforeEach(async ({noProducts}) => {
     await noProducts.noProducts();
     await noProducts.load();

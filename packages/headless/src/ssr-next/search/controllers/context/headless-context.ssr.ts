@@ -5,7 +5,7 @@ import {
 } from '../../../../controllers/context/headless-context.js';
 import type {ContextProps} from '../../../../controllers/core/context/headless-core-context.js';
 import {MissingControllerProps} from '../../../common/errors.js';
-import type {ControllerDefinitionWithProps} from '../../../common/types/controllers.js';
+import type {ControllerDefinitionWithProps} from '../../types/controller-definition.js';
 
 export * from '../../../../controllers/context/headless-context.js';
 

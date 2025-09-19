@@ -52,31 +52,28 @@ describe('atomic-commerce-recommendation-interface', () => {
     vi.mocked(headless.buildContext).mockReturnValue(buildFakeContext({}));
   });
 
-  const setupElement = async ({
-    analytics,
-    iconAssetsPath,
-    language, // TODO (KIT-4365): remove this in v4
-    languageAssetsPath,
-    scrollContainer,
-  }: {
-    analytics?: boolean;
-    iconAssetsPath?: string;
-    language?: string;
-    languageAssetsPath?: string;
-    scrollContainer?: string;
-  } = {}) => {
+  const setupElement = async (
+    props: {
+      analytics?: boolean;
+      iconAssetsPath?: string;
+      language?: string;
+      languageAssetsPath?: string;
+      scrollContainer?: string;
+    } = {}
+  ) => {
     const element = (await fixture<AtomicCommerceRecommendationInterface>(
       html`<atomic-commerce-recommendation-interface
-        ?analytics=${analytics}
-        icon-assets-path=${ifDefined(iconAssetsPath)}
-        language=${ifDefined(language)}
-        language-assets-path=${ifDefined(languageAssetsPath)}
-        scroll-container=${ifDefined(scrollContainer)}
+        analytics=${ifDefined(props.analytics)}
+        icon-assets-path=${ifDefined(props.iconAssetsPath)}
+        language=${ifDefined(props.language)}
+        language-assets-path=${ifDefined(props.languageAssetsPath)}
+        scroll-container=${props.scrollContainer || 'atomic-commerce-recommendation-interface'}
       >
       </atomic-commerce-recommendation-interface>`
     )) as AtomicCommerceRecommendationInterface;
 
     expect(element).toBeInstanceOf(AtomicCommerceRecommendationInterface);
+
     return element;
   };
 

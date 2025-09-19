@@ -14,11 +14,9 @@ import {
 import * as utils from '../../utils/utils.js';
 import {ControllerBuilder} from '../common/builders/controller-builder.js';
 import {createStaticControllerBuilder} from '../common/builders/static-controller-builder.js';
-import {InvalidControllerDefinition} from '../common/errors.js';
 import {
   buildControllerDefinitions,
   createStaticState,
-  ensureAtLeastOneSolutionType,
 } from './controller-utils.js';
 import type {SSRCommerceEngine} from './factories/build-factory.js';
 import {SolutionType} from './types/controller-constants.js';
@@ -195,7 +193,6 @@ describe('commerce controller-utils', () => {
     beforeEach(() => {
       const mockStaticBuilder = {
         withState: vi.fn().mockReturnThis(),
-        withKind: vi.fn().mockReturnThis(),
         withInitialState: vi.fn().mockReturnThis(),
         build: vi.fn().mockReturnValue({
           state: {},
@@ -243,36 +240,6 @@ describe('commerce controller-utils', () => {
       expect(utils.clone).toHaveBeenCalledTimes(2);
       expect(utils.clone).toHaveBeenNthCalledWith(1, mockSearchActions[0]);
       expect(utils.clone).toHaveBeenNthCalledWith(2, mockSearchActions[1]);
-    });
-  });
-
-  describe('#ensureAtLeastOneSolutionType', () => {
-    it('should not throw when no options provided', () => {
-      expect(() => ensureAtLeastOneSolutionType()).not.toThrow();
-    });
-
-    it('should not throw when listing is true', () => {
-      expect(() =>
-        ensureAtLeastOneSolutionType({listing: true, search: false})
-      ).not.toThrow();
-    });
-
-    it('should not throw when search is true', () => {
-      expect(() =>
-        ensureAtLeastOneSolutionType({listing: false, search: true})
-      ).not.toThrow();
-    });
-
-    it('should not throw when both listing and search are true', () => {
-      expect(() =>
-        ensureAtLeastOneSolutionType({listing: true, search: true})
-      ).not.toThrow();
-    });
-
-    it('should throw InvalidControllerDefinition when both listing and search are false', () => {
-      expect(() =>
-        ensureAtLeastOneSolutionType({listing: false, search: false})
-      ).toThrow(InvalidControllerDefinition);
     });
   });
 });

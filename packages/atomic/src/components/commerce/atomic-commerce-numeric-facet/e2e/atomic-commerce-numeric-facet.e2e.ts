@@ -1,11 +1,11 @@
 import {expect, test} from './fixture';
 
-test.describe('default', () => {
+test.describe('atomic-commerce-numeric-facet', () => {
   test.beforeEach(async ({numericFacet}) => {
     await numericFacet.load();
   });
 
-  test('should be A11y compliant', async ({numericFacet, makeAxeBuilder}) => {
+  test('should be accessible', async ({numericFacet, makeAxeBuilder}) => {
     await numericFacet.hydrated.waitFor();
     const accessibilityResults = await makeAxeBuilder().analyze();
     expect(accessibilityResults.violations).toEqual([]);

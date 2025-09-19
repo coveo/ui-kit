@@ -9,7 +9,7 @@ import {
   createProductListComponent,
   createTestComponent,
 } from '../__tests__/component-test-utils.js';
-import {createMockCommerceNavigatorContextProvider} from '../__tests__/mock-navigator-context-provider.js';
+import {createMockNavigatorContextProvider} from '../__tests__/mock-navigator-context-provider.js';
 import {
   buildMockController,
   defineMockCommerceController,
@@ -36,7 +36,7 @@ type MockControllers = {
 describe('Commerce Engine', () => {
   let mockControllers: MockControllers;
   let mockNavigatorContextProvider: ReturnType<
-    typeof createMockCommerceNavigatorContextProvider
+    typeof createMockNavigatorContextProvider
   >;
   let engineDefinition: ReturnType<
     typeof defineCommerceEngine<MockControllerDefinitions>
@@ -45,7 +45,7 @@ describe('Commerce Engine', () => {
 
   beforeEach(() => {
     vi.spyOn(console, 'error').mockImplementation(() => {});
-    mockNavigatorContextProvider = createMockCommerceNavigatorContextProvider();
+    mockNavigatorContextProvider = createMockNavigatorContextProvider();
     mockControllers = {
       controller1: buildMockController(),
       controller2: buildMockController(),

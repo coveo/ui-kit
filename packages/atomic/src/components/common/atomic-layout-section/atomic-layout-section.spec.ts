@@ -6,7 +6,7 @@ import {fixture} from '@/vitest-utils/testing-helpers/fixture';
 import type {AtomicLayoutSection} from './atomic-layout-section';
 import type {Section} from './sections';
 
-describe('AtomicLayoutSection', () => {
+describe('atomic-layout-section', () => {
   let element: AtomicLayoutSection;
 
   interface LayoutSectionProps {

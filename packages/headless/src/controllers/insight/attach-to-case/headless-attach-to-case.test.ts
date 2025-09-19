@@ -181,13 +181,15 @@ describe('insight attach to case', () => {
         testCaseId
       );
 
-      expect(attachResult).toHaveBeenCalledWith({result: attachedResult});
+      expect(attachResult).toHaveBeenCalledTimes(1);
+      expect(attachResult).toHaveBeenCalledWith(attachedResult);
     });
 
     it('calling #attach should trigger the #logCaseAttach usage analytics action', () => {
       attachToCase.attach();
 
       expect(logCaseAttach).toHaveBeenCalledTimes(1);
+      expect(logCaseAttach).toHaveBeenCalledWith(testResult);
     });
   });
 
@@ -219,13 +221,15 @@ describe('insight attach to case', () => {
         testCaseId
       );
 
-      expect(detachResult).toHaveBeenCalledWith({result: resultToDetach});
+      expect(detachResult).toHaveBeenCalledTimes(1);
+      expect(detachResult).toHaveBeenCalledWith(resultToDetach);
     });
 
     it('calling #detach should trigger the #logCaseDetach usage analytics action', () => {
       attachToCase.detach();
 
       expect(logCaseDetach).toHaveBeenCalledTimes(1);
+      expect(logCaseDetach).toHaveBeenCalledWith(testResult);
     });
   });
 });

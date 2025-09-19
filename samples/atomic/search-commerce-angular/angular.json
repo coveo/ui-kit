@@ -30,7 +30,14 @@
             ],
             "scripts": [],
             "browser": "src/main.ts",
-            "preserveSymlinks": true
+            "preserveSymlinks": true,
+            "allowedCommonJsDependencies": [
+              "dayjs",
+              "escape-html",
+              "exponential-backoff",
+              "pino",
+              "cross-fetch"
+            ]
           },
           "configurations": {
             "production": {
@@ -84,7 +91,6 @@
       }
     }
   },
-  "defaultProject": "angular",
   "cli": {
     "analytics": false
   }

@@ -1,9 +1,9 @@
 import {within} from 'shadow-dom-testing-library';
-import {describe, test, expect, beforeAll, afterAll} from 'vitest';
+import {afterAll, beforeAll, describe, expect, test} from 'vitest';
 import './{{name}}';
 import { {{namePascalCase}} } from './{{name}}';
 
-describe('{{namePascalCase}}', () => {
+describe('{{name}}', () => {
   let element: {{namePascalCase}};
   beforeAll(async () => {
     element = document.createElement('{{name}}');

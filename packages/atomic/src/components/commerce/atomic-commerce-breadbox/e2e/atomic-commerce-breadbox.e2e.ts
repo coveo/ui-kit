@@ -2,12 +2,12 @@
 import type {Locator} from '@playwright/test';
 import {expect, test} from './fixture';
 
-test.describe('Default', () => {
+test.describe('atomic-commerce-breadbox', () => {
   test.beforeEach(async ({breadbox}) => {
     await breadbox.load();
   });
 
-  test('should be A11y compliant', async ({breadbox, makeAxeBuilder}) => {
+  test('should be accessible', async ({breadbox, makeAxeBuilder}) => {
     await breadbox.getFacetValue('regular').first().click();
 
     const accessibilityResults = await makeAxeBuilder().analyze();

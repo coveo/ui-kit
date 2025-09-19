@@ -18,7 +18,7 @@ import MagnifyingGlassIcon from '../../../images/magnifying-glass.svg';
 
 vi.mock('@coveo/headless/commerce', {spy: true});
 
-describe('AtomicCommerceNoProducts', () => {
+describe('atomic-commerce-no-products', () => {
   const mockedEngine = buildFakeCommerceEngine();
   let mockedSummary: Summary<SearchSummaryState | ProductListingSummaryState>;
 

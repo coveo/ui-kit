@@ -18,7 +18,7 @@ import './atomic-commerce-search-box-instant-products';
 
 vi.mock('@coveo/headless/commerce', {spy: true});
 
-describe('AtomicCommerceSearchBoxInstantProducts', () => {
+describe('atomic-commerce-search-box-instant-products', () => {
   beforeEach(() => {
     vi.mocked(buildInstantProducts).mockReturnValue(buildFakeInstantProducts());
   });

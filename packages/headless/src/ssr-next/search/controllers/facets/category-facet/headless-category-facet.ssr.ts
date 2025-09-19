@@ -4,7 +4,7 @@ import {
   type CategoryFacet,
   type CategoryFacetProps,
 } from '../../../../../controllers/facets/category-facet/headless-category-facet.js';
-import type {ControllerDefinitionWithoutProps} from '../../../../common/types/controllers.js';
+import type {ControllerDefinitionWithoutProps} from '../../../types/controller-definition.js';
 
 export * from '../../../../../controllers/facets/category-facet/headless-category-facet.js';
 

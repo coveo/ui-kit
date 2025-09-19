@@ -1,7 +1,7 @@
 import type {Page} from 'playwright/test';
 import {expect, test} from './fixture';
 
-test.describe('AtomicCommerceSearchBoxQuerySuggestions', () => {
+test.describe('atomic-commerce-search-box-query-suggestions', () => {
   test.beforeEach(async ({commerceSearchBoxQuerySuggestions, page}) => {
     await commerceSearchBoxQuerySuggestions.load();
     await page.locator('atomic-commerce-search-box').waitFor();

@@ -3,10 +3,7 @@ import {html, LitElement} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {when} from 'lit/directives/when.js';
 import ratingStyles from '@/src/components/common/atomic-rating/atomic-rating.tw.css.js';
-import {
-  computeNumberOfStars,
-  renderRating,
-} from '@/src/components/common/atomic-rating/rating.js';
+import {computeNumberOfStars} from '@/src/components/common/atomic-rating/rating-utils.js';
 import {bindingGuard} from '@/src/decorators/binding-guard';
 import {bindings} from '@/src/decorators/bindings.js';
 import {createProductContextController} from '@/src/decorators/commerce/product-template-decorators.js';
@@ -14,6 +11,7 @@ import {errorGuard} from '@/src/decorators/error-guard';
 import type {InitializableComponent} from '@/src/decorators/types.js';
 import {LightDomMixin} from '@/src/mixins/light-dom';
 import Star from '../../../images/star.svg';
+import {renderRating} from '../../common/atomic-rating/rating';
 import type {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface.js';
 
 /**

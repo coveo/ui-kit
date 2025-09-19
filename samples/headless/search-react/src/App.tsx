@@ -1,5 +1,5 @@
 import type React from 'react';
-import {BrowserRouter, NavLink, Route, Routes} from 'react-router-dom';
+import {BrowserRouter, NavLink, Route, Routes} from 'react-router';
 import {AboutPage} from './pages/AboutPage';
 import {AnalyticsHook} from './pages/AnalyticsHook';
 import {CommerceApp} from './pages/commerce/CommerceApp';

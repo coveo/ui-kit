@@ -16,6 +16,11 @@ import type {
   GeneratedAnswerStreamEventData,
 } from '../../api/generated-answer/generated-answer-event-payload.js';
 import type {GeneratedAnswerStreamRequest} from '../../api/generated-answer/generated-answer-request.js';
+import {fetchAnswer} from '../../api/knowledge/stream-answer-api.js';
+import type {StreamAnswerAPIState} from '../../api/knowledge/stream-answer-api-state.js';
+import type {SearchRequest} from '../../api/search/search/search-request.js';
+import type {AsyncThunkOptions} from '../../app/async-thunk-options.js';
+import type {SearchThunkExtraArguments} from '../../app/search-thunk-extra-arguments.js';
 import type {
   ConfigurationSection,
   DebugSection,
@@ -26,8 +31,12 @@ import {
   nonEmptyStringArray,
   validatePayload,
 } from '../../utils/validate-payload.js';
+import {updateSearchAction} from '../search/search-actions.js';
 import {logGeneratedAnswerStreamEnd} from './generated-answer-analytics-actions.js';
-import {buildStreamingRequest} from './generated-answer-request.js';
+import {
+  buildStreamingRequest,
+  constructAnswerAPIQueryParams,
+} from './generated-answer-request.js';
 import {
   type GeneratedContentFormat,
   type GeneratedResponseFormat,
@@ -179,6 +188,12 @@ export const setCannotAnswer = createAction(
   (payload: boolean) => validatePayload(payload, booleanValue)
 );
 
+export const setAnswerApiQueryParams = createAction(
+  'generatedAnswer/setAnswerApiQueryParams',
+  (payload: Partial<SearchRequest>) =>
+    validatePayload(payload, new RecordValue({}))
+);
+
 interface StreamAnswerArgs {
   setAbortControllerRef: (ref: AbortController) => void;
 }
@@ -284,3 +299,43 @@ export const streamAnswer = createAsyncThunk<
     dispatch(setIsLoading(false));
   }
 });
+
+/**
+ * Thunk to handle the sequence of actions required to generate a new answer
+ * after a search request.
+ *
+ * ⚠️ This action only works when an **answer configuration ID** is present
+ * in the engine configuration. In that case, the **Answer API** will be used
+ * instead of the regular search pipeline.
+ *
+ * Flow:
+ * 1. Reset any existing answer state.
+ * 2. Fetch a new answer from the Answer API using the provided configuration.
+ * 3. Update the search action metadata.
+ */
+export const generateAnswer = createAsyncThunk<
+  void,
+  void,
+  AsyncThunkOptions<StreamAnswerAPIState, SearchThunkExtraArguments>
+>(
+  'generatedAnswer/generateAnswer',
+  async (_, {getState, dispatch, extra: {navigatorContext, logger}}) => {
+    const state = getState() as StreamAnswerAPIState;
+    if (state.generatedAnswer.answerConfigurationId) {
+      const answerApiQueryParams = constructAnswerAPIQueryParams(
+        state,
+        navigatorContext
+      );
+      // TODO: SVCC-5178 Refactor multiple sequential dispatches into single action
+      dispatch(resetAnswer());
+      dispatch(setAnswerApiQueryParams(answerApiQueryParams));
+      await dispatch(fetchAnswer(answerApiQueryParams));
+      dispatch(updateSearchAction(undefined));
+    } else {
+      logger.warn(
+        '[WARNING] Missing answerConfigurationId in engine configuration. ' +
+          'The generateAnswer action requires an answer configuration ID to use CRGA with the Answer API.'
+      );
+    }
+  }
+);

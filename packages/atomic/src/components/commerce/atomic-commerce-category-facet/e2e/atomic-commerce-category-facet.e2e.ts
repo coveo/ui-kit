@@ -1,11 +1,11 @@
 import {expect, test} from './fixture';
 
-test.describe('default', () => {
+test.describe('atomic-commerce-category-facet', () => {
   test.beforeEach(async ({categoryFacet}) => {
     await categoryFacet.load();
   });
 
-  test('should be A11y compliant', async ({categoryFacet, makeAxeBuilder}) => {
+  test('should be accessible', async ({categoryFacet, makeAxeBuilder}) => {
     await categoryFacet.hydrated.waitFor();
     const accessibilityResults = await makeAxeBuilder().analyze();
     expect(accessibilityResults.violations).toEqual([]);

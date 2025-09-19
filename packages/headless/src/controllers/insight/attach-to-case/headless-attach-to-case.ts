@@ -124,18 +124,14 @@ export function buildAttachToCase(
 
     attach() {
       dispatch(
-        attachResult({
-          result: buildAttachedResultFromSearchResult(result, caseId),
-        })
+        attachResult(buildAttachedResultFromSearchResult(result, caseId))
       );
       dispatch(logCaseAttach(result));
     },
 
     detach() {
       dispatch(
-        detachResult({
-          result: buildAttachedResultFromSearchResult(result, caseId),
-        })
+        detachResult(buildAttachedResultFromSearchResult(result, caseId))
       );
       dispatch(logCaseDetach(result));
     },

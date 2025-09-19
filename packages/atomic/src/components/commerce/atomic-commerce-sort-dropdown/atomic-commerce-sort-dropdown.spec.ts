@@ -14,7 +14,7 @@ import './atomic-commerce-sort-dropdown';
 
 vi.mock('@coveo/headless/commerce', {spy: true});
 
-describe('AtomicCommerceSortDropdown', () => {
+describe('atomic-commerce-sort-dropdown', () => {
   const mockedSort = vi.fn();
 
   beforeEach(() => {

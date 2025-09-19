@@ -1,13 +1,13 @@
 import {expect, test} from './fixture';
 
-test.describe('default', () => {
+test.describe('atomic-commerce-text', () => {
   test('should show text', async ({text}) => {
     await text.load();
 
     await expect(text.getText).toHaveText('Atomic Commerce Text');
   });
 
-  test('should be A11y compliant', async ({text, makeAxeBuilder}) => {
+  test('should be accessible', async ({text, makeAxeBuilder}) => {
     await text.load();
 
     await text.hydrated.waitFor();

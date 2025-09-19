@@ -1,6 +1,6 @@
 import {expect, test} from './fixture';
 
-test.describe('AtomicCommerceRefineModal', () => {
+test.describe('atomic-commerce-refine-modal', () => {
   test.beforeEach(async ({page}) => {
     await page.goto('/iframe.html?id=atomic-commerce-refine-toggle--default');
     await page.locator('atomic-commerce-refine-toggle').waitFor();

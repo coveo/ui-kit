@@ -24,15 +24,15 @@ export const defaultImplementation = {
   state: defaultState,
 } satisfies SummaryType;
 
-export const buildFakeSummary = ({
+export const buildFakeSummary = <T extends SummaryState>({
   implementation,
   state,
 }: Partial<{
-  implementation?: Partial<SummaryType>;
-  state?: Partial<SummaryState>;
-}> = {}): SummaryType =>
+  implementation?: Partial<Summary<T>>;
+  state?: Partial<T>;
+}> = {}): Summary<T> =>
   ({
     ...defaultImplementation,
     ...implementation,
     ...(state && {state: {...defaultState, ...state}}),
-  }) as SummaryType;
+  }) as Summary<T>;

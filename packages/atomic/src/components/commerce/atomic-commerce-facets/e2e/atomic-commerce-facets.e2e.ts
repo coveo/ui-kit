@@ -1,7 +1,7 @@
 import {expect, test} from './fixture';
 
-test.describe('default', async () => {
-  test('should be A11y compliant', async ({facets, makeAxeBuilder}) => {
+test.describe('atomic-commerce-facets', async () => {
+  test('should be accessible', async ({facets, makeAxeBuilder}) => {
     await facets.load();
     await facets.hydrated.waitFor();
     const accessibilityResults = await makeAxeBuilder().analyze();

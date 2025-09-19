@@ -2,7 +2,7 @@
 import type {AtomicCommerceInterface} from '../atomic-commerce-interface';
 import {expect, test} from './fixture';
 
-test.describe('AtomicCommerceInterface', () => {
+test.describe('atomic-commerce-interface', () => {
   test.describe('when search has not been initialized', () => {
     test.beforeEach(async ({commerceInterface}) => {
       await commerceInterface.load({

@@ -47,13 +47,12 @@ describe('attached results slice', () => {
     const finalState = attachedResultsReducer(state, action);
     expect(finalState).toStrictEqual(action.payload);
     expect(finalState.results.length).toEqual(0);
+    expect(finalState.loading).toBe(true);
   });
 
   it('#attachResult correctly adds a result in the attached state', () => {
     const testAttachedResult = createMockAttachedResult();
-    const action = attachResult({
-      result: testAttachedResult,
-    });
+    const action = attachResult(testAttachedResult);
     const finalState = attachedResultsReducer(state, action);
     expect(finalState.results.length).toEqual(1);
     expect(finalState.results).toStrictEqual([testAttachedResult]);
@@ -61,21 +60,19 @@ describe('attached results slice', () => {
 
   it('#attachResult correctly adds multiple results in the attached state', () => {
     const ids = ['foo', 'bar', 'baz'];
-    const results = ids.map((id) =>
+    const attachedResults = ids.map((id) =>
       createMockAttachedResult({
         permanentId: id,
       })
     );
     let finalState = attachedResultsReducer(state, {type: ''});
-    results.forEach((result) => {
-      const action = attachResult({
-        result: result,
-      });
+    attachedResults.forEach((attachedResult) => {
+      const action = attachResult(attachedResult);
       finalState = attachedResultsReducer(finalState, action);
     });
 
-    expect(finalState.results.length).toEqual(results.length);
-    expect(finalState.results).toStrictEqual([...results]);
+    expect(finalState.results.length).toEqual(attachedResults.length);
+    expect(finalState.results).toStrictEqual([...attachedResults]);
   });
 
   it('#attachResult correctly attaches results so we can find them later', () => {
@@ -83,9 +80,7 @@ describe('attached results slice', () => {
     const testAttachedResult = createMockAttachedResult({
       permanentId: testPermanentId,
     });
-    const action = attachResult({
-      result: testAttachedResult,
-    });
+    const action = attachResult(testAttachedResult);
     const finalState = attachedResultsReducer(state, action);
 
     expect(finalState.results).toContainEqual(testAttachedResult);
@@ -93,9 +88,7 @@ describe('attached results slice', () => {
 
   it('#detachResult can be called when no results are attached without breaking', () => {
     const testDetachResult = createMockAttachedResult();
-    const action = detachResult({
-      result: testDetachResult,
-    });
+    const action = detachResult(testDetachResult);
 
     const finalState = attachedResultsReducer(state, action);
     expect(finalState.results.length).toEqual(0);
@@ -107,14 +100,10 @@ describe('attached results slice', () => {
       permanentId: testPermanentId,
     });
 
-    const attachAction = attachResult({
-      result: testDetachResult,
-    });
+    const attachAction = attachResult(testDetachResult);
     const intermediateState = attachedResultsReducer(state, attachAction);
 
-    const detachAction = detachResult({
-      result: testDetachResult,
-    });
+    const detachAction = detachResult(testDetachResult);
     const finalState = attachedResultsReducer(intermediateState, detachAction);
 
     expect(finalState.results.length).toEqual(0);
@@ -140,9 +129,7 @@ describe('attached results slice', () => {
     const resultToDetach = createMockAttachedResult({
       permanentId: permanentIdToTest,
     });
-    const detachAction = detachResult({
-      result: resultToDetach,
-    });
+    const detachAction = detachResult(resultToDetach);
     const finalState = attachedResultsReducer(intermediateState, detachAction);
 
     const expectedAttachedResults = attachedResults.slice(1, 3);

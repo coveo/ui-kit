@@ -33,6 +33,9 @@ jobs:
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         with:
           node-version-file: ".nvmrc"
+      - name: Install npm
+        run: npm i -g npm@11.6.0
+        shell: bash
       - run: npm ci
       - run: npm run pr:report
         env:
@@ -58,7 +61,7 @@ jobs:
           registry-url: "https://registry.npmjs.org"
           node-version-file: ".nvmrc"
       - name: Install npm
-        run: npm i -g npm@11.4.2
+        run: npm i -g npm@11.6.0
         shell: bash
       - name: Install dependencies
         run: npm ci
@@ -137,6 +140,7 @@ jobs:
         with:
           path: ".turbo"
           name: "turborepo-cdn-cache"
+          include-hidden-files: true
   affected:
     name: "Determine affected projects"
     runs-on: ubuntu-latest
@@ -638,7 +642,7 @@ jobs:
           registry-url: "https://registry.npmjs.org"
           node-version-file: ".nvmrc"
       - name: Install npm
-        run: npm i -g npm@11.4.2
+        run: npm i -g npm@11.6.0
         shell: bash
       - run: npm ci
         shell: bash
@@ -671,7 +675,7 @@ jobs:
           registry-url: "https://registry.npmjs.org"
           node-version-file: ".nvmrc"
       - name: Install npm
-        run: npm i -g npm@11.4.2
+        run: npm i -g npm@11.6.0
         shell: bash
       - run: npm ci
         shell: bash
@@ -807,7 +811,7 @@ jobs:
           registry-url: "https://registry.npmjs.org"
           node-version-file: ".nvmrc"
       - name: Install npm
-        run: npm i -g npm@11.4.2
+        run: npm i -g npm@11.6.0
         shell: bash
       - run: npm ci
         shell: bash
@@ -839,7 +843,7 @@ jobs:
           registry-url: "https://registry.npmjs.org"
           node-version-file: ".nvmrc"
       - name: Install npm
-        run: npm i -g npm@11.4.2
+        run: npm i -g npm@11.6.0
         shell: bash
       - run: npm ci
         shell: bash

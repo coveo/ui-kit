@@ -1,6 +1,6 @@
 import {expect, test} from './fixture';
 
-test.describe('AtomicCommerceRefineToggle', () => {
+test.describe('atomic-commerce-refine-toggle', () => {
   test.beforeEach(async ({commerceRefineToggle}) => {
     await commerceRefineToggle.load();
     await commerceRefineToggle.hydrated.waitFor();

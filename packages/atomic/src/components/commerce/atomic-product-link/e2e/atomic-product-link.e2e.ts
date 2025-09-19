@@ -1,6 +1,6 @@
 import {expect, test} from './fixture';
 
-test.describe('default', () => {
+test.describe('atomic-product-link', () => {
   test.beforeEach(async ({productLink}) => {
     await productLink.load();
     await productLink.hydrated.first().waitFor({state: 'visible'});

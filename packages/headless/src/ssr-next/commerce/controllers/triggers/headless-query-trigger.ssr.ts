@@ -4,8 +4,8 @@ import type {SearchOnlyControllerDefinitionWithoutProps} from '../../types/contr
 
 export type {QueryTriggerState} from '../../../../controllers/core/triggers/headless-core-query-trigger.js';
 export type {QueryTrigger};
-export interface QueryTriggerDefinition
-  extends SearchOnlyControllerDefinitionWithoutProps<QueryTrigger> {}
+export type QueryTriggerDefinition =
+  SearchOnlyControllerDefinitionWithoutProps<QueryTrigger>;
 
 /**
  * Defines the `QueryTrigger` controller for the purpose of server-side rendering.

@@ -1,6 +1,6 @@
 import {expect, test} from './fixture';
 
-test.describe('AtomicCommerceSearchBoxRecentQueries', () => {
+test.describe('atomic-commerce-search-box-recent-queries', () => {
   test.beforeEach(async ({commerceSearchBoxRecentQueries, page}) => {
     await page.addInitScript(() => {
       localStorage.setItem(
