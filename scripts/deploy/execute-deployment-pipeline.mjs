@@ -32,19 +32,29 @@ function getVersionComponents(version) {
   ];
 }
 
+function getFullyQualifiedVersion(versionComponentsOrdered) {
+  const main = versionComponentsOrdered.slice(0, 3).join('.');
+  if (versionComponentsOrdered.length > 3) {
+    const suffix = versionComponentsOrdered.slice(3).join('.');
+    return `${main}-${suffix}`;
+  }
+
+  return main;
+}
+
 function getVersionSubpaths(version) {
   const prNumber = process.env.PR_NUMBER;
-  const versionComposantsOrdered = getVersionComponents(version);
+  const versionComponentOrdered = getVersionComponents(version);
 
   // Use PR number as build if available
   return prNumber
     ? {
-      patch: versionComposantsOrdered.slice(0, 3).concat(prNumber).join('.'),
+      patch: versionComponentOrdered.slice(0, 3).concat(prNumber).join('.'),
     }
     : {
-      major: versionComposantsOrdered.slice(0, 1),
-      minor: versionComposantsOrdered.slice(0, 2).join('.'),
-      patch: versionComposantsOrdered.slice(0, 3).join('.'),
+      major: versionComponentOrdered.slice(0, 1),
+      minor: versionComponentOrdered.slice(0, 2).join('.'),
+      patch: getFullyQualifiedVersion(versionComponentOrdered),
     };
 }
 
