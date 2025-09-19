@@ -5,8 +5,11 @@ import {AtomicModal} from './atomic-modal';
 import './atomic-modal';
 import '../atomic-component-error/atomic-component-error';
 import type {i18n} from 'i18next';
+import {updateBreakpoints} from '@/src/utils/replace-breakpoint';
 import {renderInAtomicSearchInterface} from '@/vitest-utils/testing-helpers/fixtures/atomic/search/atomic-search-interface-fixture';
 import {createTestI18n} from '@/vitest-utils/testing-helpers/i18n-utils';
+
+vi.mock('@/src/utils/replace-breakpoint', {spy: true});
 
 class MockAtomicFocusTrap extends HTMLElement {
   active = false;
@@ -51,7 +54,7 @@ describe('atomic-modal', () => {
       headerContent?: string;
       bodyContent?: string;
       footerContent?: string;
-      close?: () => void;
+      close?: Function;
     } = {}
   ) => {
     const {element} = await renderInAtomicSearchInterface<AtomicModal>({
@@ -194,6 +197,17 @@ describe('atomic-modal', () => {
   });
 
   describe('#render (when rendering)', () => {
+    it('should call the updateBreakpoints util upon the first render only', async () => {
+      const {element} = await renderModal();
+
+      expect(updateBreakpoints).toHaveBeenCalledOnce();
+
+      element.requestUpdate();
+      await element.updateComplete;
+
+      expect(updateBreakpoints).toHaveBeenCalledOnce();
+    });
+
     it('should not render when isOpen is false', async () => {
       const {element, parts} = await renderModal({isOpen: false});
 
