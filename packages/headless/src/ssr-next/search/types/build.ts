@@ -3,7 +3,6 @@ import type {
   ControllersMap,
   ControllersPropsMap,
 } from '../../common/types/controllers.js';
-import type {OptionsTuple} from '../../common/types/utilities.js';
 import type {
   SearchEngineDefinitionBuildResult,
   SearchEngineDefinitionControllersPropsOption,
@@ -17,7 +16,5 @@ export type Build<
   TControllersMap extends ControllersMap,
   TControllersProps extends ControllersPropsMap,
 > = (
-  ...params: OptionsTuple<
-    SearchEngineDefinitionControllersPropsOption<TControllersProps>
-  >
+  props: SearchEngineDefinitionControllersPropsOption<TControllersProps>
 ) => Promise<SearchEngineDefinitionBuildResult<TEngine, TControllersMap>>;

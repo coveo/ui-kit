@@ -11,7 +11,6 @@ import type {
   CommerceEngineDefinitionControllersPropsOption,
   ControllerDefinitionsMap,
   FilteredBakedInControllers,
-  OptionsTuple,
 } from './controller-definitions.js';
 
 /**
@@ -26,14 +25,12 @@ export type FetchStaticState<
   TControllersDefinitionsMap extends ControllerDefinitionsMap<Controller>,
   TSolutionType extends SolutionType,
 > = (
-  ...params: OptionsTuple<
-    BuildConfig<TControllersDefinitionsMap, TSolutionType> &
-      CommerceEngineDefinitionControllersPropsOption<
-        TControllersDefinitionsMap,
-        TControllersProps,
-        TSolutionType
-      >
-  >
+  params: BuildConfig<TControllersDefinitionsMap, TSolutionType> &
+    CommerceEngineDefinitionControllersPropsOption<
+      TControllersDefinitionsMap,
+      TControllersProps,
+      TSolutionType
+    >
 ) => Promise<
   EngineStaticState<
     TSearchAction,
