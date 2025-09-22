@@ -175,6 +175,7 @@ describe('knowledge-generated-answer', () => {
         expect(generatedAnswer.state.isStreaming).toBe(true);
         expect(generatedAnswer.state.isLoading).toBe(false);
         expect(generatedAnswer.state.answer).toBe('partial...');
+        expect(generatedAnswer.state.isAnswerGenerated).toBe(false);
       });
     });
 
