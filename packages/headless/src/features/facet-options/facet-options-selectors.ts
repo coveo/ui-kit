@@ -8,8 +8,8 @@ export const isFacetEnabledSelector = (
 };
 
 export const selectFacetOptions = (state: {
-  facetOptions?: { freezeFacetOrder?: boolean };
+  facetOptions?: {freezeFacetOrder?: boolean};
 }) => {
-  const { freezeFacetOrder } = state.facetOptions ?? {};
-  return freezeFacetOrder !== undefined ? { freezeFacetOrder } : undefined;
+  const {freezeFacetOrder} = state.facetOptions ?? {};
+  return freezeFacetOrder !== undefined ? {freezeFacetOrder} : undefined;
 };

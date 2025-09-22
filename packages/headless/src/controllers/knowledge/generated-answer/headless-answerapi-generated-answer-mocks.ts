@@ -1670,12 +1670,3 @@ export const expectedStreamAnswerAPIParamWithDifferentFacetTimes = {
     currentValues: addSecondsToFacetsTimestamps(dateRangeCurrentValues, 5),
   },
 };
-
-export const expectedStreamAnswerAPIParamWithoutReferrer = {
-  ...expectedStreamAnswerAPIParam,
-  referrer: '',
-  analytics: {
-    ...expectedStreamAnswerAPIParam.analytics,
-    documentReferrer: null,
-  },
-};
