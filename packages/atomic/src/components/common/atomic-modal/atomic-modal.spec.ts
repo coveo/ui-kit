@@ -5,7 +5,7 @@ import {AtomicModal} from './atomic-modal';
 import './atomic-modal';
 import '../atomic-component-error/atomic-component-error';
 import type {i18n} from 'i18next';
-import {updateBreakpoints} from '@/src/utils/replace-breakpoint';
+import {updateBreakpoints} from '@/src/utils/replace-breakpoint-utils';
 import {renderInAtomicSearchInterface} from '@/vitest-utils/testing-helpers/fixtures/atomic/search/atomic-search-interface-fixture';
 import {createTestI18n} from '@/vitest-utils/testing-helpers/i18n-utils';
 
