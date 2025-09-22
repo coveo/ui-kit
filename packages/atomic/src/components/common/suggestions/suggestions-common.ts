@@ -196,9 +196,9 @@ export const dispatchSearchBoxSuggestionsEvent = <
 };
 
 export function elementHasNoQuery(el: SearchBoxSuggestionElement) {
-  return !el.query;
+  return !el.query || el.query.trim() === '';
 }
 
 export function elementHasQuery(el: SearchBoxSuggestionElement) {
-  return !!el.query;
+  return !!el.query && el.query.trim() !== '';
 }

@@ -1,3 +1,18 @@
+## <small>3.30.2 (2025-09-18)</small>
+
+* chore(headless-react-ssr): create a folder for commerce next API (#5994) ([aaf190e](https://github.com/coveo/ui-kit/commits/aaf190e)), closes [#5994](https://github.com/coveo/ui-kit/issues/5994)
+* fix(headless): ensure relay receive complete environment (#5962) ([78f93dd](https://github.com/coveo/ui-kit/commits/78f93dd)), closes [#5962](https://github.com/coveo/ui-kit/issues/5962)
+* fix(headless): fixed payload of the generate call (#6055) ([4e873fc](https://github.com/coveo/ui-kit/commits/4e873fc)), closes [#6055](https://github.com/coveo/ui-kit/issues/6055)
+* [Version Bump][skip ci]: ui-kit publish ([a3fb13e](https://github.com/coveo/ui-kit/commits/a3fb13e))
+
+
+
+## <small>3.30.1 (2025-09-17)</small>
+
+* fix(headless): ensure relay receive complete environment (#5962) ([78f93dd](https://github.com/coveo/ui-kit/commits/78f93dd)), closes [#5962](https://github.com/coveo/ui-kit/issues/5962)
+
+
+
 ## 3.30.0 (2025-09-17)
 
 * fix(headless): ensure updateBasicConfiguration is called only once when token is expired (#6010) ([0e2233a](https://github.com/coveo/ui-kit/commits/0e2233a)), closes [#6010](https://github.com/coveo/ui-kit/issues/6010)

@@ -1268,12 +1268,84 @@ export const streamAnswerAPIStateMockWithoutSearchAction: StreamAnswerAPIState =
     },
   };
 
+export const streamAnswerAPIStateMockWithAnalyticsEnabled: StreamAnswerAPIState =
+  {
+    ...streamAnswerAPIStateMock,
+    configuration: {
+      ...streamAnswerAPIStateMock.configuration,
+      analytics: {
+        ...streamAnswerAPIStateMock.configuration.analytics,
+        enabled: true,
+      },
+    },
+  };
+
+export const streamAnswerAPIStateMockWithFoldingDisabled: StreamAnswerAPIState =
+  {
+    ...streamAnswerAPIStateMock,
+    folding: {
+      ...streamAnswerAPIStateMock.folding,
+      enabled: false,
+      fields: {
+        collection: '',
+        parent: '',
+        child: '',
+      },
+      filterFieldRange: 0,
+      collections: {},
+    },
+  };
+
+export const streamAnswerAPIStateMockWithFoldingEnabled: StreamAnswerAPIState =
+  {
+    ...streamAnswerAPIStateMock,
+    folding: {
+      ...streamAnswerAPIStateMock.folding,
+      enabled: true,
+      fields: {
+        collection: 'testCollection',
+        parent: 'testParent',
+        child: 'testChild',
+      },
+      filterFieldRange: 1,
+      collections: {},
+    },
+  };
+
+export const streamAnswerAPIStateMockWithDictionaryFieldContext: StreamAnswerAPIState =
+  {
+    ...streamAnswerAPIStateMock,
+    dictionaryFieldContext: {
+      contextValues: {
+        key1: 'value1',
+        key2: 'value2',
+      },
+    },
+  };
+
+export const streamAnswerAPIStateMockWithExcerptLength: StreamAnswerAPIState = {
+  ...streamAnswerAPIStateMock,
+  excerptLength: {
+    length: 300,
+  },
+};
+
+export const streamAnswerAPIStateMockWithQuerySyntaxEnabled: StreamAnswerAPIState =
+  {
+    ...streamAnswerAPIStateMock,
+    query: {
+      q: 'what is the hardest wood',
+      enableQuerySyntax: true,
+    },
+  };
+
 export const expectedStreamAnswerAPIParam = {
   q: 'what is the hardest wood',
   aq: 'aq-test-query',
   cq: 'cq-test-query',
   dq: 'dq-test-query',
   lq: 'lq-test-query',
+  enableQuerySyntax: false,
   context: {
     testKey: 'testValue',
   },
@@ -1286,8 +1358,8 @@ export const expectedStreamAnswerAPIParam = {
     },
   },
   searchHub: 'jstpierre2 test - Woods test',
-  facets: {
-    '0': {
+  facets: [
+    {
       filterFacetCount: true,
       injectionDepth: 1000,
       numberOfValues: 8,
@@ -1301,7 +1373,7 @@ export const expectedStreamAnswerAPIParam = {
       facetId: 'author',
       field: 'author',
     },
-    '1': {
+    {
       filterFacetCount: true,
       injectionDepth: 1000,
       numberOfValues: 7,
@@ -1315,7 +1387,7 @@ export const expectedStreamAnswerAPIParam = {
       field: 'date',
       generateAutomaticRanges: false,
     },
-    '2': {
+    {
       filterFacetCount: true,
       injectionDepth: 1000,
       numberOfValues: 0,
@@ -1329,7 +1401,7 @@ export const expectedStreamAnswerAPIParam = {
       field: 'date',
       generateAutomaticRanges: false,
     },
-    '3': {
+    {
       filterFacetCount: true,
       injectionDepth: 1000,
       numberOfValues: 1,
@@ -1343,7 +1415,7 @@ export const expectedStreamAnswerAPIParam = {
       generateAutomaticRanges: true,
       field: 'date',
     },
-    '4': {
+    {
       filterFacetCount: true,
       injectionDepth: 1000,
       numberOfValues: 6,
@@ -1357,7 +1429,7 @@ export const expectedStreamAnswerAPIParam = {
       facetId: 'filetype',
       field: 'filetype',
     },
-    '5': {
+    {
       delimitingCharacter: ';',
       filterFacetCount: true,
       injectionDepth: 1000,
@@ -1372,7 +1444,7 @@ export const expectedStreamAnswerAPIParam = {
       facetId: 'geographicalhierarchy',
       field: 'geographicalhierarchy',
     },
-    '6': {
+    {
       filterFacetCount: true,
       injectionDepth: 1000,
       numberOfValues: 8,
@@ -1386,7 +1458,7 @@ export const expectedStreamAnswerAPIParam = {
       field: 'sncost',
       generateAutomaticRanges: true,
     },
-    '7': {
+    {
       filterFacetCount: true,
       injectionDepth: 1000,
       numberOfValues: 5,
@@ -1431,7 +1503,7 @@ export const expectedStreamAnswerAPIParam = {
       field: 'snrating',
       generateAutomaticRanges: false,
     },
-    '8': {
+    {
       filterFacetCount: true,
       injectionDepth: 1000,
       numberOfValues: 5,
@@ -1476,7 +1548,7 @@ export const expectedStreamAnswerAPIParam = {
       field: 'snrating',
       generateAutomaticRanges: false,
     },
-    '9': {
+    {
       filterFacetCount: true,
       injectionDepth: 1000,
       numberOfValues: 8,
@@ -1490,7 +1562,7 @@ export const expectedStreamAnswerAPIParam = {
       facetId: 'source',
       field: 'source',
     },
-    '10': {
+    {
       filterFacetCount: true,
       injectionDepth: 1000,
       numberOfValues: 8,
@@ -1504,7 +1576,7 @@ export const expectedStreamAnswerAPIParam = {
       facetId: 'year',
       field: 'year',
     },
-    '11': {
+    {
       filterFacetCount: true,
       injectionDepth: 1000,
       numberOfValues: 0,
@@ -1518,7 +1590,7 @@ export const expectedStreamAnswerAPIParam = {
       field: 'ytviewcount',
       generateAutomaticRanges: false,
     },
-    '12': {
+    {
       filterFacetCount: true,
       injectionDepth: 1000,
       numberOfValues: 1,
@@ -1532,7 +1604,7 @@ export const expectedStreamAnswerAPIParam = {
       facetId: 'ytviewcount_input_range',
       field: 'ytviewcount',
     },
-  },
+  ],
   fieldsToInclude: [
     'author',
     'language',
@@ -1569,6 +1641,15 @@ export const expectedStreamAnswerAPIParam = {
   numberOfResults: 10,
   firstResult: 0,
   tab: 'default',
+  locale: 'en',
+  timezone: 'America/New_York',
+  referrer: 'some-test-referrer',
+  debug: false,
+  actionsHistory: [],
+  sortCriteria: 'relevancy',
+  facetOptions: {
+    freezeFacetOrder: false,
+  },
   analytics: {
     actionCause: 'searchboxSubmit',
     capture: false,
@@ -1576,44 +1657,9 @@ export const expectedStreamAnswerAPIParam = {
     clientTimestamp: '2020-01-01T00:00:00.000Z',
     customData: undefined,
     documentLocation: '',
-    documentReferrer: '',
+    documentReferrer: 'some-test-referrer',
     originContext: 'Search',
     source: [`@coveo/atomic@${atomicVersion}`, '@coveo/headless@Test version'],
-  },
-};
-
-export const expectedStreamAnswerAPIParamWithATabWithAnExpression = {
-  ...expectedStreamAnswerAPIParam,
-  cq: 'cq-test-query AND @fileType=html',
-  tab: 'default',
-};
-
-export const expectedStreamAnswerAPIParamWithoutAnyTab = {
-  ...expectedStreamAnswerAPIParam,
-  tab: '',
-};
-
-export const expectedStreamAnswerAPIParamWithStaticFiltersSelected = {
-  ...expectedStreamAnswerAPIParam,
-  cq: 'cq-test-query AND @filetype=="youtubevideo"',
-};
-
-export const expectedStreamAnswerAPIParamWithStaticFiltersAndTabExpression = {
-  ...expectedStreamAnswerAPIParam,
-  cq: 'cq-test-query AND @fileType=html AND (@filetype=="youtubevideo" OR @filetype=="dropbox") AND @filetype=="tsx"',
-};
-
-export const expectedStreamAnswerAPIParamWithStaticFiltersAndTabExpressionWithoutAdvancedCQ =
-  {
-    ...expectedStreamAnswerAPIParam,
-    cq: '@fileType=html AND (@filetype=="youtubevideo" OR @filetype=="dropbox") AND @filetype=="tsx"',
-  };
-
-export const expectedStreamAnswerAPIParamWithoutSearchAction = {
-  ...expectedStreamAnswerAPIParam,
-  analytics: {
-    ...expectedStreamAnswerAPIParam.analytics,
-    actionCause: '',
   },
 };
 

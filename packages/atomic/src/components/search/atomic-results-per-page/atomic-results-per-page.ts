@@ -53,8 +53,8 @@ export class AtomicResultsPerPage
   private choices!: number[];
   private readonly radioGroupName = randomID('atomic-results-per-page-');
 
-  @state()
   @bindStateToController('resultPerPage')
+  @state()
   public resultPerPageState!: ResultsPerPageState;
   @bindStateToController('searchStatus')
   @state()

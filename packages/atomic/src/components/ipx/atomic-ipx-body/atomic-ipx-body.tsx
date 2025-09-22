@@ -11,7 +11,7 @@ import {
   InitializableComponent,
   InitializeBindings,
 } from '../../../utils/initialization-utils';
-import {updateBreakpoints} from '../../../utils/replace-breakpoint';
+import {updateBreakpoints} from '../../../utils/replace-breakpoint-utils';
 import {once, randomID} from '../../../utils/utils';
 import {AnyBindings} from '../../common/interface/bindings';
 
@@ -85,7 +85,7 @@ export class AtomicIPXBody implements InitializableComponent<AnyBindings> {
             <slot name="header"></slot>
           </div>
         </header>
-        <hr part="header-ruler" class=""></hr>
+        <hr part="header-ruler" class="border-neutral"></hr>
         <div
           part="body-wrapper"
           class="scrollbar flex w-full grow flex-col overflow-auto"
