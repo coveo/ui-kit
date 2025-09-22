@@ -658,7 +658,7 @@ export class Store {
    * Registers sort option data to the store.
    * @param {Record<String, any>} store
    * @param {Array<{label: string; value: string; criterion: SortCriterion;}>} data
-  */
+   */
   static registerSortOptionDataToStore(store, data) {
     store.state.sort = data;
   }
