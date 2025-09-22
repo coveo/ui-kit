@@ -73,7 +73,7 @@ function handlePendingSearch(
   state.requestId = action.meta.requestId;
 }
 
-function handlePendingfetchMoreResults(
+function handlePendingFetchMoreResults(
   state: SearchState,
   action: PayloadAction<
     void,
@@ -127,7 +127,7 @@ export const searchReducer = createReducer(
       state.response.searchUid = action.payload.response.searchUid;
     });
     builder.addCase(executeSearch.pending, handlePendingSearch);
-    builder.addCase(fetchMoreResults.pending, handlePendingfetchMoreResults);
+    builder.addCase(fetchMoreResults.pending, handlePendingFetchMoreResults);
     builder.addCase(fetchPage.pending, handlePendingSearch);
     builder.addCase(updateSearchAction, (state, action) => {
       state.searchAction = action.payload;

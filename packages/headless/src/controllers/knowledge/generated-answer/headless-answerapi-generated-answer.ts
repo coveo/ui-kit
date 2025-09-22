@@ -111,7 +111,7 @@ const subscribeToSearchRequest = (
       lastRequestId = currentRequestId;
       engine.dispatch(resetAnswer());
 
-      if (triggerParams.q.length > 0) {
+      if (triggerParams.q?.length > 0) {
         engine.dispatch(generateAnswer());
       }
     }
