@@ -293,7 +293,9 @@ export class AtomicSearchInterface
   public willUpdate(changedProperties: Map<string, unknown>) {
     super.willUpdate(changedProperties);
 
-    this.initFieldsToInclude();
+    if (changedProperties.has('fieldsToInclude')) {
+      this.initFieldsToInclude();
+    }
   }
 
   public disconnectedCallback() {
