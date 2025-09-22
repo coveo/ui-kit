@@ -31,7 +31,7 @@ import {buildFakeSearchStatus} from '@/vitest-utils/testing-helpers/fixtures/hea
 import {buildFakeUrlManager} from '@/vitest-utils/testing-helpers/fixtures/headless/search/url-manager-controller';
 import {getAnalyticsConfig} from './analytics-config';
 import '@/src/components/search/atomic-search-layout/atomic-search-layout';
-import {DEFAULT_MOBILE_BREAKPOINT} from '@/src/utils/replace-breakpoint';
+import {DEFAULT_MOBILE_BREAKPOINT} from '@/src/utils/replace-breakpoint-utils';
 
 vi.mock('@coveo/headless', {spy: true});
 vi.mock('@/src/components/search/atomic-search-interface/store', {spy: true});
