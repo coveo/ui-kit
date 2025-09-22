@@ -174,7 +174,7 @@ describe('constructAnswerAPIQueryParams', () => {
     expect(queryParams).toEqual(expectedStreamAnswerAPIParamWithoutReferrer);
   });
 
-  it('should include actionsHistory when analytics is enabled and history is present', () => {
+  it('should include actionsHistory when analytics are enabled and history is present', () => {
     const history = [
       {name: 'search', value: 'some query', time: new Date().toISOString()},
       {name: 'click', value: 'some uri', time: new Date().toISOString()},
