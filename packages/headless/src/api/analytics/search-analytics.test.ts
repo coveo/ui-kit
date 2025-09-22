@@ -486,7 +486,7 @@ describe('#configureLegacyAnalytics', () => {
           },
           answer: {
             queries: {
-              ['test-query']: {
+              'test-query': {
                 data: {
                   answerId: 'answerId1234',
                 },
