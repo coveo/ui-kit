@@ -1,4 +1,5 @@
 import HistoryStore from '../../api/analytics/coveo.analytics/history-store.js';
+import {buildMockNavigatorContextProvider} from '../../test/mock-navigator-context-provider.js';
 import {
   expectedStreamAnswerAPIParam,
   expectedStreamAnswerAPIParamWithDifferentFacetTimes,
@@ -17,8 +18,7 @@ import {
   streamAnswerAPIStateMockWithStaticFiltersAndTabExpression,
   streamAnswerAPIStateMockWithStaticFiltersAndTabExpressionWithEmptyCQ,
   streamAnswerAPIStateMockWithStaticFiltersSelected,
-} from '../../controllers/knowledge/generated-answer/headless-answerapi-generated-answer-mocks.js';
-import {buildMockNavigatorContextProvider} from '../../test/mock-navigator-context-provider.js';
+} from './generated-answer-mocks.js';
 import {constructAnswerAPIQueryParams} from './generated-answer-request.js';
 
 describe('constructAnswerAPIQueryParams', () => {

@@ -160,31 +160,27 @@ export function buildAnswerApiGeneratedAnswer(
 
   subscribeToSearchRequest(engine as SearchEngine<StreamAnswerAPIState>);
 
-  const getCurrentAnswerState = () => {
-    const currentState = getState();
-    const params = selectAnswerApiQueryParams(currentState);
-    return selectAnswer(params)(currentState).data;
-  };
-
   return {
     ...controller,
     get state() {
-      const answerApiState = getCurrentAnswerState();
+      const currentState = getState();
+      const params = selectAnswerApiQueryParams(currentState);
+      const selectedAnswerState = selectAnswer(params)(currentState).data;
 
       return {
         ...getState().generatedAnswer,
-        answer: answerApiState?.answer,
+        answer: selectedAnswerState?.answer,
         citations: filterOutDuplicatedCitations(
-          answerApiState?.citations ?? []
+          selectedAnswerState?.citations ?? []
         ),
         error: {
-          message: answerApiState?.error?.message,
-          statusCode: answerApiState?.error?.code,
+          message: selectedAnswerState?.error?.message,
+          statusCode: selectedAnswerState?.error?.code,
         },
-        isLoading: answerApiState?.isLoading ?? false,
-        isStreaming: answerApiState?.isStreaming ?? false,
-        answerContentFormat: answerApiState?.contentFormat ?? 'text/plain',
-        isAnswerGenerated: answerApiState?.generated ?? false,
+        isLoading: selectedAnswerState?.isLoading ?? false,
+        isStreaming: selectedAnswerState?.isStreaming ?? false,
+        answerContentFormat: selectedAnswerState?.contentFormat ?? 'text/plain',
+        isAnswerGenerated: selectedAnswerState?.generated ?? false,
       };
     },
     retry() {
@@ -195,12 +191,14 @@ export function buildAnswerApiGeneratedAnswer(
       engine.dispatch(resetAnswer());
     },
     async sendFeedback(feedback) {
-      const answerApiState = getCurrentAnswerState();
+      const currentState = getState();
+      const params = selectAnswerApiQueryParams(currentState);
+      const selectedAnswerState = selectAnswer(params)(currentState).data;
 
       const args = parseEvaluationArguments({
         query: getState().query.q,
         feedback,
-        answerApiState: answerApiState!,
+        answerApiState: selectedAnswerState!,
       });
       engine.dispatch(answerEvaluation.endpoints.post.initiate(args));
       engine.dispatch(sendGeneratedAnswerFeedback());

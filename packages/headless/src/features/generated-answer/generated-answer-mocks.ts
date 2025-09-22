@@ -1,7 +1,7 @@
 /** biome-ignore-all lint/suspicious/noExplicitAny: <mock> */
 /* eslint-disable @cspell/spellchecker */
-import type {StreamAnswerAPIState} from '../../../api/knowledge/stream-answer-api-state.js';
-import {addSecondsToFacetsTimestamps} from './utils/testingUtils.js';
+import type {StreamAnswerAPIState} from '../../api/knowledge/stream-answer-api-state.js';
+import {addSecondsToFacetsTimestamps} from '../../controllers/knowledge/generated-answer/utils/testingUtils.js';
 
 const atomicVersion = '2.77.0';
 

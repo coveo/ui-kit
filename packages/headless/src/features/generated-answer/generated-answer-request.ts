@@ -1,3 +1,4 @@
+import type {HistoryElement} from '../../api/analytics/coveo.analytics/history-store.js';
 import HistoryStore from '../../api/analytics/coveo.analytics/history-store.js';
 import type {GeneratedAnswerStreamRequest} from '../../api/generated-answer/generated-answer-request.js';
 import type {StreamAnswerAPIState} from '../../api/knowledge/stream-answer-api-state.js';
@@ -40,6 +41,7 @@ import {
 import type {ContextPayload} from '../context/context-state.js';
 import {selectDictionaryFieldContext} from '../dictionary-field-context/dictionary-field-context-selectors.js';
 import {selectExcerptLength} from '../excerpt-length/excerpt-length-selectors.js';
+import type {FacetOptions} from '../facet-options/facet-options.js';
 import {selectFacetOptions} from '../facet-options/facet-options-selectors.js';
 import type {AnyFacetRequest} from '../facets/generic/interfaces/generic-facet-request.js';
 import {selectFoldingQueryParams} from '../folding/folding-selectors.js';
@@ -55,6 +57,7 @@ export interface AnswerApiQueryParams {
   cq?: string;
   dq?: string;
   lq?: string;
+  enableQuerySyntax?: boolean;
   context?: ContextPayload;
   pipelineRuleParameters?: {
     mlGenerativeQuestionAnswering: {
@@ -76,6 +79,21 @@ export interface AnswerApiQueryParams {
   numberOfResults?: number;
   firstResult?: number;
   tab?: string;
+  locale?: string;
+  timezone?: string;
+  debug?: boolean;
+  referrer?: string;
+  actionsHistory?: HistoryElement[];
+  foldingParams?: {
+    filterField: string;
+    childField: string;
+    parentField: string;
+    filterFieldRange: number;
+  };
+  excerptLength?: number;
+  dictionaryFieldContext?: Record<string, string>;
+  sortCriteria?: string;
+  facetOptions?: FacetOptions;
   analytics?: AnalyticsParam['analytics'];
 }
 
@@ -189,7 +207,9 @@ const getGeneratedFacetParams = (
       a.facetId > b.facetId ? 1 : b.facetId > a.facetId ? -1 : 0
     );
 
-const getActionsHistory = (state: StreamAnswerAPIState) => ({
+const getActionsHistory = (
+  state: StreamAnswerAPIState
+): {actionsHistory: HistoryElement[]} => ({
   actionsHistory: state.configuration.analytics.enabled
     ? HistoryStore.getInstance().getHistory()
     : [],
