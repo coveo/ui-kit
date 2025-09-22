@@ -1,4 +1,5 @@
 import type {PrimitivesValues} from '@coveo/bueno';
+import {createCustomEqual} from 'fast-equals';
 
 export function arrayEqual<T>(
   firstArray: T[],
@@ -71,40 +72,11 @@ export const arrayEqualStrictlyDifferentOrder = <
   return false;
 };
 
-export function deepEqualAnyOrder<T>(a: T, b: T): boolean {
-  if (a === b) return true;
-  if (a == null || b == null) return false;
-
-  if (typeof a !== typeof b) return false;
-
-  if (Array.isArray(a) && Array.isArray(b)) {
-    return arrayEqualAnyOrder(a, b);
-  }
-
-  if (typeof a === 'object' && typeof b === 'object') {
-    if (a instanceof Date && b instanceof Date) {
-      return a.getTime() === b.getTime();
-    }
-
-    if (a instanceof RegExp && b instanceof RegExp) {
-      return a.toString() === b.toString();
-    }
-
-    if (a.constructor === Object && b.constructor === Object) {
-      const objA = a as Record<string, unknown>;
-      const objB = b as Record<string, unknown>;
-      const keysA = Object.keys(objA);
-      const keysB = Object.keys(objB);
-
-      if (keysA.length !== keysB.length) return false;
-
-      return keysA.every(
-        (key) => keysB.includes(key) && deepEqualAnyOrder(objA[key], objB[key])
-      );
-    }
-
-    return a === b;
-  }
-
-  return a === b;
-}
+export const deepEqualAnyOrder: <T>(a: T, b: T) => boolean = createCustomEqual({
+  createCustomConfig: (config: {}) => {
+    return {
+      ...config,
+      areArraysEqual: arrayEqualAnyOrder,
+    };
+  },
+});
