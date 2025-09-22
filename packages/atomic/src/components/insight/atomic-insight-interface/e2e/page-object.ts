@@ -1,9 +1,9 @@
 import type {Page} from '@playwright/test';
-import {BasePageObject} from '@/playwright-utils/base-page-object';
+import {BasePageObject} from '@/playwright-utils/lit-base-page-object';
 
 const INSIGHT_SEARCH_REGEX = /\/insight\/v1\/configs\/.*\/search/;
 
-export class InsightInterfacePageObject extends BasePageObject<'atomic-insight-interface'> {
+export class InsightInterfacePageObject extends BasePageObject {
   constructor(page: Page) {
     super(page, 'atomic-insight-interface');
   }
