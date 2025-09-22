@@ -121,12 +121,10 @@
     "headers-polyfill": "4.0.3",
     "navigator.sendbeacon": "0.0.20",
     "pino": "9.7.0",
-    "redux-thunk": "3.1.0",
-    "ts-debounce": "4.0.0"
+    "redux-thunk": "3.1.0"
   },
   "devDependencies": {
     "@coveo/documentation": "1.0.0",
-    "chalk": "5.4.1",
     "live-server": "1.2.2",
     "typedoc": "0.28.7",
     "vitest": "3.2.4"
