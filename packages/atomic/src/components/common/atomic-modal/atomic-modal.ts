@@ -7,6 +7,7 @@ import {errorGuard} from '@/src/decorators/error-guard';
 import type {InitializableComponent} from '@/src/decorators/types.js';
 import {watch} from '@/src/decorators/watch.js';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles.js';
+import {multiClassMap, tw} from '@/src/directives/multi-class-map.js';
 import {InitializeBindingsMixin} from '@/src/mixins/bindings-mixin';
 import {listenOnce} from '@/src/utils/event-utils.js';
 import {updateBreakpoints} from '@/src/utils/replace-breakpoint-utils';
@@ -38,31 +39,15 @@ export class AtomicModal
   @reference '../../../utils/tailwind.global.tw.css';
   
   @keyframes scaleUp {
-    0% {
-      transform: scale(0.7) translateY(150vh);
-      opacity: 0;
-    }
-    100% {
-      transform: scale(1) translateY(0px);
-      opacity: 1;
-    }
+    from { transform: scale(0.7) translateY(150vh); opacity: 0; }
+    to { transform: scale(1) translateY(0); opacity: 1; }
   }
   
   @keyframes slideDown {
-    0% {
-      transform: translateY(0px);
-      opacity: 1;
-    }
-    100% {
-      transform: translateY(150vh);
-      opacity: 0;
-    }
+    from { transform: translateY(0); opacity: 1; }
+    to { transform: translateY(150vh); opacity: 0; }
   }
-  
-  [part='backdrop'] {
-    @apply pointer-events-none;
-  }
-  
+
   article.animate-open {
     @apply animate-scale-up-modal;
   }
@@ -71,82 +56,14 @@ export class AtomicModal
     @apply animate-slide-down-modal;
   }
   
-  atomic-focus-trap {
-    @apply contents;
-  }
-  
-  [part='container'] {
-    @apply overflow-hidden;
-    grid-area: modal;
-  }
-  
-  .animate-scaleUpModalIPX[part='container'] {
-    @apply rounded;
-    @apply shadow;
-  }
-  
-  :host([is-open]) [part='backdrop'] {
-    @apply pointer-events-auto;
-  }
-  
-  :host([is-open]:not([fullscreen])) [part='backdrop'] {
-    background-color: rgba(40, 40, 40, 0.8);
-  }
-  
-  :host(:not([fullscreen])) [part='backdrop'] {
-    @apply grid;
-    @apply p-6;
-    transition: background-color 500ms ease-in-out;
-    grid-template-areas:
+  .grid-template-modal {
+        grid-template-areas:
       '. .     .'
       '. modal .'
       '. .     .';
     grid-template-columns: 1fr min(30rem, 100%) 1fr;
     grid-template-rows: 1fr auto 3fr;
-  }
-  
-  :host(:not([fullscreen])) [part='container'] {
-    @apply rounded;
-    @apply shadow;
-  }
-  
-  :host(:not([fullscreen])) [part='header-wrapper'] {
-    @apply px-6;
-    @apply py-4;
-  }
-  
-  :host(:not([fullscreen])) [part='header'] {
-    @apply font-bold;
-  }
-  
-  :host(:not([fullscreen])) [part='body-wrapper'] {
-    @apply p-6;
-  }
-  
-  :host(:not([fullscreen])) [part='footer-wrapper'] {
-    @apply bg-neutral-light;
-    padding: 1rem 1.125rem;
-  }
-  
-  :host([fullscreen]) [part='container'] {
-    @apply absolute;
-    @apply inset-0;
-  }
-  
-  :host([fullscreen]) [part='header-wrapper'] {
-    @apply p-6;
-  }
-  
-  :host([fullscreen]) [part='body-wrapper'] {
-    @apply px-6;
-    @apply pt-8;
-    @apply pb-5;
-  }
-  
-  :host([fullscreen]) [part='footer-wrapper'] {
-    @apply shadow-t-lg;
-    @apply px-6;
-    @apply py-4;
+
   }
   `;
 
@@ -218,11 +135,23 @@ export class AtomicModal
         () => html`
           <div
             part="backdrop"
-            class=" ${this.boundary === 'page' ? 'fixed' : 'absolute'} top-0 right-0 bottom-0 left-0 z-9999"
+            class=${multiClassMap(
+              tw({
+                'top-0 right-0 bottom-0 left-0 z-9999': true,
+                fixed: this.boundary === 'page',
+                absolute: this.boundary !== 'page',
+                'grid p-6 transition-colors duration-500 ease-in-out grid-template-modal':
+                  !this.fullscreen,
+                'bg-[rgba(40,40,40,0.8)]': this.isOpen && !this.fullscreen,
+                'pointer-events-auto': this.isOpen,
+                'pointer-events-none': !this.isOpen,
+              })
+            )}
             @click="${(e: MouseEvent) => e.target === e.currentTarget && this.close()}"
             data-nosnippet
           >
             <atomic-focus-trap
+              class="contents"
               role="dialog"
               aria-modal=${this.isOpen ? 'true' : 'false'}
               aria-labelledby=${this.headerId}
@@ -344,14 +273,34 @@ export class AtomicModal
     return html`
       <article
         part="container"
-        class="bg-background text-on-background flex flex-col justify-between ${this.isOpen ? 'animate-open' : 'animate-close'}"
-      
+        class=${multiClassMap(
+          tw({
+            '[grid-area:modal] bg-background text-on-background flex flex-col justify-between overflow-hidden': true,
+            'animate-open': this.isOpen,
+            'animate-close': !this.isOpen,
+            'absolute inset-0': this.fullscreen,
+            'rounded shadow': !this.fullscreen,
+          })
+        )}
         ${ref(this.animatableContainer)}
       >
-        <header part="header-wrapper" class="flex flex-col items-center">
+        <header 
+          part="header-wrapper" 
+          class=${multiClassMap(
+            tw({
+              'flex flex-col items-center px-6 py-6': true,
+              'py-4': !this.fullscreen,
+            })
+          )}
+        >
           <div
             part="header"
-            class="flex justify-between w-full max-w-lg text-xl"
+            class=${multiClassMap(
+              tw({
+                'flex justify-between w-full max-w-lg text-xl': true,
+                'font-bold': this.fullscreen,
+              })
+            )}
             id=${this.headerId}
           >
             <slot name="header"></slot>
@@ -360,7 +309,13 @@ export class AtomicModal
         <hr part="header-ruler" class="border-t border-neutral"/>
         <div
           part="body-wrapper"
-          class="flex w-full grow flex-col items-center overflow-auto [scrollbar-gutter:stable_both-edges]"
+          class=${multiClassMap(
+            tw({
+              'flex w-full grow flex-col items-center overflow-auto [scrollbar-gutter:stable_both-edges]': true,
+              'px-6 pt-8 pb-5': this.fullscreen,
+              'p-6': !this.fullscreen,
+            })
+          )}
         >
           <div
             part="body"
@@ -372,7 +327,13 @@ export class AtomicModal
         </div>
         <footer
           part="footer-wrapper"
-          class="z-10 flex flex-col items-center w-full border-t border-neutral bg-background"
+          class=${multiClassMap(
+            tw({
+              'z-10 flex flex-col items-center w-full border-t border-neutral bg-background': true,
+              'px-6 py-4 shadow-t-lg': this.fullscreen,
+              'bg-neutral-light px-4 py-4.5': !this.fullscreen,
+            })
+          )}
         >
           <div part="footer" class="w-full max-w-lg">
             <slot name="footer"></slot>
