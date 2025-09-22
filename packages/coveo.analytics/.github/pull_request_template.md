@@ -10,5 +10,5 @@
 
 ### Checklist:
 
--   [ ] Unit tests and/or functional tests are written and cover the proposed changes :exclamation:
--   [ ] The proposed change can't affect any current customer implementation that could lead to events being rejected from our APIs or events to be miscategorized by UA.
+- [ ] Unit tests and/or functional tests are written and cover the proposed changes :exclamation:
+- [ ] The proposed change can't affect any current customer implementation that could lead to events being rejected from our APIs or events to be miscategorized by UA.

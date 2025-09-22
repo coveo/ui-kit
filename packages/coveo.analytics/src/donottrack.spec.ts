@@ -8,7 +8,7 @@ describe('doNotTrack', () => {
             navigatorDoNotTrack?: any;
             navigatorMsDoNotTrack?: any;
             windowDoNotTrack?: any;
-        }
+        },
     ) {
         jest.resetModules();
         jest.mock('./detector', () => ({

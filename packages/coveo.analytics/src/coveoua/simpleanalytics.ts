@@ -42,7 +42,7 @@ export class CoveoUA {
             const pluginOptions: PluginOptions = {client: this.client};
             this.plugins.clearRequired();
             this.getPluginKeys(optionsOrEndpoint).forEach((pluginKey) =>
-                this.plugins.require(pluginKey, pluginOptions)
+                this.plugins.require(pluginKey, pluginOptions),
             );
             this.client.registerBeforeSendEventHook((eventType, payload) => ({
                 ...payload,

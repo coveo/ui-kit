@@ -166,7 +166,7 @@ describe('history', () => {
 
         expect(storageMock.setItem).toHaveBeenCalledWith(
             history.STORE_KEY,
-            expect.stringContaining(JSON.stringify(historyElements))
+            expect.stringContaining(JSON.stringify(historyElements)),
         );
     });
 

@@ -39,7 +39,7 @@ describe('AnalyticsBeaconClient', () => {
 
         expect(sendBeaconMock).toHaveBeenCalledWith(
             `${baseUrl}/analytics/custom?access_token=👛&visitorId=${currentVisitorId}&discardVisitInfo=true`,
-            expect.anything()
+            expect.anything(),
         );
         expect(await getSendBeaconFirstCallBlobArgument()).toBe(`customEvent=${encodeURIComponent('{"wow":"ok"}')}`);
     });
@@ -63,12 +63,12 @@ describe('AnalyticsBeaconClient', () => {
 
         expect(sendBeaconMock).toHaveBeenCalledWith(
             `${baseUrl}/analytics/collect?visitorId=${currentVisitorId}&discardVisitInfo=true`,
-            expect.anything()
+            expect.anything(),
         );
         expect(await getSendBeaconFirstCallBlobArgument()).toBe(
             `access_token=${encodeURIComponent('👛')}&collectEvent=${encodeURIComponent(
-                '{"pr1a":"value","to encode":"to encode"}'
-            )}`
+                '{"pr1a":"value","to encode":"to encode"}',
+            )}`,
         );
     });
 
@@ -94,10 +94,10 @@ describe('AnalyticsBeaconClient', () => {
 
         expect(sendBeaconMock).toHaveBeenCalledWith(
             `${baseUrl}/analytics/collect?visitorId=${currentVisitorId}&discardVisitInfo=true`,
-            expect.anything()
+            expect.anything(),
         );
         expect(await getSendBeaconFirstCallBlobArgument()).toBe(
-            `access_token=${encodeURIComponent('👛')}&collectEvent=${encodeURIComponent('{"value":{"subvalue":"ok"}}')}`
+            `access_token=${encodeURIComponent('👛')}&collectEvent=${encodeURIComponent('{"value":{"subvalue":"ok"}}')}`,
         );
     });
 
@@ -147,7 +147,7 @@ describe('AnalyticsBeaconClient', () => {
 
             await client.sendEvent(EventType.collect, {foo: 'bar'});
             expect(await getSendBeaconFirstCallBlobArgument()).toBe(
-                'access_token=%F0%9F%91%9B&collectEvent=%7B%22foo%22%3A%22baz%22%7D'
+                'access_token=%F0%9F%91%9B&collectEvent=%7B%22foo%22%3A%22baz%22%7D',
             );
         });
 
@@ -162,7 +162,7 @@ describe('AnalyticsBeaconClient', () => {
 
             await client.sendEvent(EventType.click, {actionCause: 'foo'});
             expect(await getSendBeaconFirstCallBlobArgument()).toContain(
-                `clickEvent=${encodeURIComponent('{"actionCause":"bar"}')}`
+                `clickEvent=${encodeURIComponent('{"actionCause":"bar"}')}`,
             );
         });
 
@@ -176,7 +176,7 @@ describe('AnalyticsBeaconClient', () => {
 
             await client.sendEvent(EventType.click, {actionCause: 'foo'});
             expect(await getSendBeaconFirstCallBlobArgument()).toContain(
-                `clickEvent=${encodeURIComponent('{"actionCause":"foo","aNewProperty":"bar"}')}`
+                `clickEvent=${encodeURIComponent('{"actionCause":"foo","aNewProperty":"bar"}')}`,
             );
         });
 
@@ -188,7 +188,7 @@ describe('AnalyticsBeaconClient', () => {
 
             await client.sendEvent(EventType.click, {actionCause: 'bar'});
             expect(await getSendBeaconFirstCallBlobArgument()).toContain(
-                `clickEvent=${encodeURIComponent(`{"actionCause":"bar"}`)}`
+                `clickEvent=${encodeURIComponent(`{"actionCause":"bar"}`)}`,
             );
         });
     });

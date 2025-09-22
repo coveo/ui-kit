@@ -8,7 +8,7 @@ import json from '@rollup/plugin-json';
 import replace from '@rollup/plugin-replace';
 import copy from 'rollup-plugin-copy';
 import {parse, resolve} from 'path';
-import packageJson from './package.json' assert {type: 'json'};
+import packageJson from './package.json' with {type: 'json'};
 import * as url from 'url';
 
 /**
@@ -35,7 +35,9 @@ const tsPlugin = () =>
 const versionReplace = () =>
     replace({
         preventAssignment: true,
-        'process.env.PKG_VERSION': JSON.stringify(packageJson.version),
+        include: 'src/version.ts',
+        delimiters: ["'", "'"],
+        local: JSON.stringify(packageJson.version), // replaces 'local' in src/version.ts
     });
 
 /**

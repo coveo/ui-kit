@@ -56,6 +56,6 @@ export const baseMeasurementProtocolKeysMapping: {[name: string]: string} = {
             ...all,
             [key]: key,
         }),
-        {}
+        {},
     ),
 };

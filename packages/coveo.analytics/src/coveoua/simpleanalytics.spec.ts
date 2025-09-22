@@ -63,7 +63,7 @@ describe('simpleanalytics', () => {
 
         it('throws when initializing with a token that is not a string nor a AnalyticClient', () => {
             expect(() => coveoua('init', {})).toThrow(
-                `You must pass either your token or a valid object when you call 'init'`
+                `You must pass either your token or a valid object when you call 'init'`,
             );
         });
 
@@ -165,7 +165,7 @@ describe('simpleanalytics', () => {
 
         it(`throw if the initForProxy receive an endpoint that is not a string`, () => {
             expect(() => coveoua('initForProxy', {})).toThrow(
-                `You must pass a string as the endpoint parameter when you call 'initForProxy'`
+                `You must pass a string as the endpoint parameter when you call 'initForProxy'`,
             );
         });
     });
@@ -484,7 +484,7 @@ describe('simpleanalytics', () => {
             coveoua('init', 'MYTOKEN', {plugins: []});
 
             expect(() => coveoua('require', 'test')).toThrow(
-                `No plugin named "test" is currently registered. If you use a custom plugin, use 'provide' first.`
+                `No plugin named "test" is currently registered. If you use a custom plugin, use 'provide' first.`,
             );
         });
     });
@@ -506,7 +506,7 @@ describe('simpleanalytics', () => {
             coveoua('reset');
 
             expect(() => coveoua('init', 'MYTOKEN', {plugins: ['test']})).toThrow(
-                `No plugin named "test" is currently registered. If you use a custom plugin, use 'provide' first.`
+                `No plugin named "test" is currently registered. If you use a custom plugin, use 'provide' first.`,
             );
         });
 
@@ -529,7 +529,7 @@ describe('simpleanalytics', () => {
         coveoua('init', 'SOME TOKEN', {plugins: ['svc']});
 
         expect(() => coveoua('potato')).toThrow(
-            `The action "potato" does not exist. Available actions: init, set, send, onLoad, callPlugin, reset, require, provide, version.`
+            `The action "potato" does not exist. Available actions: init, set, send, onLoad, callPlugin, reset, require, provide, version.`,
         );
     });
 

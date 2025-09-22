@@ -6,13 +6,13 @@ declare const self: any;
 const promise = (window as any)['Promise'];
 if (!(promise instanceof Function) && !global) {
     console.error(
-        `This script uses window.Promise which is not supported in your browser. Consider adding a polyfill like "es6-promise".`
+        `This script uses window.Promise which is not supported in your browser. Consider adding a polyfill like "es6-promise".`,
     );
 }
 const fetch = (window as any)['fetch'];
 if (!(fetch instanceof Function) && !global) {
     console.error(
-        `This script uses window.fetch which is not supported in your browser. Consider adding a polyfill like "fetch".`
+        `This script uses window.fetch which is not supported in your browser. Consider adding a polyfill like "fetch".`,
     );
 }
 

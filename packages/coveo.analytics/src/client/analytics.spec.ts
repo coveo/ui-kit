@@ -713,7 +713,7 @@ describe('custom clientId', () => {
         const client = new CoveoAnalyticsClient({});
         expect.assertions(1);
         await expect(client.setClientId('somestring')).rejects.toEqual(
-            Error('Cannot generate uuid client id without a specific namespace string.')
+            Error('Cannot generate uuid client id without a specific namespace string.'),
         );
         //uuid v5 specific uuid generation
     });

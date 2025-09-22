@@ -16,7 +16,7 @@ export class Plugins {
         const pluginClass = this.registeredPluginsMap[name];
         if (!pluginClass) {
             throw new Error(
-                `No plugin named "${name}" is currently registered. If you use a custom plugin, use 'provide' first.`
+                `No plugin named "${name}" is currently registered. If you use a custom plugin, use 'provide' first.`,
             );
         }
         this.requiredPlugins[name] = new (pluginClass as any)(options);

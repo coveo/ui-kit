@@ -187,7 +187,7 @@ describe('EC plugin', () => {
                 executeRegisteredHook(ECPluginEventTypes.event, {});
 
                 expect(console.warn).toHaveBeenCalledWith(
-                    `The position for product '${aProductWithATooSmallPosition.name}' must be greater than 0 when provided.`
+                    `The position for product '${aProductWithATooSmallPosition.name}' must be greater than 0 when provided.`,
                 );
                 expect(console.warn).toHaveBeenCalledTimes(1);
             });
@@ -226,11 +226,11 @@ describe('EC plugin', () => {
 
                 expect(console.warn).toHaveBeenNthCalledWith(
                     1,
-                    `The position for product '${aProductWithANameAndId.name}' must be greater than 0 when provided.`
+                    `The position for product '${aProductWithANameAndId.name}' must be greater than 0 when provided.`,
                 );
                 expect(console.warn).toHaveBeenNthCalledWith(
                     2,
-                    `The position for product '${aProductWithOnlyAnId.id}' must be greater than 0 when provided.`
+                    `The position for product '${aProductWithOnlyAnId.id}' must be greater than 0 when provided.`,
                 );
             });
 
@@ -401,7 +401,7 @@ describe('EC plugin', () => {
                 executeRegisteredHook(ECPluginEventTypes.event, {});
 
                 expect(console.warn).toHaveBeenCalledWith(
-                    `The position for impression '${anImpression.name}' must be greater than 0 when provided.`
+                    `The position for impression '${anImpression.name}' must be greater than 0 when provided.`,
                 );
                 expect(console.warn).toHaveBeenCalledTimes(1);
             });
@@ -440,11 +440,11 @@ describe('EC plugin', () => {
 
                 expect(console.warn).toHaveBeenNthCalledWith(
                     1,
-                    `The position for impression '${anImpressionWithANameAndId.name}' must be greater than 0 when provided.`
+                    `The position for impression '${anImpressionWithANameAndId.name}' must be greater than 0 when provided.`,
                 );
                 expect(console.warn).toHaveBeenNthCalledWith(
                     2,
-                    `The position for impression '${anImpressionWithOnlyAnId.id}' must be greater than 0 when provided.`
+                    `The position for impression '${anImpressionWithOnlyAnId.id}' must be greater than 0 when provided.`,
                 );
             });
 

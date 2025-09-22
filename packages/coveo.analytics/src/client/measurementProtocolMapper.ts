@@ -24,7 +24,7 @@ export const convertKeysToMeasurementProtocol = (params: any) => {
 };
 
 const measurementProtocolKeysMappingValues = keysOf(measurementProtocolKeysMapping).map(
-    (key) => measurementProtocolKeysMapping[key]
+    (key) => measurementProtocolKeysMapping[key],
 );
 
 const isKnownMeasurementProtocolKey = (key: string) => measurementProtocolKeysMappingValues.indexOf(key) !== -1;
@@ -66,6 +66,6 @@ const convertCustomObject = (prefix: string, customData: {[name: string]: string
             ...allCustom,
             [`${prefix}${currentCustomKey}`]: customData[currentCustomKey],
         }),
-        {}
+        {},
     );
 };

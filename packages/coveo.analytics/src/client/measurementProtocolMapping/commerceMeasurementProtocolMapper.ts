@@ -112,7 +112,7 @@ export const convertProductToMeasurementProtocol = (product: Product, index: num
 export const convertImpressionListToMeasurementProtocol = (
     impressionList: ImpressionList,
     listIndex: number,
-    prefix: string
+    prefix: string,
 ) => {
     const payload: {[name: string]: any} = impressionList.impressions.reduce(
         (mappedImpressions, impression, productIndex) => {
@@ -121,7 +121,7 @@ export const convertImpressionListToMeasurementProtocol = (
                 ...convertImpressionToMeasurementProtocol(impression, listIndex, productIndex, prefix),
             };
         },
-        {}
+        {},
     );
 
     if (impressionList.listName) {
@@ -135,7 +135,7 @@ const convertImpressionToMeasurementProtocol = (
     impression: BaseImpression,
     listIndex: number,
     productIndex: number,
-    prefix: string
+    prefix: string,
 ) => {
     return keysOf(impression).reduce((mappedImpression, key) => {
         const newKey = `il${listIndex + 1}${prefix}${productIndex + 1}${impressionKeysMapping[key] || key}`;
@@ -150,7 +150,7 @@ const productKeysMappingValues = keysOf(productKeysMapping).map((key) => product
 const impressionKeysMappingValues = keysOf(impressionKeysMapping).map((key) => impressionKeysMapping[key]);
 const productActionsKeysMappingValues = keysOf(productActionsKeysMapping).map((key) => productActionsKeysMapping[key]);
 const transactionActionsKeysMappingValues = keysOf(transactionActionsKeysMapping).map(
-    (key) => transactionActionsKeysMapping[key]
+    (key) => transactionActionsKeysMapping[key],
 );
 const reviewKeysMappingValues = keysOf(reviewActionsKeysMapping).map((key) => reviewActionsKeysMapping[key]);
 const quoteKeysMappingValues = keysOf(quoteActionsKeysMapping).map((key) => quoteActionsKeysMapping[key]);
@@ -166,7 +166,7 @@ const transactionActionsKeyRegex = new RegExp(`^(${transactionActionsKeysMapping
 const customProductKeyRegex = new RegExp(`^${productPrefixMatchGroup}custom$`);
 const customImpressionKeyRegex = new RegExp(`^${impressionPrefixMatchGroup}custom$`);
 const coveoCommerceExtensionKeysRegex = new RegExp(
-    `^(${[...coveoCommerceExtensionKeys, ...reviewKeysMappingValues, ...quoteKeysMappingValues].join('|')})$`
+    `^(${[...coveoCommerceExtensionKeys, ...reviewKeysMappingValues, ...quoteKeysMappingValues].join('|')})$`,
 );
 
 const isProductKey = (key: string) => productKeyRegex.test(key);

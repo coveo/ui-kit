@@ -443,7 +443,7 @@ describe('InsightClient', () => {
             await client.logCollapseSmartSnippetSuggestion(exampleSmartSnippetSuggestion);
             expectMatchCustomEventPayload(
                 SearchPageEvents.collapseSmartSnippetSuggestion,
-                exampleSmartSnippetSuggestion
+                exampleSmartSnippetSuggestion,
             );
         });
 
@@ -480,7 +480,7 @@ describe('InsightClient', () => {
             expectMatchDocumentPayload(
                 SearchPageEvents.openSmartSnippetSuggestionSource,
                 fakeDocInfo,
-                expectedMetadata
+                expectedMetadata,
             );
         });
 
@@ -502,7 +502,7 @@ describe('InsightClient', () => {
             expectMatchDocumentPayload(
                 SearchPageEvents.openSmartSnippetSuggestionInlineLink,
                 fakeDocInfo,
-                expectedMetadata
+                expectedMetadata,
             );
         });
         it('should send proper payload for #showMoreFoldedResults', async () => {
@@ -581,7 +581,7 @@ describe('InsightClient', () => {
             await client.logGeneratedAnswerCopyToClipboard(exampleGeneratedAnswerMetadata);
             expectMatchCustomEventPayload(
                 SearchPageEvents.generatedAnswerCopyToClipboard,
-                exampleGeneratedAnswerMetadata
+                exampleGeneratedAnswerMetadata,
             );
         });
 
@@ -631,7 +631,7 @@ describe('InsightClient', () => {
             await client.logGeneratedAnswerFeedbackSubmit(exampleGeneratedAnswerMetadata);
             expectMatchCustomEventPayload(
                 SearchPageEvents.generatedAnswerFeedbackSubmit,
-                exampleGeneratedAnswerMetadata
+                exampleGeneratedAnswerMetadata,
             );
         });
 
@@ -693,7 +693,7 @@ describe('InsightClient', () => {
             await client.logGeneratedAnswerFeedbackSubmitV2(exampleGeneratedAnswerMetadata);
             expectMatchCustomEventPayload(
                 SearchPageEvents.generatedAnswerFeedbackSubmitV2,
-                exampleGeneratedAnswerMetadata
+                exampleGeneratedAnswerMetadata,
             );
         });
     });
@@ -1263,7 +1263,7 @@ describe('InsightClient', () => {
             expectMatchDocumentPayload(
                 SearchPageEvents.openSmartSnippetSuggestionSource,
                 fakeDocInfo,
-                expectedMetadata
+                expectedMetadata,
             );
         });
 
@@ -1286,7 +1286,7 @@ describe('InsightClient', () => {
             expectMatchDocumentPayload(
                 SearchPageEvents.openSmartSnippetSuggestionInlineLink,
                 fakeDocInfo,
-                expectedMetadata
+                expectedMetadata,
             );
         });
 

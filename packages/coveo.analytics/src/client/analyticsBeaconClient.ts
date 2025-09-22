@@ -7,7 +7,7 @@ export class AnalyticsBeaconClient implements AnalyticsRequestClient {
     public async sendEvent(eventType: EventType, originalPayload: IRequestPayload): Promise<void> {
         if (!this.isAvailable()) {
             throw new Error(
-                `navigator.sendBeacon is not supported in this browser. Consider adding a polyfill like "sendbeacon-polyfill".`
+                `navigator.sendBeacon is not supported in this browser. Consider adding a polyfill like "sendbeacon-polyfill".`,
             );
         }
 
@@ -18,7 +18,7 @@ export class AnalyticsBeaconClient implements AnalyticsRequestClient {
         const {url, payload} = await this.preProcessRequestAsPotentialJSONString(
             `${baseUrl}/analytics/${eventType}?${paramsFragments}`,
             originalPayload,
-            preprocessRequest
+            preprocessRequest,
         );
 
         const parsedRequestData = this.encodeForEventType(eventType, payload);
@@ -41,7 +41,7 @@ export class AnalyticsBeaconClient implements AnalyticsRequestClient {
     private async preProcessRequestAsPotentialJSONString(
         originalURL: string,
         originalPayload: IRequestPayload,
-        preprocessRequest?: PreprocessAnalyticsRequest
+        preprocessRequest?: PreprocessAnalyticsRequest,
     ): Promise<{url: string; payload: IRequestPayload}> {
         let returnedUrl = originalURL;
         let returnedPayload = originalPayload;
@@ -49,7 +49,7 @@ export class AnalyticsBeaconClient implements AnalyticsRequestClient {
         if (preprocessRequest) {
             const processedRequest = await preprocessRequest(
                 {url: originalURL, body: JSON.stringify(originalPayload)},
-                'analyticsBeacon'
+                'analyticsBeacon',
             );
             const {url: processedURL, body: processedBody} = processedRequest;
             returnedUrl = processedURL || originalURL;

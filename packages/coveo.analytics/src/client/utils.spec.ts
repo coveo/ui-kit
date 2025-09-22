@@ -9,7 +9,7 @@ describe('utils', () => {
             `truncateUrl('${URL_PLAIN}', %d) truncates to exactly that length`,
             (limit) => {
                 expect(truncateUrl(URL_PLAIN, limit)).toBe(URL_PLAIN.substring(0, limit));
-            }
+            },
         );
 
         /** Decoded: `'http://test/ ¿OKツ😅#fine'` */
@@ -20,7 +20,7 @@ describe('utils', () => {
             `truncateUrl('${URL_WITH_ESCAPES}', %d) truncates to the exact limit outside of codepoints`,
             (limit) => {
                 expect(truncateUrl(URL_WITH_ESCAPES, limit)).toBe(URL_WITH_ESCAPES.substring(0, limit));
-            }
+            },
         );
 
         it.each([
@@ -32,7 +32,7 @@ describe('utils', () => {
             `truncateUrl('${URL_WITH_ESCAPES}', %d) does not break up single-byte codepoints`,
             (limit, expectedLength) => {
                 expect(truncateUrl(URL_WITH_ESCAPES, limit)).toBe(URL_WITH_ESCAPES.substring(0, expectedLength));
-            }
+            },
         );
 
         it.each([
@@ -62,7 +62,7 @@ describe('utils', () => {
             `truncateUrl('${URL_WITH_ESCAPES}', %d) does not break up three-byte codepoints`,
             (limit, expectedLength) => {
                 expect(truncateUrl(URL_WITH_ESCAPES, limit)).toBe(URL_WITH_ESCAPES.substring(0, expectedLength));
-            }
+            },
         );
 
         it.each([
@@ -105,9 +105,9 @@ describe('utils', () => {
             `truncateUrl('${URL_WITH_INVALID_ESCAPES}', %d) only checks for percent with invalid escapes`,
             (limit, expectedLength) => {
                 expect(truncateUrl(URL_WITH_INVALID_ESCAPES, limit)).toBe(
-                    URL_WITH_INVALID_ESCAPES.substring(0, expectedLength)
+                    URL_WITH_INVALID_ESCAPES.substring(0, expectedLength),
                 );
-            }
+            },
         );
     });
 });

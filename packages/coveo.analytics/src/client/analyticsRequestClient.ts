@@ -21,7 +21,7 @@ export type AnalyticsClientOrigin = 'analyticsFetch' | 'analyticsBeacon';
 
 export type PreprocessAnalyticsRequest = (
     request: IAnalyticsRequestOptions,
-    clientOrigin: AnalyticsClientOrigin
+    clientOrigin: AnalyticsClientOrigin,
 ) => IAnalyticsRequestOptions | Promise<IAnalyticsRequestOptions>;
 
 export interface IAnalyticsRequestOptions extends RequestInit {

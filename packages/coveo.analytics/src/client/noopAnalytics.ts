@@ -28,7 +28,7 @@ export class NoopAnalytics implements AnalyticsClient {
         return Promise.resolve();
     }
     makeEvent<TPreparedRequest, TCompleteRequest, TResponse extends AnyEventResponse>(
-        eventType: EventType | string
+        eventType: EventType | string,
     ): Promise<PreparedEvent<TPreparedRequest, TCompleteRequest, TResponse>> {
         return Promise.resolve({eventType: eventType as EventType, payload: null, log: () => Promise.resolve()});
     }

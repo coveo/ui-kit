@@ -104,7 +104,7 @@ describe('SearchPageClient', () => {
                         Promise.resolve({...payload, customData: {...payload.customData, ...customDataFromMiddleware}}),
                 ],
             },
-            provider
+            provider,
         );
     };
 
@@ -151,7 +151,7 @@ describe('SearchPageClient', () => {
     const expectSearchEventToMatchDescription = (
         description: EventDescription,
         actionCause: SearchPageEvents,
-        meta = {}
+        meta = {},
     ) => {
         expectMatchDescription(description, actionCause, {...meta, genQaMetadata: 'bar'});
     };
@@ -177,7 +177,7 @@ describe('SearchPageClient', () => {
     const expectMatchCustomEventPayload = (
         actionCause: SearchPageEvents,
         meta = {},
-        eventType = CustomEventsTypes[actionCause]
+        eventType = CustomEventsTypes[actionCause],
     ) => {
         const body: string = lastCallBody(fetchMock);
         const customData = {foo: 'bar', ...customDataFromMiddleware, ...meta};

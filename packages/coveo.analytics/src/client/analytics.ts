@@ -79,19 +79,19 @@ export interface AnalyticsClient {
     ): Promise<PreparedEvent<TPreparedRequest, TCompleteRequest, TResponse>>;
     sendEvent(eventType: string, ...payload: VariableArgumentsPayload): Promise<AnyEventResponse | void>;
     makeSearchEvent(
-        request: PreparedSearchEventRequest
+        request: PreparedSearchEventRequest,
     ): Promise<PreparedEvent<PreparedSearchEventRequest, SearchEventRequest, SearchEventResponse>>;
     sendSearchEvent(request: SearchEventRequest): Promise<SearchEventResponse | void>;
     makeClickEvent(
-        request: PreparedClickEventRequest
+        request: PreparedClickEventRequest,
     ): Promise<PreparedEvent<PreparedClickEventRequest, ClickEventRequest, ClickEventResponse>>;
     sendClickEvent(request: ClickEventRequest): Promise<ClickEventResponse | void>;
     makeCustomEvent(
-        request: PreparedCustomEventRequest
+        request: PreparedCustomEventRequest,
     ): Promise<PreparedEvent<PreparedCustomEventRequest, CustomEventRequest, CustomEventResponse>>;
     sendCustomEvent(request: CustomEventRequest): Promise<CustomEventResponse | void>;
     makeViewEvent(
-        request: PreparedViewEventRequest
+        request: PreparedViewEventRequest,
     ): Promise<PreparedEvent<PreparedViewEventRequest, ViewEventRequest, ViewEventResponse>>;
     sendViewEvent(request: ViewEventRequest): Promise<ViewEventResponse | void>;
     getVisit(): Promise<VisitResponse>;
@@ -220,7 +220,7 @@ export class CoveoAnalyticsClient implements AnalyticsClient, VisitorIdProvider 
         } catch (err) {
             console.log(
                 'Could not get visitor ID from the current runtime environment storage. Using a random ID instead.',
-                err
+                err,
             );
             return uuidv4();
         }
@@ -394,7 +394,7 @@ export class CoveoAnalyticsClient implements AnalyticsClient, VisitorIdProvider 
                     payload: {...payloadToSend, ...remainingPayload},
                 });
                 await Promise.all(
-                    this.afterSendHooks.map((hook) => hook(eventType, {...parametersToSend, ...remainingPayload}))
+                    this.afterSendHooks.map((hook) => hook(eventType, {...parametersToSend, ...remainingPayload})),
                 );
                 await this.deferExecution();
                 return (await this.sendFromBuffer()) as TResponse | void;
@@ -431,7 +431,7 @@ export class CoveoAnalyticsClient implements AnalyticsClient, VisitorIdProvider 
     async makeSearchEvent(request: PreparedSearchEventRequest) {
         return this.makeEvent<PreparedSearchEventRequest, SearchEventRequest, SearchEventResponse>(
             EventType.search,
-            request
+            request,
         );
     }
 
@@ -442,7 +442,7 @@ export class CoveoAnalyticsClient implements AnalyticsClient, VisitorIdProvider 
     async makeClickEvent(request: PreparedClickEventRequest) {
         return this.makeEvent<PreparedClickEventRequest, ClickEventRequest, ClickEventResponse>(
             EventType.click,
-            request
+            request,
         );
     }
 
@@ -453,7 +453,7 @@ export class CoveoAnalyticsClient implements AnalyticsClient, VisitorIdProvider 
     async makeCustomEvent(request: PreparedCustomEventRequest) {
         return this.makeEvent<PreparedCustomEventRequest, CustomEventRequest, CustomEventResponse>(
             EventType.custom,
-            request
+            request,
         );
     }
 
@@ -535,7 +535,7 @@ export class CoveoAnalyticsClient implements AnalyticsClient, VisitorIdProvider 
                     ...newPayload,
                     [key]: payload[key],
                 }),
-                {}
+                {},
             );
     }
 
@@ -553,7 +553,7 @@ export class CoveoAnalyticsClient implements AnalyticsClient, VisitorIdProvider 
                     ...newPayload,
                     [key]: payload[key],
                 }),
-                {}
+                {},
             );
         return newPayload;
     }

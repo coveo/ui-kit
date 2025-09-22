@@ -8,7 +8,7 @@ export const SVCPluginEventTypes = {
 };
 
 const allSVCEventTypes = Object.keys(SVCPluginEventTypes).map(
-    (key) => SVCPluginEventTypes[key as keyof typeof SVCPluginEventTypes]
+    (key) => SVCPluginEventTypes[key as keyof typeof SVCPluginEventTypes],
 );
 
 export type CustomValues = {

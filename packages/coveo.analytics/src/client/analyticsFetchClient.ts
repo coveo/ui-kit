@@ -47,7 +47,7 @@ export class AnalyticsFetchClient implements AnalyticsRequestClient {
             }
             console.error(`An error has occured when sending the "${eventType}" event.`, response, payload);
             throw new Error(
-                `An error has occurred when sending the "${eventType}" event. Check the console logs for more details.`
+                `An error has occurred when sending the "${eventType}" event. Check the console logs for more details.`,
             );
         }
     }

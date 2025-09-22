@@ -12,7 +12,7 @@ export const ECPluginEventTypes = {
 };
 
 const allECEventTypes = Object.keys(ECPluginEventTypes).map(
-    (key) => ECPluginEventTypes[key as keyof typeof ECPluginEventTypes]
+    (key) => ECPluginEventTypes[key as keyof typeof ECPluginEventTypes],
 );
 
 // From https://stackoverflow.com/a/49725198/497731
@@ -185,9 +185,9 @@ export class ECPlugin extends BasePlugin {
                     ({
                         ...rest,
                         impressions: impressions.map((baseImpression) =>
-                            this.assureBaseImpressionValidity(baseImpression)
+                            this.assureBaseImpressionValidity(baseImpression),
                         ),
-                    } as ImpressionList)
+                    }) as ImpressionList,
             )
             .reduce((newPayload, impressionList, index) => {
                 return {
@@ -201,7 +201,7 @@ export class ECPlugin extends BasePlugin {
         const {position, ...productRest} = product;
         if (position !== undefined && position < 1) {
             console.warn(
-                `The position for product '${product.name || product.id}' must be greater ` + `than 0 when provided.`
+                `The position for product '${product.name || product.id}' must be greater ` + `than 0 when provided.`,
             );
 
             return productRest;
@@ -215,7 +215,7 @@ export class ECPlugin extends BasePlugin {
         if (position !== undefined && position < 1) {
             console.warn(
                 `The position for impression '${baseImpression.name || baseImpression.id}'` +
-                    ` must be greater than 0 when provided.`
+                    ` must be greater than 0 when provided.`,
             );
 
             return baseImpressionRest;

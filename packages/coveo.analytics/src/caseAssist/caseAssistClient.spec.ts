@@ -59,7 +59,7 @@ describe('CaseAssistClient', () => {
             {
                 enableAnalytics: true,
             },
-            provider
+            provider,
         );
     };
 
@@ -133,7 +133,7 @@ describe('CaseAssistClient', () => {
     const expectMatchActionPayload = (
         content: Record<string, unknown>,
         actionName: CaseAssistActions,
-        actionData: Object
+        actionData: Object,
     ) => {
         expectMatchProperty(content, 'ec', 'svc');
         expectMatchProperty(content, 'svc_action', actionName);
@@ -309,7 +309,7 @@ describe('CaseAssistClient', () => {
                 ...fakeDocumentSuggestion,
                 rate: rating,
             },
-            fakeTicket
+            fakeTicket,
         );
     });
 
@@ -334,7 +334,7 @@ describe('CaseAssistClient', () => {
             {
                 reason: CaseCancelledReasons.quit,
             },
-            fakeTicket
+            fakeTicket,
         );
     });
 
@@ -348,7 +348,7 @@ describe('CaseAssistClient', () => {
             {
                 reason: CaseCancelledReasons.solved,
             },
-            fakeTicket
+            fakeTicket,
         );
     });
 

@@ -65,7 +65,7 @@ describe('CoveoLinkParam class', () => {
         expect(coveoLink1.expired).toBe(false);
         const coveoLink2: CoveoLinkParam = new CoveoLinkParam(
             '074af291-224b-4705-9dc5-a47bd80a8db9',
-            Date.now() - 180000
+            Date.now() - 180000,
         );
         expect(coveoLink2.expired).toBe(true);
     });
@@ -75,7 +75,7 @@ describe('CoveoLinkParam class', () => {
         expect(coveoLink1.expired).toBe(false);
         const coveoLink2: CoveoLinkParam = new CoveoLinkParam(
             '074af291-224b-4705-9dc5-a47bd80a8db9',
-            Date.now() + 5000
+            Date.now() + 5000,
         );
         expect(coveoLink2.expired).toBe(true);
     });
@@ -115,7 +115,7 @@ describe('CoveoLinkPlugin', () => {
         const url: string = 'https://coveo.com/some/path/';
         const result: string = await link.decorate(url);
         expect(result).toBe(
-            'https://coveo.com/some/path/?cvo_cid=85698661efdf4c6d9cadc4632bf81ce3.' + currentSecsSinceEpoch()
+            'https://coveo.com/some/path/?cvo_cid=85698661efdf4c6d9cadc4632bf81ce3.' + currentSecsSinceEpoch(),
         );
     });
 
@@ -124,7 +124,7 @@ describe('CoveoLinkPlugin', () => {
         const result: string = await link.decorate(url);
         expect(result).toBe(
             'https://coveo.com/query?q=something&p=param&cvo_cid=85698661efdf4c6d9cadc4632bf81ce3.' +
-                currentSecsSinceEpoch()
+                currentSecsSinceEpoch(),
         );
     });
 
@@ -134,7 +134,7 @@ describe('CoveoLinkPlugin', () => {
         expect(result).toBe(
             'https://coveo.com/?q=something&cvo_cid=85698661efdf4c6d9cadc4632bf81ce3.' +
                 currentSecsSinceEpoch() +
-                '#frag'
+                '#frag',
         );
     });
 

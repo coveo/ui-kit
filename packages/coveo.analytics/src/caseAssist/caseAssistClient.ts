@@ -37,7 +37,10 @@ export class CaseAssistClient {
     public coveoAnalyticsClient: AnalyticsClient;
     private svc: SVCPlugin;
 
-    constructor(private options: Partial<CaseAssistClientOptions>, private provider?: CaseAssistClientProvider) {
+    constructor(
+        private options: Partial<CaseAssistClientOptions>,
+        private provider?: CaseAssistClientProvider,
+    ) {
         const analyticsEnabled = (options.enableAnalytics ?? true) && !doNotTrack();
 
         this.coveoAnalyticsClient = analyticsEnabled ? new CoveoAnalyticsClient(options) : new NoopAnalytics();
@@ -136,7 +139,7 @@ export class CaseAssistClient {
                 ? {
                       searchHub: this.provider.getOriginLevel1(),
                   }
-                : null
+                : null,
         );
     }
 
@@ -149,7 +152,7 @@ export class CaseAssistClient {
                 ? {
                       searchHub: this.provider.getOriginLevel1(),
                   }
-                : null
+                : null,
         );
     }
 
@@ -183,7 +186,7 @@ export class CaseAssistClient {
         event: CaseAssistActions,
         info: PartialDocumentInformation,
         identifier: DocumentIdentifier,
-        metadata?: Record<string, any>
+        metadata?: Record<string, any>,
     ) {
         const payload: ClickEventRequest = {
             ...info,
