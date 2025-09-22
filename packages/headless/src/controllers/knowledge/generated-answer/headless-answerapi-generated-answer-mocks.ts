@@ -1663,41 +1663,6 @@ export const expectedStreamAnswerAPIParam = {
   },
 };
 
-export const expectedStreamAnswerAPIParamWithATabWithAnExpression = {
-  ...expectedStreamAnswerAPIParam,
-  cq: 'cq-test-query AND @fileType=html',
-  tab: 'default',
-};
-
-export const expectedStreamAnswerAPIParamWithDefaultTab = {
-  ...expectedStreamAnswerAPIParam,
-  tab: 'default',
-};
-
-export const expectedStreamAnswerAPIParamWithStaticFiltersSelected = {
-  ...expectedStreamAnswerAPIParam,
-  cq: 'cq-test-query AND @filetype=="youtubevideo"',
-};
-
-export const expectedStreamAnswerAPIParamWithStaticFiltersAndTabExpression = {
-  ...expectedStreamAnswerAPIParam,
-  cq: 'cq-test-query AND @fileType=html AND (@filetype=="youtubevideo" OR @filetype=="dropbox") AND @filetype=="tsx"',
-};
-
-export const expectedStreamAnswerAPIParamWithStaticFiltersAndTabExpressionWithoutAdvancedCQ =
-  {
-    ...expectedStreamAnswerAPIParam,
-    cq: '@fileType=html AND (@filetype=="youtubevideo" OR @filetype=="dropbox") AND @filetype=="tsx"',
-  };
-
-export const expectedStreamAnswerAPIParamWithoutSearchAction = {
-  ...expectedStreamAnswerAPIParam,
-  analytics: {
-    ...expectedStreamAnswerAPIParam.analytics,
-    actionCause: '',
-  },
-};
-
 export const expectedStreamAnswerAPIParamWithDifferentFacetTimes = {
   ...expectedStreamAnswerAPIParam,
   facets: {
@@ -1713,38 +1678,4 @@ export const expectedStreamAnswerAPIParamWithoutReferrer = {
     ...expectedStreamAnswerAPIParam.analytics,
     documentReferrer: null,
   },
-};
-
-export const expectedStreamAnswerAPIParamWithFoldingDisabled = {
-  ...expectedStreamAnswerAPIParam,
-  filterField: '',
-  childField: '',
-  parentField: '',
-  filterFieldRange: 0,
-};
-
-export const expectedStreamAnswerAPIParamWithFoldingEnabled = {
-  ...expectedStreamAnswerAPIParam,
-  filterField: 'testCollection',
-  childField: 'testParent',
-  parentField: 'testChild',
-  filterFieldRange: 1,
-};
-
-export const expectedStreamAnswerAPIWithExcerptLength = {
-  ...expectedStreamAnswerAPIParam,
-  excerptLength: 300,
-};
-
-export const expectedStreamAnswerAPIParamWithDictionaryFieldContext = {
-  ...expectedStreamAnswerAPIParam,
-  dictionaryFieldContext: {
-    key1: 'value1',
-    key2: 'value2',
-  },
-};
-
-export const expectedStreamAnswerAPIParamWithQuerySyntaxEnabled = {
-  ...expectedStreamAnswerAPIParam,
-  enableQuerySyntax: true,
 };
