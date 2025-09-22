@@ -84,12 +84,10 @@ export interface AnswerApiQueryParams {
   debug?: boolean;
   referrer?: string;
   actionsHistory?: HistoryElement[];
-  foldingParams?: {
-    filterField: string;
-    childField: string;
-    parentField: string;
-    filterFieldRange: number;
-  };
+  filterField?: string;
+  childField?: string;
+  parentField?: string;
+  filterFieldRange?: number;
   excerptLength?: number;
   dictionaryFieldContext?: Record<string, string>;
   sortCriteria?: string;
