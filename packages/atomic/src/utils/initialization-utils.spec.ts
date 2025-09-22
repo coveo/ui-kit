@@ -70,8 +70,8 @@ class AtomicSearchInterface {
   }
 }
 
-jest.mock('./replace-breakpoint.ts', () => ({
-  ...jest.requireActual('./replace-breakpoint.ts'),
+jest.mock('./replace-breakpoint-utils.ts', () => ({
+  ...jest.requireActual('./replace-breakpoint.ts-utils'),
   updateBreakpoints: () => {},
 }));
 
