@@ -245,4 +245,14 @@ describe('constructAnswerAPIQueryParams', () => {
       expectedStreamAnswerAPIParamWithQuerySyntaxEnabled
     );
   });
+
+  it('should correctly set locale and timzone when set in state', () => {
+    const queryParams = constructAnswerAPIQueryParams(
+      streamAnswerAPIStateMock,
+      buildMockNavigatorContextProvider()()
+    );
+
+    expect(queryParams.locale).toEqual('en');
+    expect(queryParams.timezone).toEqual('America/New_York');
+  });
 });
