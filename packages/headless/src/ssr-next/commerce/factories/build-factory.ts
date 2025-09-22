@@ -13,10 +13,7 @@ import {
 import {buildControllerDefinitions} from '../controller-utils.js';
 import type {RecommendationBuildConfig} from '../types/build.js';
 import {SolutionType} from '../types/controller-constants.js';
-import type {
-  AugmentedControllerDefinition,
-  BakedInControllers,
-} from '../types/controller-definitions.js';
+import type {BakedInControllers} from '../types/controller-definitions.js';
 import type {InferControllersMapFromDefinition} from '../types/controller-inference.js';
 import type {
   CommerceControllerDefinitionsMap,
@@ -128,7 +125,7 @@ function buildSSRCommerceEngine(
 
 export const buildFactory =
   <TControllerDefinitions extends CommerceControllerDefinitionsMap>(
-    controllerDefinitions: AugmentedControllerDefinition<TControllerDefinitions>,
+    controllerDefinitions: TControllerDefinitions,
     options: CommerceEngineDefinitionOptions<TControllerDefinitions>
   ) =>
   <TSolutionType extends SolutionType>(solutionType: TSolutionType) =>

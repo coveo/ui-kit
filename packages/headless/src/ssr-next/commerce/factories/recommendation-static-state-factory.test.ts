@@ -4,7 +4,7 @@ import {buildMockCommerceState} from '../../../test/mock-commerce-state.js';
 import {buildMockSSRCommerceEngine} from '../../../test/mock-engine-v2.js';
 import {defineMockRecommendationDefinition} from '../../../test/mock-ssr-controller-definitions.js';
 import type {SolutionType} from '../types/controller-constants.js';
-import type {FilteredBakedInControllers} from '../types/controller-definitions.js';
+import type {BakedInControllers} from '../types/controller-definitions.js';
 import type {InferControllersMapFromDefinition} from '../types/controller-inference.js';
 import type {CommerceControllerDefinitionsMap} from '../types/engine.js';
 import * as buildFactory from './build-factory.js';
@@ -46,7 +46,7 @@ describe('fetchRecommendationStaticStateFactory', () => {
               CommerceControllerDefinitionsMap,
               T
             > &
-              FilteredBakedInControllers<T>,
+              BakedInControllers,
           })
     );
 
@@ -70,6 +70,7 @@ describe('fetchRecommendationStaticStateFactory', () => {
     );
 
     await factory({
+      recommendations: ['rec1', 'rec2'],
       context: {
         country: 'CA',
         currency: 'USD',
