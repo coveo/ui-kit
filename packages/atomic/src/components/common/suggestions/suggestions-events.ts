@@ -6,44 +6,6 @@ import type {AnyBindings} from '../interface/bindings';
 import type {SearchBoxSuggestionsEvent} from './suggestions-types';
 
 /**
- * Supported search box element selectors.
- */
-const searchBoxElements = [
-  'atomic-search-box',
-  'atomic-insight-search-box',
-  'atomic-commerce-search-box',
-] as const;
-
-/**
- * Type guard to check if a candidate is a Lit element.
- */
-const isLitElementLoosely = (candidate: unknown): candidate is LitElement =>
-  'updateComplete' in (candidate as LitElement) &&
-  (candidate as LitElement).updateComplete instanceof Promise;
-
-/**
- * Dispatches a search box suggestions event after waiting for component readiness.
- */
-const dispatchSearchBoxSuggestionsEventEventually = async <
-  SearchBoxController,
-  Bindings = AnyBindings,
->(
-  interfaceElement: Element,
-  element: HTMLElement,
-  event: SearchBoxSuggestionsEvent<SearchBoxController, Bindings>
-) => {
-  await customElements.whenDefined(interfaceElement.nodeName.toLowerCase());
-  if (isLitElementLoosely(interfaceElement)) {
-    await interfaceElement.updateComplete;
-  } else if ('componentOnReady' in interfaceElement) {
-    await (interfaceElement as HTMLStencilElement).componentOnReady();
-  }
-  element.dispatchEvent(
-    buildCustomEvent('atomic/searchBoxSuggestion/register', event)
-  );
-};
-
-/**
  * Dispatches an event which retrieves the `SearchBoxSuggestionsBindings` on a configured parent search box.
  *
  * @param event Event sent from the registered query suggestions to the parent search box
@@ -72,5 +34,34 @@ export const dispatchSearchBoxSuggestionsEvent = <
     interfaceElement,
     element,
     event
+  );
+};
+
+const searchBoxElements = [
+  'atomic-search-box',
+  'atomic-insight-search-box',
+  'atomic-commerce-search-box',
+] as const;
+
+const isLitElementLoosely = (candidate: unknown): candidate is LitElement =>
+  'updateComplete' in (candidate as LitElement) &&
+  (candidate as LitElement).updateComplete instanceof Promise;
+
+const dispatchSearchBoxSuggestionsEventEventually = async <
+  SearchBoxController,
+  Bindings = AnyBindings,
+>(
+  interfaceElement: Element,
+  element: HTMLElement,
+  event: SearchBoxSuggestionsEvent<SearchBoxController, Bindings>
+) => {
+  await customElements.whenDefined(interfaceElement.nodeName.toLowerCase());
+  if (isLitElementLoosely(interfaceElement)) {
+    await interfaceElement.updateComplete;
+  } else if ('componentOnReady' in interfaceElement) {
+    await (interfaceElement as HTMLStencilElement).componentOnReady();
+  }
+  element.dispatchEvent(
+    buildCustomEvent('atomic/searchBoxSuggestion/register', event)
   );
 };
