@@ -9,7 +9,7 @@ import {updateBreakpoints} from '@/src/utils/replace-breakpoint-utils';
 import {renderInAtomicSearchInterface} from '@/vitest-utils/testing-helpers/fixtures/atomic/search/atomic-search-interface-fixture';
 import {createTestI18n} from '@/vitest-utils/testing-helpers/i18n-utils';
 
-vi.mock('@/src/utils/replace-breakpoint', {spy: true});
+vi.mock('@/src/utils/replace-breakpoint-utils', {spy: true});
 
 class MockAtomicFocusTrap extends HTMLElement {
   active = false;
