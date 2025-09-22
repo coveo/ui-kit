@@ -1,8 +1,7 @@
 import {exec} from 'node:child_process';
 import {watch} from 'node:fs';
-import chalk from 'chalk';
-import ora from 'ora';
 import waitOn from 'wait-on';
+import colors from './colors.mjs';
 
 /**
  * An array to keep track of running processes.
@@ -19,6 +18,45 @@ let isStopped = false;
  */
 let storybookServer;
 
+function createSpinner(text) {
+  const frames = ['⚽  🐕  ', ' ⚽ 🐕  ', '  ⚽🐕  ', ' ⚽🐕   ', '⚽ 🐕   '];
+  let currentFrame = 0;
+  let intervalId = null;
+  let isRunning = false;
+
+  return {
+    start() {
+      if (isRunning) return this;
+
+      isRunning = true;
+      intervalId = setInterval(() => {
+        process.stdout.write(`\r${frames[currentFrame]} ${text}`);
+        currentFrame = (currentFrame + 1) % frames.length;
+      }, 200);
+
+      return this;
+    },
+
+    succeed(finalText) {
+      if (intervalId) {
+        clearInterval(intervalId);
+        intervalId = null;
+      }
+      isRunning = false;
+      process.stdout.write(`\r✅ ${finalText || text}\n`);
+    },
+
+    fail(finalText) {
+      if (intervalId) {
+        clearInterval(intervalId);
+        intervalId = null;
+      }
+      isRunning = false;
+      process.stdout.write(`\r❌ ${finalText || text}\n`);
+    },
+  };
+}
+
 /**
  * Executes a command as a child process with a spinner animation.
  *
@@ -27,11 +65,7 @@ let storybookServer;
  * @returns {Promise<void>} A promise that resolves when the command completes successfully, or rejects if an error occurs.
  */
 async function nextTask(text, command) {
-  const frames = ['⚽  🐕  ', ' ⚽ 🐕  ', '  ⚽🐕  ', ' ⚽🐕   ', '⚽ 🐕   '];
-  const spinner = ora({
-    text: text,
-    spinner: {frames, interval: 200},
-  }).start();
+  const spinner = createSpinner(text).start();
 
   return new Promise((resolve, reject) => {
     const childProcess = exec(command, {stdio: 'inherit'});
@@ -43,15 +77,15 @@ async function nextTask(text, command) {
       runningProcesses = runningProcesses.filter((p) => p !== childProcess);
 
       if (code === 0) {
-        spinner.succeed(chalk.magenta.bold(`${text}`));
+        spinner.succeed(colors.magenta.bold(`${text}`));
         resolve();
       } else {
-        spinner.fail(chalk.red.bold(`${text}`));
+        spinner.fail(colors.red.bold(`${text}`));
       }
     });
 
     childProcess.on('error', (error) => {
-      spinner.fail(chalk.red.bold(`${text}`));
+      spinner.fail(colors.red.bold(`${text}`));
       reject(error);
     });
   });
@@ -95,7 +129,7 @@ async function waitForPort(port, host = 'localhost', timeout = 30000) {
 }
 
 async function startServers() {
-  console.log(chalk.green.bold('🚀 Starting development servers...'));
+  console.log(colors.green.bold('🚀 Starting development servers...'));
 
   storybookServer = exec('npx storybook dev -p 4400 --no-open', {
     stdio: 'ignore',
@@ -109,11 +143,11 @@ async function startServers() {
   });
 
   console.log(
-    chalk.yellow('⌛ Waiting for Storybook (4400) and Vite (3333)...')
+    colors.yellow('⌛ Waiting for Storybook (4400) and Vite (3333)...')
   );
   await Promise.all([waitForPort(4400), waitForPort(3333)]);
 
-  console.log(chalk.blue.bold('✅ Servers started! Watching for changes...'));
+  console.log(colors.blue.bold('✅ Servers started! Watching for changes...'));
 }
 
 // Get the stencil flag
@@ -138,7 +172,7 @@ watch('src', {recursive: true}, async (_, filename) => {
 
   // Stop all processes if a file changes to prevent multiple builds at once
   await stopAllProcesses();
-  console.log(chalk.cyanBright(`📂 File changed: ${filename}`));
+  console.log(colors.cyanBright(`📂 File changed: ${filename}`));
 
   // Flag to stop the build process if a file changes during the build
   isStopped = false;
@@ -213,5 +247,5 @@ watch('src', {recursive: true}, async (_, filename) => {
     return;
   }
 
-  console.log(chalk.magenta.bold(' 🎇 Build process completed! 🎇 '));
+  console.log(colors.magenta.bold(' 🎇 Build process completed! 🎇 '));
 });

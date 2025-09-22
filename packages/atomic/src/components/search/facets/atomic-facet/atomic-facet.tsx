@@ -449,6 +449,7 @@ export class AtomicFacet implements InitializableComponent {
     );
   }
 
+  
   private renderValues() {
     return this.renderValuesContainer(
       this.facet.state.values.map((value, i) => {

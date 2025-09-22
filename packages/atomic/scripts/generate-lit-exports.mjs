@@ -2,7 +2,7 @@ import {execSync} from 'node:child_process';
 import fs from 'node:fs';
 import path from 'node:path';
 import {fileURLToPath} from 'node:url';
-import chalk from 'chalk';
+import colors from './colors.mjs';
 
 const directories = [
   'commerce',
@@ -100,7 +100,7 @@ export async function formatAllGeneratedLitExports() {
 
 export async function generateLitExports() {
   for (const dir of directories) {
-    console.log(chalk.blue('Directory:'), chalk.green(dir));
+    console.log(colors.blue('Directory:'), colors.green(dir));
     await generateLitExportsForDir(dir);
   }
   await formatAllGeneratedLitExports();

@@ -2,7 +2,7 @@ import {spawn} from 'node:child_process';
 import {readdirSync, readFileSync, statSync, writeFileSync} from 'node:fs';
 import {findPackageJSON} from 'node:module';
 import path from 'node:path';
-import chalk from 'chalk';
+import colors from './colors.mjs';
 
 const currentDir = import.meta.dirname;
 const siteDir = path.resolve(currentDir, '../dev');
@@ -104,19 +104,19 @@ const updateHtmlVersionsInDirectory = (
         });
         writeFileSync(filePath, content, 'utf-8');
         console.log(
-          `Updated atomic version in ${chalk.green(filePath)} to ${chalk.blue(`${cdnBaseUrl}/atomic/${newAtomicVersion}`)}`
+          `Updated atomic version in ${colors.green(filePath)} to ${colors.blue(`${cdnBaseUrl}/atomic/${newAtomicVersion}`)}`
         );
         console.log(
-          `Updated headless version in ${chalk.green(filePath)} to ${chalk.blue(`${cdnBaseUrl}/headless/${newHeadlessVersion}`)}`
+          `Updated headless version in ${colors.green(filePath)} to ${colors.blue(`${cdnBaseUrl}/headless/${newHeadlessVersion}`)}`
         );
         console.log(
-          `Updated @coveo/atomic assets in ${chalk.green(filePath)} to ${chalk.blue(`${cdnBaseUrl}/atomic/${newAtomicVersion}/assets/`)}`
+          `Updated @coveo/atomic assets in ${colors.green(filePath)} to ${colors.blue(`${cdnBaseUrl}/atomic/${newAtomicVersion}/assets/`)}`
         );
       }
     }
   } catch (err) {
     console.error(
-      `Error updating files in ${chalk.yellow(directoryPath)}: ${chalk.red(err.message)}`
+      `Error updating files in ${colors.yellow(directoryPath)}: ${colors.red(err.message)}`
     );
     process.exit(1);
   }
@@ -151,7 +151,7 @@ const validateArgs = (
       cdnType !== 'staging')
   ) {
     console.error(
-      chalk.red(
+      colors.red(
         'Usage: npm run web:cdn -w=@coveo/atomic -- --env <local|prod|dev|staging> --atomic <vX.Y.Z> [--headless <vX.Y.Z>]'
       )
     );
@@ -161,7 +161,7 @@ const validateArgs = (
   if (cdnType === 'local') {
     if (!['major', 'minor', 'patch'].includes(versionType)) {
       console.error(
-        chalk.red(
+        colors.red(
           'For local environment, --atomic and --headless must be one of: major, minor, or patch.'
         )
       );
@@ -174,7 +174,7 @@ const validateArgs = (
       !versionRegex.test(headlessCloudVersion)
     ) {
       console.error(
-        chalk.red(
+        colors.red(
           'For cloud environment, --atomic and --headless must be in the format: vX.X.X, vX.X, or vX.'
         )
       );
@@ -224,7 +224,7 @@ try {
       stdio: 'inherit',
     });
 
-    console.log(chalk.cyan('Waiting for server on port 3000 to be ready...'));
+    console.log(colors.cyan('Waiting for server on port 3000 to be ready...'));
     await waitForServer('http://localhost:3000');
   } else {
     await updateHtmlVersionsInDirectory(
@@ -237,12 +237,12 @@ try {
   }
 
   console.log(
-    chalk.cyan('Starting workspace server on port 3333 for ./dev directory...')
+    colors.cyan('Starting workspace server on port 3333 for ./dev directory...')
   );
   spawn('npx', ['ws', '--port', '3333', '-d', 'dev', '--open'], {
     stdio: 'inherit',
   });
 } catch (err) {
-  console.error(chalk.red('An error occurred:'), err);
+  console.error(colors.red('An error occurred:'), err);
   process.exit(1);
 }

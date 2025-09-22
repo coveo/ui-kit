@@ -6,11 +6,11 @@ import {
   writeFileSync,
 } from 'node:fs';
 import {basename, dirname, join, relative} from 'node:path';
-import chalk from 'chalk';
 import cssnano from 'cssnano';
 import postcss from 'postcss';
 import postcssLoadConfig from 'postcss-load-config';
 import {dedent} from 'ts-dedent';
+import colors from './colors.mjs';
 
 function escapeBackslashes(css) {
   return css.replace(/\\/g, '\\\\');
@@ -96,13 +96,13 @@ async function convertCssToJs(srcPath, distPath, file) {
     const jsPath = `${distPath}.js`;
     writeFileSync(jsPath, fileContent);
     console.log(
-      chalk.bgGreen('Successfully processed CSS file:'),
-      chalk.green(basename(srcPath))
+      colors.bgGreen('Successfully processed CSS file:'),
+      colors.green(basename(srcPath))
     );
   } catch (err) {
     console.error(
-      chalk.bgRed('Error processing file:'),
-      chalk.green(basename(srcPath)),
+      colors.bgRed('Error processing file:'),
+      colors.green(basename(srcPath)),
       err
     );
     throw err;
@@ -116,7 +116,7 @@ export async function processCssFiles(srcDir, distDir) {
       a.name.localeCompare(b.name)
     );
   } catch (err) {
-    console.error(chalk.bgRed(`Error reading directory: ${srcDir}`), err);
+    console.error(colors.bgRed(`Error reading directory: ${srcDir}`), err);
     throw err;
   }
   for (const entry of entries) {
@@ -151,7 +151,7 @@ function getAllJsFiles(dir) {
  * Process all inline css`...` tagged template blocks in JS files through PostCSS/Tailwind
  */
 async function processInlineCss(distDir, srcDir) {
-  console.log(chalk.bold.blue('Post-processing inline CSS'));
+  console.log(colors.bold.blue('Post-processing inline CSS'));
   const {plugins, options} = await postcssLoadConfig();
   const files = getAllJsFiles(distDir);
 
@@ -185,14 +185,14 @@ async function processInlineCss(distDir, srcDir) {
       writeFileSync(file, content, 'utf8');
       // Color only the file name green, keep directory uncolored
       console.log(
-        chalk.bgGreen('Successfully processed inline CSS'),
-        chalk.green(basename(file))
+        colors.bgGreen('Successfully processed inline CSS'),
+        colors.green(basename(file))
       );
     } catch (err) {
       // Color only the file name green in error path
       console.error(
-        chalk.bgRed('Error processing inline CSS in file:'),
-        chalk.green(basename(file)),
+        colors.bgRed('Error processing inline CSS in file:'),
+        colors.green(basename(file)),
         err
       );
       throw err;
@@ -201,11 +201,11 @@ async function processInlineCss(distDir, srcDir) {
 }
 
 export async function processAllCss(srcDir, distDir) {
-  console.log(chalk.bold.blue('Starting CSS processing'));
+  console.log(colors.bold.blue('Starting CSS processing'));
 
   await processCssFiles(srcDir, distDir);
 
   await processInlineCss(distDir, srcDir);
 
-  console.log(chalk.bold.blue('CSS processing complete'));
+  console.log(colors.bold.blue('CSS processing complete'));
 }
