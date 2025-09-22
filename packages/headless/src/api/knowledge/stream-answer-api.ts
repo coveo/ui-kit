@@ -142,7 +142,7 @@ const buildAnswerEndpoint = (
   }
   const basePath = `/rest/organizations/${organizationId}`;
   const prefix = insightId
-    ? `insight/v1/configs/${insightId}`
+    ? `insight/v1/configs/${insightId}/answer`
     : `answer/v1/configs`;
   return `${platformEndpoint}${basePath}/${prefix}/${answerConfigurationId}/generate`;
 };
