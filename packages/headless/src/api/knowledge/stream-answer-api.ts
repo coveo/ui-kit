@@ -71,18 +71,22 @@ interface MessageType {
   code?: number;
 }
 
-const handleError = (draft: GeneratedAnswerStream, message: MessageType) => {
+const handleError = (
+  draft: GeneratedAnswerStream,
+  message: Required<MessageType>
+) => {
   const errorMessage = message.errorMessage || 'Unknown error occurred';
-  const errorCode = message.code || 500;
 
   draft.error = {
     message: errorMessage,
-    code: errorCode,
+    code: message.code!,
   };
   draft.isStreaming = false;
   draft.isLoading = false;
   // Throwing an error here breaks the client and prevents the error from reaching the state.
-  console.error(`Generated answer error: ${errorMessage} (code: ${errorCode})`);
+  console.error(
+    `Generated answer error: ${errorMessage} (code: ${message.code})`
+  );
 };
 
 export const updateCacheWithEvent = (
@@ -136,14 +140,11 @@ const buildAnswerEndpoint = (
   if (!platformEndpoint || !organizationId || !answerConfigurationId) {
     throw new Error('Missing required parameters for answer endpoint');
   }
-
   const basePath = `/rest/organizations/${organizationId}`;
-
-  if (insightId) {
-    return `${platformEndpoint}${basePath}/insight/v1/configs/${insightId}/answer/${answerConfigurationId}/generate`;
-  }
-
-  return `${platformEndpoint}${basePath}/answer/v1/configs/${answerConfigurationId}/generate`;
+  const prefix = insightId
+    ? `insight/v1/configs/${insightId}`
+    : `answer/v1/configs`;
+  return `${platformEndpoint}${basePath}/${prefix}/${answerConfigurationId}/generate`;
 };
 
 export const answerApi = answerSlice.injectEndpoints({
@@ -187,18 +188,12 @@ export const answerApi = answerSlice.injectEndpoints({
           organizationId,
           environment
         );
-        const answerEndpoint = insightConfiguration
-          ? buildAnswerEndpoint(
-              platformEndpoint,
-              organizationId,
-              generatedAnswer.answerConfigurationId!,
-              insightConfiguration.insightId
-            )
-          : buildAnswerEndpoint(
-              platformEndpoint,
-              organizationId,
-              generatedAnswer.answerConfigurationId!
-            );
+        const answerEndpoint = buildAnswerEndpoint(
+          platformEndpoint,
+          organizationId,
+          generatedAnswer.answerConfigurationId!,
+          insightConfiguration?.insightId
+        );
 
         await fetchEventSource(answerEndpoint, {
           method: 'POST',
