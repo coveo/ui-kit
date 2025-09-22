@@ -14,7 +14,7 @@ import {buildMockSSRCommerceEngine} from '../../../test/mock-engine-v2.js';
 import {defineMockCommerceController} from '../../../test/mock-ssr-controller-definitions.js';
 import * as augmentModule from '../../common/augment-preprocess-request.js';
 import {SolutionType} from '../types/controller-constants.js';
-import type {FilteredBakedInControllers} from '../types/controller-definitions.js';
+import type {BakedInControllers} from '../types/controller-definitions.js';
 import type {InferControllersMapFromDefinition} from '../types/controller-inference.js';
 import type {CommerceControllerDefinitionsMap} from '../types/engine.js';
 import * as buildFactory from './build-factory.js';
@@ -66,7 +66,7 @@ describe('fetchStaticStateFactory', () => {
               CommerceControllerDefinitionsMap,
               T
             > &
-              FilteredBakedInControllers<T>,
+              BakedInControllers,
           })
     );
 
@@ -83,10 +83,12 @@ describe('fetchStaticStateFactory', () => {
     // @ts-expect-error: do not care about baked-in controller initial state
     const factory = fetchStaticStateFactory(definition, mockEngineOptions);
     await factory(SolutionType.listing)({
-      country: 'CA',
-      currency: 'USD',
-      language: 'en',
-      url: 'https://example.com',
+      context: {
+        country: 'CA',
+        currency: 'USD',
+        language: 'en',
+        view: {url: 'https://example.com'},
+      },
     });
     expect(engineSpy.mock.calls[0][0]).toStrictEqual(definition);
   });
@@ -111,10 +113,12 @@ describe('fetchStaticStateFactory', () => {
     // @ts-expect-error: do not care about baked-in controller initial state
     const factory = fetchStaticStateFactory(definition, options);
     await factory(SolutionType.listing)({
-      country: 'CA',
-      currency: 'USD',
-      language: 'en',
-      url: 'https://example.com',
+      context: {
+        country: 'CA',
+        currency: 'USD',
+        language: 'en',
+        view: {url: 'https://example.com'},
+      },
     });
     expect(spy).toHaveBeenCalledWith({
       loggerOptions: {level: 'warn'},
@@ -130,10 +134,12 @@ describe('fetchStaticStateFactory', () => {
       // @ts-expect-error: do not care about baked-in controller initial state
       const factory = fetchStaticStateFactory(definition, mockEngineOptions);
       await factory(SolutionType.listing)({
-        country: 'CA',
-        currency: 'USD',
-        language: 'en',
-        url: 'https://example.com',
+        context: {
+          country: 'CA',
+          currency: 'USD',
+          language: 'en',
+          view: {url: 'https://example.com'},
+        },
       });
     });
 
@@ -155,11 +161,15 @@ describe('fetchStaticStateFactory', () => {
       // @ts-expect-error: do not care about baked-in controller initial state
       const factory = fetchStaticStateFactory(definition, mockEngineOptions);
       await factory(SolutionType.search)({
-        country: 'CA',
-        currency: 'USD',
-        language: 'en',
-        query: 'test',
-        url: 'https://example.com',
+        context: {
+          country: 'CA',
+          currency: 'USD',
+          language: 'en',
+          view: {url: 'https://example.com'},
+        },
+        searchParams: {
+          query: 'test',
+        },
       });
     });
 
@@ -181,10 +191,12 @@ describe('fetchStaticStateFactory', () => {
       // @ts-expect-error: do not care about baked-in controller initial state
       const factory = fetchStaticStateFactory(definition, mockEngineOptions);
       await factory(SolutionType.standalone)({
-        country: 'CA',
-        currency: 'USD',
-        language: 'en',
-        url: 'https://example.com',
+        context: {
+          country: 'CA',
+          currency: 'USD',
+          language: 'en',
+          view: {url: 'https://example.com'},
+        },
       });
     });
 

@@ -4,7 +4,7 @@
     "build": {
       "dependsOn": [
         "build:staticresources",
-        "build:docs",
+        "build:doc",
         "babel:headless"
       ],
       "outputs":[]
@@ -19,7 +19,7 @@
         "force-app/solutionExamples/main/staticresources/coveoua/**"
       ]
     },
-    "build:docs": {
+    "build:doc": {
       "dependsOn": ["^build"],
       "outputs": ["docs/out/**"]
     },
