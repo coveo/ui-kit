@@ -144,7 +144,7 @@ export const testInsight =
         analytics,
         !!options.answerConfigurationId,
         insightRgaGenerateRequestRegex,
-        !!withFacets
+        withFacets
       );
 
       const streamingUrl = options.answerConfigurationId

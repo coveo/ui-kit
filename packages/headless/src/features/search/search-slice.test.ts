@@ -411,7 +411,6 @@ describe('search-slice', () => {
   it('set the isloading state to true during executeSearch.pending', () => {
     const pendingAction = executeSearch.pending('asd', {
       legacy: logSearchboxSubmit(),
-      next: {actionCause: SearchPageEvents.searchboxSubmit},
     });
     const finalState = searchReducer(state, pendingAction);
     expect(finalState.isLoading).toBe(true);

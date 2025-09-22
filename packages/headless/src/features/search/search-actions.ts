@@ -175,15 +175,15 @@ export const fetchMoreResults = createAsyncThunk<
   void,
   AsyncThunkSearchOptions<StateNeededByExecuteSearch>
 >('search/fetchMoreResults', async (_, config) => {
-  const analyticsAction = makeBasicNewSearchAnalyticsAction(
-    SearchPageEvents.browseResults,
-    config.getState
-  );
-
   const state = config.getState();
   if (state.configuration.analytics.analyticsMode === 'legacy') {
     return legacyFetchMoreResults(config, state);
   }
+
+  const analyticsAction = makeBasicNewSearchAnalyticsAction(
+    SearchPageEvents.browseResults,
+    config.getState
+  );
 
   const processor = new AsyncSearchThunkProcessor<
     ReturnType<typeof config.rejectWithValue>

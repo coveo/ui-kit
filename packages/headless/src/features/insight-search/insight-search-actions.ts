@@ -175,10 +175,6 @@ export const fetchMoreResults = createAsyncThunk<
   void,
   AsyncThunkInsightOptions<StateNeededByExecuteSearch>
 >('search/fetchMoreResults', async (_, config: AsyncThunkConfig) => {
-  const eventDescription = buildEventDescription({
-    actionCause: SearchPageEvents.browseResults,
-  });
-
   const state = config.getState();
 
   if (state.configuration.analytics.analyticsMode === 'legacy') {
@@ -187,6 +183,10 @@ export const fetchMoreResults = createAsyncThunk<
 
   const processor = new AsyncInsightSearchThunkProcessor({
     ...config,
+  });
+
+  const eventDescription = buildEventDescription({
+    actionCause: SearchPageEvents.browseResults,
   });
 
   const request = await buildInsightFetchMoreResultsRequest(
