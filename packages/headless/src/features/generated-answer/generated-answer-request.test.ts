@@ -61,7 +61,7 @@ describe('constructAnswerAPIQueryParams', () => {
     );
   });
 
-  it('should default to default tab when there is NO tab', () => {
+  it('should default to the default tab when there is NO tab specified', () => {
     const queryParams = constructAnswerAPIQueryParams(
       streamAnswerAPIStateMockWithoutAnyTab,
       buildMockNavigatorContextProvider()()
