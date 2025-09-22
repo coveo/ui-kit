@@ -195,7 +195,7 @@ describe('constructAnswerAPIQueryParams', () => {
     expect(queryParams.actionsHistory?.length).toBe(2);
   });
 
-  it('should include folding params when folding is disabled', () => {
+  it('should not include folding params when folding is disabled', () => {
     const queryParams = constructAnswerAPIQueryParams(
       streamAnswerAPIStateMockWithFoldingDisabled,
       buildMockNavigatorContextProvider()()
