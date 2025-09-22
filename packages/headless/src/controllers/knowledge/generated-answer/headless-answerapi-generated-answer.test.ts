@@ -237,7 +237,7 @@ describe('knowledge-generated-answer', () => {
     });
 
     describe('when RTK Query completes with generated = undefined', () => {
-      it('should not mark cannotAnswer = true even if not loading or streaming', () => {
+      it('should mark cannotAnswer = false even if not loading or streaming', () => {
         mockSelectAnswer.mockReturnValue({
           data: {generated: undefined, isLoading: false, isStreaming: false},
         } as ReturnType<typeof selectAnswer>);
@@ -500,8 +500,8 @@ describe('knowledge-generated-answer', () => {
     });
 
     describe('generateAnswer behavior', () => {
-      describe('when request is newand state has a query', () => {
-        it('should call generateAnswer when request ID is new, state is ready, and has query', () => {
+      describe('when request is new and state has a query', () => {
+        it('should call generateAnswer when request ID is new and has query', () => {
           mockSelectAnswerTriggerParams.mockReturnValue({
             q: 'test query',
             requestId: 'new-request',
@@ -556,7 +556,7 @@ describe('knowledge-generated-answer', () => {
       });
 
       describe('when query is empty', () => {
-        it('should not call generateAnswer even with valid request ID and ready state', () => {
+        it('should not call generateAnswer even with valid request ID', () => {
           mockSelectAnswerTriggerParams.mockReturnValue({
             q: '',
             requestId: 'valid-request',
@@ -599,7 +599,7 @@ describe('knowledge-generated-answer', () => {
 
     describe('user interaction scenarios', () => {
       describe('when the user clears their query', () => {
-        it('should reset the previous answer but not generate a new one', () => {
+        it('should reset the answer and not generate a new one', () => {
           mockSelectAnswerTriggerParams
             .mockReturnValueOnce({
               q: 'test query',
@@ -625,7 +625,7 @@ describe('knowledge-generated-answer', () => {
       });
 
       describe('when the user performs multiple searches in a row', () => {
-        it('should reset and generate a new answer for each search', () => {
+        it('should reset the answer and generate a new one for each search', () => {
           mockSelectAnswerTriggerParams
             .mockReturnValueOnce({
               q: 'cats',
