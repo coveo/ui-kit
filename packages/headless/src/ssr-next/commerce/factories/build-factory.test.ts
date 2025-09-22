@@ -284,6 +284,7 @@ describe('buildFactory', () => {
     it('should build an SSRCommerceEngine with recommendation solution type', async () => {
       const factory = buildFactory(mockEmptyDefinition, mockEngineOptions);
       const build = factory(SolutionType.recommendation);
+      // @ts-expect-error: does not matter to populate all props for this test
       const result = await build(mockBuildOptions);
 
       expect(result.engine).toBeDefined();
@@ -291,6 +292,7 @@ describe('buildFactory', () => {
     });
 
     it('should add no middleware if no recommendation was specified in the build props', async () => {
+      // @ts-expect-error: only need recommendations prop for this test
       await build({
         ...mockBuildOptions,
         recommendations: [],
@@ -301,6 +303,7 @@ describe('buildFactory', () => {
     });
 
     it('should add a middleware for each recommendation in the build props', async () => {
+      // @ts-expect-error: only need recommendations prop for this test
       await build({
         ...mockBuildOptions,
         recommendations: ['rec1', 'rec2'],
