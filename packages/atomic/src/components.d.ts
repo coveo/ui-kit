@@ -1319,24 +1319,6 @@ export namespace Components {
     interface AtomicLoadMoreResults {
     }
     /**
-     * When the modal is opened, the class `atomic-modal-opened` is added to the interfaceElement and the body, allowing further customization.
-     */
-    interface AtomicModal {
-        /**
-          * Whether to display the open and close animations over the entire page or the atomic-modal only.
-         */
-        "boundary": 'page' | 'element';
-        "close": () => void;
-        /**
-          * The container to hide from the tabindex and accessibility DOM when the modal is closed.
-         */
-        "container"?: HTMLElement;
-        "fullscreen": boolean;
-        "isOpen": boolean;
-        "scope"?: HTMLElement;
-        "source"?: HTMLElement;
-    }
-    /**
      * The `atomic-no-results` component displays search tips and a "Cancel last action" button when there are no results. Any additional content slotted inside of its element will be displayed as well.
      */
     interface AtomicNoResults {
@@ -2957,10 +2939,6 @@ export interface AtomicIpxModalCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLAtomicIpxModalElement;
 }
-export interface AtomicModalCustomEvent<T> extends CustomEvent<T> {
-    detail: T;
-    target: HTMLAtomicModalElement;
-}
 export interface AtomicPagerCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLAtomicPagerElement;
@@ -3603,26 +3581,6 @@ declare global {
     var HTMLAtomicLoadMoreResultsElement: {
         prototype: HTMLAtomicLoadMoreResultsElement;
         new (): HTMLAtomicLoadMoreResultsElement;
-    };
-    interface HTMLAtomicModalElementEventMap {
-        "animationEnded": never;
-    }
-    /**
-     * When the modal is opened, the class `atomic-modal-opened` is added to the interfaceElement and the body, allowing further customization.
-     */
-    interface HTMLAtomicModalElement extends Components.AtomicModal, HTMLStencilElement {
-        addEventListener<K extends keyof HTMLAtomicModalElementEventMap>(type: K, listener: (this: HTMLAtomicModalElement, ev: AtomicModalCustomEvent<HTMLAtomicModalElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
-        removeEventListener<K extends keyof HTMLAtomicModalElementEventMap>(type: K, listener: (this: HTMLAtomicModalElement, ev: AtomicModalCustomEvent<HTMLAtomicModalElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
-    }
-    var HTMLAtomicModalElement: {
-        prototype: HTMLAtomicModalElement;
-        new (): HTMLAtomicModalElement;
     };
     /**
      * The `atomic-no-results` component displays search tips and a "Cancel last action" button when there are no results. Any additional content slotted inside of its element will be displayed as well.
@@ -4606,7 +4564,6 @@ declare global {
         "atomic-ipx-tab": HTMLAtomicIpxTabElement;
         "atomic-ipx-tabs": HTMLAtomicIpxTabsElement;
         "atomic-load-more-results": HTMLAtomicLoadMoreResultsElement;
-        "atomic-modal": HTMLAtomicModalElement;
         "atomic-no-results": HTMLAtomicNoResultsElement;
         "atomic-notifications": HTMLAtomicNotificationsElement;
         "atomic-numeric-facet": HTMLAtomicNumericFacetElement;
@@ -5908,25 +5865,6 @@ declare namespace LocalJSX {
      * The `atomic-load-more-results` component allows the user to load additional results if more are available.
      */
     interface AtomicLoadMoreResults {
-    }
-    /**
-     * When the modal is opened, the class `atomic-modal-opened` is added to the interfaceElement and the body, allowing further customization.
-     */
-    interface AtomicModal {
-        /**
-          * Whether to display the open and close animations over the entire page or the atomic-modal only.
-         */
-        "boundary"?: 'page' | 'element';
-        "close"?: () => void;
-        /**
-          * The container to hide from the tabindex and accessibility DOM when the modal is closed.
-         */
-        "container"?: HTMLElement;
-        "fullscreen"?: boolean;
-        "isOpen"?: boolean;
-        "onAnimationEnded"?: (event: AtomicModalCustomEvent<never>) => void;
-        "scope"?: HTMLElement;
-        "source"?: HTMLElement;
     }
     /**
      * The `atomic-no-results` component displays search tips and a "Cancel last action" button when there are no results. Any additional content slotted inside of its element will be displayed as well.
@@ -7539,7 +7477,6 @@ declare namespace LocalJSX {
         "atomic-ipx-tab": AtomicIpxTab;
         "atomic-ipx-tabs": AtomicIpxTabs;
         "atomic-load-more-results": AtomicLoadMoreResults;
-        "atomic-modal": AtomicModal;
         "atomic-no-results": AtomicNoResults;
         "atomic-notifications": AtomicNotifications;
         "atomic-numeric-facet": AtomicNumericFacet;
@@ -7793,10 +7730,6 @@ declare module "@stencil/core" {
              * The `atomic-load-more-results` component allows the user to load additional results if more are available.
              */
             "atomic-load-more-results": LocalJSX.AtomicLoadMoreResults & JSXBase.HTMLAttributes<HTMLAtomicLoadMoreResultsElement>;
-            /**
-             * When the modal is opened, the class `atomic-modal-opened` is added to the interfaceElement and the body, allowing further customization.
-             */
-            "atomic-modal": LocalJSX.AtomicModal & JSXBase.HTMLAttributes<HTMLAtomicModalElement>;
             /**
              * The `atomic-no-results` component displays search tips and a "Cancel last action" button when there are no results. Any additional content slotted inside of its element will be displayed as well.
              */
