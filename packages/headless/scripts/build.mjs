@@ -69,8 +69,8 @@ function emit(program) {
  */
 function compileWithTransformer() {
   console.log(
-    chalk.blue('Using tsconfig:'),
-    chalk.green(basename(tsConfigPath))
+    colors.blue('Using tsconfig:'),
+    colors.green(basename(tsConfigPath))
   );
   const {options, fileNames} = loadTsConfig(tsConfigPath);
   const program = createProgram(fileNames, options);
@@ -94,11 +94,11 @@ function compileWithTransformer() {
       );
 
       console.log(
-        `${chalk.cyan(relative(process.cwd(), diagnostic.file.fileName))}:${chalk.yellow(line + 1)}:${chalk.yellow(character + 1)} - ${chalk.red('error')} ${chalk.gray(message)}`
+        `${colors.cyan(relative(process.cwd(), diagnostic.file.fileName))}:${colors.yellow(line + 1)}:${colors.yellow(character + 1)} - ${colors.red('error')} ${colors.gray(message)}`
       );
     } else {
       console.error(
-        chalk.red(flattenDiagnosticMessageText(diagnostic.messageText, '\n'))
+        colors.red(flattenDiagnosticMessageText(diagnostic.messageText, '\n'))
       );
     }
 

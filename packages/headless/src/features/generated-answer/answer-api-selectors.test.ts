@@ -1,7 +1,11 @@
 import {skipToken} from '@reduxjs/toolkit/query';
 import {describe, expect, it} from 'vitest';
+import {streamAnswerAPIStateMock} from '../../controllers/knowledge/generated-answer/headless-answerapi-generated-answer-mocks.js';
 import type {SearchAppState} from '../../state/search-app-state.js';
-import {selectAnswerApiQueryParams} from './answer-api-selectors.js';
+import {
+  selectAnswerApiQueryParams,
+  selectAnswerTriggerParams,
+} from './answer-api-selectors.js';
 
 const buildState = (overrides: Partial<SearchAppState> = {}): SearchAppState =>
   ({
@@ -49,6 +53,20 @@ describe('answer-api-selectors', () => {
       });
       const result = selectAnswerApiQueryParams(state as SearchAppState);
       expect(result).toEqual(answerApiQueryParams);
+    });
+  });
+
+  describe('selectAnswerTriggerParams', () => {
+    it('should return the correct trigger parameters', () => {
+      const result = selectAnswerTriggerParams(streamAnswerAPIStateMock);
+
+      expect(result).toEqual({
+        q: 'what is the hardest wood',
+        requestId: 'uyb6Ti2pkk5whKHzOiX58',
+        cannotAnswer: false,
+        analyticsMode: 'next',
+        actionCause: 'searchboxSubmit',
+      });
     });
   });
 });

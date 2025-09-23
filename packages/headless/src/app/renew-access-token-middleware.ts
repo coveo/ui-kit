@@ -5,7 +5,6 @@ import type {
   UnknownAction,
 } from '@reduxjs/toolkit';
 import type {Logger} from 'pino';
-import {debounce} from 'ts-debounce';
 import {updateBasicConfiguration} from '../features/configuration/configuration-actions.js';
 import {setError} from '../features/error/error-actions.js';
 import type {
@@ -14,6 +13,7 @@ import type {
 } from '../state/state-sections.js';
 import {UnauthorizedTokenError} from '../utils/errors.js';
 import {shouldRenewJWT as shouldRenewAccessToken} from '../utils/jwt-utils.js';
+import {debounce} from '../utils/utils.js';
 
 export function createRenewAccessTokenMiddleware(
   logger: Logger,
