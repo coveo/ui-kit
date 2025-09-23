@@ -1,0 +1,77 @@
+import type {ReactiveController, ReactiveControllerHost} from 'lit';
+import {randomID} from '@/src/utils/utils';
+
+export interface LayoutStylesHost extends ReactiveControllerHost {
+  mobileBreakpoint: string;
+  getRootNode(): Node;
+  id?: string;
+}
+
+export type StylesBuilderFunction = (
+  host: HTMLElement,
+  mobileBreakpoint: string
+) => string;
+
+/**
+ * A reactive controller that manages dynamic layout styles.
+ * This controller handles:
+ * - Dynamic stylesheet creation and updates with proper cleanup
+ * - Automatic component ID assignment
+ */
+export class LayoutStylesController implements ReactiveController {
+  private host: LayoutStylesHost;
+  private dynamicStyleSheet: CSSStyleSheet | null = null;
+  private stylesBuilder: StylesBuilderFunction;
+  private componentPrefix: string;
+
+  constructor(
+    host: LayoutStylesHost,
+    stylesBuilder: StylesBuilderFunction,
+    componentPrefix: string
+  ) {
+    this.host = host;
+    this.stylesBuilder = stylesBuilder;
+    this.componentPrefix = componentPrefix;
+
+    this.host.addController(this);
+  }
+
+  hostConnected() {
+    if (!this.host.id) {
+      (this.host as unknown as HTMLElement).id = randomID(this.componentPrefix);
+    }
+
+    this.updateStyles();
+  }
+
+  /**
+   * Updates the dynamic styles based on the current mobile breakpoint
+   */
+  public updateStyles() {
+    const newStylesCSS = this.stylesBuilder(
+      this.host as unknown as HTMLElement,
+      this.host.mobileBreakpoint
+    );
+    console.log(newStylesCSS);
+
+    const parent = this.host.getRootNode();
+    const isDocumentOrShadowRoot =
+      parent instanceof Document || parent instanceof ShadowRoot;
+
+    if (!isDocumentOrShadowRoot) {
+      return;
+    }
+
+    if (!this.dynamicStyleSheet) {
+      this.dynamicStyleSheet = new CSSStyleSheet();
+      this.dynamicStyleSheet.replaceSync(newStylesCSS);
+      parent.adoptedStyleSheets = [
+        ...parent.adoptedStyleSheets,
+        this.dynamicStyleSheet,
+      ];
+      return;
+    }
+
+    this.dynamicStyleSheet.replaceSync(newStylesCSS);
+  }
+}

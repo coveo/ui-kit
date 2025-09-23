@@ -22,6 +22,7 @@ import {provide} from '@lit/context';
 import i18next, {type i18n} from 'i18next';
 import {type CSSResultGroup, css, html, LitElement} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
+import {MobileBreakpointController} from '@/src/components/common/layout/mobile-breakpoint-controller';
 import {booleanConverter} from '@/src/converters/boolean-converter';
 import {errorGuard} from '@/src/decorators/error-guard';
 import {watch} from '@/src/decorators/watch';
@@ -86,6 +87,9 @@ export class AtomicCommerceInterface
   private unsubscribeSummary?: Unsubscribe;
   private initialized = false;
   private store: CommerceStore;
+  // @ts-ignore
+  // biome-ignore lint/correctness/noUnusedPrivateClassMembers: <>
+  private _mobileBreakpointController: MobileBreakpointController;
   private interfaceController = new InterfaceController<CommerceEngine>(
     this,
     'CoveoAtomic',
@@ -205,6 +209,10 @@ export class AtomicCommerceInterface
   public constructor() {
     super();
     this.store = createCommerceStore(this.type);
+    this._mobileBreakpointController = new MobileBreakpointController(
+      this,
+      this.store
+    );
     const {promise, resolve} = Promise.withResolvers<void>();
     this.i18Initialized = promise;
     this.i18n = i18next.createInstance(undefined, resolve);
@@ -213,7 +221,6 @@ export class AtomicCommerceInterface
   public connectedCallback() {
     super.connectedCallback();
     this.store.setLoadingFlag(FirstRequestExecutedFlag);
-    this.updateMobileBreakpoint();
 
     this.addEventListener(
       'atomic/initializeComponent',
@@ -485,15 +492,6 @@ export class AtomicCommerceInterface
 
     history.pushState(null, document.title, `#${newFragment}`);
     this.bindings.engine.logger.info(`History pushState #${newFragment}`);
-  }
-
-  private updateMobileBreakpoint() {
-    const breakpoint = this.querySelector(
-      'atomic-commerce-layout'
-    )?.mobileBreakpoint;
-    if (breakpoint) {
-      this.store.state.mobileBreakpoint = breakpoint;
-    }
   }
 }
 
