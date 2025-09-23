@@ -42,7 +42,7 @@ export interface NavigatorContext {
  * The navigator context provider.
  * This provider is essential for retrieving navigation-related data such as referrer, userAgent, location, and clientId, which are crucial for handling both server-side and client-side API requests effectively.
  *
- * Note: The implementation specifics of the navigator context provider depend on the Node.js framework being utilized. It is the developer's responsibility to appropriately define and implement the navigator context provider to ensure accurate navigation context is available throughout the application. If the user fails to provide a navigator context provider, a warning will be logged either on the server or the browser console.
+ * Note: The implementation specifics of the navigator context provider depend on the Node.js framework being used. It is the developer's responsibility to define and implement the navigator context provider to ensure accurate navigation context is available in the application. If the user fails to provide a navigator context provider, a warning will be logged either in the server or the browser console.
  */
 export type NavigatorContextProvider = () => NavigatorContext;
 export type BrowserNavigatorContextProvider = (
