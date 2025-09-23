@@ -11,15 +11,7 @@ import {
   readConfigFile,
   sys,
 } from 'typescript';
-
-const colors = {
-  blue: (text) => `\x1b[34m${text}\x1b[0m`,
-  green: (text) => `\x1b[32m${text}\x1b[0m`,
-  red: (text) => `\x1b[31m${text}\x1b[0m`,
-  yellow: (text) => `\x1b[33m${text}\x1b[0m`,
-  cyan: (text) => `\x1b[36m${text}\x1b[0m`,
-  gray: (text) => `\x1b[90m${text}\x1b[0m`,
-};
+import colors from '../../../utils/ci/colors.mjs';
 
 import analyticsTransformer from './analytics-transform.mjs';
 import versionTransformer from './version-transform.mjs';
