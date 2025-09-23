@@ -4,6 +4,10 @@ export default {
     await import('./atomic-query-summary/atomic-query-summary.js'),
   'atomic-results-per-page': async () =>
     await import('./atomic-results-per-page/atomic-results-per-page.js'),
+  'atomic-search-box-query-suggestions': async () =>
+    await import(
+      './search-box-suggestions/atomic-search-box-query-suggestions/atomic-search-box-query-suggestions.js'
+    ),
   'atomic-search-layout': async () =>
     await import('./atomic-search-layout/atomic-search-layout.js'),
 } as Record<string, () => Promise<unknown>>;
