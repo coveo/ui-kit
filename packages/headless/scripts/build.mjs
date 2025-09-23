@@ -1,7 +1,6 @@
 import {basename, dirname, relative} from 'node:path';
 import {argv} from 'node:process';
 import {fileURLToPath} from 'node:url';
-import chalk from 'chalk';
 import {
   createProgram,
   DiagnosticCategory,
@@ -12,6 +11,8 @@ import {
   readConfigFile,
   sys,
 } from 'typescript';
+import colors from '../../../utils/ci/colors.mjs';
+
 import analyticsTransformer from './analytics-transform.mjs';
 import versionTransformer from './version-transform.mjs';
 
@@ -112,9 +113,9 @@ function compileWithTransformer() {
 }
 
 try {
-  console.log(chalk.blue('Starting TypeScript compilation'));
+  console.log(colors.blue('Starting TypeScript compilation'));
   compileWithTransformer();
 } catch (error) {
-  console.error(chalk.red('Build failed:'), error);
+  console.error(colors.red('Build failed:'), error);
   process.exit(1);
 }

@@ -10,7 +10,7 @@ import cssnano from 'cssnano';
 import postcss from 'postcss';
 import postcssLoadConfig from 'postcss-load-config';
 import {dedent} from 'ts-dedent';
-import colors from './colors.mjs';
+import colors from '../../../utils/ci/colors.mjs';
 
 function escapeBackslashes(css) {
   return css.replace(/\\/g, '\\\\');

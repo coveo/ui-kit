@@ -2,7 +2,7 @@ import {spawn} from 'node:child_process';
 import {readdirSync, readFileSync, statSync, writeFileSync} from 'node:fs';
 import {findPackageJSON} from 'node:module';
 import path from 'node:path';
-import colors from './colors.mjs';
+import colors from '../../../utils/ci/colors.mjs';
 
 const currentDir = import.meta.dirname;
 const siteDir = path.resolve(currentDir, '../dev');

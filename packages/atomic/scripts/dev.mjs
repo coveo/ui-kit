@@ -1,7 +1,7 @@
 import {exec} from 'node:child_process';
 import {watch} from 'node:fs';
 import waitOn from 'wait-on';
-import colors from './colors.mjs';
+import colors from '../../../utils/ci/colors.mjs';
 
 /**
  * An array to keep track of running processes.

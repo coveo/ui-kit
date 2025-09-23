@@ -2,7 +2,7 @@ import {execSync} from 'node:child_process';
 import fs from 'node:fs';
 import path from 'node:path';
 import {fileURLToPath} from 'node:url';
-import colors from './colors.mjs';
+import colors from '../../../utils/ci/colors.mjs';
 
 const directories = [
   'commerce',

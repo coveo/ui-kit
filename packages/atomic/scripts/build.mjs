@@ -11,8 +11,8 @@ import {
   readConfigFile,
   sys,
 } from 'typescript';
+import colors from '../../../utils/ci/colors.mjs';
 import resourceUrlTransformer from './asset-path-transformer.mjs';
-import colors from './colors.mjs';
 import {generateLitExports} from './generate-lit-exports.mjs';
 import pathTransformer from './path-transform.mjs';
 import {processAllCss} from './process-css.mjs';
