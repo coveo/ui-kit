@@ -1,3 +1,10 @@
+## 2.2.13 (2025-09-23)
+
+### Bug Fixes
+
+- **deps:** update all non-major dependencies ([#203](https://github.com/coveo/relay/issues/203)) ([c340ef2](https://github.com/coveo/relay/commits/))
+- **deps:** update dependency uuid to v13 ([#205](https://github.com/coveo/relay/issues/205)) ([ac3373e](https://github.com/coveo/relay/commits/))
+
 ## 2.2.12 (2025-09-15)
 
 ### Bug Fixes
