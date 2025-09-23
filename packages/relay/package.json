@@ -60,6 +60,6 @@
   },
   "dependencies": {
     "@coveo/explorer-messenger": "^0.4.1",
-    "uuid": "^11.0.0"
+    "uuid": "^13.0.0"
   }
 }
