@@ -14,12 +14,23 @@ const COLORS = {
   bgGreen: '\x1b[42m',
 };
 
+/**
+ * @param {string} text
+ * @param {...string} codes
+ * @returns {string}
+ */
 function colorize(text, ...codes) {
   return `${codes.join('')}${text}${RESET}`;
 }
 
+/**
+ * @param {string} color
+ * @returns {{ (text: string): string; bold: (text: string) => string }}
+ */
 function createColorFn(color) {
+  /** @param {string} text */
   const fn = (text) => colorize(text, color);
+  /** @param {string} text */
   fn.bold = (text) => colorize(text, BOLD, color);
   return fn;
 }
@@ -36,6 +47,7 @@ const colors = {
   bgRed: createColorFn(COLORS.bgRed),
   bgGreen: createColorFn(COLORS.bgGreen),
   bold: {
+    /** @param {string} text */
     blue: (text) => colorize(text, BOLD, COLORS.blue),
   },
 };
