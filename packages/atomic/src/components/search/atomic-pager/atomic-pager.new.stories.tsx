@@ -29,6 +29,21 @@ const meta: Meta = {
 
 export default meta;
 
-export const Default: Story = {
-  name: 'atomic-pager',
+export const Default: Story = {};
+
+export const CustomIcon: Story = {
+  name: 'With custom icons',
+  args: {
+    'previous-button-icon':
+      'https://raw.githubusercontent.com/coveo/ui-kit/main/packages/atomic/src/images/arrow-top-rounded.svg',
+    'next-button-icon':
+      'https://raw.githubusercontent.com/coveo/ui-kit/main/packages/atomic/src/images/arrow-top-rounded.svg',
+  },
+};
+
+export const WithACustomNumberOfPages: Story = {
+  name: 'With a custom number of pages',
+  args: {
+    'number-of-pages': '10',
+  },
 };
