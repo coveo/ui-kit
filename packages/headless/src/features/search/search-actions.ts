@@ -120,8 +120,6 @@ export const executeSearch = createAsyncThunk<
       ? buildSearchReduxAction(searchAction.next)
       : undefined;
 
-    config.dispatch(updateSearchAction(searchAction.next));
-
     const request = await buildSearchRequest(
       state,
       config.extra.navigatorContext,
