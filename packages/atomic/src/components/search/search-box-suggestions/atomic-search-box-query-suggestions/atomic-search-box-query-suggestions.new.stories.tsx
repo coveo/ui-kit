@@ -1,13 +1,12 @@
 import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
 import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {html} from 'lit';
-import {within} from 'shadow-dom-testing-library';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
 
 const {decorator, afterEach} = wrapInSearchInterface();
 const {events, args, argTypes, template} = getStorybookHelpers(
-  'atomic-search-box-instant-results',
+  'atomic-search-box-query-suggestions',
   {excludeCategories: ['methods']}
 );
 
@@ -36,18 +35,4 @@ export default meta;
 
 export const Default: Story = {
   name: 'atomic-search-box-query-suggestions',
-  afterEach: async (context) => {
-    await afterEach(context);
-    const {canvasElement, step} = context;
-    const canvas = within(canvasElement);
-    await step('Click Searchbox', async () => {
-      (
-        await canvas.findAllByShadowTitle('Search field with suggestions.', {
-          exact: false,
-        })
-      )
-        ?.find((el) => el.getAttribute('part') === 'textarea')
-        ?.focus();
-    });
-  },
 };
