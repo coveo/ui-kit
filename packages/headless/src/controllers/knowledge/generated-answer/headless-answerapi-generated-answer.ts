@@ -20,7 +20,6 @@ import {
   generateAnswer,
   resetAnswer,
   sendGeneratedAnswerFeedback,
-  setCannotAnswer,
   updateAnswerConfigurationId,
 } from '../../../features/generated-answer/generated-answer-actions.js';
 import type {GeneratedAnswerFeedback} from '../../../features/generated-answer/generated-answer-analytics-actions.js';
@@ -99,30 +98,23 @@ const parseEvaluationArguments = ({
 const subscribeToSearchRequest = (
   engine: SearchEngine<StreamAnswerAPIState>
 ) => {
-  let lastTriggerParams: ReturnType<typeof selectAnswerTriggerParams>;
+  let lastRequestId = '';
+
   const strictListener = () => {
     const state = engine.state;
     const triggerParams = selectAnswerTriggerParams(state);
 
-    if (!lastTriggerParams || triggerParams.q.length === 0) {
-      lastTriggerParams = triggerParams;
-    }
+    const currentRequestId = triggerParams.requestId;
+    const newSearchRequestDetected = currentRequestId !== lastRequestId;
 
-    if (triggerParams.q.length === 0 && !!triggerParams.cannotAnswer) {
-      engine.dispatch(setCannotAnswer(false));
-    }
+    if (newSearchRequestDetected) {
+      lastRequestId = currentRequestId;
+      engine.dispatch(resetAnswer());
 
-    if (
-      triggerParams.q.length === 0 ||
-      triggerParams.requestId.length === 0 ||
-      triggerParams.requestId === lastTriggerParams.requestId ||
-      (triggerParams.analyticsMode === 'next' && !triggerParams.actionCause) // If analytics mode is next, we need to wait for the action cause to be set
-    ) {
-      return;
+      if (triggerParams.q?.length > 0) {
+        engine.dispatch(generateAnswer());
+      }
     }
-
-    lastTriggerParams = triggerParams;
-    engine.dispatch(generateAnswer());
   };
 
   engine.subscribe(strictListener);
@@ -168,7 +160,7 @@ export function buildAnswerApiGeneratedAnswer(
       const selectedAnswerState = selectAnswer(params)(currentState).data;
 
       return {
-        ...getState().generatedAnswer,
+        ...currentState.generatedAnswer,
         answer: selectedAnswerState?.answer,
         citations: filterOutDuplicatedCitations(
           selectedAnswerState?.citations ?? []
@@ -181,6 +173,11 @@ export function buildAnswerApiGeneratedAnswer(
         isStreaming: selectedAnswerState?.isStreaming ?? false,
         answerContentFormat: selectedAnswerState?.contentFormat ?? 'text/plain',
         isAnswerGenerated: selectedAnswerState?.generated ?? false,
+        cannotAnswer:
+          currentState.generatedAnswer.cannotAnswer ||
+          (selectedAnswerState?.generated === false &&
+            !selectedAnswerState?.isLoading &&
+            !selectedAnswerState?.isStreaming),
       };
     },
     retry() {
