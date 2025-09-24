@@ -33,13 +33,13 @@ import {
   StorageItems,
 } from '@/src/utils/local-storage-utils';
 import {ChildrenUpdateCompleteMixin} from '../../../mixins/children-update-complete-mixin';
+import {bindingsContext} from '../../common/context/bindings-context';
 import {augmentAnalyticsConfigWithAtomicVersion} from '../../common/interface/analytics-config';
 import type {CommonBindings} from '../../common/interface/bindings';
 import {
   type BaseAtomicInterface,
   InterfaceController,
 } from '../../common/interface/interface-controller';
-import {bindingsContext} from '../../context/bindings-context';
 import {
   type CommerceStore,
   createCommerceStore,

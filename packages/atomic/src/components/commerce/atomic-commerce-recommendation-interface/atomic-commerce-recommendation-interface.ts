@@ -18,13 +18,13 @@ import {watch} from '@/src/decorators/watch';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles.js';
 import {ChildrenUpdateCompleteMixin} from '@/src/mixins/children-update-complete-mixin.js';
 import {type InitializeEvent, markParentAsReady} from '@/src/utils/init-queue';
+import {bindingsContext} from '../../common/context/bindings-context.js';
 import {augmentAnalyticsConfigWithAtomicVersion} from '../../common/interface/analytics-config.js';
 import type {CommonBindings} from '../../common/interface/bindings.js';
 import {
   type BaseAtomicInterface,
   InterfaceController,
 } from '../../common/interface/interface-controller.js';
-import {bindingsContext} from '../../context/bindings-context.js';
 import {
   type CommerceRecommendationStore,
   createCommerceRecommendationStore,
