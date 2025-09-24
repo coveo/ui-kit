@@ -3325,32 +3325,6 @@ export declare interface AtomicResultsPerPage extends LitAtomicResultsPerPage {
 }
 
 @ProxyCmp({
-  inputs: ['mobileBreakpoint'],
-  methods: [],
-  defineCustomElementFn: () => {customElements.get('atomic-search-layout') || customElements.define('atomic-search-layout', LitAtomicSearchLayout);}
-})
-@Component({
-  selector: 'atomic-search-layout',
-  standalone: false,
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  template: '<ng-content></ng-content>',
-  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: ['mobileBreakpoint']
-})
-export class AtomicSearchLayout {
-  protected readonly el: HTMLElement;
-  constructor(c: ChangeDetectorRef, el: ElementRef, protected z: NgZone) {
-    c.detach();
-    this.el = el.nativeElement;
-    
-  }
-}
-
-export declare interface AtomicSearchLayout extends LitAtomicSearchLayout {
-
-}
-
-@ProxyCmp({
   inputs: ['icon', 'maxWithQuery', 'maxWithoutQuery'],
   methods: ['initialize'],
   defineCustomElementFn: () => {customElements.get('atomic-search-box-query-suggestions') || customElements.define('atomic-search-box-query-suggestions', LitAtomicSearchBoxQuerySuggestions);}
@@ -3373,6 +3347,32 @@ export class AtomicSearchBoxQuerySuggestions {
 }
 
 export declare interface AtomicSearchBoxQuerySuggestions extends LitAtomicSearchBoxQuerySuggestions {
+
+}
+
+@ProxyCmp({
+  inputs: ['mobileBreakpoint'],
+  methods: [],
+  defineCustomElementFn: () => {customElements.get('atomic-search-layout') || customElements.define('atomic-search-layout', LitAtomicSearchLayout);}
+})
+@Component({
+  selector: 'atomic-search-layout',
+  standalone: false,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
+  inputs: ['mobileBreakpoint']
+})
+export class AtomicSearchLayout {
+  protected readonly el: HTMLElement;
+  constructor(c: ChangeDetectorRef, el: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = el.nativeElement;
+    
+  }
+}
+
+export declare interface AtomicSearchLayout extends LitAtomicSearchLayout {
 
 }
 

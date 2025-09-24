@@ -18,8 +18,8 @@ import {
 } from '@/src/components/common/suggestions/suggestions-common.js';
 import {errorGuard} from '@/src/decorators/error-guard.js';
 import type {SearchBoxSuggestionsComponent} from '@/src/decorators/types.js';
-import SearchIcon from '../../../../images/search.svg';
-import type {Bindings} from '../../atomic-search-interface/interfaces.js';
+import SearchIcon from '../../../images/search.svg';
+import type {Bindings} from '../atomic-search-interface/interfaces.js';
 
 /**
  * The `atomic-search-box-query-suggestions` component can be added as a child of an `atomic-search-box` component, allowing for the configuration of query suggestion behavior.
