@@ -32,7 +32,7 @@
       hostDiv.style.display = 'inline';
     };
 
-    const initializeSearchInterface = async (searchInterface, usesTargetSelector = false) => {
+    const initializeSearchInterface = async (searchInterface) => {
       await searchInterface.initialize({
         accessToken: 'xx564559b1-0045-48e1-953c-3addd1ee4457',
         organizationId: 'searchuisamples',
@@ -44,7 +44,7 @@
         accessToken: 'xx564559b1-0045-48e1-953c-3addd1ee4457',
         organizationId: 'searchuisamples',
       });
-      usesTargetSelector && recsInterface.getRecommendations();
+      recsInterface.getRecommendations();
 
       searchInterface.i18n.addResourceBundle('en', 'caption-filetype', {
         '.html': 'html',
@@ -57,7 +57,7 @@
         hostDiv.querySelector('atomic-ipx-embedded').appendChild(element);
       });
       const searchInterface = hostDiv.querySelector('atomic-search-interface');
-      await initializeSearchInterface(searchInterface, true);
+      await initializeSearchInterface(searchInterface);
     };
 
     (async () => {
@@ -67,9 +67,9 @@
       const hostDiv = document.querySelector('div#host-div');
 
       const embeddedSearchInterfaceChildren = Array.from(ipxModal.cloneNode(true).childNodes);
+      await initializeSearchInterface(searchInterface);
       await setupEmbeddedInterface(embeddedSearchInterfaceChildren, hostDiv);
 
-      await initializeSearchInterface(searchInterface);
 
 
       const displaySelect = document.getElementById('ipx-display-select');
