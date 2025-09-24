@@ -12,13 +12,13 @@ import {buildFakeInstantProducts} from '@/vitest-utils/testing-helpers/fixtures/
 import type {
   SearchBoxSuggestionElement,
   SearchBoxSuggestions,
-} from '../../common/suggestions/suggestions-common';
+} from '../../common/suggestions/suggestions-types';
 import {AtomicCommerceSearchBoxInstantProducts} from './atomic-commerce-search-box-instant-products';
 import './atomic-commerce-search-box-instant-products';
 
 vi.mock('@coveo/headless/commerce', {spy: true});
 
-describe('AtomicCommerceSearchBoxInstantProducts', () => {
+describe('atomic-commerce-search-box-instant-products', () => {
   beforeEach(() => {
     vi.mocked(buildInstantProducts).mockReturnValue(buildFakeInstantProducts());
   });

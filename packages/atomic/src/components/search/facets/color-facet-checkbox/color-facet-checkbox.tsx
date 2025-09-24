@@ -1,5 +1,5 @@
 import {FunctionalComponent, h} from '@stencil/core';
-import {createRipple} from '../../../../utils/ripple';
+import {createRipple} from '../../../../utils/ripple-utils';
 import {randomID} from '../../../../utils/utils';
 import {FacetValueProps} from '../../../common/facets/stencil-facet-common';
 

@@ -36,11 +36,12 @@
  * export type SearchStaticState = InferStaticState<typeof engineDefinition>;
  * export type SearchHydratedState = InferHydratedState<typeof engineDefinition>;
  *
- * export const {
- *   fetchStaticState,
- *   hydrateStaticState,
- *   setNavigatorContextProvider,
- * } = engineDefinition;
+ * export const {fetchStaticState, hydrateStaticState} = engineDefinition;
+ *
+ * await fetchStaticState({
+ *   navigatorContextProvider: () => {/*...* /},
+ *   context: {/*...* /},
+ * });
 
  * ```
  * @module SSR Search

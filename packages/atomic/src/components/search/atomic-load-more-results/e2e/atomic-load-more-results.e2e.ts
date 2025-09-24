@@ -6,7 +6,7 @@ test.describe('atomic-load-more-results', () => {
     await loadMore.hydrated.waitFor();
   });
 
-  test('should be A11y compliant', async ({loadMore, makeAxeBuilder}) => {
+  test('should be accessible', async ({loadMore, makeAxeBuilder}) => {
     await loadMore.load();
     await loadMore.hydrated.waitFor();
     const accessibilityResults = await makeAxeBuilder().analyze();

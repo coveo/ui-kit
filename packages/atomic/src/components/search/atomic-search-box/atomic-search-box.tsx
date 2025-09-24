@@ -31,7 +31,7 @@ import {
   StandaloneSearchBoxData,
   StorageItems,
 } from '../../../utils/local-storage-utils';
-import {updateBreakpoints} from '../../../utils/replace-breakpoint';
+import {updateBreakpoints} from '../../../utils/replace-breakpoint-utils';
 import {AriaLiveRegion} from '../../../utils/stencil-accessibility-utils';
 import {
   isFocusingOut,
@@ -45,11 +45,13 @@ import {SearchTextArea} from '../../common/search-box/stencil-search-text-area';
 import {SubmitButton} from '../../common/search-box/stencil-submit-button';
 import {SuggestionManager} from '../../common/suggestions/stencil-suggestion-manager';
 import {
+  elementHasQuery,
+} from '../../common/suggestions/suggestions-utils';
+import type {
   SearchBoxSuggestionElement,
   SearchBoxSuggestionsBindings,
   SearchBoxSuggestionsEvent,
-  elementHasQuery,
-} from '../../common/suggestions/suggestions-common';
+} from '../../common/suggestions/suggestions-types';
 import {Bindings} from '../atomic-search-interface/atomic-search-interface';
 
 /**

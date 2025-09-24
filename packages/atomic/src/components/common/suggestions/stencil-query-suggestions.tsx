@@ -1,7 +1,7 @@
 import {FunctionalComponent, h} from '@stencil/core';
 import {i18n} from 'i18next';
 import {encodeForDomAttribute} from '../../../utils/string-utils.js';
-import {SearchBoxSuggestionElement} from './suggestions-common.js';
+import {SearchBoxSuggestionElement} from './suggestions-types.js';
 
 interface Suggestion {
   highlightedValue: string;

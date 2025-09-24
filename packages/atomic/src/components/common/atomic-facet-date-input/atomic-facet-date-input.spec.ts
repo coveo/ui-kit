@@ -9,7 +9,7 @@ import {renderInAtomicCommerceInterface} from '@/vitest-utils/testing-helpers/fi
 import './atomic-facet-date-input';
 import {AtomicFacetDateInput} from './atomic-facet-date-input';
 
-describe('AtomicFacetDateInput', () => {
+describe('atomic-facet-date-input', () => {
   let consoleErrorSpy: MockInstance;
 
   const setupElement = async (

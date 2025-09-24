@@ -1,16 +1,19 @@
 import type {Mock, MockInstance} from 'vitest';
 import {getSampleCommerceEngineConfiguration} from '../../../app/commerce-engine/commerce-engine-configuration.js';
+import type {NavigatorContextProvider} from '../../../app/navigator-context-provider.js';
 import {buildMockCommerceState} from '../../../test/mock-commerce-state.js';
 import {buildMockSSRCommerceEngine} from '../../../test/mock-engine-v2.js';
+import {buildMockNavigatorContextProvider} from '../../../test/mock-navigator-context-provider.js';
 import {defineMockRecommendationDefinition} from '../../../test/mock-ssr-controller-definitions.js';
 import type {SolutionType} from '../types/controller-constants.js';
-import type {FilteredBakedInControllers} from '../types/controller-definitions.js';
+import type {BakedInControllers} from '../types/controller-definitions.js';
 import type {InferControllersMapFromDefinition} from '../types/controller-inference.js';
 import type {CommerceControllerDefinitionsMap} from '../types/engine.js';
 import * as buildFactory from './build-factory.js';
 import {fetchRecommendationStaticStateFactory} from './recommendation-static-state-factory.js';
 
 describe('fetchRecommendationStaticStateFactory', () => {
+  let mockNavigatorContextProvider: NavigatorContextProvider;
   let engineSpy: MockInstance;
   let mockControllers = {};
   let mockEngine: ReturnType<typeof buildMockSSRCommerceEngine>;
@@ -24,6 +27,7 @@ describe('fetchRecommendationStaticStateFactory', () => {
   };
 
   const setupMocks = () => {
+    mockNavigatorContextProvider = buildMockNavigatorContextProvider();
     mockEngine = buildMockSSRCommerceEngine(buildMockCommerceState());
 
     options = {
@@ -46,7 +50,7 @@ describe('fetchRecommendationStaticStateFactory', () => {
               CommerceControllerDefinitionsMap,
               T
             > &
-              FilteredBakedInControllers<T>,
+              BakedInControllers,
           })
     );
 
@@ -70,6 +74,8 @@ describe('fetchRecommendationStaticStateFactory', () => {
     );
 
     await factory({
+      navigatorContextProvider: mockNavigatorContextProvider,
+      recommendations: ['rec1', 'rec2'],
       context: {
         country: 'CA',
         currency: 'USD',

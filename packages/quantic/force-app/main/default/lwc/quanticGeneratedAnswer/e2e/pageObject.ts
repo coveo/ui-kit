@@ -13,6 +13,17 @@ const removeUnknownFields = (object: Record<string, unknown>) => {
   );
 };
 
+const selectors = {
+  addFacetsButton: 'c-action-add-facets button',
+};
+
+const facetElementsSelectors = {
+  timeframeFacet: {
+    component: 'c-quantic-timeframe-facet',
+    facetValueComponent: 'c-quantic-facet-value',
+  },
+};
+
 export class GeneratedAnswerObject {
   private analyticsMode: AnalyticsMode;
 
@@ -20,13 +31,17 @@ export class GeneratedAnswerObject {
     private page: Page,
     private streamId: string,
     private analytics: AnalyticsObject,
-    private answerApiEnabled: boolean
+    private answerApiEnabled: boolean,
+    private generateRequestRegex: RegExp,
+    private withFacets: boolean
   ) {
     this.page = page;
     this.streamId = streamId;
     this.analytics = analytics;
     this.analyticsMode = this.analytics.analyticsMode;
     this.answerApiEnabled = answerApiEnabled;
+    this.generateRequestRegex = generateRequestRegex;
+    this.withFacets = withFacets;
   }
 
   get likeButton(): Locator {
@@ -43,6 +58,32 @@ export class GeneratedAnswerObject {
 
   get toggleButton(): Locator {
     return this.page.getByTestId('generated-answer__toggle-button');
+  }
+
+  get firstTimeframeFacet(): Locator {
+    return this.page
+      .locator(facetElementsSelectors.timeframeFacet.component)
+      .first();
+  }
+
+  get firstTimeframeFacetValue(): Promise<string | null> {
+    return this.firstTimeframeFacet
+      .locator(facetElementsSelectors.timeframeFacet.facetValueComponent)
+      .first()
+      .locator('.facet__value-text')
+      .textContent();
+  }
+
+  get addFacetsButton(): Locator {
+    return this.page.locator(selectors.addFacetsButton);
+  }
+
+  async clickAddFacetsButton(): Promise<void> {
+    await this.addFacetsButton.click();
+  }
+
+  async clickFirstTimeframeFacetLink(): Promise<void> {
+    await this.firstTimeframeFacet.click();
   }
 
   questionContainer(questionId: string): Locator {
@@ -127,6 +168,10 @@ export class GeneratedAnswerObject {
 
   async clickToggleButton(): Promise<void> {
     await this.toggleButton.click();
+  }
+
+  async waitForGenerateRequest(): Promise<Request> {
+    return this.page.waitForRequest(this.generateRequestRegex);
   }
 
   async waitForStreamEndAnalytics(): Promise<Request | boolean> {
@@ -394,4 +439,5 @@ export class GeneratedAnswerObject {
   }
 
   streamEndAnalyticRequestPromise!: Promise<boolean | Request>;
+  generateRequestPromise!: Promise<Request> ;
 }

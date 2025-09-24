@@ -1,8 +1,8 @@
-import {Octokit} from '@octokit/rest';
+import {getOctokit} from '@actions/github';
 import {getPackageDefinitionFromPackageDir} from '../packages.mjs';
 
 const token = process.env.GITHUB_TOKEN || '';
-const github = new Octokit({auth: token});
+const github = getOctokit(token).rest;
 
 const owner = 'coveo';
 const repo = 'doc_jekyll-public-site';
