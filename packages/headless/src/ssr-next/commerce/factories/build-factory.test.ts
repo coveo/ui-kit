@@ -306,6 +306,7 @@ describe('buildFactory', () => {
     });
 
     it('should add no middleware if no recommendation was specified in the build props', async () => {
+      // @ts-expect-error: only need recommendations prop for this test
       await build({
         ...mockBuildOptions,
         recommendations: [],
@@ -316,6 +317,7 @@ describe('buildFactory', () => {
     });
 
     it('should add a middleware for each recommendation in the build props', async () => {
+      // @ts-expect-error: only need recommendations prop for this test
       await build({
         ...mockBuildOptions,
         recommendations: ['rec1', 'rec2'],
