@@ -40,7 +40,7 @@ export class AtomicSearchBoxQuerySuggestions
    * - Use a value that starts with `assets://`, to display an icon from the Atomic package.
    * - Use a stringified SVG to display it directly.
    */
-  @property() icon = '';
+  @property() icon?: string;
 
   /**
    * The maximum number of suggestions that will be displayed if the user has typed something into the input field.
@@ -82,7 +82,8 @@ export class AtomicSearchBoxQuerySuggestions
     const maxWithQuery = this.maxWithQuery;
 
     if (numberOfQueries < maxWithQuery) {
-      this.bindings.engine.logger.warn(
+      const logger = this.bindings.engine.logger;
+      logger.warn(
         `Query suggestions configuration mismatch: atomic-search-box has number-of-queries="${numberOfQueries}" but atomic-search-box-query-suggestions has max-with-query="${maxWithQuery}". ` +
           `This may cause inconsistent behavior where the search box requests ${numberOfQueries} suggestions but the component tries to display up to ${maxWithQuery}. ` +
           `Consider updating max-with-query to ${numberOfQueries} or increasing number-of-queries to ${maxWithQuery}.`
