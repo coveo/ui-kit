@@ -120,12 +120,12 @@ export function defineSearchEngine<
 
     engineOptions.navigatorContextProvider = (
       buildOptions as BuildConfig
-    ).navigatorContextProvider; // TODO: remove cast by deprecating Build type
+    ).navigatorContextProvider;
     engineOptions.configuration.preprocessRequest =
       augmentPreprocessRequestWithForwardedFor({
         preprocessRequest: engineOptions.configuration.preprocessRequest,
         navigatorContextProvider: (buildOptions as BuildConfig)
-          .navigatorContextProvider, // TODO: remove cast by deprecating Build type
+          .navigatorContextProvider,
         loggerOptions: engineOptions.loggerOptions,
       });
 
