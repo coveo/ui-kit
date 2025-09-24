@@ -39,12 +39,12 @@ import {renderSearchBoxWrapper} from '../../common/search-box/search-box-wrapper
 import {renderSearchBoxTextArea} from '../../common/search-box/search-text-area';
 import {renderSubmitButton} from '../../common/search-box/submit-button';
 import {SuggestionManager} from '../../common/suggestions/suggestion-manager';
-import {
-  elementHasQuery,
-  type SearchBoxSuggestionElement,
-  type SearchBoxSuggestionsBindings,
-  type SearchBoxSuggestionsEvent,
-} from '../../common/suggestions/suggestions-common';
+import type {
+  SearchBoxSuggestionElement,
+  SearchBoxSuggestionsBindings,
+  SearchBoxSuggestionsEvent,
+} from '../../common/suggestions/suggestions-types';
+import {elementHasQuery} from '../../common/suggestions/suggestions-utils';
 import type {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface';
 import type {SelectChildProductEventArgs} from '../atomic-product-children/select-child-product-event';
 import '../atomic-commerce-search-box-instant-products/atomic-commerce-search-box-instant-products';

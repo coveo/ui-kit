@@ -1,17 +1,8 @@
-import {afterEach, beforeEach, describe, expect, it, vi} from 'vitest';
-import {closest} from '../../../utils/dom-utils';
-import {
-  dispatchSearchBoxSuggestionsEvent,
-  elementHasNoQuery,
-  elementHasQuery,
-  type SearchBoxSuggestionElement,
-  type SearchBoxSuggestionsEvent,
-} from './suggestions-common';
+import {describe, expect, it} from 'vitest';
+import type {SearchBoxSuggestionElement} from './suggestions-types';
+import {elementHasNoQuery, elementHasQuery} from './suggestions-utils';
 
-vi.mock('../../../utils/event-utils', {spy: true});
-vi.mock('../../../utils/dom-utils', {spy: true});
-
-describe('suggestions-common', () => {
+describe('suggestions-utils', () => {
   const createTestElement = (query?: string): SearchBoxSuggestionElement => ({
     key: 'test-key',
     content: document.createElement('div'),
@@ -90,76 +81,10 @@ describe('suggestions-common', () => {
       const element = createTestElement('0');
       expect(elementHasQuery(element)).toBe(true);
     });
-  });
 
-  describe('#dispatchSearchBoxSuggestionsEvent', () => {
-    let mockElement: HTMLElement;
-    let mockEvent: SearchBoxSuggestionsEvent<unknown>;
-
-    beforeEach(() => {
-      document.body.innerHTML = '';
-      mockElement = document.createElement('div');
-      mockEvent = vi.fn();
-    });
-
-    afterEach(() => {
-      document.body.innerHTML = '';
-    });
-
-    it('should call closest with correct selector', () => {
-      vi.mocked(closest).mockReturnValue(
-        document.createElement('atomic-search-box')
-      );
-
-      dispatchSearchBoxSuggestionsEvent(mockEvent, mockElement);
-
-      expect(closest).toHaveBeenCalledWith(
-        mockElement,
-        'atomic-search-box, atomic-insight-search-box, atomic-commerce-search-box'
-      );
-    });
-
-    it('should work with any valid search box type', () => {
-      const searchBoxTypes = [
-        'atomic-search-box',
-        'atomic-insight-search-box',
-        'atomic-commerce-search-box',
-      ];
-
-      searchBoxTypes.forEach((type) => {
-        const mockParent = document.createElement(type);
-        vi.mocked(closest).mockReturnValue(mockParent);
-
-        expect(() => {
-          dispatchSearchBoxSuggestionsEvent(mockEvent, mockElement);
-        }).not.toThrow();
-      });
-    });
-
-    it('should throw error when element is not child of allowed search box elements', () => {
-      vi.mocked(closest).mockReturnValue(null);
-
-      expect(() => {
-        dispatchSearchBoxSuggestionsEvent(mockEvent, mockElement);
-      }).toThrow(
-        'The "div" component was not handled, as it is not a child of the following elements: atomic-search-box, atomic-insight-search-box, atomic-commerce-search-box'
-      );
-    });
-
-    it('should normalize nodeName to lowercase in error message', () => {
-      const upperCaseElement = document.createElement('div');
-      Object.defineProperty(upperCaseElement, 'nodeName', {
-        value: 'CUSTOM-ELEMENT',
-        writable: false,
-        configurable: true,
-      });
-      vi.mocked(closest).mockReturnValue(null);
-
-      expect(() => {
-        dispatchSearchBoxSuggestionsEvent(mockEvent, upperCaseElement);
-      }).toThrow(
-        'The "custom-element" component was not handled, as it is not a child of the following elements: atomic-search-box, atomic-insight-search-box, atomic-commerce-search-box'
-      );
+    it('should handle boolean values as strings', () => {
+      const element = createTestElement('false');
+      expect(elementHasQuery(element)).toBe(true);
     });
   });
 });
