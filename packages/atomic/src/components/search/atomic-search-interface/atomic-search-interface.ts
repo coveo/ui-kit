@@ -19,6 +19,7 @@ import i18next, {type i18n} from 'i18next';
 import {type CSSResultGroup, css, html, LitElement} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {when} from 'lit/directives/when.js';
+import {MobileBreakpointController} from '@/src/components/common/layout/mobile-breakpoint-controller';
 import {booleanConverter} from '@/src/converters/boolean-converter';
 import {errorGuard} from '@/src/decorators/error-guard';
 import {watch} from '@/src/decorators/watch';
@@ -82,6 +83,9 @@ export class AtomicSearchInterface
   private unsubscribeSearchStatus: Unsubscribe = () => {};
   private initialized = false;
   private store: SearchStore;
+  // @ts-ignore
+  // biome-ignore lint/correctness/noUnusedPrivateClassMembers: <>
+  private _mobileBreakpointController: MobileBreakpointController;
   private interfaceController = new InterfaceController<SearchEngine>(
     this,
     'CoveoAtomic',
@@ -263,6 +267,10 @@ export class AtomicSearchInterface
   public constructor() {
     super();
     this.store = createSearchStore();
+    this._mobileBreakpointController = new MobileBreakpointController(
+      this,
+      this.store
+    );
     const {promise, resolve} = Promise.withResolvers<void>();
     this.i18Initialized = promise;
     this.i18n = i18next.createInstance(undefined, resolve);
@@ -271,7 +279,6 @@ export class AtomicSearchInterface
   public connectedCallback() {
     super.connectedCallback();
     this.store.setLoadingFlag(FirstSearchExecutedFlag);
-    this.updateMobileBreakpoint();
     this.initRelevanceInspector();
 
     this.addEventListener(
@@ -496,15 +503,6 @@ export class AtomicSearchInterface
         this.store.state.fieldsToInclude
       )
     );
-  }
-
-  private updateMobileBreakpoint() {
-    const breakpoint = this.querySelector(
-      'atomic-search-layout'
-    )?.mobileBreakpoint;
-    if (breakpoint) {
-      this.store.state.mobileBreakpoint = breakpoint;
-    }
   }
 
   private initEngine(options: InitializationOptions) {
