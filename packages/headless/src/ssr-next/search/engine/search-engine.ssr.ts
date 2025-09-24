@@ -3,7 +3,6 @@
  */
 import type {UnknownAction} from '@reduxjs/toolkit';
 import {buildLogger} from '../../../app/logger.js';
-import type {NavigatorContextProvider} from '../../../app/navigator-context-provider.js';
 import {
   buildSearchEngine,
   type SearchEngine,
@@ -18,6 +17,7 @@ import {
   buildControllerDefinitions,
   createStaticState,
 } from '../controller-utils.js';
+import type {BuildConfig} from '../types/build.js';
 import type {ControllerDefinitionsMap} from '../types/controller-definition.js';
 import type {
   InferControllerPropsMapFromDefinitions,
@@ -76,8 +76,16 @@ function buildSSRSearchEngine(options: SearchEngineOptions): SSRSearchEngine {
  * Initializes a Search engine definition in SSR with given controllers definitions and search engine config.
  *
  * @param options - The search engine definition
- * @returns Three utility functions to fetch the initial state of the engine in SSR, hydrate the state in CSR,
- *  and a build function that can be used for edge cases requiring more control.
+ * @returns Two utility functions to fetch the initial state of the engine in SSR and hydrate the state in CSR.
+ *
+ * @example
+ * ```ts
+ * const searchEngine = defineSearchEngine(config);
+ *
+ * const staticState = await searchEngine.fetchStaticState({
+ *   navigatorContextProvider: () => {/*...* /},
+ * });
+ * ```
  *
  * @group Engine
  */
@@ -102,24 +110,26 @@ export function defineSearchEngine<
   type FetchStaticStateParameters = Parameters<FetchStaticStateFunction>;
   type HydrateStaticStateParameters = Parameters<HydrateStaticStateFunction>;
 
-  const getOptions = () => {
-    return engineOptions;
-  };
-
-  const setNavigatorContextProvider = (
-    navigatorContextProvider: NavigatorContextProvider
-  ) => {
-    engineOptions.navigatorContextProvider = navigatorContextProvider;
-  };
-
   const build: BuildFunction = async (...[buildOptions]: BuildParameters) => {
-    const logger = buildLogger(options.loggerOptions);
-    if (!getOptions().navigatorContextProvider) {
-      logger.warn(
-        '[WARNING] Missing navigator context in server-side code. Make sure to set it with `setNavigatorContextProvider` before calling fetchStaticState()'
+    if (!engineOptions.navigatorContextProvider) {
+      const logger = buildLogger(options.loggerOptions);
+      logger.error(
+        'No navigatorContextProvider was provided. This may impact analytics accuracy, personalization, and session tracking. Refer to the Coveo documentation on server-side navigation context for implementation guidance.'
       );
     }
-    const engine = buildSSRSearchEngine(getOptions());
+
+    engineOptions.navigatorContextProvider = (
+      buildOptions as BuildConfig
+    ).navigatorContextProvider;
+    engineOptions.configuration.preprocessRequest =
+      augmentPreprocessRequestWithForwardedFor({
+        preprocessRequest: engineOptions.configuration.preprocessRequest,
+        navigatorContextProvider: (buildOptions as BuildConfig)
+          .navigatorContextProvider,
+        loggerOptions: engineOptions.loggerOptions,
+      });
+
+    const engine = buildSSRSearchEngine(engineOptions);
     const controllers = buildControllerDefinitions({
       definitionsMap: (controllerDefinitions ?? {}) as TControllerDefinitions,
       engine,
@@ -138,13 +148,6 @@ export function defineSearchEngine<
   ) => {
     const {engine, controllers} = await build(...(params as BuildParameters));
 
-    options.configuration.preprocessRequest =
-      augmentPreprocessRequestWithForwardedFor({
-        preprocessRequest: options.configuration.preprocessRequest,
-        navigatorContextProvider: options.navigatorContextProvider,
-        loggerOptions: options.loggerOptions,
-      });
-
     engine.executeFirstSearch();
     const staticState = createStaticState({
       searchActions: [await engine.waitForSearchCompletedAction()],
@@ -154,7 +157,10 @@ export function defineSearchEngine<
       InferControllerStaticStateMapFromDefinitions<TControllerDefinitions>
     >;
 
-    return staticState;
+    return {
+      ...(params[0] as BuildConfig), // TODO: KIT-4754: remove index access after no longer relying on OptionTuple type
+      ...staticState,
+    };
   };
 
   const hydrateStaticState: HydrateStaticStateFunction = async (
@@ -171,6 +177,5 @@ export function defineSearchEngine<
   return {
     fetchStaticState,
     hydrateStaticState,
-    setNavigatorContextProvider,
   };
 }

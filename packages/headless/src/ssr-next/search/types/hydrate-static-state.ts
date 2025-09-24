@@ -5,6 +5,7 @@ import type {
   ControllersPropsMap,
 } from '../../common/types/controllers.js';
 import type {OptionsTuple} from '../../common/types/utilities.js';
+import type {BuildConfig} from './build.js';
 import type {
   SearchEngineDefinitionBuildResult,
   SearchEngineDefinitionControllersPropsOption,
@@ -31,7 +32,8 @@ export type HydrateStaticState<
   TControllersProps extends ControllersPropsMap,
 > = (
   ...params: OptionsTuple<
-    HydrateStaticStateOptions<TSearchAction> &
+    BuildConfig &
+      HydrateStaticStateOptions<TSearchAction> &
       SearchEngineDefinitionControllersPropsOption<TControllersProps>
   >
 ) => Promise<HydratedState<TEngine, TControllers>>;
