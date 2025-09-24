@@ -44,6 +44,11 @@
  *   standaloneEngineDefinition,
  * } = engineDefinition;
  *
+ * await listingEngineDefinition.fetchStaticState({
+ *   navigatorContextProvider: () => {/*...* /},
+ *   context: {/*...* /},
+ * });
+ *
  * export type ListingStaticState = InferStaticState<
  *   typeof listingEngineDefinition
  * >;

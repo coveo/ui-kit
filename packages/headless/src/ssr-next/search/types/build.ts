@@ -1,4 +1,5 @@
 import type {CoreEngine, CoreEngineNext} from '../../../app/engine.js';
+import type {NavigatorContextProvider} from '../../../app/navigator-context-provider.js';
 import type {
   ControllersMap,
   ControllersPropsMap,
@@ -7,6 +8,10 @@ import type {
   SearchEngineDefinitionBuildResult,
   SearchEngineDefinitionControllersPropsOption,
 } from './engine.js';
+
+export type BuildConfig = {
+  navigatorContextProvider: NavigatorContextProvider;
+};
 
 /**
  * @internal

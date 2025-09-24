@@ -4,7 +4,6 @@ import {
   type CommerceEngine,
   type CommerceEngineOptions,
 } from '../../../app/commerce-engine/commerce-engine.js';
-import {buildLogger} from '../../../app/logger.js';
 import {stateKey} from '../../../app/state-key.js';
 import {
   createWaitForActionMiddleware,
@@ -13,10 +12,7 @@ import {
 import {buildControllerDefinitions} from '../controller-utils.js';
 import type {RecommendationBuildConfig} from '../types/build.js';
 import {SolutionType} from '../types/controller-constants.js';
-import type {
-  AugmentedControllerDefinition,
-  BakedInControllers,
-} from '../types/controller-definitions.js';
+import type {BakedInControllers} from '../types/controller-definitions.js';
 import type {InferControllersMapFromDefinition} from '../types/controller-inference.js';
 import type {
   CommerceControllerDefinitionsMap,
@@ -25,7 +21,7 @@ import type {
   HydrateStaticStateParameters,
 } from '../types/engine.js';
 import {wireControllerParams} from '../utils/controller-wiring.js';
-import {extendEngineConfiguration} from '../utils/engine-wiring.js';
+import {augmentCommerceEngineOptions} from '../utils/engine-wiring.js';
 
 /**
  * The SSR commerce engine.
@@ -128,7 +124,7 @@ function buildSSRCommerceEngine(
 
 export const buildFactory =
   <TControllerDefinitions extends CommerceControllerDefinitionsMap>(
-    controllerDefinitions: AugmentedControllerDefinition<TControllerDefinitions>,
+    controllerDefinitions: TControllerDefinitions,
     options: CommerceEngineDefinitionOptions<TControllerDefinitions>
   ) =>
   <TSolutionType extends SolutionType>(solutionType: TSolutionType) =>
@@ -143,26 +139,16 @@ export const buildFactory =
       buildOptions
     );
 
-    const logger = buildLogger(options.loggerOptions);
-    if (!options.navigatorContextProvider) {
-      logger.warn(
-        '[WARNING] Missing navigator context in server-side code. Make sure to set it with `setNavigatorContextProvider` before calling fetchStaticState()'
-      );
-    }
-
     const enabledRecommendationControllers =
       buildOptions && 'recommendations' in buildOptions
         ? (buildOptions as RecommendationBuildConfig<TControllerDefinitions>)
             ?.recommendations.length
         : 0;
 
-    const engineOptions = {
-      ...options,
-      configuration: extendEngineConfiguration(
-        options.configuration,
-        buildOptions
-      ),
-    };
+    const engineOptions: CommerceEngineOptions = augmentCommerceEngineOptions(
+      options,
+      buildOptions
+    );
 
     const engine = buildSSRCommerceEngine(
       solutionType,

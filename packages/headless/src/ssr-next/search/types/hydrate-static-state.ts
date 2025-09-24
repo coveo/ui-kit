@@ -4,6 +4,7 @@ import type {
   ControllersMap,
   ControllersPropsMap,
 } from '../../common/types/controllers.js';
+import type {BuildConfig} from './build.js';
 import type {
   SearchEngineDefinitionBuildResult,
   SearchEngineDefinitionControllersPropsOption,
@@ -29,6 +30,7 @@ export type HydrateStaticState<
   TSearchAction extends UnknownAction,
   TControllersProps extends ControllersPropsMap,
 > = (
-  params: HydrateStaticStateOptions<TSearchAction> &
+  params: BuildConfig &
+    HydrateStaticStateOptions<TSearchAction> &
     SearchEngineDefinitionControllersPropsOption<TControllersProps>
 ) => Promise<HydratedState<TEngine, TControllers>>;
