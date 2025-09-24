@@ -106,11 +106,11 @@ export function defineSearchEngine<
   >;
   type FetchStaticStateFunction = Definition['fetchStaticState'];
   type HydrateStaticStateFunction = Definition['hydrateStaticState'];
-  type BuildParameters = Parameters<BuildFunction>;
-  type FetchStaticStateParameters = Parameters<FetchStaticStateFunction>;
-  type HydrateStaticStateParameters = Parameters<HydrateStaticStateFunction>;
+  type BuildParameters = Parameters<BuildFunction>[0];
+  type FetchStaticStateParameters = Parameters<FetchStaticStateFunction>[0];
+  type HydrateStaticStateParameters = Parameters<HydrateStaticStateFunction>[0];
 
-  const build: BuildFunction = async (...[buildOptions]: BuildParameters) => {
+  const build: BuildFunction = async (buildOptions: BuildParameters) => {
     if (!engineOptions.navigatorContextProvider) {
       const logger = buildLogger(options.loggerOptions);
       logger.error(
@@ -144,9 +144,9 @@ export function defineSearchEngine<
   };
 
   const fetchStaticState: FetchStaticStateFunction = async (
-    ...params: FetchStaticStateParameters
+    params: FetchStaticStateParameters
   ) => {
-    const {engine, controllers} = await build(...(params as BuildParameters));
+    const {engine, controllers} = await build(params as BuildParameters);
 
     engine.executeFirstSearch();
     const staticState = createStaticState({
@@ -158,16 +158,16 @@ export function defineSearchEngine<
     >;
 
     return {
-      ...(params[0] as BuildConfig), // TODO: KIT-4754: remove index access after no longer relying on OptionTuple type
+      ...params,
       ...staticState,
     };
   };
 
   const hydrateStaticState: HydrateStaticStateFunction = async (
-    ...params: HydrateStaticStateParameters
+    params: HydrateStaticStateParameters
   ) => {
-    const {engine, controllers} = await build(...(params as BuildParameters));
-    params[0]!.searchActions.forEach((action) => {
+    const {engine, controllers} = await build(params as BuildParameters);
+    params.searchActions.forEach((action) => {
       engine.dispatch(action);
     });
     await engine.waitForSearchCompletedAction();
