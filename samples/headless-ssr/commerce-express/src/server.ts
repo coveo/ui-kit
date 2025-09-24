@@ -29,7 +29,7 @@ app.get('/', async (req, res) => {
 
     const staticState = await searchEngineDefinition.fetchStaticState({
       searchParams: {query: queryFromRequest},
-      navigatorContextProvider: () => getNavigatorContext(req),
+      navigatorContext: getNavigatorContext(req),
       context: {
         language: 'en',
         country: 'US',
