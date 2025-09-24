@@ -2,7 +2,7 @@ import {describe, expect, it} from 'vitest';
 import type {SearchBoxSuggestionElement} from './suggestions-types';
 import {elementHasNoQuery, elementHasQuery} from './suggestions-utils';
 
-describe('utils', () => {
+describe('suggestions-utils', () => {
   const createTestElement = (query?: string): SearchBoxSuggestionElement => ({
     key: 'test-key',
     content: document.createElement('div'),
