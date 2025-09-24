@@ -70,20 +70,13 @@ describe('AtomicSearchLayout', () => {
     });
   });
 
-  //TODO: KIT-3909 - During the merging of the interface, we will be able to use the real interface here for its style and make this work.
   describe('when the viewport is larger than the mobile breakpoint', () => {
     beforeAll(async () => {
       await page.viewport(1200, 800);
     });
 
     it('should render facets section', async () => {
-      const {facets, element} = await renderSearchLayout('900px');
-      element.mobileBreakpoint = '600px';
-      // Wait for the layout styles controller to apply CSS
-      await element.updateComplete;
-      (
-        element as unknown as {layoutStylesController: {updateStyles(): void}}
-      ).layoutStylesController?.updateStyles();
+      const {facets} = await renderSearchLayout('900px');
       expect(facets).toBeVisible();
     });
 
