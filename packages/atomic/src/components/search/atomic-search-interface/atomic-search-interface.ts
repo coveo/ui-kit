@@ -202,7 +202,7 @@ export class AtomicSearchInterface
   reflectStateInUrl = true;
 
   /**
-   * Disable state reflection in the URL parameters.
+   * Whether to disable state reflection in the URL parameters.
    */
   @property({
     type: Boolean,
@@ -253,7 +253,7 @@ export class AtomicSearchInterface
   enableRelevanceInspector = true;
 
   /**
-   * Disable the relevance inspector shortcut for this interface.
+   * Whether to disable the relevance inspector shortcut for this interface.
    */
   @property({
     type: Boolean,
@@ -326,6 +326,10 @@ export class AtomicSearchInterface
       'atomic/relevanceInspector/close',
       this.closeRelevanceInspector as EventListener
     );
+    this.removeEventListener(
+      'dblclick',
+      this.handleRelevanceInspectorDoubleClick
+    );
   }
 
   private handleInitialization = (event: InitializeEvent) => {
@@ -357,7 +361,7 @@ export class AtomicSearchInterface
   }
 
   /**
-   * Initializes the connection with an already preconfigured [headless search engine](https://docs.coveo.com/en/headless/latest/reference/modules/Search.html, as opposed to the `initialize` method, which will internally create a new search engine instance.
+   * Initializes the interface using the provided [headless search engine](https://docs.coveo.com/en/headless/latest/reference/modules/Search.html, as opposed to the `initialize` method which internally builds a search engine instance.
    * This bypasses the properties set on the component, such as analytics, searchHub, pipeline, language, timezone & logLevel.
    */
   public initializeWithSearchEngine(engine: SearchEngine) {
@@ -570,13 +574,18 @@ export class AtomicSearchInterface
     window.addEventListener('hashchange', this.onHashChange);
   }
 
+  private handleRelevanceInspectorDoubleClick = (e: MouseEvent) => {
+    if (e.altKey) {
+      this.relevanceInspectorIsOpen = !this.relevanceInspectorIsOpen;
+    }
+  };
+
   private initRelevanceInspector() {
     if (this.enableRelevanceInspector && !this.disableRelevanceInspector) {
-      this.addEventListener('dblclick', (e) => {
-        if (e.altKey) {
-          this.relevanceInspectorIsOpen = !this.relevanceInspectorIsOpen;
-        }
-      });
+      this.addEventListener(
+        'dblclick',
+        this.handleRelevanceInspectorDoubleClick
+      );
     }
   }
 

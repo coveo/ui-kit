@@ -168,7 +168,7 @@ export class AtomicCommerceInterface
   reflectStateInUrl = true;
 
   /**
-   * Disable state reflection in the URL parameters.
+   * Whether to disable state reflection in the URL parameters.
    */
   @property({
     type: Boolean,
