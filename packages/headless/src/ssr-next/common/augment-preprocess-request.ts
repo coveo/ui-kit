@@ -5,12 +5,12 @@ import type {
   RequestMetadata,
 } from '../../api/preprocess-request.js';
 import {buildLogger, type LoggerOptions} from '../../app/logger.js';
-import type {NavigatorContextProvider} from '../../app/navigator-context-provider.js';
+import type {NavigatorContext} from '../../app/navigator-context-provider.js';
 import {isBrowser} from '../../utils/runtime.js';
 
 export interface AugmentPreprocessRequestOptions {
+  navigatorContext: NavigatorContext;
   preprocessRequest?: PreprocessRequest;
-  navigatorContextProvider?: NavigatorContextProvider;
   loggerOptions?: LoggerOptions;
 }
 
@@ -25,7 +25,7 @@ export function augmentPreprocessRequestWithForwardedFor(
   ) => {
     if (!isBrowser()) {
       const headers = new Headers(request.headers);
-      const forwardedFor = options.navigatorContextProvider?.()?.forwardedFor;
+      const forwardedFor = options.navigatorContext.forwardedFor;
       if (forwardedFor) {
         headers.set('x-forwarded-for', forwardedFor as string);
       } else {
