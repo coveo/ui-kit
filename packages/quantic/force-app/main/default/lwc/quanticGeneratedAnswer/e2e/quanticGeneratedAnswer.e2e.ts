@@ -2,7 +2,6 @@ import {testSearch, testInsight, expect} from './fixture';
 import {useCaseTestCases} from '../../../../../../playwright/utils/useCase';
 import genQaData from './data';
 import {analyticsModeTest} from '../../../../../../playwright/utils/analyticsMode';
-import {exampleQuery} from './fixture';
 
 const fixtures = {
   search: testSearch,
@@ -48,6 +47,20 @@ useCaseTestCases.forEach((useCase) => {
               }) => {
                 await generatedAnswer.streamEndAnalyticRequestPromise;
               });
+
+              if (config.options.answerConfigurationId) {
+                test('should send searchboxSubmit as the action cause in the analytics payload of the generate request', async ({
+                  generatedAnswer,
+                }) => {
+                  await generatedAnswer.streamEndAnalyticRequestPromise;
+                  const generateRequest =
+                    await generatedAnswer.generateRequestPromise;
+                  const generateRequestBody = generateRequest.postDataJSON();
+                  expect(generateRequestBody.analytics.actionCause).toBe(
+                    'searchboxSubmit'
+                  );
+                });
+              }
             });
 
             test.describe('when providing positive feedback', () => {
@@ -241,6 +254,7 @@ useCaseTestCases.forEach((useCase) => {
                   },
                   withFacets: true,
                 });
+
                 test('should trigger a new generate call to the answer API', async ({
                   generatedAnswer,
                   baseFacet,
@@ -248,9 +262,7 @@ useCaseTestCases.forEach((useCase) => {
                   await generatedAnswer.streamEndAnalyticRequestPromise;
 
                   const generateRequestPromise =
-                    generatedAnswer.waitForGenerateRequest({
-                      q: exampleQuery,
-                    });
+                    generatedAnswer.waitForGenerateRequest();
 
                   const streamEndAnalyticRequestPromise =
                     generatedAnswer.waitForStreamEndAnalytics();
@@ -259,7 +271,12 @@ useCaseTestCases.forEach((useCase) => {
                     baseFacet.waitForSearchResponse();
 
                   await generatedAnswer.clickFirstTimeframeFacetLink();
-                  await generateRequestPromise;
+
+                  const generateRequest = await generateRequestPromise;
+                  const generateRequestBody = generateRequest.postDataJSON();
+                  expect(generateRequestBody.analytics.actionCause).toBe(
+                    'facetSelect'
+                  );
                   await streamEndAnalyticRequestPromise;
                   await searchResponsePromise;
                 });
