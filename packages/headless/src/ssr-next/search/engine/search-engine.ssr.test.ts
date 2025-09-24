@@ -90,13 +90,13 @@ function createMockResultsMiddleware(options: {
 
 describe('SSR', () => {
   const mockPreprocessRequest = vi.fn(async (req) => req);
-  const mockNavigatorContextProvider = () => ({
+  const mockNavigatorContext = {
     forwardedFor: '192.168.1.1',
     referrer: 'https://example.com',
     userAgent: 'test-agent',
     location: '/test',
     clientId: 'test-client',
-  });
+  };
 
   describe('define search engine', () => {
     type StaticState = InferStaticState<typeof engineDefinition>;
@@ -144,7 +144,7 @@ describe('SSR', () => {
     it('fetches initial state of engine', async () => {
       const fetchStaticState = vi.mocked(engineDefinition.fetchStaticState);
       const staticState = await fetchStaticState({
-        navigatorContextProvider: mockNavigatorContextProvider,
+        navigatorContext: mockNavigatorContext,
       });
       expect(staticState).toBeTruthy();
       expect(getResultsPerPage(staticState)).toBe(defaultNumberOfResults);
@@ -158,11 +158,11 @@ describe('SSR', () => {
 
       const fetchStaticState = engineDefinition.fetchStaticState;
       await fetchStaticState({
-        navigatorContextProvider: mockNavigatorContextProvider,
+        navigatorContext: mockNavigatorContext,
       });
       expect(spy).toHaveBeenCalledWith({
         loggerOptions: {level: 'warn'},
-        navigatorContextProvider: mockNavigatorContextProvider,
+        navigatorContext: mockNavigatorContext,
         preprocessRequest: mockPreprocessRequest,
       });
 
@@ -174,7 +174,7 @@ describe('SSR', () => {
       beforeEach(async () => {
         const fetchStaticState = vi.mocked(engineDefinition.fetchStaticState);
         staticState = await fetchStaticState({
-          navigatorContextProvider: mockNavigatorContextProvider,
+          navigatorContext: mockNavigatorContext,
         });
       });
 
