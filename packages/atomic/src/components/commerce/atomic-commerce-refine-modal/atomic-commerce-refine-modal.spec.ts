@@ -333,7 +333,7 @@ describe('atomic-commerce-refine-modal', () => {
     expect(atomicModal).toHaveProperty('isOpen', true);
     expect(atomicModal).toHaveProperty('source', undefined);
     expect(atomicModal).toHaveProperty('container', expect.any(HTMLElement));
-    expect(atomicModal).toHaveProperty('boundary', undefined);
+    expect(atomicModal).toHaveProperty('boundary', 'page');
     expect(atomicModal).toHaveAttribute(
       'exportparts',
       'backdrop,container,header-wrapper,header,header-ruler,body-wrapper,body,footer-wrapper,footer'

@@ -5,6 +5,7 @@ import type {
 } from '../../common/types/controllers.js';
 import type {EngineStaticState} from '../../common/types/engine.js';
 import type {OptionsTuple} from '../../common/types/utilities.js';
+import type {BuildConfig} from './build.js';
 import type {SearchEngineDefinitionControllersPropsOption} from './engine.js';
 
 /**
@@ -18,6 +19,9 @@ export type FetchStaticState<
   TControllersProps extends ControllersPropsMap,
 > = (
   ...params: OptionsTuple<
-    SearchEngineDefinitionControllersPropsOption<TControllersProps>
+    BuildConfig &
+      SearchEngineDefinitionControllersPropsOption<TControllersProps>
   >
-) => Promise<EngineStaticState<TSearchAction, TControllersStaticState>>;
+) => Promise<
+  EngineStaticState<TSearchAction, TControllersStaticState> & BuildConfig
+>;
