@@ -1,23 +1,24 @@
-# Server side rendering examples
+# Coveo Headless Commerce SSR Sample (Next.js App Router)
 
-Demonstrates usage of the framework `@coveo/headless-react/ssr-commerce` utils for Server-Side Rendering with headless using Next.js in a commerce app.
+Sample e-commerce application demonstrating Coveo Headless with Server-Side Rendering using Next.js App Router. Features include search, product listings, faceted navigation, recommendations, and cart management.
+
+> **Preview Version Notice**  
+> This project uses `@coveo/headless-react/ssr-commerce-next` - the next version of Coveo's SSR framework that will be officially available in Headless V4. APIs may change before the final release.
 
 ## Getting Started
 
-- Run dev server
-
 ```bash
+npm install
 npm run dev
 ```
 
-- Run prod
+Open [http://localhost:3000](http://localhost:3000)
+
+## Available Scripts
 
 ```bash
-npm run build && npm run prod
+npm run dev        # Development server
+npm run build      # Production build
+npm run prod       # Start production server
+npm run test:e2e   # Run e2e tests (you need to run `npm run dev` first)
 ```
-
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-- Run tests
-
-TODO: add tests
