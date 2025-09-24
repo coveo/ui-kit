@@ -37,14 +37,14 @@ export default async function Search() {
   const staticState = await standaloneEngineDefinition.fetchStaticState({
     cart: {items},
     context,
-    navigatorContextProvider: () => navigatorContext,
+    navigatorContext: navigatorContext.marshal,
   });
 
   const recsStaticState = await recommendationEngineDefinition.fetchStaticState(
     {
       cart: {items},
       context,
-      navigatorContextProvider: () => navigatorContext,
+      navigatorContext: navigatorContext.marshal,
       recommendations: ['popularBought', 'popularViewed'],
     }
   );

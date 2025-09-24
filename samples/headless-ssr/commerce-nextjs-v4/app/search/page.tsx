@@ -48,7 +48,7 @@ export default async function Search({
   const staticState = await searchEngineDefinition.fetchStaticState({
     cart: {items},
     context,
-    navigatorContextProvider: () => navigatorContext,
+    navigatorContext: navigatorContext.marshal,
     searchParams: {
       ...parameters,
       // TODO: this is bad DX! Need to use the same parameter as the parameterSerializer to avoid this hack

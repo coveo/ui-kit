@@ -44,14 +44,14 @@ export default async function ProductDescriptionPage({
   const staticState = await standaloneEngineDefinition.fetchStaticState({
     cart: {items},
     context,
-    navigatorContextProvider: () => navigatorContext,
+    navigatorContext: navigatorContext.marshal,
   });
 
   const recsStaticState = await recommendationEngineDefinition.fetchStaticState(
     {
       cart: {items},
       context,
-      navigatorContextProvider: () => navigatorContext,
+      navigatorContext: navigatorContext.marshal,
       recommendations: ['viewedTogether'],
     }
   );

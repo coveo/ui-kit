@@ -75,7 +75,7 @@ export default async function Listing({
   const staticState = await listingEngineDefinition.fetchStaticState({
     cart: {items},
     context,
-    navigatorContextProvider: () => navigatorContext,
+    navigatorContext: navigatorContext.marshal,
     searchParams: parameters,
   });
 
@@ -83,7 +83,7 @@ export default async function Listing({
     {
       cart: {items},
       context,
-      navigatorContextProvider: () => navigatorContext,
+      navigatorContext: navigatorContext.marshal,
       recommendations: ['popularBought', 'popularViewed'],
     }
   );
