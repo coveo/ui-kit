@@ -83,9 +83,6 @@ export class AtomicSearchInterface
   private unsubscribeSearchStatus: Unsubscribe = () => {};
   private initialized = false;
   private store: SearchStore;
-  // @ts-ignore
-  // biome-ignore lint/correctness/noUnusedPrivateClassMembers: <>
-  private _mobileBreakpointController: MobileBreakpointController;
   private interfaceController = new InterfaceController<SearchEngine>(
     this,
     'CoveoAtomic',
@@ -267,10 +264,7 @@ export class AtomicSearchInterface
   public constructor() {
     super();
     this.store = createSearchStore();
-    this._mobileBreakpointController = new MobileBreakpointController(
-      this,
-      this.store
-    );
+    new MobileBreakpointController(this, this.store);
     const {promise, resolve} = Promise.withResolvers<void>();
     this.i18Initialized = promise;
     this.i18n = i18next.createInstance(undefined, resolve);
