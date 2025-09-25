@@ -38,7 +38,7 @@ const searchDefinition = {
   ...requiredDefinition,
   searchParams: new RecordValue({
     options: {required: true},
-    values: {query: requiredEmptyAllowedString, ...parametersDefinition},
+    values: {q: requiredEmptyAllowedString, ...parametersDefinition},
   }),
 };
 
@@ -102,13 +102,13 @@ class ControllerWirer<
     if (!this.controllerDefinitions?.parameterManager) return;
 
     const {searchParams} = this.buildConfig;
-    const {query, ...rest} =
+    const {q, ...rest} =
       (searchParams as Parameters & {
-        query?: string;
+        q?: string;
       }) || {};
 
     const parameters = {
-      ...(query && {q: query}),
+      ...{q},
       ...(rest && typeof rest === 'object' ? rest : {}),
     };
 

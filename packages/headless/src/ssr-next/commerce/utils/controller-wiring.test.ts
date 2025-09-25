@@ -93,13 +93,13 @@ describe('controller-wiring', () => {
           ...validCommonConfig,
           searchParams: {},
         });
-      }).toThrowError(/searchParams: value does not contain query/);
+      }).toThrowError(/searchParams: value does not contain q/);
     });
 
     it('should not throw for missing query', () => {
       const searchConfig = {
         ...validCommonConfig,
-        searchParams: {query: 'test query'},
+        searchParams: {q: 'test query'},
       };
       expect(() => {
         searchDefinitionSchema.validate(searchConfig);
@@ -182,7 +182,7 @@ describe('controller-wiring', () => {
         const params = {
           navigatorContext: buildMockNavigatorContext(),
           searchParams: {
-            query: 'test',
+            q: 'test',
           },
           recommendations: [],
           context: {
@@ -233,7 +233,7 @@ describe('controller-wiring', () => {
           view: {url: 'https://example.com'},
         },
         searchParams: {
-          query: 'test query',
+          q: 'test query',
         },
       };
 
@@ -262,7 +262,7 @@ describe('controller-wiring', () => {
           view: {url: 'https://example.com'},
         },
         searchParams: {
-          query: 'test query',
+          q: 'test query',
         },
         controllers: {
           customController: {

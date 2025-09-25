@@ -16,7 +16,12 @@ import type {
 
 export interface SearchBuildConfig extends CommonBuildConfig {
   searchParams: ParameterManagerState<
-    Parameters & {query: string}
+    Parameters & {
+      /**
+       * The query.
+       */
+      q: string;
+    }
   >['parameters'];
 }
 
