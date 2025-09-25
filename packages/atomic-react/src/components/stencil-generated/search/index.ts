@@ -1,11 +1,11 @@
 /* eslint-disable */
 /* tslint:disable */
 /* auto-generated react proxies */
-import { createReactComponent } from './react-component-lib/index.js';
+import { createReactComponent } from './react-component-lib';
 
 import type { JSX } from '@coveo/atomic';
 
-import { defineCustomElements } from '@coveo/atomic/loader';
+import { defineCustomElements } from '@coveo/atomic/dist/atomic/loader';
 
 defineCustomElements();
 export const AtomicAutomaticFacet = /*@__PURE__*/createReactComponent<JSX.AtomicAutomaticFacet, HTMLAtomicAutomaticFacetElement>('atomic-automatic-facet');
@@ -75,7 +75,6 @@ export const AtomicResultTimespan = /*@__PURE__*/createReactComponent<JSX.Atomic
 export const AtomicSearchBox = /*@__PURE__*/createReactComponent<JSX.AtomicSearchBox, HTMLAtomicSearchBoxElement>('atomic-search-box');
 export const AtomicSearchBoxInstantResults = /*@__PURE__*/createReactComponent<JSX.AtomicSearchBoxInstantResults, HTMLAtomicSearchBoxInstantResultsElement>('atomic-search-box-instant-results');
 export const AtomicSearchBoxQuerySuggestions = /*@__PURE__*/createReactComponent<JSX.AtomicSearchBoxQuerySuggestions, HTMLAtomicSearchBoxQuerySuggestionsElement>('atomic-search-box-query-suggestions');
-export const AtomicSearchBoxRecentQueries = /*@__PURE__*/createReactComponent<JSX.AtomicSearchBoxRecentQueries, HTMLAtomicSearchBoxRecentQueriesElement>('atomic-search-box-recent-queries');
 export const AtomicSearchInterface = /*@__PURE__*/createReactComponent<JSX.AtomicSearchInterface, HTMLAtomicSearchInterfaceElement>('atomic-search-interface');
 export const AtomicSegmentedFacet = /*@__PURE__*/createReactComponent<JSX.AtomicSegmentedFacet, HTMLAtomicSegmentedFacetElement>('atomic-segmented-facet');
 export const AtomicSegmentedFacetScrollable = /*@__PURE__*/createReactComponent<JSX.AtomicSegmentedFacetScrollable, HTMLAtomicSegmentedFacetScrollableElement>('atomic-segmented-facet-scrollable');
