@@ -1,13 +1,17 @@
 import type {CoreEngine, CoreEngineNext} from '../../../app/engine.js';
+import type {NavigatorContextProvider} from '../../../app/navigator-context-provider.js';
 import type {
   ControllersMap,
   ControllersPropsMap,
 } from '../../common/types/controllers.js';
-import type {OptionsTuple} from '../../common/types/utilities.js';
 import type {
   SearchEngineDefinitionBuildResult,
   SearchEngineDefinitionControllersPropsOption,
 } from './engine.js';
+
+export type BuildConfig = {
+  navigatorContextProvider: NavigatorContextProvider;
+};
 
 /**
  * @internal
@@ -17,7 +21,5 @@ export type Build<
   TControllersMap extends ControllersMap,
   TControllersProps extends ControllersPropsMap,
 > = (
-  ...params: OptionsTuple<
-    SearchEngineDefinitionControllersPropsOption<TControllersProps>
-  >
+  props: SearchEngineDefinitionControllersPropsOption<TControllersProps>
 ) => Promise<SearchEngineDefinitionBuildResult<TEngine, TControllersMap>>;

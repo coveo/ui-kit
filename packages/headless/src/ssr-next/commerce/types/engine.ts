@@ -1,5 +1,4 @@
 import type {UnknownAction} from '@reduxjs/toolkit';
-import type {NavigatorContextProvider} from '../../../app/navigator-context-provider.js';
 import type {Controller} from '../../../controllers/controller/headless-controller.js';
 import type {ControllersMap} from '../../common/types/controllers.js';
 import type {EngineStaticState} from '../../common/types/engine.js';
@@ -79,16 +78,6 @@ export interface CommerceEngineDefinition<
     TSolutionType
   >;
   /**
-   * Sets the navigator context provider.
-   * This provider is essential for retrieving navigation-related data such as referrer, userAgent, location, and clientId, which are crucial for handling both server-side and client-side API requests effectively.
-   *
-   * Note: The implementation specifics of the navigator context provider depend on the Node.js framework being utilized. It is the developer's responsibility to appropriately define and implement the navigator context provider to ensure accurate navigation context is available throughout the application. If the user fails to provide a navigator context provider, a warning will be logged either on the server or the browser console.
-   */
-  setNavigatorContextProvider: (
-    navigatorContextProvider: NavigatorContextProvider
-  ) => void;
-
-  /**
    * Returns the access token.
    */
   getAccessToken: () => string;
@@ -128,11 +117,13 @@ export type HydrateStaticStateFunction<
 export type FetchStaticStateParameters<
   TControllerDefinitions extends CommerceControllerDefinitionsMap,
   TSolutionType extends SolutionType,
-> = Parameters<FetchStaticStateFunction<TControllerDefinitions, TSolutionType>>;
+> = Parameters<
+  FetchStaticStateFunction<TControllerDefinitions, TSolutionType>
+>[0];
 
 export type HydrateStaticStateParameters<
   TControllerDefinitions extends CommerceControllerDefinitionsMap,
   TSolutionType extends SolutionType,
 > = Parameters<
   HydrateStaticStateFunction<TControllerDefinitions, TSolutionType>
->;
+>[0];

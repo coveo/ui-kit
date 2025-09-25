@@ -15,7 +15,7 @@ export function hydratedStaticStateFactory<
 ) {
   return <TSolutionType extends SolutionType>(solutionType: TSolutionType) =>
     async (
-      ...params: HydrateStaticStateParameters<
+      params: HydrateStaticStateParameters<
         TControllerDefinitions,
         TSolutionType
       >
@@ -24,7 +24,7 @@ export function hydratedStaticStateFactory<
         controllerDefinitions,
         options
       )(solutionType);
-      const {engine, controllers} = await solutionTypeBuild(...params);
+      const {engine, controllers} = await solutionTypeBuild(params);
 
       await engine.waitForRequestCompletedAction();
 
