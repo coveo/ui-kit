@@ -89,9 +89,6 @@ export class AtomicCommerceInterface
   private unsubscribeSummary?: Unsubscribe;
   private initialized = false;
   private store: CommerceStore;
-  // @ts-ignore
-  // biome-ignore lint/correctness/noUnusedPrivateClassMembers: <>
-  private _mobileBreakpointController: MobileBreakpointController;
   private interfaceController = new InterfaceController<CommerceEngine>(
     this,
     'CoveoAtomic',
