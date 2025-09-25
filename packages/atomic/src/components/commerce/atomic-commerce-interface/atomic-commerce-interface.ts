@@ -87,9 +87,6 @@ export class AtomicCommerceInterface
   private unsubscribeSummary?: Unsubscribe;
   private initialized = false;
   private store: CommerceStore;
-  // @ts-ignore
-  // biome-ignore lint/correctness/noUnusedPrivateClassMembers: <>
-  private _mobileBreakpointController: MobileBreakpointController;
   private interfaceController = new InterfaceController<CommerceEngine>(
     this,
     'CoveoAtomic',
@@ -209,10 +206,7 @@ export class AtomicCommerceInterface
   public constructor() {
     super();
     this.store = createCommerceStore(this.type);
-    this._mobileBreakpointController = new MobileBreakpointController(
-      this,
-      this.store
-    );
+    new MobileBreakpointController(this, this.store);
     const {promise, resolve} = Promise.withResolvers<void>();
     this.i18Initialized = promise;
     this.i18n = i18next.createInstance(undefined, resolve);
