@@ -124,6 +124,16 @@ describe('atomic-pager', () => {
     await expect.element(locators.page6).not.toBeInTheDocument();
   });
 
+  it('should render correct number of pages when numberOfPages is set to 10', async () => {
+    const element = await renderPager({
+      numberOfPages: 10,
+    });
+
+    expect(buildPager).toHaveBeenCalledWith(element.bindings.engine, {
+      options: {numberOfPages: 10},
+    });
+  });
+
   it('should update numberOfPages when property changes', async () => {
     const element = await renderPager({
       numberOfPages: 3,
@@ -141,18 +151,10 @@ describe('atomic-pager', () => {
       .spyOn(console, 'error')
       .mockImplementation(() => {});
 
-    // Test that the component validates numberOfPages during initialization
-    // We can't easily test the error case due to component lifecycle complexities
-    // but we can test that valid values work correctly
     await renderPager({numberOfPages: 0});
     await renderPager({numberOfPages: 10});
 
-    // Reset the spy for the error case test - we'll just verify the error would be thrown
-    consoleErrorSpy.mockReset();
-
-    // For the error case, we expect the validation to be called but testing it
-    // directly in the component lifecycle is complex due to render timing
-    expect(consoleErrorSpy).toHaveBeenCalledTimes(0); // No errors for valid cases
+    expect(consoleErrorSpy).toHaveBeenCalledTimes(0);
   });
 
   it('should not render when search has error', async () => {
@@ -405,14 +407,33 @@ describe('atomic-pager', () => {
       expect(consoleErrorSpy).not.toHaveBeenCalled();
     });
 
-    it('should allow positive numberOfPages', async () => {
-      const consoleErrorSpy = vi
-        .spyOn(console, 'error')
-        .mockImplementation(() => {});
+    it('should handle numberOfPages as string number', async () => {
+      const element = await renderPager();
 
-      await renderPager({numberOfPages: 10});
+      element.setAttribute('number-of-pages', '8');
+      await element.updateComplete;
 
-      expect(consoleErrorSpy).not.toHaveBeenCalled();
+      expect(element.numberOfPages).toBe(8);
+    });
+
+    it('should parse numberOfPages from mixed string-number input', async () => {
+      const element = await renderPager();
+
+      const mixedValue = parseInt('9k3', 10);
+      element.numberOfPages = mixedValue;
+      await element.updateComplete;
+
+      expect(element.numberOfPages).toBe(9);
+    });
+
+    it('should handle invalid numberOfPages gracefully', async () => {
+      const element = await renderPager();
+
+      element.numberOfPages = -5;
+
+      expect(() => {
+        element['validateProps']();
+      }).toThrow();
     });
   });
 
