@@ -1,8 +1,8 @@
 import {html} from 'lit';
 import {describe, expect, it} from 'vitest';
-import {renderInAtomicSearchInterface} from '@/vitest-utils/testing-helpers/fixtures/atomic/search/atomic-search-interface-fixture.js';
-import type {AtomicSearchBoxQuerySuggestions} from './atomic-search-box-query-suggestions.js';
-import './atomic-search-box-query-suggestions.js';
+import {renderInAtomicSearchInterface} from '@/vitest-utils/testing-helpers/fixtures/atomic/search/atomic-search-interface-fixture';
+import type {AtomicSearchBoxQuerySuggestions} from './atomic-search-box-query-suggestions';
+import './atomic-search-box-query-suggestions';
 
 describe('atomic-search-box-query-suggestions', () => {
   const renderComponent = async (
