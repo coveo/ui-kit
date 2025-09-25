@@ -2922,10 +2922,6 @@ export interface AtomicIpxModalCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLAtomicIpxModalElement;
 }
-export interface AtomicPagerCustomEvent<T> extends CustomEvent<T> {
-    detail: T;
-    target: HTMLAtomicPagerElement;
-}
 export interface AtomicQuickviewModalCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLAtomicQuickviewModalElement;
