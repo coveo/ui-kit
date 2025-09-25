@@ -88,10 +88,15 @@ describe('LayoutStylesController', () => {
       expect(mockElement.id).toBe('existing-id');
     });
 
-    it('should call updateStyles', () => {
+    it('should call updateStyles', async () => {
+      Object.defineProperty(mockElement, 'updateComplete', {
+        get: () => Promise.resolve(true),
+        configurable: true,
+      });
       const updateStylesSpy = vi.spyOn(controller, 'updateStyles');
       controller.hostConnected();
 
+      await mockElement.updateComplete;
       expect(updateStylesSpy).toHaveBeenCalled();
     });
   });
