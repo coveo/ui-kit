@@ -10,6 +10,16 @@ import {renderInAtomicSearchInterface} from '@/vitest-utils/testing-helpers/fixt
 import {createTestI18n} from '@/vitest-utils/testing-helpers/i18n-utils';
 
 vi.mock('@/src/utils/replace-breakpoint-utils', {spy: true});
+vi.mock('@/src/mixins/bindings-mixin', () => ({
+  InitializeBindingsMixin: vi.fn().mockImplementation((superClass) => {
+    return class extends superClass {
+      // biome-ignore lint/complexity/noUselessConstructor: <mocking the mixin for testing>
+      constructor(...args: unknown[]) {
+        super(...args);
+      }
+    };
+  }),
+}));
 
 class MockAtomicFocusTrap extends HTMLElement {
   active = false;
