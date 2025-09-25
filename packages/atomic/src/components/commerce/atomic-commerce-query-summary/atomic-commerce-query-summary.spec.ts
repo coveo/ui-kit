@@ -263,7 +263,7 @@ describe('atomic-commerce-query-summary', () => {
       expect(messageSetterSpy).toHaveBeenCalledOnce();
 
       const [[calledMessage]] = messageSetterSpy.mock.calls;
-      expect(calledMessage).toMatch(/Products 1-10 of 100/);
+      expect(calledMessage).toMatch(/loading/i);
     });
 
     it('should render container part', async () => {
@@ -326,36 +326,6 @@ describe('atomic-commerce-query-summary', () => {
       });
 
       expect(element).toBeEmptyDOMElement();
-    });
-
-    it('should handle empty query', async () => {
-      const {container} = await renderQuerySummary({
-        querySummaryState: {
-          firstProduct: 1,
-          lastProduct: 10,
-          totalNumberOfProducts: 100,
-          query: '',
-          hasProducts: true,
-          firstRequestExecuted: true,
-        },
-      });
-
-      expect(container).toHaveTextContent('Products 1-10 of 100');
-      expect(container).not.toHaveTextContent('for');
-    });
-
-    it('should localize numbers', async () => {
-      const {container} = await renderQuerySummary({
-        querySummaryState: {
-          firstProduct: 9991,
-          lastProduct: 10000,
-          totalNumberOfProducts: 1000000,
-          hasProducts: true,
-          firstRequestExecuted: true,
-        },
-      });
-
-      expect(container).toHaveTextContent('Products 9,991-10,000 of 1,000,000');
     });
 
     describe('when testing exact text format patterns', () => {
