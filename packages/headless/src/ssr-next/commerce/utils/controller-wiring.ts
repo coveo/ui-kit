@@ -3,7 +3,7 @@ import {contextDefinition} from '../../../features/commerce/context/context-vali
 import {parametersDefinition} from '../../../features/commerce/parameters/parameters-schema.js';
 import {
   nonEmptyString,
-  requiredEmptyAllowedString,
+  nonRequiredEmptyAllowedString,
 } from '../../../utils/validate-payload.js';
 import type {ControllersPropsMap} from '../../common/types/controllers.js';
 import type {Parameters} from '../controllers/parameter-manager/headless-core-parameter-manager.ssr.js';
@@ -37,8 +37,8 @@ const standaloneDefinition = {
 const searchDefinition = {
   ...requiredDefinition,
   searchParams: new RecordValue({
-    options: {required: true},
-    values: {q: requiredEmptyAllowedString, ...parametersDefinition},
+    options: {required: false},
+    values: {q: nonRequiredEmptyAllowedString, ...parametersDefinition},
   }),
 };
 

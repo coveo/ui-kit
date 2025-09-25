@@ -55,9 +55,6 @@ describe('controller-wiring', () => {
         expect(validate).toThrowError(
           /context: value is required and is currently undefined/
         );
-        expect(validate).toThrowError(
-          /searchParams: value is required and is currently undefined/
-        );
       });
     });
 
@@ -83,17 +80,17 @@ describe('controller-wiring', () => {
       });
     });
 
-    it('should throw for missing search parameters', () => {
+    it('should not throw for missing search parameters', () => {
       expect(() => {
         searchDefinitionSchema.validate(validCommonConfig);
-      }).toThrowError(/searchParams: value is require/);
+      }).not.toThrowError(/searchParams: value is require/);
 
       expect(() => {
         searchDefinitionSchema.validate({
           ...validCommonConfig,
           searchParams: {},
         });
-      }).toThrowError(/searchParams: value does not contain q/);
+      }).not.toThrowError(/searchParams: value does not contain q/);
     });
 
     it('should not throw for missing query', () => {

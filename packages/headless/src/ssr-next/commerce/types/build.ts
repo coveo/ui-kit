@@ -20,7 +20,7 @@ export interface SearchBuildConfig extends CommonBuildConfig {
       /**
        * The query.
        */
-      q: string;
+      q?: string;
     }
   >['parameters'];
 }
