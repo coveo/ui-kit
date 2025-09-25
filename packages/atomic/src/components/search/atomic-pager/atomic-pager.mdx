@@ -16,6 +16,10 @@ The `atomic-pager` component provides buttons that allow the end user to navigat
 
 This component should be placed within an `atomic-search-interface` component, usually in the "pagination" section of the layout.
 
+**Note:** Use either `atomic-pager` OR `atomic-load-more-results` for pagination, but not both. These components provide alternative pagination approaches:
+- `atomic-pager`: Provides traditional page-based navigation with numbered pages. It is often used along with the `atomic-results-per-page` component.
+- `atomic-load-more-results`: Allows users to incrementally load additional results with a "Load More" button.
+
 ```html
 <atomic-search-interface>
   ...

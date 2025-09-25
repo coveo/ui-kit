@@ -20,6 +20,7 @@ import {InitializeBindingsMixin} from '@/src/mixins/bindings-mixin';
 import {randomID} from '@/src/utils/utils';
 import ArrowLeftIcon from '../../../images/arrow-left-rounded.svg';
 import ArrowRightIcon from '../../../images/arrow-right-rounded.svg';
+import {getCurrentPagesRange} from '../../commerce/atomic-commerce-pager/commerce-pager-utils';
 import {createAppLoadedListener} from '../../common/interface/store';
 import {
   renderPageButtons,
@@ -118,6 +119,11 @@ export class AtomicPager
   @bindingGuard()
   @errorGuard()
   render() {
+    const pagesRange = getCurrentPagesRange(
+      this.pagerState.currentPage,
+      this.numberOfPages,
+      this.pagerState.maxPage - 1
+    );
     return html`${when(
       !this.searchStatusState.hasError &&
         this.searchStatusState.hasResults &&
@@ -144,7 +150,7 @@ export class AtomicPager
               i18n: this.bindings.i18n,
             },
           })(
-            html`${this.pagerState.currentPages.map((pageNumber) =>
+            html`${pagesRange.map((pageNumber) =>
               renderPagerPageButton({
                 props: {
                   isSelected: this.pager.isCurrentPage(pageNumber),
