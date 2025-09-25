@@ -4,11 +4,11 @@ import {beforeEach, describe, expect, it, vi} from 'vitest';
 import {AtomicModal} from './atomic-modal';
 import './atomic-modal';
 import '../atomic-component-error/atomic-component-error';
-import type {i18n} from 'i18next';
 import {updateBreakpoints} from '@/src/utils/replace-breakpoint-utils';
 import {renderInAtomicSearchInterface} from '@/vitest-utils/testing-helpers/fixtures/atomic/search/atomic-search-interface-fixture';
-import {createTestI18n} from '@/vitest-utils/testing-helpers/i18n-utils';
+import {buildFakeSearchEngine} from '@/vitest-utils/testing-helpers/fixtures/headless/search/engine';
 
+vi.mock('@coveo/headless', {spy: true});
 vi.mock('@/src/utils/replace-breakpoint-utils', {spy: true});
 vi.mock('@/src/mixins/bindings-mixin', () => ({
   InitializeBindingsMixin: vi.fn().mockImplementation((superClass) => {
@@ -46,11 +46,9 @@ if (!customElements.get('atomic-focus-trap')) {
 }
 
 describe('atomic-modal', () => {
-  let i18n: i18n;
-
+  const mockedEngine = buildFakeSearchEngine();
   beforeEach(async () => {
     console.error = vi.fn();
-    i18n = await createTestI18n();
   });
 
   const renderModal = async (
@@ -83,10 +81,7 @@ describe('atomic-modal', () => {
       </atomic-modal>`,
       selector: 'atomic-modal',
       bindings: (bindings) => {
-        bindings.i18n = i18n;
-        bindings.interfaceElement = document.createElement(
-          'atomic-search-interface'
-        );
+        bindings.engine = mockedEngine;
         return bindings;
       },
     });
