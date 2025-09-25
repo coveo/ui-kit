@@ -22,10 +22,12 @@ import {
 } from '../../../common/suggestions/stencil-instant-item';
 import {
   dispatchSearchBoxSuggestionsEvent,
+} from '../../../common/suggestions/suggestions-events';
+import type {
   SearchBoxSuggestionElement,
   SearchBoxSuggestions,
   SearchBoxSuggestionsBindings,
-} from '../../../common/suggestions/suggestions-common';
+} from '../../../common/suggestions/suggestions-types';
 import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
 
 export type AriaLabelGenerator = (

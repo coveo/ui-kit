@@ -59,6 +59,9 @@ export function buildProviderWithDefinition<
         TSolutionType
       >
     >;
+    /**
+     * @deprecated will be removed in the next major release. The navigator context provider can now be set when fetching the static state
+     */
     navigatorContext: NavigatorContext;
   }>) {
     const [hydratedState, setHydratedState] = useState<

@@ -1,7 +1,7 @@
 import type {LitElement, TemplateResult} from 'lit';
 import type {TemplateResultType} from 'lit/directive-helpers.js';
 import type {AnyBindings} from '../components/common/interface/bindings';
-import type {SearchBoxSuggestions} from '../components/common/suggestions/suggestions-common';
+import type {SearchBoxSuggestions} from '../components/common/suggestions/suggestions-types';
 
 export type GenericRender<T extends TemplateResultType> = TemplateResult<T>;
 

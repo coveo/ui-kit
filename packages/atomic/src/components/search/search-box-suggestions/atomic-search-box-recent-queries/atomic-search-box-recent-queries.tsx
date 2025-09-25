@@ -17,10 +17,12 @@ import {
 } from '../../../common/suggestions/stencil-recent-queries';
 import {
   dispatchSearchBoxSuggestionsEvent,
+} from '../../../common/suggestions/suggestions-events';
+import type {
   SearchBoxSuggestionElement,
   SearchBoxSuggestions,
   SearchBoxSuggestionsBindings,
-} from '../../../common/suggestions/suggestions-common';
+} from '../../../common/suggestions/suggestions-types';
 import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
 
 /**
