@@ -9,6 +9,7 @@ import {
 } from '@coveo/headless';
 import {html, LitElement} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
+import {keyed} from 'lit/directives/keyed.js';
 import {when} from 'lit/directives/when.js';
 import {bindStateToController} from '@/src/decorators/bind-state';
 import {bindingGuard} from '@/src/decorators/binding-guard';
@@ -20,7 +21,6 @@ import {InitializeBindingsMixin} from '@/src/mixins/bindings-mixin';
 import {randomID} from '@/src/utils/utils';
 import ArrowLeftIcon from '../../../images/arrow-left-rounded.svg';
 import ArrowRightIcon from '../../../images/arrow-right-rounded.svg';
-import {getCurrentPagesRange} from '../../commerce/atomic-commerce-pager/commerce-pager-utils';
 import {createAppLoadedListener} from '../../common/interface/store';
 import {
   renderPageButtons,
@@ -36,14 +36,14 @@ import type {Bindings} from '../atomic-search-interface/interfaces';
  *
  * @part buttons - The list of the next/previous buttons and page-buttons.
  * @part page-buttons - The list of page buttons.
- * @part page-button - The page button.
+ * @part page-button - The individual page buttons.
  * @part active-page-button - The active page button.
- * @part previous-button - The previous button.
- * @part next-button - The next button.
- * @part previous-button-icon - Icon of the previous button.
- * @part next-button-icon - Icon of the next button.
+ * @part previous-button - The previous page button.
+ * @part next-button - The next page button.
+ * @part previous-button-icon - The icon displayed on the "previous page" button.
+ * @part next-button-icon - The icon displayed on the "next page" button.
  *
- * @event atomic/scrollToTop - Emitted when the user clicks the next or previous button, or a page button.
+ * @event atomic/scrollToTop - Emitted when the user clicks any of the buttons rendered by the component.
  */
 @customElement('atomic-pager')
 @bindings()
@@ -70,13 +70,13 @@ export class AtomicPager
   public searchStatusState!: SearchStatusState;
 
   /**
-   * Specifies how many page buttons to display in the pager.
+   * The maximum number of page buttons to display in the pager.
    */
   @property({reflect: true, attribute: 'number-of-pages', type: Number})
   numberOfPages: number = 5;
 
   /**
-   * The SVG icon to use to display the Previous button.
+   * The SVG icon to render on the "previous page" button.
    *
    * - Use a value that starts with `http://`, `https://`, `./`, or `../`, to fetch and display an icon from a given location.
    * - Use a value that starts with `assets://`, to display an icon from the Atomic package.
@@ -86,7 +86,7 @@ export class AtomicPager
   previousButtonIcon: string = ArrowLeftIcon;
 
   /**
-   * The SVG icon to use to display the Next button.
+   * The SVG icon to render on the "next page" button.
    *
    * - Use a value that starts with `http://`, `https://`, `./`, or `../`, to fetch and display an icon from a given location.
    * - Use a value that starts with `assets://`, to display an icon from the Atomic package.
@@ -108,32 +108,21 @@ export class AtomicPager
     });
   }
 
-  private validateProps() {
-    new Schema({
-      numberOfPages: new NumberValue({min: 0}),
-    }).validate({
-      numberOfPages: this.numberOfPages,
-    });
-  }
-
   @bindingGuard()
   @errorGuard()
   render() {
-    const pagesRange = getCurrentPagesRange(
-      this.pagerState.currentPage,
-      this.numberOfPages,
-      this.pagerState.maxPage - 1
-    );
+    const currentGroupName = `${this.radioGroupName}-${this.pagerState.currentPages.join('-')}`;
     return html`${when(
       !this.searchStatusState.hasError &&
         this.searchStatusState.hasResults &&
         this.isAppLoaded,
       () =>
-        html`${renderPagerNavigation({
-          props: {
-            i18n: this.bindings.i18n,
-          },
-        })(html`
+        html`
+      ${renderPagerNavigation({
+        props: {
+          i18n: this.bindings.i18n,
+        },
+      })(html`
           ${renderPagerPreviousButton({
             props: {
               icon: this.previousButtonIcon,
@@ -150,20 +139,27 @@ export class AtomicPager
               i18n: this.bindings.i18n,
             },
           })(
-            html`${pagesRange.map((pageNumber) =>
-              renderPagerPageButton({
-                props: {
-                  isSelected: this.pager.isCurrentPage(pageNumber),
-                  ariaLabel: this.bindings.i18n.t('page-number', {pageNumber}),
-                  onChecked: () => {
-                    this.pager.selectPage(pageNumber);
-                    this.focusOnFirstResultAndScrollToTop();
+            html`${this.pagerState.currentPages.map((pageNumber, index) =>
+              keyed(
+                `page-${pageNumber}-${index}`,
+                renderPagerPageButton({
+                  props: {
+                    isSelected: this.pager.isCurrentPage(pageNumber),
+                    ariaLabel: this.bindings.i18n.t('page-number', {
+                      pageNumber,
+                    }),
+                    onChecked: () => {
+                      this.pager.selectPage(pageNumber);
+                      this.focusOnFirstResultAndScrollToTop();
+                    },
+                    page: pageNumber,
+                    groupName: currentGroupName,
+                    text: pageNumber.toLocaleString(
+                      this.bindings.i18n.language
+                    ),
                   },
-                  page: pageNumber,
-                  groupName: this.radioGroupName,
-                  text: pageNumber.toLocaleString(this.bindings.i18n.language),
-                },
-              })
+                })
+              )
             )}`
           )}
           ${renderPagerNextButton({
@@ -179,6 +175,14 @@ export class AtomicPager
           })}
         `)}`
     )}`;
+  }
+
+  private validateProps() {
+    new Schema({
+      numberOfPages: new NumberValue({min: 0}),
+    }).validate({
+      numberOfPages: this.numberOfPages,
+    });
   }
 
   private async focusOnFirstResultAndScrollToTop() {

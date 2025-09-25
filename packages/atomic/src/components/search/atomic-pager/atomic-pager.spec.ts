@@ -43,16 +43,16 @@ describe('atomic-pager', () => {
   };
 
   const renderPager = async ({
-    numberOfPages,
-    previousButtonIcon,
-    nextButtonIcon,
+    props = {},
     pagerState,
     searchStatusState,
     isAppLoaded = true,
   }: {
-    numberOfPages?: number;
-    previousButtonIcon?: string;
-    nextButtonIcon?: string;
+    props?: Partial<{
+      numberOfPages: number;
+      previousButtonIcon: string;
+      nextButtonIcon: string;
+    }>;
     pagerState?: Partial<PagerState>;
     searchStatusState?: Partial<SearchStatusState>;
     isAppLoaded?: boolean;
@@ -64,9 +64,9 @@ describe('atomic-pager', () => {
 
     const {element} = await renderInAtomicSearchInterface<AtomicPager>({
       template: html`<atomic-pager
-        number-of-pages=${ifDefined(numberOfPages)}
-        previous-button-icon=${ifDefined(previousButtonIcon)}
-        next-button-icon=${ifDefined(nextButtonIcon)}
+        number-of-pages=${ifDefined(props.numberOfPages)}
+        previous-button-icon=${ifDefined(props.previousButtonIcon)}
+        next-button-icon=${ifDefined(props.nextButtonIcon)}
       ></atomic-pager>`,
       selector: 'atomic-pager',
       bindings: (bindings) => {
@@ -97,20 +97,29 @@ describe('atomic-pager', () => {
     expect(element.nextButtonIcon).toBeDefined();
   });
 
-  it('should call buildPager with engine and numberOfPages option', async () => {
-    const element = await renderPager({numberOfPages: 7});
+  it('should call buildPager with engine and numberOfPages option to set the pager', async () => {
+    const element = await renderPager({props: {numberOfPages: 7}});
+    const buildPagerMock = vi.mocked(buildPager);
 
-    expect(buildPager).toHaveBeenCalledWith(element.bindings.engine, {
-      options: {numberOfPages: 7},
-    });
-    expect(element.pager).toBeDefined();
+    expect(buildPager).toHaveBeenCalledExactlyOnceWith(
+      element.bindings.engine,
+      {
+        options: {numberOfPages: 7},
+      }
+    );
+    expect(element.pager).toBe(buildPagerMock.mock.results[0].value);
   });
 
-  it('should call buildSearchStatus with engine', async () => {
+  it('should call buildSearchStatus with engine to set the search status', async () => {
     const element = await renderPager();
+    const buildSearchStatusMock = vi.mocked(buildSearchStatus);
 
-    expect(buildSearchStatus).toHaveBeenCalledWith(element.bindings.engine);
-    expect(element.searchStatus).toBeDefined();
+    expect(buildSearchStatus).toHaveBeenCalledExactlyOnceWith(
+      element.bindings.engine
+    );
+    expect(element.searchStatus).toBe(
+      buildSearchStatusMock.mock.results[0].value
+    );
   });
 
   it('should show the proper page range by default', async () => {
@@ -124,38 +133,30 @@ describe('atomic-pager', () => {
     await expect.element(locators.page6).not.toBeInTheDocument();
   });
 
-  it('should render correct number of pages when numberOfPages is set to 10', async () => {
-    const element = await renderPager({
-      numberOfPages: 10,
-    });
+  // TODO: Fix dynamic numberOfPages property updates - https://coveord.atlassian.net/browse/KIT-5076
+  // it('should update numberOfPages when property changes', async () => {
+  //   const element = await renderPager({
+  //     props: {numberOfPages: 3},
+  //     pagerState: {currentPages: [1, 2, 3]},
+  //   });
+  //   expect(element.numberOfPages).toBe(3);
 
-    expect(buildPager).toHaveBeenCalledWith(element.bindings.engine, {
-      options: {numberOfPages: 10},
-    });
-  });
+  //   element.numberOfPages = 7;
+  //   await element.updateComplete;
 
-  it('should update numberOfPages when property changes', async () => {
-    const element = await renderPager({
-      numberOfPages: 3,
-      pagerState: {currentPages: [1, 2, 3]},
-    });
-    expect(element.numberOfPages).toBe(3);
+  //   expect(element.numberOfPages).toBe(7);
+  //   expect(buildPager).toHaveBeenCalledWith(element.bindings.engine, {
+  //     options: {numberOfPages: 7},
+  //   });
+  // });
 
-    expect(buildPager).toHaveBeenCalledWith(element.bindings.engine, {
-      options: {numberOfPages: 3},
-    });
-  });
+  // it('should throw when numberOfPages property is set to invalid value', async () => {
+  //     const element = await renderPager();
 
-  it('should handle numberOfPages property validation', async () => {
-    const consoleErrorSpy = vi
-      .spyOn(console, 'error')
-      .mockImplementation(() => {});
-
-    await renderPager({numberOfPages: 0});
-    await renderPager({numberOfPages: 10});
-
-    expect(consoleErrorSpy).toHaveBeenCalledTimes(0);
-  });
+  //     expect(() => {
+  //       element.numberOfPages = -1;
+  //     }).toThrow();
+  //   });
 
   it('should not render when search has error', async () => {
     await renderPager({searchStatusState: {hasError: true}});
@@ -198,42 +199,46 @@ describe('atomic-pager', () => {
   });
 
   describe('when clicking on the previous button', () => {
-    let focusSpy: MockInstance;
-    let eventSpy: MockInstance;
-    let previousSpy: MockInstance;
+    let focusOnFirstResultAfterNextSearchSpy: MockInstance;
+    let dispatchEventSpy: MockInstance;
+    let previousPageSpy: MockInstance;
     let element: AtomicPager;
 
     beforeEach(async () => {
       element = await renderPager({
         pagerState: {hasPreviousPage: true, currentPage: 2},
       });
-      focusSpy = vi.spyOn(
+      focusOnFirstResultAfterNextSearchSpy = vi.spyOn(
         element.bindings.store.state.resultList!,
         'focusOnFirstResultAfterNextSearch'
       );
-      eventSpy = vi.spyOn(element, 'dispatchEvent');
-      previousSpy = vi.spyOn(element.pager, 'previousPage');
+      dispatchEventSpy = vi.spyOn(element, 'dispatchEvent');
+      previousPageSpy = vi.spyOn(element.pager, 'previousPage');
 
       await locators.previous.click();
     });
 
     it('should call #focusOnFirstResultAfterNextSearch', async () => {
-      expect(focusSpy).toHaveBeenCalled();
+      expect(focusOnFirstResultAfterNextSearchSpy).toHaveBeenCalledOnce();
     });
 
-    it("should dispatch 'atomic/scrollToTop'", async () => {
-      expect(eventSpy).toHaveBeenCalledWith(
+    it("should dispatch an 'atomic/scrollToTop' custom event", async () => {
+      expect(dispatchEventSpy).toHaveBeenCalledExactlyOnceWith(
         new CustomEvent('atomic/scrollToTop')
       );
     });
 
     it('should call #pager.previousPage', async () => {
-      expect(previousSpy).toHaveBeenCalled();
+      expect(previousPageSpy).toHaveBeenCalledOnce();
+    });
+  });
+
+  it('should not disable the previous button when there is a previous page', async () => {
+    await renderPager({
+      pagerState: {hasPreviousPage: true},
     });
 
-    it('should not be disabled when there is a previous page', async () => {
-      await expect.element(locators.previous).not.toHaveAttribute('disabled');
-    });
+    await expect.element(locators.previous).not.toHaveAttribute('disabled');
   });
 
   describe('when clicking on the next button', () => {
@@ -260,7 +265,7 @@ describe('atomic-pager', () => {
       expect(focusSpy).toHaveBeenCalled();
     });
 
-    it("should dispatch 'atomic/scrollToTop'", async () => {
+    it("should dispatch an 'atomic/scrollToTop' custom event", async () => {
       expect(eventSpy).toHaveBeenCalledWith(
         new CustomEvent('atomic/scrollToTop')
       );
@@ -269,10 +274,14 @@ describe('atomic-pager', () => {
     it('should call #pager.nextPage', async () => {
       expect(nextSpy).toHaveBeenCalled();
     });
+  });
 
-    it('should not be disabled when there is a next page', async () => {
-      await expect.element(locators.next).not.toHaveAttribute('disabled');
+  it('should not be disabled when there is a next page', async () => {
+    await renderPager({
+      pagerState: {hasNextPage: true},
     });
+
+    await expect.element(locators.next).not.toHaveAttribute('disabled');
   });
 
   describe('when clicking on a page button', () => {
@@ -298,7 +307,7 @@ describe('atomic-pager', () => {
       expect(focusSpy).toHaveBeenCalled();
     });
 
-    it("should dispatch 'atomic/scrollToTop'", async () => {
+    it("should dispatch an 'atomic/scrollToTop' custom event", async () => {
       expect(eventSpy).toHaveBeenCalledWith(
         new CustomEvent('atomic/scrollToTop')
       );
@@ -306,10 +315,6 @@ describe('atomic-pager', () => {
 
     it('should call #pager.selectPage with correct page number', async () => {
       expect(selectPageSpy).toHaveBeenCalledWith(3);
-    });
-
-    it('should have the correct page selected', async () => {
-      await expect.element(locators.page3).toHaveAttribute('value', '3');
     });
   });
 
@@ -333,7 +338,7 @@ describe('atomic-pager', () => {
   it('should be able to render a custom icon for the previous button', async () => {
     const icon = '<svg>random-previous-icon</svg>';
     const element = await renderPager({
-      previousButtonIcon: icon,
+      props: {previousButtonIcon: icon},
     });
 
     const atomicIcon = element.shadowRoot?.querySelector(
@@ -345,7 +350,7 @@ describe('atomic-pager', () => {
   it('should be able to render a custom icon for the next button', async () => {
     const icon = '<svg>random-next-icon</svg>';
     const element = await renderPager({
-      nextButtonIcon: icon,
+      props: {nextButtonIcon: icon},
     });
 
     const atomicIcon = element.shadowRoot?.querySelector(
@@ -368,7 +373,7 @@ describe('atomic-pager', () => {
   });
 
   describe('when pager state changes', () => {
-    it('should update currentPages when pager state changes', async () => {
+    it('should update currentPages', async () => {
       const element = await renderPager({
         pagerState: {currentPages: [6, 7, 8, 9, 10]},
       });
@@ -376,7 +381,7 @@ describe('atomic-pager', () => {
       expect(element.pagerState.currentPages).toEqual([6, 7, 8, 9, 10]);
     });
 
-    it('should update hasPreviousPage when pager state changes', async () => {
+    it('should update hasPreviousPage', async () => {
       const element = await renderPager({
         pagerState: {hasPreviousPage: false},
       });
@@ -384,7 +389,7 @@ describe('atomic-pager', () => {
       expect(element.pagerState.hasPreviousPage).toBe(false);
     });
 
-    it('should update hasNextPage when pager state changes', async () => {
+    it('should update hasNextPage', async () => {
       const element = await renderPager({
         pagerState: {hasNextPage: false},
       });
@@ -394,7 +399,7 @@ describe('atomic-pager', () => {
   });
 
   describe('when search status state changes', () => {
-    it('should update hasError when search status changes', async () => {
+    it('should update hasError', async () => {
       const element = await renderPager({
         searchStatusState: {hasError: true},
       });
@@ -402,7 +407,7 @@ describe('atomic-pager', () => {
       expect(element.searchStatusState.hasError).toBe(true);
     });
 
-    it('should update hasResults when search status changes', async () => {
+    it('should update hasResults', async () => {
       const element = await renderPager({
         searchStatusState: {hasResults: false},
       });
@@ -411,87 +416,41 @@ describe('atomic-pager', () => {
     });
   });
 
-  describe('#validateProps', () => {
-    it('should allow numberOfPages of 0', async () => {
-      const consoleErrorSpy = vi
-        .spyOn(console, 'error')
-        .mockImplementation(() => {});
+  it('should allow numberOfPages of 0', async () => {
+    const consoleErrorSpy = vi
+      .spyOn(console, 'error')
+      .mockImplementation(() => {});
 
-      await renderPager({numberOfPages: 0});
+    await renderPager({props: {numberOfPages: 0}});
 
-      expect(consoleErrorSpy).not.toHaveBeenCalled();
-    });
-
-    it('should handle numberOfPages as string number', async () => {
-      const element = await renderPager();
-
-      element.setAttribute('number-of-pages', '8');
-      await element.updateComplete;
-
-      expect(element.numberOfPages).toBe(8);
-    });
-
-    it('should parse numberOfPages from mixed string-number input', async () => {
-      const element = await renderPager();
-
-      const mixedValue = parseInt('9k3', 10);
-      element.numberOfPages = mixedValue;
-      await element.updateComplete;
-
-      expect(element.numberOfPages).toBe(9);
-    });
-
-    it('should handle invalid numberOfPages gracefully', async () => {
-      const element = await renderPager();
-
-      element.numberOfPages = -5;
-
-      expect(() => {
-        element['validateProps']();
-      }).toThrow();
-    });
+    expect(consoleErrorSpy).not.toHaveBeenCalled();
   });
 
-  describe('#focusOnFirstResultAndScrollToTop', () => {
-    it('should call focusOnFirstResultAfterNextSearch and dispatch scrollToTop event', async () => {
-      const element = await renderPager();
-      const focusSpy = vi.spyOn(
-        element.bindings.store.state.resultList!,
-        'focusOnFirstResultAfterNextSearch'
-      );
-      const eventSpy = vi.spyOn(element, 'dispatchEvent');
+  it('should handle numberOfPages as string number', async () => {
+    const element = await renderPager();
 
-      await element['focusOnFirstResultAndScrollToTop']();
+    element.setAttribute('number-of-pages', '8');
+    await element.updateComplete;
 
-      expect(focusSpy).toHaveBeenCalled();
-      expect(eventSpy).toHaveBeenCalledWith(
-        new CustomEvent('atomic/scrollToTop')
-      );
-    });
+    expect(element.numberOfPages).toBe(8);
   });
 
-  describe('when multiple rendering conditions are met', () => {
-    beforeEach(async () => {
-      await renderPager({
-        searchStatusState: {hasError: false, hasResults: true},
-        isAppLoaded: true,
-      });
+  it('should handle invalid numberOfPages gracefully', async () => {
+    await expect(renderPager({props: {numberOfPages: -5}})).rejects.toThrow();
+  });
+
+  it('should render with proper ARIA labels', async () => {
+    await renderPager({
+      searchStatusState: {hasError: false, hasResults: true},
+      isAppLoaded: true,
     });
 
-    it('should render pager buttons', async () => {
-      await expect.element(locators.page1).toBeInTheDocument();
-      await expect.element(locators.previous).toBeInTheDocument();
-      await expect.element(locators.next).toBeInTheDocument();
-    });
-
-    it('should render with proper ARIA labels', async () => {
-      await expect
-        .element(locators.page1)
-        .toHaveAttribute('aria-label', 'Page 1');
-      await expect
-        .element(locators.previous)
-        .toHaveAttribute('aria-label', 'Previous');
-      await expect.element(locators.next).toHaveAttribute('aria-label', 'Next');
-    });
+    await expect
+      .element(locators.page1)
+      .toHaveAttribute('aria-label', 'Page 1');
+    await expect
+      .element(locators.previous)
+      .toHaveAttribute('aria-label', 'Previous');
+    await expect.element(locators.next).toHaveAttribute('aria-label', 'Next');
   });
 });

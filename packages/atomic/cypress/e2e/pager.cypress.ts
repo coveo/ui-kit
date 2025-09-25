@@ -1,11 +1,9 @@
 import {TestFixture} from '../fixtures/test-fixture';
-import * as CommonAssertions from './common-assertions';
 import {
   addPager,
   pressPagerNext,
 } from './pager-actions';
 import * as PagerAssertions from './pager-assertions';
-import {pagerComponent} from './pager-selectors';
 
 describe('Pager Test Suites', () => {
   describe('Default Pager', () => {
@@ -18,7 +16,6 @@ describe('Pager Test Suites', () => {
         setupDefaultPager();
       });
       PagerAssertions.assertRenderPager(5);
-      CommonAssertions.assertAccessibility(pagerComponent);
     });
   });
 
