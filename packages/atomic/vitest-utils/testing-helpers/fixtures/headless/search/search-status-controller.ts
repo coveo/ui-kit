@@ -23,5 +23,5 @@ export const buildFakeSearchStatus = ({
   ({
     ...defaultSearchStatusImplementation,
     ...implementation,
-    ...(state && {state: {...defaultSearchStatusState, ...state}}),
+    state: {...defaultSearchStatusState, ...state},
   }) as SearchStatus;
