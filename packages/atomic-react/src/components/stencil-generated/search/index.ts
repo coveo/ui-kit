@@ -33,7 +33,6 @@ export const AtomicNoResults = /*@__PURE__*/createReactComponent<JSX.AtomicNoRes
 export const AtomicNotifications = /*@__PURE__*/createReactComponent<JSX.AtomicNotifications, HTMLAtomicNotificationsElement>('atomic-notifications');
 export const AtomicNumericFacet = /*@__PURE__*/createReactComponent<JSX.AtomicNumericFacet, HTMLAtomicNumericFacetElement>('atomic-numeric-facet');
 export const AtomicNumericRange = /*@__PURE__*/createReactComponent<JSX.AtomicNumericRange, HTMLAtomicNumericRangeElement>('atomic-numeric-range');
-export const AtomicPager = /*@__PURE__*/createReactComponent<JSX.AtomicPager, HTMLAtomicPagerElement>('atomic-pager');
 export const AtomicPopover = /*@__PURE__*/createReactComponent<JSX.AtomicPopover, HTMLAtomicPopoverElement>('atomic-popover');
 export const AtomicQueryError = /*@__PURE__*/createReactComponent<JSX.AtomicQueryError, HTMLAtomicQueryErrorElement>('atomic-query-error');
 export const AtomicQuerySummary = /*@__PURE__*/createReactComponent<JSX.AtomicQuerySummary, HTMLAtomicQuerySummaryElement>('atomic-query-summary');

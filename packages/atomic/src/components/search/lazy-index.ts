@@ -1,5 +1,6 @@
 // Auto-generated file
 export default {
+  'atomic-pager': async () => await import('./atomic-pager/atomic-pager.js'),
   'atomic-results-per-page': async () =>
     await import('./atomic-results-per-page/atomic-results-per-page.js'),
   'atomic-search-layout': async () =>
