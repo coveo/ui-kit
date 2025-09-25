@@ -10,10 +10,7 @@ export const proxyInputs = (Cmp: any, inputs: string[]) => {
         return this.el[item];
       },
       set(val: any) {
-        this.z.runOutsideAngular(() => {
-            const attrName = item.replace(/([A-Z])/g, '-$1').toLowerCase();
-            this.el.setAttribute(attrName,val);
-        });
+        this.z.runOutsideAngular(() => (this.el[item] = val));
       },
       /**
        * In the event that proxyInputs is called
