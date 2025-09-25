@@ -70,7 +70,7 @@ describe('Commerce Engine SSR', () => {
       const staticState = await engineDefinition[solutionType].fetchStaticState(
         {
           navigatorContext: mockNavigatorContext,
-          searchParams: {query: 'test'},
+          searchParams: {q: 'test'},
           recommendations: [],
           context: {
             view: {url: 'http://example.com'},
@@ -92,7 +92,7 @@ describe('Commerce Engine SSR', () => {
       const {searchEngineDefinition} = defineCommerceEngine(definitionOptions);
       const staticState = await searchEngineDefinition.fetchStaticState({
         navigatorContext: mockNavigatorContext,
-        searchParams: {query: 'foo'},
+        searchParams: {q: 'foo'},
         context: {
           view: {url: 'http://example.com/search'},
           country: 'US',

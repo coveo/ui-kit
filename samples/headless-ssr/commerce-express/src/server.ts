@@ -28,7 +28,7 @@ app.get('/', async (req, res) => {
     const queryFromRequest = req.query.q?.toString?.() ?? '';
 
     const staticState = await searchEngineDefinition.fetchStaticState({
-      searchParams: {query: queryFromRequest},
+      searchParams: {q: queryFromRequest},
       navigatorContext: getNavigatorContext(req),
       context: {
         language: 'en',

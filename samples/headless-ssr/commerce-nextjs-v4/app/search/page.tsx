@@ -49,11 +49,7 @@ export default async function Search({
     cart: {items},
     context,
     navigatorContext: navigatorContext.marshal,
-    searchParams: {
-      ...parameters,
-      // TODO: this is bad DX! Need to use the same parameter as the parameterSerializer to avoid this hack
-      query: parameters.q || '',
-    },
+    searchParams: parameters,
   });
 
   return (

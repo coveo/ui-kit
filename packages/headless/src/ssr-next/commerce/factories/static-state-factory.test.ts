@@ -140,7 +140,7 @@ describe('fetchStaticStateFactory', () => {
           view: {url: 'https://example.com'},
         },
         searchParams: {
-          query: 'test',
+          q: 'test',
         },
       });
     });
