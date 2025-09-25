@@ -150,11 +150,7 @@ export class AtomicCommerceBreadbox
     }
   }
 
-  firstUpdated() {
-    this.adaptBreadcrumbs();
-  }
-
-  updateCompleted() {
+  updated() {
     this.adaptBreadcrumbs();
   }
 
