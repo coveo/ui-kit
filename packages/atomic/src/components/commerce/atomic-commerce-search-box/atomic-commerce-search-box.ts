@@ -28,6 +28,7 @@ import {
   StorageItems,
 } from '@/src/utils/local-storage-utils';
 import {updateBreakpoints} from '@/src/utils/replace-breakpoint-utils';
+import {getDefaultSlotFromHost} from '@/src/utils/slot-utils';
 import {
   isFocusingOut,
   once,
@@ -205,13 +206,6 @@ export class AtomicCommerceSearchBox
 
   connectedCallback() {
     super.connectedCallback();
-
-    if (this.children.length === 0) {
-      this.replaceChildren(
-        document.createElement('atomic-commerce-search-box-recent-queries'),
-        document.createElement('atomic-commerce-search-box-query-suggestions')
-      );
-    }
 
     this.addEventListener(
       'atomic/searchBoxSuggestion/register',
@@ -702,6 +696,17 @@ export class AtomicCommerceSearchBox
     `;
   }
 
+  private renderSlotContent() {
+    const hasDefaultSlot = !!getDefaultSlotFromHost(this);
+
+    if (hasDefaultSlot) {
+      return html`<slot></slot>`;
+    }
+
+    return html`<atomic-commerce-search-box-recent-queries></atomic-commerce-search-box-recent-queries>
+      <atomic-commerce-search-box-query-suggestions></atomic-commerce-search-box-query-suggestions>`;
+  }
+
   @bindingGuard()
   @errorGuard()
   render() {
@@ -726,18 +731,20 @@ export class AtomicCommerceSearchBox
         },
       })(
         html`${this.renderTextBox()}
-        ${renderSubmitButton({
-          props: {
-            i18n: this.bindings.i18n,
-            disabled: this.isSearchDisabledForEndUser,
-            onClick: () => {
-              this.searchBox.submit();
-              this.suggestionManager.clearSuggestions();
-            },
+      ${renderSubmitButton({
+        props: {
+          i18n: this.bindings.i18n,
+          disabled: this.isSearchDisabledForEndUser,
+          onClick: () => {
+            this.searchBox.submit();
+            this.suggestionManager.clearSuggestions();
           },
-        })}
-        ${this.renderSuggestions()}`
+        },
+      })}
+      ${this.renderSuggestions()}`
       )}
+     
+      ${this.renderSlotContent()}
     `;
   }
 }
