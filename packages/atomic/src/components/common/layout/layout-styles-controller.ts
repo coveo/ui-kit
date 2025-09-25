@@ -35,10 +35,10 @@ export class LayoutStylesController implements ReactiveController {
 
   hostConnected() {
     if (!this.host.id) {
-      (this.host as unknown as HTMLElement).id = randomID(this.componentPrefix);
+      this.host.id = randomID(this.componentPrefix);
     }
 
-    this.updateStyles();
+    this.host.updateComplete.then(() => this.updateStyles());
   }
 
   /**
