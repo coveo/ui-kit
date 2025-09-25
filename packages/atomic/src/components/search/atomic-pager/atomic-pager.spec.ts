@@ -201,10 +201,11 @@ describe('atomic-pager', () => {
     let focusSpy: MockInstance;
     let eventSpy: MockInstance;
     let previousSpy: MockInstance;
+    let element: AtomicPager;
 
     beforeEach(async () => {
-      const element = await renderPager({
-        pagerState: {hasPreviousPage: true},
+      element = await renderPager({
+        pagerState: {hasPreviousPage: true, currentPage: 2},
       });
       focusSpy = vi.spyOn(
         element.bindings.store.state.resultList!,
@@ -229,16 +230,21 @@ describe('atomic-pager', () => {
     it('should call #pager.previousPage', async () => {
       expect(previousSpy).toHaveBeenCalled();
     });
+
+    it('should not be disabled when there is a previous page', async () => {
+      await expect.element(locators.previous).not.toHaveAttribute('disabled');
+    });
   });
 
   describe('when clicking on the next button', () => {
     let focusSpy: MockInstance;
     let eventSpy: MockInstance;
     let nextSpy: MockInstance;
+    let element: AtomicPager;
 
     beforeEach(async () => {
-      const element = await renderPager({
-        pagerState: {hasNextPage: true},
+      element = await renderPager({
+        pagerState: {hasNextPage: true, currentPage: 1},
       });
       focusSpy = vi.spyOn(
         element.bindings.store.state.resultList!,
@@ -263,16 +269,21 @@ describe('atomic-pager', () => {
     it('should call #pager.nextPage', async () => {
       expect(nextSpy).toHaveBeenCalled();
     });
+
+    it('should not be disabled when there is a next page', async () => {
+      await expect.element(locators.next).not.toHaveAttribute('disabled');
+    });
   });
 
   describe('when clicking on a page button', () => {
     let focusSpy: MockInstance;
     let eventSpy: MockInstance;
     let selectPageSpy: MockInstance;
+    let element: AtomicPager;
 
     beforeEach(async () => {
-      const element = await renderPager({
-        pagerState: {currentPages: [1, 2, 3, 4, 5]},
+      element = await renderPager({
+        pagerState: {currentPages: [1, 2, 3, 4, 5], currentPage: 1},
       });
       focusSpy = vi.spyOn(
         element.bindings.store.state.resultList!,
@@ -295,6 +306,10 @@ describe('atomic-pager', () => {
 
     it('should call #pager.selectPage with correct page number', async () => {
       expect(selectPageSpy).toHaveBeenCalledWith(3);
+    });
+
+    it('should have the correct page selected', async () => {
+      await expect.element(locators.page3).toHaveAttribute('value', '3');
     });
   });
 
