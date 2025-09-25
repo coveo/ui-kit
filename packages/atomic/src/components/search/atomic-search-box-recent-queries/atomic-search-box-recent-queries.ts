@@ -5,11 +5,11 @@ import {
 } from '@coveo/headless';
 import {LitElement, nothing} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
-import {bindings} from '../../../decorators/bindings';
-import type {LitElementWithError} from '../../../decorators/types';
+import {bindings} from '@/src/decorators/bindings';
+import type {LitElementWithError} from '@/src/decorators/types';
+import {SafeStorage, StorageItems} from '@/src/utils/local-storage-utils';
+import {once} from '@/src/utils/utils';
 import Clock from '../../../images/clock.svg';
-import {SafeStorage, StorageItems} from '../../../utils/local-storage-utils';
-import {once} from '../../../utils/utils';
 import {
   getPartialRecentQueryClearElement,
   getPartialRecentQueryElement,
@@ -22,7 +22,7 @@ import type {
   SearchBoxSuggestions,
   SearchBoxSuggestionsBindings,
 } from '../../common/suggestions/suggestions-types';
-import type {Bindings} from '../atomic-search-interface/atomic-search-interface';
+import type {Bindings} from '../atomic-search-interface/interfaces';
 
 /**
  * The `atomic-search-box-recent-queries` component can be added as a child of an `atomic-search-box` component, allowing for the configuration of recent query suggestions.
