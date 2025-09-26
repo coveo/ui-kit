@@ -1,5 +1,5 @@
 import {RETRYABLE_STREAM_ERROR_CODE} from '../../api/generated-answer/generated-answer-client.js';
-import type {SearchRequest} from '../../api/search/search/search-request.js';
+import type {AnswerApiQueryParams} from '../../features/generated-answer/generated-answer-request.js';
 import {buildMockCitation} from '../../test/mock-citation.js';
 import {
   closeGeneratedAnswerFeedbackModal,
@@ -538,7 +538,7 @@ describe('generated answer slice', () => {
   });
 
   it('#setAnswerApiQueryParams should set the answerApiQueryParams to the new value in the state', () => {
-    const newAnswerApiQueryParams: Partial<SearchRequest> = {
+    const newAnswerApiQueryParams: AnswerApiQueryParams = {
       q: 'example query',
       fieldsToInclude: ['foo', 'bar'],
     };

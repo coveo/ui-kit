@@ -1,4 +1,4 @@
-import {skipToken} from '@reduxjs/toolkit/query';
+import {QueryStatus, skipToken} from '@reduxjs/toolkit/query';
 import {answerEvaluation} from '../../../api/knowledge/post-answer-evaluation.js';
 import {
   answerApi,
@@ -73,7 +73,7 @@ vi.mock('../../../api/knowledge/post-answer-evaluation', () => ({
 
 describe('knowledge-generated-answer', () => {
   let engine: MockedSearchEngine;
-  const mockSelectAnswer = vi.mocked(selectAnswer);
+  const mockSelectAnswer = selectAnswer as unknown as ReturnType<typeof vi.fn>;
 
   const createGeneratedAnswer = (props: GeneratedAnswerProps = {}) =>
     buildAnswerApiGeneratedAnswer(
@@ -103,6 +103,17 @@ describe('knowledge-generated-answer', () => {
 
   beforeEach(() => {
     vi.clearAllMocks();
+
+    mockSelectAnswer.mockImplementation(() => () => ({
+      status: QueryStatus.uninitialized,
+      data: undefined,
+      isLoading: false,
+      isError: false,
+      isSuccess: false,
+      isUninitialized: true,
+      error: undefined,
+    }));
+
     engine = buildEngineWithGeneratedAnswer();
   });
 
@@ -130,9 +141,15 @@ describe('knowledge-generated-answer', () => {
   describe('AnswerApiGeneratedAnswer controller state', () => {
     describe('when RTK Query cache is uninitialized (cache miss)', () => {
       it('should expose undefined answer and default state flags', () => {
-        mockSelectAnswer.mockReturnValue({
+        mockSelectAnswer.mockReturnValue(() => ({
+          status: QueryStatus.uninitialized,
           data: undefined,
-        } as ReturnType<typeof selectAnswer>);
+          isLoading: false,
+          isError: false,
+          isSuccess: false,
+          isUninitialized: true,
+          error: undefined,
+        }));
 
         const generatedAnswer = createGeneratedAnswer();
 
@@ -151,9 +168,9 @@ describe('knowledge-generated-answer', () => {
 
     describe('when RTK Query is loading', () => {
       it('should expose isLoading = true and no answer yet', () => {
-        mockSelectAnswer.mockReturnValue({
-          data: {isLoading: true},
-        } as ReturnType<typeof selectAnswer>);
+        mockSelectAnswer.mockImplementation(() => () => ({
+          data: {isLoading: true, isStreaming: false},
+        }));
 
         const generatedAnswer = createGeneratedAnswer();
 
@@ -166,9 +183,9 @@ describe('knowledge-generated-answer', () => {
 
     describe('when RTK Query is streaming', () => {
       it('should expose isStreaming = true and partial answer', () => {
-        mockSelectAnswer.mockReturnValue({
+        mockSelectAnswer.mockImplementation(() => () => ({
           data: {isStreaming: true, answer: 'partial...', isLoading: false},
-        } as ReturnType<typeof selectAnswer>);
+        }));
 
         const generatedAnswer = createGeneratedAnswer();
 
@@ -181,7 +198,7 @@ describe('knowledge-generated-answer', () => {
 
     describe('when RTK Query is fulfilled', () => {
       it('should expose the full answer and citations without duplicates', () => {
-        mockSelectAnswer.mockReturnValue({
+        mockSelectAnswer.mockImplementation(() => () => ({
           data: {
             generated: true,
             answer: 'final answer',
@@ -193,7 +210,7 @@ describe('knowledge-generated-answer', () => {
             isLoading: false,
             isStreaming: false,
           },
-        } as ReturnType<typeof selectAnswer>);
+        }));
 
         const generatedAnswer = createGeneratedAnswer();
 
@@ -210,11 +227,13 @@ describe('knowledge-generated-answer', () => {
 
     describe('when RTK Query is rejected with error', () => {
       it('should expose error message and statusCode', () => {
-        mockSelectAnswer.mockReturnValue({
+        mockSelectAnswer.mockImplementation(() => () => ({
           data: {
             error: {message: 'server error', code: 500},
+            isLoading: false,
+            isStreaming: false,
           },
-        } as ReturnType<typeof selectAnswer>);
+        }));
 
         const generatedAnswer = createGeneratedAnswer();
 
@@ -227,9 +246,9 @@ describe('knowledge-generated-answer', () => {
 
     describe('when RTK Query completes with generated = false', () => {
       it('should mark cannotAnswer = true if not loading or streaming', () => {
-        mockSelectAnswer.mockReturnValue({
+        mockSelectAnswer.mockImplementation(() => () => ({
           data: {generated: false, isLoading: false, isStreaming: false},
-        } as ReturnType<typeof selectAnswer>);
+        }));
 
         const generatedAnswer = createGeneratedAnswer();
 
@@ -239,9 +258,9 @@ describe('knowledge-generated-answer', () => {
 
     describe('when RTK Query completes with generated = undefined', () => {
       it('should mark cannotAnswer = false even if not loading or streaming', () => {
-        mockSelectAnswer.mockReturnValue({
+        mockSelectAnswer.mockImplementation(() => () => ({
           data: {generated: undefined, isLoading: false, isStreaming: false},
-        } as ReturnType<typeof selectAnswer>);
+        }));
 
         const generatedAnswer = createGeneratedAnswer();
 
@@ -251,9 +270,9 @@ describe('knowledge-generated-answer', () => {
 
     describe('when RTK Query is still loading with generated = false', () => {
       it('should mark cannotAnswer = false', () => {
-        mockSelectAnswer.mockReturnValue({
+        mockSelectAnswer.mockImplementation(() => () => ({
           data: {generated: false, isLoading: true, isStreaming: false},
-        } as ReturnType<typeof selectAnswer>);
+        }));
 
         const generatedAnswer = createGeneratedAnswer();
 
@@ -263,9 +282,9 @@ describe('knowledge-generated-answer', () => {
 
     describe('when RTK Query is still streaming with generated = false', () => {
       it('should mark cannotAnswer = false', () => {
-        mockSelectAnswer.mockReturnValue({
+        mockSelectAnswer.mockImplementation(() => () => ({
           data: {generated: false, isLoading: false, isStreaming: true},
-        } as ReturnType<typeof selectAnswer>);
+        }));
 
         const generatedAnswer = createGeneratedAnswer();
 
@@ -275,9 +294,9 @@ describe('knowledge-generated-answer', () => {
 
     describe('when RTK Query completes with generated = true', () => {
       it('should mark cannotAnswer = false', () => {
-        mockSelectAnswer.mockReturnValue({
+        mockSelectAnswer.mockImplementation(() => () => ({
           data: {generated: true, isLoading: false, isStreaming: false},
-        } as ReturnType<typeof selectAnswer>);
+        }));
 
         const generatedAnswer = createGeneratedAnswer();
 
@@ -287,14 +306,14 @@ describe('knowledge-generated-answer', () => {
 
     describe('when Redux state cannotAnswer is true', () => {
       it('should return cannotAnswer as true regardless of RTK Query state', () => {
-        mockSelectAnswer.mockReturnValue({
+        mockSelectAnswer.mockImplementation(() => () => ({
           data: {
             answer: 'Some answer',
             generated: true,
             isLoading: false,
             isStreaming: false,
           },
-        } as ReturnType<typeof selectAnswer>);
+        }));
 
         engine = buildEngineWithGeneratedAnswer({
           generatedAnswer: {
@@ -352,9 +371,16 @@ describe('knowledge-generated-answer', () => {
   });
 
   it('dispatches a sendFeedback action', () => {
-    mockSelectAnswer.mockReturnValue({
-      data: {answer: 'This est une answer', answerId: '12345_6'},
-    } as ReturnType<typeof selectAnswer>);
+    (selectAnswer as unknown as ReturnType<typeof vi.fn>).mockImplementation(
+      () => () => ({
+        data: {
+          answer: 'This est une answer',
+          answerId: '12345_6',
+          isLoading: false,
+          isStreaming: false,
+        },
+      })
+    );
 
     engine = buildEngineWithGeneratedAnswer({
       query: {q: 'this est une question', enableQuerySyntax: false},
@@ -400,6 +426,15 @@ describe('knowledge-generated-answer', () => {
 
     beforeEach(() => {
       vi.clearAllMocks();
+
+      mockSelectAnswerTriggerParams.mockReturnValue({
+        q: '',
+        requestId: '',
+        cannotAnswer: false,
+        analyticsMode: 'legacy',
+        actionCause: '',
+      });
+
       createGeneratedAnswer();
       listener = engine.subscribe.mock.calls[0][0];
     });

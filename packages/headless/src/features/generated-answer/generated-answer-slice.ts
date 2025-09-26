@@ -1,6 +1,6 @@
 import {createReducer} from '@reduxjs/toolkit';
 import {RETRYABLE_STREAM_ERROR_CODE} from '../../api/generated-answer/generated-answer-client.js';
-import type {SearchRequest} from '../../api/search/search/search-request.js';
+import type {AnswerApiQueryParams} from '../../features/generated-answer/generated-answer-request.js';
 import {
   closeGeneratedAnswerFeedbackModal,
   collapseGeneratedAnswer,
@@ -133,6 +133,6 @@ export const generatedAnswerReducer = createReducer(
         state.cannotAnswer = payload;
       })
       .addCase(setAnswerApiQueryParams, (state, {payload}) => {
-        state.answerApiQueryParams = payload as Partial<SearchRequest>;
+        state.answerApiQueryParams = payload as AnswerApiQueryParams;
       })
 );

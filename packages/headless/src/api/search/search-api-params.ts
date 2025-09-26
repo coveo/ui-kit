@@ -140,7 +140,7 @@ type GenQAParameters = {
   citationsFieldToInclude: string[];
 };
 
-type ResponseFormatParameters = {
+export type ResponseFormatParameters = {
   contentFormat?: GeneratedContentFormat[];
 };
 
