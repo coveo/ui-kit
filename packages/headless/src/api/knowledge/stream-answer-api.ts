@@ -131,7 +131,7 @@ export const updateCacheWithEvent = (
   }
 };
 
-const buildAnswerEndpoint = (
+export const buildAnswerEndpoint = (
   platformEndpoint: string,
   organizationId: string,
   answerConfigurationId: string,
@@ -236,6 +236,7 @@ export const fetchAnswer = (fetchAnswerParams: AnswerApiQueryParams) => {
   return answerApi.endpoints.getAnswer.initiate(fetchAnswerParams);
 };
 
+// Select answer state from RTK endpoint state
 export const selectAnswer = (selectAnswerParams: AnswerApiQueryParams) => {
   return answerApi.endpoints.getAnswer.select(selectAnswerParams);
 };
