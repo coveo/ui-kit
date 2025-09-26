@@ -1,10 +1,10 @@
-const fs = require('fs-extra');
+const fs = require('fs');
 const pathlib = require('path');
 const {quanticIsDependency, getProjectPath} = require('./utils');
 
 function copyFolder(source, target) {
   try {
-    fs.copySync(source, target);
+    fs.cpSync(source, target, {recursive: true, force: true});
   } catch (err) {
     console.error(`Failed to copy folder at the following path ${source}`);
     console.error(err);
