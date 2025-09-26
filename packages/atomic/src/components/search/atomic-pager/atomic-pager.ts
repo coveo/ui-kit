@@ -11,6 +11,9 @@ import {html, LitElement} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {keyed} from 'lit/directives/keyed.js';
 import {when} from 'lit/directives/when.js';
+import {createAppLoadedListener} from '@/src/components/common/interface/store';
+import {renderPagerNavigation} from '@/src/components/common/pager/pager-navigation';
+import type {Bindings} from '@/src/components/search/atomic-search-interface/interfaces';
 import {bindStateToController} from '@/src/decorators/bind-state';
 import {bindingGuard} from '@/src/decorators/binding-guard';
 import {bindings} from '@/src/decorators/bindings';
@@ -21,15 +24,12 @@ import {InitializeBindingsMixin} from '@/src/mixins/bindings-mixin';
 import {randomID} from '@/src/utils/utils';
 import ArrowLeftIcon from '../../../images/arrow-left-rounded.svg';
 import ArrowRightIcon from '../../../images/arrow-right-rounded.svg';
-import {createAppLoadedListener} from '../../common/interface/store';
 import {
   renderPageButtons,
   renderPagerNextButton,
   renderPagerPageButton,
   renderPagerPreviousButton,
 } from '../../common/pager/pager-buttons';
-import {renderPagerNavigation} from '../../common/pager/pager-navigation';
-import type {Bindings} from '../atomic-search-interface/interfaces';
 
 /**
  * The `atomic-pager` provides buttons that allow the end user to navigate through the different result pages.
