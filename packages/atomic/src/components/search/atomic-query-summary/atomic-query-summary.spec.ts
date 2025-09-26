@@ -9,6 +9,7 @@ import {AriaLiveRegionController} from '@/src/utils/accessibility-utils';
 import type {AtomicQuerySummary} from './atomic-query-summary';
 
 vi.mock('@coveo/headless', {spy: true});
+
 describe('atomic-query-summary', () => {
   const mockedEngine = buildFakeSearchEngine();
   let mockedQuerySummary: ReturnType<typeof buildQuerySummary>;
