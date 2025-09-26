@@ -5,4 +5,4 @@
 ## Learn more
 
 - Checkout our [Documentation for SSR Search](https://docs.coveo.com/en/headless/latest/usage/headless-server-side-rendering/)
-- Refer to [samples/headless-ssr](https://github.com/coveo/ui-kit/tree/master/packages/samples/headless-ssr) for examples.
+- Refer to [samples/headless-ssr](https://github.com/coveo/ui-kit/tree/main/samples/headless-ssr) for examples.
