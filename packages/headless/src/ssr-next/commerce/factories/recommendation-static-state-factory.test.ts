@@ -1,7 +1,9 @@
 import type {Mock, MockInstance} from 'vitest';
 import {getSampleCommerceEngineConfiguration} from '../../../app/commerce-engine/commerce-engine-configuration.js';
+import type {NavigatorContext} from '../../../app/navigator-context-provider.js';
 import {buildMockCommerceState} from '../../../test/mock-commerce-state.js';
 import {buildMockSSRCommerceEngine} from '../../../test/mock-engine-v2.js';
+import {buildMockNavigatorContext} from '../../../test/mock-navigator-context.js';
 import {defineMockRecommendationDefinition} from '../../../test/mock-ssr-controller-definitions.js';
 import type {SolutionType} from '../types/controller-constants.js';
 import type {BakedInControllers} from '../types/controller-definitions.js';
@@ -11,12 +13,11 @@ import * as buildFactory from './build-factory.js';
 import {fetchRecommendationStaticStateFactory} from './recommendation-static-state-factory.js';
 
 describe('fetchRecommendationStaticStateFactory', () => {
+  let mockNavigatorContext: NavigatorContext;
   let engineSpy: MockInstance;
   let mockControllers = {};
   let mockEngine: ReturnType<typeof buildMockSSRCommerceEngine>;
-  let options: ReturnType<typeof getSampleCommerceEngineConfiguration> & {
-    navigatorContextProvider: Mock;
-  };
+  let options: ReturnType<typeof getSampleCommerceEngineConfiguration>;
   let controllerDefinitions: {
     rec1: ReturnType<typeof defineMockRecommendationDefinition>;
     rec2: ReturnType<typeof defineMockRecommendationDefinition>;
@@ -24,11 +25,11 @@ describe('fetchRecommendationStaticStateFactory', () => {
   };
 
   const setupMocks = () => {
+    mockNavigatorContext = buildMockNavigatorContext();
     mockEngine = buildMockSSRCommerceEngine(buildMockCommerceState());
 
     options = {
       ...getSampleCommerceEngineConfiguration(),
-      navigatorContextProvider: vi.fn(),
     };
 
     controllerDefinitions = {
@@ -70,6 +71,7 @@ describe('fetchRecommendationStaticStateFactory', () => {
     );
 
     await factory({
+      navigatorContext: mockNavigatorContext,
       recommendations: ['rec1', 'rec2'],
       context: {
         country: 'CA',
