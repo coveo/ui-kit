@@ -111,21 +111,19 @@ export function defineSearchEngine<
   type HydrateStaticStateParameters = Parameters<HydrateStaticStateFunction>[0];
 
   const build: BuildFunction = async (buildOptions: BuildParameters) => {
-    if (!engineOptions.navigatorContextProvider) {
+    if (!(buildOptions as BuildConfig).navigatorContext) {
       const logger = buildLogger(options.loggerOptions);
       logger.error(
-        'No navigatorContextProvider was provided. This may impact analytics accuracy, personalization, and session tracking. Refer to the Coveo documentation on server-side navigation context for implementation guidance.'
+        'No navigatorContext was provided. This may impact analytics accuracy, personalization, and session tracking. Refer to the Coveo documentation on server-side navigation context for implementation guidance.'
       );
     }
 
-    engineOptions.navigatorContextProvider = (
-      buildOptions as BuildConfig
-    ).navigatorContextProvider;
+    engineOptions.navigatorContextProvider = () =>
+      (buildOptions as BuildConfig).navigatorContext;
     engineOptions.configuration.preprocessRequest =
       augmentPreprocessRequestWithForwardedFor({
         preprocessRequest: engineOptions.configuration.preprocessRequest,
-        navigatorContextProvider: (buildOptions as BuildConfig)
-          .navigatorContextProvider,
+        navigatorContext: (buildOptions as BuildConfig).navigatorContext,
         loggerOptions: engineOptions.loggerOptions,
       });
 
