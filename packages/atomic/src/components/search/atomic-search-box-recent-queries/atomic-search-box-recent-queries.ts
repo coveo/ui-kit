@@ -7,6 +7,7 @@ import {html, LitElement, nothing} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {errorGuard} from '@/src/decorators/error-guard';
 import type {SearchBoxSuggestionsComponent} from '@/src/decorators/types';
+import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles.js';
 import {SafeStorage, StorageItems} from '@/src/utils/local-storage-utils';
 import {once} from '@/src/utils/utils';
 import Clock from '../../../images/clock.svg';
@@ -28,6 +29,7 @@ import type {Bindings} from '../atomic-search-interface/interfaces';
  * The `atomic-search-box-recent-queries` component can be added as a child of an `atomic-search-box` component, allowing for the configuration of recent query suggestions.
  */
 @customElement('atomic-search-box-recent-queries')
+@withTailwindStyles
 export class AtomicSearchBoxRecentQueries
   extends LitElement
   implements SearchBoxSuggestionsComponent<Bindings>
