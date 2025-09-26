@@ -708,7 +708,7 @@ export class AtomicSearchBox implements InitializableComponent<Bindings> {
   }
 
   private renderSlotContent() {
-   const hasDefaultSlot = !!getDefaultSlotFromHost(this.host);
+    const hasDefaultSlot = !!getDefaultSlotFromHost(this.host);
 
     if (hasDefaultSlot) {
       return <slot></slot>;
