@@ -37,3 +37,52 @@ index 66792ef..3ca0509 100644
              // If an event name includes a dash, we need to wrap it in quotes.
              // https://github.com/ionic-team/stencil-ds-output-targets/issues/212
              eventName = `'${event.name}'`;
+diff --git a/node_modules/@stencil/angular-output-target/angular-component-lib/utils.ts b/node_modules/@stencil/angular-output-target/angular-component-lib/utils.ts
+index 1fd8c4a..2c8a5b1 100644
+--- a/node_modules/@stencil/angular-output-target/angular-component-lib/utils.ts
++++ b/node_modules/@stencil/angular-output-target/angular-component-lib/utils.ts
+@@ -1,6 +1,34 @@
+ /* eslint-disable */
+ /* tslint:disable */
+ import { fromEvent } from 'rxjs';
++import customElementsManifest from '@coveo/atomic/custom-elements-manifest';
++
++
++const createPropertyToAttributeMap = (): Map<string, string> => {
++  const map = new Map<string, string>();
++  
++  customElementsManifest.modules.forEach((module: any) => {
++    module.declarations?.forEach((declaration: any) => {
++      if (declaration.kind === 'class' && declaration.attributes) {
++        declaration.attributes.forEach((attr: any) => {
++          if (attr.fieldName && attr.name) {
++            map.set(attr.fieldName, attr.name);
++          }
++        });
++      }
++    });
++  });
++  
++  return map;
++};
++
++const propertyToAttributeMap = createPropertyToAttributeMap();
++
++const getAttributeName = (propertyName: string): string => {
++  const mappedAttr = propertyToAttributeMap.get(propertyName);
++  return mappedAttr || propertyName.replace(/([A-Z])/g, '-$1').toLowerCase();
++};
+ 
+ export const proxyInputs = (Cmp: any, inputs: string[]) => {
+   const Prototype = Cmp.prototype;
+@@ -11,7 +39,9 @@ export const proxyInputs = (Cmp: any, inputs: string[]) => {
+       },
+       set(val: any) {
+-        this.z.runOutsideAngular(() => (this.el[item] = val));
++        this.z.runOutsideAngular(() => {
++            const attrName = getAttributeName(item);
++            this.el.setAttribute(attrName, val);
++        });
+       },
+       /**
+        * In the event that proxyInputs is called
