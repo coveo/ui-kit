@@ -2,7 +2,7 @@ import {beforeEach, describe, expect, it, vi} from 'vitest';
 import {getSampleCommerceEngineConfiguration} from '../../../app/commerce-engine/commerce-engine-configuration.js';
 import {buildLogger} from '../../../app/logger.js';
 import {buildMockCommerceContext} from '../../../test/mock-context.js';
-import {buildMockNavigatorContextProvider} from '../../../test/mock-navigator-context-provider.js';
+import {buildMockNavigatorContext} from '../../../test/mock-navigator-context.js';
 import {augmentPreprocessRequestWithForwardedFor} from '../../common/augment-preprocess-request.js';
 import type {CommonBuildConfig} from '../types/build.js';
 import {augmentCommerceEngineOptions} from './engine-wiring.js';
@@ -10,11 +10,8 @@ import {augmentCommerceEngineOptions} from './engine-wiring.js';
 vi.mock('../../common/augment-preprocess-request.js');
 vi.mock('../../../app/logger.js');
 
-// Type for testing missing navigatorContextProvider
-type BuildConfigWithoutProvider = Omit<
-  CommonBuildConfig,
-  'navigatorContextProvider'
->;
+// Type for testing missing navigatorContext
+type BuildConfigWithout = Omit<CommonBuildConfig, 'navigatorContext'>;
 
 describe('#augmentCommerceEngineOptions', () => {
   const sampleCommerceConfig = {
@@ -26,8 +23,8 @@ describe('#augmentCommerceEngineOptions', () => {
     level: 'info' as const,
   };
 
-  const createNavigatorContextProvider = (options = {}) =>
-    buildMockNavigatorContextProvider({
+  const createNavigatorContext = (options = {}) =>
+    buildMockNavigatorContext({
       clientId: 'test-client-id',
       ...options,
     });
@@ -39,22 +36,21 @@ describe('#augmentCommerceEngineOptions', () => {
     );
   });
 
-  describe('when navigatorContextProvider is provided', () => {
-    it('should set the navigatorContextProvider in the engine options', () => {
-      const navigatorContextProvider = createNavigatorContextProvider({
+  describe('when navigatorContext is provided', () => {
+    it('should set the navigatorContext in the engine options', () => {
+      const navigatorContext = createNavigatorContext({
         userAgent: 'Mozilla/5.0',
         location: 'https://example.com',
         referrer: 'https://google.com',
       });
 
       const engineOptions = augmentCommerceEngineOptions(sampleCommerceConfig, {
-        navigatorContextProvider,
+        navigatorContext,
         context: buildMockCommerceContext(),
       });
 
-      expect(engineOptions.navigatorContextProvider).toBe(
-        navigatorContextProvider
-      );
+      expect(engineOptions.navigatorContextProvider?.()).not.toBeUndefined();
+      expect(engineOptions.navigatorContextProvider?.()).toBe(navigatorContext);
       expect(mockLogger.error).not.toHaveBeenCalled();
     });
 
@@ -63,7 +59,7 @@ describe('#augmentCommerceEngineOptions', () => {
       const mockedAugmentPreprocessRequestWithForwardedFor = vi.mocked(
         augmentPreprocessRequestWithForwardedFor
       );
-      const navigatorContextProvider = createNavigatorContextProvider({
+      const navigatorContext = createNavigatorContext({
         forwardedFor: '192.168.1.1',
       });
 
@@ -75,7 +71,7 @@ describe('#augmentCommerceEngineOptions', () => {
           },
         },
         {
-          navigatorContextProvider,
+          navigatorContext,
           context: buildMockCommerceContext(),
         }
       );
@@ -84,27 +80,33 @@ describe('#augmentCommerceEngineOptions', () => {
         mockedAugmentPreprocessRequestWithForwardedFor
       ).toHaveBeenCalledWith(
         expect.objectContaining({
-          navigatorContextProvider: expect.any(Function),
+          navigatorContext: {
+            clientId: 'test-client-id',
+            forwardedFor: '192.168.1.1',
+            referrer: 'some-test-referrer',
+            location: '',
+            userAgent: '',
+          },
           preprocessRequest: mockedPreprocessRequest,
         })
       );
     });
   });
 
-  describe('when navigatorContextProvider is not provided', () => {
-    it('should log an error and set navigatorContextProvider to undefined', () => {
-      const buildConfigWithoutProvider: BuildConfigWithoutProvider = {
+  describe('when navigatorContext is not provided', () => {
+    it('should log an error and set navigatorContext to undefined', () => {
+      const buildConfigWithout: BuildConfigWithout = {
         context: buildMockCommerceContext(),
       };
 
       const engineOptions = augmentCommerceEngineOptions(
         sampleCommerceConfig,
-        buildConfigWithoutProvider as CommonBuildConfig
+        buildConfigWithout as CommonBuildConfig
       );
 
-      expect(engineOptions.navigatorContextProvider).toBeUndefined();
+      expect(engineOptions.navigatorContextProvider?.()).toBeUndefined();
       expect(mockLogger.error).toHaveBeenCalledWith(
-        'No navigatorContextProvider was provided. This may impact analytics accuracy, personalization, and session tracking. Refer to the Coveo documentation on server-side navigation context for implementation guidance.'
+        'No navigatorContext was provided. This may impact analytics accuracy, personalization, and session tracking. Refer to the Coveo documentation on server-side navigation context for implementation guidance.'
       );
     });
 
@@ -112,20 +114,20 @@ describe('#augmentCommerceEngineOptions', () => {
       const mockedAugmentPreprocessRequestWithForwardedFor = vi.mocked(
         augmentPreprocessRequestWithForwardedFor
       );
-      const buildConfigWithoutProvider: BuildConfigWithoutProvider = {
+      const buildConfigWithout: BuildConfigWithout = {
         context: buildMockCommerceContext(),
       };
 
       augmentCommerceEngineOptions(
         sampleCommerceConfig,
-        buildConfigWithoutProvider as CommonBuildConfig
+        buildConfigWithout as CommonBuildConfig
       );
 
       expect(
         mockedAugmentPreprocessRequestWithForwardedFor
       ).toHaveBeenCalledWith(
         expect.objectContaining({
-          navigatorContextProvider: undefined,
+          navigatorContext: undefined,
         })
       );
     });
@@ -133,10 +135,10 @@ describe('#augmentCommerceEngineOptions', () => {
 
   describe('context and cart configuration', () => {
     it('should set the context fields from buildConfig', () => {
-      const navigatorContextProvider = createNavigatorContextProvider();
+      const navigatorContext = createNavigatorContext();
 
       const engineOptions = augmentCommerceEngineOptions(sampleCommerceConfig, {
-        navigatorContextProvider,
+        navigatorContext,
         context: {
           ...buildMockCommerceContext(),
           location: {latitude: 37.7749, longitude: -122.4194},
@@ -153,10 +155,10 @@ describe('#augmentCommerceEngineOptions', () => {
     });
 
     it('should set the cart field from buildConfig', () => {
-      const navigatorContextProvider = createNavigatorContextProvider();
+      const navigatorContext = createNavigatorContext();
 
       const engineOptions = augmentCommerceEngineOptions(sampleCommerceConfig, {
-        navigatorContextProvider,
+        navigatorContext,
         context: buildMockCommerceContext(),
         cart: {
           items: [{name: 'foo', price: 10, productId: 'foo_id', quantity: 1}],

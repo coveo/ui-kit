@@ -1,6 +1,6 @@
 import type {Mock, MockInstance} from 'vitest';
 import {getSampleCommerceEngineConfiguration} from '../../../app/commerce-engine/commerce-engine-configuration.js';
-import type {NavigatorContextProvider} from '../../../app/navigator-context-provider.js';
+import type {NavigatorContext} from '../../../app/navigator-context-provider.js';
 import {
   buildProductListing,
   type ProductListing,
@@ -12,7 +12,7 @@ import {
 import {buildMockCommerceState} from '../../../test/mock-commerce-state.js';
 import {buildMockCommerceContext} from '../../../test/mock-context.js';
 import {buildMockSSRCommerceEngine} from '../../../test/mock-engine-v2.js';
-import {buildMockNavigatorContextProvider} from '../../../test/mock-navigator-context-provider.js';
+import {buildMockNavigatorContext} from '../../../test/mock-navigator-context.js';
 import {defineMockCommerceController} from '../../../test/mock-ssr-controller-definitions.js';
 import type {ContextOptions} from '../controllers/context/headless-context.ssr.js';
 import {SolutionType} from '../types/controller-constants.js';
@@ -29,7 +29,7 @@ vi.mock(
 vi.mock('../../../controllers/commerce/search/headless-search.js');
 
 describe('fetchStaticStateFactory', () => {
-  let mockNavigatorContextProvider: NavigatorContextProvider;
+  let mockNavigatorContext: NavigatorContext;
   let mockContext: ContextOptions;
   let engineSpy: MockInstance;
   const mockBuildProductListing = vi.mocked(buildProductListing);
@@ -48,7 +48,7 @@ describe('fetchStaticStateFactory', () => {
 
   beforeEach(() => {
     mockContext = buildMockCommerceContext();
-    mockNavigatorContextProvider = buildMockNavigatorContextProvider();
+    mockNavigatorContext = buildMockNavigatorContext();
     mockBuildProductListing.mockImplementation(
       () =>
         ({
@@ -89,17 +89,17 @@ describe('fetchStaticStateFactory', () => {
     // @ts-expect-error: do not care about baked-in controller initial state
     const factory = fetchStaticStateFactory(definition, mockEngineOptions);
     await factory(SolutionType.listing)({
-      navigatorContextProvider: mockNavigatorContextProvider,
+      navigatorContext: mockNavigatorContext,
       context: mockContext,
     });
     expect(engineSpy.mock.calls[0][0]).toStrictEqual(definition);
   });
 
-  it('should return the navigator context provider', async () => {
+  it('should return the navigator context ', async () => {
     // @ts-expect-error: do not care about baked-in controller initial state
     const factory = fetchStaticStateFactory(definition, mockEngineOptions);
     await factory(SolutionType.listing)({
-      navigatorContextProvider: mockNavigatorContextProvider,
+      navigatorContext: mockNavigatorContext,
       context: mockContext,
     });
   });
@@ -109,7 +109,7 @@ describe('fetchStaticStateFactory', () => {
       // @ts-expect-error: do not care about baked-in controller initial state
       const factory = fetchStaticStateFactory(definition, mockEngineOptions);
       await factory(SolutionType.listing)({
-        navigatorContextProvider: mockNavigatorContextProvider,
+        navigatorContext: mockNavigatorContext,
         context: mockContext,
       });
     });
@@ -132,7 +132,7 @@ describe('fetchStaticStateFactory', () => {
       // @ts-expect-error: do not care about baked-in controller initial state
       const factory = fetchStaticStateFactory(definition, mockEngineOptions);
       await factory(SolutionType.search)({
-        navigatorContextProvider: mockNavigatorContextProvider,
+        navigatorContext: mockNavigatorContext,
         context: {
           country: 'CA',
           currency: 'USD',
@@ -163,7 +163,7 @@ describe('fetchStaticStateFactory', () => {
       // @ts-expect-error: do not care about baked-in controller initial state
       const factory = fetchStaticStateFactory(definition, mockEngineOptions);
       await factory(SolutionType.standalone)({
-        navigatorContextProvider: mockNavigatorContextProvider,
+        navigatorContext: mockNavigatorContext,
         context: mockContext,
       });
     });
