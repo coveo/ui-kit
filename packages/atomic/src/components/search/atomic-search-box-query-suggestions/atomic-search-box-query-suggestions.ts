@@ -4,10 +4,12 @@ import {
   type SearchEngine,
   type Suggestion,
 } from '@coveo/headless';
-import {LitElement, nothing} from 'lit';
+import {html, LitElement, nothing} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {bindings} from '@/src/decorators/bindings';
+import {errorGuard} from '@/src/decorators/error-guard';
 import type {LitElementWithError} from '@/src/decorators/types';
+import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles.js';
 import SearchIcon from '../../../images/search.svg';
 import {
   getPartialSearchBoxSuggestionElement,
@@ -25,6 +27,7 @@ import type {Bindings} from '../atomic-search-interface/interfaces';
  * The `atomic-search-box-query-suggestions` component can be added as a child of an `atomic-search-box` component, allowing for the configuration of query suggestion behavior.
  */
 @customElement('atomic-search-box-query-suggestions')
+@withTailwindStyles
 @bindings()
 export class AtomicSearchBoxQuerySuggestions
   extends LitElement
@@ -155,8 +158,9 @@ export class AtomicSearchBoxQuerySuggestions
     };
   }
 
+  @errorGuard()
   render() {
-    return nothing;
+    return html`${nothing}`;
   }
 }
 
