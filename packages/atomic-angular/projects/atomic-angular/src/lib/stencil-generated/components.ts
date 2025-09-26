@@ -2074,7 +2074,7 @@ export declare interface AtomicCommerceInterface extends LitAtomicCommerceInterf
 
 @ProxyCmp({
   inputs: ['mobileBreakpoint'],
-  methods: [],
+  methods: ['onMobileBreakpointChange'],
   defineCustomElementFn: () => {customElements.get('atomic-commerce-layout') || customElements.define('atomic-commerce-layout', LitAtomicCommerceLayout);}
 })
 @Component({
@@ -2090,12 +2090,12 @@ export class AtomicCommerceLayout {
   constructor(c: ChangeDetectorRef, el: ElementRef, protected z: NgZone) {
     c.detach();
     this.el = el.nativeElement;
-    
+    proxyOutputs(this, this.el, ['atomic-layout-breakpoint-change']);
   }
 }
 
 export declare interface AtomicCommerceLayout extends LitAtomicCommerceLayout {
-
+  'atomic-layout-breakpoint-change': EventEmitter<CustomEvent<any>>;
 }
 
 @ProxyCmp({

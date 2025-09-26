@@ -1,4 +1,5 @@
 import {beforeEach, describe, expect, it} from 'vitest';
+import {buildMockNavigatorContext} from '../../../test/mock-navigator-context.js';
 import {
   defineMockCommerceControllerWithProps,
   defineMockRecommendationDefinition,
@@ -179,6 +180,7 @@ describe('controller-wiring', () => {
 
       beforeAll(() => {
         const params = {
+          navigatorContext: buildMockNavigatorContext(),
           searchParams: {
             query: 'test',
           },
@@ -223,6 +225,7 @@ describe('controller-wiring', () => {
 
     it('should wire parameter manager for search with query', () => {
       const params = {
+        navigatorContext: buildMockNavigatorContext(),
         context: {
           language: 'en',
           country: 'US',
@@ -251,6 +254,7 @@ describe('controller-wiring', () => {
 
     it('should contain props from custom controllers if provided', () => {
       const params = {
+        navigatorContext: buildMockNavigatorContext(),
         context: {
           language: 'en',
           country: 'US',
@@ -282,6 +286,7 @@ describe('controller-wiring', () => {
 
     it('should handle search params for parameter manager', () => {
       const params = {
+        navigatorContext: buildMockNavigatorContext(),
         context: {
           language: 'en',
           country: 'US',
@@ -313,6 +318,7 @@ describe('controller-wiring', () => {
       } as CommerceControllerDefinitionsMap;
 
       const params = {
+        navigatorContext: buildMockNavigatorContext(),
         context: {
           language: 'en',
           country: 'US',
@@ -342,6 +348,7 @@ describe('controller-wiring', () => {
         } as CommerceControllerDefinitionsMap;
 
         const params = {
+          navigatorContext: buildMockNavigatorContext(),
           context: {
             language: 'en',
             country: 'US',
@@ -379,6 +386,7 @@ describe('controller-wiring', () => {
         } as CommerceControllerDefinitionsMap;
 
         const params = {
+          navigatorContext: buildMockNavigatorContext(),
           context: {
             language: 'en',
             country: 'US',
@@ -407,6 +415,7 @@ describe('controller-wiring', () => {
         } as CommerceControllerDefinitionsMap;
 
         const params = {
+          navigatorContext: buildMockNavigatorContext(),
           context: {
             language: 'en',
             country: 'US',
