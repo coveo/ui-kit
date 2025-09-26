@@ -1,12 +1,14 @@
 import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
 import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
-import {html} from 'lit';
 import {within} from 'shadow-dom-testing-library';
 import {userEvent} from 'storybook/test';
-import {parameters} from '@/storybook-utils/common/common-meta-parameters';
+import {parameters} from '@/storybook-utils/common/search-box-suggestions-parameters';
+import {wrapInSearchBox} from '@/storybook-utils/search/search-box-wrapper';
 import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
 
-const {decorator, afterEach} = wrapInSearchInterface();
+const {decorator: searchInterfaceDecorator, afterEach: searchInterfacePlay} =
+  wrapInSearchInterface({}, false, false);
+const {decorator: searchBoxDecorator} = wrapInSearchBox();
 const {events, args, argTypes, template} = getStorybookHelpers(
   'atomic-search-box-recent-queries',
   {excludeCategories: ['methods']}
@@ -14,13 +16,10 @@ const {events, args, argTypes, template} = getStorybookHelpers(
 
 const meta: Meta = {
   component: 'atomic-search-box-recent-queries',
-  title: 'Search/SearchBox/RecentQueries',
+  title: 'Search/Search Box Recent Queries',
   id: 'atomic-search-box-recent-queries',
   render: (args) => template(args),
-  decorators: [
-    (story) => html`<atomic-search-box> ${story()} </atomic-search-box>`,
-    decorator,
-  ],
+  decorators: [searchBoxDecorator, searchInterfaceDecorator],
   parameters: {
     ...parameters,
     actions: {
@@ -30,33 +29,14 @@ const meta: Meta = {
   args,
   argTypes,
 
-  afterEach,
+  afterEach: async (context) => {
+    await searchInterfacePlay(context);
+    const canvas = within(context.canvasElement);
+    const searchBox = await canvas.findAllByShadowPlaceholderText('Search');
+    await userEvent.click(searchBox[0]);
+  },
 };
 
 export default meta;
 
-export const Default: Story = {
-  name: 'atomic-search-box-recent-queries',
-  afterEach: async (context) => {
-    await afterEach(context);
-    const {canvasElement, step} = context;
-    const canvas = within(canvasElement);
-    const searchBox = (
-      await canvas.findAllByShadowTitle('Search field with suggestions.', {
-        exact: false,
-      })
-    )?.find((el) => el.getAttribute('part') === 'textarea');
-    await step('Search for test', async () => {
-      await userEvent.click(searchBox!);
-      await userEvent.type(searchBox!, 'test{enter}');
-    });
-    await step('Clear query', async () => {
-      await userEvent.click(
-        await canvas.findByShadowRole('button', {name: 'Clear'})
-      );
-    });
-    await step('Click the searchbox', async () => {
-      await userEvent.click(searchBox!);
-    });
-  },
-};
+export const Default: Story = {};
