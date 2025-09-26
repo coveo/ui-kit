@@ -743,7 +743,6 @@ export class AtomicCommerceSearchBox
       })}
       ${this.renderSuggestions()}`
       )}
-     
       ${this.renderSlotContent()}
     `;
   }
