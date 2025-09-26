@@ -5,6 +5,7 @@ import {
   AtomicLayoutSection as LitAtomicLayoutSection,
   AtomicQuerySummary as LitAtomicQuerySummary,
   AtomicResultsPerPage as LitAtomicResultsPerPage,
+  AtomicSearchInterface as LitAtomicSearchInterface,
   AtomicSearchLayout as LitAtomicSearchLayout,
 } from '@coveo/atomic/components';
 import {createComponent} from '@lit/react';
@@ -44,6 +45,12 @@ export const AtomicResultsPerPage = createComponent({
   tagName: 'atomic-results-per-page',
   react: React,
   elementClass: LitAtomicResultsPerPage,
+});
+
+export const AtomicSearchInterface = createComponent({
+  tagName: 'atomic-search-interface',
+  react: React,
+  elementClass: LitAtomicSearchInterface,
 });
 
 export const AtomicSearchLayout = createComponent({

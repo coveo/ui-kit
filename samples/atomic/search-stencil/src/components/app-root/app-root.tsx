@@ -1,3 +1,4 @@
+import type {AtomicSearchInterface} from '@coveo/atomic/components';
 import {
   getSampleSearchEngineConfiguration,
   type SearchEngine,
@@ -16,8 +17,9 @@ const Router = createRouter();
 export class AppRoot {
   private engine?: SearchEngine;
   public async componentDidLoad() {
-    const searchInterface: HTMLAtomicSearchInterfaceElement =
-      document.querySelector('atomic-search-interface')!;
+    const searchInterface: AtomicSearchInterface = document.querySelector(
+      'atomic-search-interface'
+    )!;
 
     await customElements.whenDefined('atomic-search-interface');
     await searchInterface.initialize({

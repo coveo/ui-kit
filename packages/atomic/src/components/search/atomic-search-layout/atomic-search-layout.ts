@@ -1,9 +1,10 @@
-import {LitElement, unsafeCSS} from 'lit';
+import {LitElement} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
+import {LayoutStylesController} from '@/src/components/common/layout/layout-styles-controller';
+import {watch} from '@/src/decorators/watch';
 import {ChildrenUpdateCompleteMixin} from '@/src/mixins/children-update-complete-mixin';
 import {LightDomMixin} from '@/src/mixins/light-dom';
-import {randomID} from '@/src/utils/utils';
-import {DEFAULT_MOBILE_BREAKPOINT} from '../../../utils/replace-breakpoint-utils';
+import {DEFAULT_MOBILE_BREAKPOINT} from '@/src/utils/replace-breakpoint-utils';
 import styles from './atomic-search-layout.tw.css';
 import {buildSearchLayout} from './search-layout';
 
@@ -19,12 +20,7 @@ export class AtomicSearchLayout extends LightDomMixin(
   ChildrenUpdateCompleteMixin(LitElement)
 ) {
   static styles = [styles];
-  private async addStyles() {
-    await this.getUpdateComplete();
-    this.injectStyles(
-      unsafeCSS(buildSearchLayout(this, this.mobileBreakpoint))
-    );
-  }
+
   @state() error!: Error;
 
   /**
@@ -34,10 +30,31 @@ export class AtomicSearchLayout extends LightDomMixin(
   @property({type: String, reflect: true, attribute: 'mobile-breakpoint'})
   mobileBreakpoint: string = DEFAULT_MOBILE_BREAKPOINT;
 
+  private layoutStylesController = new LayoutStylesController(
+    this,
+    buildSearchLayout,
+    'atomic-search-layout-'
+  );
+
   connectedCallback() {
     super.connectedCallback();
-    this.id = randomID('atomic-search-layout-');
-    this.addStyles();
+    this.emitBreakpointChangeEvent();
+  }
+
+  private emitBreakpointChangeEvent() {
+    this.dispatchEvent(
+      new CustomEvent('atomic-layout-breakpoint-change', {
+        detail: {breakpoint: this.mobileBreakpoint},
+        bubbles: true,
+        composed: true,
+      })
+    );
+  }
+
+  @watch('mobileBreakpoint')
+  public onMobileBreakpointChange() {
+    this.layoutStylesController.updateStyles();
+    this.emitBreakpointChangeEvent();
   }
 }
 

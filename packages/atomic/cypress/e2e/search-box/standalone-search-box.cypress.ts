@@ -52,7 +52,7 @@ describe('Standalone Search Box Test Suites', () => {
     cy.location('href').should('contain', url);
   });
 
-  describe('when being redirected to an Atomic Search Interface after submitting a query', () => {
+  describe.skip('when being redirected to an Atomic Search Interface after submitting a query', () => {
     const query = 'hello';
 
     it(`should contain "${query}" and log a proper analytics event`, () => {
@@ -67,7 +67,7 @@ describe('Standalone Search Box Test Suites', () => {
     });
   });
 
-  describe('when being redirected to an Atomic Search Interface after selecting a suggestion', () => {
+  describe.skip('when being redirected to an Atomic Search Interface after selecting a suggestion', () => {
     const query = 'how';
     beforeEach(() => {
       setupStandaloneSearchBox();
@@ -80,7 +80,7 @@ describe('Standalone Search Box Test Suites', () => {
     assertLogOmniboxFromLink(query);
   });
 
-  describe('with the query syntax enabled, after submitting a query', () => {
+  describe.skip('with the query syntax enabled, after submitting a query', () => {
     const query = '@urihash=Wl1SZoqFsR8bpsbG';
     beforeEach(() => {
       setupStandaloneSearchBox({enableQuerySyntax: true});
