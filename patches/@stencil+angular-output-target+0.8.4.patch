@@ -38,10 +38,10 @@ index 66792ef..3ca0509 100644
              // https://github.com/ionic-team/stencil-ds-output-targets/issues/212
              eventName = `'${event.name}'`;
 diff --git a/node_modules/@stencil/angular-output-target/angular-component-lib/utils.ts b/node_modules/@stencil/angular-output-target/angular-component-lib/utils.ts
-index 1fd8c4a..2c8a5b1 100644
+index b759048..03fd3da 100644
 --- a/node_modules/@stencil/angular-output-target/angular-component-lib/utils.ts
 +++ b/node_modules/@stencil/angular-output-target/angular-component-lib/utils.ts
-@@ -1,6 +1,34 @@
+@@ -1,6 +1,33 @@
  /* eslint-disable */
  /* tslint:disable */
  import { fromEvent } from 'rxjs';
@@ -75,7 +75,8 @@ index 1fd8c4a..2c8a5b1 100644
  
  export const proxyInputs = (Cmp: any, inputs: string[]) => {
    const Prototype = Cmp.prototype;
-@@ -11,7 +39,9 @@ export const proxyInputs = (Cmp: any, inputs: string[]) => {
+@@ -10,7 +37,10 @@ export const proxyInputs = (Cmp: any, inputs: string[]) => {
+         return this.el[item];
        },
        set(val: any) {
 -        this.z.runOutsideAngular(() => (this.el[item] = val));
