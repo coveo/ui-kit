@@ -1,104 +1,27 @@
-import { Meta, Canvas, ArgTypes } from '@storybook/addon-docs/blocks';
+import { Meta } from '@storybook/addon-docs/blocks';
+import * as AtomicSearchBoxRecentQueriesStories from './atomic-search-box-recent-queries.new.stories';
+import { AtomicDocTemplate } from '../../../../storybook-utils/documentation/atomic-doc-template';
 
-<Meta title="Search/SearchBoxRecentQueries/Docs" />
 
-# Atomic Search Box Recent Queries
+<Meta of={AtomicSearchBoxRecentQueriesStories} />
 
-The `atomic-search-box-recent-queries` component can be added as a child of an `atomic-search-box` component, allowing for the configuration of recent query suggestions.
+<AtomicDocTemplate
+  stories={AtomicSearchBoxRecentQueriesStories}
+  githubPath="search/atomic-search-box-recent-queries/atomic-search-box-recent-queries.ts"
+  tagName="atomic-search-box-recent-queries"
+  className="AtomicSearchBoxRecentQueries"
+>
 
-## Usage
+This component is placed inside the [atomic-search-box](/docs/atomic-search-box--docs) to display recent queries as the user types.
 
-The component displays recently searched queries as suggestions when users interact with the search box. It stores recent queries in local storage and filters them based on the current search input.
-
+By default, atomic-search-box-recent-queries is already included.
+You can add it manually to customize its properties.
 ```html
 <atomic-search-box>
   <atomic-search-box-recent-queries></atomic-search-box-recent-queries>
 </atomic-search-box>
 ```
 
-## Properties
+**Note**: This component requires the analytics to be enabled. It will not display any recent queries if analytics are disabled.
 
-<ArgTypes of="atomic-search-box-recent-queries" />
-
-## Customization
-
-### Icon
-
-You can customize the icon displayed next to each recent query:
-
-```html
-<atomic-search-box-recent-queries icon="assets://my-custom-icon.svg">
-</atomic-search-box-recent-queries>
-```
-
-### Suggestion Limits
-
-Control how many suggestions are shown:
-
-```html
-<atomic-search-box-recent-queries 
-  max-with-query="5" 
-  max-without-query="3">
-</atomic-search-box-recent-queries>
-```
-
-## Behavior
-
-- **Analytics Dependency**: Recent queries are only stored and displayed when analytics are enabled
-- **Local Storage**: Recent queries are persisted across browser sessions
-- **Filtering**: Queries are filtered based on the current search input
-- **Clear Functionality**: Users can clear all recent queries via the "Clear" button
-
-## Examples
-
-### Basic Usage
-
-<Canvas>
-  <atomic-search-interface>
-    <atomic-search-box>
-      <atomic-search-box-recent-queries></atomic-search-box-recent-queries>
-    </atomic-search-box>
-  </atomic-search-interface>
-</Canvas>
-
-### With Custom Configuration
-
-<Canvas>
-  <atomic-search-interface>
-    <atomic-search-box>
-      <atomic-search-box-recent-queries 
-        max-with-query="3" 
-        max-without-query="5"
-        icon="assets://clock.svg">
-      </atomic-search-box-recent-queries>
-    </atomic-search-box>
-  </atomic-search-interface>
-</Canvas>
-
-## CSS Parts
-
-The component exposes the following CSS parts for styling:
-
-- `recent-query-item`: Individual recent query suggestion
-- `recent-query-content`: Container for recent query content
-- `recent-query-icon`: Icon displayed next to the query
-- `recent-query-text`: Text content of the query
-- `recent-query-text-highlight`: Highlighted portion of the query text
-- `recent-query-title-item`: Clear suggestions header
-- `recent-query-title-content`: Container for clear suggestions content
-- `recent-query-title`: "Recent Searches" title text
-- `recent-query-clear`: "Clear" button text
-
-## Accessibility
-
-The component includes proper ARIA labels and keyboard navigation support:
-
-- Each suggestion has descriptive labels for screen readers
-- Keyboard navigation through suggestions is supported
-- Clear functionality is accessible via keyboard
-
-## Related Components
-
-- `atomic-search-box`: Parent component that contains recent queries
-- `atomic-search-box-query-suggestions`: For displaying query suggestions
-- `atomic-search-box-instant-results`: For displaying instant search results
+</AtomicDocTemplate>

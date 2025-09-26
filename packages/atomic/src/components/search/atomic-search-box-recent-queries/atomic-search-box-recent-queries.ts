@@ -3,10 +3,10 @@ import {
   type RecentQueriesList,
   type SearchBox,
 } from '@coveo/headless';
-import {LitElement, nothing} from 'lit';
+import {html, LitElement, nothing} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
-import {bindings} from '@/src/decorators/bindings';
-import type {LitElementWithError} from '@/src/decorators/types';
+import {errorGuard} from '@/src/decorators/error-guard';
+import type {SearchBoxSuggestionsComponent} from '@/src/decorators/types';
 import {SafeStorage, StorageItems} from '@/src/utils/local-storage-utils';
 import {once} from '@/src/utils/utils';
 import Clock from '../../../images/clock.svg';
@@ -28,20 +28,15 @@ import type {Bindings} from '../atomic-search-interface/interfaces';
  * The `atomic-search-box-recent-queries` component can be added as a child of an `atomic-search-box` component, allowing for the configuration of recent query suggestions.
  */
 @customElement('atomic-search-box-recent-queries')
-@bindings()
 export class AtomicSearchBoxRecentQueries
   extends LitElement
-  implements LitElementWithError
+  implements SearchBoxSuggestionsComponent<Bindings>
 {
-  private suggestionsBindings!: SearchBoxSuggestionsBindings<
-    SearchBox,
-    Bindings
-  >;
+  public bindings!: SearchBoxSuggestionsBindings<SearchBox, Bindings>;
   private recentQueriesList!: RecentQueriesList;
   private storage!: SafeStorage;
 
   @state() public error!: Error;
-  @state() bindings!: Bindings;
 
   /**
    * The SVG icon to display.
@@ -64,18 +59,14 @@ export class AtomicSearchBoxRecentQueries
   @property({type: Number, attribute: 'max-without-query'})
   public maxWithoutQuery?: number;
 
-  initialize() {
-    this.initializeRecentQueries();
-  }
-
   connectedCallback() {
     super.connectedCallback();
 
     try {
       dispatchSearchBoxSuggestionsEvent<SearchBox, Bindings>(
         (bindings) => {
-          this.suggestionsBindings = bindings;
-          return this.initializeRecentQueries();
+          this.bindings = bindings;
+          return this.initialize();
         },
         this,
         ['atomic-search-box']
@@ -85,22 +76,15 @@ export class AtomicSearchBoxRecentQueries
     }
   }
 
-  private renderIcon() {
-    return this.icon || Clock;
-  }
-
-  private initializeRecentQueries(): SearchBoxSuggestions {
+  public initialize(): SearchBoxSuggestions {
     this.storage = new SafeStorage();
-    this.recentQueriesList = buildRecentQueriesList(
-      this.suggestionsBindings.engine,
-      {
-        initialState: {queries: this.retrieveLocalStorage()},
-        options: {
-          maxLength: 1000,
-          clearFilters: this.suggestionsBindings.clearFilters,
-        },
-      }
-    );
+    this.recentQueriesList = buildRecentQueriesList(this.bindings.engine, {
+      initialState: {queries: this.retrieveLocalStorage()},
+      options: {
+        maxLength: 1000,
+        clearFilters: this.bindings.clearFilters,
+      },
+    });
 
     this.recentQueriesList.subscribe(() => this.updateLocalStorage());
 
@@ -126,7 +110,7 @@ export class AtomicSearchBoxRecentQueries
   }
 
   private warnUser = once(() =>
-    this.suggestionsBindings.engine.logger.warn(
+    this.bindings.engine.logger.warn(
       'Because analytics are disabled, the recent queries feature is deactivated.'
     )
   );
@@ -141,7 +125,7 @@ export class AtomicSearchBoxRecentQueries
       return [];
     }
 
-    const query = this.suggestionsBindings.searchBoxController.state.value;
+    const query = this.bindings.searchBoxController.state.value;
     const hasQuery = query !== '';
     const max = hasQuery ? this.maxWithQuery : this.maxWithoutQuery;
     const filteredQueries = this.recentQueriesList.state.queries
@@ -160,38 +144,32 @@ export class AtomicSearchBoxRecentQueries
   }
 
   private renderClear(): SearchBoxSuggestionElement {
-    const partialItem = getPartialRecentQueryClearElement(
-      this.suggestionsBindings.i18n
-    );
+    const partialItem = getPartialRecentQueryClearElement(this.bindings.i18n);
 
     return {
       ...partialItem,
-      content: renderRecentQueryClear({i18n: this.suggestionsBindings.i18n}),
+      content: renderRecentQueryClear({i18n: this.bindings.i18n}),
       onSelect: () => {
         this.recentQueriesList.clear();
-        this.suggestionsBindings.triggerSuggestions();
+        this.bindings.triggerSuggestions();
       },
     };
   }
 
   private renderItem(value: string): SearchBoxSuggestionElement {
-    const query = this.suggestionsBindings.searchBoxController.state.value;
-    const partialItem = getPartialRecentQueryElement(
-      value,
-      this.suggestionsBindings.i18n
-    );
+    const query = this.bindings.searchBoxController.state.value;
+    const partialItem = getPartialRecentQueryElement(value, this.bindings.i18n);
     return {
       ...partialItem,
       content: renderRecentQuery({
-        icon: this.renderIcon(),
+        icon: this.icon || Clock,
         query,
         value,
       }),
-
       onSelect: () => {
-        if (this.suggestionsBindings.isStandalone) {
-          this.suggestionsBindings.searchBoxController.updateText(value);
-          this.suggestionsBindings.searchBoxController.submit();
+        if (this.bindings.isStandalone) {
+          this.bindings.searchBoxController.updateText(value);
+          this.bindings.searchBoxController.submit();
           return;
         }
 
@@ -202,7 +180,14 @@ export class AtomicSearchBoxRecentQueries
     };
   }
 
+  @errorGuard()
   render() {
-    return nothing;
+    return html`${nothing}`;
+  }
+}
+
+declare global {
+  interface HTMLElementTagNameMap {
+    'atomic-search-box-recent-queries': AtomicSearchBoxRecentQueries;
   }
 }

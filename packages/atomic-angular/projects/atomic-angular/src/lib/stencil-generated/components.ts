@@ -3326,7 +3326,7 @@ export declare interface AtomicResultsPerPage extends LitAtomicResultsPerPage {
 
 @ProxyCmp({
   inputs: ['icon', 'maxWithQuery', 'maxWithoutQuery'],
-  methods: [],
+  methods: ['initialize'],
   defineCustomElementFn: () => {customElements.get('atomic-search-box-recent-queries') || customElements.define('atomic-search-box-recent-queries', LitAtomicSearchBoxRecentQueries);}
 })
 @Component({
