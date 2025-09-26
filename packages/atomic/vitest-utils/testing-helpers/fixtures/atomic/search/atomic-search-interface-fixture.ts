@@ -18,17 +18,6 @@ import {fixture} from '@/vitest-utils/testing-helpers/fixture.js';
 import {genericSubscribe} from '@/vitest-utils/testing-helpers/fixtures/headless/common.js';
 import {createTestI18n} from '@/vitest-utils/testing-helpers/i18n-utils.js';
 
-vi.mock('@/src/mixins/bindings-mixin', () => ({
-  InitializeBindingsMixin: vi.fn().mockImplementation((superClass) => {
-    return class extends superClass {
-      // biome-ignore lint/complexity/noUselessConstructor: <mocking the mixin for testing>
-      constructor(...args: unknown[]) {
-        super(...args);
-      }
-    };
-  }),
-}));
-
 @customElement('atomic-search-interface')
 export class FixtureAtomicSearchInterface
   extends LitElement
