@@ -31,7 +31,7 @@
   "devDependencies": {
     "@actions/core": "1.11.1",
     "@actions/github": "6.0.1",
-    "@biomejs/biome": "2.1.4",
+    "@biomejs/biome": "2.2.4",
     "@coveo/ci": "1.0.0",
     "@cspell/dict-fr-fr": "2.3.2",
     "@tsconfig/node20": "20.1.6",
