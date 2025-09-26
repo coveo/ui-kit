@@ -16,4 +16,44 @@ test.describe('atomic-pager', () => {
 
     await expect(pagerElement).toBeAttached();
   });
+
+  test('should navigate with next button', async ({pager}) => {
+    await expect(pager.currentPageButton).toHaveAttribute(
+      'aria-label',
+      'Page 1'
+    );
+
+    await pager.nextButton.click();
+    await expect(pager.currentPageButton).toHaveAttribute(
+      'aria-label',
+      'Page 2'
+    );
+  });
+
+  test('should navigate with previous button', async ({pager}) => {
+    await pager.nextButton.click();
+    await expect(pager.currentPageButton).toHaveAttribute(
+      'aria-label',
+      'Page 2'
+    );
+
+    await pager.previousButton.click();
+    await expect(pager.currentPageButton).toHaveAttribute(
+      'aria-label',
+      'Page 1'
+    );
+  });
+
+  test('should navigate to specific page', async ({pager}) => {
+    await expect(pager.currentPageButton).toHaveAttribute(
+      'aria-label',
+      'Page 1'
+    );
+
+    await pager.pageButton(3).click();
+    await expect(pager.currentPageButton).toHaveAttribute(
+      'aria-label',
+      'Page 3'
+    );
+  });
 });
