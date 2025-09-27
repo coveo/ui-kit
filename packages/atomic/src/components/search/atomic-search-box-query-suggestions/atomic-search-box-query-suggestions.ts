@@ -31,7 +31,7 @@ import type {Bindings} from '../atomic-search-interface/interfaces';
 @bindings()
 export class AtomicSearchBoxQuerySuggestions
   extends LitElement
-  implements LitElementWithError
+  implements SearchBoxSuggestionsComponent<Bindings>
 {
   private suggestionsBindings!: SearchBoxSuggestionsBindings<
     SearchBox,
