@@ -63,8 +63,8 @@ export class AtomicSearchBoxQuerySuggestions
   @property({type: Number, attribute: 'max-without-query', reflect: true})
   public maxWithoutQuery = 0;
 
-  initialize() {
-    this.initializeQuerySuggestions();
+  initialize(): SearchBoxSuggestions {
+    return this.initializeQuerySuggestions();
   }
 
   connectedCallback() {
