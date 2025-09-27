@@ -27,6 +27,7 @@ import type {Bindings} from '../atomic-search-interface/interfaces';
  * The `atomic-search-box-query-suggestions` component can be added as a child of an `atomic-search-box` component, allowing for the configuration of query suggestion behavior.
  */
 @customElement('atomic-search-box-query-suggestions')
+@bindings()
 @withTailwindStyles
 @bindings()
 export class AtomicSearchBoxQuerySuggestions
