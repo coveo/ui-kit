@@ -12,7 +12,7 @@ const {events, args, argTypes, template} = getStorybookHelpers(
 
 const meta: Meta = {
   component: 'atomic-search-box-query-suggestions',
-  title: 'Search/SearchBox/QuerySuggestions',
+  title: 'Search/Search Box Query Suggestions',
   id: 'atomic-search-box-query-suggestions',
   render: (args) => template(args),
   decorators: [
