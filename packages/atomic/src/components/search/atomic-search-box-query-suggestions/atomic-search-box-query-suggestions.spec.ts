@@ -5,7 +5,7 @@ import type {AtomicSearchBoxQuerySuggestions} from './atomic-search-box-query-su
 import './atomic-search-box-query-suggestions';
 
 describe('atomic-search-box-query-suggestions', () => {
-  const renderComponent = async (
+  const renderSearchBoxQuerySuggestions = async (
     props: {maxWithQuery?: number; maxWithoutQuery?: number; icon?: string} = {}
   ) => {
     const template = html`
@@ -29,7 +29,7 @@ describe('atomic-search-box-query-suggestions', () => {
   };
 
   it('should render with default properties', async () => {
-    const {element} = await renderComponent();
+    const {element} = await renderSearchBoxQuerySuggestions();
 
     expect(element).toBeDefined();
     expect(element.maxWithQuery).toBe(3);
@@ -38,7 +38,7 @@ describe('atomic-search-box-query-suggestions', () => {
   });
 
   it('should render with custom properties', async () => {
-    const {element} = await renderComponent({
+    const {element} = await renderSearchBoxQuerySuggestions({
       maxWithQuery: 5,
       maxWithoutQuery: 2,
       icon: 'custom-icon.svg',
@@ -50,7 +50,7 @@ describe('atomic-search-box-query-suggestions', () => {
   });
 
   it('should reflect properties to attributes', async () => {
-    const {element} = await renderComponent({
+    const {element} = await renderSearchBoxQuerySuggestions({
       maxWithQuery: 8,
       maxWithoutQuery: 3,
     });
@@ -60,7 +60,7 @@ describe('atomic-search-box-query-suggestions', () => {
   });
 
   it('should render nothing (hidden component)', async () => {
-    const {element} = await renderComponent();
+    const {element} = await renderSearchBoxQuerySuggestions();
 
     // This component shows an error when not inside a search box, but that's expected
     expect(element.shadowRoot?.innerHTML).toContain('<!---->');

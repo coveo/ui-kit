@@ -6,22 +6,22 @@ import {
 } from '@coveo/headless';
 import {html, LitElement, nothing} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
-import {bindings} from '@/src/decorators/bindings';
-import {errorGuard} from '@/src/decorators/error-guard';
-import type {LitElementWithError} from '@/src/decorators/types';
-import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles.js';
-import SearchIcon from '../../../images/search.svg';
 import {
   getPartialSearchBoxSuggestionElement,
   renderQuerySuggestion,
-} from '../../common/suggestions/query-suggestions';
-import {dispatchSearchBoxSuggestionsEvent} from '../../common/suggestions/suggestions-events';
+} from '@/src/components/common/suggestions/query-suggestions';
+import {dispatchSearchBoxSuggestionsEvent} from '@/src/components/common/suggestions/suggestions-events';
 import type {
   SearchBoxSuggestionElement,
   SearchBoxSuggestions,
   SearchBoxSuggestionsBindings,
-} from '../../common/suggestions/suggestions-types';
-import type {Bindings} from '../atomic-search-interface/interfaces';
+} from '@/src/components/common/suggestions/suggestions-types';
+import type {Bindings} from '@/src/components/search/atomic-search-interface/interfaces';
+import {bindings} from '@/src/decorators/bindings';
+import {errorGuard} from '@/src/decorators/error-guard';
+import type {SearchBoxSuggestionsComponent} from '@/src/decorators/types';
+import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles.js';
+import SearchIcon from '../../../images/search.svg';
 
 /**
  * The `atomic-search-box-query-suggestions` component can be added as a child of an `atomic-search-box` component, allowing for the configuration of query suggestion behavior.
@@ -34,11 +34,6 @@ export class AtomicSearchBoxQuerySuggestions
   extends LitElement
   implements SearchBoxSuggestionsComponent<Bindings>
 {
-  private suggestionsBindings!: SearchBoxSuggestionsBindings<
-    SearchBox,
-    Bindings
-  >;
-
   @state() public error!: Error;
   @state() public bindings!: SearchBoxSuggestionsBindings<SearchBox, Bindings>;
 
@@ -63,17 +58,13 @@ export class AtomicSearchBoxQuerySuggestions
   @property({type: Number, attribute: 'max-without-query', reflect: true})
   public maxWithoutQuery = 0;
 
-  initialize(): SearchBoxSuggestions {
-    return this.initializeQuerySuggestions();
-  }
-
   connectedCallback() {
     super.connectedCallback();
     try {
       dispatchSearchBoxSuggestionsEvent<SearchBox, Bindings>(
         (bindings) => {
-          this.suggestionsBindings = bindings;
-          return this.initializeQuerySuggestions();
+          this.bindings = bindings;
+          return this.initialize();
         },
         this,
         ['atomic-search-box']
@@ -83,19 +74,19 @@ export class AtomicSearchBoxQuerySuggestions
     }
   }
 
-  private initializeQuerySuggestions(): SearchBoxSuggestions {
-    const engine = this.suggestionsBindings.engine as SearchEngine<{
+  public initialize(): SearchBoxSuggestions {
+    const engine = this.bindings.engine as SearchEngine<{
       querySet: string;
       querySuggest: string;
     }>;
     const {registerQuerySuggest, fetchQuerySuggestions} =
       loadQuerySuggestActions(engine);
 
-    const numberOfQueries = this.suggestionsBindings.numberOfQueries;
+    const numberOfQueries = this.bindings.numberOfQueries;
     const maxWithQuery = this.maxWithQuery;
 
     if (numberOfQueries < maxWithQuery) {
-      const logger = this.suggestionsBindings.engine.logger;
+      const logger = this.bindings.engine.logger;
       logger.warn(
         `Query suggestions configuration mismatch: atomic-search-box has number-of-queries="${numberOfQueries}" but atomic-search-box-query-suggestions has max-with-query="${maxWithQuery}". ` +
           `This may cause inconsistent behavior where the search box requests ${numberOfQueries} suggestions but the component tries to display up to ${maxWithQuery}. ` +
@@ -105,8 +96,8 @@ export class AtomicSearchBoxQuerySuggestions
 
     engine.dispatch(
       registerQuerySuggest({
-        id: this.suggestionsBindings.id,
-        count: this.suggestionsBindings.numberOfQueries,
+        id: this.bindings.id,
+        count: this.bindings.numberOfQueries,
       })
     );
 
@@ -115,7 +106,7 @@ export class AtomicSearchBoxQuerySuggestions
       onInput: () =>
         engine.dispatch(
           fetchQuerySuggestions({
-            id: this.suggestionsBindings.id,
+            id: this.bindings.id,
           })
         ),
       renderItems: () => this.renderItems(),
@@ -123,10 +114,9 @@ export class AtomicSearchBoxQuerySuggestions
   }
 
   private renderItems(): SearchBoxSuggestionElement[] {
-    const hasQuery =
-      this.suggestionsBindings.searchBoxController.state.value !== '';
+    const hasQuery = this.bindings.searchBoxController.state.value !== '';
     const max = hasQuery ? this.maxWithQuery : this.maxWithoutQuery;
-    return this.suggestionsBindings.searchBoxController.state.suggestions
+    return this.bindings.searchBoxController.state.suggestions
       .slice(0, max)
       .map((suggestion: Suggestion) => this.renderItem(suggestion));
   }
@@ -134,14 +124,13 @@ export class AtomicSearchBoxQuerySuggestions
   private renderItem(suggestion: Suggestion): SearchBoxSuggestionElement {
     const partialItem = getPartialSearchBoxSuggestionElement(
       suggestion,
-      this.suggestionsBindings.i18n
+      this.bindings.i18n
     );
 
     const icon = this.icon || SearchIcon;
-    const hasQuery =
-      this.suggestionsBindings.searchBoxController.state.value !== '';
+    const hasQuery = this.bindings.searchBoxController.state.value !== '';
     const hasMultipleKindOfSuggestions =
-      this.suggestionsBindings.getSuggestions().length > 1;
+      this.bindings.getSuggestions().length > 1;
 
     return {
       ...partialItem,
@@ -152,9 +141,7 @@ export class AtomicSearchBoxQuerySuggestions
         hasMultipleKindOfSuggestions,
       }),
       onSelect: () => {
-        this.suggestionsBindings.searchBoxController.selectSuggestion(
-          suggestion.rawValue
-        );
+        this.bindings.searchBoxController.selectSuggestion(suggestion.rawValue);
       },
     };
   }
