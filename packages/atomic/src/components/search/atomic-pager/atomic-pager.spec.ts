@@ -57,7 +57,9 @@ describe('atomic-pager', () => {
     searchStatusState?: Partial<SearchStatusState>;
     isAppLoaded?: boolean;
   } = {}) => {
-    vi.mocked(buildPager).mockReturnValue(buildFakePager({state: pagerState}));
+    vi.mocked(buildPager).mockReturnValue(
+      buildFakePager({state: pagerState || {}})
+    );
     vi.mocked(buildSearchStatus).mockReturnValue(
       buildFakeSearchStatus({state: searchStatusState})
     );
@@ -436,7 +438,19 @@ describe('atomic-pager', () => {
   });
 
   it('should handle invalid numberOfPages gracefully', async () => {
-    await expect(renderPager({props: {numberOfPages: -5}})).rejects.toThrow();
+    const consoleErrorSpy = vi
+      .spyOn(console, 'error')
+      .mockImplementation(() => {});
+    const element = await renderPager({props: {numberOfPages: -5}});
+
+    expect(consoleErrorSpy).toHaveBeenCalledWith(
+      expect.objectContaining({
+        message: expect.stringContaining(
+          'numberOfPages: minimum value of 0 not respected'
+        ),
+      }),
+      element
+    );
   });
 
   it('should render with proper ARIA labels', async () => {
@@ -452,5 +466,15 @@ describe('atomic-pager', () => {
       .element(locators.previous)
       .toHaveAttribute('aria-label', 'Previous');
     await expect.element(locators.next).toHaveAttribute('aria-label', 'Next');
+  });
+
+  it('should use keyed directive for page buttons', async () => {
+    await renderPager({
+      pagerState: {currentPages: [3, 4, 5, 6, 7]},
+    });
+
+    await expect.element(locators.page3).toHaveAttribute('value', '3');
+    await expect.element(locators.page4).toHaveAttribute('value', '4');
+    await expect.element(locators.page5).toHaveAttribute('value', '5');
   });
 });

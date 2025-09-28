@@ -9,6 +9,7 @@ import {
 } from '@coveo/headless/commerce';
 import {html, LitElement} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
+import {keyed} from 'lit/directives/keyed.js';
 import {when} from 'lit/directives/when.js';
 import {bindStateToController} from '@/src/decorators/bind-state';
 import {bindingGuard} from '@/src/decorators/binding-guard';
@@ -144,24 +145,27 @@ export class AtomicCommercePager
             i18n: this.bindings.i18n,
           },
         })(
-          html`${pagesRange.map((pageNumber) =>
-            renderPagerPageButton({
-              props: {
-                isSelected: pageNumber === this.pagerState.page,
-                ariaLabel: this.bindings.i18n.t('page-number', {
-                  pageNumber: pageNumber + 1,
-                }),
-                onChecked: async () => {
-                  this.pager.selectPage(pageNumber);
-                  await this.focusOnFirstResultAndScrollToTop();
+          html`${pagesRange.map((pageNumber, index) =>
+            keyed(
+              `page-${pageNumber}-${index}`,
+              renderPagerPageButton({
+                props: {
+                  isSelected: pageNumber === this.pagerState.page,
+                  ariaLabel: this.bindings.i18n.t('page-number', {
+                    pageNumber: pageNumber + 1,
+                  }),
+                  onChecked: async () => {
+                    this.pager.selectPage(pageNumber);
+                    await this.focusOnFirstResultAndScrollToTop();
+                  },
+                  page: pageNumber,
+                  groupName: this.radioGroupName,
+                  text: (pageNumber + 1).toLocaleString(
+                    this.bindings.i18n.language
+                  ),
                 },
-                page: pageNumber,
-                groupName: this.radioGroupName,
-                text: (pageNumber + 1).toLocaleString(
-                  this.bindings.i18n.language
-                ),
-              },
-            })
+              })
+            )
           )}`
         )}
         ${renderPagerNextButton({
