@@ -21,11 +21,13 @@ export function assertAccessibility<T extends HTMLElement>(
   });
 
   it('every interactive element with innerText and an aria label passes WCAG success criterion 2.5.3', () => {
-    assertWCAG2_5_3();
+    assertWCAG2_5_3(component);
   });
 }
 
-export function assertWCAG2_5_3() {
+export function assertWCAG2_5_3<T extends HTMLElement>(
+  component?: string | (() => Cypress.Chainable<JQuery<T>>)
+) {
   function splitIntoWords(text: string) {
     return text
       .split(/\b/g)
@@ -33,22 +35,27 @@ export function assertWCAG2_5_3() {
       .map((word) => word.toLowerCase());
   }
 
-  cy.window()
-    .then((win) =>
-      Array.from(getFocusableDescendants(win.document.body)).filter(
-        (element) => element.hasAttribute('aria-label') && element.innerText
-      )
-    )
-    .should((elements) =>
-      Array.from(elements).forEach((element) =>
-        expect(
-          splitIntoWords(element.getAttribute('aria-label')!)
-        ).to.include.all.members(
-          splitIntoWords(element.innerText),
-          'The aria-label should include the innerText. https://www.w3.org/WAI/WCAG22/Techniques/failures/F96.html'
-        )
+  function runCheck(root: HTMLElement) {
+    const elements = getFocusableDescendants(root).filter(
+      (el) => el.hasAttribute('aria-label') && el.innerText
+    );
+    elements.forEach((el) =>
+      expect(splitIntoWords(el.getAttribute('aria-label')!)).to.include.all.members(
+        splitIntoWords(el.innerText),
+        'The aria-label should include the innerText. https://www.w3.org/WAI/WCAG22/Techniques/failures/F96.html'
       )
     );
+  }
+
+  if (component) {
+    if (typeof component === 'string') {
+      cy.get<T>(component).then(($els) => runCheck($els[0] as unknown as HTMLElement));
+    } else {
+      component().then(($els) => runCheck($els[0] as unknown as HTMLElement));
+    }
+  } else {
+    cy.window().then((win) => runCheck(win.document.body));
+  }
 }
 
 // https://github.com/component-driven/cypress-axe#in-your-spec-file
@@ -154,16 +161,16 @@ export function assertConsoleErrorMessage(msg: string) {
 
 export function assertConsoleWarning(warn = true) {
   it(`${should(warn)} log a warning to the console`, () => {
-    cy.get(TestFixture.consoleAliases.warn).should((spy) => {
-      const calls = spy.getCalls();
-      const filteredCalls = calls.filter(
-        (call) => !call.args[0].includes('Lit is in dev mode.')
-      );
-
+    // get all warning calls, then filter out dev-mode messages
+    cy.getCalls(TestFixture.consoleAliases.warn).should((calls) => {
+      const filtered = calls.filter((call: any) => {
+        const msg = call.args?.[0];
+        return typeof msg === 'string' && !msg.includes('Lit is in dev mode.');
+      });
       if (warn) {
-        expect(filteredCalls).to.have.length.greaterThan(0);
+        expect(filtered).to.have.length.greaterThan(0);
       } else {
-        expect(filteredCalls).to.have.lengthOf(0);
+        expect(filtered).to.have.lengthOf(0);
       }
     });
   });
