@@ -19,35 +19,35 @@ import i18next, {type i18n} from 'i18next';
 import {type CSSResultGroup, css, html, LitElement} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {when} from 'lit/directives/when.js';
+import type {
+  CommonBindings,
+  NonceBindings,
+} from '@/src/components/common/interface/bindings';
+import {
+  type BaseAtomicInterface,
+  InterfaceController,
+} from '@/src/components/common/interface/interface-controller';
 import {MobileBreakpointController} from '@/src/components/common/layout/mobile-breakpoint-controller';
+import {bindingsContext} from '@/src/components/context/bindings-context';
+import {
+  errorSelector,
+  firstSearchExecutedSelector,
+  noResultsSelector,
+} from '@/src/components/search/atomic-search-layout/search-layout';
 import {booleanConverter} from '@/src/converters/boolean-converter';
 import {errorGuard} from '@/src/decorators/error-guard';
 import {watch} from '@/src/decorators/watch';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles.js';
+import {ChildrenUpdateCompleteMixin} from '@/src/mixins/children-update-complete-mixin';
 import {type InitializeEvent, markParentAsReady} from '@/src/utils/init-queue';
 import {
   SafeStorage,
   type StandaloneSearchBoxData,
   StorageItems,
 } from '@/src/utils/local-storage-utils';
-import {ChildrenUpdateCompleteMixin} from '../../../mixins/children-update-complete-mixin';
-import type {
-  CommonBindings,
-  NonceBindings,
-} from '../../common/interface/bindings';
-import {
-  type BaseAtomicInterface,
-  InterfaceController,
-} from '../../common/interface/interface-controller';
-import {bindingsContext} from '../../context/bindings-context';
-import {
-  errorSelector,
-  firstSearchExecutedSelector,
-  noResultsSelector,
-} from '../atomic-search-layout/search-layout';
 import {getAnalyticsConfig} from './analytics-config';
 import {createSearchStore, type SearchStore} from './store';
-import '../../common/atomic-modal/atomic-modal';
+import '@/src/components/common/atomic-modal/atomic-modal';
 
 const FirstSearchExecutedFlag = 'firstSearchExecuted';
 export type InitializationOptions = SearchEngineConfiguration;
