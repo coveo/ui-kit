@@ -1,6 +1,4 @@
-const {promisify} = require('util');
-const ncp = promisify(require('ncp'));
-const fs = require('fs').promises;
+const fs = require('fs/promises');
 const path = require('path');
 
 const STATIC_RESOURCES_PATH = './force-app/main/default/staticresources';
@@ -95,7 +93,9 @@ async function getPackageVersion() {
 
 async function copy(src, dest) {
   try {
-    await ncp(src, dest);
+    await fs.rm(dest, {recursive: true, force: true});
+    await fs.mkdir(path.dirname(dest), {recursive: true});
+    await fs.cp(src, dest, {recursive: true, force: true});
   } catch (error) {
     console.error(`Failed to copy: ${src}\nError: ${error.message}`);
     process.exit(1);
