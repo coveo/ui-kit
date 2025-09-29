@@ -45,6 +45,7 @@ import {
   type StandaloneSearchBoxData,
   StorageItems,
 } from '@/src/utils/local-storage-utils';
+import '@/src/components/search/atomic-relevance-inspector/atomic-relevance-inspector';
 import {getAnalyticsConfig} from './analytics-config';
 import {createSearchStore, type SearchStore} from './store';
 // TODO - Remove once all components that use atomic-modal have been migrated.
@@ -660,7 +661,6 @@ export class AtomicSearchInterface
           !this.disableRelevanceInspector,
         () => html`<atomic-relevance-inspector
           ?open=${this.relevanceInspectorIsOpen}
-          .bindings=${this.bindings}
         ></atomic-relevance-inspector>`
       )}
       <slot></slot>
