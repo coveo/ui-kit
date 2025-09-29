@@ -3,37 +3,11 @@ import HistoryStore from '../../api/analytics/coveo.analytics/history-store.js';
 import type {GeneratedAnswerStreamRequest} from '../../api/generated-answer/generated-answer-request.js';
 import type {StreamAnswerAPIState} from '../../api/knowledge/stream-answer-api-state.js';
 import {getOrganizationEndpoint} from '../../api/platform-client.js';
+import type {BaseParam} from '../../api/platform-service-params.js';
+import type {SearchRequest} from '../../api/search/search/search-request.js';
 import type {
-  ContextParam,
-  DebugParam,
-  DictionaryFieldContextParam,
-  FoldingParam,
-  LocaleParam,
-  NumberOfResultsParam,
-} from '../../api/platform-service-params.js';
-import type {
-  ActionsHistoryParam,
-  AdvancedQueryParam,
-  AnalyticsParam,
-  ConstantQueryParam,
-  DisjunctionQueryParam,
-  EnableDidYouMeanParam,
-  EnableQuerySyntaxParam,
-  ExcerptLength,
-  FacetOptionsParam,
-  FacetsParam,
-  FieldsToIncludeParam,
-  FirstResultParam,
-  LargeQueryParam,
-  PipelineParam,
-  PipelineRuleParams,
-  QueryCorrectionParam,
-  QueryParam,
-  ReferrerParam,
-  SearchHubParam,
-  SortCriteriaParam,
-  TabParam,
-  TimezoneParam,
+  AuthenticationParam,
+  AutomaticFacetsParams,
 } from '../../api/search/search-api-params.js';
 import type {NavigatorContext} from '../../app/navigator-context-provider.js';
 import {selectAdvancedSearchQueries} from '../../features/advanced-search-queries/advanced-search-query-selectors.js';
@@ -78,35 +52,10 @@ type StateNeededByGeneratedAnswerStream = ConfigurationSection &
   GeneratedAnswerSection;
 
 export interface AnswerApiQueryParams
-  extends QueryParam,
-    AdvancedQueryParam,
-    ConstantQueryParam,
-    LargeQueryParam,
-    DisjunctionQueryParam,
-    SearchHubParam,
-    PipelineRuleParams,
-    FoldingParam,
-    TimezoneParam,
-    LocaleParam,
-    SortCriteriaParam,
-    DebugParam,
-    FacetOptionsParam,
-    NumberOfResultsParam,
-    FieldsToIncludeParam,
-    DictionaryFieldContextParam,
-    ContextParam,
-    ContextParam,
-    ActionsHistoryParam,
-    FacetsParam,
-    PipelineParam,
-    ExcerptLength,
-    FirstResultParam,
-    QueryCorrectionParam,
-    EnableQuerySyntaxParam,
-    TabParam,
-    ReferrerParam,
-    EnableDidYouMeanParam,
-    AnalyticsParam {}
+  extends Omit<
+    SearchRequest,
+    keyof (BaseParam & AuthenticationParam & AutomaticFacetsParams)
+  > {}
 
 export const buildStreamingRequest = async (
   state: StateNeededByGeneratedAnswerStream
