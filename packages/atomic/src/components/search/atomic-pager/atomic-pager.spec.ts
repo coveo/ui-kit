@@ -16,6 +16,17 @@ import './atomic-pager';
 
 vi.mock('@coveo/headless', {spy: true});
 
+vi.mock('@/src/mixins/bindings-mixin', () => ({
+  InitializeBindingsMixin: vi.fn().mockImplementation((superClass) => {
+    return class extends superClass {
+      // biome-ignore lint/complexity/noUselessConstructor: <mocking the mixin for testing>
+      constructor(...args: unknown[]) {
+        super(...args);
+      }
+    };
+  }),
+}));
+
 describe('atomic-pager', () => {
   const locators = {
     page1: page.getByLabelText('Page 1'),
@@ -61,7 +72,7 @@ describe('atomic-pager', () => {
       buildFakePager({state: pagerState || {}})
     );
     vi.mocked(buildSearchStatus).mockReturnValue(
-      buildFakeSearchStatus(searchStatusState)
+      buildFakeSearchStatus(searchStatusState || {})
     );
 
     const {element} = await renderInAtomicSearchInterface<AtomicPager>({
