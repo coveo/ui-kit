@@ -73,7 +73,7 @@ describe('Instant Results Test Suites', () => {
       .init();
   }
 
-  it.skip('with a custom aria label, it should render correctly', () => {
+  it('with a custom aria label, it should render correctly', () => {
     const customFieldName = 'custom';
     const customFieldValueForResult = (index: number) => `${index}!`;
     const ariaLabelGeneratorAlias = 'ariaLabelGenerator';
@@ -105,6 +105,12 @@ describe('Instant Results Test Suites', () => {
         })
       )
       .init();
+    cy.get(`@${ariaLabelGeneratorAlias}`).then((stub) => {
+      cy.get('atomic-search-interface').then(($interface) => {
+        const instantEl = ($interface[0] as HTMLElement).querySelector('atomic-search-box-instant-results') as any;
+        instantEl.ariaLabelGenerator = stub;
+      });
+    });
 
     SearchBoxSelectors.textArea().type(`${downKeys(2)}`, delay());
     InstantResultsSelectors.results()
@@ -156,10 +162,10 @@ describe('Instant Results Test Suites', () => {
     );
     InstantResultsAssertions.assertHasResultCount(numOfInstantResults);
 
-    /*CommonAssertions.assertAriaLiveMessageWithoutIt(
+    CommonAssertions.assertAriaLiveMessageWithoutIt(
       SearchBoxSelectors.searchBoxAriaLive,
       maxRecentQueriesWithoutQuery.toString()
-    );*/
+    );
     InstantResultsAssertions.assertResultIsSelected(0);
 
     SearchBoxSelectors.activeQuerySuggestion().should('have.length', 0);
