@@ -4,7 +4,6 @@ import {
   AtomicIcon as LitAtomicIcon,
   AtomicLayoutSection as LitAtomicLayoutSection,
   AtomicQuerySummary as LitAtomicQuerySummary,
-  AtomicRelevanceInspector as LitAtomicRelevanceInspector,
   AtomicResultsPerPage as LitAtomicResultsPerPage,
   AtomicSearchInterface as LitAtomicSearchInterface,
   AtomicSearchLayout as LitAtomicSearchLayout,
@@ -40,12 +39,6 @@ export const AtomicQuerySummary = createComponent({
   tagName: 'atomic-query-summary',
   react: React,
   elementClass: LitAtomicQuerySummary,
-});
-
-export const AtomicRelevanceInspector = createComponent({
-  tagName: 'atomic-relevance-inspector',
-  react: React,
-  elementClass: LitAtomicRelevanceInspector,
 });
 
 export const AtomicResultsPerPage = createComponent({
