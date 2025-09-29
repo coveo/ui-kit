@@ -111,6 +111,9 @@ export class AtomicPager
   @bindingGuard()
   @errorGuard()
   render() {
+    if (!this.pagerState?.currentPages) {
+      return html``;
+    }
     const currentGroupName = `${this.radioGroupName}-${this.pagerState.currentPages.join('-')}`;
     return html`${when(
       !this.searchStatusState.hasError &&

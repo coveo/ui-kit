@@ -61,7 +61,7 @@ describe('atomic-pager', () => {
       buildFakePager({state: pagerState || {}})
     );
     vi.mocked(buildSearchStatus).mockReturnValue(
-      buildFakeSearchStatus({state: searchStatusState})
+      buildFakeSearchStatus(searchStatusState)
     );
 
     const {element} = await renderInAtomicSearchInterface<AtomicPager>({
@@ -428,6 +428,13 @@ describe('atomic-pager', () => {
     expect(consoleErrorSpy).not.toHaveBeenCalled();
   });
 
+  it('should handle validation error when numberOfPages is negative during initialization', async () => {
+    const element = await renderPager({props: {numberOfPages: -1}});
+
+    expect(element.error).toBeDefined();
+    expect(element.error.message).toContain('minimum value of 0 not respected');
+  });
+
   it('should handle numberOfPages as string number', async () => {
     const element = await renderPager();
 
@@ -435,22 +442,6 @@ describe('atomic-pager', () => {
     await element.updateComplete;
 
     expect(element.numberOfPages).toBe(8);
-  });
-
-  it('should handle invalid numberOfPages gracefully', async () => {
-    const consoleErrorSpy = vi
-      .spyOn(console, 'error')
-      .mockImplementation(() => {});
-    const element = await renderPager({props: {numberOfPages: -5}});
-
-    expect(consoleErrorSpy).toHaveBeenCalledWith(
-      expect.objectContaining({
-        message: expect.stringContaining(
-          'numberOfPages: minimum value of 0 not respected'
-        ),
-      }),
-      element
-    );
   });
 
   it('should render with proper ARIA labels', async () => {
