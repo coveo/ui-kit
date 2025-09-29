@@ -1,7 +1,9 @@
 import {
   dispatchSearchBoxSuggestionsEvent,
+} from '../../../src/components/common/suggestions/suggestions-events';
+import type {
   SearchBoxSuggestionElement,
-} from '../../../src/components/common/suggestions/suggestions-common';
+} from '../../../src/components/common/suggestions/suggestions-types';
 import {
   SafeStorage,
   StorageItems,

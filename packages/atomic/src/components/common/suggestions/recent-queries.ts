@@ -3,7 +3,7 @@ import type {i18n} from 'i18next';
 import {html, render} from 'lit';
 import {when} from 'lit/directives/when.js';
 import {encodeForDomAttribute} from '../../../utils/string-utils';
-import type {SearchBoxSuggestionElement} from './suggestions-common';
+import type {SearchBoxSuggestionElement} from './suggestions-types';
 
 export const getPartialRecentQueryElement = (
   value: string,
