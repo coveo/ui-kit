@@ -45,6 +45,7 @@ import {
   type StandaloneSearchBoxData,
   StorageItems,
 } from '@/src/utils/local-storage-utils';
+import '@/src/components/search/atomic-relevance-inspector/atomic-relevance-inspector';
 import {getAnalyticsConfig} from './analytics-config';
 import {createSearchStore, type SearchStore} from './store';
 import '@/src/components/common/atomic-modal/atomic-modal';
