@@ -3,10 +3,10 @@ import {describe, expect, it, type Mock, type MockInstance, vi} from 'vitest';
 import {buildCommerceEngine} from '../../../app/commerce-engine/commerce-engine.js';
 import {getSampleCommerceEngineConfiguration} from '../../../app/commerce-engine/commerce-engine-configuration.js';
 import {buildLogger} from '../../../app/logger.js';
-import type {NavigatorContextProvider} from '../../../app/navigator-context-provider.js';
+import type {NavigatorContext} from '../../../app/navigator-context-provider.js';
 import {buildMockCommerceState} from '../../../test/mock-commerce-state.js';
 import {buildMockCommerceEngine} from '../../../test/mock-engine-v2.js';
-import {buildMockNavigatorContextProvider} from '../../../test/mock-navigator-context-provider.js';
+import {buildMockNavigatorContext} from '../../../test/mock-navigator-context.js';
 import {
   defineMockCommerceController,
   defineMockRecommendationDefinition,
@@ -32,7 +32,7 @@ vi.mock('../../../app/logger.js');
 vi.mock('../../../app/commerce-engine/commerce-engine.js');
 
 describe('buildFactory', () => {
-  let mockNavigatorContextProvider: NavigatorContextProvider;
+  let mockNavigatorContext: NavigatorContext;
   let mockBuildOptions: Partial<CommonBuildConfig>;
   const mockWireControllerParams = vi.mocked(wireControllerParams);
   const mockBuildCommerceEngine = vi.mocked(buildCommerceEngine);
@@ -53,10 +53,10 @@ describe('buildFactory', () => {
     mockDispatch = vi.fn();
     vi.resetAllMocks();
 
-    mockNavigatorContextProvider = buildMockNavigatorContextProvider();
+    mockNavigatorContext = buildMockNavigatorContext();
 
     mockBuildOptions = {
-      navigatorContextProvider: mockNavigatorContextProvider,
+      navigatorContext: mockNavigatorContext,
       context: {
         country: 'US',
         currency: 'USD' as CurrencyCodeISO4217,
@@ -85,7 +85,7 @@ describe('buildFactory', () => {
 
     const factory = buildFactory(definition, mockEngineOptions);
     await factory(SolutionType.listing)({
-      navigatorContextProvider: mockNavigatorContextProvider,
+      navigatorContext: mockNavigatorContext,
       context: {
         country: 'CA',
         currency: 'USD',
@@ -108,7 +108,7 @@ describe('buildFactory', () => {
         language: 'en',
         view: {url: 'https://example.com'},
       },
-      navigatorContextProvider: mockNavigatorContextProvider,
+      navigatorContext: mockNavigatorContext,
     });
   });
 
@@ -125,7 +125,7 @@ describe('buildFactory', () => {
     const factory = buildFactory(definition, mockEngineOptions);
 
     await factory(SolutionType.listing)({
-      navigatorContextProvider: mockNavigatorContextProvider,
+      navigatorContext: mockNavigatorContext,
       context: {
         country: 'CA',
         currency: 'USD',
@@ -161,7 +161,7 @@ describe('buildFactory', () => {
             url: 'http://example.com',
           },
         },
-        navigatorContextProvider: mockNavigatorContextProvider,
+        navigatorContext: mockNavigatorContext,
       }
     );
   });
