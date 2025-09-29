@@ -1,5 +1,6 @@
 import {isNullOrUndefined} from '@coveo/bueno';
 import {createSelector} from '@reduxjs/toolkit';
+import {selectAnswer} from '../../api/knowledge/stream-answer-api.js';
 import type {StreamAnswerAPIState} from '../../api/knowledge/stream-answer-api-state.js';
 import type {GeneratedAnswerCitation} from '../../controllers/generated-answer/headless-generated-answer.js';
 import type {SearchAppState} from '../../state/search-app-state.js';
@@ -13,15 +14,7 @@ export const generativeQuestionAnsweringIdSelector = (
 ): string | undefined => {
   // If using the AnswerApi, we return the answerId first.
   if (isGeneratedAnswerSection(state)) {
-    // Read the answerId directly from the state instead of RTK Query to prevent circular dependency chain
-    const getAnswerData = Object.values(state.answer.queries).pop()?.data;
-    const generativeQuestionAnsweringId =
-      typeof getAnswerData === 'object' &&
-      getAnswerData !== null &&
-      'answerId' in getAnswerData
-        ? (getAnswerData as {answerId?: string}).answerId
-        : undefined;
-    return generativeQuestionAnsweringId;
+    return selectAnswer(state).data?.answerId;
   }
 
   // Used for type narrowing.
