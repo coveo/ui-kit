@@ -9,6 +9,7 @@ import {
   VERSION as HEADLESS_VERSION,
   type LogLevel,
   loadConfigurationActions,
+  loadContextActions,
   loadQueryActions,
   type ProductListing,
   type ProductListingSummaryState,
@@ -18,6 +19,7 @@ import {
   type Unsubscribe,
   type UrlManager,
 } from '@coveo/headless/commerce';
+import type {CurrencyCodeISO4217} from '@coveo/relay-event-types';
 import {provide} from '@lit/context';
 import i18next, {type i18n} from 'i18next';
 import {type CSSResultGroup, css, html, LitElement} from 'lit';
@@ -139,12 +141,17 @@ export class AtomicCommerceInterface
    */
   @property({type: Object, attribute: false}) i18n: i18n;
 
-  // TODO - KIT-4993: Mark as deprecated in favor of updateLocale method.
-  // TODO - (v4) KIT-4365: Remove.
+  // TODO - (v4) KIT-4365: Remove (or turn into private state attribute)
   /**
    * The commerce interface language.
    *
-   * Will default to the value set in the Headless engine context if not provided.
+   * Will default to the value set in the Headless engine context if not
+   * provided.
+   *
+   * @deprecated - This property will be removed in the next major version of
+   * Atomic (v4). Rather than using this property, set the initial language
+   * through the engine configuration when calling `initializeWithEngine`, and
+   * update the language as needed using the `updateLocale` method.
    */
   @property({type: String, attribute: 'language', reflect: true})
   language?: string;
@@ -293,6 +300,52 @@ export class AtomicCommerceInterface
     }
   }
 
+  /**
+   * Updates the locale settings for the commerce interface and headless commerce
+   * engine. Only the provided parameters will be updated.
+   *
+   * Calling this method affects the localization of the interface as well as
+   * the catalog configuration being used by the Commerce API. If the resulting
+   * language-country-currency combination matches no existing catalog
+   * configuration in your Coveo organization, requests made through the
+   * commerce engine will start failing.
+   *
+   * @param language - (Optional) The IETF language code tag (e.g., `en`).
+   * @param country - (Optional) The ISO-3166-1 country tag (e.g., `US`).
+   * @param currency - (Optional) The ISO-4217 currency code (e.g., `USD`).
+   *
+   * @example
+   * ```typescript
+   * interface.updateLocale('fr', 'CA', 'CAD');
+   * ```
+   */
+  public updateLocale(
+    language?: string,
+    country?: string,
+    currency?: CurrencyCodeISO4217
+  ): void {
+    if (
+      !this.interfaceController.engineIsCreated(this.engine) ||
+      !this.context
+    ) {
+      return;
+    }
+
+    language && this.interfaceController.onLanguageChange(language);
+
+    if (this.isNewLocale(language, country, currency)) {
+      const {setContext} = loadContextActions(this.engine);
+      this.engine.dispatch(
+        setContext({
+          ...this.context.state,
+          ...(language && {language}),
+          ...(country && {country}),
+          ...(currency && {currency}),
+        })
+      );
+    }
+  }
+
   @watch('analytics')
   public toggleAnalytics() {
     this.interfaceController.onAnalyticsChange();
@@ -314,13 +367,14 @@ export class AtomicCommerceInterface
       return;
     }
 
-    // TODO - KIT-4993: Add temporary deprecation warning.
+    this.engine.logger.warn(
+      'The `language` property will be removed in the next major version of Atomic (v4). Rather than using this property, set the initial language through the engine configuration when calling `initialize` or `initializeWithEngine`, and update the language as needed using the `updateLocale` method.'
+    );
 
     this.context.setLanguage(this.language);
+
     return this.interfaceController.onLanguageChange();
   }
-
-  // TODO - KIT-4993: Add updateLocale public method.
 
   public disconnectedCallback() {
     super.disconnectedCallback();
@@ -388,11 +442,12 @@ export class AtomicCommerceInterface
     }
   }
 
-  // TODO - KIT-4993: Adjust.
   private initLanguage() {
-    if (!this.language) {
-      this.language = this.context.state.language;
+    if (!this.context || this.language) {
+      return;
     }
+
+    this.interfaceController.onLanguageChange(this.context.state.language);
   }
 
   private initRequestStatus() {
@@ -446,7 +501,7 @@ export class AtomicCommerceInterface
       this.i18Initialized,
     ]);
     this.initContext();
-    this.updateLanguage();
+    this.updateLanguage(); // TODO - (v4) KIT-4365: Remove.
     this.bindings = this.getBindings();
     markParentAsReady(this);
     this.initRequestStatus();
@@ -455,6 +510,18 @@ export class AtomicCommerceInterface
     await this.getUpdateComplete();
     this.initUrlManager();
     this.initialized = true;
+  }
+
+  private isNewLocale(language?: string, country?: string, currency?: string) {
+    if (!this.context) {
+      return false;
+    }
+
+    return (
+      (language && language !== this.context.state.language) ||
+      (country && country !== this.context.state.country) ||
+      (currency && currency !== this.context.state.currency)
+    );
   }
 
   private onHashChange = () => {
