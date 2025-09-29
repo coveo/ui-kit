@@ -1,27 +1,19 @@
-import type {SearchStatus, SearchStatusState} from '@coveo/headless';
+import type {SearchStatus} from '@coveo/headless';
 import {genericSubscribe} from '../common';
 
-export const defaultSearchStatusState: SearchStatusState = {
-  hasError: false,
-  isLoading: false,
-  hasResults: true,
-  firstSearchExecuted: true,
-};
+export const buildFakeSearchStatus = (
+  options: Partial<SearchStatus['state']> = {}
+): SearchStatus => {
+  const defaultState = {
+    hasResults: true,
+    firstSearchExecuted: false,
+    hasError: false,
+    isLoading: false,
+    ...options,
+  };
 
-export const defaultSearchStatusImplementation: SearchStatus = {
-  subscribe: genericSubscribe,
-  state: defaultSearchStatusState,
+  return {
+    state: defaultState,
+    subscribe: genericSubscribe,
+  } as SearchStatus;
 };
-
-export const buildFakeSearchStatus = ({
-  implementation,
-  state,
-}: Partial<{
-  implementation?: Partial<SearchStatus>;
-  state?: Partial<SearchStatusState>;
-}> = {}): SearchStatus =>
-  ({
-    ...defaultSearchStatusImplementation,
-    ...implementation,
-    state: {...defaultSearchStatusState, ...state},
-  }) as SearchStatus;

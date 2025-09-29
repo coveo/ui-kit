@@ -3,6 +3,7 @@ import {customElement, property, state} from 'lit/decorators.js';
 import {createRef, type Ref, ref} from 'lit/directives/ref.js';
 import {when} from 'lit/directives/when.js';
 import {booleanConverter} from '@/src/converters/boolean-converter.js';
+import {bindings} from '@/src/decorators/bindings.js';
 import {errorGuard} from '@/src/decorators/error-guard';
 import type {InitializableComponent} from '@/src/decorators/types.js';
 import {watch} from '@/src/decorators/watch.js';
@@ -30,6 +31,7 @@ import type {AnyBindings} from '../interface/bindings.js';
  * @internal
  */
 @customElement('atomic-modal')
+@bindings()
 @withTailwindStyles
 export class AtomicModal
   extends InitializeBindingsMixin(LitElement)
