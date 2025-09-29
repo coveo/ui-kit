@@ -4,8 +4,36 @@ import type {GeneratedAnswerStreamRequest} from '../../api/generated-answer/gene
 import type {StreamAnswerAPIState} from '../../api/knowledge/stream-answer-api-state.js';
 import {getOrganizationEndpoint} from '../../api/platform-client.js';
 import type {
+  ContextParam,
+  DebugParam,
+  DictionaryFieldContextParam,
+  FoldingParam,
+  LocaleParam,
+  NumberOfResultsParam,
+} from '../../api/platform-service-params.js';
+import type {
+  ActionsHistoryParam,
+  AdvancedQueryParam,
   AnalyticsParam,
-  ResponseFormatParameters,
+  ConstantQueryParam,
+  DisjunctionQueryParam,
+  EnableDidYouMeanParam,
+  EnableQuerySyntaxParam,
+  ExcerptLength,
+  FacetOptionsParam,
+  FacetsParam,
+  FieldsToIncludeParam,
+  FirstResultParam,
+  LargeQueryParam,
+  PipelineParam,
+  PipelineRuleParams,
+  QueryCorrectionParam,
+  QueryParam,
+  ReferrerParam,
+  SearchHubParam,
+  SortCriteriaParam,
+  TabParam,
+  TimezoneParam,
 } from '../../api/search/search-api-params.js';
 import type {NavigatorContext} from '../../app/navigator-context-provider.js';
 import {selectAdvancedSearchQueries} from '../../features/advanced-search-queries/advanced-search-query-selectors.js';
@@ -38,10 +66,8 @@ import {
   selectLocale,
   selectTimezone,
 } from '../configuration/configuration-selectors.js';
-import type {ContextPayload} from '../context/context-state.js';
 import {selectDictionaryFieldContext} from '../dictionary-field-context/dictionary-field-context-selectors.js';
 import {selectExcerptLength} from '../excerpt-length/excerpt-length-selectors.js';
-import type {FacetOptions} from '../facet-options/facet-options.js';
 import {selectFacetOptions} from '../facet-options/facet-options-selectors.js';
 import type {AnyFacetRequest} from '../facets/generic/interfaces/generic-facet-request.js';
 import {selectFoldingQueryParams} from '../folding/folding-selectors.js';
@@ -51,49 +77,36 @@ type StateNeededByGeneratedAnswerStream = ConfigurationSection &
   SearchSection &
   GeneratedAnswerSection;
 
-export interface AnswerApiQueryParams {
-  q?: string;
-  aq?: string;
-  cq?: string;
-  dq?: string;
-  lq?: string;
-  enableQuerySyntax?: boolean;
-  context?: ContextPayload;
-  pipelineRuleParameters?: {
-    mlGenerativeQuestionAnswering: {
-      responseFormat: ResponseFormatParameters;
-      citationsFieldToInclude: string[];
-    };
-  };
-  searchHub?: string;
-  pipeline?: string;
-  facets?: AnyFacetRequest[];
-  fieldsToInclude?: string[];
-  queryCorrection?: {
-    enabled: boolean;
-    options: {
-      automaticallyCorrect: 'whenNoResults' | 'never';
-    };
-  };
-  enableDidYouMean?: boolean;
-  numberOfResults?: number;
-  firstResult?: number;
-  tab?: string;
-  locale?: string;
-  timezone?: string;
-  debug?: boolean;
-  referrer?: string;
-  actionsHistory?: HistoryElement[];
-  filterField?: string;
-  childField?: string;
-  parentField?: string;
-  filterFieldRange?: number;
-  excerptLength?: number;
-  dictionaryFieldContext?: Record<string, string>;
-  sortCriteria?: string;
-  facetOptions?: FacetOptions;
-  analytics?: AnalyticsParam['analytics'];
-}
+export interface AnswerApiQueryParams
+  extends QueryParam,
+    AdvancedQueryParam,
+    ConstantQueryParam,
+    LargeQueryParam,
+    DisjunctionQueryParam,
+    SearchHubParam,
+    PipelineRuleParams,
+    FoldingParam,
+    TimezoneParam,
+    LocaleParam,
+    SortCriteriaParam,
+    DebugParam,
+    FacetOptionsParam,
+    NumberOfResultsParam,
+    FieldsToIncludeParam,
+    DictionaryFieldContextParam,
+    ContextParam,
+    ContextParam,
+    ActionsHistoryParam,
+    FacetsParam,
+    PipelineParam,
+    ExcerptLength,
+    FirstResultParam,
+    QueryCorrectionParam,
+    EnableQuerySyntaxParam,
+    TabParam,
+    ReferrerParam,
+    EnableDidYouMeanParam,
+    AnalyticsParam {}
 
 export const buildStreamingRequest = async (
   state: StateNeededByGeneratedAnswerStream
