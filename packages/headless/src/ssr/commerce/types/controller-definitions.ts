@@ -39,8 +39,17 @@ export type {
 
 export type RecommendationControllerSettings = {
   /**
+   * @deprecated In the next major version, recommendation controllers will be enabled by simply including their names in the `recommendations` array when calling `fetchStaticState`, rather than using this `enabled` property.
+   *
    * Toggle to enable or disable the recommendation controller.
    * When set to `true`, the controller will perform a recommendation request server-side.
+   *
+   * @example
+   * ```ts
+   * await recommendationEngineDefinition.fetchStaticState({
+   *   recommendations: ['popularBought', 'popularViewed']
+   * });
+   * ```
    *
    * @default false
    */
@@ -117,7 +126,18 @@ export type EngineDefinitionControllersPropsOption<
     TControllers,
     TControllersPropsMap,
     TSolutionType
-  >;
+  > & {
+    /**
+     * @deprecated In the next major version, this property will only be used for custom SSR controllers.
+     * Unless you have created a custom controller definition method, you don't need to use this property.
+     */
+    controllers?: ConditionalControllerProps<
+      TControllers,
+      TControllersPropsMap,
+      TSolutionType,
+      keyof TControllers
+    >;
+  };
 
 /**
  * Represents an optional engine definition for controller properties.
