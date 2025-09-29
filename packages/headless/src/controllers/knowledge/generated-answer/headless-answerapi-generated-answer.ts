@@ -155,12 +155,10 @@ export function buildAnswerApiGeneratedAnswer(
   return {
     ...controller,
     get state() {
-      const currentState = getState();
-      const params = selectAnswerApiQueryParams(currentState);
-      const selectedAnswerState = selectAnswer(params)(currentState).data;
+      const selectedAnswerState = selectAnswer(engine.state).data;
 
       return {
-        ...currentState.generatedAnswer,
+        ...getState().generatedAnswer,
         answer: selectedAnswerState?.answer,
         citations: filterOutDuplicatedCitations(
           selectedAnswerState?.citations ?? []
@@ -174,7 +172,7 @@ export function buildAnswerApiGeneratedAnswer(
         answerContentFormat: selectedAnswerState?.contentFormat ?? 'text/plain',
         isAnswerGenerated: selectedAnswerState?.generated ?? false,
         cannotAnswer:
-          currentState.generatedAnswer.cannotAnswer ||
+          getState().generatedAnswer.cannotAnswer ||
           (selectedAnswerState?.generated === false &&
             !selectedAnswerState?.isLoading &&
             !selectedAnswerState?.isStreaming),
@@ -188,14 +186,10 @@ export function buildAnswerApiGeneratedAnswer(
       engine.dispatch(resetAnswer());
     },
     async sendFeedback(feedback) {
-      const currentState = getState();
-      const params = selectAnswerApiQueryParams(currentState);
-      const selectedAnswerState = selectAnswer(params)(currentState).data;
-
       const args = parseEvaluationArguments({
         query: getState().query.q,
         feedback,
-        answerApiState: selectedAnswerState!,
+        answerApiState: selectAnswer(engine.state).data!,
       });
       engine.dispatch(answerEvaluation.endpoints.post.initiate(args));
       engine.dispatch(sendGeneratedAnswerFeedback());

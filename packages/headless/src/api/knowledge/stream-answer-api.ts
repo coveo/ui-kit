@@ -1,4 +1,5 @@
 import type {ThunkDispatch, UnknownAction} from '@reduxjs/toolkit';
+import {selectAnswerApiQueryParams} from '../../features/generated-answer/answer-api-selectors.js';
 import {
   setAnswerContentFormat,
   setCannotAnswer,
@@ -237,6 +238,7 @@ export const fetchAnswer = (fetchAnswerParams: AnswerApiQueryParams) => {
 };
 
 // Select answer state from RTK endpoint state
-export const selectAnswer = (selectAnswerParams: AnswerApiQueryParams) => {
-  return answerApi.endpoints.getAnswer.select(selectAnswerParams);
+export const selectAnswer = (state: StreamAnswerAPIState) => {
+  const params = selectAnswerApiQueryParams(state);
+  return answerApi.endpoints.getAnswer.select(params)(state);
 };

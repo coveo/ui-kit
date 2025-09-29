@@ -104,7 +104,7 @@ describe('knowledge-generated-answer', () => {
   beforeEach(() => {
     vi.clearAllMocks();
 
-    mockSelectAnswer.mockImplementation(() => () => ({
+    mockSelectAnswer.mockReturnValue({
       status: QueryStatus.uninitialized,
       data: undefined,
       isLoading: false,
@@ -112,7 +112,7 @@ describe('knowledge-generated-answer', () => {
       isSuccess: false,
       isUninitialized: true,
       error: undefined,
-    }));
+    });
 
     engine = buildEngineWithGeneratedAnswer();
   });
@@ -141,7 +141,7 @@ describe('knowledge-generated-answer', () => {
   describe('AnswerApiGeneratedAnswer controller state', () => {
     describe('when RTK Query cache is uninitialized (cache miss)', () => {
       it('should expose undefined answer and default state flags', () => {
-        mockSelectAnswer.mockReturnValue(() => ({
+        mockSelectAnswer.mockReturnValue({
           status: QueryStatus.uninitialized,
           data: undefined,
           isLoading: false,
@@ -149,7 +149,7 @@ describe('knowledge-generated-answer', () => {
           isSuccess: false,
           isUninitialized: true,
           error: undefined,
-        }));
+        });
 
         const generatedAnswer = createGeneratedAnswer();
 
@@ -168,9 +168,9 @@ describe('knowledge-generated-answer', () => {
 
     describe('when RTK Query is loading', () => {
       it('should expose isLoading = true and no answer yet', () => {
-        mockSelectAnswer.mockImplementation(() => () => ({
+        mockSelectAnswer.mockReturnValue({
           data: {isLoading: true, isStreaming: false},
-        }));
+        });
 
         const generatedAnswer = createGeneratedAnswer();
 
@@ -183,9 +183,9 @@ describe('knowledge-generated-answer', () => {
 
     describe('when RTK Query is streaming', () => {
       it('should expose isStreaming = true and partial answer', () => {
-        mockSelectAnswer.mockImplementation(() => () => ({
+        mockSelectAnswer.mockReturnValue({
           data: {isStreaming: true, answer: 'partial...', isLoading: false},
-        }));
+        });
 
         const generatedAnswer = createGeneratedAnswer();
 
@@ -198,7 +198,7 @@ describe('knowledge-generated-answer', () => {
 
     describe('when RTK Query is fulfilled', () => {
       it('should expose the full answer and citations without duplicates', () => {
-        mockSelectAnswer.mockImplementation(() => () => ({
+        mockSelectAnswer.mockReturnValue({
           data: {
             generated: true,
             answer: 'final answer',
@@ -210,7 +210,7 @@ describe('knowledge-generated-answer', () => {
             isLoading: false,
             isStreaming: false,
           },
-        }));
+        });
 
         const generatedAnswer = createGeneratedAnswer();
 
@@ -227,13 +227,13 @@ describe('knowledge-generated-answer', () => {
 
     describe('when RTK Query is rejected with error', () => {
       it('should expose error message and statusCode', () => {
-        mockSelectAnswer.mockImplementation(() => () => ({
+        mockSelectAnswer.mockReturnValue({
           data: {
             error: {message: 'server error', code: 500},
             isLoading: false,
             isStreaming: false,
           },
-        }));
+        });
 
         const generatedAnswer = createGeneratedAnswer();
 
@@ -246,9 +246,9 @@ describe('knowledge-generated-answer', () => {
 
     describe('when RTK Query completes with generated = false', () => {
       it('should mark cannotAnswer = true if not loading or streaming', () => {
-        mockSelectAnswer.mockImplementation(() => () => ({
+        mockSelectAnswer.mockReturnValue({
           data: {generated: false, isLoading: false, isStreaming: false},
-        }));
+        });
 
         const generatedAnswer = createGeneratedAnswer();
 
@@ -258,9 +258,9 @@ describe('knowledge-generated-answer', () => {
 
     describe('when RTK Query completes with generated = undefined', () => {
       it('should mark cannotAnswer = false even if not loading or streaming', () => {
-        mockSelectAnswer.mockImplementation(() => () => ({
+        mockSelectAnswer.mockReturnValue({
           data: {generated: undefined, isLoading: false, isStreaming: false},
-        }));
+        });
 
         const generatedAnswer = createGeneratedAnswer();
 
@@ -270,9 +270,9 @@ describe('knowledge-generated-answer', () => {
 
     describe('when RTK Query is still loading with generated = false', () => {
       it('should mark cannotAnswer = false', () => {
-        mockSelectAnswer.mockImplementation(() => () => ({
+        mockSelectAnswer.mockReturnValue({
           data: {generated: false, isLoading: true, isStreaming: false},
-        }));
+        });
 
         const generatedAnswer = createGeneratedAnswer();
 
@@ -282,9 +282,9 @@ describe('knowledge-generated-answer', () => {
 
     describe('when RTK Query is still streaming with generated = false', () => {
       it('should mark cannotAnswer = false', () => {
-        mockSelectAnswer.mockImplementation(() => () => ({
+        mockSelectAnswer.mockReturnValue({
           data: {generated: false, isLoading: false, isStreaming: true},
-        }));
+        });
 
         const generatedAnswer = createGeneratedAnswer();
 
@@ -294,9 +294,9 @@ describe('knowledge-generated-answer', () => {
 
     describe('when RTK Query completes with generated = true', () => {
       it('should mark cannotAnswer = false', () => {
-        mockSelectAnswer.mockImplementation(() => () => ({
+        mockSelectAnswer.mockReturnValue({
           data: {generated: true, isLoading: false, isStreaming: false},
-        }));
+        });
 
         const generatedAnswer = createGeneratedAnswer();
 
@@ -306,14 +306,14 @@ describe('knowledge-generated-answer', () => {
 
     describe('when Redux state cannotAnswer is true', () => {
       it('should return cannotAnswer as true regardless of RTK Query state', () => {
-        mockSelectAnswer.mockImplementation(() => () => ({
+        mockSelectAnswer.mockReturnValue({
           data: {
             answer: 'Some answer',
             generated: true,
             isLoading: false,
             isStreaming: false,
           },
-        }));
+        });
 
         engine = buildEngineWithGeneratedAnswer({
           generatedAnswer: {
@@ -372,7 +372,7 @@ describe('knowledge-generated-answer', () => {
 
   it('dispatches a sendFeedback action', () => {
     (selectAnswer as unknown as ReturnType<typeof vi.fn>).mockImplementation(
-      () => () => ({
+      () => ({
         data: {
           answer: 'This est une answer',
           answerId: '12345_6',
