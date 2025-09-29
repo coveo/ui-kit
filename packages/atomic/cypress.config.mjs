@@ -4,6 +4,7 @@ import plugin from './cypress/plugins/index.js';
 export default defineConfig({
   projectId: '5ph2j4',
   numTestsKeptInMemory: process.env.CI ? 0 : 50,
+  experimentalMemoryManagement: true,
   experimentalFetchPolyfill: false,
   reporter: 'spec',
   viewportHeight: 1080,
