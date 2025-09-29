@@ -25,29 +25,43 @@ export function withAnySectionnableResultList(
   const layouts = options.layouts ?? ['list', 'grid'];
   const imageSizes = options.imageSizes ?? ['none', 'icon', 'small', 'large'];
   const densities = options.densities ?? ['compact', 'normal', 'comfortable'];
-  Object.entries(viewports).forEach(([viewport, width]) =>
-    describe(`with a ${viewport} viewport`, () =>
-      layouts.forEach((display) =>
-        describe(`in a result ${display}`, () =>
-          imageSizes.forEach((image) =>
-            describe(`with image-size="${image}"`, () =>
-              densities.forEach((density) =>
-                describe(`with density="${density}"`, () => {
-                  (options.useBeforeEach ? beforeEach : before)(() => {
-                    const aspectRatio = 16 / 9;
-                    cy.viewport(width, width / aspectRatio);
-                    cy.get(options.componentTag).then((comp) => {
-                      const resultList = comp.get()[0];
-                      resultList.setAttribute('display', display);
-                      resultList.setAttribute('image-size', image!);
-                      resultList.setAttribute('density', density);
-                    });
-                  });
 
-                  assertions(display, image, density);
-                })
-              ))
-          ))
-      ))
-  );
+  // Build flat list of all combinations to avoid deep nesting
+  const combinations: Array<{
+    viewport: string;
+    width: number;
+    display: ResultDisplayLayout;
+    image: ResultDisplayImageSize;
+    density: ResultDisplayDensity;
+  }> = [];
+  Object.entries(viewports).forEach(([viewport, width]) => {
+    layouts.forEach((display) => {
+      imageSizes.forEach((image) => {
+        densities.forEach((density) => {
+          combinations.push({viewport, width, display, image, density});
+        });
+      });
+    });
+  });
+
+  // Iterate over each combination in a single describe
+  combinations.forEach(({viewport, width, display, image, density}) => {
+    describe(
+      `with a ${viewport} viewport, ${display} layout, image-size="${image}", density="${density}"`,
+      () => {
+        (options.useBeforeEach ? beforeEach : before)(() => {
+          const aspectRatio = 16 / 9;
+          cy.viewport(width, width / aspectRatio);
+          cy.get(options.componentTag).then((comp) => {
+            const resultList = comp.get()[0];
+            resultList.setAttribute('display', display);
+            resultList.setAttribute('image-size', image);
+            resultList.setAttribute('density', density);
+          });
+        });
+
+        assertions(display, image, density);
+      }
+    );
+  });
 }
