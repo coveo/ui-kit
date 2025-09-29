@@ -126,11 +126,10 @@ describe('Search Box Test Suites', () => {
 
       it('is accessible', () => {
         CommonAssertions.assertAccessibility(searchBoxComponent);
-        // Skipped because of lit migration issue
-        // CommonAssertions.assertAriaLiveMessageWithoutIt(
-        //   SearchBoxSelectors.searchBoxAriaLive,
-        //   expectedSum.toString()
-        // );
+        CommonAssertions.assertAriaLiveMessageWithoutIt(
+          SearchBoxSelectors.searchBoxAriaLive,
+          expectedSum.toString()
+        );
       });
     });
 
@@ -228,7 +227,7 @@ describe('Search Box Test Suites', () => {
     describe('with input', () => {
       const expectedSum = numOfSuggestions + numOfRecentQueries;
 
-      describe.skip('verify rendering', () => {
+      describe('verify rendering', () => {
         beforeEach(() => {
           setupWithSuggestionsAndRecentQueries();
           SearchBoxSelectors.textArea().type('Rec', {delay: 100});

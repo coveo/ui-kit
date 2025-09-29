@@ -65,6 +65,7 @@ export class AtomicModal
       '. .     .';
     grid-template-columns: 1fr min(30rem, 100%) 1fr;
     grid-template-rows: 1fr auto 3fr;
+
   }
   `;
 
