@@ -7,7 +7,7 @@ import {
   type SearchStatus,
   type SearchStatusState,
 } from '@coveo/headless';
-import {html, LitElement} from 'lit';
+import {html, LitElement, type PropertyValues} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {keyed} from 'lit/directives/keyed.js';
 import {when} from 'lit/directives/when.js';
@@ -53,6 +53,10 @@ export class AtomicPager
   extends InitializeBindingsMixin(LitElement)
   implements InitializableComponent<Bindings>
 {
+  private static propsSchema = new Schema({
+    numberOfPages: new NumberValue({min: 0}),
+  });
+
   @state()
   bindings!: Bindings;
   @state() error!: Error;
@@ -108,12 +112,15 @@ export class AtomicPager
     });
   }
 
+  willUpdate(changedProperties: PropertyValues) {
+    if (changedProperties.has('numberOfPages')) {
+      this.validateProps();
+    }
+  }
+
   @bindingGuard()
   @errorGuard()
   render() {
-    if (!this.pagerState?.currentPages) {
-      return html``;
-    }
     const currentGroupName = `${this.radioGroupName}-${this.pagerState.currentPages.join('-')}`;
     return html`${when(
       !this.searchStatusState.hasError &&
@@ -181,11 +188,14 @@ export class AtomicPager
   }
 
   private validateProps() {
-    new Schema({
-      numberOfPages: new NumberValue({min: 0}),
-    }).validate({
-      numberOfPages: this.numberOfPages,
-    });
+    try {
+      AtomicPager.propsSchema.validate({
+        numberOfPages: this.numberOfPages,
+      });
+    } catch (error) {
+      this.error = error as Error;
+      return;
+    }
   }
 
   private async focusOnFirstResultAndScrollToTop() {

@@ -147,29 +147,29 @@ describe('atomic-pager', () => {
   });
 
   // TODO: Fix dynamic numberOfPages property updates - https://coveord.atlassian.net/browse/KIT-5076
-  // it('should update numberOfPages when property changes', async () => {
-  //   const element = await renderPager({
-  //     props: {numberOfPages: 3},
-  //     pagerState: {currentPages: [1, 2, 3]},
-  //   });
-  //   expect(element.numberOfPages).toBe(3);
+  it.skip('should update numberOfPages when property changes', async () => {
+    const element = await renderPager({
+      props: {numberOfPages: 3},
+      pagerState: {currentPages: [1, 2, 3]},
+    });
+    expect(element.numberOfPages).toBe(3);
 
-  //   element.numberOfPages = 7;
-  //   await element.updateComplete;
+    element.numberOfPages = 7;
+    await element.updateComplete;
 
-  //   expect(element.numberOfPages).toBe(7);
-  //   expect(buildPager).toHaveBeenCalledWith(element.bindings.engine, {
-  //     options: {numberOfPages: 7},
-  //   });
-  // });
+    expect(element.numberOfPages).toBe(7);
+    expect(buildPager).toHaveBeenCalledWith(element.bindings.engine, {
+      options: {numberOfPages: 7},
+    });
+  });
 
-  // it('should throw when numberOfPages property is set to invalid value', async () => {
-  //     const element = await renderPager();
+  it.skip('should throw when numberOfPages property is set to invalid value', async () => {
+    const element = await renderPager();
 
-  //     expect(() => {
-  //       element.numberOfPages = -1;
-  //     }).toThrow();
-  //   });
+    expect(() => {
+      element.numberOfPages = -1;
+    }).toThrow();
+  });
 
   it('should not render when search has error', async () => {
     await renderPager({searchStatusState: {hasError: true}});

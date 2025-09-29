@@ -7,7 +7,7 @@ import {
   type ProductListing,
   type Search,
 } from '@coveo/headless/commerce';
-import {html, LitElement} from 'lit';
+import {html, LitElement, type PropertyValues} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {keyed} from 'lit/directives/keyed.js';
 import {when} from 'lit/directives/when.js';
@@ -52,6 +52,12 @@ export class AtomicCommercePager
   extends LitElement
   implements InitializableComponent<CommerceBindings>
 {
+  private static propsSchema = new Schema({
+    numberOfPages: new NumberValue({min: 0}),
+  });
+
+  private radioGroupName = randomID('atomic-commerce-pager-');
+
   @state()
   bindings!: CommerceBindings;
   @state() error!: Error;
@@ -103,15 +109,11 @@ export class AtomicCommercePager
     });
   }
 
-  private validateProps() {
-    new Schema({
-      numberOfPages: new NumberValue({min: 0}),
-    }).validate({
-      numberOfPages: this.numberOfPages,
-    });
+  willUpdate(changedProperties: PropertyValues) {
+    if (changedProperties.has('numberOfPages')) {
+      this.validateProps();
+    }
   }
-
-  private radioGroupName = randomID('atomic-commerce-pager-');
 
   @bindingGuard()
   @errorGuard()
@@ -181,6 +183,17 @@ export class AtomicCommercePager
         })}
       `)}`
     )}`;
+  }
+
+  private validateProps() {
+    try {
+      AtomicCommercePager.propsSchema.validate({
+        numberOfPages: this.numberOfPages,
+      });
+    } catch (error) {
+      this.error = error as Error;
+      return;
+    }
   }
 
   private async focusOnFirstResultAndScrollToTop() {
