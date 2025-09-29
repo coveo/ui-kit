@@ -9,6 +9,16 @@ import {AriaLiveRegionController} from '@/src/utils/accessibility-utils';
 import type {AtomicQuerySummary} from './atomic-query-summary';
 
 vi.mock('@coveo/headless', {spy: true});
+vi.mock('@/src/mixins/bindings-mixin', () => ({
+  InitializeBindingsMixin: vi.fn().mockImplementation((superClass) => {
+    return class extends superClass {
+      // biome-ignore lint/complexity/noUselessConstructor: <mocking the mixin for testing>
+      constructor(...args: unknown[]) {
+        super(...args);
+      }
+    };
+  }),
+}));
 
 describe('atomic-query-summary', () => {
   const mockedEngine = buildFakeSearchEngine();
