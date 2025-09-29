@@ -1,6 +1,7 @@
 /** biome-ignore-all lint/suspicious/noExplicitAny: <mock> */
 /* eslint-disable @cspell/spellchecker */
-import type {StreamAnswerAPIState} from '../stream-answer-api-state.js';
+import type {StreamAnswerAPIState} from '../../../api/knowledge/stream-answer-api-state.js';
+import {addSecondsToFacetsTimestamps} from './utils/testingUtils.js';
 
 const atomicVersion = '2.77.0';
 
@@ -1088,6 +1089,51 @@ export const streamAnswerAPIStateMock: StreamAnswerAPIState = {
   },
 };
 
+const dateRangeCurrentValues = [
+  {
+    start: '2020/01/01@07:45:00',
+    end: '2020/01/01@08:45:00',
+    endInclusive: false,
+    state: 'idle',
+  },
+  {
+    start: '2019/12/31@08:45:00',
+    end: '2020/01/01@08:45:00',
+    endInclusive: false,
+    state: 'idle',
+  },
+  {
+    start: '2019/12/25@08:45:00',
+    end: '2020/01/01@08:45:00',
+    endInclusive: false,
+    state: 'idle',
+  },
+  {
+    start: '2019/12/01@08:45:00',
+    end: '2020/01/01@08:45:00',
+    endInclusive: false,
+    state: 'idle',
+  },
+  {
+    start: '2019/10/01@08:45:00',
+    end: '2020/01/01@08:45:00',
+    endInclusive: false,
+    state: 'idle',
+  },
+  {
+    start: '2019/01/01@08:45:00',
+    end: '2020/01/01@08:45:00',
+    endInclusive: false,
+    state: 'idle',
+  },
+  {
+    start: '2020/01/01@08:45:00',
+    end: '2030/01/01@08:45:00',
+    endInclusive: false,
+    state: 'idle',
+  },
+];
+
 export const streamAnswerAPIStateMockWithATabWithAnExpression: StreamAnswerAPIState =
   {
     ...streamAnswerAPIStateMock,
@@ -1208,7 +1254,7 @@ export const streamAnswerAPIStateMockWithStaticFiltersAndTabExpressionWithEmptyC
   {
     ...streamAnswerAPIStateMockWithStaticFiltersAndTabExpression,
     advancedSearchQueries: {
-      ...streamAnswerAPIStateMockWithStaticFiltersAndTabExpression.advancedSearchQueries,
+      ...streamAnswerAPIStateMockWithStaticFiltersAndTabExpression.advancedSearchQueries!,
       cq: '',
     },
   };
@@ -1219,6 +1265,77 @@ export const streamAnswerAPIStateMockWithoutSearchAction: StreamAnswerAPIState =
     search: {
       ...streamAnswerAPIStateMock.search!,
       searchAction: undefined,
+    },
+  };
+
+export const streamAnswerAPIStateMockWithAnalyticsEnabled: StreamAnswerAPIState =
+  {
+    ...streamAnswerAPIStateMock,
+    configuration: {
+      ...streamAnswerAPIStateMock.configuration,
+      analytics: {
+        ...streamAnswerAPIStateMock.configuration.analytics,
+        enabled: true,
+      },
+    },
+  };
+
+export const streamAnswerAPIStateMockWithFoldingDisabled: StreamAnswerAPIState =
+  {
+    ...streamAnswerAPIStateMock,
+    folding: {
+      ...streamAnswerAPIStateMock.folding,
+      enabled: false,
+      fields: {
+        collection: '',
+        parent: '',
+        child: '',
+      },
+      filterFieldRange: 0,
+      collections: {},
+    },
+  };
+
+export const streamAnswerAPIStateMockWithFoldingEnabled: StreamAnswerAPIState =
+  {
+    ...streamAnswerAPIStateMock,
+    folding: {
+      ...streamAnswerAPIStateMock.folding,
+      enabled: true,
+      fields: {
+        collection: 'testCollection',
+        parent: 'testParent',
+        child: 'testChild',
+      },
+      filterFieldRange: 1,
+      collections: {},
+    },
+  };
+
+export const streamAnswerAPIStateMockWithDictionaryFieldContext: StreamAnswerAPIState =
+  {
+    ...streamAnswerAPIStateMock,
+    dictionaryFieldContext: {
+      contextValues: {
+        key1: 'value1',
+        key2: 'value2',
+      },
+    },
+  };
+
+export const streamAnswerAPIStateMockWithExcerptLength: StreamAnswerAPIState = {
+  ...streamAnswerAPIStateMock,
+  excerptLength: {
+    length: 300,
+  },
+};
+
+export const streamAnswerAPIStateMockWithQuerySyntaxEnabled: StreamAnswerAPIState =
+  {
+    ...streamAnswerAPIStateMock,
+    query: {
+      q: 'what is the hardest wood',
+      enableQuerySyntax: true,
     },
   };
 
@@ -1263,50 +1380,7 @@ export const expectedStreamAnswerAPIParam = {
       sortCriteria: 'descending',
       rangeAlgorithm: 'even',
       resultsMustMatch: 'atLeastOneValue',
-      currentValues: [
-        {
-          start: '2020/01/01@07:45:00',
-          end: '2020/01/01@08:45:00',
-          endInclusive: false,
-          state: 'idle',
-        },
-        {
-          start: '2019/12/31@08:45:00',
-          end: '2020/01/01@08:45:00',
-          endInclusive: false,
-          state: 'idle',
-        },
-        {
-          start: '2019/12/25@08:45:00',
-          end: '2020/01/01@08:45:00',
-          endInclusive: false,
-          state: 'idle',
-        },
-        {
-          start: '2019/12/01@08:45:00',
-          end: '2020/01/01@08:45:00',
-          endInclusive: false,
-          state: 'idle',
-        },
-        {
-          start: '2019/10/01@08:45:00',
-          end: '2020/01/01@08:45:00',
-          endInclusive: false,
-          state: 'idle',
-        },
-        {
-          start: '2019/01/01@08:45:00',
-          end: '2020/01/01@08:45:00',
-          endInclusive: false,
-          state: 'idle',
-        },
-        {
-          start: '2020/01/01@08:45:00',
-          end: '2030/01/01@08:45:00',
-          endInclusive: false,
-          state: 'idle',
-        },
-      ],
+      currentValues: dateRangeCurrentValues,
       preventAutoSelect: false,
       type: 'dateRange',
       facetId: 'date',
@@ -1567,57 +1641,32 @@ export const expectedStreamAnswerAPIParam = {
   numberOfResults: 10,
   firstResult: 0,
   tab: 'default',
+  locale: 'en',
+  timezone: 'America/New_York',
+  referrer: 'some-test-referrer',
+  debug: false,
+  actionsHistory: [],
+  sortCriteria: 'relevancy',
+  facetOptions: {
+    freezeFacetOrder: false,
+  },
   analytics: {
     actionCause: 'searchboxSubmit',
     capture: false,
     clientId: '',
     clientTimestamp: '2020-01-01T00:00:00.000Z',
+    customData: undefined,
     documentLocation: '',
-    documentReferrer: '',
+    documentReferrer: 'some-test-referrer',
     originContext: 'Search',
     source: [`@coveo/atomic@${atomicVersion}`, '@coveo/headless@Test version'],
   },
 };
 
-export const expectedStreamAnswerAPIParamWithATabWithAnExpression = {
+export const expectedStreamAnswerAPIParamWithDifferentFacetTimes = {
   ...expectedStreamAnswerAPIParam,
-  cq: '@fileType=html AND cq-test-query',
-  tab: 'default',
-};
-
-export const expectedStreamAnswerAPIParamWithoutAnyTab = {
-  ...expectedStreamAnswerAPIParam,
-  tab: '',
-};
-
-export const expectedStreamAnswerAPIParamWithStaticFiltersSelected = {
-  ...expectedStreamAnswerAPIParam,
-  cq: '@filetype=="youtubevideo" AND cq-test-query',
-};
-
-export const expectedStreamAnswerAPIParamWithStaticFiltersAndTabExpression = {
-  ...expectedStreamAnswerAPIParam,
-  cq: '@fileType=html AND (@filetype=="youtubevideo" OR @filetype=="dropbox") AND @filetype=="tsx" AND cq-test-query',
-};
-
-export const expectedStreamAnswerAPIParamWithStaticFiltersAndTabExpressionWithoutAdvancedCQ =
-  {
-    ...expectedStreamAnswerAPIParam,
-    cq: '@fileType=html AND (@filetype=="youtubevideo" OR @filetype=="dropbox") AND @filetype=="tsx"',
-  };
-
-export const expectedStreamAnswerAPIParamWithoutSearchAction = {
-  ...expectedStreamAnswerAPIParam,
-  analytics: {
-    ...expectedStreamAnswerAPIParam.analytics,
-    actionCause: '',
+  facets: {
+    ...expectedStreamAnswerAPIParam.facets,
+    currentValues: addSecondsToFacetsTimestamps(dateRangeCurrentValues, 5),
   },
 };
-
-export const expectedStreamAnswerAPIParamForSelect = (() => {
-  const {
-    analytics: _analytics,
-    ...expectedStreamAnswerAPIParamWithoutAnalytics
-  } = expectedStreamAnswerAPIParam;
-  return expectedStreamAnswerAPIParamWithoutAnalytics;
-})();

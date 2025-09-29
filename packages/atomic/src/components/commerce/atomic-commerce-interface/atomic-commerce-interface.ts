@@ -22,6 +22,7 @@ import {provide} from '@lit/context';
 import i18next, {type i18n} from 'i18next';
 import {type CSSResultGroup, css, html, LitElement} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
+import {MobileBreakpointController} from '@/src/components/common/layout/mobile-breakpoint-controller';
 import {booleanConverter} from '@/src/converters/boolean-converter';
 import {errorGuard} from '@/src/decorators/error-guard';
 import {watch} from '@/src/decorators/watch';
@@ -74,10 +75,14 @@ export class AtomicCommerceInterface
   extends ChildrenUpdateCompleteMixin(LitElement)
   implements BaseAtomicInterface<CommerceEngine>
 {
-  public urlManager!: UrlManager;
-  private searchOrListing!: Search | ProductListing;
-  public summary!: Summary<SearchSummaryState | ProductListingSummaryState>;
+  @state()
+  @provide({context: bindingsContext})
+  public bindings: CommerceBindings = {} as CommerceBindings;
   public context!: Context;
+  @state() public error!: Error;
+  public summary!: Summary<SearchSummaryState | ProductListingSummaryState>;
+  public urlManager!: UrlManager;
+  public searchOrListing!: Search | ProductListing;
   private unsubscribeUrlManager?: Unsubscribe;
   private unsubscribeSummary?: Unsubscribe;
   private initialized = false;
@@ -87,8 +92,6 @@ export class AtomicCommerceInterface
     'CoveoAtomic',
     HEADLESS_VERSION
   );
-
-  @state() public error!: Error;
 
   static styles: CSSResultGroup = [
     css`
@@ -103,6 +106,8 @@ export class AtomicCommerceInterface
     `,
   ];
 
+  // TODO - KIT-4994: Add disableAnalytics property that defaults to false.
+
   /**
    * The type of the interface.
    * - 'search': Indicates that the interface is used for Search.
@@ -111,6 +116,8 @@ export class AtomicCommerceInterface
   @property({type: String, reflect: true}) type: 'search' | 'product-listing' =
     'search';
 
+  // TODO - KIT-4994: Deprecate in favor of disableAnalytics property.
+  // TODO - (v4) KIT-4990: Remove.
   /**
    * Whether analytics should be enabled.
    */
@@ -132,6 +139,8 @@ export class AtomicCommerceInterface
    */
   @property({type: Object, attribute: false}) i18n: i18n;
 
+  // TODO - KIT-4993: Mark as deprecated in favor of updateLocale method.
+  // TODO - (v4) KIT-4365: Remove.
   /**
    * The commerce interface language.
    *
@@ -145,6 +154,7 @@ export class AtomicCommerceInterface
    */
   @property({type: Object, attribute: false}) engine?: CommerceEngine;
 
+  // TODO - (v4) KIT-4823: Remove.
   /**
    * Whether the state should be reflected in the URL parameters.
    * @deprecated - replaced by `disable-state-reflection-in-url` (this defaults to `true`, while the replacement defaults to `false`).
@@ -158,7 +168,7 @@ export class AtomicCommerceInterface
   reflectStateInUrl = true;
 
   /**
-   * Disable state reflection in the URL parameters.
+   * Whether to disable state reflection in the URL parameters.
    */
   @property({
     type: Boolean,
@@ -196,6 +206,7 @@ export class AtomicCommerceInterface
   public constructor() {
     super();
     this.store = createCommerceStore(this.type);
+    new MobileBreakpointController(this, this.store);
     const {promise, resolve} = Promise.withResolvers<void>();
     this.i18Initialized = promise;
     this.i18n = i18next.createInstance(undefined, resolve);
@@ -204,7 +215,6 @@ export class AtomicCommerceInterface
   public connectedCallback() {
     super.connectedCallback();
     this.store.setLoadingFlag(FirstRequestExecutedFlag);
-    this.updateMobileBreakpoint();
 
     this.addEventListener(
       'atomic/initializeComponent',
@@ -215,77 +225,6 @@ export class AtomicCommerceInterface
       'atomic/scrollToTop',
       this.scrollToTop as EventListener
     );
-  }
-
-  @watch('analytics')
-  public toggleAnalytics() {
-    this.interfaceController.onAnalyticsChange();
-  }
-
-  @watch('language')
-  public updateLanguage() {
-    if (
-      !this.interfaceController.engineIsCreated(this.engine) ||
-      !this.language ||
-      !this.context
-    ) {
-      return;
-    }
-
-    this.context.setLanguage(this.language);
-    return this.interfaceController.onLanguageChange();
-  }
-
-  @watch('iconAssetsPath')
-  public updateIconAssetsPath(): void {
-    this.store.state.iconAssetsPath = this.iconAssetsPath;
-  }
-
-  public disconnectedCallback() {
-    super.disconnectedCallback();
-    if (typeof this.unsubscribeUrlManager === 'function') {
-      this.unsubscribeUrlManager();
-      this.unsubscribeUrlManager = undefined;
-    }
-    if (typeof this.unsubscribeSummary === 'function') {
-      this.unsubscribeSummary();
-      this.unsubscribeSummary = undefined;
-    }
-
-    window.removeEventListener('hashchange', this.onHashChange);
-    this.removeEventListener(
-      'atomic/initializeComponent',
-      this.handleInitialization as EventListener
-    );
-    this.removeEventListener(
-      'atomic/scrollToTop',
-      this.scrollToTop as EventListener
-    );
-  }
-
-  private updateMobileBreakpoint() {
-    const breakpoint = this.querySelector(
-      'atomic-commerce-layout'
-    )?.mobileBreakpoint;
-    if (breakpoint) {
-      this.store.state.mobileBreakpoint = breakpoint;
-    }
-  }
-
-  private handleInitialization = (event: InitializeEvent) => {
-    this.interfaceController.onComponentInitializing(event);
-  };
-
-  public scrollToTop() {
-    const scrollContainerElement = document.querySelector(this.scrollContainer);
-    if (!scrollContainerElement) {
-      this.bindings.engine.logger.warn(
-        `Could not find the scroll container with the selector "${this.scrollContainer}". This will prevent UX interactions that require a scroll from working correctly. Please review the CSS selector in the scrollContainer option`
-      );
-      return;
-    }
-
-    scrollContainerElement.scrollIntoView({behavior: 'smooth'});
   }
 
   /**
@@ -354,25 +293,64 @@ export class AtomicCommerceInterface
     }
   }
 
-  @state()
-  @provide({context: bindingsContext})
-  public bindings: CommerceBindings = {} as CommerceBindings;
+  @watch('analytics')
+  public toggleAnalytics() {
+    this.interfaceController.onAnalyticsChange();
+  }
 
-  private async internalInitialization(initEngine: () => void) {
-    await Promise.all([
-      this.interfaceController.onInitialization(initEngine),
-      this.i18Initialized,
-    ]);
-    this.initContext();
-    this.updateLanguage();
-    this.bindings = this.getBindings();
-    markParentAsReady(this);
-    this.initRequestStatus();
-    this.initSummary();
-    this.initLanguage();
-    await this.getUpdateComplete();
-    this.initUrlManager();
-    this.initialized = true;
+  @watch('iconAssetsPath')
+  public updateIconAssetsPath(): void {
+    this.store.state.iconAssetsPath = this.iconAssetsPath;
+  }
+
+  // TODO - (v4) KIT-4365: Remove.
+  @watch('language')
+  public updateLanguage() {
+    if (
+      !this.interfaceController.engineIsCreated(this.engine) ||
+      !this.language ||
+      !this.context
+    ) {
+      return;
+    }
+
+    // TODO - KIT-4993: Add temporary deprecation warning.
+
+    this.context.setLanguage(this.language);
+    return this.interfaceController.onLanguageChange();
+  }
+
+  // TODO - KIT-4993: Add updateLocale public method.
+
+  public disconnectedCallback() {
+    super.disconnectedCallback();
+    if (typeof this.unsubscribeUrlManager === 'function') {
+      this.unsubscribeUrlManager();
+      this.unsubscribeUrlManager = undefined;
+    }
+    if (typeof this.unsubscribeSummary === 'function') {
+      this.unsubscribeSummary();
+      this.unsubscribeSummary = undefined;
+    }
+
+    window.removeEventListener('hashchange', this.onHashChange);
+    this.removeEventListener(
+      'atomic/initializeComponent',
+      this.handleInitialization as EventListener
+    );
+    this.removeEventListener(
+      'atomic/scrollToTop',
+      this.scrollToTop as EventListener
+    );
+  }
+
+  @errorGuard()
+  render() {
+    return html`<slot></slot>`;
+  }
+
+  private get fragment() {
+    return window.location.hash.slice(1);
   }
 
   private getBindings(): CommerceBindings {
@@ -382,6 +360,14 @@ export class AtomicCommerceInterface
       store: this.store,
       interfaceElement: this as AtomicCommerceInterface,
     };
+  }
+
+  private handleInitialization = (event: InitializeEvent) => {
+    this.interfaceController.onComponentInitializing(event);
+  };
+
+  private initContext() {
+    this.context = buildContext(this.engine!);
   }
 
   private initEngine(options: CommerceInitializationOptions) {
@@ -402,26 +388,11 @@ export class AtomicCommerceInterface
     }
   }
 
-  private get fragment() {
-    return window.location.hash.slice(1);
-  }
-
-  private initUrlManager() {
-    if (this.disableStateReflectionInUrl) {
-      return;
+  // TODO - KIT-4993: Adjust.
+  private initLanguage() {
+    if (!this.language) {
+      this.language = this.context.state.language;
     }
-    if (!this.reflectStateInUrl) {
-      return;
-    }
-    this.urlManager = this.searchOrListing.urlManager({
-      initialState: {fragment: this.fragment},
-    });
-
-    this.unsubscribeUrlManager = this.urlManager.subscribe(() => {
-      this.updateHash();
-    });
-
-    window.addEventListener('hashchange', this.onHashChange);
   }
 
   private initRequestStatus() {
@@ -451,14 +422,56 @@ export class AtomicCommerceInterface
     });
   }
 
-  private initContext() {
-    this.context = buildContext(this.engine!);
+  private initUrlManager() {
+    if (this.disableStateReflectionInUrl) {
+      return;
+    }
+    if (!this.reflectStateInUrl) {
+      return;
+    }
+    this.urlManager = this.searchOrListing.urlManager({
+      initialState: {fragment: this.fragment},
+    });
+
+    this.unsubscribeUrlManager = this.urlManager.subscribe(() => {
+      this.updateHash();
+    });
+
+    window.addEventListener('hashchange', this.onHashChange);
   }
 
-  private initLanguage() {
-    if (!this.language) {
-      this.language = this.context.state.language;
+  private async internalInitialization(initEngine: () => void) {
+    await Promise.all([
+      this.interfaceController.onInitialization(initEngine),
+      this.i18Initialized,
+    ]);
+    this.initContext();
+    this.updateLanguage();
+    this.bindings = this.getBindings();
+    markParentAsReady(this);
+    this.initRequestStatus();
+    this.initSummary();
+    this.initLanguage();
+    await this.getUpdateComplete();
+    this.initUrlManager();
+    this.initialized = true;
+  }
+
+  private onHashChange = () => {
+    this.urlManager.synchronize(this.fragment);
+  };
+
+  // TODO - (v4) KIT-4991: Make private.
+  public scrollToTop() {
+    const scrollContainerElement = document.querySelector(this.scrollContainer);
+    if (!scrollContainerElement) {
+      console.warn(
+        `Could not find the scroll container with the selector "${this.scrollContainer}". This will prevent UX interactions that require a scroll from working correctly. Please review the CSS selector in the scrollContainer option`
+      );
+      return;
     }
+
+    scrollContainerElement.scrollIntoView({behavior: 'smooth'});
   }
 
   private updateHash() {
@@ -473,15 +486,6 @@ export class AtomicCommerceInterface
 
     history.pushState(null, document.title, `#${newFragment}`);
     this.bindings.engine.logger.info(`History pushState #${newFragment}`);
-  }
-
-  private onHashChange = () => {
-    this.urlManager.synchronize(this.fragment);
-  };
-
-  @errorGuard()
-  render() {
-    return html`<slot></slot>`;
   }
 }
 

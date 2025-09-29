@@ -13,13 +13,13 @@ import {buildFakeRecentQueriesList} from '@/vitest-utils/testing-helpers/fixture
 import type {
   SearchBoxSuggestionElement,
   SearchBoxSuggestions,
-} from '../../common/suggestions/suggestions-common';
+} from '../../common/suggestions/suggestions-types';
 import {AtomicCommerceSearchBoxRecentQueries} from './atomic-commerce-search-box-recent-queries';
 import './atomic-commerce-search-box-recent-queries';
 
 vi.mock('@coveo/headless/commerce', {spy: true});
 
-describe('AtomicCommerceSearchBoxRecentQueries', () => {
+describe('atomic-commerce-search-box-recent-queries', () => {
   beforeEach(() => {
     vi.mocked(buildRecentQueriesList).mockReturnValue(
       buildFakeRecentQueriesList()

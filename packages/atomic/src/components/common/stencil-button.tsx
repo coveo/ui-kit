@@ -1,5 +1,5 @@
 import {FunctionalComponent, h} from '@stencil/core';
-import {createRipple} from '../../utils/ripple';
+import {createRipple} from '../../utils/ripple-utils';
 import {
   ButtonStyle,
   getRippleColorForButtonStyle,

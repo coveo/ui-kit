@@ -19,34 +19,35 @@ import i18next, {type i18n} from 'i18next';
 import {type CSSResultGroup, css, html, LitElement} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {when} from 'lit/directives/when.js';
+import type {
+  CommonBindings,
+  NonceBindings,
+} from '@/src/components/common/interface/bindings';
+import {
+  type BaseAtomicInterface,
+  InterfaceController,
+} from '@/src/components/common/interface/interface-controller';
+import {MobileBreakpointController} from '@/src/components/common/layout/mobile-breakpoint-controller';
+import {bindingsContext} from '@/src/components/context/bindings-context';
+import {
+  errorSelector,
+  firstSearchExecutedSelector,
+  noResultsSelector,
+} from '@/src/components/search/atomic-search-layout/search-layout';
 import {booleanConverter} from '@/src/converters/boolean-converter';
 import {errorGuard} from '@/src/decorators/error-guard';
 import {watch} from '@/src/decorators/watch';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles.js';
+import {ChildrenUpdateCompleteMixin} from '@/src/mixins/children-update-complete-mixin';
 import {type InitializeEvent, markParentAsReady} from '@/src/utils/init-queue';
 import {
   SafeStorage,
   type StandaloneSearchBoxData,
   StorageItems,
 } from '@/src/utils/local-storage-utils';
-import {ChildrenUpdateCompleteMixin} from '../../../mixins/children-update-complete-mixin';
-import type {
-  CommonBindings,
-  NonceBindings,
-} from '../../common/interface/bindings';
-import {
-  type BaseAtomicInterface,
-  InterfaceController,
-} from '../../common/interface/interface-controller';
-import {bindingsContext} from '../../context/bindings-context';
-import {
-  errorSelector,
-  firstSearchExecutedSelector,
-  noResultsSelector,
-} from '../atomic-search-layout/search-layout';
 import {getAnalyticsConfig} from './analytics-config';
 import {createSearchStore, type SearchStore} from './store';
-import '../../common/atomic-modal/atomic-modal';
+import '@/src/components/common/atomic-modal/atomic-modal';
 
 const FirstSearchExecutedFlag = 'firstSearchExecuted';
 export type InitializationOptions = SearchEngineConfiguration;
@@ -198,7 +199,7 @@ export class AtomicSearchInterface
   reflectStateInUrl = true;
 
   /**
-   * Disable state reflection in the URL parameters.
+   * Whether to disable state reflection in the URL parameters.
    */
   @property({
     type: Boolean,
@@ -249,7 +250,7 @@ export class AtomicSearchInterface
   enableRelevanceInspector = true;
 
   /**
-   * Disable the relevance inspector shortcut for this interface.
+   * Whether to disable the relevance inspector shortcut for this interface.
    */
   @property({
     type: Boolean,
@@ -263,6 +264,7 @@ export class AtomicSearchInterface
   public constructor() {
     super();
     this.store = createSearchStore();
+    new MobileBreakpointController(this, this.store);
     const {promise, resolve} = Promise.withResolvers<void>();
     this.i18Initialized = promise;
     this.i18n = i18next.createInstance(undefined, resolve);
@@ -271,7 +273,6 @@ export class AtomicSearchInterface
   public connectedCallback() {
     super.connectedCallback();
     this.store.setLoadingFlag(FirstSearchExecutedFlag);
-    this.updateMobileBreakpoint();
     this.initRelevanceInspector();
 
     this.addEventListener(
@@ -293,7 +294,9 @@ export class AtomicSearchInterface
   public willUpdate(changedProperties: Map<string, unknown>) {
     super.willUpdate(changedProperties);
 
-    this.initFieldsToInclude();
+    if (changedProperties.has('fieldsToInclude')) {
+      this.initFieldsToInclude();
+    }
   }
 
   public disconnectedCallback() {
@@ -316,6 +319,10 @@ export class AtomicSearchInterface
     this.removeEventListener(
       'atomic/relevanceInspector/close',
       this.closeRelevanceInspector as EventListener
+    );
+    this.removeEventListener(
+      'dblclick',
+      this.handleRelevanceInspectorDoubleClick
     );
   }
 
@@ -348,7 +355,7 @@ export class AtomicSearchInterface
   }
 
   /**
-   * Initializes the connection with an already preconfigured [headless search engine](https://docs.coveo.com/en/headless/latest/reference/modules/Search.html, as opposed to the `initialize` method, which will internally create a new search engine instance.
+   * Initializes the interface using the provided [headless search engine](https://docs.coveo.com/en/headless/latest/reference/modules/Search.html, as opposed to the `initialize` method which internally builds a search engine instance.
    * This bypasses the properties set on the component, such as analytics, searchHub, pipeline, language, timezone & logLevel.
    */
   public initializeWithSearchEngine(engine: SearchEngine) {
@@ -496,15 +503,6 @@ export class AtomicSearchInterface
     );
   }
 
-  private updateMobileBreakpoint() {
-    const breakpoint = this.querySelector(
-      'atomic-search-layout'
-    )?.mobileBreakpoint;
-    if (breakpoint) {
-      this.store.state.mobileBreakpoint = breakpoint;
-    }
-  }
-
   private initEngine(options: InitializationOptions) {
     const searchConfig = this.getSearchConfiguration(options);
     const analyticsConfig = getAnalyticsConfig(
@@ -570,13 +568,18 @@ export class AtomicSearchInterface
     window.addEventListener('hashchange', this.onHashChange);
   }
 
+  private handleRelevanceInspectorDoubleClick = (e: MouseEvent) => {
+    if (e.altKey) {
+      this.relevanceInspectorIsOpen = !this.relevanceInspectorIsOpen;
+    }
+  };
+
   private initRelevanceInspector() {
     if (this.enableRelevanceInspector && !this.disableRelevanceInspector) {
-      this.addEventListener('dblclick', (e) => {
-        if (e.altKey) {
-          this.relevanceInspectorIsOpen = !this.relevanceInspectorIsOpen;
-        }
-      });
+      this.addEventListener(
+        'dblclick',
+        this.handleRelevanceInspectorDoubleClick
+      );
     }
   }
 

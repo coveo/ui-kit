@@ -3,14 +3,16 @@ import {customElement, property, state} from 'lit/decorators.js';
 import {createRef, type Ref, ref} from 'lit/directives/ref.js';
 import {when} from 'lit/directives/when.js';
 import {booleanConverter} from '@/src/converters/boolean-converter.js';
+import {bindings} from '@/src/decorators/bindings.js';
 import {errorGuard} from '@/src/decorators/error-guard';
 import type {InitializableComponent} from '@/src/decorators/types.js';
 import {watch} from '@/src/decorators/watch.js';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles.js';
-import {InitializeBindingsMixin} from '../../../mixins/bindings-mixin';
-import {listenOnce} from '../../../utils/event-utils.js';
-import {updateBreakpoints} from '../../../utils/replace-breakpoint.js';
-import {once, randomID} from '../../../utils/utils.js';
+import {multiClassMap, tw} from '@/src/directives/multi-class-map.js';
+import {InitializeBindingsMixin} from '@/src/mixins/bindings-mixin';
+import {listenOnce} from '@/src/utils/event-utils.js';
+import {updateBreakpoints} from '@/src/utils/replace-breakpoint-utils';
+import {once, randomID} from '@/src/utils/utils.js';
 import type {AnyBindings} from '../interface/bindings.js';
 
 /**
@@ -25,9 +27,11 @@ import type {AnyBindings} from '../interface/bindings.js';
  * @part body - The body of the modal, between the header and the footer.
  * @part footer-wrapper - The wrapper with a shadow or background color around the footer.
  * @part footer - The footer at the bottom of the modal.
+ *
  * @internal
  */
 @customElement('atomic-modal')
+@bindings()
 @withTailwindStyles
 export class AtomicModal
   extends InitializeBindingsMixin(LitElement)
@@ -37,31 +41,15 @@ export class AtomicModal
   @reference '../../../utils/tailwind.global.tw.css';
   
   @keyframes scaleUp {
-    0% {
-      transform: scale(0.7) translateY(150vh);
-      opacity: 0;
-    }
-    100% {
-      transform: scale(1) translateY(0px);
-      opacity: 1;
-    }
+    from { transform: scale(0.7) translateY(150vh); opacity: 0; }
+    to { transform: scale(1) translateY(0); opacity: 1; }
   }
   
   @keyframes slideDown {
-    0% {
-      transform: translateY(0px);
-      opacity: 1;
-    }
-    100% {
-      transform: translateY(150vh);
-      opacity: 0;
-    }
+    from { transform: translateY(0); opacity: 1; }
+    to { transform: translateY(150vh); opacity: 0; }
   }
-  
-  [part='backdrop'] {
-    @apply pointer-events-none;
-  }
-  
+
   article.animate-open {
     @apply animate-scale-up-modal;
   }
@@ -70,82 +58,13 @@ export class AtomicModal
     @apply animate-slide-down-modal;
   }
   
-  atomic-focus-trap {
-    @apply contents;
-  }
-  
-  [part='container'] {
-    @apply overflow-hidden;
-    grid-area: modal;
-  }
-  
-  .animate-scaleUpModalIPX[part='container'] {
-    @apply rounded;
-    @apply shadow;
-  }
-  
-  :host(.open) [part='backdrop'] {
-    @apply pointer-events-auto;
-  }
-  
-  :host(.open.dialog) [part='backdrop'] {
-    background-color: rgba(40, 40, 40, 0.8);
-  }
-  
-  :host(.dialog) [part='backdrop'] {
-    @apply grid;
-    @apply p-6;
-    transition: background-color 500ms ease-in-out;
-    grid-template-areas:
+  .grid-template-modal {
+        grid-template-areas:
       '. .     .'
       '. modal .'
       '. .     .';
     grid-template-columns: 1fr min(30rem, 100%) 1fr;
     grid-template-rows: 1fr auto 3fr;
-  }
-  
-  :host(.dialog) [part='container'] {
-    @apply rounded;
-    @apply shadow;
-  }
-  
-  :host(.dialog) [part='header-wrapper'] {
-    @apply px-6;
-    @apply py-4;
-  }
-  
-  :host(.dialog) [part='header'] {
-    @apply font-bold;
-  }
-  
-  :host(.dialog) [part='body-wrapper'] {
-    @apply p-6;
-  }
-  
-  :host(.dialog) [part='footer-wrapper'] {
-    @apply bg-neutral-light;
-    padding: 1rem 1.125rem;
-  }
-  
-  :host(.fullscreen) [part='container'] {
-    @apply absolute;
-    @apply inset-0;
-  }
-  
-  :host(.fullscreen) [part='header-wrapper'] {
-    @apply p-6;
-  }
-  
-  :host(.fullscreen) [part='body-wrapper'] {
-    @apply px-6;
-    @apply pt-8;
-    @apply pb-5;
-  }
-  
-  :host(.fullscreen) [part='footer-wrapper'] {
-    @apply shadow-t-lg;
-    @apply px-6;
-    @apply py-4;
   }
   `;
 
@@ -155,13 +74,25 @@ export class AtomicModal
   @state()
   error!: Error;
 
-  @property({type: Boolean, reflect: true, converter: booleanConverter})
-  fullscreen = false;
-  @property({type: Object, attribute: false}) source?: HTMLElement;
+  /**
+   * Whether to display the open and close animations over the entire page or the atomic-modal only.
+   */
+  @property({type: String, reflect: true}) boundary: 'page' | 'element' =
+    'page';
+
+  @property({type: Object, attribute: false}) close: () => void = () => {
+    this.isOpen = false;
+    return false;
+  };
+
   /**
    * The container to hide from the tabindex and accessibility DOM when the modal is closed.
    */
   @property({type: Object, attribute: false}) container?: HTMLElement;
+
+  @property({type: Boolean, reflect: true, converter: booleanConverter})
+  fullscreen = false;
+
   @property({
     type: Boolean,
     reflect: true,
@@ -169,63 +100,88 @@ export class AtomicModal
     converter: booleanConverter,
   })
   isOpen = false;
-  @property({type: Object, attribute: false}) close: () => void = () =>
-    // biome-ignore lint/suspicious/noAssignInExpressions: <>
-    (this.isOpen = false);
+
   @property({type: Object, attribute: false}) onAnimationEnded: () => void =
     () => {};
-  @property({type: Object, attribute: false}) scope?: HTMLElement;
-  /**
-   * Whether to display the open and close animations over the entire page or the atomic-modal only.
-   */
-  @property({type: String, reflect: true}) boundary: 'page' | 'element' =
-    'page';
 
-  private shouldRender = false;
-  private headerId = randomID('atomic-modal-header-');
-  private focusTrap: Ref<HTMLAtomicFocusTrapElement> = createRef();
+  @property({type: Object, attribute: false}) scope?: HTMLElement;
+
+  @property({type: Object, attribute: false}) source?: HTMLElement;
+
   private animatableContainer: Ref<HTMLElement> = createRef();
   private currentWatchToggleOpenExecution = 0;
-
+  private focusTrap: Ref<HTMLAtomicFocusTrapElement> = createRef();
+  private headerId = randomID('atomic-modal-header-');
+  private shouldRender = false;
   private updateBreakpoints = once(() => updateBreakpoints(this));
 
-  public initialize() {
-    this.updateHostClasses();
+  // Lifecycle methods
 
+  connectedCallback() {
+    super.connectedCallback();
+
+    document.body.addEventListener('keyup', this.handleCloseOnEscape);
+    document.body.addEventListener('touchmove', this.onWindowTouchMove, {
+      passive: false,
+    });
+  }
+
+  @errorGuard()
+  render() {
+    this.updateBreakpoints();
+
+    return html`
+      ${when(
+        this.shouldRender,
+        () => html`
+          <div
+            part="backdrop"
+            class=${multiClassMap(
+              tw({
+                'top-0 right-0 bottom-0 left-0 z-9999': true,
+                fixed: this.boundary === 'page',
+                absolute: this.boundary !== 'page',
+                'grid p-6 transition-colors duration-500 ease-in-out grid-template-modal':
+                  !this.fullscreen,
+                'bg-[rgba(40,40,40,0.8)]': this.isOpen && !this.fullscreen,
+                'pointer-events-auto': this.isOpen,
+                'pointer-events-none': !this.isOpen,
+              })
+            )}
+            @click="${(e: MouseEvent) => e.target === e.currentTarget && this.close()}"
+            data-nosnippet
+          >
+            <atomic-focus-trap
+              class="contents"
+              role="dialog"
+              aria-modal=${this.isOpen ? 'true' : 'false'}
+              aria-labelledby=${this.headerId}
+              .source=${this.source}
+              .container=${this.container ?? this}
+              ${ref(this.focusTrap)}
+              .scope=${this.scope}
+            >
+              ${this.renderContent()}
+            </atomic-focus-trap>
+          </div>
+        `
+      )}
+    `;
+  }
+
+  disconnectedCallback() {
+    super.disconnectedCallback();
+    document.body.removeEventListener('keyup', this.handleCloseOnEscape);
+    document.body.removeEventListener('touchmove', this.onWindowTouchMove);
+  }
+
+  // Public methods
+
+  public initialize() {
     if (this.isOpen) {
       this.shouldRender = true;
       this.handleToggleOpen(this.isOpen);
     }
-  }
-
-  protected updated(changedProperties: Map<string, unknown>) {
-    super.updated?.(changedProperties);
-
-    if (
-      changedProperties.has('isOpen') ||
-      changedProperties.has('fullscreen')
-    ) {
-      this.updateHostClasses();
-    }
-  }
-
-  private updateHostClasses() {
-    const currentClasses = this.getAttribute('class') || '';
-    const existingClasses = currentClasses
-      .split(' ')
-      .filter((cls) => cls && !['open', 'fullscreen', 'dialog'].includes(cls));
-
-    const internalClasses: string[] = [];
-    if (this.isOpen) {
-      internalClasses.push('open');
-    }
-    if (this.fullscreen) {
-      internalClasses.push('fullscreen');
-    } else {
-      internalClasses.push('dialog');
-    }
-
-    this.className = [...existingClasses, ...internalClasses].join(' ');
   }
 
   @watch('isOpen', {waitUntilFirstUpdate: false})
@@ -233,12 +189,45 @@ export class AtomicModal
     this.handleToggleOpen(next ?? this.isOpen);
   }
 
-  private async handleToggleOpen(isOpen: boolean) {
-    if (isOpen) {
-      await this.handleModalOpen();
-    } else {
-      await this.handleModalClose();
+  // Private methods
+
+  private addModalOpenedClasses() {
+    const modalOpenedClass = 'atomic-modal-opened';
+    document.body.classList.add(modalOpenedClass);
+    this.bindings?.interfaceElement?.classList?.add(modalOpenedClass);
+  }
+
+  private createExecutionTracker(): number {
+    return ++this.currentWatchToggleOpenExecution;
+  }
+
+  private handleCloseOnEscape = (e: KeyboardEvent) => {
+    if (e.key?.toLowerCase() === 'escape') {
+      if (this.isOpen) {
+        this.dispatchEvent(
+          new CustomEvent('close', {bubbles: true, composed: true})
+        );
+      }
+      if (this.close) {
+        this.close();
+      }
+      this.isOpen = false;
     }
+  };
+
+  private async handleModalClose() {
+    const executionId = this.createExecutionTracker();
+
+    this.removeModalOpenedClasses();
+    this.setFocusTrapActive(false);
+
+    await this.waitForAnimationEnded();
+    this.onAnimationEnded();
+    if (!this.isExecutionValid(executionId)) {
+      return;
+    }
+
+    this.shouldRender = false;
   }
 
   private async handleModalOpen() {
@@ -259,34 +248,21 @@ export class AtomicModal
     this.setFocusTrapActive(true);
   }
 
-  private async handleModalClose() {
-    const executionId = this.createExecutionTracker();
-
-    this.removeModalOpenedClasses();
-    this.setFocusTrapActive(false);
-
-    await this.waitForAnimationEnded();
-    this.onAnimationEnded();
-    if (!this.isExecutionValid(executionId)) {
-      return;
+  private async handleToggleOpen(isOpen: boolean) {
+    if (isOpen) {
+      await this.handleModalOpen();
+    } else {
+      await this.handleModalClose();
     }
-
-    this.shouldRender = false;
-  }
-
-  private createExecutionTracker(): number {
-    return ++this.currentWatchToggleOpenExecution;
   }
 
   private isExecutionValid(executionId: number): boolean {
     return executionId === this.currentWatchToggleOpenExecution;
   }
 
-  private addModalOpenedClasses() {
-    const modalOpenedClass = 'atomic-modal-opened';
-    document.body.classList.add(modalOpenedClass);
-    this.bindings?.interfaceElement?.classList?.add(modalOpenedClass);
-  }
+  private onWindowTouchMove = (e: Event) => {
+    this.isOpen && e.preventDefault();
+  };
 
   private removeModalOpenedClasses() {
     const modalOpenedClass = 'atomic-modal-opened';
@@ -294,43 +270,84 @@ export class AtomicModal
     this.bindings?.interfaceElement?.classList?.remove(modalOpenedClass);
   }
 
+  private renderContent() {
+    return html`
+      <article
+        part="container"
+        class=${multiClassMap(
+          tw({
+            '[grid-area:modal] bg-background text-on-background flex flex-col justify-between overflow-hidden': true,
+            'animate-open': this.isOpen,
+            'animate-close': !this.isOpen,
+            'absolute inset-0': this.fullscreen,
+            'rounded shadow': !this.fullscreen,
+          })
+        )}
+        ${ref(this.animatableContainer)}
+      >
+        <header 
+          part="header-wrapper" 
+          class=${multiClassMap(
+            tw({
+              'flex flex-col items-center px-6 py-6': true,
+              'py-4': !this.fullscreen,
+            })
+          )}
+        >
+          <div
+            part="header"
+            class=${multiClassMap(
+              tw({
+                'flex justify-between w-full max-w-lg text-xl': true,
+                'font-bold': this.fullscreen,
+              })
+            )}
+            id=${this.headerId}
+          >
+            <slot name="header"></slot>
+          </div>
+        </header>
+        <hr part="header-ruler" class="border-t border-neutral"/>
+        <div
+          part="body-wrapper"
+          class=${multiClassMap(
+            tw({
+              'flex w-full grow flex-col items-center overflow-auto [scrollbar-gutter:stable_both-edges]': true,
+              'px-6 pt-8 pb-5': this.fullscreen,
+              'p-6': !this.fullscreen,
+            })
+          )}
+        >
+          <div
+            part="body"
+            class="w-full max-w-lg"
+            @touchmove=${(e: Event) => this.isOpen && e.stopPropagation()}
+          >
+            <slot name="body"></slot>
+          </div>
+        </div>
+        <footer
+          part="footer-wrapper"
+          class=${multiClassMap(
+            tw({
+              'z-10 flex flex-col items-center w-full border-t border-neutral bg-background': true,
+              'px-6 py-4 shadow-t-lg': this.fullscreen,
+              'bg-neutral-light px-4 py-4.5': !this.fullscreen,
+            })
+          )}
+        >
+          <div part="footer" class="w-full max-w-lg">
+            <slot name="footer"></slot>
+          </div>
+        </footer>
+      </article>
+    `;
+  }
+
   private setFocusTrapActive(active: boolean) {
     if (this.focusTrap.value) {
       this.focusTrap.value.active = active;
     }
-  }
-
-  private handleCloseOnEscape = (e: KeyboardEvent) => {
-    if (e.key?.toLowerCase() === 'escape') {
-      if (this.isOpen) {
-        this.dispatchEvent(
-          new CustomEvent('close', {bubbles: true, composed: true})
-        );
-      }
-      if (this.close) {
-        this.close();
-      }
-      this.isOpen = false;
-    }
-  };
-
-  private onWindowTouchMove = (e: Event) => {
-    this.isOpen && e.preventDefault();
-  };
-
-  connectedCallback() {
-    super.connectedCallback();
-
-    document.body.addEventListener('keyup', this.handleCloseOnEscape);
-    document.body.addEventListener('touchmove', this.onWindowTouchMove, {
-      passive: false,
-    });
-  }
-
-  disconnectedCallback() {
-    super.disconnectedCallback();
-    document.body.removeEventListener('keyup', this.handleCloseOnEscape);
-    document.body.removeEventListener('touchmove', this.onWindowTouchMove);
   }
 
   private waitForAnimationEnded() {
@@ -344,79 +361,6 @@ export class AtomicModal
         resolve()
       );
     });
-  }
-
-  private renderContent() {
-    return html`
-      <article
-        part="container"
-        class="bg-background text-on-background flex flex-col justify-between ${this.isOpen ? 'animate-open' : 'animate-close'}"
-      
-        ${ref(this.animatableContainer)}
-      >
-        <header part="header-wrapper" class="flex flex-col items-center">
-          <div
-            part="header"
-            class="flex justify-between w-full max-w-lg text-xl"
-            id=${this.headerId}
-          >
-            <slot name="header"></slot>
-          </div>
-        </header>
-        <hr part="header-ruler" class="border-t border-neutral"/>
-        <div
-          part="body-wrapper"
-          class="flex w-full grow flex-col items-center overflow-auto [scrollbar-gutter:stable_both-edges]"
-        >
-          <div
-            part="body"
-            class="w-full max-w-lg"
-            @touchmove=${(e: Event) => this.isOpen && e.stopPropagation()}
-          >
-            <slot name="body"></slot>
-          </div>
-        </div>
-        <footer
-          part="footer-wrapper"
-          class="z-10 flex flex-col items-center w-full border-t border-neutral bg-background"
-        >
-          <div part="footer" class="w-full max-w-lg">
-            <slot name="footer"></slot>
-          </div>
-        </footer>
-      </article>
-    `;
-  }
-
-  @errorGuard()
-  render() {
-    this.updateBreakpoints();
-
-    return html`
-      ${when(
-        this.shouldRender,
-        () => html`
-          <div
-            part="backdrop"
-            class=" ${this.boundary === 'page' ? 'fixed' : 'absolute'} top-0 right-0 bottom-0 left-0 z-9999"
-            @click="${(e: MouseEvent) => e.target === e.currentTarget && this.close()}"
-            data-nosnippet
-          >
-            <atomic-focus-trap
-              role="dialog"
-              aria-modal=${this.isOpen ? 'true' : 'false'}
-              aria-labelledby=${this.headerId}
-              .source=${this.source}
-              .container=${this.container ?? this}
-              ${ref(this.focusTrap)}
-              .scope=${this.scope}
-            >
-              ${this.renderContent()}
-            </atomic-focus-trap>
-          </div>
-        `
-      )}
-    `;
   }
 }
 

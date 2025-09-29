@@ -32,33 +32,33 @@
       hostDiv.style.display = 'inline';
     };
 
-    const initializeSearchInterface = async (searchInterface, usesTargetSelector = false) => {
-      await searchInterface.initialize({
-        accessToken: 'xx564559b1-0045-48e1-953c-3addd1ee4457',
-        organizationId: 'searchuisamples',
-      });
+      const initializeSearchInterface = async (searchInterface) => {
+        await searchInterface.initialize({
+          accessToken: 'xx564559b1-0045-48e1-953c-3addd1ee4457',
+          organizationId: 'searchuisamples',
+        });
 
-      await customElements.whenDefined('atomic-recs-interface');
-      const recsInterface = searchInterface.querySelector('atomic-recs-interface');
-      await recsInterface.initialize({
-        accessToken: 'xx564559b1-0045-48e1-953c-3addd1ee4457',
-        organizationId: 'searchuisamples',
-      });
-      usesTargetSelector && recsInterface.getRecommendations();
+        await customElements.whenDefined('atomic-recs-interface');
+        const recsInterface = searchInterface.querySelector('atomic-recs-interface');
+        await recsInterface.initialize({
+          accessToken: 'xx564559b1-0045-48e1-953c-3addd1ee4457',
+          organizationId: 'searchuisamples',
+        });
+        recsInterface.getRecommendations();
 
       searchInterface.i18n.addResourceBundle('en', 'caption-filetype', {
         '.html': 'html',
       });
     };
 
-    const setupEmbeddedInterface = async (embeddedSearchInterfaceChildren, hostDiv) => {
-      hostDiv.style.display = 'none';
-      embeddedSearchInterfaceChildren.forEach((element) => {
-        hostDiv.querySelector('atomic-ipx-embedded').appendChild(element);
-      });
-      const searchInterface = hostDiv.querySelector('atomic-search-interface');
-      await initializeSearchInterface(searchInterface, true);
-    };
+      const setupEmbeddedInterface = async (embeddedSearchInterfaceChildren, hostDiv) => {
+        hostDiv.style.display = 'none';
+        embeddedSearchInterfaceChildren.forEach((element) => {
+          hostDiv.querySelector('atomic-ipx-embedded').appendChild(element);
+        });
+        const searchInterface = hostDiv.querySelector('atomic-search-interface');
+        await initializeSearchInterface(searchInterface);
+      };
 
     (async () => {
       await customElements.whenDefined('atomic-search-interface');
@@ -69,23 +69,24 @@
       const embeddedSearchInterfaceChildren = Array.from(ipxModal.cloneNode(true).childNodes);
       await setupEmbeddedInterface(embeddedSearchInterfaceChildren, hostDiv);
 
-      await initializeSearchInterface(searchInterface);
+        await setupEmbeddedInterface(embeddedSearchInterfaceChildren, hostDiv);
 
+        await initializeSearchInterface(searchInterface);
 
-      const displaySelect = document.getElementById('ipx-display-select');
-      displaySelect.addEventListener('change', ({ target: { value } }) => {
-        switch (value) {
-          case 'button':
-            ipxSelectorToButtonMode(searchInterface, hostDiv);
-            break;
-          case 'target-selector':
-            ipxButtonToSelectorMode(searchInterface, hostDiv);
-          default:
-            break;
-        }
-      });
-    })();
-  </script>
+        const displaySelect = document.getElementById('ipx-display-select');
+        displaySelect.addEventListener('change', ({target: {value}}) => {
+          switch (value) {
+            case 'button':
+              ipxSelectorToButtonMode(searchInterface, hostDiv);
+              break;
+            case 'target-selector':
+              ipxButtonToSelectorMode(searchInterface, hostDiv);
+            default:
+              break;
+          }
+        });
+      })();
+    </script>
     <style>
     .search-section {
       width: 100%;

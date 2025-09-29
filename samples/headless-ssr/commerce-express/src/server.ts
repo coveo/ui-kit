@@ -25,14 +25,11 @@ app.use(express.static('dist'));
 
 app.get('/', async (req, res) => {
   try {
-    searchEngineDefinition.setNavigatorContextProvider(() =>
-      getNavigatorContext(req)
-    );
-
     const queryFromRequest = req.query.q?.toString?.() ?? '';
 
     const staticState = await searchEngineDefinition.fetchStaticState({
       searchParams: {query: queryFromRequest},
+      navigatorContext: getNavigatorContext(req),
       context: {
         language: 'en',
         country: 'US',

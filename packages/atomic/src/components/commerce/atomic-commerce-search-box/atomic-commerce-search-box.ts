@@ -27,7 +27,8 @@ import {
   type StandaloneSearchBoxData,
   StorageItems,
 } from '@/src/utils/local-storage-utils';
-import {updateBreakpoints} from '@/src/utils/replace-breakpoint';
+import {updateBreakpoints} from '@/src/utils/replace-breakpoint-utils';
+import {getDefaultSlotFromHost} from '@/src/utils/slot-utils';
 import {
   isFocusingOut,
   once,
@@ -39,12 +40,12 @@ import {renderSearchBoxWrapper} from '../../common/search-box/search-box-wrapper
 import {renderSearchBoxTextArea} from '../../common/search-box/search-text-area';
 import {renderSubmitButton} from '../../common/search-box/submit-button';
 import {SuggestionManager} from '../../common/suggestions/suggestion-manager';
-import {
-  elementHasQuery,
-  type SearchBoxSuggestionElement,
-  type SearchBoxSuggestionsBindings,
-  type SearchBoxSuggestionsEvent,
-} from '../../common/suggestions/suggestions-common';
+import type {
+  SearchBoxSuggestionElement,
+  SearchBoxSuggestionsBindings,
+  SearchBoxSuggestionsEvent,
+} from '../../common/suggestions/suggestions-types';
+import {elementHasQuery} from '../../common/suggestions/suggestions-utils';
 import type {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface';
 import type {SelectChildProductEventArgs} from '../atomic-product-children/select-child-product-event';
 import '../atomic-commerce-search-box-instant-products/atomic-commerce-search-box-instant-products';
@@ -205,13 +206,6 @@ export class AtomicCommerceSearchBox
 
   connectedCallback() {
     super.connectedCallback();
-
-    if (this.children.length === 0) {
-      this.replaceChildren(
-        document.createElement('atomic-commerce-search-box-recent-queries'),
-        document.createElement('atomic-commerce-search-box-query-suggestions')
-      );
-    }
 
     this.addEventListener(
       'atomic/searchBoxSuggestion/register',
@@ -702,6 +696,17 @@ export class AtomicCommerceSearchBox
     `;
   }
 
+  private renderSlotContent() {
+    const hasDefaultSlot = !!getDefaultSlotFromHost(this);
+
+    if (hasDefaultSlot) {
+      return html`<slot></slot>`;
+    }
+
+    return html`<atomic-commerce-search-box-recent-queries></atomic-commerce-search-box-recent-queries>
+      <atomic-commerce-search-box-query-suggestions></atomic-commerce-search-box-query-suggestions>`;
+  }
+
   @bindingGuard()
   @errorGuard()
   render() {
@@ -726,18 +731,19 @@ export class AtomicCommerceSearchBox
         },
       })(
         html`${this.renderTextBox()}
-        ${renderSubmitButton({
-          props: {
-            i18n: this.bindings.i18n,
-            disabled: this.isSearchDisabledForEndUser,
-            onClick: () => {
-              this.searchBox.submit();
-              this.suggestionManager.clearSuggestions();
-            },
+      ${renderSubmitButton({
+        props: {
+          i18n: this.bindings.i18n,
+          disabled: this.isSearchDisabledForEndUser,
+          onClick: () => {
+            this.searchBox.submit();
+            this.suggestionManager.clearSuggestions();
           },
-        })}
-        ${this.renderSuggestions()}`
+        },
+      })}
+      ${this.renderSuggestions()}`
       )}
+      ${this.renderSlotContent()}
     `;
   }
 }

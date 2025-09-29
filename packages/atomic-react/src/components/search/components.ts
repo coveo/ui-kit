@@ -4,6 +4,7 @@ import {
   AtomicFacet as LitAtomicFacet,
   AtomicIcon as LitAtomicIcon,
   AtomicLayoutSection as LitAtomicLayoutSection,
+  AtomicQuerySummary as LitAtomicQuerySummary,
   AtomicResultsPerPage as LitAtomicResultsPerPage,
   AtomicSearchInterface as LitAtomicSearchInterface,
   AtomicSearchLayout as LitAtomicSearchLayout,
@@ -39,6 +40,12 @@ export const AtomicLayoutSection = createComponent({
   tagName: 'atomic-layout-section',
   react: React,
   elementClass: LitAtomicLayoutSection,
+});
+
+export const AtomicQuerySummary = createComponent({
+  tagName: 'atomic-query-summary',
+  react: React,
+  elementClass: LitAtomicQuerySummary,
 });
 
 export const AtomicResultsPerPage = createComponent({

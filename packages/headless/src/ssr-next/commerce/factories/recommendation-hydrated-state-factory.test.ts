@@ -1,6 +1,8 @@
-import type {CurrencyCodeISO4217} from '@coveo/relay-event-types';
 import {describe, expect, it, vi} from 'vitest';
 import {getSampleCommerceEngineConfiguration} from '../../../app/commerce-engine/commerce-engine-configuration.js';
+import {defineCart} from '../controllers/cart/headless-cart.ssr.js';
+import {defineContext} from '../controllers/context/headless-context.ssr.js';
+import {defineParameterManager} from '../controllers/parameter-manager/headless-core-parameter-manager.ssr.js';
 import {defineRecommendations} from '../controllers/recommendations/headless-recommendations.ssr.js';
 import {SolutionType} from '../types/controller-constants.js';
 import {buildFactory} from './build-factory.js';
@@ -11,10 +13,16 @@ vi.mock('./build-factory.js');
 describe('hydratedRecommendationStaticStateFactory', () => {
   const createEngineOptions = () => ({
     configuration: getSampleCommerceEngineConfiguration(),
-    navigatorContextProvider: vi.fn(),
   });
 
+  const bakedInControllers = {
+    parameterManager: defineParameterManager(),
+    context: defineContext(),
+    cart: defineCart(),
+  };
+
   const createControllerDefinitions = () => ({
+    ...bakedInControllers,
     popularViewed: defineRecommendations({
       options: {
         slotId: 'slot_1',
@@ -35,14 +43,6 @@ describe('hydratedRecommendationStaticStateFactory', () => {
     },
     controllers: {},
   };
-  const mockSearchActions = [{type: 'some-search-action'}];
-  const mockBaseConfiguration = {
-    country: 'US',
-    currency: 'USD' as CurrencyCodeISO4217,
-    language: 'en',
-    query: 'some query',
-    url: 'https://example.com',
-  };
 
   beforeEach(() => {
     vi.clearAllMocks();
@@ -62,10 +62,8 @@ describe('hydratedRecommendationStaticStateFactory', () => {
       options
     );
 
-    await factory({
-      searchActions: mockSearchActions,
-      ...mockBaseConfiguration,
-    });
+    // @ts-expect-error: do not care about hydration props here
+    await factory();
 
     expect(buildFactory).toHaveBeenCalledWith(controllerDefinitions, options);
     expect(mockRecommendationState).toHaveBeenCalledWith(
@@ -82,31 +80,12 @@ describe('hydratedRecommendationStaticStateFactory', () => {
       createEngineOptions()
     );
 
-    const staticState = await factory({
-      searchActions: mockSearchActions,
-      ...mockBaseConfiguration,
-    });
+    // @ts-expect-error: do not care about hydration props here
+    const staticState = await factory();
 
     expect(
       mockBuildResult.engine.waitForRequestCompletedAction
     ).toHaveBeenCalledOnce();
-    expect(staticState).toEqual(mockBuildResult);
-  });
-
-  it('should call fromBuildResult with correct parameters', async () => {
-    const mockSolutionTypeBuild = vi.fn().mockResolvedValue(mockBuildResult);
-    vi.mocked(buildFactory).mockReturnValue(() => mockSolutionTypeBuild);
-
-    const factory = hydratedRecommendationStaticStateFactory(
-      createControllerDefinitions(),
-      createEngineOptions()
-    );
-
-    const staticState = await factory({
-      searchActions: mockSearchActions,
-      ...mockBaseConfiguration,
-    });
-
     expect(staticState).toEqual(mockBuildResult);
   });
 });

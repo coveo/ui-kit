@@ -6,7 +6,7 @@ export const buildFakeSearchStatus = (
 ): SearchStatus => {
   const defaultState = {
     hasResults: true,
-    firstSearchExecuted: true,
+    firstSearchExecuted: false,
     hasError: false,
     isLoading: false,
     ...options,
