@@ -17,7 +17,7 @@ test.describe('atomic-pager', () => {
     await expect(pagerElement).toBeAttached();
   });
 
-  test('should navigate with next button', async ({pager}) => {
+  test('should navigate through pages', async ({pager}) => {
     await expect(pager.currentPageButton).toHaveAttribute(
       'aria-label',
       'Page 1'
@@ -28,32 +28,17 @@ test.describe('atomic-pager', () => {
       'aria-label',
       'Page 2'
     );
-  });
 
-  test('should navigate with previous button', async ({pager}) => {
-    await pager.nextButton.click();
+    await pager.pageButton(5).click();
     await expect(pager.currentPageButton).toHaveAttribute(
       'aria-label',
-      'Page 2'
+      'Page 5'
     );
 
     await pager.previousButton.click();
     await expect(pager.currentPageButton).toHaveAttribute(
       'aria-label',
-      'Page 1'
-    );
-  });
-
-  test('should navigate to specific page', async ({pager}) => {
-    await expect(pager.currentPageButton).toHaveAttribute(
-      'aria-label',
-      'Page 1'
-    );
-
-    await pager.pageButton(3).click();
-    await expect(pager.currentPageButton).toHaveAttribute(
-      'aria-label',
-      'Page 3'
+      'Page 4'
     );
   });
 });
