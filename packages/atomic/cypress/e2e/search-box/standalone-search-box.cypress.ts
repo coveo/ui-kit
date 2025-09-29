@@ -31,7 +31,7 @@ describe('Standalone Search Box Test Suites', () => {
 
   function setupStandardSearchBoxAfterStandaloneRedirect() {
     // TODO (KIT-2435): Explore a better way to wait for standalone redirect
-    cy.wait(1000); // Flakiness workaround to wait after clicking in standalone search box
+    cy.wait(4000); // Flakiness workaround to wait after clicking in standalone search box
     // TODO (KIT-2356): Fails in Cypress v12 @ withRedirection()
     new TestFixture().withRedirection().with(addSearchBox()).init();
   }
@@ -52,7 +52,7 @@ describe('Standalone Search Box Test Suites', () => {
     cy.location('href').should('contain', url);
   });
 
-  describe.skip('when being redirected to an Atomic Search Interface after submitting a query', () => {
+  describe('when being redirected to an Atomic Search Interface after submitting a query', () => {
     const query = 'hello';
 
     it(`should contain "${query}" and log a proper analytics event`, () => {
@@ -67,7 +67,7 @@ describe('Standalone Search Box Test Suites', () => {
     });
   });
 
-  describe.skip('when being redirected to an Atomic Search Interface after selecting a suggestion', () => {
+  describe('when being redirected to an Atomic Search Interface after selecting a suggestion', () => {
     const query = 'how';
     beforeEach(() => {
       setupStandaloneSearchBox();
@@ -80,13 +80,13 @@ describe('Standalone Search Box Test Suites', () => {
     assertLogOmniboxFromLink(query);
   });
 
-  describe.skip('with the query syntax enabled, after submitting a query', () => {
+  describe('with the query syntax enabled, after submitting a query', () => {
     const query = '@urihash=Wl1SZoqFsR8bpsbG';
     beforeEach(() => {
       setupStandaloneSearchBox({enableQuerySyntax: true});
       SearchBoxSelectors.textArea().type(query);
       SearchBoxSelectors.submitButton().click();
-      cy.wait(1000); // Flakiness workaround to wait after clicking in standalone search box
+      cy.wait(3000); // Flakiness workaround to wait after clicking in standalone search box
       new TestFixture()
         // TODO (KIT-2356): Fails in Cypress v12 @ withRedirection()
         .withRedirection()
