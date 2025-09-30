@@ -10,9 +10,9 @@ describe('atomic-search-box-query-suggestions', () => {
   ) => {
     const template = html`
       <atomic-search-box-query-suggestions
-        max-with-query="${props.maxWithQuery ?? 3}"
-        max-without-query="${props.maxWithoutQuery ?? 0}"
-        icon="${props.icon ?? ''}"
+        .maxWithQuery="${props.maxWithQuery ?? 3}"
+        .maxWithoutQuery="${props.maxWithoutQuery}"
+        .icon="${props.icon ?? ''}"
       >
       </atomic-search-box-query-suggestions>
     `;
@@ -33,7 +33,7 @@ describe('atomic-search-box-query-suggestions', () => {
 
     expect(element).toBeDefined();
     expect(element.maxWithQuery).toBe(3);
-    expect(element.maxWithoutQuery).toBe(0);
+    expect(element.maxWithoutQuery).toBeUndefined();
     expect(element.icon).toBe('');
   });
 
@@ -57,6 +57,16 @@ describe('atomic-search-box-query-suggestions', () => {
 
     expect(element.getAttribute('max-with-query')).toBe('8');
     expect(element.getAttribute('max-without-query')).toBe('3');
+  });
+
+  it('should handle undefined maxWithoutQuery properly', async () => {
+    const {element} = await renderSearchBoxQuerySuggestions({
+      maxWithQuery: 5,
+    });
+
+    expect(element.maxWithQuery).toBe(5);
+    expect(element.maxWithoutQuery).toBeUndefined();
+    expect(element.getAttribute('max-without-query')).toBe(null);
   });
 
   it('should render nothing (hidden component)', async () => {

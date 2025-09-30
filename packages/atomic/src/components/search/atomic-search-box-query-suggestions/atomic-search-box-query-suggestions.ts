@@ -17,25 +17,21 @@ import type {
   SearchBoxSuggestionsBindings,
 } from '@/src/components/common/suggestions/suggestions-types';
 import type {Bindings} from '@/src/components/search/atomic-search-interface/interfaces';
-import {bindings} from '@/src/decorators/bindings';
 import {errorGuard} from '@/src/decorators/error-guard';
 import type {SearchBoxSuggestionsComponent} from '@/src/decorators/types';
-import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles.js';
 import SearchIcon from '../../../images/search.svg';
 
 /**
  * The `atomic-search-box-query-suggestions` component can be added as a child of an `atomic-search-box` component, allowing for the configuration of query suggestion behavior.
  */
 @customElement('atomic-search-box-query-suggestions')
-@bindings()
-@withTailwindStyles
-@bindings()
 export class AtomicSearchBoxQuerySuggestions
   extends LitElement
   implements SearchBoxSuggestionsComponent<Bindings>
 {
+  public bindings!: SearchBoxSuggestionsBindings<SearchBox, Bindings>;
+
   @state() public error!: Error;
-  @state() public bindings!: SearchBoxSuggestionsBindings<SearchBox, Bindings>;
 
   /**
    * The SVG icon to display.
@@ -56,7 +52,7 @@ export class AtomicSearchBoxQuerySuggestions
    * The maximum number of suggestions that will be displayed initially when the input field is empty.
    */
   @property({type: Number, attribute: 'max-without-query', reflect: true})
-  public maxWithoutQuery = 0;
+  public maxWithoutQuery?: number;
 
   connectedCallback() {
     super.connectedCallback();
@@ -121,13 +117,13 @@ export class AtomicSearchBoxQuerySuggestions
       .map((suggestion: Suggestion) => this.renderItem(suggestion));
   }
 
-  private renderItem(suggestion: Suggestion): SearchBoxSuggestionElement {
+  private renderItem(suggestion: Suggestion) {
     const partialItem = getPartialSearchBoxSuggestionElement(
       suggestion,
       this.bindings.i18n
     );
 
-    const icon = this.icon || SearchIcon;
+    const icon = this.icon ? this.icon : SearchIcon;
     const hasQuery = this.bindings.searchBoxController.state.value !== '';
     const hasMultipleKindOfSuggestions =
       this.bindings.getSuggestions().length > 1;

@@ -1,37 +1,33 @@
 import {expect, test} from './fixture';
 
 test.describe('atomic-search-box-query-suggestions', () => {
-  test('should have page object configured', async ({
+  test('should be accessible', async ({
     searchBoxQuerySuggestions,
+    makeAxeBuilder,
   }) => {
-    expect(searchBoxQuerySuggestions.component).toBeDefined();
-    expect(searchBoxQuerySuggestions.searchBox).toBeDefined();
-    expect(searchBoxQuerySuggestions.searchInput).toBeDefined();
-    expect(typeof searchBoxQuerySuggestions.querySuggestions).toBe('function');
-  });
+    await searchBoxQuerySuggestions.load();
 
-  test('should validate component selectors', async ({page}) => {
-    const selectors = await page.evaluate(() => {
-      const testSelectors = [
-        'atomic-search-box-query-suggestions',
-        'atomic-search-box',
-        '[part*="suggestion-item"]',
-        '[aria-label*="suggested query"]',
-      ];
+    await searchBoxQuerySuggestions.page.waitForTimeout(1000);
 
-      return testSelectors.map((selector) => ({
-        isValidSelector: CSS.supports(`selector(${selector})`),
-      }));
-    });
-
-    selectors.forEach(({isValidSelector}) => {
-      expect(isValidSelector).toBe(true);
-    });
+    const accessibilityResults = await makeAxeBuilder().analyze();
+    expect(accessibilityResults.violations).toEqual([]);
   });
 
   test('should load story page', async ({searchBoxQuerySuggestions, page}) => {
     await searchBoxQuerySuggestions.load();
     const pageTitle = await page.title();
     expect(pageTitle).toContain('Storybook');
+  });
+
+  test('should have basic component structure', async ({
+    searchBoxQuerySuggestions,
+    page,
+  }) => {
+    await searchBoxQuerySuggestions.load();
+
+    await page.waitForTimeout(1000);
+
+    const storyContent = page.locator('#storybook-root');
+    await expect(storyContent).toBeAttached();
   });
 });
