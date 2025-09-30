@@ -7,14 +7,14 @@ import type {
   CommerceEngineDefinitionOptions,
 } from '../types/engine.js';
 
-const ensureNavigatorContextProvider = (
+const ensurenavigatorContext = (
   buildConfig: CommonBuildConfig,
   loggerOptions?: LoggerOptions
 ) => {
-  if (!buildConfig.navigatorContextProvider) {
+  if (!buildConfig.navigatorContext) {
     const logger = buildLogger(loggerOptions);
     logger.error(
-      'No navigatorContextProvider was provided. This may impact analytics accuracy, personalization, and session tracking. Refer to the Coveo documentation on server-side navigation context for implementation guidance.'
+      'No navigatorContext was provided. This may impact analytics accuracy, personalization, and session tracking. Refer to the Coveo documentation on server-side navigation context for implementation guidance.'
     );
   }
 };
@@ -27,16 +27,16 @@ export function augmentCommerceEngineOptions<
 ): CommerceEngineOptions {
   const {cart, context} = buildConfig;
 
-  ensureNavigatorContextProvider(buildConfig, engineOptions.loggerOptions);
+  ensurenavigatorContext(buildConfig, engineOptions.loggerOptions);
 
   return {
     ...engineOptions,
-    navigatorContextProvider: buildConfig.navigatorContextProvider,
+    navigatorContextProvider: () => buildConfig.navigatorContext,
     configuration: {
       ...engineOptions.configuration,
       preprocessRequest: augmentPreprocessRequestWithForwardedFor({
         preprocessRequest: engineOptions.configuration.preprocessRequest,
-        navigatorContextProvider: buildConfig.navigatorContextProvider,
+        navigatorContext: buildConfig.navigatorContext,
         loggerOptions: engineOptions.loggerOptions,
       }),
       context: {

@@ -1,5 +1,8 @@
 import {exec} from 'child_process';
-import strip from 'strip-color';
+
+function stripColor(str: string) {
+  return str.replace(/\x1B[[(?);]{0,2}(;?\d)*./g, '');
+}
 
 /**
  * A response from a successful sfdx command.
@@ -32,7 +35,7 @@ export function sfdx<T = SfdxResponse>(command: string): Promise<T> {
         }
         if (stdout) {
           try {
-            jsonOutput = JSON.parse(strip(stdout));
+            jsonOutput = JSON.parse(stripColor(stdout));
             if (error) {
               console.error({
                 sfdxErrorStdout: stdout,

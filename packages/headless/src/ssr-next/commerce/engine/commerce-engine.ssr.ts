@@ -36,7 +36,7 @@ import {validateControllerNames} from '../validation/controller-validation.js';
  * const { listingEngineDefinition } = defineCommerceEngine(engineConfig);
  *
  * const staticState = await listingEngineDefinition.fetchStaticState({
- *   navigatorContextProvider: () => {/*...* /},
+ *   navigatorContext: {/*...* /},
  *   context: {/*...* /},
  * });
  *
