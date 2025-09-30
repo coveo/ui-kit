@@ -2,6 +2,7 @@ import {IconButton} from 'storybook/internal/components';
 import {STORY_MISSING, STORY_RENDERED} from 'storybook/internal/core-events';
 import {CogIcon} from '@storybook/icons';
 import {addons, types} from 'storybook/manager-api';
+import {themes} from 'storybook/theming';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import React from 'react';
 
@@ -12,6 +13,15 @@ declare global {
     };
   }
 }
+
+// Configure Storybook logo link
+addons.setConfig({
+  theme: {
+    ...themes.dark,
+    brandUrl: '?path=/story/introduction--default',
+    brandTarget: '_self',
+  },
+});
 
 addons.register('SELECT-FIRST-STORY-BY-DEFAULT-ONCE', (api) => {
   api.once(STORY_MISSING, () => {
