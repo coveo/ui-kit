@@ -161,16 +161,16 @@ export function assertConsoleErrorMessage(msg: string) {
 
 export function assertConsoleWarning(warn = true) {
   it(`${should(warn)} log a warning to the console`, () => {
-    // get all warning calls, then filter out dev-mode messages
-    cy.getCalls(TestFixture.consoleAliases.warn).should((calls) => {
-      const filtered = calls.filter((call: any) => {
-        const msg = call.args?.[0];
-        return typeof msg === 'string' && !msg.includes('Lit is in dev mode.');
-      });
+    cy.get(TestFixture.consoleAliases.warn).should((spy) => {
+      const calls = spy.getCalls();
+      const filteredCalls = calls.filter(
+        (call) => !call.args[0].includes('Lit is in dev mode.')
+      );
+
       if (warn) {
-        expect(filtered).to.have.length.greaterThan(0);
+        expect(filteredCalls).to.have.length.greaterThan(0);
       } else {
-        expect(filtered).to.have.lengthOf(0);
+        expect(filteredCalls).to.have.lengthOf(0);
       }
     });
   });
