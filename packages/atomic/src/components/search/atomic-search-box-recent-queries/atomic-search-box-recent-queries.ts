@@ -7,7 +7,6 @@ import {html, LitElement, nothing} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {errorGuard} from '@/src/decorators/error-guard';
 import type {SearchBoxSuggestionsComponent} from '@/src/decorators/types';
-import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles.js';
 import {SafeStorage, StorageItems} from '@/src/utils/local-storage-utils';
 import {once} from '@/src/utils/utils';
 import Clock from '../../../images/clock.svg';
@@ -29,7 +28,6 @@ import type {Bindings} from '../atomic-search-interface/interfaces';
  * The `atomic-search-box-recent-queries` component can be added as a child of an `atomic-search-box` component, allowing for the configuration of recent query suggestions.
  */
 @customElement('atomic-search-box-recent-queries')
-@withTailwindStyles
 export class AtomicSearchBoxRecentQueries
   extends LitElement
   implements SearchBoxSuggestionsComponent<Bindings>
@@ -50,15 +48,14 @@ export class AtomicSearchBoxRecentQueries
   @property() public icon?: string;
 
   /**
-   * The maximum number of suggestions that will be displayed if the user has typed something into the input field.
+   * The maximum number of suggestions to display when the user types in the input field.
    */
-  @property({type: Number, attribute: 'max-with-query'}) public maxWithQuery =
-    3;
-
+  @property({type: Number, attribute: 'max-with-query', reflect: true})
+  public maxWithQuery = 3;
   /**
-   * The maximum number of suggestions that will be displayed initially when the input field is empty.
+   * The maximum number of suggestions to display initially, when the input field is empty.
    */
-  @property({type: Number, attribute: 'max-without-query'})
+  @property({type: Number, attribute: 'max-without-query', reflect: true})
   public maxWithoutQuery?: number;
 
   connectedCallback() {
@@ -113,7 +110,7 @@ export class AtomicSearchBoxRecentQueries
 
   private warnUser = once(() =>
     this.bindings.engine.logger.warn(
-      'Because analytics are disabled, the recent queries feature is deactivated.'
+      'The recent queries feature is deactivated because analytics are disabled.'
     )
   );
 
