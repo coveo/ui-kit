@@ -94,11 +94,15 @@ function createTestFileMappings(testPaths, projectRoot) {
       throw new Error(`File ${tsxFilePath} or ${tsFilePath} does not exist.`);
     }
 
-    [
+    const allImportedFiles = [
       relative(projectRoot, sourceFilePath),
       ...listImports(projectRoot, sourceFilePath),
       ...listImports(projectRoot, testPath),
-    ].forEach((importedFile) => imports.add(importedFile));
+    ];
+
+    allImportedFiles.forEach((importedFile) => {
+      imports.add(importedFile);
+    });
 
     return [testName, imports];
   });

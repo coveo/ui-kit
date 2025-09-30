@@ -91,9 +91,7 @@ export const decorators = [
 
       render(story, container);
 
-      const isTestMode =
-        typeof window !== 'undefined' &&
-        window.location.href.includes('localhost');
+      const isTestMode = window?.location.href.includes('localhost');
 
       if (!isTestMode) {
         disableAnalytics(container, [

@@ -29,14 +29,18 @@ export const bindAnalyticsToLink = (
     stopPropagationAndProcess(e, onCancelPendingSelect);
 
   (['click', 'contextmenu', 'mousedown', 'mouseup'] as const).forEach(
-    (eventName) => link.addEventListener(eventName, selectHandler)
+    (eventName) => {
+      link.addEventListener(eventName, selectHandler);
+    }
   );
   link.addEventListener('touchstart', touchStartHandler, {passive: true});
   link.addEventListener('touchend', touchEndHandler, {passive: true});
 
   return () => {
     (['click', 'contextmenu', 'mousedown', 'mouseup'] as const).forEach(
-      (eventName) => link.removeEventListener(eventName, selectHandler)
+      (eventName) => {
+        link.removeEventListener(eventName, selectHandler);
+      }
     );
     link.removeEventListener('touchstart', touchStartHandler);
     link.removeEventListener('touchend', touchEndHandler);

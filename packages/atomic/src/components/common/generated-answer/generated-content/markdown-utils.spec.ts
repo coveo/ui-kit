@@ -292,7 +292,7 @@ describe('markdownUtils', () => {
     });
 
     describe('headings', () => {
-      headings.map((heading) => {
+      headings.forEach((heading) => {
         it(`should transform ${heading.title}`, () => {
           const text = `${heading.symbol} title`;
 
@@ -326,8 +326,8 @@ describe('markdownUtils', () => {
     });
 
     describe('with unclosed inline elements in text', () => {
-      inlineElements.map((inlineElement) => {
-        textVariants.map((textVariant) => {
+      inlineElements.forEach((inlineElement) => {
+        textVariants.forEach((textVariant) => {
           it(`should complete ${inlineElement.title} element for ${textVariant.title}`, () => {
             const text = `some incomplete ${inlineElement.symbol}${textVariant.text}`;
 
@@ -342,8 +342,8 @@ describe('markdownUtils', () => {
     });
 
     describe('with unclosed inline elements in list items', () => {
-      inlineElements.map((inlineElement) => {
-        textVariants.map((textVariant) => {
+      inlineElements.forEach((inlineElement) => {
+        textVariants.forEach((textVariant) => {
           it(`should complete ${inlineElement.title} element for ${textVariant.title}`, () => {
             const text = `1. item A\n2. ${inlineElement.symbol}${textVariant.text}`;
 
@@ -365,7 +365,7 @@ describe('markdownUtils', () => {
     });
 
     describe('with escaped unclosed inline elements', () => {
-      inlineElements.map((inlineElement) => {
+      inlineElements.forEach((inlineElement) => {
         it(`should not complete ${inlineElement.title} element`, () => {
           const text = `text with ${inlineElement.symbol} that is not transformed`;
 

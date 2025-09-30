@@ -15,15 +15,9 @@ export const HydrationMetadata: FunctionComponent<HydrationMetadataProps> = ({
 }) => (
   <>
     <div>
-      Hydrated:{' '}
-      <input
-        id="hydrated-indicator"
-        type="checkbox"
-        disabled
-        checked={!!hydratedState}
-      />
+      Hydrated: <input type="checkbox" disabled checked={!!hydratedState} />
     </div>
-    <span id="hydrated-msg">
+    <span data-testid="hydrated-results-count">
       Rendered page with{' '}
       {
         (hydratedState ?? staticState).controllers.resultList.state.results
@@ -33,7 +27,7 @@ export const HydrationMetadata: FunctionComponent<HydrationMetadataProps> = ({
     </span>
     <div>
       Rendered on{' '}
-      <span id="timestamp" suppressHydrationWarning>
+      <span data-testid="hydrated-timestamp" suppressHydrationWarning>
         {new Date().toISOString()}
       </span>
     </div>

@@ -202,7 +202,9 @@ export class AtomicCommerceBreadbox
   }
 
   private showAllBreadcrumbs() {
-    this.breadcrumbs.forEach((breadcrumb) => this.show(breadcrumb));
+    this.breadcrumbs.forEach((breadcrumb) => {
+      this.show(breadcrumb);
+    });
   }
 
   private adaptBreadcrumbs() {

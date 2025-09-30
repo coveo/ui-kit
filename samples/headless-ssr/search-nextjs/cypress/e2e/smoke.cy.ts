@@ -8,8 +8,8 @@ import {
 } from './utils';
 
 const numResultsMsg = `Rendered page with ${numResults} results`;
-const msgSelector = '#hydrated-msg';
-const timestampSelector = '#timestamp';
+const msgSelector = '[data-testid="hydrated-results-count"]';
+const timestampSelector = '[data-testid="hydrated-timestamp"]';
 const resultListSelector = '.result-list li';
 const searchBoxSelector = '.search-box input';
 const routes = ['generic', 'react'] as const;
