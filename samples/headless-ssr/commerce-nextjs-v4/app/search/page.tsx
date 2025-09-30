@@ -49,11 +49,7 @@ export default async function Search({
     cart: {items},
     context,
     navigatorContext: navigatorContext.marshal,
-    searchParams: {
-      ...parameters,
-      // TODO: KIT-5043: replace 'query' with 'q'
-      query: parameters.q || '',
-    },
+    searchParams: parameters,
   });
 
   return (
