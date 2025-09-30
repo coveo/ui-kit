@@ -1,4 +1,4 @@
-import {QueryStatus, skipToken} from '@reduxjs/toolkit/query';
+import {skipToken} from '@reduxjs/toolkit/query';
 import {answerEvaluation} from '../../../api/knowledge/post-answer-evaluation.js';
 import {
   answerApi,
@@ -103,17 +103,6 @@ describe('knowledge-generated-answer', () => {
 
   beforeEach(() => {
     vi.clearAllMocks();
-
-    mockSelectAnswer.mockReturnValue({
-      status: QueryStatus.uninitialized,
-      data: undefined,
-      isLoading: false,
-      isError: false,
-      isSuccess: false,
-      isUninitialized: true,
-      error: undefined,
-    });
-
     engine = buildEngineWithGeneratedAnswer();
   });
 
@@ -142,14 +131,8 @@ describe('knowledge-generated-answer', () => {
     describe('when RTK Query cache is uninitialized (cache miss)', () => {
       it('should expose undefined answer and default state flags', () => {
         mockSelectAnswer.mockReturnValue({
-          status: QueryStatus.uninitialized,
           data: undefined,
-          isLoading: false,
-          isError: false,
-          isSuccess: false,
-          isUninitialized: true,
-          error: undefined,
-        });
+        } as ReturnType<typeof selectAnswer>);
 
         const generatedAnswer = createGeneratedAnswer();
 
@@ -230,8 +213,6 @@ describe('knowledge-generated-answer', () => {
         mockSelectAnswer.mockReturnValue({
           data: {
             error: {message: 'server error', code: 500},
-            isLoading: false,
-            isStreaming: false,
           },
         } as ReturnType<typeof selectAnswer>);
 
@@ -371,16 +352,9 @@ describe('knowledge-generated-answer', () => {
   });
 
   it('dispatches a sendFeedback action', () => {
-    (selectAnswer as unknown as ReturnType<typeof vi.fn>).mockImplementation(
-      () => ({
-        data: {
-          answer: 'This est une answer',
-          answerId: '12345_6',
-          isLoading: false,
-          isStreaming: false,
-        },
-      })
-    );
+    mockSelectAnswer.mockReturnValue({
+      data: {answer: 'This est une answer', answerId: '12345_6'},
+    } as ReturnType<typeof selectAnswer>);
 
     engine = buildEngineWithGeneratedAnswer({
       query: {q: 'this est une question', enableQuerySyntax: false},
@@ -426,15 +400,6 @@ describe('knowledge-generated-answer', () => {
 
     beforeEach(() => {
       vi.clearAllMocks();
-
-      mockSelectAnswerTriggerParams.mockReturnValue({
-        q: '',
-        requestId: '',
-        cannotAnswer: false,
-        analyticsMode: 'legacy',
-        actionCause: '',
-      });
-
       createGeneratedAnswer();
       listener = engine.subscribe.mock.calls[0][0];
     });

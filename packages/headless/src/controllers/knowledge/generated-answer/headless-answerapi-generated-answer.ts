@@ -157,7 +157,6 @@ export function buildAnswerApiGeneratedAnswer(
     get state() {
       const answerApiState = selectAnswer(engine.state).data;
       const state = getState().generatedAnswer;
-
       return {
         ...state,
         answer: answerApiState?.answer,
