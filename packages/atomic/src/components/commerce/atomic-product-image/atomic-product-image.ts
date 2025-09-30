@@ -3,7 +3,7 @@ import {type Product, ProductTemplatesHelpers} from '@coveo/headless/commerce';
 import {html, LitElement, nothing} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {when} from 'lit/directives/when.js';
-import {createProductContextController} from '@/src/components/commerce/product-template-component-utils/product-template-controllers';
+import {createProductContextController} from '@/src/components/commerce/product-template-component-utils/context/product-context-controller';
 import {renderImageCarousel} from '@/src/components/common/image-carousel/image-carousel';
 import {bindingGuard} from '@/src/decorators/binding-guard';
 import {bindings} from '@/src/decorators/bindings';

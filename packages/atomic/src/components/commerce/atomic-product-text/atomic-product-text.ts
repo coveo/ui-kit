@@ -6,7 +6,7 @@ import {
 import {html, LitElement, nothing} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {when} from 'lit/directives/when.js';
-import {createProductContextController} from '@/src/components/commerce/product-template-component-utils/product-template-controllers.js';
+import {createProductContextController} from '@/src/components/commerce/product-template-component-utils/context/product-context-controller.js';
 import {booleanConverter} from '@/src/converters/boolean-converter';
 import {bindingGuard} from '@/src/decorators/binding-guard';
 import {bindings} from '@/src/decorators/bindings';

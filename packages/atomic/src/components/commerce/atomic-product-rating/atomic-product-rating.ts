@@ -2,7 +2,7 @@ import {type Product, ProductTemplatesHelpers} from '@coveo/headless/commerce';
 import {html, LitElement} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {when} from 'lit/directives/when.js';
-import {createProductContextController} from '@/src/components/commerce/product-template-component-utils/product-template-controllers.js';
+import {createProductContextController} from '@/src/components/commerce/product-template-component-utils/context/product-context-controller.js';
 import ratingStyles from '@/src/components/common/atomic-rating/atomic-rating.tw.css.js';
 import {computeNumberOfStars} from '@/src/components/common/atomic-rating/rating-utils.js';
 import {bindingGuard} from '@/src/decorators/binding-guard';

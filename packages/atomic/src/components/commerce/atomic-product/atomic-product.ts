@@ -7,7 +7,7 @@ import type {CommerceRecommendationStore} from '@/src/components/commerce/atomic
 import type {
   InteractiveProductContextEvent,
   ProductContextEvent,
-} from '@/src/components/commerce/product-template-component-utils/product-template-controllers';
+} from '@/src/components/commerce/product-template-component-utils/context/product-context-controller';
 import type {DisplayConfig} from '@/src/components/common/item-list/context/item-display-config-context-controller';
 import {
   type ItemRenderingFunction,

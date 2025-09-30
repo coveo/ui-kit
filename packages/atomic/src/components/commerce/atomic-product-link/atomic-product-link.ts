@@ -3,10 +3,7 @@ import type {InteractiveProduct, Product} from '@coveo/headless/commerce';
 import {html, LitElement} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {when} from 'lit/directives/when.js';
-import {
-  createInteractiveProductContextController,
-  createProductContextController,
-} from '@/src/components/commerce/product-template-component-utils/product-template-controllers.js';
+import {createInteractiveProductContextController} from '@/src/components/commerce/product-template-component-utils/context/interactive-product-context-controller.js';
 import {getAttributesFromLinkSlot} from '@/src/components/common/item-link/attributes-slot';
 import {renderLinkWithItemAnalytics} from '@/src/components/common/item-link/item-link';
 import {bindingGuard} from '@/src/decorators/binding-guard';
@@ -17,6 +14,7 @@ import {buildCustomEvent} from '@/src/utils/event-utils';
 import type {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface';
 import {buildStringTemplateFromProduct} from '../product-template-component-utils/product-utils';
 import '../atomic-product-text/atomic-product-text';
+import {createProductContextController} from '@/src/components/commerce/product-template-component-utils/context/product-context-controller';
 import {LightDomMixin} from '@/src/mixins/light-dom';
 import {
   type LightDOMWithSlots,
