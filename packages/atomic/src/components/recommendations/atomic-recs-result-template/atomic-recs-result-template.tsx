@@ -8,7 +8,7 @@ import {
   makeDefinedConditions,
   makeMatchConditions,
   ResultTemplateCommon,
-} from '../../common/result-templates/result-template-common';
+} from '../../common/result-templates/stencil-result-template-common';
 
 /**
  * A [result template](https://docs.coveo.com/en/atomic/latest/usage/displaying-results#defining-a-result-template) determines the format of the query results, depending on the conditions that are defined for each template.
