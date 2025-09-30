@@ -73,7 +73,7 @@ export class AtomicProduct extends ChildrenUpdateCompleteMixin(LitElement) {
   /**
    * The product link to use when the product is clicked in a grid layout.
    *
-   * @default - An `atomic-result-link` without any customization.
+   * @default - An `atomic-product-link` without any customization.
    */
   @property({type: Object, attribute: 'link-content'}) linkContent: ParentNode =
     new DocumentFragment();
