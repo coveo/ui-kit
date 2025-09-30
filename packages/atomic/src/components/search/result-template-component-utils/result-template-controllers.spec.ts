@@ -1,15 +1,16 @@
+import type {InteractiveResult} from '@coveo/headless';
 import type {LitElement} from 'lit';
 import {beforeEach, describe, expect, it, vi} from 'vitest';
 import {InteractiveItemContextController} from '@/src/components/common/item-list/context/interactive-item-context-controller';
 import {ItemContextController} from '@/src/components/common/item-list/context/item-context-controller';
 import * as fetchItemContextModule from '@/src/components/common/item-list/fetch-item-context';
 import {
-  createInteractiveProductContextController,
-  createProductContextController,
-  fetchProductContext,
-} from './product-template-decorators';
+  createInteractiveResultContextController,
+  createResultContextController,
+  fetchResultContext,
+} from './result-template-controllers';
 
-vi.mock('@/src/components/common/item-list/fetch-item-context', {spy: true});
+vi.mock('@/src/components/common/item-list/fetch-item-context');
 vi.mock(
   '@/src/components/common/item-list/context/item-context-controller',
   () => ({
@@ -32,7 +33,7 @@ vi.mock(
   })
 );
 
-describe('product-template-decorators', () => {
+describe('result-template-controllers', () => {
   let mockHost: LitElement & {error: Error | null};
 
   beforeEach(() => {
@@ -45,21 +46,21 @@ describe('product-template-decorators', () => {
     } as unknown as LitElement & {error: Error | null};
   });
 
-  describe('#createProductContextController', () => {
-    it('should create ItemContextController with atomic-product parent name and default folded false', () => {
-      createProductContextController(mockHost);
+  describe('#createResultContextController', () => {
+    it('should create ItemContextController with atomic-result parent name and default folded false', () => {
+      createResultContextController(mockHost);
 
       expect(ItemContextController).toHaveBeenCalledWith(mockHost, {
-        parentName: 'atomic-product',
+        parentName: 'atomic-result',
         folded: false,
       });
     });
 
-    it('should create ItemContextController with atomic-product parent name and custom folded value', () => {
-      createProductContextController(mockHost, {folded: true});
+    it('should create ItemContextController with atomic-result parent name and custom folded value', () => {
+      createResultContextController(mockHost, {folded: true});
 
       expect(ItemContextController).toHaveBeenCalledWith(mockHost, {
-        parentName: 'atomic-product',
+        parentName: 'atomic-result',
         folded: true,
       });
     });
@@ -68,17 +69,17 @@ describe('product-template-decorators', () => {
       const mockController = {} as ItemContextController;
       vi.mocked(ItemContextController).mockReturnValue(mockController);
 
-      const result = createProductContextController(mockHost);
+      const result = createResultContextController(mockHost);
 
       expect(result).toBe(mockController);
     });
   });
 
-  describe('#createInteractiveProductContextController', () => {
+  describe('#createInteractiveResultContextController', () => {
     it('should create InteractiveItemContextController with host', () => {
       const hostWithError = mockHost as LitElement & {error: Error};
 
-      createInteractiveProductContextController(hostWithError);
+      createInteractiveResultContextController(hostWithError);
 
       expect(InteractiveItemContextController).toHaveBeenCalledWith(
         hostWithError
@@ -86,42 +87,43 @@ describe('product-template-decorators', () => {
     });
 
     it('should return InteractiveItemContextController instance', () => {
-      const mockController = {} as InteractiveItemContextController;
+      const mockController =
+        {} as InteractiveItemContextController<InteractiveResult>;
       vi.mocked(InteractiveItemContextController).mockReturnValue(
         mockController
       );
       const hostWithError = mockHost as LitElement & {error: Error};
 
-      const result = createInteractiveProductContextController(hostWithError);
+      const result = createInteractiveResultContextController(hostWithError);
 
       expect(result).toBe(mockController);
     });
   });
 
-  describe('#fetchProductContext', () => {
-    it('should call fetchItemContext with element and atomic-product parent name', () => {
+  describe('#fetchResultContext', () => {
+    it('should call fetchItemContext with element and atomic-result parent name', () => {
       const mockElement = document.createElement('div');
       const mockPromise = Promise.resolve({});
       vi.mocked(fetchItemContextModule.fetchItemContext).mockReturnValue(
         mockPromise
       );
 
-      fetchProductContext(mockElement);
+      fetchResultContext(mockElement);
 
       expect(fetchItemContextModule.fetchItemContext).toHaveBeenCalledWith(
         mockElement,
-        'atomic-product'
+        'atomic-result'
       );
     });
 
     it('should return promise from fetchItemContext', () => {
       const mockElement = document.createElement('div');
-      const mockPromise = Promise.resolve({title: 'Test Product'});
+      const mockPromise = Promise.resolve({title: 'Test Result'});
       vi.mocked(fetchItemContextModule.fetchItemContext).mockReturnValue(
         mockPromise
       );
 
-      const result = fetchProductContext(mockElement);
+      const result = fetchResultContext(mockElement);
 
       expect(result).toBe(mockPromise);
     });

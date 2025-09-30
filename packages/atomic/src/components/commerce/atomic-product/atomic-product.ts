@@ -4,6 +4,10 @@ import {customElement, property} from 'lit/decorators.js';
 import {ref} from 'lit/directives/ref.js';
 import type {CommerceStore} from '@/src/components/commerce/atomic-commerce-interface/store';
 import type {CommerceRecommendationStore} from '@/src/components/commerce/atomic-commerce-recommendation-interface/store';
+import type {
+  InteractiveProductContextEvent,
+  ProductContextEvent,
+} from '@/src/components/commerce/product-template-component-utils/product-template-controllers';
 import type {DisplayConfig} from '@/src/components/common/item-list/context/item-display-config-context-controller';
 import {
   type ItemRenderingFunction,
@@ -17,10 +21,6 @@ import type {
 } from '@/src/components/common/layout/display-options';
 import {ItemLayoutController} from '@/src/components/common/layout/item-layout-controller';
 import {booleanConverter} from '@/src/converters/boolean-converter';
-import type {
-  InteractiveProductContextEvent,
-  ProductContextEvent,
-} from '@/src/decorators/commerce/product-template-decorators';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
 import {ChildrenUpdateCompleteMixin} from '@/src/mixins/children-update-complete-mixin';
 import {parentNodeToString} from '@/src/utils/dom-utils';

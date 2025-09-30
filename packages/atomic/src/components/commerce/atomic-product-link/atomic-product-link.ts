@@ -3,14 +3,14 @@ import type {InteractiveProduct, Product} from '@coveo/headless/commerce';
 import {html, LitElement} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {when} from 'lit/directives/when.js';
+import {
+  createInteractiveProductContextController,
+  createProductContextController,
+} from '@/src/components/commerce/product-template-component-utils/product-template-controllers.js';
 import {getAttributesFromLinkSlot} from '@/src/components/common/item-link/attributes-slot';
 import {renderLinkWithItemAnalytics} from '@/src/components/common/item-link/item-link';
 import {bindingGuard} from '@/src/decorators/binding-guard';
 import {bindings} from '@/src/decorators/bindings';
-import {
-  createInteractiveProductContextController,
-  createProductContextController,
-} from '@/src/decorators/commerce/product-template-decorators.js';
 import {errorGuard} from '@/src/decorators/error-guard';
 import type {InitializableComponent} from '@/src/decorators/types';
 import {buildCustomEvent} from '@/src/utils/event-utils';

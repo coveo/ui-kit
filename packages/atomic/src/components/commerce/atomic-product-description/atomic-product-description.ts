@@ -3,10 +3,10 @@ import type {Product} from '@coveo/headless/commerce';
 import {html, LitElement, nothing} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {createRef} from 'lit/directives/ref.js';
+import {createProductContextController} from '@/src/components/commerce/product-template-component-utils/product-template-controllers.js';
 import {booleanConverter} from '@/src/converters/boolean-converter.js';
 import {bindingGuard} from '@/src/decorators/binding-guard.js';
 import {bindings} from '@/src/decorators/bindings.js';
-import {createProductContextController} from '@/src/decorators/commerce/product-template-decorators.js';
 import {errorGuard} from '@/src/decorators/error-guard.js';
 import type {InitializableComponent} from '@/src/decorators/types.js';
 import {

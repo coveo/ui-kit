@@ -19,7 +19,7 @@ import {RecsBindings} from '../../recommendations/atomic-recs-interface/atomic-r
 import {
   ResultContext,
   InteractiveResultContext,
-} from '../../search/result-template-components/result-template-decorators';
+} from '@/src/components/search/result-template-component-utils/stencil-result-template-decorators';
 
 /**
  * The `atomic-ipx-result-link` component automatically transforms a search result title into a clickable link that points to the original item. It is an experimental internal component not intended for general use.
