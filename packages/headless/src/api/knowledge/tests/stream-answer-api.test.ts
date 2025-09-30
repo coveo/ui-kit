@@ -1,7 +1,10 @@
 /** biome-ignore-all lint/suspicious/noExplicitAny: Just tests */
 import type {EventSourceMessage} from '../../../utils/fetch-event-source/parse.js';
 import type {GeneratedAnswerStream} from '../generated-answer-stream.js';
-import {updateCacheWithEvent} from '../stream-answer-api.js';
+import {
+  buildAnswerEndpoint,
+  updateCacheWithEvent,
+} from '../stream-answer-api.js';
 
 describe('#streamAnswerApi', () => {
   describe('updateCacheWithEvent', () => {
@@ -190,6 +193,48 @@ describe('#streamAnswerApi', () => {
       expect(draft).toHaveProperty('generated', false);
       expect(draft).toHaveProperty('isStreaming', false);
       expect(dispatch).toHaveBeenCalled();
+    });
+  });
+
+  describe('buildAnswerEndpoint', () => {
+    const baseUrl = 'https://api.coveo.com';
+    const organizationId = 'test-org-123';
+    const answerConfigurationId = 'answer-config-456';
+    const insightId = 'insight-789';
+
+    it('should throw when missing answerConfiguration', () => {
+      expect(() => buildAnswerEndpoint(baseUrl, organizationId, '')).toThrow(
+        'Missing required parameters for answer endpoint'
+      );
+
+      expect(() =>
+        buildAnswerEndpoint(baseUrl, organizationId, undefined as any)
+      ).toThrow('Missing required parameters for answer endpoint');
+    });
+
+    it('should build the proper endpoint when insightId is not provided', () => {
+      const result = buildAnswerEndpoint(
+        baseUrl,
+        organizationId,
+        answerConfigurationId
+      );
+
+      expect(result).toBe(
+        `${baseUrl}/rest/organizations/${organizationId}/answer/v1/configs/${answerConfigurationId}/generate`
+      );
+    });
+
+    it('should build the proper endpoint when insightId is provided', () => {
+      const result = buildAnswerEndpoint(
+        baseUrl,
+        organizationId,
+        answerConfigurationId,
+        insightId
+      );
+
+      expect(result).toBe(
+        `${baseUrl}/rest/organizations/${organizationId}/insight/v1/configs/${insightId}/answer/${answerConfigurationId}/generate`
+      );
     });
   });
 });

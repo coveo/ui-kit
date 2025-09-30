@@ -1,6 +1,6 @@
 import {selectAnswer} from '../../api/knowledge/stream-answer-api.js';
-import {streamAnswerAPIStateMock} from '../../controllers/knowledge/generated-answer/headless-answerapi-generated-answer-mocks.js';
 import type {SearchAppState} from '../../state/search-app-state.js';
+import {streamAnswerAPIStateMock} from './generated-answer-mocks.js';
 import {generativeQuestionAnsweringIdSelector} from './generated-answer-selectors.js';
 
 vi.mock('../../api/knowledge/stream-answer-api.js', () => ({

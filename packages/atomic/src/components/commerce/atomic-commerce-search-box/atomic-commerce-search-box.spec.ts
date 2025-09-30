@@ -161,11 +161,13 @@ describe('atomic-commerce-search-box', () => {
 
   it('should replace the children with recent-queries & query-suggestions when there are no children', async () => {
     const {element} = await renderSearchBox({noSuggestions: true});
-    expect(element.children.length).toBe(2);
-    expect(element.children[0].tagName).toBe(
+    expect(element.shadowRoot!.children.length).toBe(4);
+    expect(element.shadowRoot!.children[0].tagName).toBe('TEXTAREA');
+    expect(element.shadowRoot!.children[1].tagName).toBe('DIV');
+    expect(element.shadowRoot!.children[2].tagName).toBe(
       'ATOMIC-COMMERCE-SEARCH-BOX-RECENT-QUERIES'
     );
-    expect(element.children[1].tagName).toBe(
+    expect(element.shadowRoot!.children[3].tagName).toBe(
       'ATOMIC-COMMERCE-SEARCH-BOX-QUERY-SUGGESTIONS'
     );
   });

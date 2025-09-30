@@ -1,5 +1,5 @@
 import type {GeneratedAnswerCitation} from '../../api/generated-answer/generated-answer-event-payload.js';
-import type {SearchRequest} from '../../api/search/search/search-request.js';
+import type {AnswerApiQueryParams} from '../../features/generated-answer/generated-answer-request.js';
 import type {
   GeneratedContentFormat,
   GeneratedResponseFormat,
@@ -94,7 +94,7 @@ export interface GeneratedAnswerState {
   /**
    * The query parameters used for the answer API request cache key
    */
-  answerApiQueryParams?: Partial<SearchRequest>;
+  answerApiQueryParams?: AnswerApiQueryParams;
 }
 
 export function getGeneratedAnswerInitialState(): GeneratedAnswerState {
