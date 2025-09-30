@@ -2,6 +2,10 @@ import type {InteractiveProduct, Product} from '@coveo/headless/commerce';
 import {type CSSResultGroup, html, LitElement} from 'lit';
 import {customElement, property} from 'lit/decorators.js';
 import {ref} from 'lit/directives/ref.js';
+import type {
+  InteractiveProductContextEvent,
+  ProductContextEvent,
+} from '@/src/components/commerce/product-template-component-utils/product-template-controllers';
 import type {DisplayConfig} from '@/src/components/common/item-list/context/item-display-config-context-controller';
 import {
   type ItemRenderingFunction,
@@ -14,10 +18,6 @@ import {
   ItemLayout,
 } from '@/src/components/common/layout/display-options';
 import {booleanConverter} from '@/src/converters/boolean-converter';
-import type {
-  InteractiveProductContextEvent,
-  ProductContextEvent,
-} from '@/src/decorators/commerce/product-template-decorators';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
 import {ChildrenUpdateCompleteMixin} from '@/src/mixins/children-update-complete-mixin';
 import {parentNodeToString} from '@/src/utils/dom-utils';

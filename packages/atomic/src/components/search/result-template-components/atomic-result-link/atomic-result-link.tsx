@@ -15,7 +15,7 @@ import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
 import {
   InteractiveResultContext,
   ResultContext,
-} from '../result-template-decorators';
+} from '@/src/components/search/result-template-component-utils/stencil-result-template-decorators';
 
 /**
  * The `atomic-result-link` component automatically transforms a search result title into a clickable link that points to the original item.

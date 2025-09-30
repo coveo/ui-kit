@@ -15,6 +15,8 @@ import {
  * @ResultContext() private result!: Result;
  *
  * For more information and examples, view the "Utilities" section of the readme.
+ * 
+ * @deprecated should only be used for Stencil components. For Lit components, use `createResultContextController` from \@/src/components/search/result-template-component-utils/result-template-controllers.ts
  */
 export function ResultContext(opts: {folded: boolean} = {folded: false}) {
   return ItemContext({parentName: 'atomic-result', folded: opts.folded});
@@ -34,8 +36,10 @@ export type InteractiveResultContextEvent = InteractiveItemContextEvent;
  *
  * You should use the method in the [connectedCallback lifecycle method](https://developer.mozilla.org/en-US/docs/Web/Web_Components/Using_custom_elements#using_the_lifecycle_callbacks).
  *
- * @param element The element that the event is dispatched to, which must be the child of a rendered "atomic-result".
+ * @param element The element that the event is dispatched to, which must be the child of a rendered "atomic-result" element.
  * @returns A promise that resolves on initialization of the parent "atomic-result" element, or rejects when there is no parent "atomic-result" element.
+ * 
+ * @deprecated should only be used for Stencil components. For Lit components, use `fetchResultContext` from \@/src/components/search/result-template-component-utils/result-template-controllers.ts
  */
 export function resultContext<T extends Result | FoldedResult = Result>(
   element: Element

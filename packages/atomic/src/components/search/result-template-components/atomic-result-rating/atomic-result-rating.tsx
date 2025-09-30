@@ -10,7 +10,7 @@ import {
   computeNumberOfStars,
 } from '../../../common/atomic-rating/stencil-rating';
 import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
-import {ResultContext} from '../result-template-decorators';
+import {ResultContext} from '@/src/components/search/result-template-component-utils/stencil-result-template-decorators';
 
 /**
  * The `atomic-result-rating` element renders a star rating.

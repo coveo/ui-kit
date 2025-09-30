@@ -6,7 +6,7 @@ import {
 } from '../../../../utils/initialization-utils';
 import {filterProtocol} from '../../../../utils/xss-utils';
 import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
-import {ResultContext} from '../result-template-decorators';
+import {ResultContext} from '@/src/components/search/result-template-component-utils/stencil-result-template-decorators';
 
 /**
  * The `atomic-result-image` component renders an image from a result field.

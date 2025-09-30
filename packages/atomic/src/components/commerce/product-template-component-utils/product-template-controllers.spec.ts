@@ -1,3 +1,4 @@
+import type {InteractiveProduct} from '@coveo/headless/commerce';
 import type {LitElement} from 'lit';
 import {beforeEach, describe, expect, it, vi} from 'vitest';
 import {InteractiveItemContextController} from '@/src/components/common/item-list/context/interactive-item-context-controller';
@@ -7,7 +8,7 @@ import {
   createInteractiveProductContextController,
   createProductContextController,
   fetchProductContext,
-} from './product-template-decorators';
+} from './product-template-controllers';
 
 vi.mock('@/src/components/common/item-list/fetch-item-context');
 vi.mock(
@@ -32,7 +33,7 @@ vi.mock(
   })
 );
 
-describe('product-template-decorators', () => {
+describe('product-template-controllers', () => {
   let mockHost: LitElement & {error: Error | null};
 
   beforeEach(() => {
@@ -86,7 +87,8 @@ describe('product-template-decorators', () => {
     });
 
     it('should return InteractiveItemContextController instance', () => {
-      const mockController = {} as InteractiveItemContextController;
+      const mockController =
+        {} as InteractiveItemContextController<InteractiveProduct>;
       vi.mocked(InteractiveItemContextController).mockReturnValue(
         mockController
       );

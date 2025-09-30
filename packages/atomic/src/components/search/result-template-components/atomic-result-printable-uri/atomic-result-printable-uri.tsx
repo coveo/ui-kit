@@ -12,7 +12,7 @@ import {parseXML} from '../../../../utils/utils';
 import {getAttributesFromLinkSlot} from '../../../common/item-link/attributes-slot';
 import {LinkWithItemAnalytics} from '../../../common/item-link/stencil-item-link';
 import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
-import {ResultContext} from '../result-template-decorators';
+import {ResultContext} from '@/src/components/search/result-template-component-utils/stencil-result-template-decorators';
 
 /**
  * The `atomic-result-printable-uri` component displays the URI, or path, to access a result.

@@ -6,7 +6,7 @@ import {
   InitializableComponent,
   InitializeBindings,
 } from '../../../utils/initialization-utils';
-import {ResultContext} from '../../search/result-template-components/result-template-decorators';
+import {ResultContext} from '@/src/components/search/result-template-component-utils/stencil-result-template-decorators';
 import {InsightBindings} from '../atomic-insight-interface/atomic-insight-interface';
 
 /**
