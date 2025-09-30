@@ -55,7 +55,6 @@ export class AtomicCommerceRecommendationInterface
   @provide({context: bindingsContext})
   public bindings: CommerceBindings = {} as CommerceBindings;
   @state() public error!: Error;
-
   public context!: Context;
   private store: CommerceRecommendationStore;
 
@@ -75,7 +74,7 @@ export class AtomicCommerceRecommendationInterface
           height: inherit;
         }
       }
-    `,
+      `,
   ];
 
   /**
@@ -112,6 +111,7 @@ export class AtomicCommerceRecommendationInterface
   @property({type: String, attribute: 'icon-assets-path', reflect: true})
   iconAssetsPath: string = './assets';
 
+  // TODO - (v4) KIT-4365: Remove (or more likely turn into private state attribute)
   /**
    * The commerce interface language.
    *
@@ -125,6 +125,10 @@ export class AtomicCommerceRecommendationInterface
    */
   @property({type: String, reflect: true}) language?: string;
 
+  // TODO - KIT-4994: Add disableAnalytics property that defaults to false.
+
+  // TODO - KIT-4994: Deprecate in favor of disableAnalytics property.
+  // TODO - (v4) KIT-4990: Remove.
   /**
    * Whether to enable analytics.
    */
@@ -134,7 +138,6 @@ export class AtomicCommerceRecommendationInterface
     reflect: true,
   })
   analytics: boolean = true;
-
   private i18Initialized: Promise<void>;
 
   public constructor() {
@@ -159,7 +162,7 @@ export class AtomicCommerceRecommendationInterface
   }
 
   /**
-   * Initializes the connection with an already preconfigured [headless commerce engine](https://docs.coveo.com/en/headless/latest/reference/commerce/).
+   * Initializes the connection with an already preconfigured [headless commerce engine](https://docs.coveo.com/en/headless/latest/reference/interfaces/Commerce.CommerceEngine.html).
    */
   public initializeWithEngine(engine: CommerceEngine) {
     engine.dispatch(
@@ -207,16 +210,17 @@ export class AtomicCommerceRecommendationInterface
 
     language && this.interfaceController.onLanguageChange(language);
 
-    const {setContext} = loadContextActions(this.engine);
-
-    this.engine.dispatch(
-      setContext({
-        ...this.context.state,
-        ...(language && {language}),
-        ...(country && {country}),
-        ...(currency && {currency}),
-      })
-    );
+    if (this.isNewLocale(language, country, currency)) {
+      const {setContext} = loadContextActions(this.engine);
+      this.engine.dispatch(
+        setContext({
+          ...this.context.state,
+          ...(language && {language}),
+          ...(country && {country}),
+          ...(currency && {currency}),
+        })
+      );
+    }
   }
 
   @watch('analytics')
@@ -229,6 +233,7 @@ export class AtomicCommerceRecommendationInterface
     this.store.state.iconAssetsPath = this.iconAssetsPath;
   }
 
+  // TODO - (v4) KIT-4365: Remove.
   @watch('language')
   public async updateLanguage() {
     if (
@@ -288,7 +293,7 @@ export class AtomicCommerceRecommendationInterface
       this.i18Initialized,
     ]);
     this.initContext();
-    this.language && this.updateLanguage();
+    this.updateLanguage();
     this.bindings = this.getBindings();
     markParentAsReady(this);
     this.initLanguage();
@@ -306,11 +311,24 @@ export class AtomicCommerceRecommendationInterface
       interfaceElement: this as AtomicCommerceRecommendationInterface,
     };
   }
-
   private initLanguage() {
-    if (!this.language) {
-      this.interfaceController.onLanguageChange(this.context.state.language);
+    if (!this.context || this.language) {
+      return;
     }
+
+    this.interfaceController.onLanguageChange(this.context.state.language);
+  }
+
+  private isNewLocale(language?: string, country?: string, currency?: string) {
+    if (!this.context) {
+      return false;
+    }
+
+    return (
+      (language && language !== this.context.state.language) ||
+      (country && country !== this.context.state.country) ||
+      (currency && currency !== this.context.state.currency)
+    );
   }
 }
 

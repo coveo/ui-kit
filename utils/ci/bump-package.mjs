@@ -53,7 +53,7 @@ const hasPackageJsonChanged = (directoryPath) => {
 };
 
 /**
- * @typedef {import('@npmcli/package-json').PackageJson} PackageJson
+ * @typedef {import('./types.mjs').PackageJson} PackageJson
  */
 
 /**
@@ -75,68 +75,64 @@ const modifyPackageJson = (packageDir, modifyPackageJsonCallback) => {
 const isPrerelease = process.env.IS_PRERELEASE === 'true';
 
 // Run on each package, it generate the changelog, install the latest dependencies that are part of the workspace, publish the package.
-await (async () => {
-  const PATH = '.';
-  const privatePackage = isPrivatePackage();
-  const packageJson = JSON.parse(
-    readFileSync('package.json', {encoding: 'utf-8'})
-  );
-  const versionPrefix = `${packageJson.name}@`;
-  const convention = await changelogConvention();
-  const lastTag = await getLastTag({
-    prefix: versionPrefix,
-    onBranch: `refs/remotes/origin/${REPO_RELEASE_BRANCH}`,
-  });
-  const commits = await getCommits(PATH, lastTag);
-  if (commits.length === 0 && !hasPackageJsonChanged(PATH)) {
-    return;
-  }
-  const parsedCommits = parseCommits(commits, convention.parserOpts);
-  const currentGitVersion = getCurrentVersion(PATH);
-  const currentNpmVersion = new SemVer(
-    privatePackage
-      ? '0.0.0' // private package does not have a npm version, so we default to the 'lowest' possible
-      : await describeNpmTag(packageJson.name, 'beta')
-  );
-  const isRedo = gt(currentNpmVersion, currentGitVersion);
-  const bumpInfo = isRedo
-    ? {type: 'patch'}
-    : convention.whatBump(parsedCommits);
-  const nextGoldVersion = getNextVersion(
-    isRedo ? currentNpmVersion : currentGitVersion,
-    bumpInfo
-  );
-  const newVersion =
-    isPrerelease && !privatePackage
-      ? await getNextBetaVersion(nextGoldVersion)
-      : nextGoldVersion;
+const PATH = '.';
+const privatePackage = isPrivatePackage();
+const packageJson = JSON.parse(
+  readFileSync('package.json', {encoding: 'utf-8'})
+);
+const versionPrefix = `${packageJson.name}@`;
+const convention = await changelogConvention();
+const lastTag = await getLastTag({
+  prefix: versionPrefix,
+  onBranch: `refs/remotes/origin/${REPO_RELEASE_BRANCH}`,
+});
+const commits = await getCommits(PATH, lastTag);
+if (commits.length === 0 && !hasPackageJsonChanged(PATH)) {
+  process.exit(0);
+}
+const parsedCommits = parseCommits(commits, convention.parserOpts);
+const currentGitVersion = getCurrentVersion(PATH);
+const currentNpmVersion = new SemVer(
+  privatePackage
+    ? '0.0.0' // private package does not have a npm version, so we default to the 'lowest' possible
+    : await describeNpmTag(packageJson.name, 'beta')
+);
+const isRedo = gt(currentNpmVersion, currentGitVersion);
+const bumpInfo = isRedo ? {type: 'patch'} : convention.whatBump(parsedCommits);
+const nextGoldVersion = getNextVersion(
+  isRedo ? currentNpmVersion : currentGitVersion,
+  bumpInfo
+);
+const newVersion =
+  isPrerelease && !privatePackage
+    ? await getNextBetaVersion(nextGoldVersion)
+    : nextGoldVersion;
 
-  modifyPackageJson(PATH, (packageJson) => {
-    packageJson.version = newVersion;
-  });
-  await updateWorkspaceDependent(newVersion);
-  if (privatePackage) {
-    return;
-  }
+modifyPackageJson(PATH, (packageJson) => {
+  packageJson.version = newVersion;
+});
+await updateWorkspaceDependent(newVersion);
+if (privatePackage) {
+  process.exit(0);
+}
 
-  if (parsedCommits.length > 0) {
-    const changelog = await generateChangelog(
-      parsedCommits,
-      newVersion,
-      {
-        host: REPO_HOST,
-        owner: REPO_OWNER,
-        repository: REPO_NAME,
-      },
-      convention.writerOpts
-    );
-    await writeChangelog(PATH, changelog);
-  }
-  appendFileSync(
-    join(REPO_FS_ROOT, '.git-message'),
-    `${packageJson.name}@${newVersion}\n`
+if (parsedCommits.length > 0) {
+  const changelog = await generateChangelog(
+    parsedCommits,
+    newVersion,
+    {
+      host: REPO_HOST,
+      owner: REPO_OWNER,
+      repository: REPO_NAME,
+    },
+    convention.writerOpts
   );
-})();
+  await writeChangelog(PATH, changelog);
+}
+appendFileSync(
+  join(REPO_FS_ROOT, '.git-message'),
+  `${packageJson.name}@${newVersion}\n`
+);
 
 /**
  * Update the version of the package in the other packages of the workspace

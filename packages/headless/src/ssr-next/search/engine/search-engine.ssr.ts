@@ -3,7 +3,6 @@
  */
 import type {UnknownAction} from '@reduxjs/toolkit';
 import {buildLogger} from '../../../app/logger.js';
-import type {NavigatorContextProvider} from '../../../app/navigator-context-provider.js';
 import {
   buildSearchEngine,
   type SearchEngine,
@@ -13,21 +12,22 @@ import type {Controller} from '../../../controllers/controller/headless-controll
 import type {LegacySearchAction} from '../../../features/analytics/analytics-utils.js';
 import {createWaitForActionMiddleware} from '../../../utils/utils.js';
 import {augmentPreprocessRequestWithForwardedFor} from '../../common/augment-preprocess-request.js';
+import type {EngineStaticState} from '../../common/types/engine.js';
 import {
   buildControllerDefinitions,
   createStaticState,
-} from '../../common/controller-utils.js';
-import type {ControllerDefinitionsMap} from '../../common/types/controllers.js';
-import type {
-  EngineBuildResult,
-  EngineDefinition,
-  EngineDefinitionOptions,
-  EngineStaticState,
-} from '../../common/types/engine.js';
+} from '../controller-utils.js';
+import type {BuildConfig} from '../types/build.js';
+import type {ControllerDefinitionsMap} from '../types/controller-definition.js';
 import type {
   InferControllerPropsMapFromDefinitions,
   InferControllerStaticStateMapFromDefinitions,
-} from '../../common/types/inference.js';
+} from '../types/controller-inference.js';
+import type {
+  EngineBuildResult,
+  SearchEngineDefinition,
+  SearchEngineDefinitionOptions,
+} from '../types/engine.js';
 
 /**
  * The SSR search engine.
@@ -40,15 +40,6 @@ export interface SSRSearchEngine extends SearchEngine {
    */
   waitForSearchCompletedAction(): Promise<SearchCompletedAction>;
 }
-
-/**
- * The options to create a search engine definition in SSR.
- *
- * @group Engine
- */
-export type SearchEngineDefinitionOptions<
-  TControllers extends ControllerDefinitionsMap<SSRSearchEngine, Controller>,
-> = EngineDefinitionOptions<SearchEngineOptions, TControllers>;
 
 export type SearchCompletedAction = ReturnType<
   LegacySearchAction['fulfilled' | 'rejected']
@@ -81,16 +72,20 @@ function buildSSRSearchEngine(options: SearchEngineOptions): SSRSearchEngine {
   };
 }
 
-export type SearchEngineDefinition<
-  TControllers extends ControllerDefinitionsMap<SSRSearchEngine, Controller>,
-> = EngineDefinition<SSRSearchEngine, TControllers>;
-
 /**
  * Initializes a Search engine definition in SSR with given controllers definitions and search engine config.
  *
  * @param options - The search engine definition
- * @returns Three utility functions to fetch the initial state of the engine in SSR, hydrate the state in CSR,
- *  and a build function that can be used for edge cases requiring more control.
+ * @returns Two utility functions to fetch the initial state of the engine in SSR and hydrate the state in CSR.
+ *
+ * @example
+ * ```ts
+ * const searchEngine = defineSearchEngine(config);
+ *
+ * const staticState = await searchEngine.fetchStaticState({
+ *   navigatorContextProvider: () => {/*...* /},
+ * });
+ * ```
  *
  * @group Engine
  */
@@ -103,38 +98,36 @@ export function defineSearchEngine<
   const {controllers: controllerDefinitions, ...engineOptions} = options;
   type BuildFunction = EngineBuildResult<
     SSRSearchEngine,
-    TControllerDefinitions,
-    SearchEngineOptions
+    TControllerDefinitions
   >;
-  type Definition = SearchEngineDefinition<TControllerDefinitions>;
+  type Definition = SearchEngineDefinition<
+    SSRSearchEngine,
+    TControllerDefinitions
+  >;
   type FetchStaticStateFunction = Definition['fetchStaticState'];
   type HydrateStaticStateFunction = Definition['hydrateStaticState'];
-  type BuildParameters = Parameters<BuildFunction>;
-  type FetchStaticStateParameters = Parameters<FetchStaticStateFunction>;
-  type HydrateStaticStateParameters = Parameters<HydrateStaticStateFunction>;
+  type BuildParameters = Parameters<BuildFunction>[0];
+  type FetchStaticStateParameters = Parameters<FetchStaticStateFunction>[0];
+  type HydrateStaticStateParameters = Parameters<HydrateStaticStateFunction>[0];
 
-  const getOptions = () => {
-    return engineOptions;
-  };
-
-  const setNavigatorContextProvider = (
-    navigatorContextProvider: NavigatorContextProvider
-  ) => {
-    engineOptions.navigatorContextProvider = navigatorContextProvider;
-  };
-
-  const build: BuildFunction = async (...[buildOptions]: BuildParameters) => {
-    const logger = buildLogger(options.loggerOptions);
-    if (!getOptions().navigatorContextProvider) {
-      logger.warn(
-        '[WARNING] Missing navigator context in server-side code. Make sure to set it with `setNavigatorContextProvider` before calling fetchStaticState()'
+  const build: BuildFunction = async (buildOptions: BuildParameters) => {
+    if (!(buildOptions as BuildConfig).navigatorContext) {
+      const logger = buildLogger(options.loggerOptions);
+      logger.error(
+        'No navigatorContext was provided. This may impact analytics accuracy, personalization, and session tracking. Refer to the Coveo documentation on server-side navigation context for implementation guidance.'
       );
     }
-    const engine = buildSSRSearchEngine(
-      buildOptions?.extend
-        ? await buildOptions.extend(getOptions())
-        : getOptions()
-    );
+
+    engineOptions.navigatorContextProvider = () =>
+      (buildOptions as BuildConfig).navigatorContext;
+    engineOptions.configuration.preprocessRequest =
+      augmentPreprocessRequestWithForwardedFor({
+        preprocessRequest: engineOptions.configuration.preprocessRequest,
+        navigatorContext: (buildOptions as BuildConfig).navigatorContext,
+        loggerOptions: engineOptions.loggerOptions,
+      });
+
+    const engine = buildSSRSearchEngine(engineOptions);
     const controllers = buildControllerDefinitions({
       definitionsMap: (controllerDefinitions ?? {}) as TControllerDefinitions,
       engine,
@@ -149,34 +142,32 @@ export function defineSearchEngine<
   };
 
   const fetchStaticState: FetchStaticStateFunction = async (
-    ...params: FetchStaticStateParameters
+    params: FetchStaticStateParameters
   ) => {
-    const {engine, controllers} = await build(...(params as BuildParameters));
-
-    options.configuration.preprocessRequest =
-      augmentPreprocessRequestWithForwardedFor({
-        preprocessRequest: options.configuration.preprocessRequest,
-        navigatorContextProvider: options.navigatorContextProvider,
-        loggerOptions: options.loggerOptions,
-      });
+    const {engine, controllers} = await build(params as BuildParameters);
 
     engine.executeFirstSearch();
     const staticState = createStaticState({
-      searchAction: await engine.waitForSearchCompletedAction(),
+      searchActions: [await engine.waitForSearchCompletedAction()],
       controllers: controllers,
     }) as EngineStaticState<
       UnknownAction,
       InferControllerStaticStateMapFromDefinitions<TControllerDefinitions>
     >;
 
-    return staticState;
+    return {
+      ...params,
+      ...staticState,
+    };
   };
 
   const hydrateStaticState: HydrateStaticStateFunction = async (
-    ...params: HydrateStaticStateParameters
+    params: HydrateStaticStateParameters
   ) => {
-    const {engine, controllers} = await build(...(params as BuildParameters));
-    engine.dispatch(params[0]!.searchAction);
+    const {engine, controllers} = await build(params as BuildParameters);
+    params.searchActions.forEach((action) => {
+      engine.dispatch(action);
+    });
     await engine.waitForSearchCompletedAction();
     return {engine, controllers};
   };
@@ -184,6 +175,5 @@ export function defineSearchEngine<
   return {
     fetchStaticState,
     hydrateStaticState,
-    setNavigatorContextProvider,
   };
 }

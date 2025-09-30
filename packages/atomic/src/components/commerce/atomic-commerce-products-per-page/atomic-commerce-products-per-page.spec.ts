@@ -27,7 +27,7 @@ import type {AtomicCommerceProductsPerPage} from './atomic-commerce-products-per
 vi.mock('@coveo/headless/commerce', {spy: true});
 vi.mock('@/src/components/common/items-per-page/validate.js', {spy: true});
 
-describe('AtomicCommerceProductsPerPage', () => {
+describe('atomic-commerce-products-per-page', () => {
   const mockedEngine = buildFakeCommerceEngine();
   const mockedFocusOnFirstResultAfterNextSearch = vi.fn(() =>
     Promise.resolve()

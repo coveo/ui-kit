@@ -13,7 +13,6 @@
   "workspaces": {
     ".": {
       "entry": ["hooks/*.js", "scripts/**/*.{js,mjs}"],
-      "ignoreDependencies": ["@commitlint/config-conventional"],
       "ignoreBinaries": ["ts-node", "dev"]
     },
     "packages/headless": {
@@ -45,12 +44,12 @@
     "packages/documentation": {
       "entry": ["**/assets/**/*.js", "**/lib/*.ts"]
     },
-    "packages/samples/headless-commerce-react": {
+    "samples/headless/commerce-react": {
       // Can be removed once the deprecated controller is removed from headless.
       "ignore": ["src/components/legacy-field-suggestions/**"],
       "ignoreDependencies": ["jsdom"]
     },
-    "packages/samples/headless-react": {
+    "samples/headless/search-react": {
       "entry": ["server/server.tsx", "src/index.tsx"],
       "ignoreDependencies": ["jsdom"]
     },
@@ -72,13 +71,10 @@
     "packages/shopify": {
       "ignore": ["**/*"]
     },
-    "packages/samples/stencil": {
+    "samples/atomic/search-stencil": {
       "ignore": ["**/*"]
     },
-    "packages/samples/headless-ssr": {
-      "ignore": ["**/*"]
-    },
-    "packages/samples/iife": {
+    "samples/headless-ssr/search-nextjs": {
       "ignore": ["**/*"]
     },
     "packages/create-atomic-component": {

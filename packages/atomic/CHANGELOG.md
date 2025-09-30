@@ -1,3 +1,65 @@
+## <small>3.33.7 (2025-09-24)</small>
+
+* chore: cleanup dependencies in atomic package (#6070) ([0ac5bd8](https://github.com/coveo/ui-kit/commits/0ac5bd8)), closes [#6070](https://github.com/coveo/ui-kit/issues/6070)
+* chore: remove unused dev dependencies from root package.json (#6058) ([98b9e67](https://github.com/coveo/ui-kit/commits/98b9e67)), closes [#6058](https://github.com/coveo/ui-kit/issues/6058)
+* chore(atomic): add missing tests for utility functions (#6046) ([db98f39](https://github.com/coveo/ui-kit/commits/db98f39)), closes [#6046](https://github.com/coveo/ui-kit/issues/6046)
+* chore(atomic): add UT for suggestions-common.ts (#6051) ([42e9638](https://github.com/coveo/ui-kit/commits/42e9638)), closes [#6051](https://github.com/coveo/ui-kit/issues/6051)
+* chore(atomic): migrate atomic-modal (#6033) ([5fd1a2b](https://github.com/coveo/ui-kit/commits/5fd1a2b)), closes [#6033](https://github.com/coveo/ui-kit/issues/6033)
+* chore(atomic): remove border-color fallback from global styles (#6012) ([92d78a0](https://github.com/coveo/ui-kit/commits/92d78a0)), closes [#6012](https://github.com/coveo/ui-kit/issues/6012)
+* chore(query summary): migrate atomic-query-summary (#6025) ([25218e2](https://github.com/coveo/ui-kit/commits/25218e2)), closes [#6025](https://github.com/coveo/ui-kit/issues/6025)
+
+
+
+## <small>3.33.6 (2025-09-18)</small>
+
+* [Version Bump][skip ci]: ui-kit publish ([a3fb13e](https://github.com/coveo/ui-kit/commits/a3fb13e))
+* chore(atomic): harmonize descriptions in component ut / e2e (#6044) ([4c30048](https://github.com/coveo/ui-kit/commits/4c30048)), closes [#6044](https://github.com/coveo/ui-kit/issues/6044)
+* chore(atomic): move computeNumberOfStars into dedicated rating-utils file (#6045) ([0b6ca95](https://github.com/coveo/ui-kit/commits/0b6ca95)), closes [#6045](https://github.com/coveo/ui-kit/issues/6045)
+
+
+
+## <small>3.33.5 (2025-09-17)</small>
+
+* chore(atomic): harmonize descriptions in component ut / e2e (#6044) ([4c30048](https://github.com/coveo/ui-kit/commits/4c30048)), closes [#6044](https://github.com/coveo/ui-kit/issues/6044)
+* chore(atomic): move computeNumberOfStars into dedicated rating-utils file (#6045) ([0b6ca95](https://github.com/coveo/ui-kit/commits/0b6ca95)), closes [#6045](https://github.com/coveo/ui-kit/issues/6045)
+
+
+
+## <small>3.33.4 (2025-09-17)</small>
+
+* chore: deduplicate dependencies in create-atomic-* (#6029) ([ba54e8e](https://github.com/coveo/ui-kit/commits/ba54e8e)), closes [#6029](https://github.com/coveo/ui-kit/issues/6029)
+* chore: fix vitest config (#6019) ([bd83d59](https://github.com/coveo/ui-kit/commits/bd83d59)), closes [#6019](https://github.com/coveo/ui-kit/issues/6019)
+* chore(atomic commerce): rework atomic-commerce-search-interface unit tests (#6036) ([79e7bcb](https://github.com/coveo/ui-kit/commits/79e7bcb)), closes [#6036](https://github.com/coveo/ui-kit/issues/6036)
+* chore(atomic insight): migrate IconButton functional component (#5976) ([8b47cb0](https://github.com/coveo/ui-kit/commits/8b47cb0)), closes [#5976](https://github.com/coveo/ui-kit/issues/5976)
+* chore(atomic): use cssnano instead of lightningcss for minification (#6047) ([0d03e37](https://github.com/coveo/ui-kit/commits/0d03e37)), closes [#6047](https://github.com/coveo/ui-kit/issues/6047)
+* docs: Fixed broken links (#5957) ([6c63261](https://github.com/coveo/ui-kit/commits/6c63261)), closes [#5957](https://github.com/coveo/ui-kit/issues/5957)
+* (docs): Remove request duration info on the  atomic-commerce-query-summary component (#6007) ([009880b](https://github.com/coveo/ui-kit/commits/009880b)), closes [#6007](https://github.com/coveo/ui-kit/issues/6007)
+
+
+
+## <small>3.33.3 (2025-09-03)</small>
+
+* fix(atomic commerce): missing min-height for atomic-product-excerpt/description (#5969) ([d2100f1](https://github.com/coveo/ui-kit/commits/d2100f1)), closes [#5969](https://github.com/coveo/ui-kit/issues/5969)
+* fix(atomic commerce): prevent scroll to top on product children selection/hover in grid mode (#5997) ([5fc0927](https://github.com/coveo/ui-kit/commits/5fc0927)), closes [#5997](https://github.com/coveo/ui-kit/issues/5997)
+* fix(atomic): fix product children placement in grid mode (#5949) ([42b40cc](https://github.com/coveo/ui-kit/commits/42b40cc)), closes [#5949](https://github.com/coveo/ui-kit/issues/5949)
+* chore(atomic): deduplicate item list styles (#5944) ([9288f5b](https://github.com/coveo/ui-kit/commits/9288f5b)), closes [#5944](https://github.com/coveo/ui-kit/issues/5944)
+* chore(atomic): migrate atomic-*-section-actions styles (#5937) ([64b67bf](https://github.com/coveo/ui-kit/commits/64b67bf)), closes [#5937](https://github.com/coveo/ui-kit/issues/5937)
+* chore(atomic): migrate atomic-*-section-badges styles (#5938) ([f1dd16d](https://github.com/coveo/ui-kit/commits/f1dd16d)), closes [#5938](https://github.com/coveo/ui-kit/issues/5938)
+* chore(atomic): migrate atomic-*-section-children styles (#5945) ([94eed6f](https://github.com/coveo/ui-kit/commits/94eed6f)), closes [#5945](https://github.com/coveo/ui-kit/issues/5945)
+* chore(atomic): migrate atomic-*-section-emphasized styles (#5902) ([ac50552](https://github.com/coveo/ui-kit/commits/ac50552)), closes [#5902](https://github.com/coveo/ui-kit/issues/5902)
+* chore(atomic): migrate atomic-*-section-excerpt styles (#5936) ([ee24f8b](https://github.com/coveo/ui-kit/commits/ee24f8b)), closes [#5936](https://github.com/coveo/ui-kit/issues/5936)
+* chore(atomic): migrate atomic-*-section-metadata styles (#5935) ([793842a](https://github.com/coveo/ui-kit/commits/793842a)), closes [#5935](https://github.com/coveo/ui-kit/issues/5935)
+* chore(atomic): migrate atomic-*-section-title styles (#5939) ([7446e74](https://github.com/coveo/ui-kit/commits/7446e74)), closes [#5939](https://github.com/coveo/ui-kit/issues/5939)
+* chore(atomic): migrate atomic-*-section-visual styles (#5941) ([e92dd0e](https://github.com/coveo/ui-kit/commits/e92dd0e)), closes [#5941](https://github.com/coveo/ui-kit/issues/5941)
+* chore(atomic): migrate template system common styles to custom utilities (#5907) ([f230cfe](https://github.com/coveo/ui-kit/commits/f230cfe)), closes [#5907](https://github.com/coveo/ui-kit/issues/5907)
+* chore(atomic): remove unused template from component generation script (#5991) ([beedda1](https://github.com/coveo/ui-kit/commits/beedda1)), closes [#5991](https://github.com/coveo/ui-kit/issues/5991)
+* chore(deps): update tailwind to v4.1.12 j:kit-282 (#5960) ([8f4654f](https://github.com/coveo/ui-kit/commits/8f4654f)), closes [#5960](https://github.com/coveo/ui-kit/issues/5960)
+* docs: document default slot of `atomic-commerce-layout` (#5979) ([ad23431](https://github.com/coveo/ui-kit/commits/ad23431)), closes [#5979](https://github.com/coveo/ui-kit/issues/5979)
+* refactor(atomic): rewrite `injectStylesForNowShadowDom` as `LightDomMixin` to expose `injectStyles`  ([e994ef8](https://github.com/coveo/ui-kit/commits/e994ef8)), closes [#5987](https://github.com/coveo/ui-kit/issues/5987)
+* ci: stop building storybook twice (#5977) ([bcfdb15](https://github.com/coveo/ui-kit/commits/bcfdb15)), closes [#5977](https://github.com/coveo/ui-kit/issues/5977) [#5733](https://github.com/coveo/ui-kit/issues/5733)
+
+
+
 ## <small>3.33.2 (2025-08-28)</small>
 
 * fix: expose rga internals for angular availability (#5958) ([d452d4f](https://github.com/coveo/ui-kit/commits/d452d4f)), closes [#5958](https://github.com/coveo/ui-kit/issues/5958)

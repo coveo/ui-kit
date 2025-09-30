@@ -1,0 +1,33 @@
+{
+  "name": "@samples/atomic-search-nextjs-pages-router",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "@coveo/atomic": "3.33.7",
+    "@coveo/atomic-react": "3.3.11",
+    "@coveo/headless": "3.31.0",
+    "next": "15.2.4",
+    "react": "19.1.1",
+    "react-dom": "19.1.1"
+  },
+  "devDependencies": {
+    "@types/node": "22.16.5",
+    "@types/react": "19.1.1",
+    "@types/react-dom": "19.1.2",
+    "cypress": "13.7.3",
+    "ncp": "2.0.0",
+    "typescript": "5.8.3"
+  },
+  "scripts": {
+    "build": "npm run build:next && npm run build:ts-esm && npm run build:ts-cjs",
+    "build:next": "npm run-script -w=@coveo/ci if-not-cdn -- \"npx next build\"",
+    "build:ts-esm": "npm run-script -w=@coveo/ci if-not-cdn -- \"tsc --noEmit\"",
+    "build:ts-cjs": "npm run-script -w=@coveo/ci if-not-cdn -- \"tsc --module commonjs --noEmit\"",
+    "dev": "npm run build:assets && npm run dev:nextjs",
+    "dev:nextjs": "next dev",
+    "build:assets": "ncp ../../../packages/atomic-react/dist/assets public/assets && ncp ../../../packages/atomic-react/dist/lang public/lang",
+    "e2e:watch": "cypress open --browser chrome --e2e",
+    "e2e": "cypress run --browser chrome"
+  }
+}

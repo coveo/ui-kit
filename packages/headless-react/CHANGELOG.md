@@ -1,3 +1,29 @@
+## 2.6.0 (2025-09-24)
+
+* feat(headless-ssr): add per-call navigator context support (#5878) ([76f135a](https://github.com/coveo/ui-kit/commits/76f135a)), closes [#5878](https://github.com/coveo/ui-kit/issues/5878)
+
+
+
+## <small>2.5.10 (2025-09-18)</small>
+
+* chore(headless-react-ssr): create a folder for commerce next API (#5994) ([aaf190e](https://github.com/coveo/ui-kit/commits/aaf190e)), closes [#5994](https://github.com/coveo/ui-kit/issues/5994)
+* [Version Bump][skip ci]: ui-kit publish ([a3fb13e](https://github.com/coveo/ui-kit/commits/a3fb13e))
+
+
+
+## <small>2.5.8 (2025-09-17)</small>
+
+* chore: fix vitest config (#6019) ([bd83d59](https://github.com/coveo/ui-kit/commits/bd83d59)), closes [#6019](https://github.com/coveo/ui-kit/issues/6019)
+
+
+
+## <small>2.5.7 (2025-09-03)</small>
+
+* test(headless-ssr): fix flaky SSR commerce tests (#5967) ([45c114a](https://github.com/coveo/ui-kit/commits/45c114a)), closes [#5967](https://github.com/coveo/ui-kit/issues/5967)
+* test(headless-ssr): fix flaky SSR search tests (#5996) ([53cab85](https://github.com/coveo/ui-kit/commits/53cab85)), closes [#5996](https://github.com/coveo/ui-kit/issues/5996) [#5967](https://github.com/coveo/ui-kit/issues/5967)
+
+
+
 ## <small>2.5.5 (2025-08-27)</small>
 
 * chore(headless-ssr): auto-include Essential OOTB Controllers in Commerce Engine Definition (#5865) ([846210d](https://github.com/coveo/ui-kit/commits/846210d)), closes [#5865](https://github.com/coveo/ui-kit/issues/5865)

@@ -2,12 +2,10 @@
  * Utility functions to be used for Commerce Server Side Rendering.
  */
 
-import type {NavigatorContextProvider} from '../../../app/navigator-context-provider.js';
 import type {Controller} from '../../../controllers/controller/headless-controller.js';
 import {defineCart} from '../controllers/cart/headless-cart.ssr.js';
 import {defineContext} from '../controllers/context/headless-context.ssr.js';
 import {defineParameterManager} from '../controllers/parameter-manager/headless-core-parameter-manager.ssr.js';
-import type {CommerceEngineDefinitionOptions} from '../factories/build-factory.js';
 import {hydratedStaticStateFactory} from '../factories/hydrated-state-factory.js';
 import {hydratedRecommendationStaticStateFactory} from '../factories/recommendation-hydrated-state-factory.js';
 import {fetchRecommendationStaticStateFactory} from '../factories/recommendation-static-state-factory.js';
@@ -17,7 +15,10 @@ import type {
   AugmentedControllerDefinition,
   ControllerDefinitionsMap,
 } from '../types/controller-definitions.js';
-import type {CommerceEngineDefinition} from '../types/engine.js';
+import type {
+  CommerceEngineDefinition,
+  CommerceEngineDefinitionOptions,
+} from '../types/engine.js';
 import {validateControllerNames} from '../validation/controller-validation.js';
 
 /**
@@ -32,9 +33,15 @@ import {validateControllerNames} from '../validation/controller-validation.js';
  *
  * @example
  * ```ts
- * const engineDefinition = defineCommerceEngine(engineConfig);
- * type SearchStaticState = InferStaticState<typeof engineDefinition>;
- * type SearchHydratedState = InferHydratedState<typeof engineDefinition>;
+ * const { listingEngineDefinition } = defineCommerceEngine(engineConfig);
+ *
+ * const staticState = await listingEngineDefinition.fetchStaticState({
+ *   navigatorContext: {/*...* /},
+ *   context: {/*...* /},
+ * });
+ *
+ * type SearchStaticState = InferStaticState<typeof listingEngineDefinition>;
+ * type SearchHydratedState = InferHydratedState<typeof listingEngineDefinition>;
  * ```
  *
  * @group Engine
@@ -64,12 +71,6 @@ export function defineCommerceEngine<
   const {controllers: controllerDefinitions, ...engineOptions} = options;
 
   const getOptions = () => engineOptions;
-
-  const setNavigatorContextProvider = (
-    navigatorContextProvider: NavigatorContextProvider
-  ) => {
-    engineOptions.navigatorContextProvider = navigatorContextProvider;
-  };
 
   const getAccessToken = () => engineOptions.configuration.accessToken;
 
@@ -105,7 +106,6 @@ export function defineCommerceEngine<
       getOptions()
     );
   const commonMethods = {
-    setNavigatorContextProvider,
     getAccessToken,
     setAccessToken,
   };
@@ -115,28 +115,22 @@ export function defineCommerceEngine<
       fetchStaticState: fetchStaticState(SolutionType.listing),
       hydrateStaticState: hydrateStaticState(SolutionType.listing),
       ...commonMethods,
-    } as CommerceEngineDefinition<TControllerDefinitions, SolutionType.listing>,
+    },
     searchEngineDefinition: {
       fetchStaticState: fetchStaticState(SolutionType.search),
       hydrateStaticState: hydrateStaticState(SolutionType.search),
       ...commonMethods,
-    } as CommerceEngineDefinition<TControllerDefinitions, SolutionType.search>,
+    },
     recommendationEngineDefinition: {
       fetchStaticState: fetchRecommendationStaticState,
       hydrateStaticState: hydrateRecommendationStaticState,
       ...commonMethods,
-    } as CommerceEngineDefinition<
-      TControllerDefinitions,
-      SolutionType.recommendation
-    >,
+    },
     // TODO KIT-3738 :  The standaloneEngineDefinition should not be async since no request is sent to the API
     standaloneEngineDefinition: {
       fetchStaticState: fetchStaticState(SolutionType.standalone),
       hydrateStaticState: hydrateStaticState(SolutionType.standalone),
       ...commonMethods,
-    } as CommerceEngineDefinition<
-      TControllerDefinitions,
-      SolutionType.standalone
-    >,
+    },
   };
 }

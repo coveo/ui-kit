@@ -1,46 +1,16 @@
-@utility atomic-children-desktop-* {
-  &.child-result:not(.last-child) {
-    margin-bottom: --value([ *]);
-  }
-
-  & {
-    atomic-result-section-children,
-    atomic-product-section-children {
-      atomic-result-children::part(children-root),
-      atomic-insight-result-children::part(children-root),
-      atomic-product-children::part(children-root) {
-        margin-top: --modifier([ *]);
-        padding: --value([ *]);
-      }
-
-      atomic-result-children::part(show-hide-button),
-      atomic-insigh-result-children::part(show-hide-button),
-      atomic-product-children::part(show-hide-button) {
-        margin-top: --modifier([ *]);
-        margin-bottom: --modifier([ *]);
-      }
-    }
-  }
-
-  .placeholder {
-    margin-bottom: --value([ *]);
-  }
-}
+@reference './atomic-children.css';
 
 @utility row-result-desktop {
   &.image-large.density-compact {
-    atomic-result-section-visual,
-    atomic-product-section-visual {
+    atomic-result-section-visual {
       width: 10.25rem;
       height: 10.25rem;
     }
   }
 
-  atomic-result-section-children,
-  atomic-product-section-children {
+  atomic-result-section-children {
     atomic-result-children::part(children-root),
-    atomic-insight-result-children::part(children-root),
-    atomic-product-children::part(children-root) {
+    atomic-insight-result-children::part(children-root) {
       @apply border-neutral border;
       border-radius: 16px;
     }
@@ -48,26 +18,21 @@
 
   /* == Density styles == */
   &.density-comfortable {
-    atomic-result-section-visual,
-    atomic-product-section-visual {
+    atomic-result-section-visual {
       margin-right: 1.5rem;
     }
 
     atomic-result-section-badges,
-    atomic-product-section-badges,
-    atomic-result-section-actions,
-    atomic-product-section-actions {
+    atomic-result-section-actions {
       margin-bottom: 1.5rem;
       --row-height: 2rem;
     }
 
-    atomic-result-section-title,
-    atomic-product-section-name {
+    atomic-result-section-title {
       @apply set-font-size-2xl;
     }
 
-    atomic-result-section-excerpt,
-    atomic-product-section-description {
+    atomic-result-section-excerpt {
       margin-top: 1.75rem;
       @apply set-font-size-lg;
 
@@ -82,8 +47,7 @@
       max-height: 4rem;
     }
 
-    atomic-result-section-title-metadata,
-    atomic-product-section-metadata {
+    atomic-result-section-title-metadata {
       margin-top: 0.475rem;
     }
 
@@ -91,26 +55,21 @@
   }
 
   &.density-normal {
-    atomic-result-section-visual,
-    atomic-product-section-visual {
+    atomic-result-section-visual {
       margin-right: 1rem;
     }
 
     atomic-result-section-badges,
-    atomic-product-section-badges,
-    atomic-result-section-actions,
-    atomic-product-section-actions {
+    atomic-result-section-actions {
       margin-bottom: 1rem;
       --row-height: 2rem;
     }
 
-    atomic-result-section-title,
-    atomic-product-section-name {
+    atomic-result-section-title {
       @apply set-font-size-xl;
     }
 
-    atomic-result-section-excerpt,
-    atomic-product-section-description {
+    atomic-result-section-excerpt {
       margin-top: 1.25rem;
       @apply set-font-size-base;
 
@@ -125,8 +84,7 @@
       max-height: 3.5rem;
     }
 
-    atomic-result-section-title-metadata,
-    atomic-product-section-metadata {
+    atomic-result-section-title-metadata {
       margin-top: 0.475rem;
     }
 
@@ -134,26 +92,21 @@
   }
 
   &.density-compact {
-    atomic-result-section-visual,
-    atomic-product-section-visual {
+    atomic-result-section-visual {
       margin-right: 1rem;
     }
 
     atomic-result-section-badges,
-    atomic-product-section-badges,
-    atomic-result-section-actions,
-    atomic-product-section-actions {
+    atomic-result-section-actions {
       margin-bottom: 1rem;
       --row-height: 2rem;
     }
 
-    atomic-result-section-title,
-    atomic-product-section-name {
+    atomic-result-section-title {
       @apply set-font-size-xl;
     }
 
-    atomic-result-section-excerpt,
-    atomic-product-section-description {
+    atomic-result-section-excerpt {
       margin-top: 1rem;
       @apply set-font-size-base;
 
@@ -168,8 +121,7 @@
       max-height: 3.25rem;
     }
 
-    atomic-result-section-title-metadata,
-    atomic-product-section-metadata {
+    atomic-result-section-title-metadata {
       margin-top: 0.475rem;
     }
 
@@ -193,8 +145,7 @@
 
   &.image-large.density-comfortable,
   &.image-large.density-normal {
-    atomic-result-section-visual,
-    atomic-product-section-visual {
+    atomic-result-section-visual {
       width: 20.375rem;
       height: 20.375rem;
     }
@@ -202,8 +153,7 @@
 
   &.image-small,
   &.image-large.density-compact {
-    atomic-result-section-visual,
-    atomic-product-section-visual {
+    atomic-result-section-visual {
       width: 10rem;
       height: 10rem;
     }
@@ -221,8 +171,7 @@
     grid-template-columns: minmax(0, min-content) auto 1fr auto;
     grid-template-rows: repeat(7, minmax(0, min-content));
 
-    atomic-result-section-visual,
-    atomic-product-section-visual {
+    atomic-result-section-visual {
       width: 2rem;
       height: 2rem;
     }
@@ -240,8 +189,7 @@
     grid-template-columns: auto 1fr auto;
     grid-template-rows: repeat(6, auto);
 
-    atomic-result-section-visual,
-    atomic-product-section-visual {
+    atomic-result-section-visual {
       display: none;
     }
   }

@@ -1,9 +1,10 @@
-import {LitElement, unsafeCSS} from 'lit';
+import {LitElement} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
-import {injectStylesForNoShadowDOM} from '@/src/decorators/inject-styles-for-no-shadow-dom';
+import {LayoutStylesController} from '@/src/components/common/layout/layout-styles-controller';
+import {watch} from '@/src/decorators/watch';
 import {ChildrenUpdateCompleteMixin} from '@/src/mixins/children-update-complete-mixin';
-import {randomID} from '@/src/utils/utils';
-import {DEFAULT_MOBILE_BREAKPOINT} from '../../../utils/replace-breakpoint';
+import {LightDomMixin} from '@/src/mixins/light-dom';
+import {DEFAULT_MOBILE_BREAKPOINT} from '../../../utils/replace-breakpoint-utils';
 import styles from './atomic-commerce-layout.tw.css';
 import {buildCommerceLayout} from './commerce-layout';
 
@@ -15,15 +16,10 @@ import {buildCommerceLayout} from './commerce-layout';
  * @cssprop --atomic-layout-search-box-left-suggestions-width: The width of the left list when displaying a double list.
  */
 @customElement('atomic-commerce-layout')
-@injectStylesForNoShadowDOM
-export class AtomicCommerceLayout extends ChildrenUpdateCompleteMixin(
-  LitElement
+export class AtomicCommerceLayout extends LightDomMixin(
+  ChildrenUpdateCompleteMixin(LitElement)
 ) {
   static styles = [styles];
-  static async dynamicStyles(instance: AtomicCommerceLayout) {
-    await instance.getUpdateComplete();
-    return unsafeCSS(buildCommerceLayout(instance, instance.mobileBreakpoint));
-  }
 
   @state() error!: Error;
 
@@ -34,9 +30,31 @@ export class AtomicCommerceLayout extends ChildrenUpdateCompleteMixin(
   @property({type: String, reflect: true, attribute: 'mobile-breakpoint'})
   mobileBreakpoint: string = DEFAULT_MOBILE_BREAKPOINT;
 
+  private layoutStylesController = new LayoutStylesController(
+    this,
+    buildCommerceLayout,
+    'atomic-commerce-layout-'
+  );
+
   connectedCallback() {
     super.connectedCallback();
-    this.id = randomID('atomic-commerce-layout-');
+    this.emitBreakpointChangeEvent();
+  }
+
+  private emitBreakpointChangeEvent() {
+    this.dispatchEvent(
+      new CustomEvent('atomic-layout-breakpoint-change', {
+        detail: {breakpoint: this.mobileBreakpoint},
+        bubbles: true,
+        composed: true,
+      })
+    );
+  }
+
+  @watch('mobileBreakpoint')
+  public onMobileBreakpointChange() {
+    this.layoutStylesController.updateStyles();
+    this.emitBreakpointChangeEvent();
   }
 }
 

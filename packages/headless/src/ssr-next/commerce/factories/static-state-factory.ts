@@ -1,24 +1,15 @@
 import type {UnknownAction} from '@reduxjs/toolkit';
 import {buildProductListing} from '../../../controllers/commerce/product-listing/headless-product-listing.js';
 import {buildSearch} from '../../../controllers/commerce/search/headless-search.js';
-import {augmentPreprocessRequestWithForwardedFor} from '../../common/augment-preprocess-request.js';
 import {createStaticState} from '../controller-utils.js';
 import {SolutionType} from '../types/controller-constants.js';
-import type {
-  AugmentedControllerDefinition,
-  FilteredBakedInControllers,
-} from '../types/controller-definitions.js';
-import type {InferControllerStaticStateMapFromDefinitionsWithSolutionType} from '../types/controller-inference.js';
+import type {AugmentedControllerDefinition} from '../types/controller-definitions.js';
 import type {
   CommerceControllerDefinitionsMap,
-  EngineStaticState,
-  FetchStaticStateFunction,
+  CommerceEngineDefinitionOptions,
   FetchStaticStateParameters,
 } from '../types/engine.js';
-import {
-  buildFactory,
-  type CommerceEngineDefinitionOptions,
-} from './build-factory.js';
+import {buildFactory} from './build-factory.js';
 
 export function fetchStaticStateFactory<
   TControllerDefinitions extends CommerceControllerDefinitionsMap,
@@ -26,22 +17,15 @@ export function fetchStaticStateFactory<
   controllerDefinitions: AugmentedControllerDefinition<TControllerDefinitions>,
   options: CommerceEngineDefinitionOptions<TControllerDefinitions>
 ) {
-  return (
-    solutionType: SolutionType
-  ): FetchStaticStateFunction<TControllerDefinitions> =>
-    async (...params: FetchStaticStateParameters<TControllerDefinitions>) => {
+  return <TSolutionType extends SolutionType>(solutionType: TSolutionType) =>
+    async (
+      params: FetchStaticStateParameters<TControllerDefinitions, TSolutionType>
+    ) => {
       const solutionTypeBuild = await buildFactory(
         controllerDefinitions,
         options
       )(solutionType);
-      const {engine, controllers} = await solutionTypeBuild(...params);
-
-      options.configuration.preprocessRequest =
-        augmentPreprocessRequestWithForwardedFor({
-          preprocessRequest: options.configuration.preprocessRequest,
-          navigatorContextProvider: options.navigatorContextProvider,
-          loggerOptions: options.loggerOptions,
-        });
+      const {engine, controllers} = await solutionTypeBuild(params);
 
       switch (solutionType) {
         case SolutionType.listing:
@@ -56,17 +40,18 @@ export function fetchStaticStateFactory<
         engine.waitForRequestCompletedAction()
       );
 
-      const staticState = createStaticState({
+      const staticState = createStaticState<
+        UnknownAction,
+        TControllerDefinitions,
+        TSolutionType
+      >({
         searchActions,
         controllers,
-      }) as EngineStaticState<
-        UnknownAction,
-        InferControllerStaticStateMapFromDefinitionsWithSolutionType<
-          TControllerDefinitions,
-          SolutionType
-        > &
-          FilteredBakedInControllers<typeof solutionType>
-      >;
-      return staticState;
+      });
+
+      return {
+        ...params,
+        ...staticState,
+      };
     };
 }

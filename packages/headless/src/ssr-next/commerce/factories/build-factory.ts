@@ -4,25 +4,24 @@ import {
   type CommerceEngine,
   type CommerceEngineOptions,
 } from '../../../app/commerce-engine/commerce-engine.js';
-import {buildLogger} from '../../../app/logger.js';
 import {stateKey} from '../../../app/state-key.js';
-import type {Controller} from '../../../controllers/controller/headless-controller.js';
 import {
   createWaitForActionMiddleware,
   createWaitForActionMiddlewareForRecommendation,
 } from '../../../utils/utils.js';
-import type {ControllersPropsMap} from '../../common/types/controllers.js';
 import {buildControllerDefinitions} from '../controller-utils.js';
-import type {SSRCommerceEngineOptions} from '../types/build.js';
+import type {RecommendationBuildConfig} from '../types/build.js';
 import {SolutionType} from '../types/controller-constants.js';
-import type {ControllerDefinitionsMap} from '../types/controller-definitions.js';
+import type {BakedInControllers} from '../types/controller-definitions.js';
+import type {InferControllersMapFromDefinition} from '../types/controller-inference.js';
 import type {
-  BuildParameters,
   CommerceControllerDefinitionsMap,
-  EngineDefinitionOptions,
+  CommerceEngineDefinitionOptions,
+  FetchStaticStateParameters,
+  HydrateStaticStateParameters,
 } from '../types/engine.js';
 import {wireControllerParams} from '../utils/controller-wiring.js';
-import {extendEngineConfiguration} from '../utils/engine-wiring.js';
+import {augmentCommerceEngineOptions} from '../utils/engine-wiring.js';
 
 /**
  * The SSR commerce engine.
@@ -35,11 +34,6 @@ export interface SSRCommerceEngine extends CommerceEngine {
    */
   waitForRequestCompletedAction(): Promise<Action>[];
 }
-
-export type CommerceEngineDefinitionOptions<
-  TControllers extends
-    ControllerDefinitionsMap<Controller> = ControllerDefinitionsMap<Controller>,
-> = EngineDefinitionOptions<SSRCommerceEngineOptions, TControllers>;
 
 function isListingFetchCompletedAction(action: unknown): action is Action {
   return /^commerce\/productListing\/fetch\/(fulfilled|rejected)$/.test(
@@ -128,51 +122,34 @@ function buildSSRCommerceEngine(
   };
 }
 
-function fetchActiveRecommendationControllers(
-  controllerProps: ControllersPropsMap,
-  solutionType: SolutionType
-): number {
-  return solutionType === SolutionType.recommendation
-    ? Object.values(controllerProps).filter(
-        (controller) =>
-          controller &&
-          typeof controller === 'object' &&
-          'enabled' in controller &&
-          controller.enabled
-      ).length
-    : 0;
-}
-
 export const buildFactory =
   <TControllerDefinitions extends CommerceControllerDefinitionsMap>(
     controllerDefinitions: TControllerDefinitions,
     options: CommerceEngineDefinitionOptions<TControllerDefinitions>
   ) =>
-  <T extends SolutionType>(solutionType: T) =>
-  async (...[buildOptions]: BuildParameters<TControllerDefinitions>) => {
+  <TSolutionType extends SolutionType>(solutionType: TSolutionType) =>
+  async (
+    buildOptions:
+      | FetchStaticStateParameters<TControllerDefinitions, TSolutionType>
+      | HydrateStaticStateParameters<TControllerDefinitions, TSolutionType>
+  ) => {
     const controllerProps = wireControllerParams(
       solutionType,
       controllerDefinitions,
-      buildOptions!
-    ); // TODO: KIT-4754: remove non-null assertion operator
-
-    const logger = buildLogger(options.loggerOptions);
-    if (!options.navigatorContextProvider) {
-      logger.warn(
-        '[WARNING] Missing navigator context in server-side code. Make sure to set it with `setNavigatorContextProvider` before calling fetchStaticState()'
-      );
-    }
+      buildOptions
+    );
 
     const enabledRecommendationControllers =
-      fetchActiveRecommendationControllers(controllerProps, solutionType);
+      buildOptions && 'recommendations' in buildOptions
+        ? (buildOptions as RecommendationBuildConfig<TControllerDefinitions>)
+            ?.recommendations.length
+        : 0;
 
-    const engineOptions = {
-      ...options,
-      configuration: extendEngineConfiguration(
-        options.configuration,
-        buildOptions!
-      ), // TODO: KIT-4754: remove non-null assertion operator
-    };
+    const engineOptions: CommerceEngineOptions = augmentCommerceEngineOptions(
+      options,
+      buildOptions
+    );
+
     const engine = buildSSRCommerceEngine(
       solutionType,
       engineOptions,
@@ -180,14 +157,24 @@ export const buildFactory =
     );
 
     const controllers = buildControllerDefinitions({
-      definitionsMap: (controllerDefinitions ?? {}) as TControllerDefinitions,
+      definitionsMap: controllerDefinitions ?? {},
       engine,
       solutionType,
       propsMap: controllerProps,
     });
 
+    if (buildOptions && 'searchActions' in buildOptions) {
+      buildOptions.searchActions.forEach((action) => {
+        engine.dispatch(action);
+      });
+    }
+
     return {
       engine,
-      controllers,
+      controllers: controllers as InferControllersMapFromDefinition<
+        TControllerDefinitions,
+        TSolutionType
+      > &
+        BakedInControllers,
     };
   };

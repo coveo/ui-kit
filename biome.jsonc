@@ -39,7 +39,7 @@
       "!**/packages/headless/**/coveo.analytics/**/*",
 
       // atomic-stencil-samples excluded files.
-      "!**/packages/samples/stencil/**/*.d.ts"
+      "!samples/atomic/search-stencil/**/*.d.ts"
     ]
   },
   "formatter": {
@@ -52,6 +52,11 @@
     "enabled": true,
     "rules": {
       "recommended": true,
+      "suspicious": {
+        // https://developer.mozilla.org/en-US/docs/Web/API/CookieStore Reevaluate in June '26 after 1y of availability.
+        // https://coveord.atlassian.net/browse/KIT-4913
+        "noDocumentCookie": "off"
+      },
       "style": {"noNonNullAssertion": "off"},
       "complexity": {"noBannedTypes": "off"},
       "correctness": {"noUnknownFunction": "off"}

@@ -7,20 +7,16 @@ import {
   type Controller,
 } from '../../../controllers/controller/headless-controller.js';
 import type {executeSearch} from '../../../features/search/search-actions.js';
-import {buildMockNavigatorContextProvider} from '../../../test/mock-navigator-context-provider.js';
 import {buildMockResult} from '../../../test/mock-result.js';
 import * as augmentModule from '../../common/augment-preprocess-request.js';
-import type {ControllerDefinitionWithoutProps} from '../../common/types/controllers.js';
 import type {
   InferHydratedState,
   InferStaticState,
 } from '../../common/types/engine.js';
 import {defineResultList} from '../controllers/result-list/headless-result-list.ssr.js';
-import {
-  defineSearchEngine,
-  type SearchEngineDefinition,
-  type SSRSearchEngine,
-} from './search-engine.ssr.js';
+import type {ControllerDefinitionWithoutProps} from '../types/controller-definition.js';
+import type {SearchEngineDefinition} from '../types/engine.js';
+import {defineSearchEngine, type SSRSearchEngine} from './search-engine.ssr.js';
 
 interface CustomEngineStateReader<TState extends {}> extends Controller {
   state: TState;
@@ -67,25 +63,22 @@ function createMockResultsMiddleware(options: {
   const numberOfResultsPerRequestId: {[requestId: string]: number | undefined} =
     {};
   return (api) => (next) => (action) => {
-    const possibleSearchActionWithPayload =
-      action as UnknownActionWithPossibleSearchResponsePayload;
-    if (isSearchPendingAction(possibleSearchActionWithPayload)) {
+    const unknownAction = action as UnknownAction;
+    if (isSearchPendingAction(unknownAction)) {
       const state = api.getState() as SSRSearchEngine['state'];
-      numberOfResultsPerRequestId[
-        possibleSearchActionWithPayload.meta.requestId
-      ] = state.pagination?.numberOfResults ?? options.defaultNumberOfResults;
+      numberOfResultsPerRequestId[unknownAction.meta.requestId] =
+        state.pagination?.numberOfResults ?? options.defaultNumberOfResults;
       return next(action);
     }
-    if (isSearchFulfilledAction(action as UnknownAction)) {
+    if (isSearchFulfilledAction(unknownAction)) {
+      const searchAction =
+        unknownAction as UnknownActionWithPossibleSearchResponsePayload;
       const newAction = JSON.parse(
-        JSON.stringify(possibleSearchActionWithPayload)
+        JSON.stringify(searchAction)
       ) as UnknownActionWithPossibleSearchResponsePayload;
       newAction.payload.response.results = Array.from(
         {
-          length:
-            numberOfResultsPerRequestId[
-              possibleSearchActionWithPayload.meta.requestId
-            ]!,
+          length: numberOfResultsPerRequestId[searchAction.meta.requestId]!,
         },
         (_, index) => buildMockResult({title: `Result #${index}`})
       );
@@ -96,8 +89,14 @@ function createMockResultsMiddleware(options: {
 }
 
 describe('SSR', () => {
-  const mockNavigatorContextProvider = buildMockNavigatorContextProvider();
   const mockPreprocessRequest = vi.fn(async (req) => req);
+  const mockNavigatorContext = {
+    forwardedFor: '192.168.1.1',
+    referrer: 'https://example.com',
+    userAgent: 'test-agent',
+    location: '/test',
+    clientId: 'test-client',
+  };
 
   describe('define search engine', () => {
     type StaticState = InferStaticState<typeof engineDefinition>;
@@ -105,10 +104,13 @@ describe('SSR', () => {
     type AnyState = StaticState | HydratedState;
 
     const defaultNumberOfResults = 12;
-    let engineDefinition: SearchEngineDefinition<{
-      engineStateReader: ReturnType<typeof defineCustomEngineStateReader>;
-      resultList: ReturnType<typeof defineResultList>;
-    }>;
+    let engineDefinition: SearchEngineDefinition<
+      SSRSearchEngine,
+      {
+        engineStateReader: ReturnType<typeof defineCustomEngineStateReader>;
+        resultList: ReturnType<typeof defineResultList>;
+      }
+    >;
 
     function getResultsPerPage(state: AnyState) {
       return (
@@ -128,7 +130,6 @@ describe('SSR', () => {
           engineStateReader: defineCustomEngineStateReader(),
           resultList: defineResultList(),
         },
-        navigatorContextProvider: mockNavigatorContextProvider,
         loggerOptions: {level: 'warn'} as LoggerOptions,
         middlewares: [createMockResultsMiddleware({defaultNumberOfResults})],
       });
@@ -142,22 +143,26 @@ describe('SSR', () => {
 
     it('fetches initial state of engine', async () => {
       const fetchStaticState = vi.mocked(engineDefinition.fetchStaticState);
-      const staticState = await fetchStaticState();
+      const staticState = await fetchStaticState({
+        navigatorContext: mockNavigatorContext,
+      });
       expect(staticState).toBeTruthy();
       expect(getResultsPerPage(staticState)).toBe(defaultNumberOfResults);
     });
 
-    it('should call augmentPreprocessRequestWithForwardedFor when fetchStaticState is invoked', async () => {
+    it('should call augmentPreprocessRequestWithForwardedFor when fetchStaticState is invoked with navigatorContext', async () => {
       const spy = vi.spyOn(
         augmentModule,
         'augmentPreprocessRequestWithForwardedFor'
       );
 
       const fetchStaticState = engineDefinition.fetchStaticState;
-      await fetchStaticState();
+      await fetchStaticState({
+        navigatorContext: mockNavigatorContext,
+      });
       expect(spy).toHaveBeenCalledWith({
         loggerOptions: {level: 'warn'},
-        navigatorContextProvider: mockNavigatorContextProvider,
+        navigatorContext: mockNavigatorContext,
         preprocessRequest: mockPreprocessRequest,
       });
 
@@ -168,7 +173,9 @@ describe('SSR', () => {
       let staticState: StaticState;
       beforeEach(async () => {
         const fetchStaticState = vi.mocked(engineDefinition.fetchStaticState);
-        staticState = await fetchStaticState();
+        staticState = await fetchStaticState({
+          navigatorContext: mockNavigatorContext,
+        });
       });
 
       it('hydrates engine', async () => {

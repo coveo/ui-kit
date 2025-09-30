@@ -21,12 +21,12 @@ import {getProductQuerySummaryI18nParameters} from '../../common/query-summary/u
 import type {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface';
 
 /**
- * The `atomic-commerce-query-summary` component displays information about the current range of products and the request duration (e.g., "Products 1-10 of 123").
+ * The `atomic-commerce-query-summary` component displays information about the current range of products (e.g., "Products 1-10 of 123").
  *
  * @part container - The container for the whole summary.
  * @part highlight - The summary highlights.
  * @part query - The summary highlighted query.
- * @part placeholder - The query summary placeholder used while the search interface is initializing.
+ * @part placeholder - The query summary placeholder used while the commerce interface is initializing.
  */
 @customElement('atomic-commerce-query-summary')
 @bindings()
@@ -73,6 +73,7 @@ export class AtomicCommerceQuerySummary
       totalNumberOfProducts,
       hasProducts,
       hasError,
+      isLoading,
     } = this.listingOrSearchSummaryState;
 
     const {i18nKey, highlights, ariaLiveMessage} =
@@ -84,7 +85,7 @@ export class AtomicCommerceQuerySummary
           : '',
         total: totalNumberOfProducts,
         i18n: this.bindings.i18n,
-        isLoading: false,
+        isLoading,
       });
 
     this.ariaMessage.message = ariaLiveMessage;
