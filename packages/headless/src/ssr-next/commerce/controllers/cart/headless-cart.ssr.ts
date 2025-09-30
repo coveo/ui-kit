@@ -24,6 +24,8 @@ export type CartDefinition = UniversalControllerDefinitionWithProps<
  * @group Definers
  *
  * @returns The `Cart` controller definition.
+ *
+ * Note: This controller is automatically included in all engine definitions. You do not need to add it manually to your engine definition configuration.
  */
 export function defineCart(): CartDefinition {
   return {

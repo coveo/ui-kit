@@ -55,9 +55,6 @@ describe('controller-wiring', () => {
         expect(validate).toThrowError(
           /context: value is required and is currently undefined/
         );
-        expect(validate).toThrowError(
-          /searchParams: value is required and is currently undefined/
-        );
       });
     });
 
@@ -83,23 +80,23 @@ describe('controller-wiring', () => {
       });
     });
 
-    it('should throw for missing search parameters', () => {
+    it('should not throw for missing search parameters', () => {
       expect(() => {
         searchDefinitionSchema.validate(validCommonConfig);
-      }).toThrowError(/searchParams: value is require/);
+      }).not.toThrowError(/searchParams: value is require/);
 
       expect(() => {
         searchDefinitionSchema.validate({
           ...validCommonConfig,
           searchParams: {},
         });
-      }).toThrowError(/searchParams: value does not contain query/);
+      }).not.toThrowError(/searchParams: value does not contain q/);
     });
 
     it('should not throw for missing query', () => {
       const searchConfig = {
         ...validCommonConfig,
-        searchParams: {query: 'test query'},
+        searchParams: {q: 'test query'},
       };
       expect(() => {
         searchDefinitionSchema.validate(searchConfig);
@@ -182,7 +179,7 @@ describe('controller-wiring', () => {
         const params = {
           navigatorContext: buildMockNavigatorContext(),
           searchParams: {
-            query: 'test',
+            q: 'test',
           },
           recommendations: [],
           context: {
@@ -233,7 +230,7 @@ describe('controller-wiring', () => {
           view: {url: 'https://example.com'},
         },
         searchParams: {
-          query: 'test query',
+          q: 'test query',
         },
       };
 
@@ -262,7 +259,7 @@ describe('controller-wiring', () => {
           view: {url: 'https://example.com'},
         },
         searchParams: {
-          query: 'test query',
+          q: 'test query',
         },
         controllers: {
           customController: {
