@@ -271,7 +271,7 @@ export class TestFixture {
             cy.wait(TestFixture.interceptAliases.UA);
           }
         }
-        }
+      }
     });
 
     this.aliases.forEach((alias) => alias(this));
