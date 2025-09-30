@@ -86,6 +86,8 @@ export interface EngineDefinition<
     TSolutionType
   >;
   /**
+   * @deprecated This method is deprecated and will be removed in a future major version. Use the `fetchStaticState` method instead.
+   *
    * Builds an engine and its controllers from an engine definition.
    */
   build: Build<
