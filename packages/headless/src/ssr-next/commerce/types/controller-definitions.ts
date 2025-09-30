@@ -4,11 +4,7 @@ import type {
   InferControllerStaticStateMapFromControllers,
 } from '../../common/types/controller-inference.js';
 import type {ControllersPropsMap} from '../../common/types/controllers.js';
-import type {
-  HasKey,
-  HasRequiredKeys,
-  OptionsTuple,
-} from '../../common/types/utilities.js';
+import type {HasKey, HasRequiredKeys} from '../../common/types/utilities.js';
 import type {CartDefinition} from '../controllers/cart/headless-cart.ssr.js';
 import type {ContextDefinition} from '../controllers/context/headless-context.ssr.js';
 import type {ParameterManagerDefinition} from '../controllers/parameter-manager/headless-core-parameter-manager.ssr.js';
@@ -30,7 +26,6 @@ import type {HasSolutionType} from './utilities.js';
 
 export type {
   HydratedState,
-  OptionsTuple,
   InferControllerStaticStateFromController,
   InferControllerStaticStateMapFromControllers,
 };

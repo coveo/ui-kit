@@ -1,7 +1,7 @@
 import type {i18n} from 'i18next';
 import {html, nothing, render} from 'lit';
 import {encodeForDomAttribute} from '../../../utils/string-utils.js';
-import type {SearchBoxSuggestionElement} from './suggestions-common.js';
+import type {SearchBoxSuggestionElement} from './suggestions-types.js';
 
 interface Suggestion {
   highlightedValue: string;

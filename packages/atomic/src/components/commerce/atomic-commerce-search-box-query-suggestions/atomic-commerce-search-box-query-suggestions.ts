@@ -10,12 +10,12 @@ import {
   getPartialSearchBoxSuggestionElement,
   renderQuerySuggestion,
 } from '@/src/components/common/suggestions/query-suggestions';
-import {
-  dispatchSearchBoxSuggestionsEvent,
-  type SearchBoxSuggestionElement,
-  type SearchBoxSuggestions,
-  type SearchBoxSuggestionsBindings,
-} from '@/src/components/common/suggestions/suggestions-common';
+import {dispatchSearchBoxSuggestionsEvent} from '@/src/components/common/suggestions/suggestions-events';
+import type {
+  SearchBoxSuggestionElement,
+  SearchBoxSuggestions,
+  SearchBoxSuggestionsBindings,
+} from '@/src/components/common/suggestions/suggestions-types';
 import {errorGuard} from '@/src/decorators/error-guard';
 import type {SearchBoxSuggestionsComponent} from '@/src/decorators/types';
 import SearchIcon from '../../../images/search.svg';

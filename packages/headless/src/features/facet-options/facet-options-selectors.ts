@@ -6,3 +6,10 @@ export const isFacetEnabledSelector = (
 ) => {
   return state.facetOptions.facets[id]?.enabled ?? true;
 };
+
+export const selectFacetOptions = (state: {
+  facetOptions?: {freezeFacetOrder?: boolean};
+}) => {
+  const {freezeFacetOrder} = state.facetOptions ?? {};
+  return freezeFacetOrder !== undefined ? {freezeFacetOrder} : undefined;
+};

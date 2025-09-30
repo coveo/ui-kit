@@ -1,3 +1,14 @@
+## 3.31.0 (2025-09-24)
+
+* feat(headless-ssr): add per-call navigator context support (#5878) ([76f135a](https://github.com/coveo/ui-kit/commits/76f135a)), closes [#5878](https://github.com/coveo/ui-kit/issues/5878)
+* chore: cleanup dependencies in atomic package (#6070) ([0ac5bd8](https://github.com/coveo/ui-kit/commits/0ac5bd8)), closes [#6070](https://github.com/coveo/ui-kit/issues/6070)
+* chore: cleanup some dependencies from headless (#6067) ([97e0711](https://github.com/coveo/ui-kit/commits/97e0711)), closes [#6067](https://github.com/coveo/ui-kit/issues/6067)
+* chore(ssr): fix static error in tests (#6056) ([362fc58](https://github.com/coveo/ui-kit/commits/362fc58)), closes [#6056](https://github.com/coveo/ui-kit/issues/6056)
+* fix(headless): fixed and simplified state reset logic generated answer with answer api (#6064) ([3cd6b2e](https://github.com/coveo/ui-kit/commits/3cd6b2e)), closes [#6064](https://github.com/coveo/ui-kit/issues/6064)
+* fix(headless): missing answer API params (#6062) ([6c2da39](https://github.com/coveo/ui-kit/commits/6c2da39)), closes [#6062](https://github.com/coveo/ui-kit/issues/6062)
+
+
+
 ## <small>3.30.2 (2025-09-18)</small>
 
 * chore(headless-react-ssr): create a folder for commerce next API (#5994) ([aaf190e](https://github.com/coveo/ui-kit/commits/aaf190e)), closes [#5994](https://github.com/coveo/ui-kit/issues/5994)

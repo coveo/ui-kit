@@ -3,6 +3,8 @@ import {SearchObject} from '../../../../../../playwright/page-object/searchObjec
 import {
   searchRequestRegex,
   insightSearchRequestRegex,
+  rgaGenerateRequestRegex,
+  insightRgaGenerateRequestRegex,
 } from '../../../../../../playwright/utils/requests';
 import {InsightSetupObject} from '../../../../../../playwright/page-object/insightSetupObject';
 import {useCaseEnum} from '../../../../../../playwright/utils/useCase';
@@ -32,6 +34,7 @@ type QuanticGeneratedAnswerE2ESearchFixtures = {
   search: SearchObject;
   options: Partial<GeneratedAnswerOptions>;
   withFacets: boolean;
+  baseFacet: BaseFacetObject;
 };
 
 type QuanticGeneratedAnswerE2EInsightFixtures =
@@ -70,7 +73,8 @@ export const testSearch = quanticBase.extend<QuanticGeneratedAnswerE2ESearchFixt
       data.streamId,
       analytics,
       !!options.answerConfigurationId,
-      withFacets
+      rgaGenerateRequestRegex,
+      withFacets,
     );
 
     const streamingUrl = options.answerConfigurationId
@@ -89,8 +93,12 @@ export const testSearch = quanticBase.extend<QuanticGeneratedAnswerE2ESearchFixt
     await configuration.configure(options);
     await search.waitForSearchResponse();
 
-    generatedAnswerObject.streamEndAnalyticRequestPromise =
-      generatedAnswerObject.waitForStreamEndAnalytics();
+      generatedAnswerObject.streamEndAnalyticRequestPromise =
+        generatedAnswerObject.waitForStreamEndAnalytics();
+      if (options.answerConfigurationId) {
+        generatedAnswerObject.generateRequestPromise =
+          generatedAnswerObject.waitForGenerateRequest();
+      }
 
     await search.fillSearchInput(exampleQuery);
     await search.mockSearchWithGenerativeQuestionAnsweringId(data.streamId);
@@ -135,7 +143,8 @@ export const testInsight =
         data.streamId,
         analytics,
         !!options.answerConfigurationId,
-        !!withFacets
+        insightRgaGenerateRequestRegex,
+        withFacets
       );
 
       const streamingUrl = options.answerConfigurationId
@@ -160,6 +169,10 @@ export const testInsight =
       await search.mockSearchWithGenerativeQuestionAnsweringId(data.streamId);
       generatedAnswerObject.streamEndAnalyticRequestPromise =
         generatedAnswerObject.waitForStreamEndAnalytics();
+      if (options.answerConfigurationId) {
+        generatedAnswerObject.generateRequestPromise =
+          generatedAnswerObject.waitForGenerateRequest();
+      }
 
       await search.fillSearchInput(exampleQuery);
       await search.performSearch();

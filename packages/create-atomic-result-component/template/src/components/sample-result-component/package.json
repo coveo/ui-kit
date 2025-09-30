@@ -24,8 +24,8 @@
     "!generate": "stencil generate"
   },
   "dependencies": {
-    "@coveo/headless": "3.30.2",
-    "@coveo/atomic": "3.33.6",
+    "@coveo/headless": "3.31.0",
+    "@coveo/atomic": "3.33.7",
     "@stencil/core": "4.20.0"
   },
   "devDependencies": {

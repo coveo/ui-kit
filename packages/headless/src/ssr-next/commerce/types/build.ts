@@ -1,4 +1,5 @@
 import type {CommerceEngineOptions} from '../../../app/commerce-engine/commerce-engine.js';
+import type {NavigatorContext} from '../../../app/navigator-context-provider.js';
 import type {Controller} from '../../../controllers/controller/headless-controller.js';
 import type {HasKey} from '../../common/types/utilities.js';
 import type {CartInitialState} from '../controllers/cart/headless-cart.ssr.js';
@@ -15,19 +16,18 @@ import type {
 
 export interface SearchBuildConfig extends CommonBuildConfig {
   searchParams: ParameterManagerState<
-    Parameters & {query: string}
+    Parameters & {
+      /**
+       * The query.
+       */
+      q?: string;
+    }
   >['parameters'];
 }
 
 export interface ListingBuildConfig extends CommonBuildConfig {}
 
 export interface StandaloneBuildConfig extends CommonBuildConfig {}
-
-export interface CommonBuildConfig {
-  context: ContextOptions;
-  searchParams?: ParameterManagerState<Parameters>['parameters'];
-  cart?: CartInitialState;
-}
 
 /**
  * Commerce engine options for SSR scenarios where context is defined when fetching static state.
@@ -104,6 +104,7 @@ export interface ListingBuildConfig extends CommonBuildConfig {}
 export interface StandaloneBuildConfig extends CommonBuildConfig {}
 
 export interface CommonBuildConfig {
+  navigatorContext: NavigatorContext;
   context: ContextOptions;
   searchParams?: ParameterManagerState<Parameters>['parameters'];
   cart?: CartInitialState;

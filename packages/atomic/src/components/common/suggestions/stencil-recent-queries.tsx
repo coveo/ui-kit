@@ -2,7 +2,7 @@ import {HighlightUtils} from '@coveo/headless';
 import {FunctionalComponent, h} from '@stencil/core';
 import {i18n} from 'i18next';
 import {encodeForDomAttribute} from '../../../utils/string-utils';
-import {SearchBoxSuggestionElement} from './suggestions-common';
+import {SearchBoxSuggestionElement} from './suggestions-types';
 
 export const getPartialRecentQueryElement = (
   value: string,

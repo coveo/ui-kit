@@ -1,9 +1,13 @@
 import type {CommerceEngine} from '@coveo/headless/commerce';
 import {provide} from '@lit/context';
 import type {i18n} from 'i18next';
-import {html, LitElement, nothing, type TemplateResult} from 'lit';
+import {html, LitElement, type TemplateResult} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {vi} from 'vitest';
+import type {
+  AtomicCommerceInterface,
+  CommerceBindings,
+} from '@/src/components/commerce/atomic-commerce-interface/atomic-commerce-interface.js';
 import type {CommerceStore} from '@/src/components/commerce/atomic-commerce-interface/store.js';
 import type {BaseAtomicInterface} from '@/src/components/common/interface/interface-controller.js';
 import {bindingsContext} from '@/src/components/context/bindings-context.js';
@@ -12,13 +16,9 @@ import {
   markParentAsReady,
 } from '@/src/utils/init-queue.js';
 import {initializeEventName} from '@/src/utils/initialization-lit-stencil-common-utils.js';
-import type {
-  AtomicCommerceInterface,
-  CommerceBindings,
-} from '../../../../../src/components/commerce/atomic-commerce-interface/atomic-commerce-interface.js';
-import {fixture} from '../../../fixture.js';
-import {createTestI18n} from '../../../i18n-utils.js';
-import {genericSubscribe} from '../../headless/common.js';
+import {fixture} from '@/vitest-utils/testing-helpers/fixture.js';
+import {genericSubscribe} from '@/vitest-utils/testing-helpers/fixtures/headless/common.js';
+import {createTestI18n} from '@/vitest-utils/testing-helpers/i18n-utils.js';
 
 @customElement('atomic-commerce-interface')
 export class FixtureAtomicCommerceInterface
@@ -66,12 +66,8 @@ export class FixtureAtomicCommerceInterface
     } as CommerceBindings;
   }
 
-  setRenderTemplate(template: TemplateResult) {
-    this.template = template;
-  }
-
   protected render() {
-    return this.ready ? this.template : nothing;
+    return html`<slot></slot>`;
   }
 }
 
@@ -124,7 +120,7 @@ export async function renderInAtomicCommerceInterface<T extends LitElement>({
   atomicInterface: FixtureAtomicCommerceInterface;
 }> {
   const atomicInterface = await fixture<FixtureAtomicCommerceInterface>(
-    html`<atomic-commerce-interface></atomic-commerce-interface>`
+    html`<atomic-commerce-interface>${template}</atomic-commerce-interface>`
   );
   if (!bindings) {
     atomicInterface.setBindings({} as CommerceBindings);
@@ -134,14 +130,13 @@ export async function renderInAtomicCommerceInterface<T extends LitElement>({
   } else {
     atomicInterface.setBindings(bindings ?? defaultBindings);
   }
-  atomicInterface.setRenderTemplate(template);
 
   await atomicInterface.updateComplete;
   if (!selector) {
     return {element: null, atomicInterface};
   }
 
-  const element = atomicInterface.shadowRoot!.querySelector<T>(selector)!;
+  const element = atomicInterface.querySelector<T>(selector)!;
   await element.updateComplete;
 
   return {element, atomicInterface};

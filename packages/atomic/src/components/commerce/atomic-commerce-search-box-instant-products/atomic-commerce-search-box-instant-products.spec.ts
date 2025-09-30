@@ -12,7 +12,7 @@ import {buildFakeInstantProducts} from '@/vitest-utils/testing-helpers/fixtures/
 import type {
   SearchBoxSuggestionElement,
   SearchBoxSuggestions,
-} from '../../common/suggestions/suggestions-common';
+} from '../../common/suggestions/suggestions-types';
 import {AtomicCommerceSearchBoxInstantProducts} from './atomic-commerce-search-box-instant-products';
 import './atomic-commerce-search-box-instant-products';
 

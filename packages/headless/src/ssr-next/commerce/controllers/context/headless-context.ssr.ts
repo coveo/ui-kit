@@ -29,6 +29,8 @@ export type ContextDefinition = UniversalControllerDefinitionWithProps<
  * @group Definers
  *
  * @returns The `Context` controller definition.
+ *
+ * Note: This controller is automatically included in all engine definitions. You do not need to add it manually to your engine definition configuration.
  */
 export function defineContext(): ContextDefinition {
   return {

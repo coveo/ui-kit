@@ -2,12 +2,12 @@ import type {SearchBox} from '@coveo/headless/commerce';
 import {LitElement} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import type {CommerceBindings} from '@/src/components/commerce/atomic-commerce-interface/atomic-commerce-interface';
-import {
-  dispatchSearchBoxSuggestionsEvent,
-  type SearchBoxSuggestionElement,
-  type SearchBoxSuggestions,
-  type SearchBoxSuggestionsBindings,
-} from '@/src/components/common/suggestions/suggestions-common';
+import {dispatchSearchBoxSuggestionsEvent} from '@/src/components/common/suggestions/suggestions-events';
+import type {
+  SearchBoxSuggestionElement,
+  SearchBoxSuggestions,
+  SearchBoxSuggestionsBindings,
+} from '@/src/components/common/suggestions/suggestions-types';
 import type {SearchBoxSuggestionsComponent} from '@/src/decorators/types';
 
 @customElement('fake-atomic-commerce-search-box-suggestions')

@@ -13,7 +13,7 @@ import {buildFakeLoadQuerySuggestActions} from '@/vitest-utils/testing-helpers/f
 import type {
   SearchBoxSuggestionElement,
   SearchBoxSuggestions,
-} from '../../common/suggestions/suggestions-common';
+} from '../../common/suggestions/suggestions-types';
 import './atomic-commerce-search-box-query-suggestions';
 import {AtomicCommerceSearchBoxQuerySuggestions} from './atomic-commerce-search-box-query-suggestions';
 

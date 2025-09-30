@@ -7,10 +7,10 @@ import {
   updateMessage,
 } from '../../features/generated-answer/generated-answer-actions.js';
 import {logGeneratedAnswerStreamEnd} from '../../features/generated-answer/generated-answer-analytics-actions.js';
+import type {AnswerApiQueryParams} from '../../features/generated-answer/generated-answer-request.js';
 import {fetchEventSource} from '../../utils/fetch-event-source/fetch.js';
 import type {EventSourceMessage} from '../../utils/fetch-event-source/parse.js';
 import {getOrganizationEndpoint} from '../platform-client.js';
-import type {SearchRequest} from '../search/search/search-request.js';
 import {answerSlice} from './answer-slice.js';
 import type {GeneratedAnswerStream} from './generated-answer-stream.js';
 import type {StreamAnswerAPIState} from './stream-answer-api-state.js';
@@ -76,14 +76,18 @@ const handleError = (
   draft: GeneratedAnswerStream,
   message: Required<MessageType>
 ) => {
+  const errorMessage = message.errorMessage || 'Unknown error occurred';
+
   draft.error = {
-    message: message.errorMessage,
+    message: errorMessage,
     code: message.code!,
   };
   draft.isStreaming = false;
   draft.isLoading = false;
   // Throwing an error here breaks the client and prevents the error from reaching the state.
-  console.error(`${message.errorMessage} - code ${message.code}`);
+  console.error(
+    `Generated answer error: ${errorMessage} (code: ${message.code})`
+  );
 };
 
 export const updateCacheWithEvent = (
@@ -128,10 +132,26 @@ export const updateCacheWithEvent = (
   }
 };
 
+export const buildAnswerEndpoint = (
+  platformEndpoint: string,
+  organizationId: string,
+  answerConfigurationId: string,
+  insightId?: string
+): string => {
+  if (!platformEndpoint || !organizationId || !answerConfigurationId) {
+    throw new Error('Missing required parameters for answer endpoint');
+  }
+  const basePath = `/rest/organizations/${organizationId}`;
+  const prefix = insightId
+    ? `insight/v1/configs/${insightId}/answer`
+    : `answer/v1/configs`;
+  return `${platformEndpoint}${basePath}/${prefix}/${answerConfigurationId}/generate`;
+};
+
 export const answerApi = answerSlice.injectEndpoints({
   overrideExisting: true,
   endpoints: (builder) => ({
-    getAnswer: builder.query<GeneratedAnswerStream, Partial<SearchRequest>>({
+    getAnswer: builder.query<GeneratedAnswerStream, AnswerApiQueryParams>({
       queryFn: () => ({
         data: {
           contentFormat: undefined,
@@ -169,52 +189,55 @@ export const answerApi = answerSlice.injectEndpoints({
           organizationId,
           environment
         );
-        const insightGenerateEndpoint = `${platformEndpoint}/rest/organizations/${organizationId}/insight/v1/configs/${insightConfiguration?.insightId}/answer/${generatedAnswer.answerConfigurationId}/generate`;
-        const generateEndpoint = `${platformEndpoint}/rest/organizations/${organizationId}/answer/v1/configs/${generatedAnswer.answerConfigurationId}/generate`;
-        await fetchEventSource(
-          insightConfiguration ? insightGenerateEndpoint : generateEndpoint,
-          {
-            method: 'POST',
-            body: JSON.stringify(args),
-            headers: {
-              Authorization: `Bearer ${accessToken}`,
-              Accept: 'application/json',
-              'Content-Type': 'application/json',
-              'Accept-Encoding': '*',
-            },
-            fetch,
-            onopen: async (res) => {
-              const answerId = res.headers.get('x-answer-id');
-              if (answerId) {
-                updateCachedData((draft) => {
-                  draft.answerId = answerId;
-                });
-              }
-            },
-            onmessage: (event) => {
-              updateCachedData((draft) => {
-                updateCacheWithEvent(event, draft, dispatch);
-              });
-            },
-            onerror: (error) => {
-              throw error;
-            },
-            onclose: () => {
-              updateCachedData((draft) => {
-                dispatch(setCannotAnswer(!draft.generated));
-              });
-            },
-          }
+        const answerEndpoint = buildAnswerEndpoint(
+          platformEndpoint,
+          organizationId,
+          generatedAnswer.answerConfigurationId!,
+          insightConfiguration?.insightId
         );
+
+        await fetchEventSource(answerEndpoint, {
+          method: 'POST',
+          body: JSON.stringify(args),
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+            'Accept-Encoding': '*',
+          },
+          fetch,
+          onopen: async (res) => {
+            const answerId = res.headers.get('x-answer-id');
+            if (answerId) {
+              updateCachedData((draft) => {
+                draft.answerId = answerId;
+              });
+            }
+          },
+          onmessage: (event) => {
+            updateCachedData((draft) => {
+              updateCacheWithEvent(event, draft, dispatch);
+            });
+          },
+          onerror: (error) => {
+            throw error;
+          },
+          onclose: () => {
+            updateCachedData((draft) => {
+              dispatch(setCannotAnswer(!draft.generated));
+            });
+          },
+        });
       },
     }),
   }),
 });
 
-export const fetchAnswer = (fetchAnswerParams: Partial<SearchRequest>) => {
+export const fetchAnswer = (fetchAnswerParams: AnswerApiQueryParams) => {
   return answerApi.endpoints.getAnswer.initiate(fetchAnswerParams);
 };
 
+// Select answer state from RTK endpoint state
 export const selectAnswer = (state: StreamAnswerAPIState) => {
   const params = selectAnswerApiQueryParams(state);
   return answerApi.endpoints.getAnswer.select(params)(state);

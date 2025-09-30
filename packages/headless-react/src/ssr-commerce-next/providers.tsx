@@ -6,7 +6,6 @@ import type {
   EngineStaticState,
   InferControllerStaticStateMapFromDefinitionsWithSolutionType,
   InferHydratedState,
-  NavigatorContext,
   SolutionType,
 } from '@coveo/headless/ssr-commerce-next';
 import {type PropsWithChildren, useEffect, useState} from 'react';
@@ -29,7 +28,6 @@ export function buildProviderWithDefinition<
 >(definition: ReactCommerceEngineDefinition<TControllers, TSolutionType>) {
   return function WrappedProvider({
     staticState,
-    navigatorContext,
     children,
   }: PropsWithChildren<{
     staticState: EngineStaticState<
@@ -39,13 +37,10 @@ export function buildProviderWithDefinition<
         TSolutionType
       >
     >;
-
-    navigatorContext: NavigatorContext;
   }>) {
     const [hydratedState, setHydratedState] = useState<
       InferHydratedState<typeof definition> | undefined
     >(undefined);
-    definition.setNavigatorContextProvider(() => navigatorContext);
 
     useEffect(() => {
       definition

@@ -14,10 +14,12 @@ import {
 } from '../../../common/suggestions/stencil-query-suggestions';
 import {
   dispatchSearchBoxSuggestionsEvent,
+} from '../../../common/suggestions/suggestions-events';
+import type {
   SearchBoxSuggestionElement,
   SearchBoxSuggestions,
   SearchBoxSuggestionsBindings,
-} from '../../../common/suggestions/suggestions-common';
+} from '../../../common/suggestions/suggestions-types';
 
 /**
  * The `atomic-search-box-query-suggestions` component can be added as a child of an `atomic-search-box` component, allowing for the configuration of query suggestion behavior.

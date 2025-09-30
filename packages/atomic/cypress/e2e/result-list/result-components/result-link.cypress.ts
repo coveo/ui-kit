@@ -1,5 +1,3 @@
-// eslint-disable-next-line n/no-extraneous-import
-import {pickBy} from 'lodash';
 import {
   generateComponentHTML,
   TagProps,
@@ -11,6 +9,16 @@ import {
   resultLinkComponent,
   ResultLinkSelectors,
 } from './result-link-selectors';
+
+function filterUndefined<T extends Record<string, unknown>>(object: T): Partial<T> {
+  const result: Partial<T> = {};
+  for (const key in object) {
+    if (object[key] !== undefined) {
+      result[key] = object[key];
+    }
+  }
+  return result;
+}
 
 interface ResultLinkOptions {
   target?: '_self' | '_blank' | '_parent' | '_top';
@@ -49,10 +57,7 @@ describe('Result Link Component', () => {
       new TestFixture()
         .with(
           addResultLinkInResultList(
-            pickBy(
-              {'href-template': hrefTemplate},
-              (property) => property !== undefined
-            ) as TagProps,
+            filterUndefined({'href-template': hrefTemplate}) as TagProps,
             slots
           )
         )

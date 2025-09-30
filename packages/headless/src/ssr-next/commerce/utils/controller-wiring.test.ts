@@ -1,4 +1,5 @@
 import {beforeEach, describe, expect, it} from 'vitest';
+import {buildMockNavigatorContext} from '../../../test/mock-navigator-context.js';
 import {
   defineMockCommerceControllerWithProps,
   defineMockRecommendationDefinition,
@@ -54,9 +55,6 @@ describe('controller-wiring', () => {
         expect(validate).toThrowError(
           /context: value is required and is currently undefined/
         );
-        expect(validate).toThrowError(
-          /searchParams: value is required and is currently undefined/
-        );
       });
     });
 
@@ -82,23 +80,23 @@ describe('controller-wiring', () => {
       });
     });
 
-    it('should throw for missing search parameters', () => {
+    it('should not throw for missing search parameters', () => {
       expect(() => {
         searchDefinitionSchema.validate(validCommonConfig);
-      }).toThrowError(/searchParams: value is require/);
+      }).not.toThrowError(/searchParams: value is require/);
 
       expect(() => {
         searchDefinitionSchema.validate({
           ...validCommonConfig,
           searchParams: {},
         });
-      }).toThrowError(/searchParams: value does not contain query/);
+      }).not.toThrowError(/searchParams: value does not contain q/);
     });
 
     it('should not throw for missing query', () => {
       const searchConfig = {
         ...validCommonConfig,
-        searchParams: {query: 'test query'},
+        searchParams: {q: 'test query'},
       };
       expect(() => {
         searchDefinitionSchema.validate(searchConfig);
@@ -179,8 +177,9 @@ describe('controller-wiring', () => {
 
       beforeAll(() => {
         const params = {
+          navigatorContext: buildMockNavigatorContext(),
           searchParams: {
-            query: 'test',
+            q: 'test',
           },
           recommendations: [],
           context: {
@@ -223,6 +222,7 @@ describe('controller-wiring', () => {
 
     it('should wire parameter manager for search with query', () => {
       const params = {
+        navigatorContext: buildMockNavigatorContext(),
         context: {
           language: 'en',
           country: 'US',
@@ -230,7 +230,7 @@ describe('controller-wiring', () => {
           view: {url: 'https://example.com'},
         },
         searchParams: {
-          query: 'test query',
+          q: 'test query',
         },
       };
 
@@ -251,6 +251,7 @@ describe('controller-wiring', () => {
 
     it('should contain props from custom controllers if provided', () => {
       const params = {
+        navigatorContext: buildMockNavigatorContext(),
         context: {
           language: 'en',
           country: 'US',
@@ -258,7 +259,7 @@ describe('controller-wiring', () => {
           view: {url: 'https://example.com'},
         },
         searchParams: {
-          query: 'test query',
+          q: 'test query',
         },
         controllers: {
           customController: {
@@ -282,6 +283,7 @@ describe('controller-wiring', () => {
 
     it('should handle search params for parameter manager', () => {
       const params = {
+        navigatorContext: buildMockNavigatorContext(),
         context: {
           language: 'en',
           country: 'US',
@@ -313,6 +315,7 @@ describe('controller-wiring', () => {
       } as CommerceControllerDefinitionsMap;
 
       const params = {
+        navigatorContext: buildMockNavigatorContext(),
         context: {
           language: 'en',
           country: 'US',
@@ -342,6 +345,7 @@ describe('controller-wiring', () => {
         } as CommerceControllerDefinitionsMap;
 
         const params = {
+          navigatorContext: buildMockNavigatorContext(),
           context: {
             language: 'en',
             country: 'US',
@@ -379,6 +383,7 @@ describe('controller-wiring', () => {
         } as CommerceControllerDefinitionsMap;
 
         const params = {
+          navigatorContext: buildMockNavigatorContext(),
           context: {
             language: 'en',
             country: 'US',
@@ -407,6 +412,7 @@ describe('controller-wiring', () => {
         } as CommerceControllerDefinitionsMap;
 
         const params = {
+          navigatorContext: buildMockNavigatorContext(),
           context: {
             language: 'en',
             country: 'US',

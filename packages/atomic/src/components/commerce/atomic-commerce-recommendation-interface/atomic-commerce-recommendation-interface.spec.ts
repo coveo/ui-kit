@@ -54,9 +54,9 @@ describe('atomic-commerce-recommendation-interface', () => {
 
   const setupElement = async (
     props: {
-      analytics?: boolean;
+      analytics?: boolean; // TODO - (v4) KIT-4990: remove.
       iconAssetsPath?: string;
-      language?: string;
+      language?: string; // TODO - (v4) KIT-4365: remove.
       languageAssetsPath?: string;
       scrollContainer?: string;
     } = {}
@@ -77,13 +77,10 @@ describe('atomic-commerce-recommendation-interface', () => {
     return element;
   };
 
-  const addChildElement = async <T extends TestElement>(
-    element: AtomicCommerceRecommendationInterface,
-    tag = 'test-element'
-  ) => {
+  const addChildElement = async (element: Element, tag = 'test-element') => {
     const childElement = document.createElement(
       tag
-    ) as InitializableComponent<CommerceBindings> & T;
+    ) as InitializableComponent<CommerceBindings> & TestElement;
     element.appendChild(childElement);
 
     await childElement.updateComplete;
@@ -92,8 +89,7 @@ describe('atomic-commerce-recommendation-interface', () => {
     return childElement;
   };
 
-  // #constructor
-  describe('when created', () => {
+  describe('#constructor (when created)', () => {
     it('should create an instance of InterfaceController', async () => {
       const element = await setupElement();
 
@@ -132,8 +128,7 @@ describe('atomic-commerce-recommendation-interface', () => {
     });
   });
 
-  // #connectedCallback
-  describe('when added to the DOM', () => {
+  describe('#connectedCallback (when added to the DOM)', () => {
     it("should cause CommonAtomicInterfaceHelper.onComponentInitializing to be called when an 'atomic/initializeComponent' event is dispatched", async () => {
       const element = await setupElement();
       const onComponentInitializingSpy = vi.spyOn(
@@ -182,7 +177,6 @@ describe('atomic-commerce-recommendation-interface', () => {
     });
   });
 
-  // #initializeWithEngine
   describe('#initializeWithEngine', () => {
     it('should dispatch an updateAnalyticsConfiguration action with the correct source and trackingId', async () => {
       const element = await setupElement();
@@ -200,7 +194,7 @@ describe('atomic-commerce-recommendation-interface', () => {
       });
     });
 
-    it('should call CommonInterfaceHelper.onInitialization with a function that sets engine', async () => {
+    it('should call InterfaceController.onInitialization with a function that sets engine', async () => {
       vi.spyOn(console, 'error').mockImplementation(() => {});
       const element = await setupElement();
       const engine = buildFakeCommerceEngine({});
@@ -309,6 +303,18 @@ describe('atomic-commerce-recommendation-interface', () => {
       expect(element.bindings.interfaceElement).toBe(element);
     });
 
+    it('should provide bindings to its descendant components', async () => {
+      const element = await setupElement();
+      const engine = buildFakeCommerceEngine({});
+      const childElement = await addChildElement(element);
+      const descendantElement = await addChildElement(childElement);
+
+      await element.initializeWithEngine(engine);
+
+      expect(childElement.bindings).toEqual(element.bindings);
+      expect(descendantElement.bindings).toEqual(element.bindings);
+    });
+
     it('should call markParentAsReady with this', async () => {
       const markParentAsReadySpy = vi.mocked(markParentAsReady);
       const element = await setupElement();
@@ -343,7 +349,7 @@ describe('atomic-commerce-recommendation-interface', () => {
     });
 
     // TODO (KIT-4365): remove this test in v4
-    it('should call CommonInterfaceHelper.onLanguageChange with no argument when language prop is defined', async () => {
+    it('should call InterfaceController.onLanguageChange with no argument when language prop is defined', async () => {
       // We're updating attributes before calling #initializeWithEngine; this would console.error.
       vi.spyOn(console, 'error').mockImplementation(() => {});
 
@@ -369,7 +375,6 @@ describe('atomic-commerce-recommendation-interface', () => {
     });
   });
 
-  // #updateLocale
   describe('#updateLocale', () => {
     it('should do nothing when the engine has not been created', async () => {
       vi.spyOn(console, 'error').mockImplementation(() => {});
@@ -389,7 +394,7 @@ describe('atomic-commerce-recommendation-interface', () => {
       expect(setContextMock).not.toHaveBeenCalled();
     });
 
-    it('should do nothing when context is not defined', async () => {
+    it('should do nothing when the context is not defined', async () => {
       vi.spyOn(console, 'error').mockImplementation(() => {});
       vi.mocked(headless.buildContext).mockReturnValue(undefined as never);
       const element = await setupElement();
@@ -410,7 +415,7 @@ describe('atomic-commerce-recommendation-interface', () => {
       expect(setContextMock).not.toHaveBeenCalled();
     });
 
-    describe('when the engine has been created and context is defined', () => {
+    describe('when the engine has been created and the context is defined', () => {
       let element: AtomicCommerceRecommendationInterface;
       let engine: ReturnType<typeof buildFakeCommerceEngine>;
       let onLanguageChangeSpy: ReturnType<typeof vi.spyOn>;
@@ -432,27 +437,19 @@ describe('atomic-commerce-recommendation-interface', () => {
         );
       });
 
-      it('should call onLanguageChange when language parameter is provided', async () => {
+      it('should call InterfaceController.onLanguageChange when the language parameter is provided', async () => {
         element.updateLocale('fr');
 
         expect(onLanguageChangeSpy).toHaveBeenCalledExactlyOnceWith('fr');
       });
 
-      it('should not call onLanguageChange when language parameter is not provided', async () => {
+      it('should not call InterfaceController.onLanguageChange when the language parameter is not provided', async () => {
         element.updateLocale(undefined, 'FR', 'EUR');
 
         expect(onLanguageChangeSpy).not.toHaveBeenCalled();
       });
 
-      it('should load context actions from the engine', async () => {
-        element.updateLocale('fr', 'FR', 'EUR');
-
-        expect(
-          vi.mocked(headless.loadContextActions)
-        ).toHaveBeenCalledExactlyOnceWith(engine);
-      });
-
-      it('should dispatch setContext with only the language when only the language parameter is provided', async () => {
+      it('should dispatch a setContext action with the new language when it is defined and different from the language value in the context', async () => {
         element.updateLocale('fr');
 
         expect(setContextMock).toHaveBeenCalledExactlyOnceWith({
@@ -461,7 +458,7 @@ describe('atomic-commerce-recommendation-interface', () => {
         });
       });
 
-      it('should dispatch setContext with only the country when only the country parameter is provided', async () => {
+      it('should dispatch a setContext action with the new country when it is defined and different from the country value in the context', async () => {
         element.updateLocale(undefined, 'FR');
 
         expect(setContextMock).toHaveBeenCalledExactlyOnceWith({
@@ -470,7 +467,7 @@ describe('atomic-commerce-recommendation-interface', () => {
         });
       });
 
-      it('should dispatch setContext with only the currency when only the currency parameter is provided', async () => {
+      it('should dispatch a setContext action with the new currency when it is defined and different from the currency value in the context', async () => {
         element.updateLocale(undefined, undefined, 'EUR');
 
         expect(setContextMock).toHaveBeenCalledExactlyOnceWith({
@@ -479,21 +476,27 @@ describe('atomic-commerce-recommendation-interface', () => {
         });
       });
 
-      it('should dispatch setContext with all values when all parameters are provided', async () => {
-        element.updateLocale('fr', 'FR', 'EUR');
+      it('should dispatch a setContext action with all values when all parameters are provided and any of them is different from its corresponding value in the context', async () => {
+        element.updateLocale('fr', 'US', 'USD'); // Only 'fr' is different
 
         expect(setContextMock).toHaveBeenCalledExactlyOnceWith({
           ...element.context.state,
           language: 'fr',
-          country: 'FR',
-          currency: 'EUR',
+          country: 'US',
+          currency: 'USD',
         });
+      });
+
+      it('should not dispatch a setContext action when each provided parameters is identical to its corresponding value in the context', async () => {
+        element.updateLocale('en', 'US', 'USD');
+
+        expect(setContextMock).not.toHaveBeenCalled();
       });
     });
   });
 
   // #toggleAnalytics
-  it('should call CommonInterfaceHelper.onAnalyticsChange when the analytics prop changes', async () => {
+  it('should call InterfaceController.onAnalyticsChange when the analytics prop changes', async () => {
     // We're updating attributes before calling #initializeWithEngine; this would console.error.
     vi.spyOn(console, 'error').mockImplementation(() => {});
 
@@ -529,14 +532,9 @@ describe('atomic-commerce-recommendation-interface', () => {
     expect(element.store.state.iconAssetsPath).toBe('/new/icon/assets/path');
   });
 
-  // TODO (KIT-4365): remove these tests in v4
   // #updateLanguage
-  describe('when the language prop changes', () => {
-    beforeEach(() => {
-      // We're updating attributes before calling #initializeWithEngine; this would console.error.
-      vi.spyOn(console, 'error').mockImplementation(() => {});
-    });
-
+  // TODO - (v4) KIT-4365: Remove these tests.
+  describe('when the language attribute changes', () => {
     it('should do nothing when the engine has not been created', async () => {
       const onLanguageChangeSpy = vi.spyOn(
         InterfaceController.prototype,
@@ -547,11 +545,11 @@ describe('atomic-commerce-recommendation-interface', () => {
       element.language = 'fr';
       await element.updateComplete;
 
-      expect(element.context).toBeUndefined();
+      expect(element.engine).toBeUndefined();
       expect(onLanguageChangeSpy).not.toHaveBeenCalled();
     });
 
-    it('should do nothing when #language is undefined', async () => {
+    it('should do nothing when the new language attribute is undefined', async () => {
       const onLanguageChangeSpy = vi.spyOn(
         InterfaceController.prototype,
         'onLanguageChange'
@@ -565,7 +563,22 @@ describe('atomic-commerce-recommendation-interface', () => {
       expect(onLanguageChangeSpy).not.toHaveBeenCalled();
     });
 
-    describe('when the engine has been created & #language is defined & #context is defined', () => {
+    it('should do nothing when the context is not defined', async () => {
+      const onLanguageChangeSpy = vi.spyOn(
+        InterfaceController.prototype,
+        'onLanguageChange'
+      );
+      const element = await setupElement({language: 'en'});
+      element.engine = buildFakeCommerceEngine(); // Simulate that the engine was created but the context wasn't built
+
+      element.language = 'fr';
+      await element.updateComplete;
+
+      expect(element.context).toBeUndefined();
+      expect(onLanguageChangeSpy).not.toHaveBeenCalled();
+    });
+
+    describe('when the engine has been created & the language attribute is defined & the context is defined', () => {
       it('should log a deprecation warning', async () => {
         const element = await setupElement();
         const engine = buildFakeCommerceEngine();
@@ -579,9 +592,9 @@ describe('atomic-commerce-recommendation-interface', () => {
         );
       });
 
-      it('should call CommonInterfaceHelper.onLanguageChange with no argument', async () => {
+      it('should call InterfaceController.onLanguageChange with no argument', async () => {
         const element = await setupElement({language: 'en'});
-        const engine = buildFakeCommerceEngine({});
+        const engine = buildFakeCommerceEngine();
         await element.initializeWithEngine(engine);
         const onLanguageChangeSpy = vi.spyOn(
           InterfaceController.prototype,
@@ -596,8 +609,7 @@ describe('atomic-commerce-recommendation-interface', () => {
     });
   });
 
-  // #disconnectedCallback
-  describe('when removed from the DOM', () => {
+  describe('#disconnectedCallback (when removed from the DOM)', () => {
     it('should remove the atomic/initializeComponent event listener', async () => {
       const element = await setupElement();
       const removeEventListenerSpy = vi.spyOn(element, 'removeEventListener');
@@ -635,28 +647,18 @@ describe('atomic-commerce-recommendation-interface', () => {
     });
   });
 
-  // #render
-  it('should render a slot', async () => {
-    const element = await setupElement();
+  describe('#render', () => {
+    it('should render a slot', async () => {
+      const element = await setupElement();
 
-    expect(element.shadowRoot?.querySelector('slot')).toBeTruthy();
-  });
+      expect(element.shadowRoot?.querySelector('slot')).toBeTruthy();
+    });
 
-  it('should render its children', async () => {
-    const element = await setupElement();
-    await addChildElement(element);
+    it('should render its children', async () => {
+      const element = await setupElement();
+      await addChildElement(element);
 
-    expect(within(element).queryByShadowText('test-element')).toBeTruthy();
-  });
-
-  // Cursory "integration" test
-  it('should provide bindings to its children', async () => {
-    const element = await setupElement();
-    const childElement = await addChildElement(element);
-
-    const engine = buildFakeCommerceEngine({});
-    await element.initializeWithEngine(engine);
-
-    expect(childElement.bindings).toBe(element.bindings);
+      expect(within(element).queryByShadowText('test-element')).toBeTruthy();
+    });
   });
 });

@@ -70,8 +70,6 @@
 export type {Relay} from '@coveo/relay';
 
 export type {Middleware, Unsubscribe} from '@reduxjs/toolkit';
-// Main App
-export type {CommerceEngineOptions} from './app/commerce-engine/commerce-engine.js';
 export type {CommerceEngineConfiguration} from './app/commerce-engine/commerce-engine-configuration.js';
 export {getSampleCommerceEngineConfiguration} from './app/commerce-engine/commerce-engine-configuration.js';
 // export type
@@ -264,11 +262,16 @@ export type {
   RedirectionTriggerState,
 } from './ssr/commerce/controllers/triggers/headless-redirection-trigger.ssr.js';
 export {defineRedirectionTrigger} from './ssr/commerce/controllers/triggers/headless-redirection-trigger.ssr.js';
-export type {CommerceEngineDefinition} from './ssr/commerce/engine/commerce-engine.ssr.js';
+// Main App
+export type {
+  CommerceEngineDefinition,
+  CommerceEngineOptions,
+} from './ssr/commerce/engine/commerce-engine.ssr.js';
 export {defineCommerceEngine} from './ssr/commerce/engine/commerce-engine.ssr.js';
 export type {
   CommerceEngineDefinitionOptions,
   SSRCommerceEngine as CommerceEngine,
+  SSRCommerceEngineOptions,
 } from './ssr/commerce/factories/build-factory.js';
 export {SolutionType} from './ssr/commerce/types/controller-constants.js';
 export type {

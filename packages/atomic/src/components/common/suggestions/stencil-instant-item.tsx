@@ -2,7 +2,7 @@ import {FunctionalComponent, h} from '@stencil/core';
 import {i18n} from 'i18next';
 import {encodeForDomAttribute} from '../../../utils/string-utils';
 import {getClassNameForButtonStyle} from '../stencil-button-style';
-import {SearchBoxSuggestionElement} from './suggestions-common';
+import {SearchBoxSuggestionElement} from './suggestions-types';
 
 export const getPartialInstantItemElement = (
   i18n: i18n,

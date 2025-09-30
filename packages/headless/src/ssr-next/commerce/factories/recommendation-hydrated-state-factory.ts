@@ -18,7 +18,7 @@ export function hydratedRecommendationStaticStateFactory<
   SolutionType.recommendation
 > {
   return async (
-    ...params: HydrateStaticStateParameters<
+    params: HydrateStaticStateParameters<
       TControllerDefinitions,
       SolutionType.recommendation
     >
@@ -28,7 +28,7 @@ export function hydratedRecommendationStaticStateFactory<
       options
     )(SolutionType.recommendation);
 
-    const {engine, controllers} = await solutionTypeBuild(...params);
+    const {engine, controllers} = await solutionTypeBuild(params);
 
     await engine.waitForRequestCompletedAction();
 

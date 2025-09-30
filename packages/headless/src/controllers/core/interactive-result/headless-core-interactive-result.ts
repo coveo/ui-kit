@@ -1,8 +1,8 @@
-import {debounce} from 'ts-debounce';
 import {configuration} from '../../../app/common-reducers.js';
 import type {CoreEngine, CoreEngineNext} from '../../../app/engine.js';
 import type {ConfigurationSection} from '../../../state/state-sections.js';
 import {loadReducerError} from '../../../utils/errors.js';
+import {debounce} from '../../../utils/utils.js';
 
 export interface InteractiveResultCoreOptions {
   /**

@@ -1,7 +1,6 @@
 import {basename, dirname, relative} from 'node:path';
 import {argv} from 'node:process';
 import {fileURLToPath} from 'node:url';
-import chalk from 'chalk';
 import {
   createProgram,
   DiagnosticCategory,
@@ -12,6 +11,8 @@ import {
   readConfigFile,
   sys,
 } from 'typescript';
+import colors from '../../../utils/ci/colors.mjs';
+
 import analyticsTransformer from './analytics-transform.mjs';
 import versionTransformer from './version-transform.mjs';
 
@@ -68,8 +69,8 @@ function emit(program) {
  */
 function compileWithTransformer() {
   console.log(
-    chalk.blue('Using tsconfig:'),
-    chalk.green(basename(tsConfigPath))
+    colors.blue('Using tsconfig:'),
+    colors.green(basename(tsConfigPath))
   );
   const {options, fileNames} = loadTsConfig(tsConfigPath);
   const program = createProgram(fileNames, options);
@@ -93,11 +94,11 @@ function compileWithTransformer() {
       );
 
       console.log(
-        `${chalk.cyan(relative(process.cwd(), diagnostic.file.fileName))}:${chalk.yellow(line + 1)}:${chalk.yellow(character + 1)} - ${chalk.red('error')} ${chalk.gray(message)}`
+        `${colors.cyan(relative(process.cwd(), diagnostic.file.fileName))}:${colors.yellow(line + 1)}:${colors.yellow(character + 1)} - ${colors.red('error')} ${colors.gray(message)}`
       );
     } else {
       console.error(
-        chalk.red(flattenDiagnosticMessageText(diagnostic.messageText, '\n'))
+        colors.red(flattenDiagnosticMessageText(diagnostic.messageText, '\n'))
       );
     }
 
@@ -112,9 +113,9 @@ function compileWithTransformer() {
 }
 
 try {
-  console.log(chalk.blue('Starting TypeScript compilation'));
+  console.log(colors.blue('Starting TypeScript compilation'));
   compileWithTransformer();
 } catch (error) {
-  console.error(chalk.red('Build failed:'), error);
+  console.error(colors.red('Build failed:'), error);
   process.exit(1);
 }

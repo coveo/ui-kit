@@ -44,6 +44,11 @@
  *   standaloneEngineDefinition,
  * } = engineDefinition;
  *
+ * await listingEngineDefinition.fetchStaticState({
+ *   navigatorContextProvider: () => {/*...* /},
+ *   context: {/*...* /},
+ * });
+ *
  * export type ListingStaticState = InferStaticState<
  *   typeof listingEngineDefinition
  * >;
@@ -289,7 +294,6 @@ export type {
   HydratedState,
   InferControllerStaticStateFromController,
   InferControllerStaticStateMapFromControllers,
-  OptionsTuple,
 } from './ssr-next/commerce/types/controller-definitions.js';
 export type {
   InferControllerFromDefinition,

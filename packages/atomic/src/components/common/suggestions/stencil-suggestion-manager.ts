@@ -3,13 +3,12 @@ import {forceUpdate} from '@stencil/core';
 import DOMPurify from 'dompurify';
 import {debounce} from '../../../utils/debounce-utils';
 import {promiseTimeout} from '../../../utils/promise-utils';
-import {
-  elementHasNoQuery,
-  elementHasQuery,
-  type SearchBoxSuggestionElement,
-  type SearchBoxSuggestionsBindings,
-  type SearchBoxSuggestionsEvent,
-} from './suggestions-common';
+import type {
+  SearchBoxSuggestionElement,
+  SearchBoxSuggestionsBindings,
+  SearchBoxSuggestionsEvent,
+} from './suggestions-types';
+import {elementHasNoQuery, elementHasQuery} from './suggestions-utils';
 
 /**
  * List of suggestions that will be displayed along other lists (e.g recent queries) when the search box's input is selected.

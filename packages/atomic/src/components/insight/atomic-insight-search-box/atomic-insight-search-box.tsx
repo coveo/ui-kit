@@ -25,8 +25,10 @@ import {
 import {SuggestionManager} from '../../common/suggestions/stencil-suggestion-manager';
 import {
   elementHasQuery,
+} from '../../common/suggestions/suggestions-utils';
+import {
   SearchBoxSuggestionElement,
-} from '../../common/suggestions/suggestions-common';
+} from '../../common/suggestions/suggestions-types';
 import {InsightBindings} from '../atomic-insight-interface/atomic-insight-interface';
 
 /**

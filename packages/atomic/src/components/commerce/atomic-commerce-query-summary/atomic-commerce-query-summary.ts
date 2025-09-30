@@ -26,7 +26,7 @@ import type {CommerceBindings} from '../atomic-commerce-interface/atomic-commerc
  * @part container - The container for the whole summary.
  * @part highlight - The summary highlights.
  * @part query - The summary highlighted query.
- * @part placeholder - The query summary placeholder used while the search interface is initializing.
+ * @part placeholder - The query summary placeholder used while the commerce interface is initializing.
  */
 @customElement('atomic-commerce-query-summary')
 @bindings()
@@ -73,6 +73,7 @@ export class AtomicCommerceQuerySummary
       totalNumberOfProducts,
       hasProducts,
       hasError,
+      isLoading,
     } = this.listingOrSearchSummaryState;
 
     const {i18nKey, highlights, ariaLiveMessage} =
@@ -84,7 +85,7 @@ export class AtomicCommerceQuerySummary
           : '',
         total: totalNumberOfProducts,
         i18n: this.bindings.i18n,
-        isLoading: false,
+        isLoading,
       });
 
     this.ariaMessage.message = ariaLiveMessage;

@@ -1,7 +1,7 @@
 import {isMacOS} from '@/src/utils/device-utils';
 import {Component, Fragment, Host, Prop, VNode, h} from '@stencil/core';
 import {i18n} from 'i18next';
-import {SearchBoxSuggestionElement} from '../suggestions/suggestions-common';
+import {SearchBoxSuggestionElement} from '../suggestions/suggestions-types';
 
 /**
  * The `atomic-suggestion-renderer` component is used to render individual suggestions. It was created to isolate

@@ -144,24 +144,31 @@ export class AtomicCommerceBreadbox
     );
   }
 
-  updated(changedProperties: Map<string, unknown>) {
-    super.updated(changedProperties);
+  willUpdate(changedProperties: Map<string, unknown>) {
     if (changedProperties.has('pathLimit')) {
       this.validateProps();
     }
+  }
+
+  updated() {
     this.adaptBreadcrumbs();
   }
 
   private validateProps() {
-    new Schema({
-      pathLimit: new NumberValue({
-        default: 3,
-        min: 1,
-        required: false,
-      }),
-    }).validate({
-      pathLimit: this.pathLimit,
-    });
+    try {
+      new Schema({
+        pathLimit: new NumberValue({
+          default: 3,
+          min: 1,
+          required: false,
+        }),
+      }).validate({
+        pathLimit: this.pathLimit,
+      });
+    } catch (error) {
+      this.error = error as Error;
+      return;
+    }
   }
 
   public disconnectedCallback() {

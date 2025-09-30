@@ -9,7 +9,6 @@ import type {SolutionType} from './controller-constants.js';
 import type {
   CommerceEngineDefinitionControllersPropsOption,
   ControllerDefinitionsMap,
-  OptionsTuple,
 } from './controller-definitions.js';
 import type {CommerceEngineDefinitionBuildResult} from './engine.js';
 
@@ -32,13 +31,11 @@ export type HydrateStaticState<
   TControllersDefinitionsMap extends ControllerDefinitionsMap<Controller>,
   TSolutionType extends SolutionType,
 > = (
-  ...params: OptionsTuple<
-    HydrateStaticStateOptions<TSearchAction> &
-      BuildConfig<TControllersDefinitionsMap, TSolutionType> &
-      CommerceEngineDefinitionControllersPropsOption<
-        TControllersDefinitionsMap,
-        TControllersProps,
-        TSolutionType
-      >
-  >
+  params: HydrateStaticStateOptions<TSearchAction> &
+    BuildConfig<TControllersDefinitionsMap, TSolutionType> &
+    CommerceEngineDefinitionControllersPropsOption<
+      TControllersDefinitionsMap,
+      TControllersProps,
+      TSolutionType
+    >
 ) => Promise<HydratedState<TControllers>>;

@@ -1,3 +1,15 @@
+## <small>3.33.7 (2025-09-24)</small>
+
+* chore: cleanup dependencies in atomic package (#6070) ([0ac5bd8](https://github.com/coveo/ui-kit/commits/0ac5bd8)), closes [#6070](https://github.com/coveo/ui-kit/issues/6070)
+* chore: remove unused dev dependencies from root package.json (#6058) ([98b9e67](https://github.com/coveo/ui-kit/commits/98b9e67)), closes [#6058](https://github.com/coveo/ui-kit/issues/6058)
+* chore(atomic): add missing tests for utility functions (#6046) ([db98f39](https://github.com/coveo/ui-kit/commits/db98f39)), closes [#6046](https://github.com/coveo/ui-kit/issues/6046)
+* chore(atomic): add UT for suggestions-common.ts (#6051) ([42e9638](https://github.com/coveo/ui-kit/commits/42e9638)), closes [#6051](https://github.com/coveo/ui-kit/issues/6051)
+* chore(atomic): migrate atomic-modal (#6033) ([5fd1a2b](https://github.com/coveo/ui-kit/commits/5fd1a2b)), closes [#6033](https://github.com/coveo/ui-kit/issues/6033)
+* chore(atomic): remove border-color fallback from global styles (#6012) ([92d78a0](https://github.com/coveo/ui-kit/commits/92d78a0)), closes [#6012](https://github.com/coveo/ui-kit/issues/6012)
+* chore(query summary): migrate atomic-query-summary (#6025) ([25218e2](https://github.com/coveo/ui-kit/commits/25218e2)), closes [#6025](https://github.com/coveo/ui-kit/issues/6025)
+
+
+
 ## <small>3.33.6 (2025-09-18)</small>
 
 * [Version Bump][skip ci]: ui-kit publish ([a3fb13e](https://github.com/coveo/ui-kit/commits/a3fb13e))
