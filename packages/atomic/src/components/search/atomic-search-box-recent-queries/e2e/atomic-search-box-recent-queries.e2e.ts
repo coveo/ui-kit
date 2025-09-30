@@ -6,7 +6,6 @@ test.describe('atomic-search-box-recent-queries', () => {
     makeAxeBuilder,
   }) => {
     await searchBoxRecentQueries.load();
-    await searchBoxRecentQueries.page.waitForTimeout(1000);
     const accessibilityResults = await makeAxeBuilder().analyze();
     expect(accessibilityResults.violations).toEqual([]);
   });
