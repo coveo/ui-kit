@@ -15,7 +15,7 @@ import {
 } from '../../../utils/initialization-utils';
 import {AnyBindings} from '../interface/bindings';
 import {LinkWithItemAnalytics} from '../item-link/stencil-item-link';
-import { ResultContextEvent } from '@/src/components/search/result-template-component-utils/context/stencil-result-template-decorators';
+import {ResultContextEvent} from '@/src/components/search/result-template-component-utils/context/stencil-result-template-decorators';
 
 /**
  * @part source-url
