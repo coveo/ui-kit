@@ -51,7 +51,7 @@ export default async function Search({
     navigatorContext: navigatorContext.marshal,
     searchParams: {
       ...parameters,
-      // TODO: this is bad DX! Need to use the same parameter as the parameterSerializer to avoid this hack
+      // TODO: KIT-5043: replace 'query' with 'q'
       query: parameters.q || '',
     },
   });
