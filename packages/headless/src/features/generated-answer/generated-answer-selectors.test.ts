@@ -1,33 +1,40 @@
+import {selectAnswer} from '../../api/knowledge/stream-answer-api.js';
 import {streamAnswerAPIStateMock} from '../../controllers/knowledge/generated-answer/headless-answerapi-generated-answer-mocks.js';
 import type {SearchAppState} from '../../state/search-app-state.js';
 import {generativeQuestionAnsweringIdSelector} from './generated-answer-selectors.js';
 
-vi.mock('../../api/knowledge/stream-answer-api', () => ({
-  ...vi.importActual<Record<string, Partial<SearchAppState>>>(
-    '../../api/knowledge/stream-answer-api'
-  ),
-  selectAnswer: (_state: Partial<SearchAppState>) => ({
-    data: {
-      answerId: 'answerId1234',
-    },
-  }),
+vi.mock('../../api/knowledge/stream-answer-api.js', () => ({
+  selectAnswer: vi.fn(),
 }));
+const mockSelectAnswer = vi.mocked(selectAnswer);
 
 describe('generated-answer-selectors', () => {
   describe('generativeQuestionAnsweringIdSelector', () => {
-    afterAll(() => {
+    beforeEach(() => {
       vi.clearAllMocks();
     });
+
     it('returns the answerId if an answer configuration id is in state', () => {
+      const mockWithExplicitAnswerId = {
+        ...streamAnswerAPIStateMock,
+        answer: {
+          data: {answerId: 'my-answer-id'},
+        },
+      };
+
       const state = {
-        ...(streamAnswerAPIStateMock as Partial<SearchAppState>),
+        ...(mockWithExplicitAnswerId as Partial<SearchAppState>),
         generatedAnswer: {
-          answerConfigurationId: 'answerConfigurationId',
+          answerConfigurationId: 'config123',
         },
       } as Partial<SearchAppState>;
 
+      mockSelectAnswer.mockReturnValue({
+        data: {answerId: 'my-answer-id'},
+      } as ReturnType<typeof selectAnswer>);
+
       const result = generativeQuestionAnsweringIdSelector(state);
-      expect(result).toEqual('answerId1234');
+      expect(result).toEqual('my-answer-id');
     });
 
     it('returns the generativeQuestionAnsweringId if an answer configuration id is not in state', () => {
@@ -86,17 +93,7 @@ describe('generated-answer-selectors', () => {
       const mockWithExplicitAnswerId = {
         ...streamAnswerAPIStateMock,
         answer: {
-          ...streamAnswerAPIStateMock.answer,
-          queries: {
-            ...streamAnswerAPIStateMock.answer.queries,
-            // Explicitly setting the answerId
-            [Object.keys(streamAnswerAPIStateMock.answer.queries)[0]]: {
-              ...Object.values(streamAnswerAPIStateMock.answer.queries)[0],
-              data: {
-                answerId: 'answerId1234',
-              },
-            },
-          },
+          data: {answerId: 'my-answer-id'},
         },
       };
 
@@ -114,8 +111,12 @@ describe('generated-answer-selectors', () => {
         },
       } as Partial<SearchAppState>;
 
+      mockSelectAnswer.mockReturnValue({
+        data: {answerId: 'my-answer-id'},
+      } as ReturnType<typeof selectAnswer>);
+
       const result = generativeQuestionAnsweringIdSelector(state);
-      expect(result).toBe('answerId1234');
+      expect(result).toBe('my-answer-id');
     });
 
     it('should return undefined when no relevant data is available', () => {
