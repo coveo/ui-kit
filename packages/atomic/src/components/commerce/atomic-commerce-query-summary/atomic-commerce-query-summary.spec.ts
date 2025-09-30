@@ -7,6 +7,7 @@ import {
 } from '@coveo/headless/commerce';
 import {html} from 'lit';
 import {describe, expect, it, vi} from 'vitest';
+import {AriaLiveRegionController} from '@/src/utils/accessibility-utils';
 import {renderInAtomicCommerceInterface} from '@/vitest-utils/testing-helpers/fixtures/atomic/commerce/atomic-commerce-interface-fixture';
 import {buildFakeCommerceEngine} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/engine';
 import {buildFakeProductListing} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/product-listing-controller';
@@ -101,7 +102,7 @@ describe('atomic-commerce-query-summary', () => {
     expect(element).toBeEmptyDOMElement();
   });
 
-  it('should render nothing when hasResults is false and firstSearchExecuted is true', async () => {
+  it('should render nothing when hasProducts is false and firstRequestExecuted is true', async () => {
     const {element} = await renderQuerySummary({
       querySummaryState: {
         hasProducts: false,
@@ -111,95 +112,269 @@ describe('atomic-commerce-query-summary', () => {
     expect(element).toBeEmptyDOMElement();
   });
 
-  it('should render a placeholder when firstSearchExecuted is false', async () => {
+  it('should render a placeholder when firstRequestExecuted is false', async () => {
     const {placeholder} = await renderQuerySummary({
       querySummaryState: {
         firstRequestExecuted: false,
       },
     });
 
-    expect(placeholder).toBeTruthy();
     expect(placeholder).toBeInTheDocument();
   });
 
-  it('should render the query summary container', async () => {
-    const {container} = await renderQuerySummary();
-
-    expect(container).toBeTruthy();
-    expect(container).toBeInTheDocument();
-  });
-
-  it('should render the text correctly when there is a singular product', async () => {
-    const {container} = await renderQuerySummary({
-      querySummaryState: {
-        firstProduct: 1,
-        lastProduct: 1,
-        totalNumberOfProducts: 1,
-      },
+  describe('when hasError is false & hasProducts is true & firstRequestExecuted is true', () => {
+    it('should render correctly', async () => {
+      const {element} = await renderQuerySummary({
+        querySummaryState: {
+          hasProducts: true,
+          firstRequestExecuted: true,
+          hasError: false,
+        },
+      });
+      expect(element).toBeDefined();
     });
 
-    expect(container).toHaveTextContent('Product 1 of 1');
-  });
-
-  it('should render the text correctly when there are multiple products', async () => {
-    const {container} = await renderQuerySummary({
-      querySummaryState: {
-        firstProduct: 1,
-        lastProduct: 10,
-        totalNumberOfProducts: 100,
-      },
+    it('should call buildProductListing when interfaceElement.type is "product-listing"', async () => {
+      await renderQuerySummary({
+        interfaceElementType: 'product-listing',
+        querySummaryState: {
+          hasProducts: true,
+          firstRequestExecuted: true,
+          hasError: false,
+        },
+      });
+      expect(buildProductListing).toHaveBeenCalledWith(mockedEngine);
     });
 
-    expect(container).toHaveTextContent('Products 1-10 of 100');
-  });
-
-  it('should render the text correctly when there are products and a query', async () => {
-    const {container} = await renderQuerySummary({
-      querySummaryState: {
-        firstProduct: 1,
-        lastProduct: 10,
-        totalNumberOfProducts: 100,
-        query: 'test query',
-      },
+    it('should call buildSearch when interfaceElement.type is "search"', async () => {
+      await renderQuerySummary({
+        interfaceElementType: 'search',
+        querySummaryState: {
+          hasProducts: true,
+          firstRequestExecuted: true,
+          hasError: false,
+        },
+      });
+      expect(buildSearch).toHaveBeenCalledWith(mockedEngine);
     });
 
-    expect(container).toHaveTextContent('Products 1-10 of 100 for test query');
-  });
-
-  it('should highlight the first, last, total, and query in the text', async () => {
-    const {container} = await renderQuerySummary({
-      querySummaryState: {
-        firstProduct: 1,
-        lastProduct: 10,
-        totalNumberOfProducts: 100,
-        query: 'test query',
-      },
+    it('should bind to the query summary controller', async () => {
+      const {element} = await renderQuerySummary({
+        querySummaryState: {
+          hasProducts: true,
+          firstRequestExecuted: true,
+          hasError: false,
+        },
+      });
+      expect(element.listingOrSearchSummary).toBe(mockedQuerySummary);
     });
 
-    expect(container).toHaveTextContent('Products ');
-    expect(container).toHaveTextContent('1');
-    expect(container).toHaveTextContent('10');
-    expect(container).toHaveTextContent('100');
-    expect(container).toHaveTextContent('test query');
+    it('should render the query summary container', async () => {
+      const {container} = await renderQuerySummary({
+        querySummaryState: {
+          hasProducts: true,
+          firstRequestExecuted: true,
+          hasError: false,
+        },
+      });
 
-    const highlightedElements = container!.querySelectorAll('.font-bold');
-    expect(highlightedElements.length).toBe(4);
-  });
-
-  it('should render every part', async () => {
-    const {element, parts} = await renderQuerySummary({
-      querySummaryState: {
-        firstProduct: 1,
-        lastProduct: 10,
-        totalNumberOfProducts: 100,
-        query: 'test query',
-      },
+      expect(container).toBeInTheDocument();
     });
 
-    const partsElements = parts(element);
+    it('should render the text correctly when there is a single product', async () => {
+      const {container} = await renderQuerySummary({
+        querySummaryState: {
+          firstProduct: 1,
+          lastProduct: 1,
+          totalNumberOfProducts: 1,
+          hasProducts: true,
+          firstRequestExecuted: true,
+        },
+      });
 
-    await expect.element(partsElements.container!).toBeInTheDocument();
-    await expect.element(partsElements.highlight!).toBeInTheDocument();
-    await expect.element(partsElements.query!).toBeInTheDocument();
+      expect(container).toHaveTextContent('Product 1 of 1');
+    });
+
+    it('should render the text correctly when there are multiple products', async () => {
+      const {container} = await renderQuerySummary({
+        querySummaryState: {
+          firstProduct: 1,
+          lastProduct: 10,
+          totalNumberOfProducts: 100,
+          hasProducts: true,
+          firstRequestExecuted: true,
+        },
+      });
+
+      expect(container).toHaveTextContent('Products 1-10 of 100');
+    });
+
+    it('should render the text correctly when there are products and a query', async () => {
+      const {container} = await renderQuerySummary({
+        querySummaryState: {
+          firstProduct: 1,
+          lastProduct: 10,
+          totalNumberOfProducts: 100,
+          query: 'test query',
+          hasProducts: true,
+          firstRequestExecuted: true,
+        },
+      });
+
+      expect(container).toHaveTextContent(
+        'Products 1-10 of 100 for test query'
+      );
+    });
+
+    it('should highlight the first, last, total, and query in the text', async () => {
+      const {container} = await renderQuerySummary({
+        querySummaryState: {
+          firstProduct: 1,
+          lastProduct: 10,
+          totalNumberOfProducts: 100,
+          query: 'test query',
+          hasProducts: true,
+          firstRequestExecuted: true,
+        },
+      });
+
+      const highlightedElements = container!.querySelectorAll(
+        '[part*="highlight"]'
+      );
+      expect(highlightedElements.length).toBe(4);
+    });
+
+    it('should handle loading state properly', async () => {
+      const messageSetterSpy = vi.spyOn(
+        AriaLiveRegionController.prototype,
+        'message',
+        'set'
+      );
+
+      const {element} = await renderQuerySummary({
+        querySummaryState: {
+          isLoading: true,
+          hasProducts: true,
+          firstRequestExecuted: true,
+        },
+      });
+
+      expect(element).toBeDefined();
+      expect(messageSetterSpy).toHaveBeenCalledOnce();
+
+      const [[calledMessage]] = messageSetterSpy.mock.calls;
+      expect(calledMessage).toMatch(/loading/i);
+    });
+
+    it('should render container part', async () => {
+      const {element, parts} = await renderQuerySummary({
+        querySummaryState: {
+          firstProduct: 1,
+          lastProduct: 10,
+          totalNumberOfProducts: 100,
+          query: 'test query',
+          hasProducts: true,
+          firstRequestExecuted: true,
+        },
+      });
+
+      const partsElements = parts(element);
+      await expect.element(partsElements.container!).toBeInTheDocument();
+    });
+
+    it('should render highlight part', async () => {
+      const {element, parts} = await renderQuerySummary({
+        querySummaryState: {
+          firstProduct: 1,
+          lastProduct: 10,
+          totalNumberOfProducts: 100,
+          query: 'test query',
+          hasProducts: true,
+          firstRequestExecuted: true,
+        },
+      });
+
+      const partsElements = parts(element);
+      await expect.element(partsElements.highlight!).toBeInTheDocument();
+    });
+
+    it('should render query part', async () => {
+      const {element, parts} = await renderQuerySummary({
+        querySummaryState: {
+          firstProduct: 1,
+          lastProduct: 10,
+          totalNumberOfProducts: 100,
+          query: 'test query',
+          hasProducts: true,
+          firstRequestExecuted: true,
+        },
+      });
+
+      const partsElements = parts(element);
+      await expect.element(partsElements.query!).toBeInTheDocument();
+    });
+
+    it('should handle zero products gracefully', async () => {
+      const {element} = await renderQuerySummary({
+        querySummaryState: {
+          firstProduct: 0,
+          lastProduct: 0,
+          totalNumberOfProducts: 0,
+          hasProducts: false,
+          firstRequestExecuted: true,
+        },
+      });
+
+      expect(element).toBeEmptyDOMElement();
+    });
+
+    describe('when testing exact text format patterns', () => {
+      it('should match exact format for multiple products with query', async () => {
+        const {container} = await renderQuerySummary({
+          querySummaryState: {
+            firstProduct: 1,
+            lastProduct: 10,
+            totalNumberOfProducts: 1234,
+            query: 'test',
+            hasProducts: true,
+            firstRequestExecuted: true,
+          },
+        });
+
+        const textContent = (container?.textContent || '').trim();
+        const pattern = /^Products 1-10 of [\d,]+ for test/;
+        expect(textContent).toMatch(pattern);
+      });
+
+      it('should match exact format for single product with query', async () => {
+        const {container} = await renderQuerySummary({
+          querySummaryState: {
+            firstProduct: 1,
+            lastProduct: 1,
+            totalNumberOfProducts: 1,
+            query: "Queen's Gambit sparks world of online chess celebrities",
+            hasProducts: true,
+            firstRequestExecuted: true,
+          },
+        });
+
+        const textContent = (container?.textContent || '').trim();
+        const pattern =
+          /^Product 1 of [\d,]+ for Queen's Gambit sparks world of online chess celebrities/;
+        expect(textContent).toMatch(pattern);
+      });
+    });
+
+    it('should not show a placeholder', async () => {
+      const {placeholder} = await renderQuerySummary({
+        querySummaryState: {
+          firstRequestExecuted: true,
+          hasProducts: true,
+          hasError: false,
+        },
+      });
+
+      expect(placeholder).toBeFalsy();
+    });
   });
 });
