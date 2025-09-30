@@ -134,9 +134,9 @@ export class InterfaceController<EngineType extends AnyEngineType>
   }
 
   private initComponents() {
-    this.hangingComponentsInitialization.forEach((event) =>
-      event.detail(this.host.bindings)
-    );
+    this.hangingComponentsInitialization.forEach((event) => {
+      event.detail(this.host.bindings);
+    });
   }
 
   private initAriaLive() {

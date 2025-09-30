@@ -130,7 +130,7 @@ test.describe('atomic-commerce-search-box', () => {
         const count = Math.min(
           (await searchBox.recentQueries().count()) +
             (await searchBox.searchSuggestions().count()),
-          parseInt((await searchBox.numberOfQueries) ?? '')
+          parseInt((await searchBox.numberOfQueries) ?? '', 10)
         ).toString();
 
         const regexMessage = new RegExp(
