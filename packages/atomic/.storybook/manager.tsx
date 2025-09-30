@@ -14,7 +14,6 @@ declare global {
   }
 }
 
-// Configure Storybook logo link
 addons.setConfig({
   theme: {
     ...themes.dark,
