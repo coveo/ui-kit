@@ -126,18 +126,7 @@ export type EngineDefinitionControllersPropsOption<
     TControllers,
     TControllersPropsMap,
     TSolutionType
-  > & {
-    /**
-     * @deprecated In the next major version, this property will only be used for custom SSR controllers.
-     * Unless you have created a custom controller definition method, you don't need to use this property.
-     */
-    controllers?: ConditionalControllerProps<
-      TControllers,
-      TControllersPropsMap,
-      TSolutionType,
-      keyof TControllers
-    >;
-  };
+  >;
 
 /**
  * Represents an optional engine definition for controller properties.
