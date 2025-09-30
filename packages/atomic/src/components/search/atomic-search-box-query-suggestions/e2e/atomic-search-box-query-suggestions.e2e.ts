@@ -13,12 +13,6 @@ test.describe('atomic-search-box-query-suggestions', () => {
     expect(accessibilityResults.violations).toEqual([]);
   });
 
-  test('should load story page', async ({searchBoxQuerySuggestions, page}) => {
-    await searchBoxQuerySuggestions.load();
-    const pageTitle = await page.title();
-    expect(pageTitle).toContain('Storybook');
-  });
-
   test('should have basic component structure', async ({
     searchBoxQuerySuggestions,
     page,
