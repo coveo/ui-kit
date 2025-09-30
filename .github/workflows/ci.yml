@@ -657,7 +657,7 @@ jobs:
           PR_NUMBER: ${{ github.event.number }}
   prerelease-cdn-pr:
     if: ${{ !cancelled() && github.event_name == 'pull_request' }}
-    needs: build
+    needs: build-cdn
     name: Pre-release CDN in dev (PR)
     environment: "Prerelease (CDN)"
     runs-on: ubuntu-latest
