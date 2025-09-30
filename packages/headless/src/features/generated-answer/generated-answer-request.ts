@@ -145,7 +145,7 @@ export const constructAnswerAPIQueryParams = (
     ...(state.debug !== undefined && {debug: state.debug}),
     referrer,
     ...actionsHistory,
-    ...foldingParams,
+    ...(foldingParams ?? {}),
     ...(excerptLength && {excerptLength}),
     ...(dictionaryFieldContext && {
       dictionaryFieldContext,

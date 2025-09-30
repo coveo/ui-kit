@@ -73,7 +73,7 @@ vi.mock('../../../api/knowledge/post-answer-evaluation', () => ({
 
 describe('knowledge-generated-answer', () => {
   let engine: MockedSearchEngine;
-  const mockSelectAnswer = selectAnswer as unknown as ReturnType<typeof vi.fn>;
+  const mockSelectAnswer = vi.mocked(selectAnswer);
 
   const createGeneratedAnswer = (props: GeneratedAnswerProps = {}) =>
     buildAnswerApiGeneratedAnswer(
@@ -169,8 +169,8 @@ describe('knowledge-generated-answer', () => {
     describe('when RTK Query is loading', () => {
       it('should expose isLoading = true and no answer yet', () => {
         mockSelectAnswer.mockReturnValue({
-          data: {isLoading: true, isStreaming: false},
-        });
+          data: {isLoading: true},
+        } as ReturnType<typeof selectAnswer>);
 
         const generatedAnswer = createGeneratedAnswer();
 
@@ -185,7 +185,7 @@ describe('knowledge-generated-answer', () => {
       it('should expose isStreaming = true and partial answer', () => {
         mockSelectAnswer.mockReturnValue({
           data: {isStreaming: true, answer: 'partial...', isLoading: false},
-        });
+        } as ReturnType<typeof selectAnswer>);
 
         const generatedAnswer = createGeneratedAnswer();
 
@@ -210,7 +210,7 @@ describe('knowledge-generated-answer', () => {
             isLoading: false,
             isStreaming: false,
           },
-        });
+        } as ReturnType<typeof selectAnswer>);
 
         const generatedAnswer = createGeneratedAnswer();
 
@@ -233,7 +233,7 @@ describe('knowledge-generated-answer', () => {
             isLoading: false,
             isStreaming: false,
           },
-        });
+        } as ReturnType<typeof selectAnswer>);
 
         const generatedAnswer = createGeneratedAnswer();
 
@@ -248,7 +248,7 @@ describe('knowledge-generated-answer', () => {
       it('should mark cannotAnswer = true if not loading or streaming', () => {
         mockSelectAnswer.mockReturnValue({
           data: {generated: false, isLoading: false, isStreaming: false},
-        });
+        } as ReturnType<typeof selectAnswer>);
 
         const generatedAnswer = createGeneratedAnswer();
 
@@ -260,7 +260,7 @@ describe('knowledge-generated-answer', () => {
       it('should mark cannotAnswer = false even if not loading or streaming', () => {
         mockSelectAnswer.mockReturnValue({
           data: {generated: undefined, isLoading: false, isStreaming: false},
-        });
+        } as ReturnType<typeof selectAnswer>);
 
         const generatedAnswer = createGeneratedAnswer();
 
@@ -272,7 +272,7 @@ describe('knowledge-generated-answer', () => {
       it('should mark cannotAnswer = false', () => {
         mockSelectAnswer.mockReturnValue({
           data: {generated: false, isLoading: true, isStreaming: false},
-        });
+        } as ReturnType<typeof selectAnswer>);
 
         const generatedAnswer = createGeneratedAnswer();
 
@@ -284,7 +284,7 @@ describe('knowledge-generated-answer', () => {
       it('should mark cannotAnswer = false', () => {
         mockSelectAnswer.mockReturnValue({
           data: {generated: false, isLoading: false, isStreaming: true},
-        });
+        } as ReturnType<typeof selectAnswer>);
 
         const generatedAnswer = createGeneratedAnswer();
 
@@ -296,7 +296,7 @@ describe('knowledge-generated-answer', () => {
       it('should mark cannotAnswer = false', () => {
         mockSelectAnswer.mockReturnValue({
           data: {generated: true, isLoading: false, isStreaming: false},
-        });
+        } as ReturnType<typeof selectAnswer>);
 
         const generatedAnswer = createGeneratedAnswer();
 
@@ -313,7 +313,7 @@ describe('knowledge-generated-answer', () => {
             isLoading: false,
             isStreaming: false,
           },
-        });
+        } as ReturnType<typeof selectAnswer>);
 
         engine = buildEngineWithGeneratedAnswer({
           generatedAnswer: {

@@ -155,27 +155,28 @@ export function buildAnswerApiGeneratedAnswer(
   return {
     ...controller,
     get state() {
-      const selectedAnswerState = selectAnswer(engine.state).data;
+      const answerApiState = selectAnswer(engine.state).data;
+      const state = getState().generatedAnswer;
 
       return {
-        ...getState().generatedAnswer,
-        answer: selectedAnswerState?.answer,
+        ...state,
+        answer: answerApiState?.answer,
         citations: filterOutDuplicatedCitations(
-          selectedAnswerState?.citations ?? []
+          answerApiState?.citations ?? []
         ),
         error: {
-          message: selectedAnswerState?.error?.message,
-          statusCode: selectedAnswerState?.error?.code,
+          message: answerApiState?.error?.message,
+          statusCode: answerApiState?.error?.code,
         },
-        isLoading: selectedAnswerState?.isLoading ?? false,
-        isStreaming: selectedAnswerState?.isStreaming ?? false,
-        answerContentFormat: selectedAnswerState?.contentFormat ?? 'text/plain',
-        isAnswerGenerated: selectedAnswerState?.generated ?? false,
+        isLoading: answerApiState?.isLoading ?? false,
+        isStreaming: answerApiState?.isStreaming ?? false,
+        answerContentFormat: answerApiState?.contentFormat ?? 'text/plain',
+        isAnswerGenerated: answerApiState?.generated ?? false,
         cannotAnswer:
-          getState().generatedAnswer.cannotAnswer ||
-          (selectedAnswerState?.generated === false &&
-            !selectedAnswerState?.isLoading &&
-            !selectedAnswerState?.isStreaming),
+          state.cannotAnswer ||
+          (answerApiState?.generated === false &&
+            !answerApiState?.isLoading &&
+            !answerApiState?.isStreaming),
       };
     },
     retry() {
