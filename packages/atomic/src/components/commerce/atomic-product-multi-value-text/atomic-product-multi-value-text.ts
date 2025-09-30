@@ -7,7 +7,7 @@ import {
 } from '@coveo/headless/commerce';
 import {html, LitElement, nothing, type TemplateResult} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
-import {createProductContextController} from '@/src/components/commerce/product-template-component-utils/product-template-controllers';
+import {createProductContextController} from '@/src/components/commerce/product-template-component-utils/context/product-context-controller';
 import {bindingGuard} from '@/src/decorators/binding-guard';
 import {bindings} from '@/src/decorators/bindings';
 import {errorGuard} from '@/src/decorators/error-guard';

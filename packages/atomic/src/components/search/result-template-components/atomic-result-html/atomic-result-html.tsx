@@ -6,7 +6,7 @@ import {
 } from '../../../../utils/initialization-utils';
 import {getStringValueFromResultOrNull} from '../../../../utils/result-utils';
 import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
-import {ResultContext} from '@/src/components/search/result-template-component-utils/stencil-result-template-decorators';
+import {ResultContext} from '@/src/components/search/result-template-component-utils/context/stencil-result-template-decorators';
 
 /**
  * The `atomic-result-html` component renders the HTML value of a string result field.

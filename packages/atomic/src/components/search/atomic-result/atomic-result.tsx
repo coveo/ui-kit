@@ -16,7 +16,7 @@ import {SearchStore} from '../atomic-search-interface/store';
 import {
   InteractiveResultContextEvent,
   ResultContextEvent,
-} from '@/src/components/search/result-template-component-utils/stencil-result-template-decorators';
+} from '@/src/components/search/result-template-component-utils/context/stencil-result-template-decorators';
 
 /**
  * The `atomic-result` component is used internally by the `atomic-result-list` component.

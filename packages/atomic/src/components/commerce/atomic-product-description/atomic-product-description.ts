@@ -3,7 +3,6 @@ import type {Product} from '@coveo/headless/commerce';
 import {html, LitElement, nothing} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {createRef} from 'lit/directives/ref.js';
-import {createProductContextController} from '@/src/components/commerce/product-template-component-utils/product-template-controllers.js';
 import {booleanConverter} from '@/src/converters/boolean-converter.js';
 import {bindingGuard} from '@/src/decorators/binding-guard.js';
 import {bindings} from '@/src/decorators/bindings.js';
@@ -15,6 +14,7 @@ import {
 } from '../../common/expandable-text/expandable-text.js';
 import type {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface.js';
 import '../atomic-product-text/atomic-product-text.js';
+import {createProductContextController} from '@/src/components/commerce/product-template-component-utils/context/product-context-controller.js';
 import {LightDomMixin} from '@/src/mixins/light-dom.js';
 
 /**

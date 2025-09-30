@@ -2,10 +2,6 @@ import type {InteractiveProduct, Product} from '@coveo/headless/commerce';
 import {type CSSResultGroup, html, LitElement} from 'lit';
 import {customElement, property} from 'lit/decorators.js';
 import {ref} from 'lit/directives/ref.js';
-import type {
-  InteractiveProductContextEvent,
-  ProductContextEvent,
-} from '@/src/components/commerce/product-template-component-utils/product-template-controllers';
 import type {DisplayConfig} from '@/src/components/common/item-list/context/item-display-config-context-controller';
 import {
   type ItemRenderingFunction,
@@ -23,6 +19,10 @@ import {ChildrenUpdateCompleteMixin} from '@/src/mixins/children-update-complete
 import {parentNodeToString} from '@/src/utils/dom-utils';
 import type {CommerceStore} from '../atomic-commerce-interface/store';
 import type {CommerceRecommendationStore} from '../atomic-commerce-recommendation-interface/store';
+import type {
+  InteractiveProductContextEvent,
+  ProductContextEvent,
+} from '../product-template-component-utils/context/product-context-controller';
 import styles from './atomic-product.tw.css';
 
 /**

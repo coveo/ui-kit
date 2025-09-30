@@ -5,7 +5,7 @@ import {
   ItemContext,
   ItemContextEvent,
   itemContext,
-} from '../../common/item-list/stencil-item-decorators';
+} from '@/src/components/common/item-list/stencil-item-decorators';
 
 /**
  * A [StencilJS property decorator](https://stenciljs.com/) to be used for result template components.
@@ -16,7 +16,7 @@ import {
  *
  * For more information and examples, view the "Utilities" section of the readme.
  * 
- * @deprecated should only be used for Stencil components. For Lit components, use `createResultContextController` from \@/src/components/search/result-template-component-utils/result-template-controllers.ts
+ * @deprecated should only be used for Stencil components. For Lit components, use `createResultContextController` from \@/src/components/search/result-template-component-utils/context/result-context-controller.ts
  */
 export function ResultContext(opts: {folded: boolean} = {folded: false}) {
   return ItemContext({parentName: 'atomic-result', folded: opts.folded});
@@ -39,7 +39,7 @@ export type InteractiveResultContextEvent = InteractiveItemContextEvent;
  * @param element The element that the event is dispatched to, which must be the child of a rendered "atomic-result" element.
  * @returns A promise that resolves on initialization of the parent "atomic-result" element, or rejects when there is no parent "atomic-result" element.
  * 
- * @deprecated should only be used for Stencil components. For Lit components, use `fetchResultContext` from \@/src/components/search/result-template-component-utils/result-template-controllers.ts
+ * @deprecated should only be used for Stencil components. For Lit components, use `fetchResultContext` from \@/src/components/search/result-template-component-utils/context/fetch-result-context.ts
  */
 export function resultContext<T extends Result | FoldedResult = Result>(
   element: Element
