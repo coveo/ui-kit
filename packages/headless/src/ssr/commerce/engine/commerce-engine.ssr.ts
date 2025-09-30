@@ -2,7 +2,7 @@
  * Utility functions to be used for Commerce Server Side Rendering.
  */
 
-import type {CommerceEngineOptions} from '../../../app/commerce-engine/commerce-engine.js';
+import type {CommerceEngineOptions as OriginalCommerceEngineOptions} from '../../../app/commerce-engine/commerce-engine.js';
 import type {NavigatorContextProvider} from '../../../app/navigator-context-provider.js';
 import type {Controller} from '../../../controllers/controller/headless-controller.js';
 import {
@@ -16,6 +16,11 @@ import {fetchStaticStateFactory} from '../factories/static-state-factory.js';
 import {SolutionType} from '../types/controller-constants.js';
 import type {ControllerDefinitionsMap} from '../types/controller-definitions.js';
 import type {EngineDefinition} from '../types/engine.js';
+
+/**
+ * @deprecated use `SSRCommerceEngineOptions` type instead.
+ */
+export type CommerceEngineOptions = OriginalCommerceEngineOptions;
 
 export interface CommerceEngineDefinition<
   TControllers extends ControllerDefinitionsMap<Controller>,
