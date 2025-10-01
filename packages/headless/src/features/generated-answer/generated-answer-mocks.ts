@@ -1,7 +1,6 @@
 /** biome-ignore-all lint/suspicious/noExplicitAny: <mock> */
 /* eslint-disable @cspell/spellchecker */
-import type {StreamAnswerAPIState} from '../../../api/knowledge/stream-answer-api-state.js';
-import {addSecondsToFacetsTimestamps} from './utils/testingUtils.js';
+import type {StreamAnswerAPIState} from '../../api/knowledge/stream-answer-api-state.js';
 
 const atomicVersion = '2.77.0';
 
@@ -1660,13 +1659,5 @@ export const expectedStreamAnswerAPIParam = {
     documentReferrer: 'some-test-referrer',
     originContext: 'Search',
     source: [`@coveo/atomic@${atomicVersion}`, '@coveo/headless@Test version'],
-  },
-};
-
-export const expectedStreamAnswerAPIParamWithDifferentFacetTimes = {
-  ...expectedStreamAnswerAPIParam,
-  facets: {
-    ...expectedStreamAnswerAPIParam.facets,
-    currentValues: addSecondsToFacetsTimestamps(dateRangeCurrentValues, 5),
   },
 };
