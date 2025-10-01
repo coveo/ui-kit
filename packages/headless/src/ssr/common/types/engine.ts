@@ -57,6 +57,8 @@ export interface EngineDefinition<
     InferControllerPropsMapFromDefinitions<TControllers>
   >;
   /**
+   * @deprecated This method will be removed in a future major version. Navigator context should be provided directly when fetching the static state
+   *
    * Sets the navigator context provider.
    * This provider is essential for retrieving navigation-related data such as referrer, userAgent, location, and clientId, which are crucial for handling both server-side and client-side API requests effectively.
    *
@@ -66,6 +68,8 @@ export interface EngineDefinition<
     navigatorContextProvider: NavigatorContextProvider
   ) => void;
   /**
+   * @deprecated This method is deprecated and will be removed in a future major version. Use the `fetchStaticState` method instead.
+   *
    * Builds an engine and its controllers from an engine definition.
    */
   build: Build<

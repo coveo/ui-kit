@@ -1,3 +1,42 @@
+## <small>3.31.1 (2025-10-01)</small>
+
+* chore(deps): update dependency typedoc to v0.28.8 j:kit-282 (#5819) ([fb042f4](https://github.com/coveo/ui-kit/commits/fb042f4)), closes [#5819](https://github.com/coveo/ui-kit/issues/5819)
+* chore(headless-react): add sample for headless SSR next (#6078) ([a238fc7](https://github.com/coveo/ui-kit/commits/a238fc7)), closes [#6078](https://github.com/coveo/ui-kit/issues/6078)
+* chore(headless-ssr): add deprecation warning for navigator context provider (#6079) ([716a797](https://github.com/coveo/ui-kit/commits/716a797)), closes [#6079](https://github.com/coveo/ui-kit/issues/6079)
+* chore(headless-ssr): add missing warnings (#6088) ([6bef844](https://github.com/coveo/ui-kit/commits/6bef844)), closes [#6088](https://github.com/coveo/ui-kit/issues/6088)
+* chore(headless-ssr): remove OptionsTuple type (#6022) ([c44c9ff](https://github.com/coveo/ui-kit/commits/c44c9ff)), closes [#6022](https://github.com/coveo/ui-kit/issues/6022)
+* chore(headless-ssr): replace `navigatorContextProvider` with `navigatorContext` in SSR implementatio ([51f6eca](https://github.com/coveo/ui-kit/commits/51f6eca)), closes [#6076](https://github.com/coveo/ui-kit/issues/6076)
+* chore(headless-ssr): replace mandatory`searchParams.query` to with optional`q` (#6081) ([51352c4](https://github.com/coveo/ui-kit/commits/51352c4)), closes [#6081](https://github.com/coveo/ui-kit/issues/6081)
+* chore(headless): refactor and improvements of the answer api related logic v2 (#6053) ([32c5af7](https://github.com/coveo/ui-kit/commits/32c5af7)), closes [#6053](https://github.com/coveo/ui-kit/issues/6053)
+
+
+
+## 3.31.0 (2025-09-24)
+
+* feat(headless-ssr): add per-call navigator context support (#5878) ([76f135a](https://github.com/coveo/ui-kit/commits/76f135a)), closes [#5878](https://github.com/coveo/ui-kit/issues/5878)
+* chore: cleanup dependencies in atomic package (#6070) ([0ac5bd8](https://github.com/coveo/ui-kit/commits/0ac5bd8)), closes [#6070](https://github.com/coveo/ui-kit/issues/6070)
+* chore: cleanup some dependencies from headless (#6067) ([97e0711](https://github.com/coveo/ui-kit/commits/97e0711)), closes [#6067](https://github.com/coveo/ui-kit/issues/6067)
+* chore(ssr): fix static error in tests (#6056) ([362fc58](https://github.com/coveo/ui-kit/commits/362fc58)), closes [#6056](https://github.com/coveo/ui-kit/issues/6056)
+* fix(headless): fixed and simplified state reset logic generated answer with answer api (#6064) ([3cd6b2e](https://github.com/coveo/ui-kit/commits/3cd6b2e)), closes [#6064](https://github.com/coveo/ui-kit/issues/6064)
+* fix(headless): missing answer API params (#6062) ([6c2da39](https://github.com/coveo/ui-kit/commits/6c2da39)), closes [#6062](https://github.com/coveo/ui-kit/issues/6062)
+
+
+
+## <small>3.30.2 (2025-09-18)</small>
+
+* chore(headless-react-ssr): create a folder for commerce next API (#5994) ([aaf190e](https://github.com/coveo/ui-kit/commits/aaf190e)), closes [#5994](https://github.com/coveo/ui-kit/issues/5994)
+* fix(headless): ensure relay receive complete environment (#5962) ([78f93dd](https://github.com/coveo/ui-kit/commits/78f93dd)), closes [#5962](https://github.com/coveo/ui-kit/issues/5962)
+* fix(headless): fixed payload of the generate call (#6055) ([4e873fc](https://github.com/coveo/ui-kit/commits/4e873fc)), closes [#6055](https://github.com/coveo/ui-kit/issues/6055)
+* [Version Bump][skip ci]: ui-kit publish ([a3fb13e](https://github.com/coveo/ui-kit/commits/a3fb13e))
+
+
+
+## <small>3.30.1 (2025-09-17)</small>
+
+* fix(headless): ensure relay receive complete environment (#5962) ([78f93dd](https://github.com/coveo/ui-kit/commits/78f93dd)), closes [#5962](https://github.com/coveo/ui-kit/issues/5962)
+
+
+
 ## 3.30.0 (2025-09-17)
 
 * fix(headless): ensure updateBasicConfiguration is called only once when token is expired (#6010) ([0e2233a](https://github.com/coveo/ui-kit/commits/0e2233a)), closes [#6010](https://github.com/coveo/ui-kit/issues/6010)

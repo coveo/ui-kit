@@ -13,7 +13,6 @@
   "workspaces": {
     ".": {
       "entry": ["hooks/*.js", "scripts/**/*.{js,mjs}"],
-      "ignoreDependencies": ["@commitlint/config-conventional"],
       "ignoreBinaries": ["ts-node", "dev"]
     },
     "packages/headless": {

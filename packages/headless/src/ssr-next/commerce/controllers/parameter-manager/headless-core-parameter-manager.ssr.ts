@@ -43,6 +43,8 @@ export type ParameterManagerDefinition =
  * @group Definers
  *
  * @returns The `ParameterManager` controller definition.
+ *
+ * Note: This controller is automatically included in all engine definitions. You do not need to add it manually to your engine definition configuration.
  */
 export function defineParameterManager(): ParameterManagerDefinition {
   return {

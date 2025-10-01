@@ -18,9 +18,9 @@ import type {
 import type {GeneratedAnswerStreamRequest} from '../../api/generated-answer/generated-answer-request.js';
 import {fetchAnswer} from '../../api/knowledge/stream-answer-api.js';
 import type {StreamAnswerAPIState} from '../../api/knowledge/stream-answer-api-state.js';
-import type {SearchRequest} from '../../api/search/search/search-request.js';
 import type {AsyncThunkOptions} from '../../app/async-thunk-options.js';
 import type {SearchThunkExtraArguments} from '../../app/search-thunk-extra-arguments.js';
+import type {AnswerApiQueryParams} from '../../features/generated-answer/generated-answer-request.js';
 import type {
   ConfigurationSection,
   DebugSection,
@@ -31,7 +31,6 @@ import {
   nonEmptyStringArray,
   validatePayload,
 } from '../../utils/validate-payload.js';
-import {updateSearchAction} from '../search/search-actions.js';
 import {logGeneratedAnswerStreamEnd} from './generated-answer-analytics-actions.js';
 import {
   buildStreamingRequest,
@@ -190,7 +189,7 @@ export const setCannotAnswer = createAction(
 
 export const setAnswerApiQueryParams = createAction(
   'generatedAnswer/setAnswerApiQueryParams',
-  (payload: Partial<SearchRequest>) =>
+  (payload: AnswerApiQueryParams) =>
     validatePayload(payload, new RecordValue({}))
 );
 
@@ -327,10 +326,8 @@ export const generateAnswer = createAsyncThunk<
         navigatorContext
       );
       // TODO: SVCC-5178 Refactor multiple sequential dispatches into single action
-      dispatch(resetAnswer());
       dispatch(setAnswerApiQueryParams(answerApiQueryParams));
       await dispatch(fetchAnswer(answerApiQueryParams));
-      dispatch(updateSearchAction(undefined));
     } else {
       logger.warn(
         '[WARNING] Missing answerConfigurationId in engine configuration. ' +

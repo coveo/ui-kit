@@ -4,7 +4,9 @@ import {
   AtomicIcon as LitAtomicIcon,
   AtomicInsightInterface as LitAtomicInsightInterface,
   AtomicLayoutSection as LitAtomicLayoutSection,
+  AtomicQuerySummary as LitAtomicQuerySummary,
   AtomicResultsPerPage as LitAtomicResultsPerPage,
+  AtomicSearchInterface as LitAtomicSearchInterface,
   AtomicSearchLayout as LitAtomicSearchLayout,
 } from '@coveo/atomic/components';
 import {createComponent} from '@lit/react';
@@ -40,10 +42,22 @@ export const AtomicLayoutSection = createComponent({
   elementClass: LitAtomicLayoutSection,
 });
 
+export const AtomicQuerySummary = createComponent({
+  tagName: 'atomic-query-summary',
+  react: React,
+  elementClass: LitAtomicQuerySummary,
+});
+
 export const AtomicResultsPerPage = createComponent({
   tagName: 'atomic-results-per-page',
   react: React,
   elementClass: LitAtomicResultsPerPage,
+});
+
+export const AtomicSearchInterface = createComponent({
+  tagName: 'atomic-search-interface',
+  react: React,
+  elementClass: LitAtomicSearchInterface,
 });
 
 export const AtomicSearchLayout = createComponent({

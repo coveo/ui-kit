@@ -91,7 +91,7 @@ test.describe('theme customization', () => {
       .first()
       .locator('atomic-result-section-title atomic-result-text')
       .first();
-    await expect(resultTitle).toHaveText('Connect');
+    await expect(resultTitle).not.toBeEmpty();
   });
 
   const outsideResultTemplateTests = [

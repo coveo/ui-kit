@@ -7,6 +7,7 @@ import {
   getSampleCommerceEngineConfiguration,
   type LogLevel,
   loadConfigurationActions,
+  loadContextActions,
   loadQueryActions,
   type ProductListingSummaryState,
   type SearchSummaryState,
@@ -21,7 +22,7 @@ import {bindings} from '@/src/decorators/bindings';
 import type {InitializableComponent} from '@/src/decorators/types';
 import {markParentAsReady} from '@/src/utils/init-queue.js';
 import {SafeStorage, StorageItems} from '@/src/utils/local-storage-utils';
-import {DEFAULT_MOBILE_BREAKPOINT} from '@/src/utils/replace-breakpoint';
+import {DEFAULT_MOBILE_BREAKPOINT} from '@/src/utils/replace-breakpoint-utils';
 import {fixture} from '@/vitest-utils/testing-helpers/fixture';
 import {buildFakeContext} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/context-controller';
 import {buildFakeCommerceEngine} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/engine';
@@ -325,8 +326,13 @@ describe('atomic-commerce-interface', () => {
       expect(updateLanguageSpy).toHaveBeenCalledOnce();
     });
 
+    // TODO - (v4) KIT-4365: Eliminate the describe wrapper; we'll always set the language from the context state in v4.
     describe('when the language prop is not specified', () => {
       it('should set the language from the context state', async () => {
+        const onLanguageChangeSpy = vi.spyOn(
+          InterfaceController.prototype,
+          'onLanguageChange'
+        );
         const element = await setupElement();
         const fakeContext = buildFakeContext({
           state: {language: 'es'},
@@ -337,18 +343,17 @@ describe('atomic-commerce-interface', () => {
 
         await callTestedInitMethod(element);
 
-        expect(element.language).toBe('es');
+        expect(onLanguageChangeSpy).toHaveBeenCalledExactlyOnceWith('es');
       });
 
-      it('should call #updateLanguage twice', async () => {
+      // TODO - (v4) KIT-4365: Remove this test in v4
+      it('should call #updateLanguage', async () => {
         const element = await setupElement();
         const updateLanguageSpy = vi.spyOn(element, 'updateLanguage');
 
         await callTestedInitMethod(element);
 
-        // 1st call: exit early because language is not specified
-        // 2nd call: triggered by the @watch decorator when language is set from context state
-        expect(updateLanguageSpy).toHaveBeenCalledTimes(2);
+        expect(updateLanguageSpy).toHaveBeenCalledOnce();
       });
     });
 
@@ -1064,6 +1069,126 @@ describe('atomic-commerce-interface', () => {
     });
   });
 
+  describe('#updateLocale', () => {
+    it('should do nothing when the engine has not been created', async () => {
+      vi.spyOn(console, 'error').mockImplementation(() => {});
+      const element = await setupElement();
+      const onLanguageChangeSpy = vi.spyOn(
+        InterfaceController.prototype,
+        'onLanguageChange'
+      );
+      const setContextMock = vi.fn();
+      vi.mocked(loadContextActions).mockReturnValue({
+        setContext: setContextMock,
+      } as unknown as ReturnType<typeof loadContextActions>);
+
+      element.updateLocale('fr', 'FR', 'EUR');
+
+      expect(onLanguageChangeSpy).not.toHaveBeenCalled();
+      expect(setContextMock).not.toHaveBeenCalled();
+    });
+
+    it('should do nothing when the context is not defined', async () => {
+      vi.spyOn(console, 'error').mockImplementation(() => {});
+      vi.mocked(buildContext).mockReturnValue(undefined as never);
+      const element = await setupElement();
+      const engine = buildFakeCommerceEngine();
+      element.initializeWithEngine(engine);
+      const onLanguageChangeSpy = vi.spyOn(
+        InterfaceController.prototype,
+        'onLanguageChange'
+      );
+      const setContextMock = vi.fn();
+      vi.mocked(loadContextActions).mockReturnValue({
+        setContext: setContextMock,
+      } as unknown as ReturnType<typeof loadContextActions>);
+
+      element.updateLocale('fr', 'FR', 'EUR');
+
+      expect(onLanguageChangeSpy).not.toHaveBeenCalled();
+      expect(setContextMock).not.toHaveBeenCalled();
+    });
+
+    describe('when the engine has been created and the context is defined', () => {
+      let element: AtomicCommerceInterface;
+      let engine: ReturnType<typeof buildFakeCommerceEngine>;
+      let onLanguageChangeSpy: ReturnType<typeof vi.spyOn>;
+      let setContextMock: ReturnType<typeof vi.fn>;
+
+      beforeEach(async () => {
+        element = await setupElement();
+        engine = buildFakeCommerceEngine({});
+
+        await element.initializeWithEngine(engine);
+
+        setContextMock = vi.fn();
+        vi.mocked(loadContextActions).mockReturnValue({
+          setContext: setContextMock,
+        } as unknown as ReturnType<typeof loadContextActions>);
+        onLanguageChangeSpy = vi.spyOn(
+          InterfaceController.prototype,
+          'onLanguageChange'
+        );
+      });
+
+      it('should call InterfaceController.onLanguageChange when the language parameter is provided', async () => {
+        element.updateLocale('fr');
+
+        expect(onLanguageChangeSpy).toHaveBeenCalledExactlyOnceWith('fr');
+      });
+
+      it('should not call InterfaceController.onLanguageChange when the language parameter is not provided', async () => {
+        element.updateLocale(undefined, 'FR', 'EUR');
+
+        expect(onLanguageChangeSpy).not.toHaveBeenCalled();
+      });
+
+      it('should dispatch a setContext action with the new language when it is defined and different from the language value in the context', async () => {
+        element.updateLocale('fr');
+
+        expect(setContextMock).toHaveBeenCalledExactlyOnceWith({
+          ...element.context.state,
+          language: 'fr',
+        });
+      });
+
+      it('should dispatch a setContext action with the new country when it is defined and different from the country value in the context', async () => {
+        element.updateLocale(undefined, 'FR');
+
+        expect(setContextMock).toHaveBeenCalledExactlyOnceWith({
+          ...element.context.state,
+          country: 'FR',
+        });
+      });
+
+      it('should dispatch a setContext action with the new currency when it is defined and different from the currency value in the context', async () => {
+        element.updateLocale(undefined, undefined, 'EUR');
+
+        expect(setContextMock).toHaveBeenCalledExactlyOnceWith({
+          ...element.context.state,
+          currency: 'EUR',
+        });
+      });
+
+      it('should dispatch a setContext action with all values when all parameters are provided and any of them is different from its corresponding value in the context', async () => {
+        element.updateLocale('fr', 'US', 'USD'); // Only 'fr' is different
+
+        expect(setContextMock).toHaveBeenCalledExactlyOnceWith({
+          ...element.context.state,
+          language: 'fr',
+          country: 'US',
+          currency: 'USD',
+        });
+      });
+
+      it('should not dispatch a setContext action when each provided parameters is identical to its corresponding value in the context', async () => {
+        element.updateLocale('en', 'US', 'USD');
+
+        expect(setContextMock).not.toHaveBeenCalled();
+      });
+    });
+  });
+
   // #toggleAnalytics
   it('should call InterfaceController.onAnalyticsChange when the analytics attribute changes', async () => {
     const element = await setupElement();
@@ -1115,7 +1240,7 @@ describe('atomic-commerce-interface', () => {
       element.language = 'fr';
       await element.updateComplete;
 
-      expect(element.context).toBeUndefined();
+      expect(element.engine).toBeUndefined();
       expect(onLanguageChangeSpy).not.toHaveBeenCalled();
     });
 
@@ -1133,9 +1258,33 @@ describe('atomic-commerce-interface', () => {
       expect(onLanguageChangeSpy).not.toHaveBeenCalled();
     });
 
+    it('should do nothing when the context is not defined', async () => {
+      const onLanguageChangeSpy = vi.spyOn(
+        InterfaceController.prototype,
+        'onLanguageChange'
+      );
+      const element = await setupElement({language: 'en'});
+      element.engine = buildFakeCommerceEngine(); // Simulate that the engine was created but the context wasn't built
+
+      element.language = 'fr';
+      await element.updateComplete;
+
+      expect(element.context).toBeUndefined();
+      expect(onLanguageChangeSpy).not.toHaveBeenCalled();
+    });
+
     describe('when the engine has been created & the language attribute is defined & the context is defined', () => {
       it('should log a deprecation warning', async () => {
-        // TODO - KIT-4993: Add this test temporarily.
+        const element = await setupElement();
+        const engine = buildFakeCommerceEngine();
+        await element.initializeWithEngine(engine);
+
+        element.language = 'fr';
+        await element.updateComplete;
+
+        expect(engine.logger.warn).toHaveBeenCalledExactlyOnceWith(
+          'The `language` property will be removed in the next major version of Atomic (v4). Rather than using this property, set the initial language through the engine configuration when calling `initialize` or `initializeWithEngine`, and update the language as needed using the `updateLocale` method.'
+        );
       });
 
       it('should call InterfaceController.onLanguageChange with no argument', async () => {
@@ -1153,9 +1302,6 @@ describe('atomic-commerce-interface', () => {
       });
     });
   });
-
-  // #updateLocale
-  // TODO - KIT-4993: Add these tests.
 
   describe('#disconnectedCallback (when removed from the DOM)', () => {
     // Done through the InterfaceController

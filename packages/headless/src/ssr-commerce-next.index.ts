@@ -44,6 +44,11 @@
  *   standaloneEngineDefinition,
  * } = engineDefinition;
  *
+ * await listingEngineDefinition.fetchStaticState({
+ *   navigatorContextProvider: () => {/*...* /},
+ *   context: {/*...* /},
+ * });
+ *
  * export type ListingStaticState = InferStaticState<
  *   typeof listingEngineDefinition
  * >;
@@ -278,17 +283,17 @@ export type {SSRCommerceEngine as CommerceEngine} from './ssr-next/commerce/fact
 // Main App
 export type {
   BuildConfig,
-  SSRCommerceEngineOptions,
+  SSRCommerceEngineOptions as CommerceEngineOptions,
 } from './ssr-next/commerce/types/build.js';
 export {SolutionType} from './ssr-next/commerce/types/controller-constants.js';
 export type {
+  AugmentedControllerDefinition,
   CommerceEngineDefinitionControllersPropsOption as EngineDefinitionControllersPropsOption,
   ControllerDefinition,
   ControllerDefinitionsMap,
   HydratedState,
   InferControllerStaticStateFromController,
   InferControllerStaticStateMapFromControllers,
-  OptionsTuple,
 } from './ssr-next/commerce/types/controller-definitions.js';
 export type {
   InferControllerFromDefinition,

@@ -1,3 +1,22 @@
+## <small>2.6.1 (2025-10-01)</small>
+
+* chore(deps): update dependency typedoc to v0.28.8 j:kit-282 (#5819) ([fb042f4](https://github.com/coveo/ui-kit/commits/fb042f4)), closes [#5819](https://github.com/coveo/ui-kit/issues/5819)
+
+
+
+## 2.6.0 (2025-09-24)
+
+* feat(headless-ssr): add per-call navigator context support (#5878) ([76f135a](https://github.com/coveo/ui-kit/commits/76f135a)), closes [#5878](https://github.com/coveo/ui-kit/issues/5878)
+
+
+
+## <small>2.5.10 (2025-09-18)</small>
+
+* chore(headless-react-ssr): create a folder for commerce next API (#5994) ([aaf190e](https://github.com/coveo/ui-kit/commits/aaf190e)), closes [#5994](https://github.com/coveo/ui-kit/issues/5994)
+* [Version Bump][skip ci]: ui-kit publish ([a3fb13e](https://github.com/coveo/ui-kit/commits/a3fb13e))
+
+
+
 ## <small>2.5.8 (2025-09-17)</small>
 
 * chore: fix vitest config (#6019) ([bd83d59](https://github.com/coveo/ui-kit/commits/bd83d59)), closes [#6019](https://github.com/coveo/ui-kit/issues/6019)
