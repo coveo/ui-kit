@@ -40,6 +40,7 @@ import {
   defaultCurrencyFormatter,
   defaultNumberFormatter,
 } from '../../common/formats/format-common';
+import {ValidatePropsController} from '../../common/validate-props-controller/validate-props-controller';
 import type {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface';
 import styles from './atomic-commerce-breadbox.tw.css';
 
@@ -115,8 +116,22 @@ export class AtomicCommerceBreadbox
    */
   @property({type: Number, attribute: 'path-limit'}) pathLimit = 3;
 
+  constructor() {
+    super();
+
+    new ValidatePropsController(this, {
+      getProps: () => ({pathLimit: this.pathLimit}),
+      schema: new Schema({
+        pathLimit: new NumberValue({
+          default: 3,
+          min: 1,
+          required: false,
+        }),
+      }),
+    });
+  }
+
   public initialize() {
-    this.validateProps();
     if (this.bindings.interfaceElement.type === 'product-listing') {
       this.searchOrListing = buildProductListing(this.bindings.engine);
     } else {
@@ -144,31 +159,8 @@ export class AtomicCommerceBreadbox
     );
   }
 
-  willUpdate(changedProperties: Map<string, unknown>) {
-    if (changedProperties.has('pathLimit')) {
-      this.validateProps();
-    }
-  }
-
   updated() {
     this.adaptBreadcrumbs();
-  }
-
-  private validateProps() {
-    try {
-      new Schema({
-        pathLimit: new NumberValue({
-          default: 3,
-          min: 1,
-          required: false,
-        }),
-      }).validate({
-        pathLimit: this.pathLimit,
-      });
-    } catch (error) {
-      this.error = error as Error;
-      return;
-    }
   }
 
   public disconnectedCallback() {
