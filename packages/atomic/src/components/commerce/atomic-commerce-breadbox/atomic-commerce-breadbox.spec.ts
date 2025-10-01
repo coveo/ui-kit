@@ -149,7 +149,7 @@ describe('atomic-commerce-breadbox', () => {
     );
   });
 
-  it('should set error when pathLimit is updated to a value lower than 1', async () => {
+  it('should set error when valid pathLimit is updated to a value lower than 1', async () => {
     const {element} = await renderBreadbox();
 
     expect(element.error).toBeUndefined();
