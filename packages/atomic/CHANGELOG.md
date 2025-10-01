@@ -1,3 +1,19 @@
+## <small>3.33.8 (2025-10-01)</small>
+
+* chore(atomic commerce): deprecate language property and add updateLocale method on atomic-commerce-i ([fb9007a](https://github.com/coveo/ui-kit/commits/fb9007a)), closes [#6054](https://github.com/coveo/ui-kit/issues/6054)
+* chore(atomic): add tests for depends-on (#6093) ([b3ff08c](https://github.com/coveo/ui-kit/commits/b3ff08c)), closes [#6093](https://github.com/coveo/ui-kit/issues/6093)
+* chore(atomic): add tests for format-common (#6094) ([4d6d9f2](https://github.com/coveo/ui-kit/commits/4d6d9f2)), closes [#6094](https://github.com/coveo/ui-kit/issues/6094)
+* chore(atomic): add tests for sections.ts (#6095) ([219ba43](https://github.com/coveo/ui-kit/commits/219ba43)), closes [#6095](https://github.com/coveo/ui-kit/issues/6095)
+* chore(atomic): extract layout/breakpoint logic to reactive controllers (#6074) ([7b8cb1a](https://github.com/coveo/ui-kit/commits/7b8cb1a)), closes [#6074](https://github.com/coveo/ui-kit/issues/6074)
+* chore(atomic): refactor suggestions-common.ts (#6068) ([73e65ae](https://github.com/coveo/ui-kit/commits/73e65ae)), closes [#6068](https://github.com/coveo/ui-kit/issues/6068)
+* chore(atomic): render atomic search interface fixture children in real slots (#6083) ([8b86f3c](https://github.com/coveo/ui-kit/commits/8b86f3c)), closes [#6083](https://github.com/coveo/ui-kit/issues/6083)
+* chore(atomic): render search box suggestion components as slotted children (#6085) ([f156a8d](https://github.com/coveo/ui-kit/commits/f156a8d)), closes [#6085](https://github.com/coveo/ui-kit/issues/6085)
+* chore(storybook): make logo click redirect to introduction page (#6092) ([f68a2ba](https://github.com/coveo/ui-kit/commits/f68a2ba)), closes [#6092](https://github.com/coveo/ui-kit/issues/6092)
+* chore (commerce): e2e tests cleanup (#6090) ([1a83fe6](https://github.com/coveo/ui-kit/commits/1a83fe6)), closes [#6090](https://github.com/coveo/ui-kit/issues/6090)
+* chore (commerce): harmonize atomic commerce query summary tests to follow structure from atomic sear ([48c0888](https://github.com/coveo/ui-kit/commits/48c0888)), closes [#6069](https://github.com/coveo/ui-kit/issues/6069)
+
+
+
 ## <small>3.33.7 (2025-09-24)</small>
 
 * chore: cleanup dependencies in atomic package (#6070) ([0ac5bd8](https://github.com/coveo/ui-kit/commits/0ac5bd8)), closes [#6070](https://github.com/coveo/ui-kit/issues/6070)

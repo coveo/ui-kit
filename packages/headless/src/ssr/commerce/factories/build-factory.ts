@@ -34,10 +34,33 @@ export interface SSRCommerceEngine extends CommerceEngine {
   waitForRequestCompletedAction(): Promise<Action>[];
 }
 
+/**
+ * SSR-specific commerce engine options with deprecated context property.
+ */
+export type SSRCommerceEngineOptions = Omit<
+  CommerceEngineOptions,
+  'configuration'
+> & {
+  configuration: Omit<CommerceEngineOptions['configuration'], 'context'> & {
+    /**
+     * @deprecated In the future major release, context should be provided through `fetchStaticState` rather than in the engine definition.
+     *
+     * @example
+     * ```ts
+     * engineDefinition = defineCommerceEngine({...});
+     * engineDefinition.fetchStaticState({
+     *   context: {...},
+     * });
+     * ```
+     */
+    context: CommerceEngineOptions['configuration']['context'];
+  };
+};
+
 export type CommerceEngineDefinitionOptions<
   TControllers extends
     ControllerDefinitionsMap<Controller> = ControllerDefinitionsMap<Controller>,
-> = EngineDefinitionOptions<CommerceEngineOptions, TControllers>;
+> = EngineDefinitionOptions<SSRCommerceEngineOptions, TControllers>;
 
 function isListingFetchCompletedAction(action: unknown): action is Action {
   return /^commerce\/productListing\/fetch\/(fulfilled|rejected)$/.test(
@@ -63,7 +86,7 @@ function noSearchActionRequired(_action: unknown): _action is Action {
 
 function buildSSRCommerceEngine(
   solutionType: SolutionType,
-  options: CommerceEngineOptions,
+  options: SSRCommerceEngineOptions,
   recommendationCount: number
 ): SSRCommerceEngine {
   let actionCompletionMiddleware: ReturnType<
