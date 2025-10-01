@@ -35,7 +35,7 @@ export class AtomicRelevanceInspector
   };
 
   disconnectedCallback(): void {
-    this.removeEventListener(
+    this.bindings.interfaceElement.removeEventListener(
       'dblclick',
       this.handleRelevanceInspectorDoubleClick
     );
