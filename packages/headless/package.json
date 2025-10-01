@@ -68,7 +68,7 @@
   },
   "types": "./dist/definitions/index.d.ts",
   "license": "Apache-2.0",
-  "version": "3.31.0",
+  "version": "3.31.1",
   "files": [
     "dist/"
   ],
@@ -126,7 +126,7 @@
   "devDependencies": {
     "@coveo/documentation": "1.0.0",
     "live-server": "1.2.2",
-    "typedoc": "0.28.7",
+    "typedoc": "0.28.8",
     "vitest": "3.2.4"
   },
   "engines": {

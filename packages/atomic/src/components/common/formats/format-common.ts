@@ -1,4 +1,4 @@
-import {buildCustomEvent} from '../../../utils/event-utils';
+import {buildCustomEvent} from '@/src/utils/event-utils';
 
 export type NumberFormatter = (value: number, languages: string[]) => string;
 

@@ -1,7 +1,14 @@
+import type {HistoryElement} from '../../api/analytics/coveo.analytics/history-store.js';
 import HistoryStore from '../../api/analytics/coveo.analytics/history-store.js';
 import type {GeneratedAnswerStreamRequest} from '../../api/generated-answer/generated-answer-request.js';
 import type {StreamAnswerAPIState} from '../../api/knowledge/stream-answer-api-state.js';
 import {getOrganizationEndpoint} from '../../api/platform-client.js';
+import type {BaseParam} from '../../api/platform-service-params.js';
+import type {SearchRequest} from '../../api/search/search/search-request.js';
+import type {
+  AuthenticationParam,
+  AutomaticFacetsParams,
+} from '../../api/search/search-api-params.js';
 import type {NavigatorContext} from '../../app/navigator-context-provider.js';
 import {selectAdvancedSearchQueries} from '../../features/advanced-search-queries/advanced-search-query-selectors.js';
 import {fromAnalyticsStateToAnalyticsParams} from '../../features/configuration/analytics-params.js';
@@ -36,12 +43,19 @@ import {
 import {selectDictionaryFieldContext} from '../dictionary-field-context/dictionary-field-context-selectors.js';
 import {selectExcerptLength} from '../excerpt-length/excerpt-length-selectors.js';
 import {selectFacetOptions} from '../facet-options/facet-options-selectors.js';
+import type {AnyFacetRequest} from '../facets/generic/interfaces/generic-facet-request.js';
 import {selectFoldingQueryParams} from '../folding/folding-selectors.js';
 import {selectSortCriteria} from '../sort-criteria/sort-criteria-selectors.js';
 
 type StateNeededByGeneratedAnswerStream = ConfigurationSection &
   SearchSection &
   GeneratedAnswerSection;
+
+export interface AnswerApiQueryParams
+  extends Omit<
+    SearchRequest,
+    keyof (BaseParam & AuthenticationParam & AutomaticFacetsParams)
+  > {}
 
 export const buildStreamingRequest = async (
   state: StateNeededByGeneratedAnswerStream
@@ -58,7 +72,7 @@ export const buildStreamingRequest = async (
 export const constructAnswerAPIQueryParams = (
   state: StreamAnswerAPIState,
   navigatorContext: NavigatorContext
-) => {
+): AnswerApiQueryParams => {
   const q = selectQuery(state)?.q;
 
   const {aq, cq, dq, lq} = buildAdvancedSearchQueryParams(state);
@@ -104,8 +118,7 @@ export const constructAnswerAPIQueryParams = (
     },
     ...(searchHub?.length && {searchHub}),
     ...(pipeline?.length && {pipeline}),
-    // Passing facets
-    ...(Object.keys(facetParams).length && {facets: facetParams}),
+    ...(facetParams.length && {facets: facetParams}),
     ...(state.fields && {fieldsToInclude: state.fields.fieldsToInclude}),
     ...(state.didYouMean && {
       queryCorrection: {
@@ -132,7 +145,7 @@ export const constructAnswerAPIQueryParams = (
     ...(state.debug !== undefined && {debug: state.debug}),
     referrer,
     ...actionsHistory,
-    ...(foldingParams && foldingParams),
+    ...(foldingParams ?? {}),
     ...(excerptLength && {excerptLength}),
     ...(dictionaryFieldContext && {
       dictionaryFieldContext,
@@ -143,7 +156,9 @@ export const constructAnswerAPIQueryParams = (
   };
 };
 
-const getGeneratedFacetParams = (state: StreamAnswerAPIState) =>
+const getGeneratedFacetParams = (
+  state: StreamAnswerAPIState
+): AnyFacetRequest[] =>
   getFacets(state)
     ?.map((facetRequest) =>
       mapFacetRequest(facetRequest, initialSearchMappings())
@@ -152,7 +167,9 @@ const getGeneratedFacetParams = (state: StreamAnswerAPIState) =>
       a.facetId > b.facetId ? 1 : b.facetId > a.facetId ? -1 : 0
     );
 
-const getActionsHistory = (state: StreamAnswerAPIState) => ({
+const getActionsHistory = (
+  state: StreamAnswerAPIState
+): {actionsHistory: HistoryElement[]} => ({
   actionsHistory: state.configuration.analytics.enabled
     ? HistoryStore.getInstance().getHistory()
     : [],
