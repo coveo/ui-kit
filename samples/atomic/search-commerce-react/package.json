@@ -12,8 +12,8 @@
     "build:vite": "npm run-script -w=@coveo/ci if-not-cdn -- \"vite build\""
   },
   "dependencies": {
-    "@coveo/atomic-react": "3.3.11",
-    "@coveo/headless": "3.31.0",
+    "@coveo/atomic-react": "3.3.12",
+    "@coveo/headless": "3.31.1",
     "react": "19.1.1",
     "react-dom": "19.1.1"
   },
