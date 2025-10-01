@@ -23,16 +23,10 @@ describe('atomic-relevance-inspector', () => {
     vi.mocked(getOrganizationEndpoint).mockReturnValue(ORG_ENDPOINT);
   });
 
-  const renderRelevanceInspector = async ({
-    props = {},
-  }: {
-    props?: {open?: boolean};
-  } = {}) => {
+  const renderRelevanceInspector = async () => {
     const {element} =
       await renderInAtomicSearchInterface<AtomicRelevanceInspector>({
-        template: html`<atomic-relevance-inspector
-          ?open=${props.open}
-        ></atomic-relevance-inspector>`,
+        template: html`<atomic-relevance-inspector></atomic-relevance-inspector>`,
         selector: 'atomic-relevance-inspector',
         bindings: (bindings) => {
           bindings.engine = engine;
@@ -60,59 +54,64 @@ describe('atomic-relevance-inspector', () => {
     expect(parts(element).modal?.isOpen).toBe(false);
   });
 
-  it('should set isOpen when open prop is passed', async () => {
-    const {element, parts} = await renderRelevanceInspector({
-      props: {open: true},
-    });
+  it('should open the modal when alt+double-clicking the interface element', async () => {
+    const {element, parts} = await renderRelevanceInspector();
+    const dblClick = new MouseEvent('dblclick', {altKey: true, bubbles: true});
+    element.bindings.interfaceElement.dispatchEvent(dblClick);
     await element.updateComplete;
     expect(parts(element).modal?.isOpen).toBe(true);
+    expect(page.getByText('Open the relevance inspector')).toBeVisible();
   });
 
-  it('should display header and body text when open is true', async () => {
-    await renderRelevanceInspector({props: {open: true}});
-    expect(page.getByText('Open the relevance inspector')).toBeVisible();
-    expect(
-      page.getByText(
-        'The Relevance Inspector will open in the Coveo Administration Console.'
-      )
-    ).toBeVisible();
+  it('should toggle (close) the modal when alt+double-clicking again', async () => {
+    const {element, parts} = await renderRelevanceInspector();
+    const dblClick = new MouseEvent('dblclick', {altKey: true, bubbles: true});
+    element.bindings.interfaceElement.dispatchEvent(dblClick);
+    await element.updateComplete;
+    expect(parts(element).modal?.isOpen).toBe(true);
+    element.bindings.interfaceElement.dispatchEvent(dblClick);
+    await element.updateComplete;
+    expect(parts(element).modal?.isOpen).toBe(false);
+  });
+
+  it('should not open the modal when double-clicking without alt key', async () => {
+    const {element, parts} = await renderRelevanceInspector();
+    const dblClick = new MouseEvent('dblclick', {bubbles: true});
+    element.bindings.interfaceElement.dispatchEvent(dblClick);
+    await element.updateComplete;
+    expect(parts(element).modal?.isOpen).toBe(false);
   });
 
   it('should close when clicking Ignore button', async () => {
-    const {element, ignoreButton} = await renderRelevanceInspector({
-      props: {open: true},
-    });
+    const {element, ignoreButton, parts} = await renderRelevanceInspector();
+    // open first
+    element.bindings.interfaceElement.dispatchEvent(
+      new MouseEvent('dblclick', {altKey: true, bubbles: true})
+    );
+    await element.updateComplete;
     await ignoreButton.click();
     await element.updateComplete;
-    expect(element.open).toBe(false);
+    expect(parts(element).modal?.isOpen).toBe(false);
   });
 
   it('should open new tab with adminHref and close when clicking Open button', async () => {
     const openSpy = vi.spyOn(window, 'open').mockImplementation(() => null);
-    const {element, openButton} = await renderRelevanceInspector({
-      props: {open: true},
-    });
+    const {element, openButton, parts} = await renderRelevanceInspector();
+    element.bindings.interfaceElement.dispatchEvent(
+      new MouseEvent('dblclick', {altKey: true, bubbles: true})
+    );
+    await element.updateComplete;
     await openButton.click();
     expect(openSpy).toHaveBeenCalledWith(
       `${ORG_ENDPOINT}/admin/#/org/search/relevanceInspector/resp123`,
       '_blank'
     );
     await element.updateComplete;
-    expect(element.open).toBe(false);
-  });
-
-  it('should dispatch close event when closing', async () => {
-    const closeSpy = vi.fn();
-    const {element, ignoreButton} = await renderRelevanceInspector({
-      props: {open: true},
-    });
-    element.addEventListener('atomic/relevanceInspector/close', closeSpy);
-    await ignoreButton.click();
-    expect(closeSpy).toHaveBeenCalledOnce();
+    expect(parts(element).modal?.isOpen).toBe(false);
   });
 
   it('should compute adminHref correctly', async () => {
-    const {element} = await renderRelevanceInspector({props: {open: true}});
+    const {element} = await renderRelevanceInspector();
     // @ts-ignore access private
     const href = element.adminHref;
     expect(href).toBe(
