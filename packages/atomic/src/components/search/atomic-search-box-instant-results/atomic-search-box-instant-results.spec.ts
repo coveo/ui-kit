@@ -4,7 +4,7 @@ import {html} from 'lit';
 import {beforeEach, describe, expect, it, type MockInstance, vi} from 'vitest';
 import {fixture} from '@/vitest-utils/testing-helpers/fixture';
 import {renderInAtomicSearchInterface} from '@/vitest-utils/testing-helpers/fixtures/atomic/search/atomic-search-interface-fixture';
-import {buildFakeInstantResults} from '../../../../../vitest-utils/testing-helpers/fixtures/headless/search/instant-results-controller';
+import {buildFakeInstantResults} from '../../../../vitest-utils/testing-helpers/fixtures/headless/search/instant-results-controller';
 import type {AtomicSearchBoxInstantResults} from './atomic-search-box-instant-results';
 import './atomic-search-box-instant-results';
 
@@ -81,8 +81,6 @@ describe('atomic-search-box-instant-results', () => {
     });
 
     it('should be available for initialization when placed in search box', async () => {
-      // This component requires being inside a search box to initialize properly
-      // The buildInstantResults is called when the component is properly initialized within a search box context
       expect(element).toBeDefined();
       expect(typeof element.initialize).toBe('function');
     });
@@ -113,17 +111,4 @@ describe('atomic-search-box-instant-results', () => {
       expect(element.imageSize).toBe('large');
     });
   });
-
-  /*
-   * TODO: Additional interaction tests for specific user scenarios
-   * The following test scenarios from the original TODO are covered by integration tests:
-   * - Click on instant result -> redirect to result page
-   * - Click on "See all results" button -> execute proper search
-   * - Keyboard navigation on instant results -> redirect to result page
-   * - Keyboard navigation on "See all results" button -> execute proper search
-   * - Keyboard + mouse interaction scenarios
-   *
-   * These behaviors are primarily handled by the search box suggestion system
-   * and are tested through e2e tests for complete user interaction flows.
-   */
 });

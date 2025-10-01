@@ -4,6 +4,10 @@ export default {
     await import('./atomic-query-summary/atomic-query-summary.js'),
   'atomic-results-per-page': async () =>
     await import('./atomic-results-per-page/atomic-results-per-page.js'),
+  'atomic-search-box-instant-results': async () =>
+    await import(
+      './atomic-search-box-instant-results/atomic-search-box-instant-results.js'
+    ),
   'atomic-search-interface': async () =>
     await import('./atomic-search-interface/atomic-search-interface.js'),
   'atomic-search-layout': async () =>
