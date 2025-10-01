@@ -1,16 +1,17 @@
-import {Components} from '../../src/components';
 
-export type SearchInterface = Components.AtomicSearchInterface;
+import { AtomicSearchInterface } from '../../src/components/search/atomic-search-interface/atomic-search-interface';
+
+export type SearchInterface = AtomicSearchInterface;
 
 export const searchInterfaceComponent = 'atomic-search-interface';
 
 export function getSearchInterface(
   cb: (
-    searchInterface: HTMLAtomicSearchInterfaceElement
+    searchInterface: AtomicSearchInterface
   ) => void | Promise<void>
 ) {
   return cy.get(searchInterfaceComponent).then(($el) => {
-    cy.wrap(cb($el.get(0) as HTMLAtomicSearchInterfaceElement));
+    cy.wrap(cb($el.get(0) as AtomicSearchInterface));
   });
 }
 

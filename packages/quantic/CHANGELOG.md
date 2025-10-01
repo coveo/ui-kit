@@ -1,3 +1,9 @@
+## <small>3.30.4 (2025-10-01)</small>
+
+* chore: cleanup quantic dependencies (#6077) ([9492ff0](https://github.com/coveo/ui-kit/commits/9492ff0)), closes [#6077](https://github.com/coveo/ui-kit/issues/6077)
+
+
+
 ## <small>3.30.3 (2025-09-24)</small>
 
 * fix(headless): fixed and simplified state reset logic generated answer with answer api (#6064) ([3cd6b2e](https://github.com/coveo/ui-kit/commits/3cd6b2e)), closes [#6064](https://github.com/coveo/ui-kit/issues/6064)
