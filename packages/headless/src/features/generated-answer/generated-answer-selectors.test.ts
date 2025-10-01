@@ -12,7 +12,7 @@ describe('generated-answer-selectors', () => {
       const mockWithExplicitAnswerId = {
         ...streamAnswerAPIStateMock,
         answer: {
-          data: {answerId: 'my-answer-id'},
+          data: {},
         },
       };
 
@@ -84,7 +84,7 @@ describe('generated-answer-selectors', () => {
       const mockWithExplicitAnswerId = {
         ...streamAnswerAPIStateMock,
         answer: {
-          data: {answerId: 'my-answer-id'},
+          data: {},
         },
       };
 

@@ -486,7 +486,7 @@ describe('#configureLegacyAnalytics', () => {
             answerId: 'my-answer-id',
           },
           answer: {
-            data: {answerId: 'my-answer-id'},
+            data: {},
           },
         };
 

@@ -43,9 +43,6 @@ export const generatedAnswerReducer = createReducer(
       .addCase(setId, (state, {payload}) => {
         state.id = payload.id;
       })
-      .addCase(setAnswerId, (state, {payload}) => {
-        state.answerId = payload;
-      })
       .addCase(updateMessage, (state, {payload}) => {
         state.isLoading = false;
         state.isStreaming = true;
@@ -138,5 +135,8 @@ export const generatedAnswerReducer = createReducer(
       })
       .addCase(setAnswerApiQueryParams, (state, {payload}) => {
         state.answerApiQueryParams = payload as AnswerApiQueryParams;
+      })
+      .addCase(setAnswerId, (state, {payload}) => {
+        state.answerId = payload;
       })
 );
