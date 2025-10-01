@@ -102,7 +102,6 @@ export interface GeneratedAnswerState {
 export function getGeneratedAnswerInitialState(): GeneratedAnswerState {
   return {
     id: '',
-    answerId: undefined,
     isVisible: true,
     isEnabled: true,
     isLoading: false,
@@ -120,5 +119,6 @@ export function getGeneratedAnswerInitialState(): GeneratedAnswerState {
     expanded: false,
     cannotAnswer: false,
     answerApiQueryParams: undefined,
+    answerId: undefined,
   };
 }
