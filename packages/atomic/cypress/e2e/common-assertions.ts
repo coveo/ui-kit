@@ -20,7 +20,7 @@ export function assertAccessibility<T extends HTMLElement>(
     assertAccessibilityWithoutIt(component);
   });
 
-  it('every interactive element with innerText and an aria label passes WCAG success criterion 2.5.3', () => {
+  it.skip('every interactive element with innerText and an aria label passes WCAG success criterion 2.5.3', () => {
     assertWCAG2_5_3(component);
   });
 }

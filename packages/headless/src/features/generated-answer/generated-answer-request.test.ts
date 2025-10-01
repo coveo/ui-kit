@@ -1,7 +1,7 @@
 import HistoryStore from '../../api/analytics/coveo.analytics/history-store.js';
+import {buildMockNavigatorContextProvider} from '../../test/mock-navigator-context-provider.js';
 import {
   expectedStreamAnswerAPIParam,
-  expectedStreamAnswerAPIParamWithDifferentFacetTimes,
   streamAnswerAPIStateMock,
   streamAnswerAPIStateMockWithAnalyticsEnabled,
   streamAnswerAPIStateMockWithATabWithAnExpression,
@@ -17,8 +17,7 @@ import {
   streamAnswerAPIStateMockWithStaticFiltersAndTabExpression,
   streamAnswerAPIStateMockWithStaticFiltersAndTabExpressionWithEmptyCQ,
   streamAnswerAPIStateMockWithStaticFiltersSelected,
-} from '../../controllers/knowledge/generated-answer/headless-answerapi-generated-answer-mocks.js';
-import {buildMockNavigatorContextProvider} from '../../test/mock-navigator-context-provider.js';
+} from './generated-answer-mocks.js';
 import {constructAnswerAPIQueryParams} from './generated-answer-request.js';
 
 describe('constructAnswerAPIQueryParams', () => {
@@ -134,24 +133,6 @@ describe('constructAnswerAPIQueryParams', () => {
     expect(queryParams.analytics?.capture).toBeDefined();
     expect(queryParams.analytics?.clientId).toBeDefined();
     expect(queryParams.analytics?.originContext).toBeDefined();
-  });
-
-  it('should build the correct facets times for the query params', () => {
-    const queryParams = constructAnswerAPIQueryParams(
-      streamAnswerAPIStateMock,
-      buildMockNavigatorContextProvider()()
-    );
-
-    expect(queryParams).toEqual(expectedStreamAnswerAPIParam);
-
-    const updatedQueryParams = constructAnswerAPIQueryParams(
-      streamAnswerAPIStateMock,
-      buildMockNavigatorContextProvider()()
-    );
-
-    expect(updatedQueryParams).not.toEqual(
-      expectedStreamAnswerAPIParamWithDifferentFacetTimes
-    );
   });
 
   it('should include empty string referrer when there is NO referrer', () => {

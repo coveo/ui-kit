@@ -47,6 +47,7 @@ import {
 } from '@/src/utils/local-storage-utils';
 import {getAnalyticsConfig} from './analytics-config';
 import {createSearchStore, type SearchStore} from './store';
+// TODO - Remove once all components that use atomic-modal have been migrated.
 import '@/src/components/common/atomic-modal/atomic-modal';
 
 const FirstSearchExecutedFlag = 'firstSearchExecuted';
