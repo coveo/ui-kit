@@ -7,7 +7,6 @@ import type {
   RetryOptions,
 } from '@reduxjs/toolkit/query';
 import type {GeneratedAnswerStream} from '../api/knowledge/generated-answer-stream.js';
-import type {SearchRequest} from '../api/search/search/search-request.js';
 import type {StateWithHistory} from '../app/undoable.js';
 import type {AdvancedSearchQueriesState} from '../features/advanced-search-queries/advanced-search-queries-state.js';
 import type {AttachedResultsState} from '../features/attached-results/attached-results-state.js';
@@ -48,6 +47,7 @@ import type {DateFacetSetState} from '../features/facets/range-facets/date-facet
 import type {NumericFacetSetState} from '../features/facets/range-facets/numeric-facet-set/numeric-facet-set-state.js';
 import type {FieldsState} from '../features/fields/fields-state.js';
 import type {FoldingState} from '../features/folding/folding-state.js';
+import type {AnswerApiQueryParams} from '../features/generated-answer/generated-answer-request.js';
 import type {GeneratedAnswerState} from '../features/generated-answer/generated-answer-state.js';
 import type {HistoryState} from '../features/history/history-state.js';
 import type {InsightConfigurationState} from '../features/insight-configuration/insight-configuration-state.js';
@@ -519,7 +519,7 @@ export interface GetAnswerQuerySection {
   answer: CombinedState<
     {
       getAnswer: QueryDefinition<
-        Partial<SearchRequest>,
+        AnswerApiQueryParams,
         BaseQueryFn<
           string | FetchArgs,
           unknown,

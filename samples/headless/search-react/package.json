@@ -9,7 +9,7 @@
   },
   "dependencies": {
     "@coveo/auth": "2.1.0",
-    "@coveo/headless": "3.31.0",
+    "@coveo/headless": "3.31.1",
     "@testing-library/jest-dom": "6.6.3",
     "@testing-library/react": "16.3.0",
     "@types/escape-html": "1.0.4",
@@ -45,7 +45,7 @@
     ]
   },
   "devDependencies": {
-    "@vitejs/plugin-react": "4.7.0",
+    "@vitejs/plugin-react": "5.0.3",
     "cypress": "13.7.3",
     "vite": "7.0.6",
     "vitest": "3.2.4"
