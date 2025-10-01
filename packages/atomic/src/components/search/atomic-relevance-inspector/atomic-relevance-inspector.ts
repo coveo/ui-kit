@@ -32,7 +32,6 @@ export class AtomicRelevanceInspector
       'dblclick',
       this.handleRelevanceInspectorDoubleClick
     );
-    console.log(this.bindings);
   };
 
   disconnectedCallback(): void {
