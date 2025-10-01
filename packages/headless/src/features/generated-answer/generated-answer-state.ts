@@ -95,11 +95,13 @@ export interface GeneratedAnswerState {
    * The query parameters used for the answer API request cache key
    */
   answerApiQueryParams?: AnswerApiQueryParams;
+  answerId?: string;
 }
 
 export function getGeneratedAnswerInitialState(): GeneratedAnswerState {
   return {
     id: '',
+    answerId: undefined,
     isVisible: true,
     isEnabled: true,
     isLoading: false,

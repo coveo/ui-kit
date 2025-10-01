@@ -1,6 +1,5 @@
 import {CoveoAnalyticsClient} from 'coveo.analytics';
 import {pino} from 'pino';
-import {selectAnswer} from '../../api/knowledge/stream-answer-api.js';
 import {getConfigurationInitialState} from '../../features/configuration/configuration-state.js';
 import {getCategoryFacetSetInitialState} from '../../features/facets/category-facet-set/category-facet-set-state.js';
 import {getFacetSetInitialState} from '../../features/facets/facet-set/facet-set-state.js';
@@ -29,11 +28,7 @@ import {
   type StateNeededBySearchAnalyticsProvider,
 } from './search-analytics.js';
 
-vi.mock('../../api/knowledge/stream-answer-api.js', () => ({
-  selectAnswer: vi.fn(),
-}));
 vi.mock('@coveo/relay');
-const mockSelectAnswer = vi.mocked(selectAnswer);
 
 const mockGetHistory = vi.fn();
 
@@ -488,15 +483,12 @@ describe('#configureLegacyAnalytics', () => {
           generatedAnswer: {
             ...getGeneratedAnswerInitialState(),
             answerConfigurationId: 'test-config-id',
+            answerId: 'my-answer-id',
           },
           answer: {
             data: {answerId: 'my-answer-id'},
           },
         };
-
-        mockSelectAnswer.mockReturnValue({
-          data: {answerId: 'my-answer-id'},
-        } as ReturnType<typeof selectAnswer>);
 
         const provider = new SearchAnalyticsProvider(() => mockState);
         const metadata = provider.getBaseMetadata();

@@ -1,12 +1,6 @@
-import {selectAnswer} from '../../api/knowledge/stream-answer-api.js';
 import type {SearchAppState} from '../../state/search-app-state.js';
 import {streamAnswerAPIStateMock} from './generated-answer-mocks.js';
 import {generativeQuestionAnsweringIdSelector} from './generated-answer-selectors.js';
-
-vi.mock('../../api/knowledge/stream-answer-api.js', () => ({
-  selectAnswer: vi.fn(),
-}));
-const mockSelectAnswer = vi.mocked(selectAnswer);
 
 describe('generated-answer-selectors', () => {
   describe('generativeQuestionAnsweringIdSelector', () => {
@@ -26,12 +20,9 @@ describe('generated-answer-selectors', () => {
         ...(mockWithExplicitAnswerId as Partial<SearchAppState>),
         generatedAnswer: {
           answerConfigurationId: 'config123',
+          answerId: 'my-answer-id',
         },
       } as Partial<SearchAppState>;
-
-      mockSelectAnswer.mockReturnValue({
-        data: {answerId: 'my-answer-id'},
-      } as ReturnType<typeof selectAnswer>);
 
       const result = generativeQuestionAnsweringIdSelector(state);
       expect(result).toEqual('my-answer-id');
@@ -101,6 +92,7 @@ describe('generated-answer-selectors', () => {
         ...(mockWithExplicitAnswerId as Partial<SearchAppState>),
         generatedAnswer: {
           answerConfigurationId: 'config123',
+          answerId: 'my-answer-id',
         },
         search: {
           response: {
@@ -110,10 +102,6 @@ describe('generated-answer-selectors', () => {
           },
         },
       } as Partial<SearchAppState>;
-
-      mockSelectAnswer.mockReturnValue({
-        data: {answerId: 'my-answer-id'},
-      } as ReturnType<typeof selectAnswer>);
 
       const result = generativeQuestionAnsweringIdSelector(state);
       expect(result).toBe('my-answer-id');

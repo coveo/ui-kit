@@ -13,6 +13,7 @@ import {
   sendGeneratedAnswerFeedback,
   setAnswerApiQueryParams,
   setAnswerContentFormat,
+  setAnswerId,
   setCannotAnswer,
   setId,
   setIsAnswerGenerated,
@@ -41,6 +42,9 @@ export const generatedAnswerReducer = createReducer(
       })
       .addCase(setId, (state, {payload}) => {
         state.id = payload.id;
+      })
+      .addCase(setAnswerId, (state, {payload}) => {
+        state.answerId = payload;
       })
       .addCase(updateMessage, (state, {payload}) => {
         state.isLoading = false;
