@@ -134,7 +134,7 @@ export const AtomicPageWrapper: FunctionComponent<Props> = ({
             {options.instantResults && (
               <AtomicSearchBoxInstantResults
                 template={InstantResultsTemplate}
-                imageSize="small"
+                image-size="small"
                 ariaLabelGenerator={InstantResultsAriaLabelTemplate}
               />
             )}
