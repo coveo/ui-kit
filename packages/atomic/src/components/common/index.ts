@@ -6,3 +6,4 @@ export {AtomicFacetPlaceholder} from './atomic-facet-placeholder/atomic-facet-pl
 export {AtomicIcon} from './atomic-icon/atomic-icon.js';
 export {AtomicLayoutSection} from './atomic-layout-section/atomic-layout-section.js';
 export {AtomicModal} from './atomic-modal/atomic-modal.js';
+export {ValidatePropsController} from './validate-props-controller/validate-props-controller.js';
