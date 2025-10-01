@@ -1,7 +1,7 @@
 import type {InsightEngine} from '@coveo/headless/insight';
 import {provide} from '@lit/context';
 import type {i18n} from 'i18next';
-import {html, LitElement, nothing, type TemplateResult} from 'lit';
+import {html, LitElement, type TemplateResult} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {vi} from 'vitest';
 import type {BaseAtomicInterface} from '@/src/components/common/interface/interface-controller.js';
@@ -16,9 +16,9 @@ import {
   markParentAsReady,
 } from '@/src/utils/init-queue.js';
 import {initializeEventName} from '@/src/utils/initialization-lit-stencil-common-utils.js';
-import {fixture} from '../../../fixture.js';
-import {createTestI18n} from '../../../i18n-utils.js';
-import {genericSubscribe} from '../../headless/common.js';
+import {fixture} from '@/vitest-utils/testing-helpers/fixture.js';
+import {genericSubscribe} from '@/vitest-utils/testing-helpers/fixtures/headless/common.js';
+import {createTestI18n} from '@/vitest-utils/testing-helpers/i18n-utils.js';
 
 @customElement('atomic-insight-interface')
 export class FixtureAtomicInsightInterface
@@ -63,6 +63,7 @@ export class FixtureAtomicInsightInterface
     this.bindings = {
       ...bindings,
       i18n: bindings.i18n ?? this.i18n,
+      interfaceElement: this as unknown as AtomicInsightInterface,
     } as InsightBindings;
   }
 
@@ -71,7 +72,7 @@ export class FixtureAtomicInsightInterface
   }
 
   protected render() {
-    return this.ready ? this.template : nothing;
+    return html`<slot></slot>`;
   }
 }
 
@@ -122,7 +123,7 @@ export async function renderInAtomicInsightInterface<T extends LitElement>({
   atomicInterface: FixtureAtomicInsightInterface;
 }> {
   const atomicInterface = await fixture<FixtureAtomicInsightInterface>(
-    html`<atomic-insight-interface></atomic-insight-interface>`
+    html`<atomic-insight-interface>${template}</atomic-insight-interface>`
   );
   if (!bindings) {
     atomicInterface.setBindings({} as InsightBindings);
@@ -139,7 +140,7 @@ export async function renderInAtomicInsightInterface<T extends LitElement>({
     return {element: null, atomicInterface};
   }
 
-  const element = atomicInterface.shadowRoot!.querySelector<T>(selector)!;
+  const element = atomicInterface.querySelector<T>(selector)!;
   await element.updateComplete;
 
   return {element, atomicInterface};
