@@ -341,6 +341,10 @@ describe('atomic-product-text', () => {
     });
 
     describe('when #shouldHighlight is false', () => {
+      beforeEach(() => {
+        vi.spyOn(console, 'warn').mockImplementation(() => {});
+      });
+
       it('should render plain text even for supported highlight fields', async () => {
         const productWithHighlights = buildFakeProduct({
           ec_name: 'Test Product Name',
