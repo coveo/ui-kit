@@ -4,8 +4,9 @@
 }
 
 .title__container {
-  font-weight: 700;
+  font-weight: var(--slds-g-font-weight-7, 700);
   font-size: 1.1em;
+  color: red;
 }
 
 .date__container{
