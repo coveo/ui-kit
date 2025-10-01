@@ -8,6 +8,8 @@ export default {
     await import(
       './atomic-search-box-query-suggestions/atomic-search-box-query-suggestions.js'
     ),
+  'atomic-search-interface': async () =>
+    await import('./atomic-search-interface/atomic-search-interface.js'),
   'atomic-search-layout': async () =>
     await import('./atomic-search-layout/atomic-search-layout.js'),
 } as Record<string, () => Promise<unknown>>;
