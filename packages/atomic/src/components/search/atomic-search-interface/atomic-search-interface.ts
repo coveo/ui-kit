@@ -77,7 +77,6 @@ export class AtomicSearchInterface
   @provide({context: bindingsContext})
   public bindings: Bindings = {} as Bindings;
   @state() public error!: Error;
-  @state() public relevanceInspectorIsOpen = false;
 
   public urlManager!: UrlManager;
   public searchStatus!: SearchStatus;
@@ -275,8 +274,6 @@ export class AtomicSearchInterface
   public connectedCallback() {
     super.connectedCallback();
     this.store.setLoadingFlag(FirstSearchExecutedFlag);
-    this.initRelevanceInspector();
-    this.initFieldsToInclude();
 
     this.addEventListener(
       'atomic/initializeComponent',
@@ -286,11 +283,6 @@ export class AtomicSearchInterface
     this.addEventListener(
       'atomic/scrollToTop',
       this.scrollToTop as EventListener
-    );
-
-    this.addEventListener(
-      'atomic/relevanceInspector/close',
-      this.closeRelevanceInspector as EventListener
     );
   }
 
@@ -319,14 +311,6 @@ export class AtomicSearchInterface
       'atomic/scrollToTop',
       this.scrollToTop as EventListener
     );
-    this.removeEventListener(
-      'atomic/relevanceInspector/close',
-      this.closeRelevanceInspector as EventListener
-    );
-    this.removeEventListener(
-      'dblclick',
-      this.handleRelevanceInspectorDoubleClick
-    );
   }
 
   private handleInitialization = (event: InitializeEvent) => {
@@ -344,10 +328,6 @@ export class AtomicSearchInterface
     }
 
     scrollContainerElement.scrollIntoView({behavior: 'smooth'});
-  }
-
-  public closeRelevanceInspector() {
-    this.relevanceInspectorIsOpen = false;
   }
 
   /**
@@ -577,21 +557,6 @@ export class AtomicSearchInterface
     window.addEventListener('hashchange', this.onHashChange);
   }
 
-  private handleRelevanceInspectorDoubleClick = (e: MouseEvent) => {
-    if (e.altKey) {
-      this.relevanceInspectorIsOpen = !this.relevanceInspectorIsOpen;
-    }
-  };
-
-  private initRelevanceInspector() {
-    if (this.enableRelevanceInspector && !this.disableRelevanceInspector) {
-      this.addEventListener(
-        'dblclick',
-        this.handleRelevanceInspectorDoubleClick
-      );
-    }
-  }
-
   private initSearchStatus() {
     this.searchStatus = buildSearchStatus(this.engine!);
     this.unsubscribeSearchStatus = this.searchStatus.subscribe(() => {
@@ -660,7 +625,6 @@ export class AtomicSearchInterface
           this.enableRelevanceInspector &&
           !this.disableRelevanceInspector,
         () => html`<atomic-relevance-inspector
-          ?open=${this.relevanceInspectorIsOpen}
         ></atomic-relevance-inspector>`
       )}
       <slot></slot>
