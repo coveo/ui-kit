@@ -27,23 +27,32 @@ export class ValidatePropsController implements ReactiveController {
   hostUpdate() {
     const props = this.getProps();
 
-    if (!this._propsHaveChanged(props)) {
-      return;
+    if (this._propsHaveChanged(props)) {
+      this._validateProps(props);
     }
-
-    this._validateProps(props);
   }
 
   private _validateProps(props: Object) {
     try {
       this.schema.validate(props);
-      this.previousProps = props;
     } catch (error) {
       this.host.error = error as Error;
     }
+    this.previousProps = props;
   }
 
   private _propsHaveChanged(newProps: Object) {
-    return JSON.stringify(newProps) !== JSON.stringify(this.previousProps);
+    const newKeys = Object.keys(newProps);
+    const oldKeys = Object.keys(this.previousProps);
+
+    if (newKeys.length !== oldKeys.length) {
+      return true;
+    }
+
+    return newKeys.some(
+      (key) =>
+        (newProps as Record<string, unknown>)[key] !==
+        (this.previousProps as Record<string, unknown>)[key]
+    );
   }
 }
