@@ -53,6 +53,7 @@ import type {
   SearchBoxSuggestionsEvent,
 } from '../../common/suggestions/suggestions-types';
 import {Bindings} from '../atomic-search-interface/atomic-search-interface';
+import { getDefaultSlotFromHost } from '@/src/utils/slot-utils';
 
 /**
  * The `atomic-search-box` component creates a search box with built-in support for suggestions.
@@ -706,6 +707,19 @@ export class AtomicSearchBox implements InitializableComponent<Bindings> {
       : this.bindings.i18n.t('query-suggestions-unavailable');
   }
 
+  private renderSlotContent() {
+    const hasDefaultSlot = !!getDefaultSlotFromHost(this.host);
+
+    if (hasDefaultSlot) {
+      return <slot></slot>;
+    }
+
+    return [
+      <atomic-search-box-recent-queries></atomic-search-box-recent-queries>,
+      <atomic-search-box-query-suggestions></atomic-search-box-query-suggestions>,
+    ];
+  }
+
   public render() {
     this.updateBreakpoints();
 
@@ -742,12 +756,7 @@ export class AtomicSearchBox implements InitializableComponent<Bindings> {
             />
             {this.renderSuggestions()}
           </SearchBoxWrapper>,
-          !this.suggestionManager.suggestions.length && (
-            <slot>
-              <atomic-search-box-recent-queries></atomic-search-box-recent-queries>
-              <atomic-search-box-query-suggestions></atomic-search-box-query-suggestions>
-            </slot>
-          ),
+          this.renderSlotContent(),
         ]}
       </Host>
     );

@@ -1,6 +1,6 @@
 import {skipToken} from '@reduxjs/toolkit/query';
 import {describe, expect, it} from 'vitest';
-import {streamAnswerAPIStateMock} from '../../controllers/knowledge/generated-answer/headless-answerapi-generated-answer-mocks.js';
+import {streamAnswerAPIStateMock} from '../../features/generated-answer/generated-answer-mocks.js';
 import type {SearchAppState} from '../../state/search-app-state.js';
 import {
   selectAnswerApiQueryParams,
