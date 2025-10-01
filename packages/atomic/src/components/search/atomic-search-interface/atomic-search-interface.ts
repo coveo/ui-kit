@@ -335,7 +335,7 @@ export class AtomicSearchInterface
   }
 
   /**
-   * @deprecated provided for backward compatibility. set the 'open' property directly on the relevance inpector instead.
+   * @deprecated provided for backward compatibility. set the 'open' property directly on the relevance inspector instead.
    */
   public closeRelevanceInspector() {
     if (this.relevanceInspector) {
