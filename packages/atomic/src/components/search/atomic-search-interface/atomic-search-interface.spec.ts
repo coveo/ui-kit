@@ -1079,9 +1079,8 @@ describe('atomic-search-interface', () => {
       );
       const element = await setupElement({language: 'en'});
 
-      // Use double cast via unknown to bypass strict typing without triggering no-explicit-any rule
-      (element as unknown as {language: string | undefined}).language =
-        undefined;
+      // @ts-ignore setting to undefined to simulate removing the attribute
+      element.language = undefined;
       await element.updateComplete;
 
       expect(onLanguageChangeSpy).not.toHaveBeenCalled();
