@@ -8,15 +8,15 @@ import {ResultTemplateController} from './result-template-controller';
 
 vi.mock('./result-template-common', {spy: true});
 
-@customElement('test-result-element')
-class TestResultElement extends LitElement implements LitElementWithError {
+@customElement('test-element')
+class TestElement extends LitElement implements LitElementWithError {
   @state()
   public error!: Error;
   controller = new ResultTemplateController(this, ['valid-parent'], false);
 }
 
-@customElement('empty-test-result-element')
-class EmptyTestResultElement extends LitElement implements LitElementWithError {
+@customElement('empty-test-element')
+class EmptyTestElement extends LitElement implements LitElementWithError {
   @state()
   public error!: Error;
   controller = new ResultTemplateController(this, ['valid-parent'], true);
@@ -40,15 +40,15 @@ describe('ResultTemplateController', () => {
     parentNode: HTMLElement = document.createElement('valid-parent')
   ) {
     await fixture(template, parentNode);
-    return document.querySelector('test-result-element')! as TestResultElement;
+    return document.querySelector('test-element')! as TestElement;
   }
 
   describe('when the host has not a valid parent', () => {
     it('should set an error', async () => {
       const element = await setupElement(
-        html`<test-result-element>
+        html`<test-element>
           <template><h1>hello</h1></template>
-        </test-result-element>`,
+        </test-element>`,
         document.createElement('invalid-parent')
       );
 
@@ -59,9 +59,7 @@ describe('ResultTemplateController', () => {
 
   describe('when the template is missing from the host', () => {
     it('should set an error', async () => {
-      const element = await setupElement(
-        html`<test-result-element></test-result-element>`
-      );
+      const element = await setupElement(html`<test-element></test-element>`);
 
       expect(element.error).toBeInstanceOf(Error);
       expect(element.error.message).toContain('must contain a "template"');
@@ -71,9 +69,9 @@ describe('ResultTemplateController', () => {
   describe('when the template is empty', () => {
     it('should set an error if allowEmpty is false', async () => {
       const element = await setupElement(
-        html`<test-result-element>
+        html`<test-element>
           <template> </template>
-        </test-result-element>`
+        </test-element>`
       );
 
       expect(element.error).toBeInstanceOf(Error);
@@ -82,14 +80,14 @@ describe('ResultTemplateController', () => {
 
     it('should not set an error if allowEmpty is true', async () => {
       await setupElement(
-        html`<empty-test-result-element>
+        html`<empty-test-element>
           <template> </template>
-        </empty-test-result-element>`
+        </empty-test-element>`
       );
 
       const element = document.querySelector(
-        'empty-test-result-element'
-      ) as EmptyTestResultElement;
+        'empty-test-element'
+      ) as EmptyTestElement;
 
       expect(element.error).toBeUndefined();
     });
@@ -99,9 +97,9 @@ describe('ResultTemplateController', () => {
     it('should log a warning', async () => {
       const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
       const element = await setupElement(
-        html`<test-result-element>
+        html`<test-element>
           <template><script></script></template>
-        </test-result-element>`
+        </test-element>`
       );
 
       expect(warnSpy).toHaveBeenCalledWith(
@@ -120,12 +118,12 @@ describe('ResultTemplateController', () => {
 
     const localSetup = () =>
       setupElement(
-        html`<test-result-element>
+        html`<test-element>
           <template>
             <atomic-result-section-visual>section</atomic-result-section-visual>
             <span>other</span>
           </template>
-        </test-result-element>`
+        </test-element>`
       );
 
     beforeEach(() => {
@@ -155,7 +153,7 @@ describe('ResultTemplateController', () => {
 
       expect(warnSpy).toHaveBeenCalledWith(
         expect.stringContaining('should only contain section'),
-        expect.any(TestResultElement),
+        expect.any(TestElement),
         expect.objectContaining({})
       );
     });
@@ -166,11 +164,11 @@ describe('ResultTemplateController', () => {
 
     beforeEach(async () => {
       const {controller} = await setupElement(
-        html`<test-result-element>
+        html`<test-element>
           <template data-testId="result-template">
             <atomic-result-section-visual>section</atomic-result-section-visual>
           </template>
-        </test-result-element>`
+        </test-element>`
       );
       result = controller.getTemplate([])!;
     });
