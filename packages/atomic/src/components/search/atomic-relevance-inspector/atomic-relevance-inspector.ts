@@ -1,11 +1,10 @@
 import {getOrganizationEndpoint} from '@coveo/headless';
 import {html, LitElement, nothing} from 'lit';
-import {customElement, property, state} from 'lit/decorators.js';
+import {customElement, state} from 'lit/decorators.js';
 import {renderButton} from '@/src/components/common/button';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles.js';
 import '@/src/components/common/atomic-modal/atomic-modal';
 import type {Bindings} from '@/src/components/search/atomic-search-interface/interfaces';
-import {booleanConverter} from '@/src/converters/boolean-converter';
 import {bindingGuard} from '@/src/decorators/binding-guard';
 import {bindings} from '@/src/decorators/bindings';
 import {errorGuard} from '@/src/decorators/error-guard';
@@ -23,37 +22,24 @@ export class AtomicRelevanceInspector
   extends LitElement
   implements InitializableComponent<Bindings>
 {
-  /**
-   * The Atomic interface bindings, namely the headless search engine and i18n instances.
-   */
-  @state()
-  bindings!: Bindings;
-  @state()
-  error!: Error;
+  @state() public bindings!: Bindings;
+  @state() public error!: Error;
 
-  initialize = () => {};
+  @state() public open = false;
 
-  @property({type: Boolean, reflect: true, converter: booleanConverter})
-  open = false;
-
-  private closeRelevanceInspector() {
-    this.open = false;
-    this.dispatchEvent(
-      new CustomEvent('atomic/relevanceInspector/close', {
-        bubbles: true,
-        composed: true,
-        detail: null,
-      })
+  initialize = () => {
+    this.bindings.interfaceElement.addEventListener(
+      'dblclick',
+      this.handleRelevanceInspectorDoubleClick
     );
-  }
+    console.log(this.bindings);
+  };
 
-  private get adminHref() {
-    const {organizationId, environment} =
-      this.bindings.engine.state.configuration;
-
-    const admin = getOrganizationEndpoint(organizationId, environment, 'admin');
-    const {searchResponseId} = this.bindings.engine.state.search;
-    return `${admin}/admin/#/${organizationId}/search/relevanceInspector/${searchResponseId}`;
+  disconnectedCallback(): void {
+    this.removeEventListener(
+      'dblclick',
+      this.handleRelevanceInspectorDoubleClick
+    );
   }
 
   @bindingGuard()
@@ -62,7 +48,7 @@ export class AtomicRelevanceInspector
     return html`
       <atomic-modal
         .isOpen=${this.open}
-        @close=${() => this.closeRelevanceInspector()}
+        @close=${() => this.handleCloseRelevanceInspector()}
         exportparts="footer"
       >
         <p slot="header">Open the relevance inspector</p>
@@ -74,7 +60,7 @@ export class AtomicRelevanceInspector
             props: {
               style: 'outline-primary',
               class: 'mr-2 p-2',
-              onClick: () => this.closeRelevanceInspector(),
+              onClick: () => this.handleCloseRelevanceInspector(),
               text: 'Ignore',
             },
           })(nothing)}
@@ -84,7 +70,7 @@ export class AtomicRelevanceInspector
               class: 'p-2',
               onClick: () => {
                 window.open(this.adminHref, '_blank');
-                this.closeRelevanceInspector();
+                this.handleCloseRelevanceInspector();
               },
               text: 'Open',
             },
@@ -92,6 +78,25 @@ export class AtomicRelevanceInspector
         </div>
       </atomic-modal>
     `;
+  }
+
+  private handleRelevanceInspectorDoubleClick = (e: MouseEvent) => {
+    if (e.altKey) {
+      this.open = !this.open;
+    }
+  };
+
+  private handleCloseRelevanceInspector() {
+    this.open = false;
+  }
+
+  private get adminHref() {
+    const {organizationId, environment} =
+      this.bindings.engine.state.configuration;
+
+    const admin = getOrganizationEndpoint(organizationId, environment, 'admin');
+    const {searchResponseId} = this.bindings.engine.state.search;
+    return `${admin}/admin/#/${organizationId}/search/relevanceInspector/${searchResponseId}`;
   }
 }
 
