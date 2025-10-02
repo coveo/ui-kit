@@ -53,7 +53,7 @@ import type {
   SearchBoxSuggestionsEvent,
 } from '../../common/suggestions/suggestions-types';
 import {Bindings} from '../atomic-search-interface/atomic-search-interface';
-import { getDefaultSlotFromHost } from '@/src/utils/slot-utils';
+import { getDefaultSlotContent } from '@/src/utils/slot-utils';
 
 /**
  * The `atomic-search-box` component creates a search box with built-in support for suggestions.
@@ -708,7 +708,7 @@ export class AtomicSearchBox implements InitializableComponent<Bindings> {
   }
 
   private renderSlotContent() {
-    const hasDefaultSlot = !!getDefaultSlotFromHost(this.host);
+    const hasDefaultSlot = getDefaultSlotContent(this.host).length > 0;
 
     if (hasDefaultSlot) {
       return <slot></slot>;

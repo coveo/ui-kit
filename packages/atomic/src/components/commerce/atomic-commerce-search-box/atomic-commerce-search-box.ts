@@ -28,7 +28,7 @@ import {
   StorageItems,
 } from '@/src/utils/local-storage-utils';
 import {updateBreakpoints} from '@/src/utils/replace-breakpoint-utils';
-import {getDefaultSlotFromHost} from '@/src/utils/slot-utils';
+import {getDefaultSlotContent} from '@/src/utils/slot-utils';
 import {
   isFocusingOut,
   once,
@@ -697,9 +697,12 @@ export class AtomicCommerceSearchBox
   }
 
   private renderSlotContent() {
-    const hasDefaultSlot = !!getDefaultSlotFromHost(this);
+    const slots = getDefaultSlotContent(this);
+    if (slots.length > 1) {
+      console.warn('Element should only have 1 default slot.', this);
+    }
 
-    if (hasDefaultSlot) {
+    if (slots.length === 1) {
       return html`<slot></slot>`;
     }
 
