@@ -28,7 +28,6 @@ import {
 } from '../../common/pager/pager-buttons';
 import {renderPagerNavigation} from '../../common/pager/pager-navigation';
 import type {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface';
-import {getCurrentPagesRange} from './commerce-pager-utils';
 
 /**
  * The `atomic-commerce-pager` component enables users to navigate through paginated product results.
@@ -115,7 +114,7 @@ export class AtomicCommercePager
   @bindingGuard()
   @errorGuard()
   render() {
-    const pagesRange = getCurrentPagesRange(
+    const pagesRange = this.getCurrentPagesRange(
       this.pagerState.page,
       this.numberOfPages,
       this.pagerState.totalPages - 1
@@ -182,6 +181,65 @@ export class AtomicCommercePager
   private async focusOnFirstResultAndScrollToTop() {
     await this.bindings.store.state.resultList?.focusOnFirstResultAfterNextSearch();
     this.dispatchEvent(new CustomEvent('atomic/scrollToTop'));
+  }
+
+  private getCurrentPagesRange(
+    page: number,
+    desiredNumberOfPages: number,
+    maxPage: number
+  ): number[] {
+    let range = this.buildRange(page, desiredNumberOfPages);
+    range = this.shiftRightIfNeeded(range);
+    range = this.shiftLeftIfNeeded(range, maxPage);
+    return this.buildCurrentPages(range);
+  }
+
+  private buildRange(
+    page: number,
+    desiredNumberOfPages: number
+  ): {start: number; end: number} {
+    const isEven = desiredNumberOfPages % 2 === 0;
+    const leftCapacity = Math.floor(desiredNumberOfPages / 2);
+    const rightCapacity = isEven ? leftCapacity - 1 : leftCapacity;
+
+    const start = page - leftCapacity;
+    const end = page + rightCapacity;
+
+    return {start, end};
+  }
+
+  private shiftRightIfNeeded(range: {start: number; end: number}): {
+    start: number;
+    end: number;
+  } {
+    const minimumPage = 0;
+    const leftExcess = Math.max(minimumPage - range.start, 0);
+    const start = range.start + leftExcess;
+    const end = range.end + leftExcess;
+
+    return {start, end};
+  }
+
+  private shiftLeftIfNeeded(
+    range: {start: number; end: number},
+    maxPage: number
+  ): {start: number; end: number} {
+    const minimumPage = 0;
+    const rightExcess = Math.max(range.end - maxPage, 0);
+    const start = Math.max(range.start - rightExcess, minimumPage);
+    const end = range.end - rightExcess;
+
+    return {start, end};
+  }
+
+  private buildCurrentPages(range: {start: number; end: number}): number[] {
+    const currentPages: number[] = [];
+
+    for (let counter = range.start; counter <= range.end; ++counter) {
+      currentPages.push(counter);
+    }
+
+    return currentPages;
   }
 }
 
