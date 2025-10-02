@@ -31,7 +31,7 @@ import type {CommerceBindings} from '../atomic-commerce-interface/atomic-commerc
 import {getCurrentPagesRange} from './commerce-pager-utils';
 
 /**
- * The `atomic-commerce-pager` component enables users to navigate through paginated product results.
+ * The `atomic-commerce-pager` component enables users to navigate through paginated products.
  *
  * @part buttons - The list of all buttons rendered by the component.
  * @part page-buttons - The list of all page buttons.

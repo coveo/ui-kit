@@ -16,7 +16,7 @@ test.describe('atomic-commerce-no-products', () => {
     await expect(noProducts.ariaLive()).toBeVisible();
   });
 
-  test('should display no result message', async ({noProducts}) => {
+  test('should display no products message', async ({noProducts}) => {
     await expect(noProducts.message()).toBeVisible();
   });
 

@@ -43,7 +43,7 @@ import type {CommerceBindings} from '../atomic-commerce-interface/atomic-commerc
  * @part clear-button-icon - The icon displayed in the clear button.
  * @part values - The list container for all facet values.
  * @part value-label - The text label for individual facet values.
- * @part value-count - The count indicator showing the number of results for each value.
+ * @part value-count - The count indicator showing the number of products for each value.
  * @part value-checkbox-label - The label associated with facet value checkboxes.
  * @part value-exclude-button - The button to exclude specific facet values.
  * @part input-form - The form container for numeric range inputs.
