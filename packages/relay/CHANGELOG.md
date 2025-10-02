@@ -1,3 +1,9 @@
+## 1.2.11 (2025-10-02)
+
+### Bug Fixes
+
+- **deps:** update all non-major dependencies ([#206](https://github.com/coveo/relay/issues/206)) ([c28b789](https://github.com/coveo/relay/commits/))
+
 ## 1.2.10 (2025-09-23)
 
 ### Bug Fixes
