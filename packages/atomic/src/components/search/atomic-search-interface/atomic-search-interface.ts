@@ -126,7 +126,7 @@ export class AtomicSearchInterface
       toAttribute: (value: string[]) => JSON.stringify(value),
     },
   })
-  public fieldsToInclude: string[] | string = '[]';
+  public fieldsToInclude: string[] = [];
 
   /**
    * The search interface [query pipeline](https://docs.coveo.com/en/180/).
