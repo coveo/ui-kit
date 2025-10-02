@@ -15,34 +15,43 @@ export function deepEqual(a: unknown, b: unknown): boolean {
     return false;
   }
 
-  if (typeof a !== typeof b) {
+  const typeA = typeof a;
+  const typeB = typeof b;
+
+  if (typeA !== typeB) {
     return false;
   }
 
-  if (Array.isArray(a) && Array.isArray(b)) {
-    if (a.length !== b.length) {
+  if (Array.isArray(a)) {
+    if (!Array.isArray(b) || a.length !== b.length) {
       return false;
     }
 
-    return !a.some((item, index) => !deepEqual(item, b[index]));
+    for (let i = 0; i < a.length; i++) {
+      if (!deepEqual(a[i], b[i])) {
+        return false;
+      }
+    }
+    return true;
   }
 
-  if (typeof a === 'object' && typeof b === 'object') {
-    const aKeys = Object.keys(a as Record<string, unknown>);
-    const bKeys = Object.keys(b as Record<string, unknown>);
+  if (typeA === 'object') {
+    const aObj = a as Record<string, unknown>;
+    const bObj = b as Record<string, unknown>;
+    const aKeys = Object.keys(aObj);
+    const bKeys = Object.keys(bObj);
 
     if (aKeys.length !== bKeys.length) {
       return false;
     }
 
-    return !aKeys.some(
-      (key) =>
-        !bKeys.includes(key) ||
-        !deepEqual(
-          (a as Record<string, unknown>)[key],
-          (b as Record<string, unknown>)[key]
-        )
-    );
+    for (let i = 0; i < aKeys.length; i++) {
+      const key = aKeys[i];
+      if (!deepEqual(aObj[key], bObj[key])) {
+        return false;
+      }
+    }
+    return true;
   }
 
   return false;
