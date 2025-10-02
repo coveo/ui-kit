@@ -254,23 +254,36 @@ describe('#buildQuickviewPreviewBar', () => {
     expect(previewUnit?.style.display).not.toBe('none');
   });
 
-  it('should handle division by zero gracefully when document height is zero', () => {
-    Object.defineProperty(mockBody, 'scrollHeight', {
-      value: 0,
-      writable: true,
-      configurable: true,
+  describe('when document height is zero', () => {
+    beforeEach(() => {
+      Object.defineProperty(mockBody, 'scrollHeight', {
+        value: 0,
+        writable: true,
+        configurable: true,
+      });
     });
 
-    const words = {test: mockWordHighlight};
+    it('should not throw', () => {
+      expect(() => {
+        buildQuickviewPreviewBar(
+          {test: mockWordHighlight},
+          highlightKeywords,
+          mockIframe
+        );
+      }).not.toThrow();
+    });
 
-    expect(() => {
-      buildQuickviewPreviewBar(words, highlightKeywords, mockIframe);
-    }).not.toThrow();
+    it('should create a preview unit', () => {
+      buildQuickviewPreviewBar(
+        {test: mockWordHighlight},
+        highlightKeywords,
+        mockIframe
+      );
+      const previewBar = mockDocument.getElementById('CoveoPreviewBar');
+      const previewUnit = previewBar?.children[0] as HTMLElement;
 
-    const previewBar = mockDocument.getElementById('CoveoPreviewBar');
-    const previewUnit = previewBar?.children[0] as HTMLElement;
-    // When dividing by zero, the top style may be empty or have a fallback value
-    expect(previewUnit).toBeTruthy();
-    expect(previewBar?.contains(previewUnit)).toBe(true);
+      expect(previewUnit).toBeTruthy();
+      expect(previewBar?.contains(previewUnit)).toBe(true);
+    });
   });
 });
