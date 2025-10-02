@@ -105,7 +105,6 @@ useCaseTestCases.forEach((useCase) => {
 
               test('should keep sending RGA analytics events after submitting feedback', async ({
                 generatedAnswer,
-                page,
               }) => {
                 await generatedAnswer.streamEndAnalyticRequestPromise;
                 const likeAnalyticRequestPromise =
