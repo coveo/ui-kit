@@ -3,7 +3,10 @@ import {LitElement} from 'lit';
 import {customElement, state} from 'lit/decorators.js';
 import {beforeEach, describe, expect, it, vi} from 'vitest';
 import type {LitElementWithError} from '@/src/decorators/types';
+import {deepEqual} from '@/src/utils/compare-utils';
 import {ValidatePropsController} from './validate-props-controller';
+
+vi.mock('@/src/utils/compare-utils');
 
 @customElement('test-element')
 class TestElement extends LitElement implements LitElementWithError {
@@ -14,7 +17,7 @@ describe('ValidatePropsController', () => {
   let mockElement: TestElement;
   let mockGetProps: ReturnType<typeof vi.fn>;
   let mockSchema: Schema<{name: string}>;
-  let controller: ValidatePropsController;
+  let controller: ValidatePropsController<{name: string}>;
 
   beforeEach(() => {
     mockElement = new TestElement();
@@ -32,7 +35,9 @@ describe('ValidatePropsController', () => {
   });
 
   it('should register itself as a controller with the host', () => {
-    expect(mockElement.addController).toHaveBeenCalledWith(controller);
+    expect(mockElement.addController).toHaveBeenCalledExactlyOnceWith(
+      controller
+    );
   });
 
   describe('when host is connected', () => {
@@ -47,15 +52,12 @@ describe('ValidatePropsController', () => {
     });
 
     it('should set error on element when schema validation throws', () => {
-      const validationError = new Error('Validation failed');
-      vi.spyOn(mockSchema, 'validate').mockImplementation(() => {
-        throw validationError;
-      });
-      mockGetProps.mockReturnValue({name: 'invalid'});
+      mockGetProps.mockReturnValue({name: 'invalid-value'});
 
       controller.hostConnected();
 
-      expect(mockElement.error).toBe(validationError);
+      expect(mockElement.error).toBeDefined();
+      expect(mockElement.error).toBeInstanceOf(Error);
     });
 
     it('should not set error on element when schema validation does not throw', () => {
@@ -68,6 +70,23 @@ describe('ValidatePropsController', () => {
   });
 
   describe('when host updates', () => {
+    it('should verify whether props have changed with #deepEqual', () => {
+      const props = {name: 'valid'};
+      mockGetProps.mockReturnValue(props);
+
+      controller.hostConnected();
+
+      const newProps = {name: 'also-valid'};
+      mockGetProps.mockReturnValue(newProps);
+
+      controller.hostUpdate();
+
+      expect(vi.mocked(deepEqual)).toHaveBeenCalledExactlyOnceWith(
+        newProps,
+        props
+      );
+    });
+
     it('should not revalidate when props have not changed', () => {
       const schemaSpy = vi.spyOn(mockSchema, 'validate');
       const props = {name: 'valid'};
@@ -94,7 +113,7 @@ describe('ValidatePropsController', () => {
       schemaSpy.mockClear();
 
       const newProps = {name: 'also-valid'};
-      mockGetProps.mockReturnValue({name: 'also-valid'});
+      mockGetProps.mockReturnValue(newProps);
 
       controller.hostUpdate();
 
@@ -108,15 +127,11 @@ describe('ValidatePropsController', () => {
 
       expect(mockElement.error).toBeUndefined();
 
-      const validationError = new Error('Validation failed');
-      vi.spyOn(mockSchema, 'validate').mockImplementation(() => {
-        throw validationError;
-      });
       mockGetProps.mockReturnValue({name: 'invalid'});
 
       controller.hostUpdate();
 
-      expect(mockElement.error).toBe(validationError);
+      expect(mockElement.error).toBeInstanceOf(Error);
     });
 
     it('should not set error on element when schema revalidation does not throw', () => {

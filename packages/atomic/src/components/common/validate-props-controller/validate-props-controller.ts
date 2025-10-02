@@ -1,21 +1,24 @@
 import type {Schema} from '@coveo/bueno';
 import type {ReactiveController, ReactiveControllerHost} from 'lit';
 import type {LitElementWithError} from '@/src/decorators/types';
+import {deepEqual} from '@/src/utils/compare-utils';
 
-export class ValidatePropsController implements ReactiveController {
+export class ValidatePropsController<TProps extends Record<string, unknown>>
+  implements ReactiveController
+{
   private host: ReactiveControllerHost & LitElementWithError;
-  private getProps: () => Object;
-  private schema: Schema<Object>;
-  private previousProps: Object;
+  private getProps: () => TProps;
+  private schema: Schema<TProps>;
+  private previousProps: TProps;
 
   constructor(
     host: ReactiveControllerHost & LitElementWithError,
-    options: {getProps: () => Object; schema: Schema<Object>}
+    options: {getProps: () => TProps; schema: Schema<TProps>}
   ) {
     this.host = host;
     this.getProps = options.getProps;
     this.schema = options.schema;
-    this.previousProps = {};
+    this.previousProps = {} as TProps;
 
     host.addController(this);
   }
@@ -32,7 +35,7 @@ export class ValidatePropsController implements ReactiveController {
     }
   }
 
-  private _validateProps(props: Object) {
+  private _validateProps(props: TProps) {
     try {
       this.schema.validate(props);
     } catch (error) {
@@ -41,18 +44,7 @@ export class ValidatePropsController implements ReactiveController {
     this.previousProps = props;
   }
 
-  private _propsHaveChanged(newProps: Object) {
-    const newKeys = Object.keys(newProps);
-    const oldKeys = Object.keys(this.previousProps);
-
-    if (newKeys.length !== oldKeys.length) {
-      return true;
-    }
-
-    return newKeys.some(
-      (key) =>
-        (newProps as Record<string, unknown>)[key] !==
-        (this.previousProps as Record<string, unknown>)[key]
-    );
+  private _propsHaveChanged(newProps: TProps) {
+    return !deepEqual(newProps, this.previousProps);
   }
 }
