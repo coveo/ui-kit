@@ -28,6 +28,7 @@ import {
   AtomicCommerceTimeframeFacet as LitAtomicCommerceTimeframeFacet,
   AtomicComponentError as LitAtomicComponentError,
   AtomicIcon as LitAtomicIcon,
+  AtomicInsightInterface as LitAtomicInsightInterface,
   AtomicLayoutSection as LitAtomicLayoutSection,
   AtomicProduct as LitAtomicProduct,
   AtomicProductChildren as LitAtomicProductChildren,
@@ -226,6 +227,12 @@ export const AtomicIcon = createComponent({
   tagName: 'atomic-icon',
   react: React,
   elementClass: LitAtomicIcon,
+});
+
+export const AtomicInsightInterface = createComponent({
+  tagName: 'atomic-insight-interface',
+  react: React,
+  elementClass: LitAtomicInsightInterface,
 });
 
 export const AtomicLayoutSection = createComponent({
