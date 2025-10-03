@@ -13,15 +13,7 @@ export const generativeQuestionAnsweringIdSelector = (
 ): string | undefined => {
   // If using the AnswerApi, we return the answerId first.
   if (isGeneratedAnswerSection(state)) {
-    // Read the answerId directly from the state instead of RTK Query to prevent circular dependency chain
-    const getAnswerData = Object.values(state.answer.queries).pop()?.data;
-    const generativeQuestionAnsweringId =
-      typeof getAnswerData === 'object' &&
-      getAnswerData !== null &&
-      'answerId' in getAnswerData
-        ? (getAnswerData as {answerId?: string}).answerId
-        : undefined;
-    return generativeQuestionAnsweringId;
+    return state.generatedAnswer?.answerId;
   }
 
   // Used for type narrowing.

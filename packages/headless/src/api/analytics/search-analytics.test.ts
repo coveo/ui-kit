@@ -483,15 +483,10 @@ describe('#configureLegacyAnalytics', () => {
           generatedAnswer: {
             ...getGeneratedAnswerInitialState(),
             answerConfigurationId: 'test-config-id',
+            answerId: 'my-answer-id',
           },
           answer: {
-            queries: {
-              ['test-query']: {
-                data: {
-                  answerId: 'answerId1234',
-                },
-              },
-            },
+            data: {},
           },
         };
 
@@ -500,6 +495,7 @@ describe('#configureLegacyAnalytics', () => {
 
         expect(metadata).toBeDefined();
         expect(metadata).toHaveProperty('generativeQuestionAnsweringId');
+        expect(metadata.generativeQuestionAnsweringId).toBe('my-answer-id');
       });
 
       it('should include generativeQuestionAnsweringId from search response when the answerId is unavailable', () => {

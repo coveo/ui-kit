@@ -13,6 +13,7 @@ import {
   sendGeneratedAnswerFeedback,
   setAnswerApiQueryParams,
   setAnswerContentFormat,
+  setAnswerId,
   setCannotAnswer,
   setIsAnswerGenerated,
   setIsEnabled,
@@ -554,5 +555,16 @@ describe('generated answer slice', () => {
     );
 
     expect(finalState.answerApiQueryParams).toEqual(newAnswerApiQueryParams);
+  });
+
+  describe('#setAnswerId', () => {
+    it('should set answerId to the new value when given a new value', () => {
+      const finalState = generatedAnswerReducer(
+        {...baseState, answerId: 'old-id'},
+        setAnswerId('new-id')
+      );
+
+      expect(finalState.answerId).toEqual('new-id');
+    });
   });
 });

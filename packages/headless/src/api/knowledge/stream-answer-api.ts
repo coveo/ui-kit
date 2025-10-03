@@ -2,6 +2,7 @@ import type {ThunkDispatch, UnknownAction} from '@reduxjs/toolkit';
 import {selectAnswerApiQueryParams} from '../../features/generated-answer/answer-api-selectors.js';
 import {
   setAnswerContentFormat,
+  setAnswerId,
   setCannotAnswer,
   updateCitations,
   updateMessage,
@@ -211,6 +212,7 @@ export const answerApi = answerSlice.injectEndpoints({
             if (answerId) {
               updateCachedData((draft) => {
                 draft.answerId = answerId;
+                dispatch(setAnswerId(answerId));
               });
             }
           },

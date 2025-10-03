@@ -95,6 +95,8 @@ export interface GeneratedAnswerState {
    * The query parameters used for the answer API request cache key
    */
   answerApiQueryParams?: AnswerApiQueryParams;
+  /** The unique identifier of the answer returned by the Answer API. */
+  answerId?: string;
 }
 
 export function getGeneratedAnswerInitialState(): GeneratedAnswerState {
@@ -117,5 +119,6 @@ export function getGeneratedAnswerInitialState(): GeneratedAnswerState {
     expanded: false,
     cannotAnswer: false,
     answerApiQueryParams: undefined,
+    answerId: undefined,
   };
 }
