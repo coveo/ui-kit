@@ -22,6 +22,7 @@ class TestElement extends LitElement {
 
 describe('item-display-config-context', () => {
   beforeEach(() => {
+    vi.spyOn(console, 'warn').mockImplementation(() => {});
     vi.clearAllMocks();
   });
 
