@@ -103,3 +103,30 @@ export const WithCustomAllCategoriesLabelByField: Story = {
     'sort-criteria': 'occurrences',
   },
 };
+
+export const WithCustomAllCategoriesLabelWithIdAndFieldCompeting: Story = {
+  tags: ['!dev'],
+  name: 'With custom all categories label, using field',
+  afterEach: async (context) => {
+    await afterEach(context);
+    const searchInterface =
+      context.canvasElement.querySelector<HTMLAtomicSearchInterfaceElement>(
+        'atomic-search-interface'
+      );
+    searchInterface.i18n.addResourceBundle('en', 'translation', {
+      'all-categories-geographicalhierarchy': 'My Super Awesome Facet',
+    });
+    searchInterface.i18n.addResourceBundle('en', 'translation', {
+      'all-categories-my-awesome-facet': 'My Awesome Facet',
+    });
+    await playExecuteFirstSearch(context);
+  },
+  args: {
+    field: 'geographicalhierarchy',
+    label: 'Geographical Hierarchy',
+    'facet-id': 'my-awesome-facet',
+    'with-search': true,
+    'number-of-values': 5,
+    'sort-criteria': 'occurrences',
+  },
+};

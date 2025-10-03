@@ -38,6 +38,10 @@ test.describe('when clicking facet search "More matches for"', () => {
     name: 'With custom all categories label, using field',
     story: 'with-custom-all-categories-label-by-field',
   },
+  {
+    name: 'With custom all categories label, using facetId and field competing',
+    story: 'with-custom-all-categories-label-with-id-and-field-competing',
+  },
 ].forEach(({name, story}) => {
   test.describe(name, () => {
     test.beforeEach(async ({facet}) => {
