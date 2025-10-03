@@ -1,6 +1,15 @@
 // Auto-generated file
 export {AtomicPager} from './atomic-pager/atomic-pager.js';
 export {AtomicQuerySummary} from './atomic-query-summary/atomic-query-summary.js';
+export {AtomicResultSectionActions} from './atomic-result-section-actions/atomic-result-section-actions.js';
+export {AtomicResultSectionBadges} from './atomic-result-section-badges/atomic-result-section-badges.js';
+export {AtomicResultSectionBottomMetadata} from './atomic-result-section-bottom-metadata/atomic-result-section-bottom-metadata.js';
+export {AtomicResultSectionChildren} from './atomic-result-section-children/atomic-result-section-children.js';
+export {AtomicResultSectionEmphasized} from './atomic-result-section-emphasized/atomic-result-section-emphasized.js';
+export {AtomicResultSectionExcerpt} from './atomic-result-section-excerpt/atomic-result-section-excerpt.js';
+export {AtomicResultSectionTitle} from './atomic-result-section-title/atomic-result-section-title.js';
+export {AtomicResultSectionTitleMetadata} from './atomic-result-section-title-metadata/atomic-result-section-title-metadata.js';
+export {AtomicResultSectionVisual} from './atomic-result-section-visual/atomic-result-section-visual.js';
 export {AtomicResultsPerPage} from './atomic-results-per-page/atomic-results-per-page.js';
 export {AtomicSearchInterface} from './atomic-search-interface/atomic-search-interface.js';
 export {AtomicSearchLayout} from './atomic-search-layout/atomic-search-layout.js';
