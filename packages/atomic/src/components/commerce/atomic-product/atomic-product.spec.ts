@@ -260,13 +260,17 @@ describe('atomic-product', () => {
 
     it('should add "with-sections" class when content has sections', async () => {
       const renderingFunctionWithSections: ItemRenderingFunction = vi.fn(
-        () =>
-          '<atomic-result-section-visual">Custom</atomic-result-section-visual>'
+        (_product, productRootRef) => {
+          productRootRef.innerHTML =
+            '<atomic-result-section-visual>Custom</atomic-result-section-visual>';
+          return productRootRef.outerHTML;
+        }
       );
+
       const element = await renderProduct({
         renderingFunction: renderingFunctionWithSections,
       });
-      expect(renderingFunctionWithSections).toHaveBeenCalled();
+
       const resultRoot = element.shadowRoot!.querySelector('.result-root');
       expect(resultRoot?.classList).toContain('with-sections');
     });
@@ -277,15 +281,19 @@ describe('atomic-product', () => {
       it('should log warning', async () => {
         await renderProduct({content: undefined});
         expect(consoleWarnSpy).toHaveBeenCalledWith(
-          'AtomicProduct: content property is undefined. Cannot create layout.',
+          'atomic-product: content property is undefined. Cannot create layout.',
           expect.any(AtomicProduct)
         );
       });
 
       it('should return early and not create layout', async () => {
         const element = await renderProduct({content: undefined});
-        const layoutProperty = (element as unknown as {layout: unknown}).layout;
-        expect(layoutProperty).toBeUndefined();
+        const layout = (
+          element as unknown as {
+            itemLayoutController?: {getLayout?: () => null | object};
+          }
+        ).itemLayoutController?.getLayout?.();
+        expect(layout).toBeNull();
       });
 
       it('should not throw error', async () => {
@@ -305,7 +313,7 @@ describe('atomic-product', () => {
         getContentHTMLMethod();
 
         expect(consoleWarnSpy).toHaveBeenCalledWith(
-          'AtomicProduct: content property is undefined. Cannot get content HTML.',
+          'atomic-product: content property is undefined. Cannot get content HTML.',
           expect.any(AtomicProduct)
         );
       });
