@@ -31,6 +31,8 @@ export class ValidatePropsController<TProps extends Record<string, unknown>>
     const props = this.getProps();
 
     if (this._propsHaveChanged(props)) {
+      // @ts-expect-error: we need to clear the error.
+      this.host.error = undefined;
       this._validateProps(props);
     }
   }
