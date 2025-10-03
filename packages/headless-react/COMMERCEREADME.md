@@ -5,4 +5,4 @@
 ## Learn more
 
 - Checkout our [Documentation](https://docs.coveo.com/en/obif0156)
-- Refer to [samples/headless-ssr-commerce-nextjs](https://github.com/coveo/ui-kit/tree/master/packages/samples/headless-ssr-commerce--nextjs/) for examples.
+- Refer to [samples/headless-ssr-commerce-nextjs](https://github.com/coveo/ui-kit/tree/main/samples/headless-ssr/commerce-nextjs/) for examples.

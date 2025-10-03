@@ -12,6 +12,6 @@
 
 ## Learn more
 
-- Checkout our [Documentation for SSR Search](https://docs.coveo.com/en/headless/latest/usage/headless-server-side-rendering/) and refer to [samples/headless-ssr](https://github.com/coveo/ui-kit/tree/master/packages/samples/headless-ssr) for examples.
-- Checkout our [Documentation for SSR Commerce](https://docs.coveo.com/en/obif0156) and refer to [samples/headless-ssr-commerce](https://github.com/coveo/ui-kit/tree/master/packages/samples/headless-ssr-commerce/) for examples.
+- Checkout our [Documentation for SSR Search](https://docs.coveo.com/en/headless/latest/usage/headless-server-side-rendering/) and refer to [samples/headless-ssr](https://github.com/coveo/ui-kit/tree/main/samples/headless-ssr) for examples.
+- Checkout our [Documentation for SSR Commerce](https://docs.coveo.com/en/obif0156) and refer to [samples/headless-ssr/commerce-express](https://github.com/coveo/ui-kit/tree/main/samples/headless-ssr/commerce-express), [samples/headless-ssr/commerce-nextjs](https://github.com/coveo/ui-kit/tree/main/samples/headless-ssr/commerce-nextjs), or [samples/headless-ssr/commerce-react-router](https://github.com/coveo/ui-kit/tree/main/samples/headless-ssr/commerce-react-router) for examples.
 - For the latest features and upcoming breaking changes, see the `ssr-next` and `ssr-commerce-next` sub-packages and their respective documentation and samples.
