@@ -1199,188 +1199,6 @@ export class AtomicResultRating {
 export declare interface AtomicResultRating extends Components.AtomicResultRating {}
 
 
-@ProxyCmp({defineCustomElementFn: defineCustomElementAtomicResultSectionActions})
-@Component({standalone:false,
-  selector: 'atomic-result-section-actions',
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  template: '<ng-content></ng-content>',
-  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: [],
-})
-export class AtomicResultSectionActions {
-  protected el: HTMLElement;
-  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
-    c.detach();
-    this.el = r.nativeElement;
-  }
-}
-
-
-export declare interface AtomicResultSectionActions extends Components.AtomicResultSectionActions {}
-
-
-@ProxyCmp({defineCustomElementFn: defineCustomElementAtomicResultSectionBadges})
-@Component({standalone:false,
-  selector: 'atomic-result-section-badges',
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  template: '<ng-content></ng-content>',
-  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: [],
-})
-export class AtomicResultSectionBadges {
-  protected el: HTMLElement;
-  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
-    c.detach();
-    this.el = r.nativeElement;
-  }
-}
-
-
-export declare interface AtomicResultSectionBadges extends Components.AtomicResultSectionBadges {}
-
-
-@ProxyCmp({defineCustomElementFn: defineCustomElementAtomicResultSectionBottomMetadata})
-@Component({standalone:false,
-  selector: 'atomic-result-section-bottom-metadata',
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  template: '<ng-content></ng-content>',
-  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: [],
-})
-export class AtomicResultSectionBottomMetadata {
-  protected el: HTMLElement;
-  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
-    c.detach();
-    this.el = r.nativeElement;
-  }
-}
-
-
-export declare interface AtomicResultSectionBottomMetadata extends Components.AtomicResultSectionBottomMetadata {}
-
-
-@ProxyCmp({defineCustomElementFn: defineCustomElementAtomicResultSectionChildren})
-@Component({standalone:false,
-  selector: 'atomic-result-section-children',
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  template: '<ng-content></ng-content>',
-  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: [],
-})
-export class AtomicResultSectionChildren {
-  protected el: HTMLElement;
-  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
-    c.detach();
-    this.el = r.nativeElement;
-  }
-}
-
-
-export declare interface AtomicResultSectionChildren extends Components.AtomicResultSectionChildren {}
-
-
-@ProxyCmp({defineCustomElementFn: defineCustomElementAtomicResultSectionEmphasized})
-@Component({standalone:false,
-  selector: 'atomic-result-section-emphasized',
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  template: '<ng-content></ng-content>',
-  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: [],
-})
-export class AtomicResultSectionEmphasized {
-  protected el: HTMLElement;
-  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
-    c.detach();
-    this.el = r.nativeElement;
-  }
-}
-
-
-export declare interface AtomicResultSectionEmphasized extends Components.AtomicResultSectionEmphasized {}
-
-
-@ProxyCmp({defineCustomElementFn: defineCustomElementAtomicResultSectionExcerpt})
-@Component({standalone:false,
-  selector: 'atomic-result-section-excerpt',
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  template: '<ng-content></ng-content>',
-  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: [],
-})
-export class AtomicResultSectionExcerpt {
-  protected el: HTMLElement;
-  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
-    c.detach();
-    this.el = r.nativeElement;
-  }
-}
-
-
-export declare interface AtomicResultSectionExcerpt extends Components.AtomicResultSectionExcerpt {}
-
-
-@ProxyCmp({defineCustomElementFn: defineCustomElementAtomicResultSectionTitle})
-@Component({standalone:false,
-  selector: 'atomic-result-section-title',
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  template: '<ng-content></ng-content>',
-  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: [],
-})
-export class AtomicResultSectionTitle {
-  protected el: HTMLElement;
-  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
-    c.detach();
-    this.el = r.nativeElement;
-  }
-}
-
-
-export declare interface AtomicResultSectionTitle extends Components.AtomicResultSectionTitle {}
-
-
-@ProxyCmp({defineCustomElementFn: defineCustomElementAtomicResultSectionTitleMetadata})
-@Component({standalone:false,
-  selector: 'atomic-result-section-title-metadata',
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  template: '<ng-content></ng-content>',
-  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: [],
-})
-export class AtomicResultSectionTitleMetadata {
-  protected el: HTMLElement;
-  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
-    c.detach();
-    this.el = r.nativeElement;
-  }
-}
-
-
-export declare interface AtomicResultSectionTitleMetadata extends Components.AtomicResultSectionTitleMetadata {}
-
-
-@ProxyCmp({
-  inputs: ['imageSize']
-, defineCustomElementFn: defineCustomElementAtomicResultSectionVisual})
-@Component({standalone:false,
-  selector: 'atomic-result-section-visual',
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  template: '<ng-content></ng-content>',
-  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: ['imageSize'],
-})
-export class AtomicResultSectionVisual {
-  protected el: HTMLElement;
-  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
-    c.detach();
-    this.el = r.nativeElement;
-  }
-}
-
-
-export declare interface AtomicResultSectionVisual extends Components.AtomicResultSectionVisual {}
-
-
 @ProxyCmp({
   inputs: ['conditions', 'mustMatch', 'mustNotMatch'],
   methods: ['getTemplate']
@@ -3208,6 +3026,240 @@ export declare interface AtomicQuerySummary extends LitAtomicQuerySummary {
 }
 
 @ProxyCmp({
+  inputs: [],
+  methods: [],
+  defineCustomElementFn: () => {customElements.get('atomic-result-section-actions') || customElements.define('atomic-result-section-actions', LitAtomicResultSectionActions);}
+})
+@Component({
+  selector: 'atomic-result-section-actions',
+  standalone: false,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
+  inputs: []
+})
+export class AtomicResultSectionActions {
+  protected readonly el: HTMLElement;
+  constructor(c: ChangeDetectorRef, el: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = el.nativeElement;
+    
+  }
+}
+
+export declare interface AtomicResultSectionActions extends LitAtomicResultSectionActions {
+
+}
+
+@ProxyCmp({
+  inputs: [],
+  methods: [],
+  defineCustomElementFn: () => {customElements.get('atomic-result-section-badges') || customElements.define('atomic-result-section-badges', LitAtomicResultSectionBadges);}
+})
+@Component({
+  selector: 'atomic-result-section-badges',
+  standalone: false,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
+  inputs: []
+})
+export class AtomicResultSectionBadges {
+  protected readonly el: HTMLElement;
+  constructor(c: ChangeDetectorRef, el: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = el.nativeElement;
+    
+  }
+}
+
+export declare interface AtomicResultSectionBadges extends LitAtomicResultSectionBadges {
+
+}
+
+@ProxyCmp({
+  inputs: [],
+  methods: [],
+  defineCustomElementFn: () => {customElements.get('atomic-result-section-bottom-metadata') || customElements.define('atomic-result-section-bottom-metadata', LitAtomicResultSectionBottomMetadata);}
+})
+@Component({
+  selector: 'atomic-result-section-bottom-metadata',
+  standalone: false,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
+  inputs: []
+})
+export class AtomicResultSectionBottomMetadata {
+  protected readonly el: HTMLElement;
+  constructor(c: ChangeDetectorRef, el: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = el.nativeElement;
+    
+  }
+}
+
+export declare interface AtomicResultSectionBottomMetadata extends LitAtomicResultSectionBottomMetadata {
+
+}
+
+@ProxyCmp({
+  inputs: [],
+  methods: [],
+  defineCustomElementFn: () => {customElements.get('atomic-result-section-children') || customElements.define('atomic-result-section-children', LitAtomicResultSectionChildren);}
+})
+@Component({
+  selector: 'atomic-result-section-children',
+  standalone: false,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
+  inputs: []
+})
+export class AtomicResultSectionChildren {
+  protected readonly el: HTMLElement;
+  constructor(c: ChangeDetectorRef, el: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = el.nativeElement;
+    
+  }
+}
+
+export declare interface AtomicResultSectionChildren extends LitAtomicResultSectionChildren {
+
+}
+
+@ProxyCmp({
+  inputs: [],
+  methods: [],
+  defineCustomElementFn: () => {customElements.get('atomic-result-section-emphasized') || customElements.define('atomic-result-section-emphasized', LitAtomicResultSectionEmphasized);}
+})
+@Component({
+  selector: 'atomic-result-section-emphasized',
+  standalone: false,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
+  inputs: []
+})
+export class AtomicResultSectionEmphasized {
+  protected readonly el: HTMLElement;
+  constructor(c: ChangeDetectorRef, el: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = el.nativeElement;
+    
+  }
+}
+
+export declare interface AtomicResultSectionEmphasized extends LitAtomicResultSectionEmphasized {
+
+}
+
+@ProxyCmp({
+  inputs: [],
+  methods: [],
+  defineCustomElementFn: () => {customElements.get('atomic-result-section-excerpt') || customElements.define('atomic-result-section-excerpt', LitAtomicResultSectionExcerpt);}
+})
+@Component({
+  selector: 'atomic-result-section-excerpt',
+  standalone: false,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
+  inputs: []
+})
+export class AtomicResultSectionExcerpt {
+  protected readonly el: HTMLElement;
+  constructor(c: ChangeDetectorRef, el: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = el.nativeElement;
+    
+  }
+}
+
+export declare interface AtomicResultSectionExcerpt extends LitAtomicResultSectionExcerpt {
+
+}
+
+@ProxyCmp({
+  inputs: [],
+  methods: [],
+  defineCustomElementFn: () => {customElements.get('atomic-result-section-title-metadata') || customElements.define('atomic-result-section-title-metadata', LitAtomicResultSectionTitleMetadata);}
+})
+@Component({
+  selector: 'atomic-result-section-title-metadata',
+  standalone: false,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
+  inputs: []
+})
+export class AtomicResultSectionTitleMetadata {
+  protected readonly el: HTMLElement;
+  constructor(c: ChangeDetectorRef, el: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = el.nativeElement;
+    
+  }
+}
+
+export declare interface AtomicResultSectionTitleMetadata extends LitAtomicResultSectionTitleMetadata {
+
+}
+
+@ProxyCmp({
+  inputs: [],
+  methods: [],
+  defineCustomElementFn: () => {customElements.get('atomic-result-section-title') || customElements.define('atomic-result-section-title', LitAtomicResultSectionTitle);}
+})
+@Component({
+  selector: 'atomic-result-section-title',
+  standalone: false,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
+  inputs: []
+})
+export class AtomicResultSectionTitle {
+  protected readonly el: HTMLElement;
+  constructor(c: ChangeDetectorRef, el: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = el.nativeElement;
+    
+  }
+}
+
+export declare interface AtomicResultSectionTitle extends LitAtomicResultSectionTitle {
+
+}
+
+@ProxyCmp({
+  inputs: ['imageSize'],
+  methods: [],
+  defineCustomElementFn: () => {customElements.get('atomic-result-section-visual') || customElements.define('atomic-result-section-visual', LitAtomicResultSectionVisual);}
+})
+@Component({
+  selector: 'atomic-result-section-visual',
+  standalone: false,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
+  inputs: ['imageSize']
+})
+export class AtomicResultSectionVisual {
+  protected readonly el: HTMLElement;
+  constructor(c: ChangeDetectorRef, el: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = el.nativeElement;
+    
+  }
+}
+
+export declare interface AtomicResultSectionVisual extends LitAtomicResultSectionVisual {
+
+}
+
+@ProxyCmp({
   inputs: ['choicesDisplayed', 'initialChoice'],
   methods: ['initialize'],
   defineCustomElementFn: () => {customElements.get('atomic-results-per-page') || customElements.define('atomic-results-per-page', LitAtomicResultsPerPage);}
@@ -3363,7 +3415,7 @@ export declare interface AtomicSearchLayout extends LitAtomicSearchLayout {
   'atomic-layout-breakpoint-change': EventEmitter<CustomEvent<any>>;
 }
 
-import {AtomicAriaLive as LitAtomicAriaLive, AtomicCommerceBreadbox as LitAtomicCommerceBreadbox, AtomicCommerceCategoryFacet as LitAtomicCommerceCategoryFacet, AtomicCommerceDidYouMean as LitAtomicCommerceDidYouMean, AtomicCommerceFacet as LitAtomicCommerceFacet, AtomicCommerceFacets as LitAtomicCommerceFacets, AtomicCommerceInterface as LitAtomicCommerceInterface, AtomicCommerceLayout as LitAtomicCommerceLayout, AtomicCommerceLoadMoreProducts as LitAtomicCommerceLoadMoreProducts, AtomicCommerceNoProducts as LitAtomicCommerceNoProducts, AtomicCommerceNumericFacet as LitAtomicCommerceNumericFacet, AtomicCommercePager as LitAtomicCommercePager, AtomicCommerceProductList as LitAtomicCommerceProductList, AtomicCommerceProductsPerPage as LitAtomicCommerceProductsPerPage, AtomicCommerceQueryError as LitAtomicCommerceQueryError, AtomicCommerceQuerySummary as LitAtomicCommerceQuerySummary, AtomicCommerceRecommendationInterface as LitAtomicCommerceRecommendationInterface, AtomicCommerceRecommendationList as LitAtomicCommerceRecommendationList, AtomicCommerceRefineModal as LitAtomicCommerceRefineModal, AtomicCommerceRefineToggle as LitAtomicCommerceRefineToggle, AtomicCommerceSearchBox as LitAtomicCommerceSearchBox, AtomicCommerceSearchBoxInstantProducts as LitAtomicCommerceSearchBoxInstantProducts, AtomicCommerceSearchBoxQuerySuggestions as LitAtomicCommerceSearchBoxQuerySuggestions, AtomicCommerceSearchBoxRecentQueries as LitAtomicCommerceSearchBoxRecentQueries, AtomicCommerceSortDropdown as LitAtomicCommerceSortDropdown, AtomicCommerceText as LitAtomicCommerceText, AtomicCommerceTimeframeFacet as LitAtomicCommerceTimeframeFacet, AtomicComponentError as LitAtomicComponentError, AtomicIcon as LitAtomicIcon, AtomicInsightInterface as LitAtomicInsightInterface, AtomicLayoutSection as LitAtomicLayoutSection, AtomicPager as LitAtomicPager, AtomicProduct as LitAtomicProduct, AtomicProductChildren as LitAtomicProductChildren, AtomicProductDescription as LitAtomicProductDescription, AtomicProductExcerpt as LitAtomicProductExcerpt, AtomicProductFieldCondition as LitAtomicProductFieldCondition, AtomicProductImage as LitAtomicProductImage, AtomicProductLink as LitAtomicProductLink, AtomicProductMultiValueText as LitAtomicProductMultiValueText, AtomicProductNumericFieldValue as LitAtomicProductNumericFieldValue, AtomicProductPrice as LitAtomicProductPrice, AtomicProductRating as LitAtomicProductRating, AtomicProductSectionActions as LitAtomicProductSectionActions, AtomicProductSectionBadges as LitAtomicProductSectionBadges, AtomicProductSectionBottomMetadata as LitAtomicProductSectionBottomMetadata, AtomicProductSectionChildren as LitAtomicProductSectionChildren, AtomicProductSectionDescription as LitAtomicProductSectionDescription, AtomicProductSectionEmphasized as LitAtomicProductSectionEmphasized, AtomicProductSectionMetadata as LitAtomicProductSectionMetadata, AtomicProductSectionName as LitAtomicProductSectionName, AtomicProductSectionVisual as LitAtomicProductSectionVisual, AtomicProductTemplate as LitAtomicProductTemplate, AtomicProductText as LitAtomicProductText, AtomicQuerySummary as LitAtomicQuerySummary, AtomicResultsPerPage as LitAtomicResultsPerPage, AtomicSearchBoxInstantResults as LitAtomicSearchBoxInstantResults, AtomicSearchBoxQuerySuggestions as LitAtomicSearchBoxQuerySuggestions, AtomicSearchBoxRecentQueries as LitAtomicSearchBoxRecentQueries, AtomicSearchInterface as LitAtomicSearchInterface, AtomicSearchLayout as LitAtomicSearchLayout} from '@coveo/atomic/components';
+import {AtomicAriaLive as LitAtomicAriaLive, AtomicCommerceBreadbox as LitAtomicCommerceBreadbox, AtomicCommerceCategoryFacet as LitAtomicCommerceCategoryFacet, AtomicCommerceDidYouMean as LitAtomicCommerceDidYouMean, AtomicCommerceFacet as LitAtomicCommerceFacet, AtomicCommerceFacets as LitAtomicCommerceFacets, AtomicCommerceInterface as LitAtomicCommerceInterface, AtomicCommerceLayout as LitAtomicCommerceLayout, AtomicCommerceLoadMoreProducts as LitAtomicCommerceLoadMoreProducts, AtomicCommerceNoProducts as LitAtomicCommerceNoProducts, AtomicCommerceNumericFacet as LitAtomicCommerceNumericFacet, AtomicCommercePager as LitAtomicCommercePager, AtomicCommerceProductList as LitAtomicCommerceProductList, AtomicCommerceProductsPerPage as LitAtomicCommerceProductsPerPage, AtomicCommerceQueryError as LitAtomicCommerceQueryError, AtomicCommerceQuerySummary as LitAtomicCommerceQuerySummary, AtomicCommerceRecommendationInterface as LitAtomicCommerceRecommendationInterface, AtomicCommerceRecommendationList as LitAtomicCommerceRecommendationList, AtomicCommerceRefineModal as LitAtomicCommerceRefineModal, AtomicCommerceRefineToggle as LitAtomicCommerceRefineToggle, AtomicCommerceSearchBox as LitAtomicCommerceSearchBox, AtomicCommerceSearchBoxInstantProducts as LitAtomicCommerceSearchBoxInstantProducts, AtomicCommerceSearchBoxQuerySuggestions as LitAtomicCommerceSearchBoxQuerySuggestions, AtomicCommerceSearchBoxRecentQueries as LitAtomicCommerceSearchBoxRecentQueries, AtomicCommerceSortDropdown as LitAtomicCommerceSortDropdown, AtomicCommerceText as LitAtomicCommerceText, AtomicCommerceTimeframeFacet as LitAtomicCommerceTimeframeFacet, AtomicComponentError as LitAtomicComponentError, AtomicIcon as LitAtomicIcon, AtomicLayoutSection as LitAtomicLayoutSection, AtomicPager as LitAtomicPager, AtomicProduct as LitAtomicProduct, AtomicProductChildren as LitAtomicProductChildren, AtomicProductDescription as LitAtomicProductDescription, AtomicProductExcerpt as LitAtomicProductExcerpt, AtomicProductFieldCondition as LitAtomicProductFieldCondition, AtomicProductImage as LitAtomicProductImage, AtomicProductLink as LitAtomicProductLink, AtomicProductMultiValueText as LitAtomicProductMultiValueText, AtomicProductNumericFieldValue as LitAtomicProductNumericFieldValue, AtomicProductPrice as LitAtomicProductPrice, AtomicProductRating as LitAtomicProductRating, AtomicProductSectionActions as LitAtomicProductSectionActions, AtomicProductSectionBadges as LitAtomicProductSectionBadges, AtomicProductSectionBottomMetadata as LitAtomicProductSectionBottomMetadata, AtomicProductSectionChildren as LitAtomicProductSectionChildren, AtomicProductSectionDescription as LitAtomicProductSectionDescription, AtomicProductSectionEmphasized as LitAtomicProductSectionEmphasized, AtomicProductSectionMetadata as LitAtomicProductSectionMetadata, AtomicProductSectionName as LitAtomicProductSectionName, AtomicProductSectionVisual as LitAtomicProductSectionVisual, AtomicProductTemplate as LitAtomicProductTemplate, AtomicProductText as LitAtomicProductText, AtomicQuerySummary as LitAtomicQuerySummary, AtomicResultSectionActions as LitAtomicResultSectionActions, AtomicResultSectionBadges as LitAtomicResultSectionBadges, AtomicResultSectionBottomMetadata as LitAtomicResultSectionBottomMetadata, AtomicResultSectionChildren as LitAtomicResultSectionChildren, AtomicResultSectionEmphasized as LitAtomicResultSectionEmphasized, AtomicResultSectionExcerpt as LitAtomicResultSectionExcerpt, AtomicResultSectionTitle as LitAtomicResultSectionTitle, AtomicResultSectionTitleMetadata as LitAtomicResultSectionTitleMetadata, AtomicResultSectionVisual as LitAtomicResultSectionVisual, AtomicResultsPerPage as LitAtomicResultsPerPage, AtomicSearchBoxRecentQueries as LitAtomicSearchBoxRecentQueries, AtomicSearchInterface as LitAtomicSearchInterface, AtomicSearchLayout as LitAtomicSearchLayout} from '@coveo/atomic/components';
 
-import {defineCustomElementAtomicAutomaticFacet, defineCustomElementAtomicAutomaticFacetGenerator, defineCustomElementAtomicBreadbox, defineCustomElementAtomicCategoryFacet, defineCustomElementAtomicCitation, defineCustomElementAtomicColorFacet, defineCustomElementAtomicDidYouMean, defineCustomElementAtomicExternal, defineCustomElementAtomicFacet, defineCustomElementAtomicFacetManager, defineCustomElementAtomicFieldCondition, defineCustomElementAtomicFoldedResultList, defineCustomElementAtomicFormatCurrency, defineCustomElementAtomicFormatNumber, defineCustomElementAtomicFormatUnit, defineCustomElementAtomicGeneratedAnswer, defineCustomElementAtomicGeneratedAnswerFeedbackModal, defineCustomElementAtomicHtml, defineCustomElementAtomicInsightUserActionsTimeline, defineCustomElementAtomicInsightUserActionsToggle, defineCustomElementAtomicLoadMoreResults, defineCustomElementAtomicNoResults, defineCustomElementAtomicNotifications, defineCustomElementAtomicNumericFacet, defineCustomElementAtomicNumericRange, defineCustomElementAtomicPopover, defineCustomElementAtomicQueryError, defineCustomElementAtomicQuickview, defineCustomElementAtomicQuickviewModal, defineCustomElementAtomicRatingFacet, defineCustomElementAtomicRatingRangeFacet, defineCustomElementAtomicRecsError, defineCustomElementAtomicRecsInterface, defineCustomElementAtomicRecsList, defineCustomElementAtomicRecsResult, defineCustomElementAtomicRecsResultTemplate, defineCustomElementAtomicRefineModal, defineCustomElementAtomicRefineToggle, defineCustomElementAtomicResult, defineCustomElementAtomicResultBadge, defineCustomElementAtomicResultChildren, defineCustomElementAtomicResultChildrenTemplate, defineCustomElementAtomicResultDate, defineCustomElementAtomicResultFieldsList, defineCustomElementAtomicResultHtml, defineCustomElementAtomicResultIcon, defineCustomElementAtomicResultImage, defineCustomElementAtomicResultLink, defineCustomElementAtomicResultList, defineCustomElementAtomicResultLocalizedText, defineCustomElementAtomicResultMultiValueText, defineCustomElementAtomicResultNumber, defineCustomElementAtomicResultPrintableUri, defineCustomElementAtomicResultRating, defineCustomElementAtomicResultSectionActions, defineCustomElementAtomicResultSectionBadges, defineCustomElementAtomicResultSectionBottomMetadata, defineCustomElementAtomicResultSectionChildren, defineCustomElementAtomicResultSectionEmphasized, defineCustomElementAtomicResultSectionExcerpt, defineCustomElementAtomicResultSectionTitle, defineCustomElementAtomicResultSectionTitleMetadata, defineCustomElementAtomicResultSectionVisual, defineCustomElementAtomicResultTemplate, defineCustomElementAtomicResultText, defineCustomElementAtomicResultTimespan, defineCustomElementAtomicSearchBox, defineCustomElementAtomicSegmentedFacet, defineCustomElementAtomicSegmentedFacetScrollable, defineCustomElementAtomicSmartSnippet, defineCustomElementAtomicSmartSnippetFeedbackModal, defineCustomElementAtomicSmartSnippetSuggestions, defineCustomElementAtomicSortDropdown, defineCustomElementAtomicSortExpression, defineCustomElementAtomicTab, defineCustomElementAtomicTabManager, defineCustomElementAtomicTableElement, defineCustomElementAtomicText, defineCustomElementAtomicTimeframe, defineCustomElementAtomicTimeframeFacet} from '@coveo/atomic/components';
+import {defineCustomElementAtomicAutomaticFacet, defineCustomElementAtomicAutomaticFacetGenerator, defineCustomElementAtomicBreadbox, defineCustomElementAtomicCategoryFacet, defineCustomElementAtomicCitation, defineCustomElementAtomicColorFacet, defineCustomElementAtomicDidYouMean, defineCustomElementAtomicExternal, defineCustomElementAtomicFacet, defineCustomElementAtomicFacetManager, defineCustomElementAtomicFieldCondition, defineCustomElementAtomicFoldedResultList, defineCustomElementAtomicFormatCurrency, defineCustomElementAtomicFormatNumber, defineCustomElementAtomicFormatUnit, defineCustomElementAtomicGeneratedAnswer, defineCustomElementAtomicGeneratedAnswerFeedbackModal, defineCustomElementAtomicHtml, defineCustomElementAtomicInsightInterface, defineCustomElementAtomicInsightUserActionsTimeline, defineCustomElementAtomicInsightUserActionsToggle, defineCustomElementAtomicLoadMoreResults, defineCustomElementAtomicNoResults, defineCustomElementAtomicNotifications, defineCustomElementAtomicNumericFacet, defineCustomElementAtomicNumericRange, defineCustomElementAtomicPopover, defineCustomElementAtomicQueryError, defineCustomElementAtomicQuickview, defineCustomElementAtomicQuickviewModal, defineCustomElementAtomicRatingFacet, defineCustomElementAtomicRatingRangeFacet, defineCustomElementAtomicRecsError, defineCustomElementAtomicRecsInterface, defineCustomElementAtomicRecsList, defineCustomElementAtomicRecsResult, defineCustomElementAtomicRecsResultTemplate, defineCustomElementAtomicRefineModal, defineCustomElementAtomicRefineToggle, defineCustomElementAtomicResult, defineCustomElementAtomicResultBadge, defineCustomElementAtomicResultChildren, defineCustomElementAtomicResultChildrenTemplate, defineCustomElementAtomicResultDate, defineCustomElementAtomicResultFieldsList, defineCustomElementAtomicResultHtml, defineCustomElementAtomicResultIcon, defineCustomElementAtomicResultImage, defineCustomElementAtomicResultLink, defineCustomElementAtomicResultList, defineCustomElementAtomicResultLocalizedText, defineCustomElementAtomicResultMultiValueText, defineCustomElementAtomicResultNumber, defineCustomElementAtomicResultPrintableUri, defineCustomElementAtomicResultRating, defineCustomElementAtomicResultTemplate, defineCustomElementAtomicResultText, defineCustomElementAtomicResultTimespan, defineCustomElementAtomicSearchBox, defineCustomElementAtomicSearchBoxInstantResults, defineCustomElementAtomicSearchBoxQuerySuggestions, defineCustomElementAtomicSegmentedFacet, defineCustomElementAtomicSegmentedFacetScrollable, defineCustomElementAtomicSmartSnippet, defineCustomElementAtomicSmartSnippetFeedbackModal, defineCustomElementAtomicSmartSnippetSuggestions, defineCustomElementAtomicSortDropdown, defineCustomElementAtomicSortExpression, defineCustomElementAtomicTab, defineCustomElementAtomicTabManager, defineCustomElementAtomicTableElement, defineCustomElementAtomicText, defineCustomElementAtomicTimeframe, defineCustomElementAtomicTimeframeFacet} from '@coveo/atomic/components';
 //#endregion Lit Declarations
