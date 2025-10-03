@@ -33,22 +33,22 @@ export class ValidatePropsController<TProps extends Record<string, unknown>>
   }
 
   hostConnected() {
-    this._validateProps();
+    this._validateProps(this.getProps());
   }
 
   hostUpdate() {
-    this._validateProps();
-  }
-
-  private _validateProps() {
     const props = this.getProps();
+
     if (!this._propsHaveChanged(props)) {
       return;
     }
 
     // @ts-expect-error: we need to clear the error.
     this.host.error = undefined;
+    this._validateProps(props);
+  }
 
+  private _validateProps(props: TProps) {
     try {
       this.schema.validate(props);
     } catch (error) {
@@ -59,10 +59,6 @@ export class ValidatePropsController<TProps extends Record<string, unknown>>
   }
 
   private _propsHaveChanged(newProps: TProps) {
-    if (!this.previousProps) {
-      return true;
-    }
-
     return !deepEqual(newProps, this.previousProps);
   }
 }
