@@ -30,11 +30,11 @@ import type {CommerceBindings} from '../atomic-commerce-interface/atomic-commerc
  * @part container - The container of the component.
  * @part showing-results - The summary displaying which products are shown and how many are available.
  * @part highlight - The highlighted number of products displayed and number of products available.
- * @part progress-bar - The progress bar displaying a percentage of results shown over the total number of products available.
+ * @part progress-bar - The progress bar displaying a percentage of products shown over the total number of products available.
  * @part load-more-results-button - The "Load more products" button.
  *
- * @cssprop --atomic-more-results-progress-bar-color-from - Color of the start of the gradient for the load more results progress bar.
- * @cssprop --atomic-more-results-progress-bar-color-to - Color of the end of the gradient for the load more results progress bar.
+ * @cssprop --atomic-more-results-progress-bar-color-from - Color of the start of the gradient for the load more products progress bar.
+ * @cssprop --atomic-more-results-progress-bar-color-to - Color of the end of the gradient for the load more products progress bar.
  */
 @customElement('atomic-commerce-load-more-products')
 @bindings()

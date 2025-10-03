@@ -40,7 +40,7 @@ import {getSortByLabel, renderCommerceSortOption} from '../sort/option';
  * @part title - The title of the modal.
  * @part close-button - The button in the header that closes the modal.
  * @part close-icon - The icon of the close button.
- * @part footer-content - The wrapper around the content inside the footer of the modal, containing the button to view results.
+ * @part footer-content - The wrapper around the content inside the footer of the modal, containing the button to view the products.
  * @part footer-button - The button in the footer that closes the modal.
  * @part footer-button-text - The text inside the button in the footer that closes the modal.
  * @part footer-button-count - The count inside the button in the footer that closes the modal.
@@ -222,6 +222,7 @@ export class AtomicCommerceRefineModal
     return html`${renderRefineModal({
       props: {
         i18n: this.bindings.i18n,
+        i18nFooterButtonTextKey: 'view-products',
         host: this,
         isOpen: this.isOpen,
         onClose: () => {
