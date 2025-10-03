@@ -1,5 +1,6 @@
-import {Element, Component} from '@stencil/core';
-import {hideEmptySection} from '../../../../utils/item-section-utils';
+import {css, LitElement} from 'lit';
+import {customElement} from 'lit/decorators.js';
+import {ItemSectionMixin} from '@/src/mixins/item-section-mixin';
 
 /**
  * This section allows the information seeker to perform an action on an item without having to view its details.
@@ -11,14 +12,18 @@ import {hideEmptySection} from '../../../../utils/item-section-utils';
  * * Is a wrapping flexbox with a gap.
  * * May appear over, next to, or beneath the visual section.
  */
-@Component({
-  tag: 'atomic-result-section-actions',
-  shadow: false,
-})
-export class AtomicResultSectionActions {
-  @Element() private host!: HTMLElement;
+@customElement('atomic-result-section-actions')
+export class AtomicResultSectionActions extends ItemSectionMixin(
+  LitElement,
+  css`
+@reference '../../common/template-system/sections/sections.css';
+atomic-result-section-actions {
+  @apply section-actions;
+}`
+) {}
 
-  public componentDidRender() {
-    hideEmptySection(this.host);
+declare global {
+  interface HTMLElementTagNameMap {
+    'atomic-result-section-actions': AtomicResultSectionActions;
   }
 }

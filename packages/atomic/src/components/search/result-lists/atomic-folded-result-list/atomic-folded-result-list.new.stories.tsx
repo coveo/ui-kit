@@ -128,7 +128,9 @@ const preprocessRequest = (response: any) => {
 };
 
 const {decorator, play} = wrapInSearchInterface({
-  preprocessRequest,
+  config: {
+    preprocessRequest,
+  },
 });
 const {events, args, argTypes, template} = getStorybookHelpers(
   'atomic-folded-result-list',
@@ -169,7 +171,9 @@ const preprocessRequestNoChildrenResult = (request: any) => {
 };
 
 const {play: noResultChildrenPlay} = wrapInSearchInterface({
-  preprocessRequest: preprocessRequestNoChildrenResult,
+  config: {
+    preprocessRequest: preprocessRequestNoChildrenResult,
+  },
 });
 
 export const WithNoResultChildren: Story = {
