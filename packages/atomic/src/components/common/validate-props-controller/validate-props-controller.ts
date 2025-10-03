@@ -33,21 +33,14 @@ export class ValidatePropsController<TProps extends Record<string, unknown>>
   }
 
   hostConnected() {
-    this.validateProps();
+    this._validateProps();
   }
 
   hostUpdate() {
-    this.validateProps();
+    this._validateProps();
   }
 
-  /**
-   * Validates the current props against the Bueno schema.
-   *
-   * If the props have not changed since the last validation, it does nothing.
-   * If validation fails, it sets the `error` property on the host.
-   * If validation succeeds, it clears any existing error on the host.
-   */
-  validateProps() {
+  private _validateProps() {
     const props = this.getProps();
     if (!this._propsHaveChanged(props)) {
       return;
@@ -66,6 +59,10 @@ export class ValidatePropsController<TProps extends Record<string, unknown>>
   }
 
   private _propsHaveChanged(newProps: TProps) {
+    if (!this.previousProps) {
+      return true;
+    }
+
     return !deepEqual(newProps, this.previousProps);
   }
 }
