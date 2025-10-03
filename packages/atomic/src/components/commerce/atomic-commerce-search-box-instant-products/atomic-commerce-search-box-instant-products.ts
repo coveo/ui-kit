@@ -41,7 +41,7 @@ export type AriaLabelGenerator = (
  *
  * This component is not supported on mobile.
  *
- * @part instant-results-show-all-button - The 'See all results' button.
+ * @part instant-results-show-all-button - The 'See all products' button.
  * @part instant-results-item - The individual instant product item.
  *
  * @slot default - The default slot where the instant products are rendered.
@@ -63,7 +63,7 @@ export class AtomicCommerceSearchBoxInstantProducts
   @state() private templateHasError = false;
 
   /**
-   * Sets a rendering function to bypass the standard HTML template mechanism for rendering results.
+   * Sets a rendering function to bypass the standard HTML template mechanism for rendering products.
    * You can use this function while working with web frameworks that don't use plain HTML syntax, e.g., React, Angular or Vue.
    *
    * Do not use this method if you integrate Atomic in a plain HTML deployment.
@@ -148,6 +148,7 @@ export class AtomicCommerceSearchBoxInstantProducts
         });
         const partialItem = getPartialInstantItemElement(
           this.bindings.i18n,
+          'instant-products-suggestion-label',
           this.ariaLabelGenerator?.(this.bindings, product) || product.ec_name!,
           product.permanentid
         );
@@ -189,11 +190,15 @@ export class AtomicCommerceSearchBoxInstantProducts
     );
     if (elements.length) {
       const partialItem = getPartialInstantItemShowAllElement(
-        this.bindings.i18n
+        this.bindings.i18n,
+        'show-all-products'
       );
       elements.push({
         ...partialItem,
-        content: renderInstantItemShowAllButton({i18n: this.bindings.i18n}),
+        content: renderInstantItemShowAllButton({
+          i18n: this.bindings.i18n,
+          i18nKey: 'show-all-products',
+        }),
         onSelect: () => {
           this.bindings.clearSuggestions();
           this.bindings.searchBoxController.updateText(

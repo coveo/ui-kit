@@ -232,7 +232,7 @@ describe('atomic-commerce-did-you-mean', () => {
 
     it('should display modified query in showing-results-for section', () => {
       expect(showingResultsFor).toHaveTextContent(
-        'Showing results for modified query'
+        'Showing products for modified query'
       );
       expect(
         showingResultsFor?.querySelector('b[part="highlight"]')

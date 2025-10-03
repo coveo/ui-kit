@@ -8,9 +8,11 @@ import '../atomic-modal/atomic-modal';
 import {renderButton} from '../button';
 import '../atomic-icon/atomic-icon';
 
+type RefineModalFooterButtonTextKey = 'view-products' | 'view-results';
 interface RefineModalProps {
   host: HTMLElement;
   i18n: i18n;
+  i18nFooterButtonTextKey: RefineModalFooterButtonTextKey;
   onClose(): void;
   title: string;
   numberOfItems: number;
@@ -64,7 +66,7 @@ export const renderRefineModal: FunctionalComponentWithChildren<
             },
           })(html`
             <span part="footer-button-text" class="mr-1 truncate">
-              ${props.i18n.t('view-results')}
+              ${props.i18n.t(props.i18nFooterButtonTextKey)}
             </span>
             <span part="footer-button-count">
               ${localizedString({

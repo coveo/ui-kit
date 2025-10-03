@@ -48,7 +48,7 @@ import facetCommonStyles from '../../common/facets/facet-common.tw.css';
 import facetSearchStyles from '../../common/facets/facet-search/facet-search.tw.css';
 
 /**
- * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (e.g., number of occurrences).
+ * A facet is a list of values for a certain field occurring in the products.
  * An `atomic-commerce-category-facet` displays a facet of values in a browsable, hierarchical fashion.
  *
  * @part facet - The wrapper for the entire facet.
@@ -64,9 +64,9 @@ import facetSearchStyles from '../../common/facets/facet-search/facet-search.tw.
  * @part more-matches - The label indicating there are more matches for the current facet search query.
  * @part no-matches - The label indicating there are no matches for the current facet search query.
  * @part matches-query - The highlighted query inside the matches labels.
- * @part search-results - The search results container.
- * @part search-result - The search result value.
- * @part search-result-path - The search result path.
+ * @part search-results - The facet search results container.
+ * @part search-result - The facet search result value.
+ * @part search-result-path - The facet search result path.
  * @part search-highlight - The highlighted query inside the facet values.
  *
  * @part parents - The container surrounding the whole hierarchy of values.
