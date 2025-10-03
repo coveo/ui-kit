@@ -444,6 +444,8 @@ export class AtomicCategoryFacet implements InitializableComponent {
         <CategoryFacetTreeValueContainer>
           <CategoryFacetAllCategoryButton
             i18n={this.bindings.i18n}
+            facetId={this.facet.state.facetId}
+            field={this.field}
             onClick={() => {
               this.focusTargets.activeValueFocus.focusAfterSearch();
               this.facet.deselectAll();
@@ -565,6 +567,7 @@ export class AtomicCategoryFacet implements InitializableComponent {
           <CategoryFacetSearchValue
             value={value}
             field={this.field}
+            facetId={this.facetId}
             i18n={this.bindings.i18n}
             searchQuery={this.facetState.facetSearch.query}
             onClick={() => {

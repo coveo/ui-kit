@@ -3,11 +3,12 @@ import {i18n} from 'i18next';
 import {getFieldValueCaption} from '../../../../utils/field-utils';
 import {Button} from '../../stencil-button';
 import {FacetValueLabelHighlight} from '../facet-value-label-highlight/stencil-facet-value-label-highlight';
-
+import { getAllCategoriesLocalizedLabel } from './stencil-all-categories-localized-label';
 interface CategoryFacetSearchValueProps {
   value: {count: number; path: string[]; displayValue: string};
   i18n: i18n;
   field: string;
+  facetId?: string;
   onClick(): void;
   searchQuery: string;
 }
@@ -18,10 +19,10 @@ const PATH_MAX_LENGTH = 3;
 
 export const CategoryFacetSearchValue: FunctionalComponent<
   CategoryFacetSearchValueProps
-> = ({value, field, i18n, onClick, searchQuery}) => {
+> = ({value, facetId, field, i18n, onClick, searchQuery}) => {
   const count = value.count.toLocaleString(i18n.language);
   const inLabel = i18n.t('in');
-  const allCategories = i18n.t('all-categories');
+  const allCategories = getAllCategoriesLocalizedLabel({facetId, field, i18n});
   const localizedPath = value.path.length
     ? value.path.map((value) => getFieldValueCaption(field, value, i18n))
     : [allCategories];
