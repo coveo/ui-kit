@@ -15,6 +15,7 @@ import {deepEqual} from '@/src/utils/compare-utils';
 export class ValidatePropsController<TProps extends Record<string, unknown>>
   implements ReactiveController
 {
+  private currentProps?: TProps;
   private previousProps?: TProps;
 
   /**
@@ -33,32 +34,29 @@ export class ValidatePropsController<TProps extends Record<string, unknown>>
   }
 
   hostConnected() {
-    this._validateProps(this.getProps());
+    this.currentProps = this.getProps();
+    this._validateProps();
   }
 
   hostUpdate() {
-    const props = this.getProps();
+    this.currentProps = this.getProps();
 
-    if (!this._propsHaveChanged(props)) {
+    if (deepEqual(this.currentProps, this.previousProps)) {
       return;
     }
 
     // @ts-expect-error: we need to clear the error.
     this.host.error = undefined;
-    this._validateProps(props);
+    this._validateProps();
   }
 
-  private _validateProps(props: TProps) {
+  private _validateProps() {
     try {
-      this.schema.validate(props);
+      this.schema.validate(this.currentProps);
     } catch (error) {
       this.host.error = error as Error;
     } finally {
-      this.previousProps = props;
+      this.previousProps = this.currentProps;
     }
-  }
-
-  private _propsHaveChanged(newProps: TProps) {
-    return !deepEqual(newProps, this.previousProps);
   }
 }
