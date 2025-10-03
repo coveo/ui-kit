@@ -1,6 +1,44 @@
 import type {HighlightKeywords} from '../atomic-quickview-modal/atomic-quickview-modal';
 import type {QuickviewWordHighlight} from '../quickview-word-highlight/quickview-word-highlight';
 
+export const buildQuickviewPreviewBar = (
+  words: Record<string, QuickviewWordHighlight>,
+  highlightKeywords: HighlightKeywords,
+  iframe?: HTMLIFrameElement
+) => {
+  if (!iframe) {
+    return;
+  }
+
+  const documentWriter = iframe.contentDocument;
+  if (!documentWriter) {
+    return;
+  }
+
+  const bar = buildPreviewBar(documentWriter);
+  if (highlightKeywords.highlightNone) {
+    bar.remove();
+    return;
+  }
+
+  const docHeight = documentWriter.body.scrollHeight;
+  Object.values(words).forEach((word) => {
+    word.elements.forEach((wordElement) => {
+      const previewUnit = buildPreviewUnit(
+        documentWriter,
+        word,
+        wordElement,
+        docHeight,
+        highlightKeywords
+      );
+
+      bar.appendChild(previewUnit);
+    });
+  });
+
+  documentWriter.body.appendChild(bar);
+};
+
 const buildPreviewBar = (documentWriter: Document) => {
   const previewBarId = 'CoveoPreviewBar';
   const bar =
@@ -40,39 +78,4 @@ const buildPreviewUnit = (
   previewUnit.style.border = `1px solid ${word.previewBorderColor}`;
   previewUnit.style.backgroundColor = word.color;
   return previewUnit;
-};
-
-export const buildQuickviewPreviewBar = (
-  words: Record<string, QuickviewWordHighlight>,
-  highlightKeywords: HighlightKeywords,
-  iframe?: HTMLIFrameElement
-) => {
-  if (!iframe) {
-    return;
-  }
-  const documentWriter = iframe.contentDocument;
-  if (!documentWriter) {
-    return;
-  }
-  const bar = buildPreviewBar(documentWriter);
-  if (highlightKeywords.highlightNone) {
-    bar.remove();
-    return;
-  }
-  const docHeight = documentWriter.body.scrollHeight;
-
-  Object.values(words).forEach((word) => {
-    word.elements.forEach((wordElement) => {
-      const previewUnit = buildPreviewUnit(
-        documentWriter,
-        word,
-        wordElement,
-        docHeight,
-        highlightKeywords
-      );
-
-      bar.appendChild(previewUnit);
-    });
-  });
-  documentWriter.body.appendChild(bar);
 };
