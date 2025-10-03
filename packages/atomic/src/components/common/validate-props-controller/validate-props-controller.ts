@@ -31,7 +31,6 @@ export class ValidatePropsController<TProps extends Record<string, unknown>>
     const props = this.getProps();
 
     if (this._propsHaveChanged(props)) {
-      // TODO - KIT-5099: Remove the ts-expect-error once we have a cleaner way to handle errors.
       // @ts-expect-error: we need to clear the error.
       this.host.error = undefined;
       this._validateProps(props);
