@@ -37,7 +37,7 @@ import {CollectionGuard} from '../../../common/result-children/collection-guard'
 import {ResultChildrenGuard} from '../../../common/result-children/guard';
 import {ShowHideButton} from '../../../common/result-children/show-hide-button';
 import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
-import {ResultContext} from '../../result-template-components/result-template-decorators';
+import {ResultContext} from '@/src/components/search/result-template-component-utils/context/stencil-result-template-decorators';
 
 const childTemplateComponent = 'atomic-result-children-template';
 const componentTag = 'atomic-result-children';

@@ -1,6 +1,6 @@
 import {Result, ResultTemplatesHelpers} from '@coveo/headless';
 import {Component, Element, Prop, h} from '@stencil/core';
-import {ResultContext} from '../result-template-decorators';
+import {ResultContext} from '@/src/components/search/result-template-component-utils/context/stencil-result-template-decorators';
 
 /**
  * The `atomic-result-badge` element renders a badge to highlight special features of a result.

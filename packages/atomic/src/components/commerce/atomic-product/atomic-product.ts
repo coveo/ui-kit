@@ -14,15 +14,15 @@ import {
   ItemLayout,
 } from '@/src/components/common/layout/display-options';
 import {booleanConverter} from '@/src/converters/boolean-converter';
-import type {
-  InteractiveProductContextEvent,
-  ProductContextEvent,
-} from '@/src/decorators/commerce/product-template-decorators';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
 import {ChildrenUpdateCompleteMixin} from '@/src/mixins/children-update-complete-mixin';
 import {parentNodeToString} from '@/src/utils/dom-utils';
 import type {CommerceStore} from '../atomic-commerce-interface/store';
 import type {CommerceRecommendationStore} from '../atomic-commerce-recommendation-interface/store';
+import type {
+  InteractiveProductContextEvent,
+  ProductContextEvent,
+} from '../product-template-component-utils/context/product-context-controller';
 import styles from './atomic-product.tw.css';
 
 /**

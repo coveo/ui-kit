@@ -6,10 +6,10 @@ import {
 } from '@coveo/headless/commerce';
 import {css, html, LitElement} from 'lit';
 import {customElement, state} from 'lit/decorators.js';
+import {createProductContextController} from '@/src/components/commerce/product-template-component-utils/context/product-context-controller.js';
 import {bindStateToController} from '@/src/decorators/bind-state.js';
 import {bindingGuard} from '@/src/decorators/binding-guard.js';
 import {bindings} from '@/src/decorators/bindings.js';
-import {createProductContextController} from '@/src/decorators/commerce/product-template-decorators.js';
 import {errorGuard} from '@/src/decorators/error-guard.js';
 import type {InitializableComponent} from '@/src/decorators/types.js';
 import {multiClassMap, tw} from '@/src/directives/multi-class-map.js';

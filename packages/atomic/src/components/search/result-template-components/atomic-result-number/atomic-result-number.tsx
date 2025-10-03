@@ -6,7 +6,7 @@ import {
   NumberFormatter,
 } from '../../../common/formats/format-common';
 import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
-import {ResultContext} from '../result-template-decorators';
+import {ResultContext} from '@/src/components/search/result-template-component-utils/context/stencil-result-template-decorators';
 
 /**
  * The `atomic-result-number` component renders the value of a number result field.

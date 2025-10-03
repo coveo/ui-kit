@@ -18,7 +18,7 @@ import {
 } from '../../../../utils/stencil-accessibility-utils';
 import {Button} from '../../../common/stencil-button';
 import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
-import {ResultContext} from '../result-template-decorators';
+import {ResultContext} from '@/src/components/search/result-template-component-utils/context/stencil-result-template-decorators';
 
 /**
  * The `atomic-quickview` component renders a button which the end user can click to open a modal box containing a preview
