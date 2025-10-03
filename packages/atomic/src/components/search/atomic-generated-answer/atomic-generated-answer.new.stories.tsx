@@ -28,16 +28,18 @@ const layoutDecorator: Decorator = (story) => html`
 `;
 
 const {decorator, afterEach} = wrapInSearchInterface({
-  accessToken: 'xx564559b1-0045-48e1-953c-3addd1ee4457',
-  organizationId: 'searchuisamples',
-  search: {
-    pipeline: 'genqatest',
-  },
-  preprocessRequest: (request) => {
-    const parsed = JSON.parse(request.body as string);
-    parsed.q = 'how to resolve netflix connection with tivo';
-    request.body = JSON.stringify(parsed);
-    return request;
+  config: {
+    accessToken: 'xx564559b1-0045-48e1-953c-3addd1ee4457',
+    organizationId: 'searchuisamples',
+    search: {
+      pipeline: 'genqatest',
+    },
+    preprocessRequest: (request) => {
+      const parsed = JSON.parse(request.body as string);
+      parsed.q = 'how to resolve netflix connection with tivo';
+      request.body = JSON.stringify(parsed);
+      return request;
+    },
   },
 });
 

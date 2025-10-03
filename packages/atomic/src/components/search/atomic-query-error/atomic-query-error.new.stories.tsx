@@ -4,7 +4,9 @@ import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
 
 const {decorator, afterEach} = wrapInSearchInterface({
-  accessToken: 'invalidtoken',
+  config: {
+    accessToken: 'invalidtoken',
+  },
 });
 const {events, args, argTypes, template} = getStorybookHelpers(
   'atomic-query-error',
