@@ -24,7 +24,6 @@ export class AtomicRelevanceInspector
 {
   @state() public bindings!: Bindings;
   @state() public error!: Error;
-
   @state() public open = false;
 
   initialize = () => {
