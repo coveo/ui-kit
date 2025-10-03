@@ -40,8 +40,8 @@ describe('ValidatePropsController', () => {
     );
   });
 
-  describe('when host is connected', () => {
-    it('should validate props', () => {
+  describe('when the host is connected to the DOM', () => {
+    it('should validate the props', () => {
       const schemaSpy = vi.spyOn(mockSchema, 'validate');
       const props = {name: 'valid'};
       mockGetProps.mockReturnValue(props);
@@ -51,7 +51,7 @@ describe('ValidatePropsController', () => {
       expect(schemaSpy).toHaveBeenCalledExactlyOnceWith(props);
     });
 
-    it('should set error on element when schema validation throws', () => {
+    it('should set the error on the host when validation throws', () => {
       mockGetProps.mockReturnValue({name: 'invalid-value'});
 
       controller.hostConnected();
@@ -60,7 +60,7 @@ describe('ValidatePropsController', () => {
       expect(mockElement.error).toBeInstanceOf(Error);
     });
 
-    it('should not set error on element when schema validation does not throw', () => {
+    it('should not set the error on the host when validation does not throw', () => {
       mockGetProps.mockReturnValue({name: 'valid'});
 
       controller.hostConnected();
@@ -69,8 +69,8 @@ describe('ValidatePropsController', () => {
     });
   });
 
-  describe('when host updates', () => {
-    it('should verify whether props have changed with #deepEqual', () => {
+  describe('when the host is about to update', () => {
+    it('should verify whether the props have changed with #deepEqual', () => {
       const props = {name: 'valid'};
       mockGetProps.mockReturnValue(props);
 
@@ -87,7 +87,7 @@ describe('ValidatePropsController', () => {
       );
     });
 
-    it('should not revalidate when props have not changed', () => {
+    it('should not revalidate when the props have not changed', () => {
       const schemaSpy = vi.spyOn(mockSchema, 'validate');
       const props = {name: 'valid'};
       mockGetProps.mockReturnValue(props);
@@ -102,50 +102,67 @@ describe('ValidatePropsController', () => {
       expect(schemaSpy).not.toHaveBeenCalled();
     });
 
-    it('should revalidate when props have changed', () => {
-      const schemaSpy = vi.spyOn(mockSchema, 'validate');
-      const props = {name: 'valid'};
-      mockGetProps.mockReturnValue(props);
+    describe('when the props have changed', () => {
+      it('should clear any existing error on the host', () => {
+        mockGetProps.mockReturnValue({name: 'invalid'});
 
-      controller.hostConnected();
-      expect(schemaSpy).toHaveBeenCalledExactlyOnceWith(props);
+        controller.hostConnected();
 
-      schemaSpy.mockClear();
+        expect(mockElement.error).toBeInstanceOf(Error);
 
-      const newProps = {name: 'also-valid'};
-      mockGetProps.mockReturnValue(newProps);
+        const newProps = {name: 'valid'};
+        mockGetProps.mockReturnValue(newProps);
 
-      controller.hostUpdate();
+        controller.hostUpdate();
 
-      expect(schemaSpy).toHaveBeenCalledExactlyOnceWith(newProps);
-    });
+        expect(mockElement.error).toBeUndefined();
+      });
 
-    it('should set error on element when schema revalidation throws', () => {
-      mockGetProps.mockReturnValue({name: 'valid'});
+      it('should revalidate the props', () => {
+        const schemaSpy = vi.spyOn(mockSchema, 'validate');
+        const props = {name: 'valid'};
+        mockGetProps.mockReturnValue(props);
 
-      controller.hostConnected();
+        controller.hostConnected();
+        expect(schemaSpy).toHaveBeenCalledExactlyOnceWith(props);
 
-      expect(mockElement.error).toBeUndefined();
+        schemaSpy.mockClear();
 
-      mockGetProps.mockReturnValue({name: 'invalid'});
+        const newProps = {name: 'also-valid'};
+        mockGetProps.mockReturnValue(newProps);
 
-      controller.hostUpdate();
+        controller.hostUpdate();
 
-      expect(mockElement.error).toBeInstanceOf(Error);
-    });
+        expect(schemaSpy).toHaveBeenCalledExactlyOnceWith(newProps);
+      });
 
-    it('should not set error on element when schema revalidation does not throw', () => {
-      mockGetProps.mockReturnValue({name: 'valid'});
+      it('should set the error on the host when revalidation throws', () => {
+        mockGetProps.mockReturnValue({name: 'valid'});
 
-      controller.hostConnected();
+        controller.hostConnected();
 
-      expect(mockElement.error).toBeUndefined();
+        expect(mockElement.error).toBeUndefined();
 
-      mockGetProps.mockReturnValue({name: 'also-valid'});
+        mockGetProps.mockReturnValue({name: 'invalid'});
 
-      controller.hostUpdate();
+        controller.hostUpdate();
 
-      expect(mockElement.error).toBeUndefined();
+        expect(mockElement.error).toBeInstanceOf(Error);
+      });
+
+      it('should not set the error on the host when revalidation does not throw', () => {
+        mockGetProps.mockReturnValue({name: 'valid'});
+
+        controller.hostConnected();
+
+        expect(mockElement.error).toBeUndefined();
+
+        mockGetProps.mockReturnValue({name: 'also-valid'});
+
+        controller.hostUpdate();
+
+        expect(mockElement.error).toBeUndefined();
+      });
     });
   });
 });
