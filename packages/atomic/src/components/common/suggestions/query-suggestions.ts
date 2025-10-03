@@ -55,8 +55,7 @@ export const renderQuerySuggestion = ({
             .innerHTML=${suggestion.highlightedValue}
           ></span>`
           : html`<span part="query-suggestion-text" class="line-clamp-2 break-all"
-            >${suggestion.rawValue}</span
-          >`
+            >${suggestion.rawValue}</span>`
       }
     </div>
   `;
