@@ -1,10 +1,17 @@
-import {getNamedSlotFromHost} from '../../../utils/slot-utils';
+import {getNamedSlotContent} from '../../../utils/slot-utils';
 
+// TODO: should warn!!!
 export function getAttributesFromLinkSlot(host: HTMLElement, slotName: string) {
-  const attributesSlot = getNamedSlotFromHost(host, slotName);
-  if (!attributesSlot) {
+  const namedSlots = getNamedSlotContent(host, slotName);
+  if (namedSlots.length === 0) {
     return;
   }
+
+  if (namedSlots.length > 1) {
+    console.warn(`Element should only have 1 slot named "${slotName}".`, host);
+  }
+
+  const attributesSlot = namedSlots[0];
 
   if (attributesSlot.nodeName !== 'A') {
     console.warn(

@@ -7,7 +7,7 @@ import {
   InitializeBindings,
 } from '../../../../utils/initialization-utils';
 import {buildStringTemplateFromResult} from '../../../../utils/result-utils';
-import {getDefaultSlotFromHost} from '../../../../utils/slot-utils';
+import {getDefaultSlotContent} from '../../../../utils/slot-utils';
 import {AnyUnfoldedItem} from '../../../common/item-list/unfolded-item';
 import {getAttributesFromLinkSlot} from '../../../common/item-link/attributes-slot';
 import {LinkWithItemAnalytics} from '../../../common/item-link/stencil-item-link';
@@ -66,7 +66,7 @@ export class AtomicResultLink implements InitializableComponent {
 
   public connectedCallback() {
     const slotName = 'attributes';
-    this.hasDefaultSlot = !!getDefaultSlotFromHost(this.host);
+    this.hasDefaultSlot =  getDefaultSlotContent(this.host).length > 0;
     this.linkAttributes = getAttributesFromLinkSlot(this.host, slotName);
   }
 

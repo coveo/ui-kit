@@ -9,48 +9,27 @@ function hasLightDOMSlotContent(
   );
 }
 
-export function getNamedSlotFromHost(host: HTMLElement, slotName: string) {
+export function getNamedSlotContent(
+  host: HTMLElement,
+  slotName: string
+): Element[] {
   if (hasLightDOMSlotContent(host)) {
     const targetLightDomSlotContent = host.slotContent[slotName];
 
-    if (!targetLightDomSlotContent) {
-      return;
-    }
-
-    return targetLightDomSlotContent.find(
-      (node: ChildNode) => node instanceof Element
+    return (
+      targetLightDomSlotContent?.filter(
+        (node: ChildNode): node is Element => node instanceof Element
+      ) || []
     );
   }
 
   const children = Array.from(host.children);
-  const targetSlot = children.filter(
-    (child) => child.getAttribute('slot') === slotName
-  );
-
-  if (!targetSlot.length) {
-    return;
-  }
-
-  if (targetSlot.length > 1) {
-    console.warn(`Element should only have 1 slot named "${slotName}".`, host);
-  }
-
-  return targetSlot[0];
+  return children.filter((child) => child.getAttribute('slot') === slotName);
 }
 
-export function getDefaultSlotFromHost(host: HTMLElement) {
+export function getDefaultSlotContent(host: HTMLElement): Element[] {
   const children = Array.from(host.children);
-  const defaultSlot = children.filter(
+  return children.filter(
     (child) => !child.hasAttribute('slot') || child.getAttribute('slot') === ''
   );
-
-  if (!defaultSlot.length) {
-    return;
-  }
-
-  if (defaultSlot.length > 1) {
-    console.warn('Element should only have 1 default slot.', host);
-  }
-
-  return defaultSlot[0];
 }
