@@ -1,7 +1,7 @@
 /* eslint-disable */
 /* tslint:disable */
 /* auto-generated react proxies */
-import { createReactComponent } from './react-component-lib/index.js';
+import { createReactComponent } from './react-component-lib';
 
 import type { JSX } from '@coveo/atomic';
 
