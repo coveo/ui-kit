@@ -32,8 +32,8 @@ import facetCommonStyles from '../../common/facets/facet-common.tw.css';
 import type {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface';
 
 /**
- * A facet is a list of values for a certain field occurring in the results.
- * An `atomic-commerce-timeframe-facet` displays a facet of the results for the current query as date intervals.
+ * A facet is a list of values for a certain field occurring in the products.
+ * An `atomic-commerce-timeframe-facet` displays a facet of the products for the current query as date intervals.
  *
  * @part facet - The wrapper for the entire facet.
  * @part label-button - The header button to expand/collapse the facet.
@@ -43,7 +43,7 @@ import type {CommerceBindings} from '../atomic-commerce-interface/atomic-commerc
  * @part values - The container for the facet values list.
  * @part value-link - A facet value button.
  * @part value-link-selected - A selected facet value button.
- * @part value-count - The result count for a facet value.
+ * @part value-count - The product count for a facet value.
  * @part value-label - The label text of a facet value.
  * @part input-label - The label for date input fields.
  * @part input-start - The start date input field.

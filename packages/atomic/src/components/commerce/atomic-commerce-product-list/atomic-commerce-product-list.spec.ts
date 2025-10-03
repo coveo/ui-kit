@@ -201,6 +201,7 @@ describe('atomic-commerce-product-list', () => {
     let element: any;
 
     beforeEach(async () => {
+      vi.spyOn(console, 'warn').mockImplementation(() => {});
       element = await setupElement();
       element.isEveryProductReady = true;
     });
