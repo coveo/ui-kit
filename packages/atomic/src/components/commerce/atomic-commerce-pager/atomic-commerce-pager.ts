@@ -7,8 +7,9 @@ import {
   type ProductListing,
   type Search,
 } from '@coveo/headless/commerce';
-import {html, LitElement} from 'lit';
+import {html, LitElement, type PropertyValues} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
+import {keyed} from 'lit/directives/keyed.js';
 import {when} from 'lit/directives/when.js';
 import {bindStateToController} from '@/src/decorators/bind-state';
 import {bindingGuard} from '@/src/decorators/binding-guard';
@@ -31,7 +32,7 @@ import type {CommerceBindings} from '../atomic-commerce-interface/atomic-commerc
 import {getCurrentPagesRange} from './commerce-pager-utils';
 
 /**
- * The `atomic-commerce-pager` component enables users to navigate through paginated product results.
+ * The `atomic-commerce-pager` component enables users to navigate through paginated products.
  *
  * @part buttons - The list of all buttons rendered by the component.
  * @part page-buttons - The list of all page buttons.
@@ -51,6 +52,12 @@ export class AtomicCommercePager
   extends LitElement
   implements InitializableComponent<CommerceBindings>
 {
+  private static propsSchema = new Schema({
+    numberOfPages: new NumberValue({min: 0}),
+  });
+
+  private radioGroupName = randomID('atomic-commerce-pager-');
+
   @state()
   bindings!: CommerceBindings;
   @state() error!: Error;
@@ -102,15 +109,11 @@ export class AtomicCommercePager
     });
   }
 
-  private validateProps() {
-    new Schema({
-      numberOfPages: new NumberValue({min: 0}),
-    }).validate({
-      numberOfPages: this.numberOfPages,
-    });
+  willUpdate(changedProperties: PropertyValues) {
+    if (changedProperties.has('numberOfPages')) {
+      this.validateProps();
+    }
   }
-
-  private radioGroupName = randomID('atomic-commerce-pager-');
 
   @bindingGuard()
   @errorGuard()
@@ -144,24 +147,27 @@ export class AtomicCommercePager
             i18n: this.bindings.i18n,
           },
         })(
-          html`${pagesRange.map((pageNumber) =>
-            renderPagerPageButton({
-              props: {
-                isSelected: pageNumber === this.pagerState.page,
-                ariaLabel: this.bindings.i18n.t('page-number', {
-                  pageNumber: pageNumber + 1,
-                }),
-                onChecked: async () => {
-                  this.pager.selectPage(pageNumber);
-                  await this.focusOnFirstResultAndScrollToTop();
+          html`${pagesRange.map((pageNumber, index) =>
+            keyed(
+              `page-${pageNumber}-${index}`,
+              renderPagerPageButton({
+                props: {
+                  isSelected: pageNumber === this.pagerState.page,
+                  ariaLabel: this.bindings.i18n.t('page-number', {
+                    pageNumber: pageNumber + 1,
+                  }),
+                  onChecked: async () => {
+                    this.pager.selectPage(pageNumber);
+                    await this.focusOnFirstResultAndScrollToTop();
+                  },
+                  page: pageNumber,
+                  groupName: this.radioGroupName,
+                  text: (pageNumber + 1).toLocaleString(
+                    this.bindings.i18n.language
+                  ),
                 },
-                page: pageNumber,
-                groupName: this.radioGroupName,
-                text: (pageNumber + 1).toLocaleString(
-                  this.bindings.i18n.language
-                ),
-              },
-            })
+              })
+            )
           )}`
         )}
         ${renderPagerNextButton({
@@ -177,6 +183,17 @@ export class AtomicCommercePager
         })}
       `)}`
     )}`;
+  }
+
+  private validateProps() {
+    try {
+      AtomicCommercePager.propsSchema.validate({
+        numberOfPages: this.numberOfPages,
+      });
+    } catch (error) {
+      this.error = error as Error;
+      return;
+    }
   }
 
   private async focusOnFirstResultAndScrollToTop() {

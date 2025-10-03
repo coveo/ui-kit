@@ -3,6 +3,7 @@ import {
   AtomicComponentError as LitAtomicComponentError,
   AtomicIcon as LitAtomicIcon,
   AtomicLayoutSection as LitAtomicLayoutSection,
+  AtomicPager as LitAtomicPager,
   AtomicQuerySummary as LitAtomicQuerySummary,
   AtomicResultsPerPage as LitAtomicResultsPerPage,
   AtomicSearchBoxQuerySuggestions as LitAtomicSearchBoxQuerySuggestions,
@@ -34,6 +35,12 @@ export const AtomicLayoutSection = createComponent({
   tagName: 'atomic-layout-section',
   react: React,
   elementClass: LitAtomicLayoutSection,
+});
+
+export const AtomicPager = createComponent({
+  tagName: 'atomic-pager',
+  react: React,
+  elementClass: LitAtomicPager,
 });
 
 export const AtomicQuerySummary = createComponent({

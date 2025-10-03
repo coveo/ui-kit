@@ -18,6 +18,7 @@ describe('#renderTriggerCorrection', () => {
       html`${renderTriggerCorrection({
         props: {
           i18n,
+          i18nKeyShowingItemsFor: 'showing-products-for',
           correctedQuery: 'corrected query',
           originalQuery: 'original query',
           onClick: () => {},
@@ -50,7 +51,7 @@ describe('#renderTriggerCorrection', () => {
     const {paragraphShowingResultsFor} = await renderComponent();
 
     expect(paragraphShowingResultsFor).toHaveTextContent(
-      'Showing results for corrected query'
+      'Showing products for corrected query'
     );
   });
 
