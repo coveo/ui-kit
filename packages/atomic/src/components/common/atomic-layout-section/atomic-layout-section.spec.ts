@@ -4,7 +4,7 @@ import {html} from 'lit';
 import {ifDefined} from 'lit/directives/if-defined.js';
 import {fixture} from '@/vitest-utils/testing-helpers/fixture';
 import type {AtomicLayoutSection} from './atomic-layout-section';
-import type {Section} from './sections';
+import type {Section} from './atomic-layout-section-utils';
 
 describe('atomic-layout-section', () => {
   let element: AtomicLayoutSection;
