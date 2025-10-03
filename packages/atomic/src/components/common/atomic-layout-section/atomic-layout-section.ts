@@ -1,7 +1,7 @@
 import {LitElement} from 'lit';
 import {customElement, property} from 'lit/decorators.js';
 import {LightDomMixin} from '@/src/mixins/light-dom';
-import type {Section} from './sections';
+import type {Section} from './atomic-layout-section-utils';
 
 /**
  * The `atomic-layout-section` lets you identify various sections for the related `atomic-search-layout` or `atomic-commerce-layout` component.

@@ -1,7 +1,7 @@
 import {
   findSection,
   sectionSelector,
-} from '../../common/atomic-layout-section/sections';
+} from '../../common/atomic-layout-section/atomic-layout-section-utils';
 
 const tabsSelector = 'atomic-insight-tabs';
 const refineModalSelector = 'atomic-insight-refine-modal';
