@@ -20,7 +20,7 @@ describe('atomic-relevance-inspector', () => {
     },
   });
 
-  const dblClick = new MouseEvent('dblclick', {
+  const altDblClick = new MouseEvent('dblclick', {
     altKey: true,
     bubbles: true,
   });
@@ -47,23 +47,20 @@ describe('atomic-relevance-inspector', () => {
       get openButton() {
         return page.getByRole('button', {name: 'Open'});
       },
-      parts: (el: AtomicRelevanceInspector) => {
-        const modal = el.shadowRoot?.querySelector(
-          'atomic-modal'
-        ) as AtomicModal;
-        return {modal};
+      get modal() {
+        return element.shadowRoot?.querySelector('atomic-modal') as AtomicModal;
       },
     };
   };
 
-  it('should renders an atomic-modal with `isOpen` set to false', async () => {
-    const {element, parts} = await renderRelevanceInspector();
-    expect(parts(element).modal).toBeTruthy();
-    expect(parts(element).modal?.isOpen).toBe(false);
+  it('should render an atomic-modal with isOpen set to false', async () => {
+    const {modal} = await renderRelevanceInspector();
+    expect(modal).toBeTruthy();
+    expect(modal?.isOpen).toBe(false);
   });
 
   describe('#initialize', () => {
-    it('should add an event listener for `dblclick` on the interface element', async () => {
+    it('should add a "dblclick" event listener on the search interface element', async () => {
       const {element} = await renderRelevanceInspector();
       const addEventListenerSpy = vi.spyOn(
         element.bindings.interfaceElement,
@@ -92,57 +89,53 @@ describe('atomic-relevance-inspector', () => {
     });
   });
 
-  describe('when alt+double-click is performed', () => {
+  describe('when alt+double-clicking on the interface element', () => {
     let element: AtomicRelevanceInspector;
-    let parts: (el: AtomicRelevanceInspector) => {
-      modal: AtomicModal | null | undefined;
-    };
+    let modal: AtomicModal;
 
     beforeEach(async () => {
       const result = await renderRelevanceInspector();
       element = result.element;
-      parts = result.parts;
-      element.bindings.interfaceElement.dispatchEvent(dblClick);
+      modal = result.modal;
+      element.bindings.interfaceElement.dispatchEvent(altDblClick);
       await element.updateComplete;
     });
-    it('opens the modal', async () => {
-      expect(parts(element).modal?.isOpen).toBe(true);
+    it('should open the modal', async () => {
+      expect(modal.isOpen).toBe(true);
       expect(page.getByText('Open the relevance inspector')).toBeVisible();
     });
 
-    it('toggles (closes) the modal on a second alt+double-click', async () => {
-      expect(parts(element).modal?.isOpen).toBe(true);
-      element.bindings.interfaceElement.dispatchEvent(dblClick);
+    it('should close the modal on following alt + double-click', async () => {
+      expect(modal.isOpen).toBe(true);
+      element.bindings.interfaceElement.dispatchEvent(altDblClick);
       await element.updateComplete;
-      expect(parts(element).modal?.isOpen).toBe(false);
+      expect(modal.isOpen).toBe(false);
     });
   });
 
   describe('when the modal is open', () => {
     let element: AtomicRelevanceInspector;
-    let parts: (el: AtomicRelevanceInspector) => {
-      modal: AtomicModal | null | undefined;
-    };
+    let modal: AtomicModal;
     let ignoreButton: ReturnType<typeof page.getByRole>;
     let openButton: ReturnType<typeof page.getByRole>;
 
     beforeEach(async () => {
       const result = await renderRelevanceInspector();
       element = result.element;
-      parts = result.parts;
+      modal = result.modal;
       ignoreButton = result.ignoreButton;
       openButton = result.openButton;
       element.open = true;
       await element.updateComplete;
     });
 
-    it('closes when clicking Ignore button', async () => {
+    it('should close the modal when clicking the "ignore" button', async () => {
       await ignoreButton.click();
       await element.updateComplete;
-      expect(parts(element).modal?.isOpen).toBe(false);
+      expect(modal.isOpen).toBe(false);
     });
 
-    it('opens a new tab with the adminHref and closes when clicking Open button', async () => {
+    it('should close the modal and open a new tab with the adminHref when clicking the "open" button', async () => {
       const openSpy = vi.spyOn(window, 'open').mockImplementation(() => null);
       await openButton.click();
       expect(openSpy).toHaveBeenCalledWith(
@@ -150,7 +143,7 @@ describe('atomic-relevance-inspector', () => {
         '_blank'
       );
       await element.updateComplete;
-      expect(parts(element).modal?.isOpen).toBe(false);
+      expect(modal.isOpen).toBe(false);
     });
   });
 });
