@@ -169,7 +169,9 @@ const preprocessRequestNoChildrenResult = (request: any) => {
 };
 
 const {afterEach: noResultChildrenPlay} = wrapInSearchInterface({
-  preprocessRequest: preprocessRequestNoChildrenResult,
+  config: {
+    preprocessRequest: preprocessRequestNoChildrenResult,
+  },
 });
 
 export const WithNoResultChildren: Story = {

@@ -16,11 +16,13 @@ const {events, args, argTypes, template} = getStorybookHelpers(
 );
 
 const {decorator, afterEach} = wrapInSearchInterface({
-  preprocessRequest: (r) => {
-    const parsed = JSON.parse(r.body as string);
-    parsed.aq = '@filetype==("YouTubeVideo")';
-    r.body = JSON.stringify(parsed);
-    return r;
+  config: {
+    preprocessRequest: (r) => {
+      const parsed = JSON.parse(r.body as string);
+      parsed.aq = '@filetype==("YouTubeVideo")';
+      r.body = JSON.stringify(parsed);
+      return r;
+    },
   },
 });
 

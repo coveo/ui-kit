@@ -18,8 +18,9 @@ const {decorator: resultDecorator, engineConfig} = wrapInResult({
     return r;
   },
 });
-const {decorator: searchInterfaceDecorator, afterEach} =
-  wrapInSearchInterface(engineConfig);
+const {decorator: searchInterfaceDecorator, afterEach} = wrapInSearchInterface({
+  config: engineConfig,
+});
 
 const meta: Meta = {
   component: 'atomic-result-number',
