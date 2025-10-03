@@ -2,10 +2,13 @@ import {FunctionalComponent, h} from '@stencil/core';
 import {i18n} from 'i18next';
 import LeftArrow from '../../../../images/arrow-left-rounded.svg';
 import {Button} from '../../stencil-button';
+import { getAllCategoriesLocalizedLabel } from './stencil-all-categories-localized-label';
 
 interface CategoryFacetAllCategoryButtonProps {
   i18n: i18n;
   onClick(): void;
+  facetId?: string;
+  field: string;
 }
 
 /**
@@ -13,8 +16,8 @@ interface CategoryFacetAllCategoryButtonProps {
  */
 export const CategoryFacetAllCategoryButton: FunctionalComponent<
   CategoryFacetAllCategoryButtonProps
-> = ({i18n, onClick}) => {
-  const allCategories = i18n.t('all-categories');
+> = ({i18n, onClick, facetId, field}) => {
+  const allCategories = getAllCategoriesLocalizedLabel({facetId, field, i18n});
   return (
     <Button
       style="text-neutral"

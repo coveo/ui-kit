@@ -1,9 +1,12 @@
 import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
 import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
-import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
+import {
+  playExecuteFirstSearch,
+  wrapInSearchInterface,
+} from '@/storybook-utils/search/search-interface-wrapper';
 
-const {decorator, afterEach} = wrapInSearchInterface();
+const {decorator, afterEach} = wrapInSearchInterface({}, true);
 const {events, args, argTypes, template} = getStorybookHelpers(
   'atomic-category-facet',
   {excludeCategories: ['methods']}
@@ -22,8 +25,10 @@ const meta: Meta = {
     },
   },
   argTypes,
-
-  afterEach,
+  afterEach: async (context) => {
+    await afterEach(context);
+    await playExecuteFirstSearch(context);
+  },
   args: {
     ...args,
     numberOfValues: 8,
@@ -49,5 +54,52 @@ export const LowFacetValues: Story = {
     field: 'geographicalhierarchy',
     'number-of-values': 2,
     'with-search': true,
+  },
+};
+
+export const WithCustomAllCategoriesLabelById: Story = {
+  name: 'With custom all categories label, using facetId',
+  tags: ['!dev'],
+  afterEach: async (context) => {
+    await afterEach(context);
+    const searchInterface =
+      context.canvasElement.querySelector<HTMLAtomicSearchInterfaceElement>(
+        'atomic-search-interface'
+      );
+    searchInterface.i18n.addResourceBundle('en', 'translation', {
+      'all-categories-my-awesome-facet': 'My Awesome Facet',
+    });
+    await playExecuteFirstSearch(context);
+  },
+  args: {
+    field: 'geographicalhierarchy',
+    label: 'Geographical Hierarchy',
+    'facet-id': 'my-awesome-facet',
+    'with-search': true,
+    'number-of-values': 5,
+    'sort-criteria': 'occurrences',
+  },
+};
+
+export const WithCustomAllCategoriesLabelByField: Story = {
+  tags: ['!dev'],
+  name: 'With custom all categories label, using field',
+  afterEach: async (context) => {
+    await afterEach(context);
+    const searchInterface =
+      context.canvasElement.querySelector<HTMLAtomicSearchInterfaceElement>(
+        'atomic-search-interface'
+      );
+    searchInterface.i18n.addResourceBundle('en', 'translation', {
+      'all-categories-geographicalhierarchy': 'My Awesome Facet',
+    });
+    await playExecuteFirstSearch(context);
+  },
+  args: {
+    field: 'geographicalhierarchy',
+    label: 'Geographical Hierarchy',
+    'with-search': true,
+    'number-of-values': 5,
+    'sort-criteria': 'occurrences',
   },
 };

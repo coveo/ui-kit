@@ -273,6 +273,8 @@ export class AtomicCommerceCategoryFacet
               this.focusTargets.activeValueFocus.focusAfterSearch();
               this.facet.deselectAll();
             },
+            facetId: this.facetState.facetId,
+            field: this.facet.state.field,
           },
         })}
         ${renderCategoryFacetParentAsTreeContainer({
