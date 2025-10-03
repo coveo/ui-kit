@@ -12,8 +12,6 @@ export default {
   'atomic-layout-section': async () =>
     await import('./atomic-layout-section/atomic-layout-section.js'),
   'atomic-modal': async () => await import('./atomic-modal/atomic-modal.js'),
-  'validate-props-controller': async () =>
-    await import('./validate-props-controller/validate-props-controller.js'),
 } as Record<string, () => Promise<unknown>>;
 
 export type * from './index.js';
