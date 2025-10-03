@@ -35,5 +35,5 @@
 .user-action__details {
   font-weight: var(--lwc-fontWeightRegular, 400);
   color: var(--lwc-colorTextPlaceholder, #747474);
-  font-size: 10px;
+  font-size: var(--slds-g-font-scale-neg-2, 10px);
 }

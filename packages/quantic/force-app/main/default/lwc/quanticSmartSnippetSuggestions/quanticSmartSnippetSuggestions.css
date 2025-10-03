@@ -1,5 +1,5 @@
 .smart-snippet-suggestions__title {
-  font-weight: 700;
+  font-weight: var(--slds-g-font-weight-7, 700);
 }
 
 .accordion__summary-heading {

@@ -20,7 +20,7 @@
   right: -.5rem;
   width: 1.25rem;
   height: 1.25rem;
-  font-weight: bold;
+  font-weight: var(--slds-g-font-weight-7, bold);
   z-index: 1;
 }
 

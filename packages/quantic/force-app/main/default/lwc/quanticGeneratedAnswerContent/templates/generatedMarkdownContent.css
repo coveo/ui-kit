@@ -29,19 +29,19 @@
 }
 
 div[data-level='answer-heading-1'] {
-  font-size: 1.75rem;
+  font-size: var(--slds-g-font-scale-5, 1.75rem);
 }
 div[data-level='answer-heading-2'] {
-  font-size: 1.25rem;
+  font-size: var(--slds-g-font-scale-3, 1.25rem);
 }
 div[data-level='answer-heading-3'] {
-  font-size: 1rem;
+  font-size: var(--slds-g-font-scale-2, 1rem);
 }
 
 div[data-level] {
   margin-top: var(--lwc-spacingMedium, 1rem);
   margin-bottom: var(--lwc-spacingXSmall, 0.5rem);
-  font-weight: bold;
+  font-weight: var(--slds-g-font-weight-7, bold);
 }
 
 li,

@@ -1,4 +1,4 @@
 .smart-snippet__source-uri {
   color: #1a1b1e;
-  font-weight: 400;
+  font-weight: var(--slds-g-font-weight-4, 400);
 }
