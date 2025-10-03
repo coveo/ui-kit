@@ -152,6 +152,7 @@ export class AtomicSearchBoxInstantResults
       (result: Result) => {
         const partialItem = getPartialInstantItemElement(
           this.bindings.i18n,
+          'instant-results-suggestion-label',
           this.ariaLabelGenerator?.(this.bindings, result) || result.title,
           result.uniqueId
         );
@@ -197,11 +198,15 @@ export class AtomicSearchBoxInstantResults
     );
     if (elements.length) {
       const partialItem = getPartialInstantItemShowAllElement(
-        this.bindings.i18n
+        this.bindings.i18n,
+        'show-all-results'
       );
       elements.push({
         ...partialItem,
-        content: renderInstantItemShowAllButton({i18n: this.bindings.i18n}),
+        content: renderInstantItemShowAllButton({
+          i18n: this.bindings.i18n,
+          i18nKey: 'show-all-results',
+        }),
         onSelect: () => {
           this.bindings.clearSuggestions();
           this.bindings.searchBoxController.updateText(
