@@ -2,7 +2,7 @@ import {ResultTemplatesHelpers} from '@coveo/headless';
 import {
   makeMatchConditions,
   makeDefinedConditions,
-} from './result-template-common';
+} from './stencil-result-template-common';
 
 describe('result-template-common', () => {
   const testField = 'field';
