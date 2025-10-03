@@ -119,16 +119,17 @@ export class AtomicCommerceBreadbox
   constructor() {
     super();
 
-    new ValidatePropsController(this, {
-      getProps: () => ({pathLimit: this.pathLimit}),
-      schema: new Schema({
+    new ValidatePropsController(
+      this,
+      () => ({pathLimit: this.pathLimit}),
+      new Schema({
         pathLimit: new NumberValue({
           default: 3,
           min: 1,
           required: false,
         }),
-      }),
-    });
+      })
+    );
   }
 
   public initialize() {

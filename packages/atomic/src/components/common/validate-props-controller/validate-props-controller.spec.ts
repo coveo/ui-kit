@@ -28,10 +28,11 @@ describe('ValidatePropsController', () => {
 
     vi.spyOn(mockElement, 'addController');
 
-    controller = new ValidatePropsController(mockElement, {
-      getProps: mockGetProps,
-      schema: mockSchema,
-    });
+    controller = new ValidatePropsController(
+      mockElement,
+      mockGetProps,
+      mockSchema
+    );
   });
 
   it('should register itself as a controller with the host', () => {
