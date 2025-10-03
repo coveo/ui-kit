@@ -6,7 +6,7 @@ import {ItemSectionMixin} from '@/src/mixins/item-section-mixin';
  * This section is meant to render child products, available when using the <atomic-product-children> component.
  *
  * Behavior:
- * * Shows children at the bottom of the result, indented and wrapped in a border.
+ * * Shows children at the bottom of the product, indented and wrapped in a border.
  *
  * @slot default - The child products to display.
  */

@@ -329,4 +329,12 @@ describe('atomic-commerce-pager', () => {
     await expect.element(parts.previousButtonIcon!).toBeInTheDocument();
     await expect.element(parts.nextButtonIcon!).toBeInTheDocument();
   }, 1e60);
+
+  test('should use keyed directive for page buttons', async () => {
+    await renderPager();
+
+    await expect.element(locators.page1).toHaveAttribute('value', '1');
+    await expect.element(locators.page2).toHaveAttribute('value', '2');
+    await expect.element(locators.page3).toHaveAttribute('value', '3');
+  });
 });
