@@ -396,6 +396,7 @@ export class AtomicCommerceCategoryFacet
           props: {
             value,
             field: this.facetState.field,
+            facetId: this.facetState.facetId,
             searchQuery: this.facetState.facetSearch.query,
             i18n: this.bindings.i18n,
             onClick: () => {

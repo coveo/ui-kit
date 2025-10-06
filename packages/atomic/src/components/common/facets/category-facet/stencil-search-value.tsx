@@ -3,7 +3,7 @@ import {i18n} from 'i18next';
 import {getFieldValueCaption} from '../../../../utils/field-utils';
 import {Button} from '../../stencil-button';
 import {FacetValueLabelHighlight} from '../facet-value-label-highlight/stencil-facet-value-label-highlight';
-import { getAllCategoriesLocalizedLabel } from './stencil-all-categories-localized-label';
+import { getAllCategoriesLocalizedLabel } from './all-categories-localized-label';
 interface CategoryFacetSearchValueProps {
   value: {count: number; path: string[]; displayValue: string};
   i18n: i18n;

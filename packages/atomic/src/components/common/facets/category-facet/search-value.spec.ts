@@ -1,12 +1,14 @@
 import {html} from 'lit';
-import {beforeAll, describe, expect, it, vi} from 'vitest';
+import {beforeAll, describe, expect, it, type MockedFunction, vi} from 'vitest';
 import {renderFunctionFixture} from '@/vitest-utils/testing-helpers/fixture';
 import {createTestI18n} from '@/vitest-utils/testing-helpers/i18n-utils';
+import {getAllCategoriesLocalizedLabel} from './all-categories-localized-label';
 import {
   type CategoryFacetSearchValueProps,
   renderCategoryFacetSearchValue,
 } from './search-value';
 
+vi.mock('./all-categories-localized-label', {spy: true});
 vi.mock('../../../../utils/field-utils', () => ({
   getFieldValueCaption: vi.fn(
     (field: string, value: string) => `${field}: ${value}`
@@ -15,9 +17,15 @@ vi.mock('../../../../utils/field-utils', () => ({
 
 describe('#renderCategoryFacetSearchValue', () => {
   let i18n: Awaited<ReturnType<typeof createTestI18n>>;
+  let mockedGetAllCategoriesLocalizedLabel: MockedFunction<
+    typeof getAllCategoriesLocalizedLabel
+  >;
 
   beforeAll(async () => {
     i18n = await createTestI18n();
+    mockedGetAllCategoriesLocalizedLabel = vi
+      .mocked(getAllCategoriesLocalizedLabel)
+      .mockReturnValue('All Categories');
   });
 
   const renderComponent = async (
@@ -179,5 +187,16 @@ describe('#renderCategoryFacetSearchValue', () => {
     const {pathContainer} = await renderComponent();
 
     expect(pathContainer).toBeInTheDocument();
+  });
+
+  it('calls getAllCategoriesLocalizedLabel with the correct parameters', async () => {
+    const facetId = 'my-facet-id';
+    const field = 'my-field';
+    await renderComponent({facetId, field});
+    expect(mockedGetAllCategoriesLocalizedLabel).toHaveBeenCalledWith({
+      facetId,
+      field,
+      i18n,
+    });
   });
 });

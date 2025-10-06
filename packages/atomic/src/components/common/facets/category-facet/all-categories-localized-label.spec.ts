@@ -48,9 +48,9 @@ describe('#getAllCategoriesLocalizedLabel', () => {
 
   describe('when facetId is not provided', () => {
     it('should return the localized label for field when the key exists', () => {
-      const field = 'productCategory';
+      const field = 'product_category';
       i18n.addResourceBundle('en', 'translation', {
-        'all-categories-productCategory': 'All Product Categories',
+        'all-categories-product_category': 'All Product Categories',
       });
 
       const result = getAllCategoriesLocalizedLabel({field, i18n});
@@ -59,33 +59,33 @@ describe('#getAllCategoriesLocalizedLabel', () => {
     });
 
     it('should call i18n.exists with the field key', () => {
-      const field = 'productCategory';
+      const field = 'product_category';
       const existsSpy = vi.spyOn(i18n, 'exists');
 
       getAllCategoriesLocalizedLabel({field, i18n});
 
-      expect(existsSpy).toHaveBeenCalledWith('all-categories-productCategory');
+      expect(existsSpy).toHaveBeenCalledWith('all-categories-product_category');
     });
 
     it('should call i18n.t with the field key when it exists', () => {
-      const field = 'productCategory';
+      const field = 'product_category';
       i18n.addResourceBundle('en', 'translation', {
-        'all-categories-productCategory': 'All Product Categories',
+        'all-categories-product_category': 'All Product Categories',
       });
       const tSpy = vi.spyOn(i18n, 't');
 
       getAllCategoriesLocalizedLabel({field, i18n});
 
-      expect(tSpy).toHaveBeenCalledWith('all-categories-productCategory');
+      expect(tSpy).toHaveBeenCalledWith('all-categories-product_category');
     });
   });
 
   describe('when facetId is provided but does not exist', () => {
     it('should fall back to the field key when it exists', () => {
       const facetId = 'nonExistentFacet';
-      const field = 'productCategory';
+      const field = 'product_category';
       i18n.addResourceBundle('en', 'translation', {
-        'all-categories-productCategory': 'All Product Categories',
+        'all-categories-product_category': 'All Product Categories',
       });
 
       const result = getAllCategoriesLocalizedLabel({facetId, field, i18n});
@@ -95,7 +95,7 @@ describe('#getAllCategoriesLocalizedLabel', () => {
 
     it('should check both facetId and field keys in order', () => {
       const facetId = 'nonExistentFacet';
-      const field = 'productCategory';
+      const field = 'product_category';
       const existsSpy = vi.spyOn(i18n, 'exists');
 
       getAllCategoriesLocalizedLabel({facetId, field, i18n});
@@ -106,7 +106,7 @@ describe('#getAllCategoriesLocalizedLabel', () => {
       );
       expect(existsSpy).toHaveBeenNthCalledWith(
         2,
-        'all-categories-productCategory'
+        'all-categories-product_category'
       );
     });
   });

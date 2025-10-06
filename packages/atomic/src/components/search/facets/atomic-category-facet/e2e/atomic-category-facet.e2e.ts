@@ -29,6 +29,7 @@ test.describe('when clicking facet search "More matches for"', () => {
   });
 });
 
+//TODO KIT-4944: Replace by Unit tests
 [
   {
     name: 'With custom all categories label, using facetId',
