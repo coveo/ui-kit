@@ -43,7 +43,7 @@ describe('ItemLayoutController', () => {
 
     mockOptions = {
       elementPrefix: 'atomic-result',
-      hasCustomRenderFunction: vi.fn().mockReturnValue(false),
+      renderingFunction: vi.fn().mockReturnValue(undefined),
       content: vi.fn().mockReturnValue(mockContent),
       layoutConfig: vi.fn().mockReturnValue({
         display: 'list',
@@ -85,10 +85,6 @@ describe('ItemLayoutController', () => {
     it('should initialize with provided parameters', () => {
       expect(mockElement.addController).toHaveBeenCalledWith(controller);
     });
-
-    it('should store the options', () => {
-      expect(mockOptions.elementPrefix).toBe('atomic-result');
-    });
   });
 
   describe('#hostConnected', () => {
@@ -116,23 +112,13 @@ describe('ItemLayoutController', () => {
     });
   });
 
-  describe('#hostDisconnected', () => {
-    beforeEach(() => {
-      controller = new ItemLayoutController(mockElement, mockOptions);
-    });
-
-    it('should not throw when called', () => {
-      expect(() => controller.hostDisconnected()).not.toThrow();
-    });
-  });
-
   describe('#hostUpdated', () => {
     beforeEach(() => {
       controller = new ItemLayoutController(mockElement, mockOptions);
       controller.hostConnected();
     });
 
-    it('should handle layout updates when not in custom render mode', () => {
+    it('should apply layout classes when not in custom render mode', () => {
       const mockRoot = document.createElement('div');
       mockRoot.className = 'result-root';
       const element1 = document.createElement('atomic-result-title');
@@ -150,26 +136,29 @@ describe('ItemLayoutController', () => {
       expect(element2.classList.contains('display-list')).toBe(true);
     });
 
-    it('should not apply layout classes when custom render mode with disabled classes', () => {
-      mockOptions.hasCustomRenderFunction = vi.fn().mockReturnValue(true);
-      mockOptions.disableLayoutClassesForCustomRender = vi
+    it('should use MutationObserver when custom render function is present', () => {
+      const mockRenderFunction = vi.fn();
+      mockOptions.renderingFunction = vi
         .fn()
-        .mockReturnValue(true);
+        .mockReturnValue(mockRenderFunction);
       controller = new ItemLayoutController(mockElement, mockOptions);
       controller.hostConnected();
 
       const mockRoot = document.createElement('div');
       mockRoot.className = 'result-root';
-      const element1 = document.createElement('atomic-result-title');
-      mockRoot.appendChild(element1);
 
       vi.spyOn(mockElement.shadowRoot!, 'querySelector').mockReturnValue(
         mockRoot
       );
 
+      const observeSpy = vi.spyOn(MutationObserver.prototype, 'observe');
+
       controller.hostUpdated();
 
-      expect(element1.classList.contains('display-list')).toBe(false);
+      expect(observeSpy).toHaveBeenCalledWith(mockRoot, {
+        childList: true,
+        subtree: true,
+      });
     });
   });
 

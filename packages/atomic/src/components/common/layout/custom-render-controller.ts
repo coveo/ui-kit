@@ -1,6 +1,6 @@
 import type {LitElement, ReactiveController, ReactiveControllerHost} from 'lit';
-import type {ItemRenderingFunction} from '../item-list/item-list-common';
-import type {AnyItem} from '../item-list/unfolded-item';
+import type {ItemRenderingFunction} from '@/src/components/common/item-list/item-list-common';
+import type {AnyItem} from '@/src/components/common/item-list/unfolded-item';
 
 export interface CustomRenderHost extends ReactiveControllerHost {
   shadowRoot?: ShadowRoot | null;
@@ -38,13 +38,12 @@ export class CustomRenderController implements ReactiveController {
   }
 
   hostUpdated(): void {
-    if (this.shouldExecuteRenderFunction()) {
-      this.executeRenderFunction();
-    }
+    this.executeRenderFunction();
   }
 
-  hostDisconnected(): void {}
-
+  /**
+   * Indicates whether a custom rendering function is provided.
+   */
   public get hasCustomRenderFunction(): boolean {
     return this.options.renderingFunction() !== undefined;
   }
@@ -54,17 +53,20 @@ export class CustomRenderController implements ReactiveController {
   }
 
   private shouldExecuteRenderFunction(): boolean {
-    const renderingFunction = this.options.renderingFunction();
     const rootElementRef = this.options.rootElementRef();
 
     return !!(
-      renderingFunction &&
+      this.hasCustomRenderFunction &&
       rootElementRef &&
       !this.hasExecutedRenderFunction
     );
   }
 
   private executeRenderFunction(): void {
+    if (!this.shouldExecuteRenderFunction()) {
+      return;
+    }
+
     const renderingFunction = this.options.renderingFunction();
     const itemData = this.options.itemData();
     const rootElementRef = this.options.rootElementRef();

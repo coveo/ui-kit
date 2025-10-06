@@ -1,8 +1,8 @@
 import {LitElement} from 'lit';
 import {customElement} from 'lit/decorators.js';
 import {beforeEach, describe, expect, it, vi} from 'vitest';
+import type {AnyItem} from '@/src/components/common/item-list/unfolded-item';
 import {buildFakeProduct} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/product';
-import type {AnyItem} from '../item-list/unfolded-item';
 import {
   CustomRenderController,
   type CustomRenderHost,
@@ -56,18 +56,6 @@ describe('CustomRenderController', () => {
     it('should initialize with provided parameters', () => {
       expect(mockElement.addController).toHaveBeenCalledWith(controller);
     });
-
-    it('should set default values for optional options', () => {
-      const minimalOptions = {
-        renderingFunction: vi.fn().mockReturnValue(mockRenderingFunction),
-        itemData: vi.fn().mockReturnValue(mockItemData),
-        rootElementRef: vi.fn().mockReturnValue(mockRootElement),
-      };
-
-      controller = new CustomRenderController(mockElement, minimalOptions);
-
-      expect(mockElement.addController).toHaveBeenCalledWith(controller);
-    });
   });
 
   describe('#hostConnected', () => {
@@ -75,16 +63,7 @@ describe('CustomRenderController', () => {
       controller = new CustomRenderController(mockElement, mockOptions);
     });
 
-    it('should not throw when called', () => {
-      expect(() => controller.hostConnected()).not.toThrow();
-    });
-
-    it('should call render function execution after connection', () => {
-      controller.hostUpdated();
-      expect(mockRenderingFunction).toHaveBeenCalledTimes(1);
-    });
-
-    it('should reset state when #hostConnected is called', () => {
+    it('should reset state', () => {
       controller.hostUpdated();
       expect(mockRenderingFunction).toHaveBeenCalledTimes(1);
 

@@ -1,4 +1,6 @@
 import type {LitElement, ReactiveController, ReactiveControllerHost} from 'lit';
+import type {ItemRenderingFunction} from '@/src/components/common/item-list/item-list-common';
+import type {AnyItem} from '@/src/components/common/item-list/unfolded-item';
 import {
   type ItemDisplayDensity,
   type ItemDisplayImageSize,
@@ -18,8 +20,7 @@ export interface LayoutDisplayConfig {
 
 export interface ItemLayoutOptions {
   elementPrefix: string;
-  hasCustomRenderFunction: () => boolean;
-  disableLayoutClassesForCustomRender?: () => boolean;
+  renderingFunction: () => ItemRenderingFunction<AnyItem> | undefined;
   content: () => ParentNode | undefined;
   layoutConfig: () => LayoutDisplayConfig;
   itemClasses: () => string;
@@ -36,7 +37,6 @@ export class ItemLayoutController implements ReactiveController {
   constructor(host: ItemLayoutHost & LitElement, options: ItemLayoutOptions) {
     this.host = host;
     this.options = {
-      disableLayoutClassesForCustomRender: () => false,
       ...options,
     };
     host.addController(this);
@@ -47,17 +47,8 @@ export class ItemLayoutController implements ReactiveController {
   }
 
   hostUpdated(): void {
-    if (
-      !(
-        this.options.hasCustomRenderFunction() &&
-        this.options.disableLayoutClassesForCustomRender()
-      )
-    ) {
-      this.applyLayoutClasses();
-    }
+    this.applyLayoutClasses();
   }
-
-  hostDisconnected(): void {}
 
   /**
    * Gets the current layout instance
@@ -109,7 +100,7 @@ export class ItemLayoutController implements ReactiveController {
       return;
     }
 
-    if (this.options.hasCustomRenderFunction()) {
+    if (this.hasCustomRenderFunction()) {
       this.observeAndApplyClasses(root, classes);
     } else {
       this.addClassesToElements(root, classes);
@@ -134,6 +125,10 @@ export class ItemLayoutController implements ReactiveController {
       config.density,
       config.imageSize
     );
+  }
+
+  private hasCustomRenderFunction(): boolean {
+    return this.options.renderingFunction() !== undefined;
   }
 
   private addClassesToElements(root: Element, classes: string[]): void {

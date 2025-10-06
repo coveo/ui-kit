@@ -2,6 +2,8 @@ import type {InteractiveProduct, Product} from '@coveo/headless/commerce';
 import {type CSSResultGroup, html, LitElement} from 'lit';
 import {customElement, property} from 'lit/decorators.js';
 import {ref} from 'lit/directives/ref.js';
+import type {CommerceStore} from '@/src/components/commerce/atomic-commerce-interface/store';
+import type {CommerceRecommendationStore} from '@/src/components/commerce/atomic-commerce-recommendation-interface/store';
 import type {DisplayConfig} from '@/src/components/common/item-list/context/item-display-config-context-controller';
 import {
   type ItemRenderingFunction,
@@ -22,8 +24,6 @@ import type {
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
 import {ChildrenUpdateCompleteMixin} from '@/src/mixins/children-update-complete-mixin';
 import {parentNodeToString} from '@/src/utils/dom-utils';
-import type {CommerceStore} from '../atomic-commerce-interface/store';
-import type {CommerceRecommendationStore} from '../atomic-commerce-recommendation-interface/store';
 import styles from './atomic-product.tw.css';
 
 /**
@@ -122,18 +122,6 @@ export class AtomicProduct extends ChildrenUpdateCompleteMixin(LitElement) {
   @property({type: Object, attribute: 'rendering-function'})
   renderingFunction: ItemRenderingFunction;
 
-  /**
-   * Whether to automatically apply layout classes to rendered elements when using a custom rendering function.
-   * When disabled, the component will automatically find and apply layout classes to child elements with 'atomic-product-' prefixes.
-   *
-   * @internal
-   */
-  @property({
-    attribute: 'disable-layout-classes-for-custom-render',
-    type: Boolean,
-  })
-  disableLayoutClassesForCustomRender = false;
-
   public resolveProduct = (event: ProductContextEvent) => {
     event.preventDefault();
     event.stopPropagation();
@@ -197,10 +185,7 @@ export class AtomicProduct extends ChildrenUpdateCompleteMixin(LitElement) {
 
     this.itemLayoutController = new ItemLayoutController(this, {
       elementPrefix: 'atomic-product',
-      hasCustomRenderFunction: () =>
-        this.customRenderController.hasCustomRenderFunction,
-      disableLayoutClassesForCustomRender: () =>
-        this.disableLayoutClassesForCustomRender,
+      renderingFunction: () => this.renderingFunction,
       content: () => this.content,
       layoutConfig: () => ({
         display: this.display,
@@ -308,10 +293,6 @@ export class AtomicProduct extends ChildrenUpdateCompleteMixin(LitElement) {
     if (this.loadingFlag && this.store) {
       this.store.unsetLoadingFlag(this.loadingFlag);
     }
-  }
-
-  public updated(_changedProperties: Map<string, unknown>) {
-    // Custom rendering is now handled by the ItemLayoutController
   }
 }
 
