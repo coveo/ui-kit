@@ -156,7 +156,7 @@ atomic-commerce-layout {
       justify-content: center;
     }
 
-    /* Approx. width of pager & results per page */
+    /* Approx. width of pager & products per page */
     @media only screen and (min-width: 50rem) {
       flex-direction: row;
     }
