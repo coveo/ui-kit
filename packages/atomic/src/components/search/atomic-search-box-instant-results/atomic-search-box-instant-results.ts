@@ -173,7 +173,6 @@ export class AtomicSearchBoxInstantResults
             .density=${this.density}
             .imageSize=${this.imageSize}
             .content=${this.itemTemplateProvider.getTemplateContent(result)}
-            .stopPropagation=${false}
             .renderingFunction=${this.itemRenderingFunction}
           ></atomic-result>`
         )}`;
