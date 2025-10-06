@@ -24,7 +24,7 @@ describe('atomic-search-box-instant-results', () => {
     return element;
   };
 
-  describe('when outside of a search box', () => {
+  describe('when its parent is not an atomic-search-box', () => {
     let consoleErrorSpy: MockInstance;
     let element: AtomicSearchBoxInstantResults;
 
