@@ -1,36 +1,27 @@
 import {ArrayValue, NumberValue} from '@coveo/bueno';
-import {deselectAllBreadcrumbs} from '../../features/breadcrumb/breadcrumb-actions.js';
-import {queryReducer as query} from '../../features/query/query-slice.js';
+import {deselectAllBreadcrumbs} from '../../../features/breadcrumb/breadcrumb-actions.js';
+import {queryReducer as query} from '../../../features/query/query-slice.js';
 import {
   clearRecentQueries,
   registerRecentQueries,
-} from '../../features/recent-queries/recent-queries-actions.js';
-import {
-  logClearRecentQueries,
-  logRecentQueryClick,
-} from '../../features/recent-queries/recent-queries-analytics-actions.js';
-import {recentQueriesReducer as recentQueries} from '../../features/recent-queries/recent-queries-slice.js';
-import {
-  executeSearch,
-  prepareForSearchWithQuery,
-} from '../../features/search/search-actions.js';
-import {searchReducer as search} from '../../features/search/search-slice.js';
+} from '../../../features/recent-queries/recent-queries-actions.js';
+import {recentQueriesReducer as recentQueries} from '../../../features/recent-queries/recent-queries-slice.js';
+import {prepareForSearchWithQuery} from '../../../features/search/search-actions.js';
+import {searchReducer as search} from '../../../features/search/search-slice.js';
 import {
   buildMockSearchEngine,
   type MockedSearchEngine,
-} from '../../test/mock-engine-v2.js';
-import {buildMockQueryState} from '../../test/mock-query-state.js';
-import {createMockState} from '../../test/mock-state.js';
+} from '../../../test/mock-engine-v2.js';
+import {buildMockQueryState} from '../../../test/mock-query-state.js';
+import {createMockState} from '../../../test/mock-state.js';
 import {
-  buildRecentQueriesList,
+  buildCoreRecentQueriesList,
   type RecentQueriesList,
-} from './headless-recent-queries-list.js';
+} from './headless-core-recent-queries-list.js';
 
-vi.mock('../../features/recent-queries/recent-queries-actions');
-vi.mock('../../features/search/search-actions.js');
-vi.mock('../../features/breadcrumb/breadcrumb-actions');
-vi.mock('../../features/search/search-actions');
-vi.mock('../../features/recent-queries/recent-queries-analytics-actions');
+vi.mock('../../../features/recent-queries/recent-queries-actions');
+vi.mock('../../../features/breadcrumb/breadcrumb-actions');
+vi.mock('../../../features/search/search-actions');
 
 describe('recent queries list', () => {
   let engine: MockedSearchEngine;
@@ -41,7 +32,7 @@ describe('recent queries list', () => {
   });
 
   it('adds the correct reducers to the engine', () => {
-    recentQueriesList = buildRecentQueriesList(engine);
+    recentQueriesList = buildCoreRecentQueriesList(engine);
 
     expect(engine.addReducers).toHaveBeenCalledWith({
       search,
@@ -52,7 +43,7 @@ describe('recent queries list', () => {
 
   describe('without props', () => {
     beforeEach(() => {
-      recentQueriesList = buildRecentQueriesList(engine);
+      recentQueriesList = buildCoreRecentQueriesList(engine);
     });
 
     it('should register with default props on init', () => {
@@ -88,7 +79,7 @@ describe('recent queries list', () => {
     );
 
     beforeEach(() => {
-      recentQueriesList = buildRecentQueriesList(engine, testProps);
+      recentQueriesList = buildCoreRecentQueriesList(engine, testProps);
     });
 
     afterEach(() => {
@@ -102,10 +93,11 @@ describe('recent queries list', () => {
       });
     });
 
-    it('#clear should log analytics and dispatch clear action', () => {
+    it('#clear should dispatch clear action', () => {
       recentQueriesList.clear();
+
       expect(clearRecentQueries).toHaveBeenCalled();
-      expect(logClearRecentQueries).toHaveBeenCalled();
+      expect(recentQueriesList.state.queries.length).toBe(0);
     });
 
     it('#executeRecentQuery should validate the given index parameter', () => {
@@ -126,13 +118,11 @@ describe('recent queries list', () => {
         clearFilters: testOptions.clearFilters,
         enableQuerySyntax: false,
       });
-      expect(executeSearch).toHaveBeenCalled();
-      expect(logRecentQueryClick).toHaveBeenCalled();
     });
 
     it('#executeRecentQuery should execute #prepareForSearchWithQuery with the proper enableQuerySyntax parameter', () => {
       engine.state.query = buildMockQueryState({enableQuerySyntax: true});
-      recentQueriesList = buildRecentQueriesList(engine);
+      recentQueriesList = buildCoreRecentQueriesList(engine);
       recentQueriesList.executeRecentQuery(0);
       expect(mockedPrepareForSearchWithQuery).toHaveBeenCalledTimes(1);
       expect(mockedPrepareForSearchWithQuery).toHaveBeenCalledWith(
@@ -140,12 +130,10 @@ describe('recent queries list', () => {
           enableQuerySyntax: true,
         })
       );
-      expect(executeSearch).toHaveBeenCalled();
-      expect(logRecentQueryClick).toHaveBeenCalled();
     });
 
     it('should not clear filters if the #clearFilters option is false', () => {
-      recentQueriesList = buildRecentQueriesList(engine, {
+      recentQueriesList = buildCoreRecentQueriesList(engine, {
         options: {clearFilters: false, maxLength: 10},
       });
       recentQueriesList.executeRecentQuery(0);
@@ -158,7 +146,7 @@ describe('recent queries list', () => {
     const invalidQueries = [123, null, undefined];
 
     beforeEach(() => {
-      recentQueriesList = buildRecentQueriesList(engine, {
+      recentQueriesList = buildCoreRecentQueriesList(engine, {
         options: {maxLength: 5},
       });
     });

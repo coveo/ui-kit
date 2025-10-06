@@ -1,9 +1,9 @@
-import type {SearchEngine} from '../../app/search-engine/search-engine.js';
+import type {InsightEngine} from '../../../app/insight-engine/insight-engine.js';
+import {executeSearch} from '../../../features/insight-search/insight-search-actions.js';
 import {
   logClearRecentQueries,
   logRecentQueryClick,
-} from '../../features/recent-queries/recent-queries-analytics-actions.js';
-import {executeSearch} from '../../features/search/search-actions.js';
+} from '../../../features/recent-queries/recent-queries-insight-analytics-actions.js';
 import {
   buildCoreRecentQueriesList,
   type defaultRecentQueriesOptions,
@@ -12,7 +12,7 @@ import {
   type RecentQueriesListOptions,
   type RecentQueriesListProps,
   type RecentQueriesState,
-} from '../core/recent-queries-list/headless-core-recent-queries-list.js';
+} from '../../core/recent-queries-list/headless-core-recent-queries-list.js';
 
 export type {
   defaultRecentQueriesOptions,
@@ -34,7 +34,7 @@ export type {
  * @category RecentQueriesList
  * */
 export function buildRecentQueriesList(
-  engine: SearchEngine,
+  engine: InsightEngine,
   props?: RecentQueriesListProps
 ): RecentQueriesList {
   const coreController = buildCoreRecentQueriesList(engine, props);

@@ -1,43 +1,43 @@
 import {ArrayValue, NumberValue} from '@coveo/bueno';
-import {deselectAllBreadcrumbs} from '../../features/breadcrumb/breadcrumb-actions.js';
-import {queryReducer as query} from '../../features/query/query-slice.js';
+import {deselectAllBreadcrumbs} from '../../../features/breadcrumb/breadcrumb-actions.js';
+import {executeSearch} from '../../../features/insight-search/insight-search-actions.js';
+import {queryReducer as query} from '../../../features/query/query-slice.js';
 import {
   clearRecentQueries,
   registerRecentQueries,
-} from '../../features/recent-queries/recent-queries-actions.js';
+} from '../../../features/recent-queries/recent-queries-actions.js';
 import {
   logClearRecentQueries,
   logRecentQueryClick,
-} from '../../features/recent-queries/recent-queries-analytics-actions.js';
-import {recentQueriesReducer as recentQueries} from '../../features/recent-queries/recent-queries-slice.js';
+} from '../../../features/recent-queries/recent-queries-insight-analytics-actions.js';
+import {recentQueriesReducer as recentQueries} from '../../../features/recent-queries/recent-queries-slice.js';
+import {prepareForSearchWithQuery} from '../../../features/search/search-actions.js';
+import {searchReducer as search} from '../../../features/search/search-slice.js';
 import {
-  executeSearch,
-  prepareForSearchWithQuery,
-} from '../../features/search/search-actions.js';
-import {searchReducer as search} from '../../features/search/search-slice.js';
-import {
-  buildMockSearchEngine,
-  type MockedSearchEngine,
-} from '../../test/mock-engine-v2.js';
-import {buildMockQueryState} from '../../test/mock-query-state.js';
-import {createMockState} from '../../test/mock-state.js';
+  buildMockInsightEngine,
+  type MockedInsightEngine,
+} from '../../../test/mock-engine-v2.js';
+import {buildMockInsightState} from '../../../test/mock-insight-state.js';
+import {buildMockQueryState} from '../../../test/mock-query-state.js';
 import {
   buildRecentQueriesList,
   type RecentQueriesList,
-} from './headless-recent-queries-list.js';
+} from './headless-insight-recent-queries-list.js';
 
-vi.mock('../../features/recent-queries/recent-queries-actions');
-vi.mock('../../features/search/search-actions.js');
-vi.mock('../../features/breadcrumb/breadcrumb-actions');
-vi.mock('../../features/search/search-actions');
-vi.mock('../../features/recent-queries/recent-queries-analytics-actions');
+vi.mock('../../../features/recent-queries/recent-queries-actions');
+vi.mock('../../../features/insight-search/insight-search-actions.js');
+vi.mock('../../../features/breadcrumb/breadcrumb-actions');
+vi.mock('../../../features/search/search-actions');
+vi.mock(
+  '../../../features/recent-queries/recent-queries-insight-analytics-actions'
+);
 
 describe('recent queries list', () => {
-  let engine: MockedSearchEngine;
+  let engine: MockedInsightEngine;
   let recentQueriesList: RecentQueriesList;
 
   beforeEach(() => {
-    engine = buildMockSearchEngine(createMockState());
+    engine = buildMockInsightEngine(buildMockInsightState());
   });
 
   it('adds the correct reducers to the engine', () => {

@@ -209,6 +209,14 @@ export type {
 } from './controllers/insight/quickview/headless-insight-quickview.js';
 export {buildQuickview} from './controllers/insight/quickview/headless-insight-quickview.js';
 export type {
+  RecentQueriesList,
+  RecentQueriesListInitialState,
+  RecentQueriesListOptions,
+  RecentQueriesListProps,
+  RecentQueriesState,
+} from './controllers/insight/recent-queries-list/headless-insight-recent-queries-list.js';
+export {buildRecentQueriesList} from './controllers/insight/recent-queries-list/headless-insight-recent-queries-list.js';
+export type {
   InsightInteractiveResultOptions,
   InsightInteractiveResultProps,
   InteractiveResult,

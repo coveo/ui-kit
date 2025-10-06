@@ -39,6 +39,12 @@ export default class QuanticSearchBoxInput extends LightningElement {
     searchFieldWithSuggestions,
   };
   /**
+   * The ID of the engine instance the component registers to.
+   * @api
+   * @type {string}
+   */
+  @api engineId;
+  /**
    * Indicates whether or not to display a submit button.
    * @api
    * @type {boolean}
