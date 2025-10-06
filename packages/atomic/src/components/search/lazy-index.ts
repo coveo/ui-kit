@@ -3,6 +3,8 @@ export default {
   'atomic-pager': async () => await import('./atomic-pager/atomic-pager.js'),
   'atomic-query-summary': async () =>
     await import('./atomic-query-summary/atomic-query-summary.js'),
+  'atomic-relevance-inspector': async () =>
+    await import('./atomic-relevance-inspector/atomic-relevance-inspector.js'),
   'atomic-results-per-page': async () =>
     await import('./atomic-results-per-page/atomic-results-per-page.js'),
   'atomic-search-box-instant-results': async () =>
