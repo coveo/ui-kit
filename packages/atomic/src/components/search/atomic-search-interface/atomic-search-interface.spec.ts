@@ -4,6 +4,7 @@ import {
   buildUrlManager,
   EcommerceDefaultFieldsToInclude,
   getSampleSearchEngineConfiguration,
+  loadConfigurationActions,
   loadFieldActions,
   loadQueryActions,
   loadSearchConfigurationActions,
@@ -16,6 +17,7 @@ import {ifDefined} from 'lit/directives/if-defined.js';
 import {when} from 'lit/directives/when.js';
 import {within} from 'shadow-dom-testing-library';
 import {beforeEach, describe, expect, it, type MockInstance, vi} from 'vitest';
+import {augmentAnalyticsConfigWithAtomicVersion} from '@/src/components/common/interface/analytics-config';
 import {InterfaceController} from '@/src/components/common/interface/interface-controller';
 import {
   AtomicSearchInterface,
@@ -38,6 +40,7 @@ vi.mock('@coveo/headless', {spy: true});
 vi.mock('@/src/components/search/atomic-search-interface/store', {spy: true});
 vi.mock('@/src/utils/init-queue', {spy: true});
 vi.mock('./analytics-config', {spy: true});
+vi.mock('@/src/components/common/interface/analytics-config', {spy: true});
 
 @customElement('test-element')
 @bindings()
@@ -155,6 +158,16 @@ describe('atomic-search-interface', () => {
     vi.mocked(loadSearchConfigurationActions).mockReturnValue({
       updateSearchConfiguration: vi.fn(),
     } as unknown as ReturnType<typeof loadSearchConfigurationActions>);
+
+    vi.mocked(loadConfigurationActions).mockReturnValue({
+      updateAnalyticsConfiguration: vi.fn(),
+    } as unknown as ReturnType<typeof loadConfigurationActions>);
+
+    vi.mocked(augmentAnalyticsConfigWithAtomicVersion).mockReturnValue({
+      source: {
+        '@coveo/atomic': '1.0.0',
+      },
+    });
   });
 
   describe('#constructor (when created)', () => {
@@ -664,6 +677,33 @@ describe('atomic-search-interface', () => {
 
           expect(consoleWarnSpy).toHaveBeenCalledWith(
             'Mismatch between search interface search hub and engine search hub. The engine search hub will be used.'
+          );
+        });
+
+        it('should dispatch updateAnalyticsConfiguration with augmented analytics config', async () => {
+          const element = await setupElement();
+          const mockDispatch = vi.fn();
+          const mockUpdateAnalyticsConfiguration = vi.fn();
+          const engine = buildFakeSearchEngine({
+            implementation: {
+              dispatch: mockDispatch,
+            },
+          });
+
+          vi.mocked(loadConfigurationActions).mockReturnValue({
+            updateAnalyticsConfiguration: mockUpdateAnalyticsConfiguration,
+          } as unknown as ReturnType<typeof loadConfigurationActions>);
+
+          await element.initializeWithSearchEngine(engine);
+
+          expect(loadConfigurationActions).toHaveBeenCalledWith(engine);
+          expect(mockUpdateAnalyticsConfiguration).toHaveBeenCalledWith({
+            source: {
+              '@coveo/atomic': '1.0.0',
+            },
+          });
+          expect(mockDispatch).toHaveBeenCalledWith(
+            mockUpdateAnalyticsConfiguration.mock.results[0].value
           );
         });
       }
