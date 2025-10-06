@@ -45,7 +45,7 @@ export type AriaLabelGenerator = (
  * This component is not supported on mobile.
  *
  * @part instant-results-show-all-button - The 'See all results' button.
- * @part instant-results-item - The individual instant result item.
+ * @part instant-results-item - The individual instant result items.
  *
  * @slot default - The default slot where the instant results are rendered.
  */
