@@ -7,15 +7,15 @@ import {
   type MockInstance,
   vi,
 } from 'vitest';
+import {isResultSectionNode} from '@/src/components/common/layout/item-layout-sections';
 import {isElementNode, isVisualNode} from '@/src/utils/utils';
-import {isResultSectionNode} from '../layout/item-layout-sections';
 import {
   getTemplateNodeType,
   makeDefinedConditions,
   makeMatchConditions,
 } from './product-template-common';
 
-vi.mock('../layout/sections', {spy: true});
+vi.mock('@/src/components/common/layout/item-layout-sections', {spy: true});
 vi.mock('@/src/utils/utils', {spy: true});
 vi.mock('@coveo/headless/commerce');
 
