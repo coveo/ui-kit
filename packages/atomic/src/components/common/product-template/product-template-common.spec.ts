@@ -8,7 +8,7 @@ import {
   vi,
 } from 'vitest';
 import {isElementNode, isVisualNode} from '@/src/utils/utils';
-import {isResultSectionNode} from '../layout/layout-sections';
+import {isResultSectionNode} from '../layout/item-layout-sections';
 import {
   getTemplateNodeType,
   makeDefinedConditions,

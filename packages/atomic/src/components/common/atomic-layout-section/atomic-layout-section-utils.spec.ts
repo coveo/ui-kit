@@ -1,6 +1,9 @@
 import {describe, expect, it} from 'vitest';
-import type {Section} from './atomic-layout-section-utils';
-import {findSection, sectionSelector} from './atomic-layout-section-utils';
+import {
+  findSection,
+  type Section,
+  sectionSelector,
+} from './atomic-layout-section-utils';
 
 describe('atomic-layout-section-utils', () => {
   describe('#sectionSelector', () => {
