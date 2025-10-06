@@ -19,7 +19,6 @@ import { RecommendationEngine, InteractiveResult as RecsInteractiveResult, LogLe
 import { i18n } from "i18next";
 import { RecsInitializationOptions } from "./components/recommendations/atomic-recs-interface/atomic-recs-interface";
 import { RecsStore } from "./components/recommendations/atomic-recs-interface/store";
-import { Bindings } from "./components/search/atomic-search-interface/atomic-search-interface";
 import { SearchStore } from "./components/search/atomic-search-interface/store";
 import { RedirectionPayload } from "./components/common/search-box/redirection-payload";
 import { AriaLabelGenerator } from "./components/search/search-box-suggestions/atomic-search-box-instant-results/atomic-search-box-instant-results";
@@ -38,7 +37,6 @@ export { RecommendationEngine, InteractiveResult as RecsInteractiveResult, LogLe
 export { i18n } from "i18next";
 export { RecsInitializationOptions } from "./components/recommendations/atomic-recs-interface/atomic-recs-interface";
 export { RecsStore } from "./components/recommendations/atomic-recs-interface/store";
-export { Bindings } from "./components/search/atomic-search-interface/atomic-search-interface";
 export { SearchStore } from "./components/search/atomic-search-interface/store";
 export { RedirectionPayload } from "./components/common/search-box/redirection-payload";
 export { AriaLabelGenerator } from "./components/search/search-box-suggestions/atomic-search-box-instant-results/atomic-search-box-instant-results";
@@ -1765,16 +1763,6 @@ export namespace Components {
         "collapseFacetsAfter": number;
     }
     /**
-     * The `atomic-relevance-inspector` component is used internally to offer insight on search page relevance, as well as information to help troubleshoot issues during development.
-     */
-    interface AtomicRelevanceInspector {
-        /**
-          * The Atomic interface bindings, namely the headless search engine and i18n instances.
-         */
-        "bindings": Bindings;
-        "open": boolean;
-    }
-    /**
      * The `atomic-result` component is used internally by the `atomic-result-list` component.
      */
     interface AtomicResult {
@@ -2787,10 +2775,6 @@ export interface AtomicQuickviewModalCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLAtomicQuickviewModalElement;
 }
-export interface AtomicRelevanceInspectorCustomEvent<T> extends CustomEvent<T> {
-    detail: T;
-    target: HTMLAtomicRelevanceInspectorElement;
-}
 export interface AtomicSearchBoxCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLAtomicSearchBoxElement;
@@ -3596,26 +3580,6 @@ declare global {
         prototype: HTMLAtomicRefineToggleElement;
         new (): HTMLAtomicRefineToggleElement;
     };
-    interface HTMLAtomicRelevanceInspectorElementEventMap {
-        "atomic/relevanceInspector/close": any;
-    }
-    /**
-     * The `atomic-relevance-inspector` component is used internally to offer insight on search page relevance, as well as information to help troubleshoot issues during development.
-     */
-    interface HTMLAtomicRelevanceInspectorElement extends Components.AtomicRelevanceInspector, HTMLStencilElement {
-        addEventListener<K extends keyof HTMLAtomicRelevanceInspectorElementEventMap>(type: K, listener: (this: HTMLAtomicRelevanceInspectorElement, ev: AtomicRelevanceInspectorCustomEvent<HTMLAtomicRelevanceInspectorElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
-        removeEventListener<K extends keyof HTMLAtomicRelevanceInspectorElementEventMap>(type: K, listener: (this: HTMLAtomicRelevanceInspectorElement, ev: AtomicRelevanceInspectorCustomEvent<HTMLAtomicRelevanceInspectorElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
-    }
-    var HTMLAtomicRelevanceInspectorElement: {
-        prototype: HTMLAtomicRelevanceInspectorElement;
-        new (): HTMLAtomicRelevanceInspectorElement;
-    };
     /**
      * The `atomic-result` component is used internally by the `atomic-result-list` component.
      */
@@ -4385,7 +4349,6 @@ declare global {
         "atomic-recs-result-template": HTMLAtomicRecsResultTemplateElement;
         "atomic-refine-modal": HTMLAtomicRefineModalElement;
         "atomic-refine-toggle": HTMLAtomicRefineToggleElement;
-        "atomic-relevance-inspector": HTMLAtomicRelevanceInspectorElement;
         "atomic-result": HTMLAtomicResultElement;
         "atomic-result-badge": HTMLAtomicResultBadgeElement;
         "atomic-result-children": HTMLAtomicResultChildrenElement;
@@ -6105,17 +6068,6 @@ declare namespace LocalJSX {
         "collapseFacetsAfter"?: number;
     }
     /**
-     * The `atomic-relevance-inspector` component is used internally to offer insight on search page relevance, as well as information to help troubleshoot issues during development.
-     */
-    interface AtomicRelevanceInspector {
-        /**
-          * The Atomic interface bindings, namely the headless search engine and i18n instances.
-         */
-        "bindings": Bindings;
-        "onAtomic/relevanceInspector/close"?: (event: AtomicRelevanceInspectorCustomEvent<any>) => void;
-        "open"?: boolean;
-    }
-    /**
      * The `atomic-result` component is used internally by the `atomic-result-list` component.
      */
     interface AtomicResult {
@@ -7168,7 +7120,6 @@ declare namespace LocalJSX {
         "atomic-recs-result-template": AtomicRecsResultTemplate;
         "atomic-refine-modal": AtomicRefineModal;
         "atomic-refine-toggle": AtomicRefineToggle;
-        "atomic-relevance-inspector": AtomicRelevanceInspector;
         "atomic-result": AtomicResult;
         "atomic-result-badge": AtomicResultBadge;
         "atomic-result-children": AtomicResultChildren;
@@ -7484,10 +7435,6 @@ declare module "@stencil/core" {
              * When this component is added to the `atomic-search-interface`, an `atomic-refine-modal` component is automatically created.
              */
             "atomic-refine-toggle": LocalJSX.AtomicRefineToggle & JSXBase.HTMLAttributes<HTMLAtomicRefineToggleElement>;
-            /**
-             * The `atomic-relevance-inspector` component is used internally to offer insight on search page relevance, as well as information to help troubleshoot issues during development.
-             */
-            "atomic-relevance-inspector": LocalJSX.AtomicRelevanceInspector & JSXBase.HTMLAttributes<HTMLAtomicRelevanceInspectorElement>;
             /**
              * The `atomic-result` component is used internally by the `atomic-result-list` component.
              */
