@@ -275,6 +275,7 @@ export class AtomicSearchInterface
     super.connectedCallback();
     this.store.setLoadingFlag(FirstSearchExecutedFlag);
     this.initRelevanceInspector();
+    this.initFieldsToInclude();
 
     this.addEventListener(
       'atomic/initializeComponent',
@@ -296,7 +297,7 @@ export class AtomicSearchInterface
     super.willUpdate(changedProperties);
 
     if (changedProperties.has('fieldsToInclude')) {
-      this.initFieldsToInclude();
+      this.updateFieldsToInclude();
     }
   }
 
@@ -494,6 +495,12 @@ export class AtomicSearchInterface
   private initFieldsToInclude() {
     const fields = EcommerceDefaultFieldsToInclude.concat(this.fieldsToInclude);
     this.store.addFieldsToInclude(fields);
+  }
+
+  private updateFieldsToInclude() {
+    this.store.state.fieldsToInclude = [];
+    this.initFieldsToInclude();
+    this.registerFieldsToInclude();
   }
 
   public registerFieldsToInclude() {
