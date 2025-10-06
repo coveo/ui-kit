@@ -90,7 +90,10 @@ const generateMetadataToSend = (metadata: CaseMetadata, includeContext = true) =
 export class CoveoInsightClient {
     public coveoAnalyticsClient: AnalyticsClient;
 
-    constructor(private opts: Partial<InsightClientOptions>, private provider: InsightClientProvider) {
+    constructor(
+        private opts: Partial<InsightClientOptions>,
+        private provider: InsightClientProvider,
+    ) {
         const shouldDisableAnalytics = opts.enableAnalytics === false || doNotTrack();
         this.coveoAnalyticsClient = shouldDisableAnalytics ? new NoopAnalytics() : new CoveoAnalyticsClient(opts);
     }
@@ -146,7 +149,7 @@ export class CoveoInsightClient {
     }
 
     public logBreadcrumbFacet(
-        metadata: InsightFacetMetadata | InsightFacetRangeMetadata | InsightCategoryFacetMetadata
+        metadata: InsightFacetMetadata | InsightFacetRangeMetadata | InsightCategoryFacetMetadata,
     ) {
         const metadataToSend = generateMetadataToSend(metadata);
         return this.logSearchEvent(SearchPageEvents.breadcrumbFacet, metadataToSend);
@@ -286,7 +289,7 @@ export class CoveoInsightClient {
     public logCreateArticle(createArticleMetadata: CreateArticleMetadata, metadata?: CaseMetadata) {
         return this.logCustomEvent(
             InsightEvents.createArticle,
-            metadata ? {...generateMetadataToSend(metadata, false), ...createArticleMetadata} : createArticleMetadata
+            metadata ? {...generateMetadataToSend(metadata, false), ...createArticleMetadata} : createArticleMetadata,
         );
     }
 
@@ -295,20 +298,20 @@ export class CoveoInsightClient {
             SearchPageEvents.documentOpen,
             info,
             identifier,
-            metadata ? generateMetadataToSend(metadata, false) : undefined
+            metadata ? generateMetadataToSend(metadata, false) : undefined,
         );
     }
 
     public logCopyToClipboard(
         info: PartialDocumentInformation,
         identifier: DocumentIdentifier,
-        metadata?: CaseMetadata
+        metadata?: CaseMetadata,
     ) {
         return this.logClickEvent(
             SearchPageEvents.copyToClipboard,
             info,
             identifier,
-            metadata ? generateMetadataToSend(metadata, false) : undefined
+            metadata ? generateMetadataToSend(metadata, false) : undefined,
         );
     }
 
@@ -317,27 +320,27 @@ export class CoveoInsightClient {
             SearchPageEvents.caseSendEmail,
             info,
             identifier,
-            metadata ? generateMetadataToSend(metadata, false) : undefined
+            metadata ? generateMetadataToSend(metadata, false) : undefined,
         );
     }
 
     public logFeedItemTextPost(
         info: PartialDocumentInformation,
         identifier: DocumentIdentifier,
-        metadata?: CaseMetadata
+        metadata?: CaseMetadata,
     ) {
         return this.logClickEvent(
             SearchPageEvents.feedItemTextPost,
             info,
             identifier,
-            metadata ? generateMetadataToSend(metadata, false) : undefined
+            metadata ? generateMetadataToSend(metadata, false) : undefined,
         );
     }
 
     public logDocumentQuickview(
         info: PartialDocumentInformation,
         identifier: DocumentIdentifier,
-        caseMetadata?: CaseMetadata
+        caseMetadata?: CaseMetadata,
     ) {
         const metadata = {
             documentTitle: info.documentTitle,
@@ -347,14 +350,14 @@ export class CoveoInsightClient {
             SearchPageEvents.documentQuickview,
             info,
             identifier,
-            caseMetadata ? {...generateMetadataToSend(caseMetadata, false), ...metadata} : metadata
+            caseMetadata ? {...generateMetadataToSend(caseMetadata, false), ...metadata} : metadata,
         );
     }
 
     public logCaseAttach(
         info: PartialDocumentInformation,
         identifier: DocumentIdentifier,
-        caseMetadata?: CaseMetadata
+        caseMetadata?: CaseMetadata,
     ) {
         const metadata = {
             documentTitle: info.documentTitle,
@@ -366,135 +369,135 @@ export class CoveoInsightClient {
             SearchPageEvents.caseAttach,
             info,
             identifier,
-            caseMetadata ? {...generateMetadataToSend(caseMetadata, false), ...metadata} : metadata
+            caseMetadata ? {...generateMetadataToSend(caseMetadata, false), ...metadata} : metadata,
         );
     }
 
     public logCaseDetach(resultUriHash: string, metadata?: CaseMetadata) {
         return this.logCustomEvent(
             SearchPageEvents.caseDetach,
-            metadata ? {...generateMetadataToSend(metadata, false), resultUriHash} : {resultUriHash}
+            metadata ? {...generateMetadataToSend(metadata, false), resultUriHash} : {resultUriHash},
         );
     }
 
     public logLikeSmartSnippet(metadata?: CaseMetadata) {
         return this.logCustomEvent(
             SearchPageEvents.likeSmartSnippet,
-            metadata ? generateMetadataToSend(metadata, false) : undefined
+            metadata ? generateMetadataToSend(metadata, false) : undefined,
         );
     }
 
     public logDislikeSmartSnippet(metadata?: CaseMetadata) {
         return this.logCustomEvent(
             SearchPageEvents.dislikeSmartSnippet,
-            metadata ? generateMetadataToSend(metadata, false) : undefined
+            metadata ? generateMetadataToSend(metadata, false) : undefined,
         );
     }
 
     public logExpandSmartSnippet(metadata?: CaseMetadata) {
         return this.logCustomEvent(
             SearchPageEvents.expandSmartSnippet,
-            metadata ? generateMetadataToSend(metadata, false) : undefined
+            metadata ? generateMetadataToSend(metadata, false) : undefined,
         );
     }
 
     public logCollapseSmartSnippet(metadata?: CaseMetadata) {
         return this.logCustomEvent(
             SearchPageEvents.collapseSmartSnippet,
-            metadata ? generateMetadataToSend(metadata, false) : undefined
+            metadata ? generateMetadataToSend(metadata, false) : undefined,
         );
     }
 
     public logOpenSmartSnippetFeedbackModal(metadata?: CaseMetadata) {
         return this.logCustomEvent(
             SearchPageEvents.openSmartSnippetFeedbackModal,
-            metadata ? generateMetadataToSend(metadata, false) : undefined
+            metadata ? generateMetadataToSend(metadata, false) : undefined,
         );
     }
 
     public logCloseSmartSnippetFeedbackModal(metadata?: CaseMetadata) {
         return this.logCustomEvent(
             SearchPageEvents.closeSmartSnippetFeedbackModal,
-            metadata ? generateMetadataToSend(metadata, false) : undefined
+            metadata ? generateMetadataToSend(metadata, false) : undefined,
         );
     }
 
     public logSmartSnippetFeedbackReason(
         reason: SmartSnippetFeedbackReason,
         details?: string,
-        metadata?: CaseMetadata
+        metadata?: CaseMetadata,
     ) {
         return this.logCustomEvent(
             SearchPageEvents.sendSmartSnippetReason,
-            metadata ? {...generateMetadataToSend(metadata, false), reason, details} : {reason, details}
+            metadata ? {...generateMetadataToSend(metadata, false), reason, details} : {reason, details},
         );
     }
 
     public logExpandSmartSnippetSuggestion(
         snippet: SmartSnippetSuggestionMeta | SmartSnippetDocumentIdentifier,
-        metadata?: CaseMetadata
+        metadata?: CaseMetadata,
     ) {
         const snippetMetadata = 'documentId' in snippet ? snippet : {documentId: snippet};
         return this.logCustomEvent(
             SearchPageEvents.expandSmartSnippetSuggestion,
-            metadata ? {...generateMetadataToSend(metadata, false), ...snippetMetadata} : snippetMetadata
+            metadata ? {...generateMetadataToSend(metadata, false), ...snippetMetadata} : snippetMetadata,
         );
     }
 
     public logCollapseSmartSnippetSuggestion(
         snippet: SmartSnippetSuggestionMeta | SmartSnippetDocumentIdentifier,
-        metadata?: CaseMetadata
+        metadata?: CaseMetadata,
     ) {
         const snippetMetadata = 'documentId' in snippet ? snippet : {documentId: snippet};
         return this.logCustomEvent(
             SearchPageEvents.collapseSmartSnippetSuggestion,
-            metadata ? {...generateMetadataToSend(metadata, false), ...snippetMetadata} : snippetMetadata
+            metadata ? {...generateMetadataToSend(metadata, false), ...snippetMetadata} : snippetMetadata,
         );
     }
 
     public logOpenSmartSnippetSource(
         info: PartialDocumentInformation,
         identifier: DocumentIdentifier,
-        metadata?: CaseMetadata
+        metadata?: CaseMetadata,
     ) {
         return this.logClickEvent(
             SearchPageEvents.openSmartSnippetSource,
             info,
             identifier,
-            metadata ? generateMetadataToSend(metadata, false) : undefined
+            metadata ? generateMetadataToSend(metadata, false) : undefined,
         );
     }
 
     public logOpenSmartSnippetSuggestionSource(
         info: PartialDocumentInformation,
         snippet: SmartSnippetSuggestionMeta,
-        metadata?: CaseMetadata
+        metadata?: CaseMetadata,
     ) {
         return this.logClickEvent(
             SearchPageEvents.openSmartSnippetSuggestionSource,
             info,
             {contentIDKey: snippet.documentId.contentIdKey, contentIDValue: snippet.documentId.contentIdValue},
-            metadata ? {...generateMetadataToSend(metadata, false), ...snippet} : snippet
+            metadata ? {...generateMetadataToSend(metadata, false), ...snippet} : snippet,
         );
     }
 
     public logOpenSmartSnippetInlineLink(
         info: PartialDocumentInformation,
         identifierAndLink: DocumentIdentifier & SmartSnippetLinkMeta,
-        metadata?: CaseMetadata
+        metadata?: CaseMetadata,
     ) {
         return this.logClickEvent(
             SearchPageEvents.openSmartSnippetInlineLink,
             info,
             {contentIDKey: identifierAndLink.contentIDKey, contentIDValue: identifierAndLink.contentIDValue},
-            metadata ? {...generateMetadataToSend(metadata, false), ...identifierAndLink} : identifierAndLink
+            metadata ? {...generateMetadataToSend(metadata, false), ...identifierAndLink} : identifierAndLink,
         );
     }
 
     public logOpenSmartSnippetSuggestionInlineLink(
         info: PartialDocumentInformation,
         snippetAndLink: SmartSnippetSuggestionMeta & SmartSnippetLinkMeta,
-        metadata?: CaseMetadata
+        metadata?: CaseMetadata,
     ) {
         return this.logClickEvent(
             SearchPageEvents.openSmartSnippetSuggestionInlineLink,
@@ -503,7 +506,7 @@ export class CoveoInsightClient {
                 contentIDKey: snippetAndLink.documentId.contentIdKey,
                 contentIDValue: snippetAndLink.documentId.contentIdValue,
             },
-            metadata ? {...generateMetadataToSend(metadata, false), ...snippetAndLink} : snippetAndLink
+            metadata ? {...generateMetadataToSend(metadata, false), ...snippetAndLink} : snippetAndLink,
         );
     }
 
@@ -512,7 +515,7 @@ export class CoveoInsightClient {
             SearchPageEvents.likeGeneratedAnswer,
             metadata
                 ? {...generateMetadataToSend(metadata, false), ...generatedAnswerMetadata}
-                : generatedAnswerMetadata
+                : generatedAnswerMetadata,
         );
     }
 
@@ -521,56 +524,56 @@ export class CoveoInsightClient {
             SearchPageEvents.dislikeGeneratedAnswer,
             metadata
                 ? {...generateMetadataToSend(metadata, false), ...generatedAnswerMetadata}
-                : generatedAnswerMetadata
+                : generatedAnswerMetadata,
         );
     }
 
     public logOpenGeneratedAnswerSource(
         generatedAnswerSourceMetadata: GeneratedAnswerCitationMeta,
-        metadata?: CaseMetadata
+        metadata?: CaseMetadata,
     ) {
         return this.logCustomEvent(
             SearchPageEvents.openGeneratedAnswerSource,
             metadata
                 ? {...generateMetadataToSend(metadata, false), ...generatedAnswerSourceMetadata}
-                : generatedAnswerSourceMetadata
+                : generatedAnswerSourceMetadata,
         );
     }
 
     public logGeneratedAnswerCitationClick(
         info: PartialDocumentInformation,
         citation: GeneratedAnswerCitationClickMeta,
-        metadata?: CaseMetadata
+        metadata?: CaseMetadata,
     ) {
         return this.logClickEvent(
             SearchPageEvents.generatedAnswerCitationClick,
             {...info, documentPosition: 1},
             {contentIDKey: citation.documentId.contentIdKey, contentIDValue: citation.documentId.contentIdValue},
-            metadata ? {...generateMetadataToSend(metadata, false), ...citation} : citation
+            metadata ? {...generateMetadataToSend(metadata, false), ...citation} : citation,
         );
     }
 
     public logGeneratedAnswerSourceHover(
         generatedAnswerSourceMetadata: GeneratedAnswerSourceHoverMeta,
-        metadata?: CaseMetadata
+        metadata?: CaseMetadata,
     ) {
         return this.logCustomEvent(
             SearchPageEvents.generatedAnswerSourceHover,
             metadata
                 ? {...generateMetadataToSend(metadata, false), ...generatedAnswerSourceMetadata}
-                : generatedAnswerSourceMetadata
+                : generatedAnswerSourceMetadata,
         );
     }
 
     public logGeneratedAnswerCopyToClipboard(
         generatedAnswerMetadata: GeneratedAnswerBaseMeta,
-        metadata?: CaseMetadata
+        metadata?: CaseMetadata,
     ) {
         return this.logCustomEvent(
             SearchPageEvents.generatedAnswerCopyToClipboard,
             metadata
                 ? {...generateMetadataToSend(metadata, false), ...generatedAnswerMetadata}
-                : generatedAnswerMetadata
+                : generatedAnswerMetadata,
         );
     }
 
@@ -579,7 +582,7 @@ export class CoveoInsightClient {
             SearchPageEvents.generatedAnswerHideAnswers,
             metadata
                 ? {...generateMetadataToSend(metadata, false), ...generatedAnswerMetadata}
-                : generatedAnswerMetadata
+                : generatedAnswerMetadata,
         );
     }
 
@@ -588,7 +591,7 @@ export class CoveoInsightClient {
             SearchPageEvents.generatedAnswerShowAnswers,
             metadata
                 ? {...generateMetadataToSend(metadata, false), ...generatedAnswerMetadata}
-                : generatedAnswerMetadata
+                : generatedAnswerMetadata,
         );
     }
 
@@ -597,7 +600,7 @@ export class CoveoInsightClient {
             SearchPageEvents.generatedAnswerExpand,
             metadata
                 ? {...generateMetadataToSend(metadata, false), ...generatedAnswerMetadata}
-                : generatedAnswerMetadata
+                : generatedAnswerMetadata,
         );
     }
 
@@ -606,62 +609,62 @@ export class CoveoInsightClient {
             SearchPageEvents.generatedAnswerCollapse,
             metadata
                 ? {...generateMetadataToSend(metadata, false), ...generatedAnswerMetadata}
-                : generatedAnswerMetadata
+                : generatedAnswerMetadata,
         );
     }
 
     public logGeneratedAnswerFeedbackSubmit(
         generatedAnswerFeedbackMetadata: GeneratedAnswerFeedbackMeta,
-        metadata?: CaseMetadata
+        metadata?: CaseMetadata,
     ) {
         return this.logCustomEvent(
             SearchPageEvents.generatedAnswerFeedbackSubmit,
             metadata
                 ? {...generateMetadataToSend(metadata, false), ...generatedAnswerFeedbackMetadata}
-                : generatedAnswerFeedbackMetadata
+                : generatedAnswerFeedbackMetadata,
         );
     }
 
     public logGeneratedAnswerFeedbackSubmitV2(
         generatedAnswerFeedbackMetadata: GeneratedAnswerFeedbackMetaV2,
-        metadata?: CaseMetadata
+        metadata?: CaseMetadata,
     ) {
         return this.logCustomEvent(
             SearchPageEvents.generatedAnswerFeedbackSubmitV2,
             metadata
                 ? {...generateMetadataToSend(metadata, false), ...generatedAnswerFeedbackMetadata}
-                : generatedAnswerFeedbackMetadata
+                : generatedAnswerFeedbackMetadata,
         );
     }
 
     public logRephraseGeneratedAnswer(
         generatedAnswerRephraseMetadata: GeneratedAnswerRephraseMeta,
-        metadata?: CaseMetadata
+        metadata?: CaseMetadata,
     ) {
         return this.logSearchEvent(
             SearchPageEvents.rephraseGeneratedAnswer,
             metadata
                 ? {...generateMetadataToSend(metadata, false), ...generatedAnswerRephraseMetadata}
-                : generatedAnswerRephraseMetadata
+                : generatedAnswerRephraseMetadata,
         );
     }
 
     public logRetryGeneratedAnswer(metadata?: CaseMetadata) {
         return this.logSearchEvent(
             SearchPageEvents.retryGeneratedAnswer,
-            metadata ? {...generateMetadataToSend(metadata, false)} : {}
+            metadata ? {...generateMetadataToSend(metadata, false)} : {},
         );
     }
 
     public logGeneratedAnswerStreamEnd(
         generatedAnswerStreamEndMetadata: GeneratedAnswerStreamEndMeta,
-        metadata?: CaseMetadata
+        metadata?: CaseMetadata,
     ) {
         return this.logCustomEvent(
             SearchPageEvents.generatedAnswerStreamEnd,
             metadata
                 ? {...generateMetadataToSend(metadata, false), ...generatedAnswerStreamEndMetadata}
-                : generatedAnswerStreamEndMetadata
+                : generatedAnswerStreamEndMetadata,
         );
     }
 
@@ -685,7 +688,7 @@ export class CoveoInsightClient {
         event: SearchPageEvents,
         info: PartialDocumentInformation,
         identifier: DocumentIdentifier,
-        metadata?: Record<string, any>
+        metadata?: Record<string, any>,
     ) {
         const payload: ClickEventRequest = {
             ...info,
@@ -701,27 +704,27 @@ export class CoveoInsightClient {
     public async logShowMoreFoldedResults(
         info: PartialDocumentInformation,
         identifier: DocumentIdentifier,
-        metadata?: CaseMetadata
+        metadata?: CaseMetadata,
     ) {
         return this.logClickEvent(
             SearchPageEvents.showMoreFoldedResults,
             info,
             identifier,
-            metadata ? generateMetadataToSend(metadata, false) : undefined
+            metadata ? generateMetadataToSend(metadata, false) : undefined,
         );
     }
 
     public async logShowLessFoldedResults(metadata?: CaseMetadata) {
         return this.logCustomEvent(
             SearchPageEvents.showLessFoldedResults,
-            metadata ? generateMetadataToSend(metadata, false) : undefined
+            metadata ? generateMetadataToSend(metadata, false) : undefined,
         );
     }
 
     public logTriggerNotify(triggerNotifyMetadata: TriggerNotifyMetadata, metadata?: CaseMetadata) {
         return this.logCustomEvent(
             SearchPageEvents.triggerNotify,
-            metadata ? {...generateMetadataToSend(metadata, false), ...triggerNotifyMetadata} : triggerNotifyMetadata
+            metadata ? {...generateMetadataToSend(metadata, false), ...triggerNotifyMetadata} : triggerNotifyMetadata,
         );
     }
 
@@ -734,7 +737,7 @@ export class CoveoInsightClient {
 
     private async getBaseSearchEventRequest(
         event: SearchPageEvents | InsightEvents,
-        metadata?: Record<string, any>
+        metadata?: Record<string, any>,
     ): Promise<SearchEventRequest> {
         return {
             ...(await this.getBaseEventRequest({...metadata, ...this.provider.getGeneratedAnswerMetadata?.()})),
