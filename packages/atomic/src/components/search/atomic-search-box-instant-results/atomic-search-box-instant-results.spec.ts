@@ -4,7 +4,7 @@ import {html} from 'lit';
 import {beforeEach, describe, expect, it, type MockInstance, vi} from 'vitest';
 import {fixture} from '@/vitest-utils/testing-helpers/fixture';
 import {renderInAtomicSearchInterface} from '@/vitest-utils/testing-helpers/fixtures/atomic/search/atomic-search-interface-fixture';
-import {buildFakeInstantResults} from '../../../../vitest-utils/testing-helpers/fixtures/headless/search/instant-results-controller';
+import {buildFakeInstantResults} from '@/vitest-utils/testing-helpers/fixtures/headless/search/instant-results-controller';
 import type {AtomicSearchBoxInstantResults} from './atomic-search-box-instant-results';
 import './atomic-search-box-instant-results';
 

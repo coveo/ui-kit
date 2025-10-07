@@ -9,6 +9,7 @@ import {html, LitElement, nothing, render} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {keyed} from 'lit/directives/keyed.js';
 import type {ItemRenderingFunction} from '@/src/components/common/item-list/item-list-common';
+import {ItemTemplateProvider} from '@/src/components/common/item-list/item-template-provider';
 import type {
   ItemDisplayDensity,
   ItemDisplayImageSize,
@@ -25,11 +26,10 @@ import type {
   SearchBoxSuggestions,
   SearchBoxSuggestionsBindings,
 } from '@/src/components/common/suggestions/suggestions-types';
+import type {Bindings} from '@/src/components/search/atomic-search-interface/interfaces';
 import {errorGuard} from '@/src/decorators/error-guard';
 import type {SearchBoxSuggestionsComponent} from '@/src/decorators/types';
 import {encodeForDomAttribute} from '@/src/utils/string-utils';
-import {ItemTemplateProvider} from '../../common/item-list/item-template-provider';
-import type {Bindings} from '../atomic-search-interface/interfaces';
 
 export type AriaLabelGenerator = (
   bindings: Bindings,
