@@ -35,7 +35,6 @@ export class AtomicProduct extends ChildrenUpdateCompleteMixin(LitElement) {
   private productRootRef?: HTMLElement;
   private linkContainerRef?: HTMLElement;
   private itemLayoutController!: ItemLayoutController;
-  private customRenderController!: CustomRenderController;
 
   static styles: CSSResultGroup = styles;
 
@@ -173,7 +172,7 @@ export class AtomicProduct extends ChildrenUpdateCompleteMixin(LitElement) {
   public async connectedCallback() {
     super.connectedCallback();
 
-    this.customRenderController = new CustomRenderController(this, {
+    new CustomRenderController(this, {
       renderingFunction: () => this.renderingFunction,
       itemData: () => this.product,
       rootElementRef: () => this.productRootRef,
@@ -255,7 +254,7 @@ export class AtomicProduct extends ChildrenUpdateCompleteMixin(LitElement) {
   }
 
   public render() {
-    if (this.customRenderController.hasCustomRenderFunction) {
+    if (this.renderingFunction !== undefined) {
       return html`
         <div class=${resultComponentClass}>
           <div

@@ -171,21 +171,4 @@ describe('CustomRenderController', () => {
       });
     });
   });
-
-  describe('#hasCustomRenderFunction', () => {
-    beforeEach(() => {
-      controller = new CustomRenderController(mockElement, mockOptions);
-    });
-
-    it('should return true when rendering function is provided', () => {
-      expect(controller.hasCustomRenderFunction).toBe(true);
-    });
-
-    it('should return false when rendering function is undefined', () => {
-      mockOptions.renderingFunction = vi.fn().mockReturnValue(undefined);
-      controller = new CustomRenderController(mockElement, mockOptions);
-
-      expect(controller.hasCustomRenderFunction).toBe(false);
-    });
-  });
 });

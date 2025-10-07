@@ -41,47 +41,27 @@ export class CustomRenderController implements ReactiveController {
     this.executeRenderFunction();
   }
 
-  /**
-   * Indicates whether a custom rendering function is provided.
-   */
-  public get hasCustomRenderFunction(): boolean {
-    return this.options.renderingFunction() !== undefined;
-  }
-
   private resetRenderState(): void {
     this.hasExecutedRenderFunction = false;
   }
 
-  private shouldExecuteRenderFunction(): boolean {
-    const rootElementRef = this.options.rootElementRef();
-
-    return !!(
-      this.hasCustomRenderFunction &&
-      rootElementRef &&
-      !this.hasExecutedRenderFunction
-    );
-  }
-
   private executeRenderFunction(): void {
-    if (!this.shouldExecuteRenderFunction()) {
-      return;
-    }
-
     const renderingFunction = this.options.renderingFunction();
     const itemData = this.options.itemData();
     const rootElementRef = this.options.rootElementRef();
-    const linkContainerRef = this.options.linkContainerRef();
-
-    if (!renderingFunction || !itemData || !rootElementRef) {
+    if (
+      !renderingFunction ||
+      !itemData ||
+      !rootElementRef ||
+      this.hasExecutedRenderFunction
+    ) {
       return;
     }
-
     const customRenderOutput = renderingFunction(
       itemData,
       rootElementRef,
-      linkContainerRef
+      this.options.linkContainerRef()
     );
-
     this.options.onRenderComplete(rootElementRef, customRenderOutput);
     this.hasExecutedRenderFunction = true;
   }
