@@ -69,7 +69,7 @@ describe('#renderTextAreaClearButton', () => {
 
   it('should have aria-label as "Clear" on the button', async () => {
     const {button} = await renderComponent();
-    expect(button!).toHaveAttribute('aria-label', 'Clear');
+    expect(button!).toHaveAttribute('aria-label', 'Clear search');
   });
 
   it('should have the "clear-icon" part on the atomic-icon', async () => {
