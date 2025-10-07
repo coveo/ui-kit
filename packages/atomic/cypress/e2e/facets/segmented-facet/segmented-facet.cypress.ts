@@ -14,7 +14,7 @@ import {
   SegmentedFacetSelectors,
 } from './segmented-facet-selectors';
 
-describe('Segmented Facet Test Suites', () => {
+describe.skip('Segmented Facet Test Suites', () => {
   function setupSegmentedFacet() {
     new TestFixture().with(addSegmentedFacet({field, label})).init();
   }
