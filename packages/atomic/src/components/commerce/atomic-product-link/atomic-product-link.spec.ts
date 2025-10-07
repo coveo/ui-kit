@@ -3,14 +3,13 @@ import {type Locator, page} from '@vitest/browser/context';
 import {html, nothing} from 'lit';
 import {ifDefined} from 'lit/directives/if-defined.js';
 import {beforeEach, describe, expect, it, vi} from 'vitest';
+import type {InteractiveItemContextController} from '@/src/components/common/item-list/context/interactive-item-context-controller';
+import type {ItemContextController} from '@/src/components/common/item-list/context/item-context-controller';
 import {renderInAtomicProduct} from '@/vitest-utils/testing-helpers/fixtures/atomic/commerce/atomic-product-fixture';
 import {buildFakeInteractiveProduct} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/interactive-product';
 import {buildFakeProduct} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/product';
-
 import {AtomicProductLink} from './atomic-product-link';
 import './atomic-product-link';
-import type {InteractiveItemContextController} from '@/src/components/common/item-list/context/interactive-item-context-controller';
-import type {ItemContextController} from '@/src/components/common/item-list/context/item-context-controller';
 
 vi.mock('@coveo/headless/commerce', {spy: true});
 

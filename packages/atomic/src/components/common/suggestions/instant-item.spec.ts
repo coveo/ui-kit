@@ -8,7 +8,7 @@ import {
   renderInstantItemShowAllButton,
 } from './instant-item';
 
-vi.mock('../../../utils/string-utils', {spy: true});
+vi.mock('@/src/utils/string-utils', {spy: true});
 
 describe('instant-item', () => {
   describe('#getPartialInstantItemElement', () => {

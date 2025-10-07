@@ -7,7 +7,7 @@ import {
   renderCategoryFacetSearchValue,
 } from './search-value';
 
-vi.mock('../../../../utils/field-utils', () => ({
+vi.mock('@/src/utils/field-utils', () => ({
   getFieldValueCaption: vi.fn(
     (field: string, value: string) => `${field}: ${value}`
   ),

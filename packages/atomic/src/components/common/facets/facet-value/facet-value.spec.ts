@@ -8,22 +8,32 @@ import {
   type MockedFunction,
   vi,
 } from 'vitest';
+import {renderFacetValueBox} from '@/src/components/common/facets/facet-value-box/facet-value-box';
+import {renderFacetValueCheckbox} from '@/src/components/common/facets/facet-value-checkbox/facet-value-checkbox';
+import {renderFacetValueLabelHighlight} from '@/src/components/common/facets/facet-value-label-highlight/facet-value-label-highlight';
+import {renderFacetValueLink} from '@/src/components/common/facets/facet-value-link/facet-value-link';
 import {renderFunctionFixture} from '@/vitest-utils/testing-helpers/fixture';
 import {createTestI18n} from '@/vitest-utils/testing-helpers/i18n-utils';
-import {renderFacetValueBox} from '../facet-value-box/facet-value-box';
-import {renderFacetValueCheckbox} from '../facet-value-checkbox/facet-value-checkbox';
-import {renderFacetValueLabelHighlight} from '../facet-value-label-highlight/facet-value-label-highlight';
-import {renderFacetValueLink} from '../facet-value-link/facet-value-link';
 import {type FacetValueProps, renderFacetValue} from './facet-value';
 
-vi.mock('../facet-value-checkbox/facet-value-checkbox', {spy: true});
-vi.mock('../facet-value-link/facet-value-link', {spy: true});
-vi.mock('../facet-value-box/facet-value-box', {spy: true});
-vi.mock('../facet-value-label-highlight/facet-value-label-highlight', {
+vi.mock(
+  '@/src/components/common/facets/facet-value-checkbox/facet-value-checkbox',
+  {spy: true}
+);
+vi.mock('@/src/components/common/facets/facet-value-link/facet-value-link', {
   spy: true,
 });
+vi.mock('@/src/components/common/facets/facet-value-box/facet-value-box', {
+  spy: true,
+});
+vi.mock(
+  '@/src/components/common/facets/facet-value-label-highlight/facet-value-label-highlight',
+  {
+    spy: true,
+  }
+);
 
-describe('renderFacetValue', () => {
+describe('#renderFacetValue', () => {
   let i18n: Awaited<ReturnType<typeof createTestI18n>>;
   let testProps: typeof baseProps & {
     i18n: Awaited<ReturnType<typeof createTestI18n>>;

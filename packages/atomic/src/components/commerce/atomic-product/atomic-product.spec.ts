@@ -6,10 +6,11 @@ import type {
   ItemDisplayImageSize,
   ItemDisplayLayout,
 } from '@/src/components';
+import type {ItemRenderingFunction} from '@/src/components/common/item-list/item-list-common';
 import {renderInAtomicCommerceInterface} from '@/vitest-utils/testing-helpers/fixtures/atomic/commerce/atomic-commerce-interface-fixture';
 import {buildFakeProduct} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/product';
-import type {ItemRenderingFunction} from '../../common/item-list/item-list-common';
 import {AtomicProduct} from './atomic-product';
+import './atomic-product';
 
 vi.mock('@coveo/headless/commerce', {spy: true});
 

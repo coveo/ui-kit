@@ -17,22 +17,20 @@ import {when} from 'lit/directives/when.js';
 import {within} from 'shadow-dom-testing-library';
 import {beforeEach, describe, expect, it, type MockInstance, vi} from 'vitest';
 import {InterfaceController} from '@/src/components/common/interface/interface-controller';
-import {
-  AtomicSearchInterface,
-  type Bindings,
-} from '@/src/components/search/atomic-search-interface/atomic-search-interface';
 import {createSearchStore} from '@/src/components/search/atomic-search-interface/store';
 import {bindings} from '@/src/decorators/bindings';
 import type {InitializableComponent} from '@/src/decorators/types';
 import {markParentAsReady} from '@/src/utils/init-queue';
 import {SafeStorage, StorageItems} from '@/src/utils/local-storage-utils';
+import {DEFAULT_MOBILE_BREAKPOINT} from '@/src/utils/replace-breakpoint-utils';
 import {fixture} from '@/vitest-utils/testing-helpers/fixture';
 import {buildFakeSearchEngine} from '@/vitest-utils/testing-helpers/fixtures/headless/search/engine';
 import {buildFakeSearchStatus} from '@/vitest-utils/testing-helpers/fixtures/headless/search/search-status-controller';
 import {buildFakeUrlManager} from '@/vitest-utils/testing-helpers/fixtures/headless/search/url-manager-controller';
 import {getAnalyticsConfig} from './analytics-config';
+import {AtomicSearchInterface, type Bindings} from './atomic-search-interface';
+import './atomic-search-interface';
 import '@/src/components/search/atomic-search-layout/atomic-search-layout';
-import {DEFAULT_MOBILE_BREAKPOINT} from '@/src/utils/replace-breakpoint-utils';
 
 vi.mock('@coveo/headless', {spy: true});
 vi.mock('@/src/components/search/atomic-search-interface/store', {spy: true});

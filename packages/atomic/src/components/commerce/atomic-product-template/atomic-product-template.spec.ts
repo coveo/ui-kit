@@ -2,12 +2,16 @@ import type {Product} from '@coveo/headless/commerce';
 import {page} from '@vitest/browser/context';
 import {html} from 'lit';
 import {describe, expect, it, vi} from 'vitest';
+import {makeMatchConditions} from '@/src/components/common/product-template/product-template-common';
 import {renderInAtomicCommerceInterface} from '@/vitest-utils/testing-helpers/fixtures/atomic/commerce/atomic-commerce-interface-fixture';
 import {sanitizeHtml} from '@/vitest-utils/testing-helpers/testing-utils/sanitize-html';
-import {makeMatchConditions} from '../../common/product-template/product-template-common';
+import '@/src/components/commerce/atomic-commerce-product-list/atomic-commerce-product-list';
 import {AtomicProductTemplate} from './atomic-product-template';
+import './atomic-product-template';
 
-vi.mock('../../common/product-template/product-template-common', {spy: true});
+vi.mock('@/src/components/common/product-template/product-template-common', {
+  spy: true,
+});
 
 describe('atomic-product-template', () => {
   type AtomicProductTemplateProps = Pick<

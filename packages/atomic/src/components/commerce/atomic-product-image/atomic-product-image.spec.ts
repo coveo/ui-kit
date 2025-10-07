@@ -1,12 +1,12 @@
+import type {Product} from '@coveo/headless/commerce';
 import {html} from 'lit';
+import {ifDefined} from 'lit/directives/if-defined.js';
 import {beforeEach, describe, expect, it, vi} from 'vitest';
+import {filterProtocol} from '@/src/utils/xss-utils';
 import {renderInAtomicProduct} from '@/vitest-utils/testing-helpers/fixtures/atomic/commerce/atomic-product-fixture';
 import {buildFakeProduct} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/product';
-import './atomic-product-image';
-import type {Product} from '@coveo/headless/commerce';
-import {ifDefined} from 'lit/directives/if-defined.js';
-import {filterProtocol} from '@/src/utils/xss-utils';
 import type {AtomicProductImage} from './atomic-product-image';
+import './atomic-product-image';
 
 vi.mock('@coveo/headless/commerce', {spy: true});
 vi.mock('@/src/utils/xss-utils', () => ({

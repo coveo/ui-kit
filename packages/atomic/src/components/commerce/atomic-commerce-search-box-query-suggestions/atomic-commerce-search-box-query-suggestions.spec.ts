@@ -3,6 +3,10 @@ import {page} from '@vitest/browser/context';
 import {html} from 'lit';
 import {ifDefined} from 'lit/directives/if-defined.js';
 import {beforeEach, describe, expect, it, type MockInstance, vi} from 'vitest';
+import type {
+  SearchBoxSuggestionElement,
+  SearchBoxSuggestions,
+} from '@/src/components/common/suggestions/suggestions-types';
 import {buildCustomEvent} from '@/src/utils/event-utils';
 import {fixture} from '@/vitest-utils/testing-helpers/fixture';
 import {
@@ -10,12 +14,8 @@ import {
   renderInAtomicCommerceSearchBox,
 } from '@/vitest-utils/testing-helpers/fixtures/atomic/commerce/atomic-commerce-search-box-fixture';
 import {buildFakeLoadQuerySuggestActions} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/query-suggest-actions';
-import type {
-  SearchBoxSuggestionElement,
-  SearchBoxSuggestions,
-} from '../../common/suggestions/suggestions-types';
-import './atomic-commerce-search-box-query-suggestions';
 import {AtomicCommerceSearchBoxQuerySuggestions} from './atomic-commerce-search-box-query-suggestions';
+import './atomic-commerce-search-box-query-suggestions';
 
 vi.mock('@coveo/headless/commerce', {spy: true});
 
