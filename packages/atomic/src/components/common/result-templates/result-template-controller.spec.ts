@@ -1,11 +1,9 @@
 import {html, LitElement, type TemplateResult} from 'lit';
 import {customElement, state} from 'lit/decorators.js';
-import {describe, expect, it, vi} from 'vitest';
+import {describe, expect, it} from 'vitest';
 import type {LitElementWithError} from '@/src/decorators/types';
 import {fixture} from '@/vitest-utils/testing-helpers/fixture';
 import {ResultTemplateController} from './result-template-controller';
-
-vi.mock('./result-template-common', {spy: true});
 
 @customElement('test-result-element')
 class TestResultElement extends LitElement implements LitElementWithError {
