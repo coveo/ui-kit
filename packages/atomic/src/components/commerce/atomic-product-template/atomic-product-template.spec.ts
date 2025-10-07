@@ -4,10 +4,10 @@ import {html} from 'lit';
 import {describe, expect, it, vi} from 'vitest';
 import {renderInAtomicCommerceInterface} from '@/vitest-utils/testing-helpers/fixtures/atomic/commerce/atomic-commerce-interface-fixture';
 import {sanitizeHtml} from '@/vitest-utils/testing-helpers/testing-utils/sanitize-html';
-import {makeMatchConditions} from '../../common/product-template/product-template-common';
+import {makeMatchConditions} from '../../common/template-controller/template-utils';
 import {AtomicProductTemplate} from './atomic-product-template';
 
-vi.mock('../../common/product-template/product-template-common', {spy: true});
+vi.mock('../../common/template-controller/template-utils', {spy: true});
 
 describe('atomic-product-template', () => {
   type AtomicProductTemplateProps = Pick<

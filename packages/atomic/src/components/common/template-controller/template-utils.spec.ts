@@ -7,7 +7,7 @@ import {
   type MockInstance,
   vi,
 } from 'vitest';
-import {isResultSectionNode} from '@/src/components/common/layout/sections';
+import {isResultSectionNode} from '@/src/components/common/layout/item-layout-sections';
 import {isElementNode, isVisualNode} from '@/src/utils/utils';
 import {
   getTemplateNodeType,
@@ -17,6 +17,7 @@ import {
 } from './template-utils';
 
 vi.mock('@/src/components/common/layout/sections', {spy: true});
+vi.mock('@/src/components/common/layout/item-layout-sections', {spy: true});
 vi.mock('@/src/utils/utils', {spy: true});
 
 describe('template-utils', () => {

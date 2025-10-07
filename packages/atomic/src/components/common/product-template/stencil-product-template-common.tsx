@@ -9,7 +9,7 @@ import {tableElementTagName} from '../table-element-utils';
 import {ItemTarget} from '../layout/display-options';
 import {isResultSectionNode} from '@/src/components/common/layout/item-layout-sections';
 
-export {makeMatchConditions} from './product-template-common';
+export {makeMatchConditions} from '../template-controller/template-utils';
 
 export type TemplateContent = DocumentFragment;
 

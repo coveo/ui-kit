@@ -1,7 +1,9 @@
-import {isResultSectionNode} from '@/src/components/common/layout/sections';
+import {isResultSectionNode} from '@/src/components/common/layout/item-layout-sections';
 import {tableElementTagName} from '@/src/components/common/table-element-utils';
 import {intersection} from '@/src/utils/set';
 import {isElementNode, isVisualNode} from '@/src/utils/utils';
+
+export type TemplateContent = DocumentFragment;
 
 export type TemplateNodeType =
   | 'section'
