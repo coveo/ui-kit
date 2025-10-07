@@ -36,7 +36,7 @@ const meta: Meta = {
   argTypes,
 
   afterEach,
-  tags: ['vitest'],
+  tags: ['!test'],
 };
 
 export default meta;

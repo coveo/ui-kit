@@ -4,7 +4,6 @@ export default defineConfig({
   test: {
     projects: [
       './packages/atomic/vitest.config.js',
-      './packages/atomic/vitest-storybook.config.js',
       './packages/bueno/vitest.config.js',
       './packages/shopify/vitest.config.js',
       './packages/headless/vitest.config.js',

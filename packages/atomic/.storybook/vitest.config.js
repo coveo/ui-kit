@@ -4,7 +4,7 @@ import {defineConfig} from 'vitest/config';
 
 // More info at: https://storybook.js.org/docs/next/writing-tests/integrations/vitest-addon
 export default defineConfig({
-  name: 'atomic-storybook',
+  name: 'storybook',
   plugins: [
     // The plugin will run tests for the stories defined in your Storybook config
     // See options at: https://storybook.js.org/docs/next/writing-tests/integrations/vitest-addon#storybooktest
@@ -12,13 +12,10 @@ export default defineConfig({
       configDir: path.join(import.meta.dirname, '.storybook'),
       storybookUrl: 'http://localhost:4400',
       storybookScript: 'npm run dev',
-      tags: {
-        exclude: ['vitest'],
-      },
     }),
   ],
   test: {
-    name: 'atomic-storybook',
+    name: 'storybook',
     browser: {
       enabled: true,
       headless: true,

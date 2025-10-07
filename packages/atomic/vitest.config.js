@@ -1,5 +1,6 @@
 import {readFileSync} from 'node:fs';
 import path, {dirname, resolve} from 'node:path';
+import {storybookTest} from '@storybook/addon-vitest/vitest-plugin';
 import tailwindcss from '@tailwindcss/vite';
 import {defineConfig} from 'vitest/config';
 import packageJson from './package.json' with {type: 'json'};
@@ -22,7 +23,7 @@ function svgTransform(code, id) {
   );
 }
 
-export default defineConfig({
+const atomicDefault = defineConfig({
   name: {label: 'atomic-default'},
   define: {
     'import.meta.env.RESOURCE_URL': `"${resourceUrl}"`,
@@ -123,3 +124,29 @@ export default defineConfig({
     },
   },
 });
+
+// More info at: https://storybook.js.org/docs/next/writing-tests/integrations/vitest-addon
+const storybook = defineConfig({
+  name: 'storybook',
+  plugins: [
+    // The plugin will run tests for the stories defined in your Storybook config
+    // See options at: https://storybook.js.org/docs/next/writing-tests/integrations/vitest-addon#storybooktest
+    storybookTest({
+      configDir: path.join(import.meta.dirname, '.storybook'),
+      storybookUrl: 'http://localhost:4400',
+      storybookScript: 'npm run dev',
+    }),
+  ],
+  test: {
+    name: 'storybook',
+    browser: {
+      enabled: true,
+      headless: true,
+      provider: 'playwright',
+      instances: [{browser: 'chromium'}],
+    },
+    setupFiles: ['./vitest-utils/setup.ts', '.storybook/vitest.setup.ts'],
+  },
+});
+
+export default defineConfig({test: {projects: [atomicDefault, storybook]}});
