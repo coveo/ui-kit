@@ -1,10 +1,12 @@
 import type {SearchEngine} from '@coveo/headless';
 import {provide} from '@lit/context';
 import type {i18n} from 'i18next';
-import {html, LitElement, nothing, type TemplateResult} from 'lit';
+import {html, LitElement, type TemplateResult} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
-import {bindingsContext} from '@/src/components/common/context/bindings-context.js';
+import {vi} from 'vitest';
 import type {BaseAtomicInterface} from '@/src/components/common/interface/interface-controller.js';
+import {bindingsContext} from '@/src/components/context/bindings-context.js';
+import type {AtomicSearchInterface} from '@/src/components/index.js';
 import type {Bindings} from '@/src/components/search/atomic-search-interface/interfaces.js';
 import type {SearchStore} from '@/src/components/search/atomic-search-interface/store.js';
 import {
@@ -12,9 +14,9 @@ import {
   markParentAsReady,
 } from '@/src/utils/init-queue.js';
 import {initializeEventName} from '@/src/utils/initialization-lit-stencil-common-utils.js';
-import {fixture} from '../../../fixture.js';
-import {createTestI18n} from '../../../i18n-utils.js';
-import {genericSubscribe} from '../../headless/common.js';
+import {fixture} from '@/vitest-utils/testing-helpers/fixture.js';
+import {genericSubscribe} from '@/vitest-utils/testing-helpers/fixtures/headless/common.js';
+import {createTestI18n} from '@/vitest-utils/testing-helpers/i18n-utils.js';
 
 @customElement('atomic-search-interface')
 export class FixtureAtomicSearchInterface
@@ -59,23 +61,24 @@ export class FixtureAtomicSearchInterface
     this.bindings = {
       ...bindings,
       i18n: bindings.i18n ?? this.i18n,
+      interfaceElement: this as AtomicSearchInterface,
     } as Bindings;
   }
 
-  setRenderTemplate(template: TemplateResult) {
-    this.template = template;
-  }
-
   protected render() {
-    return this.ready ? this.template : nothing;
+    return html`<slot></slot>`;
   }
 }
 
 export const defaultBindings = {
+  interfaceElement: {} as AtomicSearchInterface,
   store: {
     state: {
       loadingFlags: [],
-    } as Partial<SearchEngine['state']>,
+    } as Partial<SearchStore['state']>,
+    setLoadingFlag: vi.fn(),
+    unsetLoadingFlag: vi.fn(),
+    onChange: vi.fn(),
   } as Partial<SearchStore> as SearchStore,
   engine: {
     subscribe: genericSubscribe,
@@ -114,7 +117,7 @@ export async function renderInAtomicSearchInterface<T extends LitElement>({
   atomicInterface: FixtureAtomicSearchInterface;
 }> {
   const atomicInterface = await fixture<FixtureAtomicSearchInterface>(
-    html`<atomic-search-interface></atomic-search-interface>`
+    html`<atomic-search-interface>${template}</atomic-search-interface>`
   );
   if (!bindings) {
     atomicInterface.setBindings({} as Bindings);
@@ -124,14 +127,13 @@ export async function renderInAtomicSearchInterface<T extends LitElement>({
   } else {
     atomicInterface.setBindings(bindings ?? defaultBindings);
   }
-  atomicInterface.setRenderTemplate(template);
 
   await atomicInterface.updateComplete;
   if (!selector) {
     return {element: null, atomicInterface};
   }
 
-  const element = atomicInterface.shadowRoot!.querySelector<T>(selector)!;
+  const element = atomicInterface.querySelector<T>(selector)!;
   await element.updateComplete;
 
   return {element, atomicInterface};

@@ -1,15 +1,19 @@
 import type {CommerceEngineConfiguration} from '../../../app/commerce-engine/commerce-engine-configuration.js';
+import type {NavigatorContext} from '../../../app/navigator-context-provider.js';
+import {buildMockNavigatorContext} from '../../../test/mock-navigator-context.js';
 import {defineMockCommerceController} from '../../../test/mock-ssr-controller-definitions.js';
 import type {CommerceEngineDefinitionOptions} from '../types/engine.js';
 import {defineCommerceEngine} from './commerce-engine.ssr.js';
 
 describe('Commerce Engine SSR', () => {
+  let mockNavigatorContext: NavigatorContext;
   let definitionOptions: CommerceEngineDefinitionOptions<{
     controller1: ReturnType<typeof defineMockCommerceController>;
     controller2: ReturnType<typeof defineMockCommerceController>;
   }>;
 
   beforeEach(() => {
+    mockNavigatorContext = buildMockNavigatorContext();
     const mockConfiguration = {
       organizationId: 'some-org-id',
       accessToken: 'some-token',
@@ -65,7 +69,8 @@ describe('Commerce Engine SSR', () => {
       const solutionType = definitionName as keyof typeof engineDefinition;
       const staticState = await engineDefinition[solutionType].fetchStaticState(
         {
-          searchParams: {query: 'test'},
+          navigatorContext: mockNavigatorContext,
+          searchParams: {q: 'test'},
           recommendations: [],
           context: {
             view: {url: 'http://example.com'},
@@ -86,7 +91,8 @@ describe('Commerce Engine SSR', () => {
     it('should always return parameter manager controller', async () => {
       const {searchEngineDefinition} = defineCommerceEngine(definitionOptions);
       const staticState = await searchEngineDefinition.fetchStaticState({
-        searchParams: {query: 'foo'},
+        navigatorContext: mockNavigatorContext,
+        searchParams: {q: 'foo'},
         context: {
           view: {url: 'http://example.com/search'},
           country: 'US',
@@ -102,6 +108,7 @@ describe('Commerce Engine SSR', () => {
     it('should always return parameter manager controller', async () => {
       const {listingEngineDefinition} = defineCommerceEngine(definitionOptions);
       const staticState = await listingEngineDefinition.fetchStaticState({
+        navigatorContext: mockNavigatorContext,
         context: {
           view: {url: 'http://example.com'},
           country: 'US',

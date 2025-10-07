@@ -2,17 +2,20 @@ import type {InteractiveProduct, Product} from '@coveo/headless/commerce';
 import {type CSSResultGroup, html, LitElement} from 'lit';
 import {customElement, property} from 'lit/decorators.js';
 import {ref} from 'lit/directives/ref.js';
+import type {CommerceStore} from '@/src/components/commerce/atomic-commerce-interface/store';
+import type {CommerceRecommendationStore} from '@/src/components/commerce/atomic-commerce-recommendation-interface/store';
 import type {DisplayConfig} from '@/src/components/common/item-list/context/item-display-config-context-controller';
 import {
   type ItemRenderingFunction,
   resultComponentClass,
 } from '@/src/components/common/item-list/item-list-common';
-import {
-  type ItemDisplayDensity,
-  type ItemDisplayImageSize,
-  type ItemDisplayLayout,
-  ItemLayout,
+import {CustomRenderController} from '@/src/components/common/layout/custom-render-controller';
+import type {
+  ItemDisplayDensity,
+  ItemDisplayImageSize,
+  ItemDisplayLayout,
 } from '@/src/components/common/layout/display-options';
+import {ItemLayoutController} from '@/src/components/common/layout/item-layout-controller';
 import {booleanConverter} from '@/src/converters/boolean-converter';
 import type {
   InteractiveProductContextEvent,
@@ -21,8 +24,6 @@ import type {
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
 import {ChildrenUpdateCompleteMixin} from '@/src/mixins/children-update-complete-mixin';
 import {parentNodeToString} from '@/src/utils/dom-utils';
-import type {CommerceStore} from '../atomic-commerce-interface/store';
-import type {CommerceRecommendationStore} from '../atomic-commerce-recommendation-interface/store';
 import styles from './atomic-product.tw.css';
 
 /**
@@ -31,10 +32,9 @@ import styles from './atomic-product.tw.css';
 @customElement('atomic-product')
 @withTailwindStyles
 export class AtomicProduct extends ChildrenUpdateCompleteMixin(LitElement) {
-  private layout!: ItemLayout;
   private productRootRef?: HTMLElement;
   private linkContainerRef?: HTMLElement;
-  private executedRenderingFunctionOnce = false;
+  private itemLayoutController!: ItemLayoutController;
 
   static styles: CSSResultGroup = styles;
 
@@ -73,7 +73,7 @@ export class AtomicProduct extends ChildrenUpdateCompleteMixin(LitElement) {
   /**
    * The product link to use when the product is clicked in a grid layout.
    *
-   * @default - An `atomic-result-link` without any customization.
+   * @default - An `atomic-product-link` without any customization.
    */
   @property({type: Object, attribute: 'link-content'}) linkContent: ParentNode =
     new DocumentFragment();
@@ -172,20 +172,27 @@ export class AtomicProduct extends ChildrenUpdateCompleteMixin(LitElement) {
   public async connectedCallback() {
     super.connectedCallback();
 
-    if (!this.content) {
-      console.warn(
-        'AtomicProduct: content property is undefined. Cannot create layout.',
-        this
-      );
-      return;
-    }
+    new CustomRenderController(this, {
+      renderingFunction: () => this.renderingFunction,
+      itemData: () => this.product,
+      rootElementRef: () => this.productRootRef,
+      linkContainerRef: () => this.linkContainerRef,
+      onRenderComplete: (element, output) => {
+        this.itemLayoutController.applyLayoutClassesToElement(element, output);
+      },
+    });
 
-    this.layout = new ItemLayout(
-      this.content.children,
-      this.display,
-      this.density,
-      this.imageSize
-    );
+    this.itemLayoutController = new ItemLayoutController(this, {
+      elementPrefix: 'atomic-product',
+      renderingFunction: () => this.renderingFunction,
+      content: () => this.content,
+      layoutConfig: () => ({
+        display: this.display,
+        density: this.density,
+        imageSize: this.imageSize,
+      }),
+      itemClasses: () => this.classes,
+    });
 
     this.addEventListener(
       'atomic/resolveResult',
@@ -231,14 +238,10 @@ export class AtomicProduct extends ChildrenUpdateCompleteMixin(LitElement) {
     this.removeEventListener('click', this.handleClick);
   }
 
-  private get isCustomRenderFunctionMode() {
-    return this.renderingFunction !== undefined;
-  }
-
   private getContentHTML() {
     if (!this.content) {
       console.warn(
-        'AtomicProduct: content property is undefined. Cannot get content HTML.',
+        'atomic-product: content property is undefined. Cannot get content HTML.',
         this
       );
       return '';
@@ -250,16 +253,8 @@ export class AtomicProduct extends ChildrenUpdateCompleteMixin(LitElement) {
     return parentNodeToString(this.linkContent ?? new HTMLElement());
   }
 
-  private shouldExecuteRenderFunction() {
-    return (
-      this.isCustomRenderFunctionMode &&
-      this.productRootRef &&
-      !this.executedRenderingFunctionOnce
-    );
-  }
-
   public render() {
-    if (this.isCustomRenderFunctionMode) {
+    if (this.renderingFunction !== undefined) {
       return html`
         <div class=${resultComponentClass}>
           <div
@@ -277,19 +272,15 @@ export class AtomicProduct extends ChildrenUpdateCompleteMixin(LitElement) {
         </div>
       `;
     }
-
     // Handle case where content is undefined and layout was not created
-    if (!this.layout) {
+    if (!this.itemLayoutController.getLayout()) {
       return html`<div class=${resultComponentClass}></div>`;
     }
 
     return html`
       <div class=${resultComponentClass}>
         <div
-          class="result-root ${this.layout
-            .getClasses()
-            .concat(this.classes)
-            .join(' ')}"
+          class="result-root ${this.itemLayoutController.getCombinedClasses().join(' ')}"
           .innerHTML=${this.getContentHTML()}
         ></div>
         <div class="link-container" .innerHTML=${this.getLinkHTML()}></div>
@@ -302,62 +293,10 @@ export class AtomicProduct extends ChildrenUpdateCompleteMixin(LitElement) {
       this.store.unsetLoadingFlag(this.loadingFlag);
     }
   }
-
-  private getCombinedClasses(additionalContent?: string): string[] {
-    const layoutClasses = this.layout
-      ? this.layout.getClasses(additionalContent)
-      : [];
-    const extraClasses = this.classes.split(/\s+/).filter((c) => c);
-    return [...layoutClasses, ...extraClasses];
-  }
-
-  private applyClassesToChildren(): void {
-    if (!this.layout) {
-      return;
-    }
-    const classes = this.getCombinedClasses();
-    const root = this.shadowRoot?.querySelector('.result-root');
-    if (!root) {
-      return;
-    }
-    root.querySelectorAll('*').forEach((el) => {
-      const tag = el.tagName.toLowerCase();
-      if (tag.startsWith('atomic-product-')) {
-        (el as HTMLElement).classList.add(...classes);
-      }
-    });
-  }
-
-  public updated(_changedProperties: Map<string, unknown>) {
-    if (this.shouldExecuteRenderFunction()) {
-      const customRenderOutputAsString = this.renderingFunction!(
-        this.product,
-        this.productRootRef!,
-        this.linkContainerRef
-      );
-
-      if (this.layout) {
-        const classes = this.getCombinedClasses(customRenderOutputAsString);
-        this.productRootRef!.classList.add(...classes);
-      }
-
-      this.executedRenderingFunctionOnce = true;
-    }
-
-    if (!this.isCustomRenderFunctionMode) {
-      this.applyClassesToChildren();
-    }
-  }
 }
 
 declare global {
   interface HTMLElementTagNameMap {
     'atomic-product': AtomicProduct;
-  }
-  interface HTMLElementEventMap {
-    'atomic/resolveResult': ProductContextEvent;
-    'atomic/resolveInteractiveResult': InteractiveProductContextEvent;
-    'atomic/resolveStopPropagation': CustomEvent;
-    'atomic/resolveResultDisplayConfig': ProductContextEvent<DisplayConfig>;
   }
 }

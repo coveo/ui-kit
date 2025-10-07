@@ -16,12 +16,12 @@ import {
   renderRecentQuery,
   renderRecentQueryClear,
 } from '../../common/suggestions/recent-queries';
-import {
-  dispatchSearchBoxSuggestionsEvent,
-  type SearchBoxSuggestionElement,
-  type SearchBoxSuggestions,
-  type SearchBoxSuggestionsBindings,
-} from '../../common/suggestions/suggestions-common';
+import {dispatchSearchBoxSuggestionsEvent} from '../../common/suggestions/suggestions-events';
+import type {
+  SearchBoxSuggestionElement,
+  SearchBoxSuggestions,
+  SearchBoxSuggestionsBindings,
+} from '../../common/suggestions/suggestions-types';
 import type {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface';
 
 /**

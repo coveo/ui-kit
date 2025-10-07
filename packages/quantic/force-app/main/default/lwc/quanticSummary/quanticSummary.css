@@ -1,3 +1,3 @@
 .bold {
-  font-weight: bold;
+  font-weight: var(--slds-g-font-weight-7, 700);
 }

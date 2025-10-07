@@ -4,25 +4,29 @@ import * as replaceBreakpoint from '@/src/utils/replace-breakpoint-utils';
 import {renderInAtomicCommerceInterface} from '@/vitest-utils/testing-helpers/fixtures/atomic/commerce/atomic-commerce-interface-fixture';
 import '@/vitest-utils/testing-helpers/fixtures/atomic/commerce/fake-atomic-commerce-search-box-suggestions-fixture';
 import {
+  buildRecentQueriesList,
   buildSearchBox,
   buildStandaloneSearchBox,
-  type CommerceEngine,
   loadQuerySetActions,
+  loadQuerySuggestActions,
 } from '@coveo/headless/commerce';
 import {userEvent} from '@vitest/browser/context';
 import {html} from 'lit';
 import {ifDefined} from 'lit/directives/if-defined.js';
 import {describe, expect, it, vi} from 'vitest';
+import {randomID} from '@/src/utils/utils';
 import {buildFakeLoadQuerySetActions} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/query-set-actions';
 import {buildFakeSearchBox} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/search-box-controller';
 import {buildFakeStandaloneSearchBox} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/standalone-search-box-controller';
-import {randomID} from '../../../utils/utils';
 import {AtomicCommerceSearchBox} from './atomic-commerce-search-box';
 import './atomic-commerce-search-box';
+import {buildFakeCommerceEngine} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/engine';
+import {buildFakeLoadQuerySuggestActions} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/query-suggest-actions';
+import {buildFakeRecentQueriesList} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/recent-queries-list-controller';
 
 vi.mock('@coveo/headless/commerce', {spy: true});
 vi.mock('@/src/utils/device-utils', {spy: true});
-vi.mock(import('../../../utils/utils'), async (importOriginal) => {
+vi.mock(import('@/src/utils/utils'), async (importOriginal) => {
   const mod = await importOriginal();
   return {
     ...mod,
@@ -47,9 +51,7 @@ const commonSearchBoxOptions = {
 };
 
 describe('atomic-commerce-search-box', () => {
-  const mockedEngine = {
-    dispatch: vi.fn(),
-  } as unknown as CommerceEngine;
+  const mockedEngine = buildFakeCommerceEngine({});
   const afterRedirectionMock = vi.fn();
   const updateRedirectUrlMock = vi.fn();
   const submitMock = vi.fn();
@@ -74,6 +76,12 @@ describe('atomic-commerce-search-box', () => {
     redirectTo?: string;
     searchBoxValue?: string;
   } = {}) => {
+    vi.mocked(buildRecentQueriesList).mockReturnValue(
+      buildFakeRecentQueriesList()
+    );
+    vi.mocked(loadQuerySuggestActions).mockReturnValue(
+      buildFakeLoadQuerySuggestActions()
+    );
     vi.mocked(buildSearchBox).mockReturnValue(
       buildFakeSearchBox(
         {
@@ -126,7 +134,6 @@ describe('atomic-commerce-search-box', () => {
         selector: 'atomic-commerce-search-box',
         bindings: (bindings) => {
           bindings.engine = mockedEngine;
-
           return bindings;
         },
       });
@@ -154,11 +161,13 @@ describe('atomic-commerce-search-box', () => {
 
   it('should replace the children with recent-queries & query-suggestions when there are no children', async () => {
     const {element} = await renderSearchBox({noSuggestions: true});
-    expect(element.children.length).toBe(2);
-    expect(element.children[0].tagName).toBe(
+    expect(element.shadowRoot!.children.length).toBe(4);
+    expect(element.shadowRoot!.children[0].tagName).toBe('TEXTAREA');
+    expect(element.shadowRoot!.children[1].tagName).toBe('DIV');
+    expect(element.shadowRoot!.children[2].tagName).toBe(
       'ATOMIC-COMMERCE-SEARCH-BOX-RECENT-QUERIES'
     );
-    expect(element.children[1].tagName).toBe(
+    expect(element.shadowRoot!.children[3].tagName).toBe(
       'ATOMIC-COMMERCE-SEARCH-BOX-QUERY-SUGGESTIONS'
     );
   });
@@ -535,6 +544,7 @@ describe('atomic-commerce-search-box', () => {
   });
 
   it('should call buildSearchBox with clearFilters set to false when clearFilters is set to false', async () => {
+    vi.spyOn(console, 'warn').mockImplementation(() => {});
     await renderSearchBox({
       searchBoxProps: {clearFilters: false},
     });

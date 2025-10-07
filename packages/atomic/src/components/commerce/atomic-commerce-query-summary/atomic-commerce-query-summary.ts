@@ -73,6 +73,7 @@ export class AtomicCommerceQuerySummary
       totalNumberOfProducts,
       hasProducts,
       hasError,
+      isLoading,
     } = this.listingOrSearchSummaryState;
 
     const {i18nKey, highlights, ariaLiveMessage} =
@@ -84,7 +85,7 @@ export class AtomicCommerceQuerySummary
           : '',
         total: totalNumberOfProducts,
         i18n: this.bindings.i18n,
-        isLoading: false,
+        isLoading,
       });
 
     this.ariaMessage.message = ariaLiveMessage;

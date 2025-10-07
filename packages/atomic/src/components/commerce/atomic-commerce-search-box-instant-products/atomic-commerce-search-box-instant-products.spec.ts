@@ -12,7 +12,7 @@ import {buildFakeInstantProducts} from '@/vitest-utils/testing-helpers/fixtures/
 import type {
   SearchBoxSuggestionElement,
   SearchBoxSuggestions,
-} from '../../common/suggestions/suggestions-common';
+} from '../../common/suggestions/suggestions-types';
 import {AtomicCommerceSearchBoxInstantProducts} from './atomic-commerce-search-box-instant-products';
 import './atomic-commerce-search-box-instant-products';
 
@@ -215,7 +215,7 @@ describe('atomic-commerce-search-box-instant-products', () => {
           expect(items[0]).toEqual(
             expect.objectContaining({
               part: 'instant-results-item',
-              ariaLabel: ', instant result',
+              ariaLabel: ', instant product',
               key: 'instant-result-12345',
             })
           );
@@ -225,7 +225,7 @@ describe('atomic-commerce-search-box-instant-products', () => {
           expect(items[items.length - 1]).toEqual(
             expect.objectContaining({
               part: 'instant-results-show-all',
-              ariaLabel: 'See all results',
+              ariaLabel: 'See all products',
               key: 'instant-results-show-all-button',
             })
           );
@@ -273,7 +273,7 @@ describe('atomic-commerce-search-box-instant-products', () => {
               (
                 items[items.length - 1].content as HTMLElement
               ).textContent?.trim()
-            ).toBe('See all results');
+            ).toBe('See all products');
           });
         });
       });
