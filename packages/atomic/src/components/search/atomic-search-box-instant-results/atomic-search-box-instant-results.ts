@@ -27,10 +27,9 @@ import type {
 } from '@/src/components/common/suggestions/suggestions-types';
 import {errorGuard} from '@/src/decorators/error-guard';
 import type {SearchBoxSuggestionsComponent} from '@/src/decorators/types';
-import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles.js';
 import {encodeForDomAttribute} from '@/src/utils/string-utils';
 import {ItemTemplateProvider} from '../../common/item-list/item-template-provider';
-import type {Bindings} from '../atomic-search-interface/atomic-search-interface';
+import type {Bindings} from '../atomic-search-interface/interfaces';
 
 export type AriaLabelGenerator = (
   bindings: Bindings,
@@ -50,7 +49,6 @@ export type AriaLabelGenerator = (
  * @slot default - The default slot where the instant results are rendered.
  */
 @customElement('atomic-search-box-instant-results')
-@withTailwindStyles
 export class AtomicSearchBoxInstantResults
   extends LitElement
   implements SearchBoxSuggestionsComponent<Bindings>

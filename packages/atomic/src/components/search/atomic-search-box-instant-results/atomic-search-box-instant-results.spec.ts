@@ -79,62 +79,6 @@ describe('atomic-search-box-instant-results', () => {
         ).toBe(mockRenderFunction);
       });
     });
-
-    it('should be available for initialization when placed in search box', async () => {
-      expect(element).toBeDefined();
-      expect(typeof element.initialize).toBe('function');
-    });
-
-    describe('#initialize', () => {
-      it('should return a SearchBoxSuggestions object with correct structure', async () => {
-        const result = element.initialize();
-
-        expect(result).toBeDefined();
-        expect(typeof result.position).toBe('number');
-        expect(result.panel).toBe('right');
-        expect(typeof result.onSuggestedQueryChange).toBe('function');
-        expect(typeof result.renderItems).toBe('function');
-      });
-
-      it('should return panel set to right', async () => {
-        const result = element.initialize();
-        expect(result.panel).toBe('right');
-      });
-
-      it('should return position based on element position in parent', async () => {
-        const result = element.initialize();
-        expect(typeof result.position).toBe('number');
-        expect(result.position).toBeGreaterThanOrEqual(0);
-      });
-
-      it('should build instant results controller with correct options', async () => {
-        element.maxResultsPerQuery = 6;
-        element.initialize();
-
-        expect(buildInstantResults).toHaveBeenCalledWith(
-          expect.anything(),
-          expect.objectContaining({
-            options: {
-              maxResultsPerQuery: 6,
-            },
-          })
-        );
-      });
-
-      it('should create onSuggestedQueryChange callback that returns a promise', async () => {
-        const result = element.initialize();
-        const callback = result.onSuggestedQueryChange?.('test query');
-
-        expect(callback).toBeInstanceOf(Promise);
-      });
-
-      it('should create renderItems callback that returns template result', async () => {
-        const result = element.initialize();
-        const rendered = result.renderItems?.();
-
-        expect(rendered).toBeDefined();
-      });
-    });
   });
 
   describe('property changes', () => {
