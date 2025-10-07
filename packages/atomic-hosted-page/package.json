@@ -21,8 +21,8 @@
     "docs/"
   ],
   "scripts": {
-    "clean": "rimraf -rf dist/*",
-    "build": "rimraf -rf dist cdn && tsc --outdir dist && tsc --outdir cdn --project tsconfig.cdn.json && node ./scripts/esbuild.js",
+    "clean": "node ../../utils/ci/rm-rf.mjs dist/*",
+    "build": "node ../../utils/ci/rm-rf.mjs dist cdn && tsc --outdir dist && tsc --outdir cdn --project tsconfig.cdn.json && node ./scripts/esbuild.js",
     "start": "node ./scripts/start.js",
     "e2e": "playwright test",
     "release:phase3": "npm run-script -w=@coveo/ci npm-publish",
@@ -37,7 +37,6 @@
   "devDependencies": {
     "@playwright/test": "1.54.1",
     "@types/node": "22.16.5",
-    "rimraf": "3.0.2",
     "vite": "7.0.6"
   },
   "engines": {

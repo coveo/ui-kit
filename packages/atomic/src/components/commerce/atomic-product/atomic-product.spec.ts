@@ -277,7 +277,7 @@ describe('atomic-product', () => {
       it('should log warning', async () => {
         await renderProduct({content: undefined});
         expect(consoleWarnSpy).toHaveBeenCalledWith(
-          'AtomicProduct: content property is undefined. Cannot create layout.',
+          'atomic-product: content property is undefined. Cannot create layout.',
           expect.any(AtomicProduct)
         );
       });
@@ -305,7 +305,7 @@ describe('atomic-product', () => {
         getContentHTMLMethod();
 
         expect(consoleWarnSpy).toHaveBeenCalledWith(
-          'AtomicProduct: content property is undefined. Cannot get content HTML.',
+          'atomic-product: content property is undefined. Cannot get content HTML.',
           expect.any(AtomicProduct)
         );
       });
