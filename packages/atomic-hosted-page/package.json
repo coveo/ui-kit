@@ -25,9 +25,9 @@
     "build": "node ../../utils/ci/rm-rf.mjs dist cdn && tsc --outdir dist && tsc --outdir cdn --project tsconfig.cdn.json && node ./scripts/esbuild.js",
     "start": "node ./scripts/start.js",
     "e2e": "playwright test",
-    "release:phase3": "npm run-script -w=@coveo/ci npm-publish",
-    "release:phase1": "npm run-script -w=@coveo/ci bump",
-    "promote:npm:latest": "npm run-script -w=@coveo/ci promote-npm-prod"
+    "release:phase3": "pnpm --filter @coveo/ci npm-publish",
+    "release:phase1": "pnpm --filter @coveo/ci bump",
+    "promote:npm:latest": "pnpm --filter @coveo/ci promote-npm-prod"
   },
   "dependencies": {
     "@coveo/bueno": "workspace:*",

@@ -9,6 +9,7 @@ import {
   selectAnswer,
 } from '../../../api/knowledge/stream-answer-api.js';
 import type {StreamAnswerAPIState} from '../../../api/knowledge/stream-answer-api-state.js';
+import {skipToken} from '@reduxjs/toolkit/query';
 import {warnIfUsingNextAnalyticsModeForServiceFeature} from '../../../app/engine.js';
 import type {InsightEngine} from '../../../app/insight-engine/insight-engine.js';
 import type {SearchEngine} from '../../../app/search-engine/search-engine.js';
@@ -111,7 +112,7 @@ const subscribeToSearchRequest = (
       lastRequestId = currentRequestId;
       engine.dispatch(resetAnswer());
 
-      if (triggerParams.q?.length > 0) {
+      if (triggerParams.q && triggerParams.q.length > 0) {
         engine.dispatch(generateAnswer());
       }
     }
@@ -180,7 +181,9 @@ export function buildAnswerApiGeneratedAnswer(
     },
     retry() {
       const answerApiQueryParams = selectAnswerApiQueryParams(getState());
-      engine.dispatch(fetchAnswer(answerApiQueryParams));
+      if (answerApiQueryParams !== skipToken) {
+        engine.dispatch(fetchAnswer(answerApiQueryParams));
+      }
     },
     reset() {
       engine.dispatch(resetAnswer());

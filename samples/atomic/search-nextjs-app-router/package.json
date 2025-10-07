@@ -3,9 +3,9 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "dev": "npm run build:assets && next dev",
-    "build": "npm run-script -w=@coveo/ci if-not-cdn -- \"npm run build:assets && next build\"",
     "build:assets": "node ../../../utils/ci/copy-files.mjs ../../../packages/atomic-react/dist/assets public/assets ../../../packages/atomic-react/dist/lang public/lang",
+    "dev": "pnpm run build:assets && next dev",
+    "build": "pnpm --filter @coveo/ci if-not-cdn -- \"pnpm run build:assets && next build\"",
     "start": "next start",
     "lint": "next lint"
   },

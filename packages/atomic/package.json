@@ -59,7 +59,7 @@
     "web:dev": "npx vite serve dev",
     "web:cdn": "node ./scripts/start-cdn.mjs",
     "prod": "npx serve www -l 3333 --no-request-logging",
-    "test": "npm run test:stencil && npm run test:lit",
+    "test": "pnpm run test:stencil && pnpm run test:lit",
     "test:stencil": "stencil test --spec -- src/utils/initialization-utils.spec.ts",
     "test:lit": "vitest run",
     "test:watch": "vitest",
@@ -74,9 +74,9 @@
     "e2e:insight": "cypress run --config-file cypress-insight-panel.config.mjs --browser chrome",
     "e2e:insight:watch": "cypress open --config-file cypress-insight-panel.config.mjs --browser chrome",
     "generate-component": "node ./scripts/generate-component.mjs",
-    "release:phase3": "npm run-script -w=@coveo/ci npm-publish",
-    "release:phase1": "npm run-script -w=@coveo/ci bump",
-    "promote:npm:latest": "npm run-script -w=@coveo/ci promote-npm-prod",
+    "release:phase3": "pnpm --filter @coveo/ci npm-publish",
+    "release:phase1": "pnpm --filter @coveo/ci bump",
+    "promote:npm:latest": "pnpm --filter @coveo/ci promote-npm-prod",
     "validate:definitions": "tsc --noEmit --esModuleInterop --skipLibCheck ./dist/types/components.d.ts"
   },
   "dependencies": {

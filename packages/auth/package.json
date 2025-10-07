@@ -12,17 +12,17 @@
     "dist/"
   ],
   "scripts": {
-    "dev": "concurrently \"npm run build:definitions -- -w\" \"npm run build:bundles -- dev\"",
-    "build": "npm run build:bundles && npm run build:definitions",
+    "dev": "concurrently \"pnpm run build:definitions -- -w\" \"pnpm run build:bundles -- dev\"",
+    "build": "pnpm run build:bundles && pnpm run build:definitions",
     "test": "jest",
     "test:watch": "jest --watch --colors --no-cache --silent=false",
     "build:bundles": "node esbuild.mjs",
     "build:definitions": "tsc -p src/tsconfig.build.json -d --emitDeclarationOnly --declarationDir dist/definitions",
     "clean": "node ../../utils/ci/rm-rf.mjs dist/*",
-    "release:phase3": "npm run-script -w=@coveo/ci npm-publish",
-    "release:phase1": "npm run-script -w=@coveo/ci bump",
-    "promote:npm:latest": "npm run-script -w=@coveo/ci promote-npm-prod",
-    "e2e": "npm run e2e:saml",
+    "release:phase3": "pnpm --filter @coveo/ci npm-publish",
+    "release:phase1": "pnpm --filter @coveo/ci bump",
+    "promote:npm:latest": "pnpm --filter @coveo/ci promote-npm-prod",
+    "e2e": "pnpm run e2e:saml",
     "e2e:saml": "vite manual-e2e/saml/"
   },
   "repository": {

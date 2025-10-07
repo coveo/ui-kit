@@ -11,9 +11,38 @@
  *   node .github/instructions/pnpm-migration-helper.mjs --apply
  */
 
-import { readFileSync, writeFileSync } from 'fs';
-import { glob } from 'glob';
-import { relative } from 'path';
+import { readFileSync, writeFileSync, readdirSync, statSync } from 'fs';
+import { join, relative } from 'path';
+
+// Simple recursive file finder
+function findFiles(dir, pattern, exclude = []) {
+  const results = [];
+  
+  function walk(currentDir) {
+    const files = readdirSync(currentDir);
+    
+    for (const file of files) {
+      const filePath = join(currentDir, file);
+      const relativePath = relative(process.cwd(), filePath);
+      
+      // Check if excluded
+      if (exclude.some(ex => relativePath.includes(ex))) {
+        continue;
+      }
+      
+      const stat = statSync(filePath);
+      
+      if (stat.isDirectory()) {
+        walk(filePath);
+      } else if (pattern.test(filePath)) {
+        results.push(filePath);
+      }
+    }
+  }
+  
+  walk(dir);
+  return results;
+}
 
 const DRY_RUN = process.argv.includes('--dry-run');
 const APPLY = process.argv.includes('--apply');
@@ -97,10 +126,23 @@ async function processFiles() {
   for (const { name, pattern, replacement, filePatterns } of replacements) {
     console.log(`\nProcessing: ${name}`);
     
-    const files = await glob(filePatterns, {
-      ignore: excludePatterns,
-      nodir: true,
-    });
+    // Convert glob patterns to regex
+    const fileRegex = new RegExp(
+      filePatterns[0]
+        .replace(/\*\*/g, '.*')
+        .replace(/\*/g, '[^/]*')
+        .replace(/\./g, '\\.')
+    );
+    
+    const files = findFiles('.', fileRegex, [
+      'node_modules',
+      'dist',
+      'dist-storybook',
+      '.next',
+      'coverage',
+      'playwright-report',
+      '.git',
+    ]);
 
     for (const file of files) {
       try {

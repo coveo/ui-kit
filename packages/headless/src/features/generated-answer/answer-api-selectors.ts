@@ -1,13 +1,33 @@
 import {createSelector} from '@reduxjs/toolkit';
-import {skipToken} from '@reduxjs/toolkit/query';
+import {skipToken, SkipToken} from '@reduxjs/toolkit/query';
 import {selectQuery} from '../../features/query/query-selectors.js';
+import type {AnswerApiQueryParams} from './generated-answer-request.js';
+import type {GeneratedAnswerState} from './generated-answer-state.js';
+import type {SearchState} from '../search/search-state.js';
+import type {ConfigurationState} from '../configuration/configuration-state.js';
+import type {QueryState} from '../query/query-state.js';
 
-export const selectAnswerTriggerParams = createSelector(
-  (state) => selectQuery(state)?.q,
-  (state) => state.search.requestId,
-  (state) => state.generatedAnswer.cannotAnswer,
-  (state) => state.configuration.analytics.analyticsMode,
-  (state) => state.search.searchAction?.actionCause,
+type AnswerTriggerParams = {
+  q: string | undefined;
+  requestId: string;
+  cannotAnswer: boolean;
+  analyticsMode: string;
+  actionCause: string | undefined;
+};
+
+export const selectAnswerTriggerParams: (state: {
+  query?: QueryState;
+  search: SearchState;
+  generatedAnswer: GeneratedAnswerState;
+  configuration: ConfigurationState;
+}) => AnswerTriggerParams = createSelector(
+  (state: {query?: QueryState}) => selectQuery(state)?.q,
+  (state: {search: SearchState}) => state.search.requestId,
+  (state: {generatedAnswer: GeneratedAnswerState}) =>
+    state.generatedAnswer.cannotAnswer,
+  (state: {configuration: ConfigurationState}) =>
+    state.configuration.analytics.analyticsMode,
+  (state: {search: SearchState}) => state.search.searchAction?.actionCause,
   (q, requestId, cannotAnswer, analyticsMode, actionCause) => ({
     q,
     requestId,
@@ -23,7 +43,10 @@ export const selectAnswerTriggerParams = createSelector(
  *
  * @see https://redux-toolkit.js.org/rtk-query/usage-with-typescript#skipping-queries-with-typescript-using-skiptoken
  */
-export const selectAnswerApiQueryParams = createSelector(
-  (state) => state.generatedAnswer?.answerApiQueryParams,
+export const selectAnswerApiQueryParams: (state: {
+  generatedAnswer?: {answerApiQueryParams?: AnswerApiQueryParams};
+}) => AnswerApiQueryParams | SkipToken = createSelector(
+  (state: {generatedAnswer?: {answerApiQueryParams?: AnswerApiQueryParams}}) =>
+    state.generatedAnswer?.answerApiQueryParams,
   (answerApiQueryParams) => answerApiQueryParams ?? skipToken
 );

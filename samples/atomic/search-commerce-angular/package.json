@@ -3,9 +3,9 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "build": "npm run-script -w=@coveo/ci if-not-cdn -- \"npm run build:assets\" && npm run-script -w=@coveo/ci if-not-cdn -- \"npm run build:angular\"",
+    "build": "pnpm --filter @coveo/ci if-not-cdn -- \"pnpm run build:assets\" && pnpm --filter @coveo/ci if-not-cdn -- \"pnpm run build:angular\"",
     "build:angular": "ng build",
-    "dev": "npm run build:assets && npm run dev:angular",
+    "dev": "pnpm run build:assets && pnpm run dev:angular",
     "dev:angular": "ng serve --host=0.0.0.0 --prebundle=false",
     "build:assets": "node ../../../utils/ci/copy-files.mjs ../../../packages/atomic-angular/projects/atomic-angular/dist/assets src/assets ../../../packages/atomic-angular/projects/atomic-angular/dist/lang src/lang"
   },

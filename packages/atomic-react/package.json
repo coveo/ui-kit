@@ -10,17 +10,17 @@
     "directory": "packages/atomic-react"
   },
   "scripts": {
-    "gen:lit": "node ./scripts/build-lit.mjs && npm run build:fixLoaderImportPaths && npm run build:fixGeneratedImportPaths",
-    "build": "npm run build:bundles && npm run build:types && npm run build:assets",
     "clean": "node ../../utils/ci/rm-rf.mjs dist",
+    "gen:lit": "node ./scripts/build-lit.mjs && pnpm run build:fixLoaderImportPaths && pnpm run build:fixGeneratedImportPaths",
+    "build": "pnpm run build:bundles && pnpm run build:types && pnpm run build:assets",
     "build:fixLoaderImportPaths": "node ./scripts/fix-loader-import-paths.js",
     "build:fixGeneratedImportPaths": "fix-esm-import-path src/components/stencil-generated",
     "build:bundles": "rollup --config rollup.config.js",
     "build:types": "tsc --project tsconfig.types.json",
-    "release:phase3": "npm run-script -w=@coveo/ci npm-publish",
-    "release:phase1": "npm run-script -w=@coveo/ci bump",
-    "promote:npm:latest": "npm run-script -w=@coveo/ci promote-npm-prod",
-    "build:assets": "node ../../utils/ci/copy-files.mjs ../atomic/dist/atomic/assets dist/assets ../atomic/dist/atomic/lang dist/lang"
+    "build:assets": "node ../../utils/ci/copy-files.mjs ../atomic/dist/atomic/assets dist/assets ../atomic/dist/atomic/lang dist/lang",
+    "release:phase3": "pnpm --filter @coveo/ci npm-publish",
+    "release:phase1": "pnpm --filter @coveo/ci bump",
+    "promote:npm:latest": "pnpm --filter @coveo/ci promote-npm-prod"
   },
   "module": "./dist/esm/atomic-react.mjs",
   "main": "./dist/cjs/atomic-react.cjs",
