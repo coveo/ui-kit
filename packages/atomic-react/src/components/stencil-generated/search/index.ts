@@ -73,7 +73,6 @@ export const AtomicResultTimespan = /*@__PURE__*/createReactComponent<JSX.Atomic
 export const AtomicSearchBox = /*@__PURE__*/createReactComponent<JSX.AtomicSearchBox, HTMLAtomicSearchBoxElement>('atomic-search-box');
 export const AtomicSearchBoxInstantResults = /*@__PURE__*/createReactComponent<JSX.AtomicSearchBoxInstantResults, HTMLAtomicSearchBoxInstantResultsElement>('atomic-search-box-instant-results');
 export const AtomicSearchBoxQuerySuggestions = /*@__PURE__*/createReactComponent<JSX.AtomicSearchBoxQuerySuggestions, HTMLAtomicSearchBoxQuerySuggestionsElement>('atomic-search-box-query-suggestions');
-export const AtomicSearchBoxRecentQueries = /*@__PURE__*/createReactComponent<JSX.AtomicSearchBoxRecentQueries, HTMLAtomicSearchBoxRecentQueriesElement>('atomic-search-box-recent-queries');
 export const AtomicSegmentedFacet = /*@__PURE__*/createReactComponent<JSX.AtomicSegmentedFacet, HTMLAtomicSegmentedFacetElement>('atomic-segmented-facet');
 export const AtomicSegmentedFacetScrollable = /*@__PURE__*/createReactComponent<JSX.AtomicSegmentedFacetScrollable, HTMLAtomicSegmentedFacetScrollableElement>('atomic-segmented-facet-scrollable');
 export const AtomicSmartSnippet = /*@__PURE__*/createReactComponent<JSX.AtomicSmartSnippet, HTMLAtomicSmartSnippetElement>('atomic-smart-snippet');
