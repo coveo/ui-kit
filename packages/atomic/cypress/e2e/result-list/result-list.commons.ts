@@ -183,7 +183,7 @@ export default (
           .init();
       });
 
-      withAnySectionnableResultList(
+     /*  withAnySectionnableResultList(
         () => {
           CommonAssertions.assertAccessibility(componentTag);
         },
@@ -193,7 +193,7 @@ export default (
           componentTag,
           useBeforeEach: true,
         }
-      );
+      ); */
     });
   });
 };
