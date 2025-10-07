@@ -37,10 +37,10 @@ import '@/src/components/search/atomic-search-layout/atomic-search-layout';
 import {DEFAULT_MOBILE_BREAKPOINT} from '@/src/utils/replace-breakpoint-utils';
 
 vi.mock('@coveo/headless', {spy: true});
+vi.mock('@/src/components/common/interface/analytics-config', {spy: true});
 vi.mock('@/src/components/search/atomic-search-interface/store', {spy: true});
 vi.mock('@/src/utils/init-queue', {spy: true});
 vi.mock('./analytics-config', {spy: true});
-vi.mock('@/src/components/common/interface/analytics-config', {spy: true});
 
 @customElement('test-element')
 @bindings()
@@ -147,21 +147,21 @@ describe('atomic-search-interface', () => {
 
     vi.mocked(buildUrlManager).mockReturnValue(buildFakeUrlManager());
 
-    vi.mocked(loadFieldActions).mockReturnValue({
+    vi.mocked(loadFieldActions, {partial: true}).mockReturnValue({
       registerFieldsToInclude: vi.fn(),
-    } as unknown as ReturnType<typeof loadFieldActions>);
+    });
 
-    vi.mocked(loadQueryActions).mockReturnValue({
+    vi.mocked(loadQueryActions, {partial: true}).mockReturnValue({
       updateQuery: vi.fn(),
-    } as unknown as ReturnType<typeof loadQueryActions>);
+    });
 
-    vi.mocked(loadSearchConfigurationActions).mockReturnValue({
+    vi.mocked(loadSearchConfigurationActions, {partial: true}).mockReturnValue({
       updateSearchConfiguration: vi.fn(),
-    } as unknown as ReturnType<typeof loadSearchConfigurationActions>);
+    });
 
-    vi.mocked(loadConfigurationActions).mockReturnValue({
+    vi.mocked(loadConfigurationActions, {partial: true}).mockReturnValue({
       updateAnalyticsConfiguration: vi.fn(),
-    } as unknown as ReturnType<typeof loadConfigurationActions>);
+    });
 
     vi.mocked(augmentAnalyticsConfigWithAtomicVersion).mockReturnValue({
       source: {
@@ -690,9 +690,9 @@ describe('atomic-search-interface', () => {
             },
           });
 
-          vi.mocked(loadConfigurationActions).mockReturnValue({
+          vi.mocked(loadConfigurationActions, {partial: true}).mockReturnValue({
             updateAnalyticsConfiguration: mockUpdateAnalyticsConfiguration,
-          } as unknown as ReturnType<typeof loadConfigurationActions>);
+          });
 
           await element.initializeWithSearchEngine(engine);
 
@@ -781,9 +781,9 @@ describe('atomic-search-interface', () => {
   describe('#fieldsToInclude', () => {
     it('should register fieldsToInclude when the engine is created', async () => {
       const registerFieldsToIncludeMock = vi.fn();
-      vi.mocked(loadFieldActions).mockReturnValue({
+      vi.mocked(loadFieldActions, {partial: true}).mockReturnValue({
         registerFieldsToInclude: registerFieldsToIncludeMock,
-      } as unknown as ReturnType<typeof loadFieldActions>);
+      });
 
       const element = await setupElement({
         fieldsToInclude: ['field1', 'field2'],
@@ -832,9 +832,9 @@ describe('atomic-search-interface', () => {
 
     it('should register updated fields with engine when fieldsToInclude changes', async () => {
       const registerFieldsToIncludeMock = vi.fn();
-      vi.mocked(loadFieldActions).mockReturnValue({
+      vi.mocked(loadFieldActions, {partial: true}).mockReturnValue({
         registerFieldsToInclude: registerFieldsToIncludeMock,
-      } as unknown as ReturnType<typeof loadFieldActions>);
+      });
 
       const element = await setupElement();
       await element.initialize(searchEngineConfig);
