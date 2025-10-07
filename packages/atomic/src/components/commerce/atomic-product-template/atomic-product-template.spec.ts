@@ -5,7 +5,6 @@ import {describe, expect, it, vi} from 'vitest';
 import {makeMatchConditions} from '@/src/components/common/product-template/product-template-common';
 import {renderInAtomicCommerceInterface} from '@/vitest-utils/testing-helpers/fixtures/atomic/commerce/atomic-commerce-interface-fixture';
 import {sanitizeHtml} from '@/vitest-utils/testing-helpers/testing-utils/sanitize-html';
-import '@/src/components/commerce/atomic-commerce-product-list/atomic-commerce-product-list';
 import {AtomicProductTemplate} from './atomic-product-template';
 import './atomic-product-template';
 

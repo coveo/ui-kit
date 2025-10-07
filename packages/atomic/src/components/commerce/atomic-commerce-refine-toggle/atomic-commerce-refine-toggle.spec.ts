@@ -14,7 +14,7 @@ import {buildFakeProductListing} from '@/vitest-utils/testing-helpers/fixtures/h
 import {buildFakeSearch} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/search-controller';
 import {buildFakeSummary} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/summary-subcontroller';
 import type {AtomicCommerceRefineToggle} from './atomic-commerce-refine-toggle';
-import './atomic-commerce-refine-toggle.js';
+import './atomic-commerce-refine-toggle';
 
 vi.mock('@coveo/headless/commerce', {spy: true});
 
