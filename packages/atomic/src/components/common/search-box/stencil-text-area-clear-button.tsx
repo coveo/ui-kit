@@ -26,7 +26,7 @@ export const TextAreaClearButton: FunctionalComponent<Props> = ({
         onClick?.();
         inputRef?.focus();
       }}
-      ariaLabel={bindings.i18n.t('clear')}
+      ariaLabel={bindings.i18n.t('clear-search')}
       {...defaultButtonProps}
     >
       <atomic-icon

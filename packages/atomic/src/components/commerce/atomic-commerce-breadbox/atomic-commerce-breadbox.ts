@@ -25,7 +25,10 @@ import {bindings} from '@/src/decorators/bindings';
 import {errorGuard} from '@/src/decorators/error-guard';
 import type {InitializableComponent} from '@/src/decorators/types';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles.js';
-import {FocusTargetController} from '@/src/utils/accessibility-utils';
+import {
+  AriaLiveRegionController,
+  FocusTargetController,
+} from '@/src/utils/accessibility-utils';
 import {parseDate} from '@/src/utils/date-utils';
 import {getFieldValueCaption} from '@/src/utils/field-utils';
 import {renderBreadcrumbButton} from '../../common/breadbox/breadcrumb-button';
@@ -98,6 +101,12 @@ export class AtomicCommerceBreadbox
   @state() public error!: Error;
   @state() private isCollapsed = true;
   @state() private showMoreText = '';
+
+  protected breadboxAriaMessage = new AriaLiveRegionController(
+    this,
+    'breadbox',
+    true
+  );
 
   /**
    * This prop allows you to control the display depth
@@ -360,6 +369,7 @@ export class AtomicCommerceBreadbox
               await this.breadcrumbShowMoreFocus.setTarget(ref);
             }
           },
+          ariaController: this.breadboxAriaMessage,
         },
       })(
         html`${renderBreadcrumbContent({
