@@ -28,15 +28,15 @@
     "e2e:playwright:lws-disabled": "npx playwright test --project=LWS-disabled",
     "scratch:create": "sf org create scratch --set-default --definition-file config/lws-enabled-scratch-def.json --alias Quantic__LWS_enabled",
     "setup:examples": "pnpm run create:lws-enabled && pnpm run create:lws-disabled",
-    "create:lws-enabled": "../../node_modules/.bin/ts-node scripts/build/deploy-community.ts --scratch-org-def-path=./config/lws-enabled-scratch-def.json",
-    "create:lws-disabled": "../../node_modules/.bin/ts-node scripts/build/deploy-community.ts --scratch-org-def-path=./config/lws-disabled-scratch-def.json",
+    "create:lws-enabled": "ts-node scripts/build/deploy-community.ts --scratch-org-def-path=./config/lws-enabled-scratch-def.json",
+    "create:lws-disabled": "ts-node scripts/build/deploy-community.ts --scratch-org-def-path=./config/lws-disabled-scratch-def.json",
     "deploy:main": "sf project deploy start --source-dir force-app/main --target-org",
     "deploy:examples": "sf project deploy start --source-dir force-app/examples --source-dir force-app/solutionExamples --target-org",
     "deploy:lws-disabled": "pnpm run deploy:main --target-org Quantic__LWS_disabled && pnpm run deploy:examples --target-org Quantic__LWS_disabled",
     "deploy:lws-enabled": "pnpm run deploy:main --target-org Quantic__LWS_enabled && pnpm run deploy:examples --target-org Quantic__LWS_enabled",
     "deploy:all": "pnpm run deploy:lws-enabled && pnpm run deploy:lws-disabled",
     "build:doc": "jsdoc -c jsdoc-config.json",
-    "publish:sfdx": "../../node_modules/.bin/ts-node scripts/build/create-package.ts --remove-translations",
+    "publish:sfdx": "ts-node scripts/build/create-package.ts --remove-translations",
     "promote:sfdx": "pnpm run publish:sfdx -- --promote",
     "promote:sfdx:ci": "pnpm run publish:sfdx -- --promote --ci",
     "release:phase1": "pnpm --filter @coveo/ci bump",
@@ -44,7 +44,7 @@
     "promote:npm:latest": "pnpm --filter @coveo/ci promote-npm-prod",
     "preinstall": "node scripts/npm/check-sfdx-project.js",
     "postinstall": "node scripts/npm/setup-quantic.js",
-    "babel:headless": "babel ../../node_modules/@coveo/headless/dist/quantic --delete-dir-on-start --out-dir .tmp/quantic-compiled --extensions .js --minified"
+    "babel:headless": "babel ./node_modules/@coveo/headless/dist/quantic --delete-dir-on-start --out-dir .tmp/quantic-compiled --extensions .js --minified"
   },
   "dependencies": {
     "@coveo/bueno": "workspace:*",

@@ -3,7 +3,7 @@
   "private": true,
   "version": "3.0.65",
   "scripts": {
-    "postinstall": "husky install && patch-package && npx playwright install",
+    "postinstall": "husky install && npx playwright install",
     "reset:install": "git checkout origin/main pnpm-lock.yaml && pnpm install",
     "clean:install": "git clean -xfd && pnpm run reset:install",
     "dev:atomic": "concurrently \"pnpm --filter @coveo/headless dev\" \"pnpm --filter @coveo/atomic start\"",
@@ -46,7 +46,6 @@
     "husky": "9.1.7",
     "knip": "5.62.0",
     "lint-staged": "16.1.2",
-    "patch-package": "8.0.0",
     "playwright": "1.54.1",
     "publint": "0.3.12",
     "semver": "7.7.2",
@@ -59,6 +58,16 @@
       "@types/async-retry": {
         "@types/retry": "0.12.5"
       }
+    }
+  },
+  "pnpm": {
+    "patchedDependencies": {
+      "@stencil/angular-output-target@0.8.4": "patches/@stencil+angular-output-target+0.8.4.patch",
+      "@stencil/core@4.20.0": "patches/@stencil+core+4.20.0.patch",
+      "@stencil/react-output-target@0.5.3": "patches/@stencil+react-output-target+0.5.3.patch",
+      "@wc-toolkit/storybook-helpers@9.0.1": "patches/@wc-toolkit+storybook-helpers+9.0.1.patch",
+      "fix-esm-import-path@1.10.1": "patches/fix-esm-import-path+1.10.1.patch",
+      "jest-environment-jsdom@29.7.0": "patches/jest-environment-jsdom+29.7.0.patch"
     }
   },
   "engines": {

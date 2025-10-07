@@ -37,6 +37,7 @@ export const createForwardRef = <PropType, ElementType>(ReactComponent: any, dis
   };
   forwardRef.displayName = displayName;
 
+  // @ts-expect-error - React 19 type compatibility issue with Stencil-generated code
   return React.forwardRef(forwardRef);
 };
 

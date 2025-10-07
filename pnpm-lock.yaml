@@ -4,6 +4,26 @@ settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
+patchedDependencies:
+  '@stencil/angular-output-target@0.8.4':
+    hash: xqpzkuct6o2mw2odrombobymri
+    path: patches/@stencil+angular-output-target+0.8.4.patch
+  '@stencil/core@4.20.0':
+    hash: j56542vvgp6ahr5hrxe7ltbozy
+    path: patches/@stencil+core+4.20.0.patch
+  '@stencil/react-output-target@0.5.3':
+    hash: uemvfuas6xlfsy7ezfehqkr5gy
+    path: patches/@stencil+react-output-target+0.5.3.patch
+  '@wc-toolkit/storybook-helpers@9.0.1':
+    hash: ueawpxboaca3a3b5nqq25zvo4m
+    path: patches/@wc-toolkit+storybook-helpers+9.0.1.patch
+  fix-esm-import-path@1.10.1:
+    hash: 6hlts3xsenyooouizlcqcj4iby
+    path: patches/fix-esm-import-path+1.10.1.patch
+  jest-environment-jsdom@29.7.0:
+    hash: gyw67zmqlhk7cq5runulptroye
+    path: patches/jest-environment-jsdom+29.7.0.patch
+
 importers:
 
   .:
@@ -59,9 +79,6 @@ importers:
       lint-staged:
         specifier: 16.1.2
         version: 16.1.2
-      patch-package:
-        specifier: 8.0.0
-        version: 8.0.0
       playwright:
         specifier: 1.54.1
         version: 1.54.1
@@ -92,6 +109,9 @@ importers:
       '@coveo/headless':
         specifier: workspace:*
         version: link:../headless
+      '@coveo/relay-event-types':
+        specifier: 15.1.0
+        version: 15.1.0
       '@lit/context':
         specifier: 1.1.6
         version: 1.1.6
@@ -106,7 +126,7 @@ importers:
         version: 2.27.2(postcss@8.5.6)
       '@stencil/core':
         specifier: 4.20.0
-        version: 4.20.0
+        version: 4.20.0(patch_hash=j56542vvgp6ahr5hrxe7ltbozy)
       cssnano:
         specifier: 7.1.1
         version: 7.1.1(postcss@8.5.6)
@@ -158,13 +178,13 @@ importers:
         version: 6.0.2(rollup@4.46.2)
       '@stencil-community/postcss':
         specifier: 2.2.0
-        version: 2.2.0(@stencil/core@4.20.0)
+        version: 2.2.0(@stencil/core@4.20.0(patch_hash=j56542vvgp6ahr5hrxe7ltbozy))
       '@stencil/angular-output-target':
         specifier: 0.8.4
-        version: 0.8.4(@stencil/core@4.20.0)
+        version: 0.8.4(patch_hash=xqpzkuct6o2mw2odrombobymri)(@stencil/core@4.20.0(patch_hash=j56542vvgp6ahr5hrxe7ltbozy))
       '@stencil/react-output-target':
         specifier: 0.5.3
-        version: 0.5.3(@stencil/core@4.20.0)
+        version: 0.5.3(patch_hash=uemvfuas6xlfsy7ezfehqkr5gy)(@stencil/core@4.20.0(patch_hash=j56542vvgp6ahr5hrxe7ltbozy))
       '@storybook/addon-a11y':
         specifier: 9.1.2
         version: 9.1.2(storybook@9.1.2(@testing-library/dom@10.4.1)(prettier@3.6.2)(vite@7.0.6(@types/node@22.16.5)(jiti@2.6.1)(less@4.4.2)(lightningcss@1.30.1)(sass@1.93.2)(terser@5.44.0)(tsx@4.20.6)(yaml@2.8.1)))
@@ -197,7 +217,7 @@ importers:
         version: 3.2.4(playwright@1.54.1)(vite@7.0.6(@types/node@22.16.5)(jiti@2.6.1)(less@4.4.2)(lightningcss@1.30.1)(sass@1.93.2)(terser@5.44.0)(tsx@4.20.6)(yaml@2.8.1))(vitest@3.2.4)
       '@wc-toolkit/storybook-helpers':
         specifier: 9.0.1
-        version: 9.0.1(lit@3.3.1)(storybook@9.1.2(@testing-library/dom@10.4.1)(prettier@3.6.2)(vite@7.0.6(@types/node@22.16.5)(jiti@2.6.1)(less@4.4.2)(lightningcss@1.30.1)(sass@1.93.2)(terser@5.44.0)(tsx@4.20.6)(yaml@2.8.1)))
+        version: 9.0.1(patch_hash=ueawpxboaca3a3b5nqq25zvo4m)(lit@3.3.1)(storybook@9.1.2(@testing-library/dom@10.4.1)(prettier@3.6.2)(vite@7.0.6(@types/node@22.16.5)(jiti@2.6.1)(less@4.4.2)(lightningcss@1.30.1)(sass@1.93.2)(terser@5.44.0)(tsx@4.20.6)(yaml@2.8.1)))
       axe-core:
         specifier: 4.10.3
         version: 4.10.3
@@ -303,7 +323,7 @@ importers:
     devDependencies:
       '@angular-devkit/build-angular':
         specifier: 19.2.3
-        version: 19.2.3(@angular/compiler-cli@19.2.2(@angular/compiler@19.2.2(@angular/core@19.2.2(rxjs@7.8.2)(zone.js@0.15.1)))(typescript@5.8.3))(@angular/compiler@19.2.2(@angular/core@19.2.2(rxjs@7.8.2)(zone.js@0.15.1)))(@types/node@22.16.5)(chokidar@4.0.3)(jest-environment-jsdom@29.7.0)(jest@29.7.0(@types/node@22.16.5)(ts-node@10.9.2(@types/node@22.16.5)(typescript@5.8.3)))(jiti@2.6.1)(lightningcss@1.30.1)(ng-packagr@19.2.0(@angular/compiler-cli@19.2.2(@angular/compiler@19.2.2(@angular/core@19.2.2(rxjs@7.8.2)(zone.js@0.15.1)))(typescript@5.8.3))(tailwindcss@4.1.13)(tslib@2.8.1)(typescript@5.8.3))(tailwindcss@4.1.13)(tsx@4.20.6)(typescript@5.8.3)(vite@7.0.6(@types/node@22.16.5)(jiti@2.6.1)(less@4.2.2)(lightningcss@1.30.1)(sass@1.85.0)(terser@5.44.0)(tsx@4.20.6)(yaml@2.8.1))(yaml@2.8.1)
+        version: 19.2.3(@angular/compiler-cli@19.2.2(@angular/compiler@19.2.2(@angular/core@19.2.2(rxjs@7.8.2)(zone.js@0.15.1)))(typescript@5.8.3))(@angular/compiler@19.2.2(@angular/core@19.2.2(rxjs@7.8.2)(zone.js@0.15.1)))(@types/node@22.16.5)(chokidar@4.0.3)(jest-environment-jsdom@29.7.0(patch_hash=gyw67zmqlhk7cq5runulptroye))(jest@29.7.0(@types/node@22.16.5)(ts-node@10.9.2(@types/node@22.16.5)(typescript@5.8.3)))(jiti@2.6.1)(lightningcss@1.30.1)(ng-packagr@19.2.0(@angular/compiler-cli@19.2.2(@angular/compiler@19.2.2(@angular/core@19.2.2(rxjs@7.8.2)(zone.js@0.15.1)))(typescript@5.8.3))(tailwindcss@4.1.13)(tslib@2.8.1)(typescript@5.8.3))(tailwindcss@4.1.13)(tsx@4.20.6)(typescript@5.8.3)(vite@7.0.6(@types/node@22.16.5)(jiti@2.6.1)(less@4.2.2)(lightningcss@1.30.1)(sass@1.85.0)(terser@5.44.0)(tsx@4.20.6)(yaml@2.8.1))(yaml@2.8.1)
       '@angular/cli':
         specifier: 19.2.3
         version: 19.2.3(@types/node@22.16.5)(chokidar@4.0.3)
@@ -379,7 +399,7 @@ importers:
         version: link:../headless
       '@lit/react':
         specifier: 1.0.6
-        version: 1.0.6(@types/react@18.3.3)
+        version: 1.0.6(@types/react@19.1.1)
     devDependencies:
       '@rollup/plugin-commonjs':
         specifier: 28.0.6
@@ -397,14 +417,14 @@ importers:
         specifier: 22.16.5
         version: 22.16.5
       '@types/react':
-        specifier: 18.3.3
-        version: 18.3.3
+        specifier: 19.1.1
+        version: 19.1.1
       '@types/react-dom':
-        specifier: 18.3.0
-        version: 18.3.0
+        specifier: 19.1.1
+        version: 19.1.1(@types/react@19.1.1)
       fix-esm-import-path:
         specifier: 1.10.1
-        version: 1.10.1
+        version: 1.10.1(patch_hash=6hlts3xsenyooouizlcqcj4iby)
       ncp:
         specifier: 2.0.0
         version: 2.0.0
@@ -528,7 +548,7 @@ importers:
         version: link:../../../../../headless
       '@stencil/core':
         specifier: 4.20.0
-        version: 4.20.0
+        version: 4.20.0(patch_hash=j56542vvgp6ahr5hrxe7ltbozy)
     devDependencies:
       '@coveo/atomic-component-health-check':
         specifier: 2.2.19
@@ -574,7 +594,7 @@ importers:
         version: link:../../../../../headless
       '@stencil/core':
         specifier: 4.20.0
-        version: 4.20.0
+        version: 4.20.0(patch_hash=j56542vvgp6ahr5hrxe7ltbozy)
     devDependencies:
       '@coveo/atomic-component-health-check':
         specifier: 2.2.19
@@ -617,7 +637,7 @@ importers:
         version: link:../headless
       '@stencil/core':
         specifier: 4.20.0
-        version: 4.20.0
+        version: 4.20.0(patch_hash=j56542vvgp6ahr5hrxe7ltbozy)
     devDependencies:
       '@coveo/create-atomic-rollup-plugin':
         specifier: 1.2.0
@@ -917,7 +937,7 @@ importers:
     dependencies:
       '@coveo/atomic-react':
         specifier: 3.3.12
-        version: 3.3.12(@coveo/bueno@1.1.2)(@coveo/headless@3.31.1(encoding@0.1.13)(pino-pretty@13.1.1)(react@19.1.1)(redux@5.0.1)(typescript@5.8.3))(@types/react@18.3.3)(encoding@0.1.13)(react-dom@19.1.1(react@19.1.1))(react@19.1.1)(typescript@5.8.3)
+        version: 3.3.12(@coveo/bueno@1.1.2)(@coveo/headless@3.31.1(encoding@0.1.13)(pino-pretty@13.1.1)(react@19.1.1)(redux@5.0.1)(typescript@5.8.3))(@types/react@18.3.3)(encoding@0.1.13)(postcss@8.5.6)(react-dom@19.1.1(react@19.1.1))(react@19.1.1)(typescript@5.8.3)
       '@coveo/headless':
         specifier: 3.31.1
         version: 3.31.1(encoding@0.1.13)(pino-pretty@13.1.1)(react@19.1.1)(redux@5.0.1)(typescript@5.8.3)
@@ -956,14 +976,14 @@ importers:
   samples/atomic/search-nextjs-app-router:
     dependencies:
       '@coveo/atomic':
-        specifier: 3.33.8
-        version: 3.33.8(@coveo/bueno@1.1.2)(@coveo/headless@3.31.1(encoding@0.1.13)(pino-pretty@13.1.1)(react@19.1.1)(redux@5.0.1)(typescript@5.8.3))(encoding@0.1.13)(postcss@8.5.6)(typescript@5.8.3)
+        specifier: workspace:*
+        version: link:../../../packages/atomic
       '@coveo/atomic-react':
-        specifier: 3.3.12
-        version: 3.3.12(@coveo/bueno@1.1.2)(@coveo/headless@3.31.1(encoding@0.1.13)(pino-pretty@13.1.1)(react@19.1.1)(redux@5.0.1)(typescript@5.8.3))(@types/react@19.1.1)(encoding@0.1.13)(postcss@8.5.6)(react-dom@19.1.1(react@19.1.1))(react@19.1.1)(typescript@5.8.3)
+        specifier: workspace:*
+        version: link:../../../packages/atomic-react
       '@coveo/headless':
-        specifier: 3.31.1
-        version: 3.31.1(encoding@0.1.13)(pino-pretty@13.1.1)(react@19.1.1)(redux@5.0.1)(typescript@5.8.3)
+        specifier: workspace:*
+        version: link:../../../packages/headless
       next:
         specifier: 15.2.4
         version: 15.2.4(@playwright/test@1.54.1)(react-dom@19.1.1(react@19.1.1))(react@19.1.1)(sass@1.93.2)
@@ -993,14 +1013,14 @@ importers:
   samples/atomic/search-nextjs-pages-router:
     dependencies:
       '@coveo/atomic':
-        specifier: 3.33.8
-        version: 3.33.8(@coveo/bueno@1.1.2)(@coveo/headless@3.31.1(encoding@0.1.13)(pino-pretty@13.1.1)(react@19.1.1)(redux@5.0.1)(typescript@5.8.3))(encoding@0.1.13)(postcss@8.5.6)(typescript@5.8.3)
+        specifier: workspace:*
+        version: link:../../../packages/atomic
       '@coveo/atomic-react':
-        specifier: 3.3.12
-        version: 3.3.12(@coveo/bueno@1.1.2)(@coveo/headless@3.31.1(encoding@0.1.13)(pino-pretty@13.1.1)(react@19.1.1)(redux@5.0.1)(typescript@5.8.3))(@types/react@19.1.1)(encoding@0.1.13)(postcss@8.5.6)(react-dom@19.1.1(react@19.1.1))(react@19.1.1)(typescript@5.8.3)
+        specifier: workspace:*
+        version: link:../../../packages/atomic-react
       '@coveo/headless':
-        specifier: 3.31.1
-        version: 3.31.1(encoding@0.1.13)(pino-pretty@13.1.1)(react@19.1.1)(redux@5.0.1)(typescript@5.8.3)
+        specifier: workspace:*
+        version: link:../../../packages/headless
       next:
         specifier: 15.2.4
         version: 15.2.4(@playwright/test@1.54.1)(react-dom@19.1.1(react@19.1.1))(react@19.1.1)(sass@1.93.2)
@@ -1033,17 +1053,17 @@ importers:
   samples/atomic/search-stencil:
     dependencies:
       '@coveo/atomic':
-        specifier: 3.33.8
-        version: 3.33.8(@coveo/bueno@1.1.2)(@coveo/headless@3.31.1(encoding@0.1.13)(pino-pretty@13.1.1)(react@19.1.1)(redux@5.0.1)(typescript@5.8.3))(encoding@0.1.13)(postcss@8.5.6)(typescript@5.8.3)
+        specifier: workspace:*
+        version: link:../../../packages/atomic
       '@coveo/headless':
-        specifier: 3.31.1
-        version: 3.31.1(encoding@0.1.13)(pino-pretty@13.1.1)(react@19.1.1)(redux@5.0.1)(typescript@5.8.3)
+        specifier: workspace:*
+        version: link:../../../packages/headless
       '@stencil/core':
         specifier: 4.20.0
-        version: 4.20.0
+        version: 4.20.0(patch_hash=j56542vvgp6ahr5hrxe7ltbozy)
       stencil-router-v2:
         specifier: 0.6.0
-        version: 0.6.0(@stencil/core@4.20.0)
+        version: 0.6.0(@stencil/core@4.20.0(patch_hash=j56542vvgp6ahr5hrxe7ltbozy))
     devDependencies:
       cypress:
         specifier: 13.7.3
@@ -1058,8 +1078,8 @@ importers:
   samples/atomic/search-vuejs:
     dependencies:
       '@coveo/atomic':
-        specifier: 3.33.8
-        version: 3.33.8(@coveo/bueno@1.1.2)(@coveo/headless@3.31.1(encoding@0.1.13)(pino-pretty@13.1.1)(react@19.1.1)(redux@5.0.1)(typescript@5.8.3))(encoding@0.1.13)(postcss@8.5.6)(typescript@5.8.3)
+        specifier: workspace:*
+        version: link:../../../packages/atomic
       vue:
         specifier: 3.5.18
         version: 3.5.18(typescript@5.8.3)
@@ -1174,7 +1194,7 @@ importers:
     dependencies:
       '@coveo/headless-react':
         specifier: 2.6.1
-        version: 2.6.1(@types/react-dom@18.3.7(@types/react@18.3.23))(@types/react@18.3.23)(encoding@0.1.13)(pino-pretty@13.1.1)(react-dom@19.1.1(react@19.1.1))(react@19.1.1)(redux@5.0.1)(typescript@5.8.3)
+        version: 2.6.1(@types/react-dom@18.3.7(@types/react@18.3.23))(@types/react@18.3.23)(encoding@0.1.13)(pino-pretty@13.1.1)(react-dom@19.1.1(react@19.1.1))(react@19.1.1)(typescript@5.8.3)
       '@react-router/fs-routes':
         specifier: 7.8.2
         version: 7.8.2(@react-router/dev@7.8.2(@react-router/serve@7.8.2(react-router@7.8.2(react-dom@19.1.1(react@19.1.1))(react@19.1.1))(typescript@5.8.3))(@types/node@22.16.5)(jiti@2.6.1)(less@4.4.2)(lightningcss@1.30.1)(react-dom@19.1.1(react@19.1.1))(react-router@7.8.2(react-dom@19.1.1(react@19.1.1))(react@19.1.1))(react@19.1.1)(sass@1.93.2)(terser@5.44.0)(tsx@4.20.6)(typescript@5.8.3)(vite@7.0.6(@types/node@22.16.5)(jiti@2.6.1)(less@4.4.2)(lightningcss@1.30.1)(sass@1.93.2)(terser@5.44.0)(tsx@4.20.6)(yaml@2.8.1))(yaml@2.8.1))(typescript@5.8.3)
@@ -5570,6 +5590,11 @@ packages:
     peerDependencies:
       '@types/react': ^18.0.0
 
+  '@types/react-dom@19.1.1':
+    resolution: {integrity: sha512-jFf/woGTVTjUJsl2O7hcopJ1r0upqoq/vIOoCj0yLh3RIXxWcljlpuZ+vEBRXsymD1jhfeJrlyTy/S1UW+4y1w==}
+    peerDependencies:
+      '@types/react': ^19.0.0
+
   '@types/react-dom@19.1.2':
     resolution: {integrity: sha512-XGJkWF41Qq305SKWEILa1O8vzhb3aOo3ogBlSmiqNko/WmRb6QIaweuZCXjKygVDXpzXb5wyxKTSOsmkuqj+Qw==}
     peerDependencies:
@@ -8294,9 +8319,6 @@ packages:
     resolution: {integrity: sha512-v2ZsoEuVHYy8ZIlYqwPe/39Cy+cFDzp4dXPaxNvkEuouymu+2Jbz0PxpKarJHYJTmv2HWT3O382qY8l4jMWthw==}
     engines: {node: ^12.20.0 || ^14.13.1 || >=16.0.0}
 
-  find-yarn-workspace-root@2.0.0:
-    resolution: {integrity: sha512-1IMnbjt4KzsQfnhnzNd8wUEgXZ44IzZaZmnLYx7D5FZlaHt2gW20Cri8Q+E/t5tIj4+epTBub+2Zxu/vNILzqQ==}
-
   findup-sync@5.0.0:
     resolution: {integrity: sha512-MzwXju70AuyflbgeOhzvQWAvvQdo1XL0A9bVvlXsYcFEBM87WR4OakL4OfZq+QRmr+duJubio+UtNQCPsVESzQ==}
     engines: {node: '>= 10.13.0'}
@@ -9628,10 +9650,6 @@ packages:
   json-stable-stringify-without-jsonify@1.0.1:
     resolution: {integrity: sha512-Bdboy+l7tA3OGW6FjyFHWkP5LuByj1Tk33Ljyq0axyzdk9//JSi2u3fP1QSmd1KNwq6VOKYGlAu87CisVir6Pw==}
 
-  json-stable-stringify@1.3.0:
-    resolution: {integrity: sha512-qtYiSSFlwot9XHtF9bD9c7rwKjr+RecWT//ZnPvSmEjpV5mmPOCN4j8UjY5hbjNkOwZ/jQv3J6R1/pL7RwgMsg==}
-    engines: {node: '>= 0.4'}
-
   json-stringify-nice@1.1.4:
     resolution: {integrity: sha512-5Z5RFW63yxReJ7vANgW6eZFGWaQvnPE3WNmZoOJrSkGju2etKA2L5rrOa1sm877TVTFt57A80BH1bArcmlLfPw==}
 
@@ -9655,9 +9673,6 @@ packages:
 
   jsonfile@6.2.0:
     resolution: {integrity: sha512-FGuPw30AdOIUTRMC2OMRtQV+jkVj2cfPqSeWXv1NEAJ1qZ5zb1X6z1mFhbfOB/iy3ssJCD+3KuZ8r8C3uVFlAg==}
-
-  jsonify@0.0.1:
-    resolution: {integrity: sha512-2/Ki0GcmuqSrgFyelQq9M05y7PS0mEwuIzrf3f1fPqkVDVRvZrPZtVSMHxdgo8Aq0sxAOb/cr2aqqA3LeWHVPg==}
 
   jsonparse@1.3.1:
     resolution: {integrity: sha512-POQXvpdL69+CluYsillJ7SUhKvytYjW9vG/GKpnf+xP8UWgYEM/RaMzHHofbALDiKbbP1W8UEYmgGl39WkPZsg==}
@@ -9694,9 +9709,6 @@ packages:
   kind-of@6.0.3:
     resolution: {integrity: sha512-dcS1ul+9tmeD95T+x28/ehLgd9mENa3LsvDTtzm3vyBEO7RPptvAD+t44WVXaUjTBRcrpFeFlC8WCruUR456hw==}
     engines: {node: '>=0.10.0'}
-
-  klaw-sync@6.0.0:
-    resolution: {integrity: sha512-nIeuVSzdCCs6TDPTqI8w1Yre34sSq7AkZ4B3sfOBbI2CgVSB4Du4aLQijFU2+lhAFCwt9+42Hel6lQNIv6AntQ==}
 
   klaw@3.0.0:
     resolution: {integrity: sha512-0Fo5oir+O9jnXu5EefYbVK+mHMBeEVEy2cmctR1O1NECcCkPRreJKrS6Qt/j3KC2C148Dfo9i3pCmCMsdqGr0g==}
@@ -11006,11 +11018,6 @@ packages:
     resolution: {integrity: sha512-XHXfu/yOQRy9vYOtUDVMN60OEJjW013GoObG1o+xwQTpB9eYJX/BjXMsdW13ZDPruFhYYn0AG22w0xgQMwl3Nw==}
     engines: {node: '>=0.10.0'}
 
-  patch-package@8.0.0:
-    resolution: {integrity: sha512-da8BVIhzjtgScwDJ2TtKsfT5JFWz1hYoBl9rUQ1f38MC2HwnEIkK8VN3dKMKcP7P7bvvgzNDbfNHtx3MsQb5vA==}
-    engines: {node: '>=14', npm: '>5'}
-    hasBin: true
-
   path-dirname@1.0.2:
     resolution: {integrity: sha512-ALzNPpyNq9AqXMBjeymIjFDAkAFH06mHJH/cSBHAgU0s4vfpBn6b2nf8tiRLvagKD8RbTpq2FKTBg7cl9l3c7Q==}
 
@@ -11923,11 +11930,6 @@ packages:
 
   rfdc@1.4.1:
     resolution: {integrity: sha512-q1b3N5QkRUWUl7iyylaaj3kOpIT0N2i9MqIEQXP73GVsN9cw3fdx8X63cEmWhJGi2PPCF23Ijp7ktmd39rawIA==}
-
-  rimraf@2.7.1:
-    resolution: {integrity: sha512-uWjbaKIK3T1OSVptzX7Nl6PvQ3qAGtKEtVRjRuazjfL3Bx5eI409VZSqgND+4UNnmzLVdPj9FqFJNPqBZFve4w==}
-    deprecated: Rimraf versions prior to v4 are no longer supported
-    hasBin: true
 
   rimraf@3.0.2:
     resolution: {integrity: sha512-JZkJMZkAGFFPP2YqXZXPbMlMBgsxzE8ILs4lMIX/2o0L9UBw9O/Y3o6wFw/i9YLapcUJWwqbi3kdxIPdC62TIA==}
@@ -13859,7 +13861,7 @@ snapshots:
     transitivePeerDependencies:
       - chokidar
 
-  '@angular-devkit/build-angular@19.2.3(@angular/compiler-cli@19.2.2(@angular/compiler@19.2.2(@angular/core@19.2.2(rxjs@7.8.2)(zone.js@0.15.1)))(typescript@5.8.3))(@angular/compiler@19.2.2(@angular/core@19.2.2(rxjs@7.8.2)(zone.js@0.15.1)))(@types/node@22.16.5)(chokidar@4.0.3)(jest-environment-jsdom@29.7.0)(jest@29.7.0(@types/node@22.16.5)(ts-node@10.9.2(@types/node@22.16.5)(typescript@5.8.3)))(jiti@2.6.1)(lightningcss@1.30.1)(ng-packagr@19.2.0(@angular/compiler-cli@19.2.2(@angular/compiler@19.2.2(@angular/core@19.2.2(rxjs@7.8.2)(zone.js@0.15.1)))(typescript@5.8.3))(tailwindcss@4.1.13)(tslib@2.8.1)(typescript@5.8.3))(tailwindcss@4.1.13)(tsx@4.20.6)(typescript@5.8.3)(vite@7.0.6(@types/node@22.16.5)(jiti@2.6.1)(less@4.2.2)(lightningcss@1.30.1)(sass@1.85.0)(terser@5.44.0)(tsx@4.20.6)(yaml@2.8.1))(yaml@2.8.1)':
+  '@angular-devkit/build-angular@19.2.3(@angular/compiler-cli@19.2.2(@angular/compiler@19.2.2(@angular/core@19.2.2(rxjs@7.8.2)(zone.js@0.15.1)))(typescript@5.8.3))(@angular/compiler@19.2.2(@angular/core@19.2.2(rxjs@7.8.2)(zone.js@0.15.1)))(@types/node@22.16.5)(chokidar@4.0.3)(jest-environment-jsdom@29.7.0(patch_hash=gyw67zmqlhk7cq5runulptroye))(jest@29.7.0(@types/node@22.16.5)(ts-node@10.9.2(@types/node@22.16.5)(typescript@5.8.3)))(jiti@2.6.1)(lightningcss@1.30.1)(ng-packagr@19.2.0(@angular/compiler-cli@19.2.2(@angular/compiler@19.2.2(@angular/core@19.2.2(rxjs@7.8.2)(zone.js@0.15.1)))(typescript@5.8.3))(tailwindcss@4.1.13)(tslib@2.8.1)(typescript@5.8.3))(tailwindcss@4.1.13)(tsx@4.20.6)(typescript@5.8.3)(vite@7.0.6(@types/node@22.16.5)(jiti@2.6.1)(less@4.2.2)(lightningcss@1.30.1)(sass@1.85.0)(terser@5.44.0)(tsx@4.20.6)(yaml@2.8.1))(yaml@2.8.1)':
     dependencies:
       '@ampproject/remapping': 2.3.0
       '@angular-devkit/architect': 0.1902.3(chokidar@4.0.3)
@@ -13921,7 +13923,7 @@ snapshots:
     optionalDependencies:
       esbuild: 0.25.1
       jest: 29.7.0(@types/node@22.16.5)(ts-node@10.9.2(@types/node@22.16.5)(typescript@5.8.3))
-      jest-environment-jsdom: 29.7.0
+      jest-environment-jsdom: 29.7.0(patch_hash=gyw67zmqlhk7cq5runulptroye)
       ng-packagr: 19.2.0(@angular/compiler-cli@19.2.2(@angular/compiler@19.2.2(@angular/core@19.2.2(rxjs@7.8.2)(zone.js@0.15.1)))(typescript@5.8.3))(tailwindcss@4.1.13)(tslib@2.8.1)(typescript@5.8.3)
       tailwindcss: 4.1.13
     transitivePeerDependencies:
@@ -15351,25 +15353,11 @@ snapshots:
       chalk: 4.1.2
       zod: 3.22.4
 
-  '@coveo/atomic-react@3.3.12(@coveo/bueno@1.1.2)(@coveo/headless@3.31.1(encoding@0.1.13)(pino-pretty@13.1.1)(react@19.1.1)(redux@5.0.1)(typescript@5.8.3))(@types/react@18.3.3)(encoding@0.1.13)(react-dom@19.1.1(react@19.1.1))(react@19.1.1)(typescript@5.8.3)':
+  '@coveo/atomic-react@3.3.12(@coveo/bueno@1.1.2)(@coveo/headless@3.31.1(encoding@0.1.13)(pino-pretty@13.1.1)(react@19.1.1)(redux@5.0.1)(typescript@5.8.3))(@types/react@18.3.3)(encoding@0.1.13)(postcss@8.5.6)(react-dom@19.1.1(react@19.1.1))(react@19.1.1)(typescript@5.8.3)':
     dependencies:
       '@coveo/atomic': 3.33.8(@coveo/bueno@1.1.2)(@coveo/headless@3.31.1(encoding@0.1.13)(pino-pretty@13.1.1)(react@19.1.1)(redux@5.0.1)(typescript@5.8.3))(encoding@0.1.13)(postcss@8.5.6)(typescript@5.8.3)
       '@coveo/headless': 3.31.1(encoding@0.1.13)(pino-pretty@13.1.1)(react@19.1.1)(redux@5.0.1)(typescript@5.8.3)
       '@lit/react': 1.0.6(@types/react@18.3.3)
-      react: 19.1.1
-      react-dom: 19.1.1(react@19.1.1)
-    transitivePeerDependencies:
-      - '@coveo/bueno'
-      - '@types/react'
-      - encoding
-      - postcss
-      - typescript
-
-  '@coveo/atomic-react@3.3.12(@coveo/bueno@1.1.2)(@coveo/headless@3.31.1(encoding@0.1.13)(pino-pretty@13.1.1)(react@19.1.1)(redux@5.0.1)(typescript@5.8.3))(@types/react@19.1.1)(encoding@0.1.13)(postcss@8.5.6)(react-dom@19.1.1(react@19.1.1))(react@19.1.1)(typescript@5.8.3)':
-    dependencies:
-      '@coveo/atomic': 3.33.8(@coveo/bueno@1.1.2)(@coveo/headless@3.31.1(encoding@0.1.13)(pino-pretty@13.1.1)(react@19.1.1)(redux@5.0.1)(typescript@5.8.3))(encoding@0.1.13)(postcss@8.5.6)(typescript@5.8.3)
-      '@coveo/headless': 3.31.1(encoding@0.1.13)(pino-pretty@13.1.1)(react@19.1.1)(redux@5.0.1)(typescript@5.8.3)
-      '@lit/react': 1.0.6(@types/react@19.1.1)
       react: 19.1.1
       react-dom: 19.1.1(react@19.1.1)
     transitivePeerDependencies:
@@ -15387,7 +15375,7 @@ snapshots:
       '@open-wc/lit-helpers': 0.7.0(lit@3.3.1)
       '@popperjs/core': 2.11.8
       '@salesforce-ux/design-system': 2.27.2(postcss@8.5.6)
-      '@stencil/core': 4.20.0
+      '@stencil/core': 4.20.0(patch_hash=j56542vvgp6ahr5hrxe7ltbozy)
       cssnano: 7.1.1(postcss@8.5.6)
       dayjs: 1.11.13
       dompurify: 3.2.6
@@ -15415,7 +15403,7 @@ snapshots:
 
   '@coveo/explorer-messenger@0.4.1': {}
 
-  '@coveo/headless-react@2.6.1(@types/react-dom@18.3.7(@types/react@18.3.23))(@types/react@18.3.23)(encoding@0.1.13)(pino-pretty@13.1.1)(react-dom@19.1.1(react@19.1.1))(react@19.1.1)(redux@5.0.1)(typescript@5.8.3)':
+  '@coveo/headless-react@2.6.1(@types/react-dom@18.3.7(@types/react@18.3.23))(@types/react@18.3.23)(encoding@0.1.13)(pino-pretty@13.1.1)(react-dom@19.1.1(react@19.1.1))(react@19.1.1)(typescript@5.8.3)':
     dependencies:
       '@coveo/headless': 3.31.1(encoding@0.1.13)(pino-pretty@13.1.1)(react@19.1.1)(redux@5.0.1)(typescript@5.8.3)
       react: 19.1.1
@@ -17892,7 +17880,7 @@ snapshots:
       '@salesforce/wire-service-jest-util': 4.1.4(@lwc/engine-dom@6.7.2)(eslint@8.57.1)(typescript@5.8.3)
       fast-glob: 3.3.3
       jest: 29.7.0(@types/node@22.16.5)(ts-node@10.9.2(@types/node@22.16.5)(typescript@5.8.3))
-      jest-environment-jsdom: 29.7.0
+      jest-environment-jsdom: 29.7.0(patch_hash=gyw67zmqlhk7cq5runulptroye)
       yargs: 17.7.2
     transitivePeerDependencies:
       - '@types/node'
@@ -18029,24 +18017,24 @@ snapshots:
     dependencies:
       '@sinonjs/commons': 3.0.1
 
-  '@stencil-community/postcss@2.2.0(@stencil/core@4.20.0)':
+  '@stencil-community/postcss@2.2.0(@stencil/core@4.20.0(patch_hash=j56542vvgp6ahr5hrxe7ltbozy))':
     dependencies:
-      '@stencil/core': 4.20.0
+      '@stencil/core': 4.20.0(patch_hash=j56542vvgp6ahr5hrxe7ltbozy)
       postcss: 8.4.49
 
-  '@stencil/angular-output-target@0.8.4(@stencil/core@4.20.0)':
+  '@stencil/angular-output-target@0.8.4(patch_hash=xqpzkuct6o2mw2odrombobymri)(@stencil/core@4.20.0(patch_hash=j56542vvgp6ahr5hrxe7ltbozy))':
     dependencies:
-      '@stencil/core': 4.20.0
+      '@stencil/core': 4.20.0(patch_hash=j56542vvgp6ahr5hrxe7ltbozy)
 
-  '@stencil/core@4.20.0': {}
+  '@stencil/core@4.20.0(patch_hash=j56542vvgp6ahr5hrxe7ltbozy)': {}
 
-  '@stencil/react-output-target@0.5.3(@stencil/core@4.20.0)':
+  '@stencil/react-output-target@0.5.3(patch_hash=uemvfuas6xlfsy7ezfehqkr5gy)(@stencil/core@4.20.0(patch_hash=j56542vvgp6ahr5hrxe7ltbozy))':
     dependencies:
-      '@stencil/core': 4.20.0
+      '@stencil/core': 4.20.0(patch_hash=j56542vvgp6ahr5hrxe7ltbozy)
 
-  '@stencil/store@1.5.0(@stencil/core@4.20.0)':
+  '@stencil/store@1.5.0(@stencil/core@4.20.0(patch_hash=j56542vvgp6ahr5hrxe7ltbozy))':
     dependencies:
-      '@stencil/core': 4.20.0
+      '@stencil/core': 4.20.0(patch_hash=j56542vvgp6ahr5hrxe7ltbozy)
 
   '@storybook/addon-a11y@9.1.2(storybook@9.1.2(@testing-library/dom@10.4.1)(prettier@3.6.2)(vite@7.0.6(@types/node@22.16.5)(jiti@2.6.1)(less@4.4.2)(lightningcss@1.30.1)(sass@1.93.2)(terser@5.44.0)(tsx@4.20.6)(yaml@2.8.1)))':
     dependencies:
@@ -18524,6 +18512,10 @@ snapshots:
   '@types/react-dom@18.3.7(@types/react@18.3.23)':
     dependencies:
       '@types/react': 18.3.23
+
+  '@types/react-dom@19.1.1(@types/react@19.1.1)':
+    dependencies:
+      '@types/react': 19.1.1
 
   '@types/react-dom@19.1.2(@types/react@19.1.1)':
     dependencies:
@@ -19066,7 +19058,7 @@ snapshots:
 
   '@vue/shared@3.5.22': {}
 
-  '@wc-toolkit/storybook-helpers@9.0.1(lit@3.3.1)(storybook@9.1.2(@testing-library/dom@10.4.1)(prettier@3.6.2)(vite@7.0.6(@types/node@22.16.5)(jiti@2.6.1)(less@4.4.2)(lightningcss@1.30.1)(sass@1.93.2)(terser@5.44.0)(tsx@4.20.6)(yaml@2.8.1)))':
+  '@wc-toolkit/storybook-helpers@9.0.1(patch_hash=ueawpxboaca3a3b5nqq25zvo4m)(lit@3.3.1)(storybook@9.1.2(@testing-library/dom@10.4.1)(prettier@3.6.2)(vite@7.0.6(@types/node@22.16.5)(jiti@2.6.1)(less@4.4.2)(lightningcss@1.30.1)(sass@1.93.2)(terser@5.44.0)(tsx@4.20.6)(yaml@2.8.1)))':
     dependencies:
       lit: 3.3.1
       storybook: 9.1.2(@testing-library/dom@10.4.1)(prettier@3.6.2)(vite@7.0.6(@types/node@22.16.5)(jiti@2.6.1)(less@4.4.2)(lightningcss@1.30.1)(sass@1.93.2)(terser@5.44.0)(tsx@4.20.6)(yaml@2.8.1))
@@ -19996,7 +19988,7 @@ snapshots:
 
   chrome-launcher@0.15.2:
     dependencies:
-      '@types/node': 22.16.5
+      '@types/node': 20.19.19
       escape-string-regexp: 4.0.0
       is-wsl: 2.2.0
       lighthouse-logger: 1.4.2
@@ -20013,7 +20005,7 @@ snapshots:
 
   chromium-edge-launcher@0.2.0:
     dependencies:
-      '@types/node': 22.16.5
+      '@types/node': 20.19.19
       escape-string-regexp: 4.0.0
       is-wsl: 2.2.0
       lighthouse-logger: 1.4.2
@@ -21946,10 +21938,6 @@ snapshots:
       locate-path: 7.2.0
       path-exists: 5.0.0
 
-  find-yarn-workspace-root@2.0.0:
-    dependencies:
-      micromatch: 4.0.8
-
   findup-sync@5.0.0:
     dependencies:
       detect-file: 1.0.0
@@ -21965,7 +21953,7 @@ snapshots:
       object.pick: 1.3.0
       parse-filepath: 1.0.2
 
-  fix-esm-import-path@1.10.1:
+  fix-esm-import-path@1.10.1(patch_hash=6hlts3xsenyooouizlcqcj4iby):
     dependencies:
       debug: 4.4.3(supports-color@8.1.1)
     transitivePeerDependencies:
@@ -23183,7 +23171,7 @@ snapshots:
       jest-util: 29.7.0
       pretty-format: 29.7.0
 
-  jest-environment-jsdom@29.7.0:
+  jest-environment-jsdom@29.7.0(patch_hash=gyw67zmqlhk7cq5runulptroye):
     dependencies:
       '@jest/environment': 29.7.0
       '@jest/fake-timers': 29.7.0
@@ -23531,14 +23519,6 @@ snapshots:
 
   json-stable-stringify-without-jsonify@1.0.1: {}
 
-  json-stable-stringify@1.3.0:
-    dependencies:
-      call-bind: 1.0.8
-      call-bound: 1.0.4
-      isarray: 2.0.5
-      jsonify: 0.0.1
-      object-keys: 1.1.1
-
   json-stringify-nice@1.1.4: {}
 
   json-stringify-safe@5.0.1: {}
@@ -23560,8 +23540,6 @@ snapshots:
       universalify: 2.0.1
     optionalDependencies:
       graceful-fs: 4.2.11
-
-  jsonify@0.0.1: {}
 
   jsonparse@1.3.1: {}
 
@@ -23597,10 +23575,6 @@ snapshots:
       is-buffer: 1.1.6
 
   kind-of@6.0.3: {}
-
-  klaw-sync@6.0.0:
-    dependencies:
-      graceful-fs: 4.2.11
 
   klaw@3.0.0:
     dependencies:
@@ -25369,24 +25343,6 @@ snapshots:
 
   pascalcase@0.1.1: {}
 
-  patch-package@8.0.0:
-    dependencies:
-      '@yarnpkg/lockfile': 1.1.0
-      chalk: 4.1.2
-      ci-info: 3.9.0
-      cross-spawn: 7.0.6
-      find-yarn-workspace-root: 2.0.0
-      fs-extra: 9.1.0
-      json-stable-stringify: 1.3.0
-      klaw-sync: 6.0.0
-      minimist: 1.2.8
-      open: 7.4.2
-      rimraf: 2.7.1
-      semver: 7.7.2
-      slash: 2.0.0
-      tmp: 0.0.33
-      yaml: 2.8.1
-
   path-dirname@1.0.2: {}
 
   path-exists@4.0.0: {}
@@ -26334,10 +26290,6 @@ snapshots:
 
   rfdc@1.4.1: {}
 
-  rimraf@2.7.1:
-    dependencies:
-      glob: 7.2.3
-
   rimraf@3.0.2:
     dependencies:
       glob: 7.2.3
@@ -27026,10 +26978,10 @@ snapshots:
 
   stencil-inline-svg@1.1.0: {}
 
-  stencil-router-v2@0.6.0(@stencil/core@4.20.0):
+  stencil-router-v2@0.6.0(@stencil/core@4.20.0(patch_hash=j56542vvgp6ahr5hrxe7ltbozy)):
     dependencies:
-      '@stencil/core': 4.20.0
-      '@stencil/store': 1.5.0(@stencil/core@4.20.0)
+      '@stencil/core': 4.20.0(patch_hash=j56542vvgp6ahr5hrxe7ltbozy)
+      '@stencil/store': 1.5.0(@stencil/core@4.20.0(patch_hash=j56542vvgp6ahr5hrxe7ltbozy))
 
   stop-iteration-iterator@1.1.0:
     dependencies:

@@ -14,7 +14,7 @@ interface WrapperProps extends AtomicJSX.AtomicFoldedResultList {
    * A template function that takes a result item and outputs its target rendering as a JSX element.
    * It can be used to conditionally render different type of result templates based on the properties of each result.
    */
-  template: (foldedResult: FoldedResult) => JSX.Element;
+  template: (foldedResult: FoldedResult) => React.JSX.Element;
 }
 
 /**
