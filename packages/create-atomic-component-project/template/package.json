@@ -22,7 +22,6 @@
     "jest-cli": "29.7.0",
     "puppeteer": "24.15.0",
     "rollup-plugin-html": "0.2.1",
-    "rimraf": "6.0.1",
     "@coveo/create-atomic-rollup-plugin": "1.2.0"
   },
   "license": "Apache-2.0",
