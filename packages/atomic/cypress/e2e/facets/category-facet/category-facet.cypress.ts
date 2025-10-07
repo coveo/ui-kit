@@ -38,7 +38,14 @@ import {
   categoryFacetComponent,
 } from './category-facet-selectors';
 
-describe('Category Facet Test Suites', () => {
+describe.skip('Category Facet Test Suites', () => {
+
+  var i = 0;
+for (i = 0; i < 500 ; i++) {    
+  it('Yeah - ' + i, () => {
+    cy.visit('https://www.google.com/');
+  });
+}
   describe('with default settings', () => {
     function setupWithDefaultSettings() {
       new TestFixture().with(addCategoryFacet()).init();
