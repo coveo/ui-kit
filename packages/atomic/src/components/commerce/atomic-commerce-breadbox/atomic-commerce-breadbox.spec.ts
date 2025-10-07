@@ -38,6 +38,7 @@ describe('atomic-commerce-breadbox', () => {
 
   beforeEach(() => {
     vi.spyOn(console, 'error').mockImplementation(() => {});
+    vi.spyOn(console, 'warn').mockImplementation(() => {});
   });
 
   interface RenderBreadboxOptions {
@@ -137,7 +138,7 @@ describe('atomic-commerce-breadbox', () => {
     expect(element.breadcrumbManager).toBe(mockedBreadcrumbManager);
   });
 
-  it('should set error when pathLimit is lower than 1', async () => {
+  it('should set error when pathLimit is initially lower than 1', async () => {
     const {element} = await renderBreadbox({
       interfaceElementType: 'product-listing',
       pathLimit: 0,
@@ -149,10 +150,13 @@ describe('atomic-commerce-breadbox', () => {
     );
   });
 
-  it('should set error when pathLimit is valid but gets changed to lower than 1', async () => {
+  it('should set error when valid pathLimit is updated to a value lower than 1', async () => {
     const {element} = await renderBreadbox();
 
+    expect(element.error).toBeUndefined();
+
     element.pathLimit = 0;
+
     await element.updateComplete;
 
     expect(element.error).toBeDefined();

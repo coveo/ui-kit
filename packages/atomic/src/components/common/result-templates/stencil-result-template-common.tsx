@@ -7,7 +7,7 @@ import {h} from '@stencil/core';
 import {aggregate, isElementNode, isVisualNode} from '../../../utils/utils';
 import {tableElementTagName} from '../table-element-utils';
 import {ItemTarget} from '../layout/display-options';
-import {isResultSectionNode} from '../layout/sections';
+import {isResultSectionNode} from '../layout/item-layout-sections';
 
 export type TemplateContent = DocumentFragment;
 

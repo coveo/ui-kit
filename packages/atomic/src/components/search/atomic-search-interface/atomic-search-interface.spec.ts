@@ -2,6 +2,7 @@ import {
   buildSearchEngine,
   buildSearchStatus,
   buildUrlManager,
+  EcommerceDefaultFieldsToInclude,
   getSampleSearchEngineConfiguration,
   loadFieldActions,
   loadQueryActions,
@@ -201,6 +202,15 @@ describe('atomic-search-interface', () => {
       );
     });
 
+    it('should initialize fields before engine initialization', async () => {
+      const element = await setupElement();
+      await element.initialize(searchEngineConfig);
+
+      expect(element.bindings.store.state.fieldsToInclude).toEqual(
+        expect.arrayContaining(EcommerceDefaultFieldsToInclude)
+      );
+    });
+
     it('should add an "atomic/scrollToTop" event listener on the element', async () => {
       const addEventListenerSpy = vi.spyOn(
         AtomicSearchInterface.prototype,
@@ -211,20 +221,6 @@ describe('atomic-search-interface', () => {
 
       expect(addEventListenerSpy).toHaveBeenCalledWith(
         'atomic/scrollToTop',
-        expect.any(Function)
-      );
-    });
-
-    it('should add an "atomic/relevanceInspector/close" event listener on the element', async () => {
-      const addEventListenerSpy = vi.spyOn(
-        AtomicSearchInterface.prototype,
-        'addEventListener'
-      );
-
-      await setupElement();
-
-      expect(addEventListenerSpy).toHaveBeenCalledWith(
-        'atomic/relevanceInspector/close',
         expect.any(Function)
       );
     });
@@ -257,18 +253,6 @@ describe('atomic-search-interface', () => {
         expect(scrollIntoViewSpy).toHaveBeenCalledExactlyOnceWith({
           behavior: 'smooth',
         });
-      });
-    });
-
-    describe("when an 'atomic/relevanceInspector/close' event is dispatched", () => {
-      it('should close the relevance inspector', async () => {
-        const element = await setupElement();
-        element.relevanceInspectorIsOpen = true;
-
-        const event = new CustomEvent('atomic/relevanceInspector/close');
-        element.dispatchEvent(event);
-
-        expect(element.relevanceInspectorIsOpen).toBe(false);
       });
     });
   });
@@ -787,6 +771,45 @@ describe('atomic-search-interface', () => {
 
       expect(element.fieldsToInclude).toEqual([]);
     });
+
+    it('should update store fields when fieldsToInclude changes', async () => {
+      const element = await setupElement();
+      await element.initialize(searchEngineConfig);
+
+      expect(element.bindings.store.state.fieldsToInclude).toEqual(
+        expect.arrayContaining(EcommerceDefaultFieldsToInclude)
+      );
+
+      const newFields = ['custom_field1', 'custom_field2'];
+      element.fieldsToInclude = newFields;
+      await element.updateComplete;
+
+      expect(element.bindings.store.state.fieldsToInclude).toEqual([
+        ...EcommerceDefaultFieldsToInclude,
+        ...newFields,
+      ]);
+    });
+
+    it('should register updated fields with engine when fieldsToInclude changes', async () => {
+      const registerFieldsToIncludeMock = vi.fn();
+      vi.mocked(loadFieldActions).mockReturnValue({
+        registerFieldsToInclude: registerFieldsToIncludeMock,
+      } as unknown as ReturnType<typeof loadFieldActions>);
+
+      const element = await setupElement();
+      await element.initialize(searchEngineConfig);
+
+      registerFieldsToIncludeMock.mockClear();
+
+      const newFields = ['custom_field1', 'custom_field2'];
+      element.fieldsToInclude = newFields;
+      await element.updateComplete;
+
+      expect(registerFieldsToIncludeMock).toHaveBeenCalledWith([
+        ...EcommerceDefaultFieldsToInclude,
+        ...newFields,
+      ]);
+    });
   });
 
   describe('#executeFirstRequest', () => {
@@ -1056,6 +1079,7 @@ describe('atomic-search-interface', () => {
       );
       const element = await setupElement({language: 'en'});
 
+      // @ts-ignore setting to undefined to simulate removing the attribute
       element.language = undefined;
       await element.updateComplete;
 
@@ -1158,18 +1182,6 @@ describe('atomic-search-interface', () => {
 
       expect(removeEventListenerSpy).toHaveBeenCalledWith(
         'atomic/scrollToTop',
-        expect.any(Function)
-      );
-    });
-
-    it('should remove the atomic/relevanceInspector/close event listener', async () => {
-      const element = await setupElement();
-      const removeEventListenerSpy = vi.spyOn(element, 'removeEventListener');
-
-      element.remove();
-
-      expect(removeEventListenerSpy).toHaveBeenCalledWith(
-        'atomic/relevanceInspector/close',
         expect.any(Function)
       );
     });

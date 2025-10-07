@@ -494,7 +494,7 @@ describe('atomic-commerce-facet', () => {
     expect(mockedFacet.facetSearch.search).toHaveBeenCalled();
   });
 
-  it('should call facetSearch.showMoreResults when there are more results available and the "more matches for x" button is clicked', async () => {
+  it('should call facetSearch.showMoreResults when there are more facet search results available and the "more matches for x" button is clicked', async () => {
     mockedFacet = buildFakeRegularFacet({
       state: {
         facetSearch: {
@@ -530,7 +530,7 @@ describe('atomic-commerce-facet', () => {
     expect(mockedFacet.facetSearch.showMoreResults).toHaveBeenCalled();
   });
 
-  it('should render facet search parts when there are search results', async () => {
+  it('should render facet search parts when there are facet search results', async () => {
     mockedFacet = buildFakeRegularFacet({
       state: {
         facetSearch: {
@@ -585,7 +585,7 @@ describe('atomic-commerce-facet', () => {
       .toBeVisible();
   });
 
-  it('should render proper part when there are no search results', async () => {
+  it('should render proper part when there are no facet search results', async () => {
     mockedFacet = buildFakeRegularFacet({
       state: {
         facetSearch: {

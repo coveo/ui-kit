@@ -20,7 +20,6 @@ import { InsightResultAttachToCaseEvent } from "./components/insight/atomic-insi
 import { RecommendationEngine, InteractiveResult as RecsInteractiveResult, LogLevel as RecsLogLevel, Result as RecsResult, ResultTemplate as RecsResultTemplate, ResultTemplateCondition as RecsResultTemplateCondition } from "@coveo/headless/recommendation";
 import { RecsInitializationOptions } from "./components/recommendations/atomic-recs-interface/atomic-recs-interface";
 import { RecsStore } from "./components/recommendations/atomic-recs-interface/store";
-import { Bindings } from "./components/search/atomic-search-interface/atomic-search-interface";
 import { SearchStore } from "./components/search/atomic-search-interface/store";
 import { RedirectionPayload } from "./components/common/search-box/redirection-payload";
 import { AriaLabelGenerator } from "./components/search/search-box-suggestions/atomic-search-box-instant-results/atomic-search-box-instant-results";
@@ -40,7 +39,6 @@ export { InsightResultAttachToCaseEvent } from "./components/insight/atomic-insi
 export { RecommendationEngine, InteractiveResult as RecsInteractiveResult, LogLevel as RecsLogLevel, Result as RecsResult, ResultTemplate as RecsResultTemplate, ResultTemplateCondition as RecsResultTemplateCondition } from "@coveo/headless/recommendation";
 export { RecsInitializationOptions } from "./components/recommendations/atomic-recs-interface/atomic-recs-interface";
 export { RecsStore } from "./components/recommendations/atomic-recs-interface/store";
-export { Bindings } from "./components/search/atomic-search-interface/atomic-search-interface";
 export { SearchStore } from "./components/search/atomic-search-interface/store";
 export { RedirectionPayload } from "./components/common/search-box/redirection-payload";
 export { AriaLabelGenerator } from "./components/search/search-box-suggestions/atomic-search-box-instant-results/atomic-search-box-instant-results";
@@ -1424,23 +1422,6 @@ export namespace Components {
         "start": number;
     }
     /**
-     * The `atomic-pager` provides buttons that allow the end user to navigate through the different result pages.
-     */
-    interface AtomicPager {
-        /**
-          * The SVG icon to use to display the Next button.  - Use a value that starts with `http://`, `https://`, `./`, or `../`, to fetch and display an icon from a given location. - Use a value that starts with `assets://`, to display an icon from the Atomic package. - Use a stringified SVG to display it directly.
-         */
-        "nextButtonIcon": string;
-        /**
-          * Specifies how many page buttons to display in the pager.
-         */
-        "numberOfPages": number;
-        /**
-          * The SVG icon to use to display the Previous button.  - Use a value that starts with `http://`, `https://`, `./`, or `../`, to fetch and display an icon from a given location. - Use a value that starts with `assets://`, to display an icon from the Atomic package. - Use a stringified SVG to display it directly.
-         */
-        "previousButtonIcon": string;
-    }
-    /**
      * The `atomic-popover` component displays any facet as a popover menu.
      */
     interface AtomicPopover {
@@ -1837,16 +1818,6 @@ export namespace Components {
           * The number of expanded facets inside the refine modal. Remaining facets are automatically collapsed.  Using the value `0` collapses all facets.
          */
         "collapseFacetsAfter": number;
-    }
-    /**
-     * The `atomic-relevance-inspector` component is used internally to offer insight on search page relevance, as well as information to help troubleshoot issues during development.
-     */
-    interface AtomicRelevanceInspector {
-        /**
-          * The Atomic interface bindings, namely the headless search engine and i18n instances.
-         */
-        "bindings": Bindings;
-        "open": boolean;
     }
     /**
      * The `atomic-result` component is used internally by the `atomic-result-list` component.
@@ -2429,23 +2400,6 @@ export namespace Components {
         "maxWithoutQuery"?: number;
     }
     /**
-     * The `atomic-search-box-recent-queries` component can be added as a child of an `atomic-search-box` component, allowing for the configuration of recent query suggestions.
-     */
-    interface AtomicSearchBoxRecentQueries {
-        /**
-          * The SVG icon to display.  - Use a value that starts with `http://`, `https://`, `./`, or `../`, to fetch and display an icon from a given location. - Use a value that starts with `assets://`, to display an icon from the Atomic package. - Use a stringified SVG to display it directly.
-         */
-        "icon"?: string;
-        /**
-          * The maximum number of suggestions that will be displayed if the user has typed something into the input field.
-         */
-        "maxWithQuery": number;
-        /**
-          * The maximum number of suggestions that will be displayed initially when the input field is empty.
-         */
-        "maxWithoutQuery"?: number;
-    }
-    /**
      * The `atomic-segmented-facet` displays a horizontal facet of the results for the current query.
      */
     interface AtomicSegmentedFacet {
@@ -2857,17 +2811,9 @@ export interface AtomicIpxModalCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLAtomicIpxModalElement;
 }
-export interface AtomicPagerCustomEvent<T> extends CustomEvent<T> {
-    detail: T;
-    target: HTMLAtomicPagerElement;
-}
 export interface AtomicQuickviewModalCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLAtomicQuickviewModalElement;
-}
-export interface AtomicRelevanceInspectorCustomEvent<T> extends CustomEvent<T> {
-    detail: T;
-    target: HTMLAtomicRelevanceInspectorElement;
 }
 export interface AtomicSearchBoxCustomEvent<T> extends CustomEvent<T> {
     detail: T;
@@ -3537,26 +3483,6 @@ declare global {
         prototype: HTMLAtomicNumericRangeElement;
         new (): HTMLAtomicNumericRangeElement;
     };
-    interface HTMLAtomicPagerElementEventMap {
-        "atomic/scrollToTop": any;
-    }
-    /**
-     * The `atomic-pager` provides buttons that allow the end user to navigate through the different result pages.
-     */
-    interface HTMLAtomicPagerElement extends Components.AtomicPager, HTMLStencilElement {
-        addEventListener<K extends keyof HTMLAtomicPagerElementEventMap>(type: K, listener: (this: HTMLAtomicPagerElement, ev: AtomicPagerCustomEvent<HTMLAtomicPagerElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
-        removeEventListener<K extends keyof HTMLAtomicPagerElementEventMap>(type: K, listener: (this: HTMLAtomicPagerElement, ev: AtomicPagerCustomEvent<HTMLAtomicPagerElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
-    }
-    var HTMLAtomicPagerElement: {
-        prototype: HTMLAtomicPagerElement;
-        new (): HTMLAtomicPagerElement;
-    };
     /**
      * The `atomic-popover` component displays any facet as a popover menu.
      */
@@ -3699,26 +3625,6 @@ declare global {
     var HTMLAtomicRefineToggleElement: {
         prototype: HTMLAtomicRefineToggleElement;
         new (): HTMLAtomicRefineToggleElement;
-    };
-    interface HTMLAtomicRelevanceInspectorElementEventMap {
-        "atomic/relevanceInspector/close": any;
-    }
-    /**
-     * The `atomic-relevance-inspector` component is used internally to offer insight on search page relevance, as well as information to help troubleshoot issues during development.
-     */
-    interface HTMLAtomicRelevanceInspectorElement extends Components.AtomicRelevanceInspector, HTMLStencilElement {
-        addEventListener<K extends keyof HTMLAtomicRelevanceInspectorElementEventMap>(type: K, listener: (this: HTMLAtomicRelevanceInspectorElement, ev: AtomicRelevanceInspectorCustomEvent<HTMLAtomicRelevanceInspectorElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
-        removeEventListener<K extends keyof HTMLAtomicRelevanceInspectorElementEventMap>(type: K, listener: (this: HTMLAtomicRelevanceInspectorElement, ev: AtomicRelevanceInspectorCustomEvent<HTMLAtomicRelevanceInspectorElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
-    }
-    var HTMLAtomicRelevanceInspectorElement: {
-        prototype: HTMLAtomicRelevanceInspectorElement;
-        new (): HTMLAtomicRelevanceInspectorElement;
     };
     /**
      * The `atomic-result` component is used internally by the `atomic-result-list` component.
@@ -4122,15 +4028,6 @@ declare global {
         new (): HTMLAtomicSearchBoxQuerySuggestionsElement;
     };
     /**
-     * The `atomic-search-box-recent-queries` component can be added as a child of an `atomic-search-box` component, allowing for the configuration of recent query suggestions.
-     */
-    interface HTMLAtomicSearchBoxRecentQueriesElement extends Components.AtomicSearchBoxRecentQueries, HTMLStencilElement {
-    }
-    var HTMLAtomicSearchBoxRecentQueriesElement: {
-        prototype: HTMLAtomicSearchBoxRecentQueriesElement;
-        new (): HTMLAtomicSearchBoxRecentQueriesElement;
-    };
-    /**
      * The `atomic-segmented-facet` displays a horizontal facet of the results for the current query.
      */
     interface HTMLAtomicSegmentedFacetElement extends Components.AtomicSegmentedFacet, HTMLStencilElement {
@@ -4477,7 +4374,6 @@ declare global {
         "atomic-notifications": HTMLAtomicNotificationsElement;
         "atomic-numeric-facet": HTMLAtomicNumericFacetElement;
         "atomic-numeric-range": HTMLAtomicNumericRangeElement;
-        "atomic-pager": HTMLAtomicPagerElement;
         "atomic-popover": HTMLAtomicPopoverElement;
         "atomic-query-error": HTMLAtomicQueryErrorElement;
         "atomic-quickview": HTMLAtomicQuickviewElement;
@@ -4491,7 +4387,6 @@ declare global {
         "atomic-recs-result-template": HTMLAtomicRecsResultTemplateElement;
         "atomic-refine-modal": HTMLAtomicRefineModalElement;
         "atomic-refine-toggle": HTMLAtomicRefineToggleElement;
-        "atomic-relevance-inspector": HTMLAtomicRelevanceInspectorElement;
         "atomic-result": HTMLAtomicResultElement;
         "atomic-result-badge": HTMLAtomicResultBadgeElement;
         "atomic-result-children": HTMLAtomicResultChildrenElement;
@@ -4525,7 +4420,6 @@ declare global {
         "atomic-search-box": HTMLAtomicSearchBoxElement;
         "atomic-search-box-instant-results": HTMLAtomicSearchBoxInstantResultsElement;
         "atomic-search-box-query-suggestions": HTMLAtomicSearchBoxQuerySuggestionsElement;
-        "atomic-search-box-recent-queries": HTMLAtomicSearchBoxRecentQueriesElement;
         "atomic-segmented-facet": HTMLAtomicSegmentedFacetElement;
         "atomic-segmented-facet-scrollable": HTMLAtomicSegmentedFacetScrollableElement;
         "atomic-smart-snippet": HTMLAtomicSmartSnippetElement;
@@ -5884,24 +5778,6 @@ declare namespace LocalJSX {
         "start": number;
     }
     /**
-     * The `atomic-pager` provides buttons that allow the end user to navigate through the different result pages.
-     */
-    interface AtomicPager {
-        /**
-          * The SVG icon to use to display the Next button.  - Use a value that starts with `http://`, `https://`, `./`, or `../`, to fetch and display an icon from a given location. - Use a value that starts with `assets://`, to display an icon from the Atomic package. - Use a stringified SVG to display it directly.
-         */
-        "nextButtonIcon"?: string;
-        /**
-          * Specifies how many page buttons to display in the pager.
-         */
-        "numberOfPages"?: number;
-        "onAtomic/scrollToTop"?: (event: AtomicPagerCustomEvent<any>) => void;
-        /**
-          * The SVG icon to use to display the Previous button.  - Use a value that starts with `http://`, `https://`, `./`, or `../`, to fetch and display an icon from a given location. - Use a value that starts with `assets://`, to display an icon from the Atomic package. - Use a stringified SVG to display it directly.
-         */
-        "previousButtonIcon"?: string;
-    }
-    /**
      * The `atomic-popover` component displays any facet as a popover menu.
      */
     interface AtomicPopover {
@@ -6270,17 +6146,6 @@ declare namespace LocalJSX {
           * The number of expanded facets inside the refine modal. Remaining facets are automatically collapsed.  Using the value `0` collapses all facets.
          */
         "collapseFacetsAfter"?: number;
-    }
-    /**
-     * The `atomic-relevance-inspector` component is used internally to offer insight on search page relevance, as well as information to help troubleshoot issues during development.
-     */
-    interface AtomicRelevanceInspector {
-        /**
-          * The Atomic interface bindings, namely the headless search engine and i18n instances.
-         */
-        "bindings": Bindings;
-        "onAtomic/relevanceInspector/close"?: (event: AtomicRelevanceInspectorCustomEvent<any>) => void;
-        "open"?: boolean;
     }
     /**
      * The `atomic-result` component is used internally by the `atomic-result-list` component.
@@ -6849,23 +6714,6 @@ declare namespace LocalJSX {
         "maxWithoutQuery"?: number;
     }
     /**
-     * The `atomic-search-box-recent-queries` component can be added as a child of an `atomic-search-box` component, allowing for the configuration of recent query suggestions.
-     */
-    interface AtomicSearchBoxRecentQueries {
-        /**
-          * The SVG icon to display.  - Use a value that starts with `http://`, `https://`, `./`, or `../`, to fetch and display an icon from a given location. - Use a value that starts with `assets://`, to display an icon from the Atomic package. - Use a stringified SVG to display it directly.
-         */
-        "icon"?: string;
-        /**
-          * The maximum number of suggestions that will be displayed if the user has typed something into the input field.
-         */
-        "maxWithQuery"?: number;
-        /**
-          * The maximum number of suggestions that will be displayed initially when the input field is empty.
-         */
-        "maxWithoutQuery"?: number;
-    }
-    /**
      * The `atomic-segmented-facet` displays a horizontal facet of the results for the current query.
      */
     interface AtomicSegmentedFacet {
@@ -7323,7 +7171,6 @@ declare namespace LocalJSX {
         "atomic-notifications": AtomicNotifications;
         "atomic-numeric-facet": AtomicNumericFacet;
         "atomic-numeric-range": AtomicNumericRange;
-        "atomic-pager": AtomicPager;
         "atomic-popover": AtomicPopover;
         "atomic-query-error": AtomicQueryError;
         "atomic-quickview": AtomicQuickview;
@@ -7337,7 +7184,6 @@ declare namespace LocalJSX {
         "atomic-recs-result-template": AtomicRecsResultTemplate;
         "atomic-refine-modal": AtomicRefineModal;
         "atomic-refine-toggle": AtomicRefineToggle;
-        "atomic-relevance-inspector": AtomicRelevanceInspector;
         "atomic-result": AtomicResult;
         "atomic-result-badge": AtomicResultBadge;
         "atomic-result-children": AtomicResultChildren;
@@ -7371,7 +7217,6 @@ declare namespace LocalJSX {
         "atomic-search-box": AtomicSearchBox;
         "atomic-search-box-instant-results": AtomicSearchBoxInstantResults;
         "atomic-search-box-query-suggestions": AtomicSearchBoxQuerySuggestions;
-        "atomic-search-box-recent-queries": AtomicSearchBoxRecentQueries;
         "atomic-segmented-facet": AtomicSegmentedFacet;
         "atomic-segmented-facet-scrollable": AtomicSegmentedFacetScrollable;
         "atomic-smart-snippet": AtomicSmartSnippet;
@@ -7589,10 +7434,6 @@ declare module "@stencil/core" {
              */
             "atomic-numeric-range": LocalJSX.AtomicNumericRange & JSXBase.HTMLAttributes<HTMLAtomicNumericRangeElement>;
             /**
-             * The `atomic-pager` provides buttons that allow the end user to navigate through the different result pages.
-             */
-            "atomic-pager": LocalJSX.AtomicPager & JSXBase.HTMLAttributes<HTMLAtomicPagerElement>;
-            /**
              * The `atomic-popover` component displays any facet as a popover menu.
              */
             "atomic-popover": LocalJSX.AtomicPopover & JSXBase.HTMLAttributes<HTMLAtomicPopoverElement>;
@@ -7658,10 +7499,6 @@ declare module "@stencil/core" {
              * When this component is added to the `atomic-search-interface`, an `atomic-refine-modal` component is automatically created.
              */
             "atomic-refine-toggle": LocalJSX.AtomicRefineToggle & JSXBase.HTMLAttributes<HTMLAtomicRefineToggleElement>;
-            /**
-             * The `atomic-relevance-inspector` component is used internally to offer insight on search page relevance, as well as information to help troubleshoot issues during development.
-             */
-            "atomic-relevance-inspector": LocalJSX.AtomicRelevanceInspector & JSXBase.HTMLAttributes<HTMLAtomicRelevanceInspectorElement>;
             /**
              * The `atomic-result` component is used internally by the `atomic-result-list` component.
              */
@@ -7887,10 +7724,6 @@ declare module "@stencil/core" {
              * The `atomic-search-box-query-suggestions` component can be added as a child of an `atomic-search-box` component, allowing for the configuration of query suggestion behavior.
              */
             "atomic-search-box-query-suggestions": LocalJSX.AtomicSearchBoxQuerySuggestions & JSXBase.HTMLAttributes<HTMLAtomicSearchBoxQuerySuggestionsElement>;
-            /**
-             * The `atomic-search-box-recent-queries` component can be added as a child of an `atomic-search-box` component, allowing for the configuration of recent query suggestions.
-             */
-            "atomic-search-box-recent-queries": LocalJSX.AtomicSearchBoxRecentQueries & JSXBase.HTMLAttributes<HTMLAtomicSearchBoxRecentQueriesElement>;
             /**
              * The `atomic-segmented-facet` displays a horizontal facet of the results for the current query.
              */
