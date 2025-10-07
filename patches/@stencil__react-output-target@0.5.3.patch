@@ -1,0 +1,37 @@
+diff --git a/dist/index.cjs.js b/dist/index.cjs.js
+index fd6fd4cb7f08dab32453d0f78e0c59e683ebb267..8959f0f228ac104dbc2cc13e784322002d91ccc4 100644
+--- a/dist/index.cjs.js
++++ b/dist/index.cjs.js
+@@ -142,7 +142,7 @@ async function reactProxyOutput(config, compilerCtx, outputTarget, components) {
+  * @returns the filtered list of components
+  */
+ function getFilteredComponents(excludeComponents = [], cmps) {
+-    return sortBy(cmps, (cmp) => cmp.tagName).filter((c) => !excludeComponents.includes(c.tagName) && !c.internal);
++    return sortBy(cmps, (cmp) => cmp.tagName).filter((c) => !excludeComponents.includes(c.tagName) && (!c.internal || ['AtomicCommerce', 'AtomicProduct'].some(allowedCmpName=>c.componentClassName.startsWith(allowedCmpName))));
+ }
+ /**
+  * Generate the code that will be responsible for creating the Stencil-React bindings
+diff --git a/react-component-lib/createOverlayComponent.tsx b/react-component-lib/createOverlayComponent.tsx
+index 288c38dd54c138fea45127e45acf9d0b96dbf99a..a67bd31cd7b08c33cf12724765d213c59756eac1 100644
+--- a/react-component-lib/createOverlayComponent.tsx
++++ b/react-component-lib/createOverlayComponent.tsx
+@@ -137,6 +137,7 @@ export const createOverlayComponent = <OverlayComponent extends object, OverlayT
+   }
+ 
+   return React.forwardRef<OverlayType, Props>((props, ref) => {
++    // @ts-expect-error - Type mismatch in React.forwardRef with pnpm
+     return <Overlay {...props} forwardedRef={ref} />;
+   });
+ };
+diff --git a/react-component-lib/utils/index.tsx b/react-component-lib/utils/index.tsx
+index a66bd02de766a2eaf05a913d6bc9b1984279265c..5caf82657ec2170977a9c03802583df606071eb3 100644
+--- a/react-component-lib/utils/index.tsx
++++ b/react-component-lib/utils/index.tsx
+@@ -37,6 +37,7 @@ export const createForwardRef = <PropType, ElementType>(ReactComponent: any, dis
+   };
+   forwardRef.displayName = displayName;
+ 
++  // @ts-expect-error - Type mismatch in React.forwardRef with pnpm
+   return React.forwardRef(forwardRef);
+ };
+ 

@@ -137,7 +137,7 @@ export const createOverlayComponent = <OverlayComponent extends object, OverlayT
   }
 
   return React.forwardRef<OverlayType, Props>((props, ref) => {
-    // @ts-expect-error - React 19 type compatibility issue with Stencil-generated code
+    // @ts-expect-error - Type mismatch in React.forwardRef with pnpm
     return <Overlay {...props} forwardedRef={ref} />;
   });
 };
