@@ -24,7 +24,7 @@ function svgTransform(code, id) {
 }
 
 const atomicDefault = defineConfig({
-  name: {label: 'atomic-default'},
+  name: 'atomic-default',
   define: {
     'import.meta.env.RESOURCE_URL': `"${resourceUrl}"`,
     __ATOMIC_VERSION__: `"${packageJson.version}"`,
