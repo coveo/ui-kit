@@ -5,11 +5,11 @@ import type {
 import {ProductTemplatesHelpers} from '@coveo/headless/commerce';
 import {html, LitElement, nothing} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
+import {ProductTemplateController} from '@/src/components/common/product-template/product-template-controller';
+import {makeMatchConditions} from '@/src/components/common/template-controller/template-utils';
 import {errorGuard} from '@/src/decorators/error-guard';
 import type {LitElementWithError} from '@/src/decorators/types';
 import {mapProperty} from '@/src/utils/props-utils';
-import {ProductTemplateController} from '../../common/product-template/product-template-controller';
-import {makeMatchConditions} from '../../common/template-controller/template-utils';
 import '../atomic-product/atomic-product';
 
 /**
