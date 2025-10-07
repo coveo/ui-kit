@@ -23,6 +23,7 @@ function svgTransform(code, id) {
 }
 
 export default defineConfig({
+  name: {label: 'atomic-default'},
   define: {
     'import.meta.env.RESOURCE_URL': `"${resourceUrl}"`,
     __ATOMIC_VERSION__: `"${packageJson.version}"`,
@@ -34,7 +35,10 @@ export default defineConfig({
   },
   resolve: {
     alias: [
-      {find: '@/', replacement: `${path.resolve(import.meta.dirname, './')}/`},
+      {
+        find: '@/',
+        replacement: `${path.resolve(import.meta.dirname, './')}/`,
+      },
       {
         find: /^@coveo\/headless\/(.*)$/,
         replacement: path.resolve(
@@ -93,6 +97,7 @@ export default defineConfig({
     },
   ],
   test: {
+    name: 'atomic-default',
     css: true,
     include: ['src/**/*.spec.ts', 'scripts/stencil-proxy.spec.mjs'],
     exclude: [
