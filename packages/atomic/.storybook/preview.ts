@@ -77,7 +77,6 @@ export const parameters: Parameters = {
       return a.title.localeCompare(b.title, 'en-US');
     },
   },
-
   controls: {
     expanded: true,
   },
