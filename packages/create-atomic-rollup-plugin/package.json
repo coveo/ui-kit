@@ -10,7 +10,7 @@
   ],
   "scripts": {
     "build": "npm run clean && npm run build:ts",
-    "clean": "rimraf dist",
+    "clean": "node ../../utils/ci/rm-rf.mjs dist",
     "build:ts": "tsc -p tsconfig.json",
     "lint": "npx @biomejs/biome check .",
     "release:phase3": "npm run-script -w=@coveo/ci npm-publish",

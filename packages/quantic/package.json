@@ -16,7 +16,7 @@
     "lint:fix": "eslint --fix force-app/main/default/lwc/ && eslint --fix force-app/examples/main/lwc/ && prettier \"force-app/{,**}/*.js\" --write",
     "lint:fix:apex": "prettier \"force-app/{,**}/*.{cls,trigger}\" --write",
     "build:staticresources": "node build-static-resources.js",
-    "dev": "npx rimraf .localdevserver && npm run build:staticresources && npm run dev:sfdx",
+    "dev": "node ../../utils/ci/rm-rf.mjs .localdevserver && npm run build:staticresources && npm run dev:sfdx",
     "dev:sfdx": "sf project deploy start --source-dir force-app/main && sfdx force:lightning:lwc:start --port 3334",
     "test:unit": "lwc-jest",
     "test:unit:debug": "lwc-jest --debug",

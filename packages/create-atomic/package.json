@@ -17,7 +17,7 @@
   },
   "scripts": {
     "start": "node ./index.mjs",
-    "build": "rimraf template && npm run build:ts && node ./scripts/preparePackageJsonTemplate.mjs",
+    "build": "node ../../utils/ci/rm-rf.mjs template && npm run build:ts && node ./scripts/preparePackageJsonTemplate.mjs",
     "build:ts": "tsc -p tsconfig.json",
     "lint": "prettier --check . && eslint .",
     "release:phase3": "npm run-script -w=@coveo/ci npm-publish",
