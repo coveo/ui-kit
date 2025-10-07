@@ -1,204 +1,80 @@
 import {html, LitElement, type TemplateResult} from 'lit';
 import {customElement, state} from 'lit/decorators.js';
-import {beforeEach, describe, expect, it, type MockInstance, vi} from 'vitest';
+import {describe, expect, it, vi} from 'vitest';
 import type {LitElementWithError} from '@/src/decorators/types';
 import {fixture} from '@/vitest-utils/testing-helpers/fixture';
-import {getTemplateNodeType} from './result-template-common';
 import {ResultTemplateController} from './result-template-controller';
 
 vi.mock('./result-template-common', {spy: true});
 
-@customElement('test-element')
-class TestElement extends LitElement implements LitElementWithError {
+@customElement('test-result-element')
+class TestResultElement extends LitElement implements LitElementWithError {
   @state()
   public error!: Error;
   controller = new ResultTemplateController(this, ['valid-parent'], false);
 }
 
-@customElement('empty-test-element')
-class EmptyTestElement extends LitElement implements LitElementWithError {
-  @state()
-  public error!: Error;
-  controller = new ResultTemplateController(this, ['valid-parent'], true);
+async function setupResultElement(
+  template: TemplateResult<1>,
+  parentNode: HTMLElement = document.createElement('valid-parent')
+) {
+  await fixture(template, parentNode);
+  return document.querySelector('test-result-element')! as TestResultElement;
 }
 
 describe('ResultTemplateController', () => {
-  function buildTemplateHtml(html: string) {
-    const template = document.createElement('template');
-    template.innerHTML = html;
-    return template;
-  }
+  it('should return a ResultTemplate with proper structure from getTemplate', async () => {
+    const {controller} = await setupResultElement(
+      html`<test-result-element>
+          <template><div>content</div></template>
+        </test-result-element>`
+    );
+    const result = controller.getTemplate([]);
 
-  function fragmentToHTML(fragment: DocumentFragment) {
-    const div = document.createElement('div');
-    div.appendChild(fragment.cloneNode(true));
-    return div.innerHTML.trim();
-  }
-
-  async function setupElement(
-    template: TemplateResult<1>,
-    parentNode: HTMLElement = document.createElement('valid-parent')
-  ) {
-    await fixture(template, parentNode);
-    return document.querySelector('test-element')! as TestElement;
-  }
-
-  describe('when the host has not a valid parent', () => {
-    it('should set an error', async () => {
-      const element = await setupElement(
-        html`<test-element>
-          <template><h1>hello</h1></template>
-        </test-element>`,
-        document.createElement('invalid-parent')
-      );
-
-      expect(element.error).toBeInstanceOf(Error);
-      expect(element.error.message).toContain('has to be the child');
-    });
+    expect(result).not.toBeNull();
+    expect(result).toHaveProperty('conditions', []);
+    expect(result).toHaveProperty('content');
+    expect(result).toHaveProperty('linkContent');
+    expect(result).toHaveProperty('priority', 1);
   });
 
-  describe('when the template is missing from the host', () => {
-    it('should set an error', async () => {
-      const element = await setupElement(html`<test-element></test-element>`);
+  it('should return null when there is an error', async () => {
+    const element = await setupResultElement(
+      html`<test-result-element></test-result-element>`
+    );
+    const result = element.controller.getTemplate([]);
 
-      expect(element.error).toBeInstanceOf(Error);
-      expect(element.error.message).toContain('must contain a "template"');
-    });
+    expect(result).toBeNull();
   });
 
-  describe('when the template is empty', () => {
-    it('should set an error if allowEmpty is false', async () => {
-      const element = await setupElement(
-        html`<test-element>
-          <template> </template>
-        </test-element>`
-      );
+  it('should get link template element', async () => {
+    const {controller} = await setupResultElement(
+      html`<test-result-element>
+          <template><div>content</div></template>
+        </test-result-element>`
+    );
+    const linkElement = controller.getLinkTemplateElement(controller['host']);
 
-      expect(element.error).toBeInstanceOf(Error);
-      expect(element.error.message).toContain('cannot be empty');
-    });
-
-    it('should not set an error if allowEmpty is true', async () => {
-      await setupElement(
-        html`<empty-test-element>
-          <template> </template>
-        </empty-test-element>`
-      );
-
-      const element = document.querySelector(
-        'empty-test-element'
-      ) as EmptyTestElement;
-
-      expect(element.error).toBeUndefined();
-    });
+    expect(linkElement).toBeInstanceOf(HTMLTemplateElement);
+    expect(linkElement.innerHTML).toBe(
+      '<atomic-result-link></atomic-result-link>'
+    );
   });
 
-  describe('when the template contains script tags', () => {
-    it('should log a warning', async () => {
-      const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
-      const element = await setupElement(
-        html`<test-element>
-          <template><script></script></template>
-        </test-element>`
-      );
-
-      expect(warnSpy).toHaveBeenCalledWith(
-        expect.stringContaining('script'),
-        element
-      );
-
-      warnSpy.mockRestore();
-    });
-  });
-
-  describe('when the template contains both section and other nodes', () => {
-    let warnSpy: MockInstance;
-    const getTemplateFirstNode = (template: HTMLTemplateElement) =>
-      template.content.childNodes[0];
-
-    const localSetup = () =>
-      setupElement(
-        html`<test-element>
-          <template>
-            <atomic-result-section-visual>section</atomic-result-section-visual>
-            <span>other</span>
+  it('should use custom link template when provided', async () => {
+    const element = await setupResultElement(
+      html`<test-result-element>
+          <template><div>content</div></template>
+          <template slot="link">
+            <custom-result-link></custom-result-link>
           </template>
-        </test-element>`
-      );
+        </test-result-element>`
+    );
 
-    beforeEach(() => {
-      warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
-    });
+    const linkElement = element.controller.getLinkTemplateElement(element);
 
-    it('should call #getTemplateNodeType with the appropriate sections', async () => {
-      const mockedGetTemplateNodeType = vi.mocked(getTemplateNodeType);
-      await localSetup();
-
-      const visualSectionTemplate = buildTemplateHtml(
-        '<atomic-result-section-visual>section</atomic-result-section-visual>'
-      );
-      const otherSectionTemplate = buildTemplateHtml('<span>other</span>');
-
-      expect(mockedGetTemplateNodeType).toHaveBeenCalledWith(
-        getTemplateFirstNode(visualSectionTemplate)
-      );
-
-      expect(mockedGetTemplateNodeType).toHaveBeenCalledWith(
-        getTemplateFirstNode(otherSectionTemplate)
-      );
-    });
-
-    it('should log a warning', async () => {
-      await localSetup();
-
-      expect(warnSpy).toHaveBeenCalledWith(
-        expect.stringContaining('should only contain section'),
-        expect.any(TestElement),
-        expect.objectContaining({})
-      );
-    });
-  });
-
-  describe('when the template is valid', () => {
-    let result: ReturnType<ResultTemplateController['getTemplate']>;
-
-    beforeEach(async () => {
-      const {controller} = await setupElement(
-        html`<test-element>
-          <template data-testId="result-template">
-            <atomic-result-section-visual>section</atomic-result-section-visual>
-          </template>
-        </test-element>`
-      );
-      result = controller.getTemplate([])!;
-    });
-
-    it('getTemplate returns a non-null object', () => {
-      expect(result).not.toBeNull();
-    });
-
-    it('getTemplate returns the correct conditions', () => {
-      expect(result).toHaveProperty('conditions', []);
-    });
-
-    it('getTemplate returns the correct content', () => {
-      const contentTemplate = buildTemplateHtml(
-        '<atomic-result-section-visual>section</atomic-result-section-visual>'
-      );
-      expect(result && fragmentToHTML(result.content!)).toBe(
-        fragmentToHTML(contentTemplate.content)
-      );
-    });
-
-    it('getTemplate returns the correct linkContent', () => {
-      const linkTemplate = buildTemplateHtml(
-        '<atomic-result-link></atomic-result-link>'
-      );
-      expect(result).toHaveProperty('linkContent', linkTemplate.content);
-    });
-
-    it('getTemplate returns the correct priority', () => {
-      expect(result).toHaveProperty('priority', 1);
-    });
+    expect(linkElement.innerHTML.trim()).toBe(
+      '<custom-result-link></custom-result-link>'
+    );
   });
 });

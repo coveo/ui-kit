@@ -5,7 +5,7 @@ import {
   ProductTemplatesHelpers,
 } from '@coveo/headless/commerce';
 import {h} from '@stencil/core';
-import {tableElementTagName} from '../../search/atomic-table-result/table-element-utils';
+import {tableElementTagName} from '../table-element-utils';
 import {ItemTarget} from '../layout/display-options';
 import {isResultSectionNode} from '../layout/sections';
 
