@@ -114,6 +114,22 @@ export class CoveoInsightClient {
         return this.logSearchEvent(SearchPageEvents.interfaceLoad);
     }
 
+    public logRecentQueryClick(metadata?: CaseMetadata) {
+        if (metadata) {
+            const metadataToSend = generateMetadataToSend(metadata);
+            return this.logSearchEvent(SearchPageEvents.recentQueryClick, metadataToSend);
+        }
+        return this.logSearchEvent(SearchPageEvents.recentQueryClick);
+    }
+
+    public logClearRecentQueries(metadata?: CaseMetadata) {
+        if (metadata) {
+            const metadataToSend = generateMetadataToSend(metadata);
+            return this.logCustomEvent(SearchPageEvents.clearRecentQueries, metadataToSend);
+        }
+        return this.logCustomEvent(SearchPageEvents.clearRecentQueries);
+    }
+
     public logInterfaceChange(metadata: InsightInterfaceChangeMetadata) {
         const metadataToSend = generateMetadataToSend(metadata);
         return this.logSearchEvent(SearchPageEvents.interfaceChange, metadataToSend);

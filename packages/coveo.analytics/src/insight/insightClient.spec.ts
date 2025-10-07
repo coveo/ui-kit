@@ -162,6 +162,16 @@ describe('InsightClient', () => {
             expectMatchPayload(SearchPageEvents.interfaceLoad);
         });
 
+        it('should send proper payload for #recentQueryClick', async () => {
+            await client.logRecentQueryClick();
+            expectMatchPayload(SearchPageEvents.recentQueryClick);
+        });
+
+        it('should send proper payload for #clearRecentQueries', async () => {
+            await client.logClearRecentQueries();
+            expectMatchCustomEventPayload(SearchPageEvents.clearRecentQueries);
+        });
+
         it('should send proper payload for #interfaceChange', async () => {
             await client.logInterfaceChange({
                 interfaceChangeTo: 'bob',
@@ -709,6 +719,30 @@ describe('InsightClient', () => {
             };
             await client.logInterfaceLoad(metadata);
             expectMatchPayload(SearchPageEvents.interfaceLoad, expectedMetadata);
+        });
+
+        it('should send proper payload for #recentQueryClick', async () => {
+            const metadata = baseCaseMetadata;
+
+            const expectedMetadata = {
+                ...expectedBaseCaseMetadata,
+                context_Case_Subject: 'test subject',
+                context_Case_Description: 'test description',
+            };
+            await client.logRecentQueryClick(metadata);
+            expectMatchPayload(SearchPageEvents.recentQueryClick, expectedMetadata);
+        });
+
+        it('should send proper payload for #clearRecentQueries', async () => {
+            const metadata = baseCaseMetadata;
+
+            const expectedMetadata = {
+                ...expectedBaseCaseMetadata,
+                context_Case_Subject: 'test subject',
+                context_Case_Description: 'test description',
+            };
+            await client.logClearRecentQueries(metadata);
+            expectMatchCustomEventPayload(SearchPageEvents.clearRecentQueries, expectedMetadata);
         });
 
         it('should send proper payload for #interfaceChange', async () => {
