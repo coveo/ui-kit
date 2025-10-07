@@ -63,7 +63,7 @@
     "test:stencil": "stencil test --spec -- src/utils/initialization-utils.spec.ts",
     "test:lit": "vitest run --project=atomic-default",
     "test:watch": "vitest --project=atomic-default",
-    "test:storybook": "vitest --project=storybook",
+    "test:storybook": "vitest run --project=storybook",
     "e2e": "cypress run --browser chrome",
     "e2e:firefox": "cypress run --browser firefox",
     "e2e:watch": "cypress open --browser chrome --e2e",
