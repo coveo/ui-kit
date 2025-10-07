@@ -59,49 +59,27 @@ export const Default: Story = {
       <atomic-result-template>
         <template>
           <style>
-            div.result-root.with-sections.display-list.image-small
+            div.result-root.with-sections.display-list.image-icon
               atomic-result-section-visual {
-              height: 120px;
-            }
-            .rating-wrapper {
-              display: flex;
-              align-items: center;
-            }
-            .rating-wrapper span {
-              margin-left: 5px;
-              color: #8e959d;
+              height: 60px;
             }
           </style>
           <atomic-result-section-visual>
-            <atomic-result-image
-              field="ec_images"
-              aria-hidden="true"
-            ></atomic-result-image>
+            <atomic-result-icon></atomic-result-icon>
           </atomic-result-section-visual>
           <atomic-result-section-title>
             <atomic-result-link></atomic-result-link>
           </atomic-result-section-title>
-          <atomic-result-section-title-metadata>
-            <div class="rating-wrapper">
-              <atomic-result-rating field="ec_rating"></atomic-result-rating>
-              <atomic-field-condition class="field" if-defined="ec_rating">
-                <span>
-                  <atomic-result-number
-                    field="cat_rating_count"
-                  ></atomic-result-number>
-                </span>
-              </atomic-field-condition>
-            </div>
-          </atomic-result-section-title-metadata>
+          <atomic-result-section-excerpt>
+            <atomic-result-text field="excerpt"></atomic-result-text>
+          </atomic-result-section-excerpt>
           <atomic-result-section-bottom-metadata>
-            <atomic-result-number field="ec_price">
-              <atomic-format-currency currency="USD"></atomic-format-currency>
-            </atomic-result-number>
+            <atomic-result-printable-uri></atomic-result-printable-uri>
           </atomic-result-section-bottom-metadata>
         </template>
       </atomic-result-template>
     `,
-    imageSize: 'small',
+    imageSize: 'icon',
   },
   decorators: [
     (story) => html`
