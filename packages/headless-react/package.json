@@ -41,7 +41,7 @@
     "serve:typedoc": "live-server ./docs"
   },
   "dependencies": {
-    "@coveo/headless": "3.31.2"
+    "@coveo/headless": "workspace:*"
   },
   "devDependencies": {
     "@testing-library/react": "16.3.0",
@@ -49,7 +49,7 @@
     "typescript": "5.8.3",
     "typedoc": "0.28.13",
     "vitest": "3.2.4",
-    "@coveo/documentation": "1.0.0"
+    "@coveo/documentation": "workspace:*"
   },
   "peerDependencies": {
     "react": "^18 || ^19",

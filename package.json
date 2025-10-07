@@ -32,7 +32,7 @@
     "@actions/core": "1.11.1",
     "@actions/github": "6.0.1",
     "@biomejs/biome": "2.1.4",
-    "@coveo/ci": "1.0.0",
+    "@coveo/ci": "workspace:*",
     "@cspell/dict-fr-fr": "2.3.2",
     "@tsconfig/node20": "20.1.6",
     "@types/jest": "29.5.14",
@@ -61,40 +61,9 @@
       }
     }
   },
-  "workspaces": [
-    "packages/bueno",
-    "packages/auth",
-    "packages/headless",
-    "packages/atomic",
-    "packages/quantic",
-    "packages/headless-react",
-    "packages/ssr",
-    "packages/atomic-hosted-page",
-    "packages/atomic-react",
-    "packages/atomic-angular",
-    "packages/documentation",
-    "packages/atomic-angular/projects/*",
-    "samples/atomic/*",
-    "samples/headless/*",
-    "samples/headless-ssr/*",
-    "samples/headless-ssr/search-nextjs/*",
-    "packages/shopify",
-    "utils/cdn",
-    "utils/ci",
-    "packages/create-atomic-template",
-    "packages/create-atomic",
-    "packages/create-atomic-component",
-    "packages/create-atomic-component/template/src/components/sample-component",
-    "packages/create-atomic-component-project",
-    "packages/create-atomic-component-project/template",
-    "packages/create-atomic-rollup-plugin",
-    "packages/create-atomic-result-component",
-    "packages/create-atomic-result-component/template/src/components/sample-result-component",
-    "samples/headless-ssr/*"
-  ],
   "engines": {
     "node": "^22.14.0",
-    "npm": ">=8.6.0"
+    "pnpm": ">=9.0.0"
   },
-  "packageManager": "npm@11.6.0"
+  "packageManager": "pnpm@9.15.4"
 }

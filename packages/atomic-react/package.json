@@ -31,7 +31,7 @@
     "commerce/"
   ],
   "dependencies": {
-    "@coveo/atomic": "3.34.0",
+    "@coveo/atomic": "workspace:*",
     "@lit/react": "1.0.6"
   },
   "devDependencies": {
@@ -48,7 +48,7 @@
     "rollup-plugin-polyfill-node": "^0.13.0"
   },
   "peerDependencies": {
-    "@coveo/headless": "3.31.2",
+    "@coveo/headless": "workspace:*",
     "react": ">=18.0.0",
     "react-dom": ">=18.0.0"
   },
