@@ -126,7 +126,7 @@
   "devDependencies": {
     "@coveo/documentation": "1.0.0",
     "live-server": "1.2.2",
-    "typedoc": "0.28.8",
+    "typedoc": "0.28.13",
     "vitest": "3.2.4"
   },
   "engines": {
