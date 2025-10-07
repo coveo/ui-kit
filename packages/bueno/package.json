@@ -27,7 +27,7 @@
     "build": "npm run build:bundles && npm run build:definitions",
     "build:bundles": "node esbuild.mjs",
     "build:definitions": "tsc -p tsconfig.build.json -d --emitDeclarationOnly --declarationDir dist/definitions",
-    "clean": "rimraf -rf dist/*",
+    "clean": "node ../../utils/ci/rm-rf.mjs dist/*",
     "test": "vitest run",
     "test:watch": "vitest",
     "release:phase3": "npm run-script -w=@coveo/ci npm-publish",
