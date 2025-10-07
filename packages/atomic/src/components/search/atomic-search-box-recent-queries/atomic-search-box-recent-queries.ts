@@ -1,45 +1,42 @@
 import {
   buildRecentQueriesList,
-  RecentQueriesList,
-  SearchBox,
+  type RecentQueriesList,
+  type SearchBox,
 } from '@coveo/headless';
-import {Component, Element, Prop, State, h} from '@stencil/core';
-import Clock from '../../../../images/clock.svg';
-import {SafeStorage, StorageItems} from '../../../../utils/local-storage-utils';
-import {once} from '../../../../utils/utils';
+import {html, LitElement, nothing} from 'lit';
+import {customElement, property, state} from 'lit/decorators.js';
+import {errorGuard} from '@/src/decorators/error-guard';
+import type {SearchBoxSuggestionsComponent} from '@/src/decorators/types';
+import {SafeStorage, StorageItems} from '@/src/utils/local-storage-utils';
+import {once} from '@/src/utils/utils';
+import Clock from '../../../images/clock.svg';
 import {
   getPartialRecentQueryClearElement,
   getPartialRecentQueryElement,
-  RecentQueriesContainer,
-  RecentQueryClear,
-  RecentQueryIcon,
-  RecentQueryText,
-} from '../../../common/suggestions/stencil-recent-queries';
-import {
-  dispatchSearchBoxSuggestionsEvent,
-} from '../../../common/suggestions/suggestions-events';
+  renderRecentQuery,
+  renderRecentQueryClear,
+} from '../../common/suggestions/recent-queries';
+import {dispatchSearchBoxSuggestionsEvent} from '../../common/suggestions/suggestions-events';
 import type {
   SearchBoxSuggestionElement,
   SearchBoxSuggestions,
   SearchBoxSuggestionsBindings,
-} from '../../../common/suggestions/suggestions-types';
-import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
+} from '../../common/suggestions/suggestions-types';
+import type {Bindings} from '../atomic-search-interface/interfaces';
 
 /**
  * The `atomic-search-box-recent-queries` component can be added as a child of an `atomic-search-box` component, allowing for the configuration of recent query suggestions.
  */
-@Component({
-  tag: 'atomic-search-box-recent-queries',
-  shadow: true,
-})
-export class AtomicSearchBoxRecentQueries {
-  private bindings!: SearchBoxSuggestionsBindings<SearchBox, Bindings>;
+@customElement('atomic-search-box-recent-queries')
+export class AtomicSearchBoxRecentQueries
+  extends LitElement
+  implements SearchBoxSuggestionsComponent<Bindings>
+{
+  public bindings!: SearchBoxSuggestionsBindings<SearchBox, Bindings>;
   private recentQueriesList!: RecentQueriesList;
   private storage!: SafeStorage;
 
-  @Element() private host!: HTMLElement;
-
-  @State() public error!: Error;
+  @state() public error!: Error;
 
   /**
    * The SVG icon to display.
@@ -48,25 +45,29 @@ export class AtomicSearchBoxRecentQueries {
    * - Use a value that starts with `assets://`, to display an icon from the Atomic package.
    * - Use a stringified SVG to display it directly.
    */
-  @Prop() public icon?: string;
+  @property() public icon?: string;
 
   /**
-   * The maximum number of suggestions that will be displayed if the user has typed something into the input field.
+   * The maximum number of suggestions to display when the user types in the input field.
    */
-  @Prop({reflect: true}) public maxWithQuery = 3;
+  @property({type: Number, attribute: 'max-with-query', reflect: true})
+  public maxWithQuery = 3;
   /**
-   * The maximum number of suggestions that will be displayed initially when the input field is empty.
+   * The maximum number of suggestions to display initially, when the input field is empty.
    */
-  @Prop({reflect: true}) public maxWithoutQuery?: number;
+  @property({type: Number, attribute: 'max-without-query', reflect: true})
+  public maxWithoutQuery?: number;
 
-  componentWillLoad() {
+  connectedCallback() {
+    super.connectedCallback();
+
     try {
       dispatchSearchBoxSuggestionsEvent<SearchBox, Bindings>(
         (bindings) => {
           this.bindings = bindings;
           return this.initialize();
         },
-        this.host,
+        this,
         ['atomic-search-box']
       );
     } catch (error) {
@@ -74,21 +75,20 @@ export class AtomicSearchBoxRecentQueries {
     }
   }
 
-  private renderIcon() {
-    return this.icon || Clock;
-  }
-
-  private initialize(): SearchBoxSuggestions {
+  public initialize(): SearchBoxSuggestions {
     this.storage = new SafeStorage();
     this.recentQueriesList = buildRecentQueriesList(this.bindings.engine, {
       initialState: {queries: this.retrieveLocalStorage()},
-      options: {maxLength: 1000, clearFilters: this.bindings.clearFilters},
+      options: {
+        maxLength: 1000,
+        clearFilters: this.bindings.clearFilters,
+      },
     });
 
     this.recentQueriesList.subscribe(() => this.updateLocalStorage());
 
     return {
-      position: Array.from(this.host.parentNode!.children).indexOf(this.host),
+      position: Array.from(this.parentNode!.children).indexOf(this),
       renderItems: () => this.renderItems(),
     };
   }
@@ -110,7 +110,7 @@ export class AtomicSearchBoxRecentQueries {
 
   private warnUser = once(() =>
     this.bindings.engine.logger.warn(
-      'Because analytics are disabled, the recent queries feature is deactivated.'
+      'The recent queries feature is deactivated because analytics are disabled.'
     )
   );
 
@@ -147,7 +147,7 @@ export class AtomicSearchBoxRecentQueries {
 
     return {
       ...partialItem,
-      content: <RecentQueryClear i18n={this.bindings.i18n} />,
+      content: renderRecentQueryClear({i18n: this.bindings.i18n}),
       onSelect: () => {
         this.recentQueriesList.clear();
         this.bindings.triggerSuggestions();
@@ -160,13 +160,11 @@ export class AtomicSearchBoxRecentQueries {
     const partialItem = getPartialRecentQueryElement(value, this.bindings.i18n);
     return {
       ...partialItem,
-      content: (
-        <RecentQueriesContainer>
-          <RecentQueryIcon icon={this.renderIcon()} />
-          <RecentQueryText query={query} value={value} />
-        </RecentQueriesContainer>
-      ),
-
+      content: renderRecentQuery({
+        icon: this.icon || Clock,
+        query,
+        value,
+      }),
       onSelect: () => {
         if (this.bindings.isStandalone) {
           this.bindings.searchBoxController.updateText(value);
@@ -181,14 +179,14 @@ export class AtomicSearchBoxRecentQueries {
     };
   }
 
-  public render() {
-    if (this.error) {
-      return (
-        <atomic-component-error
-          element={this.host}
-          error={this.error}
-        ></atomic-component-error>
-      );
-    }
+  @errorGuard()
+  render() {
+    return html`${nothing}`;
+  }
+}
+
+declare global {
+  interface HTMLElementTagNameMap {
+    'atomic-search-box-recent-queries': AtomicSearchBoxRecentQueries;
   }
 }
