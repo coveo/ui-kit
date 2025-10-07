@@ -20,7 +20,7 @@
     "release:phase3": "npm run-script -w=@coveo/ci npm-publish",
     "release:phase1": "npm run-script -w=@coveo/ci bump",
     "promote:npm:latest": "npm run-script -w=@coveo/ci promote-npm-prod",
-    "build:assets": "ncp ../atomic/dist/atomic/assets dist/assets && ncp ../atomic/dist/atomic/lang dist/lang "
+    "build:assets": "node ../../utils/ci/copy-files.mjs ../atomic/dist/atomic/assets dist/assets ../atomic/dist/atomic/lang dist/lang"
   },
   "module": "./dist/esm/atomic-react.mjs",
   "main": "./dist/cjs/atomic-react.cjs",
@@ -46,8 +46,7 @@
     "react": "19.1.1",
     "react-dom": "19.1.1",
     "rollup": "4.46.2",
-    "rollup-plugin-polyfill-node": "^0.13.0",
-    "ncp": "2.0.0"
+    "rollup-plugin-polyfill-node": "^0.13.0"
   },
   "peerDependencies": {
     "@coveo/headless": "3.31.1",
