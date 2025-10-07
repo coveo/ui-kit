@@ -148,7 +148,6 @@ export class AtomicCommerceFacetNumberInput
           ${minText}
         </label>
         <input
-          role="textbox"
           part="input-start"
           id="${facetId}_start"
           type="number"

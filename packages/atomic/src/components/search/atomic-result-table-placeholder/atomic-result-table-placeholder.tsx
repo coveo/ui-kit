@@ -28,7 +28,7 @@ export class AtomicResultTablePlaceholder {
   public render() {
     return (
       <table class={`list-root animate-pulse ${this.getClasses().join(' ')}`}>
-        <thead>
+        <thead aria-hidden="true">
           <tr>
             <th>
               <div

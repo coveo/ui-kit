@@ -2,14 +2,12 @@ import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
 import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {html} from 'lit';
 import {within} from 'shadow-dom-testing-library';
-import {userEvent} from 'storybook/test';
+import {expect, userEvent} from 'storybook/test';
 import {wrapInCommerceInterface} from '@/storybook-utils/commerce/commerce-interface-wrapper';
 import {parameters as commonParameters} from '@/storybook-utils/common/common-meta-parameters';
 
-const {decorator, afterEach} = wrapInCommerceInterface({
-  includeCodeRoot: false,
-});
-const {events, args, argTypes, template} = getStorybookHelpers(
+const {decorator, afterEach} = wrapInCommerceInterface();
+const {events, args, argTypes, styleTemplate} = getStorybookHelpers(
   'atomic-commerce-refine-modal',
   {excludeCategories: ['methods']}
 );
@@ -18,12 +16,9 @@ const meta: Meta = {
   component: 'atomic-commerce-refine-modal',
   title: 'Commerce/Refine Modal',
   id: 'atomic-commerce-refine-toggle',
-  render: (args) => html`${template(args)}`,
-  decorators: [
-    (story) =>
-      html`<atomic-commerce-refine-toggle></atomic-commerce-refine-toggle><div id="code-root">${story()}</div>`,
-    decorator,
-  ],
+  render: (args) =>
+    html`${styleTemplate(args)}<atomic-commerce-refine-toggle></atomic-commerce-refine-toggle>`,
+  decorators: [decorator],
   parameters: {
     ...commonParameters,
     actions: {
@@ -34,7 +29,36 @@ const meta: Meta = {
     ...args,
     'collapse-facets-after': '0',
   },
-  argTypes,
+  argTypes: {
+    ...argTypes,
+    'open-button': {
+      ...argTypes['open-button'],
+      control: {
+        disable: true,
+      },
+      table: {
+        defaultValue: {summary: undefined},
+      },
+    },
+    'is-open': {
+      ...argTypes['is-open'],
+      control: {
+        disable: true,
+      },
+      table: {
+        defaultValue: {summary: undefined},
+      },
+    },
+    'collapse-facets-after': {
+      ...argTypes['collapse-facets-after'],
+      control: {
+        disable: true,
+      },
+      table: {
+        defaultValue: {summary: undefined},
+      },
+    },
+  },
   globals: {
     layout: 'fullscreen',
     docs: {
@@ -45,16 +69,26 @@ const meta: Meta = {
       },
     },
   },
-  afterEach: async (context) => {
-    await afterEach(context);
-    const canvas = within(
-      context.canvasElement.querySelector('atomic-commerce-refine-toggle')!
-    );
+  //TODO KIT-5111: Remove beforeEach when refactored in preview.ts
+  beforeEach({canvasElement, canvas}) {
+    Object.assign(canvas, {...within(canvasElement)});
+  },
+  play: async ({mount, step, ...restOfContext}) => {
+    const canvas = (await mount()) as ReturnType<typeof within>;
+    await afterEach({mount, step, ...restOfContext});
     const refineToggle = await canvas.findByShadowRole('button', {
       name: 'Sort & Filter',
     });
-
-    await userEvent.click(refineToggle);
+    await step('Open refine modal', async () => {
+      await userEvent.click(refineToggle);
+      await expect(
+        await canvas.findByShadowText(
+          'View products',
+          {exact: false},
+          {timeout: 10e3}
+        )
+      ).toBeVisible();
+    });
   },
 };
 

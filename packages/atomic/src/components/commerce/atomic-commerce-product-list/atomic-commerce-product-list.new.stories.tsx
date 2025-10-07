@@ -60,13 +60,14 @@ const meta: Meta = {
   },
   argTypes,
 
-  afterEach,
+  afterEach: afterEachNoFirstQuery,
 };
 
 export default meta;
 
 export const Default: Story = {
   name: 'Using grid display',
+  afterEach,
 };
 
 export const GridDisplayWithTemplate: Story = {
@@ -110,17 +111,17 @@ export const GridDisplayWithTemplate: Story = {
   </template>
 </atomic-product-template>`,
   },
+  afterEach,
 };
 
 export const GridDisplayBeforeQuery: Story = {
   name: 'Using grid display before query',
-  afterEach: async (context) => {
-    await afterEachNoFirstQuery(context);
-  },
+  tags: ['!test'],
 };
 
 export const ListDisplay: Story = {
   name: 'Using list display',
+  afterEach,
   args: {
     display: 'list',
   },
@@ -128,6 +129,7 @@ export const ListDisplay: Story = {
 
 export const ListDisplayWithTemplate: Story = {
   name: 'Using list display with template',
+  afterEach,
   args: {
     display: 'list',
     'default-slot': `<atomic-product-template>
@@ -175,13 +177,11 @@ export const ListDisplayBeforeQuery: Story = {
   args: {
     display: 'list',
   },
-  afterEach: async (context) => {
-    await afterEachNoFirstQuery(context);
-  },
 };
 
 export const TableDisplay: Story = {
   name: 'Using table display',
+  afterEach,
   args: {
     display: 'table',
     'default-slot': `<atomic-product-template>
@@ -208,9 +208,23 @@ export const TableDisplayBeforeQuery: Story = {
   name: 'Using table display before query',
   args: {
     display: 'table',
-  },
-  afterEach: async (context) => {
-    await afterEachNoFirstQuery(context);
+    'default-slot': `<atomic-product-template>
+      <template>
+        <atomic-table-element label="Product">
+          <atomic-product-link></atomic-product-link>
+          <atomic-product-field-condition if-defined="ec_brand">
+            <atomic-product-text field="ec_brand" class="text-neutral-dark block"></atomic-product-text>
+          </atomic-product-field-condition>
+        </atomic-table-element>
+        <atomic-table-element label="ID">
+          <atomic-product-text field="permanentid"></atomic-product-text>
+        </atomic-table-element>
+        <atomic-table-element label="Price">
+          <atomic-product-price></atomic-product-price>
+        </atomic-table-element>
+
+      </template>
+    </atomic-product-template>`,
   },
 };
 
