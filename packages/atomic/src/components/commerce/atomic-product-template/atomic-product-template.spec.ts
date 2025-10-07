@@ -66,7 +66,8 @@ describe('atomic-product-template', () => {
       });
       expect(mockMakeMatchConditions).toHaveBeenCalledWith(
         {foo: ['bar']},
-        {baz: ['qux']}
+        {baz: ['qux']},
+        expect.any(Object)
       );
     });
   });
