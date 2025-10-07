@@ -1,5 +1,5 @@
 import {spawn} from 'node:child_process';
-import colors from '../../ci/colors.mjs'
+import colors from '../../ci/colors.mjs';
 
 try {
   console.log(

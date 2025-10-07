@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
-import { rmSync, readdirSync, existsSync } from 'fs';
-import { resolve, join, dirname, basename } from 'path';
+import {existsSync, readdirSync, rmSync} from 'node:fs';
+import {basename, dirname, join, resolve} from 'node:path';
 
 /**
  * Simple glob expansion for patterns like "dist/*"
@@ -10,11 +10,11 @@ import { resolve, join, dirname, basename } from 'path';
  */
 function expandGlob(pattern) {
   const resolvedPattern = resolve(pattern);
-  
+
   if (!pattern.includes('*')) {
     return [resolvedPattern];
   }
-  
+
   if (pattern.endsWith('/*')) {
     const dir = resolvedPattern.slice(0, -2);
     if (!existsSync(dir)) {
@@ -22,28 +22,28 @@ function expandGlob(pattern) {
     }
     try {
       const entries = readdirSync(dir);
-      return entries.map(entry => join(dir, entry));
-    } catch (err) {
+      return entries.map((entry) => join(dir, entry));
+    } catch (_err) {
       console.warn(`Warning: Could not read directory ${dir}`);
       return [];
     }
   }
-  
+
   const dir = dirname(resolvedPattern);
   const filePattern = basename(resolvedPattern);
-  
+
   if (!existsSync(dir)) {
     return [];
   }
-  
+
   try {
     const entries = readdirSync(dir);
     const regex = new RegExp(
-      '^' + filePattern.replace(/\*/g, '.*').replace(/\?/g, '.') + '$'
+      `^${filePattern.replace(/\*/g, '.*').replace(/\?/g, '.')}$`
     );
-    const matches = entries.filter(entry => regex.test(entry));
-    return matches.map(entry => join(dir, entry));
-  } catch (err) {
+    const matches = entries.filter((entry) => regex.test(entry));
+    return matches.map((entry) => join(dir, entry));
+  } catch (_err) {
     console.warn(`Warning: Could not read directory ${dir}`);
     return [];
   }
@@ -52,7 +52,7 @@ function expandGlob(pattern) {
 /**
  * Remove files and directories recursively (equivalent to rm -rf)
  * Supports simple glob patterns (e.g., dist/*, *.tmp)
- * 
+ *
  * @param {string[]} paths - Paths to remove (can include simple glob patterns)
  */
 function removeRecursive(paths) {
@@ -68,13 +68,18 @@ function removeRecursive(paths) {
 
   for (const path of paths) {
     const expandedPaths = expandGlob(path);
-    
+
     for (const resolvedPath of expandedPaths) {
       try {
-        rmSync(resolvedPath, { recursive: true, force: true });
+        rmSync(resolvedPath, {recursive: true, force: true});
         console.log(`Removed: ${resolvedPath}`);
       } catch (err) {
-        if (err && typeof err === 'object' && 'code' in err && err.code !== 'ENOENT') {
+        if (
+          err &&
+          typeof err === 'object' &&
+          'code' in err &&
+          err.code !== 'ENOENT'
+        ) {
           console.error(`Error removing ${resolvedPath}:`, String(err));
         }
       }

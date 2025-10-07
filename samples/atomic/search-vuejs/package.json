@@ -6,7 +6,7 @@
   "scripts": {
     "build": "npm run build:assets && npm run build:vue",
     "dev": "npm run build:assets && npm run dev:vue",
-  "build:assets": "node ../../../utils/ci/copy-files.mjs ../../../packages/atomic/dist/atomic/assets public/assets ../../../packages/atomic/dist/atomic/lang public/lang",
+    "build:assets": "node ../../../utils/ci/copy-files.mjs ../../../packages/atomic/dist/atomic/assets public/assets ../../../packages/atomic/dist/atomic/lang public/lang",
     "dev:vue": "vite",
     "build:vue": "vite build",
     "preview": "vite preview"

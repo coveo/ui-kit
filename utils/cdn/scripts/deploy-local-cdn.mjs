@@ -89,7 +89,7 @@ const devCdnDir = path.resolve(currentDir, `../dist`);
 
 const copyFiles = async (source, destination) => {
   try {
-    await fs.cp(source, destination, { recursive: true, force: true });
+    await fs.cp(source, destination, {recursive: true, force: true});
   } catch (err) {
     throw new Error(
       `Error copying from ${source} to ${destination}: ${err.message}`
