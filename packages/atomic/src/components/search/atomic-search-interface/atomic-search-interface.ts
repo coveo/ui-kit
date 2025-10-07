@@ -52,7 +52,7 @@ import {getAnalyticsConfig} from './analytics-config';
 import {createSearchStore, type SearchStore} from './store';
 // TODO - Remove once all components that use atomic-modal have been migrated.
 import '@/src/components/common/atomic-modal/atomic-modal';
-import {augmentAnalyticsConfigWithAtomicVersion} from '../../common/interface/analytics-config';
+import {augmentAnalyticsConfigWithAtomicVersion} from '@/src/components/common/interface/analytics-config';
 
 const FirstSearchExecutedFlag = 'firstSearchExecuted';
 export type InitializationOptions = SearchEngineConfiguration;
