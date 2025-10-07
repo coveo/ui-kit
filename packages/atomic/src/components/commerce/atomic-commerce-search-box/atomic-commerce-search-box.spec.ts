@@ -544,6 +544,7 @@ describe('atomic-commerce-search-box', () => {
   });
 
   it('should call buildSearchBox with clearFilters set to false when clearFilters is set to false', async () => {
+    vi.spyOn(console, 'warn').mockImplementation(() => {});
     await renderSearchBox({
       searchBoxProps: {clearFilters: false},
     });
