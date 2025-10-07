@@ -7,6 +7,7 @@ import {
   AtomicQuerySummary as LitAtomicQuerySummary,
   AtomicResultsPerPage as LitAtomicResultsPerPage,
   AtomicSearchBoxInstantResults as LitAtomicSearchBoxInstantResults,
+  AtomicSearchBoxRecentQueries as LitAtomicSearchBoxRecentQueries,
   AtomicSearchInterface as LitAtomicSearchInterface,
   AtomicSearchLayout as LitAtomicSearchLayout,
 } from '@coveo/atomic/components';
@@ -59,6 +60,12 @@ export const AtomicSearchBoxInstantResults = createComponent({
   tagName: 'atomic-search-box-instant-results',
   react: React,
   elementClass: LitAtomicSearchBoxInstantResults,
+});
+
+export const AtomicSearchBoxRecentQueries = createComponent({
+  tagName: 'atomic-search-box-recent-queries',
+  react: React,
+  elementClass: LitAtomicSearchBoxRecentQueries,
 });
 
 export const AtomicSearchInterface = createComponent({
