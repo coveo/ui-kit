@@ -9,7 +9,6 @@ import {
   selectAnswer,
 } from '../../../api/knowledge/stream-answer-api.js';
 import type {StreamAnswerAPIState} from '../../../api/knowledge/stream-answer-api-state.js';
-import {skipToken} from '@reduxjs/toolkit/query';
 import {warnIfUsingNextAnalyticsModeForServiceFeature} from '../../../app/engine.js';
 import type {InsightEngine} from '../../../app/insight-engine/insight-engine.js';
 import type {SearchEngine} from '../../../app/search-engine/search-engine.js';
@@ -24,6 +23,7 @@ import {
   updateAnswerConfigurationId,
 } from '../../../features/generated-answer/generated-answer-actions.js';
 import type {GeneratedAnswerFeedback} from '../../../features/generated-answer/generated-answer-analytics-actions.js';
+import type {AnswerApiQueryParams} from '../../../features/generated-answer/generated-answer-request.js';
 import {filterOutDuplicatedCitations} from '../../../features/generated-answer/utils/generated-answer-citation-utils.js';
 import {queryReducer as query} from '../../../features/query/query-slice.js';
 import type {
@@ -181,9 +181,9 @@ export function buildAnswerApiGeneratedAnswer(
     },
     retry() {
       const answerApiQueryParams = selectAnswerApiQueryParams(getState());
-      if (answerApiQueryParams !== skipToken) {
-        engine.dispatch(fetchAnswer(answerApiQueryParams));
-      }
+      engine.dispatch(
+        fetchAnswer(answerApiQueryParams as AnswerApiQueryParams)
+      );
     },
     reset() {
       engine.dispatch(resetAnswer());

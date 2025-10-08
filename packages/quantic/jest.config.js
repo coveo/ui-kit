@@ -35,7 +35,8 @@ module.exports = {
       '<rootDir>/force-app/main/default/lwc/$1/$1',
       '<rootDir>/force-app/solutionExamples/main/lwc/$1/$1',
     ],
-    
+    '^marked$':
+      '<rootDir>/../../node_modules/.pnpm/marked@12.0.2/node_modules/marked/lib/marked.cjs',
   },
   modulePathIgnorePatterns: ['.cache'],
   // add any custom configurations here
