@@ -19,7 +19,7 @@ export class SearchBoxPageObject extends BasePageObject<'atomic-search-box'> {
   }
 
   get clearButton() {
-    return this.component.getByLabel('Clear searchbox', {exact: true});
+    return this.component.getByLabel('Clear', {exact: true});
   }
 
   get ariaLive() {
