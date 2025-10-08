@@ -1,12 +1,12 @@
 import {userEvent} from '@vitest/browser/context';
 import {html} from 'lit';
 import {beforeEach, describe, expect, it, vi} from 'vitest';
-import {AtomicModal} from './atomic-modal';
-import './atomic-modal';
-import '../atomic-component-error/atomic-component-error';
 import {updateBreakpoints} from '@/src/utils/replace-breakpoint-utils';
 import {renderInAtomicSearchInterface} from '@/vitest-utils/testing-helpers/fixtures/atomic/search/atomic-search-interface-fixture';
 import {buildFakeSearchEngine} from '@/vitest-utils/testing-helpers/fixtures/headless/search/engine';
+import {AtomicModal} from './atomic-modal';
+import './atomic-modal';
+import '@/src/components/common/atomic-component-error/atomic-component-error';
 
 vi.mock('@coveo/headless', {spy: true});
 vi.mock('@/src/utils/replace-breakpoint-utils', {spy: true});

@@ -1,12 +1,12 @@
 import {buildQuerySummary, type QuerySummaryState} from '@coveo/headless';
 import {html} from 'lit';
 import {describe, expect, it, vi} from 'vitest';
+import {AriaLiveRegionController} from '@/src/utils/accessibility-utils';
 import {renderInAtomicSearchInterface} from '@/vitest-utils/testing-helpers/fixtures/atomic/search/atomic-search-interface-fixture';
 import {buildFakeSearchEngine} from '@/vitest-utils/testing-helpers/fixtures/headless/search/engine';
 import {buildFakeSummary} from '@/vitest-utils/testing-helpers/fixtures/headless/search/summary-controller';
-import './atomic-query-summary';
-import {AriaLiveRegionController} from '@/src/utils/accessibility-utils';
 import type {AtomicQuerySummary} from './atomic-query-summary';
+import './atomic-query-summary';
 
 vi.mock('@coveo/headless', {spy: true});
 vi.mock('@/src/mixins/bindings-mixin', () => ({

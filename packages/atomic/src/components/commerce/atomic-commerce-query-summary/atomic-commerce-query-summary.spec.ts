@@ -13,8 +13,8 @@ import {buildFakeCommerceEngine} from '@/vitest-utils/testing-helpers/fixtures/h
 import {buildFakeProductListing} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/product-listing-controller';
 import {buildFakeSearch} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/search-controller';
 import {buildFakeSummary} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/summary-subcontroller';
-import './atomic-commerce-query-summary';
 import type {AtomicCommerceQuerySummary} from './atomic-commerce-query-summary';
+import './atomic-commerce-query-summary';
 
 vi.mock('@coveo/headless/commerce', {spy: true});
 
