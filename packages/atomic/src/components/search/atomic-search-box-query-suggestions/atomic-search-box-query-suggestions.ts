@@ -86,7 +86,7 @@ export class AtomicSearchBoxQuerySuggestions
     const numberOfQueries = this.bindings.numberOfQueries;
     const maxWithQuery = this.maxWithQuery;
 
-    if (numberOfQueries < maxWithQuery) {
+    if (maxWithQuery !== undefined && numberOfQueries < maxWithQuery) {
       const logger = this.bindings.engine.logger;
       logger.warn(
         `Query suggestions config mismatch: number-of-queries (${numberOfQueries}) < max-with-query (${maxWithQuery}). Update one to match the other.`
