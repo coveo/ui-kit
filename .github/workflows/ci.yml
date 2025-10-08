@@ -255,7 +255,7 @@ jobs:
       - uses: ./.github/actions/setup
       - name: Install Playwright Browsers
         run: npx playwright install --with-deps
-      - run: npx turbo test:storybook --affected
+      - run: npm run -w=@coveo/atomic test:storybook
   package-compatibility:
     name: "Verify compatibility of packages"
     needs: build
