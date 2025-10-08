@@ -11,6 +11,7 @@ import {
   logCaseDetach,
 } from '../../../features/attached-results/attached-results-analytics-actions.js';
 import {attachedResultsReducer as attachedResults} from '../../../features/attached-results/attached-results-slice.js';
+import type {AttachedResult} from '../../../features/attached-results/attached-results-state.js';
 import {buildAttachedResultFromSearchResult} from '../../../features/attached-results/attached-results-utils.js';
 import type {
   AttachedResultsSection,
@@ -22,76 +23,76 @@ import {
   type Controller,
 } from '../../controller/headless-controller.js';
 
-export interface AttachToCaseProps {
+export interface AttachedResultsProps {
   /**
-   * The options for the `AttachToCase` controller.
+   * The options for the `AttachedResults` controller.
    */
-  options: AttachToCaseOptions;
+  options: AttachedResultsOptions;
 }
 
-export interface AttachToCaseOptions {
+export interface AttachedResultsOptions {
   /**
-   * The result to attach, detach.
+   * The Id of the record to attach to.
    */
-  result: Result;
-  /**
-   * The Id of the case to attach to.
-   */
-  caseId: string;
+  recordId: string;
 }
 
 /**
- * The AttachToCase controller is responsible for handling the attach and detach actions on a specific result.
- * It also provides a function `isAttached` to verify if currently a specific result is part of the attachedResults state.
+ * The AttachedResults controller manages all attached results for a given record.
+ * It provides a unified API to attach/detach results, check attachment status,
+ * and access all attached results for the record.
  *
  * @group Controllers
- * @category AttachToCase
- * @deprecated Use `buildAttachedResults` instead. This controller will be removed in ui-kit v4.
+ * @category AttachedResults
  */
-export interface AttachToCase extends Controller {
+export interface AttachedResults extends Controller {
   /**
-   * Check if a specific result is part of the list of AttachedResults in the state.
-   * @param result A result to check if attached, with SearchAPI fields
+   * Check if a specific result is attached to this record.
+   * @param result - The result to check if attached, with SearchAPI fields
    * @returns A boolean indicating if the result is attached.
    */
-  isAttached(): boolean;
+  isAttached(result: Result): boolean;
   /**
    * Attach a new result by adding it to the attachedResults state.
-   * @param result A result to add to the list of currently attached results.
+   * @param result - A result to add to the list of currently attached results.
    */
-  attach(): void;
+  attach(result: Result): void;
   /**
    * Detach a result by removing it from the attachedResults state.
-   * @param result A result to remove from the list of currently attached results.
+   * @param result - A result to remove from the list of currently attached results.
    */
-  detach(): void;
+  detach(result: Result): void;
+  /**
+   * The state of the `AttachedResults` controller.
+   * Returns all attached results for this record.
+   */
+  state: AttachedResult[];
 }
 
 /**
+ * Creates an AttachedResults controller instance.
  *
  * @param engine - The headless engine.
- * @param props - The configurable `AttachToCase` properties.
- * @returns - A `AttachToCase` controller instance.
+ * @param props - The configurable `AttachedResults` properties.
+ * @returns A `AttachedResults` controller instance.
  *
  * @group Controllers
- * @category AttachToCase
- * @deprecated Use `buildAttachedResults` instead. This controller will be removed in ui-kit v4.
+ * @category AttachedResults
  */
-export function buildAttachToCase(
+export function buildAttachedResults(
   engine: InsightEngine,
-  props: AttachToCaseProps
-): AttachToCase {
+  props: AttachedResultsProps
+): AttachedResults {
   if (!loadAttachedResultsReducers(engine)) {
     throw loadReducerError;
   }
 
   const {dispatch} = engine;
-  const getState = () => engine.state.attachedResults;
   const controller = buildController(engine);
-  const {result, caseId} = props.options;
+  const {recordId} = props.options;
 
-  const isResultAttached = () => {
-    if (isNullOrUndefined(caseId)) {
+  const isResultAttached = (result: Result): boolean => {
+    if (isNullOrUndefined(recordId)) {
       return false;
     }
 
@@ -102,38 +103,44 @@ export function buildAttachToCase(
       return false;
     }
     return engine.state.attachedResults.results.some((attached) => {
-      const caseIdMatches = caseId === attached.caseId;
+      const recordIdMatches = recordId === attached.caseId; // Note: still using caseId in state
       const permanentIdMatches =
         !isNullOrUndefined(attached.permanentId) &&
         attached.permanentId === result.raw.permanentid;
       const uriHashMatches =
         !isNullOrUndefined(attached.uriHash) &&
         attached.uriHash === result.raw.urihash;
-      return caseIdMatches && (permanentIdMatches || uriHashMatches);
+      return recordIdMatches && (permanentIdMatches || uriHashMatches);
     });
+  };
+
+  const getAttachedResultsForRecord = (): AttachedResult[] => {
+    return engine.state.attachedResults.results.filter(
+      (attached) => attached.caseId === recordId // Note: still using caseId in state
+    );
   };
 
   return {
     ...controller,
 
     get state() {
-      return getState();
+      return getAttachedResultsForRecord();
     },
 
-    isAttached() {
-      return isResultAttached();
+    isAttached(result: Result): boolean {
+      return isResultAttached(result);
     },
 
-    attach() {
+    attach(result: Result): void {
       dispatch(
-        attachResult(buildAttachedResultFromSearchResult(result, caseId))
+        attachResult(buildAttachedResultFromSearchResult(result, recordId))
       );
       dispatch(logCaseAttach(result));
     },
 
-    detach() {
+    detach(result: Result): void {
       dispatch(
-        detachResult(buildAttachedResultFromSearchResult(result, caseId))
+        detachResult(buildAttachedResultFromSearchResult(result, recordId))
       );
       dispatch(logCaseDetach(result));
     },
