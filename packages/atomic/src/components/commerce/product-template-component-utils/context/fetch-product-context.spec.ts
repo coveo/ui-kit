@@ -2,7 +2,7 @@ import {beforeEach, describe, expect, it, vi} from 'vitest';
 import * as fetchItemContextModule from '@/src/components/common/item-list/fetch-item-context';
 import {fetchProductContext} from './fetch-product-context';
 
-vi.mock('@/src/components/common/item-list/fetch-item-context');
+vi.mock('@/src/components/common/item-list/fetch-item-context', {spy: true});
 
 describe('product-template-controllers', () => {
   beforeEach(() => {
