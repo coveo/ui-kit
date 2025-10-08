@@ -36,6 +36,7 @@ const meta: Meta = {
   argTypes,
 
   afterEach,
+  //TODO: Investigate https://coveord.atlassian.net/browse/KIT-5112
   tags: ['!test'],
 };
 
