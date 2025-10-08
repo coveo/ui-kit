@@ -1,4 +1,4 @@
-import type {SearchEngine} from '@coveo/headless';
+import type {InsightEngine} from '@coveo/headless/insight';
 import {provide} from '@lit/context';
 import type {i18n} from 'i18next';
 import {html, LitElement, type TemplateResult} from 'lit';
@@ -6,9 +6,11 @@ import {customElement, property, state} from 'lit/decorators.js';
 import {vi} from 'vitest';
 import type {BaseAtomicInterface} from '@/src/components/common/interface/interface-controller.js';
 import {bindingsContext} from '@/src/components/context/bindings-context.js';
-import type {AtomicSearchInterface} from '@/src/components/index.js';
-import type {Bindings} from '@/src/components/search/atomic-search-interface/interfaces.js';
-import type {SearchStore} from '@/src/components/search/atomic-search-interface/store.js';
+import type {
+  AtomicInsightInterface,
+  InsightBindings,
+} from '@/src/components/insight/atomic-insight-interface/atomic-insight-interface.js';
+import type {InsightStore} from '@/src/components/insight/atomic-insight-interface/store.js';
 import {
   type InitializeEvent,
   markParentAsReady,
@@ -18,10 +20,10 @@ import {fixture} from '@/vitest-utils/testing-helpers/fixture.js';
 import {genericSubscribe} from '@/vitest-utils/testing-helpers/fixtures/headless/common.js';
 import {createTestI18n} from '@/vitest-utils/testing-helpers/i18n-utils.js';
 
-@customElement('atomic-search-interface')
-export class FixtureAtomicSearchInterface
+@customElement('atomic-insight-interface')
+export class FixtureAtomicInsightInterface
   extends LitElement
-  implements BaseAtomicInterface<SearchEngine>
+  implements BaseAtomicInterface<InsightEngine>
 {
   analytics: boolean = false;
   i18n!: i18n;
@@ -31,7 +33,7 @@ export class FixtureAtomicSearchInterface
   @state()
   template!: TemplateResult;
   @provide({context: bindingsContext})
-  bindings: Bindings = {} as Bindings;
+  bindings: InsightBindings = {} as InsightBindings;
   error!: Error;
   updateIconAssetsPath = () => {};
   registerFieldsToInclude?: (() => void) | undefined;
@@ -57,12 +59,16 @@ export class FixtureAtomicSearchInterface
     });
   }
 
-  setBindings(bindings: Partial<Bindings>) {
+  setBindings(bindings: Partial<InsightBindings>) {
     this.bindings = {
       ...bindings,
       i18n: bindings.i18n ?? this.i18n,
-      interfaceElement: this as unknown as AtomicSearchInterface,
-    } as Bindings;
+      interfaceElement: this as unknown as AtomicInsightInterface,
+    } as InsightBindings;
+  }
+
+  setRenderTemplate(template: TemplateResult) {
+    this.template = template;
   }
 
   protected render() {
@@ -71,24 +77,24 @@ export class FixtureAtomicSearchInterface
 }
 
 export const defaultBindings = {
-  interfaceElement: {} as AtomicSearchInterface,
+  interfaceElement: {} as AtomicInsightInterface,
   store: {
     state: {
       loadingFlags: [],
-    } as Partial<SearchStore['state']>,
+    } as Partial<InsightStore['state']>,
     setLoadingFlag: vi.fn(),
     unsetLoadingFlag: vi.fn(),
     onChange: vi.fn(),
-  } as Partial<SearchStore> as SearchStore,
+  } as Partial<InsightStore> as InsightStore,
   engine: {
     subscribe: genericSubscribe,
-  } as Partial<SearchEngine> as SearchEngine,
+  } as Partial<InsightEngine> as InsightEngine,
 } as const;
 
-defaultBindings satisfies Partial<Bindings>;
-type MinimalBindings = Partial<Bindings> & typeof defaultBindings;
+defaultBindings satisfies Partial<InsightBindings>;
+type MinimalBindings = Partial<InsightBindings> & typeof defaultBindings;
 
-export function renderInAtomicSearchInterface<T extends LitElement>({
+export function renderInAtomicInsightInterface<T extends LitElement>({
   template,
   selector,
   bindings,
@@ -96,13 +102,13 @@ export function renderInAtomicSearchInterface<T extends LitElement>({
   template: TemplateResult;
   selector?: string;
   bindings?:
-    | Partial<Bindings>
+    | Partial<InsightBindings>
     | ((bindings: MinimalBindings) => MinimalBindings);
 }): Promise<{
   element: T;
-  atomicInterface: FixtureAtomicSearchInterface;
+  atomicInterface: FixtureAtomicInsightInterface;
 }>;
-export async function renderInAtomicSearchInterface<T extends LitElement>({
+export async function renderInAtomicInsightInterface<T extends LitElement>({
   template,
   selector,
   bindings,
@@ -110,23 +116,24 @@ export async function renderInAtomicSearchInterface<T extends LitElement>({
   template: TemplateResult;
   selector?: string | never;
   bindings?:
-    | Partial<Bindings>
+    | Partial<InsightBindings>
     | ((bindings: MinimalBindings) => MinimalBindings);
 }): Promise<{
   element: null | T;
-  atomicInterface: FixtureAtomicSearchInterface;
+  atomicInterface: FixtureAtomicInsightInterface;
 }> {
-  const atomicInterface = await fixture<FixtureAtomicSearchInterface>(
-    html`<atomic-search-interface>${template}</atomic-search-interface>`
+  const atomicInterface = await fixture<FixtureAtomicInsightInterface>(
+    html`<atomic-insight-interface>${template}</atomic-insight-interface>`
   );
   if (!bindings) {
-    atomicInterface.setBindings({} as Bindings);
+    atomicInterface.setBindings({} as InsightBindings);
   }
   if (typeof bindings === 'function') {
     atomicInterface.setBindings(bindings(defaultBindings));
   } else {
     atomicInterface.setBindings(bindings ?? defaultBindings);
   }
+  atomicInterface.setRenderTemplate(template);
 
   await atomicInterface.updateComplete;
   if (!selector) {
