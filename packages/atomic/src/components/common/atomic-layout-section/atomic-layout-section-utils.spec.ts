@@ -1,8 +1,11 @@
 import {describe, expect, it} from 'vitest';
-import type {Section} from './sections';
-import {findSection, sectionSelector} from './sections';
+import {
+  findSection,
+  type Section,
+  sectionSelector,
+} from './atomic-layout-section-utils';
 
-describe('sections', () => {
+describe('atomic-layout-section-utils', () => {
   describe('#sectionSelector', () => {
     it('should return correct selector for each section', () => {
       const sections: Section[] = [

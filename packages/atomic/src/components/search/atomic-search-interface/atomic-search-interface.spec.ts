@@ -225,20 +225,6 @@ describe('atomic-search-interface', () => {
       );
     });
 
-    it('should add an "atomic/relevanceInspector/close" event listener on the element', async () => {
-      const addEventListenerSpy = vi.spyOn(
-        AtomicSearchInterface.prototype,
-        'addEventListener'
-      );
-
-      await setupElement();
-
-      expect(addEventListenerSpy).toHaveBeenCalledWith(
-        'atomic/relevanceInspector/close',
-        expect.any(Function)
-      );
-    });
-
     describe("when an 'atomic/scrollToTop' event is dispatched", () => {
       it('should log a warning when no element in the DOM matches the scrollContainer selector', async () => {
         const element = await setupElement({scrollContainer: 'i-do-not-exist'});
@@ -267,18 +253,6 @@ describe('atomic-search-interface', () => {
         expect(scrollIntoViewSpy).toHaveBeenCalledExactlyOnceWith({
           behavior: 'smooth',
         });
-      });
-    });
-
-    describe("when an 'atomic/relevanceInspector/close' event is dispatched", () => {
-      it('should close the relevance inspector', async () => {
-        const element = await setupElement();
-        element.relevanceInspectorIsOpen = true;
-
-        const event = new CustomEvent('atomic/relevanceInspector/close');
-        element.dispatchEvent(event);
-
-        expect(element.relevanceInspectorIsOpen).toBe(false);
       });
     });
   });
@@ -1105,6 +1079,7 @@ describe('atomic-search-interface', () => {
       );
       const element = await setupElement({language: 'en'});
 
+      // @ts-ignore setting to undefined to simulate removing the attribute
       element.language = undefined;
       await element.updateComplete;
 
@@ -1207,18 +1182,6 @@ describe('atomic-search-interface', () => {
 
       expect(removeEventListenerSpy).toHaveBeenCalledWith(
         'atomic/scrollToTop',
-        expect.any(Function)
-      );
-    });
-
-    it('should remove the atomic/relevanceInspector/close event listener', async () => {
-      const element = await setupElement();
-      const removeEventListenerSpy = vi.spyOn(element, 'removeEventListener');
-
-      element.remove();
-
-      expect(removeEventListenerSpy).toHaveBeenCalledWith(
-        'atomic/relevanceInspector/close',
         expect.any(Function)
       );
     });

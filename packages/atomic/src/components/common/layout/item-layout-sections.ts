@@ -1,4 +1,4 @@
-import {isElementNode} from '../../../utils/utils';
+import {isElementNode} from '@/src/utils/utils';
 
 const resultSectionTags = new Set([
   'atomic-result-section-visual',

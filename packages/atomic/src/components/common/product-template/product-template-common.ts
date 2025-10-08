@@ -5,7 +5,7 @@ import {
 import {intersection} from '../../../utils/set';
 import {isElementNode, isVisualNode} from '../../../utils/utils';
 import {tableElementTagName} from '../../search/atomic-table-result/table-element-utils';
-import {isResultSectionNode} from '../layout/sections';
+import {isResultSectionNode} from '../layout/item-layout-sections';
 
 type TemplateNodeType =
   | 'section'

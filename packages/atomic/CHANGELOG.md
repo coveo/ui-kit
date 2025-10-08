@@ -1,3 +1,22 @@
+## 3.34.0 (2025-10-08)
+
+* chore: more cleanup of dependencies in multiples packages (#6119) ([ff6c837](https://github.com/coveo/ui-kit/commits/ff6c837)), closes [#6119](https://github.com/coveo/ui-kit/issues/6119)
+* chore(atomic): add missing console method mocks to avoid polluting test logs (#6099) ([94e6006](https://github.com/coveo/ui-kit/commits/94e6006)), closes [#6099](https://github.com/coveo/ui-kit/issues/6099)
+* chore(atomic): add tests for sections.ts (#6110) ([6fb97ed](https://github.com/coveo/ui-kit/commits/6fb97ed)), closes [#6110](https://github.com/coveo/ui-kit/issues/6110)
+* chore(atomic): add unit tests for buildQuickviewPreviewBar (#6098) ([272ceb1](https://github.com/coveo/ui-kit/commits/272ceb1)), closes [#6098](https://github.com/coveo/ui-kit/issues/6098)
+* chore(atomic): add validate props reactive controller (#6100) ([45222ed](https://github.com/coveo/ui-kit/commits/45222ed)), closes [#6100](https://github.com/coveo/ui-kit/issues/6100)
+* chore(atomic): disable flaky facet tests (#6118) ([1e8ec10](https://github.com/coveo/ui-kit/commits/1e8ec10)), closes [#6118](https://github.com/coveo/ui-kit/issues/6118)
+* chore(atomic): migrate atomic-relevance-inspector (#6089) ([af85860](https://github.com/coveo/ui-kit/commits/af85860)), closes [#6089](https://github.com/coveo/ui-kit/issues/6089)
+* chore(atomic): migrate atomic-search-box-recent-queries (#6080) ([a9fe081](https://github.com/coveo/ui-kit/commits/a9fe081)), closes [#6080](https://github.com/coveo/ui-kit/issues/6080)
+* chore(atomic): migrate atomic-search-interface (#5990) ([feafe1d](https://github.com/coveo/ui-kit/commits/feafe1d)), closes [#5990](https://github.com/coveo/ui-kit/issues/5990)
+* chore(atomic): move item layout and custom render logic in reactive controllers (#6112) ([ae125ca](https://github.com/coveo/ui-kit/commits/ae125ca)), closes [#6112](https://github.com/coveo/ui-kit/issues/6112)
+* chore(deps): update tailwind to v4.1.13 j:kit-282 (#6037) ([7f2de6a](https://github.com/coveo/ui-kit/commits/7f2de6a)), closes [#6037](https://github.com/coveo/ui-kit/issues/6037)
+* fix(atomic): ensure fieldsToInclude always get updated/registered when changed and during init (#610 ([4a7feb6](https://github.com/coveo/ui-kit/commits/4a7feb6)), closes [#6105](https://github.com/coveo/ui-kit/issues/6105)
+* chore (atomic): migrated atomic-pager to lit (#6084) ([c894ef6](https://github.com/coveo/ui-kit/commits/c894ef6)), closes [#6084](https://github.com/coveo/ui-kit/issues/6084)
+* feat(atomic commerce): Use 'product' instead of 'result' consistently in public strings (#6097) ([e2e8e2b](https://github.com/coveo/ui-kit/commits/e2e8e2b)), closes [#6097](https://github.com/coveo/ui-kit/issues/6097)
+
+
+
 ## <small>3.33.8 (2025-10-01)</small>
 
 * chore(atomic commerce): deprecate language property and add updateLocale method on atomic-commerce-i ([fb9007a](https://github.com/coveo/ui-kit/commits/fb9007a)), closes [#6054](https://github.com/coveo/ui-kit/issues/6054)
