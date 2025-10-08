@@ -4,7 +4,7 @@ import ArrowRight from '../../images/arrow-right.svg';
 import {AnyBindings} from './interface/bindings.js';
 import {Button} from './stencil-button.js';
 
-export interface CarouselProps {
+interface CarouselProps {
   bindings: AnyBindings;
   previousPage(): void;
   nextPage(): void;
@@ -12,6 +12,9 @@ export interface CarouselProps {
   currentPage: number;
 }
 
+/**
+ * @deprecated should only be used for Stencil components.
+ */
 export const Carousel: FunctionalComponent<
   CarouselProps & JSXBase.HTMLAttributes<HTMLHeadingElement>
 > = (props, children) => {

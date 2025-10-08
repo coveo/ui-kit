@@ -5,6 +5,9 @@ interface SourceCitationsProps {
   isVisible: boolean;
 }
 
+/**
+ * @deprecated should only be used for Stencil components.
+ */
 export const SourceCitations: FunctionalComponent<SourceCitationsProps> = (
   props,
   children

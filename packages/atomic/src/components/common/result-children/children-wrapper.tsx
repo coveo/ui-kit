@@ -4,6 +4,9 @@ interface ChildrenWrapperProps {
   hasChildren: boolean;
 }
 
+/**
+ * @deprecated should only be used for Stencil components.
+ */
 export const ChildrenWrapper: FunctionalComponent<ChildrenWrapperProps> = (
   {hasChildren},
   children
