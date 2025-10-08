@@ -2,9 +2,7 @@ import {afterEach, beforeEach, describe, expect, it, vi} from 'vitest';
 import * as eventUtils from './event-utils';
 import {createRipple} from './ripple-utils';
 
-vi.mock('./event-utils', () => ({
-  listenOnce: vi.fn(),
-}));
+vi.mock('./event-utils', {spy: true});
 
 describe('ripple-utils', () => {
   let mockButton: HTMLElement;

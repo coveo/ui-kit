@@ -9,7 +9,7 @@ import {
 } from './search-value';
 
 vi.mock('./all-categories-localized-label', {spy: true});
-vi.mock('../../../../utils/field-utils', () => ({
+vi.mock('@/src/utils/field-utils', () => ({
   getFieldValueCaption: vi.fn(
     (field: string, value: string) => `${field}: ${value}`
   ),

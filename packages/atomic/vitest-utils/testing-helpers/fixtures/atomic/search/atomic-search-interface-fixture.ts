@@ -61,7 +61,7 @@ export class FixtureAtomicSearchInterface
     this.bindings = {
       ...bindings,
       i18n: bindings.i18n ?? this.i18n,
-      interfaceElement: this as AtomicSearchInterface,
+      interfaceElement: this as unknown as AtomicSearchInterface,
     } as Bindings;
   }
 

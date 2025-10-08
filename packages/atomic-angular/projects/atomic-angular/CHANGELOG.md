@@ -1,3 +1,12 @@
+## <small>3.7.9 (2025-10-08)</small>
+
+* chore(atomic): migrate atomic-relevance-inspector (#6089) ([af85860](https://github.com/coveo/ui-kit/commits/af85860)), closes [#6089](https://github.com/coveo/ui-kit/issues/6089)
+* chore(atomic): migrate atomic-search-box-recent-queries (#6080) ([a9fe081](https://github.com/coveo/ui-kit/commits/a9fe081)), closes [#6080](https://github.com/coveo/ui-kit/issues/6080)
+* chore(atomic): migrate atomic-search-interface (#5990) ([feafe1d](https://github.com/coveo/ui-kit/commits/feafe1d)), closes [#5990](https://github.com/coveo/ui-kit/issues/5990)
+* chore (atomic): migrated atomic-pager to lit (#6084) ([c894ef6](https://github.com/coveo/ui-kit/commits/c894ef6)), closes [#6084](https://github.com/coveo/ui-kit/issues/6084)
+
+
+
 ## <small>3.7.8 (2025-10-01)</small>
 
 * chore(atomic commerce): deprecate language property and add updateLocale method on atomic-commerce-i ([fb9007a](https://github.com/coveo/ui-kit/commits/fb9007a)), closes [#6054](https://github.com/coveo/ui-kit/issues/6054)

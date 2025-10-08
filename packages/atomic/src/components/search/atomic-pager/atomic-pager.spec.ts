@@ -15,7 +15,6 @@ import type {AtomicPager} from './atomic-pager';
 import './atomic-pager';
 
 vi.mock('@coveo/headless', {spy: true});
-
 vi.mock('@/src/mixins/bindings-mixin', () => ({
   InitializeBindingsMixin: vi.fn().mockImplementation((superClass) => {
     return class extends superClass {
