@@ -10,11 +10,11 @@ import {
   type MockInstance,
   vi,
 } from 'vitest';
+import {bindings} from '@/src/decorators/bindings';
+import type {InitializableComponent} from '@/src/decorators/types';
 import {fixture} from '@/vitest-utils/testing-helpers/fixture';
 import {renderInAtomicCommerceInterface} from '@/vitest-utils/testing-helpers/fixtures/atomic/commerce/atomic-commerce-interface-fixture';
 import type {CommerceBindings} from '../components/commerce/atomic-commerce-interface/atomic-commerce-interface';
-import {bindings} from '../decorators/bindings';
-import type {InitializableComponent} from '../decorators/types';
 import {
   AriaLiveRegionController,
   FocusTargetController,

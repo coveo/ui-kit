@@ -10,13 +10,14 @@ import {
   type CommerceBindings,
 } from '@/src/components/commerce/atomic-commerce-recommendation-interface/atomic-commerce-recommendation-interface';
 import {createCommerceRecommendationStore} from '@/src/components/commerce/atomic-commerce-recommendation-interface/store';
+import {InterfaceController} from '@/src/components/common/interface/interface-controller';
 import {bindings} from '@/src/decorators/bindings';
 import type {InitializableComponent} from '@/src/decorators/types';
 import {markParentAsReady} from '@/src/utils/init-queue';
 import {fixture} from '@/vitest-utils/testing-helpers/fixture';
 import {buildFakeContext} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/context-controller';
 import {buildFakeCommerceEngine} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/engine';
-import {InterfaceController} from '../../common/interface/interface-controller';
+import './atomic-commerce-recommendation-interface';
 
 vi.mock('i18next', {spy: true});
 vi.mock('@coveo/headless/commerce', {spy: true});
