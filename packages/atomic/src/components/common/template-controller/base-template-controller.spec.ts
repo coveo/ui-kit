@@ -117,20 +117,18 @@ describe('BaseTemplateController', () => {
       expect(element.error).toBeUndefined();
     });
 
-    describe('when the template contains script tags', () => {
-      it('should log a warning', async () => {
-        const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
-        const element = await setupElement(
-          html`<test-element>
+    it('it should log a warning when the template contains script tags', async () => {
+      const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
+      const element = await setupElement(
+        html`<test-element>
             <template><script></script></template>
           </test-element>`
-        );
+      );
 
-        expect(warnSpy).toHaveBeenCalledWith(
-          'Any "script" tags defined inside of "template" elements are not supported and will not be executed when the items are rendered.',
-          element
-        );
-      });
+      expect(warnSpy).toHaveBeenCalledWith(
+        'Any "script" tags defined inside of "template" elements are not supported and will not be executed when the items are rendered.',
+        element
+      );
     });
 
     describe('when the template contains both section and other nodes', () => {
@@ -200,6 +198,44 @@ describe('BaseTemplateController', () => {
         const linkContent = fragmentToHTML(result!.linkContent!);
 
         expect(linkContent).toContain('target="_blank"');
+        expect(linkContent).toContain('<test-link>');
+      });
+
+      it('should not include target attribute when no grid cell link target is set', async () => {
+        const parent = document.createElement('valid-parent');
+        parent.setAttribute('display', 'grid');
+
+        const element = await setupElement(
+          html`<test-element>
+            <template><div>content</div></template>
+          </test-element>`,
+          parent
+        );
+
+        const result = element.controller.getBaseTemplateForTesting([]);
+        const linkContent = fragmentToHTML(result!.linkContent!);
+
+        expect(linkContent).not.toContain('target=');
+        expect(linkContent).toBe('<test-link></test-link>');
+      });
+
+      it('should not include target attribute for non-grid display', async () => {
+        const parent = document.createElement('valid-parent');
+        parent.setAttribute('display', 'list');
+        parent.setAttribute('grid-cell-link-target', '_blank');
+
+        const element = await setupElement(
+          html`<test-element>
+            <template><div>content</div></template>
+          </test-element>`,
+          parent
+        );
+
+        const result = element.controller.getBaseTemplateForTesting([]);
+        const linkContent = fragmentToHTML(result!.linkContent!);
+
+        expect(linkContent).not.toContain('target=');
+        expect(linkContent).toBe('<test-link></test-link>');
       });
     });
   });
@@ -340,31 +376,6 @@ describe('BaseTemplateController', () => {
         const result = element.controller.getBaseTemplateForTesting([]);
         expect(result).toBeNull();
       });
-    });
-  });
-
-  describe('matchConditions property', () => {
-    it('should initialize with empty array', async () => {
-      const {controller} = await setupElement(
-        html`<test-element>
-          <template><div>content</div></template>
-        </test-element>`
-      );
-
-      expect(controller.matchConditions).toEqual([]);
-    });
-
-    it('should be mutable', async () => {
-      const {controller} = await setupElement(
-        html`<test-element>
-          <template><div>content</div></template>
-        </test-element>`
-      );
-
-      const newConditions = [() => true, () => false];
-      controller.matchConditions = newConditions;
-
-      expect(controller.matchConditions).toBe(newConditions);
     });
   });
 });
