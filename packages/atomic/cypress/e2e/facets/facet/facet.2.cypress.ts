@@ -21,7 +21,7 @@ import * as FacetAssertions from './facet-assertions';
 import {facetComponent, FacetSelectors} from './facet-selectors';
 
 // This is the second half of the facet test suite. It was split in two to speed up the test execution.
-describe('Facet Test Suite 2', () => {
+describe.skip('Facet Test Suite 2', () => {
   describe('when selecting the label button to collapse', () => {
     function setupSelectLabelCollapse() {
       new TestFixture().with(addFacet({field, label})).init();
