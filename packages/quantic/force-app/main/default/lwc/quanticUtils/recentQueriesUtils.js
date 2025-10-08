@@ -4,6 +4,7 @@ export class RecentQueryUtils {
    * @param {String} recentQuery
    * @param {String} query
    * @returns {String}
+   * @deprecated
    */
   static formatRecentQuery(recentQuery, query) {
     const highlightedValue = CoveoHeadless.HighlightUtils.highlightString({
