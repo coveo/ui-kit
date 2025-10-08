@@ -11,14 +11,12 @@ import {
   test,
   vi,
 } from 'vitest';
-import type {Bindings} from '../components/search/atomic-search-interface/interfaces';
-import type {InitializableComponent} from '../decorators/types';
-import {fetchBindings} from '../utils/initialization-lit-stencil-common-utils';
+import type {Bindings} from '@/src/components/search/atomic-search-interface/interfaces';
+import type {InitializableComponent} from '@/src/decorators/types';
+import {fetchBindings} from '@/src/utils/initialization-lit-stencil-common-utils';
 import {InitializeBindingsMixin} from './bindings-mixin';
 
-vi.mock('../utils/initialization-lit-stencil-common-utils', () => ({
-  fetchBindings: vi.fn(),
-}));
+vi.mock('@/src/utils/initialization-lit-stencil-common-utils', {spy: true});
 
 const mockBindings = () =>
   ({
@@ -44,7 +42,7 @@ class TestElement
   initialize = vi.fn();
 }
 
-describe('InitializeBindingsMixin mixin', () => {
+describe('InitializeBindingsMixin', () => {
   let element: InitializableComponent<Bindings> & LitElement;
   let bindings: Bindings;
   let consoleErrorSpy: ReturnType<typeof vi.spyOn>;

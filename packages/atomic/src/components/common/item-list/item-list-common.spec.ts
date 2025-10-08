@@ -1,5 +1,5 @@
 import {afterEach, beforeEach, describe, expect, it, vi} from 'vitest';
-import type {CommerceStore} from '@/src/components';
+import type {CommerceStore} from '@/src/components/commerce/atomic-commerce-interface/store';
 import {
   type FocusTargetController,
   getFirstFocusableDescendant,

@@ -7,7 +7,7 @@ import {afterEach, beforeEach, describe, expect, it, vi} from 'vitest';
 import {getAnalyticsConfig} from './analytics-config';
 import {createSearchStore} from './store';
 
-vi.mock('../../../global/environment', () => ({
+vi.mock('@/src/global/environment', () => ({
   getAtomicVersion: vi.fn(() => '0.0.0'),
 }));
 

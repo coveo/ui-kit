@@ -2,6 +2,7 @@ import {
   AtomicAriaLive as LitAtomicAriaLive,
   AtomicComponentError as LitAtomicComponentError,
   AtomicIcon as LitAtomicIcon,
+  AtomicInsightInterface as LitAtomicInsightInterface,
   AtomicLayoutSection as LitAtomicLayoutSection,
   AtomicPager as LitAtomicPager,
   AtomicQuerySummary as LitAtomicQuerySummary,
@@ -30,6 +31,12 @@ export const AtomicIcon = createComponent({
   tagName: 'atomic-icon',
   react: React,
   elementClass: LitAtomicIcon,
+});
+
+export const AtomicInsightInterface = createComponent({
+  tagName: 'atomic-insight-interface',
+  react: React,
+  elementClass: LitAtomicInsightInterface,
 });
 
 export const AtomicLayoutSection = createComponent({

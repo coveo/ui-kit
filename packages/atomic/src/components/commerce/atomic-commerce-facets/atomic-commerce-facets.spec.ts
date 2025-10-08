@@ -1,24 +1,23 @@
-import type {
-  CategoryFacet,
-  Context,
-  DateFacet,
-  FacetGenerator,
-  NumericFacet,
-  ProductListing,
-  RegularFacet,
-  Search,
-} from '@coveo/headless/commerce';
 import {
   buildContext,
   buildProductListing,
   buildSearch,
+  type CategoryFacet,
+  type Context,
+  type DateFacet,
+  type FacetGenerator,
+  type NumericFacet,
+  type ProductListing,
   type ProductListingSummaryState,
+  type RegularFacet,
+  type Search,
   type SearchSummaryState,
   type Summary,
 } from '@coveo/headless/commerce';
 import {page} from '@vitest/browser/context';
 import {html} from 'lit';
 import {beforeEach, describe, expect, it, type MockInstance, vi} from 'vitest';
+import {createAppLoadedListener} from '@/src/components/common/interface/store';
 import {renderInAtomicCommerceInterface} from '@/vitest-utils/testing-helpers/fixtures/atomic/commerce/atomic-commerce-interface-fixture';
 import {buildFakeCategoryFacet} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/category-facet-controller';
 import {buildFakeContext} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/context-controller';
@@ -30,11 +29,10 @@ import {buildFakeNumericFacet} from '@/vitest-utils/testing-helpers/fixtures/hea
 import {buildFakeProductListing} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/product-listing-controller';
 import {buildFakeSearch} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/search-controller';
 import {buildFakeSummary} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/summary-subcontroller';
-import {createAppLoadedListener} from '../../common/interface/store';
 import type {AtomicCommerceFacets} from './atomic-commerce-facets';
 import './atomic-commerce-facets';
 
-vi.mock('../../common/interface/store', {spy: true});
+vi.mock('@/src/components/common/interface/store', {spy: true});
 vi.mock('@coveo/headless/commerce', {spy: true});
 
 describe('atomic-commerce-facets', () => {
