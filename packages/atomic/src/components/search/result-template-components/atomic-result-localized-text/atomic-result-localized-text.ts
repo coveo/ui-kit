@@ -1,13 +1,13 @@
 import {isNullOrUndefined} from '@coveo/bueno';
 import {type Result, ResultTemplatesHelpers} from '@coveo/headless';
 import {Component, Prop, State} from '@stencil/core';
+import {ResultContext} from '@/src/components/search/result-template-component-utils/context/stencil-result-template-decorators';
 import {
   type InitializableComponent,
   InitializeBindings,
 } from '../../../../utils/initialization-utils';
 import {MapProp} from '../../../../utils/props-utils';
 import type {Bindings} from '../../atomic-search-interface/atomic-search-interface';
-import {ResultContext} from '../result-template-decorators';
 
 /**
  * The `atomic-result-localized-text` component renders a target i18n localized string using the values of a target field.
