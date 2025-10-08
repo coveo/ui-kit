@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "npm run build:assets && next dev",
     "build": "npm run-script -w=@coveo/ci if-not-cdn -- \"npm run build:assets && next build\"",
-    "build:assets": "ncp ../../../packages/atomic-react/dist/assets public/assets && ncp ../../../packages/atomic-react/dist/lang public/lang",
+    "build:assets": "node ../../../utils/ci/copy-files.mjs ../../../packages/atomic-react/dist/assets public/assets ../../../packages/atomic-react/dist/lang public/lang",
     "start": "next start",
     "lint": "next lint"
   },
@@ -21,7 +21,6 @@
     "typescript": "5.8.3",
     "@types/node": "22.16.5",
     "@types/react": "19.1.1",
-    "@types/react-dom": "19.1.2",
-    "ncp": "2.0.0"
+    "@types/react-dom": "19.1.2"
   }
 }

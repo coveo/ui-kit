@@ -27,7 +27,7 @@
   ],
   "scripts": {
     "build": "tsc --project ./tsconfig.build.json",
-    "clean": "rimraf dist",
+    "clean": "node ../../utils/ci/rm-rf.mjs dist",
     "test": "vitest run",
     "test:watch": "vitest",
     "release:phase3": "npm run-script -w=@coveo/ci npm-publish",
@@ -46,7 +46,6 @@
   "devDependencies": {
     "@testing-library/react": "16.3.0",
     "live-server": "1.2.2",
-    "rimraf": "6.0.1",
     "typescript": "5.8.3",
     "typedoc": "0.28.13",
     "vitest": "3.2.4",
