@@ -49,7 +49,6 @@ export const renderBreadcrumbButton: FunctionalComponentWithChildren<
                 }
               ),
               onClick: () => {
-                console.log(props.ariaController !== undefined);
                 props.ariaController.message = props.i18n.t('filter-removed', {
                   value: title,
                 });
