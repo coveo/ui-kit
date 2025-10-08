@@ -46,7 +46,7 @@ export class AtomicSearchBoxQuerySuggestions
    * The maximum number of suggestions that will be displayed if the user has typed something into the input field.
    */
   @property({type: Number, attribute: 'max-with-query', reflect: true})
-  public maxWithQuery = 3;
+  public maxWithQuery?: number;
 
   /**
    * The maximum number of suggestions that will be displayed initially when the input field is empty.
