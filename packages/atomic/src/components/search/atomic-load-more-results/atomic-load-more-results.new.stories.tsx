@@ -138,7 +138,7 @@ export const InPage: Story = {
                     <atomic-result-icon></atomic-result-icon>
                     <img
                       loading="lazy"
-                      src="https://picsum.photos/350"
+                      src="https://picsum.photos/seed/coveo/350"
                       class="thumbnail"
                     />
                   </atomic-result-section-visual>

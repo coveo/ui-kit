@@ -13,7 +13,7 @@ const {decorator: resultDecorator, engineConfig} = wrapInResult({
   search: {
     preprocessSearchResponseMiddleware: (res) => {
       res.body.results.forEach((r) => {
-        r.raw.randomimage = 'https://picsum.photos/200';
+        r.raw.randomimage = 'https://picsum.photos/seed/coveo/200';
         r.raw.someAltField = 'Some alt value';
       });
       return res;
