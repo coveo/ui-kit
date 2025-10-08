@@ -106,6 +106,7 @@ describe('recent queries list', () => {
       recentQueriesList.clear();
       expect(clearRecentQueries).toHaveBeenCalled();
       expect(logClearRecentQueries).toHaveBeenCalled();
+      expect(recentQueriesList.state.queries.length).toBe(0);
     });
 
     it('#executeRecentQuery should validate the given index parameter', () => {
