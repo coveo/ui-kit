@@ -1,4 +1,4 @@
-import type {Product} from '@coveo/headless/commerce';
+import type {Result} from '@coveo/headless';
 import {html} from 'lit';
 import {beforeEach, describe, expect, it, vi} from 'vitest';
 import type {
@@ -7,14 +7,13 @@ import type {
   ItemDisplayLayout,
 } from '@/src/components';
 import type {ItemRenderingFunction} from '@/src/components/common/item-list/item-list-common';
-import {renderInAtomicCommerceInterface} from '@/vitest-utils/testing-helpers/fixtures/atomic/commerce/atomic-commerce-interface-fixture';
-import {buildFakeProduct} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/product';
-import {AtomicProduct} from './atomic-product';
-import './atomic-product';
+import {renderInAtomicSearchInterface} from '@/vitest-utils/testing-helpers/fixtures/atomic/search/atomic-search-interface-fixture';
+import {buildFakeResult} from '@/vitest-utils/testing-helpers/fixtures/headless/search/result';
+import {AtomicResult} from './atomic-result';
 
-vi.mock('@coveo/headless/commerce', {spy: true});
+vi.mock('@coveo/headless', {spy: true});
 
-describe('atomic-product', () => {
+describe('atomic-result', () => {
   let consoleWarnSpy: ReturnType<typeof vi.spyOn>;
 
   beforeEach(() => {
@@ -22,32 +21,30 @@ describe('atomic-product', () => {
     consoleWarnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
   });
 
-  const renderProduct = async (
+  const renderResult = async (
     options: {
-      product?: Product;
+      result?: Result;
       content?: ParentNode;
       linkContent?: ParentNode;
       display?: ItemDisplayLayout;
       density?: ItemDisplayDensity;
       imageSize?: ItemDisplayImageSize;
       loadingFlag?: string;
-      interfaceType?: 'product-listing' | 'search';
       renderingFunction?: ItemRenderingFunction;
     } = {}
   ) => {
     const {
-      product = buildFakeProduct(),
+      result = buildFakeResult(),
       linkContent = (() => {
         const fragment = document.createDocumentFragment();
-        const div = document.createElement('atomic-product-text');
+        const div = document.createElement('atomic-result-text');
         fragment.appendChild(div);
         return fragment;
       })(),
       display = 'list',
       density = 'normal',
       imageSize = 'icon',
-      loadingFlag = 'atomic-product',
-      interfaceType = 'product-listing',
+      loadingFlag = 'atomic-result',
       renderingFunction,
     } = options;
 
@@ -55,9 +52,9 @@ describe('atomic-product', () => {
       'content' in options
         ? options.content
         : renderTemplateContent(defaultTemplateContent);
-    const {element} = await renderInAtomicCommerceInterface<AtomicProduct>({
-      template: html`<atomic-product
-        .product=${product}
+    const {element} = await renderInAtomicSearchInterface<AtomicResult>({
+      template: html`<atomic-result
+        .result=${result}
         .content=${content}
         .linkContent=${linkContent}
         .display=${display}
@@ -66,10 +63,9 @@ describe('atomic-product', () => {
         .stopPropagation=${true}
         .loadingFlag=${loadingFlag}
         .renderingFunction=${renderingFunction}
-      ></atomic-product>`,
-      selector: 'atomic-product',
+      ></atomic-result>`,
+      selector: 'atomic-result',
       bindings: (bindings) => {
-        bindings.interfaceElement.type = interfaceType ?? 'product-listing';
         bindings.store.onChange = vi.fn();
         bindings.store.state.resultList = {
           focusOnFirstResultAfterNextSearch: vi.fn(),
@@ -83,12 +79,12 @@ describe('atomic-product', () => {
   };
 
   it('should initialize', async () => {
-    const element = await renderProduct();
-    expect(element).toBeInstanceOf(AtomicProduct);
+    const element = await renderResult();
+    expect(element).toBeInstanceOf(AtomicResult);
   });
 
   it('should handle click and stop propagation', async () => {
-    const element = await renderProduct();
+    const element = await renderResult();
     const clickEvent = new MouseEvent('click', {
       bubbles: true,
       cancelable: true,
@@ -100,7 +96,7 @@ describe('atomic-product', () => {
 
   it('should click the link container when the display is "grid"', async () => {
     const clickLinkContainerSpy = vi.fn();
-    const element = await renderProduct({
+    const element = await renderResult({
       display: 'grid',
     });
 
@@ -113,7 +109,7 @@ describe('atomic-product', () => {
 
   it('should not click the link container when the display is "list"', async () => {
     const clickLinkContainerSpy = vi.fn();
-    const element = await renderProduct({
+    const element = await renderResult({
       display: 'list',
     });
 
@@ -126,7 +122,7 @@ describe('atomic-product', () => {
 
   it('should not click the link container when the display is "table"', async () => {
     const clickLinkContainerSpy = vi.fn();
-    const element = await renderProduct({
+    const element = await renderResult({
       display: 'table',
     });
 
@@ -138,17 +134,17 @@ describe('atomic-product', () => {
   });
 
   it('should render default template content', async () => {
-    const element = await renderProduct();
+    const element = await renderResult();
     const resultRoot = element.shadowRoot!.querySelector('.result-root');
-    expect(resultRoot?.innerHTML).toContain('atomic-product-section-name');
-    expect(resultRoot?.innerHTML).toContain('atomic-product-link');
+    expect(resultRoot?.innerHTML).toContain('atomic-result-section-name');
+    expect(resultRoot?.innerHTML).toContain('atomic-result-link');
   });
 
   it('should unset the loading flag on first update', async () => {
     const mockUnsetLoadingFlag = vi.fn();
     const loadingFlag = 'test-loading-flag';
 
-    const element = await renderProduct({
+    const element = await renderResult({
       loadingFlag,
     });
 
@@ -168,7 +164,7 @@ describe('atomic-product', () => {
 
   describe('#clickLinkContainer', () => {
     it('should click the anchor element when found', async () => {
-      const element = await renderProduct();
+      const element = await renderResult();
       const mockClick = vi.fn();
       const mockAnchor = {click: mockClick};
       const mockQuerySelector = vi.fn().mockReturnValue(mockAnchor);
@@ -179,13 +175,13 @@ describe('atomic-product', () => {
       element.clickLinkContainer();
 
       expect(mockQuerySelector).toHaveBeenCalledWith(
-        '.link-container > atomic-product-link a:not([slot])'
+        '.link-container > atomic-result-link a:not([slot])'
       );
       expect(mockClick).toHaveBeenCalled();
     });
 
     it('should not throw when anchor element is not found', async () => {
-      const element = await renderProduct();
+      const element = await renderResult();
 
       vi.spyOn(element.shadowRoot!, 'querySelector').mockReturnValue(null);
 
@@ -193,7 +189,7 @@ describe('atomic-product', () => {
     });
 
     it('should not throw when shadowRoot is null', async () => {
-      const element = await renderProduct();
+      const element = await renderResult();
 
       Object.defineProperty(element, 'shadowRoot', {
         get: () => null,
@@ -206,7 +202,7 @@ describe('atomic-product', () => {
 
   describe('when using the default rendering function', () => {
     it('should not add "with-sections" class when content does not have sections', async () => {
-      const element = await renderProduct({
+      const element = await renderResult({
         content: renderTemplateContent('<div>No Sections</div>'),
       });
       const resultRoot = element.shadowRoot!.querySelector('.result-root');
@@ -214,7 +210,7 @@ describe('atomic-product', () => {
     });
 
     it('should add "with-sections" class when content has sections', async () => {
-      const element = await renderProduct();
+      const element = await renderResult();
       const resultRoot = element.shadowRoot!.querySelector('.result-root');
       expect(resultRoot?.classList).toContain('with-sections');
     });
@@ -222,28 +218,28 @@ describe('atomic-product', () => {
 
   describe('when using a custom rendering function', () => {
     const renderingFunction: ItemRenderingFunction = vi.fn(
-      (product, productRootRef, linkContainerRef) => {
-        productRootRef.textContent = `Custom Product: ${product.ec_name}`;
+      (result, resultRootRef, linkContainerRef) => {
+        resultRootRef.textContent = `Custom Result: ${result.ec_name}`;
         linkContainerRef.textContent = 'Custom Link Content';
-        return productRootRef.outerHTML;
+        return resultRootRef.outerHTML;
       }
     );
 
     it('should call the custom rendering function', async () => {
-      await renderProduct({renderingFunction});
+      await renderResult({renderingFunction});
       expect(renderingFunction).toHaveBeenCalled();
     });
 
-    it('should render custom product content in result root', async () => {
-      const element = await renderProduct({
+    it('should render custom result content in result root', async () => {
+      const element = await renderResult({
         renderingFunction,
       });
       const resultRoot = element.shadowRoot!.querySelector('.result-root');
-      expect(resultRoot?.textContent).toContain('Custom Product:');
+      expect(resultRoot?.textContent).toContain('Custom Result:');
     });
 
     it('should render custom link content in link container', async () => {
-      const element = await renderProduct({
+      const element = await renderResult({
         renderingFunction,
       });
       const linkContainer =
@@ -252,7 +248,7 @@ describe('atomic-product', () => {
     });
 
     it('should not add "with-sections" class when content does not have sections', async () => {
-      const element = await renderProduct({
+      const element = await renderResult({
         renderingFunction,
       });
       const resultRoot = element.shadowRoot!.querySelector('.result-root');
@@ -262,9 +258,9 @@ describe('atomic-product', () => {
     it('should add "with-sections" class when content has sections', async () => {
       const renderingFunctionWithSections: ItemRenderingFunction = vi.fn(
         () =>
-          '<atomic-product-section-visual">Custom</atomic-result-section-visual>'
+          '<atomic-result-section-visual">Custom</atomic-result-section-visual>'
       );
-      const element = await renderProduct({
+      const element = await renderResult({
         renderingFunction: renderingFunctionWithSections,
       });
       expect(renderingFunctionWithSections).toHaveBeenCalled();
@@ -276,29 +272,29 @@ describe('atomic-product', () => {
   describe('when content is undefined', () => {
     describe('#connectedCallback', () => {
       it('should log warning', async () => {
-        await renderProduct({content: undefined});
+        await renderResult({content: undefined});
         expect(consoleWarnSpy).toHaveBeenCalledWith(
-          'atomic-product: content property is undefined. Cannot create layout.',
-          expect.any(AtomicProduct)
+          'atomic-result: content property is undefined. Cannot create layout.',
+          expect.any(AtomicResult)
         );
       });
 
       it('should return early and not create layout', async () => {
-        const element = await renderProduct({content: undefined});
+        const element = await renderResult({content: undefined});
         const layoutProperty = (element as unknown as {layout: unknown}).layout;
         expect(layoutProperty).toBeUndefined();
       });
 
       it('should not throw error', async () => {
         expect(async () => {
-          await renderProduct({content: undefined});
+          await renderResult({content: undefined});
         }).not.toThrow();
       });
     });
 
     describe('#getContentHTML', () => {
       it('should log warning', async () => {
-        const element = await renderProduct({content: undefined});
+        const element = await renderResult({content: undefined});
         const getContentHTMLMethod = (
           element as unknown as {getContentHTML: () => string}
         ).getContentHTML.bind(element);
@@ -306,13 +302,13 @@ describe('atomic-product', () => {
         getContentHTMLMethod();
 
         expect(consoleWarnSpy).toHaveBeenCalledWith(
-          'atomic-product: content property is undefined. Cannot get content HTML.',
-          expect.any(AtomicProduct)
+          'AtomicResult: content property is undefined. Cannot get content HTML.',
+          expect.any(AtomicResult)
         );
       });
 
       it('should return empty string', async () => {
-        const element = await renderProduct({content: undefined});
+        const element = await renderResult({content: undefined});
         const getContentHTMLMethod = (
           element as unknown as {getContentHTML: () => string}
         ).getContentHTML.bind(element);
@@ -321,7 +317,7 @@ describe('atomic-product', () => {
       });
 
       it('should not throw error', async () => {
-        const element = await renderProduct({content: undefined});
+        const element = await renderResult({content: undefined});
         const getContentHTMLMethod = (
           element as unknown as {getContentHTML: () => string}
         ).getContentHTML.bind(element);
@@ -332,7 +328,7 @@ describe('atomic-product', () => {
 
     describe('#render', () => {
       it('should not call layout methods when layout is undefined', async () => {
-        const element = await renderProduct({content: undefined});
+        const element = await renderResult({content: undefined});
 
         expect(() => element.render()).not.toThrow();
 
@@ -345,13 +341,13 @@ describe('atomic-product', () => {
 
       it('should handle custom rendering function mode', async () => {
         const renderingFunction: ItemRenderingFunction = vi.fn(
-          (_product, productRootRef) => {
-            productRootRef.textContent = 'Custom content without layout';
-            return productRootRef.outerHTML;
+          (_result, resultRootRef) => {
+            resultRootRef.textContent = 'Custom content without layout';
+            return resultRootRef.outerHTML;
           }
         );
 
-        const element = await renderProduct({
+        const element = await renderResult({
           content: undefined,
           renderingFunction,
         });
@@ -367,13 +363,13 @@ describe('atomic-product', () => {
     describe('#updated', () => {
       it('should not throw error when layout is undefined in custom rendering mode', async () => {
         const renderingFunction: ItemRenderingFunction = vi.fn(
-          (_product, productRootRef) => {
-            productRootRef.textContent = 'Updated content';
+          (_result, resultRootRef) => {
+            resultRootRef.textContent = 'Updated content';
             return '<div>Updated HTML</div>';
           }
         );
 
-        const element = await renderProduct({
+        const element = await renderResult({
           content: undefined,
           renderingFunction,
         });
@@ -399,30 +395,30 @@ const renderTemplateContent = (content: string) => {
   return fragment;
 };
 
-const defaultTemplateContent = `<atomic-product-section-name>
-                <atomic-product-link class="font-bold"></atomic-product-link>
-              </atomic-product-section-name>
-              <atomic-product-section-visual>
-                <atomic-product-field-condition if-defined="ec_thumbnails">
-                  <atomic-product-image field="ec_thumbnails"></atomic-product-image>
-                </atomic-product-field-condition>
-              </atomic-product-section-visual>
-              <atomic-product-section-metadata>
-                <atomic-product-field-condition if-defined="ec_brand">
-                  <atomic-product-text field="ec_brand" class="text-neutral-dark block"></atomic-product-text>
-                </atomic-product-field-condition>
-                <atomic-product-field-condition if-defined="cat_available_sizes">
-                  <atomic-product-multi-value-text
+const defaultTemplateContent = `<atomic-result-section-name>
+                <atomic-result-link class="font-bold"></atomic-result-link>
+              </atomic-result-section-name>
+              <atomic-result-section-visual>
+                <atomic-result-field-condition if-defined="ec_thumbnails">
+                  <atomic-result-image field="ec_thumbnails"></atomic-result-image>
+                </atomic-result-field-condition>
+              </atomic-result-section-visual>
+              <atomic-result-section-metadata>
+                <atomic-result-field-condition if-defined="ec_brand">
+                  <atomic-result-text field="ec_brand" class="text-neutral-dark block"></atomic-result-text>
+                </atomic-result-field-condition>
+                <atomic-result-field-condition if-defined="cat_available_sizes">
+                  <atomic-result-multi-value-text
                     field="cat_available_sizes"
-                  ></atomic-product-multi-value-text>
-                </atomic-product-field-condition>
-                <atomic-product-field-condition if-defined="ec_rating">
-                  <atomic-product-rating field="ec_rating"></atomic-product-rating>
-                </atomic-product-field-condition>
-              </atomic-product-section-metadata>
-              <atomic-product-section-emphasized>
-                <atomic-product-price currency="USD"></atomic-product-price>
-              </atomic-product-section-emphasized>
-              <atomic-product-section-children>
-                <atomic-product-children></atomic-product-children>
-              </atomic-product-section-children>`;
+                  ></atomic-result-multi-value-text>
+                </atomic-result-field-condition>
+                <atomic-result-field-condition if-defined="ec_rating">
+                  <atomic-result-rating field="ec_rating"></atomic-result-rating>
+                </atomic-result-field-condition>
+              </atomic-result-section-metadata>
+              <atomic-result-section-emphasized>
+                <atomic-result-price currency="USD"></atomic-result-price>
+              </atomic-result-section-emphasized>
+              <atomic-result-section-children>
+                <atomic-result-children></atomic-result-children>
+              </atomic-result-section-children>`;

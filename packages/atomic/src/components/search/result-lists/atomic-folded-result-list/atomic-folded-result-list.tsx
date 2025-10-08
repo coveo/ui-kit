@@ -295,7 +295,7 @@ export class AtomicFoldedResultList implements InitializableComponent {
                 <atomic-result
                   {...propsForAtomicResult}
                   part="outline"
-                  ref={(element) =>
+                  ref={(element: HTMLElement) =>
                     element && this.itemListCommon.setNewResultRef(element, i)
                   }
                 ></atomic-result>

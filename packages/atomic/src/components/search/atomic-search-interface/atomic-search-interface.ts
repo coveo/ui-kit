@@ -53,6 +53,7 @@ import {createSearchStore, type SearchStore} from './store';
 // TODO - Remove once all components that use atomic-modal have been migrated.
 import '@/src/components/common/atomic-modal/atomic-modal';
 import {augmentAnalyticsConfigWithAtomicVersion} from '@/src/components/common/interface/analytics-config';
+import '../atomic-result/atomic-result';
 
 const FirstSearchExecutedFlag = 'firstSearchExecuted';
 export type InitializationOptions = SearchEngineConfiguration;
@@ -280,6 +281,7 @@ export class AtomicSearchInterface
   public connectedCallback() {
     super.connectedCallback();
     this.store.setLoadingFlag(FirstSearchExecutedFlag);
+    this.initFieldsToInclude();
 
     this.addEventListener(
       'atomic/initializeComponent',
