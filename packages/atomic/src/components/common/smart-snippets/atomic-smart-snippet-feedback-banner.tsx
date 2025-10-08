@@ -17,6 +17,9 @@ interface SmartSnippetFeedbackBannerProps {
   explainWhyRef?(element?: HTMLButtonElement): void;
 }
 
+/**
+ * @deprecated should only be used for Stencil components.
+ */
 export const SmartSnippetFeedbackBanner: FunctionalComponent<
   SmartSnippetFeedbackBannerProps
 > = (props) => {

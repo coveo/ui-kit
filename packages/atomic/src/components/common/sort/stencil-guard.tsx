@@ -5,6 +5,10 @@ interface SortGuardProps {
   firstSearchExecuted: boolean;
   hasResults: boolean;
 }
+
+/**
+ * @deprecated should only be used for Stencil components.
+ */
 export const SortGuard: FunctionalComponent<SortGuardProps> = (
   {hasError, firstSearchExecuted, hasResults},
   children
