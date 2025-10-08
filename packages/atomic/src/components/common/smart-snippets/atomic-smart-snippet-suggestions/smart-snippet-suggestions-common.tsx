@@ -3,6 +3,9 @@ import {i18n} from 'i18next';
 import {Button} from '../../stencil-button';
 import {Heading} from '../../stencil-heading';
 
+/**
+ * @deprecated should only be used for Stencil components.
+ */
 export const SmartSnippetSuggestionsWrapper: FunctionalComponent<{
   headingLevel: number;
   i18n: i18n;
@@ -26,6 +29,9 @@ export const SmartSnippetSuggestionsWrapper: FunctionalComponent<{
   );
 };
 
+/**
+ * @deprecated should only be used for Stencil components.
+ */
 export const SmartSnippetSuggestionsQuestionWrapper: FunctionalComponent<{
   expanded: boolean;
   key: string;
@@ -41,6 +47,9 @@ export const SmartSnippetSuggestionsQuestionWrapper: FunctionalComponent<{
   );
 };
 
+/**
+ * @deprecated should only be used for Stencil components.
+ */
 export const SmartSnippetSuggestionsQuestion: FunctionalComponent<{
   ariaControls: string;
   expanded: boolean;
@@ -72,6 +81,9 @@ export const SmartSnippetSuggestionsQuestion: FunctionalComponent<{
   );
 };
 
+/**
+ * @deprecated should only be used for Stencil components.
+ */
 export const SmartSnippetSuggestionsAnswerAndSourceWrapper: FunctionalComponent<{
   expanded: boolean;
   id: string;
@@ -83,6 +95,9 @@ export const SmartSnippetSuggestionsAnswerAndSourceWrapper: FunctionalComponent<
   );
 };
 
+/**
+ * @deprecated should only be used for Stencil components.
+ */
 export const SmartSnippetSuggestionsFooter: FunctionalComponent<{
   i18n: i18n;
 }> = ({i18n}, children) => {
@@ -93,5 +108,8 @@ export const SmartSnippetSuggestionsFooter: FunctionalComponent<{
   );
 };
 
+/**
+ * @deprecated should only be used for Stencil components.
+ */
 export const getQuestionPart = (base: string, expanded: boolean) =>
   `question-${base}-${expanded ? 'expanded' : 'collapsed'}`;

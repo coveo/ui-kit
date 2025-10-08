@@ -5,6 +5,10 @@ interface ResultChildrenGuardProps {
   resultTemplateRegistered: boolean;
   templateHasError: boolean;
 }
+
+/**
+ * @deprecated should only be used for Stencil components.
+ */
 export const ResultChildrenGuard: FunctionalComponent<
   ResultChildrenGuardProps
 > = (

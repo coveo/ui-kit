@@ -11,6 +11,10 @@ export default {
     await import(
       './atomic-search-box-instant-results/atomic-search-box-instant-results.js'
     ),
+  'atomic-search-box-query-suggestions': async () =>
+    await import(
+      './atomic-search-box-query-suggestions/atomic-search-box-query-suggestions.js'
+    ),
   'atomic-search-box-recent-queries': async () =>
     await import(
       './atomic-search-box-recent-queries/atomic-search-box-recent-queries.js'

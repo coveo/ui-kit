@@ -8,6 +8,9 @@ interface Props extends Partial<StencilButtonProps> {
   inputRef: HTMLInputElement | HTMLTextAreaElement | null;
 }
 
+/**
+ * @deprecated should only be used for Stencil components.
+ */
 export const TextAreaClearButton: FunctionalComponent<Props> = ({
   inputRef,
   bindings,

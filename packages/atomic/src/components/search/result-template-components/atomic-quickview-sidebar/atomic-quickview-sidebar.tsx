@@ -13,7 +13,7 @@ import {QuickviewWordHighlight} from '../quickview-word-highlight/quickview-word
 
 const identifierKeywordsSection = 'coveo-quickview-sidebar-keywords';
 
-export interface QuickviewSidebarProps {
+interface QuickviewSidebarProps {
   words: Record<string, QuickviewWordHighlight>;
   i18n: i18n;
   highlightKeywords: HighlightKeywords;

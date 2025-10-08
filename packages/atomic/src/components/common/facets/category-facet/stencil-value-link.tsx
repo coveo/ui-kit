@@ -3,6 +3,9 @@ import {i18n} from 'i18next';
 import {FacetValueLabelHighlight} from '../facet-value-label-highlight/stencil-facet-value-label-highlight';
 import {FacetValueLink} from '../facet-value-link/stencil-facet-value-link';
 
+/**
+ * @deprecated should only be used for Stencil components.
+ */
 export interface CategoryFacetValueLinkProps {
   displayValue: string;
   numberOfResults: number;
@@ -15,6 +18,9 @@ export interface CategoryFacetValueLinkProps {
   setRef: (el?: HTMLButtonElement) => void;
 }
 
+/**
+ * @deprecated should only be used for Stencil components.
+ */
 export const CategoryFacetValueLink: FunctionalComponent<
   CategoryFacetValueLinkProps
 > = (
