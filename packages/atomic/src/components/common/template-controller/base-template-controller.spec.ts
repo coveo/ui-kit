@@ -369,13 +369,11 @@ describe('BaseTemplateController', () => {
       });
     });
 
-    describe('when there is an error', () => {
-      it('should return null', async () => {
-        const element = await setupElement(html`<test-element></test-element>`);
+    it('should return null when there is an error', async () => {
+      const element = await setupElement(html`<test-element></test-element>`);
 
-        const result = element.controller.getBaseTemplateForTesting([]);
-        expect(result).toBeNull();
-      });
+      const result = element.controller.getBaseTemplateForTesting([]);
+      expect(result).toBeNull();
     });
   });
 });
