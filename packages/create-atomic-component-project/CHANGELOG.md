@@ -1,3 +1,9 @@
+## <small>1.5.6 (2025-10-08)</small>
+
+* chore: more cleanup of dependencies in multiples packages (#6119) ([ff6c837](https://github.com/coveo/ui-kit/commits/ff6c837)), closes [#6119](https://github.com/coveo/ui-kit/issues/6119)
+
+
+
 ## <small>1.5.5 (2025-10-01)</small>
 
 * [Version Bump][skip ci]: ui-kit publish ([b0bb0b7](https://github.com/coveo/ui-kit/commits/b0bb0b7))
