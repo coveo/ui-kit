@@ -1,0 +1,46 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+import * as AtomicResultListStories from './atomic-result-list.new.stories';
+import { AtomicDocTemplate } from '../../../../../storybook-utils/documentation/atomic-doc-template';
+
+<Meta of={AtomicResultListStories} />
+
+<AtomicDocTemplate
+  stories={AtomicResultListStories}
+  githubPath="search/atomic-result-list/atomic-result-list.ts"
+  tagName="atomic-result-list"
+  className="AtomicResultList"
+>
+# UX notes
+
+## Introduction
+
+Allows the maker to determine how the result set is shown by default by selecting 3 parameters.
+
+## User Experience and Best Practices
+
+Image size: determine how big the visual should be, depending on how important it is for the results.
+
+Density: how dense the results should be.
+
+Display:
+|     |     |
+| --- | --- |
+| Grid | Mainly for products, makes it easier to browse products and shows more of them at a time. |
+| List | The most common and versatile one, you rarely go wrong with that. |
+| Table | When showing the results as a table makes the most sense, for data-heavy results. |
+
+## Use Cases and Examples
+
+The following table outlines the key differences and best use cases for grids, lists, and tables, helping you choose the most appropriate format based on your content and user needs.
+
+|     |     |
+| --- | --- |
+| Grid | Greater emphasis on the image but less on the text.  Helps if the user want to compare items visually.  Allows to display more results.  Use when you know you’ll have recent images. |
+| List | Use when content or description is the most important things.  Helps the user compare textually, easier to scan the text.  Fewer results but reduced cognitive load since text is heavier than images.  Use when you aren’t sure of the quality of the images you’ll have. |
+| Table | Use when you want to show your data in a table. |
+
+### Reference
+
+[UI cheet sheet: list vs grid](https://uxdesign.cc/ui-cheat-sheet-list-vs-grids-48151a7262a7)
+
+</AtomicDocTemplate>

@@ -1,0 +1,55 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+import * as AtomicCategoryFacetStories from './atomic-category-facet.new.stories';
+import { AtomicDocTemplate } from '../../../../../storybook-utils/documentation/atomic-doc-template';
+
+<Meta of={AtomicCategoryFacetStories} />
+
+<AtomicDocTemplate
+  stories={AtomicCategoryFacetStories}
+  githubPath="search/atomic-category-facet/atomic-category-facet.ts"
+  tagName="atomic-category-facet"
+  className="AtomicCategoryFacet"
+>
+# UX notes
+
+## Introduction
+
+A facet allows users to drill down inside a result set by filtering the result to certain field values.
+_Category Facets_ are browsable facets that display values in a hierarchical fashion, narrowing the available options through offering alternative starting points and sub-categories.
+
+The Category Facet is especially useful when making fundamental decisions on a starting point in a search or browsing session.
+For example, if the starting point was Clothing, available options to choose from might include t-shirts, sweaters, brands, sales, new arrivals, etc.
+Each one of those options would then offer a new list of surrogate categories.
+
+## Best Practices
+
+### Usage Notes
+
+* A Category Facet requires a multi-value field whose values are formatted hierarchically.
+The facet will determine the filter to apply based on the current selected path of values.
+This can offer a powerful navigational experience, quickly leading a user to relevant results.
+
+  This component uses `;` to separate individual values, and the character that’s defined with the `delimiting-character` attribute to separate hierarchical levels within each value.
+  Set this attribute to `|` instead of using the default, which is `;`.
+  The following is an example of the recommended hierarchical formatting:
+
+  `clothing; clothing|sale; clothing|sale|shoes; clothing|sale|shoes|kids; clothing|sale|shoes|kids|sneakers;`
+* It’s only possible to select one value at a time in a category facet.
+This is because they’re meant to ease navigation through their hierarchically organized content, as opposed to applying multiple hierarchical filters.
+
+### Guidelines
+
+It’s best practice to have hierarchies at five levels or less in depth.
+
+## Use Cases and Examples
+
+On an ecommerce website, a user may want to start browsing by the category _Men_, and then narrow their results to _Bottoms_, then further to _Pants_, etc.
+Instead of selecting the facet value directly, this allows them to navigate hierarchically and determine the right starting point.
+
+### References
+
+[Categories, Facets—and Browsable Facets?](https://www.uxmatters.com/mt/archives/2011/08/categories-facetsand-browsable-facets.php)
+
+[Don’t Lose Face with Facets](https://source.coveo.com/2018/04/18/facets/)
+
+</AtomicDocTemplate>

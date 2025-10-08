@@ -1,0 +1,37 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+import * as AtomicNoResultsStories from './atomic-no-results.new.stories';
+import { AtomicDocTemplate } from '../../../../storybook-utils/documentation/atomic-doc-template';
+
+<Meta of={AtomicNoResultsStories} />
+
+<AtomicDocTemplate
+  stories={AtomicNoResultsStories}
+  githubPath="search/atomic-no-results/atomic-no-results.ts"
+  tagName="atomic-no-results"
+  className="AtomicNoResults"
+>
+# UX notes
+
+## Introduction
+
+This component provides feedback to the user by indicating that the {query} didn’t return any results and guiding them to their next action.
+
+## User experience and best practices
+
+### Usage notes
+
+Used when the {query} returns no results.
+Displaying additional content from this component using a `<slot>` element is also possible.
+The `<slot>` element acts as a placeholder inside the {atomic} component, into which you can place your own markup to offer custom content such as messages, images, or links.
+
+### Guidelines
+
+Use this opportunity to provide support to your users in the form of advice and tools for {query} reformulation.
+If applicable, you should promote exploration and discovery using things like top searches, featured {items}, or popular {items}.
+
+## Use cases and examples
+
+When displaying a "no results" message on an ecommerce site, displaying popular products that relate to a selected category can help direct the user to a relevant result.
+It may also help increase sales.
+
+</AtomicDocTemplate>
