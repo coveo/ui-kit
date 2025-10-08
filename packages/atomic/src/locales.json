@@ -7803,5 +7803,32 @@
     "zh": "我们找不到任何产品为{{query}}",
     "zh-CN": "我们找不到任何产品为{{query}}",
     "zh-TW": "我們找不到任何產品為{{query}}"
+  },
+  "pager-page-loaded": {
+    "en": "Page {{page}} loaded",
+    "fr": "Page {{page}} chargée",
+    "cs": "Stránka {{page}} načtena",
+    "da": "Side {{page}} indlæst",
+    "de": "Seite {{page}} geladen",
+    "el": "Η σελίδα {{page}} φορτώθηκε",
+    "es": "Página {{page}} cargada",
+    "fi": "Sivu {{page}} ladattu",
+    "hu": "{{page}}. oldal betöltve",
+    "id": "Halaman {{page}} dimuat",
+    "it": "Pagina {{page}} caricata",
+    "ja": "ページ{{page}}が読み込まれました",
+    "ko": "{{page}}페이지가 로드되었습니다",
+    "nl": "Pagina {{page}} geladen",
+    "no": "Side {{page}} lastet",
+    "pl": "Strona {{page}} załadowana",
+    "pt": "Página {{page}} carregada",
+    "pt-BR": "Página {{page}} carregada",
+    "ru": "Страница {{page}} загружена",
+    "sv": "Sida {{page}} inläst",
+    "th": "หน้า {{page}} โหลดแล้ว",
+    "tr": "{{page}}. sayfa yüklendi",
+    "zh": "第{{page}}页已加载",
+    "zh-CN": "第{{page}}页已加载",
+    "zh-TW": "第{{page}}頁已載入"
   }
 }
