@@ -42,6 +42,12 @@ const externalizeDependencies: PluginImpl = () => {
 };
 const isCDN = process.env.DEPLOYMENT_ENVIRONMENT === 'CDN';
 
+function getPackageVersion(): string {
+  return JSON.parse(
+    readFileSync(resolve(__dirname, '../package.json'), 'utf-8')
+  ).version;
+}
+
 const config: StorybookConfig = {
   stories: [
     './Introduction.stories.tsx',
@@ -69,7 +75,13 @@ const config: StorybookConfig = {
 
   async viteFinal(config, {configType}) {
     const {default: tailwindcss} = await import('@tailwindcss/vite');
+    const version = getPackageVersion();
+
     return mergeConfig(config, {
+      define: {
+        'process.env.VERSION': JSON.stringify(version),
+        'process.env.NODE_ENV': JSON.stringify('development'),
+      },
       plugins: [
         tailwindcss(),
         resolvePathAliases(),

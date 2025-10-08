@@ -2,6 +2,10 @@ import {buildInstantProducts} from '@coveo/headless/commerce';
 import {page} from '@vitest/browser/context';
 import {html} from 'lit';
 import {beforeEach, describe, expect, it, type MockInstance, vi} from 'vitest';
+import type {
+  SearchBoxSuggestionElement,
+  SearchBoxSuggestions,
+} from '@/src/components/common/suggestions/suggestions-types';
 import {buildCustomEvent} from '@/src/utils/event-utils';
 import {fixture} from '@/vitest-utils/testing-helpers/fixture';
 import {
@@ -9,10 +13,6 @@ import {
   renderInAtomicCommerceSearchBox,
 } from '@/vitest-utils/testing-helpers/fixtures/atomic/commerce/atomic-commerce-search-box-fixture';
 import {buildFakeInstantProducts} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/instant-products-controller';
-import type {
-  SearchBoxSuggestionElement,
-  SearchBoxSuggestions,
-} from '../../common/suggestions/suggestions-types';
 import {AtomicCommerceSearchBoxInstantProducts} from './atomic-commerce-search-box-instant-products';
 import './atomic-commerce-search-box-instant-products';
 

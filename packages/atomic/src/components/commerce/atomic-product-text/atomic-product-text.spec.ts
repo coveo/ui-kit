@@ -7,6 +7,7 @@ import {renderInAtomicProduct} from '@/vitest-utils/testing-helpers/fixtures/ato
 import {buildFakeProduct} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/product';
 import {createTestI18n} from '@/vitest-utils/testing-helpers/i18n-utils';
 import {AtomicProductText} from './atomic-product-text';
+import './atomic-product-text';
 
 vi.mock('@coveo/headless/commerce', {spy: true});
 

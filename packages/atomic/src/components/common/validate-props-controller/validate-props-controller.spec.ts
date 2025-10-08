@@ -6,7 +6,7 @@ import type {LitElementWithError} from '@/src/decorators/types';
 import {deepEqual} from '@/src/utils/compare-utils';
 import {ValidatePropsController} from './validate-props-controller';
 
-vi.mock('@/src/utils/compare-utils');
+vi.mock('@/src/utils/compare-utils', {spy: true});
 
 @customElement('test-element')
 class TestElement extends LitElement implements LitElementWithError {

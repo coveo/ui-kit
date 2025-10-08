@@ -1,15 +1,14 @@
 import {page} from '@vitest/browser/context';
-import {renderFunctionFixture} from '@/vitest-utils/testing-helpers/fixture';
-import {createTestI18n} from '@/vitest-utils/testing-helpers/i18n-utils';
-import '@vitest/browser/matchers.d.ts';
 import {html} from 'lit';
 import {beforeAll, describe, expect, it, vi} from 'vitest';
+import {renderFunctionFixture} from '@/vitest-utils/testing-helpers/fixture';
+import {createTestI18n} from '@/vitest-utils/testing-helpers/i18n-utils';
 import {
   type FacetSearchMatchesProps,
   renderFacetSearchMatches,
 } from './facet-search-matches';
 
-describe('renderFacetSearchMatches', () => {
+describe('#renderFacetSearchMatches', () => {
   let i18n: Awaited<ReturnType<typeof createTestI18n>>;
 
   beforeAll(async () => {

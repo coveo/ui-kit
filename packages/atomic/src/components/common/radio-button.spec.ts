@@ -4,9 +4,9 @@ import {afterEach, beforeEach, describe, expect, it, vi} from 'vitest';
 import {createRipple} from '@/src/utils/ripple-utils';
 import {type RadioButtonProps, renderRadioButton} from './radio-button';
 
-vi.mock('../../utils/ripple-utils');
+vi.mock('@/src/utils/ripple-utils', {spy: true});
 
-describe('radioButton', () => {
+describe('#renderRadioButton', () => {
   let container: HTMLElement;
 
   beforeEach(() => {

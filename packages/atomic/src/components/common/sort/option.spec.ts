@@ -1,12 +1,11 @@
 import {page} from '@vitest/browser/context';
-import {renderFunctionFixture} from '@/vitest-utils/testing-helpers/fixture';
-import {createTestI18n} from '@/vitest-utils/testing-helpers/i18n-utils';
-import '@vitest/browser/matchers.d.ts';
 import {html} from 'lit';
 import {beforeAll, describe, expect, it} from 'vitest';
+import {renderFunctionFixture} from '@/vitest-utils/testing-helpers/fixture';
+import {createTestI18n} from '@/vitest-utils/testing-helpers/i18n-utils';
 import {renderSortOption, type SortOptionProps} from './option';
 
-describe('renderSortOption', () => {
+describe('#renderSortOption', () => {
   let i18n: Awaited<ReturnType<typeof createTestI18n>>;
 
   const locators = {
