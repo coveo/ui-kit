@@ -5,6 +5,7 @@ import {
   EcommerceDefaultFieldsToInclude,
   VERSION as HEADLESS_VERSION,
   type LogLevel,
+  loadConfigurationActions,
   loadFieldActions,
   loadQueryActions,
   loadSearchConfigurationActions,
@@ -51,6 +52,7 @@ import {getAnalyticsConfig} from './analytics-config';
 import {createSearchStore, type SearchStore} from './store';
 // TODO - Remove once all components that use atomic-modal have been migrated.
 import '@/src/components/common/atomic-modal/atomic-modal';
+import {augmentAnalyticsConfigWithAtomicVersion} from '@/src/components/common/interface/analytics-config';
 
 const FirstSearchExecutedFlag = 'firstSearchExecuted';
 export type InitializationOptions = SearchEngineConfiguration;
@@ -365,6 +367,12 @@ export class AtomicSearchInterface
         'Mismatch between search interface search hub and engine search hub. The engine search hub will be used.'
       );
     }
+
+    engine.dispatch(
+      loadConfigurationActions(engine).updateAnalyticsConfiguration({
+        ...augmentAnalyticsConfigWithAtomicVersion(),
+      })
+    );
     return this.internalInitialization(() => {
       this.engine = engine;
     });
