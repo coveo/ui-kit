@@ -116,7 +116,6 @@ export const GridDisplayWithTemplate: Story = {
 
 export const GridDisplayBeforeQuery: Story = {
   name: 'Using grid display before query',
-  tags: ['!test'],
 };
 
 export const ListDisplay: Story = {
