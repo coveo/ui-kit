@@ -19,7 +19,7 @@ export class SearchBoxPageObject extends BasePageObject {
   }
 
   get clearButton() {
-    return this.component.getByLabel('Clear search-box', {exact: true});
+    return this.component.getByLabel('Clear', {exact: true});
   }
 
   get ariaLive() {
