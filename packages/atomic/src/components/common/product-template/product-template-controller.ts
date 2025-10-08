@@ -35,15 +35,6 @@ export class ProductTemplateController extends BaseTemplateController<ProductTem
     };
   }
 
-  protected getWarnings() {
-    return {
-      scriptTag:
-        'Any "script" tags defined inside of "template" elements are not supported and will not be executed when the products are rendered.',
-      sectionMix:
-        'Product templates should only contain section elements or non-section elements, not both. Future updates could unpredictably affect this product template.',
-    };
-  }
-
   protected getDefaultLinkTemplateElement() {
     const linkTemplate = document.createElement('template');
     linkTemplate.innerHTML = `<atomic-product-link>${this.currentGridCellLinkTarget ? `<a slot="attributes" target="${this.currentGridCellLinkTarget}"></a>` : ''}</atomic-product-link>`;

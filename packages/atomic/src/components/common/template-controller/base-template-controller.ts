@@ -50,10 +50,14 @@ export abstract class BaseTemplateController<TCondition>
     );
   }
 
-  protected abstract getWarnings(): {
-    scriptTag: string;
-    sectionMix: string;
-  };
+  protected getWarnings() {
+    return {
+      scriptTag:
+        'Any "script" tags defined inside of "template" elements are not supported and will not be executed when the items are rendered.',
+      sectionMix:
+        'Item templates should only contain section elements or non-section elements, not both. Future updates could unpredictably affect this item template.',
+    };
+  }
 
   protected abstract getDefaultLinkTemplateElement(): HTMLTemplateElement;
 
