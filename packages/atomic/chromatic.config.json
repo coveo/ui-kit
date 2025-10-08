@@ -3,5 +3,6 @@
   "storybookBuildDir": "./dist-storybook",
   "onlyChanged": true,
   "storybookBaseDir": "packages/atomic",
-  "storybookConfigDir": "packages/atomic/.storybook"
+  "storybookConfigDir": "packages/atomic/.storybook",
+  "exitZeroOnChanges": true
 }
