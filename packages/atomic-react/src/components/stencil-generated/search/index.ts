@@ -44,7 +44,6 @@ export const AtomicRecsList = /*@__PURE__*/createReactComponent<JSX.AtomicRecsLi
 export const AtomicRecsResult = /*@__PURE__*/createReactComponent<JSX.AtomicRecsResult, HTMLAtomicRecsResultElement>('atomic-recs-result');
 export const AtomicRefineModal = /*@__PURE__*/createReactComponent<JSX.AtomicRefineModal, HTMLAtomicRefineModalElement>('atomic-refine-modal');
 export const AtomicRefineToggle = /*@__PURE__*/createReactComponent<JSX.AtomicRefineToggle, HTMLAtomicRefineToggleElement>('atomic-refine-toggle');
-export const AtomicResult = /*@__PURE__*/createReactComponent<JSX.AtomicResult, HTMLAtomicResultElement>('atomic-result');
 export const AtomicResultBadge = /*@__PURE__*/createReactComponent<JSX.AtomicResultBadge, HTMLAtomicResultBadgeElement>('atomic-result-badge');
 export const AtomicResultDate = /*@__PURE__*/createReactComponent<JSX.AtomicResultDate, HTMLAtomicResultDateElement>('atomic-result-date');
 export const AtomicResultFieldsList = /*@__PURE__*/createReactComponent<JSX.AtomicResultFieldsList, HTMLAtomicResultFieldsListElement>('atomic-result-fields-list');

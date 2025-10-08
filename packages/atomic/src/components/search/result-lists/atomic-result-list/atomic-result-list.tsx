@@ -361,7 +361,7 @@ export class AtomicResultList implements InitializableComponent {
       return (
         <atomic-result
           {...propsForAtomicResult}
-          ref={(element) =>
+          ref={(element: HTMLElement) =>
             element && this.resultListCommon.setNewResultRef(element, i)
           }
           part="outline"
