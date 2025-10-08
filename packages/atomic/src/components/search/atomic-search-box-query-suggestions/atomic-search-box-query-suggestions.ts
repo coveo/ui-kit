@@ -55,7 +55,12 @@ export class AtomicSearchBoxQuerySuggestions
   public maxWithoutQuery?: number;
 
   connectedCallback() {
-    super.connectedCallback();
+    try {
+      super.connectedCallback();
+    } catch (error) {
+      this.error = error as Error;
+      return;
+    }
     try {
       dispatchSearchBoxSuggestionsEvent<SearchBox, Bindings>(
         (bindings) => {
