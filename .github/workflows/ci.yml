@@ -256,6 +256,8 @@ jobs:
       - name: Install Playwright Browsers
         run: npx playwright install --with-deps
       - run: npm run -w=@coveo/atomic test:storybook
+        env:
+          DEBUG: "*"
   package-compatibility:
     name: "Verify compatibility of packages"
     needs: build
