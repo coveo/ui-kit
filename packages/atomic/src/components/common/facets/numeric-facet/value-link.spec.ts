@@ -1,25 +1,31 @@
 import {page} from '@vitest/browser/context';
+import {html} from 'lit';
+import {beforeAll, beforeEach, describe, expect, it, vi} from 'vitest';
+import {renderFacetValueCheckbox} from '@/src/components/common/facets/facet-value-checkbox/facet-value-checkbox';
+import {renderFacetValueLabelHighlight} from '@/src/components/common/facets/facet-value-label-highlight/facet-value-label-highlight';
+import {renderFacetValueLink} from '@/src/components/common/facets/facet-value-link/facet-value-link';
 import type {NumberFormatter} from '@/src/components/common/formats/format-common';
 import {renderFunctionFixture} from '@/vitest-utils/testing-helpers/fixture';
 import {createTestI18n} from '@/vitest-utils/testing-helpers/i18n-utils';
-import '@vitest/browser/matchers.d.ts';
-import {html} from 'lit';
-import {beforeAll, beforeEach, describe, expect, it, vi} from 'vitest';
-import {renderFacetValueCheckbox} from '../facet-value-checkbox/facet-value-checkbox';
-import {renderFacetValueLabelHighlight} from '../facet-value-label-highlight/facet-value-label-highlight';
-import {renderFacetValueLink} from '../facet-value-link/facet-value-link';
 import {formatHumanReadable} from './formatter';
 import {
   type NumericFacetValueLinkProps,
   renderNumericFacetValue,
 } from './value-link';
 
-// Mock the dependencies
-vi.mock('../facet-value-checkbox/facet-value-checkbox', {spy: true});
-vi.mock('../facet-value-link/facet-value-link', {spy: true});
-vi.mock('../facet-value-label-highlight/facet-value-label-highlight', {
+vi.mock(
+  '@/src/components/common/facets/facet-value-checkbox/facet-value-checkbox',
+  {spy: true}
+);
+vi.mock('@/src/components/common/facets/facet-value-link/facet-value-link', {
   spy: true,
 });
+vi.mock(
+  '@/src/components/common/facets/facet-value-label-highlight/facet-value-label-highlight',
+  {
+    spy: true,
+  }
+);
 vi.mock('./formatter', {spy: true});
 
 describe('#renderNumericFacetValue', () => {

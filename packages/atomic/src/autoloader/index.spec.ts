@@ -30,7 +30,7 @@ describe('autoloader', () => {
     vi.stubGlobal('customElements', mockCustomElements);
     vi.useFakeTimers();
 
-    vi.mock('../components/components/lazy-index.js', () => ({
+    vi.mock('@/src/components/lazy-index.js', () => ({
       __esModule: true,
       default: {
         'x-test-component': async () => {

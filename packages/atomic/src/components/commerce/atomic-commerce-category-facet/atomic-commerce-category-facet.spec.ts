@@ -1,11 +1,10 @@
 import type {CategoryFacet, Summary} from '@coveo/headless/commerce';
 import {page, userEvent} from '@vitest/browser/context';
+import {html} from 'lit';
+import {beforeEach, describe, expect, it, type MockInstance, vi} from 'vitest';
 import {renderInAtomicCommerceInterface} from '@/vitest-utils/testing-helpers/fixtures/atomic/commerce/atomic-commerce-interface-fixture';
 import {buildFakeCategoryFacet} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/category-facet-controller';
 import {buildFakeSummary} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/summary-subcontroller';
-import '@vitest/browser/matchers.d.ts';
-import {html} from 'lit';
-import {beforeEach, describe, expect, it, type MockInstance, vi} from 'vitest';
 import type {AtomicCommerceCategoryFacet} from './atomic-commerce-category-facet';
 import './atomic-commerce-category-facet';
 

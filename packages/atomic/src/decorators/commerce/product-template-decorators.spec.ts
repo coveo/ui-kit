@@ -9,7 +9,7 @@ import {
   fetchProductContext,
 } from './product-template-decorators';
 
-vi.mock('@/src/components/common/item-list/fetch-item-context');
+vi.mock('@/src/components/common/item-list/fetch-item-context', {spy: true});
 vi.mock(
   '@/src/components/common/item-list/context/item-context-controller',
   () => ({

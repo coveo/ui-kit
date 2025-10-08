@@ -8,19 +8,19 @@ import {
 import {page} from '@vitest/browser/context';
 import {html} from 'lit';
 import {beforeEach, describe, expect, it, type MockInstance, vi} from 'vitest';
+import type {
+  ItemDisplayDensity,
+  ItemDisplayImageSize,
+  ItemDisplayLayout,
+} from '@/src/components/common/layout/display-options';
 import {renderInAtomicCommerceInterface} from '@/vitest-utils/testing-helpers/fixtures/atomic/commerce/atomic-commerce-interface-fixture';
 import {buildFakeProduct} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/product';
 import {buildFakeProductListing} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/product-listing-controller';
 import {buildFakeSearch} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/search-controller';
 import {buildFakeSummary} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/summary-subcontroller';
 import {genericSubscribe} from '@/vitest-utils/testing-helpers/fixtures/headless/common';
-import type {
-  ItemDisplayDensity,
-  ItemDisplayImageSize,
-  ItemDisplayLayout,
-} from '../../common/layout/display-options';
-import './atomic-commerce-product-list';
 import {AtomicCommerceProductList} from './atomic-commerce-product-list';
+import './atomic-commerce-product-list';
 
 vi.mock('@/src/components/common/interface/store', {spy: true});
 vi.mock('@coveo/headless/commerce', {spy: true});
