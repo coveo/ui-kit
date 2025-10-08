@@ -1,11 +1,13 @@
 import QuanticSearchBoxInput from '../quanticSearchBoxInput';
 import {buildCreateTestComponent, cleanup, flushPromises} from 'c/testUtils';
+import * as mockHeadlessLoader from 'c/quanticHeadlessLoader';
 
 const functionsMocks = {
   exampleHandleInputValueChange: jest.fn(),
   exampleHandleSubmitSearch: jest.fn(),
   exampleShowSuggestions: jest.fn(),
   exampleSelectSuggestion: jest.fn(),
+  highlightString: jest.fn((payload) => payload.content),
 };
 
 const defaultPlaceholder = 'Search...';
@@ -58,6 +60,17 @@ function setupEventListeners(element) {
   );
 }
 
+function prepareHeadlessBundle() {
+  // @ts-ignore
+  mockHeadlessLoader.getHeadlessBundle = () => {
+    return {
+      HighlightUtils: {
+        highlightString: functionsMocks.highlightString,
+      },
+    };
+  };
+}
+
 const createTestComponent = buildCreateTestComponent(
   QuanticSearchBoxInput,
   'c-quantic-search-box-input',
@@ -65,13 +78,8 @@ const createTestComponent = buildCreateTestComponent(
 );
 
 describe('c-quantic-search-box-input', () => {
-  beforeAll(() => {
-    // @ts-ignore
-    global.CoveoHeadless = {
-      HighlightUtils: {
-        highlightString: () => {},
-      },
-    };
+  beforeEach(() => {
+    prepareHeadlessBundle();
   });
 
   afterEach(() => {

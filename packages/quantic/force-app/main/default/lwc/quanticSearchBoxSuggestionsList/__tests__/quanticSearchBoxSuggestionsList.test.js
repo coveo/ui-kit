@@ -1,6 +1,7 @@
 /* eslint-disable no-import-assign */
 import QuanticSearchBoxSuggestionsList from 'c/quanticSearchBoxSuggestionsList';
 import {cleanup, buildCreateTestComponent, flushPromises} from 'c/testUtils';
+import * as mockHeadlessLoader from 'c/quanticHeadlessLoader';
 
 const labels = {
   clear: 'Clear',
@@ -74,18 +75,6 @@ jest.mock('c/quanticUtils', () => {
         return count === 1 ? baseName : `${baseName}_plural`;
       }),
     },
-    RecentQueryUtils: {
-      formatRecentQuery: jest.fn((query, currentQuery) => {
-        if (!currentQuery) return query;
-        const lowerQuery = query.toLowerCase();
-        const lowerCurrentQuery = currentQuery.toLowerCase();
-        const index = lowerQuery.indexOf(lowerCurrentQuery);
-        if (index === 0) {
-          return `<strong>${query.substring(0, currentQuery.length)}</strong>${query.substring(currentQuery.length)}`;
-        }
-        return query;
-      }),
-    },
     __ariaDispatchMessageMock: ariaDispatchMessageMock,
   };
 });
@@ -131,6 +120,21 @@ const buildMixedOptions = (suggestions, recentQueries) => {
   ];
 };
 
+const functionsMocks = {
+  highlightString: jest.fn((payload) => payload.content),
+};
+
+function prepareHeadlessBundle() {
+  // @ts-ignore
+  mockHeadlessLoader.getHeadlessBundle = () => {
+    return {
+      HighlightUtils: {
+        highlightString: functionsMocks.highlightString,
+      },
+    };
+  };
+}
+
 const createTestComponent = buildCreateTestComponent(
   QuanticSearchBoxSuggestionsList,
   'c-quantic-search-box-suggestions-list',
@@ -140,6 +144,10 @@ const createTestComponent = buildCreateTestComponent(
 describe('c-quantic-search-box-suggestions-list', () => {
   afterEach(() => {
     cleanup();
+  });
+
+  beforeEach(() => {
+    prepareHeadlessBundle();
   });
 
   describe('suggestion list rendering', () => {
@@ -327,7 +335,11 @@ describe('c-quantic-search-box-suggestions-list', () => {
   describe('query property', () => {
     it('should filter recent queries based on current query', async () => {
       const element = createTestComponent({
-        recentQueries: mockRecentQueries,
+        recentQueries: [
+          'recent query 1',
+          'recent query 2',
+          'test recent query',
+        ],
         query: 'test',
       });
       await flushPromises();
@@ -335,29 +347,14 @@ describe('c-quantic-search-box-suggestions-list', () => {
       // Should only show recent queries that start with 'test'
       const options = element.shadowRoot.querySelectorAll(selectors.option);
       // Clear button + filtered recent queries
-      expect(options.length).toBe(2); // clear button + 'test recent query'
+      expect(options.length).toBe(2); // clear button + 'test recent query', other recent queries don't start with 'test'
       // The first option should be the clear button
       const clearButton = options.item(0);
       expect(clearButton.querySelector(selectors.lightningIcon)).toBeNull();
       expect(clearButton.textContent).toContain(labels.recentQueries);
       const recentQueryOption = options.item(1);
       expect(recentQueryOption.querySelector(selectors.richText).value).toEqual(
-        expect.stringContaining('<strong>test</strong> recent query')
-      );
-    });
-
-    it('should bold the current query in recent queries', async () => {
-      const element = createTestComponent({
-        recentQueries: mockRecentQueries,
-        query: 'test',
-      });
-      await flushPromises();
-
-      const options = element.shadowRoot.querySelectorAll(selectors.option);
-      // Skip the first option (clear button)
-      const recentQueryOption = options.item(1);
-      expect(recentQueryOption.querySelector(selectors.richText).value).toEqual(
-        expect.stringContaining('<strong>test</strong>')
+        'test recent query'
       );
     });
   });
