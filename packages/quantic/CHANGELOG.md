@@ -1,3 +1,10 @@
+## <small>3.30.5 (2025-10-08)</small>
+
+* chore: more cleanup of dependencies in multiples packages (#6119) ([ff6c837](https://github.com/coveo/ui-kit/commits/ff6c837)), closes [#6119](https://github.com/coveo/ui-kit/issues/6119)
+* chore(quantic): fixing linter issues related to fonts SLDS 2 migration (#6101) ([96ab0b8](https://github.com/coveo/ui-kit/commits/96ab0b8)), closes [#6101](https://github.com/coveo/ui-kit/issues/6101)
+
+
+
 ## <small>3.30.4 (2025-10-01)</small>
 
 * chore: cleanup quantic dependencies (#6077) ([9492ff0](https://github.com/coveo/ui-kit/commits/9492ff0)), closes [#6077](https://github.com/coveo/ui-kit/issues/6077)
