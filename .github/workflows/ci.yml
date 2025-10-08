@@ -257,6 +257,58 @@ jobs:
       - name: Install Playwright Browsers
         run: npx playwright install --with-deps
       - run: npx turbo test:storybook --affected
+  chromatic-publish-pr:
+    if: github.event_name == 'pull_request'
+    name: "Publish Storybook to Chromatic"
+    needs: build
+    runs-on: ubuntu-latest
+    env:
+      # https://github.com/chromaui/chromatic-cli/blob/50c1472b61279091e39130cee31f063053afef79/action-src/main.ts#L30-L40
+      CHROMATIC_SHA: ${{ github.event.pull_request.head.sha }}
+      CHROMATIC_BRANCH: ${{ github.event.pull_request.head.ref }}
+      CHROMATIC_SLUG: ${{ github.event.pull_request.head.repo.full_name }}
+      CHROMATIC_PULL_REQUEST_SHA: ${{ github.event.sha }}
+      CHROMATIC_PROJECT_TOKEN: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
+    steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@ec9f2d5744a09debf3a187a3f4f675c53b671911 # v2.13.0
+        with:
+          egress-policy: audit
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+        with:
+          fetch-depth: 0
+          filter: blob:none
+          ref: ${{ github.event.pull_request.head.ref }}
+      - run: git branch main origin/main
+      - uses: ./.github/actions/setup
+      - name: Install Playwright Browsers
+        run: npx playwright install --with-deps
+      - run: npx turbo chromatic --affected
+  chromatic-publish-merge-group:
+    if: github.event_name == 'merge_group'
+    name: "Publish Storybook to Chromatic"
+    needs: build
+    runs-on: ubuntu-latest
+    env:
+      # https://github.com/chromaui/chromatic-cli/blob/50c1472b61279091e39130cee31f063053afef79/action-src/main.ts#L30-L40
+      CHROMATIC_SHA: ${{ github.event.merge_group.head_sha }}
+      CHROMATIC_BRANCH: ${{ github.event.merge_group.head_ref }}
+      CHROMATIC_SLUG: ${{ github.event.payload.repository.full_name }}
+      CHROMATIC_PROJECT_TOKEN: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
+    steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@ec9f2d5744a09debf3a187a3f4f675c53b671911 # v2.13.0
+        with:
+          egress-policy: audit
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+        with:
+          fetch-depth: 0
+          filter: blob:none
+      - run: git branch main origin/main
+      - uses: ./.github/actions/setup
+      - name: Install Playwright Browsers
+        run: npx playwright install --with-deps
+      - run: npx turbo chromatic --affected
   package-compatibility:
     name: "Verify compatibility of packages"
     needs: build
@@ -711,6 +763,7 @@ jobs:
       - "lint-check"
       - "unit-test"
       - "storybook-test"
+      - "chromatic-publish-pr"
       - "playwright-atomic"
       - "playwright-atomic-theming"
       - "playwright-atomic-hosted-page-test"
@@ -753,6 +806,7 @@ jobs:
       - "lint-check"
       - "unit-test"
       - "storybook-test"
+      - "chromatic-publish-merge-group"
       - "playwright-atomic"
       - "playwright-atomic-theming"
       - "playwright-atomic-hosted-page-test"

@@ -2,8 +2,6 @@ import bgIcons from '@salesforce-ux/design-system/design-tokens/dist/bg-standard
 import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
 import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {html} from 'lit';
-import {within} from 'shadow-dom-testing-library';
-import {expect, userEvent, waitFor} from 'storybook/test';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
 import AssetsList from '../../../../docs/assets.json';
@@ -36,7 +34,6 @@ const meta: Meta = {
   argTypes,
 
   afterEach,
-  tags: ['!test'],
 };
 
 export default meta;
@@ -56,30 +53,7 @@ export const Default: Story = {
         </style>
         ${story()}`,
   ],
-  afterEach: async (context) => {
-    await afterEach(context);
-    const {canvasElement, step} = context;
-    const canvas = within(canvasElement);
-    await step('Wait for the facet values to render', async () => {
-      await waitFor(
-        () => expect(canvas.getByShadowTitle('People')).toBeInTheDocument(),
-        {
-          timeout: 30e3,
-        }
-      );
-    });
-    await step('Select a facet value', async () => {
-      const facet = canvas.getByShadowTitle('People');
-      await userEvent.click(facet);
-      await waitFor(
-        () =>
-          expect(
-            canvas.getByShadowTitle('Object type: People')
-          ).toBeInTheDocument(),
-        {timeout: 30e3}
-      );
-    });
-  },
+  afterEach,
 };
 
 export const AllIcons: Story = {
@@ -149,4 +123,7 @@ export const AllIcons: Story = {
           </div>
         </div>`,
   ],
+  parameters: {
+    chromatic: {disableSnapshot: true},
+  },
 };

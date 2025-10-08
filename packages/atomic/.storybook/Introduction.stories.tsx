@@ -28,4 +28,7 @@ export const Default: StoryObj = {
 export const Crawling: StoryObj = {
   name: 'Crawling',
   tags: ['!dev', '!test'],
+  parameters: {
+    chromatic: {disableSnapshot: true},
+  },
 };

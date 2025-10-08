@@ -48,7 +48,7 @@
   ],
   "scripts": {
     "clean": "node ../../utils/ci/rm-rf.mjs dist/* dist-storybook/* www/* docs/* playwright-report/*",
-    "build:storybook": "storybook build -o dist-storybook",
+    "build:storybook": "storybook build -o dist-storybook --stats-json",
     "build:cem": "cem analyze",
     "build:stencil-lit": "node --max_old_space_size=6144 ../../node_modules/@stencil/core/bin/stencil build --tsConfig tsconfig.stencil.json && node ./scripts/stencil-proxy.mjs && node ./scripts/build.mjs --config=tsconfig.lit.json && esbuild src/autoloader/index.ts --format=esm --outfile=dist/atomic/autoloader/index.esm.js && esbuild src/autoloader/index.ts --format=cjs --outfile=dist/atomic/autoloader/index.cjs.js && rollup -c rollup.config.js && node ../../utils/ci/rm-rf.mjs ./dist/atomic/loader/package.json && tsc --noEmit --esModuleInterop --skipLibCheck ./dist/types/components.d.ts",
     "build:angular": "npx turbo gen:lit --filter=@coveo/atomic-angular-builder",
@@ -78,7 +78,8 @@
     "release:phase3": "npm run-script -w=@coveo/ci npm-publish",
     "release:phase1": "npm run-script -w=@coveo/ci bump",
     "promote:npm:latest": "npm run-script -w=@coveo/ci promote-npm-prod",
-    "validate:definitions": "tsc --noEmit --esModuleInterop --skipLibCheck ./dist/types/components.d.ts"
+    "validate:definitions": "tsc --noEmit --esModuleInterop --skipLibCheck ./dist/types/components.d.ts",
+    "chromatic": "npx chromatic"
   },
   "dependencies": {
     "@coveo/bueno": "1.1.2",
@@ -123,6 +124,7 @@
     "@vitest/coverage-v8": "^3.2.4",
     "@wc-toolkit/storybook-helpers": "9.0.1",
     "axe-core": "4.10.3",
+    "chromatic": "13.3.0",
     "cypress": "13.7.3",
     "cypress-axe": "1.6.0",
     "cypress-repeat": "2.3.9",

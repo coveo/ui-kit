@@ -38,6 +38,17 @@
       "dependsOn": ["build:stencil-lit"],
       "outputs": ["dist/atomic/assets/**", "docs/assets.json"]
     },
+    "chromatic": {
+      "dependsOn": ["build"],
+      "outputs": [],
+      "env": [
+        "CHROMATIC_SHA",
+        "CHROMATIC_BRANCH",
+        "CHROMATIC_SLUG",
+        "CHROMATIC_PULL_REQUEST_SHA",
+        "CHROMATIC_PROJECT_TOKEN"
+      ]
+    },
     "test:stencil": {
       "dependsOn": ["build:locales"],
       "outputs": ["coverage/**"]
