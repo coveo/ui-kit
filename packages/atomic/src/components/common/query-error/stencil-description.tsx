@@ -9,6 +9,9 @@ interface QueryErrorDescriptionProps {
   organizationId: string;
 }
 
+/**
+ * @deprecated should only be used for Stencil components.
+ */
 export const QueryErrorDescription: FunctionalComponent<
   QueryErrorDescriptionProps
 > = ({errorType, i18n, url, organizationId}) => {

@@ -10,6 +10,9 @@ interface ShowButtonProps {
   onClick: () => void;
 }
 
+/**
+ * @deprecated should only be used for Stencil components.
+ */
 export const ShowButton: FunctionalComponent<ShowButtonProps> = (props) => (
   <Button
     style="text-primary"

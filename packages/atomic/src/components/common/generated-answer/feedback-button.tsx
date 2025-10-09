@@ -11,6 +11,9 @@ interface FeedbackButtonProps {
   onClick: () => void;
 }
 
+/**
+ * @deprecated should only be used for Stencil components.
+ */
 export const FeedbackButton: FunctionalComponent<FeedbackButtonProps> = (
   props
 ) => {

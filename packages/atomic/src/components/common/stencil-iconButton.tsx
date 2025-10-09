@@ -1,13 +1,16 @@
 import {FunctionalComponent, h, VNode} from '@stencil/core';
 import {Button, StencilButtonProps} from './stencil-button';
 
-export interface IconButtonProps extends StencilButtonProps {
+interface IconButtonProps extends StencilButtonProps {
   badge?: VNode;
   buttonRef?: (el?: HTMLButtonElement) => void;
   icon: string;
   partPrefix: string;
 }
 
+/**
+ * @deprecated should only be used for Stencil components.
+ */
 export const IconButton: FunctionalComponent<IconButtonProps> = (props) => {
   return (
     <div class="relative" part={`${props.partPrefix}-container`}>

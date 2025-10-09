@@ -10,17 +10,17 @@ interface TableColumnsProps {
   itemRenderingFunction?: ItemRenderingFunction;
 }
 
-export interface DisplayTableProps extends TableColumnsProps {
+interface DisplayTableProps extends TableColumnsProps {
   logger: Pick<Console, 'error'>;
   host: HTMLElement;
   listClasses: string;
 }
 
-export interface TableDataProps extends TableColumnsProps {
+interface TableDataProps extends TableColumnsProps {
   key: string;
 }
 
-export interface DisplayTableRowProps {
+interface DisplayTableRowProps {
   key: string;
   rowIndex: number;
   setRef: (element?: HTMLElement) => void;
@@ -56,6 +56,9 @@ const getFieldTableColumnsFromHTMLTemplate = (
     props.templateContentForFirstItem.querySelectorAll(tableElementTagName)
   );
 
+/**
+ * @deprecated should only be used for Stencil components.
+ */
 export const DisplayTable: FunctionalComponent<DisplayTableProps> = (
   props,
   children
@@ -85,6 +88,9 @@ export const DisplayTable: FunctionalComponent<DisplayTableProps> = (
   );
 };
 
+/**
+ * @deprecated should only be used for Stencil components.
+ */
 export const DisplayTableRow: FunctionalComponent<DisplayTableRowProps> = (
   {key, rowIndex, setRef},
   children
@@ -103,6 +109,9 @@ export const DisplayTableRow: FunctionalComponent<DisplayTableRowProps> = (
   );
 };
 
+/**
+ * @deprecated should only be used for Stencil components.
+ */
 export const DisplayTableData: FunctionalComponent<
   TableDataProps & {
     renderItem: (content: HTMLAtomicTableElementElement) => VNode;

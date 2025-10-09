@@ -4,6 +4,7 @@ import {
   buildUrlManager,
   EcommerceDefaultFieldsToInclude,
   getSampleSearchEngineConfiguration,
+  loadConfigurationActions,
   loadFieldActions,
   loadQueryActions,
   loadSearchConfigurationActions,
@@ -16,25 +17,25 @@ import {ifDefined} from 'lit/directives/if-defined.js';
 import {when} from 'lit/directives/when.js';
 import {within} from 'shadow-dom-testing-library';
 import {beforeEach, describe, expect, it, type MockInstance, vi} from 'vitest';
+import {augmentAnalyticsConfigWithAtomicVersion} from '@/src/components/common/interface/analytics-config';
 import {InterfaceController} from '@/src/components/common/interface/interface-controller';
-import {
-  AtomicSearchInterface,
-  type Bindings,
-} from '@/src/components/search/atomic-search-interface/atomic-search-interface';
 import {createSearchStore} from '@/src/components/search/atomic-search-interface/store';
 import {bindings} from '@/src/decorators/bindings';
 import type {InitializableComponent} from '@/src/decorators/types';
 import {markParentAsReady} from '@/src/utils/init-queue';
 import {SafeStorage, StorageItems} from '@/src/utils/local-storage-utils';
+import {DEFAULT_MOBILE_BREAKPOINT} from '@/src/utils/replace-breakpoint-utils';
 import {fixture} from '@/vitest-utils/testing-helpers/fixture';
 import {buildFakeSearchEngine} from '@/vitest-utils/testing-helpers/fixtures/headless/search/engine';
 import {buildFakeSearchStatus} from '@/vitest-utils/testing-helpers/fixtures/headless/search/search-status-controller';
 import {buildFakeUrlManager} from '@/vitest-utils/testing-helpers/fixtures/headless/search/url-manager-controller';
 import {getAnalyticsConfig} from './analytics-config';
+import {AtomicSearchInterface, type Bindings} from './atomic-search-interface';
+import './atomic-search-interface';
 import '@/src/components/search/atomic-search-layout/atomic-search-layout';
-import {DEFAULT_MOBILE_BREAKPOINT} from '@/src/utils/replace-breakpoint-utils';
 
 vi.mock('@coveo/headless', {spy: true});
+vi.mock('@/src/components/common/interface/analytics-config', {spy: true});
 vi.mock('@/src/components/search/atomic-search-interface/store', {spy: true});
 vi.mock('@/src/utils/init-queue', {spy: true});
 vi.mock('./analytics-config', {spy: true});
@@ -144,17 +145,27 @@ describe('atomic-search-interface', () => {
 
     vi.mocked(buildUrlManager).mockReturnValue(buildFakeUrlManager());
 
-    vi.mocked(loadFieldActions).mockReturnValue({
+    vi.mocked(loadFieldActions, {partial: true}).mockReturnValue({
       registerFieldsToInclude: vi.fn(),
-    } as unknown as ReturnType<typeof loadFieldActions>);
+    });
 
-    vi.mocked(loadQueryActions).mockReturnValue({
+    vi.mocked(loadQueryActions, {partial: true}).mockReturnValue({
       updateQuery: vi.fn(),
-    } as unknown as ReturnType<typeof loadQueryActions>);
+    });
 
-    vi.mocked(loadSearchConfigurationActions).mockReturnValue({
+    vi.mocked(loadSearchConfigurationActions, {partial: true}).mockReturnValue({
       updateSearchConfiguration: vi.fn(),
-    } as unknown as ReturnType<typeof loadSearchConfigurationActions>);
+    });
+
+    vi.mocked(loadConfigurationActions, {partial: true}).mockReturnValue({
+      updateAnalyticsConfiguration: vi.fn(),
+    });
+
+    vi.mocked(augmentAnalyticsConfigWithAtomicVersion).mockReturnValue({
+      source: {
+        '@coveo/atomic': '1.0.0',
+      },
+    });
   });
 
   describe('#constructor (when created)', () => {
@@ -666,6 +677,33 @@ describe('atomic-search-interface', () => {
             'Mismatch between search interface search hub and engine search hub. The engine search hub will be used.'
           );
         });
+
+        it('should dispatch updateAnalyticsConfiguration with augmented analytics config', async () => {
+          const element = await setupElement();
+          const mockDispatch = vi.fn();
+          const mockUpdateAnalyticsConfiguration = vi.fn();
+          const engine = buildFakeSearchEngine({
+            implementation: {
+              dispatch: mockDispatch,
+            },
+          });
+
+          vi.mocked(loadConfigurationActions, {partial: true}).mockReturnValue({
+            updateAnalyticsConfiguration: mockUpdateAnalyticsConfiguration,
+          });
+
+          await element.initializeWithSearchEngine(engine);
+
+          expect(loadConfigurationActions).toHaveBeenCalledWith(engine);
+          expect(mockUpdateAnalyticsConfiguration).toHaveBeenCalledWith({
+            source: {
+              '@coveo/atomic': '1.0.0',
+            },
+          });
+          expect(mockDispatch).toHaveBeenCalledWith(
+            mockUpdateAnalyticsConfiguration.mock.results[0].value
+          );
+        });
       }
     );
 
@@ -741,9 +779,9 @@ describe('atomic-search-interface', () => {
   describe('#fieldsToInclude', () => {
     it('should register fieldsToInclude when the engine is created', async () => {
       const registerFieldsToIncludeMock = vi.fn();
-      vi.mocked(loadFieldActions).mockReturnValue({
+      vi.mocked(loadFieldActions, {partial: true}).mockReturnValue({
         registerFieldsToInclude: registerFieldsToIncludeMock,
-      } as unknown as ReturnType<typeof loadFieldActions>);
+      });
 
       const element = await setupElement({
         fieldsToInclude: ['field1', 'field2'],
@@ -792,9 +830,9 @@ describe('atomic-search-interface', () => {
 
     it('should register updated fields with engine when fieldsToInclude changes', async () => {
       const registerFieldsToIncludeMock = vi.fn();
-      vi.mocked(loadFieldActions).mockReturnValue({
+      vi.mocked(loadFieldActions, {partial: true}).mockReturnValue({
         registerFieldsToInclude: registerFieldsToIncludeMock,
-      } as unknown as ReturnType<typeof loadFieldActions>);
+      });
 
       const element = await setupElement();
       await element.initialize(searchEngineConfig);

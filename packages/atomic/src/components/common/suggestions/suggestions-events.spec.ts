@@ -1,12 +1,12 @@
 import {afterEach, beforeEach, describe, expect, it, vi} from 'vitest';
-import {closest} from '../../../utils/dom-utils';
+import {closest} from '@/src/utils/dom-utils';
 import {dispatchSearchBoxSuggestionsEvent} from './suggestions-events';
 import type {SearchBoxSuggestionsEvent} from './suggestions-types';
 
-vi.mock('../../../utils/event-utils', {spy: true});
-vi.mock('../../../utils/dom-utils', {spy: true});
+vi.mock('@/src/utils/event-utils', {spy: true});
+vi.mock('@/src/utils/dom-utils', {spy: true});
 
-describe('utils', () => {
+describe('suggestions-events', () => {
   describe('#dispatchSearchBoxSuggestionsEvent', () => {
     let mockElement: HTMLElement;
     let mockEvent: SearchBoxSuggestionsEvent<unknown>;

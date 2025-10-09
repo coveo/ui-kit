@@ -3,8 +3,8 @@ import {
   type Product,
 } from '@coveo/headless/commerce';
 import {afterEach, beforeEach, describe, expect, it, vi} from 'vitest';
-import type {ItemTarget} from '../../common/layout/display-options';
-import type {TemplateProviderProps} from '../../common/template-provider/template-provider';
+import type {ItemTarget} from '@/src/components/common/layout/display-options';
+import type {TemplateProviderProps} from '@/src/components/common/template-provider/template-provider';
 import {ProductTemplateProvider} from './product-template-provider';
 
 vi.mock('@coveo/headless/commerce', {spy: true});

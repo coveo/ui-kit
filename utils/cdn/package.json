@@ -10,9 +10,5 @@
   },
   "engines": {
     "node": ">=22.14.0"
-  },
-  "devDependencies": {
-    "ncp": "2.0.0",
-    "chalk": "5.4.1"
   }
 }

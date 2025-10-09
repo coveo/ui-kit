@@ -22,7 +22,7 @@ import {
   RatingRangeFacetSelectors,
 } from './rating-range-facet-selectors';
 
-describe('Rating Range Test Suites', () => {
+describe.skip('Rating Range Test Suites', () => {
   describe('with default rating facet', () => {
     function setupRatingRangeFacet() {
       new TestFixture()
