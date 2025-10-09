@@ -46,15 +46,10 @@ export interface AttachedResultsState {
    * The array of results that are attached.
    */
   results: AttachedResult[];
-  /**
-   * A loading state, used to sync loading the attached results between multiple components.
-   */
-  loading: boolean;
 }
 
 export function getAttachedResultsInitialState(): AttachedResultsState {
   return {
     results: [],
-    loading: false,
   };
 }
