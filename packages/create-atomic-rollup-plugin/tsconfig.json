@@ -10,7 +10,8 @@
     "target": "ES2022",
     "moduleResolution": "bundler",
     "allowSyntheticDefaultImports": true,
-    "esModuleInterop": true
+    "esModuleInterop": true,
+    "types": ["node"]
   },
   "include": ["index.ts"],
   "exclude": ["lib/**/*"]

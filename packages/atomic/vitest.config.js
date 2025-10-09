@@ -1,7 +1,7 @@
 import {readFileSync} from 'node:fs';
 import path, {dirname, resolve} from 'node:path';
 import tailwindcss from '@tailwindcss/vite';
-import {defineConfig} from 'vitest/config';
+import {configDefaults, defineConfig} from 'vitest/config';
 import packageJsonHeadless from '../headless/package.json' with {type: 'json'};
 import packageJson from './package.json' with {type: 'json'};
 
@@ -97,9 +97,9 @@ export default defineConfig({
     css: true,
     include: ['src/**/*.spec.ts', 'scripts/stencil-proxy.spec.mjs'],
     exclude: [
+      ...configDefaults.exclude,
       'src/**/initialization-utils.spec.ts',
       'src/**/search-layout.spec.ts',
-      '**/node_modules/**',
     ],
     restoreMocks: true,
     setupFiles: ['./vitest-utils/setup.ts'],
