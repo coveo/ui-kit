@@ -342,20 +342,20 @@ Files that likely need updates (search for `npm` in each):
 
 #### 4.3 Verify Node.js setup
 
-Ensure all workflows use the pnpm setup action with minimal configuration:
+Ensure all workflows use the setup-node action first, then pnpm setup, with minimal configuration:
 
 ```yaml
 steps:
   - uses: actions/checkout@v4
-  
-  - uses: pnpm/action-setup@v4
-  
+
   - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
     with:
       node-version-file: ".nvmrc"
+
+  - uses: pnpm/action-setup@v4
 ```
 
-**Order matters:** pnpm setup must come before Node.js setup.
+**Order matters:** Node.js must be set up before pnpm is installed.
 
 **Note:** The pnpm version is automatically read from the `packageManager` field in `package.json`. The `cache` and `registry-url` options in setup-node are optional and should only be added when specifically needed (e.g., registry-url for publishing jobs).
 
