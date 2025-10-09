@@ -1,3 +1,6 @@
+import {getTemplateNodeType} from '@/src/components/common/template-controller/template-utils';
+import {aggregate} from '@/src/utils/utils';
+
 export function rectEquals(r1: DOMRect, r2: DOMRect) {
   return (
     r1.x === r2.x &&
@@ -11,6 +14,10 @@ export function parentNodeToString(node: ParentNode): string {
   return Array.from(node.children)
     .map((child) => child.outerHTML)
     .join('');
+}
+
+export function groupNodesByType(nodes: NodeList) {
+  return aggregate(Array.from(nodes), (node) => getTemplateNodeType(node));
 }
 
 export function closest<K extends keyof HTMLElementTagNameMap>(

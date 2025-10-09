@@ -1,5 +1,10 @@
 import {afterEach, beforeEach, describe, expect, it} from 'vitest';
-import {closest, parentNodeToString, rectEquals} from './dom-utils';
+import {
+  closest,
+  groupNodesByType,
+  parentNodeToString,
+  rectEquals,
+} from './dom-utils';
 
 describe('dom-utils', () => {
   let container: HTMLElement;
@@ -141,6 +146,35 @@ describe('dom-utils', () => {
       expect(parentNodeToString(fragment)).toBe(
         '<span>Fragment child 1</span><div>Fragment child 2</div>'
       );
+    });
+  });
+
+  describe('#groupNodesByType', () => {
+    it('should return empty object for empty NodeList', () => {
+      const emptyDiv = document.createElement('div');
+      const result = groupNodesByType(emptyDiv.childNodes);
+
+      expect(result).toEqual({});
+    });
+
+    it('should group nodes by their template node type', () => {
+      const container = document.createElement('div');
+
+      const divElement = document.createElement('div');
+      container.appendChild(divElement);
+
+      const comment = document.createComment('test comment');
+      container.appendChild(comment);
+
+      const result = groupNodesByType(container.childNodes);
+
+      expect(result.other).toBeDefined();
+      expect(result.other).toHaveLength(1);
+      expect(result.other![0]).toBe(divElement);
+
+      expect(result.metadata).toBeDefined();
+      expect(result.metadata).toHaveLength(1);
+      expect(result.metadata![0]).toBe(comment);
     });
   });
 
