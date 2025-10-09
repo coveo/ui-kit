@@ -50,11 +50,14 @@ function getPackageVersion(): string {
 
 const config: StorybookConfig = {
   stories: [
-    './Introduction.stories.tsx',
-    '../src/**/*.new.stories.tsx',
-    '../src/**/*.mdx',
-    '../storybook-pages/**/*.new.stories.tsx',
-    '../storybook-pages/**/*.mdx',
+    // './Introduction.stories.tsx',
+    '../src/components/commerce/**/*.new.stories.tsx',
+    '../src/components/search/**/*.new.stories.tsx',
+    // '../src/components/search/facets/**/*.new.stories.tsx',
+    // '../src/**/*.new.stories.tsx',
+    // '../src/**/*.mdx',
+    // '../storybook-pages/**/*.new.stories.tsx',
+    // '../storybook-pages/**/*.mdx',
   ],
   staticDirs: [
     {from: '../dist/atomic/assets', to: '/assets'},

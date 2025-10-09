@@ -141,6 +141,7 @@ const storybook = defineConfig({
     name: 'storybook',
     fileParallelism: false,
     browser: {
+      fileParallelism: false,
       enabled: true,
       headless: true,
       provider: 'playwright',
