@@ -55,5 +55,5 @@ catalog:
   rollup-plugin-node-polyfills: 0.2.1
   typedoc: 0.28.13
   typescript: 5.8.3
-  vite: 7.0.6
-  vitest: 3.2.4
+  vite: 7.0.5
+  vitest: 3.2.3

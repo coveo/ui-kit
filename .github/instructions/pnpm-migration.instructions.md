@@ -75,12 +75,20 @@ strict-peer-dependencies=false
 public-hoist-pattern[]=*types*
 public-hoist-pattern[]=*eslint*
 public-hoist-pattern[]=*prettier*
+
+# Security: Enforce 7-day cooldown for new package versions
+# Helps prevent supply chain attacks by avoiding packages published within the last 7 days
+minimum-release-age=7d
+# Exclude internal @coveo packages from the cooldown
+minimum-release-age-exclude[]=@coveo/*
 ```
 
 **Rationale:** 
 - `shamefully-hoist=false` maintains pnpm's strict isolation
 - `auto-install-peers=true` helps with peer dependency resolution
 - `public-hoist-pattern` hoists commonly needed dev dependencies
+- `minimum-release-age=7d` enforces a 7-day waiting period before allowing newly published packages, helping prevent supply chain attacks
+- `minimum-release-age-exclude[]=@coveo/*` excludes internal packages from the cooldown
 
 #### 1.3 Update root package.json
 
