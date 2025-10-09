@@ -1,8 +1,9 @@
 import { spreadProps } from '@open-wc/lit-helpers';
 import {Decorator} from '@storybook/web-components-vite';
 import {html} from 'lit';
+import { ifDefined } from 'lit/directives/if-defined.js';
 
-export const wrapInResultList = (display: string = 'list', includeCodeRoot: boolean = true): {
+export const wrapInResultList = (display: string = 'list', includeCodeRoot: boolean = true, style?: string): {
   decorator: Decorator;
 } => ({
   decorator: (story) => html`
@@ -12,6 +13,7 @@ export const wrapInResultList = (display: string = 'list', includeCodeRoot: bool
       number-of-placeholders="24"
       density="compact"
       image-size="small"
+      style=${ifDefined(style)}
     >
       ${story()}
     </atomic-result-list>

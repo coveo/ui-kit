@@ -6,17 +6,13 @@ import {wrapInResultTemplateForSections} from '@/storybook-utils/search/result-t
 import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
 
 const {decorator: searchInterfaceDecorator, afterEach} = wrapInSearchInterface({
-  config: {
-    preprocessRequest: (request) => {
-      const parsed = JSON.parse(request.body as string);
-      parsed.perPage = 1;
-      request.body = JSON.stringify(parsed);
-      return request;
-    },
-  },
   includeCodeRoot: false,
 });
-const {decorator: resultListDecorator} = wrapInResultList('grid', false);
+const {decorator: resultListDecorator} = wrapInResultList(
+  'list',
+  false,
+  'max-width: 100%; width: 768px; padding: 2rem;'
+);
 const {decorator: resultTemplateDecorator} = wrapInResultTemplateForSections();
 
 const {events, args, argTypes, template} = getStorybookHelpers(
