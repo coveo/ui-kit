@@ -255,14 +255,14 @@ jobs:
       - uses: ./.github/actions/setup
       - name: Install Playwright Browsers
         run: npx playwright install --with-deps
-      - run: npm run -w=@coveo/atomic test:storybook > log 2>&1
+      - run: npm run -w=@coveo/atomic test:storybook
         env:
           DEBUG: storybook
-      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
-        if: always()
-        with:
-          name: debug
-          path: log
+      # - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+      #   if: always()
+      #   with:
+      #     name: debug
+      #     path: log
   package-compatibility:
     name: "Verify compatibility of packages"
     needs: build
