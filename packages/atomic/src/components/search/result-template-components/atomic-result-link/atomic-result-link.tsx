@@ -9,7 +9,7 @@ import {
 import {buildStringTemplateFromResult} from '../../../../utils/result-utils';
 import {getDefaultSlotContent} from '../../../../utils/slot-utils';
 import {AnyUnfoldedItem} from '../../../common/item-list/unfolded-item';
-import {getAttributesFromLinkSlot} from '../../../common/item-link/attributes-slot';
+import {getAttributesFromLinkSlotContent} from '../../../common/item-link/attributes-slot';
 import {LinkWithItemAnalytics} from '../../../common/item-link/stencil-item-link';
 import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
 import {
@@ -67,7 +67,7 @@ export class AtomicResultLink implements InitializableComponent {
   public connectedCallback() {
     const slotName = 'attributes';
     this.hasDefaultSlot =  getDefaultSlotContent(this.host).length > 0;
-    this.linkAttributes = getAttributesFromLinkSlot(this.host, slotName);
+    this.linkAttributes = getAttributesFromLinkSlotContent(this.host, slotName);
   }
 
   public render() {

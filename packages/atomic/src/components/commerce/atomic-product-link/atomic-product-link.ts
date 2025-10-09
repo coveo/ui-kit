@@ -3,7 +3,7 @@ import type {InteractiveProduct, Product} from '@coveo/headless/commerce';
 import {html, LitElement} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {when} from 'lit/directives/when.js';
-import {getAttributesFromLinkSlot} from '@/src/components/common/item-link/attributes-slot';
+import {getAttributesFromLinkSlotContent} from '@/src/components/common/item-link/attributes-slot';
 import {renderLinkWithItemAnalytics} from '@/src/components/common/item-link/item-link';
 import {bindingGuard} from '@/src/decorators/binding-guard';
 import {bindings} from '@/src/decorators/bindings';
@@ -117,7 +117,10 @@ export class AtomicProductLink
           );
 
       const {warningMessage} = interactiveProduct;
-      this.linkAttributes = getAttributesFromLinkSlot(this, 'attributes');
+      this.linkAttributes = getAttributesFromLinkSlotContent(
+        this,
+        'attributes'
+      );
 
       return renderLinkWithItemAnalytics({
         props: {

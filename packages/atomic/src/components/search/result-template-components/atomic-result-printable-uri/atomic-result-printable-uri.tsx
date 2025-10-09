@@ -9,7 +9,7 @@ import Arrow from '../../../../images/arrow-right.svg';
 import {InitializeBindings} from '../../../../utils/initialization-utils';
 import {FocusTargetController} from '../../../../utils/stencil-accessibility-utils';
 import {parseXML} from '../../../../utils/utils';
-import {getAttributesFromLinkSlot} from '../../../common/item-link/attributes-slot';
+import {getAttributesFromLinkSlotContent} from '../../../common/item-link/attributes-slot';
 import {LinkWithItemAnalytics} from '../../../common/item-link/stencil-item-link';
 import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
 import {ResultContext} from '../result-template-decorators';
@@ -59,7 +59,7 @@ export class AtomicResultPrintableUri {
       this.error = error as Error;
     }
     const slotName = 'attributes';
-    this.linkAttributes = getAttributesFromLinkSlot(this.host, slotName);
+    this.linkAttributes = getAttributesFromLinkSlotContent(this.host, slotName);
   }
 
   public initialize() {

@@ -13,7 +13,7 @@ import {
 import {buildStringTemplateFromResult} from '../../../utils/result-utils';
 import {getDefaultSlotContent} from '../../../utils/slot-utils';
 import {AnyUnfoldedItem} from '../../common/item-list/unfolded-item';
-import {getAttributesFromLinkSlot} from '../../common/item-link/attributes-slot';
+import {getAttributesFromLinkSlotContent} from '../../common/item-link/attributes-slot';
 import {LinkWithItemAnalytics} from '../../common/item-link/stencil-item-link';
 import {RecsBindings} from '../../recommendations/atomic-recs-interface/atomic-recs-interface';
 import {
@@ -78,7 +78,7 @@ export class AtomicIPXResultLink
   public connectedCallback() {
     const slotName = 'attributes';
     this.hasDefaultSlot =  getDefaultSlotContent(this.host).length > 0;
-    this.linkAttributes = getAttributesFromLinkSlot(this.host, slotName);
+    this.linkAttributes = getAttributesFromLinkSlotContent(this.host, slotName);
   }
 
   public async onSelect() {
