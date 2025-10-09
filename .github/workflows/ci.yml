@@ -241,10 +241,14 @@ jobs:
       - run: git branch main origin/main
       - uses: ./.github/actions/setup
       - run: npx turbo test --affected
-  storybook-test:
+  storybook-test-shard:
     name: "Run Storybook tests"
     needs: build
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        shardIndex: [1, 2, 3, 4,5,6,7,8,9,10]
+        shardTotal: [10]
     container:
       image: mcr.microsoft.com/playwright:v1.54.1-noble
       options: --user 1001
@@ -260,15 +264,35 @@ jobs:
           filter: blob:none
       - run: git branch main origin/main
       - uses: ./.github/actions/setup
-      - run: npm run test:storybook
+      - run: npm run test:storybook -- --shard=${{ matrix.shardIndex }}/${{ matrix.shardTotal }}
         working-directory: packages/atomic
         env:
           DEBUG: storybook
-      # - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
-      #   if: always()
-      #   with:
-      #     name: debug
-      #     path: log
+      - name: Upload blob report to GitHub Actions Artifacts
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: blob-report-${{ matrix.shardIndex }}
+          path: packages/atomic/.vitest-reports/*
+          include-hidden-files: true
+          retention-days: 1
+  storybook-test:
+    if: ${{ !cancelled() }}
+    needs: [storybook-test-shard]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+      - uses: ./.github/actions/setup
+      - name: Download blob reports from GitHub Actions Artifacts
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
+        with:
+          path: packages/atomic/.vitest-reports
+          pattern: blob-report-*
+          merge-multiple: true
+
+      - name: Merge reports
+        run: npx vitest --merge-reports
+        working-directory: packages/atomic
   package-compatibility:
     name: "Verify compatibility of packages"
     needs: build
