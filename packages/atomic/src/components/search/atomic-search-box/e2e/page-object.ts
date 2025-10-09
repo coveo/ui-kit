@@ -19,7 +19,7 @@ export class SearchBoxPageObject extends BasePageObject<'atomic-search-box'> {
   }
 
   get clearButton() {
-    return this.component.getByRole('button', {name: 'clear-search'});
+    return this.component.getByRole('button', {name: 'clear'});
   }
 
   get ariaLive() {
