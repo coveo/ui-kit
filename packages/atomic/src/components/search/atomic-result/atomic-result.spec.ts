@@ -302,7 +302,7 @@ describe('atomic-result', () => {
         getContentHTMLMethod();
 
         expect(consoleWarnSpy).toHaveBeenCalledWith(
-          'AtomicResult: content property is undefined. Cannot get content HTML.',
+          'atomic-result: content property is undefined. Cannot get content HTML.',
           expect.any(AtomicResult)
         );
       });
