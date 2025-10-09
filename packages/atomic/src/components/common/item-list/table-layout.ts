@@ -24,6 +24,7 @@ export interface TableLayoutProps extends TableColumnsProps {
 
 export interface TableDataProps extends TableColumnsProps {
   key: string;
+  currentItem?: AnyItem;
   renderItem: (content: Element) => TemplateResult;
 }
 
@@ -90,17 +91,32 @@ export const renderTableRow: FunctionalComponentWithChildren<TableRowProps> = ({
 export const renderTableData: FunctionalComponent<TableDataProps> = ({
   props,
 }) => {
-  const {renderItem} = props;
+  const {renderItem, currentItem, itemRenderingFunction} = props;
+
   const fieldColumns = getFieldTableColumns(props);
 
-  return html`${map(
-    fieldColumns,
-    (column) =>
-      html`${keyed(
-        `${column.getAttribute('label')!}${props.key}`,
-        html`<td part="result-table-cell">${renderItem(column)}</td>`
-      )}`
-  )}`;
+  let currentItemColumns = fieldColumns;
+  if (itemRenderingFunction && currentItem) {
+    const contentDiv = document.createElement('div');
+    const renderedHTML = itemRenderingFunction(
+      currentItem,
+      document.createElement('div')
+    );
+    contentDiv.innerHTML = renderedHTML;
+    currentItemColumns = Array.from(
+      contentDiv.querySelectorAll(tableElementTagName)
+    );
+  }
+
+  return html`${map(currentItemColumns, (column, index) => {
+    const label =
+      fieldColumns[index]?.getAttribute('label') ||
+      column.getAttribute('label');
+    return html`${keyed(
+      `${label}${props.key}`,
+      html`<td part="result-table-cell">${renderItem(column)}</td>`
+    )}`;
+  })}`;
 };
 
 const getFieldTableColumns = (props: TableColumnsProps) => {

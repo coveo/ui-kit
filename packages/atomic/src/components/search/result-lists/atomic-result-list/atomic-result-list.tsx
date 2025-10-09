@@ -263,10 +263,7 @@ export class AtomicResultList implements InitializableComponent {
         this.imageSize
       ),
       content: this.itemTemplateProvider.getTemplateContent(result),
-      linkContent:
-        this.display === 'grid'
-          ? this.itemTemplateProvider.getLinkTemplateContent(result)
-          : this.itemTemplateProvider.getEmptyLinkTemplateContent(),
+      linkContent: this.itemTemplateProvider.getLinkTemplateContent(result),
       store: this.bindings.store,
       density: this.density,
       imageSize: this.imageSize,
@@ -317,17 +314,17 @@ export class AtomicResultList implements InitializableComponent {
       templateContentForFirstItem:
         this.itemTemplateProvider.getTemplateContent(firstItem),
     };
+    
 
     return (
       <DisplayTable
         {...propsForTableColumns}
         listClasses={listClasses}
         logger={this.bindings.engine.logger}
-        itemRenderingFunction={this.itemRenderingFunction}
         host={this.host}
       >
         {this.resultListState.results.map((result, i) => {
-          const propsForAtomicResult = this.getPropsForAtomicResult(result);
+          const {renderingFunction,...propsForAtomicResult} = this.getPropsForAtomicResult(result);
           return (
             <DisplayTableRow
               {...propsForAtomicResult}
@@ -339,6 +336,7 @@ export class AtomicResultList implements InitializableComponent {
               <DisplayTableData
                 {...propsForTableColumns}
                 {...propsForAtomicResult}
+                itemRenderingFunction={this.itemRenderingFunction}
                 renderItem={(content) => {
                   return (
                     <atomic-result

@@ -3,6 +3,7 @@ import './App.css';
 import {HeaderLink} from './components/HeaderLink';
 import {CommerceRecommendationPage} from './pages/CommerceRecommendationPage';
 import {CommerceSearchPage} from './pages/CommerceSearchPage';
+import {CommerceTableResultListPage} from './pages/CommerceTableProductListPage';
 import {FoldedResultListPage} from './pages/FoldedResultListPage';
 import {InstantResultsPage} from './pages/InstantResultsPage';
 import {RecsPage} from './pages/RecsPage';
@@ -16,6 +17,7 @@ const TABLE_RESULT_LIST_PAGE = 'Table result list';
 const RECS_PAGE = 'Recs Interface';
 const COMMERCE_SEARCH_PAGE = 'Commerce Search Page';
 const COMMERCE_RECOMMENDATIONS_PAGE = 'Commerce Recommendations Page';
+const COMMERCE_TABLE_RESULT_LIST_PAGE = 'Commerce Table result list';
 
 const pages = [
   LIST_PAGE,
@@ -25,6 +27,7 @@ const pages = [
   RECS_PAGE,
   COMMERCE_SEARCH_PAGE,
   COMMERCE_RECOMMENDATIONS_PAGE,
+  COMMERCE_TABLE_RESULT_LIST_PAGE,
 ];
 
 function App() {
@@ -64,6 +67,11 @@ function App() {
             currentPage={page}
             setPage={setPage}
           />
+          <HeaderLink
+            page={COMMERCE_TABLE_RESULT_LIST_PAGE}
+            currentPage={page}
+            setPage={setPage}
+          />
         </ul>
       </header>
       {page === LIST_PAGE && <ResultListPage />}
@@ -73,6 +81,9 @@ function App() {
       {page === RECS_PAGE && <RecsPage />}
       {page === COMMERCE_SEARCH_PAGE && <CommerceSearchPage />}
       {page === COMMERCE_RECOMMENDATIONS_PAGE && <CommerceRecommendationPage />}
+      {page === COMMERCE_TABLE_RESULT_LIST_PAGE && (
+        <CommerceTableResultListPage />
+      )}
     </>
   );
 }
