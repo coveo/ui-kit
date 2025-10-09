@@ -190,7 +190,7 @@ jobs:
       DEPLOYMENT_ENVIRONMENT: CDN
     runs-on: ubuntu-latest
     container:
-      image: mcr.microsoft.com/playwright:v1.55.0-noble
+      image: mcr.microsoft.com/playwright:v1.54.1-noble
       options: --user 1001
     steps:
       - name: Harden Runner
@@ -225,7 +225,7 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     container:
-      image: mcr.microsoft.com/playwright:v1.55.0-noble
+      image: mcr.microsoft.com/playwright:v1.54.1-noble
       options: --user 1001
     timeout-minutes: 15
     steps:
@@ -246,7 +246,7 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     container:
-      image: mcr.microsoft.com/playwright:v1.55.0-noble
+      image: mcr.microsoft.com/playwright:v1.54.1-noble
       options: --user 1001
     steps:
       - name: Harden Runner
@@ -359,7 +359,7 @@ jobs:
     if: ${{ needs.prepare-playwright-atomic.outputs.shardIndex != '[0]' && needs.prepare-playwright-atomic.outputs.shardTotal != '[0]' }}
     runs-on: ubuntu-latest
     container:
-      image: mcr.microsoft.com/playwright:v1.55.0-noble
+      image: mcr.microsoft.com/playwright:v1.54.1-noble
       options: --user 1001
     strategy:
       fail-fast: false
@@ -388,7 +388,7 @@ jobs:
       - "playwright-atomic"
     runs-on: ubuntu-latest
     container:
-      image: mcr.microsoft.com/playwright:v1.55.0-noble
+      image: mcr.microsoft.com/playwright:v1.54.1-noble
       options: --user 1001
     steps:
       - name: Harden Runner
@@ -426,7 +426,7 @@ jobs:
     if: contains(needs.affected.outputs.projects, '@coveo/atomic')
     runs-on: ubuntu-latest
     container:
-      image: mcr.microsoft.com/playwright:v1.55.0-noble
+      image: mcr.microsoft.com/playwright:v1.54.1-noble
       options: --user 1001
     steps:
       - name: Harden Runner
@@ -512,7 +512,7 @@ jobs:
     if: contains(needs.affected.outputs.projects, '@samples/atomic-search-commerce-react')
     runs-on: ubuntu-latest
     container:
-      image: mcr.microsoft.com/playwright:v1.55.0-noble
+      image: mcr.microsoft.com/playwright:v1.54.1-noble
       options: --user 1001
     steps:
       - name: Harden Runner
@@ -543,7 +543,7 @@ jobs:
     if: contains(needs.affected.outputs.projects, '@samples/atomic-search-commerce-angular')
     runs-on: ubuntu-latest
     container:
-      image: mcr.microsoft.com/playwright:v1.55.0-noble
+      image: mcr.microsoft.com/playwright:v1.54.1-noble
       options: --user 1001
     steps:
       - name: Harden Runner
@@ -588,7 +588,7 @@ jobs:
     if: contains(needs.affected.outputs.projects, '@coveo/atomic-hosted-page')
     runs-on: ubuntu-latest
     container:
-      image: mcr.microsoft.com/playwright:v1.55.0-noble
+      image: mcr.microsoft.com/playwright:v1.54.1-noble
       options: --user 1001
     steps:
       - name: Harden Runner
@@ -606,7 +606,7 @@ jobs:
     if: contains(needs.affected.outputs.projects, '@samples/headless-ssr-commerce-nextjs')
     runs-on: ubuntu-latest
     container:
-      image: mcr.microsoft.com/playwright:v1.55.0-noble
+      image: mcr.microsoft.com/playwright:v1.54.1-noble
       options: --user 1001
     steps:
       - name: Harden Runner
