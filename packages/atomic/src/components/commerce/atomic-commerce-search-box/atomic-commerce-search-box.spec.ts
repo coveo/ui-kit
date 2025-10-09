@@ -11,7 +11,7 @@ import {
   loadQuerySuggestActions,
 } from '@coveo/headless/commerce';
 import {userEvent} from '@vitest/browser/context';
-import {html} from 'lit';
+import {html, type TemplateResult} from 'lit';
 import {ifDefined} from 'lit/directives/if-defined.js';
 import {describe, expect, it, vi} from 'vitest';
 import {randomID} from '@/src/utils/utils';
@@ -63,6 +63,7 @@ describe('atomic-commerce-search-box', () => {
     noSuggestions = false,
     redirectTo = undefined,
     searchBoxValue = '',
+    additionalChildren = html``,
   }: {
     searchBoxProps?: {
       redirectionUrl?: string;
@@ -75,6 +76,7 @@ describe('atomic-commerce-search-box', () => {
     noSuggestions?: boolean;
     redirectTo?: string;
     searchBoxValue?: string;
+    additionalChildren?: TemplateResult;
   } = {}) => {
     vi.mocked(buildRecentQueriesList).mockReturnValue(
       buildFakeRecentQueriesList()
@@ -130,6 +132,7 @@ describe('atomic-commerce-search-box', () => {
           clear-filters=${ifDefined(clearFilters)}
         >
           ${suggestions}
+          ${additionalChildren}
         </atomic-commerce-search-box>`,
         selector: 'atomic-commerce-search-box',
         bindings: (bindings) => {
@@ -555,6 +558,22 @@ describe('atomic-commerce-search-box', () => {
         clearFilters: false,
       },
     });
+  });
+
+  it('should warn when element has more than 1 default slot', async () => {
+    const consoleSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
+
+    const {element} = await renderSearchBox({
+      additionalChildren: html`
+        <slot>some child</slot>
+        <slot>some child</slot>
+      `,
+    });
+
+    expect(consoleSpy).toHaveBeenCalledExactlyOnceWith(
+      'Element should only have 1 default slot.',
+      element
+    );
   });
 });
 
