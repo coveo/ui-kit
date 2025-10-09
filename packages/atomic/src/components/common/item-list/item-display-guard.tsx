@@ -1,10 +1,13 @@
 import {FunctionalComponent, h, Fragment} from '@stencil/core';
 
-export interface ItemDisplayGuardProps {
+interface ItemDisplayGuardProps {
   firstRequestExecuted: boolean;
   hasItems: boolean;
 }
 
+/**
+ * @deprecated should only be used for Stencil components.
+ */
 export const ItemDisplayGuard: FunctionalComponent<ItemDisplayGuardProps> = (
   props,
   children

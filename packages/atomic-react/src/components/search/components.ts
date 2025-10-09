@@ -7,6 +7,8 @@ import {
   AtomicPager as LitAtomicPager,
   AtomicQuerySummary as LitAtomicQuerySummary,
   AtomicResultsPerPage as LitAtomicResultsPerPage,
+  AtomicSearchBoxInstantResults as LitAtomicSearchBoxInstantResults,
+  AtomicSearchBoxQuerySuggestions as LitAtomicSearchBoxQuerySuggestions,
   AtomicSearchBoxRecentQueries as LitAtomicSearchBoxRecentQueries,
   AtomicSearchInterface as LitAtomicSearchInterface,
   AtomicSearchLayout as LitAtomicSearchLayout,
@@ -60,6 +62,18 @@ export const AtomicResultsPerPage = createComponent({
   tagName: 'atomic-results-per-page',
   react: React,
   elementClass: LitAtomicResultsPerPage,
+});
+
+export const AtomicSearchBoxInstantResults = createComponent({
+  tagName: 'atomic-search-box-instant-results',
+  react: React,
+  elementClass: LitAtomicSearchBoxInstantResults,
+});
+
+export const AtomicSearchBoxQuerySuggestions = createComponent({
+  tagName: 'atomic-search-box-query-suggestions',
+  react: React,
+  elementClass: LitAtomicSearchBoxQuerySuggestions,
 });
 
 export const AtomicSearchBoxRecentQueries = createComponent({

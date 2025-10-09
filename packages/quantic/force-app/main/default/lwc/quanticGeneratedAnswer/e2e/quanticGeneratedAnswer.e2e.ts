@@ -102,6 +102,53 @@ useCaseTestCases.forEach((useCase) => {
                 await generatedAnswer.clickSubmitFeedbackButton();
                 await feedbackRequestPromise;
               });
+
+              test('should keep sending RGA analytics events after submitting feedback', async ({
+                generatedAnswer,
+              }) => {
+                await generatedAnswer.streamEndAnalyticRequestPromise;
+                const likeAnalyticRequestPromise =
+                  generatedAnswer.waitForLikeGeneratedAnswerAnalytics();
+                await generatedAnswer.clickLikeButton();
+                await likeAnalyticRequestPromise;
+
+                const exampleDocumentUrl = 'https://www.coveo.com/';
+                const exampleDetails = 'example details...';
+                await generatedAnswer.fillFeedbackForm({
+                  correctTopic: 'Yes',
+                  hallucinationFree: 'Yes',
+                  documented: 'Not sure',
+                  readable: 'Yes',
+                });
+                await generatedAnswer.typeInFeedbackDocumentUrlInput(
+                  exampleDocumentUrl
+                );
+                await generatedAnswer.typeInFeedbackDetailsInput(
+                  exampleDetails
+                );
+
+                const feedbackRequestPromise =
+                  generatedAnswer.waitForFeedbackSubmitRequest({
+                    correctTopic: 'yes',
+                    hallucinationFree: 'yes',
+                    documented: 'unknown',
+                    readable: 'yes',
+                    documentUrl: exampleDocumentUrl,
+                    details: exampleDetails,
+                    helpful: true,
+                  });
+
+                await generatedAnswer.clickSubmitFeedbackButton();
+                await feedbackRequestPromise;
+
+                await generatedAnswer.clickCompleteFeedbackButton();
+
+                // Click the copy to clipboard button and ensure the analytic is sent.
+                const copyToClipboardAnalyticRequestPromise =
+                  generatedAnswer.waitForCopyToClipboardAnalytics();
+                await generatedAnswer.clickCopyToClipboardButton();
+                await copyToClipboardAnalyticRequestPromise;
+              });
             });
 
             test.describe('when providing negative feedback', () => {

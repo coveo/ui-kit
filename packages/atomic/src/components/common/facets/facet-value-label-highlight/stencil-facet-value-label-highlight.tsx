@@ -8,6 +8,9 @@ interface FacetValueLabelHighlightProps {
   isExcluded?: boolean;
 }
 
+/**
+ * @deprecated should only be used for Stencil components.
+ */
 export const FacetValueLabelHighlight: FunctionalComponent<
   FacetValueLabelHighlightProps
 > = (props) => {

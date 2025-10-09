@@ -4,13 +4,16 @@ import CloseIcon from '../../../images/close.svg';
 import {Breadcrumb} from './breadcrumb-types';
 import {getFirstBreadcrumbValue} from './breadcrumb-utils';
 
-export interface BreadcrumbContentProps {
+interface BreadcrumbContentProps {
   pathLimit: number;
   isCollapsed: boolean;
   i18n: i18n;
   breadcrumb: Breadcrumb;
 }
 
+/**
+ * @deprecated should only be used for Stencil components.
+ */
 export const BreadcrumbContent: FunctionalComponent<BreadcrumbContentProps> = (
   props
 ) => {

@@ -5,13 +5,16 @@ import {
   renderWithHighlights,
 } from './render-highlights';
 
-export interface ItemTextHighlightedProps {
+interface ItemTextHighlightedProps {
   textValue: string;
   highlightKeywords: HighlightKeywords[];
   onError: (error: Error) => void;
   highlightString: HighlightString;
 }
 
+/**
+ * @deprecated should only be used for Stencil components.
+ */
 export const ItemTextHighlighted: FunctionalComponent<
   ItemTextHighlightedProps
 > = ({highlightKeywords, highlightString, onError, textValue}) => {

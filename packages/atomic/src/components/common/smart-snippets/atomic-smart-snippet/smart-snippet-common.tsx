@@ -2,11 +2,9 @@ import {FunctionalComponent, h} from '@stencil/core';
 import {i18n} from 'i18next';
 import {Heading} from '../../stencil-heading';
 
-export interface SmartSnippetQuestionProps {
-  headingLevel?: number;
-  question: string;
-}
-
+/**
+ * @deprecated should only be used for Stencil components.
+ */
 export const SmartSnippetWrapper: FunctionalComponent<{
   headingLevel?: number;
   i18n: i18n;
@@ -26,10 +24,15 @@ export const SmartSnippetWrapper: FunctionalComponent<{
   );
 };
 
-export const SmartSnippetQuestion: FunctionalComponent<{
+interface SmartSnippetQuestionProps {
   headingLevel?: number;
   question: string;
-}> = ({headingLevel, question}) => {
+}
+
+/**
+ * @deprecated should only be used for Stencil components.
+ */
+export const SmartSnippetQuestion: FunctionalComponent<SmartSnippetQuestionProps> = ({headingLevel, question}) => {
   return (
     <Heading
       level={headingLevel ? headingLevel + 1 : 0}
@@ -41,6 +44,9 @@ export const SmartSnippetQuestion: FunctionalComponent<{
   );
 };
 
+/**
+ * @deprecated should only be used for Stencil components.
+ */
 export const SmartSnippetTruncatedAnswer: FunctionalComponent<{
   answer: string;
   style?: string;
@@ -57,6 +63,9 @@ export const SmartSnippetTruncatedAnswer: FunctionalComponent<{
   );
 };
 
+/**
+ * @deprecated should only be used for Stencil components.
+ */
 export const SmartSnippetFooter: FunctionalComponent<{i18n: i18n}> = (
   {i18n},
   children
