@@ -245,6 +245,9 @@ jobs:
     name: "Run Storybook tests"
     needs: build
     runs-on: ubuntu-latest
+    container:
+      image: mcr.microsoft.com/playwright:v1.55.0-noble
+      options: --user 1001
     steps:
       - name: Harden Runner
         uses: step-security/harden-runner@ec9f2d5744a09debf3a187a3f4f675c53b671911 # v2.13.0
@@ -257,8 +260,6 @@ jobs:
           filter: blob:none
       - run: git branch main origin/main
       - uses: ./.github/actions/setup
-      - name: Install Playwright Browsers
-        run: npx playwright install --with-deps
       - run: npm run test:storybook
         working-directory: packages/atomic
         env:
