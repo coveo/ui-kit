@@ -40,6 +40,6 @@ jobs:
             - name: Call coveo.analytics.js-infra
               run: node ./scripts/trigger-cd.mjs
               env:
-                  GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+                  GH_TOKEN: ${{ secrets.CD_DISPATCHER }}
                   FORCE_DEPLOY: ${{ inputs.FORCE_DEPLOY || false }}
                   DRY_RUN: ${{ inputs.DRY_RUN || github.base_ref == 'master' || false }}
