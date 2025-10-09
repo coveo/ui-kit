@@ -10,6 +10,9 @@ interface NumericFacetValueLinkProps extends FormatFacetValueRange {
   displayValuesAs: 'checkbox' | 'link';
 }
 
+/**
+ * @deprecated should only be used for Stencil components.
+ */
 export const NumericFacetValueLink: FunctionalComponent<
   NumericFacetValueLinkProps
 > = (props) => {

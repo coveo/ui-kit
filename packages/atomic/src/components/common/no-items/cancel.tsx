@@ -6,6 +6,10 @@ interface CancelProps {
   i18n: i18n;
   onClick: () => void;
 }
+
+/**
+ * @deprecated should only be used for Stencil components.
+ */
 export const Cancel: FunctionalComponent<CancelProps> = ({i18n, onClick}) => {
   return (
     <Button

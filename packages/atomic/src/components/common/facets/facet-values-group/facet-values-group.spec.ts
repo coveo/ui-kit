@@ -11,8 +11,10 @@ import {
 import {renderFieldsetGroup as renderCommonFieldsetGroup} from '@/src/components/common/fieldset-group';
 import {renderFunctionFixture} from '@/vitest-utils/testing-helpers/fixture';
 import {createTestI18n} from '@/vitest-utils/testing-helpers/i18n-utils';
-import {renderFacetValuesGroup} from './facet-values-group';
-import type {FacetValuesGroupProps} from './stencil-facet-values-group';
+import {
+  type FacetValuesGroupProps,
+  renderFacetValuesGroup,
+} from './facet-values-group';
 
 vi.mock('@/src/components/common/fieldset-group', {spy: true});
 

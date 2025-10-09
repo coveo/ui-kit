@@ -10,6 +10,10 @@ interface CategoryFacetParentButtonProps {
   facetValue: {value: string; numberOfResults: number};
   onClick: () => void;
 }
+
+/**
+ * @deprecated should only be used for Stencil components.
+ */
 export const CategoryFacetParentButton: FunctionalComponent<
   CategoryFacetParentButtonProps
 > = ({field, facetValue, i18n, onClick}) => {

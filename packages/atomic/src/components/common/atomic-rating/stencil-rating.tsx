@@ -9,9 +9,10 @@ interface RatingProps {
   icon: string;
   iconSize?: number;
 }
-/** 
- * @deprecated Use `renderRating` instead. 
-*/
+
+/**
+ * @deprecated should only be used for Stencil components.
+ */
 export const Rating: FunctionalComponent<RatingProps> = (props) => {
   const width =
     ((props.numberOfActiveIcons / props.numberOfTotalIcons) * 100).toString() +
@@ -66,6 +67,9 @@ export const Rating: FunctionalComponent<RatingProps> = (props) => {
   );
 };
 
+/**
+ * @deprecated should only be used for Stencil components.
+ */
 export const computeNumberOfStars = (
   value: unknown,
   field: string

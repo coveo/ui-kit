@@ -1,12 +1,16 @@
 import {FunctionalComponent, h} from '@stencil/core';
 import {i18n} from 'i18next';
 
-export interface SortOptionProps {
+interface SortOptionProps {
   value: string;
   selected: boolean;
   i18n: i18n;
   label: string;
 }
+
+/**
+ * @deprecated should only be used for Stencil components.
+ */
 export const SortOption: FunctionalComponent<SortOptionProps> = ({
   value,
   selected,
