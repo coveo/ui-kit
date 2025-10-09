@@ -51,9 +51,7 @@ const SLOTS_DEFAULT = `
     </atomic-result-section-bottom-metadata>
     <atomic-result-section-children>
       <atomic-result-children image-size="icon">
-        <!-- CHILD -->
         <atomic-result-children-template>
-          <!-- CHILD TEMPLATE -->
           <template>
             <atomic-result-section-visual>
               <atomic-result-image class="icon" fallback="https://picsum.photos/350"></atomic-result-image>
@@ -127,7 +125,7 @@ const preprocessRequest = (response: any) => {
 };
 
 const {decorator, afterEach} = wrapInSearchInterface({
-  preprocessRequest,
+  config: {preprocessRequest},
 });
 const {events, args, argTypes, template} = getStorybookHelpers(
   'atomic-folded-result-list',
