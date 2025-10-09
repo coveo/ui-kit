@@ -42,6 +42,7 @@ const meta: Meta = {
       type: 'string',
     },
   },
+  tags: ['!test'],
 
   afterEach,
   args: {

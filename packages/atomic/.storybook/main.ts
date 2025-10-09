@@ -50,20 +50,11 @@ function getPackageVersion(): string {
 
 const config: StorybookConfig = {
   stories: [
-    // './Introduction.stories.tsx',
-    '../src/components/commerce/**/*.new.stories.tsx',
-    // '../src/components/search/facets/**/*.new.stories.tsx',
-    '../src/components/search/formats/**/*.new.stories.tsx',
-    '../src/components/search/result-lists/**/*.new.stories.tsx',
-    // '../src/components/search/result-template-components/**/*.new.stories.tsx',
-    // '../src/components/search/result-templates/**/*.new.stories.tsx',
-    // '../src/components/search/search-box-suggestions/**/*.new.stories.tsx',
-    // '../src/components/search/smart-snippets/**/*.new.stories.tsx',
-    // '../src/components/search/tabs/**/*.new.stories.tsx',
-    // '../src/**/*.new.stories.tsx',
-    // '../src/**/*.mdx',
-    // '../storybook-pages/**/*.new.stories.tsx',
-    // '../storybook-pages/**/*.mdx',
+    './Introduction.stories.tsx',
+    '../src/**/*.new.stories.tsx',
+    '../src/**/*.mdx',
+    '../storybook-pages/**/*.new.stories.tsx',
+    '../storybook-pages/**/*.mdx',
   ],
   staticDirs: [
     {from: '../dist/atomic/assets', to: '/assets'},
