@@ -12,7 +12,6 @@ import {
 } from 'vitest';
 import {bindings} from '@/src/decorators/bindings';
 import type {InitializableComponent} from '@/src/decorators/types';
-import {defer} from '@/src/utils/utils';
 import {fixture} from '@/vitest-utils/testing-helpers/fixture';
 import {renderInAtomicCommerceInterface} from '@/vitest-utils/testing-helpers/fixtures/atomic/commerce/atomic-commerce-interface-fixture';
 import type {CommerceBindings} from '../components/commerce/atomic-commerce-interface/atomic-commerce-interface';
@@ -20,8 +19,9 @@ import {
   AriaLiveRegionController,
   FocusTargetController,
 } from './accessibility-utils';
+import {defer} from './utils';
 
-vi.mock('@/src/utils/utils', () => ({
+vi.mock('./utils', () => ({
   defer: vi.fn(async () => {
     return Promise.resolve();
   }),

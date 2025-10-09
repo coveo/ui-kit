@@ -1,6 +1,8 @@
 import type {ReactiveController, ReactiveControllerHost} from 'lit';
 import type {ItemTarget} from '@/src/components/common/layout/display-options';
-import {groupNodesByType} from '@/src/utils/dom-utils';
+import {isResultSectionNode} from '@/src/components/common/layout/item-layout-sections';
+import {tableElementTagName} from '@/src/components/common/table-element-utils';
+import {aggregate, isElementNode, isVisualNode} from '@/src/utils/utils';
 
 export type TemplateContent = DocumentFragment;
 
@@ -129,7 +131,9 @@ export abstract class BaseTemplateController<TCondition>
       console.warn(warnings.scriptTag, this.host);
     }
 
-    const {section, other} = groupNodesByType(this.template.content.childNodes);
+    const {section, other} = this.groupNodesByType(
+      this.template.content.childNodes
+    );
 
     if (section?.length && other?.length) {
       console.warn(warnings.sectionMix, this.host, {
@@ -152,5 +156,29 @@ export abstract class BaseTemplateController<TCondition>
     return this.host.querySelector<HTMLTemplateElement>(
       'template:not([slot])'
     )!;
+  }
+
+  private groupNodesByType(nodes: NodeList) {
+    return aggregate(Array.from(nodes), (node) =>
+      this.getTemplateNodeType(node)
+    );
+  }
+
+  private getTemplateNodeType(
+    node: Node
+  ): 'section' | 'metadata' | 'table-column-definition' | 'other' {
+    if (isResultSectionNode(node)) {
+      return 'section';
+    }
+    if (!isVisualNode(node)) {
+      return 'metadata';
+    }
+    if (
+      isElementNode(node) &&
+      node.tagName.toLowerCase() === tableElementTagName
+    ) {
+      return 'table-column-definition';
+    }
+    return 'other';
   }
 }

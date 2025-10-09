@@ -4,9 +4,6 @@ import {beforeEach, describe, expect, it, type MockInstance, vi} from 'vitest';
 import type {LitElementWithError} from '@/src/decorators/types';
 import {fixture} from '@/vitest-utils/testing-helpers/fixture';
 import {BaseTemplateController} from './base-template-controller';
-import {getTemplateNodeType} from './template-utils';
-
-vi.mock('./template-utils', {spy: true});
 
 class TestTemplateController extends BaseTemplateController<() => boolean> {
   protected getDefaultLinkTemplateElement() {
@@ -134,8 +131,6 @@ describe('BaseTemplateController', () => {
 
     describe('when the template contains both section and other nodes', () => {
       let warnSpy: MockInstance;
-      const getTemplateFirstNode = (template: HTMLTemplateElement) =>
-        template.content.childNodes[0];
 
       const localSetup = () =>
         setupElement(
@@ -151,33 +146,30 @@ describe('BaseTemplateController', () => {
         warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
       });
 
-      it('should call getTemplateNodeType with the appropriate sections', async () => {
-        const mockedGetTemplateNodeType = vi.mocked(getTemplateNodeType);
-
-        await localSetup();
-
-        const visualSectionTemplate = buildTemplateHtml(
-          '<atomic-result-section-visual>section</atomic-result-section-visual>'
-        );
-        const otherSectionTemplate = buildTemplateHtml('<span>other</span>');
-
-        expect(mockedGetTemplateNodeType).toHaveBeenCalledWith(
-          getTemplateFirstNode(visualSectionTemplate)
-        );
-
-        expect(mockedGetTemplateNodeType).toHaveBeenCalledWith(
-          getTemplateFirstNode(otherSectionTemplate)
-        );
-      });
-
-      it('should log a warning', async () => {
+      it('should log a warning when mixing section and other elements', async () => {
         await localSetup();
 
         expect(warnSpy).toHaveBeenCalledWith(
           'Item templates should only contain section elements or non-section elements, not both. Future updates could unpredictably affect this item template.',
           expect.any(TestElement),
-          expect.objectContaining({})
+          expect.objectContaining({
+            section: expect.any(Array),
+            other: expect.any(Array),
+          })
         );
+      });
+
+      it('should identify section elements correctly', async () => {
+        await localSetup();
+
+        expect(warnSpy).toHaveBeenCalled();
+        const [, , logData] = warnSpy.mock.calls[0];
+
+        expect(logData.section).toBeDefined();
+        expect(logData.section.length).toBe(1);
+
+        expect(logData.other).toBeDefined();
+        expect(logData.other.length).toBe(1);
       });
     });
 
