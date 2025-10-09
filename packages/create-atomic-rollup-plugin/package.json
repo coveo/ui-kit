@@ -35,7 +35,7 @@
     "directory": "packages/create-atomic-rollup-plugin"
   },
   "devDependencies": {
-    "@types/node": "22.10.2",
-    "typescript": "5.8.3"
+    "@types/node": "catalog:",
+    "typescript": "catalog:"
   }
 }

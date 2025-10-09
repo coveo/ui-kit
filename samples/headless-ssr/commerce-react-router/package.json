@@ -22,9 +22,9 @@
   "devDependencies": {
     "@coveo/relay-event-types": "catalog:",
     "@react-router/dev": "7.8.2",
-    "@types/react": "18.3.23",
-    "@types/react-dom": "18.3.7",
-    "typescript": "5.8.3",
+    "@types/react": "catalog:",
+    "@types/react-dom": "catalog:",
+    "typescript": "catalog:",
     "vite": "catalog:",
     "vite-tsconfig-paths": "5.1.4"
   }

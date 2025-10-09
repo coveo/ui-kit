@@ -12,11 +12,11 @@
     "react-dom": "catalog:"
   },
   "devDependencies": {
-    "@types/node": "22.16.5",
-    "@types/react": "19.1.1",
-    "@types/react-dom": "19.1.2",
+    "@types/node": "catalog:",
+    "@types/react": "catalog:",
+    "@types/react-dom": "catalog:",
     "cypress": "catalog:",
-    "typescript": "5.8.3"
+    "typescript": "catalog:"
   },
   "scripts": {
     "build": "pnpm run build:next && pnpm run build:ts-esm && pnpm run build:ts-cjs",

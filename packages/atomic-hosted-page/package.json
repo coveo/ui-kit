@@ -36,7 +36,7 @@
   },
   "devDependencies": {
     "@playwright/test": "catalog:",
-    "@types/node": "22.16.5",
+    "@types/node": "catalog:",
     "vite": "catalog:"
   },
   "engines": {

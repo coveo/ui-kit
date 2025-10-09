@@ -17,7 +17,7 @@
     "@types/conventional-changelog-writer": "4.0.10",
     "@types/npmcli__arborist": "6.3.1",
     "@types/semver": "7.7.1",
-    "typescript": "5.8.3"
+    "typescript": "catalog:"
   },
   "scripts": {
     "add-generated-files": "node ./add-generated-files.mjs",

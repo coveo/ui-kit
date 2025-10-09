@@ -14,16 +14,16 @@
     "@testing-library/react": "catalog:",
     "@types/escape-html": "1.0.4",
     "@types/express": "5.0.3",
-    "@types/node": "22.16.5",
-    "@types/react": "19.1.1",
-    "@types/react-dom": "19.1.2",
+    "@types/node": "catalog:",
+    "@types/react": "catalog:",
+    "@types/react-dom": "catalog:",
     "dayjs": "catalog:",
     "escape-html": "1.0.3",
     "express": "5.1.0",
     "react": "catalog:",
     "react-dom": "catalog:",
     "react-router": "7.8.2",
-    "typescript": "5.8.3"
+    "typescript": "catalog:"
   },
   "scripts": {
     "dev": "vite",
