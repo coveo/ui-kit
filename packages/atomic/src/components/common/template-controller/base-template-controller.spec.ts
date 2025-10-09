@@ -129,47 +129,119 @@ describe('BaseTemplateController', () => {
       );
     });
 
-    describe('when the template contains both section and other nodes', () => {
+    describe('when validating template content', () => {
       let warnSpy: MockInstance;
-
-      const localSetup = () =>
-        setupElement(
-          html`<test-element>
-            <template>
-              <atomic-result-section-visual>section</atomic-result-section-visual>
-              <span>other</span>
-            </template>
-          </test-element>`
-        );
 
       beforeEach(() => {
         warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
       });
 
-      it('should log a warning when mixing section and other elements', async () => {
-        await localSetup();
+      it('should not log a warning when template contains only section elements', async () => {
+        await setupElement(
+          html`<test-element>
+            <template>
+              <atomic-result-section-visual>section1</atomic-result-section-visual>
+              <atomic-result-section-title>section2</atomic-result-section-title>
+            </template>
+          </test-element>`
+        );
 
-        expect(warnSpy).toHaveBeenCalledWith(
+        expect(warnSpy).not.toHaveBeenCalledWith(
           'Item templates should only contain section elements or non-section elements, not both. Future updates could unpredictably affect this item template.',
           expect.any(TestElement),
-          expect.objectContaining({
-            section: expect.any(Array),
-            other: expect.any(Array),
-          })
+          expect.any(Object)
         );
       });
 
-      it('should identify section elements correctly', async () => {
-        await localSetup();
+      it('should not log a warning when template contains only other elements', async () => {
+        await setupElement(
+          html`<test-element>
+            <template>
+              <div>content1</div>
+              <span>content2</span>
+              <p>content3</p>
+            </template>
+          </test-element>`
+        );
 
-        expect(warnSpy).toHaveBeenCalled();
-        const [, , logData] = warnSpy.mock.calls[0];
+        expect(warnSpy).not.toHaveBeenCalledWith(
+          'Item templates should only contain section elements or non-section elements, not both. Future updates could unpredictably affect this item template.',
+          expect.any(TestElement),
+          expect.any(Object)
+        );
+      });
 
-        expect(logData.section).toBeDefined();
-        expect(logData.section.length).toBe(1);
+      it('should not log a warning when template contains only metadata elements', async () => {
+        await setupElement(
+          html`<test-element>
+            <template>
+              <style>body { color: red; }</style>
+              <!-- This is a comment -->
+               
+            </template>
+          </test-element>`
+        );
 
-        expect(logData.other).toBeDefined();
-        expect(logData.other.length).toBe(1);
+        expect(warnSpy).not.toHaveBeenCalledWith(
+          'Item templates should only contain section elements or non-section elements, not both. Future updates could unpredictably affect this item template.',
+          expect.any(TestElement),
+          expect.any(Object)
+        );
+      });
+
+      it('should not log a warning when template contains only table column definitions', async () => {
+        await setupElement(
+          html`<test-element>
+            <template>
+              <atomic-table-element slot="table-column">Column 1</atomic-table-element>
+              <atomic-table-element slot="table-column">Column 2</atomic-table-element>
+            </template>
+          </test-element>`
+        );
+
+        expect(warnSpy).not.toHaveBeenCalledWith(
+          'Item templates should only contain section elements or non-section elements, not both. Future updates could unpredictably affect this item template.',
+          expect.any(TestElement),
+          expect.any(Object)
+        );
+      });
+
+      describe('when the template contains both section and other nodes', () => {
+        const localSetup = () =>
+          setupElement(
+            html`<test-element>
+              <template>
+                <atomic-result-section-visual>section</atomic-result-section-visual>
+                <span>other</span>
+              </template>
+            </test-element>`
+          );
+
+        it('should log a warning when mixing section and other elements', async () => {
+          await localSetup();
+
+          expect(warnSpy).toHaveBeenCalledWith(
+            'Item templates should only contain section elements or non-section elements, not both. Future updates could unpredictably affect this item template.',
+            expect.any(TestElement),
+            expect.objectContaining({
+              section: expect.any(Array),
+              other: expect.any(Array),
+            })
+          );
+        });
+
+        it('should identify section elements correctly', async () => {
+          await localSetup();
+
+          expect(warnSpy).toHaveBeenCalled();
+          const [, , logData] = warnSpy.mock.calls[0];
+
+          expect(logData.section).toBeDefined();
+          expect(logData.section.length).toBe(1);
+
+          expect(logData.other).toBeDefined();
+          expect(logData.other.length).toBe(1);
+        });
       });
     });
 
