@@ -3,12 +3,18 @@ import {FunctionalComponent, h} from '@stencil/core';
 import {i18n} from 'i18next';
 import {Button} from '../../stencil-button';
 
+/**
+ * @deprecated should only be used for Stencil components.
+ */
 export const SmartSnippetFeedbackModalHeader: FunctionalComponent<{
   i18n: i18n;
 }> = ({i18n}) => {
   return <h1 slot="header">{i18n.t('smart-snippet-feedback-explain-why')}</h1>;
 };
 
+/**
+ * @deprecated should only be used for Stencil components.
+ */
 export const SmartSnippetFeedbackModalBody: FunctionalComponent<{
   formId: string;
   onSubmit: (e: Event) => void;
@@ -26,6 +32,9 @@ export const SmartSnippetFeedbackModalBody: FunctionalComponent<{
   );
 };
 
+/**
+ * @deprecated should only be used for Stencil components.
+ */
 export const SmartSnippetFeebackModalOptions: FunctionalComponent<{
   i18n: i18n;
 }> = ({i18n}, children) => {
@@ -39,6 +48,9 @@ export const SmartSnippetFeebackModalOptions: FunctionalComponent<{
   );
 };
 
+/**
+ * @deprecated should only be used for Stencil components.
+ */
 export const SmartSnippetFeedbackModalOption: FunctionalComponent<{
   correspondingAnswer: SmartSnippetFeedback | 'other';
   currentAnswer?: SmartSnippetFeedback | 'other';
@@ -66,6 +78,9 @@ export const SmartSnippetFeedbackModalOption: FunctionalComponent<{
   );
 };
 
+/**
+ * @deprecated should only be used for Stencil components.
+ */
 export const SmartSnippetFeedbackModalDetails: FunctionalComponent<{
   currentAnswer?: SmartSnippetFeedback | 'other';
   i18n: i18n;
@@ -92,6 +107,9 @@ export const SmartSnippetFeedbackModalDetails: FunctionalComponent<{
   );
 };
 
+/**
+ * @deprecated should only be used for Stencil components.
+ */
 export const SmartSnippetFeedbackModalFooter: FunctionalComponent<{
   formId: string;
   i18n: i18n;
@@ -114,6 +132,9 @@ export const SmartSnippetFeedbackModalFooter: FunctionalComponent<{
   );
 };
 
+/**
+ * @deprecated should only be used for Stencil components.
+ */
 export const smartSnippetFeedbackOptions: {
   id: string;
   localeKey: string;

@@ -16,6 +16,9 @@ const SEPARATOR = '/';
 const ELLIPSIS = '...';
 const PATH_MAX_LENGTH = 3;
 
+/**
+ * @deprecated should only be used for Stencil components.
+ */
 export const CategoryFacetSearchValue: FunctionalComponent<
   CategoryFacetSearchValueProps
 > = ({value, field, i18n, onClick, searchQuery}) => {
