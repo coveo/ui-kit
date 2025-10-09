@@ -21,58 +21,62 @@ async function setupProductElement(
 }
 
 describe('ProductTemplateController', () => {
-  it('should return a ProductTemplate with proper structure from getTemplate', async () => {
-    const {controller} = await setupProductElement(
-      html`<test-product-element>
+  describe('#getTemplate', () => {
+    it('should return a ProductTemplate with proper structure from getTemplate', async () => {
+      const {controller} = await setupProductElement(
+        html`<test-product-element>
           <template><div>product content</div></template>
         </test-product-element>`
-    );
-    const result = controller.getTemplate([]);
+      );
+      const result = controller.getTemplate([]);
 
-    expect(result).not.toBeNull();
-    expect(result).toHaveProperty('conditions', []);
-    expect(result).toHaveProperty('content');
-    expect(result).toHaveProperty('linkContent');
-    expect(result).toHaveProperty('priority', 1);
+      expect(result).not.toBeNull();
+      expect(result).toHaveProperty('conditions', []);
+      expect(result).toHaveProperty('content');
+      expect(result).toHaveProperty('linkContent');
+      expect(result).toHaveProperty('priority', 1);
+    });
+
+    it('should return null when there is an error', async () => {
+      const element = await setupProductElement(
+        html`<test-product-element></test-product-element>`
+      );
+      const result = element.controller.getTemplate([]);
+
+      expect(result).toBeNull();
+    });
   });
 
-  it('should return null when there is an error', async () => {
-    const element = await setupProductElement(
-      html`<test-product-element></test-product-element>`
-    );
-    const result = element.controller.getTemplate([]);
-
-    expect(result).toBeNull();
-  });
-
-  it('should get link template element', async () => {
-    const {controller} = await setupProductElement(
-      html`<test-product-element>
+  describe('#getLinkTemplateElement', () => {
+    it('should get link template element', async () => {
+      const {controller} = await setupProductElement(
+        html`<test-product-element>
           <template><div>product content</div></template>
         </test-product-element>`
-    );
-    const linkElement = controller.getLinkTemplateElement(controller['host']);
+      );
+      const linkElement = controller.getLinkTemplateElement(controller['host']);
 
-    expect(linkElement).toBeInstanceOf(HTMLTemplateElement);
-    expect(linkElement.innerHTML).toBe(
-      '<atomic-product-link></atomic-product-link>'
-    );
-  });
+      expect(linkElement).toBeInstanceOf(HTMLTemplateElement);
+      expect(linkElement.innerHTML).toBe(
+        '<atomic-product-link></atomic-product-link>'
+      );
+    });
 
-  it('should use custom link template when provided', async () => {
-    const element = await setupProductElement(
-      html`<test-product-element>
+    it('should use custom link template when provided', async () => {
+      const element = await setupProductElement(
+        html`<test-product-element>
           <template><div>product content</div></template>
           <template slot="link">
             <custom-product-link></custom-product-link>
           </template>
         </test-product-element>`
-    );
+      );
 
-    const linkElement = element.controller.getLinkTemplateElement(element);
+      const linkElement = element.controller.getLinkTemplateElement(element);
 
-    expect(linkElement.innerHTML.trim()).toBe(
-      '<custom-product-link></custom-product-link>'
-    );
+      expect(linkElement.innerHTML.trim()).toBe(
+        '<custom-product-link></custom-product-link>'
+      );
+    });
   });
 });

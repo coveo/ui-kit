@@ -21,58 +21,62 @@ async function setupResultElement(
 }
 
 describe('ResultTemplateController', () => {
-  it('should return a ResultTemplate with proper structure from getTemplate', async () => {
-    const {controller} = await setupResultElement(
-      html`<test-result-element>
+  describe('#getTemplate', () => {
+    it('should return a ResultTemplate with proper structure from getTemplate', async () => {
+      const {controller} = await setupResultElement(
+        html`<test-result-element>
           <template><div>content</div></template>
         </test-result-element>`
-    );
-    const result = controller.getTemplate([]);
+      );
+      const result = controller.getTemplate([]);
 
-    expect(result).not.toBeNull();
-    expect(result).toHaveProperty('conditions', []);
-    expect(result).toHaveProperty('content');
-    expect(result).toHaveProperty('linkContent');
-    expect(result).toHaveProperty('priority', 1);
+      expect(result).not.toBeNull();
+      expect(result).toHaveProperty('conditions', []);
+      expect(result).toHaveProperty('content');
+      expect(result).toHaveProperty('linkContent');
+      expect(result).toHaveProperty('priority', 1);
+    });
+
+    it('should return null when there is an error', async () => {
+      const element = await setupResultElement(
+        html`<test-result-element></test-result-element>`
+      );
+      const result = element.controller.getTemplate([]);
+
+      expect(result).toBeNull();
+    });
   });
 
-  it('should return null when there is an error', async () => {
-    const element = await setupResultElement(
-      html`<test-result-element></test-result-element>`
-    );
-    const result = element.controller.getTemplate([]);
-
-    expect(result).toBeNull();
-  });
-
-  it('should get link template element', async () => {
-    const {controller} = await setupResultElement(
-      html`<test-result-element>
+  describe('#getLinkTemplateElement', () => {
+    it('should get link template element', async () => {
+      const {controller} = await setupResultElement(
+        html`<test-result-element>
           <template><div>content</div></template>
         </test-result-element>`
-    );
-    const linkElement = controller.getLinkTemplateElement(controller['host']);
+      );
+      const linkElement = controller.getLinkTemplateElement(controller['host']);
 
-    expect(linkElement).toBeInstanceOf(HTMLTemplateElement);
-    expect(linkElement.innerHTML).toBe(
-      '<atomic-result-link></atomic-result-link>'
-    );
-  });
+      expect(linkElement).toBeInstanceOf(HTMLTemplateElement);
+      expect(linkElement.innerHTML).toBe(
+        '<atomic-result-link></atomic-result-link>'
+      );
+    });
 
-  it('should use custom link template when provided', async () => {
-    const element = await setupResultElement(
-      html`<test-result-element>
+    it('should use custom link template when provided', async () => {
+      const element = await setupResultElement(
+        html`<test-result-element>
           <template><div>content</div></template>
           <template slot="link">
             <custom-result-link></custom-result-link>
           </template>
         </test-result-element>`
-    );
+      );
 
-    const linkElement = element.controller.getLinkTemplateElement(element);
+      const linkElement = element.controller.getLinkTemplateElement(element);
 
-    expect(linkElement.innerHTML.trim()).toBe(
-      '<custom-result-link></custom-result-link>'
-    );
+      expect(linkElement.innerHTML.trim()).toBe(
+        '<custom-result-link></custom-result-link>'
+      );
+    });
   });
 });

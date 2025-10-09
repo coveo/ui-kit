@@ -4,6 +4,7 @@ import {beforeEach, describe, expect, it, type MockInstance, vi} from 'vitest';
 import type {LitElementWithError} from '@/src/decorators/types';
 import {fixture} from '@/vitest-utils/testing-helpers/fixture';
 import {BaseTemplateController} from './base-template-controller';
+import {getTemplateNodeType} from './template-utils';
 
 vi.mock('./template-utils', {spy: true});
 
@@ -151,7 +152,6 @@ describe('BaseTemplateController', () => {
       });
 
       it('should call getTemplateNodeType with the appropriate sections', async () => {
-        const {getTemplateNodeType} = await import('./template-utils');
         const mockedGetTemplateNodeType = vi.mocked(getTemplateNodeType);
 
         await localSetup();
@@ -284,25 +284,6 @@ describe('BaseTemplateController', () => {
 
       const linkElement = controller.getLinkTemplateElement(controller['host']);
       expect(linkElement.innerHTML).toContain('target="_blank"');
-    });
-  });
-
-  describe('#getWarnings', () => {
-    it('should return generic item-based warning messages', async () => {
-      const {controller} = await setupElement(
-        html`<test-element>
-          <template><div>content</div></template>
-        </test-element>`
-      );
-
-      const warnings = controller['getWarnings']();
-
-      expect(warnings.scriptTag).toBe(
-        'Any "script" tags defined inside of "template" elements are not supported and will not be executed when the items are rendered.'
-      );
-      expect(warnings.sectionMix).toBe(
-        'Item templates should only contain section elements or non-section elements, not both. Future updates could unpredictably affect this item template.'
-      );
     });
   });
 

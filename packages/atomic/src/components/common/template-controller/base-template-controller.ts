@@ -1,7 +1,6 @@
 import type {ReactiveController, ReactiveControllerHost} from 'lit';
 import type {ItemTarget} from '@/src/components/common/layout/display-options';
-import {aggregate} from '@/src/utils/utils';
-import {getTemplateNodeType} from './template-utils';
+import {groupNodesByType} from '@/src/utils/dom-utils';
 
 export type TemplateContent = DocumentFragment;
 
@@ -50,20 +49,7 @@ export abstract class BaseTemplateController<TCondition>
     );
   }
 
-  protected getWarnings() {
-    return {
-      scriptTag:
-        'Any "script" tags defined inside of "template" elements are not supported and will not be executed when the items are rendered.',
-      sectionMix:
-        'Item templates should only contain section elements or non-section elements, not both. Future updates could unpredictably affect this item template.',
-    };
-  }
-
   protected abstract getDefaultLinkTemplateElement(): HTMLTemplateElement;
-
-  protected setError(error: Error) {
-    this.host.error = error;
-  }
 
   protected getBaseTemplate(
     conditions: TCondition[]
@@ -73,26 +59,30 @@ export abstract class BaseTemplateController<TCondition>
     }
     return {
       conditions: conditions.concat(this.matchConditions),
-      content: getTemplateElement(this.host).content!,
+      content: this.getTemplateElement().content!,
       linkContent: this.getLinkTemplateElement(this.host).content!,
       priority: 1,
     };
   }
 
-  protected get parentElement() {
+  protected get currentGridCellLinkTarget() {
+    return this.gridCellLinkTarget;
+  }
+
+  private setError(error: Error) {
+    this.host.error = error;
+  }
+
+  private get parentElement() {
     return this.host.parentElement;
   }
 
-  protected get template() {
+  private get template() {
     return this.host.querySelector('template');
   }
 
-  protected parentAttr(attribute: string) {
+  private parentAttr(attribute: string) {
     return this.parentElement?.attributes.getNamedItem(attribute)?.value;
-  }
-
-  protected get currentGridCellLinkTarget() {
-    return this.gridCellLinkTarget;
   }
 
   private validateTemplate() {
@@ -148,12 +138,19 @@ export abstract class BaseTemplateController<TCondition>
       });
     }
   }
-}
 
-function getTemplateElement(host: HTMLElement) {
-  return host.querySelector<HTMLTemplateElement>('template:not([slot])')!;
-}
+  private getWarnings() {
+    return {
+      scriptTag:
+        'Any "script" tags defined inside of "template" elements are not supported and will not be executed when the items are rendered.',
+      sectionMix:
+        'Item templates should only contain section elements or non-section elements, not both. Future updates could unpredictably affect this item template.',
+    };
+  }
 
-function groupNodesByType(nodes: NodeList) {
-  return aggregate(Array.from(nodes), (node) => getTemplateNodeType(node));
+  private getTemplateElement() {
+    return this.host.querySelector<HTMLTemplateElement>(
+      'template:not([slot])'
+    )!;
+  }
 }
