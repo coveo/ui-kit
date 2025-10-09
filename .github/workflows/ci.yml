@@ -255,7 +255,8 @@ jobs:
       - uses: ./.github/actions/setup
       - name: Install Playwright Browsers
         run: npx playwright install --with-deps
-      - run: npm run -w=@coveo/atomic test:storybook
+      - run: npm run test:storybook
+        working-directory: packages/atomic
         env:
           DEBUG: storybook
       # - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
