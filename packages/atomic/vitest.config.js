@@ -146,6 +146,9 @@ const storybook = defineConfig({
       headless: true,
       provider: 'playwright',
       instances: [{browser: 'chromium'}],
+      context: {
+        actionTimeout: 3000,
+      },
     },
     setupFiles: ['./vitest-utils/setup.ts', '.storybook/vitest.setup.ts'],
   },
