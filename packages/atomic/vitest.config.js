@@ -134,6 +134,7 @@ const storybook = defineConfig({
     storybookTest({
       configDir: path.join(import.meta.dirname, '.storybook'),
       storybookUrl: 'http://localhost:4400',
+      storybookScript: 'npx storybook dev -p 4400 --no-open',
     }),
   ],
   test: {
