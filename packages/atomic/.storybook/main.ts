@@ -59,7 +59,7 @@ const config: StorybookConfig = {
     '../src/components/search/result-templates/**/*.new.stories.tsx',
     '../src/components/search/search-box-suggestions/**/*.new.stories.tsx',
     '../src/components/search/smart-snippets/**/*.new.stories.tsx',
-    '../src/components/search/atomic-[ab]*/**/*.new.stories.tsx',
+    '../src/components/search/atomic-[abcd]*/**/*.new.stories.tsx',
     // '../src/components/search/atomic-[abcdefghijklmnopqrstuvwxyz]*/**/*.new.stories.tsx',
     // '../src/components/search/tabs/**/*.new.stories.tsx',
     // '../src/**/*.new.stories.tsx',
