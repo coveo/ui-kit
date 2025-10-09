@@ -290,13 +290,17 @@ File: `.github/workflows/ci.yml`
 # After
 - name: Install pnpm
   uses: pnpm/action-setup@v4
+
+- uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
   with:
-    version: 9.15.4
+    node-version-file: '.nvmrc'
 
 - run: pnpm install --frozen-lockfile
 - run: pnpm run build
 - run: pnpm --filter @coveo/ci add-generated-files
 ```
+
+**Note:** When using `pnpm/action-setup@v4` without specifying a version, it automatically reads the version from the `packageManager` field in your root `package.json`. This ensures a uniform pnpm version across the entire repository.
 
 **Jobs to update in ci.yml:**
 - `pr-report`
@@ -310,14 +314,16 @@ File: `.github/workflows/ci.yml`
 - `prerelease-npm-pr`
 - `prerelease-npm-merge`
 
-**Important:** Also update the `setup-node` action configuration:
+**Important:** Also update the `setup-node` action configuration to use minimal settings:
 ```yaml
-- uses: actions/setup-node@v4
+- uses: pnpm/action-setup@v4
+
+- uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
   with:
-    node-version-file: ".nvmrc"
-    cache: 'pnpm'  # Changed from 'npm'
-    registry-url: "https://registry.npmjs.org"
+    node-version-file: '.nvmrc'
 ```
+
+**Note:** The pnpm version is not specified in the action because it automatically reads from the `packageManager` field in the root `package.json` file (`"packageManager": "pnpm@9.15.4"`). This ensures version consistency across the repository. The `cache` and `registry-url` options in setup-node should only be added when specifically needed (e.g., registry-url for publishing jobs).
 
 #### 4.2 GitHub Actions
 
@@ -336,23 +342,22 @@ Files that likely need updates (search for `npm` in each):
 
 #### 4.3 Verify Node.js setup
 
-Ensure all workflows use the pnpm setup action:
+Ensure all workflows use the pnpm setup action with minimal configuration:
 
 ```yaml
 steps:
   - uses: actions/checkout@v4
   
   - uses: pnpm/action-setup@v4
-    with:
-      version: 9.15.4
   
-  - uses: actions/setup-node@v4
+  - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
     with:
       node-version-file: ".nvmrc"
-      cache: 'pnpm'
 ```
 
-**Order matters:** pnpm setup must come before Node.js setup for caching to work.
+**Order matters:** pnpm setup must come before Node.js setup.
+
+**Note:** The pnpm version is automatically read from the `packageManager` field in `package.json`. The `cache` and `registry-url` options in setup-node are optional and should only be added when specifically needed (e.g., registry-url for publishing jobs).
 
 ---
 

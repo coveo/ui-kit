@@ -16,14 +16,11 @@ inputs:
 runs:
   using: composite
   steps:
+    - name: Install pnpm
+      uses: pnpm/action-setup@v4
     - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
       with:
-        registry-url: 'https://registry.npmjs.org'
         node-version-file: '.nvmrc'
-        cache: 'npm'
-    - name: Install npm
-      run: npm i -g npm@11.6.0
-      shell: bash
     - uses: actions/cache@5a3ec84eff668545956fd18022155c47e93e2684 # v4
       with:
         path: ~/.cache/Cypress
@@ -37,8 +34,8 @@ runs:
         restore-keys: |
           ${{ runner.os }}-${{ inputs.cache-prefix }}-turbo-
     - if: steps.npm-cache.outputs.cache-hit != 'true'
-      run: npm ci
+      run: pnpm install --frozen-lockfile
       shell: bash
-    - run: npm run build
+    - run: pnpm run build
       if: inputs.skip-build != 'true'
       shell: bash
