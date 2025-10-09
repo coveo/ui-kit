@@ -1,5 +1,9 @@
-import { registerComponentForInit, initializeWithHeadless, getHeadlessBundle } from 'c/quanticHeadlessLoader';
-import { LightningElement, api } from 'lwc';
+import {
+  registerComponentForInit,
+  initializeWithHeadless,
+  getHeadlessBundle,
+} from 'c/quanticHeadlessLoader';
+import {LightningElement, api} from 'lwc';
 import generateAnswer from '@salesforce/label/c.GenerateAnswer';
 
 /** @typedef {import("coveo").InsightEngine} InsightEngine */
@@ -37,7 +41,9 @@ export default class GenerateAnswerButton extends LightningElement {
     this.engine = engine;
     this.headless = getHeadlessBundle(this.engineId);
     this.searchBox = this.headless.buildSearchBox(engine);
-    this.unsubscribeSearchBox = this.searchBox.subscribe(() => this.updateGenerateAnswerButtonVisibility());
+    this.unsubscribeSearchBox = this.searchBox.subscribe(() =>
+      this.updateGenerateAnswerButtonVisibility()
+    );
     this.actions = {
       ...this.headless.loadGeneratedAnswerActions(engine),
     };
@@ -52,7 +58,10 @@ export default class GenerateAnswerButton extends LightningElement {
    * @returns {void}
    */
   updateGenerateAnswerButtonVisibility() {
-    if (!this.generateAnswerButtonIsDisplayed && this.searchBox.state.isLoading) {
+    if (
+      !this.generateAnswerButtonIsDisplayed &&
+      this.searchBox.state.isLoading
+    ) {
       return;
     }
     this.generateAnswerButtonIsDisplayed = !this.searchBox.state.value;
