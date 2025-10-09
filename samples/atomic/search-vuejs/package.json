@@ -17,8 +17,8 @@
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "6.0.1",
-    "cypress": "13.7.3",
+    "cypress": "catalog:",
     "typescript": "5.8.3",
-    "vite": "7.0.6"
+    "vite": "catalog:"
   }
 }

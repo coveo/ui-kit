@@ -111,11 +111,11 @@
   "dependencies": {
     "@coveo/bueno": "workspace:*",
     "@coveo/relay": "1.2.7",
-    "@coveo/relay-event-types": "15.1.0",
+    "@coveo/relay-event-types": "catalog:",
     "@reduxjs/toolkit": "2.6.0",
     "abortcontroller-polyfill": "1.7.8",
     "coveo.analytics": "2.30.45",
-    "dayjs": "1.11.13",
+    "dayjs": "catalog:",
     "exponential-backoff": "3.1.2",
     "fast-equals": "5.2.2",
     "headers-polyfill": "4.0.3",
@@ -126,8 +126,8 @@
   "devDependencies": {
     "@coveo/documentation": "workspace:*",
     "live-server": "1.2.2",
-    "typedoc": "0.28.13",
-    "vitest": "3.2.4"
+    "typedoc": "catalog:",
+    "vitest": "catalog:"
   },
   "engines": {
     "node": "^20.9.0 || ^22.11.0"

@@ -35,7 +35,7 @@
     "promote:npm:latest": "pnpm --filter @coveo/ci promote-npm-prod"
   },
   "devDependencies": {
-    "vitest": "3.2.4"
+    "vitest": "catalog:"
   },
   "engines": {
     "node": "^20.9.0 || ^22.11.0"

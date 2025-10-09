@@ -44,11 +44,11 @@
     "@coveo/headless": "workspace:*"
   },
   "devDependencies": {
-    "@testing-library/react": "16.3.0",
+    "@testing-library/react": "catalog:",
     "live-server": "1.2.2",
     "typescript": "5.8.3",
-    "typedoc": "0.28.13",
-    "vitest": "3.2.4",
+    "typedoc": "catalog:",
+    "vitest": "catalog:",
     "@coveo/documentation": "workspace:*"
   },
   "peerDependencies": {

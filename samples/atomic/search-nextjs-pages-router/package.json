@@ -7,15 +7,15 @@
     "@coveo/atomic": "workspace:*",
     "@coveo/atomic-react": "workspace:*",
     "@coveo/headless": "workspace:*",
-    "next": "15.2.4",
-    "react": "19.1.1",
-    "react-dom": "19.1.1"
+    "next": "catalog:",
+    "react": "catalog:",
+    "react-dom": "catalog:"
   },
   "devDependencies": {
     "@types/node": "22.16.5",
     "@types/react": "19.1.1",
     "@types/react-dom": "19.1.2",
-    "cypress": "13.7.3",
+    "cypress": "catalog:",
     "typescript": "5.8.3"
   },
   "scripts": {

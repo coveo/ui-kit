@@ -26,16 +26,16 @@
   "dependencies": {
     "@coveo/headless": "workspace:*",
     "@coveo/atomic": "workspace:*",
-    "@stencil/core": "4.20.0"
+    "@stencil/core": "catalog:"
   },
   "devDependencies": {
     "@coveo/atomic-component-health-check": "2.2.19",
-    "@rollup/plugin-url": "8.0.2",
-    "@types/jest": "29.5.14",
-    "jest": "29.7.0",
-    "jest-cli": "29.7.0",
-    "rollup-plugin-html": "0.2.1",
-    "@coveo/create-atomic-rollup-plugin": "1.2.1"
+    "@rollup/plugin-url": "catalog:",
+    "@types/jest": "catalog:",
+    "jest": "catalog:",
+    "jest-cli": "catalog:",
+    "rollup-plugin-html": "catalog:",
+    "@coveo/create-atomic-rollup-plugin": "catalog:"
   },
   "keywords": [
     "coveo-atomic-component"

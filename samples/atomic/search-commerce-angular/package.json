@@ -27,7 +27,7 @@
     "@angular/build": "19.2.3",
     "@angular/cli": "19.2.3",
     "@angular/compiler-cli": "19.2.2",
-    "@playwright/test": "1.54.1",
+    "@playwright/test": "catalog:",
     "@types/node": "22.16.5",
     "typescript": "5.8.3"
   }
