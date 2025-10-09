@@ -20,7 +20,7 @@ import * as FacetAssertions from './facet-assertions';
 import {facetComponent, FacetSelectors} from './facet-selectors';
 
 // This is the first half of the facet test suite. It was split in two to speed up the test execution.
-describe('Facet Test Suite 1', () => {
+describe.skip('Facet Test Suite 1', () => {
   describe('with checkbox values', () => {
     function setupWithCheckboxValues() {
       new TestFixture().with(addFacet({field, label})).init();

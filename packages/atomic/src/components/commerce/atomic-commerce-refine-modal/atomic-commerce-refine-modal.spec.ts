@@ -22,8 +22,8 @@ import {buildFakeProductListing} from '@/vitest-utils/testing-helpers/fixtures/h
 import {buildFakeSearch} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/search-controller';
 import {buildFakeSort} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/sort-subcontroller';
 import {buildFakeSummary} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/summary-subcontroller';
-import './atomic-commerce-refine-modal';
 import type {AtomicCommerceRefineModal} from './atomic-commerce-refine-modal';
+import './atomic-commerce-refine-modal';
 
 vi.mock('@coveo/headless/commerce', {spy: true});
 

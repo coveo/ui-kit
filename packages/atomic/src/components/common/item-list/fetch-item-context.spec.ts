@@ -1,12 +1,12 @@
 import {beforeEach, describe, expect, it, vi} from 'vitest';
-import {closest} from '../../../utils/dom-utils.js';
-import {buildCustomEvent} from '../../../utils/event-utils.js';
-import {MissingParentError} from './context/item-context-controller.js';
-import {fetchItemContext} from './fetch-item-context.js';
+import {closest} from '@/src/utils/dom-utils';
+import {buildCustomEvent} from '@/src/utils/event-utils';
+import {MissingParentError} from './context/item-context-controller';
+import {fetchItemContext} from './fetch-item-context';
 
-vi.mock('../../../utils/dom-utils.js');
-vi.mock('../../../utils/event-utils.js');
-vi.mock('./context/item-context-controller.js');
+vi.mock('@/src/utils/dom-utils', {spy: true});
+vi.mock('@/src/utils/event-utils', {spy: true});
+vi.mock('./context/item-context-controller', {spy: true});
 
 describe('item-context', () => {
   let mockElement: Element;

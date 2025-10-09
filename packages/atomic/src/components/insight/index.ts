@@ -1,2 +1,2 @@
 // Auto-generated file
-export {};
+export {AtomicInsightInterface} from './atomic-insight-interface/atomic-insight-interface.js';

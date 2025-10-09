@@ -2,7 +2,7 @@ import {Result, ResultTemplatesHelpers} from '@coveo/headless';
 import bgIcons from '@salesforce-ux/design-system/design-tokens/dist/bg-standard.common';
 import {Component, Element, h} from '@stencil/core';
 import {snakeToCamel} from '../../../../utils/utils';
-import {ResultContext} from '../result-template-decorators';
+import {ResultContext} from '@/src/components/search/result-template-component-utils/context/stencil-result-template-decorators';
 import {fileTypeIcons} from './file-type-icons';
 import {objectTypeIcons} from './object-type-icons';
 

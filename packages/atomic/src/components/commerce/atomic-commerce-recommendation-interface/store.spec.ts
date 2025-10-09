@@ -3,13 +3,13 @@ import {
   createBaseStore,
   setLoadingFlag,
   unsetLoadingFlag,
-} from '../../common/interface/store';
+} from '@/src/components/common/interface/store';
 import {
   type CommerceRecommendationStore,
   createCommerceRecommendationStore,
 } from './store';
 
-vi.mock('../../common/interface/store', {spy: true});
+vi.mock('@/src/components/common/interface/store', {spy: true});
 const createBaseStoreSpy = vi.mocked(createBaseStore);
 
 describe('#createCommerceRecommendationStore', () => {

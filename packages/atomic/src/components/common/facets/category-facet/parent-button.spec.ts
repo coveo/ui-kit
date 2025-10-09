@@ -7,13 +7,13 @@ import {
   renderCategoryFacetParentButton,
 } from './parent-button';
 
-vi.mock('../../../../utils/field-utils', () => ({
+vi.mock('@/src/utils/field-utils', () => ({
   getFieldValueCaption: vi.fn(
     (field: string, value: string) => `${field}: ${value}`
   ),
 }));
 
-describe('renderCategoryFacetParentButton', () => {
+describe('#renderCategoryFacetParentButton', () => {
   let i18n: Awaited<ReturnType<typeof createTestI18n>>;
 
   beforeAll(async () => {

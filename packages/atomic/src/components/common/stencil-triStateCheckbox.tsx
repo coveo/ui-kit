@@ -4,13 +4,12 @@ import Tick from '../../images/checkbox.svg';
 import Close from '../../images/close.svg';
 import {StencilCheckboxProps} from './stencil-checkbox';
 
-export type TriStateCheckboxProps = Omit<StencilCheckboxProps, 'checked'> & {
+type TriStateCheckboxProps = Omit<StencilCheckboxProps, 'checked'> & {
   state: FacetValueState;
 };
 
 /**
- * @deprecated Should only be used for Stencil components; for Lit components, use the triStateCheckbox.ts
- * This file is required to be in a tsx file to be able to use it in Stencil components.
+ * @deprecated should only be used for Stencil components.
  */
 export const TriStateCheckbox: FunctionalComponent<TriStateCheckboxProps> = (
   props

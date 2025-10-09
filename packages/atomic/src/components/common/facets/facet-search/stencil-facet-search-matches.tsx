@@ -34,6 +34,9 @@ function clickableMoreMatchesFound(query: string, i18n: i18n) {
   });
 }
 
+/**
+ * @deprecated should only be used for Stencil components.
+ */
 export const FacetSearchMatches: FunctionalComponent<
   FacetSearchMatchesProps
 > = (props) => {

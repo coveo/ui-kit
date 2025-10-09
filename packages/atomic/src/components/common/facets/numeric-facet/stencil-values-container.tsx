@@ -6,6 +6,10 @@ interface NumericFacetValuesContainerProps {
   i18n: i18n;
   label: string;
 }
+
+/**
+ * @deprecated should only be used for Stencil components.
+ */
 export const NumericFacetValuesContainer: FunctionalComponent<
   NumericFacetValuesContainerProps
 > = ({i18n, label}, children) => {

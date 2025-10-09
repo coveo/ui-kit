@@ -1,6 +1,6 @@
 import {Result} from '@coveo/headless';
 import {Component, h, Element, Host} from '@stencil/core';
-import {ResultContext} from '../result-template-decorators';
+import {ResultContext} from '@/src/components/search/result-template-component-utils/context/stencil-result-template-decorators';
 
 /**
  * The `atomic-result-fields-list` component selectively renders its children to ensure they fit the parent element and adds dividers between them.

@@ -8,6 +8,9 @@ interface QueryErrorTitleProps {
   organizationId: string;
 }
 
+/**
+ * @deprecated should only be used for Stencil components.
+ */
 export const QueryErrorTitle: FunctionalComponent<QueryErrorTitleProps> = ({
   errorType,
   i18n,

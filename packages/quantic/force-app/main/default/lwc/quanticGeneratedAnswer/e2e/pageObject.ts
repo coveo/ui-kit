@@ -112,6 +112,10 @@ export class GeneratedAnswerObject {
     return this.page.getByRole('button', {name: /Send feedback/i});
   }
 
+  get completeFeedbackButton(): Locator {
+    return this.page.getByRole('button', {name: /Done/i});
+  }
+
   get citationLink(): Locator {
     return this.page
       .getByTestId('generated-answer__citations')
@@ -144,6 +148,10 @@ export class GeneratedAnswerObject {
 
   async clickSubmitFeedbackButton(): Promise<void> {
     await this.submitFeedbackButton.click();
+  }
+
+  async clickCompleteFeedbackButton(): Promise<void> {
+    await this.completeFeedbackButton.click();
   }
 
   async fillFeedbackForm(answers: Record<string, string>): Promise<void> {
@@ -439,5 +447,5 @@ export class GeneratedAnswerObject {
   }
 
   streamEndAnalyticRequestPromise!: Promise<boolean | Request>;
-  generateRequestPromise!: Promise<Request> ;
+  generateRequestPromise!: Promise<Request>;
 }

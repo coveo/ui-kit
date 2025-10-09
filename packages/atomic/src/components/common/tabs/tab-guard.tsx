@@ -8,6 +8,9 @@ interface TabGuardProps {
   activeTab: string;
 }
 
+/**
+ * @deprecated should only be used for Stencil components.
+ */
 export const TabGuard: FunctionalComponent<TabGuardProps> = (
   {tabsIncluded, tabsExcluded, activeTab},
   children

@@ -44,6 +44,9 @@ const warnAboutLimitedUsageQuickview = (logger?: SearchEngine['logger']) => {
   );
 };
 
+/**
+ * @deprecated should only be used for Stencil components.
+ */
 export const QuickviewIframe: FunctionalComponent<{
   title: string;
   content?: string;

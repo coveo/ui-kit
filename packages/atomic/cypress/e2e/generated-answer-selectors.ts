@@ -22,7 +22,6 @@ export const GeneratedAnswerSelectors = {
     GeneratedAnswerSelectors.citation().find('.citation-title'),
   citationCard: () =>
     GeneratedAnswerSelectors.shadow().find('[part="citation-popover"]'),
-  loader: () => GeneratedAnswerSelectors.shadow().find('.typing-indicator'),
   retryContainer: () =>
     GeneratedAnswerSelectors.shadow().find('[part="retry-container"]'),
   retryButton: () => GeneratedAnswerSelectors.retryContainer().find('button'),

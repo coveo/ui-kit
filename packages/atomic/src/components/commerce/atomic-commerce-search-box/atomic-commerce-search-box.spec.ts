@@ -15,14 +15,14 @@ import {html} from 'lit';
 import {ifDefined} from 'lit/directives/if-defined.js';
 import {describe, expect, it, vi} from 'vitest';
 import {randomID} from '@/src/utils/utils';
+import {buildFakeCommerceEngine} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/engine';
 import {buildFakeLoadQuerySetActions} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/query-set-actions';
+import {buildFakeLoadQuerySuggestActions} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/query-suggest-actions';
+import {buildFakeRecentQueriesList} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/recent-queries-list-controller';
 import {buildFakeSearchBox} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/search-box-controller';
 import {buildFakeStandaloneSearchBox} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/standalone-search-box-controller';
 import {AtomicCommerceSearchBox} from './atomic-commerce-search-box';
 import './atomic-commerce-search-box';
-import {buildFakeCommerceEngine} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/engine';
-import {buildFakeLoadQuerySuggestActions} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/query-suggest-actions';
-import {buildFakeRecentQueriesList} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/recent-queries-list-controller';
 
 vi.mock('@coveo/headless/commerce', {spy: true});
 vi.mock('@/src/utils/device-utils', {spy: true});
@@ -544,6 +544,7 @@ describe('atomic-commerce-search-box', () => {
   });
 
   it('should call buildSearchBox with clearFilters set to false when clearFilters is set to false', async () => {
+    vi.spyOn(console, 'warn').mockImplementation(() => {});
     await renderSearchBox({
       searchBoxProps: {clearFilters: false},
     });
