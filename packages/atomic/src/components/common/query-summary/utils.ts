@@ -63,9 +63,10 @@ const getQuerySummaryData = (
     query: renderWrapHighlight({props: {part: 'query', content: params.query}}),
   };
 
-  const ariaLiveMessage = isLoading
-    ? i18n.t(loadingStatus)
-    : i18n.t(i18nKey, params);
+  const ariaOptionalLoadedMessage = `${isLoading ? '' : `${i18n.t('search-result-loaded')}. `}`;
+  const ariaLiveMessage = `${ariaOptionalLoadedMessage}${
+    isLoading ? i18n.t(loadingStatus) : i18n.t(i18nKey, params)
+  }`;
 
   return {i18nKey, highlights, ariaLiveMessage};
 };
