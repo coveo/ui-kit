@@ -52,7 +52,7 @@ const config: StorybookConfig = {
   stories: [
     // './Introduction.stories.tsx',
     '../src/components/commerce/**/*.new.stories.tsx',
-    '../src/components/search/facets/**/*.new.stories.tsx',
+    // '../src/components/search/facets/**/*.new.stories.tsx',
     // '../src/components/search/formats/**/*.new.stories.tsx',
     // '../src/components/search/result-lists/**/*.new.stories.tsx',
     // '../src/components/search/result-template-components/**/*.new.stories.tsx',
