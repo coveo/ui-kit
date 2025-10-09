@@ -1,11 +1,11 @@
 import {createSelector} from '@reduxjs/toolkit';
-import {skipToken, SkipToken} from '@reduxjs/toolkit/query';
+import {type SkipToken, skipToken} from '@reduxjs/toolkit/query';
 import {selectQuery} from '../../features/query/query-selectors.js';
-import type {AnswerApiQueryParams} from './generated-answer-request.js';
-import type {GeneratedAnswerState} from './generated-answer-state.js';
-import type {SearchState} from '../search/search-state.js';
 import type {ConfigurationState} from '../configuration/configuration-state.js';
 import type {QueryState} from '../query/query-state.js';
+import type {SearchState} from '../search/search-state.js';
+import type {AnswerApiQueryParams} from './generated-answer-request.js';
+import type {GeneratedAnswerState} from './generated-answer-state.js';
 
 type AnswerTriggerParams = {
   q: string | undefined;
