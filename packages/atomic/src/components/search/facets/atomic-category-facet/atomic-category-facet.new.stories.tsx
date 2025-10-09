@@ -22,7 +22,6 @@ const meta: Meta = {
     },
   },
   argTypes,
-  tags: ['!test'],
 
   afterEach,
   args: {

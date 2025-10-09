@@ -24,7 +24,6 @@ const meta: Meta = {
   },
   args,
   argTypes,
-  tags: ['!test'],
 
   afterEach,
 };
