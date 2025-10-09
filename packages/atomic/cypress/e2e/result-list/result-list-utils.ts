@@ -1,23 +1,23 @@
 import {
-  ResultDisplayDensity,
-  ResultDisplayLayout,
+  ItemDisplayDensity,
+  ItemDisplayLayout,
 } from '../../../src/components/common/layout/display-options';
 import {ResultDisplayImageSize} from './result-template-assertions';
 
 interface WithAnySectionnableResultListOptions {
   componentTag: string;
   viewports?: Record<string, number>;
-  layouts?: ResultDisplayLayout[];
+  layouts?: ItemDisplayLayout[];
   imageSizes?: ResultDisplayImageSize[];
-  densities?: ResultDisplayDensity[];
+  densities?: ItemDisplayDensity[];
   useBeforeEach?: boolean;
 }
 
 export function withAnySectionnableResultList(
   assertions: (
-    display: ResultDisplayLayout,
+    display: ItemDisplayLayout,
     imageSize: ResultDisplayImageSize,
-    density: ResultDisplayDensity
+    density: ItemDisplayDensity
   ) => void,
   options: WithAnySectionnableResultListOptions
 ) {
