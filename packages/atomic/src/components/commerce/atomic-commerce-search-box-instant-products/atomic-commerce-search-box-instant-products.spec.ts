@@ -31,7 +31,7 @@ describe('atomic-commerce-search-box-instant-products', () => {
   let mockedConsole: MockedObject<Console>;
 
   beforeEach(() => {
-    mockedConsole = mockConsole({silent: true});
+    mockedConsole = mockConsole();
     vi.mocked(buildInstantProducts).mockReturnValue(buildFakeInstantProducts());
   });
   const renderElements = async (bindings: Record<string, unknown> = {}) => {

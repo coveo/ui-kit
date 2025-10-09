@@ -38,7 +38,7 @@ describe('atomic-commerce-breadbox', () => {
   const mockedDeselectAll = vi.fn();
 
   beforeEach(() => {
-    mockConsole({silent: true});
+    mockConsole();
   });
 
   interface RenderBreadboxOptions {

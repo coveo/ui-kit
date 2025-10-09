@@ -1,14 +1,14 @@
 import {vi} from 'vitest';
 
-export function mockConsole(options: {silent?: boolean} = {}) {
-  const errorSpy = vi.spyOn(console, 'error');
-  const logSpy = vi.spyOn(console, 'log');
-  const warnSpy = vi.spyOn(console, 'warn');
+export function mockConsole(options: {loud?: boolean} = {}) {
+  const mockedError = vi.spyOn(console, 'error');
+  const mockedLog = vi.spyOn(console, 'log');
+  const mockedWarn = vi.spyOn(console, 'warn');
 
-  if (options.silent) {
-    errorSpy.mockImplementation(() => {});
-    logSpy.mockImplementation(() => {});
-    warnSpy.mockImplementation(() => {});
+  if (!options.loud) {
+    mockedError.mockImplementation(() => {});
+    mockedLog.mockImplementation(() => {});
+    mockedWarn.mockImplementation(() => {});
   }
 
   return vi.mocked(console);
