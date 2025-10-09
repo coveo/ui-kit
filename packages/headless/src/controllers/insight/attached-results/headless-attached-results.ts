@@ -32,9 +32,9 @@ export interface AttachedResultsProps {
 
 export interface AttachedResultsOptions {
   /**
-   * The Id of the record to attach to.
+   * The Id of the case to attach to.
    */
-  recordId: string;
+  caseId: string;
 }
 
 /**
@@ -59,7 +59,7 @@ export interface AttachedResults extends Controller {
   attach(result: Result): void;
   /**
    * Detach a result by removing it from the attachedResults state.
-   * @param result - A result to remove from the list of currently attached results.
+   * @param attachedResult - A result to remove from the list of currently attached results.
    */
   detach(result: Result): void;
   /**
@@ -89,10 +89,10 @@ export function buildAttachedResults(
 
   const {dispatch} = engine;
   const controller = buildController(engine);
-  const {recordId} = props.options;
+  const {caseId} = props.options;
 
   const isResultAttached = (result: Result): boolean => {
-    if (isNullOrUndefined(recordId)) {
+    if (isNullOrUndefined(caseId)) {
       return false;
     }
 
@@ -103,20 +103,20 @@ export function buildAttachedResults(
       return false;
     }
     return engine.state.attachedResults.results.some((attached) => {
-      const recordIdMatches = recordId === attached.caseId; // Note: still using caseId in state
+      const caseIdMatches = caseId === attached.caseId;
       const permanentIdMatches =
         !isNullOrUndefined(attached.permanentId) &&
         attached.permanentId === result.raw.permanentid;
       const uriHashMatches =
         !isNullOrUndefined(attached.uriHash) &&
         attached.uriHash === result.raw.urihash;
-      return recordIdMatches && (permanentIdMatches || uriHashMatches);
+      return caseIdMatches && (permanentIdMatches || uriHashMatches);
     });
   };
 
   const getAttachedResultsForRecord = (): AttachedResult[] => {
     return engine.state.attachedResults.results.filter(
-      (attached) => attached.caseId === recordId // Note: still using caseId in state
+      (attached) => attached.caseId === caseId
     );
   };
 
@@ -133,14 +133,14 @@ export function buildAttachedResults(
 
     attach(result: Result): void {
       dispatch(
-        attachResult(buildAttachedResultFromSearchResult(result, recordId))
+        attachResult(buildAttachedResultFromSearchResult(result, caseId))
       );
       dispatch(logCaseAttach(result));
     },
 
     detach(result: Result): void {
       dispatch(
-        detachResult(buildAttachedResultFromSearchResult(result, recordId))
+        detachResult(buildAttachedResultFromSearchResult(result, caseId))
       );
       dispatch(logCaseDetach(result));
     },
