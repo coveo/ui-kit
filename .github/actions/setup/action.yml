@@ -1,10 +1,10 @@
 name: 'Setup & build'
 description: 'Setup node, install dependencies & build'
 inputs:
-  use-cache:
+  save-cache:
     description: 'Whether to save the cache.'
     required: false
-    default: 'true'
+    default: 'false'
   cache-prefix:
     description: 'Prefix to add to the cache key for different environments'
     required: false
@@ -30,7 +30,7 @@ runs:
         key: ${{ runner.os }}-${{ inputs.cache-prefix }}-cy-${{ github.sha }}
         restore-keys: |
           ${{ runner.os }}-${{ inputs.cache-prefix }}-cy-
-    - uses: actions/cache@5a3ec84eff668545956fd18022155c47e93e2684 # v4
+    - uses: actions/cache/restore@5a3ec84eff668545956fd18022155c47e93e2684 # v4
       with:
         path: .turbo
         key: ${{ runner.os }}-${{ inputs.cache-prefix }}-turbo-${{ github.sha }}
@@ -42,3 +42,10 @@ runs:
     - run: npm run build
       if: inputs.skip-build != 'true'
       shell: bash
+    - uses: actions/cache/save@5a3ec84eff668545956fd18022155c47e93e2684 # v4
+      if: inputs.save-cache == 'true'
+      with:
+        path: .turbo
+        key: ${{ runner.os }}-${{ inputs.cache-prefix }}-turbo-${{ github.sha }}
+        restore-keys: |
+          ${{ runner.os }}-${{ inputs.cache-prefix }}-turbo-

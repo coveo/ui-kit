@@ -105,6 +105,7 @@ const atomicDefault = defineConfig({
       'src/**/initialization-utils.spec.ts',
       'src/**/search-layout.spec.ts',
     ],
+    reporters: process.env.CI ? ['blob'] : [],
     restoreMocks: true,
     setupFiles: ['./vitest-utils/setup.ts'],
     deps: {

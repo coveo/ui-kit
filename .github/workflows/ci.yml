@@ -83,6 +83,8 @@ jobs:
         with:
           ref: ${{ github.head_ref }}
       - uses: ./.github/actions/setup
+        with:
+          save-cache: "true"
       - name: Check for uncommitted changes
         id: check-changes
         run: |
@@ -122,6 +124,7 @@ jobs:
         with:
           cache-prefix: "cdn"
           skip-build: "true"
+          save-cache: "true"
       - name: Build CDN
         if: github.event_name == 'merge_group'
         run: npm run build
@@ -246,6 +249,7 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     strategy:
+      fail-fast: false
       matrix:
         shardIndex: [1, 2, 3, 4,5,6,7,8,9,10]
         shardTotal: [10]
