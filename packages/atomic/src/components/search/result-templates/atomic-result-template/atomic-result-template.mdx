@@ -1,0 +1,85 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+import * as AtomicResultTemplateStories from './atomic-result-template.new.stories';
+import { AtomicDocTemplate } from '../../../../../storybook-utils/documentation/atomic-doc-template';
+
+<Meta of={ AtomicResultTemplateStories } />
+
+<AtomicDocTemplate
+  stories={ AtomicResultTemplateStories }
+  githubPath="search/result-templates/atomic-result-template/atomic-result-template.ts"
+  tagName="atomic-result-template"
+  className="AtomicResultTemplate"
+>
+
+A result template determines the format of query results, depending on the conditions that are defined for each template.
+
+Result templates are typically placed within components that display results such as `atomic-result-list` or `atomic-folded-result-list`.
+
+```html
+<atomic-search-interface>
+  ...
+  <atomic-search-layout>
+    ...
+    <atomic-layout-section section="main">
+      ...
+      <atomic-layout-section section="results">
+
+        <atomic-result-list>
+          <atomic-result-template>
+            <template>
+              <atomic-result-section-visual>
+                <atomic-result-image field="ytthumbnailurl"></atomic-result-image>
+              </atomic-result-section-visual>
+              <atomic-result-section-title>
+                <atomic-result-link></atomic-result-link>
+              </atomic-result-section-title>
+              <atomic-result-section-excerpt>
+                <atomic-result-text field="excerpt"></atomic-result-text>
+              </atomic-result-section-excerpt>
+            </template>
+          </atomic-result-template>
+        </atomic-result-list>
+        
+      </atomic-layout-section>
+      ...
+    </atomic-layout-section>
+  </atomic-search-layout>
+</atomic-search-interface>
+```
+
+## Conditional Templates
+
+You can define multiple result templates with different conditions to display results in different formats based on specific criteria:
+
+```html
+<atomic-result-list>
+  <!-- Template for YouTube videos -->
+  <atomic-result-template must-match-sourcetype="YouTube">
+    <template>
+      <atomic-result-section-visual>
+        <atomic-result-image field="ytthumbnailurl"></atomic-result-image>
+      </atomic-result-section-visual>
+      <atomic-result-section-title>
+        <atomic-result-link></atomic-result-link>
+      </atomic-result-section-title>
+      <atomic-result-section-excerpt>
+        <atomic-result-text field="excerpt"></atomic-result-text>
+      </atomic-result-section-excerpt>
+    </template>
+  </atomic-result-template>
+
+  <!-- Default template for other results -->
+  <atomic-result-template>
+    <template>
+      <atomic-result-section-title>
+        <atomic-result-link></atomic-result-link>
+      </atomic-result-section-title>
+      <atomic-result-section-excerpt>
+        <atomic-result-text field="excerpt"></atomic-result-text>
+      </atomic-result-section-excerpt>
+    </template>
+  </atomic-result-template>
+</atomic-result-list>
+```
+
+</AtomicDocTemplate>

@@ -84,7 +84,7 @@ export class AtomicResultTemplate extends LitElement {
   /**
    * Gets the appropriate result template based on conditions applied.
    */
-  public getTemplate(): ResultTemplate<DocumentFragment> | null {
+  public async getTemplate(): Promise<ResultTemplate<DocumentFragment> | null> {
     return this.resultTemplateController?.getTemplate(this.conditions) || null;
   }
 }
