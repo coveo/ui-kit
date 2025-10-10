@@ -89,6 +89,7 @@ export default defineConfig({
       reuseExistingServer: !process.env.CI,
       stdout: 'pipe',
       stderr: 'pipe',
+      gracefulShutdown: {signal: 'SIGTERM', timeout: 500},
     },
   ].filter(Boolean),
 });
