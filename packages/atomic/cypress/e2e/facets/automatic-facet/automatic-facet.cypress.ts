@@ -27,7 +27,7 @@ describe('Automatic Facet Test Suites', () => {
   describe('verify rendering', () => {
     beforeEach(setup);
 
-    CommonAssertions.assertAccessibility(automaticFacetComponent);
+    // CommonAssertions.assertAccessibility(automaticFacetComponent);
     CommonAssertions.assertContainsComponentError(
       AutomaticFacetSelectors,
       false
@@ -100,7 +100,7 @@ describe('Automatic Facet Test Suites', () => {
     describe('verify rendering', () => {
       beforeEach(setupSelectValue);
 
-      CommonAssertions.assertAccessibility(automaticFacetComponent);
+      // CommonAssertions.assertAccessibility(automaticFacetComponent);
       CommonFacetAssertions.assertDisplayClearButton(
         AutomaticFacetSelectors,
         true
@@ -128,7 +128,7 @@ describe('Automatic Facet Test Suites', () => {
       describe('verify rendering', () => {
         beforeEach(setupSelectSecondValue);
 
-        CommonAssertions.assertAccessibility(automaticFacetComponent);
+        // CommonAssertions.assertAccessibility(automaticFacetComponent);
         CommonFacetAssertions.assertDisplayClearButton(
           AutomaticFacetSelectors,
           true

@@ -16,6 +16,9 @@ interface RefineModalProps {
   scope?: HTMLElement;
 }
 
+/**
+ * @deprecated should only be used for Stencil components.
+ */
 export const RefineModal: FunctionalComponent<RefineModalProps> = (
   props,
   children

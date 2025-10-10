@@ -1,9 +1,13 @@
 import {FunctionalComponent, h} from '@stencil/core';
 
-export interface CategoryFacetParentAsTreeContainerProps {
+interface CategoryFacetParentAsTreeContainerProps {
   isTopLevel: boolean;
   className?: string;
 }
+
+/**
+ * @deprecated should only be used for Stencil components.
+ */
 export const CategoryFacetParentAsTreeContainer: FunctionalComponent<
   CategoryFacetParentAsTreeContainerProps
 > = ({isTopLevel, className}, children) => {

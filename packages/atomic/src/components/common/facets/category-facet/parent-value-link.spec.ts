@@ -22,7 +22,7 @@ vi.mock('./value-link', () => ({
   ),
 }));
 
-describe('renderCategoryFacetParentValueLink', () => {
+describe('#renderCategoryFacetParentValueLink', () => {
   let i18n: Awaited<ReturnType<typeof createTestI18n>>;
 
   beforeAll(async () => {

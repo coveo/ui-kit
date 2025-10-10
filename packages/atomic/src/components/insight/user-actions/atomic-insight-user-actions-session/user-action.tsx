@@ -21,6 +21,9 @@ interface UserAction {
   bindings: InsightBindings;
 }
 
+/**
+ * @deprecated should only be used for Stencil components.
+ */
 export const UserAction: FunctionalComponent<UserAction> = ({
   bindings,
   action,

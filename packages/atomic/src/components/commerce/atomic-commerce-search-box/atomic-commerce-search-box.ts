@@ -573,6 +573,7 @@ export class AtomicCommerceSearchBox
           this.searchBox.clear();
           this.suggestionManager.clearSuggestions();
           this.triggerTextAreaChange('');
+          this.announceClearSearchBoxToScreenReader();
         },
         popup: {
           id: `${this.id}-popup`,
@@ -748,6 +749,11 @@ export class AtomicCommerceSearchBox
       )}
       ${this.renderSlotContent()}
     `;
+  }
+
+  private announceClearSearchBoxToScreenReader() {
+    this.searchBoxAriaMessage.message =
+      this.bindings.i18n.t('search-box-cleared');
   }
 }
 

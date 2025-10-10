@@ -1,6 +1,6 @@
 import {FunctionalComponent, h, Fragment} from '@stencil/core';
 
-export interface ItemListGuardProps {
+interface ItemListGuardProps {
   hasError: boolean;
   hasItems: boolean;
   hasTemplate: boolean;
@@ -8,6 +8,9 @@ export interface ItemListGuardProps {
   templateHasError: boolean;
 }
 
+/**
+ * @deprecated should only be used for Stencil components.
+ */
 export const ItemListGuard: FunctionalComponent<ItemListGuardProps> = (
   {hasError, hasItems, firstRequestExecuted, hasTemplate, templateHasError},
   children

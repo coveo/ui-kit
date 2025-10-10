@@ -5,9 +5,7 @@ import {
   updateBreakpoints,
 } from './replace-breakpoint-utils';
 
-vi.mock('./dom-utils', () => ({
-  closest: vi.fn(),
-}));
+vi.mock('./dom-utils', {spy: true});
 
 describe('replace-breakpoint-utils', () => {
   let mockElement: HTMLElement;

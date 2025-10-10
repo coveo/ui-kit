@@ -1,10 +1,10 @@
 import {spawn} from 'node:child_process';
-import chalk from 'chalk';
+import colors from '../../ci/colors.mjs';
 
 try {
   console.log(
     // eslint-disable-next-line @cspell/spellchecker
-    chalk.cyan(
+    colors.cyan(
       'Starting workspace server on port 3000 for ./dist/proda/StaticCDN directory...'
     )
   );
@@ -13,6 +13,6 @@ try {
     stdio: 'inherit',
   });
 } catch (err) {
-  console.error(chalk.red('Error starting the server:'), err);
+  console.error(colors.red('Error starting the server:'), err);
   process.exit(1);
 }

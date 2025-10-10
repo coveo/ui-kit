@@ -6,6 +6,9 @@ import {FacetValueCheckbox} from '../facet-value-checkbox/stencil-facet-value-ch
 import {FacetValueLabelHighlight} from '../facet-value-label-highlight/stencil-facet-value-label-highlight';
 import {FacetValueLink} from '../facet-value-link/stencil-facet-value-link';
 
+/**
+ * @deprecated should only be used for Stencil components.
+ */
 export interface FacetValueProps {
   field: string;
   facetValue: string;
@@ -20,6 +23,9 @@ export interface FacetValueProps {
   setRef?: (btn?: HTMLButtonElement) => void;
 }
 
+/**
+ * @deprecated should only be used for Stencil components.
+ */
 export const FacetValue: FunctionalComponent<FacetValueProps> = ({
   facetSearchQuery,
   displayValuesAs,

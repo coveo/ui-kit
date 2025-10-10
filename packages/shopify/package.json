@@ -8,7 +8,7 @@
   "main": "./dist/headless.esm.js",
   "module": "./dist/headless.esm.js",
   "license": "Apache-2.0",
-  "version": "1.8.12",
+  "version": "1.8.13",
   "files": [
     "dist/"
   ],
@@ -51,7 +51,7 @@
     "build:bundles": "node esbuild.mjs",
     "build:definitions": "tsc -p src/tsconfig.build.json && node ./scripts/copy-types.mjs",
     "test": "vitest run",
-    "clean": "rimraf -rf dist/* && rimraf -rf cdn/",
+    "clean": "node ../../utils/ci/rm-rf.mjs dist/* cdn/",
     "release:phase3": "npm run-script -w=@coveo/ci npm-publish",
     "release:phase1": "npm run-script -w=@coveo/ci bump",
     "promote:npm:latest": "npm run-script -w=@coveo/ci promote-npm-prod"
@@ -60,7 +60,7 @@
     "vitest": "3.2.4"
   },
   "dependencies": {
-    "@coveo/headless": "3.31.1",
+    "@coveo/headless": "3.31.2",
     "@coveo/relay": "1.2.7",
     "uuid": "^11.0.0"
   },

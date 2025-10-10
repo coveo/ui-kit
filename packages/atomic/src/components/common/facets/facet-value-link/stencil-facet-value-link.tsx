@@ -2,10 +2,13 @@ import {FunctionalComponent, h, VNode} from '@stencil/core';
 import {Button} from '../../stencil-button';
 import {FacetValueProps} from '../stencil-facet-common';
 
-export interface FacetValueLinkProps extends FacetValueProps {
+interface FacetValueLinkProps extends FacetValueProps {
   subList?: VNode | VNode[];
 }
 
+/**
+ * @deprecated should only be used for Stencil components.
+ */
 export const FacetValueLink: FunctionalComponent<FacetValueLinkProps> = (
   props,
   children

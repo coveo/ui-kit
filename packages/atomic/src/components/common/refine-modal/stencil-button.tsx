@@ -7,6 +7,10 @@ interface RefineToggleButtonProps {
   onClick: () => void;
   setRef: (button: HTMLButtonElement) => void;
 }
+
+/**
+ * @deprecated should only be used for Stencil components.
+ */
 export const RefineToggleButton: FunctionalComponent<
   RefineToggleButtonProps
 > = ({i18n, onClick, setRef}) => {
