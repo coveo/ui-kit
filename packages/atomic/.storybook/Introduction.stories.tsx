@@ -27,5 +27,5 @@ export const Default: StoryObj = {
 
 export const Crawling: StoryObj = {
   name: 'Crawling',
-  tags: ['!dev'],
+  tags: ['!dev', '!test'],
 };
