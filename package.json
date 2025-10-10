@@ -47,6 +47,7 @@
     "knip": "5.62.0",
     "lint-staged": "16.1.2",
     "patch-package": "8.0.0",
+    "pkg-pr-new": "0.0.60",
     "playwright": "1.54.1",
     "publint": "0.3.12",
     "semver": "7.7.2",

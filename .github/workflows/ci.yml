@@ -649,13 +649,13 @@ jobs:
       - name: Install npm
         run: npm i -g npm@11.6.0
         shell: bash
-      - run: npm ci
-        shell: bash
+      - uses: ./.github/actions/setup
+
       - name: Release
         run: |
           npm run nx:graph
           npm run release:phase1
-          npm run release:phase3
+          npx pkg-pr-new publish './packages/'
           npm run release:phase4
         env:
           IS_PRERELEASE: "true"
@@ -804,25 +804,19 @@ jobs:
         uses: step-security/harden-runner@ec9f2d5744a09debf3a187a3f4f675c53b671911 # v2.13.0
         with:
           egress-policy: audit
-
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
         with:
           fetch-depth: 0
       - run: git branch main origin/main
-      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
-        with:
-          registry-url: "https://registry.npmjs.org"
-          node-version-file: ".nvmrc"
       - name: Install npm
         run: npm i -g npm@11.6.0
         shell: bash
-      - run: npm ci
-        shell: bash
+      - uses: ./.github/actions/setup
       - name: Release
         run: |
           npm run nx:graph
           npm run release:phase1
-          npm run release:phase3
+          npx pkg-pr-new publish './packages/'
           npm run release:phase4
         env:
           IS_PRERELEASE: "true"
