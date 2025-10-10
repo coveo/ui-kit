@@ -7,7 +7,8 @@
     "serve": {
       "dependsOn": ["deploy"],
       "outputs": [],
-      "persistent": true
+      "persistent": true,
+      "cache": false
     }
   }
 }

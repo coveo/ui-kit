@@ -5,6 +5,44 @@ import type {PluginImpl} from 'rollup';
 import {mergeConfig} from 'vite';
 import {generateExternalPackageMappings} from '../scripts/externalPackageMappings.mjs';
 
+const virtualOpenApiModules: PluginImpl = () => {
+  const virtualModules = new Map<string, string>();
+
+  return {
+    name: 'virtual-openapi-modules',
+    enforce: 'pre',
+    resolveId(id) {
+      if (id.startsWith('https://platform.cloud.coveo.com/api-docs/')) {
+        return id;
+      }
+      return null;
+    },
+    async load(id) {
+      if (id.startsWith('https://platform.cloud.coveo.com/api-docs/')) {
+        if (virtualModules.has(id)) {
+          return virtualModules.get(id);
+        }
+
+        try {
+          console.log(`Fetching OpenAPI spec from ${id}`);
+          const response = await fetch(id);
+          if (!response.ok) {
+            throw new Error(`Failed to fetch ${id}: ${response.statusText}`);
+          }
+          const content = await response.json();
+          const moduleContent = `export default ${JSON.stringify(content, null, 2)};`;
+          virtualModules.set(id, moduleContent);
+          return moduleContent;
+        } catch (error) {
+          console.error(`Error fetching OpenAPI spec from ${id}:`, error);
+          throw error;
+        }
+      }
+      return null;
+    },
+  };
+};
+
 const externalizeDependencies: PluginImpl = () => {
   return {
     name: 'externalize-dependencies',
@@ -68,7 +106,10 @@ const config: StorybookConfig = {
     name: '@storybook/web-components-vite',
     options: {},
   },
-
+  env: (config) => ({
+    ...config,
+    VITE_IS_CDN: isCDN ? 'true' : 'false',
+  }),
   async viteFinal(config, {configType}) {
     const {default: tailwindcss} = await import('@tailwindcss/vite');
     const version = getPackageVersion();
@@ -79,6 +120,7 @@ const config: StorybookConfig = {
         'process.env.NODE_ENV': JSON.stringify('development'),
       },
       plugins: [
+        virtualOpenApiModules(),
         tailwindcss(),
         resolvePathAliases(),
         forceInlineCssImports(),

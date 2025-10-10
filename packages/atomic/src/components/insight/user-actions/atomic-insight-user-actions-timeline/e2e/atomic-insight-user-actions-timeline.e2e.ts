@@ -1,75 +1,9 @@
 import {expect, test} from './fixture';
 
-const followingSessionsActions = [
-  {
-    name: 'CUSTOM',
-    value:
-      '{"event_type":"example","event_value":"exampleCustomAction","origin_level_1":"default"}',
-    time: new Date('2024-09-02T15:30:00Z').valueOf(),
-  },
-  {
-    name: 'CUSTOM',
-    value:
-      '{"event_type":"example","event_value":"exampleCustomAction","origin_level_1":"default"}',
-    time: new Date('2024-09-01T15:30:00Z').valueOf(),
-  },
-];
-
-const ticketCreationSessionActions = [
-  {
-    name: 'CUSTOM',
-    value:
-      '{"event_type":"errors","event_value":"One","origin_level_1":"default","origin_level_2":"default"}',
-    time: new Date('2024-08-30T00:10:00Z').valueOf(),
-  },
-  {
-    name: 'CUSTOM',
-    value:
-      '{"event_type":"errors","event_value":"Two","origin_level_1":"default","origin_level_2":"default"}',
-    time: new Date('2024-08-30T00:12:00Z').valueOf(),
-  },
-  {
-    name: 'CUSTOM',
-    value:
-      '{"event_type":"errors","event_value":"Three","origin_level_1":"default","origin_level_2":"default"}',
-    time: new Date('2024-08-29T23:45:00Z').valueOf(),
-  },
-];
-
-const precedingSessionsActions = [
-  {
-    name: 'CUSTOM',
-    value:
-      '{"event_type":"example","event_value":"exampleCustomAction","origin_level_1":"default"}',
-    time: new Date('2024-08-29T15:40:00Z').valueOf(),
-  },
-  {
-    name: 'CUSTOM',
-    value:
-      '{"event_type":"example","event_value":"exampleCustomAction","origin_level_1":"default"}',
-    time: new Date('2024-08-28T15:40:00Z').valueOf(),
-  },
-];
-
-const exampleUserActions = [
-  ...followingSessionsActions,
-  ...ticketCreationSessionActions,
-  ...precedingSessionsActions,
-];
-
-const exampleUserId = 'exampleUserId';
-const exampleTicketCreationDate = encodeURIComponent('2024-08-30');
-
 test.describe('user actions timeline', () => {
   test.describe('when user actions data is found', () => {
-    test.beforeEach(async ({userActionsTimeline, page}) => {
-      await userActionsTimeline.load({
-        args: {
-          userId: exampleUserId,
-          ticketCreationDateTime: exampleTicketCreationDate,
-        },
-      });
-      await userActionsTimeline.mockUserActions(page, exampleUserActions);
+    test.beforeEach(async ({userActionsTimeline}) => {
+      await userActionsTimeline.load();
     });
 
     test('should display the ticket creation session', async ({
@@ -171,9 +105,8 @@ test.describe('user actions timeline', () => {
   });
 
   test.describe('when no user actions data is found', () => {
-    test.beforeEach(async ({userActionsTimeline, page}) => {
-      await userActionsTimeline.mockUserActions(page, []);
-      await userActionsTimeline.load();
+    test.beforeEach(async ({userActionsTimeline}) => {
+      await userActionsTimeline.load({story: 'with-no-user-actions'});
     });
 
     test('should display the user actions error screen', async ({
@@ -184,9 +117,10 @@ test.describe('user actions timeline', () => {
   });
 
   test.describe('when an error occurs while fetching user actions', () => {
-    test.beforeEach(async ({userActionsTimeline, page}) => {
-      await userActionsTimeline.mockUserActionsError(page);
-      await userActionsTimeline.load();
+    test.beforeEach(async ({userActionsTimeline}) => {
+      await userActionsTimeline.load({
+        story: 'with-user-actions-error',
+      });
     });
 
     test('should display the user actions error screen', async ({
