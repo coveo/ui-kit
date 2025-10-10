@@ -40,8 +40,6 @@ jobs:
       - run: npm run pr:report
         env:
           GITHUB_CREDENTIALS: ${{ steps.generate-token.outputs.token }}
-  # TODO: KIT-4396 - https://coveord.atlassian.net/browse/KIT-4396 This action takes currently over 50 minutes to run, which is too long for a PR workflow.
-  # What is slow is the "npm ci" step, which takes about 30 minutes and is out of our control. We will skip this job for now.
   build-windows:
     name: "Build Windows"
     runs-on: windows-latest
@@ -69,8 +67,8 @@ jobs:
       - name: Build packages
         run: npm run build
         shell: bash
-  build:
-    name: "Build"
+  build-missing:
+    name: "Build & commit missing generated files"
     runs-on: ubuntu-latest
     environment: PR Artifacts
     steps:
@@ -83,6 +81,8 @@ jobs:
         with:
           ref: ${{ github.head_ref }}
       - uses: ./.github/actions/setup
+        with:
+          load-cache: "false"
       - name: Check for uncommitted changes
         id: check-changes
         run: |
@@ -106,11 +106,27 @@ jobs:
         env:
           GITHUB_INSTALLATION_TOKEN: ${{ steps.generate-token.outputs.token }}
           DEBUG: "*"
+  build:
+    name: "Build"
+    runs-on: ubuntu-latest
+    environment: PR Artifacts
+    steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@ec9f2d5744a09debf3a187a3f4f675c53b671911 # v2.13.0
+        with:
+          egress-policy: audit
+
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+      - uses: ./.github/actions/setup
+        with:
+          save-cache: "true"
   build-cdn:
     name: "Build CDN"
     runs-on: ubuntu-latest
     env:
       DEPLOYMENT_ENVIRONMENT: CDN
+      IS_PRERELEASE: "true"
+      PR_NUMBER: ${{ github.event_name == 'pull_request' && github.event.pull_request.number || '' }}
     steps:
       - name: Harden Runner
         uses: step-security/harden-runner@ec9f2d5744a09debf3a187a3f4f675c53b671911 # v2.13.0
@@ -121,26 +137,7 @@ jobs:
       - uses: ./.github/actions/setup
         with:
           cache-prefix: "cdn"
-          skip-build: "true"
-      - name: Build CDN
-        if: github.event_name == 'merge_group'
-        run: npm run build
-        env:
-          DEPLOYMENT_ENVIRONMENT: CDN
-          IS_PRERELEASE: "true"
-      - name: Build CDN
-        if: github.event_name == 'pull_request'
-        run: npm run build
-        env:
-          DEPLOYMENT_ENVIRONMENT: CDN
-          IS_PRERELEASE: "true"
-          PR_NUMBER: ${{ github.event.pull_request.number }}
-      - name: Upload CDN Turbo Cache
-        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
-        with:
-          path: ".turbo"
-          name: "turborepo-cdn-cache"
-          include-hidden-files: true
+          save-cache: "true"
   affected:
     name: "Determine affected projects"
     runs-on: ubuntu-latest
@@ -234,8 +231,6 @@ jobs:
           filter: blob:none
       - run: git branch main origin/main
       - uses: ./.github/actions/setup
-      - name: Install Playwright Browsers
-        run: npx playwright install --with-deps
       - run: npx turbo test --affected
   package-compatibility:
     name: "Verify compatibility of packages"
