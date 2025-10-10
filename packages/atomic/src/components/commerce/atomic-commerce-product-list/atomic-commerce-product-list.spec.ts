@@ -22,6 +22,7 @@ import {genericSubscribe} from '@/vitest-utils/testing-helpers/fixtures/headless
 import {AtomicCommerceProductList} from './atomic-commerce-product-list';
 import './atomic-commerce-product-list';
 
+vi.mock('@/src/components/common/item-list/table-layout', {spy: true});
 vi.mock('@/src/components/common/interface/store', {spy: true});
 vi.mock('@coveo/headless/commerce', {spy: true});
 
@@ -1193,7 +1194,7 @@ describe('atomic-commerce-product-list', () => {
         expect(atomicProductElement?.[1].product).toBe(mockProduct2);
       });
 
-      it('should pass correct #renderingFunction', async () => {
+      it('should not set the renderingFunction on the atomic product itself', async () => {
         const element = await setupElement({display});
         display === 'table' && (await setupTableTemplate(element));
 
@@ -1208,9 +1209,13 @@ describe('atomic-commerce-product-list', () => {
         const atomicProductElement =
           element.shadowRoot?.querySelector('atomic-product');
 
-        expect(atomicProductElement?.renderingFunction).toBe(
-          mockRenderingFunction
-        );
+        if (display === 'table') {
+          expect(atomicProductElement?.renderingFunction).toBeUndefined();
+        } else {
+          expect(atomicProductElement?.renderingFunction).toBe(
+            mockRenderingFunction
+          );
+        }
       });
 
       it('should pass correct #store', async () => {
