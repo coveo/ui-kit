@@ -5,6 +5,10 @@ inputs:
     description: 'Whether to save the cache.'
     required: false
     default: 'false'
+  load-cache:
+    description: 'Whether to save the cache.'
+    required: false
+    default: 'true'
   cache-prefix:
     description: 'Prefix to add to the cache key for different environments'
     required: false
@@ -30,22 +34,22 @@ runs:
         key: ${{ runner.os }}-${{ inputs.cache-prefix }}-cy-${{ github.sha }}
         restore-keys: |
           ${{ runner.os }}-${{ inputs.cache-prefix }}-cy-
-    - uses: actions/cache/restore@5a3ec84eff668545956fd18022155c47e93e2684 # v4
+    - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
+      if: inputs.save-cache != 'true' && inputs.load-cache == 'true'
       with:
+        name: ${{ runner.os }}-${{ inputs.cache-prefix }}-turbo
         path: .turbo
-        key: ${{ runner.os }}-${{ inputs.cache-prefix }}-turbo-${{ github.sha }}
-        restore-keys: |
-          ${{ runner.os }}-${{ inputs.cache-prefix }}-turbo-
     - if: steps.npm-cache.outputs.cache-hit != 'true'
       run: npm ci
       shell: bash
     - run: npm run build
       if: inputs.skip-build != 'true'
       shell: bash
-    - uses: actions/cache/save@5a3ec84eff668545956fd18022155c47e93e2684 # v4
+    - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
       if: inputs.save-cache == 'true'
       with:
+        name: ${{ runner.os }}-${{ inputs.cache-prefix }}-turbo
         path: .turbo
-        key: ${{ runner.os }}-${{ inputs.cache-prefix }}-turbo-${{ github.sha }}
-        restore-keys: |
-          ${{ runner.os }}-${{ inputs.cache-prefix }}-turbo-
+        include-hidden-files: true
+        retention-days: 1
+        if-no-files-found: error
