@@ -1,15 +1,17 @@
-import {renderFunctionFixture} from '@/vitest-utils/testing-helpers/fixture';
-import {createTestI18n} from '@/vitest-utils/testing-helpers/i18n-utils';
-import '@vitest/browser/matchers.d.ts';
 import {html, type TemplateResult} from 'lit';
 import {beforeAll, beforeEach, describe, expect, it, vi} from 'vitest';
-import {renderFacetValuesGroup} from '../facet-values-group/facet-values-group';
+import {renderFacetValuesGroup} from '@/src/components/common/facets/facet-values-group/facet-values-group';
+import {renderFunctionFixture} from '@/vitest-utils/testing-helpers/fixture';
+import {createTestI18n} from '@/vitest-utils/testing-helpers/i18n-utils';
 import {
   type NumericFacetValuesContainerProps,
   renderNumericFacetValuesGroup,
 } from './values-container';
 
-vi.mock('../facet-values-group/facet-values-group', {spy: true});
+vi.mock(
+  '@/src/components/common/facets/facet-values-group/facet-values-group',
+  {spy: true}
+);
 
 describe('#renderNumericFacetValuesGroup', async () => {
   let i18n: Awaited<ReturnType<typeof createTestI18n>>;

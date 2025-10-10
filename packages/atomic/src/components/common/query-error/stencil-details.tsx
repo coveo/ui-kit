@@ -4,6 +4,10 @@ interface QueryErrorDetailsProps {
   error: unknown;
   show: boolean;
 }
+
+/**
+ * @deprecated should only be used for Stencil components.
+ */
 export const QueryErrorDetails: FunctionalComponent<QueryErrorDetailsProps> = ({
   error,
   show,

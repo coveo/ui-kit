@@ -12,6 +12,9 @@ interface FacetSearchInputProps {
   onChange(value: string): void;
 }
 
+/**
+ * @deprecated should only be used for Stencil components.
+ */
 export const FacetSearchInput: FunctionalComponent<FacetSearchInputProps> = (
   props
 ) => {

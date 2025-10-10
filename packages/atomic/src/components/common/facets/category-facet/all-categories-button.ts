@@ -4,16 +4,19 @@ import {html} from 'lit';
 import {renderButton} from '@/src/components/common/button';
 import type {FunctionalComponent} from '@/src/utils/functional-component-utils';
 import LeftArrow from '../../../../images/arrow-left-rounded.svg';
+import {getAllCategoriesLocalizedLabel} from './all-categories-localized-label';
 
 export interface CategoryFacetAllCategoryButtonProps {
   i18n: i18n;
+  facetId?: string;
+  field: string;
   onClick(): void;
 }
 
 export const renderCategoryFacetAllCategoryButton: FunctionalComponent<
   CategoryFacetAllCategoryButtonProps
-> = ({props: {i18n, onClick}}) => {
-  const allCategories = i18n.t('all-categories');
+> = ({props: {i18n, onClick, facetId, field}}) => {
+  const allCategories = getAllCategoriesLocalizedLabel({facetId, field, i18n});
   return html`
     ${renderButton({
       props: {
