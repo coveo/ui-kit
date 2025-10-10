@@ -59,7 +59,7 @@ export class AtomicCommerceSearchBoxRecentQueries
   @property({type: Number, attribute: 'max-without-query', reflect: true})
   public maxWithoutQuery?: number;
 
-  protected searchBoxAriaMessage = new AriaLiveRegionController(
+  private searchBoxAriaMessage = new AriaLiveRegionController(
     this,
     'recent-search-cleared',
     true
