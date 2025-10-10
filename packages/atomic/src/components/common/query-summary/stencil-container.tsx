@@ -3,6 +3,10 @@ import {FunctionalComponent, h} from '@stencil/core';
 interface QuerySummaryContainerProps {
   additionalClasses?: string;
 }
+
+/**
+ * @deprecated should only be used for Stencil components.
+ */
 export const QuerySummaryContainer: FunctionalComponent<
   QuerySummaryContainerProps
 > = ({additionalClasses}, children) => {

@@ -8,6 +8,10 @@ interface TriggerCorrectionProps {
   originalQuery: string;
   onClick: () => void;
 }
+
+/**
+ * @deprecated should only be used for Stencil components.
+ */
 export const TriggerCorrection: FunctionalComponent<TriggerCorrectionProps> = ({
   i18n,
   correctedQuery,

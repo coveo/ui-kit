@@ -1,10 +1,13 @@
 import {FunctionalComponent, h} from '@stencil/core';
 
-export interface FacetPlaceholderProps {
+interface FacetPlaceholderProps {
   numberOfValues: number;
   isCollapsed: boolean;
 }
 
+/**
+ * @deprecated should only be used for Stencil components.
+ */
 export const FacetPlaceholder: FunctionalComponent<FacetPlaceholderProps> = ({
   numberOfValues,
   isCollapsed,
