@@ -13,7 +13,7 @@ inputs:
   output-folder:
     description: 'Folder where final merged report will be generated'
     required: false
-    default: 'playwright-report-json'
+    default: ''
 
 runs:
   using: composite
@@ -25,7 +25,7 @@ runs:
         pattern: ${{ inputs.artifact-pattern }}
         merge-multiple: true
     - name: Merge into JSON Report
-      run: npx playwright merge-reports --reporter json ./all-blob-reports > ./${{ inputs.output-folder }}/merged-json-report.json
+      run: npx playwright merge-reports --reporter json ./all-blob-reports > ./merged-json-report.json
       working-directory: ${{ inputs.working-directory }}
       shell: bash
 
@@ -33,5 +33,5 @@ runs:
       uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
       with:
         name: ${{ inputs.upload-artifact-name }}
-        path: ${{ inputs.working-directory }}/${{ inputs.output-folder }}
+        path: ${{ inputs.working-directory }}
         retention-days: 5
