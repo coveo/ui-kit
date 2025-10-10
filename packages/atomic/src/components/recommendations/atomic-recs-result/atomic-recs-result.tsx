@@ -14,12 +14,12 @@ import {
   resultComponentClass,
 } from '../../common/item-list/stencil-item-list-common';
 import {
-  ItemLayout,
   ItemDisplayDensity,
   ItemDisplayImageSize,
   ItemDisplayLayout,
-} from '../../common/layout/display-options';
+} from '@/src/components/common/layout/display-options';
 import {RecsStore} from '../atomic-recs-interface/store';
+import { ItemLayout } from '@/src/components/common/layout/item-layout';
 
 /**
  * The `atomic-recs-result` component is used internally by the `atomic-recs-list` component.
