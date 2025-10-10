@@ -145,30 +145,28 @@ describe('#getAllCategoriesLocalizedLabel', () => {
     });
   });
 
-  describe('priority order', () => {
-    it('should prioritize facetId over field when both keys exist', () => {
-      const facetId = 'myFacet';
-      const field = 'myField';
-      i18n.addResourceBundle('en', 'translation', {
-        'all-categories-myFacet': 'Facet Categories',
-        'all-categories-myField': 'Field Categories',
-      });
-
-      const result = getAllCategoriesLocalizedLabel({facetId, field, i18n});
-
-      expect(result).toBe('Facet Categories');
+  it('should prioritize facetId over field when both keys exist', () => {
+    const facetId = 'myFacet';
+    const field = 'myField';
+    i18n.addResourceBundle('en', 'translation', {
+      'all-categories-myFacet': 'Facet Categories',
+      'all-categories-myField': 'Field Categories',
     });
 
-    it('should prioritize field over default when facetId is undefined', () => {
-      const field = 'myField';
-      i18n.addResourceBundle('en', 'translation', {
-        'all-categories-myField': 'Field Categories',
-        'all-categories': 'All Categories',
-      });
+    const result = getAllCategoriesLocalizedLabel({facetId, field, i18n});
 
-      const result = getAllCategoriesLocalizedLabel({field, i18n});
+    expect(result).toBe('Facet Categories');
+  });
 
-      expect(result).toBe('Field Categories');
+  it('should prioritize field over default when facetId is undefined', () => {
+    const field = 'myField';
+    i18n.addResourceBundle('en', 'translation', {
+      'all-categories-myField': 'Field Categories',
+      'all-categories': 'All Categories',
     });
+
+    const result = getAllCategoriesLocalizedLabel({field, i18n});
+
+    expect(result).toBe('Field Categories');
   });
 });
