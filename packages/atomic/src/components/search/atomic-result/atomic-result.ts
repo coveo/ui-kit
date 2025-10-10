@@ -1,5 +1,5 @@
 import type {FoldedResult, InteractiveResult, Result} from '@coveo/headless';
-import {type CSSResultGroup, html, LitElement} from 'lit';
+import {type CSSResultGroup, css, html, LitElement} from 'lit';
 import {customElement, property} from 'lit/decorators.js';
 import {ref} from 'lit/directives/ref.js';
 import type {DisplayConfig} from '@/src/components/common/item-list/context/item-display-config-context-controller';
@@ -23,7 +23,6 @@ import {booleanConverter} from '@/src/converters/boolean-converter';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
 import {ChildrenUpdateCompleteMixin} from '@/src/mixins/children-update-complete-mixin';
 import {parentNodeToString} from '@/src/utils/dom-utils';
-import styles from './atomic-result.tw.css';
 /**
  * The `atomic-result` component is used internally by the `atomic-result-list` and `atomic-folded-result-list` components.
  */
@@ -34,7 +33,13 @@ export class AtomicResult extends ChildrenUpdateCompleteMixin(LitElement) {
   private linkContainerRef?: HTMLElement;
   private itemLayoutController!: ItemLayoutController;
 
-  static styles: CSSResultGroup = styles;
+  static styles: CSSResultGroup = css`
+@import "../../common/template-system/template-system.css";
+
+:host {
+  @apply atomic-template-system;
+}
+`;
 
   /**
    * Whether `atomic-result-link` components nested in the `atomic-result` should stop click event propagation.
