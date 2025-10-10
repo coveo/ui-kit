@@ -73,12 +73,18 @@ jobs:
 
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
       - uses: ./.github/actions/setup
-      - name: Merge Playwright reports
+      - name: Merge Playwright HTML reports
         uses: ./.github/actions/merge-playwright-reports
         with:
           working-directory: packages/quantic
           artifact-pattern: quantic-blob-report-*
           upload-artifact-name: quantic-playwright-report
+      - name: Merge Playwright JSON reports
+        uses: ./.github/actions/merge-playwright-reports
+        with:
+          working-directory: packages/quantic
+          artifact-pattern: merged-json-*
+          upload-artifact-name: quantic-playwright-report-json
   e2e-quantic-cleanup:
     if: cancelled() || failure() || success()
     needs:
