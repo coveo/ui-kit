@@ -8,6 +8,9 @@ interface GeneratedContentContainerProps {
   isStreaming: boolean;
 }
 
+/**
+ * @deprecated should only be used for Stencil components.
+ */
 export const GeneratedContentContainer: FunctionalComponent<
   GeneratedContentContainerProps
 > = (props, children) => {

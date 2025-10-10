@@ -14,7 +14,15 @@ export class AtomicCategoryFacetPageObject extends BasePageObject<'atomic-catego
     return this.page.locator('[part="search-result"]');
   }
 
+  get getAllCategoriesButton() {
+    return this.page.locator('[part="all-categories-button"]');
+  }
+
   get facetSearchMoreMatchesFor() {
     return this.page.getByRole('button', {name: 'More matches for p'});
+  }
+
+  getFacetValueByLabel(label: string) {
+    return this.page.locator('[part="value-label"]', {hasText: label});
   }
 }

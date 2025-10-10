@@ -2,11 +2,11 @@ import {getOrganizationEndpoint} from '@coveo/headless';
 import {page} from '@vitest/browser/context';
 import {html} from 'lit';
 import {beforeEach, describe, expect, it, vi} from 'vitest';
+import type {AtomicModal} from '@/src/components/common';
 import {renderInAtomicSearchInterface} from '@/vitest-utils/testing-helpers/fixtures/atomic/search/atomic-search-interface-fixture';
 import {buildFakeSearchEngine} from '@/vitest-utils/testing-helpers/fixtures/headless/search/engine';
-import './atomic-relevance-inspector';
-import type {AtomicModal} from '@/src/components/common';
 import type {AtomicRelevanceInspector} from './atomic-relevance-inspector';
+import './atomic-relevance-inspector';
 
 vi.mock('@coveo/headless', {spy: true});
 

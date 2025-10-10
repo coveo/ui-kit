@@ -1,11 +1,14 @@
 import {FunctionalComponent, h} from '@stencil/core';
 import Tick from '../../../../images/clear.svg';
 
-export interface ExcludeProps {
+interface ExcludeProps {
   onClick(): void;
   ariaLabel?: string;
 }
 
+/**
+ * @deprecated should only be used for Stencil components.
+ */
 export const FacetValueExclude: FunctionalComponent<ExcludeProps> = (props) => {
   return (
     <button

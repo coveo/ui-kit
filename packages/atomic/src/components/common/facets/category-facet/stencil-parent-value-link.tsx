@@ -7,6 +7,9 @@ import {
 interface CategoryFacetParentValueLinkProps
   extends Omit<CategoryFacetValueLinkProps, 'isParent' | 'isSelected'> {}
 
+/**
+ * @deprecated should only be used for Stencil components.
+ */
 export const CategoryFacetParentValueLink: FunctionalComponent<
   CategoryFacetParentValueLinkProps
 > = (props, children) => {

@@ -7,6 +7,10 @@ interface FacetGuardProps {
   firstSearchExecuted: boolean;
   hasResults: boolean;
 }
+
+/**
+ * @deprecated should only be used for Stencil components.
+ */
 export const FacetGuard: FunctionalComponent<FacetGuardProps> = (
   {hasError, enabled, firstSearchExecuted, hasResults},
   children

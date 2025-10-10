@@ -11,6 +11,9 @@ type TriStateFacetValueProps = Omit<FacetValueProps, 'isSelected'> & {
   onExclude(): void;
 };
 
+/**
+ * @deprecated should only be used for Stencil components.
+ */
 export const FacetValueCheckbox: FunctionalComponent<
   FacetValueProps | TriStateFacetValueProps
 > = (props, children) => {

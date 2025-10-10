@@ -2,7 +2,7 @@ import {isUndefined} from '@coveo/bueno';
 import {Fragment, FunctionalComponent, VNode, h} from '@stencil/core';
 import {possiblyWarnOnBadFieldType} from './field-warning';
 
-export interface ItemTextProps<T> {
+interface ItemTextProps<T> {
   logger: Pick<Console, 'error'>;
   host: HTMLElement;
   defaultValue: string | undefined;
@@ -11,6 +11,9 @@ export interface ItemTextProps<T> {
   getProperty: (result: T, property: string) => unknown;
 }
 
+/**
+ * @deprecated should only be used for Stencil components.
+ */
 export const ItemTextFallback = <T,>(
   {field, host, logger, defaultValue, item, getProperty}: ItemTextProps<T>,
   children: VNode[]
