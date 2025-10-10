@@ -1,12 +1,12 @@
 import type {LitElement, ReactiveController, ReactiveControllerHost} from 'lit';
 import type {ItemRenderingFunction} from '@/src/components/common/item-list/item-list-common';
 import type {AnyItem} from '@/src/components/common/item-list/unfolded-item';
-import {
-  type ItemDisplayDensity,
-  type ItemDisplayImageSize,
-  type ItemDisplayLayout,
-  ItemLayout,
+import type {
+  ItemDisplayDensity,
+  ItemDisplayImageSize,
+  ItemDisplayLayout,
 } from './display-options';
+import {ItemLayout} from './item-layout';
 
 export interface ItemLayoutHost extends ReactiveControllerHost {
   shadowRoot?: ShadowRoot | null;

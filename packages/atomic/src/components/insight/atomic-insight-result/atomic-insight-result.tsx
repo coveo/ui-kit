@@ -11,11 +11,11 @@ import {
 } from '../../common/item-list/stencil-item-decorators';
 import {resultComponentClass} from '../../common/item-list/stencil-item-list-common';
 import {
-  ItemLayout,
   ItemDisplayDensity,
   ItemDisplayImageSize,
-} from '../../common/layout/display-options';
+} from '@/src/components/common/layout/display-options';
 import {InsightStore} from '../atomic-insight-interface/store';
+import { ItemLayout } from '@/src/components/common/layout/item-layout';
 
 /**
  * @internal

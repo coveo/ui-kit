@@ -7,7 +7,6 @@ import {
   resultComponentClass,
 } from '../../common/item-list/stencil-item-list-common';
 import {
-  ItemLayout,
   ItemDisplayDensity,
   ItemDisplayImageSize,
   ItemDisplayLayout,
@@ -17,6 +16,7 @@ import {
   InteractiveResultContextEvent,
   ResultContextEvent,
 } from '@/src/components/search/result-template-component-utils/context/stencil-result-template-decorators';
+import { ItemLayout } from '@/src/components/common/layout/item-layout';
 
 /**
  * The `atomic-result` component is used internally by the `atomic-result-list` component.
