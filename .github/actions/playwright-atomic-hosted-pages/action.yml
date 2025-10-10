@@ -8,10 +8,6 @@ inputs:
 runs:
   using: composite
   steps:
-    - name: Install Playwright Browsers
-      run: npx playwright install --with-deps
-      working-directory: packages/atomic-hosted-page
-      shell: bash
     - name: Free port 3000
       run: |
         if lsof -i :3000; then
