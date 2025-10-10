@@ -38,9 +38,9 @@ export interface AttachedResultsOptions {
 }
 
 /**
- * The AttachedResults controller manages all attached results for a given record.
+ * The AttachedResults controller manages all attached results for a given case.
  * It provides a unified API to attach/detach results, check attachment status,
- * and access all attached results for the record.
+ * and access all attached results for the case.
  *
  * @group Controllers
  * @category AttachedResults
@@ -59,14 +59,14 @@ export interface AttachedResults extends Controller {
   attach(result: Result): void;
   /**
    * Detach a result by removing it from the attachedResults state.
-   * @param attachedResult - A result to remove from the list of currently attached results.
+   * @param result - A result to remove from the list of currently attached results.
    */
   detach(result: Result): void;
   /**
    * The state of the `AttachedResults` controller.
    * Returns all attached results for this record.
    */
-  state: AttachedResult[];
+  state: {results: AttachedResult[]};
 }
 
 /**
@@ -124,7 +124,9 @@ export function buildAttachedResults(
     ...controller,
 
     get state() {
-      return getAttachedResultsForRecord();
+      return {
+        results: getAttachedResultsForRecord(),
+      };
     },
 
     isAttached(result: Result): boolean {
