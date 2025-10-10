@@ -596,46 +596,46 @@ jobs:
     secrets:
       SFDX_AUTH_CLIENT_ID: ${{ secrets.SFDX_AUTH_CLIENT_ID }}
       SFDX_AUTH_JWT_KEY: ${{ secrets.SFDX_AUTH_JWT_KEY }}
-  prerelease-npm-pr:
-    if: ${{ !cancelled() && github.event_name == 'pull_request' }}
-    needs: build
-    timeout-minutes: 40
-    name: Pre-release NPM at alpha (PR)
-    permissions:
-      contents: read
-      id-token: write
-    env:
-      NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-    runs-on: ubuntu-latest
-    environment: "Prerelease"
-    steps:
-      - name: Harden Runner
-        uses: step-security/harden-runner@ec9f2d5744a09debf3a187a3f4f675c53b671911 # v2.13.0
-        with:
-          egress-policy: audit
+  # prerelease-npm-pr:
+  #   if: ${{ !cancelled() && github.event_name == 'pull_request' }}
+  #   needs: build
+  #   timeout-minutes: 40
+  #   name: Pre-release NPM at alpha (PR)
+  #   permissions:
+  #     contents: read
+  #     id-token: write
+  #   env:
+  #     NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+  #   runs-on: ubuntu-latest
+  #   environment: "Prerelease"
+  #   steps:
+  #     - name: Harden Runner
+  #       uses: step-security/harden-runner@ec9f2d5744a09debf3a187a3f4f675c53b671911 # v2.13.0
+  #       with:
+  #         egress-policy: audit
 
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
-        with:
-          fetch-depth: 0
-      - run: git branch main origin/main
-      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
-        with:
-          registry-url: "https://registry.npmjs.org"
-          node-version-file: ".nvmrc"
-      - name: Install npm
-        run: npm i -g npm@11.6.0
-        shell: bash
-      - run: npm ci
-        shell: bash
-      - name: Release
-        run: |
-          npm run nx:graph
-          npm run release:phase1
-          npm run release:phase3
-          npm run release:phase4
-        env:
-          IS_PRERELEASE: "true"
-          PR_NUMBER: ${{ github.event.number }}
+  #     - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+  #       with:
+  #         fetch-depth: 0
+  #     - run: git branch main origin/main
+  #     - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+  #       with:
+  #         registry-url: "https://registry.npmjs.org"
+  #         node-version-file: ".nvmrc"
+  #     - name: Install npm
+  #       run: npm i -g npm@11.6.0
+  #       shell: bash
+  #     - run: npm ci
+  #       shell: bash
+  #     - name: Release
+  #       run: |
+  #         npm run nx:graph
+  #         npm run release:phase1
+  #         npm run release:phase3
+  #         npm run release:phase4
+  #       env:
+  #         IS_PRERELEASE: "true"
+  #         PR_NUMBER: ${{ github.event.number }}
   prerelease-cdn-pr:
     if: ${{ !cancelled() && github.event_name == 'pull_request' }}
     needs: build-cdn
@@ -686,7 +686,7 @@ jobs:
       - "cypress-atomic-insight-panel-test"
       - "cypress-headless-ssr-search-nextjs-app-router-test"
       - "cypress-headless-ssr-search-nextjs-pages-router-test"
-      - "prerelease-npm-pr"
+      # - "prerelease-npm-pr"
       - "prerelease-cdn-pr"
     runs-on: ubuntu-latest
     steps:
@@ -763,45 +763,45 @@ jobs:
             echo "Build is invalid"
             exit 1
           fi
-  prerelease-npm-merge:
-    if: ${{ !cancelled() && needs.is-valid.result == 'success' && github.event_name == 'merge_group' }}
-    needs: is-valid
-    timeout-minutes: 40
-    name: Pre-release NPM at alpha (Merge group)
-    env:
-      NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-    runs-on: ubuntu-latest
-    environment: "Prerelease"
-    permissions:
-      contents: read
-      id-token: write
-    steps:
-      - name: Harden Runner
-        uses: step-security/harden-runner@ec9f2d5744a09debf3a187a3f4f675c53b671911 # v2.13.0
-        with:
-          egress-policy: audit
+  # prerelease-npm-merge:
+  #   if: ${{ !cancelled() && needs.is-valid.result == 'success' && github.event_name == 'merge_group' }}
+  #   needs: is-valid
+  #   timeout-minutes: 40
+  #   name: Pre-release NPM at alpha (Merge group)
+  #   env:
+  #     NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+  #   runs-on: ubuntu-latest
+  #   environment: "Prerelease"
+  #   permissions:
+  #     contents: read
+  #     id-token: write
+  #   steps:
+  #     - name: Harden Runner
+  #       uses: step-security/harden-runner@ec9f2d5744a09debf3a187a3f4f675c53b671911 # v2.13.0
+  #       with:
+  #         egress-policy: audit
 
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
-        with:
-          fetch-depth: 0
-      - run: git branch main origin/main
-      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
-        with:
-          registry-url: "https://registry.npmjs.org"
-          node-version-file: ".nvmrc"
-      - name: Install npm
-        run: npm i -g npm@11.6.0
-        shell: bash
-      - run: npm ci
-        shell: bash
-      - name: Release
-        run: |
-          npm run nx:graph
-          npm run release:phase1
-          npm run release:phase3
-          npm run release:phase4
-        env:
-          IS_PRERELEASE: "true"
+  #     - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+  #       with:
+  #         fetch-depth: 0
+  #     - run: git branch main origin/main
+  #     - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+  #       with:
+  #         registry-url: "https://registry.npmjs.org"
+  #         node-version-file: ".nvmrc"
+  #     - name: Install npm
+  #       run: npm i -g npm@11.6.0
+  #       shell: bash
+  #     - run: npm ci
+  #       shell: bash
+  #     - name: Release
+  #       run: |
+  #         npm run nx:graph
+  #         npm run release:phase1
+  #         npm run release:phase3
+  #         npm run release:phase4
+  #       env:
+  #         IS_PRERELEASE: "true"
   prerelease-cdn-merge:
     if: ${{ !cancelled() && needs.is-valid.result == 'success' && github.event_name == 'merge_group' }}
     needs: is-valid
