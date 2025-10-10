@@ -15,9 +15,7 @@ runs:
         path: packages/quantic/.env
         key: quantic-playwright-env-${{ github.sha }}
     - name: Run Playwright Tests
-      run: |
-        npx playwright install --with-deps
-        npx playwright test --shard=${{ inputs.shardIndex }}/${{ inputs.shardTotal }}
+      run: npx playwright test --shard=${{ inputs.shardIndex }}/${{ inputs.shardTotal }}
       shell: bash
       working-directory: ./packages/quantic
     - name: Upload blob report to GitHub Actions Artifacts
