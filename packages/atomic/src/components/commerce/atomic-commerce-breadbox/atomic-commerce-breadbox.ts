@@ -103,7 +103,7 @@ export class AtomicCommerceBreadbox
   @state() private isCollapsed = true;
   @state() private showMoreText = '';
 
-  protected breadboxAriaMessage = new AriaLiveRegionController(
+  private breadboxAriaMessage = new AriaLiveRegionController(
     this,
     'breadbox',
     true
