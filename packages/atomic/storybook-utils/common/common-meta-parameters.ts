@@ -2,12 +2,17 @@ import type {Parameters, StoryContext} from '@storybook/web-components-vite';
 
 const formatCode = async (code: string) => {
   const prettier = await import('prettier/standalone');
-  const prettierPluginBabel = await import('prettier/plugins/babel');
+  const prettierPluginHtml = await import('prettier/plugins/html');
   const prettierPluginEstree = await import('prettier/plugins/estree');
+  const prettierPluginPostCSS = await import('prettier/plugins/postcss');
 
   return prettier.format(code, {
-    parser: 'babel',
-    plugins: [prettierPluginBabel.default, prettierPluginEstree.default],
+    parser: 'html',
+    plugins: [
+      prettierPluginHtml.default,
+      prettierPluginEstree.default,
+      prettierPluginPostCSS.default,
+    ],
   });
 };
 
