@@ -8,7 +8,7 @@ export class AtomicResultPageObject extends BasePageObject {
   }
 
   get hydrated() {
-    return this.page.locator('atomic-product-list');
+    return this.page.locator('atomic-result');
   }
 
   get ResultsPerPage() {
