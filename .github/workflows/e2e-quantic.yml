@@ -88,7 +88,7 @@ jobs:
   Publish-Dashboard:
     name: Create playwright-dashboard page
     if: (success() || failure()) && github.event_name == 'schedule' && github.ref == 'refs/heads/master'
-    needs: [End-to-End-Tests]
+    needs: [merge-quantic-playwright-reports]
     runs-on:
       [
         "coveo uid=${{ github.run_id }}-${{ github.run_attempt }}",
