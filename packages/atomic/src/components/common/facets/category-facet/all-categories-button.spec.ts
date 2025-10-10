@@ -2,17 +2,25 @@
 
 import {page} from '@vitest/browser/context';
 import {html} from 'lit';
-import {beforeAll, describe, expect, it, vi} from 'vitest';
+import {beforeAll, describe, expect, it, type MockedFunction, vi} from 'vitest';
 import {renderFunctionFixture} from '@/vitest-utils/testing-helpers/fixture';
 import {createTestI18n} from '@/vitest-utils/testing-helpers/i18n-utils';
 import type {CategoryFacetAllCategoryButtonProps} from './all-categories-button';
 import {renderCategoryFacetAllCategoryButton} from './all-categories-button';
+import {getAllCategoriesLocalizedLabel} from './all-categories-localized-label';
+
+vi.mock('./all-categories-localized-label', {spy: true});
 
 describe('#renderCategoryFacetAllCategoryButton', () => {
   let i18n: Awaited<ReturnType<typeof createTestI18n>>;
-
+  let mockedGetAllCategoriesLocalizedLabel: MockedFunction<
+    typeof getAllCategoriesLocalizedLabel
+  >;
   beforeAll(async () => {
     i18n = await createTestI18n();
+    mockedGetAllCategoriesLocalizedLabel = vi
+      .mocked(getAllCategoriesLocalizedLabel)
+      .mockReturnValue('All Categories');
   });
 
   const renderComponent = (
@@ -21,6 +29,7 @@ describe('#renderCategoryFacetAllCategoryButton', () => {
     const defaultProps: CategoryFacetAllCategoryButtonProps = {
       i18n,
       onClick: vi.fn(),
+      field: 'myfield',
     };
     const mergedProps = {
       ...defaultProps,
@@ -63,5 +72,16 @@ describe('#renderCategoryFacetAllCategoryButton', () => {
     await expect
       .element(button)
       .toHaveAttribute('part', 'all-categories-button');
+  });
+
+  it('calls getAllCategoriesLocalizedLabel with the correct parameters', async () => {
+    const facetId = 'my-facet-id';
+    const field = 'my-field';
+    await renderComponent({facetId, field});
+    expect(mockedGetAllCategoriesLocalizedLabel).toHaveBeenCalledWith({
+      facetId,
+      field,
+      i18n,
+    });
   });
 });
