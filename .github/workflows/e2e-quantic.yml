@@ -83,7 +83,7 @@ jobs:
         uses: ./.github/actions/merge-playwright-reports
         with:
           working-directory: packages/quantic
-          artifact-pattern: merged-json-*
+          artifact-pattern: quantic-blob-report-*
           upload-artifact-name: quantic-playwright-report-json
   e2e-quantic-cleanup:
     if: cancelled() || failure() || success()
