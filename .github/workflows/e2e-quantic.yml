@@ -87,7 +87,8 @@ jobs:
           upload-artifact-name: quantic-playwright-report-json
   Publish-Dashboard:
     name: Create playwright-dashboard page
-    if: (success() || failure()) && github.event_name == 'schedule' && github.ref == 'refs/heads/master'
+    if: (success() || failure())
+    # if: (success() || failure()) && github.event_name == 'schedule' && github.ref == 'refs/heads/master'
     needs: [merge-quantic-playwright-reports]
     runs-on:
       [
