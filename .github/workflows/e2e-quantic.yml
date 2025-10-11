@@ -90,13 +90,7 @@ jobs:
     if: (success() || failure())
     # if: (success() || failure()) && github.event_name == 'schedule' && github.ref == 'refs/heads/master'
     needs: [merge-quantic-playwright-reports]
-    runs-on:
-      [
-        "coveo uid=${{ github.run_id }}-${{ github.run_attempt }}",
-        linux,
-        arm64,
-        ec2,
-      ]
+    runs-on: ubuntu-latest
     steps:
       - name: Harden the runner (Audit all outbound calls)
         uses: step-security/harden-runner@f4a75cfd619ee5ce8d5b864b0d183aff3c69b55a # v2.13.1
