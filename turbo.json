@@ -103,5 +103,10 @@
     "NODE_ENV",
     "CI"
   ],
-  "globalPassThroughEnv": ["GITHUB_*", "RUNNER_*", "SFDX_*"]
+  "globalPassThroughEnv": [
+    "GITHUB_*",
+    "RUNNER_*",
+    "SFDX_*",
+    "PLAYWRIGHT_BROWSERS_PATH"
+  ]
 }
