@@ -15,11 +15,10 @@
     },
     "license": "MIT",
     "devDependencies": {
-        "concurrently": "^8.2.0",
-        "cypress": "^12.16.0",
-        "eslint-plugin-cypress": "^2.13.3",
+        "concurrently": "^9.2.1",
+        "cypress": "^15.3.0",
+        "eslint-plugin-cypress": "^5.2.0",
         "http-server": "^14.1.1",
         "typescript": "^5.0.4"
-    },
-    "dependencies": {}
+    }
 }
