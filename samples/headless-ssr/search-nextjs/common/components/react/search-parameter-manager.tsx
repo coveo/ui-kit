@@ -35,7 +35,6 @@ export default function SearchParameterManager() {
     const {serialize} = buildSSRSearchParameterSerializer();
 
     return serialize(state.parameters, newURL);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state.parameters]);
 
   useEffect(() => {
@@ -51,7 +50,6 @@ export default function SearchParameterManager() {
     const isStaticState = methods === undefined;
 
     historyRouter[isStaticState ? 'replace' : 'push'](correctedUrl);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [correctedUrl, methods]);
 
   return null;

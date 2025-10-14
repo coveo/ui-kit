@@ -1,7 +1,6 @@
 import type {JSX as AtomicJSX} from '@coveo/atomic';
 import type {Result} from '@coveo/headless/recommendation';
-// biome-ignore lint/style/useImportType: <React is needed>
-import React, {useEffect, useRef} from 'react';
+import React, {type JSX, useEffect, useRef} from 'react';
 import {createRoot} from 'react-dom/client';
 import {renderToString} from 'react-dom/server';
 import {
@@ -10,8 +9,8 @@ import {
 } from '../stencil-generated/search/index.js';
 
 interface Template {
-  contentTemplate: React.JSX.Element;
-  linkTemplate: React.JSX.Element;
+  contentTemplate: JSX.Element;
+  linkTemplate: JSX.Element;
 }
 
 /**
@@ -22,7 +21,7 @@ interface WrapperProps extends AtomicJSX.AtomicRecsList {
    * A template function that takes a result item and outputs its target rendering as a JSX element.
    * It can be used to conditionally render different type of result templates based on the properties of each result.
    */
-  template: (result: Result) => React.JSX.Element | Template;
+  template: (result: Result) => JSX.Element | Template;
 }
 
 /**
@@ -57,7 +56,7 @@ export const RecsListWrapper: React.FC<WrapperProps> = (props) => {
 };
 
 const hasLinkTemplate = (
-  template: React.JSX.Element | Template
+  template: JSX.Element | Template
 ): template is Template => {
   return (template as Template).linkTemplate !== undefined;
 };

@@ -127,6 +127,7 @@
   "devDependencies": {
     "@coveo/documentation": "workspace:*",
     "live-server": "1.2.2",
+    "node-fetch": "3.3.2",
     "typedoc": "catalog:",
     "vitest": "catalog:"
   },

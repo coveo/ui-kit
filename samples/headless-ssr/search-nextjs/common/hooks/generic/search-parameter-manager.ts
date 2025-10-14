@@ -59,7 +59,6 @@ export function useSyncSearchParameterManager({
     const {serialize} = buildSSRSearchParameterSerializer();
     const newURL = new URL(historyRouter.url);
     return serialize(state.parameters, newURL);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state.parameters]);
 
   useEffect(() => {
@@ -73,6 +72,5 @@ export function useSyncSearchParameterManager({
     }
     const isStaticState = controller === undefined;
     historyRouter[isStaticState ? 'replace' : 'push'](correctedUrl);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [controller, correctedUrl]);
 }

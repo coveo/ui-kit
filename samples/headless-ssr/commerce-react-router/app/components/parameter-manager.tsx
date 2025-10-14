@@ -21,7 +21,6 @@ export default function ParameterManager({url}: {url: string | null}) {
    * When the URL fragment changes, this effect deserializes it and synchronizes it into the
    * ParameterManager controller's state.
    */
-
   useEffect(() => {
     if (methods === undefined) {
       return;
@@ -37,14 +36,12 @@ export default function ParameterManager({url}: {url: string | null}) {
 
     previousUrl.current = newUrl;
     methods.synchronize(newCommerceParams);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchParams]);
 
   /**
    * When the ParameterManager controller's state changes, this effect serializes it into the URL fragment and pushes the new URL
    * to the browser history.
    * */
-
   useEffect(() => {
     if (methods === undefined) {
       return;
@@ -58,7 +55,6 @@ export default function ParameterManager({url}: {url: string | null}) {
 
     previousUrl.current = newUrl;
     history.pushState(null, '', newUrl);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state.parameters]);
 
   return null;
