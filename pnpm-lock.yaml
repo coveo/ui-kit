@@ -1519,6 +1519,9 @@ importers:
       '@coveo/bueno':
         specifier: workspace:*
         version: link:../../packages/bueno
+      local-web-server:
+        specifier: 5.4.0
+        version: 5.4.0
 
   utils/ci:
     dependencies:
