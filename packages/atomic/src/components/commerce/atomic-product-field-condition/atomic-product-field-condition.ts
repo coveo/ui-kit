@@ -1,16 +1,17 @@
 import type {ProductTemplateCondition} from '@coveo/headless/commerce';
+import {ProductTemplatesHelpers} from '@coveo/headless/commerce';
 import {html, LitElement} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {createProductContextController} from '@/src/components/commerce/product-template-component-utils/context/product-context-controller';
+import {
+  makeDefinedConditions,
+  makeMatchConditions,
+} from '@/src/components/common/template-controller/template-utils';
 import {bindings} from '@/src/decorators/bindings';
 import {errorGuard} from '@/src/decorators/error-guard';
 import type {InitializableComponent} from '@/src/decorators/types';
 import {LightDomMixin} from '@/src/mixins/light-dom';
 import {mapProperty} from '@/src/utils/props-utils';
-import {
-  makeDefinedConditions,
-  makeMatchConditions,
-} from '../../common/product-template/product-template-common';
 import type {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface';
 
 /**
@@ -58,8 +59,16 @@ export class AtomicProductFieldCondition
 
   private get conditions(): ProductTemplateCondition[] {
     return [
-      ...makeDefinedConditions(this.ifDefined, this.ifNotDefined),
-      ...makeMatchConditions(this.mustMatch, this.mustNotMatch),
+      ...makeDefinedConditions(
+        this.ifDefined,
+        this.ifNotDefined,
+        ProductTemplatesHelpers
+      ),
+      ...makeMatchConditions(
+        this.mustMatch,
+        this.mustNotMatch,
+        ProductTemplatesHelpers
+      ),
     ];
   }
 

@@ -3,30 +3,30 @@ import {customElement, state} from 'lit/decorators.js';
 import {describe, expect, it} from 'vitest';
 import type {LitElementWithError} from '@/src/decorators/types';
 import {fixture} from '@/vitest-utils/testing-helpers/fixture';
-import {ProductTemplateController} from './product-template-controller';
+import {ResultTemplateController} from './result-template-controller';
 
-@customElement('test-product-element')
-class TestProductElement extends LitElement implements LitElementWithError {
+@customElement('test-result-element')
+class TestResultElement extends LitElement implements LitElementWithError {
   @state()
   public error!: Error;
-  controller = new ProductTemplateController(this, ['valid-parent'], false);
+  controller = new ResultTemplateController(this, ['valid-parent'], false);
 }
 
-async function setupProductElement(
+async function setupResultElement(
   template: TemplateResult<1>,
   parentNode: HTMLElement = document.createElement('valid-parent')
 ) {
   await fixture(template, parentNode);
-  return document.querySelector('test-product-element')! as TestProductElement;
+  return document.querySelector('test-result-element')! as TestResultElement;
 }
 
-describe('ProductTemplateController', () => {
+describe('ResultTemplateController', () => {
   describe('#getTemplate', () => {
-    it('should return a ProductTemplate with proper structure from getTemplate', async () => {
-      const {controller} = await setupProductElement(
-        html`<test-product-element>
-          <template><div>product content</div></template>
-        </test-product-element>`
+    it('should return a ResultTemplate with proper structure from getTemplate', async () => {
+      const {controller} = await setupResultElement(
+        html`<test-result-element>
+          <template><div>content</div></template>
+        </test-result-element>`
       );
       const result = controller.getTemplate([]);
 
@@ -38,8 +38,8 @@ describe('ProductTemplateController', () => {
     });
 
     it('should return null when there is an error', async () => {
-      const element = await setupProductElement(
-        html`<test-product-element></test-product-element>`
+      const element = await setupResultElement(
+        html`<test-result-element></test-result-element>`
       );
       const result = element.controller.getTemplate([]);
 
@@ -49,33 +49,33 @@ describe('ProductTemplateController', () => {
 
   describe('#getLinkTemplateElement', () => {
     it('should get link template element', async () => {
-      const {controller} = await setupProductElement(
-        html`<test-product-element>
-          <template><div>product content</div></template>
-        </test-product-element>`
+      const {controller} = await setupResultElement(
+        html`<test-result-element>
+          <template><div>content</div></template>
+        </test-result-element>`
       );
       const linkElement = controller.getLinkTemplateElement(controller['host']);
 
       expect(linkElement).toBeInstanceOf(HTMLTemplateElement);
       expect(linkElement.innerHTML).toBe(
-        '<atomic-product-link></atomic-product-link>'
+        '<atomic-result-link></atomic-result-link>'
       );
     });
 
     it('should use custom link template when provided', async () => {
-      const element = await setupProductElement(
-        html`<test-product-element>
-          <template><div>product content</div></template>
+      const element = await setupResultElement(
+        html`<test-result-element>
+          <template><div>content</div></template>
           <template slot="link">
-            <custom-product-link></custom-product-link>
+            <custom-result-link></custom-result-link>
           </template>
-        </test-product-element>`
+        </test-result-element>`
       );
 
       const linkElement = element.controller.getLinkTemplateElement(element);
 
       expect(linkElement.innerHTML.trim()).toBe(
-        '<custom-product-link></custom-product-link>'
+        '<custom-result-link></custom-result-link>'
       );
     });
   });
