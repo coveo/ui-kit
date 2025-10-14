@@ -21,6 +21,7 @@ describe('attached results slice', () => {
     const finalState = attachedResultsReducer(undefined, {type: ''});
     expect(finalState).toEqual({
       results: [],
+      loading: false,
     });
   });
 
@@ -41,10 +42,12 @@ describe('attached results slice', () => {
   it('#setAttachedResults accepts an empty array of results', () => {
     const action = setAttachedResults({
       results: [],
+      loading: true,
     });
     const finalState = attachedResultsReducer(state, action);
     expect(finalState).toStrictEqual(action.payload);
     expect(finalState.results.length).toEqual(0);
+    expect(finalState.loading).toBe(true);
   });
 
   it('#attachResult correctly adds a result in the attached state', () => {

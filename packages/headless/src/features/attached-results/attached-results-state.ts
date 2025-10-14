@@ -48,7 +48,7 @@ export interface AttachedResultsState {
   results: AttachedResult[];
   /**
    * A loading state, used to sync loading the attached results between multiple components.
-   * @deprecated To be removed in UI-KIT V4 TODO: SFINT-6404
+   * To be removed in UI-KIT V4 TODO: SFINT-6404
    */
   loading: boolean;
 }

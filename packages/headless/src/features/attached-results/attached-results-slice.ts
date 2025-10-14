@@ -15,13 +15,16 @@ export const attachedResultsReducer = createReducer(
   (builder) => {
     builder
       .addCase(setAttachedResults, (state, action) => {
-        const {results} = action.payload;
+        const {results, loading} = action.payload;
 
         if ('results' in state && state.results?.length > 0) {
           return;
         }
 
         state.results = results;
+        if (loading) {
+          state.loading = loading;
+        }
       })
       .addCase(attachResult, (state, action) => {
         if (

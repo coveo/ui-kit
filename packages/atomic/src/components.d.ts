@@ -21,7 +21,6 @@ import { RecsInitializationOptions } from "./components/recommendations/atomic-r
 import { RecsStore } from "./components/recommendations/atomic-recs-interface/store";
 import { SearchStore } from "./components/search/atomic-search-interface/store";
 import { RedirectionPayload } from "./components/common/search-box/redirection-payload";
-import { AriaLabelGenerator } from "./components/search/search-box-suggestions/atomic-search-box-instant-results/atomic-search-box-instant-results";
 import { SearchBoxSuggestionElement } from "./components/common/suggestions/suggestions-types";
 export { AutomaticFacet, CategoryFacetSortCriterion, DateFilterRange, DateRangeRequest, FacetResultsMustMatch, FacetSortCriterion, FoldedResult, GeneratedAnswer, GeneratedAnswerCitation, InlineLink, InteractiveCitation, InteractiveResult, NumericFilter, NumericFilterState, RangeFacetRangeAlgorithm, RangeFacetSortCriterion, RelativeDateUnit, Result, ResultTemplate, ResultTemplateCondition, SearchStatus } from "@coveo/headless";
 export { AtomicInterface } from "./utils/initialization-utils";
@@ -39,7 +38,6 @@ export { RecsInitializationOptions } from "./components/recommendations/atomic-r
 export { RecsStore } from "./components/recommendations/atomic-recs-interface/store";
 export { SearchStore } from "./components/search/atomic-search-interface/store";
 export { RedirectionPayload } from "./components/common/search-box/redirection-payload";
-export { AriaLabelGenerator } from "./components/search/search-box-suggestions/atomic-search-box-instant-results/atomic-search-box-instant-results";
 export { SearchBoxSuggestionElement } from "./components/common/suggestions/suggestions-types";
 export namespace Components {
     /**
@@ -2298,34 +2296,6 @@ export namespace Components {
         "suggestionTimeout": number;
     }
     /**
-     * The `atomic-search-box-instant-results` component can be added as a child of an `atomic-search-box` component, allowing for the configuration of instant results behavior.
-     * This component does not support accessibility out-of-the-box. To do so, see [Instant Results Accessibility](https://docs.coveo.com/en/atomic/latest/usage/accessibility/#instant-results-accessibility).
-     * This component is not supported on mobile.
-     */
-    interface AtomicSearchBoxInstantResults {
-        /**
-          * The callback to generate an [`aria-label`](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Attributes/aria-label) for a given result so that accessibility tools can fully describe what's visually rendered by a result.  By default, or if an empty string is returned, `result.title` is used.
-         */
-        "ariaLabelGenerator"?: AriaLabelGenerator;
-        /**
-          * The spacing of various elements in the result list, including the gap between results, the gap between parts of a result, and the font sizes of different parts in a result.
-         */
-        "density": ItemDisplayDensity;
-        /**
-          * The expected size of the image displayed in the results.
-         */
-        "imageSize": ItemDisplayImageSize;
-        /**
-          * The maximum number of results to show.
-         */
-        "maxResultsPerQuery": number;
-        /**
-          * Sets a rendering function to bypass the standard HTML template mechanism for rendering results. You can use this function while working with web frameworks that don't use plain HTML syntax, e.g., React, Angular or Vue.  Do not use this method if you integrate Atomic in a plain HTML deployment.
-          * @param resultRenderingFunction
-         */
-        "setRenderFunction": (resultRenderingFunction: ItemRenderingFunction) => Promise<void>;
-    }
-    /**
      * The `atomic-segmented-facet` displays a horizontal facet of the results for the current query.
      */
     interface AtomicSegmentedFacet {
@@ -3928,17 +3898,6 @@ declare global {
         new (): HTMLAtomicSearchBoxElement;
     };
     /**
-     * The `atomic-search-box-instant-results` component can be added as a child of an `atomic-search-box` component, allowing for the configuration of instant results behavior.
-     * This component does not support accessibility out-of-the-box. To do so, see [Instant Results Accessibility](https://docs.coveo.com/en/atomic/latest/usage/accessibility/#instant-results-accessibility).
-     * This component is not supported on mobile.
-     */
-    interface HTMLAtomicSearchBoxInstantResultsElement extends Components.AtomicSearchBoxInstantResults, HTMLStencilElement {
-    }
-    var HTMLAtomicSearchBoxInstantResultsElement: {
-        prototype: HTMLAtomicSearchBoxInstantResultsElement;
-        new (): HTMLAtomicSearchBoxInstantResultsElement;
-    };
-    /**
      * The `atomic-segmented-facet` displays a horizontal facet of the results for the current query.
      */
     interface HTMLAtomicSegmentedFacetElement extends Components.AtomicSegmentedFacet, HTMLStencilElement {
@@ -4328,7 +4287,6 @@ declare global {
         "atomic-result-text": HTMLAtomicResultTextElement;
         "atomic-result-timespan": HTMLAtomicResultTimespanElement;
         "atomic-search-box": HTMLAtomicSearchBoxElement;
-        "atomic-search-box-instant-results": HTMLAtomicSearchBoxInstantResultsElement;
         "atomic-segmented-facet": HTMLAtomicSegmentedFacetElement;
         "atomic-segmented-facet-scrollable": HTMLAtomicSegmentedFacetScrollableElement;
         "atomic-smart-snippet": HTMLAtomicSmartSnippetElement;
@@ -6540,29 +6498,6 @@ declare namespace LocalJSX {
         "suggestionTimeout"?: number;
     }
     /**
-     * The `atomic-search-box-instant-results` component can be added as a child of an `atomic-search-box` component, allowing for the configuration of instant results behavior.
-     * This component does not support accessibility out-of-the-box. To do so, see [Instant Results Accessibility](https://docs.coveo.com/en/atomic/latest/usage/accessibility/#instant-results-accessibility).
-     * This component is not supported on mobile.
-     */
-    interface AtomicSearchBoxInstantResults {
-        /**
-          * The callback to generate an [`aria-label`](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Attributes/aria-label) for a given result so that accessibility tools can fully describe what's visually rendered by a result.  By default, or if an empty string is returned, `result.title` is used.
-         */
-        "ariaLabelGenerator"?: AriaLabelGenerator;
-        /**
-          * The spacing of various elements in the result list, including the gap between results, the gap between parts of a result, and the font sizes of different parts in a result.
-         */
-        "density"?: ItemDisplayDensity;
-        /**
-          * The expected size of the image displayed in the results.
-         */
-        "imageSize"?: ItemDisplayImageSize;
-        /**
-          * The maximum number of results to show.
-         */
-        "maxResultsPerQuery"?: number;
-    }
-    /**
      * The `atomic-segmented-facet` displays a horizontal facet of the results for the current query.
      */
     interface AtomicSegmentedFacet {
@@ -7063,7 +6998,6 @@ declare namespace LocalJSX {
         "atomic-result-text": AtomicResultText;
         "atomic-result-timespan": AtomicResultTimespan;
         "atomic-search-box": AtomicSearchBox;
-        "atomic-search-box-instant-results": AtomicSearchBoxInstantResults;
         "atomic-segmented-facet": AtomicSegmentedFacet;
         "atomic-segmented-facet-scrollable": AtomicSegmentedFacetScrollable;
         "atomic-smart-snippet": AtomicSmartSnippet;
@@ -7560,12 +7494,6 @@ declare module "@stencil/core" {
              * The `atomic-search-box` component creates a search box with built-in support for suggestions.
              */
             "atomic-search-box": LocalJSX.AtomicSearchBox & JSXBase.HTMLAttributes<HTMLAtomicSearchBoxElement>;
-            /**
-             * The `atomic-search-box-instant-results` component can be added as a child of an `atomic-search-box` component, allowing for the configuration of instant results behavior.
-             * This component does not support accessibility out-of-the-box. To do so, see [Instant Results Accessibility](https://docs.coveo.com/en/atomic/latest/usage/accessibility/#instant-results-accessibility).
-             * This component is not supported on mobile.
-             */
-            "atomic-search-box-instant-results": LocalJSX.AtomicSearchBoxInstantResults & JSXBase.HTMLAttributes<HTMLAtomicSearchBoxInstantResultsElement>;
             /**
              * The `atomic-segmented-facet` displays a horizontal facet of the results for the current query.
              */
