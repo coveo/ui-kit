@@ -19,7 +19,7 @@ import type {AtomicFacet} from './atomic-facet';
 
 vi.mock('@coveo/headless', {spy: true});
 
-describe('AtomicFacet', () => {
+describe('atomic-facet', () => {
   let mockedRegisterFacet: Mock;
 
   beforeEach(() => {
