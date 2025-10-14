@@ -1,8 +1,8 @@
 import {beforeEach, describe, expect, it, vi} from 'vitest';
 import {ItemLayout} from './item-layout';
-import * as sections from './sections';
+import * as sections from './item-layout-sections';
 
-vi.mock('./sections');
+vi.mock('./item-layout-sections', {spy: true});
 
 const mockContainsSections = vi.mocked(sections.containsSections);
 
