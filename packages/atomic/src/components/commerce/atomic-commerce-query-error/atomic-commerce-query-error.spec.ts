@@ -1,17 +1,17 @@
 import {buildProductListing, buildSearch} from '@coveo/headless/commerce';
+import {userEvent} from '@vitest/browser/context';
 import {html} from 'lit';
 import {beforeEach, describe, expect, it, vi} from 'vitest';
+import {getAriaMessageFromErrorType} from '@/src/components/common/query-error/utils';
 import {renderInAtomicCommerceInterface} from '@/vitest-utils/testing-helpers/fixtures/atomic/commerce/atomic-commerce-interface-fixture';
 import {buildFakeCommerceEngine} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/engine';
 import {buildFakeProductListing} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/product-listing-controller';
 import {buildFakeSearch} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/search-controller';
-import './atomic-commerce-query-error';
-import {userEvent} from '@vitest/browser/context';
-import {getAriaMessageFromErrorType} from '../../common/query-error/utils';
 import type {AtomicCommerceQueryError} from './atomic-commerce-query-error';
+import './atomic-commerce-query-error';
 
 vi.mock('@coveo/headless/commerce', {spy: true});
-vi.mock('../../common/query-error/utils', {spy: true});
+vi.mock('@/src/components/common/query-error/utils', {spy: true});
 
 describe('atomic-commerce-query-error', () => {
   const mockedEngine = buildFakeCommerceEngine();

@@ -10,7 +10,6 @@ import { defineCustomElements } from '@coveo/atomic/loader';
 defineCustomElements();
 export const AtomicCitation = /*@__PURE__*/createReactComponent<JSX.AtomicCitation, HTMLAtomicCitationElement>('atomic-citation');
 export const AtomicGeneratedAnswerFeedbackModal = /*@__PURE__*/createReactComponent<JSX.AtomicGeneratedAnswerFeedbackModal, HTMLAtomicGeneratedAnswerFeedbackModalElement>('atomic-generated-answer-feedback-modal');
-export const AtomicInsightInterface = /*@__PURE__*/createReactComponent<JSX.AtomicInsightInterface, HTMLAtomicInsightInterfaceElement>('atomic-insight-interface');
 export const AtomicInsightUserActionsTimeline = /*@__PURE__*/createReactComponent<JSX.AtomicInsightUserActionsTimeline, HTMLAtomicInsightUserActionsTimelineElement>('atomic-insight-user-actions-timeline');
 export const AtomicInsightUserActionsToggle = /*@__PURE__*/createReactComponent<JSX.AtomicInsightUserActionsToggle, HTMLAtomicInsightUserActionsToggleElement>('atomic-insight-user-actions-toggle');
 export const AtomicNumericRange = /*@__PURE__*/createReactComponent<JSX.AtomicNumericRange, HTMLAtomicNumericRangeElement>('atomic-numeric-range');

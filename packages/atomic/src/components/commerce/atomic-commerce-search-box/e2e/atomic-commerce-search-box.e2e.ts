@@ -175,7 +175,7 @@ test.describe('atomic-commerce-search-box', () => {
           await expect(searchBox.clearButton).not.toBeVisible();
         });
 
-        test('should clear searchbox when clicking the clear button', async ({
+        test('should clear search-box when clicking the clear button', async ({
           searchBox,
         }) => {
           await searchBox.clearButton.click();
@@ -206,7 +206,7 @@ test.describe('atomic-commerce-search-box', () => {
     });
   });
 
-  test.describe('with instant results & query suggestions', () => {
+  test.describe('with instant products & query suggestions', () => {
     test.beforeEach(async ({searchBox}) => {
       await searchBox.load({
         args: {suggestionTimeout: 5000},
@@ -258,7 +258,7 @@ test.describe('atomic-commerce-search-box', () => {
 
       test('should display instant results', async ({searchBox}) => {
         await expect(
-          searchBox.instantResult({listSide: 'Right'}).first()
+          searchBox.instantProduct({listSide: 'Right'}).first()
         ).toBeVisible();
       });
 
@@ -294,7 +294,7 @@ test.describe('atomic-commerce-search-box', () => {
       }) => {
         await searchBox.searchInput.click();
         await searchBox.searchInput.fill('a');
-        await searchBox.instantResult({listSide: 'Right'}).first().hover();
+        await searchBox.instantProduct({listSide: 'Right'}).first().hover();
         await searchBox.searchInput.press('Enter');
         await expect(searchBox.searchInput).toHaveValue('a');
       });

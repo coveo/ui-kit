@@ -3,9 +3,14 @@ import {
   AtomicComponentError as LitAtomicComponentError,
   AtomicFacet as LitAtomicFacet,
   AtomicIcon as LitAtomicIcon,
+  AtomicInsightInterface as LitAtomicInsightInterface,
   AtomicLayoutSection as LitAtomicLayoutSection,
+  AtomicPager as LitAtomicPager,
   AtomicQuerySummary as LitAtomicQuerySummary,
   AtomicResultsPerPage as LitAtomicResultsPerPage,
+  AtomicSearchBoxInstantResults as LitAtomicSearchBoxInstantResults,
+  AtomicSearchBoxQuerySuggestions as LitAtomicSearchBoxQuerySuggestions,
+  AtomicSearchBoxRecentQueries as LitAtomicSearchBoxRecentQueries,
   AtomicSearchInterface as LitAtomicSearchInterface,
   AtomicSearchLayout as LitAtomicSearchLayout,
 } from '@coveo/atomic/components';
@@ -36,10 +41,22 @@ export const AtomicIcon = createComponent({
   elementClass: LitAtomicIcon,
 });
 
+export const AtomicInsightInterface = createComponent({
+  tagName: 'atomic-insight-interface',
+  react: React,
+  elementClass: LitAtomicInsightInterface,
+});
+
 export const AtomicLayoutSection = createComponent({
   tagName: 'atomic-layout-section',
   react: React,
   elementClass: LitAtomicLayoutSection,
+});
+
+export const AtomicPager = createComponent({
+  tagName: 'atomic-pager',
+  react: React,
+  elementClass: LitAtomicPager,
 });
 
 export const AtomicQuerySummary = createComponent({
@@ -52,6 +69,24 @@ export const AtomicResultsPerPage = createComponent({
   tagName: 'atomic-results-per-page',
   react: React,
   elementClass: LitAtomicResultsPerPage,
+});
+
+export const AtomicSearchBoxInstantResults = createComponent({
+  tagName: 'atomic-search-box-instant-results',
+  react: React,
+  elementClass: LitAtomicSearchBoxInstantResults,
+});
+
+export const AtomicSearchBoxQuerySuggestions = createComponent({
+  tagName: 'atomic-search-box-query-suggestions',
+  react: React,
+  elementClass: LitAtomicSearchBoxQuerySuggestions,
+});
+
+export const AtomicSearchBoxRecentQueries = createComponent({
+  tagName: 'atomic-search-box-recent-queries',
+  react: React,
+  elementClass: LitAtomicSearchBoxRecentQueries,
 });
 
 export const AtomicSearchInterface = createComponent({

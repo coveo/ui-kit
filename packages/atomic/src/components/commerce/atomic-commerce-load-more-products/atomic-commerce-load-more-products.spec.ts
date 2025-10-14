@@ -6,14 +6,15 @@ import {
 import {page} from '@vitest/browser/context';
 import {html} from 'lit';
 import {beforeEach, describe, expect, it, type Mock, vi} from 'vitest';
+import type {ResultListInfo} from '@/src/components/common/interface/store';
 import {renderInAtomicCommerceInterface} from '@/vitest-utils/testing-helpers/fixtures/atomic/commerce/atomic-commerce-interface-fixture';
+import {buildFakeCommerceEngine} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/engine';
 import {buildFakePager} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/pager-subcontroller';
 import {buildFakeProduct} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/product';
 import {buildFakeProductListing} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/product-listing-controller';
 import {buildFakeSearch} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/search-controller';
-import './atomic-commerce-load-more-products';
-import {buildFakeCommerceEngine} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/engine';
 import type {AtomicCommerceLoadMoreProducts} from './atomic-commerce-load-more-products';
+import './atomic-commerce-load-more-products';
 
 vi.mock('@coveo/headless/commerce', {spy: true});
 
@@ -84,7 +85,7 @@ describe('atomic-commerce-load-more-products', () => {
           bindings.engine = mockedEngine;
           bindings.store.state.resultList = {
             focusOnNextNewResult: focusOnNextNewResultSpy,
-          };
+          } as unknown as ResultListInfo;
           bindings.store.state.loadingFlags = isAppLoaded
             ? []
             : ['app-loading'];

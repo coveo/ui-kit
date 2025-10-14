@@ -9,6 +9,9 @@ interface CopyButtonProps {
   onClick: () => void;
 }
 
+/**
+ * @deprecated should only be used for Stencil components.
+ */
 export const CopyButton: FunctionalComponent<CopyButtonProps> = (props) => {
   return (
     <Button

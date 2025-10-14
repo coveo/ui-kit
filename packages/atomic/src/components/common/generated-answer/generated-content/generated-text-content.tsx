@@ -5,6 +5,9 @@ interface GeneratedTextContentProps {
   isStreaming: boolean;
 }
 
+/**
+ * @deprecated should only be used for Stencil components.
+ */
 export const GeneratedTextContent: FunctionalComponent<
   GeneratedTextContentProps
 > = (props) => {

@@ -1,7 +1,3 @@
-import type {NumberFormatter} from '@/src/components/common/formats/format-common';
-import {getFieldValueCaption} from '@/src/utils/field-utils';
-import {createTestI18n} from '@/vitest-utils/testing-helpers/i18n-utils';
-import '@vitest/browser/matchers.d.ts';
 import {
   beforeAll,
   beforeEach,
@@ -11,6 +7,9 @@ import {
   type MockInstance,
   vi,
 } from 'vitest';
+import type {NumberFormatter} from '@/src/components/common/formats/format-common';
+import {getFieldValueCaption} from '@/src/utils/field-utils';
+import {createTestI18n} from '@/vitest-utils/testing-helpers/i18n-utils';
 import {
   type FacetValueRange,
   type FormatFacetValueRange,
@@ -18,9 +17,7 @@ import {
   formatNumberLocalized,
 } from './formatter';
 
-vi.mock('@/src/utils/field-utils', () => ({
-  getFieldValueCaption: vi.fn(),
-}));
+vi.mock('@/src/utils/field-utils', {spy: true});
 
 describe('formatter', () => {
   let i18n: Awaited<ReturnType<typeof createTestI18n>>;

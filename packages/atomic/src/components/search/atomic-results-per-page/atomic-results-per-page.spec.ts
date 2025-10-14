@@ -1,13 +1,13 @@
 import {buildResultsPerPage, buildSearchStatus} from '@coveo/headless';
 import {html} from 'lit';
+import {ifDefined} from 'lit/directives/if-defined.js';
 import {beforeEach, describe, expect, it, vi} from 'vitest';
 import {renderInAtomicSearchInterface} from '@/vitest-utils/testing-helpers/fixtures/atomic/search/atomic-search-interface-fixture.js';
-import './atomic-results-per-page';
-import {ifDefined} from 'lit/directives/if-defined.js';
 import {buildFakeSearchEngine} from '@/vitest-utils/testing-helpers/fixtures/headless/search/engine';
 import {buildFakeResultsPerPage} from '@/vitest-utils/testing-helpers/fixtures/headless/search/results-per-page-controller';
 import {buildFakeSearchStatus} from '@/vitest-utils/testing-helpers/fixtures/headless/search/search-status-controller';
 import type {AtomicResultsPerPage} from './atomic-results-per-page';
+import './atomic-results-per-page';
 
 vi.mock('@coveo/headless', {spy: true});
 vi.mock('@/src/mixins/bindings-mixin', () => ({

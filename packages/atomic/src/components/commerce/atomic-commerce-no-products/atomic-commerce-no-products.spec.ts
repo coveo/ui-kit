@@ -8,13 +8,13 @@ import {
 import {html} from 'lit';
 import {describe, expect, it, vi} from 'vitest';
 import {renderInAtomicCommerceInterface} from '@/vitest-utils/testing-helpers/fixtures/atomic/commerce/atomic-commerce-interface-fixture';
+import {buildFakeCommerceEngine} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/engine';
 import {buildFakeProductListing} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/product-listing-controller';
 import {buildFakeSearch} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/search-controller';
 import {buildFakeSummary} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/summary-subcontroller';
+import MagnifyingGlassIcon from '../../../images/magnifying-glass.svg';
 import type {AtomicCommerceNoProducts} from './atomic-commerce-no-products';
 import './atomic-commerce-no-products';
-import {buildFakeCommerceEngine} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/engine';
-import MagnifyingGlassIcon from '../../../images/magnifying-glass.svg';
 
 vi.mock('@coveo/headless/commerce', {spy: true});
 
@@ -71,7 +71,7 @@ describe('atomic-commerce-no-products', () => {
       element,
       slot: element.shadowRoot?.querySelector('slot'),
       icon: element.shadowRoot?.querySelector('[part="icon"]'),
-      noResultsText: element.shadowRoot?.querySelector('[part="no-results"]'),
+      noProductsText: element.shadowRoot?.querySelector('[part="no-results"]'),
       highlightedQuery: element.shadowRoot?.querySelector('[part="highlight"]'),
       searchTips: element.shadowRoot?.querySelector('[part="search-tips"]'),
     };
@@ -147,26 +147,26 @@ describe('atomic-commerce-no-products', () => {
     expect(icon).toHaveAttribute('icon', MagnifyingGlassIcon);
   });
 
-  it('should render the correct part attribute on the "no results" text', async () => {
-    const {noResultsText} = await renderNoProducts();
+  it('should render the correct part attribute on the "no products" text', async () => {
+    const {noProductsText} = await renderNoProducts();
 
-    expect(noResultsText).toHaveAttribute('part', 'no-results');
+    expect(noProductsText).toHaveAttribute('part', 'no-results');
   });
 
   it('should render the correct text when there is a query', async () => {
     const query = 'test query';
-    const {noResultsText} = await renderNoProducts({
+    const {noProductsText} = await renderNoProducts({
       summaryState: {
         query,
       },
     });
 
-    expect(noResultsText).toHaveTextContent(
+    expect(noProductsText).toHaveTextContent(
       `We couldn't find any product for “${query}”`
     );
   });
 
-  it('should highlight the query in the "no results" text', async () => {
+  it('should highlight the query in the "no products" text', async () => {
     const query = 'test query';
     const {highlightedQuery} = await renderNoProducts({
       summaryState: {
@@ -189,9 +189,9 @@ describe('atomic-commerce-no-products', () => {
   });
 
   it('should render the correct text when there is no query', async () => {
-    const {noResultsText} = await renderNoProducts();
+    const {noProductsText} = await renderNoProducts();
 
-    expect(noResultsText).toHaveTextContent('No products');
+    expect(noProductsText).toHaveTextContent('No products');
   });
 
   it('should render the correct part attribute for the search tips', async () => {

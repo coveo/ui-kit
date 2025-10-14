@@ -5,6 +5,9 @@ interface Props {
   onFocusout?: (event: FocusEvent) => void;
 }
 
+/**
+ * @deprecated should only be used for Stencil components.
+ */
 export const SearchBoxWrapper: FunctionalComponent<Props> = (
   props,
   children

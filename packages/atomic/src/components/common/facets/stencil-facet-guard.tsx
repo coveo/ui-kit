@@ -8,7 +8,9 @@ interface FacetGuardProps {
   hasResults: boolean;
 }
 
-// @deprecated - use the `when` directive instead for Lit
+/**
+ * @deprecated should only be used for Stencil components.
+ */
 export const FacetGuard: FunctionalComponent<FacetGuardProps> = (
   {hasError, enabled, firstSearchExecuted, hasResults},
   children

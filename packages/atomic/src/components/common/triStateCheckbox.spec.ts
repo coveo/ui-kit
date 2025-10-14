@@ -1,14 +1,13 @@
 import {page} from '@vitest/browser/context';
-import {renderFunctionFixture} from '@/vitest-utils/testing-helpers/fixture';
-import '@vitest/browser/matchers.d.ts';
 import {html} from 'lit';
 import {describe, expect, it, vi} from 'vitest';
+import {renderFunctionFixture} from '@/vitest-utils/testing-helpers/fixture';
 import {
   renderTriStateCheckbox,
   type TriStateCheckboxProps,
 } from './triStateCheckbox';
 
-describe('renderTriStateCheckbox', () => {
+describe('#renderTriStateCheckbox', () => {
   const defaultProps: TriStateCheckboxProps = {
     state: 'idle',
     text: 'Test Checkbox',

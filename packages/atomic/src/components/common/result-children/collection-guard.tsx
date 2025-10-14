@@ -15,6 +15,10 @@ interface CollectionGuardProps {
   imageSize: ItemDisplayImageSize;
   noResultText: string;
 }
+
+/**
+ * @deprecated should only be used for Stencil components.
+ */
 export const CollectionGuard: FunctionalComponent<CollectionGuardProps> = (
   {
     isLoadingMoreResults,

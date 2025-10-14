@@ -1,10 +1,38 @@
-import fs from 'fs-extra';
-
-const {readFileSync, writeFileSync, copySync, copyFileSync} = fs;
-
+import {copyFileSync, cpSync, readFileSync, writeFileSync} from 'node:fs';
 import {dirname, join, resolve} from 'node:path';
 import {fileURLToPath} from 'node:url';
-import detectIndent from 'detect-indent';
+
+/**
+ * Detects the indentation used in a string.
+ * @param {string} str - The string to analyze
+ * @returns {{indent: string, amount: number, type: 'tab' | 'space' | undefined}} The detected indentation
+ */
+function detectIndent(str) {
+  const tabMatch = str.match(/^(\t+)/m);
+  if (tabMatch) {
+    return {
+      indent: '\t',
+      amount: 1,
+      type: 'tab',
+    };
+  }
+
+  const spaceMatch = str.match(/^( +)/m);
+  if (spaceMatch) {
+    const amount = spaceMatch[1].length;
+    return {
+      indent: ' '.repeat(amount),
+      amount,
+      type: 'space',
+    };
+  }
+
+  return {
+    indent: '',
+    amount: 0,
+    type: undefined,
+  };
+}
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -16,7 +44,7 @@ const atomicTemplatePath = resolve(
 );
 const bundledTemplatePath = resolve(__dirname, '..', 'template');
 
-copySync(atomicTemplatePath, bundledTemplatePath, {recursive: true});
+cpSync(atomicTemplatePath, bundledTemplatePath, {recursive: true});
 copyFileSync(
   join(__dirname, '!.eslintrc'),
   join(bundledTemplatePath, '.eslintrc')

@@ -14,10 +14,6 @@
   background-color: rgb(243, 243, 243);
 }
 
-.insight-panel_search-box {
-  flex: 1;
-}
-
 c-quantic-facet-manager,
 c-quantic-results-per-page {
   display: none;

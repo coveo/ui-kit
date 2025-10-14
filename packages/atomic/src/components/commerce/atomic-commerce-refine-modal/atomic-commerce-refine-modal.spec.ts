@@ -22,8 +22,8 @@ import {buildFakeProductListing} from '@/vitest-utils/testing-helpers/fixtures/h
 import {buildFakeSearch} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/search-controller';
 import {buildFakeSort} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/sort-subcontroller';
 import {buildFakeSummary} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/summary-subcontroller';
-import './atomic-commerce-refine-modal';
 import type {AtomicCommerceRefineModal} from './atomic-commerce-refine-modal';
+import './atomic-commerce-refine-modal';
 
 vi.mock('@coveo/headless/commerce', {spy: true});
 
@@ -291,7 +291,7 @@ describe('atomic-commerce-refine-modal', () => {
   it('should render the footer button with the correct text', async () => {
     const {footerButton} = await renderRefineModal();
 
-    expect(footerButton).toHaveTextContent('View results (100)');
+    expect(footerButton).toHaveTextContent('View products (100)');
   });
 
   it('should render the footer button text with the correct part attribute', async () => {
@@ -303,7 +303,7 @@ describe('atomic-commerce-refine-modal', () => {
   it('should render the footer button text with the correct text', async () => {
     const {footerButtonText} = await renderRefineModal();
 
-    expect(footerButtonText).toHaveTextContent('View results');
+    expect(footerButtonText).toHaveTextContent('View products');
   });
 
   it('should make isOpen false when the footer button is clicked', async () => {

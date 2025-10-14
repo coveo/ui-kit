@@ -1,14 +1,15 @@
 import {page} from '@vitest/browser/context';
-import {renderFunctionFixture} from '@/vitest-utils/testing-helpers/fixture';
-import '@vitest/browser/matchers.d.ts';
 import {html} from 'lit';
 import {describe, expect, it, vi} from 'vitest';
-import {highlightSearchResult} from '../facet-search/facet-search-utils';
+import {highlightSearchResult} from '@/src/components/common/facets/facet-search/facet-search-utils';
+import {renderFunctionFixture} from '@/vitest-utils/testing-helpers/fixture';
 import {renderFacetValueLabelHighlight} from './facet-value-label-highlight';
 
-vi.mock('../facet-search/facet-search-utils', {spy: true});
+vi.mock('@/src/components/common/facets/facet-search/facet-search-utils', {
+  spy: true,
+});
 
-describe('renderFacetValueLabelHighlight', () => {
+describe('#renderFacetValueLabelHighlight', () => {
   const setupElement = async (props = {}) => {
     const baseProps = {
       displayValue: 'Test Value',

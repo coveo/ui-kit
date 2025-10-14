@@ -22,6 +22,7 @@ describe('#renderRefineModal', () => {
         props: {
           host: mockHost,
           i18n,
+          i18nFooterButtonTextKey: 'view-products',
           onClose: () => {},
           title: 'Test Modal',
           numberOfItems: 42,
@@ -99,7 +100,7 @@ describe('#renderRefineModal', () => {
     const {footerButtonText} = await renderComponent();
 
     expect(footerButtonText).toHaveAttribute('part', 'footer-button-text');
-    expect(footerButtonText).toHaveTextContent('View results');
+    expect(footerButtonText).toHaveTextContent('View products');
   });
 
   it('should render footer button count with correct part', async () => {
