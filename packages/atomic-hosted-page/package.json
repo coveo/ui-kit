@@ -15,6 +15,17 @@
   "es2017": "dist/esm/index.mjs",
   "types": "dist/types/components.d.ts",
   "unpkg": "dist/atomic-page/atomic-hosted-page.esm.js",
+  "exports": {
+    ".": {
+      "types": "./dist/types/components.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs.js"
+    },
+    "./loader": {
+      "import": "./loader/index.js"
+    },
+    "./dist/*": "./dist/*"
+  },
   "files": [
     "dist/",
     "loader/",

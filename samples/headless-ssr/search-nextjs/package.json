@@ -19,7 +19,6 @@
     "@types/react": "catalog:",
     "@types/react-dom": "catalog:",
     "cypress": "catalog:",
-    "cypress-repeat": "catalog:",
     "cypress-web-vitals": "4.2.0",
     "typescript": "catalog:"
   }
