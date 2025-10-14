@@ -174,7 +174,7 @@ test.describe('atomic-commerce-search-box', () => {
           await expect(searchBox.clearButton).not.toBeVisible();
         });
 
-        test('should clear searchbox when clicking the clear button', async ({
+        test('should clear search-box when clicking the clear button', async ({
           searchBox,
         }) => {
           await searchBox.clearButton.click();

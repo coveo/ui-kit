@@ -3,7 +3,7 @@
   "private": true,
   "version": "3.0.65",
   "scripts": {
-    "postinstall": "husky install && patch-package && npx playwright install",
+    "postinstall": "husky install && patch-package",
     "reset:install": "git checkout origin/main package-lock.json && npm i",
     "clean:install": "git clean -xfd && npm run reset:install",
     "dev:atomic": "concurrently \"npm run -w @coveo/headless dev\" \"npm run -w @coveo/atomic start\"",
