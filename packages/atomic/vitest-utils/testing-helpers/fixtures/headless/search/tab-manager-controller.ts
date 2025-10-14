@@ -1,6 +1,6 @@
 import type {TabManager} from '@coveo/headless';
 import {vi} from 'vitest';
-import {genericSubscribe} from '../common';
+import {genericSubscribe} from '@/vitest-utils/testing-helpers/fixtures/headless/common';
 
 export const buildFakeTabManager = (
   options: Partial<TabManager['state']> = {}
