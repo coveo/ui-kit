@@ -28,10 +28,10 @@ export class ProductTemplateController extends BaseTemplateController<ProductTem
       return null;
     }
     return {
-      conditions: conditions.concat(this.matchConditions),
-      content: getTemplateElement(this.host).content!,
-      linkContent: this.getLinkTemplateElement(this.host).content!,
-      priority: 1,
+      conditions: baseTemplate.conditions,
+      content: baseTemplate.content,
+      linkContent: baseTemplate.linkContent,
+      priority: baseTemplate.priority,
     };
   }
 
