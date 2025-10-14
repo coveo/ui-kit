@@ -1,4 +1,4 @@
-import oapiSearch from 'https://platform.cloud.coveo.com/api-docs/SearchApi?group=public';
+import oapiSearch from 'virtual:open-api-coveo/SearchApi?group=public';
 import {fromOpenApi} from '@mswjs/source/open-api';
 import {delay, HttpResponse, http} from 'msw';
 import type {OpenAPIV3} from 'openapi-types';

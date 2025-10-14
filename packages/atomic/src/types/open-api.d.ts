@@ -1,3 +1,3 @@
-declare module 'https://platform.cloud.coveo.com/api-docs/*' {
+declare module 'virtual:open-api-coveo/*' {
     export default any;
 }
