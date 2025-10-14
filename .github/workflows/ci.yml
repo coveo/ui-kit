@@ -181,7 +181,7 @@ jobs:
         run: npm run knip
   cdn-checks:
     name: "CDN Checks"
-    needs: [affected, build-cdn]
+    needs: [affected]
     if: contains(needs.affected.outputs.projects, '@coveo/atomic') || contains(needs.affected.outputs.projects, '@samples/headless-commerce-react') || contains(needs.affected.outputs.projects, '@coveo/atomic-hosted-page')
     env:
       DEPLOYMENT_ENVIRONMENT: CDN
