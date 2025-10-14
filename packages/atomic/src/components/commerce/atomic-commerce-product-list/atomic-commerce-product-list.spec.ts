@@ -406,6 +406,24 @@ describe('atomic-commerce-product-list', () => {
     {display: 'grid'},
     {display: 'list'},
   ])('when #display is $display', ({display}) => {
+    it('should not set the renderingFunction on the atomic product itself', async () => {
+      const element = await setupElement({display});
+
+      const mockRenderingFunction = vi.fn();
+
+      element.setRenderFunction(mockRenderingFunction);
+
+      element.requestUpdate();
+      await element.updateComplete;
+
+      const atomicProductElement =
+        element.shadowRoot?.querySelector('atomic-product');
+
+      expect(atomicProductElement?.renderingFunction).toBe(
+        mockRenderingFunction
+      );
+    });
+
     it('should render correct # of atomic-result-placeholder when app is not loaded', async () => {
       const element = await setupElement({
         isAppLoaded: false,
@@ -549,6 +567,22 @@ describe('atomic-commerce-product-list', () => {
   });
 
   describe("when #display is 'table'", () => {
+    it('should not set the renderingFunction on the atomic product itself', async () => {
+      const element = await setupElement({display: 'table'});
+
+      const mockRenderingFunction = vi.fn();
+
+      element.setRenderFunction(mockRenderingFunction);
+
+      element.requestUpdate();
+      await element.updateComplete;
+
+      const atomicProductElement =
+        element.shadowRoot?.querySelector('atomic-product');
+
+      expect(atomicProductElement?.renderingFunction).toBeUndefined();
+    });
+
     it('should render 1 atomic-result-table-placeholder when app is not loaded', async () => {
       const element = await setupElement({
         display: 'table',
@@ -1192,30 +1226,6 @@ describe('atomic-commerce-product-list', () => {
 
         expect(atomicProductElement?.[0].product).toBe(mockProduct1);
         expect(atomicProductElement?.[1].product).toBe(mockProduct2);
-      });
-
-      it('should not set the renderingFunction on the atomic product itself', async () => {
-        const element = await setupElement({display});
-        display === 'table' && (await setupTableTemplate(element));
-
-        const mockRenderingFunction = vi.fn();
-
-        element.setRenderFunction(mockRenderingFunction);
-
-        // Must trigger update to get render function.
-        element.requestUpdate();
-        await element.updateComplete;
-
-        const atomicProductElement =
-          element.shadowRoot?.querySelector('atomic-product');
-
-        if (display === 'table') {
-          expect(atomicProductElement?.renderingFunction).toBeUndefined();
-        } else {
-          expect(atomicProductElement?.renderingFunction).toBe(
-            mockRenderingFunction
-          );
-        }
       });
 
       it('should pass correct #store', async () => {
