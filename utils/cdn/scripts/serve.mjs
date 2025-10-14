@@ -8,10 +8,13 @@ try {
       'Starting workspace server on port 3000 for ./dist/proda/StaticCDN directory...'
     )
   );
-  // eslint-disable-next-line @cspell/spellchecker
-  spawn('npx', ['ws', '--port', '3000', '-d', 'dist/proda/StaticCDN'], {
-    stdio: 'inherit',
-  });
+  spawn(
+    'pnpm',
+    ['dlx', 'local-web-server', '--port', '3000', '-d', 'dist/proda/StaticCDN'],
+    {
+      stdio: 'inherit',
+    }
+  );
 } catch (err) {
   console.error(colors.red('Error starting the server:'), err);
   process.exit(1);
