@@ -1,34 +1,35 @@
 import {
   buildInstantResults,
   buildInteractiveInstantResult,
-  InstantResults,
-  Result,
-  SearchBox,
+  type InstantResults,
+  type Result,
+  type SearchBox,
 } from '@coveo/headless';
-import {Component, Element, State, h, Prop, Method} from '@stencil/core';
-import {InitializableComponent} from '../../../../utils/initialization-utils';
-import {encodeForDomAttribute} from '../../../../utils/string-utils';
-import {ItemTemplateProvider} from '../../../common/item-list/item-template-provider';
-import {ItemRenderingFunction} from '../../../common/item-list/stencil-item-list-common';
-import {
+import {html, LitElement, nothing, render} from 'lit';
+import {customElement, property, state} from 'lit/decorators.js';
+import {keyed} from 'lit/directives/keyed.js';
+import type {ItemRenderingFunction} from '@/src/components/common/item-list/item-list-common';
+import {ItemTemplateProvider} from '@/src/components/common/item-list/item-template-provider';
+import type {
   ItemDisplayDensity,
   ItemDisplayImageSize,
   ItemDisplayLayout,
-} from '../../../common/layout/display-options';
+} from '@/src/components/common/layout/display-options';
 import {
   getPartialInstantItemElement,
   getPartialInstantItemShowAllElement,
-  InstantItemShowAllButton,
-} from '../../../common/suggestions/stencil-instant-item';
-import {
-  dispatchSearchBoxSuggestionsEvent,
-} from '../../../common/suggestions/suggestions-events';
+  renderInstantItemShowAllButton,
+} from '@/src/components/common/suggestions/instant-item';
+import {dispatchSearchBoxSuggestionsEvent} from '@/src/components/common/suggestions/suggestions-events';
 import type {
   SearchBoxSuggestionElement,
   SearchBoxSuggestions,
   SearchBoxSuggestionsBindings,
-} from '../../../common/suggestions/suggestions-types';
-import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
+} from '@/src/components/common/suggestions/suggestions-types';
+import type {Bindings} from '@/src/components/search/atomic-search-interface/interfaces';
+import {errorGuard} from '@/src/decorators/error-guard';
+import type {SearchBoxSuggestionsComponent} from '@/src/decorators/types';
+import {encodeForDomAttribute} from '@/src/utils/string-utils';
 
 export type AriaLabelGenerator = (
   bindings: Bindings,
@@ -42,13 +43,16 @@ export type AriaLabelGenerator = (
  *
  * This component is not supported on mobile.
  *
+ * @part instant-results-show-all-button - The 'See all results' button.
+ * @part instant-results-item - The individual instant result items.
+ *
  * @slot default - The default slot where the instant results are rendered.
  */
-@Component({
-  tag: 'atomic-search-box-instant-results',
-  shadow: true,
-})
-export class AtomicSearchBoxInstantResults implements InitializableComponent {
+@customElement('atomic-search-box-instant-results')
+export class AtomicSearchBoxInstantResults
+  extends LitElement
+  implements SearchBoxSuggestionsComponent<Bindings>
+{
   public bindings!: SearchBoxSuggestionsBindings<SearchBox, Bindings>;
   private itemRenderingFunction: ItemRenderingFunction;
   private results: Result[] = [];
@@ -56,10 +60,8 @@ export class AtomicSearchBoxInstantResults implements InitializableComponent {
   private instantResults!: InstantResults;
   private display: ItemDisplayLayout = 'list';
 
-  @Element() public host!: HTMLElement;
-
-  @State() public error!: Error;
-  @State() private templateHasError = false;
+  @state() public error!: Error;
+  @state() private templateHasError = false;
 
   /**
    * Sets a rendering function to bypass the standard HTML template mechanism for rendering results.
@@ -69,38 +71,46 @@ export class AtomicSearchBoxInstantResults implements InitializableComponent {
    *
    * @param resultRenderingFunction
    */
-  @Method() public async setRenderFunction(
+  public async setRenderFunction(
     resultRenderingFunction: ItemRenderingFunction
   ) {
     this.itemRenderingFunction = resultRenderingFunction;
   }
+
   /**
    * The maximum number of results to show.
    */
-  @Prop({reflect: true}) public maxResultsPerQuery = 4;
+  @property({attribute: 'max-results-per-query', reflect: true, type: Number})
+  public maxResultsPerQuery = 4;
+
   /**
    * The spacing of various elements in the result list, including the gap between results, the gap between parts of a result, and the font sizes of different parts in a result.
    */
-  @Prop({reflect: true}) public density: ItemDisplayDensity = 'normal';
+  @property({reflect: true}) public density: ItemDisplayDensity = 'normal';
+
   /**
    * The expected size of the image displayed in the results.
    */
-  @Prop({reflect: true}) public imageSize: ItemDisplayImageSize = 'icon';
+  @property({attribute: 'image-size', reflect: true})
+  public imageSize: ItemDisplayImageSize = 'icon';
+
   /**
    * The callback to generate an [`aria-label`](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Attributes/aria-label) for a given result so that accessibility tools can fully describe what's visually rendered by a result.
    *
    * By default, or if an empty string is returned, `result.title` is used.
    */
-  @Prop() public ariaLabelGenerator?: AriaLabelGenerator;
+  @property({attribute: 'aria-label-generator'})
+  public ariaLabelGenerator?: AriaLabelGenerator;
 
-  public componentWillLoad() {
+  connectedCallback() {
+    super.connectedCallback();
     try {
       dispatchSearchBoxSuggestionsEvent<SearchBox, Bindings>(
         (bindings) => {
           this.bindings = bindings;
           return this.initialize();
         },
-        this.host,
+        this,
         ['atomic-search-box']
       );
     } catch (error) {
@@ -126,8 +136,6 @@ export class AtomicSearchBoxInstantResults implements InitializableComponent {
     hasModifier && setTarget('_blank');
     el.click();
     hasModifier && setTarget(initialTarget || '');
-
-    return true;
   }
 
   private renderItems(): SearchBoxSuggestionElement[] {
@@ -142,30 +150,38 @@ export class AtomicSearchBoxInstantResults implements InitializableComponent {
       (result: Result) => {
         const partialItem = getPartialInstantItemElement(
           this.bindings.i18n,
+          'instant-results-suggestion-label',
           this.ariaLabelGenerator?.(this.bindings, result) || result.title,
           result.uniqueId
         );
+        const key = `instant-result-${encodeForDomAttribute(result.uniqueId)}`;
+
+        const template = html`${keyed(
+          key,
+          html`<atomic-result
+            part="outline"
+            .result=${result}
+            .interactiveResult=${buildInteractiveInstantResult(
+              this.bindings.engine,
+              {
+                options: {result},
+              }
+            )}
+            .display=${this.display}
+            .density=${this.density}
+            .imageSize=${this.imageSize}
+            .content=${this.itemTemplateProvider.getTemplateContent(result)}
+            .renderingFunction=${this.itemRenderingFunction}
+          ></atomic-result>`
+        )}`;
+
+        const container = document.createElement('div');
+        render(template, container);
+        const resultElement = container.firstElementChild as HTMLElement;
+
         return {
           ...partialItem,
-          content: (
-            <atomic-result
-              key={`instant-result-${encodeForDomAttribute(result.uniqueId)}`}
-              part="outline"
-              result={result}
-              interactiveResult={buildInteractiveInstantResult(
-                this.bindings.engine,
-                {
-                  options: {result},
-                }
-              )}
-              display={this.display}
-              density={this.density}
-              imageSize={this.imageSize}
-              content={this.itemTemplateProvider.getTemplateContent(result)}
-              stopPropagation={false}
-              renderingFunction={this.itemRenderingFunction}
-            ></atomic-result>
-          ),
+          content: resultElement,
           onSelect: (e: MouseEvent) => {
             const link = this.getLink(e.target as HTMLElement);
 
@@ -179,11 +195,15 @@ export class AtomicSearchBoxInstantResults implements InitializableComponent {
     );
     if (elements.length) {
       const partialItem = getPartialInstantItemShowAllElement(
-        this.bindings.i18n
+        this.bindings.i18n,
+        'show-all-results'
       );
       elements.push({
         ...partialItem,
-        content: <InstantItemShowAllButton i18n={this.bindings.i18n} />,
+        content: renderInstantItemShowAllButton({
+          i18n: this.bindings.i18n,
+          i18nKey: 'show-all-results',
+        }),
         onSelect: () => {
           this.bindings.clearSuggestions();
           this.bindings.searchBoxController.updateText(
@@ -206,7 +226,7 @@ export class AtomicSearchBoxInstantResults implements InitializableComponent {
     this.itemTemplateProvider = new ItemTemplateProvider({
       includeDefaultTemplate: true,
       templateElements: Array.from(
-        this.host.querySelectorAll('atomic-result-template')
+        this.querySelectorAll('atomic-result-template')
       ),
       getResultTemplateRegistered: () => true,
       setResultTemplateRegistered: () => {},
@@ -218,7 +238,7 @@ export class AtomicSearchBoxInstantResults implements InitializableComponent {
     });
 
     return {
-      position: Array.from(this.host.parentNode!.children).indexOf(this.host),
+      position: Array.from(this.parentNode!.children).indexOf(this),
       panel: 'right',
       onSuggestedQueryChange: (q) => {
         this.instantResults.updateQuery(q);
@@ -252,14 +272,14 @@ export class AtomicSearchBoxInstantResults implements InitializableComponent {
     });
   }
 
-  public render() {
-    if (this.error) {
-      return (
-        <atomic-component-error
-          element={this.host}
-          error={this.error}
-        ></atomic-component-error>
-      );
-    }
+  @errorGuard()
+  render() {
+    return html`${nothing}`;
+  }
+}
+
+declare global {
+  interface HTMLElementTagNameMap {
+    'atomic-search-box-instant-results': AtomicSearchBoxInstantResults;
   }
 }
