@@ -1,10 +1,10 @@
 import {ResultTemplate, ResultTemplateCondition} from '@coveo/headless';
 import {Component, Element, Prop, State, Method} from '@stencil/core';
-import {MapProp} from '../../../../utils/props-utils';
+import {MapProp} from '../../../utils/props-utils';
 import {
   makeMatchConditions,
   ResultTemplateCommon,
-} from '../../../common/result-templates/stencil-result-template-common';
+} from '../../common/result-templates/stencil-result-template-common';
 
 /**
  * The `atomic-result-children-template` component determines the format of the child results, depending on the conditions that are defined for each template. A `template` element must be the child of an `atomic-result-children-template`, and an `atomic-result-children` must be the parent of each `atomic-result-children-template`.
