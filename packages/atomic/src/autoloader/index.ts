@@ -16,7 +16,7 @@ export function registerAutoloader(
   roots = Array.isArray(roots) ? roots : [roots];
 
   // Track visited nodes to prevent infinite recursion
-  const visitedNodes = new WeakSet<Element | ShadowRoot | DocumentFragment>();
+  const visitedNodez = new WeakSet<Element | ShadowRoot | DocumentFragment>();
   /**
    * Observes a stencil element for hydration and discovers its shadowRoot when hydrated.
    */
@@ -26,7 +26,7 @@ export function registerAutoloader(
         atomicElement.classList.contains('hydrated') &&
         'shadowRoot' in atomicElement &&
         atomicElement.shadowRoot &&
-        !visitedNodes.has(atomicElement.shadowRoot)
+        !visitedNodez.has(atomicElement.shadowRoot)
       ) {
         attributeObserver.disconnect();
         await discover(atomicElement.shadowRoot);
@@ -47,7 +47,7 @@ export function registerAutoloader(
    * Checks a node for undefined elements and attempts to register them.
    */
   const discover = async (root: Element | ShadowRoot | DocumentFragment) => {
-    visitedNodes.add(root);
+    visitedNodez.add(root);
 
     // TODO: KIT-5085 remove once we get rid of cypress
     const rootTagName =
@@ -77,7 +77,7 @@ export function registerAutoloader(
       if (
         'shadowRoot' in root &&
         root.shadowRoot &&
-        !visitedNodes.has(root.shadowRoot)
+        !visitedNodez.has(root.shadowRoot)
       ) {
         await discover(root.shadowRoot);
         observer.observe(root.shadowRoot, {subtree: true, childList: true});
@@ -87,7 +87,7 @@ export function registerAutoloader(
     const childTemplates = root.querySelectorAll('template');
     //This is necessary to load the components that are inside the templates
     for (const template of childTemplates) {
-      if (visitedNodes.has(template.content)) {
+      if (visitedNodez.has(template.content)) {
         continue;
       }
       await discover(template.content);
@@ -105,7 +105,7 @@ export function registerAutoloader(
       if (
         'shadowRoot' in atomicElement &&
         atomicElement.shadowRoot &&
-        !visitedNodes.has(atomicElement.shadowRoot)
+        !visitedNodez.has(atomicElement.shadowRoot)
       ) {
         await discover(atomicElement);
         continue;
