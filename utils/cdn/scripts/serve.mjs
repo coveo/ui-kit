@@ -10,7 +10,14 @@ try {
   );
   spawn(
     'pnpm',
-    ['dlx', 'local-web-server', '--port', '3000', '-d', 'dist/proda/StaticCDN'],
+    [
+      'exec',
+      'local-web-server',
+      '--port',
+      '3000',
+      '-d',
+      'dist/proda/StaticCDN',
+    ],
     {
       stdio: 'inherit',
     }
