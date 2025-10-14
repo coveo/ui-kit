@@ -56,6 +56,9 @@
     "utils/ci": {
       "ignoreDependencies": ["@types/conventional-changelog-writer"]
     },
+    "utils/cdn": {
+      "ignoreDependencies": ["@coveo/bueno"]
+    },
 
     // Projects to enable bunch by bunch.
     // Projects using stencil don't really have a proper entry point because of stencil's magic so they have problems with knip.
