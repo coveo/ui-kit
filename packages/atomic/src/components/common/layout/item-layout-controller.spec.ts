@@ -1,23 +1,25 @@
 import {LitElement} from 'lit';
 import {customElement} from 'lit/decorators.js';
 import {beforeEach, describe, expect, it, vi} from 'vitest';
-import * as displayOptions from './display-options';
+import type * as displayOptions from './display-options';
+import {ItemLayout} from './item-layout';
 import {
   ItemLayoutController,
   type ItemLayoutHost,
   type ItemLayoutOptions,
 } from './item-layout-controller';
 
-vi.mock('./display-options');
+vi.mock('./display-options', {spy: true});
+vi.mock('./item-layout', {spy: true});
 
 const mockGetClasses = vi.fn();
-const MockedItemLayout = vi.mocked(displayOptions.ItemLayout);
+const MockedItemLayout = vi.mocked(ItemLayout);
 
 MockedItemLayout.mockImplementation(
   () =>
     ({
       getClasses: mockGetClasses,
-    }) as unknown as displayOptions.ItemLayout
+    }) as unknown as ItemLayout
 );
 
 @customElement('test-item-element')
