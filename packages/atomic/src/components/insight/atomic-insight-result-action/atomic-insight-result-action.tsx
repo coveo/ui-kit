@@ -14,7 +14,7 @@ import {
   InitializeBindings,
 } from '../../../utils/initialization-utils';
 import {IconButton} from '../../common/stencil-iconButton';
-import {ResultContext} from '../../search/result-template-components/result-template-decorators';
+import {ResultContext} from '@/src/components/search/result-template-component-utils/context/stencil-result-template-decorators';
 import {InsightBindings} from '../atomic-insight-interface/atomic-insight-interface';
 
 export interface InsightResultActionClickedEvent {

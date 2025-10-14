@@ -6,7 +6,7 @@ import {
 import {Component, Prop, h, Element} from '@stencil/core';
 import {MapProp} from '../../../../utils/props-utils';
 import {makeMatchConditions} from '../../../common/result-templates/stencil-result-template-common';
-import {ResultContext} from '../result-template-decorators';
+import {ResultContext} from '@/src/components/search/result-template-component-utils/context/stencil-result-template-decorators';
 
 /**
  * The `atomic-field-condition` component takes a list of conditions that, if fulfilled, apply the template in which it's defined.

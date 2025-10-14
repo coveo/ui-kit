@@ -16,11 +16,13 @@ import {
 import {html, LitElement} from 'lit';
 import {customElement, state} from 'lit/decorators.js';
 import {ifDefined} from 'lit/directives/if-defined.js';
+import {when} from 'lit/directives/when.js';
 import {within} from 'shadow-dom-testing-library';
 import {beforeEach, describe, expect, it, type MockInstance, vi} from 'vitest';
+import {InterfaceController} from '@/src/components/common/interface/interface-controller';
 import {bindings} from '@/src/decorators/bindings';
 import type {InitializableComponent} from '@/src/decorators/types';
-import {markParentAsReady} from '@/src/utils/init-queue.js';
+import {markParentAsReady} from '@/src/utils/init-queue';
 import {SafeStorage, StorageItems} from '@/src/utils/local-storage-utils';
 import {DEFAULT_MOBILE_BREAKPOINT} from '@/src/utils/replace-breakpoint-utils';
 import {fixture} from '@/vitest-utils/testing-helpers/fixture';
@@ -29,21 +31,19 @@ import {buildFakeCommerceEngine} from '@/vitest-utils/testing-helpers/fixtures/h
 import {buildFakeProductListing} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/product-listing-controller';
 import {buildFakeSearch} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/search-controller';
 import {buildFakeSummary} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/summary-subcontroller';
-import {InterfaceController} from '../../common/interface/interface-controller.js';
-import {getAnalyticsConfig} from './analytics-config.js';
+import '@/src/components/commerce/atomic-commerce-layout/atomic-commerce-layout';
+import {getAnalyticsConfig} from './analytics-config';
 import {
   AtomicCommerceInterface,
   type CommerceBindings,
 } from './atomic-commerce-interface';
-import {createCommerceStore} from './store.js';
-import './atomic-commerce-interface.js';
-import '../atomic-commerce-layout/atomic-commerce-layout.js';
-import {when} from 'lit/directives/when.js';
+import {createCommerceStore} from './store';
+import './atomic-commerce-interface';
 
 vi.mock('@coveo/headless/commerce', {spy: true});
-vi.mock('./analytics-config.js', {spy: true});
-vi.mock('./store.js', {spy: true});
-vi.mock('@/src/utils/init-queue.js', {spy: true});
+vi.mock('@/src/utils/init-queue', {spy: true});
+vi.mock('./analytics-config', {spy: true});
+vi.mock('./store', {spy: true});
 
 @customElement('test-element')
 @bindings()
@@ -1078,9 +1078,9 @@ describe('atomic-commerce-interface', () => {
         'onLanguageChange'
       );
       const setContextMock = vi.fn();
-      vi.mocked(loadContextActions).mockReturnValue({
+      vi.mocked(loadContextActions, {partial: true}).mockReturnValue({
         setContext: setContextMock,
-      } as unknown as ReturnType<typeof loadContextActions>);
+      });
 
       element.updateLocale('fr', 'FR', 'EUR');
 
@@ -1099,9 +1099,9 @@ describe('atomic-commerce-interface', () => {
         'onLanguageChange'
       );
       const setContextMock = vi.fn();
-      vi.mocked(loadContextActions).mockReturnValue({
+      vi.mocked(loadContextActions, {partial: true}).mockReturnValue({
         setContext: setContextMock,
-      } as unknown as ReturnType<typeof loadContextActions>);
+      });
 
       element.updateLocale('fr', 'FR', 'EUR');
 
@@ -1122,9 +1122,9 @@ describe('atomic-commerce-interface', () => {
         await element.initializeWithEngine(engine);
 
         setContextMock = vi.fn();
-        vi.mocked(loadContextActions).mockReturnValue({
+        vi.mocked(loadContextActions, {partial: true}).mockReturnValue({
           setContext: setContextMock,
-        } as unknown as ReturnType<typeof loadContextActions>);
+        });
         onLanguageChangeSpy = vi.spyOn(
           InterfaceController.prototype,
           'onLanguageChange'

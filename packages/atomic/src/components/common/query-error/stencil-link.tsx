@@ -7,6 +7,9 @@ interface QueryErrorLinkProps {
   i18n: i18n;
 }
 
+/**
+ * @deprecated should only be used for Stencil components.
+ */
 export const QueryErrorLink: FunctionalComponent<QueryErrorLinkProps> = ({
   errorType,
   i18n,

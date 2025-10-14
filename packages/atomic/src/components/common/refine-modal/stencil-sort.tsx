@@ -6,6 +6,10 @@ interface RefineModalSortSectionProps {
   i18n: i18n;
   onSelect: (e: Event) => void;
 }
+
+/**
+ * @deprecated should only be used for Stencil components.
+ */
 export const RefineModalSortSection: FunctionalComponent<
   RefineModalSortSectionProps
 > = ({i18n, onSelect}, children) => {

@@ -7,6 +7,10 @@ interface SortSelectProps {
   i18n: i18n;
   onSelect: (opt: Event) => void;
 }
+
+/**
+ * @deprecated should only be used for Stencil components.
+ */
 export const SortSelect: FunctionalComponent<SortSelectProps> = (
   {i18n, id, onSelect},
   children

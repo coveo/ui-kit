@@ -3,19 +3,13 @@ import {i18n} from 'i18next';
 import {Button, StencilButtonProps} from '../stencil-button';
 import {RadioButton, StencilRadioButtonProps} from '../stencil-radio-button';
 
-/**
- * @deprecated use the lit equivalent
- */
-export interface PagerNavigationButtonProps
+interface PagerNavigationButtonProps
   extends Omit<StencilButtonProps, 'style' | 'part' | 'class'> {
   icon: string;
   i18n: i18n;
 }
 
-/**
- * @deprecated use the lit equivalent
- */
-export interface PagerPageButtonProps
+interface PagerPageButtonProps
   extends Omit<
     StencilRadioButtonProps,
     'part' | 'style' | 'checked' | 'ariaCurrent' | 'key' | 'class' | 'ref'
@@ -25,15 +19,12 @@ export interface PagerPageButtonProps
   text: string;
 }
 
-/**
- * @deprecated use the lit equivalent
- */
-export interface PagerPageButtonsProps {
+interface PagerPageButtonsProps {
   i18n: i18n;
 }
 
 /**
- * @deprecated use the lit equivalent
+ * @deprecated should only be used for Stencil components.
  */
 export const PagerPreviousButton: FunctionalComponent<
   PagerNavigationButtonProps
@@ -56,7 +47,7 @@ export const PagerPreviousButton: FunctionalComponent<
 };
 
 /**
- * @deprecated use the lit equivalent
+ * @deprecated should only be used for Stencil components.
  */
 export const PagerNextButton: FunctionalComponent<
   PagerNavigationButtonProps
@@ -79,7 +70,7 @@ export const PagerNextButton: FunctionalComponent<
 };
 
 /**
- * @deprecated use the lit equivalent
+ * @deprecated should only be used for Stencil components.
  */
 export const PagerPageButton: FunctionalComponent<PagerPageButtonProps> = (
   props
@@ -99,7 +90,7 @@ export const PagerPageButton: FunctionalComponent<PagerPageButtonProps> = (
 };
 
 /**
- * @deprecated use the lit equivalent
+ * @deprecated should only be used for Stencil components.
  */
 export const PagerPageButtons: FunctionalComponent<PagerPageButtonsProps> = (
   props,

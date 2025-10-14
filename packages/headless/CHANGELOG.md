@@ -1,3 +1,10 @@
+## <small>3.31.2 (2025-10-08)</small>
+
+* chore(deps) update typedoc  (#6124) ([657371a](https://github.com/coveo/ui-kit/commits/657371a)), closes [#6124](https://github.com/coveo/ui-kit/issues/6124)
+* chore: more cleanup of dependencies in multiples packages (#6119) ([ff6c837](https://github.com/coveo/ui-kit/commits/ff6c837)), closes [#6119](https://github.com/coveo/ui-kit/issues/6119)
+
+
+
 ## <small>3.31.1 (2025-10-01)</small>
 
 * chore(deps): update dependency typedoc to v0.28.8 j:kit-282 (#5819) ([fb042f4](https://github.com/coveo/ui-kit/commits/fb042f4)), closes [#5819](https://github.com/coveo/ui-kit/issues/5819)

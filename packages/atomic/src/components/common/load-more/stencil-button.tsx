@@ -2,9 +2,6 @@ import {FunctionalComponent, h} from '@stencil/core';
 import {i18n} from 'i18next';
 import {Button} from '../stencil-button';
 
-/**
- * @deprecated Should only be used for Stencil components; for Lit components, use LoadMoreButtonProps interface instead
- */
 interface StencilLoadMoreButtonProps {
   i18n: i18n;
   onClick: () => void;
@@ -13,7 +10,7 @@ interface StencilLoadMoreButtonProps {
 }
 
 /**
- * @deprecated Should only be used for Stencil components; for Lit components, use the button.ts file instead
+ * @deprecated should only be used for Stencil components.
  */
 export const LoadMoreButton: FunctionalComponent<
   StencilLoadMoreButtonProps

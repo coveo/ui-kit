@@ -4,19 +4,28 @@ import {generativeQuestionAnsweringIdSelector} from './generated-answer-selector
 
 describe('generated-answer-selectors', () => {
   describe('generativeQuestionAnsweringIdSelector', () => {
-    afterAll(() => {
+    beforeEach(() => {
       vi.clearAllMocks();
     });
+
     it('returns the answerId if an answer configuration id is in state', () => {
+      const mockWithExplicitAnswerId = {
+        ...streamAnswerAPIStateMock,
+        answer: {
+          data: {},
+        },
+      };
+
       const state = {
-        ...(streamAnswerAPIStateMock as Partial<SearchAppState>),
+        ...(mockWithExplicitAnswerId as Partial<SearchAppState>),
         generatedAnswer: {
-          answerConfigurationId: 'answerConfigurationId',
+          answerConfigurationId: 'config123',
+          answerId: 'my-answer-id',
         },
       } as Partial<SearchAppState>;
 
       const result = generativeQuestionAnsweringIdSelector(state);
-      expect(result).toEqual('answerId1234');
+      expect(result).toEqual('my-answer-id');
     });
 
     it('returns the generativeQuestionAnsweringId if an answer configuration id is not in state', () => {
@@ -75,17 +84,7 @@ describe('generated-answer-selectors', () => {
       const mockWithExplicitAnswerId = {
         ...streamAnswerAPIStateMock,
         answer: {
-          ...streamAnswerAPIStateMock.answer,
-          queries: {
-            ...streamAnswerAPIStateMock.answer.queries,
-            // Explicitly setting the answerId
-            [Object.keys(streamAnswerAPIStateMock.answer.queries)[0]]: {
-              ...Object.values(streamAnswerAPIStateMock.answer.queries)[0],
-              data: {
-                answerId: 'answerId1234',
-              },
-            },
-          },
+          data: {},
         },
       };
 
@@ -93,6 +92,7 @@ describe('generated-answer-selectors', () => {
         ...(mockWithExplicitAnswerId as Partial<SearchAppState>),
         generatedAnswer: {
           answerConfigurationId: 'config123',
+          answerId: 'my-answer-id',
         },
         search: {
           response: {
@@ -104,7 +104,7 @@ describe('generated-answer-selectors', () => {
       } as Partial<SearchAppState>;
 
       const result = generativeQuestionAnsweringIdSelector(state);
-      expect(result).toBe('answerId1234');
+      expect(result).toBe('my-answer-id');
     });
 
     it('should return undefined when no relevant data is available', () => {

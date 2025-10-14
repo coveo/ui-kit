@@ -6,19 +6,18 @@
   "scripts": {
     "build": "npm run build:assets && npm run build:vue",
     "dev": "npm run build:assets && npm run dev:vue",
-    "build:assets": "ncp ../../../packages/atomic/dist/atomic/assets public/assets && ncp ../../../packages/atomic/dist/atomic/lang public/lang",
+    "build:assets": "node ../../../utils/ci/copy-files.mjs ../../../packages/atomic/dist/atomic/assets public/assets ../../../packages/atomic/dist/atomic/lang public/lang",
     "dev:vue": "vite",
     "build:vue": "vite build",
     "preview": "vite preview"
   },
   "dependencies": {
-    "@coveo/atomic": "3.33.8",
+    "@coveo/atomic": "3.34.0",
     "vue": "3.5.18"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "6.0.1",
     "cypress": "13.7.3",
-    "ncp": "2.0.0",
     "typescript": "5.8.3",
     "vite": "7.0.6"
   }

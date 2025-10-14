@@ -6,10 +6,11 @@ import type {
   ItemDisplayImageSize,
   ItemDisplayLayout,
 } from '@/src/components';
+import type {ItemRenderingFunction} from '@/src/components/common/item-list/item-list-common';
 import {renderInAtomicCommerceInterface} from '@/vitest-utils/testing-helpers/fixtures/atomic/commerce/atomic-commerce-interface-fixture';
 import {buildFakeProduct} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/product';
-import type {ItemRenderingFunction} from '../../common/item-list/item-list-common';
 import {AtomicProduct} from './atomic-product';
+import './atomic-product';
 
 vi.mock('@coveo/headless/commerce', {spy: true});
 
@@ -277,7 +278,7 @@ describe('atomic-product', () => {
       it('should log warning', async () => {
         await renderProduct({content: undefined});
         expect(consoleWarnSpy).toHaveBeenCalledWith(
-          'AtomicProduct: content property is undefined. Cannot create layout.',
+          'atomic-product: content property is undefined. Cannot create layout.',
           expect.any(AtomicProduct)
         );
       });
@@ -305,7 +306,7 @@ describe('atomic-product', () => {
         getContentHTMLMethod();
 
         expect(consoleWarnSpy).toHaveBeenCalledWith(
-          'AtomicProduct: content property is undefined. Cannot get content HTML.',
+          'atomic-product: content property is undefined. Cannot get content HTML.',
           expect.any(AtomicProduct)
         );
       });

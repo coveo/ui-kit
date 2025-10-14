@@ -4,6 +4,9 @@ import {encodeForDomAttribute} from '../../../utils/string-utils';
 import {getClassNameForButtonStyle} from '../stencil-button-style';
 import {SearchBoxSuggestionElement} from './suggestions-types';
 
+/**
+ * @deprecated should only be used for Stencil components.
+ */
 export const getPartialInstantItemElement = (
   i18n: i18n,
   itemTitle: string,
@@ -19,6 +22,9 @@ export const getPartialInstantItemElement = (
   };
 };
 
+/**
+ * @deprecated should only be used for Stencil components.
+ */
 export const getPartialInstantItemShowAllElement = (
   i18n: i18n
 ): Pick<SearchBoxSuggestionElement, 'key' | 'part' | 'ariaLabel'> => {
@@ -32,6 +38,10 @@ export const getPartialInstantItemShowAllElement = (
 interface InstantItemShowAllButtonProps {
   i18n: i18n;
 }
+
+/**
+ * @deprecated should only be used for Stencil components.
+ */
 export const InstantItemShowAllButton: FunctionalComponent<
   InstantItemShowAllButtonProps
 > = ({i18n}) => {

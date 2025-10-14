@@ -9,7 +9,7 @@ import {getStringValueFromResultOrNull} from '../../../../utils/result-utils';
 import {ItemTextFallback} from '../../../common/item-text/stencil-item-text-fallback';
 import {ItemTextHighlighted} from '../../../common/item-text/stencil-item-text-highlighted';
 import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
-import {ResultContext} from '../result-template-decorators';
+import {ResultContext} from '@/src/components/search/result-template-component-utils/context/stencil-result-template-decorators';
 
 /**
  * The `atomic-result-text` component renders the value of a string result field.

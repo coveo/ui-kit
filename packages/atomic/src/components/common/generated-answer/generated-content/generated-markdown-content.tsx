@@ -7,6 +7,9 @@ interface GeneratedMarkdownContentProps {
   isStreaming: boolean;
 }
 
+/**
+ * @deprecated should only be used for Stencil components.
+ */
 export const GeneratedMarkdownContent: FunctionalComponent<
   GeneratedMarkdownContentProps
 > = (props) => {
