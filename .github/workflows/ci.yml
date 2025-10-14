@@ -185,6 +185,8 @@ jobs:
     if: contains(needs.affected.outputs.projects, '@coveo/atomic') || contains(needs.affected.outputs.projects, '@samples/headless-commerce-react') || contains(needs.affected.outputs.projects, '@coveo/atomic-hosted-page')
     env:
       DEPLOYMENT_ENVIRONMENT: CDN
+      IS_PRERELEASE: "true"
+      PR_NUMBER: ${{ github.event_name == 'pull_request' && github.event.pull_request.number || '' }}
     runs-on: ubuntu-latest
     steps:
       - name: Harden Runner
