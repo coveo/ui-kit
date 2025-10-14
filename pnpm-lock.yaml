@@ -48,12 +48,18 @@ catalogs:
     cypress:
       specifier: 13.7.3
       version: 13.7.3
+    cypress-repeat:
+      specifier: 2.3.9
+      version: 2.3.9
     dayjs:
       specifier: 1.11.13
       version: 1.11.13
     esbuild:
       specifier: 0.25.8
       version: 0.25.8
+    exponential-backoff:
+      specifier: 3.1.2
+      version: 3.1.2
     jest:
       specifier: 29.7.0
       version: 29.7.0
@@ -318,7 +324,7 @@ importers:
         specifier: 1.6.0
         version: 1.6.0(axe-core@4.10.3)(cypress@13.7.3)
       cypress-repeat:
-        specifier: 2.3.9
+        specifier: 'catalog:'
         version: 2.3.9(cypress@13.7.3)
       cypress-split:
         specifier: 1.5.0
@@ -769,7 +775,7 @@ importers:
         specifier: ^0.1.13
         version: 0.1.13
       exponential-backoff:
-        specifier: 3.1.2
+        specifier: 'catalog:'
         version: 3.1.2
       fast-equals:
         specifier: 5.2.2
@@ -909,6 +915,9 @@ importers:
       eslint-config-prettier:
         specifier: 10.1.8
         version: 10.1.8(eslint@8.57.1)
+      exponential-backoff:
+        specifier: 'catalog:'
+        version: 3.1.2
       jest:
         specifier: 'catalog:'
         version: 29.7.0(@types/node@24.6.2)(ts-node@10.9.2(@types/node@24.6.2)(typescript@5.8.3))
@@ -1112,6 +1121,9 @@ importers:
       cypress:
         specifier: 'catalog:'
         version: 13.7.3
+      cypress-repeat:
+        specifier: 'catalog:'
+        version: 2.3.9(cypress@13.7.3)
       typescript:
         specifier: 'catalog:'
         version: 5.8.3
@@ -1134,6 +1146,9 @@ importers:
       cypress:
         specifier: 'catalog:'
         version: 13.7.3
+      cypress-repeat:
+        specifier: 'catalog:'
+        version: 2.3.9(cypress@13.7.3)
       rollup-plugin-html:
         specifier: 'catalog:'
         version: 0.2.1
@@ -1332,6 +1347,9 @@ importers:
       cypress:
         specifier: 'catalog:'
         version: 13.7.3
+      cypress-repeat:
+        specifier: 'catalog:'
+        version: 2.3.9(cypress@13.7.3)
       cypress-web-vitals:
         specifier: 4.2.0
         version: 4.2.0(cypress-real-events@1.15.0(cypress@13.7.3))(cypress@13.7.3)
