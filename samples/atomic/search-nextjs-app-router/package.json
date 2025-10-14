@@ -3,24 +3,24 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "dev": "npm run build:assets && next dev",
-    "build": "npm run-script -w=@coveo/ci if-not-cdn -- \"npm run build:assets && next build\"",
     "build:assets": "node ../../../utils/ci/copy-files.mjs ../../../packages/atomic-react/dist/assets public/assets ../../../packages/atomic-react/dist/lang public/lang",
+    "dev": "pnpm run build:assets && next dev",
+    "build": "pnpm --filter @coveo/ci if-not-cdn -- \"pnpm run build:assets && next build\"",
     "start": "next start",
     "lint": "next lint"
   },
   "dependencies": {
-    "next": "15.2.4",
-    "react": "19.1.1",
-    "react-dom": "19.1.1",
-    "@coveo/atomic-react": "3.3.18",
-    "@coveo/atomic": "3.35.5",
-    "@coveo/headless": "3.32.0"
+    "next": "catalog:",
+    "react": "catalog:",
+    "react-dom": "catalog:",
+    "@coveo/atomic-react": "workspace:*",
+    "@coveo/atomic": "workspace:*",
+    "@coveo/headless": "workspace:*"
   },
   "devDependencies": {
-    "typescript": "5.8.3",
-    "@types/node": "22.16.5",
-    "@types/react": "19.1.1",
-    "@types/react-dom": "19.1.2"
+    "typescript": "catalog:",
+    "@types/node": "catalog:",
+    "@types/react": "catalog:",
+    "@types/react-dom": "catalog:"
   }
 }

@@ -15,8 +15,8 @@ import {
 } from './components.js';
 
 interface Template {
-  contentTemplate: JSX.Element;
-  linkTemplate: JSX.Element;
+  contentTemplate: React.JSX.Element;
+  linkTemplate: React.JSX.Element;
 }
 
 interface AtomicCommerceRecommendationListProps {
@@ -60,7 +60,7 @@ interface WrapperProps extends AtomicCommerceRecommendationListProps {
    * A template function that takes a result item and outputs its target rendering as a JSX element.
    * It can be used to conditionally render different type of result templates based on the properties of each result.
    */
-  template: (result: Product) => JSX.Element | Template;
+  template: (result: Product) => React.JSX.Element | Template;
 }
 
 /**
@@ -103,7 +103,7 @@ export const ListWrapper: React.FC<WrapperProps> = (props) => {
 };
 
 const hasLinkTemplate = (
-  template: JSX.Element | Template
+  template: React.JSX.Element | Template
 ): template is Template => {
   return (template as Template).linkTemplate !== undefined;
 };
