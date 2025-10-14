@@ -32,15 +32,6 @@ export class ResultTemplateController extends BaseTemplateController<ResultTempl
     };
   }
 
-  protected getWarnings() {
-    return {
-      scriptTag:
-        'Any "script" tags inside "template" elements are not supported and will not be executed when the results are rendered.',
-      sectionMix:
-        'Result templates should only contain section OR non-section elements, not both. Future updates could unpredictably affect this template.',
-    };
-  }
-
   protected getDefaultLinkTemplateElement() {
     const linkTemplate = document.createElement('template');
     linkTemplate.innerHTML = `<atomic-result-link>${

@@ -28,19 +28,10 @@ export class ProductTemplateController extends BaseTemplateController<ProductTem
       return null;
     }
     return {
-      conditions: baseTemplate.conditions,
-      content: baseTemplate.content,
-      linkContent: baseTemplate.linkContent,
-      priority: baseTemplate.priority,
-    };
-  }
-
-  protected getWarnings() {
-    return {
-      scriptTag:
-        'Any "script" tags defined inside of "template" elements are not supported and will not be executed when the products are rendered.',
-      sectionMix:
-        'Product templates should only contain section elements or non-section elements, not both. Future updates could unpredictably affect this product template.',
+      conditions: conditions.concat(this.matchConditions),
+      content: getTemplateElement(this.host).content!,
+      linkContent: this.getLinkTemplateElement(this.host).content!,
+      priority: 1,
     };
   }
 

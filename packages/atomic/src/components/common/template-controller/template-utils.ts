@@ -1,37 +1,12 @@
-import {isResultSectionNode} from '@/src/components/common/layout/item-layout-sections';
-import {tableElementTagName} from '@/src/components/common/table-element-utils';
 import {intersection} from '@/src/utils/set';
-import {isElementNode, isVisualNode} from '@/src/utils/utils';
 
 export type TemplateContent = DocumentFragment;
-
-export type TemplateNodeType =
-  | 'section'
-  | 'metadata'
-  | 'table-column-definition'
-  | 'other';
 
 export interface TemplateHelpers<TCondition> {
   fieldMustMatch: (field: string, values: string[]) => TCondition;
   fieldMustNotMatch: (field: string, values: string[]) => TCondition;
   fieldsMustBeDefined: (fieldNames: string[]) => TCondition;
   fieldsMustNotBeDefined: (fieldNames: string[]) => TCondition;
-}
-
-export function getTemplateNodeType(node: Node): TemplateNodeType {
-  if (isResultSectionNode(node)) {
-    return 'section';
-  }
-  if (!isVisualNode(node)) {
-    return 'metadata';
-  }
-  if (
-    isElementNode(node) &&
-    node.tagName.toLowerCase() === tableElementTagName
-  ) {
-    return 'table-column-definition';
-  }
-  return 'other';
 }
 
 export function makeMatchConditions<TCondition>(

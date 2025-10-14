@@ -7,10 +7,7 @@ import {
   type MockInstance,
   vi,
 } from 'vitest';
-import {isResultSectionNode} from '@/src/components/common/layout/item-layout-sections';
-import {isElementNode, isVisualNode} from '@/src/utils/utils';
 import {
-  getTemplateNodeType,
   makeDefinedConditions,
   makeMatchConditions,
   type TemplateHelpers,
@@ -21,41 +18,6 @@ vi.mock('@/src/components/common/layout/item-layout-sections', {spy: true});
 vi.mock('@/src/utils/utils', {spy: true});
 
 describe('template-utils', () => {
-  describe('getTemplateNodeType', () => {
-    it('returns "section" when isResultSectionNode is true', () => {
-      const node: Node = document.createElement('div');
-      vi.mocked(isResultSectionNode).mockReturnValueOnce(true);
-
-      expect(getTemplateNodeType(node)).toBe('section');
-    });
-
-    it('returns "metadata" when node is not visual', () => {
-      const node: Node = document.createElement('span');
-      vi.mocked(isResultSectionNode).mockReturnValueOnce(false);
-      vi.mocked(isVisualNode).mockReturnValueOnce(false);
-
-      expect(getTemplateNodeType(node)).toBe('metadata');
-    });
-
-    it('returns "table-column-definition" when node matches tableElementTagName', () => {
-      const node: Node = document.createElement('atomic-table-element');
-      vi.mocked(isResultSectionNode).mockReturnValueOnce(false);
-      vi.mocked(isVisualNode).mockReturnValueOnce(true);
-      vi.mocked(isElementNode).mockReturnValueOnce(true);
-
-      expect(getTemplateNodeType(node)).toBe('table-column-definition');
-    });
-
-    it('returns "other" for any other visual element', () => {
-      const node: Node = document.createElement('p');
-      vi.mocked(isResultSectionNode).mockReturnValueOnce(false);
-      vi.mocked(isVisualNode).mockReturnValueOnce(true);
-      vi.mocked(isElementNode).mockReturnValueOnce(false);
-
-      expect(getTemplateNodeType(node)).toBe('other');
-    });
-  });
-
   describe('makeMatchConditions', () => {
     let consoleErrorSpy: MockInstance;
     let mockHelpers: TemplateHelpers<() => boolean>;

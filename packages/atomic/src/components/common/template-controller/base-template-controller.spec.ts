@@ -5,16 +5,7 @@ import type {LitElementWithError} from '@/src/decorators/types';
 import {fixture} from '@/vitest-utils/testing-helpers/fixture';
 import {BaseTemplateController} from './base-template-controller';
 
-vi.mock('./template-utils', {spy: true});
-
 class TestTemplateController extends BaseTemplateController<() => boolean> {
-  protected getWarnings() {
-    return {
-      scriptTag: 'Test script warning',
-      sectionMix: 'Test section mix warning',
-    };
-  }
-
   protected getDefaultLinkTemplateElement() {
     const linkTemplate = document.createElement('template');
     linkTemplate.innerHTML = `<test-link>${this.currentGridCellLinkTarget ? `<a slot="attributes" target="${this.currentGridCellLinkTarget}"></a>` : ''}</test-link>`;
@@ -41,6 +32,9 @@ class EmptyTestElement extends LitElement implements LitElementWithError {
 }
 
 describe('BaseTemplateController', () => {
+  let mockElement: TestElement;
+  let controller: TestTemplateController;
+
   function buildTemplateHtml(html: string) {
     const template = document.createElement('template');
     template.innerHTML = html;
@@ -61,124 +55,303 @@ describe('BaseTemplateController', () => {
     return document.querySelector('test-element')! as TestElement;
   }
 
-  describe('validation', () => {
-    describe('when the host has not a valid parent', () => {
-      it('should set an error', async () => {
-        const element = await setupElement(
-          html`<test-element>
+  beforeEach(() => {
+    mockElement = new TestElement();
+  });
+
+  it('should register itself as a controller with the host', () => {
+    const addControllerSpy = vi.spyOn(mockElement, 'addController');
+    controller = new TestTemplateController(
+      mockElement,
+      ['valid-parent'],
+      false
+    );
+
+    expect(addControllerSpy).toHaveBeenCalledExactlyOnceWith(controller);
+  });
+
+  describe('when the host is connected to the DOM', () => {
+    it('it should set an error on the host when the host is not a valid parent', async () => {
+      const element = await setupElement(
+        html`<test-element>
             <template><h1>hello</h1></template>
           </test-element>`,
-          document.createElement('invalid-parent')
-        );
+        document.createElement('invalid-parent')
+      );
 
-        expect(element.error).toBeInstanceOf(Error);
-        expect(element.error.message).toContain('has to be the child');
-      });
+      expect(element.error).toBeInstanceOf(Error);
+      expect(element.error.message).toContain('has to be the child');
     });
 
-    describe('when the template is missing from the host', () => {
-      it('should set an error', async () => {
-        const element = await setupElement(html`<test-element></test-element>`);
+    it('should set an error on the host when the template is missing from the host', async () => {
+      const element = await setupElement(html`<test-element></test-element>`);
 
-        expect(element.error).toBeInstanceOf(Error);
-        expect(element.error.message).toContain('must contain a "template"');
-      });
+      expect(element.error).toBeInstanceOf(Error);
+      expect(element.error.message).toContain('must contain a "template"');
     });
 
-    describe('when the template is empty', () => {
-      it('should set an error if allowEmpty is false', async () => {
-        const element = await setupElement(
-          html`<test-element>
+    it('should set an error when allowEmpty is false', async () => {
+      const element = await setupElement(
+        html`<test-element>
             <template> </template>
           </test-element>`
-        );
+      );
 
-        expect(element.error).toBeInstanceOf(Error);
-        expect(element.error.message).toContain('cannot be empty');
-      });
+      expect(element.error).toBeInstanceOf(Error);
+      expect(element.error.message).toContain('cannot be empty');
+    });
 
-      it('should not set an error if allowEmpty is true', async () => {
-        await setupElement(
-          html`<empty-test-element>
+    it('should not set an error when allowEmpty is true', async () => {
+      await setupElement(
+        html`<empty-test-element>
             <template> </template>
           </empty-test-element>`
-        );
+      );
 
-        const element = document.querySelector(
-          'empty-test-element'
-        ) as EmptyTestElement;
+      const element = document.querySelector(
+        'empty-test-element'
+      ) as EmptyTestElement;
 
-        expect(element.error).toBeUndefined();
-      });
+      expect(element.error).toBeUndefined();
     });
 
-    describe('when the template contains script tags', () => {
-      it('should log a warning using child class message', async () => {
-        const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
-        const element = await setupElement(
-          html`<test-element>
+    it('it should log a warning when the template contains script tags', async () => {
+      const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
+      const element = await setupElement(
+        html`<test-element>
             <template><script></script></template>
           </test-element>`
-        );
+      );
 
-        expect(warnSpy).toHaveBeenCalledWith('Test script warning', element);
-
-        warnSpy.mockRestore();
-      });
+      expect(warnSpy).toHaveBeenCalledWith(
+        'Any "script" tags defined inside of "template" elements are not supported and will not be executed when the items are rendered.',
+        element
+      );
     });
 
-    describe('when the template contains both section and other nodes', () => {
+    describe('when validating template content', () => {
       let warnSpy: MockInstance;
-      const getTemplateFirstNode = (template: HTMLTemplateElement) =>
-        template.content.childNodes[0];
-
-      const localSetup = () =>
-        setupElement(
-          html`<test-element>
-            <template>
-              <atomic-result-section-visual>section</atomic-result-section-visual>
-              <span>other</span>
-            </template>
-          </test-element>`
-        );
 
       beforeEach(() => {
         warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
       });
 
-      it('should call getTemplateNodeType with the appropriate sections', async () => {
-        const {getTemplateNodeType} = await import('./template-utils');
-        const mockedGetTemplateNodeType = vi.mocked(getTemplateNodeType);
-
-        await localSetup();
-
-        const visualSectionTemplate = buildTemplateHtml(
-          '<atomic-result-section-visual>section</atomic-result-section-visual>'
-        );
-        const otherSectionTemplate = buildTemplateHtml('<span>other</span>');
-
-        expect(mockedGetTemplateNodeType).toHaveBeenCalledWith(
-          getTemplateFirstNode(visualSectionTemplate)
+      it('should not log a warning when template contains only section elements', async () => {
+        await setupElement(
+          html`<test-element>
+            <template>
+              <atomic-result-section-visual>section1</atomic-result-section-visual>
+              <atomic-result-section-title>section2</atomic-result-section-title>
+            </template>
+          </test-element>`
         );
 
-        expect(mockedGetTemplateNodeType).toHaveBeenCalledWith(
-          getTemplateFirstNode(otherSectionTemplate)
+        expect(warnSpy).not.toHaveBeenCalledWith(
+          'Item templates should only contain section elements or non-section elements, not both. Future updates could unpredictably affect this item template.',
+          expect.any(TestElement),
+          expect.any(Object)
         );
       });
 
-      it('should log a warning using child class message', async () => {
-        await localSetup();
-
-        expect(warnSpy).toHaveBeenCalledWith(
-          'Test section mix warning',
-          expect.any(TestElement),
-          expect.objectContaining({})
+      it('should not log a warning when template contains only other elements', async () => {
+        await setupElement(
+          html`<test-element>
+            <template>
+              <div>content1</div>
+              <span>content2</span>
+              <p>content3</p>
+            </template>
+          </test-element>`
         );
+
+        expect(warnSpy).not.toHaveBeenCalledWith(
+          'Item templates should only contain section elements or non-section elements, not both. Future updates could unpredictably affect this item template.',
+          expect.any(TestElement),
+          expect.any(Object)
+        );
+      });
+
+      it('should not log a warning when template contains only metadata elements', async () => {
+        await setupElement(
+          html`<test-element>
+            <template>
+              <style>body { color: red; }</style>
+              <!-- This is a comment -->
+               
+            </template>
+          </test-element>`
+        );
+
+        expect(warnSpy).not.toHaveBeenCalledWith(
+          'Item templates should only contain section elements or non-section elements, not both. Future updates could unpredictably affect this item template.',
+          expect.any(TestElement),
+          expect.any(Object)
+        );
+      });
+
+      it('should not log a warning when template contains only table column definitions', async () => {
+        await setupElement(
+          html`<test-element>
+            <template>
+              <atomic-table-element slot="table-column">Column 1</atomic-table-element>
+              <atomic-table-element slot="table-column">Column 2</atomic-table-element>
+            </template>
+          </test-element>`
+        );
+
+        expect(warnSpy).not.toHaveBeenCalledWith(
+          'Item templates should only contain section elements or non-section elements, not both. Future updates could unpredictably affect this item template.',
+          expect.any(TestElement),
+          expect.any(Object)
+        );
+      });
+
+      describe('when the template contains both section and other nodes', () => {
+        const localSetup = () =>
+          setupElement(
+            html`<test-element>
+              <template>
+                <atomic-result-section-visual>section</atomic-result-section-visual>
+                <span>other</span>
+              </template>
+            </test-element>`
+          );
+
+        it('should log a warning when mixing section and other elements', async () => {
+          await localSetup();
+
+          expect(warnSpy).toHaveBeenCalledWith(
+            'Item templates should only contain section elements or non-section elements, not both. Future updates could unpredictably affect this item template.',
+            expect.any(TestElement),
+            expect.objectContaining({
+              section: expect.any(Array),
+              other: expect.any(Array),
+            })
+          );
+        });
+
+        it('should identify section elements correctly', async () => {
+          await localSetup();
+
+          expect(warnSpy).toHaveBeenCalled();
+          const [, , logData] = warnSpy.mock.calls[0];
+
+          expect(logData.section).toBeDefined();
+          expect(logData.section.length).toBe(1);
+
+          expect(logData.other).toBeDefined();
+          expect(logData.other.length).toBe(1);
+        });
+      });
+    });
+
+    describe('when parent has grid display and grid-cell-link-target', () => {
+      it('should set grid cell link target', async () => {
+        const parent = document.createElement('valid-parent');
+        parent.setAttribute('display', 'grid');
+        parent.setAttribute('grid-cell-link-target', '_blank');
+
+        const element = await setupElement(
+          html`<test-element>
+            <template><div>content</div></template>
+          </test-element>`,
+          parent
+        );
+
+        const result = element.controller.getBaseTemplateForTesting([]);
+        const linkContent = fragmentToHTML(result!.linkContent!);
+
+        expect(linkContent).toContain('target="_blank"');
+        expect(linkContent).toContain('<test-link>');
+      });
+
+      it('should not include target attribute when no grid cell link target is set', async () => {
+        const parent = document.createElement('valid-parent');
+        parent.setAttribute('display', 'grid');
+
+        const element = await setupElement(
+          html`<test-element>
+            <template><div>content</div></template>
+          </test-element>`,
+          parent
+        );
+
+        const result = element.controller.getBaseTemplateForTesting([]);
+        const linkContent = fragmentToHTML(result!.linkContent!);
+
+        expect(linkContent).not.toContain('target=');
+        expect(linkContent).toBe('<test-link></test-link>');
+      });
+
+      it('should not include target attribute for non-grid display', async () => {
+        const parent = document.createElement('valid-parent');
+        parent.setAttribute('display', 'list');
+        parent.setAttribute('grid-cell-link-target', '_blank');
+
+        const element = await setupElement(
+          html`<test-element>
+            <template><div>content</div></template>
+          </test-element>`,
+          parent
+        );
+
+        const result = element.controller.getBaseTemplateForTesting([]);
+        const linkContent = fragmentToHTML(result!.linkContent!);
+
+        expect(linkContent).not.toContain('target=');
+        expect(linkContent).toBe('<test-link></test-link>');
       });
     });
   });
 
-  describe('template generation', () => {
+  describe('#getLinkTemplateElement', () => {
+    it('should return custom link template when provided', async () => {
+      const {controller} = await setupElement(
+        html`<test-element>
+          <template>
+            <div>content</div>
+          </template>
+          <template slot="link">
+            <custom-link></custom-link>
+          </template>
+        </test-element>`
+      );
+
+      const linkElement = controller.getLinkTemplateElement(controller['host']);
+      expect(linkElement.innerHTML.trim()).toBe('<custom-link></custom-link>');
+    });
+
+    it('should return default link template when none provided', async () => {
+      const {controller} = await setupElement(
+        html`<test-element>
+          <template>
+            <div>content</div>
+          </template>
+        </test-element>`
+      );
+
+      const linkElement = controller.getLinkTemplateElement(controller['host']);
+      expect(linkElement.innerHTML).toBe('<test-link></test-link>');
+    });
+
+    it('should include grid cell link target in default template when set', async () => {
+      const parent = document.createElement('valid-parent');
+      parent.setAttribute('display', 'grid');
+      parent.setAttribute('grid-cell-link-target', '_blank');
+
+      const {controller} = await setupElement(
+        html`<test-element>
+          <template><div>content</div></template>
+        </test-element>`,
+        parent
+      );
+
+      const linkElement = controller.getLinkTemplateElement(controller['host']);
+      expect(linkElement.innerHTML).toContain('target="_blank"');
+    });
+  });
+
+  describe('#getBaseTemplate', () => {
     describe('when the template is valid', () => {
       let result: ReturnType<
         TestTemplateController['getBaseTemplateForTesting']
@@ -195,186 +368,57 @@ describe('BaseTemplateController', () => {
         result = controller.getBaseTemplateForTesting([])!;
       });
 
-      it('getBaseTemplate returns a non-null object', () => {
+      it('should return a non-null template object', () => {
         expect(result).not.toBeNull();
       });
 
-      it('getBaseTemplate returns the correct conditions', () => {
+      it('should return the correct conditions', () => {
         expect(result).toHaveProperty('conditions', []);
       });
 
-      it('getBaseTemplate returns the correct content', () => {
+      it('should return the correct content', () => {
         const contentTemplate = buildTemplateHtml('<div>test content</div>');
         expect(result && fragmentToHTML(result.content!)).toBe(
           fragmentToHTML(contentTemplate.content)
         );
       });
 
-      it('getBaseTemplate returns the correct linkContent', () => {
+      it('should return the correct linkContent', () => {
         const linkTemplate = buildTemplateHtml('<test-link></test-link>');
-        expect(result).toHaveProperty('linkContent', linkTemplate.content);
+        expect(fragmentToHTML(result!.linkContent!)).toBe(
+          fragmentToHTML(linkTemplate.content)
+        );
       });
 
-      it('getBaseTemplate returns the correct priority', () => {
+      it('should return the correct priority', () => {
         expect(result).toHaveProperty('priority', 1);
       });
-    });
 
-    describe('when there is an error', () => {
-      it('getBaseTemplate returns null', async () => {
-        const element = await setupElement(html`<test-element></test-element>`);
+      it('should merge match conditions with provided conditions', async () => {
+        const {controller} = await setupElement(
+          html`<test-element>
+            <template><div>content</div></template>
+          </test-element>`
+        );
 
-        const result = element.controller.getBaseTemplateForTesting([]);
-        expect(result).toBeNull();
+        controller.matchConditions = [() => true, () => false];
+        const providedConditions = [() => true];
+
+        const result = controller.getBaseTemplateForTesting(providedConditions);
+
+        expect(result?.conditions).toHaveLength(3);
+        expect(result?.conditions).toEqual([
+          ...providedConditions,
+          ...controller.matchConditions,
+        ]);
       });
     });
-  });
 
-  describe('link template handling', () => {
-    it('should use custom link template when provided', async () => {
-      const {controller} = await setupElement(
-        html`<test-element>
-          <template>
-            <div>content</div>
-          </template>
-          <template slot="link">
-            <custom-link></custom-link>
-          </template>
-        </test-element>`
-      );
-
-      const linkElement = controller.getLinkTemplateElement(controller['host']);
-      expect(linkElement.innerHTML.trim()).toBe('<custom-link></custom-link>');
-    });
-
-    it('should use default link template when none provided', async () => {
-      const {controller} = await setupElement(
-        html`<test-element>
-          <template>
-            <div>content</div>
-          </template>
-        </test-element>`
-      );
-
-      const linkElement = controller.getLinkTemplateElement(controller['host']);
-      expect(linkElement.innerHTML).toBe('<test-link></test-link>');
-    });
-  });
-
-  describe('grid cell link target functionality', () => {
-    it('should include grid cell link target in default link template when parent has grid display', async () => {
-      const parent = document.createElement('valid-parent');
-      parent.setAttribute('display', 'grid');
-      parent.setAttribute('grid-cell-link-target', '_blank');
-
-      const element = await setupElement(
-        html`<test-element>
-          <template><div>content</div></template>
-        </test-element>`,
-        parent
-      );
-
-      const result = element.controller.getBaseTemplateForTesting([]);
-      const linkContent = fragmentToHTML(result!.linkContent!);
-
-      expect(linkContent).toContain('target="_blank"');
-      expect(linkContent).toContain('<test-link>');
-    });
-
-    it('should not include target attribute when no grid cell link target is set', async () => {
-      const parent = document.createElement('valid-parent');
-      parent.setAttribute('display', 'grid');
-
-      const element = await setupElement(
-        html`<test-element>
-          <template><div>content</div></template>
-        </test-element>`,
-        parent
-      );
-
-      const result = element.controller.getBaseTemplateForTesting([]);
-      const linkContent = fragmentToHTML(result!.linkContent!);
-
-      expect(linkContent).not.toContain('target=');
-      expect(linkContent).toBe('<test-link></test-link>');
-    });
-
-    it('should not include target attribute for non-grid display', async () => {
-      const parent = document.createElement('valid-parent');
-      parent.setAttribute('display', 'list');
-      parent.setAttribute('grid-cell-link-target', '_blank');
-
-      const element = await setupElement(
-        html`<test-element>
-          <template><div>content</div></template>
-        </test-element>`,
-        parent
-      );
-
-      const result = element.controller.getBaseTemplateForTesting([]);
-      const linkContent = fragmentToHTML(result!.linkContent!);
-
-      expect(linkContent).not.toContain('target=');
-      expect(linkContent).toBe('<test-link></test-link>');
-    });
-  });
-
-  describe('match conditions', () => {
-    it('should initialize with empty match conditions', async () => {
-      const {controller} = await setupElement(
-        html`<test-element>
-          <template><div>content</div></template>
-        </test-element>`
-      );
-
-      expect(controller.matchConditions).toEqual([]);
-    });
-
-    it('should merge match conditions with provided conditions in getBaseTemplate', async () => {
-      const {controller} = await setupElement(
-        html`<test-element>
-          <template><div>content</div></template>
-        </test-element>`
-      );
-
-      controller.matchConditions = [() => true, () => false];
-      const providedConditions = [() => true];
-
-      const result = controller.getBaseTemplateForTesting(providedConditions);
-
-      expect(result?.conditions).toHaveLength(3);
-      expect(result?.conditions).toEqual([
-        ...providedConditions,
-        ...controller.matchConditions,
-      ]);
-    });
-  });
-
-  describe('host lifecycle', () => {
-    it('should validate template during initialization', async () => {
-      const element = await setupElement(
-        html`<test-element>
-          <template><div>content</div></template>
-        </test-element>`
-      );
-
-      expect(element.error).toBeUndefined();
-
-      const result = element.controller.getBaseTemplateForTesting([]);
-      expect(result).not.toBeNull();
-    });
-  });
-
-  describe('error state management', () => {
-    it('should preserve error state across multiple calls', async () => {
+    it('should return null when there is an error', async () => {
       const element = await setupElement(html`<test-element></test-element>`);
 
-      const firstResult = element.controller.getBaseTemplateForTesting([]);
-      const secondResult = element.controller.getBaseTemplateForTesting([]);
-
-      expect(firstResult).toBeNull();
-      expect(secondResult).toBeNull();
-      expect(element.error).toBeInstanceOf(Error);
+      const result = element.controller.getBaseTemplateForTesting([]);
+      expect(result).toBeNull();
     });
   });
 });
