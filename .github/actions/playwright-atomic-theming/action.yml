@@ -9,7 +9,7 @@ runs:
   using: composite
   steps:
     - name: Run Playwright tests
-      run: npx playwright test -c dev
+      run: pnpm exec playwright test -c dev
       working-directory: packages/atomic
       shell: bash
     - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
