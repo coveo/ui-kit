@@ -21,7 +21,10 @@ const virtualOpenApiModules: PluginImpl = () => {
     },
     async load(id) {
       if (id.startsWith('virtual:open-api-coveo')) {
-        const url = id.replace('virtual:open-api-coveo', 'https://platform.cloud.coveo.com/api-docs');
+        const url = id.replace(
+          'virtual:open-api-coveo',
+          'https://platform.cloud.coveo.com/api-docs'
+        );
         console.log('load', id);
         if (virtualModules.has(id)) {
           return virtualModules.get(id);
