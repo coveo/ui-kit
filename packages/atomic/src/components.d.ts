@@ -2194,37 +2194,6 @@ export namespace Components {
         "rows": number;
     }
     /**
-     * A [result template](https://docs.coveo.com/en/atomic/latest/usage/displaying-results#defining-a-result-template) determines the format of the query results, depending on the conditions that are defined for each template.
-     * @MapProp name: mustMatch;attr: must-match;docs: The field and values that define which result items the condition must be applied to. For example, a template with the following attribute only applies to result items whose `filetype` is `lithiummessage` or `YouTubePlaylist`: `must-match-filetype="lithiummessage,YouTubePlaylist"`;type: Record<string, string[]> ;default: {}
-     * @MapProp name: mustNotMatch;attr: must-not-match;docs: The field and values that define which result items the condition must not be applied to. For example, a template with the following attribute only applies to result items whose `filetype` is not `lithiummessage`: `must-not-match-filetype="lithiummessage";type: Record<string, string[]> ;default: {}
-     */
-    interface AtomicResultTemplate {
-        /**
-          * A function that must return true on results for the result template to apply. Set programmatically before initialization, not via attribute.  For example, the following targets a template and sets a condition to make it apply only to results whose `title` contains `singapore`: `document.querySelector('#target-template').conditions = [(result) => /singapore/i.test(result.title)];`
-         */
-        "conditions": ResultTemplateCondition[];
-        /**
-          * Gets the appropriate result template based on conditions applied.
-         */
-        "getTemplate": () => Promise<ResultTemplate<DocumentFragment> | null>;
-        /**
-          * Verifies whether the specified fields match the specified values.
-          * @type {Record<string, string[]>}
-         */
-        "mustMatch": Record<
-    string,
-    string[]
-  >;
-        /**
-          * Verifies whether the specified fields do not match the specified values.
-          * @type {Record<string, string[]>}
-         */
-        "mustNotMatch": Record<
-    string,
-    string[]
-  >;
-    }
-    /**
      * The `atomic-result-text` component renders the value of a string result field.
      */
     interface AtomicResultText {
@@ -3849,17 +3818,6 @@ declare global {
         new (): HTMLAtomicResultTablePlaceholderElement;
     };
     /**
-     * A [result template](https://docs.coveo.com/en/atomic/latest/usage/displaying-results#defining-a-result-template) determines the format of the query results, depending on the conditions that are defined for each template.
-     * @MapProp name: mustMatch;attr: must-match;docs: The field and values that define which result items the condition must be applied to. For example, a template with the following attribute only applies to result items whose `filetype` is `lithiummessage` or `YouTubePlaylist`: `must-match-filetype="lithiummessage,YouTubePlaylist"`;type: Record<string, string[]> ;default: {}
-     * @MapProp name: mustNotMatch;attr: must-not-match;docs: The field and values that define which result items the condition must not be applied to. For example, a template with the following attribute only applies to result items whose `filetype` is not `lithiummessage`: `must-not-match-filetype="lithiummessage";type: Record<string, string[]> ;default: {}
-     */
-    interface HTMLAtomicResultTemplateElement extends Components.AtomicResultTemplate, HTMLStencilElement {
-    }
-    var HTMLAtomicResultTemplateElement: {
-        prototype: HTMLAtomicResultTemplateElement;
-        new (): HTMLAtomicResultTemplateElement;
-    };
-    /**
      * The `atomic-result-text` component renders the value of a string result field.
      */
     interface HTMLAtomicResultTextElement extends Components.AtomicResultText, HTMLStencilElement {
@@ -4283,7 +4241,6 @@ declare global {
         "atomic-result-section-title-metadata": HTMLAtomicResultSectionTitleMetadataElement;
         "atomic-result-section-visual": HTMLAtomicResultSectionVisualElement;
         "atomic-result-table-placeholder": HTMLAtomicResultTablePlaceholderElement;
-        "atomic-result-template": HTMLAtomicResultTemplateElement;
         "atomic-result-text": HTMLAtomicResultTextElement;
         "atomic-result-timespan": HTMLAtomicResultTimespanElement;
         "atomic-search-box": HTMLAtomicSearchBoxElement;
@@ -6396,33 +6353,6 @@ declare namespace LocalJSX {
         "rows": number;
     }
     /**
-     * A [result template](https://docs.coveo.com/en/atomic/latest/usage/displaying-results#defining-a-result-template) determines the format of the query results, depending on the conditions that are defined for each template.
-     * @MapProp name: mustMatch;attr: must-match;docs: The field and values that define which result items the condition must be applied to. For example, a template with the following attribute only applies to result items whose `filetype` is `lithiummessage` or `YouTubePlaylist`: `must-match-filetype="lithiummessage,YouTubePlaylist"`;type: Record<string, string[]> ;default: {}
-     * @MapProp name: mustNotMatch;attr: must-not-match;docs: The field and values that define which result items the condition must not be applied to. For example, a template with the following attribute only applies to result items whose `filetype` is not `lithiummessage`: `must-not-match-filetype="lithiummessage";type: Record<string, string[]> ;default: {}
-     */
-    interface AtomicResultTemplate {
-        /**
-          * A function that must return true on results for the result template to apply. Set programmatically before initialization, not via attribute.  For example, the following targets a template and sets a condition to make it apply only to results whose `title` contains `singapore`: `document.querySelector('#target-template').conditions = [(result) => /singapore/i.test(result.title)];`
-         */
-        "conditions"?: ResultTemplateCondition[];
-        /**
-          * Verifies whether the specified fields match the specified values.
-          * @type {Record<string, string[]>}
-         */
-        "mustMatch"?: Record<
-    string,
-    string[]
-  >;
-        /**
-          * Verifies whether the specified fields do not match the specified values.
-          * @type {Record<string, string[]>}
-         */
-        "mustNotMatch"?: Record<
-    string,
-    string[]
-  >;
-    }
-    /**
      * The `atomic-result-text` component renders the value of a string result field.
      */
     interface AtomicResultText {
@@ -6994,7 +6924,6 @@ declare namespace LocalJSX {
         "atomic-result-section-title-metadata": AtomicResultSectionTitleMetadata;
         "atomic-result-section-visual": AtomicResultSectionVisual;
         "atomic-result-table-placeholder": AtomicResultTablePlaceholder;
-        "atomic-result-template": AtomicResultTemplate;
         "atomic-result-text": AtomicResultText;
         "atomic-result-timespan": AtomicResultTimespan;
         "atomic-search-box": AtomicSearchBox;
@@ -7476,12 +7405,6 @@ declare module "@stencil/core" {
              * The `atomic-result-table-placeholder` component provides an intermediate visual state that is rendered before the first results are available.
              */
             "atomic-result-table-placeholder": LocalJSX.AtomicResultTablePlaceholder & JSXBase.HTMLAttributes<HTMLAtomicResultTablePlaceholderElement>;
-            /**
-             * A [result template](https://docs.coveo.com/en/atomic/latest/usage/displaying-results#defining-a-result-template) determines the format of the query results, depending on the conditions that are defined for each template.
-             * @MapProp name: mustMatch;attr: must-match;docs: The field and values that define which result items the condition must be applied to. For example, a template with the following attribute only applies to result items whose `filetype` is `lithiummessage` or `YouTubePlaylist`: `must-match-filetype="lithiummessage,YouTubePlaylist"`;type: Record<string, string[]> ;default: {}
-             * @MapProp name: mustNotMatch;attr: must-not-match;docs: The field and values that define which result items the condition must not be applied to. For example, a template with the following attribute only applies to result items whose `filetype` is not `lithiummessage`: `must-not-match-filetype="lithiummessage";type: Record<string, string[]> ;default: {}
-             */
-            "atomic-result-template": LocalJSX.AtomicResultTemplate & JSXBase.HTMLAttributes<HTMLAtomicResultTemplateElement>;
             /**
              * The `atomic-result-text` component renders the value of a string result field.
              */
