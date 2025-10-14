@@ -46,10 +46,16 @@ export interface AttachedResultsState {
    * The array of results that are attached.
    */
   results: AttachedResult[];
+  /**
+   * A loading state, used to sync loading the attached results between multiple components.
+   * @deprecated To be removed in UI-KIT V4 TODO: SFINT-6404
+   */
+  loading: boolean;
 }
 
 export function getAttachedResultsInitialState(): AttachedResultsState {
   return {
     results: [],
+    loading: false,
   };
 }
