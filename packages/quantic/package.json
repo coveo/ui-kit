@@ -71,6 +71,7 @@
     "dotenv": "17.2.1",
     "eslint": "8.57",
     "eslint-config-prettier": "10.1.8",
+    "exponential-backoff": "catalog:",
     "jest": "catalog:",
     "jest-junit": "16.0.0",
     "jsdoc": "4.0.4",
