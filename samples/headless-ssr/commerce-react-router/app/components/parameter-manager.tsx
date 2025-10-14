@@ -22,7 +22,6 @@ export default function ParameterManager({url}: {url: string | null}) {
    * ParameterManager controller's state.
    */
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <>
   useEffect(() => {
     if (methods === undefined) {
       return;
@@ -38,6 +37,7 @@ export default function ParameterManager({url}: {url: string | null}) {
 
     previousUrl.current = newUrl;
     methods.synchronize(newCommerceParams);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchParams]);
 
   /**
@@ -45,7 +45,6 @@ export default function ParameterManager({url}: {url: string | null}) {
    * to the browser history.
    * */
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <>
   useEffect(() => {
     if (methods === undefined) {
       return;
@@ -59,6 +58,7 @@ export default function ParameterManager({url}: {url: string | null}) {
 
     previousUrl.current = newUrl;
     history.pushState(null, '', newUrl);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state.parameters]);
 
   return null;

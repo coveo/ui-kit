@@ -52,7 +52,6 @@ export function useSyncSearchParameterManager({
   }, [historyRouter.url?.searchParams, controller]);
 
   // Update the URL.
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <>
   const correctedUrl = useMemo(() => {
     if (!historyRouter.url) {
       return null;
@@ -60,9 +59,9 @@ export function useSyncSearchParameterManager({
     const {serialize} = buildSSRSearchParameterSerializer();
     const newURL = new URL(historyRouter.url);
     return serialize(state.parameters, newURL);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state.parameters]);
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <>
   useEffect(() => {
     if (!correctedUrl || document.location.href === correctedUrl) {
       return;
@@ -74,5 +73,6 @@ export function useSyncSearchParameterManager({
     }
     const isStaticState = controller === undefined;
     historyRouter[isStaticState ? 'replace' : 'push'](correctedUrl);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [controller, correctedUrl]);
 }

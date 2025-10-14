@@ -17,7 +17,7 @@
     },
     "packages/headless": {
       "entry": ["src/*index.ts", "ponyfills/*.js"],
-      "ignoreDependencies": ["navigator.sendbeacon"]
+      "ignoreDependencies": ["navigator.sendbeacon", "reselect"]
     },
     "packages/atomic-hosted-page": {
       "entry": [

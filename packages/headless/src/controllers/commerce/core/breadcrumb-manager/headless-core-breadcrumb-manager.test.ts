@@ -402,7 +402,6 @@ describe('core breadcrumb manager', () => {
 
   function generateDeselectionTestCases(breadcrumb: AnyFacetValueResponse) {
     return (state: string, action: Action) => {
-      // biome-ignore lint/suspicious/noDuplicateTestHooks: <not refactoring this right now>
       beforeEach(() => {
         breadcrumb.state = state as FacetValueState;
         deselectBreadcrumb();
