@@ -1,3 +1,9 @@
+## <small>3.31.5 (2025-10-15)</small>
+
+* fix(headless): fix analytics not logged after submitting a feedback (#6091) ([836ecb8](https://github.com/coveo/ui-kit/commits/836ecb8)), closes [#6091](https://github.com/coveo/ui-kit/issues/6091)
+
+
+
 ## <small>3.31.2 (2025-10-08)</small>
 
 * chore(deps) update typedoc  (#6124) ([657371a](https://github.com/coveo/ui-kit/commits/657371a)), closes [#6124](https://github.com/coveo/ui-kit/issues/6124)
