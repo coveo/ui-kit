@@ -1,4 +1,5 @@
 import {spawn} from 'node:child_process';
+import path from 'node:path';
 import colors from '../../ci/colors.mjs';
 
 try {
@@ -11,7 +12,10 @@ try {
   spawn(
     'pnpm',
     [
+      '--filter',
+      '@coveo/cdn',
       'exec',
+      '--',
       'local-web-server',
       '--port',
       '3000',
@@ -20,6 +24,7 @@ try {
     ],
     {
       stdio: 'inherit',
+      cwd: path.resolve(import.meta.dirname, '..'),
     }
   );
 } catch (err) {
