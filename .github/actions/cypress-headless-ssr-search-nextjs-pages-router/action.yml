@@ -17,7 +17,7 @@ runs:
         command: >-
           pnpm --filter @samples/headless-ssr-search-nextjs-pages-router exec
           cypress-repeat run -n 3 --until-passes --rerun-failed-only -- cypress
-          run --browser chrome --project ${{ github.workspace }}/samples/headless-ssr/search-nextjs --env NEXTJS_ROUTER=pages
+          run --browser chrome --project . --env NEXTJS_ROUTER=pages
         start: pnpm exec turbo prod --filter=@samples/headless-ssr-search-nextjs-pages-router
         wait-on: "http://localhost:3000"
         wait-on-timeout: 600000
