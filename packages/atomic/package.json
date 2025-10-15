@@ -91,6 +91,7 @@
     "cssnano": "7.1.1",
     "dayjs": "catalog:",
     "dompurify": "3.2.6",
+    "encoding": "^0.1.13",
     "escape-html": "1.0.3",
     "i18next": "25.3.2",
     "i18next-http-backend": "3.0.2",

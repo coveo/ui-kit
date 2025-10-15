@@ -3,6 +3,9 @@ description: "Runs CDN checks"
 runs:
   using: composite
   steps:
+    - name: Install dependencies
+      run: pnpm install --frozen-lockfile
+      shell: bash
     - uses: ./.github/actions/playwright-atomic
       with:
         testsToRun: "atomic-commerce-query-error.e2e.ts atomic-icon.e2e.ts atomic-commerce-text.e2e.ts atomic-commerce-query-summary.e2e.ts"
