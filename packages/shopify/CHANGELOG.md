@@ -1,3 +1,9 @@
+## <small>1.9.3 (2025-10-15)</small>
+
+* feat(shopify): minify shopify cdn output (#6120) ([1d72d4e](https://github.com/coveo/ui-kit/commits/1d72d4e)), closes [#6120](https://github.com/coveo/ui-kit/issues/6120)
+
+
+
 ## <small>1.8.13 (2025-10-08)</small>
 
 * chore: more cleanup of dependencies in multiples packages (#6119) ([ff6c837](https://github.com/coveo/ui-kit/commits/ff6c837)), closes [#6119](https://github.com/coveo/ui-kit/issues/6119)
