@@ -25,7 +25,9 @@ describe('atomic-facet', () => {
   beforeEach(() => {
     mockedRegisterFacet = vi.fn();
     vi.mocked(buildFacet).mockReturnValue(buildFakeFacet({}));
-    vi.mocked(buildSearchStatus).mockReturnValue(buildFakeSearchStatus({}));
+    vi.mocked(buildSearchStatus).mockReturnValue(
+      buildFakeSearchStatus({firstSearchExecuted: true})
+    );
     vi.mocked(buildTabManager).mockReturnValue(buildFakeTabManager({}));
     vi.mocked(buildFacetConditionsManager).mockReturnValue(
       buildFakeFacetConditionsManager({})
