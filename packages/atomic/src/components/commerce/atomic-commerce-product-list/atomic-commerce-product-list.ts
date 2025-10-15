@@ -507,6 +507,7 @@ export class AtomicCommerceProductList
                 props: {
                   firstItem,
                   key,
+                  itemRenderingFunction: this.itemRenderingFunction,
                   templateContentForFirstItem,
                   renderItem: (content) => {
                     return html`${keyed(
@@ -522,7 +523,6 @@ export class AtomicCommerceProductList
                         .linkContent=${this.productTemplateProvider.getLinkTemplateContent(product)}
                         .loadingFlag=${this.loadingFlag}
                         .product=${product}
-                        .renderingFunction=${this.itemRenderingFunction}
                         .store=${this.bindings.store as never}
                       ></atomic-product>`
                     )}`;
