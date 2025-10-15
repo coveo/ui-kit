@@ -3,12 +3,13 @@ import {
   type Result,
   type Template,
 } from '@coveo/headless';
-import type {AnyBindings} from '../interface/bindings';
-import type {ItemTarget} from '../layout/display-options';
+import type {ItemTarget} from '@/src/components/common/layout/display-options';
 import {
   TemplateProvider,
   type TemplateProviderProps,
-} from '../template-provider/template-provider';
+} from '@/src/components/common/template-provider/template-provider';
+import type {AnyBindings} from '../interface/bindings';
+import '@/src/components/search/atomic-result-template/atomic-result-template.js';
 
 export class ItemTemplateProvider extends TemplateProvider<Result> {
   constructor(

@@ -6,11 +6,13 @@ import {renderFacetValueLabelHighlight} from '@/src/components/common/facets/fac
 import {hierarchicalPath} from '@/src/directives/hierarchical-path';
 import {getFieldValueCaption} from '@/src/utils/field-utils';
 import type {FunctionalComponent} from '@/src/utils/functional-component-utils';
+import {getAllCategoriesLocalizedLabel} from './all-categories-localized-label';
 
 interface CategoryFacetSearchValueProps {
   value: {count: number; path: string[]; displayValue: string};
   i18n: i18n;
   field: string;
+  facetId?: string;
   onClick(): void;
   searchQuery: string;
 }
@@ -23,7 +25,11 @@ export const renderCategoryFacetSearchValue: FunctionalComponent<
 > = ({props}) => {
   const count = props.value.count.toLocaleString(props.i18n.language);
   const inLabel = props.i18n.t('in');
-  const allCategories = props.i18n.t('all-categories');
+  const allCategories = getAllCategoriesLocalizedLabel({
+    facetId: props.facetId,
+    field: props.field,
+    i18n: props.i18n,
+  });
   const localizedPath = props.value.path.length
     ? props.value.path.map((value) =>
         getFieldValueCaption(props.field, value, props.i18n)

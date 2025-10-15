@@ -52,6 +52,7 @@ import {getAnalyticsConfig} from './analytics-config';
 import {createSearchStore, type SearchStore} from './store';
 // TODO - Remove once all components that use atomic-modal have been migrated.
 import '@/src/components/common/atomic-modal/atomic-modal';
+import '../result-lists/atomic-result-list/atomic-result-list';
 import {augmentAnalyticsConfigWithAtomicVersion} from '@/src/components/common/interface/analytics-config';
 
 const FirstSearchExecutedFlag = 'firstSearchExecuted';
@@ -596,10 +597,8 @@ export class AtomicSearchInterface
         this.searchStatus.state.firstSearchExecuted
       );
 
-      if (
-        this.searchStatus.state.firstSearchExecuted &&
-        this.store.hasLoadingFlag(FirstSearchExecutedFlag)
-      ) {
+      if (this.searchStatus.state.firstSearchExecuted) {
+        console.log('unset flag');
         this.store.unsetLoadingFlag(FirstSearchExecutedFlag);
       }
     });

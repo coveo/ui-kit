@@ -5,7 +5,7 @@ import {
 } from '@coveo/headless';
 import {Component, Prop, h, Element} from '@stencil/core';
 import {MapProp} from '../../../../utils/props-utils';
-import {makeMatchConditions} from '../../../common/result-templates/result-template-common';
+import {makeMatchConditions} from '../../../common/result-templates/stencil-result-template-common';
 import {ResultContext} from '@/src/components/search/result-template-component-utils/context/stencil-result-template-decorators';
 
 /**

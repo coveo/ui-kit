@@ -1,4 +1,4 @@
-import {tableElementTagName} from '../../../src/components/search/atomic-table-result/table-element-utils';
+import {tableElementTagName} from '../../../src/components/common/table-element-utils';
 import {generateComponentHTML, TestFixture} from '../../fixtures/test-fixture';
 import {
   assertConsoleWarning,

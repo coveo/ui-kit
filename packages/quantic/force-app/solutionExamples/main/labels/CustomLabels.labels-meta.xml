@@ -49,4 +49,18 @@
     <protected>false</protected>
     <shortDescription>Result is attached</shortDescription>
   </labels>
+  <labels>
+    <fullName>GenerateAnswer</fullName>
+    <value>Generate answer</value>
+    <language>en_US</language>
+    <protected>false</protected>
+    <shortDescription>Generate answer</shortDescription>
+  </labels>
+  <labels>
+    <fullName>NoGeneratedAnswer</fullName>
+    <value>No generated answer available.</value>
+    <language>en_US</language>
+    <protected>false</protected>
+    <shortDescription>No generated answer available.</shortDescription>
+  </labels>
 </CustomLabels>

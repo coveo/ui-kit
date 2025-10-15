@@ -3,11 +3,11 @@ import {
   type Product,
   type Template,
 } from '@coveo/headless/commerce';
-import type {ItemTarget} from '../../common/layout/display-options';
+import type {ItemTarget} from '@/src/components/common/layout/display-options';
 import {
   TemplateProvider,
   type TemplateProviderProps,
-} from '../../common/template-provider/template-provider';
+} from '@/src/components/common/template-provider/template-provider';
 import '../atomic-product-template/atomic-product-template.js';
 
 export class ProductTemplateProvider extends TemplateProvider<Product> {

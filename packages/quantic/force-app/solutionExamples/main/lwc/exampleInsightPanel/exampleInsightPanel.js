@@ -13,6 +13,7 @@ import {buildAttachedResultsPayloadHeadless} from 'c/attachToCaseUtils';
 // @ts-ignore
 import {getAllAttachedResults} from 'c/attachToCaseService';
 import {getRecord} from 'lightning/uiRecordApi';
+import noGeneratedAnswer from '@salesforce/label/c.NoGeneratedAnswer';
 
 export default class ExampleInsightPanel extends LightningElement {
   /** @type {string} */
@@ -21,6 +22,11 @@ export default class ExampleInsightPanel extends LightningElement {
   @api insightId = '142be676-703c-445f-b2d3-fcc7c0a3ded8';
   /** @type {string} */
   @api caseId = '1234';
+  answerConfigurationId = '10f49a04-76d3-46bf-b8dc-22b0c291c254';
+
+  labels = {
+    noGeneratedAnswer,
+  };
 
   /** @type {boolean} */
   isInitAttachedResults = false;

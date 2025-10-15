@@ -3,10 +3,6 @@ description: "Run Playwright tests for Headless SSR Commerce"
 runs:
   using: composite
   steps:
-    - name: Install Playwright Browsers
-      run: npx playwright install --with-deps
-      working-directory: samples/headless-ssr/commerce-nextjs
-      shell: bash
     - name: Run Playwright tests
       run: npx playwright test
       working-directory: samples/headless-ssr/commerce-nextjs

@@ -1,6 +1,7 @@
 import type {i18n} from 'i18next';
 import {html} from 'lit';
 import {keyed} from 'lit/directives/keyed.js';
+import type {AriaLiveRegionController} from '@/src/utils/accessibility-utils';
 import type {FunctionalComponentWithChildren} from '@/src/utils/functional-component-utils';
 import {renderButton} from '../button';
 import type {Breadcrumb} from './breadcrumb-types';
@@ -15,6 +16,7 @@ export interface BreadcrumbButtonProps {
   pathLimit: number;
   breadcrumb: Breadcrumb;
   i18n: i18n;
+  ariaController: AriaLiveRegionController;
 }
 
 export const renderBreadcrumbButton: FunctionalComponentWithChildren<
@@ -46,7 +48,12 @@ export const renderBreadcrumbButton: FunctionalComponentWithChildren<
                   value: title,
                 }
               ),
-              onClick: props.onSelectBreadcrumb,
+              onClick: () => {
+                props.ariaController.message = props.i18n.t('filter-removed', {
+                  value: title,
+                });
+                props.onSelectBreadcrumb();
+              },
             },
           })(children)}
         </li>`

@@ -5,7 +5,7 @@ import {
   makeDefinedConditions,
   makeMatchConditions,
   ResultTemplateCommon,
-} from '../../../common/result-templates/result-template-common';
+} from '../../../common/result-templates/stencil-result-template-common';
 
 /**
  * @internal

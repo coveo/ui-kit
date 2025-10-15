@@ -1,6 +1,6 @@
 // The Lit equivalent of this file is table-layout.ts
 import {FunctionalComponent, VNode, h} from '@stencil/core';
-import {tableElementTagName} from '../../search/atomic-table-result/table-element-utils.js';
+import {tableElementTagName} from '../table-element-utils.js';
 import {AnyItem} from './unfolded-item.js';
 import {ItemRenderingFunction} from './stencil-item-list-common.js';
 

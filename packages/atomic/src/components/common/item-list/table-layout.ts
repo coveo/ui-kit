@@ -3,11 +3,11 @@ import {keyed} from 'lit/directives/keyed.js';
 import {map} from 'lit/directives/map.js';
 import {ref} from 'lit/directives/ref.js';
 import type {ItemRenderingFunction} from '@/src/components';
+import {tableElementTagName} from '@/src/components/common/table-element-utils';
 import type {
   FunctionalComponent,
   FunctionalComponentWithChildren,
 } from '@/src/utils/functional-component-utils';
-import {tableElementTagName} from '../../search/atomic-table-result/table-element-utils';
 import type {AnyItem} from '../item-list/unfolded-item';
 
 interface TableColumnsProps {

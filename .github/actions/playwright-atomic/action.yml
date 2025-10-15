@@ -17,10 +17,6 @@ inputs:
 runs:
   using: composite
   steps:
-    - name: Install Playwright Browsers
-      run: npx playwright install --with-deps
-      working-directory: packages/atomic
-      shell: bash
     - name: Run Playwright tests
       id: playwright
       run: npx playwright test ${{ inputs.testsToRun }} --shard=${{ inputs.shardIndex }}/${{ inputs.shardTotal }}

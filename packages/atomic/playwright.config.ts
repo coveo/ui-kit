@@ -55,6 +55,7 @@ export default defineConfig({
           : 'http://localhost:4400',
         timeout: 120 * 1000,
         reuseExistingServer: !process.env.CI,
+        gracefulShutdown: {signal: 'SIGTERM', timeout: 500},
       }
     : undefined,
 });

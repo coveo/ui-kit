@@ -1,0 +1,117 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+import * as AtomicResultTemplateStories from './atomic-result-template.new.stories';
+import { AtomicDocTemplate } from '../../../../storybook-utils/documentation/atomic-doc-template';
+
+
+<Meta of={AtomicResultTemplateStories} />
+
+<AtomicDocTemplate
+  stories={AtomicResultTemplateStories}
+  defaultStory="Default"
+  githubPath="search/atomic-result-template/atomic-result-template.ts"
+  tagName="atomic-result-template"
+  className="AtomicResultTemplate"
+>
+
+This component defines the UI display of your search results. 
+It can be used inside `atomic-result-list`, `atomic-folded-result-list`, or `atomic-search-box-instant-results`, and it must have a `<template>` as its child.
+
+Example using the `atomic-result-list`:
+```html
+<atomic-result-list>
+  <atomic-result-template>
+    <template>
+      <atomic-result-section-visual>
+        <atomic-result-image field="ytthumbnailurl" fallback="https://picsum.photos/350"></atomic-result-image>
+      </atomic-result-section-visual>
+      
+      <atomic-result-section-badges>
+        <atomic-field-condition must-match-sourcetype="YouTube">
+          <atomic-result-badge
+            label="YouTube"
+            class="youtube-badge"
+          ></atomic-result-badge>
+        </atomic-field-condition>
+        
+        <atomic-result-badge
+          icon="https://raw.githubusercontent.com/Rush/Font-Awesome-SVG-PNG/master/black/svg/language.svg"
+        >
+          <atomic-result-multi-value-text
+            field="language"
+          ></atomic-result-multi-value-text>
+        </atomic-result-badge>
+      </atomic-result-section-badges>
+
+      <atomic-result-section-title>
+        <atomic-result-link></atomic-result-link>
+      </atomic-result-section-title>
+
+      <atomic-result-section-excerpt>
+        <atomic-result-text field="excerpt"></atomic-result-text>
+      </atomic-result-section-excerpt>
+
+      <atomic-result-section-bottom-metadata>
+        <atomic-result-fields-list>
+          <atomic-field-condition class="field" if-defined="source">
+            <span class="field-label">
+              <atomic-text value="source"></atomic-text>:
+            </span>
+            <atomic-result-text field="source"></atomic-result-text>
+          </atomic-field-condition>
+          
+          <atomic-field-condition class="field" if-defined="author">
+            <span class="field-label">
+              <atomic-text value="author"></atomic-text>:
+            </span>
+            <atomic-result-text field="author"></atomic-result-text>
+          </atomic-field-condition>
+          
+          <atomic-field-condition class="field" if-defined="date">
+            <span class="field-label">
+              <atomic-text value="date"></atomic-text>:
+            </span>
+            <atomic-result-date></atomic-result-date>
+          </atomic-field-condition>
+        </atomic-result-fields-list>
+      </atomic-result-section-bottom-metadata>
+    </template>
+  </atomic-result-template>
+</atomic-result-list>
+```
+
+## Template Conditions
+
+You can use conditions to display different templates based on result properties:
+
+```html
+<atomic-result-list>
+  <!-- Template for YouTube videos -->
+  <atomic-result-template must-match-sourcetype="YouTube">
+    <template>
+      <atomic-result-section-visual>
+        <atomic-result-image field="ytthumbnailurl"></atomic-result-image>
+      </atomic-result-section-visual>
+      <atomic-result-section-title>
+        <atomic-result-link></atomic-result-link>
+      </atomic-result-section-title>
+      <atomic-result-section-excerpt>
+        <atomic-result-text field="excerpt"></atomic-result-text>
+      </atomic-result-section-excerpt>
+    </template>
+  </atomic-result-template>
+
+  <!-- Default template for all other results -->
+  <atomic-result-template>
+    <template>
+      <atomic-result-section-title>
+        <atomic-result-link></atomic-result-link>
+      </atomic-result-section-title>
+      <atomic-result-section-excerpt>
+        <atomic-result-text field="excerpt"></atomic-result-text>
+      </atomic-result-section-excerpt>
+    </template>
+  </atomic-result-template>
+</atomic-result-list>
+```
+
+</AtomicDocTemplate>
