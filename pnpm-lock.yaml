@@ -1518,13 +1518,14 @@ importers:
         version: 3.2.4(@types/node@22.16.5)(@vitest/browser@3.2.4)(jiti@2.6.1)(jsdom@20.0.3)(less@4.4.1)(lightningcss@1.30.1)(sass@1.93.2)(terser@5.44.0)(tsx@4.20.6)(yaml@2.8.1)
 
   utils/cdn:
+    dependencies:
+      local-web-server:
+        specifier: 5.4.0
+        version: 5.4.0
     devDependencies:
       '@coveo/bueno':
         specifier: workspace:*
         version: link:../../packages/bueno
-      local-web-server:
-        specifier: 5.4.0
-        version: 5.4.0
 
   utils/ci:
     dependencies:
