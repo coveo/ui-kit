@@ -1,6 +1,6 @@
 // The Lit equivalent of this file is table-layout.ts
 import {FunctionalComponent, VNode, h} from '@stencil/core';
-import {tableElementTagName} from '../../search/atomic-table-result/table-element-utils.js';
+import {tableElementTagName} from '../table-element-utils.js';
 import {AnyItem} from './unfolded-item.js';
 import {ItemRenderingFunction} from './stencil-item-list-common.js';
 
@@ -119,8 +119,25 @@ export const DisplayTableData: FunctionalComponent<
 > = (props) => {
   const fieldColumns = getFieldTableColumns(props);
 
-  return fieldColumns.map((column) => {
-    const key = column.getAttribute('label')! + props.key;
+  let currentItemColumns = fieldColumns;
+  if (props.itemRenderingFunction && props.firstItem) {
+    const contentDiv = document.createElement('div');
+    const renderedHTML = props.itemRenderingFunction(
+      props.firstItem,
+      document.createElement('div'),
+      undefined
+    );
+    contentDiv.innerHTML = renderedHTML;
+    currentItemColumns = Array.from(
+      contentDiv.querySelectorAll(tableElementTagName)
+    );
+  }
+
+  return currentItemColumns.map((column, index) => {
+    const label =
+      fieldColumns[index]?.getAttribute('label') ||
+      column.getAttribute('label');
+    const key = label + props.key;
     return (
       <td key={key} part="result-table-cell">
         {props.renderItem(column)}
