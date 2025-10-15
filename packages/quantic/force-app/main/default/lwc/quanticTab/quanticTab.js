@@ -13,7 +13,7 @@ import {LightningElement, api, track} from 'lwc';
  * @category Search
  * @category Insight Panel
  * @example
- * <c-quantic-tab engine-id={engineId} label="Community" expression="@objecttype==&quote;Message&quote;" is-active></c-quantic-tab>
+ * <c-quantic-tab engine-id={engineId} label="Community" expression="@objecttype==&quot;Message&quot;" is-active></c-quantic-tab>
  */
 export default class QuanticTab extends LightningElement {
   /**
