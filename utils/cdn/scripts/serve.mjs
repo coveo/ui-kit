@@ -16,7 +16,7 @@ try {
       '@coveo/cdn',
       'exec',
       '--',
-      'local-web-server',
+      'ws',
       '--port',
       '3000',
       '-d',
