@@ -30,7 +30,7 @@ import {createAppLoadedListener} from '../../../common/interface/store';
 import {ItemDisplayGuard} from '../../../common/item-list/item-display-guard';
 import {FoldedItemListStateContextEvent} from '../../../common/item-list/item-list-decorators';
 import {ItemListGuard} from '../../../common/item-list/item-list-guard';
-import {ItemTemplateProvider} from '../../../common/item-list/item-template-provider';
+import {ItemTemplateProvider} from '../../../common/item-list/stencil-item-template-provider';
 import {DisplayWrapper} from '../../../common/item-list/stencil-display-wrapper';
 import {
   ItemListCommon,

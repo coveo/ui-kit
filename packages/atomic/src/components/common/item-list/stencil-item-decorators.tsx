@@ -6,7 +6,7 @@ import {
   ItemDisplayDensity,
   ItemDisplayImageSize,
 } from '../layout/display-options';
-import {ItemTemplateProvider} from './item-template-provider';
+import {ItemTemplateProvider} from './stencil-item-template-provider';
 
 export class MissingParentError extends Error {
   constructor(elementName: string, parentName: string) {

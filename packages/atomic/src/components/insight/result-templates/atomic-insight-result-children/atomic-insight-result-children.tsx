@@ -16,7 +16,7 @@ import {
   FoldedItemListContext,
   FoldedItemListStateContext,
 } from '../../../common/item-list/item-list-decorators';
-import {ItemTemplateProvider} from '../../../common/item-list/item-template-provider';
+import {ItemTemplateProvider} from '../../../common/item-list/stencil-item-template-provider';
 import {
   ChildTemplatesContext,
   ChildTemplatesContextEvent,

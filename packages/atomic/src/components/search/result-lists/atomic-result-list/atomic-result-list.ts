@@ -2,6 +2,7 @@ import {
   buildInteractiveResult,
   buildResultList,
   buildResultsPerPage,
+  buildTabManager,
   type Result,
   type ResultList,
   type ResultListState,
@@ -9,7 +10,7 @@ import {
   type TabManager,
   type TabManagerState,
 } from '@coveo/headless';
-import {type CSSResultGroup, css, html, LitElement, nothing} from 'lit';
+import {type CSSResultGroup, html, LitElement, nothing} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {keyed} from 'lit/directives/keyed.js';
 import {map} from 'lit/directives/map.js';
@@ -39,6 +40,7 @@ import {
   type ItemDisplayImageSize,
   type ItemDisplayLayout,
 } from '@/src/components/common/layout/display-options';
+import {renderTabGuard} from '@/src/components/common/tabs/tab-guard';
 import type {Bindings} from '@/src/components/search/atomic-search-interface/atomic-search-interface';
 import {bindStateToController} from '@/src/decorators/bind-state';
 import {bindingGuard} from '@/src/decorators/binding-guard.js';
@@ -49,7 +51,6 @@ import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles.js';
 import {ChildrenUpdateCompleteMixin} from '@/src/mixins/children-update-complete-mixin.js';
 import {FocusTargetController} from '@/src/utils/accessibility-utils.js';
 import {ArrayProp} from '@/src/utils/props-utils';
-import {shouldDisplayOnCurrentTab} from '@/src/utils/tab-utils';
 import {randomID} from '@/src/utils/utils';
 import '@/src/components/search/atomic-result/atomic-result';
 import {NumberValue, Schema, StringValue} from '@coveo/bueno';
@@ -84,11 +85,6 @@ export class AtomicResultList
     tableDisplayStyles,
     listDisplayStyles,
     gridDisplayStyles,
-    css`
-      atomic-result:not(.hydrated) {
-        visibility: hidden;
-      }
-    `,
   ];
 
   public resultList!: ResultList;
@@ -106,7 +102,7 @@ export class AtomicResultList
   @state()
   error!: Error;
   @state()
-  private isAppLoaded = false;
+  private isAppLoaded = true;
   @state()
   private isEveryResultReady = false;
   @state()
@@ -153,8 +149,8 @@ export class AtomicResultList
    * If you don't set this property, the result list can be displayed on any tab. Otherwise, the result list can only be displayed on the specified tabs.
    */
   @ArrayProp()
-  @property({reflect: true, attribute: 'tabs-included', type: Array})
-  public tabsIncluded: string[] | string = '[]';
+  @property({attribute: 'tabs-included', type: Array})
+  public tabsIncluded: string[] | string = [];
 
   /**
    * The tabs on which this result list must not be displayed. This property should not be used at the same time as `tabs-included`.
@@ -166,8 +162,8 @@ export class AtomicResultList
    * If you don't set this property, the result list can be displayed on any tab. Otherwise, the result list won't be displayed on any of the specified tabs.
    */
   @ArrayProp()
-  @property({reflect: true, attribute: 'tabs-excluded', type: Array})
-  public tabsExcluded: string[] | string = '[]';
+  @property({attribute: 'tabs-excluded', type: Array})
+  public tabsExcluded: string[] | string = [];
 
   @property({reflect: true, attribute: 'number-of-placeholders', type: Number})
   numberOfPlaceholders = 24;
@@ -196,6 +192,7 @@ export class AtomicResultList
 
     this.resultList = buildResultList(this.bindings.engine);
     this.resultsPerPage = buildResultsPerPage(this.bindings.engine);
+    this.tabManager = buildTabManager(this.bindings.engine);
 
     this.initResultTemplateProvider();
 
@@ -218,14 +215,20 @@ export class AtomicResultList
       ) {
         this.bindings.store.unsetLoadingFlag(this.loadingFlag);
       }
+    }
+
+    if (changedProperties.has('resultListState')) {
       const oldState = changedProperties.get(
         'resultListState'
       ) as ResultListState;
-
+      if (this.resultListState.firstSearchExecuted) {
+        this.bindings.store.unsetLoadingFlag(this.loadingFlag);
+      }
       if (!oldState?.isLoading && this.resultListState.isLoading) {
         this.isEveryResultReady = false;
       }
     }
+
     await this.updateResultReadyState();
   }
 
@@ -244,56 +247,66 @@ export class AtomicResultList
   @bindingGuard()
   @errorGuard()
   render() {
-    console.log(this.resultListState.results);
-    return html`${when(
-      this.shouldRender,
-      () =>
-        html`${when(
-          this.templateHasError,
-          () => html`<slot></slot>`,
-          () => {
-            const listClasses = this.computeListDisplayClasses();
-            const productClasses = `${listClasses} ${!this.isEveryResultReady && 'hidden'}`;
+    return html`${renderTabGuard({
+      props: {
+        tabsIncluded: this.tabsIncluded as string[],
+        tabsExcluded: this.tabsExcluded as string[],
+        activeTab: this.tabManagerState?.activeTab,
+      },
+    })(
+      html`${when(
+        this.shouldRender,
+        () =>
+          html`${when(
+            this.templateHasError,
+            () => html`<slot></slot>`,
+            () => {
+              const listClasses = this.computeListDisplayClasses();
+              const resultClasses = `${listClasses} ${!this.isEveryResultReady && 'hidden'}`;
 
-            // Products must be rendered immediately (though hidden) to start their initialization and loading processes.
-            // If we wait to render products until placeholders are removed, the components won't begin loading until then,
-            // causing a longer delay. The `isEveryProductsReady` flag hides products while preserving placeholders,
-            // then removes placeholders once products are fully loaded to prevent content flash.
-            return html`
-              ${when(this.isAppLoaded, () =>
-                renderDisplayWrapper({
-                  props: {listClasses: productClasses, display: this.display},
-                })(
-                  html`${when(
-                    this.display === 'grid',
-                    () => this.renderGrid(),
-                    () =>
-                      html`${when(
-                        this.display === 'list',
-                        () => this.renderAsList(),
-                        () => this.renderTable()
-                      )}`
-                  )}`
-                )
-              )}
-              ${when(!this.isEveryResultReady, () =>
-                renderDisplayWrapper({
-                  props: {listClasses, display: this.display},
-                })(
-                  renderItemPlaceholders({
+              // Results must be rendered immediately (though hidden) to start their initialization and loading processes.
+              // If we wait to render results until placeholders are removed, the components won't begin loading until then,
+              // causing a longer delay. The `isEveryResultReady` flag hides results while preserving placeholders,
+              // then removes placeholders once results are fully loaded to prevent content flash.
+              return html`
+                ${when(this.isAppLoaded, () =>
+                  renderDisplayWrapper({
                     props: {
-                      density: this.density,
+                      listClasses: resultClasses,
                       display: this.display,
-                      imageSize: this.imageSize,
-                      numberOfPlaceholders: this.numberOfPlaceholders,
                     },
-                  })
-                )
-              )}
-            `;
-          }
-        )}`,
-      () => nothing
+                  })(
+                    html`${when(
+                      this.display === 'grid',
+                      () => this.renderGrid(),
+                      () =>
+                        html`${when(
+                          this.display === 'list',
+                          () => this.renderList(),
+                          () => this.renderTable()
+                        )}`
+                    )}`
+                  )
+                )}
+                ${when(!this.isEveryResultReady, () =>
+                  renderDisplayWrapper({
+                    props: {listClasses, display: this.display},
+                  })(
+                    renderItemPlaceholders({
+                      props: {
+                        density: this.density,
+                        display: this.display,
+                        imageSize: this.imageSize,
+                        numberOfPlaceholders: this.numberOfPlaceholders,
+                      },
+                    })
+                  )
+                )}
+              `;
+            }
+          )}`,
+        () => nothing
+      )}`
     )}`;
   }
 
@@ -345,56 +358,27 @@ export class AtomicResultList
     });
   }
 
-  private getPropsForAtomicResult(result: Result) {
-    return {
-      interactiveResult: buildInteractiveResult(this.bindings.engine, {
-        options: {result},
-      }),
-      result,
-      renderingFunction: this.itemRenderingFunction,
-      loadingFlag: this.loadingFlag,
-      key: this.resultListCommon.getResultId(
-        result.uniqueId,
-        this.resultListState.searchResponseId,
-        this.density,
-        this.imageSize
-      ),
-      content: this.resultTemplateProvider.getTemplateContent(result),
-      linkContent:
-        this.display === 'grid'
-          ? this.resultTemplateProvider.getLinkTemplateContent(result)
-          : this.resultTemplateProvider.getEmptyLinkTemplateContent(),
-      store: this.bindings.store,
-      density: this.density,
-      imageSize: this.imageSize,
-      display: this.display,
-    };
-  }
-
   private computeListDisplayClasses() {
-    const displayPlaceholders = !this.isAppLoaded;
+    const displayPlaceholders = !(this.isAppLoaded && this.isEveryResultReady);
 
     return getItemListDisplayClasses(
       this.display,
       this.density,
       this.imageSize,
-      this.resultListState.firstSearchExecuted &&
-        this.resultListState.isLoading,
+      this.resultListState?.isLoading,
       displayPlaceholders
     );
   }
 
   private renderGrid() {
     return html`${map(this.resultListState.results, (result, index) => {
-      const propsForAtomicResult = this.getPropsForAtomicResult(result);
       return renderGridLayout({
         props: {
-          selectorForItem: 'atomic-result',
           item: {
             ...result,
             title: result.title,
           },
-          ...propsForAtomicResult.interactiveResult,
+          selectorForItem: 'atomic-result',
           setRef: (element) => {
             element &&
               this.resultListCommon.setNewResultRef(
@@ -405,52 +389,46 @@ export class AtomicResultList
         },
       })(
         html`${keyed(
-          this.resultListCommon.getResultId(
-            result.uniqueId,
-            this.resultList.state.searchResponseId,
-            this.density,
-            this.imageSize
-          ),
+          this.getResultId(result),
           html`<atomic-result
-            .content=${propsForAtomicResult.content}
-            .density=${propsForAtomicResult.density}
-            .display=${propsForAtomicResult.display}
-            .imageSize=${propsForAtomicResult.imageSize}
-            .interactiveResult=${propsForAtomicResult.interactiveResult}
-            .linkContent=${propsForAtomicResult.linkContent}
-            .loadingFlag=${propsForAtomicResult.loadingFlag}
-            .result=${propsForAtomicResult.result}
-            .renderingFunction=${propsForAtomicResult.renderingFunction}
-            .store=${propsForAtomicResult.store as never}
+            .content=${this.getContent(result)}
+            .density=${this.density}
+            .display=${this.display}
+            .imageSize=${this.imageSize}
+            .interactiveResult=${this.getInteractiveResult(result)}
+            .linkContent=${this.getLinkContent(result)}
+            .loadingFlag=${this.loadingFlag}
+            .result=${result}
+            .renderingFunction=${this.itemRenderingFunction}
+            .store=${this.bindings.store as never}
           ></atomic-result>`
         )}`
       );
     })}`;
   }
 
-  private renderAsList() {
+  private renderList() {
     return html`${map(this.resultListState.results, (result, index) => {
-      const propsForAtomicResult = this.getPropsForAtomicResult(result);
       return html`${keyed(
-        propsForAtomicResult.key,
+        this.getResultId(result),
         html`<atomic-result
-          part="outline"
-          ${ref(
-            (element) =>
-              element instanceof HTMLElement &&
-              this.resultListCommon.setNewResultRef(element, index)
-          )}
-          .content=${propsForAtomicResult.content}
-          .density=${propsForAtomicResult.density}
-          .display=${propsForAtomicResult.display}
-          .imageSize=${propsForAtomicResult.imageSize}
-          .interactiveResult=${propsForAtomicResult.interactiveResult}
-          .linkContent=${propsForAtomicResult.linkContent}
-          .loadingFlag=${propsForAtomicResult.loadingFlag}
-          .result=${propsForAtomicResult.result}
-          .renderingFunction=${propsForAtomicResult.renderingFunction}
-          .store=${propsForAtomicResult.store as never}
-        ></atomic-result>`
+        part="outline"
+         ${ref(
+           (element) =>
+             element instanceof HTMLElement &&
+             this.resultListCommon.setNewResultRef(element, index)
+         )}
+            .content=${this.getContent(result)}
+            .density=${this.density}
+            .display=${this.display}
+            .imageSize=${this.imageSize}
+            .interactiveResult=${this.getInteractiveResult(result)}
+            .linkContent=${this.getLinkContent(result)}
+            .loadingFlag=${this.loadingFlag}
+            .result=${result}
+            .renderingFunction=${this.itemRenderingFunction}
+            .store=${this.bindings.store as never}
+          ></atomic-result>`
       )}`;
     })}`;
   }
@@ -475,10 +453,9 @@ export class AtomicResultList
           },
         })(
           html`${map(this.resultListState.results, (result, index) => {
-            const propsForAtomicResult = this.getPropsForAtomicResult(result);
             return renderTableRow({
               props: {
-                key: propsForAtomicResult.key,
+                key: this.getResultId(result),
                 rowIndex: index,
                 setRef: (element) => {
                   element &&
@@ -494,19 +471,19 @@ export class AtomicResultList
                   firstItem,
                   templateContentForFirstItem,
                   itemRenderingFunction: this.itemRenderingFunction,
-                  key: propsForAtomicResult.key,
+                  key: this.getResultId(result),
                   renderItem: (content) => {
                     return html`<atomic-result
                       .content=${content}
-                      .density=${propsForAtomicResult.density}
-                      .display=${propsForAtomicResult.display}
-                      .imageSize=${propsForAtomicResult.imageSize}
-                      .interactiveResult=${propsForAtomicResult.interactiveResult}
-                      .linkContent=${propsForAtomicResult.linkContent}
-                      .loadingFlag=${propsForAtomicResult.loadingFlag}
-                      .result=${propsForAtomicResult.result}
-                      .renderingFunction=${propsForAtomicResult.renderingFunction}
-                      .store=${propsForAtomicResult.store as never}
+                      .density=${this.density}
+                      .display=${this.display}
+                      .imageSize=${this.imageSize}
+                      .interactiveResult=${this.getInteractiveResult(result)}
+                       .linkContent=${this.getLinkContent(result)}
+                      .loadingFlag=${this.loadingFlag}
+                      .result=${result}
+                      .renderingFunction=${this.itemRenderingFunction}
+                      .store=${this.bindings.store as never}
                     ></atomic-result>`;
                   },
                 },
@@ -526,23 +503,37 @@ export class AtomicResultList
     return this.nextNewResultTarget;
   }
   private get shouldRender() {
-    // Tab guard - check if should display on current tab
-    if (
-      !shouldDisplayOnCurrentTab(
-        [...(this.tabsIncluded as string[])],
-        [...(this.tabsExcluded as string[])],
-        this.tabManagerState.activeTab
-      )
-    ) {
-      return false;
-    }
-
     // Item list guard - check for errors, templates, and first search
     return !(
       this.resultListState.hasError ||
       (this.resultListState.firstSearchExecuted &&
         !this.resultListState.hasResults) ||
       !this.resultTemplateRegistered
+    );
+  }
+
+  private getLinkContent(result: Result) {
+    return this.display === 'grid'
+      ? this.resultTemplateProvider.getLinkTemplateContent(result)
+      : this.resultTemplateProvider.getEmptyLinkTemplateContent();
+  }
+
+  private getContent(result: Result) {
+    return this.resultTemplateProvider.getTemplateContent(result);
+  }
+
+  private getInteractiveResult(result: Result) {
+    return buildInteractiveResult(this.bindings.engine, {
+      options: {result},
+    });
+  }
+
+  private getResultId(result: Result) {
+    return this.resultListCommon.getResultId(
+      result.uniqueId,
+      this.resultListState.searchResponseId,
+      this.density,
+      this.imageSize
     );
   }
 }
