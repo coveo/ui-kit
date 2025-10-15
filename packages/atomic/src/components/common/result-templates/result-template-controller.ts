@@ -1,19 +1,16 @@
-import type {
-  ProductTemplate,
-  ProductTemplateCondition,
-} from '@coveo/headless/commerce';
+import type {ResultTemplate, ResultTemplateCondition} from '@coveo/headless';
 import type {ReactiveControllerHost} from 'lit';
 import {
   BaseTemplateController,
   type TemplateContent,
 } from '@/src/components/common/template-controller/base-template-controller';
 
-type ProductTemplateHost = ReactiveControllerHost &
+type ResultTemplateHost = ReactiveControllerHost &
   HTMLElement & {error?: Error};
 
-export class ProductTemplateController extends BaseTemplateController<ProductTemplateCondition> {
+export class ResultTemplateController extends BaseTemplateController<ResultTemplateCondition> {
   constructor(
-    host: ProductTemplateHost,
+    host: ResultTemplateHost,
     validParents: string[],
     allowEmpty: boolean = false
   ) {
@@ -21,8 +18,8 @@ export class ProductTemplateController extends BaseTemplateController<ProductTem
   }
 
   getTemplate(
-    conditions: ProductTemplateCondition[]
-  ): ProductTemplate<TemplateContent> | null {
+    conditions: ResultTemplateCondition[]
+  ): ResultTemplate<TemplateContent> | null {
     const baseTemplate = this.getBaseTemplate(conditions);
     if (!baseTemplate) {
       return null;
@@ -37,7 +34,11 @@ export class ProductTemplateController extends BaseTemplateController<ProductTem
 
   protected getDefaultLinkTemplateElement() {
     const linkTemplate = document.createElement('template');
-    linkTemplate.innerHTML = `<atomic-product-link>${this.currentGridCellLinkTarget ? `<a slot="attributes" target="${this.currentGridCellLinkTarget}"></a>` : ''}</atomic-product-link>`;
+    linkTemplate.innerHTML = `<atomic-result-link>${
+      this.currentGridCellLinkTarget
+        ? `<a slot="attributes" target="${this.currentGridCellLinkTarget}"></a>`
+        : ''
+    }</atomic-result-link>`;
     return linkTemplate;
   }
 }
