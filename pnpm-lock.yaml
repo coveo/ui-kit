@@ -989,8 +989,8 @@ importers:
         specifier: 19.2.2
         version: 19.2.2(@angular/common@19.2.2(@angular/core@19.2.2(rxjs@7.8.2)(zone.js@0.15.1))(rxjs@7.8.2))(@angular/core@19.2.2(rxjs@7.8.2)(zone.js@0.15.1))(@angular/platform-browser@19.2.2(@angular/animations@19.2.2(@angular/core@19.2.2(rxjs@7.8.2)(zone.js@0.15.1)))(@angular/common@19.2.2(@angular/core@19.2.2(rxjs@7.8.2)(zone.js@0.15.1))(rxjs@7.8.2))(@angular/core@19.2.2(rxjs@7.8.2)(zone.js@0.15.1)))(rxjs@7.8.2)
       '@coveo/atomic-angular':
-        specifier: 3.7.9
-        version: 3.7.9(@angular/common@19.2.2(@angular/core@19.2.2(rxjs@7.8.2)(zone.js@0.15.1))(rxjs@7.8.2))(@angular/core@19.2.2(rxjs@7.8.2)(zone.js@0.15.1))(@coveo/bueno@1.1.3)(@coveo/headless@3.31.2(encoding@0.1.13)(pino-pretty@13.1.1)(react-native@0.81.4(@babel/core@7.28.4)(@types/react@19.2.0)(react@19.2.0))(react@19.2.0)(redux@5.0.1)(typescript@5.8.3))(encoding@0.1.13)(postcss@8.5.6)(typescript@5.8.3)
+        specifier: 3.7.11
+        version: 3.7.11(@angular/common@19.2.2(@angular/core@19.2.2(rxjs@7.8.2)(zone.js@0.15.1))(rxjs@7.8.2))(@angular/core@19.2.2(rxjs@7.8.2)(zone.js@0.15.1))(@coveo/bueno@1.1.3)(@coveo/headless@3.31.6(encoding@0.1.13)(pino-pretty@13.1.1)(react-native@0.81.4(@babel/core@7.28.4)(@types/react@19.2.0)(react@19.2.0))(react@19.2.0)(redux@5.0.1)(typescript@5.8.3))(encoding@0.1.13)(postcss@8.5.6)(typescript@5.8.3)
       rxjs:
         specifier: 7.8.2
         version: 7.8.2
@@ -2563,13 +2563,13 @@ packages:
     resolution: {integrity: sha512-ooWCrlZP11i8GImSjTHYHLkvFDP48nS4+204nGb1RiX/WXYHmJA2III9/e2DWVabCESdW7hBAEzHRqUn9OUVvQ==}
     engines: {node: '>=0.1.90'}
 
-  '@coveo/atomic-angular@3.7.9':
-    resolution: {integrity: sha512-o8VdfVnEte4gplllGI0sLh/Dqz4JHGkFmjPNzmpWuU3qK85ulRlcaXeOoIKDR5AsDdFbh2MMXqcsaPpIZaqRjA==}
+  '@coveo/atomic-angular@3.7.11':
+    resolution: {integrity: sha512-BkuvC8j4ZO9wYloHtF0mikiBNUXxPo5962oD2qUwPBhrHtXEBp9ecOz88FcYS98ZaKhHoQfQtMDEmwajymn6Xw==}
     engines: {node: ^20.9.0 || ^22.11.0}
     peerDependencies:
       '@angular/common': 14 - 19
       '@angular/core': 14 - 19
-      '@coveo/headless': 3.31.2
+      '@coveo/headless': 3.31.6
 
   '@coveo/atomic-component-health-check@2.2.19':
     resolution: {integrity: sha512-n/llxt8mLYW5P9G8R0ozbrMrqtnDT03oMix7tQ796+F2AFwL6F3FcXyRPVMqsWuTnKH6jOwZ04HcAoP+868Ejw==}
@@ -2589,6 +2589,17 @@ packages:
     peerDependencies:
       '@coveo/bueno': 1.1.3
       '@coveo/headless': 3.31.2
+      typescript: '>=5.0.0'
+    peerDependenciesMeta:
+      typescript:
+        optional: true
+
+  '@coveo/atomic@3.35.3':
+    resolution: {integrity: sha512-kCrL9JxGP2ODvV62fTstq2H6/sSp7ejW9mb4zYs6BHGSGFl6DtnA4X4V0LSpvNRefSAPmpJQP5veacMweL7R+g==}
+    engines: {node: ^20.9.0 || ^22.11.0}
+    peerDependencies:
+      '@coveo/bueno': 1.1.3
+      '@coveo/headless': 3.31.6
       typescript: '>=5.0.0'
     peerDependenciesMeta:
       typescript:
@@ -2616,8 +2627,8 @@ packages:
   '@coveo/explorer-messenger@0.4.1':
     resolution: {integrity: sha512-MX+alPTsRQLAC99b7cUwMGtaGcDw44ftEJOFwoS8alTgFlY7oaUP4jyZSJ/BCOMXlYpkhU2VYDERr/HD5P1Dtw==}
 
-  '@coveo/headless@3.31.2':
-    resolution: {integrity: sha512-5xA28a927WgXKRtnuLq7zEuwthf3cJgq259a31wq4UCtInnmfT2cq0QDqxgCU5njB/7SpJ+8FqpSTNZOHYcEwQ==}
+  '@coveo/headless@3.31.6':
+    resolution: {integrity: sha512-sT/O25qVhkAsBEhurKDziwlm/iu7uL0mPYO9oaSef5DHe4zYrhEOuoyeE5h5u3WAflgUWVhzGQluDFByWp8m/w==}
     engines: {node: ^20.9.0 || ^22.11.0}
     peerDependencies:
       encoding: ^0.1.13
@@ -15522,12 +15533,12 @@ snapshots:
   '@colors/colors@1.5.0':
     optional: true
 
-  '@coveo/atomic-angular@3.7.9(@angular/common@19.2.2(@angular/core@19.2.2(rxjs@7.8.2)(zone.js@0.15.1))(rxjs@7.8.2))(@angular/core@19.2.2(rxjs@7.8.2)(zone.js@0.15.1))(@coveo/bueno@1.1.3)(@coveo/headless@3.31.2(encoding@0.1.13)(pino-pretty@13.1.1)(react-native@0.81.4(@babel/core@7.28.4)(@types/react@19.2.0)(react@19.2.0))(react@19.2.0)(redux@5.0.1)(typescript@5.8.3))(encoding@0.1.13)(postcss@8.5.6)(typescript@5.8.3)':
+  '@coveo/atomic-angular@3.7.11(@angular/common@19.2.2(@angular/core@19.2.2(rxjs@7.8.2)(zone.js@0.15.1))(rxjs@7.8.2))(@angular/core@19.2.2(rxjs@7.8.2)(zone.js@0.15.1))(@coveo/bueno@1.1.3)(@coveo/headless@3.31.6(encoding@0.1.13)(pino-pretty@13.1.1)(react-native@0.81.4(@babel/core@7.28.4)(@types/react@19.2.0)(react@19.2.0))(react@19.2.0)(redux@5.0.1)(typescript@5.8.3))(encoding@0.1.13)(postcss@8.5.6)(typescript@5.8.3)':
     dependencies:
       '@angular/common': 19.2.2(@angular/core@19.2.2(rxjs@7.8.2)(zone.js@0.15.1))(rxjs@7.8.2)
       '@angular/core': 19.2.2(rxjs@7.8.2)(zone.js@0.15.1)
-      '@coveo/atomic': 3.34.0(@coveo/bueno@1.1.3)(@coveo/headless@3.31.2(encoding@0.1.13)(pino-pretty@13.1.1)(react-native@0.81.4(@babel/core@7.28.4)(@types/react@19.2.0)(react@19.2.0))(react@19.2.0)(redux@5.0.1)(typescript@5.8.3))(encoding@0.1.13)(postcss@8.5.6)(typescript@5.8.3)
-      '@coveo/headless': 3.31.2(encoding@0.1.13)(pino-pretty@13.1.1)(react-native@0.81.4(@babel/core@7.28.4)(@types/react@19.2.0)(react@19.2.0))(react@19.2.0)(redux@5.0.1)(typescript@5.8.3)
+      '@coveo/atomic': 3.35.3(@coveo/bueno@1.1.3)(@coveo/headless@3.31.6(encoding@0.1.13)(pino-pretty@13.1.1)(react-native@0.81.4(@babel/core@7.28.4)(@types/react@19.2.0)(react@19.2.0))(react@19.2.0)(redux@5.0.1)(typescript@5.8.3))(encoding@0.1.13)(postcss@8.5.6)(typescript@5.8.3)
+      '@coveo/headless': 3.31.6(encoding@0.1.13)(pino-pretty@13.1.1)(react-native@0.81.4(@babel/core@7.28.4)(@types/react@19.2.0)(react@19.2.0))(react@19.2.0)(redux@5.0.1)(typescript@5.8.3)
       tslib: 2.8.1
     transitivePeerDependencies:
       - '@coveo/bueno'
@@ -15554,10 +15565,10 @@ snapshots:
       - postcss
       - typescript
 
-  '@coveo/atomic@3.34.0(@coveo/bueno@1.1.3)(@coveo/headless@3.31.2(encoding@0.1.13)(pino-pretty@13.1.1)(react-native@0.81.4(@babel/core@7.28.4)(@types/react@19.2.0)(react@19.2.0))(react@19.2.0)(redux@5.0.1)(typescript@5.8.3))(encoding@0.1.13)(postcss@8.5.6)(typescript@5.8.3)':
+  '@coveo/atomic@3.34.0(@coveo/bueno@1.1.3)(@coveo/headless@packages+headless)(postcss@8.5.6)(typescript@5.8.3)':
     dependencies:
       '@coveo/bueno': 1.1.3
-      '@coveo/headless': 3.31.2(encoding@0.1.13)(pino-pretty@13.1.1)(react-native@0.81.4(@babel/core@7.28.4)(@types/react@19.2.0)(react@19.2.0))(react@19.2.0)(redux@5.0.1)(typescript@5.8.3)
+      '@coveo/headless': link:packages/headless
       '@lit/context': 1.1.6
       '@open-wc/lit-helpers': 0.7.0(lit@3.3.1)
       '@popperjs/core': 2.11.8
@@ -15578,10 +15589,10 @@ snapshots:
       - encoding
       - postcss
 
-  '@coveo/atomic@3.34.0(@coveo/bueno@1.1.3)(@coveo/headless@packages+headless)(postcss@8.5.6)(typescript@5.8.3)':
+  '@coveo/atomic@3.35.3(@coveo/bueno@1.1.3)(@coveo/headless@3.31.6(encoding@0.1.13)(pino-pretty@13.1.1)(react-native@0.81.4(@babel/core@7.28.4)(@types/react@19.2.0)(react@19.2.0))(react@19.2.0)(redux@5.0.1)(typescript@5.8.3))(encoding@0.1.13)(postcss@8.5.6)(typescript@5.8.3)':
     dependencies:
       '@coveo/bueno': 1.1.3
-      '@coveo/headless': link:packages/headless
+      '@coveo/headless': 3.31.6(encoding@0.1.13)(pino-pretty@13.1.1)(react-native@0.81.4(@babel/core@7.28.4)(@types/react@19.2.0)(react@19.2.0))(react@19.2.0)(redux@5.0.1)(typescript@5.8.3)
       '@lit/context': 1.1.6
       '@open-wc/lit-helpers': 0.7.0(lit@3.3.1)
       '@popperjs/core': 2.11.8
@@ -15614,7 +15625,7 @@ snapshots:
 
   '@coveo/explorer-messenger@0.4.1': {}
 
-  '@coveo/headless@3.31.2(encoding@0.1.13)(pino-pretty@13.1.1)(react-native@0.81.4(@babel/core@7.28.4)(@types/react@19.2.0)(react@19.2.0))(react@19.2.0)(redux@5.0.1)(typescript@5.8.3)':
+  '@coveo/headless@3.31.6(encoding@0.1.13)(pino-pretty@13.1.1)(react-native@0.81.4(@babel/core@7.28.4)(@types/react@19.2.0)(react@19.2.0))(react@19.2.0)(redux@5.0.1)(typescript@5.8.3)':
     dependencies:
       '@coveo/bueno': 1.1.3
       '@coveo/relay': 1.2.7
