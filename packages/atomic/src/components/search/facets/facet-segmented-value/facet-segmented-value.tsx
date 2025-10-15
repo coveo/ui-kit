@@ -2,6 +2,9 @@ import {FunctionalComponent, h} from '@stencil/core';
 import {FacetValueProps} from '../../../common/facets/stencil-facet-common';
 import {Button} from '../../../common/stencil-button';
 
+/**
+ * @deprecated should only be used for Stencil components.
+ */
 export const FacetSegmentedValue: FunctionalComponent<FacetValueProps> = (
   props
 ) => {

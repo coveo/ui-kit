@@ -11,7 +11,7 @@ li {
 }
 
 .facet__value_selected{
-  font-weight: bold;
+  font-weight: var(--slds-g-font-weight-7, bold);
 }
 
 .facet__value-checkbox {

@@ -1,11 +1,14 @@
 import {FunctionalComponent, h} from '@stencil/core';
 import {ItemDisplayLayout} from '../layout/display-options.js';
 
-export interface DisplayWrapperProps {
+interface DisplayWrapperProps {
   display: ItemDisplayLayout;
   listClasses: string;
 }
 
+/**
+ * @deprecated should only be used for Stencil components.
+ */
 export const DisplayWrapper: FunctionalComponent<DisplayWrapperProps> = (
   {display, listClasses},
   children

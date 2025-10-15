@@ -29,6 +29,7 @@ import type {
 } from '../../state/state-sections.js';
 import {
   nonEmptyStringArray,
+  requiredNonEmptyString,
   validatePayload,
 } from '../../utils/validate-payload.js';
 import {logGeneratedAnswerStreamEnd} from './generated-answer-analytics-actions.js';
@@ -71,6 +72,11 @@ export interface GeneratedAnswerErrorPayload {
 export const setIsVisible = createAction(
   'generatedAnswer/setIsVisible',
   (payload: boolean) => validatePayload(payload, booleanValue)
+);
+
+export const setAnswerId = createAction(
+  'generatedAnswer/setAnswerId',
+  (payload: string) => validatePayload(payload, requiredNonEmptyString)
 );
 
 export const setIsEnabled = createAction(

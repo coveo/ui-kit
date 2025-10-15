@@ -1,0 +1,15 @@
+name: "Playwright Atomic React"
+description: "Runs Playwright tests for Atomic React"
+inputs:
+  github-token:
+    description: The GitHub token for accurately detecting a build vs a re-run build
+    required: false
+    default: ""
+runs:
+  using: composite
+  steps:
+    - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+      if: failure()
+      with:
+        name: react-screenshots
+        path: samples/atomic/search-commerce-react/playwright-report/

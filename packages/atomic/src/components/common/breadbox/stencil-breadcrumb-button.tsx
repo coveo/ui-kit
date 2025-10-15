@@ -7,7 +7,7 @@ import {
   getFirstBreadcrumbValue,
 } from './breadcrumb-utils';
 
-export interface BreadcrumbButtonProps {
+interface BreadcrumbButtonProps {
   onSelectBreadcrumb: () => void;
   setRef: (el: HTMLButtonElement) => void;
   pathLimit: number;
@@ -15,6 +15,9 @@ export interface BreadcrumbButtonProps {
   i18n: i18n;
 }
 
+/**
+ * @deprecated should only be used for Stencil components.
+ */
 export const BreadcrumbButton: FunctionalComponent<BreadcrumbButtonProps> = (
   props,
   children

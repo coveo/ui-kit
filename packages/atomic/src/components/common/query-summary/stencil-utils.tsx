@@ -30,19 +30,14 @@ const WrapHighlight: FunctionalComponent<{part?: string}> = (
   );
 };
 
+/**
+ * @deprecated should only be used for Stencil components.
+ */
 export const getQuerySummaryI18nParameters = (props: i18nKeyProps) => {
   return getQuerySummaryData(props, {
     loadingStatus: 'loading-results',
     itemsForQuery: 'showing-results-of-with-query',
     allItems: 'showing-results-of',
-  });
-};
-
-export const getProductQuerySummaryI18nParameters = (props: i18nKeyProps) => {
-  return getQuerySummaryData(props, {
-    loadingStatus: 'loading-products',
-    itemsForQuery: 'showing-products-of-with-query',
-    allItems: 'showing-products-of',
   });
 };
 

@@ -8,6 +8,9 @@ interface FacetSearchInputGuardProps {
   numberOfDisplayedValues: number;
 }
 
+/**
+ * @deprecated should only be used for Stencil components.
+ */
 export const FacetSearchInputGuard: FunctionalComponent<
   FacetSearchInputGuardProps
 > = ({withSearch, canShowMoreValues, numberOfDisplayedValues}, children) => {

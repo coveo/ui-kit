@@ -5,6 +5,7 @@ import {
   type SearchSummaryState,
   type Summary,
 } from '@coveo/headless/commerce';
+import {userEvent} from '@vitest/browser/context';
 import {html} from 'lit';
 import {describe, expect, it, vi} from 'vitest';
 import {renderInAtomicCommerceInterface} from '@/vitest-utils/testing-helpers/fixtures/atomic/commerce/atomic-commerce-interface-fixture';
@@ -13,8 +14,7 @@ import {buildFakeProductListing} from '@/vitest-utils/testing-helpers/fixtures/h
 import {buildFakeSearch} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/search-controller';
 import {buildFakeSummary} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/summary-subcontroller';
 import type {AtomicCommerceRefineToggle} from './atomic-commerce-refine-toggle';
-import './atomic-commerce-refine-toggle.js';
-import {userEvent} from '@vitest/browser/context';
+import './atomic-commerce-refine-toggle';
 
 vi.mock('@coveo/headless/commerce', {spy: true});
 
