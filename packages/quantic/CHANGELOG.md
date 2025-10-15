@@ -1,3 +1,9 @@
+## <small>3.31.3 (2025-10-15)</small>
+
+* chore(quantic): salesforce cli version updated (#6164) ([be6ce9c](https://github.com/coveo/ui-kit/commits/be6ce9c)), closes [#6164](https://github.com/coveo/ui-kit/issues/6164)
+
+
+
 ## <small>3.31.2 (2025-10-15)</small>
 
 * feat(quantic): contextual CRGA added to example insight panel (#6131) ([e19cc0d](https://github.com/coveo/ui-kit/commits/e19cc0d)), closes [#6131](https://github.com/coveo/ui-kit/issues/6131)
