@@ -8,8 +8,8 @@
     "e2e:watch": "cypress open --browser chrome --e2e"
   },
   "dependencies": {
-    "@coveo/headless-react": "2.6.2",
-    "@coveo/headless": "3.31.2",
+    "@coveo/headless-react": "2.6.5",
+    "@coveo/headless": "3.31.6",
     "next": "15.2.4",
     "react": "19.1.1",
     "react-dom": "19.1.1"
