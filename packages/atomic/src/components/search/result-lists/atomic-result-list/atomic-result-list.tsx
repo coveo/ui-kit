@@ -322,12 +322,12 @@ export class AtomicResultList implements InitializableComponent {
       <DisplayTable
         {...propsForTableColumns}
         listClasses={listClasses}
-        logger={this.bindings.engine.logger}
         itemRenderingFunction={this.itemRenderingFunction}
+        logger={this.bindings.engine.logger}
         host={this.host}
       >
         {this.resultListState.results.map((result, i) => {
-          const propsForAtomicResult = this.getPropsForAtomicResult(result);
+          const {renderingFunction,...propsForAtomicResult} = this.getPropsForAtomicResult(result);
           return (
             <DisplayTableRow
               {...propsForAtomicResult}
@@ -339,6 +339,7 @@ export class AtomicResultList implements InitializableComponent {
               <DisplayTableData
                 {...propsForTableColumns}
                 {...propsForAtomicResult}
+                itemRenderingFunction={this.itemRenderingFunction}
                 renderItem={(content) => {
                   return (
                     <atomic-result

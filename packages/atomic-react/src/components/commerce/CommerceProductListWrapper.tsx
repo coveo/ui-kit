@@ -76,16 +76,17 @@ export const ListWrapper: React.FC<WrapperProps> = (props) => {
           createRoot(linkContainer!).render(templateResult.linkTemplate);
           createRoot(root).render(templateResult.contentTemplate);
           return renderToString(templateResult.contentTemplate);
-        } else {
+        }
+        if (linkContainer !== undefined) {
           createRoot(root).render(templateResult);
           otherProps.display === 'grid'
-            ? createRoot(linkContainer!).render(
+            ? createRoot(linkContainer).render(
                 <AtomicProductLink></AtomicProductLink>
               )
             : // biome-ignore lint/complexity/noUselessFragments: <>
-              createRoot(linkContainer!).render(<></>);
-          return renderToString(templateResult);
+              createRoot(linkContainer).render(<></>);
         }
+        return renderToString(templateResult);
       }
     );
   }, [otherProps.display, template]);
