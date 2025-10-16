@@ -100,15 +100,6 @@ export class AtomicCommercePager
   private previousButton!: FocusTargetController;
   private nextButton!: FocusTargetController;
 
-  private initFocusTargets() {
-    if (!this.previousButton) {
-      this.previousButton = new FocusTargetController(this, this.bindings);
-    }
-    if (!this.nextButton) {
-      this.nextButton = new FocusTargetController(this, this.bindings);
-    }
-  }
-
   public initialize() {
     this.validateProps();
     this.initFocusTargets();
@@ -182,28 +173,7 @@ export class AtomicCommercePager
                       text: (pageNumber + 1).toLocaleString(
                         this.bindings.i18n.language
                       ),
-                      onFocusCallback: async (
-                        elements,
-                        currentFocus,
-                        newFocus
-                      ) => {
-                        const currentIndex = elements.indexOf(currentFocus);
-                        const newIndex = elements.indexOf(newFocus);
-
-                        if (
-                          currentIndex === elements.length - 1 &&
-                          newIndex === 0
-                        ) {
-                          await this.nextButton.focus();
-                        } else if (
-                          currentIndex === 0 &&
-                          newIndex === elements.length - 1
-                        ) {
-                          await this.previousButton.focus();
-                        } else {
-                          newFocus.focus();
-                        }
-                      },
+                      onFocusCallback: this.handleFocus,
                     },
                   })
                 )
@@ -227,6 +197,32 @@ export class AtomicCommercePager
       )}
     `;
   }
+
+  private initFocusTargets() {
+    if (!this.previousButton) {
+      this.previousButton = new FocusTargetController(this, this.bindings);
+    }
+    if (!this.nextButton) {
+      this.nextButton = new FocusTargetController(this, this.bindings);
+    }
+  }
+
+  private handleFocus = async (
+    elements: HTMLInputElement[],
+    currentFocus: HTMLInputElement,
+    newFocus: HTMLInputElement
+  ) => {
+    const currentIndex = elements.indexOf(currentFocus);
+    const newIndex = elements.indexOf(newFocus);
+
+    if (currentIndex === elements.length - 1 && newIndex === 0) {
+      await this.nextButton.focus();
+    } else if (currentIndex === 0 && newIndex === elements.length - 1) {
+      await this.previousButton.focus();
+    } else {
+      newFocus.focus();
+    }
+  };
 
   private validateProps() {
     try {
