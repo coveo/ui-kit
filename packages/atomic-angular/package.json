@@ -13,7 +13,7 @@
   },
   "private": true,
   "dependencies": {
-    "@coveo/atomic": "3.35.4",
+    "@coveo/atomic": "3.35.5",
     "rxjs": "7.8.2"
   },
   "peerDependencies": {

@@ -1,3 +1,9 @@
+## <small>3.35.5 (2025-10-16)</small>
+
+* chore: setup MSW with Storybook and replace playwright network mocking (#6000) ([010586c](https://github.com/coveo/ui-kit/commits/010586c)), closes [#6000](https://github.com/coveo/ui-kit/issues/6000)
+
+
+
 ## <small>3.35.3 (2025-10-15)</small>
 
 * fix(atomic-react): fix table layout (#6146) ([2cdc290](https://github.com/coveo/ui-kit/commits/2cdc290)), closes [#6146](https://github.com/coveo/ui-kit/issues/6146)
