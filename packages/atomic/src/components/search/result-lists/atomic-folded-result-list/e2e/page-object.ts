@@ -21,20 +21,4 @@ export class AtomicFoldedResultListPageObject extends BasePageObject<'atomic-fol
   get resultChildren() {
     return this.page.locator('[part="children-root"]');
   }
-
-  async withATotalNumberOfChildResults(total: number) {
-    await this.page.route(
-      '**/search/v2?organizationId=searchuisamples',
-      async (route) => {
-        const response = await route.fetch();
-        const body = await response.json();
-        body.results[0].totalNumberOfChildResults = total;
-
-        await route.fulfill({
-          response,
-          json: body,
-        });
-      }
-    );
-  }
 }

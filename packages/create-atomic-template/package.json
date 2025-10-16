@@ -7,7 +7,7 @@
     "lint": "prettier --check . && eslint ."
   },
   "dependencies": {
-    "@coveo/atomic": "3.35.4",
+    "@coveo/atomic": "3.35.5",
     "@coveo/headless": "3.32.0",
     "@stencil/core": "4.20.0"
   },
