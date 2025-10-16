@@ -3,7 +3,7 @@ import {customElement} from 'lit/decorators.js';
 import {ItemSectionMixin} from '@/src/mixins/item-section-mixin';
 
 /**
- * This section identifies the item by its name, and its main use is to make the result list scannable.
+ * This section is intended to display the result's name, and its main use is to make the result list scannable.
  * This is usually the page title.
  *
  * Behavior:

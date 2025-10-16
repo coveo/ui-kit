@@ -3,7 +3,7 @@ import {customElement} from 'lit/decorators.js';
 import {ItemSectionMixin} from '@/src/mixins/item-section-mixin';
 
 /**
- * This section displays additional descriptive information about the item.
+ * This section is meant to render additional descriptive information about the result.
  *
  * Behavior:
  * * Has a maximum height of two lines.
