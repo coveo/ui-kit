@@ -24,8 +24,7 @@ test.describe('when more results are NOT available & there are NO result childre
 
 test.describe('when more results are NOT available & there are result children', () => {
   test.beforeEach(async ({foldedResultList}) => {
-    await foldedResultList.withATotalNumberOfChildResults(1);
-    await foldedResultList.load();
+    await foldedResultList.load({story: 'with-few-result-children'});
   });
 
   test('should show result children', async ({foldedResultList}) => {
@@ -74,8 +73,9 @@ test.describe('when more results are available & there are result children', () 
 
 test.describe('when more results are available & there are NO result children', () => {
   test.beforeEach(async ({foldedResultList}) => {
-    await foldedResultList.withATotalNumberOfChildResults(10);
-    await foldedResultList.load({story: 'with-no-result-children'});
+    await foldedResultList.load({
+      story: 'with-more-results-available-and-no-children',
+    });
   });
 
   test('should show the "load all results" button', async ({

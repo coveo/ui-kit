@@ -217,6 +217,7 @@ test.describe('with minimum-query-length=4', () => {
     await searchBox.load({
       args: {minimumQueryLength: 4, suggestionTimeout: 5000},
     });
+    await searchBox.hydrated.waitFor();
   });
 
   const testCases = () => {
