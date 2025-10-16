@@ -111,7 +111,7 @@
   "dependencies": {
     "@coveo/bueno": "1.1.3",
     "@coveo/relay": "1.2.7",
-    "@coveo/relay-event-types": "15.1.0",
+    "@coveo/relay-event-types": "16.0.1",
     "@reduxjs/toolkit": "2.6.0",
     "abortcontroller-polyfill": "1.7.8",
     "coveo.analytics": "2.30.45",
@@ -120,7 +120,7 @@
     "fast-equals": "5.2.2",
     "headers-polyfill": "4.0.3",
     "navigator.sendbeacon": "0.0.20",
-    "pino": "9.7.0",
+    "pino": "10.0.0",
     "redux-thunk": "3.1.0"
   },
   "devDependencies": {

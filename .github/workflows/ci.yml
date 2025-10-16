@@ -26,11 +26,11 @@ jobs:
           private-key: ${{ secrets.GH_APP_PRIVATE_KEY }}
           owner: coveo
           repositories: "ui-kit"
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5
         with:
           fetch-depth: 0
       - run: git branch main origin/main
-      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+      - uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444 # v5
         with:
           node-version-file: ".nvmrc"
       - name: Install npm
@@ -51,10 +51,10 @@ jobs:
         with:
           egress-policy: audit
 
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5
         with:
           ref: ${{ github.head_ref }}
-      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+      - uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444 # v5
         with:
           registry-url: "https://registry.npmjs.org"
           node-version-file: ".nvmrc"
@@ -77,7 +77,7 @@ jobs:
         with:
           egress-policy: audit
 
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5
         with:
           ref: ${{ github.head_ref }}
       - uses: ./.github/actions/setup
@@ -116,7 +116,7 @@ jobs:
         with:
           egress-policy: audit
 
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5
       - uses: ./.github/actions/setup
         with:
           save-cache: "true"
@@ -133,7 +133,7 @@ jobs:
         with:
           egress-policy: audit
 
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5
       - uses: ./.github/actions/setup
         with:
           cache-prefix: "cdn"
@@ -150,7 +150,7 @@ jobs:
         with:
           egress-policy: audit
 
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5
         with:
           fetch-depth: 0
           filter: blob:none
@@ -175,7 +175,7 @@ jobs:
         uses: step-security/harden-runner@ec9f2d5744a09debf3a187a3f4f675c53b671911 # v2.13.0
         with:
           egress-policy: audit
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5
       - uses: ./.github/actions/setup
       - name: Run knip
         run: npm run knip
@@ -194,7 +194,7 @@ jobs:
         uses: step-security/harden-runner@ec9f2d5744a09debf3a187a3f4f675c53b671911 # v2.13.0
         with:
           egress-policy: audit
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5
       - uses: ./.github/actions/setup
         with:
           cache-prefix: "cdn"
@@ -210,7 +210,7 @@ jobs:
         with:
           egress-policy: audit
 
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5
       - uses: ./.github/actions/setup
       - run: npm run lint:check
   unit-test:
@@ -227,7 +227,7 @@ jobs:
         with:
           egress-policy: audit
 
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5
         with:
           fetch-depth: 0
           filter: blob:none
@@ -244,7 +244,7 @@ jobs:
         with:
           egress-policy: audit
 
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5
       - uses: ./.github/actions/setup
       - run: npm run package-compatibility
   typedoc:
@@ -258,7 +258,7 @@ jobs:
         with:
           egress-policy: audit
 
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5
       - uses: ./.github/actions/setup
       - name: "Build headless typedoc"
         run: npm run build:typedoc
@@ -277,7 +277,7 @@ jobs:
         with:
           egress-policy: audit
 
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5
       - uses: ./.github/actions/setup
       - uses: ./.github/actions/e2e-atomic-csp
   prepare-playwright-atomic:
@@ -297,7 +297,7 @@ jobs:
         with:
           egress-policy: audit
 
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5
         with:
           fetch-depth: 0
       - run: git branch main origin/main
@@ -337,7 +337,7 @@ jobs:
         with:
           egress-policy: audit
 
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5
       - uses: ./.github/actions/setup
       - run: npm run build
       - uses: ./.github/actions/playwright-atomic
@@ -358,7 +358,7 @@ jobs:
         with:
           egress-policy: audit
 
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5
       - uses: ./.github/actions/setup
       - run: npm run build
       - name: Merge Playwright reports
@@ -396,7 +396,7 @@ jobs:
         with:
           egress-policy: audit
 
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5
       - uses: ./.github/actions/setup
       - run: npm run build
       - uses: ./.github/actions/playwright-atomic-theming
@@ -447,7 +447,7 @@ jobs:
         with:
           egress-policy: audit
 
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5
       - uses: ./.github/actions/setup
       - uses: ./.github/actions/cypress-atomic
         with:
@@ -465,7 +465,7 @@ jobs:
         with:
           egress-policy: audit
 
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5
       - uses: ./.github/actions/setup
       - uses: ./.github/actions/cypress-atomic-screenshots
   playwright-atomic-search-commerce-react-test:
@@ -482,7 +482,7 @@ jobs:
         with:
           egress-policy: audit
 
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5
       - uses: ./.github/actions/setup
       - uses: ./.github/actions/playwright-atomic-search-commerce-react
   cypress-atomic-search-nextjs-pages-router-test:
@@ -496,7 +496,7 @@ jobs:
         with:
           egress-policy: audit
 
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5
       - uses: ./.github/actions/setup
       - uses: ./.github/actions/cypress-atomic-search-nextjs-pages-router
   playwright-atomic-search-commerce-angular-test:
@@ -513,7 +513,7 @@ jobs:
         with:
           egress-policy: audit
 
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5
       - uses: ./.github/actions/setup
       - uses: ./.github/actions/playwright-atomic-search-commerce-angular
   cypress-atomic-search-stencil-test:
@@ -527,7 +527,7 @@ jobs:
         with:
           egress-policy: audit
 
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5
       - uses: ./.github/actions/setup
       - uses: ./.github/actions/cypress-atomic-search-stencil
   playwright-atomic-hosted-page-test:
@@ -544,7 +544,7 @@ jobs:
         with:
           egress-policy: audit
 
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5
       - uses: ./.github/actions/setup
       - run: npm run build
       - uses: ./.github/actions/playwright-atomic-hosted-pages
@@ -562,7 +562,7 @@ jobs:
         with:
           egress-policy: audit
 
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5
       - uses: ./.github/actions/setup
       - run: npm run build
       - uses: ./.github/actions/playwright-headless-ssr-commerce-nextjs
@@ -577,7 +577,7 @@ jobs:
         with:
           egress-policy: audit
 
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5
       - uses: ./.github/actions/setup
       - uses: ./.github/actions/cypress-atomic-insight-panel
   cypress-headless-ssr-search-nextjs-app-router-test:
@@ -591,7 +591,7 @@ jobs:
         with:
           egress-policy: audit
 
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5
       - uses: ./.github/actions/setup
       - uses: ./.github/actions/cypress-headless-ssr-search-nextjs-app-router
   cypress-headless-ssr-search-nextjs-pages-router-test:
@@ -605,7 +605,7 @@ jobs:
         with:
           egress-policy: audit
 
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5
       - uses: ./.github/actions/setup
       - uses: ./.github/actions/cypress-headless-ssr-search-nextjs-pages-router
   e2e-quantic:
@@ -667,11 +667,11 @@ jobs:
         uses: step-security/harden-runner@ec9f2d5744a09debf3a187a3f4f675c53b671911 # v2.13.0
         with:
           egress-policy: audit
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5
         with:
           fetch-depth: 0
       - run: git branch main origin/main
-      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+      - uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444 # v5
         with:
           registry-url: "https://registry.npmjs.org"
           node-version-file: ".nvmrc"
@@ -833,11 +833,11 @@ jobs:
         uses: step-security/harden-runner@ec9f2d5744a09debf3a187a3f4f675c53b671911 # v2.13.0
         with:
           egress-policy: audit
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5
         with:
           fetch-depth: 0
       - run: git branch main origin/main
-      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+      - uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444 # v5
         with:
           registry-url: "https://registry.npmjs.org"
           node-version-file: ".nvmrc"

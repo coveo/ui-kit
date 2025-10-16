@@ -62,7 +62,7 @@
   "dependencies": {
     "@coveo/headless": "3.32.0",
     "@coveo/relay": "1.2.7",
-    "uuid": "^11.0.0"
+    "uuid": "^13.0.0"
   },
   "engines": {
     "node": "^20.9.0 || ^22.11.0"
