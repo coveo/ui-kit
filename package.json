@@ -71,7 +71,8 @@
     },
     "overrides": {
       "react": "catalog:",
-      "react-dom": "catalog:"
+      "react-dom": "catalog:",
+      "typescript": "catalog:"
     }
   },
   "engines": {
