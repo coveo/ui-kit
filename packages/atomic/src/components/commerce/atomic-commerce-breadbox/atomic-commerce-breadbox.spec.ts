@@ -18,7 +18,7 @@ import {buildFakeSearch} from '@/vitest-utils/testing-helpers/fixtures/headless/
 import './atomic-commerce-breadbox';
 import type {AtomicCommerceBreadbox} from './atomic-commerce-breadbox';
 
-vi.mock('@coveo/headless/commerce', {spy: true});
+vi.mock('@coveo/headless', {spy: true});
 vi.mock('@/src/utils/date-utils', () => {
   const parseDate = vi.fn((date) => {
     const d = new Date(date);
