@@ -1,3 +1,4 @@
+/* eslint-disable no-import-assign */
 import QuanticSearchBoxInput from '../quanticSearchBoxInput';
 import {buildCreateTestComponent, cleanup, flushPromises} from 'c/testUtils';
 import * as mockHeadlessLoader from 'c/quanticHeadlessLoader';
