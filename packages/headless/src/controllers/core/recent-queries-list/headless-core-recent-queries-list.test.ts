@@ -27,13 +27,29 @@ describe('recent queries list', () => {
   let engine: MockedSearchEngine;
   let recentQueriesList: RecentQueriesList;
 
+  const testInitialState = {
+    queries: ['first query', 'second query'],
+  };
+  const testOptions = {
+    maxLength: 5,
+    clearFilters: true,
+  };
+  const testProps = {
+    initialState: testInitialState,
+    options: testOptions,
+  };
+  const mockedPrepareForSearchWithQuery = vi.mocked(prepareForSearchWithQuery);
+
   beforeEach(() => {
     engine = buildMockSearchEngine(createMockState());
+    recentQueriesList = buildCoreRecentQueriesList(engine);
+  });
+
+  afterEach(() => {
+    mockedPrepareForSearchWithQuery.mockClear();
   });
 
   it('adds the correct reducers to the engine', () => {
-    recentQueriesList = buildCoreRecentQueriesList(engine);
-
     expect(engine.addReducers).toHaveBeenCalledWith({
       search,
       recentQueries,
@@ -42,10 +58,6 @@ describe('recent queries list', () => {
   });
 
   describe('without props', () => {
-    beforeEach(() => {
-      recentQueriesList = buildCoreRecentQueriesList(engine);
-    });
-
     it('should register with default props on init', () => {
       expect(registerRecentQueries).toHaveBeenCalledWith({
         queries: [],
@@ -63,27 +75,8 @@ describe('recent queries list', () => {
   });
 
   describe('with props', () => {
-    const testInitialState = {
-      queries: ['first query', 'second query'],
-    };
-    const testOptions = {
-      maxLength: 5,
-      clearFilters: true,
-    };
-    const testProps = {
-      initialState: testInitialState,
-      options: testOptions,
-    };
-    const mockedPrepareForSearchWithQuery = vi.mocked(
-      prepareForSearchWithQuery
-    );
-
     beforeEach(() => {
       recentQueriesList = buildCoreRecentQueriesList(engine, testProps);
-    });
-
-    afterEach(() => {
-      mockedPrepareForSearchWithQuery.mockClear();
     });
 
     it('should register with props on init', () => {
@@ -92,14 +85,9 @@ describe('recent queries list', () => {
         maxLength: testProps.options.maxLength,
       });
     });
+  });
 
-    it('#clear should dispatch clear action', () => {
-      recentQueriesList.clear();
-
-      expect(clearRecentQueries).toHaveBeenCalled();
-      expect(recentQueriesList.state.queries.length).toBe(0);
-    });
-
+  describe('#executeRecentQuery', () => {
     it('#executeRecentQuery should validate the given index parameter', () => {
       const validationSpy = vi.spyOn(NumberValue.prototype, 'validate');
       engine.state.recentQueries = {...testInitialState, ...testOptions};
@@ -138,6 +126,15 @@ describe('recent queries list', () => {
       });
       recentQueriesList.executeRecentQuery(0);
       expect(deselectAllBreadcrumbs).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('#clear', () => {
+    it('#clear should dispatch clear action', () => {
+      recentQueriesList.clear();
+
+      expect(clearRecentQueries).toHaveBeenCalled();
+      expect(recentQueriesList.state.queries.length).toBe(0);
     });
   });
 

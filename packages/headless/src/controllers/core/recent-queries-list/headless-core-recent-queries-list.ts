@@ -130,7 +130,7 @@ export interface RecentQueriesState {
   maxLength: number;
   /**
    * Whether analytics & tracking are enabled.
-   * In the case where it is disabled, it is recommended not to save recent queries.
+   * When analyticsEnabled is `false`, it is recommended not to save recent queries.
    */
   analyticsEnabled: boolean;
 }
