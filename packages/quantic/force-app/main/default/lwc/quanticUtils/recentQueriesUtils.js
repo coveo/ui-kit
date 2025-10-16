@@ -1,3 +1,4 @@
+// TODO SFINT-6408: [v4] Remove RecentQueryUtils from QuanticUtils once deprecated usage is fully removed.
 export class RecentQueryUtils {
   /**
    * Highlights a recent query based on the letters that match the current query.
