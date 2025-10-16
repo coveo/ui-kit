@@ -30,7 +30,7 @@ import {createAppLoadedListener} from '../../../common/interface/store';
 import {ItemDisplayGuard} from '../../../common/item-list/item-display-guard';
 import {FoldedItemListStateContextEvent} from '../../../common/item-list/item-list-decorators';
 import {ItemListGuard} from '../../../common/item-list/item-list-guard';
-import {ItemTemplateProvider} from '../../../common/item-list/item-template-provider';
+import {ResultTemplateProvider} from '../../../common/item-list/result-template-provider';
 import {DisplayWrapper} from '../../../common/item-list/stencil-display-wrapper';
 import {
   ItemListCommon,
@@ -60,7 +60,7 @@ export class AtomicInsightFoldedResultList
   public resultsPerPage!: InsightResultsPerPage;
   private itemRenderingFunction: ItemRenderingFunction;
   private loadingFlag = randomID('firstResultLoaded-');
-  private itemTemplateProvider!: ItemTemplateProvider;
+  private itemTemplateProvider!: ResultTemplateProvider;
   private nextNewResultTarget?: FocusTargetController;
   private display: ItemDisplayLayout = 'list';
   private itemListCommon!: ItemListCommon;
@@ -139,7 +139,7 @@ export class AtomicInsightFoldedResultList
       this.error = e as Error;
     }
 
-    this.itemTemplateProvider = new ItemTemplateProvider({
+    this.itemTemplateProvider = new ResultTemplateProvider({
       includeDefaultTemplate: true,
       templateElements: Array.from(
         this.host.querySelectorAll('atomic-insight-result-template')
