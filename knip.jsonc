@@ -25,7 +25,7 @@
         "loader/index.js",
         "dev/vite.config.ts"
       ],
-      "ignore": ["cdn/**"]
+      "ignore": ["cdn/**", "local-web-server"]
     },
     "packages/atomic-angular/projects/atomic-angular": {
       "entry": ["src/public-api.ts"],
