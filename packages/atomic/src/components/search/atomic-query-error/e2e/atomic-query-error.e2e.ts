@@ -24,8 +24,7 @@ test.describe('AtomicQueryError', () => {
     test('should display the component with the correct content', async ({
       queryError,
     }) => {
-      await queryError.with419Error();
-      await queryError.load();
+      await queryError.load({story: 'with-419-error'});
 
       await expect(queryError.title).toBeVisible();
       await expect(queryError.description).toBeVisible();

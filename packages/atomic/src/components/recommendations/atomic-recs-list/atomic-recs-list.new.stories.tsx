@@ -1,6 +1,8 @@
 import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
 import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {html} from 'lit';
+import {HttpResponse, http} from 'msw';
+import {baseSearchResponse} from '@/storybook-utils/api/search';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {wrapInRecommendationInterface} from '@/storybook-utils/search/recs-interface-wrapper';
 
@@ -108,6 +110,43 @@ export const RecsOpeningInNewTab: Story = {
 export const RecsAsCarousel: Story = {
   args: {
     'number-of-recommendations-per-page': 4,
+  },
+  afterEach,
+};
+
+export const NotEnoughRecsForCarousel: Story = {
+  name: 'Not enough recommendations for carousel',
+  parameters: {
+    msw: {
+      handlers: [
+        http.post('**/search/v2', () => {
+          return HttpResponse.json({
+            ...baseSearchResponse,
+            totalCount: 3,
+            totalCountFiltered: 3,
+          });
+        }),
+      ],
+    },
+  },
+  afterEach,
+};
+
+export const NoRecommendations: Story = {
+  name: 'No recommendations',
+  parameters: {
+    msw: {
+      handlers: [
+        http.post('**/search/v2', () => {
+          return HttpResponse.json({
+            ...baseSearchResponse,
+            totalCount: 0,
+            totalCountFiltered: 0,
+            results: [],
+          });
+        }),
+      ],
+    },
   },
   afterEach,
 };
