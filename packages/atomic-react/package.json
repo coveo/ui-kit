@@ -32,18 +32,18 @@
   ],
   "dependencies": {
     "@coveo/atomic": "3.35.5",
-    "@lit/react": "1.0.6"
+    "@lit/react": "1.0.8"
   },
   "devDependencies": {
     "@rollup/plugin-commonjs": "28.0.6",
     "@rollup/plugin-json": "6.1.0",
     "@rollup/plugin-node-resolve": "16.0.1",
     "@rollup/plugin-typescript": "12.1.4",
-    "@types/react": "18.3.3",
-    "@types/react-dom": "18.3.0",
+    "@types/react": "18.3.26",
+    "@types/react-dom": "18.3.7",
     "fix-esm-import-path": "1.10.1",
-    "react": "19.1.1",
-    "react-dom": "19.1.1",
+    "react": "19.2.0",
+    "react-dom": "19.2.0",
     "rollup": "4.46.2",
     "rollup-plugin-polyfill-node": "^0.13.0"
   },

@@ -10,9 +10,9 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "next": "15.2.4",
-    "react": "19.1.1",
-    "react-dom": "19.1.1",
+    "next": "15.5.4",
+    "react": "19.2.0",
+    "react-dom": "19.2.0",
     "@coveo/atomic-react": "3.3.18",
     "@coveo/atomic": "3.35.5",
     "@coveo/headless": "3.32.0"
@@ -20,7 +20,7 @@
   "devDependencies": {
     "typescript": "5.8.3",
     "@types/node": "22.16.5",
-    "@types/react": "19.1.1",
-    "@types/react-dom": "19.1.2"
+    "@types/react": "19.2.2",
+    "@types/react-dom": "19.2.1"
   }
 }

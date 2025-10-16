@@ -10,14 +10,14 @@
   "dependencies": {
     "@coveo/headless-react": "2.6.6",
     "@coveo/headless": "3.32.0",
-    "next": "15.2.4",
-    "react": "19.1.1",
-    "react-dom": "19.1.1"
+    "next": "15.5.4",
+    "react": "19.2.0",
+    "react-dom": "19.2.0"
   },
   "devDependencies": {
     "@types/node": "22.16.5",
-    "@types/react": "19.1.1",
-    "@types/react-dom": "19.1.2",
+    "@types/react": "19.2.2",
+    "@types/react-dom": "19.2.1",
     "cypress": "13.7.3",
     "cypress-web-vitals": "4.2.0",
     "typescript": "5.8.3"
