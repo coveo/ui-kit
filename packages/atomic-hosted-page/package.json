@@ -48,6 +48,7 @@
   "devDependencies": {
     "@playwright/test": "catalog:",
     "@types/node": "catalog:",
+    "local-web-server": "catalog:",
     "vite": "catalog:"
   },
   "engines": {

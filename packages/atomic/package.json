@@ -134,7 +134,7 @@
     "jest-cli": "catalog:",
     "jest-localstorage-mock": "2.4.26",
     "lit-html": "3.3.1",
-    "local-web-server": "5.4.0",
+    "local-web-server": "catalog:",
     "msw": "2.11.4",
     "msw-storybook-addon": "2.0.5",
     "natural-orderby": "5.0.0",

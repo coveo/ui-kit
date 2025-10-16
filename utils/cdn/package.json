@@ -12,7 +12,7 @@
     "node": ">=22.14.0"
   },
   "dependencies": {
-    "local-web-server": "5.4.0"
+    "local-web-server": "catalog:"
   },
   "devDependencies": {
     "@coveo/bueno": "workspace:*"

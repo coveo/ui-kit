@@ -1,50 +1,9 @@
 import {execSync, spawn} from 'node:child_process';
 
 const startWsServer = () => {
-  const wsServer = spawn(
-    'pnpm',
-    [
-      '--filter',
-      '@coveo/cdn',
-      'exec',
-      '--',
-      'ws',
-      '--port',
-      '3333',
-      '-d',
-      'dev',
-    ],
-    {
-      stdio: 'inherit',
-    }
-  );
-
-  const handleSignal = (signal) => {
-    if (wsServer.exitCode !== null || wsServer.signalCode !== null) {
-      process.exit(0);
-      return;
-    }
-
-    wsServer.kill(signal);
-
-    setTimeout(() => {
-      if (wsServer.exitCode === null && wsServer.signalCode === null) {
-        wsServer.kill('SIGKILL');
-      }
-    }, 400);
-  };
-
-  ['SIGINT', 'SIGTERM'].forEach((signal) => {
-    process.on(signal, () => handleSignal(signal));
-  });
-
-  wsServer.on('exit', (code, signal) => {
-    if (signal) {
-      process.exit(0);
-      return;
-    }
-
-    process.exit(code ?? 0);
+  const wsServer = spawn('pnpm', ['exec', 'ws', '-p', '3333', '-d', 'dev'], {
+    stdio: 'inherit',
+    shell: true,
   });
 
   wsServer.on('error', (err) => {
