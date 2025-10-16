@@ -3,8 +3,8 @@ import {customElement} from 'lit/decorators.js';
 import {ItemSectionMixin} from '@/src/mixins/item-section-mixin';
 
 /**
- * This section surfaces some fields that are directly related to the title of the item.
- * For example, in Commerce, this could be the item's rating, which is tied to the nature of the product itself,
+ * This section is intended to display some fields that are directly related to the title of the result.
+ * In commerce, this could be the product rating, which is tied to the nature of the product itself,
  * rather than to the product's description.
  *
  * Behavior:

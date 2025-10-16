@@ -3,7 +3,7 @@ import {customElement} from 'lit/decorators.js';
 import {ItemSectionMixin} from '@/src/mixins/item-section-mixin';
 
 /**
- * This section provides badges that highlight special features of the item.
+ * This section is meant to render badges that highlight special features of the result.
  *
  * Behavior:
  * * Exposes the `--line-height` CSS variable so child elements can adjust to the current line height.
