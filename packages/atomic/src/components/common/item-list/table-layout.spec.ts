@@ -5,7 +5,6 @@ import {
   renderFunctionFixture,
 } from '@/vitest-utils/testing-helpers/fixture';
 import {buildFakeProduct} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/product';
-import type {AnyItem} from '../interface/item';
 import {
   renderTableData,
   renderTableLayout,
@@ -14,6 +13,7 @@ import {
   type TableLayoutProps,
   type TableRowProps,
 } from './table-layout';
+import type {AnyItem} from './unfolded-item';
 
 describe('renderTableLayout', () => {
   const tableLayoutFixture = async (
@@ -465,6 +465,28 @@ describe('renderTableData', () => {
       expect(renderItem).toHaveBeenCalledTimes(2);
       expect(renderItem).toHaveBeenNthCalledWith(1, tableElement1);
       expect(renderItem).toHaveBeenNthCalledWith(2, tableElement2);
+    });
+
+    describe('when #firstItem and itemRenderingFunction are undefined', () => {
+      it('should use templateContentForFirstItem', async () => {
+        const renderItem = vi.fn();
+
+        await tableDataFixture({
+          itemRenderingFunction: undefined,
+          firstItem: undefined,
+          templateContentForFirstItem,
+          renderItem,
+        });
+
+        const tableElement1 = document.createElement('atomic-table-element');
+        tableElement1.setAttribute('label', 'Test Label 1');
+        const tableElement2 = document.createElement('atomic-table-element');
+        tableElement2.setAttribute('label', 'Test Label 2');
+
+        expect(renderItem).toHaveBeenCalledTimes(2);
+        expect(renderItem).toHaveBeenNthCalledWith(1, tableElement1);
+        expect(renderItem).toHaveBeenNthCalledWith(2, tableElement2);
+      });
     });
   });
 });

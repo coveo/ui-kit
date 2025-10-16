@@ -1,9 +1,8 @@
-import {expect, test, triggerError} from './fixture';
+import {expect, test} from './fixture';
 
 test.describe('atomic-commerce-query-error', () => {
   test.beforeEach(async ({queryError}) => {
-    await triggerError(queryError.page);
-    await queryError.load();
+    await queryError.load({story: 'with-418-error'});
   });
 
   test('should be accessible', async ({queryError, makeAxeBuilder}) => {

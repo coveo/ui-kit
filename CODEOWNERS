@@ -2,14 +2,48 @@
 
 * @coveo/dxui
 
-# Owners of the Quantic package
+# Knowledge Owners
+## Quantic package
 
-/packages/quantic/ @coveo/salesforce-integration
+/packages/quantic/ @coveo/knowledge-ui-kit-reviewers
 /packages/quantic/package.json @coveo/salesforce-integration @coveo/dxui
 
-# Owners of the Atomic Insight components
+## Generative Answering
+### Headless
+/packages/headless/src/api/knowledge/** @coveo/knowledge-ui-kit-reviewers
+/packages/headless/src/api/generated-answer/** @coveo/knowledge-ui-kit-reviewers
+/packages/headless/src/api/service/** @coveo/knowledge-ui-kit-reviewers
+/packages/headless/src/features/generated-answer/** @coveo/knowledge-ui-kit-reviewers
+/packages/headless/src/controllers/knowledge/generated-answer/** @coveo/knowledge-ui-kit-reviewers
+/packages/headless/src/features/question-answering/** @coveo/knowledge-ui-kit-reviewers
 
-/packages/atomic/src/components/insight @coveo/service-core
+### Atomic
+/packages/atomic/src/components/common/generated-answer/** @coveo/knowledge-ui-kit-reviewers
+/packages/atomic/src/components/search/atomic-generated-answer/** @coveo/knowledge-ui-kit-reviewers
+
+## Insight
+### Headless
+/packages/headless/src/app/insight-engine/** @coveo/knowledge-ui-kit-reviewers
+/packages/headless/src/controllers/insight/** @coveo/knowledge-ui-kit-reviewers
+/packages/headless/src/controllers/insight-interface/** @coveo/knowledge-ui-kit-reviewers
+/packages/headless/src/features/insight-interface/** @coveo/knowledge-ui-kit-reviewers
+/packages/headless/src/features/insight-search/** @coveo/knowledge-ui-kit-reviewers
+/packages/headless/src/features/insight-user-actions/** @coveo/knowledge-ui-kit-reviewers
+/packages/headless/src/features/insight-configuration/** @coveo/knowledge-ui-kit-reviewers
+
+### Atomic
+/packages/atomic/src/components/insight/** @coveo/knowledge-ui-kit-reviewers
+
+## Case Assist
+### Headless
+/packages/headless/src/app/case-assist-engine/** @coveo/knowledge-ui-kit-reviewers
+/packages/headless/src/controllers/case-field/** @coveo/knowledge-ui-kit-reviewers
+/packages/headless/src/controllers/case-field/** @coveo/knowledge-ui-kit-reviewers
+/packages/headless/src/features/case-assist/** @coveo/knowledge-ui-kit-reviewers
+/packages/headless/src/features/case-assist-configuration/** @coveo/knowledge-ui-kit-reviewers
+/packages/headless/src/features/case-context/** @coveo/knowledge-ui-kit-reviewers
+/packages/headless/src/features/case-field/** @coveo/knowledge-ui-kit-reviewers
+/packages/headless/src/features/case-input/** @coveo/knowledge-ui-kit-reviewers
 
 # Owners of Atomic's Cypress Tests
 
@@ -17,7 +51,7 @@
 
 # Owners of Atomic IPX components
 
-/packages/atomic/src/components/ipx @coveo/service-core
+/packages/atomic/src/components/ipx @coveo/knowledge-ui-kit-reviewers
 
 # Owners of the Commerce headless sub-package
 
