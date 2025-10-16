@@ -102,6 +102,7 @@
   "devDependencies": {
     "@axe-core/playwright": "4.10.2",
     "@custom-elements-manifest/analyzer": "0.10.4",
+    "@mswjs/source": "0.5.0",
     "@playwright/test": "catalog:",
     "@rollup/plugin-commonjs": "28.0.6",
     "@rollup/plugin-json": "6.1.0",
