@@ -11,7 +11,7 @@
     "!test.watch": "stencil test --spec --e2e --watchAll"
   },
   "dependencies": {
-    "@coveo/atomic": "3.35.4",
+    "@coveo/atomic": "3.35.5",
     "@coveo/headless": "3.32.0"
   },
   "devDependencies": {
