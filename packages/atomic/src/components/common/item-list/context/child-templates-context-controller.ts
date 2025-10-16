@@ -1,5 +1,5 @@
 import type {ReactiveController, ReactiveControllerHost} from 'lit';
-import type {ItemTemplateProvider} from '@/src/components/common/item-list/item-template-provider';
+import type {ResultTemplateProvider} from '@/src/components/common/item-list/result-template-provider';
 import type {LitElementWithError} from '@/src/decorators/types';
 import {buildCustomEvent} from '@/src/utils/event-utils';
 
@@ -7,18 +7,18 @@ const childTemplatesContextEventName = 'atomic/resolveChildTemplates';
 
 /**
  * A reactive controller that manages child template context data from parent components.
- * Handles fetching ItemTemplateProvider via custom events and manages the template provider state.
+ * Handles fetching ResultTemplateProvider via custom events and manages the template provider state.
  */
 export class ChildTemplatesContextController implements ReactiveController {
   private host: ReactiveControllerHost & LitElementWithError;
-  private _itemTemplateProvider: ItemTemplateProvider | null = null;
+  private _itemTemplateProvider: ResultTemplateProvider | null = null;
 
   constructor(host: ReactiveControllerHost & LitElementWithError) {
     this.host = host;
     host.addController(this);
   }
 
-  get itemTemplateProvider(): ItemTemplateProvider | null {
+  get itemTemplateProvider(): ResultTemplateProvider | null {
     return this._itemTemplateProvider;
   }
 
@@ -35,7 +35,7 @@ export class ChildTemplatesContextController implements ReactiveController {
   private _resolveChildTemplatesContext(): void {
     const event = buildCustomEvent(
       childTemplatesContextEventName,
-      (itemTemplateProvider?: ItemTemplateProvider) => {
+      (itemTemplateProvider?: ResultTemplateProvider) => {
         if (this._itemTemplateProvider) {
           return;
         }
@@ -54,7 +54,7 @@ export class ChildTemplatesContextController implements ReactiveController {
 }
 
 type ChildTemplatesContextEventHandler = (
-  itemTemplateProvider?: ItemTemplateProvider
+  itemTemplateProvider?: ResultTemplateProvider
 ) => void;
 export type ChildTemplatesContextEvent =
   CustomEvent<ChildTemplatesContextEventHandler>;
