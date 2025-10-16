@@ -14,7 +14,8 @@ import { AtomicDocTemplate } from '../../../../storybook-utils/documentation/ato
 >
 
 This component defines the UI display of your search results. 
-It can be used inside `atomic-result-list`, `atomic-folded-result-list`, or `atomic-search-box-instant-results`, and it must have a `<template>` as its child.
+A `template` element must be the child of an `atomic-result-template`. Furthermore, an `atomic-result-list`, `atomic-folded-result-list`, or `atomic-search-box-instant-results` must be the parent of each `atomic-result-template`.
+ * **Note:** Any `<script>` tags that are defined inside a `<template>` element will not be executed when the results are being rendered.
 
 Example using the `atomic-result-list`:
 ```html

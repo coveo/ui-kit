@@ -63,6 +63,100 @@ const TEMPLATE_EXAMPLE = `<template>
   </atomic-result-section-bottom-metadata>
 </template>`;
 
+const FOLDED_TEMPLATE_EXAMPLE = `<template>
+  <style>
+    .field {
+      display: inline-flex;
+      align-items: center;
+    }
+
+    .field-label {
+      font-weight: bold;
+      margin-right: 0.25rem;
+    }
+
+    .thumbnail {
+      border-radius: var(--atomic-border-radius);
+    }
+  </style>
+  <atomic-result-section-visual>
+    <atomic-result-image field="ytthumbnailurl" fallback="https://picsum.photos/seed/picsum/350" class="thumbnail"></atomic-result-image>
+  </atomic-result-section-visual>
+  <atomic-result-section-title>
+    <atomic-result-link></atomic-result-link>
+  </atomic-result-section-title>
+  <atomic-result-section-excerpt>
+    <atomic-result-text field="excerpt"></atomic-result-text>
+  </atomic-result-section-excerpt>
+  <atomic-result-section-bottom-metadata>
+    <atomic-result-fields-list>
+      <atomic-field-condition class="field" if-defined="inat_kingdom">
+        <span class="field-label">Kingdom:</span>
+        <atomic-result-text field="inat_kingdom"></atomic-result-text>
+      </atomic-field-condition>
+      <atomic-field-condition class="field" if-defined="inat_family">
+        <span class="field-label">Family:</span>
+        <atomic-result-text field="inat_family"></atomic-result-text>
+      </atomic-field-condition>
+      <atomic-field-condition class="field" if-defined="inat_class">
+        <span class="field-label">Class:</span>
+        <atomic-result-text field="inat_class"></atomic-result-text>
+      </atomic-field-condition>
+    </atomic-result-fields-list>
+  </atomic-result-section-bottom-metadata>
+  <atomic-result-section-children>
+    <atomic-result-children image-size="icon">
+      <atomic-result-children-template>
+        <template>
+          <style>
+            .field {
+              display: inline-flex;
+              align-items: center;
+            }
+
+            .field-label {
+              font-weight: bold;
+              margin-right: 0.25rem;
+            }
+
+            .child-thumbnail {
+              border-radius: var(--atomic-border-radius);
+            }
+          </style>
+          <atomic-result-section-visual>
+            <atomic-result-image field="ytthumbnailurl" fallback="https://picsum.photos/seed/child/200" class="child-thumbnail"></atomic-result-image>
+          </atomic-result-section-visual>
+          <atomic-result-section-title>
+            <atomic-result-link></atomic-result-link>
+          </atomic-result-section-title>
+          <atomic-result-section-excerpt>
+            <atomic-result-text field="excerpt"></atomic-result-text>
+          </atomic-result-section-excerpt>
+          <atomic-result-section-bottom-metadata>
+            <atomic-result-fields-list>
+              <atomic-field-condition class="field" if-defined="inat_kingdom">
+                <span class="field-label">Kingdom:</span>
+                <atomic-result-text field="inat_kingdom"></atomic-result-text>
+              </atomic-field-condition>
+              <atomic-field-condition class="field" if-defined="inat_family">
+                <span class="field-label">Family:</span>
+                <atomic-result-text field="inat_family"></atomic-result-text>
+              </atomic-field-condition>
+              <atomic-field-condition class="field" if-defined="inat_class">
+                <span class="field-label">Class:</span>
+                <atomic-result-text field="inat_class"></atomic-result-text>
+              </atomic-field-condition>
+            </atomic-result-fields-list>
+          </atomic-result-section-bottom-metadata>
+          <atomic-result-section-children>
+            <atomic-result-children inherit-templates></atomic-result-children>
+          </atomic-result-section-children>
+        </template>
+      </atomic-result-children-template>
+    </atomic-result-children>
+  </atomic-result-section-children>
+</template>`;
+
 const {events, args, argTypes, template} = getStorybookHelpers(
   'atomic-result-template',
   {excludeCategories: ['methods']}
@@ -118,6 +212,23 @@ const {
   false
 );
 
+const {
+  decorator: foldedSearchInterfaceDecorator,
+  afterEach: initializeFoldedSearchInterface,
+} = wrapInSearchInterface(
+  {
+    preprocessRequest: (request: any) => {
+      const parsed = JSON.parse(request.body as string);
+      parsed.numberOfResults = 4;
+      parsed.aq = '@source=iNaturalistTaxons';
+      request.body = JSON.stringify(parsed);
+      return request;
+    },
+  },
+  false,
+  false
+);
+
 export const Default: Story = {
   name: 'In a result list',
   decorators: [
@@ -133,22 +244,49 @@ export const Default: Story = {
 
 export const InAFoldedResultList: Story = {
   name: 'In a folded result list',
+  args: {
+    ...args,
+    'default-slot': FOLDED_TEMPLATE_EXAMPLE,
+  },
   decorators: [
     (story) => html`
-      <atomic-folded-result-list>
+      <atomic-folded-result-list
+        image-size="small"
+        display="grid"
+        collection-field="foldingcollection"
+        parent-field="foldingparent"
+        child-field="foldingchild"
+      >
         ${story()}
       </atomic-folded-result-list>
     `,
-    searchInterfaceDecorator,
+    foldedSearchInterfaceDecorator,
   ],
-  afterEach: initializeSearchInterface,
+  parameters: {
+    docs: {
+      source: {
+        code: `<atomic-folded-result-list
+  image-size="small"
+  display="grid"
+  collection-field="foldingcollection"
+  parent-field="foldingparent"
+  child-field="foldingchild"
+>
+  <atomic-result-template>
+${FOLDED_TEMPLATE_EXAMPLE}
+  </atomic-result-template>
+</atomic-folded-result-list>`,
+      },
+    },
+  },
+  afterEach: initializeFoldedSearchInterface,
 };
 
 export const InASearchBoxInstantResults: Story = {
   name: 'In a search box instant results',
   decorators: [
     (story) => html`
-      <atomic-search-box>
+      <atomic-search-box style="width: 600px;">
         <atomic-search-box-query-suggestions>
           <atomic-search-box-instant-results>
             ${story()}
