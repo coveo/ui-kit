@@ -18,6 +18,16 @@ import {buildFakeTabManager} from '@/vitest-utils/testing-helpers/fixtures/headl
 import type {AtomicFacet} from './atomic-facet';
 
 vi.mock('@coveo/headless', {spy: true});
+vi.mock('@/src/mixins/bindings-mixin', () => ({
+  InitializeBindingsMixin: vi.fn().mockImplementation((superClass) => {
+    return class extends superClass {
+      // biome-ignore lint/complexity/noUselessConstructor: <mocking the mixin for testing>
+      constructor(...args: unknown[]) {
+        super(...args);
+      }
+    };
+  }),
+}));
 
 describe('atomic-facet', () => {
   let mockedRegisterFacet: Mock;
@@ -81,6 +91,12 @@ describe('atomic-facet', () => {
           registerFacet: mockedRegisterFacet,
         },
       }),
+      // bindings: (bindings) => {
+      //   console.log('@@@@@@@@@@@@');
+      //   bindings.store.getUniqueIDFromEngine = vi.fn().mockReturnValue('123');
+      //   bindings.store.registerFacet = mockedRegisterFacet;
+      //   return bindings;
+      // },
     });
     const qs = (part: string) =>
       element.shadowRoot?.querySelector(`[part~="${part}"]`)!;

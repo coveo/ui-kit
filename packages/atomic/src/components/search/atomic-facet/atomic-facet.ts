@@ -52,6 +52,7 @@ import {initializePopover} from '../../common/facets/popover/popover-type';
 import type {Bindings} from '../atomic-search-interface/atomic-search-interface';
 import '../../common/atomic-facet-placeholder/atomic-facet-placeholder';
 import {booleanConverter} from '@/src/converters/boolean-converter';
+import {bindings} from '@/src/decorators/bindings';
 import {InitializeBindingsMixin} from '@/src/mixins/bindings-mixin';
 import facetCommonStyles from '../../common/facets/facet-common.tw.css';
 import facetSearchStyles from '../../common/facets/facet-search/facet-search.tw.css';
@@ -99,6 +100,7 @@ import facetValueExcludeStyles from '../../common/facets/facet-value-exclude/fac
  * @part show-more-less-icon - The icons of the show more & show less buttons.
  */
 @customElement('atomic-facet')
+@bindings()
 @withTailwindStyles
 export class AtomicFacet
   extends InitializeBindingsMixin(LitElement)
@@ -338,6 +340,7 @@ export class AtomicFacet
   private facetSearchAriaLive?: AriaLiveRegionController;
 
   public initialize() {
+    console.log('Reading Bindings from Facet', this.bindings);
     if (
       [...this.tabsIncluded].length > 0 &&
       [...this.tabsExcluded].length > 0
