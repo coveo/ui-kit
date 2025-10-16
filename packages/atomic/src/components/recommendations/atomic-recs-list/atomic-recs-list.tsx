@@ -27,7 +27,7 @@ import {randomID} from '../../../utils/utils';
 import {ResultsPlaceholdersGuard} from '../../common/atomic-result-placeholder/stencil-placeholders';
 import {createAppLoadedListener} from '../../common/interface/store';
 import {ItemDisplayGuard} from '../../common/item-list/item-display-guard';
-import {ItemTemplateProvider} from '../../common/item-list/item-template-provider';
+import {ResultTemplateProvider} from '../../common/item-list/result-template-provider';
 import {DisplayGrid} from '../../common/item-list/stencil-display-grid';
 import {DisplayWrapper} from '../../common/item-list/stencil-display-wrapper';
 import {
@@ -68,7 +68,7 @@ export class AtomicRecsList implements InitializableComponent<RecsBindings> {
   public recommendationList!: RecommendationList;
   private loadingFlag = randomID('firstRecommendationLoaded-');
   private itemRenderingFunction: ItemRenderingFunction;
-  private itemTemplateProvider!: ItemTemplateProvider;
+  private itemTemplateProvider!: ResultTemplateProvider;
   private nextNewResultTarget?: FocusTargetController;
   private itemListCommon!: ItemListCommon;
 
@@ -173,7 +173,7 @@ export class AtomicRecsList implements InitializableComponent<RecsBindings> {
       },
     });
 
-    this.itemTemplateProvider = new ItemTemplateProvider({
+    this.itemTemplateProvider = new ResultTemplateProvider({
       includeDefaultTemplate: true,
       templateElements: Array.from(
         this.host.querySelectorAll('atomic-recs-result-template')
