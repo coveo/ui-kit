@@ -1,5 +1,7 @@
 import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
 import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
+import {HttpResponse, http} from 'msw';
+import {baseRecommendationsResponse} from '@/storybook-utils/api/commerce';
 import {wrapInCommerceRecommendationInterface} from '@/storybook-utils/commerce/commerce-recommendation-interface-wrapper';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 
@@ -107,5 +109,28 @@ export const AsCarousel: Story = {
   name: 'As a carousel',
   args: {
     'products-per-page': 3,
+  },
+};
+
+export const NoRecommendations: Story = {
+  name: 'No recommendations',
+  parameters: {
+    msw: {
+      handlers: [
+        http.post('*/commerce/v2/recommendations', () => {
+          return HttpResponse.json({
+            ...baseRecommendationsResponse,
+            products: [],
+            pagination: {
+              page: 0,
+              perPage: 10,
+              totalEntries: 0,
+              totalPages: 0,
+            },
+            triggers: [],
+          });
+        }),
+      ],
+    },
   },
 };
