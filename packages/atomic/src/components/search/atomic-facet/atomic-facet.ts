@@ -21,7 +21,6 @@ import {customElement, property, state} from 'lit/decorators.js';
 import {when} from 'lit/directives/when.js';
 import {bindStateToController} from '@/src/decorators/bind-state';
 import {bindingGuard} from '@/src/decorators/binding-guard';
-import {bindings} from '@/src/decorators/bindings';
 import {errorGuard} from '@/src/decorators/error-guard';
 import type {InitializableComponent} from '@/src/decorators/types';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
@@ -53,6 +52,7 @@ import {initializePopover} from '../../common/facets/popover/popover-type';
 import type {Bindings} from '../atomic-search-interface/atomic-search-interface';
 import '../../common/atomic-facet-placeholder/atomic-facet-placeholder';
 import {booleanConverter} from '@/src/converters/boolean-converter';
+import {InitializeBindingsMixin} from '@/src/mixins/bindings-mixin';
 import facetCommonStyles from '../../common/facets/facet-common.tw.css';
 import facetSearchStyles from '../../common/facets/facet-search/facet-search.tw.css';
 import facetValueBoxStyles from '../../common/facets/facet-value-box/facet-value-box.tw.css';
@@ -99,10 +99,9 @@ import facetValueExcludeStyles from '../../common/facets/facet-value-exclude/fac
  * @part show-more-less-icon - The icons of the show more & show less buttons.
  */
 @customElement('atomic-facet')
-@bindings()
 @withTailwindStyles
 export class AtomicFacet
-  extends LitElement
+  extends InitializeBindingsMixin(LitElement)
   implements InitializableComponent<Bindings>
 {
   static styles = [
@@ -280,7 +279,7 @@ export class AtomicFacet
    * ```
    */
   @mapProperty({attributePrefix: 'depends-on'})
-  public dependsOn: Record<string, string> = {};
+  public dependsOn!: Record<string, string>;
   /**
    * Specifies an explicit list of `allowedValues` in the Search API request, as a JSON string representation.
    *
@@ -632,7 +631,7 @@ export class AtomicFacet
         facetId: this.facetId!,
         conditions: parseDependsOn<
           FacetValueRequest | CategoryFacetValueRequest
-        >(this.dependsOn),
+        >(this.dependsOn || {}),
       }
     );
   }
