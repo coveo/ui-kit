@@ -9,10 +9,11 @@ import { AutomaticFacet, CategoryFacetSortCriterion, DateFilterRange, DateRangeR
 import { AtomicInterface } from "./utils/initialization-utils";
 import { AnyBindings } from "./components/common/interface/bindings";
 import { NumberInputType } from "./components/common/facets/facet-number-input/number-input-type";
-import { ItemDisplayBasicLayout, ItemDisplayDensity, ItemDisplayImageSize, ItemDisplayLayout } from "./components/common/layout/display-options";
+import { ItemDisplayBasicLayout, ItemDisplayDensity, ItemDisplayImageSize, ItemDisplayLayout as ItemDisplayLayout1 } from "./components/common/layout/display-options";
 import { ItemRenderingFunction } from "./components/common/item-list/stencil-item-list-common";
 import { FacetSortCriterion as InsightFacetSortCriterion, FoldedResult as InsightFoldedResult, InteractiveResult as InsightInteractiveResult, RangeFacetRangeAlgorithm as InsightRangeFacetRangeAlgorithm, RangeFacetSortCriterion as InsightRangeFacetSortCriterion, Result as InsightResult, ResultTemplate as InsightResultTemplate, ResultTemplateCondition as InsightResultTemplateCondition, UserAction as IUserAction } from "@coveo/headless/insight";
 import { InsightStore } from "./components/insight/atomic-insight-interface/store";
+import { ItemDisplayDensity as ItemDisplayDensity1, ItemDisplayImageSize as ItemDisplayImageSize1, ItemDisplayLayout } from "./components/common/layout/display-options";
 import { Actions, InsightResultActionClickedEvent } from "./components/insight/atomic-insight-result-action/atomic-insight-result-action";
 import { InsightResultAttachToCaseEvent } from "./components/insight/atomic-insight-result-attach-to-case-action/atomic-insight-result-attach-to-case-action";
 import { RecommendationEngine, InteractiveResult as RecsInteractiveResult, LogLevel as RecsLogLevel, Result as RecsResult, ResultTemplate as RecsResultTemplate, ResultTemplateCondition as RecsResultTemplateCondition } from "@coveo/headless/recommendation";
@@ -26,10 +27,11 @@ export { AutomaticFacet, CategoryFacetSortCriterion, DateFilterRange, DateRangeR
 export { AtomicInterface } from "./utils/initialization-utils";
 export { AnyBindings } from "./components/common/interface/bindings";
 export { NumberInputType } from "./components/common/facets/facet-number-input/number-input-type";
-export { ItemDisplayBasicLayout, ItemDisplayDensity, ItemDisplayImageSize, ItemDisplayLayout } from "./components/common/layout/display-options";
+export { ItemDisplayBasicLayout, ItemDisplayDensity, ItemDisplayImageSize, ItemDisplayLayout as ItemDisplayLayout1 } from "./components/common/layout/display-options";
 export { ItemRenderingFunction } from "./components/common/item-list/stencil-item-list-common";
 export { FacetSortCriterion as InsightFacetSortCriterion, FoldedResult as InsightFoldedResult, InteractiveResult as InsightInteractiveResult, RangeFacetRangeAlgorithm as InsightRangeFacetRangeAlgorithm, RangeFacetSortCriterion as InsightRangeFacetSortCriterion, Result as InsightResult, ResultTemplate as InsightResultTemplate, ResultTemplateCondition as InsightResultTemplateCondition, UserAction as IUserAction } from "@coveo/headless/insight";
 export { InsightStore } from "./components/insight/atomic-insight-interface/store";
+export { ItemDisplayDensity as ItemDisplayDensity1, ItemDisplayImageSize as ItemDisplayImageSize1, ItemDisplayLayout } from "./components/common/layout/display-options";
 export { Actions, InsightResultActionClickedEvent } from "./components/insight/atomic-insight-result-action/atomic-insight-result-action";
 export { InsightResultAttachToCaseEvent } from "./components/insight/atomic-insight-result-attach-to-case-action/atomic-insight-result-attach-to-case-action";
 export { RecommendationEngine, InteractiveResult as RecsInteractiveResult, LogLevel as RecsLogLevel, Result as RecsResult, ResultTemplate as RecsResultTemplate, ResultTemplateCondition as RecsResultTemplateCondition } from "@coveo/headless/recommendation";
@@ -1779,7 +1781,7 @@ export namespace Components {
         /**
           * How results should be displayed.
          */
-        "display": ItemDisplayLayout;
+        "display": ItemDisplayLayout1;
         /**
           * The size of the visual section in result list items.  This is overwritten by the image size defined in the result content, if it exists.
          */
@@ -1984,7 +1986,7 @@ export namespace Components {
         /**
           * The desired layout to use when displaying results. Layouts affect how many results to display per row and how visually distinct they are from each other.
          */
-        "display": ItemDisplayLayout;
+        "display": ItemDisplayLayout1;
         /**
           * The expected size of the image displayed in the results.
          */
@@ -2062,7 +2064,7 @@ export namespace Components {
      */
     interface AtomicResultPlaceholder {
         "density": ItemDisplayDensity;
-        "display": ItemDisplayLayout;
+        "display": ItemDisplayLayout1;
         "imageSize": ItemDisplayImageSize;
     }
     /**
@@ -5990,7 +5992,7 @@ declare namespace LocalJSX {
         /**
           * How results should be displayed.
          */
-        "display"?: ItemDisplayLayout;
+        "display"?: ItemDisplayLayout1;
         /**
           * The size of the visual section in result list items.  This is overwritten by the image size defined in the result content, if it exists.
          */
@@ -6191,7 +6193,7 @@ declare namespace LocalJSX {
         /**
           * The desired layout to use when displaying results. Layouts affect how many results to display per row and how visually distinct they are from each other.
          */
-        "display"?: ItemDisplayLayout;
+        "display"?: ItemDisplayLayout1;
         /**
           * The expected size of the image displayed in the results.
          */
@@ -6264,7 +6266,7 @@ declare namespace LocalJSX {
      */
     interface AtomicResultPlaceholder {
         "density": ItemDisplayDensity;
-        "display": ItemDisplayLayout;
+        "display": ItemDisplayLayout1;
         "imageSize": ItemDisplayImageSize;
     }
     /**
