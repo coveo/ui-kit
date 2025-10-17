@@ -1,4 +1,4 @@
-import {getAttributesFromLinkSlot} from '@/src/components/common/item-link/attributes-slot';
+import {getAttributesFromLinkSlotContent} from '@/src/components/common/item-link/attributes-slot';
 import {SmartSnippetFeedbackBanner} from '@/src/components/common/smart-snippets/atomic-smart-snippet-feedback-banner';
 import {
   SmartSnippetFooter,
@@ -124,7 +124,7 @@ export class AtomicInsightSmartSnippet
           <SmartSnippetFooter i18n={this.bindings.i18n}>
             {source && (
               <atomic-smart-snippet-source
-                anchorAttributes={getAttributesFromLinkSlot(
+                anchorAttributes={getAttributesFromLinkSlotContent(
                   this.host,
                   'source-anchor-attributes'
                 )}
