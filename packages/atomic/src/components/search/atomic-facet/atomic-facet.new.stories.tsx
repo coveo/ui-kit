@@ -36,6 +36,21 @@ const meta: Meta = {
   },
   argTypes: {
     ...argTypes,
+    'depends-on': {
+      control: {type: 'object'},
+    },
+    'tabs-included': {
+      control: {type: 'object'},
+    },
+    'tabs-excluded': {
+      control: {type: 'object'},
+    },
+    'custom-sort': {
+      control: {type: 'object'},
+    },
+    'allowed-values': {
+      control: {type: 'object'},
+    },
     'sort-criteria': {
       control: 'select',
       options: sortCriteriaOptions,
@@ -47,6 +62,11 @@ const meta: Meta = {
   args: {
     ...args,
     'number-of-values': 8,
+    'tabs-included': '[]',
+    'tabs-excluded': '[]',
+    'allowed-values': '[]',
+    'custom-sort': '[]',
+    'depends-on': '{}',
   },
 };
 
