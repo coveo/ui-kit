@@ -12,7 +12,7 @@ index 867be0c..d822e79 100644
  type StoryHelpers<T> = {
      args: Partial<T> & {
 diff --git a/node_modules/@wc-toolkit/storybook-helpers/dist/index.js b/node_modules/@wc-toolkit/storybook-helpers/dist/index.js
-index 1c0f4ce..1051420 100644
+index 1c0f4ce..8e3ceba 100644
 --- a/node_modules/@wc-toolkit/storybook-helpers/dist/index.js
 +++ b/node_modules/@wc-toolkit/storybook-helpers/dist/index.js
 @@ -568,7 +568,7 @@ var options2 = {};
@@ -50,7 +50,7 @@ index 1c0f4ce..1051420 100644
    ) : ""}
  `;
  }
-@@ -705,18 +717,29 @@ function getSlotsTemplate(component, args, excludeCategories) {
+@@ -705,18 +717,32 @@ function getSlotsTemplate(component, args, excludeCategories) {
  ${slotTemplates}
  `) : "";
  }
@@ -70,6 +70,9 @@ index 1c0f4ce..1051420 100644
 +      containerElement = containerElement.shadowRoot;
 +    } 
 +    const selectedComponent = containerElement.querySelector(component.tagName);
++    if(!selectedComponent) {
++      return;
++    }
      argObserver?.observe(selectedComponent, {
 -      attributes: true
 +      attributes: true,
@@ -84,7 +87,7 @@ index 1c0f4ce..1051420 100644
    const { attrArgs: attributes } = getAttributesAndProperties(component);
    if (argObserver) {
      return;
-@@ -726,13 +749,24 @@ function setArgObserver(component) {
+@@ -726,13 +752,24 @@ function setArgObserver(component) {
        if (mutation.attributeName === "class" && isUpdating) {
          return;
        }
@@ -110,7 +113,7 @@ index 1c0f4ce..1051420 100644
          updateArgs({
            [`${mutation.attributeName}`]: mutation.target.getAttribute(mutation.attributeName || "")
          });
-@@ -781,7 +815,8 @@ function getStorybookHelpers(tagName, options3) {
+@@ -781,7 +818,8 @@ function getStorybookHelpers(tagName, options3) {
        slot,
        argTypes,
        options3?.excludeCategories || [],

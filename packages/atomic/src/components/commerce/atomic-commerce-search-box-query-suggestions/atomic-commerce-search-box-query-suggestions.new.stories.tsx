@@ -30,12 +30,17 @@ const meta: Meta = {
   },
   args,
   argTypes,
-
-  afterEach: async (context) => {
-    await commerceInterfacePlay(context);
-    const canvas = within(context.canvasElement);
-    const searchBox = await canvas.findAllByShadowPlaceholderText('Search');
-    await userEvent.click(searchBox[0]);
+  //TODO KIT-5111: Remove beforeEach when refactored in preview.ts
+  beforeEach({canvasElement, canvas}) {
+    Object.assign(canvas, {...within(canvasElement)});
+  },
+  play: async ({mount, step, ...restOfContext}) => {
+    const canvas = (await mount()) as ReturnType<typeof within>;
+    await commerceInterfacePlay({mount, step, ...restOfContext});
+    await step('Click in the search box', async () => {
+      const searchBox = await canvas.findByShadowRole('textbox');
+      await userEvent.click(searchBox);
+    });
   },
 };
 
