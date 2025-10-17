@@ -30,19 +30,20 @@ MDX files provide user-facing documentation in Storybook. They should:
      - `atomic-query-error` → `query-error`
      - `atomic-product-link` → `product-link`
 
-2. **Search for similar components across use cases:**
+2. **Fast-path checks (skip broad search if true):**
+   - Component path contains `result-template-components` or `product-template-components` → Use `atomic-product-link.mdx` as reference
+   - Component is in `/common` folder → Skip use-case search, go to template pattern lookup
+
+3. **Search for similar components (only if no fast-path match):**
    ```bash
    find packages/atomic/src/components -name "*${base-name}*.mdx"
    ```
 
-3. **Check these use case folders:**
-   - `/search` - Search interface components
-   - `/commerce` - Commerce/product listing components
-   - `/insight` - Insight panel components
-   - `/recommendations` - Recommendation components
-   - `/common` - Shared components
+4. **Limit search scope:**
+   - If component has use-case prefix (e.g., `atomic-commerce-*`), only search that use case folder
+   - For non-prefixed components in `/search`, `/commerce`, `/insight`, or `/recommendations`, skip other use-case folders
 
-4. **Verify MDX exists and is complete:**
+5. **Verify MDX exists and is complete:**
    - Has more than just TODO comments
    - Contains actual usage examples
    - Shows the component within its interface context
@@ -110,6 +111,8 @@ import { AtomicDocTemplate } from '../../../../storybook-utils/documentation/ato
 
 ### Component Description
 
+**The `AtomicDocTemplate` automatically renders the component's JSDoc.** Only add description if it provides usage context beyond JSDoc (e.g., typical placement, relationships).
+
 Start with: "The `atomic-component-name` component [description]."
 
 **Examples:**
@@ -120,7 +123,40 @@ Start with: "The `atomic-component-name` component [description]."
 
 Always show the component within its proper interface hierarchy:
 
-**Search components:**
+**Template components** (used within product/result templates):
+
+**CRITICAL:** Template components MUST be nested inside a `<template>` element within the template container:
+
+```html
+<atomic-commerce-interface>
+  <atomic-commerce-product-list>
+    <atomic-product-template>
+      <template>
+        <atomic-component-name></atomic-component-name>
+      </template>
+    </atomic-product-template>
+  </atomic-commerce-product-list>
+</atomic-commerce-interface>
+```
+
+For search/result templates:
+```html
+<atomic-search-interface>
+  <atomic-search-layout>
+    <atomic-layout-section section="main">
+      <atomic-result-list>
+        <atomic-result-template>
+          <template>
+            <atomic-result-component-name></atomic-result-component-name>
+          </template>
+        </atomic-result-template>
+      </atomic-result-list>
+    </atomic-layout-section>
+  </atomic-search-layout>
+</atomic-search-interface>
+```
+
+**Search components (non-template):**
 ```html
 <atomic-search-interface>
   <atomic-search-layout>
@@ -131,7 +167,7 @@ Always show the component within its proper interface hierarchy:
 </atomic-search-interface>
 ```
 
-**Commerce components:**
+**Commerce components (non-template):**
 ```html
 <atomic-commerce-interface>
   <atomic-commerce-layout>
@@ -139,17 +175,6 @@ Always show the component within its proper interface hierarchy:
       <atomic-component-name></atomic-component-name>
     </atomic-layout-section>
   </atomic-commerce-layout>
-</atomic-commerce-interface>
-```
-
-**Template components:**
-```html
-<atomic-commerce-interface>
-  <atomic-commerce-product-list>
-    <atomic-product-template>
-      <atomic-component-name></atomic-component-name>
-    </atomic-product-template>
-  </atomic-commerce-product-list>
 </atomic-commerce-interface>
 ```
 
@@ -162,7 +187,13 @@ Use bold **Note:** for important information:
 
 ### Customization Examples
 
-If the component has important configuration options, show them. If the component has no `@property` decorators or all properties are internal (`@state`), omit the customization section.
+**Create a "Customization" section when:**
+- Component has **optional** `@property` decorators
+- Multiple configuration patterns exist
+
+**Don't create separate section when:**
+- Only required properties exist (mention inline with usage example)
+- No public `@property` decorators (all `@state`)
 
 ```markdown
 ## Customization
@@ -175,7 +206,6 @@ You can customize the [feature]:
   prop2="value2">
 </atomic-component-name>
 ```
-```
 
 ## Component Analysis
 
@@ -183,6 +213,14 @@ You can customize the [feature]:
 - Similar component's MDX file
 - Component TypeScript source
 - Storybook stories file
+
+### Handling Existing MDX Files
+
+If the MDX file already exists:
+1. Check for TODO comments or placeholder content
+2. **Verify `githubPath` correctness** - must match actual file location from `packages/atomic/src/components/`
+3. Preserve correct import structure
+4. Replace placeholder content with complete documentation
 
 Before writing documentation:
 
@@ -210,6 +248,7 @@ Before completing the documentation:
 - [ ] Component description starts with "The `atomic-...` component"
 - [ ] Usage example shows component in proper interface context
 - [ ] All interface/layout names match the component's use case
+- [ ] `githubPath` matches actual file location from `packages/atomic/src/components/`
 - [ ] Important configuration options are documented
 - [ ] Related components are referenced with proper links
 - [ ] Code examples use proper indentation and syntax
@@ -219,12 +258,15 @@ Before completing the documentation:
 
 **Template component** (used within product/result templates):
 ```mdx
-The `atomic-product-link` component renders a product **ec_name** as a clickable link. This component is used within `atomic-product-template` components inside the product list:
+This component is used within `atomic-product-template` components inside the product list:
 
+```html
 <atomic-commerce-interface>
   <atomic-commerce-product-list>
     <atomic-product-template>
-      <atomic-product-link></atomic-product-link>
+      <template>
+        <atomic-product-link></atomic-product-link>
+      </template>
     </atomic-product-template>
   </atomic-commerce-product-list>
 </atomic-commerce-interface>
@@ -236,6 +278,7 @@ This component is typically placed within the "pagination" section of the layout
 
 **Note:** Use either `atomic-commerce-pager` OR `atomic-commerce-load-more-products` for pagination, but not both.
 
+```html
 <atomic-commerce-interface>
   <atomic-commerce-layout>
     <atomic-layout-section section="main">
@@ -245,7 +288,6 @@ This component is typically placed within the "pagination" section of the layout
     </atomic-layout-section>
   </atomic-commerce-layout>
 </atomic-commerce-interface>
-```
 ```
 
 ## Workflow
