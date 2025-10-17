@@ -1,3 +1,51 @@
+import {type HttpHandler, HttpResponse, http} from 'msw';
+export class SearchApiHarness {
+  readonly searchEndpointHandler;
+  readonly querySuggestionHandler;
+  readonly handlers: HttpHandler[];
+  constructor(basePath: string = 'https://:orgId.org.coveo.com') {
+    this.searchEndpointHandler = new EndpointHarness(baseSearchResponse);
+    this.querySuggestionHandler = new EndpointHarness(baseQuerySuggestResponse);
+    this.handlers = [
+      http.post(`${basePath}/rest/search/v2`, () =>
+        this.searchEndpointHandler.getNextResponse()
+      ),
+      http.post(`${basePath}/rest/search/v2/querySuggest`, () =>
+        this.querySuggestionHandler.getNextResponse()
+      ),
+    ];
+  }
+}
+
+class EndpointHarness<TResponse extends {}> {
+  private nextResponses: TResponse[] = [];
+  constructor(public baseResponse: TResponse) {}
+
+  enqueueNextResponses(...responses: TResponse[]) {
+    this.nextResponses.push(...responses);
+  }
+
+  flushQueuedResponses() {
+    this.nextResponses.length = 0;
+  }
+
+  getNextResponse(): HttpResponse<TResponse> {
+    return HttpResponse.json(this.nextResponses.shift() ?? this.baseResponse);
+  }
+}
+
+const getNthResult = (n: number) => ({
+  title: `Sample Result ${n}`,
+  excerpt: 'This is a sample result excerpt for testing.',
+  clickUri: `https://example.com/search/${n}`,
+  uniqueId: `rec-${n}`,
+  raw: {
+    systitle: `Sample Result ${n}`,
+    sysdescription: 'This is a sample result excerpt for testing.',
+    sysuri: `https://example.com/search/${n}`,
+  },
+});
+
 export const baseSearchResponse = {
   totalCount: 120,
   totalCountFiltered: 120,
@@ -32,41 +80,7 @@ export const baseSearchResponse = {
   facets: [],
   suggestedFacets: [],
   categoryFacets: [],
-  results: [
-    {
-      title: 'Sample Result 1',
-      excerpt: 'This is a sample result excerpt for testing.',
-      clickUri: 'https://example.com/search/1',
-      uniqueId: 'rec-1',
-      raw: {
-        systitle: 'Sample Result 1',
-        sysdescription: 'This is a sample result excerpt for testing.',
-        sysuri: 'https://example.com/search/1',
-      },
-    },
-    {
-      title: 'Sample Result 2',
-      excerpt: 'This is another sample result for testing purposes.',
-      clickUri: 'https://example.com/search/2',
-      uniqueId: 'rec-2',
-      raw: {
-        systitle: 'Sample Result 2',
-        sysdescription: 'This is another sample result for testing purposes.',
-        sysuri: 'https://example.com/search/2',
-      },
-    },
-    {
-      title: 'Sample Result 3',
-      excerpt: 'Third sample result with useful content.',
-      clickUri: 'https://example.com/search/3',
-      uniqueId: 'rec-3',
-      raw: {
-        systitle: 'Sample Result 3',
-        sysdescription: 'Third sample result with useful content.',
-        sysuri: 'https://example.com/search/3',
-      },
-    },
-  ],
+  results: Array.from({length: 120}, (_, n) => getNthResult(n)),
   questionAnswer: {
     answerFound: false,
     question: '',
@@ -78,4 +92,39 @@ export const baseSearchResponse = {
     score: 0.0,
     relatedQuestions: [],
   },
+};
+
+export const baseQuerySuggestResponse = {
+  completions: [
+    {
+      expression: 'coveo',
+      score: 100,
+      executableConfidence: 1.0,
+      highlighted: '[coveo]',
+    },
+    {
+      expression: 'coveo platform',
+      score: 95,
+      executableConfidence: 0.95,
+      highlighted: '[coveo] platform',
+    },
+    {
+      expression: 'coveo search',
+      score: 90,
+      executableConfidence: 0.9,
+      highlighted: '[coveo] search',
+    },
+    {
+      expression: 'coveo ui kit',
+      score: 85,
+      executableConfidence: 0.85,
+      highlighted: '[coveo] ui kit',
+    },
+    {
+      expression: 'coveo headless',
+      score: 80,
+      executableConfidence: 0.8,
+      highlighted: '[coveo] headless',
+    },
+  ],
 };
