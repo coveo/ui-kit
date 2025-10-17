@@ -12,6 +12,17 @@ Generate comprehensive Vitest unit tests for functional components (functions re
 
 ## Required Steps
 
+**Use `manage_todo_list` tool:** Track progress through steps below. Mark ONE in-progress before working, mark completed immediately after finishing each step. Final todo must be execution summary generation.
+
+**Checklist:**
+- [ ] Analyze component (signature, props, children, events, dependencies)
+- [ ] Create test file `{component-name}.spec.ts` in component directory
+- [ ] Structure tests with describe blocks and helpers
+- [ ] Implement test patterns (basic rendering, props, events, children)
+- [ ] Ensure essential coverage (rendering, props, interactions, attributes, children, errors)
+- [ ] Run tests with Vitest
+- [ ] Generate execution summary (mandatory final todo)
+
 ### 1. Analyze the Component
 
 Examine for:
@@ -161,4 +172,8 @@ describe('when disabled', () => {
 
 ## Post-Execution Summary
 
-After completing tests, create execution summary at `.github/prompts/.executions/generate-vitest-test-atomic-lit-functional-component-[YYYY-MM-DD-HHmmss].prompt-execution.md` following the template structure. Include: reference components used, unclear instructions, time-consuming operations, concrete improvement suggestions. Inform user of file location.
+**Mandatory final todo:** Generate `.github/prompts/.executions/generate-vitest-test-atomic-lit-functional-component-[YYYY-MM-DD-HHmmss].prompt-execution.md` following `TEMPLATE.prompt-execution.md`.
+
+**Include:** Reference components used, type selection issues, ambiguous instructions, time-consuming operations, missing guidance, concrete improvement suggestions.
+
+**Inform user** of summary location and suggest "Prompt Engineer" chatmode for optimization. Mark complete only after file created and user informed.
