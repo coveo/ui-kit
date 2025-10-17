@@ -5,6 +5,7 @@
 import type {CommerceEngineOptions as OriginalCommerceEngineOptions} from '../../../app/commerce-engine/commerce-engine.js';
 import type {NavigatorContextProvider} from '../../../app/navigator-context-provider.js';
 import type {Controller} from '../../../controllers/controller/headless-controller.js';
+import {createAccessTokenManager} from '../../../ssr-next/commerce/utils/access-token-manager.js';
 import {
   buildFactory,
   type CommerceEngineDefinitionOptions,
@@ -63,41 +64,54 @@ export function defineCommerceEngine<
 } {
   const {controllers: controllerDefinitions, ...engineOptions} = options;
 
-  const getOptions = () => engineOptions;
-
   const setNavigatorContextProvider = (
     navigatorContextProvider: NavigatorContextProvider
   ) => {
     engineOptions.navigatorContextProvider = navigatorContextProvider;
   };
 
-  const getAccessToken = () => engineOptions.configuration.accessToken;
+  const tokenManager = createAccessTokenManager(
+    engineOptions.configuration.accessToken
+  );
 
+  const onAccessTokenUpdate = (
+    updateCallback: (accessToken: string) => void
+  ) => {
+    tokenManager.registerCallback(updateCallback);
+  };
+
+  const definitionOptions = {
+    ...engineOptions,
+    onAccessTokenUpdate,
+  };
+
+  const getAccessToken = () => tokenManager.getAccessToken();
   const setAccessToken = (accessToken: string) => {
     engineOptions.configuration.accessToken = accessToken;
+    tokenManager.setAccessToken(accessToken);
   };
 
   const build = buildFactory<TControllerDefinitions>(
     controllerDefinitions,
-    getOptions()
+    definitionOptions
   );
   const fetchStaticState = fetchStaticStateFactory<TControllerDefinitions>(
     controllerDefinitions,
-    getOptions()
+    definitionOptions
   );
   const hydrateStaticState = hydratedStaticStateFactory<TControllerDefinitions>(
     controllerDefinitions,
-    getOptions()
+    definitionOptions
   );
   const fetchRecommendationStaticState =
     fetchRecommendationStaticStateFactory<TControllerDefinitions>(
       controllerDefinitions,
-      getOptions()
+      definitionOptions
     );
   const hydrateRecommendationStaticState =
     hydratedRecommendationStaticStateFactory<TControllerDefinitions>(
       controllerDefinitions,
-      getOptions()
+      definitionOptions
     );
 
   return {
