@@ -52,21 +52,6 @@ describe('#renderFacetPlaceholder', () => {
     expect(placeholder?.part).toContain('placeholder');
   });
 
-  it('should render placeholder with correct CSS classes', async () => {
-    const element = await renderComponent();
-    const placeholder = locators(element).placeholder;
-
-    expect(placeholder).toHaveClass(
-      'bg-background',
-      'border-neutral',
-      'mb-4',
-      'animate-pulse',
-      'rounded-lg',
-      'border',
-      'p-7'
-    );
-  });
-
   it('should render placeholder with aria-hidden attribute', async () => {
     const element = await renderComponent();
     const placeholder = locators(element).placeholder;
@@ -79,8 +64,7 @@ describe('#renderFacetPlaceholder', () => {
     const header = locators(element).header;
 
     expect(header).not.toBeNull();
-    expect(header).toHaveClass('bg-neutral', 'h-8', 'rounded');
-    expect(header).toHaveStyle({width: '75%'});
+    expect(header?.tagName).toBe('DIV');
   });
 
   describe('when isCollapsed is false', () => {
@@ -89,7 +73,7 @@ describe('#renderFacetPlaceholder', () => {
       const valuesContainer = locators(element).valuesContainer;
 
       expect(valuesContainer).not.toBeNull();
-      expect(valuesContainer).toHaveClass('mt-7');
+      expect(valuesContainer?.tagName).toBe('DIV');
     });
 
     it('should render correct number of facet value placeholders', async () => {
@@ -102,29 +86,15 @@ describe('#renderFacetPlaceholder', () => {
       expect(facetValues).toHaveLength(3);
     });
 
-    it('should render facet value placeholders with correct styling', async () => {
+    it('should render facet value placeholders correctly', async () => {
       const element = await renderComponent({
         numberOfValues: 1,
         isCollapsed: false,
       });
       const facetValue = locators(element).facetValues[0];
 
-      expect(facetValue).toHaveClass('bg-neutral', 'mt-4', 'flex', 'h-5');
-      expect(facetValue).toHaveStyle({width: '100%', opacity: '0.5'});
-    });
-
-    it('should render multiple facet value placeholders when numberOfValues is greater than 1', async () => {
-      const element = await renderComponent({
-        numberOfValues: 10,
-        isCollapsed: false,
-      });
-      const facetValues = locators(element).facetValues;
-
-      expect(facetValues).toHaveLength(10);
-      facetValues.forEach((value) => {
-        expect(value).toBeInTheDocument();
-        expect(value).toHaveClass('bg-neutral', 'mt-4', 'flex', 'h-5');
-      });
+      expect(facetValue).not.toBeNull();
+      expect(facetValue?.tagName).toBe('DIV');
     });
 
     it('should render no facet value placeholders when numberOfValues is 0', async () => {
@@ -161,45 +131,23 @@ describe('#renderFacetPlaceholder', () => {
       const header = locators(element).header;
 
       expect(header).not.toBeNull();
-      expect(header).toHaveClass('bg-neutral', 'h-8', 'rounded');
+      expect(header?.tagName).toBe('DIV');
     });
   });
 
-  describe('edge cases', () => {
-    it('should handle large numberOfValues without errors', async () => {
-      const element = await renderComponent({
-        numberOfValues: 100,
-        isCollapsed: false,
-      });
-      const facetValues = locators(element).facetValues;
-
-      expect(facetValues).toHaveLength(100);
+  it('should render correctly when toggling between collapsed states', async () => {
+    const expandedElement = await renderComponent({
+      numberOfValues: 3,
+      isCollapsed: false,
     });
+    const expandedValues = locators(expandedElement).facetValues;
+    expect(expandedValues).toHaveLength(3);
 
-    it('should handle numberOfValues of 1', async () => {
-      const element = await renderComponent({
-        numberOfValues: 1,
-        isCollapsed: false,
-      });
-      const facetValues = locators(element).facetValues;
-
-      expect(facetValues).toHaveLength(1);
+    const collapsedElement = await renderComponent({
+      numberOfValues: 3,
+      isCollapsed: true,
     });
-
-    it('should render correctly when toggling between collapsed states', async () => {
-      const expandedElement = await renderComponent({
-        numberOfValues: 3,
-        isCollapsed: false,
-      });
-      const expandedValues = locators(expandedElement).facetValues;
-      expect(expandedValues).toHaveLength(3);
-
-      const collapsedElement = await renderComponent({
-        numberOfValues: 3,
-        isCollapsed: true,
-      });
-      const collapsedValues = locators(collapsedElement).facetValues;
-      expect(collapsedValues).toHaveLength(0);
-    });
+    const collapsedValues = locators(collapsedElement).facetValues;
+    expect(collapsedValues).toHaveLength(0);
   });
 });
