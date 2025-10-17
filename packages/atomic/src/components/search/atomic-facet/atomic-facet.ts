@@ -131,7 +131,7 @@ export class AtomicFacet
   @state() public error!: Error;
 
   /**
-   * Specifies a unique identifier for the facet.
+   * A unique identifier for the facet.
    */
   @property({type: String, attribute: 'facet-id', reflect: true})
   public facetId?: string;
@@ -215,7 +215,7 @@ export class AtomicFacet
   @property({type: String, attribute: 'display-values-as', reflect: true})
   public displayValuesAs: 'checkbox' | 'link' | 'box' = 'checkbox';
   /**
-   * Specifies whether the facet is collapsed. When the facet is the child of an `atomic-facet-manager` component, the facet manager controls this property.
+   * Whether the facet is collapsed. When the facet is the child of an `atomic-facet-manager` component, the facet manager controls this property.
    */
   @property({
     type: Boolean,
@@ -283,7 +283,7 @@ export class AtomicFacet
   @mapProperty({attributePrefix: 'depends-on'})
   public dependsOn!: Record<string, string>;
   /**
-   * Specifies an explicit list of `allowedValues` in the Search API request, as a JSON string representation.
+   * An explicit list of `allowedValues` in the Search API request, as a JSON string representation.
    *
    * If you specify a list of values for this option, the facet uses only these values (if they are available in
    * the current result set).
@@ -309,7 +309,7 @@ export class AtomicFacet
   public allowedValues: string[] | string = [];
 
   /**
-   * Identifies the facet values that must appear at the top, in this order.
+   * The facet values that must appear at the top, in the specified.
    * This parameter can be used in conjunction with the `sortCriteria` parameter.
    *
    * Facet values not part of the `customSort` list will be sorted according to the `sortCriteria`.
