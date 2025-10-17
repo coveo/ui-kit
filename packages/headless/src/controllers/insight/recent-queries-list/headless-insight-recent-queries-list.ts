@@ -6,7 +6,6 @@ import {
 } from '../../../features/recent-queries/recent-queries-insight-analytics-actions.js';
 import {
   buildCoreRecentQueriesList,
-  type defaultRecentQueriesOptions,
   type RecentQueriesList,
   type RecentQueriesListInitialState,
   type RecentQueriesListOptions,
@@ -15,7 +14,6 @@ import {
 } from '../../core/recent-queries-list/headless-core-recent-queries-list.js';
 
 export type {
-  defaultRecentQueriesOptions,
   RecentQueriesListProps,
   RecentQueriesListOptions,
   RecentQueriesList,
