@@ -187,7 +187,7 @@ jobs:
         run: npm run knip
   cdn-checks:
     name: "CDN Checks"
-    needs: [affected, build-cdn]
+    needs: [affected]
     if: contains(needs.affected.outputs.projects, '@coveo/atomic') || contains(needs.affected.outputs.projects, '@samples/headless-commerce-react') || contains(needs.affected.outputs.projects, '@coveo/atomic-hosted-page')
     env:
       DEPLOYMENT_ENVIRONMENT: CDN
@@ -200,14 +200,10 @@ jobs:
         uses: step-security/harden-runner@ec9f2d5744a09debf3a187a3f4f675c53b671911 # v2.13.0
         with:
           egress-policy: audit
-
-      - name: Setup for CDN checks
-        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
       - uses: ./.github/actions/setup
         with:
           cache-prefix: "cdn"
-        env:
-          DEPLOYMENT_ENVIRONMENT: CDN
       - name: "Run CDN checks"
         uses: ./.github/actions/cdn-checks
   lint-check:

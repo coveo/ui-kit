@@ -1,3 +1,9 @@
+## <small>1.3.7 (2025-10-15)</small>
+
+* [Version Bump][skip ci]: ui-kit publish ([2e3b4d2](https://github.com/coveo/ui-kit/commits/2e3b4d2))
+
+
+
 ## <small>1.3.6 (2025-10-08)</small>
 
 * chore: more cleanup of dependencies in multiples packages (#6119) ([ff6c837](https://github.com/coveo/ui-kit/commits/ff6c837)), closes [#6119](https://github.com/coveo/ui-kit/issues/6119)
