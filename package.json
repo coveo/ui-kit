@@ -70,6 +70,7 @@
       "@stencil/react-output-target@0.5.3": "patches/@stencil__react-output-target@0.5.3.patch"
     },
     "overrides": {
+      "braces": "3.0.3",
       "react": "catalog:",
       "react-dom": "catalog:",
       "typescript": "catalog:"
