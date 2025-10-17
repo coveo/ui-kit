@@ -23,7 +23,10 @@ runs:
         SFDX_AUTH_JWT_KEY_FILE: server.key
         SFDX_AUTH_JWT_USERNAME: rdaccess@coveo.com
         SFDX_AUTH_JWT_INSTANCE_URL: https://login.salesforce.com
-    - uses: actions/cache@5a3ec84eff668545956fd18022155c47e93e2684 # v4
+    - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
       with:
+        name: quantic-playwright-env
         path: packages/quantic/.env
-        key: quantic-playwright-env-${{ github.sha }}
+        include-hidden-files: true
+        retention-days: 1
+        if-no-files-found: error
