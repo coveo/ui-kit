@@ -1,4 +1,3 @@
-import type {CoreEngine} from '@coveo/headless';
 import {
   ComponentInterface,
   getElement,
@@ -286,7 +285,3 @@ export function DeferUntilRender() {
 }
 
 export type I18nState = Record<string, (variables?: TOptions) => string>;
-export type AtomicInterface = HTMLElement & {
-  engine?: CoreEngine;
-  bindings?: Bindings;
-};
