@@ -82,7 +82,7 @@ Example using the `atomic-result-list`:
 
 ## Template Conditions
 
-You can use conditions to display different templates based on result properties:
+You can use conditions to display different templates based on result properties. **The order of declaration matters**: the first template whose conditions are met will be applied. If a default template (without conditions) is declared first, it will apply to all results, even if other templates with conditions are declared later.
 
 ```html
 <atomic-result-list>

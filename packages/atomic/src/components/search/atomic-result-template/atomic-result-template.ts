@@ -37,19 +37,24 @@ export class AtomicResultTemplate
   conditions: ResultTemplateCondition[] = [];
 
   /**
-   * The field and values that must be matched by a result item for the template to apply.
-   * For example, a template with the following attribute only applies to result items whose `sourcetype` is `YouTube` or `Salesforce`: `must-match-sourcetype="YouTube,Salesforce"`
+   * The field and values that define which results the condition must be applied to.
+   * For example, a template with the following attribute only applies to results whose `sourcetype` is `YouTube` or `Salesforce`:
+   * `must-match-sourcetype="YouTube,Salesforce"`
+   * @type {Record<string, string[]>}
+   * @default {}
    */
-  @mapProperty({attributePrefix: 'must-match', splitValues: true})
-  mustMatch: Record<string, string[]> = {};
+  @mapProperty({splitValues: true, attributePrefix: 'must-match'})
+  mustMatch!: Record<string, string[]>;
 
   /**
-   * The field and values that must not be matched by a result item for the template to apply.
-   * For example, a template with the following attribute only applies to result items whose `sourcetype` is not `YouTube`: `must-not-match-sourcetype="YouTube"`
+   * The field and values that define which results the condition must not be applied to.
+   * For example, a template with the following attribute only applies to results whose `sourcetype` is not `YouTube`:
+   * `must-not-match-sourcetype="YouTube"`
+   * @type {Record<string, string[]>}
+   * @default {}
    */
-  @mapProperty({attributePrefix: 'must-not-match', splitValues: true})
-  mustNotMatch: Record<string, string[]> = {};
-
+  @mapProperty({splitValues: true, attributePrefix: 'must-not-match'})
+  mustNotMatch!: Record<string, string[]>;
   constructor() {
     super();
     const validParent = [
