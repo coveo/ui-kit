@@ -1,11 +1,11 @@
 import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
 import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {html} from 'lit/static-html.js';
+import {SearchApiHarness} from '@/storybook-utils/api/search';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
-import {
-  playExecuteFirstSearch,
-  wrapInSearchInterface,
-} from '@/storybook-utils/search/search-interface-wrapper';
+import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
+
+const searchApiHarness = new SearchApiHarness();
 
 const {decorator, play} = wrapInSearchInterface();
 const {events, args, argTypes, template} = getStorybookHelpers(
@@ -25,10 +25,38 @@ const meta: Meta = {
     actions: {
       handles: events,
     },
+    msw: {
+      handlers: [...searchApiHarness.handlers],
+    },
   },
   args,
   argTypes,
-
+  beforeEach: () => {
+    searchApiHarness.searchEndpointHandler.flushQueuedResponses();
+    searchApiHarness.searchEndpointHandler.enqueueNextResponses(
+      {
+        ...searchApiHarness.searchEndpointHandler.baseResponse,
+        results:
+          searchApiHarness.searchEndpointHandler.baseResponse.results.slice(
+            0,
+            40
+          ),
+      },
+      {
+        ...searchApiHarness.searchEndpointHandler.baseResponse,
+        results:
+          searchApiHarness.searchEndpointHandler.baseResponse.results.slice(
+            40,
+            80
+          ),
+      },
+      {
+        ...searchApiHarness.searchEndpointHandler.baseResponse,
+        results:
+          searchApiHarness.searchEndpointHandler.baseResponse.results.slice(80),
+      }
+    );
+  },
   play,
 };
 
@@ -198,8 +226,4 @@ export const InPage: Story = {
         </atomic-layout-section>
       </atomic-search-layout>`,
   ],
-  play: async (context) => {
-    await play(context);
-    await playExecuteFirstSearch(context);
-  },
 };
