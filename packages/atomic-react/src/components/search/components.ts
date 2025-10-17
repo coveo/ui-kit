@@ -1,6 +1,7 @@
 import {
   AtomicAriaLive as LitAtomicAriaLive,
   AtomicComponentError as LitAtomicComponentError,
+  AtomicExternal as LitAtomicExternal,
   AtomicFacet as LitAtomicFacet,
   AtomicIcon as LitAtomicIcon,
   AtomicInsightInterface as LitAtomicInsightInterface,
@@ -36,6 +37,12 @@ export const AtomicComponentError = createComponent({
   tagName: 'atomic-component-error',
   react: React,
   elementClass: LitAtomicComponentError,
+});
+
+export const AtomicExternal = createComponent({
+  tagName: 'atomic-external',
+  react: React,
+  elementClass: LitAtomicExternal,
 });
 
 export const AtomicFacet = createComponent({

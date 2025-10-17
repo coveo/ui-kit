@@ -1,4 +1,5 @@
 // Auto-generated file
+export {AtomicExternal} from './atomic-external/atomic-external.js';
 export {AtomicFacet} from './atomic-facet/atomic-facet.js';
 export {AtomicPager} from './atomic-pager/atomic-pager.js';
 export {AtomicQuerySummary} from './atomic-query-summary/atomic-query-summary.js';

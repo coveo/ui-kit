@@ -15,7 +15,6 @@ export const AtomicCategoryFacet = /*@__PURE__*/createReactComponent<JSX.AtomicC
 export const AtomicCitation = /*@__PURE__*/createReactComponent<JSX.AtomicCitation, HTMLAtomicCitationElement>('atomic-citation');
 export const AtomicColorFacet = /*@__PURE__*/createReactComponent<JSX.AtomicColorFacet, HTMLAtomicColorFacetElement>('atomic-color-facet');
 export const AtomicDidYouMean = /*@__PURE__*/createReactComponent<JSX.AtomicDidYouMean, HTMLAtomicDidYouMeanElement>('atomic-did-you-mean');
-export const AtomicExternal = /*@__PURE__*/createReactComponent<JSX.AtomicExternal, HTMLAtomicExternalElement>('atomic-external');
 export const AtomicFacetManager = /*@__PURE__*/createReactComponent<JSX.AtomicFacetManager, HTMLAtomicFacetManagerElement>('atomic-facet-manager');
 export const AtomicFoldedResultList = /*@__PURE__*/createReactComponent<JSX.AtomicFoldedResultList, HTMLAtomicFoldedResultListElement>('atomic-folded-result-list');
 export const AtomicFormatCurrency = /*@__PURE__*/createReactComponent<JSX.AtomicFormatCurrency, HTMLAtomicFormatCurrencyElement>('atomic-format-currency');
