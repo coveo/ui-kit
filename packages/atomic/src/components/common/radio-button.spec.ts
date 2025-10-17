@@ -70,7 +70,8 @@ describe('#renderRadioButton', () => {
     render(
       html`${renderRadioButton({props: {...props, text: 'radio-1'}})}
       ${renderRadioButton({props: {...props, text: 'radio-2'}})}
-      ${renderRadioButton({props: {...props, text: 'radio-3'}})}`,
+      ${renderRadioButton({props: {...props, text: 'radio-3'}})}
+      ${renderRadioButton({props: {...props, text: 'radio-4'}})}`,
       container
     );
 
@@ -85,6 +86,12 @@ describe('#renderRadioButton', () => {
     await expect(getRadio(2)).toBeInTheDocument();
 
     keyDown(inputs[2], {key: 'ArrowRight'});
+    await expect(getRadio(3)).toBeInTheDocument();
+
+    keyDown(inputs[2], {key: 'Tab'});
+    await expect(getRadio(4)).toBeInTheDocument();
+
+    keyDown(inputs[2], {key: 'Tab', shiftKey: true});
     await expect(getRadio(3)).toBeInTheDocument();
   });
 
