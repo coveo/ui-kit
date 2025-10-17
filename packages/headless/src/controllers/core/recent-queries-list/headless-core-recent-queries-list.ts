@@ -49,7 +49,7 @@ const defaultRecentQueriesState: Required<RecentQueriesListInitialState> = {
   queries: [],
 };
 
-export const defaultRecentQueriesOptions: Required<RecentQueriesListOptions> = {
+const defaultRecentQueriesOptions: Required<RecentQueriesListOptions> = {
   maxLength: 10,
   clearFilters: true,
 };
