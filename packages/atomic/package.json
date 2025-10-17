@@ -1,7 +1,7 @@
 {
   "name": "@coveo/atomic",
   "type": "module",
-  "version": "3.34.0",
+  "version": "3.35.5",
   "description": "A web-component library for building modern UIs interfacing with the Coveo platform",
   "homepage": "https://docs.coveo.com/en/atomic/latest/",
   "repository": {
@@ -82,7 +82,7 @@
   },
   "dependencies": {
     "@coveo/bueno": "1.1.3",
-    "@coveo/headless": "3.31.2",
+    "@coveo/headless": "3.32.0",
     "@lit/context": "1.1.6",
     "@open-wc/lit-helpers": "0.7.0",
     "@popperjs/core": "2.11.8",
@@ -101,6 +101,7 @@
   "devDependencies": {
     "@axe-core/playwright": "4.10.2",
     "@custom-elements-manifest/analyzer": "0.10.4",
+    "@mswjs/source": "0.5.0",
     "@playwright/test": "1.54.1",
     "@rollup/plugin-commonjs": "28.0.6",
     "@rollup/plugin-json": "6.1.0",
@@ -133,7 +134,10 @@
     "jest-cli": "29.7.0",
     "jest-localstorage-mock": "2.4.26",
     "local-web-server": "5.4.0",
+    "msw": "2.11.4",
+    "msw-storybook-addon": "2.0.5",
     "natural-orderby": "5.0.0",
+    "openapi-types": "12.1.3",
     "playwright": "1.54.1",
     "postcss": "8.5.6",
     "postcss-load-config": "6.0.1",
@@ -156,7 +160,7 @@
   },
   "peerDependencies": {
     "@coveo/bueno": "1.1.3",
-    "@coveo/headless": "3.31.2",
+    "@coveo/headless": "3.32.0",
     "typescript": ">=5.0.0"
   },
   "peerDependenciesMeta": {
@@ -167,5 +171,10 @@
   "license": "Apache-2.0",
   "engines": {
     "node": "^20.9.0 || ^22.11.0"
+  },
+  "msw": {
+    "workerDirectory": [
+      ".storybook/public"
+    ]
   }
 }

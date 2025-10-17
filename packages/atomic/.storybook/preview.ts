@@ -5,8 +5,15 @@ import {
 } from '@storybook/web-components-vite';
 import {setStorybookHelpersConfig} from '@wc-toolkit/storybook-helpers';
 import {render} from 'lit';
+import {initialize, mswLoader} from 'msw-storybook-addon';
 import customElements from '../custom-elements.json';
 import {defineCustomElements} from '../dist/atomic/loader/index.js';
+
+initialize(
+  import.meta.env.VITE_IS_CDN === 'true'
+    ? {serviceWorker: {url: './mockServiceWorker.js'}}
+    : {}
+);
 
 setCustomElementsManifest(customElements);
 
@@ -24,6 +31,8 @@ setStorybookHelpersConfig({
   ],
   hideArgRef: true,
 });
+
+export const loaders = [mswLoader];
 
 export const parameters: Parameters = {
   options: {

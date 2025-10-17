@@ -5,6 +5,7 @@ import {
   streamAnswerAPIStateMock,
   streamAnswerAPIStateMockWithAnalyticsEnabled,
   streamAnswerAPIStateMockWithATabWithAnExpression,
+  streamAnswerAPIStateMockWithCaseContextIncluded,
   streamAnswerAPIStateMockWithDictionaryFieldContext,
   streamAnswerAPIStateMockWithExcerptLength,
   streamAnswerAPIStateMockWithFoldingDisabled,
@@ -246,5 +247,25 @@ describe('constructAnswerAPIQueryParams', () => {
 
     expect(queryParams.locale).toEqual('en');
     expect(queryParams.timezone).toEqual('America/New_York');
+  });
+
+  it('should correctly set case context when set in state', () => {
+    const queryParams = constructAnswerAPIQueryParams(
+      streamAnswerAPIStateMockWithCaseContextIncluded,
+      buildMockNavigatorContextProvider()()
+    );
+
+    expect(queryParams).toMatchObject({
+      caseContext: {caseSubject: 'foo', caseDescription: 'bar'},
+    });
+  });
+
+  it('should not set case context when not included in state', () => {
+    const queryParams = constructAnswerAPIQueryParams(
+      streamAnswerAPIStateMock,
+      buildMockNavigatorContextProvider()()
+    );
+
+    expect(queryParams.caseContext).toBeUndefined();
   });
 });

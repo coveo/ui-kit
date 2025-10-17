@@ -6,7 +6,7 @@ import {
   ItemDisplayDensity,
   ItemDisplayImageSize,
 } from '../layout/display-options';
-import {ItemTemplateProvider} from './item-template-provider';
+import {ResultTemplateProvider} from './result-template-provider';
 
 export class MissingParentError extends Error {
   constructor(elementName: string, parentName: string) {
@@ -136,14 +136,14 @@ function extractFolded(item: Record<string, unknown>, returnFolded: boolean) {
 }
 
 type ChildTemplatesContextEventHandler = (
-  itemTemplateProvider?: ItemTemplateProvider
+  itemTemplateProvider?: ResultTemplateProvider
 ) => void;
 export type ChildTemplatesContextEvent =
   CustomEvent<ChildTemplatesContextEventHandler>;
 const childTemplatesContextEventName = 'atomic/resolveChildTemplates';
 
 interface AtomicItemChildren {
-  itemTemplateProvider?: ItemTemplateProvider;
+  itemTemplateProvider?: ResultTemplateProvider;
 }
 
 /**
@@ -156,7 +156,7 @@ export function ChildTemplatesContext() {
       const element = getElement(this);
       const event = buildCustomEvent(
         childTemplatesContextEventName,
-        (itemTemplateProvider?: ItemTemplateProvider) => {
+        (itemTemplateProvider?: ResultTemplateProvider) => {
           const component = this as AtomicItemChildren;
           if (component.itemTemplateProvider) {
             return;
