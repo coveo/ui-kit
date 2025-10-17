@@ -24,11 +24,11 @@ import {bindingGuard} from '@/src/decorators/binding-guard';
 import {errorGuard} from '@/src/decorators/error-guard';
 import type {InitializableComponent} from '@/src/decorators/types';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
-import {mapProperty} from '@/src/utils/props-utils';
 import {
   AriaLiveRegionController,
   FocusTargetController,
-} from '../../../utils/accessibility-utils';
+} from '@/src/utils/accessibility-utils';
+import {mapProperty} from '@/src/utils/props-utils';
 import {getFieldCaptions} from '../../../utils/field-utils';
 import {parseDependsOn} from '../../common/facets/depends-on';
 import type {FacetInfo} from '../../common/facets/facet-common-store';
@@ -340,7 +340,6 @@ export class AtomicFacet
   private facetSearchAriaLive?: AriaLiveRegionController;
 
   public initialize() {
-    console.log('Reading Bindings from Facet', this.bindings);
     if (
       [...this.tabsIncluded].length > 0 &&
       [...this.tabsExcluded].length > 0

@@ -91,12 +91,6 @@ describe('atomic-facet', () => {
           registerFacet: mockedRegisterFacet,
         },
       }),
-      // bindings: (bindings) => {
-      //   console.log('@@@@@@@@@@@@');
-      //   bindings.store.getUniqueIDFromEngine = vi.fn().mockReturnValue('123');
-      //   bindings.store.registerFacet = mockedRegisterFacet;
-      //   return bindings;
-      // },
     });
     const qs = (part: string) =>
       element.shadowRoot?.querySelector(`[part~="${part}"]`)!;
@@ -338,6 +332,62 @@ describe('atomic-facet', () => {
         );
         const {locators} = await setupElement();
         await expect.element(locators.showLess).not.toBeInTheDocument();
+      });
+
+      describe('when no additional facet values are available', () => {
+        beforeEach(() => {
+          vi.mocked(buildFacet).mockReturnValue(
+            buildFakeFacet({
+              state: {
+                canShowMoreValues: false,
+                canShowLessValues: true,
+                values: Array.from({length: 12}, (_, i) => ({
+                  value: `value-${i + 1}`,
+                  state: 'idle' as const,
+                  numberOfResults: 10 - i,
+                })),
+              },
+            })
+          );
+        });
+
+        it('should hide show more button', async () => {
+          const {locators} = await setupElement();
+          await expect.element(locators.showMore).not.toBeInTheDocument();
+        });
+
+        it('should display show less button', async () => {
+          const {locators} = await setupElement();
+          await expect.element(locators.showLess).toBeVisible();
+        });
+      });
+
+      it('should display show more button and hide show less button when show less is selected', async () => {
+        vi.mocked(buildFacet).mockReturnValue(
+          buildFakeFacet({
+            state: {
+              canShowMoreValues: true,
+              canShowLessValues: false,
+              values: [
+                {
+                  value: 'value-1',
+                  state: 'idle' as const,
+                  numberOfResults: 10,
+                },
+                {
+                  value: 'value-2',
+                  state: 'idle' as const,
+                  numberOfResults: 5,
+                },
+              ],
+            },
+          })
+        );
+        const {locators} = await setupElement();
+
+        await expect.element(locators.showLess).not.toBeInTheDocument();
+        await expect.element(locators.showMore).toBeVisible();
+        expect(locators.valueCheckbox.length).toBe(2);
       });
     });
 
